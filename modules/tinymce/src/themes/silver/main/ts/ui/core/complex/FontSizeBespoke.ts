@@ -180,7 +180,7 @@ const getNumberInputSpec = (editor: Editor): NumberInputSpec => {
 };
 
 const createFontSizeInputButton = (editor: Editor, backstage: UiFactoryBackstage): AlloySpec =>
-  createBespokeNumberInput(editor, backstage, getNumberInputSpec(editor));
+  createBespokeNumberInput(editor, backstage, getNumberInputSpec(editor), 'fontsizeinput');
 
 // TODO: Test this!
 const createFontSizeMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {

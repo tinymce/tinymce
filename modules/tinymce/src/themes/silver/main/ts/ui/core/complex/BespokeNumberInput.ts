@@ -1,6 +1,6 @@
 import { Keys } from '@ephox/agar';
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Disabling, Focusing, FocusInsideModes, Input, Keying, Memento, NativeEvents, Representing, SystemEvents, Tooltipping } from '@ephox/alloy';
-import { Arr, Cell, Fun, Id, Optional } from '@ephox/katamari';
+import { Arr, Cell, Fun, Id, Optional, Type } from '@ephox/katamari';
 import { Focus, SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -16,7 +16,7 @@ interface BespokeSelectApi {
   readonly getComponent: () => AlloyComponent;
 }
 
-const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage, spec: NumberInputSpec): AlloySpec => {
+const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage, spec: NumberInputSpec, btnName?: string): AlloySpec => {
   let currentComp: Optional<AlloyComponent> = Optional.none();
 
   const getValueFromCurrentComp = (comp: Optional<AlloyComponent>): string =>
@@ -89,7 +89,8 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
       dom: {
         tag: 'button',
         attributes: {
-          'aria-label': translatedTooltip
+          'aria-label': translatedTooltip,
+          'data-mce-btn': title
         },
         classes: classes.concat(title)
       },
@@ -205,7 +206,10 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tox-number-input' ]
+      classes: [ 'tox-number-input' ],
+      attributes: {
+        ...(Type.isNonNullable(btnName) ? { 'data-mce-btn': btnName } : {})
+      }
     },
     components: [
       memMinus.asSpec(),
