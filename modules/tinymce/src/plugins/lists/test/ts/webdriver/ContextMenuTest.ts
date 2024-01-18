@@ -25,6 +25,6 @@ describe('webdriver.tinymce.plugins.lists.ContextMenuTest', () => {
       </ol>`
     );
     await RealMouse.pRightClickOn('iframe => ol > li');
-    UiFinder.exists(SugarBody.body(), '[title="List properties..."][aria-disabled="false"]');
+    UiFinder.exists(SugarBody.body(), '[aria-label="List properties..."][aria-disabled="false"]');
   });
 });

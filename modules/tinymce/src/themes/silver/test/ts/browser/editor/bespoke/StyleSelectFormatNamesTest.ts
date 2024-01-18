@@ -62,7 +62,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.StyleSelectFormatNamesTes
       children: Arr.map(expectedItems, (expected) => s.element('div', {
         attrs: {
           role: str.is('menuitemcheckbox'),
-          title: str.is(expected.title)
+          'aria-label': str.is(expected.title)
         },
         children: [
           s.element('div', {
