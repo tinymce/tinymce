@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: Directly right clicking on a ol's li in FireFox didn't enable the button `List
+  Properties...` in the context menu.
+time: 2024-01-11T13:11:04.55620054+01:00
+custom:
+  Issue: TINY-10490

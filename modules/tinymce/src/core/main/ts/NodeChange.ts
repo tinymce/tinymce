@@ -5,6 +5,7 @@ import * as Options from './api/Options';
 import Delay from './api/util/Delay';
 import * as RangeCompare from './selection/RangeCompare';
 import { RangeLikeObject } from './selection/RangeTypes';
+import * as SelectionBookmark from './selection/SelectionBookmark';
 import { hasAnyRanges } from './selection/SelectionUtils';
 
 /**
@@ -49,6 +50,8 @@ class NodeChange {
     // IE has a bug where it fires a selectionchange on right click that has a range at the start of the body
     // When the contextmenu event fires the selection is located at the right location
     editor.on('contextmenu', () => {
+      SelectionBookmark.store(editor);
+
       editor.dispatch('SelectionChange');
     });
 
