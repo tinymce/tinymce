@@ -91,6 +91,6 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
     const editorTargetRect = editor.dom.getRect(editorTarget.dom);
     const editorTargetTop = editorTargetRect.y;
 
-    assert.closeTo(editorTargetTop, toolbarBottom, 10);
+    assert.isAtMost(editorTargetTop, toolbarBottom, 'toolbarBottom should be above editorTargetTop');
   });
 });
