@@ -85,10 +85,12 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
     editor.focus();
 
     const toolbar = await UiFinder.pWaitFor('the toolbar should be visible', SugarBody.body(), '.tox-editor-header');
-    const toolbarRect = editor.dom.getRect(toolbar.dom as HTMLElement);
-    const toolbarBottom = toolbarRect.y + toolbarRect.h;
+    // const toolbarRect = editor.dom.getRect(toolbar.dom as HTMLElement);
+    const toolbarRect = toolbar.dom.getBoundingClientRect();
+    const toolbarBottom = toolbarRect.y + toolbarRect.height;
 
-    const editorBodyRect = editor.dom.getRect(editor.getBody());
+    // const editorBodyRect = editor.dom.getRect(editor.getBody());
+    const editorBodyRect = editor.getBody().getBoundingClientRect();
     const editorBodyTop = editorBodyRect.y;
 
     // assert.isAtLeast(editorTargetTop, toolbarBottom, 'toolbarBottom should be above editorTargetTop');
