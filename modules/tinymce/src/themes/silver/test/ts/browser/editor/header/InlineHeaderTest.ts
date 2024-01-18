@@ -88,10 +88,10 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
     const toolbarRect = editor.dom.getRect(toolbar.dom as HTMLElement);
     const toolbarBottom = toolbarRect.y + toolbarRect.h;
 
-    const editorTargetRect = editor.dom.getRect(editorTarget.dom);
-    const editorTargetTop = editorTargetRect.y;
+    const editorBodyRect = editor.dom.getRect(editor.getBody());
+    const editorBodyTop = editorBodyRect.y;
 
     // assert.isAtLeast(editorTargetTop, toolbarBottom, 'toolbarBottom should be above editorTargetTop');
-    assert.approximately(editorTargetTop, toolbarBottom, 5, 'toolbarBottom should be above editorTargetTop');
+    assert.approximately(editorBodyTop, toolbarBottom, 5, 'toolbarBottom should be above editorBodyTop');
   });
 });
