@@ -16,7 +16,7 @@ describe('browser.tinymce.themes.silver.editor.core.UndoRedoTest', () => {
     UiFinder.exists(SugarBody.body(), `button[data-mce-btn="${title}"][aria-disabled="${disabled}"]`);
 
   const assertMenuItemState = (editor: Editor, item: string, disabled: boolean) =>
-    TinyUiActions.pWaitForUi(editor, `div[title="${item}"][role="menuitem"][aria-disabled="${disabled}"]`);
+    TinyUiActions.pWaitForUi(editor, `div[aria-label="${item}"][role="menuitem"][aria-disabled="${disabled}"]`);
 
   const pWaitForToolbarState = async (editor: Editor, disabled: boolean) => {
     const overlord = UiFinder.findIn(SugarBody.body(), '.tox-toolbar-overlord').getOrDie();

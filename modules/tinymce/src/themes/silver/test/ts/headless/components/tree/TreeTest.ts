@@ -152,8 +152,8 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
 
     store.clear();
     Mouse.clickOn(dir.element, '.tox-mbtn');
-    await UiFinder.pWaitFor('Wait for menu item to show up', SugarBody.body(), '[title="menuitem"]');
-    Mouse.clickOn(SugarBody.body(), '[title="menuitem"]');
+    await UiFinder.pWaitFor('Wait for menu item to show up', SugarBody.body(), '[aria-label="menuitem"]');
+    Mouse.clickOn(SugarBody.body(), '[aria-label="menuitem"]');
     store.assertEq('menuitem', [ 'menuitem' ]);
 
     Mouse.clickOn(dir.element, '.tox-tree--directory .tox-trbtn.tox-tree--directory__label');

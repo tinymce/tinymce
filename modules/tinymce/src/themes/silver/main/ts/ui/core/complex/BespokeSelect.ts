@@ -210,6 +210,7 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
     {
       text: spec.icon.isSome() ? Optional.none() : spec.text,
       icon: spec.icon,
+      ariaLabel: Optional.some(spec.tooltip),
       tooltip: Optional.from(spec.tooltip),
       role: Optional.none(),
       fetch: items.getFetch(backstage, getStyleItems),

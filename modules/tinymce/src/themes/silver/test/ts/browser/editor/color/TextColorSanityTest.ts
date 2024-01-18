@@ -168,7 +168,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
       input.dom.dispatchEvent(evt);
       const dialogResult = UiFinder.findIn<HTMLInputElement>(dialog, 'label:contains("#") + input').getOrDie();
       await Waiter.pTryUntil('Dialog has changed', () => dialogResult.dom.value === 'FF0000');
-      TinyUiActions.clickOnUi(editor, 'button[data-mce-btn="save"]');
+      TinyUiActions.clickOnUi(editor, 'button[data-mce-btn="Save"]');
       TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       UiFinder.exists(SugarBody.body(), 'div[data-mce-color="#FF0000"]');

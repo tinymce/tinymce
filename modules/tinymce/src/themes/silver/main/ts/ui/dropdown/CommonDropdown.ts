@@ -46,6 +46,7 @@ export interface CommonDropdownSpec<T> {
   readonly classes: string[];
   readonly dropdownBehaviours: Behaviour.NamedConfiguredBehaviour<any, any, any>[];
   readonly searchable?: boolean;
+  readonly ariaLabel: Optional<string>;
 }
 
 // TODO: Use renderCommonStructure here.
@@ -105,10 +106,10 @@ const renderCommonDropdown = <T>(
 
   const role = spec.role.fold(() => ({}), (role) => ({ role }));
 
-  const tooltipAttributes = spec.tooltip.fold(
+  const ariaLabelAttribute = spec.ariaLabel.fold(
     () => ({}),
-    (tooltip) => {
-      const translatedTooltip = sharedBackstage.providers.translate(tooltip);
+    (ariaLabel) => {
+      const translatedTooltip = sharedBackstage.providers.translate(ariaLabel);
       return {
         'aria-label': translatedTooltip
       };
@@ -132,7 +133,7 @@ const renderCommonDropdown = <T>(
         tag: 'button',
         classes: [ prefix, `${prefix}--select` ].concat(Arr.map(spec.classes, (c) => `${prefix}--${c}`)),
         attributes: {
-          ...tooltipAttributes,
+          ...ariaLabelAttribute,
           ...(Type.isNonNullable(btnName) ? { 'data-mce-btn': btnName } : {})
         }
       },

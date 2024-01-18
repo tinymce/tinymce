@@ -17,7 +17,7 @@ describe('browser.tinymce.plugins.link.RemoveLinkTest', () => {
     editor.setContent('<p><a href="http://tiny.cloud">tiny</a></p>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
     await TinyUiActions.pTriggerContextMenu(editor, 'a[href="http://tiny.cloud"]', '.tox-silver-sink [role="menuitem"]');
-    TinyUiActions.clickOnUi(editor, 'div[title="Remove link"]');
+    TinyUiActions.clickOnUi(editor, 'div[aria-label="Remove link"]');
     TinyAssertions.assertContentPresence(editor, { 'a[href="http://tiny.cloud"]': 0 });
   });
 
@@ -26,7 +26,7 @@ describe('browser.tinymce.plugins.link.RemoveLinkTest', () => {
     editor.setContent('<p><a href="http://tiny.cloud">tiny</a></p>');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 2);
     await TinyUiActions.pTriggerContextMenu(editor, 'a[href="http://tiny.cloud"]', '.tox-silver-sink [role="menuitem"]');
-    TinyUiActions.clickOnUi(editor, 'div[title="Remove link"]');
+    TinyUiActions.clickOnUi(editor, 'div[aria-label="Remove link"]');
     TinyAssertions.assertContentPresence(editor, { 'a[href="http://tiny.cloud"]': 0 });
   });
 
@@ -35,7 +35,7 @@ describe('browser.tinymce.plugins.link.RemoveLinkTest', () => {
     editor.setContent('<p><a href="http://tiny.cloud"><img src="http://moxiecode.cachefly.net/tinymce/v9/images/logo.png" /></a></p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
     await TinyUiActions.pTriggerContextMenu(editor, 'a[href="http://tiny.cloud"]', '.tox-silver-sink [role="menuitem"]');
-    TinyUiActions.clickOnUi(editor, 'div[title="Remove link"]');
+    TinyUiActions.clickOnUi(editor, 'div[aria-label="Remove link"]');
     TinyAssertions.assertContentPresence(editor, { 'a[href="http://tiny.cloud"]': 0 });
   });
 

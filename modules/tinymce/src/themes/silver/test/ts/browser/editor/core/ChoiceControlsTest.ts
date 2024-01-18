@@ -34,7 +34,7 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
     pOpen: async (editor, title) => {
       TinyUiActions.clickOnMenu(editor, 'button:contains("Format")');
       await TinyUiActions.pWaitForUi(editor, '[role="menu"]');
-      TinyUiActions.clickOnUi(editor, `[role="menu"] [title="${title}"]`);
+      TinyUiActions.clickOnUi(editor, `[role="menu"] [aria-label="${title}"]`);
     },
     close: (editor) => TinyUiActions.clickOnMenu(editor, 'button:contains("Format")'),
     menuSelector: '[role="menu"]~[role="menu"]' // the line-height submenu is always the *second* menu in the sink
@@ -42,7 +42,7 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
 
   const pSelectItem = async (editor: Editor, selector: string, value: string) => {
     await TinyUiActions.pWaitForUi(editor, selector);
-    TinyUiActions.clickOnUi(editor, `[role="menuitemcheckbox"][title="${value}"]`);
+    TinyUiActions.clickOnUi(editor, `[role="menuitemcheckbox"][aria-label="${value}"]`);
   };
 
   const pAssertOptions = async (editor: Editor, selector: string, ideal: string[], current: Optional<string>) => {

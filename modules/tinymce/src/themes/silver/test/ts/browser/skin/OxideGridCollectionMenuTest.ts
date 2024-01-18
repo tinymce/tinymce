@@ -70,10 +70,10 @@ describe('browser.tinymce.themes.silver.skin.OxideGridCollectionMenuTest', () =>
       menu
     );
 
-    await FocusTools.pTryOnSelector('Focus should be on 1', doc, '.tox-collection__item[data-mce-btn="1"]');
+    await FocusTools.pTryOnSelector('Focus should be on 1', doc, '.tox-collection__item[aria-label="1"]');
     TinyUiActions.keydown(editor, Keys.right());
-    await FocusTools.pTryOnSelector('Focus should be on 2', doc, '.tox-collection__item[data-mce-btn="2"]');
+    await FocusTools.pTryOnSelector('Focus should be on 2', doc, '.tox-collection__item[aria-label="2"]');
     TinyUiActions.keydown(editor, Keys.right());
-    await FocusTools.pTryOnSelector('Focus should be on 3', doc, '.tox-collection__item[data-mce-btn="3"]');
+    await FocusTools.pTryOnSelector('Focus should be on 3', doc, '.tox-collection__item[aria-label="3"]');
   });
 });

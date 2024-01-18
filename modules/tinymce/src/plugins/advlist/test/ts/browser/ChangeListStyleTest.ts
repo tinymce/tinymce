@@ -29,7 +29,7 @@ describe('browser.tinymce.plugins.advlist.ChangeListStyleTest', () => {
         TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
         TinyUiActions.clickOnToolbar(editor, '[aria-label="Numbered list"] > .tox-tbtn + .tox-split-button__chevron');
         await pWaitForMenu(editor);
-        TinyUiActions.clickOnUi(editor, 'div.tox-selected-menu[role="menu"] div[data-mce-btn="Lower Alpha"]');
+        TinyUiActions.clickOnUi(editor, 'div.tox-selected-menu[role="menu"] div[aria-label="Lower Alpha"]');
         TinyAssertions.assertContent(editor, '<ol style="list-style-type: lower-alpha;"><li>a</li><ul><li>b</li></ul></ol>');
         TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 0);
       });
@@ -40,7 +40,7 @@ describe('browser.tinymce.plugins.advlist.ChangeListStyleTest', () => {
         TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 1, 0, 0 ], 1);
         TinyUiActions.clickOnToolbar(editor, '[aria-label="Numbered list"] > .tox-tbtn + .tox-split-button__chevron');
         await pWaitForMenu(editor);
-        TinyUiActions.clickOnUi(editor, 'div.tox-selected-menu[role="menu"] div[data-mce-btn="Lower Alpha"]');
+        TinyUiActions.clickOnUi(editor, 'div.tox-selected-menu[role="menu"] div[aria-label="Lower Alpha"]');
         TinyAssertions.assertContent(editor, '<ol style="list-style-type: lower-alpha;"><li>a</li><ol style="list-style-type: lower-alpha;"><li>b</li></ol></ol>');
         TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 1, 0, 0 ], 1);
       });

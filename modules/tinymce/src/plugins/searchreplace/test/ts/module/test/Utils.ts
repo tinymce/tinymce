@@ -57,9 +57,9 @@ const clickReplace = (editor: Editor): SugarElement<HTMLElement> => TinyUiAction
 const clickClose = (editor: Editor): void => TinyUiActions.closeDialog(editor);
 
 const pSelectPreference = async (editor: Editor, name: string): Promise<void> => {
-  TinyUiActions.clickOnUi(editor, 'button[data-mce-btn="options"]');
+  TinyUiActions.clickOnUi(editor, 'button[data-mce-btn="Preferences"');
   await TinyUiActions.pWaitForPopup(editor, '.tox-selected-menu[role=menu]');
-  TinyUiActions.clickOnUi(editor, '.tox-selected-menu[role=menu] div[title="' + name + '"]');
+  TinyUiActions.clickOnUi(editor, '.tox-selected-menu[role=menu] div[aria-label="' + name + '"]');
 };
 
 export {

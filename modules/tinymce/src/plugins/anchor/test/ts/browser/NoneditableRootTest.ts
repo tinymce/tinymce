@@ -28,11 +28,11 @@ describe('browser.tinymce.plugins.anchor.NoneditableRootTest', () => {
       editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
       TinyUiActions.clickOnMenu(editor, 'button:contains("Insert")');
-      await TinyUiActions.pWaitForUi(editor, '[role="menuitem"][title="Anchor..."][aria-disabled="true"]');
+      await TinyUiActions.pWaitForUi(editor, '[role="menuitem"][aria-label="Anchor..."][aria-disabled="true"]');
       TinyUiActions.keystroke(editor, Keys.escape());
       TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
       TinyUiActions.clickOnMenu(editor, 'button:contains("Insert")');
-      await TinyUiActions.pWaitForUi(editor, '[role="menuitem"][title="Anchor..."][aria-disabled="false"]');
+      await TinyUiActions.pWaitForUi(editor, '[role="menuitem"][aria-label="Anchor..."][aria-disabled="false"]');
       TinyUiActions.keystroke(editor, Keys.escape());
     });
   });

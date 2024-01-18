@@ -55,6 +55,7 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
     text: spec.text,
     icon: spec.icon,
     tooltip: spec.tooltip,
+    ariaLabel: spec.tooltip,
     searchable: spec.search.isSome(),
     // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
     role,

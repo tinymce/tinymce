@@ -72,7 +72,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.BespokeSelectAriaLabelTes
       (item) => `${scenario.label} ${item}`,
       Fun.curry(MenuUtils.pOpenMenuWithSelector, scenario.label),
       (editor) => {
-        const submenuSelector = 'div[title="Blocks"]';
+        const submenuSelector = 'div[aria-label="Blocks"]';
         return TinyUiActions.pWaitForUi(editor, submenuSelector).then(() => TinyUiActions.clickOnUi(editor, submenuSelector));
       }
     );
