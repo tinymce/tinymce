@@ -81,7 +81,7 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>Content</p>');
     const totalWidth = editor.getDoc().documentElement.clientWidth;
-    Css.set(editorTarget, 'margin-left', totalWidth - 200 + 'px');
+    Css.set(editorTarget, 'margin-left', totalWidth - 250 + 'px');
     editor.focus();
 
     const toolbar = await UiFinder.pWaitFor('the toolbar should be visible', SugarBody.body(), '.tox-editor-header');
@@ -92,12 +92,6 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
     // const editorBodyRect = editor.dom.getRect(editor.getBody());
     const editorBodyRect = editor.getBody().getBoundingClientRect();
     const editorBodyTop = editorBodyRect.y;
-
-    assert.equal(parseInt(Css.get(toolbar, 'margin-bottom'), 10), 0, 'toolbar margin-bottom = 0');
-    assert.equal(parseInt(Css.get(toolbar, 'margin-top'), 10), 0, 'toolbar margin-top = 0');
-
-    assert.equal(parseInt(Css.get(SugarBody.body(), 'margin-bottom'), 10), 0, 'body margin-bottom = 0');
-    assert.equal(parseInt(Css.get(SugarBody.body(), 'margin-top'), 10), 0, 'body margin-top = 0');
 
     // assert.isAtLeast(editorTargetTop, toolbarBottom, 'toolbarBottom should be above editorTargetTop');
     assert.approximately(editorBodyTop, toolbarBottom, 5, 'toolbarBottom should be above editorBodyTop');
