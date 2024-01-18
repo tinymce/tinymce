@@ -745,7 +745,8 @@ const register = (editor: Editor): void => {
       { start: '######', format: 'h6' },
       { start: '1. ', cmd: 'InsertOrderedList' },
       { start: '* ', cmd: 'InsertUnorderedList' },
-      { start: '- ', cmd: 'InsertUnorderedList' }
+      { start: '- ', cmd: 'InsertUnorderedList' },
+      { start: '> ', cmd: 'mceBlockQuote' }
     ]
   });
 
@@ -761,6 +762,11 @@ const register = (editor: Editor): void => {
       }
     },
     default: (_ctx: PatternTypes.DynamicPatternContext): PatternTypes.Pattern[] => [ ]
+  });
+
+  registerOption('text_patterns_block_pre_execution', {
+    processor: 'boolean',
+    default: true
   });
 
   registerOption('noneditable_class', {
@@ -947,6 +953,7 @@ const getPasteTabSpaces = option('paste_tab_spaces');
 const shouldAllowHtmlDataUrls = option('allow_html_data_urls');
 const getTextPatterns = option('text_patterns');
 const getTextPatternsLookup = option('text_patterns_lookup');
+const isBlockPatternsPreExecuted = option('text_patterns_block_pre_execution');
 const getNonEditableClass = option('noneditable_class');
 const getEditableClass = option('editable_class');
 const getNonEditableRegExps = option('noneditable_regexp');
@@ -1059,6 +1066,7 @@ export {
   getAllowedImageFileTypes,
   getTextPatterns,
   getTextPatternsLookup,
+  isBlockPatternsPreExecuted,
   hasTextPatternsLookup,
   getNonEditableClass,
   getNonEditableRegExps,

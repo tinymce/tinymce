@@ -12,7 +12,8 @@ import * as Utils from '../../module/test/TextPatternsUtils';
 describe('browser.tinymce.core.textpatterns.TextPatternsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'lists',
-    base_url: '/project/tinymce/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce',
+    text_patterns_block_pre_execution: false,
   }, [ ListsPlugin ]);
 
   beforeEach(() => {

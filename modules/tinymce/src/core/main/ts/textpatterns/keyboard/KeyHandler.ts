@@ -2,6 +2,7 @@ import { Unicode } from '@ephox/katamari';
 
 import * as TextSearch from '../../alien/TextSearch';
 import Editor from '../../api/Editor';
+import * as Options from '../../api/Options';
 import VK from '../../api/util/VK';
 import * as Zwsp from '../../text/Zwsp';
 import * as BlockPattern from '../core/BlockPattern';
@@ -58,6 +59,15 @@ const handleInlineKey = (
     const offset = Math.max(0, rng.startOffset - 1);
     const beforeText = Utils.getBeforeText(editor.dom, block, rng.startContainer, offset);
     const dynamicPatternSet = Utils.resolveFromDynamicPatterns(patternSet, block, beforeText);
+    if (Options.isBlockPatternsPreExecuted(editor)) {
+      const blockMatches = BlockPattern.findPatterns(editor, block, dynamicPatternSet, false);
+      if (blockMatches.length > 0) {
+        editor.undoManager.transact(() => {
+          BlockPattern.applyMatches(editor, blockMatches);
+        });
+        return;
+      }
+    }
     const inlineMatches = InlinePattern.findPatterns(editor, block, rng.startContainer, offset, dynamicPatternSet, false);
     if (inlineMatches.length > 0) {
       editor.undoManager.transact(() => {
