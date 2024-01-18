@@ -78,9 +78,9 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardNavigationT
     await Utils.pSetFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', 'fish');
     pressEnter(editor);
     pressTab(editor);
-    await pAssertFocused('Find button', '.tox-button[data-mce-btn="replace"]');
+    await pAssertFocused('Find button', '.tox-button[data-mce-btn="Replace"]');
     pressTab(editor);
-    await pAssertFocused('Find button', '.tox-button[data-mce-btn="replaceall"]');
+    await pAssertFocused('Find button', '.tox-button[data-mce-btn="Replace All"]');
     pressEnter(editor);
     await pAssertFocused('Find input', '.tox-textfield[placeholder="Find"]');
     pressEsc(editor);

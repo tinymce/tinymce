@@ -70,7 +70,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorAriaLabelTest', () => 
     });
     input.dom.dispatchEvent(evt);
     await Waiter.pTryUntil('Dialog has changed', () => input.dom.value === '123123');
-    TinyUiActions.clickOnUi(editor, 'button[data-mce-btn="save"]');
+    TinyUiActions.clickOnUi(editor, 'button[data-mce-btn="Save"]');
     UiFinder.exists(SugarBody.body(), expectedSelector);
   };
 
@@ -109,7 +109,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorAriaLabelTest', () => 
     });
     input.dom.dispatchEvent(evt);
     await Waiter.pTryUntil('Dialog has changed', () => input.dom.value === '123123');
-    TinyUiActions.clickOnUi(editor, 'button[data-mce-btn="save"]');
+    TinyUiActions.clickOnUi(editor, 'button[data-mce-btn="Save"]');
     TinyUiActions.clickOnMenu(editor, menuSelector);
     await TinyUiActions.pWaitForUi(editor, expectedSelector);
     UiFinder.exists(SugarBody.body(), expectedSelector);
