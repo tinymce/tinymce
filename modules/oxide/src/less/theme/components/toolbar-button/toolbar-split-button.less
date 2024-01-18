@@ -12,7 +12,6 @@
     box-sizing: border-box;
     display: flex;
     margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0;
-    overflow: hidden;
   }
 
   .tox-split-button:hover {
@@ -23,6 +22,11 @@
     background: @toolbar-button-focus-background-color;
     box-shadow: @toolbar-button-focus-box-shadow;
     color: @toolbar-button-focus-text-color;
+    position: relative;
+
+    &::after {
+      .toolbar-button-keyboard-focus-outline-mixin();
+    }
   }
 
   .tox-split-button > * {

@@ -16,6 +16,8 @@
 @menubar-select-text-color: @toolbar-button-text-color;
 @menubar-select-text-transform: @toolbar-button-text-transform;
 
+@menubar-select-keyboard-focus-outline: @toolbar-button-keyboard-focus-outline;
+
 @menubar-select-disabled-background-color: @toolbar-button-background-color;
 @menubar-select-disabled-border: @menubar-select-border;
 @menubar-select-disabled-border-color: @toolbar-button-background-color; /* Deprecated. Remove in next major release */
@@ -54,7 +56,6 @@
     justify-content: center;
     margin: @menubar-select-spacing-y @menubar-select-spacing-x (@menubar-select-spacing-y + 1px) 0;
     outline: none;
-    overflow: hidden;
     padding: 0 4px;
     text-transform: @menubar-select-text-transform;
     width: auto;
@@ -73,6 +74,12 @@
     border: @menubar-select-focus-border;
     box-shadow: @menubar-select-focus-box-shadow;
     color: @menubar-select-focus-text-color;
+    position: relative;
+    z-index: 1; // Ensure focus outline is on top of other buttons
+
+    &::after {
+      .toolbar-button-keyboard-focus-outline-mixin();
+    }
   }
 
   // Active state applied using class
