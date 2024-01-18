@@ -53,7 +53,7 @@ describe('browser.tinymce.plugins.image.plugin.MainTabTest', () => {
     editor.execCommand('mceImage');
     const dialog = await TinyUiActions.pWaitForDialog(editor);
     const expected = {
-      ['.tox-form__grid--2col button[aria-label="Class"]']: 1,
+      ['.tox-form__grid--2col button[data-mce-btn="Class"]']: 1,
       ['.tox-form__grid--2col .tox-checkbox']: 1
     };
 
@@ -67,7 +67,7 @@ describe('browser.tinymce.plugins.image.plugin.MainTabTest', () => {
     editor.execCommand('mceImage');
     const dialog = await TinyUiActions.pWaitForDialog(editor);
     const expected = {
-      ['.tox-form__group button[aria-label="Class"]']: 1,
+      ['.tox-form__group button[data-mce-btn="Class"]']: 1,
       ['.tox-form__grid--2col .tox-checkbox']: 0
     };
 
@@ -83,7 +83,7 @@ describe('browser.tinymce.plugins.image.plugin.MainTabTest', () => {
     editor.execCommand('mceImage');
     const dialog = await TinyUiActions.pWaitForDialog(editor);
     const expected = {
-      ['.tox-form__grid--2col button[aria-label="Class"]']: 0,
+      ['.tox-form__grid--2col button[data-mce-btn="Class"]']: 0,
       ['.tox-form__group .tox-checkbox']: 1,
     };
 

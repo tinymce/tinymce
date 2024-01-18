@@ -105,7 +105,8 @@ export const renderListBox = (spec: ListBoxSpec, backstage: UiFactoryBackstage, 
         ]
       },
       'tox-listbox',
-      backstage.shared)
+      backstage.shared,
+      spec.label.getOrUndefined())
     }
   });
 
