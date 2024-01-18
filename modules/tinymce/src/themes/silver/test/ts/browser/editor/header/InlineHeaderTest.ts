@@ -93,6 +93,12 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
     const editorBodyRect = editor.getBody().getBoundingClientRect();
     const editorBodyTop = editorBodyRect.y;
 
+    assert.equal(parseInt(Css.get(toolbar, 'margin-bottom'), 10), 0, 'toolbar margin-bottom = 0');
+    assert.equal(parseInt(Css.get(toolbar, 'margin-top'), 10), 0, 'toolbar margin-top = 0');
+
+    assert.equal(parseInt(Css.get(SugarBody.body(), 'margin-bottom'), 10), 0, 'body margin-bottom = 0');
+    assert.equal(parseInt(Css.get(SugarBody.body(), 'margin-top'), 10), 0, 'body margin-top = 0');
+
     // assert.isAtLeast(editorTargetTop, toolbarBottom, 'toolbarBottom should be above editorTargetTop');
     assert.approximately(editorBodyTop, toolbarBottom, 5, 'toolbarBottom should be above editorBodyTop');
   });
