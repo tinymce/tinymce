@@ -56,7 +56,7 @@ describe('headless.tinymce.themes.silver.window.CustomDialogTest', () => {
     field7: 'label:contains("nested2") + input',
     field8: 'button:contains("Cancel")',
     field9: 'button:contains("Save")',
-    browseButton: 'button[data-mce-btn="f3-urlinput"]'
+    browseButton: 'button[data-mce-btn="F3"]'
   };
 
   it('', async () => {

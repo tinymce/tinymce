@@ -142,7 +142,7 @@ const renderButtonSpec = (
     classes,
     attributes: {
       'aria-label': translatedText,
-      'data-mce-btn': spec.name
+      'data-mce-btn': spec.text
     }
   };
 
