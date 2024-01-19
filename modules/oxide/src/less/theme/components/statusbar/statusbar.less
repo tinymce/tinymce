@@ -116,7 +116,7 @@
       }
     }
 
-    &:focus::after {
+    &:focus-visible::after {
       .toolbar-button-keyboard-focus-outline-mixin();
     }
   }
@@ -167,7 +167,7 @@
       }
     }
 
-    &:focus {
+    &:focus-visible {
       background-color: @statusbar-focus-background-color;
       border-radius: 1px 1px @statusbar-resize-handle-radius 1px;
       box-shadow: 0 0 0 2px @statusbar-focus-background-color;
