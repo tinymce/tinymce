@@ -79,16 +79,16 @@ export const renderIconButtonSpec = (
   spec: IconButtonWrapper,
   action: Optional<(comp: AlloyComponent) => void>,
   providersBackstage: UiFactoryBackstageProviders,
-  extraBehaviours: Behaviours = []
+  extraBehaviours: Behaviours = [],
+  btnName: string
 ): AlloyButtonSpec => {
   const tooltipAttributes = spec.tooltip.map<{}>((tooltip) => ({
     'aria-label': providersBackstage.translate(tooltip),
-    'title': providersBackstage.translate(tooltip)
   })).getOr({});
   const dom = {
     tag: 'button',
     classes: [ ToolbarButtonClasses.Button ],
-    attributes: tooltipAttributes
+    attributes: { ...tooltipAttributes, 'data-mce-btn': btnName }
   };
   const icon = spec.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons));
   const components = componentRenderPipeline([
@@ -137,12 +137,13 @@ const renderButtonSpec = (
     ...extraClasses
   ];
 
+  console.log(spec.text, translatedText);
   const dom = {
     tag: 'button',
     classes,
     attributes: {
-      // TINY-10453: Look into this, we might want to remove this title attribute since it has already contain a label
-      title: translatedText
+      'aria-label': translatedText,
+      'data-mce-btn': spec.text
     }
   };
 
@@ -276,7 +277,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
       fetch: getFetch(menuButtonSpec.items, getButton, backstage)
     };
 
-    const memButton = Memento.record(renderMenuButton(fixedSpec, ToolbarButtonClasses.Button, backstage, Optional.none()));
+    const memButton = Memento.record(renderMenuButton(fixedSpec, ToolbarButtonClasses.Button, backstage, Optional.none(), true, spec.tooltip.getOrUndefined()));
 
     return memButton.asSpec();
   } else if (isNormalFooterButtonSpec(spec, buttonType)) {

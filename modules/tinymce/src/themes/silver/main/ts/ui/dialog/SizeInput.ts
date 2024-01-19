@@ -34,8 +34,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
       classes: [ 'tox-lock', 'tox-button', 'tox-button--naked', 'tox-button--icon' ],
       attributes: {
         'aria-label': translatedLabel,
-        // TINY-10453: Remove this tooltip, we don't want duplicate tooltips and until we figured a better way to test, it's here now so that tests would pass
-        'title': translatedLabel
+        'data-mce-btn': spec.label.getOr('Constrain proportions')
       }
     },
     components: [

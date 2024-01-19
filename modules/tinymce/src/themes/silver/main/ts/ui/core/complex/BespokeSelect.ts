@@ -179,14 +179,15 @@ const createMenuItems = (backstage: UiFactoryBackstage, spec: SelectSpec): Bespo
   };
 };
 
-const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec, tooltipWithPlaceholder: string, textUpdateEventName: string): SketchSpec => {
+const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec, tooltipWithPlaceholder: string, textUpdateEventName: string, btnName?: string): SketchSpec => {
   const { items, getStyleItems } = createMenuItems(backstage, spec);
 
   const getApi = (comp: AlloyComponent): BespokeSelectApi => ({
     getComponent: Fun.constant(comp),
     setTooltip: (tooltip: string) => {
       const translatedTooltip = backstage.shared.providers.translate(tooltip);
-      Attribute.setAll(comp.element, { 'aria-label': translatedTooltip, 'title': translatedTooltip });
+      // Removed title attribute, will address dynamically update tooltip in TINY-10474
+      Attribute.setAll(comp.element, { 'aria-label': translatedTooltip });
     }
   });
 
@@ -209,6 +210,7 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
     {
       text: spec.icon.isSome() ? Optional.none() : spec.text,
       icon: spec.icon,
+      ariaLabel: Optional.some(spec.tooltip),
       tooltip: Optional.from(spec.tooltip),
       role: Optional.none(),
       fetch: items.getFetch(backstage, getStyleItems),
@@ -220,7 +222,8 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
       dropdownBehaviours: []
     },
     ToolbarButtonClasses.Button,
-    backstage.shared
+    backstage.shared,
+    btnName
   );
 };
 
