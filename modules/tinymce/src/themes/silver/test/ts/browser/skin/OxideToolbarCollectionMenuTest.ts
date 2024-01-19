@@ -54,7 +54,7 @@ describe('browser.tinymce.themes.silver.skin.OxideToolbarCollectionMenuTest', ()
               s.element('div', {
                 classes: [ arr.has('tox-collection__item'), arr.not('tox-tbtn') ],
                 attrs: {
-                  title: str.is('A-button')
+                  'aria-label': str.is('A-button')
                 },
                 children: [
                   s.element('div', {
@@ -68,7 +68,7 @@ describe('browser.tinymce.themes.silver.skin.OxideToolbarCollectionMenuTest', ()
               s.element('div', {
                 classes: [ arr.has('tox-collection__item'), arr.not('tox-tbtn') ],
                 attrs: {
-                  title: str.is('B-button')
+                  'aria-label': str.is('B-button')
                 },
                 children: [
                   s.element('div', {
@@ -82,7 +82,7 @@ describe('browser.tinymce.themes.silver.skin.OxideToolbarCollectionMenuTest', ()
               s.element('div', {
                 classes: [ arr.has('tox-collection__item'), arr.not('tox-tbtn') ],
                 attrs: {
-                  title: str.is('C-button')
+                  'aria-label': str.is('C-button')
                 },
                 children: [
                   s.element('div', {
@@ -101,7 +101,7 @@ describe('browser.tinymce.themes.silver.skin.OxideToolbarCollectionMenuTest', ()
               s.element('div', {
                 classes: [ arr.has('tox-collection__item'), arr.not('tox-tbtn') ],
                 attrs: {
-                  title: str.is('D-button')
+                  'aria-label': str.is('D-button')
                 },
                 children: [
                   s.element('div', {
@@ -115,7 +115,7 @@ describe('browser.tinymce.themes.silver.skin.OxideToolbarCollectionMenuTest', ()
               s.element('div', {
                 classes: [ arr.has('tox-collection__item'), arr.not('tox-tbtn') ],
                 attrs: {
-                  title: str.is('E-button')
+                  'aria-label': str.is('E-button')
                 },
                 children: [
                   s.element('div', {
@@ -129,7 +129,7 @@ describe('browser.tinymce.themes.silver.skin.OxideToolbarCollectionMenuTest', ()
               s.element('div', {
                 classes: [ arr.has('tox-collection__item'), arr.not('tox-tbtn') ],
                 attrs: {
-                  title: str.is('F-button')
+                  'aria-label': str.is('F-button')
                 },
                 children: [
                   s.element('div', {
@@ -147,10 +147,10 @@ describe('browser.tinymce.themes.silver.skin.OxideToolbarCollectionMenuTest', ()
       menu
     );
 
-    await FocusTools.pTryOnSelector('Focus should start on A', doc, '.tox-collection__item[title="A-button"]');
+    await FocusTools.pTryOnSelector('Focus should start on A', doc, '.tox-collection__item[aria-label="A-button"]');
     TinyUiActions.keydown(editor, Keys.down());
-    await FocusTools.pTryOnSelector('Focus should move to D', doc, '.tox-collection__item[title="D-button"]');
+    await FocusTools.pTryOnSelector('Focus should move to D', doc, '.tox-collection__item[aria-label="D-button"]');
     TinyUiActions.keydown(editor, Keys.right());
-    await FocusTools.pTryOnSelector('Focus should move to E', doc, '.tox-collection__item[title="E-button"]');
+    await FocusTools.pTryOnSelector('Focus should move to E', doc, '.tox-collection__item[aria-label="E-button"]');
   });
 });

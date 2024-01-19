@@ -160,8 +160,8 @@ describe('browser.tinymce.plugins.lists.NoneditableRootTest', () => {
       TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
         setupEditor(editor);
 
-        UiFinder.exists(SugarBody.body(), 'button[title="Numbered list"][aria-disabled="true"]');
-        UiFinder.exists(SugarBody.body(), 'button[title="Bullet list"][aria-disabled="true"]');
+        UiFinder.exists(SugarBody.body(), 'button[data-mce-btn="numlist"][aria-disabled="true"]');
+        UiFinder.exists(SugarBody.body(), 'button[data-mce-btn="bullist"][aria-disabled="true"]');
       });
     });
 
@@ -169,10 +169,10 @@ describe('browser.tinymce.plugins.lists.NoneditableRootTest', () => {
       TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
         setupEditor(editor);
 
-        TinyUiActions.clickOnToolbar(editor, 'button[title="Decrease indent"]');
+        TinyUiActions.clickOnToolbar(editor, 'button[data-mce-btn="outdent"]');
         TinyAssertions.assertContent(editor, initialListContent);
 
-        TinyUiActions.clickOnToolbar(editor, 'button[title="Increase indent"]');
+        TinyUiActions.clickOnToolbar(editor, 'button[data-mce-btn="indent"]');
         TinyAssertions.assertContent(editor, initialListContent);
       });
     });

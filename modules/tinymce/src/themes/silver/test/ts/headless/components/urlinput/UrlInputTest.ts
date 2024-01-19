@@ -292,9 +292,10 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
     closeMenu();
   });
 
-  it('TINY-10155: Title attribute of picker button should be specified by picker_text property', () =>
+  // TINY-10465 - Address tests below, these are using custom tooltips so querying for title attributes are no longer relevant
+  it.skip('TINY-10155: Title attribute of picker button should be specified by picker_text property', () =>
     assert.equal(Attribute.get(getPicker(true).element, 'title'), 'UrlInput picker text'));
 
-  it('TINY-10155: Title attribute of picker button should fall back to label when picker_text property is not specified', () =>
+  it.skip('TINY-10155: Title attribute of picker button should fall back to label when picker_text property is not specified', () =>
     assert.equal(Attribute.get(getPicker(false).element, 'title'), 'UrlInput label'));
 });

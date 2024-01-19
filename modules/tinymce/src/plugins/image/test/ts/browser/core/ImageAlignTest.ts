@@ -132,8 +132,8 @@ describe('browser.tinymce.plugins.image.ImageAlignTest', () => {
     const ariaLabel = ariaLabels[alignment];
 
     TinyUiActions.clickOnToolbar(editor, `button[aria-label^="Align"].tox-tbtn--select`);
-    await TinyUiActions.pWaitForUi(editor, `div[title="${ariaLabel}"]`);
-    TinyUiActions.clickOnUi(editor, `div[title="${ariaLabel}"]`);
+    await TinyUiActions.pWaitForUi(editor, `div[aria-label="${ariaLabel}"]`);
+    TinyUiActions.clickOnUi(editor, `div[aria-label="${ariaLabel}"]`);
   };
 
   const pApplyAlignmentFromToolbar = (editor: Editor, alignment: Alignment) => {

@@ -52,7 +52,7 @@ describe('browser.tinymce.themes.silver.skin.OxideGridCollectionMenuTest', () =>
             children: Arr.map([ '1', '2', '3', '4', '5', '6', '7', '8' ], (num) => s.element('div', {
               classes: [ arr.has('tox-collection__item') ],
               attrs: {
-                title: str.is(num)
+                'aria-label': str.is(num)
               },
               children: [
                 // NOTE: The oxide demo page has div, but I think that's just a mistake
@@ -70,10 +70,10 @@ describe('browser.tinymce.themes.silver.skin.OxideGridCollectionMenuTest', () =>
       menu
     );
 
-    await FocusTools.pTryOnSelector('Focus should be on 1', doc, '.tox-collection__item[title="1"]');
+    await FocusTools.pTryOnSelector('Focus should be on 1', doc, '.tox-collection__item[aria-label="1"]');
     TinyUiActions.keydown(editor, Keys.right());
-    await FocusTools.pTryOnSelector('Focus should be on 2', doc, '.tox-collection__item[title="2"]');
+    await FocusTools.pTryOnSelector('Focus should be on 2', doc, '.tox-collection__item[aria-label="2"]');
     TinyUiActions.keydown(editor, Keys.right());
-    await FocusTools.pTryOnSelector('Focus should be on 3', doc, '.tox-collection__item[title="3"]');
+    await FocusTools.pTryOnSelector('Focus should be on 3', doc, '.tox-collection__item[aria-label="3"]');
   });
 });

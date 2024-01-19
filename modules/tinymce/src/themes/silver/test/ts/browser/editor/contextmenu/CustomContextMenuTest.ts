@@ -91,10 +91,10 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.CustomContextMenuTest
       // Open submenu
       Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.right());
       await Waiter.pTryUntil('menu items visible', () => {
-        UiFinder.exists(SugarBody.body(), 'div[title="customSubMenuItem"][aria-disabled="false"]');
-        UiFinder.exists(SugarBody.body(), 'div[title="disabledCustomNestedMenuItem"][aria-disabled="true"]');
-        UiFinder.exists(SugarBody.body(), 'div[title="customNestedMenuItem"][aria-disabled="false"]');
-        UiFinder.exists(SugarBody.body(), 'div[title="disabledCustomMenuItem"][aria-disabled="true"]');
+        UiFinder.exists(SugarBody.body(), 'div[aria-label="customSubMenuItem"][aria-disabled="false"]');
+        UiFinder.exists(SugarBody.body(), 'div[aria-label="disabledCustomNestedMenuItem"][aria-disabled="true"]');
+        UiFinder.exists(SugarBody.body(), 'div[aria-label="customNestedMenuItem"][aria-disabled="false"]');
+        UiFinder.exists(SugarBody.body(), 'div[aria-label="disabledCustomMenuItem"][aria-disabled="true"]');
       });
     });
 
@@ -106,8 +106,8 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.CustomContextMenuTest
       // Open submenu
       Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.right());
       await Waiter.pTryUntil('menu items visible', () => {
-        UiFinder.exists(SugarBody.body(), 'div[title="customSubMenuItem"] div.tox-collection__item-accessory:contains("custom-shortcut")');
-        UiFinder.exists(SugarBody.body(), 'div[title="customNestedMenuItem"] div.tox-collection__item-accessory:contains("custom-nested-shortcut")');
+        UiFinder.exists(SugarBody.body(), 'div[aria-label="customSubMenuItem"] div.tox-collection__item-accessory:contains("custom-shortcut")');
+        UiFinder.exists(SugarBody.body(), 'div[aria-label="customNestedMenuItem"] div.tox-collection__item-accessory:contains("custom-nested-shortcut")');
       });
     });
   });

@@ -150,11 +150,11 @@ describe('browser.tinymce.plugins.table.NoneditableRootTest', () => {
         );
         TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 2);
         TinyUiActions.clickOnMenu(editor, 'button:contains("Table")');
-        await TinyUiActions.pWaitForUi(editor, `[role="menu"] [title="${menuitem}"][aria-disabled="true"]`);
+        await TinyUiActions.pWaitForUi(editor, `[role="menu"] [aria-label="${menuitem}"][aria-disabled="true"]`);
         TinyUiActions.keystroke(editor, Keys.escape());
         TinySelections.setSelection(editor, [ 1, 0, 0, 0, 0, 0 ], 0, [ 1, 0, 0, 0, 0, 0 ], 2);
         TinyUiActions.clickOnMenu(editor, 'button:contains("Table")');
-        await TinyUiActions.pWaitForUi(editor, `[role="menu"] [title="${menuitem}"][aria-disabled="false"]`);
+        await TinyUiActions.pWaitForUi(editor, `[role="menu"] [aria-label="${menuitem}"][aria-disabled="false"]`);
         TinyUiActions.keystroke(editor, Keys.escape());
       });
     };
@@ -188,11 +188,11 @@ describe('browser.tinymce.plugins.table.NoneditableRootTest', () => {
         editor.setContent(`<div>${table}</div><div contenteditable="true">${table}</div>`);
         TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0, 0 ], 1);
         TinyUiActions.clickOnMenu(editor, 'button:contains("Table")');
-        await TinyUiActions.pWaitForUi(editor, `[role="menu"] [title="Split cell"][aria-disabled="true"]`);
+        await TinyUiActions.pWaitForUi(editor, `[role="menu"] [aria-label="Split cell"][aria-disabled="true"]`);
         TinyUiActions.keystroke(editor, Keys.escape());
         TinySelections.setSelection(editor, [ 1, 0, 0, 0, 0, 0 ], 0, [ 1, 0, 0, 0, 0, 0 ], 1);
         TinyUiActions.clickOnMenu(editor, 'button:contains("Table")');
-        await TinyUiActions.pWaitForUi(editor, `[role="menu"] [title="Split cell"][aria-disabled="false"]`);
+        await TinyUiActions.pWaitForUi(editor, `[role="menu"] [aria-label="Split cell"][aria-disabled="false"]`);
         TinyUiActions.keystroke(editor, Keys.escape());
       });
     });
