@@ -5,6 +5,7 @@
 //
 @border-color: darken(@background-color, 20);
 @collection-item-separator-color: contrast(@background-color, @border-color, lighten(@border-color, 10%));
+@collection-list-item-active-background-color: @toolbar-button-hover-background-color;
 @dialog-border-radius: @panel-border-radius;
 @dialog-border-width: 1px;
 @dialog-footer-separator-border: 1px solid @dialog-border-color;
@@ -68,6 +69,8 @@
 @button-naked-active-border-color: @button-secondary-active-border-color;
 @button-naked-active-box-shadow: @button-secondary-active-box-shadow;
 @button-naked-active-icon-color: @button-secondary-active-text-color;
+@insert-table-picker-selected-background-color: fade(@color-tint, 50%);
+@insert-table-picker-selected-border-color: @insert-table-picker-selected-background-color;
 
 .tox {
   &:not(.tox-tinymce-inline) .tox-editor-header {

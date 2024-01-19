@@ -3,12 +3,15 @@
 //
 
 @insert-table-picker-cell-size: @base-value + 1; // Add 1 to account for the border size
-@insert-table-picker-selected-background-color: fade(@color-tint, 50%);
+@insert-table-picker-background-color: @background-color;
+@insert-table-picker-selected-background-color: @color-tint;
 @insert-table-picker-border-color: @border-color;
+@insert-table-picker-selected-border-color: @insert-table-picker-border-color;
 @insert-table-picker-label-color: contrast(@menu-background-color, @text-color-muted, @color-white);
 
 .tox {
   .tox-insert-table-picker {
+    background-color: @insert-table-picker-background-color;
     display: flex;
     flex-wrap: wrap;
     width: @insert-table-picker-cell-size * 10;
@@ -37,7 +40,7 @@
   // Selected cell
   .tox-insert-table-picker .tox-insert-table-picker__selected {
     background-color: @insert-table-picker-selected-background-color;
-    border-color: @insert-table-picker-selected-background-color;
+    border-color: @insert-table-picker-selected-border-color;
   }
 
   // Label for selected cells
