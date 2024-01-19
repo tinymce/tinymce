@@ -1,0 +1,7 @@
+project: tinymce
+kind: Changed
+body: The DOMUtils.isEmpty API function has been modified to consider nodes containing
+  only comments as empty.
+time: 2024-01-10T13:45:53.458792+02:00
+custom:
+  Issue: TINY-10459

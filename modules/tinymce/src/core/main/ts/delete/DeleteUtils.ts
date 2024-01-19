@@ -83,7 +83,7 @@ const deleteRangeContents = (editor: Editor, rng: Range, root: SugarElement<HTML
   // If the block is the editor body then we need to insert the root block as well
   if (lastBlock.dom === editor.getBody()) {
     paddEmptyBody(editor, moveSelection);
-  } else if (Empty.isEmpty(lastBlock)) {
+  } else if (Empty.isEmpty(editor.schema, lastBlock, { checkRootAsContent: false })) {
     PaddingBr.fillWithPaddingBr(lastBlock);
     if (moveSelection) {
       editor.selection.setCursorLocation(lastBlock.dom, 0);
@@ -93,7 +93,7 @@ const deleteRangeContents = (editor: Editor, rng: Range, root: SugarElement<HTML
   if (!Compare.eq(root, lastBlock)) {
     const additionalCleanupNodes = Optionals.is(Traverse.parent(lastBlock), root) ? [] : Traverse.siblings(lastBlock);
     Arr.each(additionalCleanupNodes.concat(Traverse.children(root)), (node) => {
-      if (!Compare.eq(node, lastBlock) && !Compare.contains(node, lastBlock) && Empty.isEmpty(node)) {
+      if (!Compare.eq(node, lastBlock) && !Compare.contains(node, lastBlock) && Empty.isEmpty(editor.schema, node)) {
         Remove.remove(node);
       }
     });
