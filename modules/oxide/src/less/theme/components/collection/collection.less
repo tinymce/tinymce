@@ -17,7 +17,7 @@
 @collection-item-label-disabled-text-color: fade(@collection-item-label-text-color, 50%);
 @collection-item-caret-disabled-text-color: fade(@collection-item-label-text-color, 50%);
 
-@collection-list-item-active-background-color: @toolbar-button-hover-background-color;
+@collection-list-item-active-background-color: @color-tint;
 @collection-list-item-label-active-text-color: contrast(@collection-list-item-active-background-color, @color-black, @color-white);
 @collection-list-item-enabled-background-color: @menu-background-color;
 @collection-list-item-label-enabled-text-color: contrast(@collection-list-item-enabled-background-color, @color-black, @color-white);
@@ -199,7 +199,7 @@
   }
 
   .tox-collection__item-accessory {
-    color: @text-color-muted;
+    color: currentColor;
     display: inline-block;
     font-size: @font-size-sm;
     height: @collection-item-list-icon-height;
@@ -220,7 +220,7 @@
     }
 
     svg {
-      fill: @collection-item-label-text-color;
+      fill: currentColor;
     }
   }
 
