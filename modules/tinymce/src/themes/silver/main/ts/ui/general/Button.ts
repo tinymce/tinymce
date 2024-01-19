@@ -137,7 +137,6 @@ const renderButtonSpec = (
     ...extraClasses
   ];
 
-  console.log(spec.text, translatedText);
   const dom = {
     tag: 'button',
     classes,
