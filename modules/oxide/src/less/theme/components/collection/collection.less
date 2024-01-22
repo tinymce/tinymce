@@ -171,6 +171,12 @@
   .tox-collection--grid .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
     background-color: @collection-grid-item-active-background-color;
     color: @collection-grid-item-label-active-text-color;
+    position: relative;
+    z-index: 1;
+
+    &:focus::after {
+      .toolbar-button-keyboard-focus-outline-mixin(0 0 0 2px @color-tint inset);
+    }
   }
 
   .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) {

@@ -54,10 +54,10 @@
 @toolbar-button-disabled-icon-color: fade(@toolbar-button-icon-color, 50%);
 @toolbar-button-disabled-text-color: fade(@toolbar-button-text-color, 50%);
 
-.toolbar-button-keyboard-focus-outline-mixin() {
+.toolbar-button-keyboard-focus-outline-mixin(@_box-shadow: @toolbar-button-keyboard-focus-outline) {
   border-radius: @toolbar-button-border-radius;
   bottom: 0;
-  box-shadow: @toolbar-button-keyboard-focus-outline;
+  box-shadow: @_box-shadow;
   content: '';
   left: 0;
   position: absolute;
