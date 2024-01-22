@@ -3,7 +3,7 @@
 
 <head>
   <title>TinyMCE full featured Demo Page</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 
 <body>
@@ -11,37 +11,174 @@
     <h1>Tinymce full featured Page</h1>
     <div id="ephox-ui">
       <textarea>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sed augue velit. Sed viverra aliquet fringilla. Duis quis turpis rutrum, auctor
-          diam vitae,
-          pellentesque arcu. Pellentesque vel ipsum a urna condimentum tincidunt ut bibendum metus. Ut eu ipsum faucibus sapien tempor ullamcorper. Donec
-          tempor
-          fermentum posuere. Suspendisse vel vestibulum nisl, a auctor nisi. Phasellus in aliquam ex, nec vulputate orci. Fusce non pharetra magna. Sed id
-          felis et
-          magna ultricies dapibus. Nunc varius ipsum at nunc lobortis viverra. Nulla neque sem, tincidunt nec tempus et, tempus sagittis nisl. Vivamus
-          dolor ligula,
-          euismod at rhoncus sed, consequat eget nibh. Nam massa dui, dictum sit amet erat at, mollis sodales orci. Vestibulum sodales dictum felis, sed
-          vulputate
-          turpis condimentum sed.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sed augue velit. Sed viverra aliquet fringilla. Duis quis turpis rutrum, auctor
-          diam vitae,
-          pellentesque arcu. Pellentesque vel ipsum a urna condimentum tincidunt ut bibendum metus. Ut eu ipsum faucibus sapien tempor ullamcorper. Donec
-          tempor
-          fermentum posuere. Suspendisse vel vestibulum nisl, a auctor nisi. Phasellus in aliquam ex, nec vulputate orci. Fusce non pharetra magna. Sed id
-          felis et
-          magna ultricies dapibus. Nunc varius ipsum at nunc lobortis viverra. Nulla neque sem, tincidunt nec tempus et, tempus sagittis nisl. Vivamus
-          dolor ligula,
-          euismod at rhoncus sed, consequat eget nibh. Nam massa dui, dictum sit amet erat at, mollis sodales orci. Vestibulum sodales dictum felis, sed
-          vulputate
-          turpis condimentum sed.
-        </p></textarea>
+        <h3>No heights (colgroup)</h3>
+        <table style="border-collapse: collapse;" border="1"><colgroup><col><col><col></colgroup>
+          <tbody>
+          <tr>
+          <td>a</td>
+          <td>b</td>
+          <td>c</td>
+          </tr>
+          <tr>
+          <td>d</td>
+          <td>e</td>
+          <td>f</td>
+          </tr>
+          <tr>
+          <td>g</td>
+          <td>h</td>
+          <td>i</td>
+          </tr>
+          </tbody>
+          </table>
+        <h3>Height style on table (colgroup)</h3>
+        <table style="border-collapse: collapse; height: 200px;" border="1"><colgroup><col><col><col></colgroup>
+          <tbody>
+          <tr>
+          <td>a</td>
+          <td>b</td>
+          <td>c</td>
+          </tr>
+          <tr>
+          <td>d</td>
+          <td>e</td>
+          <td>f</td>
+          </tr>
+          <tr>
+          <td>g</td>
+          <td>h</td>
+          <td>i</td>
+          </tr>
+          </tbody>
+          </table>
+        <h3>Height style on table and tds (colgroup)</h3>
+        <table style="border-collapse: collapse; height: 67.1592px;" border="1"><colgroup><col style="width: 33.3333%;"><col style="width: 33.3333%;"><col style="width: 33.3333%;"></colgroup>
+          <tbody>
+          <tr>
+          <td style="height: 22.3864px;">&nbsp;</td>
+          <td style="height: 22.3864px;">&nbsp;</td>
+          <td style="height: 22.3864px;">&nbsp;</td>
+          </tr>
+          <tr>
+          <td style="height: 22.3864px;">&nbsp;</td>
+          <td style="height: 22.3864px;">&nbsp;</td>
+          <td style="height: 22.3864px;">&nbsp;</td>
+          </tr>
+          <tr>
+          <td style="height: 22.3864px;">&nbsp;</td>
+          <td style="height: 22.3864px;">&nbsp;</td>
+          <td style="height: 22.3864px;">&nbsp;</td>
+          </tr>
+          </tbody>
+          </table>
+        <h3>Height style on table and trs (colgroup)</h3>
+        <table style="border-collapse: collapse; height: 100px;" border="1"><colgroup><col style="width: 33.3333%;"><col style="width: 33.3333%;"><col style="width: 33.3333%;"></colgroup>
+          <tbody>
+          <tr style="height: 30px;">
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          </tr>
+          <tr style="height: 30px;">
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          </tr>
+          <tr style="height: 30px;">
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          </tr>
+          </tbody>
+          </table>
+        <h3>Height style only on tds (colgroup)</h3>
+        <table style="border-collapse: collapse;" border="1"><colgroup><col><col><col></colgroup>
+          <tbody>
+          <tr>
+          <td style="height: 22.3864px;">&nbsp;</td>
+          <td style="height: 22.3864px;">&nbsp;</td>
+          <td style="height: 22.3864px;">&nbsp;</td>
+          </tr>
+          <tr>
+          <td style="height: 22.3864px;">&nbsp;</td>
+          <td style="height: 22.3864px;">&nbsp;</td>
+          <td style="height: 22.3864px;">&nbsp;</td>
+          </tr>
+          <tr>
+          <td style="height: 22.3864px;">&nbsp;</td>
+          <td style="height: 22.3864px;">&nbsp;</td>
+          <td style="height: 22.3864px;">&nbsp;</td>
+          </tr>
+          </tbody>
+          </table>
+        <h3>Height style only on trs (colgroup)</h3>
+        <table style="border-collapse: collapse;" border="1"><colgroup><col style="width: 33.3333%;"><col style="width: 33.3333%;"><col style="width: 33.3333%;"></colgroup>
+          <tbody>
+          <tr style="height: 30px;">
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          </tr>
+          <tr style="height: 30px;">
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          </tr>
+          <tr style="height: 30px;">
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          </tr>
+          </tbody>
+          </table>
+        <h3>Default stable behaviour - heights on table, trs and tds (% width) (Colgroup)</h3>
+        <table style="border-collapse: collapse; width: 99.9851%; height: 67.1592px;" border="1"><colgroup><col style="width: 33.3333%;"><col style="width: 33.3333%;"><col style="width: 33.3333%;"></colgroup>
+          <tbody>
+          <tr style="height: 22.3864px;">
+          <td style="height: 22.3864px;">&nbsp;</td>
+          <td style="height: 22.3864px;">&nbsp;</td>
+          <td style="height: 22.3864px;">&nbsp;</td>
+          </tr>
+          <tr style="height: 22.3864px;">
+          <td style="height: 22.3864px;">&nbsp;</td>
+          <td style="height: 22.3864px;">&nbsp;</td>
+          <td style="height: 22.3864px;">&nbsp;</td>
+          </tr>
+          <tr style="height: 22.3864px;">
+          <td style="height: 22.3864px;">&nbsp;</td>
+          <td style="height: 22.3864px;">&nbsp;</td>
+          <td style="height: 22.3864px;">&nbsp;</td>
+          </tr>
+          </tbody>
+          </table>
+        <h3>Default stable behaviour - heights on table, trs and tds (px width) (Colgroup)</h3>
+          <table style="border-collapse: collapse; width: 1296px; height: 67.1592px;" border="1"><colgroup><col style="width: 432px;"><col style="width: 432px;"><col style="width: 432px;"></colgroup>
+            <tbody>
+            <tr style="height: 22.3864px;">
+            <td style="height: 22.3864px;">&nbsp;</td>
+            <td style="height: 22.3864px;">&nbsp;</td>
+            <td style="height: 22.3864px;">&nbsp;</td>
+            </tr>
+            <tr style="height: 22.3864px;">
+            <td style="height: 22.3864px;">&nbsp;</td>
+            <td style="height: 22.3864px;">&nbsp;</td>
+            <td style="height: 22.3864px;">&nbsp;</td>
+            </tr>
+            <tr style="height: 22.3864px;">
+            <td style="height: 22.3864px;">&nbsp;</td>
+            <td style="height: 22.3864px;">&nbsp;</td>
+            <td style="height: 22.3864px;">&nbsp;</td>
+            </tr>
+            </tbody>
+            </table>
+      </textarea>
     </div>
     <div class="tinymce">Inline demo</div>
     <script src="../../../../js/tinymce/tinymce.js"></script>
     <script src="../../../../scratch/demos/core/demo.js"></script>
-    <script>demos.FullDemo();</script>
+    <script>
+      demos.FullDemo();
+    </script>
   </main>
 </body>
 

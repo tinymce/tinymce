@@ -21,7 +21,7 @@ const isTable = (node: Node) => Type.isNonNullable(node) && node.nodeName === 'T
 const barResizerPrefix = 'bar-';
 const isResizable = (elm: SugarElement<Element>) => Attribute.get(elm, 'data-mce-resize') !== 'false';
 
-const syncPixels = (table: SugarElement<HTMLTableElement>): void => {
+const syncTableCellPixels = (table: SugarElement<HTMLTableElement>): void => {
   const warehouse = Warehouse.fromTable(table);
   if (!Warehouse.hasColumns(warehouse)) {
     // Ensure the specified width matches the actual cell width
@@ -37,8 +37,12 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
   const selectionRng = Singleton.value<Range>();
   const tableResize = Singleton.value<TableResize>();
   const resizeWire = Singleton.value<ResizeWire>();
+  // const hdirection = BarPositions.height;
+  // const vdirection = BarPositions.width;
   let startW: number;
   let startRawW: string;
+  let startH: number;
+  // let startRawH: string;
 
   const lazySizing = (table: SugarElement<HTMLTableElement>) =>
     TableSize.get(editor, table);
@@ -49,7 +53,11 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
   const getNumColumns = (table: SugarElement<HTMLTableElement>) =>
     TableGridSize.getGridSize(table).columns;
 
-  const afterCornerResize = (table: SugarElement<HTMLTableElement>, origin: string, width: number) => {
+  const getNumRows = (table: SugarElement<HTMLTableElement>) =>
+    TableGridSize.getGridSize(table).rows;
+
+  const afterCornerResize = (table: SugarElement<HTMLTableElement>, origin: string, width: number, height: number) => {
+    console.log('corner resize');
     // Origin will tell us which handle was clicked, eg corner-se or corner-nw
     // so check to see if it ends with `e` (eg east edge)
     const isRightEdgeResize = Strings.endsWith(origin, 'e');
@@ -82,7 +90,12 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
 
     // Sync the cell sizes, as the core resizing logic doesn't update them, but snooker does
     if (Utils.isPixel(startRawW)) {
-      syncPixels(table);
+      syncTableCellPixels(table);
+    }
+
+    if (height !== startH) {
+      const idx = isRightEdgeResize ? getNumRows(table) - 1 : 0;
+      Adjustments.adjustHeight(table, height - startH, idx );
     }
   };
 
@@ -155,6 +168,8 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
 
       startW = e.width;
       startRawW = Options.isTableResponsiveForced(editor) ? '' : Utils.getRawWidth(editor, targetElm).getOr('');
+      startH = e.height;
+      // startRawH = Utils.getRawHeight(editor, targetElm).getOr('');
     }
   });
 
@@ -166,7 +181,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
       // Resize based on the snooker logic to adjust the individual col/rows if resized from a corner
       const origin = e.origin;
       if (Strings.startsWith(origin, 'corner-')) {
-        afterCornerResize(table, origin, e.width);
+        afterCornerResize(table, origin, e.width, e.height);
       }
 
       Utils.removeDataStyle(table);

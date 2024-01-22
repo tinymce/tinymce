@@ -4,7 +4,6 @@ import { Css, Insert, Remove, SelectorFind, SugarBody, SugarElement } from '@eph
 
 import { TableSize } from 'ephox/snooker/api/TableSize';
 import { Warehouse } from 'ephox/snooker/api/Warehouse';
-import * as BarPositions from 'ephox/snooker/resize/BarPositions';
 import * as ColumnSizes from 'ephox/snooker/resize/ColumnSizes';
 
 const noneTableHtml = '<table><tbody><tr><td>A</td><td>A</td></tr></tbody></table>';
@@ -77,7 +76,7 @@ UnitTest.test('ColumnSizes.getPixelHeights', () => {
     .map((cell) => Math.round(parseFloat(Css.get(cell, 'height'))))
     .getOrDie();
 
-  const pixelHeights = ColumnSizes.getPixelHeights(Warehouse.fromTable(table), table, BarPositions.height);
+  const pixelHeights = ColumnSizes.getPixelHeights(Warehouse.fromTable(table), table);
 
   // Round to account for precision issues
   const roundedPixelHeights = Arr.map(pixelHeights, Math.round);

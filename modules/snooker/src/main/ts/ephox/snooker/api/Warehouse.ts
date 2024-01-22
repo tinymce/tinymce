@@ -147,6 +147,9 @@ const fromTable = (table: SugarElement<HTMLTableElement>): Warehouse => {
 const justCells = (warehouse: Warehouse): Structs.DetailExt[] =>
   Arr.bind(warehouse.all, (w) => w.cells);
 
+// const justRows = (warehouse: Warehouse) =>
+//   Arr.map(warehouse.all, (w) => w.element);
+
 const justColumns = (warehouse: Warehouse): Structs.ColumnExt[] =>
   Obj.values(warehouse.columns);
 
@@ -163,6 +166,7 @@ export const Warehouse = {
   findItem,
   filterItems,
   justCells,
+  // justRows,
   justColumns,
   hasColumns,
   getColumnAt

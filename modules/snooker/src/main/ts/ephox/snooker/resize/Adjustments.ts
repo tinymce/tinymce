@@ -8,12 +8,11 @@ import { Warehouse } from '../api/Warehouse';
 import * as Deltas from '../calc/Deltas';
 import * as CellUtils from '../util/CellUtils';
 import { CellElement } from '../util/TableTypes';
-import { BarPositions, RowInfo } from './BarPositions';
 import * as ColumnSizes from './ColumnSizes';
 import * as Recalculations from './Recalculations';
 import * as Sizes from './Sizes';
 
-const sumUp = (newSize: number[]) => Arr.foldr(newSize, (b, a) => b + a, 0);
+// const sumUp = (newSize: number[]) => Arr.foldr(newSize, (b, a) => b + a, 0);
 
 const recalculate = (warehouse: Warehouse, widths: number[]): Recalculations.CellWidthSpan<CellElement>[] => {
   if (Warehouse.hasColumns(warehouse)) {
@@ -47,25 +46,25 @@ const adjustWidth = (table: SugarElement<HTMLTableElement>, delta: number, index
   resizing.resizeTable(tableSize.adjustTableWidth, clampedStep, isLastColumn);
 };
 
-const adjustHeight = (table: SugarElement<HTMLTableElement>, delta: number, index: number, direction: BarPositions<RowInfo>): void => {
+const adjustHeight = (table: SugarElement<HTMLTableElement>, delta: number, index: number): void => {
   const warehouse = Warehouse.fromTable(table);
-  const heights = ColumnSizes.getPixelHeights(warehouse, table, direction);
+  const heights = ColumnSizes.getPixelHeights(warehouse, table);
 
   const newHeights = Arr.map(heights, (dy, i) => index === i ? Math.max(delta + dy, CellUtils.minHeight()) : dy);
 
-  const newCellSizes = Recalculations.recalculateHeightForCells(warehouse, newHeights);
+  // const newCellSizes = Recalculations.recalculateHeightForCells(warehouse, newHeights);
   const newRowSizes = Recalculations.matchRowHeight(warehouse, newHeights);
 
   Arr.each(newRowSizes, (row) => {
     Sizes.setHeight(row.element, row.height);
   });
 
-  Arr.each(newCellSizes, (cell) => {
-    Sizes.setHeight(cell.element, cell.height);
-  });
+  // Arr.each(newCellSizes, (cell) => {
+  //   Sizes.setHeight(cell.element, cell.height);
+  // });
 
-  const total = sumUp(newHeights);
-  Sizes.setHeight(table, total);
+  // const total = sumUp(newHeights);
+  // Sizes.setHeight(table, total);
 };
 
 // Using the width of the added/removed columns gathered on extraction (pixelDelta), get and apply the new column sizes and overall table width delta

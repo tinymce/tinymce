@@ -169,7 +169,14 @@ export default (): void => {
     toolbar_mode: 'floating',
     emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js',
     resize_img_proportional: true,
-    format_empty_lines: true
+    format_empty_lines: true,
+    table_sizing_mode: 'fixed',
+    // valid_children: 'td[#text|img]',
+    // table_sizing_mode: 'responsive',
+    table_column_resizing: 'resizetable',
+    // table_default_styles: {
+    //   width: '50%'
+    // }
   };
 
   tinymce.init(settings);

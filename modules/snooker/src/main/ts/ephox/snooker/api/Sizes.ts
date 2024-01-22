@@ -1,7 +1,6 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Css, Height, SugarElement, Width } from '@ephox/sugar';
 
-import * as BarPositions from '../resize/BarPositions';
 import * as ColumnSizes from '../resize/ColumnSizes';
 import * as Redistribution from '../resize/Redistribution';
 import * as Sizes from '../resize/Sizes';
@@ -66,7 +65,7 @@ const redistribute = (table: SugarElement<HTMLTableElement>, optWidth: Optional<
   optHeight.each((newHeight) => {
     const hUnit = getUnit(newHeight);
     const totalHeight = Height.get(table);
-    const oldHeights = ColumnSizes.getRawHeights(warehouse, table, BarPositions.height);
+    const oldHeights = ColumnSizes.getRawHeights(warehouse, table);
     const nuHeights = Redistribution.redistribute(oldHeights, totalHeight, newHeight);
     redistributeToH(nuHeights, rows, cells, hUnit);
     Css.set(table, 'height', newHeight);
