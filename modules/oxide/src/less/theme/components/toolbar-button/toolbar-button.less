@@ -20,8 +20,6 @@
 @toolbar-button-text-transform: none;
 @toolbar-button-width: 34px;
 
-@toolbar-button-keyboard-focus-outline: 0 0 0 2px @color-tint; // Uses box shadow property
-
 @toolbar-button-hover-background-color: contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 7%)); // Differentiating against the enabled color //multiply(white, contrast(@background-color, fade(@color-tint, 20), fade(@color-tint, 80)));
 @toolbar-button-hover-border: @toolbar-button-border;
 @toolbar-button-hover-box-shadow: @toolbar-button-box-shadow;
@@ -53,17 +51,6 @@
 @toolbar-button-disabled-box-shadow: @toolbar-button-box-shadow;
 @toolbar-button-disabled-icon-color: fade(@toolbar-button-icon-color, 50%);
 @toolbar-button-disabled-text-color: fade(@toolbar-button-text-color, 50%);
-
-.toolbar-button-keyboard-focus-outline-mixin(@_box-shadow: @toolbar-button-keyboard-focus-outline) {
-  border-radius: @toolbar-button-border-radius;
-  bottom: 0;
-  box-shadow: @_box-shadow;
-  content: '';
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-}
 
 .tox {
   .tox-tbtn {
@@ -108,7 +95,7 @@
     z-index: 1; // Ensure focus outline is on top of other buttons
 
     &::after {
-      .toolbar-button-keyboard-focus-outline-mixin();
+      .keyboard-focus-outline-mixin();
     }
   }
 
@@ -186,7 +173,7 @@
   }
 
   .tox-tbtn--enabled:focus::after {
-    .toolbar-button-keyboard-focus-outline-mixin();
+    .keyboard-focus-outline-mixin();
   }
 
   .tox-tbtn:focus:not(.tox-tbtn--disabled) {

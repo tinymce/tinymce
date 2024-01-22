@@ -52,6 +52,17 @@
   outline: none;
 }
 
+.keyboard-focus-outline-mixin(@_box-shadow: @keyboard-focus-outline) {
+  border-radius: @toolbar-button-border-radius;
+  bottom: 0;
+  box-shadow: @_box-shadow;
+  content: '';
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
 // Reset firefox focus states
 button::-moz-focus-inner {
   border: 0;

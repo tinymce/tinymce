@@ -16,7 +16,7 @@
 @menubar-select-text-color: @toolbar-button-text-color;
 @menubar-select-text-transform: @toolbar-button-text-transform;
 
-@menubar-select-keyboard-focus-outline: @toolbar-button-keyboard-focus-outline;
+@menubar-select-keyboard-focus-outline: @keyboard-focus-outline;
 
 @menubar-select-disabled-background-color: @toolbar-button-background-color;
 @menubar-select-disabled-border: @menubar-select-border;
@@ -78,7 +78,7 @@
     z-index: 1; // Ensure focus outline is on top of other buttons
 
     &::after {
-      .toolbar-button-keyboard-focus-outline-mixin();
+      .keyboard-focus-outline-mixin();
     }
   }
 

@@ -159,7 +159,7 @@
     }
 
     &:focus::after {
-      .toolbar-button-keyboard-focus-outline-mixin();
+      .keyboard-focus-outline-mixin();
     }
   }
 
@@ -175,7 +175,7 @@
     z-index: 1;
 
     &:focus::after {
-      .toolbar-button-keyboard-focus-outline-mixin(0 0 0 2px @color-tint inset);
+      .keyboard-focus-outline-mixin(@keyboard-focus-outline-inset);
     }
   }
 

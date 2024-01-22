@@ -22,7 +22,7 @@
     }
 
     &:focus::after {
-      .toolbar-button-keyboard-focus-outline-mixin();
+      .keyboard-focus-outline-mixin();
     }
 
     .tox-input-wrapper {
@@ -35,12 +35,12 @@
         z-index: 1; // Ensure focus outline is on top of other buttons
 
         &::after {
-          .toolbar-button-keyboard-focus-outline-mixin();
+          .keyboard-focus-outline-mixin();
         }
       }
 
       &:has(input:focus)::after {
-        .toolbar-button-keyboard-focus-outline-mixin();
+        .keyboard-focus-outline-mixin();
       }
     }
 
@@ -86,7 +86,7 @@
         z-index: 1; // Ensure focus outline is on top of other buttons
 
         &::after {
-          .toolbar-button-keyboard-focus-outline-mixin();
+          .keyboard-focus-outline-mixin();
         }
       }
 
