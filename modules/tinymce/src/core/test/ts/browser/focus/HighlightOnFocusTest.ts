@@ -27,8 +27,7 @@ describe('browser.tinymce.core.focus.HighlightOnFocus', () => {
   context('without highlight_on_focus option', () => {
     const hook = TinyHooks.bddSetup<Editor>({
       base_url: '/project/tinymce/js/tinymce',
-      toolbar: 'forecolor',
-      highlight_on_focus: true
+      toolbar: 'forecolor'
     }, []);
 
     before(() => {
