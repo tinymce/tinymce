@@ -53,11 +53,9 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
     );
   };
 
-  const openAndGetMenu = (selector: string) => {
-    Mouse.clickOn(SugarBody.body(), selector);
-    return Waiter.pTryUntil('Waiting for menu', () =>
-      UiFinder.findIn(SugarBody.body(), '[role="menu"]').getOrDie()
-    );
+  const openMenu = (editor: Editor, buttonSelector: string) => {
+    TinyUiActions.clickOnToolbar(editor, buttonSelector);
+    return TinyUiActions.pWaitForPopup(editor, '[role="menu"]');
   };
 
   Arr.each([
@@ -177,9 +175,12 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
       it(`TINY-10453: Should trigger tooltip with ${test.label} - Toolbar Split Button Menu - forecolor`, async () => {
         const editor = hook.editor();
         const buttonSelector = 'div[data-mce-btn="forecolor"] > .tox-tbtn + .tox-split-button__chevron';
-        await openAndGetMenu(buttonSelector);
-        const menuSelector = 'div[data-mce-btn="Light Green"]';
-        await pAssertTooltip(editor, () => test.pTriggerTooltip(editor, menuSelector), 'Light Green');
+        await openMenu(editor, buttonSelector);
+        await Waiter.pWait(300);
+        const menuSelector = 'div[data-mce-btn="Red"]';
+        await test.pTriggerTooltip(editor, menuSelector);
+        const tooltip = await TinyUiActions.pWaitForUi(editor, '.tox-silver-sink .tox-tooltip__body:contains("Red")') as SugarElement<HTMLElement>;
+        assert.equal(TextContent.get(tooltip), 'Red');
         await pCloseTooltip(editor, menuSelector);
         await closeMenu(menuSelector);
       });
@@ -187,7 +188,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
       it(`TINY-10453: Should trigger tooltip with ${test.label} - Toolbar Split Button Menu - listpreview`, async () => {
         const editor = hook.editor();
         const buttonSelector = 'div[data-mce-btn="split-button-with-icon"]  > .tox-tbtn + .tox-split-button__chevron';
-        await openAndGetMenu(buttonSelector);
+        await openMenu(editor, buttonSelector);
         const menuSelector = 'div[aria-label="Lower Alpha 1"]';
         await pAssertTooltip(editor, () => test.pTriggerTooltip(editor, menuSelector), 'Lower Alpha 1');
         await pCloseTooltip(editor, menuSelector);
@@ -435,7 +436,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
       it(`TINY-10453: Should trigger tooltip with ${test.label} - no split button`, async () => {
         const editor = hook.editor();
         const buttonSelector = 'div[data-mce-btn="split-button"] > .tox-tbtn + .tox-split-button__chevron';
-        await openAndGetMenu(buttonSelector);
+        await openMenu(editor, buttonSelector);
         const menuSelector = '[aria-label="Choice item 1"]';
         await pAssertNoTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), '');
         await closeMenu(menuSelector);
