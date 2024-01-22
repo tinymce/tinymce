@@ -17,6 +17,7 @@ import * as DomSerializerPreProcess from './DomSerializerPreProcess';
 import { isWsPreserveElement } from './ElementType';
 
 interface DomSerializerSettings extends DomParserSettings, WriterSettings, SchemaSettings, HtmlSerializerSettings {
+  remove_trailing_brs?: boolean;
   url_converter?: URLConverter;
   url_converter_scope?: {};
 }
@@ -90,6 +91,7 @@ const DomSerializerImpl = (settings: DomSerializerSettings, editor?: Editor): Do
 
   const defaultedSettings: DomSerializerSettings = {
     entity_encoding: 'named',
+    remove_trailing_brs: true,
     pad_empty_with_br: false,
     ...settings
   };

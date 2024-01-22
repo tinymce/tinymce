@@ -860,7 +860,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('TINY-3909: Remove redundant br elements', () => {
-    const ser = DomSerializer({ });
+    const ser = DomSerializer({ remove_trailing_brs: true });
 
     setTestHtml( '<p>a<br></p>' +
       '<p>a<br>b<br></p>' +
@@ -873,7 +873,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('TINY-3909: Replace br with nbsp when wrapped in two inline elements and one block element', () => {
-    const ser = DomSerializer({ });
+    const ser = DomSerializer({ remove_trailing_brs: true });
 
     setTestHtml('<p><strong><em><br /></em></strong></p>');
     assert.equal(
@@ -883,7 +883,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('TINY-3909: Replace br with nbsp when wrapped in an inline element and placed in the root', () => {
-    const ser = DomSerializer({ });
+    const ser = DomSerializer({ remove_trailing_brs: true });
 
     setTestHtml('<strong><br /></strong>');
     assert.equal(
@@ -893,7 +893,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('TINY-3909: Don\'t replace br inside root element when there is multiple brs', () => {
-    const ser = DomSerializer({ });
+    const ser = DomSerializer({ remove_trailing_brs: true });
 
     setTestHtml('<strong><br /><br /></strong>');
     assert.equal(
@@ -903,7 +903,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('TINY-3909: Don\'t replace br inside root element when there is siblings', () => {
-    const ser = DomSerializer({ });
+    const ser = DomSerializer({ remove_trailing_brs: true });
 
     setTestHtml('<strong><br /></strong><em>x</em>');
     assert.equal(
@@ -913,7 +913,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('TINY-3909: Remove br in invalid parent bug', () => {
-    const ser = DomSerializer({ });
+    const ser = DomSerializer({ remove_trailing_brs: true });
 
     ser.setRules('br');
     setTestHtml('<br>');
