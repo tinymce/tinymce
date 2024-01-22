@@ -23,6 +23,7 @@
     box-shadow: @toolbar-button-focus-box-shadow;
     color: @toolbar-button-focus-text-color;
     position: relative;
+    z-index: 1; // Ensure focus outline is on top of other buttons
 
     &::after {
       .toolbar-button-keyboard-focus-outline-mixin();
