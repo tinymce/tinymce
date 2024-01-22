@@ -131,7 +131,7 @@ const setupContextToolbars = (editor: Editor): void => {
             text,
             title: Optional.none(),
             rel: Optional.none(),
-            target: Optional.none(),
+            target: Optional.from(Options.getDefaultLinkTarget(editor)),
             class: Optional.none()
           });
           collapseSelectionToEnd(editor);
