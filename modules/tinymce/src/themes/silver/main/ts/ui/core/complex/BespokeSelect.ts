@@ -89,7 +89,7 @@ const enum IrrelevantStyleItemResponse {
   Disable
 }
 
-const generateSelectItems = (_editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec) => {
+const generateSelectItems = (backstage: UiFactoryBackstage, spec: SelectSpec) => {
   const generateItem = (rawItem: FormatItem, response: IrrelevantStyleItemResponse, invalid: boolean, value: Optional<SelectedFormat>): Optional<Menu.NestedMenuItemContents> => {
     const translatedText = backstage.shared.providers.translate(rawItem.title);
     if (rawItem.type === 'separator') {
@@ -169,7 +169,7 @@ const createMenuItems = (editor: Editor, backstage: UiFactoryBackstage, spec: Se
     () => Arr.map(dataset.data, (d) => FormatRegister.processBasic(d, spec.isSelectedFor, spec.getPreviewFor)) :
     dataset.getData;
   return {
-    items: generateSelectItems(editor, backstage, spec),
+    items: generateSelectItems(backstage, spec),
     getStyleItems
   };
 };
