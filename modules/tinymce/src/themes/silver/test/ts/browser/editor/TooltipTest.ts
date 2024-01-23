@@ -438,7 +438,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
         const buttonSelector = 'div[data-mce-label="split-button"] > .tox-tbtn + .tox-split-button__chevron';
         await openMenu(editor, buttonSelector);
         const menuSelector = '[aria-label="Choice item 1"]';
-        await pAssertNoTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), '');
+        await pAssertNoTooltip(editor, () => test.pTriggerTooltip(editor, menuSelector), '');
         await closeMenu(menuSelector);
       });
     });
