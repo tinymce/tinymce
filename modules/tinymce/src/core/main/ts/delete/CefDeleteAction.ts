@@ -54,11 +54,11 @@ const isDeleteFromCefDifferentBlocks = (root: Node, forward: boolean, from: Care
   );
 };
 
-const deleteEmptyBlockOrMoveToCef = (root: Node, forward: boolean, from: CaretPosition, to: CaretPosition): Optional<DeleteActionAdt> => {
+const deleteEmptyBlockOrMoveToCef = (schema: Schema, root: Node, forward: boolean, from: CaretPosition, to: CaretPosition): Optional<DeleteActionAdt> => {
   // TODO: TINY-8865 - This may not be safe to cast as Node below and alternative solutions need to be looked into
   const toCefElm = to.getNode(!forward) as Node;
   return DeleteUtils.getParentBlock(SugarElement.fromDom(root), SugarElement.fromDom(from.getNode() as Node)).map((blockElm) =>
-    Empty.isEmpty(blockElm) ? DeleteAction.remove(blockElm.dom) : DeleteAction.moveToElement(toCefElm)
+    Empty.isEmpty(schema, blockElm) ? DeleteAction.remove(blockElm.dom) : DeleteAction.moveToElement(toCefElm)
   ).orThunk(() => Optional.some(DeleteAction.moveToElement(toCefElm)));
 };
 
@@ -69,9 +69,9 @@ const findCefPosition = (root: Node, forward: boolean, from: CaretPosition, sche
     } else if (isDeleteFromCefDifferentBlocks(root, forward, from, to, schema)) {
       return Optional.none();
     } else if (forward && NodeType.isContentEditableFalse(to.getNode())) {
-      return deleteEmptyBlockOrMoveToCef(root, forward, from, to);
+      return deleteEmptyBlockOrMoveToCef(schema, root, forward, from, to);
     } else if (!forward && NodeType.isContentEditableFalse(to.getNode(true))) {
-      return deleteEmptyBlockOrMoveToCef(root, forward, from, to);
+      return deleteEmptyBlockOrMoveToCef(schema, root, forward, from, to);
     } else if (forward && isAfterContentEditableFalse(from)) {
       return Optional.some(DeleteAction.moveToPosition(to));
     } else if (!forward && isBeforeContentEditableFalse(from)) {
