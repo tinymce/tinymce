@@ -5,12 +5,12 @@ import PluginManager from 'tinymce/core/api/PluginManager';
 import * as Api from './api/Api';
 import * as Commands from './api/Commands';
 import * as Options from './api/Options';
-import { ScrollInfo } from './core/Actions';
+import { FullScreenInfo } from './core/Actions';
 import * as Buttons from './ui/Buttons';
 
 export default (): void => {
   PluginManager.add('fullscreen', (editor) => {
-    const fullscreenState = Cell<ScrollInfo | null>(null);
+    const fullscreenState = Cell<FullScreenInfo | null>(null);
 
     if (editor.inline) {
       return Api.get(fullscreenState);

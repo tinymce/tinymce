@@ -1,12 +1,12 @@
 import { Cell } from '@ephox/katamari';
 
-import { ScrollInfo } from '../core/Actions';
+import { FullScreenInfo } from '../core/Actions';
 
 export interface Api {
   readonly isFullscreen: () => boolean;
 }
 
-const get = (fullscreenState: Cell<ScrollInfo | null>): Api => ({
+const get = (fullscreenState: Cell<FullScreenInfo | null>): Api => ({
   isFullscreen: () => fullscreenState.get() !== null
 });
 
