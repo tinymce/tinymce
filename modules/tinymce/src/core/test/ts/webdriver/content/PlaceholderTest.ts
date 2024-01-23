@@ -87,9 +87,9 @@ describe('webdriver.tinymce.core.content.PlaceholderTest', () => {
     await pAssertPlaceholderExists(editor);
     await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.text('t') ]);
     await pAssertPlaceholderNotExists(editor);
-    TinyUiActions.clickOnToolbar(editor, '.tox-tbtn[data-mce-btn="undo"]');
+    TinyUiActions.clickOnToolbar(editor, '.tox-tbtn[data-mce-label="undo"]');
     await pAssertPlaceholderExists(editor);
-    TinyUiActions.clickOnToolbar(editor, '.tox-tbtn[data-mce-btn="redo"]');
+    TinyUiActions.clickOnToolbar(editor, '.tox-tbtn[data-mce-label="redo"]');
     await pAssertPlaceholderNotExists(editor);
     assertCount(3);
   });
@@ -98,7 +98,7 @@ describe('webdriver.tinymce.core.content.PlaceholderTest', () => {
     const editor = hook.editor();
     setContent(editor, '<p></p>');
     await pAssertPlaceholderExists(editor);
-    TinyUiActions.clickOnToolbar(editor, '.tox-tbtn[data-mce-btn="bold"]');
+    TinyUiActions.clickOnToolbar(editor, '.tox-tbtn[data-mce-label="bold"]');
     await pAssertPlaceholderExists(editor);
     await pTypeTextAndDelete(editor);
     assertCount(2);

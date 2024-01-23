@@ -69,7 +69,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ReadonlyToolbarResizeTest
       s.element('button', {
         classes: [ arr.has('tox-tbtn'), arr.has('tox-tbtn--disabled') ],
         attrs: {
-          'data-mce-btn': str.is(buttonName),
+          'data-mce-label': str.is(buttonName),
           'aria-disabled': str.is('true')
         }
       })
@@ -82,7 +82,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ReadonlyToolbarResizeTest
       s.element('button', {
         classes: [ arr.has('tox-tbtn'), arr.not('tox-tbtn--disabled') ],
         attrs: {
-          'data-mce-btn': str.is(buttonName),
+          'data-mce-label': str.is(buttonName),
           'aria-disabled': str.is('false')
         }
       })

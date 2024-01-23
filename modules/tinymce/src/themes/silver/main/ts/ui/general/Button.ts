@@ -88,7 +88,7 @@ export const renderIconButtonSpec = (
   const dom = {
     tag: 'button',
     classes: [ ToolbarButtonClasses.Button ],
-    attributes: { ...tooltipAttributes, 'data-mce-btn': btnName }
+    attributes: { ...tooltipAttributes, 'data-mce-label': btnName }
   };
   const icon = spec.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons));
   const components = componentRenderPipeline([
@@ -142,7 +142,7 @@ const renderButtonSpec = (
     classes,
     attributes: {
       'aria-label': translatedText,
-      'data-mce-btn': spec.text
+      'data-mce-label': spec.text
     }
   };
 

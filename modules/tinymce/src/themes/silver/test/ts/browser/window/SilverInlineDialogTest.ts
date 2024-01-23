@@ -216,25 +216,25 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
       await FocusTools.pTryOnSelector(
         'Focus should be on barny button',
         SugarDocument.getDocument(),
-        'button[data-mce-btn="Barny Text"]'
+        'button[data-mce-label="Barny Text"]'
       );
       TinyUiActions.keydown(editor, Keys.tab());
       await FocusTools.pTryOnSelector(
         'Focus should be on alert button',
         SugarDocument.getDocument(),
-        'button[data-mce-btn="Alert"]'
+        'button[data-mce-label="Alert"]'
       );
       TinyUiActions.keydown(editor, Keys.tab());
       await FocusTools.pTryOnSelector(
         'Focus should be on confirm button',
         SugarDocument.getDocument(),
-        'button[data-mce-btn="Confirm"]'
+        'button[data-mce-label="Confirm"]'
       );
       TinyUiActions.keydown(editor, Keys.tab());
       await FocusTools.pTryOnSelector(
         'Focus should be on x close button',
         SugarDocument.getDocument(),
-        '.tox-button[data-mce-btn="close"]'
+        '.tox-button[data-mce-label="close"]'
       );
       DialogUtils.close(editor);
     });
@@ -259,7 +259,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
     const editor = hook.editor();
     openDialog(editor, { inline: 'toolbar' }, createDialogWithIframeSpec());
     await TinyUiActions.pWaitForDialog(editor);
-    TinyUiActions.clickOnUi(editor, 'button[data-mce-btn="Random"]');
+    TinyUiActions.clickOnUi(editor, 'button[data-mce-label="Random"]');
     UiFinder.notExists(SugarBody.body(), 'tox-dialog-inline');
     await FocusTools.pTryOnSelector(
       'Focus should be on iframe',

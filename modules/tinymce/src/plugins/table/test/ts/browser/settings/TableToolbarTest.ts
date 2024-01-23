@@ -37,15 +37,15 @@ describe('browser.tinymce.plugins.table.TableToolbarTest', () => {
     editor.setContent(tableWithCaptionHtml);
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
     // Ensure the copy/paste row buttons are disabled
-    await TinyUiActions.pWaitForUi(editor, '.tox-pop .tox-tbtn--disabled[data-mce-btn="tablecopyrow"]');
-    await TinyUiActions.pWaitForUi(editor, '.tox-pop .tox-tbtn--disabled[data-mce-btn="tablepasterowbefore"]');
+    await TinyUiActions.pWaitForUi(editor, '.tox-pop .tox-tbtn--disabled[data-mce-label="tablecopyrow"]');
+    await TinyUiActions.pWaitForUi(editor, '.tox-pop .tox-tbtn--disabled[data-mce-label="tablepasterowbefore"]');
     TinySelections.setCursor(editor, [ 0, 1, 0, 0, 0 ], 0);
     // Ensure the copy row button is enabled, but the paste row button is disabled
-    await TinyUiActions.pWaitForUi(editor, '.tox-pop .tox-tbtn[data-mce-btn="tablecopyrow"]:not(.tox-tbtn--disabled)');
-    await TinyUiActions.pWaitForUi(editor, '.tox-pop .tox-tbtn--disabled[data-mce-btn="tablepasterowbefore"]');
+    await TinyUiActions.pWaitForUi(editor, '.tox-pop .tox-tbtn[data-mce-label="tablecopyrow"]:not(.tox-tbtn--disabled)');
+    await TinyUiActions.pWaitForUi(editor, '.tox-pop .tox-tbtn--disabled[data-mce-label="tablepasterowbefore"]');
     editor.execCommand('mceTableCopyRow');
     // The paste row button should now be enabled
-    await TinyUiActions.pWaitForUi(editor, '.tox-pop .tox-tbtn[data-mce-btn="tablepasterowbefore"]:not(.tox-tbtn--disabled)');
+    await TinyUiActions.pWaitForUi(editor, '.tox-pop .tox-tbtn[data-mce-label="tablepasterowbefore"]:not(.tox-tbtn--disabled)');
     McEditor.remove(editor);
   });
 });

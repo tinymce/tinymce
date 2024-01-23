@@ -109,7 +109,7 @@ const renderCommonStructure = (
       classes: [ ToolbarButtonClasses.Button ].concat(optText.isSome() ? [ ToolbarButtonClasses.MatchWidth ] : []),
       attributes: {
         ...getTooltipAttributes(tooltip, providersBackstage),
-        ...(Type.isNonNullable(btnName) ? { 'data-mce-btn': btnName } : {})
+        ...(Type.isNonNullable(btnName) ? { 'data-mce-label': btnName } : {})
       }
     },
     components: componentRenderPipeline([
@@ -344,7 +344,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
       attributes: {
         'aria-pressed': false,
         ...getTooltipAttributes(spec.tooltip, sharedBackstage.providers),
-        ...(Type.isNonNullable(btnName) ? { 'data-mce-btn': btnName } : {})
+        ...(Type.isNonNullable(btnName) ? { 'data-mce-label': btnName } : {})
       }
     },
 

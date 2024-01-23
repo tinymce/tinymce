@@ -42,7 +42,7 @@ export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactor
     classes: [ 'tox-statusbar__resize-handle' ],
     attributes: {
       'aria-label': providersBackstage.translate(resizeLabel),
-      'data-mce-btn': 'resize-handle'
+      'data-mce-label': 'resize-handle'
     },
     behaviours: [
       Dragging.config({

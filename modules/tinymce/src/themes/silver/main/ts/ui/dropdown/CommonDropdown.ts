@@ -134,7 +134,7 @@ const renderCommonDropdown = <T>(
         classes: [ prefix, `${prefix}--select` ].concat(Arr.map(spec.classes, (c) => `${prefix}--${c}`)),
         attributes: {
           ...ariaLabelAttribute,
-          ...(Type.isNonNullable(btnName) ? { 'data-mce-btn': btnName } : {})
+          ...(Type.isNonNullable(btnName) ? { 'data-mce-label': btnName } : {})
         }
       },
       components: componentRenderPipeline([

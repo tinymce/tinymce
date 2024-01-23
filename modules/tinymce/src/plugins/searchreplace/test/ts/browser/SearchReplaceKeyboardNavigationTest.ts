@@ -60,7 +60,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardNavigationT
     pressEnter(editor);
     await pAssertFocused('Placeholder menu button', '.tox-tbtn--select[aria-label="Preferences"]');
     pressTab(editor);
-    await pAssertFocused('Find button', '.tox-button[data-mce-btn="Find"]');
+    await pAssertFocused('Find button', '.tox-button[data-mce-label="Find"]');
     pressEsc(editor);
   });
 
@@ -74,13 +74,13 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardNavigationT
     pressTab(editor);
     await pAssertFocused('Placeholder menu button', '.tox-tbtn--select[aria-label="Preferences"]');
     pressTab(editor);
-    await pAssertFocused('Find button', '.tox-button[data-mce-btn="Find"]');
+    await pAssertFocused('Find button', '.tox-button[data-mce-label="Find"]');
     await Utils.pSetFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', 'fish');
     pressEnter(editor);
     pressTab(editor);
-    await pAssertFocused('Find button', '.tox-button[data-mce-btn="Replace"]');
+    await pAssertFocused('Find button', '.tox-button[data-mce-label="Replace"]');
     pressTab(editor);
-    await pAssertFocused('Find button', '.tox-button[data-mce-btn="Replace all"]');
+    await pAssertFocused('Find button', '.tox-button[data-mce-label="Replace all"]');
     pressEnter(editor);
     await pAssertFocused('Find input', '.tox-textfield[placeholder="Find"]');
     pressEsc(editor);

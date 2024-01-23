@@ -13,7 +13,7 @@ describe('browser.tinymce.themes.silver.editor.core.SimpleControlsInlineTest', (
   };
 
   const pAssertToolbarButtonPressed = (title: string, pressed: boolean) =>
-    Waiter.pTryUntil('button pressed', () => UiFinder.exists(SugarBody.body(), `button[data-mce-btn="${title}"][aria-pressed="${pressed ? 'true' : 'false'}"]`));
+    Waiter.pTryUntil('button pressed', () => UiFinder.exists(SugarBody.body(), `button[data-mce-label="${title}"][aria-pressed="${pressed ? 'true' : 'false'}"]`));
 
   it('TINY-6675: Button state on multiple inline editors is correct', async () => {
     const editorOne = await McEditor.pFromSettings<Editor>(settings);

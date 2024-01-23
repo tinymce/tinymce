@@ -36,7 +36,7 @@ const SilverThemeSelectors: ThemeSelectors = {
   menuBarSelector: '.tox-menubar',
   dialogSelector: 'div[role="dialog"]',
   dialogCancelSelector: '.tox-button:contains("Cancel")',
-  dialogCloseSelector: '.tox-button[data-mce-btn="close"]',
+  dialogCloseSelector: '.tox-button[data-mce-label="close"]',
   dialogSubmitSelector: '.tox-button:contains("Save")'
 };
 

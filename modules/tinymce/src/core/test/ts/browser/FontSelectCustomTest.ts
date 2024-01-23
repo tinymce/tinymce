@@ -21,7 +21,7 @@ describe('browser.tinymce.core.FontSelectCustomTest', () => {
   }, []);
 
   const assertSelectBoxDisplayValue = (title: string, expectedValue: string) => {
-    const selectBox = UiFinder.findIn(SugarBody.body(), `*[data-mce-btn="${title}"]`).getOrDie();
+    const selectBox = UiFinder.findIn(SugarBody.body(), `*[data-mce-label="${title}"]`).getOrDie();
     const value = Strings.trim(TextContent.get(selectBox) ?? '');
     assert.equal(value, expectedValue, 'Should be the expected display value');
   };

@@ -27,8 +27,8 @@ describe('browser.tinymce.plugins.advlist.NoneditableRootTest', () => {
       TinyState.withNoneditableRootEditor<Editor>(hook.editor(), (editor) => {
         setupEditor(editor);
 
-        UiFinder.exists(TinyDom.container(editor), 'div[data-mce-btn="numlist"][aria-disabled="true"]');
-        UiFinder.exists(TinyDom.container(editor), 'div[data-mce-btn="bullist"][aria-disabled="true"]');
+        UiFinder.exists(TinyDom.container(editor), 'div[data-mce-label="numlist"][aria-disabled="true"]');
+        UiFinder.exists(TinyDom.container(editor), 'div[data-mce-label="bullist"][aria-disabled="true"]');
       });
     });
 
@@ -36,10 +36,10 @@ describe('browser.tinymce.plugins.advlist.NoneditableRootTest', () => {
       TinyState.withNoneditableRootEditor<Editor>(hook.editor(), (editor) => {
         setupEditor(editor);
 
-        TinyUiActions.clickOnToolbar(editor, 'button[data-mce-btn="outdent"]');
+        TinyUiActions.clickOnToolbar(editor, 'button[data-mce-label="outdent"]');
         TinyAssertions.assertContent(editor, initialListContent);
 
-        TinyUiActions.clickOnToolbar(editor, 'button[data-mce-btn="indent"]');
+        TinyUiActions.clickOnToolbar(editor, 'button[data-mce-label="indent"]');
         TinyAssertions.assertContent(editor, initialListContent);
       });
     });

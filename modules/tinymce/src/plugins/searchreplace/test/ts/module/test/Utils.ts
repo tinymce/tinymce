@@ -50,14 +50,14 @@ const pOpenDialogWithKeyboard = async (editor: Editor): Promise<void> => {
   await TinyUiActions.pWaitForDialog(editor);
 };
 
-const clickFind = (editor: Editor): SugarElement<HTMLElement> => TinyUiActions.clickOnUi(editor, '[role=dialog] button[data-mce-btn="Find"]');
-const clickNext = (editor: Editor): SugarElement<HTMLElement> => TinyUiActions.clickOnUi(editor, '[role=dialog] button[data-mce-btn="Next"]');
-const clickPrev = (editor: Editor): SugarElement<HTMLElement> => TinyUiActions.clickOnUi(editor, '[role=dialog] button[data-mce-btn="Previous"]');
-const clickReplace = (editor: Editor): SugarElement<HTMLElement> => TinyUiActions.clickOnUi(editor, '[role=dialog] button[data-mce-btn="Replace"]');
+const clickFind = (editor: Editor): SugarElement<HTMLElement> => TinyUiActions.clickOnUi(editor, '[role=dialog] button[data-mce-label="Find"]');
+const clickNext = (editor: Editor): SugarElement<HTMLElement> => TinyUiActions.clickOnUi(editor, '[role=dialog] button[data-mce-label="Next"]');
+const clickPrev = (editor: Editor): SugarElement<HTMLElement> => TinyUiActions.clickOnUi(editor, '[role=dialog] button[data-mce-label="Previous"]');
+const clickReplace = (editor: Editor): SugarElement<HTMLElement> => TinyUiActions.clickOnUi(editor, '[role=dialog] button[data-mce-label="Replace"]');
 const clickClose = (editor: Editor): void => TinyUiActions.closeDialog(editor);
 
 const pSelectPreference = async (editor: Editor, name: string): Promise<void> => {
-  TinyUiActions.clickOnUi(editor, 'button[data-mce-btn="Preferences"');
+  TinyUiActions.clickOnUi(editor, 'button[data-mce-label="Preferences"');
   await TinyUiActions.pWaitForPopup(editor, '.tox-selected-menu[role=menu]');
   TinyUiActions.clickOnUi(editor, '.tox-selected-menu[role=menu] div[aria-label="' + name + '"]');
 };

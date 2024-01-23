@@ -96,7 +96,7 @@ const closeMenu = (editor: Editor): void => {
 };
 
 const clickOnButton = (editor: Editor, title: string): void => {
-  TinyUiActions.clickOnToolbar(editor, `button[data-mce-btn="${title}"]`);
+  TinyUiActions.clickOnToolbar(editor, `button[data-mce-label="${title}"]`);
 };
 
 const pClickOnMenuItem = async (editor: Editor, title: string): Promise<void> => {

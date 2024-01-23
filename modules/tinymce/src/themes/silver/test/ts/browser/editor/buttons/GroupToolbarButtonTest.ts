@@ -30,7 +30,7 @@ describe('browser.tinymce.themes.silver.editor.buttons.GroupToolbarButtonTest', 
         classes: [ arr.has('tox-toolbar__group') ],
         children: [
           s.element('button', {
-            attrs: { 'data-mce-btn': str.is('bold') }
+            attrs: { 'data-mce-label': str.is('bold') }
           })
         ]
       }),
@@ -38,7 +38,7 @@ describe('browser.tinymce.themes.silver.editor.buttons.GroupToolbarButtonTest', 
         classes: [ arr.has('tox-toolbar__group') ],
         children: [
           s.element('button', {
-            attrs: { 'data-mce-btn': str.is('italic') }
+            attrs: { 'data-mce-label': str.is('italic') }
           })
         ]
       })
@@ -71,7 +71,7 @@ describe('browser.tinymce.themes.silver.editor.buttons.GroupToolbarButtonTest', 
 
   it('TINY-4229: Register floating group toolbar button via editor settings', testToolbarGroup(
     defaultToolbarGroupOptions,
-    'button[data-mce-btn="formatting"]',
+    'button[data-mce-label="formatting"]',
     '.tox-toolbar__overflow',
     defaultToolbarGroupStruct
   ));
@@ -89,7 +89,7 @@ describe('browser.tinymce.themes.silver.editor.buttons.GroupToolbarButtonTest', 
         });
       }
     },
-    'button[data-mce-btn="alignment"]',
+    'button[data-mce-label="alignment"]',
     '.tox-toolbar__overflow',
     ApproxStructure.build((s, str, arr) => s.element('div', {
       classes: [ arr.has('tox-toolbar__overflow') ],
@@ -98,13 +98,13 @@ describe('browser.tinymce.themes.silver.editor.buttons.GroupToolbarButtonTest', 
           classes: [ arr.has('tox-toolbar__group') ],
           children: [
             s.element('button', {
-              attrs: { 'data-mce-btn': str.is('alignleft') }
+              attrs: { 'data-mce-label': str.is('alignleft') }
             }),
             s.element('button', {
-              attrs: { 'data-mce-btn': str.is('aligncenter') }
+              attrs: { 'data-mce-label': str.is('aligncenter') }
             }),
             s.element('button', {
-              attrs: { 'data-mce-btn': str.is('alignright') }
+              attrs: { 'data-mce-label': str.is('alignright') }
             })
           ]
         })
@@ -118,8 +118,8 @@ describe('browser.tinymce.themes.silver.editor.buttons.GroupToolbarButtonTest', 
       toolbar: 'formatting | underline',
       toolbar_mode: 'wrap'
     }, () => {
-      UiFinder.notExists(SugarBody.body(), 'button[data-mce-btn="formatting"]');
-      UiFinder.exists(SugarBody.body(), 'button[data-mce-btn="underline"]');
+      UiFinder.notExists(SugarBody.body(), 'button[data-mce-label="formatting"]');
+      UiFinder.exists(SugarBody.body(), 'button[data-mce-label="underline"]');
       return Promise.resolve();
     })
   );
