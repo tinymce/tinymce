@@ -433,7 +433,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
         base_url: '/project/tinymce/js/tinymce'
       });
 
-      it(`TINY-10453: Should trigger tooltip with ${test.label} - no split button`, async () => {
+      it(`TINY-10453: Should not show tooltip with ${test.label} - Contains text and no icon`, async () => {
         const editor = hook.editor();
         const buttonSelector = 'div[data-mce-label="split-button"] > .tox-tbtn + .tox-split-button__chevron';
         await openMenu(editor, buttonSelector);
