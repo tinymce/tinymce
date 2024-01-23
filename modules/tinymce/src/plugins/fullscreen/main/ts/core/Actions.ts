@@ -1,5 +1,5 @@
-import { Cell, Fun, Optional, Singleton, Throttler } from '@ephox/katamari';
-import { Css, DomEvent, EventUnbinder, SugarElement, SugarShadowDom, Traverse, WindowVisualViewport } from '@ephox/sugar';
+import { Cell, Fun, Optional, Optionals, Singleton, Throttler } from '@ephox/katamari';
+import { Class, Css, DomEvent, EventUnbinder, SugarElement, SugarShadowDom, Traverse, WindowVisualViewport, SugarNode } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -15,7 +15,7 @@ interface ScrollPos {
   readonly y: number;
 }
 
-export interface ScrollInfo {
+export interface FullScreenInfo {
   readonly scrollPos: ScrollPos;
   readonly containerWidth: string;
   readonly containerHeight: string;
@@ -24,6 +24,7 @@ export interface ScrollInfo {
   readonly iframeWidth: string;
   readonly iframeHeight: string;
   readonly fullscreenChangeHandler: EventUnbinder;
+  readonly sinkCssPosition: Optional<string>;
 }
 
 const DOM = DOMUtils.DOM;
@@ -84,14 +85,17 @@ const viewportUpdate = WindowVisualViewport.get().fold(
   }
 );
 
-const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | null>): void => {
+const toggleFullscreen = (editor: Editor, fullscreenState: Cell<FullScreenInfo | null>): void => {
   const body = document.body;
   const documentElement = document.documentElement;
   const editorContainer = editor.getContainer();
   const editorContainerS = SugarElement.fromDom(editorContainer);
+  const sinkContainerS = Traverse.nextSibling(editorContainerS)
+    .filter((elm): elm is SugarElement<HTMLElement> => SugarNode.isHTMLElement(elm) && Class.has(elm, 'tox-silver-sink'));
+
   const fullscreenRoot = getFullscreenRoot(editor);
 
-  const fullscreenInfo: ScrollInfo | null = fullscreenState.get();
+  const fullscreenInfo: FullScreenInfo | null = fullscreenState.get();
   const editorBody = SugarElement.fromDom(editor.getBody());
 
   const isTouch = Env.deviceType.isTouch();
@@ -134,7 +138,7 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | nul
       }
     });
 
-    const newFullScreenInfo = {
+    const newFullScreenInfo: FullScreenInfo = {
       scrollPos: getScrollPos(),
       containerWidth: editorContainerStyle.width,
       containerHeight: editorContainerStyle.height,
@@ -142,7 +146,8 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | nul
       containerLeft: editorContainerStyle.left,
       iframeWidth: iframeStyle.width,
       iframeHeight: iframeStyle.height,
-      fullscreenChangeHandler
+      fullscreenChangeHandler,
+      sinkCssPosition: sinkContainerS.map((elm) => Css.get(elm, 'position'))
     };
 
     if (isTouch) {
@@ -153,6 +158,9 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | nul
     editorContainerStyle.width = editorContainerStyle.height = '';
 
     handleClasses(DOM.addClass);
+    sinkContainerS.each((elm) => {
+      Css.set(elm, 'position', 'fixed');
+    });
 
     viewportUpdate.bind(editorContainerS);
 
@@ -175,6 +183,10 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<ScrollInfo | nul
     editorContainerStyle.height = fullscreenInfo.containerHeight;
     editorContainerStyle.top = fullscreenInfo.containerTop;
     editorContainerStyle.left = fullscreenInfo.containerLeft;
+
+    Optionals.lift2(sinkContainerS, fullscreenInfo.sinkCssPosition, (elm, val) => {
+      Css.set(elm, 'position', val);
+    });
 
     cleanup();
     setScrollPos(fullscreenInfo.scrollPos);
