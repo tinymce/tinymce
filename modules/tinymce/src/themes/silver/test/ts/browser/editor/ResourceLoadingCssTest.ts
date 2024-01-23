@@ -22,7 +22,7 @@ describe('browser.tinymce.themes.silver.editor.ResourceLoadingCssTest', () => {
     tinymce.Resource.add('key', 'no valuable data here');
     const editor = await pGetEditor();
     assert.equal(Css.get(TinyDom.container(editor), 'background-color'), 'rgba(0, 0, 0, 0)');
-    tinymce.Resource.remove('key');
+    tinymce.Resource.unload('key');
     McEditor.remove(editor);
   });
 
@@ -30,7 +30,7 @@ describe('browser.tinymce.themes.silver.editor.ResourceLoadingCssTest', () => {
     tinymce.Resource.add('ui/default/skin.css', '* {background-color: red !important;}');
     const editor = await pGetEditor();
     assert.equal(Css.get(TinyDom.container(editor), 'background-color'), 'rgb(255, 0, 0)');
-    tinymce.Resource.remove('ui/default/skin.css');
+    tinymce.Resource.unload('ui/default/skin.css');
     McEditor.remove(editor);
 
     // confidence check that subsequent editor aren't also red.

@@ -6,7 +6,6 @@ interface Resource {
   has: (id: string) => boolean;
   get: (id: string) => any;
   unload: (id: string) => void;
-  remove: (id: string) => void;
 }
 
 const awaiter = (resolveCb: (data: any) => void, rejectCb: (err?: any) => void, timeout = 1000) => {
@@ -66,23 +65,18 @@ const create = (): Resource => {
     resources[id] = data;
   };
 
-  const remove = (id: string) => {
-    delete tasks[id];
-    delete resources[id];
-  };
-
   const has = (id: string) => {
     return id in resources;
   };
 
   const unload = (id: string) => {
     delete tasks[id];
+    delete resources[id];
   };
 
   const get = (id: string) => resources[id];
 
   return {
-    remove,
     load,
     add,
     has,
