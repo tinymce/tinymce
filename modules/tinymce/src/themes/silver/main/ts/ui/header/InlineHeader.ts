@@ -40,6 +40,7 @@ export const InlineHeader = (
   const editorMaxWidthOpt = Options.getMaxWidthOption(editor).or(EditorSize.getWidth(editor));
   const headerBackstage = backstage.shared.header;
   const isPositionedAtTop = headerBackstage.isPositionedAtTop;
+  const minimumToolbarWidth = 150; // Value is arbitrary.
 
   const toolbarMode = Options.getToolbarMode(editor);
   const isSplitToolbar = toolbarMode === ToolbarMode.sliding || toolbarMode === ToolbarMode.floating;
@@ -184,8 +185,6 @@ export const InlineHeader = (
 
           Note: this is entirely determined on the number of items in the menu and the toolbar, because when they wrap, that's what causes the height. Also, having multiple toolbars can also make it higher.
           */
-          const minimumToolbarWidth = 150; // Value is arbitrary.
-
           const availableWidth = window.innerWidth - (left - scroll.left);
 
           const width = Math.max(
@@ -249,7 +248,7 @@ export const InlineHeader = (
 
         // this check is needed because if the toolbar is rendered outside of the `outerContainer` because the toolbar have `position: "fixed"`
         // the calculate width isn't correct
-        return w !== 0 ? Optional.some(w) : Optional.none();
+        return w > minimumToolbarWidth ? Optional.some(w) : Optional.none();
       } else {
         return Optional.none();
       }
