@@ -229,7 +229,7 @@ const backspaceDeleteIntoListCaret = (editor: Editor, isForward: boolean): boole
   const root = Selection.getClosestEditingHost(editor, selectionStartElm);
   const block = dom.getParent(selectionStartElm, dom.isBlock, root);
 
-  if (block && dom.isEmpty(block)) {
+  if (block && dom.isEmpty(block, undefined, { checkRootAsContent: true })) {
     const rng = ListRangeUtils.normalizeRange(editor.selection.getRng());
     const otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward, root), 'LI', root);
 
