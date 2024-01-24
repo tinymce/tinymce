@@ -246,7 +246,10 @@ export const InlineHeader = (
         Css.set(mainUi.outerContainer.element, 'left', '0px');
         Css.remove(mainUi.outerContainer.element, 'width');
         const w = Width.getOuter(mainUi.outerContainer.element);
-        return Optional.some(w);
+
+        // this check is needed because if the toolbar is rendered outside of the `outerContainer` because the toolbar have `position: "fixed"`
+        // the calculate width isn't correct
+        return w !== 0 ? Optional.some(w) : Optional.none();
       } else {
         return Optional.none();
       }
