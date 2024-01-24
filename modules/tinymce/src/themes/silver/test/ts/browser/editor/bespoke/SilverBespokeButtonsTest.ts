@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, UiFinder } from '@ephox/agar';
-import { context, describe, it } from '@ephox/bedrock-client';
+import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -98,9 +98,16 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
   };
 
   const assertEvent = (count: number, value: string) => {
-    assert.equal(eventCount, count);
+    // The event count is sometimes more if SelectionChange triggers a NodeChange. Since SelectionChange is dependent on browser thottling it may or may not execute in time for the assert
+    assert.isAtLeast(eventCount, count);
     assert.equal(lastEventValue, value);
   };
+
+  beforeEach(() => {
+    // Adding undo levels triggers nodeChange so we need to reset that state between tests
+    // or tests would depend on that state or break when you run the test in isolation.
+    hook.editor().undoManager.reset();
+  });
 
   it('TBA: Checking alignment ticks and updating',
     testWithEvents('AlignTextUpdate', async (editor) => {
