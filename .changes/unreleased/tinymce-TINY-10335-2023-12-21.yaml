@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: The floating toolbar would not be fully visible when the editor was placed inside
+  a scrollable container.
+time: 2023-12-21T17:31:45.463635+02:00
+custom:
+  Issue: TINY-10335

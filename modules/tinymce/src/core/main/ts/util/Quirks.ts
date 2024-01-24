@@ -1,5 +1,4 @@
 import { Fun } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -94,7 +93,7 @@ const Quirks = (editor: Editor): Quirks => {
         const body = editor.getBody();
 
         // Selection is collapsed but the editor isn't empty
-        if (isCollapsed && !Empty.isEmpty(SugarElement.fromDom(body))) {
+        if (isCollapsed && !Empty.isEmptyNode(editor.schema, body)) {
           return;
         }
 

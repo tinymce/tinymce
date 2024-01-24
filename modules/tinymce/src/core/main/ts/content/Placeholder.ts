@@ -1,5 +1,4 @@
 import { Arr, Strings } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
@@ -9,7 +8,6 @@ import * as Options from '../api/Options';
 import Delay from '../api/util/Delay';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import VK from '../api/util/VK';
-import * as Empty from '../dom/Empty';
 
 const nonTypingKeycodes = [
   // tab, esc, home, end
@@ -55,8 +53,7 @@ const isTypingKeyboardEvent = (e: EditorEvent<unknown>) =>
   isKeyboardEvent(e) && !(isDeleteEvent(e) || e.type === 'keyup' && e.keyCode === 229);
 
 const isVisuallyEmpty = (dom: DOMUtils, rootElm: Element, forcedRootBlock: string): boolean => {
-  // Note: Don't use DOMUtils.isEmpty() here as it treats empty format caret nodes as non empty nodes
-  if (Empty.isEmpty(SugarElement.fromDom(rootElm), false)) {
+  if (dom.isEmpty(rootElm, undefined, { skipBogus: false, includeZwsp: true })) {
     // Ensure the node matches the forced_root_block setting, as the content could be an empty list, etc...
     // and also check that the content isn't indented
     const firstElement = rootElm.firstElementChild;
