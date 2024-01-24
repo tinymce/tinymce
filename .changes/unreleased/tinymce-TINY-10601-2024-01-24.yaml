@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Slovenian help dialog content had a dot in the wrong place.
+time: 2024-01-24T06:31:11.950568+01:00
+custom:
+  Issue: TINY-10601
