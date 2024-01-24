@@ -6,7 +6,6 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
-// TODO TINY-10480: Investigate flaky tests
 describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
   const wrapper = SugarElement.fromTag('div');
   const editorTarget = SugarElement.fromTag('div');
@@ -61,18 +60,22 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
       }
     });
 
+  // TODO TINY-10480: Investigate flaky tests
   it.skip('TINY-9646: The width should remain on the editor', () =>
     pRunToolbarWidthTest(500, '400px')
   );
 
+  // TODO TINY-10480: Investigate flaky tests
   it.skip('TINY-8977: If the editor does not fit within the view', () =>
     pRunToolbarWidthTest(200, '200px')
   );
 
+  // TODO TINY-10480: Investigate flaky tests
   it.skip('TINY-8977: If the visible editor is smaller than the minimum', () =>
     pRunToolbarWidthTest(50, '150px')
   );
 
+  // TODO TINY-10480: Investigate flaky tests
   it.skip('TINY-8977: If the editor is not visible at all', () =>
     pRunToolbarWidthTest(-50, '150px')
   );
