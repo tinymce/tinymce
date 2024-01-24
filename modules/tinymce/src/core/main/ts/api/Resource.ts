@@ -71,6 +71,7 @@ const create = (): Resource => {
 
   const unload = (id: string) => {
     delete tasks[id];
+    delete resources[id];
   };
 
   const get = (id: string) => resources[id];
