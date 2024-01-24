@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: In some cases having a vertical scroll made the toolbar width calculation wrong.
+time: 2024-01-24T14:49:10.32493272+01:00
+custom:
+  Issue: TINY-10581
