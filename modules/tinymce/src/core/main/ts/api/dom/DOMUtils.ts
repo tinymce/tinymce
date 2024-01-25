@@ -2,11 +2,11 @@ import { Arr, Fun, Obj, Optionals, Strings, Type } from '@ephox/katamari';
 import { Attribute, Class, ContentEditable, Css, Html, Insert, Remove, Selectors, SugarElement, SugarNode, Traverse, WindowVisualViewport } from '@ephox/sugar';
 
 import * as TransparentElements from '../../content/TransparentElements';
+import * as Empty from '../../dom/Empty';
 import * as NodeType from '../../dom/NodeType';
 import * as Position from '../../dom/Position';
 import * as StyleSheetLoaderRegistry from '../../dom/StyleSheetLoaderRegistry';
 import * as TrimNode from '../../dom/TrimNode';
-import { isWhitespaceText, isZwsp } from '../../text/Whitespace';
 import { GeomRect } from '../geom/Rect';
 import Entities from '../html/Entities';
 import Schema from '../html/Schema';
@@ -16,7 +16,6 @@ import { MappedEvent } from '../util/EventDispatcher';
 import Tools from '../util/Tools';
 import EventUtils, { EventUtilsCallback } from './EventUtils';
 import StyleSheetLoader from './StyleSheetLoader';
-import DomTreeWalker from './TreeWalker';
 
 /**
  * Utility class for various DOM manipulation and retrieval functions.
@@ -182,7 +181,7 @@ interface DOMUtils {
   findCommonAncestor: (a: Node, b: Node) => Node | null;
   run <R, T extends Node>(this: DOMUtils, elm: T | T[], func: (node: T) => R, scope?: any): typeof elm extends Array<any> ? R[] : R;
   run <R, T extends Node>(this: DOMUtils, elm: RunArguments<T>, func: (node: T) => R, scope?: any): RunResult<typeof elm, R>;
-  isEmpty: (node: Node, elements?: Record<string, any>, options?: ({ includeZwsp?: boolean })) => boolean;
+  isEmpty: (node: Node, elements?: Record<string, any>, options?: Empty.IsEmptyOptions) => boolean;
   createRng: () => Range;
   nodeIndex: (node: Node, normalized?: boolean) => number;
   split: {
@@ -928,80 +927,16 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     }
   };
 
-  // Check if element has a data-bookmark attribute, name attribute or is a named anchor
-  const isNonEmptyElement = (node: Node) => {
-    if (NodeType.isElement(node)) {
-      const isNamedAnchor = node.nodeName.toLowerCase() === 'a' && !getAttrib(node, 'href') && getAttrib(node, 'id');
-      if (getAttrib(node, 'name') || getAttrib(node, 'data-mce-bookmark') || isNamedAnchor) {
-        return true;
-      }
+  const isEmpty = (node: Node, elements?: Record<string, boolean>, options?: Empty.IsEmptyOptions) => {
+    if (Type.isPlainObject(elements)) {
+      const isContent = (node: Node): boolean => {
+        const name = node.nodeName.toLowerCase();
+        return Boolean(elements[name]);
+      };
+      return Empty.isEmptyNode(schema, node, { ...options, isContent });
+    } else {
+      return Empty.isEmptyNode(schema, node, options);
     }
-    return false;
-  };
-
-  const isEmpty = (node: Node, elements?: Record<string, any>, options?: ({ includeZwsp?: boolean })) => {
-    let brCount = 0;
-
-    // Keep elements with data-bookmark attributes, name attributes or are named anchors
-    if (isNonEmptyElement(node)) {
-      return false;
-    }
-
-    const firstChild = node.firstChild;
-    if (firstChild) {
-      const walker = new DomTreeWalker(firstChild, node);
-      const whitespaceElements = schema ? schema.getWhitespaceElements() : {};
-      const nonEmptyElements = elements || (schema ? schema.getNonEmptyElements() : null);
-
-      let tempNode: Node | null | undefined = firstChild;
-      do {
-        if (NodeType.isElement(tempNode)) {
-          // Ignore bogus elements
-          const bogusVal = tempNode.getAttribute('data-mce-bogus');
-          if (bogusVal) {
-            tempNode = walker.next(bogusVal === 'all');
-            continue;
-          }
-
-          // Keep empty elements like <img />
-          const name = tempNode.nodeName.toLowerCase();
-          if (nonEmptyElements && nonEmptyElements[name]) {
-            // Ignore single BR elements in blocks like <p><br /></p> or <p><span><br /></span></p>
-            if (name === 'br') {
-              brCount++;
-              tempNode = walker.next();
-              continue;
-            }
-
-            return false;
-          }
-
-          // Keep elements with data-bookmark attributes, name attributes or are named anchors
-          if (isNonEmptyElement(tempNode)) {
-            return false;
-          }
-        }
-
-        // Keep comment nodes
-        if (NodeType.isComment(tempNode)) {
-          return false;
-        }
-
-        // Keep non whitespace text nodes
-        if (NodeType.isText(tempNode) && !isWhitespaceText(tempNode.data) && (!options?.includeZwsp || !isZwsp(tempNode.data))) {
-          return false;
-        }
-
-        // Keep whitespace preserve elements
-        if (NodeType.isText(tempNode) && tempNode.parentNode && whitespaceElements[tempNode.parentNode.nodeName] && isWhitespaceText(tempNode.data)) {
-          return false;
-        }
-
-        tempNode = walker.next();
-      } while (tempNode);
-    }
-
-    return brCount <= 1;
   };
 
   const createRng = () => doc.createRange();
@@ -1745,6 +1680,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      * Returns true/false if the specified node is to be considered empty or not.
      *
      * @method isEmpty
+     * @param {Node} node The target node to check if it's empty.
      * @param {Object} elements Optional name/value object with elements that are automatically treated as non-empty elements.
      * @return {Boolean} true/false if the node is empty or not.
      * @example

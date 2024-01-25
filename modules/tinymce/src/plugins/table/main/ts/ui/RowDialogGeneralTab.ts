@@ -6,18 +6,14 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 import * as Options from '../api/Options';
 import * as UiUtils from './UiUtils';
 
-const getClassList = (editor: Editor): Optional<Dialog.ListBoxSpec> => {
-  const classes = UiUtils.buildListItems(Options.getRowClassList(editor));
-  if (classes.length > 0) {
-    return Optional.some({
+const getClassList = (editor: Editor): Optional<Dialog.ListBoxSpec> =>
+  UiUtils.buildClassList(Options.getRowClassList(editor))
+    .map((items) => ({
       name: 'class',
       type: 'listbox',
       label: 'Class',
-      items: classes
-    });
-  }
-  return Optional.none();
-};
+      items
+    }));
 
 const formChildren: Dialog.BodyComponentSpec[] = [
   {

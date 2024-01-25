@@ -42,7 +42,7 @@ const updateSimpleProps = (modifier: DomModifier, colModifier: DomModifier, data
   if (shouldUpdate('scope')) {
     modifier.setAttrib('scope', data.scope);
   }
-  if (shouldUpdate('class')) {
+  if (shouldUpdate('class') && data.class !== 'mce-no-match') {
     modifier.setAttrib('class', data.class);
   }
   if (shouldUpdate('height')) {
