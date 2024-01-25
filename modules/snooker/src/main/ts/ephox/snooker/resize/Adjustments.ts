@@ -59,6 +59,12 @@ const adjustHeight = (table: SugarElement<HTMLTableElement>, delta: number, inde
     Sizes.setHeight(row.element, row.height);
   });
 
+  // Arr.each(Warehouse.justCells(warehouse), (cell) => {
+  //   Sizes.removeHeight(cell.element);
+  // });
+
+  Sizes.removeHeight(table);
+
   // Arr.each(newCellSizes, (cell) => {
   //   Sizes.setHeight(cell.element, cell.height);
   // });

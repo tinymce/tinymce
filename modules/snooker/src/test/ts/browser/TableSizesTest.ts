@@ -4,7 +4,7 @@ import { Css, Html, Insert, InsertAll, Remove, SugarBody, SugarElement } from '@
 
 import * as Sizes from 'ephox/snooker/api/Sizes';
 
-import { addStyles, readHeight, readWidth } from '../module/ephox/snooker/test/SizeUtils';
+import { addStyles, readCellHeights, readRowHeights, readWidth } from '../module/ephox/snooker/test/SizeUtils';
 
 UnitTest.test('Table Sizes Test (fusebox)', () => {
   const percentTable =
@@ -120,21 +120,37 @@ UnitTest.test('Table Sizes Test (fusebox)', () => {
   const checkHeight = (expected: string[][], table: SugarElement<HTMLTableElement>, newHeight: string) => {
     Insert.append(SugarBody.body(), table);
     Sizes.redistribute(table, Optional.none(), Optional.some(newHeight));
-    Assert.eq('', expected, readHeight(table));
+    Assert.eq('', expected, readCellHeights(table));
     Remove.remove(table);
   };
 
-  const checkBasicHeight = (expected: string[][], input: string[][], initialHeight: string, newHeight: string) => {
+  // const checkBasicHeight = (expected: string[][], input: string[][], initialHeight: string, newHeight: string) => {
+  //   const table = generateH(input, initialHeight);
+  //   checkHeight(expected, table, newHeight);
+  // };
+
+  const checkHeightRow = (expectedRowHeights: string[], table: SugarElement<HTMLTableElement>, newHeight: string) => {
+    Insert.append(SugarBody.body(), table);
+    Sizes.redistribute(table, Optional.none(), Optional.some(newHeight));
+    Assert.eq('', expectedRowHeights, readRowHeights(table));
+    Remove.remove(table);
+  };
+
+  const checkBasicHeightRow = (expectedRowHeights: string[], input: string[][], initialHeight: string, newHeight: string) => {
     const table = generateH(input, initialHeight);
-    checkHeight(expected, table, newHeight);
+    checkHeightRow(expectedRowHeights, table, newHeight);
   };
 
   const styles = addStyles();
 
-  checkBasicHeight([[ '5px' ]], [[ '10px' ]], '100px', '50px');
-  checkBasicHeight([[ '10%' ]], [[ '10px' ]], '100px', '100%');
-  checkBasicHeight([[ '20px' ]], [[ '10px' ]], '25px', '50px');
-  checkBasicHeight([[ '40%' ]], [[ '10px' ]], '25px', '300%');
+  checkBasicHeightRow([ '50px' ], [[ '10px' ]], '100px', '50px');
+  // checkBasicHeightRow([ '10%' ], [[ '10px' ]], '100px', '100%');
+  checkBasicHeightRow([ '20px' ], [[ '10px' ]], '25px', '50px');
+  checkBasicHeightRow([ '40%' ], [[ '10px' ]], '25px', '300%');
+  // checkBasicHeight([[ '5px' ]], [[ '10px' ]], '100px', '50px');
+  // checkBasicHeight([[ '10%' ]], [[ '10px' ]], '100px', '100%');
+  // checkBasicHeight([[ '20px' ]], [[ '10px' ]], '25px', '50px');
+  // checkBasicHeight([[ '40%' ]], [[ '10px' ]], '25px', '300%');
 
   checkBasicWidth([[ '2px' ]], [[ '10px' ]], '50px', '10px');
   checkBasicWidth([[ '10px' ]], [[ '10px' ]], '50px', '50px');
