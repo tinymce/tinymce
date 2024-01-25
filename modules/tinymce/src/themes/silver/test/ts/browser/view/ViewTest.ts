@@ -75,7 +75,7 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       }
     }, []);
 
-    const clickViewButton = (editor: Editor, tooltip: string) => TinyUiActions.clickOnUi(editor, `.tox-view button[title='${tooltip}']`);
+    const clickViewButton = (editor: Editor, tooltip: string) => TinyUiActions.clickOnUi(editor, `.tox-view button[aria-label='${tooltip}']`);
 
     const toggleView = (name: string) => {
       const editor = hook.editor();
@@ -130,7 +130,6 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
           s.element('button', {
             classes: Arr.map(classes, (cls) => arr.has(cls)),
             attrs: {
-              'title': str.is(title),
               'type': str.is('button'),
               'tabindex': str.is('-1'),
               'data-alloy-tabstop': str.is('true')
@@ -327,19 +326,19 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       await FocusTools.pTryOnSelector('Focus should be on the view header', root, '.tox-view__header');
 
       TinyUiActions.keystroke(editor, Keys.enter());
-      await FocusTools.pTryOnSelector('Button 1 should be the first selection', root, '.tox-view__header [title="Button 1"]');
+      await FocusTools.pTryOnSelector('Button 1 should be the first selection', root, '.tox-view__header [aria-label="Button 1"]');
 
       TinyUiActions.keystroke(editor, Keys.right());
-      await FocusTools.pTryOnSelector('With right it should pass from Button 1 to Button 2', root, '.tox-view__header [title="Button 2"]');
+      await FocusTools.pTryOnSelector('With right it should pass from Button 1 to Button 2', root, '.tox-view__header [aria-label="Button 2"]');
 
       TinyUiActions.keystroke(editor, Keys.right());
-      await FocusTools.pTryOnSelector('Pressing right again it should move to Button 1', root, '.tox-view__header [title="Button 1"]');
+      await FocusTools.pTryOnSelector('Pressing right again it should move to Button 1', root, '.tox-view__header [aria-label="Button 1"]');
 
       TinyUiActions.keystroke(editor, Keys.left());
-      await FocusTools.pTryOnSelector('With left it should pass from Button 1 to Button 2', root, '.tox-view__header [title="Button 2"]');
+      await FocusTools.pTryOnSelector('With left it should pass from Button 1 to Button 2', root, '.tox-view__header [aria-label="Button 2"]');
 
       TinyUiActions.keystroke(editor, Keys.left());
-      await FocusTools.pTryOnSelector('Pressing left again it should move to Button 1', root, '.tox-view__header [title="Button 1"]');
+      await FocusTools.pTryOnSelector('Pressing left again it should move to Button 1', root, '.tox-view__header [aria-label="Button 1"]');
       toggleView('myview1');
     });
   });
