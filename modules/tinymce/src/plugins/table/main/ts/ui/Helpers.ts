@@ -92,7 +92,7 @@ const getSharedValues = <T extends Record<string, string>>(data: T[]): T => {
         const comparisonValue = baseData[key];
         if (comparisonValue !== '' && key === itemKey) {
           if (comparisonValue !== itemValue) {
-            baseData[key] = '';
+            baseData[key] = key === 'class' ? 'mce-no-match' : '';
           }
         }
       });
