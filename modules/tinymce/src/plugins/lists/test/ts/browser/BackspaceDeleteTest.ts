@@ -7,7 +7,7 @@ import Plugin from 'tinymce/plugins/lists/Plugin';
 
 describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
-    plugins: 'lists accordion',
+    plugins: 'lists',
     add_unload_trigger: false,
     disable_nodechange: true,
     indent: false,
