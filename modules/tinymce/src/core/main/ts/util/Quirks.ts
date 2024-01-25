@@ -1,4 +1,4 @@
-import { Fun, Type } from '@ephox/katamari';
+import { Fun } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -19,8 +19,8 @@ import * as Rtc from '../Rtc';
  */
 
 interface Quirks {
-  refreshContentEditable (): void;
-  isHidden (): boolean;
+  refreshContentEditable(): void;
+  isHidden(): boolean;
 }
 
 const Quirks = (editor: Editor): Quirks => {
@@ -679,15 +679,6 @@ const Quirks = (editor: Editor): Quirks => {
     }
   };
 
-  const dropDragEndEvent = () => {
-    editor.on('drop', (event) => {
-      const data = event.dataTransfer?.getData('text/html');
-      if (Type.isString(data) && /^<img[^>]*>$/.test(data)) {
-        editor.dispatch('dragend', new window.DragEvent('dragend', event));
-      }
-    });
-  };
-
   const setup = () => {
     // All browsers
     removeBlockQuoteOnBackSpace();
@@ -730,7 +721,6 @@ const Quirks = (editor: Editor): Quirks => {
       showBrokenImageIcon();
       blockCmdArrowNavigation();
       disableBackspaceIntoATable();
-      dropDragEndEvent();
     }
   };
 

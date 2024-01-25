@@ -1,6 +1,7 @@
-import { ApproxStructure } from '@ephox/agar';
+import { ApproxStructure, DragnDrop } from '@ephox/agar';
 import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
+import { SelectorFind } from '@ephox/sugar';
+import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -80,11 +81,21 @@ describe('browser.tinymce.core.util.QuirksFirefoxTest', () => {
 
   it('TINY-9694: dragend should fire when drop fires with an image', () => {
     const editor = hook.editor();
-    const transfer = new window.DataTransfer();
-    transfer.setData('text/html', '<img src="test">');
-    editor.dispatch('drop', new window.DragEvent('drop', {
-      dataTransfer: transfer
-    }));
-    assertEvents([ 'drop', 'dragend' ]);
+    editor.setContent(`
+      <table style="border-collapse: collapse; width: 103.363%; height: 355px;" border="1"><colgroup><col style="width: 23.1332%;"><col style="width: 53.8799%;"><col style="width: 23.1332%;"></colgroup>
+        <tbody>
+          <tr>
+            <td>&nbsp;</td>
+            <td><img src="https://google.com/logos/google.jpg" alt=""></td>
+          </tr>
+        </tbody>
+      </table>
+`);
+    DragnDrop.dragnDrop(
+      SelectorFind.descendant(TinyDom.body(editor), 'img').getOrDie(),
+      SelectorFind.descendant(TinyDom.body(editor), 'td').getOrDie(),
+      false
+    );
+    assertEvents([ 'dragstart', 'drop', 'dragend' ]);
   });
 });
