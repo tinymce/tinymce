@@ -4,7 +4,6 @@ import Env from '../api/Env';
 import DomParser, { DomParserSettings } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
 import Tools from '../api/util/Tools';
-import * as RemoveTrailingBr from '../dom/RemoveTrailingBr';
 import { dataUriToBlobInfo } from '../file/BlobCacheUtils';
 
 const isBogusImage = (img: AstNode): boolean =>
@@ -64,10 +63,6 @@ const createSafeEmbed = (mime?: string, src?: string, width?: string, height?: s
 
 const register = (parser: DomParser, settings: DomParserSettings): void => {
   const schema = parser.schema;
-
-  if (settings.remove_trailing_brs) {
-    RemoveTrailingBr.addNodeFilter(settings, parser, schema);
-  }
 
   parser.addAttributeFilter('href', (nodes) => {
     let i = nodes.length;
