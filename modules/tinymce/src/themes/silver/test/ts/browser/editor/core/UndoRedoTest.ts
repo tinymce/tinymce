@@ -13,7 +13,7 @@ describe('browser.tinymce.themes.silver.editor.core.UndoRedoTest', () => {
   }, []);
 
   const assertToolbarButtonState = (title: string, disabled: boolean) =>
-    UiFinder.exists(SugarBody.body(), `button[data-mce-label="${title}"][aria-disabled="${disabled}"]`);
+    UiFinder.exists(SugarBody.body(), `button[data-mce-name="${title}"][aria-disabled="${disabled}"]`);
 
   const assertMenuItemState = (editor: Editor, item: string, disabled: boolean) =>
     TinyUiActions.pWaitForUi(editor, `div[aria-label="${item}"][role="menuitem"][aria-disabled="${disabled}"]`);
@@ -57,7 +57,7 @@ describe('browser.tinymce.themes.silver.editor.core.UndoRedoTest', () => {
     TinyUiActions.keyup(hook.editor(), Keys.escape());
 
     // 2. Redo should be enabled after undo being clicked
-    TinyUiActions.clickOnToolbar(editor, '.tox-tbtn[data-mce-label="undo"]');
+    TinyUiActions.clickOnToolbar(editor, '.tox-tbtn[data-mce-name="undo"]');
     assertToolbarButtonState('redo', false);
     assertToolbarButtonState('undo', true);
     TinyUiActions.clickOnMenu(editor, 'button:contains("Edit")');

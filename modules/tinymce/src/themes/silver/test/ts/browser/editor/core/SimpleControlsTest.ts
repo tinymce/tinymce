@@ -13,7 +13,7 @@ describe('browser.tinymce.themes.silver.editor.core.SimpleControlsTest', () => {
   }, []);
 
   const assertToolbarButtonPressed = (title: string) =>
-    UiFinder.exists(SugarBody.body(), `button[data-mce-label="${title}"][aria-pressed="true"]`);
+    UiFinder.exists(SugarBody.body(), `button[data-mce-name="${title}"][aria-pressed="true"]`);
 
   it('TBA: b tag is recognized as valid tag for bold', () => {
     const editor = hook.editor();

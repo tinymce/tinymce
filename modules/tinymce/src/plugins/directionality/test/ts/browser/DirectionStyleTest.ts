@@ -8,7 +8,7 @@ type Dir = 'rtl' | 'ltr';
 
 describe('browser.tinymce.plugins.directionality.DirectionStyleTest', () => {
   const applyDir = (editor: Editor, dir: Dir) =>
-    TinyUiActions.clickOnToolbar(editor, dir === 'ltr' ? 'button[data-mce-label="ltr"]' : 'button[data-mce-label="rtl"]');
+    TinyUiActions.clickOnToolbar(editor, dir === 'ltr' ? 'button[data-mce-name="ltr"]' : 'button[data-mce-name="rtl"]');
 
   const testDirectionStyle = (editor: Editor, content: string, dir: Dir, expected: string, cursorPath: number[] = [ 0, 0 ]) => {
     editor.setContent(content);

@@ -105,7 +105,7 @@ describe.skip('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleT
       });
 
       it(`TINY-9271: Emits 'ToggleToolbarDrawer' in ${toolbarMode} via user click`, async () => {
-        await pTestEvent(toolbarMode, (editor) => TinyUiActions.clickOnToolbar(editor, 'button[data-mce-label="overflow-button"]'));
+        await pTestEvent(toolbarMode, (editor) => TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="overflow-button"]'));
       });
     });
   });

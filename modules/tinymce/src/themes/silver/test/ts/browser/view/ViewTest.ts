@@ -419,13 +419,13 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       const editor = hook.editor();
 
       editor.setContent('<p>ab</p>');
-      TinyUiActions.clickOnToolbar(editor, '[data-mce-label="overflow-button"]');
+      TinyUiActions.clickOnToolbar(editor, '[data-mce-name="overflow-button"]');
 
       editor.execCommand('ToggleView', false, 'myview1');
       assertViewHtml(0, '<button>myview1</button>');
       editor.execCommand('ToggleView', false, 'myview1');
       assertMainViewVisible();
-      const moreButton = UiFinder.findIn(TinyDom.container(editor), '[data-mce-label="overflow-button"]');
+      const moreButton = UiFinder.findIn(TinyDom.container(editor), '[data-mce-name="overflow-button"]');
       assert.isTrue(moreButton.isValue(), 'Reveal or hide additional toolbar items button should be there');
     });
   });
@@ -497,7 +497,7 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       editor.execCommand('ToggleView', false, 'myview1');
       assertMainViewVisible();
 
-      const boldButton = await TinyUiActions.pWaitForUi(editor, '.tox-toolbar__primary [data-mce-label="bold"]');
+      const boldButton = await TinyUiActions.pWaitForUi(editor, '.tox-toolbar__primary [data-mce-name="bold"]');
       assert.isDefined(boldButton, 'Bold button should be in `tox-toolbar__primary`');
     });
   });

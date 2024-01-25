@@ -146,38 +146,38 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - Toolbar addButton`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'button[data-mce-label="basic-button"]';
+        const buttonSelector = 'button[data-mce-name="basic-button"]';
         await pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Button');
         await pCloseTooltip(editor, buttonSelector);
       });
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - Toolbar addToggleButton`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'button[data-mce-label="toggle-button"]';
+        const buttonSelector = 'button[data-mce-name="toggle-button"]';
         await pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Toggle Button');
         await pCloseTooltip(editor, buttonSelector);
       });
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - Toolbar addMenuButton`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'button[data-mce-label="menu-button"]';
+        const buttonSelector = 'button[data-mce-name="menu-button"]';
         await pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Menu Button');
         await pCloseTooltip(editor, buttonSelector);
       });
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - Toolbar addSplitButton`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'div[data-mce-label="split-button"]';
+        const buttonSelector = 'div[data-mce-name="split-button"]';
         await pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Split Button');
         await pCloseTooltip(editor, buttonSelector);
       });
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - Toolbar Split Button Menu - forecolor`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'div[data-mce-label="forecolor"] > .tox-tbtn + .tox-split-button__chevron';
+        const buttonSelector = 'div[data-mce-name="forecolor"] > .tox-tbtn + .tox-split-button__chevron';
         await openMenu(editor, buttonSelector);
         await Waiter.pWait(300);
-        const menuSelector = 'div[data-mce-label="Red"]';
+        const menuSelector = 'div[data-mce-name="Red"]';
         await test.pTriggerTooltip(editor, menuSelector);
         const tooltip = await TinyUiActions.pWaitForUi(editor, '.tox-silver-sink .tox-tooltip__body:contains("Red")') as SugarElement<HTMLElement>;
         assert.equal(TextContent.get(tooltip), 'Red');
@@ -187,7 +187,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - Toolbar Split Button Menu - listpreview`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'div[data-mce-label="split-button-with-icon"]  > .tox-tbtn + .tox-split-button__chevron';
+        const buttonSelector = 'div[data-mce-name="split-button-with-icon"]  > .tox-tbtn + .tox-split-button__chevron';
         await openMenu(editor, buttonSelector);
         const menuSelector = 'div[aria-label="Lower Alpha 1"]';
         await pAssertTooltip(editor, () => test.pTriggerTooltip(editor, menuSelector), 'Lower Alpha 1');
@@ -277,10 +277,10 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - button without label in Dialog`, async () => {
         const editor = hook.editor();
-        const toolbarButtonSelector = '[data-mce-label="dialog-button"]';
+        const toolbarButtonSelector = '[data-mce-name="dialog-button"]';
         TinyUiActions.clickOnToolbar(editor, toolbarButtonSelector);
         await TinyUiActions.pWaitForDialog(editor);
-        const buttonSelector = '[data-mce-label="Test-Button"]';
+        const buttonSelector = '[data-mce-name="Test-Button"]';
         await pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Test-Button');
         await pCloseTooltip(editor, buttonSelector);
         TinyUiActions.closeDialog(editor);
@@ -288,10 +288,10 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - sizeinput - 'Constrain Proportions' in Dialog`, async () => {
         const editor = hook.editor();
-        const toolbarButtonSelector = '[data-mce-label="size-input-dialog-button"]';
+        const toolbarButtonSelector = '[data-mce-name="size-input-dialog-button"]';
         TinyUiActions.clickOnToolbar(editor, toolbarButtonSelector);
         await TinyUiActions.pWaitForDialog(editor);
-        const buttonSelector = '[data-mce-label="Constrain proportions"]';
+        const buttonSelector = '[data-mce-name="Constrain proportions"]';
         await pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Constrain proportions');
         await pCloseTooltip(editor, buttonSelector);
         TinyUiActions.closeDialog(editor);
@@ -299,10 +299,10 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - dialog footer button`, async () => {
         const editor = hook.editor();
-        const toolbarButtonSelector = '[data-mce-label="dialog-footer-button"]';
+        const toolbarButtonSelector = '[data-mce-name="dialog-footer-button"]';
         TinyUiActions.clickOnToolbar(editor, toolbarButtonSelector);
         await TinyUiActions.pWaitForDialog(editor);
-        const buttonSelector = '[data-mce-label="Preferences"]';
+        const buttonSelector = '[data-mce-name="Preferences"]';
         await pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Preferences');
         await pCloseTooltip(editor, buttonSelector);
         TinyUiActions.closeDialog(editor);
@@ -310,10 +310,10 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - dialog close button`, async () => {
         const editor = hook.editor();
-        const toolbarButtonSelector = '[data-mce-label="dialog-footer-button"]';
+        const toolbarButtonSelector = '[data-mce-name="dialog-footer-button"]';
         TinyUiActions.clickOnToolbar(editor, toolbarButtonSelector);
         await TinyUiActions.pWaitForDialog(editor);
-        const buttonSelector = '[data-mce-label="close"]';
+        const buttonSelector = '[data-mce-name="close"]';
         await pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Close');
         await pCloseTooltip(editor, buttonSelector);
         TinyUiActions.closeDialog(editor);
@@ -328,48 +328,48 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - fontsizeinput - Decrease font size`, async () => {
         const editor = hook.editor();
-        const buttonSelector = '[data-mce-label="fontsizeinput"] > [data-mce-label="minus"]';
+        const buttonSelector = '[data-mce-name="fontsizeinput"] > [data-mce-name="minus"]';
         await pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Decrease font size');
         await pCloseTooltip(editor, buttonSelector);
       });
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - fontsizeinput - Increase font size`, async () => {
         const editor = hook.editor();
-        const buttonSelector = '[data-mce-label="fontsizeinput"] > [data-mce-label="plus"]';
+        const buttonSelector = '[data-mce-name="fontsizeinput"] > [data-mce-name="plus"]';
         await pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Increase font size');
         await pCloseTooltip(editor, buttonSelector);
       });
       it(`TINY-10453: Should trigger tooltip with ${test.label} - fontsize`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'button[data-mce-label="fontsize"]';
+        const buttonSelector = 'button[data-mce-name="fontsize"]';
         await pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Font size 12pt');
         await pCloseTooltip(editor, buttonSelector);
       });
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - fontfamily`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'button[data-mce-label="fontfamily"]';
+        const buttonSelector = 'button[data-mce-name="fontfamily"]';
         await pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Font System Font');
         await pCloseTooltip(editor, buttonSelector);
       });
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - align`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'button[data-mce-label="align"]';
+        const buttonSelector = 'button[data-mce-name="align"]';
         await pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Alignment left');
         await pCloseTooltip(editor, buttonSelector);
       });
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - blocks`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'button[data-mce-label="blocks"]';
+        const buttonSelector = 'button[data-mce-name="blocks"]';
         await pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Block Paragraph');
         await pCloseTooltip(editor, buttonSelector);
       });
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - styles`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'button[data-mce-label="styles"]';
+        const buttonSelector = 'button[data-mce-name="styles"]';
         await pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Format Paragraph');
         await pCloseTooltip(editor, buttonSelector);
       });
@@ -383,7 +383,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - resize handle`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'div[data-mce-label="resize-handle"]';
+        const buttonSelector = 'div[data-mce-name="resize-handle"]';
         await pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Resize');
         await pCloseTooltip(editor, buttonSelector);
       });
@@ -404,7 +404,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - overflow more button`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'button[data-mce-label="overflow-button"]';
+        const buttonSelector = 'button[data-mce-name="overflow-button"]';
         await pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Reveal or hide additional toolbar items');
         await pCloseTooltip(editor, buttonSelector);
       });
@@ -435,7 +435,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
 
       it(`TINY-10453: Should not show tooltip with ${test.label} - Contains text and no icon`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'div[data-mce-label="split-button"] > .tox-tbtn + .tox-split-button__chevron';
+        const buttonSelector = 'div[data-mce-name="split-button"] > .tox-tbtn + .tox-split-button__chevron';
         await openMenu(editor, buttonSelector);
         const menuSelector = '[aria-label="Choice item 1"]';
         await pAssertNoTooltip(editor, () => test.pTriggerTooltip(editor, menuSelector), '');

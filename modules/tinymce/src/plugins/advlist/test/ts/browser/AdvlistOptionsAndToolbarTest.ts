@@ -55,7 +55,7 @@ describe('browser.tinymce.plugins.advlist.AdvlistOptionsAndToolbarTest', () => {
               [ arr.not('tox-tbtn'), arr.has('tox-split-button') ] :
               [ arr.has('tox-tbtn'), arr.not('tox-split-button') ],
             attrs: {
-              'data-mce-label': str.is('numlist'),
+              'data-mce-name': str.is('numlist'),
             }
           }),
           s.element(splitBtns.bullet ? 'div' : 'button', {
@@ -63,7 +63,7 @@ describe('browser.tinymce.plugins.advlist.AdvlistOptionsAndToolbarTest', () => {
               [ arr.not('tox-tbtn'), arr.has('tox-split-button') ] :
               [ arr.has('tox-tbtn'), arr.not('tox-split-button') ],
             attrs: {
-              'data-mce-label': str.is('bullist'),
+              'data-mce-name': str.is('bullist'),
             }
           })
         ]

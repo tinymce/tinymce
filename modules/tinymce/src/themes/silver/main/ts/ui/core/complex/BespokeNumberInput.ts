@@ -90,7 +90,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
         tag: 'button',
         attributes: {
           'aria-label': translatedTooltip,
-          'data-mce-label': title
+          'data-mce-name': title
         },
         classes: classes.concat(title)
       },
@@ -208,7 +208,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
       tag: 'div',
       classes: [ 'tox-number-input' ],
       attributes: {
-        ...(Type.isNonNullable(btnName) ? { 'data-mce-label': btnName } : {})
+        ...(Type.isNonNullable(btnName) ? { 'data-mce-name': btnName } : {})
       }
     },
     components: [

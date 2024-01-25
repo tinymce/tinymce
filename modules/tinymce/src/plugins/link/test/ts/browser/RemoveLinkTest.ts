@@ -43,7 +43,7 @@ describe('browser.tinymce.plugins.link.RemoveLinkTest', () => {
     const editor = hook.editor();
     editor.setContent('<p><a href="http://tiny.cloud">tiny</a> content <a href="http://tiny.cloud">link</a> with <a href="http://tiny.cloud">other</a></p>');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 1, [ 0, 4, 0 ], 2);
-    TinyUiActions.clickOnUi(editor, 'button[data-mce-label="unlink"]');
+    TinyUiActions.clickOnUi(editor, 'button[data-mce-name="unlink"]');
     TinyAssertions.assertContentPresence(editor, { a: 0 });
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 4 ], 2);
   });
@@ -53,7 +53,7 @@ describe('browser.tinymce.plugins.link.RemoveLinkTest', () => {
       const editor = hook.editor();
       editor.setContent('<a href="#"><p>tiny</p></a>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
-      TinyUiActions.clickOnUi(editor, 'button[data-mce-label="unlink"]');
+      TinyUiActions.clickOnUi(editor, 'button[data-mce-name="unlink"]');
       TinyAssertions.assertContent(editor, '<p>tiny</p>');
       TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
     });
@@ -62,7 +62,7 @@ describe('browser.tinymce.plugins.link.RemoveLinkTest', () => {
       const editor = hook.editor();
       editor.setContent('<div><a href="#"><p>tiny</p></a></div>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1);
-      TinyUiActions.clickOnUi(editor, 'button[data-mce-label="unlink"]');
+      TinyUiActions.clickOnUi(editor, 'button[data-mce-name="unlink"]');
       TinyAssertions.assertContent(editor, '<div><p>tiny</p></div>');
       TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 1);
     });

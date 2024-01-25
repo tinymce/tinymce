@@ -37,7 +37,7 @@ const renderColorStructure = (item: ItemStructureSpec, providerBackstage: UiFact
   const attributes = item.ariaLabel.map(
     (al) => ({
       'aria-label': providerBackstage.translate(al),
-      'data-mce-label': al
+      'data-mce-name': al
     })
   ).getOr({ });
 

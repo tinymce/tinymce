@@ -26,7 +26,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.SplitFloatingToolbarKeybo
 
   it('TINY-9723: Menu toolbar items should not be tabstoppable', async () => {
     const editor = hook.editor();
-    TinyUiActions.clickOnToolbar(editor, '.tox-tbtn[data-mce-label="overflow-button"]');
+    TinyUiActions.clickOnToolbar(editor, '.tox-tbtn[data-mce-name="overflow-button"]');
     const menubutton = await TinyUiActions.pWaitForPopup(editor, '.tox-tbtn[aria-label="menubutton"]');
     assert.isFalse(Attribute.has(menubutton, 'data-alloy-tabstop'));
     // Focus is on the first toolbar__group on the fontsize button

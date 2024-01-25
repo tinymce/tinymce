@@ -23,7 +23,7 @@ const renderClose = (providersBackstage: UiFactoryBackstageProviders) => Button.
     attributes: {
       'type': 'button',
       'aria-label': providersBackstage.translate('Close'),
-      'data-mce-label': 'close'
+      'data-mce-name': 'close'
     }
   },
   buttonBehaviours: Behaviour.derive([
