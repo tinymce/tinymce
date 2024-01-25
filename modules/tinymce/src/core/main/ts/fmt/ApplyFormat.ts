@@ -34,7 +34,7 @@ const canFormatBR = (editor: Editor, format: ApplyFormat, node: HTMLBRElement, p
     const validBRParentElements = getTextRootBlockElements(editor.schema);
     // If a caret node is present, the format should apply to that, not the br (applicable to collapsed selections)
     const hasCaretNodeSibling = PredicateExists.sibling(SugarElement.fromDom(node), (sibling) => isCaretNode(sibling.dom));
-    return Obj.hasNonNullableKey(validBRParentElements, parentName) && Empty.isEmpty(SugarElement.fromDom(node.parentNode), false) && !hasCaretNodeSibling;
+    return Obj.hasNonNullableKey(validBRParentElements, parentName) && Empty.isEmptyNode(editor.schema, node.parentNode, { skipBogus: false, includeZwsp: true }) && !hasCaretNodeSibling;
   } else {
     return false;
   }

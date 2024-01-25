@@ -3,21 +3,21 @@ import { Type } from '@ephox/katamari';
 import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Schema from '../api/html/Schema';
-import { isContent } from './Empty';
+import * as Empty from './Empty';
 import * as NodeType from './NodeType';
 
 const isSpan = (node: Node): node is HTMLSpanElement =>
   node.nodeName.toLowerCase() === 'span';
 
-const isInlineContent = (node: Node | null, root: Node, schema: Schema): boolean =>
-  Type.isNonNullable(node) && (isContent(node, root) || schema.isInline(node.nodeName.toLowerCase()));
+const isInlineContent = (node: Node | null, schema: Schema): boolean =>
+  Type.isNonNullable(node) && (Empty.isContent(schema, node) || schema.isInline(node.nodeName.toLowerCase()));
 
 const surroundedByInlineContent = (node: Node, root: Node, schema: Schema): boolean => {
   const prev = new DomTreeWalker(node, root).prev(false);
   const next = new DomTreeWalker(node, root).next(false);
   // Check if the next/previous is either inline content or the start/end (eg is undefined)
-  const prevIsInline = Type.isUndefined(prev) || isInlineContent(prev, root, schema);
-  const nextIsInline = Type.isUndefined(next) || isInlineContent(next, root, schema);
+  const prevIsInline = Type.isUndefined(prev) || isInlineContent(prev, schema);
+  const nextIsInline = Type.isUndefined(next) || isInlineContent(next, schema);
   return prevIsInline && nextIsInline;
 };
 
@@ -64,7 +64,7 @@ const trimNode = <T extends Node>(dom: DOMUtils, node: T, schema: Schema, root?:
   }
 
   // Remove any empty nodes
-  if (!isDocument(node) && !isContent(node, rootNode) && !isKeepElement(node) && !isKeepTextNode(node, rootNode, schema)) {
+  if (!isDocument(node) && !Empty.isContent(schema, node) && !isKeepElement(node) && !isKeepTextNode(node, rootNode, schema)) {
     dom.remove(node);
   }
 

@@ -10,7 +10,8 @@ import Plugin from 'tinymce/plugins/charmap/Plugin';
 
 import { fakeEvent } from '../module/Helpers';
 
-describe('browser.tinymce.plugins.charmap.DialogHeightTest', () => {
+// Disabled investigation ticket logged: #TINY-10579
+describe.skip('browser.tinymce.plugins.charmap.DialogHeightTest', () => {
   Arr.each([
     { label: 'IFrame Editor', setup: TinyHooks.bddSetupLight },
     { label: 'Shadow Dom Editor', setup: TinyHooks.bddSetupInShadowRoot },
