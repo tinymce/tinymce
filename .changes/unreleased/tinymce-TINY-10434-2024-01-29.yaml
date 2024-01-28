@@ -1,6 +1,6 @@
 project: tinymce
 kind: Added
-body: New 'revision-history' icon
+body: New `revision-history` icon
 time: 2024-01-29T08:47:50.07086+10:30
 custom:
   Issue: TINY-10434
