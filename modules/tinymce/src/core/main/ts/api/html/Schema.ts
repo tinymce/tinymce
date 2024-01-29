@@ -246,11 +246,11 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     Arr.each(ValidChildrenRuleParser.parseValidChildrenRules(validChildren ?? ''), ({ operation, name, validChildren }) => {
       const parent = operation === 'replace' ? { '#comment': {}} : children[name];
 
-      Arr.each(validChildren, (child) => {
+      Arr.each(validChildren, ({ preset, name }) => {
         if (operation === 'remove') {
-          delete parent[child];
+          delete parent[name];
         } else {
-          parent[child] = {};
+          parent[name] = {};
         }
       });
 

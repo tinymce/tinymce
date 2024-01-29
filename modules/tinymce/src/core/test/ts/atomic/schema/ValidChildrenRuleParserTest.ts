@@ -21,7 +21,30 @@ describe('atomic.tinymce.core.schema.ValidChildrenRuleParserTest', () => {
         {
           name: 'foo',
           operation: 'replace',
-          validChildren: [ 'bar', 'baz' ]
+          validChildren: [
+            { preset: false, name: 'bar' },
+            { preset: false, name: 'baz' }
+          ]
+        }
+      ]
+    }));
+
+    it('Replace children in multiple parents', () => testValidChildrenRuleParser({
+      input: 'foo1[bar],foo2[baz]',
+      expected: [
+        {
+          name: 'foo1',
+          operation: 'replace',
+          validChildren: [
+            { preset: false, name: 'bar' }
+          ]
+        },
+        {
+          name: 'foo2',
+          operation: 'replace',
+          validChildren: [
+            { preset: false, name: 'baz' }
+          ]
         }
       ]
     }));
@@ -32,7 +55,44 @@ describe('atomic.tinymce.core.schema.ValidChildrenRuleParserTest', () => {
         {
           name: 'foo',
           operation: 'add',
-          validChildren: [ 'bar', 'baz' ]
+          validChildren: [
+            { preset: false, name: 'bar' },
+            { preset: false, name: 'baz' }
+          ]
+        }
+      ]
+    }));
+
+    it('Add children to multiple parents', () => testValidChildrenRuleParser({
+      input: '+foo1[bar],+foo2[baz]',
+      expected: [
+        {
+          name: 'foo1',
+          operation: 'add',
+          validChildren: [
+            { preset: false, name: 'bar' }
+          ]
+        },
+        {
+          name: 'foo2',
+          operation: 'add',
+          validChildren: [
+            { preset: false, name: 'baz' }
+          ]
+        }
+      ]
+    }));
+
+    it('Add children presets', () => testValidChildrenRuleParser({
+      input: '+foo[@bar|@baz]',
+      expected: [
+        {
+          name: 'foo',
+          operation: 'add',
+          validChildren: [
+            { preset: true, name: 'bar' },
+            { preset: true, name: 'baz' }
+          ]
         }
       ]
     }));
@@ -43,7 +103,44 @@ describe('atomic.tinymce.core.schema.ValidChildrenRuleParserTest', () => {
         {
           name: 'foo',
           operation: 'remove',
-          validChildren: [ 'bar', 'baz' ]
+          validChildren: [
+            { preset: false, name: 'bar' },
+            { preset: false, name: 'baz' }
+          ]
+        }
+      ]
+    }));
+
+    it('Remove children from multiple parents', () => testValidChildrenRuleParser({
+      input: '-foo1[bar],-foo2[baz]',
+      expected: [
+        {
+          name: 'foo1',
+          operation: 'remove',
+          validChildren: [
+            { preset: false, name: 'bar' }
+          ]
+        },
+        {
+          name: 'foo2',
+          operation: 'remove',
+          validChildren: [
+            { preset: false, name: 'baz' }
+          ]
+        }
+      ]
+    }));
+
+    it('Remove children presets', () => testValidChildrenRuleParser({
+      input: '-foo[@bar|@baz]',
+      expected: [
+        {
+          name: 'foo',
+          operation: 'remove',
+          validChildren: [
+            { preset: true, name: 'bar' },
+            { preset: true, name: 'baz' }
+          ]
         }
       ]
     }));
