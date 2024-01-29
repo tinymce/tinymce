@@ -6,8 +6,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
-// Disabled investigation ticket logged: #TINY-10579
-describe.skip('webdriver.tinymce.core.keyboard.IframeTabfocusTest', () => {
+describe('webdriver.tinymce.core.keyboard.IframeTabfocusTest', () => {
   context('Focus shift on pressing tab', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       base_url: '/project/tinymce/js/tinymce',
@@ -51,9 +50,9 @@ describe.skip('webdriver.tinymce.core.keyboard.IframeTabfocusTest', () => {
       }
     }, []);
 
-    afterEach(async () => {
+    afterEach(() => {
       // Un focus the editor
-      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({ shiftKey: true }, '\t') ]);
+      window.focus();
     });
 
     it('TINY-9277: Focus on tab', async () => {
