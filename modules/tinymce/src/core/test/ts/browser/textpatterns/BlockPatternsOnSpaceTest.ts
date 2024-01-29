@@ -77,4 +77,10 @@ describe('browser.tinymce.core.textpatterns.BlockPatternsOnSpaceTest', () => {
     Utils.setContentAndPressSpace(editor, '>');
     TinyAssertions.assertContent(editor, '<blockquote><p>&nbsp;</p></blockquote>');
   });
+
+  it('TINY-10324: should insert horizontal ruel on ---', () => {
+    const editor = hook.editor();
+    Utils.setContentAndPressSpace(editor, '---');
+    TinyAssertions.assertContent(editor, '<hr><p>&nbsp;</p>');
+  });
 });

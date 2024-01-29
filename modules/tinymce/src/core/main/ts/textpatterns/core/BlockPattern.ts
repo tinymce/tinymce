@@ -82,7 +82,7 @@ const findPattern = <P extends Pattern>(patterns: P[], text: string): Optional<P
   return Arr.find(sortedPatterns, (pattern) => text.indexOf(pattern.start) === 0 || nuText.indexOf(pattern.start) === 0);
 };
 
-const findPatterns = (editor: Editor, block: Element, patternSet: PatternSet, normalizedMatches: boolean): BlockPatternMatch[] => {
+const findPatterns = (editor: Editor, block: Element, patternSet: PatternSet, normalizedMatches: boolean, isEnter: boolean): BlockPatternMatch[] => {
   const dom = editor.dom;
   const forcedRootBlock = Options.getForcedRootBlock(editor);
   if (!dom.is(block, forcedRootBlock)) {
@@ -92,7 +92,7 @@ const findPatterns = (editor: Editor, block: Element, patternSet: PatternSet, no
   // Get the block text and then find a matching pattern
   const blockText = block.textContent ?? '';
   return findPattern(patternSet.blockPatterns, blockText).map((pattern) => {
-    if (Tools.trim(blockText).length === pattern.start.length && !Options.isBlockPatternsPreExecuted(editor)) {
+    if (Tools.trim(blockText).length === pattern.start.length && isEnter) {
       return [];
     }
 
@@ -103,18 +103,18 @@ const findPatterns = (editor: Editor, block: Element, patternSet: PatternSet, no
   }).getOr([]);
 };
 
-const applyMatches = (editor: Editor, matches: BlockPatternMatch[]): void => {
+const applyMatches = (editor: Editor, matches: BlockPatternMatch[], isEnter: boolean): void => {
   if (matches.length === 0) {
     return;
   }
 
   // Store the current selection and then apply the matched patterns
-  if (Options.isBlockPatternsPreExecuted(editor)) {
-    Arr.each(matches, (match) => applyPattern(editor, match));
-  } else {
+  if (isEnter) {
     const bookmark = editor.selection.getBookmark();
     Arr.each(matches, (match) => applyPattern(editor, match));
     editor.selection.moveToBookmark(bookmark);
+  } else {
+    Arr.each(matches, (match) => applyPattern(editor, match));
   }
 };
 

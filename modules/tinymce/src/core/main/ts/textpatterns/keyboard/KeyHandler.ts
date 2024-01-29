@@ -2,7 +2,6 @@ import { Unicode } from '@ephox/katamari';
 
 import * as TextSearch from '../../alien/TextSearch';
 import Editor from '../../api/Editor';
-import * as Options from '../../api/Options';
 import VK from '../../api/util/VK';
 import * as Zwsp from '../../text/Zwsp';
 import * as BlockPattern from '../core/BlockPattern';
@@ -18,7 +17,7 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
     // IMPORTANT: We need to get normalized match results since undoing and redoing the editor state
     // via undoManager.extra() will result in the DOM being normalized.
     const inlineMatches = InlinePattern.findPatterns(editor, block, rng.startContainer, offset, dynamicPatternSet, true);
-    const blockMatches = BlockPattern.findPatterns(editor, block, dynamicPatternSet, true);
+    const blockMatches = BlockPattern.findPatterns(editor, block, dynamicPatternSet, true, true);
     if (blockMatches.length > 0 || inlineMatches.length > 0) {
       editor.undoManager.add();
       editor.undoManager.extra(
@@ -29,7 +28,7 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
           // create a cursor position that we can move to avoid the inline formats
           Zwsp.insert(editor);
           InlinePattern.applyMatches(editor, inlineMatches);
-          BlockPattern.applyMatches(editor, blockMatches);
+          BlockPattern.applyMatches(editor, blockMatches, true);
           // find the spot before the cursor position
           const range = editor.selection.getRng();
           const spot = TextSearch.textBefore(range.startContainer, range.startOffset, editor.dom.getRoot());
@@ -59,14 +58,12 @@ const handleInlineKey = (
     const offset = Math.max(0, rng.startOffset - 1);
     const beforeText = Utils.getBeforeText(editor.dom, block, rng.startContainer, offset);
     const dynamicPatternSet = Utils.resolveFromDynamicPatterns(patternSet, block, beforeText);
-    if (Options.isBlockPatternsPreExecuted(editor)) {
-      const blockMatches = BlockPattern.findPatterns(editor, block, dynamicPatternSet, false);
-      if (blockMatches.length > 0) {
-        editor.undoManager.transact(() => {
-          BlockPattern.applyMatches(editor, blockMatches);
-        });
-        return;
-      }
+    const blockMatches = BlockPattern.findPatterns(editor, block, dynamicPatternSet, false, false);
+    if (blockMatches.length > 0) {
+      editor.undoManager.transact(() => {
+        BlockPattern.applyMatches(editor, blockMatches, false);
+      });
+      return;
     }
     const inlineMatches = InlinePattern.findPatterns(editor, block, rng.startContainer, offset, dynamicPatternSet, false);
     if (inlineMatches.length > 0) {
