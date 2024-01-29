@@ -1,14 +1,21 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { SugarElement, SelectorFind } from '@ephox/sugar';
+import { SugarElement, SelectorFind, Class } from '@ephox/sugar';
+import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
+import Editor from 'tinymce/core/api/Editor';
 import * as Empty from 'tinymce/core/dom/Empty';
 
 describe('browser.tinymce.core.dom.EmptyTest', () => {
-  const testEmpty = (html: string, expected: boolean) => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    base_url: '/project/tinymce/js/tinymce'
+  }, [], true);
+
+  const testEmpty = (html: string, expected: boolean, options?: Empty.IsEmptyOptions) => {
+    const schema = hook.editor().schema;
     const elm = SugarElement.fromHtml(html);
     const expectedLabel = expected ? 'empty' : 'not empty';
-    assert.equal(Empty.isEmpty(elm), expected, html + ' should be treated as ' + expectedLabel);
+    assert.equal(Empty.isEmpty(schema, elm, options), expected, html + ' should be treated as ' + expectedLabel);
   };
 
   it('Empty elements', () => {
@@ -27,6 +34,9 @@ describe('browser.tinymce.core.dom.EmptyTest', () => {
     testEmpty('<p><i><b></b></i><b><i data-mce-bogus="all"><img src="#"></i></b></p>', true);
     testEmpty('<p><br data-mce-bogus="1"><br></p>', true);
     testEmpty('<a id="link" href="http://some.url/"></a>', true);
+    testEmpty('<span>\uFEFF</span>', true, { includeZwsp: true });
+    testEmpty('<img src="#">', true, { checkRootAsContent: false });
+    testEmpty('<div><!-- comment --><em></em></div>', true);
   });
 
   it('Non empty elements', () => {
@@ -34,6 +44,8 @@ describe('browser.tinymce.core.dom.EmptyTest', () => {
     testEmpty('<img src="#">', false);
     testEmpty('<input>', false);
     testEmpty('<textarea></textarea>', false);
+    testEmpty('<textarea> </textarea>', false);
+    testEmpty('<textarea>a</textarea>', false);
     testEmpty('<hr>', false);
     testEmpty('a', false);
     testEmpty('abc', false);
@@ -44,9 +56,13 @@ describe('browser.tinymce.core.dom.EmptyTest', () => {
     testEmpty('<span contenteditable="false"></span>', false);
     testEmpty('<div contenteditable="false"><span contenteditable="true"></span></div>', false);
     testEmpty('<a id="anchor"></a>', false);
+    testEmpty('<span>\uFEFF</span>', false);
+    testEmpty('<p><br data-mce-bogus="1"><br></p>', false, { skipBogus: false } );
+    testEmpty('<span class="foo"></span>', false, { isContent: (node: Node) => Class.has(SugarElement.fromDom(node), 'foo') });
   });
 
   it('TINY-10010: table cell with empty CET should not be treated as empty', () => {
+    const schema = hook.editor().schema;
     const html = `<table style="border-collapse: collapse; width: 100%;" border="1">
         <tbody>
         <tr>
@@ -58,6 +74,6 @@ describe('browser.tinymce.core.dom.EmptyTest', () => {
       </table>`;
     const table = SugarElement.fromHtml(html);
     const td = SelectorFind.descendant(table, 'td').getOrDie();
-    assert.isFalse(Empty.isEmpty(td));
+    assert.isFalse(Empty.isEmpty(schema, td));
   });
 });

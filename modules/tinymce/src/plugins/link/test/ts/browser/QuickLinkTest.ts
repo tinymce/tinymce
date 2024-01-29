@@ -1,8 +1,8 @@
 import { FocusTools, Keys, UiFinder, Waiter } from '@ephox/agar';
-import { describe, it, before, after } from '@ephox/bedrock-client';
+import { after, before, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
-import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions, TinyContentActions } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
@@ -191,5 +191,29 @@ describe('browser.tinymce.plugins.link.QuickLinkTest', () => {
     FocusTools.setActiveValue(doc, 'http://tiny.cloud/2');
     TinyUiActions.keydown(editor, Keys.enter());
     TinyAssertions.assertContent(editor, '<p>Lorem <a href="http://tiny.cloud/2"><em><strong>ipsum</strong></em></a> dolor sit amet</p>');
+  });
+
+  it('TINY-10439: `link_default_target` should be used when inserting link via quicklink', async () => {
+    const editor = hook.editor();
+
+    editor.setContent('<p>Word</p>');
+    // add link to word
+    TinySelections.setSelection(editor, [ 0, 0 ], ''.length, [ 0, 0 ], 'Word'.length);
+    await pOpenQuickLink(editor);
+    FocusTools.setActiveValue(doc, 'http://tiny.cloud/5');
+    TinyUiActions.keydown(editor, Keys.enter());
+    TinyAssertions.assertContent(editor, '<p><a href="http://tiny.cloud/5">Word</a></p>');
+
+    editor.options.set('link_default_target', '_blank');
+
+    editor.setContent('<p>Word</p>');
+    // add link to word
+    TinySelections.setSelection(editor, [ 0, 0 ], ''.length, [ 0, 0 ], 'Word'.length);
+    await pOpenQuickLink(editor);
+    FocusTools.setActiveValue(doc, 'http://tiny.cloud/5');
+    TinyUiActions.keydown(editor, Keys.enter());
+    TinyAssertions.assertContent(editor, '<p><a href="http://tiny.cloud/5" target="_blank" rel="noopener">Word</a></p>');
+
+    editor.options.unset('link_default_target');
   });
 });

@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: When inline editor toolbar wrapped to multiple lines the top wasn't always calculated
+  correctly.
+time: 2024-01-18T10:40:44.201716295+01:00
+custom:
+  Issue: TINY-10580

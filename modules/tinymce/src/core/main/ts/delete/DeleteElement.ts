@@ -85,8 +85,8 @@ const eqRawNode = (rawNode: Node) => (elm: SugarElement<Node>): boolean =>
 const isBlock = (editor: Editor, elm: SugarElement<Node>): boolean =>
   elm && Obj.has(editor.schema.getBlockElements(), SugarNode.name(elm));
 
-const paddEmptyBlock = (elm: SugarElement<Node>, preserveEmptyCaret: boolean): Optional<CaretPosition> => {
-  if (Empty.isEmpty(elm)) {
+const paddEmptyBlock = (schema: Schema, elm: SugarElement<Node>, preserveEmptyCaret: boolean): Optional<CaretPosition> => {
+  if (Empty.isEmpty(schema, elm)) {
     const br = SugarElement.fromHtml('<br data-mce-bogus="1">');
     // Remove all bogus elements except caret
     if (preserveEmptyCaret) {
@@ -148,7 +148,7 @@ const deleteElement = (
     editor.setContent('');
     editor.selection.setCursorLocation();
   } else {
-    parentBlock.bind((elm) => paddEmptyBlock(elm, preserveEmptyCaret)).fold(
+    parentBlock.bind((elm) => paddEmptyBlock(editor.schema, elm, preserveEmptyCaret)).fold(
       () => {
         if (moveCaret) {
           setSelection(editor, forward, normalizedAfterDeletePos);
