@@ -1,5 +1,6 @@
 import { Arr, Fun } from '@ephox/katamari';
 
+import * as GlobalAttributesSet from './GlobalAttributesSet';
 import * as SchemaElementSets from './SchemaElementSets';
 import { SchemaType } from './SchemaTypes';
 import * as SchemaUtils from './SchemaUtils';
@@ -13,7 +14,8 @@ export interface SchemaLookupTable {
 }
 
 export const makeSchema = (type: SchemaType): SchemaLookupTable => {
-  const { globalAttributes, phrasingContent, flowContent } = SchemaElementSets.getElementSetsAsStrings(type);
+  const globalAttributes = GlobalAttributesSet.getGlobalAttributeSet(type);
+  const { phrasingContent, flowContent } = SchemaElementSets.getElementSetsAsStrings(type);
   const schema: SchemaLookupTable = {};
 
   const addElement = (name: string, attributes: string[], children: string[]) => {
@@ -28,7 +30,7 @@ export const makeSchema = (type: SchemaType): SchemaLookupTable => {
     const childNames = SchemaUtils.split(children);
     const names = SchemaUtils.split(name);
     let ni = names.length;
-    const allAttributes = SchemaUtils.split([ globalAttributes, attributes ].join(' '));
+    const allAttributes = [ ...globalAttributes, ...SchemaUtils.split(attributes) ];
     while (ni--) {
       addElement(names[ni], allAttributes.slice(), childNames);
     }
