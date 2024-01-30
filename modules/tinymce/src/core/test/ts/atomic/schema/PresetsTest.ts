@@ -4,10 +4,10 @@ import { assert } from 'chai';
 
 import * as Presets from 'tinymce/core/schema/Presets';
 import * as SchemaElementSets from 'tinymce/core/schema/SchemaElementSets';
-import { SchemaType } from 'tinymce/core/schema/SchemaTypes';
+import * as SchemaTypes from 'tinymce/core/schema/SchemaTypes';
 
 describe('atomic.tinymce.core.schema.PresetsTest', () => {
-  const testPreset = (testCase: { type: SchemaType; preset: string; expectedSet: keyof SchemaElementSets.ElementSets<readonly string[]> }) => {
+  const testPreset = (testCase: { type: SchemaTypes.SchemaType; preset: string; expectedSet: keyof SchemaElementSets.ElementSets<readonly string[]> }) => {
     const arraySets = SchemaElementSets.getElementSets(testCase.type);
 
     const expectedNames = arraySets[testCase.expectedSet];
