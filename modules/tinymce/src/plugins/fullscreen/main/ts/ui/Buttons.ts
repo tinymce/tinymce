@@ -28,7 +28,8 @@ const register = (editor: Editor, fullscreenState: Cell<FullScreenInfo | null>):
     tooltip: 'Fullscreen',
     icon: 'fullscreen',
     onAction,
-    onSetup: makeSetupHandler(editor, fullscreenState)
+    onSetup: makeSetupHandler(editor, fullscreenState),
+    shortcut: 'Meta+Shift+F'
   });
 };
 
