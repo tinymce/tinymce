@@ -247,9 +247,9 @@ const openPropsDialog = async (editor: Editor, dialogCommand: `mceTable${'' | 'C
 };
 
 const selectListBoxValue = async (editor: Editor, section: string, title: string): Promise<void> => {
-  TinyUiActions.clickOnUi(editor, `button[title="${section}"].tox-listbox--select`);
+  TinyUiActions.clickOnUi(editor, `button[aria-label="${section}"].tox-listbox--select`);
   await TinyUiActions.pWaitForUi(editor, 'div[role="menu"].tox-menu.tox-collection--list');
-  TinyUiActions.clickOnUi(editor, `div[title="${title}"].tox-collection__item`);
+  TinyUiActions.clickOnUi(editor, `div[aria-label="${title}"].tox-collection__item`);
 };
 
 export {

@@ -6,7 +6,7 @@ import {
   Unselecting
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
-import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
+import { Arr, Cell, Fun, Future, Id, Merger, Optional, Type } from '@ephox/katamari';
 import { Attribute, EventArgs, SelectorFind } from '@ephox/sugar';
 
 import { ToolbarGroupOption } from '../../../api/Options';
@@ -85,8 +85,6 @@ const getToggleApi = (component: AlloyComponent): Toolbar.ToolbarToggleButtonIns
 
 const getTooltipAttributes = (tooltip: Optional<string>, providersBackstage: UiFactoryBackstageProviders) => tooltip.map<{}>((tooltip) => ({
   'aria-label': providersBackstage.translate(tooltip),
-  // TINY-10453: Remove this tooltip, we don't want duplicate tooltips and until we figured a better way to test, it's here now so that tests would pass
-  'title': providersBackstage.translate(tooltip)
 })).getOr({});
 
 const focusButtonEvent = Id.generate('focus-button');
@@ -96,7 +94,8 @@ const renderCommonStructure = (
   optText: Optional<string>,
   tooltip: Optional<string>,
   behaviours: Optional<Behaviours>,
-  providersBackstage: UiFactoryBackstageProviders
+  providersBackstage: UiFactoryBackstageProviders,
+  btnName?: string
 ): AlloyButtonSpec => {
   const optMemDisplayText = optText.map(
     (text) => Memento.record(renderLabel(text, ToolbarButtonClasses.Button, providersBackstage))
@@ -108,7 +107,10 @@ const renderCommonStructure = (
     dom: {
       tag: 'button',
       classes: [ ToolbarButtonClasses.Button ].concat(optText.isSome() ? [ ToolbarButtonClasses.MatchWidth ] : []),
-      attributes: getTooltipAttributes(tooltip, providersBackstage)
+      attributes: {
+        ...getTooltipAttributes(tooltip, providersBackstage),
+        ...(Type.isNonNullable(btnName) ? { 'data-mce-name': btnName } : {})
+      }
     },
     components: componentRenderPipeline([
       optMemDisplayIcon.map((mem) => mem.asSpec()),
@@ -150,7 +152,7 @@ const renderCommonStructure = (
   };
 };
 
-const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage: UiFactoryBackstage, identifyButtons: (toolbar: string | ToolbarGroupOption[]) => ToolbarGroup[], attributes: Record<string, string>): SketchSpec => {
+const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage: UiFactoryBackstage, identifyButtons: (toolbar: string | ToolbarGroupOption[]) => ToolbarGroup[], attributes: Record<string, string>, btnName?: string): SketchSpec => {
   const sharedBackstage = backstage.shared;
   const editorOffCell = Cell(Fun.noop);
   const specialisation = {
@@ -174,7 +176,7 @@ const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage
       toggledClass: ToolbarButtonClasses.Ticked
     },
     parts: {
-      button: renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.some(behaviours), sharedBackstage.providers),
+      button: renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.some(behaviours), sharedBackstage.providers, btnName),
       toolbar: {
         dom: {
           tag: 'div',
@@ -194,9 +196,9 @@ const generateTooltippingBehaviour = (text: Optional<string>, providersBackstage
   )
 ).toArray();
 
-const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisation: Specialisation<T>, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
+const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisation: Specialisation<T>, providersBackstage: UiFactoryBackstageProviders, btnName?: string): SketchSpec => {
   const editorOffCell = Cell(Fun.noop);
-  const structure = renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.none(), providersBackstage);
+  const structure = renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.none(), providersBackstage, btnName);
   return AlloyButton.sketch({
     dom: structure.dom,
     components: structure.components,
@@ -227,10 +229,10 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
   });
 };
 
-const renderToolbarButton = (spec: Toolbar.ToolbarButton, providersBackstage: UiFactoryBackstageProviders): SketchSpec =>
-  renderToolbarButtonWith(spec, providersBackstage, [ ]);
+const renderToolbarButton = (spec: Toolbar.ToolbarButton, providersBackstage: UiFactoryBackstageProviders, btnName?: string): SketchSpec =>
+  renderToolbarButtonWith(spec, providersBackstage, [ ], btnName);
 
-const renderToolbarButtonWith = (spec: Toolbar.ToolbarButton, providersBackstage: UiFactoryBackstageProviders, bonusEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[]): SketchSpec =>
+const renderToolbarButtonWith = (spec: Toolbar.ToolbarButton, providersBackstage: UiFactoryBackstageProviders, bonusEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[], btnName?: string): SketchSpec =>
   renderCommonToolbarButton(spec, {
     toolbarButtonBehaviours: (bonusEvents.length > 0 ? [
       // TODO: May have to pass through eventOrder if events start clashing
@@ -238,12 +240,12 @@ const renderToolbarButtonWith = (spec: Toolbar.ToolbarButton, providersBackstage
     ] : [ ]),
     getApi: getButtonApi,
     onSetup: spec.onSetup
-  }, providersBackstage);
+  }, providersBackstage, btnName);
 
-const renderToolbarToggleButton = (spec: Toolbar.ToolbarToggleButton, providersBackstage: UiFactoryBackstageProviders): SketchSpec =>
-  renderToolbarToggleButtonWith(spec, providersBackstage, [ ]);
+const renderToolbarToggleButton = (spec: Toolbar.ToolbarToggleButton, providersBackstage: UiFactoryBackstageProviders, btnName?: string): SketchSpec =>
+  renderToolbarToggleButtonWith(spec, providersBackstage, [ ], btnName);
 
-const renderToolbarToggleButtonWith = (spec: Toolbar.ToolbarToggleButton, providersBackstage: UiFactoryBackstageProviders, bonusEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[]): SketchSpec =>
+const renderToolbarToggleButtonWith = (spec: Toolbar.ToolbarToggleButton, providersBackstage: UiFactoryBackstageProviders, bonusEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[], btnName?: string): SketchSpec =>
   renderCommonToolbarButton(spec,
     {
       toolbarButtonBehaviours: [
@@ -256,7 +258,8 @@ const renderToolbarToggleButtonWith = (spec: Toolbar.ToolbarToggleButton, provid
       getApi: getToggleApi,
       onSetup: spec.onSetup
     },
-    providersBackstage
+    providersBackstage,
+    btnName
   );
 
 const fetchChoices = (getApi: (comp: AlloyComponent) => Toolbar.ToolbarSplitButtonInstanceApi, spec: ChoiceFetcher, providersBackstage: UiFactoryBackstageProviders) =>
@@ -290,8 +293,7 @@ const fetchChoices = (getApi: (comp: AlloyComponent) => Toolbar.ToolbarSplitButt
       )));
 
 // TODO: hookup onSetup and onDestroy
-const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: UiFactoryBackstageShared): SketchSpec => {
-
+const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: UiFactoryBackstageShared, btnName?: string): SketchSpec => {
   const getApi = (comp: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => ({
     isEnabled: () => !Disabling.isDisabled(comp),
     setEnabled: (state: boolean) => Disabling.set(comp, !state),
@@ -325,7 +327,8 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
       ),
     setTooltip: (tooltip: string) => {
       const translatedTooltip = sharedBackstage.providers.translate(tooltip);
-      Attribute.setAll(comp.element, { 'aria-label': translatedTooltip, 'title': translatedTooltip });
+      // Removed title attribute, will address dynamically update tooltip in TINY-10474
+      Attribute.setAll(comp.element, { 'aria-label': translatedTooltip });
     }
   });
 
@@ -338,7 +341,11 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     dom: {
       tag: 'div',
       classes: [ ToolbarButtonClasses.SplitButton ],
-      attributes: { 'aria-pressed': false, ...getTooltipAttributes(spec.tooltip, sharedBackstage.providers) }
+      attributes: {
+        'aria-pressed': false,
+        ...getTooltipAttributes(spec.tooltip, sharedBackstage.providers),
+        ...(Type.isNonNullable(btnName) ? { 'data-mce-name': btnName } : {})
+      }
     },
 
     onExecute: (button: AlloyComponent) => {

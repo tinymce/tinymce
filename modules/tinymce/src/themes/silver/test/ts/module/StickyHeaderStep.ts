@@ -105,7 +105,7 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
           {
             // opening the first menu should reveal the next menu which contains Align, open Align
             label: 'Open Align menu item',
-            selector: 'div[title=Align][role=menuitem]' // note we are using title instead of aria-label for some items here.
+            selector: 'div[aria-label=Align][role=menuitem]' // note we are using title instead of aria-label for some items here.
           }
         ]), 2, isToolbarTop);
       });
@@ -118,11 +118,11 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
           },
           {
             label: 'then Formats submenu',
-            selector: 'div[title=Formats][role=menuitem]'
+            selector: 'div[aria-label=Formats][role=menuitem]'
           },
           {
             label: 'then Inline submenu',
-            selector: 'div[title=Inline][role=menuitem]'
+            selector: 'div[aria-label=Inline][role=menuitem]'
           }
         ]), 3, isToolbarTop);
       });
@@ -131,7 +131,7 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
         await StickyUtils.pOpenMenuAndTestScrolling(() => MenuUtils.pOpenNestedMenus([
           {
             label: 'Open splitmenu item, color palette',
-            selector: 'div[title^="Text color"][aria-expanded=false]'
+            selector: 'div[data-mce-name="forecolor"][aria-expanded=false]'
           }
         ]), 1, isToolbarTop);
       });

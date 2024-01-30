@@ -21,7 +21,7 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
   const pClickEditMenu = async (editor: Editor, item: string): Promise<void> => {
     TinyUiActions.clickOnMenu(editor, 'button:contains("Edit")');
     await TinyUiActions.pWaitForUi(editor, '*[role="menu"]');
-    await RealMouse.pClickOn(`div[title=${item}]`);
+    await RealMouse.pClickOn(`div[aria-label=${item}]`);
   };
 
   const pPaste = async (editor: Editor): Promise<void> => {

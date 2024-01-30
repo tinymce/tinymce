@@ -137,7 +137,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorFormattingTest', (
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
     TinyUiActions.clickOnToolbar(editor, selectors.forecolorSplitButton);
     await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
-    TinyUiActions.clickOnUi(editor, 'div[title="Red"]');
+    TinyUiActions.clickOnUi(editor, 'div[data-mce-name="Red"]');
     TinyAssertions.assertContentStructure(editor, forecolorTitleStruct);
   });
 
@@ -147,7 +147,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorFormattingTest', (
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
     TinyUiActions.clickOnToolbar(editor, '[aria-label^="Background color"] > .tox-tbtn + .tox-split-button__chevron');
     await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
-    TinyUiActions.clickOnUi(editor, 'div[title="Red"]');
+    TinyUiActions.clickOnUi(editor, 'div[data-mce-name="Red"]');
     TinyAssertions.assertContentStructure(editor, backcolorTitleStruct);
   });
 
@@ -155,13 +155,13 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorFormattingTest', (
     const editor = hook.editor();
     editor.setContent(`Hello${Unicode.nbsp}world`);
     TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 2);
-    TinyUiActions.clickOnToolbar(editor, '[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+    TinyUiActions.clickOnToolbar(editor, '[data-mce-name="forecolor"] > .tox-tbtn + .tox-split-button__chevron');
     await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
     TinyUiActions.clickOnUi(editor, 'div[data-mce-color="#3598DB"]');
     TinyAssertions.assertContentStructure(editor, forecolorTextStruct);
-    TinyUiActions.clickOnToolbar(editor, '[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron');
+    TinyUiActions.clickOnToolbar(editor, '[data-mce-name="forecolor"] > .tox-tbtn + .tox-split-button__chevron');
     await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
-    TinyUiActions.clickOnUi(editor, 'div[title="Remove color"]');
+    TinyUiActions.clickOnUi(editor, 'div[data-mce-name="Remove color"]');
     TinyAssertions.assertContent(editor, '<p>Hello&nbsp;world</p>');
   });
 });

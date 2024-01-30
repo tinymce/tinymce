@@ -69,7 +69,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ReadonlyToolbarResizeTest
       s.element('button', {
         classes: [ arr.has('tox-tbtn'), arr.has('tox-tbtn--disabled') ],
         attrs: {
-          'title': str.is(buttonName),
+          'data-mce-name': str.is(buttonName),
           'aria-disabled': str.is('true')
         }
       })
@@ -82,7 +82,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ReadonlyToolbarResizeTest
       s.element('button', {
         classes: [ arr.has('tox-tbtn'), arr.not('tox-tbtn--disabled') ],
         attrs: {
-          'title': str.is(buttonName),
+          'data-mce-name': str.is(buttonName),
           'aria-disabled': str.is('false')
         }
       })
@@ -103,21 +103,21 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ReadonlyToolbarResizeTest
     const editor = hook.editor();
     Css.set(TinyDom.container(editor), 'width', '300px');
     await pAssertToolbarButtonState('Assert the first toolbar button, Bold is disabled', true, (s, str, arr) => [
-      disabledButtonStruct(s, str, arr, 'Bold'),
+      disabledButtonStruct(s, str, arr, 'bold'),
       s.theRest()
     ]);
 
     resizeTo(300, 400, 550, 400);
 
     await pAssertToolbarButtonState('Assert the toolbar buttons are disabled after resizing the editor', true, (s, str, arr) => [
-      disabledButtonStruct(s, str, arr, 'Bold'),
-      disabledButtonStruct(s, str, arr, 'Italic'),
-      disabledButtonStruct(s, str, arr, 'Underline'),
-      disabledButtonStruct(s, str, arr, 'Strikethrough'),
-      disabledButtonStruct(s, str, arr, 'Cut'),
-      disabledButtonStruct(s, str, arr, 'Copy'),
-      disabledButtonStruct(s, str, arr, 'Paste'),
-      disabledButtonStruct(s, str, arr, 'Increase indent'),
+      disabledButtonStruct(s, str, arr, 'bold'),
+      disabledButtonStruct(s, str, arr, 'italic'),
+      disabledButtonStruct(s, str, arr, 'underline'),
+      disabledButtonStruct(s, str, arr, 'strikethrough'),
+      disabledButtonStruct(s, str, arr, 'cut'),
+      disabledButtonStruct(s, str, arr, 'copy'),
+      disabledButtonStruct(s, str, arr, 'paste'),
+      disabledButtonStruct(s, str, arr, 'indent'),
       s.theRest()
     ]);
   });
@@ -126,46 +126,46 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ReadonlyToolbarResizeTest
     const editor = hook.editor();
     Css.set(TinyDom.container(editor), 'width', '550px');
     await pAssertToolbarButtonState('Assert the first toolbar button, Bold is disabled', true, (s, str, arr) => [
-      disabledButtonStruct(s, str, arr, 'Bold'),
+      disabledButtonStruct(s, str, arr, 'bold'),
       s.theRest()
     ]);
     editor.mode.set('design');
     await pOpenMore(ToolbarMode.floating);
     await pAssertToolbarButtonState('Assert the toolbar buttons are enabled', false, (s, str, arr) => [
-      enabledButtonStruct(s, str, arr, 'Bold'),
-      enabledButtonStruct(s, str, arr, 'Italic'),
-      enabledButtonStruct(s, str, arr, 'Underline'),
-      enabledButtonStruct(s, str, arr, 'Strikethrough'),
-      enabledButtonStruct(s, str, arr, 'Cut'),
-      enabledButtonStruct(s, str, arr, 'Copy'),
-      enabledButtonStruct(s, str, arr, 'Paste'),
-      enabledButtonStruct(s, str, arr, 'Increase indent'),
+      enabledButtonStruct(s, str, arr, 'bold'),
+      enabledButtonStruct(s, str, arr, 'italic'),
+      enabledButtonStruct(s, str, arr, 'underline'),
+      enabledButtonStruct(s, str, arr, 'strikethrough'),
+      enabledButtonStruct(s, str, arr, 'cut'),
+      enabledButtonStruct(s, str, arr, 'copy'),
+      enabledButtonStruct(s, str, arr, 'paste'),
+      enabledButtonStruct(s, str, arr, 'indent'),
       s.theRest()
     ]);
     await pAssertToolbarDrawerButtonState('Assert the toolbar drawer buttons are enabled', (s, str, arr) => [
-      enabledButtonStruct(s, str, arr, 'Subscript'),
-      enabledButtonStruct(s, str, arr, 'Superscript'),
-      enabledButtonStruct(s, str, arr, 'Clear formatting'),
+      enabledButtonStruct(s, str, arr, 'subscript'),
+      enabledButtonStruct(s, str, arr, 'superscript'),
+      enabledButtonStruct(s, str, arr, 'removeformat'),
       s.theRest()
     ]);
 
     resizeTo(400, 400, 500, 400);
 
     await pAssertToolbarButtonState('Assert the toolbar buttons are enabled and now include subscript', false, (s, str, arr) => [
-      enabledButtonStruct(s, str, arr, 'Bold'),
-      enabledButtonStruct(s, str, arr, 'Italic'),
-      enabledButtonStruct(s, str, arr, 'Underline'),
-      enabledButtonStruct(s, str, arr, 'Strikethrough'),
-      enabledButtonStruct(s, str, arr, 'Cut'),
-      enabledButtonStruct(s, str, arr, 'Copy'),
-      enabledButtonStruct(s, str, arr, 'Paste'),
-      enabledButtonStruct(s, str, arr, 'Increase indent'),
-      enabledButtonStruct(s, str, arr, 'Subscript'),
+      enabledButtonStruct(s, str, arr, 'bold'),
+      enabledButtonStruct(s, str, arr, 'italic'),
+      enabledButtonStruct(s, str, arr, 'underline'),
+      enabledButtonStruct(s, str, arr, 'strikethrough'),
+      enabledButtonStruct(s, str, arr, 'cut'),
+      enabledButtonStruct(s, str, arr, 'copy'),
+      enabledButtonStruct(s, str, arr, 'paste'),
+      enabledButtonStruct(s, str, arr, 'indent'),
+      enabledButtonStruct(s, str, arr, 'subscript'),
       s.theRest()
     ]);
     await pAssertToolbarDrawerButtonState('Assert the toolbar drawer buttons are enabled', (s, str, arr) => [
-      enabledButtonStruct(s, str, arr, 'Superscript'),
-      enabledButtonStruct(s, str, arr, 'Clear formatting'),
+      enabledButtonStruct(s, str, arr, 'superscript'),
+      enabledButtonStruct(s, str, arr, 'removeformat'),
       s.theRest()
     ]);
   });

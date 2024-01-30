@@ -76,7 +76,7 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
   };
 
   const assertToolbarDisabled = (expectedState: boolean) => {
-    const elm = UiFinder.findIn(SugarBody.body(), 'button[title="Bold"]').getOrDie();
+    const elm = UiFinder.findIn(SugarBody.body(), 'button[data-mce-name="bold"]').getOrDie();
     assert.equal(Class.has(elm, 'tox-tbtn--disabled'), expectedState, 'Button should have expected disabled state');
   };
 

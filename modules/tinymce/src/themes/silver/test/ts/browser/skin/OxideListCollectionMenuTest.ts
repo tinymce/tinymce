@@ -67,7 +67,7 @@ describe('browser.tinymce.themes.silver.skin.OxideListCollectionMenuTest', () =>
               s.element('div', {
                 classes: [ arr.has('tox-collection__item') ],
                 attrs: {
-                  title: str.is('Alpha')
+                  'aria-label': str.is('Alpha')
                 },
                 children: [
                   s.element('div', {
@@ -93,7 +93,7 @@ describe('browser.tinymce.themes.silver.skin.OxideListCollectionMenuTest', () =>
               s.element('div', {
                 classes: [ arr.has('tox-collection__item') ],
                 attrs: {
-                  title: str.is('Beta')
+                  'aria-label': str.is('Beta')
                 },
                 children: [
                   s.element('div', {
@@ -118,7 +118,7 @@ describe('browser.tinymce.themes.silver.skin.OxideListCollectionMenuTest', () =>
               s.element('div', {
                 classes: [ arr.has('tox-collection__item') ],
                 attrs: {
-                  title: str.is('Gamma')
+                  'aria-label': str.is('Gamma')
                 },
                 children: [
                   s.element('div', {

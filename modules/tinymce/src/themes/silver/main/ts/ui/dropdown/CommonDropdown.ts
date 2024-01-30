@@ -3,7 +3,7 @@ import {
   Keying, MaxHeight, Memento, NativeEvents, Replacing, Representing, SimulatedEvent, SketchSpec, SystemEvents, TieredData, Tooltipping, Unselecting
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
-import { Arr, Cell, Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
+import { Arr, Cell, Fun, Future, Id, Merger, Optional, Type } from '@ephox/katamari';
 import { EventArgs, SugarElement } from '@ephox/sugar';
 
 import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button/ButtonEvents';
@@ -46,13 +46,15 @@ export interface CommonDropdownSpec<T> {
   readonly classes: string[];
   readonly dropdownBehaviours: Behaviour.NamedConfiguredBehaviour<any, any, any>[];
   readonly searchable?: boolean;
+  readonly ariaLabel: Optional<string>;
 }
 
 // TODO: Use renderCommonStructure here.
 const renderCommonDropdown = <T>(
   spec: CommonDropdownSpec<T>,
   prefix: string,
-  sharedBackstage: UiFactoryBackstageShared
+  sharedBackstage: UiFactoryBackstageShared,
+  btnName?: string
 ): SketchSpec => {
   const editorOffCell = Cell(Fun.noop);
 
@@ -104,14 +106,12 @@ const renderCommonDropdown = <T>(
 
   const role = spec.role.fold(() => ({}), (role) => ({ role }));
 
-  const tooltipAttributes = spec.tooltip.fold(
+  const ariaLabelAttribute = spec.ariaLabel.fold(
     () => ({}),
-    (tooltip) => {
-      const translatedTooltip = sharedBackstage.providers.translate(tooltip);
+    (ariaLabel) => {
+      const translatedAriaLabel = sharedBackstage.providers.translate(ariaLabel);
       return {
-        // TINY-10453: Remove this tooltip, we don't want duplicate tooltips and until we figured a better way to test, it's here now so that tests would pass
-        'title': translatedTooltip,
-        'aria-label': translatedTooltip
+        'aria-label': translatedAriaLabel
       };
     }
   );
@@ -133,7 +133,8 @@ const renderCommonDropdown = <T>(
         tag: 'button',
         classes: [ prefix, `${prefix}--select` ].concat(Arr.map(spec.classes, (c) => `${prefix}--${c}`)),
         attributes: {
-          ...tooltipAttributes
+          ...ariaLabelAttribute,
+          ...(Type.isNonNullable(btnName) ? { 'data-mce-name': btnName } : {})
         }
       },
       components: componentRenderPipeline([

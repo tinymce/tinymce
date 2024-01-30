@@ -67,7 +67,7 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
 
 const createStylesButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec => {
   const dataset: AdvancedSelectDataset = { type: 'advanced', ...backstage.styles };
-  return createSelectButton(editor, backstage, getSpec(editor, dataset), btnTooltip, 'StylesTextUpdate');
+  return createSelectButton(editor, backstage, getSpec(editor, dataset), btnTooltip, 'StylesTextUpdate', 'styles');
 };
 
 const createStylesMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
