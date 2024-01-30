@@ -3,6 +3,10 @@ import { Arr } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
+import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
+import LinkPlugin from 'tinymce/plugins/link/Plugin';
+import SavePlugin from 'tinymce/plugins/save/Plugin';
+import SearchReplacePlugin from 'tinymce/plugins/searchreplace/Plugin';
 
 import * as TooltipUtils from '../../../module/TooltipUtils';
 
@@ -12,7 +16,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipShortcutTest', () => {
     toolbar_mode: 'wrap',
     base_url: '/project/tinymce/js/tinymce',
     plugins: 'link save searchreplace fullscreen',
-  });
+  }, [ LinkPlugin, SavePlugin, SearchReplacePlugin, FullscreenPlugin ]);
 
   Arr.each([
     { button: 'bold', expectedTooltip: 'Bold (⌘B)' },
@@ -34,7 +38,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipShortcutTest', () => {
   ], (test) => {
     it(`TINY-10487: Assert keyboard shortcut present in tooltip for ${test.button}`, async () => {
       const editor = hook.editor();
-      const buttonSelector = `button[data-mce-label="${test.button}"]`;
+      const buttonSelector = `button[data-mce-name="${test.button}"]`;
       await TooltipUtils.pAssertTooltip(editor, () => TooltipUtils.pTriggerTooltipWithMouse(editor, buttonSelector), test.expectedTooltip);
       await TooltipUtils.pCloseTooltip(editor, buttonSelector);
     });

@@ -329,8 +329,8 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
       ),
     setTooltip: (tooltip: string) => {
       const translatedTooltip = sharedBackstage.providers.translate(tooltip);
-      Attribute.set(comp.element, 'aria-label', translatedTooltip);
-      Tooltipping.setTooltipText(comp, sharedBackstage.providers.tooltips.getComponent({ tooltipText: translatedTooltip }));
+      // Removed title attribute, will address dynamically update tooltip in TINY-10474
+      Attribute.setAll(comp.element, { 'aria-label': translatedTooltip });
     }
   });
 
