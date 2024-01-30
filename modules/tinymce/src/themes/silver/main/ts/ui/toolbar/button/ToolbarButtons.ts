@@ -12,6 +12,7 @@ import { Attribute, EventArgs, SelectorFind } from '@ephox/sugar';
 import { ToolbarGroupOption } from '../../../api/Options';
 import { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
 import * as ReadOnly from '../../../ReadOnly';
+import * as ConvertShortcut from '../../../ui/alien/ConvertShortcut';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
@@ -45,6 +46,7 @@ interface GeneralToolbarButton<T> {
   readonly icon: Optional<string>;
   readonly text: Optional<string>;
   readonly tooltip: Optional<string>;
+  readonly shortcut: Optional<string>;
   readonly onAction: (api: T) => void;
   readonly enabled: boolean;
 }
@@ -188,10 +190,10 @@ const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage
   });
 };
 
-const generateTooltippingBehaviour = (text: Optional<string>, providersBackstage: UiFactoryBackstageProviders) => text.map(
+const generateTooltippingBehaviour = (providersBackstage: UiFactoryBackstageProviders, text: Optional<string>, shortcut: Optional<string>) => text.map(
   (t) => Tooltipping.config(
     providersBackstage.tooltips.getConfig({
-      tooltipText: providersBackstage.translate(t)
+      tooltipText: providersBackstage.translate(t) + shortcut.map((shortcut) => ` (${ConvertShortcut.convertText(shortcut)})`).getOr(''),
     })
   )
 ).toArray();
@@ -215,7 +217,7 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
             onControlAttached(specialisation, editorOffCell),
             onControlDetached(specialisation, editorOffCell)
           ]),
-          ...generateTooltippingBehaviour(spec.tooltip, providersBackstage),
+          ...generateTooltippingBehaviour(providersBackstage, spec.tooltip, spec.shortcut),
           // Enable toolbar buttons by default
           DisablingConfigs.toolbarButton(() => !spec.enabled || providersBackstage.isDisabled()),
           ReadOnly.receivingConfig()
@@ -327,8 +329,8 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
       ),
     setTooltip: (tooltip: string) => {
       const translatedTooltip = sharedBackstage.providers.translate(tooltip);
-      // Removed title attribute, will address dynamically update tooltip in TINY-10474
-      Attribute.setAll(comp.element, { 'aria-label': translatedTooltip });
+      Attribute.set(comp.element, 'aria-label', translatedTooltip);
+      Tooltipping.setTooltipText(comp, sharedBackstage.providers.tooltips.getComponent({ tooltipText: translatedTooltip }));
     }
   });
 
@@ -367,7 +369,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         onControlDetached(specialisation, editorOffCell)
       ]),
       Unselecting.config({ }),
-      ...generateTooltippingBehaviour(spec.tooltip, sharedBackstage.providers),
+      ...generateTooltippingBehaviour(sharedBackstage.providers, spec.tooltip, Optional.none()),
     ]),
 
     eventOrder: {
