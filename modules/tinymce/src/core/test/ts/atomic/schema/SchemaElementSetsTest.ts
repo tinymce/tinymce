@@ -5,15 +5,42 @@ import * as SchemaElementSets from 'tinymce/core/schema/SchemaElementSets';
 import { SchemaType } from 'tinymce/core/schema/SchemaTypes';
 
 describe('atomic.tinymce.core.schema.SchemaElementSetsTest', () => {
+  const assertDirectMutation = (names: readonly string[]) => {
+    assert.throw(() => {
+      const mutableNames = names as string[];
+
+      // Should not be possible to mutate the array
+      mutableNames.push('foo');
+    });
+  };
+
   const testSchemaElementSets = (testCase: { type: SchemaType; expected: SchemaElementSets.ElementSets<string[]> }) => {
-    const { globalAttributes, blockContent, phrasingContent, flowContent } = SchemaElementSets.getElementSetsAsStrings(testCase.type);
+    const stringSets = SchemaElementSets.getElementSetsAsStrings(testCase.type);
+    const arraySets = SchemaElementSets.getElementSets(testCase.type);
 
     assert.deepEqual({
-      globalAttributes: globalAttributes.split(' '),
-      blockContent: blockContent.split(' '),
-      phrasingContent: phrasingContent.split(' '),
-      flowContent: flowContent.split(' '),
+      globalAttributes: stringSets.globalAttributes.split(' '),
+      blockContent: stringSets.blockContent.split(' '),
+      phrasingContent: stringSets.phrasingContent.split(' '),
+      flowContent: stringSets.flowContent.split(' ')
     }, testCase.expected);
+
+    assert.deepEqual({
+      globalAttributes: arraySets.globalAttributes,
+      blockContent: arraySets.blockContent,
+      phrasingContent: arraySets.phrasingContent,
+      flowContent: arraySets.flowContent
+    }, testCase.expected);
+
+    assertDirectMutation(arraySets.globalAttributes);
+    assertDirectMutation(arraySets.blockContent);
+    assertDirectMutation(arraySets.phrasingContent);
+    assertDirectMutation(arraySets.flowContent);
+
+    // Should not be possible to replace things
+    assert.throw(() => {
+      arraySets.flowContent = [];
+    });
   };
 
   it('HTML5 element sets', () => testSchemaElementSets({

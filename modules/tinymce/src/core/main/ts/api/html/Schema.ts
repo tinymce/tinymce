@@ -1,6 +1,7 @@
 import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
 
 import * as CustomElementsRuleParser from '../../schema/CustomElementsRuleParser';
+import * as Presets from '../../schema/Presets';
 import * as SchemaLookupTable from '../../schema/SchemaLookupTable';
 import { ElementSettings, SchemaElement, SchemaMap, SchemaRegExpMap, SchemaSettings, SchemaType } from '../../schema/SchemaTypes';
 import * as SchemaUtils from '../../schema/SchemaUtils';
@@ -245,12 +246,25 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
   const addValidChildren = (validChildren: string | undefined) => {
     Arr.each(ValidChildrenRuleParser.parseValidChildrenRules(validChildren ?? ''), ({ operation, name, validChildren }) => {
       const parent = operation === 'replace' ? { '#comment': {}} : children[name];
-
-      Arr.each(validChildren, ({ preset, name }) => {
+      const processNodeName = (name: string) => {
         if (operation === 'remove') {
           delete parent[name];
         } else {
           parent[name] = {};
+        }
+      };
+
+      const processPreset = (name: string) => {
+        Presets.getElementsPreset(schemaType, name).each((names) => {
+          Arr.each(names, processNodeName);
+        });
+      };
+
+      Arr.each(validChildren, ({ preset, name }) => {
+        if (preset) {
+          processPreset(name);
+        } else {
+          processNodeName(name);
         }
       });
 
