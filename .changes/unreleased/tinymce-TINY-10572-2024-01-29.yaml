@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: Added 'getAllEmojis' api function to the emoticons plugin
+time: 2024-01-29T10:00:00.985790235+01:00
+custom:
+  Issue: TINY-10572
