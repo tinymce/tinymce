@@ -42,7 +42,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
   let startW: number;
   let startRawW: string;
   let startH: number;
-  // let startRawH: string;
+  let startRawH: string;
 
   const lazySizing = (table: SugarElement<HTMLTableElement>) =>
     TableSize.get(editor, table);
@@ -93,7 +93,9 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
       syncTableCellPixels(table);
     }
 
-    if (height !== startH) {
+    if (height !== startH && startRawH !== '') {
+      // Restore the original size and then let snooker resize appropriately
+      Css.set(table, 'height', startRawH);
       const idx = isRightEdgeResize ? getNumRows(table) - 1 : 0;
       Adjustments.adjustHeight(table, height - startH, idx );
     }
@@ -169,7 +171,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
       startW = e.width;
       startRawW = Options.isTableResponsiveForced(editor) ? '' : Utils.getRawWidth(editor, targetElm).getOr('');
       startH = e.height;
-      // startRawH = Utils.getRawHeight(editor, targetElm).getOr('');
+      startRawH = Utils.getRawHeight(editor, targetElm).getOr('');
     }
   });
 

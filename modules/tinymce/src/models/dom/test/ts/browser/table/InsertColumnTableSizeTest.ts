@@ -143,11 +143,11 @@ describe('browser.tinymce.models.dom.table.InsertColumnTableSizeTest', () => {
   const pInsertColumnMeasureWidth = async (editor: Editor, scenario: Scenario) => {
     const table = insertTable(editor, scenario.html);
     await TableTestUtils.pDragHandle(editor, 'se', -100, 0);
-    const widthBefore = TableTestUtils.getWidths(editor, table.dom);
+    const widthBefore = TableTestUtils.getWidthData(editor, table.dom);
     TableTestUtils.insertColumnBefore(editor);
     TableTestUtils.insertColumnAfter(editor);
     TableTestUtils.deleteColumn(editor);
-    const widthAfter = TableTestUtils.getWidths(editor, table.dom);
+    const widthAfter = TableTestUtils.getWidthData(editor, table.dom);
     return {
       widthBefore,
       widthAfter

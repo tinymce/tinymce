@@ -1,6 +1,6 @@
 import { Mouse, UiFinder, Waiter } from '@ephox/agar';
-import { afterEach, describe, it } from '@ephox/bedrock-client';
-import { Cell } from '@ephox/katamari';
+import { afterEach, context, describe, it } from '@ephox/bedrock-client';
+import { Arr, Cell } from '@ephox/katamari';
 import { Attribute, Height, Hierarchy, SelectorFind, SugarElement, Width } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -73,6 +73,19 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
     assert.approximately(changedWidth, width, 4, 'width is ' + width + ' but expected ' + changedWidth);
   };
 
+  // const tableHtml = '<table style="border-collapse: collapse; width: 367px; height: 190px;" border="1">' +
+  //   '<tbody>' +
+  //   '<tr>' +
+  //   '<td>a</td>' +
+  //   '<td>b</td>' +
+  //   '</tr>' +
+  //   '<tr>' +
+  //   '<td>1</td>' +
+  //   '<td>2</td>' +
+  //   '</tr>' +
+  //   '</tbody>' +
+  //   '</table>';
+
   const tableHtml = '<table style="border-collapse: collapse; width: 367px; height: 190px;" border="1">' +
     '<tbody>' +
     '<tr>' +
@@ -100,6 +113,8 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
     '</tbody>' +
     '</table>';
 
+  // TODO: Test different tables here
+
   const pWaitForSelection = async (editor: Editor) => {
     TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
     await Waiter.pTryUntil(
@@ -117,16 +132,44 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
     resetState();
   });
 
-  it('TBA: resize table height by dragging bottom', async () => {
-    const editor = hook.editor();
-    editor.setContent('<table style="border-collapse: collapse;border: 0;"><tbody><tr><td style="height:45px;">a</td></tr><tr><td style="height:45px;">a</td></tr></tbody></table>');
-    setStateFrom(editor, [ 0, 0, 0, 0 ]);
-    await pWaitForSelection(editor);
-    mouseover(TinyDom.body(editor), 'td');
-    dragDropBlocker(TinyDom.documentElement(editor), 'div[data-row="0"]', 0, 50);
-    assertSizeChange(editor, [ 0, 0, 0, 0 ], { dh: 50, dw: 0 });
-    assertNoDataStyle(editor, [ 0 ]);
-  });
+  Arr.each(
+    [
+      {
+        title: 'height only on tds',
+        content: '<table style="border-collapse: collapse;border: 0;"><tbody><tr><td style="height:45px;">a</td></tr><tr><td style="height:45px;">a</td></tr></tbody></table>',
+      },
+      {
+        title: 'height only on trs',
+        content: '<table style="border-collapse: collapse;border: 0;"><tbody><tr style="height:45px;"><td>a</td></tr><tr style="height:45px;"><td>a</td></tr></tbody></table>',
+      },
+      {
+        title: 'height only on both trs and tds',
+        content: '<table style="border-collapse: collapse;border: 0;"><tbody><tr style="height:45px;"><td style="height:45px;">a</td></tr><tr style="height:45px;"><td style="height:45px;">a</td></tr></tbody></table>',
+      },
+      {
+        title: 'height only table, trs and tds',
+        content: '<table style="border-collapse: collapse;border: 0; height: 100px;"><tbody><tr style="height:45px;"><td style="height:45px;">a</td></tr><tr style="height:45px;"><td style="height:45px;">a</td></tr></tbody></table>',
+      },
+    ],
+    (scenario) => {
+      const { title, content } = scenario;
+      it(`TBA: resize table height by dragging bottom (${title})`, async () => {
+        const editor = hook.editor();
+        editor.setContent(content);
+        setStateFrom(editor, [ 0, 0, 0, 0 ]);
+        await pWaitForSelection(editor);
+        mouseover(TinyDom.body(editor), 'td');
+        dragDropBlocker(
+          TinyDom.documentElement(editor),
+          'div[data-row="0"]',
+          0,
+          50
+        );
+        assertSizeChange(editor, [ 0, 0, 0, 0 ], { dh: 50, dw: 0 });
+        assertNoDataStyle(editor, [ 0 ]);
+      });
+    }
+  );
 
   it('TBA: resize table width by dragging right side', async () => {
     const editor = hook.editor();
@@ -139,29 +182,137 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
     assertNoDataStyle(editor, [ 0 ]);
   });
 
-  it('TBA: Resize table bigger with handle, then resize row height bigger by dragging middle border', async () => {
-    const editor = hook.editor();
-    editor.setContent(tableHtml);
-    setStateFrom(editor, [ 0 ]);
-    await pWaitForSelection(editor);
-    dragDrop(TinyDom.body(editor), '#mceResizeHandlese', 50, 50);
-    mouseover(TinyDom.body(editor), 'td');
-    dragDropBlocker(TinyDom.documentElement(editor), 'div[data-row="0"]', 0, 50);
-    assertSizeChange(editor, [ 0 ], { dh: 100, dw: 50 });
-    assertNoDataStyle(editor, [ 0 ]);
-  });
+  Arr.each(
+    [
+      {
+        title: 'height only on table',
+        content: '<table style="border-collapse: collapse; width: 367px; height: 190px;" border="1">' +
+        '<tbody>' +
+        '<tr>' +
+        '<td style="width: 180px;">a</td>' +
+        '<td style="width: 180px;">b</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td style="width: 180px;">1</td>' +
+        '<td style="width: 180px;">2</td>' +
+        '</tr>' +
+        '</tbody>' +
+        '</table>'
+      },
+      {
+        title: 'height only on tds',
+        content: '<table style="border-collapse: collapse; width: 367px;" border="1">' +
+        '<tbody>' +
+        '<tr>' +
+        '<td style="width: 180px; height: 50px;">a</td>' +
+        '<td style="width: 180px; height: 50px;">b</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td style="width: 180px; height: 50px;">1</td>' +
+        '<td style="width: 180px; height: 50px;">2</td>' +
+        '</tr>' +
+        '</tbody>' +
+        '</table>'
+      },
+      {
+        title: 'height only on trs',
+        content: '<table style="border-collapse: collapse; width: 367px;" border="1">' +
+        '<tbody>' +
+        '<tr style=" height: 73px;">' +
+        '<td style="width: 180px;">a</td>' +
+        '<td style="width: 180px;">b</td>' +
+        '</tr>' +
+        '<tr style=" height: 43px;">' +
+        '<td style="width: 180px;">1</td>' +
+        '<td style="width: 180px;">2</td>' +
+        '</tr>' +
+        '</tbody>' +
+        '</table>'
+      },
+      {
+        title: 'height only on trs and tds',
+        content: '<table style="border-collapse: collapse; width: 367px;" border="1">' +
+        '<tbody>' +
+        '<tr style=" height: 50px;">' +
+        '<td style="width: 180px; height: 50px;">a</td>' +
+        '<td style="width: 180px; height: 50px;">b</td>' +
+        '</tr>' +
+        '<tr style=" height: 50px;">' +
+        '<td style="width: 180px; height: 50px;">1</td>' +
+        '<td style="width: 180px; height: 50px;">2</td>' +
+        '</tr>' +
+        '</tbody>' +
+        '</table>'
+      },
+      {
+        title: 'height on table, trs and tds',
+        content: '<table style="border-collapse: collapse; width: 367px; height: 100px;" border="1">' +
+        '<tbody>' +
+        '<tr style=" height: 50px;">' +
+        '<td style="width: 180px; height: 50px;">a</td>' +
+        '<td style="width: 180px; height: 50px;">b</td>' +
+        '</tr>' +
+        '<tr style=" height: 50px;">' +
+        '<td style="width: 180px; height: 50px;">1</td>' +
+        '<td style="width: 180px; height: 50px;">2</td>' +
+        '</tr>' +
+        '</tbody>' +
+        '</table>'
+      },
+    ],
+    (scenario) => {
+      const { title, content } = scenario;
+      context(title, () => {
+        it('TBA: Resize table bigger with handle, then resize row height bigger by dragging middle border', async () => {
+          const editor = hook.editor();
+          editor.setContent(content);
+          setStateFrom(editor, [ 0 ]);
+          await pWaitForSelection(editor);
+          dragDrop(TinyDom.body(editor), '#mceResizeHandlese', 50, 50);
+          mouseover(TinyDom.body(editor), 'td');
+          dragDropBlocker(TinyDom.documentElement(editor), 'div[data-row="0"]', 0, 50);
+          assertSizeChange(editor, [ 0 ], { dh: 100, dw: 50 });
+          assertNoDataStyle(editor, [ 0 ]);
+        });
 
-  it('TBA: Resize table bigger with handle, then resize row height smaller by dragging middle border', async () => {
-    const editor = hook.editor();
-    editor.setContent(tableHtml);
-    setStateFrom(editor, [ 0 ]);
-    await pWaitForSelection(editor);
-    dragDrop(TinyDom.body(editor), '#mceResizeHandlese', 50, 50);
-    mouseover(TinyDom.body(editor), 'td');
-    dragDropBlocker(TinyDom.documentElement(editor), 'div[data-row="0"]', 0, -30);
-    assertSizeChange(editor, [ 0 ], { dh: 20, dw: 50 });
-    assertNoDataStyle(editor, [ 0 ]);
-  });
+        it('TBA: Resize table bigger with handle, then resize row height smaller by dragging middle border', async () => {
+          const editor = hook.editor();
+          editor.setContent(content);
+          setStateFrom(editor, [ 0 ]);
+          await pWaitForSelection(editor);
+          dragDrop(TinyDom.body(editor), '#mceResizeHandlese', 50, 50);
+          mouseover(TinyDom.body(editor), 'td');
+          dragDropBlocker(TinyDom.documentElement(editor), 'div[data-row="0"]', 0, -30);
+          assertSizeChange(editor, [ 0 ], { dh: 20, dw: 50 });
+          assertNoDataStyle(editor, [ 0 ]);
+        });
+
+        it('TBA: Resize table smaller with handle, then resize row height bigger by dragging middle border', async () => {
+          const editor = hook.editor();
+          editor.setContent(tableHtml);
+          setStateFrom(editor, [ 0 ]);
+          await pWaitForSelection(editor);
+          dragDrop(TinyDom.body(editor), '#mceResizeHandlese', -10, -10);
+          mouseover(TinyDom.body(editor), 'td');
+          dragDropBlocker(TinyDom.documentElement(editor), 'div[data-row="0"]', 0, 50);
+          assertSizeChange(editor, [ 0 ], { dh: 40, dw: -10 });
+          assertNoDataStyle(editor, [ 0 ]);
+        });
+
+        it('TBA: Resize table smaller with handle, then resize row height smaller by dragging middle border', async () => {
+          const editor = hook.editor();
+          editor.setContent(tableHtml);
+          setStateFrom(editor, [ 0 ]);
+          await pWaitForSelection(editor);
+          dragDrop(TinyDom.body(editor), '#mceResizeHandlese', -10, -10);
+          mouseover(TinyDom.body(editor), 'td');
+          dragDropBlocker(TinyDom.documentElement(editor), 'div[data-row="0"]', 0, -20);
+          assertSizeChange(editor, [ 0 ], { dh: -30, dw: -10 });
+          assertNoDataStyle(editor, [ 0 ]);
+        });
+      });
+    }
+  );
 
   it('TBA: Resize table bigger with handle, then resize column width bigger by dragging middle border', async () => {
     const editor = hook.editor();
@@ -184,30 +335,6 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
     mouseover(TinyDom.body(editor), 'td');
     dragDropBlocker(TinyDom.documentElement(editor), 'div[data-column="0"]', -30, 0);
     assertSizeChange(editor, [ 0 ], { dh: 50, dw: 50 });
-    assertNoDataStyle(editor, [ 0 ]);
-  });
-
-  it('TBA: Resize table smaller with handle, then resize row height bigger by dragging middle border', async () => {
-    const editor = hook.editor();
-    editor.setContent(tableHtml);
-    setStateFrom(editor, [ 0 ]);
-    await pWaitForSelection(editor);
-    dragDrop(TinyDom.body(editor), '#mceResizeHandlese', -10, -10);
-    mouseover(TinyDom.body(editor), 'td');
-    dragDropBlocker(TinyDom.documentElement(editor), 'div[data-row="0"]', 0, 50);
-    assertSizeChange(editor, [ 0 ], { dh: 40, dw: -10 });
-    assertNoDataStyle(editor, [ 0 ]);
-  });
-
-  it('TBA: Resize table smaller with handle, then resize row height smaller by dragging middle border', async () => {
-    const editor = hook.editor();
-    editor.setContent(tableHtml);
-    setStateFrom(editor, [ 0 ]);
-    await pWaitForSelection(editor);
-    dragDrop(TinyDom.body(editor), '#mceResizeHandlese', -10, -10);
-    mouseover(TinyDom.body(editor), 'td');
-    dragDropBlocker(TinyDom.documentElement(editor), 'div[data-row="0"]', 0, -20);
-    assertSizeChange(editor, [ 0 ], { dh: -30, dw: -10 });
     assertNoDataStyle(editor, [ 0 ]);
   });
 
