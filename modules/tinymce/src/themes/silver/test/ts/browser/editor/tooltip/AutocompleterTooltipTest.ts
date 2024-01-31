@@ -1,4 +1,4 @@
-import { Keys, UiFinder } from '@ephox/agar';
+import { Keys, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
@@ -21,8 +21,10 @@ describe('browser.tinymce.themes.silver.editor.AutocompleterTooltipTest', () => 
 
   const pCloseAutocompleterByKey = async (editor: Editor) => {
     TinyContentActions.keydown(editor, Keys.escape());
-    // Wait 50ms for the keypress to process
     await AutocompleterUtils.pWaitForAutocompleteToClose();
+    await Waiter.pTryUntil(
+      'Waiting for tooltip to NO LONGER be in DOM',
+      () => UiFinder.notExists(SugarBody.body(), '.tox-silver-sink .tox-tooltip__body'));
   };
 
   context('AutocompleteItem, columns = auto', () => {
