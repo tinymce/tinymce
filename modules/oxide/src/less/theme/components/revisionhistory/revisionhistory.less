@@ -8,21 +8,26 @@
 @revisionhistory-text-lineheight: 24px;
 
 .tox {
-  .tox-view__pane {
-    border-top: @revisionhistory-border;
-    margin-top: @pad-sm;
-    padding: 0 !important;
+  .tox-revisionhistory__pane {
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;      /* Override the default padding of tox-view__pane */
   }
 
   .tox-revisionhistory {
     background-color: @revisionhistory-background-color;
+    border-radius: 4px;
+    border-top: @revisionhistory-border;
     display: flex;
+    flex: 1;
     height: 100%;
+    margin-top: 8px;
+    overflow: 'auto';
     position: relative;
     width: 100%;
   }
 
-  .tox-revsionhistory__iframe {
+  .tox-revisionhistory__iframe {
     flex: 1;
   }
 

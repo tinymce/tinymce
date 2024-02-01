@@ -85,9 +85,8 @@ export const renderButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryB
   const optTranslatedText = isToggleButton ? spec.text.map(providers.translate) : Optional.some(providers.translate(spec.text));
   const optTranslatedTextComponed = optTranslatedText.map(GuiFactory.text);
 
-  const tooltipAttributes = buttonSpec.tooltip.or(optTranslatedText).map<{}>((tooltip) => ({
-    'aria-label': providers.translate(tooltip),
-    'title': providers.translate(tooltip)
+  const ariaLabelAttributes = buttonSpec.tooltip.or(optTranslatedText).map<{}>((al) => ({
+    'aria-label': providers.translate(al),
   })).getOr({});
 
   const optIconSpec = optMemIcon.map((memIcon) => memIcon.asSpec());
@@ -102,10 +101,10 @@ export const renderButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryB
       .concat(...hasIconAndText ? [ 'tox-button--icon-and-text' ] : [])
       .concat(...spec.borderless ? [ 'tox-button--naked' ] : [])
       .concat(...spec.type === 'togglebutton' && spec.active ? [ ViewButtonClasses.Ticked ] : []),
-    attributes: tooltipAttributes
+    attributes: ariaLabelAttributes
   };
   const extraBehaviours: Behaviours = [];
 
-  const iconButtonSpec = renderCommonSpec(buttonSpec, Optional.some(action), extraBehaviours, dom, components, spec.tooltip, providers);
+  const iconButtonSpec = renderCommonSpec(buttonSpec, Optional.some(action), extraBehaviours, dom, components, Optional.none(), providers);
   return AlloyButton.sketch(iconButtonSpec);
 };

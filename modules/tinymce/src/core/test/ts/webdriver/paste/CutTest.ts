@@ -17,7 +17,7 @@ describe('webdriver.tinymce.core.paste.CutTest', () => {
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
     TinyUiActions.clickOnMenu(editor, 'button:contains("Edit")');
     await TinyUiActions.pWaitForUi(editor, '*[role="menu"]');
-    await RealMouse.pClickOn('div[title="Cut"]');
+    await RealMouse.pClickOn('div[aria-label="Cut"]');
     await Waiter.pTryUntil('Cut is async now, so need to wait for content', () => TinyAssertions.assertContent(editor, '<p>ac</p>'));
   });
 
@@ -35,7 +35,7 @@ describe('webdriver.tinymce.core.paste.CutTest', () => {
       TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
       TinyUiActions.clickOnMenu(editor, 'button:contains("Edit")');
       await TinyUiActions.pWaitForUi(editor, '*[role="menu"]');
-      await RealMouse.pClickOn('div[title="Cut"]');
+      await RealMouse.pClickOn('div[aria-label="Cut"]');
       await Waiter.pTryUntil('Cut is async now, so need to wait for content', () => TinyAssertions.assertContent(editor, '<p>ac</p>'));
     });
   });

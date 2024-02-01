@@ -79,8 +79,8 @@ const getItems = (editor: Editor, classes: Dialog.ListBoxItemSpec[], insertNewTa
 
   const classListItem: Dialog.ListBoxSpec[] = classes.length > 0 ? [
     {
-      type: 'listbox',
       name: 'class',
+      type: 'listbox',
       label: 'Class',
       items: classes
     }

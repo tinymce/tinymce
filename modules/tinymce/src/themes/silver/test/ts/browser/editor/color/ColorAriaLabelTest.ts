@@ -28,7 +28,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorAriaLabelTest', () => 
     forecolorMenuItem: (color: string = '') => Strings.isEmpty(color) ? `[role="menu"] div[aria-label^="Text color"]` : `[role="menu"] div[aria-label^="Text color ${color}"]`,
     forecolorMenu: 'button:contains("forecolor")',
     backcolorMenu: 'button:contains("backcolor")',
-    swatchItemColor: (color: string = '') => `[role="menuitemradio"][title="${color}"]`
+    swatchItemColor: (color: string = '') => `[role="menuitemradio"][data-mce-name="${color}"]`
   };
 
   const pResetColorToDefault = async (editor: Editor, selector: string) => {
@@ -60,7 +60,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorAriaLabelTest', () => 
   const pSelectCustomAndAssertToolbar = async (editor: Editor, selector: string, expectedSelector: string) => {
     TinyUiActions.clickOnToolbar(editor, selector);
     await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
-    TinyUiActions.clickOnUi(editor, 'button[title="Custom color"]');
+    TinyUiActions.clickOnUi(editor, 'button[data-mce-name="Custom color"]');
     const dialog = await TinyUiActions.pWaitForDialog(editor);
     const input = UiFinder.findIn<HTMLInputElement>(dialog, 'label:contains("#") + input').getOrDie();
     UiControls.setValue(input, '123123');
@@ -70,7 +70,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorAriaLabelTest', () => 
     });
     input.dom.dispatchEvent(evt);
     await Waiter.pTryUntil('Dialog has changed', () => input.dom.value === '123123');
-    TinyUiActions.clickOnUi(editor, 'button[title="Save"]');
+    TinyUiActions.clickOnUi(editor, 'button[data-mce-name="Save"]');
     UiFinder.exists(SugarBody.body(), expectedSelector);
   };
 
@@ -99,7 +99,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorAriaLabelTest', () => 
   const pSelectCustomAndAssertMenu = async (editor: Editor, menuSelector: string, menuItemSelector: string, expectedSelector: string) => {
     await pOpenMenuAndSwatch(editor, menuSelector, menuItemSelector);
 
-    TinyUiActions.clickOnUi(editor, 'button[title="Custom color"]');
+    TinyUiActions.clickOnUi(editor, 'button[data-mce-name="Custom color"]');
     const dialog = await TinyUiActions.pWaitForDialog(editor);
     const input = UiFinder.findIn<HTMLInputElement>(dialog, 'label:contains("#") + input').getOrDie();
     UiControls.setValue(input, '123123');
@@ -109,7 +109,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorAriaLabelTest', () => 
     });
     input.dom.dispatchEvent(evt);
     await Waiter.pTryUntil('Dialog has changed', () => input.dom.value === '123123');
-    TinyUiActions.clickOnUi(editor, 'button[title="Save"]');
+    TinyUiActions.clickOnUi(editor, 'button[data-mce-name="Save"]');
     TinyUiActions.clickOnMenu(editor, menuSelector);
     await TinyUiActions.pWaitForUi(editor, expectedSelector);
     UiFinder.exists(SugarBody.body(), expectedSelector);

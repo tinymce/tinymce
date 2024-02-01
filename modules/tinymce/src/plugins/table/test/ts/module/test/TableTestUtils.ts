@@ -79,11 +79,13 @@ const pAssertDialogPresence = async (label: string, editor: Editor, expected: Re
   );
 };
 
-const pAssertListBoxValue = async (label: string, editor: Editor, section: string, expected: string): Promise<void> => {
+const pAssertListBox = async (label: string, editor: Editor, section: string, expected: { title: string; value: string }): Promise<void> => {
   const dialog = await TinyUiActions.pWaitForDialog(editor);
   const elem = UiFinder.findIn(dialog, 'label:contains("' + section + '") + .tox-listboxfield > .tox-listbox').getOrDie();
   const value = Attribute.get(elem, 'data-value');
-  assert.equal(value, expected, 'Checking listbox: ' + label);
+  assert.equal(value, expected.value, 'Checking listbox value: ' + label);
+  const text = TextContent.get(elem);
+  assert.equal(text, expected.title, 'Checking listbox text: ' + label);
 };
 
 const getInput = (selector: string) =>
@@ -239,9 +241,20 @@ const createRow = (cellContents: string[]): SugarElement<HTMLTableRowElement> =>
   return tr;
 };
 
+const openPropsDialog = async (editor: Editor, dialogCommand: `mceTable${'' | 'Cell' | 'Row'}Props`): Promise<void> => {
+  editor.execCommand(dialogCommand);
+  await TinyUiActions.pWaitForDialog(editor);
+};
+
+const selectListBoxValue = async (editor: Editor, section: string, title: string): Promise<void> => {
+  TinyUiActions.clickOnUi(editor, `button[aria-label="${section}"].tox-listbox--select`);
+  await TinyUiActions.pWaitForUi(editor, 'div[role="menu"].tox-menu.tox-collection--list');
+  TinyUiActions.clickOnUi(editor, `div[aria-label="${title}"].tox-collection__item`);
+};
+
 export {
   pAssertDialogPresence,
-  pAssertListBoxValue,
+  pAssertListBox,
   openContextToolbarOn,
   assertTableStructure,
   createTableChildren,
@@ -254,5 +267,7 @@ export {
   pClickDialogButton,
   assertElementStructure,
   assertApproxElementStructure,
-  createRow
+  createRow,
+  openPropsDialog,
+  selectListBoxValue
 };

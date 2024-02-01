@@ -32,13 +32,13 @@ describe('browser.tinymce.plugins.link.SelectedImageFigureTest', () => {
       </figure>
     `);
 
-    await TinyUiActions.pWaitForUi(editor, '[title="Insert/edit link"]:not(.tox-tbtn--enabled)');
+    await TinyUiActions.pWaitForUi(editor, '[data-mce-name="link"]:not(.tox-tbtn--enabled)');
 
     TinySelections.select(editor, 'figure.has-link', []);
-    await TinyUiActions.pWaitForUi(editor, '[title="Insert/edit link"].tox-tbtn--enabled');
+    await TinyUiActions.pWaitForUi(editor, '[data-mce-name="link"].tox-tbtn--enabled');
 
     TinySelections.select(editor, 'figure.no-link', []);
-    await TinyUiActions.pWaitForUi(editor, '[title="Insert/edit link"]:not(.tox-tbtn--enabled)');
+    await TinyUiActions.pWaitForUi(editor, '[data-mce-name="link"]:not(.tox-tbtn--enabled)');
   });
 
 });

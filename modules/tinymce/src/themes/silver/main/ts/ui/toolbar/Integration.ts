@@ -26,7 +26,7 @@ export interface RenderToolbarConfig {
   readonly allowToolbarGroups: boolean;
 }
 
-type BridgeRenderFn<S> = (spec: S, backstage: UiFactoryBackstage, editor: Editor) => AlloySpec;
+type BridgeRenderFn<S> = (spec: S, backstage: UiFactoryBackstage, editor: Editor, btnName: string) => AlloySpec;
 
 const defaultToolbar = [
   {
@@ -56,35 +56,35 @@ const defaultToolbar = [
 ];
 
 const renderFromBridge = <BI, BO>(bridgeBuilder: (i: BI) => Result<BO, StructureSchema.SchemaError<any>>, render: BridgeRenderFn<BO>) =>
-  (spec: BI, backstage: UiFactoryBackstage, editor: Editor) => {
+  (spec: BI, backstage: UiFactoryBackstage, editor: Editor, btnName: string) => {
     const internal = bridgeBuilder(spec).mapError((errInfo) => StructureSchema.formatError(errInfo)).getOrDie();
-    return render(internal, backstage, editor);
+    return render(internal, backstage, editor, btnName);
   };
 
 const types: Record<string, BridgeRenderFn<any>> = {
   button: renderFromBridge(
     Toolbar.createToolbarButton,
-    (s, backstage) => renderToolbarButton(s, backstage.shared.providers)
+    (s, backstage, _, btnName) => renderToolbarButton(s, backstage.shared.providers, btnName)
   ),
 
   togglebutton: renderFromBridge(
     Toolbar.createToggleButton,
-    (s, backstage) => renderToolbarToggleButton(s, backstage.shared.providers)
+    (s, backstage, _, btnName) => renderToolbarToggleButton(s, backstage.shared.providers, btnName)
   ),
 
   menubutton: renderFromBridge(
     Toolbar.createMenuButton,
-    (s, backstage) => renderMenuButton(s, ToolbarButtonClasses.Button, backstage, Optional.none(), false)
+    (s, backstage, _, btnName) => renderMenuButton(s, ToolbarButtonClasses.Button, backstage, Optional.none(), false, btnName)
   ),
 
   splitbutton: renderFromBridge(
     Toolbar.createSplitButton,
-    (s, backstage) => renderSplitButton(s, backstage.shared)
+    (s, backstage, _, btnName) => renderSplitButton(s, backstage.shared, btnName)
   ),
 
   grouptoolbarbutton: renderFromBridge(
     Toolbar.createGroupToolbarButton,
-    (s, backstage, editor) => {
+    (s, backstage, editor, btnName) => {
       const buttons = editor.ui.registry.getAll().buttons;
       const identify = (toolbar: string | ToolbarGroupOption[]) =>
         identifyButtons(editor, { buttons, toolbar, allowToolbarGroups: false }, backstage, Optional.none());
@@ -94,7 +94,7 @@ const types: Record<string, BridgeRenderFn<any>> = {
 
       switch (getToolbarMode(editor)) {
         case ToolbarMode.floating:
-          return renderFloatingToolbarButton(s, backstage, identify, attributes);
+          return renderFloatingToolbarButton(s, backstage, identify, attributes, btnName);
         default:
           // TODO change this message and add a case when sliding is available
           throw new Error('Toolbar groups are only supported when using floating toolbar mode');
@@ -103,7 +103,7 @@ const types: Record<string, BridgeRenderFn<any>> = {
   )
 };
 
-const extractFrom = (spec: ToolbarButton & { type: string }, backstage: UiFactoryBackstage, editor: Editor): Optional<AlloySpec> =>
+const extractFrom = (spec: ToolbarButton & { type: string }, backstage: UiFactoryBackstage, editor: Editor, btnName: string): Optional<AlloySpec> =>
   Obj.get(types, spec.type).fold(
     () => {
       // eslint-disable-next-line no-console
@@ -111,7 +111,7 @@ const extractFrom = (spec: ToolbarButton & { type: string }, backstage: UiFactor
       return Optional.none();
     },
     (render) => Optional.some(
-      render(spec, backstage, editor)
+      render(spec, backstage, editor, btnName)
     )
   );
 
@@ -186,7 +186,7 @@ const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem:
           console.warn(`Ignoring the '${toolbarItem}' toolbar button. Group toolbar buttons are only supported when using floating toolbar mode and cannot be nested.`);
           return Optional.none();
         } else {
-          return extractFrom(spec, backstage, editor);
+          return extractFrom(spec, backstage, editor, toolbarItem.toLowerCase());
         }
       }
     );

@@ -58,7 +58,6 @@ const renderLabel = (text: string ): SimpleSpec => ({
     tag: 'span',
     classes: [ 'tox-tree__label' ],
     attributes: {
-      'title': text,
       'aria-label': text,
     }
   },

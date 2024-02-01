@@ -105,7 +105,7 @@ describe('browser.tinymce.themes.silver.editor.buttons.UpdateToolbarButtonTextAn
     const button = await TinyUi(editor).pWaitForUi(selectorForToolbarButtonWithLabel('MenuBefore'));
     const initialWidth = Css.get(button, 'width');
     TinyUiActions.clickOnToolbar(editor, selectorForToolbarButtonWithLabel('MenuBefore'));
-    const menuItem = await TinyUi(editor).pWaitForUi( '[title="Change MenuLabel"]');
+    const menuItem = await TinyUi(editor).pWaitForUi( '[aria-label="Change MenuLabel"]');
     Mouse.click(menuItem);
     await TinyUiActions.pWaitForUi(editor, selectorForToolbarButtonWithLabel('Menu After After After After After After'));
     const currentWidth = Css.get(button, 'width');
@@ -123,7 +123,7 @@ describe('browser.tinymce.themes.silver.editor.buttons.UpdateToolbarButtonTextAn
     const currentWidth = Css.get(button, 'width');
     assert.equal(initialWidth, currentWidth);
     TinyUiActions.clickOnToolbar(editor, `${selectorForToolbarButtonWithLabel('Split After After After After After After')} + .tox-split-button__chevron`);
-    const menuItem = await TinyUi(editor).pWaitForUi( '[title="Menu item 1"]');
+    const menuItem = await TinyUi(editor).pWaitForUi( '[aria-label="Menu item 1"]');
     Mouse.click(menuItem);
     await TinyUiActions.pWaitForUi(editor, selectorForToolbarButtonWithLabel('Split Item After After After After After After'));
   });

@@ -27,15 +27,15 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
   const makeIcon = (iconName: string) =>
     Icons.render(iconName, { tag: 'span', classes: [ 'tox-icon', 'tox-lock-icon__' + iconName ] }, providersBackstage.icons);
 
-  const translatedLabel = providersBackstage.translate(spec.label.getOr('Constrain proportions'));
+  const label = spec.label.getOr('Constrain proportions');
+  const translatedLabel = providersBackstage.translate(label);
   const pLock = AlloyFormCoupledInputs.parts.lock({
     dom: {
       tag: 'button',
       classes: [ 'tox-lock', 'tox-button', 'tox-button--naked', 'tox-button--icon' ],
       attributes: {
         'aria-label': translatedLabel,
-        // TINY-10453: Remove this tooltip, we don't want duplicate tooltips and until we figured a better way to test, it's here now so that tests would pass
-        'title': translatedLabel
+        'data-mce-name': label
       }
     },
     components: [

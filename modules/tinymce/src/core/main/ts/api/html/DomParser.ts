@@ -13,7 +13,7 @@ import { getSanitizer, internalElementAttr } from '../../html/Sanitization';
 import { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
 import AstNode from './Node';
-import Schema, { getTextRootBlockElements, SchemaMap, SchemaRegExpMap } from './Schema';
+import Schema, { SchemaMap, SchemaRegExpMap, getTextRootBlockElements } from './Schema';
 
 /**
  * @summary
@@ -66,9 +66,6 @@ export interface DomParserSettings {
   inline_styles?: boolean;
   pad_empty_with_br?: boolean;
   preserve_cdata?: boolean;
-  /**
-   * @deprecated Remove trailing <br> tags functionality has been added to tinymce.dom.Serializer and option will be removed in the next major release */
-  remove_trailing_brs?: boolean;
   root_name?: string;
   sandbox_iframes?: boolean;
   sandbox_iframes_exclusions?: string[];

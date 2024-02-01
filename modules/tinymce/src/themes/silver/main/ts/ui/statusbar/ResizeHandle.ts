@@ -41,8 +41,8 @@ export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactor
     tag: 'div',
     classes: [ 'tox-statusbar__resize-handle' ],
     attributes: {
-      'title': providersBackstage.translate('Resize'), // TODO: tooltips AP-213
       'aria-label': providersBackstage.translate(resizeLabel),
+      'data-mce-name': 'resize-handle'
     },
     behaviours: [
       Dragging.config({

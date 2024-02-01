@@ -47,11 +47,11 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
         toolbar: 'styles'
       },
       initial: [{
-        clickOn: 'button[title^="Format"]',
+        clickOn: 'button[data-mce-name="styles"]',
         waitFor: 'div[role="menu"]'
       }],
       assertAbove: 'div[role="menu"]',
-      assertBelow: 'button[title^="Format"]'
+      assertBelow: 'button[data-mce-name="styles"]'
     }));
 
     it('SplitButton menu should open above button', () => pTest({
@@ -89,11 +89,11 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
         toolbar: Arr.range(10, Fun.constant('bold | italic ')).join('')
       },
       initial: [{
-        clickOn: 'button[title="Reveal or hide additional toolbar items"]',
+        clickOn: 'button[data-mce-name="overflow-button"]',
         waitFor: '.tox-toolbar__overflow'
       }],
       assertAbove: '.tox-toolbar__overflow',
-      assertBelow: 'button[title="Reveal or hide additional toolbar items"]'
+      assertBelow: 'button[data-mce-name="overflow-button"]'
     }));
 
     it('Menu button in overflow toolbar should open up', () => pTest({
@@ -104,15 +104,15 @@ describe('browser.tinymce.themes.silver.editor.ToolbarBottomTest', () => {
       },
       initial: [
         {
-          clickOn: 'button[title="Reveal or hide additional toolbar items"]',
+          clickOn: 'button[data-mce-name="overflow-button"]',
           waitFor: '.tox-toolbar__overflow'
         }, {
-          clickOn: 'button[title^="Align"]',
+          clickOn: 'button[data-mce-name="align"]',
           waitFor: 'div[role="menu"]'
         }
       ],
       assertAbove: 'div[role="menu"]',
-      assertBelow: 'button[title^="Align"]'
+      assertBelow: 'button[data-mce-name="align"]'
     }));
 
     it('Menubar menu should open above button', () => pTest({

@@ -11,6 +11,8 @@ import Plugin from 'tinymce/plugins/charmap/Plugin';
 import { fakeEvent } from '../module/Helpers';
 
 describe('browser.tinymce.plugins.charmap.DialogHeightTest', () => {
+  const isChromeEdge = () => navigator.userAgent.includes(' Edg/');
+
   Arr.each([
     { label: 'IFrame Editor', setup: TinyHooks.bddSetupLight },
     { label: 'Shadow Dom Editor', setup: TinyHooks.bddSetupInShadowRoot },
@@ -39,7 +41,8 @@ describe('browser.tinymce.plugins.charmap.DialogHeightTest', () => {
         fakeEvent(input, 'input');
       };
 
-      it('TBA: Search for items, dialog height should not change when fewer items returned', async () => {
+      // Edge is being strange and focusing the body in this test but not when executed in isolation see #TINY-10579 for details
+      (isChromeEdge() ? it.skip : it)('TBA: Search for items, dialog height should not change when fewer items returned', async () => {
         const editor = hook.editor();
         const root = SugarShadowDom.getRootNode(TinyDom.targetElement(editor));
         const body = SugarShadowDom.getContentContainer(root);

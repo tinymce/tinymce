@@ -58,7 +58,7 @@ const collapseAndRestoreCellSelection = (editor: Editor) => {
   const selectedCells = TableCellSelection.getCellsFromEditor(editor);
   const selectedNode = SugarElement.fromDom(editor.selection.getNode());
 
-  if (NodeType.isTableCell(selectedNode.dom) && Empty.isEmpty(selectedNode)) {
+  if (NodeType.isTableCell(selectedNode.dom) && Empty.isEmpty(editor.schema, selectedNode)) {
     editor.selection.setCursorLocation(selectedNode.dom, 0);
   } else {
     editor.selection.collapse(true);
@@ -88,7 +88,7 @@ const emptySingleTableCells = (editor: Editor, cells: SugarElement<HTMLTableCell
        */
       const outsideBlock = getOutsideBlock(editor, isStartInTable ? rng.endContainer : rng.startContainer);
       rng.deleteContents();
-      handleEmptyBlock(editor, isStartInTable, outsideBlock.filter(Empty.isEmpty));
+      handleEmptyBlock(editor, isStartInTable, outsideBlock.filter(Fun.curry(Empty.isEmpty, editor.schema)));
 
       /*
        * The only time we can have only part of the cell contents selected is when part of the selection
@@ -99,7 +99,7 @@ const emptySingleTableCells = (editor: Editor, cells: SugarElement<HTMLTableCell
        */
       const endPointCell = isStartInTable ? cells[0] : cells[cells.length - 1];
       deleteContentInsideCell(editor, endPointCell, editorRng, isStartInTable);
-      if (!Empty.isEmpty(endPointCell)) {
+      if (!Empty.isEmpty(editor.schema, endPointCell)) {
         return Optional.some(isStartInTable ? cells.slice(1) : cells.slice(0, -1));
       } else {
         return Optional.none();
@@ -132,8 +132,8 @@ const emptyMultiTableCells = (
     deleteContentInsideCell(editor, endCell, rng, false);
 
     // Only clean empty cells, the first and last cells have the potential to still have content
-    const startTableCellsToClean = Empty.isEmpty(startCell) ? startTableCells : startTableCells.slice(1);
-    const endTableCellsToClean = Empty.isEmpty(endCell) ? endTableCells : endTableCells.slice(0, -1);
+    const startTableCellsToClean = Empty.isEmpty(editor.schema, startCell) ? startTableCells : startTableCells.slice(1);
+    const endTableCellsToClean = Empty.isEmpty(editor.schema, endCell) ? endTableCells : endTableCells.slice(0, -1);
 
     cleanCells(startTableCellsToClean.concat(endTableCellsToClean));
     // Delete all content in between the start table and end table
@@ -240,7 +240,7 @@ const deleteCaretInsideCaption = (
 const deleteCaretCells = (editor: Editor, forward: boolean, rootElm: SugarElement<Node>, startElm: SugarElement<Node>): Optional<() => void> => {
   const from = CaretPosition.fromRangeStart(editor.selection.getRng());
   return getParentCell(rootElm, startElm).bind(
-    (fromCell) => Empty.isEmpty(fromCell) ?
+    (fromCell) => Empty.isEmpty(editor.schema, fromCell, { checkRootAsContent: false }) ?
       emptyElement(editor, fromCell) :
       deleteBetweenCells(editor, rootElm, forward, fromCell, from)
   );
@@ -253,7 +253,7 @@ const deleteCaretCaption = (
   fromCaption: SugarElement<HTMLTableCaptionElement>
 ): Optional<() => void> => {
   const from = CaretPosition.fromRangeStart(editor.selection.getRng());
-  return Empty.isEmpty(fromCaption) ?
+  return Empty.isEmpty(editor.schema, fromCaption) ?
     emptyElement(editor, fromCaption) :
     deleteCaretInsideCaption(editor, rootElm, forward, fromCaption, from);
 };

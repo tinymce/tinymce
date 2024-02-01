@@ -793,7 +793,7 @@ const register = (editor: Editor): void => {
 
   registerOption('highlight_on_focus', {
     processor: 'boolean',
-    default: false
+    default: true
   });
 
   registerOption('xss_sanitization', {

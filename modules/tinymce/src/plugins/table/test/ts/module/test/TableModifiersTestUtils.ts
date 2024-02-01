@@ -14,6 +14,16 @@ interface AssertStyleOptions {
   readonly customStyle: string;
 }
 
+const menuTitleToToolbarBarMap: Record<string, string> = {
+  'Border style': 'tablecellborderstyle',
+  'Border width': 'tablecellborderwidth',
+  'Vertical align': 'tablecellvalign',
+  'Background color': 'tablecellbackgroundcolor',
+  'Border color': 'tablecellbordercolor',
+  'Table styles': 'tableclass',
+  'Cell styles': 'tablecellclass',
+};
+
 interface AssertStyleOptionsWithCheckmarks extends AssertStyleOptions {
   readonly checkMarkEntries: number;
 }
@@ -86,13 +96,13 @@ const closeMenu = (editor: Editor): void => {
 };
 
 const clickOnButton = (editor: Editor, title: string): void => {
-  TinyUiActions.clickOnToolbar(editor, `button[title="${title}"]`);
+  TinyUiActions.clickOnToolbar(editor, `button[data-mce-name="${title}"]`);
 };
 
 const pClickOnMenuItem = async (editor: Editor, title: string): Promise<void> => {
   TinyUiActions.clickOnMenu(editor, 'span:contains("Table")');
-  await TinyUiActions.pWaitForUi(editor, `div[title="${title}"]`);
-  TinyUiActions.clickOnUi(editor, `div[title="${title}"]`);
+  await TinyUiActions.pWaitForUi(editor, `div[aria-label="${title}"]`);
+  TinyUiActions.clickOnUi(editor, `div[aria-label="${title}"]`);
 };
 
 const pAssertMenuPresence = async (
@@ -103,10 +113,11 @@ const pAssertMenuPresence = async (
   container: SugarElement<HTMLElement>,
   useMenuOrToolbar: 'toolbar' | 'menuitem'
 ): Promise<void> => {
+  const title = useMenuOrToolbar === 'toolbar' ? menuTitleToToolbarBarMap[menuTitle] : menuTitle;
   if (useMenuOrToolbar === 'toolbar') {
-    clickOnButton(editor, menuTitle);
+    clickOnButton(editor, title);
   } else {
-    await pClickOnMenuItem(editor, menuTitle);
+    await pClickOnMenuItem(editor, title);
   }
   await Waiter.pTryUntil('Ensure the correct values are present', () =>
     Assertions.assertPresence(label, expected, container)
@@ -117,7 +128,7 @@ const pAssertMenuPresence = async (
 const pAssertCheckmarkOn = async (editor: Editor, menuTitle: string, itemTitle: string, totalNumberOfEntries: number, sugarContainer: SugarElement<HTMLElement>, useMenuOrToolbar: 'toolbar' | 'menuitem') => {
   const expected = {
     '.tox-menu': useMenuOrToolbar === 'toolbar' ? 1 : 2,
-    [`.tox-collection__item[aria-checked="true"][title="${itemTitle}"]`]: 1,
+    [`.tox-collection__item[aria-checked="true"][aria-label="${itemTitle}"]`]: 1,
     '.tox-collection__item[aria-checked="false"]': (totalNumberOfEntries - 1),
     '.tox-collection__item[aria-checked="true"]': 1,
   };
@@ -125,13 +136,14 @@ const pAssertCheckmarkOn = async (editor: Editor, menuTitle: string, itemTitle: 
 };
 
 const pClickOnSubMenu = async (editor: Editor, menuTitle: string, itemTitle: string, useMenuOrToolbar: 'toolbar' | 'menuitem'): Promise<void> => {
+  const title = useMenuOrToolbar === 'toolbar' ? menuTitleToToolbarBarMap[menuTitle] : menuTitle;
   if (useMenuOrToolbar === 'toolbar') {
-    clickOnButton(editor, menuTitle);
+    clickOnButton(editor, title);
   } else {
-    await pClickOnMenuItem(editor, menuTitle);
+    await pClickOnMenuItem(editor, title);
   }
-  await TinyUiActions.pWaitForUi(editor, `div[title="${itemTitle}"]`);
-  TinyUiActions.clickOnUi(editor, `div[title="${itemTitle}"]`);
+  await TinyUiActions.pWaitForUi(editor, `div[aria-label="${itemTitle}"]`);
+  TinyUiActions.clickOnUi(editor, `div[aria-label="${itemTitle}"]`);
   closeMenu(editor);
 };
 
@@ -164,6 +176,7 @@ const pAssertStyleCanBeToggledWithoutCheckmarks = async (editor: Editor, options
 const pAssertStyleCanBeToggled = async (editor: Editor, options: AssertStyleOptionsWithCheckmarks, useMenuOrToolbar: 'toolbar' | 'menuitem'): Promise<void> => {
   const sugarContainer = SugarBody.body();
   setEditorContentTableAndSelection(editor, options.rows, options.columns);
+
   await pAssertCheckmarkOn(editor, options.menuTitle, options.subMenuRemoveTitle, options.checkMarkEntries, sugarContainer, useMenuOrToolbar);
 
   await pClickOnSubMenu(editor, options.menuTitle, options.subMenuTitle, useMenuOrToolbar);
