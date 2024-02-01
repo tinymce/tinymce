@@ -207,6 +207,13 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
             onControlAttached(specialisation, editorOffCell),
             onControlDetached(specialisation, editorOffCell)
           ]),
+          ...(spec.tooltip.map(
+            (t) => Tooltipping.config(
+              providersBackstage.tooltips.getConfig({
+                tooltipText: providersBackstage.translate(t)
+              })
+            )
+          )).toArray(),
           // Enable toolbar buttons by default
           DisablingConfigs.toolbarButton(() => !spec.enabled || providersBackstage.isDisabled()),
           ReadOnly.receivingConfig()
