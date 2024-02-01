@@ -976,7 +976,7 @@ const getDetailsInitialState = option('details_initial_state');
 const getDetailsSerializedState = option('details_serialized_state');
 const shouldForceHexColor = option('force_hex_color');
 const shouldSandboxIframes = option('sandbox_iframes');
-const getSandboxIframesExclusions = (editor: Editor): Record<string, {}> => Tools.makeMap(editor.options.get('sandbox_iframes_exclusions'));
+const getSandboxIframesExclusions = (editor: Editor): string[] => editor.options.get('sandbox_iframes_exclusions');
 const shouldConvertUnsafeEmbeds = option('convert_unsafe_embeds');
 
 export {

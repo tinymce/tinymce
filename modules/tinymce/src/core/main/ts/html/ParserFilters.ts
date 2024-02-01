@@ -156,7 +156,7 @@ const register = (parser: DomParser, settings: DomParserSettings): void => {
   registerBase64ImageFilter(parser, settings);
 
   const shouldSandboxIframes = settings.sandbox_iframes ?? false;
-  const sandboxIframesExclusions = settings.sandbox_iframes_exclusions ?? {};
+  const sandboxIframesExclusions = Arr.unique(settings.sandbox_iframes_exclusions ?? []);
   if (settings.convert_unsafe_embeds) {
     parser.addNodeFilter('object,embed', (nodes) => Arr.each(nodes, (node) => {
       node.replace(

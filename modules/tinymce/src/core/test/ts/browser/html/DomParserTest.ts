@@ -9,7 +9,6 @@ import DomParser, { DomParserSettings, ParserArgs, ParserFilterCallback } from '
 import AstNode, { Attributes } from 'tinymce/core/api/html/Node';
 import Schema, { SchemaElement, SchemaSettings } from 'tinymce/core/api/html/Schema';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
-import Tools from 'tinymce/core/api/util/Tools';
 
 interface ParseTestResult {
   readonly nodes: AstNode[];
@@ -1549,7 +1548,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         });
 
         context('sandbox_iframes_exclusions', () => {
-          const exclusions = Tools.makeMap([ 'tiny.cloud' ]);
+          const exclusions = [ 'tiny.cloud' ];
           const parser = DomParser({ ...scenario.settings, sandbox_iframes: true, sandbox_iframes_exclusions: exclusions });
 
           const testSandboxIframeExclusions = (src: string, expected: string) => () => {

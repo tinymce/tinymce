@@ -30,7 +30,7 @@ const withSerializedContent = <R extends EditorEvent<{ content: string }>>(conte
   }
 };
 
-const makeParserSettings = (editor: Editor): Partial<DomParserSettings> => ({
+const makeParserSettings = (editor: Editor): DomParserSettings => ({
   sanitize: Options.shouldSanitizeXss(editor),
   sandbox_iframes: Options.shouldSandboxIframes(editor),
   sandbox_iframes_exclusions: Options.getSandboxIframesExclusions(editor)

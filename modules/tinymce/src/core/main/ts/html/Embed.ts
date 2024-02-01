@@ -1,4 +1,5 @@
-import { Obj, Optional, Strings, Type } from '@ephox/katamari';
+
+import { Arr, Optional, Strings, Type } from '@ephox/katamari';
 import { Url } from '@ephox/polaris';
 
 import AstNode from '../api/html/Node';
@@ -10,28 +11,30 @@ interface EmbedAttrs {
   readonly height?: string;
 }
 
-const sandboxIframe = (iframeNode: AstNode, exclusions: Record<string, {}>): void => {
-  if (Optional.from(iframeNode.attr('src')).bind(Url.extractHost).forall((host) => !Obj.has(exclusions, host))) {
+const sandboxIframe = (iframeNode: AstNode, exclusions: string[]): void => {
+  if (Optional.from(iframeNode.attr('src')).bind(Url.extractHost).forall((host) => !Arr.contains(exclusions, host))) {
     iframeNode.attr('sandbox', '');
   }
 };
 
 const isMimeType = (mime: string, type: 'image' | 'video' | 'audio'): boolean => Strings.startsWith(mime, `${type}/`);
 
-const createSafeEmbed = ({ type, src, width, height }: EmbedAttrs = {}, sandboxIframes: boolean, sandboxIframesExclusions: Record<string, {}>): AstNode => {
-  let name: 'iframe' | 'img' | 'video' | 'audio';
+const getEmbedType = (type: string | undefined): 'iframe' | 'img' | 'video' | 'audio' => {
   if (Type.isUndefined(type)) {
-    name = 'iframe';
+    return 'iframe';
   } else if (isMimeType(type, 'image')) {
-    name = 'img';
+    return 'img';
   } else if (isMimeType(type, 'video')) {
-    name = 'video';
+    return 'video';
   } else if (isMimeType(type, 'audio')) {
-    name = 'audio';
+    return 'audio';
   } else {
-    name = 'iframe';
+    return 'iframe';
   }
+};
 
+const createSafeEmbed = ({ type, src, width, height }: EmbedAttrs = {}, sandboxIframes: boolean, sandboxIframesExclusions: string[]): AstNode => {
+  const name = getEmbedType(type);
   const embed = new AstNode(name, 1);
   embed.attr(name === 'audio' ? { src } : { src, width, height });
 
