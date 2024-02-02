@@ -65,7 +65,12 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
     // Responsive tables don't have a width so we need to convert it to a relative/percent
     // table instead, as that's closer to responsive sizing than fixed sizing
     if (startRawW === '') {
-      TableConversions.convertToPercentSize(table);
+      TableConversions.convertToPercentSizeWidth(table);
+    }
+
+    // Responsive tables don't have a height so we need to convert it to a fixed value to be able to resize the table height
+    if (startRawH === '') {
+      TableConversions.convertToPixelSizeHeight(table);
     }
 
     // Adjust the column sizes and update the table width to use the right sizing, if the table changed size.
@@ -157,15 +162,15 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
       });
 
       if (!Sizes.isPixelSizing(table) && Options.isTablePixelsForced(editor)) {
-        TableConversions.convertToPixelSize(table);
+        TableConversions.convertToPixelSizeWidth(table);
       } else if (!Sizes.isPercentSizing(table) && Options.isTablePercentagesForced(editor)) {
-        TableConversions.convertToPercentSize(table);
+        TableConversions.convertToPercentSizeWidth(table);
       }
 
       // TINY-6601: If resizing using a bar, then snooker will base the resizing on the initial size. So
       // when using a responsive table we need to ensure we convert to a relative table before resizing
       if (Sizes.isNoneSizing(table) && Strings.startsWith(e.origin, barResizerPrefix)) {
-        TableConversions.convertToPercentSize(table);
+        TableConversions.convertToPercentSizeWidth(table);
       }
 
       startW = e.width;

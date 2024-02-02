@@ -54,11 +54,11 @@ const registerCommands = (editor: Editor, actions: TableActions): void => {
     if (!isForcedSizing) {
       TableLookup.table(cellOrCaption, isRoot).each((table) => {
         if (sizing === 'relative' && !Sizes.isPercentSizing(table)) {
-          TableConversions.convertToPercentSize(table);
+          TableConversions.convertToPercentSizeWidth(table);
         } else if (sizing === 'fixed' && !Sizes.isPixelSizing(table)) {
-          TableConversions.convertToPixelSize(table);
+          TableConversions.convertToPixelSizeWidth(table);
         } else if (sizing === 'responsive' && !Sizes.isNoneSizing(table)) {
-          TableConversions.convertToNoneSize(table);
+          TableConversions.convertToNoneSizeWidth(table);
         }
         Utils.removeDataStyle(table);
         Events.fireTableModified(editor, table.dom, Events.structureModified);

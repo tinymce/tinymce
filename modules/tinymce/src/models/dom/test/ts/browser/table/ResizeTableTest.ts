@@ -3,7 +3,7 @@ import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Cell } from '@ephox/katamari';
 import { TableGridSize } from '@ephox/snooker';
 import { Html, Insert, Remove, SelectorExists, SelectorFilter, SugarBody, SugarElement } from '@ephox/sugar';
-import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
+import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -12,10 +12,24 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as TableTestUtils from '../../module/table/TableTestUtils';
 
-interface ExpectedWidthUnits {
-  tableWidth?: string;
-  colWidth?: string;
-  tdWidth?: string;
+type Unit = 'px' | '%';
+
+interface ExpectedUnits {
+  tableWidth?: Unit;
+  tableHeight?: Unit;
+  colWidth?: Unit;
+  tdWidth?: Unit;
+  tdHeight?: Unit;
+  trHeight?: Unit;
+}
+
+interface ExpectedValues {
+  tableWidth?: number;
+  tableHeight?: number;
+  colWidths?: number[];
+  tdWidths?: number[];
+  tdHeights?: number[];
+  trHeights?: number[];
 }
 
 interface TableMeasurements {
@@ -38,6 +52,11 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
   const lastObjectResizedEvent = Cell<EditorEvent<ObjectResizeEvent> | null>(null);
   const pixelDiffThreshold = 3;
   const percentDiffThreshold = 1;
+  const defaultCellHeight = 22.5; // px
+  const defaultCellPadding = 6.4 * 2;
+  const defaultCellBorder = 1 * 2;
+  const editorBodyInternalWidth = 364; // px
+  const defaultCellHeightOverall = defaultCellHeight + defaultCellPadding + defaultCellBorder;
   let tableModifiedEvents: Array<EditorEvent<TableModifiedEvent>> = [];
 
   const pixelTable = '<table style="width: 200px;"><tbody><tr><td></td><td></td></tr></tbody></table>';
@@ -52,23 +71,6 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     height: 300,
     base_url: '/project/tinymce/js/tinymce',
     indent: false
-  };
-
-  // const assertWithin = (value: number, min: number, max: number) => {
-  //   assert.isAtMost(value, max, 'asserting if value falls within a certain range');
-  //   assert.isAtLeast(value, min, 'asserting if value falls within a certain range');
-  // };
-
-  const assertWidths = (input: TableMeasurementsAll) => {
-    const expectedPx = input.before.tableWidth.px - 100;
-    const expectedPercent = input.after.tableWidth.px / input.before.tableWidth.px * 100;
-
-    // not able to match the percent exactly - there's always a difference in fractions, so lets assert a small range instead
-    assert.approximately(input.after.tableWidth.px, expectedPx, 1);
-    // assertWithin(input.tableWidthBefore.px, expectedPx - 1, expectedPx + 1);
-    assert.isTrue(input.after.tableWidth.isPercent, 'table width should be in percents');
-    assert.approximately(input.after.tableWidth.raw ?? 0, expectedPercent, 1);
-    // assertWithin(input.tableWidthBefore.raw, expectedPercent - 1, expectedPercent + 1);
   };
 
   const bindResizeEvents = (editor: Editor) => {
@@ -168,57 +170,51 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     };
   };
 
-  // interface ExpectedHeightUnits {
-  //   tableHeight: string | null;
-  //   trHeight: string | null;
-  //   tdHeight: string | null;
-  // }
-
-  // const assertWidthUnitsBeforeResize = (measurements: TableMeasurements, expected: ExpectedWidthUnits) => {
-  //   assert.equal(measurements.tableWidth.unit, expected.tableWidth || null, `table width before resizing is in ${expected.tableWidth || null}`);
-  //   Arr.each(measurements.colWidths, (data) => {
-  //     assert.equal(data.unit, expected.colWidth || null, `col width before resizing is in ${expected.colWidth || null}`);
-  //   });
-  //   Arr.each(measurements.cellWidths, (data) => {
-  //     assert.equal(data.unit, expected.tdWidth || null, `td width before resizing is in ${expected.tdWidth || null}`);
-  //   });
-  // };
-
-  const assertWidthUnits = (type: 'before' | 'after') => (measurements: TableMeasurements, expected: ExpectedWidthUnits) => {
-    assert.equal(measurements.tableWidth.unit, expected.tableWidth || null, `table width after resizing is in ${expected.tableWidth || null}`);
-    Arr.each(measurements.colWidths, (data) => {
-      assert.equal(data.unit, expected.colWidth || null, `col width ${type} resizing is in ${expected.colWidth || null}`);
+  const assertRawSizes = (type: 'before' | 'after') => (measurements: TableMeasurements, expected: ExpectedValues) => {
+    assert.approximately(measurements.tableHeight.raw ?? 0, expected.tableHeight ?? 0, measurements.tableHeight.isPercent ? percentDiffThreshold : pixelDiffThreshold, `table height (${type})`);
+    assert.approximately(measurements.tableWidth.raw ?? 0, expected.tableWidth ?? 0, measurements.tableWidth.isPercent ? percentDiffThreshold : pixelDiffThreshold, `table width (${type})`);
+    Arr.each(measurements.colWidths, (data, idx) => {
+      const expectedValue = (expected.colWidths ?? [])[idx] || 0;
+      assert.approximately(data.raw ?? 0, expectedValue, data.isPercent ? percentDiffThreshold : pixelDiffThreshold, `col width (${idx}) (${type})`);
     });
-    Arr.each(measurements.cellWidths, (data) => {
-      assert.equal(data.unit, expected.tdWidth || null, `td width ${type} resizing is in ${expected.tdWidth || null}`);
+    Arr.each(measurements.trHeights, (data, idx) => {
+      const expectedValue = (expected.trHeights ?? [])[idx] ?? 0;
+      assert.approximately(data.raw ?? 0, expectedValue, data.isPercent ? percentDiffThreshold : pixelDiffThreshold, `tr height (${idx}) (${type})`);
+    });
+    Arr.each(measurements.cellWidths, (data, idx) => {
+      const expectedValue = (expected.tdWidths ?? [])[idx] ?? 0;
+      assert.approximately(data.raw ?? 0, expectedValue, data.isPercent ? percentDiffThreshold : pixelDiffThreshold, `td width (${idx}) (${type})`);
+    });
+    Arr.each(measurements.cellHeights, (data, idx) => {
+      const expectedValue = (expected.tdHeights ?? [])[idx] ?? 0;
+      assert.approximately(data.raw ?? 0, expectedValue, data.isPercent ? percentDiffThreshold : pixelDiffThreshold, `td height (${idx}) (${type})`);
     });
   };
 
-  const assertWidthUnitsBeforeResize = assertWidthUnits('before');
-  const assertWidthUnitsAfterResize = assertWidthUnits('after');
+  const assertRawSizesBeforeResize = assertRawSizes('before');
+  const assertRawSizesAfterResize = assertRawSizes('after');
 
-  // const assertWidthUnitsAfterResize = (measurements: TableMeasurementsAll, expected: ExpectedWidthUnits) => {
-  //   assert.equal(measurements.tableWidthAfter.unit, expected.tableWidth || null, `table width after resizing is in ${expected.tableWidth || null}`);
-  //   Arr.each(measurements.colWidthsBefore, (data) => {
-  //     assert.equal(data.unit, expected.colWidth || null, `col width after resizing is in ${expected.colWidth || null}`);
-  //   });
-  //   Arr.each(measurements.cellWidthsAfter, (data) => {
-  //     assert.equal(data.unit, expected.tdWidth || null, `td width after resizing is in ${expected.tdWidth || null}`);
-  //   });
-  // };
+  const assertUnits = (type: 'before' | 'after') => (measurements: TableMeasurements, expected: ExpectedUnits) => {
+    assert.equal(measurements.tableWidth.unit, expected.tableWidth || null, `table width ${type} resizing`);
+    assert.equal(measurements.tableHeight.unit, expected.tableHeight || null, `table height ${type} resizing`);
+    Arr.each(measurements.colWidths, (data) => {
+      assert.equal(data.unit, expected.colWidth || null, `col width ${type} resizing`);
+    });
+    Arr.each(measurements.trHeights, (data) => {
+      assert.equal(data.unit, expected.trHeight || null, `tr height ${type} resizing`);
+    });
+    Arr.each(measurements.cellWidths, (data) => {
+      assert.equal(data.unit, expected.tdWidth || null, `td width ${type} resizing`);
+    });
+    Arr.each(measurements.cellHeights, (data) => {
+      assert.equal(data.unit, expected.tdHeight || null, `td height ${type} resizing`);
+    });
+  };
 
-  // const assertUnitBeforeResize = (unit: string | null, widths: TableMeasurements) => {
-  //   assert.equal(widths.widthBefore.unit, unit, `table width before resizing is in ${unit}`);
-  // };
+  const assertUnitsBeforeResize = assertUnits('before');
+  const assertUnitsAfterResize = assertUnits('after');
 
-  // const assertWidthUnitAfterResize = (unit: string | null, measurements: TableMeasurements) => {
-  //   assert.equal(measurements.widthAfter.unit, unit, `table width after resizing is in ${unit}`);
-  // };
-
-  // const assertWidthBeforeResize = (width: number | null, measurements: TableMeasurements) => {
-  //   assert.equal(measurements.widthBefore.raw, width, `table raw width before resizing is ${width}`);
-  // };
-
+  // TODO: TODO: Swap to using assertRawSizes
   const assertWidthAfterResize = (width: number | null, measurements: TableMeasurementsAll, approx: boolean = false) => {
     if (approx) {
       assert.approximately(measurements.after.tableWidth.raw ?? 0, width ?? 0, pixelDiffThreshold, `table raw width after resizing is ~${width}`);
@@ -267,8 +263,18 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
         pResizeWithCornerHandle,
         () => TableTestUtils.insertRaw(editor, percentTable)
       );
-      assertWidthUnitsBeforeResize(measurements.before, { tableWidth: '%', tdWidth: '%' });
-      assertWidthUnitsAfterResize(measurements.after, { tableWidth: '%', tdWidth: '%' });
+
+      assertUnitsBeforeResize(measurements.before, { tableWidth: '%', tdWidth: '%' });
+      assertUnitsAfterResize(measurements.after, { tableWidth: '%', tableHeight: 'px', trHeight: 'px', tdWidth: '%' });
+
+      assertRawSizesBeforeResize(measurements.before, { tableWidth: 100, tdWidths: [ 50, 50 ] });
+      assertRawSizesAfterResize(measurements.after, {
+        tableWidth: ((editorBodyInternalWidth - 100) / editorBodyInternalWidth) * 100,
+        tableHeight: defaultCellHeightOverall,
+        trHeights: [ defaultCellHeightOverall ],
+        tdWidths: [ 50, 50 ],
+      });
+
       assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
       assertEventData(lastObjectResizedEvent, 'objectresized');
     });
@@ -276,9 +282,25 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     it('TBA: resize should detect current unit for px table', async () => {
       const editor = hook.editor();
       editor.setContent('');
-      const measurements = await pInsertResizeMeasure(editor, pResizeWithCornerHandle, () => TableTestUtils.insertRaw(editor, pixelTable));
-      assertWidthUnitsBeforeResize(measurements.before, { tableWidth: 'px' });
-      assertWidthUnitsAfterResize(measurements.after, { tableWidth: 'px', tdWidth: 'px' });
+      const measurements = await pInsertResizeMeasure(
+        editor,
+        pResizeWithCornerHandle,
+        () => TableTestUtils.insertRaw(editor, pixelTable)
+      );
+
+      assertUnitsBeforeResize(measurements.before, { tableWidth: 'px' });
+      assertUnitsAfterResize(measurements.after, { tableWidth: 'px', tableHeight: 'px', trHeight: 'px', tdWidth: 'px' });
+
+      assertRawSizesBeforeResize(measurements.before, {
+        tableWidth: 200,
+      });
+      assertRawSizesAfterResize(measurements.after, {
+        tableWidth: 100,
+        tableHeight: defaultCellHeightOverall,
+        trHeights: [ defaultCellHeightOverall ],
+        tdWidths: [ 50 - defaultCellPadding - defaultCellBorder, 50 - defaultCellPadding - defaultCellBorder ],
+      });
+
       assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
       assertEventData(lastObjectResizedEvent, 'objectresized');
     });
@@ -287,27 +309,29 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     it('TINY-7699: resize a row and verify the output has the correct heights', async () => {
       const editor = hook.editor();
       editor.setContent('');
+      const dy = 50;
       const measurements = await pInsertResizeMeasure(editor,
-        () => TableTestUtils.pDragResizeBar(editor, 'row', 0, 0, 50),
+        () => TableTestUtils.pDragResizeBar(editor, 'row', 0, 0, dy),
         () => TableTestUtils.insertRaw(editor, pixelTableWithRowHeights)
-        // () => {
-        //   TableTestUtils.insertRaw(editor, pixelTableWithRowHeights);
-        //   assert.fail();
-        // }
       );
-      assertWidthUnitsBeforeResize(measurements.before, { tableWidth: 'px' });
-      assertWidthUnitsAfterResize(measurements.after, { tableWidth: 'px' });
+
+      assertUnitsBeforeResize(measurements.before, { tableWidth: 'px', tableHeight: 'px', trHeight: 'px', tdHeight: 'px' });
+      assertUnitsAfterResize(measurements.after, { tableWidth: 'px', tableHeight: 'px', trHeight: 'px' });
+
+      assertRawSizesBeforeResize(measurements.before, {
+        tableWidth: 200,
+        tableHeight: 100,
+        trHeights: [ 100 ],
+        tdHeights: [ 100 ],
+      });
+      assertRawSizesAfterResize(measurements.after, {
+        tableWidth: 200,
+        tableHeight: 100 + 50 + defaultCellPadding,
+        trHeights: [ 100 + 50 + defaultCellPadding ],
+      });
+
       assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
       assertEventData(lastObjectResizedEvent, 'objectresized');
-      // Original height + Delta + Padding and border
-      const height = `${100 + 50 + 15}px`;
-      TinyAssertions.assertContent(editor,
-        `<table style="width: 200px; height: ${height};">` +
-        '<tbody>' +
-        `<tr style="height: ${height};"><td>&nbsp;</td><td>&nbsp;</td></tr>` +
-        '</tbody>' +
-        '</table>'
-      );
     });
   });
 
@@ -320,10 +344,26 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     it('TBA: new tables should default to % and resize should force %', async () => {
       const editor = hook.editor();
       editor.setContent('');
-      const measurements = await pInsertResizeMeasure(editor, pResizeWithCornerHandle, () => TableTestUtils.makeInsertTable(editor, 5, 2));
-      assertWidths(measurements);
-      assertWidthUnitsBeforeResize(measurements.before, { tableWidth: '%', colWidth: '%' });
-      assertWidthUnitsAfterResize(measurements.after, { tableWidth: '%', colWidth: '%' });
+      const measurements = await pInsertResizeMeasure(
+        editor,
+        pResizeWithCornerHandle,
+        () => TableTestUtils.makeInsertTable(editor, 5, 2)
+      );
+
+      assertUnitsBeforeResize(measurements.before, { tableWidth: '%', colWidth: '%' });
+      assertUnitsAfterResize(measurements.after, { tableWidth: '%', tableHeight: 'px', trHeight: 'px', colWidth: '%' });
+
+      assertRawSizesBeforeResize(measurements.before, {
+        tableWidth: 100,
+        colWidths: [ 20, 20, 20, 20, 20 ]
+      });
+      assertRawSizesAfterResize(measurements.after, {
+        tableWidth: ((editorBodyInternalWidth - 100) / editorBodyInternalWidth) * 100,
+        tableHeight: defaultCellHeightOverall * 2,
+        trHeights: [ defaultCellHeightOverall, defaultCellHeightOverall ],
+        colWidths: [ 20, 20, 20, 20, 20 ]
+      });
+
       assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
       assertEventData(lastObjectResizedEvent, 'objectresized');
     });
@@ -331,9 +371,23 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     it('TINY-6051: force % on responsive/unset table when resized', async () => {
       const editor = hook.editor();
       editor.setContent('');
-      const measurements = await pInsertResizeMeasure(editor, pResizeWithCornerHandle, () => TableTestUtils.insertRaw(editor, responsiveTable));
-      assertWidthUnitsBeforeResize(measurements.before, {});
-      assertWidthUnitsAfterResize(measurements.after, { tableWidth: '%', tdWidth: '%' });
+      const measurements = await pInsertResizeMeasure(
+        editor,
+        pResizeWithCornerHandle,
+        () => TableTestUtils.insertRaw(editor, responsiveTable)
+      );
+
+      assertUnitsBeforeResize(measurements.before, {});
+      assertUnitsAfterResize(measurements.after, { tableWidth: '%', tableHeight: 'px', trHeight: 'px', tdWidth: '%' });
+
+      assertRawSizesBeforeResize(measurements.before, {});
+      assertRawSizesAfterResize(measurements.after, {
+        tableWidth: 5.5,
+        tableHeight: defaultCellHeightOverall,
+        trHeights: [ defaultCellHeightOverall ],
+        tdWidths: [ 50, 50 ]
+      });
+
       assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
       assertEventData(lastObjectResizedEvent, 'objectresized');
     });
@@ -341,9 +395,25 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     it('TBA: force % on px table when resized', async () => {
       const editor = hook.editor();
       editor.setContent('');
-      const measurements = await pInsertResizeMeasure(editor, pResizeWithCornerHandle, () => TableTestUtils.insertRaw(editor, pixelTable));
-      assertWidthUnitsBeforeResize(measurements.before, { tableWidth: 'px' });
-      assertWidthUnitsAfterResize(measurements.after, { tableWidth: '%', tdWidth: '%' });
+      const measurements = await pInsertResizeMeasure(
+        editor,
+        pResizeWithCornerHandle,
+        () => TableTestUtils.insertRaw(editor, pixelTable)
+      );
+
+      assertUnitsBeforeResize(measurements.before, { tableWidth: 'px' });
+      assertUnitsAfterResize(measurements.after, { tableWidth: '%', tableHeight: 'px', trHeight: 'px', tdWidth: '%' });
+
+      assertRawSizesBeforeResize(measurements.before, {
+        tableWidth: 200,
+      });
+      assertRawSizesAfterResize(measurements.after, {
+        tableWidth: ((200 - 100) / editorBodyInternalWidth) * 100,
+        tableHeight: defaultCellHeightOverall,
+        trHeights: [ defaultCellHeightOverall ],
+        tdWidths: [ 50, 50 ],
+      });
+
       assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
       assertEventData(lastObjectResizedEvent, 'objectresized');
     });
@@ -358,9 +428,30 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     it('TBA: new tables should default to px and resize should force px', async () => {
       const editor = hook.editor();
       editor.setContent('');
-      const measurements = await pInsertResizeMeasure(editor, pResizeWithCornerHandle, () => TableTestUtils.makeInsertTable(editor, 5, 2));
-      assertWidthUnitsBeforeResize(measurements.before, { tableWidth: 'px', colWidth: 'px' });
-      assertWidthUnitsAfterResize(measurements.after, { tableWidth: 'px', colWidth: 'px' });
+      const measurements = await pInsertResizeMeasure(
+        editor,
+        pResizeWithCornerHandle,
+        () => TableTestUtils.makeInsertTable(editor, 5, 2)
+      );
+
+      assertUnitsBeforeResize(measurements.before, { tableWidth: 'px', colWidth: 'px' });
+      assertUnitsAfterResize(measurements.after, { tableWidth: 'px', tableHeight: 'px', trHeight: 'px', colWidth: 'px' });
+
+      const colWidthBefore = editorBodyInternalWidth / 5;
+      assertRawSizesBeforeResize(measurements.before, {
+        tableWidth: editorBodyInternalWidth,
+        colWidths: [ colWidthBefore, colWidthBefore, colWidthBefore, colWidthBefore, colWidthBefore ]
+      });
+      const dx = -100;
+      const dy = -20;
+      const colWidthAfter = colWidthBefore + dy;
+      assertRawSizesAfterResize(measurements.after, {
+        tableWidth: editorBodyInternalWidth + dx,
+        tableHeight: defaultCellHeightOverall * 2,
+        trHeights: [ defaultCellHeightOverall, defaultCellHeightOverall ],
+        colWidths: [ colWidthAfter, colWidthAfter, colWidthAfter, colWidthAfter, colWidthAfter ]
+      });
+
       assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
       assertEventData(lastObjectResizedEvent, 'objectresized');
     });
@@ -368,9 +459,25 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     it('TINY-6051: force px on responsive/unset table when resized', async () => {
       const editor = hook.editor();
       editor.setContent('');
-      const measurements = await pInsertResizeMeasure(editor, pResizeWithCornerHandle, () => TableTestUtils.insertRaw(editor, responsiveTable));
-      assertWidthUnitsBeforeResize(measurements.before, {});
-      assertWidthUnitsAfterResize(measurements.after, { tableWidth: 'px', tdWidth: 'px' });
+      const measurements = await pInsertResizeMeasure(
+        editor,
+        pResizeWithCornerHandle,
+        () => TableTestUtils.insertRaw(editor, responsiveTable)
+      );
+
+      assertUnitsBeforeResize(measurements.before, {});
+      assertUnitsAfterResize(measurements.after, { tableWidth: 'px', tableHeight: 'px', trHeight: 'px', tdWidth: 'px' });
+
+      assertRawSizesBeforeResize(measurements.before, { });
+      const tableWidthAfter = 48.5625;
+      const tdWidthAfter = (tableWidthAfter / 2) - defaultCellBorder - defaultCellPadding;
+      assertRawSizesAfterResize(measurements.after, {
+        tableWidth: tableWidthAfter,
+        tableHeight: defaultCellHeightOverall,
+        trHeights: [ defaultCellHeightOverall ],
+        tdWidths: [ tdWidthAfter, tdWidthAfter ]
+      });
+
       assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
       assertEventData(lastObjectResizedEvent, 'objectresized');
     });
@@ -378,9 +485,26 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     it('TBA: force px on % table when resized', async () => {
       const editor = hook.editor();
       editor.setContent('');
-      const measurements = await pInsertResizeMeasure(editor, pResizeWithCornerHandle, () => TableTestUtils.insertRaw(editor, percentTable));
-      assertWidthUnitsBeforeResize(measurements.before, { tableWidth: '%', tdWidth: '%' });
-      assertWidthUnitsAfterResize(measurements.after, { tableWidth: 'px', tdWidth: 'px' });
+      const measurements = await pInsertResizeMeasure(
+        editor,
+        pResizeWithCornerHandle,
+        () => TableTestUtils.insertRaw(editor, percentTable)
+      );
+
+      assertUnitsBeforeResize(measurements.before, { tableWidth: '%', tdWidth: '%' });
+      assertUnitsAfterResize(measurements.after, { tableWidth: 'px', tableHeight: 'px', trHeight: 'px', tdWidth: 'px' });
+
+      assertRawSizesBeforeResize(measurements.before, { tableWidth: 100, tdWidths: [ 50, 50 ] });
+      const dx = -100;
+      const tableWidthAfter = editorBodyInternalWidth + dx;
+      const tdWidthAfter = (tableWidthAfter / 2) - defaultCellBorder - defaultCellPadding;
+      assertRawSizesAfterResize(measurements.after, {
+        tableWidth: tableWidthAfter,
+        tableHeight: defaultCellHeightOverall,
+        trHeights: [ defaultCellHeightOverall, defaultCellHeightOverall ],
+        tdWidths: [ tdWidthAfter, tdWidthAfter ]
+      });
+
       assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
       assertEventData(lastObjectResizedEvent, 'objectresized');
     });
@@ -395,9 +519,24 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     it('TINY-6051: new tables should default to no widths and resize should force %', async () => {
       const editor = hook.editor();
       editor.setContent('');
-      const measurements = await pInsertResizeMeasure(editor, pResizeWithCornerHandle, () => TableTestUtils.makeInsertTable(editor, 5, 2));
-      assertWidthUnitsBeforeResize(measurements.before, {});
-      assertWidthUnitsAfterResize(measurements.after, { tableWidth: '%', colWidth: '%' });
+      const measurements = await pInsertResizeMeasure(
+        editor,
+        pResizeWithCornerHandle,
+        () => TableTestUtils.makeInsertTable(editor, 5, 2)
+      );
+
+      assertUnitsBeforeResize(measurements.before, {});
+      assertUnitsAfterResize(measurements.after, { tableWidth: '%', tableHeight: 'px', trHeight: 'px', colWidth: '%' });
+
+      assertRawSizesBeforeResize(measurements.before, {});
+      const minColWidth = 13.8;
+      assertRawSizesAfterResize(measurements.after, {
+        tableWidth: ((minColWidth * 5) / editorBodyInternalWidth) * 100,
+        tableHeight: defaultCellHeightOverall * 2,
+        trHeights: [ defaultCellHeightOverall, defaultCellHeightOverall ],
+        colWidths: [ 20, 20, 20, 20, 20 ]
+      });
+
       assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
       assertEventData(lastObjectResizedEvent, 'objectresized');
     });
@@ -405,9 +544,24 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     it('TINY-6051: force % on responsive/unset table when resized', async () => {
       const editor = hook.editor();
       editor.setContent('');
-      const measurements = await pInsertResizeMeasure(editor, pResizeWithCornerHandle, () => TableTestUtils.insertRaw(editor, responsiveTable));
-      assertWidthUnitsBeforeResize(measurements.before, {});
-      assertWidthUnitsAfterResize(measurements.after, { tableWidth: '%', tdWidth: '%' });
+      const measurements = await pInsertResizeMeasure(
+        editor,
+        pResizeWithCornerHandle,
+        () => TableTestUtils.insertRaw(editor, responsiveTable)
+      );
+
+      assertUnitsBeforeResize(measurements.before, {});
+      assertUnitsAfterResize(measurements.after, { tableWidth: '%', tableHeight: 'px', trHeight: 'px', tdWidth: '%' });
+
+      assertRawSizesBeforeResize(measurements.before, {});
+      const minColWidth = 13.8;
+      assertRawSizesAfterResize(measurements.after, {
+        tableWidth: ((minColWidth * 2) / editorBodyInternalWidth) * 100,
+        tableHeight: defaultCellHeightOverall,
+        trHeights: [ defaultCellHeightOverall ],
+        tdWidths: [ 50, 50 ]
+      });
+
       assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
       assertEventData(lastObjectResizedEvent, 'objectresized');
     });
@@ -415,9 +569,26 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     it('TINY-6051: force % on px table when resized', async () => {
       const editor = hook.editor();
       editor.setContent('');
-      const measurements = await pInsertResizeMeasure(editor, pResizeWithCornerHandle, () => TableTestUtils.insertRaw(editor, pixelTable));
-      assertWidthUnitsBeforeResize(measurements.before, { tableWidth: 'px' });
-      assertWidthUnitsAfterResize(measurements.after, { tableWidth: '%', tdWidth: '%' });
+      const measurements = await pInsertResizeMeasure(
+        editor,
+        pResizeWithCornerHandle,
+        () => TableTestUtils.insertRaw(editor, pixelTable)
+      );
+
+      assertUnitsBeforeResize(measurements.before, { tableWidth: 'px' });
+      assertUnitsAfterResize(measurements.after, { tableWidth: '%', tableHeight: 'px', trHeight: 'px', tdWidth: '%' });
+
+      assertRawSizesBeforeResize(measurements.before, {
+        tableWidth: 200,
+      });
+      // TODO: The widths on the tds don't seem correct here (most likely existing)
+      assertRawSizesAfterResize(measurements.after, {
+        tableWidth: ((200 - 100) / editorBodyInternalWidth) * 100,
+        tableHeight: defaultCellHeightOverall,
+        trHeights: [ defaultCellHeightOverall ],
+        tdWidths: [ 35, 35 ],
+      });
+
       assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
       assertEventData(lastObjectResizedEvent, 'objectresized');
     });
@@ -433,11 +604,25 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     it('TINY-6001: adjusting an inner column should not change the table width', async () => {
       const editor = hook.editor();
       editor.setContent('');
-      const widths = await pInsertResizeMeasure(editor,
+      const measurements = await pInsertResizeMeasure(editor,
         () => TableTestUtils.pDragResizeBar(editor, 'column', 0, 20, 0),
         () => TableTestUtils.insertRaw(editor, pixelTable)
+        // () => {
+        //   TableTestUtils.insertRaw(editor, pixelTable);
+        //   assert.fail();
+        // }
       );
-      assertWidthAfterResize(200, widths);
+      assertWidthAfterResize(200, measurements);
+
+      assertRawSizesBeforeResize(measurements.before, {
+        tableWidth: 200,
+      });
+      const tdWidthBefore = (200.0 / 2) - defaultCellBorder - defaultCellPadding;
+      assertRawSizesAfterResize(measurements.after, {
+        tableWidth: 200,
+        tdWidths: [ tdWidthBefore + 20, tdWidthBefore - 20 ]
+      });
+
       assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
       assertEventData(lastObjectResizedEvent, 'objectresized');
     });
@@ -550,8 +735,8 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
         () => TableTestUtils.pDragResizeBar(editor, 'column', 0, 100, 0),
         () => TableTestUtils.makeInsertTable(editor, 2, 2)
       );
-      assertWidthUnitsBeforeResize(measurements.before, {});
-      assertWidthUnitsAfterResize(measurements.after, { tableWidth: '%', colWidth: '%' });
+      assertUnitsBeforeResize(measurements.before, {});
+      assertUnitsAfterResize(measurements.after, { tableWidth: '%', colWidth: '%' });
       assertWidthAfterResize(35, measurements, true);
       assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
       assertEventData(lastObjectResizedEvent, 'objectresized');
@@ -571,8 +756,8 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
         () => TableTestUtils.pDragResizeBar(editor, 'column', 0, 100, 0),
         () => TableTestUtils.insertRaw(editor, responsiveTableWithContent)
       );
-      assertWidthUnitsBeforeResize(measurements.before, {});
-      assertWidthUnitsAfterResize(measurements.after, { tableWidth: '%', colWidth: '%' });
+      assertUnitsBeforeResize(measurements.before, {});
+      assertUnitsAfterResize(measurements.after, { tableWidth: '%', colWidth: '%' });
       assertWidthAfterResize(53, measurements, true);
       assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
       assertEventData(lastObjectResizedEvent, 'objectresized');
