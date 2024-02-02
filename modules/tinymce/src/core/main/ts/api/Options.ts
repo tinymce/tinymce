@@ -743,11 +743,11 @@ const register = (editor: Editor): void => {
       { start: '####', format: 'h4', trigger: 'space' },
       { start: '#####', format: 'h5', trigger: 'space' },
       { start: '######', format: 'h6', trigger: 'space' },
-      { start: '1. ', cmd: 'InsertOrderedList', trigger: 'space' },
-      { start: '* ', cmd: 'InsertUnorderedList', trigger: 'space' },
-      { start: '- ', cmd: 'InsertUnorderedList', trigger: 'space' },
-      { start: '> ', cmd: 'mceBlockQuote', trigger: 'space' },
-      { start: '--- ', cmd: 'InsertHorizontalRule', trigger: 'space' },
+      { start: '1.', cmd: 'InsertOrderedList', trigger: 'space' },
+      { start: '*', cmd: 'InsertUnorderedList', trigger: 'space' },
+      { start: '-', cmd: 'InsertUnorderedList', trigger: 'space' },
+      { start: '>', cmd: 'mceBlockQuote', trigger: 'space' },
+      { start: '---', cmd: 'InsertHorizontalRule', trigger: 'space' },
     ]
   });
 

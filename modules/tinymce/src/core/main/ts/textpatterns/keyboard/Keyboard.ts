@@ -33,6 +33,17 @@ const setup = (editor: Editor): void => {
     }
   }, true);
 
+  editor.on('keydown', (e) => {
+    if (KeyHandler.checkKeyCode(keyCodes, e) && editor.selection.isCollapsed()) {
+      const patternSet = Pattern.filterByTrigger(getPatternSet(), 'space');
+      const hasPatterns = patternSet.blockPatterns.length > 0 || hasDynamicPatterns();
+
+      if (hasPatterns && KeyHandler.handleBlockPatternOnSpace(editor, patternSet)) {
+        e.preventDefault();
+      }
+    }
+  }, true);
+
   const handleInlineTrigger = () => {
     if (editor.selection.isCollapsed()) {
       const patternSet = Pattern.filterByTrigger(getPatternSet(), 'space');

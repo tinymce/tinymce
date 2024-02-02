@@ -15,7 +15,7 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
 
   const findPatternsWithDynamicPatterns = (editor: Editor, patternSet: PatternSet, normalizedMatches: boolean) => getParentBlock(editor, editor.selection.getRng()).map((block) => {
     const dynamicPatternSet = resolveFromDynamicPatterns(patternSet, block, block.textContent ?? '');
-    return BlockPattern.findPatterns(editor, block, dynamicPatternSet, normalizedMatches, true);
+    return BlockPattern.findPatterns(editor, block, dynamicPatternSet, normalizedMatches);
   }).getOr([]);
 
   context('no text_patterns_lookup', () => {
