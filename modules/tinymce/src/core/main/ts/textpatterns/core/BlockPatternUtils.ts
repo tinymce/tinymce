@@ -69,17 +69,15 @@ const findPattern = (predicate: (pattern: Pattern, text: string, nuText: string)
   return Arr.find(sortedPatterns, (pattern) => predicate(pattern, text, nuText));
 };
 
-const createFindPatterns = (findPattern: FindPattern, skipFullMatch: boolean) => (editor: Editor, block: Element, patternSet: PatternSet, normalizedMatches: boolean): BlockPatternMatch[] => {
+const createFindPatterns = (findPattern: FindPattern, skipFullMatch: boolean) => (editor: Editor, block: Element, patternSet: PatternSet, normalizedMatches: boolean, text = block.textContent ?? ''): BlockPatternMatch[] => {
   const dom = editor.dom;
   const forcedRootBlock = Options.getForcedRootBlock(editor);
   if (!dom.is(block, forcedRootBlock)) {
     return [];
   }
 
-  // Get the block text and then find a matching pattern
-  const blockText = block.textContent ?? '';
-  return findPattern(patternSet.blockPatterns, blockText).map((pattern) => {
-    if (skipFullMatch && Tools.trim(blockText).length === pattern.start.length) {
+  return findPattern(patternSet.blockPatterns, text).map((pattern) => {
+    if (skipFullMatch && Tools.trim(text).length === pattern.start.length) {
       return [];
     }
 

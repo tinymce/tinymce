@@ -23,66 +23,99 @@ describe('browser.tinymce.core.textpatterns.BlockPatternsOnSpaceTest', () => {
       const editor = hook.editor();
       Utils.setContentAndPressSpaceDown(editor, '#');
       TinyAssertions.assertContent(editor, '<h1>&nbsp;</h1>');
+
+      Utils.setContentAndPressSpaceDown(editor, '#abc', false, 1);
+      TinyAssertions.assertContent(editor, '<h1>abc</h1>');
     });
 
     it('TINY-10324: should insert h2 on ##', () => {
       const editor = hook.editor();
       Utils.setContentAndPressSpaceDown(editor, '##');
       TinyAssertions.assertContent(editor, '<h2>&nbsp;</h2>');
+
+      Utils.setContentAndPressSpaceDown(editor, '##abc', false, 2);
+      TinyAssertions.assertContent(editor, '<h2>abc</h2>');
     });
 
     it('TINY-10324: should insert h3 on ###', () => {
       const editor = hook.editor();
       Utils.setContentAndPressSpaceDown(editor, '###');
       TinyAssertions.assertContent(editor, '<h3>&nbsp;</h3>');
+
+      Utils.setContentAndPressSpaceDown(editor, '###abc', false, 3);
+      TinyAssertions.assertContent(editor, '<h3>abc</h3>');
     });
 
     it('TINY-10324: should insert h4 on ####', () => {
       const editor = hook.editor();
       Utils.setContentAndPressSpaceDown(editor, '####');
       TinyAssertions.assertContent(editor, '<h4>&nbsp;</h4>');
+
+      Utils.setContentAndPressSpaceDown(editor, '####abc', false, 4);
+      TinyAssertions.assertContent(editor, '<h4>abc</h4>');
     });
 
     it('TINY-10324: should insert h5 on #####', () => {
       const editor = hook.editor();
       Utils.setContentAndPressSpaceDown(editor, '#####');
       TinyAssertions.assertContent(editor, '<h5>&nbsp;</h5>');
+
+      Utils.setContentAndPressSpaceDown(editor, '#####abc', false, 5);
+      TinyAssertions.assertContent(editor, '<h5>abc</h5>');
     });
 
     it('TINY-10324: should insert h6 on ######', () => {
       const editor = hook.editor();
       Utils.setContentAndPressSpaceDown(editor, '######');
       TinyAssertions.assertContent(editor, '<h6>&nbsp;</h6>');
+
+      Utils.setContentAndPressSpaceDown(editor, '######abc', false, 6);
+      TinyAssertions.assertContent(editor, '<h6>abc</h6>');
     });
 
     it('TINY-10324: should insert unordered list on *', () => {
       const editor = hook.editor();
       Utils.setContentAndPressSpaceDown(editor, '*');
       TinyAssertions.assertContent(editor, '<ul><li>&nbsp;</li></ul>');
+
+      Utils.setContentAndPressSpaceDown(editor, '*abc', false, 1);
+      TinyAssertions.assertContent(editor, '<ul><li>abc</li></ul>');
     });
 
     it('TINY-10324: should insert unordered list on -', () => {
       const editor = hook.editor();
       Utils.setContentAndPressSpaceDown(editor, '-');
       TinyAssertions.assertContent(editor, '<ul><li>&nbsp;</li></ul>');
+
+      Utils.setContentAndPressSpaceDown(editor, '-abc', false, 1);
+      TinyAssertions.assertContent(editor, '<ul><li>abc</li></ul>');
     });
 
     it('TINY-10324: should insert ordered list on 1.', () => {
       const editor = hook.editor();
       Utils.setContentAndPressSpaceDown(editor, '1.');
       TinyAssertions.assertContent(editor, '<ol><li>&nbsp;</li></ol>');
+
+      Utils.setContentAndPressSpaceDown(editor, '1.abc', false, 2);
+      TinyAssertions.assertContent(editor, '<ol><li>abc</li></ol>');
     });
 
     it('TINY-10324: should insert blockquote on >', () => {
       const editor = hook.editor();
       Utils.setContentAndPressSpaceDown(editor, '>');
       TinyAssertions.assertContent(editor, '<blockquote><p>&nbsp;</p></blockquote>');
+
+      Utils.setContentAndPressSpaceDown(editor, '>abc', false, 1);
+      TinyAssertions.assertContent(editor, '<blockquote><p>abc</p></blockquote>');
     });
 
     it('TINY-10324: should insert horizontal rule on ---', () => {
       const editor = hook.editor();
       Utils.setContentAndPressSpaceDown(editor, '---');
       TinyAssertions.assertContent(editor, '<hr><p>&nbsp;</p>');
+
+      Utils.setContentAndPressSpaceDown(editor, '---abc', false, 3);
+      TinyAssertions.assertContent(editor, '<hr><p>abc</p>');
     });
   });
 
