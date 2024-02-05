@@ -209,12 +209,12 @@ timestamps {
       def s_buckets = "${buckets}"
       def name = "${os}-${platform.browser}-${platform.provider}${suffix}"
       if (platform.provider) {
-        // use local
-        processes[name] = runTestNode(name, platform.browser, platform.os, s_bucket, s_buckets, runAllTests)
-      } else {
         // use remote
         def testname = "tinymce_${env.BRANCH_NAME}_${env.BUILD_NUMBER}"
         processes[name] = runTestPod(cacheName, name, testname, platform.browser, platform.provider, platform.os, s_bucket, s_buckets, runAllTests)
+      } else {
+        // use local
+        processes[name] = runTestNode(name, platform.browser, platform.os, s_bucket, s_buckets, runAllTests)
       }
     }
   }
