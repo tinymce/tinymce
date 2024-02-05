@@ -1,0 +1,32 @@
+{
+  "name": "tinymce",
+  "namedInputs": {
+    "tinymce": [
+      "ts-globals",
+      "{projectRoot}/tsconfig.json",
+      "{projectRoot}/src/**/main/**/*.ts"
+    ]
+  },
+  "targets": {
+    "build": {
+      "inputs": [
+        "tinymce",
+        "{projectRoot}/Gruntfile.js"
+      ],
+      "outputs": [
+        "{projectRoot}/dist",
+        "{projectRoot}/js",
+        "{projectRoot}/lib"
+      ]
+    },
+    "test": {
+      "inputs": [
+        "tinymce",
+        "{projectRoot}/src/**/test/**/*.ts"
+      ],
+      "dependsOn": [
+        "build"
+      ]
+    }
+  }
+}

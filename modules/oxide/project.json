@@ -1,0 +1,14 @@
+{
+  "name": "@tinymce/oxide",
+  "targets": {
+    "build": {
+      "inputs": [
+        "{projectRoot}/src/less/**/*.less",
+        "tiny-icons"
+      ],
+      "outputs": [
+        "{projectRoot}/build/skins/**"
+      ]
+    }
+  }
+}
