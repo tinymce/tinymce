@@ -72,15 +72,15 @@ UnitTest.test('ColumnSizes.getPixelHeights', () => {
   const table = SugarElement.fromHtml<HTMLTableElement>(noneTableHtml);
   Insert.append(SugarBody.body(), table);
 
-  const cellHeight = SelectorFind.descendant<HTMLTableCellElement>(table, 'td')
-    .map((cell) => Math.round(parseFloat(Css.get(cell, 'height'))))
+  const rowHeight = SelectorFind.descendant<HTMLTableCellElement>(table, 'tr')
+    .map((tr) => Math.round(parseFloat(Css.get(tr, 'height'))))
     .getOrDie();
 
   const pixelHeights = ColumnSizes.getPixelHeights(Warehouse.fromTable(table), table);
 
   // Round to account for precision issues
   const roundedPixelHeights = Arr.map(pixelHeights, Math.round);
-  Assert.eq('Row heights should be the computed size of the cell', [ cellHeight ], roundedPixelHeights);
+  Assert.eq('Row heights should be the computed size of the cell', [ rowHeight ], roundedPixelHeights);
 
   Remove.remove(table);
 });

@@ -47,7 +47,6 @@ const adjustWidth = (table: SugarElement<HTMLTableElement>, delta: number, index
 };
 
 const adjustHeight = (table: SugarElement<HTMLTableElement>, delta: number, index: number): void => {
-  console.log('adjusting height');
   const warehouse = Warehouse.fromTable(table);
   const heights = ColumnSizes.getPixelHeights(warehouse, table);
 

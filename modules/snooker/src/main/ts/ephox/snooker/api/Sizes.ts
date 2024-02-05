@@ -23,7 +23,7 @@ const redistributeToColumns = (newWidths: string[], columns: Column[], unit: str
   });
 };
 
-const redistributeToH = <T extends Detail> (newHeights: string[], rows: RowDetail<T>[], cells: DetailExt[], unit: string): void => {
+const redistributeToH = <T extends Detail> (newHeights: string[], rows: RowDetail<T>[], cells: DetailExt[]): void => {
   // Arr.each(cells, (cell) => {
   //   const heights = newHeights.slice(cell.row, cell.rowspan + cell.row);
   //   const h = Redistribution.sum(heights, CellUtils.minHeight());
@@ -53,7 +53,6 @@ const getUnit = (newSize: string): 'px' | '%' => {
 // Procedure to resize table dimensions to optWidth x optHeight and redistribute cell and row dimensions.
 // Updates CSS of the table, rows, and cells.
 const redistribute = (table: SugarElement<HTMLTableElement>, optWidth: Optional<string>, optHeight: Optional<string>): void => {
-  console.log('redistribute');
   const warehouse = Warehouse.fromTable(table);
   const rows = warehouse.all;
   const cells = Warehouse.justCells(warehouse);
@@ -75,11 +74,10 @@ const redistribute = (table: SugarElement<HTMLTableElement>, optWidth: Optional<
   });
 
   optHeight.each((newHeight) => {
-    const hUnit = getUnit(newHeight);
     const totalHeight = Height.get(table);
     const oldHeights = ColumnSizes.getRawHeights(warehouse, table);
     const nuHeights = Redistribution.redistribute(oldHeights, totalHeight, newHeight);
-    redistributeToH(nuHeights, rows, cells, hUnit);
+    redistributeToH(nuHeights, rows, cells);
     Css.set(table, 'height', newHeight);
   });
 };
