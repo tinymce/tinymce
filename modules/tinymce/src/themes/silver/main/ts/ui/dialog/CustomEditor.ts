@@ -1,4 +1,4 @@
-import { AddEventsBehaviour, AlloyEvents, Behaviour, Memento, SimpleSpec } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, Behaviour, Memento, SimpleSpec, Tabstopping } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Obj, Optional, Singleton } from '@ephox/katamari';
 
@@ -55,14 +55,14 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
           () => initialValue.get().getOr(''),
           (ed) => ed.getValue()
         ),
-        (component, value) => {
+        (_component, value) => {
           editorApi.get().fold(
             () => initialValue.set(value),
             (ed) => ed.setValue(value)
           );
         }
       ),
-
+      Tabstopping.config({}),
       ComposingConfigs.self()
     ]),
     components: [ memReplaced.asSpec() ]
