@@ -24,24 +24,11 @@ const redistributeToColumns = (newWidths: string[], columns: Column[], unit: str
 };
 
 const redistributeToH = <T extends Detail> (newHeights: string[], rows: RowDetail<T>[], cells: DetailExt[]): void => {
-  // Arr.each(cells, (cell) => {
-  //   const heights = newHeights.slice(cell.row, cell.rowspan + cell.row);
-  //   const h = Redistribution.sum(heights, CellUtils.minHeight());
-  //   Css.set(cell.element, 'height', h + unit);
-  // });
-  // Arr.each(cells, (cell) => {
-  //   const heights = newHeights.slice(cell.row, cell.rowspan + cell.row);
-  //   const h = Redistribution.sum(heights, CellUtils.minHeight());
-  //   Css.set(cell.element, 'height', h + unit);
-  // });
-
   Arr.each(cells, (cell) => {
     Css.remove(cell.element, 'height');
   });
 
   Arr.each(rows, (row, i) => {
-    // const h = Redistribution.sum(heights, CellUtils.minHeight());
-    // Css.set(row.element, 'height', h + unit);
     Css.set(row.element, 'height', newHeights[i]);
   });
 };

@@ -80,6 +80,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
 
       const resizing = lazyResizingBehaviour();
       const tableSize = lazySizing(table);
+      // const preserveTableHeightResizing = () => ResizeBehaviour.preserveTable();
 
       // For preserve table we want to always resize the entire table. So pretend the last column is being resized
       const col = Options.isPreserveTableColumnResizing(editor) || isRightEdgeResize ? getNumColumns(table) - 1 : 0;

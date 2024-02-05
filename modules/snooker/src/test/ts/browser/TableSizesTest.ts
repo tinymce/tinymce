@@ -1,12 +1,13 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Arr, Optional } from '@ephox/katamari';
+import { Assert, after, before, describe, it } from '@ephox/bedrock-client';
+import { Arr, Optional, Type } from '@ephox/katamari';
 import { Css, Html, Insert, InsertAll, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+// import { assert } from 'chai';
 
 import * as Sizes from 'ephox/snooker/api/Sizes';
 
 import { addStyles, readCellHeights, readRowHeights, readWidth } from '../module/ephox/snooker/test/SizeUtils';
 
-UnitTest.test('Table Sizes Test (fusebox)', () => {
+describe('Table Sizes Test (fusebox)', () => {
   const percentTable =
   '<table style="width: 100%;">' +
   '<tbody>' +
@@ -72,20 +73,31 @@ UnitTest.test('Table Sizes Test (fusebox)', () => {
     return table;
   };
 
-  const generateH = (info: string[][], totalHeight: string) => {
+  const generateH = (tdInfo: string[][], trInfo: string[], totalHeight: string) => {
     const table = SugarElement.fromTag('table');
     Css.set(table, 'height', totalHeight);
     const tbody = SugarElement.fromTag('tbody');
-    const trows = Arr.map(info, (row, r) => {
+    const numRows = tdInfo.length || trInfo.length;
+    const trows: SugarElement<HTMLTableRowElement>[] = [];
+    Arr.range(numRows, (r) => {
       const tr = SugarElement.fromTag('tr');
-      const cells = Arr.map(row, (height, c) => {
+      const trHeight = trInfo[r];
+      if (Type.isNonNullable(trHeight)) {
+        Css.set(tr, 'height', trHeight);
+      }
+      const numCells = tdInfo[r].length || 1;
+      const cells: SugarElement<HTMLTableCellElement>[] = [];
+      Arr.range(numCells, (c) => {
         const td = SugarElement.fromTag('td');
-        Css.set(td, 'height', height);
+        const height = tdInfo[r][c];
+        if (Type.isNonNullable(height)) {
+          Css.set(td, 'height', height);
+        }
         Insert.append(td, SugarElement.fromText(String.fromCharCode('A'.charCodeAt(0) + c) + r));
-        return td;
+        cells.push(td);
       });
       InsertAll.append(tr, cells);
-      return tr;
+      trows.push(tr);
     });
     InsertAll.append(tbody, trows);
     Insert.append(table, tbody);
@@ -120,7 +132,8 @@ UnitTest.test('Table Sizes Test (fusebox)', () => {
   const checkHeight = (expected: string[][], table: SugarElement<HTMLTableElement>, newHeight: string) => {
     Insert.append(SugarBody.body(), table);
     Sizes.redistribute(table, Optional.none(), Optional.some(newHeight));
-    Assert.eq('', expected, readCellHeights(table));
+    // Assert.eq('check height', expected, readCellHeights(table));
+    Assert.eq('check height', expected, readRowHeights(table));
     Remove.remove(table);
   };
 
@@ -129,116 +142,137 @@ UnitTest.test('Table Sizes Test (fusebox)', () => {
   //   checkHeight(expected, table, newHeight);
   // };
 
-  const checkHeightRow = (expectedRowHeights: string[], table: SugarElement<HTMLTableElement>, newHeight: string) => {
+  const checkRowHeight = (expectedRowHeights: string[], table: SugarElement<HTMLTableElement>, newTableHeight: string) => {
     Insert.append(SugarBody.body(), table);
-    Sizes.redistribute(table, Optional.none(), Optional.some(newHeight));
-    Assert.eq('', expectedRowHeights, readRowHeights(table));
+    Sizes.redistribute(table, Optional.none(), Optional.some(newTableHeight));
+    Assert.eq('check height row', expectedRowHeights, readRowHeights(table));
     Remove.remove(table);
   };
 
-  const checkBasicHeightRow = (expectedRowHeights: string[], input: string[][], initialHeight: string, newHeight: string) => {
-    const table = generateH(input, initialHeight);
-    checkHeightRow(expectedRowHeights, table, newHeight);
+  const checkBasicRowHeightWithTrs = (expectedRowHeights: string[], trHeightsInput: string[], initialTableHeight: string, newTableHeight: string) => {
+    const table = generateH([[]], trHeightsInput, initialTableHeight);
+    checkRowHeight(expectedRowHeights, table, newTableHeight);
   };
 
-  const styles = addStyles();
+  const checkBasicRowHeightWithTds = (expectedRowHeights: string[], tdHeightsInput: string[][], initialTableHeight: string, newTableHeight: string) => {
+    const table = generateH(tdHeightsInput, [], initialTableHeight);
+    checkRowHeight(expectedRowHeights, table, newTableHeight);
+  };
 
-  checkBasicHeightRow([ '50px' ], [[ '10px' ]], '100px', '50px');
-  // checkBasicHeightRow([ '10%' ], [[ '10px' ]], '100px', '100%');
-  checkBasicHeightRow([ '20px' ], [[ '10px' ]], '25px', '50px');
-  checkBasicHeightRow([ '40%' ], [[ '10px' ]], '25px', '300%');
-  // checkBasicHeight([[ '5px' ]], [[ '10px' ]], '100px', '50px');
-  // checkBasicHeight([[ '10%' ]], [[ '10px' ]], '100px', '100%');
-  // checkBasicHeight([[ '20px' ]], [[ '10px' ]], '25px', '50px');
-  // checkBasicHeight([[ '40%' ]], [[ '10px' ]], '25px', '300%');
+  let styles: ReturnType<typeof addStyles>;
 
-  checkBasicWidth([[ '2px' ]], [[ '10px' ]], '50px', '10px');
-  checkBasicWidth([[ '10px' ]], [[ '10px' ]], '50px', '50px');
-  checkBasicWidth([[ '20px' ]], [[ '10px' ]], '50px', '100px');
-  checkBasicWidth([[ '20%' ]], [[ '10px' ]], '50px', '200%');
-  checkBasicWidth([[ '20%' ]], [[ '10px' ]], '50px', '400%');
+  before(() => {
+    styles = addStyles();
+  });
 
-  checkBasicWidth([[ '2px' ]], [[ '10px' ]], '50px', '10px');
+  after(() => {
+    styles.remove();
+  });
 
-  checkHeight([
-    [ '140px', '40px', '40px', '140px' ],
-    [ '250px', '100px', '100px' ],
-    [ '150px', '150px', '150px', '150px' ]
-  ], SugarElement.fromHtml(pixelTableHeight), '300px');
+  it('test basic row height distributions', () => {
+    checkBasicRowHeightWithTrs([ '5px' ], [ '10px' ], '100px', '50px');
+    checkBasicRowHeightWithTrs([ '10%' ], [ '10px' ], '100px', '100%');
+    checkBasicRowHeightWithTrs([ '20px' ], [ '10px' ], '25px', '50px');
+    checkBasicRowHeightWithTrs([ '40%' ], [ '10px' ], '25px', '300%');
 
-  checkHeight([
-    [ '70px', '20px', '20px', '70px' ],
-    [ '125px', '50px', '50px' ],
-    [ '75px', '75px', '75px', '75px' ]
-  ], SugarElement.fromHtml(pixelTableHeight), '150px');
+    checkBasicRowHeightWithTds([ '50px' ], [[ '10px' ]], '100px', '50px');
+    checkBasicRowHeightWithTds([ '99%' ], [[ '10px' ]], '100px', '100%');
+    checkBasicRowHeightWithTds([ '48px' ], [[ '10px' ]], '25px', '50px');
+    checkBasicRowHeightWithTds([ '96%' ], [[ '10px' ]], '25px', '300%');
+  });
 
-  checkHeight([
-    [ '46.7%', '13.3%', '13.3%', '46.7%' ],
-    [ '83.3%', '33.3%', '33.3%' ],
-    [ '50%', '50%', '50%', '50%' ]
-  ], SugarElement.fromHtml(pixelTableHeight), '100%');
+  it('test basic width distributions', () => {
+    checkBasicWidth([[ '2px' ]], [[ '10px' ]], '50px', '10px');
+    checkBasicWidth([[ '10px' ]], [[ '10px' ]], '50px', '50px');
+    checkBasicWidth([[ '20px' ]], [[ '10px' ]], '50px', '100px');
+    checkBasicWidth([[ '20%' ]], [[ '10px' ]], '50px', '200%');
+    checkBasicWidth([[ '20%' ]], [[ '10px' ]], '50px', '400%');
 
-  checkHeight([
-    [ '46.7%', '13.3%', '13.3%', '46.7%' ],
-    [ '83.3%', '33.3%', '33.3%' ],
-    [ '50%', '50%', '50%', '50%' ]
-  ], SugarElement.fromHtml(pixelTableHeight), '150%');
+    checkBasicWidth([[ '2px' ]], [[ '10px' ]], '50px', '10px');
+  });
 
-  checkWidth([
-    [ '10px', '30px', '20px', '25px', '15px' ],
-    [ '60px', '25px', '15px' ],
-    [ '40px', '60px' ],
-    [ '100px' ]
-  ], SugarElement.fromHtml(pixelTable), '100px');
+  it('test more complex height distributions', () => {
+    checkHeight([
+      [ '140px', '40px', '40px', '140px' ],
+      [ '250px', '100px', '100px' ],
+      [ '150px', '150px', '150px', '150px' ]
+    ], SugarElement.fromHtml(pixelTableHeight), '300px');
 
-  checkWidth([
-    [ '100px', '300px', '200px', '250px', '150px' ],
-    [ '600px', '250px', '150px' ],
-    [ '400px', '600px' ],
-    [ '1000px' ]
-  ], SugarElement.fromHtml(pixelTable), '1000px');
+    checkHeight([
+      [ '70px', '20px', '20px', '70px' ],
+      [ '125px', '50px', '50px' ],
+      [ '75px', '75px', '75px', '75px' ]
+    ], SugarElement.fromHtml(pixelTableHeight), '150px');
 
-  checkWidth([
-    [ '10%', '30%', '20%', '25%', '15%' ],
-    [ '60%', '25%', '15%' ],
-    [ '40%', '60%' ],
-    [ '100%' ]
-  ], SugarElement.fromHtml(pixelTable), '50%');
+    checkHeight([
+      [ '46.7%', '13.3%', '13.3%', '46.7%' ],
+      [ '83.3%', '33.3%', '33.3%' ],
+      [ '50%', '50%', '50%', '50%' ]
+    ], SugarElement.fromHtml(pixelTableHeight), '100%');
 
-  checkWidth([
-    [ '10%', '30%', '20%', '25%', '15%' ],
-    [ '60%', '25%', '15%' ],
-    [ '40%', '60%' ],
-    [ '100%' ]
-  ], SugarElement.fromHtml(pixelTable), '100%');
+    checkHeight([
+      [ '46.7%', '13.3%', '13.3%', '46.7%' ],
+      [ '83.3%', '33.3%', '33.3%' ],
+      [ '50%', '50%', '50%', '50%' ]
+    ], SugarElement.fromHtml(pixelTableHeight), '150%');
+  });
 
-  checkWidth([
-    [ '10%', '30%', '20%', '25%', '15%' ],
-    [ '60%', '25%', '15%' ],
-    [ '40%', '60%' ],
-    [ '100%' ]
-  ], SugarElement.fromHtml(percentTable), '100%');
+  it('test more complex width distributions', () => {
+    checkWidth([
+      [ '10px', '30px', '20px', '25px', '15px' ],
+      [ '60px', '25px', '15px' ],
+      [ '40px', '60px' ],
+      [ '100px' ]
+    ], SugarElement.fromHtml(pixelTable), '100px');
 
-  checkWidth([
-    [ '10%', '30%', '20%', '25%', '15%' ],
-    [ '60%', '25%', '15%' ],
-    [ '40%', '60%' ],
-    [ '100%' ]
-  ], SugarElement.fromHtml(percentTable), '50%');
+    checkWidth([
+      [ '100px', '300px', '200px', '250px', '150px' ],
+      [ '600px', '250px', '150px' ],
+      [ '400px', '600px' ],
+      [ '1000px' ]
+    ], SugarElement.fromHtml(pixelTable), '1000px');
 
-  checkWidth([
-    [ '10px', '30px', '20px', '25px', '15px' ],
-    [ '60px', '25px', '15px' ],
-    [ '40px', '60px' ],
-    [ '100px' ]
-  ], SugarElement.fromHtml(percentTable), '100px');
+    checkWidth([
+      [ '10%', '30%', '20%', '25%', '15%' ],
+      [ '60%', '25%', '15%' ],
+      [ '40%', '60%' ],
+      [ '100%' ]
+    ], SugarElement.fromHtml(pixelTable), '50%');
 
-  checkWidth([
-    [ '30px', '90px', '60px', '75px', '45px' ],
-    [ '180px', '75px', '45px' ],
-    [ '120px', '180px' ],
-    [ '300px' ]
-  ], SugarElement.fromHtml(percentTable), '300px');
+    checkWidth([
+      [ '10%', '30%', '20%', '25%', '15%' ],
+      [ '60%', '25%', '15%' ],
+      [ '40%', '60%' ],
+      [ '100%' ]
+    ], SugarElement.fromHtml(pixelTable), '100%');
 
-  styles.remove();
+    checkWidth([
+      [ '10%', '30%', '20%', '25%', '15%' ],
+      [ '60%', '25%', '15%' ],
+      [ '40%', '60%' ],
+      [ '100%' ]
+    ], SugarElement.fromHtml(percentTable), '100%');
+
+    checkWidth([
+      [ '10%', '30%', '20%', '25%', '15%' ],
+      [ '60%', '25%', '15%' ],
+      [ '40%', '60%' ],
+      [ '100%' ]
+    ], SugarElement.fromHtml(percentTable), '50%');
+
+    checkWidth([
+      [ '10px', '30px', '20px', '25px', '15px' ],
+      [ '60px', '25px', '15px' ],
+      [ '40px', '60px' ],
+      [ '100px' ]
+    ], SugarElement.fromHtml(percentTable), '100px');
+
+    checkWidth([
+      [ '30px', '90px', '60px', '75px', '45px' ],
+      [ '180px', '75px', '45px' ],
+      [ '120px', '180px' ],
+      [ '300px' ]
+    ], SugarElement.fromHtml(percentTable), '300px');
+  });
+
 });

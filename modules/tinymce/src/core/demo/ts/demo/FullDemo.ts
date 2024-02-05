@@ -173,7 +173,7 @@ export default (): void => {
     table_sizing_mode: 'fixed',
     // valid_children: 'td[#text|img]',
     // table_sizing_mode: 'responsive',
-    table_column_resizing: 'resizetable',
+    // table_column_resizing: 'resizetable',
     // table_default_styles: {
     //   width: '50%'
     // }
