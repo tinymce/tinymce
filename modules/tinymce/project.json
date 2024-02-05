@@ -10,7 +10,8 @@
   "targets": {
     "build": {
       "inputs": [
-        "tinymce"
+        "tinymce",
+        "{projectRoot}/Gruntfile.js"
       ],
       "outputs": [
         "{projectRoot}/dist",
