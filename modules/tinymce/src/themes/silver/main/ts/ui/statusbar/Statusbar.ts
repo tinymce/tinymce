@@ -24,7 +24,7 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
           dom: {
             tag: 'a',
             attributes: {
-              'href': 'https://www.tiny.cloud/powered-by-tiny?utm_campaign=editor_referral&utm_medium=poweredby&utm_source=tinymce&utm_content=v6',
+              'href': 'https://www.tiny.cloud/powered-by-tiny?utm_campaign=poweredby&utm_source=tiny&utm_medium=referral&utm_content=v6',
               'rel': 'noopener',
               'target': '_blank',
               'aria-label': I18n.translate([ 'Powered by {0}', 'Tiny' ])
