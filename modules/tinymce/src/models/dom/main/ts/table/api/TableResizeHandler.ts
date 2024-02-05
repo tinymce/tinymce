@@ -98,11 +98,13 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
       syncTableCellPixels(table);
     }
 
+    // TODO: FIgure out if should distribute the height evenly across the rows when using the corner resize handles
     if (height !== startH && startRawH !== '') {
       // Restore the original size and then let snooker resize appropriately
       Css.set(table, 'height', startRawH);
-      const idx = isRightEdgeResize ? getNumRows(table) - 1 : 0;
-      Adjustments.adjustHeight(table, height - startH, idx );
+      // const idx = isRightEdgeResize ? getNumRows(table) - 1 : 0;
+      const idx = getNumRows(table) - 1;
+      Adjustments.adjustHeight(table, height - startH, idx);
     }
   };
 

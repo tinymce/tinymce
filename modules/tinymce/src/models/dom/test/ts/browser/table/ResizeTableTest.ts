@@ -64,7 +64,6 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
   const responsiveTable = '<table><tbody><tr><td><br></td><td><br></td></tr></tbody></table>';
   const responsiveTableWithContent = '<table><colgroup><col><col></colgroup><tbody><tr><td>Content</td><td><br></td></tr></tbody></table>';
   const pixelTableWithRowHeights = '<table style="width: 200px; height: 100px;"><tbody><tr style="height: 100px;"><td style="height: 100px;"></td><td style="height: 100px;"></td></tr></tbody></table>';
-  // TODO: Consider adding other items as well
 
   const defaultSettings = {
     width: 400,
@@ -116,9 +115,6 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     const size = TableGridSize.getGridSize(table);
     return Arr.range(size.rows, (row) => TableTestUtils.getCellHeight(editor, table, row, 0));
   };
-
-  // const getCellHeights = (editor: Editor, table: SugarElement<HTMLTableElement>) =>
-  //   Arr.map(SelectorFilter.descendants<HTMLTableCellElement>(table, 'td,th'), (cell) => TableTestUtils.getHeightData(editor, cell.dom));
 
   const getTrHeights = (editor: Editor, table: SugarElement<HTMLTableElement>) =>
     Arr.map(SelectorFilter.descendants<HTMLTableCellElement>(table, 'tr'), (tr) => TableTestUtils.getHeightData(editor, tr.dom));
@@ -214,15 +210,6 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
   const assertUnitsBeforeResize = assertUnits('before');
   const assertUnitsAfterResize = assertUnits('after');
 
-  // TODO: TODO: Swap to using assertRawSizes
-  const assertWidthAfterResize = (width: number | null, measurements: TableMeasurementsAll, approx: boolean = false) => {
-    if (approx) {
-      assert.approximately(measurements.after.tableWidth.raw ?? 0, width ?? 0, pixelDiffThreshold, `table raw width after resizing is ~${width}`);
-    } else {
-      assert.equal(measurements.after.tableWidth.raw, width, `table raw width after resizing is ${width}`);
-    }
-  };
-
   const assertEventData = (state: Cell<EditorEvent<ObjectResizeEvent> | null>, expectedEventName: string) => {
     const event = state.get();
     assert.equal(event?.target.nodeName, 'TABLE', 'Should be table element');
@@ -305,7 +292,6 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
       assertEventData(lastObjectResizedEvent, 'objectresized');
     });
 
-    // TODO: Test differnt table height variations
     it('TINY-7699: resize a row and verify the output has the correct heights', async () => {
       const editor = hook.editor();
       editor.setContent('');
@@ -468,7 +454,7 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
       assertUnitsBeforeResize(measurements.before, {});
       assertUnitsAfterResize(measurements.after, { tableWidth: 'px', tableHeight: 'px', trHeight: 'px', tdWidth: 'px' });
 
-      assertRawSizesBeforeResize(measurements.before, { });
+      assertRawSizesBeforeResize(measurements.before, {});
       const tableWidthAfter = 48.5625;
       const tdWidthAfter = (tableWidthAfter / 2) - defaultCellBorder - defaultCellPadding;
       assertRawSizesAfterResize(measurements.after, {
@@ -607,12 +593,10 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
       const measurements = await pInsertResizeMeasure(editor,
         () => TableTestUtils.pDragResizeBar(editor, 'column', 0, 20, 0),
         () => TableTestUtils.insertRaw(editor, pixelTable)
-        // () => {
-        //   TableTestUtils.insertRaw(editor, pixelTable);
-        //   assert.fail();
-        // }
       );
-      assertWidthAfterResize(200, measurements);
+
+      assertUnitsBeforeResize(measurements.before, { tableWidth: 'px' });
+      assertUnitsAfterResize(measurements.after, { tableWidth: 'px', tdWidth: 'px' });
 
       assertRawSizesBeforeResize(measurements.before, {
         tableWidth: 200,
@@ -630,22 +614,27 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     it('TINY-6242: adjusting the entire table should resize all columns', async () => {
       const editor = hook.editor();
       editor.setContent('');
-      const widths = await pInsertResizeMeasure(editor,
+      const measurements = await pInsertResizeMeasure(editor,
         () => TableTestUtils.pDragHandle(editor, 'se', 20, 0),
         () => TableTestUtils.insertRaw(editor, pixelTable)
       );
-      assertWidthAfterResize(220, widths);
+
+      assertUnitsBeforeResize(measurements.before, { tableWidth: 'px' });
+      assertUnitsAfterResize(measurements.after, { tableWidth: 'px', tableHeight: 'px', trHeight: 'px', tdWidth: 'px' });
+
+      assertRawSizesBeforeResize(measurements.before, {
+        tableWidth: 200,
+      });
+      const tdWidthBefore = (200.0 / 2) - defaultCellBorder - defaultCellPadding;
+      assertRawSizesAfterResize(measurements.after, {
+        tableWidth: 220,
+        tableHeight: defaultCellHeightOverall,
+        trHeights: [ defaultCellHeightOverall ],
+        tdWidths: [ tdWidthBefore + 10, tdWidthBefore + 10 ]
+      });
+
       assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
       assertEventData(lastObjectResizedEvent, 'objectresized');
-      const firstColWidth = widths.after.cellWidths[0];
-      const lastColWidth = widths.after.cellWidths[1];
-      // Note: Use 96px as the padding + borders are about 14px which adds up to ~110px per cell
-      const rawFirstColWidth = firstColWidth.raw ?? 0;
-      assert.approximately(rawFirstColWidth, 96, pixelDiffThreshold, `First column raw width ${rawFirstColWidth + String(firstColWidth.unit)} should be ~96px`);
-      assert.equal(firstColWidth.unit, 'px', 'First column unit width');
-      const rawLastColWidth = lastColWidth.raw ?? 0;
-      assert.approximately(rawLastColWidth, 96, pixelDiffThreshold, `Last column raw width ${rawLastColWidth + String(lastColWidth.unit)} should be ~96px`);
-      assert.equal(lastColWidth.unit, 'px', 'Last column unit width');
     });
   });
 
@@ -659,11 +648,23 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     it('TINY-6001: adjusting an inner column should change the table width', async () => {
       const editor = hook.editor();
       editor.setContent('');
-      const widths = await pInsertResizeMeasure(editor,
+      const measurements = await pInsertResizeMeasure(editor,
         () => TableTestUtils.pDragResizeBar(editor, 'column', 0, 20, 0),
         () => TableTestUtils.insertRaw(editor, pixelTable)
       );
-      assertWidthAfterResize(220, widths);
+
+      assertUnitsBeforeResize(measurements.before, { tableWidth: 'px' });
+      assertUnitsAfterResize(measurements.after, { tableWidth: 'px', tdWidth: 'px' });
+
+      assertRawSizesBeforeResize(measurements.before, {
+        tableWidth: 200,
+      });
+      const tdWidthBefore = (200.0 / 2) - defaultCellBorder - defaultCellPadding;
+      assertRawSizesAfterResize(measurements.after, {
+        tableWidth: 220,
+        tdWidths: [ tdWidthBefore + 20, tdWidthBefore ]
+      });
+
       assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
       assertEventData(lastObjectResizedEvent, 'objectresized');
     });
@@ -671,23 +672,27 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     it('TINY-6242: adjusting the entire table should resize the last column', async () => {
       const editor = hook.editor();
       editor.setContent('');
-      const widths = await pInsertResizeMeasure(editor,
+      const measurements = await pInsertResizeMeasure(editor,
         () => TableTestUtils.pDragHandle(editor, 'ne', 20, 0),
         () => TableTestUtils.insertRaw(editor, pixelTable)
       );
-      assertWidthAfterResize(220, widths);
+
+      assertUnitsBeforeResize(measurements.before, { tableWidth: 'px' });
+      assertUnitsAfterResize(measurements.after, { tableWidth: 'px', tableHeight: 'px', trHeight: 'px', tdWidth: 'px' });
+
+      assertRawSizesBeforeResize(measurements.before, {
+        tableWidth: 200,
+      });
+      const tdWidthBefore = (200.0 / 2) - defaultCellBorder - defaultCellPadding;
+      assertRawSizesAfterResize(measurements.after, {
+        tableWidth: 220,
+        tableHeight: defaultCellHeightOverall,
+        trHeights: [ defaultCellHeightOverall ],
+        tdWidths: [ tdWidthBefore, tdWidthBefore + 20 ]
+      });
+
       assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
       assertEventData(lastObjectResizedEvent, 'objectresized');
-      const lastColWidth = widths.after.cellWidths[1];
-      // Note: Use 106px as the padding + borders are about 14px
-      const rawLastColWidth = lastColWidth.raw ?? 0;
-      assert.approximately(rawLastColWidth, 106, pixelDiffThreshold, `Last column raw width ${rawLastColWidth + String(lastColWidth.unit)} should be ~106px`);
-      assert.equal(lastColWidth.unit, 'px', 'Last column unit width');
-      const firstColWidthBefore = widths.before.cellWidths[0];
-      const firstColWidthAfter = widths.after.cellWidths[0];
-      // Allow for a 1px variation here due to potential rounding issues
-      assert.approximately(firstColWidthAfter.px, firstColWidthBefore.px, 1, `First column raw width ${firstColWidthBefore.px + String(firstColWidthBefore.unit)} should be unchanged`);
-      assert.equal(firstColWidthAfter.unit, 'px', 'First column unit width');
     });
   });
 
@@ -702,21 +707,24 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     it('TINY-6242: adjusting the entire table should not resize more than the last column width', async () => {
       const editor = hook.editor();
       editor.setContent('');
-      const widths = await pInsertResizeMeasure(editor,
+      const measurements = await pInsertResizeMeasure(editor,
         () => TableTestUtils.pDragHandle(editor, 'ne', -250, 0),
         () => TableTestUtils.insertRaw(editor, percentTable)
       );
-      assertWidthAfterResize(53, widths, true);
+
+      assertUnitsBeforeResize(measurements.before, { tableWidth: '%', tdWidth: '%' });
+      assertUnitsAfterResize(measurements.after, { tableWidth: '%', tableHeight: 'px', trHeight: 'px', tdWidth: '%' });
+
+      assertRawSizesBeforeResize(measurements.before, { tableWidth: 100, tdWidths: [ 50, 50 ] });
+      assertRawSizesAfterResize(measurements.after, {
+        tableWidth: 53,
+        tableHeight: defaultCellHeightOverall,
+        trHeights: [ defaultCellHeightOverall ],
+        tdWidths: [ 95, 5 ],
+      });
+
       assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
       assertEventData(lastObjectResizedEvent, 'objectresized');
-      const firstColWidth = widths.after.cellWidths[0];
-      const lastColWidth = widths.after.cellWidths[1];
-      const rawFirstColWidth = firstColWidth.raw ?? 0;
-      assert.approximately(rawFirstColWidth, 95, percentDiffThreshold, `First column raw width ${rawFirstColWidth + String(firstColWidth.unit)} should be ~95%`);
-      assert.equal(firstColWidth.unit, '%', 'First column unit width');
-      const rawLastColWidth = lastColWidth.raw ?? 0;
-      assert.approximately(rawLastColWidth, 5, percentDiffThreshold, `Last column raw width ${rawLastColWidth + String(lastColWidth.unit)} should be ~5%`);
-      assert.equal(lastColWidth.unit, '%', 'Last column unit width');
     });
   });
 
@@ -737,7 +745,13 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
       );
       assertUnitsBeforeResize(measurements.before, {});
       assertUnitsAfterResize(measurements.after, { tableWidth: '%', colWidth: '%' });
-      assertWidthAfterResize(35, measurements, true);
+
+      assertRawSizesBeforeResize(measurements.before, {});
+      assertRawSizesAfterResize(measurements.after, {
+        tableWidth: 35,
+        colWidths: [ 88.75, 11.25 ],
+      });
+
       assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
       assertEventData(lastObjectResizedEvent, 'objectresized');
     });
@@ -758,13 +772,253 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
       );
       assertUnitsBeforeResize(measurements.before, {});
       assertUnitsAfterResize(measurements.after, { tableWidth: '%', colWidth: '%' });
-      assertWidthAfterResize(53, measurements, true);
+
+      assertRawSizesBeforeResize(measurements.before, {});
+      assertRawSizesAfterResize(measurements.after, {
+        tableWidth: 51,
+        colWidths: [ 92.25, 7.75 ],
+      });
+
       assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
       assertEventData(lastObjectResizedEvent, 'objectresized');
-      const firstColWidth = measurements.after.cellWidths[0];
-      const lastColWidth = measurements.after.cellWidths[1];
-      assert.approximately(firstColWidth.px, 157, pixelDiffThreshold, `First column computed width ${firstColWidth.px}px should be ~157px`);
-      assert.approximately(lastColWidth.px, 0, pixelDiffThreshold, `Last column computed width ${lastColWidth.px}px should be ~0px`);
+    });
+  });
+
+  context('row resizing', () => {
+    const hook = TinyHooks.bddSetup<Editor>({
+      ...defaultSettings,
+      table_sizing_mode: 'fixed'
+    }, []);
+
+    const tableWithAllHeights = `<table style="width: 50px; height: 200px;">
+    <colgroup><col style="width: 50px;"></colgroup>
+    <tbody>
+    <tr style="height: 100px;"><td style="height: 100px;"></td></tr>
+    <tr style="height: 100px;"><td style="height: 100px;"></td></tr>
+    </tbody></table>`;
+
+    const tableWithOnlyTableHeight = `<table style="width: 50px; height: 200px;">
+    <colgroup><col style="width: 50px;"></colgroup>
+    <tbody>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
+    </tbody></table>`;
+
+    const tableWithNoHeights = `<table style="width: 50px;">
+    <colgroup><col style="width: 50px;"></colgroup>
+    <tbody>
+    <tr><td></td></tr>
+    <tr><td></td></tr>
+    </tbody></table>`;
+
+    const tableWithHeightOnTableAndTrs = `<table style="width: 50px; height: 200px;">
+    <colgroup><col style="width: 50px;"></colgroup>
+    <tbody>
+    <tr style="height: 100px;"><td></td></tr>
+    <tr style="height: 100px;"><td></td></tr>
+    </tbody></table>`;
+
+    context('resizing with corner handle', () => {
+      context('height on table, trs and tds', () => {
+        Arr.each([
+          { title: 'TINY-10589: resize table larger with se handle and verify only table and trs have heights', corner: 'se', dy: 50 },
+          { title: 'TINY-10589: resize table smaller with se handle and verify only table and trs have heights', corner: 'se', dy: -30 },
+          { title: 'TINY-10589: resize table larger with sw handle and verify only table and trs have heights', corner: 'sw', dy: 50 },
+          { title: 'TINY-10589: resize table smaller with sw handle and verify only table and trs have heights', corner: 'sw', dy: -30 },
+
+        ], (scenario) => {
+          const { title, corner, dy } = scenario;
+
+          it(title, async () => {
+            const editor = hook.editor();
+            editor.setContent('');
+            const measurements = await pInsertResizeMeasure(editor,
+              () => TableTestUtils.pDragHandle(editor, corner, 0, dy),
+              () => TableTestUtils.insertRaw(editor, tableWithAllHeights)
+            );
+
+            assertUnitsBeforeResize(measurements.before, { tableWidth: 'px', tableHeight: 'px', colWidth: 'px', trHeight: 'px', tdHeight: 'px' });
+            assertUnitsAfterResize(measurements.after, { tableWidth: 'px', tableHeight: 'px', colWidth: 'px', trHeight: 'px' });
+
+            assertRawSizesBeforeResize(measurements.before, {
+              tableWidth: 50,
+              colWidths: [ 50 ],
+              tableHeight: 200,
+              trHeights: [ 100, 100 ],
+              tdHeights: [ 100, 100 ],
+            });
+            assertRawSizesAfterResize(measurements.after, {
+              tableWidth: 50,
+              colWidths: [ 50 ],
+              tableHeight: 200 + dy + (defaultCellBorder + defaultCellPadding) * 2,
+              trHeights: [ 100 + defaultCellPadding, 100 + dy + defaultCellPadding + defaultCellBorder ],
+            });
+
+            assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
+            assertEventData(lastObjectResizedEvent, 'objectresized');
+          });
+        });
+      });
+    });
+
+    context('reszing with resize bar', () => {
+      context('height on table, trs and tds', () => {
+        Arr.each([
+          { title: 'TINY-10589: resize inner row larger and verify only table and trs have heights', row: 0, dy: 50 },
+          { title: 'TINY-10589: resize inner row smaller and verify only table and trs have heights', row: 0, dy: -20 },
+          { title: 'TINY-10589: resize last row larger and verify only table and trs have heights', row: 1, dy: 50 },
+          { title: 'TINY-10589: resize last row smaller and verify only table and trs have heights', row: 1, dy: -20 },
+
+        ], (scenario) => {
+          const { title, row, dy } = scenario;
+
+          it(title, async () => {
+            const editor = hook.editor();
+            editor.setContent('');
+            const measurements = await pInsertResizeMeasure(editor,
+              () => TableTestUtils.pDragResizeBar(editor, 'row', row, 0, dy),
+              () => TableTestUtils.insertRaw(editor, tableWithAllHeights)
+            );
+
+            assertUnitsBeforeResize(measurements.before, { tableWidth: 'px', tableHeight: 'px', colWidth: 'px', trHeight: 'px', tdHeight: 'px' });
+            assertUnitsAfterResize(measurements.after, { tableWidth: 'px', tableHeight: 'px', colWidth: 'px', trHeight: 'px' });
+
+            assertRawSizesBeforeResize(measurements.before, {
+              tableWidth: 50,
+              colWidths: [ 50 ],
+              tableHeight: 200,
+              trHeights: [ 100, 100 ],
+              tdHeights: [ 100, 100 ],
+            });
+            assertRawSizesAfterResize(measurements.after, {
+              tableWidth: 50,
+              colWidths: [ 50 ],
+              tableHeight: 200 + dy + (defaultCellBorder + defaultCellPadding) * 2,
+              trHeights: [ 100 + (row === 0 ? dy : 0) + defaultCellPadding, 100 + (row === 1 ? dy : 0) + defaultCellPadding + defaultCellBorder ],
+            });
+
+            assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
+            assertEventData(lastObjectResizedEvent, 'objectresized');
+          });
+        });
+      });
+
+      context('no heights', () => {
+        Arr.each([
+          { title: 'TINY-10589: resize inner row larger and verify only table and trs have heights', row: 0, dy: 50 },
+          { title: 'TINY-10589: resize inner row smaller and verify only table and trs have heights', row: 0, dy: -20 },
+          { title: 'TINY-10589: resize last row larger and verify only table and trs have heights', row: 1, dy: 50 },
+          { title: 'TINY-10589: resize last row smaller and verify only table and trs have heights', row: 1, dy: -20 },
+
+        ], (scenario) => {
+          const { title, row, dy } = scenario;
+
+          it(title, async () => {
+            const editor = hook.editor();
+            editor.setContent('');
+            const measurements = await pInsertResizeMeasure(editor,
+              () => TableTestUtils.pDragResizeBar(editor, 'row', row, 0, dy),
+              () => TableTestUtils.insertRaw(editor, tableWithNoHeights)
+            );
+
+            assertUnitsBeforeResize(measurements.before, { tableWidth: 'px', colWidth: 'px' });
+            assertUnitsAfterResize(measurements.after, { tableWidth: 'px', tableHeight: 'px', colWidth: 'px', trHeight: 'px' });
+
+            assertRawSizesBeforeResize(measurements.before, {
+              tableWidth: 50,
+              colWidths: [ 50 ],
+            });
+            assertRawSizesAfterResize(measurements.after, {
+              tableWidth: 50,
+              colWidths: [ 50 ],
+              tableHeight: defaultCellHeightOverall * 2 + dy,
+              trHeights: [ defaultCellHeightOverall + (row === 0 ? dy : 0), defaultCellHeightOverall + (row === 1 ? dy : 0) ],
+            });
+
+            assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
+            assertEventData(lastObjectResizedEvent, 'objectresized');
+          });
+        });
+      });
+
+      context('height only on table', () => {
+        Arr.each([
+          { title: 'TINY-10589: resize inner row larger and verify only table and trs have heights', row: 0, dy: 50 },
+          { title: 'TINY-10589: resize inner row smaller and verify only table and trs have heights', row: 0, dy: -20 },
+          { title: 'TINY-10589: resize last row larger and verify only table and trs have heights', row: 1, dy: 50 },
+          { title: 'TINY-10589: resize last row smaller and verify only table and trs have heights', row: 1, dy: -20 },
+
+        ], (scenario) => {
+          const { title, row, dy } = scenario;
+
+          it(title, async () => {
+            const editor = hook.editor();
+            editor.setContent('');
+            const measurements = await pInsertResizeMeasure(editor,
+              () => TableTestUtils.pDragResizeBar(editor, 'row', row, 0, dy),
+              () => TableTestUtils.insertRaw(editor, tableWithOnlyTableHeight)
+            );
+
+            assertUnitsBeforeResize(measurements.before, { tableWidth: 'px', tableHeight: 'px', colWidth: 'px' });
+            assertUnitsAfterResize(measurements.after, { tableWidth: 'px', tableHeight: 'px', colWidth: 'px', trHeight: 'px' });
+
+            assertRawSizesBeforeResize(measurements.before, {
+              tableWidth: 50,
+              colWidths: [ 50 ],
+              tableHeight: 200,
+            });
+            assertRawSizesAfterResize(measurements.after, {
+              tableWidth: 50,
+              colWidths: [ 50 ],
+              tableHeight: 200 + dy,
+              trHeights: [ 100 + (row === 0 ? dy : 0), 100 + (row === 1 ? dy : 0) ],
+            });
+
+            assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
+            assertEventData(lastObjectResizedEvent, 'objectresized');
+          });
+        });
+      });
+
+      context('height only on table and trs', () => {
+        Arr.each([
+          { title: 'TINY-10589: resize inner row larger and verify only table and trs have heights', row: 0, dy: 50 },
+          { title: 'TINY-10589: resize inner row smaller and verify only table and trs have heights', row: 0, dy: -20 },
+          { title: 'TINY-10589: resize last row larger and verify only table and trs have heights', row: 1, dy: 50 },
+          { title: 'TINY-10589: resize last row smaller and verify only table and trs have heights', row: 1, dy: -20 },
+
+        ], (scenario) => {
+          const { title, row, dy } = scenario;
+
+          it(title, async () => {
+            const editor = hook.editor();
+            editor.setContent('');
+            const measurements = await pInsertResizeMeasure(editor,
+              () => TableTestUtils.pDragResizeBar(editor, 'row', row, 0, dy),
+              () => TableTestUtils.insertRaw(editor, tableWithHeightOnTableAndTrs)
+            );
+
+            assertUnitsBeforeResize(measurements.before, { tableWidth: 'px', tableHeight: 'px', colWidth: 'px', trHeight: 'px' });
+            assertUnitsAfterResize(measurements.after, { tableWidth: 'px', tableHeight: 'px', colWidth: 'px', trHeight: 'px' });
+
+            assertRawSizesBeforeResize(measurements.before, {
+              tableWidth: 50,
+              colWidths: [ 50 ],
+              tableHeight: 200,
+              trHeights: [ 100, 100 ]
+            });
+            assertRawSizesAfterResize(measurements.after, {
+              tableWidth: 50,
+              colWidths: [ 50 ],
+              tableHeight: 200 + dy,
+              trHeights: [ 100 + (row === 0 ? dy : 0), 100 + (row === 1 ? dy : 0) ],
+            });
+
+            assertEventData(lastObjectResizeStartEvent, 'objectresizestart');
+            assertEventData(lastObjectResizedEvent, 'objectresized');
+          });
+        });
+      });
     });
   });
 
