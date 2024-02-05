@@ -1,5 +1,5 @@
 import { AlloyComponent, GuiFactory, SimpleSpec, TooltippingTypes } from '@ephox/alloy';
-import { Fun, Result, Type } from '@ephox/katamari';
+import { Fun, Result } from '@ephox/katamari';
 
 export interface TooltipsProvider {
   readonly getConfig: (spec: { tooltipText: string; onShow?: (comp: AlloyComponent, tooltip: AlloyComponent) => void }) => TooltippingTypes.TooltippingConfigSpec;
@@ -42,11 +42,8 @@ export const TooltipsBackstage = (
         classes: [ 'tox-tooltip', 'tox-tooltip--up' ]
       },
       tooltipComponents: getComponents(spec),
-      onShow: (comp: AlloyComponent, tooltip: AlloyComponent) => {
+      onShow: () => {
         numActiveTooltips++;
-        if (Type.isNonNullable(spec.onShow)) {
-          spec.onShow(comp, tooltip);
-        }
       },
       onHide: () => {
         numActiveTooltips--;
