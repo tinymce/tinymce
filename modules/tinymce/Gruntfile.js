@@ -39,7 +39,6 @@ const stripSourceMaps = function (data) {
 
 module.exports = function (grunt) {
   const packageData = grunt.file.readJSON('package.json');
-  const BUILD_VERSION = packageData.version + (process.env.BUILD_NUMBER ? '-' + process.env.BUILD_NUMBER : '');
 
   // Determine the release date
   const dateRe = new RegExp('^##\\s+' + packageData.version.toString().replace(/\./g, '\\.') + '\\s+\\-\\s+([\\d-]+)$', 'm');
@@ -911,7 +910,7 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('version', 'Creates a version file', function () {
-    grunt.file.write('dist/version.txt', BUILD_VERSION);
+    grunt.file.write('dist/version.txt', packageData.version);
   });
 
   require('load-grunt-tasks')(grunt, {
