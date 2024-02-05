@@ -356,7 +356,7 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('event_root', {
-    processor: 'object'
+    processor: 'string'
   });
 
   registerOption('service_message', {
