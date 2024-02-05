@@ -1,0 +1,6 @@
+project: tinymce
+kind: Changed
+body: 'Now `tox-view__pane` has `position: relative` instead of `static`.'
+time: 2024-01-29T13:44:03.824960967+01:00
+custom:
+  Issue: TINY-10561
