@@ -91,14 +91,14 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
   }
 }
 
-def runTestNode(String name, String browser, String platform, String bucket, String buckets, Boolean runAll) {
+def runTestNode(String branch, String name, String browser, String platform, String bucket, String buckets, Boolean runAll) {
   return {
     stage(name) {
       node("bedrock-${platform}") {
         echo "Bedrock tests for ${name} on $NODE_NAME"
         checkout(scm)
         tinyGit.addAuthorConfig()
-        gitMerge(primaryBranch)
+        gitMerge(branch)
 
         // Clean and Install
         exec("git clean -fdx modules scratch js dist")
@@ -207,14 +207,15 @@ timestamps {
       def os = String.valueOf(platform.os).startsWith('mac') ? 'Mac' : 'Win'
       def s_bucket = "${bucket}"
       def s_buckets = "${buckets}"
-      def name = "${os}-${platform.browser}-${platform.provider}${suffix}"
       if (platform.provider) {
         // use remote
+        def name = "${os}-${platform.browser}-${platform.provider}${suffix}"
         def testname = "tinymce_${env.BRANCH_NAME}_${env.BUILD_NUMBER}"
         processes[name] = runTestPod(cacheName, name, testname, platform.browser, platform.provider, platform.os, s_bucket, s_buckets, runAllTests)
       } else {
         // use local
-        processes[name] = runTestNode(name, platform.browser, platform.os, s_bucket, s_buckets, runAllTests)
+        def name = "${os}-${platform.browser}"
+        processes[name] = runTestNode(props.primaryBranch, name, platform.browser, platform.os, s_bucket, s_buckets, runAllTests)
       }
     }
   }
