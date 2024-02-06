@@ -16,7 +16,9 @@ type TooltipWorker = (success: (elem: HTMLElement) => void) => void;
 // Use meta to pass through special information about the tooltip
 // (yes this is horrible but it is not yet public API)
 const tooltipBehaviour = (
-  meta: Record<string, any>, sharedBackstage: UiFactoryBackstageShared
+  meta: Record<string, any>,
+  sharedBackstage: UiFactoryBackstageShared,
+  tooltipText: Optional<string>
 ): Behaviour.NamedConfiguredBehaviour<any, any, any>[] =>
   Obj.get(meta, 'tooltipWorker')
     .map((tooltipWorker: TooltipWorker) => [
@@ -46,7 +48,19 @@ const tooltipBehaviour = (
         }
       })
     ])
-    .getOr([]);
+    .getOrThunk(() => {
+      return tooltipText.map((text) =>
+        [
+          Tooltipping.config(
+            {
+              ...sharedBackstage.providers.tooltips.getConfig({
+                tooltipText: text
+              }),
+              mode: 'follow-highlight'
+            }
+          )
+        ]).getOr([]);
+    });
 
 const encodeText = (text: string) => DOMUtils.DOM.encode(text);
 const replaceText = (text: string, matchText: string): string => {
@@ -82,6 +96,7 @@ const renderAutocompleteItem = (
     value: spec.value
   }, sharedBackstage.providers, renderIcons, spec.icon);
 
+  const tooltipString = spec.text.filter((text) => !useText && text !== '');
   return renderCommonItem({
     data: buildData(spec),
     enabled: spec.enabled,
@@ -89,8 +104,7 @@ const renderAutocompleteItem = (
     onAction: (_api) => onItemValueHandler(spec.value, spec.meta),
     onSetup: Fun.constant(Fun.noop),
     triggersSubmenu: false,
-    // TINY-9638: Add tooltips to autocompleter
-    itemBehaviours: tooltipBehaviour(spec.meta, sharedBackstage)
+    itemBehaviours: tooltipBehaviour(spec, sharedBackstage, tooltipString)
   }, structure, itemResponse, sharedBackstage.providers);
 };
 

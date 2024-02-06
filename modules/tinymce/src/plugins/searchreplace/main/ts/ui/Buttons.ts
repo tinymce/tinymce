@@ -20,7 +20,8 @@ const register = (editor: Editor, currentSearchState: Cell<SearchState>): void =
   editor.ui.registry.addButton('searchreplace', {
     tooltip: 'Find and replace',
     onAction: showDialog(editor, currentSearchState),
-    icon: 'search'
+    icon: 'search',
+    shortcut: 'Meta+F'
   });
 
   editor.shortcuts.add('Meta+F', '', showDialog(editor, currentSearchState));
