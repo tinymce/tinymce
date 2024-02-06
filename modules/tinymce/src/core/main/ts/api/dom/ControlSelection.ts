@@ -136,10 +136,6 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
   const createGhostElement = (elm: HTMLElement) => {
     if (isMedia(elm)) {
       return dom.create('img', { src: Env.transparentSrc });
-    } else if (NodeType.isTable(elm)) {
-      const node = elm.cloneNode(true) as HTMLElement;
-      node.querySelectorAll('tr').forEach((tr) => tr.removeAttribute('style'));
-      return node;
     } else {
       return elm.cloneNode(true) as HTMLElement;
     }
@@ -162,9 +158,6 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
   const setGhostElmSize = (ghostElm: HTMLElement, width: number, height: number) => {
     setSizeProp(ghostElm, 'width', width);
     setSizeProp(ghostElm, 'height', height);
-    // if (NodeType.isTable(ghostElm)) {
-
-    // }
   };
 
   const resizeGhostElement = (e: MouseEvent) => {
@@ -182,8 +175,6 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     // Never scale down lower than 5 pixels
     width = width < 5 ? 5 : width;
     height = height < 5 ? 5 : height;
-    // TODO: Remove td, tr heights from ghost element,
-    console.log('before prop', width, height);
 
     if ((isImage(selectedElm) || isMedia(selectedElm)) && Options.getResizeImgProportional(editor) !== false) {
       proportional = !VK.modifierPressed(e);
@@ -201,14 +192,9 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
         height = round(width * ratio);
       }
     }
-    console.log('after prop', width, height);
 
     // Update ghost size
     setGhostElmSize(selectedElmGhost, width, height);
-
-    // if (deltaX < -50) {
-    //   debugger;
-    // }
 
     // Update resize helper position
     resizeHelperX = selectedHandle.startPos.x + deltaX;

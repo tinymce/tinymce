@@ -5,7 +5,7 @@ import { Css, Html, Insert, InsertAll, Remove, SugarBody, SugarElement } from '@
 
 import * as Sizes from 'ephox/snooker/api/Sizes';
 
-import { addStyles, readCellHeights, readRowHeights, readWidth } from '../module/ephox/snooker/test/SizeUtils';
+import { addStyles, readRowHeights, readWidth } from '../module/ephox/snooker/test/SizeUtils';
 
 describe('Table Sizes Test (fusebox)', () => {
   const percentTable =
@@ -36,7 +36,7 @@ describe('Table Sizes Test (fusebox)', () => {
   '</tbody>' +
   '</table>';
 
-  const pixelTableHeight =
+  const pixelTableTdHeights =
   '<table border="1" style="border-collapse: collapse; width: 100%;"> ' +
   '<tbody> ' +
   '<tr> <td style="width: 20%; height: 40px;" rowspan="2"></td> ' +
@@ -50,6 +50,23 @@ describe('Table Sizes Test (fusebox)', () => {
   '<td style="width: 20%; height: 150px;">  </td> ' +
   '<td style="width: 20%; height: 150px;">  </td> ' +
   '<td style="width: 20%; height: 150px;">  </td> </tr> ' +
+  '</tbody> ' +
+  '</table';
+
+  const pixelTableTrHeights =
+  '<table border="1" style="border-collapse: collapse; width: 100%;"> ' +
+  '<tbody> ' +
+  '<tr style="height: 50px;"> <td style="width: 20%;" rowspan="2"></td> ' +
+  '<td style="width: 20%;">  </td> ' +
+  '<td style="width: 20%;" colspan="2"></td> ' +
+  '<td style="width: 20%;" rowspan="2"></td> </tr> ' +
+  '<tr style="height: 100px;"> <td style="width: 20%;" rowspan="2"></td> ' +
+  '<td style="width: 20%;">  </td> ' +
+  '<td style="width: 20%;">  </td> </tr> ' +
+  '<tr style="height: 150px;"> <td style="width: 20%;">  </td> ' +
+  '<td style="width: 20%;">  </td> ' +
+  '<td style="width: 20%;">  </td> ' +
+  '<td style="width: 20%;">  </td> </tr> ' +
   '</tbody> ' +
   '</table';
 
@@ -104,19 +121,6 @@ describe('Table Sizes Test (fusebox)', () => {
     return table;
   };
 
-  Assert.eq('',
-    '<table style="width: 25px;"><tbody>' +
-      '<tr><td style="width: 20px;">A0</td><td style="width: 30%;">B0</td></tr>' +
-      '<tr><td style="width: 10px;">A1</td><td style="width: 15px;">B1</td></tr>' +
-    '</tbody></table>',
-    Html.getOuter(generateW([
-      [ '20px', '30%' ],
-      [ '10px', '15px' ]
-    ], '25px'))
-  );
-
-  Assert.eq('', [[ '1px', '2px' ], [ '1px', '2px' ]], readWidth(generateW([[ '1px', '2px' ], [ '1px', '2px' ]], '3px')));
-
   const checkWidth = (expected: string[][], table: SugarElement<HTMLTableElement>, newWidth: string) => {
     Insert.append(SugarBody.body(), table);
     Sizes.redistribute(table, Optional.some(newWidth), Optional.none());
@@ -128,19 +132,6 @@ describe('Table Sizes Test (fusebox)', () => {
     const table = generateW(input, initialWidth);
     checkWidth(expected, table, newWidth);
   };
-
-  const checkHeight = (expected: string[][], table: SugarElement<HTMLTableElement>, newHeight: string) => {
-    Insert.append(SugarBody.body(), table);
-    Sizes.redistribute(table, Optional.none(), Optional.some(newHeight));
-    // Assert.eq('check height', expected, readCellHeights(table));
-    Assert.eq('check height', expected, readRowHeights(table));
-    Remove.remove(table);
-  };
-
-  // const checkBasicHeight = (expected: string[][], input: string[][], initialHeight: string, newHeight: string) => {
-  //   const table = generateH(input, initialHeight);
-  //   checkHeight(expected, table, newHeight);
-  // };
 
   const checkRowHeight = (expectedRowHeights: string[], table: SugarElement<HTMLTableElement>, newTableHeight: string) => {
     Insert.append(SugarBody.body(), table);
@@ -169,19 +160,37 @@ describe('Table Sizes Test (fusebox)', () => {
     styles.remove();
   });
 
-  it('test basic row height distributions', () => {
-    checkBasicRowHeightWithTrs([ '5px' ], [ '10px' ], '100px', '50px');
-    checkBasicRowHeightWithTrs([ '10%' ], [ '10px' ], '100px', '100%');
-    checkBasicRowHeightWithTrs([ '20px' ], [ '10px' ], '25px', '50px');
-    checkBasicRowHeightWithTrs([ '40%' ], [ '10px' ], '25px', '300%');
+  it('TBA: sanity check table generators', () => {
+    Assert.eq('',
+      '<table style="width: 25px;"><tbody>' +
+      '<tr><td style="width: 20px;">A0</td><td style="width: 30%;">B0</td></tr>' +
+      '<tr><td style="width: 10px;">A1</td><td style="width: 15px;">B1</td></tr>' +
+    '</tbody></table>',
+      Html.getOuter(generateW([
+        [ '20px', '30%' ],
+        [ '10px', '15px' ]
+      ], '25px'))
+    );
 
+    Assert.eq('', [[ '1px', '2px' ], [ '1px', '2px' ]], readWidth(generateW([[ '1px', '2px' ], [ '1px', '2px' ]], '3px')));
+  });
+
+  it('TBA: test basic row height distribution (existing heights on tds)', () => {
     checkBasicRowHeightWithTds([ '50px' ], [[ '10px' ]], '100px', '50px');
     checkBasicRowHeightWithTds([ '99%' ], [[ '10px' ]], '100px', '100%');
     checkBasicRowHeightWithTds([ '48px' ], [[ '10px' ]], '25px', '50px');
     checkBasicRowHeightWithTds([ '96%' ], [[ '10px' ]], '25px', '300%');
   });
 
-  it('test basic width distributions', () => {
+  it('TBA: test basic row height distributions (existing heights on trs)', () => {
+    checkBasicRowHeightWithTrs([ '5px' ], [ '10px' ], '100px', '50px');
+    checkBasicRowHeightWithTrs([ '10%' ], [ '10px' ], '100px', '100%');
+    checkBasicRowHeightWithTrs([ '20px' ], [ '10px' ], '25px', '50px');
+    checkBasicRowHeightWithTrs([ '40%' ], [ '10px' ], '25px', '300%');
+
+  });
+
+  it('TBA: test basic width distributions', () => {
     checkBasicWidth([[ '2px' ]], [[ '10px' ]], '50px', '10px');
     checkBasicWidth([[ '10px' ]], [[ '10px' ]], '50px', '50px');
     checkBasicWidth([[ '20px' ]], [[ '10px' ]], '50px', '100px');
@@ -191,33 +200,59 @@ describe('Table Sizes Test (fusebox)', () => {
     checkBasicWidth([[ '2px' ]], [[ '10px' ]], '50px', '10px');
   });
 
-  it('test more complex height distributions', () => {
-    checkHeight([
-      [ '140px', '40px', '40px', '140px' ],
-      [ '250px', '100px', '100px' ],
-      [ '150px', '150px', '150px', '150px' ]
-    ], SugarElement.fromHtml(pixelTableHeight), '300px');
+  it('test more complex height distributions (exising heights on tds)', () => {
+    checkRowHeight(
+      [ '43px', '103px', '153px' ],
+      SugarElement.fromHtml(pixelTableTdHeights),
+      '300px'
+    );
 
-    checkHeight([
-      [ '70px', '20px', '20px', '70px' ],
-      [ '125px', '50px', '50px' ],
-      [ '75px', '75px', '75px', '75px' ]
-    ], SugarElement.fromHtml(pixelTableHeight), '150px');
+    checkRowHeight(
+      [ '21px', '51px', '78px' ],
+      SugarElement.fromHtml(pixelTableTdHeights),
+      '150px'
+    );
 
-    checkHeight([
-      [ '46.7%', '13.3%', '13.3%', '46.7%' ],
-      [ '83.3%', '33.3%', '33.3%' ],
-      [ '50%', '50%', '50%', '50%' ]
-    ], SugarElement.fromHtml(pixelTableHeight), '100%');
+    checkRowHeight(
+      [ '14.3%', '34.3%', '51%' ],
+      SugarElement.fromHtml(pixelTableTdHeights),
+      '100%'
+    );
 
-    checkHeight([
-      [ '46.7%', '13.3%', '13.3%', '46.7%' ],
-      [ '83.3%', '33.3%', '33.3%' ],
-      [ '50%', '50%', '50%', '50%' ]
-    ], SugarElement.fromHtml(pixelTableHeight), '150%');
+    checkRowHeight(
+      [ '14.3%', '34.3%', '51%' ],
+      SugarElement.fromHtml(pixelTableTdHeights),
+      '150%'
+    );
   });
 
-  it('test more complex width distributions', () => {
+  it('test more complex height distributions (exising heights on trs)', () => {
+    checkRowHeight(
+      [ '49px', '99px', '151px' ],
+      SugarElement.fromHtml(pixelTableTrHeights),
+      '300px'
+    );
+
+    checkRowHeight(
+      [ '24px', '49px', '77px' ],
+      SugarElement.fromHtml(pixelTableTrHeights),
+      '150px'
+    );
+
+    checkRowHeight(
+      [ '16.6%', '33.2%', '49.8%' ],
+      SugarElement.fromHtml(pixelTableTrHeights),
+      '100%'
+    );
+
+    checkRowHeight(
+      [ '16.6%', '33.2%', '49.8%' ],
+      SugarElement.fromHtml(pixelTableTrHeights),
+      '150%'
+    );
+  });
+
+  it('TBA: test more complex width distributions (pixel table)', () => {
     checkWidth([
       [ '10px', '30px', '20px', '25px', '15px' ],
       [ '60px', '25px', '15px' ],
@@ -245,7 +280,9 @@ describe('Table Sizes Test (fusebox)', () => {
       [ '40%', '60%' ],
       [ '100%' ]
     ], SugarElement.fromHtml(pixelTable), '100%');
+  });
 
+  it('TBA: test more complex width distributions (percent table)', () => {
     checkWidth([
       [ '10%', '30%', '20%', '25%', '15%' ],
       [ '60%', '25%', '15%' ],
@@ -274,5 +311,4 @@ describe('Table Sizes Test (fusebox)', () => {
       [ '300px' ]
     ], SugarElement.fromHtml(percentTable), '300px');
   });
-
 });

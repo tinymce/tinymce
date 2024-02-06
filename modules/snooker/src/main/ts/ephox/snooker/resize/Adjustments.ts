@@ -1,12 +1,12 @@
 import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
-import { ResizeBehaviour, preserveTable } from '../api/ResizeBehaviour';
+import { ResizeBehaviour } from '../api/ResizeBehaviour';
 import { Detail, RowDetail } from '../api/Structs';
 import { TableSize } from '../api/TableSize';
 import { Warehouse } from '../api/Warehouse';
 import * as Deltas from '../calc/Deltas';
-// import * as CellUtils from '../util/CellUtils';
+import * as CellUtils from '../util/CellUtils';
 import { CellElement } from '../util/TableTypes';
 import * as ColumnSizes from './ColumnSizes';
 import * as Recalculations from './Recalculations';
@@ -49,17 +49,9 @@ const adjustWidth = (table: SugarElement<HTMLTableElement>, delta: number, index
 const adjustHeight = (table: SugarElement<HTMLTableElement>, delta: number, index: number): void => {
   const warehouse = Warehouse.fromTable(table);
   const heights = ColumnSizes.getPixelHeights(warehouse, table);
-  const isLastRow = index === warehouse.grid.rows - 1;
-  const resizing = preserveTable();
-  const tableSize = TableSize.pixelSize(table);
-  const clampedStep = resizing.clampTableDelta(heights, index, delta, 10, isLastRow);
 
-  const deltas = Deltas.determine(heights, index, clampedStep, tableSize, resizing);
-  console.log(deltas);
-  const newHeights = Arr.map(deltas, (dx, i) => dx + heights[i]);
-  // const newHeights = Arr.map(heights, (dy, i) => index === i ? Math.max(delta + dy, CellUtils.minHeight()) : dy);
+  const newHeights = Arr.map(heights, (dy, i) => index === i ? Math.max(delta + dy, CellUtils.minHeight()) : dy);
 
-  // const newCellSizes = Recalculations.recalculateHeightForCells(warehouse, newHeights);
   const newRowSizes = Recalculations.matchRowHeight(warehouse, newHeights);
 
   Arr.each(newRowSizes, (row) => {
@@ -70,15 +62,8 @@ const adjustHeight = (table: SugarElement<HTMLTableElement>, delta: number, inde
     Sizes.removeHeight(cell.element);
   });
 
-  // Sizes.removeHeight(table);
-
-  // Arr.each(newCellSizes, (cell) => {
-  //   Sizes.setHeight(cell.element, cell.height);
-  // });
-
   const total = sumUp(newHeights);
   Sizes.setHeight(table, total);
-  // resizing.resizeTable(tableSize.adjustTableWidth, clampedStep, isLastRow);
 };
 
 // Using the width of the added/removed columns gathered on extraction (pixelDelta), get and apply the new column sizes and overall table width delta
