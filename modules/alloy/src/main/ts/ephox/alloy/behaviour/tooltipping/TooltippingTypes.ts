@@ -16,26 +16,30 @@ export interface TooltippingConfig extends BehaviourConfigDetail {
   lazySink: LazySink;
   tooltipDom: RawDomSchema;
   tooltipComponents: AlloySpec[];
+  tooltippingSelector: Optional<string>;
   exclusive: boolean;
-  mode: 'normal' | 'follow-highlight';
+  mode: 'normal' | 'follow-highlight' | 'children-keyboard-focus';
   delayForShow: () => number;
   delayForHide: () => number;
   anchor: (comp: AlloyComponent) => AnchorSpec;
   onShow: (comp: AlloyComponent, tooltip: AlloyComponent) => void;
   onHide: (comp: AlloyComponent, tooltip: AlloyComponent) => void;
+  onReposition: (comp: AlloyComponent, tooltip: AlloyComponent) => void;
 }
 
 export interface TooltippingConfigSpec extends BehaviourConfigSpec {
   lazySink: LazySink;
   tooltipDom: RawDomSchema;
   tooltipComponents?: AlloySpec[];
+  tooltippingSelector?: string;
   exclusive?: boolean;
-  mode?: 'normal' | 'follow-highlight';
+  mode?: 'normal' | 'follow-highlight' | 'children-keyboard-focus';
   delayForShow?: () => number;
   delayForHide?: () => number;
   anchor?: (comp: AlloyComponent) => AnchorSpec;
   onShow?: (comp: AlloyComponent, tooltip: AlloyComponent) => void;
   onHide?: (comp: AlloyComponent, tooltip: AlloyComponent) => void;
+  onReposition?: (comp: AlloyComponent, tooltip: AlloyComponent) => void;
 }
 
 export interface TooltippingState extends BehaviourState {

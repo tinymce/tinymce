@@ -1,4 +1,5 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Optionals } from '@ephox/katamari';
+import { Focus, Selectors } from '@ephox/sugar';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 // Not ideal coupling here.
@@ -59,6 +60,59 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
     }
   };
 
+  const reposition = (comp: AlloyComponent) => {
+    state.getTooltip().each((tooltip) => {
+      const sink = tooltipConfig.lazySink(comp).getOrDie();
+      tooltipConfig.onReposition(comp, tooltip);
+      Positioning.position(sink, tooltip, { anchor: tooltipConfig.anchor(comp) });
+    });
+  };
+
+  const getEvents = () => {
+    if (tooltipConfig.mode === 'normal') {
+      return [
+        AlloyEvents.run(NativeEvents.focusin(), (comp) => {
+          AlloyTriggers.emit(comp, ImmediateShowTooltipEvent);
+        }),
+        AlloyEvents.run(SystemEvents.postBlur(), (comp) => {
+          AlloyTriggers.emit(comp, ImmediateHideTooltipEvent);
+        }),
+        AlloyEvents.run(NativeEvents.mouseover(), (comp) => {
+          AlloyTriggers.emit(comp, ShowTooltipEvent);
+        }),
+        AlloyEvents.run(NativeEvents.mouseout(), (comp) => {
+          AlloyTriggers.emit(comp, HideTooltipEvent);
+        })
+      ];
+    } else if (tooltipConfig.mode === 'follow-highlight') {
+      return [
+        AlloyEvents.run(SystemEvents.highlight(), (comp, _se) => {
+          AlloyTriggers.emit(comp, ShowTooltipEvent);
+        }),
+        AlloyEvents.run(SystemEvents.dehighlight(), (comp) => {
+          AlloyTriggers.emit(comp, HideTooltipEvent);
+        })
+      ];
+    } else {
+      return [
+        AlloyEvents.run(NativeEvents.focusin(), (comp, se) => {
+          Optionals.lift2(Focus.search(comp.element), tooltipConfig.tooltippingSelector, (_, tooltipSelector) => {
+            if (Selectors.is(se.event.target, tooltipSelector)) {
+              AlloyTriggers.emit(comp, ImmediateShowTooltipEvent);
+            }
+          });
+        }),
+        AlloyEvents.run(SystemEvents.postBlur(), (comp) => {
+          if (Focus.search(comp.element).isNone()) {
+            AlloyTriggers.emit(comp, ImmediateHideTooltipEvent);
+          } else {
+            reposition(comp);
+          }
+        }),
+      ];
+    }
+  };
+
   return AlloyEvents.derive(Arr.flatten([
     [
       AlloyEvents.run(ShowTooltipEvent, (comp) => {
@@ -96,29 +150,7 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
       })
     ],
     (
-      tooltipConfig.mode === 'normal'
-        ? [
-          AlloyEvents.run(NativeEvents.focusin(), (comp) => {
-            AlloyTriggers.emit(comp, ImmediateShowTooltipEvent);
-          }),
-          AlloyEvents.run(SystemEvents.postBlur(), (comp) => {
-            AlloyTriggers.emit(comp, ImmediateHideTooltipEvent);
-          }),
-          AlloyEvents.run(NativeEvents.mouseover(), (comp) => {
-            AlloyTriggers.emit(comp, ShowTooltipEvent);
-          }),
-          AlloyEvents.run(NativeEvents.mouseout(), (comp) => {
-            AlloyTriggers.emit(comp, HideTooltipEvent);
-          })
-        ]
-        : [
-          AlloyEvents.run(SystemEvents.highlight(), (comp, _se) => {
-            AlloyTriggers.emit(comp, ShowTooltipEvent);
-          }),
-          AlloyEvents.run(SystemEvents.dehighlight(), (comp) => {
-            AlloyTriggers.emit(comp, HideTooltipEvent);
-          })
-        ]
+      getEvents()
     )
   ]));
 
