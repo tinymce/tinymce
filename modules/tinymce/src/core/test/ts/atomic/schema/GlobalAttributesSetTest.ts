@@ -10,7 +10,7 @@ describe('atomic.tinymce.core.schema.GlobalAttributesSetTest', () => {
 
     assert.deepEqual(globalAttributes, testCase.expected);
 
-    // Should not be possible to replace things
+    // Should not be mutable
     assert.throw(() => {
       (globalAttributes as string[]).push('foo');
     });

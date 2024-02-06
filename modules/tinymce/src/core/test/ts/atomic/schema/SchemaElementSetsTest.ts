@@ -9,7 +9,7 @@ describe('atomic.tinymce.core.schema.SchemaElementSetsTest', () => {
     assert.throw(() => {
       const mutableNames = names as string[];
 
-      // Should not be possible to mutate the array
+      // Should not be mutable
       mutableNames.push('foo');
     });
   };
