@@ -44,7 +44,28 @@ def runRemoteTests(String name, String browser, String provider, String platform
     runBedrockTest(name, bedrockCommand, runAll, retry, timeout)
 }
 
-def runTestPod(String cacheName, String name, String browser, String provider, String platform, String bucket, String buckets, Boolean runAll) {
+
+def runBrowserTests(String name, String browser, String platform, String bucket, String buckets, Boolean runAll) {
+  def bedrockCommand =
+    "yarn grunt browser-auto" +
+      " --chunk=400" +
+      " --bedrock-os=" + platform +
+      " --bedrock-browser=" + browser +
+      " --bucket=" + bucket +
+      " --buckets=" + buckets;
+
+  // Clean scratch dir for existing nodes
+  dir('scratch') {
+    if (isUnix()) {
+      sh "rm -f *.xml"
+    } else {
+      bat "del *.xml"
+    }
+  }
+  runBedrockTest(name, bedrockCommand, runAll)
+}
+
+def runTestPod(String cacheName, String name, String testname, String browser, String provider, String platform, String bucket, String buckets, Boolean runAll) {
   return {
     bedrockRemoteTools.nodeConsumerPod(
       nodeOpts: [
@@ -62,9 +83,31 @@ def runTestPod(String cacheName, String name, String browser, String provider, S
         bedrockRemoteTools.withRemoteCreds(provider) {
           int retry = provider == 'lambdatest' ? 1 : 0
           withCredentials([string(credentialsId: 'devicefarm-testgridarn', variable: 'DF_ARN')]) {
-            runRemoteTests(name, browser, provider, platform, DF_ARN, bucket, buckets, runAll, retry, 180)
+            runRemoteTests(testname, browser, provider, platform, DF_ARN, bucket, buckets, runAll, retry, 180)
           }
         }
+      }
+    }
+  }
+}
+
+def runTestNode(String branch, String name, String browser, String platform, String bucket, String buckets, Boolean runAll) {
+  return {
+    stage(name) {
+      node("bedrock-${platform}") {
+        echo "Bedrock tests for ${name} on $NODE_NAME"
+        checkout(scm)
+        tinyGit.addAuthorConfig()
+        gitMerge(branch)
+
+        // Clean and Install
+        exec("git clean -fdx modules scratch js dist")
+        yarnInstall()
+
+        exec("yarn ci")
+        echo "Running browser tests"
+        //(String name, String browser, String platform, String bucket, String buckets, Boolean runAll)
+        runBrowserTests(name, browser, platform, bucket, buckets, runAll)
       }
     }
   }
@@ -96,9 +139,16 @@ def gitMerge(String primaryBranch) {
   }
 }
 
+def cleanBuildName(String name) {
+  def parts = name.split('/')
+  return parts[parts.size() - 1]
+}
+
 def props
 
 def cacheName = "cache_${BUILD_TAG}"
+
+def testname = "tinymce_${cleanBuildName(env.BRANCH_NAME)}_test${env.BUILD_NUMBER}"
 
 timestamps {
   bedrockRemoteTools.nodeProducerPod(
@@ -139,14 +189,18 @@ timestamps {
     }
   }
 
+  // Local nodes use os: windows | macos; Remote tests use os full name e.g.: macOS Sonoma
   def platforms = [
+    // Local tests
+    [ browser: 'edge' os: 'windows' ],
+    [ browser: 'firefox', os: 'macos' ]
+    // Remote tests
     [ browser: 'chrome', provider: 'aws', buckets: 2 ],
     // [ browser: 'edge', provider: 'aws', buckets: 2 ],
     [ browser: 'firefox', provider: 'aws', buckets: 2 ],
     [ browser: 'edge', provider: 'lambdatest', buckets: 1 ],
-    [ browser: 'safari', provider: 'lambdatest', buckets: 1 ],
+    [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ],
     [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1],
-    // [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1]
   ];
 
   def processes = [:]
@@ -160,8 +214,15 @@ timestamps {
       def os = String.valueOf(platform.os).startsWith('mac') ? 'Mac' : 'Win'
       def s_bucket = "${bucket}"
       def s_buckets = "${buckets}"
-      def name = "${os}-${platform.browser}-${platform.provider}${suffix}"
-      processes[name] = runTestPod(cacheName, name, platform.browser, platform.provider, platform.os, s_bucket, s_buckets, runAllTests)
+      if (platform.provider) {
+        // use remote
+        def name = "${os}-${platform.browser}-${platform.provider}${suffix}"
+        processes[name] = runTestPod(cacheName, name, testname, platform.browser, platform.provider, platform.os, s_bucket, s_buckets, runAllTests)
+      } else {
+        // use local
+        def name = "${os}-${platform.browser}"
+        processes[name] = runTestNode(props.primaryBranch, name, platform.browser, platform.os, s_bucket, s_buckets, runAllTests)
+      }
     }
   }
 
