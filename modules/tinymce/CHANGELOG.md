@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Update outbound TinyMCE website links. #TINY-10491
+
 ### Fixed
 - The floating toolbar would not be fully visible when the editor was placed inside a scrollable container. #TINY-10335
 
