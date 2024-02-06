@@ -126,10 +126,6 @@ const getHeightFrom = <T> (
       fallback
     )
   );
-
-  // return Arr.map(rowCells, (cellOption, c) => {
-  //   return getDimension(cellOption, c, backups, Fun.not(CellUtils.hasRowspan), getHeight, fallback);
-  // });
 };
 
 const getPixelHeights = (warehouse: Warehouse, table: SugarElement<HTMLTableElement>): number[] => {

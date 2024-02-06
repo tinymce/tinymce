@@ -73,19 +73,6 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
     assert.approximately(changedWidth, width, 4, 'width is ' + width + ' but expected ' + changedWidth);
   };
 
-  // const tableHtml = '<table style="border-collapse: collapse; width: 367px; height: 190px;" border="1">' +
-  //   '<tbody>' +
-  //   '<tr>' +
-  //   '<td>a</td>' +
-  //   '<td>b</td>' +
-  //   '</tr>' +
-  //   '<tr>' +
-  //   '<td>1</td>' +
-  //   '<td>2</td>' +
-  //   '</tr>' +
-  //   '</tbody>' +
-  //   '</table>';
-
   const tableHtml = '<table style="border-collapse: collapse; width: 367px; height: 190px;" border="1">' +
     '<tbody>' +
     '<tr>' +
@@ -112,8 +99,6 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
     '</tr>' +
     '</tbody>' +
     '</table>';
-
-  // TODO: Test different tables here
 
   const pWaitForSelection = async (editor: Editor) => {
     TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);

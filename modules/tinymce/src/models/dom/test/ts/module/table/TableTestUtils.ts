@@ -68,7 +68,6 @@ const assertDimension = (dimension: 'width' | 'height') => (editor: Editor, elm:
 };
 
 const assertWidth = assertDimension('width');
-// const assertHeight = assertSize('height');
 
 const assertTableStructure = (editor: Editor, structure: StructAssert): void => {
   const table = SelectorFind.descendant(TinyDom.body(editor), 'table').getOrDie('A table should exist');

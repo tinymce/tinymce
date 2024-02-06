@@ -1,6 +1,7 @@
 import { Mouse } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Cell } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { TableGridSize } from '@ephox/snooker';
 import { Html, Insert, Remove, SelectorExists, SelectorFilter, SugarBody, SugarElement } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
@@ -48,13 +49,14 @@ interface TableMeasurementsAll {
 }
 
 describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
+  const browser = PlatformDetection.detect().browser;
   const lastObjectResizeStartEvent = Cell<EditorEvent<ObjectResizeEvent> | null>(null);
   const lastObjectResizedEvent = Cell<EditorEvent<ObjectResizeEvent> | null>(null);
   const pixelDiffThreshold = 3;
   const percentDiffThreshold = 1;
-  const defaultCellHeight = 22.5; // px
+  const defaultCellHeight = browser.isSafari() ? 22 : 22.5; // px
   const defaultCellPadding = 6.4 * 2;
-  const defaultCellBorder = 1 * 2;
+  const defaultCellBorder = (browser.isSafari() ? 0.5 : 1) * 2;
   const editorBodyInternalWidth = 364; // px
   const defaultCellHeightOverall = defaultCellHeight + defaultCellPadding + defaultCellBorder;
   let tableModifiedEvents: Array<EditorEvent<TableModifiedEvent>> = [];

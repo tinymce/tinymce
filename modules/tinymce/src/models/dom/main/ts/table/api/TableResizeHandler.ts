@@ -37,8 +37,6 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
   const selectionRng = Singleton.value<Range>();
   const tableResize = Singleton.value<TableResize>();
   const resizeWire = Singleton.value<ResizeWire>();
-  // const hdirection = BarPositions.height;
-  // const vdirection = BarPositions.width;
   let startW: number;
   let startRawW: string;
   let startH: number;
@@ -80,7 +78,6 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
 
       const resizing = lazyResizingBehaviour();
       const tableSize = lazySizing(table);
-      // const preserveTableHeightResizing = () => ResizeBehaviour.preserveTable();
 
       // For preserve table we want to always resize the entire table. So pretend the last column is being resized
       const col = Options.isPreserveTableColumnResizing(editor) || isRightEdgeResize ? getNumColumns(table) - 1 : 0;
@@ -102,7 +99,6 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
     if (height !== startH && startRawH !== '') {
       // Restore the original size and then let snooker resize appropriately
       Css.set(table, 'height', startRawH);
-      // const idx = isRightEdgeResize ? getNumRows(table) - 1 : 0;
       const idx = getNumRows(table) - 1;
       Adjustments.adjustHeight(table, height - startH, idx);
     }
