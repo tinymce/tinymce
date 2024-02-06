@@ -184,12 +184,6 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
 
     PageScroll.bddSetup(hook.editor, 5000);
 
-    before(async () => {
-      // Need to wait for a fraction for some reason on safari,
-      // otherwise the initial scrolling doesn't work
-      await Waiter.pWait(100);
-    });
-
     it('TINY-10581: Scroll to the end of the content, open and close the editor, and then scroll to the top of the content the editor should not shrink', async () => {
       const editor = hook.editor();
       const getRect = (element: SugarElement<any>): DOMRect =>
