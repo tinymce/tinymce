@@ -256,13 +256,13 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
       BASEFONT: {}, BASE: {}, AREA: {}, SOURCE: {},
       TD: {}, TH: {}, IFRAME: {}, VIDEO: {}, AUDIO: {}, OBJECT: {},
       WBR: {}, TRACK: {}, SCRIPT: {}, PRE: {}, CODE: {}, SVG: {},
-      TEXTAREA: {},
+      TEXTAREA: {}, SUMMARY: {},
       embed: {}, param: {}, meta: {}, link: {}, isindex: {},
       input: {}, img: {}, hr: {}, frame: {}, col: {}, br: {},
       basefont: {}, base: {}, area: {}, source: {},
       td: {}, th: {}, iframe: {}, video: {}, audio: {}, object: {},
       wbr: {}, track: {}, script: {}, pre: {}, code: {}, svg: {},
-      textarea: {}
+      textarea: {}, summary: {}
     });
   });
 
