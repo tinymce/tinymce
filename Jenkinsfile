@@ -81,7 +81,7 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
       stage("${name}") {
         grunt('list-changed-browser')
         bedrockRemoteTools.withRemoteCreds(provider) {
-          int retry = provider == 'lambdatest' ? 1 : 0
+          int retry = 0
           withCredentials([string(credentialsId: 'devicefarm-testgridarn', variable: 'DF_ARN')]) {
             runRemoteTests(testname, browser, provider, platform, DF_ARN, bucket, buckets, runAll, retry, 180)
           }
