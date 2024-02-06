@@ -1,5 +1,5 @@
 import { AlloyComponent, Boxes, Channels, Docking, OffsetOrigin, VerticalDir } from '@ephox/alloy';
-import { Arr, Cell, Fun, Optional, Singleton } from '@ephox/katamari';
+import { Arr, Cell, Fun, Optional, Optionals, Singleton } from '@ephox/katamari';
 import { Attribute, Compare, Css, Height, Scroll, SugarBody, SugarElement, SugarLocation, Traverse, Width } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -248,7 +248,7 @@ export const InlineHeader = (
 
         // this check is needed because if the toolbar is rendered outside of the `outerContainer` because the toolbar have `position: "fixed"`
         // the calculate width isn't correct
-        return w > minimumToolbarWidth ? Optional.some(w) : Optional.none();
+        return Optionals.someIf(w > minimumToolbarWidth, w);
       } else {
         return Optional.none();
       }
