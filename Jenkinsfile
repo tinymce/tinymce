@@ -139,9 +139,16 @@ def gitMerge(String primaryBranch) {
   }
 }
 
+def cleanBuildName(String name) {
+  def parts = name.split('/')
+  return parts[parts.size() - 1]
+}
+
 def props
 
 def cacheName = "cache_${BUILD_TAG}"
+
+def testname = "tinymce_${cleanBuildName(env.BRANCH_NAME)}_test${env.BUILD_NUMBER}"
 
 timestamps {
   bedrockRemoteTools.nodeProducerPod(
@@ -210,7 +217,6 @@ timestamps {
       if (platform.provider) {
         // use remote
         def name = "${os}-${platform.browser}-${platform.provider}${suffix}"
-        def testname = "tinymce_${env.BRANCH_NAME}_${env.BUILD_NUMBER}"
         processes[name] = runTestPod(cacheName, name, testname, platform.browser, platform.provider, platform.os, s_bucket, s_buckets, runAllTests)
       } else {
         // use local
