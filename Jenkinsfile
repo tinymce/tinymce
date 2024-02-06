@@ -193,7 +193,7 @@ timestamps {
   def platforms = [
     // Local tests
     [ browser: 'edge', os: 'windows' ],
-    [ browser: 'firefox', os: 'macos' ]
+    [ browser: 'firefox', os: 'macos' ],
     // Remote tests
     [ browser: 'chrome', provider: 'aws', buckets: 2 ],
     // [ browser: 'edge', provider: 'aws', buckets: 2 ],
