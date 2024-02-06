@@ -50,7 +50,8 @@ describe('headless.tinymce.themes.silver.components.customeditor.BasicCustomEdit
       tag: 'textarea',
       scriptId: 'BasicCustomEditorTest',
       scriptUrl: '/custom/404', // using the cache
-      settings: undefined
+      settings: undefined,
+      onFocus: Fun.noop
     })
   ));
 
