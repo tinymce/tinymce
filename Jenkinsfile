@@ -49,7 +49,7 @@ def runBrowserTests(String name, String browser, String platform, String bucket,
   def bedrockCommand =
     "yarn grunt browser-auto" +
       " --chunk=400" +
-      " --bedrock-os=" + os +
+      " --bedrock-os=" + platform +
       " --bedrock-browser=" + browser +
       " --bucket=" + bucket +
       " --buckets=" + buckets;
