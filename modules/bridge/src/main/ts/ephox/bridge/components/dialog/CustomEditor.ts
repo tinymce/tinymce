@@ -39,6 +39,7 @@ export interface CustomEditorNew extends FormComponent {
   scriptId: string;
   scriptUrl: string;
   settings: any;
+  onFocus?: (container: HTMLElement) => void;
 }
 
 export type CustomEditor = CustomEditorOld | CustomEditorNew;

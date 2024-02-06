@@ -1,4 +1,4 @@
-import { AddEventsBehaviour, AlloyEvents, Behaviour, Memento, SimpleSpec, Tabstopping } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, Behaviour, Focusing, Memento, SimpleSpec, Tabstopping } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Obj, Optional, Singleton } from '@ephox/katamari';
 
@@ -23,6 +23,16 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
   });
 
   const initialValue = Singleton.value<string>();
+
+  const focusBehaviour = !isOldCustomEditor(spec) && spec.onFocus ? [ Focusing.config({
+    onFocus: (comp) => {
+      if (spec.onFocus) {
+        spec.onFocus(comp.element.dom);
+      }
+    }
+  }),
+  Tabstopping.config({}),
+  ComposingConfigs.self() ] : [];
 
   return {
     dom: {
@@ -62,9 +72,7 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
           );
         }
       ),
-      Tabstopping.config({}),
-      ComposingConfigs.self()
-    ]),
+    ].concat(focusBehaviour)),
     components: [ memReplaced.asSpec() ]
   };
 };
