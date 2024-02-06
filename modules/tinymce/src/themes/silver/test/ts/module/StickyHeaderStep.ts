@@ -206,7 +206,7 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
 
       window.scrollTo(0, 5000);
       // this is needed to give the time to the toolbar to resize
-      await Waiter.pWait(10);
+      await Waiter.pWait(0);
       const currentWidth = getRect(toolbar).width;
 
       assert.equal(initialWidth, currentWidth, 'initial toolbar width should be equal to the current toolbar width');
