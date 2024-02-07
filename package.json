@@ -46,7 +46,7 @@
     "@types/chai": "^4.3.3",
     "@types/dompurify": "3.0.2",
     "@types/prismjs": "^1.16.6",
-    "chai": "^4.3.3",
+    "chai": "^4.4.1",
     "chalk": "^4.1.0",
     "changie": "^1.14.0",
     "emojilib": "^2.4.0",
