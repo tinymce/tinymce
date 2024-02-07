@@ -34,7 +34,8 @@ const registerButtons = (editor: Editor): void => {
     icon: 'undo',
     enabled: false,
     onSetup: onSetupUndoRedoState(editor, 'hasUndo'),
-    onAction: onActionExecCommand(editor, 'undo')
+    onAction: onActionExecCommand(editor, 'undo'),
+    shortcut: 'Meta+Z'
   });
 
   editor.ui.registry.addButton('redo', {
@@ -42,7 +43,8 @@ const registerButtons = (editor: Editor): void => {
     icon: 'redo',
     enabled: false,
     onSetup: onSetupUndoRedoState(editor, 'hasRedo'),
-    onAction: onActionExecCommand(editor, 'redo')
+    onAction: onActionExecCommand(editor, 'redo'),
+    shortcut: 'Meta+Y'
   });
 };
 
