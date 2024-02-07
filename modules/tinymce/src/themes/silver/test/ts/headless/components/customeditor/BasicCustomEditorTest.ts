@@ -51,7 +51,7 @@ describe('headless.tinymce.themes.silver.components.customeditor.BasicCustomEdit
       scriptId: 'BasicCustomEditorTest',
       scriptUrl: '/custom/404', // using the cache
       settings: undefined,
-      onFocus: Fun.noop
+      focusSelector: ''
     })
   ));
 
