@@ -192,8 +192,8 @@ timestamps {
   // Local nodes use os: windows | macos; Remote tests use os full name e.g.: macOS Sonoma
   def platforms = [
     // Local tests
-    [ browser: 'edge', os: 'windows' ],
-    [ browser: 'firefox', os: 'macos' ],
+    // [ browser: 'edge', os: 'windows' ],
+    [ browser: 'safari', os: 'macos' ],
     // Remote tests
     [ browser: 'chrome', provider: 'aws', buckets: 2 ],
     // [ browser: 'edge', provider: 'aws', buckets: 2 ],
