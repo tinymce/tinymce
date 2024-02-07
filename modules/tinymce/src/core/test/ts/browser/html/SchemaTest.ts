@@ -407,7 +407,7 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
     assert.isTrue(schema.isValidChild('em', 'p'));
   });
 
-  it('TINY-9979: addValidChildren with a - prefixed preset should remoe preset', () => {
+  it('TINY-9979: addValidChildren with a - prefixed preset should remove preset', () => {
     const schema = Schema();
 
     assert.isTrue(schema.isValidChild('div', 'span'));
@@ -417,7 +417,7 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
     assert.isTrue(schema.isValidChild('div', 'p'));
   });
 
-  it('TINY-9979: addValidChildren with a + prefixed preset should remoe preset', () => {
+  it('TINY-9979: addValidChildren with a + prefixed preset should append preset', () => {
     const schema = Schema();
 
     assert.isTrue(schema.isValidChild('span', 'span'));
@@ -427,7 +427,7 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
     assert.isTrue(schema.isValidChild('span', 'p'));
   });
 
-  it('TINY-9979: Add valid children though valid_children setting', () => {
+  it('TINY-9979: Add valid children through valid_children setting', () => {
     const schema = Schema({ valid_children: 'span[@blocks]' });
 
     assert.isFalse(schema.isValidChild('span', 'span'));
