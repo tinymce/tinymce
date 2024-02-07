@@ -28,8 +28,7 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
     Focusing.config({
       onFocus: (comp) => spec.onFocus(comp.element.dom)
     }),
-    Tabstopping.config({}),
-    ComposingConfigs.self()
+    Tabstopping.config({})
   ] : [];
 
   return {
@@ -70,6 +69,7 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
           );
         }
       ),
+      ComposingConfigs.self()
     ].concat(focusBehaviour)),
     components: [ memReplaced.asSpec() ]
   };
