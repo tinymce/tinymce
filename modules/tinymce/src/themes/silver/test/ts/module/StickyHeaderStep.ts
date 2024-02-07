@@ -188,6 +188,7 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
       const editor = hook.editor();
       const getRect = (element: SugarElement<any>): DOMRect =>
         (element as SugarElement<HTMLElement>).dom.getBoundingClientRect();
+      let isScrolled = false;
 
       element.dom.focus();
       element.dom.scrollIntoView(false);
@@ -204,9 +205,15 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
       editor.focus();
       await UiFinder.pWaitForVisible('Wait for the editor to show', SugarBody.body(), '.tox-editor-header');
 
+      const scrollHandler = () => {
+        isScrolled = true;
+      };
+
+      window.addEventListener('scroll', scrollHandler);
       window.scrollTo(0, 5000);
-      // this is needed to give the time to the toolbar to resize
-      await Waiter.pWait(10);
+      await Waiter.pTryUntilPredicate('it should be scrolled', () => isScrolled);
+      window.removeEventListener('scroll', scrollHandler);
+
       const currentWidth = getRect(toolbar).width;
 
       assert.equal(initialWidth, currentWidth, 'initial toolbar width should be equal to the current toolbar width');
