@@ -33,7 +33,6 @@ const setup = (editor: Editor): void => {
     }
   }, true);
 
-  // TINY-10324: handle block text patterns on space bar press
   editor.on('keydown', (e) => {
     if (e.keyCode === 32 && editor.selection.isCollapsed()) {
       const patternSet = Pattern.filterByTrigger(getPatternSet(), 'space');
