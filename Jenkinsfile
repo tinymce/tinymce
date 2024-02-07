@@ -194,14 +194,15 @@ timestamps {
   def platforms = [
     // Local tests
     // [ browser: 'edge', os: 'windows' ],
-    [ browser: 'safari', os: 'macos' ],
+    // [ browser: 'firefox', os: 'macos' ],
     // Remote tests
     [ browser: 'chrome', provider: 'aws', buckets: 2 ],
-    // [ browser: 'edge', provider: 'aws', buckets: 2 ],
+    // [ browser: 'edge', provider: 'aws', buckets: 2 ], // TINY-10540: Investigate Edge issues in AWS
     [ browser: 'firefox', provider: 'aws', buckets: 2 ],
     [ browser: 'edge', provider: 'lambdatest', buckets: 1 ],
-    [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1, version: '17' ],
-    [ browser: 'safari', provider: 'lambdatest', os: 'macOS Monterey', buckets: 1, version: '15'],
+    [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ],
+    // [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1, version: '17' ], // TINY-10639: Investigate Safari 17 issues
+    [ browser: 'safari', provider: 'lambdatest', os: 'macOS Monterey', buckets: 1, version: '15' ],
   ];
 
   def processes = [:]
