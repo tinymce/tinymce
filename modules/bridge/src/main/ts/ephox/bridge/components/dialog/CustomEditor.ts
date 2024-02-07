@@ -23,7 +23,6 @@ interface CustomEditorNewSpec extends FormComponentSpec {
   scriptId: string;
   scriptUrl: string;
   settings?: any;
-  focusSelector?: string;
 }
 
 export type CustomEditorSpec = CustomEditorOldSpec | CustomEditorNewSpec;
@@ -40,7 +39,6 @@ export interface CustomEditorNew extends FormComponent {
   scriptId: string;
   scriptUrl: string;
   settings: any;
-  focusSelector: string;
 }
 
 export type CustomEditor = CustomEditorOld | CustomEditorNew;
