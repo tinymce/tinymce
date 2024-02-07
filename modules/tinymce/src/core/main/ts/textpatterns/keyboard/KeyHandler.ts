@@ -70,19 +70,19 @@ const handleInlineKey = (
 
 const handleBlockPatternOnSpace = (editor: Editor, patternSet: PatternSet): boolean => {
   const rng = editor.selection.getRng();
-  return Utils.getParentBlock(editor, rng).map((block) => {
+  return Utils.getParentBlock(editor, rng).exists((block) => {
     const offset = Math.max(0, rng.startOffset);
     const beforeText = Utils.getBeforeText(editor.dom, block, rng.startContainer, offset);
     const dynamicPatternSet = Utils.resolveFromDynamicPatterns(patternSet, block, beforeText);
     const matches = BlockPatternOnSpace.findPatterns(editor, block, dynamicPatternSet, false, beforeText);
-    if (matches.length > 0) {
+    const hasMatches = matches.length > 0;
+    if (hasMatches) {
       editor.undoManager.transact(() => {
         BlockPatternOnSpace.applyMatches(editor, matches);
       });
-      return true;
     }
-    return false;
-  }).getOr(false);
+    return hasMatches;
+  });
 };
 
 const checkKeyEvent = <T>(codes: T[], event: KeyboardEvent, predicate: (code: T, event: KeyboardEvent) => boolean): boolean => {
