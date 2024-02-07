@@ -28,9 +28,10 @@ def runHeadlessTests(Boolean runAll) {
   runBedrockTest('headless', bedrockCmd, runAll)
 }
 
-def runRemoteTests(String name, String browser, String provider, String platform, String arn, String bucket, String buckets, Boolean runAll, int retry = 0, int timeout = 0) {
+def runRemoteTests(String name, String browser, String provider, String platform, String arn, String version, String bucket, String buckets, Boolean runAll, int retry = 0, int timeout = 0) {
   def awsOpts = " --sishDomain=sish.osu.tiny.work --devicefarmArn=${arn}"
   def platformName = platform != null ? " --platformName='${platform}'" : ""
+  def browserVersion = version != null ? " --browserVersion=${version}" : ""
   def bedrockCommand =
   "yarn browser-test" +
     " --chunk=400" +
@@ -65,7 +66,7 @@ def runBrowserTests(String name, String browser, String platform, String bucket,
   runBedrockTest(name, bedrockCommand, runAll)
 }
 
-def runTestPod(String cacheName, String name, String testname, String browser, String provider, String platform, String bucket, String buckets, Boolean runAll) {
+def runTestPod(String cacheName, String name, String testname, String browser, String provider, String platform, String version, String bucket, String buckets, Boolean runAll) {
   return {
     bedrockRemoteTools.nodeConsumerPod(
       nodeOpts: [
@@ -83,7 +84,7 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
         bedrockRemoteTools.withRemoteCreds(provider) {
           int retry = 0
           withCredentials([string(credentialsId: 'devicefarm-testgridarn', variable: 'DF_ARN')]) {
-            runRemoteTests(testname, browser, provider, platform, DF_ARN, bucket, buckets, runAll, retry, 180)
+            runRemoteTests(testname, browser, provider, platform, DF_ARN, version, bucket, buckets, runAll, retry, 180)
           }
         }
       }
@@ -199,8 +200,8 @@ timestamps {
     // [ browser: 'edge', provider: 'aws', buckets: 2 ],
     [ browser: 'firefox', provider: 'aws', buckets: 2 ],
     [ browser: 'edge', provider: 'lambdatest', buckets: 1 ],
-    [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ],
-    [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1],
+    [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1, version: '17' ],
+    [ browser: 'safari', provider: 'lambdatest', os: 'macOS Monterey', buckets: 1, version: '15'],
   ];
 
   def processes = [:]
@@ -212,12 +213,13 @@ timestamps {
     for (int bucket = 1; bucket <= buckets; bucket ++) {
       def suffix = buckets == 1 ? "" : "-" + bucket + "-" + buckets
       def os = String.valueOf(platform.os).startsWith('mac') ? 'Mac' : 'Win'
+      def browserVersion = platform.version ? "-${platform.version}" : ""
       def s_bucket = "${bucket}"
       def s_buckets = "${buckets}"
       if (platform.provider) {
         // use remote
-        def name = "${os}-${platform.browser}-${platform.provider}${suffix}"
-        processes[name] = runTestPod(cacheName, name, testname, platform.browser, platform.provider, platform.os, s_bucket, s_buckets, runAllTests)
+        def name = "${os}-${platform.browser}${browserVersion}-${platform.provider}${suffix}"
+        processes[name] = runTestPod(cacheName, name, testname, platform.browser, platform.provider, platform.os, platform.version, s_bucket, s_buckets, runAllTests)
       } else {
         // use local
         def name = "${os}-${platform.browser}"
