@@ -23,13 +23,12 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
   });
 
   const initialValue = Singleton.value<string>();
-
-  const focusBehaviour = !isOldCustomEditor(spec) && spec.onFocus ? [
-    Focusing.config({
-      onFocus: (comp) => spec.onFocus(comp.element.dom)
-    }),
-    Tabstopping.config({})
-  ] : [];
+  // const focusBehaviour = !isOldCustomEditor(spec) && spec.onFocus ? [
+  //   Focusing.config({
+  //     onFocus: (comp) => spec.onFocus(comp.element.dom)
+  //   }),
+  //   Tabstopping.config({})
+  // ] : [];
 
   return {
     dom: {
@@ -69,8 +68,10 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
           );
         }
       ),
-      ComposingConfigs.self()
-    ].concat(focusBehaviour)),
+      ComposingConfigs.self(),
+      Tabstopping.config({}),
+      Focusing.config({})
+    ]/* .concat(focusBehaviour) */),
     components: [ memReplaced.asSpec() ]
   };
 };
