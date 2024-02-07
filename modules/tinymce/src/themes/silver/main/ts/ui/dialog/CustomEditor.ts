@@ -24,7 +24,7 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
   });
 
   const initialValue = Singleton.value<string>();
-  const focusBehaviour = !isOldCustomEditor(spec) && spec.settings.focusSelector ? [
+  const focusBehaviour = !isOldCustomEditor(spec) && spec.settings?.focusSelector ? [
     Focusing.config({
       onFocus: (comp) => {
         SelectorFind.descendant(comp.element, spec.settings.focusSelector).each((elementToFocus) => {
