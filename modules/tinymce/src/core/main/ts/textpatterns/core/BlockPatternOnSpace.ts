@@ -1,17 +1,12 @@
 import { Arr, Optional } from '@ephox/katamari';
 
-import DOMUtils from '../../api/dom/DOMUtils';
 import Editor from '../../api/Editor';
 import { PatternSet } from '../core/PatternTypes';
 import * as Utils from '../utils/Utils';
 import * as BlockPatternUtils from './BlockPatternUtils';
-import { BlockPattern, BlockPatternMatch } from './PatternTypes';
+import { BlockPatternMatch } from './PatternTypes';
 
-const stripPattern = (dom: DOMUtils, block: Node, pattern: BlockPattern): void => {
-  BlockPatternUtils.stripPattern(dom, block, pattern);
-};
-
-const applyPattern = BlockPatternUtils.createApplyPattern(stripPattern);
+const applyPattern = BlockPatternUtils.createApplyPattern(BlockPatternUtils.stripPattern);
 
 const findPattern = BlockPatternUtils.findPattern((pattern, text, nuText) => text === pattern.start || nuText === pattern.start);
 

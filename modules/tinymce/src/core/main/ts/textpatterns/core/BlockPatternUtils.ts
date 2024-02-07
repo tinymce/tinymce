@@ -16,8 +16,7 @@ type FindPattern = <P extends Pattern>(patterns: P[], text: string) => Optional<
 const stripPattern = (dom: DOMUtils, block: Node, pattern: BlockPattern): Optional<Text> => {
   // The pattern could be across fragmented text nodes, so we need to find the end
   // of the pattern and then remove all elements between the start/end range
-  const firstTextNode = TextSearch.textAfter(block, 0, block);
-  return firstTextNode.map((spot) => {
+  return TextSearch.textAfter(block, 0, block).map((spot) => {
     const node = spot.container;
     TextSearch.scanRight(node, pattern.start.length, block).each((end) => {
       const rng = dom.createRng();

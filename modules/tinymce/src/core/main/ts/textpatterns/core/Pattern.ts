@@ -8,7 +8,7 @@ const isInlinePattern = (pattern: Pattern): pattern is InlinePattern =>
 const isBlockPattern = (pattern: Pattern): pattern is BlockPattern =>
   pattern.type === 'block-command' || pattern.type === 'block-format';
 
-const isTriggeredOn = (pattern: Pattern, trigger: BlockPatternTrigger): boolean =>
+const hasBlockTrigger = (pattern: Pattern, trigger: BlockPatternTrigger): boolean =>
   (pattern.type === 'block-command' || pattern.type === 'block-format') && pattern.trigger === trigger;
 
 const normalizePattern = (pattern: RawPattern): Result<Pattern, PatternError> => {
@@ -112,7 +112,7 @@ const createPatternSet = (patterns: Pattern[], dynamicPatternsLookup: DynamicPat
 const filterByTrigger = (patterns: PatternSet, trigger: BlockPatternTrigger): PatternSet => {
   return {
     ...patterns,
-    blockPatterns: Arr.filter(patterns.blockPatterns, (pattern) => isTriggeredOn(pattern, trigger))
+    blockPatterns: Arr.filter(patterns.blockPatterns, (pattern) => hasBlockTrigger(pattern, trigger))
   };
 };
 
