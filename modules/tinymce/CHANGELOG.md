@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - The floating toolbar would not be fully visible when the editor was placed inside a scrollable container. #TINY-10335
+- ShadowDOM skin was not loaded properly when used with js bundling feature. #TINY-10451
 
 ## 6.8.2 - 2023-12-11
 
