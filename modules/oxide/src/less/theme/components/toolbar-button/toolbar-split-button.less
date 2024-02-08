@@ -8,11 +8,9 @@
 .tox {
   .tox-split-button {
     border: 0;
-    border-radius: @toolbar-button-border-radius;
     box-sizing: border-box;
     display: flex;
     margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0;
-    overflow: hidden;
   }
 
   .tox-split-button:hover {
@@ -23,10 +21,28 @@
     background: @toolbar-button-focus-background-color;
     box-shadow: @toolbar-button-focus-box-shadow;
     color: @toolbar-button-focus-text-color;
+    position: relative;
+    z-index: 1; // Ensure focus outline is on top of other buttons
+
+    &::after {
+      .keyboard-focus-outline-mixin();
+    }
   }
 
   .tox-split-button > * {
     border-radius: 0;
+
+    // Cannot use first and last child selectors because of a hidden element
+    // used for screen reader accessibility
+    &:nth-child(1) {
+      border-bottom-left-radius: @toolbar-button-border-radius;
+      border-top-left-radius: @toolbar-button-border-radius;
+    }
+
+    &:nth-child(2) {
+      border-bottom-right-radius: @toolbar-button-border-radius;
+      border-top-right-radius: @toolbar-button-border-radius;
+    }
   }
 
   .tox-split-button__chevron {
