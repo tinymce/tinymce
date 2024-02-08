@@ -26,5 +26,9 @@ export default (): void => {
     Buttons.register(editor);
     Autocompletion.init(editor, database);
     Filters.setup(editor);
+
+    return {
+      getAllEmojis: () => database.waitForLoad().then(() => database.listAll())
+    };
   });
 };

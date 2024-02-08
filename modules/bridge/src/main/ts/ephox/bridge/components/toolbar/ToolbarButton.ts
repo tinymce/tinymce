@@ -21,6 +21,7 @@ export interface BaseToolbarButtonInstanceApi {
 export interface ToolbarButtonSpec extends BaseToolbarButtonSpec<ToolbarButtonInstanceApi> {
   type?: 'button';
   onAction: (api: ToolbarButtonInstanceApi) => void;
+  shortcut?: string;
 }
 
 // tslint:disable-next-line:no-empty-interface
@@ -39,6 +40,7 @@ export interface BaseToolbarButton<I extends BaseToolbarButtonInstanceApi> {
 export interface ToolbarButton extends BaseToolbarButton<ToolbarButtonInstanceApi> {
   type: 'button';
   onAction: (api: ToolbarButtonInstanceApi) => void;
+  shortcut: Optional<string>;
 }
 
 export const baseToolbarButtonFields = [
@@ -51,7 +53,8 @@ export const baseToolbarButtonFields = [
 
 export const toolbarButtonSchema = StructureSchema.objOf([
   ComponentSchema.type,
-  ComponentSchema.onAction
+  ComponentSchema.onAction,
+  ComponentSchema.optionalShortcut
 ].concat(baseToolbarButtonFields));
 
 export const createToolbarButton = (spec: ToolbarButtonSpec): Result<ToolbarButton, StructureSchema.SchemaError<any>> =>

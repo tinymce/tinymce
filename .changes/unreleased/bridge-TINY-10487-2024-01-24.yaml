@@ -1,0 +1,6 @@
+project: bridge
+kind: Added
+body: Added `shortcut` optional property to `ToolbarButton` and `ToolbarToggleButton`.
+time: 2024-01-24T11:23:58.517849+11:00
+custom:
+  Issue: TINY-10487

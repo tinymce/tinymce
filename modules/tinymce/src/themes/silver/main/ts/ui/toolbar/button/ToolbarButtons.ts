@@ -12,6 +12,7 @@ import { Attribute, EventArgs, SelectorFind } from '@ephox/sugar';
 import { ToolbarGroupOption } from '../../../api/Options';
 import { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
 import * as ReadOnly from '../../../ReadOnly';
+import * as ConvertShortcut from '../../../ui/alien/ConvertShortcut';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
@@ -45,6 +46,7 @@ interface GeneralToolbarButton<T> {
   readonly icon: Optional<string>;
   readonly text: Optional<string>;
   readonly tooltip: Optional<string>;
+  readonly shortcut: Optional<string>;
   readonly onAction: (api: T) => void;
   readonly enabled: boolean;
 }
@@ -210,7 +212,7 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
           ...(spec.tooltip.map(
             (t) => Tooltipping.config(
               providersBackstage.tooltips.getConfig({
-                tooltipText: providersBackstage.translate(t)
+                tooltipText: providersBackstage.translate(t) + spec.shortcut.map((shortcut) => ` (${ConvertShortcut.convertText(shortcut)})`).getOr(''),
               })
             )
           )).toArray(),

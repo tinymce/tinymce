@@ -1,5 +1,5 @@
 import { StructureSchema } from '@ephox/boulder';
-import { Result } from '@ephox/katamari';
+import { Optional, Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
 import { BaseToolbarButton, BaseToolbarButtonSpec, baseToolbarButtonFields, BaseToolbarButtonInstanceApi } from './ToolbarButton';
@@ -20,11 +20,13 @@ export interface BaseToolbarToggleButtonInstanceApi extends BaseToolbarButtonIns
 export interface ToolbarToggleButtonSpec extends BaseToolbarToggleButtonSpec<ToolbarToggleButtonInstanceApi> {
   type?: 'togglebutton';
   onAction: (api: ToolbarToggleButtonInstanceApi) => void;
+  shortcut?: string;
 }
 
 export interface ToolbarToggleButton extends BaseToolbarToggleButton<ToolbarToggleButtonInstanceApi> {
   type: 'togglebutton';
   onAction: (api: ToolbarToggleButtonInstanceApi) => void;
+  shortcut: Optional<string>;
 }
 
 // tslint:disable-next-line:no-empty-interface
@@ -39,7 +41,8 @@ export const baseToolbarToggleButtonFields = [
 export const toggleButtonSchema = StructureSchema.objOf(
   baseToolbarToggleButtonFields.concat([
     ComponentSchema.type,
-    ComponentSchema.onAction
+    ComponentSchema.onAction,
+    ComponentSchema.optionalShortcut
   ])
 );
 
