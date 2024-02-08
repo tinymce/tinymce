@@ -52,18 +52,18 @@ describe('browser.tinymce.plugins.link.LinkDialogOverrideTest', () => {
     await TinyUiActions.pWaitForDialog(editor);
 
     // Assert save button disabled
-    UiFinder.exists(sugarBody, 'button[title="Save"][disabled="disabled"]');
+    UiFinder.exists(sugarBody, 'button[data-mce-name="Save"][disabled="disabled"]');
     const input = UiFinder.findIn<HTMLInputElement>(sugarBody, 'input[type="url"]').getOrDie();
 
     // Set value and fire 'input' event
     UiControls.setValue(input, 'https://www.google.com', 'input');
 
     // Button is now enabled
-    UiFinder.exists(sugarBody, 'button[title="Save"]:not([disabled])');
+    UiFinder.exists(sugarBody, 'button[data-mce-name="Save"]:not([disabled])');
 
     // Button is disabled again when field is empty
     UiControls.setValue(input, '', 'input');
-    UiFinder.exists(sugarBody, 'button[title="Save"][disabled="disabled"]');
+    UiFinder.exists(sugarBody, 'button[data-mce-name="Save"][disabled="disabled"]');
     TinyUiActions.closeDialog(editor);
   });
 });

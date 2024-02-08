@@ -45,8 +45,8 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
                       arr.has('tox-collection__item--active')
                     ],
                     attrs: {
-                      role: str.is('menuitemradio'),
-                      title: str.is('Default')
+                      'role': str.is('menuitemradio'),
+                      'aria-label': str.is('Default')
                     },
                     children: [
                       s.element('div', {
@@ -60,8 +60,8 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
                       arr.has('tox-collection__item')
                     ],
                     attrs: {
-                      role: str.is('menuitemradio'),
-                      title: str.is('Circle')
+                      'role': str.is('menuitemradio'),
+                      'aria-label': str.is('Circle')
                     },
                     children: [
                       s.element('div', {
@@ -75,8 +75,8 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
                       arr.has('tox-collection__item')
                     ],
                     attrs: {
-                      role: str.is('menuitemradio'),
-                      title: str.is('Square')
+                      'role': str.is('menuitemradio'),
+                      'aria-label': str.is('Square')
                     },
                     children: [
                       s.element('div', {
@@ -118,8 +118,8 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
                       arr.has('tox-collection__item--active')
                     ],
                     attrs: {
-                      role: str.is('menuitemradio'),
-                      title: str.is('Default')
+                      'role': str.is('menuitemradio'),
+                      'aria-label': str.is('Default')
                     },
                     children: [
                       s.element('div', {
@@ -133,8 +133,8 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
                       arr.has('tox-collection__item')
                     ],
                     attrs: {
-                      role: str.is('menuitemradio'),
-                      title: str.is('Lower Alpha')
+                      'role': str.is('menuitemradio'),
+                      'aria-label': str.is('Lower Alpha')
                     },
                     children: [
                       s.element('div', {
@@ -148,8 +148,8 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
                       arr.has('tox-collection__item')
                     ],
                     attrs: {
-                      role: str.is('menuitemradio'),
-                      title: str.is('Lower Greek')
+                      'role': str.is('menuitemradio'),
+                      'aria-label': str.is('Lower Greek')
                     },
                     children: [
                       s.element('div', {
@@ -169,8 +169,8 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
                       arr.has('tox-collection__item')
                     ],
                     attrs: {
-                      role: str.is('menuitemradio'),
-                      title: str.is('Lower Roman')
+                      'role': str.is('menuitemradio'),
+                      'aria-label': str.is('Lower Roman')
                     },
                     children: [
                       s.element('div', {
@@ -184,8 +184,8 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
                       arr.has('tox-collection__item')
                     ],
                     attrs: {
-                      role: str.is('menuitemradio'),
-                      title: str.is('Upper Alpha')
+                      'role': str.is('menuitemradio'),
+                      'aria-label': str.is('Upper Alpha')
                     },
                     children: [
                       s.element('div', {
@@ -199,8 +199,8 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
                       arr.has('tox-collection__item')
                     ],
                     attrs: {
-                      role: str.is('menuitemradio'),
-                      title: str.is('Upper Roman')
+                      'role': str.is('menuitemradio'),
+                      'aria-label': str.is('Upper Roman')
                     },
                     children: [
                       s.element('div', {

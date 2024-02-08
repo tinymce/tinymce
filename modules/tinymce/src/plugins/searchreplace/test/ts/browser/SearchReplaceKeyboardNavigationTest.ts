@@ -54,13 +54,13 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardNavigationT
     pressTab(editor);
     await pAssertFocused('Replace with input', '.tox-textfield[placeholder="Replace with"]');
     pressTab(editor);
-    await pAssertFocused('Placeholder menu button', '.tox-tbtn--select[title="Preferences"]');
+    await pAssertFocused('Placeholder menu button', '.tox-tbtn--select[aria-label="Preferences"]');
     pressDown(editor);
     await pAssertFocused('Match case menu item', '.tox-collection__item:contains("Match case")'); // Menu items can be reached by keyboard
     pressEnter(editor);
-    await pAssertFocused('Placeholder menu button', '.tox-tbtn--select[title="Preferences"]');
+    await pAssertFocused('Placeholder menu button', '.tox-tbtn--select[aria-label="Preferences"]');
     pressTab(editor);
-    await pAssertFocused('Find button', '.tox-button[title="Find"]');
+    await pAssertFocused('Find button', '.tox-button[data-mce-name="Find"]');
     pressEsc(editor);
   });
 
@@ -72,15 +72,15 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardNavigationT
     pressTab(editor);
     await pAssertFocused('Replace with input', '.tox-textfield[placeholder="Replace with"]');
     pressTab(editor);
-    await pAssertFocused('Placeholder menu button', '.tox-tbtn--select[title="Preferences"]');
+    await pAssertFocused('Placeholder menu button', '.tox-tbtn--select[aria-label="Preferences"]');
     pressTab(editor);
-    await pAssertFocused('Find button', '.tox-button[title="Find"]');
+    await pAssertFocused('Find button', '.tox-button[data-mce-name="Find"]');
     await Utils.pSetFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', 'fish');
     pressEnter(editor);
     pressTab(editor);
-    await pAssertFocused('Find button', '.tox-button[title="Replace"]');
+    await pAssertFocused('Find button', '.tox-button[data-mce-name="Replace"]');
     pressTab(editor);
-    await pAssertFocused('Find button', '.tox-button[title="Replace all"]');
+    await pAssertFocused('Find button', '.tox-button[data-mce-name="Replace all"]');
     pressEnter(editor);
     await pAssertFocused('Find input', '.tox-textfield[placeholder="Find"]');
     pressEsc(editor);

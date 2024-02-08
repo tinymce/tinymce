@@ -50,9 +50,9 @@ describe('webdriver.tinymce.core.keyboard.IframeTabfocusTest', () => {
       }
     }, []);
 
-    afterEach(async () => {
+    afterEach(() => {
       // Un focus the editor
-      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.combo({ shiftKey: true }, '\t') ]);
+      window.focus();
     });
 
     it('TINY-9277: Focus on tab', async () => {

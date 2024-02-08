@@ -19,7 +19,7 @@ import * as RowDialogGeneralTab from './RowDialogGeneralTab';
 type RowData = Helpers.RowData;
 
 const updateSimpleProps = (modifier: DomModifier, data: RowData, shouldUpdate: (key: string) => boolean): void => {
-  if (shouldUpdate('class')) {
+  if (shouldUpdate('class') && data.class !== 'mce-no-match') {
     modifier.setAttrib('class', data.class);
   }
   if (shouldUpdate('height')) {

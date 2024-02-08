@@ -1,6 +1,6 @@
 import { Keys } from '@ephox/agar';
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Disabling, Focusing, FocusInsideModes, Input, Keying, Memento, NativeEvents, Representing } from '@ephox/alloy';
-import { Arr, Cell, Fun, Id, Optional } from '@ephox/katamari';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Disabling, Focusing, FocusInsideModes, Input, Keying, Memento, NativeEvents, Representing, SystemEvents, Tooltipping } from '@ephox/alloy';
+import { Arr, Cell, Fun, Id, Optional, Type } from '@ephox/katamari';
 import { Focus, SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -16,7 +16,7 @@ interface BespokeSelectApi {
   readonly getComponent: () => AlloyComponent;
 }
 
-const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage, spec: NumberInputSpec): AlloySpec => {
+const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage, spec: NumberInputSpec, btnName?: string): AlloySpec => {
   let currentComp: Optional<AlloyComponent> = Optional.none();
 
   const getValueFromCurrentComp = (comp: Optional<AlloyComponent>): string =>
@@ -89,8 +89,8 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
       dom: {
         tag: 'button',
         attributes: {
-          'title': translatedTooltip,
-          'aria-label': translatedTooltip
+          'aria-label': translatedTooltip,
+          'data-mce-name': title
         },
         classes: classes.concat(title)
       },
@@ -99,6 +99,11 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
       ],
       buttonBehaviours: Behaviour.derive([
         Disabling.config({}),
+        Tooltipping.config(
+          backstage.shared.providers.tooltips.getConfig({
+            tooltipText: translatedTooltip
+          })
+        ),
         AddEventsBehaviour.config(altExecuting, [
           onControlAttached({ onSetup, getApi }, editorOffCellStepButton),
           onControlDetached({ getApi }, editorOffCellStepButton),
@@ -116,7 +121,9 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
       eventOrder: {
         [NativeEvents.keydown()]: [ altExecuting, 'keying' ],
         [NativeEvents.click()]: [ altExecuting, 'alloy.base.behaviour' ],
-        [NativeEvents.touchend()]: [ altExecuting, 'alloy.base.behaviour' ]
+        [NativeEvents.touchend()]: [ altExecuting, 'alloy.base.behaviour' ],
+        [SystemEvents.attachedToDom()]: [ 'alloy.base.behaviour', altExecuting, 'tooltipping' ],
+        [SystemEvents.detachedFromDom()]: [ altExecuting, 'tooltipping' ]
       }
     });
   };
@@ -199,7 +206,10 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tox-number-input' ]
+      classes: [ 'tox-number-input' ],
+      attributes: {
+        ...(Type.isNonNullable(btnName) ? { 'data-mce-name': btnName } : {})
+      }
     },
     components: [
       memMinus.asSpec(),

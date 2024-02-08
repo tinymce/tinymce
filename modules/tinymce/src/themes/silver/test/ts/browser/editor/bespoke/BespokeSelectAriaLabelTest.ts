@@ -32,10 +32,10 @@ describe('browser.tinymce.themes.silver.editor.bespoke.BespokeSelectAriaLabelTes
     pWaitForMenu: (editor: Editor, itemSelector: string) => Promise<SugarElement<Element>>
   ) => async () => {
     const editor = hook.editor();
-    const buttonSelector = `button[title="${makeLabel(initialItem)}"]`;
+    const buttonSelector = `button[aria-label="${makeLabel(initialItem)}"]`;
 
     await pOpenMenu(buttonSelector);
-    const itemSelector = `div[role="menuitemcheckbox"][title="${finalItem}"]`;
+    const itemSelector = `div[role="menuitemcheckbox"][aria-label="${finalItem}"]`;
     await pWaitForMenu(editor, itemSelector);
 
     const button = UiFinder.findIn(SugarBody.body(), `.tox-toolbar__group ${buttonSelector}`).getOrDie();
@@ -72,7 +72,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.BespokeSelectAriaLabelTes
       (item) => `${scenario.label} ${item}`,
       Fun.curry(MenuUtils.pOpenMenuWithSelector, scenario.label),
       (editor) => {
-        const submenuSelector = 'div[title="Blocks"]';
+        const submenuSelector = 'div[aria-label="Blocks"]';
         return TinyUiActions.pWaitForUi(editor, submenuSelector).then(() => TinyUiActions.clickOnUi(editor, submenuSelector));
       }
     );

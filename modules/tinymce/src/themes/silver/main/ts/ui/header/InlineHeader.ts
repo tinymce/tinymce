@@ -1,5 +1,5 @@
 import { AlloyComponent, Boxes, Channels, Docking, OffsetOrigin, VerticalDir } from '@ephox/alloy';
-import { Arr, Cell, Fun, Optional, Singleton } from '@ephox/katamari';
+import { Arr, Cell, Fun, Optional, Optionals, Singleton } from '@ephox/katamari';
 import { Attribute, Compare, Css, Height, Scroll, SugarBody, SugarElement, SugarLocation, Traverse, Width } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -40,6 +40,7 @@ export const InlineHeader = (
   const editorMaxWidthOpt = Options.getMaxWidthOption(editor).or(EditorSize.getWidth(editor));
   const headerBackstage = backstage.shared.header;
   const isPositionedAtTop = headerBackstage.isPositionedAtTop;
+  const minimumToolbarWidth = 150; // Value is arbitrary.
 
   const toolbarMode = Options.getToolbarMode(editor);
   const isSplitToolbar = toolbarMode === ToolbarMode.sliding || toolbarMode === ToolbarMode.floating;
@@ -125,15 +126,30 @@ export const InlineHeader = (
       // so we need to round this to account for that.
 
       const targetBounds = Boxes.box(targetElm);
-      const { top, left } = getOffsetParent(editor, mainUi.outerContainer.element).fold(
-        () => {
-          return {
-            top: isPositionedAtTop()
-              ? Math.max(targetBounds.y - Height.get(container.element) + offset, 0)
-              : targetBounds.bottom,
-            left: targetBounds.x,
-          };
-        },
+      const offsetParent = getOffsetParent(editor, mainUi.outerContainer.element);
+
+      const getLeft = () => offsetParent.fold(
+        () => targetBounds.x,
+        (offsetParent) => {
+          // Because for ui_mode: split, the main mothership (which includes the toolbar) is moved and added as a sibling
+          // If there's any relative position div set as the parent and the offsetParent is no longer the body,
+          // the absolute top/left positions would no longer be correct
+          // When there's a relative div and the position is the same as the toolbar container
+          // then it would produce a negative top as it needs to be positioned on top of the offsetParent
+          const offsetBox = Boxes.box(offsetParent);
+
+          const isOffsetParentBody = Compare.eq(offsetParent, SugarBody.body());
+
+          return isOffsetParentBody
+            ? targetBounds.x
+            : targetBounds.x - offsetBox.x;
+        }
+      );
+
+      const getTop = () => offsetParent.fold(
+        () => isPositionedAtTop()
+          ? Math.max(targetBounds.y - Height.get(container.element) + offset, 0)
+          : targetBounds.bottom,
         (offsetParent) => {
           // Because for ui_mode: split, the main mothership (which includes the toolbar) is moved and added as a sibling
           // If there's any relative position div set as the parent and the offsetParent is no longer the body,
@@ -148,22 +164,13 @@ export const InlineHeader = (
             ? Math.max(targetBounds.y - Height.get(container.element) + offset, 0)
             : targetBounds.y - offsetBox.y + scrollDelta - Height.get(container.element) + offset;
 
-          return {
-            top: isPositionedAtTop()
-              ? topValue
-              : targetBounds.bottom,
-            left: isOffsetParentBody
-              ? targetBounds.x
-              : targetBounds.x - offsetBox.x
-          };
+          return isPositionedAtTop()
+            ? topValue
+            : targetBounds.bottom;
         }
       );
 
-      const baseProperties = {
-        position: 'absolute',
-        left: Math.round(left) + 'px',
-        top: Math.round(top) + 'px'
-      };
+      const left = getLeft();
 
       const widthProperties = optToolbarWidth.map(
         (toolbarWidth: number) => {
@@ -178,8 +185,6 @@ export const InlineHeader = (
 
           Note: this is entirely determined on the number of items in the menu and the toolbar, because when they wrap, that's what causes the height. Also, having multiple toolbars can also make it higher.
           */
-          const minimumToolbarWidth = 150; // Value is arbitrary.
-
           const availableWidth = window.innerWidth - (left - scroll.left);
 
           const width = Math.max(
@@ -190,11 +195,21 @@ export const InlineHeader = (
             minimumToolbarWidth
           );
 
+          if (availableWidth < toolbarWidth) {
+            Css.set(mainUi.outerContainer.element, 'width', width + 'px');
+          }
+
           return {
             width: width + 'px'
           };
         }
       ).getOr({ });
+
+      const baseProperties = {
+        position: 'absolute',
+        left: Math.round(left) + 'px',
+        top: getTop() + 'px'
+      };
 
       Css.setAll(mainUi.outerContainer.element, {
         ...baseProperties,
@@ -230,7 +245,10 @@ export const InlineHeader = (
         Css.set(mainUi.outerContainer.element, 'left', '0px');
         Css.remove(mainUi.outerContainer.element, 'width');
         const w = Width.getOuter(mainUi.outerContainer.element);
-        return Optional.some(w);
+
+        // this check is needed because if the toolbar is rendered outside of the `outerContainer` because the toolbar have `position: "fixed"`
+        // the calculate width isn't correct
+        return Optionals.someIf(w > minimumToolbarWidth, w);
       } else {
         return Optional.none();
       }

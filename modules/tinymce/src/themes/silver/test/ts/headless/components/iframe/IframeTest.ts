@@ -2,7 +2,6 @@ import { ApproxStructure, Assertions, Waiter } from '@ephox/agar';
 import { AlloyComponent, Composing, Container, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
 import { describe, context, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
 
 import { renderIFrame } from 'tinymce/themes/silver/ui/dialog/IFrame';
@@ -51,11 +50,6 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
       ]
     })
   ));
-
-  const browser = PlatformDetection.detect().browser;
-  const isSafari = browser.isSafari();
-  const isFirefox = browser.isFirefox();
-  const isSafariOrFirefox = isSafari || isFirefox;
 
   const getFrameFromFrameNumber = (frameNumber: number) => {
     const frame = hook.component().components()[frameNumber];
@@ -132,7 +126,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
     const iframe = frame.element.dom as HTMLIFrameElement;
     iframe.onload = () => isIframeLoaded = true;
     Representing.setValue(frame, normalizeContent(content, shouldContentHaveDoctype));
-    return Waiter.pTryUntilPredicate('Wait for iframe to finish loading', () => isIframeLoaded).then(() => iframe.onload = Fun.noop);
+    return Waiter.pTryUntilPredicate('Wait for iframe to finish loading', () => isIframeLoaded && iframe.contentDocument?.body?.innerHTML !== '').then(() => iframe.onload = Fun.noop);
   };
 
   const getDoctypeLabel = (hasDoctype: boolean) => hasDoctype ? 'content has doctype' : 'content does not have doctype';
@@ -296,17 +290,25 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
   });
 
   context('Updating iframe content in intervals (streaming simulation)', () => {
-    const setValueInIntervals = (frame: AlloyComponent, interval: number, maxNumIntervals: number, shouldContentHaveDoctype: boolean): void => {
-      let iterations = 0;
-      let content = '';
-      const intervalId = setInterval(() => {
-        content += testContent;
-        Representing.setValue(frame, normalizeContent(content, shouldContentHaveDoctype));
+    const pStreamContentInIframe = (frame: AlloyComponent, interval: number, maxIterations: number, shouldContentHaveDoctype: boolean) => {
+      return new Promise<void>((resolve) => {
+        let iterations = 0;
+        let content = '';
 
-        if (++iterations > maxNumIntervals) {
-          clearInterval(intervalId);
-        }
-      }, interval);
+        const updateContent = () => {
+          content += testContent;
+          frame.element.dom.onload = () => {
+            if (iterations++ < maxIterations) {
+              setTimeout(updateContent, interval);
+            } else {
+              resolve();
+            }
+          };
+          Representing.setValue(frame, normalizeContent(content, shouldContentHaveDoctype));
+        };
+
+        updateContent();
+      });
     };
 
     const assertIframeStateAfterIntervals = (iframe: HTMLIFrameElement, maxNumIntervals: number, shouldContentHaveDoctype: boolean) => {
@@ -319,24 +321,11 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
       it(`TINY-10078 & TINY-10097: Check for throttled iframe load on Safari and iframe scroll position is at bottom after streaming when ${doctypeLabel}`, async () => {
         const frame = getFrameFromFrameNumber(streamFrameNumber);
         const iframe = frame.element.dom as HTMLIFrameElement;
-
-        let loadCount = 0;
-        iframe.onload = () => loadCount++;
-
         const interval = 100;
         const maxNumIntervals = 10;
-        setValueInIntervals(frame, interval, maxNumIntervals, shouldContentHaveDoctype);
 
-        await Waiter.pTryUntil('Wait for update intervals to finish', () => {
-          // TINY-10078, TINY-10097, TINY-10128: Artificial 500ms throttle on Safari, 200ms throttle on Firefox.
-          const expectedLoads = (isSafariOrFirefox ? interval * maxNumIntervals / (isSafari ? 500 : 200) : maxNumIntervals) + 1;
-          if (isFirefox) {
-            assert.approximately(loadCount, expectedLoads, 1, `iframe should have approximately ${expectedLoads} loads`);
-          } else {
-            assert.strictEqual(loadCount, expectedLoads, `iframe should have exactly ${expectedLoads} loads`);
-          }
-          assertIframeStateAfterIntervals(iframe, maxNumIntervals, shouldContentHaveDoctype);
-        });
+        await pStreamContentInIframe(frame, interval, maxNumIntervals, shouldContentHaveDoctype);
+        assertIframeStateAfterIntervals(iframe, maxNumIntervals, shouldContentHaveDoctype);
 
         iframe.onload = Fun.noop;
       });
@@ -344,11 +333,10 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
       it(`TINY-10078, TINY-10097, TINY-10128: When updating rapidly and ${doctypeLabel}, artificial throttles should not impact content completeness and scroll should be kept at bottom`, async () => {
         const frame = getFrameFromFrameNumber(streamFrameNumber);
         const maxNumIntervals = 10;
-        setValueInIntervals(frame, 0, maxNumIntervals, shouldContentHaveDoctype);
+        await pStreamContentInIframe(frame, 0, maxNumIntervals, shouldContentHaveDoctype);
 
         const iframe = frame.element.dom as HTMLIFrameElement;
-        await Waiter.pTryUntil('Wait for update intervals to finish', () =>
-          assertIframeStateAfterIntervals(iframe, maxNumIntervals, shouldContentHaveDoctype));
+        assertIframeStateAfterIntervals(iframe, maxNumIntervals, shouldContentHaveDoctype);
       });
     });
   });

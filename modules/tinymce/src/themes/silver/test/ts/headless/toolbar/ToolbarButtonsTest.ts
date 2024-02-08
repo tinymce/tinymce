@@ -30,6 +30,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
         components: [
           renderToolbarButton({
             type: 'button',
+            shortcut: Optional.none(),
             enabled: true,
             tooltip: Optional.some('tooltip'),
             icon: Optional.none(),
@@ -54,6 +55,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
         components: [
           renderToolbarToggleButton({
             type: 'togglebutton',
+            shortcut: Optional.none(),
             enabled: true,
             active: false,
             tooltip: Optional.some('tooltip'),
@@ -192,7 +194,6 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
         classes: [ arr.has('tox-tbtn') ],
         attrs: {
           'type': str.is('button'),
-          'title': str.is('tooltip'),
           'aria-label': str.is('tooltip')
         },
         children: [
@@ -264,7 +265,6 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
         classes: [ arr.has('tox-split-button') ],
         attrs: {
           'role': str.is('button'),
-          'title': str.is('tooltip'),
           'aria-label': str.is('tooltip'),
           'aria-expanded': str.is('false'),
           'aria-haspopup': str.is('true'),
@@ -358,7 +358,6 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
         ],
         attrs: {
           'type': str.is('button'),
-          'title': str.is('tooltip'),
           'aria-label': str.is('tooltip'),
           'aria-expanded': str.is('false'),
           'aria-haspopup': str.is('true')

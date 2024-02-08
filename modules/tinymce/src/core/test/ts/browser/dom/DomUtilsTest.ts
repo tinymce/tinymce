@@ -721,7 +721,7 @@ describe('browser.tinymce.core.dom.DOMUtilsTest', () => {
     assert.isTrue(DOM.isEmpty(getTestElement()));
 
     DOM.setHTML('test', '<div><!-- comment --></div>');
-    assert.isFalse(DOM.isEmpty(getTestElement()));
+    assert.isTrue(DOM.isEmpty(getTestElement()));
 
     DOM.setHTML('test', '<span data-mce-bogus="1"></span>');
     assert.isTrue(DOM.isEmpty(getTestElement()));
@@ -755,6 +755,13 @@ describe('browser.tinymce.core.dom.DOMUtilsTest', () => {
     assert.isFalse(DOM.isEmpty(elm, { img: true }));
   });
 
+  it('isEmpty with isContent optional predicate for custom non-empty elements', () => {
+    const elm = DOM.create('p', {}, '<em><br></em>');
+    assert.isFalse(DOM.isEmpty(elm, undefined, {
+      isContent: (node) => node.nodeName === 'EM'
+    }));
+  });
+
   it('isEmpty on pre', () => {
     const elm = DOM.create('pre', {}, '  ');
     assert.isFalse(DOM.isEmpty(elm));
@@ -765,6 +772,15 @@ describe('browser.tinymce.core.dom.DOMUtilsTest', () => {
 
     const elm = domWithoutSchema.create('p', {}, '<img>');
     assert.isFalse(domWithoutSchema.isEmpty(elm, { img: true }));
+  });
+
+  it('isEmpty with isContent optional predicate without schema', () => {
+    const domWithoutSchema = DOMUtils(document, { keep_values: true });
+
+    const elm = domWithoutSchema.create('p', {}, '<a href="http://some.url/"></a>');
+    assert.isFalse(domWithoutSchema.isEmpty(elm, undefined, {
+      isContent: (node) => node.nodeName === 'A'
+    }));
   });
 
   it('isEmpty on P with BR in EM', () => {

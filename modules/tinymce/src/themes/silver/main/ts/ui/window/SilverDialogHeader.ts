@@ -23,8 +23,7 @@ const renderClose = (providersBackstage: UiFactoryBackstageProviders) => Button.
     attributes: {
       'type': 'button',
       'aria-label': providersBackstage.translate('Close'),
-      // TINY-10453: Remove this tooltip, we don't want duplicate tooltips and until we figured a better way to test, it's here now so that tests would pass
-      'title': providersBackstage.translate('Close')
+      'data-mce-name': 'close'
     }
   },
   buttonBehaviours: Behaviour.derive([

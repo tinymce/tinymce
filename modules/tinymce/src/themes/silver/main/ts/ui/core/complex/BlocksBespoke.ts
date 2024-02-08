@@ -60,7 +60,7 @@ const getSpec = (editor: Editor): SelectSpec => {
 };
 
 const createBlocksButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
-  createSelectButton(editor, backstage, getSpec(editor), btnTooltip, 'BlocksTextUpdate');
+  createSelectButton(editor, backstage, getSpec(editor), btnTooltip, 'BlocksTextUpdate', 'blocks');
 
 // FIX: Test this!
 const createBlocksMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {

@@ -3,76 +3,45 @@
 
 standardProperties()
 
-def runBedrockTest(String name, String command, Boolean runAll, int retry = 0, int timeout = 0) {
-  def bedrockCmd = command + (runAll ? " --ignore-lerna-changed=true" : "")
-  echo "Running Bedrock cmd: ${command}"
-  def testStatus = sh(script: command, returnStatus: true)
+def runTests(String name, String bedrockCommand, Boolean runAll) {
+  // Clean out the old XML files before running tests, since we junit import *.XML files
+  dir('scratch') {
+    if (isUnix()) {
+      sh "rm -f *.xml"
+    } else {
+      bat "del *.xml"
+    }
+  }
+
+  def command = runAll ? bedrockCommand + ' --ignore-lerna-changed=true' : bedrockCommand
+  def testStatus = exec(script: command, returnStatus: true)
+
+  echo "Writing JUnit results for ${name} on node: $NODE_NAME"
   junit allowEmptyResults: true, testResults: 'scratch/TEST-*.xml'
 
+  // If the tests failed (exit code 4) then just mark it as unstable
   if (testStatus == 4) {
     unstable("Tests failed for ${name}")
   } else if (testStatus != 0) {
-    if (retry > 0) {
-      echo "Running retry [${retry}] after [${timeout}]"
-      sleep(timeout)
-      runBedrockTest(name, command, runAll, retry - 1, timeout)
-    } else {
-      archiveArtifacts artifacts: 'scratch/TEST-*.xml', onlyIfSuccessful: false
-      error("Unexpected error in ${name} ")
-    }
+    error("Unexpected error running tests for ${name} so passing failure as exit code")
   }
+}
+
+def runBrowserTests(String name, String browser, String os, Integer bucket, Integer buckets, Boolean runAll) {
+  def bedrockCommand =
+    "yarn grunt browser-auto" +
+      " --chunk=400" +
+      " --bedrock-os=" + os +
+      " --bedrock-browser=" + browser +
+      " --bucket=" + bucket +
+      " --buckets=" + buckets;
+
+  runTests(name, bedrockCommand, runAll);
 }
 
 def runHeadlessTests(Boolean runAll) {
-  def bedrockCmd = "yarn grunt headless-auto"
-  runBedrockTest('headless', bedrockCmd, runAll)
-}
-
-def runRemoteTests(String name, String browser, String provider, String platform, String arn, String bucket, String buckets, Boolean runAll, int retry = 0, int timeout = 0) {
-  def awsOpts = " --sishDomain=sish.osu.tiny.work --devicefarmArn=${arn}"
-  def platformName = platform != null ? " --platformName='${platform}'" : ""
-  def bedrockCommand =
-  "yarn browser-test" +
-    " --chunk=400" +
-    " --bedrock-browser=" + browser +
-    " --remote=" + provider +
-    " --bucket=" + bucket +
-    " --buckets=" + buckets +
-    " --name=" + name +
-    "${provider == 'aws' ? awsOpts : ''}" +
-    "${platformName}"
-    runBedrockTest(name, bedrockCommand, runAll, retry, timeout)
-}
-
-def runTestPod(String name, String browser, String provider, String platform, String bucket, String buckets, Boolean runAll) {
-  return {
-    tinyPods.node([
-      resourceRequestCpu: '2',
-      resourceRequestMemory: '4Gi',
-      resourceRequestEphemeralStorage: '16Gi',
-      resourceLimitCpu: '7.5',
-      resourceLimitMemory: '4Gi',
-      resourceLimitEphemeralStorage: '16Gi',
-    ]) {
-      if (provider == 'aws') {
-        stage('Tunnel') {
-          bedrockRemoteTools.tinyWorkSishTunnel()
-        }
-      }
-
-      stage('Test') {
-        yarnInstall()
-        sh 'yarn ci'
-        grunt('list-changed-browser')
-        bedrockRemoteTools.withRemoteCreds(provider) {
-          int retry = provider == 'lambdatest' ? 1 : 0
-          withCredentials([string(credentialsId: 'devicefarm-testgridarn', variable: 'DF_ARN')]) {
-            runRemoteTests(name, browser, provider, platform, DF_ARN, bucket, buckets, runAll, retry, 180)
-          }
-        }
-      }
-    }
-  }
+  def bedrockCommand = "yarn grunt headless-auto";
+  runTests("chrome-headless", bedrockCommand, runAll);
 }
 
 def gitMerge(String primaryBranch) {
@@ -82,26 +51,94 @@ def gitMerge(String primaryBranch) {
   }
 }
 
-def props
-
 timestamps {
-  tinyPods.node([
-    resourceRequestCpu: '2',
+  // TinyMCE builds need more CPU and RAM (especially eslint)
+  // NOTE: Ensure not to go over 7.5 CPU/RAM due to EC2 node sizes and the jnlp container requirements
+  tinyPods.nodeBrowser([
+    resourceRequestCpu: '6',
     resourceRequestMemory: '4Gi',
     resourceLimitCpu: '7.5',
     resourceLimitMemory: '4Gi'
   ]) {
-    props = readProperties(file: 'build.properties')
+    def props = readProperties(file: 'build.properties')
+
     String primaryBranch = props.primaryBranch
     assert primaryBranch != null && primaryBranch != ""
+    def runAllTests = env.BRANCH_NAME == primaryBranch
 
-    stage('Merge') {
+    stage("Merge") {
       // cancel build if primary branch doesn't merge cleanly
       gitMerge(primaryBranch)
     }
 
-    stage('Install') {
+    def platforms = [
+      [ os: "windows", browser: "chrome" ],
+      [ os: "windows", browser: "firefox" ],
+      [ os: "windows", browser: "MicrosoftEdge" ],
+      [ os: "macos", browser: "safari" ],
+      [ os: "macos", browser: "chrome" ],
+      [ os: "macos", browser: "firefox" ]
+    ]
+
+    def cleanAndInstall = {
+      echo "Installing tools"
+      exec("git clean -fdx modules scratch js dist")
       yarnInstall()
+    }
+
+    def processes = [:]
+
+    // Browser tests
+    for (int i = 0; i < platforms.size(); i++) {
+      def platform = platforms.get(i)
+
+      def buckets = platform.buckets ?: 1
+      for (int bucket = 1; bucket <= buckets; bucket++) {
+        def suffix = buckets == 1 ? "" : "-" + bucket
+
+        // closure variable - don't inline
+        def c_bucket = bucket
+
+        def name = "${platform.os}-${platform.browser}${suffix}"
+
+        processes[name] = {
+          stage(name) {
+            node("bedrock-${platform.os}") {
+              echo("Bedrock tests for ${name}")
+
+              echo("Checking out code on build node: $NODE_NAME")
+              checkout(scm)
+
+              // windows tends to not have username or email set
+              tinyGit.addAuthorConfig()
+              gitMerge(primaryBranch)
+
+              cleanAndInstall()
+              exec("yarn ci")
+
+              echo("Running browser tests")
+              runBrowserTests(name, platform.browser, platform.os, c_bucket, buckets, runAllTests)
+            }
+          }
+        }
+      }
+    }
+
+    processes["headless-and-archive"] = {
+      stage("headless tests") {
+        runHeadlessTests(runAllTests)
+      }
+
+      if (env.BRANCH_NAME != primaryBranch) {
+        stage("Archive Build") {
+          exec("yarn tinymce-grunt prodBuild symlink:js")
+          archiveArtifacts artifacts: 'js/**', onlyIfSuccessful: true
+        }
+      }
+    }
+
+    stage("Install tools") {
+      cleanAndInstall()
     }
 
     stage("Validate changelog") {
@@ -109,67 +146,20 @@ timestamps {
       exec("yarn changie-merge")
     }
 
-    stage('Type check') {
+    stage("Type check") {
       withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
         exec("yarn ci-all-seq")
       }
     }
 
-    stage('Moxiedoc check') {
-      sh 'yarn tinymce-grunt shell:moxiedoc'
+    stage("Moxiedoc check") {
+      exec("yarn tinymce-grunt shell:moxiedoc")
     }
-  }
 
-  def platforms = [
-    [ browser: 'chrome', provider: 'aws', buckets: 2 ],
-    // [ browser: 'edge', provider: 'aws', buckets: 2 ],
-    [ browser: 'firefox', provider: 'aws', buckets: 2 ],
-    [ browser: 'edge', provider: 'lambdatest', buckets: 1 ],
-    [ browser: 'safari', provider: 'lambdatest', buckets: 1 ],
-    [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1],
-    // [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1]
-  ];
-
-  def processes = [:]
-  def runAllTests = env.BRANCH_NAME == props.primaryBranch
-
-  for (int i = 0; i < platforms.size(); i++) {
-    def platform = platforms.get(i)
-    def buckets = platform.buckets ?: 1
-    for (int bucket = 1; bucket <= buckets; bucket ++) {
-      def suffix = buckets == 1 ? "" : "-" + bucket
-      def s_bucket = "${bucket}"
-      def s_buckets = "${buckets}"
-      def name = "${platform.browser}-${platform.provider}${suffix}"
-      processes[name] = runTestPod(name, platform.browser, platform.provider, platform.os, s_bucket, s_buckets, runAllTests)
-    }
-  }
-
-  processes['headless'] = {
-    tinyPods.nodeBrowser([
-      resourceRequestCpu: '2',
-      resourceRequestMemory: '4Gi',
-      resourceRequestEphemeralStorage: '16Gi',
-      resourceLimitCpu: '7.5',
-      resourceLimitMemory: '4Gi',
-      resourceLimitEphemeralStorage: '16Gi',
-    ]) {
-      stage('Test-headless') {
-        yarnInstall()
-        withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
-          sh "yarn ci-all-seq"
-        }
-      }
-
-      stage('test') {
-        grunt('list-changed-headless')
-        runHeadlessTests(runAllTests)
-      }
-    }
-  }
-
-  stage('Run tests') {
-      echo "Running tests [runAll=${runAllTests}]"
+    stage("Run Tests") {
+      grunt("list-changed-headless list-changed-browser")
+      // Run all the tests in parallel
       parallel processes
+    }
   }
 }

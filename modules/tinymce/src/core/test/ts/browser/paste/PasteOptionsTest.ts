@@ -18,7 +18,7 @@ describe('browser.tinymce.core.paste.PasteOptionsTest', () => {
       toolbar: 'pastetext'
     });
     editor.focus();
-    await TinyUiActions.pWaitForUi(editor, 'button.tox-tbtn--enabled[title="Paste as text"]');
+    await TinyUiActions.pWaitForUi(editor, 'button.tox-tbtn--enabled[data-mce-name="pastetext"]');
     McEditor.remove(editor);
   });
 });

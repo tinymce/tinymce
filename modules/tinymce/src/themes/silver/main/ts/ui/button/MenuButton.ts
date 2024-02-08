@@ -50,11 +50,12 @@ const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonI
   })
 });
 
-const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Optional<string>, tabstopping = true): SketchSpec => {
+const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Optional<string>, tabstopping = true, btnName?: string): SketchSpec => {
   return renderCommonDropdown({
     text: spec.text,
     icon: spec.icon,
     tooltip: spec.tooltip,
+    ariaLabel: spec.tooltip,
     searchable: spec.search.isSome(),
     // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
     role,
@@ -92,7 +93,8 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
     ]
   },
   prefix,
-  backstage.shared);
+  backstage.shared,
+  btnName);
 };
 
 const getFetch = (items: StoredMenuItem[], getButton: () => MementoRecord, backstage: UiFactoryBackstage): FetchCallback => {

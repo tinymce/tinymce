@@ -1,5 +1,5 @@
 import { Cursors, RealClipboard, RealKeys } from '@ephox/agar';
-import { context, describe, it } from '@ephox/bedrock-client';
+import { before, context, describe, it } from '@ephox/bedrock-client';
 import { Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -16,6 +16,7 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
   const platform = PlatformDetection.detect();
   const os = platform.os;
   const browser = platform.browser;
+  const isChromeHeadless = () => navigator.userAgent.includes('HeadlessChrome');
 
   const lastBeforeInputEvent = Singleton.value<EditorEvent<InputEvent>>();
   const lastInputEvent = Singleton.value<EditorEvent<InputEvent>>();
@@ -53,6 +54,14 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
     TinySelections.setSelection(editor, target.startPath, target.soffset, target.finishPath, target.foffset);
     await RealClipboard.pPaste('iframe => body');
   };
+
+  before(function () {
+    // #TINY-10556: Chrome headless is producing an error about the dataTransfer not being
+    // in the right state but it works in non headless mode using the exact same Chrome version.
+    if (isChromeHeadless()) {
+      this.skip();
+    }
+  });
 
   it('TINY-7719: Wrapped elements are preserved in copy and paste (headings)', async () => {
     const editor = hook.editor();

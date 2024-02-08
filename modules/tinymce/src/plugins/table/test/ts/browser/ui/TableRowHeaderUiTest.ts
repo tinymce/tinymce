@@ -71,7 +71,7 @@ describe('browser.tinymce.plugins.table.ui.TableRowHeaderUiTest', () => {
     const editor = hook.editor();
     setEditorContentAndSelection(editor, 'tbody');
 
-    clickOnButton(editor, 'Row header');
+    clickOnButton(editor, 'tablerowheader');
 
     TinyAssertions.assertContent(editor, tableWithRowHeaders);
   });
@@ -89,7 +89,7 @@ describe('browser.tinymce.plugins.table.ui.TableRowHeaderUiTest', () => {
     const editor = hook.editor();
     setEditorContentAndSelection(editor, 'thead');
 
-    clickOnButton(editor, 'Row header');
+    clickOnButton(editor, 'tablerowheader');
 
     TinyAssertions.assertContent(editor, tableWithoutRowHeaders);
   });

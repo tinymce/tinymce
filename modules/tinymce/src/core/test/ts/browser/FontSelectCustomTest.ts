@@ -21,14 +21,14 @@ describe('browser.tinymce.core.FontSelectCustomTest', () => {
   }, []);
 
   const assertSelectBoxDisplayValue = (title: string, expectedValue: string) => {
-    const selectBox = UiFinder.findIn(SugarBody.body(), `*[title^="${title}"]`).getOrDie();
+    const selectBox = UiFinder.findIn(SugarBody.body(), `*[data-mce-name="${title}"]`).getOrDie();
     const value = Strings.trim(TextContent.get(selectBox) ?? '');
     assert.equal(value, expectedValue, 'Should be the expected display value');
   };
 
   it('Font family and font size on initial page load', () => {
-    assertSelectBoxDisplayValue('Font size', '12px');
-    assertSelectBoxDisplayValue('Font', 'Arial');
+    assertSelectBoxDisplayValue('fontsize', '12px');
+    assertSelectBoxDisplayValue('fontfamily', 'Arial');
   });
 
   it('Font family with spaces and numbers in the name with legacy font elements', () => {
@@ -37,8 +37,8 @@ describe('browser.tinymce.core.FontSelectCustomTest', () => {
     editor.focus();
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
     editor.nodeChanged();
-    assertSelectBoxDisplayValue('Font size', '8pt');
-    assertSelectBoxDisplayValue('Font', 'Bookshelf Symbol 7');
+    assertSelectBoxDisplayValue('fontsize', '8pt');
+    assertSelectBoxDisplayValue('fontfamily', 'Bookshelf Symbol 7');
   });
 
   it('Font family with spaces and numbers in the name', () => {
@@ -47,8 +47,8 @@ describe('browser.tinymce.core.FontSelectCustomTest', () => {
     editor.focus();
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     editor.nodeChanged();
-    assertSelectBoxDisplayValue('Font size', '12px');
-    assertSelectBoxDisplayValue('Font', 'Bookshelf Symbol 7');
+    assertSelectBoxDisplayValue('fontsize', '12px');
+    assertSelectBoxDisplayValue('fontfamily', 'Bookshelf Symbol 7');
   });
 
   it('Font family with quoted font names', () => {
@@ -57,7 +57,7 @@ describe('browser.tinymce.core.FontSelectCustomTest', () => {
     editor.focus();
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     editor.nodeChanged();
-    assertSelectBoxDisplayValue('Font size', '12px');
-    assertSelectBoxDisplayValue('Font', 'Bauhaus 93');
+    assertSelectBoxDisplayValue('fontsize', '12px');
+    assertSelectBoxDisplayValue('fontfamily', 'Bauhaus 93');
   });
 });

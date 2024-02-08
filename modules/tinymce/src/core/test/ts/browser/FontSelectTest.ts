@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.FontSelectTest', () => {
   const assertSelectBoxDisplayValue = (title: string, expectedValue: string) => {
-    const selectBox = UiFinder.findIn(SugarBody.body(), `*[title^="${title}"]`).getOrDie();
+    const selectBox = UiFinder.findIn(SugarBody.body(), `*[data-mce-name^="${title}"]`).getOrDie();
     const value = Strings.trim(TextContent.get(selectBox) ?? '');
     assert.equal(value, expectedValue, 'Should be the expected display value');
   };
@@ -33,8 +33,8 @@ describe('browser.tinymce.core.FontSelectTest', () => {
     ];
 
     it('TBA: Font family and font size on initial page load', () => {
-      assertSelectBoxDisplayValue('Font size', '12px');
-      assertSelectBoxDisplayValue('Font', 'Arial');
+      assertSelectBoxDisplayValue('fontsize', '12px');
+      assertSelectBoxDisplayValue('fontfamily', 'Arial');
     });
 
     it('TBA: Font family and font size on paragraph with no styles', () => {
@@ -43,8 +43,8 @@ describe('browser.tinymce.core.FontSelectTest', () => {
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
       editor.nodeChanged();
       // p content style is 12px which does not match any pt values in the font size select values
-      assertSelectBoxDisplayValue('Font size', '12px');
-      assertSelectBoxDisplayValue('Font', 'Arial');
+      assertSelectBoxDisplayValue('fontsize', '12px');
+      assertSelectBoxDisplayValue('fontfamily', 'Arial');
     });
 
     it('TBA: Font family and font size on heading with no styles', () => {
@@ -54,8 +54,8 @@ describe('browser.tinymce.core.FontSelectTest', () => {
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
       editor.nodeChanged();
       // h1 content style is 32px which matches 24pt in the font size select values so it should be converted
-      assertSelectBoxDisplayValue('Font size', '24pt');
-      assertSelectBoxDisplayValue('Font', 'Arial');
+      assertSelectBoxDisplayValue('fontsize', '24pt');
+      assertSelectBoxDisplayValue('fontfamily', 'Arial');
     });
 
     it('TBA: Font family and font size on paragraph with styles that do match font size select values', () => {
@@ -64,8 +64,8 @@ describe('browser.tinymce.core.FontSelectTest', () => {
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
       editor.nodeChanged();
       // the following should be converted and pick up 12.75pt, although there's a rounded 13pt in the dropdown as well
-      assertSelectBoxDisplayValue('Font size', '12.75pt');
-      assertSelectBoxDisplayValue('Font', 'Times');
+      assertSelectBoxDisplayValue('fontsize', '12.75pt');
+      assertSelectBoxDisplayValue('fontfamily', 'Times');
     });
 
     it('TBA: Font family and font size on paragraph with styles that do not match font size select values', () => {
@@ -75,8 +75,8 @@ describe('browser.tinymce.core.FontSelectTest', () => {
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
       editor.nodeChanged();
       // the following should stay as 18px because there's no matching pt value in the font size select values
-      assertSelectBoxDisplayValue('Font size', '18px');
-      assertSelectBoxDisplayValue('Font', 'Times');
+      assertSelectBoxDisplayValue('fontsize', '18px');
+      assertSelectBoxDisplayValue('fontfamily', 'Times');
     });
 
     it('TBA: Font family and font size on paragraph with legacy font elements', () => {
@@ -84,8 +84,8 @@ describe('browser.tinymce.core.FontSelectTest', () => {
       editor.setContent('<p><font face="Times" size="1">a</font></p>', { format: 'raw' });
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
       editor.nodeChanged();
-      assertSelectBoxDisplayValue('Font size', '8pt');
-      assertSelectBoxDisplayValue('Font', 'Times');
+      assertSelectBoxDisplayValue('fontsize', '8pt');
+      assertSelectBoxDisplayValue('fontfamily', 'Times');
     });
 
     // https://websemantics.uk/articles/font-size-conversion/
@@ -94,8 +94,8 @@ describe('browser.tinymce.core.FontSelectTest', () => {
       editor.setContent('<p style="font-family: Times; font-size: medium;">a</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
       editor.nodeChanged();
-      assertSelectBoxDisplayValue('Font size', '12pt');
-      assertSelectBoxDisplayValue('Font', 'Times');
+      assertSelectBoxDisplayValue('fontsize', '12pt');
+      assertSelectBoxDisplayValue('fontfamily', 'Times');
     });
 
     it('TINY-6291: xx-small will fall back to showing raw font size due to missing 7pt fontsize_format', () => {
@@ -104,8 +104,8 @@ describe('browser.tinymce.core.FontSelectTest', () => {
       editor.focus();
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
       editor.nodeChanged();
-      assertSelectBoxDisplayValue('Font size', 'xx-small');
-      assertSelectBoxDisplayValue('Font', 'Times');
+      assertSelectBoxDisplayValue('fontsize', 'xx-small');
+      assertSelectBoxDisplayValue('fontfamily', 'Times');
     });
 
     it('TBA: System font stack variants on a paragraph show "System Font" as the font name', () => {
@@ -114,7 +114,7 @@ describe('browser.tinymce.core.FontSelectTest', () => {
       Arr.each(systemFontStackVariants, (_, idx) => {
         TinySelections.setCursor(editor, [ idx, 0 ], 0);
         editor.nodeChanged();
-        assertSelectBoxDisplayValue('Font', 'System Font');
+        assertSelectBoxDisplayValue('fontfamily', 'System Font');
       });
     });
 
@@ -124,7 +124,7 @@ describe('browser.tinymce.core.FontSelectTest', () => {
       editor.focus();
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
       editor.nodeChanged();
-      assertSelectBoxDisplayValue('Font', '-apple-system,Arial');
+      assertSelectBoxDisplayValue('fontfamily', '-apple-system,Arial');
     });
   });
 
@@ -145,7 +145,7 @@ describe('browser.tinymce.core.FontSelectTest', () => {
       editor.setContent(testCase.html);
       TinySelections.setCursor(editor, testCase.path, testCase.offset);
       editor.nodeChanged();
-      assertSelectBoxDisplayValue('Font', testCase.expectedValue);
+      assertSelectBoxDisplayValue('fontfamily', testCase.expectedValue);
     };
 
     it('TINY-10290: Should show System Font for the specified custom stack', () => testCustomStack({

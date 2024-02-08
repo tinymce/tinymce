@@ -35,16 +35,16 @@ describe('browser.tinymce.plugins.link.SelectedLinkTest', () => {
     editor.setContent('<p><a href="http://tinymce.com">a</a> b <a href="http://tinymce.com">c</a></p>');
     // Check the link button is enabled (single link)
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
-    await TinyUiActions.pWaitForUi(editor, 'button[title="Insert/edit link"].tox-tbtn--enabled');
+    await TinyUiActions.pWaitForUi(editor, 'button[data-mce-name="link"].tox-tbtn--enabled');
     // Check the link button is enabled (collapsed in link)
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
-    await TinyUiActions.pWaitForUi(editor, 'button[title="Insert/edit link"].tox-tbtn--enabled');
+    await TinyUiActions.pWaitForUi(editor, 'button[data-mce-name="link"].tox-tbtn--enabled');
     // Check the link button is disabled (text)
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 3);
-    await TinyUiActions.pWaitForUi(editor, 'button[title="Insert/edit link"]:not(.tox-tbtn--enabled)');
+    await TinyUiActions.pWaitForUi(editor, 'button[data-mce-name="link"]:not(.tox-tbtn--enabled)');
     // Check the link button is disabled (multiple links)
     TinySelections.setSelection(editor, [ 0, 1 ], 0, [ 0, 1 ], 2);
-    await TinyUiActions.pWaitForUi(editor, 'button[title="Insert/edit link"]:not(.tox-tbtn--enabled)');
+    await TinyUiActions.pWaitForUi(editor, 'button[data-mce-name="link"]:not(.tox-tbtn--enabled)');
   });
 
   it('TINY-4867: openlink should be disabled when multiple links or plain text selected', async () => {
@@ -52,16 +52,16 @@ describe('browser.tinymce.plugins.link.SelectedLinkTest', () => {
     editor.setContent('<p><a href="http://tinymce.com">a</a> b <a href="http://tinymce.com">c</a></p>');
     // Check the open link button is enabled (single link)
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
-    await TinyUiActions.pWaitForUi(editor, 'button[title="Open link"]:not(.tox-tbtn--disabled)');
+    await TinyUiActions.pWaitForUi(editor, 'button[data-mce-name="openlink"]:not(.tox-tbtn--disabled)');
     // Check the open link button is enabled (collapsed in link)
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
-    await TinyUiActions.pWaitForUi(editor, 'button[title="Open link"]:not(.tox-tbtn--disabled)');
+    await TinyUiActions.pWaitForUi(editor, 'button[data-mce-name="openlink"]:not(.tox-tbtn--disabled)');
     // Check the open link button is disabled (text)
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 3);
-    await TinyUiActions.pWaitForUi(editor, 'button[title="Open link"].tox-tbtn--disabled');
+    await TinyUiActions.pWaitForUi(editor, 'button[data-mce-name="openlink"].tox-tbtn--disabled');
     // Check the open link button is disabled (multiple links)
     TinySelections.setSelection(editor, [ 0, 1 ], 0, [ 0, 1 ], 2);
-    await TinyUiActions.pWaitForUi(editor, 'button[title="Open link"].tox-tbtn--disabled');
+    await TinyUiActions.pWaitForUi(editor, 'button[data-mce-name="openlink"].tox-tbtn--disabled');
   });
 
   it('TINY-4867: unlink should be enabled when single link or multiple links selected', async () => {
@@ -69,15 +69,15 @@ describe('browser.tinymce.plugins.link.SelectedLinkTest', () => {
     editor.setContent('<p><a href="http://tinymce.com">a</a> b <a href="http://tinymce.com">c</a></p>');
     // Check the unlink button is enabled (single link)
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 3);
-    await TinyUiActions.pWaitForUi(editor, 'button[title="Remove link"]:not(.tox-tbtn--disabled)');
+    await TinyUiActions.pWaitForUi(editor, 'button[data-mce-name="unlink"]:not(.tox-tbtn--disabled)');
     // Check the unlink button is enabled (collapsed in link)
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
-    await TinyUiActions.pWaitForUi(editor, 'button[title="Remove link"]:not(.tox-tbtn--disabled)');
+    await TinyUiActions.pWaitForUi(editor, 'button[data-mce-name="unlink"]:not(.tox-tbtn--disabled)');
     // Check the unlink button is disabled (text)
     TinySelections.setSelection(editor, [ 0, 1 ], 0, [ 0, 1 ], 2);
-    await TinyUiActions.pWaitForUi(editor, 'button[title="Remove link"].tox-tbtn--disabled');
+    await TinyUiActions.pWaitForUi(editor, 'button[data-mce-name="unlink"].tox-tbtn--disabled');
     // Check the unlink button is enabled (multiple links)
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
-    await TinyUiActions.pWaitForUi(editor, 'button[title="Remove link"]:not(.tox-tbtn--disabled)');
+    await TinyUiActions.pWaitForUi(editor, 'button[data-mce-name="unlink"]:not(.tox-tbtn--disabled)');
   });
 });

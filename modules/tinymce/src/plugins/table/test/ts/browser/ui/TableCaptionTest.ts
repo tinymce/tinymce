@@ -108,7 +108,7 @@ describe('browser.tinymce.plugins.table.ui.TableCaptionTest', () => {
     }
 
     if (toolbar) {
-      clickOnButton(editor, 'Table caption');
+      clickOnButton(editor, 'tablecaption');
     } else {
       await pClickOnMenuItem(editor, 'Table caption');
     }

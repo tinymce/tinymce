@@ -127,7 +127,7 @@ export const createAutocompleteItems = (
               itemResponse,
               sharedBackstage,
               {
-                itemBehaviours: tooltipBehaviour(d.meta, sharedBackstage),
+                itemBehaviours: tooltipBehaviour(d.meta, sharedBackstage, Optional.none()),
                 cardText: {
                   matchText,
                   highlightOn

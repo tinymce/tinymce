@@ -49,7 +49,7 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
   const shouldStyleWithCss = Options.shouldStyleWithCss(editor);
   const hasAdvancedTableTab = Options.hasAdvancedTableTab(editor);
 
-  if (!Type.isUndefined(data.class)) {
+  if (!Type.isUndefined(data.class) && data.class !== 'mce-no-match') {
     attrs.class = data.class;
   }
 
@@ -106,10 +106,6 @@ const onSubmitTableForm = (editor: Editor, tableElm: HTMLTableElement | null | u
   const modifiedData = Obj.filter(data, (value, key) => oldData[key as keyof TableData] !== value);
 
   api.close();
-
-  if (data.class === '') {
-    delete data.class;
-  }
 
   editor.undoManager.transact(() => {
     if (!tableElm) {
@@ -190,9 +186,9 @@ const open = (editor: Editor, insertNewTable: boolean): void => {
     }
   }
 
-  const classes = UiUtils.buildListItems(Options.getTableClassList(editor));
+  const classes = UiUtils.buildClassList(Options.getTableClassList(editor));
 
-  if (classes.length > 0) {
+  if (classes.isSome()) {
     if (data.class) {
       data.class = data.class.replace(/\s*mce\-item\-table\s*/g, '');
     }
@@ -201,7 +197,7 @@ const open = (editor: Editor, insertNewTable: boolean): void => {
   const generalPanel: Dialog.GridSpec = {
     type: 'grid',
     columns: 2,
-    items: TableDialogGeneralTab.getItems(editor, classes, insertNewTable)
+    items: TableDialogGeneralTab.getItems(editor, classes.getOr([]), insertNewTable)
   };
 
   const nonAdvancedForm = (): Dialog.PanelSpec => ({

@@ -18,14 +18,14 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplacePrevNextTest', () =
   const body = SugarBody.body();
 
   const pAssertButtonsEnabled = async () => {
-    await UiFinder.pWaitFor('next button enabled', body, 'button[title="Next"]:not([disabled])');
-    await UiFinder.pWaitFor('prev button enabled', body, 'button[title="Previous"]:not([disabled])');
-    await UiFinder.pWaitFor('replace button enabled', body, 'button[title="Replace"]:not([disabled])');
+    await UiFinder.pWaitFor('next button enabled', body, 'button[data-mce-name="Next"]:not([disabled])');
+    await UiFinder.pWaitFor('prev button enabled', body, 'button[data-mce-name="Previous"]:not([disabled])');
+    await UiFinder.pWaitFor('replace button enabled', body, 'button[data-mce-name="Replace"]:not([disabled])');
   };
 
   const pAssertNextPrevButtonsDisabled = async () => {
-    await UiFinder.pWaitFor('next button disabled', body, 'button[title="Next"][disabled]');
-    await UiFinder.pWaitFor('prev button disabled', body, 'button[title="Previous"][disabled]');
+    await UiFinder.pWaitFor('next button disabled', body, 'button[data-mce-name="Next"][disabled]');
+    await UiFinder.pWaitFor('prev button disabled', body, 'button[data-mce-name="Previous"][disabled]');
   };
 
   it('TBA: Test Prev and Next buttons become enabled and disabled at right places when multiple matches exist', async () => {
@@ -58,7 +58,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplacePrevNextTest', () =
     await pAssertNextPrevButtonsDisabled();
 
     // Ensure the replace button is still enabled, for the last match
-    await UiFinder.pWaitFor('wait for replace button to be enabled', body, 'button[title="Replace"]:not([disabled])');
+    await UiFinder.pWaitFor('wait for replace button to be enabled', body, 'button[data-mce-name="Replace"]:not([disabled])');
     TinyAssertions.assertContent(editor, '<p>squid squid fish</p>');
   });
 });

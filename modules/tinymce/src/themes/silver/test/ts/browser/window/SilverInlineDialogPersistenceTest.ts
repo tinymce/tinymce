@@ -145,7 +145,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPersistenceTest
             const editor = hook.editor();
             const api = DialogUtils.open(editor, dialogSpec, { inline: dialogLocation.location, persistent: persistentMode.persistent });
             await TinyUiActions.pWaitForDialog(editor);
-            Mouse.trueClickOn(TinyDom.container(editor), '.tox-tbtn[title="Bold"]');
+            Mouse.trueClickOn(TinyDom.container(editor), '.tox-tbtn[data-mce-name="bold"]');
             assertDialogVisibility(persistentMode.persistent);
             api.close();
           });

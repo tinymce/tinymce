@@ -39,7 +39,7 @@ const structWithTitleAndIconAndText = (d: TitleWithTextAndIconItem): ApproxStruc
   (s, str, arr) => s.element('div', {
     classes: [ arr.has('tox-collection__item') ],
     attrs: {
-      title: str.is(d.title)
+      'aria-label': str.is(d.title)
     },
     children: [
       s.element('div', {
@@ -59,7 +59,7 @@ const structWithTitleAndText = (d: TitleWithTextItem): ApproxStructure.Builder<S
   (s, str, arr) => s.element('div', {
     classes: [ arr.has('tox-collection__item') ],
     attrs: {
-      title: str.is(d.title)
+      'aria-label': str.is(d.title)
     },
     children: [
       s.element('div', {
@@ -73,7 +73,7 @@ const structWithTitleAndIcon = (d: TitleWithIconItem): ApproxStructure.Builder<S
   (s, str, arr) => s.element('div', {
     classes: [ arr.has('tox-collection__item') ],
     attrs: {
-      title: str.is(d.title)
+      'aria-label': str.is(d.title)
     },
     children: [
       s.element('div', {

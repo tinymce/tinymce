@@ -12,7 +12,8 @@ const setupButtons = (editor: Editor): void => {
     icon: 'link',
     tooltip: 'Insert/edit link',
     onAction: Actions.openDialog(editor),
-    onSetup: Actions.toggleLinkState(editor)
+    onSetup: Actions.toggleLinkState(editor),
+    shortcut: 'Meta+K'
   });
 
   editor.ui.registry.addButton('openlink', {
@@ -131,7 +132,7 @@ const setupContextToolbars = (editor: Editor): void => {
             text,
             title: Optional.none(),
             rel: Optional.none(),
-            target: Optional.none(),
+            target: Optional.from(Options.getDefaultLinkTarget(editor)),
             class: Optional.none()
           });
           collapseSelectionToEnd(editor);
