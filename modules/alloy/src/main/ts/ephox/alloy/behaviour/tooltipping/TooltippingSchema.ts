@@ -12,7 +12,6 @@ export default [
   FieldSchema.required('tooltipDom'),
   FieldSchema.defaulted('exclusive', true),
   FieldSchema.defaulted('tooltipComponents', []),
-  FieldSchema.optionString('tooltippingSelector'),
   FieldSchema.defaultedFunction('delayForShow', Fun.constant(300)),
   FieldSchema.defaultedFunction('delayForHide', Fun.constant(300)),
   FieldSchema.defaultedStringEnum('mode', 'normal', [ 'normal', 'follow-highlight', 'children-keyboard-focus' ]),

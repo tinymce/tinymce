@@ -141,7 +141,6 @@ export const renderCollection = (
           ...providersBackstage.tooltips.getConfig({
             tooltipText: ''
           }),
-          tooltippingSelector: '[data-mce-tooltip]',
           mode: 'children-keyboard-focus',
           onShow: (comp) => {
             SelectorFind.descendant(comp.element, '.' + ItemClasses.activeClass + '[data-mce-tooltip]').each((current) => {

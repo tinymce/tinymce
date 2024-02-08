@@ -16,7 +16,6 @@ export interface TooltippingConfig extends BehaviourConfigDetail {
   lazySink: LazySink;
   tooltipDom: RawDomSchema;
   tooltipComponents: AlloySpec[];
-  tooltippingSelector: Optional<string>;
   exclusive: boolean;
   mode: 'normal' | 'follow-highlight' | 'children-keyboard-focus';
   delayForShow: () => number;
@@ -31,7 +30,6 @@ export interface TooltippingConfigSpec extends BehaviourConfigSpec {
   lazySink: LazySink;
   tooltipDom: RawDomSchema;
   tooltipComponents?: AlloySpec[];
-  tooltippingSelector?: string;
   exclusive?: boolean;
   mode?: 'normal' | 'follow-highlight' | 'children-keyboard-focus';
   delayForShow?: () => number;

@@ -1,4 +1,4 @@
-import { Arr, Optionals } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { Focus, Selectors } from '@ephox/sugar';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -96,18 +96,26 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
     } else {
       return [
         AlloyEvents.run(NativeEvents.focusin(), (comp, se) => {
-          Optionals.lift2(Focus.search(comp.element), tooltipConfig.tooltippingSelector, (_, tooltipSelector) => {
-            if (Selectors.is(se.event.target, tooltipSelector)) {
-              AlloyTriggers.emit(comp, ImmediateShowTooltipEvent);
+          Focus.search(comp.element).each((_) => {
+            if (Selectors.is(se.event.target, '[data-mce-tooltip]')) {
+              state.getTooltip().fold(() => {
+                AlloyTriggers.emit(comp, ImmediateShowTooltipEvent);
+              },
+              (tooltip) => {
+                // Calling on show again to refresh the tooltip when it's already showing
+                if (state.isShowing()) {
+                  tooltipConfig.onShow(comp, tooltip);
+                }
+              });
             }
           });
         }),
         AlloyEvents.run(SystemEvents.postBlur(), (comp) => {
-          if (Focus.search(comp.element).isNone()) {
+          Focus.search(comp.element).fold(() => {
             AlloyTriggers.emit(comp, ImmediateHideTooltipEvent);
-          } else {
+          }, (_) => {
             reposition(comp);
-          }
+          });
         }),
       ];
     }
