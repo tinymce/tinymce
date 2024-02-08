@@ -52,10 +52,10 @@
   outline: none;
 }
 
-.keyboard-focus-outline-mixin(@_box-shadow: @keyboard-focus-outline) {
+.keyboard-focus-outline-mixin(@_inset: ~'') {
   border-radius: @toolbar-button-border-radius;
   bottom: 0;
-  box-shadow: @_box-shadow;
+  box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color @_inset;
   content: '';
   left: 0;
   position: absolute;
