@@ -61,8 +61,8 @@ describe('browser.tinymce.themes.silver.editor.bespoke.StyleSelectFormatNamesTes
       classes: [ arr.has('tox-collection__group') ],
       children: Arr.map(expectedItems, (expected) => s.element('div', {
         attrs: {
-          role: str.is('menuitemcheckbox'),
-          title: str.is(expected.title)
+          'role': str.is('menuitemcheckbox'),
+          'aria-label': str.is(expected.title)
         },
         children: [
           s.element('div', {

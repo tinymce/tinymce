@@ -37,8 +37,7 @@ const renderColorStructure = (item: ItemStructureSpec, providerBackstage: UiFact
   const attributes = item.ariaLabel.map(
     (al) => ({
       'aria-label': providerBackstage.translate(al),
-      // TINY-10453: Remove this tooltip, we don't want duplicate tooltips and until we figured a better way to test, it's here now so that tests would pass
-      'title': providerBackstage.translate(al)
+      'data-mce-name': al
     })
   ).getOr({ });
 
@@ -89,10 +88,8 @@ const renderColorStructure = (item: ItemStructureSpec, providerBackstage: UiFact
 };
 
 const renderItemDomStructure = (ariaLabel: Optional<string>): RawDomSchema => {
-  const domTitle = ariaLabel.map((label): { attributes?: { title: string; id?: string; 'aria-label': string }} => ({
+  const domTitle = ariaLabel.map((label): { attributes?: { id?: string; 'aria-label': string }} => ({
     attributes: {
-      // TINY-10453: Remove this tooltip, we don't want duplicate tooltips and until we figured a better way to test, it's here now so that tests would pass
-      'title': I18n.translate(label),
       'id': Id.generate('menu-item'),
       'aria-label': I18n.translate(label)
     }

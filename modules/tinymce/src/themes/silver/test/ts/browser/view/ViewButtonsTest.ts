@@ -89,13 +89,13 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsTest', () => {
       editor.execCommand('ToggleView', false, name);
     };
 
-    const clickViewButton = (editor: Editor, tooltip: string) => TinyUiActions.clickOnUi(editor, `.tox-view button[title='${tooltip}']`);
+    const clickViewButton = (editor: Editor, tooltip: string) => TinyUiActions.clickOnUi(editor, `.tox-view button[aria-label='${tooltip}']`);
 
-    const getSvg = (editor: Editor, name: string) => UiFinder.findIn<HTMLElement>(TinyDom.container(editor), `.tox-view button[title='${name}'] svg`).getOrDie().dom.innerHTML;
+    const getSvg = (editor: Editor, name: string) => UiFinder.findIn<HTMLElement>(TinyDom.container(editor), `.tox-view button[aria-label='${name}'] svg`).getOrDie().dom.innerHTML;
 
     const getButtonByTitle = (title: string) => {
       const editor = hook.editor();
-      return UiFinder.findIn<HTMLElement>(TinyDom.container(editor), `.tox-view button[title='${title}']`).getOrDie();
+      return UiFinder.findIn<HTMLElement>(TinyDom.container(editor), `.tox-view button[aria-label='${title}']`).getOrDie();
     };
 
     it('TINY-9523: tooglable button can be toggled with the correct implementation', () => {
@@ -121,7 +121,7 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsTest', () => {
     it('TINY-9616: if is active is true the button should have ViewButtonClasses.Ticked', async () => {
       const editor = hook.editor();
       toggleView('myview2');
-      await UiFinder.pWaitFor('buttons should be showed', TinyDom.container(editor), '[title="button-active-true"]');
+      await UiFinder.pWaitFor('buttons should be showed', TinyDom.container(editor), '[aria-label="button-active-true"]');
 
       const buttonActiveTrue = getButtonByTitle('button-active-true');
       assert.isTrue(Class.has(buttonActiveTrue, ViewButtonClasses.Ticked), 'button with active true should have ticked class');

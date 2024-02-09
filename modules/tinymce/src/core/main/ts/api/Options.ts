@@ -845,7 +845,7 @@ const register = (editor: Editor): void => {
 
   registerOption('convert_unsafe_embeds', {
     processor: 'boolean',
-    default: false
+    default: true
   });
 
   // These options must be registered later in the init sequence due to their default values

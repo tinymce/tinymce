@@ -116,7 +116,7 @@ const renderMoreToolbarCommon = (toolbarSpec: MoreDrawerToolbarSpec) => {
         primary: false,
         buttonType: Optional.none(),
         borderless: false
-      }, Optional.none(), toolbarSpec.providers)
+      }, Optional.none(), toolbarSpec.providers, [], 'overflow-button')
     },
     splitToolbarBehaviours: getToolbarBehaviours(toolbarSpec, modeName)
   };

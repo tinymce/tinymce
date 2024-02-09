@@ -8,8 +8,8 @@ import Editor from 'tinymce/core/api/Editor';
 describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemTest', () => {
 
   const codeMenuItemSelector = '[role="menuitem"]:contains("Code")';
-  const preferencesMenuItemSelector = '[title="Preferences"]';
-  const servicesMenuItemSelector = '[title="Services"]';
+  const preferencesMenuItemSelector = '[aria-label="Preferences"]';
+  const servicesMenuItemSelector = '[aria-label="Services"]';
   const highlightedCodeMenuSelector = '.tox-mbtn--active .tox-mbtn__select-label:contains("Code")';
   const highlightedEditMenuSelector = '.tox-mbtn--active .tox-mbtn__select-label:contains("Edit")';
   const disabledClass = '.tox-collection__item--state-disabled';

@@ -48,7 +48,7 @@ describe('browser.tinymce.themes.silver.window.SilverDialogBlockTest', () => {
   };
 
   const clickableButtonSelector = 'button:contains("Clickable?")';
-  const closeButtonSelector = '.tox-button[title="Close"]';
+  const closeButtonSelector = '.tox-button[data-mce-name="close"]';
 
   const pClick = async (editor: Editor, selector: string) => {
     const button = await TinyUiActions.pWaitForUi(editor, selector) as SugarElement<HTMLButtonElement>;

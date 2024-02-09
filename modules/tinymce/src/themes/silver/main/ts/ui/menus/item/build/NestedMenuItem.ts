@@ -23,7 +23,7 @@ const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse,
     },
     setTooltip: (tooltip: string) => {
       const translatedTooltip = providersBackstage.translate(tooltip);
-      Attribute.setAll(component.element, { 'aria-label': translatedTooltip, 'title': translatedTooltip });
+      Attribute.set(component.element, 'aria-label', translatedTooltip);
     }
   });
 

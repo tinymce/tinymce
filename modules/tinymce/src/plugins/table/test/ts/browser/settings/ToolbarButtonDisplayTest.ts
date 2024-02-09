@@ -14,13 +14,13 @@ describe('browser.tinymce.plugins.table.ToolbarButtonDisplayTest', () => {
   const pDisplayTest = async (startPath: number[], startOffset: number, endPath: number[], endOffset: number, shouldBeEnabled: boolean) => {
     const editor = hook.editor();
     editor.setContent('<p>A</p><table><tbody><tr><td>B</td></tr></tbody></table><p>C</p>');
-    await TinyUiActions.pWaitForUi(editor, '.tox-tbtn--disabled[title="Table caption"]');
+    await TinyUiActions.pWaitForUi(editor, '.tox-tbtn--disabled[data-mce-name="tablecaption"]');
     TinySelections.setSelection(editor, startPath, startOffset, endPath, endOffset);
 
     if (shouldBeEnabled) {
-      await TinyUiActions.pWaitForUi(editor, '.tox-tbtn[title="Table caption"]:not(.tox-tbtn-disabled)');
+      await TinyUiActions.pWaitForUi(editor, '.tox-tbtn[data-mce-name="tablecaption"]:not(.tox-tbtn-disabled)');
     } else {
-      await TinyUiActions.pWaitForUi(editor, '.tox-tbtn--disabled[title="Table caption"]');
+      await TinyUiActions.pWaitForUi(editor, '.tox-tbtn--disabled[data-mce-name="tablecaption"]');
     }
   };
 

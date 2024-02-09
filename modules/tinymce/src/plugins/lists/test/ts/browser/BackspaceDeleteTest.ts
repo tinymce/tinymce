@@ -835,19 +835,30 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
 
   it('TINY-10133: Backspace at the beginning of `summary` inside li', () => {
     const editor = hook.editor();
-    editor.setContent('<ul>' +
+    const content = '<ul>' +
         '<li>1</li>' +
         '<li><details><summary>2a</summary><p>2b</p></details></li>' +
         '<li>3</li>' +
-      '</ul>');
+      '</ul>';
+    editor.setContent(content);
     TinySelections.setCursor(editor, [ 0, 1, 0, 0 ], 0);
     editor.plugins.lists.backspaceDelete(false);
 
-    TinyAssertions.assertContent(editor, '<ul>' +
-        '<li>1<details><summary>2a</summary><p>2b</p></details></li>' +
-        '<li>3</li>' +
-      '</ul>');
-    TinyAssertions.assertCursor(editor, [ 0, 0, 1, 0, 0 ], 0);
+    TinyAssertions.assertContent(editor, content);
+    TinyAssertions.assertCursor(editor, [ 0, 1, 0, 0 ], 0);
+  });
+
+  it('TINY-10303: Backspace at the beginning of the empty `summary` inside li', () => {
+    const editor = hook.editor();
+    const content = '<ul>' +
+        '<li>Hello<details><summary></summary><p>2b</p></details></li>' +
+      '</ul>';
+    editor.setContent(content);
+    TinySelections.setCursor(editor, [ 0, 0, 1, 0 ], 0);
+    editor.plugins.lists.backspaceDelete(false);
+
+    TinyAssertions.assertContent(editor, content);
+    TinyAssertions.assertCursor(editor, [ 0, 0, 1, 0 ], 0);
   });
 
   it('TINY-10133: Delete at the end of li content when next li contains `details`', () => {

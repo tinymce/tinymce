@@ -280,6 +280,13 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
       }
     });
 
+    // TINY-10640: Firefox was flaking in tests and was not properly dismissing the toolbar could not reproduce it manually but adding this seems to resolve it.
+    editor.on('ExecCommand', ({ command }) => {
+      if (command.toLowerCase() === 'toggleview') {
+        close();
+      }
+    });
+
     editor.on('AfterProgressState', (event) => {
       if (event.state) {
         close();

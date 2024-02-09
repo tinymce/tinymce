@@ -15,7 +15,7 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
     const editor = hook.editor();
     editor.setContent('a');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
-    TinyUiActions.clickOnToolbar(editor, 'button[title="Right to left"]');
+    TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="rtl"]');
     TinyAssertions.assertContent(editor, '<p dir="rtl">a</p>');
   });
 
@@ -23,7 +23,7 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
     const editor = hook.editor();
     editor.setContent('<p dir="rtl">a</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
-    TinyUiActions.clickOnToolbar(editor, 'button[title="Left to right"]');
+    TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="ltr"]');
     TinyAssertions.assertContent(editor, '<p>a</p>'); // as the default dir is ltr it just removes the dir attr
   });
 
@@ -31,9 +31,9 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
     const editor = hook.editor();
     editor.setContent('<p>foo</p><p>bar</p>');
     TinySelections.setSelection(editor, [ 0 ], 0, [ 1 ], 1);
-    TinyUiActions.clickOnToolbar(editor, 'button[title="Right to left"]');
+    TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="rtl"]');
     TinyAssertions.assertContent(editor, '<p dir="rtl">foo</p><p dir="rtl">bar</p>');
-    TinyUiActions.clickOnToolbar(editor, 'button[title="Left to right"]');
+    TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="ltr"]');
     TinyAssertions.assertContent(editor, '<p>foo</p><p>bar</p>');
   });
 
@@ -41,9 +41,9 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
     const editor = hook.editor();
     editor.setContent('<ul><li>foo</li><li>bar</li></ul>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
-    TinyUiActions.clickOnToolbar(editor, 'button[title="Right to left"]');
+    TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="rtl"]');
     TinyAssertions.assertContent(editor, '<ul dir="rtl"><li>foo</li><li>bar</li></ul>');
-    TinyUiActions.clickOnToolbar(editor, 'button[title="Left to right"]');
+    TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="ltr"]');
     TinyAssertions.assertContent(editor, '<ul><li>foo</li><li>bar</li></ul>');
   });
 
@@ -62,7 +62,7 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
       '</ul>'
     );
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
-    TinyUiActions.clickOnToolbar(editor, 'button[title="Right to left"]');
+    TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="rtl"]');
     TinyAssertions.assertContent(editor,
       '<ul dir="rtl">' +
         '<li>foo' +
@@ -90,7 +90,7 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
     '</ul>';
     editor.setContent(editorContent);
     TinySelections.setSelection(editor, [ 0, 0, 1, 0 ], 0, [ 0, 0, 1, 0 ], 1); // foo
-    TinyUiActions.clickOnToolbar(editor, 'button[title="Left to right"]');
+    TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="ltr"]');
     TinyAssertions.assertContent(editor, editorContent);
   });
 
@@ -107,7 +107,7 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
       '</ul>'
     );
     TinySelections.setSelection(editor, [ 0, 0, 1, 0 ], 0, [ 0, 0, 1, 0 ], 1); // foo
-    TinyUiActions.clickOnToolbar(editor, 'button[title="Right to left"]');
+    TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="rtl"]');
     TinyAssertions.assertContent(editor,
       '<ul dir="rtl">' +
         '<li dir="ltr">ini' +
@@ -124,9 +124,9 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
     const editor = hook.editor();
     editor.setContent('<div dir="ltr"><p>foo</p><p>bar</p></div>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
-    TinyUiActions.clickOnToolbar(editor, 'button[title="Right to left"]');
+    TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="rtl"]');
     TinyAssertions.assertContent(editor, '<div dir="ltr"><p dir="rtl">foo</p><p>bar</p></div>');
-    TinyUiActions.clickOnToolbar(editor, 'button[title="Left to right"]');
+    TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="ltr"]');
     TinyAssertions.assertContent(editor, '<div dir="ltr"><p>foo</p><p>bar</p></div>');
   });
 
@@ -143,7 +143,7 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
       '</div>'
     );
     TinySelections.setSelection(editor, [ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 1); // foo
-    TinyUiActions.clickOnToolbar(editor, 'button[title="Right to left"]');
+    TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="rtl"]');
     TinyAssertions.assertContent(editor,
       '<div dir="rtl">' +
         '<div id="target-elm" dir="ltr">' +
@@ -154,7 +154,7 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
         '</div>' +
       '</div>'
     );
-    TinyUiActions.clickOnToolbar(editor, 'button[title="Left to right"]');
+    TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="ltr"]');
     TinyAssertions.assertContent(editor,
       '<div dir="rtl">' +
         '<div id="target-elm" dir="ltr">' +

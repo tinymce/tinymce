@@ -10,20 +10,37 @@
 
 .tox {
   .tox-number-input {
+    background: @toolbar-button-bespoke-background-color;
     border-radius: @toolbar-button-border-radius;
     display: flex;
     margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0;
-    padding: 0 @toolbar-button-select-padding;
+    position: relative;
     width: auto;
 
+    &:focus {
+      background: @toolbar-button-bespoke-background-color; // Prevent toolbar button focus background to override bespoke background
+    }
+
+    &:focus::after {
+      .keyboard-focus-outline-mixin();
+    }
+
     .tox-input-wrapper {
-      background: @toolbar-button-bespoke-background-color;
       display: flex;
       pointer-events: none;
+      position: relative;
       text-align: center;
 
       &:focus {
-        background: @toolbar-button-focus-background-color;
+        z-index: 1; // Ensure focus outline is on top of other buttons
+
+        &::after {
+          .keyboard-focus-outline-mixin();
+        }
+      }
+
+      &:has(input:focus)::after {
+        .keyboard-focus-outline-mixin();
       }
     }
 
@@ -33,16 +50,12 @@
       font-size: @toolbar-number-input-input-wrapper-font-size;
       margin: @toolbar-number-input-button-margin 0;
       pointer-events: all;
+      position: relative;
       width: @toolbar-number-input-input-wrapper-width;
 
       &:hover {
         background: @toolbar-button-hover-background-color;
         color: @toolbar-button-hover-text-color;
-      }
-
-      &:focus {
-        background: @color-white;
-        color: @color-black;
       }
 
       &:disabled {
@@ -55,9 +68,9 @@
     }
 
     button {
-      background: @toolbar-button-bespoke-background-color;
       color: @toolbar-button-text-color;
       height: @toolbar-button-height;
+      position: relative;
       text-align: center;
       width: @toolbar-number-input-button-width;
 
@@ -69,7 +82,12 @@
       }
 
       &:focus {
-        background: @toolbar-button-focus-background-color;
+        background: @toolbar-button-bespoke-background-color;
+        z-index: 1; // Ensure focus outline is on top of other buttons
+
+        &::after {
+          .keyboard-focus-outline-mixin();
+        }
       }
 
       &:hover {
@@ -118,6 +136,6 @@
 
   .tox-number-input:focus:not(:active) > button,
   .tox-number-input:focus:not(:active) > .tox-input-wrapper {
-    background: @toolbar-button-focus-background-color;
+    background: @toolbar-button-bespoke-background-color;
   }
 }

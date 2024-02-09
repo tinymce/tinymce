@@ -129,7 +129,7 @@ const getSpec = (editor: Editor): SelectSpec => {
 };
 
 const createFontSizeButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
-  createSelectButton(editor, backstage, getSpec(editor), btnTooltip, 'FontSizeTextUpdate');
+  createSelectButton(editor, backstage, getSpec(editor), btnTooltip, 'FontSizeTextUpdate', 'fontsize');
 
 const getConfigFromUnit = (unit: string): Config => {
   const baseConfig = { step: 1 };
@@ -180,7 +180,7 @@ const getNumberInputSpec = (editor: Editor): NumberInputSpec => {
 };
 
 const createFontSizeInputButton = (editor: Editor, backstage: UiFactoryBackstage): AlloySpec =>
-  createBespokeNumberInput(editor, backstage, getNumberInputSpec(editor));
+  createBespokeNumberInput(editor, backstage, getNumberInputSpec(editor), 'fontsizeinput');
 
 // TODO: Test this!
 const createFontSizeMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {

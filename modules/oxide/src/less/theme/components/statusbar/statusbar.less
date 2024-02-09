@@ -3,13 +3,14 @@
 //
 
 @statusbar-background-color: @background-color;
-@statusbar-focus-background-color: multiply(white, contrast(@background-color, fade(@color-black, 15), fade(@color-black, 85)));
+@statusbar-focus-background-color: transparent;
 @statusbar-font-size: @font-size-sm;
 @statusbar-font-weight: @font-weight-normal;
 @statusbar-height: 25px;
 @statusbar-padding-x: @pad-sm;
 @statusbar-separator-color: @tinymce-separator-color;
 @statusbar-text-color: contrast(@statusbar-background-color, @text-color-muted, fade(@color-white, 75));
+@statusbar-focus-text-color: @text-color;
 @statusbar-text-transform: none;
 @statusbar-not-disabled-selector: ~'&:not(:disabled):not([aria-disabled=true])';
 @statusbar-logo-color: fade(@text-color, 80);
@@ -37,7 +38,6 @@
   .tox-statusbar__path {
     display: flex;
     flex: 1 1 auto;
-    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
@@ -56,7 +56,6 @@
     display: flex;
     flex: 1 1 auto;
     justify-content: space-between;
-    overflow: hidden;
 
     @media @breakpoint-gt-sm {
       &.tox-statusbar__text-container-3-cols > .tox-statusbar__help-text,
@@ -105,14 +104,19 @@
   .tox-statusbar__path-item,
   .tox-statusbar__wordcount {
     color: @statusbar-text-color;
+    position: relative;
     text-decoration: none;
 
     &:hover,
     &:focus {
       @{statusbar-not-disabled-selector} {
-        color: @text-color;
+        color: @statusbar-focus-text-color;
         cursor: pointer;
       }
+    }
+
+    &:focus-visible::after {
+      .keyboard-focus-outline-mixin();
     }
   }
 
@@ -141,22 +145,34 @@
     display: flex;
     flex: 0 0 auto;
     justify-content: flex-end;
-    margin-left: auto;
-    margin-right: -@statusbar-padding-x;
-    padding-bottom: 3px;
-    padding-left: 1ch;
-    padding-right: 3px;
+    margin-bottom: 3px;
+    margin-left: @pad-xs;
+    margin-right: calc(3px - @statusbar-padding-x);
+    margin-top: 3px;
+    padding-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    position: relative;
 
     svg {
       display: block;
       fill: @statusbar-resize-handle-color;
     }
 
+    &:hover,
     &:focus {
       svg {
-        background-color: @statusbar-focus-background-color;
-        border-radius: 1px 1px @statusbar-resize-handle-radius 1px;
-        box-shadow: 0 0 0 2px @statusbar-focus-background-color;
+        fill: @statusbar-focus-text-color;
+      }
+    }
+
+    &:focus-visible {
+      background-color: @statusbar-focus-background-color;
+      border-radius: 1px 1px @statusbar-resize-handle-radius 1px;
+      box-shadow: 0 0 0 2px @statusbar-focus-background-color;
+
+      &::after {
+        .keyboard-focus-outline-mixin();
       }
     }
   }

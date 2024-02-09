@@ -31,7 +31,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         TinySelections.setCursor(editor, [ 0, 0 ], 2);
         TinyUiActions.clickOnToolbar(editor, selectors.backcolorToolbar);
         await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
-        TinyUiActions.clickOnUi(editor, 'button[title="Custom color"]');
+        TinyUiActions.clickOnUi(editor, 'button[data-mce-name="Custom color"]');
         const backgroundDialog = await TinyUiActions.pWaitForDialog(editor);
         const backgroundDialogResult = UiFinder.findIn<HTMLInputElement>(backgroundDialog, 'label:contains("#") + input').getOrDie();
         await Waiter.pTryUntil('Dialog should start with the right color', () => assert.equal(backgroundDialogResult.dom.value, '80FF80'));
@@ -43,7 +43,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         editor.setContent('<p>Text</p>');
         TinyUiActions.clickOnToolbar(editor, selectors.forecolorToolbar);
         await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
-        TinyUiActions.clickOnUi(editor, 'button[title="Custom color"]');
+        TinyUiActions.clickOnUi(editor, 'button[data-mce-name="Custom color"]');
         const textDialog = await TinyUiActions.pWaitForDialog(editor);
         const textDialogResult = UiFinder.findIn<HTMLInputElement>(textDialog, 'label:contains("#") + input').getOrDie();
         await Waiter.pTryUntil('Dialog should start with the right color', () => assert.equal(textDialogResult.dom.value, 'FFC0CB'));
@@ -163,7 +163,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         TinySelections.setCursor(editor, [ 0, 0 ], 2);
         TinyUiActions.clickOnToolbar(editor, selectors.backcolorToolbar);
         await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
-        TinyUiActions.clickOnUi(editor, 'button[title="Custom color"]');
+        TinyUiActions.clickOnUi(editor, 'button[data-mce-name="Custom color"]');
         const backgroundDialog = await TinyUiActions.pWaitForDialog(editor);
         const backgroundDialogResult = UiFinder.findIn<HTMLInputElement>(backgroundDialog, 'label:contains("#") + input').getOrDie();
         await Waiter.pTryUntil('Dialog should start with the right color', () => assert.equal(backgroundDialogResult.dom.value, '00FF00'));
@@ -175,7 +175,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         editor.setContent('<p style="color: #FF00FF;background-color: #00FF00;">Text</p>', { format: 'raw' });
         TinyUiActions.clickOnToolbar(editor, selectors.forecolorToolbar);
         await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
-        TinyUiActions.clickOnUi(editor, 'button[title="Custom color"]');
+        TinyUiActions.clickOnUi(editor, 'button[data-mce-name="Custom color"]');
         const textDialog = await TinyUiActions.pWaitForDialog(editor);
         const textDialogResult = UiFinder.findIn<HTMLInputElement>(textDialog, 'label:contains("#") + input').getOrDie();
         await Waiter.pTryUntil('Dialog should start with the right color', () => assert.equal(textDialogResult.dom.value, 'FF00FF'));

@@ -115,7 +115,6 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
                 s.element('div', {
                   classes: [ arr.has('tox-statusbar__resize-handle') ],
                   attrs: {
-                    'title': str.is('Resize'),
                     'aria-label': str.is(label)
                   }
                 })

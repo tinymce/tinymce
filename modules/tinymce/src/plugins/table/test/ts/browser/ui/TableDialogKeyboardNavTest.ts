@@ -57,7 +57,7 @@ describe('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', () => {
     pressTabKey(editor);
     await pAssertFocusOnItem('Save', '.tox-button:contains("Save")');
     pressTabKey(editor);
-    await pAssertFocusOnItem('x Close Button', '.tox-button[title="Close"]');
+    await pAssertFocusOnItem('x Close Button', '.tox-button[data-mce-name="close"]');
     pressTabKey(editor);
     await pAssertFocusOnItem('General Tab', '.tox-dialog__body-nav-item:contains("General")');
 
@@ -81,7 +81,7 @@ describe('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', () => {
     pressTabKey(editor);
     await pAssertFocusOnItem('Save', '.tox-button:contains("Save")');
     pressTabKey(editor);
-    await pAssertFocusOnItem('x Close Button', '.tox-button[title="Close"]');
+    await pAssertFocusOnItem('x Close Button', '.tox-button[data-mce-name="close"]');
     pressTabKey(editor);
     await pAssertFocusOnItem('Advanced Tab', '.tox-dialog__body-nav-item:contains("Advanced")');
   });

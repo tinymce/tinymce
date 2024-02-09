@@ -11,8 +11,8 @@ import { getColorCols } from 'tinymce/themes/silver/ui/core/color/Options';
 
 describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () => {
   const selectors = {
-    backcolorButton: 'div[title^="Background color"] .tox-tbtn',
-    forecolorButton: 'div[title^="Text color"] .tox-tbtn',
+    backcolorButton: 'div[data-mce-name="backcolor"] .tox-tbtn',
+    forecolorButton: 'div[data-mce-name="forecolor"] .tox-tbtn',
     backcolorSplitButton: '[aria-label^="Background color"] > .tox-tbtn + .tox-split-button__chevron',
     forecolorSplitButton: '[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron'
   };
@@ -157,7 +157,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
       TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       UiFinder.notExists(SugarBody.body(), 'div[data-mce-color="#FF0000"]');
-      TinyUiActions.clickOnUi(editor, 'button[title="Custom color"]');
+      TinyUiActions.clickOnUi(editor, 'button[data-mce-name="Custom color"]');
       const dialog = await TinyUiActions.pWaitForDialog(editor);
       const input = UiFinder.findIn<HTMLInputElement>(dialog, 'label:contains("R") + input').getOrDie();
       UiControls.setValue(input, '255');
@@ -168,7 +168,7 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
       input.dom.dispatchEvent(evt);
       const dialogResult = UiFinder.findIn<HTMLInputElement>(dialog, 'label:contains("#") + input').getOrDie();
       await Waiter.pTryUntil('Dialog has changed', () => dialogResult.dom.value === 'FF0000');
-      TinyUiActions.clickOnUi(editor, 'button[title="Save"]');
+      TinyUiActions.clickOnUi(editor, 'button[data-mce-name="Save"]');
       TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       UiFinder.exists(SugarBody.body(), 'div[data-mce-color="#FF0000"]');

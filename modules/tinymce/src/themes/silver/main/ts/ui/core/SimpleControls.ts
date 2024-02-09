@@ -9,9 +9,9 @@ const onActionToggleFormat = (editor: Editor, fmt: string) => (): void => {
 
 const registerFormatButtons = (editor: Editor): void => {
   Tools.each([
-    { name: 'bold', text: 'Bold', icon: 'bold' },
-    { name: 'italic', text: 'Italic', icon: 'italic' },
-    { name: 'underline', text: 'Underline', icon: 'underline' },
+    { name: 'bold', text: 'Bold', icon: 'bold', shortcut: 'Meta+B' },
+    { name: 'italic', text: 'Italic', icon: 'italic', shortcut: 'Meta+I' },
+    { name: 'underline', text: 'Underline', icon: 'underline', shortcut: 'Meta+U' },
     { name: 'strikethrough', text: 'Strikethrough', icon: 'strike-through' },
     { name: 'subscript', text: 'Subscript', icon: 'subscript' },
     { name: 'superscript', text: 'Superscript', icon: 'superscript' }
@@ -20,17 +20,20 @@ const registerFormatButtons = (editor: Editor): void => {
       tooltip: btn.text,
       icon: btn.icon,
       onSetup: onSetupStateToggle(editor, btn.name),
-      onAction: onActionToggleFormat(editor, btn.name)
+      onAction: onActionToggleFormat(editor, btn.name),
+      shortcut: btn.shortcut
     });
   });
 
   for (let i = 1; i <= 6; i++) {
     const name = 'h' + i;
+    const shortcut = `Alt+Shift+${i}`;
     editor.ui.registry.addToggleButton(name, {
       text: name.toUpperCase(),
       tooltip: 'Heading ' + i,
       onSetup: onSetupStateToggle(editor, name),
-      onAction: onActionToggleFormat(editor, name)
+      onAction: onActionToggleFormat(editor, name),
+      shortcut
     });
   }
 };
@@ -38,15 +41,16 @@ const registerFormatButtons = (editor: Editor): void => {
 const registerCommandButtons = (editor: Editor): void => {
   Tools.each([
     { name: 'copy', text: 'Copy', action: 'Copy', icon: 'copy' },
-    { name: 'help', text: 'Help', action: 'mceHelp', icon: 'help' },
-    { name: 'selectall', text: 'Select all', action: 'SelectAll', icon: 'select-all' },
+    { name: 'help', text: 'Help', action: 'mceHelp', icon: 'help', shortcut: 'Alt+0' },
+    { name: 'selectall', text: 'Select all', action: 'SelectAll', icon: 'select-all', shortcut: 'Meta+A' },
     { name: 'newdocument', text: 'New document', action: 'mceNewDocument', icon: 'new-document' },
-    { name: 'print', text: 'Print', action: 'mcePrint', icon: 'print' },
+    { name: 'print', text: 'Print', action: 'mcePrint', icon: 'print', shortcut: 'Meta+P' },
   ], (btn) => {
     editor.ui.registry.addButton(btn.name, {
       tooltip: btn.text,
       icon: btn.icon,
-      onAction: onActionExecCommand(editor, btn.action)
+      onAction: onActionExecCommand(editor, btn.action),
+      shortcut: btn.shortcut
     });
   });
 

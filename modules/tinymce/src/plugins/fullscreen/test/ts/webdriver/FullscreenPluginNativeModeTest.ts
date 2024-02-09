@@ -30,9 +30,9 @@ describe('webdriver.tinymce.plugins.fullscreen.FullScreenPluginNativeModeTest', 
 
   it('TBA: Toggle fullscreen on with real click, check document.fullscreenElement, toggle fullscreen off, check document.fullscreenElement', async () => {
     await pIsFullscreen(false);
-    await RealMouse.pClickOn('button[title="Fullscreen"]');
+    await RealMouse.pClickOn('button[data-mce-name="fullscreen"]');
     await pIsFullscreen(true);
-    await RealMouse.pClickOn('button[title="Fullscreen"]');
+    await RealMouse.pClickOn('button[data-mce-name="fullscreen"]');
     await pIsFullscreen(false);
   });
 });

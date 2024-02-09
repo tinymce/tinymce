@@ -19,7 +19,8 @@ const register = (editor: Editor): void => {
     tooltip: 'Save',
     enabled: false,
     onAction: () => editor.execCommand('mceSave'),
-    onSetup: stateToggle(editor)
+    onSetup: stateToggle(editor),
+    shortcut: 'Meta+S'
   });
 
   editor.ui.registry.addButton('cancel', {

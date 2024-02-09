@@ -694,7 +694,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
           (s, str, arr) => s.element('div', {
             classes: [ arr.has('tox-collection__item') ],
             attrs: {
-              title: str.is('equals sign')
+              'aria-label': str.is('equals sign')
             },
             children: [
               s.element('div', {

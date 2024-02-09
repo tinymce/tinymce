@@ -25,19 +25,19 @@ describe('browser.tinymce.themes.silver.editor.core.AlignmentButtonsTest', () =>
             classes: [ arr.has('tox-toolbar__group') ],
             children: [
               s.element('button', {
-                attrs: { title: str.is('Align left') }
+                attrs: { 'data-mce-name': str.is('alignleft') }
               }),
               s.element('button', {
-                attrs: { title: str.is('Align center') }
+                attrs: { 'data-mce-name': str.is('aligncenter') }
               }),
               s.element('button', {
-                attrs: { title: str.is('Align right') }
+                attrs: { 'data-mce-name': str.is('alignright') }
               }),
               s.element('button', {
-                attrs: { title: str.is('Justify') }
+                attrs: { 'data-mce-name': str.is('alignjustify') }
               }),
               s.element('button', {
-                attrs: { title: str.is('No alignment') }
+                attrs: { 'data-mce-name': str.is('alignnone') }
               })
             ]
           })
