@@ -1,6 +1,6 @@
 import {
   AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Disabling, FormField as AlloyFormField, Input as AlloyInput, Invalidating, Keying,
-  NativeEvents, Representing, SketchSpec, SystemEvents, Tabstopping
+  NativeEvents, Representing, SketchSpec, SystemEvents, Tabstopping, Tooltipping
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Arr, Fun, Future, Optional, Result } from '@ephox/katamari';
@@ -28,6 +28,7 @@ export interface TextField {
   }>;
   readonly maximized: boolean;
   readonly data: Optional<string>;
+  readonly tooltip: Optional<string>;
 }
 
 type InputSpec = Omit<Dialog.Input, 'type'>;
@@ -50,6 +51,13 @@ const renderTextField = (spec: TextField, providersBackstage: UiFactoryBackstage
         return Optional.some(true);
       }
     }),
+    ...(spec.tooltip.map(
+      (t) => Tooltipping.config(
+        providersBackstage.tooltips.getConfig({
+          tooltipText: providersBackstage.translate(t)
+        })
+      )
+    )).toArray(),
     AddEventsBehaviour.config('textfield-change', [
       AlloyEvents.run(NativeEvents.input(), (component, _) => {
         AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name } );
@@ -138,7 +146,8 @@ const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProv
   classname: 'tox-textfield',
   validation: Optional.none(),
   maximized: spec.maximized,
-  data: initialData
+  data: initialData,
+  tooltip: spec.tooltip
 }, providersBackstage);
 
 const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBackstageProviders, initialData: Optional<string>): SketchSpec => renderTextField({
@@ -152,7 +161,8 @@ const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBacksta
   classname: 'tox-textarea',
   validation: Optional.none(),
   maximized: spec.maximized,
-  data: initialData
+  data: initialData,
+  tooltip: Optional.none()
 }, providersBackstage);
 
 export {

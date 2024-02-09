@@ -1,0 +1,6 @@
+project: alloy
+kind: Added
+body: Added `tooltip` optional property to dialog `Input`.
+time: 2024-02-09T09:43:13.910561+08:00
+custom:
+  Issue: TINY-3719

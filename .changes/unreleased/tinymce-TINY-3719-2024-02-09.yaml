@@ -1,0 +1,7 @@
+project: tinymce
+kind: Added
+body: Custom tooltip will now show on mouse hover and keyboard for dialog `TextField`
+  if `tooltip` property is assigned.
+time: 2024-02-09T09:46:07.695824+08:00
+custom:
+  Issue: TINY-3719

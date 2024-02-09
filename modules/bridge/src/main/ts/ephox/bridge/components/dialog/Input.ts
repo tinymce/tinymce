@@ -10,6 +10,7 @@ export interface InputSpec extends FormComponentWithLabelSpec {
   placeholder?: string;
   maximized?: boolean;
   enabled?: boolean;
+  tooltip?: string;
 }
 
 export interface Input extends FormComponentWithLabel {
@@ -18,12 +19,14 @@ export interface Input extends FormComponentWithLabel {
   placeholder: Optional<string>;
   maximized: boolean;
   enabled: boolean;
+  tooltip: Optional<string>;
 }
 
 const inputFields = formComponentWithLabelFields.concat([
   FieldSchema.optionString('inputMode'),
   FieldSchema.optionString('placeholder'),
   FieldSchema.defaultedBoolean('maximized', false),
+  ComponentSchema.optionalTooltip,
   ComponentSchema.enabled
 ]);
 
