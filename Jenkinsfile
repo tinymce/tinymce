@@ -201,6 +201,7 @@ timestamps {
     [ browser: 'firefox', provider: 'aws', buckets: 2 ],
     [ browser: 'edge', provider: 'lambdatest', buckets: 1 ],
     [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ],
+    [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ],
     // [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1, version: '17' ], // TINY-10639: Investigate Safari 17 issues
     [ browser: 'safari', provider: 'lambdatest', os: 'macOS Monterey', buckets: 1, version: '15' ],
   ];
