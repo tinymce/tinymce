@@ -1,0 +1,6 @@
+project: tinymce
+kind: Changed
+body: '`convert_unsafe_embeds` editor option is now defaulted to `true`.'
+time: 2024-01-04T23:13:56.583751+11:00
+custom:
+  Issue: TINY-10351
