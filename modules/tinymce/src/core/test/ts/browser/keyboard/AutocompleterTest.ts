@@ -13,7 +13,7 @@ describe('browser.tinymce.core.keyboard.AutocompleterTest', () => {
   const plusTriggerChar = '+';
   const dollarsTriggerChar = '$';
   // This matches the throttle time used in Autocompleter.ts
-  const keyboardThrottleTimer = 50;
+  const inputThrottleTimer = 50;
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
@@ -40,7 +40,7 @@ describe('browser.tinymce.core.keyboard.AutocompleterTest', () => {
         onAction
       });
 
-      const dollarsFetch = Throttler.last(fetch(dollarsTriggerChar, 'dollars'), keyboardThrottleTimer * 3);
+      const dollarsFetch = Throttler.last(fetch(dollarsTriggerChar, 'dollars'), inputThrottleTimer * 3);
       ed.ui.registry.addAutocompleter('Dollars1', {
         trigger: dollarsTriggerChar,
         minChars: 0,
@@ -55,22 +55,23 @@ describe('browser.tinymce.core.keyboard.AutocompleterTest', () => {
     editor.focus();
     editor.setContent(`<p>${triggerChar}</p>`);
     TinySelections.setCursor(editor, [ 0, 0 ], triggerChar.length);
-    TinyContentActions.keypress(editor, triggerChar.charCodeAt(0));
-    // Wait 50ms for the keypress to process
-    await Waiter.pWait(keyboardThrottleTimer);
+    editor.dispatch('input');
+    // Wait 50ms for the input to process
+    await Waiter.pWait(inputThrottleTimer);
   };
 
   const pUpdateWithChar = async (editor: Editor, chr: string) => {
     editor.insertContent(chr);
     TinyContentActions.keypress(editor, chr.charCodeAt(0));
-    // Wait 50ms for the keypress to process
-    await Waiter.pWait(keyboardThrottleTimer);
+    editor.dispatch('input');
+    // Wait 50ms for the input to process
+    await Waiter.pWait(inputThrottleTimer);
   };
 
   const pCloseAutocompleterByKey = async (editor: Editor) => {
     TinyContentActions.keydown(editor, Keys.escape());
     // Wait 50ms for the keypress to process
-    await Waiter.pWait(keyboardThrottleTimer);
+    await Waiter.pWait(inputThrottleTimer);
   };
 
   const pWaitForEvents = (events: string[], expectedEvents: string[]) =>

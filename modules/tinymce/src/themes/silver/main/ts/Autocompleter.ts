@@ -1,32 +1,24 @@
 import { AddEventsBehaviour, AlloyEvents, Behaviour, GuiFactory, Highlighting, InlineView, ItemTypes, SystemEvents } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
-import { Arr, Cell, Id, Optional } from '@ephox/katamari';
-import { Attribute, Css, Replication, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Arr, Cell, Id, Optional, Singleton } from '@ephox/katamari';
+import { Attribute, Css, Replication, SelectorFind, SimRange, SugarElement } from '@ephox/sugar';
 
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import { AutocompleteLookupData } from 'tinymce/core/autocomplete/AutocompleteTypes';
 
 import { AutocompleterEditorEvents, AutocompleterUiApi } from './autocomplete/AutocompleteEditorEvents';
-import * as AutocompleteTagReader from './autocomplete/AutocompleteTagReader';
 import { UiFactoryBackstageShared } from './backstage/Backstage';
 import ItemResponse from './ui/menus/item/ItemResponse';
 import { createPartialMenuWithAlloyItems } from './ui/menus/menu/MenuUtils';
 import { createAutocompleteItems, createInlineMenuFrom, FocusMode } from './ui/menus/menu/SingleMenu';
 
-const getAutocompleterRange = (dom: DOMUtils, initRange: Range): Optional<Range> => {
-  return AutocompleteTagReader.detect(SugarElement.fromDom(initRange.startContainer)).map((elm) => {
-    const range = dom.createRng();
-    range.selectNode(elm.dom);
-    return range;
-  });
-};
+const rangeToSimRange = (r: Range) => SimRange.create(SugarElement.fromDom(r.startContainer), r.startOffset, SugarElement.fromDom(r.endContainer), r.endOffset);
 
 const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared): void => {
   const autocompleterId = Id.generate('autocompleter');
-
   const processingAction = Cell<boolean>(false);
   const activeState = Cell<boolean>(false);
+  const activeRange = Singleton.value<Range>();
 
   const autocompleter = GuiFactory.build(
     InlineView.sketch({
@@ -88,15 +80,20 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared): vo
         choices,
         match.matchText,
         (itemValue, itemMeta) => {
-          const nr = editor.selection.getRng();
-          getAutocompleterRange(editor.dom, nr).each((range) => {
-            const autocompleterApi: InlineContent.AutocompleterInstanceApi = {
-              hide: () => cancelIfNecessary(),
-              reload: (fetchOptions: Record<string, any>) => {
-                hideIfNecessary();
-                editor.execCommand('mceAutocompleterReload', false, { fetchOptions });
-              }
-            };
+          const autocompleterApi: InlineContent.AutocompleterInstanceApi = {
+            hide: () => cancelIfNecessary(),
+            reload: (fetchOptions: Record<string, any>) => {
+              hideIfNecessary();
+              editor.execCommand('mceAutocompleterReload', false, { fetchOptions });
+            }
+          };
+
+          // Asks the editor for a new active range that emits an event that updates
+          // the activeRange state not ideal but trying to avoid direct method calls to the core.
+          // We need to get a fresh range since when you hit enter the IME commits and the updates the DOM so we then need to rescan.
+          editor.execCommand('mceAutocompleterRefreshActiveRange');
+
+          activeRange.get().each((range) => {
             processingAction.set(true);
             match.onAction(autocompleterApi, range, itemValue, itemMeta);
             processingAction.set(false);
@@ -111,33 +108,31 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared): vo
   };
 
   const display = (lookupData: AutocompleteLookupData[], items: ItemTypes.ItemSpec[]) => {
-    AutocompleteTagReader.findIn(SugarElement.fromDom(editor.getBody())).each((element) => {
-      // Display the autocompleter menu
-      const columns: InlineContent.ColumnTypes = Arr.findMap(lookupData, (ld) => Optional.from(ld.columns)).getOr(1);
-      InlineView.showMenuAt(
-        autocompleter,
-        {
-          anchor: {
-            type: 'node',
-            root: SugarElement.fromDom(editor.getBody()),
-            node: Optional.from(element)
-          }
-        },
-        createInlineMenuFrom(
-          createPartialMenuWithAlloyItems(
-            'autocompleter-value',
-            true,
-            items,
-            columns,
-            { menuType: 'normal' }
-          ),
+    // Display the autocompleter menu
+    const columns: InlineContent.ColumnTypes = Arr.findMap(lookupData, (ld) => Optional.from(ld.columns)).getOr(1);
+    InlineView.showMenuAt(
+      autocompleter,
+      {
+        anchor: {
+          type: 'selection',
+          getSelection: () => activeRange.get().map(rangeToSimRange),
+          root: SugarElement.fromDom(editor.getBody()),
+        }
+      },
+      createInlineMenuFrom(
+        createPartialMenuWithAlloyItems(
+          'autocompleter-value',
+          true,
+          items,
           columns,
-          FocusMode.ContentFocus,
-          // Use the constant.
-          'normal'
-        )
-      );
-    });
+          { menuType: 'normal' }
+        ),
+        columns,
+        FocusMode.ContentFocus,
+        // Use the constant.
+        'normal'
+      )
+    );
 
     getMenu().each(Highlighting.highlightFirst);
   };
@@ -194,11 +189,14 @@ const register = (editor: Editor, sharedBackstage: UiFactoryBackstageShared): vo
 
   editor.on('AutocompleterUpdate', ({ lookupData }) => updateDisplay(lookupData));
 
+  editor.on('AutocompleterUpdateActiveRange', ({ range }) => activeRange.set(range));
+
   editor.on('AutocompleterEnd', () => {
     // Hide the menu and reset
     hideIfNecessary();
     activeState.set(false);
     processingAction.set(false);
+    activeRange.clear();
   });
 
   const autocompleterUiApi: AutocompleterUiApi = {

@@ -1,4 +1,4 @@
-import { AutocompleterEventArgs } from '../autocomplete/AutocompleteTypes';
+import { AutocompleterEventArgs, AutocompleterUpdateActiveRange } from '../autocomplete/AutocompleteTypes';
 import { FormatVars } from '../fmt/FormatTypes';
 import { RangeLikeObject } from '../selection/RangeTypes';
 import Editor from './Editor';
@@ -83,6 +83,10 @@ const fireAutocompleterUpdate = (editor: Editor, args: AutocompleterEventArgs): 
   editor.dispatch('AutocompleterUpdate', args);
 };
 
+const fireAutocompleterUpdateActiveRange = (editor: Editor, args: AutocompleterUpdateActiveRange): void => {
+  editor.dispatch('AutocompleterUpdateActiveRange', args);
+};
+
 const fireAutocompleterEnd = (editor: Editor): void => {
   editor.dispatch('AutocompleterEnd');
 };
@@ -120,6 +124,7 @@ export {
   fireGetContent,
   fireAutocompleterStart,
   fireAutocompleterUpdate,
+  fireAutocompleterUpdateActiveRange,
   fireAutocompleterEnd,
   firePastePlainTextToggle,
   firePastePostProcess,

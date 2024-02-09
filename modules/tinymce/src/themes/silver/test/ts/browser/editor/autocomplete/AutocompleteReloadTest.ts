@@ -1,6 +1,6 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
-import { TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { InlineContent } from 'tinymce/core/api/ui/Ui';
@@ -87,16 +87,16 @@ describe('Editor Autocompleter Reload test', () => {
     ]
   });
 
-  const pSetContentAndTrigger = async (editor: Editor, content: string, triggerCharCode: number) => {
+  const pSetContentAndTrigger = async (editor: Editor, content: string) => {
     editor.setContent(`<p>${content}</p>`);
     TinySelections.setCursor(editor, [ 0, 0 ], content.length);
-    TinyContentActions.keypress(editor, triggerCharCode);
+    editor.dispatch('input');
     await pWaitForAutocompleteToOpen();
   };
 
   const pTestAutocompleter = async (scenario: Scenario | ScenarioWithPostAction) => {
     const editor = hook.editor();
-    await pSetContentAndTrigger(editor, ':aa', ':'.charCodeAt(0));
+    await pSetContentAndTrigger(editor, ':aa');
     await scenario.action(editor);
     await scenario.assertion(editor);
     if (hasPostActions(scenario)) {
