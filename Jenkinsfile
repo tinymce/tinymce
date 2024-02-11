@@ -186,7 +186,7 @@ timestamps {
     }
 
     stage('Moxiedoc check') {
-      sh 'yarn tinymce-grunt shell:moxiedoc'
+      exec("yarn tinymce-grunt shell:moxiedoc")
     }
   }
 
