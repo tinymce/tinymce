@@ -72,6 +72,7 @@ const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'pageembed', name: 'Page Embed', type: PluginType.Premium },
   { key: 'permanentpen', name: 'Permanent Pen', type: PluginType.Premium },
   { key: 'powerpaste', name: 'PowerPaste', type: PluginType.Premium, slug: 'introduction-to-powerpaste' },
+  { key: 'revisionhistory', name: 'Revision History', type: PluginType.Premium },
   { key: 'rtc', name: 'Real-Time Collaboration', type: PluginType.Premium, slug: 'rtc-introduction' },
   { key: 'tinymcespellchecker', name: 'Spell Checker Pro', type: PluginType.Premium, slug: 'introduction-to-tiny-spellchecker' },
   { key: 'autocorrect', name: 'Spelling Autocorrect', type: PluginType.Premium },
