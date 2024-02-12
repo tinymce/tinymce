@@ -59,7 +59,8 @@ describe('browser.tinymce.models.dom.table.FakeSelectionTest', () => {
     assert.strictEqual(event.start, start, 'start');
     assert.strictEqual(event.finish, finish, 'finish');
     assert.deepStrictEqual(event.cells, cells, 'cells');
-    assert.isObject(event.otherCells, 'other cells');
+    assert.isNotEmpty(event.otherCells?.downOrRightCells, 'other cells (down or right)');
+    assert.isNotEmpty(event.otherCells?.upOrLeftCells, 'other cells (up or left)');
   };
 
   const assertTableSelection = (editor: Editor, tableHtml: string, selectCells: [ string, string ], cellContents: string[]) => {

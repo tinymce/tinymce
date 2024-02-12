@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Fix non-public `TableSelectionChange` event to not use Sugar or Optional objects
-time: 2024-02-09T13:48:15.161282039+10:00
-custom:
-  Issue: TINY-8368
