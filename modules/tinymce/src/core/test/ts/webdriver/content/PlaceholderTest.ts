@@ -12,6 +12,7 @@ describe('webdriver.tinymce.core.content.PlaceholderTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'undo redo | bold',
+    plugins: [ 'lists' ],
     placeholder,
     setup: (editor: Editor) => {
       editor.on('PlaceholderToggle', () => {
