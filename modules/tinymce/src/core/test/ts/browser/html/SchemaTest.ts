@@ -379,6 +379,61 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
     assert.isFalse(schema.isValidChild('a', 'b'));
   });
 
+  it('TINY-9979: addValidChildren with just a preset should expand that preset and replace existing children', () => {
+    const schema = Schema();
+
+    assert.isTrue(schema.isValidChild('div', 'span'));
+    assert.isTrue(schema.isValidChild('div', 'p'));
+    schema.addValidChildren('div[@phrasing]');
+    assert.isTrue(schema.isValidChild('div', 'span'));
+    assert.isFalse(schema.isValidChild('div', 'p'));
+
+    assert.isTrue(schema.isValidChild('span', 'span'));
+    assert.isFalse(schema.isValidChild('span', 'p'));
+    schema.addValidChildren('span[@blocks]');
+    assert.isFalse(schema.isValidChild('span', 'span'));
+    assert.isTrue(schema.isValidChild('span', 'p'));
+
+    assert.isTrue(schema.isValidChild('strong', 'span'));
+    assert.isFalse(schema.isValidChild('strong', 'p'));
+    schema.addValidChildren('strong[@flow]');
+    assert.isTrue(schema.isValidChild('strong', 'span'));
+    assert.isTrue(schema.isValidChild('strong', 'p'));
+
+    assert.isTrue(schema.isValidChild('em', 'span'));
+    assert.isFalse(schema.isValidChild('em', 'p'));
+    schema.addValidChildren('em[@phrasing|@blocks]');
+    assert.isTrue(schema.isValidChild('em', 'span'));
+    assert.isTrue(schema.isValidChild('em', 'p'));
+  });
+
+  it('TINY-9979: addValidChildren with a - prefixed preset should remove preset', () => {
+    const schema = Schema();
+
+    assert.isTrue(schema.isValidChild('div', 'span'));
+    assert.isTrue(schema.isValidChild('div', 'p'));
+    schema.addValidChildren('-div[@phrasing]');
+    assert.isFalse(schema.isValidChild('div', 'span'));
+    assert.isTrue(schema.isValidChild('div', 'p'));
+  });
+
+  it('TINY-9979: addValidChildren with a + prefixed preset should append preset', () => {
+    const schema = Schema();
+
+    assert.isTrue(schema.isValidChild('span', 'span'));
+    assert.isFalse(schema.isValidChild('span', 'p'));
+    schema.addValidChildren('+span[@blocks]');
+    assert.isTrue(schema.isValidChild('span', 'span'));
+    assert.isTrue(schema.isValidChild('span', 'p'));
+  });
+
+  it('TINY-9979: Add valid children through valid_children setting', () => {
+    const schema = Schema({ valid_children: 'span[@blocks]' });
+
+    assert.isFalse(schema.isValidChild('span', 'span'));
+    assert.isTrue(schema.isValidChild('span', 'p'));
+  });
+
   it('addCustomElements/getCustomElements', () => {
     const schema = Schema();
     schema.addCustomElements('~inline,block');
