@@ -1,5 +1,7 @@
 import { PathRange } from '../utils/PathRange';
 
+export type BlockPatternTrigger = 'enter' | 'space';
+
 export interface RawPattern {
   start?: any;
   end?: any;
@@ -7,6 +9,7 @@ export interface RawPattern {
   cmd?: any;
   value?: any;
   replacement?: any;
+  trigger?: BlockPatternTrigger;
 }
 
 export interface PatternError {
@@ -34,6 +37,7 @@ export type InlinePattern = InlineFormatPattern | InlineCmdPattern;
 
 interface BlockBasePattern {
   readonly start: string;
+  readonly trigger: BlockPatternTrigger;
 }
 
 export interface BlockFormatPattern extends BlockBasePattern {

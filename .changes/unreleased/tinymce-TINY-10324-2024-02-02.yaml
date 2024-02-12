@@ -1,0 +1,7 @@
+project: tinymce
+kind: Added
+body: A new `trigger` property for block text pattern configurations, allowing pattern
+  activation with either Space or Enter keys.
+time: 2024-02-02T17:54:28.314147+02:00
+custom:
+  Issue: TINY-10324

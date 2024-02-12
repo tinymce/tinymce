@@ -12,7 +12,21 @@ import * as Utils from '../../module/test/TextPatternsUtils';
 describe('browser.tinymce.core.textpatterns.TextPatternsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'lists',
-    base_url: '/project/tinymce/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce',
+    text_patterns: [
+      { start: '*', end: '*', format: 'italic' },
+      { start: '**', end: '**', format: 'bold' },
+      { start: '#', format: 'h1', trigger: 'enter' },
+      { start: '##', format: 'h2', trigger: 'enter' },
+      { start: '###', format: 'h3', trigger: 'enter' },
+      { start: '####', format: 'h4', trigger: 'enter' },
+      { start: '#####', format: 'h5', trigger: 'enter' },
+      { start: '######', format: 'h6', trigger: 'enter' },
+      { start: '1. ', cmd: 'InsertOrderedList', trigger: 'enter' },
+      { start: '* ', cmd: 'InsertUnorderedList', trigger: 'enter' },
+      { start: '- ', cmd: 'InsertUnorderedList', trigger: 'enter' },
+    ]
+
   }, [ ListsPlugin ]);
 
   beforeEach(() => {
