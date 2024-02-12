@@ -14,7 +14,7 @@ describe('browser.tinymce.core.textpatterns.ReplacementTest', () => {
       { start: 'heading', replacement: '<h1>My Heading</h1>' },
       { start: 'complex pattern', replacement: '<h1>Text</h1><p>More text</p>' },
       { start: '*', end: '*', format: 'italic' },
-      { start: '#', format: 'h1' },
+      { start: '#', format: 'h1', trigger: 'enter' },
       { start: 'text_pattern', replacement: 'wow' },
       { start: 'world ', replacement: 'World ' }
     ],
