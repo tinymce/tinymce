@@ -9,10 +9,10 @@
   },
   "scripts": {
     "test": "echo 'No tests'",
-    "build": "gulp build",
-    "start": "gulp watch",
+    "build": "grunt build",
+    "start": "grunt watch",
     "prepublishOnly": "yarn ci",
-    "ci": "gulp build --no-color"
+    "ci": "grunt build"
   },
   "keywords": [
     "TinyMCE"
@@ -35,9 +35,5 @@
   "dependencies": {
     "prism-themes": "^1.9.0",
     "prismjs": "^1.27.0"
-  },
-  "devDependencies": {
-    "gulp": "^4.0.2",
-    "postcss-preset-env": "^9.3.0"
   }
 }
