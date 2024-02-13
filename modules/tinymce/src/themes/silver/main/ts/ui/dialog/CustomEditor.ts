@@ -23,15 +23,12 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
   });
 
   const initialValue = Singleton.value<string>();
-  const focusBehaviour = !isOldCustomEditor(spec) && spec.onFocus.isSome() /* && spec.settings?.focusSelector */ ? [
+  const focusBehaviour = !isOldCustomEditor(spec) && spec.onFocus.isSome() ? [
     Focusing.config({
       onFocus: (comp) => {
         spec.onFocus.each((onFocusFn) => {
           onFocusFn(comp.element.dom);
         });
-        // SelectorFind.descendant(comp.element, spec.settings.focusSelector).each((elementToFocus) => {
-        //   Focus.focus(elementToFocus as SugarElement<HTMLElement>);
-        // });
       }
     }),
     Tabstopping.config({})
