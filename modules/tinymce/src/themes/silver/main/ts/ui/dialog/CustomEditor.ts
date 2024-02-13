@@ -23,12 +23,12 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
   });
 
   const initialValue = Singleton.value<string>();
-  const focusBehaviour = !isOldCustomEditor(spec) && spec.onFocus /* && spec.settings?.focusSelector */ ? [
+  const focusBehaviour = !isOldCustomEditor(spec) && spec.onFocus.isSome() /* && spec.settings?.focusSelector */ ? [
     Focusing.config({
       onFocus: (comp) => {
-        if (spec.onFocus) {
-          spec.onFocus(comp.element.dom);
-        }
+        spec.onFocus.each((onFocusFn) => {
+          onFocusFn(comp.element.dom);
+        });
         // SelectorFind.descendant(comp.element, spec.settings.focusSelector).each((elementToFocus) => {
         //   Focus.focus(elementToFocus as SugarElement<HTMLElement>);
         // });
