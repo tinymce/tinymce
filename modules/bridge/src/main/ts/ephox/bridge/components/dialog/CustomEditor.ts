@@ -22,6 +22,7 @@ interface CustomEditorNewSpec extends FormComponentSpec {
   tag?: string;
   scriptId: string;
   scriptUrl: string;
+  onFocus?: (e: HTMLElement) => void;
   settings?: any;
 }
 
@@ -38,6 +39,7 @@ export interface CustomEditorNew extends FormComponent {
   tag: string;
   scriptId: string;
   scriptUrl: string;
+  onFocus?: (e: HTMLElement) => void;
   settings: any;
 }
 

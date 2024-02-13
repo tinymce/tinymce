@@ -1,7 +1,6 @@
 import { AddEventsBehaviour, AlloyEvents, Behaviour, Focusing, Memento, SimpleSpec, Tabstopping } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Obj, Optional, Singleton } from '@ephox/katamari';
-import { Focus, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Resource from 'tinymce/core/api/Resource';
 
@@ -24,12 +23,15 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
   });
 
   const initialValue = Singleton.value<string>();
-  const focusBehaviour = !isOldCustomEditor(spec) && spec.settings?.focusSelector ? [
+  const focusBehaviour = !isOldCustomEditor(spec) && spec.onFocus /* && spec.settings?.focusSelector */ ? [
     Focusing.config({
       onFocus: (comp) => {
-        SelectorFind.descendant(comp.element, spec.settings.focusSelector).each((elementToFocus) => {
-          Focus.focus(elementToFocus as SugarElement<HTMLElement>);
-        });
+        if (spec.onFocus) {
+          spec.onFocus(comp.element.dom);
+        }
+        // SelectorFind.descendant(comp.element, spec.settings.focusSelector).each((elementToFocus) => {
+        //   Focus.focus(elementToFocus as SugarElement<HTMLElement>);
+        // });
       }
     }),
     Tabstopping.config({})
