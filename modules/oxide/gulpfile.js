@@ -2,7 +2,7 @@ const gulp = require('gulp');
 const connect = require('gulp-connect');
 const clean = require('gulp-clean');
 const less = require('gulp-less');
-const lessAutoprefix = require('less-plugin-autoprefix');
+const lessPresetEnv = require('less-plugin-preset-env');
 const gulpStylelint = require('gulp-stylelint');
 const cleanCSS = require('gulp-clean-css');
 const sourcemaps = require('gulp-sourcemaps');
@@ -13,7 +13,7 @@ const path = require('path');
 const through2 = require('through2');
 
 
-const autoprefix = new lessAutoprefix({
+const presetEnv = new lessPresetEnv({
   browsers: ['last 2 Safari versions', 'iOS 14.0', 'last 2 Chrome versions', 'Firefox ESR'],
   grid: 'no-autoplace'
 });
@@ -80,7 +80,7 @@ gulp.task('less', function() {
     .pipe(less({
       math: 'always',
       relativeUrls: true,
-      plugins: [autoprefix]
+      plugins: [presetEnv]
     }))
     .pipe(gulp.dest('./build/skins/'));
 });

@@ -37,6 +37,7 @@
     "prismjs": "^1.27.0"
   },
   "devDependencies": {
-    "gulp": "^4.0.2"
+    "gulp": "^4.0.2",
+    "postcss-preset-env": "^9.3.0"
   }
 }
