@@ -367,6 +367,14 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
     assert.isFalse(schema.isValidChild('body', 'p'));
   });
 
+  it('addValidChildren with exotic names', () => {
+    const schema = Schema();
+
+    assert.isFalse(schema.isValidChild('foo.-bar', 'bar.-baz'));
+    schema.addValidChildren('foo.-bar[bar.-baz]');
+    assert.isTrue(schema.isValidChild('foo.-bar', 'bar.-baz'));
+  });
+
   it('addValidChildren replace should remove all children except the specified ones', () => {
     const schema = Schema();
 
@@ -827,6 +835,16 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
 
       assert.isTrue(schema.isBlock('foo'));
       assert.isTrue(schema.isInline('bar'));
+    });
+
+    it('TINY-9980: Add custom elements with exotic names', () => {
+      const schema = Schema({});
+      schema.addCustomElements({
+        'foo.-bar': { extends: 'div', children: [ 'bar.-baz' ] }
+      });
+
+      assert.isTrue(schema.isValid('foo.-bar'));
+      assert.isTrue(schema.isValidChild('foo.-bar', 'bar.-baz'));
     });
   });
 

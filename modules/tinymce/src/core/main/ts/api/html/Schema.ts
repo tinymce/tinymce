@@ -203,9 +203,6 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
   };
 
   const addCustomElement = (name: string, spec: CustomElementSpec) => {
-    const parseName = (name: string) =>
-      Optional.from(/(@?)(\w+)/.exec(name)).map((matches) => ({ preset: matches[1] === '@', name: matches[2] }));
-
     // Flush cached items since we are altering the default maps
     delete mapCache.text_block_elements;
     delete mapCache.block_elements;
@@ -257,7 +254,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
 
       Arr.each(spec.attributes, (attrName) => {
         const globalAttrs = GlobalAttributesSet.getGlobalAttributeSet(schemaType);
-        parseName(attrName).each(({ preset, name }) => {
+        ValidChildrenRuleParser.parseValidChild(attrName).each(({ preset, name }) => {
           if (preset) {
             if (name === 'global') {
               Arr.each(globalAttrs, processAttrName);
@@ -293,7 +290,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
       };
 
       Arr.each(spec.children, (child) => {
-        parseName(child).each(({ preset, name }) => {
+        ValidChildrenRuleParser.parseValidChild(child).each(({ preset, name }) => {
           if (preset) {
             processPreset(name);
           } else {

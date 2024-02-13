@@ -144,6 +144,20 @@ describe('atomic.tinymce.core.schema.ValidChildrenRuleParserTest', () => {
         }
       ]
     }));
+
+    it('Replace children with exotic names', () => testValidChildrenRuleParser({
+      input: 'foo.-bar[bar.-baz]',
+      expected: [
+        {
+          name: 'foo.-bar',
+          operation: 'replace',
+          validChildren: [
+            { preset: false, name: 'bar.-baz' },
+          ]
+        }
+      ]
+    }));
+
   });
 });
 
