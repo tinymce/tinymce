@@ -1,6 +1,7 @@
 import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
 
 import * as CustomElementsRuleParser from '../../schema/CustomElementsRuleParser';
+import * as GlobalAttributesSet from '../../schema/GlobalAttributesSet';
 import * as Presets from '../../schema/Presets';
 import * as SchemaLookupTable from '../../schema/SchemaLookupTable';
 import { CustomElementSpec, ElementSettings, SchemaElement, SchemaMap, SchemaRegExpMap, SchemaSettings, SchemaType } from '../../schema/SchemaTypes';
@@ -202,6 +203,9 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
   };
 
   const addCustomElement = (name: string, spec: CustomElementSpec) => {
+    const parseName = (name: string) =>
+      Optional.from(/(@?)(\w+)/.exec(name)).map((matches) => ({ preset: matches[1] === '@', name: matches[2] }));
+
     // Flush cached items since we are altering the default maps
     delete mapCache.text_block_elements;
     delete mapCache.block_elements;
@@ -235,7 +239,12 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     }
 
     // Add custom attributes
-    if (Type.isString(spec.attributes)) {
+    if (Type.isArray(spec.attributes)) {
+      const processAttrName = (name: string) => {
+        customRule.attributesOrder.push(name);
+        customRule.attributes[name] = {};
+      };
+
       const customRule = elements[name] ?? {};
 
       delete customRule.attributesDefault;
@@ -243,8 +252,21 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
       delete customRule.attributePatterns;
       delete customRule.attributesRequired;
 
-      customRule.attributesOrder = Arr.filter(spec.attributes, Type.isString);
-      customRule.attributes = Arr.mapToObject(customRule.attributesOrder, (_) => ({}));
+      customRule.attributesOrder = [];
+      customRule.attributes = {};
+
+      Arr.each(spec.attributes, (attrName) => {
+        const globalAttrs = GlobalAttributesSet.getGlobalAttributeSet(schemaType);
+        parseName(attrName).each(({ preset, name }) => {
+          if (preset) {
+            if (name === 'global') {
+              Arr.each(globalAttrs, processAttrName);
+            }
+          } else {
+            processAttrName(name);
+          }
+        });
+      });
 
       elements[name] = customRule;
     }
@@ -258,7 +280,29 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
 
     // Add custom children
     if (Type.isArray(spec.children)) {
-      children[name] = Arr.mapToObject(spec.children, (_) => ({}));
+      const customElementChildren: Record<string, {}> = {};
+
+      const processNodeName = (name: string) => {
+        customElementChildren[name] = {};
+      };
+
+      const processPreset = (name: string) => {
+        Presets.getElementsPreset(schemaType, name).each((names) => {
+          Arr.each(names, processNodeName);
+        });
+      };
+
+      Arr.each(spec.children, (child) => {
+        parseName(child).each(({ preset, name }) => {
+          if (preset) {
+            processPreset(name);
+          } else {
+            processNodeName(name);
+          }
+        });
+      });
+
+      children[name] = customElementChildren;
     }
 
     // Add custom elements at extends positions
