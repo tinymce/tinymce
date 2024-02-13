@@ -1,7 +1,7 @@
 {
   "name": "@ephox/polaris",
   "description": "This project does data manipulation on arrays and strings.",
-  "version": "6.3.0",
+  "version": "6.3.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce.git",
@@ -19,10 +19,10 @@
     "LICENSE.txt"
   ],
   "dependencies": {
-    "@ephox/katamari": "^9.1.5"
+    "@ephox/katamari": "^9.1.6"
   },
   "devDependencies": {
-    "@ephox/katamari-assertions": "^4.0.9"
+    "@ephox/katamari-assertions": "^4.0.10"
   },
   "scripts": {
     "prepublishOnly": "tsc -b",

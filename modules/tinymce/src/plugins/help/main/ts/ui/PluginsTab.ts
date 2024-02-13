@@ -30,7 +30,7 @@ const tab = (editor: Editor): Dialog.TabSpec & { name: string } => {
       '<ul>' +
       premiumPluginList +
       '<li class="tox-help__more-link" ">' +
-      '<a href="https://www.tiny.cloud/pricing/?utm_campaign=editor_referral&utm_medium=help_dialog&utm_source=tinymce" rel="noopener" target="_blank"' +
+      '<a href="https://www.tiny.cloud/pricing/?utm_campaign=help_dialog_plugin_tab&utm_source=tiny&utm_medium=referral&utm_term=read_more&utm_content=premium_plugin_heading" rel="noopener" target="_blank"' +
       ' data-alloy-tabstop="true" tabindex="-1">' + I18n.translate('Learn more...') + '</a></li>' +
       '</ul>' +
       '</div>';
