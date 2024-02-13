@@ -149,13 +149,6 @@ export const renderCollection = (
               });
             });
           },
-          onReposition: (comp) => {
-            SelectorFind.descendant(comp.element, '.' + ItemClasses.activeClass + '[data-mce-tooltip]').each((current) => {
-              Attribute.getOpt(current, 'data-mce-tooltip').each((text) => {
-                Tooltipping.setComponents(comp, providersBackstage.tooltips.getComponents( { tooltipText: text }));
-              });
-            });
-          },
           anchor: (comp: AlloyComponent) => {
             return {
               type: 'node',

@@ -26,5 +26,4 @@ export default [
   })),
   Fields.onHandler('onHide'),
   Fields.onHandler('onShow'),
-  Fields.onHandler('onReposition')
 ];

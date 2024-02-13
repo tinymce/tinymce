@@ -23,7 +23,6 @@ export interface TooltippingConfig extends BehaviourConfigDetail {
   anchor: (comp: AlloyComponent) => AnchorSpec;
   onShow: (comp: AlloyComponent, tooltip: AlloyComponent) => void;
   onHide: (comp: AlloyComponent, tooltip: AlloyComponent) => void;
-  onReposition: (comp: AlloyComponent, tooltip: AlloyComponent) => void;
 }
 
 export interface TooltippingConfigSpec extends BehaviourConfigSpec {
@@ -37,7 +36,6 @@ export interface TooltippingConfigSpec extends BehaviourConfigSpec {
   anchor?: (comp: AlloyComponent) => AnchorSpec;
   onShow?: (comp: AlloyComponent, tooltip: AlloyComponent) => void;
   onHide?: (comp: AlloyComponent, tooltip: AlloyComponent) => void;
-  onReposition?: (comp: AlloyComponent, tooltip: AlloyComponent) => void;
 }
 
 export interface TooltippingState extends BehaviourState {

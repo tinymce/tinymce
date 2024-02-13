@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { Focus, Selectors } from '@ephox/sugar';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
@@ -63,7 +63,6 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
   const reposition = (comp: AlloyComponent) => {
     state.getTooltip().each((tooltip) => {
       const sink = tooltipConfig.lazySink(comp).getOrDie();
-      tooltipConfig.onReposition(comp, tooltip);
       Positioning.position(sink, tooltip, { anchor: tooltipConfig.anchor(comp) });
     });
   };
@@ -102,24 +101,22 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
                 AlloyTriggers.emit(comp, ImmediateShowTooltipEvent);
               },
               (tooltip) => {
-                // Calling on show again to refresh the tooltip when it's already showing
                 if (state.isShowing()) {
                   tooltipConfig.onShow(comp, tooltip);
+                  reposition(comp);
                 }
               });
             }
           });
         }),
-        AlloyEvents.run(SystemEvents.postBlur(), (comp) => {
+        AlloyEvents.run(SystemEvents.postBlur(), (comp, se) => {
           Focus.search(comp.element).fold(() => {
             AlloyTriggers.emit(comp, ImmediateHideTooltipEvent);
-          }, (_) => {
-            reposition(comp);
-          });
+          }, Fun.noop);
         }),
       ];
     }
-  };
+  }
 
   return AlloyEvents.derive(Arr.flatten([
     [
