@@ -42,8 +42,11 @@ export const TooltipsBackstage = (
         classes: [ 'tox-tooltip', 'tox-tooltip--up' ]
       },
       tooltipComponents: getComponents(spec),
-      onShow: () => {
+      onShow: (comp: AlloyComponent, tooltip: AlloyComponent) => {
         numActiveTooltips++;
+        if (spec.onShow) {
+          spec.onShow(comp, tooltip);
+        }
       },
       onHide: () => {
         numActiveTooltips--;

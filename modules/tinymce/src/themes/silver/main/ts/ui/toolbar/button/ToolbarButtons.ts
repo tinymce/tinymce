@@ -373,16 +373,16 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         return Tooltipping.config(
           {
             ...sharedBackstage.providers.tooltips.getConfig({
-              tooltipText: sharedBackstage.providers.translate(tooltip)
-            }),
-            onShow: (comp) => {
-              if (tooltipString.get() !== tooltip) {
-                const translatedTooltip = sharedBackstage.providers.translate(tooltipString.get());
-                Tooltipping.setComponents(comp,
-                  sharedBackstage.providers.tooltips.getComponents({ tooltipText: translatedTooltip })
-                );
+              tooltipText: sharedBackstage.providers.translate(tooltip),
+              onShow: (comp) => {
+                if (tooltipString.get() !== tooltip) {
+                  const translatedTooltip = sharedBackstage.providers.translate(tooltipString.get());
+                  Tooltipping.setComponents(comp,
+                    sharedBackstage.providers.tooltips.getComponents({ tooltipText: translatedTooltip })
+                  );
+                }
               }
-            }
+            }),
           }
         );
       }).toArray())
