@@ -109,14 +109,14 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
             }
           });
         }),
-        AlloyEvents.run(SystemEvents.postBlur(), (comp, se) => {
+        AlloyEvents.run(SystemEvents.postBlur(), (comp) => {
           Focus.search(comp.element).fold(() => {
             AlloyTriggers.emit(comp, ImmediateHideTooltipEvent);
           }, Fun.noop);
         }),
       ];
     }
-  }
+  };
 
   return AlloyEvents.derive(Arr.flatten([
     [
