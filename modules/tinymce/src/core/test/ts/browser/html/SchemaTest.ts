@@ -817,6 +817,17 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
         }
       });
     });
+
+    it('TINY-9980: Add custom elements that extends the block/inline state type', () => {
+      const schema = Schema({});
+      schema.addCustomElements({
+        foo: { extends: 'div' },
+        bar: { extends: 'span' }
+      });
+
+      assert.isTrue(schema.isBlock('foo'));
+      assert.isTrue(schema.isInline('bar'));
+    });
   });
 
   context('custom_elements with spec record', () => {
