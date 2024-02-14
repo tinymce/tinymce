@@ -1,0 +1,7 @@
+project: tinymce
+kind: Removed
+body: Removed `closeButton` from `NotificationSpec`, close button in notification
+  is now rendered by default.
+time: 2024-02-14T10:20:38.864209+08:00
+custom:
+  Issue: TINY-10646
