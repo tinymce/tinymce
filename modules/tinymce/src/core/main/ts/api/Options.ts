@@ -356,7 +356,7 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('event_root', {
-    processor: 'object'
+    processor: 'string'
   });
 
   registerOption('service_message', {
@@ -737,15 +737,17 @@ const register = (editor: Editor): void => {
     default: [
       { start: '*', end: '*', format: 'italic' },
       { start: '**', end: '**', format: 'bold' },
-      { start: '#', format: 'h1' },
-      { start: '##', format: 'h2' },
-      { start: '###', format: 'h3' },
-      { start: '####', format: 'h4' },
-      { start: '#####', format: 'h5' },
-      { start: '######', format: 'h6' },
-      { start: '1. ', cmd: 'InsertOrderedList' },
-      { start: '* ', cmd: 'InsertUnorderedList' },
-      { start: '- ', cmd: 'InsertUnorderedList' }
+      { start: '#', format: 'h1', trigger: 'space' },
+      { start: '##', format: 'h2', trigger: 'space' },
+      { start: '###', format: 'h3', trigger: 'space' },
+      { start: '####', format: 'h4', trigger: 'space' },
+      { start: '#####', format: 'h5', trigger: 'space' },
+      { start: '######', format: 'h6', trigger: 'space' },
+      { start: '1.', cmd: 'InsertOrderedList', trigger: 'space' },
+      { start: '*', cmd: 'InsertUnorderedList', trigger: 'space' },
+      { start: '-', cmd: 'InsertUnorderedList', trigger: 'space' },
+      { start: '>', cmd: 'mceBlockQuote', trigger: 'space' },
+      { start: '---', cmd: 'InsertHorizontalRule', trigger: 'space' },
     ]
   });
 
@@ -843,7 +845,7 @@ const register = (editor: Editor): void => {
 
   registerOption('convert_unsafe_embeds', {
     processor: 'boolean',
-    default: false
+    default: true
   });
 
   // These options must be registered later in the init sequence due to their default values

@@ -20,7 +20,7 @@ const setup = (editor: Editor): void => {
 
   editor.on('keydown', (e) => {
     if (e.keyCode === 13 && !VK.modifierPressed(e) && editor.selection.isCollapsed()) {
-      const patternSet = getPatternSet();
+      const patternSet = Pattern.filterByTrigger(getPatternSet(), 'enter');
       // Do not process anything if we don't have any inline patterns, block patterns,
       // or dynamic lookup defined
       const hasPatterns = patternSet.inlinePatterns.length > 0 ||
@@ -33,9 +33,20 @@ const setup = (editor: Editor): void => {
     }
   }, true);
 
+  editor.on('keydown', (e) => {
+    if (e.keyCode === 32 && editor.selection.isCollapsed()) {
+      const patternSet = Pattern.filterByTrigger(getPatternSet(), 'space');
+      const hasPatterns = patternSet.blockPatterns.length > 0 || hasDynamicPatterns();
+
+      if (hasPatterns && KeyHandler.handleBlockPatternOnSpace(editor, patternSet)) {
+        e.preventDefault();
+      }
+    }
+  }, true);
+
   const handleInlineTrigger = () => {
     if (editor.selection.isCollapsed()) {
-      const patternSet = getPatternSet();
+      const patternSet = Pattern.filterByTrigger(getPatternSet(), 'space');
 
       // Do not process anything if we don't have any inline patterns or dynamic lookup defined
       const hasPatterns = patternSet.inlinePatterns.length > 0 || hasDynamicPatterns();

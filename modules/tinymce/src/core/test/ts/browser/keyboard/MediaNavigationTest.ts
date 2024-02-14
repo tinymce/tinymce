@@ -13,7 +13,8 @@ describe('browser.tinymce.core.keyboard.MediaNavigationTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     height: 400,
     indent: false,
-    base_url: '/project/tinymce/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce',
+    convert_unsafe_embeds: false
   }, [], true);
 
   const assertStartContainer = (editor: Editor, f: (node: Node) => boolean) => {

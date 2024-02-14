@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: The toolbar width was miscalculated for the inline editor positioned inside a scrollable container.
+time: 2024-01-24T14:49:10.32493272+01:00
+custom:
+  Issue: TINY-10581

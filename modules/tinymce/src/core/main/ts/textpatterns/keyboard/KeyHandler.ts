@@ -1,24 +1,19 @@
-import { Unicode } from '@ephox/katamari';
+import { Fun, Unicode } from '@ephox/katamari';
 
 import * as TextSearch from '../../alien/TextSearch';
 import Editor from '../../api/Editor';
 import VK from '../../api/util/VK';
 import * as Zwsp from '../../text/Zwsp';
 import * as BlockPattern from '../core/BlockPattern';
+import * as BlockPatternOnSpace from '../core/BlockPatternOnSpace';
 import * as InlinePattern from '../core/InlinePattern';
 import { PatternSet } from '../core/PatternTypes';
 import * as Utils from '../utils/Utils';
 
-const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
-  const rng = editor.selection.getRng();
-  return Utils.getParentBlock(editor, rng).map((block) => {
-    const offset = Math.max(0, rng.startOffset);
-    const dynamicPatternSet = Utils.resolveFromDynamicPatterns(patternSet, block, block.textContent ?? '');
-    // IMPORTANT: We need to get normalized match results since undoing and redoing the editor state
-    // via undoManager.extra() will result in the DOM being normalized.
-    const inlineMatches = InlinePattern.findPatterns(editor, block, rng.startContainer, offset, dynamicPatternSet, true);
-    const blockMatches = BlockPattern.findPatterns(editor, block, dynamicPatternSet, true);
-    if (blockMatches.length > 0 || inlineMatches.length > 0) {
+const handleEnter = (editor: Editor, patternSet: PatternSet): boolean =>
+  BlockPattern.getMatches(editor, patternSet).fold(
+    Fun.never,
+    ({ inlineMatches, blockMatches }) => {
       editor.undoManager.add();
       editor.undoManager.extra(
         () => {
@@ -44,10 +39,7 @@ const handleEnter = (editor: Editor, patternSet: PatternSet): boolean => {
         }
       );
       return true;
-    }
-    return false;
-  }).getOr(false);
-};
+    });
 
 const handleInlineKey = (
   editor: Editor,
@@ -66,6 +58,16 @@ const handleInlineKey = (
     }
   });
 };
+
+const handleBlockPatternOnSpace = (editor: Editor, patternSet: PatternSet): boolean =>
+  BlockPatternOnSpace.getMatches(editor, patternSet).fold(
+    Fun.never,
+    (matches) => {
+      editor.undoManager.transact(() => {
+        BlockPatternOnSpace.applyMatches(editor, matches);
+      });
+      return true;
+    });
 
 const checkKeyEvent = <T>(codes: T[], event: KeyboardEvent, predicate: (code: T, event: KeyboardEvent) => boolean): boolean => {
   for (let i = 0; i < codes.length; i++) {
@@ -89,6 +91,7 @@ const checkCharCode = (chars: string[], event: KeyboardEvent): boolean =>
 export {
   handleEnter,
   handleInlineKey,
+  handleBlockPatternOnSpace,
   checkCharCode,
   checkKeyCode
 };

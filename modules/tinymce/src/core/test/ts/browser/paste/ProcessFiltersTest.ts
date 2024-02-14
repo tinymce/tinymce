@@ -113,4 +113,14 @@ describe('browser.tinymce.core.paste.ProcessFiltersTest', () => {
     const result = processPrePost(editor, 'a<b>b</b>c', true, preProcessHandler(), preventHandler);
     assert.deepEqual(result, { content: 'a<b>b</b>cX', cancelled: true }, 'Should have a X added and be cancelled');
   });
+
+  it('TINY-10351: Unsafe embeds should be converted on preprocess/postprocess', () => {
+    const editor = hook.editor();
+
+    const objectRes = processPrePost(editor, '<object data="about:blank"></object>', true, Fun.noop, Fun.noop);
+    assert.deepEqual(objectRes, { content: '<iframe src="about:blank"></iframe>', cancelled: false }, '<object> should be converted');
+
+    const embedRes = processPrePost(editor, '<embed src="about:blank">', true, Fun.noop, Fun.noop);
+    assert.deepEqual(embedRes, { content: '<iframe src="about:blank"></iframe>', cancelled: false }, '<embed> should be converted');
+  });
 });

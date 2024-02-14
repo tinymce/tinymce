@@ -1,6 +1,7 @@
 import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
 
 import * as CustomElementsRuleParser from '../../schema/CustomElementsRuleParser';
+import * as Presets from '../../schema/Presets';
 import * as SchemaLookupTable from '../../schema/SchemaLookupTable';
 import { ElementSettings, SchemaElement, SchemaMap, SchemaRegExpMap, SchemaSettings, SchemaType } from '../../schema/SchemaTypes';
 import * as SchemaUtils from '../../schema/SchemaUtils';
@@ -147,7 +148,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     'noshade nowrap readonly selected autoplay loop controls allowfullscreen');
 
   const nonEmptyOrMoveCaretBeforeOnEnter = 'td th iframe video audio object script code';
-  const nonEmptyElementsMap = createLookupTable('non_empty_elements', nonEmptyOrMoveCaretBeforeOnEnter + ' pre svg textarea', voidElementsMap);
+  const nonEmptyElementsMap = createLookupTable('non_empty_elements', nonEmptyOrMoveCaretBeforeOnEnter + ' pre svg textarea summary', voidElementsMap);
   const moveCaretBeforeOnEnterElementsMap = createLookupTable('move_caret_before_on_enter_elements', nonEmptyOrMoveCaretBeforeOnEnter + ' table', voidElementsMap);
 
   const headings = 'h1 h2 h3 h4 h5 h6';
@@ -245,12 +246,25 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
   const addValidChildren = (validChildren: string | undefined) => {
     Arr.each(ValidChildrenRuleParser.parseValidChildrenRules(validChildren ?? ''), ({ operation, name, validChildren }) => {
       const parent = operation === 'replace' ? { '#comment': {}} : children[name];
-
-      Arr.each(validChildren, (child) => {
+      const processNodeName = (name: string) => {
         if (operation === 'remove') {
-          delete parent[child];
+          delete parent[name];
         } else {
-          parent[child] = {};
+          parent[name] = {};
+        }
+      };
+
+      const processPreset = (name: string) => {
+        Presets.getElementsPreset(schemaType, name).each((names) => {
+          Arr.each(names, processNodeName);
+        });
+      };
+
+      Arr.each(validChildren, ({ preset, name }) => {
+        if (preset) {
+          processPreset(name);
+        } else {
+          processNodeName(name);
         }
       });
 

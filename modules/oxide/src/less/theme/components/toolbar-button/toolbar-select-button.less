@@ -41,6 +41,10 @@
   .tox-tbtn--bespoke {
     background: @toolbar-button-bespoke-background-color;
 
+    &:focus {
+      background: @toolbar-button-bespoke-background-color; // Prevent toolbar button focus background to override bespoke background
+    }
+
     & + .tox-tbtn--bespoke {
       margin-inline-start: @toolbar-button-bespoke-spacing-x;
     }

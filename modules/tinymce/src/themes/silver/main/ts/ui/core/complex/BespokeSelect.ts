@@ -223,17 +223,16 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
       dropdownBehaviours: [
         Tooltipping.config({
           ...backstage.shared.providers.tooltips.getConfig({
-            tooltipText: backstage.shared.providers.translate(spec.tooltip)
-          }),
-          onShow: (comp) => {
-            if (spec.tooltip !== tooltipString.get()) {
-              const translatedTooltip = backstage.shared.providers.translate(tooltipString.get());
-              Tooltipping.setComponents(comp,
-                backstage.shared.providers.tooltips.getComponents({ tooltipText: translatedTooltip })
-              );
+            tooltipText: backstage.shared.providers.translate(spec.tooltip),
+            onShow: (comp) => {
+              if (spec.tooltip !== tooltipString.get()) {
+                const translatedTooltip = backstage.shared.providers.translate(tooltipString.get());
+                Tooltipping.setComponents(comp,
+                  backstage.shared.providers.tooltips.getComponents({ tooltipText: translatedTooltip })
+                );
+              }
             }
-          }
-
+          }),
         })
       ]
     },
