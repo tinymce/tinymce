@@ -149,18 +149,16 @@ export const renderCollection = (
               });
             });
           },
-          anchor: (comp: AlloyComponent) => {
-            return {
-              type: 'node',
-              node: SelectorFind.descendant(comp.element, '.' + ItemClasses.activeClass).orThunk(() => SelectorFind.first('.tox-collection__item')),
-              root: comp.element,
-              layouts: {
-                onLtr: Fun.constant([ Layout.south, Layout.north, Layout.southeast, Layout.northeast, Layout.southwest, Layout.northwest ]),
-                onRtl: Fun.constant([ Layout.south, Layout.north, Layout.southeast, Layout.northeast, Layout.southwest, Layout.northwest ])
-              },
-              bubble: Bubble.nu(0, -2, {}),
-            };
-          }
+          anchor: (comp: AlloyComponent) => ({
+            type: 'node',
+            node: SelectorFind.descendant(comp.element, '.' + ItemClasses.activeClass).orThunk(() => SelectorFind.first('.tox-collection__item')),
+            root: comp.element,
+            layouts: {
+              onLtr: Fun.constant([ Layout.south, Layout.north, Layout.southeast, Layout.northeast, Layout.southwest, Layout.northwest ]),
+              onRtl: Fun.constant([ Layout.south, Layout.north, Layout.southeast, Layout.northeast, Layout.southwest, Layout.northwest ])
+            },
+            bubble: Bubble.nu(0, -2, {}),
+          })
         }
       ),
       Representing.config({
