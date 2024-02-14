@@ -47,7 +47,6 @@ export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): No
         level: Arr.contains([ 'success', 'error', 'warning', 'warn', 'info' ], settings.type) ? settings.type : undefined,
         progress: settings.progressBar === true,
         icon: settings.icon,
-        closeButton: settings.closeButton,
         onAction: close,
         iconProvider: sharedBackstage.providers.icons,
         translationProvider: sharedBackstage.providers.translate

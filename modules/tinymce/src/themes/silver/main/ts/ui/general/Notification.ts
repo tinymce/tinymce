@@ -20,7 +20,6 @@ export interface NotificationSketchSpec extends Sketcher.SingleSketchSpec {
   readonly text: string;
   readonly level?: 'info' | 'warn' | 'warning' | 'error' | 'success';
   readonly icon?: string;
-  readonly closeButton?: boolean;
   readonly progress: boolean;
   readonly onAction: Function;
   readonly iconProvider: Icons.IconProvider;
@@ -32,7 +31,6 @@ export interface NotificationSketchDetail extends Sketcher.SingleSketchDetail {
   readonly text: string;
   readonly level: Optional<'info' | 'warn' | 'warning' | 'error' | 'success'>;
   readonly icon: Optional<string>;
-  readonly closeButton: boolean;
   readonly onAction: Function;
   readonly progress: boolean;
   readonly iconProvider: Icons.IconProvider;
@@ -196,7 +194,7 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
     ]),
     components: components
       .concat(detail.progress ? [ memBannerProgress.asSpec() ] : [])
-      .concat(!detail.closeButton ? [] : [ memButton.asSpec() ]),
+      .concat([ memButton.asSpec() ]),
     apis
   };
 };
@@ -212,7 +210,6 @@ export const Notification: NotificationSketcher = Sketcher.single({
     FieldSchema.required('text'),
     FieldSchema.required('iconProvider'),
     FieldSchema.required('translationProvider'),
-    FieldSchema.defaultedBoolean('closeButton', true)
   ],
   apis: {
     updateProgress: (apis: NotificationSketchApis, comp: AlloyComponent, percent: number) => {

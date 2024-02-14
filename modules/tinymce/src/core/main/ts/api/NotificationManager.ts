@@ -19,7 +19,6 @@ export interface NotificationSpec {
   icon?: string;
   progressBar?: boolean;
   timeout?: number;
-  closeButton?: boolean;
 }
 
 export interface NotificationApi {
