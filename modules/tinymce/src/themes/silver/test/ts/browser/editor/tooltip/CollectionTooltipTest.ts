@@ -28,7 +28,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
       await FocusTools.pTryOnSelector('Focus should start on', doc, 'input');
       await TooltipUtils.pAssertTooltip(editor, async () => {
         TinyUiActions.keydown(editor, Keys.tab());
-        return Promise.resolve();
+        throw new Error('Should not have triggered tooltip' + document.activeElement);
       }, 'dollar sign');
       TinyUiActions.closeDialog(editor);
     });
