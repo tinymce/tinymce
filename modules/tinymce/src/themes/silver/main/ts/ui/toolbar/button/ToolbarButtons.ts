@@ -190,14 +190,6 @@ const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage
   });
 };
 
-const generateTooltippingBehaviour = (providersBackstage: UiFactoryBackstageProviders, text: Optional<string>, shortcut: Optional<string>) => text.map(
-  (t) => Tooltipping.config(
-    providersBackstage.tooltips.getConfig({
-      tooltipText: providersBackstage.translate(t) + shortcut.map((shortcut) => ` (${ConvertShortcut.convertText(shortcut)})`).getOr(''),
-    })
-  )
-).toArray();
-
 const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisation: Specialisation<T>, providersBackstage: UiFactoryBackstageProviders, btnName?: string): SketchSpec => {
   const editorOffCell = Cell(Fun.noop);
   const structure = renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.none(), providersBackstage, btnName);
@@ -217,7 +209,13 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
             onControlAttached(specialisation, editorOffCell),
             onControlDetached(specialisation, editorOffCell)
           ]),
-          ...generateTooltippingBehaviour(providersBackstage, spec.tooltip, spec.shortcut),
+          ...(spec.tooltip.map(
+            (t) => Tooltipping.config(
+              providersBackstage.tooltips.getConfig({
+                tooltipText: providersBackstage.translate(t) + spec.shortcut.map((shortcut) => ` (${ConvertShortcut.convertText(shortcut)})`).getOr(''),
+              })
+            )
+          )).toArray(),
           // Enable toolbar buttons by default
           DisablingConfigs.toolbarButton(() => !spec.enabled || providersBackstage.isDisabled()),
           ReadOnly.receivingConfig()
@@ -296,6 +294,8 @@ const fetchChoices = (getApi: (comp: AlloyComponent) => Toolbar.ToolbarSplitButt
 
 // TODO: hookup onSetup and onDestroy
 const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: UiFactoryBackstageShared, btnName?: string): SketchSpec => {
+  const tooltipString = Cell<string>(spec.tooltip.getOr(''));
+
   const getApi = (comp: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => ({
     isEnabled: () => !Disabling.isDisabled(comp),
     setEnabled: (state: boolean) => Disabling.set(comp, !state),
@@ -329,8 +329,8 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
       ),
     setTooltip: (tooltip: string) => {
       const translatedTooltip = sharedBackstage.providers.translate(tooltip);
-      // Removed title attribute, will address dynamically update tooltip in TINY-10474
-      Attribute.setAll(comp.element, { 'aria-label': translatedTooltip });
+      Attribute.set(comp.element, 'aria-label', translatedTooltip);
+      tooltipString.set(tooltip);
     }
   });
 
@@ -369,7 +369,23 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         onControlDetached(specialisation, editorOffCell)
       ]),
       Unselecting.config({ }),
-      ...generateTooltippingBehaviour(sharedBackstage.providers, spec.tooltip, Optional.none()),
+      ...(spec.tooltip.map((tooltip) => {
+        return Tooltipping.config(
+          {
+            ...sharedBackstage.providers.tooltips.getConfig({
+              tooltipText: sharedBackstage.providers.translate(tooltip),
+              onShow: (comp) => {
+                if (tooltipString.get() !== tooltip) {
+                  const translatedTooltip = sharedBackstage.providers.translate(tooltipString.get());
+                  Tooltipping.setComponents(comp,
+                    sharedBackstage.providers.tooltips.getComponents({ tooltipText: translatedTooltip })
+                  );
+                }
+              }
+            }),
+          }
+        );
+      }).toArray())
     ]),
 
     eventOrder: {

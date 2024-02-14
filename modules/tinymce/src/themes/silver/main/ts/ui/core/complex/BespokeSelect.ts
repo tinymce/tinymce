@@ -1,5 +1,5 @@
-import { AlloyComponent, Disabling, SketchSpec, TieredData } from '@ephox/alloy';
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { AlloyComponent, Disabling, SketchSpec, TieredData, Tooltipping } from '@ephox/alloy';
+import { Arr, Cell, Fun, Optional } from '@ephox/katamari';
 import { Attribute } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -181,13 +181,14 @@ const createMenuItems = (backstage: UiFactoryBackstage, spec: SelectSpec): Bespo
 
 const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec, tooltipWithPlaceholder: string, textUpdateEventName: string, btnName: string): SketchSpec => {
   const { items, getStyleItems } = createMenuItems(backstage, spec);
+  const tooltipString = Cell<string>(spec.tooltip);
 
   const getApi = (comp: AlloyComponent): BespokeSelectApi => ({
     getComponent: Fun.constant(comp),
     setTooltip: (tooltip: string) => {
       const translatedTooltip = backstage.shared.providers.translate(tooltip);
-      // Removed title attribute, will address dynamically update tooltip in TINY-10474
-      Attribute.setAll(comp.element, { 'aria-label': translatedTooltip });
+      Attribute.set(comp.element, 'aria-label', translatedTooltip);
+      tooltipString.set(tooltip);
     }
   });
 
@@ -211,7 +212,7 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
       text: spec.icon.isSome() ? Optional.none() : spec.text,
       icon: spec.icon,
       ariaLabel: Optional.some(spec.tooltip),
-      tooltip: Optional.from(spec.tooltip),
+      tooltip: Optional.none(), // TINY-10474 - Using own tooltip config
       role: Optional.none(),
       fetch: items.getFetch(backstage, getStyleItems),
       onSetup,
@@ -219,7 +220,21 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
       columns: 1,
       presets: 'normal',
       classes: spec.icon.isSome() ? [] : [ 'bespoke' ],
-      dropdownBehaviours: []
+      dropdownBehaviours: [
+        Tooltipping.config({
+          ...backstage.shared.providers.tooltips.getConfig({
+            tooltipText: backstage.shared.providers.translate(spec.tooltip),
+            onShow: (comp) => {
+              if (spec.tooltip !== tooltipString.get()) {
+                const translatedTooltip = backstage.shared.providers.translate(tooltipString.get());
+                Tooltipping.setComponents(comp,
+                  backstage.shared.providers.tooltips.getComponents({ tooltipText: translatedTooltip })
+                );
+              }
+            }
+          }),
+        })
+      ]
     },
     ToolbarButtonClasses.Button,
     backstage.shared,
