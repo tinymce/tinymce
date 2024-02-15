@@ -63,7 +63,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
 
       const buttonSelector = 'button[data-mce-name="charmap"]';
       TinyUiActions.clickOnToolbar(editor, buttonSelector);
-      const dialog await TinyUiActions.pWaitForDialog(editor);
+      const dialog = await TinyUiActions.pWaitForDialog(editor);
       await FocusTools.pTryOnSelector('Focus should start on', doc, 'input');
       await TooltipUtils.pAssertTooltip(editor, async () => {
         UiFinder.findIn(SugarDocument.getDocument(), '.tox-collection__item[aria-label="dollar sign"]').each((elem) => Mouse.mouseOver(elem));
