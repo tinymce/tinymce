@@ -139,16 +139,16 @@ export const renderCollection = (
       Tooltipping.config(
         {
           ...providersBackstage.tooltips.getConfig({
-            tooltipText: ''
+            tooltipText: '',
+            onShow: (comp) => {
+              SelectorFind.descendant(comp.element, '.' + ItemClasses.activeClass + '[data-mce-tooltip]').each((current) => {
+                Attribute.getOpt(current, 'data-mce-tooltip').each((text) => {
+                  Tooltipping.setComponents(comp, providersBackstage.tooltips.getComponents( { tooltipText: text }));
+                });
+              });
+            },
           }),
           mode: 'children-keyboard-focus',
-          onShow: (comp) => {
-            SelectorFind.descendant(comp.element, '.' + ItemClasses.activeClass + '[data-mce-tooltip]').each((current) => {
-              Attribute.getOpt(current, 'data-mce-tooltip').each((text) => {
-                Tooltipping.setComponents(comp, providersBackstage.tooltips.getComponents( { tooltipText: text }));
-              });
-            });
-          },
           anchor: (comp: AlloyComponent) => ({
             type: 'node',
             node: SelectorFind.descendant(comp.element, '.' + ItemClasses.activeClass).orThunk(() => SelectorFind.first('.tox-collection__item')),
