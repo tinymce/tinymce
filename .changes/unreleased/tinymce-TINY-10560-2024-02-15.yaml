@@ -1,6 +1,6 @@
 project: tinymce
 kind: Fixed
-body: Adding newline after using `selection.setContent` with a `<pre>` caused a crash
+body: Adding newline after using `selection.setContent` to insert a block element would throw an unhandled exception.
 time: 2024-02-15T11:41:14.948838122+01:00
 custom:
   Issue: TINY-10560
