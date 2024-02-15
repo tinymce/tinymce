@@ -836,4 +836,15 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     TinyAssertions.assertContent(editor, '<blockquote><p>A</p></blockquote><p>&nbsp;</p>');
     TinyAssertions.assertCursor(editor, [ 1, 0, 0, 0 ], 0);
   });
+
+  it('TINY-10560: Press Enter after a `selection.setContent` should create a new line and not throw errors', () => {
+    const editor = hook.editor();
+    editor.setContent('abc');
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
+
+    editor.selection.setContent('<pre><code>hello</code></pre>');
+    TinyAssertions.assertContent(editor, '<p>&nbsp;</p><pre><code>hello</code></pre><p>&nbsp;</p>');
+    insertNewline(editor, { });
+    TinyAssertions.assertContent(editor, '<p>&nbsp;</p><pre><code>hello</code></pre><p>&nbsp;</p><p>&nbsp;</p>');
+  });
 });
