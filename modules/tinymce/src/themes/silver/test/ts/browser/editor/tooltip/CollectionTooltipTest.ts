@@ -10,20 +10,29 @@ import EmoticonsPlugin from 'tinymce/plugins/emoticons/Plugin';
 import * as TooltipUtils from '../../../module/TooltipUtils';
 
 describe('browser.tinymce.themes.silver.editor.CollectionTooltipTest', () => {
-  const pOpenDialogAndWaitForLoad = async (editor: Editor, buttonSelector: string) => {
-    const doc = SugarDocument.getDocument();
-    TinyUiActions.clickOnToolbar(editor, buttonSelector);
-    const dialog = await TinyUiActions.pWaitForDialog(editor);
-    await Waiter.pTryUntil('Dialog to stop loading', () => UiFinder.exists(dialog, '[data-mce-tooltip]'));
-    await FocusTools.pTryOnSelector('Focus should start on', doc, 'input');
-  };
-
   context('Charmap plugin', () => {
     const hook = TinyHooks.bddSetup<Editor>({
       base_url: '/project/tinymce/js/tinymce',
       plugins: 'charmap',
       toolbar: 'charmap',
+      charmap_append: [
+        [ 0x2600, 'sun' ],
+        [ 0x2601, 'cloud' ],
+        [ 0x2602, 'umbrella' ]
+      ]
     }, [ CharmapPlugin ], true);
+
+    const pOpenDialogAndWaitForLoad = async (editor: Editor, buttonSelector: string) => {
+      const doc = SugarDocument.getDocument();
+      TinyUiActions.clickOnToolbar(editor, buttonSelector);
+      const dialog = await TinyUiActions.pWaitForDialog(editor);
+      await Waiter.pTryUntil('Dialog to stop loading', () => UiFinder.exists(dialog, '[data-mce-tooltip]'));
+      Mouse.clickOn(doc, '.tox-dialog__body-nav-item.tox-tab:contains("User Defined")');
+      // Waiting for the tab to load, can't use wait for [data-mce-tooltip="sun"] to exist as it's already in the dom, but not shown
+      await Waiter.pWait(100);
+      FocusTools.setFocus(doc, 'input');
+      await FocusTools.pTryOnSelector('Focus should start on', doc, 'input');
+    };
 
     it(`TINY-9637: Should trigger tooltip when focus is shifted in collection with keyboard`, async () => {
       const editor = hook.editor();
@@ -32,7 +41,7 @@ describe('browser.tinymce.themes.silver.editor.CollectionTooltipTest', () => {
       await TooltipUtils.pAssertTooltip(editor, async () => {
         TinyUiActions.keydown(editor, Keys.tab());
         return Promise.resolve();
-      }, 'dollar sign');
+      }, 'sun');
       TinyUiActions.closeDialog(editor);
     });
 
@@ -46,7 +55,7 @@ describe('browser.tinymce.themes.silver.editor.CollectionTooltipTest', () => {
         TinyUiActions.keydown(editor, Keys.right());
         TinyUiActions.keydown(editor, Keys.right());
         return Promise.resolve();
-      }, 'euro sign');
+      }, 'umbrella');
       TinyUiActions.closeDialog(editor);
     });
 
@@ -56,9 +65,9 @@ describe('browser.tinymce.themes.silver.editor.CollectionTooltipTest', () => {
 
       await pOpenDialogAndWaitForLoad(editor, 'button[data-mce-name="charmap"]');
       await TooltipUtils.pAssertTooltip(editor, async () => {
-        UiFinder.findIn(SugarDocument.getDocument(), '.tox-collection__item[aria-label="dollar sign"]').each((elem) => Mouse.mouseOver(elem));
+        UiFinder.findIn(SugarDocument.getDocument(), '.tox-collection__item[aria-label="sun"]').each((elem) => Mouse.mouseOver(elem));
         return Promise.resolve();
-      }, 'dollar sign');
+      }, 'sun');
       TinyUiActions.closeDialog(editor);
     });
 
@@ -68,10 +77,10 @@ describe('browser.tinymce.themes.silver.editor.CollectionTooltipTest', () => {
 
       await pOpenDialogAndWaitForLoad(editor, 'button[data-mce-name="charmap"]');
       await TooltipUtils.pAssertTooltip(editor, async () => {
-        UiFinder.findIn(SugarDocument.getDocument(), '.tox-collection__item[aria-label="dollar sign"]').each((elem) => Mouse.mouseOver(elem));
-        UiFinder.findIn(SugarDocument.getDocument(), '.tox-collection__item[aria-label="euro sign"]').each((elem) => Mouse.mouseOver(elem));
+        UiFinder.findIn(SugarDocument.getDocument(), '.tox-collection__item[aria-label="sun"]').each((elem) => Mouse.mouseOver(elem));
+        UiFinder.findIn(SugarDocument.getDocument(), '.tox-collection__item[aria-label="cloud"]').each((elem) => Mouse.mouseOver(elem));
         return Promise.resolve();
-      }, 'euro sign');
+      }, 'cloud');
       TinyUiActions.closeDialog(editor);
     });
 
@@ -84,7 +93,7 @@ describe('browser.tinymce.themes.silver.editor.CollectionTooltipTest', () => {
       await TooltipUtils.pAssertTooltip(editor, async () => {
         TinyUiActions.keydown(editor, Keys.tab());
         return Promise.resolve();
-      }, 'dollar sign');
+      }, 'sun');
       await TooltipUtils.pAssertNoTooltip(editor, async () => {
         FocusTools.setFocus(doc, 'input');
         return Promise.resolve();
@@ -101,7 +110,7 @@ describe('browser.tinymce.themes.silver.editor.CollectionTooltipTest', () => {
       await TooltipUtils.pAssertTooltip(editor, async () => {
         TinyUiActions.keydown(editor, Keys.tab());
         return Promise.resolve();
-      }, 'dollar sign');
+      }, 'sun');
       await TooltipUtils.pAssertNoTooltip(editor, async () => {
         FocusTools.setFocus(doc, '.tox-dialog__body-nav-item.tox-tab:contains("Extended Latin")');
         return Promise.resolve();
@@ -115,7 +124,33 @@ describe('browser.tinymce.themes.silver.editor.CollectionTooltipTest', () => {
       base_url: '/project/tinymce/js/tinymce',
       plugins: 'emoticons',
       toolbar: 'emoticons',
+      emoticons_append: {
+        robot: {
+          keywords: [ 'computer', 'machine', 'bot' ],
+          char: '🤖',
+        },
+        dog: {
+          keywords: [ 'animal', 'friend', 'nature', 'woof', 'puppy', 'pet', 'faithful' ],
+          char: '🐶',
+        },
+        custom_mind_explode: {
+          keywords: [ 'brain', 'mind', 'explode', 'blown' ],
+          char: '🤯'
+        },
+      }
     }, [ EmoticonsPlugin ], true);
+
+    const pOpenDialogAndWaitForLoad = async (editor: Editor, buttonSelector: string) => {
+      const doc = SugarDocument.getDocument();
+      TinyUiActions.clickOnToolbar(editor, buttonSelector);
+      const dialog = await TinyUiActions.pWaitForDialog(editor);
+      await Waiter.pTryUntil('Dialog to stop loading', () => UiFinder.exists(dialog, '[data-mce-tooltip]'));
+      Mouse.clickOn(doc, '.tox-dialog__body-nav-item.tox-tab:contains("User Defined")');
+      // Waiting for the tab to load, can't use wait for [data-mce-tooltip="custom mind explore"] to exist as it's already in the dom, but not shown
+      await Waiter.pWait(300);
+      FocusTools.setFocus(doc, 'input');
+      await FocusTools.pTryOnSelector('Focus should start on', doc, 'input');
+    };
 
     it(`TINY-9637: Should trigger tooltip when focus is shifted in collection with keyboard`, async () => {
       const editor = hook.editor();
@@ -125,7 +160,7 @@ describe('browser.tinymce.themes.silver.editor.CollectionTooltipTest', () => {
       await TooltipUtils.pAssertTooltip(editor, async () => {
         TinyUiActions.keydown(editor, Keys.tab());
         return Promise.resolve();
-      }, '100');
+      }, 'robot');
       TinyUiActions.closeDialog(editor);
     });
 
@@ -139,7 +174,7 @@ describe('browser.tinymce.themes.silver.editor.CollectionTooltipTest', () => {
         TinyUiActions.keydown(editor, Keys.right());
         TinyUiActions.keydown(editor, Keys.right());
         return Promise.resolve();
-      }, 'grinning');
+      }, 'custom mind explode');
       TinyUiActions.closeDialog(editor);
     });
 
@@ -149,9 +184,9 @@ describe('browser.tinymce.themes.silver.editor.CollectionTooltipTest', () => {
 
       await pOpenDialogAndWaitForLoad(editor, 'button[data-mce-name="emoticons"]');
       await TooltipUtils.pAssertTooltip(editor, async () => {
-        UiFinder.findIn(SugarDocument.getDocument(), '.tox-collection__item[aria-label="kissing smiling eyes"]').each((elem) => Mouse.mouseOver(elem));
+        UiFinder.findIn(SugarDocument.getDocument(), '.tox-collection__item[aria-label="dog"]').each((elem) => Mouse.mouseOver(elem));
         return Promise.resolve();
-      }, 'kissing smiling eyes');
+      }, 'dog');
       TinyUiActions.closeDialog(editor);
     });
 
@@ -161,10 +196,10 @@ describe('browser.tinymce.themes.silver.editor.CollectionTooltipTest', () => {
 
       await pOpenDialogAndWaitForLoad(editor, 'button[data-mce-name="emoticons"]');
       await TooltipUtils.pAssertTooltip(editor, async () => {
-        UiFinder.findIn(SugarDocument.getDocument(), '.tox-collection__item[aria-label="heart eyes"]').each((elem) => Mouse.mouseOver(elem));
-        UiFinder.findIn(SugarDocument.getDocument(), '.tox-collection__item[aria-label="stuck out tongue closed eyes"]').each((elem) => Mouse.mouseOver(elem));
+        UiFinder.findIn(SugarDocument.getDocument(), '.tox-collection__item[aria-label="robot"]').each((elem) => Mouse.mouseOver(elem));
+        UiFinder.findIn(SugarDocument.getDocument(), '.tox-collection__item[aria-label="dog"]').each((elem) => Mouse.mouseOver(elem));
         return Promise.resolve();
-      }, 'stuck out tongue closed eyes');
+      }, 'dog');
       TinyUiActions.closeDialog(editor);
     });
 
@@ -177,7 +212,7 @@ describe('browser.tinymce.themes.silver.editor.CollectionTooltipTest', () => {
       await TooltipUtils.pAssertTooltip(editor, async () => {
         TinyUiActions.keydown(editor, Keys.tab());
         return Promise.resolve();
-      }, '100');
+      }, 'robot');
       await TooltipUtils.pAssertNoTooltip(editor, async () => {
         FocusTools.setFocus(doc, 'input');
         return Promise.resolve();
@@ -194,7 +229,7 @@ describe('browser.tinymce.themes.silver.editor.CollectionTooltipTest', () => {
       await TooltipUtils.pAssertTooltip(editor, async () => {
         TinyUiActions.keydown(editor, Keys.tab());
         return Promise.resolve();
-      }, '100');
+      }, 'robot');
       await TooltipUtils.pAssertNoTooltip(editor, async () => {
         FocusTools.setFocus(doc, '.tox-dialog__body-nav-item.tox-tab:contains("People")');
         return Promise.resolve();
