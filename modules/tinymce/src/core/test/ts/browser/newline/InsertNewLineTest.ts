@@ -3,6 +3,7 @@ import { after, before, context, describe, it } from '@ephox/bedrock-client';
 import { Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
@@ -844,7 +845,9 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
 
     editor.selection.setContent('<pre><code>hello</code></pre>');
     TinyAssertions.assertContent(editor, '<p>&nbsp;</p><pre><code>hello</code></pre><p>&nbsp;</p>');
-    insertNewline(editor, { });
+    assert.doesNotThrow(() => {
+      insertNewline(editor, { });
+    });
     TinyAssertions.assertContent(editor, '<p>&nbsp;</p><pre><code>hello</code></pre><p>&nbsp;</p><p>&nbsp;</p>');
   });
 });
