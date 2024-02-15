@@ -9,7 +9,15 @@ import EmoticonsPlugin from 'tinymce/plugins/emoticons/Plugin';
 
 import * as TooltipUtils from '../../../module/TooltipUtils';
 
-describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
+describe('browser.tinymce.themes.silver.editor.CollectionTooltipTest', () => {
+  const pOpenDialogAndWaitForLoad = async (editor: Editor, buttonSelector: string) => {
+    const doc = SugarDocument.getDocument();
+    TinyUiActions.clickOnToolbar(editor, buttonSelector);
+    const dialog = await TinyUiActions.pWaitForDialog(editor);
+    await Waiter.pTryUntil('Dialog to stop loading', () => UiFinder.exists(dialog, '[data-mce-tooltip]'));
+    await FocusTools.pTryOnSelector('Focus should start on', doc, 'input');
+  };
+
   context('Charmap plugin', () => {
     const hook = TinyHooks.bddSetup<Editor>({
       base_url: '/project/tinymce/js/tinymce',
@@ -18,14 +26,9 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
     }, [ CharmapPlugin ], true);
 
     it(`TINY-9637: Should trigger tooltip when focus is shifted in collection with keyboard`, async () => {
-      const doc = SugarDocument.getDocument();
       const editor = hook.editor();
       editor.focus();
-
-      const buttonSelector = 'button[data-mce-name="charmap"]';
-      TinyUiActions.clickOnToolbar(editor, buttonSelector);
-      await TinyUiActions.pWaitForDialog(editor);
-      await FocusTools.pTryOnSelector('Focus should start on', doc, 'input');
+      await pOpenDialogAndWaitForLoad(editor, 'button[data-mce-name="charmap"]');
       await TooltipUtils.pAssertTooltip(editor, async () => {
         TinyUiActions.keydown(editor, Keys.tab());
         return Promise.resolve();
@@ -34,14 +37,10 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
     });
 
     it(`TINY-9637: Should trigger tooltip when focus is shifted in collection item then to next item with keyboard `, async () => {
-      const doc = SugarDocument.getDocument();
       const editor = hook.editor();
       editor.focus();
 
-      const buttonSelector = 'button[data-mce-name="charmap"]';
-      TinyUiActions.clickOnToolbar(editor, buttonSelector);
-      await TinyUiActions.pWaitForDialog(editor);
-      await FocusTools.pTryOnSelector('Focus should start on', doc, 'input');
+      await pOpenDialogAndWaitForLoad(editor, 'button[data-mce-name="charmap"]');
       await TooltipUtils.pAssertTooltip(editor, async () => {
         TinyUiActions.keydown(editor, Keys.tab());
         TinyUiActions.keydown(editor, Keys.right());
@@ -52,14 +51,10 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
     });
 
     it(`TINY-9637: Should trigger tooltip when focus is shifted in collection item with mouse`, async () => {
-      const doc = SugarDocument.getDocument();
       const editor = hook.editor();
       editor.focus();
 
-      const buttonSelector = 'button[data-mce-name="charmap"]';
-      TinyUiActions.clickOnToolbar(editor, buttonSelector);
-      await TinyUiActions.pWaitForDialog(editor);
-      await FocusTools.pTryOnSelector('Focus should start on', doc, 'input');
+      await pOpenDialogAndWaitForLoad(editor, 'button[data-mce-name="charmap"]');
       await TooltipUtils.pAssertTooltip(editor, async () => {
         UiFinder.findIn(SugarDocument.getDocument(), '.tox-collection__item[aria-label="dollar sign"]').each((elem) => Mouse.mouseOver(elem));
         return Promise.resolve();
@@ -68,14 +63,10 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
     });
 
     it(`TINY-9637: Should trigger tooltip when focus is shifted in collection item then to next item with mouse`, async () => {
-      const doc = SugarDocument.getDocument();
       const editor = hook.editor();
       editor.focus();
 
-      const buttonSelector = 'button[data-mce-name="charmap"]';
-      TinyUiActions.clickOnToolbar(editor, buttonSelector);
-      await TinyUiActions.pWaitForDialog(editor);
-      await FocusTools.pTryOnSelector('Focus should start on', doc, 'input');
+      await pOpenDialogAndWaitForLoad(editor, 'button[data-mce-name="charmap"]');
       await TooltipUtils.pAssertTooltip(editor, async () => {
         UiFinder.findIn(SugarDocument.getDocument(), '.tox-collection__item[aria-label="dollar sign"]').each((elem) => Mouse.mouseOver(elem));
         UiFinder.findIn(SugarDocument.getDocument(), '.tox-collection__item[aria-label="euro sign"]').each((elem) => Mouse.mouseOver(elem));
@@ -85,14 +76,11 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
     });
 
     it(`TINY-9637: Should hide tooltip when focus is shifted from collection item to input`, async () => {
-      const doc = SugarDocument.getDocument();
       const editor = hook.editor();
       editor.focus();
 
-      const buttonSelector = 'button[data-mce-name="charmap"]';
-      TinyUiActions.clickOnToolbar(editor, buttonSelector);
-      await TinyUiActions.pWaitForDialog(editor);
-      await FocusTools.pTryOnSelector('Focus should start on', doc, 'input');
+      const doc = SugarDocument.getDocument();
+      await pOpenDialogAndWaitForLoad(editor, 'button[data-mce-name="charmap"]');
       await TooltipUtils.pAssertTooltip(editor, async () => {
         TinyUiActions.keydown(editor, Keys.tab());
         return Promise.resolve();
@@ -105,14 +93,11 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
     });
 
     it(`TINY-9637: Should hide tooltip when focus is shifted from collection item to next tab`, async () => {
-      const doc = SugarDocument.getDocument();
       const editor = hook.editor();
       editor.focus();
 
-      const buttonSelector = 'button[data-mce-name="charmap"]';
-      TinyUiActions.clickOnToolbar(editor, buttonSelector);
-      await TinyUiActions.pWaitForDialog(editor);
-      await FocusTools.pTryOnSelector('Focus should start on', doc, 'input');
+      const doc = SugarDocument.getDocument();
+      await pOpenDialogAndWaitForLoad(editor, 'button[data-mce-name="charmap"]');
       await TooltipUtils.pAssertTooltip(editor, async () => {
         TinyUiActions.keydown(editor, Keys.tab());
         return Promise.resolve();
@@ -133,15 +118,10 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
     }, [ EmoticonsPlugin ], true);
 
     it(`TINY-9637: Should trigger tooltip when focus is shifted in collection with keyboard`, async () => {
-      const doc = SugarDocument.getDocument();
       const editor = hook.editor();
       editor.focus();
 
-      const buttonSelector = 'button[data-mce-name="emoticons"]';
-      TinyUiActions.clickOnToolbar(editor, buttonSelector);
-      const dialog = await TinyUiActions.pWaitForDialog(editor);
-      await Waiter.pTryUntil('Dialog to stop loading', () => UiFinder.exists(dialog, '[data-mce-tooltip]'));
-      await FocusTools.pTryOnSelector('Focus should start on', doc, 'input');
+      await pOpenDialogAndWaitForLoad(editor, 'button[data-mce-name="emoticons"]');
       await TooltipUtils.pAssertTooltip(editor, async () => {
         TinyUiActions.keydown(editor, Keys.tab());
         return Promise.resolve();
@@ -150,15 +130,10 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
     });
 
     it(`TINY-9637: Should trigger tooltip when focus is shifted in collection item then to next item with keyboard `, async () => {
-      const doc = SugarDocument.getDocument();
       const editor = hook.editor();
       editor.focus();
 
-      const buttonSelector = 'button[data-mce-name="emoticons"]';
-      TinyUiActions.clickOnToolbar(editor, buttonSelector);
-      const dialog = await TinyUiActions.pWaitForDialog(editor);
-      await Waiter.pTryUntil('Dialog to stop loading', () => UiFinder.exists(dialog, '[data-mce-tooltip]'));
-      await FocusTools.pTryOnSelector('Focus should start on', doc, 'input');
+      await pOpenDialogAndWaitForLoad(editor, 'button[data-mce-name="emoticons"]');
       await TooltipUtils.pAssertTooltip(editor, async () => {
         TinyUiActions.keydown(editor, Keys.tab());
         TinyUiActions.keydown(editor, Keys.right());
@@ -169,15 +144,10 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
     });
 
     it(`TINY-9637: Should trigger tooltip when focus is shifted in collection item with mouse`, async () => {
-      const doc = SugarDocument.getDocument();
       const editor = hook.editor();
       editor.focus();
 
-      const buttonSelector = 'button[data-mce-name="emoticons"]';
-      TinyUiActions.clickOnToolbar(editor, buttonSelector);
-      const dialog = await TinyUiActions.pWaitForDialog(editor);
-      await Waiter.pTryUntil('Dialog to stop loading', () => UiFinder.exists(dialog, '[data-mce-tooltip]'));
-      await FocusTools.pTryOnSelector('Focus should start on', doc, 'input');
+      await pOpenDialogAndWaitForLoad(editor, 'button[data-mce-name="emoticons"]');
       await TooltipUtils.pAssertTooltip(editor, async () => {
         UiFinder.findIn(SugarDocument.getDocument(), '.tox-collection__item[aria-label="kissing smiling eyes"]').each((elem) => Mouse.mouseOver(elem));
         return Promise.resolve();
@@ -186,15 +156,10 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
     });
 
     it(`TINY-9637: Should trigger tooltip when focus is shifted in collection item then to next item with mouse`, async () => {
-      const doc = SugarDocument.getDocument();
       const editor = hook.editor();
       editor.focus();
 
-      const buttonSelector = 'button[data-mce-name="emoticons"]';
-      TinyUiActions.clickOnToolbar(editor, buttonSelector);
-      const dialog = await TinyUiActions.pWaitForDialog(editor);
-      await Waiter.pTryUntil('Dialog to stop loading', () => UiFinder.exists(dialog, '[data-mce-tooltip]'));
-      await FocusTools.pTryOnSelector('Focus should start on', doc, 'input');
+      await pOpenDialogAndWaitForLoad(editor, 'button[data-mce-name="emoticons"]');
       await TooltipUtils.pAssertTooltip(editor, async () => {
         UiFinder.findIn(SugarDocument.getDocument(), '.tox-collection__item[aria-label="heart eyes"]').each((elem) => Mouse.mouseOver(elem));
         UiFinder.findIn(SugarDocument.getDocument(), '.tox-collection__item[aria-label="stuck out tongue closed eyes"]').each((elem) => Mouse.mouseOver(elem));
@@ -204,15 +169,11 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
     });
 
     it(`TINY-9637: Should hide tooltip when focus is shifted from collection item to input`, async () => {
-      const doc = SugarDocument.getDocument();
       const editor = hook.editor();
       editor.focus();
 
-      const buttonSelector = 'button[data-mce-name="emoticons"]';
-      TinyUiActions.clickOnToolbar(editor, buttonSelector);
-      const dialog = await TinyUiActions.pWaitForDialog(editor);
-      await Waiter.pTryUntil('Dialog to stop loading', () => UiFinder.exists(dialog, '[data-mce-tooltip]'));
-      await FocusTools.pTryOnSelector('Focus should start on', doc, 'input');
+      const doc = SugarDocument.getDocument();
+      await pOpenDialogAndWaitForLoad(editor, 'button[data-mce-name="emoticons"]');
       await TooltipUtils.pAssertTooltip(editor, async () => {
         TinyUiActions.keydown(editor, Keys.tab());
         return Promise.resolve();
@@ -225,15 +186,11 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
     });
 
     it(`TINY-9637: Should hide tooltip when focus is shifted from collection item to next tab`, async () => {
-      const doc = SugarDocument.getDocument();
       const editor = hook.editor();
       editor.focus();
 
-      const buttonSelector = 'button[data-mce-name="emoticons"]';
-      TinyUiActions.clickOnToolbar(editor, buttonSelector);
-      const dialog = await TinyUiActions.pWaitForDialog(editor);
-      await Waiter.pTryUntil('Dialog to stop loading', () => UiFinder.exists(dialog, '[data-mce-tooltip]'));
-      await FocusTools.pTryOnSelector('Focus should start on', doc, 'input');
+      const doc = SugarDocument.getDocument();
+      await pOpenDialogAndWaitForLoad(editor, 'button[data-mce-name="emoticons"]');
       await TooltipUtils.pAssertTooltip(editor, async () => {
         TinyUiActions.keydown(editor, Keys.tab());
         return Promise.resolve();
