@@ -174,7 +174,6 @@ describe.skip('browser.tinymce.themes.silver.throbber.ThrobberFocusTest', () => 
 
       const notification = editor.notificationManager.open({
         text: 'Test',
-        closeButton: true
       });
       const popup = await TinyUiActions.pWaitForPopup(editor, 'div.tox-notification') as SugarElement<HTMLElement>;
       Focus.focus(popup);

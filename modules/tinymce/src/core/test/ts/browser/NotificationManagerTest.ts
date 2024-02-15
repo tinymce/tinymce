@@ -210,7 +210,6 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
           icon: 'warning',
           progressBar: true,
           timeout: 10,
-          closeButton: true
         };
         const notifications = editor.notificationManager.getNotifications();
 
@@ -225,7 +224,6 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
           event.notification.icon = 'user';
           event.notification.progressBar = false;
           event.notification.timeout = 5;
-          event.notification.closeButton = false;
         });
 
         editor.notificationManager.open(testMsg);
@@ -239,7 +237,6 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
         assert.equal(modified.icon, 'user', 'Should have modified icon');
         assert.isFalse(modified.progressBar, 'Should have modified progressBar');
         assert.equal(modified.timeout, 5, 'Should have modified timeout');
-        assert.isFalse(modified.closeButton, 'Should have modified closeButton');
       });
 
       it('TBA: Should not open notification if editor is removed', () => {
