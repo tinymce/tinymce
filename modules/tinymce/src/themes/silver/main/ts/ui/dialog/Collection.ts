@@ -1,6 +1,7 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Disabling, EventFormat, FormField as AlloyFormField, Keying,
-  NativeEvents, Replacing, Representing, SimulatedEvent, SketchSpec, SystemEvents, Tabstopping
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Bubble, Disabling, EventFormat, FormField as AlloyFormField, Keying,
+  Layout,
+  NativeEvents, Replacing, Representing, SimulatedEvent, SketchSpec, SystemEvents, Tabstopping, Tooltipping
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Arr, Fun, Optional } from '@ephox/katamari';
@@ -56,13 +57,12 @@ export const renderCollection = (
         '-': ' '
       };
 
-      // Title attribute is added here to provide tooltips which might be helpful to sighted users.
       // Using aria-label here overrides the Apple description of emojis and special characters in Mac/ MS description in Windows.
       // But if only the title attribute is used instead, the names are read out twice. i.e., the description followed by the item.text.
       const ariaLabel = itemText.replace(/\_| \- |\-/g, (match) => mapItemName[match]);
 
       const disabledClass = providersBackstage.isDisabled() ? ' tox-collection__item--state-disabled' : '';
-      return `<div class="tox-collection__item${disabledClass}" tabindex="-1" data-collection-item-value="${Entities.encodeAllRaw(item.value)}" title="${ariaLabel}" aria-label="${ariaLabel}">${iconContent}${textContent}</div>`;
+      return `<div data-mce-tooltip="${ariaLabel}" class="tox-collection__item${disabledClass}" tabindex="-1" data-collection-item-value="${Entities.encodeAllRaw(item.value)}" aria-label="${ariaLabel}">${iconContent}${textContent}</div>`;
     });
 
     const chunks = spec.columns !== 'auto' && spec.columns > 1 ? Arr.chunk(htmlLines, spec.columns) : [ htmlLines ];
@@ -94,8 +94,9 @@ export const renderCollection = (
       Class.add(tgt, ItemClasses.activeClass);
     })),
     AlloyEvents.run(NativeEvents.focusout(), runOnItem((comp) => {
-      SelectorFind.descendant(comp.element, '.' + ItemClasses.activeClass).each((currentActive) => {
+      SelectorFind.descendant<HTMLElement>(comp.element, '.' + ItemClasses.activeClass).each((currentActive) => {
         Class.remove(currentActive, ItemClasses.activeClass);
+        Focus.blur(currentActive);
       });
     })),
     AlloyEvents.runOnExecute(runOnItem((comp, se, tgt, itemValue) => {
@@ -103,7 +104,7 @@ export const renderCollection = (
         name: spec.name,
         value: itemValue
       });
-    }))
+    })),
   ];
 
   const iterCollectionItems = (comp: AlloyComponent, applyAttributes: (element: SugarElement<Element>) => void) =>
@@ -135,6 +136,31 @@ export const renderCollection = (
       }),
       ReadOnly.receivingConfig(),
       Replacing.config({ }),
+      Tooltipping.config(
+        {
+          ...providersBackstage.tooltips.getConfig({
+            tooltipText: '',
+            onShow: (comp) => {
+              SelectorFind.descendant(comp.element, '.' + ItemClasses.activeClass + '[data-mce-tooltip]').each((current) => {
+                Attribute.getOpt(current, 'data-mce-tooltip').each((text) => {
+                  Tooltipping.setComponents(comp, providersBackstage.tooltips.getComponents( { tooltipText: text }));
+                });
+              });
+            },
+          }),
+          mode: 'children-keyboard-focus',
+          anchor: (comp: AlloyComponent) => ({
+            type: 'node',
+            node: SelectorFind.descendant(comp.element, '.' + ItemClasses.activeClass).orThunk(() => SelectorFind.first('.tox-collection__item')),
+            root: comp.element,
+            layouts: {
+              onLtr: Fun.constant([ Layout.south, Layout.north, Layout.southeast, Layout.northeast, Layout.southwest, Layout.northwest ]),
+              onRtl: Fun.constant([ Layout.south, Layout.north, Layout.southeast, Layout.northeast, Layout.southwest, Layout.northwest ])
+            },
+            bubble: Bubble.nu(0, -2, {}),
+          })
+        }
+      ),
       Representing.config({
         store: {
           mode: 'memory',
@@ -158,7 +184,8 @@ export const renderCollection = (
       AddEventsBehaviour.config('collection-events', collectionEvents)
     ]),
     eventOrder: {
-      [SystemEvents.execute()]: [ 'disabling', 'alloy.base.behaviour', 'collection-events' ]
+      [SystemEvents.execute()]: [ 'disabling', 'alloy.base.behaviour', 'collection-events' ],
+      [NativeEvents.focusin()]: [ 'collection-events', 'tooltipping' ],
     }
   });
 
