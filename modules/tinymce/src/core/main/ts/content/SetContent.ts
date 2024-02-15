@@ -18,6 +18,7 @@ export const setContent = (editor: Editor, content: Content, args: Partial<SetCo
   return preProcessSetContent(editor, defaultedArgs).map((updatedArgs) => {
     const result = Rtc.setContent(editor, updatedArgs.content, updatedArgs);
     postProcessSetContent(editor, result.html, updatedArgs);
+    editor.undoManager.add();
     return result.content;
   }).getOr(content);
 };

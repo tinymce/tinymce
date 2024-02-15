@@ -1,4 +1,4 @@
-import { afterEach, before, context, describe, it } from '@ephox/bedrock-client';
+import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -117,7 +117,7 @@ describe('browser.tinymce.models.dom.table.command.TableDeleteColumnTest', () =>
       const lastColIndex = cols - 1;
       const pathToBody = [ 0, options.colgroup ? 1 : 0 ];
 
-      before(() => {
+      beforeEach(() => {
         const editor = hook.editor();
         editor.setContent(createTable(originalTBody.join('')));
       });
@@ -141,10 +141,10 @@ describe('browser.tinymce.models.dom.table.command.TableDeleteColumnTest', () =>
         TinySelections.setCursor(editor, [ ...pathToBody, 1, 0, 0 ], 0);
         editor.execCommand('mceTableDeleteCol');
         TinyAssertions.assertCursor(editor, [ ...pathToBody, 1, 0, 0 ], textOffset(1, 0));
-        const firstAndLastColTds = new RegExp(`<td>\\d+-(${lastColIndex}|0)</td>`, 'g');
+        const firstAndLastColTds = new RegExp(`<td>\\d+-0</td>`, 'g');
         TinyAssertions.assertContent(
           editor,
-          createTable(originalTBody.join('').replace(firstAndLastColTds, '')).replace('<col><col>', '')
+          createTable(originalTBody.join('').replace(firstAndLastColTds, '')).replace('<col>', '')
         );
 
         assertEvents(1);

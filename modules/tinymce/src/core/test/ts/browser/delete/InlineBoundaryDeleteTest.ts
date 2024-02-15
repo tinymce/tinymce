@@ -113,7 +113,7 @@ describe('browser.tinymce.core.delete.InlineBoundaryDeleteTest', () => {
   });
 
   it('Backspace/delete between blocks', () => {
-    testBackspace('<p><a href="#">a</a></p><p><a href="#">b</a></p>', [ 1 ], 0, '<p><a href="#">a</a><a href="#">b</a></p>', 'end', [ 0, 0, 0 ], 1);
+    testBackspace('<p><a href="#">a</a></p><p><a href="#">b</a></p>', [ 1 ], 0, '<p><a href="#">a</a><a href="#">b</a></p>', 'end', [ 0, 0, 0 ], 2);
     testDelete('<p><a href="#">a</a></p><p><a href="#">b</a></p>', [ 0 ], 1, '<p><a href="#">a</a><a href="#">b</a></p>', 'end', [ 0, 0, 0 ], 1);
   });
 

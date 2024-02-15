@@ -133,7 +133,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
         editor.setContent(imageHtml(blobUri));
         assert.isFalse(hasBlobAsSource(editor.dom.select('img')[0]), 'replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)');
         assert.equal(editor.getContent(), '<p><img src="file.png"></p>', 'replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)');
-        assertEventsLength(1);
+        assertEventsLength(2);
       });
     });
   });
@@ -361,7 +361,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
       if (callCount === 2) {
         // Note: This is 1 as only the removal of the image triggers the addition of an undo level and a change event
-        assertEventsLength(1);
+        assertEventsLength(2);
 
         // This is in exact since the status of the image can be pending or failed meaning it should try again
         assert.isAtLeast(uploadCount, 1, 'Should at least be one.');
@@ -386,7 +386,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
       });
     });
 
-    assertEventsLength(0);
+    assertEventsLength(1);
     return Promise.all([
       editor.uploadImages().then(uploadDone),
       editor.uploadImages().then(uploadDone)
@@ -506,7 +506,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
     assertEventsLength(0);
     const uploadDone = () => {
-      assertEventsLength(0);
+      assertEventsLength(1);
       assert.equal(uploadCount, 0, 'Should not upload.');
     };
 
@@ -526,7 +526,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
     assertEventsLength(0);
     const uploadDone = () => {
-      assertEventsLength(0);
+      assertEventsLength(1);
       assert.equal(uploadCount, 0, 'Should not upload.');
     };
 
@@ -546,7 +546,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
     assertEventsLength(0);
     const uploadDone = () => {
-      assertEventsLength(0);
+      assertEventsLength(1);
       assert.equal(uploadCount, 0, 'Should not upload.');
       assert.equal(filterCount, 1, 'Should have filtered one item.');
     };

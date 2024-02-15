@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: SetContent did not trigger an undo level as expected, resulting in some situations
+  where undo/redo could not be performed or was incorrectly performed.
+time: 2024-03-14T15:14:19.571713634+01:00
+custom:
+  Issue: TINY-10283
