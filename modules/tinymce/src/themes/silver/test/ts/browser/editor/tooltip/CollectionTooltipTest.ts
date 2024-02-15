@@ -28,7 +28,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
       await FocusTools.pTryOnSelector('Focus should start on', doc, 'input');
       await TooltipUtils.pAssertTooltip(editor, async () => {
         TinyUiActions.keydown(editor, Keys.tab());
-        throw new Error('Should not have triggered tooltip ' + document.activeElement);
+        throw new Error('Should not have triggered tooltip ' + document.activeElement?.textContent);
         return Promise.resolve();
       }, 'dollar sign');
       TinyUiActions.closeDialog(editor);
@@ -47,6 +47,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
         TinyUiActions.keydown(editor, Keys.tab());
         TinyUiActions.keydown(editor, Keys.right());
         TinyUiActions.keydown(editor, Keys.right());
+        throw new Error('Should not have triggered tooltip ' + document.activeElement?.textContent);
         return Promise.resolve();
       }, 'euro sign');
       TinyUiActions.closeDialog(editor);
@@ -80,6 +81,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
       await TooltipUtils.pAssertTooltip(editor, async () => {
         UiFinder.findIn(SugarDocument.getDocument(), '.tox-collection__item[aria-label="dollar sign"]').each((elem) => Mouse.mouseOver(elem));
         UiFinder.findIn(SugarDocument.getDocument(), '.tox-collection__item[aria-label="euro sign"]').each((elem) => Mouse.mouseOver(elem));
+        throw new Error('Should not have triggered tooltip ' + document.activeElement?.textContent);
         return Promise.resolve();
       }, 'euro sign');
       TinyUiActions.closeDialog(editor);
@@ -216,6 +218,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
       await FocusTools.pTryOnSelector('Focus should start on', doc, 'input');
       await TooltipUtils.pAssertTooltip(editor, async () => {
         TinyUiActions.keydown(editor, Keys.tab());
+        throw new Error('Should not have triggered tooltip ' + document.activeElement?.textContent);
         return Promise.resolve();
       }, '100');
       await TooltipUtils.pAssertNoTooltip(editor, async () => {
