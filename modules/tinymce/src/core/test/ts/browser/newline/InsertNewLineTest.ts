@@ -843,11 +843,11 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     editor.setContent('abc');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
 
-    editor.selection.setContent('<pre><code>hello</code></pre>');
-    TinyAssertions.assertContent(editor, '<p>&nbsp;</p><pre><code>hello</code></pre><p>&nbsp;</p>');
+    editor.selection.setContent('<pre>hello</pre>');
+    TinyAssertions.assertContent(editor, '<p>&nbsp;</p><pre>hello</pre><p>&nbsp;</p>');
     assert.doesNotThrow(() => {
       insertNewline(editor, { });
     });
-    TinyAssertions.assertContent(editor, '<p>&nbsp;</p><pre><code>hello</code></pre><p>&nbsp;</p><p>&nbsp;</p>');
+    TinyAssertions.assertContent(editor, '<p>&nbsp;</p><pre>hello</pre><p>&nbsp;</p><p>&nbsp;</p>');
   });
 });
