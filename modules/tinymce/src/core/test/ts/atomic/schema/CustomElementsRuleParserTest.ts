@@ -19,7 +19,6 @@ describe('atomic.tinymce.core.schema.CustomElementsRuleParserTest', () => {
       input: '~foo',
       expected: [
         {
-          inline: true,
           cloneName: 'span',
           name: 'foo'
         }
@@ -30,7 +29,6 @@ describe('atomic.tinymce.core.schema.CustomElementsRuleParserTest', () => {
       input: 'foo',
       expected: [
         {
-          inline: false,
           cloneName: 'div',
           name: 'foo'
         }
@@ -41,12 +39,10 @@ describe('atomic.tinymce.core.schema.CustomElementsRuleParserTest', () => {
       input: 'foo,~bar',
       expected: [
         {
-          inline: false,
           cloneName: 'div',
           name: 'foo'
         },
         {
-          inline: true,
           cloneName: 'span',
           name: 'bar'
         }

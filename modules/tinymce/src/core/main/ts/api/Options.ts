@@ -609,7 +609,7 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('custom_elements', {
-    processor: 'string'
+    processor: stringOrObjectProcessor
   });
 
   registerOption('extended_valid_elements', {
