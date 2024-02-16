@@ -84,5 +84,9 @@
     "webpack": "^5.74.0",
     "webpack-cli": "^5.1.1",
     "webpack-dev-server": "^4.11.0"
+  },
+  "dependencies": {
+    "generator-tinymce": "^1.4.16",
+    "yo": "^5.0.0"
   }
 }
