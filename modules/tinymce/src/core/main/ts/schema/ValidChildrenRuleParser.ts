@@ -39,7 +39,7 @@ export const parseValidChildrenRules = (value: string): ValidChildrenRule[] => {
       const operation = prefix ? prefixToOperation(prefix) : 'replace';
       const name = matches[2];
       const validChildren = Arr.bind(SchemaUtils.split(matches[3], '|'), (validChild) =>
-        parseValidChild(validChild).fold(Fun.constant([]), Arr.pure)
+        parseValidChild(validChild).toArray()
       );
 
       return [{ operation, name, validChildren }];
