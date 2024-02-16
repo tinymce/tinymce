@@ -1,0 +1,6 @@
+project: agar
+kind: Fixed
+body: '`pMoveToOn` in `RealMouse` was sending click action instead of move.'
+time: 2024-02-16T08:46:24.205333+08:00
+custom:
+  Issue: TINY-9641
