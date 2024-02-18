@@ -1,0 +1,7 @@
+project: tinymce
+kind: Changed
+body: Remove height field from `table` plugin cell dialog. Update row dialog to remove
+  unnecessary cell heights
+time: 2024-02-18T21:49:45.126737287+10:00
+custom:
+  Issue: TINY-10617

@@ -45,9 +45,6 @@ const updateSimpleProps = (modifier: DomModifier, colModifier: DomModifier, data
   if (shouldUpdate('class') && data.class !== 'mce-no-match') {
     modifier.setAttrib('class', data.class);
   }
-  if (shouldUpdate('height')) {
-    modifier.setStyle('height', Utils.addPxSuffix(data.height));
-  }
   if (shouldUpdate('width')) {
     colModifier.setStyle('width', Utils.addPxSuffix(data.width));
   }
