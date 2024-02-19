@@ -31,6 +31,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
   const store = TestStore();
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
+    text_patterns: [], // Since we define # that is used by text pattern we get a conflict
     setup: (ed: Editor) => {
       ed.ui.registry.addAutocompleter('Plus1', {
         trigger: '+',
@@ -310,12 +311,18 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
     } else {
       TinySelections.setCursor(editor, [ 0, 0 ], initialContent.length);
     }
-    TinyContentActions.keypress(editor, triggerOverride || details.triggerChar.charCodeAt(0));
-    // Wait 50ms for the keypress to process
-    await Waiter.pWait(50);
+
+    if (triggerOverride) {
+      TinyContentActions.keystroke(editor, triggerOverride);
+    } else {
+      editor.dispatch('input');
+      // Wait 50ms for the input to process
+      await Waiter.pWait(50);
+    }
+
     if (Type.isNonNullable(additionalContent)) {
       editor.execCommand('mceInsertContent', false, additionalContent);
-      TinyContentActions.keypress(editor, additionalContent.charCodeAt(additionalContent.length - 1));
+      editor.dispatch('input');
     }
   };
 
@@ -328,22 +335,6 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
     await pWaitForAutocompleteToClose();
     scenario.assertion(editor);
   };
-
-  it('TINY-10317: Should not trigger during composing', async () => {
-    const editor = hook.editor();
-    editor.setContent('<p>+</p>');
-    TinySelections.setCursor(editor, [ 0, 0 ], 1);
-    editor.dispatch('compositionstart');
-    TinyContentActions.keypress(editor, '+'.charCodeAt(0));
-    await Waiter.pWait(250);
-    UiFinder.notExists(SugarBody.body(), '.tox-autocompleter div[role="menu"]');
-    editor.dispatch('compositionend');
-    TinyContentActions.keypress(editor, '+'.charCodeAt(0));
-    await pWaitForAutocompleteToOpen();
-    TinyContentActions.keydown(editor, Keys.down());
-    TinyContentActions.keydown(editor, Keys.enter());
-    TinyAssertions.assertContent(editor, '<p>plus-bB</p>');
-  });
 
   it('Checking first autocomplete (columns = 1) trigger: "+"', () => pTestAutocompleter({
     triggerChar: '+',
@@ -647,7 +638,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
     await pSetContentAndTrigger(editor, {
       triggerChar: '=',
       initialContent: 'test=tw'
-    }, 'w'.charCodeAt(0));
+    });
     await pAssertAutocompleterStructure({
       type: 'grid',
       groups: [
@@ -661,7 +652,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
     await pSetContentAndTrigger(editor, {
       triggerChar: '=',
       initialContent: 'test=twe'
-    }, 'e'.charCodeAt(0));
+    });
     await pWaitForAutocompleteToClose();
     TinyAssertions.assertContent(editor, '<p>test=twe</p>');
     // Check the autocompleter is shown again when deleting a char

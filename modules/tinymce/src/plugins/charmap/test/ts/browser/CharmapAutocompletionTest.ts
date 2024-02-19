@@ -16,7 +16,7 @@ describe('browser.tinymce.plugins.charmap.AutocompletionTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>:co</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 3);
-    TinyContentActions.keypress(editor, 'o'.charCodeAt(0));
+    editor.dispatch('input');
     await TinyUiActions.pWaitForPopup(editor, '.tox-autocompleter');
     TinyContentActions.keydown(editor, Keys.enter());
   });

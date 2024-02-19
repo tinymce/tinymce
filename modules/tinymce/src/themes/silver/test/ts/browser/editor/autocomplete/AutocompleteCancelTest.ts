@@ -45,28 +45,18 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteCancelTe
     children: [ s.text(str.is(content), true) ]
   });
 
-  const expectedAutocompletePara = (content: string): ApproxStructure.Builder<StructAssert> => (s, str, _arr) => s.element('p', {
-    children: [
-      s.element('span', {
-        attrs: {
-          'data-mce-autocompleter': str.is('1'),
-          'data-mce-bogus': str.is('1')
-        },
-        children: [ s.text(str.is(content), true) ]
-      })
-    ]
-  });
+  const expectedAutocompletePara = expectedSimplePara;
 
   const setContentAndTrigger = (editor: Editor, content: string, triggerCharCode: number, template?: string, elementPath?: number[]) => {
     const htmlTemplate = template || '<p>CONTENT</p>';
     editor.setContent(htmlTemplate.replace('CONTENT', content));
     TinySelections.setCursor(editor, elementPath || [ 0, 0 ], content.length);
-    TinyContentActions.keypress(editor, triggerCharCode);
+    editor.dispatch('input');
   };
 
   const insertContentAndTrigger = (editor: Editor, content: string) => {
     editor.execCommand('mceInsertContent', false, content);
-    TinyContentActions.keypress(editor, content.charCodeAt(content.length - 1));
+    editor.dispatch('input');
   };
 
   const pAssertContent = (label: string, editor: Editor, expected: ApproxStructure.Builder<StructAssert[]>) =>
@@ -167,7 +157,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteCancelTe
       s.element('p', {})
     ]);
     insertContentAndTrigger(editor, 'aa');
-    TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
+    TinySelections.setCursor(editor, [ 0, 0 ], 3);
     await pWaitForAutocompleteToClose();
     await pAssertContent('Check autocompleter was not cancelled', editor, (s, str, arr) => [
       expectedAutocompletePara(':aaa')(s, str, arr),

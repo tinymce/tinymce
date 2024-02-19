@@ -3,7 +3,7 @@ import { assert } from 'chai';
 
 import * as AutocompleteContext from 'tinymce/core/autocomplete/AutocompleteContext';
 
-describe('atomic.tinymce.core.autocomplete.AutocompleteContext', () => {
+describe('atomic.tinymce.core.autocomplete.ParserTest', () => {
   it('should find the one char trigger', () => {
     assert.equal(AutocompleteContext.findTrigger('', 0, '@').getOr(null), -1);
     assert.equal(AutocompleteContext.findTrigger('abc', 0, '@').getOr(null), -1);
@@ -41,5 +41,14 @@ describe('atomic.tinymce.core.autocomplete.AutocompleteContext', () => {
     assert.equal(AutocompleteContext.findTrigger('abc @@@123', 40, '@@@').getOr(null), 4);
     // Fake caret
     assert.equal(AutocompleteContext.findTrigger('@@abc\uFFEFx', 40, '@@').getOr(null), 0);
+  });
+
+  it('should find trigger even with whitespace', () => {
+    assert.equal(AutocompleteContext.findTrigger('@abc x', 40, '@', true).getOr(null), 0);
+    assert.equal(AutocompleteContext.findTrigger('@abc\u00a0x', 40, '@', true).getOr(null), 0);
+    assert.equal(AutocompleteContext.findTrigger('@abc\tx', 40, '@', true).getOr(null), 0);
+    assert.equal(AutocompleteContext.findTrigger('@abc\nx', 40, '@', true).getOr(null), 0);
+    assert.equal(AutocompleteContext.findTrigger('@abc 123', 4, '@', true).getOr(null), 0);
+    assert.equal(AutocompleteContext.findTrigger('@abc 123', 5, '@', true).getOr(null), 0);
   });
 });
