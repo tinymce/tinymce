@@ -1,7 +1,0 @@
-project: tinymce
-kind: Added
-body: New `label` component available in the `buttons` header of the `View` UI API,
-  along with two size options (`normal` and `large`).
-time: 2023-12-12T00:52:50.133673+11:00
-custom:
-  Issue: TINY-10339

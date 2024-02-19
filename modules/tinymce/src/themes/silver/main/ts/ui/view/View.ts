@@ -34,8 +34,6 @@ interface ViewApis {
   readonly getOnHide: (comp: AlloyComponent) => (api: BridgeView.ViewInstanceApi) => void;
 }
 
-export type ViewLabel = BridgeView.ViewLabel;
-
 export type ViewButtonWithoutGroup = Exclude<BridgeView.ViewButton, BridgeView.ViewButtonsGroup>;
 
 const renderViewButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryBackstageProviders) =>
