@@ -1,0 +1,6 @@
+project: snooker
+kind: Changed
+body: Change `Sizes`, `Adjustments` to remove heights from td/th and only apply to trs.
+time: 2024-02-19T14:41:50.079268479+10:00
+custom:
+  Issue: TINY-10589

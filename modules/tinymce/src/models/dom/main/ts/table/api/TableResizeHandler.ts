@@ -95,7 +95,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
       syncTableCellPixels(table);
     }
 
-    // TODO: FIgure out if should distribute the height evenly across the rows when using the corner resize handles
+    // NOTE: This will only change the height of teh last tr
     if (height !== startH && startRawH !== '') {
       // Restore the original size and then let snooker resize appropriately
       Css.set(table, 'height', startRawH);
