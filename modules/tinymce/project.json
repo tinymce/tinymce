@@ -1,5 +1,6 @@
 {
   "name": "tinymce",
+  "tags": [ "open-source", "editor" ],
   "namedInputs": {
     "tinymce": [
       "ts-globals",

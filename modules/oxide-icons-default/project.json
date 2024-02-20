@@ -1,5 +1,6 @@
 {
   "name": "@tinymce/oxide-icons-default",
+  "tags": [ "open-source", "ui", "icons" ],
   "targets": {
     "build": {
       "inputs": [

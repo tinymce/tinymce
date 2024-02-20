@@ -1,5 +1,6 @@
 {
   "name": "@tinymce/oxide",
+  "tags": [ "open-source", "ui" ],
   "targets": {
     "build": {
       "inputs": [

@@ -1,6 +1,9 @@
 {
   "name": "tinymce-monorepo",
   "private": true,
+  "nx": {
+    "tags": [ "open-source" ,"repo" ]
+  },
   "workspaces": [
     "modules/*"
   ],
