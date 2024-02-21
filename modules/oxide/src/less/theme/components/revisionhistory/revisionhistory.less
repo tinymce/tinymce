@@ -68,6 +68,16 @@
           color: @button-active-text-color;
         }
 
+        &:focus {
+          position: relative;   // Override static which prevents z-index to have any effect
+          z-index: 1; // Ensure focus outline is on top of other buttons
+
+          &::after {
+            border-radius: @control-border-radius !important;
+            .keyboard-focus-outline-mixin();
+          }
+        }
+
         &.tox-revisionhistory__card--selected {
           background-color: @button-active-background-color;
           color: @button-active-text-color;
