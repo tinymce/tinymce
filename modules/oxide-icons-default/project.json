@@ -6,6 +6,9 @@
       "inputs": [
         "{projectRoot}/src/svg/*.svg"
       ],
+      "dependsOn": [
+        "^build"
+      ],
       "outputs": [
         "{projectRoot}/dist"
       ]
