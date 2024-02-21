@@ -88,9 +88,6 @@ const setup = (editor: Editor): void => {
     if (isPlaceholderShown !== showPlaceholder || initial) {
       dom.setAttrib(body, placeholderAttr, showPlaceholder ? placeholder : null);
 
-      // Also set the aria-placeholder attribute for screen readers
-      dom.setAttrib(body, 'aria-placeholder', showPlaceholder ? placeholder : null);
-
       Events.firePlaceholderToggle(editor, showPlaceholder);
 
       // Swap the key listener state
