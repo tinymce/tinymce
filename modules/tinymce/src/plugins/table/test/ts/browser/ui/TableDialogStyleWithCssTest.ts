@@ -15,16 +15,22 @@ interface TableSpec {
 
   readonly cellSpacingAttr?: string;
   readonly cellSpacingStyle?: string;
+
+  readonly cellBorderWidthStyle?: string;
+
+  readonly borderAttr?: string;
 }
 
 describe('browser.tinymce.plugins.table.ui.TableCellDialogStyleWithCssTest', () => {
   const generalSelectors = {
     cellspacing: 'label.tox-label:contains(Cell spacing) + input.tox-textfield',
-    cellpadding: 'label.tox-label:contains(Cell padding) + input.tox-textfield'
-  };
+    cellpadding: 'label.tox-label:contains(Cell padding) + input.tox-textfield',
+    borderwidth: 'label.tox-label:contains(Border width) + input.tox-textfield',
+  } as const;
+  type GeneralData = Partial<Record<keyof typeof generalSelectors, string>>;
 
-  const setDialogValues = (data: Record<string, string>) => TableTestUtils.setDialogValues(data, false, generalSelectors);
-  const assertDialogValues = (data: Record<string, string>) => TableTestUtils.assertDialogValues(data, false, generalSelectors);
+  const setDialogValues = (data: GeneralData) => TableTestUtils.setDialogValues(data, false, generalSelectors);
+  const assertDialogValues = (data: GeneralData) => TableTestUtils.assertDialogValues(data, false, generalSelectors);
 
   const initializeTable = (editor: Editor, table: TableSpec) => {
     const { cellPaddingAttr, cellPaddingStyle, cellSpacingAttr, cellSpacingStyle } = table;
@@ -66,14 +72,20 @@ describe('browser.tinymce.plugins.table.ui.TableCellDialogStyleWithCssTest', () 
         const definedOnly = Obj.filter(record, Type.isNonNullable) as Record<string, string>;
         return Obj.map(definedOnly, (val) => val !== '' ? str.is(val) : str.none());
       };
-      const cell = s.element('td', { styles: transformMap({ padding: spec.cellPaddingStyle }) });
+      const cell = s.element('td', {
+        styles: transformMap({
+          'padding': spec.cellPaddingStyle,
+          'border-width': spec.cellBorderWidthStyle
+        })
+      });
 
       const row = s.element('tr', { children: [ cell, cell ] });
       const tbody = s.element('tbody', { children: [ row, row ] });
 
       const tableAttributes = {
         cellspacing: spec.cellSpacingAttr,
-        cellpadding: spec.cellPaddingAttr
+        cellpadding: spec.cellPaddingAttr,
+        border: spec.borderAttr
       };
 
       const tableStyles = { 'border-spacing': spec.cellSpacingStyle };
@@ -221,6 +233,18 @@ describe('browser.tinymce.plugins.table.ui.TableCellDialogStyleWithCssTest', () 
           assertTable(editor, { cellSpacingAttr: '', cellSpacingStyle: '5px' });
         } else {
           assertTable(editor, { cellSpacingAttr: '5', cellSpacingStyle: '' });
+        }
+      });
+
+      it('TINY-10308: Setting table border to 0px should remove border-width styles and set border="0"', async () => {
+        const editor = hook.editor();
+        initializeTable(editor, {});
+
+        for (const borderwidth of [ '0', '0px' ]) {
+          await TableTestUtils.pOpenTableDialog(editor);
+          setDialogValues({ borderwidth });
+          await TableTestUtils.pClickDialogButton(editor, true);
+          assertTable(editor, { borderAttr: '0', cellBorderWidthStyle: '' });
         }
       });
     });
