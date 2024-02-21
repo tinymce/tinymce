@@ -925,7 +925,6 @@ module.exports = function (grunt) {
   grunt.registerTask('prodBuild', [
     'shell:prismjs',
     'shell:tsc',
-    'eslint',
     'globals',
     'emoji',
     'html-i18n',
