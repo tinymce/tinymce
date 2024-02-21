@@ -82,4 +82,16 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     TableTestUtils.assertDialogValues(getExpectedData(2, '100%'), false, generalSelectors);
     await TableTestUtils.pClickDialogButton(editor, false);
   });
+
+  it('TINY-10308: Setting border to 0px should remove border-width styles and set border="0"', async () => {
+    const editor = hook.editor();
+    for (const border of [ '0', '0px' ]) {
+      editor.setContent('<table style="border-collapse: collapse;" border="1"><tbody><tr><td>&nbsp;</td></tr></tbody></table>');
+      setCursor(editor);
+      await TableTestUtils.pOpenTableDialog(editor);
+      TableTestUtils.setDialogValues({ border }, false, generalSelectors);
+      await TableTestUtils.pClickDialogButton(editor, true);
+      TinyAssertions.assertContent(editor, '<table style="border-collapse: collapse;" border="0" width="100%"><tbody><tr><td>&nbsp;</td></tr></tbody></table>');
+    }
+  });
 });
