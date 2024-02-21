@@ -105,6 +105,6 @@ export const renderButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryB
   };
   const extraBehaviours: Behaviours = [];
 
-  const iconButtonSpec = renderCommonSpec(buttonSpec, Optional.some(action), extraBehaviours, dom, components, Optional.none(), providers);
+  const iconButtonSpec = renderCommonSpec(buttonSpec, Optional.some(action), extraBehaviours, dom, components, spec.tooltip, providers);
   return AlloyButton.sketch(iconButtonSpec);
 };

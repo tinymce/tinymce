@@ -194,18 +194,25 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
                     },
                   ]
                 },
-                buttons: [{
-                  type: 'menu',
-                  name: 'options',
-                  icon: 'Preferences',
-                  tooltip: 'Preferences',
-                  align: 'start',
-                  items: [{
-                    type: 'togglemenuitem',
-                    name: 'menuitem1',
-                    text: 'Menu item 1',
-                  }]
-                }]
+                buttons: [
+                  {
+                    type: 'menu',
+                    name: 'options',
+                    icon: 'Preferences',
+                    tooltip: 'Preferences',
+                    align: 'start',
+                    items: [{
+                      type: 'togglemenuitem',
+                      name: 'menuitem1',
+                      text: 'Menu item 1',
+                    }]
+                  },
+                  {
+                    type: 'togglebutton',
+                    text: 'notooltip',
+                    align: 'start',
+                  },
+                ]
               });
             }
           });
@@ -273,6 +280,17 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
         await TinyUiActions.pWaitForDialog(editor);
         const buttonSelector = '[data-mce-name="close"]';
         await TooltipUtils.pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Close');
+        await TooltipUtils.pCloseTooltip(editor, buttonSelector);
+        TinyUiActions.closeDialog(editor);
+      });
+
+      it(`TINY-10453: Should trigger tooltip with ${test.label} - dialog footer button - togglebutton`, async () => {
+        const editor = hook.editor();
+        const toolbarButtonSelector = '[data-mce-name="dialog-footer-button"]';
+        TinyUiActions.clickOnToolbar(editor, toolbarButtonSelector);
+        await TinyUiActions.pWaitForDialog(editor);
+        const buttonSelector = '[data-mce-name="notooltip"]';
+        await TooltipUtils.pAssertNoTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), '');
         await TooltipUtils.pCloseTooltip(editor, buttonSelector);
         TinyUiActions.closeDialog(editor);
       });
@@ -399,6 +417,88 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
         const menuSelector = '[aria-label="Choice item 1"]';
         await TooltipUtils.pAssertNoTooltip(editor, () => test.pTriggerTooltip(editor, menuSelector), '');
         await TooltipUtils.pCloseMenu(menuSelector);
+      });
+    });
+
+    context.only('View', () => {
+      const hook = TinyHooks.bddSetup<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        toolbar: 'test-view',
+        setup: (ed: Editor) => {
+          ed.ui.registry.addButton('test-view', {
+            text: 'Test View',
+            onAction: () => {
+              ed.execCommand('ToggleView', false, 'view');
+            }
+          });
+          ed.ui.registry.addView('view', {
+            buttons: [
+              {
+                type: 'group',
+                buttons: [
+                  {
+                    type: 'togglebutton' as const,
+                    icon: 'fullscreen',
+                    tooltip: 'Fullscreen',
+                    onAction: Fun.noop
+                  },
+                  {
+                    type: 'togglebutton',
+                    icon: 'copy',
+                    text: 'Copy code',
+                    onAction: Fun.noop
+                  },
+                  {
+                    type: 'togglebutton',
+                    text: 'Copy code 2',
+                    onAction: Fun.noop
+                  },
+                  {
+                    type: 'togglebutton',
+                    icon: 'Bold',
+                    tooltip: 'Bold',
+                    onAction: Fun.noop
+                  },
+                ]
+              }
+            ],
+            onShow: Fun.noop,
+            onHide: Fun.noop
+          });
+        }
+      });
+
+      it(`TINY-10672: Should trigger tooltip with ${test.label} - View togglebutton - with tooltip and icon, no text`, async () => {
+        const editor = hook.editor();
+        const toolbarButtonSelector = '[data-mce-name="test-view"]';
+        TinyUiActions.clickOnToolbar(editor, toolbarButtonSelector);
+        await TinyUiActions.pWaitForUi(editor, '.tox-view-wrap');
+        const buttonSelector = 'button[aria-label="Fullscreen"]';
+        await TooltipUtils.pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Fullscreen');
+        await TooltipUtils.pCloseTooltip(editor, buttonSelector);
+        editor.execCommand('ToggleView', false, 'view');
+      });
+
+      it(`TINY-10672: Should not trigger tooltip with ${test.label} - View togglebutton - with text and icon, no tooltip`, async () => {
+        const editor = hook.editor();
+        const toolbarButtonSelector = '[data-mce-name="test-view"]';
+        TinyUiActions.clickOnToolbar(editor, toolbarButtonSelector);
+        await TinyUiActions.pWaitForUi(editor, '.tox-view-wrap');
+        const buttonSelector = 'button[aria-label="Copy code"]';
+        await TooltipUtils.pAssertNoTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), '');
+        await TooltipUtils.pCloseTooltip(editor, buttonSelector);
+        editor.execCommand('ToggleView', false, 'view');
+      });
+
+      it(`TINY-10672: Should not trigger tooltip with ${test.label} - View togglebutton - with text, no icon and tooltip`, async () => {
+        const editor = hook.editor();
+        const toolbarButtonSelector = '[data-mce-name="test-view"]';
+        TinyUiActions.clickOnToolbar(editor, toolbarButtonSelector);
+        await TinyUiActions.pWaitForUi(editor, '.tox-view-wrap');
+        const buttonSelector = 'button[aria-label="Copy code 2"]';
+        await TooltipUtils.pAssertNoTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), '');
+        await TooltipUtils.pCloseTooltip(editor, buttonSelector);
+        editor.execCommand('ToggleView', false, 'view');
       });
     });
   });
