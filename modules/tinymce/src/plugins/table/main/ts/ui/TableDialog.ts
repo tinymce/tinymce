@@ -48,7 +48,7 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
 
   const shouldStyleWithCss = Options.shouldStyleWithCss(editor);
   const hasAdvancedTableTab = Options.hasAdvancedTableTab(editor);
-  const borderIsZero = data.border.includes?.('0');
+  const borderIsZero = data.border?.includes?.('0');
 
   if (!Type.isUndefined(data.class) && data.class !== 'mce-no-match') {
     attrs.class = data.class;
