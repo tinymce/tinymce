@@ -420,7 +420,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
       });
     });
 
-    context.only('View', () => {
+    context('View', () => {
       const hook = TinyHooks.bddSetup<Editor>({
         base_url: '/project/tinymce/js/tinymce',
         toolbar: 'test-view',
