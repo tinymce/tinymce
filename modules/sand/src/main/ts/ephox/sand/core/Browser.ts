@@ -17,6 +17,8 @@ export interface Browser extends UaInfo {
   readonly isOpera: () => boolean;
   readonly isFirefox: () => boolean;
   readonly isSafari: () => boolean;
+  // TINY-10669: Remove this API
+  readonly isSafariLessThan17: () => boolean;
 }
 
 const unknown = (): Browser => {
@@ -31,6 +33,7 @@ const nu = (info: UaInfo): Browser => {
   const version = info.version;
 
   const isBrowser = (name: string) => (): boolean => current === name;
+  const isBrowserLessThanMajor = (name: string, major: number) => () => Fun.apply(isBrowser(name)) && version.major < major;
 
   return {
     current,
@@ -42,7 +45,8 @@ const nu = (info: UaInfo): Browser => {
     isIE: isBrowser(ie),
     isOpera: isBrowser(opera),
     isFirefox: isBrowser(firefox),
-    isSafari: isBrowser(safari)
+    isSafari: isBrowser(safari),
+    isSafariLessThan17: isBrowserLessThanMajor(safari, 17)
   };
 };
 
