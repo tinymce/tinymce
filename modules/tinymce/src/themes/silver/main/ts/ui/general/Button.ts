@@ -275,7 +275,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
       fetch: getFetch(menuButtonSpec.items, getButton, backstage)
     };
 
-    const memButton = Memento.record(renderMenuButton(fixedSpec, ToolbarButtonClasses.Button, backstage, Optional.none(), true, spec.text.or(spec.tooltip).getOrUndefined();
+    const memButton = Memento.record(renderMenuButton(fixedSpec, ToolbarButtonClasses.Button, backstage, Optional.none(), true, spec.text.or(spec.tooltip).getOrUndefined()));
 
     return memButton.asSpec();
   } else if (isNormalFooterButtonSpec(spec, buttonType)) {
@@ -286,7 +286,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
     };
     return renderButton(buttonSpec, action, backstage.shared.providers, [ ]);
   } else if (isToggleButtonSpec(spec, buttonType)) {
-    return renderToggleButton(spec, backstage.shared.providers, spec.text.getOr(spec.tooltip.getOrUndefined()));
+    return renderToggleButton(spec, backstage.shared.providers, spec.text.or(spec.tooltip).getOrUndefined());
   } else {
     // eslint-disable-next-line no-console
     console.error('Unknown footer button type: ', buttonType);
