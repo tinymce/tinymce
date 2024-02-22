@@ -52,7 +52,7 @@ describe('atomic.tinymce.core.schema.SchemaElementSetsTest', () => {
         'a', 'abbr', 'b', 'bdo', 'br', 'button', 'cite', 'code', 'del', 'dfn', 'em', 'embed', 'i', 'iframe', 'img',
         'input', 'ins', 'kbd', 'label', 'map', 'noscript', 'object', 'q', 's', 'samp', 'script', 'select', 'small',
         'span', 'strong', 'sub', 'sup', 'textarea', 'u', 'var', '#text', '#comment', 'audio', 'canvas', 'command',
-        'data', 'datalist', 'mark', 'meter', 'output', 'picture', 'progress', 'template', 'time', 'wbr', 'video',
+        'data', 'datalist', 'mark', 'meter', 'output', 'picture', 'progress', 'time', 'wbr', 'video',
         'ruby', 'bdi', 'keygen', 'svg', 'acronym', 'applet', 'basefont', 'big', 'font', 'strike', 'tt'
       ],
       flowContent: [
@@ -62,7 +62,7 @@ describe('atomic.tinymce.core.schema.SchemaElementSetsTest', () => {
         'abbr', 'b', 'bdo', 'br', 'button', 'cite', 'code', 'del', 'dfn', 'em', 'embed', 'i', 'iframe', 'img', 'input',
         'ins', 'kbd', 'label', 'map', 'noscript', 'object', 'q', 's', 'samp', 'script', 'select', 'small', 'span', 'strong',
         'sub', 'sup', 'textarea', 'u', 'var', '#text', '#comment', 'audio', 'canvas', 'command', 'data', 'datalist', 'mark',
-        'meter', 'output', 'picture', 'progress', 'template', 'time', 'wbr', 'video', 'ruby', 'bdi', 'keygen', 'svg', 'acronym',
+        'meter', 'output', 'picture', 'progress', 'time', 'wbr', 'video', 'ruby', 'bdi', 'keygen', 'svg', 'acronym',
         'applet', 'basefont', 'big', 'font', 'strike', 'tt'
       ]
     }
@@ -80,7 +80,7 @@ describe('atomic.tinymce.core.schema.SchemaElementSetsTest', () => {
         'a', 'abbr', 'b', 'bdo', 'br', 'button', 'cite', 'code', 'del', 'dfn', 'em', 'embed', 'i', 'iframe', 'img',
         'input', 'ins', 'kbd', 'label', 'map', 'noscript', 'object', 'q', 's', 'samp', 'script', 'select', 'small',
         'span', 'strong', 'sub', 'sup', 'textarea', 'u', 'var', '#text', '#comment', 'audio', 'canvas', 'command',
-        'data', 'datalist', 'mark', 'meter', 'output', 'picture', 'progress', 'template', 'time', 'wbr', 'video',
+        'data', 'datalist', 'mark', 'meter', 'output', 'picture', 'progress', 'time', 'wbr', 'video',
         'ruby', 'bdi', 'keygen', 'svg'
       ],
       flowContent: [
@@ -90,7 +90,7 @@ describe('atomic.tinymce.core.schema.SchemaElementSetsTest', () => {
         'code', 'del', 'dfn', 'em', 'embed', 'i', 'iframe', 'img', 'input', 'ins', 'kbd', 'label', 'map', 'noscript',
         'object', 'q', 's', 'samp', 'script', 'select', 'small', 'span', 'strong', 'sub', 'sup', 'textarea', 'u',
         'var', '#text', '#comment', 'audio', 'canvas', 'command', 'data', 'datalist', 'mark', 'meter', 'output', 'picture',
-        'progress', 'template', 'time', 'wbr', 'video', 'ruby', 'bdi', 'keygen', 'svg'
+        'progress', 'time', 'wbr', 'video', 'ruby', 'bdi', 'keygen', 'svg'
       ]
     }
   }));

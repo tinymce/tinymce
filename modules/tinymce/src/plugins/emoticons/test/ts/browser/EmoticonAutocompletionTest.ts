@@ -19,7 +19,7 @@ describe('browser.tinymce.plugins.emoticons.EmoticonAutocompletionTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>:ha</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 3);
-    TinyContentActions.keypress(editor, 'a'.charCodeAt(0));
+    editor.dispatch('input');
     await TinyUiActions.pWaitForPopup(editor, '.tox-autocompleter .tox-collection__item');
     TinyContentActions.keydown(editor, Keys.right());
     TinyContentActions.keydown(editor, Keys.right());

@@ -12,6 +12,7 @@ export interface ElementSets<T> {
 //  math - currently not supported.
 //  meta - Only allowed if the `itemprop` attribute is set so very special.
 //  slot - We only want these to be accepted in registered custom components.
+//  template - Not supported since the HTML inside it is stored in a `content` property fragment so needs special treatment.
 // Extra element in `phrasing`: command keygen
 //
 // Missing elements in `flow` compared to HTML5 spec at 2034-01-30 (timestamped since the spec is constantly evolving)
@@ -35,7 +36,7 @@ export const getElementSetsAsStrings = (type: SchemaType): ElementSets<string> =
     const transparentContent = 'a ins del canvas map';
     blockContent += ' article aside details dialog figure main header footer hgroup section nav ' + transparentContent;
     phrasingContent += ' audio canvas command data datalist mark meter output picture ' +
-      'progress template time wbr video ruby bdi keygen svg';
+      'progress time wbr video ruby bdi keygen svg';
   }
 
   // Add HTML4 elements unless it's html5-strict

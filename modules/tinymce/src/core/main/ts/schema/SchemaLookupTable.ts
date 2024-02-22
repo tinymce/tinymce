@@ -136,7 +136,6 @@ export const makeSchema = (type: SchemaType): SchemaLookupTable => {
     add('article section nav aside main header footer', '', flowContent);
     add('hgroup', '', 'h1 h2 h3 h4 h5 h6');
     add('figure', '', [ flowContent, 'figcaption' ].join(' '));
-    add('template', 'shadowrootmode', flowContent);
     add('time', 'datetime', phrasingContent);
     add('dialog', 'open', flowContent);
     add('command', 'type label icon disabled checked radiogroup command');
