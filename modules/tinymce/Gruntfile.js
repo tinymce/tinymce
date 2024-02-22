@@ -369,8 +369,8 @@ module.exports = function (grunt) {
             dest: 'js/tinymce/langs/README.md'
           },
           {
-            src: '../../LICENSE.TXT',
-            dest: 'js/tinymce/license.txt'
+            src: '../../LICENSE.md',
+            dest: 'js/tinymce/license.md'
           },
           {
             src: '../../README.md',
@@ -461,9 +461,9 @@ module.exports = function (grunt) {
           'js/tinymce/models',
           'js/tinymce/tinymce.d.ts',
           'js/tinymce/tinymce.min.js',
-          'js/tinymce/license.txt',
+          'js/tinymce/license.md',
           'CHANGELOG.md',
-          'LICENSE.TXT',
+          'LICENSE.md',
           'README.md'
         ]
       },
@@ -504,7 +504,7 @@ module.exports = function (grunt) {
               'bin',
               'patches',
               '.yarnrc',
-              'LICENSE.TXT',
+              'LICENSE.md',
               'README.md',
               'lerna.json',
               'package.json',
@@ -588,7 +588,7 @@ module.exports = function (grunt) {
           'js/tinymce/icons',
           'js/tinymce/themes',
           'js/tinymce/models',
-          'js/tinymce/license.txt'
+          'js/tinymce/license.md'
         ]
       },
 
@@ -723,7 +723,7 @@ module.exports = function (grunt) {
           'js/tinymce/tinymce.js',
           'js/tinymce/tinymce.d.ts',
           'js/tinymce/tinymce.min.js',
-          'js/tinymce/license.txt',
+          'js/tinymce/license.md',
           'CHANGELOG.md',
           'js/tinymce/README.md'
         ]
@@ -774,7 +774,7 @@ module.exports = function (grunt) {
           { src: 'js/tinymce/tinymce.js', dest: '/content/scripts/tinymce/tinymce.js' },
           { src: 'js/tinymce/tinymce.d.ts', dest: '/content/scripts/tinymce/tinymce.d.ts' },
           { src: 'js/tinymce/tinymce.min.js', dest: '/content/scripts/tinymce/tinymce.min.js' },
-          { src: 'js/tinymce/license.txt', dest: '/content/scripts/tinymce/license.txt' },
+          { src: 'js/tinymce/license.md', dest: '/content/scripts/tinymce/license.md' },
           { src: 'tools/nuget/build/TinyMCE.targets', dest: '/build/TinyMCE.targets' }
         ]
       },
