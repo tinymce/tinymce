@@ -71,3 +71,7 @@ As an open source product, we encourage and support the active development of ou
 ## Want more information?
 
 Visit the [TinyMCE website](https://tiny.cloud/) and check out the [TinyMCE documentation](https://www.tiny.cloud/docs/).
+
+## License
+
+Licensed under the terms of GNU General Public License Version 2 or later. For full details about the license, please check the LICENSE.md file.
