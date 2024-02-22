@@ -745,8 +745,8 @@ module.exports = function (grunt) {
           summary: 'TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor ' +
           'control released as Open Source under GNU General Public License Version 2 or later by Tiny Technologies, Inc.',
           projectUrl: 'https://www.tiny.cloud/',
-          iconUrl: 'https://www.tiny.cloud/favicon-32x32.png',
-          licenseUrl: 'https://www.tiny.cloud/license',
+          license: 'GPL-2.0-or-later',
+          licenseUrl: 'https://licenses.nuget.org/GPL-2.0-or-later',
           requireLicenseAcceptance: true,
           tags: 'Editor TinyMCE HTML HTMLEditor',
           excludes: [
