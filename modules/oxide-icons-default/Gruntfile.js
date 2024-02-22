@@ -1,43 +1,35 @@
-var iconPackager = require('@ephox/oxide-icons-tools').iconPackager;
+const iconPackager = require('@ephox/oxide-icons-tools').iconPackager;
 
 module.exports = function (grunt) {
-  grunt.loadTasks('./tasks');
+    grunt.initConfig({
+        clean: {
+            dist: ['./dist']
+        },
+        'icon-packager': {
+            options: {
+                name: 'default',
+                filePaths: grunt.file.expand('src/svg/**/*.svg')
+            }
+        }
+    });
 
-  grunt.initConfig({
-    // Clean specified directories
-    clean: {
-      dist: ['./dist'],
-    }
-  });
+    // load all grunt tasks from the monorepo config
+    require('load-grunt-tasks')(grunt, {
+      config: '../../package.json',
+      pattern: ['grunt-*']
+    });
 
-  // load local grunt tasks
-  require('load-grunt-tasks')(grunt);
-  // load all grunt tasks from the parent config
-  require('load-grunt-tasks')(grunt, {
-    config: '../../package.json',
-    pattern: ['grunt-*']
-  });
-  grunt.registerTask('icon-packager', function () {
-    return grunt.src('src/svg/**/*.svg')
-      .pipe(iconPackager({
-        name: 'default'
-      }))
-      .pipe(grunt.dest('dist'));
-  });
+    grunt.registerTask('icon-packager', async function () {
+        var done = this.async();
+        const options = grunt.config.get('icon-packager.options');
+        try {
+            await iconPackager(options);
+            done();
+        } catch (e) {
+            grunt.log.error('An error occurred:', e);
+            done(false);
+        }
+    });
 
-  grunt.reg('clean', function () {
-    return grunt.src('./dist', {
-      read: false,
-      allowEmpty: true,
-    }).pipe(clean());
-  });
-
-  grunt.registerTask("build", [
-    "clean",
-    "stylelint",
-    "compileLess",
-    "cssmin",
-    "generateJsSkins"
-  ]);
-  grunt.registerTask('default', ['clean', 'icon-packager']);
+    grunt.registerTask('default', ['clean', 'icon-packager']);
 };
