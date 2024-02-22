@@ -33,7 +33,7 @@ describe('browser.tinymce.plugins.table.ui.TableCellDialogStyleWithCssTest', () 
   const assertDialogValues = (data: GeneralData) => TableTestUtils.assertDialogValues(data, false, generalSelectors);
 
   const initializeTable = (editor: Editor, table: TableSpec) => {
-    const { cellPaddingAttr, cellPaddingStyle, cellSpacingAttr, cellSpacingStyle } = table;
+    const { cellPaddingAttr, cellPaddingStyle, cellSpacingAttr, cellSpacingStyle, cellBorderWidthStyle, borderAttr } = table;
     const defaultTable = SugarElement.fromHtml<HTMLTableElement>(
       '<table>' +
       '<tbody>' +
@@ -55,11 +55,17 @@ describe('browser.tinymce.plugins.table.ui.TableCellDialogStyleWithCssTest', () 
     if (Type.isNonNullable(cellSpacingAttr)) {
       Attribute.set(defaultTable, 'cellspacing', cellSpacingAttr);
     }
+    if (Type.isNonNullable(borderAttr)) {
+      Attribute.set(defaultTable, 'border', borderAttr);
+    }
     if (Type.isNonNullable(cellSpacingStyle)) {
       Css.set(defaultTable, 'border-spacing', cellSpacingStyle);
     }
     if (Type.isNonNullable(cellPaddingStyle)) {
       Arr.each(SelectorFilter.descendants(defaultTable, 'td,th'), (cell) => Css.set(cell, 'padding', cellPaddingStyle));
+    }
+    if (Type.isNonNullable(cellBorderWidthStyle)) {
+      Arr.each(SelectorFilter.descendants(defaultTable, 'td'), (cell) => Css.set(cell, 'border-width', cellBorderWidthStyle));
     }
 
     editor.setContent(Html.getOuter(defaultTable));
@@ -236,15 +242,20 @@ describe('browser.tinymce.plugins.table.ui.TableCellDialogStyleWithCssTest', () 
         }
       });
 
-      it('TINY-10308: Setting table border to 0px should remove border-width styles and set border="0"', async () => {
+      it('TINY-10308: Setting table border to 0px should always set border="0"', async () => {
         const editor = hook.editor();
-        initializeTable(editor, {});
 
         for (const borderwidth of [ '0', '0px' ]) {
+          initializeTable(editor, { cellBorderWidthStyle: '5px', borderAttr: '1' });
           await TableTestUtils.pOpenTableDialog(editor);
           setDialogValues({ borderwidth });
           await TableTestUtils.pClickDialogButton(editor, true);
-          assertTable(editor, { borderAttr: '0', cellBorderWidthStyle: '' });
+          if (spec.style_by_css) {
+            assertTable(editor, { borderAttr: '0', cellBorderWidthStyle: '' });
+          } else {
+            // Still leaves cell `border-width` style as is:
+            assertTable(editor, { borderAttr: '0', cellBorderWidthStyle: '5px' });
+          }
         }
       });
     });
