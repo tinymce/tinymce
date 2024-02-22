@@ -35,7 +35,7 @@
 @button-focus-border-color: @button-hover-border-color;
 @button-focus-box-shadow: @button-hover-box-shadow;
 @button-focus-text-color: @button-hover-text-color;
-@button-focus-outline: inset 0 0 0 2px @color-white, 0 0 0 1px @color-tint, 0 0 0 3px fade(@color-tint, 25%);
+@button-focus-outline: inset 0 0 0 1px @color-white, 0 0 0 2px @color-tint;
 
 @button-hover-background-color: darken(@button-background-color, 5%);
 @button-hover-background-image: @button-background-image;
@@ -132,9 +132,7 @@
       border-color: @button-focus-border-color;
       box-shadow: @button-focus-box-shadow;
       color: @button-focus-text-color;
-    }
 
-    &:focus-visible:not(:disabled) {
       &::before {
         opacity: 1;
       }
