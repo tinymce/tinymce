@@ -10,7 +10,7 @@ import * as LicenseKeyValidation from 'tinymce/core/init/LicenseKeyValidation';
 describe('browser.tinymce.core.init.LicenseKeyValidationTest', () => {
   let oldWarn: typeof console.warn;
   let messages: string[] = [];
-  const expectedLogMessage = 'You are running TinyMCE in evaluation mode. Provide a valid license key or specify the license to \'GPL\' to agree to the open source license terms. https://tiny.cloud/<TBD>';
+  const expectedLogMessage = 'You are running TinyMCE in evaluation mode. Provide a valid license key or specify the license to \'GPL\' to agree to the open source license terms. https://www.tiny.cloud/';
   const invalidGeneratedKeyToShort = 'foo';
   const invalidGeneratedKeyToLong = Arr.range(512, Fun.constant('x')).join('');
   const validGeneratedKey = Arr.range(52, Fun.constant('x')).join('');
