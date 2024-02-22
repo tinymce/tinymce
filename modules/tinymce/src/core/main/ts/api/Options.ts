@@ -677,6 +677,10 @@ const register = (editor: Editor): void => {
     processor: 'string'
   });
 
+  registerOption('license_key', {
+    processor: 'string'
+  });
+
   registerOption('paste_block_drop', {
     processor: 'boolean',
     default: false
@@ -967,6 +971,7 @@ const getDetailsSerializedState = option('details_serialized_state');
 const shouldForceHexColor = option('force_hex_color');
 const shouldSandboxIframes = option('sandbox_iframes');
 const shouldConvertUnsafeEmbeds = option('convert_unsafe_embeds');
+const getLicenseKey = option('license_key');
 
 export {
   register,
@@ -1074,5 +1079,6 @@ export {
   shouldUseDocumentWrite,
   shouldForceHexColor,
   shouldSandboxIframes,
-  shouldConvertUnsafeEmbeds
+  shouldConvertUnsafeEmbeds,
+  getLicenseKey
 };
