@@ -3318,7 +3318,7 @@ async@^2.6.0, async@^2.6.4:
   dependencies:
     lodash "^4.17.14"
 
-async@^3.0.0, async@^3.2.3, async@^3.2.4, async@~3.2.0:
+async@^3.0.0, async@^3.2.0, async@^3.2.3, async@^3.2.4, async@~3.2.0:
   version "3.2.5"
   resolved "https://registry.yarnpkg.com/async/-/async-3.2.5.tgz#ebd52a8fdaf7a2289a24df399f8d8485c8a46b66"
   integrity sha512-baNZyqaaLhyLVKm/DlvdW051MSgO6b8eVfIezl9E5PqWxFgzLm/wQntEW4zOytVburDEr0JlALEpdOFwvErLsg==
@@ -4256,12 +4256,12 @@ connect-history-api-fallback@^2.0.0:
   resolved "https://registry.yarnpkg.com/connect-history-api-fallback/-/connect-history-api-fallback-2.0.0.tgz#647264845251a0daf25b97ce87834cace0f5f1c8"
   integrity sha512-U73+6lQFmfiNPrYbXqr6kZ1i1wiRqXnp2nhMsINseWXO8lDau0LGEffJ8kQi4EjLZympVgRdvqjAgiZ1tgzDDA==
 
-connect-livereload@^0.6.0:
+connect-livereload@^0.6.0, connect-livereload@^0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/connect-livereload/-/connect-livereload-0.6.1.tgz#1ac0c8bb9d9cfd5b28b629987a56a9239db9baaa"
   integrity sha512-3R0kMOdL7CjJpU66fzAkCe6HNtd3AavCS4m+uW4KtJjrdGPT0SQEZieAYd+cm+lJoBznNQ4lqipYWkhBMgk00g==
 
-connect@^3.6.6:
+connect@^3.6.6, connect@^3.7.0:
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/connect/-/connect-3.7.0.tgz#5d49348910caa5e07a01800b030d0c35f20484f8"
   integrity sha512-ZqRXc+tZukToSNmh5C2iWMSoV3X1YUcPbqEM4DkEG5tNQXrQUZCNVGGv3IuicnkMtPfGf3Xtp8WCXs295iQ1pQ==
@@ -6688,7 +6688,7 @@ grunt-cli@~1.4.3:
     nopt "~4.0.1"
     v8flags "~3.2.0"
 
-grunt-contrib-clean@^2.0.0:
+grunt-contrib-clean@^2.0.0, grunt-contrib-clean@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/grunt-contrib-clean/-/grunt-contrib-clean-2.0.1.tgz#062e8019d31bfca35af8929a2ee1063c6c46dd2d"
   integrity sha512-uRvnXfhiZt8akb/ZRDHJpQQtkkVkqc/opWO4Po/9ehC2hPxgptB9S6JHDC/Nxswo4CJSM0iFPT/Iym3cEMWzKA==
@@ -6720,6 +6720,16 @@ grunt-contrib-cssmin@^5.0.0:
     chalk "^4.1.2"
     clean-css "^5.3.2"
     maxmin "^3.0.0"
+
+grunt-contrib-less@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/grunt-contrib-less/-/grunt-contrib-less-3.0.0.tgz#909a37004c92bd1a2a9eb79d1227ea5aabd46e24"
+  integrity sha512-fBB8MUDCo5EgT7WdOVQnZq4GF+XCeFdnkhaxI7uepp8P973sH1jdodjF87c6d9WSHKgArJAGP5JEtthhdKVovg==
+  dependencies:
+    async "^3.2.0"
+    chalk "^4.1.0"
+    less "^4.1.1"
+    lodash "^4.17.21"
 
 grunt-contrib-symlink@^1.0.0:
   version "1.0.0"
@@ -6819,7 +6829,7 @@ grunt-webpack@^5.0.0:
     deep-for-each "^3.0.0"
     lodash "^4.17.19"
 
-grunt@^1.0.4, grunt@^1.1.0, grunt@^1.5.3:
+grunt@^1.0.4, grunt@^1.1.0, grunt@^1.5.3, grunt@^1.6.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/grunt/-/grunt-1.6.1.tgz#0b4dd1524f26676dcf45d8f636b8d9061a8ede16"
   integrity sha512-/ABUy3gYWu5iBmrUSRBP97JLpQUm0GgVveDCp6t3yRNIoltIYw7rEj3g5y1o2PGPR2vfTRGa7WC/LZHLTXnEzA==
@@ -8224,12 +8234,12 @@ lerna@^8.1.2:
     yargs "17.7.2"
     yargs-parser "21.1.1"
 
-less-plugin-preset-env@^1.2.4:
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/less-plugin-preset-env/-/less-plugin-preset-env-1.2.4.tgz#250f71afd8afb5b192f4b1963e758bc60615a740"
-  integrity sha512-0NEHhgJsYWZdrPtnq+kRYxnMxSXSsxCgacfJJ3CjL5DJA23qFOK4wtP7TAKKTWwDa/+JqFH1DKo3fgm4WBxHYw==
+less-plugin-preset-env@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/less-plugin-preset-env/-/less-plugin-preset-env-1.2.5.tgz#3877de910ec6e67326dd98549e3b66d0407689c8"
+  integrity sha512-0Fx5WtfYIRhIwq5KF4D+IDtTXheIbtN6jO6H3bPvkzsebZjPhS/ReBmOCJC7kJW87RqnsmiYFiXhsW66pAdJ0w==
 
-"less@^3.7.1 || ^4.0.0", less@^4.2.0:
+"less@^3.7.1 || ^4.0.0", less@^4.1.1, less@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/less/-/less-4.2.0.tgz#cbefbfaa14a4cd388e2099b2b51f956e1465c450"
   integrity sha512-P3b3HJDBtSzsXUl0im2L7gTO5Ubg8mEN6G8qoTS77iXxXX4Hvu4Qj540PZDvQ8V6DmX6iXo98k7Md0Cm1PrLaA==
@@ -12089,17 +12099,17 @@ strong-log-transformer@2.1.0, strong-log-transformer@^2.1.0:
     minimist "^1.2.0"
     through "^2.3.4"
 
-stylelint-config-recommended@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/stylelint-config-recommended/-/stylelint-config-recommended-3.0.0.tgz#e0e547434016c5539fe2650afd58049a2fd1d657"
-  integrity sha512-F6yTRuc06xr1h5Qw/ykb2LuFynJ2IxkKfCMf+1xqPffkxh0S09Zc902XCffcsw/XMFq/OzQ1w54fLIDtmRNHnQ==
+stylelint-config-recommended@^14.0.0:
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/stylelint-config-recommended/-/stylelint-config-recommended-14.0.0.tgz#b395c7014838d2aaca1755eebd914d0bb5274994"
+  integrity sha512-jSkx290CglS8StmrLp2TxAppIajzIBZKYm3IxT89Kg6fGlxbPiTiyH9PS5YUuVAFwaJLl1ikiXX0QWjI0jmgZQ==
 
-stylelint-config-standard@^20.0.0:
-  version "20.0.0"
-  resolved "https://registry.yarnpkg.com/stylelint-config-standard/-/stylelint-config-standard-20.0.0.tgz#06135090c9e064befee3d594289f50e295b5e20d"
-  integrity sha512-IB2iFdzOTA/zS4jSVav6z+wGtin08qfj+YyExHB3LF9lnouQht//YyB0KZq9gGz5HNPkddHOzcY8HsUey6ZUlA==
+stylelint-config-standard@^36.0.0:
+  version "36.0.0"
+  resolved "https://registry.yarnpkg.com/stylelint-config-standard/-/stylelint-config-standard-36.0.0.tgz#6704c044d611edc12692d4a5e37b039a441604d4"
+  integrity sha512-3Kjyq4d62bYFp/Aq8PMKDwlgUyPU4nacXsjDLWJdNPRUgpuxALu1KnlAHIj36cdtxViVhXexZij65yM0uNIHug==
   dependencies:
-    stylelint-config-recommended "^3.0.0"
+    stylelint-config-recommended "^14.0.0"
 
 stylelint-order@^6.0.4:
   version "6.0.4"

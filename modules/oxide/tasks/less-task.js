@@ -1,9 +1,9 @@
 const less = require('less');
 const fs = require('node:fs');
 const path = require('path');
-const lessPresetEnv = require("less-plugin-preset-env");
+const LessPluginPresetEnv = require('less-plugin-preset-env');
 
-const presetEnv = new lessPresetEnv({
+const presetEnv = new LessPluginPresetEnv({
   browsers: ['last 2 Safari versions', 'iOS 14.0', 'last 2 Chrome versions', 'Firefox ESR'],
   grid: 'no-autoplace'
 });

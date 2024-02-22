@@ -9,6 +9,7 @@
   },
   "scripts": {
     "test": "echo 'No tests'",
+    "build-old": "gulp build",
     "build": "grunt build",
     "start": "grunt watch",
     "prepublishOnly": "yarn ci",
@@ -35,5 +36,18 @@
   "dependencies": {
     "prism-themes": "^1.9.0",
     "prismjs": "^1.27.0"
+  },
+  "devDependencies": {
+    "connect": "^3.7.0",
+    "connect-livereload": "^0.6.1",
+    "grunt": "^1.6.1",
+    "grunt-contrib-clean": "^2.0.1",
+    "grunt-contrib-cssmin": "^5.0.0",
+    "grunt-contrib-less": "^3.0.0",
+    "grunt-stylelint": "^0.19.0",
+    "less": "^4.2.0",
+    "stylelint": "^16.2.1",
+    "stylelint-config-standard": "^36.0.0",
+    "stylelint-order": "^6.0.4"
   }
 }
