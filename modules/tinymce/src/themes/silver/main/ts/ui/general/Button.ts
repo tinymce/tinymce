@@ -240,7 +240,10 @@ const renderToggleButton = (spec: FooterToggleButtonSpec, providers: UiFactoryBa
       ...(spec.active ? [ ViewButtonClasses.Ticked ] : []),
       ...(showIconAndText ? [ 'tox-button--icon-and-text' ] : [])
     ],
-    attributes: { ...tooltipAttributes, ...(Type.isNonNullable(btnName) ? { 'data-mce-name': btnName } : {} ) }
+    attributes: {
+      ...tooltipAttributes,
+      ...(Type.isNonNullable(btnName) ? { 'data-mce-name': btnName } : {} )
+    }
   };
   const extraBehaviours: Behaviours = [];
 
