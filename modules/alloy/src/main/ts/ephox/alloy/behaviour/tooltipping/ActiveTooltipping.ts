@@ -68,93 +68,94 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
   };
 
   const getEvents = () => {
-    if (tooltipConfig.mode === 'normal') {
-      return [
-        AlloyEvents.run(NativeEvents.focusin(), (comp) => {
-          AlloyTriggers.emit(comp, ImmediateShowTooltipEvent);
-        }),
-        AlloyEvents.run(SystemEvents.postBlur(), (comp) => {
-          AlloyTriggers.emit(comp, ImmediateHideTooltipEvent);
-        }),
-        AlloyEvents.run(NativeEvents.mouseover(), (comp) => {
-          AlloyTriggers.emit(comp, ShowTooltipEvent);
-        }),
-        AlloyEvents.run(NativeEvents.mouseout(), (comp) => {
-          AlloyTriggers.emit(comp, HideTooltipEvent);
-        })
-      ];
-    } else if (tooltipConfig.mode === 'follow-highlight') {
-      return [
-        AlloyEvents.run(SystemEvents.highlight(), (comp, _se) => {
-          AlloyTriggers.emit(comp, ShowTooltipEvent);
-        }),
-        AlloyEvents.run(SystemEvents.dehighlight(), (comp) => {
-          AlloyTriggers.emit(comp, HideTooltipEvent);
-        })
-      ];
-    } else if (tooltipConfig.mode === 'children-normal') {
-      return [
-        AlloyEvents.run(NativeEvents.focusin(), (comp, se) => {
-          Focus.search(comp.element).each((_) => {
-            if (Selectors.is(se.event.target, '[data-mce-tooltip]')) {
-              state.getTooltip().fold(() => {
-                AlloyTriggers.emit(comp, ImmediateShowTooltipEvent);
-              },
-              (tooltip) => {
-                if (state.isShowing()) {
-                  tooltipConfig.onShow(comp, tooltip);
-                  reposition(comp);
-                }
-              });
-            }
-          });
-        }),
-        AlloyEvents.run(SystemEvents.postBlur(), (comp) => {
-          Focus.search(comp.element).fold(() => {
+    switch (tooltipConfig.mode) {
+      case 'normal':
+        return [
+          AlloyEvents.run(NativeEvents.focusin(), (comp) => {
+            AlloyTriggers.emit(comp, ImmediateShowTooltipEvent);
+          }),
+          AlloyEvents.run(SystemEvents.postBlur(), (comp) => {
             AlloyTriggers.emit(comp, ImmediateHideTooltipEvent);
-          }, Fun.noop);
-        }),
-        AlloyEvents.run<EventArgs>(NativeEvents.mouseover(), (comp) => {
-          SelectorFind.descendant(comp.element, '[data-mce-tooltip]:hover').each((_) => {
-            state.getTooltip().fold(() => {
-              AlloyTriggers.emit(comp, ShowTooltipEvent);
-            }, (tooltip) => {
-              if (state.isShowing()) {
-                tooltipConfig.onShow(comp, tooltip);
-                reposition(comp);
+          }),
+          AlloyEvents.run(NativeEvents.mouseover(), (comp) => {
+            AlloyTriggers.emit(comp, ShowTooltipEvent);
+          }),
+          AlloyEvents.run(NativeEvents.mouseout(), (comp) => {
+            AlloyTriggers.emit(comp, HideTooltipEvent);
+          })
+        ];
+      case 'follow-highlight':
+        return [
+          AlloyEvents.run(SystemEvents.highlight(), (comp, _se) => {
+            AlloyTriggers.emit(comp, ShowTooltipEvent);
+          }),
+          AlloyEvents.run(SystemEvents.dehighlight(), (comp) => {
+            AlloyTriggers.emit(comp, HideTooltipEvent);
+          })
+        ];
+      case 'children-normal':
+        return [
+          AlloyEvents.run(NativeEvents.focusin(), (comp, se) => {
+            Focus.search(comp.element).each((_) => {
+              if (Selectors.is(se.event.target, '[data-mce-tooltip]')) {
+                state.getTooltip().fold(() => {
+                  AlloyTriggers.emit(comp, ImmediateShowTooltipEvent);
+                },
+                (tooltip) => {
+                  if (state.isShowing()) {
+                    tooltipConfig.onShow(comp, tooltip);
+                    reposition(comp);
+                  }
+                });
               }
             });
-          });
-        }),
-        AlloyEvents.run(NativeEvents.mouseout(), (comp) => {
-          SelectorFind.descendant(comp.element, '[data-mce-tooltip]:hover').fold(() => {
-            AlloyTriggers.emit(comp, HideTooltipEvent);
-          }, Fun.noop);
-        }),
-      ];
-    } else {
-      return [
-        AlloyEvents.run(NativeEvents.focusin(), (comp, se) => {
-          Focus.search(comp.element).each((_) => {
-            if (Selectors.is(se.event.target, '[data-mce-tooltip]')) {
+          }),
+          AlloyEvents.run(SystemEvents.postBlur(), (comp) => {
+            Focus.search(comp.element).fold(() => {
+              AlloyTriggers.emit(comp, ImmediateHideTooltipEvent);
+            }, Fun.noop);
+          }),
+          AlloyEvents.run<EventArgs>(NativeEvents.mouseover(), (comp) => {
+            SelectorFind.descendant(comp.element, '[data-mce-tooltip]:hover').each((_) => {
               state.getTooltip().fold(() => {
-                AlloyTriggers.emit(comp, ImmediateShowTooltipEvent);
-              },
-              (tooltip) => {
+                AlloyTriggers.emit(comp, ShowTooltipEvent);
+              }, (tooltip) => {
                 if (state.isShowing()) {
                   tooltipConfig.onShow(comp, tooltip);
                   reposition(comp);
                 }
               });
-            }
-          });
-        }),
-        AlloyEvents.run(SystemEvents.postBlur(), (comp) => {
-          Focus.search(comp.element).fold(() => {
-            AlloyTriggers.emit(comp, ImmediateHideTooltipEvent);
-          }, Fun.noop);
-        }),
-      ];
+            });
+          }),
+          AlloyEvents.run(NativeEvents.mouseout(), (comp) => {
+            SelectorFind.descendant(comp.element, '[data-mce-tooltip]:hover').fold(() => {
+              AlloyTriggers.emit(comp, HideTooltipEvent);
+            }, Fun.noop);
+          }),
+        ];
+      default:
+        return [
+          AlloyEvents.run(NativeEvents.focusin(), (comp, se) => {
+            Focus.search(comp.element).each((_) => {
+              if (Selectors.is(se.event.target, '[data-mce-tooltip]')) {
+                state.getTooltip().fold(() => {
+                  AlloyTriggers.emit(comp, ImmediateShowTooltipEvent);
+                },
+                (tooltip) => {
+                  if (state.isShowing()) {
+                    tooltipConfig.onShow(comp, tooltip);
+                    reposition(comp);
+                  }
+                });
+              }
+            });
+          }),
+          AlloyEvents.run(SystemEvents.postBlur(), (comp) => {
+            Focus.search(comp.element).fold(() => {
+              AlloyTriggers.emit(comp, ImmediateHideTooltipEvent);
+            }, Fun.noop);
+          }),
+        ];
     }
   };
 
