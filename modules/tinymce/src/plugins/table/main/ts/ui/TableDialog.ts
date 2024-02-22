@@ -68,6 +68,7 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
       styles['border-width'] = '';
     } else {
       styles['border-width'] = Utils.addPxSuffix(data.border);
+      attrs.border = 1;
     }
     styles['border-spacing'] = Utils.addPxSuffix(data.cellspacing);
   } else {
