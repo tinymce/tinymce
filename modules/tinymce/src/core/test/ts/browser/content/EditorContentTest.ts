@@ -18,7 +18,8 @@ const defaultExpectedEvents = [
 ];
 
 describe('browser.tinymce.core.content.EditorContentTest', () => {
-  const isSafari = PlatformDetection.detect().browser.isSafari();
+  // TINY-10669: Remove this check
+  const isSafariLessThan17 = PlatformDetection.detect().browser.isSafariLessThan17();
 
   const toHtml = (node: AstNode): string => HtmlSerializer({}).serialize(node);
 
@@ -556,7 +557,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
           const content = editor.getContent();
           assert.equal(content,
             // TINY-9624: Safari seems to encode the contents of iframes
-            isSafari
+            isSafariLessThan17
               ? '<p><iframe>&lt;p&gt;test&lt;/p&gt;</iframe></p>'
               : '<p><iframe><p>test</p></iframe></p>',
             'getContent should not error when there is iframes with child nodes in content');
@@ -597,7 +598,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         const editor = hook.editor();
         editor.setContent('<p>test</p><!--\ufeff><iframe onload=alert(document.domain)>-></body>-->');
         // TINY-10305: Safari escapes text nodes within <iframe>.
-        TinyAssertions.assertRawContent(editor, isSafari ? '<p>test</p><!----><p><iframe>-&gt;&lt;/body&gt;--&gt;&lt;/body&gt;</iframe></p>' : '<p>test</p><!---->');
+        TinyAssertions.assertRawContent(editor, isSafariLessThan17 ? '<p>test</p><!----><p><iframe>-&gt;&lt;/body&gt;--&gt;&lt;/body&gt;</iframe></p>' : '<p>test</p><!---->');
       });
 
       it('TINY-10305: setContent tree should sanitize content that can cause mXSS via ZWNBSP trimming', () => {

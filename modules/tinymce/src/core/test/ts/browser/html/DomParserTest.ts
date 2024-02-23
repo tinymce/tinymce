@@ -17,7 +17,8 @@ interface ParseTestResult {
 }
 
 describe('browser.tinymce.core.html.DomParserTest', () => {
-  const browser = PlatformDetection.detect().browser;
+  // TINY-10669: Remove this check
+  const isSafariLessThan17 = PlatformDetection.detect().browser.isSafariLessThan17();
   const schema = Schema({ valid_elements: '*[class|title]' });
   const serializer = HtmlSerializer({}, schema);
 
@@ -772,7 +773,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
         assert.equal(
           serializer.serialize(DomParser(scenario.settings).parse('<iframe><textarea></iframe><img src="a" onerror="alert(document.domain)" />')),
-          browser.isSafari() || !scenario.isSanitizeEnabled ? '<iframe><textarea></iframe><img src="a">' : '<img src="a">'
+          isSafariLessThan17 || !scenario.isSanitizeEnabled ? '<iframe><textarea></iframe><img src="a">' : '<img src="a">'
         );
       });
 

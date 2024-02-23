@@ -7,7 +7,8 @@ import { getSanitizer, MimeType } from 'tinymce/core/html/Sanitization';
 
 describe('browser.tinymce.core.html.SanitizationTest', () => {
   context('Sanitize html', () => {
-    const isSafari = PlatformDetection.detect().browser.isSafari();
+    // TINY-10669: Remove this check
+    const isSafariLessThan17 = PlatformDetection.detect().browser.isSafariLessThan17();
 
     const testHtmlSanitizer = (testCase: { input: string; expected: string; mimeType: MimeType; sanitize?: boolean }) => {
       const sanitizer = getSanitizer({ sanitize: testCase.sanitize ?? true }, Schema());
@@ -22,14 +23,14 @@ describe('browser.tinymce.core.html.SanitizationTest', () => {
     it('Sanitize iframe HTML', () => testHtmlSanitizer({
       input: '<iframe src="x"><script>alert(1)</script></iframe><iframe src="javascript:alert(1)"></iframe>',
       // Safari seems to encode the contents of iframes
-      expected: isSafari ? '<iframe src="x">&lt;script&gt;alert(1)&lt;/script&gt;</iframe><iframe></iframe>' : '<iframe></iframe>',
+      expected: isSafariLessThan17 ? '<iframe src="x">&lt;script&gt;alert(1)&lt;/script&gt;</iframe><iframe></iframe>' : '<iframe></iframe>',
       mimeType: 'text/html'
     }));
 
     it('Disabled sanitization of iframe HTML', () => testHtmlSanitizer({
       input: '<iframe src="x"><script>alert(1)</script></iframe><iframe src="javascript:alert(1)"></iframe>',
       // Safari seems to encode the contents of iframes
-      expected: isSafari ? '<iframe src="x">&lt;script&gt;alert(1)&lt;/script&gt;</iframe><iframe></iframe>' : '<iframe src="x"><script>alert(1)</script></iframe><iframe></iframe>',
+      expected: isSafariLessThan17 ? '<iframe src="x">&lt;script&gt;alert(1)&lt;/script&gt;</iframe><iframe></iframe>' : '<iframe src="x"><script>alert(1)</script></iframe><iframe></iframe>',
       mimeType: 'text/html',
       sanitize: false
     }));

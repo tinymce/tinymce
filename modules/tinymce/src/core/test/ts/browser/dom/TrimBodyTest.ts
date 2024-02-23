@@ -6,7 +6,8 @@ import { assert } from 'chai';
 import * as TrimBody from 'tinymce/core/dom/TrimBody';
 
 describe('browser.tinymce.core.dom.TrimBodyTest', () => {
-  const isSafari = PlatformDetection.detect().browser.isSafari();
+  // TINY-10669: Remove this check
+  const isSafariLessThan17 = PlatformDetection.detect().browser.isSafariLessThan17();
 
   context('trim', () => {
     it('trim should trim body containing trimmmable nodes', () => {
@@ -181,7 +182,7 @@ describe('browser.tinymce.core.dom.TrimBodyTest', () => {
         TrimBody.emptyUnescapedZwspTexts(unescapedText);
         // TINY-10305: Safari escapes text nodes within <plaintext>.
         assert.strictEqual(unescapedText.innerHTML,
-          isSafari ? `<p>Test</p><${plaintext}>Test&lt;p&gt;Test&lt;/p&gt;</${plaintext}>` : `<p>Test</p><${plaintext}>Test<p>Test</p></${plaintext}>`);
+          isSafariLessThan17 ? `<p>Test</p><${plaintext}>Test&lt;p&gt;Test&lt;/p&gt;</${plaintext}>` : `<p>Test</p><${plaintext}>Test<p>Test</p></${plaintext}>`);
       });
     });
   });

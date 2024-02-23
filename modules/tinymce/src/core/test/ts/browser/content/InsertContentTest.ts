@@ -9,7 +9,8 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as InsertContent from 'tinymce/core/content/InsertContent';
 
 describe('browser.tinymce.core.content.InsertContentTest', () => {
-  const isSafari = PlatformDetection.detect().browser.isSafari();
+  // TINY-10669: Remove this check
+  const isSafariLessThan17 = PlatformDetection.detect().browser.isSafariLessThan17();
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
@@ -843,7 +844,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       TinySelections.setCursor(editor, [ 0 ], 0);
       editor.insertContent('<!--\ufeff><iframe onload=alert(document.domain)>-></body>-->');
       // TINY-10305: Safari escapes text nodes within <iframe>.
-      TinyAssertions.assertRawContent(editor, isSafari
+      TinyAssertions.assertRawContent(editor, isSafariLessThan17
         ? '<p><!----><iframe>-&gt;&lt;/body&gt;--&gt;&lt;span id="mce_marker" data-mce-type="bookmark"&gt;&amp;#xFEFF;&lt;/span&gt;&lt;/body&gt;</iframe>initial</p>'
         : '<p><!---->initial</p>');
     });
