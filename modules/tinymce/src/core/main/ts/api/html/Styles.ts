@@ -17,9 +17,9 @@
  */
 
 import { RgbaColour, Transformations } from '@ephox/acid';
-import { Obj, Type, Unicode } from '@ephox/katamari';
+import { Obj, Unicode } from '@ephox/katamari';
 
-import { ForceHexColor, URLConverter } from '../OptionTypes';
+import { URLConverter } from '../OptionTypes';
 import Schema, { SchemaMap } from './Schema';
 
 export type StyleMap = Record<string, string | number>;
@@ -29,7 +29,6 @@ export interface StylesSettings {
   allow_svg_data_urls?: boolean;
   url_converter?: URLConverter;
   url_converter_scope?: any;
-  force_hex_color?: ForceHexColor;
 }
 
 interface Styles {
@@ -266,14 +265,9 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
             }
 
             // Convert RGB/RGBA colors to HEX
-            if (Type.isString(settings.force_hex_color) && settings.force_hex_color !== 'off') {
-              RgbaColour.fromString(value).each((rgba) => {
-                //  Always convert or only convert if there will be no loss of information from the alpha channel
-                if (settings.force_hex_color === 'always' || rgba.alpha === 1) {
-                  value = Transformations.rgbaToHexString(RgbaColour.toString(rgba));
-                }
-              });
-            }
+            RgbaColour.fromString(value).each((rgba) => {
+              value = Transformations.rgbaToHexString(RgbaColour.toString(rgba));
+            });
 
             // Convert URLs and force them into url('value') format
             value = value.replace(urlOrStrRegExp, processUrl);
