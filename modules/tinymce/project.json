@@ -1,18 +1,11 @@
 {
   "name": "tinymce",
   "tags": [ "open-source", "editor" ],
-  "namedInputs": {
-    "tinymce": [
-      "ts-globals",
-      "{projectRoot}/tsconfig.json",
-      "{projectRoot}/src/**/main/**/*.ts"
-    ]
-  },
   "targets": {
     "build": {
       "inputs": [
-        "tinymce",
-        "{projectRoot}/Gruntfile.js"
+        "tiny-product",
+        "^tiny-product"
       ],
       "dependsOn": [
         "lint",
@@ -22,15 +15,6 @@
         "{projectRoot}/dist",
         "{projectRoot}/js",
         "{projectRoot}/lib"
-      ]
-    },
-    "test": {
-      "inputs": [
-        "tinymce",
-        "{projectRoot}/src/**/test/**/*.ts"
-      ],
-      "dependsOn": [
-        "build"
       ]
     }
   }
