@@ -8,7 +8,6 @@
     "directory": "modules/bridge"
   },
   "scripts": {
-    "test": "echo \"No tests here\"",
     "prepublishOnly": "tsc -b",
     "build": "tsc",
     "lint": "eslint --config ../../.eslintrc.json src/**/*.ts"
