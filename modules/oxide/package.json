@@ -1,7 +1,7 @@
 {
   "name": "@tinymce/oxide",
-  "version": "2.8.1",
-  "description": "TinyMCE 5 Oxide skin",
+  "version": "3.0.0",
+  "description": "TinyMCE Oxide skins",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce.git",
@@ -13,8 +13,9 @@
     "build": "grunt build",
     "start": "grunt watch",
     "prepublishOnly": "yarn ci",
-    "ci": "grunt build"
+    "ci": "grunt --gruntfile Gruntfile.cjs && grunt build"
   },
+  "type": "module",
   "keywords": [
     "TinyMCE"
   ],
