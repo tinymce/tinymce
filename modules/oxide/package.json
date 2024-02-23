@@ -13,7 +13,7 @@
     "build": "grunt build",
     "start": "grunt watch",
     "prepublishOnly": "yarn ci",
-    "ci": "grunt --gruntfile Gruntfile.cjs && grunt build"
+    "ci": "grunt build"
   },
   "type": "module",
   "keywords": [
