@@ -58,12 +58,6 @@ export default (): void => {
         callback('movie.mp4', { source2: 'alt.ogg', poster: 'https://www.google.com/logos/google.jpg' });
       }
     },
-    templates: [
-      { title: 'Some title 1', description: 'Some desc 1', content: 'My content' },
-      { title: 'Some title 2', description: 'Some desc 2', content: '<div class="mceTmpl"><span class="cdate">cdate</span><span class="mdate">mdate</span>My content2</div>' }
-    ],
-    template_cdate_format: '[CDATE: %m/%d/%Y : %H:%M:%S]',
-    template_mdate_format: '[MDATE: %m/%d/%Y : %H:%M:%S]',
     image_caption: true,
     theme: 'silver',
     mobile: {
@@ -80,7 +74,7 @@ export default (): void => {
     plugins: [
       'fullscreen', 'help', 'autosave', 'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
       'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code', 'fullscreen', 'insertdatetime', 'media', 'nonbreaking',
-      'save', 'table', 'directionality', 'emoticons', 'template', 'importcss', 'codesample', 'help'
+      'save', 'table', 'directionality', 'emoticons', 'importcss', 'codesample', 'help'
     ],
     // rtl_ui: true,
     add_unload_trigger: false,
