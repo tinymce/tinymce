@@ -367,6 +367,14 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
     assert.isFalse(schema.isValidChild('body', 'p'));
   });
 
+  it('addValidChildren with exotic names', () => {
+    const schema = Schema();
+
+    assert.isFalse(schema.isValidChild('foo.-bar', 'bar.-baz'));
+    schema.addValidChildren('foo.-bar[bar.-baz]');
+    assert.isTrue(schema.isValidChild('foo.-bar', 'bar.-baz'));
+  });
+
   it('addValidChildren replace should remove all children except the specified ones', () => {
     const schema = Schema();
 
@@ -708,6 +716,172 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
       const schema = Schema({ padd_empty_block_inline_children: true });
       const rules = Obj.mapToArray(schema.getTextInlineElements(), (_value, name) => getElementRule(schema, name.toLowerCase()));
       assert.isTrue(rules.length > 0 && Arr.forall(rules, (rule) => rule.paddInEmptyBlock === true));
+    });
+  });
+
+  context('addCustomElements with spec', () => {
+    it('TINY-9980: Add custom element by name only', () => {
+      const schema = Schema({});
+      schema.addCustomElements({
+        foo: {},
+        bar: {}
+      });
+
+      assert.isTrue(schema.isValid('foo'));
+      assert.isTrue(schema.isValid('bar'));
+      assert.deepEqual(schema.getElementRule('foo'), { attributes: {}, attributesOrder: [] });
+      assert.deepEqual(schema.getElementRule('bar'), { attributes: {}, attributesOrder: [] });
+      assert.isFalse(schema.isValidChild('div', 'foo'));
+      assert.isFalse(schema.isValidChild('span', 'foo'));
+      assert.isFalse(schema.isValidChild('div', 'bar'));
+      assert.isFalse(schema.isValidChild('span', 'bar'));
+      assert.isFalse(schema.isValidChild('foo', 'div'));
+      assert.isFalse(schema.isValidChild('foo', 'span'));
+      assert.isFalse(schema.isValidChild('bar', 'div'));
+      assert.isFalse(schema.isValidChild('bar', 'span'));
+    });
+
+    it('TINY-9980: Add custom element with custom attributes', () => {
+      const schema = Schema({});
+      schema.addCustomElements({
+        foo: { attributes: [ 'a', 'b' ] }
+      });
+
+      assert.deepEqual(schema.getElementRule('foo'), { attributes: { a: {}, b: {}}, attributesOrder: [ 'a', 'b' ] });
+    });
+
+    it('TINY-9980: Add custom element with padEmpty', () => {
+      const schema = Schema({});
+      schema.addCustomElements({
+        foo: { padEmpty: true }
+      });
+
+      assert.deepEqual(schema.getElementRule('foo'), { attributes: {}, attributesOrder: [], paddEmpty: true });
+    });
+
+    it('TINY-9980: Add custom element with custom children', () => {
+      const schema = Schema({});
+      schema.addCustomElements({
+        foo: { children: [ 'span', 'div' ] }
+      });
+
+      assert.isTrue(schema.isValidChild('foo', 'span'));
+      assert.isTrue(schema.isValidChild('foo', 'div'));
+      assert.isFalse(schema.isValidChild('foo', 'strong'));
+      assert.isFalse(schema.isValidChild('foo', 'h1'));
+    });
+
+    it('TINY-9980: Add custom element that extends div', () => {
+      const schema = Schema({});
+      schema.addCustomElements({
+        foo: { extends: 'div' }
+      });
+
+      assert.isTrue(schema.isValidChild('div', 'foo'), 'Foo should be accepted where div is accepted');
+      assert.deepEqual(schema.getElementRule('foo'), schema.getElementRule('div'), 'foo should have all the rules that div have');
+      assert.isTrue(schema.isValidChild('foo', 'span'), 'foo should be able to contain the same children as div');
+      assert.isTrue(schema.isValidChild('foo', 'div'), 'foo should be able to contain the same children as div');
+    });
+
+    it('TINY-9980: Add custom element that extends div but overrides attributes and children', () => {
+      const schema = Schema({});
+      schema.addCustomElements({
+        foo: { extends: 'div', attributes: [ 'a', 'b' ], children: [ 'span', 'div' ] }
+      });
+
+      assert.deepEqual(schema.getElementRule('foo'), { attributes: { a: {}, b: {}}, attributesOrder: [ 'a', 'b' ], paddEmpty: true });
+      assert.isTrue(schema.isValidChild('foo', 'span'));
+      assert.isTrue(schema.isValidChild('foo', 'div'));
+      assert.isFalse(schema.isValidChild('foo', 'strong'));
+      assert.isFalse(schema.isValidChild('foo', 'h1'));
+    });
+
+    it('TINY-9980: Add custom element with preset children', () => {
+      const schema = Schema({});
+      schema.addCustomElements({
+        foo: { children: [ 'div', '@phrasing' ] }
+      });
+
+      assert.isTrue(schema.isValidChild('foo', 'span'));
+      assert.isTrue(schema.isValidChild('foo', 'div'));
+      assert.isFalse(schema.isValidChild('foo', 'h1'));
+    });
+
+    it('TINY-9980: Add custom element with preset attributes', () => {
+      const schema = Schema({});
+      schema.addCustomElements({
+        foo: { attributes: [ '@global', 'bar' ] }
+      });
+
+      assert.deepEqual(schema.getElementRule('foo'), {
+        attributesOrder: [
+          'id', 'accesskey', 'class', 'dir', 'lang', 'style', 'tabindex', 'title', 'role', 'contenteditable', 'contextmenu', 'draggable',
+          'dropzone', 'hidden', 'spellcheck', 'translate', 'xml:lang', 'bar'
+        ],
+        attributes: {
+          'id': {}, 'accesskey': {}, 'class': {}, 'dir': {}, 'lang': {}, 'style': {}, 'tabindex': {}, 'title': {}, 'role': {},
+          'contenteditable': {}, 'contextmenu': {}, 'draggable': {}, 'dropzone': {}, 'hidden': {},
+          'spellcheck': {}, 'translate': {}, 'xml:lang': {}, 'bar': {}
+        }
+      });
+    });
+
+    it('TINY-9980: Add custom elements that extends the block/inline state type', () => {
+      const schema = Schema({});
+      schema.addCustomElements({
+        foo: { extends: 'div' },
+        bar: { extends: 'span' }
+      });
+
+      assert.isTrue(schema.isBlock('foo'));
+      assert.isTrue(schema.isInline('bar'));
+    });
+
+    it('TINY-9980: Add custom elements with exotic names', () => {
+      const schema = Schema({});
+      schema.addCustomElements({
+        'foo.-bar': { extends: 'div', children: [ 'bar.-baz' ] }
+      });
+
+      assert.isTrue(schema.isValid('foo.-bar'));
+      assert.isTrue(schema.isValidChild('foo.-bar', 'bar.-baz'));
+    });
+  });
+
+  context('custom_elements with spec record', () => {
+    it('TINY-9980: Add custom elements', () => {
+      const schema = Schema({
+        custom_elements: {
+          foo: { extends: 'div' },
+          bar: { extends: 'span' }
+        }
+      });
+
+      assert.isTrue(schema.isValidChild('div', 'foo'));
+      assert.isTrue(schema.isValidChild('h1', 'bar'));
+    });
+
+    it('TINY-9980: Add custom elements with extended_valid_elements', () => {
+      const schema = Schema({
+        custom_elements: {
+          foo: { extends: 'div' }
+        },
+        extended_valid_elements: 'foo[a|b]'
+      });
+
+      assert.deepEqual(schema.getElementRule('foo'), { attributes: { a: {}, b: {}}, attributesOrder: [ 'a', 'b' ] });
+    });
+
+    it('TINY-9980: Add custom elements with valid_children', () => {
+      const schema = Schema({
+        custom_elements: {
+          foo: { extends: 'div' }
+        },
+        valid_children: 'foo[span]'
+      });
+
+      assert.isTrue(schema.isValidChild('foo', 'span'));
+      assert.isFalse(schema.isValidChild('foo', 'strong'));
     });
   });
 });

@@ -1,0 +1,7 @@
+project: tinymce
+kind: Added
+body: Added custom tooltip for autocompleter, now visible on both mouse hover and
+  keyboard focus, except single column cases.
+time: 2024-02-20T15:00:16.098911+08:00
+custom:
+  Issue: TINY-9638

@@ -32,8 +32,8 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteAriaTest
 
         editor.setContent(`<p>${initialContent}</p>`);
         TinySelections.setCursor(editor, [ 0, 0 ], initialContent.length);
-        TinyContentActions.keypress(editor, triggerChar.charCodeAt(0));
-        // Wait 50ms for the keypress to process
+        editor.dispatch('input');
+        // Wait 50ms for the input to process
         await Waiter.pWait(50);
       };
 

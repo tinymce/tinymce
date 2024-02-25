@@ -15,7 +15,7 @@ export interface ElementSettings {
 }
 
 export interface SchemaSettings extends ElementSettings {
-  custom_elements?: string;
+  custom_elements?: string | Record<string, CustomElementSpec>;
   extended_valid_elements?: string;
   invalid_elements?: string;
   invalid_styles?: string | Record<string, string>;
@@ -69,5 +69,12 @@ export interface SchemaMap {
 
 export interface SchemaRegExpMap {
   [name: string]: RegExp;
+}
+
+export interface CustomElementSpec {
+  extends?: string;
+  attributes?: string[];
+  children?: string[];
+  padEmpty?: boolean;
 }
 

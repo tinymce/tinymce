@@ -671,10 +671,10 @@
     jquery "^3.4.1"
     querystringify "^2.1.1"
 
-"@ephox/bedrock-server@^14.1.0":
-  version "14.1.1"
-  resolved "https://registry.yarnpkg.com/@ephox/bedrock-server/-/bedrock-server-14.1.1.tgz#ef7e5b78c67f366cdc6ddb429a42f480bb2b240a"
-  integrity sha512-mFF6T0xtT5L9dAloxhrpqBEQSea1nZANgPqsHldoRAB24gQbtP3tnmoMwWRm985pWLU2ZJzXOcnA0jHOA2E/wg==
+"@ephox/bedrock-server@^14.1.2":
+  version "14.1.2"
+  resolved "https://registry.yarnpkg.com/@ephox/bedrock-server/-/bedrock-server-14.1.2.tgz#ff134b24ca810fe2fa0b0e065df5a5f6bc5fb539"
+  integrity sha512-0i69zfGgGT6N+sojXjaGroTiifVCD7aSzwQKGQZA2xB5BppOLN4HQBem3Gb8dc98PqPv9l282tIXjb91UXpdPQ==
   dependencies:
     "@aws-sdk/client-device-farm" "^3.354.0"
     "@ephox/bedrock-client" "^14.1.1"

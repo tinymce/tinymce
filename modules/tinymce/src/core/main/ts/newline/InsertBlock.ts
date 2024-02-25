@@ -228,7 +228,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     }
 
     // If after the last element in block node edge case for #5091
-    if (container.parentNode === parentBlock && isAfterLastNodeInContainer && !start) {
+    if ((container.parentNode === parentBlock || container === parentBlock) && isAfterLastNodeInContainer && !start) {
       return true;
     }
 

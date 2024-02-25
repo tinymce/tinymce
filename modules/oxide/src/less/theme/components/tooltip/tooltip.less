@@ -13,10 +13,12 @@
 @tooltip-padding-y: @pad-xs;
 @tooltip-text-color: @color-white;
 @tooltip-text-transform: none;
+@tooltip-max-width: 15em;
 
 .tox {
   .tox-tooltip {
     display: inline-block;
+    max-width: @tooltip-max-width;
     padding: @tooltip-arrow-size;
 
     /*
@@ -38,6 +40,7 @@
     font-size: @tooltip-font-size;
     font-style: @tooltip-font-style;
     font-weight: @tooltip-font-weight;
+    overflow-wrap: break-word;
     padding: @tooltip-padding-y @tooltip-padding-x;
     text-transform: @tooltip-text-transform;
   }

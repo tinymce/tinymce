@@ -117,7 +117,7 @@ export const InlineHeader = (
     });
   };
 
-  const updateChromePosition = (optToolbarWidth: Optional<number>) => {
+  const updateChromePosition = (isOuterContainerWidthRestored: boolean) => {
     floatContainer.on((container) => {
       const toolbar = OuterContainer.getToolbar(mainUi.outerContainer);
       const offset = calcToolbarOffset(toolbar);
@@ -172,11 +172,18 @@ export const InlineHeader = (
 
       const left = getLeft();
 
-      const widthProperties = optToolbarWidth.map(
-        (toolbarWidth: number) => {
-          const scroll = Scroll.get();
+      const widthProperties = Optionals.someIf(
+        isOuterContainerWidthRestored,
+        // This width can be used for calculating the "width" when resolving issues with flex-wrapping being triggered at the window width, despite scroll space being available to the right.
+        Math.ceil(mainUi.outerContainer.element.dom.getBoundingClientRect().width)
+      )
+      // this check is needed because if the toolbar is rendered outside of the `outerContainer` because the toolbar have `position: "fixed"`
+      // the calculate width isn't correct
+        .filter((w) => w > minimumToolbarWidth).map(
+          (toolbarWidth: number) => {
+            const scroll = Scroll.get();
 
-          /*
+            /*
           As the editor container can wrap its elements (due to flex-wrap), the width of the container impacts also its height. Adding a minimum width works around two problems:
 
           a) The docking behaviour (e.g. lazyContext) does not handle the situation of a very thin component near the edge of the screen very well, and actually has no concept of horizontal scroll - it only checks y values.
@@ -185,25 +192,25 @@ export const InlineHeader = (
 
           Note: this is entirely determined on the number of items in the menu and the toolbar, because when they wrap, that's what causes the height. Also, having multiple toolbars can also make it higher.
           */
-          const availableWidth = window.innerWidth - (left - scroll.left);
+            const availableWidth = window.innerWidth - (left - scroll.left);
 
-          const width = Math.max(
-            Math.min(
-              toolbarWidth,
-              availableWidth
-            ),
-            minimumToolbarWidth
-          );
+            const width = Math.max(
+              Math.min(
+                toolbarWidth,
+                availableWidth
+              ),
+              minimumToolbarWidth
+            );
 
-          if (availableWidth < toolbarWidth) {
-            Css.set(mainUi.outerContainer.element, 'width', width + 'px');
+            if (availableWidth < toolbarWidth) {
+              Css.set(mainUi.outerContainer.element, 'width', width + 'px');
+            }
+
+            return {
+              width: width + 'px'
+            };
           }
-
-          return {
-            width: width + 'px'
-          };
-        }
-      ).getOr({ });
+        ).getOr({ });
 
       const baseProperties = {
         position: 'absolute',
@@ -228,7 +235,7 @@ export const InlineHeader = (
     });
   };
 
-  const restoreAndGetCompleteOuterContainerWidth = (): Optional<number> => {
+  const restoreOuterContainerWidth = (): boolean => {
     /*
     Editors can be placed so far to the right that their left position is beyond the window width. This causes problems with flex-wrap. To solve this, set a width style on the container.
     Natural width of the container needs to be calculated first.
@@ -244,17 +251,10 @@ export const InlineHeader = (
         Css.set(mainUi.outerContainer.element, 'position', 'absolute');
         Css.set(mainUi.outerContainer.element, 'left', '0px');
         Css.remove(mainUi.outerContainer.element, 'width');
-        const w = Width.getOuter(mainUi.outerContainer.element);
-
-        // this check is needed because if the toolbar is rendered outside of the `outerContainer` because the toolbar have `position: "fixed"`
-        // the calculate width isn't correct
-        return Optionals.someIf(w > minimumToolbarWidth, w);
-      } else {
-        return Optional.none();
+        return true;
       }
-    } else {
-      return Optional.none();
     }
+    return false;
   };
 
   const update = (stickyAction: (c: AlloyComponent) => void) => {
@@ -274,11 +274,10 @@ export const InlineHeader = (
       updateChromeWidth();
     }
 
-    // This width can be used for calculating the "width" when resolving issues with flex-wrapping being triggered at the window width, despite scroll space being available to the right.
-    const optToolbarWidth: Optional<number> = useFixedToolbarContainer ? Optional.none() : restoreAndGetCompleteOuterContainerWidth();
+    const isOuterContainerWidthRestored = useFixedToolbarContainer ? false : restoreOuterContainerWidth();
 
     /*
-      Refresh split toolbar. Before calling refresh, we need to make sure that we have the full width (through restoreAndGet.. above), otherwise too much will be put in the overflow drawer.
+      Refresh split toolbar. Before calling refresh, we need to make sure that we have the full width (through restoreOuterContainerWidth above), otherwise too much will be put in the overflow drawer.
       A split toolbar requires a calculation to see what ends up in the "more drawer". When we don't have a split toolbar, then there is no reason to refresh the toolbar when the size changes.
     */
     if (isSplitToolbar) {
@@ -288,7 +287,7 @@ export const InlineHeader = (
     // Positioning
     if (!useFixedToolbarContainer) {
       // This will position the container in the right spot.
-      updateChromePosition(optToolbarWidth);
+      updateChromePosition(isOuterContainerWidthRestored);
     }
 
     // Docking
