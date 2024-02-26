@@ -2,10 +2,16 @@
 // Revision history
 //
 @revisionhistory-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
-@revisionhistory-border: 1px solid @border-color;
+@revisionhistory-border-color: @border-color;
+@revisionhistory-text-color: @text-color;
+@revisionhistory-card-active-background-color: @button-active-background-color;
+@revisionhistory-card-active-text-color: @button-active-text-color;
+@revisionhistory-border: 1px solid @revisionhistory-border-color;
+@revisionhistory-sidebar-title-font-size: @font-size-lg;
 @revisionhistory-sidebar-title-height: 60px;
 @revisionhistory-sidebar-minwidth: 192px;
 @revisionhistory-text-lineheight: 24px;
+@revisionhistory-card-padding: @pad-sm;
 
 .tox {
   .tox-revisionhistory__pane {
@@ -40,8 +46,8 @@
 
     .tox-revisionhistory__sidebar-title {
       border-bottom: @revisionhistory-border;
-      color: @text-color;
-      font-size: @font-size-lg;
+      color: @revisionhistory-text-color;
+      font-size: @revisionhistory-sidebar-title-font-size;
       font-weight: 400;
       height: @revisionhistory-sidebar-title-height;
       min-width: @revisionhistory-sidebar-minwidth;
@@ -53,24 +59,24 @@
       max-height: calc(100% - @revisionhistory-sidebar-title-height);
       min-width: @revisionhistory-sidebar-minwidth;
       overflow-y: auto;
-      padding: @pad-sm;
+      padding: @revisionhistory-card-padding;
 
       .tox-revisionhistory__card {
         border: @revisionhistory-border;
         border-radius: @control-border-radius;
-        color: @color-black;
+        color: @revisionhistory-text-color;
         cursor: pointer;
-        margin-bottom: @pad-sm;
-        padding: @pad-sm;
+        margin-bottom: @revisionhistory-card-padding;
+        padding: @revisionhistory-card-padding;
 
         &:hover {
-          background-color: @button-hover-background-color;
-          color: @button-active-text-color;
+          background-color: @revisionhistory-card-active-background-color;
+          color: @revisionhistory-card-active-text-color;
         }
 
         &.tox-revisionhistory__card--selected {
-          background-color: @button-active-background-color;
-          color: @button-active-text-color;
+          background-color: @revisionhistory-card-active-background-color;
+          color: @revisionhistory-card-active-text-color;
         }
 
         > label {
