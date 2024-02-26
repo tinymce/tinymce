@@ -1,0 +1,6 @@
+project: polaris
+kind: Added
+body: New `Url.extractHost` API that returns the host name from a valid URL string.
+time: 2024-01-04T22:53:07.956426+11:00
+custom:
+  Issue: TINY-10350

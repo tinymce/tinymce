@@ -7,6 +7,5 @@ export default (): void => {
     selector: '#editor',
     inline: true,
     fixed_toolbar_container: '#toolbar',
-    plugins: 'template' // lets you check notification positioning
   });
 };

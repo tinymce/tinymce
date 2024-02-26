@@ -46,7 +46,6 @@ const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'save', name: 'Save' },
   { key: 'searchreplace', name: 'Search and Replace' },
   { key: 'table', name: 'Table' },
-  { key: 'template', name: 'Template' },
   { key: 'textcolor', name: 'Text Color' },
   { key: 'visualblocks', name: 'Visual Blocks' },
   { key: 'visualchars', name: 'Visual Characters' },

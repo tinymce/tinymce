@@ -16,7 +16,8 @@ describe('browser.tinymce.plugins.media.core.EphoxEmbedTest', () => {
       children: [
         s.element('iframe', {
           attrs: {
-            src: str.is('about:blank')
+            src: str.is('about:blank'),
+            sandbox: str.is('')
           }
         })
       ],
@@ -49,12 +50,13 @@ describe('browser.tinymce.plugins.media.core.EphoxEmbedTest', () => {
     it('TBA: Open dialog, assert embedded content, close dialog and assert div structure', async () => {
       const editor = hook.editor();
       const content = '<div contenteditable="false" data-ephox-embed-iri="embed-iri"><iframe src="about:blank"></iframe></div>';
+      const sandboxedContent = '<div contenteditable="false" data-ephox-embed-iri="embed-iri"><iframe src="about:blank" sandbox=""></iframe></div>';
       editor.setContent(content);
       assertDivStructure(editor, ephoxEmbedStructure);
       TinySelections.select(editor, 'div', []);
       await Utils.pOpenDialog(editor);
       await Utils.pAssertSourceValue(editor, 'embed-iri');
-      await Utils.pAssertEmbedData(editor, content);
+      await Utils.pAssertEmbedData(editor, sandboxedContent);
       TinyUiActions.submitDialog(editor);
       await Waiter.pTryUntil('wait for div structure', () => assertDivStructure(editor, ephoxEmbedStructure));
     });
