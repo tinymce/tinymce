@@ -33,7 +33,7 @@ const embedPromise = (data: MediaData, dataToHtml: DataToHtml.DataToHtmlCallback
     if (cache[data.source]) {
       wrappedResolve(cache[data.source]);
     } else {
-      handler({ url: data.source }, wrappedResolve, rej);
+      handler({ url: data.source }).then(wrappedResolve).catch(rej);
     }
   });
 };
