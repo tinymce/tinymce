@@ -17,13 +17,15 @@
 @collection-item-label-disabled-text-color: fade(@collection-item-label-text-color, 50%);
 @collection-item-caret-disabled-text-color: fade(@collection-item-label-text-color, 50%);
 
-@collection-list-item-active-background-color: @toolbar-button-hover-background-color;
+@collection-list-item-active-background-color: @color-tint;
 @collection-list-item-label-active-text-color: contrast(@collection-list-item-active-background-color, @color-black, @color-white);
 @collection-list-item-enabled-background-color: @menu-background-color;
 @collection-list-item-label-enabled-text-color: contrast(@collection-list-item-enabled-background-color, @color-black, @color-white);
 
-@collection-toolbar-item-active-background-color: @toolbar-button-hover-background-color;
+@collection-toolbar-item-active-background-color: @menu-background-color;
 @collection-toolbar-item-label-active-text-color: contrast(@collection-toolbar-item-active-background-color, @color-black, @color-white);
+@collection-toolbar-item-active-hover-background-color: @toolbar-button-hover-background-color;
+@collection-toolbar-item-label-active-hover-text-color: contrast(@collection-toolbar-item-active-hover-background-color, @color-black, @color-white);
 @collection-toolbar-item-enabled-background-color: @toolbar-button-enabled-background-color;
 @collection-toolbar-item-label-enabled-text-color: contrast(@collection-toolbar-item-enabled-background-color, @color-black, @color-white);
 
@@ -140,13 +142,25 @@
     background-color: @collection-list-item-active-background-color;
   }
 
-  .tox-collection--toolbar .tox-collection__item--enabled {
+  .tox-collection--toolbar .tox-collection__item--enabled,
+  .tox-collection--toolbar .tox-collection__item--enabled.tox-collection__item--active,
+  .tox-collection--toolbar .tox-collection__item--enabled.tox-collection__item--active:hover {
     background-color: @collection-toolbar-item-enabled-background-color;
     color: @collection-toolbar-item-label-enabled-text-color;
   }
 
   .tox-collection--toolbar .tox-collection__item--active {
     background-color: @collection-toolbar-item-active-background-color;
+    position: relative;
+
+    &:hover {
+      background-color: @collection-toolbar-item-active-hover-background-color;
+      color: @collection-toolbar-item-label-active-hover-text-color;
+    }
+
+    &:focus::after {
+      .keyboard-focus-outline-mixin();
+    }
   }
 
   .tox-collection--grid .tox-collection__item--enabled {
@@ -157,6 +171,12 @@
   .tox-collection--grid .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
     background-color: @collection-grid-item-active-background-color;
     color: @collection-grid-item-label-active-text-color;
+    position: relative;
+    z-index: 1;
+
+    &:focus::after {
+      .keyboard-focus-outline-mixin('inset');
+    }
   }
 
   .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
@@ -199,7 +219,7 @@
   }
 
   .tox-collection__item-accessory {
-    color: @text-color-muted;
+    color: currentColor;
     display: inline-block;
     font-size: @font-size-sm;
     height: @collection-item-list-icon-height;
@@ -220,7 +240,7 @@
     }
 
     svg {
-      fill: @collection-item-label-text-color;
+      fill: currentColor;
     }
   }
 

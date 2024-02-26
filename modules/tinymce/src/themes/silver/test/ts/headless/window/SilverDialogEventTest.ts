@@ -71,6 +71,17 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
 
   let dialog: AlloyComponent;
   before(() => {
+    const getTooltipComponents = () => [
+      {
+        dom: {
+          tag: 'div',
+        },
+        components: [
+          GuiFactory.text('Test')
+        ]
+      }
+    ];
+
     const store = hook.store();
     const sink = hook.component();
     const dialogStuff = renderDialog(
@@ -93,9 +104,11 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
               getConfig: (): TooltippingTypes.TooltippingConfigSpec => {
                 return {
                   lazySink: () => Result.value(hook.component()),
-                  tooltipDom: { tag: 'div' }
-                } as any;
-              }
+                  tooltipDom: { tag: 'div' },
+                  tooltipComponents: getTooltipComponents()
+                };
+              },
+              getComponents: getTooltipComponents,
             }
           } as UiFactoryBackstageProviders
         },

@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: ShadowDOM skin was not loaded properly when used with js bundling feature.
-time: 2024-01-11T15:39:53.32712+01:00
-custom:
-  Issue: TINY-10451

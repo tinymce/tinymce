@@ -3,7 +3,6 @@ import {
 } from '@ephox/alloy';
 import { Arr, Cell, Optional, Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { OtherCells } from '@ephox/snooker';
 import { Compare, Css, SugarElement, SugarPosition, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -13,11 +12,16 @@ interface SnapExtra {
   readonly td: SugarElement<HTMLTableCellElement>;
 }
 
+// Duplicated in modules/tinymce/src/models/dom/main/ts/table/api/Events.ts
+// NOTE: This is an internal only event so not publicly exposing the interface in EventTypes.ts
 interface TableSelectionChangeEvent {
-  readonly cells: SugarElement<HTMLTableCellElement>[];
-  readonly start: SugarElement<HTMLTableCellElement>;
-  readonly finish: SugarElement<HTMLTableCellElement>;
-  readonly otherCells: Optional<OtherCells.OtherCells>;
+  readonly cells: HTMLTableCellElement[];
+  readonly start: HTMLTableCellElement;
+  readonly finish: HTMLTableCellElement;
+  readonly otherCells?: {
+    readonly upOrLeftCells: HTMLTableCellElement[];
+    readonly downOrRightCells: HTMLTableCellElement[];
+  };
 }
 
 const snapWidth = 40;
@@ -182,21 +186,25 @@ const setup = (editor: Editor, sink: AlloyComponent): void => {
 
   // TODO: Make this work for desktop maybe?
   if (PlatformDetection.detect().deviceType.isTouch()) {
+    const domToSugar = <T extends Node>(arr: T[]) => Arr.map(arr, SugarElement.fromDom);
+
     editor.on('TableSelectionChange', (e: EditorEvent<TableSelectionChangeEvent>) => {
       if (!isVisible.get()) {
         Attachment.attach(sink, topLeft);
         Attachment.attach(sink, bottomRight);
         isVisible.set(true);
       }
-      startCell.set(e.start);
-      finishCell.set(e.finish);
+      const start = SugarElement.fromDom(e.start);
+      const finish = SugarElement.fromDom(e.finish);
+      startCell.set(start);
+      finishCell.set(finish);
 
-      e.otherCells.each((otherCells) => {
-        tlTds.set(otherCells.upOrLeftCells);
-        brTds.set(otherCells.downOrRightCells);
+      Optional.from(e.otherCells).each((otherCells) => {
+        tlTds.set(domToSugar(otherCells.upOrLeftCells));
+        brTds.set(domToSugar(otherCells.downOrRightCells));
 
-        snapTopLeft(e.start);
-        snapBottomRight(e.finish);
+        snapTopLeft(start);
+        snapBottomRight(finish);
       });
     });
 

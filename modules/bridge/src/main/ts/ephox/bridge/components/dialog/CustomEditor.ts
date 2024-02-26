@@ -1,5 +1,5 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
-import { Result } from '@ephox/katamari';
+import { Optional, Result } from '@ephox/katamari';
 
 import { FormComponent, formComponentFields, FormComponentSpec } from './FormComponent';
 
@@ -22,6 +22,7 @@ interface CustomEditorNewSpec extends FormComponentSpec {
   tag?: string;
   scriptId: string;
   scriptUrl: string;
+  onFocus?: (e: HTMLElement) => void;
   settings?: any;
 }
 
@@ -38,6 +39,7 @@ export interface CustomEditorNew extends FormComponent {
   tag: string;
   scriptId: string;
   scriptUrl: string;
+  onFocus: Optional<(e: HTMLElement) => void>;
   settings: any;
 }
 
@@ -47,6 +49,7 @@ const customEditorFields = formComponentFields.concat([
   FieldSchema.defaultedString('tag', 'textarea'),
   FieldSchema.requiredString('scriptId'),
   FieldSchema.requiredString('scriptUrl'),
+  FieldSchema.optionFunction('onFocus'),
   FieldSchema.defaultedPostMsg('settings', undefined)
 ]);
 

@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Autocompleter will now work with IMEs.
+time: 2024-02-09T11:07:35.827981+01:00
+custom:
+  Issue: TINY-10637

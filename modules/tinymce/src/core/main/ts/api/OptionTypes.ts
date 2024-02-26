@@ -5,7 +5,7 @@ import Editor from './Editor';
 import { PastePostProcessEvent, PastePreProcessEvent } from './EventTypes';
 import { Formats } from './fmt/Format';
 import { AllowedFormat } from './fmt/StyleFormat';
-import { SchemaType } from './html/Schema';
+import { CustomElementSpec, SchemaType } from './html/Schema';
 import { EditorUiApi, Toolbar } from './ui/Ui';
 
 export type EntityEncoding = 'named' | 'numeric' | 'raw' | 'named,numeric' | 'named+numeric' | 'numeric,named' | 'numeric+named';
@@ -89,7 +89,7 @@ interface BaseEditorOptions {
   convert_unsafe_embeds?: boolean;
   convert_urls?: boolean;
   custom_colors?: boolean;
-  custom_elements?: string;
+  custom_elements?: string | Record<string, CustomElementSpec>;
   custom_ui_selector?: string;
   custom_undo_redo_levels?: number;
   default_font_stack?: string[];

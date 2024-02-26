@@ -1,0 +1,7 @@
+project: tinymce
+kind: Improved
+body: Custom tooltips will now show for items in `collection` which is rendered inside
+  a dialog, on mouse hover and keyboard focus.
+time: 2024-02-08T12:27:34.309686+08:00
+custom:
+  Issue: TINY-9637

@@ -12,12 +12,6 @@ interface ViewToggleButtonApi extends ViewButtonApi {
   setActive: (state: boolean) => void;
 }
 
-export interface ViewLabelSpec {
-  text: string;
-  size?: 'normal' | 'large';
-  type: 'label';
-}
-
 interface BaseButtonSpec<Api extends ViewButtonApi> {
   text?: string;
   icon?: string;
@@ -40,16 +34,10 @@ export interface ViewToggleButtonSpec extends BaseButtonSpec<ViewToggleButtonApi
 
 export interface ViewButtonsGroupSpec {
   type: 'group';
-  buttons: Array<ViewNormalButtonSpec | ViewToggleButtonSpec | ViewLabelSpec>;
+  buttons: Array<ViewNormalButtonSpec | ViewToggleButtonSpec>;
 }
 
-export type ViewButtonSpec = ViewNormalButtonSpec | ViewToggleButtonSpec | ViewLabelSpec | ViewButtonsGroupSpec;
-
-export interface ViewLabel {
-  text: string;
-  size: 'normal' | 'large';
-  type: 'label';
-}
+export type ViewButtonSpec = ViewNormalButtonSpec | ViewToggleButtonSpec | ViewButtonsGroupSpec;
 
 interface BaseButton<Api extends ViewButtonApi> {
   text: Optional<string>;
@@ -73,16 +61,10 @@ export interface ViewToggleButton extends BaseButton<ViewToggleButtonApi> {
 }
 export interface ViewButtonsGroup {
   type: 'group';
-  buttons: Array<ViewNormalButton | ViewToggleButton | ViewLabel>;
+  buttons: Array<ViewNormalButton | ViewToggleButton>;
 }
 
-export type ViewButton = ViewNormalButton | ViewToggleButton | ViewLabel | ViewButtonsGroup;
-
-const labelFields = [
-  ComponentSchema.text,
-  FieldSchema.requiredStringEnum('type', [ 'label' ]),
-  FieldSchema.defaultedStringEnum('size', 'normal', [ 'normal', 'large' ]),
-];
+export type ViewButton = ViewNormalButton | ViewToggleButton | ViewButtonsGroup;
 
 const baseButtonFields = [
   ComponentSchema.optionalText,
@@ -108,7 +90,6 @@ const toggleButtonFields = [
 const schemaWithoutGroupButton = {
   button: normalButtonFields,
   togglebutton: toggleButtonFields,
-  label: labelFields
 };
 
 const groupFields = [

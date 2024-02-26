@@ -48,6 +48,7 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
 
   const shouldStyleWithCss = Options.shouldStyleWithCss(editor);
   const hasAdvancedTableTab = Options.hasAdvancedTableTab(editor);
+  const borderIsZero = parseFloat(data.border) === 0;
 
   if (!Type.isUndefined(data.class) && data.class !== 'mce-no-match') {
     attrs.class = data.class;
@@ -62,10 +63,16 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
   }
 
   if (shouldStyleWithCss) {
-    styles['border-width'] = Utils.addPxSuffix(data.border);
+    if (borderIsZero) {
+      attrs.border = 0;
+      styles['border-width'] = '';
+    } else {
+      styles['border-width'] = Utils.addPxSuffix(data.border);
+      attrs.border = 1;
+    }
     styles['border-spacing'] = Utils.addPxSuffix(data.cellspacing);
   } else {
-    attrs.border = data.border;
+    attrs.border = borderIsZero ? 0 : data.border;
     attrs.cellpadding = data.cellpadding;
     attrs.cellspacing = data.cellspacing;
   }
@@ -73,7 +80,9 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
   // TINY-9837: Relevant data are applied on child TD/THs only if they have been modified since the previous dialog submission
   if (shouldStyleWithCss && tableElm.children) {
     const cellStyles: StyleMap = {};
-    if (shouldApplyOnCell.border) {
+    if (borderIsZero) {
+      cellStyles['border-width'] = '';
+    } else if (shouldApplyOnCell.border) {
       cellStyles['border-width'] = Utils.addPxSuffix(data.border);
     }
     if (shouldApplyOnCell.cellpadding) {

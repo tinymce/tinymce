@@ -1,7 +1,7 @@
 import { AlloySpec, SimpleSpec } from '@ephox/alloy';
 
 const promotionMessage = '⚡️Upgrade';
-const promotionLink = 'https://www.tiny.cloud/tinymce-self-hosted-premium-features/?utm_source=TinyMCE&utm_medium=SPAP&utm_campaign=SPAP&utm_id=editorreferral';
+const promotionLink = 'https://www.tiny.cloud/tinymce-self-hosted-premium-features/?utm_campaign=self_hosted_upgrade_promo&utm_source=tiny&utm_medium=referral';
 
 const renderPromotion = (spec: SimpleSpec): AlloySpec => {
   return {

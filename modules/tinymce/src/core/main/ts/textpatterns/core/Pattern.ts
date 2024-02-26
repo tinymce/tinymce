@@ -1,12 +1,15 @@
 import { Arr, Result, Results, Type } from '@ephox/katamari';
 
-import { BlockPattern, DynamicPatternContext, DynamicPatternsLookup, InlineCmdPattern, InlinePattern, Pattern, PatternError, PatternSet, RawDynamicPatternsLookup, RawPattern } from './PatternTypes';
+import { BlockPattern, DynamicPatternContext, DynamicPatternsLookup, InlineCmdPattern, InlinePattern, Pattern, PatternError, PatternSet, RawDynamicPatternsLookup, RawPattern, BlockPatternTrigger } from './PatternTypes';
 
 const isInlinePattern = (pattern: Pattern): pattern is InlinePattern =>
   pattern.type === 'inline-command' || pattern.type === 'inline-format';
 
 const isBlockPattern = (pattern: Pattern): pattern is BlockPattern =>
   pattern.type === 'block-command' || pattern.type === 'block-format';
+
+const hasBlockTrigger = (pattern: Pattern, trigger: BlockPatternTrigger): boolean =>
+  (pattern.type === 'block-command' || pattern.type === 'block-format') && pattern.trigger === trigger;
 
 const normalizePattern = (pattern: RawPattern): Result<Pattern, PatternError> => {
   const err = (message: string) => Result.error({ message, pattern });
@@ -74,18 +77,22 @@ const normalizePattern = (pattern: RawPattern): Result<Pattern, PatternError> =>
     });
   } else {
     // block pattern
+    const trigger = pattern.trigger ?? 'space';
+
     if (pattern.start.length === 0) {
       return err('Block pattern has empty `start` parameter');
     }
     return formatOrCmd<BlockPattern>('Block', (formats) => ({
       type: 'block-format',
       start: pattern.start,
-      format: formats[0]
+      format: formats[0],
+      trigger
     }), (command, commandValue) => ({
       type: 'block-command',
       start: pattern.start,
       cmd: command,
-      value: commandValue
+      value: commandValue,
+      trigger
     }));
   }
 };
@@ -101,6 +108,13 @@ const createPatternSet = (patterns: Pattern[], dynamicPatternsLookup: DynamicPat
   blockPatterns: getBlockPatterns(patterns),
   dynamicPatternsLookup
 });
+
+const filterByTrigger = (patterns: PatternSet, trigger: BlockPatternTrigger): PatternSet => {
+  return {
+    ...patterns,
+    blockPatterns: Arr.filter(patterns.blockPatterns, (pattern) => hasBlockTrigger(pattern, trigger))
+  };
+};
 
 const fromRawPatterns = (patterns: RawPattern[]): Pattern[] => {
   const normalized = Results.partition(Arr.map(patterns, normalizePattern));
@@ -122,5 +136,6 @@ export {
   getBlockPatterns,
   getInlinePatterns,
   fromRawPatterns,
-  fromRawPatternsLookup
+  fromRawPatternsLookup,
+  filterByTrigger
 };

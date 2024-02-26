@@ -1,5 +1,5 @@
 import { FocusTools, Mouse, UiFinder, Waiter } from '@ephox/agar';
-import { SugarBody, SugarElement, TextContent } from '@ephox/sugar';
+import { SelectorFilter, SugarBody, SugarElement, TextContent } from '@ephox/sugar';
 import { TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -11,6 +11,7 @@ const pAssertTooltip = async (editor: Editor, pTriggerTooltip: () => Promise<voi
   await pTriggerTooltip();
   const tooltip = await TinyUiActions.pWaitForUi(editor, tooltipSelector) as SugarElement<HTMLElement>;
   assert.equal(TextContent.get(tooltip), text);
+  assert.equal(SelectorFilter.all(tooltipSelector).length, 1);
 };
 
 const pAssertNoTooltip = async (_: Editor, pTriggerTooltip: () => Promise<void>, _text: string): Promise<void> => {

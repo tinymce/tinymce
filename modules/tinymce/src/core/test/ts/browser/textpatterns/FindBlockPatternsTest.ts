@@ -23,9 +23,9 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
       text_patterns: [
         { start: '*', end: '*', format: 'italic' },
         { start: '**', end: '**', format: 'bold' },
-        { start: '#', format: 'h1' },
-        { start: '##', format: 'h2' },
-        { start: '###', format: 'h3' }
+        { start: '#', format: 'h1', trigger: 'enter' },
+        { start: '##', format: 'h2', trigger: 'enter' },
+        { start: '###', format: 'h3', trigger: 'enter' },
       ],
       base_url: '/project/tinymce/js/tinymce'
     }, []);
@@ -47,7 +47,8 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
             pattern: {
               type: 'block-format',
               start: '#',
-              format: 'h1'
+              format: 'h1',
+              trigger: 'enter'
             },
             range: { start: [ 0, 0 ], end: [ 0, 0 ] }
           }
@@ -85,16 +86,16 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
       text_patterns: [
         { start: '*', end: '*', format: 'italic' },
         { start: '**', end: '**', format: 'bold' },
-        { start: '#', format: 'h1' },
-        { start: '##', format: 'h2' },
-        { start: '###', format: 'h3' },
-        { start: '#####', format: 'h5' },
+        { start: '#', format: 'h1', trigger: 'enter' },
+        { start: '##', format: 'h2', trigger: 'enter' },
+        { start: '###', format: 'h3', trigger: 'enter' },
+        { start: '#####', format: 'h5', trigger: 'enter' },
         { start: '' }
       ],
       text_patterns_lookup: (_ctx: DynamicPatternContext) => [
-        { start: '####', format: 'h4' },
-        { start: 'TBA', cmd: 'mceInsertContent', value: 'To be announced' },
-        { start: '###', cmd: 'mceInsertContent', value: 'h3 heading' }
+        { start: '####', format: 'h4', trigger: 'enter' },
+        { start: 'TBA', cmd: 'mceInsertContent', value: 'To be announced', trigger: 'enter' },
+        { start: '###', cmd: 'mceInsertContent', value: 'h3 heading', trigger: 'enter' }
       ],
       base_url: '/project/tinymce/js/tinymce'
     }, []);
@@ -113,7 +114,8 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
             pattern: {
               type: 'block-format',
               start: '####',
-              format: 'h4'
+              format: 'h4',
+              trigger: 'enter'
             },
             range: {
               start: [ 0, 0 ],
@@ -138,7 +140,8 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
               type: 'block-command',
               start: 'TBA',
               cmd: 'mceInsertContent',
-              value: 'To be announced'
+              value: 'To be announced',
+              trigger: 'enter'
             },
             range: {
               start: [ 0, 0 ],
@@ -161,7 +164,8 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
           pattern: {
             type: 'block-format',
             start: '####',
-            format: 'h4'
+            format: 'h4',
+            trigger: 'enter'
           },
           range: {
             start: [ 0, 0, 0 ],
@@ -193,7 +197,8 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
             type: 'block-command',
             start: '###',
             cmd: 'mceInsertContent',
-            value: 'h3 heading'
+            value: 'h3 heading',
+            trigger: 'enter'
           },
           range: {
             start: [ 0, 0 ],
@@ -213,7 +218,8 @@ describe('browser.tinymce.textpatterns.FindBlockPatternsTest', () => {
           pattern: {
             type: 'block-format',
             start: '#####',
-            format: 'h5'
+            format: 'h5',
+            trigger: 'enter'
           },
           range: {
             start: [ 0, 0 ],

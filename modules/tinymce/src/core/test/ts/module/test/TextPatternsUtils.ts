@@ -9,7 +9,7 @@ import { PatternSet } from 'tinymce/core/textpatterns/core/PatternTypes';
 
 const setContentAndFireKeystroke = (key: number) => {
   return (editor: Editor, content: string, offset = content.length, elementPath = [ 0, 0 ], wrapInP = true) => {
-    editor.setContent(wrapInP ? '<p>' + content + '</p>' : content);
+    editor.setContent(wrapInP ? '<p>' + content + '</p>' : content, { format: 'raw' });
     editor.focus();
     TinySelections.setCursor(editor, elementPath, offset);
     TinyContentActions.keystroke(editor, key);
@@ -22,6 +22,16 @@ const setContentAndPressSpace = (editor: Editor, content: string, offset = conte
   TinySelections.setCursor(editor, elementPath, offset);
   editor.execCommand('mceInsertContent', false, ' ');
   TinyContentActions.keyup(editor, Keys.space());
+};
+
+const setContentAndPressSpaceDown = (editor: Editor, content: string, insertSpace = false, offset = content.length, elementPath = [ 0, 0 ], blockElement = 'p'): void => {
+  editor.setContent(`<${blockElement}>${content}</${blockElement}>`, { format: 'raw' });
+  editor.focus();
+  TinySelections.setCursor(editor, elementPath, offset);
+  TinyContentActions.keystroke(editor, Keys.space());
+  if (insertSpace) {
+    editor.execCommand('mceInsertContent', false, ' ');
+  }
 };
 
 const bodyStruct = (children: StructAssert[]): StructAssert => {
@@ -123,6 +133,7 @@ const getPatternSetFor = (hook: TinyHooks.Hook<Editor>): () => PatternSet => Thu
 
 export {
   setContentAndPressSpace,
+  setContentAndPressSpaceDown,
   setContentAndPressEnter,
   bodyStruct,
   inlineStructHelper,

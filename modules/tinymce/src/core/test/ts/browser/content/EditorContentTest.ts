@@ -451,8 +451,8 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
               base_url: '/project/tinymce/js/tinymce'
             }, []);
 
-            it('TINY-10349: Object elements should not be converted', testNoConversion(hook, '<object data="about:blank"></object>'));
-            it('TINY-10349: Embed elements should not be converted', testNoConversion(hook, '<embed src="about:blank">'));
+            it('TINY-10349: Object elements should be converted', testConversion(hook, '<object data="about:blank"></object>', '<iframe src="about:blank"></iframe>'));
+            it('TINY-10349: Embed elements should be converted', testConversion(hook, '<embed src="about:blank">', '<iframe src="about:blank"></iframe>'));
           });
 
           context('convert_unsafe_embeds: false', () => {

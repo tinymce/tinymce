@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: 'When setting table border width and `table_style_by_css` is true, only the border attribute is set to 0 and border-width styling is no longer used'
+time: 2024-02-22T09:27:00.437918021+11:00
+custom:
+  Issue: TINY-10308

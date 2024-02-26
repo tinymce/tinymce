@@ -12,7 +12,8 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     media_live_embeds: false,
     document_base_url: '/tinymce/tinymce/trunk/tests/',
     extended_valid_elements: 'script[src|type]',
-    allow_conditional_comments: true
+    allow_conditional_comments: true,
+    convert_unsafe_embeds: false
   };
   const hook = TinyHooks.bddSetupLight<Editor>(settings, [ Plugin ]);
 

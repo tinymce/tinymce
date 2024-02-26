@@ -271,6 +271,7 @@ export {
   pDragResizeBar,
   selectWithKeyboard,
   selectWithMouse,
+  getSelectedCells,
   assertSelectedCells,
   getWidths,
   insertColumnBefore,

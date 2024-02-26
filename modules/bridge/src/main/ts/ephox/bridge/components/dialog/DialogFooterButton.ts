@@ -66,7 +66,7 @@ export interface DialogFooterMenuButton extends BaseDialogFooterButton {
 
 export interface DialogFooterToggleButton extends BaseDialogFooterButton {
   type: 'togglebutton';
-  tooltip: string;
+  tooltip: Optional<string>;
   text: Optional<string>;
   active: boolean;
 }
@@ -106,7 +106,7 @@ const menuFooterButtonFields = [
 const toggleButtonSpecFields = [
   ...baseFooterButtonFields,
   FieldSchema.requiredStringEnum('type', [ 'togglebutton' ]),
-  FieldSchema.requiredString('tooltip'),
+  ComponentSchema.optionalTooltip,
   ComponentSchema.optionalIcon,
   ComponentSchema.optionalText,
   FieldSchema.defaultedBoolean('active', false)

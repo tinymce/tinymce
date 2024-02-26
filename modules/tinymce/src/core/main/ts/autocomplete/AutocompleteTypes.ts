@@ -12,6 +12,10 @@ export interface AutocompleterEventArgs {
   readonly lookupData: AutocompleteLookupData[];
 }
 
+export interface AutocompleterUpdateActiveRange {
+  readonly range: Range;
+}
+
 export interface AutocompleterReloadArgs {
   readonly fetchOptions?: Record<string, any>;
 }

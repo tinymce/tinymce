@@ -3,7 +3,7 @@
 // When making changes here, please review menubar/menubar.less and menubar/menubar-button.less
 //
 
-@toolbar-button-background-color: transparent;
+@toolbar-button-background-color: @background-color;
 @toolbar-button-border-radius: 3px;
 @toolbar-button-border: 0;
 @toolbar-button-box-shadow: none;
@@ -20,15 +20,15 @@
 @toolbar-button-text-transform: none;
 @toolbar-button-width: 34px;
 
-@toolbar-button-hover-background-color: multiply(white, contrast(@background-color, fade(@color-tint, 20), fade(@color-tint, 80)));
+@toolbar-button-hover-background-color: contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 7%)); // Differentiating against the enabled color
 @toolbar-button-hover-border: @toolbar-button-border;
 @toolbar-button-hover-box-shadow: @toolbar-button-box-shadow;
 @toolbar-button-hover-icon-color: @toolbar-button-icon-color;
 @toolbar-button-hover-text-color: @toolbar-button-text-color;
 
-@toolbar-button-focus-background-color: @toolbar-button-hover-background-color;
+@toolbar-button-focus-background-color: @toolbar-button-background-color;
 @toolbar-button-focus-border: @toolbar-button-hover-border;
-@toolbar-button-focus-box-shadow: @toolbar-button-hover-box-shadow;
+@toolbar-button-focus-box-shadow: @toolbar-button-box-shadow;
 @toolbar-button-focus-icon-color: @toolbar-button-hover-icon-color;
 @toolbar-button-focus-text-color: @toolbar-button-hover-text-color;
 
@@ -69,7 +69,6 @@
     justify-content: center;
     margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0;
     outline: none;
-    overflow: hidden;
     padding: 0;
     text-transform: @toolbar-button-text-transform;
     width: @toolbar-button-width;
@@ -92,6 +91,12 @@
     background: @toolbar-button-focus-background-color;
     border: @toolbar-button-focus-border;
     box-shadow: @toolbar-button-focus-box-shadow;
+    position: relative;
+    z-index: 1; // Ensure focus outline is on top of other buttons
+
+    &::after {
+      .keyboard-focus-outline-mixin();
+    }
   }
 
   .tox-tbtn:hover {
@@ -140,12 +145,15 @@
   }
 
   // An toggle on/off button's on state.
+  .tox-tbtn--active,
   .tox-tbtn--enabled,
-  .tox-tbtn--enabled:hover {
+  .tox-tbtn--enabled:hover,
+  .tox-tbtn--enabled:focus {
     background: @toolbar-button-enabled-background-color;
     border: @toolbar-button-enabled-border;
     box-shadow: @toolbar-button-enabled-box-shadow;
     color: @toolbar-button-enabled-text-color;
+    position: relative;
 
     > * {
       transform: @toolbar-button-enabled-transform;
@@ -162,6 +170,10 @@
         fill: @toolbar-button-disabled-icon-color;
       }
     }
+  }
+
+  .tox-tbtn--enabled:focus::after {
+    .keyboard-focus-outline-mixin();
   }
 
   .tox-tbtn:focus:not(.tox-tbtn--disabled) {

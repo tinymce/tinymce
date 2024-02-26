@@ -1,12 +1,11 @@
 import { Cell, Optional, Singleton, Throttler, Thunk, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
-import { fireAutocompleterEnd, fireAutocompleterStart, fireAutocompleterUpdate } from '../api/Events';
+import * as Events from '../api/Events';
 import { AutocompleteContext, getContext } from '../autocomplete/AutocompleteContext';
 import { AutocompleteLookupInfo, lookup, lookupWithContext } from '../autocomplete/AutocompleteLookup';
 import * as Autocompleters from '../autocomplete/Autocompleters';
 import { AutocompleterReloadArgs } from '../autocomplete/AutocompleteTypes';
-import * as Rtc from '../Rtc';
 
 interface ActiveAutocompleter {
   readonly trigger: string;
@@ -21,12 +20,7 @@ interface AutocompleterApi {
 const setupEditorInput = (editor: Editor, api: AutocompleterApi) => {
   const update = Throttler.last(api.load, 50);
 
-  editor.on('keypress compositionend', (e) => {
-    // IE will pass the escape key here, so just don't do anything on escape
-    if (e.which === 27) {
-      return;
-    }
-
+  editor.on('input', () => {
     update.throttle();
   });
 
@@ -39,6 +33,10 @@ const setupEditorInput = (editor: Editor, api: AutocompleterApi) => {
     // Pressing <esc> closes the autocompleter
     } else if (keyCode === 27) {
       api.cancelIfNecessary();
+    } else if (keyCode === 38 || keyCode === 40) {
+      // Arrow up and down keys needs to cancel the update since while composing arrow up or down will end the compose and issue a input event
+      // that causes the list to update and then the focus moves up to the first item in the auto completer list.
+      update.cancel();
     }
   });
 
@@ -53,8 +51,7 @@ export const setup = (editor: Editor): void => {
 
   const cancelIfNecessary = () => {
     if (isActive()) {
-      Rtc.removeAutocompleterDecoration(editor);
-      fireAutocompleterEnd(editor);
+      Events.fireAutocompleterEnd(editor);
       uiActive.set(false);
       activeAutocompleter.clear();
     }
@@ -63,9 +60,6 @@ export const setup = (editor: Editor): void => {
   const commenceIfNecessary = (context: AutocompleteContext) => {
     /* Autocompleter works by moving the content into a newly generated element. When combined with composing this creates issues where unexpected data input and visual issues */
     if (!isActive() && !editor.composing) {
-      // Create the wrapper
-      Rtc.addAutocompleterDecoration(editor, context.range);
-
       // store the element/context
       activeAutocompleter.set({
         trigger: context.trigger,
@@ -82,7 +76,7 @@ export const setup = (editor: Editor): void => {
 
   const doLookup = (fetchOptions: Record<string, any> | undefined): Optional<AutocompleteLookupInfo> =>
     activeAutocompleter.get().map(
-      (ac) => getContext(editor.dom, editor.selection.getRng(), ac.trigger)
+      (ac) => getContext(editor.dom, editor.selection.getRng(), ac.trigger, true)
         .bind((newContext) => lookupWithContext(editor, getAutocompleters, newContext, fetchOptions))
     ).getOrThunk(() => lookup(editor, getAutocompleters));
 
@@ -111,10 +105,12 @@ export const setup = (editor: Editor): void => {
                 });
 
                 if (uiActive.get()) {
-                  fireAutocompleterUpdate(editor, { lookupData });
+                  Events.fireAutocompleterUpdateActiveRange(editor, { range: context.range });
+                  Events.fireAutocompleterUpdate(editor, { lookupData });
                 } else {
                   uiActive.set(true);
-                  fireAutocompleterStart(editor, { lookupData });
+                  Events.fireAutocompleterUpdateActiveRange(editor, { range: context.range });
+                  Events.fireAutocompleterStart(editor, { lookupData });
                 }
               }
             }
@@ -124,12 +120,36 @@ export const setup = (editor: Editor): void => {
     );
   };
 
+  const isRangeInsideOrEqual = (innerRange: Range, outerRange: Range) => {
+    const startComparison = innerRange.compareBoundaryPoints(window.Range.START_TO_START, outerRange);
+    const endComparison = innerRange.compareBoundaryPoints(window.Range.END_TO_END, outerRange);
+
+    return startComparison >= 0 && endComparison <= 0;
+  };
+
+  const readActiveRange = () => {
+    return activeAutocompleter.get().bind(({ trigger }) => {
+      const selRange = editor.selection.getRng();
+      return getContext(editor.dom, selRange, trigger, uiActive.get())
+        .filter(({ range }) => isRangeInsideOrEqual(selRange, range))
+        .map(({ range }) => range);
+    });
+  };
+
   editor.addCommand('mceAutocompleterReload', (_ui, value: AutocompleterReloadArgs) => {
     const fetchOptions = Type.isObject(value) ? value.fetchOptions : {};
     load(fetchOptions);
   });
 
   editor.addCommand('mceAutocompleterClose', cancelIfNecessary);
+
+  editor.addCommand('mceAutocompleterRefreshActiveRange', () => {
+    readActiveRange().each((range) => {
+      Events.fireAutocompleterUpdateActiveRange(editor, { range });
+    });
+  });
+
+  editor.editorCommands.addQueryStateHandler('mceAutoCompleterInRange', () => readActiveRange().isSome());
 
   setupEditorInput(editor, {
     cancelIfNecessary,
