@@ -74,6 +74,16 @@ describe('browser.tinymce.core.init.LicenseKeyValidationTest', () => {
       LicenseKeyValidation.validateEditorLicenseKey(hook.editor());
       assert.deepEqual(messages, [ ], 'Should not produce a message since generated key is valid');
     });
+
+    it('validateEditorLicenseKey api_key set but no license_key', () => {
+      const editor = hook.editor();
+
+      messages = [];
+      editor.options.set('api_key', 'some-api-key');
+      LicenseKeyValidation.validateEditorLicenseKey(hook.editor());
+      assert.deepEqual(messages, [ ], 'Should not produce a message since an api_key was provided');
+      editor.options.unset('api_key');
+    });
   });
 
   context('No license key specified', () => {
@@ -114,6 +124,20 @@ describe('browser.tinymce.core.init.LicenseKeyValidationTest', () => {
 
     it('Should have warned while initializing the editor since the key is to short', () => {
       assert.deepEqual(messages, [ expectedLogMessage ]);
+    });
+  });
+
+  context('api_key specified', () => {
+    before(beforeHandler);
+    after(afterHandler);
+
+    TinyHooks.bddSetupLight<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      api_key: 'some-api-key'
+    });
+
+    it('Should not have any warning messages since an api_key was provided', () => {
+      assert.deepEqual(messages, []);
     });
   });
 });

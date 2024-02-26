@@ -985,6 +985,7 @@ const shouldSandboxIframes = option('sandbox_iframes');
 const getSandboxIframesExclusions = (editor: Editor): string[] => editor.options.get('sandbox_iframes_exclusions');
 const shouldConvertUnsafeEmbeds = option('convert_unsafe_embeds');
 const getLicenseKey = option('license_key');
+const getApiKey = option('api_key');
 
 export {
   register,
@@ -1094,5 +1095,6 @@ export {
   shouldSandboxIframes,
   getLicenseKey,
   getSandboxIframesExclusions,
-  shouldConvertUnsafeEmbeds
+  shouldConvertUnsafeEmbeds,
+  getApiKey
 };
