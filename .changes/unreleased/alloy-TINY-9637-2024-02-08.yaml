@@ -1,6 +1,6 @@
 project: alloy
 kind: Added
-body: New Tooltipping mode, tooltip will only be shown when children within an component
+body: New Tooltipping mode, tooltip will only be shown when children within a component
   has keyboard focus and has the attribute `[data-mce-tooltip]`.
 time: 2024-02-08T12:40:35.294145+08:00
 custom:
