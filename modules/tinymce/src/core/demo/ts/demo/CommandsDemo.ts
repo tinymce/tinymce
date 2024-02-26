@@ -66,7 +66,6 @@ export default (): void => {
     cmd('mceSave'),
     cmd('SearchReplace'),
     cmd('mceSpellcheck'),
-    cmd('mceInsertTemplate', '{$user}'),
     cmd('mceVisualBlocks'),
     cmd('mceVisualChars'),
     cmd('mceMedia'),
@@ -107,7 +106,7 @@ export default (): void => {
     plugins: [
       'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
       'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code', 'fullscreen', 'insertdatetime', 'media', 'nonbreaking',
-      'save', 'table', 'directionality', 'emoticons', 'template', 'importcss', 'codesample'
+      'save', 'table', 'directionality', 'emoticons', 'importcss', 'codesample'
     ],
     toolbar1: 'bold italic',
     menubar: false

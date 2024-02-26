@@ -7,7 +7,9 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.content.EditorGetContentRawTest', () => {
-  const isSafari = PlatformDetection.detect().browser.isSafari();
+  // TINY-10669: Remove this
+  const platform = PlatformDetection.detect();
+  const isSafariLessThan17 = platform.browser.isSafari() && platform.browser.version.major < 17;
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
@@ -50,7 +52,7 @@ describe('browser.tinymce.core.content.EditorGetContentRawTest', () => {
     assert.strictEqual(editor.getContent({ format: 'raw' }), '<p>test0</p><plaintext></plaintext>', 'Should be expected html');
     // TINY-10305: Modern browsers add a closing plaintext tag to end of body. Safari escapes text nodes within <plaintext>.
     TinyAssertions.assertRawContent(editor,
-      isSafari ? '<p>test0</p><plaintext>te\uFEFFst1 test2&lt;p&gt;te\uFEFFst3&lt;/p&gt;</plaintext>' : `${initial}</plaintext>`);
+      isSafariLessThan17 ? '<p>test0</p><plaintext>te\uFEFFst1 test2&lt;p&gt;te\uFEFFst3&lt;/p&gt;</plaintext>' : `${initial}</plaintext>`);
   });
 
   context('Content XSS', () => {

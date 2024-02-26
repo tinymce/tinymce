@@ -18,7 +18,10 @@ const defaultExpectedEvents = [
 ];
 
 describe('browser.tinymce.core.content.EditorContentTest', () => {
-  const isSafari = PlatformDetection.detect().browser.isSafari();
+  // TINY-10669: Remove this
+  const platform = PlatformDetection.detect();
+  const isSafari = platform.browser.isSafari();
+  const isSafariLessThan17 = isSafari && platform.browser.version.major < 17;
 
   const toHtml = (node: AstNode): string => HtmlSerializer({}).serialize(node);
 
@@ -358,10 +361,10 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
               base_url: '/project/tinymce/js/tinymce'
             }, []);
 
-            it('TINY-10348: Iframe should not be sandboxed by default', () => {
+            it('TINY-10348: Iframe should be sandboxed by default', () => {
               const editor = hook.editor();
               editor.setContent('<iframe src="about:blank"></iframe>');
-              TinyAssertions.assertContent(editor, '<p><iframe src="about:blank"></iframe></p>');
+              TinyAssertions.assertContent(editor, '<p><iframe src="about:blank" sandbox=""></iframe></p>');
             });
           });
 
@@ -404,6 +407,27 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
               TinyAssertions.assertContent(editor, '<p><iframe src="about:blank" sandbox=""></iframe></p>');
             });
           });
+
+          context('sandbox_iframes_exclusions', () => {
+            const hook = TinyHooks.bddSetupLight<Editor>({
+              ...options,
+              base_url: '/project/tinymce/js/tinymce',
+              sandbox_iframes: true,
+              sandbox_iframes_exclusions: [ 'tiny.cloud' ]
+            }, []);
+
+            it('TINY-10350: Iframe should be sandboxed when sandbox_iframes: true and not excluded', () => {
+              const editor = hook.editor();
+              editor.setContent('<iframe src="https://example.com"></iframe>');
+              TinyAssertions.assertContent(editor, '<p><iframe src="https://example.com" sandbox=""></iframe></p>');
+            });
+
+            it('TINY-10350: Iframe should not be sandboxed when sandbox_iframes: true and excluded', () => {
+              const editor = hook.editor();
+              editor.setContent('<iframe src="https://tiny.cloud"></iframe>');
+              TinyAssertions.assertContent(editor, '<p><iframe src="https://tiny.cloud"></iframe></p>');
+            });
+          });
         });
 
         context('Convert unsafe embeds', () => {
@@ -428,8 +452,8 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
               base_url: '/project/tinymce/js/tinymce'
             }, []);
 
-            it('TINY-10349: Object elements should be converted', testConversion(hook, '<object data="about:blank"></object>', '<iframe src="about:blank"></iframe>'));
-            it('TINY-10349: Embed elements should be converted', testConversion(hook, '<embed src="about:blank">', '<iframe src="about:blank"></iframe>'));
+            it('TINY-10349: Object elements should be converted', testConversion(hook, '<object data="about:blank"></object>', '<iframe src="about:blank" sandbox=""></iframe>'));
+            it('TINY-10349: Embed elements should be converted', testConversion(hook, '<embed src="about:blank">', '<iframe src="about:blank" sandbox=""></iframe>'));
           });
 
           context('convert_unsafe_embeds: false', () => {
@@ -451,10 +475,10 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
             }, []);
 
             it('TINY-10349: Object elements should be converted to iframe',
-              testConversion(hook, '<object data="about:blank"></object>', '<iframe src="about:blank"></iframe>'));
+              testConversion(hook, '<object data="about:blank"></object>', '<iframe src="about:blank" sandbox=""></iframe>'));
 
             it('TINY-10349: Embed elements should be converted to iframe',
-              testConversion(hook, '<embed src="about:blank">', '<iframe src="about:blank"></iframe>'));
+              testConversion(hook, '<embed src="about:blank">', '<iframe src="about:blank" sandbox=""></iframe>'));
           });
 
           context('convert_unsafe_embeds: true, sandbox_iframes: true', () => {
@@ -554,12 +578,11 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
           const editor = hook.editor();
           editor.setContent('<p><iframe><p>test</p></iframe></p>');
           const content = editor.getContent();
-          assert.equal(content,
-            // TINY-9624: Safari seems to encode the contents of iframes
-            isSafari
-              ? '<p><iframe>&lt;p&gt;test&lt;/p&gt;</iframe></p>'
-              : '<p><iframe><p>test</p></iframe></p>',
-            'getContent should not error when there is iframes with child nodes in content');
+          // TINY-10669: Remove this check
+          const expected = isSafariLessThan17
+            ? '<p><iframe sandbox="">&lt;p&gt;test&lt;/p&gt;</iframe></p>'
+            : '<p><iframe sandbox=""><p>test</p></iframe></p>';
+          assert.equal(content, expected, 'getContent should not error when there is iframes with child nodes in content');
         });
 
         it('getContent text with unsanitized content should get text from unsanitized content', () => {
@@ -596,8 +619,11 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
       it('TINY-10305: setContent html should sanitize content that can cause mXSS via ZWNBSP trimming', () => {
         const editor = hook.editor();
         editor.setContent('<p>test</p><!--\ufeff><iframe onload=alert(document.domain)>-></body>-->');
-        // TINY-10305: Safari escapes text nodes within <iframe>.
-        TinyAssertions.assertRawContent(editor, isSafari ? '<p>test</p><!----><p><iframe>-&gt;&lt;/body&gt;--&gt;&lt;/body&gt;</iframe></p>' : '<p>test</p><!---->');
+        // TINY-10669: Remove this check
+        const expected = isSafariLessThan17
+          ? '<p>test</p><!----><p><iframe sandbox="">-&gt;&lt;/body&gt;--&gt;&lt;/body&gt;</iframe></p>'
+          : '<p>test</p><!---->';
+        TinyAssertions.assertRawContent(editor, expected);
       });
 
       it('TINY-10305: setContent tree should sanitize content that can cause mXSS via ZWNBSP trimming', () => {

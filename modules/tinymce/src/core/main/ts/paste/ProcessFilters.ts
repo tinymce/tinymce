@@ -14,6 +14,7 @@ const preProcess = (editor: Editor, html: string): string => {
   const parser = DomParser({
     sanitize: Options.shouldSanitizeXss(editor),
     sandbox_iframes: Options.shouldSandboxIframes(editor),
+    sandbox_iframes_exclusions: Options.getSandboxIframesExclusions(editor),
     convert_unsafe_embeds: Options.shouldConvertUnsafeEmbeds(editor)
   }, editor.schema);
 
@@ -41,7 +42,6 @@ const filterContent = (editor: Editor, content: string, internal: boolean): Proc
 
   // Filter the content to remove potentially dangerous content (eg scripts)
   const filteredContent = preProcess(editor, preProcessArgs.content);
-
   if (editor.hasEventListeners('PastePostProcess') && !preProcessArgs.isDefaultPrevented()) {
     return postProcessFilter(editor, filteredContent, internal);
   } else {
