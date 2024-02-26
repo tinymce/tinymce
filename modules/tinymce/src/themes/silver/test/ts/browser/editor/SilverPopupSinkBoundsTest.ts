@@ -223,8 +223,8 @@ describe('browser.tinymce.themes.silver.editor.SilverPopupSinkBoundsTest', () =>
         await TinyUiActions.pWaitForUi(editor, '[role=menu]');
 
         Arr.range(nestedLevel, async (x) => {
-          TinyUiActions.clickOnUi(editor, `[role="menu"] div[title="Nested Item ${x}"]`);
-          await TinyUiActions.pWaitForUi(editor, `[role="menu"] div[title="Nested Item ${x}"]`);
+          TinyUiActions.clickOnUi(editor, `[role="menu"] div[aria-label="Nested Item ${x}"]`);
+          await TinyUiActions.pWaitForUi(editor, `[role="menu"] div[aria-label="Nested Item ${x}"]`);
         });
 
         const shadowHost = UiFinder.findIn(SugarBody.body(), '.test-shadow-root').getOrDie();

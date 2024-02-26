@@ -15,7 +15,7 @@ describe('browser.tinymce.themes.silver.editor.AutocompleterTooltipTest', () => 
     editor.focus();
     editor.setContent(`<p>${triggerChar}</p>`);
     TinySelections.setCursor(editor, [ 0, 0 ], triggerChar.length);
-    TinyContentActions.keypress(editor, triggerChar.charCodeAt(0));
+    editor.dispatch('input');
     await UiFinder.pWaitForVisible('Wait for autocompleter to appear', SugarBody.body(), '.tox-autocompleter');
   };
 

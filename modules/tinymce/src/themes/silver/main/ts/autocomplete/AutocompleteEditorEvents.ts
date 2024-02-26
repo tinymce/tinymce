@@ -1,11 +1,8 @@
 import { AlloyComponent, AlloyTriggers, Highlighting, NativeEvents } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-
-import * as AutocompleteTagReader from './AutocompleteTagReader';
 
 export interface AutocompleterUiApi {
   readonly getMenu: () => Optional<AlloyComponent>;
@@ -68,9 +65,9 @@ const setup = (api: AutocompleterUiApi, editor: Editor): void => {
     }
   });
 
-  editor.on('NodeChange', (e) => {
+  editor.on('NodeChange', () => {
     // Close if active, not in the middle of an onAction callback and we're no longer inside the autocompleter span
-    if (api.isActive() && !api.isProcessingAction() && AutocompleteTagReader.detect(SugarElement.fromDom(e.element)).isNone()) {
+    if (api.isActive() && !api.isProcessingAction() && !editor.queryCommandState('mceAutoCompleterInRange')) {
       api.cancelIfNecessary();
     }
   });
