@@ -556,10 +556,10 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
         });
 
         it('TINY-10349: Pasted object element should be converted to iframe',
-          testPasteHtml(hook, '<object data="about:blank">', '<p><iframe src="about:blank"></iframe></p>'));
+          testPasteHtml(hook, '<object data="about:blank">', '<p><iframe src="about:blank" sandbox=""></iframe></p>'));
 
         it('TINY-10349: Pasted embed element should be converted to iframe',
-          testPasteHtml(hook, '<embed src="about:blank">', '<p><iframe src="about:blank"></iframe></p>'));
+          testPasteHtml(hook, '<embed src="about:blank">', '<p><iframe src="about:blank" sandbox=""></iframe></p>'));
       });
 
       context('convert_unsafe_embeds: true, sandbox_iframes: true', () => {

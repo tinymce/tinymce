@@ -83,6 +83,7 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
     inline_styles: getOption('inline_styles'),
     root_name: getRootName(editor),
     sandbox_iframes: getOption('sandbox_iframes'),
+    sandbox_iframes_exclusions: Options.getSandboxIframesExclusions(editor),
     sanitize: getOption('xss_sanitization'),
     validate: true,
     blob_cache: blobCache,

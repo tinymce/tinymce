@@ -831,7 +831,19 @@ const register = (editor: Editor): void => {
 
   registerOption('sandbox_iframes', {
     processor: 'boolean',
-    default: false
+    default: true
+  });
+
+  registerOption('sandbox_iframes_exclusions', {
+    processor: 'string[]',
+    default: [
+      'youtube.com',
+      'youtu.be',
+      'vimeo.com',
+      'dailymotion.com',
+      'dai.ly',
+      'codepen.io'
+    ]
   });
 
   registerOption('convert_unsafe_embeds', {
@@ -956,6 +968,7 @@ const hasTableTabNavigation = option('table_tab_navigation');
 const getDetailsInitialState = option('details_initial_state');
 const getDetailsSerializedState = option('details_serialized_state');
 const shouldSandboxIframes = option('sandbox_iframes');
+const getSandboxIframesExclusions = (editor: Editor): string[] => editor.options.get('sandbox_iframes_exclusions');
 const shouldConvertUnsafeEmbeds = option('convert_unsafe_embeds');
 
 export {
@@ -1063,5 +1076,6 @@ export {
   getDetailsSerializedState,
   shouldUseDocumentWrite,
   shouldSandboxIframes,
+  getSandboxIframesExclusions,
   shouldConvertUnsafeEmbeds
 };

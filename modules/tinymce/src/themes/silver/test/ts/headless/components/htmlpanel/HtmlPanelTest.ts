@@ -4,13 +4,16 @@ import { context, describe, it } from '@ephox/bedrock-client';
 
 import { renderHtmlPanel } from 'tinymce/themes/silver/ui/general/HtmlPanel';
 
+import TestBackstage from '../../../module/TestBackstage';
+
 describe('headless.tinymce.themes.silver.components.htmlpanel.HtmlPanelTest', () => {
   context('Presentation', () => {
+    const backstage = TestBackstage();
     const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
       renderHtmlPanel({
         html: '<br /><br /><hr />',
         presets: 'presentation'
-      })
+      }, backstage.shared.providers)
     ));
 
     it('Check basic structure', () => {
@@ -32,11 +35,12 @@ describe('headless.tinymce.themes.silver.components.htmlpanel.HtmlPanelTest', ()
   });
 
   context('Document', () => {
+    const backstage = TestBackstage();
     const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
       renderHtmlPanel({
         html: '<br /><hr />',
         presets: 'document'
-      })
+      }, backstage.shared.providers)
     ));
 
     it('Check basic structure', () => {
