@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Advcode's styles wasn't working as expected.
-time: 2024-02-25T17:07:33.699387984+01:00
-custom:
-  Issue: TINY-10675
