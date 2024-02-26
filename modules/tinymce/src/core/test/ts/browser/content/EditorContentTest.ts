@@ -621,7 +621,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         editor.setContent('<p>test</p><!--\ufeff><iframe onload=alert(document.domain)>-></body>-->');
         // TINY-10669: Remove this check
         const expected = isSafariLessThan17
-          ? '<p>test</p><!----><p><iframe>-&gt;&lt;/body&gt;--&gt;&lt;/body&gt;</iframe></p>'
+          ? '<p>test</p><!----><p><iframe sandbox="">-&gt;&lt;/body&gt;--&gt;&lt;/body&gt;</iframe></p>'
           : '<p>test</p><!---->';
         TinyAssertions.assertRawContent(editor, expected);
       });
