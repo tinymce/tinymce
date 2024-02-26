@@ -95,7 +95,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
       syncTableCellPixels(table);
     }
 
-    // NOTE: This will only change the height of teh last tr
+    // NOTE: This will only change the height of the last tr
     if (height !== startH && startRawH !== '') {
       // Restore the original size and then let snooker resize appropriately
       Css.set(table, 'height', startRawH);
