@@ -50,17 +50,17 @@ describe('browser.tinymce.plugins.media.core.MediaAlignmentTest', () => {
   context('apply alignment to ephox embed elements', () => {
     it('TINY-8687: align ephox embed element without styles to the left', () => testAlignLeft(
       '<div contenteditable="false" data-ephox-embed-iri="embed-iri"><iframe src="about:blank"></iframe></div>',
-      '<div style="float: left;" contenteditable="false" data-ephox-embed-iri="embed-iri"><iframe src="about:blank"></iframe></div>'
+      '<div style="float: left;" contenteditable="false" data-ephox-embed-iri="embed-iri"><iframe src="about:blank" sandbox=""></iframe></div>'
     ));
 
     it('TINY-8687: align ephox embed element without styles to the center', () => testAlignCenter(
       '<div contenteditable="false" data-ephox-embed-iri="embed-iri"><iframe src="about:blank"></iframe></div>',
-      '<div style="margin-left: auto; margin-right: auto;" contenteditable="false" data-ephox-embed-iri="embed-iri"><iframe src="about:blank"></iframe></div>'
+      '<div style="margin-left: auto; margin-right: auto;" contenteditable="false" data-ephox-embed-iri="embed-iri"><iframe src="about:blank" sandbox=""></iframe></div>'
     ));
 
     it('TINY-8687: align ephox embed element without styles to the right', () => testAlignRight(
       '<div contenteditable="false" data-ephox-embed-iri="embed-iri"><iframe src="about:blank"></iframe></div>',
-      '<div style="float: right;" contenteditable="false" data-ephox-embed-iri="embed-iri"><iframe src="about:blank"></iframe></div>'
+      '<div style="float: right;" contenteditable="false" data-ephox-embed-iri="embed-iri"><iframe src="about:blank" sandbox=""></iframe></div>'
     ));
   });
 
