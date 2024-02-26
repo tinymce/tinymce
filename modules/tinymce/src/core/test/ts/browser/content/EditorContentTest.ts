@@ -18,6 +18,7 @@ const defaultExpectedEvents = [
 ];
 
 describe('browser.tinymce.core.content.EditorContentTest', () => {
+  // TINY-10669: Remove this
   const platform = PlatformDetection.detect();
   const isSafari = platform.browser.isSafari();
   const isSafariLessThan17 = isSafari && platform.browser.version.major < 17;
@@ -451,8 +452,8 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
               base_url: '/project/tinymce/js/tinymce'
             }, []);
 
-            it('TINY-10349: Object elements should be converted', testConversion(hook, '<object data="about:blank"></object>', '<iframe src="about:blank"></iframe>'));
-            it('TINY-10349: Embed elements should be converted', testConversion(hook, '<embed src="about:blank">', '<iframe src="about:blank"></iframe>'));
+            it('TINY-10349: Object elements should be converted', testConversion(hook, '<object data="about:blank"></object>', '<iframe src="about:blank" sandbox=""></iframe>'));
+            it('TINY-10349: Embed elements should be converted', testConversion(hook, '<embed src="about:blank">', '<iframe src="about:blank" sandbox=""></iframe>'));
           });
 
           context('convert_unsafe_embeds: false', () => {

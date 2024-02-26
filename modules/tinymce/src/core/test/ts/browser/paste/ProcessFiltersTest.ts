@@ -12,6 +12,7 @@ type PreProcessHandler = (e: EditorEvent<PastePreProcessEvent>) => void;
 type PostProcessHandler = (e: EditorEvent<PastePostProcessEvent>) => void;
 
 describe('browser.tinymce.core.paste.ProcessFiltersTest', () => {
+
   const baseSettings = {
     add_unload_trigger: false,
     indent: false,
@@ -122,10 +123,10 @@ describe('browser.tinymce.core.paste.ProcessFiltersTest', () => {
     const editor = hook.editor();
 
     const objectRes = processPrePost(editor, '<object data="about:blank"></object>', true, Fun.noop, Fun.noop);
-    assert.deepEqual(objectRes, { content: '<iframe src="about:blank"></iframe>', cancelled: false }, '<object> should be converted');
+    assert.deepEqual(objectRes, { content: '<iframe src="about:blank" sandbox=""></iframe>', cancelled: false }, '<object> should be converted');
 
     const embedRes = processPrePost(editor, '<embed src="about:blank">', true, Fun.noop, Fun.noop);
-    assert.deepEqual(embedRes, { content: '<iframe src="about:blank"></iframe>', cancelled: false }, '<embed> should be converted');
+    assert.deepEqual(embedRes, { content: '<iframe src="about:blank" sandbox=""></iframe>', cancelled: false }, '<embed> should be converted');
   });
 
   context('iframe sandboxing', () => {
