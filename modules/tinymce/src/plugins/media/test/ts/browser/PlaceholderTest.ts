@@ -12,7 +12,8 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
   const baseSettings = {
     plugins: [ 'media' ],
     toolbar: 'media',
-    extended_valid_elements: 'script[src|type]'
+    extended_valid_elements: 'script[src|type]',
+    sandbox_iframes_exclusions: []
   };
 
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -55,7 +56,7 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
     it('TBA: Set and assert iframe placeholder structure', () => pTestPlaceholder(hook.editor(),
       'https://www.youtube.com/watch?v=P_205ZY52pY',
       '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
-      'height="314" allowfullscreen="allowfullscreen"></iframe></p>',
+      'height="314" sandbox="" allowfullscreen="allowfullscreen"></iframe></p>',
       placeholderStructure
     ));
 
@@ -104,8 +105,8 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
     it('TBA: Set and assert live iframe embed structure', () => pTestPlaceholder(hook.editor(),
       'https://www.youtube.com/watch?v=P_205ZY52pY',
       '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
-      'height="314" allowfullscreen="allowfullscreen"></iframe></p>',
-      createIframeStructure(false)
+      'height="314" sandbox="" allowfullscreen="allowfullscreen"></iframe></p>',
+      createIframeStructure(true)
     ));
 
     it('TINY-10348: Live iframe embed structure when sandbox_iframes: false', async () => {

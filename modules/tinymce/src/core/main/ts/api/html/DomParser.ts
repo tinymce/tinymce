@@ -68,6 +68,7 @@ export interface DomParserSettings {
   preserve_cdata?: boolean;
   root_name?: string;
   sandbox_iframes?: boolean;
+  sandbox_iframes_exclusions?: string[];
   sanitize?: boolean;
   validate?: boolean;
 }

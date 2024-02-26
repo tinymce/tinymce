@@ -21,14 +21,10 @@ export default (): void => {
       { title: 'None', value: '' },
       { title: 'Some class', value: 'class-name' }
     ],
-    templates: [
-      { title: 'Some title 1', description: 'Some desc 1', content: 'My content' },
-      { title: 'Some title 2', description: 'Some desc 2', content: '<div class="mceTmpl"><span class="cdate">cdate</span><span class="mdate">mdate</span>My content2</div>' }
-    ],
     plugins: [
       'autosave', 'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
       'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code', 'fullscreen', 'insertdatetime', 'media', 'nonbreaking',
-      'save', 'table', 'directionality', 'emoticons', 'template', 'codesample', 'help'
+      'save', 'table', 'directionality', 'emoticons', 'codesample', 'help'
     ]
   };
 

@@ -1476,16 +1476,43 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       });
 
       context('Sandboxing iframes', () => {
-        const serializeIframeHtml = (sandbox: boolean): string => {
-          const parser = DomParser({ ...scenario.settings, sandbox_iframes: sandbox });
-          return serializer.serialize(parser.parse('<iframe src="about:blank"></iframe>'));
-        };
+        context('sandbox_iframes', () => {
+          const testSandboxIframe = (sandbox: boolean, expected: string) => () => {
+            const parser = DomParser({ ...scenario.settings, sandbox_iframes: sandbox });
+            const serialized = serializer.serialize(parser.parse('<iframe src="about:blank"></iframe>'));
+            assert.equal(serialized, expected);
+          };
 
-        it('TINY-10348: iframes should be sandboxed when sandbox_iframes: false', () =>
-          assert.equal(serializeIframeHtml(false), '<iframe src="about:blank"></iframe>'));
+          it('TINY-10348: iframes should be sandboxed when sandbox_iframes: false',
+            testSandboxIframe(false, '<iframe src="about:blank"></iframe>'));
 
-        it('TINY-10348: iframes should be sandboxed when sandbox_iframes: true', () =>
-          assert.equal(serializeIframeHtml(true), '<iframe src="about:blank" sandbox=""></iframe>'));
+          it('TINY-10348: iframes should be sandboxed when sandbox_iframes: true',
+            testSandboxIframe(true, '<iframe src="about:blank" sandbox=""></iframe>'));
+        });
+
+        context('sandbox_iframes_exclusions', () => {
+          const exclusions = [ 'tiny.cloud' ];
+          const parser = DomParser({ ...scenario.settings, sandbox_iframes: true, sandbox_iframes_exclusions: exclusions });
+
+          const testSandboxIframeExclusions = (src: string, expected: string) => () => {
+            const serialized = serializer.serialize(parser.parse(`<iframe src="${src}"></iframe>`));
+            assert.equal(serialized, expected);
+          };
+
+          it('TINY-10350: iframes should be sandboxed when sandbox_iframes: true and host is not excluded',
+            testSandboxIframeExclusions('https://www.example.com', '<iframe src="https://www.example.com" sandbox=""></iframe>'));
+
+          it('TINY-10350: iframes should not be sandboxed when sandbox_iframes: true and host is excluded',
+            testSandboxIframeExclusions('https://www.tiny.cloud', '<iframe src="https://www.tiny.cloud"></iframe>'));
+
+          it('TINY-10350: iframes with non-URL src should be sandboxed when sandbox_iframes: true',
+            testSandboxIframeExclusions('abc', '<iframe src="abc" sandbox=""></iframe>'));
+
+          it('TINY-10350: iframes with no src should be sandboxed when sandbox_iframes: true', () => {
+            const serialized = serializer.serialize(parser.parse('<iframe></iframe>'));
+            assert.equal(serialized, '<iframe sandbox=""></iframe>');
+          });
+        });
       });
 
       context('Convert unsafe embeds', () => {

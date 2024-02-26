@@ -30,6 +30,12 @@ const withSerializedContent = <R extends EditorEvent<{ content: string }>>(conte
   }
 };
 
+const makeParserSettings = (editor: Editor): DomParserSettings => ({
+  sanitize: Options.shouldSanitizeXss(editor),
+  sandbox_iframes: Options.shouldSandboxIframes(editor),
+  sandbox_iframes_exclusions: Options.getSandboxIframesExclusions(editor)
+});
+
 const preProcessGetContent = <T extends GetContentArgs>(editor: Editor, args: T): Result<T, Content> => {
   if (args.no_events) {
     return Result.value(args);
@@ -47,7 +53,7 @@ const postProcessGetContent = <T extends GetContentArgs>(editor: Editor, content
   if (args.no_events) {
     return content;
   } else {
-    const processedEventArgs = withSerializedContent(content, (content) => Events.fireGetContent(editor, { ...args, content }), { sanitize: Options.shouldSanitizeXss(editor), sandbox_iframes: Options.shouldSandboxIframes(editor) });
+    const processedEventArgs = withSerializedContent(content, (content) => Events.fireGetContent(editor, { ...args, content }), makeParserSettings(editor));
     return processedEventArgs.content;
   }
 };
@@ -56,7 +62,7 @@ const preProcessSetContent = <T extends SetContentArgs>(editor: Editor, args: T)
   if (args.no_events) {
     return Result.value(args);
   } else {
-    const processedEventArgs = withSerializedContent(args.content, (content) => Events.fireBeforeSetContent(editor, { ...args, content }), { sanitize: Options.shouldSanitizeXss(editor), sandbox_iframes: Options.shouldSandboxIframes(editor) });
+    const processedEventArgs = withSerializedContent(args.content, (content) => Events.fireBeforeSetContent(editor, { ...args, content }), makeParserSettings(editor));
     if (processedEventArgs.isDefaultPrevented()) {
       Events.fireSetContent(editor, processedEventArgs);
       return Result.error(undefined);
