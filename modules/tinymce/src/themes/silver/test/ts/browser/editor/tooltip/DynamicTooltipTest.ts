@@ -328,5 +328,3 @@ describe('browser.tinymce.themes.silver.editor.TooltipShortcutTest', () => {
     });
   });
 });
-
-
