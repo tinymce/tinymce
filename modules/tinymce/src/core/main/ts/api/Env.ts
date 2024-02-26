@@ -39,7 +39,6 @@ interface Env {
     isOpera: () => boolean;
     isFirefox: () => boolean;
     isSafari: () => boolean;
-    isSafariLessThan17: () => boolean;
   };
   os: {
     current: string | undefined;
@@ -103,9 +102,7 @@ const Env: Env = {
     isFirefox: browser.isFirefox,
     isIE: browser.isIE,
     isOpera: browser.isOpera,
-    isSafari: browser.isSafari,
-    // TINY-10669: Remove this API
-    isSafariLessThan17: browser.isSafariLessThan17
+    isSafari: browser.isSafari
   },
   os: {
     current: os.current,

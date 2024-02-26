@@ -7,7 +7,8 @@ import * as TrimBody from 'tinymce/core/dom/TrimBody';
 
 describe('browser.tinymce.core.dom.TrimBodyTest', () => {
   // TINY-10669: Remove this check
-  const isSafariLessThan17 = PlatformDetection.detect().browser.isSafariLessThan17();
+  const platform = PlatformDetection.detect();
+  const isSafariLessThan17 = platform.browser.isSafari() && platform.browser.version.major < 17;
 
   context('trim', () => {
     it('trim should trim body containing trimmmable nodes', () => {

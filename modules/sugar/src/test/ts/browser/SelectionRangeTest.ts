@@ -38,13 +38,15 @@ UnitTest.test('WindowSelectionTest', () => {
   const find = (path: number[]) => Hierarchy.follow(container, path).getOrDie('invalid path');
 
   const detection = PlatformDetection.detect();
+  // TINY-10669: Remove this
+  const isSafariLessThan17 = () => detection.browser.isSafari() && detection.browser.version.major < 17;
 
   const detector = (variants: Variants): VariantRange => {
     if (detection.browser.isFirefox() && variants.firefox !== undefined) {
       return variants.firefox;
-    } else if (detection.browser.isSafari() && variants.safari !== undefined && !detection.browser.isSafariLessThan17()) {
+    } else if (detection.browser.isSafari() && variants.safari !== undefined && !isSafariLessThan17()) {
       return variants.safari;
-    } else if (detection.browser.isSafariLessThan17() && variants.safariLessThan17 !== undefined) {
+    } else if (isSafariLessThan17() && variants.safariLessThan17 !== undefined) {
       // TINY-10669: Remove this and all safariLessThan17 variants
       return variants.safariLessThan17;
     } else if (detection.browser.isChromium() && variants.chromium !== undefined) {

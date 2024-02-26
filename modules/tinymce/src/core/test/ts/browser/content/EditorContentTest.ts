@@ -19,7 +19,8 @@ const defaultExpectedEvents = [
 
 describe('browser.tinymce.core.content.EditorContentTest', () => {
   // TINY-10669: Remove this check
-  const isSafariLessThan17 = PlatformDetection.detect().browser.isSafariLessThan17();
+  const platform = PlatformDetection.detect();
+  const isSafariLessThan17 = platform.browser.isSafari() && platform.browser.version.major < 17;
 
   const toHtml = (node: AstNode): string => HtmlSerializer({}).serialize(node);
 

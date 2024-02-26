@@ -8,7 +8,8 @@ import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.content.EditorGetContentRawTest', () => {
   // TINY-10669: Remove this check
-  const isSafariLessThan17 = PlatformDetection.detect().browser.isSafariLessThan17();
+  const platform = PlatformDetection.detect();
+  const isSafariLessThan17 = platform.browser.isSafari() && platform.browser.version.major < 17;
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'

@@ -8,7 +8,8 @@ import { getSanitizer, MimeType } from 'tinymce/core/html/Sanitization';
 describe('browser.tinymce.core.html.SanitizationTest', () => {
   context('Sanitize html', () => {
     // TINY-10669: Remove this check
-    const isSafariLessThan17 = PlatformDetection.detect().browser.isSafariLessThan17();
+    const platform = PlatformDetection.detect();
+    const isSafariLessThan17 = platform.browser.isSafari() && platform.browser.version.major < 17;
 
     const testHtmlSanitizer = (testCase: { input: string; expected: string; mimeType: MimeType; sanitize?: boolean }) => {
       const sanitizer = getSanitizer({ sanitize: testCase.sanitize ?? true }, Schema());
