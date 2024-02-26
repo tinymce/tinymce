@@ -133,6 +133,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     }
   };
 
+  // TODO: TINY-10658 Remove height styling from last row to allow table ghost element to visually change
   const createGhostElement = (elm: HTMLElement) => {
     if (isMedia(elm)) {
       return dom.create('img', { src: Env.transparentSrc });

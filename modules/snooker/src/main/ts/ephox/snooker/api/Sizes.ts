@@ -1,7 +1,6 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Css, Height, SugarElement, Width } from '@ephox/sugar';
 
-import * as BarPositions from '../resize/BarPositions';
 import * as ColumnSizes from '../resize/ColumnSizes';
 import * as Redistribution from '../resize/Redistribution';
 import * as Sizes from '../resize/Sizes';
@@ -24,11 +23,9 @@ const redistributeToColumns = (newWidths: string[], columns: Column[], unit: str
   });
 };
 
-const redistributeToH = <T extends Detail> (newHeights: string[], rows: RowDetail<T>[], cells: DetailExt[], unit: string): void => {
+const redistributeToH = <T extends Detail> (newHeights: string[], rows: RowDetail<T>[], cells: DetailExt[]): void => {
   Arr.each(cells, (cell) => {
-    const heights = newHeights.slice(cell.row, cell.rowspan + cell.row);
-    const h = Redistribution.sum(heights, CellUtils.minHeight());
-    Css.set(cell.element, 'height', h + unit);
+    Css.remove(cell.element, 'height');
   });
 
   Arr.each(rows, (row, i) => {
@@ -64,11 +61,10 @@ const redistribute = (table: SugarElement<HTMLTableElement>, optWidth: Optional<
   });
 
   optHeight.each((newHeight) => {
-    const hUnit = getUnit(newHeight);
     const totalHeight = Height.get(table);
-    const oldHeights = ColumnSizes.getRawHeights(warehouse, table, BarPositions.height);
+    const oldHeights = ColumnSizes.getRawHeights(warehouse, table);
     const nuHeights = Redistribution.redistribute(oldHeights, totalHeight, newHeight);
-    redistributeToH(nuHeights, rows, cells, hUnit);
+    redistributeToH(nuHeights, rows, cells);
     Css.set(table, 'height', newHeight);
   });
 };

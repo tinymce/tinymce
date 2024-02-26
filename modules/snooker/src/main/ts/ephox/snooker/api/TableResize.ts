@@ -62,7 +62,7 @@ const create = (wire: ResizeWire, resizing: ResizeBehaviour, lazySizing: (elemen
     events.trigger.beforeResize(table, 'row');
     const delta = hdirection.delta(event.delta, table);
     // TODO: Use the resizing behaviour for heights as well
-    Adjustments.adjustHeight(table, delta, event.row, hdirection);
+    Adjustments.adjustHeight(table, delta, event.row);
     events.trigger.afterResize(table, 'row');
   });
 

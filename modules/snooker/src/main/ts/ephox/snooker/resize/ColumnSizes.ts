@@ -8,7 +8,7 @@ import * as Blocks from '../lookup/Blocks';
 import * as CellUtils from '../util/CellUtils';
 import { CellElement } from '../util/TableTypes';
 import * as Util from '../util/Util';
-import { BarPositions, RowInfo, width } from './BarPositions';
+import { height, width } from './BarPositions';
 import * as Sizes from './Sizes';
 
 const isCol = SugarNode.isTag('col');
@@ -17,7 +17,7 @@ const getRawW = (cell: SugarElement<HTMLTableCellElement | HTMLTableColElement>)
   return Sizes.getRawWidth(cell).getOrThunk(() => Sizes.getPixelWidth(cell) + 'px');
 };
 
-const getRawH = (cell: SugarElement<HTMLTableCellElement>): string => {
+const getRawH = (cell: SugarElement<HTMLTableCellElement | HTMLTableRowElement>): string => {
   return Sizes.getRawHeight(cell).getOrThunk(() => Sizes.getHeight(cell) + 'px');
 };
 
@@ -106,29 +106,36 @@ const getPixelWidths = (warehouse: Warehouse, table: SugarElement<HTMLTableEleme
 const getHeightFrom = <T> (
   warehouse: Warehouse,
   table: SugarElement<HTMLTableElement>,
-  direction: BarPositions<RowInfo>,
-  getHeight: (cell: SugarElement<HTMLTableCellElement>) => T,
+  getHeight: (cell: SugarElement<HTMLTableCellElement | HTMLTableRowElement>) => T,
   fallback: (deduced: Optional<number>) => T
 ): T[] => {
-  const rows = Blocks.rows(warehouse);
+  const rowCells = Blocks.rows(warehouse);
+  const rows = Arr.map(warehouse.all, (r) => Optional.some(r.element));
 
-  const backups = [ Optional.some(direction.edge(table)) ].concat(Arr.map(direction.positions(rows, table), (pos) =>
+  const backups = [ Optional.some(height.edge(table)) ].concat(Arr.map(height.positions(rowCells, table), (pos) =>
     pos.map((p) => p.y)
   ));
 
-  return Arr.map(rows, (cellOption, c) => {
-    return getDimension(cellOption, c, backups, Fun.not(CellUtils.hasRowspan), getHeight, fallback);
-  });
+  return Arr.map(rows, (row, i) =>
+    getDimension(
+      row,
+      i,
+      backups,
+      Fun.always,
+      getHeight,
+      fallback
+    )
+  );
 };
 
-const getPixelHeights = (warehouse: Warehouse, table: SugarElement<HTMLTableElement>, direction: BarPositions<RowInfo>): number[] => {
-  return getHeightFrom(warehouse, table, direction, Sizes.getHeight, (deduced: Optional<number>) => {
+const getPixelHeights = (warehouse: Warehouse, table: SugarElement<HTMLTableElement>): number[] => {
+  return getHeightFrom(warehouse, table, Sizes.getHeight, (deduced: Optional<number>) => {
     return deduced.getOrThunk(CellUtils.minHeight);
   });
 };
 
-const getRawHeights = (warehouse: Warehouse, table: SugarElement<HTMLTableElement>, direction: BarPositions<RowInfo>): string[] => {
-  return getHeightFrom(warehouse, table, direction, getRawH, getDeduced);
+const getRawHeights = (warehouse: Warehouse, table: SugarElement<HTMLTableElement>): string[] => {
+  return getHeightFrom(warehouse, table, getRawH, getDeduced);
 };
 
 export { getRawWidths, getPixelWidths, getPercentageWidths, getPixelHeights, getRawHeights };

@@ -147,12 +147,12 @@ describe('browser.tinymce.models.dom.table.InsertRowTableResizeTest', () => {
 
   const insertRowMeasureWidth = (editor: Editor, scenario: Scenario) => {
     const table = insertTable(editor, scenario.html);
-    const widthBefore = TableTestUtils.getWidths(editor, table.dom);
+    const widthBefore = TableTestUtils.getWidthData(editor, table.dom);
     const cellWidthBefore = TableTestUtils.getCellWidth(editor, table, 0, 0);
     TableTestUtils.insertRowBefore(editor);
     TableTestUtils.insertRowAfter(editor);
     TableTestUtils.deleteRow(editor);
-    const widthAfter = TableTestUtils.getWidths(editor, table.dom);
+    const widthAfter = TableTestUtils.getWidthData(editor, table.dom);
     const cellWidthAfter = TableTestUtils.getCellWidth(editor, table, 0, 0);
     return {
       widthBefore,
