@@ -15,7 +15,7 @@ interface EmbedResponse {
   readonly html?: string;
 }
 
-export type MediaResolver = (data: { url: string }, resolve: (response: EmbedResponse) => void, reject: (reason?: any) => void) => void;
+export type MediaResolver = (data: { url: string }) => Promise<EmbedResponse>;
 
 const cache: Record<string, EmbedResponse> = {};
 
