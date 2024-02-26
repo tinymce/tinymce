@@ -11,13 +11,7 @@ describe('browser.tinymce.plugins.media.DataAttributeTest', () => {
     plugins: [ 'media' ],
     toolbar: 'media',
     media_url_resolver: (data: { url: string }) => {
-      return new Promise<{ html: string }>((resolve, reject) => {
-        try {
-          resolve({ html: '<div data-ephox-embed-iri="' + data.url + '" style="max-width: 300px; max-height: 150px"></div>' });
-        } catch (error) {
-          reject(error);
-        }
-      });
+      Promise.resolve({ html: '<div data-ephox-embed-iri="' + data.url + '" style="max-width: 300px; max-height: 150px"></div>' });
     },
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ]);

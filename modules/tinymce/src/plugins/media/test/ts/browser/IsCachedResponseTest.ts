@@ -12,14 +12,8 @@ describe('browser.tinymce.plugins.media.IsCachedResponseTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: [ 'media' ],
     toolbar: 'media',
-    media_url_resolver: (data: { url: string }) => {
-      return new Promise<{ html: string }>((resolve, reject) => {
-        if (data.url === 'test') {
-          resolve({ html: '<div>x</div>' });
-        } else {
-          reject('error');
-        }
-      });
+    media_url_resolver: () => {
+      Promise.resolve({ html: '<div>x</div>' });
     },
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ], true);
