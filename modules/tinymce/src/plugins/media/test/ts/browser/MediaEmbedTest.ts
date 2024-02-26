@@ -11,10 +11,16 @@ describe.skip('browser.tinymce.plugins.media.core.MediaEmbedTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: [ 'media' ],
     toolbar: 'media',
-    media_url_resolver: (data: { url: string }, resolve: (response: { html: string }) => void) => {
-      resolve({
-        html: '<video width="300" height="150" ' +
-          'controls="controls">\n<source src="' + data.url + '" />\n</video>'
+    media_url_resolver: (data: { url: string }) => {
+      return new Promise<{ html: string }>((resolve, reject) => {
+        try {
+          resolve({
+            html: '<video width="300" height="150" ' +
+              'controls="controls">\n<source src="' + data.url + '" />\n</video>'
+          });
+        } catch (error) {
+          reject(error);
+        }
       });
     },
     base_url: '/project/tinymce/js/tinymce'
