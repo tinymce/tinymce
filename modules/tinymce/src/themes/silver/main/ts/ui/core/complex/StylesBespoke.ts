@@ -1,5 +1,5 @@
 import { AlloyComponent, AlloyTriggers, SketchSpec } from '@ephox/alloy';
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional, Strings } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { BlockFormat, InlineFormat } from 'tinymce/core/api/fmt/Format';
@@ -16,10 +16,10 @@ import { findNearest } from './utils/FormatDetection';
 import * as Tooltip from './utils/Tooltip';
 
 const menuTitle = 'Formats';
-const btnTooltip = 'Format {0}';
+const getTooltipPlaceholder = (value: string) => Strings.isEmpty(value) ? 'Formats' : 'Format {0}';
 
 const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
-  const fallbackFormat = 'Paragraph';
+  const fallbackFormat = 'Formats';
 
   const isSelectedFor = (format: string) => () => editor.formatter.match(format);
 
@@ -43,15 +43,22 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
     };
     const flattenedItems = Arr.bind(getStyleFormats(editor), getFormatItems);
     const detectedFormat = findNearest(editor, Fun.constant(flattenedItems));
-    const text = detectedFormat.fold(Fun.constant(fallbackFormat), (fmt) => fmt.title);
+    const text = detectedFormat.fold(Fun.constant({
+      title: fallbackFormat,
+      tooltipLabel: ''
+    }), (fmt) => ({
+      title: fmt.title,
+      tooltipLabel: fmt.title
+    }));
+
     AlloyTriggers.emitWith(comp, updateMenuText, {
-      text
+      text: text.title
     });
-    Events.fireStylesTextUpdate(editor, { value: text });
+    Events.fireStylesTextUpdate(editor, { value: text.tooltipLabel });
   };
 
   return {
-    tooltip: Tooltip.makeTooltipText(editor, btnTooltip, fallbackFormat),
+    tooltip: Tooltip.makeTooltipText(editor, getTooltipPlaceholder(''), ''),
     text: Optional.some(fallbackFormat),
     icon: Optional.none(),
     isSelectedFor,
@@ -67,7 +74,7 @@ const getSpec = (editor: Editor, dataset: SelectDataset): SelectSpec => {
 
 const createStylesButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec => {
   const dataset: AdvancedSelectDataset = { type: 'advanced', ...backstage.styles };
-  return createSelectButton(editor, backstage, getSpec(editor, dataset), btnTooltip, 'StylesTextUpdate', 'styles');
+  return createSelectButton(editor, backstage, getSpec(editor, dataset), getTooltipPlaceholder, 'StylesTextUpdate', 'styles');
 };
 
 const createStylesMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {

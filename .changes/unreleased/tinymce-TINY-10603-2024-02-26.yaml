@@ -1,0 +1,6 @@
+project: tinymce
+kind: Changed
+body: '`Styles` bespoke toolbar button fallback changed to `Formats` if `Paragraph` is not configured in `style_formats` option.'
+time: 2024-02-26T10:40:04.767801+08:00
+custom:
+  Issue: TINY-10603

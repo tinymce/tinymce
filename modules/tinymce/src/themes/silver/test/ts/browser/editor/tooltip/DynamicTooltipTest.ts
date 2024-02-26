@@ -284,6 +284,49 @@ describe('browser.tinymce.themes.silver.editor.TooltipShortcutTest', () => {
       }));
     });
 
+    context('No translation, with custom style formats', () => {
+      const hook = TinyHooks.bddSetup<Editor>({
+        ...settings,
+        style_formats: [
+          {
+            title: 'Button',
+            selector: 'a',
+            classes: 'button'
+          },
+          {
+            title: 'Heading 1',
+            format: 'h1'
+          },
+          {
+            title: 'Italic',
+            format: 'italic'
+          }
+        ]
+      });
+      afterEach(makeCleanupFn(hook));
+
+      it('TINY-10603: styles dropdown should default to Formats when Paragraph is not configured', async () => {
+        const editor = hook.editor();
+        const buttonSelector = `button[data-mce-name="styles"]`;
+        await TooltipUtils.pAssertTooltip(editor, () => TooltipUtils.pTriggerTooltipWithMouse(editor, buttonSelector), `Formats`);
+        await TooltipUtils.pCloseTooltip(editor, buttonSelector);
+      });
+
+      it('TINY-10603: styles dropdown should update custom tooltip if display text changes', async () => {
+        const editor = hook.editor();
+        const buttonSelector = `button[data-mce-name="styles"]`;
+
+        await TooltipUtils.pAssertTooltip(editor, () => TooltipUtils.pTriggerTooltipWithMouse(editor, buttonSelector), `Formats`);
+
+        await MenuUtils.pOpenMenuWithSelector('Formats', buttonSelector);
+        const itemSelector = `div[role="menuitemcheckbox"][aria-label="Heading 1"]`;
+        TinyUiActions.clickOnUi(editor, itemSelector);
+        await TooltipUtils.pCloseTooltip(editor, buttonSelector);
+        await TooltipUtils.pAssertTooltip(editor, () => TooltipUtils.pTriggerTooltipWithMouse(editor, buttonSelector), `Format Heading 1`);
+        await TooltipUtils.pCloseTooltip(editor, buttonSelector);
+      });
+    });
   });
 });
+
 
