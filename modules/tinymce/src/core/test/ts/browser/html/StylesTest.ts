@@ -45,6 +45,13 @@ describe('browser.tinymce.core.html.StylesTest', () => {
       '   FONT-SIZE  :  10px  ;   COLOR  :  RED   ',
       'font-size: 10px; color: red;'
     );
+    assertStyles(
+      styles,
+      'border: 1px solid rgb(255, 0, 0);',
+      'border: 1px solid rgb(255, 0, 0);'
+      // TODO: color in border attr should be in HEX format once https://ephocks.atlassian.net/browse/TINY-9817 is fixed.
+      // 'border: 1px solid #ff0000;' // Should expect this
+    );
   });
 
   it('Urls convert urls and force format', () => {
