@@ -49,7 +49,7 @@ describe('browser.tinymce.core.html.StylesTest', () => {
       styles,
       'border: 1px solid rgb(255, 0, 0);',
       'border: 1px solid rgb(255, 0, 0);'
-      // TODO: color in border attr should be in HEX format once https://ephocks.atlassian.net/browse/TINY-9817 is fixed.
+      // TODO: color in border style should be in HEX format once https://ephocks.atlassian.net/browse/TINY-9817 is fixed.
       // 'border: 1px solid #ff0000;' // Should expect this
     );
   });
