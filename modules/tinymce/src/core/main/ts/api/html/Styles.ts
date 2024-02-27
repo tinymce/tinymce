@@ -266,7 +266,7 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
 
             // Convert RGB/RGBA colors to HEX
             RgbaColour.fromString(value).each((rgba) => {
-              value = Transformations.rgbaToHexString(RgbaColour.toString(rgba));
+              value = Transformations.rgbaToHexString(RgbaColour.toString(rgba)).toLowerCase();
             });
 
             // Convert URLs and force them into url('value') format
