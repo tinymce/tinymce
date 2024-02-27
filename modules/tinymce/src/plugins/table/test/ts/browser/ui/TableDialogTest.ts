@@ -439,7 +439,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     TableTestUtils.setDialogValues({ border: '3px' }, false, generalSelectors);
     await TableTestUtils.pClickDialogButton(editor, true);
     // shorthand form is retained
-    // TODO: border color should be in HEX format once https://ephocks.atlassian.net/browse/TINY-9817 is fixed. Other tests in this file also have the same wrongly expected RGB.
+    // TODO: border color should be in HEX format once https://ephocks.atlassian.net/browse/TINY-8917 is fixed. Other tests in this file also have the same wrongly expected RGB.
     TinyAssertions.assertContent(editor, '<table style="border: 3px dotted rgb(255, 0, 0); border-collapse: collapse;" border="1"><tbody><tr><td style="border-width: 3px;">&nbsp;</td></tr></tbody></table>');
     await TableTestUtils.pOpenTableDialog(editor);
     TableTestUtils.assertDialogValues(getExpectedData(3, ''), false, generalSelectors);
