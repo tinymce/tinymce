@@ -23,11 +23,6 @@ const children: Dialog.BodyComponentSpec[] = [
     label: 'Width'
   },
   {
-    name: 'height',
-    type: 'input',
-    label: 'Height'
-  },
-  {
     name: 'celltype',
     type: 'listbox',
     label: 'Cell type',
