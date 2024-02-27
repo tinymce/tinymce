@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: Added new `license_key` option that can be set to `gpl` or a valid license key.
+time: 2024-02-22T10:42:55.188027+01:00
+custom:
+  Issue: TINY-10681
