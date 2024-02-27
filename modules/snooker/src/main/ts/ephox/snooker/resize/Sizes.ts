@@ -10,6 +10,7 @@ type SizeSetter = (e: SugarElement<HTMLElement>, value: number) => void;
 const rPercentageBasedSizeRegex = /(\d+(\.\d+)?)%/;
 const rPixelBasedSizeRegex = /(\d+(\.\d+)?)px|em/;
 const isCol = SugarNode.isTag('col');
+const isRow = SugarNode.isTag('tr');
 
 const getPercentSize = (elm: SugarElement<HTMLElement>, outerGetter: SizeGetter, innerGetter: SizeGetter): number => {
   const relativeParent = Traverse.parentElement(elm).getOrThunk(() => SugarBody.getBody(Traverse.owner(elm)));
@@ -26,6 +27,10 @@ export const setPercentageWidth = (cell: SugarElement<HTMLElement>, amount: numb
 
 export const setHeight = (cell: SugarElement<HTMLElement>, amount: number): void => {
   Css.set(cell, 'height', amount + 'px');
+};
+
+export const removeHeight = (cell: SugarElement<HTMLElement>): void => {
+  Css.remove(cell, 'height');
 };
 
 const getHeightValue = (cell: SugarElement<HTMLElement>): string =>
@@ -80,8 +85,8 @@ export const getPixelWidth = (cell: SugarElement<HTMLTableCellElement | HTMLTabl
   // For col elements use the computed width as col elements aren't affected by borders, padding, etc...
   isCol(cell) ? Width.get(cell) : Width.getRuntime(cell);
 
-export const getHeight = (cell: SugarElement<HTMLTableCellElement>): number => {
-  return get(cell, 'rowspan', getTotalHeight);
+export const getHeight = (cell: SugarElement<HTMLTableCellElement | HTMLTableRowElement>): number => {
+  return isRow(cell) ? Height.get(cell) : get(cell as SugarElement<HTMLTableCellElement>, 'rowspan', getTotalHeight);
 };
 
 export const getGenericWidth = (cell: SugarElement<HTMLElement>): Optional<Dimension.Dimension<'fixed' | 'relative' | 'empty'>> => {

@@ -8,7 +8,6 @@ import { Warehouse } from '../api/Warehouse';
 import * as Deltas from '../calc/Deltas';
 import * as CellUtils from '../util/CellUtils';
 import { CellElement } from '../util/TableTypes';
-import { BarPositions, RowInfo } from './BarPositions';
 import * as ColumnSizes from './ColumnSizes';
 import * as Recalculations from './Recalculations';
 import * as Sizes from './Sizes';
@@ -47,21 +46,20 @@ const adjustWidth = (table: SugarElement<HTMLTableElement>, delta: number, index
   resizing.resizeTable(tableSize.adjustTableWidth, clampedStep, isLastColumn);
 };
 
-const adjustHeight = (table: SugarElement<HTMLTableElement>, delta: number, index: number, direction: BarPositions<RowInfo>): void => {
+const adjustHeight = (table: SugarElement<HTMLTableElement>, delta: number, index: number): void => {
   const warehouse = Warehouse.fromTable(table);
-  const heights = ColumnSizes.getPixelHeights(warehouse, table, direction);
+  const heights = ColumnSizes.getPixelHeights(warehouse, table);
 
   const newHeights = Arr.map(heights, (dy, i) => index === i ? Math.max(delta + dy, CellUtils.minHeight()) : dy);
 
-  const newCellSizes = Recalculations.recalculateHeightForCells(warehouse, newHeights);
   const newRowSizes = Recalculations.matchRowHeight(warehouse, newHeights);
 
   Arr.each(newRowSizes, (row) => {
     Sizes.setHeight(row.element, row.height);
   });
 
-  Arr.each(newCellSizes, (cell) => {
-    Sizes.setHeight(cell.element, cell.height);
+  Arr.each(Warehouse.justCells(warehouse), (cell) => {
+    Sizes.removeHeight(cell.element);
   });
 
   const total = sumUp(newHeights);

@@ -8,21 +8,28 @@ import * as TableLookup from './TableLookup';
 // Remove legacy sizing attributes such as "width"
 const cleanupLegacyAttributes = (element: SugarElement<HTMLElement>): void => {
   Attribute.remove(element, 'width');
+  Attribute.remove(element, 'height');
 };
 
-const convertToPercentSize = (table: SugarElement<HTMLTableElement>): void => {
+const convertToPercentSizeWidth = (table: SugarElement<HTMLTableElement>): void => {
   const newWidth = Sizes.getPercentTableWidth(table);
   redistribute(table, Optional.some(newWidth), Optional.none());
   cleanupLegacyAttributes(table);
 };
 
-const convertToPixelSize = (table: SugarElement<HTMLTableElement>): void => {
+const convertToPixelSizeWidth = (table: SugarElement<HTMLTableElement>): void => {
   const newWidth = Sizes.getPixelTableWidth(table);
   redistribute(table, Optional.some(newWidth), Optional.none());
   cleanupLegacyAttributes(table);
 };
 
-const convertToNoneSize = (table: SugarElement<HTMLTableElement>): void => {
+const convertToPixelSizeHeight = (table: SugarElement<HTMLTableElement>): void => {
+  const newHeight = Sizes.getPixelTableHeight(table);
+  redistribute(table, Optional.none(), Optional.some(newHeight));
+  cleanupLegacyAttributes(table);
+};
+
+const convertToNoneSizeWidth = (table: SugarElement<HTMLTableElement>): void => {
   Css.remove(table, 'width');
   const columns = TableLookup.columns(table);
   const rowElements: SugarElement<HTMLElement>[] = columns.length > 0 ? columns : TableLookup.cells(table);
@@ -34,5 +41,10 @@ const convertToNoneSize = (table: SugarElement<HTMLTableElement>): void => {
   cleanupLegacyAttributes(table);
 };
 
-export { convertToPixelSize, convertToPercentSize, convertToNoneSize };
+export {
+  convertToPixelSizeWidth,
+  convertToPercentSizeWidth,
+  convertToNoneSizeWidth,
+  convertToPixelSizeHeight
+};
 

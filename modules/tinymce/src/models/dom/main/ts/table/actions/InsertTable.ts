@@ -51,11 +51,11 @@ const insert = (editor: Editor, columns: number, rows: number, colHeaders: numbe
   // Enforce the sizing mode of the table
   return SelectorFind.descendant<HTMLTableElement>(Utils.getBody(editor), 'table[data-mce-id="__mce"]').map((table) => {
     if (Options.isTablePixelsForced(editor)) {
-      TableConversions.convertToPixelSize(table);
+      TableConversions.convertToPixelSizeWidth(table);
     } else if (Options.isTableResponsiveForced(editor)) {
-      TableConversions.convertToNoneSize(table);
+      TableConversions.convertToNoneSizeWidth(table);
     } else if (Options.isTablePercentagesForced(editor) || isPercentage(defaultStyles.width)) {
-      TableConversions.convertToPercentSize(table);
+      TableConversions.convertToPercentSizeWidth(table);
     }
     Utils.removeDataStyle(table);
     Attribute.remove(table, 'data-mce-id');
