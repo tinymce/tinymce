@@ -27,7 +27,7 @@ const registerFormatButtons = (editor: Editor): void => {
 
   for (let i = 1; i <= 6; i++) {
     const name = 'h' + i;
-    const shortcut = `Alt+Shift+${i}`;
+    const shortcut = `Access+${i}`;
     editor.ui.registry.addToggleButton(name, {
       text: name.toUpperCase(),
       tooltip: 'Heading ' + i,
