@@ -7,7 +7,7 @@ type KeyStatus = 'VALID' | 'INVALID';
 
 const isGplKey = (key: string) => key.toLowerCase() === 'gpl';
 
-const isValidGeneratedKey = (key: string): boolean => key.length >= 40 && key.length <= 255;
+const isValidGeneratedKey = (key: string): boolean => key.length >= 64 && key.length <= 255;
 
 export const validateLicenseKey = (key: string): KeyStatus => isGplKey(key) || isValidGeneratedKey(key) ? 'VALID' : 'INVALID';
 
