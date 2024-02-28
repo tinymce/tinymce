@@ -60,6 +60,10 @@ module.exports = function (grunt) {
     },
 
     eslint: {
+      options: {
+        maxWarnings: 0,
+        fix: grunt.option('fix')
+      },
       target: [ 'src/**/*.ts' ]
     },
 
@@ -925,7 +929,6 @@ module.exports = function (grunt) {
   grunt.registerTask('prodBuild', [
     'shell:prismjs',
     'shell:tsc',
-    'eslint',
     'globals',
     'emoji',
     'html-i18n',
@@ -960,7 +963,8 @@ module.exports = function (grunt) {
 
   grunt.registerTask('start', ['webpack-dev-server']);
 
-  grunt.registerTask('default', ['clean:dist', 'prod']);
+  grunt.registerTask('buildOnly', ['clean:dist', 'prod']);
+  grunt.registerTask('default', ['clean:dist', 'eslint', 'prod']);
   grunt.registerTask('test', ['bedrock-auto:standard']);
   grunt.registerTask('test-manual', ['bedrock-manual']);
 };

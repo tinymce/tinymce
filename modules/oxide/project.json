@@ -1,13 +1,17 @@
 {
   "name": "@tinymce/oxide",
+  "tags": [ "open-source", "ui", "skin" ],
   "targets": {
     "build": {
       "inputs": [
-        "{projectRoot}/src/less/**/*.less",
-        "tiny-icons"
+        "tiny-product",
+        "^tiny-product"
       ],
       "outputs": [
-        "{projectRoot}/build/skins/**"
+        "{projectRoot}/build"
+      ],
+      "dependsOn": [
+        "^build"
       ]
     }
   }
