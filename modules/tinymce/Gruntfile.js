@@ -59,10 +59,6 @@ module.exports = function (grunt) {
       moxiedoc: { command: 'moxiedoc "src/core/main/ts" -t tinymcenext --fail-on-warning --dry' }
     },
 
-    eslint: {
-      target: [ 'src/**/*.ts' ]
-    },
-
     globals: {
       options: {
         configFile: 'src/core/main/json/globals.json',

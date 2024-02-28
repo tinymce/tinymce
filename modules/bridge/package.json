@@ -10,7 +10,7 @@
   "scripts": {
     "prepublishOnly": "tsc -b",
     "build": "tsc",
-    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts"
+    "lint": "eslint --config ../../.eslintrc.json --max-warnings=0 src/**/*.ts"
   },
   "dependencies": {
     "@ephox/boulder": "^7.1.6",
