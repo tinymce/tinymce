@@ -33,7 +33,7 @@
     "lint": "eslint --config ../../.eslintrc.json src/**/*.ts"
   },
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
-  "license": "MIT",
+  "license": "GPL-2.0-or-later",
   "main": "./lib/main/ts/ephox/boss/api/Main.js",
   "module": "./lib/main/ts/ephox/boss/api/Main.js",
   "types": "./lib/main/ts/ephox/boss/api/Main.d.ts"

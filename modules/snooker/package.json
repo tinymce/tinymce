@@ -28,11 +28,8 @@
   "devDependencies": {
     "@ephox/agar": "^8.0.1"
   },
-  "devDependencies": {
-    "@ephox/agar": "^8.0.0"
-  },
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
-  "license": "MIT",
+  "license": "GPL-2.0-or-later",
   "main": "./lib/main/ts/ephox/snooker/api/Main.js",
   "module": "./lib/main/ts/ephox/snooker/api/Main.js",
   "types": "./lib/main/ts/ephox/snooker/api/Main.d.ts",

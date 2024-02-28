@@ -60,7 +60,7 @@
     "grunt-contrib-symlink": "^1.0.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-eslint": "^24.0.0",
-    "grunt-nuget-pack": "^0.0.6",
+    "grunt-nuget-pack": "^1.0.1",
     "grunt-shell": "^4.0.0",
     "grunt-terser": "^2.0.0",
     "grunt-webpack": "^5.0.0",

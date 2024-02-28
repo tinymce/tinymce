@@ -23,7 +23,7 @@
     "build": "tsc"
   },
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
-  "license": "MIT",
+  "license": "GPL-2.0-or-later",
   "dependencies": {
     "@ephox/agar": "^8.0.1",
     "@ephox/katamari": "^9.1.6",

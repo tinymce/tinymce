@@ -21,7 +21,7 @@
     "predicate"
   ],
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
-  "license": "MIT",
+  "license": "GPL-2.0-or-later",
   "dependencies": {
     "@ephox/katamari": "^9.1.6",
     "@ephox/sand": "^6.0.10"

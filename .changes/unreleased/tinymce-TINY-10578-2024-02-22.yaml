@@ -1,0 +1,6 @@
+project: tinymce
+kind: Changed
+body: TinyMCE is now GPL Version 2 or later licensed.
+time: 2024-02-22T08:43:23.304334+01:00
+custom:
+  Issue: TINY-10578
