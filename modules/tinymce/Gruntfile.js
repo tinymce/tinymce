@@ -59,6 +59,14 @@ module.exports = function (grunt) {
       moxiedoc: { command: 'moxiedoc "src/core/main/ts" -t tinymcenext --fail-on-warning --dry' }
     },
 
+    eslint: {
+      options: {
+        maxWarnings: 0,
+        fix: grunt.option('fix')
+      },
+      target: [ 'src/**/*.ts' ]
+    },
+
     globals: {
       options: {
         configFile: 'src/core/main/json/globals.json',
@@ -955,7 +963,8 @@ module.exports = function (grunt) {
 
   grunt.registerTask('start', ['webpack-dev-server']);
 
-  grunt.registerTask('default', ['clean:dist', 'prod']);
+  grunt.registerTask('buildOnly', ['clean:dist', 'prod']);
+  grunt.registerTask('default', ['clean:dist', 'eslint', 'prod']);
   grunt.registerTask('test', ['bedrock-auto:standard']);
   grunt.registerTask('test-manual', ['bedrock-manual']);
 };
