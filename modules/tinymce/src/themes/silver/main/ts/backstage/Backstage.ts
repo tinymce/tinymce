@@ -58,7 +58,7 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
     translate: I18n.translate,
     isDisabled: () => editor.mode.isReadOnly() || !editor.ui.isEnabled(),
     getOption: editor.options.get,
-    tooltips: TooltipsBackstage(lazySinks.popup)
+    tooltips: TooltipsBackstage(lazySinks.dialog)
   };
 
   const urlinput = UrlInputBackstage(editor);
