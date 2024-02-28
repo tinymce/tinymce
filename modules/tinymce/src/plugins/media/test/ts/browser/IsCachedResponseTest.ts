@@ -13,7 +13,7 @@ describe('browser.tinymce.plugins.media.IsCachedResponseTest', () => {
     plugins: [ 'media' ],
     toolbar: 'media',
     media_url_resolver: () => {
-      Promise.resolve({ html: '<div>x</div>' });
+      return Promise.resolve({ html: '<div>x</div>' });
     },
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ], true);

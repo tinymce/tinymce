@@ -12,7 +12,7 @@ describe.skip('browser.tinymce.plugins.media.core.MediaEmbedTest', () => {
     plugins: [ 'media' ],
     toolbar: 'media',
     media_url_resolver: (data: { url: string }) => {
-      Promise.resolve({ html: '<video width="300" height="150" ' + 'controls="controls">\n<source src="' + data.url + '" />\n</video>' });
+      return Promise.resolve({ html: '<video width="300" height="150" ' + 'controls="controls">\n<source src="' + data.url + '" />\n</video>' });
     },
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ]);
