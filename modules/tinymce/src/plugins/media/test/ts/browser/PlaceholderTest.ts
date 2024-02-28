@@ -61,14 +61,14 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
     ));
 
     it('TBA: Set and assert video placeholder structure', () => pTestPlaceholder(hook.editor(),
-      '/custom/video.mp4',
+      '/custom/tinymce/video.mp4',
       '<p><video controls="controls" width="300" height="150">\n' +
       '<source src="custom/video.mp4" type="video/mp4"></video></p>',
       placeholderStructure
     ));
 
     it('TBA: Set and assert audio placeholder structure', () => pTestPlaceholder(hook.editor(),
-      '/custom/audio.mp3',
+      '/custom/tinymce/audio.mp3',
       '<p><audio src="custom/audio.mp3" controls="controls"></audio></p>',
       placeholderStructure
     ));
