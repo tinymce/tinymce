@@ -70,10 +70,12 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
   return {
     bedrockRemoteTools.nodeConsumerPod(
       nodeOpts: [
-        resourceRequestCpu: '1',
-        resourceLimitCpu: '7.5',
+        resourceRequestCpu: '2',
+        resourceRequestMemory: '4Gi',
+        resourceRequestEphemeralStorage: '16Gi',
+        resourceLimitCpu: '7',
         resourceLimitMemory: '4Gi',
-        resourceLimitEphemeralStorage: '16Gi',
+        resourceLimitEphemeralStorage: '16Gi'
       ],
       build: cacheName,
       useContainers: ['node', 'aws-cli']
@@ -118,6 +120,9 @@ def runHeadlessPod(String cacheName, Boolean runAll) {
   return {
     bedrockRemoteTools.nodeConsumerPod(
       nodeOpts: [
+        resourceRequestCpu: '2',
+        resourceRequestMemory: '4Gi',
+        resourceRequestEphemeralStorage: '16Gi',
         resourceLimitCpu: '7',
         resourceLimitMemory: '4Gi',
         resourceLimitEphemeralStorage: '16Gi'
@@ -156,8 +161,10 @@ timestamps {
     nodeOpts: [
       resourceRequestCpu: '2',
       resourceRequestMemory: '4Gi',
+      resourceRequestEphemeralStorage: '16Gi',
       resourceLimitCpu: '7.5',
-      resourceLimitMemory: '4Gi'
+      resourceLimitMemory: '4Gi',
+      resourceLimitEphemeralStorage: '16Gi'
     ],
     build: cacheName
   ) {
