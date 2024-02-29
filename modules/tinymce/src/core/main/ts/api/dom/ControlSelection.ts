@@ -336,7 +336,6 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
             height: '100%'
           });
 
-          // TODO: Want to know selected handle
           selectedElmGhost = createGhostElement(dom, selectedElm);
           dom.addClass(selectedElmGhost, 'mce-clonedresizable');
           dom.setAttrib(selectedElmGhost, 'data-mce-bogus', 'all');
