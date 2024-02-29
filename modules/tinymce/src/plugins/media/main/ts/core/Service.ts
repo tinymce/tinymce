@@ -15,7 +15,7 @@ interface EmbedResponse {
   readonly html?: string;
 }
 
-export type MediaResolver = (data: { url: string }, resolve: (response: EmbedResponse) => void, reject: (reason?: any) => void) => void;
+export type MediaResolver = (data: { url: string }) => Promise<EmbedResponse>;
 
 const cache: Record<string, EmbedResponse> = {};
 
@@ -33,7 +33,7 @@ const embedPromise = (data: MediaData, dataToHtml: DataToHtml.DataToHtmlCallback
     if (cache[data.source]) {
       wrappedResolve(cache[data.source]);
     } else {
-      handler({ url: data.source }, wrappedResolve, rej);
+      handler({ url: data.source }).then(wrappedResolve).catch(rej);
     }
   });
 };
