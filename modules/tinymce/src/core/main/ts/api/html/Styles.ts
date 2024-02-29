@@ -265,7 +265,7 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
               value = value.toLowerCase();
             }
 
-            // Convert RGB coercible colors to HEX
+            // Convert RGB colors to HEX
             if (!rgbaRegExp.test(value)) {
               RgbaColour.fromString(value).each((rgba) => {
                 value = Transformations.rgbaToHexString(RgbaColour.toString(rgba)).toLowerCase();
