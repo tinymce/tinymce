@@ -1,6 +1,0 @@
-project: tinymce
-kind: Changed
-body: Change table height resizing handling to remove heights from `td`/`th` elements and only apply to `tr` elements.
-time: 2024-02-19T14:48:30.335596211+10:00
-custom:
-  Issue: TINY-10589

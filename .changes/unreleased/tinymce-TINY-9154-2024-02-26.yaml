@@ -1,6 +1,0 @@
-project: tinymce
-kind: Changed
-body: Changed the `media_url_resolver` option to use promises.
-time: 2024-02-26T13:19:58.901491+11:00
-custom:
-  Issue: TINY-9154
