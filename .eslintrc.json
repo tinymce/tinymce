@@ -18,6 +18,7 @@
     "@typescript-eslint/no-unsafe-argument": "off",
     "@typescript-eslint/prefer-for-of": "off",
     "@typescript-eslint/prefer-regexp-exec": "off",
+    "@typescript-eslint/require-await": "off",
     "no-empty": "off",
     "no-underscore-dangle": "off",
     "one-var": "off",

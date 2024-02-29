@@ -79,7 +79,7 @@ const pDownOn = (selector: string): Promise<{}> =>
   pActionOn(selector, 'down');
 
 const pMoveToOn = (selector: string): Promise<{}> =>
-  pActionOn(selector, 'click');
+  pActionOn(selector, 'move');
 
 export {
   sMoveToOn,

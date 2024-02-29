@@ -30,14 +30,14 @@
     "@ephox/katamari-assertions": "^4.0.10"
   },
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
-  "license": "MIT",
+  "license": "GPL-2.0-or-later",
   "main": "./lib/main/ts/ephox/robin/api/Main.js",
   "module": "./lib/main/ts/ephox/robin/api/Main.js",
   "types": "./lib/main/ts/ephox/robin/api/Main.d.ts",
   "scripts": {
     "test": "bedrock-auto -b chrome-headless -d src/test",
     "test-manual": "bedrock -d src/test",
-    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts",
+    "lint": "eslint --config ../../.eslintrc.json --max-warnings=0 src/**/*.ts",
     "prepublishOnly": "tsc -b",
     "build": "tsc"
   }

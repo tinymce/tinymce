@@ -11,17 +11,17 @@
   "bugs": {
     "url": "https://github.com/tinymce/tinymce/issues"
   },
-  "license": "MIT",
+  "license": "GPL-2.0-or-later",
   "engines": {
     "node": ">=0.10.26"
   },
   "main": "js/tinymce/tinymce.js",
   "types": "js/tinymce/tinymce.d.ts",
   "scripts": {
-    "build": "grunt",
+    "build": "grunt buildOnly",
     "test": "grunt test",
     "test-manual": "grunt test-manual",
-    "lint": "grunt eslint",
+    "lint": "eslint --max-warnings=0 src/**/*.ts",
     "silver-test": "grunt bedrock-auto:silver",
     "silver-test-manual": "grunt bedrock-manual:silver"
   },

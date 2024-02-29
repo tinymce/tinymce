@@ -1,0 +1,7 @@
+project: alloy
+kind: Added
+body: New Tooltipping mode, tooltip will only be shown when children within a component
+  has keyboard focus or on mouse hover and has the attribute `[data-mce-tooltip]`.
+time: 2024-02-16T07:40:19.503506+08:00
+custom:
+  Issue: TINY-9641

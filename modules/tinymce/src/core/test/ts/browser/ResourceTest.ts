@@ -50,7 +50,7 @@ describe('browser.tinymce.core.ResourceTest', () => {
 
   it('bundling', () => {
     addScript('script.1', 'value.1');
-    const load = loadScript('script.1', '/custom/404');
+    const load = loadScript('script.1', '/custom/tinymce/404');
     return assertLoadSuccess(load, 'value.1');
   });
 
@@ -67,8 +67,8 @@ describe('browser.tinymce.core.ResourceTest', () => {
   });
 
   it('invalid URL fails', () => {
-    const load = loadScript('script.3', '/custom/404');
-    return assertLoadFailure(load, 'Script at URL "/custom/404" failed to load');
+    const load = loadScript('script.3', '/custom/tinymce/404');
+    return assertLoadFailure(load, 'Script at URL "/custom/tinymce/404" failed to load');
   });
 
   it('invalid id fails', () => {

@@ -179,7 +179,7 @@ const createMenuItems = (backstage: UiFactoryBackstage, spec: SelectSpec): Bespo
   };
 };
 
-const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec, tooltipWithPlaceholder: string, textUpdateEventName: string, btnName: string): SketchSpec => {
+const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec: SelectSpec, getTooltip: (value: string) => string, textUpdateEventName: string, btnName: string): SketchSpec => {
   const { items, getStyleItems } = createMenuItems(backstage, spec);
   const tooltipString = Cell<string>(spec.tooltip);
 
@@ -195,7 +195,7 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
   // Set the initial text when the component is attached and then update on node changes
   const onSetup = (api: BespokeSelectApi) => {
     const handler = (e: EditorEvent<{ value: string }>) =>
-      api.setTooltip(Tooltip.makeTooltipText(editor, tooltipWithPlaceholder, e.value));
+      api.setTooltip(Tooltip.makeTooltipText(editor, getTooltip(e.value), e.value));
     editor.on(textUpdateEventName, handler);
     return composeUnbinders(
       onSetupEvent(editor, 'NodeChange', (api: BespokeSelectApi) => {

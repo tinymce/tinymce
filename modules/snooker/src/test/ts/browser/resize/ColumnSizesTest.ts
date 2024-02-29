@@ -4,7 +4,6 @@ import { Css, Insert, Remove, SelectorFind, SugarBody, SugarElement } from '@eph
 
 import { TableSize } from 'ephox/snooker/api/TableSize';
 import { Warehouse } from 'ephox/snooker/api/Warehouse';
-import * as BarPositions from 'ephox/snooker/resize/BarPositions';
 import * as ColumnSizes from 'ephox/snooker/resize/ColumnSizes';
 
 const noneTableHtml = '<table><tbody><tr><td>A</td><td>A</td></tr></tbody></table>';
@@ -73,15 +72,15 @@ UnitTest.test('ColumnSizes.getPixelHeights', () => {
   const table = SugarElement.fromHtml<HTMLTableElement>(noneTableHtml);
   Insert.append(SugarBody.body(), table);
 
-  const cellHeight = SelectorFind.descendant<HTMLTableCellElement>(table, 'td')
-    .map((cell) => Math.round(parseFloat(Css.get(cell, 'height'))))
+  const rowHeight = SelectorFind.descendant<HTMLTableCellElement>(table, 'tr')
+    .map((tr) => Math.round(parseFloat(Css.get(tr, 'height'))))
     .getOrDie();
 
-  const pixelHeights = ColumnSizes.getPixelHeights(Warehouse.fromTable(table), table, BarPositions.height);
+  const pixelHeights = ColumnSizes.getPixelHeights(Warehouse.fromTable(table), table);
 
   // Round to account for precision issues
   const roundedPixelHeights = Arr.map(pixelHeights, Math.round);
-  Assert.eq('Row heights should be the computed size of the cell', [ cellHeight ], roundedPixelHeights);
+  Assert.eq('Row heights should be the computed size of the cell', [ rowHeight ], roundedPixelHeights);
 
   Remove.remove(table);
 });

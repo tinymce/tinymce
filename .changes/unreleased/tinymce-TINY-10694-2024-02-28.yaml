@@ -1,0 +1,6 @@
+project: tinymce
+kind: Changed
+body: Updated deprecation/removed console message.
+time: 2024-02-28T11:23:35.305430309+10:00
+custom:
+  Issue: TINY-10694

@@ -67,7 +67,7 @@ const factories: Record<string, FormPartRenderer<any>> = {
   slider: make<Dialog.Slider, number>((spec, backstage, data) => renderSlider(spec, backstage.shared.providers, data)),
   urlinput: make<Dialog.UrlInput, Dialog.UrlInputData>((spec, backstage, data) => renderUrlInput(spec, backstage, backstage.urlinput, data)),
   customeditor: make<Dialog.CustomEditor>(renderCustomEditor),
-  htmlpanel: make<Dialog.HtmlPanel>(renderHtmlPanel),
+  htmlpanel: make<Dialog.HtmlPanel>((spec, backstage) => renderHtmlPanel(spec, backstage.shared.providers)),
   imagepreview: make<Dialog.ImagePreview, Dialog.ImagePreviewData>((spec, _, data) => renderImagePreview(spec, data)),
   table: make<Dialog.Table>((spec, backstage) => renderTable(spec, backstage.shared.providers)),
   tree: make<Dialog.Tree>((spec, backstage) => renderTree(spec, backstage)),

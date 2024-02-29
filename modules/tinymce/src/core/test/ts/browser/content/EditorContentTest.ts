@@ -355,10 +355,10 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
               base_url: '/project/tinymce/js/tinymce'
             }, []);
 
-            it('TINY-10348: Iframe should not be sandboxed by default', () => {
+            it('TINY-10348: Iframe should be sandboxed by default', () => {
               const editor = hook.editor();
               editor.setContent('<iframe src="about:blank"></iframe>');
-              TinyAssertions.assertContent(editor, '<p><iframe src="about:blank"></iframe></p>');
+              TinyAssertions.assertContent(editor, '<p><iframe src="about:blank" sandbox=""></iframe></p>');
             });
           });
 
@@ -401,6 +401,27 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
               TinyAssertions.assertContent(editor, '<p><iframe src="about:blank" sandbox=""></iframe></p>');
             });
           });
+
+          context('sandbox_iframes_exclusions', () => {
+            const hook = TinyHooks.bddSetupLight<Editor>({
+              ...options,
+              base_url: '/project/tinymce/js/tinymce',
+              sandbox_iframes: true,
+              sandbox_iframes_exclusions: [ 'tiny.cloud' ]
+            }, []);
+
+            it('TINY-10350: Iframe should be sandboxed when sandbox_iframes: true and not excluded', () => {
+              const editor = hook.editor();
+              editor.setContent('<iframe src="https://example.com"></iframe>');
+              TinyAssertions.assertContent(editor, '<p><iframe src="https://example.com" sandbox=""></iframe></p>');
+            });
+
+            it('TINY-10350: Iframe should not be sandboxed when sandbox_iframes: true and excluded', () => {
+              const editor = hook.editor();
+              editor.setContent('<iframe src="https://tiny.cloud"></iframe>');
+              TinyAssertions.assertContent(editor, '<p><iframe src="https://tiny.cloud"></iframe></p>');
+            });
+          });
         });
 
         context('Convert unsafe embeds', () => {
@@ -425,8 +446,8 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
               base_url: '/project/tinymce/js/tinymce'
             }, []);
 
-            it('TINY-10349: Object elements should be converted', testConversion(hook, '<object data="about:blank"></object>', '<iframe src="about:blank"></iframe>'));
-            it('TINY-10349: Embed elements should be converted', testConversion(hook, '<embed src="about:blank">', '<iframe src="about:blank"></iframe>'));
+            it('TINY-10349: Object elements should be converted', testConversion(hook, '<object data="about:blank"></object>', '<iframe src="about:blank" sandbox=""></iframe>'));
+            it('TINY-10349: Embed elements should be converted', testConversion(hook, '<embed src="about:blank">', '<iframe src="about:blank" sandbox=""></iframe>'));
           });
 
           context('convert_unsafe_embeds: false', () => {
@@ -448,10 +469,10 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
             }, []);
 
             it('TINY-10349: Object elements should be converted to iframe',
-              testConversion(hook, '<object data="about:blank"></object>', '<iframe src="about:blank"></iframe>'));
+              testConversion(hook, '<object data="about:blank"></object>', '<iframe src="about:blank" sandbox=""></iframe>'));
 
             it('TINY-10349: Embed elements should be converted to iframe',
-              testConversion(hook, '<embed src="about:blank">', '<iframe src="about:blank"></iframe>'));
+              testConversion(hook, '<embed src="about:blank">', '<iframe src="about:blank" sandbox=""></iframe>'));
           });
 
           context('convert_unsafe_embeds: true, sandbox_iframes: true', () => {

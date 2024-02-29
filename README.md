@@ -2,7 +2,7 @@
 
 The world's #1 open source rich text editor.
 
-**Using an old version of TinyMCE?** We recommend you to upgrade to TinyMCE 6 to continue receiving security updates, or consider [TinyMCE 5 LTS](https://www.tiny.cloud/long-term-support/) if you need more time to upgrade.
+**Using an old version of TinyMCE?** We recommend you to upgrade to TinyMCE 7 to continue receiving security updates, or consider [TinyMCE 5 LTS](https://www.tiny.cloud/long-term-support/) if you need more time to upgrade.
 
 Used and trusted by millions of developers, TinyMCE is the world’s most customizable, scalable, and flexible rich text editor. We’ve helped launch the likes of Atlassian, Medium, Evernote (and lots more that we can’t tell you), by empowering them to create exceptional content and experiences for their users.
 
@@ -71,3 +71,7 @@ As an open source product, we encourage and support the active development of ou
 ## Want more information?
 
 Visit the [TinyMCE website](https://tiny.cloud/) and check out the [TinyMCE documentation](https://www.tiny.cloud/docs/).
+
+## License
+
+Licensed under the terms of GNU General Public License Version 2 or later. For full details about the license, please check the LICENSE.md file.

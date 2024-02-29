@@ -12,7 +12,8 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
   const baseSettings = {
     plugins: [ 'media' ],
     toolbar: 'media',
-    extended_valid_elements: 'script[src|type]'
+    extended_valid_elements: 'script[src|type]',
+    sandbox_iframes_exclusions: []
   };
 
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -55,20 +56,20 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
     it('TBA: Set and assert iframe placeholder structure', () => pTestPlaceholder(hook.editor(),
       'https://www.youtube.com/watch?v=P_205ZY52pY',
       '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
-      'height="314" allowfullscreen="allowfullscreen"></iframe></p>',
+      'height="314" sandbox="" allowfullscreen="allowfullscreen"></iframe></p>',
       placeholderStructure
     ));
 
     it('TBA: Set and assert video placeholder structure', () => pTestPlaceholder(hook.editor(),
-      '/custom/video.mp4',
+      '/custom/tinymce/video.mp4',
       '<p><video controls="controls" width="300" height="150">\n' +
-      '<source src="custom/video.mp4" type="video/mp4"></video></p>',
+      '<source src="custom/tinymce/video.mp4" type="video/mp4"></video></p>',
       placeholderStructure
     ));
 
     it('TBA: Set and assert audio placeholder structure', () => pTestPlaceholder(hook.editor(),
-      '/custom/audio.mp3',
-      '<p><audio src="custom/audio.mp3" controls="controls"></audio></p>',
+      '/custom/tinymce/audio.mp3',
+      '<p><audio src="custom/tinymce/audio.mp3" controls="controls"></audio></p>',
       placeholderStructure
     ));
   });
@@ -104,8 +105,8 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
     it('TBA: Set and assert live iframe embed structure', () => pTestPlaceholder(hook.editor(),
       'https://www.youtube.com/watch?v=P_205ZY52pY',
       '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
-      'height="314" allowfullscreen="allowfullscreen"></iframe></p>',
-      createIframeStructure(false)
+      'height="314" sandbox="" allowfullscreen="allowfullscreen"></iframe></p>',
+      createIframeStructure(true)
     ));
 
     it('TINY-10348: Live iframe embed structure when sandbox_iframes: false', async () => {

@@ -713,10 +713,11 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
    */
 
   /**
-   * Adds custom non-HTML elements to the schema.
+   * Adds custom non-HTML elements to the schema. For more information about adding custom elements see:
+   * <a href="https://www.tiny.cloud/docs/tinymce/latest/content-filtering/#custom_elements">custom_elements</a>
    *
    * @method addCustomElements
-   * @param {String} custom_elements Comma separated list of custom elements to add.
+   * @param {String/Object} custom_elements Comma separated list or record of custom elements to add.
    */
 
   /**
