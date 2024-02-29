@@ -39,6 +39,7 @@
 @keyboard-focus-outline-width: 0;
 @toolbar-button-focus-background-color: @toolbar-button-hover-background-color;
 @toolbar-button-bespoke-background-color: transparent;
+@toolbar-button-bespoke-focus-background-color: @toolbar-button-focus-background-color;
 @toolbar-button-bespoke-spacing-x: @toolbar-button-spacing-x;
 @toolbar-separator-distance: 0;
 @color-tint: #207ab7;
@@ -72,6 +73,8 @@
 @button-naked-active-icon-color: @button-secondary-active-text-color;
 @insert-table-picker-selected-background-color: fade(@color-tint, 50%);
 @insert-table-picker-selected-border-color: @insert-table-picker-selected-background-color;
+@edit-area-border-color: transparent; // Hide focus outline around editor container
+@edit-area-border-width: 0; // Hide focus outline around editor container
 
 .tox {
   &:not(.tox-tinymce-inline) .tox-editor-header {

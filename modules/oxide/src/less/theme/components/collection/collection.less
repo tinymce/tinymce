@@ -158,8 +158,13 @@
       color: @collection-toolbar-item-label-active-hover-text-color;
     }
 
-    &:focus::after {
-      .keyboard-focus-outline-mixin();
+    &:focus {
+      background-color: @collection-toolbar-item-active-hover-background-color;
+      color: @collection-toolbar-item-label-active-hover-text-color;
+
+      &::after {
+        .keyboard-focus-outline-mixin();
+      }
     }
   }
 

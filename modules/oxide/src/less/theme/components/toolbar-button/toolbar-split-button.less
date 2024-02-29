@@ -8,6 +8,7 @@
 .tox {
   .tox-split-button {
     border: 0;
+    border-radius: @toolbar-button-border-radius;
     box-sizing: border-box;
     display: flex;
     margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0;
@@ -25,6 +26,7 @@
     z-index: 1; // Ensure focus outline is on top of other buttons
 
     &::after {
+      pointer-events: none; // Prevent the focus outline from opening the menu
       .keyboard-focus-outline-mixin();
     }
   }
@@ -55,6 +57,10 @@
 
   .tox-split-button .tox-tbtn {
     margin: 0;
+  }
+
+  .tox-split-button:focus .tox-tbtn {
+    background-color: transparent; // Prevent the toolbar button background to cover the parent split button's background color
   }
 
   .tox-split-button.tox-tbtn--disabled:hover,
