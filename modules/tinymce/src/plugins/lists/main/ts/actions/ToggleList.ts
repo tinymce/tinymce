@@ -187,8 +187,7 @@ const getSelectedTextBlocks = (editor: Editor, rng: Range, root: Node): HTMLElem
 
     block.appendChild(node);
     if (nextSibling && BookmarkManager.isBookmarkNode(nextSibling) && !(nextSibling?.nextSibling)) {
-      block.appendChild(nextSibling);
-      nextSibling.remove();
+      block.append(nextSibling);
     }
   });
 
