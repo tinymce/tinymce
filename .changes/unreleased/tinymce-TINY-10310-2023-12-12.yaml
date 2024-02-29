@@ -1,7 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Moving focus to the outside of the editor after having clicked a menu would
-  not fire a `blur` event as expected.
-time: 2023-12-12T00:53:44.756269+11:00
-custom:
-  Issue: TINY-10310

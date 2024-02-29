@@ -1,6 +1,0 @@
-project: snooker
-kind: Changed
-body: '`ColumnSizes` will now use `tr` elements to calculate the row width where appropriate.'
-time: 2024-02-19T14:29:45.154506179+10:00
-custom:
-  Issue: TINY-10589

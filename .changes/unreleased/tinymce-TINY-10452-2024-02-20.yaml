@@ -1,6 +1,0 @@
-project: tinymce
-kind: Changed
-body: Removed incorrect `aria-placeholder` attribute from editor body when `placeholder` option is set.
-time: 2024-02-20T11:42:12.513674+08:00
-custom:
-  Issue: TINY-10452

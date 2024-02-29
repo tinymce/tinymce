@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Floating toolbar buttons in inline editor incorrectly wrapped into multiple rows on window resizing or zooming.
-time: 2024-02-19T10:14:06.839626+02:00
-custom:
-  Issue: TINY-10570

@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Fixed incorrect object processor for `event_root` option.
-time: 2024-02-05T08:24:59.073602+08:00
-custom:
-  Issue: TINY-10433

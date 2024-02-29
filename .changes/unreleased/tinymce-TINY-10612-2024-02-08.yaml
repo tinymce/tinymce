@@ -1,6 +1,0 @@
-project: tinymce
-kind: Added
-body: Added icons for the import from Word, export to Word and export to PDF premium plugins.
-time: 2024-02-08T16:51:18.6037+01:00
-custom:
-  Issue: TINY-10612

@@ -1,6 +1,0 @@
-project: tinymce
-kind: Added
-body: More advanced schema config for custom elements.
-time: 2024-02-13T14:09:01.056842+01:00
-custom:
-  Issue: TINY-9980

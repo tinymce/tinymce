@@ -1,6 +1,0 @@
-project: tinymce
-kind: Changed
-body: Update outbound link for statusbar Tiny logo
-time: 2024-02-13T09:13:21.830404857+10:00
-custom:
-  Issue: TINY-10494
