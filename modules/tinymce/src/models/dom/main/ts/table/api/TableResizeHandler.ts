@@ -16,6 +16,9 @@ export interface TableResizeHandler {
   readonly show: () => void;
 }
 
+type CornerLocation = 'nw' | 'ne' | 'se' | 'sw';
+type CornerOrigin = `corner-${CornerLocation}`;
+
 const isTable = (node: Node) => Type.isNonNullable(node) && node.nodeName === 'TABLE';
 
 const barResizerPrefix = 'bar-';
@@ -32,6 +35,12 @@ const syncTableCellPixels = (table: SugarElement<HTMLTableElement>): void => {
     });
   }
 };
+
+const isCornerResize = (origin: string): origin is CornerOrigin =>
+  Strings.startsWith(origin, 'corner-');
+
+const getCornerLocation = (origin: CornerOrigin): CornerLocation =>
+  Strings.removeLeading(origin, 'corner-') as CornerLocation;
 
 export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
   const selectionRng = Singleton.value<Range>();
@@ -54,10 +63,12 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
   const getNumRows = (table: SugarElement<HTMLTableElement>) =>
     TableGridSize.getGridSize(table).rows;
 
-  const afterCornerResize = (table: SugarElement<HTMLTableElement>, origin: string, width: number, height: number) => {
+  const afterCornerResize = (table: SugarElement<HTMLTableElement>, origin: CornerOrigin, width: number, height: number) => {
     // Origin will tell us which handle was clicked, eg corner-se or corner-nw
     // so check to see if it ends with `e` (eg east edge)
-    const isRightEdgeResize = Strings.endsWith(origin, 'e');
+    const location = getCornerLocation(origin);
+    const isRightEdgeResize = Strings.endsWith(location, 'e');
+    const isNorthEdgeResize = Strings.startsWith(location, 'n');
 
     // Responsive tables don't have a width so we need to convert it to a relative/percent
     // table instead, as that's closer to responsive sizing than fixed sizing
@@ -82,8 +93,8 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
       // For preserve table we want to always resize the entire table. So pretend the last column is being resized
       const col = Options.isPreserveTableColumnResizing(editor) || isRightEdgeResize ? getNumColumns(table) - 1 : 0;
       Adjustments.adjustWidth(table, width - startW, col, resizing, tableSize);
-    // Handle the edge case where someone might fire this event without resizing.
-    // If so then we need to ensure the table is still using percent
+      // Handle the edge case where someone might fire this event without resizing.
+      // If so then we need to ensure the table is still using percent
     } else if (Utils.isPercentage(startRawW)) {
       const percentW = parseFloat(startRawW.replace('%', ''));
       const targetPercentW = width * percentW / startW;
@@ -95,11 +106,11 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
       syncTableCellPixels(table);
     }
 
-    // NOTE: This will only change the height of the last tr
+    // NOTE: This will only change the height of the first or last tr
     if (height !== startH && startRawH !== '') {
       // Restore the original size and then let snooker resize appropriately
       Css.set(table, 'height', startRawH);
-      const idx = getNumRows(table) - 1;
+      const idx = isNorthEdgeResize ? 0 : getNumRows(table) - 1;
       Adjustments.adjustHeight(table, height - startH, idx);
     }
   };
@@ -185,7 +196,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
 
       // Resize based on the snooker logic to adjust the individual col/rows if resized from a corner
       const origin = e.origin;
-      if (Strings.startsWith(origin, 'corner-')) {
+      if (isCornerResize(origin)) {
         afterCornerResize(table, origin, e.width, e.height);
       }
 
