@@ -1,5 +1,24 @@
 # List of packages to bump:
 # Format: [package_name]@[new_version]
 
-snooker@11.2.1
-polaris@6.4.0
+acid@7.0.0
+agar@9.0.0
+alloy@15.0.0
+boss@7.0.0
+boulder@8.0.0
+bridge@5.0.0
+darwin@9.0.0
+dragster@8.0.0
+jax@8.0.0
+katamari-assertions@5.0.0
+katamari@10.0.0
+mcagar@10.0.0
+oxide-icons-default@3.0.0
+oxide@3.0.0
+phoenix@9.0.0
+polaris@7.0.0
+porkbun@8.0.0
+robin@11.0.0
+sand@7.0.0
+snooker@12.0.0
+sugar@10.0.0

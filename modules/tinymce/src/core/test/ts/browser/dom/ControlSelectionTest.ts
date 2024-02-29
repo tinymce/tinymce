@@ -1,6 +1,6 @@
-import { Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { Assertions, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
-import { Cell, Obj, Strings } from '@ephox/katamari';
+import { Arr, Cell, Obj, Strings } from '@ephox/katamari';
 import { Attribute, Css, Hierarchy, SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -10,7 +10,7 @@ import Env from 'tinymce/core/api/Env';
 
 describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
   const imgSrc = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAGUlEQVR4nGK5aLGTATdgwiM3gqUBAQAA//8ukgHZvWHlnwAAAABJRU5ErkJggg==';
-  const eventCounter = Cell<Record<string, number>>({ });
+  const eventCounter = Cell<Record<string, number>>({});
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     base_url: '/project/tinymce/js/tinymce',
@@ -35,7 +35,7 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     editor.dispatch('contextmenu', { target, clientX, clientY, button: 2 } as PointerEvent);
   };
 
-  const resetEventCounter = () => eventCounter.set({ });
+  const resetEventCounter = () => eventCounter.set({});
 
   const assertEventCount = (type: string, count: number) => {
     assert.equal(Obj.get(eventCounter.get(), type.toLowerCase()).getOr(0), count, `Check ${type} event count is ${count}`);
@@ -83,6 +83,18 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     getAndAssertDimensions(target, expectedWidth, expectedHeight);
   };
 
+  const pAssertInitialGhostElement = async (editor: Editor, resizeSelector: string, assertGhostElem: (ghostElm: SugarElement<Element>) => void) => {
+    const editorBody = TinyDom.body(editor);
+    const resizeHandle = await UiFinder.pWaitForVisible('Wait for resize handlers to show', editorBody, resizeSelector);
+    Mouse.mouseDown(resizeHandle);
+    const ghost = UiFinder.findIn(editorBody, '.mce-clonedresizable').getOrDie();
+    assertGhostElem(ghost);
+    Mouse.mouseUp(resizeHandle);
+    Waiter.pTryUntil('ghost element should be removed from DOM', () => {
+      UiFinder.notExists(editorBody, '.mce-clonedresizable');
+    });
+  };
+
   beforeEach(() => resetEventCounter());
 
   it('TBA: Select image by context menu clicking on it', () => {
@@ -128,21 +140,21 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
   it('TINY-6229: Resize video element', () => {
     const editor = hook.editor();
     editor.setContent('<p><video controls width="300" height="150"></video></p>');
-    TinySelections.select(editor, 'video', [ ]);
+    TinySelections.select(editor, 'video', []);
     return pResizeAndAssertDimensions(editor, 'video', '#mceResizeHandlese', 300, 150, 300, 150);
   });
 
   it('TINY-6229: Resize video media element', () => {
     const editor = hook.editor();
     editor.setContent('<p><span contenteditable="false" class="mce-preview-object mce-object-video"><video controls width="300" height="150"></video></span></p>');
-    TinySelections.select(editor, 'span', [ ]);
+    TinySelections.select(editor, 'span', []);
     return pResizeAndAssertDimensions(editor, 'video', '#mceResizeHandlese', -150, -75, 300, 150);
   });
 
   it('TINY-6229: Resize iframe media element', () => {
     const editor = hook.editor();
     editor.setContent('<p><span contenteditable="false" class="mce-preview-object mce-object-iframe"><iframe style="border: 1px solid black" width="400" height="200" src="' + Env.transparentSrc + '" allowfullscreen></iframe></span></p>');
-    TinySelections.select(editor, 'span', [ ]);
+    TinySelections.select(editor, 'span', []);
     return pResizeAndAssertDimensions(editor, 'iframe', '#mceResizeHandlese', 100, 50, 402, 202);
   });
 
@@ -154,7 +166,7 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
       '<p><span contenteditable="false" class="mce-preview-object mce-object-audio"><audio controls></audio></span></p>'
     );
     // Select to set the initial selected element in ControlSelection, change and then come back
-    TinySelections.select(editor, 'span.mce-object-video', [ ]);
+    TinySelections.select(editor, 'span.mce-object-video', []);
     await pWaitForDragHandles(editorBody, '#mceResizeHandlenw');
     TinyAssertions.assertContentPresence(editor, {
       'span[data-mce-selected=1] video': 1,
@@ -163,7 +175,7 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
 
     const audioPreviewSpan = editor.dom.select('span')[1];
     editor.dom.setAttrib(audioPreviewSpan, 'data-mce-selected', '3');
-    TinySelections.select(editor, 'span.mce-object-audio', [ ]);
+    TinySelections.select(editor, 'span.mce-object-audio', []);
     await Waiter.pTryUntil('Wait for resize handles to disappear', () => UiFinder.notExists(editorBody, '#mceResizeHandlenw'));
     TinyAssertions.assertContentPresence(editor, {
       'span[data-mce-selected] video': 0,
@@ -172,7 +184,7 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
 
     const videoPreviewSpan = editor.dom.select('span')[0];
     editor.dom.setAttrib(videoPreviewSpan, 'data-mce-selected', '2');
-    TinySelections.select(editor, 'span.mce-object-video', [ ]);
+    TinySelections.select(editor, 'span.mce-object-video', []);
     await pWaitForDragHandles(editorBody, '#mceResizeHandlenw');
     TinyAssertions.assertContentPresence(editor, {
       'span[data-mce-selected=2] video': 1,
@@ -183,7 +195,7 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
   it('TINY-7074: Resizing a media element should update both the root and wrapper element dimensions', async () => {
     const editor = hook.editor();
     editor.setContent(`<p><span contenteditable="false" class="mce-preview-object mce-object-iframe"><iframe style="border: 1px solid black; width: 400px; height: 200px" src="${Env.transparentSrc}"></iframe></span></p>`);
-    TinySelections.select(editor, 'span', [ ]);
+    TinySelections.select(editor, 'span', []);
     await pResizeAndAssertDimensions(editor, 'iframe', '#mceResizeHandlese', 100, 50, 402, 202);
     const wrapper = UiFinder.findIn(TinyDom.body(editor), 'span.mce-preview-object').getOrDie();
     getAndAssertDimensions(wrapper, 402 + 100, 202 + 50);
@@ -227,5 +239,37 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     TinyAssertions.assertContentPresence(editor, { 'details[data-mce-selected="1"]': 0 });
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     TinyAssertions.assertContentPresence(editor, { 'details[data-mce-selected="1"]': 1 });
+  });
+
+  Arr.each([ 'nw', 'ne', 'se', 'sw' ], (origin) => {
+    it(`TINY-10589 & TINY-10707: Resize ghost table element does not have heights on correct row to allow proper resizing (origin: ${origin})`, async () => {
+      const editor = hook.editor();
+      editor.setContent(
+        '<table style="width: 100px; height: 50px"><tbody>' +
+        '<tr style="height: 25px;"><td style="height: 11px;">Cell1</td><td style="height: 12px;">Cell2</td></tr>' +
+        '<tr style="height: 25px;"><td style="height: 10px;">Cell3</td><td style="height: 10px;">Cell4</td></tr>' +
+        '</tbody></table>'
+      );
+      TinySelections.select(editor, 'td', [ 0 ]);
+      const childSelector = Strings.startsWith(origin, 'n') ? ':first-child' : ':last-child';
+      await pAssertInitialGhostElement(
+        editor,
+        `#mceResizeHandle${origin}`,
+        (ghostElm) => {
+          Assertions.assertPresence(
+            'correct number of height styles',
+            {
+              'tr': 2,
+              'td': 4,
+              'tr[style*="height"]': 1,
+              'td[style*="height"]': 2,
+              [`tr${childSelector} > td[style*="height"]`]: 0,
+              [`tr${childSelector}[style*="height"]`]: 0,
+            },
+            ghostElm
+          );
+        }
+      );
+    });
   });
 });

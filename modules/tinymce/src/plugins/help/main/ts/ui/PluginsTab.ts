@@ -56,7 +56,7 @@ const tab = (editor: Editor): Dialog.TabSpec & { name: string } => {
   }, (x) => {
     // We know this plugin, so use our stored details.
     const name = x.type === PluginUrls.PluginType.Premium ? `${x.name}*` : x.name;
-    const html = makeLink({ name, url: `https://www.tiny.cloud/docs/tinymce/6/${x.slug}/` });
+    const html = makeLink({ name, url: `https://www.tiny.cloud/docs/tinymce/7/${x.slug}/` });
     return { name, html };
   });
 

@@ -677,6 +677,10 @@ const register = (editor: Editor): void => {
     processor: 'string'
   });
 
+  registerOption('license_key', {
+    processor: 'string'
+  });
+
   registerOption('paste_block_drop', {
     processor: 'boolean',
     default: false
@@ -840,9 +844,13 @@ const register = (editor: Editor): void => {
       'youtube.com',
       'youtu.be',
       'vimeo.com',
+      'player.vimeo.com',
       'dailymotion.com',
+      'embed.music.apple.com',
+      'open.spotify.com',
+      'giphy.com',
       'dai.ly',
-      'codepen.io'
+      'codepen.io',
     ]
   });
 
@@ -970,6 +978,8 @@ const getDetailsSerializedState = option('details_serialized_state');
 const shouldSandboxIframes = option('sandbox_iframes');
 const getSandboxIframesExclusions = (editor: Editor): string[] => editor.options.get('sandbox_iframes_exclusions');
 const shouldConvertUnsafeEmbeds = option('convert_unsafe_embeds');
+const getLicenseKey = option('license_key');
+const getApiKey = option('api_key');
 
 export {
   register,
@@ -1076,6 +1086,8 @@ export {
   getDetailsSerializedState,
   shouldUseDocumentWrite,
   shouldSandboxIframes,
+  getLicenseKey,
   getSandboxIframesExclusions,
-  shouldConvertUnsafeEmbeds
+  shouldConvertUnsafeEmbeds,
+  getApiKey
 };

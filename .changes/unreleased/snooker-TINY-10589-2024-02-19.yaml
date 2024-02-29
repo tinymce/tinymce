@@ -1,0 +1,6 @@
+project: snooker
+kind: Removed
+body: Remove `direction` argument in `Adjustments.adjustHeight`
+time: 2024-02-19T14:43:48.290415923+10:00
+custom:
+  Issue: TINY-10589

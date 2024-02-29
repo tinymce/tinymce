@@ -49,7 +49,7 @@ describe('headless.tinymce.themes.silver.components.customeditor.BasicCustomEdit
       name: 'customeditor',
       tag: 'textarea',
       scriptId: 'BasicCustomEditorTest',
-      scriptUrl: '/custom/404', // using the cache
+      scriptUrl: '/custom/tinymce/404', // using the cache
       settings: undefined,
       onFocus: Optional.none()
     })

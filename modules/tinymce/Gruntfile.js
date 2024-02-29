@@ -60,6 +60,10 @@ module.exports = function (grunt) {
     },
 
     eslint: {
+      options: {
+        maxWarnings: 0,
+        fix: grunt.option('fix')
+      },
       target: [ 'src/**/*.ts' ]
     },
 
@@ -369,8 +373,8 @@ module.exports = function (grunt) {
             dest: 'js/tinymce/langs/README.md'
           },
           {
-            src: '../../LICENSE.TXT',
-            dest: 'js/tinymce/license.txt'
+            src: '../../LICENSE.md',
+            dest: 'js/tinymce/license.md'
           },
           {
             src: '../../README.md',
@@ -461,9 +465,9 @@ module.exports = function (grunt) {
           'js/tinymce/models',
           'js/tinymce/tinymce.d.ts',
           'js/tinymce/tinymce.min.js',
-          'js/tinymce/license.txt',
+          'js/tinymce/license.md',
           'CHANGELOG.md',
-          'LICENSE.TXT',
+          'LICENSE.md',
           'README.md'
         ]
       },
@@ -504,7 +508,7 @@ module.exports = function (grunt) {
               'bin',
               'patches',
               '.yarnrc',
-              'LICENSE.TXT',
+              'LICENSE.md',
               'README.md',
               'lerna.json',
               'package.json',
@@ -588,7 +592,7 @@ module.exports = function (grunt) {
           'js/tinymce/icons',
           'js/tinymce/themes',
           'js/tinymce/models',
-          'js/tinymce/license.txt'
+          'js/tinymce/license.md'
         ]
       },
 
@@ -628,7 +632,7 @@ module.exports = function (grunt) {
             zip.addData('bower.json', jsonToBuffer({
               'name': 'tinymce',
               'description': 'Web based JavaScript HTML WYSIWYG editor control.',
-              'license': 'MIT',
+              'license': 'GPL-2.0-or-later',
               'keywords': keywords,
               'homepage': 'https://www.tiny.cloud/',
               'ignore': ['README.md', 'composer.json', 'package.json', '.npmignore', 'CHANGELOG.md']
@@ -646,7 +650,7 @@ module.exports = function (grunt) {
               'author': 'Ephox Corporation DBA Tiny Technologies, Inc',
               'main': 'tinymce.js',
               'types': 'tinymce.d.ts',
-              'license': 'MIT',
+              'license': 'GPL-2.0-or-later',
               'keywords': keywords,
               'homepage': 'https://www.tiny.cloud/',
               'bugs': { 'url': 'https://github.com/tinymce/tinymce/issues' }
@@ -656,7 +660,7 @@ module.exports = function (grunt) {
               'name': 'tinymce/tinymce',
               'version': packageData.version,
               'description': 'Web based JavaScript HTML WYSIWYG editor control.',
-              'license': ['MIT-only'],
+              'license': ['GPL-2.0-or-later'],
               'keywords': keywords,
               'homepage': 'https://www.tiny.cloud/',
               'type': 'component',
@@ -723,7 +727,7 @@ module.exports = function (grunt) {
           'js/tinymce/tinymce.js',
           'js/tinymce/tinymce.d.ts',
           'js/tinymce/tinymce.min.js',
-          'js/tinymce/license.txt',
+          'js/tinymce/license.md',
           'CHANGELOG.md',
           'js/tinymce/README.md'
         ]
@@ -738,15 +742,15 @@ module.exports = function (grunt) {
           authors: 'Ephox Corporation DBA Tiny Technologies, Inc',
           owners: 'Ephox Corporation DBA Tiny Technologies, Inc',
           description: 'The best WYSIWYG editor! TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor ' +
-          'control released as Open Source under MIT by Tiny Technologies, Inc. TinyMCE has the ability to convert HTML ' +
+          'control released as Open Source under GNU General Public License Version 2 or later by Tiny Technologies, Inc. TinyMCE has the ability to convert HTML ' +
           'TEXTAREA fields or other HTML elements to editor instances. TinyMCE is very easy to integrate ' +
           'into other Content Management Systems.',
           releaseNotes: 'Release notes for my package.',
           summary: 'TinyMCE is a platform independent web based Javascript HTML WYSIWYG editor ' +
-          'control released as Open Source under MIT by Tiny Technologies, Inc.',
+          'control released as Open Source under GNU General Public License Version 2 or later by Tiny Technologies, Inc.',
           projectUrl: 'https://www.tiny.cloud/',
-          iconUrl: 'https://www.tiny.cloud/favicon-32x32.png',
-          licenseUrl: 'https://www.tiny.cloud/license',
+          license: 'GPL-2.0-or-later',
+          licenseUrl: 'https://licenses.nuget.org/GPL-2.0-or-later',
           requireLicenseAcceptance: true,
           tags: 'Editor TinyMCE HTML HTMLEditor',
           excludes: [
@@ -774,7 +778,7 @@ module.exports = function (grunt) {
           { src: 'js/tinymce/tinymce.js', dest: '/content/scripts/tinymce/tinymce.js' },
           { src: 'js/tinymce/tinymce.d.ts', dest: '/content/scripts/tinymce/tinymce.d.ts' },
           { src: 'js/tinymce/tinymce.min.js', dest: '/content/scripts/tinymce/tinymce.min.js' },
-          { src: 'js/tinymce/license.txt', dest: '/content/scripts/tinymce/license.txt' },
+          { src: 'js/tinymce/license.md', dest: '/content/scripts/tinymce/license.md' },
           { src: 'tools/nuget/build/TinyMCE.targets', dest: '/build/TinyMCE.targets' }
         ]
       },
@@ -925,7 +929,6 @@ module.exports = function (grunt) {
   grunt.registerTask('prodBuild', [
     'shell:prismjs',
     'shell:tsc',
-    'eslint',
     'globals',
     'emoji',
     'html-i18n',
@@ -960,7 +963,8 @@ module.exports = function (grunt) {
 
   grunt.registerTask('start', ['webpack-dev-server']);
 
-  grunt.registerTask('default', ['clean:dist', 'prod']);
+  grunt.registerTask('buildOnly', ['clean:dist', 'prod']);
+  grunt.registerTask('default', ['clean:dist', 'eslint', 'prod']);
   grunt.registerTask('test', ['bedrock-auto:standard']);
   grunt.registerTask('test-manual', ['bedrock-manual']);
 };

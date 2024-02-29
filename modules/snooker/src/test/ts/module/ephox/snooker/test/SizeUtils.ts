@@ -33,13 +33,20 @@ const readWidth = (element: SugarElement<HTMLTableElement>): (string | null)[][]
   });
 };
 
-const readHeight = (element: SugarElement<HTMLTableElement>): (string | null)[][] => {
+const readCellHeights = (element: SugarElement<HTMLTableElement>): (string | null)[][] => {
   const rows = SelectorFilter.descendants(element, 'tr');
   return Arr.map(rows, (row) => {
     const cells = SelectorFilter.descendants(row, 'td,th');
     return Arr.map(cells, (cell) =>
       Css.getRaw(cell, 'height').map(reducePrecision).getOrNull()
     );
+  });
+};
+
+const readRowHeights = (element: SugarElement<HTMLTableElement>): (string | null)[] => {
+  const rows = SelectorFilter.descendants(element, 'tr');
+  return Arr.map(rows, (row) => {
+    return Css.getRaw(row, 'height').map(reducePrecision).getOrNull();
   });
 };
 
@@ -56,7 +63,8 @@ const assertApproxCellSizes = (expectedSizes: (string | null)[][], actualSizes: 
 export {
   addStyles,
   assertApproxCellSizes,
-  readHeight,
+  readCellHeights,
+  readRowHeights,
   readWidth,
   reducePrecision
 };

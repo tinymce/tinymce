@@ -246,6 +246,7 @@ interface BaseEditorOptions {
   visual_table_class?: string;
   width?: number | string;
   xss_sanitization?: boolean;
+  license_key?: string;
 
   // Internal settings (used by cloud or tests)
   disable_nodechange?: boolean;

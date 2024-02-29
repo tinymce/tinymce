@@ -23,7 +23,7 @@
     "LICENSE.txt"
   ],
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
-  "license": "MIT",
+  "license": "GPL-2.0-or-later",
   "devDependencies": {
     "gulp": "^4.0.2",
     "gulp-clean": "^0.4.0",
