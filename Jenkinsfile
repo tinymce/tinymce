@@ -17,7 +17,6 @@ def runBedrockTest(String name, String command, Boolean runAll, int retry = 0, i
       sleep(timeout)
       runBedrockTest(name, command, runAll, retry - 1, timeout)
     } else {
-      archiveArtifacts artifacts: 'scratch/TEST-*.xml', onlyIfSuccessful: false
       error("Unexpected error in ${name} ")
     }
   }
