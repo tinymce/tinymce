@@ -1,6 +1,0 @@
-project: tinymce
-kind: Removed
-body: Removed `InsertOrderedList` and `InsertUnorderedList` from core.
-time: 2024-02-12T06:53:37.417068+01:00
-custom:
-  Issue: TINY-10644

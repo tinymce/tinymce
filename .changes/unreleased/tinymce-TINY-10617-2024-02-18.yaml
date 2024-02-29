@@ -1,6 +1,0 @@
-project: tinymce
-kind: Changed
-body: Remove the height field from the `table` plugin cell dialog. The `table` plugin row dialog now controls the row height by setting the height on the `tr` element, not the `td` elements.
-time: 2024-02-18T21:49:45.126737287+10:00
-custom:
-  Issue: TINY-10617

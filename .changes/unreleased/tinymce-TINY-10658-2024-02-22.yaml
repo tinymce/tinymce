@@ -1,6 +1,0 @@
-project: tinymce
-kind: Improved
-body: Make table ghost element better reflect height changes when resizing.
-time: 2024-02-22T10:05:45.969456407+10:00
-custom:
-  Issue: TINY-10658

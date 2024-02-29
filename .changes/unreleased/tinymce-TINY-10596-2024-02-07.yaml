@@ -1,6 +1,0 @@
-project: tinymce
-kind: Added
-body: Added onFocus callback for CustomEditor dialog component.
-time: 2024-02-07T12:29:51.857930182+01:00
-custom:
-  Issue: TINY-10596

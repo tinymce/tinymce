@@ -1,6 +1,0 @@
-project: tinymce
-kind: Removed
-body: The autocompleter `ch` configuration property has been removed. Use the `trigger` property instead.
-time: 2024-02-19T15:48:53.973594+02:00
-custom:
-  Issue: TINY-8929
