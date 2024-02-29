@@ -242,12 +242,19 @@ describe('browser.tinymce.core.html.StylesTest', () => {
     assertStyles(styles, 'background:url(vbscript:alert(1)', `background: url('vbscript:alert(1');`);
   });
 
-  it('TINY-10436: HEX colours are enforced always', () => {
+  it('TINY-10436: TODO', () => {
     const styles = Styles();
     assertStyles(styles, 'color: #aabbcc;', 'color: #aabbcc;');
+    assertStyles(styles, 'color: #aabbcc88', 'color: #aabbcc88;');
+    assertStyles(styles, 'color: #aabbccff', 'color: #aabbccff;');
     assertStyles(styles, 'color: rgb(1, 2, 3);', 'color: #010203;');
-    assertStyles(styles, 'color: rgba(1, 2, 3, 1);', 'color: #010203;');
-    assertStyles(styles, 'color: rgba(1, 2, 3, 0);', 'color: #010203;');
-    assertStyles(styles, 'color: rgba(1, 2, 3, 0.5);', 'color: #010203;');
+    assertStyles(styles, 'color: rgba(1, 2, 3, 1);', 'color: rgba(1, 2, 3, 1);');
+    assertStyles(
+      styles,
+      'color: rgba   (   1   ,   2    ,   3     ,    1        );',
+      'color: rgba   (   1   ,   2    ,   3     ,    1        );'
+    );
+    assertStyles(styles, 'color: rgba(1, 2, 3, 0);', 'color: rgba(1, 2, 3, 0);');
+    assertStyles(styles, 'color: rgba(1, 2, 3, 0.5);', 'color: rgba(1, 2, 3, 0.5);');
   });
 });
