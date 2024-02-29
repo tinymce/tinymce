@@ -5,7 +5,6 @@ import * as NodeType from '../../dom/NodeType';
 import * as FilterNode from '../../html/FilterNode';
 import * as FilterRegistry from '../../html/FilterRegistry';
 import * as InvalidNodes from '../../html/InvalidNodes';
-import * as LegacyFilter from '../../html/LegacyFilter';
 import * as Namespace from '../../html/Namespace';
 import * as ParserFilters from '../../html/ParserFilters';
 import { isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../../html/ParserUtils';
@@ -13,7 +12,7 @@ import { getSanitizer, internalElementAttr } from '../../html/Sanitization';
 import { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
 import AstNode from './Node';
-import Schema, { SchemaMap, SchemaRegExpMap, getTextRootBlockElements } from './Schema';
+import Schema, { getTextRootBlockElements, SchemaMap, SchemaRegExpMap } from './Schema';
 
 /**
  * @summary
@@ -33,7 +32,7 @@ const makeMap = Tools.makeMap, extend = Tools.extend;
 
 export interface ParserArgs {
   getInner?: boolean | number;
-  forced_root_block?: boolean | string;
+  forced_root_block?: string;
   context?: string;
   isRootContent?: boolean;
   format?: string;
@@ -56,14 +55,12 @@ export interface DomParserSettings {
   allow_script_urls?: boolean;
   allow_unsafe_link_target?: boolean;
   blob_cache?: BlobCache;
-  convert_fonts_to_spans?: boolean;
   convert_unsafe_embeds?: boolean;
   document?: Document;
   fix_list_elements?: boolean;
   font_size_legacy_values?: string;
-  forced_root_block?: boolean | string;
+  forced_root_block?: string;
   forced_root_block_attrs?: Record<string, string>;
-  inline_styles?: boolean;
   pad_empty_with_br?: boolean;
   preserve_cdata?: boolean;
   root_name?: string;
@@ -258,16 +255,8 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
   return [ preprocess, postprocess ];
 };
 
-const getRootBlockName = (settings: DomParserSettings, args: ParserArgs) => {
-  const name = args.forced_root_block ?? settings.forced_root_block;
-  if (name === false) {
-    return '';
-  } else if (name === true) {
-    return 'p';
-  } else {
-    return name;
-  }
-};
+const getRootBlockName = (settings: DomParserSettings, args: ParserArgs) =>
+  args.forced_root_block ?? settings.forced_root_block;
 
 const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomParser => {
   const nodeFilterRegistry = FilterRegistry.create<ParserFilterCallback>();
@@ -509,7 +498,6 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
   };
 
   ParserFilters.register(exports, defaultedSettings);
-  LegacyFilter.register(exports, defaultedSettings, schema);
 
   return exports;
 };

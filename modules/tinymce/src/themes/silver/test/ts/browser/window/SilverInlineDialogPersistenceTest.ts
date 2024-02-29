@@ -64,7 +64,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogPersistenceTest
                 type: 'submit',
                 name: 'save',
                 text: 'Save',
-                primary: true
+                buttonType: 'primary',
               },
               {
                 type: 'cancel',

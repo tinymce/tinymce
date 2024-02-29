@@ -30,11 +30,6 @@ export interface BeforeSetContentEvent extends SetContentArgs {
   selection?: boolean;
 }
 
-export interface SetContentEvent extends BeforeSetContentEvent {
-  /** @deprecated */
-  content: string;
-}
-
 export interface SaveContentEvent extends GetContentEvent {
   save: boolean;
 }
@@ -214,7 +209,7 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'BeforeGetContent': BeforeGetContentEvent;
   'GetContent': GetContentEvent;
   'BeforeSetContent': BeforeSetContentEvent;
-  'SetContent': SetContentEvent;
+  'SetContent': BeforeSetContentEvent;
   'SaveContent': SaveContentEvent;
   'RawSaveContent': SaveContentEvent;
   'LoadContent': { load: boolean; element: HTMLElement };

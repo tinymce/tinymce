@@ -388,7 +388,7 @@ export const Dialog = (editor: Editor): { open: () => void } => {
               type: 'submit',
               name: 'save',
               text: 'Save',
-              primary: true
+              buttonType: 'primary',
             }
           ],
           initialData: fromImageData(info.image),

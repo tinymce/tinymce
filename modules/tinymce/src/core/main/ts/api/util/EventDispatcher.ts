@@ -119,23 +119,6 @@ class EventDispatcher<T extends {}> {
   }
 
   /**
-   * Fires the specified event by name.
-   * <br>
-   * <em>Deprecated in TinyMCE 6.0 and has been marked for removal in TinyMCE 7.0. Use <code>dispatch</code> instead.</em>
-   *
-   * @method fire
-   * @param {String} name Name of the event to fire.
-   * @param {Object?} args Event arguments.
-   * @return {Object} Event args instance passed in.
-   * @deprecated Use dispatch() instead
-   * @example
-   * instance.fire('event', {...});
-   */
-  public fire <K extends string, U extends MappedEvent<T, K>>(name: K, args?: U): EditorEvent<U> {
-    return this.dispatch(name, args);
-  }
-
-  /**
    * Dispatches the specified event by name.
    *
    * @method dispatch

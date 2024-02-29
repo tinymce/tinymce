@@ -25,11 +25,7 @@ export interface TinyApis {
   setSelectionFrom: (spec: Cursors.CursorSpec | Cursors.RangeSpec) => void;
   setSelection: (startPath: number[], soffset: number, finishPath: number[], foffset: number) => void;
   select: (selector: string, path: number[]) => void;
-  /** @deprecated use unsetOption instead */
-  deleteSetting: (key: string) => void;
   unsetOption: (key: string) => void;
-  /** @deprecated use setOption instead */
-  setSetting: (key: string, value: any) => void;
   setOption: (key: string, value: any) => void;
   execCommand: (command: string, value?: any) => void;
 
@@ -48,11 +44,7 @@ export interface TinyApis {
   sSetSelectionFrom: <T> (spec: Cursors.CursorSpec | Cursors.RangeSpec) => Step<T, T>;
   sSetSelection: <T> (startPath: number[], soffset: number, finishPath: number[], foffset: number) => Step<T, T>;
   sSelect: <T> (selector: string, path: number[]) => Step<T, T>;
-  /** @deprecated use sUnsetOption instead */
-  sDeleteSetting: <T> (key: string) => Step<T, T>;
   sUnsetOption: <T> (key: string) => Step<T, T>;
-  /** @deprecated use sSetOption instead */
-  sSetSetting: <T> (key: string, value: any) => Step<T, T>;
   sSetOption: <T> (key: string, value: any) => Step<T, T>;
   sExecCommand: <T> (command: string, value?: any) => Step<T, T>;
   sTryAssertFocus: <T> (waitTime?: number) => Step<T, T>;
@@ -190,8 +182,6 @@ export const TinyApis = (editor: Editor): TinyApis => {
     setCursor,
     setSelection,
     select,
-    setSetting: setOption,
-    deleteSetting: unsetOption,
     setOption,
     unsetOption,
     execCommand,
@@ -214,8 +204,6 @@ export const TinyApis = (editor: Editor): TinyApis => {
     sAssertContentStructure,
     sSetSelectionFrom,
     sSetSelection,
-    sSetSetting: sSetOption,
-    sDeleteSetting: sUnsetOption,
     sSetOption,
     sUnsetOption,
     sSetCursor,

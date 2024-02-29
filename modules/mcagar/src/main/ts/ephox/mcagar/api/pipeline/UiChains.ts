@@ -48,7 +48,7 @@ const cClickOnWithin = <T>(label: string, selector: string, cContext: Chain<T, S
     NamedChain.asChain([
       NamedChain.direct(NamedChain.inputName(), cContext, 'context'),
       NamedChain.direct('context', UiFinder.cFindIn(selector), 'ui'),
-      NamedChain.direct('ui', Mouse.cClick, '_'),
+      NamedChain.direct('ui', Mouse.cClickWith({ }), '_'),
       NamedChain.outputInput
     ]),
     Guard.addLogging(label)
@@ -98,7 +98,7 @@ const cTriggerContextMenu = <T>(label: string, target: string, menu: string): Ch
   return Chain.fromChains([
     cEditorRoot,
     UiFinder.cFindIn(target),
-    Mouse.cContextMenu,
+    Mouse.cContextMenuWith({ }),
 
     // Ignores input
     cWaitForPopup(label, menu)
@@ -111,7 +111,7 @@ const cClickPopupButton = <T>(btnType: 'dialogCloseSelector' | 'dialogSubmitSele
   return NamedChain.asChain([
     NamedChain.direct(NamedChain.inputName(), cWaitForVisible('waiting for: ' + popupSelector, popupSelector), 'popup'),
     NamedChain.direct('popup', Chain.binder((container) => UiFinder.findIn(container, getThemeSelectors()[btnType])), 'button'),
-    NamedChain.direct('button', Mouse.cClick, '_'),
+    NamedChain.direct('button', Mouse.cClickWith({ }), '_'),
     NamedChain.outputInput
   ]);
 };

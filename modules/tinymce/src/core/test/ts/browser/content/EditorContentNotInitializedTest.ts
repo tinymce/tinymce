@@ -17,11 +17,6 @@ describe('browser.tinymce.core.content.EditorContentNotInitializedTest', () => {
 
   const createEditor = () => new Editor('editor', settings, EditorManager);
 
-  const setContentAndAssertReturn = (editor: Editor, content: AstNode | string) => {
-    const actual = editor.setContent(content);
-    assert.deepEqual(actual, content, 'should return what you tried to set');
-  };
-
   const getAndAssertContent = (editor: Editor, expected: AstNode | string, tree?: boolean) => {
     const actual = tree ? editor.getContent({ format: 'tree' }) : editor.getContent();
     assert.deepEqual(actual, expected, 'content should be equal');
@@ -34,14 +29,14 @@ describe('browser.tinymce.core.content.EditorContentNotInitializedTest', () => {
 
   it('set content on editor without initializing it', () => {
     const editor = createEditor();
-    setContentAndAssertReturn(editor, 'hello');
+    editor.setContent('hello');
     McEditor.remove(editor);
   });
 
   it('set content on editor where the body has been removed', async () => {
     const editor = await McEditor.pFromHtml<Editor>('<textarea></textarea>', settings);
     removeBodyElement(editor);
-    setContentAndAssertReturn(editor, 'hello');
+    editor.setContent('hello');
     McEditor.remove(editor);
   });
 
@@ -60,14 +55,14 @@ describe('browser.tinymce.core.content.EditorContentNotInitializedTest', () => {
 
   it('set tree content on editor without initializing it', () => {
     const editor = createEditor();
-    setContentAndAssertReturn(editor, new AstNode('p', 1));
+    editor.setContent(new AstNode('p', 1));
     McEditor.remove(editor);
   });
 
   it('set tree content on editor where the body has been removed', async () => {
     const editor = await McEditor.pFromHtml<Editor>('<textarea></textarea>', settings);
     removeBodyElement(editor);
-    setContentAndAssertReturn(editor, new AstNode('p', 1));
+    editor.setContent(new AstNode('p', 1));
     McEditor.remove(editor);
   });
 

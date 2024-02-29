@@ -31,7 +31,7 @@ const isNotPre = Fun.not(NodeType.matchStyleValues('white-space', 'pre pre-line 
 const isText = NodeType.isText;
 const isBr = NodeType.isBr;
 const nodeIndex = DOMUtils.nodeIndex;
-const resolveIndex = RangeNodes.getNodeUnsafe;
+const resolveIndex = RangeNodes.getNode;
 const createRange = (doc: Document | null): Range => doc ? doc.createRange() : DOMUtils.DOM.createRng();
 const isWhiteSpace = (chr: string | undefined): boolean => Type.isString(chr) && /[\r\n\t ]/.test(chr);
 const isRange = (rng: any): rng is Range => !!rng.setStart && !!rng.setEnd;

@@ -25,7 +25,7 @@ const preProcess = (editor: Editor, html: string): string => {
     });
   });
 
-  const fragment = parser.parse(html, { forced_root_block: false, isRootContent: true });
+  const fragment = parser.parse(html, { isRootContent: true });
   return HtmlSerializer({ validate: true }, editor.schema).serialize(fragment);
 };
 

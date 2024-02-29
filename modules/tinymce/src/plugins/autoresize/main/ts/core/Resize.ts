@@ -3,7 +3,7 @@ import { Cell, Fun } from '@ephox/katamari';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import { SetContentEvent } from 'tinymce/core/api/EventTypes';
+import { BeforeSetContentEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Events from '../api/Events';
@@ -40,7 +40,7 @@ const shouldScrollIntoView = (trigger: EditorEvent<unknown> | undefined) => {
   // triggers the selection should already be in view and resizing would only
   // extend the content area.
   if (trigger?.type.toLowerCase() === 'setcontent') {
-    const setContentEvent = (trigger as EditorEvent<SetContentEvent>);
+    const setContentEvent = (trigger as EditorEvent<BeforeSetContentEvent>);
     return setContentEvent.selection === true || setContentEvent.paste === true;
   } else {
     return false;

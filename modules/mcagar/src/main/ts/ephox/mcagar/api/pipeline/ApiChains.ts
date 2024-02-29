@@ -13,11 +13,7 @@ export interface ApiChains {
   cSetSelectionFrom: <T extends Editor> (spec: Cursors.CursorSpec | Cursors.RangeSpec) => Chain<T, T>;
   cSetSelection: <T extends Editor> (startPath: number[], soffset: number, finishPath: number[], foffset: number) => Chain<T, T>;
   cSetCursor: <T extends Editor> (elementPath: number[], offset: number) => Chain<T, T>;
-  /** @deprecated use cSetOption instead */
-  cDeleteSetting: <T extends Editor> (key: string) => Chain<T, T>;
   cUnsetOption: <T extends Editor> (key: string) => Chain<T, T>;
-  /** @deprecated use cSetOption instead */
-  cSetSetting: <T extends Editor> (key: string, value: any) => Chain<T, T>;
   cSetOption: <T extends Editor> (key: string, value: any) => Chain<T, T>;
   cGetContent: Chain<Editor, string>;
   cExecCommand: <T extends Editor> (command: string, value?: any) => Chain<T, T>;
@@ -121,10 +117,8 @@ export const ApiChains: ApiChains = {
   cGetContent,
   cSetSelectionFrom,
   cSetSelection,
-  cSetSetting: cSetOption,
   cSetOption,
   cSetRawContent,
-  cDeleteSetting: cUnsetOption,
   cUnsetOption,
   cSetCursor,
   cSelect,

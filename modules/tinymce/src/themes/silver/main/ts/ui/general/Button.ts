@@ -1,14 +1,9 @@
 import {
-  AddEventsBehaviour,
-  Button as AlloyButton,
-  AlloyComponent, AlloyEvents,
-  FormField as AlloyFormField,
-  AlloySpec, AlloyTriggers, Behaviour,
-  GuiFactory, Memento,
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Button as AlloyButton, FormField as AlloyFormField, GuiFactory, Memento,
   RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, Tabstopping, Tooltipping
 } from '@ephox/alloy';
 import { Dialog, Toolbar } from '@ephox/bridge';
-import { Fun, Merger, Optional, Type } from '@ephox/katamari';
+import { Fun, Merger, Optional, Optionals, Type } from '@ephox/katamari';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';
@@ -126,7 +121,7 @@ const renderButtonSpec = (
   const components = [ icon.getOrThunk(() => GuiFactory.text(translatedText)) ];
 
   // The old default is based on the now-deprecated 'primary' property. `buttonType` takes precedence now.
-  const buttonType = spec.buttonType.getOr(!spec.primary && !spec.borderless ? 'secondary' : 'primary');
+  const buttonType = spec.buttonType.getOr(!Optionals.equals(spec.buttonType, Optional.some('primary')) && !spec.borderless ? 'secondary' : 'primary');
 
   const baseClasses = calculateClassesFromButtonType(buttonType);
 
@@ -216,12 +211,11 @@ const renderToggleButton = (spec: FooterToggleButtonSpec, providers: UiFactoryBa
   };
 
   // The old default is based on the now-deprecated 'primary' property. `buttonType` takes precedence now.
-  const buttonType = spec.buttonType.getOr(!spec.primary ? 'secondary' : 'primary');
+  const buttonType = spec.buttonType.getOr('secondary');
 
   const buttonSpec: IconButtonWrapper = {
     ...spec,
     name: spec.name ?? '',
-    primary: buttonType === 'primary',
     tooltip: spec.tooltip,
     enabled: spec.enabled ?? false,
     borderless: false

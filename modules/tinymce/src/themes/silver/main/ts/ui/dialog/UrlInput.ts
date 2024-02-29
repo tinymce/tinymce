@@ -1,6 +1,6 @@
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Composing, CustomEvent, Disabling, FormField as AlloyFormField,
-  Invalidating, Memento, NativeEvents, Representing, SketchSpec, SimpleSpec, SystemEvents, Tabstopping, Typeahead as AlloyTypeahead
+  Invalidating, Memento, NativeEvents, Representing, SimpleSpec, SketchSpec, SystemEvents, Tabstopping, Typeahead as AlloyTypeahead
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Arr, Fun, Future, FutureResult, Id, Optional, Result } from '@ephox/katamari';
@@ -238,7 +238,6 @@ export const renderUrlInput = (
     icon: Optional.some('browse'),
     text: spec.picker_text.or(spec.label).getOr(''),
     enabled: spec.enabled,
-    primary: false,
     buttonType: Optional.none(),
     borderless: true
   }, (component) => AlloyTriggers.emit(component, browseUrlEvent), providersBackstage, [], [ 'tox-browse-url' ]));

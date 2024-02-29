@@ -71,9 +71,9 @@ describe('atomic.katamari.api.async.FutureTest', () => {
     });
   }));
 
-  it('mapM spec', () =>
+  it('traverse spec', () =>
     fc.assert(fc.asyncProperty(fc.array(fc.tuple(fc.integer(1, 10), fc.integer())), (tuples) => new Promise((resolve, reject) =>
-      Futures.mapM(tuples, ([ timeout, value ]) => Future.nu((cb) => setTimeout(() => cb(value), timeout))).get((ii) => {
+      Futures.traverse(tuples, ([ timeout, value ]) => Future.nu((cb) => setTimeout(() => cb(value), timeout))).get((ii) => {
         eqAsync('pars', tuples.map(([ _, i ]) => i), ii, reject, tArray(tNumber));
         resolve();
       }))))

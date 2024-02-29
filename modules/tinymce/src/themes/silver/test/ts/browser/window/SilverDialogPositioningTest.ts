@@ -54,7 +54,7 @@ describe('browser.tinymce.themes.silver.window.SilverDialogPositioningTest', () 
             type: 'submit',
             name: 'ok',
             text: 'OK',
-            primary: true
+            buttonType: 'primary',
           }
         ],
         onSubmit: (api) => api.close(),

@@ -9,7 +9,6 @@ describe('browser.tinymce.core.FormatterCheckTest', () => {
     indent: false,
     extended_valid_elements: 'b,i,span[style|class|contenteditable]',
     entities: 'raw',
-    convert_fonts_to_spans: false,
     valid_styles: {
       '*': 'color,font-size,font-family,background-color,font-weight,font-style,text-decoration,float,' +
         'margin,margin-top,margin-right,margin-bottom,margin-left,display,text-align,vertical-align'

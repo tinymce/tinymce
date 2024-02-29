@@ -60,7 +60,7 @@ describe.skip('browser.tinymce.themes.silver.throbber.ThrobberFocusTest', () => 
             type: 'submit',
             name: 'save',
             text: 'Save',
-            primary: true
+            buttonType: 'primary',
           }
         ],
       });

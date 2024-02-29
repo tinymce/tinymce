@@ -196,7 +196,6 @@ interface DOMUtils {
     <K extends string>(target: Target, name?: K, func?: EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>): EventUtils;
     <K extends string>(target: Target[], name?: K, func?: EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>): EventUtils[];
   };
-  fire: (target: Node | Window, name: string, evt?: {}) => EventUtils;
   dispatch: (target: Node | Window, name: string, evt?: {}) => EventUtils;
   getContentEditable: (node: Node) => string | null;
   getContentEditableParent: (node: Node) => string | null;
@@ -1028,7 +1027,6 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   };
 
   const dispatch = (target: Target, name: string, evt?: {}) => events.dispatch(target, name, evt);
-  const fire = (target: Target, name: string, evt?: {}) => events.dispatch(target, name, evt);
 
   const getContentEditable = (node: Node) => {
     if (node && NodeType.isHTMLElement(node)) {
@@ -1747,20 +1745,6 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      * were passed in.
      */
     unbind: unbind as DOMUtils['unbind'],
-
-    /**
-     * Fires the specified event name and optional object on the specified target.
-     * <br>
-     * <em>Deprecated in TinyMCE 6.0 and has been marked for removal in TinyMCE 7.0. Use <code>dispatch</code> instead.</em>
-     *
-     * @method fire
-     * @param {Node/Document/Window} target Target element or object to fire event on.
-     * @param {String} name Event name to fire.
-     * @param {Object} evt Event object to send.
-     * @return {Event} Event object.
-     * @deprecated Use dispatch() instead
-     */
-    fire,
 
     /**
      * Dispatches the specified event name and optional object on the specified target.

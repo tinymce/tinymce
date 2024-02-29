@@ -65,7 +65,7 @@ export default {
               type: 'submit',
               name: 'save',
               text: 'Save',
-              primary: true
+              buttonType: 'primary',
             }
           ],
           initialData: {

@@ -1,11 +1,7 @@
 import { Editor } from './EditorTypes';
 
 const get = <R>(editor: Editor, name: string): R => {
-  if (editor.options) {
-    return editor.options.get(name);
-  } else {
-    return editor.getParam(name);
-  }
+  return editor.options.get(name);
 };
 
 const set = <T>(editor: Editor, name: string, value: T): void => {

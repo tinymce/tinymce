@@ -1,7 +1,7 @@
 import { Assertions, Logger, Step } from '@ephox/agar';
+import { SugarElement } from '@ephox/sugar';
 
 import { Editor } from '../../alien/EditorTypes';
-import { TinyDom } from '../TinyDom';
 
 type SyncTestCallback<T> = (initValue: T) => void;
 type AsyncTestCallback<T> = (initValue: T, done: () => void, die: (err?: any) => void) => void;
@@ -115,7 +115,7 @@ const trimBrs = (html: string): string => {
 };
 
 const equalDom = <T extends Node> (actual: T, expected: T, message?: string): void => {
-  Assertions.assertDomEq(typeof message !== 'undefined' ? message : 'Nodes are not equal', TinyDom.fromDom(expected), TinyDom.fromDom(actual));
+  Assertions.assertDomEq(typeof message !== 'undefined' ? message : 'Nodes are not equal', SugarElement.fromDom(expected), SugarElement.fromDom(actual));
 };
 
 const equal = <T> (actual: T, expected: T, message?: string): void => {

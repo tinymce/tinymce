@@ -2,10 +2,7 @@ import { AutocompleterEventArgs, AutocompleterUpdateActiveRange } from '../autoc
 import { FormatVars } from '../fmt/FormatTypes';
 import { RangeLikeObject } from '../selection/RangeTypes';
 import Editor from './Editor';
-import {
-  BeforeSetContentEvent, SetContentEvent, PastePlainTextToggleEvent, PastePostProcessEvent, PastePreProcessEvent, GetContentEvent, BeforeGetContentEvent,
-  PreProcessEvent, PostProcessEvent, EditableRootStateChangeEvent
-} from './EventTypes';
+import { BeforeGetContentEvent, BeforeSetContentEvent, EditableRootStateChangeEvent, GetContentEvent, PastePlainTextToggleEvent, PastePostProcessEvent, PastePreProcessEvent, PostProcessEvent, PreProcessEvent } from './EventTypes';
 import { ParserArgs } from './html/DomParser';
 import { EditorEvent } from './util/EventDispatcher';
 
@@ -66,7 +63,7 @@ const fireFormatRemove = (editor: Editor, format: string, node: Node | RangeLike
 const fireBeforeSetContent = <T extends BeforeSetContentEvent>(editor: Editor, args: T): EditorEvent<T> =>
   editor.dispatch('BeforeSetContent', args);
 
-const fireSetContent = <T extends SetContentEvent>(editor: Editor, args: T): EditorEvent<T> =>
+const fireSetContent = <T extends BeforeSetContentEvent>(editor: Editor, args: T): EditorEvent<T> =>
   editor.dispatch('SetContent', args);
 
 const fireBeforeGetContent = <T extends BeforeGetContentEvent>(editor: Editor, args: T): EditorEvent<T> =>

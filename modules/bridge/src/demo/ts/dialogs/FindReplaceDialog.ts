@@ -33,7 +33,7 @@ export const createFindReplaceDialog = (): void => {
           name: 'find',
           text: 'Find',
           align: 'start',
-          primary: true
+          buttonType: 'primary',
         },
         {
           type: 'custom',

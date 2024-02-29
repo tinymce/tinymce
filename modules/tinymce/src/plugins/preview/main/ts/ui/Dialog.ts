@@ -25,7 +25,7 @@ export const open = (editor: Editor): void => {
         type: 'cancel',
         name: 'close',
         text: 'Close',
-        primary: true
+        buttonType: 'primary',
       }
     ],
     initialData: {

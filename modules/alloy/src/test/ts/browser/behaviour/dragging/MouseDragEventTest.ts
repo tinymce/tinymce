@@ -46,23 +46,23 @@ UnitTest.asynctest('MouseDragEventTest', (success, failure) => {
         NamedChain.asChain([
           store.cClear,
           NamedChain.writeValue('box', component.element),
-          NamedChain.direct('box', Mouse.cMouseDown, '_'),
+          NamedChain.direct('box', Mouse.cMouseDownWith({ }), '_'),
           NamedChain.writeValue('container', gui.element),
           NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
 
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 200), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveWith({ dx: 100, dy: 200 }), '_'),
           store.cAssertEq('Checking that no drag events have fired yet', [ ]),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(120, 200), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveWith({ dx: 120, dy: 200 }), '_'),
           store.cAssertEq('Checking that a drag event has fired with (20, 0) delta', [{ left: 20, top: 0 }]),
           NamedChain.direct('box', cAssertNoPositionInfo, '_'),
-          NamedChain.direct('blocker', Mouse.cMouseUp, '_'),
+          NamedChain.direct('blocker', Mouse.cMouseUpWith({ }), '_'),
           store.cClear,
 
-          NamedChain.direct('box', Mouse.cMouseDown, '_'),
+          NamedChain.direct('box', Mouse.cMouseDownWith({ }), '_'),
           NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(300, 100), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveWith({ dx: 300, dy: 100 }), '_'),
           store.cAssertEq('The state should have been reset, so one position should not give us a delta', [ ]),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(303, 100), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveWith({ dx: 303, dy: 100 }), '_'),
           store.cAssertEq('The state should have been reset, so two positions should give us a delta of (3, 0)', [{ left: 3, top: 0 }]),
           NamedChain.bundle((output) => Result.value(output))
         ])

@@ -137,7 +137,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInsta
         type: 'submit',
         name: 'save',
         text: 'Save',
-        primary: true
+        buttonType: 'primary',
       }
     ],
     initialData,

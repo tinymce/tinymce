@@ -8,9 +8,6 @@ export const par = <T>(futures: ArrayLike<Future<T>>): Future<Array<T>> =>
 export const traverse = <A, B>(array: ArrayLike<A>, fn: (value: A) => Future<B>): Future<B[]> =>
   par(Arr.map(array, fn));
 
-/** Deprecated for rename to traverse */
-export const mapM = traverse;
-
 /** Kleisli composition of two functions: a -> Future b.
  *  Note the order of arguments: g is invoked first, then the result passed to f.
  *  This is in line with f . g = \x -> f (g a)

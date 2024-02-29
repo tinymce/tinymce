@@ -92,7 +92,7 @@ export const createTableRowDialog = (): void => {
           type: 'submit',
           name: 'ok',
           text: 'Ok',
-          primary: true
+          buttonType: 'primary',
         },
         {
           type: 'cancel',

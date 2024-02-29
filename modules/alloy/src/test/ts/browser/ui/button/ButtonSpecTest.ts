@@ -56,7 +56,7 @@ UnitTest.asynctest('ButtonSpecTest', (success, failure) => {
         Chain.asStep(gui.element, [
           UiFinder.cFindIn('button'),
           Cursors.cFollow([ 0 ]),
-          Mouse.cClick
+          Mouse.cClickWith({ })
         ]),
         store.sAssertEq('step 3: post click on button text', [ 'button.action' ]),
         store.sClear

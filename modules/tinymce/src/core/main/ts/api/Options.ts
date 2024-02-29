@@ -547,12 +547,6 @@ const register = (editor: Editor): void => {
     default: false
   });
 
-  registerOption('convert_fonts_to_spans', {
-    processor: 'boolean',
-    default: true,
-    deprecated: true
-  });
-
   registerOption('fix_list_elements', {
     processor: 'boolean',
     default: false
@@ -571,12 +565,6 @@ const register = (editor: Editor): void => {
   registerOption('pad_empty_with_br', {
     processor: 'boolean',
     default: false,
-  });
-
-  registerOption('inline_styles', {
-    processor: 'boolean',
-    default: true,
-    deprecated: true
   });
 
   registerOption('element_format', {

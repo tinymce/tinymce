@@ -12,12 +12,11 @@ const setupArgs = (args: Partial<SetContentArgs>, content: Content): SetContentA
   content
 });
 
-export const setContent = (editor: Editor, content: Content, args: Partial<SetContentArgs> = {}): Content => {
+export const setContent = (editor: Editor, content: Content, args: Partial<SetContentArgs> = {}): void => {
   const defaultedArgs = setupArgs(args, content);
 
-  return preProcessSetContent(editor, defaultedArgs).map((updatedArgs) => {
+  preProcessSetContent(editor, defaultedArgs).each((updatedArgs) => {
     const result = Rtc.setContent(editor, updatedArgs.content, updatedArgs);
     postProcessSetContent(editor, result.html, updatedArgs);
-    return result.content;
-  }).getOr(content);
+  });
 };

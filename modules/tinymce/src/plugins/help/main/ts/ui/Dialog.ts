@@ -86,7 +86,7 @@ const init = (editor: Editor, customTabs: CustomTabSpecs, pluginUrl: string) => 
             type: 'cancel',
             name: 'close',
             text: 'Close',
-            primary: true
+            buttonType: 'primary',
           }
         ],
         initialData: {}

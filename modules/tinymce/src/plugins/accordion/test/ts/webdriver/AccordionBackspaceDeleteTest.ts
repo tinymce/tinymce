@@ -105,7 +105,7 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
 
     const testPreventBodyDeletion = (deletionKey: DeletionKey) => async () => {
       const editor = hook.editor();
-      editor.setContent(createAccordion(editor, { body: '<p><br></p>' }));
+      createAccordion(editor, { body: '<p><br></p>' });
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
       await pDoBackspaceDelete(deletionKey);
       TinyAssertions.assertContentPresence(editor, { 'details > div > p': 1 });

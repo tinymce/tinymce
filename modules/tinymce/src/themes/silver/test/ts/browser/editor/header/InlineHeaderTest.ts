@@ -32,7 +32,7 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
 
     editor.setContent('<p>Content</p>');
     editor.focus();
-    editor.fire('ScrollWindow');
+    editor.dispatch('ScrollWindow');
 
     await pAssertHeaderWidth(expectedWidth, '400px');
   };

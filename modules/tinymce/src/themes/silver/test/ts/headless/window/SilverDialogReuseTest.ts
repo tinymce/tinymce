@@ -37,7 +37,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogReuseTest', () => {
       name: 'barny',
       text: 'Barny Text',
       align: 'start',
-      primary: true
+      buttonType: 'primary',
     }
   ];
 

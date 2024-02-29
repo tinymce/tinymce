@@ -4,7 +4,7 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { SetContentEvent, GetContentEvent } from 'tinymce/core/api/EventTypes';
+import { BeforeSetContentEvent, GetContentEvent } from 'tinymce/core/api/EventTypes';
 import { ContentFormat } from 'tinymce/core/content/ContentTypes';
 
 describe('browser.tinymce.core.content.EditorContentEventsTest', () => {
@@ -129,7 +129,7 @@ describe('browser.tinymce.core.content.EditorContentEventsTest', () => {
   Arr.each([ 'BeforeSetContent', 'SetContent' ], (action) => {
     it(`TINY-9143: Can pass custom data object to "${action}" event`, () => {
       const editor = hook.editor();
-      const lastEventState = Singleton.value<SetContentEvent>();
+      const lastEventState = Singleton.value<BeforeSetContentEvent>();
       editor.setContent('<p>initial</p>');
       editor.once(action, (e) => lastEventState.set(e));
       editor.setContent('<p>new</p>', data);

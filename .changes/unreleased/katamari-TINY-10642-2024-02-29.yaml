@@ -1,0 +1,6 @@
+project: katamari
+kind: Removed
+body: Removed deprecated things
+time: 2024-02-29T14:03:14.7173415+01:00
+custom:
+  Issue: TINY-10642

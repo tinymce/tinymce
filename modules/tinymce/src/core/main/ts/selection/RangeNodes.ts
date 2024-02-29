@@ -23,18 +23,7 @@ const getNode = (container: Node, offset: number): Node => {
   }
 };
 
-/** @deprecated Use getNode instead */
-const getNodeUnsafe = (container: Node, offset: number): Node | undefined => {
-  // If a negative offset is used on an element then `undefined` should be returned
-  if (offset < 0 && NodeType.isElement(container) && container.hasChildNodes()) {
-    return undefined;
-  } else {
-    return getNode(container, offset);
-  }
-};
-
 export {
   getSelectedNode,
-  getNode,
-  getNodeUnsafe
+  getNode
 };

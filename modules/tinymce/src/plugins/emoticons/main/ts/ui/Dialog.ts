@@ -80,7 +80,7 @@ const open = (editor: Editor, database: EmojiDatabase): void => {
         {
           type: 'cancel',
           text: 'Close',
-          primary: true
+          buttonType: 'primary',
         }
       ]
     };
@@ -115,7 +115,7 @@ const open = (editor: Editor, database: EmojiDatabase): void => {
           {
             type: 'cancel',
             text: 'Close',
-            primary: true
+            buttonType: 'primary',
           }
         ],
         initialData: {

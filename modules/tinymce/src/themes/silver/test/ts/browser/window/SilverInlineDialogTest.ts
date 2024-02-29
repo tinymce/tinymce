@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, TestStore, UiFind
 import { TestHelpers } from '@ephox/alloy';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Arr, Strings } from '@ephox/katamari';
-import { SugarBody, SugarDocument, Css } from '@ephox/sugar';
+import { Css, SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -57,7 +57,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
           name: 'barny',
           text: 'Barny Text',
           align: 'start',
-          primary: true
+          buttonType: 'primary',
         },
         {
           type: 'custom',

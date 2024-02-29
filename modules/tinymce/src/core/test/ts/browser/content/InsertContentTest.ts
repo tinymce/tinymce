@@ -4,7 +4,7 @@ import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wra
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { SetContentEvent } from 'tinymce/core/api/EventTypes';
+import { BeforeSetContentEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as InsertContent from 'tinymce/core/content/InsertContent';
 
@@ -141,9 +141,9 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
 
   it('TBA: insertAtCaret prevent default of beforeSetContent', () => {
     const editor = hook.editor();
-    let args: EditorEvent<SetContentEvent> | undefined;
+    let args: EditorEvent<BeforeSetContentEvent> | undefined;
 
-    const handler = (e: EditorEvent<SetContentEvent>) => {
+    const handler = (e: EditorEvent<BeforeSetContentEvent>) => {
       if (e.selection === true) {
         e.preventDefault();
         e.content = '<h1>b</h1>';
@@ -151,7 +151,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       }
     };
 
-    const collector = (e: EditorEvent<SetContentEvent>) => {
+    const collector = (e: EditorEvent<BeforeSetContentEvent>) => {
       args = e;
     };
 

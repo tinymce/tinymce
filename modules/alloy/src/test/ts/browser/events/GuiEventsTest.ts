@@ -154,7 +154,7 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
     Chain.asStep(page, [
       UiFinder.cFindIn('.test-button'),
       Cursors.cFollow([ 0 ]),
-      Mouse.cClick
+      Mouse.cClickWith({ })
     ]),
     store.sAssertEq(
       'Checking event log after clicking on test-button text',
@@ -268,11 +268,11 @@ UnitTest.asynctest('GuiEventsTest', (success, failure) => {
     sTestMouseover,
     sTestSelectStart,
 
-    sTestMouseOperation('mousedown', Mouse.cMouseDown),
-    sTestMouseOperation('mouseup', Mouse.cMouseUp),
-    sTestMouseOperation('mousemove', Mouse.cMouseMoveTo(10, 10)),
-    sTestMouseOperation('mouseout', Mouse.cMouseOut),
-    sTestMouseOperation('contextmenu', Mouse.cContextMenu),
+    sTestMouseOperation('mousedown', Mouse.cMouseDownWith({ })),
+    sTestMouseOperation('mouseup', Mouse.cMouseUpWith({ })),
+    sTestMouseOperation('mousemove', Mouse.cMouseMoveWith({ dx: 10, dy: 10 })),
+    sTestMouseOperation('mouseout', Mouse.cMouseOutWith({ })),
+    sTestMouseOperation('contextmenu', Mouse.cContextMenuWith({ })),
 
     // TODO: Add API support to agar
     sTestChange,

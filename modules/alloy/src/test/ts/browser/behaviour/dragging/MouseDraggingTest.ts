@@ -136,7 +136,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
     });
 
     const cReset = Chain.fromChains([
-      NamedChain.direct('blocker', Mouse.cMouseUp, '_'),
+      NamedChain.direct('blocker', Mouse.cMouseUpWith({ }), '_'),
       NamedChain.direct('container', Chain.control(
         UiFinder.cFindIn('.test-blocker'),
         Guard.tryUntilNot('There should no longer be a blocker')
@@ -151,7 +151,7 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
         });
       }), '_'),
 
-      NamedChain.direct('box', Mouse.cMouseDown, '_'),
+      NamedChain.direct('box', Mouse.cMouseDownWith({ }), '_'),
       NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker')
     ]);
 
@@ -159,33 +159,33 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
       Chain.asStep({}, [
         NamedChain.asChain([
           NamedChain.write('box', cSubject),
-          NamedChain.direct('box', Mouse.cMouseDown, '_'),
+          NamedChain.direct('box', Mouse.cMouseDownWith({ }), '_'),
           NamedChain.writeValue('container', gui.element),
           NamedChain.direct('container', UiFinder.cFindIn('.test-blocker'), 'blocker'),
 
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 200), '_'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(120, 200), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveWith({ dx: 100, dy: 200 }), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveWith({ dx: 120, dy: 200 }), '_'),
           NamedChain.direct('box', cRecordPosition, 'box_position1'),
 
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(140, 200), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveWith({ dx: 140, dy: 200 }), '_'),
           NamedChain.direct('box', cRecordPosition, 'box_position2'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(160, 200), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveWith({ dx: 160, dy: 200 }), '_'),
           NamedChain.direct('box', cRecordPosition, 'box_position3'),
           NamedChain.write('_', cEnsurePositionChanged),
 
           cReset,
 
           // Test bounds
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 200), '_'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(50, 200), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveWith({ dx: 100, dy: 200 }), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveWith({ dx: 50, dy: 200 }), '_'),
           NamedChain.direct('box', cRecordPosition, 'box_position4'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(0, 200), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveWith({ dx: 0, dy: 200 }), '_'),
           NamedChain.direct('box', cRecordPosition, 'box_position5'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(-50, 200), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveWith({ dx: -50, dy: 200 }), '_'),
           NamedChain.direct('box', cRecordPosition, 'box_position6_bound'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(400, 200), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveWith({ dx: 400, dy: 200 }), '_'),
           NamedChain.direct('box', cRecordPosition, 'box_position7'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(500, 200), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveWith({ dx: 500, dy: 200 }), '_'),
           NamedChain.direct('box', cRecordPosition, 'box_position8_bound'),
           NamedChain.write('_', cEnsureBound),
 
@@ -193,11 +193,11 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
           cScrollTo(0, 1000),
           cReset,
 
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 1100), '_'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 1100), '_'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 1400), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveWith({ dx: 100, dy: 1100 }), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveWith({ dx: 100, dy: 1100 }), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveWith({ dx: 100, dy: 1400 }), '_'),
           NamedChain.direct('box', cRecordPosition, 'box_scrolled_position9'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(100, 1500), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveWith({ dx: 100, dy: 1500 }), '_'),
           NamedChain.direct('box', cRecordPosition, 'box_scrolled_position10_bound'),
           NamedChain.write('_', cEnsureScrollBound),
 
@@ -205,13 +205,13 @@ UnitTest.asynctest('MouseDraggingTest', (success, failure) => {
           cReset,
 
           // Test pinning.
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(50, 100), '_'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(50, 100), '_'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(50, 60), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveWith({ dx: 50, dy: 100 }), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveWith({ dx: 50, dy: 100 }), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveWith({ dx: 50, dy: 60 }), '_'),
           NamedChain.direct('box', cRecordPosition, 'box_position11'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(50, 30), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveWith({ dx: 50, dy: 30 }), '_'),
           NamedChain.direct('box', cRecordPosition, 'box_position12_pinned'),
-          NamedChain.direct('blocker', Mouse.cMouseMoveTo(160, 20), '_'),
+          NamedChain.direct('blocker', Mouse.cMouseMoveWith({ dx: 160, dy: 20 }), '_'),
           NamedChain.direct('box', cRecordPosition, 'box_position13_pinned'),
           NamedChain.write('_', cEnsurePinned),
 

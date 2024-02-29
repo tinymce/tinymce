@@ -42,9 +42,6 @@ export const sequence = <A> (arr: ArrayLike<Optional<A>>): Optional<Array<A>> =>
   return Optional.some(r);
 };
 
-/** @deprecated Use Arr.findMap instead. */
-export const findMap = Arr.findMap;
-
 /** Map each element of an array to an Optional and collect the results.
  *  If all results are "some", return Optional.some of the results.
  *  If any result is "none", return Optional.none

@@ -61,7 +61,7 @@ import * as Traverse from './search/Traverse';
 import * as Awareness from './selection/Awareness';
 import * as CursorPosition from './selection/CursorPosition';
 import * as Edge from './selection/Edge';
-import { RawRect, Rect, StructRect } from './selection/Rect';
+import { RawRect } from './selection/Rect';
 import { SimRange } from './selection/SimRange';
 import { SimSelection } from './selection/SimSelection';
 import { Situ } from './selection/Situ';
@@ -160,7 +160,5 @@ export {
   WindowVisualViewport,
   Width,
   SelectionDirection,
-  StructRect,
-  RawRect,
-  Rect
+  RawRect
 };

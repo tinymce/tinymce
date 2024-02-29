@@ -29,7 +29,7 @@ const getEphoxEmbedData = (node: AstNode): MediaData => {
 const htmlToData = (html: string, schema?: Schema): MediaData => {
   let data = {} as Partial<MediaData>;
 
-  const parser = DomParser({ validate: false, forced_root_block: false }, schema);
+  const parser = DomParser({ validate: false }, schema);
   const rootNode = parser.parse(html);
 
   for (let node: AstNode | null | undefined = rootNode; node; node = node.walk()) {

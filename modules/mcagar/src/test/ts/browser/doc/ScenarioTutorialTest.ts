@@ -24,7 +24,7 @@ UnitTest.asynctest('Tutorial: Property Testing with TinyMCE', (success, failure)
   TinyLoader.setupLight((editor, loadSuccess, loadFailure) => {
     const apis = TinyApis(editor);
     const scenarios = TinyScenarios(editor);
-    const body = TinyDom.fromDom(editor.getBody());
+    const body = TinyDom.body(editor);
 
     Pipeline.async({}, [
       apis.sFocus(),

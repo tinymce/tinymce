@@ -22,10 +22,10 @@ import { EventUtilsCallback } from './dom/EventUtils';
 import ScriptLoader from './dom/ScriptLoader';
 import EditorSelection from './dom/Selection';
 import DomSerializer from './dom/Serializer';
-import EditorCommands, { ExecCommandArgs, EditorCommandCallback } from './EditorCommands';
+import EditorCommands, { EditorCommandCallback, ExecCommandArgs } from './EditorCommands';
 import EditorManager from './EditorManager';
 import EditorObservable from './EditorObservable';
-import { BuiltInOptionType, BuiltInOptionTypeMap, Options as EditorOptions, create as createOptions } from './EditorOptions';
+import { create as createOptions, Options as EditorOptions } from './EditorOptions';
 import EditorUpload, { UploadResult } from './EditorUpload';
 import Env from './Env';
 import { SaveContentEvent } from './EventTypes';
@@ -37,7 +37,7 @@ import { create as createMode, EditorMode } from './Mode';
 import { Model } from './ModelManager';
 import NotificationManager from './NotificationManager';
 import * as Options from './Options';
-import { NormalizedEditorOptions, RawEditorOptions } from './OptionTypes';
+import { RawEditorOptions } from './OptionTypes';
 import PluginManager, { Plugin } from './PluginManager';
 import Shortcuts from './Shortcuts';
 import { Theme } from './ThemeManager';
@@ -246,7 +246,6 @@ class Editor implements EditorObservable {
   public bindPendingEventDelegates!: EditorObservable['bindPendingEventDelegates'];
   public toggleNativeEvent!: EditorObservable['toggleNativeEvent'];
   public unbindAllNativeEvents!: EditorObservable['unbindAllNativeEvents'];
-  public fire!: EditorObservable['fire'];
   public dispatch!: EditorObservable['dispatch'];
   public on!: EditorObservable['on'];
   public off!: EditorObservable['off'];
@@ -385,43 +384,6 @@ class Editor implements EditorObservable {
    */
   public translate(text: Untranslated): TranslatedString {
     return I18n.translate(text);
-  }
-
-  /**
-   * Returns a configuration parameter by name.
-   * <br>
-   * <em>Deprecated in TinyMCE 6.0 and has been marked for removal in TinyMCE 7.0. Use the <code>editor.options.get</code> API instead.</em>
-   *
-   * @method getParam
-   * @param {String} name Configuration parameter to retrieve.
-   * @param {String} defaultVal Optional default value to return.
-   * @param {String} type Optional type parameter.
-   * @return {String} Configuration parameter value or default value.
-   * @deprecated Use editor.options.get instead
-   * @example
-   * // Returns a specific config value from the currently active editor
-   * const someval = tinymce.activeEditor.getParam('myvalue');
-   *
-   * // Returns a specific config value from a specific editor instance by id
-   * const someval2 = tinymce.get('my_editor').getParam('myvalue');
-   */
-  public getParam <K extends BuiltInOptionType>(name: string, defaultVal: BuiltInOptionTypeMap[K], type: K): BuiltInOptionTypeMap[K];
-  public getParam <K extends keyof NormalizedEditorOptions>(name: K, defaultVal?: NormalizedEditorOptions[K], type?: BuiltInOptionType): NormalizedEditorOptions[K];
-  public getParam <T>(name: string, defaultVal: T, type?: BuiltInOptionType): T;
-  public getParam(name: string, defaultVal?: any, type?: BuiltInOptionType): any {
-    const options = this.options;
-
-    // To keep the legacy API we need to register the option if it's not already been registered
-    if (!options.isRegistered(name)) {
-      if (Type.isNonNullable(type)) {
-        options.register(name, { processor: type, default: defaultVal });
-      } else {
-        options.register(name, { processor: Fun.always, default: defaultVal });
-      }
-    }
-
-    // Attempt to use the passed default value if nothing has been set already
-    return !options.isSet(name) && !Type.isUndefined(defaultVal) ? defaultVal : options.get(name);
   }
 
   /**
@@ -720,7 +682,7 @@ class Editor implements EditorObservable {
 
       const value = NodeType.isTextareaOrInput(elm) ? elm.value : elm.innerHTML;
 
-      const html = self.setContent(value, loadArgs);
+      self.setContent(value, loadArgs);
 
       if (!loadArgs.no_events) {
         self.dispatch('LoadContent', {
@@ -729,7 +691,7 @@ class Editor implements EditorObservable {
         });
       }
 
-      return html;
+      return value;
     } else {
       return '';
     }
@@ -805,13 +767,11 @@ class Editor implements EditorObservable {
   /**
    * Sets the specified content to the editor instance, this will cleanup the content before it gets set using
    * the different cleanup rules options.
-   * <br>
-   * <em>Note: The content return value was deprecated in TinyMCE 6.0 and has been marked for removal in TinyMCE 7.0.</em>
    *
    * @method setContent
    * @param {String} content Content to set to editor, normally HTML contents but can be other formats as well.
    * @param {Object} args Optional content object, this gets passed around through the whole set process.
-   * @return {String} HTML string that got set into the editor.
+   * @return {void} Nothing
    * @example
    * // Sets the HTML contents of the activeEditor editor
    * tinymce.activeEditor.setContent('<span>some</span> html');
@@ -822,10 +782,8 @@ class Editor implements EditorObservable {
    * // Sets the content of the activeEditor editor using the specified format
    * tinymce.activeEditor.setContent('<p>Some html</p>', { format: 'html' });
    */
-  public setContent(content: string, args?: Partial<EditorContent.SetContentArgs>): string;
-  public setContent(content: AstNode, args?: Partial<EditorContent.SetContentArgs>): AstNode;
-  public setContent(content: EditorContent.Content, args?: Partial<EditorContent.SetContentArgs>): EditorContent.Content;
-  public setContent(content: EditorContent.Content, args?: Partial<EditorContent.SetContentArgs>): EditorContent.Content {
+  public setContent(content: string | AstNode | EditorContent.Content, args?: Partial<EditorContent.SetContentArgs>): void;
+  public setContent(content: EditorContent.Content, args?: Partial<EditorContent.SetContentArgs>): void {
     return EditorContent.setContent(this, content, args);
   }
 

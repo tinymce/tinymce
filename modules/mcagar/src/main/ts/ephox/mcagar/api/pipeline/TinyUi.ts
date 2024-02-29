@@ -99,7 +99,7 @@ export const TinyUi = (editor: Editor): TinyUi => {
   const cTriggerContextMenu = (label: string, target: string, menu: string): Chain<unknown, SugarElement<HTMLElement>> => {
     return Chain.fromChains([
       cFindIn(cEditorRoot, target),
-      Mouse.cContextMenu,
+      Mouse.cContextMenuWith({ }),
 
       // Ignores input
       cWaitForPopup(label, menu)
@@ -140,7 +140,7 @@ export const TinyUi = (editor: Editor): TinyUi => {
   const cSubmitDialog = <T extends Element> () => {
     return Chain.fromChains<SugarElement<T>, SugarElement<T>>([
       Chain.binder((container: SugarElement<T>) => UiFinder.findIn(container, getThemeSelectors().dialogSubmitSelector)),
-      Mouse.cClick
+      Mouse.cClickWith({ })
     ]);
   };
 

@@ -163,7 +163,7 @@ UnitTest.asynctest('Tooltipping Behaviour', (success, failure) => {
           Chain.asStep({ }, [
             Chain.inject(gui.element),
             UiFinder.cFindIn('span:contains("alpha-tooltip")'),
-            Mouse.cMouseOut
+            Mouse.cMouseOutWith({ })
           ]),
           Logger.t('Hovering outside the tooltip should dismiss it after delay', Waiter.sTryUntil('emptysing', sAssertEmptySink))
         ]

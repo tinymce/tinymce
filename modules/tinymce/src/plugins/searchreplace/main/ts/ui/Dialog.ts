@@ -182,7 +182,7 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
         type: 'custom',
         name: 'find',
         text: 'Find',
-        primary: true
+        buttonType: 'primary',
       },
       {
         type: 'custom',

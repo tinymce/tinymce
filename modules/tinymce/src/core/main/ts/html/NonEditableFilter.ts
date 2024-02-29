@@ -1,5 +1,5 @@
 import Editor from '../api/Editor';
-import { SetContentEvent } from '../api/EventTypes';
+import { BeforeSetContentEvent } from '../api/EventTypes';
 import AstNode from '../api/html/Node';
 import * as Options from '../api/Options';
 import { EditorEvent } from '../api/util/EventDispatcher';
@@ -37,7 +37,7 @@ const replaceMatchWithSpan = (editor: Editor, content: string, cls: string) => {
   };
 };
 
-const convertRegExpsToNonEditable = (editor: Editor, nonEditableRegExps: RegExp[], e: EditorEvent<SetContentEvent>): void => {
+const convertRegExpsToNonEditable = (editor: Editor, nonEditableRegExps: RegExp[], e: EditorEvent<BeforeSetContentEvent>): void => {
   let i = nonEditableRegExps.length, content = e.content;
 
   // Don't replace the variables when raw is used for example on undo/redo

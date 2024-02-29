@@ -267,7 +267,7 @@ const colorPickerDialog = (editor: Editor) => (callback: ColorInputCallback, val
         type: 'submit',
         name: 'save',
         text: 'Save',
-        primary: true
+        buttonType: 'primary',
       }
     ],
     initialData,

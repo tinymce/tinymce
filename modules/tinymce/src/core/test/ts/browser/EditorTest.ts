@@ -8,7 +8,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import { BeforeSetContentEvent, SaveContentEvent, SetContentEvent } from 'tinymce/core/api/EventTypes';
+import { BeforeSetContentEvent, SaveContentEvent } from 'tinymce/core/api/EventTypes';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import URI from 'tinymce/core/api/util/URI';
@@ -168,26 +168,11 @@ describe('browser.tinymce.core.EditorTest', () => {
     assert.equal(editor.getContent(), '<p>123</p><table><tbody><tr><td>X</td></tr></tbody></table><p>456</p>', 'WebKit Serialization range bug');
   });
 
-  it('TBA: editor_methods - getParam', () => {
-    const editor = hook.editor();
-
-    assert.isUndefined(editor.getParam('test1'), 'unregistered with no default');
-    assert.equal(editor.getParam('test2', ''), '', 'unregistered with default');
-    assert.equal(editor.getParam('test2', 'blah'), 'blah', 'unregistered with different default');
-
-    assert.equal(editor.getParam('custom_prop1', 10, 'number'), 5, 'unregistered with correct type');
-    assert.equal(editor.getParam('custom_prop2', '10', 'string'), '10', 'unregistered with incorrect type');
-
-    editor.options.register('test4', { processor: 'string', default: 'default' });
-    assert.equal(editor.getParam('test4'), 'default', 'registered with no passed default');
-    assert.equal(editor.getParam('test4', 'override'), 'override', 'registered with passed default');
-  });
-
   it('TBA: setContent', () => {
     const editor = hook.editor();
     let count: number;
 
-    const callback = (e: EditorEvent<SetContentEvent | BeforeSetContentEvent>) => {
+    const callback = (e: EditorEvent<BeforeSetContentEvent | BeforeSetContentEvent>) => {
       e.content = e.content.replace(/test/, 'X');
       count++;
     };

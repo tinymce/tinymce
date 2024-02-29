@@ -14,7 +14,6 @@ describe('browser.tinymce.core.util.ObservableTest', () => {
       private readonly parentObj?: Class;
       public removed: boolean = false;
       public hasEventListeners!: Observable<any>['hasEventListeners'];
-      public fire!: Observable<any>['fire'];
       public dispatch!: Observable<any>['dispatch'];
       public on!: Observable<any>['on'];
       public off!: Observable<any>['off'];

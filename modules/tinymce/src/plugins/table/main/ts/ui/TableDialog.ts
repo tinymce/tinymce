@@ -243,7 +243,7 @@ const open = (editor: Editor, insertNewTable: boolean): void => {
         type: 'submit',
         name: 'save',
         text: 'Save',
-        primary: true
+        buttonType: 'primary',
       }
     ],
     initialData: data

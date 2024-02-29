@@ -26,37 +26,6 @@ const cMouseUpWith = Fun.compose(Chain.op, Clicks.mouseUp);
 const cMouseMoveWith = Fun.compose(Chain.op, Clicks.mouseMove);
 const cMouseOutWith = Fun.compose(Chain.op, Clicks.mouseOut);
 
-// With delta position (shifted relative to top-left of component)
-/**
- * @deprecated use cMouseUpWith({ dx, dy }) instead */
-const cMouseUpTo = (dx: number, dy: number): Chain<SugarElement<Node>, SugarElement<Node>> => cMouseUpWith({ dx, dy });
-/**
- * @deprecated use cMouseMoveWith({ dx, dy }) instead */
-const cMouseMoveTo = (dx: number, dy: number): Chain<SugarElement<Node>, SugarElement<Node>> => cMouseMoveWith({ dx, dy });
-
-// No extra settings
-/**
- * @deprecated use cClickWith({ }) instead*/
-const cClick = cClickWith({ });
-/**
- * @deprecated use cContextMenuWith({ }) instead */
-const cContextMenu = cContextMenuWith({ });
-/**
- * @deprecated use cMouseOverWith({ }) instead */
-const cMouseOver = cMouseOverWith({ });
-/**
- * @deprecated use cMouseDownWith({ }) instead */
-const cMouseDown = cMouseDownWith({ });
-/**
- * @deprecated use cMouseUpWith({ }) instead */
-const cMouseUp = cMouseUpWith({ });
-/**
- * @deprecated use cMouseMoveWith({ }) instead */
-const cMouseMove = cMouseMoveWith({ });
-/**
- * @deprecated use cMouseOutWith({ }) instead */
-const cMouseOut = cMouseOutWith({ });
-
 const triggerOn = <T extends Element>(container: SugarElement<Node>, selector: string, action: (ele: SugarElement<T>) => void): SugarElement<T> => {
   const ele = UiFinder.findIn<T>(container, selector).getOrDie();
   action(ele);
@@ -87,7 +56,7 @@ const sContextMenuOn = <T>(container: SugarElement<Node>, selector: string): Ste
 
 const cClickOn = <T>(selector: string): Chain<SugarElement<T>, SugarElement<T>> => Chain.fromIsolatedChains([
   UiFinder.cFindIn(selector),
-  cClick
+  cClickWith({ })
 ]);
 
 // True click utilities: mouse down / mouse up / click events all in one
@@ -125,17 +94,6 @@ export {
   cMouseUpWith,
   cMouseMoveWith,
   cMouseOutWith,
-
-  cClick,
-  cContextMenu,
-  cMouseOver,
-  cMouseDown,
-  cMouseUp,
-  cMouseMove,
-  cMouseOut,
-
-  cMouseUpTo,
-  cMouseMoveTo,
 
   sClickOn,
   sHoverOn,

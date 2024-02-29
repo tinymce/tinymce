@@ -68,7 +68,7 @@ const open = (editor: Editor, charMap: CharMap[]): void => {
         type: 'cancel',
         name: 'close',
         text: 'Close',
-        primary: true
+        buttonType: 'primary',
       }
     ],
     initialData,

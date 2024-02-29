@@ -1,8 +1,8 @@
 import { Keys, Mouse, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { SugarBody } from '@ephox/sugar';
-import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
+import { SugarBody, SugarElement } from '@ephox/sugar';
+import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -34,7 +34,7 @@ describe('browser.tinymce.themes.silver.window.SilverDialogApiAccessTest', () =>
         name: 'async.setData',
         text: 'Call api.setData after two seconds',
         align: 'start',
-        primary: true
+        buttonType: 'primary',
       },
       {
         type: 'custom',
@@ -108,7 +108,7 @@ describe('browser.tinymce.themes.silver.window.SilverDialogApiAccessTest', () =>
         const editor = hook.editor();
         DialogUtils.open(editor, dialogSpec, test.params);
 
-        const dialog = UiFinder.findIn(TinyDom.fromDom(document), '.tox-dialog').getOrDie();
+        const dialog = UiFinder.findIn(SugarElement.fromDom(document), '.tox-dialog').getOrDie();
         const dialogHasClass = (className: string) => dialog.dom.classList.contains(className);
 
         assert.isFalse(dialogHasClass('tox-dialog--fullscreen'), 'before toggle dialog should not have class tox-dialog--fullscreen');

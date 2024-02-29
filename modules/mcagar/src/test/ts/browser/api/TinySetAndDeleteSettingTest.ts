@@ -32,19 +32,19 @@ UnitTest.asynctest('TinySetAndDeleteSettingTest', (success, failure) => {
 
     Pipeline.async({}, [
       Logger.t('set and change setting', GeneralSteps.sequence([
-        apis.sSetSetting('a', 'b'),
+        apis.sSetOption('a', 'b'),
         sAssertSetting(editor, 'a', 'b'),
-        apis.sSetSetting('a', 'c'),
+        apis.sSetOption('a', 'c'),
         sAssertSetting(editor, 'a', 'c')
       ])),
 
       Logger.t('set setting to function', GeneralSteps.sequence([
-        apis.sSetSetting('a', Fun.identity),
+        apis.sSetOption('a', Fun.identity),
         sAssertSettingType(editor, 'a', 'function')
       ])),
 
       Logger.t('delete setting', GeneralSteps.sequence([
-        apis.sDeleteSetting('a'),
+        apis.sUnsetOption('a'),
         sAssertSetting(editor, 'a', undefined)
       ]))
     ], loadSuccess, loadFailure);

@@ -57,7 +57,7 @@ UnitTest.asynctest('DisablingTest', (success, failure) => {
 
     const sClickButton = Chain.asStep({ }, [
       Chain.mapper(() => memDisabledButton.get(component).element),
-      Mouse.cClick
+      Mouse.cClickWith({ })
     ]);
 
     const disabledButton = memDisabledButton.get(component);

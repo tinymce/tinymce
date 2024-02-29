@@ -1,10 +1,8 @@
 import { Fun, Optional } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { SugarElement } from '@ephox/sugar';
 
 import { CustomEvent } from '../../events/SimulatedEvent';
 import { AlloyComponent } from '../component/ComponentApi';
-import * as NativeEvents from './NativeEvents';
 
 const prefixName = (name: string) => Fun.constant('alloy.' + name);
 
@@ -36,12 +34,6 @@ const focusItem = prefixName('focus.item');
 // This event represents a touchstart and touchend on the same location, and fires on
 // the touchend
 const tap = alloy.tap;
-
-/*
- * Tap event for touch device, otherwise click event
- * @deprecated
- */
-const tapOrClick = (): string => PlatformDetection.detect().deviceType.isTouch() ? alloy.tap() : NativeEvents.click();
 
 // This event represents a longpress on the same location
 const longpress = prefixName('longpress');
@@ -112,7 +104,6 @@ export {
   execute,
   focusItem,
   tap,
-  tapOrClick,
   longpress,
   sandboxClose,
   systemInit,

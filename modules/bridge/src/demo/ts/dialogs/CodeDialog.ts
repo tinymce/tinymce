@@ -19,7 +19,7 @@ export const createCodeDialog = (): void => {
           type: 'submit',
           name: 'ok',
           text: 'Ok',
-          primary: true
+          buttonType: 'primary',
         },
         {
           type: 'cancel',

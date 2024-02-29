@@ -117,7 +117,7 @@ UnitTest.asynctest('MouseTest', (success, failure) => {
       [ 'input.click', 'container.click' ],
       Chain.asStep(container, [
         UiFinder.cFindIn('input'),
-        Mouse.cClick
+        Mouse.cClickWith({ })
       ])
     ),
 
@@ -134,7 +134,7 @@ UnitTest.asynctest('MouseTest', (success, failure) => {
       [ 'input.contextmenu', 'container.contextmenu' ],
       Chain.asStep(container, [
         UiFinder.cFindIn('input'),
-        Mouse.cContextMenu
+        Mouse.cContextMenuWith({ })
       ])
     )
 
