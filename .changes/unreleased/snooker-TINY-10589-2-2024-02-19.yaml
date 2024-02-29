@@ -1,6 +1,0 @@
-project: snooker
-kind: Changed
-body: Change existing exports in `TableConversions` module to have 'Width' postfix.
-time: 2024-02-19T14:37:42.210401219+10:00
-custom:
-  Issue: TINY-10589

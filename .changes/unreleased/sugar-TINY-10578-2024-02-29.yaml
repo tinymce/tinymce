@@ -1,6 +1,0 @@
-project: sugar
-kind: Changed
-body: Changed license to GPL Version 2 or later.
-time: 2024-02-29T10:40:38.334447+01:00
-custom:
-  Issue: TINY-10578
