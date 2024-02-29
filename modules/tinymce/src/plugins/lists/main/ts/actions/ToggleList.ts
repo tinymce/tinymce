@@ -173,7 +173,12 @@ const getSelectedTextBlocks = (editor: Editor, rng: Range, root: Node): HTMLElem
 
     const nextSibling = node.nextSibling;
     if (BookmarkManager.isBookmarkNode(node)) {
-      if (NodeType.isListNode(nextSibling) || NodeType.isTextBlock(editor, nextSibling) || (!nextSibling && node.parentNode === root)) {
+      if (!nextSibling && node.parentNode === root) {
+        node.previousSibling?.appendChild(node);
+        block = null;
+        return;
+      }
+      if (NodeType.isListNode(nextSibling) || NodeType.isTextBlock(editor, nextSibling)) {
         block = null;
         return;
       }
