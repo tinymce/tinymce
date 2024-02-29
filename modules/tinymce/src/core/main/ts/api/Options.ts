@@ -853,9 +853,13 @@ const register = (editor: Editor): void => {
       'youtube.com',
       'youtu.be',
       'vimeo.com',
+      'player.vimeo.com',
       'dailymotion.com',
+      'embed.music.apple.com',
+      'open.spotify.com',
+      'giphy.com',
       'dai.ly',
-      'codepen.io'
+      'codepen.io',
     ]
   });
 
