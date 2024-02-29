@@ -1,6 +1,6 @@
 project: tinymce
 kind: Fixed
-body: Toggle list behavior generated wrong html when the root block is forced to `div`
+body: Toggle list behavior generated wrong html when the `forced_root_block` option was set to `div`.
 time: 2024-02-29T09:33:25.529271935+01:00
 custom:
   Issue: TINY-10488
