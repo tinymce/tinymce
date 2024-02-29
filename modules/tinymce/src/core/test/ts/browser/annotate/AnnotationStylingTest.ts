@@ -16,7 +16,6 @@ interface Outline {
 describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    height: 800,
     setup: (editor: Editor) => {
       editor.on('init', () => {
         editor.annotator.register('test-annotation', {
@@ -290,11 +289,11 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
     });
   });
 
-  context.only('editable element within noneditable element', () => {
+  context('editable element within noneditable element', () => {
     it('should have blue outline for nested editable region and blue outline for noneditable ancestor (editable region selected)', async () => {
       const editor = hook.editor();
       editor.setContent(figureImageHtml);
-      TinySelections.setSelection(editor, [ 1, 1, 0 ], 1, [ 1, 1, 0 ], 2, true);
+      TinySelections.setCursor(editor, [ 1, 1, 0 ], 1, true);
       await pAssertStyling(editor, 'figure.image', noBackgroundColor, selectedOutline, false);
       await pAssertStyling(editor, 'figcaption', noBackgroundColor, selectedOutline, false);
     });
@@ -304,7 +303,6 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
       editor.setContent(figureImageHtml);
       TinySelections.select(editor, 'img', []);
       editor.annotator.annotate('test-comment', {});
-      debugger
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 1, true);
       await pAssertStyling(editor, 'figure.image', noBackgroundColor, selectedOutline, false);
       await pAssertStyling(editor, 'figcaption', noBackgroundColor, selectedOutline, false);
