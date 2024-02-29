@@ -375,8 +375,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.setContent(initialContent);
     LegacyUnit.setSelection(editor, 'p:nth-child(2) b', 0, 'p:last-of-type b', 3);
     editor.formatter.remove('format');
-    // TINY-10669: Remove Safari >= 17
-    if (browser.isSafari() && browser.version.major >= 17) {
+    if (browser.isSafari()) {
       // Safari 17 will not select the non-editable content
       // Selection only covers editable "def" and removes format correctly
       const expectedContent = '<p>abc</p><p>def</p><p contenteditable="false"><b>ghj</b></p>';

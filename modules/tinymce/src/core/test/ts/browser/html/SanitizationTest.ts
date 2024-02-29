@@ -1,5 +1,4 @@
 import { context, describe, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
 
 import Schema from 'tinymce/core/api/html/Schema';
@@ -7,10 +6,6 @@ import { getSanitizer, MimeType } from 'tinymce/core/html/Sanitization';
 
 describe('browser.tinymce.core.html.SanitizationTest', () => {
   context('Sanitize html', () => {
-    // TINY-10669: Remove this check
-    const platform = PlatformDetection.detect();
-    const isSafariLessThan17 = platform.browser.isSafari() && platform.browser.version.major < 17;
-
     const testHtmlSanitizer = (testCase: { input: string; expected: string; mimeType: MimeType; sanitize?: boolean }) => {
       const sanitizer = getSanitizer({ sanitize: testCase.sanitize ?? true }, Schema());
 
@@ -24,14 +19,14 @@ describe('browser.tinymce.core.html.SanitizationTest', () => {
     it('Sanitize iframe HTML', () => testHtmlSanitizer({
       input: '<iframe src="x"><script>alert(1)</script></iframe><iframe src="javascript:alert(1)"></iframe>',
       // Safari seems to encode the contents of iframes
-      expected: isSafariLessThan17 ? '<iframe src="x">&lt;script&gt;alert(1)&lt;/script&gt;</iframe><iframe></iframe>' : '<iframe></iframe>',
+      expected: '<iframe></iframe>',
       mimeType: 'text/html'
     }));
 
     it('Disabled sanitization of iframe HTML', () => testHtmlSanitizer({
       input: '<iframe src="x"><script>alert(1)</script></iframe><iframe src="javascript:alert(1)"></iframe>',
       // Safari seems to encode the contents of iframes
-      expected: isSafariLessThan17 ? '<iframe src="x">&lt;script&gt;alert(1)&lt;/script&gt;</iframe><iframe></iframe>' : '<iframe src="x"><script>alert(1)</script></iframe><iframe></iframe>',
+      expected: '<iframe src="x"><script>alert(1)</script></iframe><iframe></iframe>',
       mimeType: 'text/html',
       sanitize: false
     }));

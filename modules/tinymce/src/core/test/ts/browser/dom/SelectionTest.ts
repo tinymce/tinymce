@@ -11,10 +11,8 @@ import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 
 describe('browser.tinymce.core.dom.SelectionTest', () => {
-  // TINY-10669: Remove this check
   const platform = PlatformDetection.detect();
   const isSafari = platform.browser.isSafari();
-  const isSafariLessThan17 = isSafari && platform.browser.version.major < 17;
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
@@ -1371,8 +1369,8 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
       soffset: 1,
       fpath: [ 1, 0 ],
       foffset: 1,
-      // TINY-10639: Safari 17 does not allow selection over non-editable content
-      expected: isSafari && !isSafariLessThan17
+      // TINY-10639: Safari does not allow selection over non-editable content
+      expected: isSafari
     }));
 
     it('TINY-9477: isEditable on selected noneditable table cells should be true since parent is editable', testIsEditableSelection({

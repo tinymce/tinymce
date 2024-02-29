@@ -1,16 +1,11 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { TinyApis, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.content.EditorGetContentRawTest', () => {
-  // TINY-10669: Remove this check
-  const platform = PlatformDetection.detect();
-  const isSafariLessThan17 = platform.browser.isSafari() && platform.browser.version.major < 17;
-
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
   }, []);
@@ -51,8 +46,7 @@ describe('browser.tinymce.core.content.EditorGetContentRawTest', () => {
     TinyApis(editor).setRawContent(initial);
     assert.strictEqual(editor.getContent({ format: 'raw' }), '<p>test0</p><plaintext></plaintext>', 'Should be expected html');
     // TINY-10305: Modern browsers add a closing plaintext tag to end of body. Safari escapes text nodes within <plaintext>.
-    TinyAssertions.assertRawContent(editor,
-      isSafariLessThan17 ? '<p>test0</p><plaintext>te\uFEFFst1 test2&lt;p&gt;te\uFEFFst3&lt;/p&gt;</plaintext>' : `${initial}</plaintext>`);
+    TinyAssertions.assertRawContent(editor, `${initial}</plaintext>`);
   });
 
   context('Content XSS', () => {

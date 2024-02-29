@@ -38,17 +38,12 @@ UnitTest.test('WindowSelectionTest', () => {
   const find = (path: number[]) => Hierarchy.follow(container, path).getOrDie('invalid path');
 
   const detection = PlatformDetection.detect();
-  // TINY-10669: Remove this
-  const isSafariLessThan17 = () => detection.browser.isSafari() && detection.browser.version.major < 17;
 
   const detector = (variants: Variants): VariantRange => {
     if (detection.browser.isFirefox() && variants.firefox !== undefined) {
       return variants.firefox;
-    } else if (detection.browser.isSafari() && variants.safari !== undefined && !isSafariLessThan17()) {
+    } else if (detection.browser.isSafari() && variants.safari !== undefined) {
       return variants.safari;
-    } else if (isSafariLessThan17() && variants.safariLessThan17 !== undefined) {
-      // TINY-10669: Remove this and all safariLessThan17 variants
-      return variants.safariLessThan17;
     } else if (detection.browser.isChromium() && variants.chromium !== undefined) {
       return variants.chromium;
     } else {
@@ -153,12 +148,6 @@ UnitTest.test('WindowSelectionTest', () => {
         soffset: 0,
         finish: [ 0 ],
         foffset: 7
-      },
-      safariLessThan17: {
-        start: [ 0, 0 ],
-        soffset: ''.length,
-        finish: [ 0 ],
-        foffset: 7
       }
     },
     Situ.on(find( [ 0 ]), 0),
@@ -180,12 +169,6 @@ UnitTest.test('WindowSelectionTest', () => {
         soffset: 7,
         finish: [ 0 ],
         foffset: 0
-      },
-      safariLessThan17: {
-        start: [ 0 ],
-        soffset: 7,
-        finish: [ 0, 0 ],
-        foffset: ''.length
       }
     },
     Situ.on(find( [ 0 ]), 7),
@@ -195,13 +178,6 @@ UnitTest.test('WindowSelectionTest', () => {
   checkSelection(
     'LTR selection (t I)',
     {
-      // '<p>This <strong>world</strong> is not <strong>w<em>ha[</em>t</strong> I<br><br>]wanted</p><p><br>And even more</p>';
-      safariLessThan17: {
-        start: [ 0, 3, 2 ],
-        soffset: ''.length,
-        finish: [ 0 ],
-        foffset: 6
-      },
       fallback: {
         start: [ 0, 3, 1 ],
         soffset: 1,
@@ -280,12 +256,6 @@ UnitTest.test('WindowSelectionTest', () => {
         soffset: 0,
         finish: [ 0 ],
         foffset: 0
-      },
-      safariLessThan17: {
-        start: [ 0, 0 ],
-        soffset: 0,
-        finish: [ 0, 0 ],
-        foffset: 0
       }
     },
     Situ.on(find( [ 0 ]), 0 ),
@@ -299,12 +269,6 @@ UnitTest.test('WindowSelectionTest', () => {
         start: [ 0 ],
         soffset: 0,
         finish: [ 0 ],
-        foffset: 0
-      },
-      safariLessThan17: {
-        start: [ 0, 0 ],
-        soffset: 0,
-        finish: [ 0, 0 ],
         foffset: 0
       }
     },
