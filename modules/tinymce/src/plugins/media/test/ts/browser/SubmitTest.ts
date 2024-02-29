@@ -17,12 +17,14 @@ describe('browser.tinymce.plugins.media.core.SubmitTest', () => {
       base_url: '/project/tinymce/js/tinymce'
     }, [ Plugin ]);
 
-    const mediaUrlResolver = (data: { url: string }, resolve: (data: { html: string }) => void) => {
-      setTimeout(() => {
-        resolve({
-          html: '<span id="fake">' + data.url + '</span>'
-        });
-      }, 500);
+    const mediaUrlResolver = (data: { url: string }) => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            html: '<span id="fake">' + data.url + '</span>'
+          });
+        }, 500);
+      });
     };
 
     const customEmbed =
