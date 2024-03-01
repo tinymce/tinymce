@@ -5,7 +5,7 @@ import * as Pattern from '../textpatterns/core/Pattern';
 import * as PatternTypes from '../textpatterns/core/PatternTypes';
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
-import { EditorOptions, ForceHexColor } from './OptionTypes';
+import { EditorOptions } from './OptionTypes';
 import I18n from './util/I18n';
 import Tools from './util/Tools';
 
@@ -833,15 +833,6 @@ const register = (editor: Editor): void => {
     default: ''
   });
 
-  registerOption('force_hex_color', {
-    processor: (value) => {
-      const options: ForceHexColor[] = [ 'always', 'rgb_only', 'off' ];
-      const valid = Arr.contains(options, value);
-      return valid ? { value, valid } : { valid: false, message: `Must be one of: ${options.join(', ')}.` };
-    },
-    default: 'off',
-  });
-
   registerOption('sandbox_iframes', {
     processor: 'boolean',
     default: true
@@ -984,7 +975,6 @@ const getAllowedImageFileTypes = (editor: Editor): string[] => Tools.explode(edi
 const hasTableTabNavigation = option('table_tab_navigation');
 const getDetailsInitialState = option('details_initial_state');
 const getDetailsSerializedState = option('details_serialized_state');
-const shouldForceHexColor = option('force_hex_color');
 const shouldSandboxIframes = option('sandbox_iframes');
 const getSandboxIframesExclusions = (editor: Editor): string[] => editor.options.get('sandbox_iframes_exclusions');
 const shouldConvertUnsafeEmbeds = option('convert_unsafe_embeds');
@@ -1095,7 +1085,6 @@ export {
   getDetailsInitialState,
   getDetailsSerializedState,
   shouldUseDocumentWrite,
-  shouldForceHexColor,
   shouldSandboxIframes,
   getLicenseKey,
   getSandboxIframesExclusions,

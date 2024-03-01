@@ -33,17 +33,24 @@ describe('browser.tinymce.core.html.StylesTest', () => {
   it('Colors force hex and lowercase', () => {
     const styles = Styles();
 
-    assertStyles(styles, 'color: rgb(1,2,3)', 'color: rgb(1,2,3);');
-    assertStyles(styles, 'color: RGB(1,2,3)', 'color: rgb(1,2,3);');
+    assertStyles(styles, 'color: rgb(1,2,3)', 'color: #010203;');
+    assertStyles(styles, 'color: RGB(1,2,3)', 'color: #010203;');
     assertStyles(styles, 'color: #FF0000', 'color: #ff0000;');
-    assertStyles(styles, '  color:   RGB  (  1  ,  2  ,  3  )  ', 'color: rgb  (  1  ,  2  ,  3  );');
+    assertStyles(styles, '  color:   RGB  (  1  ,  2  ,  3  )  ', 'color: #010203;');
     assertStyles(styles,
       '   FONT-SIZE  :  10px  ;   COLOR  :  RGB  (  1  ,  2  ,  3  )   ',
-      'font-size: 10px; color: rgb  (  1  ,  2  ,  3  );'
+      'font-size: 10px; color: #010203;'
     );
     assertStyles(styles,
       '   FONT-SIZE  :  10px  ;   COLOR  :  RED   ',
       'font-size: 10px; color: red;'
+    );
+    assertStyles(
+      styles,
+      'border: 1px solid rgb(255, 0, 0);',
+      'border: 1px solid rgb(255, 0, 0);'
+      // TODO: color in border style should be in HEX format once https://ephocks.atlassian.net/browse/TINY-8917 is fixed.
+      // 'border: 1px solid #ff0000;' // Should expect this
     );
   });
 
@@ -152,13 +159,13 @@ describe('browser.tinymce.core.html.StylesTest', () => {
     assertStyles(
       styles,
       'border-width: 1px; border-color: rgb(1, 2, 3)',
-      'border-width: 1px; border-color: rgb(1, 2, 3);'
+      'border-width: 1px; border-color: #010203;'
     );
 
     assertStyles(
       styles,
       'border-width: 1px; border-color: rgb(1, 2, 3); border-style: dashed',
-      'border: 1px dashed rgb(1, 2, 3);'
+      'border: 1px dashed #010203;'
     );
   });
 
@@ -235,35 +242,26 @@ describe('browser.tinymce.core.html.StylesTest', () => {
     assertStyles(styles, 'background:url(vbscript:alert(1)', `background: url('vbscript:alert(1');`);
   });
 
-  it('TINY-9819: force_hex_color set to "off" (the default)', () => {
+  it('TINY-10436: colors are handled the way they did in v5', () => {
     const styles = Styles();
-    for (const color of [
-      '#aabbcc',
-      'rgb(1, 2, 3)',
-      'rgba(1, 2, 3, 0.5)',
-      `rgba(200, 150, 100, 0.95)`
-    ]) {
-      // All colors are unchanged:
-      assertStyles(styles, `color: ${color};`, `color: ${color};`);
-    }
-  });
-
-  it('TINY-9819: force_hex_color set to "always"', () => {
-    const styles = Styles({ force_hex_color: 'always' });
     assertStyles(styles, 'color: #aabbcc;', 'color: #aabbcc;');
+    assertStyles(styles, 'color: #aabbcc88', 'color: #aabbcc88;');
+    assertStyles(styles, 'color: #aabbccff', 'color: #aabbccff;');
     assertStyles(styles, 'color: rgb(1, 2, 3);', 'color: #010203;');
-    assertStyles(styles, 'color: rgba(1, 2, 3, 1);', 'color: #010203;');
-    assertStyles(styles, 'color: rgba(1, 2, 3, 0);', 'color: #010203;');
-    assertStyles(styles, 'color: rgba(1, 2, 3, 0.5);', 'color: #010203;');
-  });
-
-  it('TINY-9819: force_hex_color set to "rgb_only"', () => {
-    const styles = Styles({ force_hex_color: 'rgb_only' });
-    assertStyles(styles, 'color: #aabbcc;', 'color: #aabbcc;');
-    assertStyles(styles, 'color: rgb(1, 2, 3);', 'color: #010203;');
-    assertStyles(styles, 'color: rgba(1, 2, 3, 1);', 'color: #010203;');
+    assertStyles(styles, 'color: rgba(1, 2, 3, 1);', 'color: rgba(1, 2, 3, 1);');
     assertStyles(styles, 'color: rgba(1, 2, 3, 0);', 'color: rgba(1, 2, 3, 0);');
     assertStyles(styles, 'color: rgba(1, 2, 3, 0.5);', 'color: rgba(1, 2, 3, 0.5);');
+    assertStyles(
+      styles,
+      'color: rgba   (   1   ,   2    ,   3     ,    1        );',
+      'color: rgba   (   1   ,   2    ,   3     ,    1        );'
+    );
+    assertStyles(
+      styles,
+      'color: rgba   (   1   ,   2    ,   3);',
+      'color: rgba   (   1   ,   2    ,   3);'
+    );
+    assertStyles(styles, 'color: rgba(1, 2, 3);', 'color: rgba(1, 2, 3);');
+    assertStyles(styles, 'color: rgb(1, 2, 3, 0.5);', 'color: rgb(1, 2, 3, 0.5);');
   });
-
 });

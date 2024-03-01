@@ -44,8 +44,6 @@ export interface ToolbarGroup {
 export type ToolbarMode = 'floating' | 'sliding' | 'scrolling' | 'wrap';
 export type ToolbarLocation = 'top' | 'bottom' | 'auto';
 
-export type ForceHexColor = 'always' | 'rgb_only' | 'off';
-
 interface BaseEditorOptions {
   a11y_advanced_options?: boolean;
   add_form_submit_trigger?: boolean;
@@ -121,7 +119,6 @@ interface BaseEditorOptions {
   font_size_style_values?: string;
   font_size_formats?: string;
   font_size_input_default_unit?: string;
-  force_hex_color?: ForceHexColor;
   forced_root_block?: string;
   forced_root_block_attrs?: Record<string, string>;
   formats?: Formats;
@@ -310,7 +307,6 @@ export interface EditorOptions extends NormalizedEditorOptions {
   font_size_style_values: string;
   forced_root_block: string;
   forced_root_block_attrs: Record<string, string>;
-  force_hex_color: ForceHexColor;
   format_noneditable_selector: string;
   height: number | string;
   highlight_on_focus: boolean;
