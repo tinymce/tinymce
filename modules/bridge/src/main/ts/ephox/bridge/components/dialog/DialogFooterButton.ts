@@ -74,7 +74,7 @@ const baseFooterButtonFields = [
   ComponentSchema.optionalIcon,
   FieldSchema.defaultedStringEnum('align', 'end', [ 'start', 'end' ]),
   ComponentSchema.enabled,
-  FieldSchema.optionStringEnum('buttonType', [ 'primary', 'secondary' ])
+  FieldSchema.defaultedStringEnum('buttonType', 'secondary', [ 'primary', 'secondary' ])
 ];
 
 export const dialogFooterButtonFields = [

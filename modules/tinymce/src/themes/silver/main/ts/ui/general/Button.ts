@@ -3,7 +3,7 @@ import {
   RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, Tabstopping, Tooltipping
 } from '@ephox/alloy';
 import { Dialog, Toolbar } from '@ephox/bridge';
-import { Fun, Merger, Optional, Optionals, Type } from '@ephox/katamari';
+import { Fun, Merger, Optional, Type } from '@ephox/katamari';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as ReadOnly from '../../ReadOnly';
@@ -121,7 +121,7 @@ const renderButtonSpec = (
   const components = [ icon.getOrThunk(() => GuiFactory.text(translatedText)) ];
 
   // The old default is based on the now-deprecated 'primary' property. `buttonType` takes precedence now.
-  const buttonType = spec.buttonType.getOr(!Optionals.equals(spec.buttonType, Optional.some('primary')) && !spec.borderless ? 'secondary' : 'primary');
+  const buttonType = spec.buttonType.getOr(!spec.borderless ? 'secondary' : 'primary');
 
   const baseClasses = calculateClassesFromButtonType(buttonType);
 

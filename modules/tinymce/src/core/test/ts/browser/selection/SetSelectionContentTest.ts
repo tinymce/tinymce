@@ -4,7 +4,7 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { BeforeSetContentEvent } from 'tinymce/core/api/EventTypes';
+import { SetContentEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { SetSelectionContentArgs } from 'tinymce/core/content/ContentTypes';
 import * as SetSelectionContent from 'tinymce/core/selection/SetSelectionContent';
@@ -16,7 +16,7 @@ describe('browser.tinymce.selection.SetSelectionContentTest', () => {
   }, []);
 
   const setContentOverride = (editor: Editor, content: string, overrideContent: string, args: Partial<SetSelectionContentArgs>) => {
-    const handler = (e: EditorEvent<BeforeSetContentEvent>) => {
+    const handler = (e: EditorEvent<SetContentEvent>) => {
       if (e.selection === true) {
         e.preventDefault();
         editor.getBody().innerHTML = overrideContent;
@@ -285,7 +285,7 @@ describe('browser.tinymce.selection.SetSelectionContentTest', () => {
   it('TINY-3254: The SetContent event should contain the cleaned content', () => {
     const editor = hook.editor();
 
-    let lastSetContent: BeforeSetContentEvent | undefined;
+    let lastSetContent: SetContentEvent | undefined;
     editor.on('SetContent', (e) => {
       lastSetContent = e;
     });

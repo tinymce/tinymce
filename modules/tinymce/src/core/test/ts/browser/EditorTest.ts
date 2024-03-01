@@ -8,7 +8,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import { BeforeSetContentEvent, SaveContentEvent } from 'tinymce/core/api/EventTypes';
+import { BeforeSetContentEvent, SaveContentEvent, SetContentEvent } from 'tinymce/core/api/EventTypes';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import URI from 'tinymce/core/api/util/URI';
@@ -172,7 +172,7 @@ describe('browser.tinymce.core.EditorTest', () => {
     const editor = hook.editor();
     let count: number;
 
-    const callback = (e: EditorEvent<BeforeSetContentEvent | BeforeSetContentEvent>) => {
+    const callback = (e: EditorEvent<SetContentEvent | BeforeSetContentEvent>) => {
       e.content = e.content.replace(/test/, 'X');
       count++;
     };

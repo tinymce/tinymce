@@ -3,7 +3,7 @@ import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wr
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { BeforeSetContentEvent, GetContentEvent } from 'tinymce/core/api/EventTypes';
+import { GetContentEvent, SetContentEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { Bookmark } from 'tinymce/core/bookmark/BookmarkTypes';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
@@ -82,7 +82,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
   it('setContent', () => {
     const editor = hook.editor();
     let rng = editor.dom.createRng();
-    let eventObj: EditorEvent<BeforeSetContentEvent> | undefined;
+    let eventObj: EditorEvent<SetContentEvent> | undefined;
 
     // Set contents at selection
     editor.setContent('<p>text</p>');
@@ -140,7 +140,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     LegacyUnit.equal(rng.endOffset, 0, 'Selection end offset');
 
     // Set selected contents, onSetContent event
-    const handler = (event: EditorEvent<BeforeSetContentEvent>) => {
+    const handler = (event: EditorEvent<SetContentEvent>) => {
       eventObj = event;
     };
 

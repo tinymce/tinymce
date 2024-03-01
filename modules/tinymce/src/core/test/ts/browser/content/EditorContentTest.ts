@@ -5,7 +5,7 @@ import { TinyApis, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { BeforeGetContentEvent, BeforeSetContentEvent, GetContentEvent } from 'tinymce/core/api/EventTypes';
+import { BeforeGetContentEvent, BeforeSetContentEvent, GetContentEvent, SetContentEvent } from 'tinymce/core/api/EventTypes';
 import AstNode from 'tinymce/core/api/html/Node';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
@@ -80,7 +80,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
       }
     ], (options) => {
       context(`Test with inline: ${options.inline} and xss_sanitization: ${options.xss_sanitization}`, () => {
-        let events: EditorEvent<BeforeSetContentEvent | GetContentEvent | BeforeSetContentEvent | BeforeGetContentEvent>[] = [];
+        let events: EditorEvent<SetContentEvent | GetContentEvent | BeforeSetContentEvent | BeforeGetContentEvent>[] = [];
         const hook = TinyHooks.bddSetupLight<Editor>({
           base_url: '/project/tinymce/js/tinymce',
           setup: (editor: Editor) => {

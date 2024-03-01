@@ -256,7 +256,7 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
 };
 
 const getRootBlockName = (settings: DomParserSettings, args: ParserArgs) =>
-  args.forced_root_block ?? settings.forced_root_block;
+  args.forced_root_block ?? settings.forced_root_block ?? '';
 
 const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomParser => {
   const nodeFilterRegistry = FilterRegistry.create<ParserFilterCallback>();

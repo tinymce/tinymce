@@ -30,7 +30,7 @@ const buttonFields = [
   ComponentSchema.generatedName('button'),
   ComponentSchema.optionalIcon,
   ComponentSchema.borderless,
-  FieldSchema.optionStringEnum('buttonType', [ 'primary', 'secondary', 'toolbar' ]),
+  FieldSchema.defaultedStringEnum('buttonType', 'secondary', [ 'primary', 'secondary' ])
 ];
 
 export const buttonSchema = StructureSchema.objOf(buttonFields);
