@@ -1,6 +1,0 @@
-project: snooker
-kind: Added
-body: Add `convertToPixelSizeHeight` to `TableConversions` module.
-time: 2024-02-19T14:39:02.678792458+10:00
-custom:
-  Issue: TINY-10589

@@ -1,6 +1,0 @@
-project: tinymce
-kind: Improved
-body: Included keyboard shortcut in custom tooltip for `ToolbarButton` and `ToolbarToggleButton`.
-time: 2024-01-24T11:27:30.524213+11:00
-custom:
-  Issue: TINY-10487

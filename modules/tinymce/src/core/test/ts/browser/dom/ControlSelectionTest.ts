@@ -1,6 +1,6 @@
 import { Assertions, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
-import { Cell, Obj, Strings } from '@ephox/katamari';
+import { Arr, Cell, Obj, Strings } from '@ephox/katamari';
 import { Attribute, Css, Hierarchy, SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -241,25 +241,35 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     TinyAssertions.assertContentPresence(editor, { 'details[data-mce-selected="1"]': 1 });
   });
 
-  it('TINY-10589: Resize ghost table element does not have heights on last row to allow proper resizing', async () => {
-    const editor = hook.editor();
-    editor.setContent(
-      '<table style="width: 100px; height: 50px"><tbody>' +
-      '<tr style="height: 25px;"><td style="height: 11px;">Cell1</td><td style="height: 12px;">Cell2</td></tr>' +
-      '<tr style="height: 25px;"><td style="height: 10px;">Cell3</td><td style="height: 10px;">Cell4</td></tr>' +
-      '</tbody></table>'
-    );
-    TinySelections.select(editor, 'td', [ 0 ]);
-    await pAssertInitialGhostElement(
-      editor,
-      '#mceResizeHandlese',
-      (ghostElm) => {
-        Assertions.assertPresence(
-          'correct number of height styles',
-          { 'tr': 2, 'td': 4, 'tr[style*="height"]': 1, 'td[style*="height"]': 2, 'tr:last-child[style*="height"]': 0 },
-          ghostElm
-        );
-      }
-    );
+  Arr.each([ 'nw', 'ne', 'se', 'sw' ], (origin) => {
+    it(`TINY-10589 & TINY-10707: Resize ghost table element does not have heights on correct row to allow proper resizing (origin: ${origin})`, async () => {
+      const editor = hook.editor();
+      editor.setContent(
+        '<table style="width: 100px; height: 50px"><tbody>' +
+        '<tr style="height: 25px;"><td style="height: 11px;">Cell1</td><td style="height: 12px;">Cell2</td></tr>' +
+        '<tr style="height: 25px;"><td style="height: 10px;">Cell3</td><td style="height: 10px;">Cell4</td></tr>' +
+        '</tbody></table>'
+      );
+      TinySelections.select(editor, 'td', [ 0 ]);
+      const childSelector = Strings.startsWith(origin, 'n') ? ':first-child' : ':last-child';
+      await pAssertInitialGhostElement(
+        editor,
+        `#mceResizeHandle${origin}`,
+        (ghostElm) => {
+          Assertions.assertPresence(
+            'correct number of height styles',
+            {
+              'tr': 2,
+              'td': 4,
+              'tr[style*="height"]': 1,
+              'td[style*="height"]': 2,
+              [`tr${childSelector} > td[style*="height"]`]: 0,
+              [`tr${childSelector}[style*="height"]`]: 0,
+            },
+            ghostElm
+          );
+        }
+      );
+    });
   });
 });

@@ -1,0 +1,7 @@
+project: tinymce
+kind: Removed
+body: Removed `force_hex_color` option, with the default now being all colors are forced
+  to HEX format and as lower case
+time: 2024-02-27T16:23:33.051971748+11:00
+custom:
+  Issue: TINY-10436

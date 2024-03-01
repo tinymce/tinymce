@@ -448,7 +448,6 @@ const contentBodyLoaded = (editor: Editor): void => {
     onSetAttrib: (e) => {
       editor.dispatch('SetAttrib', e);
     },
-    force_hex_color: Options.shouldForceHexColor(editor),
   });
 
   editor.parser = createParser(editor);

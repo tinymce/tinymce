@@ -72,8 +72,12 @@
         border-radius: @control-border-radius;
         color: @revisionhistory-text-color;
         cursor: pointer;
+        font-size: @font-size-sm;
         margin-bottom: @revisionhistory-card-padding;
         padding: @revisionhistory-card-padding;
+        text-overflow: ellipsis;
+        text-wrap: nowrap;
+        width: 100%;
 
         &:hover {
           background-color: @revisionhistory-card-hover-background-color;
@@ -95,14 +99,6 @@
           background-color: @revisionhistory-card-active-background-color;
           box-shadow: @revisonhistory-box-shadow;
           color: @revisionhistory-card-active-text-color;
-        }
-
-        > label {
-          color: inherit;
-          font-size: @font-size-sm;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          text-wrap: nowrap;
         }
       }
 

@@ -1,6 +1,0 @@
-project: tinymce
-kind: Changed
-body: The `highlight_on_focus` option now defaults to true, adding a focus outline to every editor.
-time: 2024-01-15T14:35:01.822328906+01:00
-custom:
-  Issue: TINY-10574

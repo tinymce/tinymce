@@ -18,7 +18,7 @@
     width: auto;
 
     &:focus {
-      background: @toolbar-button-bespoke-background-color; // Prevent toolbar button focus background to override bespoke background
+      background: @toolbar-button-bespoke-focus-background-color; // Prevent toolbar button focus background to override bespoke background
     }
 
     &:focus::after {
@@ -32,6 +32,7 @@
       text-align: center;
 
       &:focus {
+        background-color: @toolbar-button-bespoke-focus-background-color;
         z-index: 1; // Ensure focus outline is on top of other buttons
 
         &::after {
@@ -58,6 +59,10 @@
         color: @toolbar-button-hover-text-color;
       }
 
+      &:focus {
+        background-color: @toolbar-button-bespoke-focus-background-color;
+      }
+
       &:disabled {
         background: @toolbar-button-disabled-background-color;
         border: @toolbar-button-disabled-border;
@@ -82,7 +87,7 @@
       }
 
       &:focus {
-        background: @toolbar-button-bespoke-background-color;
+        background: @toolbar-button-bespoke-focus-background-color;
         z-index: 1; // Ensure focus outline is on top of other buttons
 
         &::after {
@@ -136,6 +141,6 @@
 
   .tox-number-input:focus:not(:active) > button,
   .tox-number-input:focus:not(:active) > .tox-input-wrapper {
-    background: @toolbar-button-bespoke-background-color;
+    background: @toolbar-button-bespoke-focus-background-color;
   }
 }
