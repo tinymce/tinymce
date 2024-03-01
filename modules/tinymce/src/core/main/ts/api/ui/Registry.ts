@@ -163,7 +163,7 @@ const registry = (): Registry.Registry => {
     addSidebar: bridge.addSidebar,
 
     /**
-     * Registers a new split button for the toolbar. The advanced list plugin uses
+     * Registers a new split button for the toolbar. The list styles plugin uses
      * a split button to simplify its functionality.
      * <br>
      * For information on creating a split toolbar button, see:
