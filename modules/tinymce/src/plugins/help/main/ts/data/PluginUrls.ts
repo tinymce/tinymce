@@ -20,7 +20,6 @@ export interface PluginUrl extends PartialPluginUrl {
 // These lists are automatically sorted when generating the dialog.
 const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'accordion', name: 'Accordion' },
-  { key: 'advlist', name: 'List Styles' },
   { key: 'anchor', name: 'Anchor' },
   { key: 'autolink', name: 'Autolink' },
   { key: 'autoresize', name: 'Autoresize' },
@@ -38,6 +37,7 @@ const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'insertdatetime', name: 'Insert Date/Time' },
   { key: 'link', name: 'Link' },
   { key: 'lists', name: 'Lists' },
+  { key: 'advlist', name: 'List Styles' },
   { key: 'media', name: 'Media' },
   { key: 'nonbreaking', name: 'Nonbreaking' },
   { key: 'pagebreak', name: 'Page Break' },
