@@ -1,6 +1,0 @@
-project: bridge
-kind: Changed
-body: Tooltip property in `DialogFooterToggleButton` is now optional.
-time: 2024-02-21T10:18:55.438108+08:00
-custom:
-  Issue: TINY-10672

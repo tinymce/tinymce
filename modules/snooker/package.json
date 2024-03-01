@@ -1,7 +1,7 @@
 {
   "name": "@ephox/snooker",
   "description": "This project implements the table model.",
-  "version": "11.2.1",
+  "version": "12.0.0",
   "files": [
     "lib/main",
     "lib/demo",
@@ -19,14 +19,14 @@
     "directory": "modules/snooker"
   },
   "dependencies": {
-    "@ephox/dragster": "^7.3.1",
-    "@ephox/katamari": "^9.1.6",
-    "@ephox/porkbun": "^7.0.10",
-    "@ephox/robin": "^10.4.1",
-    "@ephox/sugar": "^9.3.1"
+    "@ephox/dragster": "^8.0.0",
+    "@ephox/katamari": "^10.0.0",
+    "@ephox/porkbun": "^8.0.0",
+    "@ephox/robin": "^11.0.0",
+    "@ephox/sugar": "^10.0.0"
   },
   "devDependencies": {
-    "@ephox/agar": "^8.0.1"
+    "@ephox/agar": "^9.0.0"
   },
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "GPL-2.0-or-later",

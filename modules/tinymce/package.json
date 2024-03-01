@@ -1,6 +1,6 @@
 {
   "name": "tinymce",
-  "version": "7.0.0",
+  "version": "7.1.0",
   "private": true,
   "repository": {
     "type": "git",
@@ -31,12 +31,12 @@
     "tslib": "^2.0.0"
   },
   "devDependencies": {
-    "@ephox/acid": "^6.0.3",
-    "@ephox/agar": "^8.0.1",
-    "@ephox/alloy": "^14.0.3",
-    "@ephox/bridge": "^4.7.1",
-    "@ephox/darwin": "^8.2.1",
-    "@tinymce/oxide": "^2.8.2",
-    "@tinymce/oxide-icons-default": "^2.6.1"
+    "@ephox/acid": "^7.0.0",
+    "@ephox/agar": "^9.0.0",
+    "@ephox/alloy": "^15.0.0",
+    "@ephox/bridge": "^5.0.0",
+    "@ephox/darwin": "^9.0.0",
+    "@tinymce/oxide": "^3.0.0",
+    "@tinymce/oxide-icons-default": "^3.0.0"
   }
 }
