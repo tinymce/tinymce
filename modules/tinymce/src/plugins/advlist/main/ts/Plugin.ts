@@ -12,7 +12,7 @@ export default (): void => {
       Commands.register(editor);
     } else {
       // eslint-disable-next-line no-console
-      console.error('Please use the Lists plugin together with the Advanced List plugin.');
+      console.error('Please use the Lists plugin together with the List Styles plugin.');
     }
   });
 };
