@@ -32,6 +32,7 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
 
   const platform = PlatformDetection.detect();
   const isFirefox = platform.browser.isFirefox();
+  const isSafari = platform.browser.isSafari();
   const isMacOS = platform.os.isMacOS();
   const isWindows = platform.os.isWindows();
 
@@ -408,10 +409,20 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
         }
         assertAccordionContent(editor, getSummarySpec(expectedContent));
 
-        const expectedPath = isSummary ? [ 0, 0, 1, 0 ] : [ 0, 1, 0, 1, 0 ];
-        // 0 offset as selection positioned within format caret
-        const expectedOffset = 0;
-        TinyAssertions.assertCursor(editor, expectedPath, expectedOffset);
+        if (isSafari) {
+          // Safari positions selection around format caret
+          const expectedPath = isSummary ? [ 0, 0, 0 ] : [ 0, 1, 0, 0 ];
+          const expectedOffset = isBackspace ? 6 : 2;
+
+          TinyAssertions.assertCursor(editor, expectedPath, expectedOffset);
+        } else {
+          // 0 offset as selection positioned within format caret
+          const expectedPath = isSummary ? [ 0, 0, 1, 0 ] : [ 0, 1, 0, 1, 0 ];
+          const expectedOffset = 0;
+
+          TinyAssertions.assertCursor(editor, expectedPath, expectedOffset);
+        }
+
       };
 
       const testCtrlDeletionInSummary = (deletionKey: DeletionKey) => testCtrlDeletion(deletionKey, 'summary');
