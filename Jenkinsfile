@@ -153,7 +153,7 @@ def props
 
 def cacheName = "cache_${BUILD_TAG}"
 
-def testname = "tinymce_${cleanBuildName(env.BRANCH_NAME)}_test${env.BUILD_NUMBER}"
+def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NUMBER}"
 
 timestamps {
   bedrockRemoteTools.nodeProducerPod(
@@ -227,7 +227,8 @@ timestamps {
       if (platform.provider) {
         // use remote
         def name = "${os}-${platform.browser}${browserVersion}-${platform.provider}${suffix}"
-        processes[name] = runTestPod(cacheName, name, testname, platform.browser, platform.provider, platform.os, platform.version, s_bucket, s_buckets, runAllTests)
+        def testName = "${env.BUILD_NUMBER}-${os}-${platform.browser}"
+        processes[name] = runTestPod(cacheName, name, "${testPrefix}_${testName}", platform.browser, platform.provider, platform.os, platform.version, s_bucket, s_buckets, runAllTests)
       } else {
         // use local
         def name = "${os}-${platform.browser}"
