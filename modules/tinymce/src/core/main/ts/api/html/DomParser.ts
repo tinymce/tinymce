@@ -5,6 +5,7 @@ import * as NodeType from '../../dom/NodeType';
 import * as FilterNode from '../../html/FilterNode';
 import * as FilterRegistry from '../../html/FilterRegistry';
 import * as InvalidNodes from '../../html/InvalidNodes';
+import * as LegacyFilter from '../../html/LegacyFilter';
 import * as Namespace from '../../html/Namespace';
 import * as ParserFilters from '../../html/ParserFilters';
 import { isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../../html/ParserUtils';
@@ -498,6 +499,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
   };
 
   ParserFilters.register(exports, defaultedSettings);
+  LegacyFilter.register(exports, defaultedSettings, schema);
 
   return exports;
 };

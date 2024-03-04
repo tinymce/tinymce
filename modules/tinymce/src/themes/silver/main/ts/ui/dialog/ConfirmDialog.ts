@@ -24,7 +24,7 @@ export const setup = (backstage: UiFactoryBackstage): ConfirmDialogApi => {
       renderFooterButton({
         name: 'yes',
         text: 'Yes',
-        buttonType: Optional.some('primary'),
+        buttonType: 'primary',
         align: 'end',
         enabled: true,
         icon: Optional.none()
@@ -34,7 +34,7 @@ export const setup = (backstage: UiFactoryBackstage): ConfirmDialogApi => {
     const footerNo = renderFooterButton({
       name: 'no',
       text: 'No',
-      buttonType: Optional.some('secondary'),
+      buttonType: 'secondary',
       align: 'end',
       enabled: true,
       icon: Optional.none()

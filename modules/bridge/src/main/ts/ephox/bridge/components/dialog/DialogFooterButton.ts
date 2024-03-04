@@ -44,7 +44,7 @@ interface BaseDialogFooterButton {
   align: 'start' | 'end';
   enabled: boolean;
   icon: Optional<string>;
-  buttonType: Optional<'primary' | 'secondary'>;
+  buttonType: 'primary' | 'secondary';
 }
 
 export interface DialogFooterNormalButton extends BaseDialogFooterButton {

@@ -120,8 +120,7 @@ const renderButtonSpec = (
   const icon = spec.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons));
   const components = [ icon.getOrThunk(() => GuiFactory.text(translatedText)) ];
 
-  // The old default is based on the now-deprecated 'primary' property. `buttonType` takes precedence now.
-  const buttonType = spec.buttonType.getOr(!spec.borderless ? 'secondary' : 'primary');
+  const buttonType = spec.buttonType;
 
   const baseClasses = calculateClassesFromButtonType(buttonType);
 
@@ -210,9 +209,6 @@ const renderToggleButton = (spec: FooterToggleButtonSpec, providers: UiFactoryBa
     });
   };
 
-  // The old default is based on the now-deprecated 'primary' property. `buttonType` takes precedence now.
-  const buttonType = spec.buttonType.getOr('secondary');
-
   const buttonSpec: IconButtonWrapper = {
     ...spec,
     name: spec.name ?? '',
@@ -225,7 +221,7 @@ const renderToggleButton = (spec: FooterToggleButtonSpec, providers: UiFactoryBa
     'aria-label': providers.translate(tooltip),
   })).getOr({});
 
-  const buttonTypeClasses = calculateClassesFromButtonType(buttonType ?? 'secondary');
+  const buttonTypeClasses = calculateClassesFromButtonType(spec.buttonType);
   const showIconAndText: boolean = spec.icon.isSome() && spec.text.isSome();
   const dom = {
     tag: 'button',

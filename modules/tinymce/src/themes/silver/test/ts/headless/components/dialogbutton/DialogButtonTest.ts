@@ -14,7 +14,7 @@ describe('headless.tinymce.themes.silver.components.dialogbutton.DialogButtonTes
         name: 'test-button',
         text: 'Button<Text',
         enabled: true,
-        buttonType: Optional.some('primary'),
+        buttonType: 'primary',
         icon: Optional.none(),
         borderless: false
       }, store.adder('button.action'), TestProviders)
@@ -48,7 +48,7 @@ describe('headless.tinymce.themes.silver.components.dialogbutton.DialogButtonTes
         name: 'test-button',
         text: 'ButtonText',
         enabled: true,
-        buttonType: Optional.some('secondary'),
+        buttonType: 'secondary',
         icon: Optional.none(),
         borderless: false
       }, store.adder('button.action'), TestProviders)
@@ -74,7 +74,7 @@ describe('headless.tinymce.themes.silver.components.dialogbutton.DialogButtonTes
         name: 'test-button',
         text: 'ButtonText',
         enabled: true,
-        buttonType: Optional.some('toolbar'),
+        buttonType: 'toolbar',
         icon: Optional.none(),
         borderless: false
       }, store.adder('button.action'), TestProviders)

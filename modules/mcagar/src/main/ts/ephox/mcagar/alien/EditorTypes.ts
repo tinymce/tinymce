@@ -60,3 +60,7 @@ export interface Editor {
   once: (event: string, callback: EventCallback) => void;
   off: (event: string, callback: EventCallback) => void;
 }
+
+export interface LegacyEditor extends Editor {
+  getParam: <T>(key: string, defaultValue?: T, type?: string) => T;
+}

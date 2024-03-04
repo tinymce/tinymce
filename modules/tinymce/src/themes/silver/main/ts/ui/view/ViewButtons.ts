@@ -51,7 +51,7 @@ export const renderButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryB
   const buttonSpec: IconButtonWrapper = {
     ...spec,
     name: isToggleButton ? spec.text.getOr(spec.icon.getOr('')) : spec.text ?? spec.icon.getOr(''),
-    buttonType: Optional.from(spec.buttonType),
+    buttonType: spec.buttonType,
     tooltip: spec.tooltip,
     icon: spec.icon,
     enabled: true,

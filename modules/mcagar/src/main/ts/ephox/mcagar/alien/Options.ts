@@ -1,7 +1,11 @@
-import { Editor } from './EditorTypes';
+import { Editor, LegacyEditor } from './EditorTypes';
 
-const get = <R>(editor: Editor, name: string): R => {
-  return editor.options.get(name);
+const get = <R>(editor: Editor | LegacyEditor, name: string): R => {
+  if (editor.options) {
+    return editor.options.get(name);
+  } else {
+    return (editor as LegacyEditor).getParam(name);
+  }
 };
 
 const set = <T>(editor: Editor, name: string, value: T): void => {

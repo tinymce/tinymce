@@ -24,7 +24,7 @@ export const setup = (backstage: UiFactoryBackstage): AlertDialogApi => {
       renderFooterButton({
         name: 'close-alert',
         text: 'OK',
-        buttonType: Optional.some('primary'),
+        buttonType: 'primary',
         align: 'end',
         enabled: true,
         icon: Optional.none()

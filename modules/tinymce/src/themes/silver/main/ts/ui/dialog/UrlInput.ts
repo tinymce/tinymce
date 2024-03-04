@@ -238,7 +238,7 @@ export const renderUrlInput = (
     icon: Optional.some('browse'),
     text: spec.picker_text.or(spec.label).getOr(''),
     enabled: spec.enabled,
-    buttonType: Optional.none(),
+    buttonType: 'secondary',
     borderless: true
   }, (component) => AlloyTriggers.emit(component, browseUrlEvent), providersBackstage, [], [ 'tox-browse-url' ]));
 

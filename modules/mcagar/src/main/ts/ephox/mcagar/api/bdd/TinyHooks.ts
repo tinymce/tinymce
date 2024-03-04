@@ -2,11 +2,11 @@ import { after, afterEach, before } from '@ephox/bedrock-client';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Insert, Remove, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
-import { Editor as EditorType } from '../../alien/EditorTypes';
+import { Editor as EditorType, LegacyEditor } from '../../alien/EditorTypes';
 import * as Loader from '../../loader/Loader';
 import { setupTinymceBaseUrl } from '../../loader/Urls';
 
-export interface Hook<T extends EditorType> {
+export interface Hook<T extends EditorType > {
   readonly editor: () => T;
 }
 
@@ -77,7 +77,7 @@ const setupHooks = <T extends EditorType = EditorType>(
   };
 };
 
-const bddSetup = <T extends EditorType = EditorType>(settings: Record<string, any>, setupModules: Array<() => void> = [], focusOnInit: boolean = false): Hook<T> => {
+const bddSetup = <T extends (EditorType | LegacyEditor) = EditorType>(settings: Record<string, any>, setupModules: Array<() => void> = [], focusOnInit: boolean = false): Hook<T> => {
   return setupHooks(settings, setupModules, focusOnInit, Optional.none);
 };
 

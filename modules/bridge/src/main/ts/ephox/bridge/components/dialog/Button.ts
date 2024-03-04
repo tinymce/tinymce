@@ -20,7 +20,7 @@ export interface Button {
   name: string;
   icon: Optional<string>;
   borderless: boolean;
-  buttonType: Optional<'primary' | 'secondary' | 'toolbar'>;
+  buttonType: 'primary' | 'secondary' | 'toolbar';
 }
 
 const buttonFields = [
