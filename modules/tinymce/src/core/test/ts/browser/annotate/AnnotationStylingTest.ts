@@ -301,7 +301,7 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
     it('TINY-8698: should have blue outline for nested editable region when selected noneditable ancestor has a comment', async () => {
       const editor = hook.editor();
       editor.setContent(figureImageHtml);
-      TinySelections.select(editor, 'img', []);
+      TinySelections.select(editor, 'figure.image', []);
       editor.annotator.annotate('test-comment', {});
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 1, true);
       await pAssertStyling(editor, 'figure.image', noBackgroundColor, selectedOutline, false);
