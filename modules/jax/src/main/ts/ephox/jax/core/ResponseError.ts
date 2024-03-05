@@ -22,11 +22,32 @@ const getResponseText = (responseType: ResponseBodyDataTypes, request: XMLHttpRe
   }
 };
 
+const statusText = (request: XMLHttpRequest): string => {
+  if (request.statusText === '') {
+    // Safari bug with HTTPS requests
+    if (request.status === 404) {
+      return 'Not Found';
+    } else {
+      return `Response code ${request.status}`;
+    }
+  } else {
+    return request.statusText;
+  }
+};
+
+const errorMessage = (url: string, request: XMLHttpRequest): string => {
+  if (request.status === 0) {
+    return 'Unknown HTTP error (possible cross-domain request)';
+  } else {
+    return `Could not load url ${url}: ${statusText(request)}`;
+  }
+};
+
 export const handle = <T extends ResponseType>(url: string, responseType: ResponseBodyDataTypes, request: XMLHttpRequest): Future<HttpError<T>> => getResponseText(responseType, request).map((responseText) => {
-  const message = request.status === 0 ? 'Unknown HTTP error (possible cross-domain request)' : `Could not load url ${url}: ${request.statusText}`;
   return {
-    message,
+    message: errorMessage(url, request),
     status: request.status,
     responseText
   };
 });
+
