@@ -18,11 +18,15 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest', () => {
 
   const isFirefox = Env.browser.isFirefox();
 
-  const clickNbspToolbarButton = (editor: Editor) => TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Nonbreaking space"]');
+  const clickNbspToolbarButton = (editor: Editor) => {
+    TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Nonbreaking space"]');
+    editor.focus();
+  };
 
   beforeEach(() => {
     const editor = hook.editor();
     editor.setContent('');
+    editor.focus();
   });
 
   it('TBA: Click on the nbsp button then type some text, and assert content is correct', async () => {
