@@ -28,13 +28,13 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest', () => {
   it('TBA: Click on the nbsp button then type some text, and assert content is correct', async () => {
     const editor = hook.editor();
     clickNbspToolbarButton(editor);
-    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.text('break') ]);
+    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.text('word') ]);
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
       return s.element('body', {
         children: [
           s.element('p', {
             children: [
-              s.text(str.is(Unicode.nbsp + 'break'))
+              s.text(str.is(Unicode.nbsp + 'word'))
             ]
           })
         ]
@@ -62,16 +62,16 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest', () => {
 
   it('TBA: Add content to editor, click on the nbsp button then type some text, and assert content is correct', async () => {
     const editor = hook.editor();
-    editor.setContent('break');
-    TinySelections.setCursor(editor, [ 0, 0 ], 5);
+    editor.setContent('word');
+    TinySelections.setCursor(editor, [ 0, 0 ], 4);
     clickNbspToolbarButton(editor);
-    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.text('break') ]);
+    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.text('word') ]);
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
       return s.element('body', {
         children: [
           s.element('p', {
             children: [
-              s.text(str.is('break break'))
+              s.text(str.is('word word'))
             ]
           })
         ]
@@ -98,16 +98,16 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest', () => {
 
   it('TBA: Add text to editor, click on the nbsp button and add content plus a space, and assert content is correct', async () => {
     const editor = hook.editor();
-    editor.setContent('break');
-    TinySelections.setCursor(editor, [ 0, 0 ], 5);
+    editor.setContent('word');
+    TinySelections.setCursor(editor, [ 0, 0 ], 4);
     clickNbspToolbarButton(editor);
-    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.text('break ') ]);
+    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.text('word ') ]);
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
       return s.element('body', {
         children: [
           s.element('p', {
             children: [
-              s.text(str.is('break break' + Unicode.nbsp))
+              s.text(str.is('word word' + Unicode.nbsp))
             ].concat(isFirefox ? [ s.element('br', {}) ] : [])
           })
         ]

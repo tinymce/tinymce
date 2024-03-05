@@ -28,7 +28,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () =
   it('TINY-3647: Click on the nbsp button then type some text, and assert content is correct', async () => {
     const editor = hook.editor();
     clickNbspToolbarButton(editor);
-    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.text('break') ]);
+    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.text('word') ]);
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('body', {
       children: [
         s.element('p', {
@@ -39,7 +39,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () =
                 s.text(str.is(Unicode.nbsp))
               ]
             }),
-            s.text(str.is(Unicode.zeroWidth + 'break'))
+            s.text(str.is(Unicode.zeroWidth + 'word'))
           ]
         })
       ]
@@ -71,22 +71,22 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () =
 
   it('TINY-3647: Add content to editor, click on the nbsp button then type some text, and assert content is correct', async () => {
     const editor = hook.editor();
-    editor.setContent('break');
-    TinySelections.setCursor(editor, [ 0, 0 ], 5);
+    editor.setContent('word');
+    TinySelections.setCursor(editor, [ 0, 0 ], 4);
     clickNbspToolbarButton(editor);
-    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.text('break') ]);
+    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.text('word') ]);
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('body', {
       children: [
         s.element('p', {
           children: [
-            s.text(str.is('break')),
+            s.text(str.is('word')),
             s.element('span', {
               classes: [ arr.has('mce-nbsp-wrap') ],
               children: [
                 s.text(str.is(Unicode.nbsp))
               ]
             }),
-            s.text(str.is(Unicode.zeroWidth + 'break'))
+            s.text(str.is(Unicode.zeroWidth + 'word'))
           ]
         })
       ]
@@ -116,14 +116,14 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () =
 
   it('TINY-3647: Add text to editor, click on the nbsp button and add content plus a space, and assert content is correct', async () => {
     const editor = hook.editor();
-    editor.setContent('break');
-    TinySelections.setCursor(editor, [ 0, 0 ], 5);
+    editor.setContent('word');
+    TinySelections.setCursor(editor, [ 0, 0 ], 4);
     clickNbspToolbarButton(editor);
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('body', {
       children: [
         s.element('p', {
           children: [
-            s.text(str.is('break')),
+            s.text(str.is('word')),
             s.element('span', {
               classes: [ arr.has('mce-nbsp-wrap') ],
               children: [
@@ -136,19 +136,19 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () =
       ]
     })));
 
-    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.text('break ') ]);
+    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.text('word ') ]);
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('body', {
       children: [
         s.element('p', {
           children: [
-            s.text(str.is('break')),
+            s.text(str.is('word')),
             s.element('span', {
               classes: [ arr.has('mce-nbsp-wrap') ],
               children: [
                 s.text(str.is(Unicode.nbsp))
               ]
             }),
-            s.text(str.is(Unicode.zeroWidth + 'break' + Unicode.nbsp))
+            s.text(str.is(Unicode.zeroWidth + 'word' + Unicode.nbsp))
           ].concat(isFirefox ? [ s.element('br', {}) ] : [])
         })
       ]
@@ -157,14 +157,14 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () =
 
   it('TINY-3647: Add text to editor, click on the nbsp button and add content plus a space, repeat, and assert content is correct', async () => {
     const editor = hook.editor();
-    editor.setContent('break');
-    TinySelections.setCursor(editor, [ 0, 0 ], 5);
+    editor.setContent('word');
+    TinySelections.setCursor(editor, [ 0, 0 ], 4);
     clickNbspToolbarButton(editor);
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('body', {
       children: [
         s.element('p', {
           children: [
-            s.text(str.is('break')),
+            s.text(str.is('word')),
             s.element('span', {
               classes: [ arr.has('mce-nbsp-wrap') ],
               children: [
@@ -177,37 +177,37 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () =
       ]
     })));
 
-    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.text('break ') ]);
+    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.text('word ') ]);
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('body', {
       children: [
         s.element('p', {
           children: [
-            s.text(str.is('break')),
+            s.text(str.is('word')),
             s.element('span', {
               classes: [ arr.has('mce-nbsp-wrap') ],
               children: [
                 s.text(str.is(Unicode.nbsp))
               ]
             }),
-            s.text(str.is(Unicode.zeroWidth + 'break' + Unicode.nbsp))
+            s.text(str.is(Unicode.zeroWidth + 'word' + Unicode.nbsp))
           ].concat(isFirefox ? [ s.element('br', {}) ] : [])
         })
       ]
     })));
 
-    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.text('break ') ]);
+    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.text('word ') ]);
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('body', {
       children: [
         s.element('p', {
           children: [
-            s.text(str.is('break')),
+            s.text(str.is('word')),
             s.element('span', {
               classes: [ arr.has('mce-nbsp-wrap') ],
               children: [
                 s.text(str.is(Unicode.nbsp))
               ]
             }),
-            s.text(str.is(Unicode.zeroWidth + 'break break' + Unicode.nbsp))
+            s.text(str.is(Unicode.zeroWidth + 'word word' + Unicode.nbsp))
           ].concat(isFirefox ? [ s.element('br', {}) ] : [])
         })
       ]
