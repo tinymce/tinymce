@@ -227,7 +227,7 @@ const renderToggleButton = (spec: FooterToggleButtonSpec, providers: UiFactoryBa
     borderless: false
   };
 
-  const tooltipAttributes = buttonSpec.tooltip.map<{}>((tooltip) => ({
+  const tooltipAttributes = buttonSpec.tooltip.or(spec.text).map((tooltip) => ({
     'aria-label': providers.translate(tooltip),
   })).getOr({});
 
