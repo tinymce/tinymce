@@ -71,6 +71,22 @@
       overflow-y: auto;
       padding: @revisionhistory-card-padding;
 
+      &:focus {
+        height: 100%;
+        position: relative;   // Override static which prevents z-index to have any effect
+        z-index: 1; // Ensure focus outline is on top of other buttons
+
+        &::after {
+          .keyboard-focus-outline-mixin();
+
+          border-radius: @control-border-radius;
+          bottom: 1px;
+          left: 1px;
+          right: 1px;
+          top: 1px;
+        }
+      }
+
       .tox-revisionhistory__card {
         border: @revisionhistory-border;
         border-radius: @control-border-radius;
