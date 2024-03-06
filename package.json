@@ -1,6 +1,9 @@
 {
   "name": "tinymce-monorepo",
   "private": true,
+  "nx": {
+    "tags": [ "open-source", "repo" ]
+  },
   "workspaces": [
     "modules/*"
   ],
@@ -38,7 +41,7 @@
   },
   "devDependencies": {
     "@ephox/bedrock-client": "^14.1.0",
-    "@ephox/bedrock-server": "^14.1.0",
+    "@ephox/bedrock-server": "^14.1.2",
     "@ephox/oxide-icons-tools": "^4.0.0",
     "@ephox/swag": "^4.6.0",
     "@tinymce/eslint-plugin": "^2.3.0",
@@ -61,7 +64,7 @@
     "grunt-contrib-symlink": "^1.0.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-eslint": "^24.0.0",
-    "grunt-nuget-pack": "^0.0.6",
+    "grunt-nuget-pack": "^1.0.1",
     "grunt-shell": "^4.0.0",
     "grunt-stylelint": "^0.19.0",
     "grunt-terser": "^2.0.0",

@@ -1,6 +1,0 @@
-project: tinymce
-kind: Improved
-body: Improved showing which element has focus for keyboard navigation.
-time: 2024-01-26T10:57:16.397607+01:00
-custom:
-  Issue: TINY-9176

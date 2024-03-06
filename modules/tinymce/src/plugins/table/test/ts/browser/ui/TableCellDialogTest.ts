@@ -31,7 +31,6 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
 
   const generalSelectors = {
     width: 'label.tox-label:contains(Width) + input.tox-textfield',
-    height: 'label.tox-label:contains(Height) + input.tox-textfield',
     celltype: 'label.tox-label:contains(Cell type) + div.tox-listboxfield > .tox-listbox',
     scope: 'label.tox-label:contains(Scope) + div.tox-listboxfield > .tox-listbox',
     halign: 'label.tox-label:contains(Horizontal align) + div.tox-listboxfield > .tox-listbox',
@@ -82,7 +81,6 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
 
   const baseData = {
     width: '',
-    height: '',
     celltype: 'td',
     halign: '',
     valign: '',
@@ -91,7 +89,6 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
 
   const baseAdvData = {
     width: '',
-    height: '',
     celltype: 'td',
     halign: '',
     valign: '',
@@ -128,14 +125,13 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
     TableTestUtils.assertDialogValues(baseData, false, generalSelectors);
     TableTestUtils.setDialogValues({
       width: '100',
-      height: '101',
       celltype: 'td',
       scope: '',
       halign: '',
       valign: ''
     }, false, generalSelectors);
     await TableTestUtils.pClickDialogButton(editor, true);
-    TinyAssertions.assertContent(editor, '<table><tbody><tr><td style="width: 100px; height: 101px;">a</td><td>b</td></tr></tbody></table>');
+    TinyAssertions.assertContent(editor, '<table><tbody><tr><td style="width: 100px;">a</td><td>b</td></tr></tbody></table>');
     assertEventsOrder();
   });
 
@@ -145,7 +141,6 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
 
     const complexData = {
       width: '10px',
-      height: '11px',
       celltype: 'th',
       scope: 'row',
       halign: 'right',
@@ -169,7 +164,6 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
   it('TBA: Table cell properties dialog (update all, including advanced)', async () => {
     const advData = {
       width: '10',
-      height: '11',
       scope: 'row',
       celltype: 'th',
       halign: 'right',
@@ -180,7 +174,7 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
       borderwidth: ''
     };
 
-    const advHtml = '<table><tbody><tr><th style="width: 10px; height: 11px; vertical-align: top; text-align: right; ' +
+    const advHtml = '<table><tbody><tr><th style="width: 10px; vertical-align: top; text-align: right; ' +
     'border-color: red; border-style: dashed; background-color: blue;" scope="row">X</th></tr></tbody></table>';
 
     const editor = hook.editor();
@@ -200,8 +194,8 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
     const initialHtml = '<table>' +
       '<tbody>' +
       '<tr>' +
-      '<td data-mce-selected="1">a</td>' +
-      '<td data-mce-selected="1">b</td>' +
+      '<td data-mce-selected="1" style="height: 10px;">a</td>' +
+      '<td data-mce-selected="1" style="height: 10px;">b</td>' +
       '</tr>' +
       '</tbody>' +
       '</table>';
@@ -209,15 +203,14 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
     const newHtml = '<table>' +
         '<tbody>' +
           '<tr>' +
-            '<td style="height: 20px; vertical-align: bottom; border-style: dashed; background-color: red;">a</td>' +
-            '<td style="height: 20px; vertical-align: bottom; border-style: dashed; background-color: red;">b</td>' +
+            '<td style="height: 10px; vertical-align: bottom; border-style: dashed; background-color: red;">a</td>' +
+            '<td style="height: 10px; vertical-align: bottom; border-style: dashed; background-color: red;">b</td>' +
           '</tr>' +
         '</tbody>' +
       '</table>';
 
     const newData = {
       width: '',
-      height: '20',
       celltype: 'td',
       scope: '',
       valign: 'bottom',
@@ -256,7 +249,6 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
 
     const initialDialogValues = {
       width: '',
-      height: '200px',
       celltype: 'td',
       halign: '',
       valign: '',
@@ -274,14 +266,13 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
       '</colgroup>' +
       '<tbody>' +
         '<tr>' +
-          '<td style="height: 20px; text-align: center; border-color: blue; background-color: red;">&nbsp;</td>' +
-          '<td style="height: 20px; text-align: center; border-color: red; background-color: red;">&nbsp;</td>' +
+          '<td style="height: 200px; text-align: center; border-color: blue; background-color: red;">&nbsp;</td>' +
+          '<td style="height: 200px; text-align: center; border-color: red; background-color: red;">&nbsp;</td>' +
         '</tr>' +
       '</tbody>' +
     '</table>';
 
     const newData = {
-      height: '20',
       halign: 'center',
       backgroundcolor: 'red'
     };
@@ -314,7 +305,6 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
 
     const initialDialogValues = {
       width: '',
-      height: '200px',
       celltype: 'td',
       halign: 'center',
       valign: 'bottom',
@@ -332,16 +322,16 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
       '</colgroup>' +
       '<tbody>' +
         '<tr>' +
-          '<td>&nbsp;</td>' +
-          '<td>&nbsp;</td>' +
+          '<td style="height: 200px;">&nbsp;</td>' +
+          '<td style="height: 200px;">&nbsp;</td>' +
         '</tr>' +
       '</tbody>' +
     '</table>';
 
     const newData = {
       height: '',
-      halign: '',
       valign: '',
+      halign: '',
       backgroundcolor: '',
       bordercolor: '',
       borderstyle: '',
@@ -361,12 +351,11 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
   });
 
   it('TBA: Remove all styles', async () => {
-    const advHtml = '<table><tbody><tr><th style="width: 10px; height: 11px; vertical-align: top; text-align: right; ' +
+    const advHtml = '<table><tbody><tr><th style="width: 10px; vertical-align: top; text-align: right; ' +
     'border-color: red; border-style: dashed; background-color: blue;" scope="row">X</th></tr></tbody></table>';
 
     const advData = {
       width: '10px',
-      height: '11px',
       celltype: 'th',
       scope: 'row',
       halign: 'right',
@@ -381,7 +370,6 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
 
     const emptyData = {
       width: '',
-      height: '',
       scope: '',
       celltype: 'th', // is never empty
       halign: '',
@@ -434,7 +422,6 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
   it('TBA: Test cancel changes nothing and save does', async () => {
     const advData = {
       width: '10px',
-      height: '11px',
       scope: 'row',
       celltype: 'th',
       halign: 'right',
@@ -445,7 +432,7 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
       borderwidth: ''
     };
 
-    const advHtml = '<table><tbody><tr><th style="width: 10px; height: 11px; vertical-align: top; text-align: right; ' +
+    const advHtml = '<table><tbody><tr><th style="width: 10px; vertical-align: top; text-align: right; ' +
     'border-color: red; border-style: dashed; background-color: blue;" scope="row">a</th><td>b</td></tr></tbody></table>';
 
     const editor = hook.editor();

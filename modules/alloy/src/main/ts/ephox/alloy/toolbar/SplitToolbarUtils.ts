@@ -45,7 +45,7 @@ const refresh = (toolbar: AlloyComponent, detail: SplitToolbarBaseDetail, setOve
 
   const availableWidth = Width.get(primary.element);
 
-  const overflows = Overflows.partition(availableWidth, detail.builtGroups.get(), (comp) => Width.get(comp.element), overflowGroup);
+  const overflows = Overflows.partition(availableWidth, detail.builtGroups.get(), (comp) => Math.ceil(comp.element.dom.getBoundingClientRect().width), overflowGroup);
 
   if (overflows.extra.length === 0) {
     // Not ideal. Breaking abstraction somewhat, though remove is better than insert

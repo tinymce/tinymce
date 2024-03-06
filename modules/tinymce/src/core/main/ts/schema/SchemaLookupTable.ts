@@ -124,6 +124,7 @@ export const makeSchema = (type: SchemaType): SchemaLookupTable => {
     add('mark rt rp bdi', '', phrasingContent);
     add('summary', '', [ phrasingContent, 'h1 h2 h3 h4 h5 h6' ].join(' '));
     add('canvas', 'width height', flowContent);
+    add('data', 'value', phrasingContent);
     add('video', 'src crossorigin poster preload autoplay mediagroup loop ' +
       'muted controls width height buffered', [ flowContent, 'track source' ].join(' '));
     add('audio', 'src crossorigin preload autoplay mediagroup loop muted controls ' +

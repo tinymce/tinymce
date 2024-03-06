@@ -1,7 +1,7 @@
 {
   "name": "@ephox/snooker",
   "description": "This project implements the table model.",
-  "version": "11.2.0",
+  "version": "12.0.0",
   "files": [
     "lib/main",
     "lib/demo",
@@ -19,17 +19,17 @@
     "directory": "modules/snooker"
   },
   "dependencies": {
-    "@ephox/dragster": "^7.3.0",
-    "@ephox/katamari": "^9.1.5",
-    "@ephox/porkbun": "^7.0.9",
-    "@ephox/robin": "^10.4.0",
-    "@ephox/sugar": "^9.3.0"
+    "@ephox/dragster": "^8.0.0",
+    "@ephox/katamari": "^10.0.0",
+    "@ephox/porkbun": "^8.0.0",
+    "@ephox/robin": "^11.0.0",
+    "@ephox/sugar": "^10.0.0"
   },
   "devDependencies": {
-    "@ephox/agar": "^8.0.0"
+    "@ephox/agar": "^9.0.0"
   },
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
-  "license": "MIT",
+  "license": "GPL-2.0-or-later",
   "main": "./lib/main/ts/ephox/snooker/api/Main.js",
   "module": "./lib/main/ts/ephox/snooker/api/Main.js",
   "types": "./lib/main/ts/ephox/snooker/api/Main.d.ts",
@@ -38,6 +38,6 @@
     "build": "tsc",
     "test": "bedrock-auto -b chrome-headless -d src/test/ts",
     "test-manual": "bedrock -d src/test/ts",
-    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts"
+    "lint": "eslint --config ../../.eslintrc.json --max-warnings=0 src/**/*.ts"
   }
 }

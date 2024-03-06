@@ -20,10 +20,10 @@ export interface MenuRegistry {
 const defaultMenubar = 'file edit view insert format tools table help';
 
 const defaultMenus: Record<string, MenuSpec> = {
-  file: { title: 'File', items: 'newdocument restoredraft | preview | export print | deleteallconversations' },
+  file: { title: 'File', items: 'newdocument restoredraft | preview | importword exportpdf exportword | export print | deleteallconversations' },
   edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall | searchreplace' },
-  view: { title: 'View', items: 'code | visualaid visualchars visualblocks | spellchecker | preview fullscreen | showcomments' },
-  insert: { title: 'Insert', items: 'image link media addcomment pageembed template inserttemplate codesample inserttable accordion | charmap emoticons hr | pagebreak nonbreaking anchor tableofcontents footnotes | mergetags | insertdatetime' },
+  view: { title: 'View', items: 'code revisionhistory | visualaid visualchars visualblocks | spellchecker | preview fullscreen | showcomments' },
+  insert: { title: 'Insert', items: 'image link media addcomment pageembed inserttemplate codesample inserttable accordion | charmap emoticons hr | pagebreak nonbreaking anchor tableofcontents footnotes | mergetags | insertdatetime' },
   format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript codeformat | styles blocks fontfamily fontsize align lineheight | forecolor backcolor | language | removeformat' },
   tools: { title: 'Tools', items: 'aidialog aishortcuts | spellchecker spellcheckerlanguage | autocorrect capitalization | a11ycheck code typography wordcount addtemplate' },
   table: { title: 'Table', items: 'inserttable | cell row column | advtablesort | tableprops deletetable' },
@@ -37,9 +37,9 @@ const make = (menu: { title: string; items: string[] }, registry: MenuRegistry, 
     getItems: () => Arr.bind(menu.items, (i): Menu.NestedMenuItemContents[] => {
       const itemName = i.toLowerCase();
       if (itemName.trim().length === 0) {
-        return [ ];
+        return [];
       } else if (Arr.exists(removedMenuItems, (removedMenuItem) => removedMenuItem === itemName)) {
-        return [ ];
+        return [];
       } else if (itemName === 'separator' || itemName === '|') {
         return [{
           type: 'separator'
@@ -47,7 +47,7 @@ const make = (menu: { title: string; items: string[] }, registry: MenuRegistry, 
       } else if (registry.menuItems[itemName]) {
         return [ registry.menuItems[itemName] ];
       } else {
-        return [ ];
+        return [];
       }
     })
   };

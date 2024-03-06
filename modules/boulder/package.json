@@ -1,18 +1,18 @@
 {
   "name": "@ephox/boulder",
-  "version": "7.1.5",
+  "version": "8.0.0",
   "description": "Basic javascript object validation",
   "dependencies": {
-    "@ephox/katamari": "^9.1.5"
+    "@ephox/katamari": "^10.0.0"
   },
   "devDependencies": {
-    "@ephox/agar": "^8.0.0",
-    "@ephox/katamari-assertions": "^4.0.9"
+    "@ephox/agar": "^9.0.0",
+    "@ephox/katamari-assertions": "^5.0.0"
   },
   "scripts": {
     "test": "bedrock-auto -b chrome-headless -d src/test/ts",
     "test-manual": "bedrock -d src/test/ts",
-    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts",
+    "lint": "eslint --config ../../.eslintrc.json --max-warnings=0 src/**/*.ts",
     "prepublishOnly": "tsc -b",
     "build": "tsc"
   },
@@ -36,7 +36,7 @@
     "LICENSE.txt"
   ],
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
-  "license": "MIT",
+  "license": "GPL-2.0-or-later",
   "main": "./lib/main/ts/ephox/boulder/api/Main.js",
   "module": "./lib/main/ts/ephox/boulder/api/Main.js",
   "types": "./lib/main/ts/ephox/boulder/api/Main.d.ts"

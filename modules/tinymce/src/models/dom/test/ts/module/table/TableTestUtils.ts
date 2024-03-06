@@ -18,26 +18,30 @@ interface Options {
   readonly headerCols: number;
 }
 
-export interface WidthData {
+export interface SizeData {
   readonly raw: number | null;
   readonly px: number;
   readonly unit: string | null;
   readonly isPercent: boolean;
 }
 
-const getRawWidth = (editor: Editor, elm: HTMLElement): string => {
-  const style = editor.dom.getStyle(elm, 'width');
+const getRawSize = (dimension: 'width' | 'height') => (editor: Editor, elm: HTMLElement): string => {
+  const style = editor.dom.getStyle(elm, dimension);
   if (style) {
     return style;
   } else {
-    const attr = editor.dom.getAttrib(elm, 'width');
+    const attr = editor.dom.getAttrib(elm, dimension);
     return attr ? attr + 'px' : attr;
   }
 };
 
-const getWidths = (editor: Editor, elm: HTMLElement): WidthData => {
-  const rawWidth = getRawWidth(editor, elm);
-  const pxWidth = editor.dom.getStyle(elm, 'width', true);
+const getRawWidth = getRawSize('width');
+const getRawHeight = getRawSize('height');
+
+const getDimensionData = (dimension: 'width' | 'height') => (editor: Editor, elm: HTMLElement): SizeData => {
+  const getRaw = dimension === 'width' ? getRawWidth : getRawHeight;
+  const rawWidth = getRaw(editor, elm);
+  const pxWidth = editor.dom.getStyle(elm, dimension, true);
   const unit = /\d+(\.\d+)?(%|px)/.exec(rawWidth)?.[2] ?? null;
   return {
     raw: rawWidth === '' ? null : parseFloat(rawWidth),
@@ -47,17 +51,23 @@ const getWidths = (editor: Editor, elm: HTMLElement): WidthData => {
   };
 };
 
-const assertWidth = (editor: Editor, elm: HTMLElement, expectedWidth: number | null, expectedUnit: string | null): void => {
-  const widthData = getWidths(editor, elm);
+const getWidthData = getDimensionData('width');
+const getHeightData = getDimensionData('height');
+
+const assertDimension = (dimension: 'width' | 'height') => (editor: Editor, elm: HTMLElement, expectedSize: number | null, expectedUnit: string | null): void => {
+  const getData = dimension === 'width' ? getWidthData : getHeightData;
+  const widthData = getData(editor, elm);
   const nodeName = elm.nodeName.toLowerCase();
-  if (expectedWidth === null) {
+  if (expectedSize === null) {
     assert.isNull(widthData.raw, `${nodeName} width should not be set`);
   } else {
     // This does a approximately check with a delta of 4 to compensate for Firefox sometimes being off by 4 pixels depending on version and platform see TINY-9200 for details
-    assert.approximately(widthData.raw ?? -1, expectedWidth, 4, `${nodeName} width is ${expectedWidth} ~= ${widthData.raw}`);
+    assert.approximately(widthData.raw ?? -1, expectedSize, 4, `${nodeName} width is ${expectedSize} ~= ${widthData.raw}`);
   }
   assert.equal(widthData.unit, expectedUnit, `${nodeName} unit is ${expectedUnit}`);
 };
+
+const assertWidth = assertDimension('width');
 
 const assertTableStructure = (editor: Editor, structure: StructAssert): void => {
   const table = SelectorFind.descendant(TinyDom.body(editor), 'table').getOrDie('A table should exist');
@@ -152,12 +162,16 @@ const assertSelectedCells = (editor: Editor, expectedSelectedCells: string[], ma
   assert.deepEqual(selectedCells, expectedSelectedCells);
 };
 
-const getCellWidth = (editor: Editor, table: SugarElement<HTMLTableElement>, rowNumber: number, columnNumber: number): WidthData => {
+const getCellDimension = (getData: (editor: Editor, elm: HTMLElement) => SizeData) => (editor: Editor, table: SugarElement<HTMLTableElement>, rowNumber: number, columnNumber: number): SizeData => {
   const row = SelectorFilter.descendants<HTMLTableRowElement>(table, 'tr')[rowNumber];
   const cell = SelectorFilter.descendants<HTMLTableCellElement>(row, 'th,td')[columnNumber];
-  return getWidths(editor, cell.dom);
+  return getData(editor, cell.dom);
 };
 
+const getCellWidth = getCellDimension(getWidthData);
+const getCellHeight = getCellDimension(getHeightData);
+
+// TODO: Update to accept heights as well
 const assertTableStructureWithSizes = (
   editor: Editor,
   cols: number,
@@ -245,7 +259,7 @@ const insertTableTest = (editor: Editor, tableColumns: number, tableRows: number
   TinyAssertions.assertCursor(editor, [ 0, withColGroups ? 1 : 0, 0, 0 ], 0);
 };
 
-const assertWidths = (widths: { widthBefore: WidthData; widthAfter: WidthData }): void => {
+const assertWidths = (widths: { widthBefore: SizeData; widthAfter: SizeData }): void => {
   if (widths.widthBefore.isPercent) {
     // due to rounding errors we can be off by one pixel for percentage tables
     assert.approximately(
@@ -261,6 +275,7 @@ const assertWidths = (widths: { widthBefore: WidthData; widthAfter: WidthData })
 
 export {
   getCellWidth,
+  getCellHeight,
   assertTableStructure,
   assertTableStructureWithSizes,
   insertTableTest,
@@ -271,8 +286,10 @@ export {
   pDragResizeBar,
   selectWithKeyboard,
   selectWithMouse,
+  getSelectedCells,
   assertSelectedCells,
-  getWidths,
+  getWidthData,
+  getHeightData,
   insertColumnBefore,
   insertColumnAfter,
   deleteColumn,

@@ -17,6 +17,9 @@ export default {
   tooltips: {
     getConfig: (): TooltippingTypes.TooltippingConfigSpec => {
       return { } as any;
-    }
+    },
+    getComponents: () => {
+      return [] as any;
+    },
   }
 } as UiFactoryBackstageProviders;

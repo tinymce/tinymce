@@ -6,13 +6,21 @@
  Make sure that if making changes to this file, the other files are updated as well
  */
 
-import { Optional } from '@ephox/katamari';
-import { OtherCells } from '@ephox/snooker';
-import { SugarElement } from '@ephox/sugar';
-
 import Editor from 'tinymce/core/api/Editor';
 import { NewTableCellEvent, NewTableRowEvent, TableEventData } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+
+// Duplicated in modules/tinymce/src/themes/silver/main/ts/ui/selector/TableSelectorHandles.ts
+// NOTE: This is an internal only event so not publicly exposing the interface in EventTypes.ts
+export interface TableSelectionChangeEvent {
+  readonly cells: HTMLTableCellElement[];
+  readonly start: HTMLTableCellElement;
+  readonly finish: HTMLTableCellElement;
+  readonly otherCells?: {
+    readonly upOrLeftCells: HTMLTableCellElement[];
+    readonly downOrRightCells: HTMLTableCellElement[];
+  };
+}
 
 const fireNewRow = (editor: Editor, row: HTMLTableRowElement): EditorEvent<NewTableRowEvent> =>
   editor.dispatch('NewRow', { node: row });
@@ -26,12 +34,12 @@ const fireTableModified = (editor: Editor, table: HTMLTableElement, data: TableE
 
 const fireTableSelectionChange = (
   editor: Editor,
-  cells: SugarElement<HTMLTableCellElement>[],
-  start: SugarElement<HTMLTableCellElement>,
-  finish: SugarElement<HTMLTableCellElement>,
-  otherCells: Optional<OtherCells.OtherCells>
+  cells: HTMLTableCellElement[],
+  start: HTMLTableCellElement,
+  finish: HTMLTableCellElement,
+  otherCells?: TableSelectionChangeEvent['otherCells']
 ): void => {
-  editor.dispatch('TableSelectionChange', {
+  editor.dispatch<'TableSelectionChange', TableSelectionChangeEvent>('TableSelectionChange', {
     cells,
     start,
     finish,

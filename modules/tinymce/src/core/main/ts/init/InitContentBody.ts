@@ -37,6 +37,7 @@ import SelectionOverrides from '../SelectionOverrides';
 import * as TextPattern from '../textpatterns/TextPatterns';
 import Quirks from '../util/Quirks';
 import * as ContentCss from './ContentCss';
+import * as LicenseKeyValidation from './LicenseKeyValidation';
 
 declare const escape: any;
 declare let tinymce: TinyMCE;
@@ -83,6 +84,7 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
     inline_styles: getOption('inline_styles'),
     root_name: getRootName(editor),
     sandbox_iframes: getOption('sandbox_iframes'),
+    sandbox_iframes_exclusions: Options.getSandboxIframesExclusions(editor),
     sanitize: getOption('xss_sanitization'),
     validate: true,
     blob_cache: blobCache,
@@ -446,7 +448,6 @@ const contentBodyLoaded = (editor: Editor): void => {
     onSetAttrib: (e) => {
       editor.dispatch('SetAttrib', e);
     },
-    force_hex_color: Options.shouldForceHexColor(editor),
   });
 
   editor.parser = createParser(editor);
@@ -476,6 +477,8 @@ const contentBodyLoaded = (editor: Editor): void => {
   const setupRtcThunk = Rtc.setup(editor);
 
   preInit(editor);
+
+  LicenseKeyValidation.validateEditorLicenseKey(editor);
 
   setupRtcThunk.fold(() => {
     const cancelProgress = startProgress(editor);

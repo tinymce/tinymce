@@ -1,6 +1,0 @@
-project: tinymce
-kind: Changed
-body: Delay before the tooltip to show up, from 800ms to 300ms.
-time: 2024-01-22T10:17:13.194831+11:00
-custom:
-  Issue: TINY-10475

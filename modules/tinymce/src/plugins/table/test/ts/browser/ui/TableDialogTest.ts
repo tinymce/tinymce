@@ -1,5 +1,6 @@
 import { ApproxStructure, UiFinder } from '@ephox/agar';
 import { after, before, context, describe, it } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
 import { SugarBody } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
@@ -9,6 +10,12 @@ import Plugin from 'tinymce/plugins/table/Plugin';
 import * as TableTestUtils from '../../module/test/TableTestUtils';
 
 describe('browser.tinymce.plugins.table.TableDialogTest', () => {
+  // TODO: border color should be in HEX format once https://ephocks.atlassian.net/browse/TINY-8917 is fixed.
+  // Various tests here expect RGB, but should be expecting HEX.
+  // In Safari 15, the colors are also swapped in various border color styles, so also remove this once done.
+  const platform = PlatformDetection.detect();
+  const isSafari15 = platform.browser.isSafari() && platform.browser.version.major === 15;
+
   const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'table',
     toolbar: 'tableprops',
@@ -159,8 +166,8 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
           'margin-right': str.is('auto'),
           'border-width': str.is('1px'),
           'border-spacing': str.is('5px'),
-          'background-color': str.startsWith(''), // need to check presence but it can be #ff0000 or rgb(255, 0, 0)
-          'border-color': str.startsWith('') // need to check presence but it can be #ff0000 or rgb(255, 0, 0)
+          'background-color': str.startsWith(''), // need to check presence but it can be #ff0000 or #ff0000
+          'border-color': str.startsWith('') // need to check presence but it can be #ff0000 or #ff0000
         },
         children: [
           s.element('caption', { }),
@@ -236,8 +243,8 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
   it('TBA: Open dialog via execCommand', async () => {
     const baseHtml =
     '<table style="height: 500px; width: 500px; border-width: 1px; ' +
-    'border-spacing: 5px; background-color: rgb(0, 0, 255); ' +
-    'border-color: rgb(255, 0, 0); border-style: dotted; ' +
+    'border-spacing: 5px; background-color: #0000ff; ' +
+    'border-color: #ff0000; border-style: dotted; ' +
     'margin-left: 0px; margin-right: auto;">' +
     '<caption><br></caption>' +
     '<tbody><tr><td>X</td></tr></tbody>' +
@@ -286,11 +293,11 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
 
     const newHtml =
     '<table class="dog" style="width: 500px; height: 500px; margin-left: 0px; margin-right: auto; ' +
-    'background-color: rgb(0, 0, 255); border: 1px dotted rgb(255, 0, 0); ' +
+    `background-color: #0000ff; border: 1px dotted ${isSafari15 ? 'rgb(255, 0, 0)' : '#ff0000'}; ` +
     'border-spacing: 5px; border-collapse: collapse;" border="1">' +
     '<caption>Caption</caption>' +
     '<tbody>' +
-    '<tr><td style="border-color: rgb(255, 0, 0); border-width: 1px; padding: 5px;">X</td></tr>' +
+    '<tr><td style="border-color: #ff0000; border-width: 1px; padding: 5px;">X</td></tr>' +
 
     '</tbody>' +
     '</table>';
@@ -427,7 +434,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
       align: ''
     });
 
-    const inputHtml = '<table style="border: 1px dotted rgb(255, 0, 0); border-collapse: collapse;" border="1px"><tbody><tr><td>&nbsp;</td></tr></tbody></table>';
+    const inputHtml = '<table style="border: 1px dotted #ff0000; border-collapse: collapse;" border="1px"><tbody><tr><td>&nbsp;</td></tr></tbody></table>';
 
     const editor = hook.editor();
     editor.setContent(inputHtml);
@@ -551,15 +558,15 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
 
     it('TINY-9837: Should apply bordercolor to cells if it has been modified',
       () => testApplyDataToCells({ bordercolor: '#FF0000' }, [
-        '<table style="width: 500px; height: 500px; border: 2px dotted rgb(255, 0, 0); border-collapse: collapse;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
+        `<table style="width: 500px; height: 500px; border: 2px dotted ${isSafari15 ? 'rgb(255, 0, 0)' : '#ff0000'}; border-collapse: collapse;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>`,
         '<tbody>',
         '<tr>',
         '<td style="border: 5px double rgb(255, 0, 0);">&nbsp;</td>',
-        '<td style="border-color: rgb(255, 0, 0); border-width: 2px;">&nbsp;</td>',
+        '<td style="border-color: #ff0000; border-width: 2px;">&nbsp;</td>',
         '</tr>',
         '<tr>',
-        '<td style="border-color: rgb(255, 0, 0); border-width: 2px;">&nbsp;</td>',
-        '<td style="border-color: rgb(255, 0, 0); border-width: 2px;">&nbsp;</td>',
+        '<td style="border-color: #ff0000; border-width: 2px;">&nbsp;</td>',
+        '<td style="border-color: #ff0000; border-width: 2px;">&nbsp;</td>',
         '</tr>',
         '</tbody>',
         '</table>'
@@ -583,15 +590,15 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
 
     it('TINY-9837: Should apply border and bordercolor to cells if they have been modified',
       () => testApplyDataToCells({ border: '3px', bordercolor: '#FF0000' }, [
-        '<table style="width: 500px; height: 500px; border: 3px dotted rgb(255, 0, 0); border-collapse: collapse;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
+        `<table style="width: 500px; height: 500px; border: 3px dotted ${isSafari15 ? 'rgb(255, 0, 0)' : '#ff0000'}; border-collapse: collapse;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>`,
         '<tbody>',
         '<tr>',
         '<td style="border: 3px double rgb(255, 0, 0);">&nbsp;</td>',
-        '<td style="border-color: rgb(255, 0, 0); border-width: 3px;">&nbsp;</td>',
+        '<td style="border-color: #ff0000; border-width: 3px;">&nbsp;</td>',
         '</tr>',
         '<tr>',
-        '<td style="border-color: rgb(255, 0, 0); border-width: 3px;">&nbsp;</td>',
-        '<td style="border-color: rgb(255, 0, 0); border-width: 3px;">&nbsp;</td>',
+        '<td style="border-color: #ff0000; border-width: 3px;">&nbsp;</td>',
+        '<td style="border-color: #ff0000; border-width: 3px;">&nbsp;</td>',
         '</tr>',
         '</tbody>',
         '</table>'
@@ -599,15 +606,15 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
 
     it('TINY-9837: Should apply cellpadding and bordercolor to cells if they have been modified',
       () => testApplyDataToCells({ cellpadding: '3px', bordercolor: '#FF0000' }, [
-        '<table style="width: 500px; height: 500px; border: 2px dotted rgb(255, 0, 0); border-collapse: collapse;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
+        `<table style="width: 500px; height: 500px; border: 2px dotted ${isSafari15 ? 'rgb(255, 0, 0)' : '#ff0000'}; border-collapse: collapse;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>`,
         '<tbody>',
         '<tr>',
         '<td style="border: 5px double rgb(255, 0, 0); padding: 3px;">&nbsp;</td>',
-        '<td style="border-color: rgb(255, 0, 0); border-width: 2px; padding: 3px;">&nbsp;</td>',
+        '<td style="border-color: #ff0000; border-width: 2px; padding: 3px;">&nbsp;</td>',
         '</tr>',
         '<tr>',
-        '<td style="border-color: rgb(255, 0, 0); border-width: 2px; padding: 3px;">&nbsp;</td>',
-        '<td style="border-color: rgb(255, 0, 0); border-width: 2px; padding: 3px;">&nbsp;</td>',
+        '<td style="border-color: #ff0000; border-width: 2px; padding: 3px;">&nbsp;</td>',
+        '<td style="border-color: #ff0000; border-width: 2px; padding: 3px;">&nbsp;</td>',
         '</tr>',
         '</tbody>',
         '</table>'
@@ -615,15 +622,15 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
 
     it('TINY-9837: Should apply border, cellpadding and bordercolor to cells if they have been modified',
       () => testApplyDataToCells({ border: '3px', cellpadding: '3px', bordercolor: '#FF0000' }, [
-        '<table style="width: 500px; height: 500px; border: 3px dotted rgb(255, 0, 0); border-collapse: collapse;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
+        `<table style="width: 500px; height: 500px; border: 3px dotted ${isSafari15 ? 'rgb(255, 0, 0)' : '#ff0000'}; border-collapse: collapse;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>`,
         '<tbody>',
         '<tr>',
         '<td style="border: 3px double rgb(255, 0, 0); padding: 3px;">&nbsp;</td>',
-        '<td style="border-color: rgb(255, 0, 0); border-width: 3px; padding: 3px;">&nbsp;</td>',
+        '<td style="border-color: #ff0000; border-width: 3px; padding: 3px;">&nbsp;</td>',
         '</tr>',
         '<tr>',
-        '<td style="border-color: rgb(255, 0, 0); border-width: 3px; padding: 3px;">&nbsp;</td>',
-        '<td style="border-color: rgb(255, 0, 0); border-width: 3px; padding: 3px;">&nbsp;</td>',
+        '<td style="border-color: #ff0000; border-width: 3px; padding: 3px;">&nbsp;</td>',
+        '<td style="border-color: #ff0000; border-width: 3px; padding: 3px;">&nbsp;</td>',
         '</tr>',
         '</tbody>',
         '</table>'

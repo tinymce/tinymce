@@ -12,6 +12,7 @@ describe('webdriver.tinymce.core.content.PlaceholderTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'undo redo | bold',
+    plugins: [ 'lists' ],
     placeholder,
     setup: (editor: Editor) => {
       editor.on('PlaceholderToggle', () => {
@@ -35,10 +36,8 @@ describe('webdriver.tinymce.core.content.PlaceholderTest', () => {
   const pAssertPlaceholder = (editor: Editor, expected: boolean) => Waiter.pTryUntil('Wait for placeholder to update', () => {
     const body = editor.getBody();
     const dataPlaceholder = editor.dom.getAttrib(body, 'data-mce-placeholder');
-    const ariaPlaceholder = editor.dom.getAttrib(body, 'aria-placeholder');
     const expectedPlaceholder = expected ? placeholder : '';
     assert.equal(dataPlaceholder, expectedPlaceholder, 'Check data-mce-placeholder attribute');
-    assert.equal(ariaPlaceholder, expectedPlaceholder, 'Check aria-placeholder attribute');
   });
 
   const pAssertPlaceholderExists = (editor: Editor) => pAssertPlaceholder(editor, true);

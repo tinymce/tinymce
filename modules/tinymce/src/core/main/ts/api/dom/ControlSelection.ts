@@ -1,4 +1,4 @@
-import { Arr, Obj, Throttler, Type } from '@ephox/katamari';
+import { Arr, Obj, Strings, Throttler, Type } from '@ephox/katamari';
 import { SelectorFind, Selectors, SugarElement } from '@ephox/sugar';
 
 import * as NodeType from '../../dom/NodeType';
@@ -9,6 +9,7 @@ import * as Events from '../Events';
 import * as Options from '../Options';
 import { EditorEvent } from '../util/EventDispatcher';
 import VK from '../util/VK';
+import DOMUtils from './DOMUtils';
 import EditorSelection from './Selection';
 
 interface ControlSelection {
@@ -133,9 +134,20 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     }
   };
 
-  const createGhostElement = (elm: HTMLElement) => {
+  const createGhostElement = (dom: DOMUtils, elm: HTMLElement) => {
     if (isMedia(elm)) {
       return dom.create('img', { src: Env.transparentSrc });
+    } else if (NodeType.isTable(elm)) {
+      const isNorth = Strings.startsWith(selectedHandle.name, 'n');
+      const rowSelect = isNorth ? Arr.head : Arr.last;
+      const tableElm = elm.cloneNode(true) as HTMLTableElement;
+      // Get row, remove all height styles
+      rowSelect(dom.select('tr', tableElm)).each((tr) => {
+        const cells = dom.select('td,th', tr);
+        dom.setStyle(tr, 'height', null);
+        Arr.each(cells, (cell) => dom.setStyle(cell, 'height', null));
+      });
+      return tableElm;
     } else {
       return elm.cloneNode(true) as HTMLElement;
     }
@@ -324,7 +336,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
             height: '100%'
           });
 
-          selectedElmGhost = createGhostElement(selectedElm);
+          selectedElmGhost = createGhostElement(dom, selectedElm);
           dom.addClass(selectedElmGhost, 'mce-clonedresizable');
           dom.setAttrib(selectedElmGhost, 'data-mce-bogus', 'all');
           selectedElmGhost.contentEditable = 'false'; // Hides IE move layer cursor

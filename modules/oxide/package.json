@@ -19,7 +19,7 @@
     "TinyMCE"
   ],
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
-  "license": "MIT",
+  "license": "GPL-2.0-or-later",
   "files": [
     "build/skins/content/**/*.css",
     "build/skins/content/**/*.css.map",

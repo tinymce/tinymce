@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Waiter } from '@ephox/agar';
 import { GuiFactory, TestHelpers } from '@ephox/alloy';
 import { after, before, describe, it } from '@ephox/bedrock-client';
-import { Cell, Fun, Global } from '@ephox/katamari';
+import { Cell, Fun, Global, Optional } from '@ephox/katamari';
 import { Class, SugarElement } from '@ephox/sugar';
 
 import Resource from 'tinymce/core/api/Resource';
@@ -49,8 +49,9 @@ describe('headless.tinymce.themes.silver.components.customeditor.BasicCustomEdit
       name: 'customeditor',
       tag: 'textarea',
       scriptId: 'BasicCustomEditorTest',
-      scriptUrl: '/custom/404', // using the cache
-      settings: undefined
+      scriptUrl: '/custom/tinymce/404', // using the cache
+      settings: undefined,
+      onFocus: Optional.none()
     })
   ));
 

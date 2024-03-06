@@ -960,7 +960,7 @@
     jquery "^3.4.1"
     querystringify "^2.1.1"
 
-"@ephox/bedrock-server@^14.1.0":
+"@ephox/bedrock-server@^14.1.2":
   version "14.1.2"
   resolved "https://registry.yarnpkg.com/@ephox/bedrock-server/-/bedrock-server-14.1.2.tgz#ff134b24ca810fe2fa0b0e065df5a5f6bc5fb539"
   integrity sha512-0i69zfGgGT6N+sojXjaGroTiifVCD7aSzwQKGQZA2xB5BppOLN4HQBem3Gb8dc98PqPv9l282tIXjb91UXpdPQ==
@@ -6145,13 +6145,13 @@ grunt-legacy-util@~2.0.1:
     underscore.string "~3.3.5"
     which "~2.0.2"
 
-grunt-nuget-pack@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/grunt-nuget-pack/-/grunt-nuget-pack-0.0.6.tgz#a547a2bd6a502bc24be4df5b76486e07c00cb163"
-  integrity sha512-Aj+/jIZDhT4EvwUidsnAy60vClWnjC+ghoO2+S7NRSziKceElPc65PIZxRduGsLHn924J+OVmUWJfCUkrAO4Kg==
+grunt-nuget-pack@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/grunt-nuget-pack/-/grunt-nuget-pack-1.0.1.tgz#84a52977c8371a83591d4888dc7e5e70dd6de757"
+  integrity sha512-BC8d6kbJZv4r8WprBHYzn0ZOHCMDs4p5I2kavh1tta2L5FRgTos2T5IgVowBgfAob5MTSclqALQkudmiXEPnRw==
   dependencies:
     moxie-zip "~0.0.3"
-    xml-writer "~1.4.2"
+    xml-writer "~1.7.0"
 
 grunt-shell@^4.0.0:
   version "4.0.0"
@@ -11770,17 +11770,12 @@ ws@^8.13.0, ws@^8.8.0:
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.16.0.tgz#d1cd774f36fbc07165066a60e40323eab6446fd4"
   integrity sha512-HS0c//TP7Ina87TfiPUz1rQzMhHrl/SG2guqRcTOIUYD2q8uhUdNHZYJUaQ8aTGPzCh+c6oawMKW35nFl1dxyQ==
 
-xml-writer@^1.6.0:
+xml-writer@^1.6.0, xml-writer@~1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/xml-writer/-/xml-writer-1.7.0.tgz#b76f1d591c16a2634ebdb703c7bdbd0fd6819065"
   integrity sha512-elFVMRiV5jb59fbc87zzVa0C01QLBEWP909mRuWqFqrYC5wNTH5QW4AaKMNv7d6zAsuOulkD7wnztZNLQW0Nfg==
 
-xml-writer@~1.4.2:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/xml-writer/-/xml-writer-1.4.2.tgz#effc296065e2e53dbb5a4491eb42d5e3554fe36c"
-  integrity sha512-7icuC+B1UQ5i4RSp5QXQciwsdM5C8BlZxWG0onYtkUcjmUTGk/8iveNRRaa8htUQ9FWchxRHxw5hijL0yU20xQ==
-
-xtend@~4.0.1:
+xtend@~4.0.0, xtend@~4.0.1:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/xtend/-/xtend-4.0.2.tgz#bb72779f5fa465186b1f438f674fa347fdb5db54"
   integrity sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==

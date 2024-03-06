@@ -109,7 +109,7 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
   it('TBA: Image uploader test with custom route', async () => {
     const editor = hook.editor();
     editor.setContent('');
-    editor.options.set('images_upload_url', '/custom/imageUpload');
+    editor.options.set('images_upload_url', '/custom/tinymce/imageUpload');
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
     await TinyUiActions.pWaitForDialog(editor);
     TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');

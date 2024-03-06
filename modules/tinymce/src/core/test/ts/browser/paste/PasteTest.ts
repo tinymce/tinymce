@@ -455,7 +455,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
       editor.execCommand('mceInsertClipboardContent', false, {
         html: (
           '<span style="color:#ff0000; text-indent: 10px">a</span>' +
-          '<span style="color:rgb(255, 0, 0); text-indent: 10px">b</span>'
+          '<span style="color:#ff0000; text-indent: 10px">b</span>'
         )
       });
 
@@ -471,7 +471,7 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
         html: (
           '<span style="color:red; text-indent: 10px">a</span>' +
           '<span style="color:#ff0000; text-indent: 10px">b</span>' +
-          '<span style="color:rgb(255, 0, 0); text-indent: 10px">c</span>'
+          '<span style="color:#ff0000; text-indent: 10px">c</span>'
         )
       });
 
@@ -480,18 +480,18 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
 
     it('TBA: paste webkit remove runtime styles (color) in the same (color) (rgb)', () => {
       const editor = hook.editor();
-      editor.setContent('<p style="color:rgb(255, 0, 0)">Test</span>');
+      editor.setContent('<p style="color:#ff0000">Test</span>');
       TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
 
       editor.execCommand('mceInsertClipboardContent', false, {
         html: (
           '<span style="color:red; text-indent: 10px">a</span>' +
           '<span style="color:#ff0000; text-indent: 10px">b</span>' +
-          '<span style="color:rgb(255, 0, 0); text-indent: 10px">c</span>'
+          '<span style="color:#ff0000; text-indent: 10px">c</span>'
         )
       });
 
-      TinyAssertions.assertContent(editor, '<p style="color: rgb(255, 0, 0);">abc</p>');
+      TinyAssertions.assertContent(editor, '<p style="color: #ff0000;">abc</p>');
     });
 
     it('TINY-9997: Paste command does not dispatch input events', async () => {
@@ -556,10 +556,10 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
         });
 
         it('TINY-10349: Pasted object element should be converted to iframe',
-          testPasteHtml(hook, '<object data="about:blank">', '<p><iframe src="about:blank"></iframe></p>'));
+          testPasteHtml(hook, '<object data="about:blank">', '<p><iframe src="about:blank" sandbox=""></iframe></p>'));
 
         it('TINY-10349: Pasted embed element should be converted to iframe',
-          testPasteHtml(hook, '<embed src="about:blank">', '<p><iframe src="about:blank"></iframe></p>'));
+          testPasteHtml(hook, '<embed src="about:blank">', '<p><iframe src="about:blank" sandbox=""></iframe></p>'));
       });
 
       context('convert_unsafe_embeds: true, sandbox_iframes: true', () => {

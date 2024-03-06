@@ -1,8 +1,9 @@
-import { AlloyComponent, GuiFactory, TooltippingTypes } from '@ephox/alloy';
+import { AlloyComponent, GuiFactory, SimpleSpec, TooltippingTypes } from '@ephox/alloy';
 import { Fun, Result } from '@ephox/katamari';
 
 export interface TooltipsProvider {
-  readonly getConfig: (spec: { tooltipText: string }) => TooltippingTypes.TooltippingConfigSpec;
+  readonly getConfig: (spec: { tooltipText: string; onShow?: (comp: AlloyComponent, tooltip: AlloyComponent) => void }) => TooltippingTypes.TooltippingConfigSpec;
+  readonly getComponents: (spec: { tooltipText: string }) => SimpleSpec[];
 }
 
 export const TooltipsBackstage = (
@@ -16,16 +17,8 @@ export const TooltipsBackstage = (
 
   const alreadyShowingTooltips = () => numActiveTooltips > 0;
 
-  const getConfig = (spec: { tooltipText: string }) => ({
-    delayForShow: () => alreadyShowingTooltips() ? intervalDelay : tooltipDelay,
-    delayForHide: Fun.constant(tooltipDelay),
-    exclusive: true,
-    lazySink: getSink,
-    tooltipDom: {
-      tag: 'div',
-      classes: [ 'tox-tooltip', 'tox-tooltip--up' ]
-    },
-    tooltipComponents: [
+  const getComponents = (spec: { tooltipText: string }): SimpleSpec[] => {
+    return [
       {
         dom: {
           tag: 'div',
@@ -34,18 +27,36 @@ export const TooltipsBackstage = (
         components: [
           GuiFactory.text(spec.tooltipText)
         ]
+      }
+    ];
+  };
+
+  const getConfig = (spec: { tooltipText: string; onShow?: (comp: AlloyComponent, tooltip: AlloyComponent) => void }) => {
+    return {
+      delayForShow: () => alreadyShowingTooltips() ? intervalDelay : tooltipDelay,
+      delayForHide: Fun.constant(tooltipDelay),
+      exclusive: true,
+      lazySink: getSink,
+      tooltipDom: {
+        tag: 'div',
+        classes: [ 'tox-tooltip', 'tox-tooltip--up' ]
       },
-    ],
-    onShow: () => {
-      numActiveTooltips++;
-    },
-    onHide: () => {
-      numActiveTooltips--;
-    }
-  });
+      tooltipComponents: getComponents(spec),
+      onShow: (comp: AlloyComponent, tooltip: AlloyComponent) => {
+        numActiveTooltips++;
+        if (spec.onShow) {
+          spec.onShow(comp, tooltip);
+        }
+      },
+      onHide: () => {
+        numActiveTooltips--;
+      }
+    };
+  };
 
   return {
-    getConfig
+    getConfig,
+    getComponents
   };
 
 };

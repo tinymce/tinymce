@@ -5,7 +5,7 @@ import * as Pattern from '../textpatterns/core/Pattern';
 import * as PatternTypes from '../textpatterns/core/PatternTypes';
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
-import { EditorOptions, ForceHexColor } from './OptionTypes';
+import { EditorOptions } from './OptionTypes';
 import I18n from './util/I18n';
 import Tools from './util/Tools';
 
@@ -356,7 +356,7 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('event_root', {
-    processor: 'object'
+    processor: 'string'
   });
 
   registerOption('service_message', {
@@ -609,7 +609,7 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('custom_elements', {
-    processor: 'string'
+    processor: stringOrObjectProcessor
   });
 
   registerOption('extended_valid_elements', {
@@ -674,6 +674,10 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('api_key', {
+    processor: 'string'
+  });
+
+  registerOption('license_key', {
     processor: 'string'
   });
 
@@ -829,18 +833,25 @@ const register = (editor: Editor): void => {
     default: ''
   });
 
-  registerOption('force_hex_color', {
-    processor: (value) => {
-      const options: ForceHexColor[] = [ 'always', 'rgb_only', 'off' ];
-      const valid = Arr.contains(options, value);
-      return valid ? { value, valid } : { valid: false, message: `Must be one of: ${options.join(', ')}.` };
-    },
-    default: 'off',
-  });
-
   registerOption('sandbox_iframes', {
     processor: 'boolean',
-    default: false
+    default: true
+  });
+
+  registerOption('sandbox_iframes_exclusions', {
+    processor: 'string[]',
+    default: [
+      'youtube.com',
+      'youtu.be',
+      'vimeo.com',
+      'player.vimeo.com',
+      'dailymotion.com',
+      'embed.music.apple.com',
+      'open.spotify.com',
+      'giphy.com',
+      'dai.ly',
+      'codepen.io',
+    ]
   });
 
   registerOption('convert_unsafe_embeds', {
@@ -964,9 +975,11 @@ const getAllowedImageFileTypes = (editor: Editor): string[] => Tools.explode(edi
 const hasTableTabNavigation = option('table_tab_navigation');
 const getDetailsInitialState = option('details_initial_state');
 const getDetailsSerializedState = option('details_serialized_state');
-const shouldForceHexColor = option('force_hex_color');
 const shouldSandboxIframes = option('sandbox_iframes');
+const getSandboxIframesExclusions = (editor: Editor): string[] => editor.options.get('sandbox_iframes_exclusions');
 const shouldConvertUnsafeEmbeds = option('convert_unsafe_embeds');
+const getLicenseKey = option('license_key');
+const getApiKey = option('api_key');
 
 export {
   register,
@@ -1072,7 +1085,9 @@ export {
   getDetailsInitialState,
   getDetailsSerializedState,
   shouldUseDocumentWrite,
-  shouldForceHexColor,
   shouldSandboxIframes,
-  shouldConvertUnsafeEmbeds
+  getLicenseKey,
+  getSandboxIframesExclusions,
+  shouldConvertUnsafeEmbeds,
+  getApiKey
 };

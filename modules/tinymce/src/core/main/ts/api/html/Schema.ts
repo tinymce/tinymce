@@ -1,9 +1,10 @@
 import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
 
 import * as CustomElementsRuleParser from '../../schema/CustomElementsRuleParser';
+import * as GlobalAttributesSet from '../../schema/GlobalAttributesSet';
 import * as Presets from '../../schema/Presets';
 import * as SchemaLookupTable from '../../schema/SchemaLookupTable';
-import { ElementSettings, SchemaElement, SchemaMap, SchemaRegExpMap, SchemaSettings, SchemaType } from '../../schema/SchemaTypes';
+import { CustomElementSpec, ElementSettings, SchemaElement, SchemaMap, SchemaRegExpMap, SchemaSettings, SchemaType } from '../../schema/SchemaTypes';
 import * as SchemaUtils from '../../schema/SchemaUtils';
 import * as ValidChildrenRuleParser from '../../schema/ValidChildrenRuleParser';
 import * as ValidElementsRuleParser from '../../schema/ValidElementsRuleParser';
@@ -38,7 +39,7 @@ interface Schema {
   getCustomElements: () => SchemaMap;
   addValidElements: (validElements: string) => void;
   setValidElements: (validElements: string) => void;
-  addCustomElements: (customElements: string) => void;
+  addCustomElements: (customElements: string | Record<string, CustomElementSpec>) => void;
   addValidChildren: (validChildren: any) => void;
 }
 
@@ -201,45 +202,129 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     addValidElements(validElements);
   };
 
-  // Adds custom non HTML elements to the schema
-  const addCustomElements = (customElements: string | undefined) => {
+  const addCustomElement = (name: string, spec: CustomElementSpec) => {
     // Flush cached items since we are altering the default maps
     delete mapCache.text_block_elements;
     delete mapCache.block_elements;
 
-    Arr.each(CustomElementsRuleParser.parseCustomElementsRules(customElements ?? ''), ({ inline, name, cloneName }) => {
-      children[name] = children[cloneName];
-      customElementsMap[name] = cloneName;
+    const inline = spec.extends ? !isBlock(spec.extends) : false;
+    const cloneName = spec.extends;
 
-      // Treat all custom elements as being non-empty by default
-      nonEmptyElementsMap[name.toUpperCase()] = {};
-      nonEmptyElementsMap[name] = {};
+    children[name] = cloneName ? children[cloneName] : {};
+    customElementsMap[name] = cloneName ?? name;
 
-      // If it's not marked as inline then add it to valid block elements
-      if (!inline) {
-        blockElementsMap[name.toUpperCase()] = {};
-        blockElementsMap[name] = {};
-      }
+    // Treat all custom elements as being non-empty by default
+    nonEmptyElementsMap[name.toUpperCase()] = {};
+    nonEmptyElementsMap[name] = {};
 
-      // Add elements clone if needed
-      if (!elements[name]) {
-        let customRule = elements[cloneName];
+    // If it's not marked as inline then add it to valid block elements
+    if (!inline) {
+      blockElementsMap[name.toUpperCase()] = {};
+      blockElementsMap[name] = {};
+    }
 
-        customRule = extend({}, customRule);
-        delete customRule.removeEmptyAttrs;
-        delete customRule.removeEmpty;
+    // Add elements clone if needed
+    if (cloneName && !elements[name] && elements[cloneName]) {
+      const customRule = SchemaUtils.deepCloneElementRule(elements[cloneName]);
 
-        elements[name] = customRule;
-      }
+      delete customRule.removeEmptyAttrs;
+      delete customRule.removeEmpty;
 
-      // Add custom elements at span/div positions
+      elements[name] = customRule;
+    } else {
+      elements[name] = { attributesOrder: [], attributes: { }};
+    }
+
+    // Add custom attributes
+    if (Type.isArray(spec.attributes)) {
+      const processAttrName = (name: string) => {
+        customRule.attributesOrder.push(name);
+        customRule.attributes[name] = {};
+      };
+
+      const customRule = elements[name] ?? {};
+
+      delete customRule.attributesDefault;
+      delete customRule.attributesForced;
+      delete customRule.attributePatterns;
+      delete customRule.attributesRequired;
+
+      customRule.attributesOrder = [];
+      customRule.attributes = {};
+
+      Arr.each(spec.attributes, (attrName) => {
+        const globalAttrs = GlobalAttributesSet.getGlobalAttributeSet(schemaType);
+        ValidChildrenRuleParser.parseValidChild(attrName).each(({ preset, name }) => {
+          if (preset) {
+            if (name === 'global') {
+              Arr.each(globalAttrs, processAttrName);
+            }
+          } else {
+            processAttrName(name);
+          }
+        });
+      });
+
+      elements[name] = customRule;
+    }
+
+    // Add custom pad empty rule
+    if (Type.isBoolean(spec.padEmpty)) {
+      const customRule = elements[name] ?? {};
+      customRule.paddEmpty = spec.padEmpty;
+      elements[name] = customRule;
+    }
+
+    // Add custom children
+    if (Type.isArray(spec.children)) {
+      const customElementChildren: Record<string, {}> = {};
+
+      const processNodeName = (name: string) => {
+        customElementChildren[name] = {};
+      };
+
+      const processPreset = (name: string) => {
+        Presets.getElementsPreset(schemaType, name).each((names) => {
+          Arr.each(names, processNodeName);
+        });
+      };
+
+      Arr.each(spec.children, (child) => {
+        ValidChildrenRuleParser.parseValidChild(child).each(({ preset, name }) => {
+          if (preset) {
+            processPreset(name);
+          } else {
+            processNodeName(name);
+          }
+        });
+      });
+
+      children[name] = customElementChildren;
+    }
+
+    // Add custom elements at extends positions
+    if (cloneName) {
       Obj.each(children, (element, elmName) => {
         if (element[cloneName]) {
           children[elmName] = element = extend({}, children[elmName]);
           element[name] = element[cloneName];
         }
       });
+    }
+  };
+
+  const addCustomElementsFromString = (customElements: string) => {
+    Arr.each(CustomElementsRuleParser.parseCustomElementsRules(customElements ?? ''), ({ name, cloneName }) => {
+      addCustomElement(name, { extends: cloneName });
     });
+  };
+
+  const addCustomElements = (customElements: string | Record<string, CustomElementSpec> | undefined) => {
+    if (Type.isObject(customElements)) {
+      Obj.each(customElements as Record<string, CustomElementSpec>, (spec, name) => addCustomElement(name, spec));
+    } else if (Type.isString(customElements)) {
+      addCustomElementsFromString(customElements);
+    }
   };
 
   // Adds valid children to the schema object
@@ -293,113 +378,115 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     return undefined;
   };
 
-  if (!settings.valid_elements) {
-    // No valid elements defined then clone the elements from the schema spec
-    each(schemaItems, (element, name) => {
-      elements[name] = {
-        attributes: element.attributes,
-        attributesOrder: element.attributesOrder
-      };
+  const setup = () => {
+    if (!settings.valid_elements) {
+      // No valid elements defined then clone the elements from the schema spec
+      each(schemaItems, (element, name) => {
+        elements[name] = {
+          attributes: element.attributes,
+          attributesOrder: element.attributesOrder
+        };
 
-      children[name] = element.children;
-    });
+        children[name] = element.children;
+      });
 
-    // Prefer strong/em over b/i
-    each(SchemaUtils.split('strong/b em/i'), (item) => {
-      const items = SchemaUtils.split(item, '/');
-      elements[items[1]].outputName = items[0];
-    });
+      // Prefer strong/em over b/i
+      each(SchemaUtils.split('strong/b em/i'), (item) => {
+        const items = SchemaUtils.split(item, '/');
+        elements[items[1]].outputName = items[0];
+      });
 
-    // Add default alt attribute for images, removed since alt="" is treated as presentational.
-    // elements.img.attributesDefault = [{name: 'alt', value: ''}];
+      // Add default alt attribute for images, removed since alt="" is treated as presentational.
+      // elements.img.attributesDefault = [{name: 'alt', value: ''}];
 
-    // By default,
-    // - padd the text inline element if it is empty and also a child of an empty root block
-    // - in all other cases, remove the text inline element if it is empty
-    each(textInlineElementsMap, (_val, name) => {
-      if (elements[name]) {
-        if (settings.padd_empty_block_inline_children) {
-          elements[name].paddInEmptyBlock = true;
+      // By default,
+      // - padd the text inline element if it is empty and also a child of an empty root block
+      // - in all other cases, remove the text inline element if it is empty
+      each(textInlineElementsMap, (_val, name) => {
+        if (elements[name]) {
+          if (settings.padd_empty_block_inline_children) {
+            elements[name].paddInEmptyBlock = true;
+          }
+          elements[name].removeEmpty = true;
         }
-        elements[name].removeEmpty = true;
-      }
-    });
+      });
 
-    // Remove these if they are empty by default
-    each(SchemaUtils.split('ol ul blockquote a table tbody'), (name) => {
-      if (elements[name]) {
-        elements[name].removeEmpty = true;
-      }
-    });
+      // Remove these if they are empty by default
+      each(SchemaUtils.split('ol ul blockquote a table tbody'), (name) => {
+        if (elements[name]) {
+          elements[name].removeEmpty = true;
+        }
+      });
 
-    // Padd these by default
-    each(SchemaUtils.split('p h1 h2 h3 h4 h5 h6 th td pre div address caption li summary'), (name) => {
-      if (elements[name]) {
-        elements[name].paddEmpty = true;
-      }
-    });
+      // Padd these by default
+      each(SchemaUtils.split('p h1 h2 h3 h4 h5 h6 th td pre div address caption li summary'), (name) => {
+        if (elements[name]) {
+          elements[name].paddEmpty = true;
+        }
+      });
 
-    // Remove these if they have no attributes
-    each(SchemaUtils.split('span'), (name) => {
-      elements[name].removeEmptyAttrs = true;
-    });
+      // Remove these if they have no attributes
+      each(SchemaUtils.split('span'), (name) => {
+        elements[name].removeEmptyAttrs = true;
+      });
 
-    // Remove these by default
-    // TODO: Reenable in 4.1
-    /* each(split('script style'), function(name) {
-     delete elements[name];
-     });*/
-  } else {
-    setValidElements(settings.valid_elements);
+      // Remove these by default
+      // TODO: Reenable in 4.1
+      /* each(split('script style'), function(name) {
+       delete elements[name];
+       });*/
+    } else {
+      setValidElements(settings.valid_elements);
 
-    each(schemaItems, (element, name) => {
-      children[name] = element.children;
-    });
-  }
-
-  // Opt in is done with options like `extended_valid_elements`
-  delete elements.svg;
-
-  addCustomElements(settings.custom_elements);
-  addValidChildren(settings.valid_children);
-  addValidElements(settings.extended_valid_elements);
-
-  // Todo: Remove this when we fix list handling to be valid
-  addValidChildren('+ol[ul|ol],+ul[ul|ol]');
-
-  // Some elements are not valid by themselves - require parents
-  each({
-    dd: 'dl',
-    dt: 'dl',
-    li: 'ul ol',
-    td: 'tr',
-    th: 'tr',
-    tr: 'tbody thead tfoot',
-    tbody: 'table',
-    thead: 'table',
-    tfoot: 'table',
-    legend: 'fieldset',
-    area: 'map',
-    param: 'video audio object'
-  }, (parents, item) => {
-    if (elements[item]) {
-      elements[item].parentsRequired = SchemaUtils.split(parents);
+      each(schemaItems, (element, name) => {
+        children[name] = element.children;
+      });
     }
-  });
 
-  // Delete invalid elements
-  if (settings.invalid_elements) {
-    each(explode(settings.invalid_elements), (item) => {
+    // Opt in is done with options like `extended_valid_elements`
+    delete elements.svg;
+
+    addCustomElements(settings.custom_elements);
+    addValidChildren(settings.valid_children);
+    addValidElements(settings.extended_valid_elements);
+
+    // Todo: Remove this when we fix list handling to be valid
+    addValidChildren('+ol[ul|ol],+ul[ul|ol]');
+
+    // Some elements are not valid by themselves - require parents
+    each({
+      dd: 'dl',
+      dt: 'dl',
+      li: 'ul ol',
+      td: 'tr',
+      th: 'tr',
+      tr: 'tbody thead tfoot',
+      tbody: 'table',
+      thead: 'table',
+      tfoot: 'table',
+      legend: 'fieldset',
+      area: 'map',
+      param: 'video audio object'
+    }, (parents, item) => {
       if (elements[item]) {
-        delete elements[item];
+        elements[item].parentsRequired = SchemaUtils.split(parents);
       }
     });
-  }
 
-  // If the user didn't allow span only allow internal spans
-  if (!getElementRule('span')) {
-    addValidElements('span[!data-mce-type|*]');
-  }
+    // Delete invalid elements
+    if (settings.invalid_elements) {
+      each(explode(settings.invalid_elements), (item) => {
+        if (elements[item]) {
+          delete elements[item];
+        }
+      });
+    }
+
+    // If the user didn't allow span only allow internal spans
+    if (!getElementRule('span')) {
+      addValidElements('span[!data-mce-type|*]');
+    }
+  };
 
   /**
    * Name/value map object with valid parents and children to those parents.
@@ -626,10 +713,11 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
    */
 
   /**
-   * Adds custom non-HTML elements to the schema.
+   * Adds custom non-HTML elements to the schema. For more information about adding custom elements see:
+   * <a href="https://www.tiny.cloud/docs/tinymce/latest/content-filtering/#custom_elements">custom_elements</a>
    *
    * @method addCustomElements
-   * @param {String} custom_elements Comma separated list of custom elements to add.
+   * @param {String/Object} custom_elements Comma separated list or record of custom elements to add.
    */
 
   /**
@@ -639,6 +727,8 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
    * @method addValidChildren
    * @param {String} valid_children Valid children elements string to parse
    */
+
+  setup();
 
   return {
     type: schemaType,

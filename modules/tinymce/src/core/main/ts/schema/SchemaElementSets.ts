@@ -12,8 +12,8 @@ export interface ElementSets<T> {
 //  math - currently not supported.
 //  meta - Only allowed if the `itemprop` attribute is set so very special.
 //  slot - We only want these to be accepted in registered custom components.
+//  template - Not supported since the HTML inside it is stored in a `content` property fragment so needs special treatment.
 // Extra element in `phrasing`: command keygen
-// TODO: Add missing `data` and `template` logged in: TINY-10611
 //
 // Missing elements in `flow` compared to HTML5 spec at 2034-01-30 (timestamped since the spec is constantly evolving)
 //  search - Can be both in a block and inline position but is not a transparent element. So not supported at this time.
@@ -35,7 +35,7 @@ export const getElementSetsAsStrings = (type: SchemaType): ElementSets<string> =
   if (type !== 'html4') {
     const transparentContent = 'a ins del canvas map';
     blockContent += ' article aside details dialog figure main header footer hgroup section nav ' + transparentContent;
-    phrasingContent += ' audio canvas command datalist mark meter output picture ' +
+    phrasingContent += ' audio canvas command data datalist mark meter output picture ' +
       'progress time wbr video ruby bdi keygen svg';
   }
 

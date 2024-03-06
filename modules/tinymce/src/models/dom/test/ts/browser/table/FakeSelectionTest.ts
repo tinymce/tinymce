@@ -1,21 +1,36 @@
 import { Assertions, Keys } from '@ephox/agar';
-import { context, describe, it } from '@ephox/bedrock-client';
+import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Html, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import { TableSelectionChangeEvent } from 'tinymce/models/dom/table/api/Events';
 
 import * as TableTestUtils from '../../module/table/TableTestUtils';
 
 describe('browser.tinymce.models.dom.table.FakeSelectionTest', () => {
+  let tableSelectionChangeEvents: Array<EditorEvent<TableSelectionChangeEvent>> = [];
+  let tableSelectionClearEvents: Array<EditorEvent<void>> = [];
+
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     valid_styles: {
       '*': 'width,height,vertical-align,text-align,float,border-color,background-color,border,padding,border-spacing,border-collapse'
     },
-    base_url: '/project/tinymce/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce',
+    setup: (editor: Editor) => {
+      editor.on('TableSelectionChange', (e) => tableSelectionChangeEvents.push(e));
+      editor.on('TableSelectionClear', (e) => tableSelectionClearEvents.push(e));
+    }
   }, []);
+
+  afterEach(() => {
+    tableSelectionChangeEvents = [];
+    tableSelectionClearEvents = [];
+  });
 
   const simpleTable =
   '<table><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></table>';
@@ -35,10 +50,32 @@ describe('browser.tinymce.models.dom.table.FakeSelectionTest', () => {
     TableTestUtils.selectWithMouse(startTd, endTd);
   };
 
+  const assertTableSelectionChangeEvent = (editor: Editor, event: EditorEvent<TableSelectionChangeEvent>) => {
+    const cells = Arr.map(TableTestUtils.getSelectedCells(editor), (cell) => cell.dom);
+    const start = cells[0];
+    const finish = cells[cells.length - 1];
+
+    assert.strictEqual(event.type, 'tableselectionchange');
+    assert.strictEqual(event.start, start, 'start');
+    assert.strictEqual(event.finish, finish, 'finish');
+    assert.deepStrictEqual(event.cells, cells, 'cells');
+    assert.isNotEmpty(event.otherCells?.downOrRightCells, 'other cells (down or right)');
+    assert.isNotEmpty(event.otherCells?.upOrLeftCells, 'other cells (up or left)');
+  };
+
   const assertTableSelection = (editor: Editor, tableHtml: string, selectCells: [ string, string ], cellContents: string[]) => {
     editor.setContent(tableHtml);
     selectCellsWithMouse(editor, selectCells);
     TableTestUtils.assertSelectedCells(editor, cellContents, Html.get);
+
+    if (cellContents.length > 0 ) {
+      assert.lengthOf(tableSelectionChangeEvents, 1);
+      assertTableSelectionChangeEvent(editor, tableSelectionChangeEvents[0]);
+      assert.isNotEmpty(tableSelectionClearEvents);
+    } else {
+      assert.isEmpty(tableSelectionChangeEvents);
+      assert.isNotEmpty(tableSelectionClearEvents);
+    }
   };
 
   const assertSelectionContent = (editor: Editor, expectedHtml: string) => {

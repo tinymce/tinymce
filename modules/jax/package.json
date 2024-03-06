@@ -1,6 +1,6 @@
 {
   "name": "@ephox/jax",
-  "version": "7.0.9",
+  "version": "8.0.0",
   "description": "AJAX library",
   "repository": {
     "type": "git",
@@ -9,7 +9,7 @@
   },
   "scripts": {
     "prepublishOnly": "yarn run lint && yarn run build",
-    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts",
+    "lint": "eslint --config ../../.eslintrc.json --max-warnings=0 src/**/*.ts",
     "build": "tsc -b",
     "test": "bedrock-auto -b chrome-headless --customRoutes ../tinymce/src/core/test/json/routes.json -d src/test/ts/",
     "test-manual": "bedrock --customRoutes --customRoutes ../tinymce/src/core/test/json/routes.json -d src/test/ts/",
@@ -20,9 +20,9 @@
     "ajax"
   ],
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
-  "license": "MIT",
+  "license": "GPL-2.0-or-later",
   "dependencies": {
-    "@ephox/katamari": "^9.1.5"
+    "@ephox/katamari": "^10.0.0"
   },
   "files": [
     "lib/main",

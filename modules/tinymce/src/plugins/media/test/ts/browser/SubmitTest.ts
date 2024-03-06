@@ -14,21 +14,30 @@ describe('browser.tinymce.plugins.media.core.SubmitTest', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       plugins: [ 'media' ],
       toolbar: 'media',
-      base_url: '/project/tinymce/js/tinymce'
+      base_url: '/project/tinymce/js/tinymce',
+      sandbox_iframes_exclusions: []
     }, [ Plugin ]);
 
-    const mediaUrlResolver = (data: { url: string }, resolve: (data: { html: string }) => void) => {
-      setTimeout(() => {
-        resolve({
-          html: '<span id="fake">' + data.url + '</span>'
-        });
-      }, 500);
+    const mediaUrlResolver = (data: { url: string }) => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            html: '<span id="fake">' + data.url + '</span>'
+          });
+        }, 500);
+      });
     };
 
     const customEmbed =
     '<div style="left: 0px; width: 100%; height: 0px; position: relative; padding-bottom: 56.338%; max-width: 650px;">' +
     '<iframe src="https://www.youtube.com/embed/IcgmSRJHu_8"' +
     ' width="560" height="314" allowfullscreen="allowfullscreen">' +
+    '</iframe></div>';
+
+    const sandboxedCustomEmbed =
+    '<div style="left: 0px; width: 100%; height: 0px; position: relative; padding-bottom: 56.338%; max-width: 650px;">' +
+    '<iframe src="https://www.youtube.com/embed/IcgmSRJHu_8"' +
+    ' width="560" height="314" sandbox="" allowfullscreen="allowfullscreen">' +
     '</iframe></div>';
 
     const pTestResolvedEmbedContentSubmit = async (editor: Editor, url: string, expected: string) => {
@@ -78,16 +87,16 @@ describe('browser.tinymce.plugins.media.core.SubmitTest', () => {
       editor.options.unset('media_url_resolver');
       await pTestResolvedEmbedContentSubmit(editor,
         'https://www.youtube.com/watch?v=IcgmSRJHu_8',
-        '<p><iframe src="https://www.youtube.com/embed/IcgmSRJHu_8" width="560" height="314" allowfullscreen="allowfullscreen"></iframe></p>'
+        '<p><iframe src="https://www.youtube.com/embed/IcgmSRJHu_8" width="560" height="314" sandbox="" allowfullscreen="allowfullscreen"></iframe></p>'
       );
     });
 
     it('TBA: Open dialog, set embed content, submit dialog and assert content', async () => {
       const editor = hook.editor();
       editor.options.set('media_url_resolver', mediaUrlResolver);
-      await pTestManualEmbedContentSubmit(editor, customEmbed, customEmbed);
+      await pTestManualEmbedContentSubmit(editor, customEmbed, sandboxedCustomEmbed);
       editor.options.unset('media_url_resolver');
-      await pTestEmbedUnchangedAfterOpenCloseDialog(editor, customEmbed);
+      await pTestEmbedUnchangedAfterOpenCloseDialog(editor, sandboxedCustomEmbed);
     });
 
     it('TBA: Set audio_template_callback and embed content, submit dialog and assert content', async () => {
@@ -112,7 +121,7 @@ describe('browser.tinymce.plugins.media.core.SubmitTest', () => {
       // Any youtube link triggers iframe callback
       const editor = hook.editor();
       const iframeTemplateCallback = Fun.constant('<iframe id="template" title="testcallback" src="https://www.youtube.com/embed/IcgmSRJHu_8" width="500" height="300"></iframe>');
-      const expected = '<p><iframe id="template" title="testcallback" src="https://www.youtube.com/embed/IcgmSRJHu_8" width="500" height="300"></iframe></p>';
+      const expected = '<p><iframe id="template" title="testcallback" src="https://www.youtube.com/embed/IcgmSRJHu_8" width="500" height="300" sandbox=""></iframe></p>';
       await pTestTemplateCallbackContentSubmit(editor, 'iframe_template_callback', iframeTemplateCallback, 'https://www.youtube.com/embed/IcgmSRJHu_8', expected);
       await pTestEmbedUnchangedAfterOpenCloseDialog(editor, expected);
     });
@@ -123,6 +132,7 @@ describe('browser.tinymce.plugins.media.core.SubmitTest', () => {
       plugins: [ 'media' ],
       toolbar: 'media',
       base_url: '/project/tinymce/js/tinymce',
+      sandbox_iframes_exclusions: [],
       setup: (editor: Editor) => {
         editor.on('PreInit', () => {
           const converter = (nodes: AstNode[]): void => {
@@ -159,7 +169,7 @@ describe('browser.tinymce.plugins.media.core.SubmitTest', () => {
       await Utils.pSetHeightAndWidth(editor, '500', '700');
       await Utils.pAssertHeightAndWidth(editor, '500', '700');
       TinyUiActions.submitDialog(editor);
-      await Utils.pAssertEditorContent(editor, '<p><iframe src="https://www.youtube.com/embed/5auGeCM0knQ" width="700" height="500" allowfullscreen="allowfullscreen"></iframe></p>');
+      await Utils.pAssertEditorContent(editor, '<p><iframe src="https://www.youtube.com/embed/5auGeCM0knQ" width="700" height="500" sandbox="" allowfullscreen="allowfullscreen"></iframe></p>');
     });
   });
 });

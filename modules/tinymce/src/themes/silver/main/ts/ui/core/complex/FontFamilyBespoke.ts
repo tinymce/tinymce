@@ -13,7 +13,7 @@ import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import * as Tooltip from './utils/Tooltip';
 
 const menuTitle = 'Fonts';
-const btnTooltip = 'Font {0}';
+const getTooltipPlaceholder = Fun.constant('Font {0}');
 const systemFont = 'System Font';
 
 // A list of fonts that must be in a font family for the font to be recognised as the system stack
@@ -95,7 +95,7 @@ const getSpec = (editor: Editor): SelectSpec => {
   const dataset = buildBasicSettingsDataset(editor, 'font_family_formats', Delimiter.SemiColon);
 
   return {
-    tooltip: Tooltip.makeTooltipText(editor, btnTooltip, systemFont),
+    tooltip: Tooltip.makeTooltipText(editor, getTooltipPlaceholder(), systemFont),
     text: Optional.some(systemFont),
     icon: Optional.none(),
     isSelectedFor,
@@ -110,7 +110,7 @@ const getSpec = (editor: Editor): SelectSpec => {
 };
 
 const createFontFamilyButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
-  createSelectButton(editor, backstage, getSpec(editor), btnTooltip, 'FontFamilyTextUpdate', 'fontfamily');
+  createSelectButton(editor, backstage, getSpec(editor), getTooltipPlaceholder, 'FontFamilyTextUpdate', 'fontfamily');
 
 // TODO: Test this!
 const createFontFamilyMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {

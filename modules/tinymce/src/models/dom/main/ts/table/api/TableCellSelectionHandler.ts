@@ -1,5 +1,5 @@
 import { InputHandlers, Response, SelectionAnnotation, SelectionKeys, Selections, SelectionTypes } from '@ephox/darwin';
-import { Arr, Cell, Fun } from '@ephox/katamari';
+import { Arr, Cell, Fun, Obj } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
 import { OtherCells, TableFill, TableLookup } from '@ephox/snooker';
 import { Class, Compare, DomEvent, EventArgs, SelectionDirection, SimSelection, SugarElement, SugarNode, Direction } from '@ephox/sugar';
@@ -33,11 +33,14 @@ export const TableCellSelectionHandler = (editor: Editor, resizeHandler: TableRe
   const onSelection = (cells: SugarElement<HTMLTableCellElement>[], start: SugarElement<HTMLTableCellElement>, finish: SugarElement<HTMLTableCellElement>) => {
     const tableOpt = TableLookup.table(start);
     tableOpt.each((table) => {
+      const cellsDom = Arr.map(cells, (cell) => cell.dom);
       const cloneFormats = Options.getTableCloneElements(editor);
       const generators = TableFill.cellOperations(Fun.noop, SugarElement.fromDom(editor.getDoc()), cloneFormats);
       const selectedCells = getCellsFromSelection(editor);
-      const otherCells = OtherCells.getOtherCells(table, { selection: selectedCells }, generators);
-      Events.fireTableSelectionChange(editor, cells, start, finish, otherCells);
+      const otherCellsDom = OtherCells.getOtherCells(table, { selection: selectedCells }, generators)
+        .map((otherCells) => Obj.map(otherCells, (cellArr) => Arr.map(cellArr, (cell) => cell.dom)))
+        .getOrUndefined();
+      Events.fireTableSelectionChange(editor, cellsDom, start.dom, finish.dom, otherCellsDom);
     });
   };
 

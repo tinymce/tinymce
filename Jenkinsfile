@@ -3,8 +3,58 @@
 
 standardProperties()
 
-def runTests(String name, String bedrockCommand, Boolean runAll) {
-  // Clean out the old XML files before running tests, since we junit import *.XML files
+def runBedrockTest(String name, String command, Boolean runAll, int retry = 0, int timeout = 0) {
+  def bedrockCmd = command + (runAll ? " --ignore-lerna-changed=true" : "")
+  echo "Running Bedrock cmd: ${command}"
+  def testStatus = sh(script: command, returnStatus: true)
+  junit allowEmptyResults: true, testResults: 'scratch/TEST-*.xml'
+
+  if (testStatus == 4) {
+    unstable("Tests failed for ${name}")
+  } else if (testStatus != 0) {
+    if (retry > 0) {
+      echo "Running retry [${retry}] after [${timeout}]"
+      sleep(timeout)
+      runBedrockTest(name, command, runAll, retry - 1, timeout)
+    } else {
+      error("Unexpected error in ${name} ")
+    }
+  }
+}
+
+def runHeadlessTests(Boolean runAll) {
+  def bedrockCmd = "yarn grunt headless-auto"
+  runBedrockTest('headless', bedrockCmd, runAll)
+}
+
+def runRemoteTests(String name, String browser, String provider, String platform, String arn, String version, String bucket, String buckets, Boolean runAll, int retry = 0, int timeout = 0) {
+  def awsOpts = " --sishDomain=sish.osu.tiny.work --devicefarmArn=${arn}"
+  def platformName = platform != null ? " --platformName='${platform}'" : ""
+  def browserVersion = version != null ? " --browserVersion=${version}" : ""
+  def bedrockCommand =
+  "yarn browser-test" +
+    " --chunk=400" +
+    " --bedrock-browser=" + browser +
+    " --remote=" + provider +
+    " --bucket=" + bucket +
+    " --buckets=" + buckets +
+    " --name=" + name +
+    "${provider == 'aws' ? awsOpts : ''}" +
+    "${platformName}"
+    runBedrockTest(name, bedrockCommand, runAll, retry, timeout)
+}
+
+
+def runBrowserTests(String name, String browser, String platform, String bucket, String buckets, Boolean runAll) {
+  def bedrockCommand =
+    "yarn grunt browser-auto" +
+      " --chunk=400" +
+      " --bedrock-os=" + platform +
+      " --bedrock-browser=" + browser +
+      " --bucket=" + bucket +
+      " --buckets=" + buckets;
+
+  // Clean scratch dir for existing nodes
   dir('scratch') {
     if (isUnix()) {
       sh "rm -f *.xml"
@@ -12,36 +62,79 @@ def runTests(String name, String bedrockCommand, Boolean runAll) {
       bat "del *.xml"
     }
   }
+  runBedrockTest(name, bedrockCommand, runAll)
+}
 
-  def command = runAll ? bedrockCommand + ' --ignore-lerna-changed=true' : bedrockCommand
-  def testStatus = exec(script: command, returnStatus: true)
+def runTestPod(String cacheName, String name, String testname, String browser, String provider, String platform, String version, String bucket, String buckets, Boolean runAll) {
+  return {
+    bedrockRemoteTools.nodeConsumerPod(
+      nodeOpts: [
+        resourceRequestCpu: '2',
+        resourceRequestMemory: '4Gi',
+        resourceRequestEphemeralStorage: '16Gi',
+        resourceLimitCpu: '7',
+        resourceLimitMemory: '4Gi',
+        resourceLimitEphemeralStorage: '16Gi'
+      ],
+      build: cacheName,
+      useContainers: ['node', 'aws-cli']
+    ) {
 
-  echo "Writing JUnit results for ${name} on node: $NODE_NAME"
-  junit allowEmptyResults: true, testResults: 'scratch/TEST-*.xml'
-
-  // If the tests failed (exit code 4) then just mark it as unstable
-  if (testStatus == 4) {
-    unstable("Tests failed for ${name}")
-  } else if (testStatus != 0) {
-    error("Unexpected error running tests for ${name} so passing failure as exit code")
+      stage("${name}") {
+        grunt('list-changed-browser')
+        bedrockRemoteTools.withRemoteCreds(provider) {
+          int retry = 0
+          withCredentials([string(credentialsId: 'devicefarm-testgridarn', variable: 'DF_ARN')]) {
+            runRemoteTests(testname, browser, provider, platform, DF_ARN, version, bucket, buckets, runAll, retry, 180)
+          }
+        }
+      }
+    }
   }
 }
 
-def runBrowserTests(String name, String browser, String os, Integer bucket, Integer buckets, Boolean runAll) {
-  def bedrockCommand =
-    "yarn grunt browser-auto" +
-      " --chunk=400" +
-      " --bedrock-os=" + os +
-      " --bedrock-browser=" + browser +
-      " --bucket=" + bucket +
-      " --buckets=" + buckets;
+def runTestNode(String branch, String name, String browser, String platform, String bucket, String buckets, Boolean runAll) {
+  return {
+    stage(name) {
+      node("bedrock-${platform}") {
+        echo "Bedrock tests for ${name} on $NODE_NAME"
+        checkout(scm)
+        tinyGit.addAuthorConfig()
+        gitMerge(branch)
 
-  runTests(name, bedrockCommand, runAll);
+        // Clean and Install
+        exec("git clean -fdx modules scratch js dist")
+        yarnInstall()
+
+        exec("yarn ci")
+        echo "Running browser tests"
+        //(String name, String browser, String platform, String bucket, String buckets, Boolean runAll)
+        runBrowserTests(name, browser, platform, bucket, buckets, runAll)
+      }
+    }
+  }
 }
 
-def runHeadlessTests(Boolean runAll) {
-  def bedrockCommand = "yarn grunt headless-auto";
-  runTests("chrome-headless", bedrockCommand, runAll);
+def runHeadlessPod(String cacheName, Boolean runAll) {
+  return {
+    bedrockRemoteTools.nodeConsumerPod(
+      nodeOpts: [
+        resourceRequestCpu: '2',
+        resourceRequestMemory: '4Gi',
+        resourceRequestEphemeralStorage: '16Gi',
+        resourceLimitCpu: '7',
+        resourceLimitMemory: '4Gi',
+        resourceLimitEphemeralStorage: '16Gi'
+      ],
+      build: cacheName
+    ) {
+      stage("Headless-chrome") {
+        yarnInstall()
+        grunt('list-changed-headless')
+        runHeadlessTests(runAll)
+      }
+    }
+  }
 }
 
 def gitMerge(String primaryBranch) {
@@ -51,94 +144,40 @@ def gitMerge(String primaryBranch) {
   }
 }
 
-timestamps {
-  // TinyMCE builds need more CPU and RAM (especially eslint)
-  // NOTE: Ensure not to go over 7.5 CPU/RAM due to EC2 node sizes and the jnlp container requirements
-  tinyPods.nodeBrowser([
-    resourceRequestCpu: '6',
-    resourceRequestMemory: '4Gi',
-    resourceLimitCpu: '7.5',
-    resourceLimitMemory: '4Gi'
-  ]) {
-    def props = readProperties(file: 'build.properties')
+def cleanBuildName(String name) {
+  def parts = name.split('/')
+  return parts[parts.size() - 1]
+}
 
+def props
+
+def cacheName = "cache_${BUILD_TAG}"
+
+def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NUMBER}"
+
+timestamps {
+  bedrockRemoteTools.nodeProducerPod(
+    nodeOpts: [
+      resourceRequestCpu: '2',
+      resourceRequestMemory: '4Gi',
+      resourceRequestEphemeralStorage: '16Gi',
+      resourceLimitCpu: '7.5',
+      resourceLimitMemory: '4Gi',
+      resourceLimitEphemeralStorage: '16Gi'
+    ],
+    build: cacheName
+  ) {
+    props = readProperties(file: 'build.properties')
     String primaryBranch = props.primaryBranch
     assert primaryBranch != null && primaryBranch != ""
-    def runAllTests = env.BRANCH_NAME == primaryBranch
 
-    stage("Merge") {
+    stage('Merge') {
       // cancel build if primary branch doesn't merge cleanly
       gitMerge(primaryBranch)
     }
 
-    def platforms = [
-      [ os: "windows", browser: "chrome" ],
-      [ os: "windows", browser: "firefox" ],
-      [ os: "windows", browser: "MicrosoftEdge" ],
-      [ os: "macos", browser: "safari" ],
-      [ os: "macos", browser: "chrome" ],
-      [ os: "macos", browser: "firefox" ]
-    ]
-
-    def cleanAndInstall = {
-      echo "Installing tools"
-      exec("git clean -fdx modules scratch js dist")
+    stage('Install') {
       yarnInstall()
-    }
-
-    def processes = [:]
-
-    // Browser tests
-    for (int i = 0; i < platforms.size(); i++) {
-      def platform = platforms.get(i)
-
-      def buckets = platform.buckets ?: 1
-      for (int bucket = 1; bucket <= buckets; bucket++) {
-        def suffix = buckets == 1 ? "" : "-" + bucket
-
-        // closure variable - don't inline
-        def c_bucket = bucket
-
-        def name = "${platform.os}-${platform.browser}${suffix}"
-
-        processes[name] = {
-          stage(name) {
-            node("bedrock-${platform.os}") {
-              echo("Bedrock tests for ${name}")
-
-              echo("Checking out code on build node: $NODE_NAME")
-              checkout(scm)
-
-              // windows tends to not have username or email set
-              tinyGit.addAuthorConfig()
-              gitMerge(primaryBranch)
-
-              cleanAndInstall()
-              exec("yarn ci")
-
-              echo("Running browser tests")
-              runBrowserTests(name, platform.browser, platform.os, c_bucket, buckets, runAllTests)
-            }
-          }
-        }
-      }
-    }
-
-    processes["headless-and-archive"] = {
-      stage("headless tests") {
-        runHeadlessTests(runAllTests)
-      }
-
-      if (env.BRANCH_NAME != primaryBranch) {
-        stage("Archive Build") {
-          exec("yarn tinymce-grunt prodBuild symlink:js")
-          archiveArtifacts artifacts: 'js/**', onlyIfSuccessful: true
-        }
-      }
-    }
-
-    stage("Install tools") {
-      cleanAndInstall()
     }
 
     stage("Validate changelog") {
@@ -146,20 +185,64 @@ timestamps {
       exec("yarn changie-merge")
     }
 
-    stage("Type check") {
+    stage('Type check') {
       withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
         exec("yarn ci-all-seq")
       }
     }
 
-    stage("Moxiedoc check") {
+    stage('Moxiedoc check') {
       exec("yarn tinymce-grunt shell:moxiedoc")
     }
+  }
 
-    stage("Run Tests") {
-      grunt("list-changed-headless list-changed-browser")
-      // Run all the tests in parallel
-      parallel processes
+  // Local nodes use os: windows | macos; Remote tests use os full name e.g.: macOS Sonoma
+  def platforms = [
+    // Local tests
+    // [ browser: 'edge', os: 'windows' ],
+    // [ browser: 'firefox', os: 'macos' ],
+    // Remote tests
+    [ browser: 'chrome', provider: 'aws', buckets: 2 ],
+    // [ browser: 'edge', provider: 'aws', buckets: 2 ], // TINY-10540: Investigate Edge issues in AWS
+    [ browser: 'firefox', provider: 'aws', buckets: 2 ],
+    [ browser: 'edge', provider: 'lambdatest', buckets: 1 ],
+    [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ],
+    [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ],
+    // [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1, version: '17' ], // TINY-10639: Investigate Safari 17 issues
+    [ browser: 'safari', provider: 'lambdatest', os: 'macOS Monterey', buckets: 1, version: '15' ],
+  ];
+
+  def processes = [:]
+  def runAllTests = env.BRANCH_NAME == props.primaryBranch
+
+  for (int i = 0; i < platforms.size(); i++) {
+    def platform = platforms.get(i)
+    def buckets = platform.buckets ?: 1
+    for (int bucket = 1; bucket <= buckets; bucket ++) {
+      def suffix = buckets == 1 ? "" : "-" + bucket + "-" + buckets
+      def os = String.valueOf(platform.os).startsWith('mac') ? 'Mac' : 'Win'
+      def browserVersion = platform.version ? "-${platform.version}" : ""
+      def s_bucket = "${bucket}"
+      def s_buckets = "${buckets}"
+      if (platform.provider) {
+        // use remote
+        def name = "${os}-${platform.browser}${browserVersion}-${platform.provider}${suffix}"
+        def testName = "${env.BUILD_NUMBER}-${os}-${platform.browser}"
+        processes[name] = runTestPod(cacheName, name, "${testPrefix}_${testName}", platform.browser, platform.provider, platform.os, platform.version, s_bucket, s_buckets, runAllTests)
+      } else {
+        // use local
+        def name = "${os}-${platform.browser}"
+        processes[name] = runTestNode(props.primaryBranch, name, platform.browser, platform.os, s_bucket, s_buckets, runAllTests)
+      }
     }
   }
+
+  processes['headless'] = runHeadlessPod(cacheName, runAllTests)
+
+  stage('Run tests') {
+      echo "Running tests [runAll=${runAllTests}]"
+      parallel processes
+  }
+
+  bedrockRemoteTools.cleanUpPod(cacheName)
 }

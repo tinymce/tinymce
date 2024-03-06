@@ -1,9 +1,7 @@
 import { Cell, Fun, Obj, Optional, Type } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
 
 import Editor from './api/Editor';
 import Formatter from './api/Formatter';
-import * as AutocompleteTag from './autocomplete/AutocompleteTag';
 import { Content, ContentFormat, GetContentArgs, GetSelectionContentArgs, SetContentArgs, SetContentResult, InsertContentDetails } from './content/ContentTypes';
 import { getContentInternal } from './content/GetContentImpl';
 import { insertHtmlAtCaret } from './content/InsertContentImpl';
@@ -173,8 +171,8 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
     getContent: (format, args) => getSelectedContentInternal(editor, format, args)
   },
   autocompleter: {
-    addDecoration: (range: Range) => AutocompleteTag.create(editor, range),
-    removeDecoration: () => AutocompleteTag.remove(editor, SugarElement.fromDom(editor.getBody()))
+    addDecoration: Fun.noop, // This was never fully implemented in RTC
+    removeDecoration: Fun.noop, // This was never fully implemented in RTC
   },
   raw: {
     getModel: () => Optional.none()

@@ -41,7 +41,6 @@
       "tinymce/plugins/save/*": ["modules/tinymce/src/plugins/save/main/ts/*"],
       "tinymce/plugins/searchreplace/*": ["modules/tinymce/src/plugins/searchreplace/main/ts/*"],
       "tinymce/plugins/table/*": ["modules/tinymce/src/plugins/table/main/ts/*"],
-      "tinymce/plugins/template/*": ["modules/tinymce/src/plugins/template/main/ts/*"],
       "tinymce/plugins/visualblocks/*": ["modules/tinymce/src/plugins/visualblocks/main/ts/*"],
       "tinymce/plugins/visualchars/*": ["modules/tinymce/src/plugins/visualchars/main/ts/*"],
       "tinymce/plugins/wordcount/*": ["modules/tinymce/src/plugins/wordcount/main/ts/*"],

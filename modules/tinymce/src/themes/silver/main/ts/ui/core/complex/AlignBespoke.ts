@@ -12,7 +12,7 @@ import { buildBasicStaticDataset } from './SelectDatasets';
 import * as Tooltip from './utils/Tooltip';
 
 const menuTitle = 'Align';
-const btnTooltip = 'Alignment {0}';
+const getTooltipPlaceholder = Fun.constant('Alignment {0}');
 const fallbackAlignment = 'left';
 
 const alignMenuItems = [
@@ -45,7 +45,7 @@ const getSpec = (editor: Editor): SelectSpec => {
       .each((item) => editor.execCommand(item.command));
 
   return {
-    tooltip: Tooltip.makeTooltipText(editor, btnTooltip, fallbackAlignment),
+    tooltip: Tooltip.makeTooltipText(editor, getTooltipPlaceholder(), fallbackAlignment),
     text: Optional.none(),
     icon: Optional.some('align-left'),
     isSelectedFor,
@@ -60,7 +60,7 @@ const getSpec = (editor: Editor): SelectSpec => {
 };
 
 const createAlignButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec =>
-  createSelectButton(editor, backstage, getSpec(editor), btnTooltip, 'AlignTextUpdate', 'align');
+  createSelectButton(editor, backstage, getSpec(editor), getTooltipPlaceholder, 'AlignTextUpdate', 'align');
 
 const createAlignMenu = (editor: Editor, backstage: UiFactoryBackstage): void => {
   const menuItems = createMenuItems(backstage, getSpec(editor));

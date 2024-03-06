@@ -21,8 +21,10 @@ describe('browser.tinymce.themes.silver.editor.TooltipShortcutTest', () => {
   const os = PlatformDetection.detect().os;
 
   const meta = os.isMacOS() || os.isiOS() ? '\u2318' : 'Ctrl+';
+  const ctrl = os.isMacOS() || os.isiOS() ? '\u2303' : 'Ctrl+';
   const shift = os.isMacOS() || os.isiOS() ? '\u21E7' : 'Shift+';
   const alt = os.isMacOS() || os.isiOS() ? '\u2325' : 'Alt+';
+  const headingShortcut = os.isMacOS() || os.isiOS() ? `${ctrl}${alt}` : `${shift}${alt}`;
 
   Arr.each([
     { button: 'bold', expectedTooltip: `Bold (${meta}B)` },
@@ -31,12 +33,12 @@ describe('browser.tinymce.themes.silver.editor.TooltipShortcutTest', () => {
     { button: 'selectall', expectedTooltip: `Select all (${meta}A)` },
     { button: 'redo', expectedTooltip: `Redo (${meta}Y)` },
     { button: 'undo', expectedTooltip: `Undo (${meta}Z)` },
-    { button: 'h1', expectedTooltip: `Heading 1 (${alt}${shift}1)` },
-    { button: 'h2', expectedTooltip: `Heading 2 (${alt}${shift}2)` },
-    { button: 'h3', expectedTooltip: `Heading 3 (${alt}${shift}3)` },
-    { button: 'h4', expectedTooltip: `Heading 4 (${alt}${shift}4)` },
-    { button: 'h5', expectedTooltip: `Heading 5 (${alt}${shift}5)` },
-    { button: 'h6', expectedTooltip: `Heading 6 (${alt}${shift}6)` },
+    { button: 'h1', expectedTooltip: `Heading 1 (${headingShortcut}1)` },
+    { button: 'h2', expectedTooltip: `Heading 2 (${headingShortcut}2)` },
+    { button: 'h3', expectedTooltip: `Heading 3 (${headingShortcut}3)` },
+    { button: 'h4', expectedTooltip: `Heading 4 (${headingShortcut}4)` },
+    { button: 'h5', expectedTooltip: `Heading 5 (${headingShortcut}5)` },
+    { button: 'h6', expectedTooltip: `Heading 6 (${headingShortcut}6)` },
     { button: 'link', expectedTooltip: `Insert/edit link (${meta}K)` },
     { button: 'save', expectedTooltip: `Save (${meta}S)` },
     { button: 'searchreplace', expectedTooltip: `Find and replace (${meta}F)` },

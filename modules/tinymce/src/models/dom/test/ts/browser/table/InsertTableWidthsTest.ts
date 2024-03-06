@@ -23,7 +23,7 @@ describe('browser.tinymce.models.dom.table.InsertTableWidthsTest', () => {
       });
 
       const assertTableWidth = (label: string, editor: Editor, table: HTMLTableElement, expectedWidth: number, diff: number = 1) => {
-        const widths = TableTestUtils.getWidths(editor, table);
+        const widths = TableTestUtils.getWidthData(editor, table);
         assert.approximately(widths.px, expectedWidth, diff, label);
       };
 
