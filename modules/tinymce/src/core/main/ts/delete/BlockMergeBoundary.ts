@@ -1,5 +1,5 @@
-import { Optional, Optionals } from '@ephox/katamari';
-import { Compare, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
+import { Fun, Optional, Optionals } from '@ephox/katamari';
+import { Compare, PredicateExists, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Schema from '../api/html/Schema';
 import * as CaretFinder from '../caret/CaretFinder';
@@ -35,6 +35,9 @@ const getBlockPosition = (rootNode: HTMLElement, pos: CaretPosition): Optional<B
   const containerElm = SugarElement.fromDom(pos.container());
   return DeleteUtils.getParentBlock(rootElm, containerElm).map((block) => blockPosition(block, pos));
 };
+
+const isNotAncestorial = (blockBoundary: BlockBoundary) =>
+  !PredicateExists.ancestor(blockBoundary.to.block, Fun.curry(Compare.eq, blockBoundary.from.block));
 
 const isDifferentBlocks = (blockBoundary: BlockBoundary): boolean =>
   !Compare.eq(blockBoundary.from.block, blockBoundary.to.block);
@@ -81,7 +84,7 @@ const readFromRange = (schema: Schema, rootNode: HTMLElement, forward: boolean, 
   );
 
   return Optionals.lift2(fromBlockPos, toBlockPos, blockBoundary).filter((blockBoundary) =>
-    isDifferentBlocks(blockBoundary) && hasSameHost(rootNode, blockBoundary) && isEditable(blockBoundary) && hasValidBlocks(blockBoundary));
+    isDifferentBlocks(blockBoundary) && hasSameHost(rootNode, blockBoundary) && isEditable(blockBoundary) && hasValidBlocks(blockBoundary) && isNotAncestorial(blockBoundary));
 };
 
 const read = (schema: Schema, rootNode: HTMLElement, forward: boolean, rng: Range): Optional<BlockBoundary> =>
