@@ -16,7 +16,7 @@ describe('atomic.tinymce.core.schema.SchemaLookupTableTest', () => {
     'draggable', 'dropzone', 'hidden', 'spellcheck', 'translate', 'xml:lang', 'accept', 'alt', 'autocomplete',
     'checked', 'dirname', 'disabled', 'form', 'formaction', 'formenctype', 'formmethod', 'formnovalidate',
     'formtarget', 'height', 'list', 'max', 'maxlength', 'min', 'multiple', 'name', 'pattern', 'readonly',
-    'required', 'size', 'src', 'step', 'type', 'value', 'width', 'usemap', 'align', 'autofocus', 'placeholder'
+    'required', 'size', 'src', 'step', 'type', 'value', 'width', 'usemap', 'align', 'autofocus', 'placeholder', 'itemprop', 'itemscope', 'itemtype'
   ]));
 
   it('HTML5-strict lookup table', () => testSchemaInputElementAttributes('html5-strict', [
@@ -24,7 +24,7 @@ describe('atomic.tinymce.core.schema.SchemaLookupTableTest', () => {
     'draggable', 'dropzone', 'hidden', 'spellcheck', 'translate', 'accept', 'alt', 'autocomplete', 'checked',
     'dirname', 'disabled', 'form', 'formaction', 'formenctype', 'formmethod', 'formnovalidate', 'formtarget',
     'height', 'list', 'max', 'maxlength', 'min', 'multiple', 'name', 'pattern', 'readonly', 'required',
-    'size', 'src', 'step', 'type', 'value', 'width', 'autofocus', 'placeholder'
+    'size', 'src', 'step', 'type', 'value', 'width', 'autofocus', 'placeholder', 'itemprop', 'itemscope', 'itemtype'
   ]));
 
   it('HTML4 lookup table', () => testSchemaInputElementAttributes('html4', [
