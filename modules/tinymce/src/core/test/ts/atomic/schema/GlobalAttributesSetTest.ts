@@ -20,7 +20,7 @@ describe('atomic.tinymce.core.schema.GlobalAttributesSetTest', () => {
     type: 'html5',
     expected: [
       'id', 'accesskey', 'class', 'dir', 'lang', 'style', 'tabindex', 'title', 'role', 'contenteditable', 'contextmenu',
-      'draggable', 'dropzone', 'hidden', 'spellcheck', 'translate', 'xml:lang', 'itemprop', 'itemscope', 'itemtype'
+      'draggable', 'dropzone', 'hidden', 'spellcheck', 'translate', 'itemprop', 'itemscope', 'itemtype', 'xml:lang'
     ]
   }));
 

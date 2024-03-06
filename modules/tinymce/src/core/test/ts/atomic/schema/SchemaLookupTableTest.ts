@@ -13,18 +13,18 @@ describe('atomic.tinymce.core.schema.SchemaLookupTableTest', () => {
 
   it('HTML5 lookup table', () => testSchemaInputElementAttributes('html5', [
     'id', 'accesskey', 'class', 'dir', 'lang', 'style', 'tabindex', 'title', 'role', 'contenteditable', 'contextmenu',
-    'draggable', 'dropzone', 'hidden', 'spellcheck', 'translate', 'xml:lang', 'accept', 'alt', 'autocomplete',
+    'draggable', 'dropzone', 'hidden', 'spellcheck', 'translate', 'itemprop', 'itemscope', 'itemtype', 'xml:lang', 'accept', 'alt', 'autocomplete',
     'checked', 'dirname', 'disabled', 'form', 'formaction', 'formenctype', 'formmethod', 'formnovalidate',
     'formtarget', 'height', 'list', 'max', 'maxlength', 'min', 'multiple', 'name', 'pattern', 'readonly',
-    'required', 'size', 'src', 'step', 'type', 'value', 'width', 'usemap', 'align', 'autofocus', 'placeholder', 'itemprop', 'itemscope', 'itemtype'
+    'required', 'size', 'src', 'step', 'type', 'value', 'width', 'usemap', 'align', 'autofocus', 'placeholder'
   ]));
 
   it('HTML5-strict lookup table', () => testSchemaInputElementAttributes('html5-strict', [
     'id', 'accesskey', 'class', 'dir', 'lang', 'style', 'tabindex', 'title', 'role', 'contenteditable', 'contextmenu',
-    'draggable', 'dropzone', 'hidden', 'spellcheck', 'translate', 'accept', 'alt', 'autocomplete', 'checked',
+    'draggable', 'dropzone', 'hidden', 'spellcheck', 'translate', 'itemprop', 'itemscope', 'itemtype', 'accept', 'alt', 'autocomplete', 'checked',
     'dirname', 'disabled', 'form', 'formaction', 'formenctype', 'formmethod', 'formnovalidate', 'formtarget',
     'height', 'list', 'max', 'maxlength', 'min', 'multiple', 'name', 'pattern', 'readonly', 'required',
-    'size', 'src', 'step', 'type', 'value', 'width', 'autofocus', 'placeholder', 'itemprop', 'itemscope', 'itemtype'
+    'size', 'src', 'step', 'type', 'value', 'width', 'autofocus', 'placeholder'
   ]));
 
   it('HTML4 lookup table', () => testSchemaInputElementAttributes('html4', [
