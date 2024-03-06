@@ -17,9 +17,13 @@
 
 .tox {
   .tox-revisionhistory__pane {
+    padding: 0 !important;      /* Override the default padding of tox-view__pane */
+  }
+
+  .tox-revisionhistory__container {
     display: flex;
     flex-direction: column;
-    padding: 0 !important;      /* Override the default padding of tox-view__pane */
+    height: 100%;
   }
 
   .tox-revisionhistory {
