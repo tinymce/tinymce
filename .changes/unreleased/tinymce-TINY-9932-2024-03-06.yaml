@@ -1,6 +1,6 @@
 project: tinymce
 kind: Improved
-body: Included itemprop, itemscope, itemtype as valid HTML5 element
+body: Included itemprop, itemscope, itemtype as valid HTML5 attributes.
 time: 2024-03-06T15:55:10.739553+11:00
 custom:
   Issue: TINY-9932
