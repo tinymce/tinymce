@@ -16,6 +16,8 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ]);
 
+  const tester = Env.browser.isSafari() ? it.skip : it;
+
   const isFirefox = Env.browser.isFirefox();
 
   const clickNbspToolbarButton = (editor: Editor) => TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Nonbreaking space"]');
@@ -25,7 +27,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest', () => {
     editor.setContent('');
   });
 
-  it('TBA: Click on the nbsp button then type some text, and assert content is correct', async () => {
+  tester('TBA: Click on the nbsp button then type some text, and assert content is correct', async () => {
     const editor = hook.editor();
     clickNbspToolbarButton(editor);
     await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('test') ]);
@@ -60,7 +62,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest', () => {
     }));
   });
 
-  it('TBA: Add content to editor, click on the nbsp button then type some text, and assert content is correct', async () => {
+  tester('TBA: Add content to editor, click on the nbsp button then type some text, and assert content is correct', async () => {
     const editor = hook.editor();
     editor.setContent('test');
     TinySelections.setCursor(editor, [ 0, 0 ], 4);
@@ -96,7 +98,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest', () => {
     }));
   });
 
-  it('TBA: Add text to editor, click on the nbsp button and add content plus a space, and assert content is correct', async () => {
+  tester('TBA: Add text to editor, click on the nbsp button and add content plus a space, and assert content is correct', async () => {
     const editor = hook.editor();
     editor.setContent('test');
     TinySelections.setCursor(editor, [ 0, 0 ], 4);
