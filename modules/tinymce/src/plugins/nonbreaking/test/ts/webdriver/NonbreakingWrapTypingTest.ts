@@ -16,6 +16,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () =
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ]);
 
+  // TINY-10737: Investigate these failures on Safari
   const tester = Env.browser.isSafari() ? it.skip : it;
 
   const isFirefox = Env.browser.isFirefox();
