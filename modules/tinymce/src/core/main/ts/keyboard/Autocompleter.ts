@@ -32,13 +32,14 @@ const setupEditorInput = (editor: Editor, api: AutocompleterApi) => {
       update.throttle();
     // Pressing <esc> closes the autocompleter
     } else if (keyCode === 27) {
+      update.cancel(); // We need to cancel here since Esc cancels the IME composition and triggers an input event
       api.cancelIfNecessary();
     } else if (keyCode === 38 || keyCode === 40) {
       // Arrow up and down keys needs to cancel the update since while composing arrow up or down will end the compose and issue a input event
       // that causes the list to update and then the focus moves up to the first item in the auto completer list.
       update.cancel();
     }
-  });
+  }, true); // Need to add this to the top so that it exectued before the silver keyboard event
 
   editor.on('remove', update.cancel);
 };
@@ -58,8 +59,7 @@ export const setup = (editor: Editor): void => {
   };
 
   const commenceIfNecessary = (context: AutocompleteContext) => {
-    /* Autocompleter works by moving the content into a newly generated element. When combined with composing this creates issues where unexpected data input and visual issues */
-    if (!isActive() && !editor.composing) {
+    if (!isActive()) {
       // store the element/context
       activeAutocompleter.set({
         trigger: context.trigger,
