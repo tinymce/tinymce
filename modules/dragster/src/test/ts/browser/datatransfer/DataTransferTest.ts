@@ -221,15 +221,8 @@ describe('browser.dragster.datatransfer.DataTransferTest', () => {
       assert.strictEqual(transfer.files.length, 2, 'Should have same number of files');
 
       transfer.clearData();
-      if (isFirefox || isSafari) {
-        // Firefox & Safari follows the spec where clearData does not remove files
-        // https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/clearData
-        assert.deepEqual(transfer.types, [ 'Files' ], 'Should have Files type remaining');
-        assert.strictEqual(transfer.files.length, 2, 'Files should not have been cleared');
-      } else {
-        assert.strictEqual(transfer.types.length, 0, 'Should have no types');
-        assert.strictEqual(transfer.files.length, 0, 'Should have no files');
-      }
+      assert.deepEqual(transfer.types, [ 'Files' ], 'Should have Files type remaining');
+      assert.strictEqual(transfer.files.length, 2, 'Files should not have been cleared');
     });
   });
 });
