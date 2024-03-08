@@ -12,6 +12,7 @@ describe('browser.dragster.datatransfer.DataTransferTest', () => {
   const browser = PlatformDetection.detect().browser;
   const isSafari = browser.isSafari();
   const isFirefox = browser.isFirefox();
+  const isChromium = browser.isChromium();
   const isEdge = browser.isEdge();
 
   const testFile1 = new window.File([ 'Lorem ipsum' ], 'file1.txt', { type: 'text/plain', lastModified: 123 });
@@ -225,12 +226,10 @@ describe('browser.dragster.datatransfer.DataTransferTest', () => {
       if (isEdge) {
         assert.strictEqual(transfer.types.length, 0, 'Should have no types');
         assert.strictEqual(transfer.files.length, 0, 'Should have no files');
-      } else {
-        if (isFirefox || isSafari) {
-          // Firefox & Safari follows the spec where clearData does not remove files
-          // https://developer.mozilla.org/en-us/docs/Web/API/DataTransfer/clearData
-          assert.deepEqual(transfer.types, [ 'Files' ], 'Should have Files type remaining');
-        }
+      } else if (isFirefox || isSafari || isChromium) {
+        // Firefox, Chrome & Safari follows the spec where clearData does not remove files
+        // https://developer.mozilla.org/en-us/docs/Web/API/DataTransfer/clearData
+        assert.deepEqual(transfer.types, [ 'Files' ], 'Should have Files type remaining');
         assert.strictEqual(transfer.files.length, 2, 'Files should not have been cleared');
       }
     });
