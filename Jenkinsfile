@@ -208,7 +208,7 @@ timestamps {
     [ browser: 'edge', provider: 'lambdatest', buckets: 1 ],
     [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ],
     [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ],
-    [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1, version: '17' ]
+    [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ]
   ];
 
   def processes = [:]
