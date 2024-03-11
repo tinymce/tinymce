@@ -839,7 +839,6 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       editor.setContent('<p>initial</p>');
       TinySelections.setCursor(editor, [ 0 ], 0);
       editor.insertContent('<!--\ufeff><iframe onload=alert(document.domain)>-></body>-->');
-      // TINY-10305: Safari escapes text nodes within <iframe>.
       TinyAssertions.assertRawContent(editor, '<p><!---->initial</p>');
     });
   });

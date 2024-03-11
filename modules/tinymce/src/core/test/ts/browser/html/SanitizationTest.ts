@@ -18,14 +18,12 @@ describe('browser.tinymce.core.html.SanitizationTest', () => {
 
     it('Sanitize iframe HTML', () => testHtmlSanitizer({
       input: '<iframe src="x"><script>alert(1)</script></iframe><iframe src="javascript:alert(1)"></iframe>',
-      // Safari seems to encode the contents of iframes
       expected: '<iframe></iframe>',
       mimeType: 'text/html'
     }));
 
     it('Disabled sanitization of iframe HTML', () => testHtmlSanitizer({
       input: '<iframe src="x"><script>alert(1)</script></iframe><iframe src="javascript:alert(1)"></iframe>',
-      // Safari seems to encode the contents of iframes
       expected: '<iframe src="x"><script>alert(1)</script></iframe><iframe></iframe>',
       mimeType: 'text/html',
       sanitize: false
