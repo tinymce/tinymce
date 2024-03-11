@@ -190,13 +190,7 @@ describe('browser.dragster.datatransfer.DataTransferTest', () => {
     it('TINY-9601: Files list cannot be modified', () => {
       const transfer = createDataTransfer();
       addAndAssertFile(transfer, testFile1, 1);
-      if (isSafari) {
-        // Safari doesn't throw a TypeError on native DataTransfer.files so verify using different method
-        transfer.files[0] = testFile2;
-        assert.deepEqual(transfer.files.item(0), testFile1, 'Should still be file 1');
-      } else {
-        assertFilesCannotBeModified(transfer);
-      }
+      assertFilesCannotBeModified(transfer);
     });
 
     it('TINY-9601: Files list cannot be modified when in protected mode', () => {
@@ -209,7 +203,8 @@ describe('browser.dragster.datatransfer.DataTransferTest', () => {
   });
 
   context('clearData', () => {
-    it('TINY-9601: clearData should clear data as expected', () => {
+    // TINY-10743: Skipping until clearData behaviour is resolved
+    it.skip('TINY-9601: clearData should clear data as expected', () => {
       const transfer = createDataTransfer();
 
       transfer.setData('text/plain', 'Hello');

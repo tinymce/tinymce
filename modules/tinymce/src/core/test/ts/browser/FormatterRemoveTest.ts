@@ -1,4 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
 import { LegacyUnit, TinyApis, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -8,6 +9,8 @@ import { ZWSP } from 'tinymce/core/text/Zwsp';
 import * as KeyUtils from '../module/test/KeyUtils';
 
 describe('browser.tinymce.core.FormatterRemoveTest', () => {
+  const browser = PlatformDetection.detect().browser;
+
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     extended_valid_elements: 'b[style],i,span[style|contenteditable|class]',
@@ -70,7 +73,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
     assert.equal(getContent(editor), '<p><span style="color: #ff0000; font-weight: bold;">' +
-      '<em>1</em></span><span style="color: rgb(255, 0, 0);"><em>23</em></span>' +
+      '<em>1</em></span><span style="color: #ff0000;"><em>23</em></span>' +
       '<span style=\"color: #ff0000; font-weight: bold;\"><em>4' +
       '</em></span></p>', 'Inline element style where element is format root');
   });
@@ -109,7 +112,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.selection.setRng(rng);
     editor.formatter.remove('format');
     assert.equal(getContent(editor), '<p><span style="font-weight: bold;"><em><span style="color: #ff0000; font-weight: bold;">12</span>' +
-      '</em></span><em><span style="color: rgb(255, 0, 0);">34</span></em></p>', 'Partially selected inline element text with complex children');
+      '</em></span><em><span style="color: #ff0000;">34</span></em></p>', 'Partially selected inline element text with complex children');
   });
 
   it('Inline elements with exact flag', () => {
@@ -372,7 +375,14 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.setContent(initialContent);
     LegacyUnit.setSelection(editor, 'p:nth-child(2) b', 0, 'p:last-of-type b', 3);
     editor.formatter.remove('format');
-    TinyAssertions.assertContent(editor, initialContent);
+    if (browser.isSafari()) {
+      // Safari 17 will not select the non-editable content
+      // Selection only covers editable "def" and removes format correctly
+      const expectedContent = '<p>abc</p><p>def</p><p contenteditable="false"><b>ghj</b></p>';
+      TinyAssertions.assertContent(editor, expectedContent);
+    } else {
+      TinyAssertions.assertContent(editor, initialContent);
+    }
   });
 
   it('contentEditable: true inside contentEditable: false', () => {

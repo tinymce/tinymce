@@ -11,7 +11,7 @@ import { GeomRect } from '../geom/Rect';
 import Entities from '../html/Entities';
 import Schema from '../html/Schema';
 import Styles, { StyleMap } from '../html/Styles';
-import { ForceHexColor, URLConverter } from '../OptionTypes';
+import { URLConverter } from '../OptionTypes';
 import { MappedEvent } from '../util/EventDispatcher';
 import Tools from '../util/Tools';
 import EventUtils, { EventUtilsCallback } from './EventUtils';
@@ -64,7 +64,6 @@ export interface DOMUtilsSettings {
   onSetAttrib: (event: SetAttribEvent) => void;
   contentCssCors: boolean;
   referrerPolicy: ReferrerPolicy;
-  force_hex_color: ForceHexColor;
 }
 
 export type Target = Node | Window;
@@ -339,7 +338,6 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   const styles = Styles({
     url_converter: settings.url_converter,
     url_converter_scope: settings.url_converter_scope,
-    force_hex_color: settings.force_hex_color,
   }, settings.schema);
 
   const events = settings.ownEvents ? new EventUtils() : EventUtils.Event;

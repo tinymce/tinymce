@@ -16,7 +16,7 @@ const registry = (): Registry.Registry => {
      * Emoticons and Charmap use an autocompleter.
      * <br>
      * For information on creating an autocompleter, see:
-     * <a href="https://www.tiny.cloud/docs/tinymce/6/autocompleter/">
+     * <a href="https://www.tiny.cloud/docs/tinymce/7/autocompleter/">
      * UI Components - Autocompleter</a>.
      *
      * @method addAutocompleter
@@ -30,7 +30,7 @@ const registry = (): Registry.Registry => {
      * via keyboard navigation controls.
      * <br>
      * For information on creating a basic toolbar button, see:
-     * <a href="https://www.tiny.cloud/docs/tinymce/6/custom-basic-toolbar-button/">
+     * <a href="https://www.tiny.cloud/docs/tinymce/7/custom-basic-toolbar-button/">
      * UI Components - Types of toolbar buttons: Basic button</a>.
      *
      * @method addButton
@@ -48,7 +48,7 @@ const registry = (): Registry.Registry => {
      * contextual input form appears allowing for quick changes to the url field.
      * <br>
      * For information on creating context forms, see:
-     * <a href="https://www.tiny.cloud/docs/tinymce/6/contextform/">
+     * <a href="https://www.tiny.cloud/docs/tinymce/7/contextform/">
      * UI Components - Context forms</a>.
      *
      * @method addContextForm
@@ -62,7 +62,7 @@ const registry = (): Registry.Registry => {
      * for example, the cursor is inside a table.
      * <br>
      * For information on creating context menus, see:
-     * <a href="https://www.tiny.cloud/docs/tinymce/6/contextmenu/">
+     * <a href="https://www.tiny.cloud/docs/tinymce/7/contextmenu/">
      * UI Components - Context Menu</a>.
      *
      * @method addContextMenu
@@ -105,7 +105,7 @@ const registry = (): Registry.Registry => {
      * addNestedMenuItem or addToggleMenuItem.
      * <br>
      * For information on creating a toolbar menu button, see:
-     * <a href="https://www.tiny.cloud/docs/tinymce/6/custom-menu-toolbar-button/">
+     * <a href="https://www.tiny.cloud/docs/tinymce/7/custom-menu-toolbar-button/">
      * UI Components - Types of toolbar buttons: Menu button</a>.
      *
      * @method addMenuButton
@@ -119,7 +119,7 @@ const registry = (): Registry.Registry => {
      * via keyboard navigation controls.
      * <br>
      * For information on creating a basic menu item, see:
-     * <a href="https://www.tiny.cloud/docs/tinymce/6/creating-custom-menu-items/">
+     * <a href="https://www.tiny.cloud/docs/tinymce/7/creating-custom-menu-items/">
      * UI Components - Custom menu items: Basic menu items</a>.
      *
      * @method addMenuItem
@@ -134,7 +134,7 @@ const registry = (): Registry.Registry => {
      * created by addMenuItem, addNestedMenuItem or addToggleMenuItem.
      * <br>
      * For information on creating a nested menu item, see:
-     * <a href="https://www.tiny.cloud/docs/tinymce/6/custom-nested-menu-items/">
+     * <a href="https://www.tiny.cloud/docs/tinymce/7/custom-nested-menu-items/">
      * UI Components - Custom menu items: Nested menu items</a>.
      *
      * @method addNestedMenuItem
@@ -153,7 +153,7 @@ const registry = (): Registry.Registry => {
      * sidebar for its Ui components.
      * <br>
      * For information on creating a custom sidebar, see:
-     * <a href="https://www.tiny.cloud/docs/tinymce/6/customsidebar/">
+     * <a href="https://www.tiny.cloud/docs/tinymce/7/customsidebar/">
      * UI Components - Custom sidebar</a>.
      *
      * @method addSidebar
@@ -163,11 +163,11 @@ const registry = (): Registry.Registry => {
     addSidebar: bridge.addSidebar,
 
     /**
-     * Registers a new split button for the toolbar. The advanced list plugin uses
+     * Registers a new split button for the toolbar. The list styles plugin uses
      * a split button to simplify its functionality.
      * <br>
      * For information on creating a split toolbar button, see:
-     * <a href="https://www.tiny.cloud/docs/tinymce/6/custom-split-toolbar-button/">
+     * <a href="https://www.tiny.cloud/docs/tinymce/7/custom-split-toolbar-button/">
      * UI Components - Types of toolbar buttons: Split button</a>.
      *
      * @method addSplitButton
@@ -181,7 +181,7 @@ const registry = (): Registry.Registry => {
      * be set in the configuration.
      * <br>
      * For information on creating a toggle toolbar button, see:
-     * <a href="https://www.tiny.cloud/docs/tinymce/6/custom-toggle-toolbar-button/">
+     * <a href="https://www.tiny.cloud/docs/tinymce/7/custom-toggle-toolbar-button/">
      * UI Components - Types of toolbar buttons: Toggle button</a>.
      *
      * @method addToggleButton
@@ -197,7 +197,7 @@ const registry = (): Registry.Registry => {
      * <strong>Note:</strong> Group toolbar buttons can only be used when using the floating toolbar mode.
      * <br>
      * For information on creating a group toolbar button, see:
-     * <a href="https://www.tiny.cloud/docs/tinymce/6/custom-group-toolbar-button/">
+     * <a href="https://www.tiny.cloud/docs/tinymce/7/custom-group-toolbar-button/">
      * UI Components - Types of toolbar buttons: Group toolbar button</a>.
      *
      * @method addGroupToolbarButton
@@ -211,7 +211,7 @@ const registry = (): Registry.Registry => {
      * showing a tick in the menu item to represent state.
      * <br>
      * For information on creating a toggle menu item, see:
-     * <a href="https://www.tiny.cloud/docs/tinymce/6/custom-toggle-menu-items/">
+     * <a href="https://www.tiny.cloud/docs/tinymce/7/custom-toggle-menu-items/">
      * UI Components - Custom menu items: Toggle menu items</a>.
      *
      * @method addToggleMenuItem
@@ -229,6 +229,10 @@ const registry = (): Registry.Registry => {
      * There is also a ToggleView command.
      * The ToggleView command can toggle the view visibility.
      * The ToggleView command can be queried for its current state.
+     * <br>
+     * For information on creating a custom view, see:
+     * <a href="https://www.tiny.cloud/docs/tinymce/7/custom-view/">
+     * UI Components - Custom view</a>.
      *
      * @method addView
      * @param {String} name Unique name identifying the new view.

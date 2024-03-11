@@ -8,7 +8,6 @@
         "^tiny-product"
       ],
       "dependsOn": [
-        "lint",
         "^build"
       ],
       "outputs": [

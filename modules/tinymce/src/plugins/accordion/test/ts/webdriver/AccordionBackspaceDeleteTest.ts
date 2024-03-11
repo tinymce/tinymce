@@ -31,11 +31,10 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
   const hook = TinyHooks.bddSetup<Editor>(settings, [ AccordionPlugin ], true);
 
   const platform = PlatformDetection.detect();
-  const os = platform.os;
-  const isSafari = platform.browser.isSafari();
   const isFirefox = platform.browser.isFirefox();
-  const isMacOS = os.isMacOS();
-  const isWindows = os.isWindows();
+  const isSafari = platform.browser.isSafari();
+  const isMacOS = platform.os.isMacOS();
+  const isWindows = platform.os.isWindows();
 
   const pDoBackspaceDelete = async (key: DeletionKey, modifier?: BackspaceDeleteModifier): Promise<void> => {
     await RealKeys.pSendKeysOn('iframe => body', [ Type.isUndefined(modifier) ? RealKeys.text(key) : RealKeys.combo(modifier, key) ]);
@@ -246,8 +245,8 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
         TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
         await pDoDelete();
         assertAccordionContent(editor, { summary: 'summary', body: '<p>ody</p>' });
-        // TODO: Investigate why the path is different here on Firefox and Safari
-        TinyAssertions.assertCursor(editor, isFirefox || isSafari ? [ 0, 1, 0 ] : [ 0, 1, 0, 0 ], 0);
+        // TODO: Investigate why the path is different here on Firefox
+        TinyAssertions.assertCursor(editor, isFirefox ? [ 0, 1, 0 ] : [ 0, 1, 0, 0 ], 0);
       });
 
       it('TINY-9951: Deleting content in body by pressing DELETE should work as expected if caret in middle of body content', async () => {
@@ -410,19 +409,20 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
         }
         assertAccordionContent(editor, getSummarySpec(expectedContent));
 
-        // TINY-9302: Extra format caret added when using keyboard shortcut ranged deletion, except on Safari
-        // due to TINY-9951 workaround
-        let expectedPath: number[];
-        let expectedOffset: number;
         if (isSafari) {
-          expectedPath = isSummary ? [ 0, 0, 0 ] : [ 0, 1, 0, 0 ];
-          expectedOffset = isBackspace ? 'word1 '.length : 'wo'.length;
+          // Safari positions selection around format caret
+          const expectedPath = isSummary ? [ 0, 0, 0 ] : [ 0, 1, 0, 0 ];
+          const expectedOffset = isBackspace ? 6 : 2;
+
+          TinyAssertions.assertCursor(editor, expectedPath, expectedOffset);
         } else {
-          expectedPath = isSummary ? [ 0, 0, 1, 0 ] : [ 0, 1, 0, 1, 0 ];
           // 0 offset as selection positioned within format caret
-          expectedOffset = 0;
+          const expectedPath = isSummary ? [ 0, 0, 1, 0 ] : [ 0, 1, 0, 1, 0 ];
+          const expectedOffset = 0;
+
+          TinyAssertions.assertCursor(editor, expectedPath, expectedOffset);
         }
-        TinyAssertions.assertCursor(editor, expectedPath, expectedOffset);
+
       };
 
       const testCtrlDeletionInSummary = (deletionKey: DeletionKey) => testCtrlDeletion(deletionKey, 'summary');
