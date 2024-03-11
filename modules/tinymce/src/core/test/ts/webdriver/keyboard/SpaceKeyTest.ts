@@ -22,7 +22,8 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
   });
 
   context('Space key around inline boundary elements', () => {
-    it('TINY-8588: Add one space just before a block', async () => {
+    // TINY-10742: Skipping until unexpected <br> tag being added in Firefox is addressed.
+    it.skip('TINY-8588: Add one space just before a block', async () => {
       const editor = hook.editor();
       editor.setContent('<p>s<span style="display: block;" contenteditable="false">a</span></p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
@@ -34,7 +35,8 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
       }
     });
 
-    it('TINY-8588: Add two spaces just before a block', async () => {
+    // TINY-10742: Skipping until unexpected <br> tag being added in Firefox is addressed.
+    it.skip('TINY-8588: Add two spaces just before a block', async () => {
       const editor = hook.editor();
       editor.setContent('<p>s<span style="display: block;" contenteditable="false">a</span></p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
@@ -49,7 +51,8 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
       }
     });
 
-    it('TINY-8588: Add one space before a block while in a span', async () => {
+    // TINY-10742: Skipping until unexpected <br> tag being added in Firefox is addressed.
+    it.skip('TINY-8588: Add one space before a block while in a span', async () => {
       const editor = hook.editor();
       editor.setContent('<p><span class="filler">s</span><span style="display: block;" contenteditable="false">a</span></p>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
@@ -61,7 +64,8 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
       }
     });
 
-    it('TINY-8588: Add one space before a block inside a strong', async () => {
+    // TINY-10742: Skipping until unexpected <br> tag being added in Firefox is addressed.
+    it.skip('TINY-8588: Add one space before a block inside a strong', async () => {
       const editor = hook.editor();
       editor.setContent('<p>s<strong><span contenteditable="false" style="display: block;">a</span></strong></p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
