@@ -76,7 +76,8 @@
     svg {
 
       @media (forced-colors: active) {
-        forced-color-adjust: auto;
+        // forced-color-adjust: auto does not work in Firefox, for an alternative, I've choosen to use a universally high contrast color for windows high contrast mode
+        fill: #f0f;
       }
 
       display: block;
