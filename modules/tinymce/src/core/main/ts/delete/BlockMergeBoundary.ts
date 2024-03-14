@@ -1,5 +1,5 @@
-import { Fun, Optional, Optionals } from '@ephox/katamari';
-import { Compare, PredicateExists, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
+import { Optional, Optionals } from '@ephox/katamari';
+import { Compare, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Schema from '../api/html/Schema';
 import * as CaretFinder from '../caret/CaretFinder';
@@ -37,7 +37,7 @@ const getBlockPosition = (rootNode: HTMLElement, pos: CaretPosition): Optional<B
 };
 
 const isNotAncestorial = (blockBoundary: BlockBoundary) =>
-  !PredicateExists.ancestor(blockBoundary.to.block, Fun.curry(Compare.eq, blockBoundary.from.block));
+  !(Compare.contains(blockBoundary.to.block, blockBoundary.from.block) || Compare.contains(blockBoundary.from.block, blockBoundary.to.block));
 
 const isDifferentBlocks = (blockBoundary: BlockBoundary): boolean =>
   !Compare.eq(blockBoundary.from.block, blockBoundary.to.block);
