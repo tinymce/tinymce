@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Arr, Fun, Obj, Optional, Optionals, Type } from '@ephox/katamari';
 import { SelectorFind, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
@@ -39,9 +40,14 @@ const register = (editor: Editor): void => {
   const stringOrFalseProcessor = (value: unknown) => Type.isString(value) || value === false;
   const stringOrNumberProcessor = (value: unknown) => Type.isString(value) || Type.isNumber(value);
 
+  const skinOption = () => {
+    const forcedColors = window.matchMedia('(forced-colors: active)').matches;
+    return forcedColors ? 'oxide-dark' : 'oxide';
+  };
+
   registerOption('skin', {
     processor: (value) => Type.isString(value) || value === false,
-    default: 'oxide'
+    default: skinOption()
   });
 
   registerOption('skin_url', {

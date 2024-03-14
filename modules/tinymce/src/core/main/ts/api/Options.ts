@@ -46,6 +46,18 @@ const bodyOptionProcessor = (editor: Editor, defaultValue: string = '') => (valu
   }
 };
 
+const contentCSSOption = (editor: Editor) => {
+  let cssClasses: string[];
+  if (window.matchMedia(`(forced-colors: active)`).matches) {
+    cssClasses = [ 'dark' ];
+  } else if (isInline(editor)) {
+    cssClasses = [];
+  } else {
+    cssClasses = [ 'default' ];
+  }
+  return cssClasses;
+};
+
 const register = (editor: Editor): void => {
   const registerOption = editor.options.register;
 
@@ -297,7 +309,7 @@ const register = (editor: Editor): void => {
         return { valid: false, message: 'Must be false, a string or an array of strings.' };
       }
     },
-    default: isInline(editor) ? [] : [ 'default' ]
+    default: contentCSSOption(editor)
   });
 
   registerOption('content_style', {

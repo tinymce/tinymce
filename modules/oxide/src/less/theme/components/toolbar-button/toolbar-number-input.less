@@ -80,6 +80,11 @@
       width: @toolbar-number-input-button-width;
 
       svg {
+
+        @media (forced-colors: active) {
+          forced-color-adjust: auto;
+        }
+
         display: block;
         fill: @toolbar-button-icon-color;
         margin: 0 auto;
