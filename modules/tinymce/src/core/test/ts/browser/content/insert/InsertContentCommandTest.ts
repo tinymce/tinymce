@@ -4,7 +4,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.core.content.InsertContentCommandTest', () => {
+describe('browser.tinymce.core.content.insert.InsertContentCommandTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     disable_nodechange: true,
