@@ -77,7 +77,7 @@
 
       @media (forced-colors: active) {
         // forced-color-adjust: auto does not work in Firefox, for an alternative, I've choosen to use a universally high contrast color for windows high contrast mode
-        fill: #f0f;
+        fill: currentColor;
       }
 
       display: block;
@@ -112,6 +112,13 @@
     color: @toolbar-button-hover-text-color;
 
     svg {
+
+      @media (forced-colors: active) {
+        // forced-color-adjust: auto does not work in Firefox, for an alternative, I've choosen to use a universally high contrast color for windows high contrast mode
+        fill: currentColor;
+        filter: brightness(110%) saturate(110%);
+      }
+
       fill: @toolbar-button-hover-icon-color;
     }
   }
@@ -123,6 +130,13 @@
     color: @toolbar-button-active-text-color;
 
     svg {
+
+      @media (forced-colors: active) {
+        // forced-color-adjust: auto does not work in Firefox, for an alternative, I've choosen to use a universally high contrast color for windows high contrast mode
+        fill: currentColor;
+        filter: brightness(100%) saturate(120%);
+      }
+
       fill: @toolbar-button-active-icon-color;
     }
   }
@@ -186,6 +200,13 @@
     color: @toolbar-button-focus-text-color;
 
     svg {
+
+      @media (forced-colors: active) {
+        // forced-color-adjust: auto does not work in Firefox, for an alternative, I've choosen to use a universally high contrast color for windows high contrast mode
+        fill: currentColor;
+        filter: brightness(100%) saturate(120%);
+      }
+
       fill: @toolbar-button-focus-icon-color;
     }
   }
