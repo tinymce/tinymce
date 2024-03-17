@@ -111,14 +111,12 @@
     box-shadow: @toolbar-button-hover-box-shadow;
     color: @toolbar-button-hover-text-color;
 
+    @media (forced-colors: active) {
+      background: currentColor;
+      filter: brightness(50%);
+    }
+
     svg {
-
-      @media (forced-colors: active) {
-        // forced-color-adjust: auto does not work in Firefox, for an alternative, I've choosen to use a universally high contrast color for windows high contrast mode
-        fill: currentColor;
-        filter: brightness(110%) saturate(110%);
-      }
-
       fill: @toolbar-button-hover-icon-color;
     }
   }
@@ -129,14 +127,11 @@
     box-shadow: @toolbar-button-active-box-shadow;
     color: @toolbar-button-active-text-color;
 
+    @media (forced-colors: active) {
+      background: currentColor;
+    }
+
     svg {
-
-      @media (forced-colors: active) {
-        // forced-color-adjust: auto does not work in Firefox, for an alternative, I've choosen to use a universally high contrast color for windows high contrast mode
-        fill: currentColor;
-        filter: brightness(100%) saturate(120%);
-      }
-
       fill: @toolbar-button-active-icon-color;
     }
   }
@@ -179,6 +174,10 @@
       transform: @toolbar-button-enabled-transform;
     }
 
+    @media (forced-colors: active) {
+      background: currentColor;
+    }
+
     // Disable stylelint below because we're mixing the :hover modifier with the "--enabled" class
     // since they need to be kept the same/use the same rules
     svg { /* stylelint-disable-line no-descending-specificity */
@@ -199,14 +198,11 @@
   .tox-tbtn:focus:not(.tox-tbtn--disabled) {
     color: @toolbar-button-focus-text-color;
 
+    @media (forced-colors: active) {
+      background: currentColor;
+    }
+
     svg {
-
-      @media (forced-colors: active) {
-        // forced-color-adjust: auto does not work in Firefox, for an alternative, I've choosen to use a universally high contrast color for windows high contrast mode
-        fill: currentColor;
-        filter: brightness(100%) saturate(120%);
-      }
-
       fill: @toolbar-button-focus-icon-color;
     }
   }
