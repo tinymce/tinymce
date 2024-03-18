@@ -77,7 +77,7 @@
 
       @media (forced-colors: active) {
         // forced-color-adjust: auto does not work in Firefox, for an alternative, I've choosen to use a universally high contrast color for windows high contrast mode
-        fill: currentColor;
+        fill: #f0f;
       }
 
       display: block;
@@ -112,11 +112,16 @@
     color: @toolbar-button-hover-text-color;
 
     @media (forced-colors: active) {
-      background: currentColor;
       filter: brightness(50%);
     }
 
     svg {
+
+      @media (forced-colors: active) {
+        fill: #f0f;
+        // filter: invert(1);
+      }
+
       fill: @toolbar-button-hover-icon-color;
     }
   }
@@ -155,6 +160,12 @@
     // Disable stylelint below because we're mixing the :disabled modifier with the "--disabled" class
     // since they need to be kept the same/use the same rules
     svg { /* stylelint-disable-line no-descending-specificity */
+
+      @media (forced-colors: active) {
+        fill: #f0f;
+        filter: brightness(30%);
+      }
+
       fill: @toolbar-button-disabled-icon-color;
     }
   }
@@ -181,6 +192,11 @@
     // Disable stylelint below because we're mixing the :hover modifier with the "--enabled" class
     // since they need to be kept the same/use the same rules
     svg { /* stylelint-disable-line no-descending-specificity */
+
+      @media (forced-colors: active) {
+        fill: #f0f;
+      }
+
       fill: @toolbar-button-enabled-icon-color;
     }
 
@@ -203,6 +219,11 @@
     }
 
     svg {
+
+      @media (forced-colors: active) {
+        fill: #f0f;
+      }
+
       fill: @toolbar-button-focus-icon-color;
     }
   }
