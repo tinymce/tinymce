@@ -145,6 +145,12 @@
   .tox-collection--toolbar .tox-collection__item--enabled,
   .tox-collection--toolbar .tox-collection__item--enabled.tox-collection__item--active,
   .tox-collection--toolbar .tox-collection__item--enabled.tox-collection__item--active:hover {
+
+    @media (forced-colors: active) {
+      background-color: currentColor;
+      color: HighlightText;
+    }
+
     background-color: @collection-toolbar-item-enabled-background-color;
     color: @collection-toolbar-item-label-enabled-text-color;
   }
@@ -154,11 +160,23 @@
     position: relative;
 
     &:hover {
+
+      @media (forced-colors: active) {
+        background-color: currentColor;
+        color: HighlightText;
+      }
+
       background-color: @collection-toolbar-item-active-hover-background-color;
       color: @collection-toolbar-item-label-active-hover-text-color;
     }
 
     &:focus {
+
+      @media (forced-colors: active) {
+        background-color: currentColor;
+        color: HighlightText;
+      }
+
       background-color: @collection-toolbar-item-active-hover-background-color;
       color: @collection-toolbar-item-label-active-hover-text-color;
 
@@ -256,6 +274,12 @@
     cursor: not-allowed;
 
     .tox-collection__item-caret svg {
+
+      @media (forced-colors: active) {
+        fill: currentColor;
+        filter: brightness(30%);
+      }
+
       fill: @collection-item-caret-disabled-text-color;
     }
   }
