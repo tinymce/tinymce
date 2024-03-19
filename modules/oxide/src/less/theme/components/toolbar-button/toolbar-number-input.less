@@ -84,6 +84,22 @@
         fill: @toolbar-button-icon-color;
         margin: 0 auto;
         transform: scale(@toolbar-number-input-button-icon-ratio);
+
+        @media (forced-colors: active) {
+          &,
+          &:active {
+            fill: currentColor;
+          }
+
+          &:hover {
+            fill: currentColor;
+            filter: brightness(50%);
+          }
+
+          &:disabled {
+            filter: contrast(0);
+          }
+        }
       }
 
       &:focus {
