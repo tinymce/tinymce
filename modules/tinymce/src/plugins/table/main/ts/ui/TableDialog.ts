@@ -64,11 +64,11 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
 
   if (shouldStyleWithCss) {
     if (borderIsZero) {
-      attrs.border = 0;
+      styles['border'] = 'none';
       styles['border-width'] = '';
     } else {
       styles['border-width'] = Utils.addPxSuffix(data.border);
-      attrs.border = 1;
+      styles['border'] = '1px solid black';
     }
     styles['border-spacing'] = Utils.addPxSuffix(data.cellspacing);
   } else {
@@ -83,6 +83,7 @@ const applyDataToElement = (editor: Editor, tableElm: HTMLTableElement, data: Ta
     if (borderIsZero) {
       cellStyles['border-width'] = '';
     } else if (shouldApplyOnCell.border) {
+      cellStyles['border'] = '1px solid black';
       cellStyles['border-width'] = Utils.addPxSuffix(data.border);
     }
     if (shouldApplyOnCell.cellpadding) {
