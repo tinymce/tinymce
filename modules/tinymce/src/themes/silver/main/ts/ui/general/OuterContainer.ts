@@ -3,7 +3,7 @@ import {
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Id, Optional, Optionals, Result } from '@ephox/katamari';
-import { Attribute, Css, SelectorFind } from '@ephox/sugar';
+import { Attribute, Css, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import { ToolbarMode } from '../../api/Options';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -89,6 +89,18 @@ interface ToolbarApis {
 
 const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, OuterContainerSketchSpec> = (detail, components, _spec) => {
   let toolbarDrawerOpenState = false;
+
+  const toggleStatusbar = (editorContainer: SugarElement<Element>) => {
+    SelectorFind.sibling(editorContainer, '.tox-statusbar').each((statusBar) => {
+      if (Css.get(statusBar, 'display') === 'none' && Attribute.get(statusBar, 'aria-hidden') === 'true') {
+        Css.remove(statusBar, 'display');
+        Attribute.remove(statusBar, 'aria-hidden');
+      } else {
+        Css.set(statusBar, 'display', 'none');
+        Attribute.set(statusBar, 'aria-hidden', 'true');
+      }
+    });
+  };
 
   const apis: OuterContainerApis = {
     getSocket: (comp) => {
@@ -190,11 +202,7 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
 
       Composite.parts.getPart(comp, detail, 'editorContainer').each((editorContainer) => {
         const element = editorContainer.element;
-        SelectorFind.sibling(element, '.tox-statusbar').each((statusBar) => {
-          console.log('hide status bar', statusBar);
-          Css.set(statusBar, 'display', 'none');
-          Attribute.set(statusBar, 'aria-hidden', 'true');
-        });
+        toggleStatusbar(element);
         Css.set(element, 'display', 'none');
         Attribute.set(element, 'aria-hidden', 'true');
       });
@@ -206,11 +214,7 @@ const factory: UiSketcher.CompositeSketchFactory<OuterContainerSketchDetail, Out
 
       Composite.parts.getPart(comp, detail, 'editorContainer').each((editorContainer) => {
         const element = editorContainer.element;
-        SelectorFind.sibling(element, '.tox-statusbar').each((statusBar) => {
-          console.log('show status bar', statusBar);
-          Css.remove(statusBar, 'display');
-          Attribute.remove(statusBar, 'aria-hidden');
-        });
+        toggleStatusbar(element);
         Css.remove(element, 'display');
         Attribute.remove(element, 'aria-hidden');
       });
