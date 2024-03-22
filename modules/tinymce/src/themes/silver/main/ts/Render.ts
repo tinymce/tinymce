@@ -387,7 +387,6 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
     const editorContainer = OuterContainer.parts.editorContainer({
       components: Arr.flatten<AlloySpec>([
         editorComponents,
-        // Inline mode does not have a status bar
         isInline ? [ ] : [ memBottomAnchorBar.asSpec() ]
       ])
     });
@@ -419,6 +418,7 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
         },
         components: [
           editorContainer,
+          // Inline mode does not have a status bar
           ...isInline ? [] : [ partViewWrapper, ...statusbar.toArray() ],
           partThrobber,
         ],
