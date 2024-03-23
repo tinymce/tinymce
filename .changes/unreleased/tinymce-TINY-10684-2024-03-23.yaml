@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: Inline header now calculates `max-width` correctly using the viewport-relative
+  positioning.
+time: 2024-03-23T21:42:30.928799+08:00
+custom:
+  Issue: TINY-10684

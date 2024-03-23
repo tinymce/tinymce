@@ -1,6 +1,6 @@
 import { AlloyComponent, Boxes, Channels, Docking, OffsetOrigin, VerticalDir } from '@ephox/alloy';
 import { Arr, Cell, Fun, Optional, Optionals, Singleton } from '@ephox/katamari';
-import { Attribute, Compare, Css, Height, Scroll, SugarBody, SugarElement, SugarLocation, Traverse, Width } from '@ephox/sugar';
+import { Attribute, Compare, Css, Height, Scroll, SugarBody, SugarElement, SugarLocation, Traverse, Width, WindowVisualViewport } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -111,7 +111,7 @@ export const InlineHeader = (
       const maxWidth = editorMaxWidthOpt.getOrThunk(() => {
         // No max width, so use the body width, minus the left pos as the maximum
         const bodyMargin = Utils.parseToInt(Css.get(SugarBody.body(), 'margin-left')).getOr(0);
-        return Width.get(SugarBody.body()) - SugarLocation.absolute(targetElm).left + bodyMargin;
+        return WindowVisualViewport.getBounds().width - SugarLocation.viewport(targetElm).left + bodyMargin;
       });
       Css.set(container.element, 'max-width', maxWidth + 'px');
     });
@@ -210,7 +210,7 @@ export const InlineHeader = (
               width: width + 'px'
             };
           }
-        ).getOr({ });
+        ).getOr({ width: 'max-content' });
 
       const baseProperties = {
         position: 'absolute',
