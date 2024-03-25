@@ -1,6 +1,6 @@
 project: tinymce
 kind: Fixed
-body: The status bar was invisible when the editor's height is short
+body: The status bar was invisible when the editor's height is short.
 time: 2024-03-25T10:41:06.226617+10:30
 custom:
   Issue: TINY-10705
