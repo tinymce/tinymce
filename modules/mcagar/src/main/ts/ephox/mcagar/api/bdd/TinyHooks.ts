@@ -33,8 +33,8 @@ const setupHooks = <T extends EditorType = EditorType>(
   let hasFailure = false;
 
   before(function (done) {
-    // TINY-7039: Double the timeout as sometimes 2s wasn't enough for more complex editor loads
-    this.timeout(4000);
+    // The default timeout is 2s, that isn't enough on slow connections
+    this.timeout(10000);
     setup = setupElement();
     Loader.setup({
       preInit: (tinymce, settings) => {
