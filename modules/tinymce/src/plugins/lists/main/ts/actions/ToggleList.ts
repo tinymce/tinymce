@@ -1,5 +1,6 @@
 import { Arr, Optional, Type, Unicode } from '@ephox/katamari';
 import { Has, SugarElement } from '@ephox/sugar';
+import createDompurify from 'dompurify';
 
 import BookmarkManager from 'tinymce/core/api/dom/BookmarkManager';
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -187,7 +188,7 @@ const getSelectedTextBlocks = (editor: Editor, rng: Range, root: Node): HTMLElem
 
     block.appendChild(node);
     if (nextSibling && BookmarkManager.isBookmarkNode(nextSibling) && !(nextSibling?.nextSibling)) {
-      block.append(nextSibling);
+      block.append(createDompurify().sanitize(nextSibling));
     }
   });
 
