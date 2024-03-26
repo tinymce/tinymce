@@ -23,6 +23,6 @@ describe('browser.tinymce.plugins.lists.TableInListTest', () => {
     TinySelections.setCursor(editor, [ 0, 0 ], '* abc'.length);
 
     TinyContentActions.keystroke(editor, Keys.enter());
-    TinyAssertions.assertContent(editor, '<div><ul><li>abc</li><li>&nbsp;</li></ul></div>');
+    TinyAssertions.assertContent(editor, '<ul><li>abc</li><li>&nbsp;</li></ul>');
   });
 });
