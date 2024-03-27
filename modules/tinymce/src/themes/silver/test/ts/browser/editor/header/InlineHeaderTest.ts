@@ -110,15 +110,17 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
     const toolbar = await UiFinder.pWaitFor('the toolbar should be visible', SugarBody.body(), '.tox-toolbar__primary');
     const toolbarGroups = Traverse.children(toolbar);
     assert.isAtLeast(toolbarGroups.length, expectedGroups, `Toolbar should have more than ${expectedGroups} groups`);
-    if (expectedGroups < 5) {
-      UiFinder.exists(toolbar, '[data-mce-name="overflow-button"]');
-    }
   };
 
   const pBlurAndScrollX = async (element: SugarElement<HTMLElement>, scrollToX: number) => {
     element.dom.blur();
     await Waiter.pTryUntil('Wait until toolbar is hidden', async () => UiFinder.pWaitForHidden('Wait for toolbar to be hidden', SugarBody.body(), '.tox-toolbar__primary'));
     Scroll.to(scrollToX, 0);
+  };
+
+  const pAssertOverflowButtonExist = async () => {
+    const toolbar = await UiFinder.pWaitFor('the toolbar should be visible', SugarBody.body(), '.tox-toolbar__primary');
+    await Waiter.pTryUntil('Wait for toolbar to be rendered and contains at least 1 group', () => UiFinder.exists(toolbar, '[data-mce-name="overflow-button"]'));
   };
 
   context('editor in horizontal scrollable table, showing more button', () => {
@@ -157,27 +159,30 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
 
     it('TINY-10684: Toolbar should only show more button, then expanded when scrolled, but not all items are rendered due to width constraint (scrolling left)', async () => {
       const editor = hook.editor();
-      Scroll.to(0, 0);
       editor.setContent('<p>Content</p>');
+      Scroll.to(0, 0);
       editor.focus();
-      await Waiter.pTryUntil('Wait for toolbar to be rendered and contains at least 1 group', async () => await pAssertToolbarGroupsAtleast(1));
+      await pAssertOverflowButtonExist();
+      await pAssertToolbarGroupsAtleast(1);
       await pBlurAndScrollX(editorTarget, document.documentElement.scrollWidth);
       editor.focus();
-      await Waiter.pTryUntil('Wait for toolbar to be rendered and contains at least 2 group', async () => await pAssertToolbarGroupsAtleast(2));
+      await pAssertOverflowButtonExist();
+      await pAssertToolbarGroupsAtleast(2);
     });
 
     it('TINY-10684: Toolbar should only show more button, then expanded when scrolled, but not all items are rendered due to width constraint (scrolling right)', async () => {
       const editor = hook.editor();
-      Scroll.to(0, 0);
       editor.setContent('<p>Content</p>');
+      Scroll.to(0, 0);
       editor.focus();
       await pBlurAndScrollX(editorTarget, document.documentElement.scrollWidth);
       editor.focus();
-      await Waiter.pTryUntil('Wait for toolbar to be rendered and contains at least 2 group', async () => await pAssertToolbarGroupsAtleast(2));
+      await pAssertOverflowButtonExist();
+      await pAssertToolbarGroupsAtleast(2);
       await pBlurAndScrollX(editorTarget, 0);
       editor.focus();
-      await Waiter.pTryUntil('Wait for toolbar to be rendered and contains at least 1 group', async () => await pAssertToolbarGroupsAtleast(1));
-      editor.focus();
+      await pAssertOverflowButtonExist();
+      await pAssertToolbarGroupsAtleast(1);
     });
   });
 
@@ -220,26 +225,28 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
 
     it('TINY-10684: Toolbar should expand the width of viewport when there\'s sufficient space, all items should be rendered, showing only show more button when width is constrained', async () => {
       const editor = hook.editor();
-      Scroll.to(0, 0);
       editor.setContent('<p>Content</p>');
+      Scroll.to(0, 0);
       editor.focus();
       await pBlurAndScrollX(editorTarget, document.documentElement.scrollWidth);
       editor.focus();
-      await Waiter.pTryUntil('Wait until toolbar is shown', async () => await pAssertToolbarGroupsAtleast(5));
+      await pAssertToolbarGroupsAtleast(5);
       await pBlurAndScrollX(editorTarget, 0);
       editor.focus();
-      await Waiter.pTryUntil('Wait until toolbar is shown', async () => await pAssertToolbarGroupsAtleast(1));
+      await pAssertOverflowButtonExist();
+      await pAssertToolbarGroupsAtleast(1);
     });
 
     it('TINY-10684: Toolbar should only show show more button, then expanded the width of viewport when there\'s sufficient space, all items should be rendered', async () => {
       const editor = hook.editor();
-      Scroll.to(0, 0);
       editor.setContent('<p>Content</p>');
+      Scroll.to(0, 0);
       editor.focus();
-      await Waiter.pTryUntil('Wait until toolbar is shown', async () => await pAssertToolbarGroupsAtleast(1));
+      await pAssertOverflowButtonExist();
+      await pAssertToolbarGroupsAtleast(1);
       await pBlurAndScrollX(editorTarget, document.documentElement.scrollWidth);
       editor.focus();
-      await Waiter.pTryUntil('Wait until toolbar is shown', async () => await pAssertToolbarGroupsAtleast(5));
+      await pAssertToolbarGroupsAtleast(5);
     });
   });
 
@@ -282,28 +289,31 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
 
     it('TINY-10684: Toolbar should expand the width of viewport when there\'s sufficient space, all items should be rendered (scrolling right)', async () => {
       const editor = hook.editor();
-      Scroll.to(0, 0);
       editor.setContent('<p>Content</p>');
+      Scroll.to(0, 0);
       editor.focus();
-      await pBlurAndScrollX(editorTarget, 500);
+      editorTarget.dom.scrollIntoView({ inline: 'end' });
       editor.focus();
-      await Waiter.pTryUntil('Wait until toolbar is shown', async () => await pAssertToolbarGroupsAtleast(1));
+      await pAssertOverflowButtonExist();
+      await pAssertToolbarGroupsAtleast(1);
       await pBlurAndScrollX(editorTarget, document.documentElement.scrollWidth);
       editor.focus();
-      await Waiter.pTryUntil('Wait until toolbar is shown', async () => await pAssertToolbarGroupsAtleast(5));
+      await pAssertToolbarGroupsAtleast(5);
     });
 
     it('TINY-10684: Toolbar should expand the width of viewport when there\'s sufficient space, all items should be rendered (scrolling left)', async () => {
       const editor = hook.editor();
-      Scroll.to(0, 0);
       editor.setContent('<p>Content</p>');
+      Scroll.to(0, 0);
       editor.focus();
       await pBlurAndScrollX(editorTarget, document.documentElement.scrollWidth);
       editor.focus();
-      await Waiter.pTryUntil('Wait until toolbar is shown', async () => await pAssertToolbarGroupsAtleast(5));
-      await pBlurAndScrollX(editorTarget, 500);
+      await pAssertToolbarGroupsAtleast(5);
+      editorTarget.dom.blur();
+      editorTarget.dom.scrollIntoView({ inline: 'end' });
       editor.focus();
-      await Waiter.pTryUntil('Wait until toolbar is shown', async () => await pAssertToolbarGroupsAtleast(1));
+      await pAssertOverflowButtonExist();
+      await pAssertToolbarGroupsAtleast(1);
     });
   });
 
@@ -344,25 +354,31 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
     it('TINY-10684: Toolbar should only show more button, then expanded when scrolled, but not all items are rendered due to width constraint (scrolling left)', async () => {
       const editor = hook.editor();
       editor.setContent('<p>Content</p>');
+      Scroll.to(0, 0);
       editor.focus();
       await pBlurAndScrollX(editorTarget, document.documentElement.scrollWidth);
       editor.focus();
-      await Waiter.pTryUntil('Wait until toolbar is shown', async () => await pAssertToolbarGroupsAtleast(2));
+      await pAssertOverflowButtonExist();
+      await pAssertToolbarGroupsAtleast(2);
       await pBlurAndScrollX(editorTarget, 800);
       editor.focus();
-      await Waiter.pTryUntil('Wait until toolbar is shown', async () => await pAssertToolbarGroupsAtleast(1));
+      await pAssertOverflowButtonExist();
+      await pAssertToolbarGroupsAtleast(1);
     });
 
     it('TINY-10684: Toolbar should only show more button, then expanded when scrolled, but not all items are rendered due to width constraint (scrolling right)', async () => {
       const editor = hook.editor();
       editor.setContent('<p>Content</p>');
+      Scroll.to(0, 0);
       editor.focus();
       await pBlurAndScrollX(editorTarget, 800);
       editor.focus();
-      await Waiter.pTryUntil('Wait until toolbar is shown', async () => await pAssertToolbarGroupsAtleast(1));
+      await pAssertOverflowButtonExist();
+      await pAssertToolbarGroupsAtleast(1);
       await pBlurAndScrollX(editorTarget, document.documentElement.scrollWidth);
       editor.focus();
-      await Waiter.pTryUntil('Wait until toolbar is shown', async () => await pAssertToolbarGroupsAtleast(2));
+      await pAssertOverflowButtonExist();
+      await pAssertToolbarGroupsAtleast(2);
     });
   });
 });
