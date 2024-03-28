@@ -214,11 +214,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
           const editor = hook.editor();
           editor.setContent('<p>tree</p>');
           editor.setContent(getFontTree());
-          if (options.inline) {
-            assert.equal(editor.getContent(), '<span style="font-size: 300%;">x</span>', 'Should be expected filtered html');
-          } else {
-            assert.equal(editor.getContent(), '<p><span style="font-size: 300%;">x</span></p>', 'Should be expected filtered html');
-          }
+          assert.equal(editor.getContent(), '<p><span style="font-size: 300%;">x</span></p>', 'Should be expected filtered html');
           assertEventsFiredInOrder([
             'beforesetcontent',
             'setcontent',
@@ -234,11 +230,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
           const editor = hook.editor();
           editor.setContent('<p>tree</p>');
           editor.setContent(getFontTree());
-          if (options.inline) {
-            assert.equal(editor.getContent(), '<span style="font-size: 300%;">x</span>', 'Should be expected filtered html');
-          } else {
-            assert.equal(editor.getContent(), '<p><span style="font-size: 300%;">x</span></p>', 'Should be expected filtered html');
-          }
+          assert.equal(editor.getContent(), '<p><span style="font-size: 300%;">x</span></p>', 'Should be expected filtered html');
           assertEventsFiredInOrder([
             'beforesetcontent',
             'setcontent',
@@ -289,6 +281,15 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
           const editor = hook.editor();
           editor.setContent(content);
           TinyAssertions.assertContent(editor, content, { format: 'raw' });
+        });
+
+        it('TINY-10283: Using setContent with editor should add undo levels', () => {
+          const editor = hook.editor();
+          editor.resetContent('<p>Reset Content</p>');
+          assert.equal(editor.undoManager.data.length, 1, 'UndoManager should only have an initial undo level');
+          editor.setContent('<p>Different Content</p>');
+          TinyAssertions.assertContent(editor, '<p>Different Content</p>');
+          assert.equal(editor.undoManager.data.length, 2, 'UndoManager should have an additional undo level');
         });
 
         const initialContent = '<p>initial</p>';

@@ -193,7 +193,7 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
       );
       await pCopyAndPaste(
         editor,
-        { startPath: [ 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 0 ], foffset: 3 },
+        { startPath: [ 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 0 ], foffset: tagName === 'code' ? 4 : 3 },
         { startPath: [ 1, 0 ], soffset: 1, finishPath: [ 1, 0 ], foffset: 4 }
       );
       await pAssertInputEvents(`<${tagName} class="someclass">abc</${tagName}>`);

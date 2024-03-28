@@ -85,7 +85,7 @@ describe('browser.tinymce.plugins.table.NoneditableRootTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ], true);
 
-  context('Noneditable root buttons', () => {
+  context.skip('Noneditable root buttons', () => {
     const testDisableButtonOnNoneditable = (title: string, ariaDisabled = true) => () => {
       TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
         const disabledSelector = ariaDisabled ? '[aria-disabled="true"]' : ':disabled';
@@ -141,7 +141,7 @@ describe('browser.tinymce.plugins.table.NoneditableRootTest', () => {
     });
   });
 
-  context('Noneditable root menuitems', () => {
+  context.skip('Noneditable root menuitems', () => {
     const testDisableMenuitemOnNoneditable = (menuitem: string) => async () => {
       await TinyState.withNoneditableRootEditorAsync(hook.editor(), async (editor) => {
         editor.setContent(

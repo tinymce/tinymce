@@ -2269,15 +2269,15 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
 
   it('Apply format to node outside fake table selection', () => {
     const editor = hook.editor();
-    editor.setContent('<p>test</p><table><tbody><tr><td data-mce-selected="1">cell 1</td><td>cell 2</td></tr><tr><td data-mce-selected="1">cell 3</td><td>cell 4</td></tr></tbody></table>');
-    LegacyUnit.setSelection(editor, 'td', 0, 'td', 0);
+    editor.setContent('<p>test</p><table><tbody><tr><td>cell 1</td><td>cell 2</td></tr><tr><td>cell 3</td><td>cell 4</td></tr></tbody></table>');
+    TinySelections.setSelection(editor, [ 1, 0, 0, 0 ], 0, [ 1, 0, 1, 0 ], 1, true);
     const para = editor.dom.select('p')[0];
     // Apply to custom node
     editor.formatter.apply('bold', { }, para);
     assert.equal(getContent(editor), '<p><strong>test</strong></p><table><tbody><tr><td>cell 1</td><td>cell 2</td></tr><tr><td>cell 3</td><td>cell 4</td></tr></tbody></table>');
     // Apply to current fake table selection
     editor.formatter.apply('bold');
-    assert.equal(getContent(editor), '<p><strong>test</strong></p><table><tbody><tr><td><strong>cell 1</strong></td><td>cell 2</td></tr><tr><td><strong>cell 3</strong></td><td>cell 4</td></tr></tbody></table>');
+    assert.equal(getContent(editor), '<p><strong>test</strong></p><table><tbody><tr><td><strong>cell 1</strong></td><td><strong>cell 2</strong></td></tr><tr><td><strong>cell 3</strong></td><td>cell 4</td></tr></tbody></table>');
   });
 
   it('TINY-6567: Apply format including the final bullet point in the list', () => {

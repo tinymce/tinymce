@@ -34,7 +34,15 @@ describe('browser.tinymce.core.EditorRemovedApiTest', () => {
     editor.queryCommandValue('bold');
     editor.queryCommandSupported('bold');
     editor.uploadImages();
-    editor.setContent('a');
+    let passedSet = true;
+    try {
+      editor.setContent('a');
+    } catch (e) {
+      passedSet = false;
+    }
+    if (passedSet) {
+      throw new Error('SetContent on a non-existing editor should result in an error.');
+    }
     editor.insertContent('a');
     editor.execCommand('bold');
     editor.focus();
