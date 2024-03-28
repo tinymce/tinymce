@@ -5,6 +5,7 @@ import Editor from 'tinymce/core/api/Editor';
 import Schema from 'tinymce/core/api/html/Schema';
 import Tools from 'tinymce/core/api/util/Tools';
 
+import * as Options from '../api/Options';
 import * as NodeType from './NodeType';
 
 const listNames = [ 'OL', 'UL', 'DL' ];
@@ -63,7 +64,8 @@ const isListHost = (schema: Schema, node: Node): boolean =>
 
 const getClosestListHost = (editor: Editor, elm: Node): HTMLElement => {
   const parentBlocks = editor.dom.getParents<HTMLElement>(elm, editor.dom.isBlock);
-  const parentBlock = Arr.find(parentBlocks, (elm) => isListHost(editor.schema, elm));
+  const isNotForcedRootBlock = (elm: HTMLElement) => elm.nodeName.toLowerCase() !== Options.getForcedRootBlock(editor);
+  const parentBlock = Arr.find(parentBlocks, (elm) => isNotForcedRootBlock(elm) && isListHost(editor.schema, elm));
 
   return parentBlock.getOr(editor.getBody());
 };
