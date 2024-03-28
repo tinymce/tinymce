@@ -73,9 +73,41 @@
     text-transform: @toolbar-button-text-transform;
     width: @toolbar-button-width;
 
+    @media (forced-colors: active) {
+      &:hover {
+        filter: brightness(70%);
+      }
+
+      &.tox-tbtn--active,
+      &.tox-tbtn--enabled,
+      &.tox-tbtn--enabled:hover,
+      &.tox-tbtn--enabled:focus,
+      &:focus:not(.tox-tbtn--disabled) {
+        filter: brightness(50%);
+      }
+    }
+
     svg {
       display: block;
       fill: @toolbar-button-icon-color;
+
+      @media (forced-colors: active) {
+        &,
+        &:hover,
+        &.tox-tbtn--enabled,
+        &.tox-tbtn--enabled:hover,
+        &.tox-tbtn--enabled:focus,
+        &:focus:not(.tox-tbtn--disabled) {
+          fill: #f0f !important;
+        }
+
+        &.tox-tbtn--disabled,
+        &.tox-tbtn--disabled:hover,
+        .tox-tbtn:disabled,
+        .tox-tbtn:disabled:hover {
+          filter: contrast(0%);
+        }
+      }
     }
   }
 
