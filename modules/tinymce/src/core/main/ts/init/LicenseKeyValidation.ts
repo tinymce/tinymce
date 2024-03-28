@@ -16,6 +16,6 @@ export const validateEditorLicenseKey = (editor: Editor): void => {
   const hasApiKey = Type.isString(Options.getApiKey(editor));
   if (!hasApiKey && (Type.isUndefined(licenseKey) || validateLicenseKey(licenseKey) === 'INVALID')) {
     // eslint-disable-next-line no-console
-    console.warn('You are running TinyMCE in evaluation mode. Provide a valid license key or specify the license to \'GPL\' to agree to the open source license terms. https://www.tiny.cloud/');
+    console.warn(`TinyMCE is running in evaluation mode. Provide a valid license key or add license_key: 'gpl' to the init config to agree to the open source license terms. Read more at https://www.tiny.cloud/license-key/`);
   }
 };
