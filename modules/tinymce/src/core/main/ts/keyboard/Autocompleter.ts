@@ -20,7 +20,12 @@ interface AutocompleterApi {
 const setupEditorInput = (editor: Editor, api: AutocompleterApi) => {
   const update = Throttler.last(api.load, 50);
 
-  editor.on('input', () => {
+  editor.on('input', (e) => {
+    // TINY-10715: Firefox on Android using Korean Gboard will produce stray composition events when you move the caret by tapping inside the composed text
+    if (e.inputType === 'insertCompositionText' && !editor.composing) {
+      return;
+    }
+
     update.throttle();
   });
 
