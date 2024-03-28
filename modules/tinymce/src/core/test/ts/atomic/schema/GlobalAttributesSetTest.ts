@@ -20,7 +20,7 @@ describe('atomic.tinymce.core.schema.GlobalAttributesSetTest', () => {
     type: 'html5',
     expected: [
       'id', 'accesskey', 'class', 'dir', 'lang', 'style', 'tabindex', 'title', 'role', 'contenteditable', 'contextmenu',
-      'draggable', 'dropzone', 'hidden', 'spellcheck', 'translate', 'xml:lang'
+      'draggable', 'dropzone', 'hidden', 'spellcheck', 'translate', 'itemprop', 'itemscope', 'itemtype', 'xml:lang'
     ]
   }));
 
@@ -28,7 +28,7 @@ describe('atomic.tinymce.core.schema.GlobalAttributesSetTest', () => {
     type: 'html5-strict',
     expected: [
       'id', 'accesskey', 'class', 'dir', 'lang', 'style', 'tabindex', 'title', 'role', 'contenteditable', 'contextmenu',
-      'draggable', 'dropzone', 'hidden', 'spellcheck', 'translate'
+      'draggable', 'dropzone', 'hidden', 'spellcheck', 'translate', 'itemprop', 'itemscope', 'itemtype'
     ]
   }));
 

@@ -15,7 +15,7 @@ export const getGlobalAttributeSet = (type: SchemaType): readonly string[] => {
 
     // html5 and html5-strict extra attributes
     ...(
-      type !== 'html4' ? [ 'contenteditable', 'contextmenu', 'draggable', 'dropzone', 'hidden', 'spellcheck', 'translate' ] : []
+      type !== 'html4' ? [ 'contenteditable', 'contextmenu', 'draggable', 'dropzone', 'hidden', 'spellcheck', 'translate', 'itemprop', 'itemscope', 'itemtype' ] : []
     ),
 
     // html4 and html5 extra attributes
