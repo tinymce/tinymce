@@ -10,7 +10,6 @@ import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { ReadyUiReferences } from '../../modes/UiReferences';
 import OuterContainer from '../general/OuterContainer';
 import * as EditorSize from '../sizing/EditorSize';
-import * as Utils from '../sizing/Utils';
 
 export interface InlineHeader {
   readonly isVisible: () => boolean;
@@ -109,9 +108,8 @@ export const InlineHeader = (
     floatContainer.on((container) => {
       // Update the max width of the inline toolbar
       const maxWidth = editorMaxWidthOpt.getOrThunk(() => {
-        // No max width, so use the body width, minus the left pos as the maximum
-        const bodyMargin = Utils.parseToInt(Css.get(SugarBody.body(), 'margin-left')).getOr(0);
-        return WindowVisualViewport.getBounds().width - SugarLocation.viewport(targetElm).left + bodyMargin;
+        // Adding 10px of margin so that the toolbar won't try to wrap
+        return WindowVisualViewport.getBounds().width - SugarLocation.viewport(targetElm).left - 10;
       });
       Css.set(container.element, 'max-width', maxWidth + 'px');
     });
