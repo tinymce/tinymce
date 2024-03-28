@@ -15,6 +15,7 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "strict": true,
+    "noEmitOnError": true,
     "types": []
   }
 }
