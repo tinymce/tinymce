@@ -225,7 +225,7 @@ describe('headless.tinymce.themes.silver.window.WindowManagerTest', () => {
         return s.element('div', {
           classes: [ arr.has('tox-dialog__header') ],
           children: [
-            s.element('div', { classes: [ arr.has('tox-dialog__title') ] }),
+            s.element('h1', { classes: [ arr.has('tox-dialog__title') ] }),
             s.element('div', { classes: [ arr.has('tox-dialog__draghandle') ] }),
             s.element('button', { classes: [ arr.has('tox-button') ] })
           ]
@@ -236,7 +236,7 @@ describe('headless.tinymce.themes.silver.window.WindowManagerTest', () => {
         return s.element('div', {
           classes: [ arr.has('tox-dialog__header') ],
           children: [
-            s.element('div', { classes: [ arr.has('tox-dialog__title') ] }),
+            s.element('h1', { classes: [ arr.has('tox-dialog__title') ] }),
             s.element('button', { classes: [ arr.has('tox-button') ] })
           ]
         });
