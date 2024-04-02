@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: Dialog title not being announced VoiceOver MacOS, dialog contains `aria-label`
+  instead of `aria-labelledby` on MacOS.
+time: 2024-04-02T21:42:19.730734+08:00
+custom:
+  Issue: TINY-10808
