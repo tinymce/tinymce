@@ -285,15 +285,15 @@ export const InlineHeader = (
 
     // Positioning
     if (!useFixedToolbarContainer) {
-      // Getting the current scroll as the previously step may have reset the scroll,
-      // We also want calculation based on the previous scroll, then restoring the scroll everything is set.
+      // Getting the current scroll as the previous step may have reset the scroll,
+      // We also want calculation based on the previous scroll, then restoring the scroll when everything is set.
       const currentScroll = Scroll.get();
       const optScroll = Optionals.someIf(prevScroll.left !== currentScroll.left, prevScroll);
 
       // This will position the container in the right spot.
       updateChromePosition(isOuterContainerWidthRestored, optScroll);
 
-      // Restore scroll left position only if they are different, keeping the current scroll, that shouldn't be changed
+      // Restore scroll left position only if they are different, keeping the current scroll top, that shouldn't be changed
       optScroll.each((scroll) => {
         Scroll.to(scroll.left, currentScroll.top);
       });
