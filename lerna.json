@@ -2,6 +2,10 @@
   "version": "independent",
   "npmClient": "yarn",
   "command":  {
+    "version": {
+      "ignoreChanges": ["modules/tinymce/**"],
+      "private": false
+    },
     "publish": {
       "ignoreChanges": ["modules/tinymce/**"],
       "push": false
