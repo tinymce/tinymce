@@ -1,6 +1,6 @@
 project: tinymce
 kind: Fixed
-body: Updated theme loader respects the suffix when loading skin CSS files
+body: Theme loader now respects the suffix when loading skin CSS files
 time: 2024-04-04T16:35:26.405336+11:00
 custom:
   Issue: TINY-10602
