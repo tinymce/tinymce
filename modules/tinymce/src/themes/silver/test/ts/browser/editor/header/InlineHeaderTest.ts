@@ -1,7 +1,7 @@
 import { UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Css, Insert, Remove, Scroll, SelectorFind, SugarBody, SugarElement, TextContent, Traverse } from '@ephox/sugar';
-import { TinyHooks } from '@ephox/wrap-mcagar';
+import { Css, Insert, Remove, Scroll, SelectorFind, SugarBody, SugarElement, SugarLocation, TextContent, Traverse } from '@ephox/sugar';
+import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -112,6 +112,12 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
     assert.isAtLeast(toolbarGroups.length, expectedGroups, `Toolbar should have more than ${expectedGroups} groups`);
   };
 
+  const pAssertOverflowToolbarGroupsAtAleast = async (expectedGroups: number) => {
+    const toolbar = await UiFinder.pWaitFor('the toolbar should be visible', SugarBody.body(), '.tox-toolbar__overflow');
+    const toolbarGroups = Traverse.children(toolbar);
+    assert.isAtLeast(toolbarGroups.length, expectedGroups, `Toolbar should have more than ${expectedGroups} groups`);
+  };
+
   const pBlurAndScrollX = async (element: SugarElement<HTMLElement>, scrollToX: number) => {
     element.dom.blur();
     await Waiter.pTryUntil('Wait until toolbar is hidden', async () => UiFinder.pWaitForHidden('Wait for toolbar to be hidden', SugarBody.body(), '.tox-toolbar__primary'));
@@ -121,6 +127,10 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
   const pAssertOverflowButtonExist = async () => {
     const toolbar = await UiFinder.pWaitFor('the toolbar should be visible', SugarBody.body(), '.tox-toolbar__primary');
     await Waiter.pTryUntil('Wait for toolbar to be rendered and contains at least 1 group', () => UiFinder.exists(toolbar, '[data-mce-name="overflow-button"]'));
+  };
+
+  const clickOnOverflowButton = async (editor: Editor) => {
+    TinyUiActions.clickOnToolbar(editor, '[data-mce-name="overflow-button"]');
   };
 
   context('editor in horizontal scrollable table, showing more button', () => {
@@ -379,6 +389,27 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
       editor.focus();
       await pAssertOverflowButtonExist();
       await pAssertToolbarGroupsAtleast(2);
+    });
+
+    it('TINY-10684: When overflow toolbar drawer is shown, and when document is scrolled, the scrolling state should be maintained', async () => {
+      const editor = hook.editor();
+      editor.setContent('<p>Content</p>');
+      Scroll.to(0, 0);
+      editor.focus();
+      await pBlurAndScrollX(editorTarget, document.documentElement.scrollWidth);
+      editor.focus();
+      await pAssertOverflowButtonExist();
+      clickOnOverflowButton(editor);
+      editor.focus();
+      await pAssertOverflowToolbarGroupsAtAleast(2);
+
+      Scroll.to(SugarLocation.absolute(editorTarget).left + 200 - window.innerWidth, 0);
+      await Waiter.pWait(100);
+      assert.notEqual(Scroll.get().left, 0, 'Scroll should be reset to 0');
+
+      Scroll.to(document.documentElement.scrollWidth, 0);
+      await Waiter.pWait(100);
+      assert.notEqual(Scroll.get().left, 0, 'Scroll should be reset to 0');
     });
   });
 });
