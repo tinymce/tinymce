@@ -76,7 +76,7 @@ const registry = (): Registry.Registry => {
      * the cursor is on an image element.
      * <br>
      * For information on creating context toolbars, see:
-     * <a href="https://www.tiny.cloud/docs/tinymce/6/contexttoolbar/">
+     * <a href="https://www.tiny.cloud/docs/tinymce/7/contexttoolbar/">
      * UI Components - Context Toolbar</a>.
      *
      * @method addContextToolbar
