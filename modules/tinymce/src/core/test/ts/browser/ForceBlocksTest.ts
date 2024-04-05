@@ -147,21 +147,38 @@ describe('browser.tinymce.core.ForceBlocksTest', () => {
     });
   });
 
-  it('TINY-10237: Should not wrap SVG elements', () => {
-    const editor = hook.editor();
+  context('Namespace elements', () => {
+    const testNamespaceElement = (testCase: { input: string; caretPath: number[]; expected: string }) => {
+      const editor = hook.editor();
 
-    editor.setContent('<svg></svg>foo', { format: 'raw' });
-    TinySelections.setCursor(editor, [ 1 ], 0);
-    pressArrowKey(editor);
-    TinyAssertions.assertRawContent(editor, '<svg></svg><p>foo</p>');
-  });
+      editor.setContent(testCase.input, { format: 'raw' });
+      TinySelections.setCursor(editor, testCase.caretPath, 0);
+      pressArrowKey(editor);
+      TinyAssertions.assertRawContent(editor, testCase.expected);
+    };
 
-  it('TINY-10273: Should not create empty paragraphs for whitespace around SVG elements', () => {
-    const editor = hook.editor();
+    it('TINY-10237: Should not wrap SVG elements', () => testNamespaceElement({
+      input: '<svg></svg>foo',
+      caretPath: [ 1 ],
+      expected: '<svg></svg><p>foo</p>'
+    }));
 
-    editor.setContent(' <svg></svg> <svg></svg> ', { format: 'raw' });
-    TinySelections.setCursor(editor, [ 0 ], 0);
-    pressArrowKey(editor);
-    TinyAssertions.assertRawContent(editor, '<svg></svg><svg></svg>');
+    it('TINY-10273: Should not create empty paragraphs for whitespace around SVG elements', () => testNamespaceElement({
+      input: ' <svg></svg> <svg></svg> ',
+      caretPath: [ 0 ],
+      expected: '<svg></svg><svg></svg>'
+    }));
+
+    it('TINY-10809: Should not wrap math elements', () => testNamespaceElement({
+      input: '<math></math>foo',
+      caretPath: [ 1 ],
+      expected: '<math></math><p>foo</p>'
+    }));
+
+    it('TINY-10809: Should not create empty paragraphs for whitespace around math elements', () => testNamespaceElement({
+      input: ' <math></math> <math></math> ',
+      caretPath: [ 0 ],
+      expected: '<math></math><math></math>'
+    }));
   });
 });
