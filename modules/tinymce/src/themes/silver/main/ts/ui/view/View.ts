@@ -73,14 +73,6 @@ const renderViewHeader = (spec: ViewHeaderSpec) => {
         ...(isPhone || isTablet ? [ 'tox-view--mobile', 'tox-view--scrolling' ] : [])
       ]
     },
-    behaviours: Behaviour.derive([
-      Focusing.config({}),
-      Keying.config({
-        mode: 'flow',
-        selector: 'button, .tox-button',
-        focusInside: FocusInsideModes.OnEnterOrSpaceMode
-      })
-    ]),
     components: hasGroups ?
       endButtons
       : [
@@ -123,6 +115,13 @@ const factory: UiSketcher.CompositeSketchFactory<ViewDetail, ViewSketchSpec> = (
     uid: detail.uid,
     dom: detail.dom,
     components,
+    behaviours: Behaviour.derive([
+      Focusing.config({}),
+      Keying.config({
+        mode: 'cyclic',
+        focusInside: FocusInsideModes.OnEnterOrSpaceMode
+      })
+    ]),
     apis
   };
 };
