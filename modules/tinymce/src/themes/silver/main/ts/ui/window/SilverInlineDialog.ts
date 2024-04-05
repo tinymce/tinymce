@@ -104,8 +104,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(
       classes: [ 'tox-dialog', inlineClass, ...dialogSizeClass ],
       attributes: {
         role: 'dialog',
-        // TINY-10808 - Workaround to address the dialog header not being announced on VoiceOver,
-        // ideally we should use the aria-labelledby
+        // TINY-10808 - Workaround to address the dialog header not being announced on VoiceOver with aria-labelledby, ideally we should use the aria-labelledby
         ...os.isMacOS() ? { 'aria-label': internalDialog.title } : { 'aria-labelledby': dialogLabelId }
       }
     },

@@ -117,11 +117,12 @@ const factory: CompositeSketchFactory<ModalDialogDetail, ModalDialogSpec> = (det
         AddEventsBehaviour.config(modalEventsId, [
           AlloyEvents.runOnAttached((c) => {
             // TINY-10808 - Workaround to address the dialog header not being announced on VoiceOver with aria-labelledby, ideally we should use the aria-labelledby
-            const title = TextContent.get(AlloyParts.getPartOrDie(c, detail, 'title').element);
+            const titleElm = AlloyParts.getPartOrDie(c, detail, 'title').element;
+            const title = TextContent.get(titleElm);
             if (browser.os.isMacOS() && Type.isNonNullable(title)) {
               Attribute.set(c.element, 'aria-label', title);
             } else {
-              AriaLabel.labelledBy(c.element, AlloyParts.getPartOrDie(c, detail, 'title').element);
+              AriaLabel.labelledBy(c.element, titleElm);
             }
           })
         ])
