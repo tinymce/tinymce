@@ -94,14 +94,14 @@ export default (): void => {
           }
         ],
         onShow: (api: any) => {
-          api.getContainer().innerHTML = '<button>myview1</button>';
-          api.getContainer().querySelector('button')?.focus();
+          api.getContainer().innerHTML = '<input tabindex="-1" data-alloy-tabstop="true" style="border: 1px solid gray">';
+          api.getContainer().querySelector('input')?.focus();
         },
         onHide: () => console.log('hide')
       });
-      ed.on('init', () => {
-        ed.execCommand('ToggleView', false, 'myview1');
-      });
+    },
+    init_instance_callback: (ed) => {
+      ed.execCommand('ToggleView', false, 'myview1');
     },
     plugins: [],
     toolbar: 'undo redo',
