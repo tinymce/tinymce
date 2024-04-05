@@ -328,8 +328,8 @@ UnitTest.asynctest('LocationTest', (success, failure) => {
     // Chrome has a weird 2px bug where the offsetTop of a table cell is 2px less than every other browser, even though
     // the difference between table.getBoundingClientRect() and cell.getBoundingClientRect() is correct.
     // I don't want to make every browser pay for Chrome's mistake in a scenario we don't need for TBIO, so we're living with it.
-    // Firefox 71 has also started behaving the same as chrome
-    if (platform.browser.isChromium() || platform.browser.isFirefox() && platform.browser.version.major >= 71) {
+    // Firefox 71 has also started behaving the same as chrome but seems to be fixed in 124
+    if (platform.browser.isChromium() || platform.browser.isFirefox() && platform.browser.version.major >= 71 && platform.browser.version.major < 124) {
       const chromeDifference = -2;
       Arr.each(tests, (t) => {
         if (t.id !== 'table-1') {
