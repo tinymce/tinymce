@@ -176,7 +176,6 @@ describe('browser.tinymce.core.dom.TrimBodyTest', () => {
         const unescapedText = document.createElement('div');
         unescapedText.innerHTML = `<p>Test</p><${plaintext}>Test<p>Test</p>`;
         TrimBody.emptyUnescapedZwspTexts(unescapedText);
-        // TINY-10305: Safari escapes text nodes within <plaintext>.
         assert.strictEqual(unescapedText.innerHTML, `<p>Test</p><${plaintext}>Test<p>Test</p></${plaintext}>`);
       });
     });

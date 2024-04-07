@@ -12,6 +12,7 @@
     { "path": "modules/bridge" },
     { "path": "modules/darwin" },
     { "path": "modules/dragster" },
+    { "path": "modules/jax" },
     { "path": "modules/katamari" },
     { "path": "modules/katamari-assertions" },
     { "path": "modules/mcagar" },
