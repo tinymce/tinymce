@@ -30,7 +30,7 @@ describe('browser.tinymce.themes.silver.editor.backstage.BackstageSinkTest', () 
     setup: (ed: Editor) => {
       Options.register(ed);
       ed.on('init', () => {
-        const skinUrl = EditorManager.baseURL + '/skins/ui/oxide/skin.min.css';
+        const skinUrl = EditorManager.baseURL + '/skins/ui/oxide/skin.css';
         ed.ui.styleSheetLoader.load(skinUrl).then(
           () => {
             ed.dispatch('SkinLoaded');
