@@ -92,6 +92,11 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
     editor.off(eventName, eventTester);
   };
 
+  const assertNoEvent = () => {
+    assert.equal(eventCount, 0);
+    assert.equal(lastEventValue, '');
+  };
+
   const assertEvent = (count: number, value: string) => {
     // The event count is sometimes more if SelectionChange triggers a NodeChange. Since SelectionChange is dependent on browser thottling it may or may not execute in time for the assert
     assert.isAtLeast(eventCount, count);
@@ -104,9 +109,17 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
     hook.editor().undoManager.reset();
   });
 
+  const setContentWithNoEvent = (editor: Editor, content: string) => {
+    editor.undoManager.ignore(() =>
+      editor.setContent(content)
+    );
+
+    assertNoEvent();
+  };
+
   it('TBA: Checking alignment ticks and updating',
     testWithEvents('AlignTextUpdate', async (editor) => {
-      editor.setContent('<p>First paragraph</p><p>Second paragraph</p>');
+      setContentWithNoEvent(editor, '<p>First paragraph</p><p>Second paragraph</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
       assertEvent(1, 'left');
       await MenuUtils.pOpenAlignMenu('Align');
@@ -146,7 +159,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
 
   it('TBA: Checking fontfamily ticks and updating',
     testWithEvents('FontFamilyTextUpdate', async (editor) => {
-      editor.setContent('<p>First paragraph</p><p>Second paragraph</p>');
+      setContentWithNoEvent(editor, '<p>First paragraph</p><p>Second paragraph</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
       assertEvent(1, 'Verdana');
       await MenuUtils.pOpenMenu('FontSelect', 'Verdana');
@@ -184,7 +197,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
 
   it('TBA: Checking fontsize ticks and updating',
     testWithEvents('FontSizeTextUpdate', async (editor) => {
-      editor.setContent('<p>First paragraph</p><p>Second paragraph</p>');
+      setContentWithNoEvent(editor, '<p>First paragraph</p><p>Second paragraph</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
       assertEvent(1, '12pt');
       await MenuUtils.pOpenMenu('FontSelect', '12pt'); // This might be fragile.
@@ -222,7 +235,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
 
   it('TBA: Checking format ticks and updating',
     testWithEvents('BlocksTextUpdate', async (editor) => {
-      editor.setContent('<p>First paragraph</p><p>Second paragraph</p>');
+      setContentWithNoEvent(editor, '<p>First paragraph</p><p>Second paragraph</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
       assertEvent(1, 'Paragraph');
       await MenuUtils.pOpenMenu('Format', 'Paragraph:first');
@@ -287,7 +300,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
 
   it('TBA: Checking style ticks and updating',
     testWithEvents('StylesTextUpdate', async (editor) => {
-      editor.setContent('<p>First paragraph</p><p>Second paragraph</p>');
+      setContentWithNoEvent(editor, '<p>First paragraph</p><p>Second paragraph</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
       assertEvent(1, 'Paragraph');
       await MenuUtils.pOpenMenu('Format', 'Paragraph:last');
@@ -353,7 +366,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
 
   it('TBA: Checking toolbar keyboard navigation', async () => {
     const editor = hook.editor();
-    editor.setContent('<p>First paragraph</p><p>Second paragraph</p>');
+    setContentWithNoEvent(editor, '<p>First paragraph</p><p>Second paragraph</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
     await MenuUtils.pOpenAlignMenu('Align');
     await pAssertFocusOnItem('Left');
@@ -374,7 +387,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
   context('Noneditable root', () => {
     const testDisableOnNoneditable = (title: string) => () => {
       TinyState.withNoneditableRootEditor(hook.editor(), (editor) => {
-        editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
+        setContentWithNoEvent(editor, '<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
         TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
         UiFinder.exists(SugarBody.body(), `[aria-label^="${title}"]:disabled`);
         TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
