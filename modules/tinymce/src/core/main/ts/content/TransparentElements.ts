@@ -16,7 +16,8 @@ export const elementNames = (map: SchemaMap): string[] => Arr.filter(Obj.keys(ma
 const makeSelectorFromSchemaMap = (map: SchemaMap) =>
   Arr.map(elementNames(map), (name) => {
     // Exclude namespace elements from processing
-    return `${name}:` + Arr.map(Namespace.namespaceElements, (ns) => `not(${ns} ${name})`).join(':');
+    const escapedName = CSS.escape(name);
+    return `${escapedName}:` + Arr.map(Namespace.namespaceElements, (ns) => `not(${ns} ${escapedName})`).join(':');
   }).join(',');
 
 const updateTransparent = (blocksSelector: string, transparent: Element) => {
