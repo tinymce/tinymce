@@ -94,8 +94,8 @@ export default (): void => {
           }
         ],
         onShow: (api: any) => {
-          api.getContainer().innerHTML = '<input tabindex="-1" data-alloy-tabstop="true" style="border: 1px solid gray">';
-          api.getContainer().querySelector('input')?.focus();
+          api.getContainer().innerHTML = '<button>myview1</button>';
+          api.getContainer().querySelector('button')?.focus();
         },
         onHide: () => console.log('hide')
       });

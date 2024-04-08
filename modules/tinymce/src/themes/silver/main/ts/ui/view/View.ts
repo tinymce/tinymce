@@ -1,6 +1,6 @@
 import {
   AlloyComponent, AlloySpec, Behaviour, Composite, Container, Focusing, FocusInsideModes, Keying, PartType, RawDomSchema, SimpleSpec,
-  Sketcher, UiSketcher
+  Sketcher, Tabstopping, UiSketcher
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { View as BridgeView } from '@ephox/bridge';
@@ -73,6 +73,14 @@ const renderViewHeader = (spec: ViewHeaderSpec) => {
         ...(isPhone || isTablet ? [ 'tox-view--mobile', 'tox-view--scrolling' ] : [])
       ]
     },
+    behaviours: Behaviour.derive([
+      Focusing.config({}),
+      Keying.config({
+        mode: 'flow',
+        selector: 'button, .tox-button',
+        focusInside: FocusInsideModes.OnEnterOrSpaceMode
+      })
+    ]),
     components: hasGroups ?
       endButtons
       : [
@@ -97,6 +105,10 @@ const renderViewHeader = (spec: ViewHeaderSpec) => {
 const renderViewPane = (spec: SimpleSpec) => {
   return {
     uid: spec.uid,
+    behaviours: Behaviour.derive([
+      Focusing.config({}),
+      Tabstopping.config({})
+    ]),
     dom: {
       tag: 'div',
       classes: [ 'tox-view__pane' ]
