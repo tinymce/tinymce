@@ -26,17 +26,13 @@
     "silver-test-manual": "grunt bedrock-manual:silver"
   },
   "dependencies": {
-    "dompurify": "3.0.5",
-    "prismjs": "^1.27.0",
-    "tslib": "^2.0.0"
-  },
-  "devDependencies": {
     "@ephox/acid": "^7.0.0",
     "@ephox/agar": "^9.0.0",
     "@ephox/alloy": "^15.0.0",
     "@ephox/bridge": "^5.0.0",
     "@ephox/darwin": "^9.0.0",
     "@tinymce/oxide": "^3.0.0",
-    "@tinymce/oxide-icons-default": "^3.0.0"
+    "@tinymce/oxide-icons-default": "^3.0.0",
+    "dompurify": "3.0.5"
   }
 }
