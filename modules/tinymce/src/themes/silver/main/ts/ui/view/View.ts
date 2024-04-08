@@ -6,6 +6,7 @@ import { FieldSchema } from '@ephox/boulder';
 import { View as BridgeView } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+import { Focus, SugarNode, Traverse } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderButton } from './ViewButtons';
@@ -107,7 +108,20 @@ const renderViewPane = (spec: SimpleSpec) => {
     uid: spec.uid,
     behaviours: Behaviour.derive([
       Focusing.config({}),
-      Tabstopping.config({})
+      Tabstopping.config({}),
+      Keying.config({
+        mode: 'cyclic',
+        useTabstopAt: (elem) => {
+          let hasValidFirstChild = false;
+          Traverse.firstChild(elem).each((firstChild) => {
+            if (SugarNode.isHTMLElement(firstChild)) {
+              Focus.focus(firstChild);
+              hasValidFirstChild = true;
+            }
+          });
+          return hasValidFirstChild;
+        }
+      })
     ]),
     dom: {
       tag: 'div',
