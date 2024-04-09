@@ -130,10 +130,12 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
       assertEventsLength(0);
       return editor.uploadImages().then(() => {
-        editor.setContent(imageHtml(blobUri));
+        editor.undoManager.ignore(() =>
+          editor.setContent(imageHtml(blobUri))
+        );
         assert.isFalse(hasBlobAsSource(editor.dom.select('img')[0]), 'replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)');
         assert.equal(editor.getContent(), '<p><img src="file.png"></p>', 'replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)');
-        assertEventsLength(2);
+        assertEventsLength(1);
       });
     });
   });
@@ -361,7 +363,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
       if (callCount === 2) {
         // Note: This is 1 as only the removal of the image triggers the addition of an undo level and a change event
-        assertEventsLength(2);
+        assertEventsLength(1);
 
         // This is in exact since the status of the image can be pending or failed meaning it should try again
         assert.isAtLeast(uploadCount, 1, 'Should at least be one.');
@@ -374,7 +376,9 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
       assert.lengthOf(editor.undoManager.data, 2, 'Suitable number of stacks added');
     };
 
+    assertEventsLength(0);
     editor.resetContent(imageHtml(testBlobDataUri));
+    clearEvents();
 
     editor.options.set('images_upload_handler', (_data: BlobInfo) => {
       uploadCount++;
@@ -386,7 +390,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
       });
     });
 
-    assertEventsLength(1);
+    assertEventsLength(0);
     return Promise.all([
       editor.uploadImages().then(uploadDone),
       editor.uploadImages().then(uploadDone)

@@ -32,7 +32,7 @@ describe('browser.tinymce.core.content.EditorContentNotInitializedTest', () => {
     body.parentNode?.removeChild(body);
   };
 
-  it.skip('set content on editor without initializing it', () => {
+  it('set content on editor without initializing it', () => {
     const editor = createEditor();
     setContentAndAssertReturn(editor, 'hello');
     McEditor.remove(editor);
@@ -58,7 +58,7 @@ describe('browser.tinymce.core.content.EditorContentNotInitializedTest', () => {
     McEditor.remove(editor);
   });
 
-  it.skip('set tree content on editor without initializing it', () => {
+  it('set tree content on editor without initializing it', () => {
     const editor = createEditor();
     setContentAndAssertReturn(editor, new AstNode('p', 1));
     McEditor.remove(editor);
