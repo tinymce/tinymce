@@ -987,5 +987,11 @@ describe('browser.tinymce.core.dom.DOMUtilsTest', () => {
       path: [ 0 ],
       expected: false
     }));
+
+    it('TINY-10809: isEditable on math element should always be considered non-editable', testIsEditable({
+      input: '<math></math>',
+      path: [ 0 ],
+      expected: false
+    }));
   });
 });
