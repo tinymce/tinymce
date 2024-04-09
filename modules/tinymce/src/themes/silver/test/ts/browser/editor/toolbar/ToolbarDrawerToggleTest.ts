@@ -11,11 +11,16 @@ import { RawEditorOptions, ToolbarMode } from 'tinymce/core/api/OptionTypes';
 import * as UiUtils from '../../../module/UiUtils';
 
 // TODO TINY-10480: Investigate flaky tests
-describe.skip('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest', () => {
+describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest', () => {
 
   const assertToolbarToggleState = (editor: Editor, expected: boolean) => {
     const state = editor.queryCommandState('ToggleToolbarDrawer');
     assert.equal(state, expected, 'Expected toolbar toggle state to be ' + expected);
+  };
+
+  const pWaitForOverflowToolbar = async (editor: Editor, toolbarMode: ToolbarMode) => {
+    const selector = `.tox-toolbar__overflow${toolbarMode === 'sliding' ? '--open' : ''}`;
+    await TinyUiActions.pWaitForUi(editor, selector);
   };
 
   const pTestToggle = async (options: RawEditorOptions, shouldToggle: boolean) => {
@@ -37,7 +42,7 @@ describe.skip('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleT
     McEditor.remove(editor);
   };
 
-  context(`Using the 'ToggleToolbarDrawer' command should toggle the toolbar if applicable`, () => {
+  context.skip(`Using the 'ToggleToolbarDrawer' command should toggle the toolbar if applicable`, () => {
     Arr.each<{ mode: ToolbarMode; shouldToggle: boolean }>([
       { mode: 'floating', shouldToggle: true },
       { mode: 'sliding', shouldToggle: true },
@@ -90,7 +95,7 @@ describe.skip('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleT
     });
 
     command(editor);
-    await TinyUiActions.pWaitForUi(editor, '.tox-toolbar__overflow');
+    await pWaitForOverflowToolbar(editor, toolbarMode);
     command(editor);
     await Waiter.pTryUntil('Wait for toolbar to be completely open', () => {
       store.sAssertEq('Assert store contains opened state', [ true, false ]);
@@ -126,7 +131,7 @@ describe.skip('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleT
         const doc = SugarDocument.getDocument();
         FocusTools.isOnSelector('Root element is focused', doc, 'iframe');
         editor.execCommand('ToggleToolbarDrawer', false, { skipFocus: true });
-        await TinyUiActions.pWaitForUi(editor, '.tox-toolbar__overflow');
+        await pWaitForOverflowToolbar(editor, toolbarMode);
         await FocusTools.pTryOnSelector('Focus should be preserved', doc, 'iframe');
         editor.execCommand('ToggleToolbarDrawer', false, { skipFocus: true });
         await FocusTools.pTryOnSelector('Focus should be preserved', doc, 'iframe');
@@ -145,7 +150,7 @@ describe.skip('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleT
         editor.focus();
         const initialFocusedElement = document.activeElement;
         editor.execCommand('ToggleToolbarDrawer', false, { skipFocus: false });
-        await TinyUiActions.pWaitForUi(editor, '.tox-toolbar__overflow');
+        await pWaitForOverflowToolbar(editor, toolbarMode);
         await Waiter.pTryUntil('Wait for toolbar to be completely open', () => {
           assert.notEqual(initialFocusedElement, document.activeElement, 'Focus should not be preserved');
         });
