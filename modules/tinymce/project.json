@@ -5,7 +5,7 @@
     "build": {
       "inputs": [
         "tiny-product",
-        "^tiny-product"
+        "^tiny-library"
       ],
       "dependsOn": [
         "^build"

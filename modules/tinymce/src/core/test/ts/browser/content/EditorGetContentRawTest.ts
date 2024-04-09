@@ -45,7 +45,6 @@ describe('browser.tinymce.core.content.EditorGetContentRawTest', () => {
     const initial = '<p>test0</p><plaintext>te\uFEFFst1 test2<p>te\uFEFFst3</p>';
     TinyApis(editor).setRawContent(initial);
     assert.strictEqual(editor.getContent({ format: 'raw' }), '<p>test0</p><plaintext></plaintext>', 'Should be expected html');
-    // TINY-10305: Modern browsers add a closing plaintext tag to end of body. Safari escapes text nodes within <plaintext>.
     TinyAssertions.assertRawContent(editor, `${initial}</plaintext>`);
   });
 
