@@ -120,11 +120,9 @@ const factory: CompositeSketchFactory<SplitSlidingToolbarDetail, SplitSlidingToo
       },
       refresh: (toolbar: AlloyComponent) => refresh(toolbar, detail),
       toggle: (toolbar: AlloyComponent) => {
-        console.log('toggle');
         toggleToolbar(toolbar, detail, false);
       },
       toggleWithoutFocusing: (toolbar: AlloyComponent) => {
-        console.log('toggleWithoutFocusing');
         toggleToolbar(toolbar, detail, true);
       },
       isOpen: (toolbar: AlloyComponent) => isOpen(toolbar, detail)
