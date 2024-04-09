@@ -8,7 +8,7 @@ export interface NamespaceTracker {
   readonly reset: () => void;
 }
 
-const nodeNameToNamespaceType = (name: string) => {
+const nodeNameToNamespaceType = (name: string): NamespaceType => {
   const lowerCaseName = name.toLowerCase();
 
   if (lowerCaseName === 'svg') {
