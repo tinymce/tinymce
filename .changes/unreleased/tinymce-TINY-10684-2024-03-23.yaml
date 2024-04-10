@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: An inline editor toolbar now behaves correctly in horizontally scrolled containers.
-time: 2024-03-23T21:42:30.928799+08:00
-custom:
-  Issue: TINY-10684
