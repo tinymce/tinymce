@@ -19,7 +19,7 @@ describe('browser.tinymce.plugins.table.TableGridFalse', () => {
       TinyUiActions.clickOnUi(editor, 'div.tox-menu div.tox-collection__item .tox-collection__item-label:contains("Table")')
     );
     const dialog = await TinyUiActions.pWaitForDialog(editor);
-    UiFinder.exists(dialog, 'div.tox-dialog__title:contains("Table Properties")');
+    UiFinder.exists(dialog, 'h1.tox-dialog__title:contains("Table Properties")');
     Assertions.assertPresence(
       'assert presence of col and row input',
       {
