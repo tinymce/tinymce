@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Tapping inside a composed text on Firefox Android would not close the autocompleter.
-time: 2024-03-14T14:10:04.576048+01:00
-custom:
-  Issue: TINY-10715

@@ -14,8 +14,8 @@ describe('browser.tinymce.core.init.ShadowDomEditorTest', () => {
     }
   });
 
-  const isSkin = (ss: StyleSheet) => ss.href !== null && Strings.contains(ss.href, 'skin.min.css');
-  const isShadowDomSkin = (ss: StyleSheet) => ss.href !== null && Strings.contains(ss.href, 'skin.shadowdom.min.css');
+  const isSkin = (ss: StyleSheet) => ss.href !== null && Strings.contains(ss.href, 'skin.css');
+  const isShadowDomSkin = (ss: StyleSheet) => ss.href !== null && Strings.contains(ss.href, 'skin.shadowdom.css');
 
   Arr.each([
     { type: 'normal', settings: { }, numSinks: 1 },

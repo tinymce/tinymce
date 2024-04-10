@@ -1697,4 +1697,47 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       assert.equal(serializedHtml, '<div><svg> <circle> </circle> </svg> <svg> <circle> </circle> </svg></div>');
     });
   });
+
+  context('Math elements', () => {
+    it('TINY-10809: Should not wrap math elements', () => {
+      const schema = Schema();
+      schema.addValidElements('math[*]');
+      const input = '<math></math>foo';
+      const serializedHtml = HtmlSerializer({}, schema).serialize(DomParser({ forced_root_block: 'p' }, schema).parse(input));
+      assert.equal(serializedHtml, '<math></math><p>foo</p>');
+    });
+
+    it('TINY-10809: Should retain math elements as is but filter out scripts', () => {
+      const schema = Schema();
+      schema.addValidElements('math[*]');
+      const input = '<math><script>alert(1)</script><mrow><msup><mi>a</mi><mn>2</mn></msup></mrow></math>';
+      const serializedHtml = HtmlSerializer({}, schema).serialize(DomParser({ forced_root_block: 'p' }, schema).parse(input));
+      assert.equal(serializedHtml, '<math><mrow><msup><mi>a</mi><mn>2</mn></msup></mrow></math>');
+    });
+
+    it('TINY-10809: Should retain math elements and keep scripts if sanitize is set to false', () => {
+      const schema = Schema();
+      schema.addValidElements('math[*]');
+      const input = '<math><script>alert(1)</script><mrow><msup><mi>a</mi><mn>2</mn></msup></mrow></math>';
+      const serializedHtml = HtmlSerializer({}, schema).serialize(DomParser({ forced_root_block: 'p', sanitize: false }, schema).parse(input));
+      assert.equal(serializedHtml, '<math><script>alert(1)</script><mrow><msup><mi>a</mi><mn>2</mn></msup></mrow></math>');
+    });
+
+    it('TINY-10809: Trim whitespace before or after but not inside math elements at root level', () => {
+      const schema = Schema();
+      schema.addValidElements('math[*]');
+      const input = '  <math> <mrow> <msup><mi>a</mi><mn>2</mn> </msup> </mrow> </math> ';
+      const serializedHtml = HtmlSerializer({}, schema).serialize(DomParser({ forced_root_block: 'p' }, schema).parse(input));
+      assert.equal(serializedHtml, '<math> <mrow> <msup><mi>a</mi><mn>2</mn> </msup> </mrow> </math>');
+    });
+
+    it('TINY-10809: Trim whitespace before or after but not between or inside math elements when inside a block element', () => {
+      const schema = Schema();
+      schema.addValidElements('math[*]');
+      const input = '<div>  <math> <mrow> </mrow> </math>  <math> <mtro> </mrow> </math>  </div>';
+      const serializedHtml = HtmlSerializer({}, schema).serialize(DomParser({ forced_root_block: 'p' }, schema).parse(input));
+      assert.equal(serializedHtml, '<div><math> <mrow> </mrow> </math> <math> </math></div>');
+    });
+  });
+
 });

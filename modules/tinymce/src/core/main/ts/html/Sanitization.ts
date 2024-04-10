@@ -204,21 +204,34 @@ const getPurifyConfig = (settings: DomParserSettings, mimeType: string): Config 
 };
 
 const sanitizeNamespaceElement = (ele: Element) => {
-  // xlink:href used to be the way to do links in SVG 1.x https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/xlink:href
-  const xlinkAttrs = [ 'type', 'href', 'role', 'arcrole', 'title', 'show', 'actuate', 'label', 'from', 'to' ].map((name) => `xlink:${name}`);
-  const config: Config = {
-    IN_PLACE: true,
-    USE_PROFILES: {
-      html: true,
-      svg: true,
-      svgFilters: true
-    },
-    ALLOWED_ATTR: xlinkAttrs
-  };
+  const namespaceType = Namespace.toScopeType(ele);
 
-  createDompurify().sanitize(ele, config);
+  if (namespaceType === 'svg') {
+    // xlink:href used to be the way to do links in SVG 1.x https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/xlink:href
+    const xlinkAttrs = [ 'type', 'href', 'role', 'arcrole', 'title', 'show', 'actuate', 'label', 'from', 'to' ].map((name) => `xlink:${name}`);
+    const config: Config = {
+      IN_PLACE: true,
+      USE_PROFILES: {
+        html: true,
+        svg: true,
+        svgFilters: true
+      },
+      ALLOWED_ATTR: xlinkAttrs
+    };
 
-  return ele.innerHTML;
+    createDompurify().sanitize(ele, config);
+  } else if (namespaceType === 'math') {
+    const config: Config = {
+      IN_PLACE: true,
+      USE_PROFILES: {
+        mathMl: true
+      },
+    };
+
+    createDompurify().sanitize(ele, config);
+  } else {
+    throw new Error('Not a namespace element');
+  }
 };
 
 const getSanitizer = (settings: DomParserSettings, schema: Schema): Sanitizer => {
