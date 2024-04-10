@@ -1,6 +1,6 @@
 import { AlloyComponent, Boxes, Channels, Docking, OffsetOrigin, VerticalDir } from '@ephox/alloy';
 import { Arr, Cell, Fun, Optional, Optionals, Singleton } from '@ephox/katamari';
-import { Attribute, Compare, Css, Height, Scroll, SugarBody, SugarElement, SugarLocation, Traverse, Width } from '@ephox/sugar';
+import { Attribute, Compare, Css, Height, Scroll, SugarBody, SugarElement, SugarLocation, SugarPosition, Traverse, Width, WindowVisualViewport } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -10,7 +10,6 @@ import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { ReadyUiReferences } from '../../modes/UiReferences';
 import OuterContainer from '../general/OuterContainer';
 import * as EditorSize from '../sizing/EditorSize';
-import * as Utils from '../sizing/Utils';
 
 export interface InlineHeader {
   readonly isVisible: () => boolean;
@@ -109,15 +108,14 @@ export const InlineHeader = (
     floatContainer.on((container) => {
       // Update the max width of the inline toolbar
       const maxWidth = editorMaxWidthOpt.getOrThunk(() => {
-        // No max width, so use the body width, minus the left pos as the maximum
-        const bodyMargin = Utils.parseToInt(Css.get(SugarBody.body(), 'margin-left')).getOr(0);
-        return Width.get(SugarBody.body()) - SugarLocation.absolute(targetElm).left + bodyMargin;
+        // Adding 10px of margin so that the toolbar won't try to wrap
+        return WindowVisualViewport.getBounds().width - SugarLocation.viewport(targetElm).left - 10;
       });
       Css.set(container.element, 'max-width', maxWidth + 'px');
     });
   };
 
-  const updateChromePosition = (isOuterContainerWidthRestored: boolean) => {
+  const updateChromePosition = (isOuterContainerWidthRestored: boolean, prevScroll: Optional<SugarPosition>) => {
     floatContainer.on((container) => {
       const toolbar = OuterContainer.getToolbar(mainUi.outerContainer);
       const offset = calcToolbarOffset(toolbar);
@@ -181,7 +179,7 @@ export const InlineHeader = (
       // the calculate width isn't correct
         .filter((w) => w > minimumToolbarWidth).map(
           (toolbarWidth: number) => {
-            const scroll = Scroll.get();
+            const scroll = prevScroll.getOr(Scroll.get());
 
             /*
           As the editor container can wrap its elements (due to flex-wrap), the width of the container impacts also its height. Adding a minimum width works around two problems:
@@ -210,7 +208,7 @@ export const InlineHeader = (
               width: width + 'px'
             };
           }
-        ).getOr({ });
+        ).getOr({ width: 'max-content' });
 
       const baseProperties = {
         position: 'absolute',
@@ -274,6 +272,7 @@ export const InlineHeader = (
       updateChromeWidth();
     }
 
+    const prevScroll = Scroll.get();
     const isOuterContainerWidthRestored = useFixedToolbarContainer ? false : restoreOuterContainerWidth();
 
     /*
@@ -286,8 +285,18 @@ export const InlineHeader = (
 
     // Positioning
     if (!useFixedToolbarContainer) {
+      // Getting the current scroll as the previous step may have reset the scroll,
+      // We also want calculation based on the previous scroll, then restoring the scroll when everything is set.
+      const currentScroll = Scroll.get();
+      const optScroll = Optionals.someIf(prevScroll.left !== currentScroll.left, prevScroll);
+
       // This will position the container in the right spot.
-      updateChromePosition(isOuterContainerWidthRestored);
+      updateChromePosition(isOuterContainerWidthRestored, optScroll);
+
+      // Restore scroll left position only if they are different, keeping the current scroll top, that shouldn't be changed
+      optScroll.each((scroll) => {
+        Scroll.to(scroll.left, currentScroll.top);
+      });
     }
 
     // Docking
