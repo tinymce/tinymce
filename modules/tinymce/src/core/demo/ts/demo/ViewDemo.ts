@@ -99,9 +99,9 @@ export default (): void => {
         },
         onHide: () => console.log('hide')
       });
-      ed.on('init', () => {
-        ed.execCommand('ToggleView', false, 'myview1');
-      });
+    },
+    init_instance_callback: (ed) => {
+      ed.execCommand('ToggleView', false, 'myview1');
     },
     plugins: [],
     toolbar: 'undo redo',
