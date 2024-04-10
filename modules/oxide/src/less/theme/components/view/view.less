@@ -12,8 +12,7 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    // Override the browser's height calculation caused by height:auto
-    height: 100%;
+    height: 100%;     // Override the height set by browsers so the view doesn't grow beyond editor container
   }
 
   .tox-view {
@@ -65,6 +64,7 @@
     gap: @view-toolbar-button-spacing-x; // spacing between buttons within a group
     justify-content: space-between;
     padding: @view-header-padding;
+    overflow-x: auto;           // Show horizontal scrollbar on small screens
   }
 
   .tox-view__toolbar__group {
