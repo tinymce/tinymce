@@ -34,7 +34,8 @@
     flex: 1;
     height: 100%;
     margin-top: 8px;
-    overflow: 'auto';
+    overflow-x: auto;
+    overflow-y: hidden;
     position: relative;
     width: 100%;
   }
@@ -51,8 +52,6 @@
     border-left: @revisionhistory-border;
     height: 100%;
     max-width: 360px;
-    overflow-x: auto;
-    overflow-y: hidden;
 
     .tox-revisionhistory__sidebar-title {
       border-bottom: @revisionhistory-border;
