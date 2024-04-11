@@ -99,12 +99,16 @@ export default (): void => {
         },
         onHide: () => console.log('hide')
       });
-      ed.on('init', () => {
-        ed.execCommand('ToggleView', false, 'myview1');
+
+      ed.ui.registry.addButton('customview', {
+        text: 'Custom view',
+        onAction: () => {
+          ed.execCommand('ToggleView', false, 'myview1');
+        }
       });
     },
     plugins: [],
-    toolbar: 'undo redo',
+    toolbar: 'undo redo customview',
     contextmenu: 'link linkchecker image table lists configurepermanentpen'
   };
 
