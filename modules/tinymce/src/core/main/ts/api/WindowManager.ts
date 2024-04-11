@@ -144,8 +144,8 @@ const WindowManager = (editor: Editor): WindowManager => {
      * Opens a new window.
      *
      * @method open
-     * @param {Object} config For information on the available options, see: <a href="https://www.tiny.cloud/docs/tinymce/6/dialog-configuration/#options">Dialog - Configuration options</a>.
-     * @param {Object} params (Optional) For information on the available options, see: <a href="https://www.tiny.cloud/docs/tinymce/6/dialog-configuration/#configuration-parameters">Dialog - Configuration parameters</a>.
+     * @param {Object} config For information on the available options, see: <a href="https://www.tiny.cloud/docs/tinymce/7/dialog-configuration/#options">Dialog - Configuration options</a>.
+     * @param {Object} params (Optional) For information on the available options, see: <a href="https://www.tiny.cloud/docs/tinymce/7/dialog-configuration/#configuration-parameters">Dialog - Configuration parameters</a>.
      * @returns {WindowManager.DialogInstanceApi} A new dialog instance.
      */
     open,
@@ -154,7 +154,7 @@ const WindowManager = (editor: Editor): WindowManager => {
      * Opens a new window for the specified url.
      *
      * @method openUrl
-     * @param {Object} config For information on the available options, see: <a href="https://www.tiny.cloud/docs/tinymce/6/urldialog/#configuration">URL dialog - Configuration</a>.
+     * @param {Object} config For information on the available options, see: <a href="https://www.tiny.cloud/docs/tinymce/7/urldialog/#configuration">URL dialog - Configuration</a>.
      * @returns {WindowManager.UrlDialogInstanceApi} A new URL dialog instance.
      */
     openUrl,

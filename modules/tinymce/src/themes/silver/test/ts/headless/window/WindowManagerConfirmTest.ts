@@ -55,7 +55,7 @@ describe.skip('headless.tinymce.themes.silver.window.WindowManagerConfirmTest', 
                       display: str.is('none')
                     },
                     children: [
-                      s.element('div', {
+                      s.element('h1', {
                         classes: [ arr.has('tox-dialog__title') ],
                         styles: {
                           display: str.is('none')

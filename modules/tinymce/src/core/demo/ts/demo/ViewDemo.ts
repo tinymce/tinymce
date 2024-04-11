@@ -107,6 +107,9 @@ export default (): void => {
         }
       });
     },
+    init_instance_callback: (ed) => {
+      ed.execCommand('ToggleView', false, 'myview1');
+    },
     plugins: [],
     toolbar: 'undo redo customview',
     contextmenu: 'link linkchecker image table lists configurepermanentpen'

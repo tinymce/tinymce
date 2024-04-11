@@ -1,6 +1,6 @@
 import { BlockFormat, InlineFormat, SelectorFormat } from './Format';
 
-// somewhat documented at https://www.tiny.cloud/docs/tinymce/6/content-formatting/#formats
+// somewhat documented at https://www.tiny.cloud/docs/tinymce/7/content-formatting/#formats
 export type StyleFormat = BlockStyleFormat | InlineStyleFormat | SelectorStyleFormat;
 export type AllowedFormat = Separator | FormatReference | StyleFormat | NestedFormatting;
 
