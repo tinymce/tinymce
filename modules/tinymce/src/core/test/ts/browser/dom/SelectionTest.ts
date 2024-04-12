@@ -1,3 +1,4 @@
+import { Keys } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
@@ -157,6 +158,30 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     editor.selection.setContent('<div>text</div>');
     LegacyUnit.equal(eventObj?.content, '<div>text</div>', 'Set selected contents, onSetContent event');
     editor.off('SetContent', handler);
+  });
+
+  it('TINY-10755: pressing enter after inserting a wrapped content before another wrapped content should workas expected', async () => {
+    const wrappedElement = '<pre><code>hello</code></pre>';
+    const h1Element = '<h1>hello</h1>';
+    const editor = hook.editor();
+
+    editor.setContent('<p>a</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    editor.selection.setContent(wrappedElement);
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    editor.selection.setContent(h1Element);
+    editor.dom.dispatch(editor.getBody(), 'keydown', { keyCode: Keys.enter() });
+
+    TinyAssertions.assertRawContent(editor, '<p>a<h1>hello</h1><pre><code data-mce-selected="inline-boundary">﻿<br>hello</code></pre></p>');
+
+    editor.setContent('<p>a</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    editor.selection.setContent(h1Element);
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    editor.selection.setContent(wrappedElement);
+    editor.dom.dispatch(editor.getBody(), 'keydown', { keyCode: Keys.enter() });
+
+    TinyAssertions.assertRawContent(editor, `<p>a${wrappedElement}<h1><br data-mce-bogus="1"></h1>${h1Element}</p>`);
   });
 
   it('getStart/getEnd', () => {
