@@ -18,6 +18,10 @@ const isEditorUIElement = (elm: Node): boolean => {
   return NodeType.isElement(elm) && FocusManager.isEditorUIElement(elm);
 };
 
+const isEditorUIElementWithoutFullscreen = (elm: Node): boolean => {
+  return NodeType.isElement(elm) && FocusManager.isEditorUIElement(elm) && !elm.className.toString().includes('tox-fullscreen');
+};
+
 const isEditorContentAreaElement = (elm: Element): boolean => {
   const classList = elm.classList;
   if (classList !== undefined) {
@@ -29,11 +33,11 @@ const isEditorContentAreaElement = (elm: Element): boolean => {
   }
 };
 
-const isUIElement = (editor: Editor, elm: Node): boolean => {
+const isUIElement = (editor: Editor, elm: Node, isEditorUI: (elm: Node) => boolean = isEditorUIElement): boolean => {
   const customSelector = Options.getCustomUiSelector(editor);
   const parent = DOM.getParent(elm, (elm) => {
     return (
-      isEditorUIElement(elm) ||
+      isEditorUI(elm) ||
       (customSelector ? editor.dom.is(elm, customSelector) : false)
     );
   });
@@ -53,6 +57,11 @@ const getActiveElement = (editor: Editor): Element => {
     return document.body;
   }
 };
+
+const shouldTrapFocusInFullScreen = (editor: Editor): boolean =>
+  editor.plugins.fullscreen
+    && editor.plugins.fullscreen.isFullscreen()
+    && Options.shouldFullScreenTrapFocus(editor);
 
 const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => {
   const editor = e.editor;
@@ -114,7 +123,9 @@ const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => 
           const elem = (target as Node);
           if (elem.ownerDocument === document) {
             // Fire a blur event if the element isn't a UI element
-            if (elem !== document.body && !isUIElement(activeEditor, elem) && editorManager.focusedEditor === activeEditor) {
+            if (elem !== document.body
+              && editorManager.focusedEditor === activeEditor
+              && (!isUIElement(activeEditor, elem) || (shouldTrapFocusInFullScreen(activeEditor) && !isUIElement(editor, elem, isEditorUIElementWithoutFullscreen)))) {
               activeEditor.dispatch('blur', { focusedEditor: null });
               editorManager.focusedEditor = null;
             }

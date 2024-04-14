@@ -1,0 +1,7 @@
+project: tinymce
+kind: Added
+body: New `fullscreen_trap_focus` option, that prevents focus from going out of the editor
+  when in fullscreen mode.
+time: 2024-04-14T21:23:35.919442+08:00
+custom:
+  Issue: TINY-10597

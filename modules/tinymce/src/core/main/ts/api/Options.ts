@@ -859,6 +859,11 @@ const register = (editor: Editor): void => {
     default: true
   });
 
+  registerOption('fullscreen_trap_focus', {
+    processor: 'boolean',
+    default: false
+  });
+
   // These options must be registered later in the init sequence due to their default values
   editor.on('ScriptsLoaded', () => {
     registerOption('directionality', {
@@ -980,6 +985,7 @@ const getSandboxIframesExclusions = (editor: Editor): string[] => editor.options
 const shouldConvertUnsafeEmbeds = option('convert_unsafe_embeds');
 const getLicenseKey = option('license_key');
 const getApiKey = option('api_key');
+const shouldFullScreenTrapFocus = option('fullscreen_trap_focus');
 
 export {
   register,
@@ -1089,5 +1095,6 @@ export {
   getLicenseKey,
   getSandboxIframesExclusions,
   shouldConvertUnsafeEmbeds,
-  getApiKey
+  getApiKey,
+  shouldFullScreenTrapFocus
 };
