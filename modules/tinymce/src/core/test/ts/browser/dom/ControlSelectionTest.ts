@@ -32,7 +32,7 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     const clientX = (rect.left + rect.width / 2), clientY = (rect.top + rect.height / 2);
     editor.dispatch('mousedown', { target, clientX, clientY, button: 2 } as MouseEvent);
     editor.dispatch('mouseup', { target, clientX, clientY, button: 2 } as MouseEvent);
-    editor.dispatch('contextmenu', { target, clientX, clientY, button: 2 } as PointerEvent);
+    editor.dispatch('contextmenu', { target, clientX, clientY, button: 2, x: clientX, y: clientY } as PointerEvent);
   };
 
   const resetEventCounter = () => eventCounter.set({});
@@ -100,6 +100,13 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
   it('TBA: Select image by context menu clicking on it', () => {
     const editor = hook.editor();
     editor.setContent(`<p><img src="${imgSrc}" width="100" height="100"></p>`);
+    contextMenuClickInMiddleOf(editor, [ 0, 0 ]);
+    TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 1);
+  });
+
+  it.only('TINY-10931: Select a link that is part of a selection', () => {
+    const editor = hook.editor();
+    editor.setContent(`<p>one <a href="https://www.example.com">Example</a> two</p>`);
     contextMenuClickInMiddleOf(editor, [ 0, 0 ]);
     TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 1);
   });

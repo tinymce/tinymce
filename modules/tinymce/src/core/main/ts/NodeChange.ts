@@ -1,4 +1,5 @@
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Type } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
 import Editor from './api/Editor';
 import * as Options from './api/Options';
@@ -49,9 +50,15 @@ class NodeChange {
 
     // IE has a bug where it fires a selectionchange on right click that has a range at the start of the body
     // When the contextmenu event fires the selection is located at the right location
-    editor.on('contextmenu', () => {
-      SelectionBookmark.store(editor);
+    editor.on('contextmenu', (event) => {
+      const elementFromPoint = SugarElement.fromPoint(SugarElement.fromDom(editor.contentDocument), event.x, event.y);
+      elementFromPoint.each((elm) => {
+        if (elm.dom.nodeName === 'A') {
+          editor.selection.select(elm.dom);
+        }
+      });
 
+      SelectionBookmark.store(editor);
       editor.dispatch('SelectionChange');
     });
 
