@@ -36,8 +36,6 @@ export const renderColorSwatchItem = (spec: Menu.ColorSwatchMenuItem, backstage:
     menuRole: false
   };
 
-  const widgetSketchSpec = AlloyMenu.sketch(widgetSpec);
-
   return {
     type: 'widget',
     data: { value: Id.generate('widget-id') },
@@ -47,7 +45,7 @@ export const renderColorSwatchItem = (spec: Menu.ColorSwatchMenuItem, backstage:
     },
     autofocus: true,
     components: [
-      ItemWidget.parts.widget(widgetSketchSpec)
+      ItemWidget.parts.widget(AlloyMenu.sketch(widgetSpec))
     ]
   };
 };
