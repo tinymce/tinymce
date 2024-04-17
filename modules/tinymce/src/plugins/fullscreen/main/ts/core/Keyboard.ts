@@ -8,7 +8,7 @@ import { FullScreenInfo } from './Actions';
 const setup = (editor: Editor, fullscreenState: Cell<FullScreenInfo | null>): void => {
   editor.on('init', () => {
     editor.on('keydown', (e) => {
-      if ((e.keyCode === VK.TAB || (e.keyCode === VK.TAB && e.shiftKey)) && fullscreenState.get()) {
+      if (e.keyCode === VK.TAB && !(e.metaKey || e.ctrlKey) && fullscreenState.get()) {
         e.preventDefault();
       }
     });
