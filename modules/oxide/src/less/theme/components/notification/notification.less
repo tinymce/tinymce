@@ -29,6 +29,15 @@
 @notification-info-text-color: @text-color;
 @notification-info-link-color: mix(@text-color, @_color-info, 40%);
 
+@notification-body-link-color: @color-tint;
+@notification-body-link-text-decoration: underline;
+@notification-body-link-hover-color: darken(@notification-body-link-color, 20%);
+@notification-body-link-hover-text-decoration: underline;
+@notification-body-link-active-color: darken(@notification-body-link-color, 30%);
+@notification-body-link-active-text-decoration: underline;
+@notification-body-link-focus-outline-color: @notification-body-link-color;
+@notification-body-link-focus-outline-border-radius: 1px;
+
 // Private variables
 @_color-warn: #ffcc00;
 @_color-info: #3087eb;
@@ -50,19 +59,40 @@
     font-size: @notification-font-size;
     font-weight: @notification-font-weight;
     grid-template-columns: minmax(40px, 1fr) auto minmax(40px, 1fr);
+    margin-left: auto;
+    margin-right: auto;
     margin-top: @pad-xs;
     opacity: 0;
     padding: @notification-padding;
     transition: transform 100ms ease-in, opacity 150ms ease-in;
+    width: max-content;
+
+    a {
+      color: @notification-body-link-color;
+      cursor: pointer;
+      text-decoration: @notification-body-link-text-decoration;
+
+      &:hover,
+      &:focus {
+        color: @notification-body-link-hover-color;
+        text-decoration: @notification-body-link-hover-text-decoration;
+      }
+
+      &:focus-visible {
+        border-radius: @notification-body-link-focus-outline-border-radius;
+        outline: 2px solid @notification-body-link-focus-outline-color;
+        outline-offset: 2px;
+      }
+
+      &:active {
+        color: @notification-body-link-active-color;
+        text-decoration: @notification-body-link-active-text-decoration;
+      }
+    }
 
     p {
       font-size: @notification-font-size;
       font-weight: @notification-font-weight;
-    }
-
-    a {
-      cursor: pointer;
-      text-decoration: underline;
     }
   }
 
@@ -79,10 +109,6 @@
       color: @notification-success-text-color;
     }
 
-    a {
-      color: @notification-success-link-color;
-    }
-
     svg {
       fill: @notification-success-text-color;
     }
@@ -95,10 +121,6 @@
 
     p {
       color: @notification-error-text-color;
-    }
-
-    a {
-      color: @notification-error-link-color;
     }
 
     svg {
@@ -116,10 +138,6 @@
       color: @notification-warn-text-color;
     }
 
-    a {
-      color: @notification-warn-link-color;
-    }
-
     svg {
       fill: @notification-warn-text-color;
     }
@@ -132,10 +150,6 @@
 
     p {
       color: @notification-info-text-color;
-    }
-
-    a {
-      color: @notification-info-link-color;
     }
 
     svg {
@@ -166,10 +180,6 @@
     margin-top: 1rem;
   }
 
-  .tox-notification-inner a {
-    //
-  }
-
   .tox-notification__icon {
     align-self: center;
     grid-column-end: 2;
@@ -198,5 +208,23 @@
     grid-row-end: 3;
     grid-row-start: 2;
     justify-self: center;
+  }
+
+  .tox-notification-container-dock-fadeout {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .tox-notification-container-dock-fadein {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .tox-notification-container-dock-transition {
+    transition: visibility 0s linear .3s, opacity .3s ease;
+  }
+
+  .tox-notification-container-dock-transition.tox-notification-container-dock-fadein {
+    transition-delay: 0s;
   }
 }
