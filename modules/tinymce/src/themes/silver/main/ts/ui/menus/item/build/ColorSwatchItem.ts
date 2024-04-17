@@ -1,6 +1,6 @@
-import { ItemTypes, ItemWidget, Menu as AlloyMenu, MenuTypes, SketchSpec } from '@ephox/alloy';
+import { ItemTypes, ItemWidget, Menu as AlloyMenu, MenuTypes } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Fun, Id, Optional, Resolve } from '@ephox/katamari';
+import { Fun, Id } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import * as ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
@@ -9,14 +9,6 @@ import { createPartialChoiceMenu } from '../../menu/MenuChoice';
 import { deriveMenuMovement } from '../../menu/MenuMovement';
 import * as MenuParts from '../../menu/MenuParts';
 import ItemResponse from '../ItemResponse';
-
-const removeRoleAttr = (spec: SketchSpec): SketchSpec => {
-  Optional.from(Resolve.resolve<{ role?: string }>('domModification.attributes', spec))
-    .each((domModificationAttributes) => {
-      delete domModificationAttributes.role;
-    });
-  return spec;
-};
 
 export const renderColorSwatchItem = (spec: Menu.ColorSwatchMenuItem, backstage: UiFactoryBackstage): ItemTypes.WidgetItemSpec => {
   const items = getColorItems(spec, backstage);
@@ -39,11 +31,12 @@ export const renderColorSwatchItem = (spec: Menu.ColorSwatchMenuItem, backstage:
   const widgetSpec: MenuTypes.MenuSpec = {
     ...menuSpec,
     markers: MenuParts.markers(presets),
-    movement: deriveMenuMovement(columns, presets)
+    movement: deriveMenuMovement(columns, presets),
+    // TINY-10806: Avoid duplication of ARIA role="menu" in the accessibility tree for Color Swatch menu item.
+    menuRole: false
   };
 
-  // TINY-10806: Avoid duplication of ARIA role="menu" in the accessibility tree for Color Swatch menu item.
-  const widgetSketchSpec = removeRoleAttr(AlloyMenu.sketch(widgetSpec));
+  const widgetSketchSpec = AlloyMenu.sketch(widgetSpec);
 
   return {
     type: 'widget',

@@ -124,7 +124,8 @@ const schema = Fun.constant([
   FieldSchema.defaulted('fakeFocus', false),
   FieldSchema.defaulted('focusManager', FocusManagers.dom()),
   Fields.onHandler('onHighlight'),
-  Fields.onHandler('onDehighlight')
+  Fields.onHandler('onDehighlight'),
+  FieldSchema.defaulted('menuRole', true),
 ]);
 
 const name = Fun.constant('menu');

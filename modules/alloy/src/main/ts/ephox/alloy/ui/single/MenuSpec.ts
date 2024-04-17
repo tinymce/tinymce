@@ -88,11 +88,13 @@ const make: CompositeSketchFactory<MenuDetail, MenuSpec> = (detail, components, 
   components,
   eventOrder: detail.eventOrder,
 
-  domModification: {
-    attributes: {
-      role: 'menu'
+  ...detail.menuRole ? {
+    domModification: {
+      attributes: {
+        role: 'menu'
+      }
     }
-  }
+  } : {}
 });
 
 export {
