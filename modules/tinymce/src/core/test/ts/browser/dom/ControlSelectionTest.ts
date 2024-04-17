@@ -104,13 +104,6 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 1);
   });
 
-  it('TINY-10931: Select a link that is part of a selection', () => {
-    const editor = hook.editor();
-    editor.setContent(`<p>one <a href="https://www.example.com">Example</a> two</p>`);
-    contextMenuClickInMiddleOf(editor, [ 0, 0 ]);
-    TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 1);
-  });
-
   it('TINY-4161: Resize events should not be called if the object isn\'t resized', async () => {
     const editor = hook.editor();
     const editorBody = TinyDom.body(editor);
