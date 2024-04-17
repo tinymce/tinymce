@@ -17,10 +17,8 @@ const register = (editor: Editor): void => {
 };
 
 const getFullscreenNative = option<boolean>('fullscreen_native');
-const shouldFullScreenTrapFocus = option<boolean>('fullscreen_trap_focus');
 
 export {
   register,
-  getFullscreenNative,
-  shouldFullScreenTrapFocus
+  getFullscreenNative
 };

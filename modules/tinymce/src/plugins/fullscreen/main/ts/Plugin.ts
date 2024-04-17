@@ -20,7 +20,6 @@ export default (): void => {
     Options.register(editor);
     Commands.register(editor, fullscreenState);
     Buttons.register(editor, fullscreenState);
-    Events.setup(editor, fullscreenState);
 
     editor.addShortcut('Meta+Shift+F', '', 'mceFullScreen');
 

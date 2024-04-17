@@ -171,6 +171,7 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<FullScreenInfo |
       requestFullscreen(fullscreenRoot);
     }
     Events.fireFullscreenStateChanged(editor, true);
+    editor.options.set('trap_focus', true);
   } else {
     fullscreenInfo.fullscreenChangeHandler.unbind();
     if (Options.getFullscreenNative(editor) && isFullscreenElement(fullscreenRoot)) {
@@ -193,6 +194,7 @@ const toggleFullscreen = (editor: Editor, fullscreenState: Cell<FullScreenInfo |
 
     fullscreenState.set(null);
     Events.fireFullscreenStateChanged(editor, false);
+    editor.options.set('trap_focus', false);
     editor.off('remove', cleanup);
   }
 };

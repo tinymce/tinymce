@@ -58,10 +58,7 @@ const getActiveElement = (editor: Editor): Element => {
   }
 };
 
-const shouldTrapFocusInFullScreen = (editor: Editor): boolean =>
-  editor.plugins.fullscreen
-    && editor.plugins.fullscreen.isFullscreen()
-    && Options.shouldFullScreenTrapFocus(editor);
+const shouldTrapFocusInFullScreen = (editor: Editor): boolean => Options.shouldFullScreenTrapFocus(editor);
 
 const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => {
   const editor = e.editor;
@@ -124,10 +121,13 @@ const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => 
           if (elem.ownerDocument === document) {
             // Fire a blur event if the element isn't a UI element
             if (elem !== document.body
-              && editorManager.focusedEditor === activeEditor
-              && (!isUIElement(activeEditor, elem) || (shouldTrapFocusInFullScreen(activeEditor) && !isUIElement(editor, elem, isEditorUIElementWithoutFullscreen)))) {
-              activeEditor.dispatch('blur', { focusedEditor: null });
-              editorManager.focusedEditor = null;
+              && editorManager.focusedEditor === activeEditor) {
+              if (shouldTrapFocusInFullScreen(activeEditor) && !isUIElement(editor, elem, isEditorUIElementWithoutFullscreen)) {
+                editor.focus();
+              } else if (!isUIElement(activeEditor, elem)) {
+                activeEditor.dispatch('blur', { focusedEditor: null });
+                editorManager.focusedEditor = null;
+              }
             }
           }
         });

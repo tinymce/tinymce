@@ -859,7 +859,7 @@ const register = (editor: Editor): void => {
     default: true
   });
 
-  registerOption('fullscreen_trap_focus', {
+  registerOption('trap_focus', {
     processor: 'boolean',
     default: false
   });
@@ -985,7 +985,7 @@ const getSandboxIframesExclusions = (editor: Editor): string[] => editor.options
 const shouldConvertUnsafeEmbeds = option('convert_unsafe_embeds');
 const getLicenseKey = option('license_key');
 const getApiKey = option('api_key');
-const shouldFullScreenTrapFocus = option('fullscreen_trap_focus');
+const shouldFullScreenTrapFocus = option('trap_focus');
 
 export {
   register,

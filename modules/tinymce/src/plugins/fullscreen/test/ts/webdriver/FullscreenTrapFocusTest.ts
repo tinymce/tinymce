@@ -23,7 +23,6 @@ describe('webdriver.tinymce.plugins.fullscreen.FullscreenTrapFocusTest', () => {
           toolbar: 'fullscreen',
           plugins: 'fullscreen',
           base_url: '/project/tinymce/js/tinymce',
-          fullscreen_trap_focus: true,
           fullscreen_native: mode === 'native'
         }, [ FullscreenPlugin ], true);
 
@@ -36,7 +35,7 @@ describe('webdriver.tinymce.plugins.fullscreen.FullscreenTrapFocusTest', () => {
         };
 
         const setupInput = (insert: (marker: SugarElement<Node>, element: SugarElement<Node>) => void, editor: Editor) => {
-          const input = SugarElement.fromHtml('<input />');
+          const input = SugarElement.fromTag('input');
           insert(TinyDom.container(editor), input);
           return input;
         };
