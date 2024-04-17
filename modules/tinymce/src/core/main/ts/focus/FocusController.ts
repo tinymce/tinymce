@@ -18,10 +18,6 @@ const isEditorUIElement = (elm: Node): boolean => {
   return NodeType.isElement(elm) && FocusManager.isEditorUIElement(elm);
 };
 
-const isEditorUIElementWithoutFullscreen = (elm: Node): boolean => {
-  return NodeType.isElement(elm) && FocusManager.isEditorUIElement(elm) && !elm.className.toString().includes('tox-fullscreen');
-};
-
 const isEditorContentAreaElement = (elm: Element): boolean => {
   const classList = elm.classList;
   if (classList !== undefined) {
@@ -120,14 +116,9 @@ const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => 
           const elem = (target as Node);
           if (elem.ownerDocument === document) {
             // Fire a blur event if the element isn't a UI element
-            if (elem !== document.body
-              && editorManager.focusedEditor === activeEditor) {
-              if (shouldTrapFocusInFullScreen(activeEditor) && !isUIElement(editor, elem, isEditorUIElementWithoutFullscreen)) {
-                editor.focus();
-              } else if (!isUIElement(activeEditor, elem)) {
-                activeEditor.dispatch('blur', { focusedEditor: null });
-                editorManager.focusedEditor = null;
-              }
+            if (elem !== document.body && editorManager.focusedEditor === activeEditor && !isUIElement(activeEditor, elem)) {
+              activeEditor.dispatch('blur', { focusedEditor: null });
+              editorManager.focusedEditor = null;
             }
           }
         });

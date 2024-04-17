@@ -1,8 +1,9 @@
 import { FocusTools, RealKeys, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
-import { Insert, Remove, SugarDocument, SugarElement } from '@ephox/sugar';
-import { TinyContentActions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
+import { Arr, Optional } from '@ephox/katamari';
+import { Attribute, Insert, Remove, SugarDocument, SugarElement } from '@ephox/sugar';
+import { McEditor, TinyContentActions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as NativeFullscreen from 'tinymce/plugins/fullscreen/core/NativeFullscreen';
@@ -10,6 +11,40 @@ import * as NativeFullscreen from 'tinymce/plugins/fullscreen/core/NativeFullscr
 import FullscreenPlugin from '../../../main/ts/Plugin';
 
 describe('webdriver.tinymce.plugins.fullscreen.FullscreenTrapFocusTest', () => {
+  const pDoShiftTab = async (selector: string = 'iframe => body'): Promise<void> => {
+    await RealKeys.pSendKeysOn(selector, [ RealKeys.combo({ shift: true }, 'tab') ]);
+  };
+
+  const pDoTab = async (selector: string = 'iframe => body'): Promise<void> => {
+    await RealKeys.pSendKeysOn(selector, [ RealKeys.text('tab') ]);
+  };
+
+  const setupInput = (insert: (marker: SugarElement<Node>, element: SugarElement<Node>) => void, editor: Editor) => {
+    const input = SugarElement.fromTag('input');
+    insert(TinyDom.container(editor), input);
+    return input;
+  };
+
+  const setupInputBefore = (editor: Editor) => setupInput(Insert.before, editor);
+  const setupInputAfter = (editor: Editor) => setupInput(Insert.after, editor);
+
+  const pIsFullscreen = (fullscreen: boolean) => Waiter.pTryUntilPredicate('Waiting for fullscreen mode to ' + (fullscreen ? 'start' : 'end'), () => {
+    if (fullscreen) {
+      return NativeFullscreen.getFullscreenElement(document) === document.body;
+    } else {
+      return NativeFullscreen.getFullscreenElement(document) === null;
+    }
+  });
+
+  const pToggleFullscreen = async (editor: Editor, nativeMode: boolean, fullscreen: boolean) => {
+    TinyContentActions.keystroke(editor, 121, { alt: true });
+    await FocusTools.pTryOnSelector('Assert toolbar is focused', SugarDocument.getDocument(), 'div[role=toolbar] .tox-tbtn');
+    await RealKeys.pSendKeysOn('div[role=toolbar] .tox-tbtn', [ RealKeys.text('enter') ]);
+    if (nativeMode) {
+      await pIsFullscreen(fullscreen);
+      await Waiter.pWait(500);
+    }
+  };
 
   Arr.each([
     { label: 'Iframe Editor', setup: TinyHooks.bddSetup },
@@ -25,41 +60,6 @@ describe('webdriver.tinymce.plugins.fullscreen.FullscreenTrapFocusTest', () => {
           base_url: '/project/tinymce/js/tinymce',
           fullscreen_native: mode === 'native'
         }, [ FullscreenPlugin ], true);
-
-        const pDoShiftTab = async (selector: string = 'iframe => body'): Promise<void> => {
-          await RealKeys.pSendKeysOn(selector, [ RealKeys.combo({ shift: true }, 'tab') ]);
-        };
-
-        const pDoTab = async (selector: string = 'iframe => body'): Promise<void> => {
-          await RealKeys.pSendKeysOn(selector, [ RealKeys.text('tab') ]);
-        };
-
-        const setupInput = (insert: (marker: SugarElement<Node>, element: SugarElement<Node>) => void, editor: Editor) => {
-          const input = SugarElement.fromTag('input');
-          insert(TinyDom.container(editor), input);
-          return input;
-        };
-
-        const setupInputBefore = (editor: Editor) => setupInput(Insert.before, editor);
-        const setupInputAfter = (editor: Editor) => setupInput(Insert.after, editor);
-
-        const pIsFullscreen = (fullscreen: boolean) => Waiter.pTryUntilPredicate('Waiting for fullscreen mode to ' + (fullscreen ? 'start' : 'end'), () => {
-          if (fullscreen) {
-            return NativeFullscreen.getFullscreenElement(document) === document.body;
-          } else {
-            return NativeFullscreen.getFullscreenElement(document) === null;
-          }
-        });
-
-        const pToggleFullscreen = async (editor: Editor, nativeMode: boolean, fullscreen: boolean) => {
-          TinyContentActions.keystroke(editor, 121, { alt: true });
-          await FocusTools.pTryOnSelector('Assert toolbar is focused', SugarDocument.getDocument(), 'div[role=toolbar] .tox-tbtn');
-          await RealKeys.pSendKeysOn('div[role=toolbar] .tox-tbtn', [ RealKeys.text('enter') ]);
-          if (nativeMode) {
-            await pIsFullscreen(fullscreen);
-            await Waiter.pWait(500);
-          }
-        };
 
         it('TINY-10597: Focus should not go out of the editor on fullscreen mode, when shift tabbing ', async () => {
           const editor = hook.editor();
@@ -106,5 +106,38 @@ describe('webdriver.tinymce.plugins.fullscreen.FullscreenTrapFocusTest', () => {
         });
       });
     });
+  });
+
+  context('Multiple editors', () => {
+    it('TINY-10597: Trap focus multiple editors', async () => {
+      const settings = {
+        toolbar: 'fullscreen',
+        plugins: 'fullscreen',
+        base_url: '/project/tinymce/js/tinymce',
+      };
+      const editorOne = await McEditor.pFromSettings<Editor>(settings);
+      const editorTwo = await McEditor.pFromSettings<Editor>(settings);
+
+      editorOne.focus();
+      editorOne.execCommand('mceFullScreen');
+      await pDoTab();
+      assert.isTrue(editorOne.hasFocus(), 'Focus should be in editor 1');
+      await pDoTab();
+      assert.isTrue(editorOne.hasFocus(), 'Focus should be in editor 1');
+      editorOne.execCommand('mceFullScreen');
+
+      editorTwo.focus();
+      editorTwo.execCommand('mceFullScreen');
+      const bodyId = Optional.from(editorTwo.iframeElement).map(SugarElement.fromDom).map((elm) => `#${Attribute.get(elm, 'id')} => body`).getOr('');
+      await pDoShiftTab(bodyId);
+      assert.isTrue(editorTwo.hasFocus(), 'Focus should be in editor 2');
+      await pDoShiftTab(bodyId);
+      assert.isTrue(editorTwo.hasFocus(), 'Focus should be in editor 2');
+      editorTwo.execCommand('mceFullScreen');
+
+      McEditor.remove(editorOne);
+      McEditor.remove(editorTwo);
+    });
+
   });
 });
