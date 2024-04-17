@@ -104,7 +104,7 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 1);
   });
 
-  it.only('TINY-10931: Select a link that is part of a selection', () => {
+  it('TINY-10931: Select a link that is part of a selection', () => {
     const editor = hook.editor();
     editor.setContent(`<p>one <a href="https://www.example.com">Example</a> two</p>`);
     contextMenuClickInMiddleOf(editor, [ 0, 0 ]);

@@ -1,4 +1,4 @@
-import { Arr, Fun, Type } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import Editor from './api/Editor';
