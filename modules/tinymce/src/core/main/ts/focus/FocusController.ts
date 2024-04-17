@@ -29,11 +29,11 @@ const isEditorContentAreaElement = (elm: Element): boolean => {
   }
 };
 
-const isUIElement = (editor: Editor, elm: Node, isEditorUI: (elm: Node) => boolean = isEditorUIElement): boolean => {
+const isUIElement = (editor: Editor, elm: Node): boolean => {
   const customSelector = Options.getCustomUiSelector(editor);
   const parent = DOM.getParent(elm, (elm) => {
     return (
-      isEditorUI(elm) ||
+      isEditorUIElement(elm) ||
       (customSelector ? editor.dom.is(elm, customSelector) : false)
     );
   });
@@ -53,8 +53,6 @@ const getActiveElement = (editor: Editor): Element => {
     return document.body;
   }
 };
-
-const shouldTrapFocusInFullScreen = (editor: Editor): boolean => Options.shouldFullScreenTrapFocus(editor);
 
 const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => {
   const editor = e.editor;
@@ -116,7 +114,7 @@ const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => 
           const elem = (target as Node);
           if (elem.ownerDocument === document) {
             // Fire a blur event if the element isn't a UI element
-            if (elem !== document.body && editorManager.focusedEditor === activeEditor && !isUIElement(activeEditor, elem)) {
+            if (elem !== document.body && !isUIElement(activeEditor, elem) && editorManager.focusedEditor === activeEditor) {
               activeEditor.dispatch('blur', { focusedEditor: null });
               editorManager.focusedEditor = null;
             }

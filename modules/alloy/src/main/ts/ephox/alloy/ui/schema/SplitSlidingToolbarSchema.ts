@@ -48,12 +48,10 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
             onShrunk: (comp) => {
               AlloyParts.getPart(comp, detail, 'overflow-button').each((button) => {
                 Toggling.off(button);
-                Focusing.focus(button);
               });
               detail.onClosed(comp);
             },
             onGrown: (comp) => {
-              Keying.focusIn(comp);
               detail.onOpened(comp);
             },
             onStartGrow: (comp) => {
