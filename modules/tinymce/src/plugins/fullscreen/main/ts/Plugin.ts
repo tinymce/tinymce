@@ -4,7 +4,6 @@ import PluginManager from 'tinymce/core/api/PluginManager';
 
 import * as Api from './api/Api';
 import * as Commands from './api/Commands';
-import * as Events from './api/Events';
 import * as Options from './api/Options';
 import { FullScreenInfo } from './core/Actions';
 import * as Buttons from './ui/Buttons';
