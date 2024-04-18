@@ -66,10 +66,7 @@
   }
 
   .tox-collection__item--active {
-
-    @media (forced-colors: active) {
-      filter: brightness(50%);
-    }
+    //
   }
 
   .tox-collection--toolbar .tox-collection__group {
@@ -193,6 +190,10 @@
 
   .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
     color: @collection-list-item-label-active-text-color;
+
+    @media (forced-colors: active) {
+      border: solid 1px;
+    }
   }
 
   .tox-collection--toolbar .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
