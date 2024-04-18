@@ -245,7 +245,7 @@ const makeSandbox = (
       // TODO: Add aria-selected attribute
       attributes: {
         id: ariaControls.id,
-        ...detail.role.fold( Fun.constant({}), (role) => ({ role }))
+        ...detail?.role?.fold( Fun.constant({}), (role) => ({ role })) ?? {}
       }
     },
     behaviours: SketchBehaviours.augment(
