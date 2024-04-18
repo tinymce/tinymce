@@ -75,15 +75,18 @@
 
     @media (forced-colors: active) {
       &:hover {
-        filter: brightness(70%);
+        border: 1px solid currentColor;
+        border-radius: 3px;
       }
 
+      &.tox-tbtn:hover,
       &.tox-tbtn--active,
       &.tox-tbtn--enabled,
       &.tox-tbtn--enabled:hover,
       &.tox-tbtn--enabled:focus,
       &:focus:not(.tox-tbtn--disabled) {
-        filter: brightness(50%);
+        border: 1px solid currentColor;
+        border-radius: 3px;
       }
     }
 
@@ -92,13 +95,13 @@
       fill: @toolbar-button-icon-color;
 
       @media (forced-colors: active) {
-        &,
-        &:hover,
+        & {
+          fill: currentColor !important;
+        }
+
         &.tox-tbtn--enabled,
-        &.tox-tbtn--enabled:hover,
-        &.tox-tbtn--enabled:focus,
         &:focus:not(.tox-tbtn--disabled) {
-          fill: #f0f !important;
+          fill: currentColor !important;
         }
 
         &.tox-tbtn--disabled,
