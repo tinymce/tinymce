@@ -7,36 +7,43 @@
 @notification-font-size: @font-size-sm;
 @notification-font-weight: @font-weight-normal;
 @notification-padding: @pad-xs;
+@notification-link-text-decoration: underline;
+@notification-link-hover-text-decoration: underline;
+@notification-link-active-text-decoration: underline;
+@notification-link-focus-outline-border-radius: 1px;
 
 @notification-success-background-color: mix(@background-color, @color-success, 80%);
 @notification-success-border-color: mix(@background-color, @color-success, 70%);
 @notification-success-text-color: @text-color;
 @notification-success-link-color: mix(@text-color, @color-success, 45%);
+@notification-success-link-hover-color: darken(@notification-success-link-color, 20%);
+@notification-success-link-active-color: darken(@notification-success-link-color, 30%);
+@notification-success-link-focus-outline-color: @notification-success-link-color;
 
 // Yellow warning color mixes particularly bad with darker colors, hence additional checks
 @notification-warn-background-color: .bg-luma-checker(tint(@_color-warn, 80%), @background-color)[@result];
 @notification-warn-border-color: .bg-luma-checker(tint(@_color-warn, 70%), @tinymce-separator-color)[@result];
 @notification-warn-text-color: .bg-luma-checker(@text-color, mix(@text-color, @_color-warn, 70%))[@result];
 @notification-warn-link-color: .bg-luma-checker(mix(@text-color, @_color-warn, 60%), @_color-warn)[@result];
+@notification-warn-link-hover-color: darken(@notification-warn-link-color, 20%);
+@notification-warn-link-active-color: darken(@notification-warn-link-color, 30%);
+@notification-warn-link-focus-outline-color: @notification-warn-link-color;
 
 @notification-error-background-color: mix(@background-color, @color-error, 80%);
 @notification-error-border-color: mix(@background-color, @color-error, 70%);
 @notification-error-text-color: @text-color;
 @notification-error-link-color: mix(@text-color, @color-error, 50%);
+@notification-error-link-hover-color: darken(@notification-error-link-color, 20%);
+@notification-error-link-active-color: darken(@notification-error-link-color, 30%);
+@notification-error-link-focus-outline-color: @notification-error-link-color;
 
 @notification-info-background-color: mix(@background-color, @_color-info, 80%);
 @notification-info-border-color: mix(@background-color, @_color-info, 70%);
 @notification-info-text-color: @text-color;
 @notification-info-link-color: mix(@text-color, @_color-info, 40%);
-
-@notification-body-link-color: @color-tint;
-@notification-body-link-text-decoration: underline;
-@notification-body-link-hover-color: darken(@notification-body-link-color, 20%);
-@notification-body-link-hover-text-decoration: underline;
-@notification-body-link-active-color: darken(@notification-body-link-color, 30%);
-@notification-body-link-active-text-decoration: underline;
-@notification-body-link-focus-outline-color: @notification-body-link-color;
-@notification-body-link-focus-outline-border-radius: 1px;
+@notification-info-link-hover-color: darken(@notification-info-link-color, 20%);
+@notification-info-link-active-color: darken(@notification-info-link-color, 30%);
+@notification-info-link-focus-outline-color: @notification-info-link-color;
 
 // Private variables
 @_color-warn: #ffcc00;
@@ -68,26 +75,8 @@
     width: max-content;
 
     a {
-      color: @notification-body-link-color;
       cursor: pointer;
-      text-decoration: @notification-body-link-text-decoration;
-
-      &:hover,
-      &:focus {
-        color: @notification-body-link-hover-color;
-        text-decoration: @notification-body-link-hover-text-decoration;
-      }
-
-      &:focus-visible {
-        border-radius: @notification-body-link-focus-outline-border-radius;
-        outline: 2px solid @notification-body-link-focus-outline-color;
-        outline-offset: 2px;
-      }
-
-      &:active {
-        color: @notification-body-link-active-color;
-        text-decoration: @notification-body-link-active-text-decoration;
-      }
+      text-decoration: @notification-link-text-decoration;
     }
 
     p {
@@ -109,6 +98,27 @@
       color: @notification-success-text-color;
     }
 
+    a {
+      color: @notification-success-link-color;
+
+      &:hover,
+      &:focus {
+        color: @notification-success-link-hover-color;
+        text-decoration: @notification-link-hover-text-decoration;
+      }
+
+      &:focus-visible {
+        border-radius: @notification-link-focus-outline-border-radius;
+        outline: 2px solid @notification-success-link-focus-outline-color;
+        outline-offset: 2px;
+      }
+
+      &:active {
+        color: @notification-success-link-active-color;
+        text-decoration: @notification-link-active-text-decoration;
+      }
+    }
+
     svg {
       fill: @notification-success-text-color;
     }
@@ -121,6 +131,28 @@
 
     p {
       color: @notification-error-text-color;
+    }
+
+    /* stylelint-disable-next-line no-descending-specificity */
+    a {
+      color: @notification-error-link-color;
+
+      &:hover,
+      &:focus {
+        color: @notification-error-link-hover-color;
+        text-decoration: @notification-link-hover-text-decoration;
+      }
+
+      &:focus-visible {
+        border-radius: @notification-link-focus-outline-border-radius;
+        outline: 2px solid @notification-error-link-focus-outline-color;
+        outline-offset: 2px;
+      }
+
+      &:active {
+        color: @notification-error-link-active-color;
+        text-decoration: @notification-link-active-text-decoration;
+      }
     }
 
     svg {
@@ -138,6 +170,28 @@
       color: @notification-warn-text-color;
     }
 
+    /* stylelint-disable-next-line no-descending-specificity */
+    a {
+      color: @notification-warn-link-color;
+
+      &:hover,
+      &:focus {
+        color: @notification-warn-link-hover-color;
+        text-decoration: @notification-link-hover-text-decoration;
+      }
+
+      &:focus-visible {
+        border-radius: @notification-link-focus-outline-border-radius;
+        outline: 2px solid @notification-warn-link-focus-outline-color;
+        outline-offset: 2px;
+      }
+
+      &:active {
+        color: @notification-warn-link-active-color;
+        text-decoration: @notification-link-active-text-decoration;
+      }
+    }
+
     svg {
       fill: @notification-warn-text-color;
     }
@@ -150,6 +204,28 @@
 
     p {
       color: @notification-info-text-color;
+    }
+
+    /* stylelint-disable-next-line no-descending-specificity */
+    a {
+      color: @notification-info-link-color;
+
+      &:hover,
+      &:focus {
+        color: @notification-info-link-hover-color;
+        text-decoration: @notification-link-hover-text-decoration;
+      }
+
+      &:focus-visible {
+        border-radius: @notification-link-focus-outline-border-radius;
+        outline: 2px solid @notification-info-link-focus-outline-color;
+        outline-offset: 2px;
+      }
+
+      &:active {
+        color: @notification-info-link-active-color;
+        text-decoration: @notification-link-active-text-decoration;
+      }
     }
 
     svg {
