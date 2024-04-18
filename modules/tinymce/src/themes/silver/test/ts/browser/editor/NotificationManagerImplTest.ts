@@ -298,12 +298,13 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
       const hasFocus = (node: Node) => Focus.search(SugarElement.fromDom(node)).isSome();
       TinyContentActions.keystroke(editor, 123, { alt: true });
 
-      await FocusTools.pTryOnSelector('Link in notification has focus', doc, 'a[href="example.com"]');
+      await FocusTools.pTryOnSelector('Dismiss button in notification has focus', doc, '.tox-notification__dismiss');
       assert.isTrue(hasFocus(notification.getEl()), 'Focus should on notification 1');
 
       TinyUiActions.keystroke(editor, Keys.escape());
       TinyUiActions.keystroke(editor, Keys.escape());
       await Waiter.pTryUntil('Notification should be closed', () => UiFinder.notExists(SugarBody.body(), '.tox-notification-container'));
+      assert.isTrue(editor.hasFocus(), 'Focus should be on the editor');
 
       notification.close();
     });
