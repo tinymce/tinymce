@@ -2,7 +2,7 @@ import { TestStore, Waiter, FocusTools, Assertions, ApproxStructure, Keys } from
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Focus, SugarDocument } from '@ephox/sugar';
-import { McEditor, TinyAssertions, TinyUiActions } from '@ephox/wrap-mcagar';
+import { McEditor, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
