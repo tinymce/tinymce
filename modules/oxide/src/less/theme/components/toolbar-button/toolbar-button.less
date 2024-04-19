@@ -75,8 +75,7 @@
 
     @media (forced-colors: active) {
       &:hover {
-        border: 1px solid currentColor;
-        border-radius: 3px;
+        outline: 1px solid currentColor;
       }
 
       &.tox-tbtn:hover,
@@ -85,8 +84,8 @@
       &.tox-tbtn--enabled:hover,
       &.tox-tbtn--enabled:focus,
       &:focus:not(.tox-tbtn--disabled) {
-        border: 1px solid currentColor;
-        border-radius: 3px;
+        outline: 1px solid currentColor;
+        position: relative;
       }
     }
 
