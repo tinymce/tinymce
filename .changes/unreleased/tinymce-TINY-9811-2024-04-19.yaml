@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Addressed caret and placeholder text is invisible in Windows High Contrast Mode
+time: 2024-04-19T15:46:47.295442+10:00
+custom:
+  Issue: TINY-9811
