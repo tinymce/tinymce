@@ -1,0 +1,6 @@
+project: alloy
+kind: Improved
+body: Replace `aria-pressed` with `aria-expanded` in `Toggling.config` for `SplitSlidingToolbarSchema`.
+time: 2024-04-19T09:44:03.456867+08:00
+custom:
+  Issue: TINY-10795

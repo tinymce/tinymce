@@ -77,7 +77,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
         Toggling.config({
           toggleClass: detail.markers.overflowToggledClass,
           aria: {
-            mode: 'pressed'
+            mode: 'expanded'
           },
           toggleOnExecute: false
         })
