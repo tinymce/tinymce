@@ -191,7 +191,8 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest',
         Assertions.assertStructure('overflow button stucture', ApproxStructure.build((s, str) =>
           s.element('button', {
             attrs: {
-              'aria-expanded': str.is('true')
+              'aria-expanded': str.is('true'),
+              'aria-pressed': str.none()
             }
           })
         ), toolbarButton);
