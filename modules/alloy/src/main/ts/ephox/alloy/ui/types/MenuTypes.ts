@@ -76,6 +76,7 @@ export interface MenuDetail extends CompositeSketchDetail {
 
   focusManager: FocusManager;
   eventOrder: Record<string, string[]>;
+  menuRole: boolean;
 }
 
 export interface MenuSpec extends CompositeSketchSpec {
@@ -99,6 +100,7 @@ export interface MenuSpec extends CompositeSketchSpec {
   onHighlight?: (comp: AlloyComponent, target: AlloyComponent) => void;
   onDehighlight?: (comp: AlloyComponent, target: AlloyComponent) => void;
   eventOrder?: Record<string, string[]>;
+  menuRole?: boolean;
 }
 
 export interface MenuSketcher extends CompositeSketch<MenuSpec> { }
