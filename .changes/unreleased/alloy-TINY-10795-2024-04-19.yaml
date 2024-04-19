@@ -1,6 +1,6 @@
 project: alloy
 kind: Improved
-body: '`skipFocus` is set to true when actived in sliding toolbar mode, skipping focus
+body: '`skipFocus` is set to true when activated in sliding toolbar mode, skipping focus
   from being shifted to the first control in the expanded toolbar row.'
 time: 2024-04-19T09:44:03.456867+08:00
 custom:
