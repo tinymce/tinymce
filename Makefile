@@ -1,6 +1,7 @@
 UNRELEASED_FILES := $(wildcard .changes/unreleased/*)
 PACKAGES := $(patsubst .changes/unreleased/%,%,$(UNRELEASED_FILES))
 
+
 extract_first_word = $(word 1, $(subst -, ,$1))
 
 PACKAGE_NAMES := $(sort $(foreach proj,$(PACKAGES),$(call extract_first_word,$(proj))))
