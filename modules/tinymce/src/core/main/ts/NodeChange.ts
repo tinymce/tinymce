@@ -51,6 +51,7 @@ class NodeChange {
     // When the contextmenu event fires the selection is located at the right location
     editor.on('contextmenu', () => {
       SelectionBookmark.store(editor);
+
       editor.dispatch('SelectionChange');
     });
 
