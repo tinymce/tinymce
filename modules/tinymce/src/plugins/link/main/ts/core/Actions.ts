@@ -12,7 +12,7 @@ const getLinks = (editor: Editor) => editor.selection.isCollapsed() ?
   Utils.getLinks(editor.dom.getParents(editor.selection.getStart())) as [HTMLAnchorElement] :
   Utils.getLinksInSelection(editor.selection.getRng());
 
-const getSelectedLink = (editor: Editor): HTMLAnchorElement | null => Arr.head(getLinks(editor)).getOrNull();
+const getSelectedLink = (editor: Editor): HTMLAnchorElement | undefined => getLinks(editor)[0];
 
 const hasOnlyAltModifier = (e: KeyboardEvent) => {
   return e.altKey === true && e.shiftKey === false && e.ctrlKey === false && e.metaKey === false;
