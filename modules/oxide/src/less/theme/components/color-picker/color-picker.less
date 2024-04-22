@@ -3,6 +3,14 @@
 //
 
 .tox {
+  .tox-hue-slider,
+  .tox-rgb-form .tox-rgba-preview {
+
+    @media (forced-colors: active) {
+      forced-color-adjust: none;
+    }
+  }
+
   .tox-color-picker-container {
     display: flex;
     flex-direction: row;
@@ -47,10 +55,6 @@
     box-sizing: border-box;
     height: 100%;
     width: 25px;
-
-    @media (forced-colors: active) {
-      forced-color-adjust: none;
-    }
   }
 
   .tox-hue-slider-spectrum {
