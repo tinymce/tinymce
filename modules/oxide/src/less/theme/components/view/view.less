@@ -1,4 +1,4 @@
-@view-header-padding: 10px 10px 2px 10px;
+@view-header-padding: @pad-sm @pad-sm 0 @pad-sm;
 @view-header-padding-mobile: @pad-sm;
 @view-pane-padding: @pad-sm;
 
@@ -64,7 +64,7 @@
     gap: @view-toolbar-button-spacing-x; // spacing between buttons within a group
     justify-content: space-between;
     overflow-x: auto;           // Show horizontal scrollbar on small screens
-    padding: @view-header-padding;
+    padding: 10px 10px 2px 10px;
   }
 
   .tox-view__toolbar__group {
