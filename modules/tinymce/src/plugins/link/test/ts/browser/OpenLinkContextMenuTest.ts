@@ -1,7 +1,7 @@
 import { FocusTools, Keyboard, Keys, TestStore } from '@ephox/agar';
-import { afterEach, describe, it } from '@ephox/bedrock-client';
-import { SugarDocument } from '@ephox/sugar';
-import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { after, afterEach, before, describe, it } from '@ephox/bedrock-client';
+import { DomEvent, EventUnbinder, SugarBody, SugarDocument } from '@ephox/sugar';
+import { TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
@@ -14,22 +14,28 @@ describe('browser.tinymce.plugins.link.OpenLinkContextMenuTest', () => {
     toolbar: 'link',
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
-    image_caption: true
+    image_caption: true,
   }, [ LinkPlugin ], true);
-
-  // Capture the href links being clicked
-  document.addEventListener('click', (e) => {
-    store.add((e.target as HTMLAnchorElement).href);
-  });
 
   const pAssertFocusOnItem = (label: string, selector: string) =>
     FocusTools.pTryOnSelector(`Focus should be on: ${label}`, SugarDocument.getDocument(), selector);
+  let unbinder: EventUnbinder;
+
+  before(() => {
+    unbinder = DomEvent.bind(SugarBody.body(), 'click', (e) => {
+      store.add((e.target.dom as HTMLAnchorElement).href);
+    });
+  });
+
+  after(() => {
+    unbinder.unbind();
+  });
 
   afterEach(() => {
     store.clear();
   });
 
-  it('TINY-10391: Should open a new tab for a link inside the selected content', async () => {
+  it('TINY-10391: Should open a new tab when triggering open link on a link inside selection', async () => {
     const editor = hook.editor();
     editor.setContent('<p>one <a href="https://www.exampleone.com/">Example</a> two</p>');
     TinySelections.select(editor, 'p', []);
@@ -43,7 +49,7 @@ describe('browser.tinymce.plugins.link.OpenLinkContextMenuTest', () => {
     ]);
   });
 
-  it('TINY-10391: Should open a new tab for a link with selection expanded to the surrounding content', async () => {
+  it('TINY-10391: Should open a new tab when triggering open link on a link with selection expanded to the surroundings', async () => {
     const editor = hook.editor();
     editor.setContent('<p>one <a href="https://www.exampletwo.com">Example</a> two</p>');
     // Select `e Example`
@@ -55,6 +61,30 @@ describe('browser.tinymce.plugins.link.OpenLinkContextMenuTest', () => {
     Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.enter());
     store.assertEq('Should open the targeted link', [
       'https://www.exampletwo.com/'
+    ]);
+  });
+
+  it('TINY-10391: Pressing Alt (Option on Mac) + Enter on a link should open a new tab', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>one <a href="https://www.exampletwo.com">Example</a> two</p>');
+    // Select `e Example`
+    TinySelections.setCursor(editor, [ 0, 1, 0 ], 4);
+    TinyContentActions.keydown(editor, Keys.enter(), {
+      altKey: true,
+    });
+    store.assertEq('Should open the targeted link', [
+      'https://www.exampletwo.com/'
+    ]);
+  });
+
+  it('TINY-10391: Triggering Ctrl + click on a link inside selection should open a new tab', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>Link <a href="https://www.one.com">One</a> and link <a href="https://www.two.com">Two</a></p>');
+    // Select `nk One and link Two`
+    TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 0, 3, 0 ], 3);
+    editor.dispatch('click', { target: editor.dom.select('a')[0], metaKey: true } as any);
+    store.assertEq('Should open the targeted link', [
+      'https://www.one.com/'
     ]);
   });
 });

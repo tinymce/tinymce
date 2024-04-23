@@ -41,7 +41,7 @@ const gotoSelectedLink = (editor: Editor) => (): void => {
 };
 
 const setupGotoLinks = (editor: Editor): void => {
-  editor.on('click', (e: any) => {
+  editor.on('click', (e) => {
     const links = Utils.getLinks(editor.dom.getParents(e.target)) as [HTMLAnchorElement];
 
     if (links.length === 1 && VK.metaKeyPressed(e)) {
