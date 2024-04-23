@@ -8,7 +8,7 @@ import { ListAction } from '../core/ListAction';
 import * as Selection from '../core/Selection';
 import { createTextBlock } from '../core/TextBlock';
 import { composeList } from './ComposeList';
-import { Entry, isEntryComment, isIndented, isSelected } from './Entry';
+import { Entry, isEntryComment, isEntryList, isIndented, isSelected } from './Entry';
 import { Indentation, indentEntry } from './Indentation';
 import { normalizeEntries } from './NormalizeEntries';
 import { EntrySet, ItemSelection, parseLists } from './ParseLists';
@@ -20,7 +20,8 @@ const outdentedComposer = (editor: Editor, entries: Entry[]): SugarElement<Docum
     const content = !isEntryComment(entry)
       ? SugarFragment.fromElements(entry.content)
       : SugarFragment.fromElements([ SugarElement.fromHtml(`<!--${entry.content}-->`) ]);
-    return SugarElement.fromDom(createTextBlock(editor, content.dom));
+    const listItemAttrs = isEntryList(entry) ? entry.itemAttributes : {};
+    return SugarElement.fromDom(createTextBlock(editor, content.dom, listItemAttrs));
   });
 };
 

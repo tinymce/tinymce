@@ -1,9 +1,10 @@
+
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Options from '../api/Options';
 import * as NodeType from './NodeType';
 
-const createTextBlock = (editor: Editor, contentNode: Node): DocumentFragment => {
+const createTextBlock = (editor: Editor, contentNode: Node, attrs: Record<string, string> = {}): DocumentFragment => {
   const dom = editor.dom;
   const blockElements = editor.schema.getBlockElements();
   const fragment = dom.createFragment();
@@ -13,7 +14,10 @@ const createTextBlock = (editor: Editor, contentNode: Node): DocumentFragment =>
   let textBlock: Element | null;
   let hasContentNode = false;
 
-  textBlock = dom.create(blockName, blockAttrs);
+  textBlock = dom.create(blockName, {
+    ...blockAttrs,
+    ...(attrs.style ? { style: attrs.style } : {})
+  });
 
   if (!NodeType.isBlock(contentNode.firstChild, blockElements)) {
     fragment.appendChild(textBlock);
@@ -50,3 +54,4 @@ const createTextBlock = (editor: Editor, contentNode: Node): DocumentFragment =>
 export {
   createTextBlock
 };
+

@@ -63,9 +63,10 @@ const getIframeHtml = (editor: Editor) => {
 };
 
 const createIframe = (editor: Editor, boxInfo: BoxInfo) => {
-  const iframeTitle = editor.translate('Rich Text Area');
+  const iframeTitle = Env.browser.isFirefox() ? Options.getIframeAriaText(editor) : 'Rich Text Area';
+  const translatedTitle = editor.translate(iframeTitle);
   const tabindex = Attribute.getOpt(SugarElement.fromDom(editor.getElement()), 'tabindex').bind(Strings.toInt);
-  const ifr = createIframeElement(editor.id, iframeTitle, Options.getIframeAttrs(editor), tabindex).dom;
+  const ifr = createIframeElement(editor.id, translatedTitle, Options.getIframeAttrs(editor), tabindex).dom;
 
   ifr.onload = () => {
     ifr.onload = null;

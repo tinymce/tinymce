@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Focus now remains on the `More` button when activated in sliding toolbar mode, rather than moving to the first control in the expanded toolbar row.
+time: 2024-04-19T09:25:18.652068+08:00
+custom:
+  Issue: TINY-10795

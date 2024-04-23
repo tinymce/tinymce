@@ -1,7 +1,7 @@
-import { TestStore, Waiter, FocusTools } from '@ephox/agar';
+import { TestStore, Waiter, FocusTools, Assertions, ApproxStructure, Keys } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { SugarDocument } from '@ephox/sugar';
+import { Focus, SugarDocument } from '@ephox/sugar';
 import { McEditor, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -158,6 +158,44 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest',
         await Waiter.pTryUntil('Wait for toolbar to be completely closed', () => {
           assert.notEqual(initialFocusedElement, document.activeElement, 'Focus should not be preserved');
         });
+        McEditor.remove(editor);
+      });
+    });
+
+    context('Focus should still be on overflow button when using sliding toolbar mode', () => {
+      it(`TINY-10795: Focus should still be on overflow button when toggled`, async () => {
+        const editor = await McEditor.pFromSettings<Editor>({
+          menubar: false,
+          statusbar: false,
+          width: 200,
+          toolbar_mode: 'sliding',
+          base_url: '/project/tinymce/js/tinymce'
+        });
+        const toolbarButton = TinyUiActions.clickOnToolbar<HTMLElement>(editor, 'button[data-mce-name="overflow-button"]');
+        Focus.focus(toolbarButton);
+        TinyUiActions.keystroke(editor, Keys.enter());
+        await FocusTools.pTryOnSelector('Focus should still be on overflow-button', SugarDocument.getDocument(), 'button[data-mce-name="overflow-button"]');
+        McEditor.remove(editor);
+      });
+
+      it(`TINY-10795: Overflow button should have aria-expanded when toggled`, async () => {
+        const editor = await McEditor.pFromSettings<Editor>({
+          menubar: false,
+          statusbar: false,
+          width: 200,
+          toolbar_mode: 'sliding',
+          base_url: '/project/tinymce/js/tinymce'
+        });
+        const toolbarButton = TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="overflow-button"]');
+        await pWaitForOverflowToolbar(editor, 'sliding');
+        Assertions.assertStructure('overflow button stucture', ApproxStructure.build((s, str) =>
+          s.element('button', {
+            attrs: {
+              'aria-expanded': str.is('true'),
+              'aria-pressed': str.none()
+            }
+          })
+        ), toolbarButton);
         McEditor.remove(editor);
       });
     });
