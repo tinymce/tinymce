@@ -38,7 +38,7 @@ describe('browser.tinymce.core.content.EditorContentNotInitializedTest', () => {
     McEditor.remove(editor);
   });
 
-  it.skip('set content on editor where the body has been removed', async () => {
+  it('set content on editor where the body has been removed', async () => {
     const editor = await McEditor.pFromHtml<Editor>('<textarea></textarea>', settings);
     removeBodyElement(editor);
     setContentAndAssertReturn(editor, 'hello');
@@ -64,7 +64,7 @@ describe('browser.tinymce.core.content.EditorContentNotInitializedTest', () => {
     McEditor.remove(editor);
   });
 
-  it.skip('set tree content on editor where the body has been removed', async () => {
+  it('set tree content on editor where the body has been removed', async () => {
     const editor = await McEditor.pFromHtml<Editor>('<textarea></textarea>', settings);
     removeBodyElement(editor);
     setContentAndAssertReturn(editor, new AstNode('p', 1));

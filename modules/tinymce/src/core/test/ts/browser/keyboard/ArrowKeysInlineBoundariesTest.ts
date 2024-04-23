@@ -160,7 +160,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysInlineBoundariesTest', () => {
     it('From end of anchor text to after anchor to but not to next paragraph', () => {
       const editor = hook.editor();
       legacySetRawContent(editor, '<p><a href="#">a</a></p><p>b<a href="#">c</a></p>');
-      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1, true);
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       TinyContentActions.keystroke(editor, Keys.right());
       TinySelections.setCursor(editor, [ 0, 1 ], 1);
       assertCaretAfterZwsp(editor);

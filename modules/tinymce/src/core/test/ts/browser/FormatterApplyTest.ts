@@ -8,7 +8,7 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 
 import * as KeyUtils from '../module/test/KeyUtils';
-import { selectCells } from './TableTestUtils';
+import * as TableTestUtils from './TableTestUtils';
 
 describe('browser.tinymce.core.FormatterApplyTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -2272,7 +2272,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>test</p><table><tbody><tr><td>cell 1</td><td>cell 2</td></tr><tr><td>cell 3</td><td>cell 4</td></tr></tbody></table>');
     TinySelections.setSelection(editor, [ 1, 0, 0, 0 ], 0, [ 1, 0, 1, 0 ], 1, true);
-    selectCells(editor, [ 1 ], [[ 0, 0 ], [ 0, 1 ]]);
+    TableTestUtils.selectCells(editor, [ 1 ], [[ 0, 0 ], [ 0, 1 ]]);
     const para = editor.dom.select('p')[0];
     // Apply to custom node
     editor.formatter.apply('bold', { }, para);

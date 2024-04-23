@@ -285,11 +285,14 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
 
         it('TINY-10283: Using setContent with editor should add undo levels', () => {
           const editor = hook.editor();
+          editor.undoManager.reset();
           editor.resetContent('<p>Reset Content</p>');
           assert.equal(editor.undoManager.data.length, 1, 'UndoManager should only have an initial undo level');
           editor.setContent('<p>Different Content</p>');
           TinyAssertions.assertContent(editor, '<p>Different Content</p>');
           assert.equal(editor.undoManager.data.length, 2, 'UndoManager should have an additional undo level');
+          editor.undoManager.undo();
+          TinyAssertions.assertContent(editor, '<p>Reset Content</p>');
         });
 
         const initialContent = '<p>initial</p>';
