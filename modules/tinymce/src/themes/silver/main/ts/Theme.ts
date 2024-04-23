@@ -1,5 +1,5 @@
-import { Boxes } from '@ephox/alloy';
-import { Fun } from '@ephox/katamari';
+import { AlloyComponent, Boxes } from '@ephox/alloy';
+import { Fun, Singleton } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import ThemeManager, { RenderResult, Theme } from 'tinymce/core/api/ThemeManager';
@@ -72,11 +72,13 @@ export default (): void => {
       }
     });
 
+    const notificationRegion = Singleton.value<AlloyComponent>();
     // The NotificationManager uses the popup mothership (and sink)
     const getNotificationManagerImpl = () => NotificationManagerImpl(
       editor,
       { backstage: popups.backstage },
-      popups.getMothership()
+      popups.getMothership(),
+      notificationRegion
     );
 
     return {
