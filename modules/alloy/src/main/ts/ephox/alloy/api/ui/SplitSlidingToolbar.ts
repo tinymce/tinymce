@@ -108,7 +108,7 @@ const factory: CompositeSketchFactory<SplitSlidingToolbarDetail, SplitSlidingToo
         }),
         AddEventsBehaviour.config('toolbar-toggle-events', [
           AlloyEvents.run(toolbarToggleEvent, (toolbar) => {
-            toggleToolbar(toolbar, detail, true);
+            toggleToolbar(toolbar, detail, false);
           })
         ])
       ]
