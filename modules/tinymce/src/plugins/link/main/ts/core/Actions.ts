@@ -1,5 +1,3 @@
-import { Arr } from '@ephox/katamari';
-
 import Editor from 'tinymce/core/api/Editor';
 import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
 import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
@@ -18,7 +16,7 @@ const hasOnlyAltModifier = (e: KeyboardEvent) => {
   return e.altKey === true && e.shiftKey === false && e.ctrlKey === false && e.metaKey === false;
 };
 
-const gotoLink = (editor: Editor, a: HTMLAnchorElement | null): void => {
+const gotoLink = (editor: Editor, a: HTMLAnchorElement | undefined): void => {
   if (a) {
     const href = Utils.getHref(a);
     if (/^#/.test(href)) {
