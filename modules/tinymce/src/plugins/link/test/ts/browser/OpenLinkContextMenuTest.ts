@@ -8,8 +8,8 @@ import Editor from 'tinymce/core/api/Editor';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 
 describe('browser.tinymce.plugins.link.OpenLinkContextMenuTest', () => {
+  let unbinder: EventUnbinder;
   const store = TestStore<string>();
-
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'link',
     toolbar: 'link',
@@ -20,7 +20,6 @@ describe('browser.tinymce.plugins.link.OpenLinkContextMenuTest', () => {
 
   const pAssertFocusOnItem = (label: string, selector: string) =>
     FocusTools.pTryOnSelector(`Focus should be on: ${label}`, SugarDocument.getDocument(), selector);
-  let unbinder: EventUnbinder;
 
   before(() => {
     unbinder = DomEvent.bind(SugarBody.body(), 'click', (e) => {
@@ -29,7 +28,7 @@ describe('browser.tinymce.plugins.link.OpenLinkContextMenuTest', () => {
   });
 
   after(() => {
-    unbinder.unbind();
+    unbinder?.unbind();
   });
 
   afterEach(() => {
