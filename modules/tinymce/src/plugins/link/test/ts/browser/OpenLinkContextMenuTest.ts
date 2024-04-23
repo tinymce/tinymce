@@ -1,5 +1,6 @@
 import { FocusTools, Keyboard, Keys, TestStore } from '@ephox/agar';
 import { after, afterEach, before, describe, it } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
 import { DomEvent, EventUnbinder, SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
@@ -79,10 +80,12 @@ describe('browser.tinymce.plugins.link.OpenLinkContextMenuTest', () => {
 
   it('TINY-10391: Triggering Ctrl + click on a link inside selection should open a new tab', async () => {
     const editor = hook.editor();
+    const os = PlatformDetection.detect().os;
     editor.setContent('<p>Link <a href="https://www.one.com">One</a> and link <a href="https://www.two.com">Two</a></p>');
     // Select `nk One and link Two`
     TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 0, 3, 0 ], 3);
-    editor.dispatch('click', { target: editor.dom.select('a')[0], metaKey: true } as any);
+    const keyConfig = os.isMacOS() || os.isiOS() ? { metaKey: true } : { ctrlKey: true };
+    editor.dispatch('click', { target: editor.dom.select('a')[0], ...keyConfig } as any);
     store.assertEq('Should open the targeted link', [
       'https://www.one.com/'
     ]);
