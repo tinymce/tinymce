@@ -64,7 +64,7 @@ describe('browser.tinymce.plugins.link.OpenLinkContextMenuTest', () => {
     ]);
   });
 
-  it('TINY-10391: Pressing Alt (Option on Mac) + Enter on a link should open a new tab', async () => {
+  it('TINY-10391: Pressing Alt (Option on Mac) + Enter when the cursor is within a link should open a new tab', async () => {
     const editor = hook.editor();
     editor.setContent('<p>one <a href="https://www.exampletwo.com">Example</a> two</p>');
     // Select `e Example`
