@@ -1,6 +1,6 @@
 project: tinymce
 kind: Fixed
-body: Open link context menu action did not work with selection surrounding a link
+body: Open link context menu action did not work with selection surrounding a link.
 time: 2024-04-17T13:41:21.980893+09:30
 custom:
   Issue: TINY-10391
