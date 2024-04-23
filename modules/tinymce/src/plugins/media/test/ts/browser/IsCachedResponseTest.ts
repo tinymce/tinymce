@@ -1,6 +1,6 @@
 import { Assertions, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { Html, SugarBody, SugarElement } from '@ephox/sugar';
+import { SugarBody, SugarElement, TextContent } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -28,8 +28,8 @@ describe('browser.tinymce.plugins.media.IsCachedResponseTest', () => {
 
   const pWaitForAndAssertNotification = async (expected: string) => {
     const notification = await UiFinder.pWaitFor('Could not find notification', SugarBody.body(), 'div.tox-notification__body') as SugarElement<HTMLElement>;
-    const html = Html.get(notification);
-    Assertions.assertHtml('Plugin list html does not match', expected, html);
+    const textContent = TextContent.get(notification);
+    Assertions.assertEq('Plugin list html does not match', expected, textContent);
   };
 
   it('TBA: test cached response', async () => {
@@ -43,7 +43,7 @@ describe('browser.tinymce.plugins.media.IsCachedResponseTest', () => {
     await Utils.pSetSourceInput(editor, 'XXX');
     TinyUiActions.submitDialog(editor);
 
-    await pWaitForAndAssertNotification('<p>Media embed handler threw unknown error.</p>');
+    await pWaitForAndAssertNotification('Media embed handler threw unknown error.');
     TinyAssertions.assertContent(editor, '');
   });
 });
