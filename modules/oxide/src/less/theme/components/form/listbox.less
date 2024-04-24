@@ -34,6 +34,10 @@
 
   .tox-listbox__select-chevron svg {
     fill: @listbox-button-chevron-color;
+
+    @media (forced-colors: active) {
+      fill: currentColor !important;
+    }
   }
 
   .tox-listboxfield .tox-listbox--select {
