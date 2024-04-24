@@ -1,6 +1,5 @@
 import { FocusTools, Keyboard, Keys, TestStore } from '@ephox/agar';
 import { after, afterEach, before, describe, it } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { DomEvent, EventUnbinder, SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
