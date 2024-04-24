@@ -74,11 +74,11 @@
     width: @toolbar-button-width;
 
     @media (forced-colors: active) {
-      &:hover {
-        outline: 1px solid currentColor;
+      &:hover,
+      &.tox-tbtn:hover {
+        outline: 1px dashed currentColor;
       }
 
-      &.tox-tbtn:hover,
       &.tox-tbtn--active,
       &.tox-tbtn--enabled,
       &.tox-tbtn--enabled:hover,
