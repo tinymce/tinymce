@@ -11,6 +11,8 @@
 @notification-link-hover-text-decoration: underline;
 @notification-link-active-text-decoration: underline;
 @notification-link-focus-outline-border-radius: 1px;
+@notification-focus-border-color: @textfield-focus-border-color;
+@notification-focus-box-shadow: @textfield-focus-box-shadow;
 
 @notification-success-background-color: mix(@background-color, @color-success, 80%);
 @notification-success-border-color: mix(@background-color, @color-success, 70%);
@@ -82,6 +84,11 @@
     p {
       font-size: @notification-font-size;
       font-weight: @notification-font-weight;
+    }
+
+    &:focus {
+      border-color: @notification-focus-border-color;
+      box-shadow: @notification-focus-box-shadow;
     }
   }
 

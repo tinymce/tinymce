@@ -152,11 +152,11 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
         const hasFocus = (node: Node) => Focus.search(SugarElement.fromDom(node)).isSome();
 
         TinyContentActions.keystroke(editor, 123, { alt: true });
-        await FocusTools.pTryOnSelector('Assert focus should be on notification 1', root, '.tox-notification__dismiss');
+        await FocusTools.pTryOnSelector('Assert focus should be on notification 1', root, '.tox-notification');
         assert.isTrue(hasFocus(n1.getEl()), 'Focus should be on notification 1');
 
         n1.close();
-        await FocusTools.pTryOnSelector('Assert focus should on notification 2', root, '.tox-notification__dismiss');
+        await FocusTools.pTryOnSelector('Assert focus should on notification 2', root, '.tox-notification');
         assert.isTrue(hasFocus(n2.getEl()), 'Focus should be on notification 2');
 
         n2.close();

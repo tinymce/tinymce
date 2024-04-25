@@ -199,8 +199,7 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
       Tabstopping.config({ }),
       Focusing.config({ }),
       Keying.config({
-        mode: 'acyclic',
-        selector: 'button, a',
+        mode: 'special',
         onEscape: (comp) => {
           detail.onAction(comp);
           return Optional.some(true);

@@ -269,6 +269,10 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
       const hasFocus = (node: Node) => Focus.search(SugarElement.fromDom(node)).isSome();
       TinyContentActions.keystroke(editor, 123, { alt: true });
 
+      await FocusTools.pTryOnSelector('Notification has focus', doc, '.tox-notification');
+      assert.isTrue(hasFocus(notification.getEl()), 'Focus should be on notification 1');
+
+      TinyUiActions.keystroke(editor, Keys.tab());
       await FocusTools.pTryOnSelector('Link in notification has focus', doc, 'a[href="example.com"]');
       assert.isTrue(hasFocus(notification.getEl()), 'Focus should be on notification 1');
 
@@ -281,6 +285,11 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
       assert.isTrue(hasFocus(notification.getEl()), 'Focus should be on notification 1');
 
       TinyUiActions.keystroke(editor, Keys.tab());
+      TinyUiActions.keystroke(editor, Keys.tab());
+
+      await FocusTools.pTryOnSelector('Notification has focus', doc, '.tox-notification');
+      assert.isTrue(hasFocus(notification2.getEl()), 'Focus should be on notification 2');
+
       TinyUiActions.keystroke(editor, Keys.tab());
       await FocusTools.pTryOnSelector('Dismiss button in notification 2 has focus', doc, '.tox-notification__dismiss');
       assert.isTrue(hasFocus(notification2.getEl()), 'Focus should be on notification 2');
@@ -298,7 +307,7 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
       const hasFocus = (node: Node) => Focus.search(SugarElement.fromDom(node)).isSome();
       TinyContentActions.keystroke(editor, 123, { alt: true });
 
-      await FocusTools.pTryOnSelector('Dismiss button in notification has focus', doc, '.tox-notification__dismiss');
+      await FocusTools.pTryOnSelector('Notification has focus', doc, '.tox-notification');
       assert.isTrue(hasFocus(notification.getEl()), 'Focus should on notification 1');
 
       TinyUiActions.keystroke(editor, Keys.escape());
