@@ -357,7 +357,7 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
       height: 400
     }, []);
 
-    it('Should clamp the notification width to the width of the editor', async () => {
+    it('TINY-10886: Should clamp the notification width to the width of the editor', async () => {
       const editor = hook.editor();
       const longMessage = Arr.range(100, (_) => 'hello').join(' ');
       const nError = openNotification(editor, 'error', longMessage);
