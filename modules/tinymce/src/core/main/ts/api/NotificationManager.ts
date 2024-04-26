@@ -155,7 +155,7 @@ const NotificationManager = (editor: Editor): NotificationManager => {
       });
     });
 
-    editor.addShortcut('alt+F12', 'focus on the first notification', () =>
+    editor.addShortcut('alt+F12', 'Focus to notification', () =>
       getTopNotification()
         .map((notificationApi) => SugarElement.fromDom(notificationApi.getEl()))
         .each((elm) => Focus.focus(elm)));
