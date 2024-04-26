@@ -357,4 +357,26 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
       nWarn.close();
     });
   });
+
+  context('Width clamping', () => {
+    const hook = TinyHooks.bddSetup<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      toolbar_location: 'bottom',
+      width: 600,
+      height: 400
+    }, []);
+
+    it('TINY-10886: Should clamp the notification width to the width of the editor', async () => {
+      const editor = hook.editor();
+      const longMessage = Arr.range(100, (_) => 'hello').join(' ');
+      const nError = openNotification(editor, 'error', longMessage);
+      const nWarn = openNotification(editor, 'warning', 'hello');
+
+      assert.approximately(nError.getEl().clientWidth, 600, 10, 'Should be roughly the width of the editor');
+      assert.isBelow(nWarn.getEl().clientWidth, 500, 'Should be lower than editor width');
+
+      nError.close();
+      nWarn.close();
+    });
+  });
 });

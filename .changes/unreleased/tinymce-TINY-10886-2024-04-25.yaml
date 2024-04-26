@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Notification width was not constrained to the width of the editor.
+time: 2024-04-25T08:40:24.984951+02:00
+custom:
+  Issue: TINY-10886

@@ -1,6 +1,6 @@
 import { AlloyComponent, Behaviour, Boxes, Docking, Gui, GuiFactory, InlineView, Keying, MaxHeight, Replacing } from '@ephox/alloy';
 import { Arr, Optional, Singleton, Type } from '@ephox/katamari';
-import { SugarElement, SugarLocation, Traverse } from '@ephox/sugar';
+import { Css, SugarElement, SugarLocation, Traverse, Width } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { NotificationApi, NotificationManagerImpl, NotificationSpec } from 'tinymce/core/api/NotificationManager';
@@ -26,6 +26,16 @@ export default (
   const getBounds = () => {
     const contentArea = Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()));
     return Optional.some(contentArea);
+  };
+
+  const clampComponentsToBounds = (components: AlloyComponent[]) => {
+    getBounds().each((bounds) => {
+      Arr.each(components, (comp) => {
+        if (Width.get(comp.element) > bounds.width) {
+          Css.set(comp.element, 'width', bounds.width + 'px');
+        }
+      });
+    });
   };
 
   const open = (settings: NotificationSpec, closeCallback: () => void, isEditorOrUIFocused: () => boolean): NotificationApi => {
@@ -155,6 +165,7 @@ export default (
         Replacing.append(notificationWrapper, notificationSpec);
         InlineView.reposition(notificationWrapper);
         Docking.refresh(notificationWrapper);
+        clampComponentsToBounds(notificationWrapper.components());
       });
     }
 
@@ -168,6 +179,7 @@ export default (
       notificationRegion.on((region) => {
         InlineView.reposition(region);
         Docking.refresh(region);
+        clampComponentsToBounds(region.components());
       });
     };
 
