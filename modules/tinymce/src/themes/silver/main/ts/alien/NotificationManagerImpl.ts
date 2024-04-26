@@ -1,4 +1,4 @@
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Boxes, Docking, Gui, GuiFactory, InlineView, Keying, MaxHeight, Replacing } from '@ephox/alloy';
+import { AlloyComponent, Behaviour, Boxes, Docking, Gui, GuiFactory, InlineView, Keying, MaxHeight, Replacing } from '@ephox/alloy';
 import { Arr, Optional, Singleton, Type } from '@ephox/katamari';
 import { SugarElement, SugarLocation, Traverse } from '@ephox/sugar';
 
@@ -95,12 +95,8 @@ export default (
           inlineBehaviours: Behaviour.derive([
             Keying.config({
               mode: 'cyclic',
+              selector: '.tox-notification, .tox-notification a, .tox-notification button',
             }),
-            AddEventsBehaviour.config('notification-events', [
-              AlloyEvents.runOnAttached((comp) => {
-                editor.shortcuts.add('alt+F12', 'focus on notification region', () => Keying.focusIn(comp));
-              }),
-            ]),
             Replacing.config({}),
             ...(
               Options.isStickyToolbar(editor) && !sharedBackstage.header.isPositionedAtTop()

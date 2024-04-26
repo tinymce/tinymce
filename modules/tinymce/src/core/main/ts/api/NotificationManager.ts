@@ -1,4 +1,5 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Focus, SugarElement } from '@ephox/sugar';
 
 import * as EditorView from '../EditorView';
 import * as EditorFocus from '../focus/EditorFocus';
@@ -153,6 +154,11 @@ const NotificationManager = (editor: Editor): NotificationManager => {
         getImplementation().close(notification);
       });
     });
+
+    editor.addShortcut('alt+F12', 'Focus to notification', () =>
+      getTopNotification()
+        .map((notificationApi) => SugarElement.fromDom(notificationApi.getEl()))
+        .each((elm) => Focus.focus(elm)));
   };
 
   registerEvents(editor);
