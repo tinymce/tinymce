@@ -44,6 +44,10 @@
     overflow-wrap: break-word;
     padding: @tooltip-padding-y @tooltip-padding-x;
     text-transform: @tooltip-text-transform;
+
+    @media (forced-colors: active) {
+      outline: outset 1px;
+    }
   }
 
   .tox-tooltip__arrow {

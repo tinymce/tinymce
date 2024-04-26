@@ -79,6 +79,10 @@
     margin-top: @toolbar-separator-distance - 1px;
     padding-bottom: @toolbar-padding-y;
     padding-top: @toolbar-separator-distance + @toolbar-padding-y;
+
+    @media (forced-colors: active) {
+      outline: 1px solid currentColor;
+    }
   }
 
   .tox-toolbar--scrolling {
@@ -127,6 +131,10 @@
   box-shadow: @pop-box-shadow;
   overscroll-behavior: none;
   padding: @pad-xs 0;
+
+  @media (forced-colors: active) {
+    border: solid;
+  }
 }
 
 // Context toolbar

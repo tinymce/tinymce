@@ -39,6 +39,12 @@
 
   // Selected cell
   .tox-insert-table-picker .tox-insert-table-picker__selected {
+
+    @media (forced-colors: active) {
+      border-color: Highlight;
+      filter: contrast(50%);
+    }
+
     background-color: @insert-table-picker-selected-background-color;
     border-color: @insert-table-picker-selected-border-color;
   }

@@ -27,6 +27,12 @@
       top: 6px;
       width: $height;
 
+      @media (forced-colors: active) {
+        border-color: currentColor;
+        border-width: 2px !important;
+        forced-color-adjust: none;
+      }
+
       &:hover:not([aria-disabled=true]),
       &:focus:not([aria-disabled=true]) {
         border-color: @input-button-focus-border-color;
@@ -51,6 +57,10 @@
         top: -1px;
         width: $height;
         z-index: -1;
+
+        @media (forced-colors: active) {
+          border: none;
+        }
       }
     }
 

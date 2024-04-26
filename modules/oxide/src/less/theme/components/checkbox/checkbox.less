@@ -44,6 +44,10 @@
     .tox-checkbox-icon__unchecked svg {
       display: block;
       fill: @checkbox-unselected-color;
+
+      @media (forced-colors: active) {
+        fill: currentColor !important;
+      }
     }
 
     .tox-checkbox-icon__indeterminate svg {

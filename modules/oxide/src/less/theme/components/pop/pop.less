@@ -69,6 +69,11 @@
     opacity: 1;
     position: absolute;
     width: 0;
+
+    @media (forced-colors: active) {
+      // TODO: Temporary disabled due to unable to set the colour of the arrow in forced-colors mode
+      content: none;
+    }
   }
 
   // Hide the arrows on inset layouts and make the arrow transition as it disappears
