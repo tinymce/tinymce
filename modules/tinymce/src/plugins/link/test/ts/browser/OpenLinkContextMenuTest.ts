@@ -1,4 +1,4 @@
-import { FocusTools, Keyboard, Keys, TestStore } from '@ephox/agar';
+import { FocusTools, Keyboard, Keys, TestStore, Waiter } from '@ephox/agar';
 import { after, afterEach, before, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { DomEvent, EventUnbinder, SugarBody, SugarDocument } from '@ephox/sugar';
@@ -45,7 +45,7 @@ describe('browser.tinymce.plugins.link.OpenLinkContextMenuTest', () => {
     await TinyUiActions.pTriggerContextMenu(editor, 'a', '.tox-silver-sink [role="menuitem"]');
     Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.down());
     Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.down());
-    await pAssertFocusOnItem('Open Link', '.tox-collection__item:contains("Open link")');
+    await pAssertFocusOnItem('Open link', '.tox-collection__item:contains("Open link")');
     Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.enter());
     store.assertEq('Should open the targeted link', [
       'https://www.exampleone.com/'
@@ -60,7 +60,7 @@ describe('browser.tinymce.plugins.link.OpenLinkContextMenuTest', () => {
     await TinyUiActions.pTriggerContextMenu(editor, 'a[href="https://www.exampletwo.com"]', '.tox-silver-sink [role="menuitem"]');
     Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.down());
     Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.down());
-    await pAssertFocusOnItem('Open Link', '.tox-collection__item:contains("Open link")');
+    await pAssertFocusOnItem('Open link', '.tox-collection__item:contains("Open link")');
     Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.enter());
     store.assertEq('Should open the targeted link', [
       'https://www.exampletwo.com/'
@@ -90,6 +90,20 @@ describe('browser.tinymce.plugins.link.OpenLinkContextMenuTest', () => {
     editor.dispatch('click', { target: editor.dom.select('a')[0], ...keyConfig } as any);
     store.assertEq('Should open the targeted link', [
       'https://www.one.com/'
+    ]);
+  });
+
+  it('TINY-10391: Should open a new tab when triggering open link on an image with embedded link', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><a href="https://www.exampleimage.com"><img src="http://www.example.image/image"></a></p>');
+    // Open link context menu on the link
+    await TinyUiActions.pTriggerContextMenu(editor, 'a[href="https://www.exampleimage.com"]', '.tox-silver-sink [role="menuitem"]');
+    Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.down());
+    Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.down());
+    await pAssertFocusOnItem('Open link', '.tox-collection__item:contains("Open link")');
+    Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.enter());
+    store.assertEq('Should open the targeted link', [
+      'https://www.exampleimage.com/'
     ]);
   });
 });
