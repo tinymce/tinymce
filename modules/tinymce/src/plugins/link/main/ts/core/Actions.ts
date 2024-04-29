@@ -6,9 +6,16 @@ import VK from 'tinymce/core/api/util/VK';
 import * as OpenUrl from './OpenUrl';
 import * as Utils from './Utils';
 
-const getLinks = (editor: Editor) => editor.selection.isCollapsed() ?
-  Utils.getLinks(editor.dom.getParents(editor.selection.getStart())) as [HTMLAnchorElement] :
-  Utils.getLinksInSelection(editor.selection.getRng());
+const isSelectionOnImageWithEmbeddedLink = (editor: Editor) => {
+  const rng = editor.selection.getRng();
+  const node = rng.startContainer;
+  // Handle a case where an image embedded with a link is selected
+  return Utils.isLink(node) && rng.startContainer === rng.endContainer && editor.dom.select('img', node).length === 1;
+};
+
+const getLinks = (editor: Editor) => editor.selection.isCollapsed() || isSelectionOnImageWithEmbeddedLink(editor)
+  ? Utils.getLinks(editor.dom.getParents(editor.selection.getStart())) as [HTMLAnchorElement]
+  : Utils.getLinksInSelection(editor.selection.getRng()) as [HTMLAnchorElement];
 
 const getSelectedLink = (editor: Editor): HTMLAnchorElement | undefined => getLinks(editor)[0];
 

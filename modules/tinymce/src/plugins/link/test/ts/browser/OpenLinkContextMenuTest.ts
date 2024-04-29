@@ -1,11 +1,13 @@
-import { FocusTools, Keyboard, Keys, TestStore } from '@ephox/agar';
+import { Keys, TestStore } from '@ephox/agar';
 import { after, afterEach, before, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
-import { DomEvent, EventUnbinder, SugarBody, SugarDocument } from '@ephox/sugar';
+import { DomEvent, EventUnbinder, SugarBody } from '@ephox/sugar';
 import { TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
+
+import { pAssertFocusOnItem } from '../module/Utils';
 
 describe('browser.tinymce.plugins.link.OpenLinkContextMenuTest', () => {
   let unbinder: EventUnbinder;
@@ -17,9 +19,6 @@ describe('browser.tinymce.plugins.link.OpenLinkContextMenuTest', () => {
     base_url: '/project/tinymce/js/tinymce',
     image_caption: true,
   }, [ LinkPlugin ], true);
-
-  const pAssertFocusOnItem = (label: string, selector: string) =>
-    FocusTools.pTryOnSelector(`Focus should be on: ${label}`, SugarDocument.getDocument(), selector);
 
   before(() => {
     unbinder = DomEvent.bind(SugarBody.body(), 'click', (e) => {
@@ -43,10 +42,10 @@ describe('browser.tinymce.plugins.link.OpenLinkContextMenuTest', () => {
     editor.setContent('<p>one <a href="https://www.exampleone.com/">Example</a> two</p>');
     TinySelections.select(editor, 'p', []);
     await TinyUiActions.pTriggerContextMenu(editor, 'a', '.tox-silver-sink [role="menuitem"]');
-    Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.down());
-    Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.down());
-    await pAssertFocusOnItem('Open Link', '.tox-collection__item:contains("Open link")');
-    Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.enter());
+    TinyUiActions.keydown(editor, Keys.down());
+    TinyUiActions.keydown(editor, Keys.down());
+    await pAssertFocusOnItem('Open link', '.tox-collection__item:contains("Open link")');
+    TinyUiActions.keydown(editor, Keys.enter());
     store.assertEq('Should open the targeted link', [
       'https://www.exampleone.com/'
     ]);
@@ -58,10 +57,10 @@ describe('browser.tinymce.plugins.link.OpenLinkContextMenuTest', () => {
     // Select `e Example`
     TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 0, 1, 0 ], 6);
     await TinyUiActions.pTriggerContextMenu(editor, 'a[href="https://www.exampletwo.com"]', '.tox-silver-sink [role="menuitem"]');
-    Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.down());
-    Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.down());
-    await pAssertFocusOnItem('Open Link', '.tox-collection__item:contains("Open link")');
-    Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.enter());
+    TinyUiActions.keydown(editor, Keys.down());
+    TinyUiActions.keydown(editor, Keys.down());
+    await pAssertFocusOnItem('Open link', '.tox-collection__item:contains("Open link")');
+    TinyUiActions.keydown(editor, Keys.enter());
     store.assertEq('Should open the targeted link', [
       'https://www.exampletwo.com/'
     ]);
@@ -90,6 +89,20 @@ describe('browser.tinymce.plugins.link.OpenLinkContextMenuTest', () => {
     editor.dispatch('click', { target: editor.dom.select('a')[0], ...keyConfig } as any);
     store.assertEq('Should open the targeted link', [
       'https://www.one.com/'
+    ]);
+  });
+
+  it('TINY-10391: Should open a new tab when triggering open link on an image with embedded link', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><a href="https://www.exampleimage.com"><img src="http://www.example.image/image"></a></p>');
+    // Open link context menu on the link
+    await TinyUiActions.pTriggerContextMenu(editor, 'img', '.tox-silver-sink [role="menuitem"]');
+    TinyUiActions.keydown(editor, Keys.down());
+    TinyUiActions.keydown(editor, Keys.down());
+    await pAssertFocusOnItem('Open link', '.tox-collection__item:contains("Open link"):not([aria-disabled="true"])');
+    TinyUiActions.keydown(editor, Keys.enter());
+    store.assertEq('Should open the targeted link', [
+      'https://www.exampleimage.com/'
     ]);
   });
 });

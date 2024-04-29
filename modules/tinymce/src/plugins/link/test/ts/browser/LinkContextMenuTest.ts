@@ -6,15 +6,14 @@ import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
 
+import { pAssertFocusOnItem } from '../module/Utils';
+
 describe('browser.tinymce.plugins.link.LinkContextMenuTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'link',
     toolbar: 'link',
     base_url: '/project/tinymce/js/tinymce',
   }, [ Plugin ]);
-
-  const pAssertFocusOnItem = (label: string, selector: string) =>
-    FocusTools.pTryOnSelector(`Focus should be on: ${label}`, SugarDocument.getDocument(), selector);
 
   const pressDownArrowKey = (editor: Editor) => TinyUiActions.keydown(editor, Keys.down());
 
