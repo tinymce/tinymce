@@ -1,6 +1,6 @@
 project: tinymce
 kind: Fixed
-body: Open link menu not enabled for image with embedded link.
+body: Open link context menu action was not enabled for links on images.
 time: 2024-04-26T17:26:20.867461+09:30
 custom:
   Issue: TINY-10391
