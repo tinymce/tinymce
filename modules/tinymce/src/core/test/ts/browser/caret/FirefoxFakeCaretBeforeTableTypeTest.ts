@@ -38,7 +38,7 @@ describe('browser.tinymce.core.FirefoxFakeCaretBeforeTableTypeTest', () => {
       '</table>'
     );
     TinySelections.setCursor(editor, [], 0);
-    assertUndoManagerDataLength(editor, 2);
+    assertUndoManagerDataLength(editor, 1);
     KeyUtils.type(editor, 'a');
     assertUndoManagerDataLength(editor, 3);
   });

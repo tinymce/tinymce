@@ -96,9 +96,7 @@ export const extra = (editor: Editor, undoManager: UndoManager, index: Index, ca
   if (undoManager.transact(callback1)) {
     const bookmark = undoManager.data[index.get()].bookmark;
     const lastLevel = undoManager.data[index.get() - 1];
-    undoManager.ignore(() =>
-      Levels.applyToEditor(editor, lastLevel, true)
-    );
+    Levels.applyToEditor(editor, lastLevel, true);
 
     if (undoManager.transact(callback2)) {
       undoManager.data[index.get() - 1].beforeBookmark = bookmark;

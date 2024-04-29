@@ -28,9 +28,7 @@ describe('browser.tinymce.core.fmt.RemoveTrailingWhitespaceFormatTest', () => {
 
   it('unlink with leading whitespace', () => {
     const editor = hook.editor();
-    editor.undoManager.ignore(() =>
-      editor.setContent('<p><a href="#">a b</a></p>')
-    );
+    editor.setContent('<p><a href="#">a b</a></p>');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 3);
     editor.execCommand('unlink');
     TinyAssertions.assertContent(editor, '<p><a href="#">a</a> b</p>');
@@ -38,9 +36,7 @@ describe('browser.tinymce.core.fmt.RemoveTrailingWhitespaceFormatTest', () => {
 
   it('unlink with trailing whitespace', () => {
     const editor = hook.editor();
-    editor.undoManager.ignore(() =>
-      editor.setContent('<p><a href="#">a b</a></p>')
-    );
+    editor.setContent('<p><a href="#">a b</a></p>');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 2);
     editor.execCommand('unlink');
     TinyAssertions.assertContent(editor, '<p>a <a href="#">b</a></p>');

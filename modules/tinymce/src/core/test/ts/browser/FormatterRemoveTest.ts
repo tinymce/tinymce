@@ -7,7 +7,6 @@ import Editor from 'tinymce/core/api/Editor';
 import { ZWSP } from 'tinymce/core/text/Zwsp';
 
 import * as KeyUtils from '../module/test/KeyUtils';
-import * as TableTestUtils from './TableTestUtils';
 
 describe('browser.tinymce.core.FormatterRemoveTest', () => {
   const browser = PlatformDetection.detect().browser;
@@ -574,8 +573,8 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
 
   it('Remove format on node outside fake table selection', () => {
     const editor = hook.editor();
-    editor.setContent('<p><strong>test</strong></p><table><tbody><tr><td><strong>cell 1</strong></td><td>cell 2</td></tr><tr><td><strong>cell 3</strong></td><td>cell 4</td></tr></tbody></table>');
-    TableTestUtils.selectCells(editor, [ 1 ], [[ 0, 0 ], [ 0, 1 ]]);
+    editor.setContent('<p><strong>test</strong></p><table><tbody><tr><td data-mce-selected="1"><strong>cell 1</strong></td><td>cell 2</td></tr><tr><td data-mce-selected="1"><strong>cell 3</strong></td><td>cell 4</td></tr></tbody></table>');
+    LegacyUnit.setSelection(editor, 'td', 0, 'td', 0);
     const para = editor.dom.select('p')[0];
     // Remove bold on custom node
     editor.formatter.remove('bold', { }, para);
