@@ -3,7 +3,7 @@ import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Scroll } from '@ephox/sugar';
-import { LegacyUnit, TinyApis, TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyDom, LegacyUnit, TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyApis } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -350,11 +350,13 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
     editor.undoManager.clear();
     editor.setContent('<p>a</p>');
+    editor.undoManager.add();
 
     assert.equal(lastEvt?.lastLevel, undefined);
     assert.equal(HtmlUtils.cleanHtml(lastEvt?.level.content ?? ''), '<p>a</p>');
 
     editor.setContent('<p>b</p>');
+    editor.undoManager.add();
 
     assert.equal(HtmlUtils.cleanHtml(lastEvt?.lastLevel?.content ?? ''), '<p>a</p>');
     assert.equal(HtmlUtils.cleanHtml(lastEvt?.level.content ?? ''), '<p>b</p>');
@@ -487,9 +489,9 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
 
   it('ignore does a transaction but no levels', () => {
     const editor = hook.editor();
-    editor.setContent('<p>a</p>');
     editor.undoManager.clear();
     editor.setDirty(false);
+    editor.setContent('<p>a</p>');
     LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
     editor.undoManager.typing = true;
 

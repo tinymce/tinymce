@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: The `editor.setContent()` API did not trigger an undo level as expected, resulting in situations where undo/redo could not be performed correctly.
-time: 2024-03-14T15:14:19.571713634+01:00
-custom:
-  Issue: TINY-10283
