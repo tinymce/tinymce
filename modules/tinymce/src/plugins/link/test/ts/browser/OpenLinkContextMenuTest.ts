@@ -96,7 +96,7 @@ describe('browser.tinymce.plugins.link.OpenLinkContextMenuTest', () => {
     const editor = hook.editor();
     editor.setContent('<p><a href="https://www.exampleimage.com"><img src="http://www.example.image/image"></a></p>');
     // Open link context menu on the link
-    await TinyUiActions.pTriggerContextMenu(editor, 'a[href="https://www.exampleimage.com"]', '.tox-silver-sink [role="menuitem"]');
+    await TinyUiActions.pTriggerContextMenu(editor, 'img', '.tox-silver-sink [role="menuitem"]');
     TinyUiActions.keydown(editor, Keys.down());
     TinyUiActions.keydown(editor, Keys.down());
     await pAssertFocusOnItem('Open link', '.tox-collection__item:contains("Open link"):not([aria-disabled="true"])');
