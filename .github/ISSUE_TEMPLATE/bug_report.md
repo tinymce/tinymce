@@ -6,7 +6,7 @@ labels: type:bug
 ---
 
 ## 📝 Provide detailed reproduction steps (if any)
-Please provide the steps to reproduce and if possible a minimal demo of the problem via [fiddle.tiny.cloud](fiddle.tiny.cloud) or similar.
+Please provide the steps to reproduce and if possible a minimal demo of the problem via [fiddle.tiny.cloud](https://fiddle.tiny.cloud) or similar.
 1. …
 2. …
 3. …

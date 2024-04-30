@@ -147,6 +147,11 @@
   .tox-collection--toolbar .tox-collection__item--enabled.tox-collection__item--active:hover {
     background-color: @collection-toolbar-item-enabled-background-color;
     color: @collection-toolbar-item-label-enabled-text-color;
+
+    @media (forced-colors: active) {
+      border-radius: 3px;
+      outline: solid 1px;
+    }
   }
 
   .tox-collection--toolbar .tox-collection__item--active {
@@ -186,10 +191,21 @@
 
   .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
     color: @collection-list-item-label-active-text-color;
+
+    @media (forced-colors: active) {
+      border: solid 1px;
+    }
   }
 
   .tox-collection--toolbar .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
     color: @collection-toolbar-item-label-active-text-color;
+
+    @media (forced-colors: active) {
+      &:hover {
+        border-radius: 3px;
+        outline: solid 1px;
+      }
+    }
   }
 
   .tox-collection__item-icon,

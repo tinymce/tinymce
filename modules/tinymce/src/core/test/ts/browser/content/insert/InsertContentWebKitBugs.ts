@@ -3,7 +3,7 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.core.content.InsertContentTest', () => {
+describe('browser.tinymce.core.content.insert.InsertContentTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     base_url: '/project/tinymce/js/tinymce',

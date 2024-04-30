@@ -26,7 +26,7 @@ describe('webdriver.tinymce.themes.silver.dialogs.DialogFocusTest', () => {
 
   TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
     '[role="dialog"] { border: 1px solid black; padding: 2em; background-color: rgb(131,193,249); top: 40px; position: absolute; }',
-
+    '[role="dialog"] h1 { font-size: 15px; background: none; border: none; padding: 0px; margin: 0px; }',
     ':focus { outline: 3px solid green; !important; }'
   ]);
 

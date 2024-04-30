@@ -79,11 +79,31 @@
       text-align: center;
       width: @toolbar-number-input-button-width;
 
+      @media (forced-colors: active) {
+        &:hover,
+        &:focus,
+        &:active {
+          outline: 1px solid currentColor !important;
+        }
+      }
+
       svg {
         display: block;
         fill: @toolbar-button-icon-color;
         margin: 0 auto;
         transform: scale(@toolbar-number-input-button-icon-ratio);
+
+        @media (forced-colors: active) {
+          &,
+          &:active,
+          &:hover {
+            fill: currentColor !important;
+          }
+
+          &:disabled {
+            filter: contrast(0);
+          }
+        }
       }
 
       &:focus {

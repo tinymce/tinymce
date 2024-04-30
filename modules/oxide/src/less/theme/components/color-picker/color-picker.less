@@ -3,6 +3,16 @@
 //
 
 .tox {
+  .tox-hue-slider,
+  .tox-rgb-form .tox-rgba-preview {
+
+    @media (forced-colors: active) {
+      background-color: currentColor !important;
+      border: 1px solid highlight !important;
+      forced-color-adjust: none;
+    }
+  }
+
   .tox-color-picker-container {
     display: flex;
     flex-direction: row;

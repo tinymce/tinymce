@@ -122,6 +122,11 @@
 
   .tox-statusbar__branding {
     svg {
+
+      @media (forced-colors: active) {
+        fill: currentColor;
+      }
+
       fill: @statusbar-logo-color;
       height: 1.14em;
       vertical-align: -.28em;

@@ -5,6 +5,7 @@ import {
 } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
 import { Cell, Fun, Id, Optional, Optionals } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Height, SugarNode } from '@ephox/sugar';
 
 import * as Backstage from '../../backstage/Backstage';
@@ -94,6 +95,8 @@ const renderInlineDialog = <T extends Dialog.DialogData>(
 
   const inlineClass = 'tox-dialog-inline';
 
+  const os = PlatformDetection.detect().os;
+
   // TODO: Disable while validating?
   const dialog = GuiFactory.build({
     dom: {
@@ -101,7 +104,8 @@ const renderInlineDialog = <T extends Dialog.DialogData>(
       classes: [ 'tox-dialog', inlineClass, ...dialogSizeClass ],
       attributes: {
         role: 'dialog',
-        ['aria-labelledby']: dialogLabelId
+        // TINY-10808 - Workaround to address the dialog header not being announced on VoiceOver with aria-labelledby, ideally we should use the aria-labelledby
+        ...os.isMacOS() ? { 'aria-label': internalDialog.title } : { 'aria-labelledby': dialogLabelId }
       }
     },
     eventOrder: {

@@ -12,6 +12,7 @@ describe('browser.dragster.datatransfer.DataTransferTest', () => {
   const browser = PlatformDetection.detect().browser;
   const isSafari = browser.isSafari();
   const isFirefox = browser.isFirefox();
+  const isChrome = browser.isChromium();
 
   const testFile1 = new window.File([ 'Lorem ipsum' ], 'file1.txt', { type: 'text/plain', lastModified: 123 });
   const testFile2 = new window.File([ '<p>Lorem ipsum</p>' ], 'file2.html', { type: 'text/html', lastModified: 456 });
@@ -222,8 +223,9 @@ describe('browser.dragster.datatransfer.DataTransferTest', () => {
       assert.strictEqual(transfer.files.length, 2, 'Should have same number of files');
 
       transfer.clearData();
-      if (isFirefox || isSafari) {
+      if (isFirefox || isSafari || isChrome) {
         // Firefox & Safari follows the spec where clearData does not remove files
+        // Chromium now also follows the spec
         // https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/clearData
         assert.deepEqual(transfer.types, [ 'Files' ], 'Should have Files type remaining');
         assert.strictEqual(transfer.files.length, 2, 'Files should not have been cleared');

@@ -12,6 +12,12 @@
     color: @placeholder-text-color;
     content: attr(data-mce-placeholder);
     position: absolute;
+
+    @media (forced-colors: active) {
+      color: highlight;
+      filter: brightness(30%);
+      z-index: -1;
+    }
   }
 }
 

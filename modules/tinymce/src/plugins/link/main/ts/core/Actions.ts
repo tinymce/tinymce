@@ -6,17 +6,24 @@ import VK from 'tinymce/core/api/util/VK';
 import * as OpenUrl from './OpenUrl';
 import * as Utils from './Utils';
 
-const getLink = (editor: Editor, elm: Node): HTMLAnchorElement | null =>
-  editor.dom.getParent<HTMLAnchorElement>(elm, 'a[href]');
+const isSelectionOnImageWithEmbeddedLink = (editor: Editor) => {
+  const rng = editor.selection.getRng();
+  const node = rng.startContainer;
+  // Handle a case where an image embedded with a link is selected
+  return Utils.isLink(node) && rng.startContainer === rng.endContainer && editor.dom.select('img', node).length === 1;
+};
 
-const getSelectedLink = (editor: Editor): HTMLAnchorElement | null =>
-  getLink(editor, editor.selection.getStart());
+const getLinks = (editor: Editor) => editor.selection.isCollapsed() || isSelectionOnImageWithEmbeddedLink(editor)
+  ? Utils.getLinks(editor.dom.getParents(editor.selection.getStart())) as [HTMLAnchorElement]
+  : Utils.getLinksInSelection(editor.selection.getRng()) as [HTMLAnchorElement];
+
+const getSelectedLink = (editor: Editor): HTMLAnchorElement | undefined => getLinks(editor)[0];
 
 const hasOnlyAltModifier = (e: KeyboardEvent) => {
   return e.altKey === true && e.shiftKey === false && e.ctrlKey === false && e.metaKey === false;
 };
 
-const gotoLink = (editor: Editor, a: HTMLAnchorElement | null): void => {
+const gotoLink = (editor: Editor, a: HTMLAnchorElement | undefined): void => {
   if (a) {
     const href = Utils.getHref(a);
     if (/^#/.test(href)) {
@@ -40,10 +47,11 @@ const gotoSelectedLink = (editor: Editor) => (): void => {
 
 const setupGotoLinks = (editor: Editor): void => {
   editor.on('click', (e) => {
-    const link = getLink(editor, e.target);
-    if (link && VK.metaKeyPressed(e)) {
+    const links = Utils.getLinks(editor.dom.getParents(e.target)) as [HTMLAnchorElement];
+
+    if (links.length === 1 && VK.metaKeyPressed(e)) {
       e.preventDefault();
-      gotoLink(editor, link);
+      gotoLink(editor, links[0]);
     }
   });
 
@@ -80,12 +88,7 @@ const toggleLinkMenuState = (editor: Editor) => (api: Menu.MenuItemInstanceApi):
   return toggleState(editor, updateState);
 };
 
-const hasExactlyOneLinkInSelection = (editor: Editor): boolean => {
-  const links = editor.selection.isCollapsed() ?
-    Utils.getLinks(editor.dom.getParents(editor.selection.getStart())) :
-    Utils.getLinksInSelection(editor.selection.getRng());
-  return links.length === 1;
-};
+const hasExactlyOneLinkInSelection = (editor: Editor): boolean => getLinks(editor).length === 1;
 
 const toggleGotoLinkState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi | Menu.MenuItemInstanceApi): () => void => {
   const updateState = () => api.setEnabled(hasExactlyOneLinkInSelection(editor));
