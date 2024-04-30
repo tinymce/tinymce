@@ -23,6 +23,10 @@
       position: absolute;
       transition: opacity .15s;
       z-index: 1;
+
+      @media (forced-colors: active) {
+        border: @edit-area-border-width solid highlight;
+      }
     }
   }
 

@@ -1,44 +1,79 @@
-import { Boxes, Gui, GuiFactory, InlineView, Layout, MaxHeight, NodeAnchorSpec } from '@ephox/alloy';
-import { Arr, Num, Optional, Type } from '@ephox/katamari';
-import { SugarBody, SugarElement } from '@ephox/sugar';
+import { AlloyComponent, Behaviour, Boxes, Docking, Gui, GuiFactory, InlineView, Keying, MaxHeight, Replacing } from '@ephox/alloy';
+import { Arr, Optional, Singleton, Type } from '@ephox/katamari';
+import { Css, SugarElement, SugarLocation, Traverse, Width } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { NotificationApi, NotificationManagerImpl, NotificationSpec } from 'tinymce/core/api/NotificationManager';
 import Delay from 'tinymce/core/api/util/Delay';
 
+import * as Options from '../api/Options';
 import { UiFactoryBackstage } from '../backstage/Backstage';
+import * as ScrollingContext from '../modes/ScrollingContext';
 import { Notification } from '../ui/general/Notification';
 
 interface Extras {
   readonly backstage: UiFactoryBackstage;
 }
 
-export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): NotificationManagerImpl => {
+export default (
+  editor: Editor,
+  extras: Extras,
+  uiMothership: Gui.GuiSystem,
+  notificationRegion: Singleton.Value<AlloyComponent>
+): NotificationManagerImpl => {
   const sharedBackstage = extras.backstage.shared;
 
   const getBounds = () => {
-    /* Attempt to ensure that the notifications render below the top of the header and between
-     * whichever is the larger between the bottom of the content area and the bottom of the viewport
-     *
-     * Note: This isn't perfect, but we have a plan to fix it now that TinyMCE 6 removed public methods restricting
-     * our ability to change anything (TINY-6679).
-     *
-     * TODO TINY-8128: use docking and associate the notifications together so they update position automatically
-     * during UI refresh updates.
-     */
     const contentArea = Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()));
-    const win = Boxes.win();
-    const x = Num.clamp(win.x, contentArea.x, contentArea.right);
-    const y = Num.clamp(win.y, contentArea.y, contentArea.bottom);
-    const right = Math.max(contentArea.right, win.right);
-    const bottom = Math.max(contentArea.bottom, win.bottom);
-    return Optional.some(Boxes.bounds(x, y, right - x, bottom - y));
+    return Optional.some(contentArea);
   };
 
-  const open = (settings: NotificationSpec, closeCallback: () => void): NotificationApi => {
+  const clampComponentsToBounds = (components: AlloyComponent[]) => {
+    getBounds().each((bounds) => {
+      Arr.each(components, (comp) => {
+        if (Width.get(comp.element) > bounds.width) {
+          Css.set(comp.element, 'width', bounds.width + 'px');
+        }
+      });
+    });
+  };
+
+  const open = (settings: NotificationSpec, closeCallback: () => void, isEditorOrUIFocused: () => boolean): NotificationApi => {
     const close = () => {
-      closeCallback();
-      InlineView.hide(notificationWrapper);
+      const removeNotificationAndReposition = (region: AlloyComponent) => {
+        Replacing.remove(region, notification);
+        reposition();
+      };
+
+      const manageRegionVisibility = (region: AlloyComponent, editorOrUiFocused: boolean) => {
+        if (Traverse.children(region.element).length === 0) {
+          handleEmptyRegion(region, editorOrUiFocused);
+        } else {
+          handleRegionWithChildren(region, editorOrUiFocused);
+        }
+      };
+
+      const handleEmptyRegion = (region: AlloyComponent, editorOrUIFocused: boolean) => {
+        InlineView.hide(region);
+        notificationRegion.clear();
+        if (editorOrUIFocused) {
+          editor.focus();
+        }
+      };
+
+      const handleRegionWithChildren = (region: AlloyComponent, editorOrUIFocused: boolean) => {
+        if (editorOrUIFocused) {
+          Keying.focusIn(region);
+        }
+      };
+
+      notificationRegion.on((region) => {
+        closeCallback();
+        const editorOrUIFocused = isEditorOrUIFocused();
+        removeNotificationAndReposition(region);
+
+        manageRegionVisibility(region, editorOrUIFocused);
+      });
     };
 
     const notification = GuiFactory.build(
@@ -49,23 +84,90 @@ export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): No
         icon: settings.icon,
         onAction: close,
         iconProvider: sharedBackstage.providers.icons,
-        translationProvider: sharedBackstage.providers.translate
+        backstageProvider: sharedBackstage.providers,
       })
     );
 
-    const notificationWrapper = GuiFactory.build(
-      InlineView.sketch({
-        dom: {
-          tag: 'div',
-          classes: [ 'tox-notifications-container' ]
-        },
-        lazySink: sharedBackstage.getSink,
-        fireDismissalEventInstead: {},
-        ...sharedBackstage.header.isPositionedAtTop() ? {} : { fireRepositionEventInstead: {}}
-      })
-    );
+    if (!notificationRegion.isSet()) {
+      const notificationWrapper = GuiFactory.build(
+        InlineView.sketch({
+          dom: {
+            tag: 'div',
+            classes: [ 'tox-notifications-container' ],
+            attributes: {
+              'aria-label': 'Notifications',
+              'role': 'region'
+            }
+          },
+          lazySink: sharedBackstage.getSink,
+          fireDismissalEventInstead: {},
+          ...sharedBackstage.header.isPositionedAtTop() ? {} : { fireRepositionEventInstead: {}},
+          inlineBehaviours: Behaviour.derive([
+            Keying.config({
+              mode: 'cyclic',
+              selector: '.tox-notification, .tox-notification a, .tox-notification button',
+            }),
+            Replacing.config({}),
+            ...(
+              Options.isStickyToolbar(editor) && !sharedBackstage.header.isPositionedAtTop()
+                ? [ ]
+                : [
+                  Docking.config({
+                    contextual: {
+                      lazyContext: () => Optional.some(Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()))),
+                      fadeInClass: 'tox-notification-container-dock-fadein',
+                      fadeOutClass: 'tox-notification-container-dock-fadeout',
+                      transitionClass: 'tox-notification-container-dock-transition'
+                    },
+                    modes: [ 'top' ],
+                    lazyViewport: (comp) => {
+                      const optScrollingContext = ScrollingContext.detectWhenSplitUiMode(editor, comp.element);
+                      return optScrollingContext
+                        .map(
+                          (sc) => {
+                            const combinedBounds = ScrollingContext.getBoundsFrom(sc);
+                            return {
+                              bounds: combinedBounds,
+                              optScrollEnv: Optional.some({
+                                currentScrollTop: sc.element.dom.scrollTop,
+                                scrollElmTop: SugarLocation.absolute(sc.element).top
+                              })
+                            };
+                          }
+                        ).getOrThunk(
+                          () => ({
+                            bounds: Boxes.win(),
+                            optScrollEnv: Optional.none()
+                          })
+                        );
+                    }
+                  })
+                ]
+            )
+          ])
+        })
+      );
 
-    uiMothership.add(notificationWrapper);
+      const notificationSpec = GuiFactory.premade(notification);
+      const anchorOverrides = {
+        maxHeightFunction: MaxHeight.expandable()
+      };
+      const anchor = {
+        ...sharedBackstage.anchors.banner(),
+        overrides: anchorOverrides
+      };
+      notificationRegion.set(notificationWrapper);
+      uiMothership.add(notificationWrapper);
+      InlineView.showWithinBounds(notificationWrapper, notificationSpec, { anchor }, getBounds);
+    } else {
+      const notificationSpec = GuiFactory.premade(notification);
+      notificationRegion.on((notificationWrapper) => {
+        Replacing.append(notificationWrapper, notificationSpec);
+        InlineView.reposition(notificationWrapper);
+        Docking.refresh(notificationWrapper);
+        clampComponentsToBounds(notificationWrapper.components());
+      });
+    }
 
     if (Type.isNumber(settings.timeout) && settings.timeout > 0) {
       Delay.setEditorTimeout(editor, () => {
@@ -74,39 +176,11 @@ export default (editor: Editor, extras: Extras, uiMothership: Gui.GuiSystem): No
     }
 
     const reposition = () => {
-      const notificationSpec = GuiFactory.premade(notification);
-      const anchorOverrides = {
-        maxHeightFunction: MaxHeight.expandable()
-      };
-
-      // TODO TINY-8128: This is a hack. This logic only works if called on every notification in order (as NotificationManager.reposition() does).
-      const allNotifications = editor.notificationManager.getNotifications();
-
-      if (allNotifications[0] === thisNotification) {
-        // first notification goes below the banner element
-        const anchor = {
-          ...sharedBackstage.anchors.banner(),
-          overrides: anchorOverrides
-        };
-        InlineView.showWithinBounds(notificationWrapper, notificationSpec, { anchor }, getBounds);
-      } else {
-        // all other notifications go directly below the previous one
-        Arr.indexOf(allNotifications, thisNotification).each((idx) => {
-          const previousNotification = allNotifications[idx - 1].getEl();
-
-          const nodeAnchor: NodeAnchorSpec = {
-            type: 'node',
-            root: SugarBody.body(),
-            node: Optional.some(SugarElement.fromDom(previousNotification)),
-            overrides: anchorOverrides,
-            layouts: {
-              onRtl: () => [ Layout.south ],
-              onLtr: () => [ Layout.south ]
-            }
-          };
-          InlineView.showWithinBounds(notificationWrapper, notificationSpec, { anchor: nodeAnchor }, getBounds);
-        });
-      }
+      notificationRegion.on((region) => {
+        InlineView.reposition(region);
+        Docking.refresh(region);
+        clampComponentsToBounds(region.components());
+      });
     };
 
     const thisNotification = {

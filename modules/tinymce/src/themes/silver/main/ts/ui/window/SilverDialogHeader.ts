@@ -52,7 +52,7 @@ const renderTitle = (
 
   return {
     dom: {
-      tag: 'div',
+      tag: 'h1',
       classes: [ 'tox-dialog__title' ],
       attributes: {
         ...titleId.map((x) => ({ id: x })).getOr({})

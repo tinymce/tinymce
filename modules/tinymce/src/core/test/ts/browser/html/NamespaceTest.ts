@@ -9,11 +9,13 @@ describe('browser.tinymce.core.html.NamespaceTest', () => {
 
   it('isNonHtmlElementRootName', () => {
     assert.isTrue(Namespace.isNonHtmlElementRootName('svg'));
+    assert.isTrue(Namespace.isNonHtmlElementRootName('math'));
     assert.isFalse(Namespace.isNonHtmlElementRootName('span'));
   });
 
   it('isNonHtmlElementRoot', () => {
     assert.isTrue(Namespace.isNonHtmlElementRoot(createSvgElement('svg')));
+    assert.isTrue(Namespace.isNonHtmlElementRoot(createSvgElement('math')));
     assert.isFalse(Namespace.isNonHtmlElementRoot(document.createElement('span')));
   });
 
@@ -36,6 +38,14 @@ describe('browser.tinymce.core.html.NamespaceTest', () => {
             </desc>
           </circle>
         </svg>
+        <math>
+          <mrow>
+            <msup>
+              <mi>a</mi>
+              <mn>2</mn>
+            </msup>
+          </mrow>
+        </math>
         <span>baz</span>
       </div>
     `.trim());
@@ -46,12 +56,27 @@ describe('browser.tinymce.core.html.NamespaceTest', () => {
     );
 
     const states: Array<[ string, Namespace.NamespaceType ]> = [];
+
     while (walker.nextNode()) {
       const type = tracker.track(walker.currentNode);
       assert.equal(type, tracker.current(), 'Current tracker state should be the last executed track result');
       states.push([ walker.currentNode.nodeName.toLowerCase(), type ]);
     }
-    assert.deepEqual(states, [[ 'p', 'html' ], [ 'span', 'html' ], [ 'svg', 'svg' ], [ 'circle', 'svg' ], [ 'desc', 'svg' ], [ 'p', 'svg' ], [ 'span', 'html' ]]);
+
+    assert.deepEqual(states, [
+      [ 'p', 'html' ],
+      [ 'span', 'html' ],
+      [ 'svg', 'svg' ],
+      [ 'circle', 'svg' ],
+      [ 'desc', 'svg' ],
+      [ 'p', 'svg' ],
+      [ 'math', 'math' ],
+      [ 'mrow', 'math' ],
+      [ 'msup', 'math' ],
+      [ 'mi', 'math' ],
+      [ 'mn', 'math' ],
+      [ 'span', 'html' ]
+    ]);
 
     tracker.track(createSvgElement('svg'));
     assert.equal(tracker.current(), 'svg');

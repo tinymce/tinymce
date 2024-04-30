@@ -28,9 +28,10 @@ const loadUiSkins = async (editor: Editor, skinUrl: string): Promise<void> => {
   const skinUiCss = 'ui/' + skinResourceIdentifier + '/skin.css';
   const css = tinymce.Resource.get(skinUiCss);
   if (Type.isString(css)) {
-    return Promise.resolve(loadRawCss(editor, skinUiCss, css, editor.ui.styleSheetLoader));
+    loadRawCss(editor, skinUiCss, css, editor.ui.styleSheetLoader);
   } else {
-    const skinUiCss = skinUrl + '/skin.min.css';
+    const suffix = editor.editorManager.suffix;
+    const skinUiCss = skinUrl + `/skin${suffix}.css`;
     return loadStylesheet(editor, skinUiCss, editor.ui.styleSheetLoader);
   }
 };
@@ -46,30 +47,29 @@ const loadShadowDomUiSkins = async (editor: Editor, skinUrl: string): Promise<vo
 
     if (Type.isString(css)) {
       loadRawCss(editor, shadowDomSkinCss, css, DOMUtils.DOM.styleSheetLoader);
-      return Promise.resolve();
     } else {
-      const shadowDomSkinCss = skinUrl + '/skin.shadowdom.min.css';
+      const suffix = editor.editorManager.suffix;
+      const shadowDomSkinCss = skinUrl + `/skin.shadowdom${suffix}.css`;
       return loadStylesheet(editor, shadowDomSkinCss, DOMUtils.DOM.styleSheetLoader);
     }
   }
 };
 
 const loadUrlSkin = async (isInline: boolean, editor: Editor): Promise<void> => {
-  Options.getSkinUrlOption(editor).fold(() => {
+  const unbundled = () => {
     const skinResourceIdentifier = Options.getSkinUrl(editor);
+    const suffix = editor.editorManager.suffix;
     if (skinResourceIdentifier) {
-      editor.contentCSS.push(skinResourceIdentifier + (isInline ? '/content.inline' : '/content') + '.min.css');
+      editor.contentCSS.push(skinResourceIdentifier + (isInline ? '/content.inline' : '/content') + `${suffix}.css`);
     }
-  }, (skinUrl) => {
+  };
+  Options.getSkinUrlOption(editor).fold(unbundled, (skinUrl) => {
     const skinContentCss = 'ui/' + skinUrl + (isInline ? '/content.inline' : '/content') + '.css';
     const css = tinymce.Resource.get(skinContentCss);
     if (Type.isString(css)) {
       loadRawCss(editor, skinContentCss, css, editor.ui.styleSheetLoader);
     } else {
-      const skinResourceIdentifier = Options.getSkinUrl(editor);
-      if (skinResourceIdentifier) {
-        editor.contentCSS.push(skinResourceIdentifier + (isInline ? '/content.inline' : '/content') + '.min.css');
-      }
+      unbundled();
     }
   });
 

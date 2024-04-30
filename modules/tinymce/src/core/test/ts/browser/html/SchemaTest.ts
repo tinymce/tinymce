@@ -816,12 +816,12 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
       assert.deepEqual(schema.getElementRule('foo'), {
         attributesOrder: [
           'id', 'accesskey', 'class', 'dir', 'lang', 'style', 'tabindex', 'title', 'role', 'contenteditable', 'contextmenu', 'draggable',
-          'dropzone', 'hidden', 'spellcheck', 'translate', 'xml:lang', 'bar'
+          'dropzone', 'hidden', 'spellcheck', 'translate', 'itemprop', 'itemscope', 'itemtype', 'xml:lang', 'bar'
         ],
         attributes: {
           'id': {}, 'accesskey': {}, 'class': {}, 'dir': {}, 'lang': {}, 'style': {}, 'tabindex': {}, 'title': {}, 'role': {},
           'contenteditable': {}, 'contextmenu': {}, 'draggable': {}, 'dropzone': {}, 'hidden': {},
-          'spellcheck': {}, 'translate': {}, 'xml:lang': {}, 'bar': {}
+          'spellcheck': {}, 'translate': {}, 'itemprop': {}, 'itemscope': {}, 'itemtype': {}, 'xml:lang': {}, 'bar': {}
         }
       });
     });

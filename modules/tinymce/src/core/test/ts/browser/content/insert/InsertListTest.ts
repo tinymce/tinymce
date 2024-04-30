@@ -7,7 +7,7 @@ import AstNode from 'tinymce/core/api/html/Node';
 import Schema from 'tinymce/core/api/html/Schema';
 import * as InsertList from 'tinymce/core/content/InsertList';
 
-describe('browser.tinymce.core.content.InsertListTest', () => {
+describe('browser.tinymce.core.content.insert.InsertListTest', () => {
   const schema = Schema({});
 
   const createFragment = (html: string): AstNode => {

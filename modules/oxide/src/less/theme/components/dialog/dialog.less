@@ -237,6 +237,11 @@
   .tox-dialog__body-nav-item--active {
     border-bottom: 2px solid @dialog-body-link-color;
     color: @dialog-body-link-color;
+
+    @media (forced-colors: active) {
+      border-bottom: 2px solid highlight;
+      color: highlight;
+    }
   }
 
   .tox-dialog__body-content {

@@ -28,7 +28,11 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
       editor.setContent('<p>s<span style="display: block;" contenteditable="false">a</span></p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
-      TinyAssertions.assertContent(editor, '<p>s&nbsp;<span style="display: block;" contenteditable="false">a</span></p>');
+      if (isFirefox) {
+        TinyAssertions.assertContent(editor, '<p>s&nbsp;<br><span style="display: block;" contenteditable="false">a</span></p>');
+      } else {
+        TinyAssertions.assertContent(editor, '<p>s&nbsp;<span style="display: block;" contenteditable="false">a</span></p>');
+      }
     });
 
     // TINY-10742: Skipping until unexpected <br> tag being added in Firefox is addressed.
@@ -41,7 +45,7 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
       if (isSafari) { // Split due to normalization issue. See TINY-8833
         TinyAssertions.assertContent(editor, '<p>s &nbsp;<span style="display: block;" contenteditable="false">a</span></p>');
       } else if (isFirefox) { // Split due to normalization issue. See TINY-8833
-        TinyAssertions.assertContent(editor, '<p>s&nbsp; <span style="display: block;" contenteditable="false">a</span></p>');
+        TinyAssertions.assertContent(editor, '<p>s&nbsp; <br><span style="display: block;" contenteditable="false">a</span></p>');
       } else {
         TinyAssertions.assertContent(editor, '<p>s&nbsp;&nbsp;<span style="display: block;" contenteditable="false">a</span></p>');
       }
@@ -53,7 +57,11 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
       editor.setContent('<p><span class="filler">s</span><span style="display: block;" contenteditable="false">a</span></p>');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
-      TinyAssertions.assertContent(editor, '<p><span class="filler">s&nbsp;</span><span style="display: block;" contenteditable="false">a</span></p>');
+      if (isFirefox) {
+        TinyAssertions.assertContent(editor, '<p><span class="filler">s&nbsp;<br></span><span style="display: block;" contenteditable="false">a</span></p>');
+      } else {
+        TinyAssertions.assertContent(editor, '<p><span class="filler">s&nbsp;</span><span style="display: block;" contenteditable="false">a</span></p>');
+      }
     });
 
     // TINY-10742: Skipping until unexpected <br> tag being added in Firefox is addressed.
@@ -62,7 +70,11 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
       editor.setContent('<p>s<strong><span contenteditable="false" style="display: block;">a</span></strong></p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
-      TinyAssertions.assertContent(editor, '<p>s&nbsp;<strong><span style="display: block;" contenteditable="false">a</span></strong></p>');
+      if (isFirefox) {
+        TinyAssertions.assertContent(editor, '<p>s&nbsp;<br><strong><span style="display: block;" contenteditable="false">a</span></strong></p>');
+      } else {
+        TinyAssertions.assertContent(editor, '<p>s&nbsp;<strong><span style="display: block;" contenteditable="false">a</span></strong></p>');
+      }
     });
 
     it('TINY-8814: Add one space just after a block', async () => {

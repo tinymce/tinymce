@@ -1,4 +1,4 @@
-import { TestStore, Waiter, FocusTools } from '@ephox/agar';
+import { TestStore, Waiter, FocusTools, Assertions, ApproxStructure } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SugarDocument } from '@ephox/sugar';
@@ -11,11 +11,16 @@ import { RawEditorOptions, ToolbarMode } from 'tinymce/core/api/OptionTypes';
 import * as UiUtils from '../../../module/UiUtils';
 
 // TODO TINY-10480: Investigate flaky tests
-describe.skip('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest', () => {
+describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest', () => {
 
   const assertToolbarToggleState = (editor: Editor, expected: boolean) => {
     const state = editor.queryCommandState('ToggleToolbarDrawer');
     assert.equal(state, expected, 'Expected toolbar toggle state to be ' + expected);
+  };
+
+  const pWaitForOverflowToolbar = async (editor: Editor, toolbarMode: ToolbarMode) => {
+    const selector = `.tox-toolbar__overflow${toolbarMode === 'sliding' ? '--open' : ''}`;
+    await TinyUiActions.pWaitForUi(editor, selector);
   };
 
   const pTestToggle = async (options: RawEditorOptions, shouldToggle: boolean) => {
@@ -37,7 +42,7 @@ describe.skip('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleT
     McEditor.remove(editor);
   };
 
-  context(`Using the 'ToggleToolbarDrawer' command should toggle the toolbar if applicable`, () => {
+  context.skip(`Using the 'ToggleToolbarDrawer' command should toggle the toolbar if applicable`, () => {
     Arr.each<{ mode: ToolbarMode; shouldToggle: boolean }>([
       { mode: 'floating', shouldToggle: true },
       { mode: 'sliding', shouldToggle: true },
@@ -90,7 +95,7 @@ describe.skip('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleT
     });
 
     command(editor);
-    await TinyUiActions.pWaitForUi(editor, '.tox-toolbar__overflow');
+    await pWaitForOverflowToolbar(editor, toolbarMode);
     command(editor);
     await Waiter.pTryUntil('Wait for toolbar to be completely open', () => {
       store.sAssertEq('Assert store contains opened state', [ true, false ]);
@@ -126,7 +131,7 @@ describe.skip('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleT
         const doc = SugarDocument.getDocument();
         FocusTools.isOnSelector('Root element is focused', doc, 'iframe');
         editor.execCommand('ToggleToolbarDrawer', false, { skipFocus: true });
-        await TinyUiActions.pWaitForUi(editor, '.tox-toolbar__overflow');
+        await pWaitForOverflowToolbar(editor, toolbarMode);
         await FocusTools.pTryOnSelector('Focus should be preserved', doc, 'iframe');
         editor.execCommand('ToggleToolbarDrawer', false, { skipFocus: true });
         await FocusTools.pTryOnSelector('Focus should be preserved', doc, 'iframe');
@@ -145,7 +150,7 @@ describe.skip('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleT
         editor.focus();
         const initialFocusedElement = document.activeElement;
         editor.execCommand('ToggleToolbarDrawer', false, { skipFocus: false });
-        await TinyUiActions.pWaitForUi(editor, '.tox-toolbar__overflow');
+        await pWaitForOverflowToolbar(editor, toolbarMode);
         await Waiter.pTryUntil('Wait for toolbar to be completely open', () => {
           assert.notEqual(initialFocusedElement, document.activeElement, 'Focus should not be preserved');
         });
@@ -153,6 +158,29 @@ describe.skip('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleT
         await Waiter.pTryUntil('Wait for toolbar to be completely closed', () => {
           assert.notEqual(initialFocusedElement, document.activeElement, 'Focus should not be preserved');
         });
+        McEditor.remove(editor);
+      });
+    });
+
+    context('Assert overflow button structure when in sliding mode', () => {
+      it(`TINY-10795: Overflow button should have aria-expanded when toggled`, async () => {
+        const editor = await McEditor.pFromSettings<Editor>({
+          menubar: false,
+          statusbar: false,
+          width: 200,
+          toolbar_mode: 'sliding',
+          base_url: '/project/tinymce/js/tinymce'
+        });
+        const toolbarButton = TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="overflow-button"]');
+        await pWaitForOverflowToolbar(editor, 'sliding');
+        Assertions.assertStructure('overflow button stucture', ApproxStructure.build((s, str) =>
+          s.element('button', {
+            attrs: {
+              'aria-expanded': str.is('true'),
+              'aria-pressed': str.none()
+            }
+          })
+        ), toolbarButton);
         McEditor.remove(editor);
       });
     });

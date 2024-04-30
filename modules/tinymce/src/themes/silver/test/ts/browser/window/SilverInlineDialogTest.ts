@@ -264,7 +264,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
     await FocusTools.pTryOnSelector(
       'Focus should be on iframe',
       SugarDocument.getDocument(),
-      'iframe[title="Rich Text Area"]'
+      'iframe.tox-edit-area__iframe'
     );
   });
 });

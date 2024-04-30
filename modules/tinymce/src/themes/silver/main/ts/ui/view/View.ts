@@ -1,6 +1,6 @@
 import {
   AlloyComponent, AlloySpec, Behaviour, Composite, Container, Focusing, FocusInsideModes, Keying, PartType, RawDomSchema, SimpleSpec,
-  Sketcher, UiSketcher
+  Sketcher, Tabstopping, UiSketcher
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { View as BridgeView } from '@ephox/bridge';
@@ -105,6 +105,10 @@ const renderViewHeader = (spec: ViewHeaderSpec) => {
 const renderViewPane = (spec: SimpleSpec) => {
   return {
     uid: spec.uid,
+    behaviours: Behaviour.derive([
+      Focusing.config({}),
+      Tabstopping.config({})
+    ]),
     dom: {
       tag: 'div',
       classes: [ 'tox-view__pane' ]
@@ -123,6 +127,13 @@ const factory: UiSketcher.CompositeSketchFactory<ViewDetail, ViewSketchSpec> = (
     uid: detail.uid,
     dom: detail.dom,
     components,
+    behaviours: Behaviour.derive([
+      Focusing.config({}),
+      Keying.config({
+        mode: 'cyclic',
+        focusInside: FocusInsideModes.OnEnterOrSpaceMode
+      })
+    ]),
     apis
   };
 };

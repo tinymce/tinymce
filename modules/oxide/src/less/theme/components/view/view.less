@@ -1,4 +1,4 @@
-@view-header-padding: @pad-sm @pad-sm 0 @pad-sm;
+@view-header-padding: (@pad-sm + @keyboard-focus-outline-width) (@pad-sm + @keyboard-focus-outline-width) @keyboard-focus-outline-width (@pad-sm + @keyboard-focus-outline-width);    // Account for outline/border of the buttons
 @view-header-padding-mobile: @pad-sm;
 @view-pane-padding: @pad-sm;
 
@@ -12,6 +12,7 @@
     display: flex;
     flex: 1;
     flex-direction: column;
+    height: 100%;     // Override the height set by browsers so the view doesn't grow beyond editor container
   }
 
   .tox-view {
@@ -36,6 +37,7 @@
     line-height: @button-line-height;
     padding: @button-padding-y @button-padding-x;
     text-align: @button-text-align;
+    white-space: nowrap;
   }
 
   .tox-view__label--normal {
@@ -61,6 +63,7 @@
     flex-direction: row;
     gap: @view-toolbar-button-spacing-x; // spacing between buttons within a group
     justify-content: space-between;
+    overflow-x: auto;           // Show horizontal scrollbar on small screens
     padding: @view-header-padding;
   }
 

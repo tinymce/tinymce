@@ -2,7 +2,7 @@ import { UiFinder } from '@ephox/agar';
 import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Attribute, Classes, Css, Html, SelectorFind, SugarBody, SugarDocument, SugarElement, SugarShadowDom, Traverse } from '@ephox/sugar';
+import { Attribute, Classes, Css, Html, SelectorFind, SugarBody, SugarDocument, SugarElement, SugarShadowDom, TextContent, Traverse } from '@ephox/sugar';
 import { McEditor, TinyContentActions, TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -31,12 +31,18 @@ describe('browser.tinymce.plugins.fullscreen.FullScreenPluginTest', () => {
 
   const pWaitForDialog = async (editor: Editor, ariaLabel: string) => {
     const dialog = await TinyUiActions.pWaitForDialog(editor);
-    if (Attribute.has(dialog, 'aria-labelledby')) {
-      const labelledby = Attribute.get(dialog, 'aria-labelledby');
-      const dialogLabel = SelectorFind.descendant<HTMLLabelElement>(dialog, '#' + labelledby).getOrDie('Could not find labelledby');
-      assert.equal(Html.get(dialogLabel), ariaLabel, 'Checking label text');
+    if (!Attribute.has(dialog, 'aria-labelledby') && !Attribute.has(dialog, 'aria-label')) {
+      throw new Error('Dialog did not have correct aria attribute');
+    }
+
+    if (platform.os.isMacOS()) {
+      const ariaLabel = Attribute.get(dialog, 'aria-label');
+      const dialogLabel = SelectorFind.descendant<HTMLHeadingElement>(dialog, 'h1').getOrDie('Could not find dialog title');
+      assert.equal(TextContent.get(dialogLabel), ariaLabel, 'Checking aria-label text');
     } else {
-      throw new Error('Dialog did not have an aria-labelledby');
+      const labelledby = Attribute.get(dialog, 'aria-labelledby');
+      const dialogLabel = SelectorFind.descendant<HTMLHeadingElement>(dialog, '#' + labelledby).getOrDie('Could not find labelledby');
+      assert.equal(Html.get(dialogLabel), ariaLabel, 'Checking label text');
     }
   };
 

@@ -20,6 +20,7 @@ const shortcuts: ShortcutActionPairType[] = [
   { shortcuts: [ 'Alt + F9' ], action: 'Focus to menubar' },
   { shortcuts: [ 'Alt + F10' ], action: 'Focus to toolbar' },
   { shortcuts: [ 'Alt + F11' ], action: 'Focus to element path' },
+  { shortcuts: [ 'Alt + F12' ], action: 'Focus to notification' },
   { shortcuts: [ 'Ctrl + F9' ], action: 'Focus to contextual toolbar' },
   { shortcuts: [ 'Shift + Enter' ], action: 'Open popup menu for split buttons' },
   { shortcuts: [ 'Meta + K' ], action: 'Insert link (if link plugin activated)' },
