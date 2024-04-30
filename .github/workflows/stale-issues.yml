@@ -1,0 +1,21 @@
+name: 'Close stale issues'
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          stale-issue-message: 'This issue is stale because it has been open 365 days with no activity. Please comment if you wish to keep this issue open or it will be closed in 30 days.'
+          close-issue-message: 'This issue was closed because it has been stalled for 30 days with no activity.'
+          days-before-stale: 365
+          days-before-close: 30
+          days-before-pr-close: -1
+          days-before-pr-stale: -1
+
+          debug-only: true
+          enable-statistics: true
+          operations-per-run: 50
