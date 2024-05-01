@@ -6,6 +6,11 @@ on:
 jobs:
   stale:
     runs-on: ubuntu-latest
+
+    permissions:
+      issues: write
+      # pull-requests: write # only makes issues stale, not PRs
+
     steps:
       - uses: actions/stale@v9
         with:
@@ -18,4 +23,4 @@ jobs:
 
           debug-only: true
           enable-statistics: true
-          operations-per-run: 50
+          operations-per-run: 1500
