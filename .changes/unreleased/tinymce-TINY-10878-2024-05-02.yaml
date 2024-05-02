@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: Resolved an issue where emojis were not loading correctly due to a broken CDN
+  link.
+time: 2024-05-02T19:19:00.487471+10:00
+custom:
+  Issue: TINY-10878

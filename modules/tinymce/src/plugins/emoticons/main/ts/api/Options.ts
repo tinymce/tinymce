@@ -40,7 +40,7 @@ const register = (editor: Editor, pluginUrl: string): void => {
 
   registerOption('emoticons_images_url', {
     processor: 'string',
-    default: 'https://twemoji.maxcdn.com/v/13.0.1/72x72/'
+    default: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/'
   });
 };
 
