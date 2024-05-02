@@ -61,6 +61,7 @@ export default (): void => {
 
   const settings: RawEditorOptions = {
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
+    language: 'sv_SE',
     content_css: '../../../../js/tinymce/skins/content/default/content.css',
     content_langs: [
       { title: 'English (US)', code: 'en_us' },
