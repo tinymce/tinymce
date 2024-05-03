@@ -23,4 +23,4 @@ Tiny Technologies, Inc. supports the following community versions of TinyMCE:
 | 5.10.x  | &#10006;                       |
 | Other   | &#10006;                       |
 
-For supported enterprise versions of TinyMCE, refer to the enterprise [Supported TinyMCE versions documentation](https://www.tiny.cloud/docs/tinymce/7/support/#supportedversionsandplatforms).
+Commercial versions of TinyMCE have a longer support schedule than community versions. For the full list of supported TinyMCE versions please refer to the [Supported TinyMCE versions documentation](https://www.tiny.cloud/docs/tinymce/latest/support/#supportedversionsandplatforms).
