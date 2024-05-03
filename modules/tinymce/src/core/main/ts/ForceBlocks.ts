@@ -5,11 +5,11 @@ import Editor from './api/Editor';
 import Schema, { SchemaMap } from './api/html/Schema';
 import * as Options from './api/Options';
 import * as Bookmarks from './bookmark/Bookmarks';
+import * as StructureBookmark from './bookmark/StructureBookmark';
 import * as TransparentElements from './content/TransparentElements';
 import * as NodeType from './dom/NodeType';
 import * as PaddingBr from './dom/PaddingBr';
 import * as Parents from './dom/Parents';
-import * as EditorFocus from './focus/EditorFocus';
 import * as Namespace from './html/Namespace';
 
 /**
@@ -62,7 +62,7 @@ const addRootBlocks = (editor: Editor) => {
   const rootNode = editor.getBody();
   let rootBlockNode: Node | undefined | null;
   let tempNode: Node;
-  let wrapped = false;
+  let bm: StructureBookmark.StructureBookmark | null = null;
 
   const forcedRootBlock = Options.getForcedRootBlock(editor);
   if (!startNode || !NodeType.isElement(startNode)) {
@@ -73,11 +73,6 @@ const addRootBlocks = (editor: Editor) => {
   if (!schema.isValidChild(rootNodeName, forcedRootBlock.toLowerCase()) || hasBlockParent(blockElements, rootNode, startNode)) {
     return;
   }
-
-  // Get current selection
-  const rng = selection.getRng();
-  const { startContainer, startOffset, endContainer, endOffset } = rng;
-  const restoreSelection = EditorFocus.hasFocus(editor);
 
   // Wrap non block elements and text nodes
   let node = rootNode.firstChild;
@@ -96,9 +91,12 @@ const addRootBlocks = (editor: Editor) => {
       }
 
       if (!rootBlockNode) {
+        if (!bm && editor.hasFocus()) {
+          bm = StructureBookmark.getBookmark(editor.selection.getRng());
+        }
+
         rootBlockNode = createRootBlock(editor);
         rootNode.insertBefore(rootBlockNode, node);
-        wrapped = true;
       }
 
       tempNode = node;
@@ -110,10 +108,8 @@ const addRootBlocks = (editor: Editor) => {
     }
   }
 
-  if (wrapped && restoreSelection) {
-    rng.setStart(startContainer, startOffset);
-    rng.setEnd(endContainer, endOffset);
-    selection.setRng(rng);
+  if (bm) {
+    editor.selection.setRng(StructureBookmark.resolveBookmark(bm));
     editor.nodeChanged();
   }
 };
@@ -139,3 +135,4 @@ export {
   insertEmptyLine,
   setup
 };
+
