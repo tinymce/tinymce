@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Images with empty alt text are now considered decorative.
+time: 2024-05-03T12:12:16.178075+08:00
+custom:
+  Issue: TINY-10903

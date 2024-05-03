@@ -61,7 +61,7 @@ describe('browser.tinymce.plugins.image.DecorativeImageDialogTest', () => {
     assertCleanHtml('Checking output', editor, '<p><img src="src"></p>');
   });
 
-  it('TBA: Image update with decorative toggled on should produce empty alt and role=presentation', async () => {
+  it('TINY-10903: Image with non empty alt text to decorative', async () => {
     const editor = hook.editor();
     editor.setContent('<p><img src="#1" alt="alt1" /></p>');
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
@@ -77,7 +77,20 @@ describe('browser.tinymce.plugins.image.DecorativeImageDialogTest', () => {
     assertCleanHtml('Checking output', editor, '<p><img role="presentation" src="#1" alt=""></p>');
   });
 
-  it('TBA: Image update with decorative toggled off should produce empty alt and role=presentation', async () => {
+  it('TINY-10903: Image with non empty alt text maintained as infromative', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><img src="#1" alt="alt1" /></p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
+    editor.execCommand('mceImage');
+    await TinyUiActions.pWaitForDialog(editor);
+    assertInputValue(generalTabSelectors.src, '#1');
+    assertInputValue(generalTabSelectors.alt, 'alt1');
+    assertInputCheckbox(generalTabSelectors.decorative, false);
+    TinyUiActions.submitDialog(editor);
+    assertCleanHtml('Checking output', editor, '<p><img src="#1" alt="alt1"></p>');
+  });
+
+  it('TINY-10903: Image with empty alt text and role presentation to informative', async () => {
     const editor = hook.editor();
     editor.setContent('<p><img role="presentation" src="#1" alt="" /></p>');
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
@@ -91,5 +104,105 @@ describe('browser.tinymce.plugins.image.DecorativeImageDialogTest', () => {
     });
     TinyUiActions.submitDialog(editor);
     assertCleanHtml('Checking output', editor, '<p><img src="#1"></p>');
+  });
+
+  it('TINY-10903: Image with empty alt text and role presentation maintained as decorative', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><img role="presentation" src="#1" alt="" /></p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
+    editor.execCommand('mceImage');
+    await TinyUiActions.pWaitForDialog(editor);
+    assertInputValue(generalTabSelectors.src, '#1');
+    assertInputValue(generalTabSelectors.alt, '');
+    assertInputCheckbox(generalTabSelectors.decorative, true);
+    TinyUiActions.submitDialog(editor);
+    assertCleanHtml('Checking output', editor, '<p><img role="presentation" src="#1" alt=""></p>');
+  });
+
+  it('TINY-10903: Image with empty alt text maintained as decorative', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><img src="#1" alt="" /></p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
+    editor.execCommand('mceImage');
+    await TinyUiActions.pWaitForDialog(editor);
+    assertInputValue(generalTabSelectors.src, '#1');
+    assertInputValue(generalTabSelectors.alt, '');
+    assertInputCheckbox(generalTabSelectors.decorative, true);
+    TinyUiActions.submitDialog(editor);
+    assertCleanHtml('Checking output', editor, '<p><img role="presentation" src="#1" alt=""></p>');
+  });
+
+  it('TINY-10903: Image with empty alt text to infromative', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><img src="#1" alt="" /></p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
+    editor.execCommand('mceImage');
+    await TinyUiActions.pWaitForDialog(editor);
+    assertInputValue(generalTabSelectors.src, '#1');
+    assertInputValue(generalTabSelectors.alt, '');
+    assertInputCheckbox(generalTabSelectors.decorative, true);
+    fillActiveDialog({
+      decorative: false
+    });
+    TinyUiActions.submitDialog(editor);
+    assertCleanHtml('Checking output', editor, '<p><img src="#1"></p>');
+  });
+
+  it('TINY-10903: Image with role presentation maintained as decorative', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><img src="#1" role="presentation" /></p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
+    editor.execCommand('mceImage');
+    await TinyUiActions.pWaitForDialog(editor);
+    assertInputValue(generalTabSelectors.src, '#1');
+    assertInputValue(generalTabSelectors.alt, '');
+    assertInputCheckbox(generalTabSelectors.decorative, true);
+    TinyUiActions.submitDialog(editor);
+    assertCleanHtml('Checking output', editor, '<p><img role="presentation" src="#1" alt=""></p>');
+  });
+
+  it('TINY-10903: Image with role presentation maintained to informative', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><img src="#1" role="presentation" /></p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
+    editor.execCommand('mceImage');
+    await TinyUiActions.pWaitForDialog(editor);
+    assertInputValue(generalTabSelectors.src, '#1');
+    assertInputValue(generalTabSelectors.alt, '');
+    assertInputCheckbox(generalTabSelectors.decorative, true);
+    fillActiveDialog({
+      decorative: false
+    });
+    TinyUiActions.submitDialog(editor);
+    assertCleanHtml('Checking output', editor, '<p><img src="#1"></p>');
+  });
+
+  it('TINY-10903: Image with role presentation and non empty alt text maintained as informative', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><img role="presentation" src="#1" alt="test" /></p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
+    editor.execCommand('mceImage');
+    await TinyUiActions.pWaitForDialog(editor);
+    assertInputValue(generalTabSelectors.src, '#1');
+    assertInputValue(generalTabSelectors.alt, 'test');
+    assertInputCheckbox(generalTabSelectors.decorative, false);
+    TinyUiActions.submitDialog(editor);
+    assertCleanHtml('Checking output', editor, '<p><img role="presentation" src="#1" alt="test"></p>');
+  });
+
+  it('TINY-10903: Image with role presentation and non empty alt text to decorative', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><img role="presentation" src="#1" alt="test" /></p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
+    editor.execCommand('mceImage');
+    await TinyUiActions.pWaitForDialog(editor);
+    assertInputValue(generalTabSelectors.src, '#1');
+    assertInputValue(generalTabSelectors.alt, 'test');
+    assertInputCheckbox(generalTabSelectors.decorative, false);
+    fillActiveDialog({
+      decorative: true
+    });
+    TinyUiActions.submitDialog(editor);
+    assertCleanHtml('Checking output', editor, '<p><img role="presentation" src="#1" alt=""></p>');
   });
 });

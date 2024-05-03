@@ -140,7 +140,7 @@ describe('browser.tinymce.plugins.image.core.ImageDataTest', () => {
       vspace: '',
       border: '',
       borderStyle: '',
-      isDecorative: false
+      isDecorative: true
     });
     const data = readFromImage(image);
     assertModel({
@@ -156,7 +156,7 @@ describe('browser.tinymce.plugins.image.core.ImageDataTest', () => {
       vspace: '',
       border: '',
       borderStyle: '',
-      isDecorative: false
+      isDecorative: true
     }, data);
     assertStructure(ApproxStructure.build((s, str) => {
       return s.element('img', {

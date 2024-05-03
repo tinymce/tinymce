@@ -154,8 +154,11 @@ const isFigure = (elm: Node | null): elm is HTMLElement =>
 const isImage = (elm: Node): elm is HTMLImageElement =>
   elm.nodeName === 'IMG';
 
-const getIsDecorative = (image: HTMLElement): boolean =>
-  DOM.getAttrib(image, 'alt').length === 0 && DOM.getAttrib(image, 'role') === 'presentation';
+// Decorative image, alt="" or role="presentation" or both, we don't consider decorative image when contains conflicting non empty alt text and role="presentation"
+const getIsDecorative = (image: HTMLElement): boolean => {
+  const hasEmptyAlt = image.hasAttribute('alt') && image.getAttribute('alt') === '';
+  return hasEmptyAlt || (DOM.getAttrib(image, 'alt').length === 0 && DOM.getAttrib(image, 'role') === 'presentation');
+};
 
 const getAlt = (image: HTMLElement): string => {
   if (getIsDecorative(image)) {

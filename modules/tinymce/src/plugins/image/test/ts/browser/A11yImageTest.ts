@@ -66,7 +66,7 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
     UiFinder.notExists(SugarBody.body(), 'div[role="dialog"]');
   });
 
-  it('FOAM-11: Image with alt text', async () => {
+  it('TINY-10903: Empty editor - alt input should be enabled - image with alt text', async () => {
     const editor = hook.editor();
     await pCreateTestOnEmptyEditor(
       editor,
@@ -81,13 +81,14 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
     await pTestUiStateEnabled(editor, 'alt');
   });
 
-  it('FOAM-11: Decorative image', async () => {
+  it('TINY-10903: Empty editor - alt input should be disabled - image without alt text and with role presentation', async () => {
     const editor = hook.editor();
     await pCreateTestOnEmptyEditor(
       editor,
       {
+        alt: '',
         src: {
-          value: 'src'
+          value: 'src',
         },
         decorative: true
       },
@@ -96,7 +97,7 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
     await pTestUiStateDisabled(editor);
   });
 
-  it('FOAM-11: Decorative image (should ignore alt text value)', async () => {
+  it('TINY-10903: Empty editor - alt input should be disabled - Decorative image (should ignore alt text value)', async () => {
     const editor = hook.editor();
     await pCreateTestOnEmptyEditor(
       editor,
@@ -112,7 +113,47 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
     await pTestUiStateDisabled(editor);
   });
 
-  it('FOAM-11: Decorative image to informative image', async () => {
+  it('TINY-10903: With content - alt input should be disabled - Image without role presentation and alt to decorative image', async () => {
+    const editor = hook.editor();
+    await pCreateTestOnContent(
+      editor,
+      {
+        src: {
+          value: 'src'
+        },
+        decorative: true
+      },
+      {
+        start: { element: [ 0 ], offset: 0 },
+        finish: { element: [ 0 ], offset: 1 }
+      },
+      '<p><img src="src" /></p>',
+      '<p><img role="presentation" src="src" alt=""></p>'
+    );
+    await pTestUiStateDisabled(editor);
+  });
+
+  it('TINY-10903: With content - alt input should be disabled - Image without role presentation but empty alt text to decorative image', async () => {
+    const editor = hook.editor();
+    await pCreateTestOnContent(
+      editor,
+      {
+        src: {
+          value: 'src'
+        },
+        decorative: true
+      },
+      {
+        start: { element: [ 0 ], offset: 0 },
+        finish: { element: [ 0 ], offset: 1 }
+      },
+      '<p><img src="src" alt="" /></p>',
+      '<p><img role="presentation" src="src" alt=""></p>'
+    );
+    await pTestUiStateDisabled(editor);
+  });
+
+  it('TINY-10903: With content - alt input be enabled - Decorative image with role and empty alt text to informative image', async () => {
     const editor = hook.editor();
     await pCreateTestOnContent(
       editor,
@@ -133,7 +174,48 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
     await pTestUiStateEnabled(editor, 'alt');
   });
 
-  it('FOAM-11: Informative image to decorative image', async () => {
+  it('TINY-10903: With content - alt input should be disabled - Decorative image with role and without alt attribute to decorative image', async () => {
+    const editor = hook.editor();
+    await pCreateTestOnContent(
+      editor,
+      {
+        alt: 'alt',
+        src: {
+          value: 'src'
+        },
+        decorative: true
+      },
+      {
+        start: { element: [ 0 ], offset: 0 },
+        finish: { element: [ 0 ], offset: 1 }
+      },
+      '<p><img role="presentation" src="src" /></p>',
+      '<p><img role="presentation" src="src" alt=""></p>'
+    );
+    await pTestUiStateDisabled(editor);
+  });
+
+  it('TINY-10903: With content - alt input should be disabled - Decorative image with role and null alt text to informative image', async () => {
+    const editor = hook.editor();
+    await pCreateTestOnContent(
+      editor,
+      {
+        src: {
+          value: 'src'
+        },
+        decorative: true
+      },
+      {
+        start: { element: [ 0 ], offset: 0 },
+        finish: { element: [ 0 ], offset: 1 }
+      },
+      '<p><img role="presentation" src="src" /></p>',
+      '<p><img role="presentation" src="src" alt=""></p>'
+    );
+    await pTestUiStateDisabled(editor);
+  });
+
+  it('TINY-10903: Informative image to decorative image', async () => {
     const editor = hook.editor();
     await pCreateTestOnContent(
       editor,
