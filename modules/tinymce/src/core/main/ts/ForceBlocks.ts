@@ -1,4 +1,4 @@
-import { Arr, Fun, Obj } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 import { Insert, SugarElement } from '@ephox/sugar';
 
 import Editor from './api/Editor';
@@ -95,6 +95,13 @@ const addRootBlocks = (editor: Editor) => {
           bm = StructureBookmark.getBookmark(editor.selection.getRng());
         }
 
+        // Firefox will remove the last BR element if you insert nodes next to it using DOM APIs like insertBefore
+        // so for that weird edge case we stop processing.
+        if (!node.parentNode) {
+          node = null;
+          break;
+        }
+
         rootBlockNode = createRootBlock(editor);
         rootNode.insertBefore(rootBlockNode, node);
       }
@@ -128,7 +135,7 @@ const insertEmptyLine = (editor: Editor, root: SugarElement<HTMLElement>, insert
 };
 
 const setup = (editor: Editor): void => {
-  editor.on('NodeChange', Fun.curry(addRootBlocks, editor));
+  editor.on('NodeChange', () => addRootBlocks(editor));
 };
 
 export {

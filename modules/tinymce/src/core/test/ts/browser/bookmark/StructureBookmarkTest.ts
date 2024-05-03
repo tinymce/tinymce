@@ -2,7 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import { getBookmark, resolveBookmark } from 'tinymce/core/bookmark/StructureBookmark';
+import * as StructureBookmark from 'tinymce/core/bookmark/StructureBookmark';
 
 describe('browser.tinymce.core.StructureBookmarkTest', () => {
   const testBookmark = (testCase: { html: string; startPath: number[]; startOffset: number; endPath: number[]; endOffset: number }) => {
@@ -16,8 +16,8 @@ describe('browser.tinymce.core.StructureBookmarkTest', () => {
     inputRange.setStart(startContainer.dom, testCase.startOffset);
     inputRange.setEnd(endContainer.dom, testCase.endOffset);
 
-    const bm = getBookmark(inputRange);
-    const resolvedRange = resolveBookmark(bm);
+    const bm = StructureBookmark.getBookmark(inputRange);
+    const resolvedRange = StructureBookmark.resolveBookmark(bm);
 
     const actualStartPath = Hierarchy.path(scope, SugarElement.fromDom(resolvedRange.startContainer)).getOrDie('Failed to get start container');
     const actualEndPath = Hierarchy.path(scope, SugarElement.fromDom(resolvedRange.endContainer)).getOrDie('Failed to get end container');
