@@ -152,7 +152,6 @@ export interface Options {
    * Logs the initial raw editor options to the console.
    *
    * @method debug
-   * @returns {void}
    */
   debug: () => void;
 }
