@@ -33,7 +33,7 @@ describe('browser.tinymce.core.StructureBookmarkTest', () => {
     inputRange.setStart(startContainer.dom, startOffset);
     inputRange.setEnd(endContainer.dom, endOffset);
 
-    const bm = StructureBookmark.getBookmark(inputRange);
+    const bm = StructureBookmark.getBookmark(inputRange, () => document.createElement('span'));
     if (mutation) {
       mutation(scope);
     }

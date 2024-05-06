@@ -92,7 +92,7 @@ const addRootBlocks = (editor: Editor) => {
 
       if (!rootBlockNode) {
         if (!bm && editor.hasFocus()) {
-          bm = StructureBookmark.getBookmark(editor.selection.getRng());
+          bm = StructureBookmark.getBookmark(editor.selection.getRng(), () => document.createElement('span'));
         }
 
         // Firefox will remove the last BR element if you insert nodes next to it using DOM APIs like insertBefore

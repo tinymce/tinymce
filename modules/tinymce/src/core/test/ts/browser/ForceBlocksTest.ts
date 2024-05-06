@@ -119,6 +119,17 @@ describe('browser.tinymce.core.ForceBlocksTest', () => {
     assert.equal(HtmlUtils.cleanHtml(editor.getBody().innerHTML), '<span data-mce-type="bookmark">a</span>');
   });
 
+  it('TINY-10840: Wrapping should not throw error on element indexes', () => {
+    const editor = hook.editor();
+    editor.getBody().innerHTML = '<br><br>';
+    assert.doesNotThrow(() => {
+      TinySelections.setCursor(editor, [ ], 2);
+      editor.nodeChanged(); // This is needed since on some browsers selection change is async
+    });
+    TinyAssertions.assertContent(editor, '<p><br><br></p>');
+    TinyAssertions.assertCursor(editor, [ 0 ], 2);
+  });
+
   context('Transparent elements', () => {
     it('TINY-9172: Do not wrap root level transparent elements if they blocks inside', () => {
       const editor = hook.editor();

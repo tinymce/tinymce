@@ -1,7 +1,7 @@
 import * as NodeType from '../dom/NodeType';
 
 export interface ElementBookmark {
-  marker: Element;
+  marker: Node;
   before: boolean;
 }
 
@@ -20,12 +20,12 @@ export interface StructureBookmark {
 const isTextEndpoint = (endpoint: BookmarkEndpoint): endpoint is TextBookmark => endpoint.hasOwnProperty('text');
 const isElementEndpoint = (endpoint: BookmarkEndpoint): endpoint is ElementBookmark => endpoint.hasOwnProperty('marker');
 
-export const getBookmark = (range: Range): StructureBookmark => {
+export const getBookmark = (range: Range, createMarker: () => Node): StructureBookmark => {
   const getEndpoint = (container: Node, offset: number): ElementBookmark | TextBookmark => {
     if (NodeType.isText(container)) {
       return { text: container, offset };
     } else {
-      const marker = document.createElement('span');
+      const marker = createMarker();
       const children = container.childNodes;
       if (offset < children.length) {
         container.insertBefore(marker, children[offset]);
@@ -56,7 +56,7 @@ export const resolveBookmark = (bm: StructureBookmark): Range => {
       } else {
         rng.setStartAfter(start.marker);
       }
-      start.marker.remove();
+      start.marker.parentNode?.removeChild(start.marker);
     }
   }
 
@@ -69,7 +69,7 @@ export const resolveBookmark = (bm: StructureBookmark): Range => {
       } else {
         rng.setEndAfter(end.marker);
       }
-      end.marker.remove();
+      end.marker.parentNode?.removeChild(end.marker);
     }
   }
 
