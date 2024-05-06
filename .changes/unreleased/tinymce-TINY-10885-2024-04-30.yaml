@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Insert/Edit image dialog lost focus after the image upload completed.
+time: 2024-04-30T16:02:20.600725+03:00
+custom:
+  Issue: TINY-10885
