@@ -140,6 +140,7 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
 
   context('Deleting content in summary or body', () => {
     context('With a collapsed selection', () => {
+
       it('TINY-9951: Deleting content in summary by pressing BACKSPACE should work as expected if caret at the end of summary content', async () => {
         const editor = hook.editor();
         createAccordion(editor);
@@ -245,8 +246,8 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
         TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
         await pDoDelete();
         assertAccordionContent(editor, { summary: 'summary', body: '<p>ody</p>' });
-        // TODO: Investigate why the path is different here on Firefox
-        TinyAssertions.assertCursor(editor, isFirefox ? [ 0, 1, 0 ] : [ 0, 1, 0, 0 ], 0);
+        // TODO: Investigate why the path is different here on Firefox and Safari (17 and 15)
+        TinyAssertions.assertCursor(editor, /*(isFirefox || isSafari) ? [ 0, 1, 0 ] :*/ [ 0, 1, 0, 0 ], 0);
       });
 
       it('TINY-9951: Deleting content in body by pressing DELETE should work as expected if caret in middle of body content', async () => {
