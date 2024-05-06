@@ -31,6 +31,7 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
   const hook = TinyHooks.bddSetup<Editor>(settings, [ AccordionPlugin ], true);
 
   const platform = PlatformDetection.detect();
+  const isFirefox = platform.browser.isFirefox();
   const isSafari = platform.browser.isSafari();
   const isMacOS = platform.os.isMacOS();
   const isWindows = platform.os.isWindows();
@@ -246,7 +247,7 @@ describe('webdriver.tinymce.plugins.accordion.AccordionBackspaceDeleteTest', () 
         await pDoDelete();
         assertAccordionContent(editor, { summary: 'summary', body: '<p>ody</p>' });
         // TODO: Investigate why the path is different here on Firefox and Safari (17 and 15)
-        TinyAssertions.assertCursor(editor, /* (isFirefox || isSafari) ? [ 0, 1, 0 ] : */ [ 0, 1, 0, 0 ], 0);
+        TinyAssertions.assertCursor(editor, (isFirefox || isSafari) ? [ 0, 1, 0 ] : [ 0, 1, 0, 0 ], 0);
       });
 
       it('TINY-9951: Deleting content in body by pressing DELETE should work as expected if caret in middle of body content', async () => {
