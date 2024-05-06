@@ -1,4 +1,4 @@
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr, Cell, Obj } from '@ephox/katamari';
 import { Insert, SugarElement } from '@ephox/sugar';
 
 import Editor from './api/Editor';
@@ -54,7 +54,7 @@ const shouldRemoveTextNode = (blockElements: SchemaMap, node: Node) => {
 const createRootBlock = (editor: Editor): HTMLElement =>
   editor.dom.create(Options.getForcedRootBlock(editor), Options.getForcedRootBlockAttrs(editor));
 
-const addRootBlocks = (editor: Editor) => {
+const addRootBlocks = (editor: Editor, lock: Cell<boolean>) => {
   const dom = editor.dom, selection = editor.selection;
   const schema = editor.schema;
   const blockElements = schema.getBlockElements();
@@ -73,6 +73,13 @@ const addRootBlocks = (editor: Editor) => {
   if (!schema.isValidChild(rootNodeName, forcedRootBlock.toLowerCase()) || hasBlockParent(blockElements, rootNode, startNode)) {
     return;
   }
+
+  // Using a lock state prevents selection changes to issue new node changes to trigger
+  if (lock.get()) {
+    return;
+  }
+
+  lock.set(true);
 
   // Wrap non block elements and text nodes
   let node = rootNode.firstChild;
@@ -119,6 +126,8 @@ const addRootBlocks = (editor: Editor) => {
     editor.selection.setRng(StructureBookmark.resolveBookmark(bm));
     editor.nodeChanged();
   }
+
+  lock.set(false);
 };
 
 const insertEmptyLine = (editor: Editor, root: SugarElement<HTMLElement>, insertBlock: (root: SugarElement<HTMLElement>, block: SugarElement<HTMLElement>) => void): Range => {
@@ -135,7 +144,8 @@ const insertEmptyLine = (editor: Editor, root: SugarElement<HTMLElement>, insert
 };
 
 const setup = (editor: Editor): void => {
-  editor.on('NodeChange', () => addRootBlocks(editor));
+  const lock = Cell<boolean>(false);
+  editor.on('NodeChange', () => addRootBlocks(editor, lock));
 };
 
 export {
