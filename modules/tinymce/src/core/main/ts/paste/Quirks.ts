@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import { Transformations } from '@ephox/acid';
 
 import Editor from '../api/Editor';
@@ -75,11 +76,12 @@ const removeWebKitStyles = (editor: Editor, content: string, internal: boolean):
     });
   } else {
     // Remove all external styles
-    content = content.replace(/(<[^>]+) style="([^"]*)"([^>]*>)/gi, '$1$3');
+    content = content.replace(/(<[^>]+) style=['"]([^'"]*)['"]([^>]*>)/gi, '$1$3');
+    debugger;
   }
 
   // Keep internal styles
-  content = content.replace(/(<[^>]+) data-mce-style="([^"]+)"([^>]*>)/gi, (all, before, value, after) => {
+  content = content.replace(/(<[^>]+) data-mce-style=['"]([^'"]*)['"]([^>]*>)/gi, (all, before, value, after) => {
     return before + ' style="' + value + '"' + after;
   });
 
