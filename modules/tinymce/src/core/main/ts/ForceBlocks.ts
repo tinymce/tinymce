@@ -1,4 +1,4 @@
-import { Arr, Cell, Obj } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 import { Insert, SugarElement } from '@ephox/sugar';
 
 import Editor from './api/Editor';
@@ -54,7 +54,7 @@ const shouldRemoveTextNode = (blockElements: SchemaMap, node: Node) => {
 const createRootBlock = (editor: Editor): HTMLElement =>
   editor.dom.create(Options.getForcedRootBlock(editor), Options.getForcedRootBlockAttrs(editor));
 
-const addRootBlocks = (editor: Editor, lock: Cell<boolean>) => {
+const addRootBlocks = (editor: Editor) => {
   const dom = editor.dom, selection = editor.selection;
   const schema = editor.schema;
   const blockElements = schema.getBlockElements();
@@ -74,12 +74,17 @@ const addRootBlocks = (editor: Editor, lock: Cell<boolean>) => {
     return;
   }
 
-  // Using a lock state prevents selection changes to issue new node changes to trigger
-  if (lock.get()) {
+  // Firefox will automatically remove the last BR if you insert nodes next to it and add a BR back if you remove those siblings
+  // and since the bookmark code inserts temporary nodes an new BR will be constantly removed and added and triggering a selection
+  // change causing an infinite recursion. So we treat this special case on it's own.
+  if (rootNode.firstChild === rootNode.lastChild && NodeType.isBr(rootNode.firstChild)) {
+    rootBlockNode = createRootBlock(editor);
+    rootBlockNode.appendChild(PaddingBr.createPaddingBr().dom);
+    rootNode.replaceChild(rootBlockNode, rootNode.firstChild);
+    editor.selection.setCursorLocation(rootBlockNode, 0);
+    editor.nodeChanged();
     return;
   }
-
-  lock.set(true);
 
   // Wrap non block elements and text nodes
   let node = rootNode.firstChild;
@@ -126,8 +131,6 @@ const addRootBlocks = (editor: Editor, lock: Cell<boolean>) => {
     editor.selection.setRng(StructureBookmark.resolveBookmark(bm));
     editor.nodeChanged();
   }
-
-  lock.set(false);
 };
 
 const insertEmptyLine = (editor: Editor, root: SugarElement<HTMLElement>, insertBlock: (root: SugarElement<HTMLElement>, block: SugarElement<HTMLElement>) => void): Range => {
@@ -144,8 +147,7 @@ const insertEmptyLine = (editor: Editor, root: SugarElement<HTMLElement>, insert
 };
 
 const setup = (editor: Editor): void => {
-  const lock = Cell<boolean>(false);
-  editor.on('NodeChange', () => addRootBlocks(editor, lock));
+  editor.on('NodeChange', () => addRootBlocks(editor));
 };
 
 export {
