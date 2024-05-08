@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
-import { after, afterEach, context, describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun, Arr, Obj, Type } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -12,54 +13,25 @@ describe('browser.tinymce.core.EditorOptionsDebugTest', () => {
       ...options,
       base_url: '/project/tinymce/js/tinymce',
     }, []);
-
-  const METHODS = [ 'log', 'error' ] as const;
-  const logs = METHODS.reduce(
-    (acc, method) => (acc[method] = [], acc),
-    {} as Record<typeof METHODS[number], unknown[][]>
-  );
-  const cleanup: (() => void)[] = [];
-  for (const method of METHODS) {
-    const original = console[method];
-    console[method] = (...args: unknown[]) => {
-      original(...args);
-      logs[method].push(args);
-    };
-    cleanup.push(() => {
-      console[method] = original;
-    });
-  }
-
   const ignoredKeys = new Set([ 'promotion', 'toolbar', 'menubar', 'statusbar', 'base_url', 'selector', 'setup' ]);
-  const assertLastLog = (expected: unknown) => {
-    const log = Arr.last(logs.log)
-      .filter((args): args is [Record<string, unknown>] => Type.isObject(args[0]) && Type.isNonNullable(args[0]))
-      .map(([ log ]) => Obj.filter(log, (_, k) => !ignoredKeys.has(k)))
+  const assertDebugLog = (editor: Editor, expectedLog: unknown) => {
+    const logs: unknown[] = [];
+    const originalLog = console.log;
+    console.log = (arg: unknown) => logs.push(arg);
+    editor.options.debug();
+    console.log = originalLog;
+
+    const log = Arr.last(logs)
+      .filter((args): args is Record<string, unknown> => Type.isObject(args) && Type.isNonNullable(args))
+      .map((log) => Obj.filter(log, (_, k) => !ignoredKeys.has(k)))
       .getOrDie(`Expected a console.log`);
-    assert.deepEqual(log, expected);
+    assert.deepEqual(log, expectedLog);
   };
-
-  after(() => {
-    let fn: (() => void) | undefined;
-    while ((fn = cleanup.pop())) {
-      fn();
-    }
-  });
-  afterEach(() => METHODS.forEach((method) => (logs[method] = [])));
-
-  // const create = (initialOptions: Record<string, any>): EditorOptions.Options =>
-  //   EditorOptions.create(hook.editor(), initialOptions);
-
-  // const logValue = (value: unknown) => {
-  //   processed.push(value);
-  //   return true;
-  // };
 
   context('With empty options', () => {
     const hook = createHook({});
     it('TINY-10605: should log empty object', () => {
-      hook.editor().options.debug();
-      assertLastLog({});
+      assertDebugLog(hook.editor(), {});
     });
   });
 
@@ -68,8 +40,9 @@ describe('browser.tinymce.core.EditorOptionsDebugTest', () => {
       file_picker_callback: Fun.noop
     });
     it('TINY-10605: Functions should log "[object Function]"', () => {
-      hook.editor().options.debug();
-      assertLastLog({ file_picker_callback: '[object Function]' });
+      assertDebugLog(hook.editor(), { file_picker_callback: '[object Function]' });
+    });
+  });
     });
   });
 
@@ -79,8 +52,13 @@ describe('browser.tinymce.core.EditorOptionsDebugTest', () => {
     a.b = b;
     const hook = createHook({ a, b });
     it('TINY-10605: Circular references should error log a TypeError', () => {
+      const logs: unknown[] = [];
+      const originalError = console.error;
+      console.error = (arg: unknown) => logs.push(arg);
       hook.editor().options.debug();
-      const error = Arr.last(logs.error).getOrDie('Expected a console.error')[0];
+      console.error = originalError;
+
+      const error = Arr.last(logs).getOrDie('Expected a console.error');
       assert.instanceOf(error, TypeError);
     });
   });
@@ -96,8 +74,7 @@ describe('browser.tinymce.core.EditorOptionsDebugTest', () => {
     };
     const hook = createHook(initialOptions);
     it('TINY-10605: Leaves objects, arrays and primitive values as is', () => {
-      hook.editor().options.debug();
-      assertLastLog(initialOptions);
+      assertDebugLog(hook.editor(), initialOptions);
     });
   });
 });
