@@ -1,6 +1,0 @@
-project: tinymce
-kind: Improved
-body: The editor UI now renders correctly in Windows High Contrast Mode.
-time: 2024-04-22T22:21:18.646603+10:00
-custom:
-  Issue: TINY-10781

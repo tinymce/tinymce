@@ -1,7 +1,0 @@
-project: tinymce
-kind: Improved
-body: Removed `aria-pressed` from the `More` button in sliding toolbar mode
-  and replaced it with `aria-expanded`.
-time: 2024-04-19T09:25:18.652068+08:00
-custom:
-  Issue: TINY-10795
