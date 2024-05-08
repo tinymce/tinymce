@@ -193,7 +193,7 @@ export const makeSchema = (type: SchemaType): SchemaLookupTable => {
     addAttrs('a', 'download');
     addAttrs('link script img', 'crossorigin');
     addAttrs('img', 'loading');
-    addAttrs('iframe', 'sandbox seamless allow allowfullscreen loading'); // Excluded: srcdoc
+    addAttrs('iframe', 'sandbox seamless allow allowfullscreen loading referrerpolicy'); // Excluded: srcdoc
   }
 
   // Special: iframe, ruby, video, audio, label
