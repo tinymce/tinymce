@@ -147,6 +147,13 @@ export interface Options {
    * @return {Boolean} True if the option has a value set, otherwise false.
    */
   isSet: (name: string) => boolean;
+
+  /**
+   * Logs the initial raw editor options to the console.
+   *
+   * @method debug
+   */
+  debug: () => void;
 }
 
 // A string array allows comma/space separated values as well for ease of use
@@ -224,7 +231,7 @@ const processDefaultValue = <T, U>(name: string, defaultValue: T, processor: Pro
   return undefined;
 };
 
-const create = (editor: Editor, initialOptions: Record<string, unknown>): Options => {
+const create = (editor: Editor, initialOptions: Record<string, unknown>, rawInitialOptions: Record<string, unknown> = initialOptions): Options => {
   const registry: Record<string, OptionSpec<any, any>> = {};
   const values: Record<string, any> = {};
 
@@ -294,13 +301,38 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>): Option
   const isSet = (name: string) =>
     Obj.has(values, name);
 
+  const debug = () => {
+    try {
+      // eslint-disable-next-line no-console
+      console.log(
+        JSON.parse(JSON.stringify(rawInitialOptions, (_key, value: unknown) => {
+          if (
+            Type.isBoolean(value) ||
+            Type.isNumber(value) ||
+            Type.isString(value) ||
+            Type.isNull(value) ||
+            Type.isArray(value) ||
+            Type.isPlainObject(value)
+          ) {
+            return value;
+          }
+          return Object.prototype.toString.call(value);
+        }))
+      );
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+    }
+  };
+
   return {
     register,
     isRegistered,
     get,
     set,
     unset,
-    isSet
+    isSet,
+    debug,
   };
 };
 
