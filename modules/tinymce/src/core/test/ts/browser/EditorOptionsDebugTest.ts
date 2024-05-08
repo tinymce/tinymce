@@ -43,6 +43,31 @@ describe('browser.tinymce.core.EditorOptionsDebugTest', () => {
       assertDebugLog(hook.editor(), { file_picker_callback: '[object Function]' });
     });
   });
+
+  context('With undefined', () => {
+    const hook = createHook({
+      encoding: undefined
+    });
+    it('TINY-10605: Undefined values should log "[object Undefined]"', () => {
+      assertDebugLog(hook.editor(), { encoding: '[object Undefined]' });
+    });
+  });
+
+  context('With RegExp', () => {
+    const hook = createHook({
+      protect: /a/
+    });
+    it('TINY-10605: RegExp values should log "[object RegExp]"', () => {
+      assertDebugLog(hook.editor(), { protect: '[object RegExp]' });
+    });
+  });
+
+  context('With div node', () => {
+    const hook = createHook({
+      fixed_toolbar_container_target: SugarElement.fromTag('div').dom
+    });
+    it('TINY-10605: Divs should log "[object HTMLDivElement]"', () => {
+      assertDebugLog(hook.editor(), { fixed_toolbar_container_target: '[object HTMLDivElement]' });
     });
   });
 
@@ -71,9 +96,10 @@ describe('browser.tinymce.core.EditorOptionsDebugTest', () => {
       paste_as_text: true,
       context_menu: [ 'image', 'lists' ],
       menu: { insert: { title: 'Insert', items: 'table | image | accordion' }},
+      inline: null
     };
     const hook = createHook(initialOptions);
-    it('TINY-10605: Leaves objects, arrays and primitive values as is', () => {
+    it('TINY-10605: Leaves objects, arrays, null, strings, number and booleans as is', () => {
       assertDebugLog(hook.editor(), initialOptions);
     });
   });
