@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Dialog title markup changed to use an `h1` element instead of `div`.
-time: 2024-04-02T21:41:45.987934+08:00
-custom:
-  Issue: TINY-10800

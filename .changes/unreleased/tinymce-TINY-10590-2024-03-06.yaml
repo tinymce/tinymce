@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Backspacing in certain html setups resulted in data moving around unexpectedly.
-time: 2024-03-06T16:07:38.830652013+01:00
-custom:
-  Issue: TINY-10590

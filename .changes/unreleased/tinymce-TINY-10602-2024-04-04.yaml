@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Theme loader did not respect the suffix when it was loading skin CSS files.
-time: 2024-04-04T16:35:26.405336+11:00
-custom:
-  Issue: TINY-10602

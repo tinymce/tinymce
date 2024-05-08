@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: The buttons in the custom view header were clipped when overflowing
-time: 2024-04-12T10:55:52.601575+09:30
-custom:
-  Issue: TINY-10741

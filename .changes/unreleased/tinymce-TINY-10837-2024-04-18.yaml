@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Styles were not retained when toggling a list on and off.
-time: 2024-04-18T10:57:01.817028+02:00
-custom:
-  Issue: TINY-10837
