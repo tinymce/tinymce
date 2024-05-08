@@ -1,7 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Fixed accessibility issue by removing duplicate `role="menu"` attribute from
-  color swatches.
-time: 2024-04-12T10:36:16.480977+03:00
-custom:
-  Issue: TINY-10806
