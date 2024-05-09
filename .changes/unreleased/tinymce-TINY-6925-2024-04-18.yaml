@@ -1,7 +1,0 @@
-project: tinymce
-kind: Improved
-body: 'Notification accessibility improvements: added tooltips, keyboard navigation
-  and shortcut to focus on notificatons.'
-time: 2024-04-18T10:05:30.586268+08:00
-custom:
-  Issue: TINY-6925

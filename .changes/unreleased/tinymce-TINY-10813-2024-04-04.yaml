@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Custom block elements with colon characters would throw errors.
-time: 2024-04-04T10:21:20.297165+02:00
-custom:
-  Issue: TINY-10813

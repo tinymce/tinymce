@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: In the custom view, the scrollbar of the container were not visible if its height was greater than the
-time: 2024-04-12T10:57:35.127892+09:30
-custom:
-  Issue: TINY-10741

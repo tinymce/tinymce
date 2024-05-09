@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Firefox not announcing the iframe title when `iframe_aria_text` was set.
-time: 2024-04-19T22:50:45.839561+08:00
-custom:
-  Issue: TINY-10718

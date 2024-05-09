@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Tab navigation in views didn't work.
-time: 2024-04-08T12:53:40.468313658+02:00
-custom:
-  Issue: TINY-10780
