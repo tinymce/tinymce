@@ -4,7 +4,7 @@ import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import { applyCaretFormat } from 'tinymce/core/fmt/CaretFormat';
+import { applyCaretFormat, removeCaretFormat } from 'tinymce/core/fmt/CaretFormat';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 
 describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
@@ -150,6 +150,23 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
       } else {
         TinyAssertions.assertContent(editor, '<p>a c</p>');
       }
+    });
+
+    it('TINY-10854: `&nbsp;`s should be converted to spaces when bedore or after there is an inline element', async () => {
+      const editor = hook.editor();
+      editor.setContent('<p>a</p>');
+      TinySelections.setCursor(editor, [ 0 ], 1);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+
+      applyCaretFormat(editor, 'bold', {});
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('b') ]);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+
+      removeCaretFormat(editor, 'bold', {});
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('c') ]);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+      TinyAssertions.assertContent(editor, '<p>a <strong>b </strong> c&nbsp;</p>');
     });
   });
 });

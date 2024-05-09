@@ -1,5 +1,5 @@
 import { Arr, Fun, Obj, Optional, Strings, Type, Unicode } from '@ephox/katamari';
-import { Attribute, Insert, Remove, SugarElement, SugarNode } from '@ephox/sugar';
+import { Attribute, Insert, PredicateFind, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
@@ -165,6 +165,27 @@ const cleanFormatNode = (editor: Editor, caretContainer: Node, formatNode: Eleme
   }
 };
 
+const normalizeNbspsBetween = (editor: Editor, caretContainer: Node | null) => {
+  const fake = true;
+  if (fake) {
+    editor.once('input', (_e) => {
+      if (caretContainer && !editor.dom.isEmpty(caretContainer)) {
+        Traverse.prevSibling(SugarElement.fromDom(caretContainer)).each((node) => {
+          if (NodeType.isText(node.dom)) {
+            node.dom.data = node.dom.data.replace(Unicode.nbsp, ' ');
+          } else {
+            PredicateFind.descendant(node, (e) => NodeType.isText(e.dom)).each((textNode) => {
+              if (NodeType.isText(textNode.dom)) {
+                textNode.dom.data = textNode.dom.data.replace(Unicode.nbsp, ' ');
+              }
+            });
+          }
+        });
+      }
+    });
+  }
+};
+
 const applyCaretFormat = (editor: Editor, name: string, vars?: FormatVars): void => {
   let caretContainer: Node | null;
   const selection = editor.selection;
@@ -210,6 +231,8 @@ const applyCaretFormat = (editor: Editor, name: string, vars?: FormatVars): void
 
       selectionRng.insertNode(caretContainer);
       offset = 1;
+
+      normalizeNbspsBetween(editor, caretContainer);
 
       editor.formatter.apply(name, vars, caretContainer);
     } else {
@@ -296,6 +319,8 @@ const removeCaretFormat = (editor: Editor, name: string, vars?: FormatVars, simi
       removeCaretContainerNode(editor, caretContainer, Type.isNonNullable(caretContainer));
     }
     selection.setCursorLocation(caretTextNode, 1);
+    // TODO: is this correct that we use caretTextNode.parentElement instead of direct go to the correct element?
+    normalizeNbspsBetween(editor, caretTextNode.parentElement);
 
     if (dom.isEmpty(formatNode)) {
       dom.remove(formatNode);
