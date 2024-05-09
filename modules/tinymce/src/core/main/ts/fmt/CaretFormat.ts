@@ -166,24 +166,21 @@ const cleanFormatNode = (editor: Editor, caretContainer: Node, formatNode: Eleme
 };
 
 const normalizeNbspsBetween = (editor: Editor, caretContainer: Node | null) => {
-  const fake = true;
-  if (fake) {
-    editor.once('input', (_e) => {
-      if (caretContainer && !editor.dom.isEmpty(caretContainer)) {
-        Traverse.prevSibling(SugarElement.fromDom(caretContainer)).each((node) => {
-          if (NodeType.isText(node.dom)) {
-            node.dom.data = node.dom.data.replace(Unicode.nbsp, ' ');
-          } else {
-            PredicateFind.descendant(node, (e) => NodeType.isText(e.dom)).each((textNode) => {
-              if (NodeType.isText(textNode.dom)) {
-                textNode.dom.data = textNode.dom.data.replace(Unicode.nbsp, ' ');
-              }
-            });
-          }
-        });
-      }
-    });
-  }
+  editor.once('input', (_e) => {
+    if (caretContainer && !editor.dom.isEmpty(caretContainer)) {
+      Traverse.prevSibling(SugarElement.fromDom(caretContainer)).each((node) => {
+        if (NodeType.isText(node.dom)) {
+          node.dom.data = node.dom.data.replace(Unicode.nbsp, ' ');
+        } else {
+          PredicateFind.descendant(node, (e) => NodeType.isText(e.dom)).each((textNode) => {
+            if (NodeType.isText(textNode.dom)) {
+              textNode.dom.data = textNode.dom.data.replace(Unicode.nbsp, ' ');
+            }
+          });
+        }
+      });
+    }
+  });
 };
 
 const applyCaretFormat = (editor: Editor, name: string, vars?: FormatVars): void => {
@@ -319,8 +316,8 @@ const removeCaretFormat = (editor: Editor, name: string, vars?: FormatVars, simi
       removeCaretContainerNode(editor, caretContainer, Type.isNonNullable(caretContainer));
     }
     selection.setCursorLocation(caretTextNode, 1);
-    // TODO: is this correct that we use caretTextNode.parentElement instead of direct go to the correct element?
-    normalizeNbspsBetween(editor, caretTextNode.parentElement);
+
+    normalizeNbspsBetween(editor, newCaretContainer);
 
     if (dom.isEmpty(formatNode)) {
       dom.remove(formatNode);
