@@ -1,5 +1,6 @@
 import { ApproxStructure, RealKeys } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
@@ -16,6 +17,22 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
   const detect = PlatformDetection.detect().browser;
   const isSafari = detect.isSafari();
   const isFirefox = detect.isFirefox();
+
+  const simulateComposing = (editor: Editor, updates: string[], end: string) => {
+    const domElement = editor.getBody();
+    editor.undoManager.typing = true;
+    domElement.dispatchEvent(new window.CompositionEvent('compositionstart'));
+    Arr.foldl(updates, (acc, update) => {
+      domElement.dispatchEvent(new window.CompositionEvent('compositionupdate', { data: acc + update }));
+      return acc + update;
+    }, '');
+    domElement.dispatchEvent(new window.CompositionEvent('compositionupdate', { data: end }));
+
+    editor.undoManager.ignore(() => {
+      editor.insertContent(end);
+    });
+    domElement.dispatchEvent(new window.CompositionEvent('compositionend', { data: end }));
+  };
 
   beforeEach(() => {
     hook.editor().focus();
@@ -167,6 +184,30 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('c') ]);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
       TinyAssertions.assertContent(editor, '<p>a <strong>b </strong> c&nbsp;</p>');
+    });
+
+    it('TINY-10854: `&nbsp;`s should be converted to spaces when bedore or after there is an inline element (with composition)', async () => {
+      const editor = hook.editor();
+      // 亀 -> Japanese kanji for 'kame' (turtle)
+      editor.setContent('<p>亀</p>');
+      TinySelections.setCursor(editor, [ 0 ], 1);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+
+      applyCaretFormat(editor, 'bold', {});
+      // い -> Japanese hiragana for 'i'
+      // ぬ -> Japanese hiragana for 'nu'
+      // 犬 -> Japanese kanji for 'inu' (dog)
+      simulateComposing(editor, [ 'い', 'ぬ' ], '犬');
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+
+      removeCaretFormat(editor, 'bold', {});
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+      // ね -> Japanese hiragana for 'ne'
+      // こ -> Japanese hiragana for 'ko'
+      // 猫 -> Japanese kanji for 'neko' (cat)
+      simulateComposing(editor, [ 'ね', 'こ' ], '猫');
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+      TinyAssertions.assertContent(editor, '<p>亀 <strong>犬 </strong> 猫&nbsp;</p>');
     });
   });
 });
