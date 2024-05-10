@@ -166,8 +166,8 @@ const cleanFormatNode = (editor: Editor, caretContainer: Node, formatNode: Eleme
 };
 
 const normalizeNbspsBetween = (editor: Editor, caretContainer: Node | null) => {
-  editor.once('input', (e) => {
-    if (!e.isComposing && caretContainer && !editor.dom.isEmpty(caretContainer)) {
+  const handler = () => {
+    if (caretContainer && !editor.dom.isEmpty(caretContainer)) {
       Traverse.prevSibling(SugarElement.fromDom(caretContainer)).each((node) => {
         if (NodeType.isText(node.dom)) {
           node.dom.data = node.dom.data.replace(Unicode.nbsp, ' ');
@@ -180,6 +180,11 @@ const normalizeNbspsBetween = (editor: Editor, caretContainer: Node | null) => {
         }
       });
     }
+  };
+  editor.once('input', (e) => {
+    !e.isComposing ? handler() : editor.once('compositionend', () => {
+      handler();
+    });
   });
 };
 

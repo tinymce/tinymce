@@ -22,6 +22,7 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
     const domElement = editor.getBody();
     editor.undoManager.typing = true;
     domElement.dispatchEvent(new window.CompositionEvent('compositionstart'));
+    editor.dispatch('input', { isComposing: true } as InputEvent);
     Arr.foldl(updates, (acc, update) => {
       domElement.dispatchEvent(new window.CompositionEvent('compositionupdate', { data: acc + update }));
       return acc + update;
@@ -188,8 +189,7 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
 
     it('TINY-10854: `&nbsp;`s should be converted to spaces when bedore or after there is an inline element (with composition)', async () => {
       const editor = hook.editor();
-      // 亀 -> Japanese kanji for 'kame' (turtle)
-      editor.setContent('<p>亀</p>');
+      editor.setContent('<p>a</p>');
       TinySelections.setCursor(editor, [ 0 ], 1);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
 
@@ -207,7 +207,7 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
       // 猫 -> Japanese kanji for 'neko' (cat)
       simulateComposing(editor, [ 'ね', 'こ' ], '猫');
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
-      TinyAssertions.assertContent(editor, '<p>亀 <strong>犬 </strong> 猫&nbsp;</p>');
+      TinyAssertions.assertContent(editor, '<p>a <strong>犬 </strong> 猫&nbsp;</p>');
     });
   });
 });
