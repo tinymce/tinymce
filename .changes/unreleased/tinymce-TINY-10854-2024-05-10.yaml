@@ -1,7 +1,6 @@
 project: tinymce
 kind: Fixed
-body: '`nbsp`s wasn''t replaced correctly if the next character is wrapped in an inline
-  element.'
+body: 'Extra unnecessary nbsp entities was inserted before and after inline elements created by input of formatted text.'
 time: 2024-05-10T11:38:17.292535402+02:00
 custom:
   Issue: TINY-10854
