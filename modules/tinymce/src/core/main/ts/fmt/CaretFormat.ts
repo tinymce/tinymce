@@ -1,5 +1,5 @@
 import { Arr, Fun, Obj, Optional, Strings, Type, Unicode } from '@ephox/katamari';
-import { Attribute, Insert, PredicateFind, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { Attribute, Insert, PredicateFind, Remove, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
@@ -165,16 +165,18 @@ const cleanFormatNode = (editor: Editor, caretContainer: Node, formatNode: Eleme
   }
 };
 
+const normalizeNbsps = (node: SugarElement<Text>) => SugarText.set(node, SugarText.get(node).replace(Unicode.nbsp, ' '));
+
 const normalizeNbspsBetween = (editor: Editor, caretContainer: Node | null) => {
   const handler = () => {
     if (caretContainer && !editor.dom.isEmpty(caretContainer)) {
       Traverse.prevSibling(SugarElement.fromDom(caretContainer)).each((node) => {
-        if (NodeType.isText(node.dom)) {
-          node.dom.data = node.dom.data.replace(Unicode.nbsp, ' ');
+        if (SugarNode.isText(node)) {
+          normalizeNbsps(node);
         } else {
-          PredicateFind.descendant(node, (e) => NodeType.isText(e.dom)).each((textNode) => {
-            if (NodeType.isText(textNode.dom)) {
-              textNode.dom.data = textNode.dom.data.replace(Unicode.nbsp, ' ');
+          PredicateFind.descendant(node, (e) => SugarNode.isText(e)).each((textNode) => {
+            if (SugarNode.isText(textNode)) {
+              normalizeNbsps(textNode);
             }
           });
         }
@@ -182,9 +184,13 @@ const normalizeNbspsBetween = (editor: Editor, caretContainer: Node | null) => {
     }
   };
   editor.once('input', (e) => {
-    !e.isComposing ? handler() : editor.once('compositionend', () => {
+    if (!e.isComposing) {
       handler();
-    });
+    } else {
+      editor.once('compositionend', () => {
+        handler();
+      });
+    }
   });
 };
 
