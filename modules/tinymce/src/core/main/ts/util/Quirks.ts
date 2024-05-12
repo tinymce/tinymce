@@ -465,7 +465,6 @@ const Quirks = (editor: Editor): Quirks => {
     const specialDelete = Cell(false);
     const content = Cell<Optional<string>>(Optional.none());
     editor.on('keydown', (e) => {
-      debugger;
       if (isDefaultPrevented(e) || e.key !== 'Delete') {
         return;
       }
