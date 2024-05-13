@@ -5,7 +5,7 @@ import * as ComponentSchema from '../../core/ComponentSchema';
 
 export interface HtmlPanelSpec {
   type: 'htmlpanel';
-  html?: string;
+  html: string;
   onInit?: (el: HTMLElement) => void;
   presets?: 'presentation' | 'document';
   stretched?: boolean;
@@ -22,7 +22,7 @@ export interface HtmlPanel {
 
 const htmlPanelFields = [
   ComponentSchema.type,
-  FieldSchema.defaultedString('html', ''),
+  FieldSchema.requiredString('html'),
   FieldSchema.defaultedStringEnum('presets', 'presentation', [ 'presentation', 'document' ]),
   FieldSchema.defaultedFunction('onInit', Fun.noop),
   FieldSchema.defaultedBoolean('stretched', false),
