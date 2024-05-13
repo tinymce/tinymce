@@ -1,16 +1,10 @@
 import { RealKeys } from '@ephox/agar';
-import { before, describe, it } from '@ephox/bedrock-client';
+import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 
 describe('webdriver.tinymce.core.delete.QuirksChromeTest', () => {
-  before(function () {
-    if (!Env.browser.isChromium() && !Env.browser.isSafari()) {
-      this.skip();
-    }
-  });
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce'
