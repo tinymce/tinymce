@@ -169,7 +169,7 @@ const normalizeNbsps = (node: SugarElement<Text>) => SugarText.set(node, SugarTe
 
 const normalizeNbspsBetween = (editor: Editor, caretContainer: Node | null) => {
   const handler = () => {
-    if (caretContainer && !editor.dom.isEmpty(caretContainer)) {
+    if (caretContainer !== null && !editor.dom.isEmpty(caretContainer)) {
       Traverse.prevSibling(SugarElement.fromDom(caretContainer)).each((node) => {
         if (SugarNode.isText(node)) {
           normalizeNbsps(node);
