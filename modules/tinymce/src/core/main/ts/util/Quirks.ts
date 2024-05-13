@@ -281,7 +281,8 @@ const Quirks = (editor: Editor): Quirks => {
     };
 
     const isSelectionAcrossElements = () => {
-      return (!selection.isCollapsed() && dom.getParent(selection.getStart(), dom.isBlock) !== dom.getParent(selection.getEnd(), dom.isBlock));
+      return !selection.isCollapsed() &&
+        dom.getParent(selection.getStart(), dom.isBlock) !== dom.getParent(selection.getEnd(), dom.isBlock);
     };
 
     editor.on('keypress', (e) => {
@@ -596,7 +597,7 @@ const Quirks = (editor: Editor): Quirks => {
   const isAllContentSelected = (editor: Editor): boolean => {
     const body = editor.getBody();
     const rng = editor.selection.getRng();
-    return (rng.startContainer === rng.endContainer && rng.startContainer === body && rng.startOffset === 0 && rng.endOffset === body.childNodes.length);
+    return rng.startContainer === rng.endContainer && rng.startContainer === body && rng.startOffset === 0 && rng.endOffset === body.childNodes.length;
   };
 
   /**
@@ -613,9 +614,7 @@ const Quirks = (editor: Editor): Quirks => {
       if (!VK.modifierPressed(e) && !isAllContentSelected(editor)) {
         selection.normalize();
       }
-    },
-    true
-    );
+    }, true);
   };
 
   /**
