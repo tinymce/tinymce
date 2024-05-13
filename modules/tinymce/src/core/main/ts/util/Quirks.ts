@@ -26,11 +26,7 @@ interface Quirks {
 
 const Quirks = (editor: Editor): Quirks => {
   const each = Tools.each;
-  const BACKSPACE = VK.BACKSPACE,
-    DELETE = VK.DELETE,
-    dom = editor.dom,
-    selection = editor.selection,
-    parser = editor.parser;
+  const BACKSPACE = VK.BACKSPACE, DELETE = VK.DELETE, dom = editor.dom, selection = editor.selection, parser = editor.parser;
   const browser = Env.browser;
   const isGecko = browser.isFirefox();
   const isWebKit = browser.isChromium() || browser.isSafari();
@@ -94,11 +90,7 @@ const Quirks = (editor: Editor): Quirks => {
       const keyCode = e.keyCode;
 
       // Empty the editor if it's needed for example backspace at <p><b>|</b></p>
-      if (
-        !isDefaultPrevented(e) &&
-        (keyCode === DELETE || keyCode === BACKSPACE) &&
-        editor.selection.isEditable()
-      ) {
+      if (!isDefaultPrevented(e) && (keyCode === DELETE || keyCode === BACKSPACE) && editor.selection.isEditable()) {
         const isCollapsed = editor.selection.isCollapsed();
         const body = editor.getBody();
 
@@ -201,11 +193,7 @@ const Quirks = (editor: Editor): Quirks => {
             return;
           }
 
-          if (
-            previousSibling &&
-            previousSibling.nodeName &&
-            previousSibling.nodeName.toLowerCase() === 'hr'
-          ) {
+          if (previousSibling && previousSibling.nodeName && previousSibling.nodeName.toLowerCase() === 'hr') {
             dom.remove(previousSibling);
             e.preventDefault();
           }
@@ -221,8 +209,7 @@ const Quirks = (editor: Editor): Quirks => {
   const focusBody = () => {
     // Fix for a focus bug in FF 3.x where the body element
     // wouldn't get proper focus if the user clicked on the HTML element
-    if (!Range.prototype.getClientRects) {
-      // Detect getClientRects got introduced in FF 4
+    if (!Range.prototype.getClientRects) { // Detect getClientRects got introduced in FF 4
       editor.on('mousedown', (e) => {
         if (!isDefaultPrevented(e) && e.target.nodeName === 'HTML') {
           const body = editor.getBody();
@@ -257,12 +244,7 @@ const Quirks = (editor: Editor): Quirks => {
         editor.nodeChanged();
       }
 
-      if (
-        target.nodeName === 'A' &&
-        dom.hasClass(target, visualAidsAnchorClass) &&
-        target.childNodes.length === 0 &&
-        dom.isEditable(target.parentNode)
-      ) {
+      if (target.nodeName === 'A' && dom.hasClass(target, visualAidsAnchorClass) && target.childNodes.length === 0 && dom.isEditable(target.parentNode)) {
         e.preventDefault();
         selection.select(target);
       }
@@ -283,9 +265,7 @@ const Quirks = (editor: Editor): Quirks => {
    */
   const removeStylesWhenDeletingAcrossBlockElements = () => {
     const getAttributeApplyFunction = () => {
-      const template = dom.getAttribs(
-        selection.getStart().cloneNode(false) as Element
-      );
+      const template = dom.getAttribs(selection.getStart().cloneNode(false) as Element);
 
       return () => {
         const target = selection.getStart();
@@ -301,21 +281,13 @@ const Quirks = (editor: Editor): Quirks => {
     };
 
     const isSelectionAcrossElements = () => {
-      return (
-        !selection.isCollapsed() &&
-        dom.getParent(selection.getStart(), dom.isBlock) !==
-        dom.getParent(selection.getEnd(), dom.isBlock)
-      );
+      return (!selection.isCollapsed() && dom.getParent(selection.getStart(), dom.isBlock) !== dom.getParent(selection.getEnd(), dom.isBlock));
     };
 
     editor.on('keypress', (e) => {
       let applyAttributes;
 
-      if (
-        !isDefaultPrevented(e) &&
-        (e.keyCode === 8 || e.keyCode === 46) &&
-        isSelectionAcrossElements()
-      ) {
+      if (!isDefaultPrevented(e) && (e.keyCode === 8 || e.keyCode === 46) && isSelectionAcrossElements()) {
         applyAttributes = getAttributeApplyFunction();
         editor.getDoc().execCommand('delete', false);
         applyAttributes();
@@ -346,11 +318,7 @@ const Quirks = (editor: Editor): Quirks => {
       if (!isDefaultPrevented(e) && e.keyCode === BACKSPACE) {
         if (selection.isCollapsed() && selection.getRng().startOffset === 0) {
           const previousSibling = selection.getNode().previousSibling;
-          if (
-            previousSibling &&
-            previousSibling.nodeName &&
-            previousSibling.nodeName.toLowerCase() === 'table'
-          ) {
+          if (previousSibling && previousSibling.nodeName && previousSibling.nodeName.toLowerCase() === 'table') {
             e.preventDefault();
             return false;
           }
@@ -540,11 +508,7 @@ const Quirks = (editor: Editor): Quirks => {
         return;
       }
 
-      while (
-        parent.parentNode &&
-        parent.parentNode.firstChild === parent &&
-        parent.parentNode !== root
-      ) {
+      while (parent.parentNode && parent.parentNode.firstChild === parent && parent.parentNode !== root) {
         parent = parent.parentNode;
       }
 
@@ -600,10 +564,7 @@ const Quirks = (editor: Editor): Quirks => {
 
         if (parentNode?.lastChild === node) {
           while (parentNode && !dom.isBlock(parentNode)) {
-            if (
-              parentNode.parentNode?.lastChild !== parentNode ||
-              parentNode === root
-            ) {
+            if (parentNode.parentNode?.lastChild !== parentNode || parentNode === root) {
               return;
             }
 
@@ -628,22 +589,14 @@ const Quirks = (editor: Editor): Quirks => {
    */
   const setDefaultBlockType = () => {
     editor.on('init', () => {
-      setEditorCommandState(
-        'DefaultParagraphSeparator',
-        Options.getForcedRootBlock(editor)
-      );
+      setEditorCommandState('DefaultParagraphSeparator', Options.getForcedRootBlock(editor));
     });
   };
 
   const isAllContentSelected = (editor: Editor): boolean => {
     const body = editor.getBody();
     const rng = editor.selection.getRng();
-    return (
-      rng.startContainer === rng.endContainer &&
-      rng.startContainer === body &&
-      rng.startOffset === 0 &&
-      rng.endOffset === body.childNodes.length
-    );
+    return (rng.startContainer === rng.endContainer && rng.startContainer === body && rng.startOffset === 0 && rng.endOffset === body.childNodes.length);
   };
 
   /**
@@ -652,18 +605,16 @@ const Quirks = (editor: Editor): Quirks => {
    */
   const normalizeSelection = () => {
     // Normalize selection for example <b>a</b><i>|a</i> becomes <b>a|</b><i>a</i>
-    editor.on(
-      'keyup focusin mouseup',
-      (e) => {
-        // no point to exclude Ctrl+A, since normalization will still run after Ctrl will be unpressed
-        // better exclude any key combinations with the modifiers to avoid double normalization
-        // (also addresses TINY-1130)
-        // The use of isAllContentSelected addresses TINY-4550
-        if (!VK.modifierPressed(e) && !isAllContentSelected(editor)) {
-          selection.normalize();
-        }
-      },
-      true
+    editor.on('keyup focusin mouseup', (e) => {
+      // no point to exclude Ctrl+A, since normalization will still run after Ctrl will be unpressed
+      // better exclude any key combinations with the modifiers to avoid double normalization
+      // (also addresses TINY-1130)
+      // The use of isAllContentSelected addresses TINY-4550
+      if (!VK.modifierPressed(e) && !isAllContentSelected(editor)) {
+        selection.normalize();
+      }
+    },
+    true
     );
   };
 
@@ -731,21 +682,11 @@ const Quirks = (editor: Editor): Quirks => {
   const blockCmdArrowNavigation = () => {
     if (isMac) {
       editor.on('keydown', (e) => {
-        if (
-          VK.metaKeyPressed(e) &&
-          !e.shiftKey &&
-          (e.keyCode === 37 || e.keyCode === 39)
-        ) {
+        if (VK.metaKeyPressed(e) && !e.shiftKey && (e.keyCode === 37 || e.keyCode === 39)) {
           e.preventDefault();
           // The modify component isn't part of the standard spec, so we need to add the type here
-          const selection = editor.selection.getSel() as Selection & {
-            modify: Function;
-          };
-          selection.modify(
-            'move',
-            e.keyCode === 37 ? 'backward' : 'forward',
-            'lineboundary'
-          );
+          const selection = editor.selection.getSel() as Selection & { modify: Function };
+          selection.modify('move', e.keyCode === 37 ? 'backward' : 'forward', 'lineboundary');
         }
       });
     }
@@ -768,9 +709,7 @@ const Quirks = (editor: Editor): Quirks => {
       } while ((elm = elm.parentNode));
     });
 
-    editor.contentStyles.push(
-      '.mce-content-body {-webkit-touch-callout: none}'
-    );
+    editor.contentStyles.push('.mce-content-body {-webkit-touch-callout: none}');
   };
 
   /**
@@ -872,7 +811,7 @@ const Quirks = (editor: Editor): Quirks => {
 
     // Weird, wheres that cursor selection?
     const sel = editor.selection.getSel();
-    return !sel || !sel.rangeCount || sel.rangeCount === 0;
+    return (!sel || !sel.rangeCount || sel.rangeCount === 0);
   };
 
   const setupRtc = () => {
@@ -955,7 +894,7 @@ const Quirks = (editor: Editor): Quirks => {
 
   return {
     refreshContentEditable,
-    isHidden,
+    isHidden
   };
 };
 
