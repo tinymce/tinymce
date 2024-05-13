@@ -63,8 +63,7 @@ export const renderHtmlPanel = (spec: HtmlPanelSpec, providersBackstage: UiFacto
       },
       containerBehaviours: Behaviour.derive([
         Tabstopping.config({ }),
-        Focusing.config({
-        }),
+        Focusing.config({ }),
         init
       ])
     });
