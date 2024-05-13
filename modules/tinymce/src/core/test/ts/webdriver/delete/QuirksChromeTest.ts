@@ -74,4 +74,68 @@ describe('webdriver.tinymce.core.delete.QuirksChromeTest', () => {
     );
   });
 
+  it('TINY-10892: Backspace from beginning of P that contains IMG into UL when the LI does NOT end with an inline element', async () => {
+    const editor = hook.editor();
+    editor.setContent(
+      `<ul>
+  <li>sdadsa</li>
+  </ul>
+  <p><em>sdada</em><img src="#" alt="" width="24" height="24"> dsada </p>`);
+    editor.selection.setCursorLocation(editor.getDoc().querySelector('em') as HTMLElement, 0);
+    await RealKeys.pSendKeysOn('iframe => body => em', [ RealKeys.backspace() ]);
+    TinyAssertions.assertContent(editor,
+      `<ul>
+<li>sdadsa<em>sdada</em><img src="#" alt="" width="24" height="24"> dsada</li>
+</ul>`
+    );
+  });
+
+  it('TINY-10892: Backspace from beginning of P that contains IMG into UL when the LI DOES end with an inline element', async () => {
+    const editor = hook.editor();
+    editor.setContent(
+      `<ul>
+  <li>sdadsa <strong>a</strong></li>
+  </ul>
+  <p><em>sdada</em><img src="#" alt="" width="24" height="24"> dsada </p>`);
+    editor.selection.setCursorLocation(editor.getDoc().querySelector('em') as HTMLElement, 0);
+    await RealKeys.pSendKeysOn('iframe => body => em', [ RealKeys.backspace() ]);
+    TinyAssertions.assertContent(editor,
+      `<ul>
+<li>sdadsa <strong>a</strong><em>sdada</em><img src="#" alt="" width="24" height="24"> dsada</li>
+</ul>`
+    );
+  });
+
+  it('TINY-10892: Delete from end of UL when the LI does NOT end with an inline element and has nextSibling P that contains IMG', async () => {
+    const editor = hook.editor();
+    editor.setContent(
+      `<ul>
+  <li>a</li>
+  </ul>
+  <p><em>sdada</em><img src="#" alt="" width="24" height="24"> dsada </p>`);
+    editor.selection.setCursorLocation(editor.getDoc().querySelector('li') as HTMLElement, 1);
+    await RealKeys.pSendKeysOn('iframe => body => li', [ RealKeys.text('\uE017') /* unicode for Delete key */]);
+    TinyAssertions.assertContent(editor,
+      `<ul>
+<li>a<em>sdada</em><img src="#" alt="" width="24" height="24"> dsada</li>
+</ul>`
+    );
+  });
+
+  it('TINY-10892: Delete from end of UL when the LI DOES end with an inline element and has nextSibling P that contains IMG', async () => {
+    const editor = hook.editor();
+    editor.setContent(
+      `<ul>
+  <li>a <strong>a</strong></li>
+  </ul>
+  <p><em>sdada</em><img src="#" alt="" width="24" height="24"> dsada </p>`);
+    editor.selection.setCursorLocation(editor.getDoc().querySelector('strong') as HTMLElement, 1);
+    await RealKeys.pSendKeysOn('iframe => body => strong', [ RealKeys.text('\uE017') /* unicode for Delete key */]);
+    TinyAssertions.assertContent(editor,
+      `<ul>
+<li>a <strong>a</strong><em>sdada</em><img src="#" alt="" width="24" height="24"> dsada</li>
+</ul>`
+    );
+  });
+
 });
