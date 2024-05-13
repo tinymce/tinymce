@@ -1,6 +1,6 @@
 project: tinymce
 kind: Fixed
-body: 'Extra unnecessary nbsp entities was inserted before and after inline elements created by input of formatted text.'
+body: 'Unnecessary nbsp entities were inserted when typing at the edges of inline elements.'
 time: 2024-05-10T11:38:17.292535402+02:00
 custom:
   Issue: TINY-10854
