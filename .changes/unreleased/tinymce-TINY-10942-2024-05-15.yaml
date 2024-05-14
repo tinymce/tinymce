@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Autocompleter possible values are no longer capped at a length of 10.
+time: 2024-05-15T07:43:13.073467513+10:00
+custom:
+  Issue: TINY-10942
