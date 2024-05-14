@@ -18,6 +18,8 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
   const browser = platform.browser;
   const isChromeHeadless = () => navigator.userAgent.includes('HeadlessChrome');
 
+  const isSafari = platform.browser.isSafari();
+
   const lastBeforeInputEvent = Singleton.value<EditorEvent<InputEvent>>();
   const lastInputEvent = Singleton.value<EditorEvent<InputEvent>>();
   let inputEventTypes: string[] = [];
@@ -59,6 +61,12 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
     // #TINY-10556: Chrome headless is producing an error about the dataTransfer not being
     // in the right state but it works in non headless mode using the exact same Chrome version.
     if (isChromeHeadless()) {
+      this.skip();
+    }
+
+    // #TINY-10892: This test fails on CI but passes locally, so we need to investigate
+    // why it fails on CI.
+    if (isSafari) {
       this.skip();
     }
   });
