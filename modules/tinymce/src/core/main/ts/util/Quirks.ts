@@ -1,5 +1,4 @@
-import { Cell, Fun, Optional, Singleton } from '@ephox/katamari';
-import { PredicateFind, SugarElement } from '@ephox/sugar';
+import { Fun } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -9,7 +8,6 @@ import { EditorEvent } from '../api/util/EventDispatcher';
 import Tools from '../api/util/Tools';
 import VK from '../api/util/VK';
 import * as CaretContainer from '../caret/CaretContainer';
-import * as ElementType from '../dom/ElementType';
 import * as Empty from '../dom/Empty';
 import * as Rtc from '../Rtc';
 
@@ -33,7 +31,6 @@ const Quirks = (editor: Editor): Quirks => {
   const isWebKit = browser.isChromium() || browser.isSafari();
   const isiOS = Env.deviceType.isiPhone() || Env.deviceType.isiPad();
   const isMac = Env.os.isMacOS() || Env.os.isiOS();
-  const isChrome = browser.isChromium();
 
   /**
    * Executes a command with a specific state this can be to enable/disable browser editing features.
@@ -328,160 +325,6 @@ const Quirks = (editor: Editor): Quirks => {
       }
       return true;
     });
-  };
-
-  // This helper function, deletes the content created by Chrome which has extra font-family style and replaces
-  // it with the original content saved on keydown which does not have font-family
-  const removeExtraFontFamilyOnKeyup = (editor: Editor, specialDelete: Cell<boolean>, content: Singleton.Value<string>) => {
-    editor.on('keyup', (e) => {
-      if (isDefaultPrevented(e) || e.key !== 'Backspace' && e.key !== 'Delete' || !specialDelete.get()) {
-        return;
-      }
-
-      const rng = selection.getRng();
-      const container = rng.startContainer;
-      const root = dom.getRoot();
-      const parent = PredicateFind.ancestor(SugarElement.fromDom(container), (node) => node.dom.nodeName.toLowerCase() === 'li');
-
-      let outsideContainer = container;
-      while (
-        outsideContainer.parentNode &&
-        outsideContainer.parentNode.firstChild === outsideContainer &&
-        outsideContainer.parentNode !== root &&
-        outsideContainer.parentNode.nodeName.toLowerCase() !== 'li'
-      ) {
-        outsideContainer = outsideContainer.parentNode;
-      }
-      let outsideOffset = Optional.none<number>();
-      parent.each((parent) => {
-        parent.dom.childNodes.forEach((node, key) => {
-          if (node === outsideContainer) {
-            outsideOffset = Optional.some(key);
-            return;
-          }
-        });
-        outsideOffset.each((offset) => {
-          selection.getSel()?.setBaseAndExtent(parent.dom, offset + 1, parent.dom, parent.dom.childNodes.length);
-          editor.execCommand('Delete');
-          selection.setCursorLocation(parent.dom, offset + 1);
-          content.get().each((content) => editor.insertContent(content));
-          selection.setCursorLocation(parent.dom, offset + 1);
-        });
-
-      });
-
-      specialDelete.set(false);
-    });
-  };
-
-  /**
-   * Removes font-family style added when pressing backspace when the cursor is just before an image
-   * and there is a list before the image. #TINY-10892
-   */
-  const removeExtraFontFamilyOnBackspace = () => {
-    const specialDelete = Cell(false);
-    const content: Singleton.Value<string> = Singleton.value();
-    editor.on('keydown', (e) => {
-      if (isDefaultPrevented(e) || e.key !== 'Backspace') {
-        return;
-      }
-
-      const rng = selection.getRng();
-      const container = rng.startContainer;
-      let parent = container;
-      const offset = rng.startOffset;
-      const root = dom.getRoot();
-
-      if (!rng.collapsed || offset !== 0) {
-        return;
-      }
-
-      while (
-        parent.parentNode &&
-        parent.parentNode.firstChild === parent &&
-        parent.parentNode !== root
-      ) {
-        parent = parent.parentNode;
-      }
-      let hasImgNode = false;
-      parent.childNodes.forEach((node) => {
-        if (node.nodeName.toLowerCase() === 'img') {
-          hasImgNode = true;
-          return;
-        }
-      });
-      if (!hasImgNode || !parent.previousSibling || !ElementType.isList(SugarElement.fromDom<Node>(parent.previousSibling))) {
-        return;
-      }
-
-      const bookmark = selection.getBookmark();
-
-      selection.select(parent, true);
-      content.set(selection.getContent());
-      selection.bookmarkManager.moveToBookmark(bookmark);
-
-      specialDelete.set(true);
-    });
-
-    removeExtraFontFamilyOnKeyup(editor, specialDelete, content);
-
-  };
-
-  /**
-   * Removes font-family style added when pressing delete when the cursor is just before an image
-   * and there is a list before the image. #TINY-10892
-   */
-  const removeExtraFontFamilyOnDelete = () => {
-    const specialDelete = Cell(false);
-    const content: Singleton.Value<string> = Singleton.value();
-    editor.on('keydown', (e) => {
-      if (isDefaultPrevented(e) || e.key !== 'Delete') {
-        return;
-      }
-
-      const rng = selection.getRng();
-      const container = rng.startContainer;
-      let parent = container;
-      const offset = rng.startOffset;
-      const root = dom.getRoot();
-
-      if (!rng.collapsed || offset !== container.textContent?.length) {
-        return;
-      }
-
-      while (
-        parent.parentNode &&
-        parent.parentNode.lastChild === parent &&
-        parent.parentNode !== root
-      ) {
-        parent = parent.parentNode;
-      }
-      if (!parent.nextSibling) {
-        return;
-      }
-      parent = parent.nextSibling;
-      let hasImgNode = false;
-      parent.childNodes.forEach((node) => {
-        if (node.nodeName.toLowerCase() === 'img') {
-          hasImgNode = true;
-          return;
-        }
-      });
-      if (!hasImgNode || !parent.previousSibling || !ElementType.isList(SugarElement.fromDom<Node>(parent.previousSibling))) {
-        return;
-      }
-
-      const bookmark = selection.getBookmark();
-
-      selection.select(parent, true);
-      content.set(selection.getContent());
-      selection.bookmarkManager.moveToBookmark(bookmark);
-
-      specialDelete.set(true);
-    });
-
-    removeExtraFontFamilyOnKeyup(editor, specialDelete, content);
-
   };
 
   /**
@@ -845,11 +688,6 @@ const Quirks = (editor: Editor): Quirks => {
     // it will always normalize to the wrong location
     if (!Env.windowsPhone) {
       normalizeSelection();
-    }
-
-    if (isChrome) {
-      removeExtraFontFamilyOnBackspace();
-      removeExtraFontFamilyOnDelete();
     }
 
     // WebKit

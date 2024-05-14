@@ -57,7 +57,7 @@ const isEditable = (blockBoundary: BlockBoundary): boolean =>
   NodeType.isContentEditableFalse(blockBoundary.from.block.dom) === false && NodeType.isContentEditableFalse(blockBoundary.to.block.dom) === false;
 
 const hasValidBlocks = (blockBoundary: BlockBoundary): boolean => {
-  const isValidBlock = (block: SugarElement<Element>) => ElementType.isTextBlock(block) || TransparentElements.hasBlockAttr(block.dom);
+  const isValidBlock = (block: SugarElement<Element>) => ElementType.isTextBlock(block) || TransparentElements.hasBlockAttr(block.dom) || ElementType.isListItem(block);
   return isValidBlock(blockBoundary.from.block) && isValidBlock(blockBoundary.to.block);
 };
 
