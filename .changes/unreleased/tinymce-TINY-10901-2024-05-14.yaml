@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Iframes in dialogs was not rendering rounded borders correctly.
+time: 2024-05-14T11:06:22.403781+02:00
+custom:
+  Issue: TINY-10901
