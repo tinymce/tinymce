@@ -1,6 +1,6 @@
-import {RealKeys} from '@ephox/agar';
-import {describe, it} from '@ephox/bedrock-client';
-import {TinyAssertions, TinyHooks} from '@ephox/wrap-mcagar';
+import { RealKeys } from '@ephox/agar';
+import { describe, it } from '@ephox/bedrock-client';
+import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -18,7 +18,7 @@ describe('webdriver.tinymce.core.delete.DeleteImgIntoListTest', () => {
   </ol>
   <p><em>sdada</em><img src="#" alt="" width="24" height="24"> dsada </p>`);
     editor.selection.setCursorLocation(editor.getDoc().querySelector('em') as HTMLElement, 0);
-    await RealKeys.pSendKeysOn('iframe => body => em', [RealKeys.backspace()]);
+    await RealKeys.pSendKeysOn('iframe => body => em', [ RealKeys.backspace() ]);
     TinyAssertions.assertContent(editor,
       `<ol>
 <li>sdadsa<em>sdada</em><img src="#" alt="" width="24" height="24"> dsada</li>
@@ -34,7 +34,7 @@ describe('webdriver.tinymce.core.delete.DeleteImgIntoListTest', () => {
   </ol>
   <p><em>sdada</em><img src="#" alt="" width="24" height="24"> dsada </p>`);
     editor.selection.setCursorLocation(editor.getDoc().querySelector('em') as HTMLElement, 0);
-    await RealKeys.pSendKeysOn('iframe => body => em', [RealKeys.backspace()]);
+    await RealKeys.pSendKeysOn('iframe => body => em', [ RealKeys.backspace() ]);
     TinyAssertions.assertContent(editor,
       `<ol>
 <li>sdadsa <strong>a</strong><em>sdada</em><img src="#" alt="" width="24" height="24"> dsada</li>
@@ -50,7 +50,7 @@ describe('webdriver.tinymce.core.delete.DeleteImgIntoListTest', () => {
   </ol>
   <p><em>sdada</em><img src="#" alt="" width="24" height="24"> dsada </p>`);
     editor.selection.setCursorLocation(editor.getDoc().querySelector('li') as HTMLElement, 1);
-    await RealKeys.pSendKeysOn('iframe => body => li', [RealKeys.text('\uE017') /* unicode for Delete key */]);
+    await RealKeys.pSendKeysOn('iframe => body => li', [ RealKeys.text('\uE017') /* unicode for Delete key */]);
     TinyAssertions.assertContent(editor,
       `<ol>
 <li>a<em>sdada</em><img src="#" alt="" width="24" height="24"> dsada</li>
@@ -66,7 +66,7 @@ describe('webdriver.tinymce.core.delete.DeleteImgIntoListTest', () => {
   </ol>
   <p><em>sdada</em><img src="#" alt="" width="24" height="24"> dsada </p>`);
     editor.selection.setCursorLocation(editor.getDoc().querySelector('strong') as HTMLElement, 1);
-    await RealKeys.pSendKeysOn('iframe => body => strong', [RealKeys.text('\uE017') /* unicode for Delete key */]);
+    await RealKeys.pSendKeysOn('iframe => body => strong', [ RealKeys.text('\uE017') /* unicode for Delete key */]);
     TinyAssertions.assertContent(editor,
       `<ol>
 <li>a <strong>a</strong><em>sdada</em><img src="#" alt="" width="24" height="24"> dsada</li>
@@ -82,7 +82,7 @@ describe('webdriver.tinymce.core.delete.DeleteImgIntoListTest', () => {
   </ul>
   <p><em>sdada</em><img src="#" alt="" width="24" height="24"> dsada </p>`);
     editor.selection.setCursorLocation(editor.getDoc().querySelector('em') as HTMLElement, 0);
-    await RealKeys.pSendKeysOn('iframe => body => em', [RealKeys.backspace()]);
+    await RealKeys.pSendKeysOn('iframe => body => em', [ RealKeys.backspace() ]);
     TinyAssertions.assertContent(editor,
       `<ul>
 <li>sdadsa<em>sdada</em><img src="#" alt="" width="24" height="24"> dsada</li>
@@ -98,7 +98,7 @@ describe('webdriver.tinymce.core.delete.DeleteImgIntoListTest', () => {
   </ul>
   <p><em>sdada</em><img src="#" alt="" width="24" height="24"> dsada </p>`);
     editor.selection.setCursorLocation(editor.getDoc().querySelector('em') as HTMLElement, 0);
-    await RealKeys.pSendKeysOn('iframe => body => em', [RealKeys.backspace()]);
+    await RealKeys.pSendKeysOn('iframe => body => em', [ RealKeys.backspace() ]);
     TinyAssertions.assertContent(editor,
       `<ul>
 <li>sdadsa <strong>a</strong><em>sdada</em><img src="#" alt="" width="24" height="24"> dsada</li>
@@ -114,7 +114,7 @@ describe('webdriver.tinymce.core.delete.DeleteImgIntoListTest', () => {
   </ul>
   <p><em>sdada</em><img src="#" alt="" width="24" height="24"> dsada </p>`);
     editor.selection.setCursorLocation(editor.getDoc().querySelector('li') as HTMLElement, 1);
-    await RealKeys.pSendKeysOn('iframe => body => li', [RealKeys.text('\uE017') /* unicode for Delete key */]);
+    await RealKeys.pSendKeysOn('iframe => body => li', [ RealKeys.text('\uE017') /* unicode for Delete key */]);
     TinyAssertions.assertContent(editor,
       `<ul>
 <li>a<em>sdada</em><img src="#" alt="" width="24" height="24"> dsada</li>
@@ -130,7 +130,7 @@ describe('webdriver.tinymce.core.delete.DeleteImgIntoListTest', () => {
   </ul>
   <p><em>sdada</em><img src="#" alt="" width="24" height="24"> dsada </p>`);
     editor.selection.setCursorLocation(editor.getDoc().querySelector('strong') as HTMLElement, 1);
-    await RealKeys.pSendKeysOn('iframe => body => strong', [RealKeys.text('\uE017') /* unicode for Delete key */]);
+    await RealKeys.pSendKeysOn('iframe => body => strong', [ RealKeys.text('\uE017') /* unicode for Delete key */]);
     TinyAssertions.assertContent(editor,
       `<ul>
 <li>a <strong>a</strong><em>sdada</em><img src="#" alt="" width="24" height="24"> dsada</li>
