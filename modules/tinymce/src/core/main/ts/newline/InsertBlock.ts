@@ -1,4 +1,4 @@
-import { Arr, Optional, Type } from '@ephox/katamari';
+import { Arr, Optional, Optionals, Type } from '@ephox/katamari';
 import { ContentEditable, Insert, PredicateFilter, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
@@ -8,12 +8,11 @@ import { SchemaMap } from '../api/html/Schema';
 import * as Options from '../api/Options';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import Tools from '../api/util/Tools';
+import { findPreviousBr, isAfterBr } from '../caret/CaretBr';
 import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
 import { isAfterTable } from '../caret/CaretPositionPredicates';
-import { showCaret } from '../caret/FakeCaretUtils';
 import * as NodeType from '../dom/NodeType';
-import { moveToRange } from '../keyboard/NavigationUtils';
 import * as NormalizeRange from '../selection/NormalizeRange';
 import { isWhitespaceText } from '../text/Whitespace';
 import * as Zwsp from '../text/Zwsp';
@@ -392,7 +391,8 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     editor.selection.setCursorLocation(newBlock, 0);
   } else if (CaretContainer.isCaretContainerBlock(parentBlock)) {
     // TODO: NOTE: Added logic to make sure pressing enter is consistent between browsers
-    // As an example a fake caret if used before/after tables on FIrefox but not on Chrome
+    // As an example a fake caret is used before/after tables on FIrefox but not on Chrome so different behaviour could occur
+    // TODO: Create Jira to improve this
     // const isBefore = parentBlock.getAttribute('data-mce-caret') === 'before';
     // const node = isBefore ? parentBlock.nextElementSibling : parentBlock.previousElementSibling;
     newBlock = CaretContainer.showCaretContainerBlock(parentBlock) as Element;
@@ -410,17 +410,24 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     // }
     NewLineUtils.moveToCaretPosition(editor, newBlock);
   } else if (isCaretAtStartOrEndOfBlock(false)) {
+    // Caret is moved to the new block in the insertNewBlockAfter fn
     newBlock = insertNewBlockAfter();
   } else if (isCaretAtStartOrEndOfBlock(true) && parentBlockParent) {
     // Check where caret is positioned before it is potentially moved by 'insertBefore' fn
     const caretPos = CaretPosition.fromRangeStart(rng);
     const afterTable = isAfterTable(caretPos);
+    const parentBlockSugar = SugarElement.fromDom(parentBlock);
+    const afterBr = isAfterBr(parentBlockSugar, caretPos, editor.schema);
+    const prevBrOpt = afterBr
+      ? findPreviousBr(parentBlockSugar, caretPos, editor.schema).bind((pos) => Optional.from(pos.getNode()))
+      : Optional.none();
 
     newBlock = parentBlockParent.insertBefore(createNewBlock(), parentBlock);
 
-    // TODO: Falling back to the parentBlock means withouth considering the existing selection offset can cause
-    // issues when there are brs and it appears the the cursor has not moved
-    NewLineUtils.moveToCaretPosition(editor, containerAndSiblingName(parentBlock, 'HR') || afterTable ? newBlock : parentBlock);
+    const root = Optionals.someIf(containerAndSiblingName(parentBlock, 'HR') || afterTable, newBlock)
+      .or(prevBrOpt)
+      .getOr(parentBlock);
+    NewLineUtils.moveToCaretPosition(editor, root);
   } else {
     // Extract after fragment and insert it after the current block
     const tmpRng = includeZwspInRange(rng).cloneRange();
