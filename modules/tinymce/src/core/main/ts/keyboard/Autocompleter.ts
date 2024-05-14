@@ -100,7 +100,6 @@ export const setup = (editor: Editor): void => {
             // Ensure the active autocompleter trigger matches, as the old one may have closed
             // and a new one may have opened. If it doesn't match, then do nothing.
             if (ac.trigger !== context.trigger) {
-              cancelIfNecessary();
               return;
             }
 
