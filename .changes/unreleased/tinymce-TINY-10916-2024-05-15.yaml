@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Fixed a bug where applying a transparent color resulted in it being converted to black.
+time: 2024-05-15T17:05:18.42363+10:00
+custom:
+  Issue: TINY-10916
