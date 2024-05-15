@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * This class is used to parse CSS styles. It also compresses styles to reduce the output size.
  *
@@ -246,6 +247,9 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
             name = decodeHexSequences(name);
             value = decodeHexSequences(value);
 
+            console.log('name', name);
+            console.log('value', value);
+
             // Skip properties with double quotes and sequences like \" \' in their names
             // See 'mXSS Attacks: Attacking well-secured Web-Applications by using innerHTML Mutations'
             // https://cure53.de/fp170.pdf
@@ -263,6 +267,11 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
               value = 'bold';
             } else if (name === 'color' || name === 'background-color') { // Lowercase colors like RED
               value = value.toLowerCase();
+            }
+
+            // Convert transparent to fully transparent black
+            if (value === 'transparent') {
+              value = '#00000000';
             }
 
             // Convert RGB colors to HEX

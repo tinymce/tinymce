@@ -264,4 +264,9 @@ describe('browser.tinymce.core.html.StylesTest', () => {
     assertStyles(styles, 'color: rgba(1, 2, 3);', 'color: rgba(1, 2, 3);');
     assertStyles(styles, 'color: rgb(1, 2, 3, 0.5);', 'color: rgb(1, 2, 3, 0.5);');
   });
+
+  it('TINY-10916: transparent should be convert to black with 0 alpha', () => {
+    const styles = Styles();
+    assertStyles(styles, 'color: transparent;', 'color: #00000000;');
+  });
 });
