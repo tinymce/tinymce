@@ -61,7 +61,6 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
     if (isChromeHeadless()) {
       this.skip();
     }
-
   });
 
   it('TINY-7719: Wrapped elements are preserved in copy and paste (headings)', async () => {
