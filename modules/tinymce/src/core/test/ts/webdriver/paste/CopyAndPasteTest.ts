@@ -18,8 +18,6 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
   const browser = platform.browser;
   const isChromeHeadless = () => navigator.userAgent.includes('HeadlessChrome');
 
-  const isSafari = platform.browser.isSafari();
-
   const lastBeforeInputEvent = Singleton.value<EditorEvent<InputEvent>>();
   const lastInputEvent = Singleton.value<EditorEvent<InputEvent>>();
   let inputEventTypes: string[] = [];
@@ -64,11 +62,6 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
       this.skip();
     }
 
-    // #TINY-10892: This test fails on CI but passes locally, so we need to investigate
-    // why it fails on CI.
-    if (isSafari) {
-      this.skip();
-    }
   });
 
   it('TINY-7719: Wrapped elements are preserved in copy and paste (headings)', async () => {
