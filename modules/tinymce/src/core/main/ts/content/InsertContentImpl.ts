@@ -90,20 +90,18 @@ const reduceInlineTextElements = (editor: Editor, merge: boolean | undefined): v
 
     Tools.each(dom.select('*[data-mce-fragment]'), (node) => {
       const isInline = Type.isNonNullable(textInlineElements[node.nodeName.toLowerCase()]);
-      if (isInline && StyleUtils.hasInheritableStyles(dom, node)) {
-        for (let parentNode = node.parentElement; Type.isNonNullable(parentNode) && parentNode !== root; parentNode = parentNode.parentElement) {
-          // Check if the parent has a style conflict that would prevent the child node from being safely removed,
-          // even if a exact node match could be found further up the tree
-          const styleConflict = StyleUtils.hasStyleConflict(dom, node, parentNode);
-          if (styleConflict) {
-            break;
+      if (isInline) {
+        const stripNodes = (currentNode: HTMLElement) => {
+          if (currentNode.childNodes.length === 1) {
+            stripNodes(currentNode.childNodes.item(0) as HTMLElement);
           }
-
-          if (elementUtils.compare(parentNode, node)) {
-            dom.remove(node, true);
-            break;
+          for (let parentNode = node.parentElement; Type.isNonNullable(parentNode) && parentNode !== root; parentNode = parentNode.parentElement) {
+            if (elementUtils.compare(parentNode, currentNode) && !StyleUtils.hasStyleConflict(dom, currentNode, parentNode)) {
+              dom.remove(currentNode, true);
+            }
           }
-        }
+        };
+        stripNodes(node);
       }
     });
   }
