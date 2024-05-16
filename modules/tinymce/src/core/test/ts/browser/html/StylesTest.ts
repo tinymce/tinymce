@@ -1,10 +1,17 @@
+import { Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
+import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
+import Editor from 'tinymce/core/api/Editor';
 import Schema from 'tinymce/core/api/html/Schema';
 import Styles from 'tinymce/core/api/html/Styles';
 
 describe('browser.tinymce.core.html.StylesTest', () => {
+
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    base_url: '/project/tinymce/js/tinymce'
+  }, []);
 
   const assertStyles = (styles: Styles, input: string, expected: string) => {
     assert.equal(styles.serialize(styles.parse(input)), expected);
@@ -265,8 +272,15 @@ describe('browser.tinymce.core.html.StylesTest', () => {
     assertStyles(styles, 'color: rgb(1, 2, 3, 0.5);', 'color: rgb(1, 2, 3, 0.5);');
   });
 
-  it('TINY-10916: transparent should be convert to black with 0 alpha', () => {
+  it('TINY-10916: transparent should not be converted to other format', () => {
     const styles = Styles();
-    assertStyles(styles, 'color: transparent;', 'color: #00000000;');
+    assertStyles(styles, 'color: transparent;', 'color: transparent;');
+  });
+
+  it('TINY-10916: transparent should not be converted to other format when using set/get Content API', () => {
+    const editor = hook.editor();
+    editor.setContent('<p style="color: transparent;">test</p>');
+    const content = editor.getContent();
+    Assertions.assertEq('Should not convert transparent to other format', '<p style="color: transparent;">test</p>', content);
   });
 });
