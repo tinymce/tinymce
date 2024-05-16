@@ -280,6 +280,10 @@ describe('browser.tinymce.core.html.StylesTest', () => {
     assertStyles(styles, 'border-color: transparent;', 'border-color: transparent;');
     assertStyles(styles, 'border: 1px solid transparent;', 'border: 1px solid transparent;');
     assertStyles(styles, 'background: transparent;', 'background: transparent;');
+    assertStyles(styles, 'outline: 1px solid transparent;', 'outline: 1px solid transparent;');
+    assertStyles(styles, 'box-shadow: 1px 1px 1px transparent;', 'box-shadow: 1px 1px 1px transparent;');
+    assertStyles(styles, 'text-shadow: 1px 1px 1px transparent;', 'text-shadow: 1px 1px 1px transparent;');
+    assertStyles(styles, 'text-decoration-color: transparent;', 'text-decoration-color: transparent;');
   });
 
   it('TINY-10916: transparent should not be converted to other format when using set/get Content API', () => {
@@ -289,7 +293,11 @@ describe('browser.tinymce.core.html.StylesTest', () => {
       '<p style="background-color: transparent;">bg colour transparent</p>',
       '<p style="border-color: transparent;">border colour transparent</p>',
       '<p style="border: 1px solid transparent;">border transparent</p>',
-      `<p style="background: transparent;">bg transparent</p>`
+      `<p style="background: transparent;">bg transparent</p>`,
+      '<p style="outline: 1px solid transparent;">outline transparent</p>',
+      '<p style="box-shadow: 1px 1px 1px transparent;">box-shadow transparent</p>',
+      '<p style="text-shadow: 1px 1px 1px transparent;">text-shadow transparent</p>',
+      '<p style="text-decoration-color: transparent;">text-decoration-color transparent</p>'
     ], (content) => {
       editor.setContent(content);
       const result = editor.getContent();
