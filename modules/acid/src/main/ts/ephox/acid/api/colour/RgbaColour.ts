@@ -106,9 +106,6 @@ const fromStringValues = (red: string, green: string, blue: string, alpha: strin
 };
 
 const fromString = (rgbaString: string): Optional<Rgba> => {
-  if (rgbaString === 'transparent') {
-    return Optional.some(rgbaColour(0, 0, 0, 0));
-  }
   const rgbMatch = rgbRegex.exec(rgbaString);
   if (rgbMatch !== null) {
     return Optional.some(fromStringValues(rgbMatch[1], rgbMatch[2], rgbMatch[3], '1'));
