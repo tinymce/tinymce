@@ -42,7 +42,7 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
   const urlOrStrRegExp = /(?:url(?:(?:\(\s*\"([^\"]+)\"\s*\))|(?:\(\s*\'([^\']+)\'\s*\))|(?:\(\s*([^)\s]+)\s*\))))|(?:\'([^\']+)\')|(?:\"([^\"]+)\")/gi;
   const styleRegExp = /\s*([^:]+):\s*([^;]+);?/g;
   const trimRightRegExp = /\s+$/;
-  const rgbaRegExp = /rgba\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*(0|1|0?\.\d+)\s*\)/i;
+  const rgbRegExp = /rgb\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/gi; 
   const encodingLookup: Record<string, string> = {};
   let validStyles: Record<string, string[]> | undefined;
   let invalidStyles: Record<string, SchemaMap> | undefined;
@@ -266,7 +266,7 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
             }
 
             // Convert RGB colors to HEX
-            if (!rgbaRegExp.test(value)) {
+            if (rgbRegExp.test(value)) {
               RgbaColour.fromString(value).each((rgba) => {
                 value = Transformations.rgbaToHexString(RgbaColour.toString(rgba)).toLowerCase();
               });
