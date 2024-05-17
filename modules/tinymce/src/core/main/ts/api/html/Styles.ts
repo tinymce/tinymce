@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /**
  * This class is used to parse CSS styles. It also compresses styles to reduce the output size.
  *
@@ -43,7 +42,7 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
   const urlOrStrRegExp = /(?:url(?:(?:\(\s*\"([^\"]+)\"\s*\))|(?:\(\s*\'([^\']+)\'\s*\))|(?:\(\s*([^)\s]+)\s*\))))|(?:\'([^\']+)\')|(?:\"([^\"]+)\")/gi;
   const styleRegExp = /\s*([^:]+):\s*([^;]+);?/g;
   const trimRightRegExp = /\s+$/;
-  const rgbaRegExp = /rgba *\(/i;
+  const rgbaRegExp = /rgba\s*\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*(0|1|0?\.\d+)\s*\)/i;
   const encodingLookup: Record<string, string> = {};
   let validStyles: Record<string, string[]> | undefined;
   let invalidStyles: Record<string, SchemaMap> | undefined;
@@ -267,7 +266,7 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
             }
 
             // Convert RGB colors to HEX
-            if (!rgbaRegExp.test(value) && value.toLowerCase() !== 'transparent') {
+            if (!rgbaRegExp.test(value)) {
               RgbaColour.fromString(value).each((rgba) => {
                 value = Transformations.rgbaToHexString(RgbaColour.toString(rgba)).toLowerCase();
               });
