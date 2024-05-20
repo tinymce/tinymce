@@ -1,4 +1,5 @@
 import { context, describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -384,9 +385,7 @@ describe('browser.tinymce.core.content.insert.InsertContentTest', () => {
     });
     TinyAssertions.assertContent(editor, '<p>' +
       '<span style="font-size: 9pt;">' +
-      '<span style="font-size: 14pt;">' +
-      '<span style="font-size: 9pt;">test</span>' +
-      '</span>' +
+      '<span style="font-size: 14pt;">test</span>' +
       '</span>' +
       '</p>');
   });
@@ -468,16 +467,12 @@ describe('browser.tinymce.core.content.insert.InsertContentTest', () => {
     });
     TinyAssertions.assertContent(editor, '<p>' +
     '<span style="margin: 5px;">' +
-    '<span style="margin-left: 5px; margin-right: 5px;">' +
-    '<span style="margin: 5px;">test</span>' +
-    '</span>' +
+    '<span style="margin-left: 5px; margin-right: 5px;">test</span>' +
     '</span>' +
     '</p>' +
     '<p>' +
     '<span style="border-style: solid;">' +
-    '<span style="border: solid red;">' +
-    '<span style="border-style: solid;">test</span>' +
-    '</span>' +
+    '<span style="border: solid red;">test</span>' +
     '</span>' +
     '</p>');
   });
@@ -510,9 +505,7 @@ describe('browser.tinymce.core.content.insert.InsertContentTest', () => {
       '</p>' +
       '<p>' +
       '<span style="font: italic 10px sans-serif;">' +
-      '<span style="font-size: 12px;">' +
-      '<span style="font: italic 10px sans-serif;">test</span>' +
-      '</span>' +
+      '<span style="font-size: 12px;">test</span>' +
       '</span>' +
       '</p>');
   });
@@ -547,11 +540,89 @@ describe('browser.tinymce.core.content.insert.InsertContentTest', () => {
       '</p>' +
       '<p>' +
       '<span style="font-size: 10px;">' +
-      '<span style="font: italic 12px sans-serif;">' +
-      '<span style="font-size: 10px;">test</span>' +
-      '</span>' +
+      '<span style="font: italic 12px sans-serif;">test</span>' +
       '</span>' +
       '</p>');
+  });
+
+  const buildNestedSpans = (style: string, values: string[], text: string): string => Arr.foldl(values, (acc, v) => `<span style="${style}: ${v};">${acc}</span>`, text);
+  const testMergeNestedSpans = (initial: string, inserted: string, expected: string, path: number[], offset: number) => {
+    const editor = hook.editor();
+    editor.setContent('<p>' + initial + '</p>');
+    TinySelections.setCursor(editor, path, offset);
+    InsertContent.insertAtCaret(editor, {
+      content: inserted,
+      merge: true
+    });
+    TinyAssertions.assertContent(editor, '<p>' + expected + '</p>');
+  };
+
+  context('TINY-10869: Merging nested spans with different styles', () => {
+    Arr.each([ 'color', 'background-color' ], (style) => {
+      it('TINY-10869: Merging one different styled span inserted into initial span', () => {
+        const initial = buildNestedSpans(style, [ '#ff0000' ], 'test');
+        const inserted = buildNestedSpans(style, [ '#0000ff' ], 'test');
+        const expected = buildNestedSpans(style, [ '#ff0000' ], 'te' + inserted + 'st');
+        testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0 ], 2);
+      });
+
+      it('TINY-10869: Merging one different and one identical styled spans inserted into initial spans', () => {
+        const initial = buildNestedSpans(style, [ '#ff0000', '#00ff00' ], 'test');
+        const inserted = buildNestedSpans(style, [ '#0000ff', '#ff0000' ], 'test');
+        const expected = buildNestedSpans(style, [ '#ff0000', '#00ff00' ], 'te' + buildNestedSpans(style, [ '#0000ff' ], 'test') + 'st');
+        testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0 ], 2);
+      });
+
+      it('TINY-10869: Merging two different styled spans inserted into initial spans', () => {
+        const initial = buildNestedSpans(style, [ '#ff0000', '#00ff00' ], 'test');
+        const inserted = buildNestedSpans(style, [ '#000000', '#0000ff' ], 'test');
+        const expected = buildNestedSpans(style, [ '#ff0000', '#00ff00' ], 'te' + inserted + 'st');
+        testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0 ], 2);
+      });
+
+      it('TINY-10869: Merging three identical styled spans inserted into initial spans', () => {
+        const initial = buildNestedSpans(style, [ '#ff0000', '#00ff00', '#0000ff' ], 'test');
+        const inserted = buildNestedSpans(style, [ '#ff0000', '#00ff00', '#0000ff' ], 'test');
+        const expected = buildNestedSpans(style, [ '#ff0000', '#00ff00', '#0000ff' ], 'tetestst');
+        testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0, 0 ], 2);
+      });
+    });
+
+    it('TINY-10869: Merging one styled spans inserted into different styled initial span', () => {
+      const initial = buildNestedSpans('color', [ '#ff0000' ], 'test');
+      const inserted = buildNestedSpans('background-color', [ '#0000ff' ], 'test');
+      const expected = buildNestedSpans('color', [ '#ff0000' ], 'te' + inserted + 'st');
+      testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0 ], 2);
+    });
+
+    it('TINY-10869: Merging two spans of same style into two different styled initial spans', () => {
+      const initial = buildNestedSpans('color', [ '#ff0000', '#00ff00' ], 'test');
+      const inserted = buildNestedSpans('background-color', [ '#0000ff', '#ff0000' ], 'test');
+      const expected = buildNestedSpans('color', [ '#ff0000', '#00ff00' ], 'te' + inserted + 'st');
+      testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0 ], 2);
+    });
+
+    it('TINY-10869: Merging two different styled spans inserted into two identical styled initial spans', () => {
+      const initial = buildNestedSpans('color', [ '#ff0000' ], buildNestedSpans('background-color', [ '#00ff00' ], 'test'));
+      const inserted = buildNestedSpans('color', [ '#ff0000' ], buildNestedSpans('background-color', [ '#00ff00' ], 'test'));
+      const expected = buildNestedSpans('color', [ '#ff0000' ], buildNestedSpans('background-color', [ '#00ff00' ], 'tetestst'));
+      testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0 ], 2);
+    });
+
+    it('TINY-10869: Merging two different styled spans inserted into two different styled initial spans', () => {
+      const initial = buildNestedSpans('color', [ '#ff0000' ], buildNestedSpans('background-color', [ '#00ff00' ], 'test'));
+      const inserted = buildNestedSpans('background-color', [ '#0000ff' ], buildNestedSpans('color', [ '#00ff00' ], 'test'));
+      const expected = buildNestedSpans('color', [ '#ff0000' ], buildNestedSpans('background-color', [ '#00ff00' ], 'te' + inserted + 'st'));
+      testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0 ], 2);
+    });
+
+    it('TINY-10869: Merging four different styled spans inserted into four different styled initial spans, with some spans identical', () => {
+      const initial = buildNestedSpans('color', [ '#ff0000', '#00ff00' ], buildNestedSpans('background-color', [ '#00ff00', '#0000ff' ], 'test'));
+      const inserted = buildNestedSpans('background-color', [ '#0000ff', '#ff0000' ], buildNestedSpans('color', [ '#ff0000', '#0000ff' ], 'test'));
+      const expectedInserted = buildNestedSpans('background-color', [ '#ff0000' ], buildNestedSpans('color', [ '#0000ff' ], 'test'));
+      const expected = buildNestedSpans('color', [ '#ff0000', '#00ff00' ], buildNestedSpans('background-color', [ '#00ff00', '#0000ff' ], 'te' + expectedInserted + 'st'));
+      testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0, 0, 0 ], 2);
+    });
   });
 
   it('TINY-7756: Content with nested elements that will be invalid if parent is unwrapped', () => {

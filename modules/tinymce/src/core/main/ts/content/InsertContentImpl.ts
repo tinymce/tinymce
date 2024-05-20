@@ -98,6 +98,7 @@ const reduceInlineTextElements = (editor: Editor, merge: boolean | undefined): v
           for (let parentNode = node.parentElement; Type.isNonNullable(parentNode) && parentNode !== root; parentNode = parentNode.parentElement) {
             if (elementUtils.compare(parentNode, currentNode) && !StyleUtils.hasStyleConflict(dom, currentNode, parentNode)) {
               dom.remove(currentNode, true);
+              break;
             }
           }
         };
