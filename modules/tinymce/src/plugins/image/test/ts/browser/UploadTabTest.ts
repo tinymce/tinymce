@@ -1,7 +1,7 @@
-import { Assertions, FileInput, Files, Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { Assertions, FileInput, Files, FocusTools, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Strings } from '@ephox/katamari';
-import { SugarBody, Value } from '@ephox/sugar';
+import { SugarBody, SugarDocument, Value } from '@ephox/sugar';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -116,6 +116,7 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
     await pTriggerUpload(editor);
     await TinyUiActions.pWaitForUi(editor, '.tox-tab:contains("General")');
     await pAssertSrcTextValue('uploaded_image.jpg');
+    FocusTools.isOnSelector('Focus should be on Source field', SugarDocument.getDocument(), 'input[type="url"]');
     closeDialog(editor);
   });
 
