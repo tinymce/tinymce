@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Optional } from '@ephox/katamari';
 
 import { Hex, Hsv, Rgba } from './ColourTypes';
@@ -7,8 +8,8 @@ const min = Math.min;
 const max = Math.max;
 const round = Math.round;
 
-const rgbRegex = /^\s*rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/i;
-const rgbaRegex = /^\s*rgba\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d?(?:\.\d+)?)\s*\)\s*$/i;
+const rgbRegex = /^\s*rgb\s*\(\s*(\d+)\s*[,\s]\s*(\d+)\s*[,\s]\s*(\d+)\s*\)\s*$/i;
+const rgbaRegex = /^\s*rgba\s*\(\s*(\d+)\s*[,\s]\s*(\d+)\s*[,\s]\s*(\d+)\s*[,\s]\s*(\d?(?:\.\d+)?)\s*\)\s*$/i;
 
 const rgbaColour = (red: number, green: number, blue: number, alpha: number): Rgba => ({
   red,
@@ -102,7 +103,17 @@ const fromStringValues = (red: string, green: string, blue: string, alpha: strin
   const g = parseInt(green, 10);
   const b = parseInt(blue, 10);
   const a = parseFloat(alpha);
+
   return rgbaColour(r, g, b, a);
+};
+
+const getColorFormat = (colorString: string): string => {
+  if (rgbRegex.test(colorString)) {
+    return 'rgb';
+  } else if (rgbaRegex.test(colorString)) {
+    return 'rgba';
+  }
+  return 'other'; // Add a return statement for the default case
 };
 
 const fromString = (rgbaString: string): Optional<Rgba> => {
@@ -127,6 +138,7 @@ export {
   fromHsv,
   fromHex,
   fromString,
+  getColorFormat,
   toString,
   red
 };

@@ -304,4 +304,10 @@ describe('browser.tinymce.core.html.StylesTest', () => {
       Assertions.assertEq('Should not convert transparent to other format', content, result);
     });
   });
+
+  it('TINY-10916: only non calculative new colour foramt should be handled', () => {
+    const styles = Styles();
+    assertStyles(styles, 'color: rgb(0 0 0)', 'color: #000000;');
+    assertStyles(styles, 'color: rgb(0 0 0 / 0)', 'color: rgb(0 0 0 / 0);');
+  });
 });
