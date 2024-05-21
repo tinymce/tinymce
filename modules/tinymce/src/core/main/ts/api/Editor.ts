@@ -274,7 +274,7 @@ class Editor implements EditorObservable {
     this.hidden = false;
     const normalizedOptions = normalizeOptions(editorManager.defaultOptions, options);
 
-    this.options = createOptions(self, normalizedOptions);
+    this.options = createOptions(self, normalizedOptions, options);
     Options.register(self);
     const getOption = this.options.get;
 

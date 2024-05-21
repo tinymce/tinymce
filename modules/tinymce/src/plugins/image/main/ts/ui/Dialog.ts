@@ -235,6 +235,7 @@ const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDi
         api.setData({ src: { value: url, meta: {}}});
         api.showTab('general');
         changeSrc(helpers, info, state, api);
+        api.focus('src');
       };
 
       Utils.blobToDataUri(file).then((dataUrl) => {

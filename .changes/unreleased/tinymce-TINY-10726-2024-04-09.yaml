@@ -1,7 +1,0 @@
-project: tinymce
-kind: Fixed
-body: '`ToggleToolbarDrawer` command did not toggle the toolbar in `sliding` mode
-  when `{skipFocus: true}` parameter was passed.'
-time: 2024-04-09T23:36:48.55386+03:00
-custom:
-  Issue: TINY-10726

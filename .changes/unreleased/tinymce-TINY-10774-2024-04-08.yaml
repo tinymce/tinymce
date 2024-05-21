@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Video and audio elements could not be played on Safari.
-time: 2024-04-08T15:06:01.494664+02:00
-custom:
-  Issue: TINY-10774
