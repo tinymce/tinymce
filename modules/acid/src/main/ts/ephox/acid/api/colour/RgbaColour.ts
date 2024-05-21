@@ -9,7 +9,9 @@ const max = Math.max;
 const round = Math.round;
 
 const rgbRegex = /^\s*rgb\s*\(\s*(\d+)\s*[,\s]\s*(\d+)\s*[,\s]\s*(\d+)\s*\)\s*$/i;
-const rgbaRegex = /^\s*rgba\s*\(\s*(\d+)\s*[,\s]\s*(\d+)\s*[,\s]\s*(\d+)\s*[,\s]\s*(\d?(?:\.\d+)?)\s*\)\s*$/i;
+
+// This regex will match rgba(0, 0, 0, 0.5) or rgba(0, 0, 0, 50%) or rgb(0, 0, 0, 1), or without commas
+const rgbaRegex = /^\s*(rgba|rgb)\s*\(\s*(\d{1,3})\s*[,\s]\s*(\d{1,3})\s*[,\s]\s*(\d{1,3})\s*[,\s]\s*(1|0|0?\.\d+|\d{1,3}%)\s*\)\s*$/i;
 
 const rgbaColour = (red: number, green: number, blue: number, alpha: number): Rgba => ({
   red,
@@ -113,7 +115,7 @@ const getColorFormat = (colorString: string): string => {
   } else if (rgbaRegex.test(colorString)) {
     return 'rgba';
   }
-  return 'other'; // Add a return statement for the default case
+  return 'other';
 };
 
 const fromString = (rgbaString: string): Optional<Rgba> => {
