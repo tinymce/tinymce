@@ -1,0 +1,7 @@
+project: tinymce
+kind: Improved
+body: Improve merging of inserted inline elements by removing all nodes identical
+  to any parent nodes.
+time: 2024-05-21T11:34:54.353877+10:00
+custom:
+  Issue: TINY-10869
