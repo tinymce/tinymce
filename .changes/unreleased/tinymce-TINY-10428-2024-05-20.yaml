@@ -1,6 +1,6 @@
 project: tinymce
 kind: Improved
-body: 'Silver theme slider component emits onChange event now while using arrow keys '
+body: 'Silver theme slider component emits onChange event now while using arrow keys.'
 time: 2024-05-20T16:47:55.820758+02:00
 custom:
   Issue: TINY-10428
