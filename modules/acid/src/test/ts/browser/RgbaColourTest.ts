@@ -10,11 +10,11 @@ describe('RgbaColourTest', () => {
       Arr.each([
         { colour: 'rgb(0, 0, 0)', expected: 'rgb' },
         { colour: 'rgba(0, 0, 0, 0)', expected: 'rgba' },
-        // rgb with alpha value is effectively rgba, we do not convert rgba to hex
-        { colour: 'rgb(0, 0, 0, 0)', expected: 'rgba' },
+        // rgb with alpha value is invalid
+        { colour: 'rgb(0, 0, 0, 0)', expected: 'other' },
         { colour: 'rgb(0 0 0)', expected: 'rgb' },
         { colour: 'rgba(0 0 0 0)', expected: 'rgba' },
-        // We currently don't support this format, however we still recognise it as an rgb colour
+        // We currently don't support converting this format
         { colour: 'rgb(0 0 0 / 10%)', expected: 'other' },
       ], (test) => {
         const { colour, expected } = test;
