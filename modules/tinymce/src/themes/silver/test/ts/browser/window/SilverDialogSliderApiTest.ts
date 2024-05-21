@@ -1,4 +1,4 @@
-import { FocusTools, Keys, TestStore, Waiter } from '@ephox/agar';
+import { FocusTools, Keys, TestStore } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SugarDocument } from '@ephox/sugar';
