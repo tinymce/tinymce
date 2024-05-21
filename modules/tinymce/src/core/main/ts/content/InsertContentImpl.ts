@@ -7,7 +7,6 @@ import { ParserArgs } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
 import Schema from '../api/html/Schema';
 import HtmlSerializer from '../api/html/Serializer';
-import * as StyleUtils from '../api/html/StyleUtils';
 import Tools from '../api/util/Tools';
 import CaretPosition from '../caret/CaretPosition';
 import { CaretWalker } from '../caret/CaretWalker';
@@ -91,15 +90,18 @@ const reduceInlineTextElements = (editor: Editor, merge: boolean | undefined): v
     Tools.each(dom.select('*[data-mce-fragment]'), (node) => {
       const isInline = Type.isNonNullable(textInlineElements[node.nodeName.toLowerCase()]);
       if (isInline) {
+        // Remove nodes recursively if identical to any parent node
         const stripNodes = (currentNode: HTMLElement) => {
+          // If node has only one child, that child should be removed first
+          // Only begin removing nodes when currentNode has 0 or >1 children
           if (currentNode.childNodes.length === 1) {
             stripNodes(currentNode.childNodes.item(0) as HTMLElement);
           }
-          for (let parentNode = node.parentElement; Type.isNonNullable(parentNode) && parentNode !== root; parentNode = parentNode.parentElement) {
-            if (elementUtils.compare(parentNode, currentNode) && !StyleUtils.hasStyleConflict(dom, currentNode, parentNode)) {
-              dom.remove(currentNode, true);
-              break;
-            }
+          // Check recursively if the current node has the same attributes and styles as any parent
+          const conflictWithParent = (parentNode: HTMLElement | null): boolean => Type.isNonNullable(parentNode) && parentNode !== root
+            && (elementUtils.compare(currentNode, parentNode) || conflictWithParent(parentNode.parentElement));
+          if (conflictWithParent(currentNode.parentElement)) {
+            dom.remove(currentNode, true);
           }
         };
         stripNodes(node);
