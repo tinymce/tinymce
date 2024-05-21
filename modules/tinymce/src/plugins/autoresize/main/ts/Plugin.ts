@@ -22,7 +22,7 @@ export default (): void => {
       editor.options.set('resize', false);
     }
     if (!editor.inline) {
-      const oldSize = Cell<Resize.PreviousData>({
+      const oldSize = Cell<Resize.ResizeData>({
         totalHeight: 0,
         contentHeight: 0,
         initiated: false,

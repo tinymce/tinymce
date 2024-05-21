@@ -29,7 +29,7 @@ const toggleScrolling = (editor: Editor, state: boolean): void => {
   }
 };
 
-interface PreviousData {
+interface ResizeData {
   readonly totalHeight: number;
   readonly contentHeight: number;
   readonly initiated: boolean;
@@ -56,7 +56,7 @@ const shouldScrollIntoView = (trigger: EditorEvent<unknown> | undefined) => {
 /**
  * This method gets executed each time the editor needs to resize.
  */
-const resize = (editor: Editor, oldSize: Cell<PreviousData>, trigger?: EditorEvent<unknown>, getExtraMarginBottom?: () => number): void => {
+const resize = (editor: Editor, oldSize: Cell<ResizeData>, trigger?: EditorEvent<unknown>, getExtraMarginBottom?: () => number): void => {
   const dom = editor.dom;
 
   const doc = editor.getDoc();
@@ -141,7 +141,7 @@ const resize = (editor: Editor, oldSize: Cell<PreviousData>, trigger?: EditorEve
   }
 };
 
-const setup = (editor: Editor, oldSize: Cell<PreviousData>): void => {
+const setup = (editor: Editor, oldSize: Cell<ResizeData>): void => {
   const getExtraMarginBottom = () => Options.getAutoResizeBottomMargin(editor);
 
   editor.on('init', (e) => {
@@ -176,8 +176,8 @@ const setup = (editor: Editor, oldSize: Cell<PreviousData>): void => {
 };
 
 export {
-  PreviousData,
   resize,
+  ResizeData,
   setup
 };
 

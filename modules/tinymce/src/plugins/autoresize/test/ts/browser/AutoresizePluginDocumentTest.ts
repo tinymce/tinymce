@@ -43,7 +43,7 @@ describe('browser.tinymce.plugins.autoresize.AutoresizePluginTest', () => {
       resizeEventsCount.set(0);
     });
 
-    it('TBA: Should not have a resize handle visible by default', async () => {
+    it('TINY-10793: Should not have a resize handle visible by default', async () => {
       const editor = hook.editor();
       const statusbar = await TinyUiActions.pWaitForUi(editor, '.tox-statusbar');
       Assertions.assertStructure('Check the statusbar does not have a resize handle', ApproxStructure.build((s, str, arr) => {
