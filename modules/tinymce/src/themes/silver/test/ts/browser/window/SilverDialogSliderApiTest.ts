@@ -51,7 +51,7 @@ describe('browser.tinymce.themes.silver.window.SilverDialogSliderApiTest', () =>
         await FocusTools.pTryOnSelector('Focus should be on slider rail', SugarDocument.getDocument(), '.tox-slider__rail');
         TinyUiActions.keydown(editor, Keys.left());
 
-       store.assertEq('Check if on change event is logged after using arrow key', [ 'logOnChangeEvent' ]);
+        store.assertEq('Check if on change event is logged after using arrow key', [ 'logOnChangeEvent' ]);
       });
     });
   });
