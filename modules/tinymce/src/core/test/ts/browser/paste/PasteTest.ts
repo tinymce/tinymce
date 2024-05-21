@@ -69,17 +69,17 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     const editor = hook.editor();
 
     // If a previous test left this toggled on...
-    if (editor.queryCommandState('pasteasplaintext')) {
+    if (editor.queryCommandState('mceTogglePlainTextPaste')) {
       editor.execCommand('mceTogglePlainTextPaste');
     }
 
-    assert.isFalse(editor.queryCommandState('pasteasplaintext'));
+    assert.isFalse(editor.queryCommandState('mceTogglePlainTextPaste'));
     editor.execCommand('mceTogglePlainTextPaste');
-    assert.isTrue(editor.queryCommandState('pasteasplaintext'));
+    assert.isTrue(editor.queryCommandState('mceTogglePlainTextPaste'));
     editor.execCommand('mceTogglePlainTextPaste');
-    assert.isFalse(editor.queryCommandState('pasteasplaintext'));
+    assert.isFalse(editor.queryCommandState('mceTogglePlainTextPaste'));
     editor.execCommand('mceTogglePlainTextPaste');
-    assert.isTrue(editor.queryCommandState('pasteasplaintext'));
+    assert.isTrue(editor.queryCommandState('mceTogglePlainTextPaste'));
   });
 
   it('TBA: Paste simple text content', () => {
