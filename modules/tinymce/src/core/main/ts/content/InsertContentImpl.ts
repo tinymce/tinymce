@@ -90,21 +90,20 @@ const reduceInlineTextElements = (editor: Editor, merge: boolean | undefined): v
     Tools.each(dom.select('*[data-mce-fragment]'), (node) => {
       const isInline = Type.isNonNullable(textInlineElements[node.nodeName.toLowerCase()]);
       if (isInline) {
-        // Remove nodes recursively if identical to any parent node
-        const stripNodes = (currentNode: HTMLElement) => {
+        const unwrapIdenticalChildElements = (currentNode: Element) => {
           // If node has only one child, that child should be removed first
           // Only begin removing nodes when currentNode has 0 or >1 children
-          if (currentNode.childNodes.length === 1) {
-            stripNodes(currentNode.childNodes.item(0) as HTMLElement);
+          if (currentNode.childNodes.length === 1 && NodeType.isElement(currentNode.children[0])) {
+            unwrapIdenticalChildElements(currentNode.children[0]);
           }
           // Check recursively if the current node has the same attributes and styles as any parent
-          const conflictWithParent = (parentNode: HTMLElement | null): boolean => Type.isNonNullable(parentNode) && parentNode !== root
-            && (elementUtils.compare(currentNode, parentNode) || conflictWithParent(parentNode.parentElement));
-          if (conflictWithParent(currentNode.parentElement)) {
+          const identicalToParent = (parentNode: HTMLElement | null): boolean => Type.isNonNullable(parentNode) && parentNode !== root
+            && (elementUtils.compare(currentNode, parentNode) || identicalToParent(parentNode.parentElement));
+          if (identicalToParent(currentNode.parentElement)) {
             dom.remove(currentNode, true);
           }
         };
-        stripNodes(node);
+        unwrapIdenticalChildElements(node);
       }
     });
   }
