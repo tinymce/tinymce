@@ -129,8 +129,10 @@ describe('atomic.robin.words.IdentifyTest', () => {
       WordScope('abc', none, some(' ')),
       WordScope('U.S.A.', some(' '), some('.')),
       WordScope('E.U.', some(' '), some(' ')),
+      WordScope('u.s.a', some(' '), some('.')),
       WordScope('something', some(' '), some(' ')),
+      WordScope('H.', some(' '), some(' ')),
       WordScope('else', some(' '), none)
-    ], 'abc U.S.A.. E.U. something else');
+    ], 'abc U.S.A.. E.U. u.s.a.. something H. else');
   });
 });
