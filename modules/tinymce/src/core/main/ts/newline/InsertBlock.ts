@@ -1,4 +1,4 @@
-import { Arr, Optional, Optionals, Type } from '@ephox/katamari';
+import { Arr, Optional, Type } from '@ephox/katamari';
 import { ContentEditable, Insert, PredicateFilter, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
@@ -400,14 +400,6 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
       NewLineUtils.emptyBlock(parentBlock);
     }
     NewLineUtils.setForcedBlockAttrs(editor, newBlock);
-    // if (isBefore && node) {
-    //   // Keep selection before the fake caret candidate
-    //   showCaret(-1, editor, node as HTMLElement, true, false).each((newRng) => {
-    //     moveToRange(editor, newRng);
-    //   });
-    // } else {
-    //   NewLineUtils.moveToCaretPosition(editor, newBlock);
-    // }
     NewLineUtils.moveToCaretPosition(editor, newBlock);
   } else if (isCaretAtStartOrEndOfBlock(false)) {
     // Caret is moved to the new block in the insertNewBlockAfter fn
