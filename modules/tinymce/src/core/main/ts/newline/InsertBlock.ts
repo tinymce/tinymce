@@ -424,9 +424,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
 
     newBlock = parentBlockParent.insertBefore(createNewBlock(), parentBlock);
 
-    const root = Optionals.someIf(containerAndSiblingName(parentBlock, 'HR') || afterTable, newBlock)
-      .or(prevBrOpt)
-      .getOr(parentBlock);
+    const root = containerAndSiblingName(parentBlock, 'HR') || afterTable ? newBlock : prevBrOpt.getOr(parentBlock);
     NewLineUtils.moveToCaretPosition(editor, root);
   } else {
     // Extract after fragment and insert it after the current block
