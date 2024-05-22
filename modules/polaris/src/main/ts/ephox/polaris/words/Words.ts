@@ -38,6 +38,8 @@ export interface WordsWithIndices<T> {
   readonly indices: WordIndex[];
 }
 
+const isAnAcronym = (str: string) => new RegExp(/^(?:[A-Z]\.)+$/gm).test(str);
+
 const findWordsWithIndices = <T>(chars: Word<T>, sChars: string[], characterMap: CharacterMap, options: WordOptions): WordsWithIndices<T> => {
   const words: Word<T>[] = [];
   const indices: WordIndex[] = [];
@@ -51,12 +53,13 @@ const findWordsWithIndices = <T>(chars: Word<T>, sChars: string[], characterMap:
     word.push(chars[i]);
 
     // If there's a word boundary between the current character and the next character,
+    // (and this boundary doesn't depend from a dot at the end of an acronym)
     // append the current word to the words array and start building a new word.
-    if (isWordBoundary(characterMap, i)) {
+    if (isWordBoundary(characterMap, i) && !isAnAcronym(word.join('') + sChars[i + 1])) {
       const ch = sChars[i];
       if (
         (options.includeWhitespace || !WHITESPACE.test(ch)) &&
-        (options.includePunctuation || !PUNCTUATION.test(ch))
+        (options.includePunctuation || !PUNCTUATION.test(ch) || isAnAcronym(word.join('')))
       ) {
         const startOfWord = i - word.length + 1;
         const endOfWord = i + 1;
