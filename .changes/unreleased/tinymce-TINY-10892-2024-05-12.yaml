@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Deleting into a list from a paragraph that has an `img` tag could cause extra inline styles to be added.
-time: 2024-05-12T23:00:56.388965+01:00
-custom:
-  Issue: TINY-10892
