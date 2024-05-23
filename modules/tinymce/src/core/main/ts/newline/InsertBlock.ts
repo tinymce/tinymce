@@ -390,11 +390,8 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     );
     editor.selection.setCursorLocation(newBlock, 0);
   } else if (CaretContainer.isCaretContainerBlock(parentBlock)) {
-    // TODO: NOTE: Added logic to make sure pressing enter is consistent between browsers
-    // As an example a fake caret is used before/after tables on FIrefox but not on Chrome so different behaviour could occur
-    // TODO: Create Jira to improve this
-    // const isBefore = parentBlock.getAttribute('data-mce-caret') === 'before';
-    // const node = isBefore ? parentBlock.nextElementSibling : parentBlock.previousElementSibling;
+    // TODO: TINY-10384 NOTE: Added logic to make sure pressing enter is consistent between browsers.
+    // As an example a fake caret is used before/after tables on Firefox but not on Chrome. So different behaviour could occur
     newBlock = CaretContainer.showCaretContainerBlock(parentBlock) as Element;
     if (dom.isEmpty(parentBlock)) {
       NewLineUtils.emptyBlock(parentBlock);

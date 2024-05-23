@@ -25,7 +25,6 @@ describe('browser.tinymce.core.keyboard.EnterKeyHrTest', () => {
     TinySelections.setCursor(editor, [], 1);
     TinyContentActions.keystroke(editor, Keys.enter());
     TinyAssertions.assertContent(editor, '<hr><p>&nbsp;</p><p>a</p>');
-    // TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
     TinyAssertions.assertSelection(editor, [ 2, 0 ], 0, [ 2, 0 ], 0);
   });
 
@@ -44,7 +43,6 @@ describe('browser.tinymce.core.keyboard.EnterKeyHrTest', () => {
     TinySelections.setCursor(editor, [], 2);
     TinyContentActions.keystroke(editor, Keys.enter());
     TinyAssertions.assertContent(editor, '<p>a</p><hr><p>&nbsp;</p><p>b</p>');
-    // TinyAssertions.assertSelection(editor, [ 2 ], 0, [ 2 ], 0);
     TinyAssertions.assertSelection(editor, [ 3, 0 ], 0, [ 3, 0 ], 0);
   });
 
