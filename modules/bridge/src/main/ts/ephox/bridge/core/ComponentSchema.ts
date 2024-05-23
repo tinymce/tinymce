@@ -21,6 +21,8 @@ export const optionalTooltip = FieldSchema.optionString('tooltip');
 export const optionalLabel = FieldSchema.optionString('label');
 export const optionalShortcut = FieldSchema.optionString('shortcut');
 export const optionalSelect = FieldSchema.optionFunction('select');
+export const optionalFor = FieldSchema.optionString('for');
+export const optionalID = FieldSchema.optionString('id');
 
 export const active = FieldSchema.defaultedBoolean('active', false);
 export const borderless = FieldSchema.defaultedBoolean('borderless', false);

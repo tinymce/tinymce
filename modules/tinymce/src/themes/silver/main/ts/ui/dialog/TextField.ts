@@ -28,6 +28,7 @@ export interface TextField {
   }>;
   readonly maximized: boolean;
   readonly data: Optional<string>;
+  readonly id: Optional<string>;
 }
 
 type InputSpec = Omit<Dialog.Input, 'type'>;
@@ -78,10 +79,12 @@ const renderTextField = (spec: TextField, providersBackstage: UiFactoryBackstage
 
   const placeholder = spec.placeholder.fold( Fun.constant({}), (p) => ({ placeholder: providersBackstage.translate(p) }));
   const inputMode = spec.inputMode.fold(Fun.constant({}), (mode) => ({ inputmode: mode }));
+  const id = spec.id.fold(Fun.constant({}), (id) => ({ id }));
 
   const inputAttributes = {
     ...placeholder,
-    ...inputMode
+    ...inputMode,
+    ...id
   };
 
   const pField = AlloyFormField.parts.field({
@@ -129,6 +132,7 @@ const renderTextField = (spec: TextField, providersBackstage: UiFactoryBackstage
 
 const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProviders, initialData: Optional<string>): SketchSpec => renderTextField({
   name: spec.name,
+  id: spec.id,
   multiline: false,
   label: spec.label,
   inputMode: spec.inputMode,
@@ -143,6 +147,7 @@ const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProv
 
 const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBackstageProviders, initialData: Optional<string>): SketchSpec => renderTextField({
   name: spec.name,
+  id: Optional.none(), //should text area also have an id? 
   multiline: true,
   label: spec.label,
   inputMode: Optional.none(), // type attribute is not valid for textareas
