@@ -55,10 +55,10 @@ describe('browser.tinymce.core.delete.BlockBoundaryDeleteTest', () => {
 
   it('Delete between textblock and non text block should not merge', () => {
     const editor = hook.editor();
-    editor.setContent('<p>a</p><ul><li>b</li></ul>');
+    editor.setContent('<p>a</p><table><tbody><tr><td>b</td></tr></tbody></table>');
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
     noopDelete(editor);
-    TinyAssertions.assertContent(editor, '<p>a</p><ul><li>b</li></ul>');
+    TinyAssertions.assertContent(editor, '<p>a</p><table><tbody><tr><td>b</td></tr></tbody></table>');
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
   });
 
@@ -469,7 +469,7 @@ describe('browser.tinymce.core.delete.BlockBoundaryDeleteTest', () => {
                 children: [
                   s.element('em', {
                     children: [
-                      s.element('strong', { })
+                      s.element('strong', {})
                     ]
                   }),
                 ],
