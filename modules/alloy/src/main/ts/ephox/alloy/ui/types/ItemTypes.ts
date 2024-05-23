@@ -79,6 +79,7 @@ export interface NormalItemDetail extends ItemDetail {
   eventOrder: Record<string, string[]>;
   builder: <NormalItemInfo>(buildInfo: NormalItemInfo) => AlloySpec;
   hasSubmenu: boolean;
+  role: Optional<string>;
 }
 
 export interface ItemDetail {

@@ -54,7 +54,8 @@ const renderToggleMenuItem = (
         toggleClass: ItemClasses.tickedClass,
         toggleOnExecute: false,
         selected: spec.active
-      }
+      },
+      role: spec.role.getOrUndefined()
     }
   );
 };

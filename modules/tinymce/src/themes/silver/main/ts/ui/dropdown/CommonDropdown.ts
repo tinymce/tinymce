@@ -38,6 +38,7 @@ export interface CommonDropdownSpec<T> {
   readonly disabled?: boolean;
   readonly tooltip: Optional<string>;
   readonly role: Optional<string>;
+  readonly listRole?: string;
   readonly fetch: (comp: AlloyComponent, callback: (tdata: Optional<TieredData>) => void) => void;
   readonly onSetup: (itemApi: T) => OnDestroy<T>;
   readonly getApi: (comp: AlloyComponent) => T;
@@ -105,6 +106,7 @@ const renderCommonDropdown = <T>(
   };
 
   const role = spec.role.fold(() => ({}), (role) => ({ role }));
+  const listRole = Optional.from(spec.listRole).map((listRole) => ({ listRole })).getOr({});
 
   const ariaLabelAttribute = spec.ariaLabel.fold(
     () => ({}),
@@ -129,6 +131,7 @@ const renderCommonDropdown = <T>(
     AlloyDropdown.sketch({
       ...spec.uid ? { uid: spec.uid } : {},
       ...role,
+      ...listRole,
       dom: {
         tag: 'button',
         classes: [ prefix, `${prefix}--select` ].concat(Arr.map(spec.classes, (c) => `${prefix}--${c}`)),

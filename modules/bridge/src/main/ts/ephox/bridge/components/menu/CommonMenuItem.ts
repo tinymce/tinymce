@@ -20,6 +20,7 @@ export interface CommonMenuItem {
   enabled: boolean;
   text: Optional<string>;
   value: string;
+  role: Optional<string>;
   meta: Record<string, any>;
   shortcut: Optional<string>;
 }
@@ -27,6 +28,7 @@ export interface CommonMenuItem {
 export const commonMenuItemFields: FieldProcessor[] = [
   ComponentSchema.enabled,
   ComponentSchema.optionalText,
+  ComponentSchema.optionalRole,
   ComponentSchema.optionalShortcut,
   ComponentSchema.generatedValue('menuitem'),
   ComponentSchema.defaultedMeta

@@ -1,5 +1,5 @@
 import { FieldProcessor, FieldSchema } from '@ephox/boulder';
-import { Obj, Type } from '@ephox/katamari';
+import { Fun, Obj, Type } from '@ephox/katamari';
 
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
@@ -19,10 +19,13 @@ import * as ItemEvents from '../util/ItemEvents';
 
 type ItemRole = 'menuitem' | 'menuitemcheckbox' | 'menuitemradio';
 
-const getItemRole = (detail: NormalItemDetail): ItemRole =>
-  detail.toggling
-    .map((toggling) => toggling.exclusive ? 'menuitemradio' : 'menuitemcheckbox')
-    .getOr('menuitem');
+const getItemRole = (detail: NormalItemDetail): ItemRole | string =>
+  detail.role.fold(
+    () => detail.toggling
+      .map((toggling) => toggling.exclusive ? 'menuitemradio' : 'menuitemcheckbox')
+      .getOr('menuitem'),
+    Fun.identity
+  );
 
 const getTogglingSpec = (tConfig: Partial<ItemTogglingConfigSpec>): TogglingConfigSpec => ({
   aria: {
@@ -98,6 +101,7 @@ const schema: FieldProcessor[] = [
   FieldSchema.defaulted('hasSubmenu', false),
 
   FieldSchema.option('toggling'),
+  FieldSchema.option('role'),
 
   // Maybe this needs to have fewer behaviours
   SketchBehaviours.field('itemBehaviours', [ Toggling, Focusing, Keying, Representing ]),
