@@ -93,11 +93,11 @@ const reduceInlineTextElements = (editor: Editor, merge: boolean | undefined): v
         const unwrapIdenticalChildElements = (currentNode: Element) => {
           // If node has only one child, that child should be removed first
           // Only begin removing nodes when currentNode has 0 or >1 children
-          if (currentNode.childNodes.length === 1 && NodeType.isElement(currentNode.children[0])) {
+          if (currentNode.children.length === 1 && NodeType.isElement(currentNode.children[0])) {
             unwrapIdenticalChildElements(currentNode.children[0]);
           }
           // Check recursively if the current node has the same attributes and styles as any parent
-          const identicalToParent = (parentNode: HTMLElement | null): boolean => Type.isNonNullable(parentNode) && parentNode !== root
+          const identicalToParent = (parentNode: Element | null): boolean => Type.isNonNullable(parentNode) && parentNode !== root
             && (elementUtils.compare(currentNode, parentNode) || identicalToParent(parentNode.parentElement));
           if (identicalToParent(currentNode.parentElement)) {
             dom.remove(currentNode, true);

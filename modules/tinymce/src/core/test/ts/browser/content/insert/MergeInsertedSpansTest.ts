@@ -1,5 +1,5 @@
-import { describe, it } from '@ephox/bedrock-client';
-import { Arr, Fun, Obj } from '@ephox/katamari';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { Arr, Obj } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -10,15 +10,15 @@ describe('browser.tinymce.core.content.insert.MergeInsertedSpansTest', () => {
     base_url: '/project/tinymce/js/tinymce',
   }, [], true);
 
-  const red = '#ff0000';
-  const green = '#00ff00';
-  const blue = '#0000ff';
+  const validInlineElements = [ 'span', 'strong', 'code' ];
+  const colorStyles = [ 'color', 'background-color', 'border-color' ];
+  const pixelStyles = [ 'font-size', 'border-width', 'padding' ];
+  const colorStyleValues = [ '#ff0000', '#00ff00', '#0000ff', '#000000' ];
+  const pixelStyleValues = [ '10px', '20px', '30px', '40px' ];
 
   const buildInlineStyles = (inlineStyles: Record<string, string>) => Obj.mapToArray(inlineStyles, (value, style) => `${style}: ${value};`);
-  const buildNestedInlineElements = (type: string, spans: Record<string, string>[], text: string): string =>
-    Arr.foldr(spans, (acc, inlineStyles) => `<${type} style="${buildInlineStyles(inlineStyles).join(' ')}">${acc}</span>`, text);
-  const buildNestedSpans = Fun.curry(buildNestedInlineElements, 'span');
-
+  const buildNestedInlineElements = (elementType: string, spans: Record<string, string>[], text: string): string =>
+    Arr.foldr(spans, (acc, inlineStyles) => `<${elementType} style="${buildInlineStyles(inlineStyles).join(' ')}">${acc}</${elementType}>`, text);
   const testMergeNestedSpans = (initial: string, inserted: string, expected: string, path: number[], offset: number) => {
     const editor = hook.editor();
     editor.setContent(`<p>${initial}</p>`);
@@ -30,176 +30,203 @@ describe('browser.tinymce.core.content.insert.MergeInsertedSpansTest', () => {
     TinyAssertions.assertContent(editor, `<p>${expected}</p>`);
   };
 
-  Arr.each([ 'color', 'background-color' ], (style) => {
-    it('TINY-10869: Merging one styled span inserted into span with same style', () => {
-      const initial = buildNestedSpans([{ [style]: red }], 'test');
-      const inserted = buildNestedSpans([{ [style]: red }], 'test');
-      const expected = buildNestedSpans([{ [style]: red }], 'tetestst');
-      testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0 ], 2);
+  it('TINY-10869: Merging one styled a inserted into a with same style', () => {
+    const initial = buildNestedInlineElements('a', [{ ['color']: colorStyleValues[0] }], 'test');
+    const inserted = buildNestedInlineElements('a', [{ ['color']: colorStyleValues[0] }], 'test');
+    const expected = buildNestedInlineElements('a', [{ ['color']: colorStyleValues[0] }], 'te')
+      + inserted + buildNestedInlineElements('a', [{ ['color']: colorStyleValues[0] }], 'st');
+    testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0 ], 2);
+  });
+
+  Arr.each(validInlineElements, (elementType) => {
+    const testMergingSameStyle = (style: string, valueArr: string[]) => {
+      it(`TINY-10869: Merging one styled ${elementType} inserted into ${elementType} with same style`, () => {
+        const initial = buildNestedInlineElements(elementType, [{ [style]: valueArr[0] }], 'test');
+        const inserted = buildNestedInlineElements(elementType, [{ [style]: valueArr[0] }], 'test');
+        const expected = buildNestedInlineElements(elementType, [{ [style]: valueArr[0] }], 'tetestst');
+        testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0 ], 2);
+      });
+
+      it(`TINY-10869: Merging one different styled ${elementType} inserted into initial ${elementType}`, () => {
+        const initial = buildNestedInlineElements(elementType, [{ [style]: valueArr[0] }], 'test');
+        const inserted = buildNestedInlineElements(elementType, [{ [style]: valueArr[1] }], 'test');
+        const expected = buildNestedInlineElements(elementType, [{ [style]: valueArr[0] }], `te${inserted}st`);
+        testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0 ], 2);
+      });
+
+      it(`TINY-10869: Merging one different and one identical styled ${elementType}s inserted into initial ${elementType}s`, () => {
+        const initial = buildNestedInlineElements(elementType, [{ [style]: valueArr[0] }, { [style]: valueArr[2] }], 'test');
+        const inserted = buildNestedInlineElements(elementType, [{ [style]: valueArr[1] }, { [style]: valueArr[0] }], 'test');
+        const expected = buildNestedInlineElements(elementType, [{ [style]: valueArr[0] }, { [style]: valueArr[2] }], `te${buildNestedInlineElements(elementType, [{ [style]: valueArr[1] }], 'test')}st`);
+        testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0 ], 2);
+      });
+
+      it(`TINY-10869: Merging two different styled ${elementType}s inserted into initial ${elementType}s`, () => {
+        const initial = buildNestedInlineElements(elementType, [{ [style]: valueArr[0] }, { [style]: valueArr[2] }], 'test');
+        const inserted = buildNestedInlineElements(elementType, [{ [style]: valueArr[3] }, { [style]: valueArr[1] }], 'test');
+        const expected = buildNestedInlineElements(elementType, [{ [style]: valueArr[0] }, { [style]: valueArr[2] }], `te${inserted}st`);
+        testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0 ], 2);
+      });
+
+      it(`TINY-10869: Merging three identical styled ${elementType}s inserted into initial ${elementType}s`, () => {
+        const initial = buildNestedInlineElements(elementType, [{ [style]: valueArr[0] }, { [style]: valueArr[2] }, { [style]: valueArr[1] }], 'test');
+        const inserted = buildNestedInlineElements(elementType, [{ [style]: valueArr[0] }, { [style]: valueArr[2] }, { [style]: valueArr[1] }], 'test');
+        const expected = buildNestedInlineElements(elementType, [{ [style]: valueArr[0] }, { [style]: valueArr[2] }, { [style]: valueArr[1] }], 'tetestst');
+        testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0, 0 ], 2);
+      });
+    };
+
+    const testMergingDifferentStyles = (styleA: string, valueArrA: string[], styleB: string, valueArrB: string[]) => {
+      it(`TINY-10869: Merging one styled ${elementType}s inserted into different styled initial ${elementType}`, () => {
+        const initial = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[0] }], 'test');
+        const inserted = buildNestedInlineElements(elementType, [{ [styleB]: valueArrB[1] }], 'test');
+        const expected = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[0] }], `te${inserted}st`);
+        testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0 ], 2);
+      });
+
+      it(`TINY-10869: Merging two ${elementType}s of same style into two different styled initial ${elementType}s`, () => {
+        const initial = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[0] }, { [styleA]: valueArrA[1] }], 'test');
+        const inserted = buildNestedInlineElements(elementType, [{ [styleB]: valueArrB[1] }, { [styleB]: valueArrB[0] }], 'test');
+        const expected = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[0] }, { [styleA]: valueArrA[1] }], `te${inserted}st`);
+        testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0 ], 2);
+      });
+
+      it(`TINY-10869: Merging two different styled ${elementType}s inserted into two identical styled initial ${elementType}s`, () => {
+        const initial = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[0] }, { [styleB]: valueArrB[1] }], 'test');
+        const inserted = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[0] }, { [styleB]: valueArrB[1] }], 'test');
+        const expected = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[0] }, { [styleB]: valueArrB[1] }], 'tetestst');
+        testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0 ], 2);
+      });
+
+      it(`TINY-10869: Merging two different styled ${elementType}s inserted into two different styled initial ${elementType}s`, () => {
+        const initial = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[0] }, { [styleB]: valueArrB[1] }], 'test');
+        const inserted = buildNestedInlineElements(elementType, [{ [styleB]: valueArrB[2] }, { [styleA]: valueArrA[1] }], 'test');
+        const expected = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[0] }, { [styleB]: valueArrB[1] }], `te${inserted}st`);
+        testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0 ], 2);
+      });
+
+      it(`TINY-10869: Merging four different styled ${elementType}s inserted into four different styled initial spans, with some ${elementType}s identical`, () => {
+        const initial = buildNestedInlineElements(elementType, [
+          { [styleA]: valueArrA[0] },
+          { [styleA]: valueArrA[2] },
+          { [styleB]: valueArrB[2] },
+          { [styleB]: valueArrB[1] }
+        ], 'test');
+        const inserted = buildNestedInlineElements(elementType, [
+          { [styleB]: valueArrB[1] },
+          { [styleB]: valueArrB[0] },
+          { [styleA]: valueArrA[0] },
+          { [styleA]: valueArrA[1] },
+        ], 'test');
+        const expectedInserted = buildNestedInlineElements(elementType, [
+          { [styleB]: valueArrB[0] },
+          { [styleA]: valueArrA[1] },
+        ], 'test');
+        const expected = buildNestedInlineElements(elementType, [
+          { [styleA]: valueArrA[0] },
+          { [styleA]: valueArrA[2] },
+          { [styleB]: valueArrB[2] },
+          { [styleB]: valueArrB[1] },
+        ], 'te' + expectedInserted + 'st');
+        testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0, 0, 0 ], 2);
+      });
+
+      it(`TINY-10869: Merging ${elementType} with two styles inserted into initial ${elementType} with different styles`, () => {
+        const initial = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[1], [styleB]: valueArrB[0] }], 'test');
+        const inserted = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[0], [styleB]: valueArrB[1] }], 'test');
+        const expected = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[1], [styleB]: valueArrB[0] }], `te${inserted}st`);
+        testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0 ], 2);
+      });
+
+      it(`TINY-10869: Merging ${elementType} with two styles inserted into initial ${elementType} with identical styles`, () => {
+        const initial = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[1], [styleB]: valueArrB[0] }], 'test');
+        const inserted = initial;
+        const expected = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[1], [styleB]: valueArrB[0] }], 'tetestst');
+        testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0 ], 2);
+      });
+
+      it(`TINY-10869: Merging two nested ${elementType}s with different styles inserted into one initial ${elementType} with same style as one ${elementType}`, () => {
+        const initial = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[1], [styleB]: valueArrB[0] }], 'test');
+        const inserted = buildNestedInlineElements(elementType, [
+          { [styleA]: valueArrA[0], [styleB]: valueArrB[1] },
+          { [styleA]: valueArrA[1], [styleB]: valueArrB[0] }
+        ], 'test');
+        const expectedInserted = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[0], [styleB]: valueArrB[1] }], 'test');
+        const expected = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[1], [styleB]: valueArrB[0] }], `te${expectedInserted}st`);
+        testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0 ], 2);
+      });
+
+      it(`TINY-10869: Merging two nested ${elementType}s with different styles inserted into one initial ${elementType} with same style as one ${elementType} but different order`, () => {
+        const initial = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[1], [styleB]: valueArrB[0] }], 'test');
+        const inserted = buildNestedInlineElements(elementType, [
+          { [styleA]: valueArrA[0], [styleB]: valueArrB[1] },
+          { [styleB]: valueArrB[0], [styleA]: valueArrA[1] }
+        ], 'test');
+        const expectedInserted = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[0], [styleB]: valueArrB[1] }], 'test');
+        const expected = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[1], [styleB]: valueArrB[0] }], `te${expectedInserted}st`);
+        testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0 ], 2);
+      });
+
+      it(`TINY-10869: Merging two nested ${elementType}s with different styles inserted into one initial ${elementType} with both styles`, () => {
+        const initial = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[1], [styleB]: valueArrB[0] }], 'test');
+        const inserted = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[1] }, { [styleB]: valueArrB[0] }], 'test');
+        const expected = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[1], [styleB]: valueArrB[0] }], `te${inserted}st`);
+        testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0 ], 2);
+      });
+
+      it(`TINY-10869: Merging one ${elementType} with two styles into nested ${elementType}s each with one same style`, () => {
+        const initial = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[1] }, { [styleB]: valueArrB[0] }], 'test');
+        const inserted = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[1], [styleB]: valueArrB[0] }], 'test');
+        const expected = buildNestedInlineElements(elementType, [{ [styleA]: valueArrA[1] }, { [styleB]: valueArrB[0] }], `te${inserted}st`);
+        testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0 ], 2);
+      });
+
+      it(`TINY-10869: Merging two ${elementType}s with different styles into two nested ${elementType}s with matching styles`, () => {
+        const initial = buildNestedInlineElements(elementType, [
+          { [styleA]: valueArrA[0], [styleB]: valueArrB[1] },
+          { [styleB]: valueArrB[0], [styleA]: valueArrA[1] }
+        ], 'test');
+        const inserted = buildNestedInlineElements(elementType, [
+          { [styleA]: valueArrA[0], [styleB]: valueArrB[1] },
+          { [styleB]: valueArrB[0], [styleA]: valueArrA[1] }
+        ], 'test');
+        const expected = buildNestedInlineElements(elementType, [
+          { [styleA]: valueArrA[0], [styleB]: valueArrB[1] },
+          { [styleB]: valueArrB[0], [styleA]: valueArrA[1] }
+        ], 'tetestst');
+        testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0 ], 2);
+      });
+
+      it(`TINY-10869: Merging two ${elementType}s with different styles into two nested ${elementType}s with matching styles but reversed order`, () => {
+        const initial = buildNestedInlineElements(elementType, [
+          { [styleA]: valueArrA[0], [styleB]: valueArrB[1] },
+          { [styleB]: valueArrB[0], [styleA]: valueArrA[1] }
+        ], 'test');
+        const inserted = buildNestedInlineElements(elementType, [
+          { [styleB]: valueArrB[0], [styleA]: valueArrA[1] },
+          { [styleA]: valueArrA[0], [styleB]: valueArrB[1] }
+        ], 'test');
+        const expected = buildNestedInlineElements(elementType, [
+          { [styleA]: valueArrA[0], [styleB]: valueArrB[1] },
+          { [styleB]: valueArrB[0], [styleA]: valueArrA[1] }
+        ], 'tetestst');
+        testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0 ], 2);
+      });
+    };
+
+    context(`Inserting ${elementType} elements`, () => {
+      Arr.each(colorStyles, (colorStyle) => {
+        testMergingSameStyle(colorStyle, colorStyleValues);
+        const otherStyles = Arr.difference(colorStyles, [ colorStyle ]);
+        Arr.each(otherStyles, (otherStyle) => testMergingDifferentStyles(colorStyle, colorStyleValues, otherStyle, colorStyleValues));
+        Arr.each(pixelStyles, (pixelStyle) => testMergingDifferentStyles(colorStyle, colorStyleValues, pixelStyle, pixelStyleValues));
+      });
+
+      Arr.each(pixelStyles, (pixelStyle) => {
+        testMergingSameStyle(pixelStyle, pixelStyleValues);
+        const otherStyles = Arr.difference(pixelStyles, [ pixelStyle ]);
+        Arr.each(otherStyles, (otherStyle) => testMergingDifferentStyles(pixelStyle, pixelStyleValues, otherStyle, pixelStyleValues));
+      });
     });
-
-    it('TINY-10869: Merging one different styled span inserted into initial span', () => {
-      const initial = buildNestedSpans([{ [style]: red }], 'test');
-      const inserted = buildNestedSpans([{ [style]: blue }], 'test');
-      const expected = buildNestedSpans([{ [style]: red }], `te${inserted}st`);
-      testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0 ], 2);
-    });
-
-    it('TINY-10869: Merging one different and one identical styled spans inserted into initial spans', () => {
-      const initial = buildNestedSpans([{ [style]: red }, { [style]: green }], 'test');
-      const inserted = buildNestedSpans([{ [style]: blue }, { [style]: red }], 'test');
-      const expected = buildNestedSpans([{ [style]: red }, { [style]: green }], `te${buildNestedSpans([{ [style]: blue }], 'test')}st`);
-      testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0 ], 2);
-    });
-
-    it('TINY-10869: Merging two different styled spans inserted into initial spans', () => {
-      const initial = buildNestedSpans([{ [style]: red }, { [style]: green }], 'test');
-      const inserted = buildNestedSpans([{ [style]: '#000000' }, { [style]: blue }], 'test');
-      const expected = buildNestedSpans([{ [style]: red }, { [style]: green }], `te${inserted}st`);
-      testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0 ], 2);
-    });
-
-    it('TINY-10869: Merging three identical styled spans inserted into initial spans', () => {
-      const initial = buildNestedSpans([{ [style]: red }, { [style]: green }, { [style]: blue }], 'test');
-      const inserted = buildNestedSpans([{ [style]: red }, { [style]: green }, { [style]: blue }], 'test');
-      const expected = buildNestedSpans([{ [style]: red }, { [style]: green }, { [style]: blue }], 'tetestst');
-      testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0, 0 ], 2);
-    });
-  });
-
-  it('TINY-10869: Merging one styled spans inserted into different styled initial span', () => {
-    const initial = buildNestedSpans([{ ['color']: red }], 'test');
-    const inserted = buildNestedSpans([{ ['background-color']: blue }], 'test');
-    const expected = buildNestedSpans([{ ['color']: red }], `te${inserted}st`);
-    testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0 ], 2);
-  });
-
-  it('TINY-10869: Merging two spans of same style into two different styled initial spans', () => {
-    const initial = buildNestedSpans([{ ['color']: red }, { ['color']: green }], 'test');
-    const inserted = buildNestedSpans([{ ['background-color']: blue }, { ['background-color']: red }], 'test');
-    const expected = buildNestedSpans([{ ['color']: red }, { ['color']: green }], `te${inserted}st`);
-    testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0 ], 2);
-  });
-
-  it('TINY-10869: Merging two different styled spans inserted into two identical styled initial spans', () => {
-    const initial = buildNestedSpans([{ ['color']: red }, { ['background-color']: green }], 'test');
-    const inserted = buildNestedSpans([{ ['color']: red }, { ['background-color']: green }], 'test');
-    const expected = buildNestedSpans([{ ['color']: red }, { ['background-color']: green }], 'tetestst');
-    testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0 ], 2);
-  });
-
-  it('TINY-10869: Merging two different styled spans inserted into two different styled initial spans', () => {
-    const initial = buildNestedSpans([{ ['color']: red }, { ['background-color']: green }], 'test');
-    const inserted = buildNestedSpans([{ ['background-color']: blue }, { ['color']: green }], 'test');
-    const expected = buildNestedSpans([{ ['color']: red }, { ['background-color']: green }], `te${inserted}st`);
-    testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0 ], 2);
-  });
-
-  it('TINY-10869: Merging four different styled spans inserted into four different styled initial spans, with some spans identical', () => {
-    const initial = buildNestedSpans([
-      { ['color']: red },
-      { ['color']: green },
-      { ['background-color']: green },
-      { ['background-color']: blue }
-    ], 'test');
-    const inserted = buildNestedSpans([
-      { ['background-color']: blue },
-      { ['background-color']: red },
-      { ['color']: red },
-      { ['color']: blue },
-    ], 'test');
-    const expectedInserted = buildNestedSpans([
-      { ['background-color']: red },
-      { ['color']: blue },
-    ], 'test');
-    const expected = buildNestedSpans([
-      { ['color']: red },
-      { ['color']: green },
-      { ['background-color']: green },
-      { ['background-color']: blue },
-    ], 'te' + expectedInserted + 'st');
-    testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0, 0, 0 ], 2);
-  });
-
-  it('TINY-10869: Merging span with two styles inserted into initial span with different styles', () => {
-    const initial = buildNestedSpans([{ ['color']: blue, ['background-color']: red }], 'test');
-    const inserted = buildNestedSpans([{ ['color']: red, ['background-color']: blue }], 'test');
-    const expected = buildNestedSpans([{ ['color']: blue, ['background-color']: red }], `te${inserted}st`);
-    testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0 ], 2);
-  });
-
-  it('TINY-10869: Merging span with two styles inserted into initial span with identical styles', () => {
-    const initial = buildNestedSpans([{ ['color']: blue, ['background-color']: red }], 'test');
-    const inserted = initial;
-    const expected = buildNestedSpans([{ ['color']: blue, ['background-color']: red }], 'tetestst');
-    testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0 ], 2);
-  });
-
-  it('TINY-10869: Merging two nested spans with different styles inserted into one initial span with same style as one span', () => {
-    const initial = buildNestedSpans([{ ['color']: blue, ['background-color']: red }], 'test');
-    const inserted = buildNestedSpans([
-      { ['color']: red, ['background-color']: blue },
-      { ['color']: blue, ['background-color']: red }
-    ], 'test');
-    const expectedInserted = buildNestedSpans([{ ['color']: red, ['background-color']: blue }], 'test');
-    const expected = buildNestedSpans([{ ['color']: blue, ['background-color']: red }], `te${expectedInserted}st`);
-    testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0 ], 2);
-  });
-
-  it('TINY-10869: Merging two nested spans with different styles inserted into one initial span with same style as one span but different order', () => {
-    const initial = buildNestedSpans([{ ['color']: blue, ['background-color']: red }], 'test');
-    const inserted = buildNestedSpans([
-      { ['color']: red, ['background-color']: blue },
-      { ['background-color']: red, ['color']: blue }
-    ], 'test');
-    const expectedInserted = buildNestedSpans([{ ['color']: red, ['background-color']: blue }], 'test');
-    const expected = buildNestedSpans([{ ['color']: blue, ['background-color']: red }], `te${expectedInserted}st`);
-    testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0 ], 2);
-  });
-
-  it('TINY-10869: Merging two nested spans with different styles inserted into one initial span with both styles', () => {
-    const initial = buildNestedSpans([{ ['color']: blue, ['background-color']: red }], 'test');
-    const inserted = buildNestedSpans([{ ['color']: blue }, { ['background-color']: red }], 'test');
-    const expected = buildNestedSpans([{ ['color']: blue, ['background-color']: red }], `te${inserted}st`);
-    testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0 ], 2);
-  });
-
-  it('TINY-10869: Merging one span with two styles into nested spans each with one same style', () => {
-    const initial = buildNestedSpans([{ ['color']: blue }, { ['background-color']: red }], 'test');
-    const inserted = buildNestedSpans([{ ['color']: blue, ['background-color']: red }], 'test');
-    const expected = buildNestedSpans([{ ['color']: blue }, { ['background-color']: red }], `te${inserted}st`);
-    testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0 ], 2);
-  });
-
-  it('TINY-10869: Merging two spans with different styles into two nested spans with matching styles', () => {
-    const initial = buildNestedSpans([
-      { ['color']: red, ['background-color']: blue },
-      { ['background-color']: red, ['color']: blue }
-    ], 'test');
-    const inserted = buildNestedSpans([
-      { ['color']: red, ['background-color']: blue },
-      { ['background-color']: red, ['color']: blue }
-    ], 'test');
-    const expected = buildNestedSpans([
-      { ['color']: red, ['background-color']: blue },
-      { ['background-color']: red, ['color']: blue }
-    ], 'tetestst');
-    testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0 ], 2);
-  });
-
-  it('TINY-10869: Merging two spans with different styles into two nested spans with matching styles but reversed order', () => {
-    const initial = buildNestedSpans([
-      { ['color']: red, ['background-color']: blue },
-      { ['background-color']: red, ['color']: blue }
-    ], 'test');
-    const inserted = buildNestedSpans([
-      { ['background-color']: red, ['color']: blue },
-      { ['color']: red, ['background-color']: blue }
-    ], 'test');
-    const expected = buildNestedSpans([
-      { ['color']: red, ['background-color']: blue },
-      { ['background-color']: red, ['color']: blue }
-    ], 'tetestst');
-    testMergeNestedSpans(initial, inserted, expected, [ 0, 0, 0, 0 ], 2);
   });
 });
