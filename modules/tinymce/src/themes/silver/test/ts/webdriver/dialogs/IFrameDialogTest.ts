@@ -14,7 +14,7 @@ import * as TestExtras from '../../module/TestExtras';
 
 describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
   // TINY-10974: this can be removed with all relatives if in this file when all the CI Firefoxs are updated to version 126
-  const isFirefoxBelove126 = PlatformDetection.detect().browser.isFirefox() && PlatformDetection.detect().browser.version.major < 126;
+  const isFirefoxBelow126 = PlatformDetection.detect().browser.isFirefox() && PlatformDetection.detect().browser.version.major < 126;
   const extrasHook = TestExtras.bddSetup();
   let windowManager: WindowManagerImpl;
   before(() => {
@@ -85,7 +85,7 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
     await pWaitUntilIframeLoaded();
     const input = await FocusTools.pTryOnSelector('focus should be on the input initially', SugarDocument.getDocument(), 'input');
 
-    if (isFirefoxBelove126) {
+    if (isFirefoxBelow126) {
       // Firefox doesn't allow escaping the iframe when using shift+tab if it's body hasn't been interacted with? Focusing alone didn't work
       // TODO: TINY-2308 - Investigate how to fix this, as it means tabbing can get stuck in the iframe on Firefox
       await RealMouse.pClickOn('iframe => body');
@@ -106,7 +106,7 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
 
     // Firefox when shift+tabbing it will cause the iframe to be focused twice
     // so we need to do an extra shift+tab
-    if (isFirefoxBelove126) {
+    if (isFirefoxBelow126) {
       await FocusTools.pTryOnSelector('focus should be on the iframe', SugarDocument.getDocument(), 'iframe');
       await pPressTab('iframe', true);
     }
@@ -128,7 +128,7 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
 
     const input = await FocusTools.pTryOnSelector('focus should be on the input initially', SugarDocument.getDocument(), 'input');
 
-    if (isFirefoxBelove126) {
+    if (isFirefoxBelow126) {
       // Firefox doesn't allow escaping the iframe when using shift+tab if it's body hasn't been interacted with? Focusing alone didn't work
       // TODO: TINY-2308 - Investigate how to fix this, as it means tabbing can get stuck in the iframe on Firefox
       await RealMouse.pClickOn('iframe => body');
@@ -149,7 +149,7 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
     await pPressTab('iframe => body', true);
     // Firefox when shift+tabbing it will cause the iframe to be focused twice
     // so we need to do an extra shift+tab
-    if (isFirefoxBelove126) {
+    if (isFirefoxBelow126) {
       await FocusTools.pTryOnSelector('focus should be on the iframe', SugarDocument.getDocument(), 'iframe');
       await assertContainerBorderFocus(true);
       await pPressTab('iframe', true);
