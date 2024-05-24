@@ -13,6 +13,7 @@ import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 import * as TestExtras from '../../module/TestExtras';
 
 describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
+  // TINY-10974: this can be removed with all relatives if in this file when all the CI Firefoxs are updated to version 126
   const isFirefoxBelove126 = PlatformDetection.detect().browser.isFirefox() && PlatformDetection.detect().browser.version.major < 126;
   const extrasHook = TestExtras.bddSetup();
   let windowManager: WindowManagerImpl;
