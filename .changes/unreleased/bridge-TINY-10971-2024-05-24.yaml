@@ -1,0 +1,7 @@
+project: bridge
+kind: Added
+body: Added for and id attributes to component schema. Label component has an optional
+  for parameter. Input has an optional id parameter.
+time: 2024-05-24T12:05:29.521753+02:00
+custom:
+  Issue: TINY-10971
