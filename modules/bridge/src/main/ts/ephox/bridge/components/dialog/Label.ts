@@ -26,7 +26,6 @@ export const createLabelFields = (itemsField: FieldProcessor): FieldProcessor[] 
   ComponentSchema.type,
   ComponentSchema.label,
   ComponentSchema.optionalFor,
-  //items still required I guess??? it is called like that: createLabelFields(createItemsField('label'))
   itemsField,
   FieldSchema.defaultedStringEnum('align', 'start', [ 'start', 'center', 'end' ])
 ];

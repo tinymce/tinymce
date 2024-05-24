@@ -147,7 +147,7 @@ const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProv
 
 const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBackstageProviders, initialData: Optional<string>): SketchSpec => renderTextField({
   name: spec.name,
-  id: Optional.none(), //should text area also have an id? 
+  id: Optional.none(), // I would consider adding id for textarea and other components (for now it is only added in the input component)
   multiline: true,
   label: spec.label,
   inputMode: Optional.none(), // type attribute is not valid for textareas
