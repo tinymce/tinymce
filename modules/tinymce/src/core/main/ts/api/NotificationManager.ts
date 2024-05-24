@@ -145,7 +145,7 @@ const NotificationManager = (editor: Editor): NotificationManager => {
 
     // NodeChange is needed for inline mode and autoresize as the positioning is done
     // from the bottom up, which changes when the content in the editor changes.
-    editor.on('show ResizeEditor NodeChange', () => {
+    editor.on('show ResizeEditor ResizeWindow NodeChange ToggleView', () => {
       requestAnimationFrame(reposition);
     });
 
