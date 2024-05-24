@@ -3,7 +3,7 @@ import { TestHelpers } from '@ephox/alloy';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { SelectorFind, SugarDocument } from '@ephox/sugar';
+import { Focus, SelectorFind, SugarDocument } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import { Dialog } from 'tinymce/core/api/ui/Ui';
