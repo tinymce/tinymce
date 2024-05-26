@@ -225,6 +225,7 @@ describe('browser.tinymce.core.content.insert.MergeInsertedSpansTest', () => {
         testMergingSameStyle(pixelStyle, pixelStyleValues);
         const otherStyles = Arr.difference(pixelStyles, [ pixelStyle ]);
         Arr.each(otherStyles, (otherStyle) => testMergingDifferentStyles(pixelStyle, pixelStyleValues, otherStyle, pixelStyleValues));
+        Arr.each(pixelStyles, (colorStyleValues) => testMergingDifferentStyles(pixelStyle, pixelStyleValues, colorStyle, colorStyleValues));
       });
     });
   });
