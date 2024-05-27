@@ -2,6 +2,7 @@ import { Arr } from '@ephox/katamari';
 
 import { CharacterMap, classify } from './StringMapper';
 import * as UnicodeData from './UnicodeData';
+import { characterIndices as ci } from './UnicodeData';
 import { isWordBoundary } from './WordBoundary';
 
 const EMPTY_STRING = UnicodeData.EMPTY_STRING;
@@ -38,12 +39,24 @@ export interface WordsWithIndices<T> {
   readonly indices: WordIndex[];
 }
 
-const isAnAcronym = (str: string) => new RegExp(/^(?:[A-Z]\.)+$/gm).test(str);
+// const isAnAcronym = (str: string) => new RegExp(/^([A-Z]\.)+$/).test(str);
+
+interface CouldBeAnAcronym {
+  prev: undefined | number | string;
+  check: undefined | boolean;
+  isTheLast: boolean;
+}
 
 const findWordsWithIndices = <T>(chars: Word<T>, sChars: string[], characterMap: CharacterMap, options: WordOptions): WordsWithIndices<T> => {
   const words: Word<T>[] = [];
   const indices: WordIndex[] = [];
   let word: Word<T> = [];
+
+  const couldBeAnAcronym: CouldBeAnAcronym = {
+    prev: undefined,
+    check: undefined,
+    isTheLast: false
+  };
 
   // Loop through each character in the classification map and determine whether
   // it precedes a word boundary, building an array of distinct words as we go.
@@ -52,14 +65,31 @@ const findWordsWithIndices = <T>(chars: Word<T>, sChars: string[], characterMap:
     // Append this character to the current word.
     word.push(chars[i]);
 
+    const onWordBoundary = isWordBoundary(characterMap, i);
+    const dotAfterLetter = sChars[i] === '.' && couldBeAnAcronym.prev === ci.ALETTER;
+    const letterAfterDot = characterMap[i] === ci.ALETTER && (couldBeAnAcronym.prev === '.' || couldBeAnAcronym.prev === undefined);
+    if (couldBeAnAcronym.check || couldBeAnAcronym.check === undefined) {
+      if (dotAfterLetter) {
+        couldBeAnAcronym.prev = sChars[i];
+        couldBeAnAcronym.check = true;
+        if (onWordBoundary) {
+          couldBeAnAcronym.isTheLast = true;
+        }
+      } else if (letterAfterDot && sChars[i + 1] === '.') {
+        couldBeAnAcronym.prev = characterMap[i];
+        couldBeAnAcronym.check = true;
+      } else {
+        couldBeAnAcronym.check = false;
+      }
+    }
     // If there's a word boundary between the current character and the next character,
     // (and this boundary doesn't depend from a dot at the end of an acronym)
     // append the current word to the words array and start building a new word.
-    if (isWordBoundary(characterMap, i) && !isAnAcronym(word.join('') + sChars[i + 1])) {
+    if (onWordBoundary && (couldBeAnAcronym.isTheLast || !couldBeAnAcronym.check)) {
       const ch = sChars[i];
       if (
         (options.includeWhitespace || !WHITESPACE.test(ch)) &&
-        (options.includePunctuation || !PUNCTUATION.test(ch) || isAnAcronym(word.join('')))
+        (options.includePunctuation || !PUNCTUATION.test(ch) || couldBeAnAcronym.isTheLast)
       ) {
         const startOfWord = i - word.length + 1;
         const endOfWord = i + 1;
@@ -77,9 +107,15 @@ const findWordsWithIndices = <T>(chars: Word<T>, sChars: string[], characterMap:
           start: startOfWord,
           end: endOfWord
         });
+        couldBeAnAcronym.prev = undefined;
+        couldBeAnAcronym.check = undefined;
+        couldBeAnAcronym.isTheLast = false;
       }
 
       word = [];
+      couldBeAnAcronym.prev = undefined;
+      couldBeAnAcronym.check = undefined;
+      couldBeAnAcronym.isTheLast = false;
     }
   }
 
