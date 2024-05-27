@@ -21,8 +21,7 @@ describe('headless.tinymce.themes.silver.components.checkbox.Checkbox component 
     renderCheckbox({
       label: 'TestCheckbox',
       name: 'test-check-box',
-      enabled: true,
-      id: Optional.none()
+      enabled: true
     }, providers, Optional.none())
   ));
 

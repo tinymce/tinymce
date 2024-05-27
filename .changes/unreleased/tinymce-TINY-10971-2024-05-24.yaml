@@ -1,5 +1,5 @@
 project: tinymce
 kind: Added
-body: Added support for setting custom `for` attributes on label dialog components and an custom `id` attributes on the Input, Colorinput, Checkbox, SelectBox and Textarea components.
+body: Added support for setting custom `for` attributes on label dialog components and an custom `id` attributes on the Input, Colorinput, SelectBox and Textarea components.
 custom:
   Issue: TINY-10971
