@@ -3,7 +3,7 @@ import {
   NativeEvents, SimpleSpec, SketchSpec, Tabstopping
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
@@ -23,12 +23,15 @@ export const renderSelectBox = (spec: SelectBoxSpec, providersBackstage: UiFacto
   // DUPE with TextField.
   const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
 
+  const idAttr = spec.id.fold(Fun.constant({}), (id) => ({ id }));
+
   const pField = AlloyFormField.parts.field({
     // TODO: Alloy should not allow dom changing of an HTML select!
     dom: { },
     ...initialData.map((data) => ({ data })).getOr({}),
     selectAttributes: {
-      size: spec.size
+      size: spec.size,
+      ...idAttr
     },
     options: translatedOptions,
     factory: AlloyHtmlSelect,

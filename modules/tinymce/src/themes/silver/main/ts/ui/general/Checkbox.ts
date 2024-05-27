@@ -21,13 +21,16 @@ export const renderCheckbox = (spec: CheckboxSpec, providerBackstage: UiFactoryB
     return Optional.some(true);
   };
 
+  const idAttr = spec.id.fold(Fun.constant({}), (id) => ({ id }));
+
   const pField = AlloyFormField.parts.field({
     factory: { sketch: Fun.identity },
     dom: {
       tag: 'input',
       classes: [ 'tox-checkbox__input' ],
       attributes: {
-        type: 'checkbox'
+        type: 'checkbox',
+        ...idAttr
       }
     },
 

@@ -24,7 +24,8 @@ describe('headless.tinymce.themes.silver.components.colorinput.ColorInputTest', 
         renderColorInput({
           name: 'alpha',
           storageKey: 'test',
-          label: Optional.some('test-color-input')
+          label: Optional.some('test-color-input'),
+          id: Optional.none()
         }, extrasHook.access().extras.backstages.popup.shared, {
           colorPicker: (_callback, _value) => {},
           hasCustomColors: Fun.always,

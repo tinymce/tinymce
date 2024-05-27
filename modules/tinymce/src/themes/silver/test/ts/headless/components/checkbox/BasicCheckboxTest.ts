@@ -22,6 +22,7 @@ describe('headless.tinymce.themes.silver.components.checkbox.Checkbox component 
       label: 'TestCheckbox',
       name: 'test-check-box',
       enabled: true,
+      id: Optional.none()
     }, providers, Optional.none())
   ));
 

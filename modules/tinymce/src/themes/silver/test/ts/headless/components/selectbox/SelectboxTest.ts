@@ -28,7 +28,8 @@ describe('headless.tinymce.themes.silver.components.selectbox.SelectboxTest', ()
         { value: 'one', text: 'One' },
         { value: 'two', text: 'Two' },
         { value: 'three', text: 'Three' }
-      ]
+      ],
+      id: Optional.none()
     }, providers, Optional.none())
   ));
 

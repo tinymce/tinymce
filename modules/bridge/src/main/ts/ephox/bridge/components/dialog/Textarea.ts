@@ -9,6 +9,7 @@ export interface TextAreaSpec extends FormComponentWithLabelSpec {
   placeholder?: string;
   maximized?: boolean;
   enabled?: boolean;
+  id?: string;
 }
 
 export interface TextArea extends FormComponentWithLabel {
@@ -16,11 +17,13 @@ export interface TextArea extends FormComponentWithLabel {
   maximized: boolean;
   placeholder: Optional<string>;
   enabled: boolean;
+  id: Optional<string>;
 }
 
 const textAreaFields = formComponentWithLabelFields.concat([
   FieldSchema.optionString('placeholder'),
   FieldSchema.defaultedBoolean('maximized', false),
+  FieldSchema.optionString('id'),
   ComponentSchema.enabled
 ]);
 

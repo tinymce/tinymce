@@ -16,7 +16,8 @@ describe('headless.tinymce.themes.silver.components.textarea.TextareaTest', () =
       label: Optional.some('LabelA'),
       placeholder: Optional.none(),
       maximized: false,
-      enabled: true
+      enabled: true,
+      id: Optional.none()
     }, TestProviders, Optional.none())
   ));
 

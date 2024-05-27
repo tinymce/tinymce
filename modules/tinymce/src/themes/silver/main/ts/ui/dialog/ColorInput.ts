@@ -39,9 +39,12 @@ export const renderColorInput = (
   colorInputBackstage: UiFactoryBackstageForColorInput,
   initialData: Optional<string>
 ): SimpleSpec => {
+  const idAttr = spec.id.fold(Fun.constant({}), (id) => ({ id }));
+
   const pField = FormField.parts.field({
     factory: Input,
     inputClasses: [ 'tox-textfield' ],
+    inputAttributes: { ...idAttr },
     data: initialData,
 
     onSetValue: (c: AlloyComponent) => Invalidating.run(c).get(Fun.noop),
