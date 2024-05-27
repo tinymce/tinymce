@@ -36,7 +36,7 @@ const selectBoxFields: FieldProcessor[] = formComponentWithLabelFields.concat([
     ComponentSchema.value
   ]),
   FieldSchema.defaultedNumber('size', 1),
-  FieldSchema.optionString('string'),
+  FieldSchema.optionString('id'),
   ComponentSchema.enabled
 ]);
 
