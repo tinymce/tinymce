@@ -1,6 +1,5 @@
 project: tinymce
 kind: Added
-body: Added a possibility to define for and id attributes. Label component has an optional
-  for spec parameter. Input, Colorinput, Checkbox, SelectBox and Textarea have an optional id spec parameter.
+body: Added support for setting custom `for` attributes on label dialog components and an custom `id` attributes on the Input, Colorinput, Checkbox, SelectBox and Textarea components.
 custom:
   Issue: TINY-10971
