@@ -32,7 +32,7 @@ const toggleScrolling = (editor: Editor, state: boolean): void => {
 interface ResizeData {
   readonly totalHeight: number;
   readonly contentHeight: number;
-  readonly initiated: boolean;
+  readonly set: boolean;
 }
 
 const parseCssValueToInt = (dom: DOMUtils, elm: Element, name: string, computed: boolean): number => {
@@ -106,18 +106,18 @@ const resize = (editor: Editor, oldSize: Cell<ResizeData>, trigger?: EditorEvent
 
   const old = oldSize.get();
 
-  if (old.initiated) {
+  if (old.set) {
     editor.dom.setStyles(editor.getDoc().documentElement, { 'min-height': 0 });
     editor.dom.setStyles(editor.getBody(), { 'min-height': 'inherit' });
   }
   // Resize content element
-  if (resizeHeight !== old.totalHeight && (contentHeight - resizeBottomMargin !== old.contentHeight || !old.initiated)) {
+  if (resizeHeight !== old.totalHeight && (contentHeight - resizeBottomMargin !== old.contentHeight || !old.set)) {
     const deltaSize = (resizeHeight - old.totalHeight);
     dom.setStyle(editor.getContainer(), 'height', resizeHeight + 'px');
     oldSize.set({
       totalHeight: resizeHeight,
       contentHeight,
-      initiated: true,
+      set: true,
     });
     Events.fireResizeEditor(editor);
 

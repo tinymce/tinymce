@@ -25,7 +25,7 @@ export default (): void => {
       const oldSize = Cell<Resize.ResizeData>({
         totalHeight: 0,
         contentHeight: 0,
-        initiated: false,
+        set: false,
       });
       Commands.register(editor, oldSize);
       Resize.setup(editor, oldSize);
