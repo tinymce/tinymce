@@ -69,11 +69,20 @@ const findWordsWithIndices = <T>(chars: Word<T>, sChars: string[], characterMap:
           i = endOfUrl;
         }
 
+        // If the word is an abbreviation, include the next character if it's a period.
+        if (sChars[i + 1] === '.' && /^([a-zA-Z]\.)+$/.test(str + '.')) {
+          word.push(chars[i + 1]);
+          indices.push({
+            start: startOfWord,
+            end: endOfWord + 1
+          });
+        } else {
+          indices.push({
+            start: startOfWord,
+            end: endOfWord
+          });
+        }
         words.push(word);
-        indices.push({
-          start: startOfWord,
-          end: endOfWord
-        });
       }
 
       word = [];
