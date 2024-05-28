@@ -107,9 +107,6 @@ const findWordsWithIndices = <T>(chars: Word<T>, sChars: string[], characterMap:
           start: startOfWord,
           end: endOfWord
         });
-        couldBeAnAcronym.prev = undefined;
-        couldBeAnAcronym.check = undefined;
-        couldBeAnAcronym.isTheLast = false;
       }
 
       word = [];
