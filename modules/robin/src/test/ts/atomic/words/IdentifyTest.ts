@@ -126,6 +126,14 @@ describe('atomic.robin.words.IdentifyTest', () => {
 
   it('TINY-10904: acronyms should be managed correctly', () => {
     check([
+      WordScope('U.S.A.', none, none),
+    ], 'U.S.A.');
+
+    check([
+      WordScope('U.S.A', none, none),
+    ], 'U.S.A');
+
+    check([
       WordScope('abc', none, some(' ')),
       WordScope('U.S.A.', some(' '), some('.')),
       WordScope('E.U.', some(' '), some(' ')),
