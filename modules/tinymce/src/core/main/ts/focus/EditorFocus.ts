@@ -13,7 +13,6 @@ import * as FocusController from './FocusController';
 
 const getContentEditableHost = (editor: Editor, node: Node): HTMLElement | null =>
   editor.dom.getParent(node, (node): node is HTMLElement => editor.dom.getContentEditable(node) === 'true');
-  // (editableRoot ? Arr.last : Arr.head)(editor.dom.getParents(node, (node): node is HTMLElement => editor.dom.getContentEditable(node) === 'true')).getOrNull();
 
 const getCollapsedNode = (rng: Range): Optional<SugarElement<Node>> =>
   rng.collapsed ? Optional.from(RangeNodes.getNode(rng.startContainer, rng.startOffset)).map(SugarElement.fromDom) : Optional.none();
