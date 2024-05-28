@@ -27,9 +27,9 @@ const getItemRole = (detail: NormalItemDetail): ItemRole | string =>
     Fun.identity
   );
 
-const getTogglingSpec = (tConfig: Partial<ItemTogglingConfigSpec>): TogglingConfigSpec => ({
+const getTogglingSpec = (tConfig: Partial<ItemTogglingConfigSpec>, isOption: boolean): TogglingConfigSpec => ({
   aria: {
-    mode: 'checked'
+    mode: isOption ? 'selected' : 'checked'
   },
   // Filter out the additional properties that are not in Toggling Behaviour's configuration (e.g. exclusive)
   ...Obj.filter(tConfig, (_value, name) => name !== 'exclusive'),
@@ -58,7 +58,7 @@ const builder = (detail: NormalItemDetail): AlloySpec => ({
     detail.itemBehaviours,
     [
       // Investigate, is the Toggling.revoke still necessary here?
-      detail.toggling.fold(Toggling.revoke, (tConfig) => Toggling.config(getTogglingSpec(tConfig))),
+      detail.toggling.fold(Toggling.revoke, (tConfig) => Toggling.config(getTogglingSpec(tConfig, detail.role.exists((role) => role === 'option')))),
       Focusing.config({
         ignore: detail.ignoreFocus,
         // Rationale: because nothing is focusable, when you click

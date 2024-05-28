@@ -245,16 +245,19 @@ const renderCommonDropdown = <T>(
           // When the menu is "searchable", use fakeFocus so that keyboard
           // focus stays in the search field
           fakeFocus: spec.searchable,
-          onHighlightItem: updateAriaOnHighlight,
-          onCollapseMenu: (tmenuComp, itemCompCausingCollapse, nowActiveMenuComp) => {
-            // We want to update ARIA on collapsing as well, because it isn't changing
-            // the highlights. So what we need to do is get the right parameters to
-            // pass to updateAriaOnHighlight
-            Highlighting.getHighlighted(nowActiveMenuComp).each((itemComp) => {
-              updateAriaOnHighlight(tmenuComp, nowActiveMenuComp, itemComp);
-            });
-          },
-          onDehighlightItem: updateAriaOnDehighlight
+          // We don't want to update the  `aria-selected` on highlight or dehighlight for the `listbox` role because that is used to indicate the selected item
+          ...(spec.listRole === 'listbox' ? {} : {
+            onHighlightItem: updateAriaOnHighlight,
+            onCollapseMenu: (tmenuComp, itemCompCausingCollapse, nowActiveMenuComp) => {
+              // We want to update ARIA on collapsing as well, because it isn't changing
+              // the highlights. So what we need to do is get the right parameters to
+              // pass to updateAriaOnHighlight
+              Highlighting.getHighlighted(nowActiveMenuComp).each((itemComp) => {
+                updateAriaOnHighlight(tmenuComp, nowActiveMenuComp, itemComp);
+              });
+            },
+            onDehighlightItem: updateAriaOnDehighlight
+          })
         }
       },
 

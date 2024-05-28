@@ -35,7 +35,8 @@ describe('headless.tinymce.themes.silver.components.listbox.ListBoxAriaTest', ()
             children: [
               s.element('button', {
                 attrs: {
-                  role: str.is('combobox'),
+                  'role': str.is('combobox'),
+                  'aria-haspopup': str.is('listbox'),
                 },
               })
             ]
@@ -67,19 +68,19 @@ describe('headless.tinymce.themes.silver.components.listbox.ListBoxAriaTest', ()
             children: [
               s.element('div', {
                 attrs: {
-                  'aria-checked': str.is('false'),
+                  'aria-selected': str.is('false'),
                   'role': str.is('option'),
                 },
               }),
               s.element('div', {
                 attrs: {
-                  'aria-checked': str.is('false'),
+                  'aria-selected': str.is('false'),
                   'role': str.is('option'),
                 },
               }),
               s.element('div', {
                 attrs: {
-                  'aria-checked': str.is('true'),
+                  'aria-selected': str.is('true'),
                   'role': str.is('option'),
                 },
               }),
