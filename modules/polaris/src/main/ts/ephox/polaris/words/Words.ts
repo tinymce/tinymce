@@ -2,7 +2,6 @@ import { Arr } from '@ephox/katamari';
 
 import { CharacterMap, classify } from './StringMapper';
 import * as UnicodeData from './UnicodeData';
-import { characterIndices as ci } from './UnicodeData';
 import { isWordBoundary } from './WordBoundary';
 
 const EMPTY_STRING = UnicodeData.EMPTY_STRING;
@@ -44,30 +43,21 @@ const findWordsWithIndices = <T>(chars: Word<T>, sChars: string[], characterMap:
   const indices: WordIndex[] = [];
   let word: Word<T> = [];
 
-  let isInAcronym = false;
   // Loop through each character in the classification map and determine whether
   // it precedes a word boundary, building an array of distinct words as we go.
   for (let i = 0; i < characterMap.length; ++i) {
 
     // Append this character to the current word.
     word.push(chars[i]);
-    if (word.length === 1 && characterMap[i] === ci.ALETTER) {
-      isInAcronym = true;
-    }
-
-    const dotAfterLetter: boolean = isInAcronym && sChars[i] === '.' && i > 0 && characterMap[i - 1] === ci.ALETTER;
-    const letterAfterDot: boolean = isInAcronym && ((characterMap[i] === ci.ALETTER && i > 0 && sChars[i - 1] === '.') || word.length === 1);
-    const isTheLastLeter: boolean = isInAcronym && letterAfterDot && (i + 1) <= sChars.length && sChars[i + 1] !== '.';
-    isInAcronym = isInAcronym && (dotAfterLetter || letterAfterDot);
 
     // If there's a word boundary between the current character and the next character,
     // (and this boundary doesn't depend from a dot at the end of an acronym)
     // append the current word to the words array and start building a new word.
-    if (isWordBoundary(characterMap, i) && (!isInAcronym || dotAfterLetter || isTheLastLeter)) {
+    if (isWordBoundary(characterMap, i)) {
       const ch = sChars[i];
       if (
         (options.includeWhitespace || !WHITESPACE.test(ch)) &&
-        (options.includePunctuation || !PUNCTUATION.test(ch) || isInAcronym)
+        (options.includePunctuation || !PUNCTUATION.test(ch))
       ) {
         const startOfWord = i - word.length + 1;
         const endOfWord = i + 1;
@@ -80,15 +70,23 @@ const findWordsWithIndices = <T>(chars: Word<T>, sChars: string[], characterMap:
           i = endOfUrl;
         }
 
+        // If the word is an abbreviation, include the next character if it's a period.
+        if (sChars[i + 1] === '.' && /^([a-zA-Z]\.)+$/.test(str + '.')) {
+          word.push(chars[i + 1]);
+          indices.push({
+            start: startOfWord,
+            end: endOfWord + 1
+          });
+        } else {
+          indices.push({
+            start: startOfWord,
+            end: endOfWord
+          });
+        }
         words.push(word);
-        indices.push({
-          start: startOfWord,
-          end: endOfWord
-        });
       }
 
       word = [];
-      isInAcronym = false;
     }
   }
 
