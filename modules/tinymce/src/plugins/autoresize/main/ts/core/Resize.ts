@@ -1,4 +1,4 @@
-import { Cell, Fun } from '@ephox/katamari';
+import { Cell } from '@ephox/katamari';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -29,6 +29,12 @@ const toggleScrolling = (editor: Editor, state: boolean): void => {
   }
 };
 
+interface ResizeData {
+  readonly totalHeight: number;
+  readonly contentHeight: number;
+  readonly set: boolean;
+}
+
 const parseCssValueToInt = (dom: DOMUtils, elm: Element, name: string, computed: boolean): number => {
   const value = parseInt(dom.getStyle(elm, name, computed) ?? '', 10);
   // The value maybe be an empty string, so in that case treat it as being 0
@@ -50,7 +56,7 @@ const shouldScrollIntoView = (trigger: EditorEvent<unknown> | undefined) => {
 /**
  * This method gets executed each time the editor needs to resize.
  */
-const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unknown>, getExtraMarginBottom?: () => number): void => {
+const resize = (editor: Editor, oldSize: Cell<ResizeData>, trigger?: EditorEvent<unknown>, getExtraMarginBottom?: () => number): void => {
   const dom = editor.dom;
 
   const doc = editor.getDoc();
@@ -98,11 +104,21 @@ const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unk
     toggleScrolling(editor, false);
   }
 
+  const old = oldSize.get();
+
+  if (old.set) {
+    editor.dom.setStyles(editor.getDoc().documentElement, { 'min-height': 0 });
+    editor.dom.setStyles(editor.getBody(), { 'min-height': 'inherit' });
+  }
   // Resize content element
-  if (resizeHeight !== oldSize.get()) {
-    const deltaSize = resizeHeight - oldSize.get();
+  if (resizeHeight !== old.totalHeight && (contentHeight - resizeBottomMargin !== old.contentHeight || !old.set)) {
+    const deltaSize = (resizeHeight - old.totalHeight);
     dom.setStyle(editor.getContainer(), 'height', resizeHeight + 'px');
-    oldSize.set(resizeHeight);
+    oldSize.set({
+      totalHeight: resizeHeight,
+      contentHeight,
+      set: true,
+    });
     Events.fireResizeEditor(editor);
 
     // iPadOS has an issue where it won't rerender the body when the iframe is resized
@@ -125,13 +141,10 @@ const resize = (editor: Editor, oldSize: Cell<number>, trigger?: EditorEvent<unk
   }
 };
 
-const setup = (editor: Editor, oldSize: Cell<number>): void => {
-  let getExtraMarginBottom = () => Options.getAutoResizeBottomMargin(editor);
-  let resizeCounter: number;
-  let sizeAfterFirstResize: number;
+const setup = (editor: Editor, oldSize: Cell<ResizeData>): void => {
+  const getExtraMarginBottom = () => Options.getAutoResizeBottomMargin(editor);
 
   editor.on('init', (e) => {
-    resizeCounter = 0;
     const overflowPadding = Options.getAutoResizeOverflowPadding(editor);
     const dom = editor.dom;
 
@@ -155,33 +168,16 @@ const setup = (editor: Editor, oldSize: Cell<number>): void => {
     }
 
     resize(editor, oldSize, e, getExtraMarginBottom);
-    resizeCounter += 1;
   });
 
   editor.on('NodeChange SetContent keyup FullscreenStateChanged ResizeContent', (e) => {
-    if (resizeCounter === 1) {
-      sizeAfterFirstResize = editor.getContainer().offsetHeight;
-      resize(editor, oldSize, e, getExtraMarginBottom);
-      resizeCounter += 1;
-    } else if (resizeCounter === 2) {
-      // After the first check, this code checks if the editor's container is resized again, if so it means that the resize is in a loop
-      // in this case, the CSS is changed to let the document and body adapt to the height of the content
-      const isLooping = sizeAfterFirstResize < editor.getContainer().offsetHeight;
-      if (isLooping) {
-        const dom = editor.dom;
-        const doc = editor.getDoc();
-        dom.setStyles(doc.documentElement, { 'min-height': 0 });
-        dom.setStyles(editor.getBody(), { 'min-height': 'inherit' });
-      }
-      getExtraMarginBottom = isLooping ? Fun.constant(0) : getExtraMarginBottom;
-      resizeCounter += 1;
-    } else {
-      resize(editor, oldSize, e, getExtraMarginBottom);
-    }
+    resize(editor, oldSize, e, getExtraMarginBottom);
   });
 };
 
 export {
-  setup,
-  resize
+  resize,
+  ResizeData,
+  setup
 };
+

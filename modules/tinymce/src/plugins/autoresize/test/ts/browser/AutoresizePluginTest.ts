@@ -123,8 +123,8 @@ describe('browser.tinymce.plugins.autoresize.AutoresizePluginTest', () => {
       const image = editor.dom.select('img')[0];
       editor.dom.setAttrib(image, 'src', 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png');
       // Content height + div image height (84px) + bottom margin = 5634
-      await Waiter.pTryUntil('wait for editor content height', () => assertEditorContentApproxHeight(editor, 5634), 10, 3000);
-      await Waiter.pTryUntil('wait for editor height', () => assertEditorHeightAbove(editor, 5634), 10, 3000);
+      await Waiter.pTryUntil('wait for editor content height', () => assertEditorContentApproxHeight(editor, 5584), 10, 3000);
+      await Waiter.pTryUntil('wait for editor height', () => assertEditorHeightAbove(editor, 5632), 10, 3000);
     });
 
     it('TBA: Editor size content set to 10 and autoresize_bottom_margin set to 100', async () => {
@@ -186,7 +186,7 @@ describe('browser.tinymce.plugins.autoresize.AutoresizePluginTest', () => {
     });
   });
 
-  context('TINY-9123', () => {
+  context('TINY-8872', () => {
     const resizeEventsCount = Cell(0);
     const hook = TinyHooks.bddSetup<Editor>({
       plugins: 'autoresize fullscreen',
@@ -205,14 +205,14 @@ describe('browser.tinymce.plugins.autoresize.AutoresizePluginTest', () => {
       resizeEventsCount.set(0);
     });
 
-    it('TINY-9123: it should not continue to resize when the CSS forces the content to have a margin-bottom lesser than autoresize_bottom_margin', async () => {
+    it('TINY-8872: it should not continue to resize when the CSS forces the content to have a margin-bottom lesser than autoresize_bottom_margin', async () => {
       const editor = hook.editor();
       editor.setContent('<div style="height: 250px;">a</div>');
       await Waiter.pWait(2000);
       assert.isAtMost(resizeEventsCount.get(), 10, 'Should have fired a ResizeEditor event at most 10 time');
     });
 
-    it('TINY-9123: it should continue to resize if the content expands or contract', async () => {
+    it('TINY-8872: it should continue to resize if the content expands or contract', async () => {
       const editor = hook.editor();
       const content = '<p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p><p>a</p>';
       editor.setContent('<div>' + content + '</div>');
