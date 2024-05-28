@@ -55,8 +55,6 @@ const findWordsWithIndices = <T>(chars: Word<T>, sChars: string[], characterMap:
       isInAcronym = true;
     }
 
-    const onWordBoundary = isWordBoundary(characterMap, i);
-
     const dotAfterLetter: boolean = isInAcronym && sChars[i] === '.' && i > 0 && characterMap[i - 1] === ci.ALETTER;
     const letterAfterDot: boolean = isInAcronym && ((characterMap[i] === ci.ALETTER && i > 0 && sChars[i - 1] === '.') || word.length === 1);
     const isTheLastLeter: boolean = isInAcronym && letterAfterDot && (i + 1) <= sChars.length && sChars[i + 1] !== '.';
@@ -65,7 +63,7 @@ const findWordsWithIndices = <T>(chars: Word<T>, sChars: string[], characterMap:
     // If there's a word boundary between the current character and the next character,
     // (and this boundary doesn't depend from a dot at the end of an acronym)
     // append the current word to the words array and start building a new word.
-    if (onWordBoundary && (!isInAcronym || dotAfterLetter || isTheLastLeter)) {
+    if (isWordBoundary(characterMap, i) && (!isInAcronym || dotAfterLetter || isTheLastLeter)) {
       const ch = sChars[i];
       if (
         (options.includeWhitespace || !WHITESPACE.test(ch)) &&
