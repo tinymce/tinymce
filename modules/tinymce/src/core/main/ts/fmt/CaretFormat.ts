@@ -8,6 +8,7 @@ import * as DeleteElement from '../delete/DeleteElement';
 import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as SplitRange from '../selection/SplitRange';
+import { isWhiteSpace } from '../text/CharType';
 import * as Zwsp from '../text/Zwsp';
 import * as ExpandRange from './ExpandRange';
 import { CARET_ID, getParentCaretContainer, isCaretNode } from './FormatContainer';
@@ -165,7 +166,7 @@ const cleanFormatNode = (editor: Editor, caretContainer: Node, formatNode: Eleme
   }
 };
 
-const normalizeNbsps = (node: SugarElement<Text>) => SugarText.set(node, SugarText.get(node).replace(Unicode.nbsp, ' '));
+const normalizeNbsps = (node: SugarElement<Text>) => SugarText.set(node, SugarText.get(node).replace(new RegExp(`${Unicode.nbsp}$`), ' '));
 
 const normalizeNbspsBetween = (editor: Editor, caretContainer: Node | null) => {
   const handler = () => {
@@ -184,12 +185,14 @@ const normalizeNbspsBetween = (editor: Editor, caretContainer: Node | null) => {
     }
   };
   editor.once('input', (e) => {
-    if (!e.isComposing) {
-      handler();
-    } else {
-      editor.once('compositionend', () => {
+    if (e.data && !isWhiteSpace(e.data)) {
+      if (!e.isComposing) {
         handler();
-      });
+      } else {
+        editor.once('compositionend', () => {
+          handler();
+        });
+      }
     }
   });
 };

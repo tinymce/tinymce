@@ -22,7 +22,7 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
     const domElement = editor.getBody();
     editor.undoManager.typing = true;
     domElement.dispatchEvent(new window.CompositionEvent('compositionstart'));
-    editor.dispatch('input', { isComposing: true } as InputEvent);
+    editor.dispatch('input', { isComposing: true, data: updates[0] } as InputEvent);
     Arr.foldl(updates, (acc, update) => {
       domElement.dispatchEvent(new window.CompositionEvent('compositionupdate', { data: acc + update }));
       return acc + update;
@@ -170,7 +170,7 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
       }
     });
 
-    it('TINY-10854: `&nbsp;`s should be converted to spaces when bedore or after there is an inline element', async () => {
+    it('TINY-10854: `&nbsp;`s should be converted to spaces when before or after there is an inline element', async () => {
       const editor = hook.editor();
       editor.setContent('<p>a</p>');
       TinySelections.setCursor(editor, [ 0 ], 1);
@@ -184,10 +184,28 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('c') ]);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
-      TinyAssertions.assertContent(editor, '<p>a <strong>b </strong> c&nbsp;</p>');
+      TinyAssertions.assertContent(editor, '<p>a <strong>b&nbsp;</strong> c&nbsp;</p>');
     });
 
-    it('TINY-10854: `&nbsp;`s should be converted to spaces when bedore or after there is an inline element (with composition)', async () => {
+    it('TINY-10854: `&nbsp;`s should not be converted to spaces when it is at the start of an inline element', async () => {
+      const editor = hook.editor();
+      editor.setContent('<p>a </p>');
+      TinySelections.setCursor(editor, [ 0 ], 1);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+
+      applyCaretFormat(editor, 'bold', {});
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('b') ]);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+
+      removeCaretFormat(editor, 'bold', {});
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('c') ]);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+      TinyAssertions.assertContent(editor, '<p>a&nbsp;<strong> b&nbsp;</strong> c&nbsp;</p>');
+    });
+
+    it('TINY-10854: `&nbsp;`s should be converted to spaces when before or after there is an inline element (with composition)', async () => {
       const editor = hook.editor();
       editor.setContent('<p>a</p>');
       TinySelections.setCursor(editor, [ 0 ], 1);
@@ -207,7 +225,7 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
       // 猫 -> Japanese kanji for 'neko' (cat)
       simulateComposing(editor, [ 'ね', 'こ' ], '猫');
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
-      TinyAssertions.assertContent(editor, '<p>a <strong>犬 </strong> 猫&nbsp;</p>');
+      TinyAssertions.assertContent(editor, '<p>a <strong>犬&nbsp;</strong> 猫&nbsp;</p>');
     });
   });
 });
