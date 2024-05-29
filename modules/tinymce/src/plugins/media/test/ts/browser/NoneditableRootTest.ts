@@ -1,6 +1,6 @@
 import { ApproxStructure, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { SugarBody } from '@ephox/sugar';
+import { Focus, SugarBody, SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -41,6 +41,14 @@ describe('browser.tinymce.plugins.media.NoneditableRootTest', () => {
     });
   });
 
+  const findAndFocusEditableElement = (editor: Editor, selector: string) => {
+    const element = UiFinder.findIn<HTMLElement>(TinyDom.body(editor), selector).getOrDie();
+    Focus.focus(element);
+    // Clicking twice to focus on the the editable block
+    Mouse.trueClick(element);
+    Mouse.trueClick(element);
+  };
+
   context('Inline mode editable_root: false', () => {
     const hook = TinyHooks.bddSetup<Editor>({
       plugins: 'media',
@@ -56,10 +64,7 @@ describe('browser.tinymce.plugins.media.NoneditableRootTest', () => {
       const editor = hook.editor();
       editor.focus();
       editor.setContent('<div class="mceEditable"><div class="random"><h1 style="text-align: center;">Test</h1><div id="test" contenteditable="false"><a href="www.google.com">test</a></div></div></div>');
-      const targetElement = UiFinder.findIn<HTMLElement>(TinyDom.body(editor), '#test').getOrDie();
-      targetElement.dom.focus();
-      Mouse.trueClick(targetElement);
-      Mouse.trueClick(targetElement);
+      findAndFocusEditableElement(editor, '#test');
       await TinyUiActions.pTriggerContextMenu(editor, '#test', '[role="menuitem"]:contains("Media...")');
       TinyUiActions.clickOnUi(editor, '[role="menuitem"]:contains("Media...")');
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
@@ -120,10 +125,7 @@ describe('browser.tinymce.plugins.media.NoneditableRootTest', () => {
       editor.focus();
       const media = `<iframe src="https://www.youtube.com/embed/b3XFjWInBog" width="560" height="314" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`;
       editor.setContent('<div class="mceEditable" contenteditable="true"><div class="random"><h1 style="text-align: center;">Test</h1><div id="test">' + media + '</div></div></div>');
-      const targetElement = UiFinder.findIn<HTMLElement>(TinyDom.body(editor), '.mce-preview-object').getOrDie();
-      targetElement.dom.focus();
-      Mouse.trueClick(targetElement);
-      Mouse.trueClick(targetElement);
+      findAndFocusEditableElement(editor, '.mce-preview-object');
       await TinyUiActions.pTriggerContextMenu(editor, '#test', '[role="menuitem"]:contains("Media...")');
       TinyUiActions.clickOnUi(editor, '[role="menuitem"]:contains("Media...")');
       await TinyUiActions.pWaitForDialog(editor);
@@ -194,10 +196,7 @@ describe('browser.tinymce.plugins.media.NoneditableRootTest', () => {
       editor.focus();
       const media = `<iframe src="https://www.youtube.com/embed/b3XFjWInBog" width="560" height="314" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`;
       editor.setContent('<div class="mceEditable" contenteditable="true"><div class="random"><h1 style="text-align: center;">Test</h1><div id="test">' + media + '</div></div></div>');
-      const targetElement = UiFinder.findIn<HTMLElement>(TinyDom.body(editor), '.mce-preview-object').getOrDie();
-      targetElement.dom.focus();
-      Mouse.trueClick(targetElement);
-      Mouse.trueClick(targetElement);
+      findAndFocusEditableElement(editor, '.mce-preview-object');
       await TinyUiActions.pTriggerContextMenu(editor, '#test', '[role="menuitem"]:contains("Media...")');
       TinyUiActions.clickOnUi(editor, '[role="menuitem"]:contains("Media...")');
       await TinyUiActions.pWaitForDialog(editor);
