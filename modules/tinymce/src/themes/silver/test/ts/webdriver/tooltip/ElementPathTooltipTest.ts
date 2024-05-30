@@ -8,7 +8,7 @@ import { TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcaga
 import Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 
-import * as TooltipUtils from '../../../module/TooltipUtils';
+import * as TooltipUtils from '../../module/TooltipUtils';
 
 interface ElementPathTranslationScenario {
   readonly label: string;
