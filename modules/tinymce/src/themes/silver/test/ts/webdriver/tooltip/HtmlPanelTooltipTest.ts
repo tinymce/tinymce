@@ -13,6 +13,7 @@ describe('browser.tinymce.themes.silver.editor.HtmlPanelTooltipTest', () => {
     await TinyUiActions.pWaitForDialog(editor);
   };
 
+  // TINY-10995: When calling RealMouse.pMoveToOn, cursor moves to [0, 0]
   const contextFn = PlatformDetection.detect().browser.isSafari() ? context.skip : context;
   contextFn('Tooltip if data-mce-tooltip is in htmlpanel', () => {
     const hook = TinyHooks.bddSetup<Editor>({

@@ -1,6 +1,6 @@
 import { ApproxStructure, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Focus, SugarBody, SugarElement } from '@ephox/sugar';
+import { Focus, SugarBody } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
