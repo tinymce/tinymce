@@ -15,11 +15,11 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
     s.element('div', {
       classes: [ arr.has('tox-statusbar__path') ],
       children: [
-        s.element('div', { children: [ s.text(str.is('p')) ] }),
+        s.element('div', { children: [ s.text(str.is('p')) ], attrs: { 'aria-level': str.none() }}),
         s.element('div', { children: [ s.text(str.is(' › ')) ] }),
-        s.element('div', { children: [ s.text(str.is('strong')) ] }),
+        s.element('div', { children: [ s.text(str.is('strong')) ], attrs: { 'aria-level': str.none() }}),
         s.element('div', { children: [ s.text(str.is(' › ')) ] }),
-        s.element('div', { children: [ s.text(str.is('em')) ] })
+        s.element('div', { children: [ s.text(str.is('em')) ], attrs: { 'aria-level': str.none() }})
       ]
     });
 

@@ -23,8 +23,8 @@ const isHidden = (elm: Element): boolean =>
 const renderElementPath = (editor: Editor, settings: ElementPathSettings, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
   const delimiter = settings.delimiter ?? '\u203A';
 
-  const renderElement = (name: string, element: Node, index: number): AlloySpec => {
-    return Button.sketch({
+  const renderElement = (name: string, element: Node, index: number): AlloySpec =>
+    Button.sketch({
       dom: {
         tag: 'div',
         classes: [ 'tox-statusbar__path-item' ],
@@ -56,7 +56,6 @@ const renderElementPath = (editor: Editor, settings: ElementPathSettings, provid
         ReadOnly.receivingConfig()
       ])
     });
-  };
 
   const renderDivider = (): AlloySpec => ({
     dom: {
