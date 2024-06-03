@@ -34,5 +34,8 @@
     "@tinymce/oxide": "^3.0.0",
     "@tinymce/oxide-icons-default": "^3.0.0",
     "dompurify": "3.0.5"
+  },
+  "devDependencies": {
+    "@types/dompurify": "3.0.5"
   }
 }
