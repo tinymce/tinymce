@@ -7,6 +7,7 @@ import { ParserArgs } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
 import Schema from '../api/html/Schema';
 import HtmlSerializer from '../api/html/Serializer';
+import * as StyleUtils from '../api/html/StyleUtils';
 import Tools from '../api/util/Tools';
 import CaretPosition from '../caret/CaretPosition';
 import { CaretWalker } from '../caret/CaretWalker';
@@ -87,23 +88,29 @@ const reduceInlineTextElements = (editor: Editor, merge: boolean | undefined): v
     const root = editor.getBody();
     const elementUtils = ElementUtils(editor);
 
-    Tools.each(dom.select('*[data-mce-fragment]'), (node) => {
-      const isInline = Type.isNonNullable(textInlineElements[node.nodeName.toLowerCase()]);
-      if (isInline) {
-        const unwrapIdenticalChildElements = (currentNode: Element) => {
-          // If node has only one child, that child should be removed first
-          // Only begin removing nodes when currentNode has 0 or >1 children
-          if (currentNode.children.length === 1 && NodeType.isElement(currentNode.children[0])) {
-            unwrapIdenticalChildElements(currentNode.children[0]);
-          }
-          // Check recursively if the current node has the same attributes and styles as any parent
-          const identicalToParent = (parentNode: Element | null): boolean => Type.isNonNullable(parentNode) && parentNode !== root
-            && (elementUtils.compare(currentNode, parentNode) || identicalToParent(parentNode.parentElement));
-          if (identicalToParent(currentNode.parentElement)) {
-            dom.remove(currentNode, true);
-          }
-        };
-        unwrapIdenticalChildElements(node);
+    const fragmentSelector = '*[data-mce-fragment]';
+    const fragments = dom.select(fragmentSelector);
+
+    Tools.each(fragments, (node) => {
+      const isInline = (currentNode: Element) => Type.isNonNullable(textInlineElements[currentNode.nodeName.toLowerCase()]);
+      const hasOneChild = (currentNode: Element) => currentNode.childNodes.length === 1;
+      const hasNoNonInheritableStyles = (currentNode: Element) => !(StyleUtils.hasNonInheritableStyles(dom, currentNode) || StyleUtils.hasConditionalNonInheritableStyles(dom, currentNode));
+
+      if (hasNoNonInheritableStyles(node) && isInline(node) && hasOneChild(node)) {
+        const styles = StyleUtils.getStyleProps(dom, node);
+        const isOverridden = (oldStyles: string[], newStyles: string[]) => Arr.forall(oldStyles, (style) => Arr.contains(newStyles, style));
+        const overriddenByAllChildren = (childNode: Element): boolean => hasOneChild(node) && dom.is(childNode, fragmentSelector) && isInline(childNode) &&
+          (childNode.nodeName === node.nodeName && isOverridden(styles, StyleUtils.getStyleProps(dom, childNode)) || overriddenByAllChildren(childNode.children[0]));
+
+        const identicalToParent = (parentNode: Element | null): boolean => Type.isNonNullable(parentNode) && parentNode !== root
+          && (elementUtils.compare(node, parentNode) || identicalToParent(parentNode.parentElement));
+
+        const conflictWithInsertedParent = (parentNode: Element | null): boolean => Type.isNonNullable(parentNode) && parentNode !== root
+          && dom.is(parentNode, fragmentSelector) && (StyleUtils.hasStyleConflict(dom, node, parentNode) || conflictWithInsertedParent(parentNode.parentElement));
+
+        if (overriddenByAllChildren(node.children[0]) || (identicalToParent(node.parentElement) && !conflictWithInsertedParent(node.parentElement))) {
+          dom.remove(node, true);
+        }
       }
     });
   }

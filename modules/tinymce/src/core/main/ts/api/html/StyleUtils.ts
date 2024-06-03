@@ -9,7 +9,7 @@ const nonInheritableStyles: Set<string> = new Set();
     'margin', 'margin-left', 'margin-right', 'margin-top', 'margin-bottom',
     'padding', 'padding-left', 'padding-right', 'padding-top', 'padding-bottom',
     'border', 'border-width', 'border-style', 'border-color',
-    'background', 'background-attachment', 'background-clip', 'background-color',
+    'background', 'background-attachment', 'background-clip',
     'background-image', 'background-origin', 'background-position', 'background-repeat', 'background-size',
     'float', 'position', 'left', 'right', 'top', 'bottom',
     'z-index', 'display', 'transform',
@@ -22,17 +22,34 @@ const nonInheritableStyles: Set<string> = new Set();
   });
 })();
 
+const conditionalNonInheritableStyles: Set<string> = new Set();
+(() => {
+  // These styles are only noninheritable when applied to an element with a noninheritable style
+  // For example, background-color is visible on an element with padding, even when children have background-color;
+  // however, when the element has no padding, background-color is either visible or overridden by children
+  const conditionalNonInheritableStylesArr = [
+    'background-color'
+  ];
+  Arr.each(conditionalNonInheritableStylesArr, (style) => {
+    conditionalNonInheritableStyles.add(style);
+  });
+})();
+
 // TODO: TINY-7326 Figure out what else should be added to the shorthandStyleProps list
 // Does not include non-inherited shorthand style properties
 const shorthandStyleProps = [ 'font', 'text-decoration', 'text-emphasis' ];
 
-const getStyleProps = (dom: DOMUtils, node: Element) =>
-  Obj.keys(dom.parseStyle(dom.getAttrib(node, 'style')));
+const getStyles = (dom: DOMUtils, node: Element): Record<string, string> => dom.parseStyle(dom.getAttrib(node, 'style'));
+const getStyleProps = (dom: DOMUtils, node: Element): string[] => Obj.keys(getStyles(dom, node));
 
 const isNonInheritableStyle = (style: string) => nonInheritableStyles.has(style);
+const isConditionalNonInheritableStyle = (style: string) => conditionalNonInheritableStyles.has(style);
 
-const hasInheritableStyles = (dom: DOMUtils, node: Element): boolean =>
-  Arr.forall(getStyleProps(dom, node), (style) => !isNonInheritableStyle(style));
+const hasNonInheritableStyles = (dom: DOMUtils, node: Element): boolean =>
+  Arr.exists(getStyleProps(dom, node), (style) => isNonInheritableStyle(style));
+
+const hasConditionalNonInheritableStyles = (dom: DOMUtils, node: Element): boolean => hasNonInheritableStyles(dom, node) &&
+  Arr.exists(getStyleProps(dom, node), (style) => isConditionalNonInheritableStyle(style));
 
 const getLonghandStyleProps = (styles: string[]): string[] =>
   Arr.filter(styles, (style) => Arr.exists(shorthandStyleProps, (prop) => Strings.startsWith(style, prop)));
@@ -61,6 +78,8 @@ const hasStyleConflict = (dom: DOMUtils, node: Element, parentNode: Element): bo
 };
 
 export {
-  hasInheritableStyles,
+  getStyleProps,
+  hasNonInheritableStyles,
+  hasConditionalNonInheritableStyles,
   hasStyleConflict
 };
