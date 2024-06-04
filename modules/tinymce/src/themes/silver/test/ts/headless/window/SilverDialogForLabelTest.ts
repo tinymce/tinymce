@@ -43,30 +43,30 @@ describe('headless.tinymce.themes.silver.window.SilverDialogForLabelTest', () =>
       ApproxStructure.build((s, str, arr) => s.element('div', {
         classes: [ arr.has('tox-form') ],
         children: [
-            s.element('div', {
+          s.element('div', {
+            classes: [ arr.has('tox-form__group') ],
+            children: [
+              s.element('label', {
+                attrs: {
+                  for: str.startsWith('form-field'),
+                },
+                children: [
+                  s.text(str.is('This is a label'))
+                ]
+              }),
+              s.element('div', {
                 classes: [ arr.has('tox-form__group') ],
                 children: [
-                    s.element('label', {
-                      attrs: {
-                        for: str.startsWith('form-field'),
-                      },
-                      children: [
-                        s.text(str.is('This is a label'))
-                      ]
-                    }),
-                    s.element('div', {
-                      classes: [ arr.has('tox-form__group') ],
-                      children: [
-                        s.element('input', {
-                          classes: [ arr.has('tox-textfield') ],
-                          attrs: {
-                            id: str.startsWith('form-field')
-                          }
-                        })
-                      ]
-                    })
-                  ]
-            })
+                  s.element('input', {
+                    classes: [ arr.has('tox-textfield') ],
+                    attrs: {
+                      id: str.startsWith('form-field')
+                    }
+                  })
+                ]
+              })
+            ]
+          })
         ]
       })),
       UiFinder.findIn(SugarBody.body(), '.tox-form').getOrDie()
