@@ -1,4 +1,4 @@
-import { AlloyComponent, Composing, Form, ModalDialog, Reflecting } from '@ephox/alloy';
+import { AlloyComponent, Composing, ModalDialog, Reflecting } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
 import { Cell, Fun, Id, Optional, Optionals } from '@ephox/katamari';
 
@@ -7,30 +7,13 @@ import { dialogChannel } from './DialogChannels';
 import { renderModalBody } from './SilverDialogBody';
 import * as SilverDialogCommon from './SilverDialogCommon';
 import * as SilverDialogEvents from './SilverDialogEvents';
-import { FooterState, renderModalFooter } from './SilverDialogFooter';
-import { DialogAccess, getDialogApi } from './SilverDialogInstanceApi';
+import { renderModalFooter } from './SilverDialogFooter';
+import * as SilverDialogInstanceApi from './SilverDialogInstanceApi';
 
 interface RenderedDialog<T extends Dialog.DialogData> {
   readonly dialog: AlloyComponent;
   readonly instanceApi: Dialog.DialogInstanceApi<T>;
 }
-
-const getCompByNameFromAccess = (access: DialogAccess, name: string): Optional<AlloyComponent> => {
-  // TODO: Add API to alloy to find the inner most component of a Composing chain.
-  const root = access.getRoot();
-  // This is just to avoid throwing errors if the dialog closes before this. We should take it out
-  // while developing (probably), and put it back in for the real thing.
-  if (root.getSystem().isConnected()) {
-    const form = Composing.getCurrent(access.getFormWrapper()).getOr(access.getFormWrapper());
-    return Form.getField(form, name).orThunk(() => {
-      const footer = access.getFooter();
-      const footerState: Optional<FooterState> = footer.bind((f) => Reflecting.getState(f).get());
-      return footerState.bind((f) => f.lookupByName(name));
-    });
-  } else {
-    return Optional.none();
-  }
-};
 
 const renderDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra<T>, backstage: UiFactoryBackstage): RenderedDialog<T> => {
   const dialogId = Id.generate('dialog');
@@ -39,7 +22,7 @@ const renderDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.Dia
 
   const dialogSize = Cell<Dialog.DialogSize>(internalDialog.size);
 
-  const getCompByName = (name: string) => getCompByNameFromAccess(modalAccess, name);
+  const getCompByName = (name: string) => SilverDialogInstanceApi.getCompByName(modalAccess, name);
 
   const dialogSizeClasses = SilverDialogCommon.getDialogSizeClass(dialogSize.get()).toArray();
 
@@ -87,7 +70,7 @@ const renderDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.Dia
 
   const dialog: AlloyComponent = SilverDialogCommon.renderModalDialog(spec, dialogEvents, backstage);
 
-  const modalAccess = ((): DialogAccess => {
+  const modalAccess = ((): SilverDialogInstanceApi.DialogAccess => {
     const getForm = (): AlloyComponent => {
       const outerForm = ModalDialog.getBody(dialog);
       return Composing.getCurrent(outerForm).getOr(outerForm);
@@ -108,7 +91,7 @@ const renderDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.Dia
   })();
 
   // TODO: Get the validator from the dialog state.
-  const instanceApi = getDialogApi<T>(modalAccess, extra.redial, objOfCells);
+  const instanceApi = SilverDialogInstanceApi.getDialogApi<T>(modalAccess, extra.redial, objOfCells);
 
   return {
     dialog,
