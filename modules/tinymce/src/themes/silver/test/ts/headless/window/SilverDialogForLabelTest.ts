@@ -48,7 +48,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogForLabelTest', () =>
                 children: [
                     s.element('label', {
                       attrs: {
-                        for: str.startsWith('foo'),
+                        for: str.startsWith('form-field'),
                       },
                       children: [
                         s.text(str.is('This is a label'))
@@ -60,7 +60,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogForLabelTest', () =>
                         s.element('input', {
                           classes: [ arr.has('tox-textfield') ],
                           attrs: {
-                            id: str.startsWith('foo')
+                            id: str.startsWith('form-field')
                           }
                         })
                       ]

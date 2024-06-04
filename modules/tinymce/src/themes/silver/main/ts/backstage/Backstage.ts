@@ -82,7 +82,6 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
     setContextMenuState
   };
 
-  // TODO: Investigate this
   const getCompByName = (_name: string) => Optional.none();
 
   const popupBackstage: UiFactoryBackstage = {

@@ -45,7 +45,7 @@ export const renderLabel = (spec: LabelSpec, backstageShared: UiFactoryBackstage
           spec.for.each((name) => {
             getCompByName(name).each((target) => {
               label.getOpt(comp).each((labelComp) => {
-                const id = Attribute.get(labelComp.element, 'id') ?? Id.generate('foo');
+                const id = Attribute.get(target.element, 'id') ?? Id.generate('form-field');
                 Attribute.set(target.element, 'id', id);
                 Attribute.set(labelComp.element, 'for', id);
               });
