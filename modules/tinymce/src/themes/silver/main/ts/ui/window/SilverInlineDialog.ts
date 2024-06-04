@@ -1,6 +1,6 @@
 // DUPE with SilverDialog. Cleaning up.
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Blocking, Composing, Focusing, GuiFactory, Keying, Memento, NativeEvents,
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Blocking, Composing, Focusing, Form, GuiFactory, Keying, Memento, NativeEvents,
   Receiving, Reflecting, Replacing, SystemEvents
 } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
@@ -25,6 +25,23 @@ interface RenderedDialog<T extends Dialog.DialogData> {
   readonly instanceApi: Dialog.DialogInstanceApi<T>;
 }
 
+const getCompByNameFromAccess = (access: SilverDialogInstanceApi.DialogAccess, name: string): Optional<AlloyComponent> => {
+  // TODO: Add API to alloy to find the inner most component of a Composing chain.
+  const root = access.getRoot();
+  // This is just to avoid throwing errors if the dialog closes before this. We should take it out
+  // while developing (probably), and put it back in for the real thing.
+  if (root.getSystem().isConnected()) {
+    const form = Composing.getCurrent(access.getFormWrapper()).getOr(access.getFormWrapper());
+    return Form.getField(form, name).orThunk(() => {
+      const footer = access.getFooter();
+      const footerState: Optional<SilverDialogFooter.FooterState> = footer.bind((f) => Reflecting.getState(f).get());
+      return footerState.bind((f) => f.lookupByName(name));
+    });
+  } else {
+    return Optional.none();
+  }
+};
+
 const renderInlineDialog = <T extends Dialog.DialogData>(
   dialogInit: DialogManager.DialogInit<T>,
   extra: SilverDialogCommon.WindowExtra<T>,
@@ -36,6 +53,8 @@ const renderInlineDialog = <T extends Dialog.DialogData>(
   const dialogLabelId = Id.generate('dialog-label');
   const dialogContentId = Id.generate('dialog-content');
   const internalDialog = dialogInit.internalDialog;
+
+  const getCompByName = (name: string) => getCompByNameFromAccess(modalAccess, name);
 
   const dialogSize = Cell<Dialog.DialogSize>(internalDialog.size);
 
@@ -61,7 +80,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(
     SilverDialogBody.renderInlineBody({
       body: internalDialog.body,
       initialData: internalDialog.initialData,
-    }, dialogId, dialogContentId, backstage, ariaAttrs)
+    }, dialogId, dialogContentId, backstage, ariaAttrs, getCompByName)
   );
 
   const storagedMenuButtons = SilverDialogCommon.mapMenuButtons(internalDialog.buttons);
@@ -165,7 +184,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(
   };
 
   // TODO: Clean up the dupe between this (InlineDialog) and SilverDialog
-  const instanceApi = SilverDialogInstanceApi.getDialogApi<T>({
+  const modalAccess: SilverDialogInstanceApi.DialogAccess = {
     getId: Fun.constant(dialogId),
     getRoot: Fun.constant(dialog),
     getFooter: () => optMemFooter.map((memFooter) => memFooter.get(dialog)),
@@ -175,7 +194,8 @@ const renderInlineDialog = <T extends Dialog.DialogData>(
       return Composing.getCurrent(body).getOr(body);
     },
     toggleFullscreen
-  }, extra.redial, objOfCells);
+  };
+  const instanceApi = SilverDialogInstanceApi.getDialogApi<T>(modalAccess, extra.redial, objOfCells);
 
   return {
     dialog,

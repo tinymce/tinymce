@@ -105,6 +105,12 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
         type: 'bar',
         items: [
           {
+            type: 'label',
+            label: 'Hello',
+            for: 'replacetext',
+            items: []
+          },
+          {
             type: 'input',
             name: 'findtext',
             placeholder: 'Find',

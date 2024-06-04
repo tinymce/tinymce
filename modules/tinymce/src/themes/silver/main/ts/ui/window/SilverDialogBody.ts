@@ -17,19 +17,19 @@ interface WindowBodySpec {
 
 // ariaAttrs is being passed through to silver inline dialog
 // from the WindowManager as a property of 'params'
-const renderBody = (spec: WindowBodySpec, dialogId: string, contentId: Optional<string>, backstage: UiFactoryBackstage, ariaAttrs: boolean): SimpleSpec => {
+const renderBody = (spec: WindowBodySpec, dialogId: string, contentId: Optional<string>, backstage: UiFactoryBackstage, ariaAttrs: boolean, getCompByName: (name: string) => Optional<AlloyComponent>): SimpleSpec => {
   const renderComponents = (incoming: WindowBodySpec) => {
     const body = incoming.body;
     switch (body.type) {
       case 'tabpanel': {
         return [
-          renderTabPanel(body, incoming.initialData, backstage)
+          renderTabPanel(body, incoming.initialData, backstage, getCompByName)
         ];
       }
 
       default: {
         return [
-          renderBodyPanel(body, incoming.initialData, backstage)
+          renderBodyPanel(body, incoming.initialData, backstage, getCompByName)
         ];
       }
     }
@@ -65,11 +65,11 @@ const renderBody = (spec: WindowBodySpec, dialogId: string, contentId: Optional<
   };
 };
 
-const renderInlineBody = (spec: WindowBodySpec, dialogId: string, contentId: string, backstage: UiFactoryBackstage, ariaAttrs: boolean): SimpleSpec =>
-  renderBody(spec, dialogId, Optional.some(contentId), backstage, ariaAttrs);
+const renderInlineBody = (spec: WindowBodySpec, dialogId: string, contentId: string, backstage: UiFactoryBackstage, ariaAttrs: boolean, getCompByName: (name: string) => Optional<AlloyComponent>): SimpleSpec =>
+  renderBody(spec, dialogId, Optional.some(contentId), backstage, ariaAttrs, getCompByName);
 
-const renderModalBody = (spec: WindowBodySpec, dialogId: string, backstage: UiFactoryBackstage): AlloyParts.ConfiguredPart => {
-  const bodySpec = renderBody(spec, dialogId, Optional.none(), backstage, false);
+const renderModalBody = (spec: WindowBodySpec, dialogId: string, backstage: UiFactoryBackstage, getCompByName: (name: string) => Optional<AlloyComponent>): AlloyParts.ConfiguredPart => {
+  const bodySpec = renderBody(spec, dialogId, Optional.none(), backstage, false, getCompByName);
   return ModalDialog.parts.body(bodySpec);
 };
 

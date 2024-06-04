@@ -1,4 +1,4 @@
-import { AlloyComponent, Composing, ModalDialog, Reflecting } from '@ephox/alloy';
+import { AlloyComponent, Composing, Form, ModalDialog, Reflecting } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
 import { Cell, Fun, Id, Optional, Optionals } from '@ephox/katamari';
 
@@ -7,7 +7,7 @@ import { dialogChannel } from './DialogChannels';
 import { renderModalBody } from './SilverDialogBody';
 import * as SilverDialogCommon from './SilverDialogCommon';
 import * as SilverDialogEvents from './SilverDialogEvents';
-import { renderModalFooter } from './SilverDialogFooter';
+import { FooterState, renderModalFooter } from './SilverDialogFooter';
 import { DialogAccess, getDialogApi } from './SilverDialogInstanceApi';
 
 interface RenderedDialog<T extends Dialog.DialogData> {
@@ -15,12 +15,31 @@ interface RenderedDialog<T extends Dialog.DialogData> {
   readonly instanceApi: Dialog.DialogInstanceApi<T>;
 }
 
+const getCompByNameFromAccess = (access: DialogAccess, name: string): Optional<AlloyComponent> => {
+  // TODO: Add API to alloy to find the inner most component of a Composing chain.
+  const root = access.getRoot();
+  // This is just to avoid throwing errors if the dialog closes before this. We should take it out
+  // while developing (probably), and put it back in for the real thing.
+  if (root.getSystem().isConnected()) {
+    const form = Composing.getCurrent(access.getFormWrapper()).getOr(access.getFormWrapper());
+    return Form.getField(form, name).orThunk(() => {
+      const footer = access.getFooter();
+      const footerState: Optional<FooterState> = footer.bind((f) => Reflecting.getState(f).get());
+      return footerState.bind((f) => f.lookupByName(name));
+    });
+  } else {
+    return Optional.none();
+  }
+};
+
 const renderDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra<T>, backstage: UiFactoryBackstage): RenderedDialog<T> => {
   const dialogId = Id.generate('dialog');
   const internalDialog = dialogInit.internalDialog;
   const header = SilverDialogCommon.getHeader(internalDialog.title, dialogId, backstage);
 
   const dialogSize = Cell<Dialog.DialogSize>(internalDialog.size);
+
+  const getCompByName = (name: string) => getCompByNameFromAccess(modalAccess, name);
 
   const dialogSizeClasses = SilverDialogCommon.getDialogSizeClass(dialogSize.get()).toArray();
 
@@ -33,7 +52,7 @@ const renderDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.Dia
   const body = renderModalBody({
     body: internalDialog.body,
     initialData: internalDialog.initialData
-  }, dialogId, backstage);
+  }, dialogId, backstage, getCompByName);
 
   const storedMenuButtons = SilverDialogCommon.mapMenuButtons(internalDialog.buttons);
 
