@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: CSS color values set to `transparent` were incorrectly converted to '#000000`.
-time: 2024-05-15T17:05:18.42363+10:00
-custom:
-  Issue: TINY-10916
