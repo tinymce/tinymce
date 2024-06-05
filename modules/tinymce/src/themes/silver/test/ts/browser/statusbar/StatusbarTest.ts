@@ -29,9 +29,10 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
       children: [
         s.element('a', {
           attrs: {
-            'aria-label': str.is('Powered by Tiny')
+            'aria-label': str.is('Build with TinyMCE')
           },
           children: [
+            s.text(str.is('Build with ')),
             s.element('svg', {})
           ]
         })

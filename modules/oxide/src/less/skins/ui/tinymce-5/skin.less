@@ -179,20 +179,50 @@
     &:hover,
     &:focus {
       @{statusbar-not-disabled-selector} {
-        color: @statusbar-text-color;
-        text-decoration: underline;
+        color: @statusbar-logo-active-color;
       }
     }
   }
 
   .tox-statusbar__branding {
     svg {
-      vertical-align: -.25em;
+
+      @media (forced-colors: active) {
+        fill: currentColor;
+      }
+
+      fill: @statusbar-logo-color;
+      height: 1em;
+      margin-left: .3em;
+      width: auto;
+    }
+
+    a { /* stylelint-disable-line no-descending-specificity */
+      align-items: center;
+      display: inline-flex;
+    }
+
+    a:hover,
+    a:focus {
+      @{statusbar-not-disabled-selector} {
+        svg {
+          fill: @statusbar-logo-active-color;
+        }
+      }
     }
   }
 
   &:not([dir=rtl]) .tox-statusbar__branding {
     margin-left: 1ch;
+  }
+
+  &[dir=rtl] {
+    .tox-statusbar__branding {
+      svg {
+        margin-left: 0;
+        margin-right: .3em;
+      }
+    }
   }
 
   .tox-statusbar__resize-handle {
