@@ -123,4 +123,27 @@ describe('atomic.robin.words.IdentifyTest', () => {
       'Really I’d hope that was enough for you, but I\u2019ll throw');
 
   });
+
+  it('TINY-10904: acronyms should be managed correctly', () => {
+    check([
+      WordScope('U.S.A.', none, none),
+    ], 'U.S.A.');
+
+    check([
+      WordScope('U.S.A', none, none),
+    ], 'U.S.A');
+
+    check([
+      WordScope('abc', none, some(' ')),
+      WordScope('U.S.A.', some(' '), some('.')),
+      WordScope('E.U.', some(' '), some(' ')),
+      WordScope('u.s.a.', some(' '), some('.')),
+      WordScope('something', some(' '), some(' ')),
+      WordScope('H.', some(' '), some(' ')),
+      WordScope('else', some(' '), some(' ')),
+      WordScope('U.S', some(' '), some(' ')),
+      WordScope('abc', some(' '), some(' ')),
+      WordScope('E.U', some(' '), none)
+    ], 'abc U.S.A.. E.U. u.s.a.. something H. else U.S abc E.U');
+  });
 });
