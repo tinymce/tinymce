@@ -1,4 +1,5 @@
 import { FieldProcessor, FieldSchema } from '@ephox/boulder';
+import { Optional } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
 import { BodyComponent, BodyComponentSpec } from './BodyComponent';
@@ -10,6 +11,7 @@ export interface LabelSpec {
   label: string;
   items: BodyComponentSpec[];
   align?: Alignment;
+  for?: string;
 }
 
 export interface Label {
@@ -17,11 +19,13 @@ export interface Label {
   label: string;
   items: BodyComponent[];
   align: Alignment;
+  for: Optional<string>;
 }
 
 export const createLabelFields = (itemsField: FieldProcessor): FieldProcessor[] => [
   ComponentSchema.type,
   ComponentSchema.label,
   itemsField,
-  FieldSchema.defaultedStringEnum('align', 'start', [ 'start', 'center', 'end' ])
+  FieldSchema.defaultedStringEnum('align', 'start', [ 'start', 'center', 'end' ]),
+  FieldSchema.optionString('for')
 ];

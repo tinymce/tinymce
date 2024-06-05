@@ -1,4 +1,4 @@
-import { AlloyParts, AlloySpec, FormTypes, SimpleOrSketchSpec } from '@ephox/alloy';
+import { AlloyComponent, AlloyParts, AlloySpec, FormTypes, SimpleOrSketchSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge/';
 import { Fun, Merger, Obj, Optional } from '@ephox/katamari';
 
@@ -29,22 +29,22 @@ import { renderHtmlPanel } from './HtmlPanel';
 
 /* eslint-disable no-console */
 
-export type FormPartRenderer<T extends Dialog.BodyComponent> = (parts: FormTypes.FormParts, spec: T, dialogData: Dialog.DialogData, backstage: UiFactoryBackstage) => AlloySpec;
-export type NoFormRenderer<T extends Dialog.BodyComponent, U> = (spec: T, backstage: UiFactoryBackstage, data: Optional<U>) => AlloySpec;
+export type FormPartRenderer<T extends Dialog.BodyComponent> = (parts: FormTypes.FormParts, spec: T, dialogData: Dialog.DialogData, backstage: UiFactoryBackstage, getCompByName: (name: string) => Optional<AlloyComponent>) => AlloySpec;
+export type NoFormRenderer<T extends Dialog.BodyComponent, U> = (spec: T, backstage: UiFactoryBackstage, data: Optional<U>, getCompByName: (name: string) => Optional<AlloyComponent>) => AlloySpec;
 
 const make = <T extends Dialog.BodyComponent, U = unknown>(render: NoFormRenderer<T, U>): FormPartRenderer<T> => {
-  return (parts, spec, dialogData, backstage) =>
+  return (parts, spec, dialogData, backstage, getCompByName) =>
     Obj.get(spec as Record<string, any>, 'name').fold(
-      () => render(spec, backstage, Optional.none()),
-      (fieldName) => parts.field(fieldName, render(spec, backstage, Obj.get(dialogData, fieldName)) as SimpleOrSketchSpec)
+      () => render(spec, backstage, Optional.none(), getCompByName),
+      (fieldName) => parts.field(fieldName, render(spec, backstage, Obj.get(dialogData, fieldName), getCompByName) as SimpleOrSketchSpec)
     );
 };
 
-const makeIframe = (render: NoFormRenderer<Dialog.Iframe, string>): FormPartRenderer<Dialog.Iframe> => (parts, spec, dialogData, backstage) => {
+const makeIframe = (render: NoFormRenderer<Dialog.Iframe, string>): FormPartRenderer<Dialog.Iframe> => (parts, spec, dialogData, backstage, getCompByName) => {
   const iframeSpec = Merger.deepMerge(spec, {
     source: 'dynamic'
   });
-  return make(render)(parts, iframeSpec, dialogData, backstage);
+  return make(render)(parts, iframeSpec, dialogData, backstage, getCompByName);
 };
 
 const factories: Record<string, FormPartRenderer<any>> = {
@@ -53,7 +53,7 @@ const factories: Record<string, FormPartRenderer<any>> = {
   alertbanner: make<Dialog.AlertBanner>((spec, backstage) => renderAlertBanner(spec, backstage.shared.providers)),
   input: make<Dialog.Input, string>((spec, backstage, data) => renderInput(spec, backstage.shared.providers, data)),
   textarea: make<Dialog.TextArea, string>((spec, backstage, data) => renderTextarea(spec, backstage.shared.providers, data)),
-  label: make<Dialog.Label>((spec, backstage) => renderLabel(spec, backstage.shared)),
+  label: make<Dialog.Label>((spec, backstage, _data, getCompByName) => renderLabel(spec, backstage.shared, getCompByName)),
   iframe: makeIframe((spec, backstage, data) => renderIFrame(spec, backstage.shared.providers, data)),
   button: make<Dialog.Button>((spec, backstage) => renderDialogButton(spec, backstage.shared.providers)),
   checkbox: make<Dialog.Checkbox, boolean>((spec, backstage, data) => renderCheckbox(spec, backstage.shared.providers, data)),
@@ -80,31 +80,31 @@ const noFormParts: FormTypes.FormParts = {
   record: Fun.constant([])
 };
 
-const interpretInForm = <T extends Dialog.BodyComponent>(parts: FormTypes.FormParts, spec: T, dialogData: Dialog.DialogData, oldBackstage: UiFactoryBackstage): AlloySpec => {
+const interpretInForm = <T extends Dialog.BodyComponent>(parts: FormTypes.FormParts, spec: T, dialogData: Dialog.DialogData, oldBackstage: UiFactoryBackstage, getCompByName: (name: string) => Optional<AlloyComponent>): AlloySpec => {
   // Now, we need to update the backstage to use the parts variant.
   const newBackstage = Merger.deepMerge(
     oldBackstage,
     {
       // Add the interpreter based on the form parts.
       shared: {
-        interpreter: (childSpec: T) => interpretParts(parts, childSpec, dialogData, newBackstage)
+        interpreter: (childSpec: T) => interpretParts(parts, childSpec, dialogData, newBackstage, getCompByName)
       }
     }
   );
 
-  return interpretParts(parts, spec, dialogData, newBackstage);
+  return interpretParts(parts, spec, dialogData, newBackstage, getCompByName);
 };
 
-const interpretParts = <T extends Dialog.BodyComponent>(parts: FormTypes.FormParts, spec: T, dialogData: Dialog.DialogData, backstage: UiFactoryBackstage): AlloySpec =>
+const interpretParts = <T extends Dialog.BodyComponent>(parts: FormTypes.FormParts, spec: T, dialogData: Dialog.DialogData, backstage: UiFactoryBackstage, getCompByName: (name: string) => Optional<AlloyComponent>): AlloySpec =>
   Obj.get(factories, spec.type).fold(
     () => {
       console.error(`Unknown factory type "${spec.type}", defaulting to container: `, spec);
       return spec as unknown as AlloySpec;
     },
-    (factory) => factory(parts, spec, dialogData, backstage)
+    (factory) => factory(parts, spec, dialogData, backstage, getCompByName)
   );
 
-const interpretWithoutForm = <T extends Dialog.BodyComponent>(spec: T, dialogData: Dialog.DialogData, backstage: UiFactoryBackstage): AlloySpec =>
-  interpretParts(noFormParts, spec, dialogData, backstage);
+const interpretWithoutForm = <T extends Dialog.BodyComponent>(spec: T, dialogData: Dialog.DialogData, backstage: UiFactoryBackstage, getCompByName: (name: string) => Optional<AlloyComponent>): AlloySpec =>
+  interpretParts(noFormParts, spec, dialogData, backstage, getCompByName);
 
 export { interpretInForm, interpretWithoutForm };

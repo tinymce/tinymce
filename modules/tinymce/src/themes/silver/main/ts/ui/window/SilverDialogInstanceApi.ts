@@ -164,5 +164,6 @@ const getDialogApi = <T extends Dialog.DialogData>(
 };
 
 export {
-  getDialogApi
+  getDialogApi,
+  getCompByName
 };

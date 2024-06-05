@@ -37,6 +37,8 @@ const renderInlineDialog = <T extends Dialog.DialogData>(
   const dialogContentId = Id.generate('dialog-content');
   const internalDialog = dialogInit.internalDialog;
 
+  const getCompByName = (name: string) => SilverDialogInstanceApi.getCompByName(modalAccess, name);
+
   const dialogSize = Cell<Dialog.DialogSize>(internalDialog.size);
 
   const dialogSizeClass = SilverDialogCommon.getDialogSizeClass(dialogSize.get()).toArray();
@@ -61,7 +63,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(
     SilverDialogBody.renderInlineBody({
       body: internalDialog.body,
       initialData: internalDialog.initialData,
-    }, dialogId, dialogContentId, backstage, ariaAttrs)
+    }, dialogId, dialogContentId, backstage, ariaAttrs, getCompByName)
   );
 
   const storagedMenuButtons = SilverDialogCommon.mapMenuButtons(internalDialog.buttons);
@@ -165,7 +167,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(
   };
 
   // TODO: Clean up the dupe between this (InlineDialog) and SilverDialog
-  const instanceApi = SilverDialogInstanceApi.getDialogApi<T>({
+  const modalAccess: SilverDialogInstanceApi.DialogAccess = {
     getId: Fun.constant(dialogId),
     getRoot: Fun.constant(dialog),
     getFooter: () => optMemFooter.map((memFooter) => memFooter.get(dialog)),
@@ -175,7 +177,8 @@ const renderInlineDialog = <T extends Dialog.DialogData>(
       return Composing.getCurrent(body).getOr(body);
     },
     toggleFullscreen
-  }, extra.redial, objOfCells);
+  };
+  const instanceApi = SilverDialogInstanceApi.getDialogApi<T>(modalAccess, extra.redial, objOfCells);
 
   return {
     dialog,
