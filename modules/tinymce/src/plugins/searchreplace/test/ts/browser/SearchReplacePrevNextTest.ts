@@ -17,6 +17,8 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplacePrevNextTest', () =
 
   const body = SugarBody.body();
 
+  const findInputSelector = Utils.getFindInputSelector();
+
   const pAssertButtonsEnabled = async () => {
     await UiFinder.pWaitFor('next button enabled', body, 'button[data-mce-name="Next"]:not([disabled])');
     await UiFinder.pWaitFor('prev button enabled', body, 'button[data-mce-name="Previous"]:not([disabled])');
@@ -32,7 +34,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplacePrevNextTest', () =
     const editor = hook.editor();
     editor.setContent('<p>fish fish fish</p>');
     await Utils.pOpenDialog(editor);
-    await Utils.pSetFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', 'fish');
+    await Utils.pSetFieldValue(editor, findInputSelector, 'fish');
     Utils.clickFind(editor);
 
     // Initial button states for first match
@@ -51,7 +53,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplacePrevNextTest', () =
     await pAssertButtonsEnabled();
 
     // replace all but one value and assert next/previous are disabled
-    await Utils.pSetFieldValue(editor, 'input.tox-textfield[placeholder="Replace with"]', 'squid');
+    await Utils.pSetFieldValue(editor, Utils.getReplaceWithInputSelector(), 'squid');
     Utils.clickReplace(editor);
     await pAssertButtonsEnabled();
     Utils.clickReplace(editor);

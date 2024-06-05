@@ -21,6 +21,8 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceDialogCyclingTest',
     base_url: '/project/tinymce/js/tinymce',
   }, [ Plugin ]);
 
+  const findInputSelector = Utils.getFindInputSelector();
+
   const assertMatchFound = (editor: Editor, index: number) => {
     const matches = SelectorFilter.descendants(TinyDom.body(editor), '.mce-match-marker');
     const elem = matches[index];
@@ -40,7 +42,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceDialogCyclingTest',
         editor.setContent('<p>fish fish fish</p>');
         TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
         await Utils.pOpenDialog(editor);
-        await Utils.pAssertFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', 'fish');
+        await Utils.pAssertFieldValue(editor, findInputSelector, 'fish');
         Utils.clickFind(editor);
         assertMatchFound(editor, 0);
         cycle(editor);
@@ -57,7 +59,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceDialogCyclingTest',
         editor.setContent('<p>fish Fish fish Fish</p>');
         TinySelections.setSelection(editor, [ 0, 0 ], 5, [ 0, 0 ], 9);
         await Utils.pOpenDialog(editor);
-        await Utils.pAssertFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', 'Fish');
+        await Utils.pAssertFieldValue(editor, findInputSelector, 'Fish');
         await Utils.pSelectPreference(editor, 'Match case');
         Utils.clickFind(editor);
         assertMatchFound(editor, 0);
@@ -74,7 +76,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceDialogCyclingTest',
         editor.setContent('<p>ttt TTT ttt ttttt</p>');
         TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
         await Utils.pOpenDialog(editor);
-        await Utils.pAssertFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', 'ttt');
+        await Utils.pAssertFieldValue(editor, findInputSelector, 'ttt');
         await Utils.pSelectPreference(editor, 'Find whole words only');
         Utils.clickFind(editor);
         assertMatchFound(editor, 0);
@@ -93,7 +95,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceDialogCyclingTest',
         editor.setContent('<p>^^ ^^ ^^ fish</p>');
         TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
         await Utils.pOpenDialog(editor);
-        await Utils.pAssertFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', '^^');
+        await Utils.pAssertFieldValue(editor, findInputSelector, '^^');
         Utils.clickFind(editor);
         assertMatchFound(editor, 0);
         cycle(editor);
