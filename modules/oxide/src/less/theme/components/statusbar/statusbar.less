@@ -129,13 +129,8 @@
 
       fill: @statusbar-logo-color;
       height: 1em;
-      margin-left: .4em;
+      margin-left: .3em;
       width: auto;
-
-      @media only screen and (min-width: 767px) and (max-width: 1000px) {
-        margin-left: .2em;
-        width: 5em;
-      }
     }
 
     a { /* stylelint-disable-line no-descending-specificity */
@@ -211,5 +206,12 @@
 
   .tox-statusbar__path > * {
     margin-left: @pad-xs;
+  }
+
+  .tox-statusbar__branding {
+    svg {
+      margin-left: 0;
+      margin-right: .3em;
+    }
   }
 }
