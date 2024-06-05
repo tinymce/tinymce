@@ -193,17 +193,8 @@
 
       fill: @statusbar-logo-color;
       height: 1em;
-      margin-left: .5em;
+      margin-left: .3em;
       width: auto;
-
-      @media only screen and (min-width: 767px) and (max-width: 1000px) {
-        margin-left: .2em;
-        width: 5em;
-      }
-
-      @media @breakpoint-md {
-        width: auto;
-      }
     }
 
     a { /* stylelint-disable-line no-descending-specificity */
@@ -223,6 +214,15 @@
 
   &:not([dir=rtl]) .tox-statusbar__branding {
     margin-left: 1ch;
+  }
+
+  &[dir=rtl] {
+    .tox-statusbar__branding {
+      svg {
+        margin-left: 0;
+        margin-right: .3em;
+      }
+    }
   }
 
   .tox-statusbar__resize-handle {
