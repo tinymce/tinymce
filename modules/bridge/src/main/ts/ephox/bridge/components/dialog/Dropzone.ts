@@ -1,17 +1,34 @@
-import { StructureSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
 import { FormComponentWithLabel, FormComponentWithLabelSpec, formComponentWithLabelFields } from './FormComponent';
 
+export interface DropZonePicker {
+  icon: string;
+  tooltip: string;
+  onPick: (callback: (url: string) => void) => void;
+}
+
 export interface DropZoneSpec extends FormComponentWithLabelSpec {
   type: 'dropzone';
+  pickers?: DropZonePicker[];
 }
 
 export interface DropZone extends FormComponentWithLabel {
   type: 'dropzone';
+  pickers: DropZonePicker[];
 }
 
-const dropZoneFields = formComponentWithLabelFields;
+export const dropZonePickerSchema = StructureSchema.objOf([
+  FieldSchema.requiredString('icon'),
+  FieldSchema.requiredString('tooltip'),
+  FieldSchema.requiredFunction('onPick'),
+]);
+
+const dropZoneFields = [
+  ...formComponentWithLabelFields,
+  FieldSchema.defaultedArrayOf('pickers', [], dropZonePickerSchema)
+];
 
 export const dropZoneSchema = StructureSchema.objOf(dropZoneFields);
 

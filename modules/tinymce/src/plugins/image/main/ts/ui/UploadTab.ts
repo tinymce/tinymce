@@ -1,12 +1,19 @@
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 
-import { ImageDialogInfo } from './DialogTypes';
+import { ImageDialogInfo, ImageSourcePicker } from './DialogTypes';
 
-const makeTab = (_info: ImageDialogInfo): Dialog.TabSpec => {
+const makeTab = (_info: ImageDialogInfo, pickers: ImageSourcePicker[]): Dialog.TabSpec => {
   const items: Dialog.BodyComponentSpec[] = [
     {
       type: 'dropzone',
-      name: 'fileinput'
+      name: 'fileinput',
+      pickers: pickers.map((sourcePicker) => {
+        return {
+          tooltip: sourcePicker.tooltip,
+          icon: sourcePicker.icon,
+          onPick: sourcePicker.onPick
+        };
+      })
     }
   ];
   return {

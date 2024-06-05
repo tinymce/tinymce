@@ -6,13 +6,14 @@ import { StyleMap } from 'tinymce/core/api/html/Styles';
 import { Dialog as DialogType } from 'tinymce/core/api/ui/Ui';
 import ImageUploader, { UploadResult } from 'tinymce/core/api/util/ImageUploader';
 
+import * as Options from '../api/Options';
 import { getStyleValue, ImageData } from '../core/ImageData';
 import { normalizeCss as doNormalizeCss } from '../core/ImageSelection';
 import { ListUtils } from '../core/ListUtils';
 import * as Utils from '../core/Utils';
 import { AdvTab } from './AdvTab';
 import { collect } from './DialogInfo';
-import { API, ImageDialogData, ImageDialogInfo, ImageMeta, ListValue } from './DialogTypes';
+import { API, ImageDialogData, ImageDialogInfo, ImageMeta, ImageSourcePicker, ListValue } from './DialogTypes';
 import { MainTab } from './MainTab';
 import { UploadTab } from './UploadTab';
 
@@ -68,7 +69,8 @@ const fromImageData = (image: ImageData): ImageDialogData => ({
   hspace: image.hspace,
   borderstyle: image.borderStyle,
   fileinput: [],
-  isDecorative: image.isDecorative
+  isDecorative: image.isDecorative,
+  uploadcare: ''
 });
 
 const toImageData = (data: ImageDialogData, removeEmptyAlt: boolean): ImageData => ({
@@ -225,12 +227,6 @@ const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDi
     .fold(() => {
       api.unblock();
     }, (file) => {
-      const blobUri: string = URL.createObjectURL(file);
-      const finalize = () => {
-        api.unblock();
-        URL.revokeObjectURL(blobUri);
-      };
-
       const updateSrcAndSwitchTab = (url: string) => {
         api.setData({ src: { value: url, meta: {}}});
         api.showTab('general');
@@ -238,22 +234,33 @@ const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDi
         api.focus('src');
       };
 
-      Utils.blobToDataUri(file).then((dataUrl) => {
-        const blobInfo = helpers.createBlobCache(file, blobUri, dataUrl);
-        if (info.automaticUploads) {
-          helpers.uploadImage(blobInfo).then((result) => {
-            updateSrcAndSwitchTab(result.url);
-            finalize();
-          }).catch((err) => {
-            finalize();
-            helpers.alertErr(err);
-          });
-        } else {
-          helpers.addToBlobCache(blobInfo);
-          updateSrcAndSwitchTab(blobInfo.blobUri());
+      if (Type.isString(file)) {
+        updateSrcAndSwitchTab(file);
+        api.unblock();
+      } else {
+        const blobUri: string = URL.createObjectURL(file);
+        const finalize = () => {
           api.unblock();
-        }
-      });
+          URL.revokeObjectURL(blobUri);
+        };
+
+        Utils.blobToDataUri(file).then((dataUrl) => {
+          const blobInfo = helpers.createBlobCache(file, blobUri, dataUrl);
+          if (info.automaticUploads) {
+            helpers.uploadImage(blobInfo).then((result) => {
+              updateSrcAndSwitchTab(result.url);
+              finalize();
+            }).catch((err) => {
+              finalize();
+              helpers.alertErr(err);
+            });
+          } else {
+            helpers.addToBlobCache(blobInfo);
+            updateSrcAndSwitchTab(blobInfo.blobUri());
+            api.unblock();
+          }
+        });
+      }
     });
 };
 
@@ -275,14 +282,14 @@ const closeHandler = (state: ImageDialogState) => (): void => {
   state.open = false;
 };
 
-const makeDialogBody = (info: ImageDialogInfo): DialogType.TabPanelSpec | DialogType.PanelSpec => {
+const makeDialogBody = (info: ImageDialogInfo, pickers: ImageSourcePicker[]): DialogType.TabPanelSpec | DialogType.PanelSpec => {
   if (info.hasAdvTab || info.hasUploadUrl || info.hasUploadHandler) {
     const tabPanel: DialogType.TabPanelSpec = {
       type: 'tabpanel',
       tabs: Arr.flatten([
         [ MainTab.makeTab(info) ],
         info.hasAdvTab ? [ AdvTab.makeTab(info) ] : [],
-        info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [ UploadTab.makeTab(info) ] : []
+        info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [ UploadTab.makeTab(info, pickers) ] : []
       ])
     };
     return tabPanel;
@@ -378,7 +385,7 @@ export const Dialog = (editor: Editor): { open: () => void } => {
         return {
           title: 'Insert/Edit Image',
           size: 'normal',
-          body: makeDialogBody(info),
+          body: makeDialogBody(info, Options.getImagePickers(editor)),
           buttons: [
             {
               type: 'cancel',
@@ -398,7 +405,73 @@ export const Dialog = (editor: Editor): { open: () => void } => {
           onClose: closeHandler(state)
         };
       })
-      .then(editor.windowManager.open);
+      .then((config) => {
+        const api = editor.windowManager.open(config);
+        api.setData({
+          uploadcare: `
+<style>
+body {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  margin: 0;
+}
+
+.picker {
+  width: 500px;
+  height: 500px;
+  border: 1px solid black;
+  z-index: 1000;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: auto;
+}
+</style>
+<script type="module">
+    import * as LR from "https://cdn.jsdelivr.net/npm/@uploadcare/blocks@0.42.1/web/blocks.min.js";
+    LR.registerBlocks(LR);
+</script>
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@uploadcare/blocks@0.42.1/web/lr-file-uploader-regular.min.css"
+>
+<lr-config
+    ctx-name="my-uploader"
+    pubkey="cfef242412638bfc4193"
+    multiple="false"
+    use-cloud-image-editor="false"
+    source-list="local, url, camera, dropbox"
+></lr-config>
+<lr-file-uploader-inline ctx-name="my-uploader"></lr-file-uploader-inline>
+<lr-upload-ctx-provider ctx-name="my-uploader"></lr-upload-ctx-provider>
+
+<script>
+const ctx = document.querySelector('lr-upload-ctx-provider')
+ctx.addEventListener('change', e => {
+  top.postMessage({ type: 'uploadcare', detail: e.detail }, '*')
+})
+</script>
+        `
+        });
+
+        window.addEventListener('message', (e) => {
+          if (e.data.type === 'uploadcare') {
+            // console.log(e.data.detail);
+            if (e.data.detail.isSuccess) {
+              const url = e.data.detail.allEntries.length > 0 ? e.data.detail.allEntries[0].cdnUrl : '';
+              if (url) {
+                api.setData({ src: { value: url, meta: {}}});
+                api.showTab('general');
+                api.focus('src');
+              }
+            }
+          }
+        });
+      });
   };
   return {
     open

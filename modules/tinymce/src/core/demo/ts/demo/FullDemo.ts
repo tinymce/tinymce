@@ -113,6 +113,88 @@ export default (): void => {
       makeSidebar(ed, 'sidebar1', 'green', 200);
       makeSidebar(ed, 'sidebar2', 'green', 200);
       makeCodeView(ed);
+      ed.ui.registry.addButton('uploadcare', {
+        icon: 'image',
+        onAction: () => {
+          const api = ed.windowManager.open({
+            title: 'Uploadcare',
+            body: {
+              type: 'panel',
+              items: [
+                {
+                  type: 'iframe',
+                  name: 'uploadcare'
+                }
+              ]
+            }
+          });
+
+          api.setData({
+            uploadcare: `
+<style>
+body {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  margin: 0;
+}
+
+.picker {
+  width: 500px;
+  height: 500px;
+  border: 1px solid black;
+  z-index: 1000;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: auto;
+}
+</style>
+<script type="module">
+    import * as LR from "https://cdn.jsdelivr.net/npm/@uploadcare/blocks@0.42.1/web/blocks.min.js";
+    LR.registerBlocks(LR);
+</script>
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@uploadcare/blocks@0.42.1/web/lr-file-uploader-regular.min.css"
+>
+<lr-config
+    ctx-name="my-uploader"
+    pubkey="cfef242412638bfc4193"
+    multiple="false"
+    use-cloud-image-editor="false"
+    source-list="local, url, camera, dropbox"
+></lr-config>
+<lr-file-uploader-inline ctx-name="my-uploader"></lr-file-uploader-inline>
+<lr-upload-ctx-provider ctx-name="my-uploader"></lr-upload-ctx-provider>
+
+<script>
+const ctx = document.querySelector('lr-upload-ctx-provider')
+ctx.addEventListener('done-click', e => {
+  top.postMessage({ type: 'uploadcare', detail: e.detail }, '*')
+})
+</script>
+        `
+          });
+
+          window.addEventListener('message', (e) => {
+            if (e.data.type === 'uploadcare') {
+              console.log(e.data.detail);
+              if (e.data.detail.isSuccess) {
+                const url = e.data.detail.allEntries.length > 0 ? e.data.detail.allEntries[0].cdnUrl : '';
+                if (url) {
+                  ed.insertContent('<img src="' + url + '" alt=""/>');
+                  api.close();
+                }
+              }
+            }
+          });
+        }
+      });
+
     },
     plugins: [
       'autosave', 'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
@@ -122,9 +204,18 @@ export default (): void => {
     // rtl_ui: true,
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
-    toolbar: 'undo redo sidebar1 fontsizeinput | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | align lineheight fontsize fontfamily blocks styles insertfile | styles | ' +
+    toolbar: 'image uploadcare undo redo sidebar1 fontsizeinput | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | align lineheight fontsize fontfamily blocks styles insertfile | styles | ' +
     'bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons table codesample code language | ltr rtl',
     contextmenu: 'link linkchecker image table lists configurepermanentpen',
+    image_pickers: [
+      {
+        tooltip: 'Dropbox',
+        icon: 'dropbox',
+        onPick: (callback: any) => {
+          callback('https://www.dropbox.com/s/2oc4xk5hlo4z0xv/IMG_20180706_120000.jpg?dl=1');
+        }
+      }
+    ],
 
     // Multiple toolbar array
     // toolbar: ['undo redo sidebar1 align fontsize insertfile | fontfamily blocks styles insertfile | styles | bold italic',

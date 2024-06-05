@@ -1,7 +1,8 @@
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button, Disabling,
   FormField as AlloyFormField, GuiFactory, Memento, NativeEvents, Representing, SimpleSpec, SimulatedEvent, SketchSpec,
-  SystemEvents, Tabstopping, Toggling
+  SystemEvents, Tabstopping, Toggling,
+  Tooltipping
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Arr, Optional, Strings } from '@ephox/katamari';
@@ -16,6 +17,7 @@ import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
 import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 import { formChangeEvent } from '../general/FormEvents';
+import * as Icons from '../icons/Icons';
 
 const filterByExtension = (files: FileList, providersBackstage: UiFactoryBackstageProviders) => {
   const allowedImageFileTypes = Tools.explode(providersBackstage.getOption('images_file_types'));
@@ -58,6 +60,17 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
       AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name });
     }
   };
+
+  const makeIcon = (name: string, errId: Optional<string>, icon: string = name, label: string = name): SimpleSpec =>
+    Icons.render(icon, {
+      tag: 'div',
+      classes: [ 'tox-icon', 'tox-control-wrap__status-icon-' + name ],
+      attributes: {
+        'title': providersBackstage.translate(label),
+        'aria-live': 'polite',
+        ...errId.fold(() => ({}), (id) => ({ id }))
+      }
+    }, providersBackstage.icons);
 
   const memInput = Memento.record(
     {
@@ -115,31 +128,79 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
               tag: 'p'
             },
             components: [
-              GuiFactory.text(providersBackstage.translate('Drop an image here'))
+              GuiFactory.text(providersBackstage.translate('Drop images here or'))
             ]
           },
-          Button.sketch({
+          {
             dom: {
-              tag: 'button',
+              tag: 'div',
               styles: {
-                position: 'relative'
-              },
-              classes: [ 'tox-button', 'tox-button--secondary' ]
+                'display': 'flex',
+                'justify-content': 'center',
+                'align-items': 'center',
+              }
             },
             components: [
-              GuiFactory.text(providersBackstage.translate('Browse for an image')),
-              memInput.asSpec()
-            ],
-            action: (comp) => {
-              const inputComp = memInput.get(comp);
-              inputComp.element.dom.click();
-            },
-            buttonBehaviours: Behaviour.derive([
-              Tabstopping.config({ }),
-              DisablingConfigs.button(providersBackstage.isDisabled),
-              ReadOnly.receivingConfig()
-            ])
-          })
+              Button.sketch({
+                dom: {
+                  tag: 'button',
+                  classes: [ 'tox-button', 'tox-button--icon', 'tox-button--naked' ],
+                },
+                components: [
+                  memInput.asSpec(),
+                  makeIcon('bomb', Optional.none(), 'bomb', providersBackstage.translate('Browse for an image'))
+                ],
+                action: (comp) => {
+                  const inputComp = memInput.get(comp);
+                  inputComp.element.dom.click();
+                },
+                buttonBehaviours: Behaviour.derive([
+                  Tabstopping.config({ }),
+                  DisablingConfigs.button(providersBackstage.isDisabled),
+                  ReadOnly.receivingConfig(),
+                  Tooltipping.config(
+                    providersBackstage.tooltips.getConfig({
+                      tooltipText: providersBackstage.translate(providersBackstage.translate('Browse for an image'))
+                    })
+                  )
+                ])
+              }),
+              ...(spec.pickers.map((picker) => {
+                return Button.sketch({
+                  dom: {
+                    tag: 'button',
+                    styles: {
+                      position: 'relative'
+                    },
+                    classes: [ 'tox-button', 'tox-button--icon', 'tox-button--naked' ],
+                    attributes: {
+                      'type': 'button',
+                      'aria-label': providersBackstage.translate(picker.tooltip)
+                    }
+                  },
+                  components: [ makeIcon(picker.icon, Optional.none(), picker.icon, picker.tooltip) ],
+                  action: (comp) => {
+                    picker.onPick((url) => {
+                      comp.getSystem().getByUid(s.uid).each((dropComp) => {
+                        Representing.setValue(dropComp, [ url ]);
+                        AlloyTriggers.emitWith(dropComp, formChangeEvent, { name: spec.name });
+                      });
+                    });
+                  },
+                  buttonBehaviours: Behaviour.derive([
+                    Tabstopping.config({ }),
+                    DisablingConfigs.button(providersBackstage.isDisabled),
+                    ReadOnly.receivingConfig(),
+                    Tooltipping.config(
+                      providersBackstage.tooltips.getConfig({
+                        tooltipText: providersBackstage.translate(providersBackstage.translate(picker.tooltip))
+                      })
+                    )
+                  ])
+                });
+              }))
+            ]
+          },
         ]
       }
     ]

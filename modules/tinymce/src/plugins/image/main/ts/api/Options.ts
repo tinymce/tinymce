@@ -3,7 +3,7 @@ import { Strings, Type } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 import { EditorOptions } from 'tinymce/core/api/OptionTypes';
 
-import { UserListItem } from '../ui/DialogTypes';
+import { ImageSourcePicker, UserListItem } from '../ui/DialogTypes';
 
 type UserImageListCallback = (callback: (imageList: UserListItem[]) => void) => void;
 
@@ -62,6 +62,15 @@ const register = (editor: Editor): void => {
     },
     default: false
   });
+
+  registerOption('image_pickers', {
+    processor: (value) => {
+      // eslint-disable-next-line no-console
+      console.log('value', value);
+      return { value, valid: true };
+    },
+    default: []
+  });
 };
 
 const hasDimensions = option<boolean>('image_dimensions');
@@ -82,6 +91,8 @@ const hasUploadUrl = (editor: Editor): boolean =>
 const hasUploadHandler = (editor: Editor): boolean =>
   Type.isNonNullable(editor.options.get('images_upload_handler'));
 
+const getImagePickers = option<ImageSourcePicker[]>('image_pickers');
+
 export {
   register,
   hasDimensions,
@@ -96,5 +107,6 @@ export {
   hasUploadUrl,
   hasUploadHandler,
   showAccessibilityOptions,
-  isAutomaticUploadsEnabled
+  isAutomaticUploadsEnabled,
+  getImagePickers
 };

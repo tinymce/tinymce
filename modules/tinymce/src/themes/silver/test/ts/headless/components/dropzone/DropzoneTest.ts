@@ -12,7 +12,8 @@ describe('headless.tinymce.themes.silver.components.dropzone.DropzoneTest', () =
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderDropZone({
       name: 'drop1',
-      label: Optional.some('Dropzone Label')
+      label: Optional.some('Dropzone Label'),
+      pickers: []
     }, TestProviders, Optional.none())
   ));
 

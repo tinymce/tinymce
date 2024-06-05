@@ -68,8 +68,15 @@ export interface ImageDialogData {
   border: string;
   hspace: string;
   borderstyle: string;
-  fileinput: File[];
+  fileinput: Array<File | string>;
   isDecorative: boolean;
+  uploadcare: string;
 }
 
 export type API = Dialog.DialogInstanceApi<ImageDialogData>;
+
+export interface ImageSourcePicker {
+  icon: string;
+  tooltip: string;
+  onPick: (callback: (url: string) => void) => void;
+}
