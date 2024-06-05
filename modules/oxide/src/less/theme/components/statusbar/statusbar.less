@@ -128,9 +128,19 @@
       }
 
       fill: @statusbar-logo-color;
-      height: 1.14em;
-      vertical-align: -.28em;
-      width: 3.6em;
+      height: 1em;
+      margin-left: .4em;
+      width: auto;
+
+      @media only screen and (min-width: 767px) and (max-width: 1000px) {
+        margin-left: .2em;
+        width: 5em;
+      }
+    }
+
+    a { /* stylelint-disable-line no-descending-specificity */
+      align-items: center;
+      display: inline-flex;
     }
 
     a:hover,
