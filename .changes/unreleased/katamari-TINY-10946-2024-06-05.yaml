@@ -1,0 +1,7 @@
+project: katamari
+kind: Added
+body: Added a new `random` API to the `Num` module to generate a random number between
+  0 and 1.
+time: 2024-06-05T11:15:48.632951081+02:00
+custom:
+  Issue: TINY-10946
