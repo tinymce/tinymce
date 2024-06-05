@@ -17,8 +17,6 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplacePrevNextTest', () =
 
   const body = SugarBody.body();
 
-  const findInputSelector = Utils.getFindInputSelector();
-
   const pAssertButtonsEnabled = async () => {
     await UiFinder.pWaitFor('next button enabled', body, 'button[data-mce-name="Next"]:not([disabled])');
     await UiFinder.pWaitFor('prev button enabled', body, 'button[data-mce-name="Previous"]:not([disabled])');
@@ -34,7 +32,7 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplacePrevNextTest', () =
     const editor = hook.editor();
     editor.setContent('<p>fish fish fish</p>');
     await Utils.pOpenDialog(editor);
-    await Utils.pSetFieldValue(editor, findInputSelector, 'fish');
+    await Utils.pSetFieldValue(editor, Utils.getFindInputSelector(), 'fish');
     Utils.clickFind(editor);
 
     // Initial button states for first match
