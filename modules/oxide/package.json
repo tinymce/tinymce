@@ -9,9 +9,8 @@
   },
   "scripts": {
     "test": "echo 'No tests'",
-    "build-old": "gulp build",
-    "build": "grunt build",
-    "start": "grunt watch",
+    "build": "grunt build --force",
+    "start": "grunt start",
     "prepublishOnly": "yarn ci",
     "ci": "grunt build"
   },

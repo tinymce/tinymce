@@ -8,7 +8,7 @@ module.exports = function (grunt) {
       relativeUrls: true,
       paths: ['./build/skins'] // Define the path(s) where LESS should look for files
     };
-    const files = grunt.file.expand({cwd: './build/skins'}, '**/*.min.css');
+    const files = grunt.file.expand({cwd: './build/skins' }, '**/*.min.css');
     let processed = 0;
     files.forEach(function(file) {
       const srcPath = './build/skins/' + file;
@@ -29,5 +29,5 @@ module.exports = function (grunt) {
         };
       });
     });
-  })
+  });
 }

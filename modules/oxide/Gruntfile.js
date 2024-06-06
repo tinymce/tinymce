@@ -10,11 +10,14 @@ module.exports = function (grunt) {
       tmp: ['./tmp']
     },
     stylelint: {
-      options: {
-        formatter: 'string',
-        console: true
-      },
-      src: ['./src/less/**/*.less']
+      css: {
+        options: {
+          configFile: '.stylelintrc',
+          formatter: 'string',
+          console: true
+        },
+        src: ['./src/less/**/*.less']
+      }
     },
     // Minify CSS files
     cssmin: {
@@ -51,7 +54,7 @@ module.exports = function (grunt) {
           livereload: true
         }
       }
-    },
+    }
   });
 
   // load local grunt tasks
@@ -71,22 +74,22 @@ module.exports = function (grunt) {
   //   'generateJs',
   //   'minifyCss'
   // ]);
-  grunt.registerTask('css', [
+  grunt.registerTask('build', [
+    'clean',
     'stylelint',
     'compileLess',
     'cssmin',
     'generateJsSkins'
   ]);
 
-  grunt.registerTask('watch', [
-    'build',
+  grunt.registerTask('start', [
+    // 'build',
     'buildDemos',
-    'buildSkinSwitcher',
     'copyTinymce',
-    'monitor'
+    'buildSkinSwitcher',
+    'connect',
+    'watch',
   ]);
 
-  grunt.registerTask('demo-build', ['css', 'buildDemos', 'buildSkinSwitcher']);
-  grunt.registerTask('build', ['clean', 'css']);
   grunt.registerTask('default', ['build', /* 'connect', */ 'watch']);
 };
