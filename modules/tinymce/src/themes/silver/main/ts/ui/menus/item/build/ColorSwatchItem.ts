@@ -33,7 +33,7 @@ export const renderColorSwatchItem = (spec: Menu.ColorSwatchMenuItem, backstage:
     markers: MenuParts.markers(presets),
     movement: deriveMenuMovement(columns, presets),
     // TINY-10806: Avoid duplication of ARIA role="menu" in the accessibility tree for Color Swatch menu item.
-    menuRole: false
+    showMenuRole: false
   };
 
   return {

@@ -16,6 +16,7 @@ export interface CommonDropdownDetail<F> extends CompositeSketchDetail, HasLayou
   components: AlloySpec[ ];
 
   role: Optional<string>;
+  listRole: Optional<string>;
   eventOrder: Record<string, string[]>;
   fetch: (comp: AlloyComponent) => Future<Optional<F>>;
   onOpen: (anchor: AnchorSpec, comp: AlloyComponent, menu: AlloyComponent) => void;

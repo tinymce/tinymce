@@ -27,7 +27,8 @@ const schema = Fun.constant([
   FieldSchema.option('lazySink'),
   FieldSchema.defaulted('matchWidth', false),
   FieldSchema.defaulted('useMinWidth', false),
-  FieldSchema.option('role')
+  FieldSchema.option('role'),
+  FieldSchema.option('listRole'),
 ].concat(
   SketcherFields.sandboxFields()
 ));

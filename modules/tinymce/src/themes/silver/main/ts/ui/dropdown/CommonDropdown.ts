@@ -38,6 +38,7 @@ export interface CommonDropdownSpec<T> {
   readonly disabled?: boolean;
   readonly tooltip: Optional<string>;
   readonly role: Optional<string>;
+  readonly listRole?: string;
   readonly fetch: (comp: AlloyComponent, callback: (tdata: Optional<TieredData>) => void) => void;
   readonly onSetup: (itemApi: T) => OnDestroy<T>;
   readonly getApi: (comp: AlloyComponent) => T;
@@ -105,6 +106,7 @@ const renderCommonDropdown = <T>(
   };
 
   const role = spec.role.fold(() => ({}), (role) => ({ role }));
+  const listRole = Optional.from(spec.listRole).map((listRole) => ({ listRole })).getOr({});
 
   const ariaLabelAttribute = spec.ariaLabel.fold(
     () => ({}),
@@ -129,6 +131,7 @@ const renderCommonDropdown = <T>(
     AlloyDropdown.sketch({
       ...spec.uid ? { uid: spec.uid } : {},
       ...role,
+      ...listRole,
       dom: {
         tag: 'button',
         classes: [ prefix, `${prefix}--select` ].concat(Arr.map(spec.classes, (c) => `${prefix}--${c}`)),
@@ -242,16 +245,19 @@ const renderCommonDropdown = <T>(
           // When the menu is "searchable", use fakeFocus so that keyboard
           // focus stays in the search field
           fakeFocus: spec.searchable,
-          onHighlightItem: updateAriaOnHighlight,
-          onCollapseMenu: (tmenuComp, itemCompCausingCollapse, nowActiveMenuComp) => {
-            // We want to update ARIA on collapsing as well, because it isn't changing
-            // the highlights. So what we need to do is get the right parameters to
-            // pass to updateAriaOnHighlight
-            Highlighting.getHighlighted(nowActiveMenuComp).each((itemComp) => {
-              updateAriaOnHighlight(tmenuComp, nowActiveMenuComp, itemComp);
-            });
-          },
-          onDehighlightItem: updateAriaOnDehighlight
+          // We don't want to update the  `aria-selected` on highlight or dehighlight for the `listbox` role because that is used to indicate the selected item
+          ...(spec.listRole === 'listbox' ? {} : {
+            onHighlightItem: updateAriaOnHighlight,
+            onCollapseMenu: (tmenuComp, itemCompCausingCollapse, nowActiveMenuComp) => {
+              // We want to update ARIA on collapsing as well, because it isn't changing
+              // the highlights. So what we need to do is get the right parameters to
+              // pass to updateAriaOnHighlight
+              Highlighting.getHighlighted(nowActiveMenuComp).each((itemComp) => {
+                updateAriaOnHighlight(tmenuComp, nowActiveMenuComp, itemComp);
+              });
+            },
+            onDehighlightItem: updateAriaOnDehighlight
+          })
         }
       },
 

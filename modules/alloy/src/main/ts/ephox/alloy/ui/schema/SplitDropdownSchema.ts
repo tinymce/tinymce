@@ -34,7 +34,8 @@ const schema = Fun.constant([
   FieldSchema.defaulted('matchWidth', false),
   FieldSchema.defaulted('useMinWidth', false),
   FieldSchema.defaulted('eventOrder', {}),
-  FieldSchema.option('role')
+  FieldSchema.option('role'),
+  FieldSchema.option('listRole')
 ].concat(
   SketcherFields.sandboxFields()
 ));
