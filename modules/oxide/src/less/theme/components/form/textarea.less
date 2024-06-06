@@ -1,6 +1,6 @@
-//
-// Textarea
-//
+/*
+Textarea
+*/
 
 .tox {
   .tox-textarea-wrap {
@@ -11,7 +11,7 @@
     display: flex;
     flex: 1;
 
-    // This is needed to clip the scrollbars by the border-radius see #TINY-9331
+    /* This is needed to clip the scrollbars by the border-radius see #TINY-9331 */
     overflow: hidden;
 
     &:focus-within {
@@ -22,10 +22,10 @@
   .tox-textarea {
     &:extend(.tox .tox-textfield);
 
-    // restore appearance for scrollbars
+    /* restore appearance for scrollbars */
     appearance: textarea;
 
-    // This is required to allow white-spaces and new lines within textareas in Firefox
+    /* This is required to allow white-spaces and new lines within textareas in Firefox */
     white-space: pre-wrap;
 
     &:focus {

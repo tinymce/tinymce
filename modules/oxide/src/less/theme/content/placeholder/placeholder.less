@@ -1,13 +1,13 @@
-//
-// Placeholder
-//
+/*
+Placeholder
+*/
 
 @placeholder-text-color: @text-color-muted;
 
 .mce-content-body[data-mce-placeholder] {
   position: relative;
 
-  // Don't show the placeholder if visualblocks is enabled
+  /* Don't show the placeholder if visualblocks is enabled */
   &:not(.mce-visualblocks)::before {
     color: @placeholder-text-color;
     content: attr(data-mce-placeholder);

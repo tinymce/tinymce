@@ -1,6 +1,6 @@
-//
-// Toolbar number input
-//
+/*
+Toolbar number input
+*/
 
 @toolbar-number-input-button-width: 24px;
 @toolbar-number-input-button-margin: 2px;
@@ -18,7 +18,8 @@
     width: auto;
 
     &:focus {
-      background: @toolbar-button-bespoke-focus-background-color; // Prevent toolbar button focus background to override bespoke background
+      /* Prevent toolbar button focus background to override bespoke background */
+      background: @toolbar-button-bespoke-focus-background-color;
     }
 
     &:focus::after {

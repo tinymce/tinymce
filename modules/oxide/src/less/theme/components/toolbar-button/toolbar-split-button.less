@@ -1,6 +1,6 @@
-//
-// Toolbar split button
-//
+/*
+Toolbar split button
+*/
 
 @toolbar-split-button-chevron-touch-padding: 4px;
 @toolbar-split-color-preview-opacity: .6;
@@ -26,7 +26,7 @@
     z-index: 1; // Ensure focus outline is on top of other buttons
 
     &::after {
-      pointer-events: none; // Prevent the focus outline from opening the menu
+      pointer-events: none; /* Prevent the focus outline from opening the menu */
       .keyboard-focus-outline-mixin();
     }
   }

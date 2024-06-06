@@ -1,6 +1,6 @@
-//
-// ListBox
-//
+/*
+ListBox
+*/
 
 @listbox-disabled-background-color: darken(@background-color, 5%);
 @listbox-disabled-text-color: fade(@text-color, 85%);
@@ -38,7 +38,6 @@
 
   .tox-listboxfield .tox-listbox--select {
     &:extend(.tox .tox-textfield);
-
     align-items: center;
     display: flex;
   }
@@ -57,7 +56,7 @@
   }
 }
 
-// RTL
+/* RTL */
 .tox[dir=rtl] {
   // Don't add the padding to select boxes with visible values that, do not have the down-arrow icon
   .tox-listboxfield {

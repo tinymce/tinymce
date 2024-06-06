@@ -1,20 +1,20 @@
-//
-// Toolbar
-//
+/*
+Toolbar
+*/
 
 @toolbar-background-color: @background-color;
 @toolbar-padding-y: 1px;
 @toolbar-padding-x: @pad-sm;
 @toolbar-row-separator-color: @tinymce-separator-color;
 @toolbar-row-separator-padding: @toolbar-group-padding-x;
-@toolbar-separator-distance: 0px;
+@toolbar-separator-distance: 0;
 @toolbar-separator-color: transparent;
 
-// private variables
+/* private variables */
 @_toolbar-height: @toolbar-button-height + (@toolbar-button-spacing-y * 2) + (@toolbar-group-spacing-y * 2) + 1px;
 @_toolbar-padding-x-no-group-spacing: max(@toolbar-padding-x - @toolbar-group-padding-x, 0px);
 @_toolbar-row-separator-downsize: @_toolbar-height + @toolbar-separator-distance + @toolbar-padding-y * 2;
-@_toolbar-row-separator-image: repeating-linear-gradient(@toolbar-row-separator-color 0px 1px, transparent 1px @_toolbar-height);
+@_toolbar-row-separator-image: repeating-linear-gradient(@toolbar-row-separator-color 0 1px, transparent 1px @_toolbar-height);
 @_toolbar-row-separator-image-offset: @_toolbar-height + @toolbar-separator-distance + @toolbar-padding-y;
 @_toolbar-row-separator-image-position: center top @_toolbar-row-separator-image-offset;
 @_toolbar-row-separator-image-size: calc(100% - @toolbar-row-separator-padding * 2) calc(100% - @_toolbar-row-separator-downsize);
@@ -38,14 +38,14 @@
     flex-shrink: 0;
     flex-wrap: wrap;
     padding: 0 @_toolbar-padding-x-no-group-spacing;
-    transform: perspective(1px); // Fix for Chrome’s BG size rounding errors in some cases
+    transform: perspective(1px); /* Fix for Chrome’s BG size rounding errors in some cases */
   }
 
   .tox-toolbar-overlord > .tox-toolbar,
   .tox-toolbar-overlord > .tox-toolbar__primary,
   .tox-toolbar-overlord > .tox-toolbar__overflow {
-    @_toolbar-row-separator-image-offset: 0px;
-    @_toolbar-row-separator-downsize: 0px;
+    @_toolbar-row-separator-image-offset: 0;
+    @_toolbar-row-separator-downsize: 0;
 
     background-position: @_toolbar-row-separator-image-position;
     background-size: @_toolbar-row-separator-image-size;
@@ -94,10 +94,11 @@
     background-image: none;
   }
 
-  // Wrap for icons within toolbar buttons. Required for loading SVG via Alloy
+  /* Wrap for icons within toolbar buttons. Required for loading SVG via Alloy
   .tox-tbtn__icon-wrap {
     //
   }
+  */
 
   .tox-toolbar-overlord .tox-toolbar:not(.tox-toolbar--scrolling):first-child,
   .tox-toolbar-overlord .tox-toolbar__primary {

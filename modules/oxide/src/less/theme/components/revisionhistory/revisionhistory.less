@@ -1,6 +1,6 @@
-//
-// Revision history
-//
+/*
+Revision history
+*/
 @revisionhistory-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
 @revisionhistory-border-color: @border-color;
 @revisionhistory-text-color: @text-color;
@@ -86,8 +86,8 @@
         }
 
         &:focus {
-          position: relative;   // Override static which prevents z-index to have any effect
-          z-index: 1; // Ensure focus outline is on top of other buttons
+          position: relative;   /* Override static which prevents z-index to have any effect */
+          z-index: 1; /* Ensure focus outline is on top of other buttons */
 
           &::after {
             border-radius: @control-border-radius !important;

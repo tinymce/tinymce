@@ -1,6 +1,6 @@
-//
-// Insert table picker
-//
+/*
+Insert table picker
+*/
 
 @insert-table-picker-cell-size: @base-value + 1; // Add 1 to account for the border size
 @insert-table-picker-background-color: @background-color;
@@ -26,9 +26,9 @@
       width: @insert-table-picker-cell-size;
 
       // Option for removing colors on bottom row
-      &:nth-last-child(-n+10) {
+      /* &:nth-last-child(-n+10) {
         //
-      }
+      } */
     }
   }
 
@@ -64,7 +64,7 @@
   }
 }
 
-// RTL
+/* RTL */
 .tox[dir=rtl] {
   /* stylelint-disable-next-line no-descending-specificity */
   .tox-insert-table-picker > div {

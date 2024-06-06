@@ -1,6 +1,6 @@
-//
-// Notification
-//
+/*
+Notification
+*/
 
 @notification-border-radius: @panel-border-radius;
 @notification-box-shadow: none;
@@ -13,7 +13,7 @@
 @notification-success-text-color: @text-color;
 @notification-success-link-color: mix(@text-color, @color-success, 45%);
 
-// Yellow warning color mixes particularly bad with darker colors, hence additional checks
+/* Yellow warning color mixes particularly bad with darker colors, hence additional checks */
 @notification-warn-background-color: .bg-luma-checker(tint(@_color-warn, 80%), @background-color)[@result];
 @notification-warn-border-color: .bg-luma-checker(tint(@_color-warn, 70%), @tinymce-separator-color)[@result];
 @notification-warn-text-color: .bg-luma-checker(@text-color, mix(@text-color, @_color-warn, 70%))[@result];
@@ -29,15 +29,16 @@
 @notification-info-text-color: @text-color;
 @notification-info-link-color: mix(@text-color, @_color-info, 40%);
 
-// Private variables
+/* private variables */
 @_color-warn: #ffcc00;
 @_color-info: #3087eb;
 
 .tox {
-  // Wraps around many notifications
-  .tox-notifications-container {
+  /* Wraps around many notifications */
+
+  /* .tox-notifications-container {
     //
-  }
+  } */
 
   // An individual notification
   .tox-notification {
@@ -166,9 +167,9 @@
     margin-top: 1rem;
   }
 
-  .tox-notification-inner a {
+  /* .tox-notification-inner a {
     //
-  }
+  } */
 
   .tox-notification__icon {
     align-self: center;

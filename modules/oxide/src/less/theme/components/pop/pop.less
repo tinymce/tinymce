@@ -1,6 +1,6 @@
-//
-// Pop (The "Quickbars" container)
-//
+/*
+Pop (The "Quickbars" container)
+*/
 
 @pop-background-color: @background-color;
 @pop-border-radius: @panel-border-radius;
@@ -19,7 +19,7 @@
 
     .tox-toolbar,
     .tox-toolbar__group {
-      // When the toolbar is resizing, it won't fit into its container. Therefore, turn off wrapping
+      /* When the toolbar is resizing, it won't fit into its container. Therefore, turn off wrapping */
       flex-wrap: nowrap;
     }
   }
@@ -63,7 +63,7 @@
   .tox-pop::before,
   .tox-pop::after {
     border-style: solid;
-    content: '';
+    content: 0;
     display: block;
     height: 0;
     opacity: 1;
@@ -123,7 +123,7 @@
   .tox-pop.tox-pop--left::before,
   .tox-pop.tox-pop--left::after {
     left: 0;
-    top: calc(~'50% - 1px');
+    top: calc(50% - 1px);
     transform: translateY(-50%);
   }
 
@@ -143,7 +143,7 @@
   .tox-pop.tox-pop--right::before,
   .tox-pop.tox-pop--right::after {
     left: 100%;
-    top: calc(~'50% + 1px');
+    top: calc(50% + 1px);
     transform: translateY(-50%);
   }
 
@@ -167,6 +167,6 @@
 
   .tox-pop.tox-pop--align-right::before,
   .tox-pop.tox-pop--align-right::after {
-    left: calc(~'100% - 20px');
+    left: calc(100% - 20px);
   }
 }

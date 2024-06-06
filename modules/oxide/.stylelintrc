@@ -1,12 +1,29 @@
 {
   "extends": "stylelint-config-standard",
   "plugins": [
-    "stylelint-order"
+    "stylelint-order",
+    "stylelint-less"
   ],
   "rules": {
-    "number-leading-zero": "never",
     "order/properties-alphabetical-order": true,
-    "at-rule-empty-line-before": ["always", { "ignoreAtRules": "import" }],
-    "function-calc-no-invalid": null
+    "selector-class-pattern": "[a-z](-[a-z])*",
+    "import-notation": null,
+    "at-rule-empty-line-before": null,
+    "at-rule-no-unknown": null,
+    "block-no-empty": null,
+    "declaration-block-no-redundant-longhand-properties": null,
+    "function-url-quotes": null,
+    "function-no-unknown": null,
+    "media-query-no-invalid": null,
+    "property-no-unknown": null,
+    "property-no-vendor-prefix": null,
+    "no-descending-specificity": null,
+    "no-invalid-double-slash-comments": null,
+    "number-max-precision": null,
+    "selector-attribute-quotes": null,
+    "selector-not-notation": null,
+    "shorthand-property-no-redundant-values": null,
+    "value-keyword-case": null,
+    "value-no-vendor-prefix": null
   }
 }
