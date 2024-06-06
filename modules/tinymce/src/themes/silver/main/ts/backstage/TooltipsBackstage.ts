@@ -2,7 +2,7 @@ import { AlloyComponent, GuiFactory, SimpleSpec, TooltippingTypes } from '@ephox
 import { Fun, Result } from '@ephox/katamari';
 
 export interface TooltipsProvider {
-  readonly getConfig: (spec: { tooltipText: string; onShow?: (comp: AlloyComponent, tooltip: AlloyComponent) => void }) => TooltippingTypes.TooltippingConfigSpec;
+  readonly getConfig: (spec: { tooltipText: string; onShow?: (comp: AlloyComponent, tooltip: AlloyComponent) => void; onHide?: (comp: AlloyComponent, tooltip: AlloyComponent) => void }) => TooltippingTypes.TooltippingConfigSpec;
   readonly getComponents: (spec: { tooltipText: string }) => SimpleSpec[];
 }
 
@@ -31,7 +31,7 @@ export const TooltipsBackstage = (
     ];
   };
 
-  const getConfig = (spec: { tooltipText: string; onShow?: (comp: AlloyComponent, tooltip: AlloyComponent) => void }) => {
+  const getConfig = (spec: { tooltipText: string; onShow?: (comp: AlloyComponent, tooltip: AlloyComponent) => void; onHide?: (comp: AlloyComponent, tooltip: AlloyComponent) => void }) => {
     return {
       delayForShow: () => alreadyShowingTooltips() ? intervalDelay : tooltipDelay,
       delayForHide: Fun.constant(tooltipDelay),
@@ -48,8 +48,11 @@ export const TooltipsBackstage = (
           spec.onShow(comp, tooltip);
         }
       },
-      onHide: () => {
+      onHide: (comp: AlloyComponent, tooltip: AlloyComponent) => {
         numActiveTooltips--;
+        if (spec.onHide) {
+          spec.onHide(comp, tooltip);
+        }
       }
     };
   };

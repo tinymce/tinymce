@@ -1,6 +1,6 @@
 import { AlloyComponent, AlloySpec } from '@ephox/alloy';
 import { Dialog, Menu } from '@ephox/bridge';
-import { Cell, Result } from '@ephox/katamari';
+import { Cell, Optional, Result } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import I18n, { TranslatedString, Untranslated } from 'tinymce/core/api/util/I18n';
@@ -82,11 +82,13 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
     setContextMenuState
   };
 
+  const getCompByName = (_name: string) => Optional.none();
+
   const popupBackstage: UiFactoryBackstage = {
     ...commonBackstage,
     shared: {
       ...commonBackstage.shared,
-      interpreter: (s) => UiFactory.interpretWithoutForm(s, {}, popupBackstage),
+      interpreter: (s) => UiFactory.interpretWithoutForm(s, {}, popupBackstage, getCompByName),
       getSink: lazySinks.popup
     }
   };
@@ -95,7 +97,7 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
     ...commonBackstage,
     shared: {
       ...commonBackstage.shared,
-      interpreter: (s) => UiFactory.interpretWithoutForm(s, {}, dialogBackstage),
+      interpreter: (s) => UiFactory.interpretWithoutForm(s, {}, dialogBackstage, getCompByName),
       getSink: lazySinks.dialog
     }
   };

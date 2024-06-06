@@ -19,6 +19,8 @@ const setup = (editor: Editor): void => {
   Commands.register(editor, pasteFormat);
   PrePostProcess.setup(editor);
 
+  editor.addQueryStateHandler('mceTogglePlainTextPaste', () => pasteFormat.get() === 'text');
+
   // IMPORTANT: The following event hooks need to be setup later so that other things
   // can hook in and prevent the event so core paste doesn't handle them.
   editor.on('PreInit', () => {

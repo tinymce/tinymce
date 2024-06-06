@@ -88,10 +88,10 @@ const make: CompositeSketchFactory<MenuDetail, MenuSpec> = (detail, components, 
   components,
   eventOrder: detail.eventOrder,
 
-  ...detail.menuRole ? {
+  ...detail.showMenuRole ? {
     domModification: {
       attributes: {
-        role: 'menu'
+        role: detail.role.getOr('menu')
       }
     }
   } : {}

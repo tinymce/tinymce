@@ -1,4 +1,4 @@
-import { AlloyComponent, Behaviour, Bubble, Container as AlloyContainer, Focusing, Layout, SketchSpec, Tabstopping, Tooltipping } from '@ephox/alloy';
+import { AlloyComponent, Behaviour, Bubble, Container as AlloyContainer, Focusing, Layout, SketchSpec, Tabstopping, Tooltipping, AddEventsBehaviour, AlloyEvents } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Fun } from '@ephox/katamari';
 import { Attribute, Focus, SelectorFind } from '@ephox/sugar';
@@ -8,11 +8,18 @@ import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 type HtmlPanelSpec = Omit<Dialog.HtmlPanel, 'type'>;
 
 export const renderHtmlPanel = (spec: HtmlPanelSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
+  const classes = [ 'tox-form__group', ...(spec.stretched ? [ 'tox-form__group--stretched' ] : []) ];
+  const init = AddEventsBehaviour.config('htmlpanel', [
+    AlloyEvents.runOnAttached((comp) => {
+      spec.onInit(comp.element.dom);
+    })
+  ]);
+
   if (spec.presets === 'presentation') {
     return AlloyContainer.sketch({
       dom: {
         tag: 'div',
-        classes: [ 'tox-form__group' ],
+        classes,
         innerHtml: spec.html
       },
       containerBehaviours: Behaviour.derive([
@@ -40,14 +47,15 @@ export const renderHtmlPanel = (spec: HtmlPanelSpec, providersBackstage: UiFacto
             },
             bubble: Bubble.nu(0, -2, {}),
           })
-        })
+        }),
+        init
       ])
     });
   } else {
     return AlloyContainer.sketch({
       dom: {
         tag: 'div',
-        classes: [ 'tox-form__group' ],
+        classes,
         innerHtml: spec.html,
         attributes: {
           role: 'document'
@@ -55,7 +63,8 @@ export const renderHtmlPanel = (spec: HtmlPanelSpec, providersBackstage: UiFacto
       },
       containerBehaviours: Behaviour.derive([
         Tabstopping.config({ }),
-        Focusing.config({ })
+        Focusing.config({ }),
+        init
       ])
     });
   }

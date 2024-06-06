@@ -16,6 +16,7 @@ export const onSetup = FieldSchema.defaultedFunction('onSetup', () => Fun.noop);
 
 export const optionalName = FieldSchema.optionString('name');
 export const optionalText = FieldSchema.optionString('text');
+export const optionalRole = FieldSchema.optionString('role');
 export const optionalIcon = FieldSchema.optionString('icon');
 export const optionalTooltip = FieldSchema.optionString('tooltip');
 export const optionalLabel = FieldSchema.optionString('label');

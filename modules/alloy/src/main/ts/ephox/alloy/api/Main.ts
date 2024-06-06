@@ -1,6 +1,7 @@
 import * as Boxes from '../alien/Boxes';
 import * as EventRoot from '../alien/EventRoot';
 import * as OffsetOrigin from '../alien/OffsetOrigin';
+import * as AriaDescribe from '../aria/AriaDescribe';
 import * as AriaVoice from '../aria/AriaVoice';
 import { BehaviourState } from '../behaviour/common/BehaviourState';
 import * as DockingTypes from '../behaviour/docking/DockingTypes';
@@ -131,6 +132,7 @@ type Bounds = Boxes.Bounds;
 // Type Def Exports
 export {
   AriaVoice,
+  AriaDescribe,
   AddEventsBehaviour,
   Behaviour,
   AllowBubbling,

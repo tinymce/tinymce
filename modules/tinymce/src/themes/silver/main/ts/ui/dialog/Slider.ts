@@ -64,6 +64,9 @@ export const renderSlider = (spec: SliderSpec, providerBackstage: UiFactoryBacks
     ]),
     onChoose: (component, thumb, value) => {
       AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name, value } );
-    }
+    },
+    onChange: (component, thumb, value) => {
+      AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name, value } );
+    },
   });
 };

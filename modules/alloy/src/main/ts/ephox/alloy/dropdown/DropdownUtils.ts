@@ -67,50 +67,58 @@ const openF = (
   const getLazySink = getSink(component, detail);
 
   // TODO: Make this potentially a single menu also
-  return futureData.map((tdata) => tdata.bind((data) => Optional.from(TieredMenu.sketch({
+  return futureData.map((tdata) => tdata.bind((data) => {
+    const primaryMenu = data.menus[data.primary];
+    Optional.from(primaryMenu).each((menu) => {
+      detail.listRole.each((listRole) => {
+        menu.role = listRole;
+      });
+    });
+    return Optional.from(TieredMenu.sketch({
     // Externals are configured by the "menu" part. It's called external because it isn't contained
     // within the DOM descendants of the dropdown. You can configure things like `fakeFocus` here.
-    ...externals.menu(),
+      ...externals.menu(),
 
-    uid: Tagger.generate(''),
-    data,
+      uid: Tagger.generate(''),
+      data,
 
-    highlightOnOpen,
+      highlightOnOpen,
 
-    onOpenMenu: (tmenu, menu) => {
-      const sink = getLazySink().getOrDie();
-      Positioning.position(sink, menu, { anchor });
-      Sandboxing.decloak(sandbox);
-    },
+      onOpenMenu: (tmenu, menu) => {
+        const sink = getLazySink().getOrDie();
+        Positioning.position(sink, menu, { anchor });
+        Sandboxing.decloak(sandbox);
+      },
 
-    onOpenSubmenu: (tmenu, item, submenu) => {
-      const sink = getLazySink().getOrDie();
-      Positioning.position(sink, submenu, {
-        anchor: {
-          type: 'submenu',
-          item
-        }
-      });
-      Sandboxing.decloak(sandbox);
-    },
-
-    onRepositionMenu: (tmenu, primaryMenu, submenuTriggers) => {
-      const sink = getLazySink().getOrDie();
-      Positioning.position(sink, primaryMenu, { anchor });
-      Arr.each(submenuTriggers, (st) => {
-        Positioning.position(sink, st.triggeredMenu, {
-          anchor: { type: 'submenu', item: st.triggeringItem }
+      onOpenSubmenu: (tmenu, item, submenu) => {
+        const sink = getLazySink().getOrDie();
+        Positioning.position(sink, submenu, {
+          anchor: {
+            type: 'submenu',
+            item
+          }
         });
-      });
-    },
+        Sandboxing.decloak(sandbox);
+      },
 
-    onEscape: () => {
+      onRepositionMenu: (tmenu, primaryMenu, submenuTriggers) => {
+        const sink = getLazySink().getOrDie();
+        Positioning.position(sink, primaryMenu, { anchor });
+        Arr.each(submenuTriggers, (st) => {
+          Positioning.position(sink, st.triggeredMenu, {
+            anchor: { type: 'submenu', item: st.triggeringItem }
+          });
+        });
+      },
+
+      onEscape: () => {
       // Focus the triggering component after escaping the menu
-      Focusing.focus(component);
-      Sandboxing.close(sandbox);
-      return Optional.some(true);
-    }
-  }))));
+        Focusing.focus(component);
+        Sandboxing.close(sandbox);
+        return Optional.some(true);
+      }
+    }));
+  }));
 };
 
 // onOpenSync is because some operations need to be applied immediately, not wrapped in a future
@@ -245,7 +253,6 @@ const makeSandbox = (
       // TODO: Add aria-selected attribute
       attributes: {
         id: ariaControls.id,
-        role: 'listbox'
       }
     },
     behaviours: SketchBehaviours.augment(

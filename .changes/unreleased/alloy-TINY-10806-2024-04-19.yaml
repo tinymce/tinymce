@@ -1,6 +1,6 @@
 project: alloy
 kind: Added
-body: Added a new boolean `menuRole` property to `MenuSpec`, which affects the rendering
+body: Added a new boolean `showMenuRole` property to `MenuSpec`, which affects the rendering
   of the `role` attribute on the menu component.
 time: 2024-04-19T14:34:23.744021+03:00
 custom:

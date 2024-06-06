@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { AlloyComponent, GuiFactory, Memento, TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderLabel } from 'tinymce/themes/silver/ui/dialog/Label';
@@ -23,29 +23,35 @@ describe('headless.tinymce.themes.silver.components.label.LabelTest', () => {
     } as any
   ];
 
+  const getCompByName = (_name: string) => Optional.none();
+
   const memBasicLabel = Memento.record(renderLabel({
     label: 'Group of Options',
     items,
-    align: 'start'
-  }, sharedBackstage));
+    align: 'start',
+    for: Optional.none()
+  }, sharedBackstage, getCompByName));
 
   const memHtmlLabel = Memento.record(renderLabel({
     label: 'Some <html> like content',
     items,
-    align: 'start'
-  }, sharedBackstage));
+    align: 'start',
+    for: Optional.none()
+  }, sharedBackstage, getCompByName));
 
   const memCenterLabel = Memento.record(renderLabel({
     label: 'Group of Options',
     items,
-    align: 'center'
-  }, sharedBackstage));
+    align: 'center',
+    for: Optional.none()
+  }, sharedBackstage, getCompByName));
 
   const memEndLabel = Memento.record(renderLabel({
     label: 'Group of Options',
     items,
-    align: 'end'
-  }, sharedBackstage));
+    align: 'end',
+    for: Optional.none()
+  }, sharedBackstage, getCompByName));
 
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build({
     dom: { tag: 'div' },

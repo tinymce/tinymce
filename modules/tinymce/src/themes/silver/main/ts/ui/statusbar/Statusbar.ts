@@ -27,9 +27,9 @@ const renderStatusbar = (editor: Editor, providersBackstage: UiFactoryBackstageP
               'href': 'https://www.tiny.cloud/powered-by-tiny?utm_campaign=poweredby&utm_source=tiny&utm_medium=referral&utm_content=v7',
               'rel': 'noopener',
               'target': '_blank',
-              'aria-label': I18n.translate([ 'Powered by {0}', 'Tiny' ])
+              'aria-label': editor.translate([ 'Build with {0}', 'TinyMCE' ])
             },
-            innerHtml: Logo.trim()
+            innerHtml: editor.translate([ 'Build with {0}', Logo.trim() ])
           },
           behaviours: Behaviour.derive([
             Focusing.config({})

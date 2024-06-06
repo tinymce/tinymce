@@ -92,7 +92,8 @@ const createPreviewNode = (editor: Editor, node: AstNode): AstNode => {
     previewNode.attr({
       allowfullscreen: node.attr('allowfullscreen'),
       frameborder: '0',
-      sandbox: node.attr('sandbox')
+      sandbox: node.attr('sandbox'),
+      referrerpolicy: node.attr('referrerpolicy')
     });
   } else {
     // Exclude autoplay as we don't want video/audio to play by default

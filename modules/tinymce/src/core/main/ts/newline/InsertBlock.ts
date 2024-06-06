@@ -1,4 +1,4 @@
-import { Arr, Type } from '@ephox/katamari';
+import { Arr, Optional, Type } from '@ephox/katamari';
 import { ContentEditable, Insert, PredicateFilter, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
@@ -8,7 +8,10 @@ import { SchemaMap } from '../api/html/Schema';
 import * as Options from '../api/Options';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import Tools from '../api/util/Tools';
+import { findPreviousBr, isAfterBr } from '../caret/CaretBr';
 import * as CaretContainer from '../caret/CaretContainer';
+import CaretPosition from '../caret/CaretPosition';
+import { isAfterTable } from '../caret/CaretPositionPredicates';
 import * as NodeType from '../dom/NodeType';
 import * as NormalizeRange from '../selection/NormalizeRange';
 import { isWhitespaceText } from '../text/Whitespace';
@@ -387,6 +390,8 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     );
     editor.selection.setCursorLocation(newBlock, 0);
   } else if (CaretContainer.isCaretContainerBlock(parentBlock)) {
+    // TODO: TINY-10384 NOTE: Added logic to make sure pressing enter is consistent between browsers.
+    // As an example a fake caret is used before/after tables on Firefox but not on Chrome. So different behaviour could occur
     newBlock = CaretContainer.showCaretContainerBlock(parentBlock) as Element;
     if (dom.isEmpty(parentBlock)) {
       NewLineUtils.emptyBlock(parentBlock);
@@ -394,12 +399,22 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     NewLineUtils.setForcedBlockAttrs(editor, newBlock);
     NewLineUtils.moveToCaretPosition(editor, newBlock);
   } else if (isCaretAtStartOrEndOfBlock(false)) {
+    // Caret is moved to the new block in the insertNewBlockAfter fn
     newBlock = insertNewBlockAfter();
   } else if (isCaretAtStartOrEndOfBlock(true) && parentBlockParent) {
-    // Insert new block before
+    // Check where caret is positioned before it is potentially moved by 'insertBefore' fn
+    const caretPos = CaretPosition.fromRangeStart(rng);
+    const afterTable = isAfterTable(caretPos);
+    const parentBlockSugar = SugarElement.fromDom(parentBlock);
+    const afterBr = isAfterBr(parentBlockSugar, caretPos, editor.schema);
+    const prevBrOpt = afterBr
+      ? findPreviousBr(parentBlockSugar, caretPos, editor.schema).bind((pos) => Optional.from(pos.getNode()))
+      : Optional.none();
+
     newBlock = parentBlockParent.insertBefore(createNewBlock(), parentBlock);
-    const isNearChildren = Traverse.hasChildNodes(SugarElement.fromDom(rng.startContainer)) && rng.collapsed;
-    NewLineUtils.moveToCaretPosition(editor, (containerAndSiblingName(parentBlock, 'HR') || isNearChildren) ? newBlock : parentBlock);
+
+    const root = containerAndSiblingName(parentBlock, 'HR') || afterTable ? newBlock : prevBrOpt.getOr(parentBlock);
+    NewLineUtils.moveToCaretPosition(editor, root);
   } else {
     // Extract after fragment and insert it after the current block
     const tmpRng = includeZwspInRange(rng).cloneRange();

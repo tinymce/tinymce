@@ -8,7 +8,7 @@ import { renderModalBody } from './SilverDialogBody';
 import * as SilverDialogCommon from './SilverDialogCommon';
 import * as SilverDialogEvents from './SilverDialogEvents';
 import { renderModalFooter } from './SilverDialogFooter';
-import { DialogAccess, getDialogApi } from './SilverDialogInstanceApi';
+import * as SilverDialogInstanceApi from './SilverDialogInstanceApi';
 
 interface RenderedDialog<T extends Dialog.DialogData> {
   readonly dialog: AlloyComponent;
@@ -22,6 +22,8 @@ const renderDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.Dia
 
   const dialogSize = Cell<Dialog.DialogSize>(internalDialog.size);
 
+  const getCompByName = (name: string) => SilverDialogInstanceApi.getCompByName(modalAccess, name);
+
   const dialogSizeClasses = SilverDialogCommon.getDialogSizeClass(dialogSize.get()).toArray();
 
   const updateState = (comp: AlloyComponent, incoming: DialogManager.DialogInit<T>) => {
@@ -33,7 +35,7 @@ const renderDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.Dia
   const body = renderModalBody({
     body: internalDialog.body,
     initialData: internalDialog.initialData
-  }, dialogId, backstage);
+  }, dialogId, backstage, getCompByName);
 
   const storedMenuButtons = SilverDialogCommon.mapMenuButtons(internalDialog.buttons);
 
@@ -68,7 +70,7 @@ const renderDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.Dia
 
   const dialog: AlloyComponent = SilverDialogCommon.renderModalDialog(spec, dialogEvents, backstage);
 
-  const modalAccess = ((): DialogAccess => {
+  const modalAccess = ((): SilverDialogInstanceApi.DialogAccess => {
     const getForm = (): AlloyComponent => {
       const outerForm = ModalDialog.getBody(dialog);
       return Composing.getCurrent(outerForm).getOr(outerForm);
@@ -89,7 +91,7 @@ const renderDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.Dia
   })();
 
   // TODO: Get the validator from the dialog state.
-  const instanceApi = getDialogApi<T>(modalAccess, extra.redial, objOfCells);
+  const instanceApi = SilverDialogInstanceApi.getDialogApi<T>(modalAccess, extra.redial, objOfCells);
 
   return {
     dialog,

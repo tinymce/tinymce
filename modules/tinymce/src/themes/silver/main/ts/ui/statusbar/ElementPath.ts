@@ -1,4 +1,4 @@
-import { AddEventsBehaviour, AlloyEvents, AlloySpec, Behaviour, Button, Disabling, GuiFactory, Keying, Replacing, SimpleSpec, Tabstopping } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, AlloySpec, AriaDescribe, Behaviour, Button, Disabling, GuiFactory, Keying, Replacing, SimpleSpec, Tabstopping, Tooltipping } from '@ephox/alloy';
 import { Arr } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -23,28 +23,39 @@ const isHidden = (elm: Element): boolean =>
 const renderElementPath = (editor: Editor, settings: ElementPathSettings, providersBackstage: UiFactoryBackstageProviders): SimpleSpec => {
   const delimiter = settings.delimiter ?? '\u203A';
 
-  const renderElement = (name: string, element: Node, index: number): AlloySpec => Button.sketch({
-    dom: {
-      tag: 'div',
-      classes: [ 'tox-statusbar__path-item' ],
-      attributes: {
-        'data-index': index,
-        'aria-level': index + 1
-      }
-    },
-    components: [
-      GuiFactory.text(name)
-    ],
-    action: (_btn) => {
-      editor.focus();
-      editor.selection.select(element);
-      editor.nodeChanged();
-    },
-    buttonBehaviours: Behaviour.derive([
-      DisablingConfigs.button(providersBackstage.isDisabled),
-      ReadOnly.receivingConfig()
-    ])
-  });
+  const renderElement = (name: string, element: Node, index: number): AlloySpec =>
+    Button.sketch({
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-statusbar__path-item' ],
+        attributes: {
+          'data-index': index,
+        }
+      },
+      components: [
+        GuiFactory.text(name)
+      ],
+      action: (_btn) => {
+        editor.focus();
+        editor.selection.select(element);
+        editor.nodeChanged();
+      },
+      buttonBehaviours: Behaviour.derive([
+        Tooltipping.config({
+          ...providersBackstage.tooltips.getConfig({
+            tooltipText: providersBackstage.translate([ 'Select the {0} element', element.nodeName.toLowerCase() ]),
+            onShow: (comp, tooltip) => {
+              AriaDescribe.describedBy(comp.element, tooltip.element);
+            },
+            onHide: (comp) => {
+              AriaDescribe.remove(comp.element);
+            }
+          }),
+        }),
+        DisablingConfigs.button(providersBackstage.isDisabled),
+        ReadOnly.receivingConfig()
+      ])
+    });
 
   const renderDivider = (): AlloySpec => ({
     dom: {

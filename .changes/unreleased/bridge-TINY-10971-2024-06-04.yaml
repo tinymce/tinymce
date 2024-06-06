@@ -1,0 +1,7 @@
+project: bridge
+kind: Added
+body: Added `for` attribute to component schema and as an optinal parameter for label
+  component.
+time: 2024-06-04T18:15:54.417924+02:00
+custom:
+  Issue: TINY-10971

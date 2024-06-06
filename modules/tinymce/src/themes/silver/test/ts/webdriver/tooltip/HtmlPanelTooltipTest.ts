@@ -1,5 +1,6 @@
 import { RealKeys, RealMouse } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -7,13 +8,14 @@ import Editor from 'tinymce/core/api/Editor';
 import * as TooltipUtils from '../../module/TooltipUtils';
 
 describe('browser.tinymce.themes.silver.editor.HtmlPanelTooltipTest', () => {
-
   const pOpenDialogAndWaitForLoad = async (editor: Editor, buttonSelector: string) => {
     TinyUiActions.clickOnToolbar(editor, buttonSelector);
     await TinyUiActions.pWaitForDialog(editor);
   };
 
-  context('Tooltip if data-mce-tooltip is in htmlpanel', () => {
+  // TINY-10995: When calling RealMouse.pMoveToOn, cursor moves to [0, 0]
+  const contextFn = PlatformDetection.detect().browser.isSafari() ? context.skip : context;
+  contextFn('Tooltip if data-mce-tooltip is in htmlpanel', () => {
     const hook = TinyHooks.bddSetup<Editor>({
       base_url: '/project/tinymce/js/tinymce',
       toolbar: 'custom-dialog',
