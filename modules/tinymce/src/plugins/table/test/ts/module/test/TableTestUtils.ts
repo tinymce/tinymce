@@ -252,9 +252,9 @@ const selectListBoxValue = async (editor: Editor, section: string, title: string
   TinyUiActions.clickOnUi(editor, `div[aria-label="${title}"].tox-collection__item`);
 };
 
-const pOpenContextMenu = async (editor: Editor, selector: string) =>
+const pOpenContextMenu = async (editor: Editor, selector: string): Promise<void> => {
   await TinyUiActions.pTriggerContextMenu(editor, selector, '.tox-silver-sink .tox-menu.tox-collection [role="menuitem"]');
-
+};
 const sanitizeString = (input: string): string => {
   return input.replace(/\s+/g, ' ').trim();
 };
