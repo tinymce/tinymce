@@ -102,37 +102,43 @@ const open = (editor: Editor, currentSearchState: Cell<Actions.SearchState>): vo
   const getPanelItems = (error: boolean): Dialog.BodyComponentSpec[] => {
     const items: Dialog.BodyComponentSpec[] = [
       {
-        type: 'bar',
+        type: 'label',
+        label: 'Find',
+        for: 'findtext',
         items: [
           {
-            type: 'input',
-            name: 'findtext',
-            placeholder: 'Find',
-            maximized: true,
-            inputMode: 'search'
-          },
-          {
-            type: 'button',
-            name: 'prev',
-            text: 'Previous',
-            icon: 'action-prev',
-            enabled: false,
-            borderless: true
-          },
-          {
-            type: 'button',
-            name: 'next',
-            text: 'Next',
-            icon: 'action-next',
-            enabled: false,
-            borderless: true
+            type: 'bar',
+            items: [
+              {
+                type: 'input',
+                name: 'findtext',
+                maximized: true,
+                inputMode: 'search'
+              },
+              {
+                type: 'button',
+                name: 'prev',
+                text: 'Previous',
+                icon: 'action-prev',
+                enabled: false,
+                borderless: true
+              },
+              {
+                type: 'button',
+                name: 'next',
+                text: 'Next',
+                icon: 'action-next',
+                enabled: false,
+                borderless: true
+              }
+            ]
           }
         ]
       },
       {
         type: 'input',
         name: 'replacetext',
-        placeholder: 'Replace with',
+        label: 'Replace with',
         inputMode: 'search'
       },
     ];
