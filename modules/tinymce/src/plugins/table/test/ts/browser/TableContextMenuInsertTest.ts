@@ -39,7 +39,7 @@ describe('browser.tinymce.plugins.table.TableCellPropsStyleTest', () => {
     assert.notEqual(warnSanitized, expectedSanitized, `Warning matched expected: ${expectedSanitized}`);
   };
 
-  it('TINY-6887', async () => {
+  it('TINY-6887: should have no console warning when inserting table via context menu', async () => {
     const editor = hook.editor();
     editor.setContent('<p></p>');
     await pOpenContextMenu(editor, 'p');
