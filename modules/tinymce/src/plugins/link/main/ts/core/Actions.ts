@@ -46,6 +46,11 @@ const gotoSelectedLink = (editor: Editor) => (): void => {
 };
 
 const setupGotoLinks = (editor: Editor): void => {
+  editor.on('contextmenu', (e) => {
+    if (Utils.hasLinks(editor.dom.getParents(e.target))) {
+      editor.selection.placeCaretAt(e.x, e.y);
+    }
+  });
   editor.on('click', (e) => {
     const links = Utils.getLinks(editor.dom.getParents(e.target)) as [HTMLAnchorElement];
 
