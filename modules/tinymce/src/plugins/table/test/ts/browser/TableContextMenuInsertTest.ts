@@ -2,6 +2,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import AutoResizePlugin from 'tinymce/plugins/autoresize/Plugin';
@@ -17,9 +18,10 @@ describe('browser.tinymce.plugins.table.TableCellPropsStyleTest', () => {
     base_url: '/project/tinymce/js/tinymce',
   }, [ AutoResizePlugin, TablePlugin ], true);
 
-  const assertDebugLog = async (editor: Editor, expectedLog: string) => {
+  const assertNoConsoleWarn = async (editor: Editor) => {
     const warns: string[] = [];
     const originalWarn = console.warn;
+    const expectedWarn = 'The component must be in a context to execute: triggerEvent <div class="tox-insert-table-picker"></div> is not in context.';
 
     console.warn = (arg: string) => warns.push(arg);
 
@@ -32,7 +34,7 @@ describe('browser.tinymce.plugins.table.TableCellPropsStyleTest', () => {
     const lastWarn = Arr.last(warns).getOr('none');
 
     const warnSanitized = sanitizeString(lastWarn);
-    const expectedSanitized = sanitizeString(expectedLog);
+    const expectedSanitized = sanitizeString(expectedWarn);
 
     assert.notEqual(warnSanitized, expectedSanitized, `Warning matched expected: ${expectedSanitized}`);
   };
@@ -43,6 +45,6 @@ describe('browser.tinymce.plugins.table.TableCellPropsStyleTest', () => {
     await pOpenContextMenu(editor, 'p');
     await TinyUiActions.pWaitForPopup(editor, '.tox-collection--list');
     TinyUiActions.clickOnUi(editor, 'div[role="menuitem"]:contains("Table")');
-    await assertDebugLog( editor, 'The component must be in a context to execute: triggerEvent <div class="tox-insert-table-picker"></div> is not in context.');
+    await assertNoConsoleWarn(editor);
   });
 });
