@@ -34,9 +34,7 @@ describe('browser.tinymce.plugins.table.TableCellPropsStyleTest', () => {
     const warnSanitized = sanitizeString(lastWarn);
     const expectedSanitized = sanitizeString(expectedLog);
 
-    if (warnSanitized === expectedSanitized) {
-      throw new Error(`Warning matched expected: ${expectedSanitized}`);
-    }
+    assert.notEqual(warnSanitized, expectedSanitized, `Warning matched expected: ${expectedSanitized}`);
   };
 
   it('TINY-6887', async () => {
