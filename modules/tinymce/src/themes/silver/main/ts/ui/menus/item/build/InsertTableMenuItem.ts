@@ -124,8 +124,9 @@ export const renderInsertTableMenuItem = (spec: Menu.InsertTableMenuItem, backst
           }),
           AlloyEvents.runWithTarget<CellEvent>(cellExecuteEvent, (c, _, e) => {
             const { row, col } = e.event;
-            spec.onAction({ numRows: row + 1, numColumns: col + 1 });
+            // Close the sandbox before triggering the action
             AlloyTriggers.emit(c, SystemEvents.sandboxClose());
+            spec.onAction({ numRows: row + 1, numColumns: col + 1 });
           })
         ]),
         Keying.config({
