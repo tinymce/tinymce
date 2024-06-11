@@ -37,7 +37,6 @@ export const MouseSelection = (bridge: WindowBridge, container: SugarElement<Nod
             if (isNonEditableCell && isCellClosestContentEditable) {
               annotations.selectRange(container, boxes, singleCell, singleCell);
               // TODO: TINY-7874 This is purely a workaround until the offscreen selection issues are solved
-              bridge.selectContents(singleCell);
             }
           } else if (boxes.length > 1) {
             // Wait until we have more than one, otherwise you can't do text selection inside a cell.
