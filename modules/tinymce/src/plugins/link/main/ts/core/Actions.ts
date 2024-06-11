@@ -4,20 +4,8 @@ import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 import VK from 'tinymce/core/api/util/VK';
 
 import * as OpenUrl from './OpenUrl';
+import { LinkSelection } from './Selection';
 import * as Utils from './Utils';
-
-const isSelectionOnImageWithEmbeddedLink = (editor: Editor) => {
-  const rng = editor.selection.getRng();
-  const node = rng.startContainer;
-  // Handle a case where an image embedded with a link is selected
-  return Utils.isLink(node) && rng.startContainer === rng.endContainer && editor.dom.select('img', node).length === 1;
-};
-
-const getLinks = (editor: Editor) => editor.selection.isCollapsed() || isSelectionOnImageWithEmbeddedLink(editor)
-  ? Utils.getLinks(editor.dom.getParents(editor.selection.getStart())) as [HTMLAnchorElement]
-  : Utils.getLinksInSelection(editor.selection.getRng()) as [HTMLAnchorElement];
-
-const getSelectedLink = (editor: Editor): HTMLAnchorElement | undefined => getLinks(editor)[0];
 
 const hasOnlyAltModifier = (e: KeyboardEvent) => {
   return e.altKey === true && e.shiftKey === false && e.ctrlKey === false && e.metaKey === false;
@@ -41,11 +29,11 @@ const openDialog = (editor: Editor) => (): void => {
   editor.execCommand('mceLink', false, { dialog: true });
 };
 
-const gotoSelectedLink = (editor: Editor) => (): void => {
-  gotoLink(editor, getSelectedLink(editor));
+const gotoSelectedLink = (editor: Editor, linkSelection: LinkSelection) => (): void => {
+  linkSelection.getSelectedLink().each((link) => gotoLink(editor, link));
 };
 
-const setupGotoLinks = (editor: Editor): void => {
+const setupGotoLinks = (editor: Editor, linkSelection: LinkSelection): void => {
   editor.on('contextmenu', (e) => {
     if (Utils.hasLinks(editor.dom.getParents(e.target))) {
       editor.selection.placeCaretAt(e.x, e.y);
@@ -62,11 +50,10 @@ const setupGotoLinks = (editor: Editor): void => {
 
   editor.on('keydown', (e) => {
     if (!e.isDefaultPrevented() && e.keyCode === 13 && hasOnlyAltModifier(e)) {
-      const link = getSelectedLink(editor);
-      if (link) {
+      linkSelection.getSelectedLink().each((link) => {
         e.preventDefault();
         gotoLink(editor, link);
-      }
+      });
     }
   });
 };
@@ -93,15 +80,7 @@ const toggleLinkMenuState = (editor: Editor) => (api: Menu.MenuItemInstanceApi):
   return toggleState(editor, updateState);
 };
 
-const hasExactlyOneLinkInSelection = (editor: Editor): boolean => getLinks(editor).length === 1;
-
-const toggleGotoLinkState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi | Menu.MenuItemInstanceApi): () => void => {
-  const updateState = () => api.setEnabled(hasExactlyOneLinkInSelection(editor));
-  updateState();
-  return toggleState(editor, updateState);
-};
-
-const toggleUnlinkState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi | Menu.MenuItemInstanceApi): () => void => {
+const toggleRequiresLinkState = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi | Menu.MenuItemInstanceApi): () => void => {
   const hasLinks = (parents: Node[]) => Utils.hasLinks(parents) || Utils.hasLinksInSelection(editor.selection.getRng());
   const parents = editor.dom.getParents(editor.selection.getStart());
   const updateEnabled = (parents: Node[]) => {
@@ -117,6 +96,5 @@ export {
   setupGotoLinks,
   toggleLinkState,
   toggleLinkMenuState,
-  toggleGotoLinkState,
-  toggleUnlinkState
+  toggleRequiresLinkState
 };

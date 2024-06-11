@@ -5,53 +5,54 @@ import { InlineContent } from 'tinymce/core/api/ui/Ui';
 
 import * as Options from '../api/Options';
 import * as Actions from '../core/Actions';
+import * as Selection from '../core/Selection';
 import * as Utils from '../core/Utils';
 
-const setupButtons = (editor: Editor): void => {
+const setupButtons = (editor: Editor, linkSelection: Selection.LinkSelection): void => {
   editor.ui.registry.addToggleButton('link', {
     icon: 'link',
     tooltip: 'Insert/edit link',
+    shortcut: 'Meta+K',
     onAction: Actions.openDialog(editor),
-    onSetup: Actions.toggleLinkState(editor),
-    shortcut: 'Meta+K'
+    onSetup: Actions.toggleLinkState(editor)
   });
 
   editor.ui.registry.addButton('openlink', {
     icon: 'new-tab',
     tooltip: 'Open link',
-    onAction: Actions.gotoSelectedLink(editor),
-    onSetup: Actions.toggleGotoLinkState(editor)
+    onAction: Actions.gotoSelectedLink(editor, linkSelection),
+    onSetup: Actions.toggleRequiresLinkState(editor)
   });
 
   editor.ui.registry.addButton('unlink', {
     icon: 'unlink',
     tooltip: 'Remove link',
     onAction: () => Utils.unlink(editor),
-    onSetup: Actions.toggleUnlinkState(editor)
+    onSetup: Actions.toggleRequiresLinkState(editor)
   });
 };
 
-const setupMenuItems = (editor: Editor): void => {
+const setupMenuItems = (editor: Editor, linkSelection: Selection.LinkSelection): void => {
   editor.ui.registry.addMenuItem('openlink', {
     text: 'Open link',
     icon: 'new-tab',
-    onAction: Actions.gotoSelectedLink(editor),
-    onSetup: Actions.toggleGotoLinkState(editor)
+    onAction: Actions.gotoSelectedLink(editor, linkSelection),
+    onSetup: Actions.toggleRequiresLinkState(editor)
   });
 
   editor.ui.registry.addMenuItem('link', {
     icon: 'link',
     text: 'Link...',
     shortcut: 'Meta+K',
-    onSetup: Actions.toggleLinkMenuState(editor),
-    onAction: Actions.openDialog(editor)
+    onAction: Actions.openDialog(editor),
+    onSetup: Actions.toggleLinkMenuState(editor)
   });
 
   editor.ui.registry.addMenuItem('unlink', {
     icon: 'unlink',
     text: 'Remove link',
     onAction: () => Utils.unlink(editor),
-    onSetup: Actions.toggleUnlinkState(editor)
+    onSetup: Actions.toggleRequiresLinkState(editor)
   });
 };
 
@@ -70,7 +71,7 @@ const setupContextMenu = (editor: Editor): void => {
   });
 };
 
-const setupContextToolbars = (editor: Editor): void => {
+const setupContextToolbars = (editor: Editor, linkSelection: Selection.LinkSelection): void => {
   const collapseSelectionToEnd = (editor: Editor) => {
     editor.selection.collapse(false);
   };
@@ -156,7 +157,7 @@ const setupContextToolbars = (editor: Editor): void => {
         tooltip: 'Open link',
         onSetup: onSetupLink,
         onAction: (formApi) => {
-          Actions.gotoSelectedLink(editor)();
+          Actions.gotoSelectedLink(editor, linkSelection)();
           formApi.hide();
         }
       }
@@ -164,9 +165,15 @@ const setupContextToolbars = (editor: Editor): void => {
   });
 };
 
+const setup = (editor: Editor): void => {
+  const linkSelection = Selection.setup(editor);
+
+  setupButtons(editor, linkSelection);
+  setupMenuItems(editor, linkSelection);
+  setupContextMenu(editor);
+  setupContextToolbars(editor, linkSelection);
+};
+
 export {
-  setupButtons,
-  setupMenuItems,
-  setupContextMenu,
-  setupContextToolbars
+  setup
 };
