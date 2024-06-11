@@ -1,5 +1,5 @@
 import { Arr, Optional, Optionals, Strings, Type, Unicode } from '@ephox/katamari';
-import { Css, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
+import { Css, Html, PredicateFind, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
@@ -126,6 +126,8 @@ const hasNbsp = (pos: CaretPosition): boolean => {
 };
 
 const normalizeNbspMiddle = (text: string): string => {
+  // // eslint-disable-next-line no-console
+  // console.log('normalizeNbspMiddle');
   const chars = text.split('');
   return Arr.map(chars, (chr, i) => {
     if (isNbsp(chr) && i > 0 && i < chars.length - 1 && isContent(chars[i - 1]) && isContent(chars[i + 1])) {
@@ -178,6 +180,8 @@ const normalizeNbspAtEnd = (root: SugarElement<Node>, node: Text, makeNbsp: bool
 
 const normalizeNbsps = (root: SugarElement<Node>, pos: CaretPosition, schema: Schema): Optional<CaretPosition> => {
   const container = pos.container();
+  // eslint-disable-next-line no-console
+  console.log('container 2: ', container);
   if (!NodeType.isText(container)) {
     return Optional.none();
   }
@@ -203,11 +207,76 @@ const normalizeNbspsInEditor = (editor: Editor): void => {
   }
 };
 
+const startsWithSpaceOrNbsp = (text: string) => /^(&nbsp;|\s)(.*?)/.test(text);
+const endsWithSpaceOrNbsp = (text: string) => /(.*?)(&nbsp;|\s)$/.test(text);
+
+const endsWithDoubleSpaceOrNbsp = (text: string) => /^(.*?)(&nbsp;|\s){2}$/.test(text);
+
+const startsWithDoubleSpaceOrNbsp = (text: string) => /^(&nbsp;|\s){2}(.*?)$/.test(text);
+
+const normalizeNbspWithElements = (content: string, schema: Schema): string => {
+  const wrappedContent = document.createElement('div');
+  wrappedContent.innerHTML = content;
+  const itNeedWrapper = !wrappedContent.hasChildNodes() || wrappedContent.childNodes.length > 1;
+
+  const node: SugarElement<HTMLElement> = itNeedWrapper ? SugarElement.fromHtml(`<span>${content}</span>`) : SugarElement.fromHtml(content);
+
+  Arr.each(Traverse.children(node), (child) => {
+
+    if (Traverse.nextSibling(child).exists((nextChild) =>
+      SugarNode.isHTMLElement(nextChild)
+      && schema.isInline(SugarNode.name(nextChild))
+      && !startsWithSpaceOrNbsp(Html.get(nextChild))
+    )) {
+
+      if (SugarNode.isHTMLElement(child)) {
+        if (endsWithDoubleSpaceOrNbsp(Html.get(child))) {
+          return;
+        }
+        Html.set(child, Html.get(child).replace(/&nbsp;$/, ' '));
+      }
+      if (SugarNode.isText(child)) {
+        if (endsWithDoubleSpaceOrNbsp(child.dom.nodeValue ?? '')) {
+          return;
+        }
+        child.dom.nodeValue = child.dom.data.replace(new RegExp(`${Unicode.nbsp}$`, ''), ' ');
+      }
+    }
+
+    if (Traverse.prevSibling(child).exists((prevChild) => {
+      const isAnInlineElementThatNotEndsWithSpaceOrNbsp = SugarNode.isHTMLElement(prevChild)
+        && schema.isInline(SugarNode.name(prevChild))
+        && !endsWithSpaceOrNbsp(Html.get(prevChild));
+
+      const isATextElementThatNotEndsWithSpaceOrNbsp = SugarNode.isText(prevChild)
+        && !endsWithSpaceOrNbsp(prevChild.dom.nodeValue ?? '');
+
+      return isAnInlineElementThatNotEndsWithSpaceOrNbsp || isATextElementThatNotEndsWithSpaceOrNbsp;
+    })) {
+      if (SugarNode.isHTMLElement(child)) {
+        if (startsWithDoubleSpaceOrNbsp(Html.get(child))) {
+          return;
+        }
+        Html.set(child, Html.get(child).replace(/^&nbsp;/, ' '));
+      }
+      if (SugarNode.isText(child)) {
+        if (startsWithDoubleSpaceOrNbsp(child.dom.nodeValue ?? '')) {
+          return;
+        }
+        child.dom.nodeValue = child.dom.data.replace(new RegExp(`^${Unicode.nbsp}`, ''), ' ');
+      }
+    }
+  });
+
+  return itNeedWrapper ? Html.get(node) : Html.getOuter(node);
+};
+
 export {
   needsToBeNbspLeft,
   needsToBeNbspRight,
   needsToBeNbsp,
   needsToHaveNbsp,
   normalizeNbspMiddle,
-  normalizeNbspsInEditor
+  normalizeNbspsInEditor,
+  normalizeNbspWithElements
 };
