@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -38,5 +38,23 @@ describe('browser.tinymce.core.html.NonEditableFilterTest', () => {
     const editor = hook.editor();
     editor.setContent('<span contenteditable="false">{test1}</span>');
     assert.lengthOf(editor.dom.select('span'), 1);
+  });
+
+  context('Noneditable content injection', () => {
+    const testNoneditableContentInjection = (testCase: { input: string; expected: string }) => {
+      const editor = hook.editor();
+      editor.setContent(testCase.input);
+      TinyAssertions.assertContent(editor, testCase.expected);
+    };
+
+    it('TINY-11022: noneditable elements should not be allowed to include content that does not match the pattern', () => testNoneditableContentInjection({
+      input: '<p>foo<span class="mceNonEditable" data-mce-content="<b>baz</b>" contenteditable="false">something</span>bar</p>',
+      expected: '<p>foobar</p>'
+    }));
+
+    it('TINY-11022: noneditable elements should not be allowed to include content that just partially matches the pattern', () => testNoneditableContentInjection({
+      input: '<p>foo<span class="mceNonEditable" data-mce-content="{test1}<b>baz</b>" contenteditable="false">something</span>bar</p>',
+      expected: '<p>foobar</p>'
+    }));
   });
 });
