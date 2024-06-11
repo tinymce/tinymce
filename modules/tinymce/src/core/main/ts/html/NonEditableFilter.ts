@@ -1,3 +1,5 @@
+import { Arr } from '@ephox/katamari';
+
 import Editor from '../api/Editor';
 import { SetContentEvent } from '../api/EventTypes';
 import AstNode from '../api/html/Node';
@@ -52,6 +54,13 @@ const convertRegExpsToNonEditable = (editor: Editor, nonEditableRegExps: RegExp[
   e.content = content;
 };
 
+const isValidContent = (nonEditableRegExps: RegExp[], content: string) => {
+  return Arr.forall(nonEditableRegExps, (re) => {
+    const matches = content.match(re);
+    return matches !== null && matches[0].length === content.length;
+  });
+};
+
 const setup = (editor: Editor): void => {
   const contentEditableAttrName = 'contenteditable';
 
@@ -91,11 +100,16 @@ const setup = (editor: Editor): void => {
         continue;
       }
 
-      if (nonEditableRegExps.length > 0 && node.attr('data-mce-content')) {
-        node.name = '#text';
-        node.type = 3;
-        node.raw = true;
-        node.value = node.attr('data-mce-content');
+      const content = node.attr('data-mce-content');
+      if (nonEditableRegExps.length > 0 && content) {
+        if (isValidContent(nonEditableRegExps, content)) {
+          node.name = '#text';
+          node.type = 3;
+          node.raw = true;
+          node.value = content;
+        } else {
+          node.remove();
+        }
       } else {
         node.attr(contentEditableAttrName, null);
       }

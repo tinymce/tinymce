@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: HTML entities that were double decoded in `noscript` elements caused an XSS vulnerability.
+time: 2024-06-11T14:05:19.634277+02:00
+custom:
+  Issue: TINY-11019

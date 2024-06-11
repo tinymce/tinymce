@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: It was possible to inject XSS HTML that was not matching the regexp when using the `noneditable_regexp` option.
+time: 2024-06-12T07:27:17.817625+02:00
+custom:
+  Issue: TINY-11022
