@@ -63,7 +63,7 @@ describe('atomic.tinymce.themes.silver.components.sizeinput.SizeInputParsingTest
     });
 
     fc.assert(fc.property(
-      arbPad, fc.integer(0, largeSensible), arbPad, fc.constantFrom(...units), arbPad,
+      arbPad, fc.integer({ min: 0, max: largeSensible }), arbPad, fc.constantFrom(...units), arbPad,
       (pad1: string, nonNegNumber: number, pad2: string, unit: SizeUnit, pad3: string) => {
         const str = pad1 + nonNegNumber + pad2 + unit + pad3;
         const parsed = parseSize(str);

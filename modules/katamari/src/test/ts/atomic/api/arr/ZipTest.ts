@@ -92,7 +92,7 @@ describe('atomic.katamari.api.arr.ZipTest', () => {
 
   it('returns matching keys and values', () => {
     fc.assert(fc.property(
-      fc.array(fc.asciiString(1, 30)),
+      fc.array(fc.asciiString({ minLength: 1, maxLength: 30 })),
       (rawValues: string[]) => {
         const values = Unique.stringArray(rawValues);
 

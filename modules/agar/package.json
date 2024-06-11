@@ -31,7 +31,6 @@
     "@ephox/sand": "^7.0.0",
     "@ephox/sugar": "^10.0.0",
     "@types/sizzle": "^2.3.3",
-    "fast-check": "^3.19.0",
     "sizzle": "^2.3.4"
   },
   "devDependencies": {

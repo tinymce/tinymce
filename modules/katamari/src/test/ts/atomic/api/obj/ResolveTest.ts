@@ -74,9 +74,9 @@ describe('atomic.katamari.api.obj.ResolveTest', () => {
           fc.dictionary(fc.asciiString(), fc.constant({}))
         )
       ),
-      fc.array(fc.asciiString(1, 30), 1, 40),
-      fc.asciiString(1, 30),
-      fc.asciiString(1, 30),
+      fc.array(fc.asciiString({ minLength: 1, maxLength: 30 }), { minLength: 1, maxLength: 40 }),
+      fc.asciiString({ minLength: 1, maxLength: 30 }),
+      fc.asciiString({ minLength: 1, maxLength: 30 }),
       (dict, parts, field, newValue) => {
         const created = Resolve.forge(parts, dict);
         created[field] = newValue;

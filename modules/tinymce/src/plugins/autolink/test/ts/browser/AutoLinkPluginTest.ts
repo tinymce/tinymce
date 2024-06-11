@@ -84,14 +84,14 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
 
   it('TINY-4773: multiple @ characters', () => {
     const editor = hook.editor();
-    fc.assert(fc.property(fc.hexaString(0, 30), fc.hexaString(0, 30), fc.hexaString(0, 30), (s1, s2, s3) => {
+    fc.assert(fc.property(fc.hexaString({ minLength: 0, maxLength: 30 }), fc.hexaString({ minLength: 0, maxLength: 30 }), fc.hexaString({ minLength: 0, maxLength: 30 }), (s1, s2, s3) => {
       assertNoLink(editor, `${s1}@@${s2}@.@${s3}`, `${s1}@@${s2}@.@${s3}`);
     }));
   });
 
   it('TINY-4773: ending in @ character', () => {
     const editor = hook.editor();
-    fc.assert(fc.property(fc.hexaString(0, 100), (s1) => {
+    fc.assert(fc.property(fc.hexaString({ minLength: 0, maxLength: 100 }), (s1) => {
       assertNoLink(editor, `${s1}@`, `${s1}@`);
     }));
   });

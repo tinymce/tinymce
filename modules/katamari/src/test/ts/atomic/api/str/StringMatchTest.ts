@@ -107,7 +107,7 @@ describe('atomic.katamari.api.str.StringMatchTest', () => {
   it('StringMatch.matches(StringMatch.contains(s1), s) === s.indexOf(s1)', () => {
     fc.assert(fc.property(
       fc.asciiString(),
-      fc.asciiString(1, 40),
+      fc.asciiString({ minLength: 1, maxLength: 40 }),
       (s, s1) => {
         assert.equal(StringMatch.matches(
           StringMatch.contains(s1, StringMatch.caseInsensitive),
@@ -131,8 +131,8 @@ describe('atomic.katamari.api.str.StringMatchTest', () => {
 
   it('StringMatch.matches(StringMatch.exact(s), s + s1) === false', () => {
     fc.assert(fc.property(
-      fc.string(1, 40),
-      fc.string(1, 40),
+      fc.string({ minLength: 1, maxLength: 40 }),
+      fc.string({ minLength: 1, maxLength: 40 }),
       (s, s1) => {
         assert.isFalse(StringMatch.matches(
           StringMatch.exact(s, StringMatch.caseInsensitive),
@@ -144,8 +144,8 @@ describe('atomic.katamari.api.str.StringMatchTest', () => {
 
   it('StringMatch.matches(StringMatch.exact(s), s1 + s) === false', () => {
     fc.assert(fc.property(
-      fc.string(1, 40),
-      fc.string(1, 40),
+      fc.string({ minLength: 1, maxLength: 40 }),
+      fc.string({ minLength: 1, maxLength: 40 }),
       (s, s1) => {
         assert.isFalse(StringMatch.matches(
           StringMatch.exact(s, StringMatch.caseInsensitive),
@@ -157,7 +157,7 @@ describe('atomic.katamari.api.str.StringMatchTest', () => {
 
   it('StringMatch.matches(StringMatch.exact(s), s) === true', () => {
     fc.assert(fc.property(
-      fc.string(1, 40),
+      fc.string({ minLength: 1, maxLength: 40 }),
       (s) => {
         assert.isTrue(StringMatch.matches(
           StringMatch.exact(s, StringMatch.caseInsensitive),
@@ -169,7 +169,7 @@ describe('atomic.katamari.api.str.StringMatchTest', () => {
 
   it('StringMatch.matches(StringMatch.exact(s), s) === false when different case and case-insensitive', () => {
     fc.assert(fc.property(
-      fc.asciiString(1, 40),
+      fc.asciiString({ minLength: 1, maxLength: 40 }),
       (s) => s.toUpperCase() === s.toLowerCase() || StringMatch.matches(
         StringMatch.exact(s.toLowerCase(), StringMatch.caseInsensitive),
         s.toUpperCase()
@@ -179,7 +179,7 @@ describe('atomic.katamari.api.str.StringMatchTest', () => {
 
   it('StringMatch.matches(StringMatch.exact(s), s) === false when different case and case-sensitive', () => {
     fc.assert(fc.property(
-      fc.asciiString(1, 40),
+      fc.asciiString({ minLength: 1, maxLength: 40 }),
       (s) => s.toUpperCase() === s.toLowerCase() || !StringMatch.matches(
         StringMatch.exact(s.toLowerCase(), StringMatch.caseSensitive),
         s.toUpperCase()
@@ -189,7 +189,6 @@ describe('atomic.katamari.api.str.StringMatchTest', () => {
 
   it('StringMatch.matches(StringMatch.all(s1), *) === true', () => {
     fc.assert(fc.property(
-      fc.string(),
       fc.string(),
       (s) => {
         assert.isTrue(StringMatch.matches(

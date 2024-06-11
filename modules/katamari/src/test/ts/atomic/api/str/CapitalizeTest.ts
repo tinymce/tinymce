@@ -23,13 +23,13 @@ describe('atomic.katamari.api.str.CapitalizeTest', () => {
   });
 
   it('tail of the string is unchanged', () => {
-    fc.assert(fc.property(fc.ascii(), fc.asciiString(30), (h, t) => {
+    fc.assert(fc.property(fc.ascii(), fc.asciiString({ maxLength: 30 }), (h, t) => {
       assert.equal(Strings.capitalize(h + t).substring(1), t);
     }));
   });
 
   it('head is uppercase', () => {
-    fc.assert(fc.property(fc.ascii(), fc.asciiString(30), (h, t) => {
+    fc.assert(fc.property(fc.ascii(), fc.asciiString({ maxLength: 30 }), (h, t) => {
       const actualH = Strings.capitalize(h + t).charAt(0);
       assert.equal(actualH, h.toUpperCase());
     }));

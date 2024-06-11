@@ -11,7 +11,7 @@ describe('atomic.tinymce.models.dom.table.TableUtilsTest', () => {
     assert.isTrue(isPercentage('10%'), 'Percentage string is true');
     assert.isTrue(isPercentage('10.125%'), 'Percentage with decimal string is true');
 
-    fc.assert(fc.property(fc.float(1, 100), (n) => {
+    fc.assert(fc.property(fc.float({ min: 1, max: 100 }), (n) => {
       assert.isTrue(isPercentage(n + '%'), 'Arbitrary float with percent string is true');
       assert.isFalse(isPercentage(n + ''), 'Number string is false');
       assert.isFalse(isPercentage(n + 'px'), 'Pixel string is false');
@@ -25,7 +25,7 @@ describe('atomic.tinymce.models.dom.table.TableUtilsTest', () => {
     assert.isTrue(isPixel('10px'), 'Pixel string is true');
     assert.isTrue(isPixel('10.125px'), 'Pixel with decimal string is true');
 
-    fc.assert(fc.property(fc.float(1, 100), (n) => {
+    fc.assert(fc.property(fc.float({ min: 1, max: 100 }), (n) => {
       assert.isTrue(isPixel(n + 'px'), 'Arbitrary float with px string is true');
       assert.isFalse(isPixel(n + ''), 'Number string is false');
       assert.isFalse(isPixel(n + '%'), 'Percent string is false');

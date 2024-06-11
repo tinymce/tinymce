@@ -8,7 +8,7 @@ import * as Transformations from 'ephox/acid/api/colour/Transformations';
 describe('TransformationsTest', () => {
   context('anyToHex', () => {
     it('TINY-7480: keep hex colors as is', () => {
-      fc.assert(fc.property(fc.hexaString(6, 6), (hex) => {
+      fc.assert(fc.property(fc.hexaString({ minLength: 6, maxLength: 6 }), (hex) => {
         const result1 = Transformations.anyToHex(hex);
         const result2 = Transformations.anyToHex('#' + hex);
         assert.equal(result1.value, hex.toUpperCase(), 'without hash');

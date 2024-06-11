@@ -65,7 +65,7 @@ describe('atomic.tinymce.plugins.lists.core.ListNumberingTest', () => {
       fc.mapToConstant({ num: 26, build: (v) => String.fromCharCode(65 + v) }),
       fc.mapToConstant({ num: 26, build: (v) => String.fromCharCode(97 + v) }),
       fc.mapToConstant({ num: 10, build: (v) => v.toString() })
-    ], (c) => fc.stringOf(c, 1, 5));
+    ], (c) => fc.stringOf(c, { minLength: 1, maxLength: 5 }));
 
     fc.assert(fc.property(
       fc.oneof(...arbitrary),

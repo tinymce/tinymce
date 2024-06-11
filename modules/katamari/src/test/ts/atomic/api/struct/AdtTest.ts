@@ -136,7 +136,7 @@ describe('atomic.katamari.api.struct.AdtTest', () => {
   const arbKeys = fc.constantFrom(...allKeys);
 
   it('Error is thrown if not all arguments are supplied', () => {
-    fc.assert(fc.property(arbAdt, fc.array(arbKeys, 1, 40), (subject, exclusions) => {
+    fc.assert(fc.property(arbAdt, fc.array(arbKeys, { minLength: 1, maxLength: 40 }), (subject, exclusions) => {
       const original = Arr.filter(allKeys, (k) => !Arr.contains(exclusions, k));
 
       try {

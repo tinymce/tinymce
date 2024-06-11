@@ -55,7 +55,7 @@ describe('atomic.katamari.api.async.FutureTest', () => {
     });
   }));
 
-  it('parallel spec', () => fc.assert(fc.asyncProperty(fc.array(fc.tuple(fc.integer(1, 10), fc.integer())), (tuples) => new Promise((resolve, reject) =>
+  it('parallel spec', () => fc.assert(fc.asyncProperty(fc.array(fc.tuple(fc.integer({ min: 1, max: 10 }), fc.integer())), (tuples) => new Promise((resolve, reject) =>
     Futures.par(Arr.map(tuples, ([ timeout, value ]) => Future.nu((cb) => setTimeout(() => cb(value), timeout)))).get((ii) => {
       eqAsync('pars', tuples.map(([ _, i ]) => i), ii, reject, tArray(tNumber));
       resolve();
@@ -72,7 +72,7 @@ describe('atomic.katamari.api.async.FutureTest', () => {
   }));
 
   it('mapM spec', () =>
-    fc.assert(fc.asyncProperty(fc.array(fc.tuple(fc.integer(1, 10), fc.integer())), (tuples) => new Promise((resolve, reject) =>
+    fc.assert(fc.asyncProperty(fc.array(fc.tuple(fc.integer({ min: 1, max: 10 }), fc.integer())), (tuples) => new Promise((resolve, reject) =>
       Futures.mapM(tuples, ([ timeout, value ]) => Future.nu((cb) => setTimeout(() => cb(value), timeout))).get((ii) => {
         eqAsync('pars', tuples.map(([ _, i ]) => i), ii, reject, tArray(tNumber));
         resolve();

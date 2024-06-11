@@ -17,8 +17,8 @@ describe('atomic.katamari.api.arr.ObjSizeTest', () => {
 
   it('inductive case', () => {
     fc.assert(fc.property(
-      fc.dictionary(fc.asciiString(1, 30), fc.integer()),
-      fc.asciiString(1, 30),
+      fc.dictionary(fc.asciiString({ minLength: 1, maxLength: 30 }), fc.integer()),
+      fc.asciiString({ minLength: 1, maxLength: 30 }),
       fc.integer(),
       (obj, k, v) => {
         const objWithoutK = Obj.filter(obj, (x, i) => i !== k);

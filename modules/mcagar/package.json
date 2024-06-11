@@ -28,8 +28,7 @@
     "@ephox/agar": "^9.0.0",
     "@ephox/katamari": "^10.0.0",
     "@ephox/sand": "^7.0.0",
-    "@ephox/sugar": "^10.0.0",
-    "fast-check": "^3.19.0"
+    "@ephox/sugar": "^10.0.0"
   },
   "peerDependencies": {
     "tinymce": ">=4.0.0"

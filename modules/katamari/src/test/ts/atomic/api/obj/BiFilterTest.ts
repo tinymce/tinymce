@@ -25,7 +25,7 @@ describe('atomic.katamari.api.obj.BiFilterTest', () => {
 
   it('Check that if the filter always returns false, then everything is in "f"', () => {
     fc.assert(fc.property(
-      fc.dictionary(fc.asciiString(), fc.string(1, 40)),
+      fc.dictionary(fc.asciiString(), fc.string({ minLength: 1, maxLength: 40 })),
       (obj) => {
         const output = Obj.bifilter(obj, Fun.never);
         assert.lengthOf(Obj.keys(output.f), Obj.keys(obj).length);
@@ -37,7 +37,7 @@ describe('atomic.katamari.api.obj.BiFilterTest', () => {
 
   it('Check that if the filter always returns true, then everything is in "t"', () => {
     fc.assert(fc.property(
-      fc.dictionary(fc.asciiString(), fc.string(1, 40)),
+      fc.dictionary(fc.asciiString(), fc.string({ minLength: 1, maxLength: 40 })),
       (obj) => {
         const output = Obj.bifilter(obj, Fun.always);
         assert.lengthOf(Obj.keys(output.f), 0);
@@ -49,7 +49,7 @@ describe('atomic.katamari.api.obj.BiFilterTest', () => {
 
   it('Check that everything in f fails predicate and everything in t passes predicate', () => {
     fc.assert(fc.property(
-      fc.dictionary(fc.asciiString(1, 30), fc.integer()),
+      fc.dictionary(fc.asciiString({ minLength: 1, maxLength: 30 }), fc.integer()),
       (obj) => {
         const predicate = (x: number) => x % 2 === 0;
         const output = Obj.bifilter(obj, predicate);

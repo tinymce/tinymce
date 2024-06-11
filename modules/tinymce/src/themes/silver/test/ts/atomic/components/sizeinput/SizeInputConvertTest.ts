@@ -26,7 +26,7 @@ describe('atomic.tinymce.themes.silver.components.sizeinput.SizeInputConvertTest
 
   it('All units can convert to themselves', () => {
     fc.assert(fc.property(
-      fc.integer(0, largeSensible), fc.constantFrom(...units),
+      fc.integer({ min: 0, max: largeSensible }), fc.constantFrom(...units),
       (value: number, unit: SizeUnit) => {
         const outValue = convertUnit(nuSize(value, unit), unit).getOrNull();
         assert.equal(outValue, value);
@@ -36,7 +36,7 @@ describe('atomic.tinymce.themes.silver.components.sizeinput.SizeInputConvertTest
 
   it('All convertible units should convert back and forth', () => {
     fc.assert(fc.property(
-      fc.integer(0, largeSensible), fc.constantFrom(...convertibleUnits), fc.constantFrom(...convertibleUnits),
+      fc.integer({ min: 0, max: largeSensible }), fc.constantFrom(...convertibleUnits), fc.constantFrom(...convertibleUnits),
       (value: number, unit1: SizeUnit, unit2: SizeUnit) => {
         const outValue = convertUnit(nuSize(value, unit1), unit2).bind(
           (unit2Value) => convertUnit(nuSize(unit2Value, unit2), unit1)
@@ -50,7 +50,7 @@ describe('atomic.tinymce.themes.silver.components.sizeinput.SizeInputConvertTest
   it('All non-convertible units can only convert to themselves', () => {
     const nonConvertible = Arr.filter(units, (unit) => !Arr.contains(convertibleUnits, unit));
     fc.assert(fc.property(
-      fc.integer(0, largeSensible), fc.constantFrom(...nonConvertible), fc.constantFrom(...units),
+      fc.integer({ min: 0, max: largeSensible }), fc.constantFrom(...nonConvertible), fc.constantFrom(...units),
       (value: number, unit1: SizeUnit, unit2: SizeUnit) => {
         assert.equal(convertUnit(nuSize(value, unit1), unit2).isSome(), unit1 === unit2);
       }

@@ -38,7 +38,7 @@ describe('atomic.katamari.api.optional.OptionalsEqualTest', () => {
   });
 
   it('Optional.some(x) !== Optional.some(x + y) where y is not identity', () => {
-    fc.assert(fc.property(fc.string(), fc.string(1, 40), (a, b) => {
+    fc.assert(fc.property(fc.string(), fc.string({ minLength: 1, maxLength: 40 }), (a, b) => {
       assert.isFalse(Optionals.equals(Optional.some(a), Optional.some(a + b)));
     }));
   });
