@@ -248,8 +248,15 @@ const openPropsDialog = async (editor: Editor, dialogCommand: `mceTable${'' | 'C
 
 const selectListBoxValue = async (editor: Editor, section: string, title: string): Promise<void> => {
   TinyUiActions.clickOnUi(editor, `button[aria-label="${section}"].tox-listbox--select`);
-  await TinyUiActions.pWaitForUi(editor, 'div[role="menu"].tox-menu.tox-collection--list');
+  await TinyUiActions.pWaitForUi(editor, 'div[role="listbox"].tox-menu.tox-collection--list');
   TinyUiActions.clickOnUi(editor, `div[aria-label="${title}"].tox-collection__item`);
+};
+
+const pOpenContextMenu = async (editor: Editor, selector: string): Promise<void> => {
+  await TinyUiActions.pTriggerContextMenu(editor, selector, '.tox-silver-sink .tox-menu.tox-collection [role="menuitem"]');
+};
+const sanitizeString = (input: string): string => {
+  return input.replace(/\s+/g, ' ').trim();
 };
 
 export {
@@ -269,5 +276,7 @@ export {
   assertApproxElementStructure,
   createRow,
   openPropsDialog,
-  selectListBoxValue
+  selectListBoxValue,
+  pOpenContextMenu,
+  sanitizeString
 };

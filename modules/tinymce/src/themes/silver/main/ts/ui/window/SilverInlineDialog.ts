@@ -5,6 +5,7 @@ import {
 } from '@ephox/alloy';
 import { Dialog, DialogManager } from '@ephox/bridge';
 import { Cell, Fun, Id, Optional, Optionals } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Height, SugarNode } from '@ephox/sugar';
 
 import * as Backstage from '../../backstage/Backstage';
@@ -36,6 +37,8 @@ const renderInlineDialog = <T extends Dialog.DialogData>(
   const dialogContentId = Id.generate('dialog-content');
   const internalDialog = dialogInit.internalDialog;
 
+  const getCompByName = (name: string) => SilverDialogInstanceApi.getCompByName(modalAccess, name);
+
   const dialogSize = Cell<Dialog.DialogSize>(internalDialog.size);
 
   const dialogSizeClass = SilverDialogCommon.getDialogSizeClass(dialogSize.get()).toArray();
@@ -60,7 +63,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(
     SilverDialogBody.renderInlineBody({
       body: internalDialog.body,
       initialData: internalDialog.initialData,
-    }, dialogId, dialogContentId, backstage, ariaAttrs)
+    }, dialogId, dialogContentId, backstage, ariaAttrs, getCompByName)
   );
 
   const storagedMenuButtons = SilverDialogCommon.mapMenuButtons(internalDialog.buttons);
@@ -94,6 +97,8 @@ const renderInlineDialog = <T extends Dialog.DialogData>(
 
   const inlineClass = 'tox-dialog-inline';
 
+  const os = PlatformDetection.detect().os;
+
   // TODO: Disable while validating?
   const dialog = GuiFactory.build({
     dom: {
@@ -101,7 +106,8 @@ const renderInlineDialog = <T extends Dialog.DialogData>(
       classes: [ 'tox-dialog', inlineClass, ...dialogSizeClass ],
       attributes: {
         role: 'dialog',
-        ['aria-labelledby']: dialogLabelId
+        // TINY-10808 - Workaround to address the dialog header not being announced on VoiceOver with aria-labelledby, ideally we should use the aria-labelledby
+        ...os.isMacOS() ? { 'aria-label': internalDialog.title } : { 'aria-labelledby': dialogLabelId }
       }
     },
     eventOrder: {
@@ -161,7 +167,7 @@ const renderInlineDialog = <T extends Dialog.DialogData>(
   };
 
   // TODO: Clean up the dupe between this (InlineDialog) and SilverDialog
-  const instanceApi = SilverDialogInstanceApi.getDialogApi<T>({
+  const modalAccess: SilverDialogInstanceApi.DialogAccess = {
     getId: Fun.constant(dialogId),
     getRoot: Fun.constant(dialog),
     getFooter: () => optMemFooter.map((memFooter) => memFooter.get(dialog)),
@@ -171,7 +177,8 @@ const renderInlineDialog = <T extends Dialog.DialogData>(
       return Composing.getCurrent(body).getOr(body);
     },
     toggleFullscreen
-  }, extra.redial, objOfCells);
+  };
+  const instanceApi = SilverDialogInstanceApi.getDialogApi<T>(modalAccess, extra.redial, objOfCells);
 
   return {
     dialog,

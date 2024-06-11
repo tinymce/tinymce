@@ -8,6 +8,8 @@ import {
 } from '../../ui/types/SplitSlidingToolbarTypes';
 import * as AddEventsBehaviour from '../behaviour/AddEventsBehaviour';
 import { Coupling } from '../behaviour/Coupling';
+import { Focusing } from '../behaviour/Focusing';
+import { Keying } from '../behaviour/Keying';
 import { Sliding } from '../behaviour/Sliding';
 import { Toggling } from '../behaviour/Toggling';
 import { AlloyComponent } from '../component/ComponentApi';
@@ -25,13 +27,33 @@ import { CompositeSketchFactory } from './UiSketcher';
 const isOpen = (toolbar: AlloyComponent, detail: SplitSlidingToolbarDetail) =>
   AlloyParts.getPart(toolbar, detail, 'overflow').map(Sliding.hasGrown).getOr(false);
 
-const toggleToolbar = (toolbar: AlloyComponent, detail: SplitSlidingToolbarDetail) => {
+const toggleToolbar = (toolbar: AlloyComponent, detail: SplitSlidingToolbarDetail, skipFocus: boolean) => {
   // Make sure that the toolbar needs to toggled by checking for overflow button presence
   AlloyParts.getPart(toolbar, detail, 'overflow-button')
-    .bind(() => AlloyParts.getPart(toolbar, detail, 'overflow'))
-    .each((overf) => {
-      refresh(toolbar, detail);
-      Sliding.toggleGrow(overf);
+    .each((oveflowButton) => {
+      AlloyParts.getPart(toolbar, detail, 'overflow').each((overf) => {
+        refresh(toolbar, detail);
+        if (Sliding.hasShrunk(overf)) {
+          const fn = detail.onOpened;
+          detail.onOpened = (comp) => {
+            if (!skipFocus) {
+              Keying.focusIn(overf);
+            }
+            fn(comp);
+            detail.onOpened = fn;
+          };
+        } else {
+          const fn = detail.onClosed;
+          detail.onClosed = (comp) => {
+            if (!skipFocus) {
+              Focusing.focus(oveflowButton);
+            }
+            fn(comp);
+            detail.onClosed = fn;
+          };
+        }
+        Sliding.toggleGrow(overf);
+      });
     });
 };
 
@@ -86,7 +108,7 @@ const factory: CompositeSketchFactory<SplitSlidingToolbarDetail, SplitSlidingToo
         }),
         AddEventsBehaviour.config('toolbar-toggle-events', [
           AlloyEvents.run(toolbarToggleEvent, (toolbar) => {
-            toggleToolbar(toolbar, detail);
+            toggleToolbar(toolbar, detail, false);
           })
         ])
       ]
@@ -97,7 +119,12 @@ const factory: CompositeSketchFactory<SplitSlidingToolbarDetail, SplitSlidingToo
         refresh(toolbar, detail);
       },
       refresh: (toolbar: AlloyComponent) => refresh(toolbar, detail),
-      toggle: (toolbar: AlloyComponent) => toggleToolbar(toolbar, detail),
+      toggle: (toolbar: AlloyComponent) => {
+        toggleToolbar(toolbar, detail, false);
+      },
+      toggleWithoutFocusing: (toolbar: AlloyComponent) => {
+        toggleToolbar(toolbar, detail, true);
+      },
       isOpen: (toolbar: AlloyComponent) => isOpen(toolbar, detail)
     },
     domModification: {

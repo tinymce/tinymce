@@ -237,6 +237,11 @@ Dialog
   .tox-dialog__body-nav-item--active {
     border-bottom: 2px solid @dialog-body-link-color;
     color: @dialog-body-link-color;
+
+    @media (forced-colors: active) {
+      border-bottom: 2px solid highlight;
+      color: highlight;
+    }
   }
 
   .tox-dialog__body-content {
@@ -497,6 +502,10 @@ Dialog
       pointer-events: none;
       position: absolute;
       z-index: 1;
+    }
+
+    iframe {
+      border-radius: @dialog-iframe-bordered-border-radius;
     }
   }
 

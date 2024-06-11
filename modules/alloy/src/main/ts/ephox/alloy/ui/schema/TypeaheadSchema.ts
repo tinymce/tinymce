@@ -51,6 +51,7 @@ const schema = Fun.constant([
   FieldSchema.defaulted('dismissOnBlur', true),
   Fields.markers([ 'openClass' ]),
   FieldSchema.option('initialData'),
+  FieldSchema.option('listRole'),
 
   SketchBehaviours.field('typeaheadBehaviours', [
     Focusing, Representing, Streaming, Keying, Toggling, Coupling

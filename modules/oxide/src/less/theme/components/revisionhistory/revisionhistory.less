@@ -17,9 +17,13 @@ Revision history
 
 .tox {
   .tox-revisionhistory__pane {
+    padding: 0 !important;      /* Override the default padding of tox-view__pane */
+  }
+
+  .tox-revisionhistory__container {
     display: flex;
     flex-direction: column;
-    padding: 0 !important;      /* Override the default padding of tox-view__pane */
+    height: 100%;
   }
 
   .tox-revisionhistory {
@@ -30,12 +34,13 @@ Revision history
     flex: 1;
     height: 100%;
     margin-top: 8px;
-    overflow: 'auto';
+    overflow-x: auto;
+    overflow-y: hidden;
     position: relative;
     width: 100%;
   }
 
-  .tox-revisionhistroy--align-right {
+  .tox-revisionhistory--align-right {
     margin-left: auto;
   }
 
@@ -47,8 +52,6 @@ Revision history
     border-left: @revisionhistory-border;
     height: 100%;
     max-width: 360px;
-    overflow-x: auto;
-    overflow-y: hidden;
 
     .tox-revisionhistory__sidebar-title {
       border-bottom: @revisionhistory-border;
@@ -66,6 +69,22 @@ Revision history
       min-width: @revisionhistory-sidebar-minwidth;
       overflow-y: auto;
       padding: @revisionhistory-card-padding;
+
+      &:focus {
+        height: 100%;
+        position: relative;   // Override static which prevents z-index to have any effect
+        z-index: 1; // Ensure focus outline is on top of other buttons
+
+        &::after {
+          .keyboard-focus-outline-mixin();
+
+          border-radius: @control-border-radius;
+          bottom: 1px;
+          left: 1px;
+          right: 1px;
+          top: 1px;
+        }
+      }
 
       .tox-revisionhistory__card {
         border: @revisionhistory-border;

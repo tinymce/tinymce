@@ -1,7 +1,8 @@
+import { FocusTools } from '@ephox/agar';
 import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Focus, Insert, Remove, SugarElement } from '@ephox/sugar';
-import { LegacyUnit, TinyHooks } from '@ephox/wrap-mcagar';
+import { Focus, Insert, Remove, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { LegacyUnit, TinyContentActions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -13,9 +14,20 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
     { label: 'Iframe Editor', setup: TinyHooks.bddSetup },
     { label: 'Shadow Dom Editor', setup: TinyHooks.bddSetupInShadowRoot }
   ], (tester) => {
+    let beforeOpenEvents: BeforeOpenNotificationEvent[] = [];
+    let openEvents: OpenNotificationEvent[] = [];
+    const resetNotifications = (editor: Editor) => {
+      const notifications = [ ...editor.notificationManager.getNotifications() ];
+      Arr.each(notifications, (notification) => notification.close());
+      beforeOpenEvents = [];
+      openEvents = [];
+    };
+
     context(tester.label, () => {
-      let beforeOpenEvents: BeforeOpenNotificationEvent[] = [];
-      let openEvents: OpenNotificationEvent[] = [];
+      afterEach(() => {
+        resetNotifications(hook.editor());
+      });
+
       const hook = tester.setup<Editor>({
         service_message: 'service notification text',
         add_unload_trigger: false,
@@ -28,18 +40,6 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
           editor.on('OpenNotification', (event) => openEvents.push(event));
         }
       }, []);
-
-      const resetNotifications = () => {
-        const editor = hook.editor();
-        const notifications = [ ...editor.notificationManager.getNotifications() ];
-        Arr.each(notifications, (notification) => notification.close());
-        beforeOpenEvents = [];
-        openEvents = [];
-      };
-
-      afterEach(() => {
-        resetNotifications();
-      });
 
       // IMPORTANT: This test must be first, as it asserts the service message on load
       it('TINY-6528: Notification manager should not fire BeforeOpenNotification for service messages', () => {
@@ -61,7 +61,7 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
 
       it('TBA: Should not add duplicate text message', () => {
         const editor = hook.editor();
-        resetNotifications();
+        resetNotifications(editor);
 
         const testMsg1: NotificationSpec = { type: 'success', text: 'test success message' };
         const testMsg2: NotificationSpec = { type: 'warning', text: 'test warning message' };
@@ -95,7 +95,7 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
 
       it('TBA: Should add duplicate progressBar messages', () => {
         const editor = hook.editor();
-        resetNotifications();
+        resetNotifications(editor);
 
         const testMsg1: NotificationSpec = { text: 'test progressBar message', progressBar: true };
         const notifications = editor.notificationManager.getNotifications();
@@ -113,7 +113,7 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
 
       it('TBA: Should add duplicate timeout messages', (done) => {
         const editor = hook.editor();
-        resetNotifications();
+        resetNotifications(editor);
 
         const checkClosed = () => {
           if (notifications.length === 0) {
@@ -136,9 +136,10 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
         }, 100);
       });
 
-      it('TINY-6058: Should move focus back to the editor when all notifications closed', () => {
+      it('TINY-6058: Should move focus back to the editor when all notifications closed', async () => {
         const editor = hook.editor();
-        resetNotifications();
+        const root = SugarShadowDom.getRootNode(TinyDom.targetElement(editor));
+        resetNotifications(editor);
 
         const testMsg1: NotificationSpec = { type: 'warning', text: 'test message 1' };
         const testMsg2: NotificationSpec = { type: 'error', text: 'test message 2' };
@@ -150,59 +151,21 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
 
         const hasFocus = (node: Node) => Focus.search(SugarElement.fromDom(node)).isSome();
 
-        Focus.focus(SugarElement.fromDom(n2.getEl()));
-        assert.isTrue(hasFocus(n2.getEl()), 'Focus should be on notification 2');
-
-        n2.close();
+        TinyContentActions.keystroke(editor, 123, { alt: true });
+        await FocusTools.pTryOnSelector('Assert focus should be on notification 1', root, '.tox-notification');
         assert.isTrue(hasFocus(n1.getEl()), 'Focus should be on notification 1');
 
         n1.close();
+        await FocusTools.pTryOnSelector('Assert focus should on notification 2', root, '.tox-notification');
+        assert.isTrue(hasFocus(n2.getEl()), 'Focus should be on notification 2');
+
+        n2.close();
         assert.isTrue(editor.hasFocus(), 'Focus should be on the editor');
-      });
-
-      context('focus is placed outside of the editor', () => {
-        const input = SugarElement.fromHtml<HTMLInputElement>('<input class="test-input" />');
-
-        beforeEach(() => {
-          const body = SugarElement.fromDom(document.body);
-          Insert.append(body, input);
-        });
-
-        afterEach(() => {
-          Remove.remove(input);
-        });
-
-        it('TINY-10282: Should not move focus around if the focus is not in the editor', () => {
-          const editor = hook.editor();
-          resetNotifications();
-
-          const testMsg1: NotificationSpec = { type: 'warning', text: 'test message 1' };
-          const testMsg2: NotificationSpec = { type: 'error', text: 'test message 2' };
-          const notifications = editor.notificationManager.getNotifications();
-
-          const hasFocus = (node: SugarElement<Node>) =>
-            Focus.search(node).isSome();
-
-          const n1 = editor.notificationManager.open(testMsg1);
-          const n2 = editor.notificationManager.open(testMsg2);
-          assert.lengthOf(notifications, 2, 'Should have two messages added.');
-
-          Focus.focus(input);
-
-          assert.isTrue(hasFocus(input), 'Focus should remain on the input');
-
-          n2.close();
-          assert.isTrue(hasFocus(input), 'Focus should remain on the input');
-
-          n1.close();
-          assert.isTrue(hasFocus(input), 'Focus should remain on the input');
-          assert.isTrue(!editor.hasFocus(), 'Focus should not be on the editor');
-        });
       });
 
       it('TINY-6528: Notification manager should throw events for notification modification', () => {
         const editor = hook.editor();
-        resetNotifications();
+        resetNotifications(editor);
 
         const testMsg: NotificationSpec = {
           type: 'warning',
@@ -241,7 +204,7 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
 
       it('TBA: Should not open notification if editor is removed', () => {
         const editor = hook.editor();
-        resetNotifications();
+        resetNotifications(editor);
 
         const testMsg1: NotificationSpec = { type: 'warning', text: 'test progressBar message' };
 
@@ -250,6 +213,59 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
         assert.doesNotThrow(() => {
           editor.notificationManager.open(testMsg1);
         }, 'Should never throw exception.');
+      });
+    });
+
+    context('focus is placed outside of the editor', () => {
+      const input = SugarElement.fromHtml<HTMLInputElement>('<input class="test-input" />');
+
+      beforeEach(() => {
+        const body = SugarElement.fromDom(document.body);
+        Insert.append(body, input);
+      });
+
+      afterEach(() => {
+        Remove.remove(input);
+      });
+
+      const hook = tester.setup<Editor>({
+        service_message: 'service notification text',
+        add_unload_trigger: false,
+        disable_nodechange: true,
+        indent: false,
+        entities: 'raw',
+        base_url: '/project/tinymce/js/tinymce',
+        setup: (editor: Editor) => {
+          editor.on('BeforeOpenNotification', (event) => beforeOpenEvents.push(event));
+          editor.on('OpenNotification', (event) => openEvents.push(event));
+        }
+      }, []);
+
+      it('TINY-10282: Should not move focus around if the focus is not in the editor', () => {
+        const editor = hook.editor();
+        resetNotifications(editor);
+
+        const testMsg1: NotificationSpec = { type: 'warning', text: 'test message 1' };
+        const testMsg2: NotificationSpec = { type: 'error', text: 'test message 2' };
+        const notifications = editor.notificationManager.getNotifications();
+
+        const hasFocus = (node: SugarElement<Node>) =>
+          Focus.search(node).isSome();
+
+        const n1 = editor.notificationManager.open(testMsg1);
+        const n2 = editor.notificationManager.open(testMsg2);
+        assert.lengthOf(notifications, 2, 'Should have two messages added.');
+
+        Focus.focus(input);
+
+        assert.isTrue(hasFocus(input), 'Focus should remain on the input');
+
+        n2.close();
+        assert.isTrue(hasFocus(input), 'Focus should remain on the input');
+
+        n1.close();
+        assert.isTrue(hasFocus(input), 'Focus should remain on the input');
+        assert.isTrue(!editor.hasFocus(), 'Focus should not be on the editor');
       });
     });
   });

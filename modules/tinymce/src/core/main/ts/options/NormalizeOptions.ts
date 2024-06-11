@@ -142,8 +142,10 @@ const combineOptions = (isMobileDevice: boolean, isPhone: boolean, defaultOption
   return processPlugins(isMobileDevice, sectionResult, defaultOverrideOptions, extendedOptions);
 };
 
-const normalizeOptions = (defaultOverrideOptions: RawEditorOptions, options: RawEditorOptions): NormalizedEditorOptions =>
-  combineOptions(isPhone || isTablet, isPhone, options, defaultOverrideOptions, options);
+const normalizeOptions = (defaultOverrideOptions: RawEditorOptions, options: RawEditorOptions): NormalizedEditorOptions => {
+  const copiedOptions = Merger.merge(options);
+  return combineOptions(isPhone || isTablet, isPhone, copiedOptions, defaultOverrideOptions, copiedOptions);
+};
 
 export {
   normalizeOptions,

@@ -1,0 +1,6 @@
+project: alloy
+kind: Added
+body: New `remove` API to the `AriaDescribe` module.
+time: 2024-05-30T22:25:13.432892+08:00
+custom:
+  Issue: TINY-10891

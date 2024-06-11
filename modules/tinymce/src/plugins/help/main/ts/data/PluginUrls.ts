@@ -67,6 +67,7 @@ const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'importword', name: 'Import from Word', type: PluginType.Premium },
   { key: 'inlinecss', name: 'Inline CSS', type: PluginType.Premium, slug: 'inline-css' },
   { key: 'linkchecker', name: 'Link Checker', type: PluginType.Premium },
+  { key: 'math', name: 'Math', type: PluginType.Premium },
   { key: 'markdown', name: 'Markdown', type: PluginType.Premium },
   { key: 'mentions', name: 'Mentions', type: PluginType.Premium },
   { key: 'mergetags', name: 'Merge Tags', type: PluginType.Premium },

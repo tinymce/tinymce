@@ -72,6 +72,24 @@ describe('browser.tinymce.core.delete.BlockMergeBoundary', () => {
       const boundaryOpt = readBlockBoundary(true, [ 1, 0 ], 1);
       assertBlockBoundaryNone(boundaryOpt);
     });
+
+    it('TINY-10590: If the cursor is between an internal block and a text-node it should not count as a block boundary', () => {
+      setHtml('<div>A<p>B</p>C</div>');
+      const boundaryOpt = readBlockBoundary(false, [ 0 ], 2);
+      assertBlockBoundaryNone(boundaryOpt);
+    });
+
+    it('TINY-10590: If the cursor is in a text node and attempt to go outside of it, going backwards, it should not count as a boundary', () => {
+      setHtml('<div>A<p>B</p>C</div>');
+      const boundaryOpt = readBlockBoundary(false, [ 0, 1 ], 0);
+      assertBlockBoundaryNone(boundaryOpt);
+    });
+
+    it('TINY-10590: If the cursor is in a text node and attempt to go outside of it, going forwards, it should not count as a boundary', () => {
+      setHtml('<div>A<p>B</p>C</div>');
+      const boundaryOpt = readBlockBoundary(true, [ 0, 1 ], 1);
+      assertBlockBoundaryNone(boundaryOpt);
+    });
   });
 
   context('Some block boundaries', () => {

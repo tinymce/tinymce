@@ -1,5 +1,5 @@
 import { FieldProcessor, FieldSchema } from '@ephox/boulder';
-import { Obj, Type } from '@ephox/katamari';
+import { Fun, Obj, Type } from '@ephox/katamari';
 
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
@@ -19,14 +19,17 @@ import * as ItemEvents from '../util/ItemEvents';
 
 type ItemRole = 'menuitem' | 'menuitemcheckbox' | 'menuitemradio';
 
-const getItemRole = (detail: NormalItemDetail): ItemRole =>
-  detail.toggling
-    .map((toggling) => toggling.exclusive ? 'menuitemradio' : 'menuitemcheckbox')
-    .getOr('menuitem');
+const getItemRole = (detail: NormalItemDetail): ItemRole | string =>
+  detail.role.fold(
+    () => detail.toggling
+      .map((toggling) => toggling.exclusive ? 'menuitemradio' : 'menuitemcheckbox')
+      .getOr('menuitem'),
+    Fun.identity
+  );
 
-const getTogglingSpec = (tConfig: Partial<ItemTogglingConfigSpec>): TogglingConfigSpec => ({
+const getTogglingSpec = (tConfig: Partial<ItemTogglingConfigSpec>, isOption: boolean): TogglingConfigSpec => ({
   aria: {
-    mode: 'checked'
+    mode: isOption ? 'selected' : 'checked'
   },
   // Filter out the additional properties that are not in Toggling Behaviour's configuration (e.g. exclusive)
   ...Obj.filter(tConfig, (_value, name) => name !== 'exclusive'),
@@ -55,7 +58,7 @@ const builder = (detail: NormalItemDetail): AlloySpec => ({
     detail.itemBehaviours,
     [
       // Investigate, is the Toggling.revoke still necessary here?
-      detail.toggling.fold(Toggling.revoke, (tConfig) => Toggling.config(getTogglingSpec(tConfig))),
+      detail.toggling.fold(Toggling.revoke, (tConfig) => Toggling.config(getTogglingSpec(tConfig, detail.role.exists((role) => role === 'option')))),
       Focusing.config({
         ignore: detail.ignoreFocus,
         // Rationale: because nothing is focusable, when you click
@@ -98,6 +101,7 @@ const schema: FieldProcessor[] = [
   FieldSchema.defaulted('hasSubmenu', false),
 
   FieldSchema.option('toggling'),
+  FieldSchema.option('role'),
 
   // Maybe this needs to have fewer behaviours
   SketchBehaviours.field('itemBehaviours', [ Toggling, Focusing, Keying, Representing ]),

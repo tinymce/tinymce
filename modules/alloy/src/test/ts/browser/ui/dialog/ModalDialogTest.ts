@@ -1,7 +1,8 @@
 import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, StructAssert, TestStore, UiFinder } from '@ephox/agar';
 import { after, afterEach, before, beforeEach, describe, it } from '@ephox/bedrock-client';
-import { Result } from '@ephox/katamari';
-import { Attribute, Class, Compare, SugarBody, SugarDocument } from '@ephox/sugar';
+import { Result, Type } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
+import { Attribute, Class, Compare, SugarBody, SugarDocument, TextContent } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -258,16 +259,23 @@ describe('browser.alloy.ui.dialog.ModalDialogTest', () => {
   });
 
   it('TINY-9520: Checking aria attribute of dialog', () => {
+    const os = PlatformDetection.detect().os;
     const dialog = hook.component();
     const dialogTitle = UiFinder.findIn(dialog.element, dialogSelectors.title).getOrDie();
 
-    const titleId = Attribute.getOpt(dialogTitle, 'id').getOr('');
+    if (os.isMacOS()) {
+      const ariaLabel = TextContent.get(dialogTitle);
+      Assertions.assertEq('Dialog aria-labelledby should not be set for MacOS', true, !Attribute.has(dialog.element, 'aria-labelledby'));
+      Assertions.assertEq('aria-label should not be empty', true, Type.isNonNullable(ariaLabel) && ariaLabel.length > 0);
+      Assertions.assertEq('Dialog aria-label should be the same as header title', Attribute.get(dialog.element, 'aria-label'), ariaLabel);
+    } else {
+      const titleId = Attribute.getOpt(dialogTitle, 'id').getOr('');
+      Assertions.assertEq('titleId should be set', true, Attribute.has(dialogTitle, 'id'));
+      Assertions.assertEq('titleId should not be empty', true, titleId.length > 0);
 
-    Assertions.assertEq('titleId should be set', true, Attribute.has(dialogTitle, 'id'));
-    Assertions.assertEq('titleId should not be empty', true, titleId.length > 0);
-
-    const dialogLabelledBy = Attribute.get(dialog.element, 'aria-labelledby');
-    Assertions.assertEq('Labelledby blah better error message', titleId, dialogLabelledBy);
+      const dialogLabelledBy = Attribute.get(dialog.element, 'aria-labelledby');
+      Assertions.assertEq('Dialog aria-labelledby should be equal to title id', titleId, dialogLabelledBy);
+    }
   });
 
   it('TINY-9520: Focus testing', async () => {

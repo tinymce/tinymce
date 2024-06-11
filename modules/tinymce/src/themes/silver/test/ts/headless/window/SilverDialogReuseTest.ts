@@ -54,7 +54,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogReuseTest', () => {
             s.element('div', {
               classes: [ arr.has('tox-dialog__header') ],
               children: [
-                s.element('div', {
+                s.element('h1', {
                   classes: [ arr.has('tox-dialog__title') ],
                   html: str.is('Silver Test Modal Dialog')
                 }),

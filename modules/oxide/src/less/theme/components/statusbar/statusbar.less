@@ -122,10 +122,20 @@ Statusbar
 
   .tox-statusbar__branding {
     svg {
+
+      @media (forced-colors: active) {
+        fill: currentColor;
+      }
+
       fill: @statusbar-logo-color;
-      height: 1.14em;
-      vertical-align: -.28em;
-      width: 3.6em;
+      height: 1em;
+      margin-left: .3em;
+      width: auto;
+    }
+
+    a { /* stylelint-disable-line no-descending-specificity */
+      align-items: center;
+      display: inline-flex;
     }
 
     a:hover,
@@ -196,5 +206,12 @@ Statusbar
 
   .tox-statusbar__path > * {
     margin-left: @pad-xs;
+  }
+
+  .tox-statusbar__branding {
+    svg {
+      margin-left: 0;
+      margin-right: .3em;
+    }
   }
 }

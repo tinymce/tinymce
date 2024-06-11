@@ -341,6 +341,34 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       await FocusTools.pTryOnSelector('Pressing left again it should move to Button 1', root, '.tox-view__header [aria-label="Button 1"]');
       toggleView('myview1');
     });
+
+    it('TINY-10780: should be possible to use "tab" navigation inside the views', async () => {
+      const editor = hook.editor();
+      const root = SugarShadowDom.getRootNode(TinyDom.targetElement(editor));
+      toggleView('myview1');
+      FocusTools.setFocus(root, '.tox-view__pane');
+      await FocusTools.pTryOnSelector('Focus should be on the pane', root, '.tox-view__pane');
+
+      TinyUiActions.keystroke(editor, Keys.tab());
+      await FocusTools.pTryOnSelector('After the first tab Button 1 should be selected', root, '.tox-view__header [aria-label="Button 1"]');
+
+      TinyUiActions.keystroke(editor, Keys.tab());
+      await FocusTools.pTryOnSelector('After the second tab Button 2 should be selected', root, '.tox-view__header [aria-label="Button 2"]');
+
+      TinyUiActions.keystroke(editor, Keys.tab());
+      await FocusTools.pTryOnSelector('After the third tab pane should be selected again', root, '.tox-view__pane');
+
+      TinyUiActions.keystroke(editor, Keys.tab(), { shift: true, shiftKey: true });
+      await FocusTools.pTryOnSelector('After shift+tab from pane Button 2 should be selected', root, '.tox-view__header [aria-label="Button 2"]');
+
+      TinyUiActions.keystroke(editor, Keys.tab(), { shift: true, shiftKey: true });
+      await FocusTools.pTryOnSelector('After the second shift+tab Button 1 should be selected', root, '.tox-view__header [aria-label="Button 1"]');
+
+      TinyUiActions.keystroke(editor, Keys.tab(), { shift: true, shiftKey: true });
+      await FocusTools.pTryOnSelector('After the third shift+tab pane should be selected', root, '.tox-view__pane');
+
+      toggleView('myview1');
+    });
   });
 
   context('Inline mode', () => {

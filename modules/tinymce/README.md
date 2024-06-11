@@ -82,6 +82,6 @@ Docs are hosted on Github in the [tinymce-docs](https://github.com/tinymce/tinym
 
 [How to contribute](https://github.com/tinymce/tinymce-docs/blob/main/CONTRIBUTING.md) to the docs, including a style guide, can be found on the GitHub repo.
 
-[Documentation](https://www.tiny.cloud/docs/tinymce/6/)
+[Documentation](https://www.tiny.cloud/docs/tinymce/7/)
 
 [Log feedback](https://github.com/tinymce/tinymce/labels/6.x)

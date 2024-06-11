@@ -15,13 +15,16 @@ describe('browser.tinymce.plugins.searchreplace.UndoReplaceSpanTest', () => {
     base_url: '/project/tinymce/js/tinymce',
   }, [ Plugin ]);
 
+  const findInputSelector = Utils.getFindInputSelector();
+  const replaceWithInputSelector = Utils.getReplaceWithInputSelector();
+
   it('TBA: replace one of three found, undo and redo and assert there is no matcher spans in editor', async () => {
     const editor = hook.editor();
     editor.setContent('<p>cats cats cats</p>');
 
     await Utils.pOpenDialog(editor);
-    await Utils.pSetFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', 'cats');
-    await Utils.pSetFieldValue(editor, 'input.tox-textfield[placeholder="Replace with"]', 'dogs');
+    await Utils.pSetFieldValue(editor, findInputSelector, 'cats');
+    await Utils.pSetFieldValue(editor, replaceWithInputSelector, 'dogs');
     Utils.clickFind(editor);
     await UiFinder.pWaitFor('wait for button to be enabled', SugarBody.body(), 'button[disabled!="disabled"]:contains("Replace")');
     Utils.clickReplace(editor);

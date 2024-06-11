@@ -1,10 +1,18 @@
+import { Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
+import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
+import Editor from 'tinymce/core/api/Editor';
 import Schema from 'tinymce/core/api/html/Schema';
 import Styles from 'tinymce/core/api/html/Styles';
 
 describe('browser.tinymce.core.html.StylesTest', () => {
+
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    base_url: '/project/tinymce/js/tinymce'
+  }, []);
 
   const assertStyles = (styles: Styles, input: string, expected: string) => {
     assert.equal(styles.serialize(styles.parse(input)), expected);
@@ -263,5 +271,43 @@ describe('browser.tinymce.core.html.StylesTest', () => {
     );
     assertStyles(styles, 'color: rgba(1, 2, 3);', 'color: rgba(1, 2, 3);');
     assertStyles(styles, 'color: rgb(1, 2, 3, 0.5);', 'color: rgb(1, 2, 3, 0.5);');
+  });
+
+  it('TINY-10916: transparent should not be converted to other formats', () => {
+    const styles = Styles();
+    assertStyles(styles, 'color: transparent;', 'color: transparent;');
+    assertStyles(styles, 'background-color: transparent;', 'background-color: transparent;');
+    assertStyles(styles, 'border-color: transparent;', 'border-color: transparent;');
+    assertStyles(styles, 'border: 1px solid transparent;', 'border: 1px solid transparent;');
+    assertStyles(styles, 'background: transparent;', 'background: transparent;');
+    assertStyles(styles, 'outline: 1px solid transparent;', 'outline: 1px solid transparent;');
+    assertStyles(styles, 'box-shadow: 1px 1px 1px transparent;', 'box-shadow: 1px 1px 1px transparent;');
+    assertStyles(styles, 'text-shadow: 1px 1px 1px transparent;', 'text-shadow: 1px 1px 1px transparent;');
+    assertStyles(styles, 'text-decoration-color: transparent;', 'text-decoration-color: transparent;');
+  });
+
+  it('TINY-10916: transparent should not be converted to other format when using set/get Content API', () => {
+    const editor = hook.editor();
+    Arr.each([
+      '<p style="color: transparent;">colour transparent</p>',
+      '<p style="background-color: transparent;">bg colour transparent</p>',
+      '<p style="border-color: transparent;">border colour transparent</p>',
+      '<p style="border: 1px solid transparent;">border transparent</p>',
+      `<p style="background: transparent;">bg transparent</p>`,
+      '<p style="outline: 1px solid transparent;">outline transparent</p>',
+      '<p style="box-shadow: 1px 1px 1px transparent;">box-shadow transparent</p>',
+      '<p style="text-shadow: 1px 1px 1px transparent;">text-shadow transparent</p>',
+      '<p style="text-decoration-color: transparent;">text-decoration-color transparent</p>'
+    ], (content) => {
+      editor.setContent(content);
+      const result = editor.getContent();
+      Assertions.assertEq('Should not convert transparent to other format', content, result);
+    });
+  });
+
+  it('TINY-10916: only non calculative new colour foramt should be handled', () => {
+    const styles = Styles();
+    assertStyles(styles, 'color: rgb(0 0 0)', 'color: #000000;');
+    assertStyles(styles, 'color: rgb(0 0 0 / 0)', 'color: rgb(0 0 0 / 0);');
   });
 });

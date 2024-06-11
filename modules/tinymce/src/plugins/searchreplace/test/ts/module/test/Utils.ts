@@ -62,6 +62,10 @@ const pSelectPreference = async (editor: Editor, name: string): Promise<void> =>
   TinyUiActions.clickOnUi(editor, '.tox-selected-menu[role=menu] div[aria-label="' + name + '"]');
 };
 
+const getFindInputSelector = Fun.constant('.tox-bar > .tox-form__group > input.tox-textfield');
+
+const getReplaceWithInputSelector = Fun.constant('.tox-form > .tox-form__group > input.tox-textfield');
+
 export {
   clickFind,
   clickNext,
@@ -73,5 +77,7 @@ export {
   pAssertFieldValue,
   pAssertAlertInDialog,
   pSelectPreference,
-  pSetFieldValue
+  pSetFieldValue,
+  getFindInputSelector,
+  getReplaceWithInputSelector
 };

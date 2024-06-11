@@ -79,20 +79,26 @@ const focusEditor = (editor: Editor) => {
   const selection: EditorSelection = editor.selection;
   const body = editor.getBody();
   let rng = selection.getRng();
-
   editor.quirks.refreshContentEditable();
 
-  if (Type.isNonNullable(editor.bookmark) && !hasFocus(editor)) {
+  const restoreBookmark = (editor: Editor) => {
     SelectionBookmark.getRng(editor).each((bookmarkRng) => {
       editor.selection.setRng(bookmarkRng);
       rng = bookmarkRng;
     });
+  };
+
+  if (!hasFocus(editor) && editor.hasEditableRoot()) {
+    restoreBookmark(editor);
   }
 
   // Move focus to contentEditable=true child if needed
   const contentEditableHost = getContentEditableHost(editor, selection.getNode());
   if (contentEditableHost && editor.dom.isChildOf(contentEditableHost, body)) {
     focusBody(contentEditableHost);
+    if (!editor.hasEditableRoot()) {
+      restoreBookmark(editor);
+    }
     normalizeSelection(editor, rng);
     activateEditor(editor);
     return;

@@ -6,6 +6,7 @@ import * as BlockRangeDelete from './BlockRangeDelete';
 import * as CaretBoundaryDelete from './CaretBoundaryDelete';
 import * as CefDelete from './CefDelete';
 import * as DeleteUtils from './DeleteUtils';
+import * as DivDelete from './DivDelete';
 import * as ImageBlockDelete from './ImageBlockDelete';
 import * as InlineBoundaryDelete from './InlineBoundaryDelete';
 import * as InlineFormatDelete from './InlineFormatDelete';
@@ -25,6 +26,7 @@ const findAction = (editor: Editor, caret: Cell<Text | null>, forward: boolean) 
     MediaDelete.backspaceDelete,
     BlockRangeDelete.backspaceDelete,
     InlineFormatDelete.backspaceDelete,
+    DivDelete.backspaceDelete
   ], (item) => item(editor, forward))
     .filter((_) => editor.selection.isEditable());
 

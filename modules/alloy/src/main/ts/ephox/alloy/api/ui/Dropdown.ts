@@ -181,7 +181,7 @@ const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, c
 
     domModification: {
       attributes: {
-        'aria-haspopup': 'true',
+        'aria-haspopup': detail.listRole.getOr('true'),
         ...detail.role.fold(() => ({}), (role) => ({ role })),
         ...detail.dom.tag === 'button' ? { type: lookupAttr('type').getOr('button') } : {}
       }

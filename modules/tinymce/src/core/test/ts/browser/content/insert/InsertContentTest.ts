@@ -1,5 +1,4 @@
 import { context, describe, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -8,11 +7,7 @@ import { SetContentEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as InsertContent from 'tinymce/core/content/InsertContent';
 
-describe('browser.tinymce.core.content.InsertContentTest', () => {
-  // TINY-10669: Remove this
-  const platform = PlatformDetection.detect();
-  const isSafariLessThan17 = platform.browser.isSafari() && platform.browser.version.major < 17;
-
+describe('browser.tinymce.core.content.insert.InsertContentTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     disable_nodechange: true,
@@ -388,11 +383,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       merge: true
     });
     TinyAssertions.assertContent(editor, '<p>' +
-      '<span style="font-size: 9pt;">' +
-      '<span style="font-size: 14pt;">' +
       '<span style="font-size: 9pt;">test</span>' +
-      '</span>' +
-      '</span>' +
       '</p>');
   });
 
@@ -411,8 +402,8 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       merge: true
     });
     TinyAssertions.assertContent(editor, '<p>' +
-      '<span style="color: red; font-size: 9pt;">' +
-      '<span style="background-color: red; color: red;">test</span>' +
+      '<span style="background-color: red; color: red;">' +
+      '<span style="color: red; font-size: 9pt;">test</span>' +
       '</span>' +
       '</p>');
   });
@@ -440,11 +431,13 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       merge: true
     });
     TinyAssertions.assertContent(editor, '<p>' +
-    '<span style="color: yellow;">' +
     '<span style="background-color: red;">' +
+    '<span style="color: yellow;">' +
     '<span style="color: red;">red</span>' +
     'yellow' +
-    '<span style="color: blue;"><strong>blue</strong></span>' +
+    '<strong>' +
+    '<span style="color: blue;">blue</span>' +
+    '</strong>' +
     '</span>' +
     '</span>' +
     '</p>');
@@ -509,15 +502,13 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       merge: true
     });
     TinyAssertions.assertContent(editor, '<p>' +
-      '<span style="font: italic 10px sans-serif;">' +
-      '<span style="font-size: 10px;">test</span>' +
+      '<span style="font-size: 10px;">' +
+      '<span style="font: italic 10px sans-serif;">test</span>' +
       '</span>' +
       '</p>' +
       '<p>' +
-      '<span style="font: italic 10px sans-serif;">' +
       '<span style="font-size: 12px;">' +
       '<span style="font: italic 10px sans-serif;">test</span>' +
-      '</span>' +
       '</span>' +
       '</p>');
   });
@@ -546,15 +537,13 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       merge: true
     });
     TinyAssertions.assertContent(editor, '<p>' +
-      '<span style="font-style: italic;">' +
-      '<span style="font: italic 12px sans-serif;">test</span>' +
+      '<span style="font: italic 12px sans-serif;">' +
+      '<span style="font-style: italic;">test</span>' +
       '</span>' +
       '</p>' +
       '<p>' +
-      '<span style="font-size: 10px;">' +
       '<span style="font: italic 12px sans-serif;">' +
       '<span style="font-size: 10px;">test</span>' +
-      '</span>' +
       '</span>' +
       '</p>');
   });
@@ -844,26 +833,7 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       editor.setContent('<p>initial</p>');
       TinySelections.setCursor(editor, [ 0 ], 0);
       editor.insertContent('<!--\ufeff><iframe onload=alert(document.domain)>-></body>-->');
-      // TINY-10305: Safari escapes text nodes within <iframe>.
-      TinyAssertions.assertRawContent(editor, isSafariLessThan17
-        ? '<p><!----><iframe sandbox="">-&gt;&lt;/body&gt;--&gt;&lt;span id="mce_marker" data-mce-type="bookmark"&gt;&amp;#xFEFF;&lt;/span&gt;&lt;/body&gt;</iframe>initial</p>'
-        : '<p><!---->initial</p>');
-    });
-  });
-
-  context('SVG elements', () => {
-    const hook = TinyHooks.bddSetupLight<Editor>({
-      indent: false,
-      base_url: '/project/tinymce/js/tinymce',
-      extended_valid_elements: 'svg[width|height]'
-    }, [], true);
-
-    it('TINY-10237: Inserting SVG elements but filter out things like scripts', () => {
-      const editor = hook.editor();
-      editor.setContent('<p>ab</p>');
-      TinySelections.setCursor(editor, [ 0, 0 ], 1);
-      editor.insertContent('<svg><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"><desc><script>alert(1)</script><p>hello</p></circle></a></svg>');
-      TinyAssertions.assertContent(editor, '<p>a<svg><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"><desc><p>hello</p></desc></circle></svg>b</p>');
+      TinyAssertions.assertRawContent(editor, '<p><!---->initial</p>');
     });
   });
 });

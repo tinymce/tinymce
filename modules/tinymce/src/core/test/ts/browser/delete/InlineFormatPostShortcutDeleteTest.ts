@@ -26,7 +26,7 @@ describe('browser.tinymce.core.delete.InlineFormatPostShortcutDeleteTest', () =>
   const metaBackspaceKeyup = (editor: Editor) => {
     // using Meta + Backspace workaround trigger as macOS suppresses most keyup events when meta is engaged
     // side effect of performing backspace keydown
-    TinyContentActions.keydown(editor, Keys.backspace());
+    TinyContentActions.keydown(editor, Keys.backspace(), { meta: true });
     // firefox detects macOS Command keycode as "Command" not "Meta"
     TinyContentActions.keyup(editor, browser.isFirefox() ? 224 : 91);
   };

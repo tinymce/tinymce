@@ -22,6 +22,9 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardNavigationT
 
   const doc = SugarDocument.getDocument();
 
+  const findInputSelector = Utils.getFindInputSelector();
+  const replaceWithInputSelector = Utils.getReplaceWithInputSelector();
+
   const pressTab = (editor: Editor) => TinyUiActions.keydown(editor, Keys.tab());
   const pressEsc = (editor: Editor) => TinyUiActions.keyup(editor, Keys.escape());
   const pressDown = (editor: Editor) => TinyUiActions.keydown(editor, Keys.down());
@@ -50,9 +53,9 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardNavigationT
   it('TINY-3914: Dialog keyboard navigation', async () => {
     const editor = hook.editor();
     await Utils.pOpenDialog(editor);
-    await pAssertFocused('Find input', '.tox-textfield[placeholder="Find"]');
+    await pAssertFocused('Find input', findInputSelector);
     pressTab(editor);
-    await pAssertFocused('Replace with input', '.tox-textfield[placeholder="Replace with"]');
+    await pAssertFocused('Replace with input', replaceWithInputSelector);
     pressTab(editor);
     await pAssertFocused('Placeholder menu button', '.tox-tbtn--select[aria-label="Preferences"]');
     pressDown(editor);
@@ -68,21 +71,21 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardNavigationT
     const editor = hook.editor();
     editor.setContent('<p>fish fish fish</p>');
     await Utils.pOpenDialog(editor);
-    await pAssertFocused('Find input', '.tox-textfield[placeholder="Find"]');
+    await pAssertFocused('Find input', findInputSelector);
     pressTab(editor);
-    await pAssertFocused('Replace with input', '.tox-textfield[placeholder="Replace with"]');
+    await pAssertFocused('Replace with input', replaceWithInputSelector);
     pressTab(editor);
     await pAssertFocused('Placeholder menu button', '.tox-tbtn--select[aria-label="Preferences"]');
     pressTab(editor);
     await pAssertFocused('Find button', '.tox-button[data-mce-name="Find"]');
-    await Utils.pSetFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', 'fish');
+    await Utils.pSetFieldValue(editor, findInputSelector, 'fish');
     pressEnter(editor);
     pressTab(editor);
     await pAssertFocused('Find button', '.tox-button[data-mce-name="Replace"]');
     pressTab(editor);
     await pAssertFocused('Find button', '.tox-button[data-mce-name="Replace all"]');
     pressEnter(editor);
-    await pAssertFocused('Find input', '.tox-textfield[placeholder="Find"]');
+    await pAssertFocused('Find input', findInputSelector);
     pressEsc(editor);
   });
 
@@ -90,11 +93,11 @@ describe('browser.tinymce.plugins.searchreplace.SearchReplaceKeyboardNavigationT
     const editor = hook.editor();
     editor.setContent('<p>fish fish fish</p>');
     await Utils.pOpenDialog(editor);
-    await pAssertFocused('Find input', '.tox-textfield[placeholder="Find"]');
-    await Utils.pSetFieldValue(editor, 'input.tox-textfield[placeholder="Find"]', 'notfound');
+    await pAssertFocused('Find input', findInputSelector);
+    await Utils.pSetFieldValue(editor, findInputSelector, 'notfound');
     pressEnter(editor);
     await TinyUi(editor).pWaitForUi('.tox-notification.tox-notification--error:contains("Could not find the specified string.")');
-    await pAssertFocused('Find input', '.tox-textfield[placeholder="Find"]');
+    await pAssertFocused('Find input', findInputSelector);
     pressEsc(editor);
   });
 });

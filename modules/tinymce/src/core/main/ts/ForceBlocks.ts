@@ -1,15 +1,15 @@
-import { Arr, Fun, Obj } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 import { Insert, SugarElement } from '@ephox/sugar';
 
 import Editor from './api/Editor';
 import Schema, { SchemaMap } from './api/html/Schema';
 import * as Options from './api/Options';
 import * as Bookmarks from './bookmark/Bookmarks';
+import * as StructureBookmark from './bookmark/StructureBookmark';
 import * as TransparentElements from './content/TransparentElements';
 import * as NodeType from './dom/NodeType';
 import * as PaddingBr from './dom/PaddingBr';
 import * as Parents from './dom/Parents';
-import * as EditorFocus from './focus/EditorFocus';
 import * as Namespace from './html/Namespace';
 
 /**
@@ -62,7 +62,7 @@ const addRootBlocks = (editor: Editor) => {
   const rootNode = editor.getBody();
   let rootBlockNode: Node | undefined | null;
   let tempNode: Node;
-  let wrapped = false;
+  let bm: StructureBookmark.StructureBookmark | null = null;
 
   const forcedRootBlock = Options.getForcedRootBlock(editor);
   if (!startNode || !NodeType.isElement(startNode)) {
@@ -74,10 +74,17 @@ const addRootBlocks = (editor: Editor) => {
     return;
   }
 
-  // Get current selection
-  const rng = selection.getRng();
-  const { startContainer, startOffset, endContainer, endOffset } = rng;
-  const restoreSelection = EditorFocus.hasFocus(editor);
+  // Firefox will automatically remove the last BR if you insert nodes next to it and add a BR back if you remove those siblings
+  // and since the bookmark code inserts temporary nodes an new BR will be constantly removed and added and triggering a selection
+  // change causing an infinite recursion. So we treat this special case on it's own.
+  if (rootNode.firstChild === rootNode.lastChild && NodeType.isBr(rootNode.firstChild)) {
+    rootBlockNode = createRootBlock(editor);
+    rootBlockNode.appendChild(PaddingBr.createPaddingBr().dom);
+    rootNode.replaceChild(rootBlockNode, rootNode.firstChild);
+    editor.selection.setCursorLocation(rootBlockNode, 0);
+    editor.nodeChanged();
+    return;
+  }
 
   // Wrap non block elements and text nodes
   let node = rootNode.firstChild;
@@ -96,9 +103,19 @@ const addRootBlocks = (editor: Editor) => {
       }
 
       if (!rootBlockNode) {
+        if (!bm && editor.hasFocus()) {
+          bm = StructureBookmark.getBookmark(editor.selection.getRng(), () => document.createElement('span'));
+        }
+
+        // Firefox will remove the last BR element if you insert nodes next to it using DOM APIs like insertBefore
+        // so for that weird edge case we stop processing.
+        if (!node.parentNode) {
+          node = null;
+          break;
+        }
+
         rootBlockNode = createRootBlock(editor);
         rootNode.insertBefore(rootBlockNode, node);
-        wrapped = true;
       }
 
       tempNode = node;
@@ -110,10 +127,8 @@ const addRootBlocks = (editor: Editor) => {
     }
   }
 
-  if (wrapped && restoreSelection) {
-    rng.setStart(startContainer, startOffset);
-    rng.setEnd(endContainer, endOffset);
-    selection.setRng(rng);
+  if (bm) {
+    editor.selection.setRng(StructureBookmark.resolveBookmark(bm));
     editor.nodeChanged();
   }
 };
@@ -132,10 +147,11 @@ const insertEmptyLine = (editor: Editor, root: SugarElement<HTMLElement>, insert
 };
 
 const setup = (editor: Editor): void => {
-  editor.on('NodeChange', Fun.curry(addRootBlocks, editor));
+  editor.on('NodeChange', () => addRootBlocks(editor));
 };
 
 export {
   insertEmptyLine,
   setup
 };
+

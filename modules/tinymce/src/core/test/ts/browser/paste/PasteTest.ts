@@ -65,6 +65,23 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     ], 'Should be enabled again');
   });
 
+  it('TINY-10938: Toggle query returns correct value', () => {
+    const editor = hook.editor();
+
+    // If a previous test left this toggled on...
+    if (editor.queryCommandState('mceTogglePlainTextPaste')) {
+      editor.execCommand('mceTogglePlainTextPaste');
+    }
+
+    assert.isFalse(editor.queryCommandState('mceTogglePlainTextPaste'));
+    editor.execCommand('mceTogglePlainTextPaste');
+    assert.isTrue(editor.queryCommandState('mceTogglePlainTextPaste'));
+    editor.execCommand('mceTogglePlainTextPaste');
+    assert.isFalse(editor.queryCommandState('mceTogglePlainTextPaste'));
+    editor.execCommand('mceTogglePlainTextPaste');
+    assert.isTrue(editor.queryCommandState('mceTogglePlainTextPaste'));
+  });
+
   it('TBA: Paste simple text content', () => {
     const editor = hook.editor();
     editor.setContent('<p>1234</p>');

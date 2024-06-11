@@ -86,6 +86,7 @@ const parts: () => PartType.PartTypeAdt[] = Fun.constant([
 ]);
 
 const schema = Fun.constant([
+  FieldSchema.optionString('role'),
   FieldSchema.required('value'),
   FieldSchema.required('items'),
   FieldSchema.required('dom'),
@@ -124,7 +125,8 @@ const schema = Fun.constant([
   FieldSchema.defaulted('fakeFocus', false),
   FieldSchema.defaulted('focusManager', FocusManagers.dom()),
   Fields.onHandler('onHighlight'),
-  Fields.onHandler('onDehighlight')
+  Fields.onHandler('onDehighlight'),
+  FieldSchema.defaulted('showMenuRole', true),
 ]);
 
 const name = Fun.constant('menu');
