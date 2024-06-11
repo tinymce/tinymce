@@ -126,8 +126,6 @@ const hasNbsp = (pos: CaretPosition): boolean => {
 };
 
 const normalizeNbspMiddle = (text: string): string => {
-  // // eslint-disable-next-line no-console
-  // console.log('normalizeNbspMiddle');
   const chars = text.split('');
   return Arr.map(chars, (chr, i) => {
     if (isNbsp(chr) && i > 0 && i < chars.length - 1 && isContent(chars[i - 1]) && isContent(chars[i + 1])) {
@@ -180,8 +178,6 @@ const normalizeNbspAtEnd = (root: SugarElement<Node>, node: Text, makeNbsp: bool
 
 const normalizeNbsps = (root: SugarElement<Node>, pos: CaretPosition, schema: Schema): Optional<CaretPosition> => {
   const container = pos.container();
-  // eslint-disable-next-line no-console
-  console.log('container 2: ', container);
   if (!NodeType.isText(container)) {
     return Optional.none();
   }
