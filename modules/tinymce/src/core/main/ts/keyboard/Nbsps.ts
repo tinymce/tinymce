@@ -1,5 +1,5 @@
 import { Arr, Optional, Optionals, Strings, Type, Unicode } from '@ephox/katamari';
-import { Css, Html, PredicateFind, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { Css, Html, PredicateFind, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
@@ -218,7 +218,6 @@ const normalizeNbspWithElements = (content: string, schema: Schema): string => {
   const node: SugarElement<HTMLElement> = itNeedWrapper ? SugarElement.fromHtml(`<span>${content}</span>`) : SugarElement.fromHtml(content);
 
   Arr.each(Traverse.children(node), (child) => {
-
     if (Traverse.nextSibling(child).exists((nextChild) =>
       SugarNode.isHTMLElement(nextChild)
       && schema.isInline(SugarNode.name(nextChild))
@@ -226,16 +225,16 @@ const normalizeNbspWithElements = (content: string, schema: Schema): string => {
     )) {
 
       if (SugarNode.isHTMLElement(child)) {
-        if (endsWithDoubleSpaceOrNbsp(Html.get(child))) {
+        if (endsWithDoubleSpaceOrNbsp(Html.get(child)) || !endsWithSpaceOrNbsp(Html.get(child))) {
           return;
         }
         Html.set(child, Html.get(child).replace(/&nbsp;$/, ' '));
       }
       if (SugarNode.isText(child)) {
-        if (endsWithDoubleSpaceOrNbsp(child.dom.nodeValue ?? '')) {
+        if (endsWithDoubleSpaceOrNbsp(SugarText.get(child)) || !endsWithSpaceOrNbsp(SugarText.get(child))) {
           return;
         }
-        child.dom.nodeValue = child.dom.data.replace(new RegExp(`${Unicode.nbsp}$`, ''), ' ');
+        child.dom.nodeValue = child.dom.data.replace(new RegExp(`${Unicode.nbsp}$`), ' ');
       }
     }
 
@@ -245,18 +244,18 @@ const normalizeNbspWithElements = (content: string, schema: Schema): string => {
         && !endsWithSpaceOrNbsp(Html.get(prevChild));
 
       const isATextElementThatNotEndsWithSpaceOrNbsp = SugarNode.isText(prevChild)
-        && !endsWithSpaceOrNbsp(prevChild.dom.nodeValue ?? '');
+        && !endsWithSpaceOrNbsp(SugarText.get(prevChild));
 
       return isAnInlineElementThatNotEndsWithSpaceOrNbsp || isATextElementThatNotEndsWithSpaceOrNbsp;
     })) {
       if (SugarNode.isHTMLElement(child)) {
-        if (startsWithDoubleSpaceOrNbsp(Html.get(child))) {
+        if (startsWithDoubleSpaceOrNbsp(Html.get(child)) || !startsWithSpaceOrNbsp(Html.get(child))) {
           return;
         }
         Html.set(child, Html.get(child).replace(/^&nbsp;/, ' '));
       }
       if (SugarNode.isText(child)) {
-        if (startsWithDoubleSpaceOrNbsp(child.dom.nodeValue ?? '')) {
+        if (startsWithDoubleSpaceOrNbsp(SugarText.get(child)) || !startsWithSpaceOrNbsp(SugarText.get(child))) {
           return;
         }
         child.dom.nodeValue = child.dom.data.replace(new RegExp(`^${Unicode.nbsp}`, ''), ' ');
