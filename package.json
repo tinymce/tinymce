@@ -49,7 +49,7 @@
     "changie": "^1.14.0",
     "emojilib": "^2",
     "eslint-plugin-only-warn": "^1.1.0",
-    "fast-check": "^3.19.0",
+    "fast-check": "^2",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "grunt": "^1.5.3",
     "grunt-contrib-clean": "^2.0.0",

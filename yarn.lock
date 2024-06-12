@@ -5725,12 +5725,12 @@ fancy-log@^2.0.0:
   dependencies:
     color-support "^1.1.3"
 
-fast-check@^3.19.0:
-  version "3.19.0"
-  resolved "https://registry.yarnpkg.com/fast-check/-/fast-check-3.19.0.tgz#6a0b7cabc3aa82bc00967332de216c5452ff7ea5"
-  integrity sha512-CO2JX/8/PT9bDGO1iXa5h5ey1skaKI1dvecERyhH4pp3PGjwd3KIjMAXEg79Ps9nclsdt4oPbfqiAnLU0EwrAQ==
+fast-check@^2:
+  version "2.25.0"
+  resolved "https://registry.yarnpkg.com/fast-check/-/fast-check-2.25.0.tgz#5146601851bf3be0953bd17eb2b7d547936c6561"
+  integrity sha512-wRUT2KD2lAmT75WNIJIHECawoUUMHM0I5jrlLXGtGeqmPL8jl/EldUDjY1VCp6fDY8yflyfUeIOsOBrIbIiArg==
   dependencies:
-    pure-rand "^6.1.0"
+    pure-rand "^5.0.1"
 
 fast-deep-equal@^2.0.1:
   version "2.0.1"
@@ -10754,10 +10754,10 @@ puppeteer-core@^20.9.0:
     devtools-protocol "0.0.1147663"
     ws "8.13.0"
 
-pure-rand@^6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/pure-rand/-/pure-rand-6.1.0.tgz#d173cf23258231976ccbdb05247c9787957604f2"
-  integrity sha512-bVWawvoZoBYpp6yIoQtQXHZjmz35RSVHnUOTefl8Vcjr8snTPY1wnpSPMWekcFwbxI6gtmT7rSYPFvz71ldiOA==
+pure-rand@^5.0.1:
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/pure-rand/-/pure-rand-5.0.5.tgz#bda2a7f6a1fc0f284d78d78ca5902f26f2ad35cf"
+  integrity sha512-BwQpbqxSCBJVpamI6ydzcKqyFmnd5msMWUGvzXLm1aXvusbbgkbOto/EUPM00hjveJEaJtdbhUjKSzWRhQVkaw==
 
 qs@6.11.0, qs@^6.4.0:
   version "6.11.0"
