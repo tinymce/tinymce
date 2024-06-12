@@ -264,12 +264,12 @@ describe('browser.tinymce.models.dom.table.FakeSelectionTest', () => {
       Insert.append(body, fakeButton);
     });
 
-    after(() => SelectorFind.child(SugarBody.body(), '#button1').map(Remove.remove));
+    after(() => SelectorFind.child(SugarBody.body(), '#button1').each(Remove.remove));
 
-    const pShiftFocusOutsideEditor = async (fakeButton: SugarElement<HTMLButtonElement>) => {
-      Mouse.mouseDown(fakeButton, { button: 0 });
-      Mouse.mouseUp(fakeButton, { button: 0 });
-      Focus.focus(fakeButton);
+    const pShiftFocusOutsideEditor = async (button: SugarElement<HTMLButtonElement>) => {
+      Mouse.mouseDown(button, { button: 0 });
+      Mouse.mouseUp(button, { button: 0 });
+      Focus.focus(button);
       await FocusTools.pTryOnSelector('Wait for focus to be shifted out of the editor', SugarDocument.getDocument(), '#button1');
     };
 
@@ -278,7 +278,6 @@ describe('browser.tinymce.models.dom.table.FakeSelectionTest', () => {
       selectCellsWithMouse(editor, cellSelection);
       TinyAssertions.assertContentPresence(editor, {
         'td[contenteditable="false"][data-mce-selected="1"][data-mce-first-selected="1"][data-mce-last-selected="1"]': 1
-
       });
       const actual = Optional.from(editor.selection.getSel()?.anchorNode).map(SugarElement.fromDom).bind(Traverse.parentElement).getOrDie();
       const expected = UiFinder.findIn(TinyDom.body(editor), '.mce-offscreen-selection').getOrDie();
