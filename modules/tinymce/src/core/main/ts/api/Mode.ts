@@ -17,6 +17,7 @@ export type EditorReadOnlyType = boolean | {
  */
 
 export interface EditorMode {
+
   /**
    * Checks if the editor content can be selected.
    *

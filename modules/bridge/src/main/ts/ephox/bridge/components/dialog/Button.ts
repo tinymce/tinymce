@@ -13,6 +13,7 @@ export interface ButtonSpec {
   icon?: string;
   borderless?: boolean;
   buttonType?: 'primary' | 'secondary' | 'toolbar';
+  readonly?: boolean;
 }
 
 export interface Button {
@@ -37,7 +38,7 @@ const buttonFields = [
   // this should be defaulted to `secondary` but the implementation needs to manage the deprecation
   FieldSchema.optionStringEnum('buttonType', [ 'primary', 'secondary', 'toolbar' ]),
   // this should be removed, but must live here because FieldSchema doesn't have a way to manage deprecated fields
-  ComponentSchema.primary,
+  ComponentSchema.primary
 ];
 
 export const buttonSchema = StructureSchema.objOf(buttonFields);

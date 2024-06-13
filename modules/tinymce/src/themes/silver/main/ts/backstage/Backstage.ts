@@ -23,6 +23,7 @@ export interface UiFactoryBackstageProviders {
   readonly isDisabled: () => boolean;
   readonly getOption: Editor['options']['get'];
   readonly tooltips: TooltipsProvider;
+  readonly isReadOnlyEnableUi: () => boolean;
 }
 
 export interface UiFactoryBackstageShared {
@@ -57,6 +58,7 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
     menuItems: () => editor.ui.registry.getAll().menuItems,
     translate: I18n.translate,
     isDisabled: () => editor.mode.isReadOnly() || !editor.ui.isEnabled(),
+    isReadOnlyEnableUi: () => editor.mode.isReadOnly() && editor.mode.isUiEnabled(),
     getOption: editor.options.get,
     tooltips: TooltipsBackstage(lazySinks.dialog)
   };

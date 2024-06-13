@@ -29,6 +29,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
         },
         components: [
           renderToolbarButton({
+            readonly: false,
             type: 'button',
             shortcut: Optional.none(),
             enabled: true,
@@ -55,6 +56,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
         components: [
           renderToolbarToggleButton({
             type: 'togglebutton',
+            readonly: false,
             shortcut: Optional.none(),
             enabled: true,
             active: false,
@@ -81,6 +83,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
         },
         components: [
           renderSplitButton({
+            readonly: false,
             type: 'splitbutton',
             tooltip: Optional.some('tooltip'),
             icon: Optional.none(),
@@ -121,6 +124,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
         },
         components: [
           renderMenuButton({
+            readonly: false,
             tooltip: Optional.some('tooltip'),
             icon: Optional.none(),
             text: Optional.some('button4'),

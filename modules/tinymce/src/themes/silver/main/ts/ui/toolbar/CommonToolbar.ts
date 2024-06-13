@@ -82,7 +82,6 @@ const getToolbarBehaviours = (toolbarSpec: ToolbarSpec, modeName: 'cyclic' | 'ac
 
   return Behaviour.derive([
     DisablingConfigs.toolbarButton(toolbarSpec.providers.isDisabled),
-    ReadOnly.receivingConfig(),
     Keying.config({
       // Tabs between groups
       mode: modeName,
@@ -115,8 +114,13 @@ const renderMoreToolbarCommon = (toolbarSpec: MoreDrawerToolbarSpec) => {
         tooltip: Optional.some('Reveal or hide additional toolbar items'),
         primary: false,
         buttonType: Optional.none(),
-        borderless: false
-      }, Optional.none(), toolbarSpec.providers, [], 'overflow-button')
+        borderless: false,
+        readonly: true
+      }, Optional.none(), toolbarSpec.providers, [
+        ReadOnly.receivingConfigConditional(() => {
+          return toolbarSpec.providers.isDisabled() && !toolbarSpec.providers.isReadOnlyEnableUi();
+        })
+      ], 'overflow-button')
     },
     splitToolbarBehaviours: getToolbarBehaviours(toolbarSpec, modeName)
   };

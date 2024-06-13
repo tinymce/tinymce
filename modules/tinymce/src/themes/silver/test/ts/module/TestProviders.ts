@@ -13,6 +13,7 @@ export default {
   menuItems: (): Record<string, any> => ({}),
   translate: I18n.translate,
   isDisabled: Fun.never,
+  isReadOnlyEnableUi: Fun.never,
   getOption: <T>(name: string): T | undefined => defaultOptions[name],
   tooltips: {
     getConfig: (): TooltippingTypes.TooltippingConfigSpec => {

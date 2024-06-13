@@ -201,7 +201,7 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
       onSetupEvent(editor, 'NodeChange', (api: BespokeSelectApi) => {
         const comp = api.getComponent();
         spec.updateText(comp);
-        Disabling.set(api.getComponent(), !editor.selection.isEditable());
+        Disabling.set(api.getComponent(), !editor.selection.isEditable() || editor.readonly);
       })(api),
       () => editor.off(textUpdateEventName, handler)
     );
@@ -209,6 +209,7 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
 
   return renderCommonDropdown(
     {
+      readonly: false,
       text: spec.icon.isSome() ? Optional.none() : spec.text,
       icon: spec.icon,
       ariaLabel: Optional.some(spec.tooltip),

@@ -11,32 +11,55 @@
     <h1>Tinymce full featured Page</h1>
     <div id="ephox-ui">
       <textarea>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sed augue velit. Sed viverra aliquet fringilla. Duis quis turpis rutrum, auctor
-          diam vitae,
-          pellentesque arcu. Pellentesque vel ipsum a urna condimentum tincidunt ut bibendum metus. Ut eu ipsum faucibus sapien tempor ullamcorper. Donec
-          tempor
-          fermentum posuere. Suspendisse vel vestibulum nisl, a auctor nisi. Phasellus in aliquam ex, nec vulputate orci. Fusce non pharetra magna. Sed id
-          felis et
-          magna ultricies dapibus. Nunc varius ipsum at nunc lobortis viverra. Nulla neque sem, tincidunt nec tempus et, tempus sagittis nisl. Vivamus
-          dolor ligula,
-          euismod at rhoncus sed, consequat eget nibh. Nam massa dui, dictum sit amet erat at, mollis sodales orci. Vestibulum sodales dictum felis, sed
-          vulputate
-          turpis condimentum sed.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sed augue velit. Sed viverra aliquet fringilla. Duis quis turpis rutrum, auctor
-          diam vitae,
-          pellentesque arcu. Pellentesque vel ipsum a urna condimentum tincidunt ut bibendum metus. Ut eu ipsum faucibus sapien tempor ullamcorper. Donec
-          tempor
-          fermentum posuere. Suspendisse vel vestibulum nisl, a auctor nisi. Phasellus in aliquam ex, nec vulputate orci. Fusce non pharetra magna. Sed id
-          felis et
-          magna ultricies dapibus. Nunc varius ipsum at nunc lobortis viverra. Nulla neque sem, tincidunt nec tempus et, tempus sagittis nisl. Vivamus
-          dolor ligula,
-          euismod at rhoncus sed, consequat eget nibh. Nam massa dui, dictum sit amet erat at, mollis sodales orci. Vestibulum sodales dictum felis, sed
-          vulputate
-          turpis condimentum sed.
-        </p></textarea>
+        <p><span style="color: #ba372a;">old</span></p>
+        <p><span style="color: #169179;">new</span></p>
+        <p><span style="color: #00ff00;"><span style="color: #ff0000;"><span style="background-color: #0000ff;"><span style="background-color: #00ff00;">test</span></span></span></span></p>
+        <p><span style="background-color: #ff0000;"><span style="background-color: #0000ff;"><span style="color: #0000ff;"><span style="color: #ff0000;">test</span></span></span></span></p>
+        <table style="border-collapse: collapse; width: 100%; height: 225.773px;" border="1">
+          <tbody>
+          <tr style="height: 58.5938px;">
+          <td><strong>New row and paste</strong></td>
+          <td><strong>Old behaviour</strong></td>
+          <td><strong>New behaviour</strong></td>
+          <td><strong>Conflicting wrapped styles Twice Nested</strong></td>
+          <td><strong>Conflicting wrapped styles Quad Nested</strong></td>
+          <td><strong>Cascading wrapped styles</strong></td>
+          </tr>
+          <tr style="height: 58.5938px;">
+          <td>0</td>
+          <td><span style="color: #843fa1; background-color: #2dc26b;">purple on green text</span></td>
+          <td><span style="color: #843fa1; background-color: #2dc26b;">purple on green text</span></td>
+          <td><span style="color: #e03e2d;"><span style="color: #236fa1;">red and blue text</span></span></td>
+          <td><span style="color: #e03e2d;"><span style="color: #236fa1;"><span style="color: #b96ad9;"><span style="color: #2dc26b;">red, blue, purple, green text</span></span></span></span></td>
+          <td><span style="opacity: 0.9;"><span style="border: 1px solid black;"><span style="opacity: 0.8;"><span style="border: 1px solid green;">nested wrapped</span></span></span></span></td>
+          </tr>
+          <tr style="height: 36.1953px;">
+          <td>1</td>
+          <td><span style="color: #843fa1; background-color: #2dc26b;"><span style="color: #843fa1; background-color: #2dc26b;">purple on green text</span></span></td>
+          <td><span style="color: #843fa1; background-color: #2dc26b;">purple on green text</span></td>
+          <td><span style="color: #e03e2d;"><span style="color: #236fa1;">red and blue text</span></span></td>
+          <td><span style="color: #e03e2d;"><span style="color: #236fa1;"><span style="color: #b96ad9;"><span style="color: #2dc26b;">red, blue, purple, green text</span></span></span></span></td>
+          <td><span style="opacity: 0.9;"><span style="border: 1px solid black;"><span style="opacity: 0.8;"><span style="border: 1px solid green;">nested wrapped</span></span></span></span></td>
+          </tr>
+          <tr style="height: 36.1953px;">
+          <td>2</td>
+          <td><span style="color: #843fa1; background-color: #2dc26b;"><span style="color: #843fa1; background-color: #2dc26b;"><span style="color: #843fa1; background-color: #2dc26b;">purple on green text</span></span></span></td>
+          <td><span style="color: #843fa1; background-color: #2dc26b;">purple on green text</span></td>
+          <td><span style="color: #e03e2d;"><span style="color: #236fa1;">red and blue text</span></span></td>
+          <td><span style="color: #e03e2d;"><span style="color: #236fa1;"><span style="color: #b96ad9;"><span style="color: #2dc26b;">red, blue, purple, green text</span></span></span></span></td>
+          <td><span style="opacity: 0.9;"><span style="border: 1px solid black;"><span style="opacity: 0.8;"><span style="border: 1px solid green;">nested wrapped</span></span></span></span></td>
+          </tr>
+          <tr style="height: 36.1953px;">
+          <td>3</td>
+          <td><span style="color: #843fa1; background-color: #2dc26b;"><span style="color: #843fa1; background-color: #2dc26b;"><span style="color: #843fa1; background-color: #2dc26b;"><span style="color: #843fa1; background-color: #2dc26b;">purple on green text</span></span></span></span></td>
+          <td><span style="color: #843fa1; background-color: #2dc26b;">purple on green text</span></td>
+          <td><span style="color: #e03e2d;"><span style="color: #236fa1;">red and blue text</span></span></td>
+          <td><span style="color: #e03e2d;"><span style="color: #236fa1;"><span style="color: #b96ad9;"><span style="color: #2dc26b;">red, blue, purple, green text</span></span></span></span></td>
+          <td><span style="opacity: 0.9;"><span style="border: 1px solid black;"><span style="opacity: 0.8;"><span style="border: 1px solid green;">nested wrapped</span></span></span></span></td>
+          </tr>
+          </tbody>
+        </table>
+      </textarea>
     </div>
     <div class="tinymce">Inline demo</div>
     <script src="../../../../js/tinymce/tinymce.js"></script>
