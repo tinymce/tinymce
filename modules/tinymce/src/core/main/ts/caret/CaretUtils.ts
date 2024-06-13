@@ -81,7 +81,9 @@ const getEditingHost = (node: Node, rootNode: HTMLElement): HTMLElement => {
 
 const getParentBlock = (node: Node | null, rootNode?: Node): Node | null => {
   while (node && node !== rootNode) {
-    if (isBlockLike(node)) {
+    // Absolute inline CEFs has display: block and is considered as block element
+    // Hence it is considered as its own parent
+    if (isBlockLike(node) && !NodeType.isContentEditableFalse(node)) {
       return node;
     }
 

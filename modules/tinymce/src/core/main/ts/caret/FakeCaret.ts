@@ -110,9 +110,10 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
       return null;
     }
 
+    // console.log((element as any).style?.position);
     if (isBlock(element)) {
       const caretContainer = CaretContainer.insertBlock(caretBlock, element, before);
-      const clientRect = getAbsoluteClientRect(root, element, before);
+      const clientRect = getAbsoluteClientRect(root, element as any, before);
       dom.setStyle(caretContainer, 'top', clientRect.top);
       dom.setStyle(caretContainer, 'caret-color', 'transparent');
       caretContainerNode = caretContainer;
@@ -120,7 +121,7 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
       const caret = dom.create('div', { 'class': 'mce-visual-caret', 'data-mce-bogus': 'all' });
       dom.setStyles(caret, { ...clientRect });
       dom.add(root, caret);
-      lastVisualCaret.set({ caret, element, before });
+      lastVisualCaret.set({ caret, element: element as any, before });
 
       if (before) {
         dom.addClass(caret, 'mce-visual-caret-before');
@@ -130,6 +131,29 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
       rng = element.ownerDocument.createRange();
       rng.setStart(caretContainer, 0);
       rng.setEnd(caretContainer, 0);
+    // } else {
+    //   // Try to handle placing cursor around absolute CEF element
+    //   console.log('position ' + (element as any)?.style?.position);
+    //   if (isContentEditableFalse(element) && (element as any)?.style?.position === 'absolute') {
+    //     const caretContainer = CaretContainer.insertBlock('span', element, before);
+    //     const clientRect = getAbsoluteClientRect(root, element as any, before);
+    //     dom.setStyle(caretContainer, 'top', clientRect.top);
+    //     dom.setStyle(caretContainer, 'caret-color', 'transparent');
+    //     caretContainerNode = caretContainer;
+
+    //     const caret = dom.create('div', { 'class': 'mce-visual-caret', 'data-mce-bogus': 'all' });
+    //     dom.setStyles(caret, { ...clientRect });
+    //     dom.add(root, caret);
+    //     lastVisualCaret.set({ caret, element: element as any, before });
+
+    //     if (before) {
+    //       dom.addClass(caret, 'mce-visual-caret-before');
+    //     }
+    //     startBlink();
+
+    //     rng = element.ownerDocument.createRange();
+    //     rng.setStart(caretContainer, 0);
+    //     rng.setEnd(caretContainer, 0);
     } else {
       caretContainerNode = CaretContainer.insertInline(element, before);
       rng = element.ownerDocument.createRange();
@@ -143,6 +167,7 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
       }
 
       return rng;
+      // }
     }
 
     return rng;

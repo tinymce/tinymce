@@ -126,7 +126,7 @@ const findCaretPosition = (direction: HDirection, startPos: CaretPosition | null
 
   const container = caretPosition.container();
   let offset = caretPosition.offset();
-
+  // console.log('Strings.isNotEmpty(container.textContent', Strings.isNotEmpty(container.textContent || ''))
   if (isText(container)) {
     if (isBackwards(direction) && offset > 0) {
       return CaretPosition(container, --offset);

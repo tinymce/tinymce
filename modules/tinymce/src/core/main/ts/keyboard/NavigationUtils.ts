@@ -16,6 +16,7 @@ import * as RangeNodes from '../selection/RangeNodes';
 import * as ArrUtils from '../util/ArrUtils';
 import { isCefAtEdgeSelected } from './CefUtils';
 import * as InlineUtils from './InlineUtils';
+import * as NodeType from '../dom/NodeType';
 
 const moveToRange = (editor: Editor, rng: Range): void => {
   editor.selection.setRng(rng);
@@ -50,6 +51,7 @@ const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, i
   }
 
   let nextCaretPosition = getNextPosFn(caretPosition);
+
   const rangeIsInContainerBlock = CaretContainer.isRangeInCaretContainerBlock(range);
   if (!nextCaretPosition) {
     return rangeIsInContainerBlock ? Optional.some(range) : Optional.none();
@@ -63,11 +65,19 @@ const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, i
 
   // Peek ahead for handling of ab|c<span cE=false> -> abc|<span cE=false>
   const peekCaretPosition = getNextPosFn(nextCaretPosition);
+
+  console.log({ range: caretPosition.toRange(), nextRange: nextCaretPosition.toRange(), peekRange: peekCaretPosition?.toRange() });
+
   if (peekCaretPosition && isBeforeFn(peekCaretPosition)) {
     if (CaretUtils.isMoveInsideSameBlock(nextCaretPosition, peekCaretPosition)) {
       return FakeCaretUtils.showCaret(direction, editor, peekCaretPosition.getNode(!forwards) as HTMLElement, forwards, false);
     }
   }
+
+  // If the caret is fake, move
+  // if (NodeType.isBogusAll(caretPosition.getNode(!forwards)) && !NodeType.isBr(nextCaretPosition.getNode(!forwards))) {
+  //   return FakeCaretUtils.showCaret(direction, editor, nextCaretPosition.getNode(!forwards) as HTMLElement, forwards, false);
+  // }
 
   if (rangeIsInContainerBlock) {
     return renderRangeCaretOpt(editor, nextCaretPosition.toRange(), false);
