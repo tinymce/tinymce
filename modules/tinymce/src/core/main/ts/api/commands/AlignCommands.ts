@@ -11,7 +11,7 @@ const registerExecCommands = (editor: Editor): void => {
 
   const toggleAlign = (align: string) => () => {
     // Remove all other alignments first
-    Arr.each('left,center,right,justify'.split(','), (name) => {
+    Arr.each('left,center,right,justify'.split(','), (name: string) => {
       if (align !== name) {
         editor.formatter.remove('align' + name);
       }

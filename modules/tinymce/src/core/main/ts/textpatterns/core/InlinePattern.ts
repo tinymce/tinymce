@@ -209,7 +209,7 @@ const findPatternsRec = (
 const applyPattern = (editor: Editor, pattern: InlinePattern, patternRange: Range): void => {
   editor.selection.setRng(patternRange);
   if (pattern.type === 'inline-format') {
-    Arr.each(pattern.format, (format) => {
+    Arr.each(pattern.format, (format: string) => {
       editor.formatter.apply(format);
     });
   } else {
@@ -305,7 +305,7 @@ const applyMatches = (editor: Editor, matches: InlinePatternMatch[]): void => {
   const matchesWithMarkers = addMarkers(dom, matches);
 
   // Do the replacements
-  Arr.each(matchesWithMarkers, (match) => {
+  Arr.each(matchesWithMarkers, (match: InlinePatternMatchWithMarkers) => {
     const block = dom.getParent(match.startMarker.start, dom.isBlock);
     const isRoot = (node: Node) => node === block;
     if (isReplacementPattern(match.pattern)) {

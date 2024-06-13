@@ -11,13 +11,13 @@ export const transparentBlockAttr = 'data-mce-block';
 
 // Returns the lowercase element names form a SchemaMap by excluding anyone that has uppercase letters.
 // This method is to avoid having to specify all possible valid characters other than lowercase a-z such as '-' or ':' etc.
-export const elementNames = (map: SchemaMap): string[] => Arr.filter(Obj.keys(map), (key) => !/[A-Z]/.test(key));
+export const elementNames = (map: SchemaMap): string[] => Arr.filter(Obj.keys(map), (key: string) => !/[A-Z]/.test(key));
 
 const makeSelectorFromSchemaMap = (map: SchemaMap) =>
   Arr.map(elementNames(map), (name) => {
     // Exclude namespace elements from processing
     const escapedName = CSS.escape(name);
-    return `${escapedName}:` + Arr.map(Namespace.namespaceElements, (ns) => `not(${ns} ${escapedName})`).join(':');
+    return `${escapedName}:` + Arr.map(Namespace.namespaceElements, (ns: string) => `not(${ns} ${escapedName})`).join(':');
   }).join(',');
 
 const updateTransparent = (blocksSelector: string, transparent: Element) => {
@@ -39,7 +39,7 @@ const updateBlockStateOnChildren = (schema: Schema, scope: Element): Element[] =
   const transparentSelector = makeSelectorFromSchemaMap(schema.getTransparentElements());
   const blocksSelector = makeSelectorFromSchemaMap(schema.getBlockElements());
 
-  return Arr.filter(scope.querySelectorAll(transparentSelector), (transparent) => updateTransparent(blocksSelector, transparent));
+  return Arr.filter(scope.querySelectorAll(transparentSelector), (transparent: Element) => updateTransparent(blocksSelector, transparent));
 };
 
 const trimEdge = (schema: Schema, el: DocumentFragment, leftSide: boolean) => {

@@ -14,16 +14,16 @@ const findPatterns = BlockPatternUtils.createFindPatterns(findPattern, false);
 
 const getMatches = (editor: Editor, patternSet: PatternSet): Optional<BlockPatternMatch[]> => {
   const rng = editor.selection.getRng();
-  return Utils.getParentBlock(editor, rng).map((block) => {
+  return Utils.getParentBlock(editor, rng).map((block: Element) => {
     const offset = Math.max(0, rng.startOffset);
     const beforeText = Utils.getBeforeText(editor.dom, block, rng.startContainer, offset);
     const dynamicPatternSet = Utils.resolveFromDynamicPatterns(patternSet, block, beforeText);
     return findPatterns(editor, block, dynamicPatternSet, false, beforeText);
-  }).filter((matches) => matches.length > 0);
+  }).filter((matches: BlockPatternMatch[]) => matches.length > 0);
 };
 
 const applyMatches = (editor: Editor, matches: BlockPatternMatch[]): void => {
-  Arr.each(matches, (match) => applyPattern(editor, match));
+  Arr.each(matches, (match: BlockPatternMatch) => applyPattern(editor, match));
 };
 
 export { applyMatches, findPattern, findPatterns, getMatches };
