@@ -1,4 +1,5 @@
 {
+  "root": true,
   "extends": "plugin:@tinymce/editor",
   "parserOptions": {
     "sourceType": "module",
