@@ -99,12 +99,43 @@
   }
 
   .tox-rgb-form input {
-    width: 6em;
+    min-width: 6em;
   }
 
   .tox-rgb-form input.tox-invalid {
     /* Need !important to override Chrome's focus styling unfortunately */
-    border: 1px solid red !important;
+    border: 1px solid @color-error-element-focus-color !important;
+    box-shadow: @color-error-element-focus;
+  }
+
+  .tox-rgb-container {
+    position: relative;
+  }
+
+  .tox-rgb-form .tox-invalid-icon {
+    align-content: center;
+    align-items: center;
+    display: none;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    .tox-control-wrap__status-icon-invalid {
+      margin: 0;
+    }
+  }
+
+  .tox-rgb-warning-note {
+    background-color: #fcc;
+    border: 1px solid #f00;
+    border-radius: 3px;
+    color: #f00;
+    padding: 3px;
+  }
+
+  input.tox-invalid + .tox-invalid-icon {
+    display: flex;
   }
 
   .tox-rgb-form .tox-rgba-preview {
