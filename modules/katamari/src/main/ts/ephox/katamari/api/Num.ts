@@ -18,6 +18,5 @@ export const cycleBy = (value: number, delta: number, min: number, max: number):
 export const clamp = (value: number, min: number, max: number): number =>
   Math.min(Math.max(value, min), max);
 
-// this is from this example: https://github.com/gkouziik/eslint-plugin-security-node/blob/master/docs/rules/detect-insecure-randomness.md
-// quoting the link above: "Divide a random UInt32 by the maximum value (2^32 -1) to get a result between 0 and 1"
+// the division is meant to get a number between 0 and 1 for more information check this discussion: https://stackoverflow.com/questions/58285941/how-to-replace-math-random-with-crypto-getrandomvalues-and-keep-same-result
 export const random = (): number => window.self.crypto.getRandomValues(new Uint32Array(1))[0] / 4294967295;
