@@ -1,5 +1,5 @@
 import { afterEach, before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Singleton, Unicode } from '@ephox/katamari';
+import { Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -366,12 +366,6 @@ describe('browser.tinymce.core.paste.PasteTest', () => {
     assert.equal(PasteUtils.trimHtml('a<span class="Apple-converted-space">\u00a0<\/span>'), 'a ');
     assert.equal(PasteUtils.trimHtml('<span class="Apple-converted-space">\u00a0<\/span>'), ' ');
   });
-
-  it('TINY-10854: unicode nbsp should be correclty replaced on paste',
-    testPasteHtml(hook, `<p>a${Unicode.nbsp}<strong>b</strong>${Unicode.nbsp}c</p>`, '<p>a <strong>b</strong> c</p>'));
-
-  it('TINY-10854: nbsp should be correclty replaced on paste',
-    testPasteHtml(hook, '<p>a&nbsp;<strong>b</strong>&nbsp;c</p>', '<p>a <strong>b</strong> c</p>'));
 
   context('paste_webkit_styles', () => {
     before(function () {

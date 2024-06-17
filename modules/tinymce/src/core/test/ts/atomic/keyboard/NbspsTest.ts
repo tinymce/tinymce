@@ -1,8 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
-import Schema from 'tinymce/core/api/html/Schema';
-import { normalizeNbspMiddle, normalizeNbspWithElements } from 'tinymce/core/keyboard/Nbsps';
+import { normalizeNbspMiddle } from 'tinymce/core/keyboard/Nbsps';
 
 describe('atomic.tinymce.core.keyboard.NbspsTest', () => {
   it('normalizeNbspMiddle', () => {
@@ -20,34 +19,5 @@ describe('atomic.tinymce.core.keyboard.NbspsTest', () => {
 
     assert.equal(normalizeNbspMiddle('a\u00a0b'), 'a b', 'Should change middle nbsp to space');
     assert.equal(normalizeNbspMiddle('a\u00a0b\u00a0c'), 'a b c', 'Should change two nbsps to spaces');
-  });
-
-  it('normalizeNbspWithElements', () => {
-    const assertForNormalizeNbspWithElements = (initial: string, expected: string, message: string) => {
-      assert.deepEqual(
-        normalizeNbspWithElements(initial, Schema()),
-        expected,
-        message
-      );
-    };
-    assertForNormalizeNbspWithElements('a\u00a0<strong>b</strong>', 'a <strong>b</strong>', 'Should change nbsp to space');
-
-    assertForNormalizeNbspWithElements('a\u00a0\u00a0<strong>b</strong>', 'a&nbsp;&nbsp;<strong>b</strong>', 'Should not change nbsp to space');
-    assertForNormalizeNbspWithElements('a<strong>\u00a0\u00a0b</strong>', 'a<strong>&nbsp;&nbsp;b</strong>', 'Should not change nbsp to space');
-    assertForNormalizeNbspWithElements('a \u00a0<strong>b</strong>', 'a &nbsp;<strong>b</strong>', 'Should not change nbsp to space');
-    assertForNormalizeNbspWithElements('a<strong> \u00a0b</strong>', 'a<strong> &nbsp;b</strong>', 'Should not change nbsp to space');
-    assertForNormalizeNbspWithElements('a\u00a0 <strong>b</strong>', 'a&nbsp; <strong>b</strong>', 'Should not change nbsp to space');
-    assertForNormalizeNbspWithElements('a<strong>\u00a0 b</strong>', 'a<strong>&nbsp; b</strong>', 'Should not change nbsp to space');
-
-    assertForNormalizeNbspWithElements('<strong>a</strong>\u00a0\u00a0<strong>b</strong>', '<strong>a</strong>&nbsp;&nbsp;<strong>b</strong>', 'Should not change nbsp to space');
-    assertForNormalizeNbspWithElements('<strong>a</strong><strong>\u00a0\u00a0b</strong>', '<strong>a</strong><strong>&nbsp;&nbsp;b</strong>', 'Should not change nbsp to space');
-
-    assertForNormalizeNbspWithElements('a\u00a0<strong>\u00a0b</strong>', 'a&nbsp;<strong>&nbsp;b</strong>', 'Should not change nbsp to space');
-    assertForNormalizeNbspWithElements('<strong>a\u00a0</strong><strong>b</strong>', '<strong>a </strong><strong>b</strong>', 'Should change nbsp to space');
-
-    assertForNormalizeNbspWithElements('a<strong>\u00a0b</strong>', 'a<strong> b</strong>', 'Should change nbsp to space');
-    assertForNormalizeNbspWithElements('<strong>a</strong><strong>\u00a0b</strong>', '<strong>a</strong><strong> b</strong>', 'Should change nbsp to space');
-
-    assertForNormalizeNbspWithElements('<p>a\u00a0<strong>b</strong>\u00a0c</p>', '<p>a <strong>b</strong> c</p>', 'Should change nbsp to space');
   });
 });

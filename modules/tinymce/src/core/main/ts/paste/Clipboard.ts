@@ -11,7 +11,6 @@ import { EditorEvent } from '../api/util/EventDispatcher';
 import VK from '../api/util/VK';
 import * as InputEvents from '../events/InputEvents';
 import * as Conversions from '../file/Conversions';
-import { normalizeNbspWithElements } from '../keyboard/Nbsps';
 import * as Whitespace from '../text/Whitespace';
 import * as InternalHtml from './InternalHtml';
 import * as Newlines from './Newlines';
@@ -42,7 +41,7 @@ const createPasteDataTransfer = (html: string): DataTransfer => {
 const doPaste = (editor: Editor, content: string, internal: boolean, pasteAsText: boolean, shouldSimulateInputEvent: boolean): void => {
   const res = ProcessFilters.process(editor, content, internal);
   if (!res.cancelled) {
-    const content = normalizeNbspWithElements(res.content, editor.schema);
+    const content = res.content;
     const doPasteAction = () => SmartPaste.insertContent(editor, content, pasteAsText);
     if (shouldSimulateInputEvent) {
       const args = InputEvents.fireBeforeInputEvent(editor, 'insertFromPaste', { dataTransfer: createPasteDataTransfer(content) });
