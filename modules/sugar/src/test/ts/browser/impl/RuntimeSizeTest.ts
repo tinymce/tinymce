@@ -1,5 +1,5 @@
 import { UnitTest } from '@ephox/bedrock-client';
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Num } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import * as Insert from 'ephox/sugar/api/dom/Insert';
@@ -21,7 +21,7 @@ interface TableModel {
 }
 
 UnitTest.test('Runtime Size Test', () => {
-  const random = (min: number, max: number) => Math.round(Math.random() * (max - min) + min);
+  const random = (min: number, max: number) => Math.round(Num.random() * (max - min) + min);
 
   const getOuterHeight = (elm: SugarElement<HTMLElement>) => Math.round(elm.dom.getBoundingClientRect().height);
   const getOuterWidth = (elm: SugarElement<HTMLElement>) => Math.round(elm.dom.getBoundingClientRect().width);

@@ -50,6 +50,7 @@
     "changie": "^1.14.0",
     "emojilib": "^2.4.0",
     "eslint-plugin-only-warn": "^1.1.0",
+    "eslint-plugin-security-node": "^1.1.4",
     "fast-check": "^2.23.0",
     "fork-ts-checker-webpack-plugin": "^8.0.0",
     "grunt": "^1.5.3",

@@ -1,5 +1,5 @@
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
+import { Arr, Num } from '@ephox/katamari';
 import { TinyApis, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -90,7 +90,7 @@ describe('browser.tinymce.plugins.autosave.AutoSavePluginTest', () => {
     editor.undoManager.add();
     editor.plugins.autosave.storeDraft();
 
-    window.location.hash = 'test' + Math.random().toString(36).substring(7);
+    window.location.hash = 'test' + Num.random().toString(36).substring(7);
     assert.isFalse(editor.plugins.autosave.hasDraft(), 'Check if it notices a hash change');
     window.history.replaceState('', document.title, window.location.pathname + window.location.search);
     editor.plugins.autosave.removeDraft();
