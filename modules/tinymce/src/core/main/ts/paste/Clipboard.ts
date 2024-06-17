@@ -14,7 +14,7 @@ import * as Conversions from '../file/Conversions';
 import * as Whitespace from '../text/Whitespace';
 import * as InternalHtml from './InternalHtml';
 import * as Newlines from './Newlines';
-import { isDefaultPasteBinContent, PasteBin } from './PasteBin';
+import { PasteBin, isDefaultPasteBinContent } from './PasteBin';
 import * as PasteUtils from './PasteUtils';
 import * as ProcessFilters from './ProcessFilters';
 import * as SmartPaste from './SmartPaste';

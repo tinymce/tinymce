@@ -1,5 +1,5 @@
 import { Arr, Optional, Optionals, Strings, Type, Unicode } from '@ephox/katamari';
-import { Css, Html, PredicateFind, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
+import { Css, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
