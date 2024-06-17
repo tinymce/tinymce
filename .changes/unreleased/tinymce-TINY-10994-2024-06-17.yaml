@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: The pattern commans would execute even if command was not supported.
+time: 2024-06-17T16:06:10.078426+02:00
+custom:
+  Issue: TINY-10994
