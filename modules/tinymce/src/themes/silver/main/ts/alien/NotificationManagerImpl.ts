@@ -33,7 +33,7 @@ export default (
   const clampComponentsToBounds = (components: AlloyComponent[]) => {
     getBounds().each((bounds) => {
       Arr.each(components, (comp) => {
-        Css.set(comp.element, 'width', '');
+        Css.remove(comp.element, 'width');
         if (Width.get(comp.element) > bounds.width) {
           Css.set(comp.element, 'width', bounds.width + 'px');
         }
