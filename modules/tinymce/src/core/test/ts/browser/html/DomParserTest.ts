@@ -1738,6 +1738,51 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       const serializedHtml = HtmlSerializer({}, schema).serialize(DomParser({ forced_root_block: 'p' }, schema).parse(input));
       assert.equal(serializedHtml, '<div><math> <mrow> </mrow> </math> <math> </math></div>');
     });
+
   });
 
+  context('Special elements', () => {
+    const schema = Schema({ extended_valid_elements: 'script,noembed,xmp', valid_children: '+body[style]' });
+
+    const testSpecialElement = (testCase: { input: string; expected: string }) => {
+      const fragment = DomParser({ forced_root_block: 'p', sanitize: false }, schema).parse(testCase.input);
+      const serializedHtml = HtmlSerializer({}, schema).serialize(fragment);
+
+      assert.equal(serializedHtml, testCase.expected);
+    };
+
+    it('TINY-11019: Should not entity encode text in script elements', () => testSpecialElement({
+      input: '<script>if (a < b) alert(1)</script>',
+      expected: '<script>if (a < b) alert(1)</script>'
+    }));
+
+    it('TINY-11019: Should not entity encode text in style elements', () => testSpecialElement({
+      input: '<style>b > i {}</style>',
+      expected: '<style>b > i {}</style>'
+    }));
+
+    it('TINY-11019: Should not entity decode text inside textarea elements', () => testSpecialElement({
+      input: '<div><textarea>&lt;&gt;&amp;</textarea></div>',
+      expected: '<div><textarea>&lt;&gt;&amp;</textarea></div>'
+    }));
+
+    it('TINY-11019: Should not entity encode text inside textarea elements', () => testSpecialElement({
+      input: '<div><textarea><b>test</b></textarea></div>',
+      expected: '<div><textarea>&lt;b&gt;test&lt;/b&gt;</textarea></div>'
+    }));
+
+    const excluded = [ 'script', 'style', 'title', 'plaintext', 'textarea' ];
+    const specialElements = Arr.filter(Obj.keys(schema.getSpecialElements()), (name) => !Arr.contains(excluded, name));
+    Arr.each(specialElements, (elementName) => {
+      it(`TINY-11019: Should not entity decode text inside ${elementName} elements`, () => testSpecialElement({
+        input: `<div><${elementName}>&lt;&gt;&amp;</${elementName}></div>`,
+        expected: `<div><${elementName}>&lt;&gt;&amp;</${elementName}></div>`
+      }));
+
+      it(`TINY-11019: Should not entity encode elements inside ${elementName} elements`, () => testSpecialElement({
+        input: `<div><${elementName}><em>test</em></${elementName}></div>`,
+        expected: `<div><${elementName}><em>test</em></${elementName}></div>`
+      }));
+    });
+  });
 });
