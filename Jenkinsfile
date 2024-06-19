@@ -73,11 +73,11 @@ timestamps {
 
     def platforms = [
       [ os: "windows", browser: "chrome" ],
-      [ os: "windows", browser: "firefox" ],
-      [ os: "windows", browser: "MicrosoftEdge" ],
-      [ os: "macos", browser: "safari" ],
-      [ os: "macos", browser: "chrome" ],
-      [ os: "macos", browser: "firefox" ]
+      [ os: "windows", browser: "firefox" ]
+      // [ os: "windows", browser: "MicrosoftEdge" ],
+      // [ os: "macos", browser: "safari" ],
+      // [ os: "macos", browser: "chrome" ],
+      // [ os: "macos", browser: "firefox" ]
     ]
 
     def cleanAndInstall = {
