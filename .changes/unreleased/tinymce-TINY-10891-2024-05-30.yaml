@@ -1,6 +1,0 @@
-project: tinymce
-kind: Improved
-body: Accessibility for element path buttons, added tooltip to describe the button and removed incorrect `aria-level` attribute.
-time: 2024-05-30T22:37:58.698242+08:00
-custom:
-  Issue: TINY-10891
