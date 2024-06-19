@@ -1,7 +1,9 @@
-import { Arr, Optional, Strings } from '@ephox/katamari';
+import { Arr, Obj, Optional, Strings, Type } from '@ephox/katamari';
 import { Attribute, Class, Compare, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
+import { EditorReadOnlyType } from '../api/Mode';
+import * as Options from '../api/Options';
 import VK from '../api/util/VK';
 import * as EditorFocus from '../focus/EditorFocus';
 
@@ -54,32 +56,50 @@ const restoreFakeSelection = (editor: Editor) => {
   editor.selection.setRng(editor.selection.getRng());
 };
 
-const toggleReadOnly = (editor: Editor, state: boolean): void => {
+const setCommonEditorCommands = (editor: Editor, state: boolean): void => {
+  setEditorCommandState(editor, 'StyleWithCSS', state);
+  setEditorCommandState(editor, 'enableInlineTableEditing', state);
+  setEditorCommandState(editor, 'enableObjectResizing', state);
+};
+
+const setEditorReadonly = (editor: Editor) => {
+  editor.readonly = true;
+  editor.selection.controlSelection.hideResizeRect();
+  editor._selectionOverrides.hideFakeCaret();
+  removeFakeSelection(editor);
+  setCommonEditorCommands(editor, true);
+};
+
+const unsetEditorReadonly = (editor: Editor, body: SugarElement<HTMLElement>) => {
+  editor.readonly = false;
+  if (editor.hasEditableRoot()) {
+    setContentEditable(body, true);
+  }
+  switchOnContentEditableTrue(body);
+  setCommonEditorCommands(editor, false);
+  if (EditorFocus.hasEditorOrUiFocus(editor)) {
+    editor.focus();
+  }
+  restoreFakeSelection(editor);
+  editor.nodeChanged();
+};
+
+const toggleReadOnly = (editor: Editor, readOnlyMode: EditorReadOnlyType): void => {
   const body = SugarElement.fromDom(editor.getBody());
+  const shouldSetReadOnly = Type.isBoolean(readOnlyMode) ? readOnlyMode : true;
 
-  toggleClass(body, 'mce-content-readonly', state);
+  toggleClass(body, 'mce-content-readonly', shouldSetReadOnly);
 
-  if (state) {
-    editor.selection.controlSelection.hideResizeRect();
-    editor._selectionOverrides.hideFakeCaret();
-    removeFakeSelection(editor);
-    editor.readonly = true;
-    setContentEditable(body, false);
-    switchOffContentEditableTrue(body);
+  const shouldSetContentEditableTrue = () => Type.isBoolean(readOnlyMode) ? readOnlyMode : !Obj.get(readOnlyMode, 'selectionEnabled').getOr(true);
+
+  if (shouldSetReadOnly) {
+    setEditorReadonly(editor);
+    if (shouldSetContentEditableTrue()) {
+      setContentEditable(body, false);
+      switchOffContentEditableTrue(body);
+    }
   } else {
-    editor.readonly = false;
-    if (editor.hasEditableRoot()) {
-      setContentEditable(body, true);
-    }
-    switchOnContentEditableTrue(body);
-    setEditorCommandState(editor, 'StyleWithCSS', false);
-    setEditorCommandState(editor, 'enableInlineTableEditing', false);
-    setEditorCommandState(editor, 'enableObjectResizing', false);
-    if (EditorFocus.hasEditorOrUiFocus(editor)) {
-      editor.focus();
-    }
-    restoreFakeSelection(editor);
-    editor.nodeChanged();
+    unsetEditorReadonly(editor, body);
   }
 };
 
@@ -156,14 +176,33 @@ const processReadonlyEvents = (editor: Editor, e: Event): void => {
 };
 
 const registerReadOnlySelectionBlockers = (editor: Editor): void => {
+  editor.on('beforeinput paste', (e) => {
+    if (isReadOnly(editor) && editor.mode.isSelectionEnabled()) {
+      e.preventDefault();
+    }
+  });
+
+  editor.on('BeforeSetContent', (e) => {
+    if (isReadOnly(editor) && editor.mode.isSelectionEnabled() && !e.initial) {
+      e.preventDefault();
+    }
+  });
+
+  const selectionModeCommands = Options.getSelectionModeAllowedCommands(editor);
+  editor.on('BeforeExecCommand', (e) => {
+    if (isReadOnly(editor) && editor.mode.isSelectionEnabled() && !Arr.contains(selectionModeCommands, e.command)) {
+      e.preventDefault();
+    }
+  });
+
   editor.on('ShowCaret', (e) => {
-    if (isReadOnly(editor)) {
+    if (isReadOnly(editor) && !editor.mode.isSelectionEnabled()) {
       e.preventDefault();
     }
   });
 
   editor.on('ObjectSelected', (e) => {
-    if (isReadOnly(editor)) {
+    if (isReadOnly(editor) && !editor.mode.isSelectionEnabled()) {
       e.preventDefault();
     }
   });

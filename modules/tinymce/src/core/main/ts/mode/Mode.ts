@@ -11,6 +11,15 @@ const switchToMode = (editor: Editor, activeMode: Cell<string>, availableModes: 
   const oldMode = availableModes[activeMode.get()];
   const newMode = availableModes[mode];
 
+  // if deactivate fails, hope nothing bad happened and abort
+  try {
+    oldMode.deactivate();
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(`problem while deactivating editor mode ${mode}:`, e);
+    return;
+  }
+
   // if activate fails, hope nothing bad happened and abort
   try {
     newMode.activate();
@@ -19,7 +28,7 @@ const switchToMode = (editor: Editor, activeMode: Cell<string>, availableModes: 
     console.error(`problem while activating editor mode ${mode}:`, e);
     return;
   }
-  oldMode.deactivate();
+
   if (oldMode.editorReadOnly !== newMode.editorReadOnly) {
     toggleReadOnly(editor, newMode.editorReadOnly);
   }
@@ -48,18 +57,7 @@ const registerMode = (availableModes: Record<string, EditorModeApi>, mode: strin
 
   return {
     ...availableModes,
-    [mode]: {
-      ...api,
-      deactivate: () => {
-        // wrap custom deactivate APIs so they can't break the editor
-        try {
-          api.deactivate();
-        } catch (e) {
-          // eslint-disable-next-line no-console
-          console.error(`problem while deactivating editor mode ${mode}:`, e);
-        }
-      }
-    }
+    [mode]: api
   };
 };
 

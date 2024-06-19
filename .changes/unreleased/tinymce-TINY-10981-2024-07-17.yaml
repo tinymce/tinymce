@@ -1,0 +1,7 @@
+project: tinymce
+kind: Added
+body: '`selectionEnabled` to read only mode, which allow selection and cursor to be
+  placed within the editor in read only mode.'
+time: 2024-07-17T18:55:30.212715+08:00
+custom:
+  Issue: TINY-10981

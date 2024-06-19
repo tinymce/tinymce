@@ -859,6 +859,18 @@ const register = (editor: Editor): void => {
     default: true
   });
 
+  registerOption('selection_mode_allowed_commands', {
+    processor: 'string[]',
+    default: [
+      'mceFocus',
+      'SelectAll',
+      'ToggleSidebar',
+      'tc-delete-conversation-at-cursor',
+      'tc-try-delete-all-conversations',
+      'ToggleToolbarDrawer'
+    ]
+  });
+
   // These options must be registered later in the init sequence due to their default values
   editor.on('ScriptsLoaded', () => {
     registerOption('directionality', {
@@ -980,6 +992,7 @@ const getSandboxIframesExclusions = (editor: Editor): string[] => editor.options
 const shouldConvertUnsafeEmbeds = option('convert_unsafe_embeds');
 const getLicenseKey = option('license_key');
 const getApiKey = option('api_key');
+const getSelectionModeAllowedCommands = (editor: Editor): string[] => editor.options.get('selection_mode_allowed_commands');
 
 export {
   register,
@@ -1089,5 +1102,6 @@ export {
   getLicenseKey,
   getSandboxIframesExclusions,
   shouldConvertUnsafeEmbeds,
-  getApiKey
+  getApiKey,
+  getSelectionModeAllowedCommands
 };
