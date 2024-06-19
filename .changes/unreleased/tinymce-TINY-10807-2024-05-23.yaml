@@ -1,7 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Corrected the `role` attribute on listbox dialog components to `combobox` when
-  there are no nested menu items.
-time: 2024-05-23T12:52:53.428286+03:00
-custom:
-  Issue: TINY-10807

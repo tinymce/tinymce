@@ -1,7 +1,0 @@
-project: tinymce
-kind: Improved
-body: Improve merging of inserted inline elements by removing nodes with redundant
-  inheritable styles.
-time: 2024-06-04T17:59:27.418577+10:00
-custom:
-  Issue: TINY-10869

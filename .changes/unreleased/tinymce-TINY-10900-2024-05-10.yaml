@@ -1,6 +1,0 @@
-project: tinymce
-kind: Added
-body: New `onInit` and `stretched` properties to the `HtmlPanel` dialog component.
-time: 2024-05-10T13:39:59.751613+02:00
-custom:
-  Issue: TINY-10900

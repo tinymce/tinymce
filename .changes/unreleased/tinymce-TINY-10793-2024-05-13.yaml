@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: '`autoresize_bottom_margin` was not reliably applied in some situations.'
-time: 2024-05-13T11:51:58.035022388+02:00
-custom:
-  Issue: TINY-10793
