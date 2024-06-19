@@ -58,7 +58,7 @@ interface TooltipInteractionApi {
   isEnabled: () => boolean;
 }
 
-const unitiatedTooltipApi: TooltipInteractionApi = {
+const uninitiatedTooltipApi: TooltipInteractionApi = {
   isEnabled: Fun.always,
   setEnabled: Fun.noop,
   immediatelyShow: Fun.noop,
@@ -130,7 +130,7 @@ const rgbFormFactory = (
     description: string,
     data: string | number
   ) => {
-    const tooltipApi = Cell(unitiatedTooltipApi);
+    const tooltipApi = Cell(uninitiatedTooltipApi);
     const helptext = translate(translatePrefix + 'range');
 
     const pLabel = FormField.parts.label({
@@ -178,11 +178,11 @@ const rgbFormFactory = (
                 {
                   dom: {
                     tag: 'p',
-                    innerHtml: translate('colorcustom.rgb.invalid'),
                     classes: [
                       getClass('rgb-warning-note')
                     ]
-                  }
+                  },
+                  components: [ GuiFactory.text(translate('colorcustom.rgb.invalid')) ]
                 }
               ]);
             },
