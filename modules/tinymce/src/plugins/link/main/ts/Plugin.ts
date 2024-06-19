@@ -8,8 +8,8 @@ import * as Controls from './ui/Controls';
 export default (): void => {
   PluginManager.add('link', (editor) => {
     Options.register(editor);
-    Controls.setup(editor);
     Commands.register(editor);
+    Controls.setup(editor);
     Keyboard.setup(editor);
   });
 };
