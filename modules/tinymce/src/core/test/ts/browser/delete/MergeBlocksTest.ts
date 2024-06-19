@@ -21,10 +21,10 @@ describe('browser.tinymce.core.delete.MergeBlocksTest', () => {
     Assertions.assertHtml('Should equal html', expectedHtml, viewBlock.get().innerHTML);
   };
 
-  const mergeBlocks = (forward: boolean, block1Path: number[], block2Path: number[]) => {
+  const mergeBlocks = (forward: boolean, block1Path: number[], block2Path: number[], mergeNotDelete: boolean = false) => {
     const block1 = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), block1Path).getOrDie() as SugarElement<Element>;
     const block2 = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), block2Path).getOrDie() as SugarElement<Element>;
-    return MergeBlocks.mergeBlocks(SugarElement.fromDom(viewBlock.get()), forward, block1, block2, baseSchema);
+    return MergeBlocks.mergeBlocks(SugarElement.fromDom(viewBlock.get()), forward, block1, block2, baseSchema, mergeNotDelete);
   };
 
   const assertPosition = (position: Optional<CaretPosition>, expectedPath: number[], expectedOffset: number) => {
@@ -238,6 +238,20 @@ describe('browser.tinymce.core.delete.MergeBlocksTest', () => {
       const pos = mergeBlocks(false, [ 1 ], [ 0 ]);
       assertPosition(pos, [ 0, 0 ], 1);
       assertHtml('<div>ab</div><div><h1>c</h1></div>');
+    });
+
+    it('TINY-10590: Merge children until we find a block backwards', () => {
+      setHtml('<div>A<p>B</p>C</div>');
+      const pos = mergeBlocks(false, [ 0, 1 ], [ 0 ], true);
+      assertHtml('<div><p>AB</p>C</div>');
+      assertPosition(pos, [ 0, 0, 1 ], 1);
+    });
+
+    it('TINY-10590: Merge children until we find a block forwards', () => {
+      setHtml('<div>A<p>B</p>C</div>');
+      const pos = mergeBlocks(true, [ 0, 1 ], [ 0 ], true);
+      assertHtml('<div>A<p>BC</p></div>');
+      assertPosition(pos, [ 0, 1, 0 ], 1);
     });
   });
 });
