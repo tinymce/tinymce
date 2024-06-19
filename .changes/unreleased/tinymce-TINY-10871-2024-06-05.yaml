@@ -1,7 +1,0 @@
-project: tinymce
-kind: Improved
-body: Improved Find & Replace dialog accessibility by changing placeholders to
-  labels.
-time: 2024-06-05T14:25:44.504736+02:00
-custom:
-  Issue: TINY-10871
