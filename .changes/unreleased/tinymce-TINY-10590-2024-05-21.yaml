@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Text content could move unexpectedly when deleting a paragraph.
+time: 2024-05-21T08:45:35.803719938+02:00
+custom:
+  Issue: TINY-10590
