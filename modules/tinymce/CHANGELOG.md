@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 6.8.4 - 2024-06-19
+
+### Fixed
+- HTML entities that were double decoded in `noscript` elements caused an XSS vulnerability. #TINY-11019
+- It was possible to inject XSS HTML that was not matching the regexp when using the `noneditable_regexp` option. #TINY-11022
+
 ## 6.8.3 - 2024-02-08
 
 ### Changed
