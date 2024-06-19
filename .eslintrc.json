@@ -35,6 +35,7 @@
       260
     ],
     "security-node/non-literal-reg-expr": "off",
-    "security-node/detect-crlf": "off"
+    "security-node/detect-crlf": "off",
+    "security-node/detect-possible-timing-attacks": "off"
   }
 }
