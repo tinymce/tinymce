@@ -163,7 +163,7 @@ const registerReadOnlySelectionBlockers = (editor: Editor): void => {
   });
 
   editor.on('ObjectSelected', (e) => {
-    if (isReadOnly(editor)) {
+    if (isReadOnly(editor) && !editor.mode.allowSelectionInReadOnly()) {
       e.preventDefault();
     }
   });

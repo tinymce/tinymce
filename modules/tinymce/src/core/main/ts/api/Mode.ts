@@ -1,4 +1,4 @@
-import { Cell, Fun } from '@ephox/katamari';
+import { Cell, Fun, Obj, Type } from '@ephox/katamari';
 
 import { registerMode, setMode } from '../mode/Mode';
 import { isReadOnly, registerReadOnlyContentFilters, registerReadOnlySelectionBlockers } from '../mode/Readonly';
@@ -10,7 +10,13 @@ import Editor from './Editor';
  * @class tinymce.EditorMode
  */
 
+type EditorReadOnlyType = boolean | { ui: boolean; selection: boolean };
+
 export interface EditorMode {
+  // allowHighlight: () => boolean;
+  allowSelectionInReadOnly: () => boolean;
+  allowUiInReadOnly: () => boolean;
+
   /**
    * Checks if the editor is in a readonly state.
    *
@@ -65,7 +71,9 @@ export interface EditorModeApi {
    * @property editorReadOnly
    * @type Boolean
    */
-  editorReadOnly: boolean;
+  editorReadOnly: EditorReadOnlyType;
+
+  // editorAllowHighlight?: boolean;
 }
 
 export const create = (editor: Editor): EditorMode => {
@@ -87,6 +95,15 @@ export const create = (editor: Editor): EditorMode => {
   registerReadOnlySelectionBlockers(editor);
 
   return {
+    // allowHighlight: () => availableModes.get()[activeMode.get()].editorAllowHighlight || false,
+    allowUiInReadOnly: () => {
+      const mode = availableModes.get()[activeMode.get()].editorReadOnly;
+      return Type.isBoolean(mode) ? false : Obj.get(mode, 'ui').getOr(false);
+    },
+    allowSelectionInReadOnly: () => {
+      const mode = availableModes.get()[activeMode.get()].editorReadOnly;
+      return Type.isBoolean(mode) ? false : Obj.get(mode, 'selection').getOr(false);
+    },
     isReadOnly: () => isReadOnly(editor),
     set: (mode: string) => setMode(editor, availableModes.get(), activeMode, mode),
     get: () => activeMode.get(),

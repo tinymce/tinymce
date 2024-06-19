@@ -115,7 +115,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
   const isResizable = (elm: Element) => {
     const selector = Options.getObjectResizing(editor);
 
-    if (!selector) {
+    if (!selector || editor.mode.isReadOnly()) {
       return false;
     }
 
@@ -430,7 +430,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     const targetElm = e.type === 'mousedown' ? e.target : selection.getNode();
     const controlElm = SelectorFind.closest<HTMLElement>(SugarElement.fromDom(targetElm), controlElmSelector)
       .map((e) => e.dom)
-      .filter((e) => dom.isEditable(e.parentElement) || (e.nodeName === 'IMG' && dom.isEditable(e)))
+      .filter((e) => (editor.mode.isReadOnly() && editor.mode.allowSelectionInReadOnly() && e.nodeName !== 'TABLE') || dom.isEditable(e.parentElement) || (e.nodeName === 'IMG' && dom.isEditable(e)))
       .getOrUndefined();
 
     // Store the original data-mce-selected value or fallback to '1' if not set
