@@ -4,16 +4,16 @@ import { registerMode, setMode } from '../mode/Mode';
 import { isReadOnly, registerReadOnlyContentFilters, registerReadOnlySelectionBlockers } from '../mode/Readonly';
 import Editor from './Editor';
 
+type EditorReadOnlyType = boolean | { uiEnabled: boolean; selectionEnabled: boolean };
+
 /**
  * TinyMCE Editor Mode API.
  *
  * @class tinymce.EditorMode
  */
 
-type EditorReadOnlyType = boolean | { ui: boolean; selection: boolean };
 
 export interface EditorMode {
-  // allowHighlight: () => boolean;
   allowSelectionInReadOnly: () => boolean;
   allowUiInReadOnly: () => boolean;
 
@@ -69,11 +69,10 @@ export interface EditorModeApi {
    * Flags whether the editor should be made readonly while this mode is active.
    *
    * @property editorReadOnly
-   * @type Boolean
+   * @type Object
    */
   editorReadOnly: EditorReadOnlyType;
 
-  // editorAllowHighlight?: boolean;
 }
 
 export const create = (editor: Editor): EditorMode => {
@@ -95,14 +94,13 @@ export const create = (editor: Editor): EditorMode => {
   registerReadOnlySelectionBlockers(editor);
 
   return {
-    // allowHighlight: () => availableModes.get()[activeMode.get()].editorAllowHighlight || false,
     allowUiInReadOnly: () => {
       const mode = availableModes.get()[activeMode.get()].editorReadOnly;
-      return Type.isBoolean(mode) ? false : Obj.get(mode, 'ui').getOr(false);
+      return Type.isBoolean(mode) ? false : Obj.get(mode, 'uiEnabled').getOr(false);
     },
     allowSelectionInReadOnly: () => {
       const mode = availableModes.get()[activeMode.get()].editorReadOnly;
-      return Type.isBoolean(mode) ? false : Obj.get(mode, 'selection').getOr(false);
+      return Type.isBoolean(mode) ? false : Obj.get(mode, 'selectionEnabled').getOr(false);
     },
     isReadOnly: () => isReadOnly(editor),
     set: (mode: string) => setMode(editor, availableModes.get(), activeMode, mode),
