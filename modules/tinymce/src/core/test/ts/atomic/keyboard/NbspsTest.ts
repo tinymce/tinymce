@@ -12,6 +12,7 @@ describe('atomic.tinymce.core.keyboard.NbspsTest', () => {
     assert.equal(normalizeNbspMiddle('\u00a0a'), '\u00a0a', 'Should remain unchanged nbsp at start');
     assert.equal(normalizeNbspMiddle('a\u00a0'), 'a\u00a0', 'Should remain unchanged nbsp at end');
     assert.equal(normalizeNbspMiddle('a\u00a0\u00a0b'), 'a\u00a0\u00a0b', 'Should remain unchanged 2 consecutive nbsps');
+    assert.equal(normalizeNbspMiddle('a\u00a0\u00a0\u00a0b'), 'a\u00a0\u00a0\u00a0b', 'Should remain unchanged 3 consecutive nbsps');
     assert.equal(normalizeNbspMiddle('a\u00a0 b'), 'a\u00a0 b', 'Should remain unchanged nbsp followed by space');
     assert.equal(normalizeNbspMiddle('a \u00a0b'), 'a \u00a0b', 'Should remain unchanged space followed by nbsp');
     assert.equal(normalizeNbspMiddle('a  b'), 'a  b', 'Should remain unchanged space followed by space');
