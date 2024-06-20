@@ -21,6 +21,9 @@ const registerOptions = (editor: Editor) => {
   ContextMenuOptions.register(editor);
 };
 
+const isFullscreen = (editor: Editor): boolean =>
+  editor.plugins.fullscreen && editor.plugins.fullscreen.isFullscreen();
+
 export default (): void => {
   ThemeManager.add('silver', (editor): Theme => {
     registerOptions(editor);
@@ -54,7 +57,8 @@ export default (): void => {
             // At this stage, it looks like we need to calculate the bounds each time, just in
             // case the scrolling context details have changed since the last time. The bounds considers
             // the Boxes.box sizes, which might change over time.
-            return ScrollingContext.getBoundsFrom(sc);
+            // TINY-10973: if the editor is in fullscreen we could not consider the `ScrollingContext`
+            return isFullscreen(editor) ? Boxes.win() : ScrollingContext.getBoundsFrom(sc);
           };
         }
       );
