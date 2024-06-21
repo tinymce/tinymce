@@ -224,7 +224,7 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
               (scrollEnv) => {
                 const constrainedBounds = Boxes.constrain(
                   box,
-                  ScrollingContext.getBoundsFrom(scrollEnv)
+                  ScrollingContext.getBoundsFrom(editor, scrollEnv)
                 );
 
                 // When the toolbar location is set to the top, y is the top of the container and height is the available container height minus the header height, as the toolbar will be placed at the top of the container
@@ -284,7 +284,7 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
           },
           (sc) => {
             // TINY-9411: Implement sticky toolbar offsets in scrollable containers
-            const combinedBounds = ScrollingContext.getBoundsFrom(sc);
+            const combinedBounds = ScrollingContext.getBoundsFrom(editor, sc);
             return {
               bounds: combinedBounds,
               optScrollEnv: Optional.some({

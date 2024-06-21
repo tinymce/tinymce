@@ -55,7 +55,7 @@ const inlineAdditionalBehaviours = (editor: Editor, isStickyToolbar: boolean, is
           return optScrollingContext
             .map(
               (sc) => {
-                const combinedBounds = ScrollingContext.getBoundsFrom(sc);
+                const combinedBounds = ScrollingContext.getBoundsFrom(editor, sc);
                 return {
                   bounds: combinedBounds,
                   optScrollEnv: Optional.some({
@@ -310,7 +310,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
             lazyViewport: (comp) => {
               const optScrollingContext = ScrollingContext.detectWhenSplitUiMode(editor, comp.element);
               return optScrollingContext.map((sc) => {
-                const combinedBounds = ScrollingContext.getBoundsFrom(sc);
+                const combinedBounds = ScrollingContext.getBoundsFrom(editor, sc);
                 return {
                   bounds: combinedBounds,
                   optScrollEnv: Optional.some({
@@ -337,7 +337,7 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
           // Margin between element and the bottom of the screen or the editor content area container
           const margin = 15;
 
-          const bounds = optScrollingContext.map((sc) => ScrollingContext.getBoundsFrom(sc)).getOr(Boxes.win());
+          const bounds = optScrollingContext.map((sc) => ScrollingContext.getBoundsFrom(editor, sc)).getOr(Boxes.win());
           const contentAreaContainer = Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()));
 
           const constrainedBounds = Boxes.constrain(contentAreaContainer, bounds);
