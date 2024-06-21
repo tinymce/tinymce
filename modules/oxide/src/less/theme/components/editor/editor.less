@@ -7,6 +7,7 @@ Editor
 @editor-header-sticky-box-shadow: 0 2px 2px -2px fade(@color-black, 20%), 0 8px 8px -4px fade(@color-black, 15%);
 @editor-bottom-header-box-shadow: none;
 @editor-bottom-header-sticky-box-shadow: @editor-header-sticky-box-shadow;
+
 /* If @toolbar-background-color is set to transparent, then set the sticky toolbar background color to be another color to not be transparent over content. */
 @editor-header-sticky-background-color: if((alpha(@toolbar-background-color) > 0), transparent, @background-color);
 
@@ -25,6 +26,7 @@ Editor
   .tox-editor-header {
     display: grid;
     grid-template-columns: 1fr min-content;
+
     /* Escape the highlight of content area when the toolbar is sticky */
     z-index: 2;
   }
@@ -89,6 +91,7 @@ Editor
 
   /* Set all transition delays to 0s, overriding visibility to apply immediately
   and thus allowing the opacity to fade in */
+
   /* transition-delay: 0s; */
 }
 
