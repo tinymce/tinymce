@@ -502,6 +502,17 @@ describe('browser.tinymce.core.EditorTest', () => {
     TinyAssertions.assertContent(editor, '<p><img src="data:image/gif;base64,R0"></p>');
   });
 
+  // eslint-disable-next-line mocha/no-exclusive-tests
+  it.only('TINY-10955: multiple comments will not cause unexpected newlines', () => {
+    const editor = hook.editor();
+    editor.setContent('<div>A</div><!--Comment1--><!--Comment2--><div>B</div>');
+    TinyAssertions.assertRawContent(editor, '<div>A</div><!--Comment1--><!--Comment2--><div>B</div>');
+    editor.setContent('<div>A</div> <!--Comment1--> <!--Comment2--> <div>B</div>');
+    TinyAssertions.assertRawContent(editor, '<div>A</div><!--Comment1--><!--Comment2--><div>B</div>');
+    editor.setContent('<div>A</div>\n<!--Comment1-->\n<!--Comment2-->\n<div>B</div>');
+    TinyAssertions.assertRawContent(editor, '<div>A</div><!--Comment1--><!--Comment2--><div>B</div>');
+  });
+
   context('hasPlugin', () => {
     const checkWithoutManager = (title: string, plugins: string, plugin: string, expected: boolean) => {
       const editor = hook.editor();

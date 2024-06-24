@@ -212,6 +212,8 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
 
         if (text.length === 0) {
           node.remove();
+        } else if (text === ' ' && node.prev && node.prev.type === 8 && node.next && node.next.type === 8) {
+          node.remove();
         } else {
           node.value = text;
         }

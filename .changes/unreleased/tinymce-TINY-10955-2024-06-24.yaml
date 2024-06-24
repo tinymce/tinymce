@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: Multiple comment html elements after each other would in some cases generate
+  unwanted elements.
+time: 2024-06-24T17:40:05.135911183+02:00
+custom:
+  Issue: TINY-10955
