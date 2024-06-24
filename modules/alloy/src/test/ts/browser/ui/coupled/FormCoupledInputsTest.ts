@@ -6,6 +6,7 @@ import { Class } from '@ephox/sugar';
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
+import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
@@ -178,19 +179,22 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
           Chain.binder((elem) => component.getSystem().getByDom(elem)),
           [
             Chain.fromChains([
-              Chain.binder((comp) => FormCoupledInputs.getField1(comp).fold(() => Result.error('did not find'), Result.value)),
+              Chain.binder((comp) => FormCoupledInputs.getField1(comp)
+                .fold<Result<AlloyComponent, string>>(() => Result.error('did not find'), Result.value)),
               Chain.op((comp) => {
                 Assertions.assertEq('Not field1', true, Class.has(comp.element, 'field1'));
               })
             ]),
             Chain.fromChains([
-              Chain.binder((comp) => FormCoupledInputs.getField2(comp).fold(() => Result.error('did not find'), Result.value)),
+              Chain.binder((comp) => FormCoupledInputs.getField2(comp)
+                .fold<Result<AlloyComponent, string>>(() => Result.error('did not find'), Result.value)),
               Chain.op((comp) => {
                 Assertions.assertEq('Not field2', true, Class.has(comp.element, 'field2'));
               })
             ]),
             Chain.fromChains([
-              Chain.binder((comp) => FormCoupledInputs.getLock(comp).fold(() => Result.error('did not find'), Result.value)),
+              Chain.binder((comp) => FormCoupledInputs.getLock(comp)
+                .fold<Result<AlloyComponent, string>>(() => Result.error('did not find'), Result.value)),
               Chain.op((comp) => {
                 Assertions.assertEq('Not lock', true, Class.has(comp.element, 'lock'));
               })

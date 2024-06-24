@@ -82,7 +82,7 @@ const setupAttrHooks = (styles: Styles, settings: Partial<DOMUtilsSettings>, get
 
   const attrHooks: AttrHooks = {
     style: {
-      set: ($elm, value: string | {} | null) => {
+      set: ($elm, value: string | Record<string, string | number | null> | null) => {
         if (value !== null && typeof value === 'object') {
           $elm.css(value);
           return;
