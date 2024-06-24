@@ -9,6 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
 import PluginManager from 'tinymce/core/api/PluginManager';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import URI from 'tinymce/core/api/util/URI';
 import Theme from 'tinymce/themes/silver/Theme';
 
@@ -213,7 +214,7 @@ describe('browser.tinymce.core.EditorTest', () => {
 
   it('TBA: show/hide/isHidden and events', () => {
     const editor = hook.editor();
-    let lastEvent;
+    let lastEvent: EditorEvent<{}> | undefined;
 
     editor.on('show hide', (e) => {
       lastEvent = e;
@@ -225,13 +226,13 @@ describe('browser.tinymce.core.EditorTest', () => {
     assert.isTrue(editor.isHidden(), 'After hide isHidden state');
     assert.equal('hide', lastEvent.type, 'show/hide/isHidden and events');
 
-    lastEvent = null;
+    lastEvent = undefined;
     editor.hide();
     assert.isNull(lastEvent, 'show/hide/isHidden and events');
 
     editor.show();
     assert.isFalse(editor.isHidden(), 'After show isHidden state');
-    assert.equal(lastEvent.type, 'show', 'show/hide/isHidden and events');
+    assert.equal((lastEvent as any).type, 'show', 'show/hide/isHidden and events');
 
     lastEvent = null;
     editor.show();
@@ -368,27 +369,27 @@ describe('browser.tinymce.core.EditorTest', () => {
 
   it('TBA: setDirty/isDirty', () => {
     const editor = hook.editor();
-    let lastArgs = null;
+    let lastArgs: EditorEvent<{}> | undefined;
 
     editor.on('dirty', (e) => {
       lastArgs = e;
     });
 
     editor.setDirty(false);
-    assert.isNull(lastArgs, 'setDirty/isDirty');
+    assert.isUndefined(lastArgs, 'setDirty/isDirty');
     assert.isFalse(editor.isDirty(), 'setDirty/isDirty');
 
     editor.setDirty(true);
-    assert.equal(lastArgs.type, 'dirty', 'setDirty/isDirty');
+    assert.equal((lastArgs as any).type, 'dirty', 'setDirty/isDirty');
     assert.isTrue( editor.isDirty(), 'setDirty/isDirty');
 
-    lastArgs = null;
+    lastArgs = undefined;
     editor.setDirty(true);
-    assert.isNull(lastArgs, 'setDirty/isDirty');
+    assert.isUndefined(lastArgs, 'setDirty/isDirty');
     assert.isTrue(editor.isDirty(), 'setDirty/isDirty');
 
     editor.setDirty(false);
-    assert.isNull(lastArgs, 'setDirty/isDirty');
+    assert.isUndefined(lastArgs, 'setDirty/isDirty');
     assert.isFalse(editor.isDirty(), 'setDirty/isDirty');
   });
 
