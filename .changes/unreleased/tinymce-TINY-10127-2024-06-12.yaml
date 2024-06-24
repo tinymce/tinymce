@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: 'Cursor would shift to the start of the editor body when focus was shifted to a noneditable cell of a table.'
+time: 2024-06-12T08:42:51.138159+08:00
+custom:
+  Issue: TINY-10127
