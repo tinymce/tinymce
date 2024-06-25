@@ -37,7 +37,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.SplitButtonPopupPositionW
       ui_mode: 'split',
     }, setupElement, []);
 
-    it('TINY-10973: the split button popups should be rendered close by the corrispective split button', async () => {
+    it('TINY-10973: the split button popups should be rendered close to the split button', async () => {
       const editor = hook.editor();
       editor.execCommand('mceFullScreen');
       const button = await TinyUiActions.pWaitForUi(editor, '[aria-label^="Numbered list"]');
