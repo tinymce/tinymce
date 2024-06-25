@@ -79,8 +79,11 @@ const setup = (editor: Editor): LinkSelection => {
     getLinkFromElement(editor, e.target).each(selectedLink.set);
   });
 
-  editor.on('click', (e) => {
+  editor.on('SelectionChange', () => {
     selectedLink.clear();
+  })
+
+  editor.on('click', (e) => {
     const links = Utils.getLinks(editor.dom.getParents(e.target)) as [HTMLAnchorElement];
 
     if (links.length === 1 && VK.metaKeyPressed(e)) {

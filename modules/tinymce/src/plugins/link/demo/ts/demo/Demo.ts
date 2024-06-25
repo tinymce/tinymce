@@ -5,7 +5,7 @@ declare let tinymce: TinyMCE;
 tinymce.init({
   selector: 'textarea.tinymce',
   plugins: 'link code',
-  toolbar: 'link unlink code',
+  toolbar: 'link unlink openlink code',
   menubar: 'view insert tools custom',
   link_quicklink: true,
   link_list: [
@@ -29,7 +29,7 @@ tinymce.init({
         </a></div>
         <p><a href="#">Inline root link</a></p>
         <p><a href="#">Inline link</a></p>
-        <p>Lorem <a href="https://www.google.com">ipsum</a> dolor <a href="https://www.google.com">sit</a> amet</p>
+        <p>Lorem <a href="https://www.google.com">ipsum</a> dolor <a href="https://www.tiny.cloud">sit</a> amet</p>
       `);
     });
   }
