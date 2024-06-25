@@ -6,7 +6,7 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.toolbar.SplitButtonPopupPositionWithFullscreenTest', () => {
-  context('in a scroll content', () => {
+  context('in scrollable container', () => {
     let rootElement: SugarElement<HTMLDivElement>;
     const setupElement = () => {
       // Setup the element to render to
