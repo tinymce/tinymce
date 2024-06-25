@@ -80,7 +80,9 @@ const setup = (editor: Editor): LinkSelection => {
   });
 
   editor.on('SelectionChange', () => {
-    getLinkFromSelection(editor).each(selectedLink.set);
+    if (!selectedLink.isSet()) {
+      getLinkFromSelection(editor).each(selectedLink.set);
+    }
   });
 
   editor.on('click', (e) => {
