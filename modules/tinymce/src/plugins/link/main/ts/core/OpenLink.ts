@@ -81,7 +81,7 @@ const setup = (editor: Editor): LinkSelection => {
 
   editor.on('SelectionChange', () => {
     selectedLink.clear();
-  })
+  });
 
   editor.on('click', (e) => {
     const links = Utils.getLinks(editor.dom.getParents(e.target)) as [HTMLAnchorElement];
