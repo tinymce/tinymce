@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Fixed cases where adding a newline around a br, table or img would not move the cursor to a new line.
-time: 2024-05-21T03:42:28.925827998+10:00
-custom:
-  Issue: TINY-10384

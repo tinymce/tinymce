@@ -90,7 +90,7 @@ const transferChildren = (parent: AstNode, nativeParent: Node, specialElements: 
   const parentName = parent.name;
   // Exclude the special elements where the content is RCDATA as their content needs to be parsed instead of being left as plain text
   // See: https://html.spec.whatwg.org/multipage/parsing.html#parsing-html-fragments
-  const isSpecial = parentName in specialElements && parentName !== 'title' && parentName !== 'textarea';
+  const isSpecial = parentName in specialElements && parentName !== 'title' && parentName !== 'textarea' && parentName !== 'noscript';
 
   const childNodes = nativeParent.childNodes;
   for (let ni = 0, nl = childNodes.length; ni < nl; ni++) {

@@ -36,9 +36,6 @@ const getBlockPosition = (rootNode: HTMLElement, pos: CaretPosition): Optional<B
   return DeleteUtils.getParentBlock(rootElm, containerElm).map((block) => blockPosition(block, pos));
 };
 
-const isNotAncestorial = (blockBoundary: BlockBoundary) =>
-  !(Compare.contains(blockBoundary.to.block, blockBoundary.from.block) || Compare.contains(blockBoundary.from.block, blockBoundary.to.block));
-
 const isDifferentBlocks = (blockBoundary: BlockBoundary): boolean =>
   !Compare.eq(blockBoundary.from.block, blockBoundary.to.block);
 
@@ -84,7 +81,7 @@ const readFromRange = (schema: Schema, rootNode: HTMLElement, forward: boolean, 
   );
 
   return Optionals.lift2(fromBlockPos, toBlockPos, blockBoundary).filter((blockBoundary) =>
-    isDifferentBlocks(blockBoundary) && hasSameHost(rootNode, blockBoundary) && isEditable(blockBoundary) && hasValidBlocks(blockBoundary) && isNotAncestorial(blockBoundary));
+    isDifferentBlocks(blockBoundary) && hasSameHost(rootNode, blockBoundary) && isEditable(blockBoundary) && hasValidBlocks(blockBoundary));
 };
 
 const read = (schema: Schema, rootNode: HTMLElement, forward: boolean, rng: Range): Optional<BlockBoundary> =>

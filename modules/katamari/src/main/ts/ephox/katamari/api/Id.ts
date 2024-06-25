@@ -1,3 +1,5 @@
+import * as Num from './Num';
+
 /**
  * Generate a unique identifier.
  *
@@ -14,7 +16,7 @@ let unique = 0;
 export const generate = (prefix: string): string => {
   const date = new Date();
   const time = date.getTime();
-  const random = Math.floor(Math.random() * 1000000000);
+  const random = Math.floor(Num.random() * 1000000000);
 
   unique++;
 

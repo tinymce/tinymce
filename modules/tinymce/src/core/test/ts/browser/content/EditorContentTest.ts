@@ -1,3 +1,4 @@
+import { Waiter } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Type } from '@ephox/katamari';
 import { TinyApis, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
@@ -685,6 +686,38 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
       const editor = hook.editor();
       editor.setContent('<svg width="100" height="100"><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"><script>alert(1)</script></circle></svg>');
       TinyAssertions.assertContent(editor, '<svg width="100" height="100"><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"><script>alert(1)</script></circle></svg>');
+    });
+  });
+
+  context('Special elements', () => {
+    const hook = TinyHooks.bddSetup<Editor>({
+      base_url: '/project/tinymce/js/tinymce'
+    }, []);
+
+    it('TINY-11019: Should not be possible to run scripts inside noscript elements', async () => {
+      const editor = hook.editor();
+      let state = false;
+      const editorWinGlobal = editor.getWin() as unknown as any;
+
+      editorWinGlobal.xss = () => {
+        state = true;
+      };
+
+      editor.setContent('<noscript>&lt;/noscript&gt;&lt;style onload=xss()&gt;&lt;/style&gt;</noscript>');
+
+      await Waiter.pWait(1);
+
+      delete editorWinGlobal.xss;
+
+      assert.isFalse(state, 'xss function should not have been called');
+      TinyAssertions.assertContent(editor, '<noscript>&lt;/noscript&gt;&lt;style onload=xss()&gt;&lt;/style&gt;</noscript>');
+    });
+
+    it('TINY-11019: Should not double decode noscript contents', () => {
+      const editor = hook.editor();
+
+      editor.setContent('<noscript>&amp;lt;/noscript&amp;&gt;</noscript>');
+      TinyAssertions.assertContent(editor, '<noscript>&amp;lt;/noscript&amp;&gt;</noscript>');
     });
   });
 });

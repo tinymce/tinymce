@@ -1,7 +1,0 @@
-project: tinymce
-kind: Fixed
-body: 'Focusing on `contenteditable="true"` element when using `editable_root: false`
-  and inline mode causing selection to be shifted.'
-time: 2024-05-21T12:17:15.670101+08:00
-custom:
-  Issue: TINY-10820
