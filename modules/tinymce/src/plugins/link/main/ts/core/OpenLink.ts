@@ -62,7 +62,7 @@ const getLinkFromElement = (editor: Editor, element: Node): Optional<HTMLAnchorE
 };
 const getLinkInSelection = (editor: Editor): Optional<HTMLAnchorElement> => {
   const links = Utils.getLinksInSelection(editor.selection.getRng());
-  return Optionals.someIf(links.length > 0, links[0]);
+  return Optionals.someIf(links.length > 0, links[0]).or(getLinkFromElement(editor, editor.selection.getNode()));
 };
 
 const getLinkFromSelection = (editor: Editor) => editor.selection.isCollapsed() || isSelectionOnImageWithEmbeddedLink(editor)
@@ -80,10 +80,11 @@ const setup = (editor: Editor): LinkSelection => {
   });
 
   editor.on('SelectionChange', () => {
-    selectedLink.clear();
+    getLinkFromSelection(editor).each(selectedLink.set);
   });
 
   editor.on('click', (e) => {
+    selectedLink.clear();
     const links = Utils.getLinks(editor.dom.getParents(e.target)) as [HTMLAnchorElement];
 
     if (links.length === 1 && VK.metaKeyPressed(e)) {
@@ -93,6 +94,7 @@ const setup = (editor: Editor): LinkSelection => {
   });
 
   editor.on('keydown', (e) => {
+    selectedLink.clear();
     if (!e.isDefaultPrevented() && e.keyCode === 13 && hasOnlyAltModifier(e)) {
       getSelectedLink().each((link) => {
         e.preventDefault();
