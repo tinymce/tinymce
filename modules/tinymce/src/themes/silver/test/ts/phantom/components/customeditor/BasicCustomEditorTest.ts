@@ -51,7 +51,7 @@ describe('phantom.tinymce.themes.silver.components.customeditor.BasicCustomEdito
       name: 'customeditor',
       tag: 'textarea',
       scriptId: 'BasicCustomEditorTest',
-      scriptUrl: '/custom/404', // using the cache
+      scriptUrl: '/custom/tinymce/404', // using the cache
       settings: undefined
     })
   ));

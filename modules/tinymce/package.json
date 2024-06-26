@@ -17,8 +17,10 @@
   },
   "main": "tinymce.js",
   "scripts": {
+    "build": "grunt buildOnly",
     "test": "grunt test",
-    "lint": "grunt eslint",
+    "test-manual": "grunt test-manual",
+    "lint": "eslint --max-warnings=0 src/**/*.ts",
     "silver-test": "grunt bedrock-auto:silver",
     "silver-test-manual": "grunt bedrock-manual:silver"
   },

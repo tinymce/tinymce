@@ -8,9 +8,9 @@
     "directory": "modules/bridge"
   },
   "scripts": {
-    "test": "echo \"No tests here\"",
     "prepublishOnly": "tsc -b",
-    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts"
+    "build": "tsc",
+    "lint": "eslint --config ../../.eslintrc.json --max-warnings=0 src/**/*.ts"
   },
   "dependencies": {
     "@ephox/boulder": "^6.0.3",

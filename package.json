@@ -1,5 +1,4 @@
 {
-  "name": "root",
   "private": true,
   "workspaces": [
     "modules/*"

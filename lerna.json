@@ -3,6 +3,10 @@
   "npmClient": "yarn",
   "useWorkspaces": true,
   "command":  {
+    "version": {
+      "ignoreChanges": ["modules/tinymce/**"],
+      "private": false
+    },
     "publish": {
       "ignoreChanges": ["modules/tinymce/**"],
       "push": false
