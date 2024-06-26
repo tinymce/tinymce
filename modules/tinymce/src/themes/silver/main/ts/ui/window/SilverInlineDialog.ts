@@ -7,10 +7,10 @@
 
 // DUPE with SilverDialog. Cleaning up.
 import {
-  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Blocking, Composing, Focusing, GuiFactory, Keying, Memento, NativeEvents,
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Blocking, Composing, Focusing, GuiFactory, Keying, Memento, NativeEvents,
   Receiving, Reflecting, Replacing, SimpleSpec, SystemEvents
 } from '@ephox/alloy';
-import { DialogManager } from '@ephox/bridge';
+import { DialogManager, Dialog } from '@ephox/bridge';
 import { Fun, Id, Optional } from '@ephox/katamari';
 import { Attribute, SugarNode } from '@ephox/sugar';
 
@@ -26,7 +26,12 @@ import { renderInlineFooter } from './SilverDialogFooter';
 import { renderInlineHeader } from './SilverDialogHeader';
 import { getDialogApi } from './SilverDialogInstanceApi';
 
-const renderInlineDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra, backstage: UiFactoryBackstage, ariaAttrs: boolean) => {
+interface RenderedDialog<T extends Dialog.DialogData> {
+  readonly dialog: AlloyComponent;
+  readonly instanceApi: Dialog.DialogInstanceApi<T>;
+}
+
+const renderInlineDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra, backstage: UiFactoryBackstage, ariaAttrs: boolean): RenderedDialog<T> => {
   const dialogLabelId = Id.generate('dialog-label');
   const dialogContentId = Id.generate('dialog-content');
 

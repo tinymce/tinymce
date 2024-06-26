@@ -18,7 +18,7 @@ import { bodyChannel } from './DialogChannels';
 
 // TypeScript allows some pretty weird stuff.
 interface WindowBodySpec {
-  body: Dialog.Dialog<unknown>['body'];
+  readonly body: Dialog.Dialog<Record<string, unknown>>['body'];
 }
 
 // ariaAttrs is being passed through to silver inline dialog

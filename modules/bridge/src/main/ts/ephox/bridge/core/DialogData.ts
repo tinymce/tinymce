@@ -1,10 +1,10 @@
 import { FieldSchema, StructureProcessor, StructureSchema } from '@ephox/boulder';
 import { Arr } from '@ephox/katamari';
 
-import { DialogSpec } from '../components/dialog/Dialog';
+import { DialogData, DialogSpec } from '../components/dialog/Dialog';
 import { getDataProcessor, getNamedItems } from './DataProcessors';
 
-export const createDataValidator = <T>(structure: DialogSpec<T>): StructureProcessor => {
+export const createDataValidator = <T extends DialogData>(structure: DialogSpec<T>): StructureProcessor => {
   const namedItems = getNamedItems(structure);
   const fields = Arr.bind(namedItems, (item) => getDataProcessor(item).fold(
     () => [],

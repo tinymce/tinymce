@@ -16,6 +16,11 @@ import { SilverDialogEvents } from './SilverDialogEvents';
 import { renderModalFooter } from './SilverDialogFooter';
 import { getDialogApi } from './SilverDialogInstanceApi';
 
+interface RenderedDialog<T extends Dialog.DialogData> {
+  readonly dialog: AlloyComponent;
+  readonly instanceApi: Dialog.DialogInstanceApi<T>;
+}
+
 const getDialogSizeClasses = (size: Dialog.DialogSize): string[] => {
   switch (size) {
     case 'large':
@@ -27,7 +32,7 @@ const getDialogSizeClasses = (size: Dialog.DialogSize): string[] => {
   }
 };
 
-const renderDialog = <T>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra, backstage: UiFactoryBackstage) => {
+const renderDialog = <T extends Dialog.DialogData>(dialogInit: DialogManager.DialogInit<T>, extra: SilverDialogCommon.WindowExtra, backstage: UiFactoryBackstage): RenderedDialog<T> => {
   const header = SilverDialogCommon.getHeader(dialogInit.internalDialog.title, backstage);
 
   const body = renderModalBody({
