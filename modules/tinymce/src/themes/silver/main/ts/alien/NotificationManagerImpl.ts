@@ -23,14 +23,17 @@ export default (
 ): NotificationManagerImpl => {
   const sharedBackstage = extras.backstage.shared;
 
+  const getBoundsContainer = () => SugarElement.fromDom(editor.queryCommandValue('ToggleView') === '' ? editor.getContentAreaContainer() : editor.getContainer());
+
   const getBounds = () => {
-    const contentArea = Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()));
+    const contentArea = Boxes.box(getBoundsContainer());
     return Optional.some(contentArea);
   };
 
   const clampComponentsToBounds = (components: AlloyComponent[]) => {
     getBounds().each((bounds) => {
       Arr.each(components, (comp) => {
+        Css.remove(comp.element, 'width');
         if (Width.get(comp.element) > bounds.width) {
           Css.set(comp.element, 'width', bounds.width + 'px');
         }
@@ -114,7 +117,7 @@ export default (
                 : [
                   Docking.config({
                     contextual: {
-                      lazyContext: () => Optional.some(Boxes.box(SugarElement.fromDom(editor.getContentAreaContainer()))),
+                      lazyContext: () => Optional.some(Boxes.box(getBoundsContainer())),
                       fadeInClass: 'tox-notification-container-dock-fadein',
                       fadeOutClass: 'tox-notification-container-dock-fadeout',
                       transitionClass: 'tox-notification-container-dock-transition'

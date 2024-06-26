@@ -151,7 +151,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
 
   editor.addCommand('ToggleSidebar', (_ui: boolean, value: string) => {
     OuterContainer.toggleSidebar(outerContainer, value);
-    editor.dispatch('ToggleSidebar');
+    Events.fireToggleSidebar(editor);
   });
 
   editor.addQueryValueHandler('ToggleSidebar', () => OuterContainer.whichSidebar(outerContainer) ?? '');
@@ -170,6 +170,8 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
         editor.nodeChanged();
         OuterContainer.refreshToolbar(outerContainer);
       }
+
+      Events.fireToggleView(editor);
     }
   });
   editor.addQueryValueHandler('ToggleView', () => OuterContainer.whichView(outerContainer) ?? '');
