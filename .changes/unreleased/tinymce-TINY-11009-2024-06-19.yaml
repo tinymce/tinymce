@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: Open Link button was disabled when selection partially covered a link or when
+  multiple links were selected.
+time: 2024-06-19T15:40:12.577216+10:00
+custom:
+  Issue: TINY-11009
