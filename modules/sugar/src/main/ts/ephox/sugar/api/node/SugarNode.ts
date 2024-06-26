@@ -1,5 +1,6 @@
 import { SandHTMLElement } from '@ephox/sand';
 
+import { HTMLElementFullTagNameMap } from '../../alien/DomTypes';
 import * as NodeTypes from './NodeTypes';
 import { SugarElement } from './SugarElement';
 
@@ -21,14 +22,14 @@ const isComment = (element: SugarElement<Node>): element is SugarElement<Comment
   type(element) === NodeTypes.COMMENT || name(element) === '#comment';
 
 const isHTMLElement = (element: SugarElement<Node>): element is SugarElement<HTMLElement> =>
-  SandHTMLElement.isPrototypeOf(element.dom);
+  isElement(element) && SandHTMLElement.isPrototypeOf(element.dom);
 
 const isElement = isType<Element>(NodeTypes.ELEMENT);
 const isText = isType<Text>(NodeTypes.TEXT);
 const isDocument = isType<Document>(NodeTypes.DOCUMENT);
 const isDocumentFragment = isType<DocumentFragment>(NodeTypes.DOCUMENT_FRAGMENT);
 
-const isTag = <K extends keyof HTMLElementTagNameMap>(tag: K) => (e: SugarElement<Node>): e is SugarElement<HTMLElementTagNameMap[K]> =>
+const isTag = <K extends keyof HTMLElementFullTagNameMap>(tag: K) => (e: SugarElement<Node>): e is SugarElement<HTMLElementFullTagNameMap[K]> =>
   isElement(e) && name(e) === tag;
 
 export {
@@ -43,3 +44,4 @@ export {
   isComment,
   isTag
 };
+
