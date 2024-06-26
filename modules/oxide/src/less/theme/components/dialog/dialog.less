@@ -257,20 +257,20 @@ Dialog
     -webkit-overflow-scrolling: touch;
     padding: @dialog-body-padding;
 
-    > * {
+    >* {
       margin-bottom: 0;
       margin-top: @pad-md;
     }
 
-    > *:first-child {
+    >*:first-child {
       margin-top: 0;
     }
 
-    > *:last-child {
+    >*:last-child {
       margin-bottom: 0;
     }
 
-    > *:only-child {
+    >*:only-child {
       margin-bottom: 0;
       margin-top: 0;
     }
@@ -511,123 +511,123 @@ Dialog
       border-radius: @dialog-iframe-bordered-border-radius;
     }
 
-  .tox-navobj-bordered-focus.tox-navobj-bordered::before {
-    border-color: @textfield-focus-border-color;
-    box-shadow: @textfield-focus-box-shadow;
-    outline: @textfield-focus-outline;
-  }
+    .tox-navobj-bordered-focus.tox-navobj-bordered::before {
+      border-color: @textfield-focus-border-color;
+      box-shadow: @textfield-focus-box-shadow;
+      outline: @textfield-focus-outline;
+    }
 
-  // Make popups in a dialog appear over other dialog (urlinput, colorinput etc)
-  .tox-dialog__popups {
-    position: absolute;
-    width: 100%;
-    z-index: @z-index-dialogs;
-  }
+    // Make popups in a dialog appear over other dialog (urlinput, colorinput etc)
+    .tox-dialog__popups {
+      position: absolute;
+      width: 100%;
+      z-index: @z-index-dialogs;
+    }
 
-  // Make iframe/url dialogs stretch contents to fit the height and width of parent container
-  .tox-dialog__body-iframe {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-
-    .tox-navobj {
+    // Make iframe/url dialogs stretch contents to fit the height and width of parent container
+    .tox-dialog__body-iframe {
       display: flex;
       flex: 1;
-    }
+      flex-direction: column;
 
-    // the nav object spec is surrounded by tab stop objects, so apply flex to the middle element
-    .tox-navobj :nth-child(2) {
-      flex: 1;
+      .tox-navobj {
+        display: flex;
+        flex: 1;
+      }
 
-      /* IE 11 */
-      height: 100%;
-    }
-  }
+      // the nav object spec is surrounded by tab stop objects, so apply flex to the middle element
+      .tox-navobj :nth-child(2) {
+        flex: 1;
 
-  // Transition styles for inline dialogs
-  .tox-dialog-dock-fadeout {
-    opacity: 0;
-    visibility: hidden;
-  }
-
-  .tox-dialog-dock-fadein {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .tox-dialog-dock-transition {
-    transition: visibility 0s linear .3s, opacity .3s ease;
-  }
-
-  .tox-dialog-dock-transition.tox-dialog-dock-fadein {
-    transition-delay: 0s;
-  }
-
-.tox:not([dir=rtl]) {
-  .tox-dialog__body-nav {
-
-    @media @breakpoint-sm {
-      body:not(.tox-force-desktop) & {
-        margin-right: 0;
+        /* IE 11 */
+        height: 100%;
       }
     }
-  }
 
-  .tox-dialog__body-nav-item {
+    // Transition styles for inline dialogs
+    .tox-dialog-dock-fadeout {
+      opacity: 0;
+      visibility: hidden;
+    }
 
-    @media @breakpoint-sm {
-      body:not(.tox-force-desktop) & {
-        &:not(:first-child) {
-          margin-left: @pad-sm;
+    .tox-dialog-dock-fadein {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .tox-dialog-dock-transition {
+      transition: visibility 0s linear .3s, opacity .3s ease;
+    }
+
+    .tox-dialog-dock-transition.tox-dialog-dock-fadein {
+      transition-delay: 0s;
+    }
+
+    .tox:not([dir=rtl]) {
+      .tox-dialog__body-nav {
+
+        @media @breakpoint-sm {
+          body:not(.tox-force-desktop) & {
+            margin-right: 0;
+          }
+        }
+      }
+
+      .tox-dialog__body-nav-item {
+
+        @media @breakpoint-sm {
+          body:not(.tox-force-desktop) & {
+            &:not(:first-child) {
+              margin-left: @pad-sm;
+            }
+          }
+        }
+      }
+
+      .tox-dialog__footer {
+        .tox-dialog__footer-start,
+        .tox-dialog__footer-end {
+          >* {
+            margin-left: @pad-sm;
+          }
         }
       }
     }
-  }
 
-  .tox-dialog__footer {
-    .tox-dialog__footer-start,
-    .tox-dialog__footer-end {
-      > * {
-        margin-left: @pad-sm;
+    /* RTL */
+    .tox[dir=rtl] {
+      .tox-dialog__body {
+        text-align: right;
       }
-    }
-  }
-}
 
-/* RTL */
-.tox[dir=rtl] {
-  .tox-dialog__body {
-    text-align: right;
-  }
+      .tox-dialog__body-nav {
 
-  .tox-dialog__body-nav {
-
-    @media @breakpoint-sm {
-      body:not(.tox-force-desktop) & {
-        margin-left: 0;
+        @media @breakpoint-sm {
+          body:not(.tox-force-desktop) & {
+            margin-left: 0;
+          }
+        }
       }
-    }
-  }
 
-  .tox-dialog__body-nav-item {
+      .tox-dialog__body-nav-item {
 
-    @media @breakpoint-sm {
-      body:not(.tox-force-desktop) & {
-        &:not(:first-child) {
-          margin-right: @pad-sm;
+        @media @breakpoint-sm {
+          body:not(.tox-force-desktop) & {
+            &:not(:first-child) {
+              margin-right: @pad-sm;
+            }
+          }
+        }
+      }
+
+      .tox-dialog__footer {
+        .tox-dialog__footer-start,
+        .tox-dialog__footer-end {
+          >* {
+            margin-right: @pad-sm;
+          }
         }
       }
     }
-  }
-
-  .tox-dialog__footer {
-    .tox-dialog__footer-start,
-    .tox-dialog__footer-end {
-      > * {
-        margin-right: @pad-sm;
-      }
-    }
-  }
-}
   }
 }
