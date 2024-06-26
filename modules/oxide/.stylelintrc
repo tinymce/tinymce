@@ -24,6 +24,8 @@
     "selector-not-notation": null,
     "shorthand-property-no-redundant-values": null,
     "value-keyword-case": null,
-    "value-no-vendor-prefix": null
-  }
+    "value-no-vendor-prefix": null,
+    "comment-empty-line-before": null,
+    "comment-no-empty": null
+    }
 }

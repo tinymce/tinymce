@@ -14,7 +14,8 @@ module.exports = function (grunt) {
         options: {
           configFile: '.stylelintrc',
           formatter: 'string',
-          console: true
+          console: true,
+          failOnError: true
         },
         src: ['./src/less/**/*.less']
       }

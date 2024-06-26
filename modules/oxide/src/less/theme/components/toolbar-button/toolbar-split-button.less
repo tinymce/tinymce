@@ -26,8 +26,19 @@ Toolbar split button
     z-index: 1; // Ensure focus outline is on top of other buttons
 
     &::after {
+      border-radius: @toolbar-button-border-radius;
+      bottom: 0;
+      box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color false;
+      content: '';
+      left: 0;
       pointer-events: none; /* Prevent the focus outline from opening the menu */
-      .keyboard-focus-outline-mixin();
+      position: absolute;
+      right: 0;
+      top: 0;
+    
+      @media (forced-colors: active) {
+        border: 2px solid highlight;
+      }
     }
   }
 
@@ -65,7 +76,8 @@ Toolbar split button
   }
 
   .tox-split-button:focus .tox-tbtn {
-    background-color: transparent; // Prevent the toolbar button background to cover the parent split button's background color
+    /*  Prevent the toolbar button background to cover the parent split button's background color */
+    background-color: transparent;
   }
 
   .tox-split-button.tox-tbtn--disabled:hover,
@@ -92,6 +104,7 @@ Toolbar split button
     }
   }
 
+  /* stylelint-disable-next-line selector-id-pattern */
   .tox-split-button.tox-tbtn--disabled svg #tox-icon-text-color__color,
   .tox-split-button.tox-tbtn--disabled svg #tox-icon-highlight-bg-color__color {
     opacity: @toolbar-split-color-preview-opacity;

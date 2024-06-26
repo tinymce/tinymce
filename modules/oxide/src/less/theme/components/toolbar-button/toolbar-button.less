@@ -129,7 +129,18 @@ When making changes here, please review menubar/menubar.less and menubar/menubar
     z-index: 1; // Ensure focus outline is on top of other buttons
 
     &::after {
-      .keyboard-focus-outline-mixin();
+      border-radius: @toolbar-button-border-radius;
+      bottom: 0;
+      box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color false;
+      content: '';
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+    
+      @media (forced-colors: active) {
+        border: 2px solid highlight;
+      }
     }
   }
 
@@ -195,7 +206,8 @@ When making changes here, please review menubar/menubar.less and menubar/menubar
 
     /* Disable stylelint below because we're mixing the :hover modifier with the "--enabled" class
     since they need to be kept the same/use the same rules */
-    svg { /* stylelint-disable-line no-descending-specificity */
+    svg { 
+      /* stylelint-disable-line no-descending-specificity */
       fill: @toolbar-button-enabled-icon-color;
     }
 
@@ -207,7 +219,18 @@ When making changes here, please review menubar/menubar.less and menubar/menubar
   }
 
   .tox-tbtn--enabled:focus::after {
-    .keyboard-focus-outline-mixin();
+    border-radius: @toolbar-button-border-radius;
+    bottom: 0;
+    box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color false;
+    content: '';
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+  
+    @media (forced-colors: active) {
+      border: 2px solid highlight;
+    }
   }
 
   .tox-tbtn:focus:not(.tox-tbtn--disabled) {

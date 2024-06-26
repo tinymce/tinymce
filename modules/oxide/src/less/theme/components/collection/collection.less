@@ -3,6 +3,8 @@ Collection
 A list of items that can be arranged as vertical list, horizontal toolbar or a grid.
 */
 
+@import '../../../skins/ui/dark/skin.less';
+
 @collection-item-padding: @pad-xs @pad-sm;
 @collection-item-separator-color: @tinymce-separator-color;
 @collection-item-separator-margin-y: @pad-xs;
@@ -170,7 +172,18 @@ A list of items that can be arranged as vertical list, horizontal toolbar or a g
       color: @collection-toolbar-item-label-active-hover-text-color;
 
       &::after {
-        .keyboard-focus-outline-mixin();
+        border-radius: @collection-item-radius;
+        bottom: 0;
+        box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color false;
+        content: '';
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+      
+        @media (forced-colors: active) {
+          border: 2px solid highlight;
+        }
       }
     }
   }
@@ -187,7 +200,18 @@ A list of items that can be arranged as vertical list, horizontal toolbar or a g
     z-index: 1;
 
     &:focus::after {
-      .keyboard-focus-outline-mixin('inset');
+      border-radius: @toolbar-button-border-radius;
+      bottom: 0;
+      box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color inset;
+      content: '';
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+    
+      @media (forced-colors: active) {
+        border: 2px solid highlight;
+      }
     }
   }
 
@@ -312,8 +336,10 @@ A list of items that can be arranged as vertical list, horizontal toolbar or a g
   }
 
   .tox-collection--horizontal .tox-collection__item {
-    height: @toolbar-button-height; // 28px
-    margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0; // 4px 0 3px 0
+     /* 28px */
+    height: @toolbar-button-height;
+    /* 4px 0 3px 0 */
+    margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0;
     padding: 0 4px;
   }
 

@@ -109,14 +109,25 @@ Statusbar
 
     &:hover,
     &:focus {
-      @{statusbar-not-disabled-selector} {
+      &:not(:disabled):not([aria-disabled=true]){
         color: @statusbar-focus-text-color;
         cursor: pointer;
       }
     }
 
     &:focus-visible::after {
-      .keyboard-focus-outline-mixin();
+      border-radius: @toolbar-button-border-radius;
+      bottom: 0;
+      box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color false;
+      content: '';
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+    
+      @media (forced-colors: active) {
+        border: 2px solid highlight;
+      }
     }
   }
 
@@ -140,7 +151,7 @@ Statusbar
 
     a:hover,
     a:focus {
-      @{statusbar-not-disabled-selector} {
+      &:not(:disabled):not([aria-disabled=true]){
         svg {
           fill: @statusbar-logo-active-color;
         }
@@ -182,7 +193,18 @@ Statusbar
       box-shadow: 0 0 0 2px @statusbar-focus-background-color;
 
       &::after {
-        .keyboard-focus-outline-mixin();
+        border-radius: @toolbar-button-border-radius;
+        bottom: 0;
+        box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color false;
+        content: '';
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+      
+        @media (forced-colors: active) {
+          border: 2px solid highlight;
+        }
       }
     }
   }

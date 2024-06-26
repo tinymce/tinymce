@@ -43,9 +43,9 @@
     "grunt-contrib-clean": "^2.0.1",
     "grunt-contrib-cssmin": "^5.0.0",
     "grunt-contrib-less": "^3.0.0",
-    "grunt-stylelint": "^0.19.0",
+    "grunt-stylelint": "^0.20.1",
     "less": "^4.2.0",
-    "stylelint": "^16.2.1",
+    "stylelint": "^16.6.1",
     "stylelint-config-standard": "^36.0.0",
     "stylelint-order": "^6.0.4"
   }
