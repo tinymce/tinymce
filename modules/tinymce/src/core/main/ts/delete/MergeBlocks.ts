@@ -9,16 +9,36 @@ import * as Empty from '../dom/Empty';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as Parents from '../dom/Parents';
 
-const getChildrenUntilBlockBoundary = (block: SugarElement<Element>, schema: Schema): SugarElement<Node>[] => {
-  const children = Traverse.children(block);
-  return Arr.findIndex(children, (el) => schema.isBlock(SugarNode.name(el))).fold(
-    Fun.constant(children),
-    (index) => children.slice(0, index)
+const getChildrenFromNestedUntilBlockBoundary = (block: SugarElement<Element>, schema: Schema, forwardDelete: boolean): SugarElement<Node>[] => {
+  const allSiblingsInDirection = forwardDelete ? Traverse.prevSiblings(block).reverse() : Traverse.nextSiblings(block);
+  const siblingsToMergeIn = Arr.findIndex(allSiblingsInDirection, (element) => schema.isBlock(SugarNode.name(element))).fold(
+    Fun.constant(allSiblingsInDirection),
+    (index) => allSiblingsInDirection.slice(0, index)
   );
+
+  if (forwardDelete) {
+    return siblingsToMergeIn.reverse();
+  }
+
+  return siblingsToMergeIn;
 };
 
-const extractChildren = (block: SugarElement<Element>, schema: Schema): SugarElement<Node>[] => {
-  const children = getChildrenUntilBlockBoundary(block, schema);
+const getChildrenUntilBlockBoundary = (toBlock: SugarElement<Element>, fromBlock: SugarElement<Element>, schema: Schema, forwardDelete: boolean, extractsiblingsIfNested: boolean): SugarElement<Node>[] => {
+  if (extractsiblingsIfNested && Compare.contains(toBlock, fromBlock)) {
+    return getChildrenFromNestedUntilBlockBoundary(fromBlock, schema, forwardDelete);
+  } else if (extractsiblingsIfNested && Compare.contains(fromBlock, toBlock)) {
+    return getChildrenFromNestedUntilBlockBoundary(toBlock, schema, forwardDelete);
+  } else {
+    const children = Traverse.children(fromBlock);
+    return Arr.findIndex(children, (el) => schema.isBlock(SugarNode.name(el))).fold(
+      Fun.constant(children),
+      (index) => children.slice(0, index)
+    );
+  }
+};
+
+const extractChildren = (toBlock: SugarElement<Element>, fromBlock: SugarElement<Element>, schema: Schema, forwardDelete: boolean, extractsiblingsIfNested: boolean): SugarElement<Node>[] => {
+  const children = getChildrenUntilBlockBoundary(toBlock, fromBlock, schema, forwardDelete, extractsiblingsIfNested);
   Arr.each(children, Remove.remove);
   return children;
 };
@@ -36,6 +56,7 @@ const nestedBlockMerge = (
   fromBlock: SugarElement<Element>,
   toBlock: SugarElement<Element>,
   schema: Schema,
+  forward: boolean,
   insertionPoint: SugarElement<Node>
 ): Optional<CaretPosition> => {
   if (Empty.isEmpty(schema, toBlock)) {
@@ -48,7 +69,7 @@ const nestedBlockMerge = (
   }
 
   const position = CaretFinder.prevPosition(toBlock.dom, CaretPosition.before(insertionPoint.dom));
-  Arr.each(extractChildren(fromBlock, schema), (child) => {
+  Arr.each(extractChildren(toBlock, fromBlock, schema, forward, false), (child) => {
     Insert.before(insertionPoint, child);
   });
   removeEmptyRoot(schema, rootNode, fromBlock);
@@ -57,7 +78,7 @@ const nestedBlockMerge = (
 
 const isInline = (schema: Schema, node: SugarElement<Node>): node is SugarElement<HTMLElement> => schema.isInline(SugarNode.name(node));
 
-const sidelongBlockMerge = (rootNode: SugarElement<Node>, fromBlock: SugarElement<Element>, toBlock: SugarElement<Element>, schema: Schema): Optional<CaretPosition> => {
+const sidelongBlockMerge = (rootNode: SugarElement<Node>, fromBlock: SugarElement<Element>, toBlock: SugarElement<Element>, schema: Schema, forwardDelete: boolean): Optional<CaretPosition> => {
   if (Empty.isEmpty(schema, toBlock)) {
     if (Empty.isEmpty(schema, fromBlock)) {
       const getInlineToBlockDescendants = (el: SugarElement<Element>) => {
@@ -87,8 +108,12 @@ const sidelongBlockMerge = (rootNode: SugarElement<Node>, fromBlock: SugarElemen
   }
 
   const position = CaretFinder.lastPositionIn(toBlock.dom);
-  Arr.each(extractChildren(fromBlock, schema), (child) => {
-    Insert.append(toBlock, child);
+  Arr.each(extractChildren(toBlock, fromBlock, schema, forwardDelete, true), (child) => {
+    if (forwardDelete && Compare.contains(fromBlock, toBlock)) {
+      Insert.prepend(toBlock, child);
+    } else {
+      Insert.append(toBlock, child);
+    }
   });
   removeEmptyRoot(schema, rootNode, fromBlock);
   return position;
@@ -110,18 +135,27 @@ const trimBr = (first: boolean, block: SugarElement<Element>) => {
     .each(Remove.remove);
 };
 
-const mergeBlockInto = (rootNode: SugarElement<Node>, fromBlock: SugarElement<Element>, toBlock: SugarElement<Element>, schema: Schema): Optional<CaretPosition> => {
+const mergeBlockInto = (rootNode: SugarElement<Node>, fromBlock: SugarElement<Element>, toBlock: SugarElement<Element>, schema: Schema, forward: boolean): Optional<CaretPosition> => {
   trimBr(true, fromBlock);
   trimBr(false, toBlock);
 
   return getInsertionPoint(fromBlock, toBlock).fold(
-    Fun.curry(sidelongBlockMerge, rootNode, fromBlock, toBlock, schema),
-    Fun.curry(nestedBlockMerge, rootNode, fromBlock, toBlock, schema)
+    Fun.curry(sidelongBlockMerge, rootNode, fromBlock, toBlock, schema, forward),
+    Fun.curry(nestedBlockMerge, rootNode, fromBlock, toBlock, schema, forward)
   );
 };
 
-const mergeBlocks = (rootNode: SugarElement<Node>, forward: boolean, block1: SugarElement<Element>, block2: SugarElement<Element>, schema: Schema): Optional<CaretPosition> =>
-  forward ? mergeBlockInto(rootNode, block2, block1, schema) : mergeBlockInto(rootNode, block1, block2, schema);
+const mergeBlocks = (rootNode: SugarElement<Node>, forward: boolean, block1: SugarElement<Element>, block2: SugarElement<Element>, schema: Schema, mergeNotDelete: boolean = false): Optional<CaretPosition> => {
+  if (mergeNotDelete) {
+    if (Compare.contains(block2, block1)) {
+      return mergeBlockInto(rootNode, block2, block1, schema, !forward);
+    } else if (Compare.contains(block1, block2)) {
+      return mergeBlockInto(rootNode, block1, block2, schema, forward);
+    }
+  }
+
+  return forward ? mergeBlockInto(rootNode, block2, block1, schema, forward) : mergeBlockInto(rootNode, block1, block2, schema, !forward);
+};
 
 export {
   mergeBlocks
