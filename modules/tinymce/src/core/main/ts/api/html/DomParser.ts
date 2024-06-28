@@ -1,4 +1,5 @@
 import { Arr, Fun, Obj, Type } from '@ephox/katamari';
+import { NodeTypes } from '@ephox/sugar';
 
 import * as TransparentElements from '../../content/TransparentElements';
 import * as NodeType from '../../dom/NodeType';
@@ -211,6 +212,8 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
         }
 
         if (text.length === 0) {
+          node.remove();
+        } else if (text === ' ' && node.prev && node.prev.type === NodeTypes.COMMENT && node.next && node.next.type === NodeTypes.COMMENT) {
           node.remove();
         } else {
           node.value = text;
