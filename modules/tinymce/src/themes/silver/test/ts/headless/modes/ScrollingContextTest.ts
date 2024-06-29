@@ -4,6 +4,7 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { Css, Insert, InsertAll, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
+import Editor from 'tinymce/core/api/Editor';
 import * as ScrollingContext from 'tinymce/themes/silver/modes/ScrollingContext';
 
 describe('headless.modes.ScrollingContextTest', () => {
@@ -244,7 +245,8 @@ describe('headless.modes.ScrollingContextTest', () => {
       outerScroller.dom.scrollTop = bannerHeight + 50;
       const outerScrollerRect = outerScroller.dom.getBoundingClientRect();
 
-      const actual = ScrollingContext.getBoundsFrom({
+      const mockEditor = { plugins: {}} as Editor;
+      const actual = ScrollingContext.getBoundsFrom(mockEditor, {
         element: innerScroller,
         others: [ outerScroller ]
       });

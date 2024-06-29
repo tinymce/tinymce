@@ -52,10 +52,13 @@ export const detect = (popupSinkElem: SugarElement<HTMLElement>): Optional<Scrol
 export const detectWhenSplitUiMode = (editor: Editor, popupSinkElem: SugarElement<HTMLElement>): Optional<ScrollingContext> =>
   Options.isSplitUiMode(editor) ? detect(popupSinkElem) : Optional.none();
 
+const isFullscreen = (editor: Editor): boolean =>
+  editor.plugins.fullscreen && editor.plugins.fullscreen.isFullscreen();
+
 // Using all the scrolling viewports in the ancestry, limit the absolute
 // coordinates of window so that the bounds are limited by all the scrolling
 // viewports.
-export const getBoundsFrom = (sc: ScrollingContext): Bounds => {
+export const getBoundsFrom = (editor: Editor, sc: ScrollingContext): Bounds => {
   const scrollableBoxes = [
     // sc.element is the main scroller, others are *additional* scrollers above that
     // we need to combine all of them to constrain the bounds
@@ -63,8 +66,10 @@ export const getBoundsFrom = (sc: ScrollingContext): Bounds => {
     Boxes.win()
   ];
 
-  return Boxes.constrainByMany(
+  const result = Boxes.constrainByMany(
     Boxes.box(sc.element),
     scrollableBoxes
   );
+
+  return isFullscreen(editor) ? Boxes.win() : result;
 };
