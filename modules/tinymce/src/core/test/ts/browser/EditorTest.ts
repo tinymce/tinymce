@@ -502,8 +502,7 @@ describe('browser.tinymce.core.EditorTest', () => {
     TinyAssertions.assertContent(editor, '<p><img src="data:image/gif;base64,R0"></p>');
   });
 
-  // eslint-disable-next-line mocha/no-exclusive-tests
-  it.only('TINY-10955: multiple comments will not cause unexpected newlines', () => {
+  it('TINY-10955: multiple comments will not cause unexpected newlines', () => {
     const editor = hook.editor();
     editor.setContent('<div>A</div><!--Comment1--><!--Comment2--><div>B</div>');
     TinyAssertions.assertRawContent(editor, '<div>A</div><!--Comment1--><!--Comment2--><div>B</div>');
