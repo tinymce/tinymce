@@ -198,6 +198,23 @@ class Shortcuts {
 
     return false;
   }
+  
+  /**
+   * Includes a keyboard shortcut by pattern.
+   *
+   * @method includes
+   * @param {String} pattern Shortcut pattern. Like for example: ctrl+alt+o.
+   * @return {Boolean} true/false state if the shortcut exists.
+   */
+  public includes(pattern: string): boolean {
+    const shortcut = this.createShortcut(pattern);
+
+    if (this.shortcuts[shortcut.id]) {
+      return true;
+    }
+
+    return false;
+  }
 
   private normalizeCommandFunc(cmdFunc: CommandFunc): () => void {
     const self = this;
