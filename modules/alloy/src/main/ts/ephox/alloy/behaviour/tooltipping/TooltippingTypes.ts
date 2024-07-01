@@ -10,6 +10,9 @@ import { BehaviourState } from '../common/BehaviourState';
 export interface TooltippingBehaviour extends AlloyBehaviour<TooltippingConfigSpec, TooltippingConfig> {
   hideAllExclusive: (comp: AlloyComponent) => void;
   setComponents: (comp: AlloyComponent, specs: AlloySpec[]) => void;
+  setEnabled: (comp: AlloyComponent, enabled: boolean) => void;
+  isEnabled: (comp: AlloyComponent) => boolean;
+  immediateOpenClose: (comp: AlloyComponent, open: boolean) => void;
 }
 
 export interface TooltippingConfig extends BehaviourConfigDetail {
@@ -20,6 +23,7 @@ export interface TooltippingConfig extends BehaviourConfigDetail {
   mode: 'normal' | 'follow-highlight' | 'children-keyboard-focus' | 'children-normal';
   delayForShow: () => number;
   delayForHide: () => number;
+  onSetup: (component: AlloyComponent) => void;
   anchor: (comp: AlloyComponent) => AnchorSpec;
   onShow: (comp: AlloyComponent, tooltip: AlloyComponent) => void;
   onHide: (comp: AlloyComponent, tooltip: AlloyComponent) => void;
@@ -36,6 +40,7 @@ export interface TooltippingConfigSpec extends BehaviourConfigSpec {
   anchor?: (comp: AlloyComponent) => AnchorSpec;
   onShow?: (comp: AlloyComponent, tooltip: AlloyComponent) => void;
   onHide?: (comp: AlloyComponent, tooltip: AlloyComponent) => void;
+  onSetup?: (component: AlloyComponent) => void;
 }
 
 export interface TooltippingState extends BehaviourState {
@@ -45,4 +50,6 @@ export interface TooltippingState extends BehaviourState {
   clearTimer: () => void;
   resetTimer: (f: () => void, delay: number) => void;
   isShowing: () => boolean;
+  isEnabled: () => boolean;
+  setEnabled: (enabled: boolean) => void;
 }

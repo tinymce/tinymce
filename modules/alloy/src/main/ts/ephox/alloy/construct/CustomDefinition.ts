@@ -49,7 +49,7 @@ const schema = StructureSchema.objOf([
       // Note, not using constant behaviour names to avoid code size of unused behaviours
       [SystemEvents.execute()]: [ 'disabling', baseBehaviour, 'toggling', 'typeaheadevents' ],
       [SystemEvents.focus()]: [ baseBehaviour, 'focusing', 'keying' ],
-      [SystemEvents.systemInit()]: [ baseBehaviour, 'disabling', 'toggling', 'representing' ],
+      [SystemEvents.systemInit()]: [ baseBehaviour, 'disabling', 'toggling', 'representing', 'tooltipping' ],
       [NativeEvents.input()]: [ baseBehaviour, 'representing', 'streaming', 'invalidating' ],
       [SystemEvents.detachedFromDom()]: [ baseBehaviour, 'representing', 'item-events', 'toolbar-button-events', 'tooltipping' ],
       [NativeEvents.mousedown()]: [ 'focusing', baseBehaviour, 'item-type-events' ],
@@ -80,9 +80,9 @@ const toApis = <A>(info: CustomDetail<A>): A => info.apis;
 const toEvents = (info: CustomDetail<any>): AlloyEventRecord => info.events;
 
 export {
-  toInfo,
-  toDefinition,
-  toModification,
   toApis,
-  toEvents
+  toDefinition,
+  toEvents,
+  toInfo,
+  toModification
 };

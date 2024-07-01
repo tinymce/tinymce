@@ -1,10 +1,11 @@
-import { Fun, Singleton } from '@ephox/katamari';
+import { Cell, Fun, Singleton } from '@ephox/katamari';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { nuState } from '../common/BehaviourState';
 import { TooltippingState } from './TooltippingTypes';
 
 const init = (): TooltippingState => {
+  const enabled = Cell(true);
   const timer = Singleton.value<number>();
   const popup = Singleton.value<AlloyComponent>();
 
@@ -26,7 +27,9 @@ const init = (): TooltippingState => {
     clearTooltip: popup.clear,
     clearTimer,
     resetTimer,
-    readState
+    readState,
+    isEnabled: () => enabled.get(),
+    setEnabled: (setToEnabled) => enabled.set(setToEnabled)
   });
 
 };
