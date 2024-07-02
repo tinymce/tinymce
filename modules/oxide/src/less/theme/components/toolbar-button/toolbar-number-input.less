@@ -23,18 +23,7 @@ Toolbar number input
     }
 
     &:focus::after {
-      border-radius: @toolbar-button-border-radius;
-      bottom: 0;
-      box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color false;
-      content: '';
-      left: 0;
-      position: absolute;
-      right: 0;
-      top: 0;
-    
-      @media (forced-colors: active) {
-        border: 2px solid highlight;
-      }
+      .keyboard-focus-outline-mixin();
     }
 
     .tox-input-wrapper {
@@ -48,34 +37,12 @@ Toolbar number input
         z-index: 1; // Ensure focus outline is on top of other buttons
 
         &::after {
-          border-radius: @toolbar-button-border-radius;
-          bottom: 0;
-          box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color false;
-          content: '';
-          left: 0;
-          position: absolute;
-          right: 0;
-          top: 0;
-        
-          @media (forced-colors: active) {
-            border: 2px solid highlight;
-          }
+          .keyboard-focus-outline-mixin();
         }
       }
 
       &:has(input:focus)::after {
-        border-radius: @toolbar-button-border-radius;
-        bottom: 0;
-        box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color false;
-        content: '';
-        left: 0;
-        position: absolute;
-        right: 0;
-        top: 0;
-      
-        @media (forced-colors: active) {
-          border: 2px solid highlight;
-        }
+        .keyboard-focus-outline-mixin();
       }
     }
 
@@ -145,18 +112,7 @@ Toolbar number input
         z-index: 1; // Ensure focus outline is on top of other buttons
 
         &::after {
-          border-radius: @toolbar-button-border-radius;
-          bottom: 0;
-          box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color false;
-          content: '';
-          left: 0;
-          position: absolute;
-          right: 0;
-          top: 0;
-        
-          @media (forced-colors: active) {
-            border: 2px solid highlight;
-          }
+          .keyboard-focus-outline-mixin();
         }
       }
 

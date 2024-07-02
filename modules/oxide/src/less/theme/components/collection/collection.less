@@ -43,7 +43,7 @@ A list of items that can be arranged as vertical list, horizontal toolbar or a g
 @collection-group-label-font-size: @font-size-xs;
 @collection-group-label-font-style: normal;
 @collection-group-label-font-weight: @font-weight-normal;
-@collection-group-label-text-color:contrast(@collection-group-label-background-color, @text-color-muted, @color-white);
+@collection-group-label-text-color: contrast(@collection-group-label-background-color, @text-color-muted, @color-white);
 @collection-group-label-text-transform: none;
 
 @collection-horizontal-border-radius: @panel-border-radius;
@@ -170,18 +170,7 @@ A list of items that can be arranged as vertical list, horizontal toolbar or a g
       color: @collection-toolbar-item-label-active-hover-text-color;
 
       &::after {
-        border-radius: @collection-item-radius;
-        bottom: 0;
-        box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color false;
-        content: '';
-        left: 0;
-        position: absolute;
-        right: 0;
-        top: 0;
-      
-        @media (forced-colors: active) {
-          border: 2px solid highlight;
-        }
+        .keyboard-focus-outline-mixin();
       }
     }
   }
@@ -198,18 +187,7 @@ A list of items that can be arranged as vertical list, horizontal toolbar or a g
     z-index: 1;
 
     &:focus::after {
-      border-radius: @toolbar-button-border-radius;
-      bottom: 0;
-      box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color inset;
-      content: '';
-      left: 0;
-      position: absolute;
-      right: 0;
-      top: 0;
-    
-      @media (forced-colors: active) {
-        border: 2px solid highlight;
-      }
+      .keyboard-focus-outline-mixin('inset');
     }
   }
 
@@ -306,7 +284,7 @@ A list of items that can be arranged as vertical list, horizontal toolbar or a g
   }
 
   // Tickable items that are not ticked and have an adjacent shortcut hide the check mark completely (gap is removed)
-  .tox-collection--list .tox-collection__item:not(.tox-collection__item--enabled) .tox-collection__item-accessory + .tox-collection__item-checkmark {
+  .tox-collection--list .tox-collection__item:not(.tox-collection__item--enabled) .tox-collection__item-accessory+.tox-collection__item-checkmark {
     display: none;
   }
 
@@ -334,7 +312,7 @@ A list of items that can be arranged as vertical list, horizontal toolbar or a g
   }
 
   .tox-collection--horizontal .tox-collection__item {
-     /* 28px */
+    /* 28px */
     height: @toolbar-button-height;
     /* 4px 0 3px 0 */
     margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0;
@@ -415,12 +393,12 @@ A list of items that can be arranged as vertical list, horizontal toolbar or a g
   }
 
   // Make a space between all elements within a list item
-  .tox-collection--list .tox-collection__item > *:not(:first-child) {
+  .tox-collection--list .tox-collection__item>*:not(:first-child) {
     margin-left: @pad-sm;
   }
 
   // Create a slight padding for lists containing no icons
-  .tox-collection--list .tox-collection__item > .tox-collection__item-label:first-child {
+  .tox-collection--list .tox-collection__item>.tox-collection__item-label:first-child {
     margin-left: @pad-xs;
   }
 
@@ -441,12 +419,12 @@ A list of items that can be arranged as vertical list, horizontal toolbar or a g
   }
 
   // Make a space between all elements within a list item
-  .tox-collection--list .tox-collection__item > *:not(:first-child) {
+  .tox-collection--list .tox-collection__item>*:not(:first-child) {
     margin-right: @pad-sm;
   }
 
   // Create a slight padding for lists containing no icons
-  .tox-collection--list .tox-collection__item > .tox-collection__item-label:first-child {
+  .tox-collection--list .tox-collection__item>.tox-collection__item-label:first-child {
     margin-right: @pad-xs;
   }
 

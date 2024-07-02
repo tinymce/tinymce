@@ -3,7 +3,7 @@ Toolbar split button
 */
 
 @toolbar-split-button-chevron-touch-padding: 4px;
-@toolbar-split-color-preview-opacity: .6;
+@toolbar-split-color-preview-opacity: 0.6;
 
 .tox {
   .tox-split-button {
@@ -26,19 +26,7 @@ Toolbar split button
     z-index: 1; // Ensure focus outline is on top of other buttons
 
     &::after {
-      border-radius: @toolbar-button-border-radius;
-      bottom: 0;
-      box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color false;
-      content: '';
-      left: 0;
-      pointer-events: none; /* Prevent the focus outline from opening the menu */
-      position: absolute;
-      right: 0;
-      top: 0;
-    
-      @media (forced-colors: active) {
-        border: 2px solid highlight;
-      }
+      .keyboard-focus-outline-mixin();
     }
   }
 
@@ -63,7 +51,6 @@ Toolbar split button
   }
 
   .tox-split-button__chevron svg {
-
     @media (forced-colors: active) {
       fill: currentColor;
     }
