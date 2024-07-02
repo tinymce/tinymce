@@ -1,8 +1,8 @@
 @import '../../../theme/theme';
 
-//
-// Place your variables here
-//
+/*
+Place your variables here
+*/
 @border-color: darken(@background-color, 20);
 @collection-item-separator-color: contrast(@background-color, @border-color, lighten(@border-color, 10%));
 @collection-list-item-active-background-color: @toolbar-button-hover-background-color;
@@ -12,7 +12,6 @@
 @editor-header-box-shadow: none;
 @editor-bottom-header-box-shadow: none;
 @editor-header-sticky-box-shadow: 0 4px 4px -3px rgba(0, 0, 0, .25);
-@textfield-focus-outline: none;
 @menu-border-color: @border-color;
 @menu-box-shadow: 0 4px 8px 0 fade(@color-black, 10%);
 @menu-item-collection-list-padding: 0;
@@ -33,8 +32,8 @@
 @_toolbar-divider-height: @_toolbar-height - 1px;
 @toolbar-row-separator-color: @toolbar-group-separator-color;
 @toolbar-separator-color: @border-color;
-@toolbar-padding-y: 0px;
-@toolbar-padding-x: 0px;
+@toolbar-padding-y: 0;
+@toolbar-padding-x: 0;
 @keyboard-focus-outline-color: transparent;
 @keyboard-focus-outline-width: 0;
 @toolbar-button-focus-background-color: @toolbar-button-hover-background-color;
@@ -59,6 +58,7 @@
 @_menubar-divider-height: @_menubar-height - 1px;
 @statusbar-padding-x: @pad-sm;
 @statusbar-text-color: contrast(@statusbar-background-color, @text-color-muted, @color-white);
+@statusbar-not-disabled-selector: ~'&:not(:disabled):not([aria-disabled=true])';
 @toolbar-group-padding-x: 4px;
 @button-naked-hover-background-color: @button-secondary-hover-background-color;
 @button-naked-hover-border-color: @button-secondary-hover-border-color;
@@ -73,8 +73,8 @@
 @button-naked-active-icon-color: @button-secondary-active-text-color;
 @insert-table-picker-selected-background-color: fade(@color-tint, 50%);
 @insert-table-picker-selected-border-color: @insert-table-picker-selected-background-color;
-@edit-area-border-color: transparent; // Hide focus outline around editor container
-@edit-area-border-width: 0; // Hide focus outline around editor container
+@edit-area-border-color: transparent; /* Hide focus outline around editor container */
+@edit-area-border-width: 0; /* Hide focus outline around editor container */
 
 .tox {
   &:not(.tox-tinymce-inline) .tox-editor-header {
@@ -96,7 +96,7 @@
     box-shadow: none;
   }
 
-  // Double .tox selector to increase specificity over `:not(.tox-tinymce-inline)` from new style
+  /* Double .tox selector to increase specificity over `:not(.tox-tinymce-inline)` from new style */
   &.tox.tox-tinymce--toolbar-sticky-on {
     .tox-editor-header {
       background-color: @editor-header-sticky-background-color;
@@ -143,7 +143,7 @@
   .tox-menubar + .tox-toolbar,
   .tox-menubar + .tox-toolbar-overlord .tox-toolbar__primary {
     border-top: 1px solid @toolbar-separator-color;
-    margin-top: -1px; // Fix to hide menubar bottom border below the toolbar
+    margin-top: -1px; /* Fix to hide menubar bottom border below the toolbar */
   }
 
   &.tox-tinymce-aux .tox-toolbar__overflow {
@@ -151,10 +151,10 @@
     padding: 0;
   }
 
-  // Context toolbar
+  /* Context toolbar */
   .tox-pop .tox-pop__dialog .tox-toolbar { padding: 0; }
 
-  // Add a top border when toolbar_location is bottom
+  /* Add a top border when toolbar_location is bottom */
   &:not(.tox-tinymce-inline) .tox-editor-header:not(:first-child) .tox-menubar {
     border-top: 1px solid @menubar-separator-color;
   }
@@ -178,7 +178,7 @@
   .tox-statusbar__wordcount {
     &:hover,
     &:focus {
-      @{statusbar-not-disabled-selector} {
+      &:not(:disabled):not([aria-disabled=true]) {
         color: @statusbar-logo-active-color;
       }
     }
@@ -204,7 +204,7 @@
 
     a:hover,
     a:focus {
-      @{statusbar-not-disabled-selector} {
+      &:not(:disabled):not([aria-disabled=true]){
         svg {
           fill: @statusbar-logo-active-color;
         }

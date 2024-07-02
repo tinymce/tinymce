@@ -1,7 +1,7 @@
 
-//
-// Tree button
-//
+/*
+Tree button
+*/
 
 @tree-button-background-color: transparent;
 @tree-button-border-radius: 4px;
@@ -33,10 +33,10 @@
 
 @tree-button-active-background-color: @tree-button-enabled-background-color;
 @tree-button-active-border: @tree-button-enabled-border;
-@tree-button-active-box-shadow: @tree-button-box-shadow; // set to `0 1px 1px 0 rgba(0, 0, 0, .1) inset` for a small push in effect
+@tree-button-active-box-shadow: @tree-button-box-shadow; /* set to `0 1px 1px 0 rgba(0, 0, 0, .1) inset` for a small push in effect */
 @tree-button-active-icon-color: @tree-button-enabled-icon-color;
 @tree-button-active-text-color: @tree-button-enabled-text-color;
-@tree-button-active-transform: none; // Set to `translateY(1px)` for a small push down effect
+@tree-button-active-transform: none; /* Set to `translateY(1px)` for a small push down effect */
 
 @tree-button-enabled-background-color: multiply(white, contrast(@background-color, fade(@color-tint, 35), fade(@color-tint, 65)));
 @tree-button-enabled-border: @tree-button-hover-border;
@@ -127,14 +127,14 @@
     color: @tree-button-disabled-text-color;
     cursor: not-allowed;
 
-    // Disable stylelint below because we're mixing the :disabled modifier with the "--disabled" class
-    // since they need to be kept the same/use the same rules
+    /* Disable stylelint below because we're mixing the :disabled modifier with the "--disabled" class
+    since they need to be kept the same/use the same rules */
     svg { /* stylelint-disable-line no-descending-specificity */
       fill: @tree-button-disabled-icon-color;
     }
   }
 
-  // An toggle on/off button's on state.
+  /* An toggle on/off button's on state. */
   .tox-trbtn--enabled,
   .tox-trbtn--enabled:hover {
     background: @tree-button-enabled-background-color;
@@ -146,8 +146,8 @@
       transform: @tree-button-enabled-transform;
     }
 
-    // Disable stylelint below because we're mixing the :hover modifier with the "--enabled" class
-    // since they need to be kept the same/use the same rules
+    /* Disable stylelint below because we're mixing the :hover modifier with the "--enabled" class
+    since they need to be kept the same/use the same rules */
     svg { /* stylelint-disable-line no-descending-specificity */
       fill: @tree-button-enabled-icon-color;
     }
@@ -171,13 +171,13 @@
     width: 16px;
   }
 
-  // For buttons with text label before or after icon
+  /* For buttons with text label before or after icon */
   .tox-trbtn--labeled {
     padding: 0 4px;
     width: unset;
   }
 
-  // Vertical label
+  /* Vertical label */
   .tox-trbtn__vlabel {
     display: block;
     font-size: 10px;

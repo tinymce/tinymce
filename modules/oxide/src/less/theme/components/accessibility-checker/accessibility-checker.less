@@ -1,6 +1,6 @@
-//
-//
-// Accessibility checker
+/*
+Accessibility checker
+*/
 
 @accessibility-issue-info-heading-text-color: contrast(@dialog-background-color, @color-white, @color-tint);
 @accessibility-issue-info-body-text-color: contrast(@dialog-background-color, @color-white, @text-color);
@@ -25,9 +25,9 @@
 @accessibility-issue-success-background-color: contrast(@dialog-background-color, fade(@color-success, 10%), fade(@color-success, 50%));
 
 .tox {
-  .accessibility-issue {
+  /* .accessibility-issue {
     //
-  }
+  } */
 
   .accessibility-issue__header {
     align-items: center;
@@ -184,7 +184,8 @@
   .tox-dialog__body-content .tox-form__group .accessibility-issue__description h2 {
     font-size: @font-size-sm;
     margin-top: 0;
-    // Inherits other styles from dialog body content heading
+
+    /* Inherits other styles from dialog body content heading */
   }
 }
 

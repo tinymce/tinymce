@@ -1,6 +1,6 @@
-//
-// Statusbar
-//
+/*
+Statusbar
+*/
 
 @statusbar-background-color: @background-color;
 @statusbar-focus-background-color: transparent;
@@ -109,7 +109,7 @@
 
     &:hover,
     &:focus {
-      @{statusbar-not-disabled-selector} {
+      &:not(:disabled):not([aria-disabled=true]){
         color: @statusbar-focus-text-color;
         cursor: pointer;
       }
@@ -140,7 +140,7 @@
 
     a:hover,
     a:focus {
-      @{statusbar-not-disabled-selector} {
+      &:not(:disabled):not([aria-disabled=true]){
         svg {
           fill: @statusbar-logo-active-color;
         }
@@ -198,7 +198,7 @@
   }
 }
 
-// RTL
+/* RTL */
 .tox[dir=rtl] {
   .tox-statusbar {
     flex-direction: row-reverse;

@@ -1,9 +1,9 @@
-//
-// Toolbar split button
-//
+/*
+Toolbar split button
+*/
 
 @toolbar-split-button-chevron-touch-padding: 4px;
-@toolbar-split-color-preview-opacity: .6;
+@toolbar-split-color-preview-opacity: 0.6;
 
 .tox {
   .tox-split-button {
@@ -26,7 +26,6 @@
     z-index: 1; // Ensure focus outline is on top of other buttons
 
     &::after {
-      pointer-events: none; // Prevent the focus outline from opening the menu
       .keyboard-focus-outline-mixin();
     }
   }
@@ -52,7 +51,6 @@
   }
 
   .tox-split-button__chevron svg {
-
     @media (forced-colors: active) {
       fill: currentColor;
     }
@@ -65,7 +63,8 @@
   }
 
   .tox-split-button:focus .tox-tbtn {
-    background-color: transparent; // Prevent the toolbar button background to cover the parent split button's background color
+    /*  Prevent the toolbar button background to cover the parent split button's background color */
+    background-color: transparent;
   }
 
   .tox-split-button.tox-tbtn--disabled:hover,
@@ -92,6 +91,7 @@
     }
   }
 
+  /* stylelint-disable-next-line selector-id-pattern */
   .tox-split-button.tox-tbtn--disabled svg #tox-icon-text-color__color,
   .tox-split-button.tox-tbtn--disabled svg #tox-icon-highlight-bg-color__color {
     opacity: @toolbar-split-color-preview-opacity;

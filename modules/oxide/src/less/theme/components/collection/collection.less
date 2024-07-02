@@ -1,7 +1,7 @@
-//
-// Collection
-// A list of items that can be arranged as vertical list, horizontal toolbar or a grid.
-//
+/*
+Collection
+A list of items that can be arranged as vertical list, horizontal toolbar or a grid.
+*/
 
 @collection-item-padding: @pad-xs @pad-sm;
 @collection-item-separator-color: @tinymce-separator-color;
@@ -43,12 +43,13 @@
 @collection-group-label-font-size: @font-size-xs;
 @collection-group-label-font-style: normal;
 @collection-group-label-font-weight: @font-weight-normal;
-@collection-group-label-text-color:contrast(@collection-group-label-background-color, @text-color-muted, @color-white);
+@collection-group-label-text-color: contrast(@collection-group-label-background-color, @text-color-muted, @color-white);
 @collection-group-label-text-transform: none;
 
 @collection-horizontal-border-radius: @panel-border-radius;
 
 .tox {
+  /*
   .tox-collection {
     //
   }
@@ -64,6 +65,7 @@
   .tox-collection--grid {
     //
   }
+  */
 
   .tox-collection--toolbar .tox-collection__group {
     display: flex;
@@ -282,7 +284,7 @@
   }
 
   // Tickable items that are not ticked and have an adjacent shortcut hide the check mark completely (gap is removed)
-  .tox-collection--list .tox-collection__item:not(.tox-collection__item--enabled) .tox-collection__item-accessory + .tox-collection__item-checkmark {
+  .tox-collection--list .tox-collection__item:not(.tox-collection__item--enabled) .tox-collection__item-accessory+.tox-collection__item-checkmark {
     display: none;
   }
 
@@ -310,8 +312,10 @@
   }
 
   .tox-collection--horizontal .tox-collection__item {
-    height: @toolbar-button-height; // 28px
-    margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0; // 4px 0 3px 0
+    /* 28px */
+    height: @toolbar-button-height;
+    /* 4px 0 3px 0 */
+    margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0;
     padding: 0 4px;
   }
 
@@ -389,12 +393,12 @@
   }
 
   // Make a space between all elements within a list item
-  .tox-collection--list .tox-collection__item > *:not(:first-child) {
+  .tox-collection--list .tox-collection__item>*:not(:first-child) {
     margin-left: @pad-sm;
   }
 
   // Create a slight padding for lists containing no icons
-  .tox-collection--list .tox-collection__item > .tox-collection__item-label:first-child {
+  .tox-collection--list .tox-collection__item>.tox-collection__item-label:first-child {
     margin-left: @pad-xs;
   }
 
@@ -408,19 +412,19 @@
   }
 }
 
-// RTL
+/* RTL */
 .tox[dir=rtl] {
   .tox-collection--horizontal .tox-collection__group:not(:last-of-type) {
     border-left: 1px solid @toolbar-group-separator-color;
   }
 
   // Make a space between all elements within a list item
-  .tox-collection--list .tox-collection__item > *:not(:first-child) {
+  .tox-collection--list .tox-collection__item>*:not(:first-child) {
     margin-right: @pad-sm;
   }
 
   // Create a slight padding for lists containing no icons
-  .tox-collection--list .tox-collection__item > .tox-collection__item-label:first-child {
+  .tox-collection--list .tox-collection__item>.tox-collection__item-label:first-child {
     margin-right: @pad-xs;
   }
 

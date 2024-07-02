@@ -70,7 +70,9 @@ const makeDndEvent = (type: DragEventType, target: Element, dataTransfer: DataTr
     // DragEvent
     dataTransfer,
 
-    ...getTargetProps(target)
+    ...getTargetProps(target),
+    layerX: 0,
+    layerY: 0
   };
 
   return event;

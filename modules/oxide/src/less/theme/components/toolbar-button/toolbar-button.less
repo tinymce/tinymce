@@ -1,7 +1,7 @@
-//
-// Toolbar button
-// When making changes here, please review menubar/menubar.less and menubar/menubar-button.less
-//
+/*
+Toolbar button
+When making changes here, please review menubar/menubar.less and menubar/menubar-button.less
+*/
 
 @toolbar-button-background-color: @background-color;
 @toolbar-button-border-radius: 3px;
@@ -20,7 +20,8 @@
 @toolbar-button-text-transform: none;
 @toolbar-button-width: 34px;
 
-@toolbar-button-hover-background-color: contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 7%)); // Differentiating against the enabled color
+@toolbar-button-hover-background-color: contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 7%));
+/* Differentiating against the enabled color */
 @toolbar-button-hover-border: @toolbar-button-border;
 @toolbar-button-hover-box-shadow: @toolbar-button-box-shadow;
 @toolbar-button-hover-icon-color: @toolbar-button-icon-color;
@@ -34,10 +35,12 @@
 
 @toolbar-button-active-background-color: @toolbar-button-enabled-background-color;
 @toolbar-button-active-border: @toolbar-button-enabled-border;
-@toolbar-button-active-box-shadow: @toolbar-button-box-shadow; // set to `0 1px 1px 0 rgba(0, 0, 0, .1) inset` for a small push in effect
+@toolbar-button-active-box-shadow: @toolbar-button-box-shadow;
+/* set to `0 1px 1px 0 rgba(0, 0, 0, .1) inset` for a small push in effect */
 @toolbar-button-active-icon-color: @toolbar-button-enabled-icon-color;
 @toolbar-button-active-text-color: @toolbar-button-enabled-text-color;
-@toolbar-button-active-transform: none; // Set to `translateY(1px)` for a small push down effect
+@toolbar-button-active-transform: none;
+/* Set to `translateY(1px)` for a small push down effect */
 
 @toolbar-button-enabled-background-color: multiply(white, contrast(@background-color, fade(@color-tint, 35), fade(@color-tint, 65)));
 @toolbar-button-enabled-border: @toolbar-button-hover-border;
@@ -46,7 +49,7 @@
 @toolbar-button-enabled-text-color: @toolbar-button-hover-text-color;
 @toolbar-button-enabled-transform: none;
 
-@toolbar-button-disabled-background-color:  @toolbar-button-background-color;
+@toolbar-button-disabled-background-color: @toolbar-button-background-color;
 @toolbar-button-disabled-border: @toolbar-button-border;
 @toolbar-button-disabled-box-shadow: @toolbar-button-box-shadow;
 @toolbar-button-disabled-icon-color: fade(@toolbar-button-icon-color, 50%);
@@ -113,8 +116,8 @@
     }
   }
 
-  // This class doesn't seem to be used anywhere.
-  // The ruleset can probably be removed.
+  /* This class doesn't seem to be used anywhere.
+      The ruleset can probably be removed. */
   .tox-tbtn.tox-tbtn-more {
     padding-left: 5px;
     padding-right: 5px;
@@ -171,14 +174,16 @@
     color: @toolbar-button-disabled-text-color;
     cursor: not-allowed;
 
-    // Disable stylelint below because we're mixing the :disabled modifier with the "--disabled" class
-    // since they need to be kept the same/use the same rules
-    svg { /* stylelint-disable-line no-descending-specificity */
+
+    svg {
+      /* Disable stylelint below because we're mixing the :hover modifier with the "--enabled" class
+      since they need to be kept the same/use the same rules */
+      /* stylelint-disable-line no-descending-specificity */
       fill: @toolbar-button-disabled-icon-color;
     }
   }
 
-  // An toggle on/off button's on state.
+  /* An toggle on/off button's on state. */
   .tox-tbtn--active,
   .tox-tbtn--enabled,
   .tox-tbtn--enabled:hover,
@@ -189,13 +194,14 @@
     color: @toolbar-button-enabled-text-color;
     position: relative;
 
-    > * {
+    >* {
       transform: @toolbar-button-enabled-transform;
     }
 
-    // Disable stylelint below because we're mixing the :hover modifier with the "--enabled" class
-    // since they need to be kept the same/use the same rules
-    svg { /* stylelint-disable-line no-descending-specificity */
+    /* Disable stylelint below because we're mixing the :hover modifier with the "--enabled" class
+    since they need to be kept the same/use the same rules */
+    svg {
+      /* stylelint-disable-line no-descending-specificity */
       fill: @toolbar-button-enabled-icon-color;
     }
 
@@ -218,7 +224,7 @@
     }
   }
 
-  .tox-tbtn:active > * {
+  .tox-tbtn:active>* {
     transform: @toolbar-button-active-transform;
   }
 
