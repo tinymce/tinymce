@@ -55,41 +55,48 @@ const restoreFakeSelection = (editor: Editor) => {
   editor.selection.setRng(editor.selection.getRng());
 };
 
+const setCommonEditorCommands = (editor: Editor, state: boolean): void => {
+  setEditorCommandState(editor, 'StyleWithCSS', state);
+  setEditorCommandState(editor, 'enableInlineTableEditing', state);
+  setEditorCommandState(editor, 'enableObjectResizing', state);
+};
+
+const setEditorReadonly = (editor: Editor) => {
+  editor.readonly = true;
+  editor.selection.controlSelection.hideResizeRect();
+  editor._selectionOverrides.hideFakeCaret();
+  removeFakeSelection(editor);
+  setCommonEditorCommands(editor, true);
+};
+
+const unsetEditorReadonly = (editor: Editor, body: SugarElement<HTMLElement>) => {
+  editor.readonly = false;
+  if (editor.hasEditableRoot()) {
+    setContentEditable(body, true);
+  }
+  switchOnContentEditableTrue(body);
+  setCommonEditorCommands(editor, false);
+  if (EditorFocus.hasEditorOrUiFocus(editor)) {
+    editor.focus();
+  }
+  restoreFakeSelection(editor);
+  editor.nodeChanged();
+};
+
 const toggleReadOnly = (editor: Editor, readOnlyMode: EditorReadOnlyType): void => {
   const body = SugarElement.fromDom(editor.getBody());
   const shouldSetReadOnly = Type.isBoolean(readOnlyMode) ? readOnlyMode : true;
 
   toggleClass(body, 'mce-content-readonly', shouldSetReadOnly);
 
-  const setCommonEditorCommands = (editor: Editor, state: boolean): void => {
-    setEditorCommandState(editor, 'StyleWithCSS', state);
-    setEditorCommandState(editor, 'enableInlineTableEditing', state);
-    setEditorCommandState(editor, 'enableObjectResizing', state);
-  };
-
-  const shouldSetContentEditableTrue = () => Type.isBoolean(readOnlyMode) ? readOnlyMode : !Obj.get(readOnlyMode, 'cursorEnabled').getOr(true);
-
   if (shouldSetReadOnly) {
-    editor.selection.controlSelection.hideResizeRect();
-    editor._selectionOverrides.hideFakeCaret();
-    removeFakeSelection(editor);
-    editor.readonly = true;
-    if (shouldSetContentEditableTrue()) {
+    setEditorReadonly(editor);
+    if (Type.isBoolean(readOnlyMode) ? readOnlyMode : !Obj.get(readOnlyMode, 'cursorEnabled').getOr(true)) {
       setContentEditable(body, false);
       switchOffContentEditableTrue(body);
     }
   } else {
-    editor.readonly = false;
-    if (editor.hasEditableRoot()) {
-      setContentEditable(body, true);
-    }
-    switchOnContentEditableTrue(body);
-    setCommonEditorCommands(editor, false);
-    if (EditorFocus.hasEditorOrUiFocus(editor)) {
-      editor.focus();
-    }
-    restoreFakeSelection(editor);
-    editor.nodeChanged();
+    unsetEditorReadonly(editor, body);
   }
 };
 

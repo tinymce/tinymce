@@ -32,6 +32,7 @@ const switchToMode = (editor: Editor, activeMode: Cell<string>, availableModes: 
   if (oldMode.editorReadOnly !== newMode.editorReadOnly) {
     toggleReadOnly(editor, newMode.editorReadOnly);
   }
+  activeMode.set(mode);
   Events.fireSwitchMode(editor, mode);
 };
 

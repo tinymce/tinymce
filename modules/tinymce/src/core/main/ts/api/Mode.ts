@@ -4,13 +4,12 @@ import { registerMode, setMode } from '../mode/Mode';
 import { isReadOnly, registerReadOnlyContentFilters, registerReadOnlySelectionBlockers } from '../mode/Readonly';
 import Editor from './Editor';
 
-interface ReadOnlyWhitelist {
-  uiEnabled: boolean;
-  selectionEnabled: boolean;
-  cursorEnabled: boolean;
-}
+export type ReadonlyProperty = Readonly<'uiEnabled' | 'selectionEnabled' | 'cursorEnabled'>;
 
-export type EditorReadOnlyType = boolean | { [K in keyof ReadOnlyWhitelist]: boolean };
+export type EditorReadOnlyType = boolean | {
+  [K in ReadonlyProperty]?: boolean;
+};
+
 /**
  * TinyMCE Editor Mode API.
  *
@@ -18,11 +17,6 @@ export type EditorReadOnlyType = boolean | { [K in keyof ReadOnlyWhitelist]: boo
  */
 
 export interface EditorMode {
-  isSelectionEnabled: () => boolean;
-
-  isUiEnabled: () => boolean;
-
-  isCursorEnabled: () => boolean;
 
   /**
    * Checks if the editor is in a readonly state.
@@ -31,6 +25,30 @@ export interface EditorMode {
    * @return {Boolean} true if the editor is in a readonly state.
    */
   isReadOnly: () => boolean;
+
+  /**
+   * Checks if the editor user interface is in a readonly state.
+   *
+   * @method uiIsReadOnly
+   * @return {Boolean} true if the editor user interface is in a readonly state.
+   */
+  isUiEnabled: () => boolean;
+
+  /**
+   * Checks if the editor content can be selected.
+   *
+   * @method selectionIsReadOnly
+   * @return {Boolean} true if the editor content area is in a readonly state.
+   */
+  isSelectionEnabled: () => boolean;
+
+  /**
+   * Checks if the editor cursor can be used.
+   *
+   * @method selectionIsReadOnly
+   * @return {Boolean} true if the editor cursor is in a readonly state.
+   */
+  isCursorEnabled: () => boolean;
 
   /**
    * Sets the editor mode. The available modes are "design" and "readonly". Additional modes can be registered using 'register'.
@@ -76,7 +94,7 @@ export interface EditorModeApi {
    * Flags whether the editor should be made readonly while this mode is active.
    *
    * @property editorReadOnly
-   * @type Object
+   * @type Boolean | Object
    */
   editorReadOnly: EditorReadOnlyType;
 }
@@ -99,15 +117,15 @@ export const create = (editor: Editor): EditorMode => {
   registerReadOnlyContentFilters(editor);
   registerReadOnlySelectionBlockers(editor);
 
-  const getModeValue = (value: keyof ReadOnlyWhitelist) => {
+  const getReadonlyFromProperty = (property: ReadonlyProperty) => {
     const mode = availableModes.get()[activeMode.get()].editorReadOnly;
-    return Type.isBoolean(mode) ? false : Obj.get(mode, value).getOr(false);
+    return Type.isBoolean(mode) ? false : Obj.get(mode, property).getOr(false);
   };
 
   return {
-    isUiEnabled: () => getModeValue('uiEnabled'),
-    isSelectionEnabled: () => getModeValue('selectionEnabled'),
-    isCursorEnabled: () => getModeValue('cursorEnabled'),
+    isUiEnabled: () => getReadonlyFromProperty('uiEnabled'),
+    isSelectionEnabled: () => getReadonlyFromProperty('selectionEnabled'),
+    isCursorEnabled: () => getReadonlyFromProperty('cursorEnabled'),
     isReadOnly: () => isReadOnly(editor),
     set: (mode: string) => setMode(editor, availableModes.get(), activeMode, mode),
     get: () => activeMode.get(),
