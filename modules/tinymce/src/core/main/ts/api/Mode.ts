@@ -4,18 +4,25 @@ import { registerMode, setMode } from '../mode/Mode';
 import { isReadOnly, registerReadOnlyContentFilters, registerReadOnlySelectionBlockers } from '../mode/Readonly';
 import Editor from './Editor';
 
-type EditorReadOnlyType = boolean | { uiEnabled: boolean; selectionEnabled: boolean };
+interface ReadOnlyWhitelist {
+  uiEnabled: boolean;
+  selectionEnabled: boolean;
+  cursorEnabled: boolean;
+}
 
+export type EditorReadOnlyType = boolean | { [K in keyof ReadOnlyWhitelist]: boolean };
 /**
  * TinyMCE Editor Mode API.
  *
  * @class tinymce.EditorMode
  */
 
-
 export interface EditorMode {
-  allowSelectionInReadOnly: () => boolean;
-  allowUiInReadOnly: () => boolean;
+  isSelectionEnabled: () => boolean;
+
+  isUiEnabled: () => boolean;
+
+  isCursorEnabled: () => boolean;
 
   /**
    * Checks if the editor is in a readonly state.
@@ -72,7 +79,6 @@ export interface EditorModeApi {
    * @type Object
    */
   editorReadOnly: EditorReadOnlyType;
-
 }
 
 export const create = (editor: Editor): EditorMode => {
@@ -93,15 +99,15 @@ export const create = (editor: Editor): EditorMode => {
   registerReadOnlyContentFilters(editor);
   registerReadOnlySelectionBlockers(editor);
 
+  const getModeValue = (value: keyof ReadOnlyWhitelist) => {
+    const mode = availableModes.get()[activeMode.get()].editorReadOnly;
+    return Type.isBoolean(mode) ? false : Obj.get(mode, value).getOr(false);
+  };
+
   return {
-    allowUiInReadOnly: () => {
-      const mode = availableModes.get()[activeMode.get()].editorReadOnly;
-      return Type.isBoolean(mode) ? false : Obj.get(mode, 'uiEnabled').getOr(false);
-    },
-    allowSelectionInReadOnly: () => {
-      const mode = availableModes.get()[activeMode.get()].editorReadOnly;
-      return Type.isBoolean(mode) ? false : Obj.get(mode, 'selectionEnabled').getOr(false);
-    },
+    isUiEnabled: () => getModeValue('uiEnabled'),
+    isSelectionEnabled: () => getModeValue('selectionEnabled'),
+    isCursorEnabled: () => getModeValue('cursorEnabled'),
     isReadOnly: () => isReadOnly(editor),
     set: (mode: string) => setMode(editor, availableModes.get(), activeMode, mode),
     get: () => activeMode.get(),

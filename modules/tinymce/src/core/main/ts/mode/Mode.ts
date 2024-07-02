@@ -1,4 +1,4 @@
-import { Arr, Cell, Obj, Type } from '@ephox/katamari';
+import { Arr, Cell, Obj } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Events from '../api/Events';
@@ -30,11 +30,7 @@ const switchToMode = (editor: Editor, activeMode: Cell<string>, availableModes: 
   }
 
   if (oldMode.editorReadOnly !== newMode.editorReadOnly) {
-    if (Type.isObject(newMode.editorReadOnly)) {
-      toggleReadOnly(editor, true);
-    } else {
-      toggleReadOnly(editor, newMode.editorReadOnly);
-    }
+    toggleReadOnly(editor, newMode.editorReadOnly);
   }
   activeMode.set(mode);
   Events.fireSwitchMode(editor, mode);
