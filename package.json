@@ -33,7 +33,7 @@
   "devDependencies": {
     "@ephox/bedrock-client": "^12.3.2",
     "@ephox/bedrock-server": "^12.4.0",
-    "@ephox/oxide-icons-tools": "^2.2.2",
+    "@ephox/oxide-icons-tools": "^3.1.1",
     "@ephox/swag": "^4.4.0",
     "@ephox/wrap-jsverify": "^2.0.1",
     "@ephox/wrap-prismjs": "^1.29.1-patchfix.3558",
@@ -89,5 +89,6 @@
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.9.0",
     "webpack-livereload-plugin": "^2.1.1"
-  }
+  },
+  "dependencies": {}
 }
