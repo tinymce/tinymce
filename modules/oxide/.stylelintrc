@@ -1,8 +1,7 @@
 {
-  "extends": "stylelint-config-standard",
+  "extends": "stylelint-config-recommended-less",
   "plugins": [
-    "stylelint-order",
-    "stylelint-less"
+    "stylelint-order"
   ],
   "rules": {
     "order/properties-alphabetical-order": true,
@@ -27,5 +26,5 @@
     "value-no-vendor-prefix": null,
     "comment-empty-line-before": null,
     "comment-no-empty": null
-    }
+  }
 }

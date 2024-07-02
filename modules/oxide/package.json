@@ -46,7 +46,7 @@
     "grunt-stylelint": "^0.20.1",
     "less": "^4.2.0",
     "stylelint": "^16.6.1",
-    "stylelint-config-standard": "^36.0.0",
+    "stylelint-config-recommended-less": "^3.0.1",
     "stylelint-order": "^6.0.4"
   }
 }
