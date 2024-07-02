@@ -1,7 +1,8 @@
-import { Arr, Optional, Strings } from '@ephox/katamari';
+import { Arr, Obj, Optional, Strings, Type } from '@ephox/katamari';
 import { Attribute, Class, Compare, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
+import { EditorReadOnlyType } from '../api/Mode';
 import VK from '../api/util/VK';
 import * as EditorFocus from '../focus/EditorFocus';
 
@@ -54,27 +55,36 @@ const restoreFakeSelection = (editor: Editor) => {
   editor.selection.setRng(editor.selection.getRng());
 };
 
-const toggleReadOnly = (editor: Editor, state: boolean): void => {
+const toggleReadOnly = (editor: Editor, readOnlyMode: EditorReadOnlyType): void => {
   const body = SugarElement.fromDom(editor.getBody());
+  const shouldSetReadOnly = Type.isBoolean(readOnlyMode) ? readOnlyMode : true;
 
-  toggleClass(body, 'mce-content-readonly', state);
+  toggleClass(body, 'mce-content-readonly', shouldSetReadOnly);
 
-  if (state) {
+  const setCommonEditorCommands = (editor: Editor, state: boolean): void => {
+    setEditorCommandState(editor, 'StyleWithCSS', state);
+    setEditorCommandState(editor, 'enableInlineTableEditing', state);
+    setEditorCommandState(editor, 'enableObjectResizing', state);
+  };
+
+  const shouldSetContentEditableTrue = () => Type.isBoolean(readOnlyMode) ? readOnlyMode : !Obj.get(readOnlyMode, 'cursorEnabled').getOr(true);
+
+  if (shouldSetReadOnly) {
     editor.selection.controlSelection.hideResizeRect();
     editor._selectionOverrides.hideFakeCaret();
     removeFakeSelection(editor);
     editor.readonly = true;
-    setContentEditable(body, false);
-    switchOffContentEditableTrue(body);
+    if (shouldSetContentEditableTrue()) {
+      setContentEditable(body, false);
+      switchOffContentEditableTrue(body);
+    }
   } else {
     editor.readonly = false;
     if (editor.hasEditableRoot()) {
       setContentEditable(body, true);
     }
     switchOnContentEditableTrue(body);
-    setEditorCommandState(editor, 'StyleWithCSS', false);
-    setEditorCommandState(editor, 'enableInlineTableEditing', false);
-    setEditorCommandState(editor, 'enableObjectResizing', false);
+    setCommonEditorCommands(editor, false);
     if (EditorFocus.hasEditorOrUiFocus(editor)) {
       editor.focus();
     }
@@ -156,6 +166,25 @@ const processReadonlyEvents = (editor: Editor, e: Event): void => {
 };
 
 const registerReadOnlySelectionBlockers = (editor: Editor): void => {
+  editor.on('beforeinput paste', (e) => {
+    if (isReadOnly(editor) && editor.mode.isCursorEnabled()) {
+      e.preventDefault();
+    }
+  });
+
+  editor.on('BeforeSetContent', (e) => {
+    if (isReadOnly(editor) && editor.mode.isCursorEnabled() && !e.initial) {
+      e.preventDefault();
+    }
+  });
+
+  const whitelistCommandsCursorEnabled = [ 'mceFocus' ];
+  editor.on('BeforeExecCommand', (e) => {
+    if (isReadOnly(editor) && editor.mode.isCursorEnabled() && !Arr.contains(whitelistCommandsCursorEnabled, e.command)) {
+      e.preventDefault();
+    }
+  });
+
   editor.on('ShowCaret', (e) => {
     if (isReadOnly(editor)) {
       e.preventDefault();
@@ -163,7 +192,7 @@ const registerReadOnlySelectionBlockers = (editor: Editor): void => {
   });
 
   editor.on('ObjectSelected', (e) => {
-    if (isReadOnly(editor) && !editor.mode.allowSelectionInReadOnly()) {
+    if (isReadOnly(editor) && !editor.mode.isSelectionEnabled()) {
       e.preventDefault();
     }
   });
