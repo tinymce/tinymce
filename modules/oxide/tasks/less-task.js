@@ -4,7 +4,7 @@ const path = require('path');
 const LessPluginPresetEnv = require('less-plugin-preset-env');
 
 const presetEnv = new LessPluginPresetEnv({
-  browsers: ['last 2 Safari versions', 'iOS 14.0', 'last 2 Chrome versions', 'Firefox ESR'],
+  browsers: ['last 2 Safari versions', 'last 2 iOS major versions', 'last 2 Chrome versions', 'Firefox ESR'],
   grid: 'no-autoplace'
 });
 
