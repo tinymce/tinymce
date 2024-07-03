@@ -44,20 +44,13 @@ export default (): void => {
     const renderUI = (): RenderResult => {
       const renderResult = renderModeUI();
 
-      const optScrollingContext = ScrollingContext.detectWhenSplitUiMode(
+      // If we have a scroll container, it looks like we need to calculate the bounds each time, just in
+      // case the scrolling context details have changed since the last time. The bounds considers
+      // the Boxes.box sizes, which might change over time.
+      popupSinkBounds = () => ScrollingContext.detectWhenSplitUiMode(
         editor,
         popups.getMothership().element
-      );
-      optScrollingContext.each(
-        (sc) => {
-          popupSinkBounds = () => {
-            // At this stage, it looks like we need to calculate the bounds each time, just in
-            // case the scrolling context details have changed since the last time. The bounds considers
-            // the Boxes.box sizes, which might change over time.
-            return ScrollingContext.getBoundsFrom(editor, sc);
-          };
-        }
-      );
+      ).map(ScrollingContext.getBoundsFrom).getOr(Boxes.win());
 
       return renderResult;
     };

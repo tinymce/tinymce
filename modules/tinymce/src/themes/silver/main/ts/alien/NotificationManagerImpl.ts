@@ -128,7 +128,7 @@ export default (
                       return optScrollingContext
                         .map(
                           (sc) => {
-                            const combinedBounds = ScrollingContext.getBoundsFrom(editor, sc);
+                            const combinedBounds = ScrollingContext.getBoundsFrom(sc);
                             return {
                               bounds: combinedBounds,
                               optScrollEnv: Optional.some({
