@@ -29,7 +29,7 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
   };
 
   const show = (comp: AlloyComponent) => {
-    if (!state.isShowing()) {
+    if (!state.isShowing() && state.isEnabled()) {
       TooltippingApis.hideAllExclusive(comp, tooltipConfig, state);
       const sink = tooltipConfig.lazySink(comp).getOrDie();
       const popup = comp.getSystem().build({
@@ -161,6 +161,9 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
 
   return AlloyEvents.derive(Arr.flatten([
     [
+      AlloyEvents.runOnInit((component) => {
+        tooltipConfig.onSetup(component);
+      }),
       AlloyEvents.run(ShowTooltipEvent, (comp) => {
         state.resetTimer(() => {
           show(comp);
