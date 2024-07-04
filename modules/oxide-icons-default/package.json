@@ -25,6 +25,5 @@
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "GPL-2.0-or-later",
   "devDependencies": {
-    "grunt": "^1.6.1"
   }
 }
