@@ -2,7 +2,7 @@ import { describe, it, before, after } from '@ephox/bedrock-client';
 import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import * as LinkPluginUtils from 'tinymce/plugins/link/core/Utils';
+import * as LinkPluginActions from 'tinymce/plugins/link/core/Actions';
 import Plugin from 'tinymce/plugins/link/Plugin';
 
 import { TestLinkUi } from '../module/TestLinkUi';
@@ -44,7 +44,7 @@ describe('browser.tinymce.plugins.link.ImageFigureLinkTest', () => {
       '</figure>'
     );
     TinySelections.setCursor(editor, [ 0 ], 0);
-    LinkPluginUtils.unlink(editor);
+    LinkPluginActions.unlink(editor);
     await TestLinkUi.pAssertContentPresence(editor, { 'figure.image > img': 1 });
   });
 });

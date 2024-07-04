@@ -1,7 +1,7 @@
-import { Assertions, Keys } from '@ephox/agar';
-import { afterEach, context, describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
-import { Html, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Assertions, FocusTools, Keys, Mouse, UiFinder } from '@ephox/agar';
+import { after, afterEach, before, context, describe, it } from '@ephox/bedrock-client';
+import { Arr, Optional } from '@ephox/katamari';
+import { Attribute, Focus, Html, Insert, Remove, SelectorFilter, SelectorFind, SugarBody, SugarDocument, SugarElement, Traverse } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -252,6 +252,51 @@ describe('browser.tinymce.models.dom.table.FakeSelectionTest', () => {
       'td[contenteditable="false"][data-mce-selected="1"]': 0,
       'td[contenteditable="false"][data-mce-first-selected="1"]': 0,
       'td[contenteditable="false"][data-mce-last-selected="1"]': 0
+    });
+  });
+
+  context('Focusing on noneditable cell', () => {
+    before(() => {
+      const fakeButton = SugarElement.fromTag('button');
+      const body = SugarBody.body();
+      Attribute.set(fakeButton, 'id', 'button1');
+      Insert.append(fakeButton, SugarElement.fromText('Button 1'));
+      Insert.append(body, fakeButton);
+    });
+
+    after(() => SelectorFind.child(SugarBody.body(), '#button1').each(Remove.remove));
+
+    const pShiftFocusOutsideEditor = async (button: SugarElement<HTMLButtonElement>) => {
+      Mouse.mouseDown(button, { button: 0 });
+      Mouse.mouseUp(button, { button: 0 });
+      Focus.focus(button);
+      await FocusTools.pTryOnSelector('Wait for focus to be shifted out of the editor', SugarDocument.getDocument(), '#button1');
+    };
+
+    const pSelectCellAndAssertSelection = async (editor: Editor, cellSelection: [string, string]) => {
+      editor.focus();
+      selectCellsWithMouse(editor, cellSelection);
+      TinyAssertions.assertContentPresence(editor, {
+        'td[contenteditable="false"][data-mce-selected="1"][data-mce-first-selected="1"][data-mce-last-selected="1"]': 1
+      });
+      const actual = Optional.from(editor.selection.getSel()?.anchorNode).map(SugarElement.fromDom).bind(Traverse.parentElement).getOrDie();
+      const expected = UiFinder.findIn(TinyDom.body(editor), '.mce-offscreen-selection').getOrDie();
+
+      Assertions.assertDomEq('Parent of selection anchor node should be offscreen element', expected, actual);
+    };
+
+    it('TINY-10127: Selection should still be on the noneditable cell when focus is shifted elsewhere', async () => {
+      const editor = hook.editor();
+      editor.setContent('<p>test</p><table><tbody><tr><td contenteditable="false">1</td><td>2</td></tr><tr><td contenteditable="false">3</td><td>4</td></tr></tbody></table>');
+
+      const fakeButton = UiFinder.findIn<HTMLButtonElement>(SugarBody.body(), '#button1').getOrDie();
+      await pShiftFocusOutsideEditor(fakeButton);
+      await pSelectCellAndAssertSelection(editor, [ '1', '1' ]);
+
+      await pShiftFocusOutsideEditor(fakeButton);
+      await pSelectCellAndAssertSelection(editor, [ '3', '3' ]);
+
+      await pSelectCellAndAssertSelection(editor, [ '1', '1' ]);
     });
   });
 
