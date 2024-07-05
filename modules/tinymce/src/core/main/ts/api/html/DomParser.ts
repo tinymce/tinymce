@@ -293,9 +293,18 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     // special element then we need to wrap it so the internal content is handled appropriately.
     const isSpecialRoot = Obj.has(schema.getSpecialElements(), rootName.toLowerCase());
     const content = isSpecialRoot ? `<${rootName}>${html}</${rootName}>` : html;
-    // If parsing XHTML then the content must contain the xmlns declaration, see https://www.w3.org/TR/xhtml1/normative.html#strict
-    const wrappedHtml = format === 'xhtml' ? `<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body>${content}</body></html>` : `<body>${content}</body>`;
-    const body = parser.parseFromString(wrappedHtml, mimeType).body;
+    const makeWrap = () => {
+      if (format === 'xhtml') {
+        // If parsing XHTML then the content must contain the xmlns declaration, see https://www.w3.org/TR/xhtml1/normative.html#strict
+        return `<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body>${content}</body></html>`;
+      } else if (/^[\s]*<head/i.test(html) || /^[\s]*<html/i.test(html)) {
+        return `<html>${content}</html>`;
+      } else {
+        return `<body>${content}</body>`;
+      }
+    };
+
+    const body = parser.parseFromString(makeWrap(), mimeType).body;
     sanitizer.sanitizeHtmlElement(body, mimeType);
     return isSpecialRoot ? body.firstChild as Element : body;
   };
