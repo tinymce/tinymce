@@ -26,6 +26,7 @@ Toolbar split button
     z-index: 1; // Ensure focus outline is on top of other buttons
 
     &::after {
+      pointer-events: none; // Prevent the focus outline from opening the menu
       .keyboard-focus-outline-mixin();
     }
   }
