@@ -396,13 +396,13 @@ describe('browser.tinymce.core.EditorTest', () => {
       lastArgs = e;
     });
 
-    editor.setDirty(false);
-    assert.isUndefined(lastArgs, 'setDirty/isDirty');
-    assert.isFalse(editor.isDirty(), 'setDirty/isDirty');
-
     editor.setDirty(true);
     assert.equal(lastArgs?.type, 'dirty', 'setDirty/isDirty');
     assert.isTrue( editor.isDirty(), 'setDirty/isDirty');
+
+    editor.setDirty(false);
+    assert.isUndefined(lastArgs, 'setDirty/isDirty');
+    assert.isFalse(editor.isDirty(), 'setDirty/isDirty');
 
     lastArgs = undefined;
     editor.setDirty(true);
