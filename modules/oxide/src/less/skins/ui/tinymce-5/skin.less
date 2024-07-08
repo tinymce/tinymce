@@ -73,7 +73,7 @@
 @button-naked-active-icon-color: @button-secondary-active-text-color;
 @insert-table-picker-selected-background-color: fade(@color-tint, 50%);
 @insert-table-picker-selected-border-color: @insert-table-picker-selected-background-color;
-@edit-area-border-color: transparent; // Hide focus outline around editor container 
+@edit-area-border-color: transparent; // Hide focus outline around editor container
 @edit-area-border-width: 0; // Hide focus outline around editor container
 
 .tox {
@@ -178,7 +178,7 @@
   .tox-statusbar__wordcount {
     &:hover,
     &:focus {
-      &:not(:disabled):not([aria-disabled=true]) {
+      @{statusbar-not-disabled-selector} {
         color: @statusbar-logo-active-color;
       }
     }
@@ -204,7 +204,7 @@
 
     a:hover,
     a:focus {
-      &:not(:disabled):not([aria-disabled=true]){
+      @{statusbar-not-disabled-selector} {
         svg {
           fill: @statusbar-logo-active-color;
         }

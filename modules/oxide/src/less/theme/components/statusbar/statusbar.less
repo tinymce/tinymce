@@ -109,7 +109,7 @@
 
     &:hover,
     &:focus {
-      &:not(:disabled):not([aria-disabled=true]){
+      @{statusbar-not-disabled-selector} {
         color: @statusbar-focus-text-color;
         cursor: pointer;
       }
@@ -140,7 +140,7 @@
 
     a:hover,
     a:focus {
-      &:not(:disabled):not([aria-disabled=true]){
+      @{statusbar-not-disabled-selector} {
         svg {
           fill: @statusbar-logo-active-color;
         }
