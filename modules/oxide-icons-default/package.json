@@ -23,7 +23,6 @@
     "LICENSE.txt"
   ],
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
-  "license": "GPL-2.0-or-later",
-  "devDependencies": {
+  "license": "GPL-2.0-or-later"
   }
 }
