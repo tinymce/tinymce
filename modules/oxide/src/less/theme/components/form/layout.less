@@ -1,6 +1,6 @@
-/*
-Form layout
-*/
+//
+// Form layout
+//
 
 @form-group-vertical-spacing: @pad-xs;
 @form-group-horizontal-spacing: @pad-xs;
@@ -88,8 +88,7 @@ Form layout
     // the nav object spec is surrounded by tab stop objects, so apply flex to the middle element
     .tox-navobj :nth-child(2) {
       flex: 1;
-
-      /* IE 11 */
+      // IE 11
       height: 100%;
     }
   }
@@ -103,7 +102,7 @@ Form layout
   }
 }
 
-/* RTL */
+// RTL
 .tox[dir=rtl] {
   .tox-form__controls-h-stack {
     > *:not(:first-child) {

@@ -1,6 +1,6 @@
-/*
-Pop (The "Quickbars" container)
-*/
+//
+// Pop (The "Quickbars" container)
+//
 
 @pop-background-color: @background-color;
 @pop-border-radius: @panel-border-radius;
@@ -19,7 +19,7 @@ Pop (The "Quickbars" container)
 
     .tox-toolbar,
     .tox-toolbar__group {
-      /* When the toolbar is resizing, it won't fit into its container. Therefore, turn off wrapping */
+      // When the toolbar is resizing, it won't fit into its container. Therefore, turn off wrapping
       flex-wrap: nowrap;
     }
   }
@@ -71,7 +71,7 @@ Pop (The "Quickbars" container)
     width: 0;
 
     @media (forced-colors: active) {
-      /* TODO: Temporary disabled due to unable to set the colour of the arrow in forced-colors mode */
+      // TODO: Temporary disabled due to unable to set the colour of the arrow in forced-colors mode
       content: none;
     }
   }
@@ -128,7 +128,7 @@ Pop (The "Quickbars" container)
   .tox-pop.tox-pop--left::before,
   .tox-pop.tox-pop--left::after {
     left: 0;
-    top: calc(50% - 1px);
+    top: calc(~'50% - 1px');
     transform: translateY(-50%);
   }
 
@@ -148,7 +148,7 @@ Pop (The "Quickbars" container)
   .tox-pop.tox-pop--right::before,
   .tox-pop.tox-pop--right::after {
     left: 100%;
-    top: calc(50% + 1px);
+    top: calc(~'50% + 1px');
     transform: translateY(-50%);
   }
 
@@ -172,6 +172,6 @@ Pop (The "Quickbars" container)
 
   .tox-pop.tox-pop--align-right::before,
   .tox-pop.tox-pop--align-right::after {
-    left: calc(100% - 20px);
+    left: calc(~'100% - 20px');
   }
 }

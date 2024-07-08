@@ -1,6 +1,6 @@
-/*
-Editor area
-*/
+//
+// Editor area
+//
 
 @edit-area-iframe-background-color: @color-white;
 @edit-area-border: 0;
@@ -12,7 +12,7 @@ Editor area
     display: flex;
     flex: 1;
     overflow: hidden;
-    position: relative; /* Required for the iframe to resize in IE and Edge */
+    position: relative; // Required for the iframe to resize in IE and Edge
     &::before {
       border: @edit-area-border-width solid @edit-area-border-color;
       border-radius: 4px;
@@ -36,7 +36,7 @@ Editor area
     box-sizing: border-box;
     flex: 1;
     height: 100%;
-    position: absolute; /* Required for the iframe to resize in IE and Edge */
+    position: absolute; // Required for the iframe to resize in IE and Edge
     width: 100%;
   }
 }

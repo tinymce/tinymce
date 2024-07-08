@@ -1,6 +1,6 @@
-/*
-Selection
-*/
+//
+// Selection
+//
 
 @document-selection-color: initial;
 @table-selection-color: fade(#b4d7ff, 70%);
@@ -70,12 +70,12 @@ Selection
     position: relative;
 
     &::selection {
-      /* Prevent selection to be visible */
+      //Prevent selection to be visible
       background: none;
     }
 
     * {
-      /* Prevent selection of text to be visible inside cells */
+      //Prevent selection of text to be visible inside cells
       outline: none;
       -webkit-touch-callout: none;
       user-select: none;
@@ -96,7 +96,7 @@ Selection
     top: -1px;
 
     @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-      /* Provide a darker border color for IE11 */
+      // Provide a darker border color for IE11
       border-color: darken(@table-selection-color, 50%);
     }
   }

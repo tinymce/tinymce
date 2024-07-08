@@ -1,7 +1,7 @@
-/*
-Collection
-A list of items that can be arranged as vertical list, horizontal toolbar or a grid.
-*/
+//
+// Collection
+// A list of items that can be arranged as vertical list, horizontal toolbar or a grid.
+//
 
 @collection-item-padding: @pad-xs @pad-sm;
 @collection-item-separator-color: @tinymce-separator-color;
@@ -312,10 +312,8 @@ A list of items that can be arranged as vertical list, horizontal toolbar or a g
   }
 
   .tox-collection--horizontal .tox-collection__item {
-    /* 28px */
-    height: @toolbar-button-height;
-    /* 4px 0 3px 0 */
-    margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0;
+    height: @toolbar-button-height; // 28px
+    margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0; // 4px 0 3px 0
     padding: 0 4px;
   }
 
@@ -412,7 +410,7 @@ A list of items that can be arranged as vertical list, horizontal toolbar or a g
   }
 }
 
-/* RTL */
+// RTL
 .tox[dir=rtl] {
   .tox-collection--horizontal .tox-collection__group:not(:last-of-type) {
     border-left: 1px solid @toolbar-group-separator-color;

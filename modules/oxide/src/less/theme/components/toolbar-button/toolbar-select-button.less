@@ -1,7 +1,7 @@
-/*
-Toolbar select button
-When making changes here, please review menubar/menubar.less and menubar/menubar-button.less
-*/
+//
+// Toolbar select button
+// When making changes here, please review menubar/menubar.less and menubar/menubar-button.less
+//
 
 @toolbar-button-select-padding: 4px;
 @toolbar-button-bespoke-background-color: contrast(@background-color, darken(@background-color, 3%), lighten(@background-color, 7%));
@@ -48,8 +48,7 @@ When making changes here, please review menubar/menubar.less and menubar/menubar
     background: @toolbar-button-bespoke-background-color;
 
     &:focus {
-      /* Prevent toolbar button focus background to override bespoke background */
-      background: @toolbar-button-bespoke-focus-background-color;
+      background: @toolbar-button-bespoke-focus-background-color; // Prevent toolbar button focus background to override bespoke background
     }
 
     & + .tox-tbtn--bespoke {

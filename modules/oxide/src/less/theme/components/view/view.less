@@ -1,4 +1,4 @@
-@view-header-padding: (@pad-sm + @keyboard-focus-outline-width) (@pad-sm + @keyboard-focus-outline-width) @keyboard-focus-outline-width (@pad-sm + @keyboard-focus-outline-width);    /* Account for outline/border of the buttons */
+@view-header-padding: (@pad-sm + @keyboard-focus-outline-width) (@pad-sm + @keyboard-focus-outline-width) @keyboard-focus-outline-width (@pad-sm + @keyboard-focus-outline-width);    // Account for outline/border of the buttons
 @view-header-padding-mobile: @pad-sm;
 @view-pane-padding: @pad-sm;
 
@@ -12,7 +12,7 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    height: 100%; /* Override the height set by browsers so the view doesn't grow beyond editor container */
+    height: 100%;     // Override the height set by browsers so the view doesn't grow beyond editor container
   }
 
   .tox-view {
@@ -61,16 +61,16 @@
   .tox-view__toolbar {
     display: flex;
     flex-direction: row;
-    gap: @view-toolbar-button-spacing-x; /* spacing between buttons within a group */
+    gap: @view-toolbar-button-spacing-x; // spacing between buttons within a group
     justify-content: space-between;
-    overflow-x: auto; /* Show horizontal scrollbar on small screens */
+    overflow-x: auto;           // Show horizontal scrollbar on small screens
     padding: @view-header-padding;
   }
 
   .tox-view__toolbar__group {
     display: flex;
     flex-direction: row;
-    gap: @view-toolbar-group-spacing-x; /* minimal spacing between toolbar groups */
+    gap: @view-toolbar-group-spacing-x; // minimal spacing between toolbar groups
   }
 
   .tox-view__header-start,
@@ -102,7 +102,7 @@
   }
 }
 
-/* RTL */
+// RTL
 .tox[dir=rtl] {
   .tox-view__header {
     .tox-view__header-start,

@@ -1,6 +1,6 @@
-/*
-Form
-*/
+//
+// Form
+//
 
 @textfield-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
 @textfield-border-color: @border-color;
@@ -13,9 +13,7 @@ Form
 @textfield-height: 36px;
 @textfield-line-height: 24px;
 @textfield-outline: none;
-
-/* Add a border radius modifier for pill shaped controls */
-@textfield-pad-x: @pad-xs + (@control-border-radius / 4);
+@textfield-pad-x: @pad-xs + (@control-border-radius / 4); // Add a border radius modifier for pill shaped controls
 @textfield-pad-y: (@textfield-height - @textfield-line-height - (@textfield-border-width * 2)) / 2;
 @textfield-text-color: @text-color;
 
@@ -95,7 +93,7 @@ Form
   }
 }
 
-/* RTL */
+// RTL
 .tox[dir=rtl] {
   .tox-toolbar-textfield {
     + * {
