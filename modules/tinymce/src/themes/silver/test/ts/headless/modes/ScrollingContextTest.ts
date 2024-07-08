@@ -1,6 +1,7 @@
 import { Cursors } from '@ephox/agar';
 import { Boxes } from '@ephox/alloy';
 import { context, describe, it } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { Css, Insert, InsertAll, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -13,6 +14,7 @@ describe('headless.modes.ScrollingContextTest', () => {
     InsertAll.append(parent, children);
     return parent;
   };
+  const mockEditor = { plugins: {}} as any;
 
   context('isScroller', () => {
     // Default and single value tests
@@ -150,7 +152,7 @@ describe('headless.modes.ScrollingContextTest', () => {
 
       const target = Cursors.follow(situation, [ 0, 0, 0 ]).getOrDie() as SugarElement<HTMLElement>;
 
-      const optActual = ScrollingContext.detect(target);
+      const optActual = ScrollingContext.detect(mockEditor, target);
       assert.isTrue(optActual.isNone(), 'There should be no scrolling context');
     });
 
@@ -176,7 +178,7 @@ describe('headless.modes.ScrollingContextTest', () => {
 
       const target = follow([ 0, 0, 0 ]);
 
-      const optActual = ScrollingContext.detect(target);
+      const optActual = ScrollingContext.detect(mockEditor, target);
       optActual.fold(
         () => assert.fail('Should have found a scrolling context'),
         (actual) => assert.deepEqual(
@@ -186,7 +188,8 @@ describe('headless.modes.ScrollingContextTest', () => {
             others: [
               follow([ 0 ]),
               follow([ ])
-            ]
+            ],
+            isFullscreen: actual.isFullscreen
           }
         )
       );
@@ -246,7 +249,8 @@ describe('headless.modes.ScrollingContextTest', () => {
 
       const actual = ScrollingContext.getBoundsFrom({
         element: innerScroller,
-        others: [ outerScroller ]
+        others: [ outerScroller ],
+        isFullscreen: Fun.never
       });
 
       // Restore the page, but save the values that will change first.
