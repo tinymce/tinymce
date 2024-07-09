@@ -7,10 +7,12 @@
     "url": "https://github.com/tinymce/tinymce.git",
     "directory": "modules/katamari"
   },
+  "type": "module",
   "scripts": {
     "prepublishOnly": "tsc -b",
     "build": "tsc",
     "test": "bedrock-auto -b chrome-headless -d src/test/ts",
+    "test-node": "node --test --import=tsx 'src/test/ts/**/*Test.ts'",
     "test-manual": "bedrock -d src/test/ts",
     "lint": "eslint --config ../../.eslintrc.json --max-warnings=0 src/**/*.ts"
   },
@@ -32,5 +34,8 @@
   ],
   "main": "./lib/main/ts/ephox/katamari/api/Main.js",
   "module": "./lib/main/ts/ephox/katamari/api/Main.js",
-  "types": "./lib/main/ts/ephox/katamari/api/Main.d.ts"
+  "types": "./lib/main/ts/ephox/katamari/api/Main.d.ts",
+  "devDependencies": {
+    "tsx": "^4.16.2"
+  }
 }

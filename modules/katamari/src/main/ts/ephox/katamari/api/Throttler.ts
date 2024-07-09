@@ -26,7 +26,7 @@ export const adaptable = <A extends any[]>(fn: (...a: A) => void, rate: number):
         timer = null;
         args = null;
         fn.apply(null, tempArgs as A);
-      }, rate);
+      }, rate) as unknown as number;
     }
   };
 
@@ -51,7 +51,7 @@ export const first = <A extends any[]>(fn: (...a: A) => void, rate: number): Thr
       timer = setTimeout(() => {
         timer = null;
         fn.apply(null, args);
-      }, rate);
+      }, rate) as unknown as number;
     }
   };
 
@@ -77,7 +77,7 @@ export const last = <A extends any[]>(fn: (...a: A) => void, rate: number): Thro
     timer = setTimeout(() => {
       timer = null;
       fn.apply(null, args);
-    }, rate);
+    }, rate) as unknown as number;
   };
 
   return {

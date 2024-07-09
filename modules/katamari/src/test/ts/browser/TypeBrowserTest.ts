@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { describe, it } from 'node:test';
 
 import * as Type from 'ephox/katamari/api/Type';
 

@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { describe, it } from 'node:test';
 import fc from 'fast-check';
 
 import * as Fun from 'ephox/katamari/api/Fun';

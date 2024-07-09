@@ -69,7 +69,7 @@ export const repeatable = (delay: number): Repeatable => {
 
   const set = (functionToRepeat: () => void) => {
     revoke();
-    intervalId.set(Optional.some(setInterval(functionToRepeat, delay)));
+    intervalId.set(Optional.some(setInterval(functionToRepeat, delay) as unknown as number));
   };
 
   return {

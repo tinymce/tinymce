@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { describe, it } from 'node:test';
 import { Pprint, Testable } from '@ephox/dispute';
 import { assert } from 'chai';
 

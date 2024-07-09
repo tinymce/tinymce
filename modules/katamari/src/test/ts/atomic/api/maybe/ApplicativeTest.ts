@@ -1,4 +1,4 @@
-import { context, describe } from '@ephox/bedrock-client';
+import { describe, describe as context } from 'node:test';
 import { assert } from 'chai';
 
 import * as Fun from 'ephox/katamari/api/Fun';

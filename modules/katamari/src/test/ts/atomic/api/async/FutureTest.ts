@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { describe, it } from 'node:test';
 import { Testable } from '@ephox/dispute';
 import fc from 'fast-check';
 
@@ -42,7 +42,7 @@ describe('atomic.katamari.api.async.FutureTest', () => {
       resolve();
     })))));
 
-  it('parallel', () => new Promise((resolve, reject) => {
+  it('parallel', () => new Promise<void>((resolve, reject) => {
     const f = Future.nu((callback) => setTimeout(Fun.curry(callback, 'apple'), 10));
     const g = Future.nu((callback) => setTimeout(Fun.curry(callback, 'banana'), 5));
     const h = Future.nu((callback) => callback('carrot'));

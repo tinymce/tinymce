@@ -1,6 +1,9 @@
 {
   "extends": "../../tsconfig.shared.json",
   "compilerOptions": {
+    "moduleResolution": "node",
+    "target": "es2018",
+    "module": "es2015",
     "outDir": "lib",
     "rootDir": "src",
     "baseUrl": ".",
@@ -9,7 +12,8 @@
       "ephox/katamari/test/*": ["src/test/ts/module/ephox/katamari/test/*"],
       "ephox/katamari/demo/*": ["src/demo/ts/ephox/katamari/demo/*"],
       "ephox/katamari/*": ["src/main/ts/ephox/katamari/*"]
-    }
+    },
+    "types": ["node"]
   },
   "include": [
     "src/demo/ts",

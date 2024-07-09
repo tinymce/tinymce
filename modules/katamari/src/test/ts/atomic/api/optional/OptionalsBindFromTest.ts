@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { describe, it } from 'node:test';
 
 import * as Fun from 'ephox/katamari/api/Fun';
 import { Optional } from 'ephox/katamari/api/Optional';

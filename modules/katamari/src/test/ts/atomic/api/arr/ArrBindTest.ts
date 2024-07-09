@@ -1,4 +1,4 @@
-import { context, describe, it } from '@ephox/bedrock-client';
+import { describe, it, describe as context } from 'node:test';
 import { assert } from 'chai';
 import fc from 'fast-check';
 

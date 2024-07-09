@@ -1,4 +1,4 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { describe, it } from 'node:test';
 import { assert } from 'chai';
 
 import * as Arr from 'ephox/katamari/api/Arr';
