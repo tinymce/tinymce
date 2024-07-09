@@ -11,7 +11,7 @@ const switchToMode = (editor: Editor, activeMode: Cell<string>, availableModes: 
   const oldMode = availableModes[activeMode.get()];
   const newMode = availableModes[mode];
 
-  // if activate fails, hope nothing bad happened and abort
+  // if deactivate fails, hope nothing bad happened and abort
   try {
     oldMode.deactivate();
   } catch (e) {

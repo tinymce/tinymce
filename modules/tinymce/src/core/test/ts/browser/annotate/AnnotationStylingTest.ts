@@ -102,7 +102,6 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
       const actualBackgroundColor = getBackgroundColor(elm);
       const actualOutline = getOutline(elm);
       assert.equal(actualBackgroundColor, expectedBackgroundColor);
-      console.log(actualOutline, expectedOutline);
       assert.deepEqual(actualOutline, expectedOutline);
 
       if (checkOtherNodes) {

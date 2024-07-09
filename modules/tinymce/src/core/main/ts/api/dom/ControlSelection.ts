@@ -427,10 +427,6 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
       return;
     }
 
-    // The parent of the target element is the root element, which is the body in the case of an table element, it's editable so it's showing the table borders and also allowing the snooker to be set to be resizable
-    // If selection is enabled && it's not table = we show
-    // If the parent is enabled && it's not table = we show
-    // If it's image it's editable, we show
     const targetElm = e.type === 'mousedown' ? e.target : selection.getNode();
     const controlElm = SelectorFind.closest<HTMLElement>(SugarElement.fromDom(targetElm), controlElmSelector)
       .map((e) => e.dom)
