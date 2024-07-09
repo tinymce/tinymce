@@ -21,18 +21,16 @@ import { setupShadowRoot, withIframe, withNormalElement, withShadowElement, with
 type RootNode = SugarShadowDom.RootNode;
 
 UnitTest.test('ShadowDom - SelectorFind.descendant', () => {
-  if (SugarShadowDom.isSupported()) {
-    fc.assert(fc.property(htmlBlockTagName(), htmlInlineTagName(), fc.hexaString(), (block, inline, text) => {
-      withShadowElement((ss) => {
-        const id = 'theid';
-        const inner = SugarElement.fromHtml(`<${block}><p>hello<${inline} id="${id}">${text}</${inline}></p></${block}>`);
-        Insert.append(ss, inner);
+  fc.assert(fc.property(htmlBlockTagName(), htmlInlineTagName(), fc.hexaString(), (block, inline, text) => {
+    withShadowElement((ss) => {
+      const id = 'theid';
+      const inner = SugarElement.fromHtml(`<${block}><p>hello<${inline} id="${id}">${text}</${inline}></p></${block}>`);
+      Insert.append(ss, inner);
 
-        const frog: SugarElement<Element> = SelectorFind.descendant(ss, `#${id}`).getOrDie('Element not found');
-        Assert.eq('textcontent', text, frog.dom.textContent);
-      });
-    }));
-  }
+      const frog: SugarElement<Element> = SelectorFind.descendant(ss, `#${id}`).getOrDie('Element not found');
+      Assert.eq('textcontent', text, frog.dom.textContent);
+    });
+  }));
 });
 
 const shouldBeShadowRoot = (n: RootNode) => {
@@ -96,11 +94,6 @@ UnitTest.test('isDocument in iframe', () => {
   withIframe((div, iframe, cw) => {
     shouldBeDocument(SugarElement.fromDom(cw.document));
   });
-});
-
-UnitTest.test('isSupported platform test', () => {
-  // as of TinyMCE 6 all browsers support it
-  Assert.eq('This browser should support root node', true, SugarShadowDom.isSupported());
 });
 
 UnitTest.test('stylecontainer is shadow root for shadow root', () => {
@@ -171,17 +164,10 @@ const checkOriginalEventTarget = (mode: 'open' | 'closed', success: UnitTest.Suc
 };
 
 UnitTest.asynctest('getOriginalEventTarget on a closed shadow root', (success, failure) => {
-  if (!SugarShadowDom.isSupported()) {
-    return success();
-  }
-
   checkOriginalEventTarget('closed', success, failure);
 });
 
 UnitTest.asynctest('getOriginalEventTarget on an open shadow root', (success, failure) => {
-  if (!SugarShadowDom.isSupported()) {
-    return success();
-  }
   checkOriginalEventTarget('open', success, failure);
 });
 
@@ -199,12 +185,10 @@ UnitTest.test('isOpenShadowHost on closed shadow host', () => {
   });
 });
 
-if (SugarShadowDom.isSupported()) {
-  UnitTest.test('withShadowElement gives us open and closed roots', () => {
-    const roots: Array<SugarElement<ShadowRoot>> = [];
-    withShadowElement((sr) => {
-      roots.push(sr);
-    });
-    Assert.eq('open then closed', [ 'open', 'closed' ], Arr.map(roots, (r) => (r.dom as any).mode ));
+UnitTest.test('withShadowElement gives us open and closed roots', () => {
+  const roots: Array<SugarElement<ShadowRoot>> = [];
+  withShadowElement((sr) => {
+    roots.push(sr);
   });
-}
+  Assert.eq('open then closed', [ 'open', 'closed' ], Arr.map(roots, (r) => (r.dom as any).mode ));
+});
