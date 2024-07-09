@@ -78,10 +78,12 @@ const renderTextField = (spec: TextField, providersBackstage: UiFactoryBackstage
 
   const placeholder = spec.placeholder.fold( Fun.constant({}), (p) => ({ placeholder: providersBackstage.translate(p) }));
   const inputMode = spec.inputMode.fold(Fun.constant({}), (mode) => ({ inputmode: mode }));
+  const name = { 'data-mce-name': spec.name };
 
   const inputAttributes = {
     ...placeholder,
-    ...inputMode
+    ...inputMode,
+    ...name
   };
 
   const pField = AlloyFormField.parts.field({
