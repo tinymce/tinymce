@@ -5,6 +5,7 @@
 @toolbar-background-color: @background-color;
 @toolbar-padding-y: 1px;
 @toolbar-padding-x: @pad-sm;
+@toolbar-label-height: 11px;
 @toolbar-row-separator-color: @tinymce-separator-color;
 @toolbar-row-separator-padding: @toolbar-group-padding-x;
 @toolbar-separator-distance: 0;
@@ -147,5 +148,13 @@
     background-position: @_toolbar-row-separator-image-position;
     background-size: @_toolbar-row-separator-image-size;
     padding: @pad-xs 0;
+
+    &.with__lable {
+      @_toolbar-height_with_label: @_toolbar-height + @toolbar-label-height;
+      @_toolbar-row-separator-image_with_label: repeating-linear-gradient(@toolbar-row-separator-color 0px 1px, transparent 1px @_toolbar-height_with_label);
+
+      background-image: @_toolbar-row-separator-image_with_label;
+      background-position: center top (@_toolbar-row-separator-image-offset + @toolbar-label-height);
+    }
   }
 }

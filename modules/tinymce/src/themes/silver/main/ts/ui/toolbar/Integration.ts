@@ -1,6 +1,6 @@
 import { AlloySpec, VerticalDir } from '@ephox/alloy';
 import { StructureSchema } from '@ephox/boulder';
-import { Toolbar } from '@ephox/bridge';
+import { InlineContent, Toolbar } from '@ephox/bridge';
 import { Arr, Obj, Optional, Result, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -23,6 +23,7 @@ export type ToolbarButton = Toolbar.ToolbarButtonSpec | Toolbar.ToolbarMenuButto
 export interface RenderToolbarConfig {
   readonly toolbar: ToolbarConfig;
   readonly buttons: Record<string, ToolbarButton | Toolbar.GroupToolbarButtonSpec>;
+  readonly groupsLabels?: Array<InlineContent.GroupsLabels>;
   readonly allowToolbarGroups: boolean;
 }
 
@@ -193,14 +194,16 @@ const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem:
 
 const identifyButtons = (editor: Editor, toolbarConfig: RenderToolbarConfig, backstage: UiFactoryBackstage, prefixes: Optional<string[]>): ToolbarGroup[] => {
   const toolbarGroups = createToolbar(toolbarConfig);
-  const groups = Arr.map(toolbarGroups, (group) => {
+  const groups = Arr.map(toolbarGroups, (group, i) => {
+    const label = Optional.from(toolbarConfig.groupsLabels).map((groupsLabels) => groupsLabels.length - 1 >= i ? groupsLabels[i]?.name : '');
     const items = Arr.bind(group.items, (toolbarItem) => {
       return toolbarItem.trim().length === 0 ? [] :
         lookupButton(editor, toolbarConfig.buttons, toolbarItem, toolbarConfig.allowToolbarGroups, backstage, prefixes).toArray();
     });
     return {
       title: Optional.from(editor.translate(group.name)),
-      items
+      items,
+      label
     };
   });
 

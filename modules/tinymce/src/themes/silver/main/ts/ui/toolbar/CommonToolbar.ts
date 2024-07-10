@@ -1,8 +1,11 @@
 // eslint-disable-next-line max-len
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Boxes, Focusing, Keying, SketchSpec,
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec,
   SplitFloatingToolbar as AlloySplitFloatingToolbar,
-  SplitSlidingToolbar as AlloySplitSlidingToolbar, Tabstopping, Toolbar as AlloyToolbar, ToolbarGroup as AlloyToolbarGroup
+  SplitSlidingToolbar as AlloySplitSlidingToolbar,
+  Toolbar as AlloyToolbar, ToolbarGroup as AlloyToolbarGroup,
+  Behaviour, Boxes, Focusing, GuiFactory, Keying, SketchSpec,
+  Tabstopping
 } from '@ephox/alloy';
 import { Arr, Optional, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
@@ -39,20 +42,40 @@ export interface MoreDrawerToolbarSpec extends ToolbarSpec {
 
 export interface ToolbarGroup {
   readonly title: Optional<string>;
+  readonly label: Optional<string>;
   readonly items: AlloySpec[];
 }
+
+const hasWrapper = (toolbarSpec: ToolbarSpec) => Arr.exists(toolbarSpec.initGroups, (group) => group.label.isSome());
+
+const renderToolbarGroupWithLabelWrapper = () => {
+  return {
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-toolbar__group', 'tox-toolbar__group_with_label-in' ]
+    },
+
+    components: [ AlloyToolbarGroup.parts.items({}) ]
+  };
+};
 
 const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
   const attributes = toolbarGroup.title.fold(() => ({}),
     (title) => ({ attributes: { title }}));
+  // hasWrapper(toolbarGroup)
   return {
     dom: {
       tag: 'div',
-      classes: [ 'tox-toolbar__group' ],
+      classes: [ 'tox-toolbar__group' ].concat(
+        toolbarGroup.label.isSome() ? [ 'tox-toolbar__group_with_label' ] : []
+      ),
       ...attributes
     },
 
-    components: [
+    components: toolbarGroup.label.isSome() ? [
+      GuiFactory.text(toolbarGroup.label.getOr('')),
+      renderToolbarGroupWithLabelWrapper()
+    ] : [
       AlloyToolbarGroup.parts.items({})
     ],
 
@@ -106,7 +129,8 @@ const renderMoreToolbarCommon = (toolbarSpec: MoreDrawerToolbarSpec) => {
       // This already knows it is a toolbar group
       'overflow-group': renderToolbarGroupCommon({
         title: Optional.none(),
-        items: []
+        items: [],
+        label: Optional.none()
       }),
       'overflow-button': renderIconButtonSpec({
         name: 'more',
@@ -216,8 +240,10 @@ const renderToolbar = (toolbarSpec: ToolbarSpec): SketchSpec => {
     uid: toolbarSpec.uid,
     dom: {
       tag: 'div',
-      classes: [ 'tox-toolbar' ].concat(
+      classes: [ 'tox-toolbar', 'with__lable' ].concat(
         toolbarSpec.type === ToolbarMode.scrolling ? [ 'tox-toolbar--scrolling' ] : []
+      ).concat(
+        hasWrapper(toolbarSpec) ? [ 'with__lable' ] : []
       )
     },
     components: [

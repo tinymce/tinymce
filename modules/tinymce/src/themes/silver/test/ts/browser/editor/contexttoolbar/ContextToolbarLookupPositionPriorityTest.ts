@@ -10,6 +10,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLook
   const createToolbars = (positions: InlineContent.ContextPosition[]): ContextType[] => Arr.map(positions, (p) => ({
     type: 'contexttoolbar',
     items: 'bold italic',
+    groupsLabels: [],
     predicate: Fun.always,
     position: p,
     scope: 'node'
