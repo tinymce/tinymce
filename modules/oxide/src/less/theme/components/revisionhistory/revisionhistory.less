@@ -2,16 +2,16 @@
 // Revision history
 //
 @revisionhistory-base-value: 12px;
+@revisionhistory-border-radius: 6px;
 @revisionhistory-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
-@revisionhistory-border-color: @border-color;
+@revisionhistory-border-color:  #f0f0f0;
 @revisionhistory-text-color: @text-color;
 @revisionhistory-card-hover-background-color: @toolbar-button-hover-background-color;
 @revisionhistory-card-active-background-color: multiply(white, contrast(@background-color, fade(@color-tint, 35), fade(@color-tint, 65)));
 @revisionhistory-card-active-text-color: @toolbar-button-active-text-color;
 @revisionhistory-border: 1px solid @revisionhistory-border-color;
 @revisionhistory-sidebar-title-font-size: @font-size-lg;
-@revisionhistory-sidebar-title-height: 60px;
-@revisionhistory-sidebar-minwidth: 192px;
+@revisionhistory-sidebar-minwidth: 248px;
 @revisionhistory-text-lineheight: 24px;
 @revisionhistory-card-padding: @revisionhistory-base-value;
 @revisonhistory-box-shadow: none;
@@ -56,26 +56,30 @@
   }
 
   .tox-revisionhistory__sidebar {
-    border-left: @revisionhistory-border;
+    display: flex;
+    flex-direction: column;
     height: 100%;
-    max-width: 360px;
+    min-width: @revisionhistory-sidebar-minwidth;
+    width: 436px;
 
     .tox-revisionhistory__sidebar-title {
-      border-bottom: @revisionhistory-border;
+      background-color: @revisionhistory-background-color;
+      box-shadow: 0 4px 8px 0 rgba(34, 47, 62, .1);
       color: @revisionhistory-text-color;
-      font-size: @revisionhistory-sidebar-title-font-size;
+      font-size: 20px;
       font-weight: 400;
-      height: @revisionhistory-sidebar-title-height;
-      min-width: @revisionhistory-sidebar-minwidth;
-      padding: 16px;
+      line-height: 28px;
+      padding: @revisionhistory-card-padding;
+      z-index: 1; // To get a shadow effect
     }
 
     .tox-revisionhistory__revisions {
+      background-color: @revisionhistory-border-color;
+      display: flex;
       flex-direction: column;
-      max-height: calc(100% - @revisionhistory-sidebar-title-height);
-      min-width: @revisionhistory-sidebar-minwidth;
+      gap: @revisionhistory-base-value;
       overflow-y: auto;
-      padding: @revisionhistory-card-padding;
+      padding: 10px @revisionhistory-card-padding;
 
       &:focus {
         height: 100%;
@@ -94,12 +98,12 @@
       }
 
       .tox-revisionhistory__card {
+        background-color: @revisionhistory-background-color;
         border: @revisionhistory-border;
-        border-radius: 6px;
+        border-radius: @revisionhistory-border-radius;
         color: @revisionhistory-text-color;
         cursor: pointer;
         font-size: @font-size-sm;
-        margin-bottom: @revisionhistory-card-padding;
         padding: @revisionhistory-card-padding;
         width: 100%;
 
@@ -124,10 +128,6 @@
           box-shadow: @revisonhistory-box-shadow;
           color: @revisionhistory-card-active-text-color;
         }
-      }
-
-      .tox-revisionhistory__card > *:not(:last-child) {
-        margin-bottom: @revisionhistory-base-value;
       }
 
       .tox-revisionhistory__card-date {
