@@ -7,6 +7,7 @@ import { Step } from './Step';
 import * as UiFinder from './UiFinder';
 
 const click = (element: SugarElement<Node>, settings: Clicks.Settings = { }): void => Clicks.click(settings)(element);
+const dblclick = (element: SugarElement<Node>, settings: Clicks.Settings = { }): void => Clicks.dblclick(settings)(element);
 const mouseOver = (element: SugarElement<Node>, settings: Clicks.Settings = { }): void => Clicks.mouseOver(settings)(element);
 const mouseDown = (element: SugarElement<Node>, settings: Clicks.Settings = { }): void => Clicks.mouseDown(settings)(element);
 const mouseUp = (element: SugarElement<Node>, settings: Clicks.Settings = { }): void => Clicks.mouseUp(settings)(element);
@@ -19,6 +20,7 @@ const mouseUpTo = (element: SugarElement<Node>, dx: number, dy: number, settings
 
 // Custom event creation
 const cClickWith = Fun.compose(Chain.op, Clicks.click);
+const cDblclickWith = Fun.compose(Chain.op, Clicks.dblclick);
 const cContextMenuWith = Fun.compose(Chain.op, Clicks.contextMenu);
 const cMouseOverWith = Fun.compose(Chain.op, Clicks.mouseOver);
 const cMouseDownWith = Fun.compose(Chain.op, Clicks.mouseDown);
@@ -70,6 +72,9 @@ const sTriggerOn = <T, U extends Element>(container: SugarElement<Node>, selecto
 const clickOn = <T extends HTMLElement>(container: SugarElement<Node>, selector: string): SugarElement<T> =>
   triggerOn<T>(container, selector, Clicks.trigger);
 
+const dblclickOn = <T extends HTMLElement>(container: SugarElement<Node>, selector: string): SugarElement<T> =>
+  triggerOn<T>(container, selector, Clicks.dblclick({ }));
+
 const hoverOn = <T extends Element>(container: SugarElement<Node>, selector: string): SugarElement<T> =>
   triggerOn<T>(container, selector, mouseOver);
 
@@ -78,6 +83,9 @@ const contextMenuOn = <T extends Element>(container: SugarElement<Node>, selecto
 
 const sClickOn = <T>(container: SugarElement<Node>, selector: string): Step<T, T> =>
   sTriggerOn<T, Element>(container, selector, Clicks.trigger);
+
+const sDblclickOn = <T>(container: SugarElement<Node>, selector: string): Step<T, T> =>
+  sTriggerOn<T, Element>(container, selector, Clicks.dblclick({ }));
 
 const sHoverOn = <T>(container: SugarElement<Node>, selector: string): Step<T, T> =>
   sTriggerOn<T, Element>(container, selector, Clicks.mouseOver({ }));
@@ -119,6 +127,7 @@ const event = Clicks.event;
 
 export {
   cClickWith,
+  cDblclickWith,
   cContextMenuWith,
   cMouseOverWith,
   cMouseDownWith,
@@ -138,6 +147,7 @@ export {
   cMouseMoveTo,
 
   sClickOn,
+  sDblclickOn,
   sHoverOn,
   sContextMenuOn,
   cClickOn,
@@ -155,6 +165,7 @@ export {
   middleClickButtons,
 
   click,
+  dblclick,
   mouseOver,
   mouseDown,
   mouseUp,
@@ -164,6 +175,7 @@ export {
   mouseOut,
 
   clickOn,
+  dblclickOn,
   contextMenuOn,
   hoverOn,
 
