@@ -1,5 +1,3 @@
-var fs = require('node:fs');
-
 module.exports = function (grunt) {
   grunt.loadTasks('./tasks');
 
