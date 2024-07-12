@@ -297,7 +297,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
       if (format === 'xhtml') {
         // If parsing XHTML then the content must contain the xmlns declaration, see https://www.w3.org/TR/xhtml1/normative.html#strict
         return `<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body>${content}</body></html>`;
-      } else if (/^[\s]*<head/i.test(html) || /^[\s]*<html/i.test(html)) {
+      } else if (/^[\s]*<head/i.test(html) || /^[\s]*<html/i.test(html) || /^[\s]*<!DOCTYPE/i.test(html)) {
         return `<html>${content}</html>`;
       } else {
         return `<body>${content}</body>`;
