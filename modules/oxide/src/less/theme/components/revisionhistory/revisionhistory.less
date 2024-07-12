@@ -3,8 +3,10 @@
 //
 @revisionhistory-gap: 12px;
 @revisionhistory-border-radius: 6px;
-@revisionhistory-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
-@revisionhistory-border-color: #f0f0f0;
+@revisionhistory-dark-mode: boolean(luma(@background-color) < 3);
+@revisionhistory-secondary-color: #f0f0f0;
+@revisionhistory-sidebar-background-color: if(@revisionhistory-dark-mode, #2b3b4e, @revisionhistory-secondary-color);   // Trial and error
+@revisionhistory-border-color: if(@revisionhistory-dark-mode, rgba(255, 255, 255, .15), @revisionhistory-secondary-color);
 @revisionhistory-text-color: @text-color;
 @revisionhistory-card-hover-background-color: @toolbar-button-hover-background-color;
 @revisionhistory-card-active-background-color: multiply(white, contrast(@background-color, fade(@color-tint, 35), fade(@color-tint, 65)));
@@ -13,7 +15,7 @@
 @revisionhistory-sidebar-minwidth: 248px;
 @revisionhistory-text-lineheight: 24px;
 @revisionhistory-padding: @revisionhistory-gap;
-@revisonhistory-box-shadow: none;
+@revisionhistory-box-shadow: none;
 
 .overflow-text() {
   overflow: hidden;
@@ -33,8 +35,7 @@
   }
 
   .tox-revisionhistory {
-    background-color: @revisionhistory-background-color;
-    border-radius: 4px;
+    background-color: @background-color;
     border-top: @revisionhistory-border;
     display: flex;
     flex: 1;
@@ -62,6 +63,7 @@
     width: 436px;
 
     .tox-revisionhistory__sidebar-title {
+      background-color: @background-color;
       box-shadow: 0 4px 8px 0 rgba(34, 47, 62, .1);
       color: @revisionhistory-text-color;
       font-size: 20px;
@@ -72,7 +74,7 @@
     }
 
     .tox-revisionhistory__revisions {
-      background-color: @revisionhistory-border-color;
+      background-color: @revisionhistory-sidebar-background-color;
       display: flex;
       flex: 1;
       flex-direction: column;
@@ -97,7 +99,7 @@
       }
 
       .tox-revisionhistory__card {
-        background-color: @revisionhistory-background-color;
+        background-color: @background-color;
         border: @revisionhistory-border;
         border-radius: @revisionhistory-border-radius;
         color: @revisionhistory-text-color;
@@ -108,7 +110,7 @@
 
         &:hover {
           background-color: @revisionhistory-card-hover-background-color;
-          box-shadow: @revisonhistory-box-shadow;
+          box-shadow: @revisionhistory-box-shadow;
           color: @revisionhistory-card-active-text-color;
         }
 
@@ -124,7 +126,7 @@
 
         &.tox-revisionhistory__card--selected {
           background-color: @revisionhistory-card-active-background-color;
-          box-shadow: @revisonhistory-box-shadow;
+          box-shadow: @revisionhistory-box-shadow;
           color: @revisionhistory-card-active-text-color;
         }
       }
