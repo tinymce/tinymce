@@ -145,6 +145,9 @@ describe('atomic.katamari.api.struct.TypeTest', () => {
     checkIsPromiseLike(false, [ 1, 3, 4, 5 ]);
     checkIsPromiseLike(false, 1);
     checkIsPromiseLike(true, new Promise(noop));
+    checkIsPromiseLike(false, { then: noop });
+    checkIsPromiseLike(false, { catch: noop });
+    checkIsPromiseLike(true, { then: noop, catch: noop });
   });
 
   it('isNumber', () => {
