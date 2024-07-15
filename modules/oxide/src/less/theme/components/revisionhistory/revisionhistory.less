@@ -1,6 +1,7 @@
 //
 // Revision history
 //
+@revisionhistory-base-value: 12px;
 @revisionhistory-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
 @revisionhistory-border-color: @border-color;
 @revisionhistory-text-color: @text-color;
@@ -12,8 +13,14 @@
 @revisionhistory-sidebar-title-height: 60px;
 @revisionhistory-sidebar-minwidth: 192px;
 @revisionhistory-text-lineheight: 24px;
-@revisionhistory-card-padding: @pad-sm;
+@revisionhistory-card-padding: @revisionhistory-base-value;
 @revisonhistory-box-shadow: none;
+
+.overflow-text() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+};
 
 .tox {
   .tox-revisionhistory__pane {
@@ -88,14 +95,12 @@
 
       .tox-revisionhistory__card {
         border: @revisionhistory-border;
-        border-radius: @control-border-radius;
+        border-radius: 6px;
         color: @revisionhistory-text-color;
         cursor: pointer;
         font-size: @font-size-sm;
         margin-bottom: @revisionhistory-card-padding;
         padding: @revisionhistory-card-padding;
-        text-overflow: ellipsis;
-        text-wrap: nowrap;
         width: 100%;
 
         &:hover {
@@ -121,10 +126,40 @@
         }
       }
 
+      .tox-revisionhistory__card > *:not(:last-child) {
+        margin-bottom: @revisionhistory-base-value;
+      }
+
+      .tox-revisionhistory__card-date {
+        font-size: 16px;
+        line-height: @revisionhistory-text-lineheight;
+      }
+
+      .tox-revisionhistory__card-author {
+        align-items: center;
+        display: flex;
+        flex: 1 0 0;
+        gap: 8px;
+        height: 36px;
+      }
+
+      .tox-revisionhistory__card-author-name {
+        .overflow-text();
+
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 18px;
+      }
+
+      .tox-revisionhistory__avatar {
+        height: 36px;
+        width: 36px;
+      }
+
       .tox-revisionhistory__norevision {
         color: @text-color-muted;
         font-size: 16px;
-        line-height: 24px;
+        line-height: @revisionhistory-text-lineheight;
         padding: 5px 5.5px;
       }
     }
