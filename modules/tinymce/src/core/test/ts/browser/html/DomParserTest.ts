@@ -1756,6 +1756,11 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       expected: '<script>if (a < b) alert(1)</script>'
     }));
 
+    it('TINY-11053: HTML and head elements should be ignored.', () => testSpecialElement({
+      input: '<html><head><!--comment 1--></head><body><!--comment 2--><body></html>',
+      expected: '<!--comment 2-->'
+    }));
+
     it('TINY-11019: Should not entity encode text in style elements', () => testSpecialElement({
       input: '<style>b > i {}</style>',
       expected: '<style>b > i {}</style>'
