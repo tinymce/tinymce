@@ -1,6 +1,6 @@
 project: tinymce
 kind: Fixed
-body: Prevent default mousedown on button was causing misplaced focus bugs.
+body: Prevent default mousedown on toolbar buttons was causing misplaced focus bugs.
 time: 2024-07-12T13:54:15.834489+02:00
 custom:
   Issue: TINY-10638
