@@ -8,7 +8,6 @@
 @revisionhistory-sidebar-background-color: if(@revisionhistory-dark-mode, #2b3b4e, @revisionhistory-secondary-color);   // Trial and error
 @revisionhistory-border-color: if(@revisionhistory-dark-mode, rgba(255, 255, 255, .15), @revisionhistory-secondary-color);
 @revisionhistory-text-color: @text-color;
-@revisionhistory-card-hover-background-color: @toolbar-button-hover-background-color;
 @revisionhistory-card-active-background-color: if(@revisionhistory-dark-mode, #62430b, #fff5cc);
 @revisionhistory-border: 1px solid @revisionhistory-border-color;
 @revisionhistory-border-color--selected: if(@revisionhistory-dark-mode, #cea215, #e3b82a);
@@ -141,7 +140,15 @@
         }
       }
 
+      .tox-revisionhistory__card-header {
+        align-items: center;
+        display: flex;
+        gap: @revisionhistory-gap;
+        margin-bottom: @revisionhistory-gap;
+      }
+
       .tox-revisionhistory__card-date {
+        flex: 1;
         font-size: 16px;
         line-height: @revisionhistory-text-lineheight;
       }
@@ -172,6 +179,11 @@
         font-size: 16px;
         line-height: @revisionhistory-text-lineheight;
         padding: 5px 5.5px;
+      }
+
+      .tox-revisionhistory__card-icon-elected {
+        color: @revisionhistory-text-color;
+        height: 24px;
       }
     }
   }
