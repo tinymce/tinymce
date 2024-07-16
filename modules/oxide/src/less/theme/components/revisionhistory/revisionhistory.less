@@ -9,10 +9,10 @@
 @revisionhistory-border-color: if(@revisionhistory-dark-mode, rgba(255, 255, 255, .15), @revisionhistory-secondary-color);
 @revisionhistory-text-color: @text-color;
 @revisionhistory-card-hover-background-color: @toolbar-button-hover-background-color;
-@revisionhistory-card-active-background-color: #fff5cc;
+@revisionhistory-card-active-background-color: if(@revisionhistory-dark-mode, #62430b, #fff5cc);
 @revisionhistory-border: 1px solid @revisionhistory-border-color;
-@revisionhistory-border-color--selected: #e3b82a;
-@revisionhistory-border-color--focused: #006ce7;
+@revisionhistory-border-color--selected: if(@revisionhistory-dark-mode, #cea215, #e3b82a);
+@revisionhistory-border-color--focused: if(@revisionhistory-dark-mode, #285ec7, #006ce7);
 @revisionhistory-box-shadow: 0 4px 8px 0 rgba(34, 47, 62, .1);
 @revisionhistory-sidebar-minwidth: 248px;
 @revisionhistory-text-lineheight: 24px;
