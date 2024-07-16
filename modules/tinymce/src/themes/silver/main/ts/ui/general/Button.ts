@@ -59,8 +59,7 @@ export const renderCommonSpec = (
         )
       ).toArray(),
       AddEventsBehaviour.config('button press', [
-        AlloyEvents.preventDefault('click'),
-        AlloyEvents.preventDefault('mousedown')
+        AlloyEvents.preventDefault('click')
       ])
     ].concat(extraBehaviours)),
     eventOrder: {
