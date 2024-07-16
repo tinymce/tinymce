@@ -6,6 +6,7 @@
     "@ephox/katamari": "^8.1.1"
   },
   "devDependencies": {
+    "@ephox/agar": "6.0.4",
     "@ephox/katamari-assertions": "^3.0.3"
   },
   "scripts": {
