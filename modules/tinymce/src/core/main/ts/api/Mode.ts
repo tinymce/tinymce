@@ -85,7 +85,7 @@ export interface EditorModeApi {
    * Flags whether the editor should be made readonly while this mode is active.
    *
    * @property editorReadOnly
-   * @type Boolean | Object
+   * @type EditorReadOnlyType
    */
   editorReadOnly: EditorReadOnlyType;
 }
