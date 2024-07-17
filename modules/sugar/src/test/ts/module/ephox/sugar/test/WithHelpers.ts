@@ -2,7 +2,6 @@ import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as SugarBody from 'ephox/sugar/api/node/SugarBody';
 import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
-import * as SugarShadowDom from 'ephox/sugar/api/node/SugarShadowDom';
 import * as Attribute from 'ephox/sugar/api/properties/Attribute';
 
 export const withNormalElement = (f: (d: SugarElement<Element>) => void): void => {
@@ -27,11 +26,9 @@ export const setupShadowRoot = (mode: 'open' | 'closed'): { shadowRoot: SugarEle
 };
 
 export const withShadowElementInMode = (mode: 'open' | 'closed', f: (sr: SugarElement<ShadowRoot>, innerDiv: SugarElement<HTMLElement>, shadowHost: SugarElement<HTMLElement>) => void): void => {
-  if (SugarShadowDom.isSupported()) {
-    const { shadowRoot, innerDiv, shadowHost } = setupShadowRoot(mode);
-    f(shadowRoot, innerDiv, shadowHost);
-    Remove.remove(shadowHost);
-  }
+  const { shadowRoot, innerDiv, shadowHost } = setupShadowRoot(mode);
+  f(shadowRoot, innerDiv, shadowHost);
+  Remove.remove(shadowHost);
 };
 
 export const withShadowElement = (f: (shadowRoot: SugarElement<ShadowRoot>, innerDiv: SugarElement<HTMLElement>, shadowHost: SugarElement<HTMLElement>) => void): void => {

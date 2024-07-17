@@ -1,4 +1,4 @@
-import { Arr, Fun, Optional, Type } from '@ephox/katamari';
+import { Arr, Optional, Type } from '@ephox/katamari';
 
 import { HTMLElementFullTagNameMap } from '../../alien/DomTypes';
 import * as Traverse from '../search/Traverse';
@@ -17,23 +17,8 @@ export type RootNode = SugarElement<Document | ShadowRoot>;
 export const isShadowRoot = (dos: SugarElement<Node>): dos is SugarElement<ShadowRoot> =>
   SugarNode.isDocumentFragment(dos) && Type.isNonNullable((dos.dom as ShadowRoot).host);
 
-/* eslint-disable @tinymce/no-implicit-dom-globals, @typescript-eslint/unbound-method */
-const supported: boolean =
-  Type.isFunction(Element.prototype.attachShadow) &&
-  Type.isFunction(Node.prototype.getRootNode);
-/* eslint-enable */
-
-/**
- * Does the browser support shadow DOM?
- *
- * NOTE: Node.getRootNode() and Element.attachShadow don't exist on IE11 and pre-Chromium Edge.
- */
-export const isSupported = Fun.constant(supported);
-
-export const getRootNode: (e: SugarElement<Node>) => RootNode =
-  supported
-    ? (e) => SugarElement.fromDom((e.dom as any).getRootNode())
-    : Traverse.documentOrOwner;
+export const getRootNode: (e: SugarElement<Node>) => RootNode = (e) =>
+  SugarElement.fromDom(e.dom.getRootNode()) as RootNode;
 
 /** Create an element, using the actual document. */
 export const createElement: {
@@ -76,7 +61,7 @@ export const getShadowHost = (e: SugarElement<ShadowRoot>): SugarElement<Element
  * See: https://developers.google.com/web/fundamentals/web-components/shadowdom#events
  */
 export const getOriginalEventTarget = (event: Event): Optional<EventTarget> => {
-  if (isSupported() && Type.isNonNullable(event.target)) {
+  if (Type.isNonNullable(event.target)) {
     const el = SugarElement.fromDom(event.target as Node);
     if (SugarNode.isElement(el) && isOpenShadowHost(el)) {
       // When target element is inside Shadow DOM we need to take first element from composedPath

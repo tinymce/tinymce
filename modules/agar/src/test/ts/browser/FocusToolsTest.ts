@@ -1,5 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { SugarElement, SugarShadowDom, Value } from '@ephox/sugar';
+import { SugarElement, Value } from '@ephox/sugar';
 
 import * as Assertions from 'ephox/agar/api/Assertions';
 import { Chain } from 'ephox/agar/api/Chain';
@@ -104,13 +104,13 @@ UnitTest.asynctest('FocusToolsTest', (success, failure) => {
       DomContainers.mTeardown
     ]),
 
-    SugarShadowDom.isSupported() ? Log.stepsAsStep('TINY-6360', 'Within ShadowRoot', [
+    Log.stepsAsStep('TINY-6360', 'Within ShadowRoot', [
       DomContainers.mSetupShadowRoot,
       Step.raw((state, next, die, logs) => {
         sTestFocusTools(state.shadowRoot, state.shadowRoot).runStep(state, next, die, logs);
       }),
       DomContainers.mTeardown
-    ]) : Step.pass
+    ])
   ], (_, _logs) => {
     success();
   }, failure);

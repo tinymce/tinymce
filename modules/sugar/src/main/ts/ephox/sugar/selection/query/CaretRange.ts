@@ -13,36 +13,34 @@ interface VendorDocument {
   readonly caretRangeFromPoint?: (x: number, y: number) => Range | null;
 }
 
-declare const document: VendorDocument;
-
-const caretPositionFromPoint = (doc: SugarElement<Document>, x: number, y: number): Optional<Range> =>
-  Optional.from((doc.dom as VendorDocument).caretPositionFromPoint?.(x, y))
+const caretPositionFromPoint = (doc: Document & VendorDocument, x: number, y: number): Optional<Range> =>
+  Optional.from(doc.caretPositionFromPoint?.(x, y))
     .bind((pos) => {
       // It turns out that Firefox can return null for pos.offsetNode
       if (pos.offsetNode === null) {
         return Optional.none<Range>();
       }
-      const r = doc.dom.createRange();
+      const r = doc.createRange();
       r.setStart(pos.offsetNode, pos.offset);
       r.collapse();
       return Optional.some(r);
     });
 
-const caretRangeFromPoint = (doc: SugarElement<Document>, x: number, y: number): Optional<Range> =>
-  Optional.from((doc.dom as VendorDocument).caretRangeFromPoint?.(x, y));
+const caretRangeFromPoint = (doc: VendorDocument, x: number, y: number): Optional<Range> =>
+  Optional.from(doc.caretRangeFromPoint?.(x, y));
 
-const availableSearch = (() => {
-  if (document.caretPositionFromPoint) {
-    return caretPositionFromPoint;  // defined standard
-  } else if (document.caretRangeFromPoint) {
-    return caretRangeFromPoint; // webkit implementation
+const availableSearch = (doc: VendorDocument, x: number, y: number): Optional<Range> => {
+  if (doc.caretPositionFromPoint) {
+    return caretPositionFromPoint(doc as Document, x, y);  // defined standard, firefox only
+  } else if (doc.caretRangeFromPoint) {
+    return caretRangeFromPoint(doc, x, y); // webkit/blink implementation
   } else {
-    return Optional.none; // unsupported browser
+    return Optional.none(); // unsupported browser
   }
-})();
+};
 
 const fromPoint = (win: Window, x: number, y: number): Optional<SimRange> => {
-  const doc = SugarElement.fromDom(win.document);
+  const doc = win.document;
   return availableSearch(doc, x, y).map((rng) => SimRange.create(
     SugarElement.fromDom(rng.startContainer),
     rng.startOffset,

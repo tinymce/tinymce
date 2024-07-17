@@ -1,6 +1,6 @@
 import { TestLogs } from '@ephox/agar';
 import { Optional } from '@ephox/katamari';
-import { Insert, Remove, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 
 import * as Loader from '../../loader/Loader';
 import { setupTinymceBaseUrl } from '../../loader/Urls';
@@ -54,10 +54,6 @@ const setupInShadowRoot = (
   success: Loader.SuccessCallback,
   failure: Loader.FailureCallback
 ): void => {
-  if (!SugarShadowDom.isSupported()) {
-    return success();
-  }
-
   const shadowHost: SugarElement<HTMLElement> = SugarElement.fromTag('div', document);
 
   Insert.append(SugarBody.body(), shadowHost);
@@ -84,14 +80,10 @@ const setupInBodyAndShadowRoot = (callback: Loader.RunCallback, settings: Record
     callback,
     settings,
     (v, logs1) => {
-      if (SugarShadowDom.isSupported()) {
-        setupInShadowRoot((e, _sr, s, f) => callback(e, s, f), settings, (v2, logs2) => {
-          const logs = TestLogs.concat(TestLogs.getOrInit(logs1), TestLogs.getOrInit(logs2));
-          success(v2, logs);
-        }, failure);
-      } else {
-        success(v, logs1);
-      }
+      setupInShadowRoot((e, _sr, s, f) => callback(e, s, f), settings, (v2, logs2) => {
+        const logs = TestLogs.concat(TestLogs.getOrInit(logs1), TestLogs.getOrInit(logs2));
+        success(v2, logs);
+      }, failure);
     },
     failure
   );

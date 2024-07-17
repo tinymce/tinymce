@@ -14,7 +14,7 @@ const mediaMatch = (query: string) => window.matchMedia(query).matches;
 // IMPORTANT: Must be in a thunk, otherwise rollup thinks calling this immediately
 // causes side effects and won't tree shake this away
 // Note: navigator.userAgentData is not part of the native typescript types yet
-let platform = Thunk.cached(() => PlatformDetection.detect(navigator.userAgent, Optional.from(((navigator as any).userAgentData)), mediaMatch));
+let platform = Thunk.cached(() => PlatformDetection.detect(window.navigator.userAgent, Optional.from(((window.navigator as any).userAgentData)), mediaMatch));
 
 export const detect = (): PlatformDetection => platform();
 

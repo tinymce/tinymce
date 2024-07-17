@@ -1,6 +1,6 @@
 import { after, afterEach, before } from '@ephox/bedrock-client';
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Insert, Remove, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 
 import { Editor as EditorType } from '../../alien/EditorTypes';
 import * as Loader from '../../loader/Loader';
@@ -99,11 +99,7 @@ const bddSetupInShadowRoot = <T extends EditorType = EditorType>(settings: Recor
   let editorDiv: Optional<SugarElement<HTMLElement>>;
   let teardown: () => void = Fun.noop;
 
-  before(function () {
-    if (!SugarShadowDom.isSupported()) {
-      this.skip();
-    }
-
+  before(() => {
     const shadowHost = SugarElement.fromTag('div', document);
 
     Insert.append(SugarBody.body(), shadowHost);

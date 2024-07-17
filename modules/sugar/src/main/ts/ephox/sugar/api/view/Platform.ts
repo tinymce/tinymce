@@ -6,9 +6,8 @@ interface ChoiceOption<T> {
   value: () => T;
 }
 
-const platform = PlatformDetection.detect();
-const isTouch: () => boolean = platform.deviceType.isTouch;
-const isAndroid: () => boolean = platform.deviceType.isAndroid;
+const isTouch: () => boolean = () => PlatformDetection.detect().deviceType.isTouch();
+const isAndroid: () => boolean = () => PlatformDetection.detect().deviceType.isAndroid();
 
 // TODO: Work out what these values are supposed to be.
 const MINIMUM_LARGE_WIDTH = 620;
