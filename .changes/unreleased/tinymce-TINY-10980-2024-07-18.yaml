@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: '`uiEnabled` to read only mode, which allows toolbar and menu buttons to be enabled when the `readonly: true` property is specified in the button spec.'
+time: 2024-07-18T09:55:03.406708+08:00
+custom:
+  Issue: TINY-10980

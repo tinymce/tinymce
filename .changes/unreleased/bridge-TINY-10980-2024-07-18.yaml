@@ -1,0 +1,7 @@
+project: bridge
+kind: Added
+body: Optional `readonly` property that defaults to `false` to `CommonMenuItem`, `ToolbarButton`,
+  `ToolbarSplitButton` and `MenuButton`.
+time: 2024-07-18T09:55:03.406708+08:00
+custom:
+  Issue: TINY-10980
