@@ -44,7 +44,7 @@ export default (): void => {
     ed.mode.register('readonlySelectionMode', {
       activate: () => console.log('Readonly Selection: Activated'),
       deactivate: () => console.log('Readonly Selection: Deactivated'),
-      editorReadOnly: { selectionEnabled: true, cursorEnabled: true }
+      editorReadOnly: { selectionEnabled: true }
     });
     makeModeUI('readonlySelectionMode');
 
