@@ -1,14 +1,15 @@
-import { Cell, Fun, Obj, Type } from '@ephox/katamari';
+import { Cell, Fun } from '@ephox/katamari';
 
-import { registerMode, setMode } from '../mode/Mode';
+import { getEditorReadOnlyProperty, registerMode, setMode } from '../mode/Mode';
 import { isReadOnly, registerReadOnlyContentFilters, registerReadOnlySelectionBlockers } from '../mode/Readonly';
 import Editor from './Editor';
 
-export type ReadonlyProperty = Readonly<'uiEnabled' | 'selectionEnabled'>;
+export interface ReadOnlyProperty {
+  uiEnabled: boolean;
+  selectionEnabled: boolean;
+}
 
-export type EditorReadOnlyType = boolean | {
-  [K in ReadonlyProperty]?: boolean;
-};
+export type EditorReadOnlyType = boolean | ReadOnlyProperty;
 
 /**
  * TinyMCE Editor Mode API.
@@ -20,7 +21,7 @@ export interface EditorMode {
   /**
    * Checks if the editor content can be selected.
    *
-   * @method selectionIsReadOnly
+   * @method isSelectionEnabled
    * @return {boolean} true if the editor content area allows selection.
    */
   isSelectionEnabled: () => boolean;
@@ -28,13 +29,13 @@ export interface EditorMode {
   /**
    * Checks if the editor user interface is in a readonly state.
    *
-   * @method uiIsReadOnly
+   * @method isUiEnabled
    * @return {boolean} true if the editor user interface is enabled.
    */
   isUiEnabled: () => boolean;
 
   /**
-   * Checks if the editor is in a readonly state.
+   * Checks if the editor content is in a readonly state.
    *
    * @method isReadOnly
    * @return {Boolean} true if the editor is in a readonly state.
@@ -91,7 +92,6 @@ export interface EditorModeApi {
 }
 
 export const create = (editor: Editor): EditorMode => {
-  const activeMode = Cell('design');
   const availableModes = Cell<Record<string, EditorModeApi>>({
     design: {
       activate: Fun.noop,
@@ -104,21 +104,20 @@ export const create = (editor: Editor): EditorMode => {
       editorReadOnly: true
     }
   });
+  const activeMode = Cell<[ string, EditorModeApi ]>([ 'design', availableModes.get().design ]);
 
   registerReadOnlyContentFilters(editor);
   registerReadOnlySelectionBlockers(editor);
 
-  const getReadonlyFromProperty = (property: ReadonlyProperty) => {
-    const mode = availableModes.get()[activeMode.get()].editorReadOnly;
-    return Type.isBoolean(mode) ? false : Obj.get(mode, property).getOr(false);
-  };
-
   return {
-    isUiEnabled: () => getReadonlyFromProperty('uiEnabled'),
-    isSelectionEnabled: () => getReadonlyFromProperty('selectionEnabled'),
+    isUiEnabled: () => getEditorReadOnlyProperty(activeMode, 'uiEnabled'),
+    isSelectionEnabled: () => getEditorReadOnlyProperty(activeMode, 'selectionEnabled'),
     isReadOnly: () => isReadOnly(editor),
     set: (mode: string) => setMode(editor, availableModes.get(), activeMode, mode),
-    get: () => activeMode.get(),
+    get: () => {
+      const [ mode ] = activeMode.get();
+      return mode;
+    },
     register: (mode: string, api: EditorModeApi) => {
       availableModes.set(registerMode(availableModes.get(), mode, api));
     }

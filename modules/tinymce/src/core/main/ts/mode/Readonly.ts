@@ -1,9 +1,8 @@
-import { Arr, Obj, Optional, Strings, Type } from '@ephox/katamari';
+import { Arr, Optional, Strings, Type } from '@ephox/katamari';
 import { Attribute, Class, Compare, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import { EditorReadOnlyType } from '../api/Mode';
-import * as Options from '../api/Options';
 import VK from '../api/util/VK';
 import * as EditorFocus from '../focus/EditorFocus';
 
@@ -90,11 +89,9 @@ const toggleReadOnly = (editor: Editor, readOnlyMode: EditorReadOnlyType): void 
 
   toggleClass(body, 'mce-content-readonly', shouldSetReadOnly);
 
-  const shouldSetContentEditableTrue = () => Type.isBoolean(readOnlyMode) ? readOnlyMode : !Obj.get(readOnlyMode, 'selectionEnabled').getOr(true);
-
   if (shouldSetReadOnly) {
     setEditorReadonly(editor);
-    if (shouldSetContentEditableTrue()) {
+    if (Type.isBoolean(readOnlyMode) ? readOnlyMode : !readOnlyMode.selectionEnabled) {
       setContentEditable(body, false);
       switchOffContentEditableTrue(body);
     }
@@ -188,20 +185,7 @@ const registerReadOnlySelectionBlockers = (editor: Editor): void => {
     }
   });
 
-  const selectionModeCommands = Options.getSelectionModeAllowedCommands(editor);
-  editor.on('BeforeExecCommand', (e) => {
-    if (isReadOnly(editor) && editor.mode.isSelectionEnabled() && !Arr.contains(selectionModeCommands, e.command)) {
-      e.preventDefault();
-    }
-  });
-
-  editor.on('ShowCaret', (e) => {
-    if (isReadOnly(editor) && !editor.mode.isSelectionEnabled()) {
-      e.preventDefault();
-    }
-  });
-
-  editor.on('ObjectSelected', (e) => {
+  editor.on('ObjectSelected ShowCaret', (e) => {
     if (isReadOnly(editor) && !editor.mode.isSelectionEnabled()) {
       e.preventDefault();
     }
