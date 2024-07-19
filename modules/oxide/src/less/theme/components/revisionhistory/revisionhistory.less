@@ -4,7 +4,7 @@
 @revisionhistory-gap: 12px;
 @revisionhistory-border-radius: 6px;
 @revisionhistory-dark-mode: boolean(luma(@background-color) < 3);
-@revisionhistory-secondary-color: #f0f0f0;
+@revisionhistory-secondary-color: contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 15%));
 @revisionhistory-sidebar-background-color: if(@revisionhistory-dark-mode, #2b3b4e, @revisionhistory-secondary-color);   // Trial and error
 @revisionhistory-border-color: if(@revisionhistory-dark-mode, rgba(255, 255, 255, .15), @revisionhistory-secondary-color);
 @revisionhistory-text-color: @text-color;
@@ -60,7 +60,7 @@
     flex-direction: column;
     height: 100%;
     min-width: @revisionhistory-sidebar-minwidth;
-    width: 436px;
+    width: 316px;
 
     .tox-revisionhistory__sidebar-title {
       background-color: @background-color;
