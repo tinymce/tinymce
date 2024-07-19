@@ -398,6 +398,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
     paste(editor, { 'text/html': '<p>X</p>' }, [ 0, 0 ], 4, [ 0, 0 ], 4);
     TinyAssertions.assertContent(editor, '<p>test</p>');
     editor.off('copy', copyHandler);
+    setMode(editor, 'design');
   });
 
   it('TINY-10981: Setting caret before cef in editor while in readonly mode should render fake caret', () => {
