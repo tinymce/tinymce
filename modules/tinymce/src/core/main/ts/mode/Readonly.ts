@@ -174,7 +174,7 @@ const processReadonlyEvents = (editor: Editor, e: Event): void => {
 
 const registerReadOnlySelectionBlockers = (editor: Editor): void => {
   editor.on('beforeinput paste', (e) => {
-    if (isReadOnly(editor) && editor.mode.isSelectionEnabled()) {
+    if (isReadOnly(editor)) {
       e.preventDefault();
     }
   });
