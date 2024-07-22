@@ -552,7 +552,7 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
         TinyUiActions.keystroke(editor, Keys.escape());
       });
 
-      it('TINY-10980: Menu item should be enabled since setEnabled(true) in onSetup callback and toolbar spec readonly: true', async () => {
+      it('TINY-10980: Menu item should be enabled since setEnabled(true) in onSetup callback and toolbar spec allowedModes: [ design, readonly ]', async () => {
         const editor = hook.editor();
         editor.mode.set('design');
         TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
@@ -568,7 +568,7 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
         TinyUiActions.keystroke(editor, Keys.escape());
       });
 
-      it('TINY-10980: Menu item should be disabled since setEnabled(false) in onSetup callback and toolbar spec readonly: true', async () => {
+      it('TINY-10980: Menu item should be disabled since setEnabled(false) in onSetup callback and toolbar spec allowedModes: [ design, readonly ]', async () => {
         const editor = hook.editor();
         editor.mode.set('design');
         TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
@@ -588,7 +588,7 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
 
   Arr.each(setupButtonsScenario, (scenario) => {
     context(scenario.label, () => {
-      context('onSetup callback and toolbar button spec readonly property not present', () => {
+      context('onSetup callback and toolbar button spec allowedModes not present', () => {
         const hook = TinyHooks.bddSetup<Editor>({
           base_url: '/project/tinymce/js/tinymce',
           toolbar: 't1',
@@ -632,7 +632,7 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
         });
       });
 
-      context('onSetup callback with setEnabled(true) and toolbar button readonly: true', () => {
+      context('onSetup callback with setEnabled(true) and toolbar button allowedModes: [ design, readonly ]', () => {
         const hook = TinyHooks.bddSetup<Editor>({
           base_url: '/project/tinymce/js/tinymce',
           toolbar: 't3',
@@ -654,7 +654,7 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
         });
       });
 
-      context('onSetup callback with setEnabled(false) and toolbar button readonly: true', () => {
+      context('onSetup callback with setEnabled(false) and toolbar button allowedModes: [ design, readonly ]', () => {
         const hook = TinyHooks.bddSetup<Editor>({
           base_url: '/project/tinymce/js/tinymce',
           toolbar: 't4',
@@ -678,7 +678,7 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
         });
       });
 
-      context('onSetup callback not present and toolbar button readonly: true', () => {
+      context('onSetup callback not present and toolbar button allowedModes: [ design, readonly ]', () => {
         const hook = TinyHooks.bddSetup<Editor>({
           base_url: '/project/tinymce/js/tinymce',
           toolbar: 't5',
@@ -777,7 +777,7 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
 
     Arr.each(setupButtonsScenario, (scenario) => {
       context(scenario.label, () => {
-        context('onSetup callback and toolbar button spec readonly property not present', () => {
+        context('onSetup callback and toolbar button spec allowedModes not present', () => {
           const hook = TinyHooks.bddSetup<Editor>({
             base_url: '/project/tinymce/js/tinymce',
             toolbar: Arr.range(20, Fun.constant('t1')).join(' '),
@@ -861,7 +861,7 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
           });
         });
 
-        context('onSetup callback with setEnabled(true) and toolbar button readonly: true', () => {
+        context('onSetup callback with setEnabled(true) and toolbar button allowedModes: [ design, readonly ]', () => {
           const hook = TinyHooks.bddSetup<Editor>({
             base_url: '/project/tinymce/js/tinymce',
             toolbar: Arr.range(20, Fun.constant('t3')).join(' '),
@@ -903,7 +903,7 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
           });
         });
 
-        context('onSetup callback with setEnabled(false) and toolbar button readonly: true', () => {
+        context('onSetup callback with setEnabled(false) and toolbar button allowedModes: [ design, readonly ]', () => {
           const hook = TinyHooks.bddSetup<Editor>({
             base_url: '/project/tinymce/js/tinymce',
             toolbar: Arr.range(20, Fun.constant('t4')).join(' '),
@@ -945,7 +945,7 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
           });
         });
 
-        context('onSetup callback not present and toolbar button readonly: true', () => {
+        context('onSetup callback not present and toolbar button allowedModes: [ design, readonly ]', () => {
           const hook = TinyHooks.bddSetup<Editor>({
             base_url: '/project/tinymce/js/tinymce',
             toolbar: Arr.range(20, Fun.constant('t5')).join(' '),
