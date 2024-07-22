@@ -38,14 +38,14 @@ export default (): void => {
     ed.mode.register('readonlyUIMode', {
       activate: () => console.log('Readonly UI: Activated'),
       deactivate: () => console.log('Readonly UI: Deactivated'),
-      editorReadOnly: { uiEnabled: true }
+      editorReadOnly: { uiEnabled: true, selectionEnabled: false }
     });
     makeModeUI('readonlyUIMode');
 
     ed.mode.register('readonlySelectionMode', {
       activate: () => console.log('Readonly Selection: Activated'),
       deactivate: () => console.log('Readonly Selection: Deactivated'),
-      editorReadOnly: { selectionEnabled: true }
+      editorReadOnly: { selectionEnabled: true, uiEnabled: false }
     });
     makeModeUI('readonlySelectionMode');
 
