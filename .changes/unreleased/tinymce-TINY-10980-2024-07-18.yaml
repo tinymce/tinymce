@@ -1,6 +1,6 @@
 project: tinymce
 kind: Added
-body: new `uiEnabled` property of the read only mode API, which allows toolbar and menu buttons to be enabled when the new `allowedModes: string[]` property is specified in their button spec.
+body: 'New `uiEnabled` property of the read only mode API, which allows toolbar and menu buttons to be enabled when the new `allowedModes: string[]` property is specified in their button spec.'
 time: 2024-07-18T09:55:03.406708+08:00
 custom:
   Issue: TINY-10980
