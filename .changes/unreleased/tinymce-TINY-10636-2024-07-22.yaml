@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Updated Stylelint to the latest version
+time: 2024-07-22T13:19:09.33048+10:00
+custom:
+  Issue: TINY-10636
