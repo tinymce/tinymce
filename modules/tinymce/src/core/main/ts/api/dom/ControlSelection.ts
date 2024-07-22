@@ -432,7 +432,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
       .map((e) => e.dom)
       .filter((e) => {
         if (editor.mode.isReadOnly()) {
-          return editor.mode.isSelectionEnabled() && e.nodeName !== 'TABLE';
+          return editor.mode.isSelectionEnabled();
         }
         return dom.isEditable(e.parentElement) || e.nodeName === 'IMG' && dom.isEditable(e);
       })
