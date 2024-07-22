@@ -255,7 +255,7 @@ describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
     TinyAssertions.assertContent(editor, '');
   });
 
-  it('TINY-10891: Deleting image element should not be permitted in cursorEnabled mode', async () => {
+  it('TINY-10891: Deleting image element should not be permitted in selectionEnabled mode', async () => {
     const editor = hook.editor();
 
     setMode(editor, 'design');
