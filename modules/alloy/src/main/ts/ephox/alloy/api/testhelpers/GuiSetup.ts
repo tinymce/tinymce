@@ -167,9 +167,6 @@ const setupInShadowRoot = <T = string>(
   success: () => void,
   failure: (err: any, logs?: TestLogs) => void
 ): void => {
-  if (!SugarShadowDom.isSupported()) {
-    return success();
-  }
   const sh = SugarElement.fromTag('div');
   Insert.append(SugarBody.body(), sh);
   const sr = SugarElement.fromDom(sh.dom.attachShadow({ mode: 'open' }));
@@ -191,7 +188,7 @@ const bddSetupInShadowRoot = <T = string>(
       root: sr,
       teardown: () => Remove.remove(sh)
     };
-  }, createComponent, createGui, () => !SugarShadowDom.isSupported());
+  }, createComponent, createGui);
 };
 
 const setupInBodyAndShadowRoot = <T = string>(

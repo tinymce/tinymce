@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { SugarDocument, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { SugarDocument, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import StyleSheetLoader from 'tinymce/core/api/dom/StyleSheetLoader';
@@ -13,11 +13,7 @@ describe('browser.tinymce.core.dom.StyleSheetLoaderRegistry', () => {
     assert.strictEqual(ssl2, ssl1, 'Should be the same');
   });
 
-  it('same element gets same instance (ShadowRoot)', function () {
-    if (!SugarShadowDom.isSupported()) {
-      this.skip();
-    }
-
+  it('same element gets same instance (ShadowRoot)', () => {
     const div = document.createElement('div');
     const sr = div.attachShadow({ mode: 'open' });
     const innerDiv = document.createElement('div');

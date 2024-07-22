@@ -1,6 +1,0 @@
-project: tinymce
-kind: Changed
-body: Replaced tiny branding logo with `Build with TinyMCE` text and logo.
-time: 2024-06-05T10:04:11.604368+08:00
-custom:
-  Issue: TINY-11001

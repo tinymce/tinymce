@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Deleting in a `div` with preceeding `br` elements would sometimes throw errors.
-time: 2024-05-07T11:18:49.114387+02:00
-custom:
-  Issue: TINY-10840

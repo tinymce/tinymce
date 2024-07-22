@@ -1,5 +1,5 @@
 import { Arr, Fun, Obj, Optional, Strings, Type, Unicode } from '@ephox/katamari';
-import { Attribute, Insert, Remove, SugarElement, SugarNode } from '@ephox/sugar';
+import { Attribute, Insert, PredicateFind, Remove, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Editor from '../api/Editor';
@@ -8,6 +8,7 @@ import * as DeleteElement from '../delete/DeleteElement';
 import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as SplitRange from '../selection/SplitRange';
+import { isWhiteSpace } from '../text/CharType';
 import * as Zwsp from '../text/Zwsp';
 import * as ExpandRange from './ExpandRange';
 import { CARET_ID, getParentCaretContainer, isCaretNode } from './FormatContainer';
@@ -165,6 +166,37 @@ const cleanFormatNode = (editor: Editor, caretContainer: Node, formatNode: Eleme
   }
 };
 
+const normalizeNbsps = (node: SugarElement<Text>) => SugarText.set(node, SugarText.get(node).replace(new RegExp(`${Unicode.nbsp}$`), ' '));
+
+const normalizeNbspsBetween = (editor: Editor, caretContainer: Node | null) => {
+  const handler = () => {
+    if (caretContainer !== null && !editor.dom.isEmpty(caretContainer)) {
+      Traverse.prevSibling(SugarElement.fromDom(caretContainer)).each((node) => {
+        if (SugarNode.isText(node)) {
+          normalizeNbsps(node);
+        } else {
+          PredicateFind.descendant(node, (e) => SugarNode.isText(e)).each((textNode) => {
+            if (SugarNode.isText(textNode)) {
+              normalizeNbsps(textNode);
+            }
+          });
+        }
+      });
+    }
+  };
+  editor.once('input', (e) => {
+    if (e.data && !isWhiteSpace(e.data)) {
+      if (!e.isComposing) {
+        handler();
+      } else {
+        editor.once('compositionend', () => {
+          handler();
+        });
+      }
+    }
+  });
+};
+
 const applyCaretFormat = (editor: Editor, name: string, vars?: FormatVars): void => {
   let caretContainer: Node | null;
   const selection = editor.selection;
@@ -210,6 +242,8 @@ const applyCaretFormat = (editor: Editor, name: string, vars?: FormatVars): void
 
       selectionRng.insertNode(caretContainer);
       offset = 1;
+
+      normalizeNbspsBetween(editor, caretContainer);
 
       editor.formatter.apply(name, vars, caretContainer);
     } else {
@@ -296,6 +330,8 @@ const removeCaretFormat = (editor: Editor, name: string, vars?: FormatVars, simi
       removeCaretContainerNode(editor, caretContainer, Type.isNonNullable(caretContainer));
     }
     selection.setCursorLocation(caretTextNode, 1);
+
+    normalizeNbspsBetween(editor, newCaretContainer);
 
     if (dom.isEmpty(formatNode)) {
       dom.remove(formatNode);

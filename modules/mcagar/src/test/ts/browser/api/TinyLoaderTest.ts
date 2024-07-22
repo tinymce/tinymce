@@ -1,6 +1,5 @@
 import { Assertions, Logger, Pipeline, Step, TestLogs } from '@ephox/agar';
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { SugarShadowDom } from '@ephox/sugar';
 
 import { Editor } from 'ephox/mcagar/alien/EditorTypes';
 import * as TinyLoader from 'ephox/mcagar/api/pipeline/TinyLoader';
@@ -49,14 +48,8 @@ UnitTest.asynctest('TinyLoader.setupInBodyAndShadowRoot passes logs through', (s
     base_url: '/project/tinymce/js/tinymce'
   }, (v, logs) => {
     try {
-      if (SugarShadowDom.isSupported()) {
-        Assert.eq('Value should come from second call', 'call2', v);
-        Assert.eq('Logs should be concatenated', TestLogs.addLogEntry(TestLogs.single('log1'), 'log2'), logs);
-      } else {
-        // if the browser isn't supported, the "shadow dom" test won't be run, so we only get logs from the "body" test
-        Assert.eq('Value should come from first call', 'call1', v);
-        Assert.eq('Logs should just be from the first call', TestLogs.single('log1'), logs);
-      }
+      Assert.eq('Value should come from second call', 'call2', v);
+      Assert.eq('Logs should be concatenated', TestLogs.addLogEntry(TestLogs.single('log1'), 'log2'), logs);
       success();
     } catch (e: any) {
       failure(e);

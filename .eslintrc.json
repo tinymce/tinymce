@@ -1,6 +1,9 @@
 {
   "root": true,
-  "extends": "plugin:@tinymce/editor",
+  "extends": [
+    "plugin:@tinymce/editor",
+    "plugin:security-node/recommended"
+  ],
   "parserOptions": {
     "sourceType": "module",
     "project": [
@@ -8,7 +11,10 @@
       "modules/*/tsconfig.json"
     ]
   },
-  "plugins": ["only-warn"],
+  "plugins": [
+    "only-warn",
+    "security-node"
+  ],
   "rules": {
     "@typescript-eslint/camelcase": "off", // leave off
     "@typescript-eslint/member-ordering": "off",
@@ -24,6 +30,12 @@
     "one-var": "off",
     "prefer-rest-params": "off",
     "prefer-spread": "off",
-    "max-len": ["warn", 260]
+    "max-len": [
+      "warn",
+      260
+    ],
+    "security-node/non-literal-reg-expr": "off",
+    "security-node/detect-crlf": "off",
+    "security-node/detect-possible-timing-attacks": "off"
   }
 }

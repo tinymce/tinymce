@@ -31,6 +31,7 @@ const checkIsObject = check(Type.isObject, 'isObject');
 const checkIsArray = check(Type.isArray, 'isArray');
 const checkIsFunction = check(Type.isFunction, 'isFunction');
 const checkIsNumber = check(Type.isNumber, 'isNumber');
+const checkIsPromiseLike = check(Type.isPromiseLike, 'isPromiseLike');
 
 describe('atomic.katamari.api.struct.TypeTest', () => {
   it('isNull', () => {
@@ -129,6 +130,24 @@ describe('atomic.katamari.api.struct.TypeTest', () => {
     checkIsFunction(true, noop);
     checkIsFunction(false, [ 1, 3, 4, 5 ]);
     checkIsFunction(false, 1);
+  });
+
+  it('isPromiseLike', () => {
+    checkIsPromiseLike(false, null);
+    checkIsPromiseLike(false, undefined);
+    checkIsPromiseLike(false, true);
+    checkIsPromiseLike(false, false);
+    checkIsPromiseLike(false, 'ball');
+    checkIsPromiseLike(false, {});
+    checkIsPromiseLike(false, objectString);
+    checkIsPromiseLike(false, []);
+    checkIsPromiseLike(false, noop);
+    checkIsPromiseLike(false, [ 1, 3, 4, 5 ]);
+    checkIsPromiseLike(false, 1);
+    checkIsPromiseLike(true, new Promise(noop));
+    checkIsPromiseLike(false, { then: noop });
+    checkIsPromiseLike(false, { catch: noop });
+    checkIsPromiseLike(true, { then: noop, catch: noop });
   });
 
   it('isNumber', () => {

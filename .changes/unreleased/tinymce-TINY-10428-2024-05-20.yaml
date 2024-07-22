@@ -1,6 +1,0 @@
-project: tinymce
-kind: Improved
-body: 'Dialog slider components now emit an onChange event when using arrow keys.'
-time: 2024-05-20T16:47:55.820758+02:00
-custom:
-  Issue: TINY-10428

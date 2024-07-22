@@ -1,5 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { Arr, Fun, Result } from '@ephox/katamari';
+import { Arr, Fun, Num, Result } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import { SimpleGenerators } from 'ephox/snooker/api/Generators';
@@ -53,7 +53,7 @@ UnitTest.test('FitmentIVTest', () => {
     ));
 
   const rand = (min: number, max: number) =>
-    Math.floor(Math.random() * (max - min + 1)) + min;
+    Math.floor(Num.random() * (max - min + 1)) + min;
 
   const inVariantRunner = <T extends InvTest> (label: string, mvTest: () => T, timelimit: number): number => {
     let times = 0;

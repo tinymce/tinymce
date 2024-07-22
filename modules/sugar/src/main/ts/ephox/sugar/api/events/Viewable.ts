@@ -10,14 +10,7 @@ import * as Visibility from '../view/Visibility';
  *
  * It's a bit harder to manage, though, because visibility is a one-shot listener.
  */
-
-const poll = (element: SugarElement<HTMLElement>, f: () => void): () => void => {
-  const poller = setInterval(f, 500);
-
-  return () => clearInterval(poller);
-};
-
-const mutate = (element: SugarElement<HTMLElement>, f: () => void): () => void => {
+const observe = (element: SugarElement<HTMLElement>, f: () => void): () => void => {
   const observer: MutationObserver = new window.MutationObserver(f);
 
   const unbindMutate = () => observer.disconnect();
@@ -28,9 +21,6 @@ const mutate = (element: SugarElement<HTMLElement>, f: () => void): () => void =
 
   return unbindMutate;
 };
-
-// IE11 and above, not using numerosity so we can poll on IE10
-const wait = window.MutationObserver !== undefined && window.MutationObserver !== null ? mutate : poll;
 
 const onShow = (element: SugarElement<HTMLElement>, f: () => void): () => void => {
   if (Visibility.isVisible(element)) {
@@ -45,7 +35,7 @@ const onShow = (element: SugarElement<HTMLElement>, f: () => void): () => void =
       }
     }, 100);
 
-    const unbind = wait(element, throttler.throttle);
+    const unbind = observe(element, throttler.throttle);
 
     return unbind;
   }

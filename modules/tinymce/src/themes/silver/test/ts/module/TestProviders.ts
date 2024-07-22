@@ -16,7 +16,12 @@ export default {
   getOption: <T>(name: string): T | undefined => defaultOptions[name],
   tooltips: {
     getConfig: (): TooltippingTypes.TooltippingConfigSpec => {
-      return { } as any;
+      return {
+        lazySink: {},
+        tooltipDom: {
+          tag: 'div'
+        }
+      } as any;
     },
     getComponents: () => {
       return [] as any;

@@ -11,7 +11,13 @@ const setup = (editor: Editor): void => {
 
   // This is a thunk so that they reflect changes in the underlying options each time they are requested.
   const getPatternSet = () => Pattern.createPatternSet(
-    Options.getTextPatterns(editor),
+    Options.getTextPatterns(editor)
+      .filter((pattern) => {
+        if (pattern.type === 'inline-command' || pattern.type === 'block-command') {
+          return editor.queryCommandSupported(pattern.cmd);
+        }
+        return true;
+      }),
     Options.getTextPatternsLookup(editor)
   );
 

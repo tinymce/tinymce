@@ -35,9 +35,8 @@ export const MouseSelection = (bridge: WindowBridge, container: SugarElement<Nod
             const isNonEditableCell = ContentEditable.getRaw(singleCell) === 'false';
             const isCellClosestContentEditable = Optionals.is(ContentEditable.closest(event.target), singleCell, Compare.eq);
             if (isNonEditableCell && isCellClosestContentEditable) {
+              // Not selecting the contents or the node of the actual cell as shown below, keeping the selection on the offscreen element.
               annotations.selectRange(container, boxes, singleCell, singleCell);
-              // TODO: TINY-7874 This is purely a workaround until the offscreen selection issues are solved
-              bridge.selectContents(singleCell);
             }
           } else if (boxes.length > 1) {
             // Wait until we have more than one, otherwise you can't do text selection inside a cell.
