@@ -1,6 +1,6 @@
 project: tinymce
 kind: Changed
-body: Removed Gulp dependency in Oxide and oxide-icons-default modules and replaced with Grunt.
+body: Removed Gulp dependency in `Oxide` and `oxide-icons-default` modules and replaced with Grunt.
 time: 2024-07-22T13:18:34.542801+10:00
 custom:
   Issue: TINY-10116
