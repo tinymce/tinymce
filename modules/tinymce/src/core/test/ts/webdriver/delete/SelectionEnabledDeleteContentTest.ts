@@ -182,7 +182,7 @@ describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
     TinyAssertions.assertContent(editor, '');
   });
 
-  it('TINY-10891: Deleting table content should not be permitted in cusorEnabled mode', async () => {
+  it('TINY-10891: Deleting table content should not be permitted in selectionEnabled mode', async () => {
     const editor = hook.editor();
     setMode(editor, 'design');
     editor.setContent(tableHtml);
