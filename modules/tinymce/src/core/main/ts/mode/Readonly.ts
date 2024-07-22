@@ -179,6 +179,8 @@ const registerReadOnlySelectionBlockers = (editor: Editor): void => {
     }
   });
 
+  // When the editor is in readonly && selectionEnabled mode, blocking setContent/insertContent
+  // This is required to prevent content to be modified as `contenteditable="false" has been removed in this mode
   editor.on('BeforeSetContent', (e) => {
     if (isReadOnly(editor) && editor.mode.isSelectionEnabled() && !e.initial) {
       e.preventDefault();
