@@ -18,7 +18,7 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
     indent: false,
     content_style: 'body { margin: 16px; }',
     base_url: '/project/tinymce/js/tinymce'
-  }, []);
+  }, [], true);
 
   const getScrollTop = (editor: Editor) => Scroll.get(TinyDom.document(editor)).top;
 
