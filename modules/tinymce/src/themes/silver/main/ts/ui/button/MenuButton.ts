@@ -27,7 +27,7 @@ interface StoredMenuButton extends Omit<Dialog.DialogFooterMenuButton, 'items'> 
 const getMenuButtonApi = (spec: MenuButtonSpec, backstage: UiFactoryBackstage) => (component: AlloyComponent): Toolbar.ToolbarMenuButtonInstanceApi => ({
   isEnabled: () => !Disabling.isDisabled(component),
   setEnabled: (state: boolean) => {
-    if (!backstage.shared.providers.isDisabled() || spec.readonly && backstage.shared.providers.isReadOnlyEnableUi()) {
+    if (backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedModes)) {
       Disabling.set(component, !state, true);
     }
   },
@@ -92,10 +92,10 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
     columns: 1,
     presets: 'normal',
     classes: [],
-    readonly: spec.readonly,
     dropdownBehaviours: [
       ...(tabstopping ? [ Tabstopping.config({ }) ] : [])
-    ]
+    ],
+    allowedModes: spec.allowedModes
   },
   prefix,
   backstage.shared,

@@ -23,7 +23,7 @@ const renderToggleMenuItem = (
     isActive: () => Toggling.isOn(component),
     isEnabled: () => !Disabling.isDisabled(component),
     setEnabled: (state: boolean) => {
-      if (!providersBackstage.isDisabled() || spec.readonly && providersBackstage.isReadOnlyEnableUi()) {
+      if (providersBackstage.isButtonAllowedInCurrentMode(spec.allowedModes)) {
         Disabling.set(component, !state);
       }
     }
@@ -45,7 +45,7 @@ const renderToggleMenuItem = (
 
   return Merger.deepMerge(
     renderCommonItem({
-      readonly: spec.readonly,
+      allowedModes: spec.allowedModes,
       data: buildData(spec),
       enabled: spec.enabled,
       getApi,

@@ -40,6 +40,309 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
 
   const assertButtonNativelyEnabled = (selector: string) => UiFinder.exists(SugarBody.body(), `[data-mce-name="${selector}"]:not([disabled="disabled"])`);
 
+  const setupButtonsScenario = [
+    {
+      label: 'Normal toolbar button',
+      buttonSetupOne: (ed: Editor) => {
+        ed.ui.registry.addButton('t1', {
+          icon: 'italic',
+          text: 'Test Menu Item 1',
+          onAction: Fun.noop
+        });
+      },
+      buttonSetupTwo: (ed: Editor) => {
+        ed.ui.registry.addButton('t2', {
+          icon: 'italic',
+          text: 'Test Menu Item 2',
+          onAction: Fun.noop,
+          onSetup: (api) => {
+            api.setEnabled(true);
+            return Fun.noop;
+          }
+        });
+      },
+      buttonSetupThree: (ed: Editor) => {
+        ed.ui.registry.addButton('t3', {
+          icon: 'italic',
+          text: 'Test Menu Item 3',
+          allowedModes: [ 'design', 'readonly' ],
+          onAction: Fun.noop,
+          onSetup: (api) => {
+            api.setEnabled(true);
+            return Fun.noop;
+          }
+        });
+      },
+      buttonSetupFour: (ed: Editor) => {
+        ed.ui.registry.addButton('t4', {
+          icon: 'italic',
+          text: 'Test Menu Item 4',
+          allowedModes: [ 'design', 'readonly' ],
+          onAction: Fun.noop,
+          onSetup: (api) => {
+            api.setEnabled(false);
+            return Fun.noop;
+          }
+        });
+      },
+      buttonSetupFive: (ed: Editor) => {
+        ed.ui.registry.addButton('t5', {
+          icon: 'italic',
+          text: 'Test Menu Item 5',
+          allowedModes: [ 'design', 'readonly' ],
+          onAction: Fun.noop,
+        });
+      },
+      assertButtonEnabled,
+      assertButtonDisabled
+    },
+    {
+      label: 'Toggle toolbar button',
+      buttonSetupOne: (ed: Editor) => {
+        ed.ui.registry.addToggleButton('t1', {
+          icon: 'italic',
+          text: 'Test Menu Item 1',
+          onAction: Fun.noop
+        });
+      },
+      buttonSetupTwo: (ed: Editor) => {
+        ed.ui.registry.addToggleButton('t2', {
+          icon: 'italic',
+          text: 'Test Menu Item 2',
+          onAction: Fun.noop,
+          onSetup: (api) => {
+            api.setEnabled(true);
+            return Fun.noop;
+          }
+        });
+      },
+      buttonSetupThree: (ed: Editor) => {
+        ed.ui.registry.addToggleButton('t3', {
+          icon: 'italic',
+          text: 'Test Menu Item 3',
+          allowedModes: [ 'design', 'readonly' ],
+          onAction: Fun.noop,
+          onSetup: (api) => {
+            api.setEnabled(true);
+            return Fun.noop;
+          }
+        });
+      },
+      buttonSetupFour: (ed: Editor) => {
+        ed.ui.registry.addToggleButton('t4', {
+          icon: 'italic',
+          text: 'Test Menu Item 4',
+          allowedModes: [ 'design', 'readonly' ],
+          onAction: Fun.noop,
+          onSetup: (api) => {
+            api.setEnabled(false);
+            return Fun.noop;
+          }
+        });
+      },
+      buttonSetupFive: (ed: Editor) => {
+        ed.ui.registry.addToggleButton('t5', {
+          icon: 'italic',
+          text: 'Test Menu Item 5',
+          allowedModes: [ 'design', 'readonly' ],
+          onAction: Fun.noop,
+        });
+      },
+      assertButtonEnabled,
+      assertButtonDisabled
+    },
+    {
+      label: 'Split toolbar button',
+      buttonSetupOne: (ed: Editor) => {
+        ed.ui.registry.addSplitButton('t1', {
+          icon: 'italic',
+          text: 'Test Menu Item 1',
+          onAction: Fun.noop,
+          fetch: (success) => {
+            success([
+              {
+                text: 'Choice item 1',
+                type: 'choiceitem',
+              }
+            ]);
+          },
+          onItemAction: Fun.noop
+        });
+      },
+      buttonSetupTwo: (ed: Editor) => {
+        ed.ui.registry.addSplitButton('t2', {
+          icon: 'italic',
+          text: 'Test Menu Item 2',
+          onAction: Fun.noop,
+          onItemAction: Fun.noop,
+          fetch: (success) => {
+            success([
+              {
+                text: 'Choice item 1',
+                type: 'choiceitem',
+              }
+            ]);
+          },
+          onSetup: (api) => {
+            api.setEnabled(true);
+            return Fun.noop;
+          }
+        });
+      },
+      buttonSetupThree: (ed: Editor) => {
+        ed.ui.registry.addSplitButton('t3', {
+          icon: 'italic',
+          text: 'Test Menu Item 3',
+          allowedModes: [ 'design', 'readonly' ],
+          onAction: Fun.noop,
+          onItemAction: Fun.noop,
+          fetch: (success) => {
+            success([
+              {
+                text: 'Choice item 1',
+                type: 'choiceitem',
+              }
+            ]);
+          },
+          onSetup: (api) => {
+            api.setEnabled(true);
+            return Fun.noop;
+          }
+        });
+      },
+      buttonSetupFour: (ed: Editor) => {
+        ed.ui.registry.addSplitButton('t4', {
+          icon: 'italic',
+          text: 'Test Menu Item 4',
+          allowedModes: [ 'design', 'readonly' ],
+          onAction: Fun.noop,
+          onSetup: (api) => {
+            api.setEnabled(false);
+            return Fun.noop;
+          },
+          onItemAction: Fun.noop,
+          fetch: (success) => {
+            success([
+              {
+                text: 'Choice item 1',
+                type: 'choiceitem',
+              }
+            ]);
+          },
+        });
+      },
+      buttonSetupFive: (ed: Editor) => {
+        ed.ui.registry.addSplitButton('t5', {
+          icon: 'italic',
+          text: 'Test Menu Item 5',
+          allowedModes: [ 'design', 'readonly' ],
+          onAction: Fun.noop,
+          onItemAction: Fun.noop,
+          fetch: (success) => {
+            success([
+              {
+                text: 'Choice item 1',
+                type: 'choiceitem',
+              }
+            ]);
+          },
+        });
+      },
+      assertButtonEnabled,
+      assertButtonDisabled
+    },
+    {
+      label: 'Menu toolbar button',
+      buttonSetupOne: (ed: Editor) => {
+        ed.ui.registry.addMenuButton('t1', {
+          icon: 'italic',
+          text: 'Test Menu Item 1',
+          fetch: (success) => {
+            success([
+              {
+                text: 'Choice item 1',
+                type: 'menuitem',
+              }
+            ]);
+          },
+        });
+      },
+      buttonSetupTwo: (ed: Editor) => {
+        ed.ui.registry.addMenuButton('t2', {
+          icon: 'italic',
+          text: 'Test Menu Item 2',
+          fetch: (success) => {
+            success([
+              {
+                text: 'Choice item 1',
+                type: 'menuitem',
+              }
+            ]);
+          },
+          onSetup: (api) => {
+            api.setEnabled(true);
+            return Fun.noop;
+          }
+        });
+      },
+      buttonSetupThree: (ed: Editor) => {
+        ed.ui.registry.addMenuButton('t3', {
+          icon: 'italic',
+          text: 'Test Menu Item 3',
+          allowedModes: [ 'design', 'readonly' ],
+          fetch: (success) => {
+            success([
+              {
+                text: 'Choice item 1',
+                type: 'menuitem',
+              }
+            ]);
+          },
+          onSetup: (api) => {
+            api.setEnabled(true);
+            return Fun.noop;
+          }
+        });
+      },
+      buttonSetupFour: (ed: Editor) => {
+        ed.ui.registry.addMenuButton('t4', {
+          icon: 'italic',
+          text: 'Test Menu Item 4',
+          allowedModes: [ 'design', 'readonly' ],
+          onSetup: (api) => {
+            api.setEnabled(false);
+            return Fun.noop;
+          },
+          fetch: (success) => {
+            success([
+              {
+                text: 'Choice item 1',
+                type: 'menuitem',
+              }
+            ]);
+          },
+        });
+      },
+      buttonSetupFive: (ed: Editor) => {
+        ed.ui.registry.addMenuButton('t5', {
+          icon: 'italic',
+          text: 'Test Menu Item 5',
+          allowedModes: [ 'design', 'readonly' ],
+          fetch: (success) => {
+            success([
+              {
+                text: 'Choice item 1',
+                type: 'menuitem',
+              }
+            ]);
+          },
+        });
+      },
+      assertButtonEnabled: assertButtonNativelyEnabled,
+      assertButtonDisabled: assertButtonNativelyDisabled
+    }
+  ];
+
   context('Menubar', () => {
     const hook = TinyHooks.bddSetup<Editor>({
       base_url: '/project/tinymce/js/tinymce',
@@ -104,8 +407,8 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
             api.setEnabled(true);
             return Fun.noop;
           },
+          allowedModes: [ 'design', 'readonly' ],
           shortcut: 'Meta+M',
-          readonly: true,
           onAction: Fun.noop
         });
 
@@ -116,8 +419,8 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
             api.setEnabled(false);
             return Fun.noop;
           },
+          allowedModes: [ 'design', 'readonly' ],
           shortcut: 'Meta+M',
-          readonly: true,
           onAction: Fun.noop
         });
       },
@@ -154,7 +457,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
             return Fun.noop;
           },
           shortcut: 'Meta+M',
-          readonly: true,
+          allowedModes: [ 'design', 'readonly' ],
           getSubmenuItems: Fun.constant('test'),
         });
 
@@ -166,7 +469,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
             return Fun.noop;
           },
           shortcut: 'Meta+M',
-          readonly: true,
+          allowedModes: [ 'design', 'readonly' ],
           getSubmenuItems: Fun.constant('test'),
         });
       },
@@ -201,20 +504,20 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
             api.setEnabled(true);
             return Fun.noop;
           },
+          allowedModes: [ 'design', 'readonly' ],
           shortcut: 'Meta+M',
-          readonly: true,
           onAction: Fun.noop
         });
 
         ed.ui.registry.addToggleMenuItem('x4', {
           icon: 'italic',
           text: 'Test Menu Item 4',
+          allowedModes: [ 'design', 'readonly' ],
           onSetup: (api) => {
             api.setEnabled(false);
             return Fun.noop;
           },
           shortcut: 'Meta+M',
-          readonly: true,
           onAction: Fun.noop
         });
       },
@@ -345,212 +648,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
     });
   });
 
-  Arr.each([
-    {
-      label: 'Normal toolbar button',
-      buttonSetupOne: (ed: Editor) => {
-        ed.ui.registry.addButton('t1', {
-          icon: 'italic',
-          text: 'Test Menu Item 1',
-          onAction: Fun.noop
-        });
-      },
-      buttonSetupTwo: (ed: Editor) => {
-        ed.ui.registry.addButton('t2', {
-          icon: 'italic',
-          text: 'Test Menu Item 2',
-          onAction: Fun.noop,
-          onSetup: (api) => {
-            api.setEnabled(true);
-            return Fun.noop;
-          }
-        });
-      },
-      buttonSetupThree: (ed: Editor) => {
-        ed.ui.registry.addButton('t3', {
-          icon: 'italic',
-          text: 'Test Menu Item 3',
-          readonly: true,
-          onAction: Fun.noop,
-          onSetup: (api) => {
-            api.setEnabled(true);
-            return Fun.noop;
-          }
-        });
-      },
-      buttonSetupFour: (ed: Editor) => {
-        ed.ui.registry.addButton('t4', {
-          icon: 'italic',
-          text: 'Test Menu Item 4',
-          readonly: true,
-          onAction: Fun.noop,
-          onSetup: (api) => {
-            api.setEnabled(false);
-            return Fun.noop;
-          }
-        });
-      },
-      buttonSetupFive: (ed: Editor) => {
-        ed.ui.registry.addButton('t4', {
-          icon: 'italic',
-          text: 'Test Menu Item 5',
-          readonly: true,
-          onAction: Fun.noop,
-        });
-      }
-    },
-    {
-      label: 'Toggle toolbar button',
-      buttonSetupOne: (ed: Editor) => {
-        ed.ui.registry.addToggleButton('t1', {
-          icon: 'italic',
-          text: 'Test Menu Item 1',
-          onAction: Fun.noop
-        });
-      },
-      buttonSetupTwo: (ed: Editor) => {
-        ed.ui.registry.addToggleButton('t2', {
-          icon: 'italic',
-          text: 'Test Menu Item 2',
-          onAction: Fun.noop,
-          onSetup: (api) => {
-            api.setEnabled(true);
-            return Fun.noop;
-          }
-        });
-      },
-      buttonSetupThree: (ed: Editor) => {
-        ed.ui.registry.addToggleButton('t3', {
-          icon: 'italic',
-          text: 'Test Menu Item 3',
-          readonly: true,
-          onAction: Fun.noop,
-          onSetup: (api) => {
-            api.setEnabled(true);
-            return Fun.noop;
-          }
-        });
-      },
-      buttonSetupFour: (ed: Editor) => {
-        ed.ui.registry.addToggleButton('t4', {
-          icon: 'italic',
-          text: 'Test Menu Item 4',
-          readonly: true,
-          onAction: Fun.noop,
-          onSetup: (api) => {
-            api.setEnabled(false);
-            return Fun.noop;
-          }
-        });
-      },
-      buttonSetupFive: (ed: Editor) => {
-        ed.ui.registry.addToggleButton('t5', {
-          icon: 'italic',
-          text: 'Test Menu Item 5',
-          readonly: true,
-          onAction: Fun.noop,
-        });
-      }
-    },
-    {
-      label: 'Split toolbar button',
-      buttonSetupOne: (ed: Editor) => {
-        ed.ui.registry.addSplitButton('t1', {
-          icon: 'italic',
-          text: 'Test Menu Item 1',
-          onAction: Fun.noop,
-          fetch: (success) => {
-            success([
-              {
-                text: 'Choice item 1',
-                type: 'choiceitem',
-              }
-            ]);
-          },
-          onItemAction: Fun.noop
-        });
-      },
-      buttonSetupTwo: (ed: Editor) => {
-        ed.ui.registry.addSplitButton('t2', {
-          icon: 'italic',
-          text: 'Test Menu Item 2',
-          onAction: Fun.noop,
-          onItemAction: Fun.noop,
-          fetch: (success) => {
-            success([
-              {
-                text: 'Choice item 1',
-                type: 'choiceitem',
-              }
-            ]);
-          },
-          onSetup: (api) => {
-            api.setEnabled(true);
-            return Fun.noop;
-          }
-        });
-      },
-      buttonSetupThree: (ed: Editor) => {
-        ed.ui.registry.addSplitButton('t3', {
-          icon: 'italic',
-          text: 'Test Menu Item 3',
-          readonly: true,
-          onAction: Fun.noop,
-          onItemAction: Fun.noop,
-          fetch: (success) => {
-            success([
-              {
-                text: 'Choice item 1',
-                type: 'choiceitem',
-              }
-            ]);
-          },
-          onSetup: (api) => {
-            api.setEnabled(true);
-            return Fun.noop;
-          }
-        });
-      },
-      buttonSetupFour: (ed: Editor) => {
-        ed.ui.registry.addSplitButton('t4', {
-          icon: 'italic',
-          text: 'Test Menu Item 4',
-          readonly: true,
-          onAction: Fun.noop,
-          onSetup: (api) => {
-            api.setEnabled(false);
-            return Fun.noop;
-          },
-          onItemAction: Fun.noop,
-          fetch: (success) => {
-            success([
-              {
-                text: 'Choice item 1',
-                type: 'choiceitem',
-              }
-            ]);
-          },
-        });
-      },
-      buttonSetupFive: (ed: Editor) => {
-        ed.ui.registry.addSplitButton('t5', {
-          icon: 'italic',
-          text: 'Test Menu Item 5',
-          readonly: true,
-          onAction: Fun.noop,
-          onItemAction: Fun.noop,
-          fetch: (success) => {
-            success([
-              {
-                text: 'Choice item 1',
-                type: 'choiceitem',
-              }
-            ]);
-          },
-        });
-      }
-    },
-  ], (scenario) => {
+  Arr.each(setupButtonsScenario, (scenario) => {
     context(scenario.label, () => {
       context('onSetup callback and toolbar button spec readonly property not present', () => {
         const hook = TinyHooks.bddSetup<Editor>({
@@ -566,19 +664,19 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         it(`TINY-10980: Toolbar ${scenario.label} should be disabled in uiEnabled mode`, async () => {
           const editor = hook.editor();
           editor.mode.set('design');
-          assertButtonEnabled('t1');
+          scenario.assertButtonEnabled('t1');
 
           editor.mode.set('testmode');
-          assertButtonDisabled('t1');
+          scenario.assertButtonDisabled('t1');
 
           editor.mode.set('readonly');
-          assertButtonDisabled('t1');
+          scenario.assertButtonDisabled('t1');
 
           editor.mode.set('testmode');
-          assertButtonDisabled('t1');
+          scenario.assertButtonDisabled('t1');
 
           editor.mode.set('design');
-          assertButtonEnabled('t1');
+          scenario.assertButtonEnabled('t1');
         });
       });
 
@@ -596,19 +694,19 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         it(`TINY-10980: Toolbar ${scenario.label} should not be enabled in uiEnabled mode`, async () => {
           const editor = hook.editor();
           editor.mode.set('design');
-          assertButtonEnabled('t2');
+          scenario.assertButtonEnabled('t2');
 
           editor.mode.set('testmode');
-          assertButtonDisabled('t2');
+          scenario.assertButtonDisabled('t2');
 
           editor.mode.set('readonly');
-          assertButtonDisabled('t2');
+          scenario.assertButtonDisabled('t2');
 
           editor.mode.set('testmode');
-          assertButtonDisabled('t2');
+          scenario.assertButtonDisabled('t2');
 
           editor.mode.set('design');
-          assertButtonEnabled('t2');
+          scenario.assertButtonEnabled('t2');
         });
       });
 
@@ -626,20 +724,19 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         it(`TINY-10980: Toolbar ${scenario.label} should be enabled in uiEnabled mode`, async () => {
           const editor = hook.editor();
           editor.mode.set('design');
-          assertButtonEnabled('t3');
-          UiFinder.exists(SugarBody.body(), '[data-mce-name="t3"][aria-disabled="false"]');
+          scenario.assertButtonEnabled('t3');
 
           editor.mode.set('testmode');
-          assertButtonEnabled('t3');
+          scenario.assertButtonEnabled('t3');
 
           editor.mode.set('readonly');
-          assertButtonDisabled('t3');
+          scenario.assertButtonDisabled('t3');
 
           editor.mode.set('testmode');
-          assertButtonEnabled('t3');
+          scenario.assertButtonEnabled('t3');
 
           editor.mode.set('design');
-          assertButtonEnabled('t3');
+          scenario.assertButtonEnabled('t3');
         });
       });
 
@@ -658,20 +755,20 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         it(`TINY-10980: Toolbar ${scenario.label} should be disabled in uiEnabled mode`, async () => {
           const editor = hook.editor();
           editor.mode.set('design');
-          assertButtonDisabled('t4');
+          scenario.assertButtonDisabled('t4');
 
           editor.mode.set('testmode');
-          assertButtonDisabled('t4');
+          scenario.assertButtonDisabled('t4');
 
           editor.mode.set('readonly');
-          assertButtonDisabled('t4');
+          scenario.assertButtonDisabled('t4');
 
           editor.mode.set('testmode');
-          assertButtonDisabled('t4');
+          scenario.assertButtonDisabled('t4');
 
           // Switching mode when the overflow toolbar is opened, the onSetup callback is not executed hence all buttons are enabled
           editor.mode.set('design');
-          assertButtonEnabled('t4');
+          scenario.assertButtonEnabled('t4');
         });
       });
 
@@ -690,202 +787,21 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         it(`TINY-10980: Toolbar ${scenario.label} should be enabled in uiEnabled mode`, async () => {
           const editor = hook.editor();
           editor.mode.set('design');
-          assertButtonEnabled('t5');
+          scenario.assertButtonEnabled('t5');
 
           editor.mode.set('testmode');
-          assertButtonEnabled('t5');
+          scenario.assertButtonEnabled('t5');
 
           editor.mode.set('readonly');
-          assertButtonDisabled('t5');
+          scenario.assertButtonDisabled('t5');
 
           editor.mode.set('testmode');
-          assertButtonEnabled('t5');
+          scenario.assertButtonEnabled('t5');
 
           // Switching mode when the overflow toolbar is opened, the onSetup callback is not executed hence all buttons are enabled
           editor.mode.set('design');
-          assertButtonEnabled('t5');
+          scenario.assertButtonEnabled('t5');
         });
-      });
-    });
-  });
-
-  context('Menu toolbar button', () => {
-    context('onSetup callback and toolbar button spec readonly property not present', () => {
-      const hook = TinyHooks.bddSetup<Editor>({
-        base_url: '/project/tinymce/js/tinymce',
-        toolbar: 't1',
-        setup: (ed: Editor) => {
-          registerMode(ed);
-
-          ed.ui.registry.addMenuButton('t1', {
-            icon: 'italic',
-            text: 'Test Menu Item 1',
-            fetch: (success) => {
-              success([
-                {
-                  text: 'Choice item 1',
-                  type: 'menuitem',
-                }
-              ]);
-            },
-          });
-        }
-      }, [], true);
-
-      it('TINY-10980: Toolbar menu button should be disabled in uiEnabled mode', async () => {
-        const editor = hook.editor();
-        editor.mode.set('design');
-        assertButtonNativelyEnabled('t1');
-
-        editor.mode.set('testmode');
-        assertButtonNativelyDisabled('t1');
-
-        editor.mode.set('readonly');
-        assertButtonNativelyDisabled('t1');
-
-        editor.mode.set('testmode');
-        assertButtonNativelyDisabled('t1');
-
-        editor.mode.set('design');
-        assertButtonNativelyEnabled('t1');
-      });
-    });
-
-    context('onSetup callback with setEnabled(true) and toolbar button readonly: false', () => {
-      const hook = TinyHooks.bddSetup<Editor>({
-        base_url: '/project/tinymce/js/tinymce',
-        toolbar: 't2',
-        setup: (ed: Editor) => {
-          registerMode(ed);
-
-          ed.ui.registry.addMenuButton('t2', {
-            icon: 'italic',
-            text: 'Test Menu Item 2',
-            fetch: (success) => {
-              success([
-                {
-                  text: 'Choice item 1',
-                  type: 'menuitem',
-                }
-              ]);
-            },
-            onSetup: (api) => {
-              api.setEnabled(true);
-              return Fun.noop;
-            }
-          });
-        }
-      }, [], true);
-
-      it('TINY-10980: Toolbar menu button should be disabled in uiEnabled mode', async () => {
-        const editor = hook.editor();
-        editor.mode.set('design');
-        assertButtonNativelyEnabled('t2');
-
-        editor.mode.set('testmode');
-        assertButtonNativelyDisabled('t2');
-
-        editor.mode.set('readonly');
-        assertButtonNativelyDisabled('t2');
-
-        editor.mode.set('testmode');
-        assertButtonNativelyDisabled('t2');
-
-        editor.mode.set('design');
-        assertButtonNativelyEnabled('t2');
-      });
-    });
-
-    context('onSetup callback with setEnabled(true) and toolbar button readonly: true', () => {
-      const hook = TinyHooks.bddSetup<Editor>({
-        base_url: '/project/tinymce/js/tinymce',
-        toolbar: 't3',
-        setup: (ed: Editor) => {
-          registerMode(ed);
-
-          ed.ui.registry.addMenuButton('t3', {
-            icon: 'italic',
-            text: 'Test Menu Item 3',
-            readonly: true,
-            fetch: (success) => {
-              success([
-                {
-                  text: 'Choice item 1',
-                  type: 'menuitem',
-                }
-              ]);
-            },
-            onSetup: (api) => {
-              api.setEnabled(true);
-              return Fun.noop;
-            }
-          });
-        }
-      }, [], true);
-
-      it('TINY-10980: Toolbar menu button should be enabled in uiEnabled mode', async () => {
-        const editor = hook.editor();
-        editor.mode.set('design');
-        assertButtonNativelyEnabled('t3');
-
-        editor.mode.set('testmode');
-        assertButtonNativelyEnabled('t3');
-
-        editor.mode.set('readonly');
-        assertButtonNativelyDisabled('t3');
-
-        editor.mode.set('testmode');
-        assertButtonNativelyEnabled('t3');
-
-        editor.mode.set('design');
-        assertButtonNativelyEnabled('t3');
-      });
-    });
-
-    context('onSetup callback with setEnabled(false) and toolbar button readonly: true', () => {
-      const hook = TinyHooks.bddSetup<Editor>({
-        base_url: '/project/tinymce/js/tinymce',
-        toolbar: 't4',
-        statusbar: false,
-        setup: (ed: Editor) => {
-          registerMode(ed);
-
-          ed.ui.registry.addMenuButton('t4', {
-            icon: 'italic',
-            text: 'Test Menu Item 4',
-            readonly: true,
-            onSetup: (api) => {
-              api.setEnabled(false);
-              return Fun.noop;
-            },
-            fetch: (success) => {
-              success([
-                {
-                  text: 'Choice item 1',
-                  type: 'menuitem',
-                }
-              ]);
-            },
-          });
-        }
-      }, [], true);
-
-      it('TINY-10980: Toolbar menu button should be disabled in uiEnabled mode', async () => {
-        const editor = hook.editor();
-        editor.mode.set('design');
-        assertButtonNativelyDisabled('t4');
-
-        editor.mode.set('testmode');
-        assertButtonNativelyDisabled('t4');
-
-        editor.mode.set('readonly');
-        assertButtonNativelyDisabled('t4');
-
-        editor.mode.set('testmode');
-        assertButtonNativelyDisabled('t4');
-
-        editor.mode.set('design');
-        assertButtonNativelyEnabled('t4');
       });
     });
   });
@@ -978,273 +894,306 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
       TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="overflow-button"]');
     };
 
-    context('onSetup callback and toolbar button spec readonly property not present', () => {
-      const hook = TinyHooks.bddSetup<Editor>({
-        base_url: '/project/tinymce/js/tinymce',
-        toolbar: Arr.range(20, Fun.constant('t1')).join(' '),
-        statusbar: false,
-        toolbar_mode: 'floating',
-        setup: (ed: Editor) => {
-          registerMode(ed);
+    Arr.each(setupButtonsScenario, (scenario) => {
+      context(scenario.label, () => {
+        context('onSetup callback and toolbar button spec readonly property not present', () => {
+          const hook = TinyHooks.bddSetup<Editor>({
+            base_url: '/project/tinymce/js/tinymce',
+            toolbar: Arr.range(20, Fun.constant('t1')).join(' '),
+            statusbar: false,
+            toolbar_mode: 'floating',
+            setup: (ed: Editor) => {
+              registerMode(ed);
 
-          ed.ui.registry.addButton('t1', {
-            icon: 'italic',
-            text: 'Test Menu Item 4',
-            onAction: Fun.noop
-          });
-        }
-      }, [], true);
-
-      it('TINY-10980: Buttons under overflow toolbar should be disabled', async () => {
-        const editor = hook.editor();
-        await pOpenOverflowToolbar(editor);
-        editor.mode.set('design');
-        assertButtonEnabled('t1');
-
-        editor.mode.set('testmode');
-        assertButtonDisabled('t1');
-
-        editor.mode.set('readonly');
-        assertOverflowButtonDisabled();
-
-        editor.mode.set('testmode');
-        assertButtonDisabled('t1');
-
-        editor.mode.set('design');
-        assertButtonEnabled('t1');
-        closeOverflowToolbar(editor);
-      });
-
-      it('TINY-10980: Switching mode when overflow toolbar is closed - buttons should be disabled in uiEnabled mode', async () => {
-        const editor = hook.editor();
-        editor.mode.set('design');
-        await pOpenOverflowToolbar(editor);
-        assertButtonEnabled('t1');
-        closeOverflowToolbar(editor);
-
-        editor.mode.set('testmode');
-        await pOpenOverflowToolbar(editor);
-        assertButtonDisabled('t1');
-        closeOverflowToolbar(editor);
-
-        editor.mode.set('readonly');
-        assertOverflowButtonDisabled();
-
-        editor.mode.set('testmode');
-        await pOpenOverflowToolbar(editor);
-        assertButtonDisabled('t1');
-        closeOverflowToolbar(editor);
-
-        editor.mode.set('design');
-        await pOpenOverflowToolbar(editor);
-        assertButtonEnabled('t1');
-        closeOverflowToolbar(editor);
-      });
-    });
-
-    context('onSetup callback with setEnabled(true) and toolbar button readonly: false', () => {
-      const hook = TinyHooks.bddSetup<Editor>({
-        base_url: '/project/tinymce/js/tinymce',
-        toolbar: Arr.range(30, Fun.constant('t2')).join(' '),
-        toolbar_mode: 'floating',
-        statusbar: false,
-        setup: (ed: Editor) => {
-          registerMode(ed);
-
-          ed.ui.registry.addButton('t2', {
-            icon: 'italic',
-            text: 'Test Menu Item 2',
-            onAction: Fun.noop,
-            onSetup: (api) => {
-              api.setEnabled(true);
-              return Fun.noop;
+              scenario.buttonSetupOne(ed);
             }
+          }, [], true);
+
+          it('TINY-10980: Buttons under overflow toolbar should be disabled', async () => {
+            const editor = hook.editor();
+            await pOpenOverflowToolbar(editor);
+            editor.mode.set('design');
+            scenario.assertButtonEnabled('t1');
+
+            editor.mode.set('testmode');
+            scenario.assertButtonDisabled('t1');
+
+            editor.mode.set('readonly');
+            assertOverflowButtonDisabled();
+
+            editor.mode.set('testmode');
+            scenario.assertButtonDisabled('t1');
+
+            editor.mode.set('design');
+            scenario.assertButtonEnabled('t1');
+            closeOverflowToolbar(editor);
           });
-        }
-      }, [], true);
 
-      it('TINY-10980: Buttons under overflow toolbar should be disabled', async () => {
-        const editor = hook.editor();
-        await pOpenOverflowToolbar(editor);
-        editor.mode.set('design');
-        assertButtonEnabled('t2');
+          it('TINY-10980: Switching mode when overflow toolbar is closed - buttons should be disabled in uiEnabled mode', async () => {
+            const editor = hook.editor();
+            editor.mode.set('design');
+            await pOpenOverflowToolbar(editor);
+            scenario.assertButtonEnabled('t1');
+            closeOverflowToolbar(editor);
 
-        editor.mode.set('testmode');
-        assertButtonDisabled('t2');
+            editor.mode.set('testmode');
+            await pOpenOverflowToolbar(editor);
+            scenario.assertButtonDisabled('t1');
+            closeOverflowToolbar(editor);
 
-        editor.mode.set('readonly');
-        assertOverflowButtonDisabled();
+            editor.mode.set('readonly');
+            assertOverflowButtonDisabled();
 
-        editor.mode.set('testmode');
-        assertButtonDisabled('t2');
+            editor.mode.set('testmode');
+            await pOpenOverflowToolbar(editor);
+            scenario.assertButtonDisabled('t1');
+            closeOverflowToolbar(editor);
 
-        editor.mode.set('design');
-        assertButtonEnabled('t2');
-        closeOverflowToolbar(editor);
-      });
+            editor.mode.set('design');
+            await pOpenOverflowToolbar(editor);
+            scenario.assertButtonEnabled('t1');
+            closeOverflowToolbar(editor);
+          });
+        });
 
-      it('TINY-10980: Switching mode when overflow toolbar is closed - buttons should be disabled in uiEnabled mode', async () => {
-        const editor = hook.editor();
-        editor.mode.set('design');
-        await pOpenOverflowToolbar(editor);
-        assertButtonEnabled('t2');
-        closeOverflowToolbar(editor);
+        context('onSetup callback with setEnabled(true) and toolbar button readonly: false', () => {
+          const hook = TinyHooks.bddSetup<Editor>({
+            base_url: '/project/tinymce/js/tinymce',
+            toolbar: Arr.range(30, Fun.constant('t2')).join(' '),
+            toolbar_mode: 'floating',
+            statusbar: false,
+            setup: (ed: Editor) => {
+              registerMode(ed);
 
-        editor.mode.set('testmode');
-        await pOpenOverflowToolbar(editor);
-        assertButtonDisabled('t2');
-        closeOverflowToolbar(editor);
-
-        editor.mode.set('readonly');
-        assertOverflowButtonDisabled();
-
-        editor.mode.set('testmode');
-        await pOpenOverflowToolbar(editor);
-        assertButtonDisabled('t2');
-        closeOverflowToolbar(editor);
-
-        editor.mode.set('design');
-        await pOpenOverflowToolbar(editor);
-        assertButtonEnabled('t2');
-        closeOverflowToolbar(editor);
-      });
-    });
-
-    context('onSetup callback with setEnabled(true) and toolbar button readonly: true', () => {
-      const hook = TinyHooks.bddSetup<Editor>({
-        base_url: '/project/tinymce/js/tinymce',
-        toolbar: Arr.range(20, Fun.constant('t3')).join(' '),
-        toolbar_mode: 'floating',
-        statusbar: false,
-        setup: (ed: Editor) => {
-          registerMode(ed);
-
-          ed.ui.registry.addButton('t3', {
-            icon: 'italic',
-            text: 'Test Menu Item 3',
-            readonly: true,
-            onAction: Fun.noop,
-            onSetup: (api) => {
-              api.setEnabled(true);
-              return Fun.noop;
+              scenario.buttonSetupTwo(ed);
             }
+          }, [], true);
+
+          it('TINY-10980: Buttons under overflow toolbar should be disabled', async () => {
+            const editor = hook.editor();
+            await pOpenOverflowToolbar(editor);
+            editor.mode.set('design');
+            scenario.assertButtonEnabled('t2');
+
+            editor.mode.set('testmode');
+            scenario.assertButtonDisabled('t2');
+
+            editor.mode.set('readonly');
+            assertOverflowButtonDisabled();
+
+            editor.mode.set('testmode');
+            scenario.assertButtonDisabled('t2');
+
+            editor.mode.set('design');
+            scenario.assertButtonEnabled('t2');
+            closeOverflowToolbar(editor);
           });
-        }
-      }, [], true);
 
-      it('TINY-10980: Buttons under overflow toolbar should be enabled', async () => {
-        const editor = hook.editor();
-        await pOpenOverflowToolbar(editor);
-        editor.mode.set('design');
-        assertButtonEnabled('t3');
+          it('TINY-10980: Switching mode when overflow toolbar is closed - buttons should be disabled in uiEnabled mode', async () => {
+            const editor = hook.editor();
+            editor.mode.set('design');
+            await pOpenOverflowToolbar(editor);
+            scenario.assertButtonEnabled('t2');
+            closeOverflowToolbar(editor);
 
-        editor.mode.set('testmode');
-        assertButtonEnabled('t3');
+            editor.mode.set('testmode');
+            await pOpenOverflowToolbar(editor);
+            scenario.assertButtonDisabled('t2');
+            closeOverflowToolbar(editor);
 
-        editor.mode.set('readonly');
-        assertOverflowButtonDisabled();
+            editor.mode.set('readonly');
+            assertOverflowButtonDisabled();
 
-        editor.mode.set('testmode');
-        assertButtonEnabled('t3');
+            editor.mode.set('testmode');
+            await pOpenOverflowToolbar(editor);
+            scenario.assertButtonDisabled('t2');
+            closeOverflowToolbar(editor);
 
-        editor.mode.set('design');
-        assertButtonEnabled('t3');
-        closeOverflowToolbar(editor);
-      });
+            editor.mode.set('design');
+            await pOpenOverflowToolbar(editor);
+            scenario.assertButtonEnabled('t2');
+            closeOverflowToolbar(editor);
+          });
+        });
 
-      it('TINY-10980: Switching mode when overflow toolbar is closed - buttons should be enabled in uiEnabled mode', async () => {
-        const editor = hook.editor();
-        editor.mode.set('design');
-        await pOpenOverflowToolbar(editor);
-        assertButtonEnabled('t3');
-        closeOverflowToolbar(editor);
+        context('onSetup callback with setEnabled(true) and toolbar button readonly: true', () => {
+          const hook = TinyHooks.bddSetup<Editor>({
+            base_url: '/project/tinymce/js/tinymce',
+            toolbar: Arr.range(20, Fun.constant('t3')).join(' '),
+            toolbar_mode: 'floating',
+            statusbar: false,
+            setup: (ed: Editor) => {
+              registerMode(ed);
 
-        editor.mode.set('testmode');
-        await pOpenOverflowToolbar(editor);
-        assertButtonEnabled('t3');
-        closeOverflowToolbar(editor);
-
-        editor.mode.set('readonly');
-        assertOverflowButtonDisabled();
-
-        editor.mode.set('testmode');
-        await pOpenOverflowToolbar(editor);
-        assertButtonEnabled('t3');
-        closeOverflowToolbar(editor);
-
-        editor.mode.set('design');
-        await pOpenOverflowToolbar(editor);
-        assertButtonEnabled('t3');
-        closeOverflowToolbar(editor);
-      });
-    });
-
-    context('onSetup callback with setEnabled(false) and toolbar button readonly: true', () => {
-      const hook = TinyHooks.bddSetup<Editor>({
-        base_url: '/project/tinymce/js/tinymce',
-        toolbar: Arr.range(20, Fun.constant('t4')).join(' '),
-        toolbar_mode: 'floating',
-        statusbar: false,
-        setup: (ed: Editor) => {
-          registerMode(ed);
-
-          ed.ui.registry.addButton('t4', {
-            icon: 'italic',
-            text: 'Test Menu Item 4',
-            readonly: true,
-            onAction: Fun.noop,
-            onSetup: (api) => {
-              api.setEnabled(false);
-              return Fun.noop;
+              scenario.buttonSetupThree(ed);
             }
+          }, [], true);
+
+          it('TINY-10980: Buttons under overflow toolbar should be enabled', async () => {
+            const editor = hook.editor();
+            await pOpenOverflowToolbar(editor);
+            editor.mode.set('design');
+            scenario.assertButtonEnabled('t3');
+
+            editor.mode.set('testmode');
+            scenario.assertButtonEnabled('t3');
+
+            editor.mode.set('readonly');
+            assertOverflowButtonDisabled();
+
+            editor.mode.set('testmode');
+            scenario.assertButtonEnabled('t3');
+
+            editor.mode.set('design');
+            scenario.assertButtonEnabled('t3');
+            closeOverflowToolbar(editor);
           });
-        }
-      }, [], true);
 
-      it('TINY-10980: Buttons under overflow toolbar should be disabled', async () => {
-        const editor = hook.editor();
-        await pOpenOverflowToolbar(editor);
-        editor.mode.set('design');
-        assertButtonDisabled('t4');
+          it('TINY-10980: Switching mode when overflow toolbar is closed - buttons should be enabled in uiEnabled mode', async () => {
+            const editor = hook.editor();
+            editor.mode.set('design');
+            await pOpenOverflowToolbar(editor);
+            scenario.assertButtonEnabled('t3');
+            closeOverflowToolbar(editor);
 
-        editor.mode.set('testmode');
-        assertButtonDisabled('t4');
+            editor.mode.set('testmode');
+            await pOpenOverflowToolbar(editor);
+            scenario.assertButtonEnabled('t3');
+            closeOverflowToolbar(editor);
 
-        editor.mode.set('readonly');
-        assertOverflowButtonDisabled();
+            editor.mode.set('readonly');
+            assertOverflowButtonDisabled();
 
-        editor.mode.set('testmode');
-        assertButtonDisabled('t4');
+            editor.mode.set('testmode');
+            await pOpenOverflowToolbar(editor);
+            scenario.assertButtonEnabled('t3');
+            closeOverflowToolbar(editor);
 
-        editor.mode.set('design');
-        assertButtonEnabled('t4');
-        closeOverflowToolbar(editor);
-      });
+            editor.mode.set('design');
+            await pOpenOverflowToolbar(editor);
+            scenario.assertButtonEnabled('t3');
+            closeOverflowToolbar(editor);
+          });
+        });
 
-      it('TINY-10980: Switching mode when overflow toolbar is closed - buttons should be disabled in uiEnabled mode', async () => {
-        const editor = hook.editor();
-        editor.mode.set('design');
-        await pOpenOverflowToolbar(editor);
-        assertButtonDisabled('t4');
-        closeOverflowToolbar(editor);
+        context('onSetup callback with setEnabled(false) and toolbar button readonly: true', () => {
+          const hook = TinyHooks.bddSetup<Editor>({
+            base_url: '/project/tinymce/js/tinymce',
+            toolbar: Arr.range(20, Fun.constant('t4')).join(' '),
+            toolbar_mode: 'floating',
+            statusbar: false,
+            setup: (ed: Editor) => {
+              registerMode(ed);
 
-        editor.mode.set('testmode');
-        await pOpenOverflowToolbar(editor);
-        assertButtonDisabled('t4');
-        closeOverflowToolbar(editor);
+              scenario.buttonSetupFour(ed);
+            }
+          }, [], true);
 
-        editor.mode.set('readonly');
-        assertOverflowButtonDisabled();
+          it('TINY-10980: Buttons under overflow toolbar should be disabled', async () => {
+            const editor = hook.editor();
+            await pOpenOverflowToolbar(editor);
+            editor.mode.set('design');
+            scenario.assertButtonDisabled('t4');
 
-        editor.mode.set('testmode');
-        await pOpenOverflowToolbar(editor);
-        assertButtonDisabled('t4');
-        closeOverflowToolbar(editor);
+            editor.mode.set('testmode');
+            scenario.assertButtonDisabled('t4');
 
-        editor.mode.set('design');
-        await pOpenOverflowToolbar(editor);
-        assertButtonDisabled('t4');
-        closeOverflowToolbar(editor);
+            editor.mode.set('readonly');
+            assertOverflowButtonDisabled();
+
+            editor.mode.set('testmode');
+            scenario.assertButtonDisabled('t4');
+
+            editor.mode.set('design');
+            scenario.assertButtonEnabled('t4');
+            closeOverflowToolbar(editor);
+          });
+
+          it('TINY-10980: Switching mode when overflow toolbar is closed - buttons should be disabled in uiEnabled mode', async () => {
+            const editor = hook.editor();
+            editor.mode.set('design');
+            await pOpenOverflowToolbar(editor);
+            scenario.assertButtonDisabled('t4');
+            closeOverflowToolbar(editor);
+
+            editor.mode.set('testmode');
+            await pOpenOverflowToolbar(editor);
+            scenario.assertButtonDisabled('t4');
+            closeOverflowToolbar(editor);
+
+            editor.mode.set('readonly');
+            assertOverflowButtonDisabled();
+
+            editor.mode.set('testmode');
+            await pOpenOverflowToolbar(editor);
+            scenario.assertButtonDisabled('t4');
+            closeOverflowToolbar(editor);
+
+            editor.mode.set('design');
+            await pOpenOverflowToolbar(editor);
+            scenario.assertButtonDisabled('t4');
+            closeOverflowToolbar(editor);
+          });
+        });
+
+        context('onSetup callback not present and toolbar button readonly: true', () => {
+          const hook = TinyHooks.bddSetup<Editor>({
+            base_url: '/project/tinymce/js/tinymce',
+            toolbar: Arr.range(20, Fun.constant('t5')).join(' '),
+            toolbar_mode: 'floating',
+            statusbar: false,
+            setup: (ed: Editor) => {
+              registerMode(ed);
+              scenario.buttonSetupFive(ed);
+            }
+          }, [], true);
+
+          it('TINY-10980: Buttons under overflow toolbar should be disabled', async () => {
+            const editor = hook.editor();
+            await pOpenOverflowToolbar(editor);
+            editor.mode.set('design');
+            scenario.assertButtonEnabled('t5');
+
+            editor.mode.set('testmode');
+            scenario.assertButtonEnabled('t5');
+
+            editor.mode.set('readonly');
+            assertOverflowButtonDisabled();
+
+            editor.mode.set('testmode');
+            scenario.assertButtonEnabled('t5');
+
+            editor.mode.set('design');
+            scenario.assertButtonEnabled('t5');
+            closeOverflowToolbar(editor);
+          });
+
+          it('TINY-10980: Switching mode when overflow toolbar is closed - buttons should be disabled in uiEnabled mode', async () => {
+            const editor = hook.editor();
+            editor.mode.set('design');
+            await pOpenOverflowToolbar(editor);
+            scenario.assertButtonEnabled('t5');
+            closeOverflowToolbar(editor);
+
+            editor.mode.set('testmode');
+            await pOpenOverflowToolbar(editor);
+            scenario.assertButtonEnabled('t5');
+            closeOverflowToolbar(editor);
+
+            editor.mode.set('readonly');
+            assertOverflowButtonDisabled();
+
+            editor.mode.set('testmode');
+            await pOpenOverflowToolbar(editor);
+            scenario.assertButtonEnabled('t5');
+            closeOverflowToolbar(editor);
+
+            editor.mode.set('design');
+            await pOpenOverflowToolbar(editor);
+            scenario.assertButtonEnabled('t5');
+            closeOverflowToolbar(editor);
+          });
+        });
       });
     });
 

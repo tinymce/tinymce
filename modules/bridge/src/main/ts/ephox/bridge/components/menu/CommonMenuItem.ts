@@ -1,4 +1,4 @@
-import { FieldProcessor, FieldSchema } from '@ephox/boulder';
+import { FieldProcessor, FieldSchema, ValueType } from '@ephox/boulder';
 import { Optional } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
@@ -9,7 +9,7 @@ export interface CommonMenuItemSpec {
   value?: string;
   meta?: Record<string, any>;
   shortcut?: string;
-  readonly?: boolean;
+  allowedModes?: string[];
 }
 
 export interface CommonMenuItemInstanceApi {
@@ -24,7 +24,7 @@ export interface CommonMenuItem {
   role: Optional<string>;
   meta: Record<string, any>;
   shortcut: Optional<string>;
-  readonly: boolean;
+  allowedModes: string[];
 }
 
 export const commonMenuItemFields: FieldProcessor[] = [
@@ -34,5 +34,5 @@ export const commonMenuItemFields: FieldProcessor[] = [
   ComponentSchema.optionalShortcut,
   ComponentSchema.generatedValue('menuitem'),
   ComponentSchema.defaultedMeta,
-  FieldSchema.defaultedBoolean('readonly', false)
+  FieldSchema.defaultedArrayOf('allowedModes', [ 'design' ], ValueType.string)
 ];

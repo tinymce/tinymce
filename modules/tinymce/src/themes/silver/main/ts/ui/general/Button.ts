@@ -25,7 +25,7 @@ type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];
 type AlloyButtonSpec = Parameters<typeof AlloyButton['sketch']>[0];
 
 type ButtonSpec = Omit<Dialog.Button, 'type'> & {
-  readonly?: boolean;
+  readonly allowedModes?: string[];
 };
 type FooterToggleButtonSpec = Omit<Dialog.DialogFooterToggleButton, 'type'>;
 type FooterButtonSpec = Omit<Dialog.DialogFooterNormalButton, 'type'> | Omit<Dialog.DialogFooterMenuButton, 'type'> | FooterToggleButtonSpec;
@@ -49,7 +49,7 @@ export const renderCommonSpec = (
 
   const common = {
     buttonBehaviours: Behaviour.derive([
-      DisablingConfigs.button(() => !spec.enabled || !spec.readonly && providersBackstage.isDisabled()),
+      DisablingConfigs.button(() => !spec.enabled || !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedModes)),
       Tabstopping.config({}),
       ...tooltip.map(
         (t) => Tooltipping.config(
@@ -224,7 +224,6 @@ const renderToggleButton = (spec: FooterToggleButtonSpec, providers: UiFactoryBa
     tooltip: spec.tooltip,
     enabled: spec.enabled ?? false,
     borderless: false,
-    readonly: false
   };
 
   const tooltipAttributes = buttonSpec.tooltip.or(spec.text).map((tooltip) => ({
@@ -269,7 +268,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
     const fixedSpec: Toolbar.ToolbarMenuButton = {
       ...spec,
       type: 'menubutton',
-      readonly: false,
+      allowedModes: [ 'design' ],
       // Currently, dialog-based menu buttons cannot be searchable.
       search: Optional.none(),
       onSetup: (api) => {
@@ -287,7 +286,6 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
     const buttonSpec = {
       ...spec,
       borderless: false,
-      readonly: false
     };
     return renderButton(buttonSpec, action, backstage.shared.providers, [ ]);
   } else if (isToggleButtonSpec(spec, buttonType)) {

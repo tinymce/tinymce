@@ -16,7 +16,7 @@ const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse,
   const getApi = (component: AlloyComponent): Menu.NestedMenuItemInstanceApi => ({
     isEnabled: () => !Disabling.isDisabled(component),
     setEnabled: (state: boolean) => {
-      if (!providersBackstage.isDisabled() || spec.readonly && providersBackstage.isReadOnlyEnableUi()) {
+      if (providersBackstage.isButtonAllowedInCurrentMode(spec.allowedModes)) {
         Disabling.set(component, !state);
       }
     },
@@ -42,7 +42,7 @@ const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse,
     shortcutContent: spec.shortcut
   }, providersBackstage, renderIcons);
   return renderCommonItem({
-    readonly: spec.readonly,
+    allowedModes: spec.allowedModes,
     data: buildData(spec),
     getApi,
     enabled: spec.enabled,

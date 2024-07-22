@@ -115,10 +115,10 @@ const renderMoreToolbarCommon = (toolbarSpec: MoreDrawerToolbarSpec) => {
         primary: false,
         buttonType: Optional.none(),
         borderless: false,
-        readonly: true
+        allowedModes: [ 'design', 'readonly' ],
       }, Optional.none(), toolbarSpec.providers, [
         ReadOnly.receivingConfigConditional(() => {
-          return toolbarSpec.providers.isDisabled() && !toolbarSpec.providers.isReadOnlyEnableUi();
+          return toolbarSpec.providers.isDisabled() && !toolbarSpec.providers.isButtonAllowedInCurrentMode([ 'design', 'readonly' ]);
         })
       ], 'overflow-button')
     },

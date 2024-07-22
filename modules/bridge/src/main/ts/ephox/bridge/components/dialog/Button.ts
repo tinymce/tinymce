@@ -13,7 +13,6 @@ export interface ButtonSpec {
   icon?: string;
   borderless?: boolean;
   buttonType?: 'primary' | 'secondary' | 'toolbar';
-  readonly?: boolean;
 }
 
 export interface Button {

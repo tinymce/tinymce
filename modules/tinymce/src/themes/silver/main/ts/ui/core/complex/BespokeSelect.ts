@@ -209,7 +209,6 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
 
   return renderCommonDropdown(
     {
-      readonly: false,
       text: spec.icon.isSome() ? Optional.none() : spec.text,
       icon: spec.icon,
       ariaLabel: Optional.some(spec.tooltip),
@@ -235,7 +234,8 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
             }
           }),
         })
-      ]
+      ],
+      allowedModes: [ 'design' ]
     },
     ToolbarButtonClasses.Button,
     backstage.shared,

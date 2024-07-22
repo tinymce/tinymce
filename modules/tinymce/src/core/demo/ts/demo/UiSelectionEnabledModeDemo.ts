@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { Merger } from '@ephox/katamari';
+import { Cell, Merger } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import { Editor, RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
@@ -7,6 +7,50 @@ import { Editor, RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
 declare let tinymce: TinyMCE;
 
 export default (): void => {
+  const buildModes = (ed: Editor) => {
+    const selectedMode = Cell<string>(ed.mode.get());
+    const setMode = (mode: string) => {
+      ed.mode.set(mode);
+      selectedMode.set(mode);
+    };
+    const makeModeUI = (mode: string) => {
+      const toggleSpec = {
+        text: `${mode} Mode`,
+        onAction: () => {
+          console.log('Current mode: ', ed.mode.get());
+          ed.mode.get() === mode ? ed.mode.set(selectedMode.get()) : setMode(mode);
+          console.log('New mode: ', ed.mode.get());
+        },
+        onSetup: (api: any) => {
+          const toggleActive = () => {
+            api.setActive(ed.mode.get() === mode);
+            api.setEnabled(true);
+          };
+          toggleActive();
+          ed.on('SwitchMode', toggleActive);
+          return () => ed.off('SwitchMode', toggleActive);
+        },
+        allowedModes: [ 'design', 'readonly' ]
+      };
+      ed.ui.registry.addToggleMenuItem(mode, toggleSpec);
+      ed.ui.registry.addToggleButton(mode, toggleSpec);
+    };
+    ed.mode.register('readonlyUIMode', {
+      activate: () => console.log('Readonly UI: Activated'),
+      deactivate: () => console.log('Readonly UI: Deactivated'),
+      editorReadOnly: { uiEnabled: true }
+    });
+    makeModeUI('readonlyUIMode');
+
+    ed.mode.register('readonlySelectionMode', {
+      activate: () => console.log('Readonly Selection: Activated'),
+      deactivate: () => console.log('Readonly Selection: Deactivated'),
+      editorReadOnly: { selectionEnabled: true }
+    });
+    makeModeUI('readonlySelectionMode');
+
+    makeModeUI('design');
+  };
 
   const makeSidebar = (ed: Editor, name: string, background: string, width: number) => {
     ed.ui.registry.addSidebar(name, {
@@ -110,6 +154,7 @@ export default (): void => {
     image_caption: true,
     theme: 'silver',
     setup: (ed) => {
+      buildModes(ed);
       makeSidebar(ed, 'sidebar1', 'green', 200);
       makeSidebar(ed, 'sidebar2', 'green', 200);
       makeCodeView(ed);
@@ -119,10 +164,15 @@ export default (): void => {
       'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code', 'fullscreen', 'insertdatetime', 'media', 'nonbreaking',
       'save', 'table', 'directionality', 'emoticons', 'importcss', 'codesample', 'help', 'accordion'
     ],
+    menubar: 'file edit view tools mode format table help',
+    menu: {
+      mode: { title: 'Mode', items: 'lock unlock' }
+    },
+    toolbar_mode: 'sliding',
     // rtl_ui: true,
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
-    toolbar: 'undo redo sidebar1 fontsizeinput | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | align lineheight fontsize fontfamily blocks styles insertfile | styles | ' +
+    toolbar: 'readonlyUIMode readonlySelectionMode design | undo redo sidebar1 fontsizeinput | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | align lineheight fontsize fontfamily blocks styles insertfile | styles | ' +
     'bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons table codesample code language | ltr rtl',
     contextmenu: 'link linkchecker image table lists configurepermanentpen',
 
@@ -160,7 +210,6 @@ export default (): void => {
     //     name: 'comments', items: [ 'addcomment' ]
     //   }
     // ],
-    toolbar_mode: 'floating',
     emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js',
     resize_img_proportional: true,
     format_empty_lines: true

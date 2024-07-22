@@ -59,12 +59,12 @@ const receivingConfig = (): Behaviour.NamedConfiguredBehaviour<any, any> => Rece
   }
 });
 
-const receivingConfigConditional = (disabled: (component: AlloyComponent) => boolean): Behaviour.NamedConfiguredBehaviour<any, any> => Receiving.config({
+const receivingConfigConditional = (shouldDisable: (component: AlloyComponent) => boolean): Behaviour.NamedConfiguredBehaviour<any, any> => Receiving.config({
   channels: {
     [ReadOnlyChannel]: {
       schema: ReadOnlyDataSchema,
       onReceive: (comp, data: ReadOnlyData) => {
-        Disabling.set(comp, disabled(comp) && data.readonly);
+        Disabling.set(comp, shouldDisable(comp) && data.readonly);
       }
     }
   }

@@ -25,7 +25,7 @@ export interface CommonMenuItemSpec<T> {
   readonly onSetup: (itemApi: T) => OnDestroy<T>;
   readonly triggersSubmenu: boolean;
   readonly enabled: boolean;
-  readonly readonly: boolean;
+  readonly allowedModes: string[];
   readonly itemBehaviours: Behaviour.NamedConfiguredBehaviour<any, any, any>[];
   readonly getApi: (comp: AlloyComponent) => T;
   readonly data: ItemDataOutput;
@@ -56,7 +56,7 @@ const renderCommonItem = <T>(spec: CommonMenuItemSpec<T>, structure: ItemStructu
           onControlDetached(spec, editorOffCell)
         ]),
         DisablingConfigs.item(() => {
-          return !spec.enabled || !spec.readonly && providersBackstage.isDisabled();
+          return !spec.enabled || !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedModes);
         }),
         ReadOnly.receivingConfig(),
         Replacing.config({ })

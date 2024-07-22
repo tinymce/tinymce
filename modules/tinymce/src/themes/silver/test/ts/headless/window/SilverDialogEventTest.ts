@@ -99,7 +99,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
             menuItems: () => ({}),
             translate: I18n.translate,
             isDisabled: Fun.never,
-            isReadOnlyEnableUi: Fun.never,
+            isButtonAllowedInCurrentMode: Fun.always,
             getOption: (_settingName: string) => undefined,
             tooltips: {
               getConfig: (): TooltippingTypes.TooltippingConfigSpec => {

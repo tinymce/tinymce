@@ -1,6 +1,6 @@
 import { AlloyComponent, AlloySpec } from '@ephox/alloy';
 import { Dialog, Menu } from '@ephox/bridge';
-import { Cell, Optional, Result } from '@ephox/katamari';
+import { Arr, Cell, Optional, Result } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import I18n, { TranslatedString, Untranslated } from 'tinymce/core/api/util/I18n';
@@ -21,9 +21,9 @@ export interface UiFactoryBackstageProviders {
   readonly menuItems: () => Record<string, Menu.MenuItemSpec | Menu.NestedMenuItemSpec | Menu.ToggleMenuItemSpec>;
   readonly translate: (text: Untranslated) => TranslatedString;
   readonly isDisabled: () => boolean;
+  readonly isButtonAllowedInCurrentMode: (buttonsAllowedModes?: string[]) => boolean;
   readonly getOption: Editor['options']['get'];
   readonly tooltips: TooltipsProvider;
-  readonly isReadOnlyEnableUi: () => boolean;
 }
 
 export interface UiFactoryBackstageShared {
@@ -58,7 +58,15 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
     menuItems: () => editor.ui.registry.getAll().menuItems,
     translate: I18n.translate,
     isDisabled: () => editor.mode.isReadOnly() || !editor.ui.isEnabled(),
-    isReadOnlyEnableUi: () => editor.mode.isReadOnly() && editor.mode.isUiEnabled(),
+    isButtonAllowedInCurrentMode: (buttonsAllowedModes: string[] = []) => {
+      if (!editor.mode.isReadOnly()) {
+        return Arr.contains(buttonsAllowedModes, 'design');
+      } else if (editor.mode.isReadOnly() && editor.mode.isUiEnabled()) {
+        return Arr.contains(buttonsAllowedModes, 'readonly');
+      }
+
+      return false;
+    },
     getOption: editor.options.get,
     tooltips: TooltipsBackstage(lazySinks.dialog)
   };

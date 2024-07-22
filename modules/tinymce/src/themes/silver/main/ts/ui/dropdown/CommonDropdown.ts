@@ -49,7 +49,7 @@ export interface CommonDropdownSpec<T> {
   readonly dropdownBehaviours: Behaviour.NamedConfiguredBehaviour<any, any, any>[];
   readonly searchable?: boolean;
   readonly ariaLabel: Optional<string>;
-  readonly readonly?: boolean;
+  readonly allowedModes?: string[];
 }
 
 // TODO: Use renderCommonStructure here.
@@ -162,15 +162,15 @@ const renderCommonDropdown = <T>(
         ...spec.dropdownBehaviours,
         DisablingConfigs.button(() => {
           if (prefix === MenuButtonClasses.Button) {
-            return sharedBackstage.providers.isDisabled() && !sharedBackstage.providers.isReadOnlyEnableUi();
+            return !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedModes);
           }
-          return spec.disabled || sharedBackstage.providers.isDisabled();
+          return spec.disabled || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedModes);
         }),
         ReadOnly.receivingConfigConditional((comp) => {
           if (prefix === MenuButtonClasses.Button) {
-            return sharedBackstage.providers.isDisabled() && !sharedBackstage.providers.isReadOnlyEnableUi();
+            return !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedModes);
           }
-          return sharedBackstage.providers.isDisabled() && sharedBackstage.providers.isReadOnlyEnableUi() ? Disabling.getLastDisabledState(comp) || !spec.readonly : true;
+          return Disabling.getLastDisabledState(comp) || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedModes);
         }),
         // INVESTIGATE (TINY-9012): There was a old comment here about something not quite working, and that
         // we can still get the button focused. It was probably related to Unselecting.
