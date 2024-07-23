@@ -7,4 +7,5 @@ Visit the [TinyMCE 7 documentation](https://www.tiny.cloud/docs/tinymce/7/creati
 The build process uses [Node](http://nodejs.org/) and [Gulp](http://gulpjs.com/). Make sure you have both installed before you continue.
 
 1. Install dependencies with `yarn`.
-2. To view the skins, run `npm start` in this repository and see the oxide-test-data repository for more information.
+2. Build the skins with `yarn build`.
+3. To view the skins, run `yarn start` in this repository and go to `http://localhost:4000`.

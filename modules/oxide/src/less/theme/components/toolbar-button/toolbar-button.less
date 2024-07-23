@@ -46,7 +46,7 @@
 @toolbar-button-enabled-text-color: @toolbar-button-hover-text-color;
 @toolbar-button-enabled-transform: none;
 
-@toolbar-button-disabled-background-color:  @toolbar-button-background-color;
+@toolbar-button-disabled-background-color: @toolbar-button-background-color;
 @toolbar-button-disabled-border: @toolbar-button-border;
 @toolbar-button-disabled-box-shadow: @toolbar-button-box-shadow;
 @toolbar-button-disabled-icon-color: fade(@toolbar-button-icon-color, 50%);
@@ -189,7 +189,7 @@
     color: @toolbar-button-enabled-text-color;
     position: relative;
 
-    > * {
+    >* {
       transform: @toolbar-button-enabled-transform;
     }
 
@@ -218,7 +218,7 @@
     }
   }
 
-  .tox-tbtn:active > * {
+  .tox-tbtn:active>* {
     transform: @toolbar-button-active-transform;
   }
 
