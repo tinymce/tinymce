@@ -1,5 +1,5 @@
-import { Keys, UiFinder } from '@ephox/agar';
-import { context, describe, it } from '@ephox/bedrock-client';
+import { Keys, TestStore, UiFinder } from '@ephox/agar';
+import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { Attribute, SugarBody } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -7,6 +7,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { ToolbarMode } from 'tinymce/core/api/OptionTypes';
+import { Dialog } from 'tinymce/core/api/ui/Ui';
 
 describe('browser.tinymce.core.UiEnabledModesTest', () => {
   const registerMode = (ed: Editor) => {
@@ -32,7 +33,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
 
   const assertButtonEnabled = (selector: string) => UiFinder.notExists(SugarBody.body(), `[data-mce-name="${selector}"][aria-disabled="true"]`);
 
-  const assertButtonDisabled = (selector: string) => UiFinder.notExists(SugarBody.body(), `[data-mce-name="${selector}"]:not([aria-disabled="true"])`);
+  const assertButtonDisabled = (selector: string) => UiFinder.exists(SugarBody.body(), `[data-mce-name="${selector}"][aria-disabled="true"]`);
 
   const assertOverflowButtonDisabled = () => UiFinder.exists(SugarBody.body(), '[data-mce-name="overflow-button"][disabled="disabled"]');
 
@@ -766,9 +767,8 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
           editor.mode.set('testmode');
           scenario.assertButtonDisabled('t4');
 
-          // Switching mode when the overflow toolbar is opened, the onSetup callback is not executed hence all buttons are enabled
           editor.mode.set('design');
-          scenario.assertButtonEnabled('t4');
+          scenario.assertButtonDisabled('t4');
         });
       });
 
@@ -1105,7 +1105,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
             scenario.assertButtonDisabled('t4');
 
             editor.mode.set('design');
-            scenario.assertButtonEnabled('t4');
+            scenario.assertButtonDisabled('t4');
             closeOverflowToolbar(editor);
           });
 
@@ -1327,6 +1327,105 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         assertFontSizeInputEnabled();
         closeOverflowToolbar(editor);
       });
+    });
+  });
+
+  context('Dialog footer buttons', () => {
+    const store = TestStore();
+
+    const hook = TinyHooks.bddSetup<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      toolbar: 't1 t2 t3 t4',
+      setup: (ed: Editor) => {
+        registerMode(ed);
+
+        const getDialogSpec = (allowedModes: string[] = [ 'design' ]): Dialog.DialogSpec<{}> => {
+          return {
+            title: 'Test',
+            body: {
+              type: 'panel',
+              items: [
+                {
+                  type: 'htmlpanel',
+                  html: '<div><p>Test</p></div>'
+                }
+              ]
+            },
+            buttons: [
+              {
+                type: 'cancel',
+                text: 'Cancel',
+                allowedModes
+              },
+              {
+                type: 'submit',
+                text: 'Submit',
+                buttonType: 'primary',
+                allowedModes
+              }
+            ],
+            onSubmit: (api: Dialog.DialogInstanceApi<{}>) => {
+              store.add('onSubmit');
+              api.close();
+            }
+          };
+        };
+
+        ed.ui.registry.addButton('t1', {
+          icon: 'italic',
+          text: 'Test Menu Item 1',
+          allowedModes: [ 'design', 'readonly' ],
+          onAction: () => {
+            ed.windowManager.open(getDialogSpec());
+          }
+        });
+
+        ed.ui.registry.addButton('t2', {
+          icon: 'italic',
+          text: 'Test Menu Item 1',
+          allowedModes: [ 'design', 'readonly' ],
+          onAction: () => {
+            ed.windowManager.open(getDialogSpec([ 'design', 'readonly' ]));
+          }
+        });
+      }
+    }, [], true);
+
+    beforeEach(() => store.clear());
+
+    it('TINY-10980: Dialog footer buttons should be enabled in uiEnabled mode', async () => {
+      const editor = hook.editor();
+
+      TinyUiActions.clickOnToolbar(editor, '[data-mce-name="t1"]');
+      await TinyUiActions.pWaitForDialog(editor);
+      assertButtonNativelyEnabled('Cancel');
+      assertButtonNativelyEnabled('Submit');
+      TinyUiActions.closeDialog(editor);
+
+      editor.mode.set('testmode');
+      TinyUiActions.clickOnToolbar(editor, '[data-mce-name="t1"]');
+      await TinyUiActions.pWaitForDialog(editor);
+      assertButtonNativelyDisabled('Cancel');
+      assertButtonNativelyDisabled('Submit');
+      TinyUiActions.closeDialog(editor);
+
+      editor.mode.set('design');
+      TinyUiActions.clickOnToolbar(editor, '[data-mce-name="t2"]');
+      await TinyUiActions.pWaitForDialog(editor);
+      assertButtonNativelyEnabled('Cancel');
+      assertButtonNativelyEnabled('Submit');
+      TinyUiActions.closeDialog(editor);
+
+      editor.mode.set('testmode');
+      TinyUiActions.clickOnToolbar(editor, '[data-mce-name="t2"]');
+      await TinyUiActions.pWaitForDialog(editor);
+      assertButtonNativelyEnabled('Cancel');
+      assertButtonNativelyEnabled('Submit');
+
+      TinyUiActions.clickOnUi(editor, '[data-mce-name="Submit"]');
+      store.assertEq('Clicking on submit should call onSubmit', [ 'onSubmit' ]);
+
+      editor.mode.set('design');
     });
   });
 });

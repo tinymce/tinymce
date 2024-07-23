@@ -63,8 +63,8 @@ const receivingConfigConditional = (shouldDisable: (component: AlloyComponent) =
   channels: {
     [ReadOnlyChannel]: {
       schema: ReadOnlyDataSchema,
-      onReceive: (comp, data: ReadOnlyData) => {
-        Disabling.set(comp, shouldDisable(comp) && data.readonly);
+      onReceive: (comp) => {
+        Disabling.set(comp, shouldDisable(comp));
       }
     }
   }
