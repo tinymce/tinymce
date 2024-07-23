@@ -1,7 +1,7 @@
 project: bridge
 kind: Added
-body: Optional `allowedMode` property that defaults to `[ 'design' ]` to `CommonMenuItem`, `ToolbarButton`,
-  `ToolbarSplitButton` and `MenuButton`.
+body: Optional `allowedMode` property on `CommonMenuItem`, `ToolbarButton`, `DialogFooterButton`,
+  `ToolbarSplitButton` and `MenuButton` to control their state based on the editor mode. Defaults to `[ 'design' ]`.`
 time: 2024-07-18T09:55:03.406708+08:00
 custom:
   Issue: TINY-10980

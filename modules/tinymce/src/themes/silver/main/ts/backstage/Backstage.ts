@@ -61,10 +61,9 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
     isButtonAllowedInCurrentMode: (buttonsAllowedModes: string[] = []) => {
       if (!editor.mode.isReadOnly()) {
         return Arr.contains(buttonsAllowedModes, 'design');
-      } else if (editor.mode.isReadOnly() && editor.mode.isUiEnabled()) {
+      } else if (editor.mode.isUiEnabled()) {
         return Arr.contains(buttonsAllowedModes, 'readonly');
       }
-
       return false;
     },
     getOption: editor.options.get,
