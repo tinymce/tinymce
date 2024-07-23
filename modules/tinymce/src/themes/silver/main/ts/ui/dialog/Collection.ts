@@ -83,7 +83,7 @@ export const renderCollection = (
 
   const collectionEvents = [
     AlloyEvents.run<EventArgs>(NativeEvents.mouseover(), runOnItem((comp, se, tgt) => {
-      Focus.focus(tgt);
+      Focus.focus(tgt, true);
     })),
     AlloyEvents.run<EventArgs>(NativeEvents.click(), onClick),
     AlloyEvents.run<EventArgs>(SystemEvents.tap(), onClick),
@@ -146,7 +146,7 @@ export const renderCollection = (
                   Tooltipping.setComponents(comp, providersBackstage.tooltips.getComponents( { tooltipText: text }));
                 });
               });
-            },
+            }
           }),
           mode: 'children-keyboard-focus',
           anchor: (comp: AlloyComponent) => ({
