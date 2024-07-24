@@ -1,5 +1,5 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Disabling, Focusing, ItemTypes, NativeEvents, Replacing
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, ItemTypes, NativeEvents, Replacing
 } from '@ephox/alloy';
 import { Cell, Fun, Optional, Optionals } from '@ephox/katamari';
 
@@ -54,13 +54,6 @@ const renderCommonItem = <T>(spec: CommonMenuItemSpec<T>, structure: ItemStructu
           onMenuItemExecute(spec, itemResponse),
           onControlAttached(spec, editorOffCell),
           onControlDetached(spec, editorOffCell)
-        ]),
-        AddEventsBehaviour.config('item-disabling-events', [
-          AlloyEvents.runOnAttached((comp, _se) => {
-            if (Disabling.getLastDisabledState(comp) || !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedModes)) {
-              Disabling.set(comp, true);
-            }
-          }),
         ]),
         DisablingConfigs.item(() => {
           return !spec.enabled || !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedModes);

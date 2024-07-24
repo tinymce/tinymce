@@ -31,7 +31,7 @@ import { createTieredDataFrom } from '../../menus/menu/SingleMenu';
 import { SingleMenuItemSpec } from '../../menus/menu/SingleMenuTypes';
 import { renderToolbarGroup, ToolbarGroup } from '../CommonToolbar';
 import { ToolbarButtonClasses } from './ButtonClasses';
-import { commonButtonDisplayEvent, onToolbarButtonExecute, toolbarButtonEventOrder, toolbarDisablingEvents } from './ButtonEvents';
+import { commonButtonDisplayEvent, onToolbarButtonExecute, toolbarButtonEventOrder } from './ButtonEvents';
 
 type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];
 type AlloyButtonSpec = Parameters<typeof AlloyButton['sketch']>[0];
@@ -60,10 +60,13 @@ interface ChoiceFetcher {
   readonly select: Optional<(value: string) => boolean>;
 }
 
-const getButtonApi = (component: AlloyComponent): Toolbar.ToolbarButtonInstanceApi => ({
+const getButtonApi = (spec: Toolbar.GroupToolbarButton | Toolbar.ToolbarButton, providersBackstage: UiFactoryBackstageProviders) => (component: AlloyComponent): Toolbar.ToolbarButtonInstanceApi => ({
   isEnabled: () => !Disabling.isDisabled(component),
   setEnabled: (state: boolean) => {
-    Disabling.set(component, !state, true);
+    // TODO: Address in TINY-11126
+    if (providersBackstage.isButtonAllowedInCurrentMode(spec.allowedModes)) {
+      Disabling.set(component, !state, true);
+    }
   },
   setText: (text: string) => AlloyTriggers.emitWith(component, updateMenuText, {
     text
@@ -73,14 +76,17 @@ const getButtonApi = (component: AlloyComponent): Toolbar.ToolbarButtonInstanceA
   })
 });
 
-const getToggleApi = (component: AlloyComponent): Toolbar.ToolbarToggleButtonInstanceApi => ({
+const getToggleApi = (spec: Toolbar.ToolbarToggleButton, providersBackstage: UiFactoryBackstageProviders) => (component: AlloyComponent): Toolbar.ToolbarToggleButtonInstanceApi => ({
   setActive: (state) => {
     Toggling.set(component, state);
   },
   isActive: () => Toggling.isOn(component),
   isEnabled: () => !Disabling.isDisabled(component),
   setEnabled: (state: boolean) => {
-    Disabling.set(component, !state, true);
+    // TODO: Address in TINY-11126
+    if (providersBackstage.isButtonAllowedInCurrentMode(spec.allowedModes)) {
+      Disabling.set(component, !state, true);
+    }
   },
   setText: (text: string) => AlloyTriggers.emitWith(component, updateMenuText, {
     text
@@ -169,7 +175,7 @@ const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage
   const editorOffCell = Cell(Fun.noop);
   const specialisation = {
     toolbarButtonBehaviours: [],
-    getApi: getButtonApi,
+    getApi: getButtonApi(spec, backstage.shared.providers),
     onSetup: spec.onSetup
   };
   const behaviours: Behaviours = [
@@ -217,14 +223,7 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
               getApi: specialisation.getApi
             }),
             onControlAttached(specialisation, editorOffCell),
-            onControlDetached(specialisation, editorOffCell),
-          ]),
-          AddEventsBehaviour.config(toolbarDisablingEvents, [
-            AlloyEvents.runOnAttached((comp, _se) => {
-              if (Disabling.getLastDisabledState(comp) || !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedModes)) {
-                Disabling.set(comp, true);
-              }
-            }),
+            onControlDetached(specialisation, editorOffCell)
           ]),
           ...(spec.tooltip.map(
             (t) => Tooltipping.config(
@@ -259,7 +258,7 @@ const renderToolbarButtonWith = (spec: Toolbar.ToolbarButton, providersBackstage
       // TODO: May have to pass through eventOrder if events start clashing
       AddEventsBehaviour.config('toolbarButtonWith', bonusEvents)
     ] : [ ]),
-    getApi: getButtonApi,
+    getApi: getButtonApi(spec, providersBackstage),
     onSetup: spec.onSetup
   }, providersBackstage, btnName);
 
@@ -276,7 +275,7 @@ const renderToolbarToggleButtonWith = (spec: Toolbar.ToolbarToggleButton, provid
         // TODO: May have to pass through eventOrder if events start clashing
         AddEventsBehaviour.config('toolbarToggleButtonWith', bonusEvents)
       ] : [ ]),
-      getApi: getToggleApi,
+      getApi: getToggleApi(spec, providersBackstage),
       onSetup: spec.onSetup
     },
     providersBackstage,
@@ -320,7 +319,10 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
   const getApi = (comp: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => ({
     isEnabled: () => !Disabling.isDisabled(comp),
     setEnabled: (state: boolean) => {
-      Disabling.set(comp, !state, true);
+    // TODO: Address in TINY-11126
+      if (sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedModes)) {
+        Disabling.set(comp, !state, true);
+      }
     },
     setIconFill: (id, value) => {
       SelectorFind.descendant(comp.element, `svg path[class="${id}"], rect[class="${id}"]`).each((underlinePath) => {
@@ -395,13 +397,6 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         onControlAttached(specialisation, editorOffCell),
         onControlDetached(specialisation, editorOffCell)
       ]),
-      AddEventsBehaviour.config('split-dropdown-disabling-events', [
-        AlloyEvents.runOnAttached((comp, _se) => {
-          if (Disabling.getLastDisabledState(comp) || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedModes)) {
-            Disabling.set(comp, true);
-          }
-        }),
-      ]),
       Unselecting.config({ }),
       ...(spec.tooltip.map((tooltip) => {
         return Tooltipping.config(
@@ -423,7 +418,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     ]),
 
     eventOrder: {
-      [SystemEvents.attachedToDom()]: [ 'alloy.base.behaviour', 'split-dropdown-events', 'tooltipping', 'split-dropdown-disabling-events' ],
+      [SystemEvents.attachedToDom()]: [ 'alloy.base.behaviour', 'split-dropdown-events', 'tooltipping' ],
       [SystemEvents.detachedFromDom()]: [ 'split-dropdown-events', 'tooltipping' ]
     },
 

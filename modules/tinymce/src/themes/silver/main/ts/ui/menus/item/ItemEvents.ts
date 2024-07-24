@@ -23,8 +23,7 @@ const onMenuItemExecute = <T>(info: OnMenuItemExecuteType<T>, itemResponse: Item
 
 const menuItemEventOrder: Record<string, string[]> = {
   // TODO: use the constants provided by behaviours.
-  [SystemEvents.execute()]: [ 'disabling', 'alloy.base.behaviour', 'toggling', 'item-events' ],
-  [SystemEvents.attachedToDom()]: [ 'item-events', 'item-disabling-events' ]
+  [SystemEvents.execute()]: [ 'disabling', 'alloy.base.behaviour', 'toggling', 'item-events' ]
 };
 
 export { onMenuItemExecute, menuItemEventOrder };

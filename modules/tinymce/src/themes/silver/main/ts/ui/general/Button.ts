@@ -11,7 +11,6 @@ import { Dialog, Toolbar } from '@ephox/bridge';
 import { Fun, Merger, Optional, Type } from '@ephox/katamari';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import * as ReadOnly from '../../ReadOnly';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderFormField } from '../alien/FieldLabeller';
@@ -51,7 +50,6 @@ export const renderCommonSpec = (
   const common = {
     buttonBehaviours: Behaviour.derive([
       DisablingConfigs.button(() => !spec.enabled || !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedModes)),
-      ReadOnly.receivingConfig(),
       Tabstopping.config({}),
       ...tooltip.map(
         (t) => Tooltipping.config(
@@ -225,7 +223,7 @@ const renderToggleButton = (spec: FooterToggleButtonSpec, providers: UiFactoryBa
     primary: buttonType === 'primary',
     tooltip: spec.tooltip,
     enabled: spec.enabled ?? false,
-    borderless: false
+    borderless: false,
   };
 
   const tooltipAttributes = buttonSpec.tooltip.or(spec.text).map((tooltip) => ({

@@ -13,7 +13,9 @@ const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, provi
   const getApi = (component: AlloyComponent): Menu.MenuItemInstanceApi => ({
     isEnabled: () => !Disabling.isDisabled(component),
     setEnabled: (state: boolean) => {
-      Disabling.set(component, !state, true);
+      if (providersBackstage.isButtonAllowedInCurrentMode(spec.allowedModes)) {
+        Disabling.set(component, !state);
+      }
     }
   });
 
