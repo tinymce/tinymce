@@ -41,6 +41,15 @@
   span.tox-comment:not([data-mce-selected]) {
     background-color: @document-comment-background-color;
     outline: none;
+    padding: 2px;
+  }
+
+  span.tox-comment[data-mce-selected] {
+    background-color: @document-comment-background-color;
+    border: 2px solid @keyboard-focus-outline-color;
+    border-radius: 3px;
+    outline: none;
+    padding: 2px;
   }
 
   span.tox-comment[data-mce-annotation-active="true"]:not([data-mce-selected="inline-boundary"]) {
