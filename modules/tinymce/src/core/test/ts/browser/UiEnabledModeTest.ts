@@ -847,7 +847,8 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
   context('Floating overflow toolbar button', () => {
     const hook = TinyHooks.bddSetup<Editor>({
       base_url: '/project/tinymce/js/tinymce',
-      toolbar: Arr.range(20, Fun.constant('t1')).join(' '),
+      toolbar: Arr.range(50, Fun.constant('t1')).join(' | '),
+      width: 1105,
       statusbar: false,
       setup: (ed: Editor) => {
         registerMode(ed);
@@ -899,8 +900,9 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         context('onSetup callback and toolbar button spec allowedModes: [ readonly ] not present', () => {
           const hook = TinyHooks.bddSetup<Editor>({
             base_url: '/project/tinymce/js/tinymce',
-            toolbar: Arr.range(20, Fun.constant('t1')).join(' '),
+            toolbar: Arr.range(50, Fun.constant('t1')).join(' | '),
             statusbar: false,
+            width: 1105,
             toolbar_mode: 'floating',
             setup: (ed: Editor) => {
               registerMode(ed);
@@ -959,7 +961,8 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         context('onSetup callback with setEnabled(true) and toolbar button readonly: false', () => {
           const hook = TinyHooks.bddSetup<Editor>({
             base_url: '/project/tinymce/js/tinymce',
-            toolbar: Arr.range(30, Fun.constant('t2')).join(' '),
+            toolbar: Arr.range(30, Fun.constant('t2')).join(' | '),
+            width: 1105,
             toolbar_mode: 'floating',
             statusbar: false,
             setup: (ed: Editor) => {
@@ -1019,7 +1022,8 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         context('onSetup callback with setEnabled(true) and toolbar button allowedModes: [ design, readonly ]', () => {
           const hook = TinyHooks.bddSetup<Editor>({
             base_url: '/project/tinymce/js/tinymce',
-            toolbar: Arr.range(20, Fun.constant('t3')).join(' '),
+            toolbar: Arr.range(50, Fun.constant('t3')).join(' | '),
+            width: 1105,
             toolbar_mode: 'floating',
             statusbar: false,
             setup: (ed: Editor) => {
@@ -1079,7 +1083,8 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         context('onSetup callback with setEnabled(false) and toolbar button allowedModes: [ design, readonly ]', () => {
           const hook = TinyHooks.bddSetup<Editor>({
             base_url: '/project/tinymce/js/tinymce',
-            toolbar: Arr.range(20, Fun.constant('t4')).join(' '),
+            toolbar: Arr.range(50, Fun.constant('t4')).join(' | '),
+            width: 1105,
             toolbar_mode: 'floating',
             statusbar: false,
             setup: (ed: Editor) => {
@@ -1139,8 +1144,9 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         context('onSetup callback not present and toolbar button allowedModes: [ design, readonly ]', () => {
           const hook = TinyHooks.bddSetup<Editor>({
             base_url: '/project/tinymce/js/tinymce',
-            toolbar: Arr.range(20, Fun.constant('t5')).join(' '),
+            toolbar: Arr.range(50, Fun.constant('t5')).join(' | '),
             toolbar_mode: 'floating',
+            width: 1105,
             statusbar: false,
             setup: (ed: Editor) => {
               registerMode(ed);
@@ -1207,7 +1213,8 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
       context(scenario.label, () => {
         const hook = TinyHooks.bddSetup<Editor>({
           base_url: '/project/tinymce/js/tinymce',
-          toolbar: Arr.range(35, Fun.constant(scenario.selector)).join(' '),
+          toolbar: Arr.range(50, Fun.constant(scenario.selector)).join(' | '),
+          width: 1105,
           setup: (ed: Editor) => {
             registerMode(ed);
           }
@@ -1264,7 +1271,8 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
     context('Fontsizeinput', () => {
       const hook = TinyHooks.bddSetup<Editor>({
         base_url: '/project/tinymce/js/tinymce',
-        toolbar: Arr.range(20, Fun.constant('fontsizeinput')).join(' '),
+        toolbar: Arr.range(50, Fun.constant('fontsizeinput')).join(' | '),
+        width: 1105,
         setup: (ed: Editor) => {
           registerMode(ed);
         }

@@ -735,7 +735,8 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
   context('Floating overflow toolbar button', () => {
     const hook = TinyHooks.bddSetup<Editor>({
       base_url: '/project/tinymce/js/tinymce',
-      toolbar: Arr.range(20, Fun.constant('t1')).join(' '),
+      toolbar: Arr.range(50, Fun.constant('t1')).join(' | ' ),
+      width: 1105,
       statusbar: false,
       setup: (ed: Editor) => {
         ed.ui.registry.addButton('t1', {
@@ -779,7 +780,8 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
         context('onSetup callback and toolbar button spec allowedModes not present', () => {
           const hook = TinyHooks.bddSetup<Editor>({
             base_url: '/project/tinymce/js/tinymce',
-            toolbar: Arr.range(20, Fun.constant('t1')).join(' '),
+            toolbar: Arr.range(50, Fun.constant('t1')).join(' | ' ),
+            width: 1105,
             statusbar: false,
             toolbar_mode: 'floating',
             setup: (ed: Editor) => {
@@ -821,7 +823,8 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
         context('onSetup callback with setEnabled(true) and toolbar button readonly: false', () => {
           const hook = TinyHooks.bddSetup<Editor>({
             base_url: '/project/tinymce/js/tinymce',
-            toolbar: Arr.range(30, Fun.constant('t2')).join(' '),
+            toolbar: Arr.range(30, Fun.constant('t2')).join(' | ' ),
+            width: 1105,
             toolbar_mode: 'floating',
             statusbar: false,
             setup: (ed: Editor) => {
@@ -863,7 +866,8 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
         context('onSetup callback with setEnabled(true) and toolbar button allowedModes: [ design, readonly ]', () => {
           const hook = TinyHooks.bddSetup<Editor>({
             base_url: '/project/tinymce/js/tinymce',
-            toolbar: Arr.range(20, Fun.constant('t3')).join(' '),
+            toolbar: Arr.range(50, Fun.constant('t3')).join(' | ' ),
+            width: 1105,
             toolbar_mode: 'floating',
             statusbar: false,
             setup: (ed: Editor) => {
@@ -905,7 +909,8 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
         context('onSetup callback with setEnabled(false) and toolbar button allowedModes: [ design, readonly ]', () => {
           const hook = TinyHooks.bddSetup<Editor>({
             base_url: '/project/tinymce/js/tinymce',
-            toolbar: Arr.range(20, Fun.constant('t4')).join(' '),
+            toolbar: Arr.range(50, Fun.constant('t4')).join(' | ' ),
+            width: 1105,
             toolbar_mode: 'floating',
             statusbar: false,
             setup: (ed: Editor) => {
@@ -947,7 +952,8 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
         context('onSetup callback not present and toolbar button allowedModes: [ design, readonly ]', () => {
           const hook = TinyHooks.bddSetup<Editor>({
             base_url: '/project/tinymce/js/tinymce',
-            toolbar: Arr.range(20, Fun.constant('t5')).join(' '),
+            toolbar: Arr.range(50, Fun.constant('t5')).join(' | ' ),
+            width: 1105,
             toolbar_mode: 'floating',
             statusbar: false,
             setup: (ed: Editor) => {
@@ -998,7 +1004,8 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
       context(scenario.label, () => {
         const hook = TinyHooks.bddSetup<Editor>({
           base_url: '/project/tinymce/js/tinymce',
-          toolbar: Arr.range(35, Fun.constant(scenario.selector)).join(' '),
+          toolbar: Arr.range(50, Fun.constant(scenario.selector)).join(' | ' ),
+          width: 1105,
         }, [], true);
 
         it(`TINY-10980: ${scenario.label} bespoke button should be disabled in uiEnabled mode`, async () => {
@@ -1036,7 +1043,8 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
     context('Fontsizeinput', () => {
       const hook = TinyHooks.bddSetup<Editor>({
         base_url: '/project/tinymce/js/tinymce',
-        toolbar: Arr.range(20, Fun.constant('fontsizeinput')).join(' '),
+        toolbar: Arr.range(50, Fun.constant('fontsizeinput')).join(' | ' ),
+        width: 1105,
       }, [], true);
 
       const assertFontSizeInputEnabled = () => {
