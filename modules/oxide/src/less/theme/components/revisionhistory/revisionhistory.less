@@ -151,7 +151,12 @@
       }
 
       .tox-revisionhistory__card-date {
-        flex: 1;
+        display: flex;
+        gap: @revisionhistory-gap;
+        justify-content: space-between;
+      }
+
+      .tox-revisionhistory__card-date-label {
         font-size: 16px;
         line-height: @revisionhistory-text-lineheight;
       }
@@ -160,6 +165,7 @@
         font-size: 12px;
         font-weight: 600;
         line-height: @revisionhistory-text-lineheight;
+        padding: 0;
       }
 
       .tox-revisionhistory__card-author {
