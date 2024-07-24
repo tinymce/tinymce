@@ -24,12 +24,10 @@ interface StoredMenuButton extends Omit<Dialog.DialogFooterMenuButton, 'items'> 
   readonly items: StoredMenuItem[];
 }
 
-const getMenuButtonApi = (spec: MenuButtonSpec, backstage: UiFactoryBackstage) => (component: AlloyComponent): Toolbar.ToolbarMenuButtonInstanceApi => ({
+const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonInstanceApi => ({
   isEnabled: () => !Disabling.isDisabled(component),
   setEnabled: (state: boolean) => {
-    if (backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedModes)) {
-      Disabling.set(component, !state, true);
-    }
+    Disabling.set(component, !state, true);
   },
   setActive: (state: boolean) => {
     // Note: We can't use the toggling behaviour here, as the dropdown for the menu also relies on it.
@@ -84,11 +82,11 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
           );
         },
         fetchContext,
-        getMenuButtonApi(spec, backstage)(dropdownComp)
+        getMenuButtonApi(dropdownComp)
       );
     },
     onSetup: spec.onSetup,
-    getApi: getMenuButtonApi(spec, backstage),
+    getApi: getMenuButtonApi,
     columns: 1,
     presets: 'normal',
     classes: [],

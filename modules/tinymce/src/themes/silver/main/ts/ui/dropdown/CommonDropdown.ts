@@ -126,6 +126,7 @@ const renderCommonDropdown = <T>(
   }, sharedBackstage.providers.icons);
 
   const fixWidthBehaviourName = Id.generate('common-button-display-events');
+  const disablingEventName = Id.generate('common-button-disabling-events');
   // Should we use Id.generate here?
   const customEventsName = 'dropdown-events';
 
@@ -189,6 +190,13 @@ const renderCommonDropdown = <T>(
           onControlAttached(spec, editorOffCell),
           onControlDetached(spec, editorOffCell)
         ]),
+        AddEventsBehaviour.config(disablingEventName, [
+          AlloyEvents.runOnAttached((comp) => {
+            if (Disabling.getLastDisabledState(comp) || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedModes)) {
+              Disabling.set(comp, true);
+            }
+          })
+        ]),
         AddEventsBehaviour.config(fixWidthBehaviourName, [
           AlloyEvents.runOnAttached((comp, _se) => spec.listRole === 'listbox' ? Fun.noop : UiUtils.forceInitialSize(comp)),
         ]),
@@ -219,6 +227,7 @@ const renderCommonDropdown = <T>(
           Tooltipping.name(),
           customEventsName,
           fixWidthBehaviourName,
+          disablingEventName
         ]
       }),
 

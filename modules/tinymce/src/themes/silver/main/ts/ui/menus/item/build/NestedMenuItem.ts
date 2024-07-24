@@ -16,9 +16,7 @@ const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse,
   const getApi = (component: AlloyComponent): Menu.NestedMenuItemInstanceApi => ({
     isEnabled: () => !Disabling.isDisabled(component),
     setEnabled: (state: boolean) => {
-      if (providersBackstage.isButtonAllowedInCurrentMode(spec.allowedModes)) {
-        Disabling.set(component, !state);
-      }
+      Disabling.set(component, !state, true);
     },
     setIconFill: (id, value) => {
       SelectorFind.descendant(component.element, `svg path[class="${id}"], rect[class="${id}"]`).each((underlinePath) => {
