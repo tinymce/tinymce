@@ -672,9 +672,8 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
           editor.mode.set('readonly');
           scenario.assertButtonDisabled('t4');
 
-          // Switching mode when the overflow toolbar is opened, the onSetup callback is not executed hence all buttons are enabled
           editor.mode.set('design');
-          scenario.assertButtonEnabled('t4');
+          scenario.assertButtonDisabled('t4');
         });
       });
 
@@ -924,7 +923,7 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
             assertOverflowButtonDisabled();
 
             editor.mode.set('design');
-            scenario.assertButtonEnabled('t4');
+            scenario.assertButtonDisabled('t4');
             closeOverflowToolbar(editor);
           });
 
