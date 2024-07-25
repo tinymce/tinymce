@@ -11,6 +11,7 @@ import { Dialog, Toolbar } from '@ephox/bridge';
 import { Fun, Merger, Optional, Type } from '@ephox/katamari';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import * as ReadOnly from '../../ReadOnly';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderFormField } from '../alien/FieldLabeller';
@@ -50,6 +51,7 @@ export const renderCommonSpec = (
   const common = {
     buttonBehaviours: Behaviour.derive([
       DisablingConfigs.button(() => !spec.enabled || !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedModes)),
+      ReadOnly.receivingConfigConditional(() => !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedModes)),
       Tabstopping.config({}),
       ...tooltip.map(
         (t) => Tooltipping.config(
@@ -301,7 +303,10 @@ export const renderDialogButton = (spec: ButtonSpec, providersBackstage: UiFacto
   const action = getAction(spec.name, 'custom');
   return renderFormField(Optional.none(), AlloyFormField.parts.field({
     factory: AlloyButton,
-    ...renderButtonSpec(spec, Optional.some(action), providersBackstage, [
+    ...renderButtonSpec({
+      ...spec,
+      allowedModes: [ 'design' ]
+    }, Optional.some(action), providersBackstage, [
       RepresentingConfigs.memory(''),
       ComposingConfigs.self()
     ])
