@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: Added support for CSS Variables in the `color_map`
+time: 2024-07-25T10:42:28.314139+08:00
+custom:
+  Issue: GH-9788
