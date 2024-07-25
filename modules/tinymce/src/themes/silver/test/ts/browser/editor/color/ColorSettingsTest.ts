@@ -21,8 +21,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorSettingsTest', () => {
     '#3498db', 'Black',
     'rgb(155, 89, 182)', 'Black',
     'PeachPuff', 'Some horrible pink/orange color',
-    'rgba(255, 99, 71, 0.5)', 'Pale tomato',
-    'var(--color-black)', 'Black',
+    'rgba(255, 99, 71, 0.5)', 'Pale tomato'
   ];
   const hook = TinyHooks.bddSetupLight<Editor>({
     toolbar: 'forecolor backcolor',
@@ -95,11 +94,6 @@ describe('browser.tinymce.themes.silver.editor.color.ColorSettingsTest', () => {
       value: '#FF6347',
       type: 'choiceitem',
       delta: 1
-    },
-    {
-      text: 'Black',
-      value: 'var(--black)',
-      type: 'choiceitem'
     }
   ];
 
@@ -117,5 +111,38 @@ describe('browser.tinymce.themes.silver.editor.color.ColorSettingsTest', () => {
     assertCols(editor, 'default', 5);
     assertCols(editor, 'forecolor', 5);
     assertCols(editor, 'hilitecolor', 5);
+  });
+});
+it('TBA: getCurrentColor should use raw color styles', () => {
+  const colorSettings = [
+    '#1abc9c', 'Black',
+    'hsl(145, 63.2%, 49.0%)', 'Black',
+    'var(--red)', 'Red',
+  ];
+
+  const mappedColors: ExpectedColor[] = [
+    {
+      text: 'Black',
+      value: '#1abc9c',
+      type: 'choiceitem'
+    },
+    {
+      text: 'Black',
+      value: 'hsl(145, 63.2%, 49.0%)',
+      type: 'choiceitem'
+    },
+    {
+      text: 'Red',
+      value: 'var(--red)',
+      type: 'choiceitem'
+    },
+  ];
+
+  const calculatedColors = Options.mapColorsRaw(colorSettings);
+
+  Arr.each(mappedColors, (item, i) => {
+    assert.equal(calculatedColors[i].text, item.text, 'Color text should match');
+    assert.equal(calculatedColors[i].value, item.value, 'Color value should match');
+    assert.equal(calculatedColors[i].type, item.type, 'Color type should match');
   });
 });
