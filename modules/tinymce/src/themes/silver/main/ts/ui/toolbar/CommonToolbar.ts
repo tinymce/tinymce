@@ -82,9 +82,8 @@ const getToolbarBehaviours = (toolbarSpec: ToolbarSpec, modeName: 'cyclic' | 'ac
 
   return Behaviour.derive([
     DisablingConfigs.toolbarButton(toolbarSpec.providers.isDisabled),
-    // Force toolbar button to be disabled in readonly mode.
-    ReadOnly.receivingConfigConditional((_: AlloyComponent, data: ReadOnly.ReadOnlyData) => {
-      return !toolbarSpec.providers.isButtonAllowedInCurrentMode([ 'design', 'readonly' ]) || data.readonly;
+    ReadOnly.receivingConfigConditional(() => {
+      return !toolbarSpec.providers.isButtonAllowedInCurrentMode([ 'design', 'readonly' ]);
     }),
     Keying.config({
       // Tabs between groups
