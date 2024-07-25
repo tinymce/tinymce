@@ -14,12 +14,21 @@ const mapColors = (colorMap: string[]): Menu.ChoiceMenuItemSpec[] => {
   const colors: Menu.ChoiceMenuItemSpec[] = [];
 
   for (let i = 0; i < colorMap.length; i += 2) {
-    colors.push({
-      text: colorMap[i + 1],
-      value: '#' + Transformations.anyToHex(colorMap[i]).value,
-      icon: 'checkmark',
-      type: 'choiceitem'
-    });
+    if (colorMap[i].match(/^var\(--.*\)/)) {
+      colors.push({
+        text: colorMap[i + 1],
+        value: colorMap[i],
+        icon: 'checkmark',
+        type: 'choiceitem'
+      });
+    } else {
+      colors.push({
+        text: colorMap[i + 1],
+        value: '#' + Transformations.anyToHex(colorMap[i]).value,
+        icon: 'checkmark',
+        type: 'choiceitem'
+      });
+    }
   }
 
   return colors;

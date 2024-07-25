@@ -21,7 +21,8 @@ describe('browser.tinymce.themes.silver.editor.color.ColorSettingsTest', () => {
     '#3498db', 'Black',
     'rgb(155, 89, 182)', 'Black',
     'PeachPuff', 'Some horrible pink/orange color',
-    'rgba(255, 99, 71, 0.5)', 'Pale tomato'
+    'rgba(255, 99, 71, 0.5)', 'Pale tomato',
+    'var(--color-black)', 'Black',
   ];
   const hook = TinyHooks.bddSetupLight<Editor>({
     toolbar: 'forecolor backcolor',
@@ -94,6 +95,11 @@ describe('browser.tinymce.themes.silver.editor.color.ColorSettingsTest', () => {
       value: '#FF6347',
       type: 'choiceitem',
       delta: 1
+    },
+    {
+      text: 'Black',
+      value: 'var(--black)',
+      type: 'choiceitem'
     }
   ];
 
