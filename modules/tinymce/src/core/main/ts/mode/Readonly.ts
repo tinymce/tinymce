@@ -173,7 +173,7 @@ const processReadonlyEvents = (editor: Editor, e: Event): void => {
 };
 
 const registerReadOnlySelectionBlockers = (editor: Editor): void => {
-  editor.on('beforeinput paste', (e) => {
+  editor.on('beforeinput paste cut dragend dragover draggesture dragdrop drop drag', (e) => {
     if (isReadOnly(editor)) {
       e.preventDefault();
     }
