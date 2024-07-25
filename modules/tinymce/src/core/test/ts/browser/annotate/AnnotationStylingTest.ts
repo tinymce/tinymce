@@ -13,6 +13,9 @@ interface Outline {
   readonly width: string;
 }
 
+// For now they have the same properties
+type Border = Outline;
+
 describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
@@ -76,6 +79,12 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
     style: 'solid'
   };
 
+  const commentActiveBorder: Border = {
+    color: 'rgb(0, 108, 231)', // #006ce7
+    width: '2px',
+    style: 'solid'
+  };
+
   const noBackgroundColor = 'rgba(0, 0, 0, 0)';
   const commentBackgroundColor = 'rgb(255, 232, 157)'; // #ffe89d
   const commentActiveBackgroundColor = 'rgb(254, 214, 53)'; // #fed635
@@ -92,10 +101,21 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
     };
   };
 
+  const getBorder = (elm: SugarElement<Element>): Border => {
+    const color = Css.get(elm, 'border-color');
+    const width = Css.get(elm, 'border-width');
+    const style = Css.get(elm, 'border-style');
+    return {
+      color,
+      width,
+      style
+    };
+  };
+
   const getBackgroundColor = (elm: SugarElement<Element>) =>
     Css.get(elm, 'background-color');
 
-  const pAssertStyling = (editor: Editor, selector: string, expectedBackgroundColor: string, expectedOutline: Outline, checkOtherNodes: boolean = true) =>
+  const pAssertStyling = (editor: Editor, selector: string, expectedBackgroundColor: string, expectedOutline: Outline, checkOtherNodes: boolean = true, expectedBorder?: Border) =>
     Waiter.pTryUntil('Should have correct styling', () => {
       const body = TinyDom.body(editor);
       const elm = UiFinder.findIn(body, selector).getOrDie();
@@ -103,6 +123,10 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
       const actualOutline = getOutline(elm);
       assert.equal(actualBackgroundColor, expectedBackgroundColor);
       assert.deepEqual(actualOutline, expectedOutline);
+      if (expectedBorder) {
+        const actualBorder = getBorder(elm);
+        assert.deepEqual(actualBorder, expectedBorder);
+      }
 
       if (checkOtherNodes) {
         const parents = SelectorFilter.ancestors(elm, '*', (e) => Compare.eq(e, body));
@@ -263,22 +287,22 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
           await pAssertStyling(editor, 'span', commentBackgroundColor, noOutline);
         });
 
-        it('TINY-8698: should have blue background on commented text when it is selected', async () => {
+        it('TINY-8698: should have yellow background on commented text when it is selected', async () => {
           const editor = hook.editor();
           modeTestSetContent(editor, '<p>one two</p>');
           TinySelections.setCursor(editor, [ 0, 0 ], 1);
           editor.annotator.annotate('test-comment', {});
           TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
-          await pAssertStyling(editor, 'span', inlineBoundaryBackgroundColor, noOutline);
+          await pAssertStyling(editor, 'span', commentBackgroundColor, noOutline, true, commentActiveBorder);
         });
 
-        it('TINY-8698: should have blue background on commented text when it is selected and yellow background for other related comments', async () => {
+        it('TINY-8698: should have yellow background on commented text when it is selected and yellow background for other related comments', async () => {
           const editor = hook.editor();
           modeTestSetContent(editor, '<p>one two</p><p>three four</p>');
           TinySelections.setSelection(editor, [ 0, 0 ], 4, [], 2);
           editor.annotator.annotate('test-comment', {});
           TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
-          await pAssertStyling(editor, 'span[data-mce-selected]', inlineBoundaryBackgroundColor, noOutline);
+          await pAssertStyling(editor, 'span[data-mce-selected]', commentBackgroundColor, noOutline, true, commentActiveBorder);
           await pAssertStyling(editor, 'span:not([data-mce-selected])', commentActiveBackgroundColor, noOutline);
         });
       });
@@ -290,7 +314,7 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
           TinySelections.setSelection(editor, [ 0, 0 ], 4, [], 4);
           editor.annotator.annotate('test-comment', {});
           TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
-          await pAssertStyling(editor, 'span[data-mce-selected]:contains("two")', inlineBoundaryBackgroundColor, noOutline);
+          await pAssertStyling(editor, 'span[data-mce-selected]:contains("two")', commentBackgroundColor, noOutline, true, commentActiveBorder);
           await pAssertStyling(editor, 'span:not([data-mce-selected]):contains("three four")', commentActiveBackgroundColor, noOutline);
           await pAssertStyling(editor, 'span img', noBackgroundColor, commentActiveOutline);
           await pAssertStyling(editor, 'figure', noBackgroundColor, commentActiveOutline);
