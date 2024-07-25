@@ -1,6 +1,6 @@
 project: tinymce
 kind: Added
-body: Added support for CSS Variables in the `color_map`
+body: Added support for using raw CSS in the list of possible colours, using the `color_map_raw` property.
 time: 2024-07-25T10:42:28.314139+08:00
 custom:
   Issue: GH-9788
