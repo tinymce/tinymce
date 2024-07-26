@@ -15,6 +15,7 @@
 @revisionhistory-box-shadow: 0 4px 8px 0 rgba(34, 47, 62, .1);
 @revisionhistory-sidebar-minwidth: 248px;
 @revisionhistory-text-lineheight: 24px;
+@revisionhistory-avatar-height: 36px;
 
 .overflow-text() {
   overflow: hidden;
@@ -166,7 +167,7 @@
         display: flex;
         flex: 1 0 0;
         gap: 8px;
-        height: 36px;
+        height: @revisionhistory-avatar-height;
       }
 
       .tox-revisionhistory__card-author-name {
@@ -174,12 +175,15 @@
 
         font-size: 14px;
         font-weight: 700;
-        line-height: 18px;
+        line-height: @revisionhistory-avatar-height / 2;
       }
 
       .tox-revisionhistory__avatar {
-        height: 36px;
-        width: 36px;
+        border-radius: 50%;
+        height: @revisionhistory-avatar-height;
+        object-fit: cover;
+        vertical-align: middle;
+        width: @revisionhistory-avatar-height;
       }
 
       .tox-revisionhistory__norevision {
