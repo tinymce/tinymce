@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Caret would unexpectedly go to a not editable table row above when user pressed enter.
+time: 2024-07-26T15:41:05.828102+02:00
+custom:
+  Issue: TINY-11077
