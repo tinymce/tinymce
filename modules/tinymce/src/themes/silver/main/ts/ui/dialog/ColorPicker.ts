@@ -22,6 +22,7 @@ const english: Record<string, string> = {
   'colorcustom.rgb.hex.description': 'Hex color code',
   'colorcustom.rgb.range': 'Range 0 to 255',
   'colorcustom.rgb.invalid': 'Numbers only, 0 to 255',
+  'colorcustom.rgb.invalidHex': 'Hexadecimal only, 000000 to FFFFFF',
   'aria.color.picker': 'Color Picker',
   'aria.input.invalid': 'Invalid input'
 };

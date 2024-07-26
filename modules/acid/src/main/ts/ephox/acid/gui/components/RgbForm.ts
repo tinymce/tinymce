@@ -182,7 +182,7 @@ const rgbFormFactory = (
                       getClass('rgb-warning-note')
                     ]
                   },
-                  components: [ GuiFactory.text(translate('colorcustom.rgb.invalid')) ]
+                  components: [ GuiFactory.text(translate(name === 'hex' ? 'colorcustom.rgb.invalidHex' : 'colorcustom.rgb.invalid')) ]
                 }
               ]);
             },
