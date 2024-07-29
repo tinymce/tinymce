@@ -1,8 +1,8 @@
 import { FocusTools, UiFinder } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
-import { SugarBody, Css, SugarDocument } from '@ephox/sugar';
-import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { SugarBody, SugarDocument } from '@ephox/sugar';
+import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -37,6 +37,7 @@ describe('browser.tinymce.plugins.emoticons.EmojiStyleTest', () => {
     // Currently there is no way to get the pseudo element styles in the Css module, so we are using the window.getComputedStyle
     const styles = window.getComputedStyle(emoji, ':after');
 
+    // Check 'inset' does not exist in the box-shadow, should be inset, without single quotes
     assert.isFalse(styles.boxShadow.includes('\'inset\''), 'boxShadow contains \'inset\'');
   });
 });
