@@ -604,7 +604,7 @@ describe('browser.tinymce.core.content.insert.InsertContentTest', () => {
             '</td>' +
           '</tr>' +
         '</tbody>' +
-      '</table>' + 
+      '</table>' +
       `<p>${String.fromCharCode(160)}</p>` // UTF-16 char code '160' is NO-BREAK SPACE (U+00A0)
     );
   });
