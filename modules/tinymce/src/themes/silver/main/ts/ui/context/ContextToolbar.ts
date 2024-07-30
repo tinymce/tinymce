@@ -26,7 +26,7 @@ type ScopedToolbars = ToolbarScopes.ScopedToolbars;
 export type ContextSpecType = InlineContent.ContextToolbarSpec | InlineContent.ContextFormSpec;
 export type ContextType = InlineContent.ContextToolbar | InlineContent.ContextForm;
 
-type ContextToolbarButtonType = Toolbar.ToolbarButtonSpec | Toolbar.ToolbarMenuButtonSpec | Toolbar.ToolbarSplitButtonSpec | Toolbar.ToolbarToggleButtonSpec | Toolbar.GroupToolbarButtonSpec;
+type ContextToolbarButtonType = Toolbar.ToolbarButtonSpec | Toolbar.ToolbarMenuButtonSpec | Toolbar.ToolbarSplitButtonSpec | Toolbar.ToolbarToggleButtonSpec | Toolbar.GroupToolbarButtonSpec | Toolbar.ToolbarLabelSpec;
 
 interface Extras {
   readonly backstage: UiFactoryBackstage;

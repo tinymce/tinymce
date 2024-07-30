@@ -2,6 +2,7 @@ import {
   createGroupToolbarButton, GroupToolbarButton, GroupToolbarButtonInstanceApi, GroupToolbarButtonSpec
 } from '../components/toolbar/GroupToolbarButton';
 import { createToolbarButton, ToolbarButton, ToolbarButtonInstanceApi, ToolbarButtonSpec } from '../components/toolbar/ToolbarButton';
+import { createToolbarLabel, ToolbarLabel, ToolbarLabelInstanceApi, ToolbarLabelSpec } from '../components/toolbar/ToolbarLabel';
 import { createMenuButton, ToolbarMenuButton, ToolbarMenuButtonInstanceApi, ToolbarMenuButtonSpec } from '../components/toolbar/ToolbarMenuButton';
 import {
   ColumnTypes, createSplitButton, PresetItemTypes, PresetTypes, ToolbarSplitButton, ToolbarSplitButtonInstanceApi, ToolbarSplitButtonSpec
@@ -16,6 +17,11 @@ export {
   ToolbarButtonSpec,
   ToolbarButtonInstanceApi,
   createToolbarButton,
+
+  ToolbarLabel,
+  ToolbarLabelSpec,
+  ToolbarLabelInstanceApi,
+  createToolbarLabel,
 
   ToolbarSplitButton,
   ToolbarSplitButtonSpec,
