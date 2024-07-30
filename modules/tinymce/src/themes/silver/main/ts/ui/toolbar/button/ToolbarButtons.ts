@@ -1,7 +1,14 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button as AlloyButton, Disabling, FloatingToolbarButton, Focusing,
+  AddEventsBehaviour,
+  Button as AlloyButton,
+  AlloyComponent,
+  AlloyEvents,
+  SplitDropdown as AlloySplitDropdown,
+  AlloyTriggers, Behaviour,
+  Disabling, FloatingToolbarButton, Focusing,
   GuiFactory,
-  Keying, Memento, NativeEvents, Replacing, SketchSpec, SplitDropdown as AlloySplitDropdown, SystemEvents, TieredData, TieredMenuTypes, Toggling,
+  Keying, Memento, NativeEvents, Replacing, SketchSpec,
+  SystemEvents, TieredData, TieredMenuTypes, Toggling,
   Tooltipping,
   Unselecting
 } from '@ephox/alloy';
@@ -427,10 +434,41 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
   });
 };
 
+const renderToolbarLabel = (spec: Toolbar.ToolbarLabel, providersBackstage: UiFactoryBackstageProviders, btnName?: string): SketchSpec => {
+  const optMemDisplayText = spec.text.map(
+    (text) => Memento.record(renderLabel(text, ToolbarButtonClasses.Button, providersBackstage))
+  );
+  const optMemDisplayIcon = spec.icon.map(
+    (icon) => Memento.record(renderReplaceableIconFromPack(icon, providersBackstage.icons))
+  );
+
+  // eslint-disable-next-line no-console
+  console.log('ToolbarButtonClasses.Label: ', ToolbarButtonClasses.Label);
+  // eslint-disable-next-line no-console
+  console.log('btnName: ', btnName);
+  return AlloyButton.sketch({
+    dom: {
+      tag: 'div',
+      classes: [ ToolbarButtonClasses.Label ].concat(spec.text.isSome() ? [ ToolbarButtonClasses.MatchWidth ] : []),
+      attributes: {
+        ...getTooltipAttributes(spec.tooltip, providersBackstage),
+        ...(Type.isNonNullable(btnName) ? { 'data-mce-name': btnName } : {})
+      }
+    },
+    role: 'label',
+    components: componentRenderPipeline([
+      optMemDisplayIcon.map((mem) => mem.asSpec()),
+      optMemDisplayText.map((mem) => mem.asSpec()),
+    ])
+  });
+
+};
+
 export {
   renderCommonStructure,
   renderFloatingToolbarButton,
   renderToolbarButton,
+  renderToolbarLabel,
   renderToolbarButtonWith,
   renderToolbarToggleButton,
   renderToolbarToggleButtonWith,
