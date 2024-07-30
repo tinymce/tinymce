@@ -37,7 +37,7 @@ describe('browser.tinymce.plugins.emoticons.EmojiStyleTest', () => {
     // Currently there is no way to get the pseudo element styles in the Css module, so we are using the window.getComputedStyle
     const styles = window.getComputedStyle(emoji, ':after');
 
-    // Check 'inset' does not exist in the box-shadow, should be inset, without single quotes
-    assert.isFalse(styles.boxShadow.includes('\'inset\''), 'boxShadow contains \'inset\'');
+    // Check inset is not wrapped in single quotes
+    assert.isFalse(styles.boxShadow.includes('\'inset\''), 'inset should not wrapped in single quotes');
   });
 });
