@@ -1,5 +1,23 @@
 import {
-  Behaviour, Button as AlloyButton, Tabstopping, GuiFactory, SimpleSpec, Toggling, Replacing, Keying, AddEventsBehaviour, AlloyEvents, NativeEvents, AlloyComponent, CustomEvent, Receiving, Focusing, Sliding, AlloyTriggers, EventFormat
+  AddEventsBehaviour,
+  Button as AlloyButton,
+  AlloyComponent,
+  AlloyEvents,
+  AlloyTriggers,
+  Behaviour,
+  CustomEvent,
+  EventFormat,
+  Focusing,
+  GuiFactory,
+  Keying,
+  NativeEvents,
+  Receiving,
+  Replacing,
+  SimpleSpec,
+  Sliding,
+  Tabstopping,
+  Toggling,
+  Tooltipping
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Cell, Fun, Id, Optional } from '@ephox/katamari';
@@ -53,7 +71,7 @@ interface RenderDirectoryChildrenProps extends RenderItemProps {
   selectedId: Optional<string>;
 }
 
-const renderLabel = (text: string ): SimpleSpec => ({
+const renderLabel = (text: string): SimpleSpec => ({
   dom: {
     tag: 'span',
     classes: [ 'tox-tree__label' ],
@@ -65,6 +83,21 @@ const renderLabel = (text: string ): SimpleSpec => ({
     GuiFactory.text(text)
   ],
 });
+
+const renderSpecialStateIcon = (container: Dialog.Directory | Dialog.Leaf, components: SimpleSpec[], backstage: UiFactoryBackstage): void => {
+  container.specialState.each((icon) =>
+    components.push(renderIcon(
+      icon.icon, backstage.shared.providers.icons, [
+        Tooltipping.config(
+          backstage.shared.providers.tooltips.getConfig({
+            tooltipText: icon.tooltip
+          })
+        )
+      ],
+      [ 'tox-icon-special-state' ]
+    ))
+  );
+};
 
 const leafLabelEventsId = Id.generate('leaf-label-event-id');
 
@@ -78,6 +111,7 @@ const renderLeafLabel = ({
 }: RenderLeafLabelProps): SimpleSpec => {
   const internalMenuButton = leaf.menu.map((btn) => renderMenuButton(btn, 'tox-mbtn', backstage, Optional.none(), visible));
   const components = [ renderLabel(leaf.title) ];
+  renderSpecialStateIcon(leaf, components, backstage);
   internalMenuButton.each((btn) => components.push(btn));
 
   return AlloyButton.sketch({
@@ -147,13 +181,13 @@ const renderLeafLabel = ({
   });
 };
 
-const renderIcon = (iconName: string, iconsProvider: Icons.IconProvider, behaviours: Array<Behaviour.NamedConfiguredBehaviour<any, any, any>>): SimpleSpec =>
+const renderIcon = (iconName: string, iconsProvider: Icons.IconProvider, behaviours: Array<Behaviour.NamedConfiguredBehaviour<any, any, any>>, extraClasses?: string[]): SimpleSpec =>
   Icons.render(iconName, {
     tag: 'span',
     classes: [
       'tox-tree__icon-wrap',
       'tox-icon',
-    ],
+    ].concat(extraClasses || []),
     behaviours
   }, iconsProvider);
 
@@ -181,6 +215,7 @@ const renderDirectoryLabel = ({
     },
     renderLabel(directory.title)
   ];
+  renderSpecialStateIcon(directory, components, backstage);
   internalMenuButton.each((btn) => {
     components.push(btn);
   });
@@ -196,7 +231,7 @@ const renderDirectoryLabel = ({
   return AlloyButton.sketch({
     dom: {
       tag: 'div',
-      classes: [ 'tox-tree--directory__label', 'tox-trbtn' ].concat( visible ? [ 'tox-tree--directory__label--visible' ] : [] ),
+      classes: [ 'tox-tree--directory__label', 'tox-trbtn' ].concat(visible ? [ 'tox-tree--directory__label--visible' ] : []),
     },
     components,
     action: toggleExpandChildren,
@@ -212,11 +247,11 @@ const renderDirectoryLabel = ({
         AlloyEvents.run<EventArgs<KeyboardEvent>>(NativeEvents.keydown(), (comp, se) => {
           const isRightArrowKey = se.event.raw.code === 'ArrowRight';
           const isLeftArrowKey = se.event.raw.code === 'ArrowLeft';
-          if (isRightArrowKey && noChildren ) {
+          if (isRightArrowKey && noChildren) {
             se.stop();
           }
-          if (isRightArrowKey || isLeftArrowKey ) {
-            SelectorFind.ancestor( comp.element, '.tox-tree--directory').each((directoryEle) => {
+          if (isRightArrowKey || isLeftArrowKey) {
+            SelectorFind.ancestor(comp.element, '.tox-tree--directory').each((directoryEle) => {
               comp.getSystem().getByDom(directoryEle).each((directoryComp) => {
                 if (!Toggling.isOn(directoryComp) && isRightArrowKey || Toggling.isOn(directoryComp) && isLeftArrowKey) {
                   toggleExpandChildren(comp);
@@ -311,14 +346,14 @@ const renderDirectory = ({
         }),
         AlloyEvents.run<ToggleExpandTreeNodeEventArgs>('expand-tree-node', (_cmp, se) => {
           const { expanded, node } = se.event;
-          expandedIdsCell.set( expanded ?
+          expandedIdsCell.set(expanded ?
             [ ...expandedIdsCell.get(), node ] :
             expandedIdsCell.get().filter((id) => id !== node)
           );
         }),
       ]),
       Toggling.config({
-        ...( directory.children.length > 0 ? {
+        ...(directory.children.length > 0 ? {
           aria: {
             mode: 'expanded',
           },
@@ -378,7 +413,7 @@ const renderTree = (
       AddEventsBehaviour.config(treeEventsId, [
         AlloyEvents.run<ToggleExpandTreeNodeEventArgs>('expand-tree-node', (_cmp, se) => {
           const { expanded, node } = se.event;
-          expandedIds.set( expanded ?
+          expandedIds.set(expanded ?
             [ ...expandedIds.get(), node ] :
             expandedIds.get().filter((id) => id !== node)
           );
