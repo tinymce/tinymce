@@ -1,4 +1,4 @@
-import { Optional } from '@ephox/katamari';
+import { Num, Optional } from '@ephox/katamari';
 
 import { Gene } from '../api/Gene';
 import { TextGene } from '../api/TextGene';
@@ -13,7 +13,7 @@ const isNu = (item: Gene): boolean => {
 
 const seed = (): Seed => {
   return {
-    random: Math.random()
+    random: Num.random()
   };
 };
 

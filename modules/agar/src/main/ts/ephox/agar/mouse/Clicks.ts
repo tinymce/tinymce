@@ -30,7 +30,7 @@ interface Settings {
 }
 
 // Types of events
-type EventType = 'click' | 'mousedown' | 'mouseup' | 'mousemove' | 'mouseover' | 'mouseout' | 'contextmenu';
+type EventType = 'click' | 'mousedown' | 'mouseup' | 'mousemove' | 'mouseover' | 'mouseout' | 'contextmenu' | 'dblclick';
 
 // Fire an event
 const event = (type: EventType, { dx, dy, ...settings }: Settings) => (element: SugarElement<Node>): void => {
@@ -58,6 +58,7 @@ const mouseOver = Fun.curry(event, 'mouseover');
 const mouseOut = Fun.curry(event, 'mouseout');
 const contextMenu = (settings: Settings): (element: SugarElement<Node>) => void =>
   event('contextmenu', { button: rightClickButton, ...settings });
+const dblclick = Fun.curry(event, 'dblclick');
 
 // Note: This can be used for phantomjs.
 const trigger = (element: SugarElement<HTMLElement>): void => {
@@ -103,5 +104,6 @@ export {
   contextMenu,
   // deprecate these
   point,
-  trigger
+  trigger,
+  dblclick
 };

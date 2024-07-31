@@ -1,6 +1,7 @@
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, EventFormat, Focusing, Form, FormField, FormTypes, GuiFactory, Input, Invalidating,
-  Memento, Representing, SimulatedEvent, Sketcher, SketchSpec, Tabstopping, UiSketcher
+  Memento, Representing, SimpleSpec, SimulatedEvent, Sketcher, SketchSpec,
+  Tabstopping, Tooltipping, TooltippingTypes, UiSketcher
 } from '@ephox/alloy';
 import { Cell, Fun, Future, Id, Merger, Optional, Result } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
@@ -28,6 +29,14 @@ type InputEvent = HexInputEvent | ColorInputEvent;
 
 const translatePrefix = 'colorcustom.rgb.';
 
+interface RGBTooltipSpec {
+  tooltipText: string;
+  onShow?: (comp: AlloyComponent, tooltip: AlloyComponent) => void;
+  onSetup?: (comp: AlloyComponent) => void;
+}
+
+export type RGBTooltipGetConfig = (spec: RGBTooltipSpec) => TooltippingTypes.TooltippingConfigSpec;
+
 // tslint:disable:no-empty-interface
 export interface RgbFormDetail extends Sketcher.SingleSketchDetail {
 }
@@ -40,13 +49,46 @@ export interface RgbFormSketcher extends Sketcher.SingleSketch<RgbFormSpec> {
   updateHex: (slider: AlloyComponent, colour: Hex) => void;
 }
 
+export type RgbIconCreation = (name: string, errId: Optional<string>, icon?: string, label?: string) => SimpleSpec;
+
+interface TooltipInteractionApi {
+  setEnabled: (enabled: boolean) => void;
+  immediatelyShow: () => void;
+  immediatelyHide: () => void;
+  isEnabled: () => boolean;
+}
+
+const uninitiatedTooltipApi: TooltipInteractionApi = {
+  isEnabled: Fun.always,
+  setEnabled: Fun.noop,
+  immediatelyShow: Fun.noop,
+  immediatelyHide: Fun.noop,
+};
+
 const rgbFormFactory = (
   translate: (key: string) => string,
   getClass: (key: string) => string,
   onValidHexx: (component: AlloyComponent) => void,
-  onInvalidHexx: (component: AlloyComponent) => void
+  onInvalidHexx: (component: AlloyComponent) => void,
+  tooltipGetConfig: RGBTooltipGetConfig,
+  makeIcon: RgbIconCreation
 ): RgbFormSketcher => {
-  const invalidation = (label: string, isValid: (value: string) => boolean) => Invalidating.config({
+  const setTooltipEnabled = (enabled: boolean, tooltipApi: Cell<TooltipInteractionApi>) => {
+    const api = tooltipApi.get();
+    if (enabled === api.isEnabled()) {
+      return;
+    }
+
+    api.setEnabled(enabled);
+
+    if (enabled) {
+      api.immediatelyShow();
+    } else {
+      api.immediatelyHide();
+    }
+  };
+
+  const invalidation = (label: string, isValid: (value: string) => boolean, tooltipApi: Cell<TooltipInteractionApi>) => Invalidating.config({
     invalidClass: getClass('invalid'),
 
     notify: {
@@ -56,13 +98,14 @@ const rgbFormFactory = (
         });
       },
       onValid: (comp: AlloyComponent) => {
+        setTooltipEnabled(false, tooltipApi);
         AlloyTriggers.emitWith(comp, validInput, {
           type: label,
           value: Representing.getValue(comp)
         });
       },
-
       onInvalid: (comp: AlloyComponent) => {
+        setTooltipEnabled(true, tooltipApi);
         AlloyTriggers.emitWith(comp, invalidInput, {
           type: label,
           value: Representing.getValue(comp)
@@ -87,6 +130,7 @@ const rgbFormFactory = (
     description: string,
     data: string | number
   ) => {
+    const tooltipApi = Cell(uninitiatedTooltipApi);
     const helptext = translate(translatePrefix + 'range');
 
     const pLabel = FormField.parts.label({
@@ -105,8 +149,45 @@ const rgbFormFactory = (
 
       // Have basic invalidating and tabstopping behaviour.
       inputBehaviours: Behaviour.derive([
-        invalidation(name, isValid),
-        Tabstopping.config({})
+        invalidation(name, isValid, tooltipApi),
+        Tabstopping.config({}),
+        Tooltipping.config({
+          ...tooltipGetConfig({
+            tooltipText: '',
+            onSetup: (comp: AlloyComponent) => {
+              tooltipApi.set(
+                {
+                  isEnabled: () => {
+                    return Tooltipping.isEnabled(comp);
+                  },
+                  setEnabled: (enabled: boolean) => {
+                    return Tooltipping.setEnabled(comp, enabled);
+                  },
+                  immediatelyShow: () => {
+                    return Tooltipping.immediateOpenClose(comp, true);
+                  },
+                  immediatelyHide: () => {
+                    return Tooltipping.immediateOpenClose(comp, false);
+                  },
+                }
+              );
+              Tooltipping.setEnabled(comp, false);
+            },
+            onShow: (component, _tooltip) => {
+              Tooltipping.setComponents(component, [
+                {
+                  dom: {
+                    tag: 'p',
+                    classes: [
+                      getClass('rgb-warning-note')
+                    ]
+                  },
+                  components: [ GuiFactory.text(translate(name === 'hex' ? 'colorcustom.rgb.invalidHex' : 'colorcustom.rgb.invalid')) ]
+                }
+              ]);
+            },
+          })
+        })
       ]),
 
       // If it was invalid, and the value was set, run validation against it.
@@ -118,7 +199,23 @@ const rgbFormFactory = (
       }
     });
 
-    const comps = [ pLabel, pField ];
+    const errorId = Id.generate('aria-invalid');
+
+    const memInvalidIcon = Memento.record(
+      makeIcon('invalid', Optional.some(errorId), 'warning')
+    );
+
+    const memStatus = Memento.record({
+      dom: {
+        tag: 'div',
+        classes: [ getClass('invalid-icon') ]
+      },
+      components: [
+        memInvalidIcon.asSpec()
+      ]
+    });
+
+    const comps = [ pLabel, pField, memStatus.asSpec() ];
     const concats = name !== 'hex' ? [ FormField.parts['aria-descriptor']({
       text: helptext
     }) ] : [];
@@ -129,7 +226,10 @@ const rgbFormFactory = (
         tag: 'div',
         attributes: {
           role: 'presentation'
-        }
+        },
+        classes: [
+          getClass('rgb-container'),
+        ]
       },
       components
     };

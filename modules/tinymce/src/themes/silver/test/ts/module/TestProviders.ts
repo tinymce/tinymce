@@ -13,10 +13,16 @@ export default {
   menuItems: (): Record<string, any> => ({}),
   translate: I18n.translate,
   isDisabled: Fun.never,
+  isButtonAllowedInCurrentMode: Fun.always,
   getOption: <T>(name: string): T | undefined => defaultOptions[name],
   tooltips: {
     getConfig: (): TooltippingTypes.TooltippingConfigSpec => {
-      return { } as any;
+      return {
+        lazySink: {},
+        tooltipDom: {
+          tag: 'div'
+        }
+      } as any;
     },
     getComponents: () => {
       return [] as any;

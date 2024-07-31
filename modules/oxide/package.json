@@ -1,17 +1,18 @@
 {
   "name": "@tinymce/oxide",
   "version": "3.0.0",
-  "description": "TinyMCE 5 Oxide skin",
+  "description": "TinyMCE Oxide skins",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce.git",
     "directory": "modules/oxide"
   },
   "scripts": {
-    "build": "gulp build",
-    "start": "gulp watch",
+    "test": "echo 'No tests'",
+    "build": "grunt build --force",
+    "start": "grunt start",
     "prepublishOnly": "yarn ci",
-    "ci": "gulp build --no-color"
+    "ci": "grunt build"
   },
   "keywords": [
     "TinyMCE"
@@ -36,6 +37,8 @@
     "prismjs": "^1.27.0"
   },
   "devDependencies": {
-    "gulp": "^4.0.2"
+    "connect": "^3.7.0",
+    "connect-livereload": "^0.6.1",
+    "stylelint-config-recommended-less": "^3.0.1"
   }
 }

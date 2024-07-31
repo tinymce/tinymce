@@ -1,19 +1,34 @@
 //
 // Revision history
 //
-@revisionhistory-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
-@revisionhistory-border-color: @border-color;
+@revisionhistory-gap: 12px;
+@revisionhistory-border-radius: 6px;
+@revisionhistory-dark-mode: boolean(luma(@background-color) < 3);
+@revisionhistory-secondary-color: contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 15%));
+@revisionhistory-sidebar-background-color: if(@revisionhistory-dark-mode, #2b3b4e, @revisionhistory-secondary-color);   // Trial and error
+@revisionhistory-border-color: if(@revisionhistory-dark-mode, rgba(255, 255, 255, .15), @revisionhistory-secondary-color);
 @revisionhistory-text-color: @text-color;
-@revisionhistory-card-hover-background-color: @toolbar-button-hover-background-color;
-@revisionhistory-card-active-background-color: multiply(white, contrast(@background-color, fade(@color-tint, 35), fade(@color-tint, 65)));
-@revisionhistory-card-active-text-color: @toolbar-button-active-text-color;
+@revisionhistory-card-active-background-color: if(@revisionhistory-dark-mode, #62430b, #fff5cc);
 @revisionhistory-border: 1px solid @revisionhistory-border-color;
-@revisionhistory-sidebar-title-font-size: @font-size-lg;
-@revisionhistory-sidebar-title-height: 60px;
-@revisionhistory-sidebar-minwidth: 192px;
+@revisionhistory-border-color--selected: if(@revisionhistory-dark-mode, #cea215, #e3b82a);
+@revisionhistory-border-color--focused: if(@revisionhistory-dark-mode, #285ec7, #006ce7);
+@revisionhistory-box-shadow: 0 4px 8px 0 rgba(34, 47, 62, .1);
+@revisionhistory-sidebar-minwidth: 248px;
 @revisionhistory-text-lineheight: 24px;
-@revisionhistory-card-padding: @pad-sm;
-@revisonhistory-box-shadow: none;
+@revisionhistory-avatar-height: 36px;
+
+.overflow-text() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+};
+
+.revisionhistory-focus-outline-mixin(@border-color: ~'') {
+  .keyboard-focus-outline-mixin(@border-color);
+
+  border-radius: @revisionhistory-border-radius;
+  box-shadow: 0 0 0 2px @border-color;
+}
 
 .tox {
   .tox-revisionhistory__pane {
@@ -27,8 +42,7 @@
   }
 
   .tox-revisionhistory {
-    background-color: @revisionhistory-background-color;
-    border-radius: 4px;
+    background-color: @background-color;
     border-top: @revisionhistory-border;
     display: flex;
     flex: 1;
@@ -49,26 +63,31 @@
   }
 
   .tox-revisionhistory__sidebar {
-    border-left: @revisionhistory-border;
+    display: flex;
+    flex-direction: column;
     height: 100%;
-    max-width: 360px;
+    min-width: @revisionhistory-sidebar-minwidth;
+    width: 316px;
 
     .tox-revisionhistory__sidebar-title {
-      border-bottom: @revisionhistory-border;
+      background-color: @background-color;
+      box-shadow: @revisionhistory-box-shadow;
       color: @revisionhistory-text-color;
-      font-size: @revisionhistory-sidebar-title-font-size;
+      font-size: @font-size-lg;
       font-weight: 400;
-      height: @revisionhistory-sidebar-title-height;
-      min-width: @revisionhistory-sidebar-minwidth;
-      padding: 16px;
+      line-height: 28px;
+      padding: @revisionhistory-gap;
+      z-index: 1; // To get a shadow effect
     }
 
     .tox-revisionhistory__revisions {
+      background-color: @revisionhistory-sidebar-background-color;
+      display: flex;
+      flex: 1;
       flex-direction: column;
-      max-height: calc(100% - @revisionhistory-sidebar-title-height);
-      min-width: @revisionhistory-sidebar-minwidth;
+      gap: @revisionhistory-gap;
       overflow-y: auto;
-      padding: @revisionhistory-card-padding;
+      padding: 10px @revisionhistory-gap;
 
       &:focus {
         height: 100%;
@@ -87,45 +106,96 @@
       }
 
       .tox-revisionhistory__card {
+        background-color: @background-color;
         border: @revisionhistory-border;
-        border-radius: @control-border-radius;
+        border-radius: @revisionhistory-border-radius;
         color: @revisionhistory-text-color;
         cursor: pointer;
+        display: flex;
+        flex-direction: column;
         font-size: @font-size-sm;
-        margin-bottom: @revisionhistory-card-padding;
-        padding: @revisionhistory-card-padding;
-        text-overflow: ellipsis;
-        text-wrap: nowrap;
+        gap: @revisionhistory-gap;
+        padding: @revisionhistory-gap;
         width: 100%;
 
         &:hover {
-          background-color: @revisionhistory-card-hover-background-color;
-          box-shadow: @revisonhistory-box-shadow;
-          color: @revisionhistory-card-active-text-color;
+          box-shadow: @revisionhistory-box-shadow;
         }
 
         &:focus {
           position: relative;   // Override static which prevents z-index to have any effect
-          z-index: 1; // Ensure focus outline is on top of other buttons
+          z-index: 1; // Ensure focus outline is on the top of other buttons
 
           &::after {
-            border-radius: @control-border-radius !important;
-            .keyboard-focus-outline-mixin();
+            .revisionhistory-focus-outline-mixin(@revisionhistory-border-color--focused);
+
+            box-shadow: 0 0 0 2px @revisionhistory-border-color--focused !important; // Override box-shadow set by tox-revisionhistory__card-selected when card is both selected and focused
           }
         }
 
         &.tox-revisionhistory__card--selected {
           background-color: @revisionhistory-card-active-background-color;
-          box-shadow: @revisonhistory-box-shadow;
-          color: @revisionhistory-card-active-text-color;
+          box-shadow: @revisionhistory-box-shadow;
+          position: relative;
+
+          &::after {
+            .revisionhistory-focus-outline-mixin(@revisionhistory-border-color--selected);
+          }
         }
+      }
+
+      .tox-revisionhistory__card-date {
+        display: flex;
+        gap: @revisionhistory-gap;
+        justify-content: space-between;
+      }
+
+      .tox-revisionhistory__card-date-label {
+        font-size: 16px;
+        line-height: @revisionhistory-text-lineheight;
+      }
+
+      .tox-revisionhistory__card-label {
+        font-size: 12px;
+        font-weight: 600;
+        line-height: @revisionhistory-text-lineheight;
+        padding: 0;
+      }
+
+      .tox-revisionhistory__card-author {
+        align-items: center;
+        display: flex;
+        flex: 1 0 0;
+        gap: 8px;
+        height: @revisionhistory-avatar-height;
+      }
+
+      .tox-revisionhistory__card-author-name {
+        .overflow-text();
+
+        font-size: 14px;
+        font-weight: 700;
+        line-height: @revisionhistory-avatar-height / 2;
+      }
+
+      .tox-revisionhistory__avatar {
+        border-radius: 50%;
+        height: @revisionhistory-avatar-height;
+        object-fit: cover;
+        vertical-align: middle;
+        width: @revisionhistory-avatar-height;
       }
 
       .tox-revisionhistory__norevision {
         color: @text-color-muted;
         font-size: 16px;
-        line-height: 24px;
+        line-height: @revisionhistory-text-lineheight;
         padding: 5px 5.5px;
+      }
+
+      .tox-revisionhistory__card-check-icon {
+        color: @revisionhistory-text-color;
+        height: 24px;
       }
     }
   }

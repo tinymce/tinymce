@@ -401,7 +401,8 @@ describe('browser.tinymce.core.EditorTest', () => {
     assert.isFalse(editor.isDirty(), 'setDirty/isDirty');
 
     editor.setDirty(true);
-    assert.equal(lastArgs?.type, 'dirty', 'setDirty/isDirty');
+    // Use type assertion to satisfy TypeScript and handle potential undefined lastArgs
+    assert.equal(lastArgs ? (lastArgs as EditorEvent<{}>).type : undefined, 'dirty', 'setDirty/isDirty');
     assert.isTrue( editor.isDirty(), 'setDirty/isDirty');
 
     lastArgs = undefined;
@@ -500,6 +501,16 @@ describe('browser.tinymce.core.EditorTest', () => {
     const editor = hook.editor();
     editor.setContent('<img src="data:image/gif;base64,R0ÖlGODdhIAAgAIABAP8AAP///ywAAAAAIAAgAAACHoSPqcvtD6OctNqLs968+w+G4kiW5omm6sq27gubBQA7AA==%A0">');
     TinyAssertions.assertContent(editor, '<p><img src="data:image/gif;base64,R0"></p>');
+  });
+
+  it('TINY-10955: multiple comments will not cause unexpected newlines', () => {
+    const editor = hook.editor();
+    editor.setContent('<div>A</div><!--Comment1--><!--Comment2--><div>B</div>');
+    TinyAssertions.assertRawContent(editor, '<div>A</div><!--Comment1--><!--Comment2--><div>B</div>');
+    editor.setContent('<div>A</div> <!--Comment1--> <!--Comment2--> <div>B</div>');
+    TinyAssertions.assertRawContent(editor, '<div>A</div><!--Comment1--><!--Comment2--><div>B</div>');
+    editor.setContent('<div>A</div>\n<!--Comment1-->\n<!--Comment2-->\n<div>B</div>');
+    TinyAssertions.assertRawContent(editor, '<div>A</div><!--Comment1--><!--Comment2--><div>B</div>');
   });
 
   context('hasPlugin', () => {

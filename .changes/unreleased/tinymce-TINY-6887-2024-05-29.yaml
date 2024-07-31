@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: Fixed JavaScript error when inserting a table using the context menu by adjusting
+  the event order in `renderInsertTableMenuItem`.
+time: 2024-05-29T21:20:22.758393+10:00
+custom:
+  Issue: TINY-6887

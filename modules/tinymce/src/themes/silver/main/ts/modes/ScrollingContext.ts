@@ -9,6 +9,7 @@ import * as Options from '../api/Options';
 export interface ScrollingContext {
   readonly element: SugarElement<HTMLElement>;
   readonly others: SugarElement<HTMLElement>[];
+  readonly isFullscreen: () => boolean;
 }
 
 // See https://developer.mozilla.org/en-US/docs/Glossary/Scroll_container for what makes an element scrollable
@@ -27,9 +28,12 @@ export const isScroller = (elem: SugarElement<Node> | any): boolean => {
   }
 };
 
+const isFullscreen = (editor: Editor): boolean =>
+  editor.plugins.fullscreen && editor.plugins.fullscreen.isFullscreen();
+
 // NOTE: Calculating the list of scrolling ancestors each time this function is called might
 // be unnecessary. It will depend on its usage.
-export const detect = (popupSinkElem: SugarElement<HTMLElement>): Optional<ScrollingContext> => {
+export const detect = (editor: Editor, popupSinkElem: SugarElement<HTMLElement>): Optional<ScrollingContext> => {
   const ancestorsScrollers = PredicateFilter.ancestors(popupSinkElem, isScroller) as SugarElement<HTMLElement>[];
 
   // If there is no scrollable container, we try to see if it's in a shadow root, and try to traverse beyond the host of shadow root to retrieve the scrollable container
@@ -44,13 +48,14 @@ export const detect = (popupSinkElem: SugarElement<HTMLElement>): Optional<Scrol
         element,
         // A list of all scrolling elements above the nearest scroller,
         // ordered from closest to popup -> closest to top of document
-        others: scrollers.slice(1)
+        others: scrollers.slice(1),
+        isFullscreen: () => isFullscreen(editor)
       })
     );
 };
 
 export const detectWhenSplitUiMode = (editor: Editor, popupSinkElem: SugarElement<HTMLElement>): Optional<ScrollingContext> =>
-  Options.isSplitUiMode(editor) ? detect(popupSinkElem) : Optional.none();
+  Options.isSplitUiMode(editor) ? detect(editor, popupSinkElem) : Optional.none();
 
 // Using all the scrolling viewports in the ancestry, limit the absolute
 // coordinates of window so that the bounds are limited by all the scrolling
@@ -63,7 +68,7 @@ export const getBoundsFrom = (sc: ScrollingContext): Bounds => {
     Boxes.win()
   ];
 
-  return Boxes.constrainByMany(
+  return sc.isFullscreen() ? Boxes.win() : Boxes.constrainByMany(
     Boxes.box(sc.element),
     scrollableBoxes
   );

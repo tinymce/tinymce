@@ -1,4 +1,5 @@
 import { before, describe, it } from '@ephox/bedrock-client';
+import { Num } from '@ephox/katamari';
 import { McEditor, TinyAssertions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -10,7 +11,7 @@ describe('browser.tinymce.plugins.autosave.ShouldRestoreWhenEmptyTest', () => {
     Plugin();
   });
 
-  const testingPrefix = Math.random().toString(36).substring(7);
+  const testingPrefix = Num.random().toString(36).substring(7);
   const settings = {
     base_url: '/project/tinymce/js/tinymce',
     plugins: 'autosave',

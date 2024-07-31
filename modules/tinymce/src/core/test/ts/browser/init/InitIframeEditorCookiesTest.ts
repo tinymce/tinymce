@@ -1,4 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
+import { Num } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -11,7 +12,7 @@ describe('browser.tinymce.core.init.InitIframeCookiesTest', () => {
 
   it('TINY-8916: Ensure cookies from the root document are accessible within the iframe', () => {
     const editor = hook.editor();
-    const name = 'mce-custom-cookie-' + Math.floor(Math.random() * 1000);
+    const name = 'mce-custom-cookie-' + Math.floor(Num.random() * 1000);
     const date = new Date();
     date.setTime(date.getTime() + (60 * 1000)); // Add 1min
     document.cookie = `${name}=test; expires=${date.toUTCString()}; path=/; SameSite=Strict`;

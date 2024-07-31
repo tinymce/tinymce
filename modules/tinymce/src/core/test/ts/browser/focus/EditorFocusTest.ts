@@ -1,6 +1,6 @@
 import { Assertions } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Focus, Hierarchy, SugarBody, SugarNode } from '@ephox/sugar';
+import { Focus, Hierarchy, Insert, Remove, SugarBody, SugarElement, SugarNode } from '@ephox/sugar';
 import { McEditor, TinyAssertions, TinyDom, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -8,7 +8,6 @@ import Editor from 'tinymce/core/api/Editor';
 import * as EditorFocus from 'tinymce/core/focus/EditorFocus';
 
 describe('browser.tinymce.core.focus.EditorFocusTest', () => {
-
   const pCreateInlineEditor = (html: string) => McEditor.pFromHtml<Editor>(html, {
     menubar: false,
     inline: true,
@@ -66,6 +65,23 @@ describe('browser.tinymce.core.focus.EditorFocusTest', () => {
       selectBody();
       focusEditor(editor);
       TinyAssertions.assertSelection(editor, [ 1, 1, 0, 0, 0, 0 ], 0, [ 1, 1, 0, 0, 0, 0 ], 0);
+      McEditor.remove(editor);
+    });
+
+    it('TINY-11085: Focus should return to the editor even if focus is in CET div', async () => {
+      const editor = await pCreateEditor('<div class="tinymce-editor"><div contentEditable="true">A</div></div>');
+      TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
+      const button: SugarElement<HTMLElement> = SugarElement.fromHtml('<button id="justForFocus">Text</button>');
+      Insert.append(SugarBody.body(), button);
+
+      Focus.focus(button);
+      assert.isTrue(Focus.hasFocus(button), 'Focus should be on the button');
+      assert.isFalse(EditorFocus.hasFocus(editor), 'Editor should not have focus');
+      focusEditor(editor);
+      assert.isFalse(Focus.hasFocus(button), 'Button should have lost focus');
+      assert.isTrue(EditorFocus.hasFocus(editor), 'Editor should have lost focus');
+
+      Remove.remove(button);
       McEditor.remove(editor);
     });
   });

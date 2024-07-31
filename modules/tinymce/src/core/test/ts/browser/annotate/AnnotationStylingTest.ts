@@ -1,6 +1,6 @@
 import { UiFinder, Waiter } from '@ephox/agar';
 import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { Class, Compare, Css, SelectorFilter, SugarElement, SugarNode } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -12,6 +12,9 @@ interface Outline {
   readonly style: string;
   readonly width: string;
 }
+
+// For now they have the same properties
+type Border = Outline;
 
 describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -28,6 +31,15 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
             classes: [ 'tox-comment' ]
           })
         });
+      });
+
+      editor.mode.register('testMode', {
+        activate: Fun.noop,
+        deactivate: Fun.noop,
+        editorReadOnly: {
+          uiEnabled: false,
+          selectionEnabled: true,
+        },
       });
     }
   }, [], true);
@@ -67,6 +79,12 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
     style: 'solid'
   };
 
+  const commentActiveBorder: Border = {
+    color: 'rgb(0, 108, 231)', // #006ce7
+    width: '2px',
+    style: 'solid'
+  };
+
   const noBackgroundColor = 'rgba(0, 0, 0, 0)';
   const commentBackgroundColor = 'rgb(255, 232, 157)'; // #ffe89d
   const commentActiveBackgroundColor = 'rgb(254, 214, 53)'; // #fed635
@@ -83,10 +101,21 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
     };
   };
 
+  const getBorder = (elm: SugarElement<Element>): Border => {
+    const color = Css.get(elm, 'border-color');
+    const width = Css.get(elm, 'border-width');
+    const style = Css.get(elm, 'border-style');
+    return {
+      color,
+      width,
+      style
+    };
+  };
+
   const getBackgroundColor = (elm: SugarElement<Element>) =>
     Css.get(elm, 'background-color');
 
-  const pAssertStyling = (editor: Editor, selector: string, expectedBackgroundColor: string, expectedOutline: Outline, checkOtherNodes: boolean = true) =>
+  const pAssertStyling = (editor: Editor, selector: string, expectedBackgroundColor: string, expectedOutline: Outline, checkOtherNodes: boolean = true, expectedBorder?: Border) =>
     Waiter.pTryUntil('Should have correct styling', () => {
       const body = TinyDom.body(editor);
       const elm = UiFinder.findIn(body, selector).getOrDie();
@@ -94,6 +123,10 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
       const actualOutline = getOutline(elm);
       assert.equal(actualBackgroundColor, expectedBackgroundColor);
       assert.deepEqual(actualOutline, expectedOutline);
+      if (expectedBorder) {
+        const actualBorder = getBorder(elm);
+        assert.deepEqual(actualBorder, expectedBorder);
+      }
 
       if (checkOtherNodes) {
         const parents = SelectorFilter.ancestors(elm, '*', (e) => Compare.eq(e, body));
@@ -152,160 +185,178 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
     '</div>';
 
   Arr.each([
-    { label: 'image', name: 'img', html: `<p>${imageHtml}</p>` },
-    { label: 'audio', name: 'audio', html: `<p>${audioHtml}</p>` },
-    { label: 'video', name: 'video', html: `<p>${videoHtml}</p>` },
-    { label: 'image with caption', name: 'img', outlineSelector: 'figure.image', html: figureImageHtml },
-    { label: 'codesample', name: 'pre', html: codesampleHtml, backgroundColor: 'rgb(245, 242, 240)' },
-    { label: 'table of contents', name: 'div.mce-toc', html: tocHtml },
-    { label: 'media iframe (YouTube video)', name: 'iframe', outlineSelector: 'span.mce-preview-object', html: iframeMediaHtml },
-    { label: 'media audio', name: 'audio', outlineSelector: 'span.mce-preview-object', html: audioMediaHtml },
-    { label: 'media video', name: 'video', outlineSelector: 'span.mce-preview-object', html: videoMediaHtml },
-    { label: 'mediaembed iframe (YouTube video)', name: 'iframe', outlineSelector: 'div[data-ephox-embed-iri]', html: iframeMediaEmbedHtml },
-    { label: 'mediaembed video', name: 'video', outlineSelector: 'div[data-ephox-embed-iri]', html: videoMediaEmbedHtml },
-    { label: 'mediaembed audio', name: 'audio', outlineSelector: 'div[data-ephox-embed-iri]', html: audioMediaEmbedHtml },
-    { label: 'pageembed website', name: 'iframe', outlineSelector: 'div.tiny-pageembed', html: pageEmbedHtml },
-  ], (scenario) => {
-    const { label, name, outlineSelector, html } = scenario;
-    context(label, () => {
-      const editorHtml = `<p>Before</p>${html}<p>After</p>`;
-      const selector = outlineSelector ?? name;
-      const backgroundColor = scenario.backgroundColor ?? noBackgroundColor;
-      const selectElm = (editor: Editor) => TinySelections.select(editor, selector, []);
+    { label: 'Normal mode', before: () => hook.editor().mode.set('design'), after: Fun.noop, mode: 'normal' },
+    { label: 'Cursor mode', before: () => hook.editor().mode.set('design'), after: () => hook.editor().mode.set('testMode'), mode: 'testMode' },
+  ], (modeScenario) => {
+    context(modeScenario.label, () => {
+      const modeTestSetContent = (editor: Editor, content: string, args = {}) => {
+        modeScenario.before();
+        editor.setContent(content, args);
+        modeScenario.after();
+      };
 
-      beforeEach(() => {
-        const editor = hook.editor();
-        editor.setContent(editorHtml, { format: 'raw' });
+      Arr.each([
+        { label: 'image', name: 'img', html: `<p>${imageHtml}</p>` },
+        { label: 'audio', name: 'audio', html: `<p>${audioHtml}</p>` },
+        { label: 'video', name: 'video', html: `<p>${videoHtml}</p>` },
+        { label: 'image with caption', name: 'img', outlineSelector: 'figure.image', html: figureImageHtml },
+        { label: 'codesample', name: 'pre', html: codesampleHtml, backgroundColor: 'rgb(245, 242, 240)' },
+        { label: 'table of contents', name: 'div.mce-toc', html: tocHtml },
+        { label: 'media iframe (YouTube video)', name: 'iframe', outlineSelector: 'span.mce-preview-object', html: iframeMediaHtml },
+        { label: 'media audio', name: 'audio', outlineSelector: 'span.mce-preview-object', html: audioMediaHtml },
+        { label: 'media video', name: 'video', outlineSelector: 'span.mce-preview-object', html: videoMediaHtml },
+        { label: 'mediaembed iframe (YouTube video)', name: 'iframe', outlineSelector: 'div[data-ephox-embed-iri]', html: iframeMediaEmbedHtml },
+        { label: 'mediaembed video', name: 'video', outlineSelector: 'div[data-ephox-embed-iri]', html: videoMediaEmbedHtml },
+        { label: 'mediaembed audio', name: 'audio', outlineSelector: 'div[data-ephox-embed-iri]', html: audioMediaEmbedHtml },
+        { label: 'pageembed website', name: 'iframe', outlineSelector: 'div.tiny-pageembed', html: pageEmbedHtml },
+      ], (scenario) => {
+        const { label, name, outlineSelector, html } = scenario;
+        context(label, () => {
+          const editorHtml = `<p>Before</p>${html}<p>After</p>`;
+          const selector = outlineSelector ?? name;
+          const backgroundColor = scenario.backgroundColor ?? noBackgroundColor;
+          const selectElm = (editor: Editor) => TinySelections.select(editor, selector, []);
+
+          beforeEach(() => {
+            const editor = hook.editor();
+            modeTestSetContent(editor, editorHtml, { format: 'raw' });
+          });
+
+          it('should have no outline when not selected and has no attributes', async () => {
+            const editor = hook.editor();
+            TinySelections.setCursor(editor, [ 0, 0 ], 1);
+            await pAssertStyling(editor, selector, backgroundColor, noOutline);
+          });
+
+          it('should have blue outline when selected', async () => {
+            const editor = hook.editor();
+            selectElm(editor);
+            await pAssertStyling(editor, selector, backgroundColor, selectedOutline);
+          });
+
+          it('TINY-8698: should have yellow outline when element has comment attribute but is not selected', async () => {
+            const editor = hook.editor();
+            selectElm(editor);
+            editor.annotator.annotate('test-comment', {});
+            TinySelections.setCursor(editor, [ 0, 0 ], 1);
+            await pAssertStyling(editor, selector, backgroundColor, commentOutline);
+          });
+
+          it('TINY-8698: should have blue outline when element with comment attribute is selected', async () => {
+            const editor = hook.editor();
+            selectElm(editor);
+            editor.annotator.annotate('test-comment', {});
+            TinySelections.setCursor(editor, [ 0, 0 ], 1);
+            selectElm(editor);
+            await pAssertStyling(editor, selector, backgroundColor, selectedOutline);
+          });
+
+          it('TINY-8698: should have active yellow outline when there are several related comments but the element is not selected', async () => {
+            const editor = hook.editor();
+            editor.execCommand('SelectAll');
+            editor.annotator.annotate('test-comment', {});
+            TinySelections.setCursor(editor, [ 0, 0 ], 1);
+            await pAssertStyling(editor, selector, backgroundColor, commentActiveOutline);
+          });
+        });
       });
 
-      it('should have no outline when not selected and has no attributes', async () => {
-        const editor = hook.editor();
-        TinySelections.setCursor(editor, [ 0, 0 ], 1);
-        await pAssertStyling(editor, selector, backgroundColor, noOutline);
+      context('text comments', () => {
+        it('should have no background when not selected and has no attributes', async () => {
+          const editor = hook.editor();
+          modeTestSetContent(editor, '<p>one two</p>');
+          TinySelections.setCursor(editor, [ 0, 0 ], 1);
+          await pAssertStyling(editor, 'p', noBackgroundColor, noOutline);
+        });
+
+        it('should have blue background when basic annotated text is selected', async () => {
+          const editor = hook.editor();
+          modeTestSetContent(editor, '<p>one two</p>');
+          TinySelections.setCursor(editor, [ 0, 0 ], 1);
+          editor.annotator.annotate('test-annotation', {});
+          TinySelections.setCursor(editor, [ 0, 0 ], 1);
+          await pAssertStyling(editor, 'span', inlineBoundaryBackgroundColor, noOutline);
+        });
+
+        it('TINY-8698: should have yellow background on commented text when is not selected', async () => {
+          const editor = hook.editor();
+          modeTestSetContent(editor, '<p>one two</p>');
+          TinySelections.setCursor(editor, [ 0, 0 ], 1);
+          editor.annotator.annotate('test-comment', {});
+          TinySelections.setCursor(editor, [ 0, 1 ], 3);
+          await pAssertStyling(editor, 'span', commentBackgroundColor, noOutline);
+        });
+
+        it('TINY-8698: should have yellow background on commented text when it is selected', async () => {
+          const editor = hook.editor();
+          modeTestSetContent(editor, '<p>one two</p>');
+          TinySelections.setCursor(editor, [ 0, 0 ], 1);
+          editor.annotator.annotate('test-comment', {});
+          TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
+          await pAssertStyling(editor, 'span', commentBackgroundColor, noOutline, true, commentActiveBorder);
+        });
+
+        it('TINY-8698: should have yellow background on commented text when it is selected and yellow background for other related comments', async () => {
+          const editor = hook.editor();
+          modeTestSetContent(editor, '<p>one two</p><p>three four</p>');
+          TinySelections.setSelection(editor, [ 0, 0 ], 4, [], 2);
+          editor.annotator.annotate('test-comment', {});
+          TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
+          await pAssertStyling(editor, 'span[data-mce-selected]', commentBackgroundColor, noOutline, true, commentActiveBorder);
+          await pAssertStyling(editor, 'span:not([data-mce-selected])', commentActiveBackgroundColor, noOutline);
+        });
       });
 
-      it('should have blue outline when selected', async () => {
-        const editor = hook.editor();
-        selectElm(editor);
-        await pAssertStyling(editor, selector, backgroundColor, selectedOutline);
+      context('text and block comments', () => {
+        it('TINY-8698: should have blue background on commented text when it is selected and yellow background or outline for other related comments', async () => {
+          const editor = hook.editor();
+          modeTestSetContent(editor, `<p>one two</p><p>${imageHtml}</p>${figureImageHtml}<p>three four</p>`);
+          TinySelections.setSelection(editor, [ 0, 0 ], 4, [], 4);
+          editor.annotator.annotate('test-comment', {});
+          TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
+          await pAssertStyling(editor, 'span[data-mce-selected]:contains("two")', commentBackgroundColor, noOutline, true, commentActiveBorder);
+          await pAssertStyling(editor, 'span:not([data-mce-selected]):contains("three four")', commentActiveBackgroundColor, noOutline);
+          await pAssertStyling(editor, 'span img', noBackgroundColor, commentActiveOutline);
+          await pAssertStyling(editor, 'figure', noBackgroundColor, commentActiveOutline);
+        });
+
+        it('TINY-8698: should have blue outline on commented block when it is selected and yellow background or outline for other related comments', async () => {
+          const editor = hook.editor();
+          modeTestSetContent(editor, `<p>one two</p><p>${imageHtml}</p>${figureImageHtml}<p>three four</p>`);
+          TinySelections.setSelection(editor, [ 0, 0 ], 4, [], 4);
+          editor.annotator.annotate('test-comment', {});
+          TinySelections.select(editor, 'figure', []);
+          await pAssertStyling(editor, 'span:contains("two")', commentBackgroundColor, noOutline);
+          await pAssertStyling(editor, 'span:contains("three four")', commentBackgroundColor, noOutline);
+          await pAssertStyling(editor, 'span img', noBackgroundColor, commentActiveOutline);
+          await pAssertStyling(editor, 'figure', noBackgroundColor, selectedOutline);
+        });
       });
 
-      it('TINY-8698: should have yellow outline when element has comment attribute but is not selected', async () => {
-        const editor = hook.editor();
-        selectElm(editor);
-        editor.annotator.annotate('test-comment', {});
-        TinySelections.setCursor(editor, [ 0, 0 ], 1);
-        await pAssertStyling(editor, selector, backgroundColor, commentOutline);
+      context('editable element within noneditable element', () => {
+        it('should have blue outline for nested editable region and blue outline for noneditable ancestor (editable region selected)', async () => {
+          const editor = hook.editor();
+          modeTestSetContent(editor, figureImageHtml);
+          // When in design mode, the bogus element is placed so the cursor location is correct, when we switched to cursor mode, we need to put the cursor in the correct location
+          if (modeScenario.mode === 'normal') {
+            TinySelections.setCursor(editor, [ 1, 1, 0 ], 1, true);
+          } else {
+            TinySelections.setCursor(editor, [ 0, 1, 0 ], 1, true);
+          }
+          await pAssertStyling(editor, 'figure.image', noBackgroundColor, selectedOutline, false);
+          await pAssertStyling(editor, 'figcaption', noBackgroundColor, selectedOutline, false);
+        });
+
+        it('TINY-8698: should have blue outline for nested editable region when selected noneditable ancestor has a comment', async () => {
+          const editor = hook.editor();
+          modeTestSetContent(editor, figureImageHtml);
+          TinySelections.select(editor, 'figure.image', []);
+          editor.annotator.annotate('test-comment', {});
+          TinySelections.setCursor(editor, [ 0, 1, 0 ], 1, true);
+          await pAssertStyling(editor, 'figure.image', noBackgroundColor, selectedOutline, false);
+          await pAssertStyling(editor, 'figcaption', noBackgroundColor, selectedOutline, false);
+        });
       });
-
-      it('TINY-8698: should have blue outline when element with comment attribute is selected', async () => {
-        const editor = hook.editor();
-        selectElm(editor);
-        editor.annotator.annotate('test-comment', {});
-        TinySelections.setCursor(editor, [ 0, 0 ], 1);
-        selectElm(editor);
-        await pAssertStyling(editor, selector, backgroundColor, selectedOutline);
-      });
-
-      it('TINY-8698: should have active yellow outline when there are several related comments but the element is not selected', async () => {
-        const editor = hook.editor();
-        editor.execCommand('SelectAll');
-        editor.annotator.annotate('test-comment', {});
-        TinySelections.setCursor(editor, [ 0, 0 ], 1);
-        await pAssertStyling(editor, selector, backgroundColor, commentActiveOutline);
-      });
-    });
-  });
-
-  context('text comments', () => {
-    it('should have no background when not selected and has no attributes', async () => {
-      const editor = hook.editor();
-      editor.setContent('<p>one two</p>');
-      TinySelections.setCursor(editor, [ 0, 0 ], 1);
-      await pAssertStyling(editor, 'p', noBackgroundColor, noOutline);
-    });
-
-    it('should have blue background when basic annotated text is selected', async () => {
-      const editor = hook.editor();
-      editor.setContent('<p>one two</p>');
-      TinySelections.setCursor(editor, [ 0, 0 ], 1);
-      editor.annotator.annotate('test-annotation', {});
-      TinySelections.setCursor(editor, [ 0, 0 ], 1);
-      await pAssertStyling(editor, 'span', inlineBoundaryBackgroundColor, noOutline);
-    });
-
-    it('TINY-8698: should have yellow background on commented text when is not selected', async () => {
-      const editor = hook.editor();
-      editor.setContent('<p>one two</p>');
-      TinySelections.setCursor(editor, [ 0, 0 ], 1);
-      editor.annotator.annotate('test-comment', {});
-      TinySelections.setCursor(editor, [ 0, 1 ], 3);
-      await pAssertStyling(editor, 'span', commentBackgroundColor, noOutline);
-    });
-
-    it('TINY-8698: should have blue background on commented text when it is selected', async () => {
-      const editor = hook.editor();
-      editor.setContent('<p>one two</p>');
-      TinySelections.setCursor(editor, [ 0, 0 ], 1);
-      editor.annotator.annotate('test-comment', {});
-      TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
-      await pAssertStyling(editor, 'span', inlineBoundaryBackgroundColor, noOutline);
-    });
-
-    it('TINY-8698: should have blue background on commented text when it is selected and yellow background for other related comments', async () => {
-      const editor = hook.editor();
-      editor.setContent('<p>one two</p><p>three four</p>');
-      TinySelections.setSelection(editor, [ 0, 0 ], 4, [], 2);
-      editor.annotator.annotate('test-comment', {});
-      TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
-      await pAssertStyling(editor, 'span[data-mce-selected]', inlineBoundaryBackgroundColor, noOutline);
-      await pAssertStyling(editor, 'span:not([data-mce-selected])', commentActiveBackgroundColor, noOutline);
-    });
-  });
-
-  context('text and block comments', () => {
-    it('TINY-8698: should have blue background on commented text when it is selected and yellow background or outline for other related comments', async () => {
-      const editor = hook.editor();
-      editor.setContent(`<p>one two</p><p>${imageHtml}</p>${figureImageHtml}<p>three four</p>`);
-      TinySelections.setSelection(editor, [ 0, 0 ], 4, [], 4);
-      editor.annotator.annotate('test-comment', {});
-      TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
-      await pAssertStyling(editor, 'span[data-mce-selected]:contains("two")', inlineBoundaryBackgroundColor, noOutline);
-      await pAssertStyling(editor, 'span:not([data-mce-selected]):contains("three four")', commentActiveBackgroundColor, noOutline);
-      await pAssertStyling(editor, 'span img', noBackgroundColor, commentActiveOutline);
-      await pAssertStyling(editor, 'figure', noBackgroundColor, commentActiveOutline);
-    });
-
-    it('TINY-8698: should have blue outline on commented block when it is selected and yellow background or outline for other related comments', async () => {
-      const editor = hook.editor();
-      editor.setContent(`<p>one two</p><p>${imageHtml}</p>${figureImageHtml}<p>three four</p>`);
-      TinySelections.setSelection(editor, [ 0, 0 ], 4, [], 4);
-      editor.annotator.annotate('test-comment', {});
-      TinySelections.select(editor, 'figure', []);
-      await pAssertStyling(editor, 'span:contains("two")', commentBackgroundColor, noOutline);
-      await pAssertStyling(editor, 'span:contains("three four")', commentBackgroundColor, noOutline);
-      await pAssertStyling(editor, 'span img', noBackgroundColor, commentActiveOutline);
-      await pAssertStyling(editor, 'figure', noBackgroundColor, selectedOutline);
-    });
-  });
-
-  context('editable element within noneditable element', () => {
-    it('should have blue outline for nested editable region and blue outline for noneditable ancestor (editable region selected)', async () => {
-      const editor = hook.editor();
-      editor.setContent(figureImageHtml);
-      TinySelections.setCursor(editor, [ 1, 1, 0 ], 1, true);
-      await pAssertStyling(editor, 'figure.image', noBackgroundColor, selectedOutline, false);
-      await pAssertStyling(editor, 'figcaption', noBackgroundColor, selectedOutline, false);
-    });
-
-    it('TINY-8698: should have blue outline for nested editable region when selected noneditable ancestor has a comment', async () => {
-      const editor = hook.editor();
-      editor.setContent(figureImageHtml);
-      TinySelections.select(editor, 'figure.image', []);
-      editor.annotator.annotate('test-comment', {});
-      TinySelections.setCursor(editor, [ 0, 1, 0 ], 1, true);
-      await pAssertStyling(editor, 'figure.image', noBackgroundColor, selectedOutline, false);
-      await pAssertStyling(editor, 'figcaption', noBackgroundColor, selectedOutline, false);
     });
   });
 });

@@ -12,7 +12,6 @@
 @editor-header-box-shadow: none;
 @editor-bottom-header-box-shadow: none;
 @editor-header-sticky-box-shadow: 0 4px 4px -3px rgba(0, 0, 0, .25);
-@textfield-focus-outline: none;
 @menu-border-color: @border-color;
 @menu-box-shadow: 0 4px 8px 0 fade(@color-black, 10%);
 @menu-item-collection-list-padding: 0;
@@ -33,8 +32,8 @@
 @_toolbar-divider-height: @_toolbar-height - 1px;
 @toolbar-row-separator-color: @toolbar-group-separator-color;
 @toolbar-separator-color: @border-color;
-@toolbar-padding-y: 0px;
-@toolbar-padding-x: 0px;
+@toolbar-padding-y: 0;
+@toolbar-padding-x: 0;
 @keyboard-focus-outline-color: transparent;
 @keyboard-focus-outline-width: 0;
 @toolbar-button-focus-background-color: @toolbar-button-hover-background-color;
@@ -59,6 +58,7 @@
 @_menubar-divider-height: @_menubar-height - 1px;
 @statusbar-padding-x: @pad-sm;
 @statusbar-text-color: contrast(@statusbar-background-color, @text-color-muted, @color-white);
+@statusbar-not-disabled-selector: ~'&:not(:disabled):not([aria-disabled=true])';
 @toolbar-group-padding-x: 4px;
 @button-naked-hover-background-color: @button-secondary-hover-background-color;
 @button-naked-hover-border-color: @button-secondary-hover-border-color;

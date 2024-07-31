@@ -1,12 +1,6 @@
 {
-  "extends": "stylelint-config-standard",
+  "extends": "stylelint-config-recommended-less",
   "plugins": [
     "stylelint-order"
-  ],
-  "rules": {
-    "number-leading-zero": "never",
-    "order/properties-alphabetical-order": true,
-    "at-rule-empty-line-before": ["always", { "ignoreAtRules": "import" }],
-    "function-calc-no-invalid": null
-  }
+  ]
 }

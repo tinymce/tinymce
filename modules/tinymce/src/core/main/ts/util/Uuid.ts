@@ -5,11 +5,13 @@
  * @private
  */
 
+import { Num } from '@ephox/katamari';
+
 let count = 0;
 
 const seed = (): string => {
   const rnd = () => {
-    return Math.round(Math.random() * 0xFFFFFFFF).toString(36);
+    return Math.round(Num.random() * 0xFFFFFFFF).toString(36);
   };
 
   const now = new Date().getTime();

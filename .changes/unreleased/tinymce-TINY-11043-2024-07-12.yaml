@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: Attempting to use focus commands on an editor where the cursor had last been
+  in certain contentEditable="true" elements would fail.
+time: 2024-07-12T14:33:10.01268867+02:00
+custom:
+  Issue: TINY-11085

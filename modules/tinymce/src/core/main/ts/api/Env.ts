@@ -9,7 +9,7 @@ import { PlatformDetection } from '@ephox/sand';
  * @static
  */
 
-const userAgent = navigator.userAgent;
+const userAgent = window.navigator.userAgent;
 const platform = PlatformDetection.detect();
 const browser = platform.browser;
 const os = platform.os;

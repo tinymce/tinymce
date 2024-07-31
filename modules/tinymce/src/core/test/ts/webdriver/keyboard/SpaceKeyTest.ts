@@ -1,10 +1,11 @@
 import { ApproxStructure, RealKeys } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
-import { applyCaretFormat } from 'tinymce/core/fmt/CaretFormat';
+import { applyCaretFormat, removeCaretFormat } from 'tinymce/core/fmt/CaretFormat';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 
 describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
@@ -16,6 +17,23 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
   const detect = PlatformDetection.detect().browser;
   const isSafari = detect.isSafari();
   const isFirefox = detect.isFirefox();
+
+  const simulateComposing = (editor: Editor, updates: string[], end: string) => {
+    const domElement = editor.getBody();
+    editor.undoManager.typing = true;
+    domElement.dispatchEvent(new window.CompositionEvent('compositionstart'));
+    editor.dispatch('input', { isComposing: true, data: updates[0] } as InputEvent);
+    Arr.foldl(updates, (acc, update) => {
+      domElement.dispatchEvent(new window.CompositionEvent('compositionupdate', { data: acc + update }));
+      return acc + update;
+    }, '');
+    domElement.dispatchEvent(new window.CompositionEvent('compositionupdate', { data: end }));
+
+    editor.undoManager.ignore(() => {
+      editor.insertContent(end);
+    });
+    domElement.dispatchEvent(new window.CompositionEvent('compositionend', { data: end }));
+  };
 
   beforeEach(() => {
     hook.editor().focus();
@@ -150,6 +168,64 @@ describe('webdriver.tinymce.core.keyboard.SpaceKeyTest', () => {
       } else {
         TinyAssertions.assertContent(editor, '<p>a c</p>');
       }
+    });
+
+    it('TINY-10854: `&nbsp;`s should be converted to spaces when before or after there is an inline element', async () => {
+      const editor = hook.editor();
+      editor.setContent('<p>a</p>');
+      TinySelections.setCursor(editor, [ 0 ], 1);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+
+      applyCaretFormat(editor, 'bold', {});
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('b') ]);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+
+      removeCaretFormat(editor, 'bold', {});
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('c') ]);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+      TinyAssertions.assertContent(editor, '<p>a <strong>b&nbsp;</strong> c&nbsp;</p>');
+    });
+
+    it('TINY-10854: `&nbsp;`s should not be converted to spaces when it is at the start of an inline element', async () => {
+      const editor = hook.editor();
+      editor.setContent('<p>a </p>');
+      TinySelections.setCursor(editor, [ 0 ], 1);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+
+      applyCaretFormat(editor, 'bold', {});
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('b') ]);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+
+      removeCaretFormat(editor, 'bold', {});
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('c') ]);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+      TinyAssertions.assertContent(editor, '<p>a&nbsp;<strong> b&nbsp;</strong> c&nbsp;</p>');
+    });
+
+    it('TINY-10854: `&nbsp;`s should be converted to spaces when before or after there is an inline element (with composition)', async () => {
+      const editor = hook.editor();
+      editor.setContent('<p>a</p>');
+      TinySelections.setCursor(editor, [ 0 ], 1);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+
+      applyCaretFormat(editor, 'bold', {});
+      // い -> Japanese hiragana for 'i'
+      // ぬ -> Japanese hiragana for 'nu'
+      // 犬 -> Japanese kanji for 'inu' (dog)
+      simulateComposing(editor, [ 'い', 'ぬ' ], '犬');
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+
+      removeCaretFormat(editor, 'bold', {});
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+      // ね -> Japanese hiragana for 'ne'
+      // こ -> Japanese hiragana for 'ko'
+      // 猫 -> Japanese kanji for 'neko' (cat)
+      simulateComposing(editor, [ 'ね', 'こ' ], '猫');
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text(' ') ]);
+      TinyAssertions.assertContent(editor, '<p>a <strong>犬&nbsp;</strong> 猫&nbsp;</p>');
     });
   });
 });
