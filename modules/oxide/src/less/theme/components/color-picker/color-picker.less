@@ -6,9 +6,9 @@
 // Place your variables here
 //
 
-@color-picker-warning-frame-background-color: #faa;
-@color-picker-warning-frame-text-color: #f00;
-@color-picker-warning-frame-border-color: #f00;
+@color-picker-warning-frame-background-color: mix(@background-color, @color-error, 80%);
+@color-picker-warning-frame-text-color: mix(@text-color, @color-error, 50%);
+@color-picker-warning-frame-border-color: mix(@background-color, @color-error, 70%);
 @color-picker-warning-frame-border: 1px solid @color-picker-warning-frame-border-color;
 
 .tox {
