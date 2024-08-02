@@ -1,4 +1,4 @@
-import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
+import { StructureSchema } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
@@ -9,7 +9,6 @@ export interface BaseToolbarButtonSpec<I extends BaseToolbarButtonInstanceApi> {
   icon?: string;
   text?: string;
   onSetup?: (api: I) => (api: I) => void;
-  allowedModes?: string[];
 }
 
 export interface BaseToolbarButtonInstanceApi {
@@ -36,7 +35,6 @@ export interface BaseToolbarButton<I extends BaseToolbarButtonInstanceApi> {
   icon: Optional<string>;
   text: Optional<string>;
   onSetup: (api: I) => (api: I) => void;
-  allowedModes: string[];
 }
 
 export interface ToolbarButton extends BaseToolbarButton<ToolbarButtonInstanceApi> {
@@ -50,8 +48,7 @@ export const baseToolbarButtonFields = [
   ComponentSchema.optionalTooltip,
   ComponentSchema.optionalIcon,
   ComponentSchema.optionalText,
-  ComponentSchema.onSetup,
-  FieldSchema.defaultedArrayOf('allowedModes', [ 'design' ], ValueType.string)
+  ComponentSchema.onSetup
 ];
 
 export const toolbarButtonSchema = StructureSchema.objOf([

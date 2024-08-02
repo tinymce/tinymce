@@ -105,7 +105,7 @@ describe('browser.tinymce.core.ModeTest', () => {
     const editor = hook.editor();
     setMode(editor, 'failingDeactivateDesign');
     setMode(editor, 'readonly');
-    assertMode(editor, 'failingDeactivateDesign');
-    assertBodyClass(editor, 'mce-content-readonly', false);
+    assertMode(editor, 'readonly');
+    assertBodyClass(editor, 'mce-content-readonly', true);
   });
 });
