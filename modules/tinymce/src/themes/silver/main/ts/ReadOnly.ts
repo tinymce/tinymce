@@ -1,4 +1,4 @@
-import { AlloyComponent, Behaviour, Channels, Disabling, Receiving } from '@ephox/alloy';
+import { Behaviour, Channels, Disabling, Receiving } from '@ephox/alloy';
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Arr } from '@ephox/katamari';
 
@@ -59,21 +59,9 @@ const receivingConfig = (): Behaviour.NamedConfiguredBehaviour<any, any> => Rece
   }
 });
 
-const receivingConfigConditional = (shouldDisable: (component: AlloyComponent, data: ReadOnlyData) => boolean): Behaviour.NamedConfiguredBehaviour<any, any> => Receiving.config({
-  channels: {
-    [ReadOnlyChannel]: {
-      schema: ReadOnlyDataSchema,
-      onReceive: (comp, data: ReadOnlyData) => {
-        Disabling.set(comp, shouldDisable(comp, data));
-      }
-    }
-  }
-});
-
 export {
   ReadOnlyDataSchema,
   setupReadonlyModeSwitch,
   receivingConfig,
-  receivingConfigConditional,
   broadcastReadonly
 };

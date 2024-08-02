@@ -5,8 +5,8 @@ import { isReadOnly, registerReadOnlyContentFilters, registerReadOnlySelectionBl
 import Editor from './Editor';
 
 export interface ReadOnlyProperty {
-  uiEnabled?: boolean;
-  selectionEnabled?: boolean;
+  uiEnabled: boolean;
+  selectionEnabled: boolean;
 }
 
 export type EditorReadOnlyType = boolean | ReadOnlyProperty;
@@ -18,7 +18,6 @@ export type EditorReadOnlyType = boolean | ReadOnlyProperty;
  */
 
 export interface EditorMode {
-
   /**
    * Checks if the editor content can be selected.
    *

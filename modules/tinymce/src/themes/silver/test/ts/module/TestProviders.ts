@@ -13,7 +13,6 @@ export default {
   menuItems: (): Record<string, any> => ({}),
   translate: I18n.translate,
   isDisabled: Fun.never,
-  isButtonAllowedInCurrentMode: Fun.always,
   getOption: <T>(name: string): T | undefined => defaultOptions[name],
   tooltips: {
     getConfig: (): TooltippingTypes.TooltippingConfigSpec => {

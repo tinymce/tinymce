@@ -20,7 +20,6 @@ export interface BaseMenuButtonSpec {
   // as an additional argument to fetch.
   fetch: (success: SuccessCallback, fetchContext: MenuButtonFetchContext, api: BaseMenuButtonInstanceApi) => void;
   onSetup?: (api: BaseMenuButtonInstanceApi) => (api: BaseMenuButtonInstanceApi) => void;
-  allowedModes?: string[];
 }
 
 export interface BaseMenuButton {
@@ -30,7 +29,6 @@ export interface BaseMenuButton {
   search: Optional<{ placeholder: Optional<string> }>;
   fetch: (success: SuccessCallback, fetchContext: MenuButtonFetchContext, api: BaseMenuButtonInstanceApi) => void;
   onSetup: (api: BaseMenuButtonInstanceApi) => (api: BaseMenuButtonInstanceApi) => void;
-  allowedModes: string[];
 }
 
 export interface BaseMenuButtonInstanceApi {
@@ -46,7 +44,6 @@ export const baseMenuButtonFields = [
   FieldSchema.optionString('text'),
   FieldSchema.optionString('tooltip'),
   FieldSchema.optionString('icon'),
-  FieldSchema.defaultedArrayOf('allowedModes', [ 'design' ], ValueType.string),
 
   FieldSchema.defaultedOf(
     'search',

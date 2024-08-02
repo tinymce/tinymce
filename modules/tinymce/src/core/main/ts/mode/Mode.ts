@@ -54,7 +54,7 @@ const setMode = (editor: Editor, availableModes: Record<string, EditorModeApi>, 
 const getEditorReadOnlyProperty = (activeMode: Cell<[ string, EditorModeApi ]>, key: keyof ReadOnlyProperty): boolean => {
   const [ , api ] = activeMode.get();
   const editorReadOnly = api.editorReadOnly;
-  return Type.isBoolean(editorReadOnly) ? false : editorReadOnly[key] || false;
+  return Type.isBoolean(editorReadOnly) ? false : editorReadOnly[key];
 };
 
 const registerMode = (availableModes: Record<string, EditorModeApi>, mode: string, api: EditorModeApi): Record<string, EditorModeApi> => {
@@ -64,13 +64,7 @@ const registerMode = (availableModes: Record<string, EditorModeApi>, mode: strin
 
   return {
     ...availableModes,
-    [mode]: {
-      ...api,
-      editorReadOnly: Type.isBoolean(api.editorReadOnly) ? api.editorReadOnly : {
-        selectionEnabled: api.editorReadOnly.selectionEnabled ?? false,
-        uiEnabled: api.editorReadOnly.uiEnabled ?? false,
-      }
-    }
+    [mode]: api
   };
 };
 
