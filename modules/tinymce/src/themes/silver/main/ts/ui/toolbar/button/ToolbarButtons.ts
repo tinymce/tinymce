@@ -434,13 +434,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     components: [
       AlloySplitDropdown.parts.button(
         renderCommonStructure(spec.icon, spec.text, Optional.none(), Optional.some([
-          Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, toggleOnExecute: false }),
-          DisablingConfigs.toolbarButton(() => {
-            return !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedModes);
-          }),
-          ReadOnly.receivingConfigConditional((comp: AlloyComponent) => {
-            return Disabling.getLastDisabledState(comp) || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedModes);
-          })
+          Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, toggleOnExecute: false })
         ]), sharedBackstage.providers, undefined, spec.allowedModes)
       ),
       AlloySplitDropdown.parts.arrow({

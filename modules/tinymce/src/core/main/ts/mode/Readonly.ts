@@ -94,10 +94,6 @@ const toggleReadOnly = (editor: Editor, readOnlyMode: EditorReadOnlyType): void 
     if (Type.isBoolean(readOnlyMode) ? readOnlyMode : !readOnlyMode.selectionEnabled) {
       setContentEditable(body, false);
       switchOffContentEditableTrue(body);
-    } else {
-      if (editor.hasEditableRoot()) {
-        setContentEditable(body, true);
-      }
     }
   } else {
     unsetEditorReadonly(editor, body);

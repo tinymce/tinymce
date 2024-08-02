@@ -1,7 +1,7 @@
 import { ApproxStructure, Mouse, UiFinder, Clipboard, Waiter, Keys } from '@ephox/agar';
 import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import { Fun, Singleton } from '@ephox/katamari';
-import { Attribute, Css, SelectorExists, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
+import { Css, SelectorExists, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -499,24 +499,6 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
 
       TinyContentActions.keystroke(editor, Keys.right());
       TinyAssertions.assertCursor(editor, [ 1, 1 ], 1);
-    });
-  });
-
-  context('contenteditable attribute editor body', () => {
-    it('TINY-10981: Checking content editable attribute of editor body', () => {
-      const editor = hook.editor();
-      const body = TinyDom.body(editor);
-      assert.equal(Attribute.get(body, 'contenteditable'), 'true');
-      setMode(editor, 'testmode');
-      assert.equal(Attribute.get(body, 'contenteditable'), 'true');
-      setMode(editor, 'readonly');
-      assert.equal(Attribute.get(body, 'contenteditable'), 'false');
-      setMode(editor, 'testmode');
-      assert.equal(Attribute.get(body, 'contenteditable'), 'true');
-      setMode(editor, 'readonly');
-      assert.equal(Attribute.get(body, 'contenteditable'), 'false');
-      setMode(editor, 'design');
-      assert.equal(Attribute.get(body, 'contenteditable'), 'true');
     });
   });
 });

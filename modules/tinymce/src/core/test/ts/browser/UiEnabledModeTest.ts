@@ -31,9 +31,6 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
     assert.equal(Attribute.get(menuButton, 'disabled'), 'disabled', 'Should be disabled');
   };
 
-  // Menu/Button part of split button
-  const assertMenuPartEnabled = (selector: string) => UiFinder.notExists(SugarBody.body(), `[data-mce-name="${selector}"] > span.tox-tbtn.tox-tbtn--select[aria-disabled="true"]`);
-
   const assertButtonEnabled = (selector: string) => UiFinder.notExists(SugarBody.body(), `[data-mce-name="${selector}"][aria-disabled="true"]`);
 
   const assertButtonDisabled = (selector: string) => UiFinder.exists(SugarBody.body(), `[data-mce-name="${selector}"][aria-disabled="true"]`);
@@ -252,10 +249,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
           },
         });
       },
-      assertButtonEnabled: (selector: string) => {
-        assertMenuPartEnabled(selector);
-        assertButtonEnabled(selector);
-      },
+      assertButtonEnabled,
       assertButtonDisabled
     },
     {
@@ -687,27 +681,6 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         });
       });
 
-      context('onSetup callback and toolbar button spec allowedModes: [ readonly ] not present, switch to mode onSetup', () => {
-        const hook = TinyHooks.bddSetup<Editor>({
-          base_url: '/project/tinymce/js/tinymce',
-          toolbar: 't1',
-          setup: (ed: Editor) => {
-            registerMode(ed);
-
-            scenario.buttonSetupOne(ed);
-            ed.mode.set('testmode');
-          }
-        }, [], true);
-
-        it(`TINY-10980: Toolbar ${scenario.label} should be disabled in uiEnabled mode`, async () => {
-          const editor = hook.editor();
-          scenario.assertButtonDisabled('t1');
-
-          editor.mode.set('design');
-          scenario.assertButtonEnabled('t1');
-        });
-      });
-
       context('onSetup callback with setEnabled(true) and toolbar button readonly: false', () => {
         const hook = TinyHooks.bddSetup<Editor>({
           base_url: '/project/tinymce/js/tinymce',
@@ -731,27 +704,6 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
           scenario.assertButtonDisabled('t2');
 
           editor.mode.set('testmode');
-          scenario.assertButtonDisabled('t2');
-
-          editor.mode.set('design');
-          scenario.assertButtonEnabled('t2');
-        });
-      });
-
-      context('onSetup callback with setEnabled(true) and toolbar button readonly: false, switch to mode onSetup', () => {
-        const hook = TinyHooks.bddSetup<Editor>({
-          base_url: '/project/tinymce/js/tinymce',
-          toolbar: 't2',
-          setup: (ed: Editor) => {
-            registerMode(ed);
-
-            scenario.buttonSetupTwo(ed);
-            ed.mode.set('testmode');
-          }
-        }, [], true);
-
-        it(`TINY-10980: Toolbar ${scenario.label} should not be enabled in uiEnabled mode`, async () => {
-          const editor = hook.editor();
           scenario.assertButtonDisabled('t2');
 
           editor.mode.set('design');
@@ -789,26 +741,6 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         });
       });
 
-      context('onSetup callback with setEnabled(true) and toolbar button allowedModes: [ design, readonly ], switch to mode onSetup ', () => {
-        const hook = TinyHooks.bddSetup<Editor>({
-          base_url: '/project/tinymce/js/tinymce',
-          toolbar: 't3',
-          setup: (ed: Editor) => {
-            registerMode(ed);
-
-            scenario.buttonSetupThree(ed);
-            ed.mode.set('testmode');
-          }
-        }, [], true);
-
-        it(`TINY-10980: Toolbar ${scenario.label} should be enabled in uiEnabled mode`, async () => {
-          const editor = hook.editor();
-          scenario.assertButtonEnabled('t3');
-          editor.mode.set('design');
-          scenario.assertButtonEnabled('t3');
-        });
-      });
-
       context('onSetup callback with setEnabled(false) and toolbar button allowedModes: [ design, readonly ]', () => {
         const hook = TinyHooks.bddSetup<Editor>({
           base_url: '/project/tinymce/js/tinymce',
@@ -835,27 +767,6 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
           editor.mode.set('testmode');
           scenario.assertButtonDisabled('t4');
 
-          editor.mode.set('design');
-          scenario.assertButtonDisabled('t4');
-        });
-      });
-
-      context('onSetup callback with setEnabled(false) and toolbar button allowedModes: [ design, readonly ], switch to mode onSetup', () => {
-        const hook = TinyHooks.bddSetup<Editor>({
-          base_url: '/project/tinymce/js/tinymce',
-          toolbar: 't4',
-          statusbar: false,
-          setup: (ed: Editor) => {
-            registerMode(ed);
-
-            scenario.buttonSetupFour(ed);
-            ed.mode.set('testmode');
-          }
-        }, [], true);
-
-        it(`TINY-10980: Toolbar ${scenario.label} should be disabled in uiEnabled mode`, async () => {
-          const editor = hook.editor();
-          scenario.assertButtonDisabled('t4');
           editor.mode.set('design');
           scenario.assertButtonDisabled('t4');
         });
@@ -888,27 +799,6 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
           scenario.assertButtonEnabled('t5');
 
           // Switching mode when the overflow toolbar is opened, the onSetup callback is not executed hence all buttons are enabled
-          editor.mode.set('design');
-          scenario.assertButtonEnabled('t5');
-        });
-      });
-
-      context('onSetup callback not present and toolbar button allowedModes: [ design, readonly ], switch to mode onSetup', () => {
-        const hook = TinyHooks.bddSetup<Editor>({
-          base_url: '/project/tinymce/js/tinymce',
-          toolbar: 't5',
-          statusbar: false,
-          setup: (ed: Editor) => {
-            registerMode(ed);
-
-            scenario.buttonSetupFive(ed);
-            ed.mode.set('testmode');
-          }
-        }, [], true);
-
-        it(`TINY-10980: Toolbar ${scenario.label} should be enabled in uiEnabled mode`, async () => {
-          const editor = hook.editor();
-          scenario.assertButtonEnabled('t5');
           editor.mode.set('design');
           scenario.assertButtonEnabled('t5');
         });
