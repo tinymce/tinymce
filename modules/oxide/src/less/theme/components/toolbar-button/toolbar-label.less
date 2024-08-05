@@ -3,62 +3,44 @@
 // When making changes here, please review menubar/menubar.less and menubar/menubar-button.less
 //
 
-@toolbar-button-background-color: @background-color;
-@toolbar-button-border-radius: 3px;
-@toolbar-button-border: 0;
-@toolbar-button-box-shadow: none;
-@toolbar-button-font-size: @font-size-sm;
-@toolbar-button-font-style: normal;
-@toolbar-button-font-weight: @font-weight-normal;
-@toolbar-button-height: 28px;
-@toolbar-button-icon-color: contrast(@background-color, @color-white, @color-black);
-@toolbar-button-spacing-x: 1px;
-@toolbar-button-spacing-y: 5px;
-@toolbar-button-text-color: contrast(@background-color, @color-white, @color-black);
-@toolbar-button-text-transform: none;
-@toolbar-button-width: 34px;
+@toolbar-label-background-color: @background-color;
+@toolbar-label-border-radius: 3px;
+@toolbar-label-border: 0;
+@toolbar-label-box-shadow: none;
+@toolbar-label-font-size: @font-size-sm;
+@toolbar-label-font-style: normal;
+@toolbar-label-font-weight: @font-weight-normal;
+@toolbar-label-height: 28px;
+@toolbar-label-icon-color: @text-color-muted;
+@toolbar-label-spacing-x: 1px;
+@toolbar-label-spacing-y: 5px;
+@toolbar-label-text-color: @text-color-muted;
+@toolbar-label-text-transform: none;
+@toolbar-label-width: auto;
 
 .tox {
   .tox-label {
     align-items: center;
-    background: @toolbar-button-background-color;
-    border: @toolbar-button-border;
-    border-radius: @toolbar-button-border-radius;
-    box-shadow: @toolbar-button-box-shadow;
-    color: @toolbar-button-text-color;
+    background: @toolbar-label-background-color;
+    border: @toolbar-label-border;
+    border-radius: @toolbar-label-border-radius;
+    box-shadow: @toolbar-label-box-shadow;
+    color: @toolbar-label-text-color;
     display: flex;
-    flex: 0 0 auto;
-    font-size: @toolbar-button-font-size;
-    font-style: @toolbar-button-font-style;
-    font-weight: @toolbar-button-font-weight;
-    height: @toolbar-button-height;
+    font-size: @toolbar-label-font-size;
+    font-style: @toolbar-label-font-style;
+    font-weight: @toolbar-label-font-weight;
+    height: @toolbar-label-height;
     justify-content: center;
-    margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0;
+    margin: (@toolbar-label-spacing-y + 1px) @toolbar-label-spacing-x @toolbar-label-spacing-y 0;
     outline: none;
     padding: 0;
-    text-transform: @toolbar-button-text-transform;
-    width: @toolbar-button-width;
-
-    @media (forced-colors: active) {
-
-      &:hover,
-      &.tox-tbtn:hover {
-        outline: 1px dashed currentColor;
-      }
-
-      &.tox-tbtn--active,
-      &.tox-tbtn--enabled,
-      &.tox-tbtn--enabled:hover,
-      &.tox-tbtn--enabled:focus,
-      &:focus:not(.tox-tbtn--disabled) {
-        outline: 1px solid currentColor;
-        position: relative;
-      }
-    }
+    text-transform: @toolbar-label-text-transform;
+    width: @toolbar-label-width;
 
     svg {
       display: block;
-      fill: @toolbar-button-icon-color;
+      fill: @toolbar-label-icon-color;
 
       @media (forced-colors: active) {
         & {
