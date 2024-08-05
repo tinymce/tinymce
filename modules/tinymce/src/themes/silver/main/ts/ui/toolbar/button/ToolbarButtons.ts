@@ -436,7 +436,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
 
 const renderToolbarLabel = (spec: Toolbar.ToolbarLabel, providersBackstage: UiFactoryBackstageProviders, btnName?: string): SketchSpec => {
   const optMemDisplayText = spec.text.map(
-    (text) => Memento.record(renderLabel(text, ToolbarButtonClasses.Button, providersBackstage))
+    (text) => Memento.record(renderLabel(text, ToolbarButtonClasses.Label, providersBackstage))
   );
   const optMemDisplayIcon = spec.icon.map(
     (icon) => Memento.record(renderReplaceableIconFromPack(icon, providersBackstage.icons))
@@ -449,7 +449,7 @@ const renderToolbarLabel = (spec: Toolbar.ToolbarLabel, providersBackstage: UiFa
   return AlloyButton.sketch({
     dom: {
       tag: 'div',
-      classes: [ ToolbarButtonClasses.Label ].concat(spec.text.isSome() ? [ ToolbarButtonClasses.MatchWidth ] : []),
+      classes: [ ToolbarButtonClasses.Label ],
       attributes: {
         ...getTooltipAttributes(spec.tooltip, providersBackstage),
         ...(Type.isNonNullable(btnName) ? { 'data-mce-name': btnName } : {})
