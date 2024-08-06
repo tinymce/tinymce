@@ -38,10 +38,7 @@ export const renderButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryB
     };
     const isActive = () => Class.has(comp.element, ViewButtonClasses.Ticked);
 
-    const focus = () => {
-      const elm = comp.element;
-      Focus.focus(elm);
-    };
+    const focus = () => Focus.focus(comp.element);
 
     if (isToggleButton) {
       return spec.onAction({ setIcon, setActive, isActive, focus });
