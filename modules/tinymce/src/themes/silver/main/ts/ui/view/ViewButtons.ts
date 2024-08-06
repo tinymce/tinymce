@@ -41,7 +41,7 @@ export const renderButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryB
     const focus = () => {
       const elm = comp.element;
       Focus.focus(elm);
-    }
+    };
 
     if (isToggleButton) {
       return spec.onAction({ setIcon, setActive, isActive, focus });
