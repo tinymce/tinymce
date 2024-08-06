@@ -1,4 +1,5 @@
 import { context, describe, it } from '@ephox/bedrock-client';
+import { Unicode } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -605,7 +606,7 @@ describe('browser.tinymce.core.content.insert.InsertContentTest', () => {
           '</tr>' +
         '</tbody>' +
       '</table>' +
-      `<p>${String.fromCharCode(160)}</p>` // UTF-16 char code '160' is NO-BREAK SPACE (U+00A0)
+      `<p>${Unicode.nbsp}</p>`
     );
   });
 
