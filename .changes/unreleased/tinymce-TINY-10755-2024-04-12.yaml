@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: In some cases the selection after `setContent` was in the wrong place.
+time: 2024-04-12T09:05:13.486192033+02:00
+custom:
+  Issue: TINY-10755
