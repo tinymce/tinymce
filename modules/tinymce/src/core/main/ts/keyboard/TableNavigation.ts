@@ -133,6 +133,10 @@ const tabGo = (editor: Editor, isRoot: (e: SugarElement<Node>) => boolean, cell:
       return getCellFirstCursorPosition(cell);
     });
   }, (current) => {
+    if (editor.mode.isReadOnly()) {
+      return Optional.none();
+    }
+
     editor.execCommand('mceTableInsertRowAfter');
     // Move forward from the last cell so that we move into the first valid position in the new row
     return tabForward(editor, isRoot, current);
