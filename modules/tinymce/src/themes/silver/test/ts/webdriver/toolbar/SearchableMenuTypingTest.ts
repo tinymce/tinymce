@@ -102,7 +102,6 @@ describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () 
     (store, _doc, _body) => GuiFactory.build(
       renderMenuButton(
         {
-          allowedModes: [ 'design' ],
           text: Optional.some('MailMerge'),
           icon: Optional.none(),
           tooltip: Optional.none(),

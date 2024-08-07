@@ -201,7 +201,7 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
       onSetupEvent(editor, 'NodeChange', (api: BespokeSelectApi) => {
         const comp = api.getComponent();
         spec.updateText(comp);
-        Disabling.set(api.getComponent(), !editor.selection.isEditable() || editor.readonly);
+        Disabling.set(api.getComponent(), !editor.selection.isEditable());
       })(api),
       () => editor.off(textUpdateEventName, handler)
     );
@@ -234,8 +234,7 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
             }
           }),
         })
-      ],
-      allowedModes: [ 'design' ]
+      ]
     },
     ToolbarButtonClasses.Button,
     backstage.shared,

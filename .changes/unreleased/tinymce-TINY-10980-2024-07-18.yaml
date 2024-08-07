@@ -1,6 +1,0 @@
-project: tinymce
-kind: Added
-body: 'New `uiEnabled` property on the read only mode API, in combination with a new `allowedModes: string[]` property on toolbar and menu buttons, for fine-grained control of when they may be automatically disabled based on the editor mode.'
-time: 2024-07-18T09:55:03.406708+08:00
-custom:
-  Issue: TINY-10980

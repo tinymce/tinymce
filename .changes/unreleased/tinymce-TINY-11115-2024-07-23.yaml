@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Colorpicker's hex-based input field showed the wrong validation error message
-time: 2024-07-23T10:42:15.090890687+02:00
-custom:
-  Issue: TINY-11115

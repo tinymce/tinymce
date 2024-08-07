@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: The pattern commands would execute even if the command was not enabled.
-time: 2024-06-17T16:06:10.078426+02:00
-custom:
-  Issue: TINY-10994

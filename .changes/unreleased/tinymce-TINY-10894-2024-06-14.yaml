@@ -1,7 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Notifications didn't position and resize properly when resizing the editor or
-  toggling views.
-time: 2024-06-14T12:40:37.462556+02:00
-custom:
-  Issue: TINY-10894

@@ -48,7 +48,7 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
     hook.editor().setContent('');
   });
 
-  it('TINY-8861: press enter after pasting a code sample should not add a newline inside the code', async () => {
+  (browser.isSafari() ? it.skip : it)('TINY-8861: press enter after pasting a code sample should not add a newline inside the code', async () => {
     const editor = hook.editor();
     editor.setContent('<p><br /></p><p><br /></p>');
     await TestUtils.pOpenDialogAndAssertInitial(hook.editor(), 'markup', '');
@@ -85,50 +85,48 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
   });
 
   // Safari cannot select the CEF in this scenario, so we can't run the test (and there is no bug)
-  if (!browser.isSafari()) {
-    it('TINY-8861: copying and pasting a piece of code and a text should leave the cursor on the text after paste', async () => {
-      const editor = hook.editor();
-      editor.setContent(
-        '<pre class="language-markup" contenteditable="false" data-mce-highlighted="true">test content</pre>' +
-      '<p>test text</p>'
-      );
+  (browser.isSafari() ? it.skip : it)('TINY-8861: copying and pasting a piece of code and a text should leave the cursor on the text after paste', async () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<pre class="language-markup" contenteditable="false" data-mce-highlighted="true">test content</pre>' +
+    '<p>test text</p>'
+    );
 
-      editor.execCommand('SelectAll');
+    editor.execCommand('SelectAll');
 
-      await pClickEditMenu(editor, 'Copy');
-      TinySelections.setCursor(editor, [ 1 ], 1);
+    await pClickEditMenu(editor, 'Copy');
+    TinySelections.setCursor(editor, [ 1 ], 1);
 
-      await pPaste(editor);
-      TinyAssertions.assertCursor(editor, [ 3, 0 ], 'test text'.length);
-      TinyAssertions.assertContentPresence(editor, { 'pre[data-mce-selected]': 0 });
+    await pPaste(editor);
+    TinyAssertions.assertCursor(editor, [ 3, 0 ], 'test text'.length);
+    TinyAssertions.assertContentPresence(editor, { 'pre[data-mce-selected]': 0 });
 
-      pressEnter(editor);
-      TinyAssertions.assertCursor(editor, [ 4 ], 0);
+    pressEnter(editor);
+    TinyAssertions.assertCursor(editor, [ 4 ], 0);
 
-      TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
-        const testTextParagraph = s.element('p', {
-          children: [
-            s.text(str.is('test text'))
-          ]
-        });
-        return s.element('body', {
-          children: [
-            getMockPreStructure(s, str),
-            testTextParagraph,
-            getMockPreStructure(s, str),
-            testTextParagraph,
-            s.element('p', {
-              children: [
-                s.element('br', {
-                  attrs: {
-                    'data-mce-bogus': str.is('1')
-                  }
-                })
-              ]
-            }),
-          ]
-        });
-      }));
-    });
-  }
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
+      const testTextParagraph = s.element('p', {
+        children: [
+          s.text(str.is('test text'))
+        ]
+      });
+      return s.element('body', {
+        children: [
+          getMockPreStructure(s, str),
+          testTextParagraph,
+          getMockPreStructure(s, str),
+          testTextParagraph,
+          s.element('p', {
+            children: [
+              s.element('br', {
+                attrs: {
+                  'data-mce-bogus': str.is('1')
+                }
+              })
+            ]
+          }),
+        ]
+      });
+    }));
+  });
 });

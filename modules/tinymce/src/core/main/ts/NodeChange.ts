@@ -93,24 +93,23 @@ class NodeChange {
    * @param {Object} args Optional args to pass to NodeChange event handlers.
    */
   public nodeChanged(args: Record<string, any> = {}): void {
-    const editor = this.editor;
-    const selection = editor.selection;
+    const selection = this.editor.selection;
     let node: Element | undefined;
 
     // Fix for bug #1896577 it seems that this can not be fired while the editor is loading
-    if (this.editor.initialized && selection && !Options.shouldDisableNodeChange(this.editor) && (!this.editor.mode.isReadOnly() || this.editor.mode.isSelectionEnabled())) {
+    if (this.editor.initialized && selection && !Options.shouldDisableNodeChange(this.editor) && !this.editor.mode.isReadOnly()) {
       // Get start node
-      const root = editor.getBody();
+      const root = this.editor.getBody();
       node = selection.getStart(true) || root;
 
       // Make sure the node is within the editor root or is the editor root
-      if (node.ownerDocument !== editor.getDoc() || !editor.dom.isChildOf(node, root)) {
+      if (node.ownerDocument !== this.editor.getDoc() || !this.editor.dom.isChildOf(node, root)) {
         node = root;
       }
 
       // Get parents and add them to object
       const parents: Node[] = [];
-      editor.dom.getParent(node, (node) => {
+      this.editor.dom.getParent(node, (node) => {
         if (node === root) {
           return true;
         } else {
@@ -119,7 +118,7 @@ class NodeChange {
         }
       });
 
-      editor.dispatch('NodeChange', {
+      this.editor.dispatch('NodeChange', {
         ...args,
         element: node,
         parents
