@@ -84,17 +84,20 @@ const renderLabel = (text: string): SimpleSpec => ({
   ],
 });
 
-const renderSpecialStateIcon = (container: Dialog.Directory | Dialog.Leaf, components: SimpleSpec[], backstage: UiFactoryBackstage): void => {
-  container.specialState.each((icon) =>
+const renderCustomStateIcon = (container: Dialog.Directory | Dialog.Leaf, components: SimpleSpec[], backstage: UiFactoryBackstage): void => {
+  container.customStateIcon.each((icon) =>
     components.push(renderIcon(
-      icon.icon, backstage.shared.providers.icons, [
-        Tooltipping.config(
-          backstage.shared.providers.tooltips.getConfig({
-            tooltipText: icon.tooltip
-          })
-        )
-      ],
-      [ 'tox-icon-special-state' ]
+      icon, backstage.shared.providers.icons, container.customStateIconTooltip.fold(
+        () => [],
+        (tooltip) => [
+          Tooltipping.config(
+            backstage.shared.providers.tooltips.getConfig({
+              tooltipText: tooltip
+            })
+          )
+        ]
+      ),
+      [ 'tox-icon-custom-state' ]
     ))
   );
 };
@@ -111,7 +114,7 @@ const renderLeafLabel = ({
 }: RenderLeafLabelProps): SimpleSpec => {
   const internalMenuButton = leaf.menu.map((btn) => renderMenuButton(btn, 'tox-mbtn', backstage, Optional.none(), visible));
   const components = [ renderLabel(leaf.title) ];
-  renderSpecialStateIcon(leaf, components, backstage);
+  renderCustomStateIcon(leaf, components, backstage);
   internalMenuButton.each((btn) => components.push(btn));
 
   return AlloyButton.sketch({
@@ -215,7 +218,7 @@ const renderDirectoryLabel = ({
     },
     renderLabel(directory.title)
   ];
-  renderSpecialStateIcon(directory, components, backstage);
+  renderCustomStateIcon(directory, components, backstage);
   internalMenuButton.each((btn) => {
     components.push(btn);
   });

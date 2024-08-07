@@ -75,19 +75,15 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
         type: 'directory',
         id: 'dir2',
         title: 'Dir2',
-        specialState: {
-          icon: 'color-swatch',
-          tooltip: 'Test Tooltip 1'
-        },
+        customStateIcon: 'color-swatch',
+        customStateIconTooltip: 'Test Tooltip 1',
         children: [
           {
             type: 'leaf',
             title: 'File 3',
             id: '3',
-            specialState: {
-              icon: 'color-swatch',
-              tooltip: 'Test Tooltip 1'
-            },
+            customStateIcon: 'color-swatch',
+            customStateIconTooltip: 'Test Tooltip 2',
           },
         ]
       },
@@ -141,8 +137,8 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
 
   it('TINY-11131: Check that custom icon is correct', () => {
     const element = SugarElement.fromDom(getTreeItem('.tox-tree__label[aria-label="Dir2"').element.dom.parentElement);
-    SelectorFind.child(element, '.tox-icon-special-state').getOrDie();
-    SelectorFind.child(SelectorFind.sibling(element, '.tox-tree--directory__children').getOrDie(), '.tox-icon-special-state');
+    SelectorFind.child(element, '.tox-icon-custom-state').getOrDie();
+    SelectorFind.child(SelectorFind.sibling(element, '.tox-tree--directory__children').getOrDie(), '.tox-icon-custom-state');
   });
 
   it('TINY-9614: Basic tree interactions', async () => {

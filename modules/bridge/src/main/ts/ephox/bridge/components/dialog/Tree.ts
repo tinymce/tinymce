@@ -32,23 +32,20 @@ export interface Tree {
   defaultSelectedId: Optional<Id>;
 }
 
-interface SpecialTreeState {
-  icon: string;
-  tooltip: string;
-}
-
 interface BaseTreeItemSpec {
   title: string;
   id: Id;
   menu?: ToolbarMenuButtonSpec;
-  specialState?: SpecialTreeState;
+  customStateIcon?: string;
+  customStateIconTooltip?: string;
 }
 
 interface BaseTreeItem {
   title: string;
   id: string;
   menu: Optional<ToolbarMenuButton>;
-  specialState: Optional<SpecialTreeState>;
+  customStateIcon: Optional<string>;
+  customStateIconTooltip: Optional<string>;
 }
 
 export interface DirectorySpec extends BaseTreeItemSpec {
@@ -78,10 +75,8 @@ const baseTreeItemFields = [
   ComponentSchema.title,
   FieldSchema.requiredString('id'),
   FieldSchema.optionOf('menu', MenuButtonSchema),
-  FieldSchema.optionObjOf('specialState', [
-    FieldSchema.requiredString('icon'),
-    FieldSchema.requiredString('tooltip'),
-  ]),
+  FieldSchema.optionString('customStateIcon'),
+  FieldSchema.optionString('customStateIconTooltip'),
 ];
 
 const treeItemLeafFields = baseTreeItemFields;
