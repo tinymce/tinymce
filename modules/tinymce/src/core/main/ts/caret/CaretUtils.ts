@@ -12,7 +12,7 @@ import { isFakeCaretTarget } from './FakeCaret';
 const isContentEditableTrue = NodeType.isContentEditableTrue;
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 const isMedia = NodeType.isMedia;
-const isBlockLike = NodeType.matchStyleValues('display', 'block table table-cell table-caption list-item');
+const isBlockLike = NodeType.matchStyleValues('display', 'block table table-cell table-row table-caption list-item');
 const isCaretContainer = CaretContainer.isCaretContainer;
 const isCaretContainerBlock = CaretContainer.isCaretContainerBlock;
 const isElement = NodeType.isElement;
