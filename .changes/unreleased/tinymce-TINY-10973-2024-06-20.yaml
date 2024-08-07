@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Split button popups were incorrectly positioned when switching to fullscreen mode if the editor was inside a scrollable container.
-time: 2024-06-20T14:03:06.529094655+02:00
-custom:
-  Issue: TINY-10973
