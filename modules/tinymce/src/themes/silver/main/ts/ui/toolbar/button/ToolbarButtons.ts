@@ -442,10 +442,6 @@ const renderToolbarLabel = (spec: Toolbar.ToolbarLabel, providersBackstage: UiFa
     (icon) => Memento.record(renderReplaceableIconFromPack(icon, providersBackstage.icons))
   );
 
-  // eslint-disable-next-line no-console
-  console.log('ToolbarButtonClasses.Label: ', ToolbarButtonClasses.Label);
-  // eslint-disable-next-line no-console
-  console.log('btnName: ', btnName);
   return AlloyButton.sketch({
     dom: {
       tag: 'div',
