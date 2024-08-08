@@ -97,7 +97,11 @@ const renderCustomStateIcon = (container: Dialog.Directory | Dialog.Leaf, compon
           )
         ]
       ),
-      [ 'tox-icon-custom-state' ]
+      [ 'tox-icon-custom-state' ],
+      container.customStateIconTooltip.fold(
+        () => ({}),
+        (tooltip) => ({ title: tooltip })
+      )
     ))
   );
 };
@@ -184,14 +188,15 @@ const renderLeafLabel = ({
   });
 };
 
-const renderIcon = (iconName: string, iconsProvider: Icons.IconProvider, behaviours: Array<Behaviour.NamedConfiguredBehaviour<any, any, any>>, extraClasses?: string[]): SimpleSpec =>
+const renderIcon = (iconName: string, iconsProvider: Icons.IconProvider, behaviours: Array<Behaviour.NamedConfiguredBehaviour<any, any, any>>, extraClasses?: string[], extraAttributes?: Record<string, string>): SimpleSpec =>
   Icons.render(iconName, {
     tag: 'span',
     classes: [
       'tox-tree__icon-wrap',
       'tox-icon',
     ].concat(extraClasses || []),
-    behaviours
+    behaviours,
+    attributes: extraAttributes
   }, iconsProvider);
 
 const renderIconFromPack = (iconName: string, iconsProvider: Icons.IconProvider): SimpleSpec =>
