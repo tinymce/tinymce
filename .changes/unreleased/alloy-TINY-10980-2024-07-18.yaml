@@ -1,0 +1,6 @@
+project: alloy
+kind: Added
+body: '`DisablingState` to `Disabling` behaviour, when enabling or disabling an `AlloyComponent`, the last disabled state can be optionally stored.'
+time: 2024-07-18T09:55:03.406708+08:00
+custom:
+  Issue: TINY-10980

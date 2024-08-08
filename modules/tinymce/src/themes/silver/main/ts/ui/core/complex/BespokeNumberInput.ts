@@ -26,7 +26,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
     const comp = api.getComponent();
     currentComp = Optional.some(comp);
     spec.updateInputValue(comp);
-    Disabling.set(comp, !editor.selection.isEditable());
+    Disabling.set(api.getComponent(), !editor.selection.isEditable() || editor.readonly);
   });
 
   const getApi = (comp: AlloyComponent): BespokeSelectApi => ({ getComponent: Fun.constant(comp) });
@@ -76,7 +76,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
     const translatedTooltip = backstage.shared.providers.translate(tooltip);
     const altExecuting = Id.generate('altExecuting');
     const onSetup = onSetupEvent(editor, 'NodeChange SwitchMode', (api: BespokeSelectApi) => {
-      Disabling.set(api.getComponent(), !editor.selection.isEditable());
+      Disabling.set(api.getComponent(), !editor.selection.isEditable() || editor.readonly);
     });
 
     const onClick = (comp: AlloyComponent) => {

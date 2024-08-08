@@ -56,7 +56,8 @@ export const renderButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryB
     tooltip: spec.tooltip,
     icon: spec.icon,
     enabled: true,
-    borderless: spec.borderless
+    borderless: spec.borderless,
+    allowedModes: [ 'design' ]
   };
 
   const buttonTypeClasses = calculateClassesFromButtonType(spec.buttonType ?? 'secondary');

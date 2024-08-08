@@ -28,7 +28,8 @@ export const setup = (backstage: UiFactoryBackstage): ConfirmDialogApi => {
         buttonType: Optional.some('primary'),
         align: 'end',
         enabled: true,
-        icon: Optional.none()
+        icon: Optional.none(),
+        allowedModes: [ 'design', 'readonly' ]
       }, 'submit', backstage)
     );
 
@@ -39,7 +40,8 @@ export const setup = (backstage: UiFactoryBackstage): ConfirmDialogApi => {
       buttonType: Optional.some('secondary'),
       align: 'end',
       enabled: true,
-      icon: Optional.none()
+      icon: Optional.none(),
+      allowedModes: [ 'design', 'readonly' ]
     }, 'cancel', backstage);
 
     const titleSpec = Dialogs.pUntitled();

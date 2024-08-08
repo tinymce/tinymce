@@ -73,6 +73,7 @@ export const renderCardMenuItem = (
   };
 
   return renderCommonItem({
+    allowedModes: spec.allowedModes,
     data: buildData({ text: Optional.none(), ...spec }),
     enabled: spec.enabled,
     getApi,

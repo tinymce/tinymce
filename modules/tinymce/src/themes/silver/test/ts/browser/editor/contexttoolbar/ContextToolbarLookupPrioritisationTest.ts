@@ -27,6 +27,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLook
         onAction: Fun.noop
       },
       enabled: true,
+      allowedModes: [ 'design' ],
       tooltip: Optional.none(),
       icon: Optional.none(),
       text: Optional.none(),

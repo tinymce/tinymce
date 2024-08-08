@@ -45,13 +45,6 @@
     outline: @object-block-selected-outline-width solid @object-block-selected-color;
   }
 
-  &.mce-content-readonly {
-    *[contentEditable=true]:focus,
-    *[contentEditable=true]:hover {
-      outline: none;
-    }
-  }
-
   // Styles for certain selected inline elements objects, like links.
   *[data-mce-selected="inline-boundary"] {
     background-color: @object-block-selected-color;

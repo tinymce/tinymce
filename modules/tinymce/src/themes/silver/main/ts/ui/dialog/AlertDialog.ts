@@ -28,7 +28,8 @@ export const setup = (backstage: UiFactoryBackstage): AlertDialogApi => {
         buttonType: Optional.some('primary'),
         align: 'end',
         enabled: true,
-        icon: Optional.none()
+        icon: Optional.none(),
+        allowedModes: [ 'design', 'readonly' ]
       }, 'cancel', backstage)
     );
 

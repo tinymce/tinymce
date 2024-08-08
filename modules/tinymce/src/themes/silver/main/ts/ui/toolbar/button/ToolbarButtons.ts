@@ -49,6 +49,7 @@ interface GeneralToolbarButton<T> {
   readonly shortcut: Optional<string>;
   readonly onAction: (api: T) => void;
   readonly enabled: boolean;
+  readonly allowedModes: string[];
 }
 
 interface ChoiceFetcher {
@@ -59,9 +60,14 @@ interface ChoiceFetcher {
   readonly select: Optional<(value: string) => boolean>;
 }
 
-const getButtonApi = (component: AlloyComponent): Toolbar.ToolbarButtonInstanceApi => ({
+const getButtonApi = (spec: Toolbar.GroupToolbarButton | Toolbar.ToolbarButton, providersBackstage: UiFactoryBackstageProviders) => (component: AlloyComponent): Toolbar.ToolbarButtonInstanceApi => ({
   isEnabled: () => !Disabling.isDisabled(component),
-  setEnabled: (state: boolean) => Disabling.set(component, !state),
+  setEnabled: (state: boolean) => {
+    // TODO: Address in TINY-11126
+    if (providersBackstage.isButtonAllowedInCurrentMode(spec.allowedModes)) {
+      Disabling.set(component, !state, true);
+    }
+  },
   setText: (text: string) => AlloyTriggers.emitWith(component, updateMenuText, {
     text
   }),
@@ -70,13 +76,18 @@ const getButtonApi = (component: AlloyComponent): Toolbar.ToolbarButtonInstanceA
   })
 });
 
-const getToggleApi = (component: AlloyComponent): Toolbar.ToolbarToggleButtonInstanceApi => ({
+const getToggleApi = (spec: Toolbar.ToolbarToggleButton, providersBackstage: UiFactoryBackstageProviders) => (component: AlloyComponent): Toolbar.ToolbarToggleButtonInstanceApi => ({
   setActive: (state) => {
     Toggling.set(component, state);
   },
   isActive: () => Toggling.isOn(component),
   isEnabled: () => !Disabling.isDisabled(component),
-  setEnabled: (state: boolean) => Disabling.set(component, !state),
+  setEnabled: (state: boolean) => {
+    // TODO: Address in TINY-11126
+    if (providersBackstage.isButtonAllowedInCurrentMode(spec.allowedModes)) {
+      Disabling.set(component, !state, true);
+    }
+  },
   setText: (text: string) => AlloyTriggers.emitWith(component, updateMenuText, {
     text
   }),
@@ -97,7 +108,8 @@ const renderCommonStructure = (
   tooltip: Optional<string>,
   behaviours: Optional<Behaviours>,
   providersBackstage: UiFactoryBackstageProviders,
-  btnName?: string
+  btnName?: string,
+  allowedModes: string[] = []
 ): AlloyButtonSpec => {
   const optMemDisplayText = optText.map(
     (text) => Memento.record(renderLabel(text, ToolbarButtonClasses.Button, providersBackstage))
@@ -130,8 +142,12 @@ const renderCommonStructure = (
 
     buttonBehaviours: Behaviour.derive(
       [
-        DisablingConfigs.toolbarButton(providersBackstage.isDisabled),
-        ReadOnly.receivingConfig(),
+        DisablingConfigs.toolbarButton(() => {
+          return !providersBackstage.isButtonAllowedInCurrentMode(allowedModes) || providersBackstage.isDisabled();
+        }),
+        ReadOnly.receivingConfigConditional(() => {
+          return !providersBackstage.isButtonAllowedInCurrentMode(allowedModes);
+        }),
         AddEventsBehaviour.config(commonButtonDisplayEvent, [
           AlloyEvents.runOnAttached((comp, _se) => UiUtils.forceInitialSize(comp)),
           AlloyEvents.run<UpdateMenuTextEvent>(updateMenuText, (comp, se) => {
@@ -159,7 +175,7 @@ const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage
   const editorOffCell = Cell(Fun.noop);
   const specialisation = {
     toolbarButtonBehaviours: [],
-    getApi: getButtonApi,
+    getApi: getButtonApi(spec, backstage.shared.providers),
     onSetup: spec.onSetup
   };
   const behaviours: Behaviours = [
@@ -178,7 +194,7 @@ const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage
       toggledClass: ToolbarButtonClasses.Ticked
     },
     parts: {
-      button: renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.some(behaviours), sharedBackstage.providers, btnName),
+      button: renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.some(behaviours), sharedBackstage.providers, btnName, spec.allowedModes),
       toolbar: {
         dom: {
           tag: 'div',
@@ -192,7 +208,7 @@ const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage
 
 const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisation: Specialisation<T>, providersBackstage: UiFactoryBackstageProviders, btnName?: string): SketchSpec => {
   const editorOffCell = Cell(Fun.noop);
-  const structure = renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.none(), providersBackstage, btnName);
+  const structure = renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.none(), providersBackstage, btnName, spec.allowedModes);
   return AlloyButton.sketch({
     dom: structure.dom,
     components: structure.components,
@@ -217,8 +233,12 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
             )
           )).toArray(),
           // Enable toolbar buttons by default
-          DisablingConfigs.toolbarButton(() => !spec.enabled || providersBackstage.isDisabled()),
-          ReadOnly.receivingConfig()
+          DisablingConfigs.toolbarButton(() => {
+            return !spec.enabled || !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedModes);
+          }),
+          ReadOnly.receivingConfigConditional((comp: AlloyComponent) => {
+            return Disabling.getLastDisabledState(comp) || !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedModes);
+          })
         ].concat(specialisation.toolbarButtonBehaviours)
       ),
       // Here we add the commonButtonDisplayEvent behaviour from the structure so we can listen
@@ -238,7 +258,7 @@ const renderToolbarButtonWith = (spec: Toolbar.ToolbarButton, providersBackstage
       // TODO: May have to pass through eventOrder if events start clashing
       AddEventsBehaviour.config('toolbarButtonWith', bonusEvents)
     ] : [ ]),
-    getApi: getButtonApi,
+    getApi: getButtonApi(spec, providersBackstage),
     onSetup: spec.onSetup
   }, providersBackstage, btnName);
 
@@ -255,7 +275,7 @@ const renderToolbarToggleButtonWith = (spec: Toolbar.ToolbarToggleButton, provid
         // TODO: May have to pass through eventOrder if events start clashing
         AddEventsBehaviour.config('toolbarToggleButtonWith', bonusEvents)
       ] : [ ]),
-      getApi: getToggleApi,
+      getApi: getToggleApi(spec, providersBackstage),
       onSetup: spec.onSetup
     },
     providersBackstage,
@@ -298,7 +318,12 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
 
   const getApi = (comp: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => ({
     isEnabled: () => !Disabling.isDisabled(comp),
-    setEnabled: (state: boolean) => Disabling.set(comp, !state),
+    setEnabled: (state: boolean) => {
+    // TODO: Address in TINY-11126
+      if (sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedModes)) {
+        Disabling.set(comp, !state, true);
+      }
+    },
     setIconFill: (id, value) => {
       SelectorFind.descendant(comp.element, `svg path[class="${id}"], rect[class="${id}"]`).each((underlinePath) => {
         Attribute.set(underlinePath, 'fill', value);
@@ -360,8 +385,12 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     onItemExecute: (_a, _b, _c) => { },
 
     splitDropdownBehaviours: Behaviour.derive([
-      DisablingConfigs.splitButton(sharedBackstage.providers.isDisabled),
-      ReadOnly.receivingConfig(),
+      DisablingConfigs.splitButton(() => {
+        return !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedModes);
+      }),
+      ReadOnly.receivingConfigConditional((comp: AlloyComponent) => {
+        return Disabling.getLastDisabledState(comp) || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedModes);
+      }),
       AddEventsBehaviour.config('split-dropdown-events', [
         AlloyEvents.runOnAttached((comp, _se) => UiUtils.forceInitialSize(comp)),
         AlloyEvents.run(focusButtonEvent, Focusing.focus),
@@ -405,8 +434,14 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     components: [
       AlloySplitDropdown.parts.button(
         renderCommonStructure(spec.icon, spec.text, Optional.none(), Optional.some([
-          Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, toggleOnExecute: false })
-        ]), sharedBackstage.providers)
+          Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, toggleOnExecute: false }),
+          DisablingConfigs.toolbarButton(() => {
+            return !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedModes);
+          }),
+          ReadOnly.receivingConfigConditional((comp: AlloyComponent) => {
+            return Disabling.getLastDisabledState(comp) || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedModes);
+          })
+        ]), sharedBackstage.providers, undefined, spec.allowedModes)
       ),
       AlloySplitDropdown.parts.arrow({
         dom: {
@@ -415,8 +450,12 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
           innerHtml: Icons.get('chevron-down', sharedBackstage.providers.icons)
         },
         buttonBehaviours: Behaviour.derive([
-          DisablingConfigs.splitButton(sharedBackstage.providers.isDisabled),
-          ReadOnly.receivingConfig(),
+          DisablingConfigs.splitButton(() => {
+            return !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedModes);
+          }),
+          ReadOnly.receivingConfigConditional((comp: AlloyComponent) => {
+            return Disabling.getLastDisabledState(comp) || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedModes);
+          }),
           Icons.addFocusableBehaviour()
         ])
       }),

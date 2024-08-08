@@ -15,7 +15,11 @@ const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse,
   const caret = downwardsCaret ? renderDownwardsCaret(providersBackstage.icons) : renderSubmenuCaret(providersBackstage.icons);
   const getApi = (component: AlloyComponent): Menu.NestedMenuItemInstanceApi => ({
     isEnabled: () => !Disabling.isDisabled(component),
-    setEnabled: (state: boolean) => Disabling.set(component, !state),
+    setEnabled: (state: boolean) => {
+      if (providersBackstage.isButtonAllowedInCurrentMode(spec.allowedModes)) {
+        Disabling.set(component, !state);
+      }
+    },
     setIconFill: (id, value) => {
       SelectorFind.descendant(component.element, `svg path[class="${id}"], rect[class="${id}"]`).each((underlinePath) => {
         Attribute.set(underlinePath, 'fill', value);
@@ -38,6 +42,7 @@ const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse,
     shortcutContent: spec.shortcut
   }, providersBackstage, renderIcons);
   return renderCommonItem({
+    allowedModes: spec.allowedModes,
     data: buildData(spec),
     getApi,
     enabled: spec.enabled,
