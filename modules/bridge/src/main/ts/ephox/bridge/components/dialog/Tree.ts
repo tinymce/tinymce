@@ -1,7 +1,7 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
 
-import { ToolbarMenuButtonSpec, ToolbarMenuButton } from '../../api/Toolbar';
+import { ToolbarMenuButton, ToolbarMenuButtonSpec } from '../../api/Toolbar';
 import * as ComponentSchema from '../../core/ComponentSchema';
 import { MenuButtonSchema } from '../toolbar/ToolbarMenuButton';
 
@@ -36,12 +36,16 @@ interface BaseTreeItemSpec {
   title: string;
   id: Id;
   menu?: ToolbarMenuButtonSpec;
+  customStateIcon?: string;
+  customStateIconTooltip?: string;
 }
 
 interface BaseTreeItem {
   title: string;
   id: string;
   menu: Optional<ToolbarMenuButton>;
+  customStateIcon: Optional<string>;
+  customStateIconTooltip: Optional<string>;
 }
 
 export interface DirectorySpec extends BaseTreeItemSpec {
@@ -71,6 +75,8 @@ const baseTreeItemFields = [
   ComponentSchema.title,
   FieldSchema.requiredString('id'),
   FieldSchema.optionOf('menu', MenuButtonSchema),
+  FieldSchema.optionString('customStateIcon'),
+  FieldSchema.optionString('customStateIconTooltip'),
 ];
 
 const treeItemLeafFields = baseTreeItemFields;
