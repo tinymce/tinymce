@@ -39,6 +39,20 @@ const registry = (): Registry.Registry => {
      */
     addButton: bridge.addButton,
 
+    // TODO: change this
+    /**
+     * Registers a new toolbar label.
+     * <br>
+     * For information on creating a basic toolbar button, see:
+     * <a href="https://www.tiny.cloud/docs/tinymce/7/custom-basic-toolbar-button/">
+     * UI Components - Types of toolbar buttons: Basic button</a>.
+     *
+     * @method addButton
+     * @param {String} name Unique name identifying the button, this button name will be used in the toolbar configuration to reference the button.
+     * @param {Toolbar.ToolbarButtonSpec} obj the button configuration object.
+     */
+    addToolbarLabel: bridge.addToolbarLabel,
+
     /**
      * Registers a new contextual form item.
      * Similar to a context menu item, a contextual form is an item with an input

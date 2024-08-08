@@ -8,6 +8,7 @@ import { ToggleMenuItemSpec } from '../components/menu/ToggleMenuItem';
 import { SidebarSpec } from '../components/sidebar/Sidebar';
 import { GroupToolbarButtonSpec } from '../components/toolbar/GroupToolbarButton';
 import { ToolbarButtonSpec } from '../components/toolbar/ToolbarButton';
+import { ToolbarLabelSpec } from '../components/toolbar/ToolbarLabel';
 import { ToolbarMenuButtonSpec } from '../components/toolbar/ToolbarMenuButton';
 import { ToolbarSplitButtonSpec } from '../components/toolbar/ToolbarSplitButton';
 import { ToolbarToggleButtonSpec } from '../components/toolbar/ToolbarToggleButton';
@@ -18,6 +19,7 @@ import { ViewSpec } from '../components/view/View';
 
 export interface Registry {
   addButton: (name: string, spec: ToolbarButtonSpec) => void;
+  addToolbarLabel: (name: string, spec: ToolbarLabelSpec) => void;
   addGroupToolbarButton: (name: string, spec: GroupToolbarButtonSpec) => void;
   addToggleButton: (name: string, spec: ToolbarToggleButtonSpec) => void;
   addMenuButton: (name: string, spec: ToolbarMenuButtonSpec) => void;
@@ -34,7 +36,7 @@ export interface Registry {
   addView: (name: string, spec: ViewSpec) => void;
 
   getAll: () => {
-    buttons: Record<string, ToolbarButtonSpec | GroupToolbarButtonSpec | ToolbarMenuButtonSpec | ToolbarSplitButtonSpec | ToolbarToggleButtonSpec>;
+    buttons: Record<string, ToolbarButtonSpec | GroupToolbarButtonSpec | ToolbarMenuButtonSpec | ToolbarSplitButtonSpec | ToolbarToggleButtonSpec | ToolbarLabelSpec>;
     menuItems: Record<string, MenuItemSpec | NestedMenuItemSpec | ToggleMenuItemSpec>;
     popups: Record<string, AutocompleterSpec>;
     contextMenus: Record<string, ContextMenuApi>;
@@ -46,7 +48,7 @@ export interface Registry {
 }
 
 export const create = (): Registry => {
-  const buttons: Record<string, ToolbarButtonSpec | GroupToolbarButtonSpec | ToolbarMenuButtonSpec | ToolbarSplitButtonSpec | ToolbarToggleButtonSpec> = {};
+  const buttons: Record<string, ToolbarButtonSpec | GroupToolbarButtonSpec | ToolbarMenuButtonSpec | ToolbarSplitButtonSpec | ToolbarToggleButtonSpec | ToolbarLabelSpec> = {};
   const menuItems: Record<string, MenuItemSpec | NestedMenuItemSpec | ToggleMenuItemSpec> = {};
   const popups: Record<string, AutocompleterSpec> = {};
   const icons: Record<string, string> = {};
@@ -61,6 +63,7 @@ export const create = (): Registry => {
 
   return {
     addButton: add(buttons, 'button'),
+    addToolbarLabel: add(buttons, 'label'),
     addGroupToolbarButton: add(buttons, 'grouptoolbarbutton'),
     addToggleButton: add(buttons, 'togglebutton'),
     addMenuButton: add(buttons, 'menubutton'),

@@ -15,10 +15,10 @@ import { createFontFamilyButton } from '../core/complex/FontFamilyBespoke';
 import { createFontSizeButton, createFontSizeInputButton } from '../core/complex/FontSizeBespoke';
 import { createStylesButton } from '../core/complex/StylesBespoke';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
-import { renderFloatingToolbarButton, renderSplitButton, renderToolbarButton, renderToolbarToggleButton } from './button/ToolbarButtons';
+import { renderFloatingToolbarButton, renderSplitButton, renderToolbarButton, renderToolbarLabel, renderToolbarToggleButton } from './button/ToolbarButtons';
 import { ToolbarGroup } from './CommonToolbar';
 
-export type ToolbarButton = Toolbar.ToolbarButtonSpec | Toolbar.ToolbarMenuButtonSpec | Toolbar.ToolbarToggleButtonSpec | Toolbar.ToolbarSplitButtonSpec;
+export type ToolbarButton = Toolbar.ToolbarButtonSpec | Toolbar.ToolbarMenuButtonSpec | Toolbar.ToolbarToggleButtonSpec | Toolbar.ToolbarSplitButtonSpec | Toolbar.ToolbarLabelSpec;
 
 export interface RenderToolbarConfig {
   readonly toolbar: ToolbarConfig;
@@ -65,6 +65,11 @@ const types: Record<string, BridgeRenderFn<any>> = {
   button: renderFromBridge(
     Toolbar.createToolbarButton,
     (s, backstage, _, btnName) => renderToolbarButton(s, backstage.shared.providers, btnName)
+  ),
+
+  label: renderFromBridge(
+    Toolbar.createToolbarLabel,
+    (s, backstage, _, btnName) => renderToolbarLabel(s, backstage.shared.providers, btnName)
   ),
 
   togglebutton: renderFromBridge(
