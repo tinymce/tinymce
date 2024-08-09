@@ -12,6 +12,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLook
     type: 'contexttoolbar',
     items,
     predicate: Fun.always,
+    groupsLabels: [],
     position: 'selection',
     scope: 'node'
   });
