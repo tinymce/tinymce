@@ -128,6 +128,10 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     const unbindEvents = bindResizeEvents(editor);
 
     const table = insert(editor);
+
+    // After TINY-11082 caret is placed after the table when pasting/inserting. For the purpose of this tests we need to place it back inside to show the resize handles
+    editor.selection.setCursorLocation(editor.dom.select('td:last-of-type')[0], 0);
+
     const tableWidthBefore = TableTestUtils.getWidthData(editor, table.dom);
     const tableHeightBefore = TableTestUtils.getHeightData(editor, table.dom);
     const colWidthsBefore = getColWidths(editor, table);

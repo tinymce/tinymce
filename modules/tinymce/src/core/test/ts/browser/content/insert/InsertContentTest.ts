@@ -1,4 +1,5 @@
 import { context, describe, it } from '@ephox/bedrock-client';
+import { Unicode } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -604,7 +605,8 @@ describe('browser.tinymce.core.content.insert.InsertContentTest', () => {
             '</td>' +
           '</tr>' +
         '</tbody>' +
-      '</table>'
+      '</table>' +
+      `<p>${Unicode.nbsp}</p>`
     );
   });
 
