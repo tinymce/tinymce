@@ -314,6 +314,9 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
     const marker = node;
 
     for (node = node.prev; node; node = node.walk(true)) {
+      if (node.name === 'table') {
+        break;
+      }
       if (node.type === 3 || !dom.isBlock(node.name)) {
         if (node.parent && editor.schema.isValidChild(node.parent.name, 'span')) {
           node.parent.insert(marker, node, node.name === 'br');
