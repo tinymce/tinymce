@@ -10,6 +10,7 @@ interface ViewButtonApi {
 interface ViewToggleButtonApi extends ViewButtonApi {
   isActive: () => boolean;
   setActive: (state: boolean) => void;
+  focus: () => void;
 }
 
 interface BaseButtonSpec<Api extends ViewButtonApi> {
