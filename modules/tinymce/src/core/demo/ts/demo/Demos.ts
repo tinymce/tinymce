@@ -12,6 +12,7 @@ import ShadowDomInlineDemo from './ShadowDomInlineDemo';
 import SourceDumpDemo from './SourceDumpDemo';
 import StickyToolbarDemo from './StickyToolbarDemo';
 import TinyMceDemo from './TinyMceDemo';
+import UiSelectionEnabledModeDemo from './UiSelectionEnabledModeDemo';
 import ViewDemo from './ViewDemo';
 
 declare const window: any;
@@ -31,5 +32,6 @@ window.demos = {
   StickyToolbarDemo,
   ShadowDomDemo,
   ShadowDomInlineDemo,
+  UiSelectionEnabledModeDemo,
   ViewDemo
 };

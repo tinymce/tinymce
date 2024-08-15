@@ -2,8 +2,7 @@ import { Arr } from '@ephox/katamari';
 import { Attribute, Class, SugarNode } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
-import { Stateless } from '../../behaviour/common/BehaviourState';
-import { DisableConfig } from './DisableTypes';
+import { DisableConfig, DisableState } from './DisableTypes';
 
 // Just use "disabled" attribute for these, not "aria-disabled"
 const nativeDisabled = [
@@ -13,9 +12,9 @@ const nativeDisabled = [
   'select'
 ];
 
-const onLoad = (component: AlloyComponent, disableConfig: DisableConfig, disableState: Stateless): void => {
+const onLoad = (component: AlloyComponent, disableConfig: DisableConfig, disableState: DisableState): void => {
   const f = disableConfig.disabled() ? disable : enable;
-  f(component, disableConfig, disableState);
+  f(component, disableConfig, disableState, false);
 };
 
 const hasNative = (component: AlloyComponent, config: DisableConfig): boolean =>
@@ -42,36 +41,46 @@ const ariaEnable = (component: AlloyComponent): void => {
   Attribute.set(component.element, 'aria-disabled', 'false');
 };
 
-const disable = (component: AlloyComponent, disableConfig: DisableConfig, _disableState: Stateless): void => {
+const disable = (component: AlloyComponent, disableConfig: DisableConfig, disableState: DisableState, storeState: boolean): void => {
   disableConfig.disableClass.each((disableClass) => {
     Class.add(component.element, disableClass);
   });
   const f = hasNative(component, disableConfig) ? nativeDisable : ariaDisable;
   f(component);
+  if (storeState) {
+    disableState.setLastDisabledState(true);
+  }
   disableConfig.onDisabled(component);
 };
 
-const enable = (component: AlloyComponent, disableConfig: DisableConfig, _disableState: Stateless): void => {
+const enable = (component: AlloyComponent, disableConfig: DisableConfig, disableState: DisableState, storeState: boolean): void => {
   disableConfig.disableClass.each((disableClass) => {
     Class.remove(component.element, disableClass);
   });
   const f = hasNative(component, disableConfig) ? nativeEnable : ariaEnable;
   f(component);
+  if (storeState) {
+    disableState.setLastDisabledState(false);
+  }
   disableConfig.onEnabled(component);
 };
 
 const isDisabled = (component: AlloyComponent, disableConfig: DisableConfig): boolean =>
   hasNative(component, disableConfig) ? nativeIsDisabled(component) : ariaIsDisabled(component);
 
-const set = (component: AlloyComponent, disableConfig: DisableConfig, disableState: Stateless, disabled: boolean): void => {
+const set = (component: AlloyComponent, disableConfig: DisableConfig, disableState: DisableState, disabled: boolean, storeState: boolean = false): void => {
   const f = disabled ? disable : enable;
-  f(component, disableConfig, disableState);
+  f(component, disableConfig, disableState, storeState);
 };
+
+const getLastDisabledState = (_: AlloyComponent, __: DisableConfig, disableState: DisableState): boolean =>
+  disableState.getLastDisabledState();
 
 export {
   enable,
   disable,
   isDisabled,
   onLoad,
-  set
+  set,
+  getLastDisabledState
 };
