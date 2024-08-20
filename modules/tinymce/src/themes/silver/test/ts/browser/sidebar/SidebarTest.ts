@@ -1,6 +1,7 @@
 import { ApproxStructure, Assertions, TestStore, UiFinder, Waiter } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
+import { McEditor } from '@ephox/mcagar';
 import { SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
@@ -14,7 +15,7 @@ interface EventLog {
 
 describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
   const store = TestStore<EventLog>();
-  const hook = TinyHooks.bddSetupLight<Editor>({
+  const createEditor = async () => await McEditor.pFromSettings<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'mysidebar1 mysidebar2 mysidebar3',
     setup: (editor: Editor) => {
@@ -52,7 +53,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
         onHide: logEvent('mysidebar3:hide')
       });
     }
-  }, []);
+  });
 
   const pClickAndAssertEvents = async (editor: Editor, tooltip: string, expected: EventLog[]) => {
     store.clear();
@@ -60,7 +61,14 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
     await Waiter.pTryUntil('Checking sidebar callbacks', () => store.assertEq('Asserting sidebar callbacks', expected));
   };
 
+  const pExecCommandAndAssertEvents = async (editor: Editor, sidebarName: string, expected: EventLog[]) => {
+    store.clear();
+    editor.execCommand('ToggleSidebar', false, sidebarName);
+    await Waiter.pTryUntil('Checking sidebar callbacks', () => store.assertEq('Asserting sidebar callbacks', expected));
+  };
+
   it('TBA: Sidebar initial events test', async () => {
+    const editor = await createEditor();
     await Waiter.pTryUntil('Checking initial events', () => store.assertEq('Asserting initial render and hide of sidebar', [
       { name: 'mysidebar1:render', index: 0 },
       { name: 'mysidebar2:render', index: 1 },
@@ -69,9 +77,11 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
       { name: 'mysidebar2:hide', index: 1 },
       { name: 'mysidebar3:hide', index: 2 }
     ]));
+    McEditor.remove(editor);
   });
 
-  it('TBA: Sidebar structure test', () => {
+  it('TBA: Sidebar structure test', async () => {
+    const editor = await createEditor();
     const sidebar = UiFinder.findIn(SugarBody.body(), '.tox-sidebar-wrap .tox-sidebar').getOrDie();
     Assertions.assertStructure('Checking structure', ApproxStructure.build((s, str, arr) => s.element('div', {
       classes: [ arr.has('tox-sidebar') ],
@@ -103,13 +113,64 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
         })
       ]
     })), sidebar);
+    McEditor.remove(editor);
   });
 
   it('TBA: Sidebar actions test', async () => {
-    const editor = hook.editor();
+    const editor = await createEditor();
     await pClickAndAssertEvents(editor, 'My sidebar 1', [{ name: 'mysidebar1:show', index: 0 }]);
     await pClickAndAssertEvents(editor, 'My sidebar 2', [{ name: 'mysidebar1:hide', index: 0 }, { name: 'mysidebar2:show', index: 1 }]);
     await pClickAndAssertEvents(editor, 'My sidebar 3', [{ name: 'mysidebar2:hide', index: 1 }, { name: 'mysidebar3:show', index: 2 }]);
     await pClickAndAssertEvents(editor, 'My sidebar 3', [{ name: 'mysidebar3:hide', index: 2 }]);
+    McEditor.remove(editor);
+  });
+
+  it('TINY-11178: Toggle sidebar command test', async () => {
+    const editor = await createEditor();
+    await pExecCommandAndAssertEvents(editor, 'mysidebar1', [{ name: 'mysidebar1:show', index: 0 }]);
+    await pExecCommandAndAssertEvents(editor, 'mysidebar2', [{ name: 'mysidebar1:hide', index: 0 }, { name: 'mysidebar2:show', index: 1 }]);
+    await pExecCommandAndAssertEvents(editor, 'mysidebar3', [{ name: 'mysidebar2:hide', index: 1 }, { name: 'mysidebar3:show', index: 2 }]);
+    await pExecCommandAndAssertEvents(editor, 'mysidebar3', [{ name: 'mysidebar3:hide', index: 2 }]);
+    McEditor.remove(editor);
+  });
+
+  context('Initialize sidebar with command', () => {
+    const createEditor = async () => await McEditor.pFromSettings<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      toolbar: 'mysidebar1',
+      setup: (editor: Editor) => {
+        const logEvent = (name: string) => (api: Sidebar.SidebarInstanceApi) => {
+          const index = Traverse.findIndex(SugarElement.fromDom(api.element())).getOr(-1);
+          const entry: EventLog = { name, index };
+          store.adder(entry)();
+        };
+        const handleSetup = (eventName: string) => (api: Sidebar.SidebarInstanceApi) => {
+          api.element().appendChild(SugarElement.fromHtml('<div style="width: 200px; background: red;"></div>').dom);
+          logEvent(eventName)(api);
+          return Fun.noop;
+        };
+        editor.ui.registry.addSidebar('mysidebar1', {
+          tooltip: 'My sidebar 1',
+          icon: 'bold',
+          onSetup: handleSetup('mysidebar1:render'),
+          onShow: logEvent('mysidebar1:show'),
+          onHide: logEvent('mysidebar1:hide')
+        });
+        editor.on('init', () => {
+          editor.execCommand('ToggleSidebar', false, 'mysidebar1');
+        });
+      }
+    });
+
+    it('TINY-11178: Toggle sidebar command on init event test', async () => {
+      store.clear();
+      const editor = await createEditor();
+      await Waiter.pTryUntil('Checking sidebar callbacks', () => store.assertEq('Asserting sidebar callbacks', [
+        { name: 'mysidebar1:render', index: 0 },
+        { name: 'mysidebar1:hide', index: 0 },
+        { name: 'mysidebar1:show', index: 0 }
+      ]));
+      McEditor.remove(editor);
+    });
   });
 });
