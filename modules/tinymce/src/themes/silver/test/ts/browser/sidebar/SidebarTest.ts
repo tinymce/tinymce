@@ -3,7 +3,7 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { McEditor } from '@ephox/mcagar';
 import { SugarBody, SugarElement, Traverse } from '@ephox/sugar';
-import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Sidebar } from 'tinymce/core/api/ui/Ui';
