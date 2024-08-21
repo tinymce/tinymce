@@ -29,28 +29,6 @@ export default (): void => {
     });
   };
 
-  const makeCustomSidebar = (ed: Editor) => {
-    ed.ui.registry.addSidebar('mysidebar', {
-      tooltip: 'My sidebar',
-      icon: 'warning',
-      onShow: (api) => {
-        console.log('showing sidebar');
-        api.element().innerHTML = '<div style="width: 500px">Hello world!</div>';
-      },
-    });
-    ed.on('init', () => {
-      const sidebar = ed.ui.registry.getAll().sidebars.mysidebar;
-      console.log('init', sidebar);
-      // const command = ed.editorCommands.commands.exec.togglesidebar;
-      // console.log(command);
-      // command('togglesidebar', false, 'mysidebar');
-      ed.execCommand('ToggleSidebar', false, 'mysidebar');
-    });
-    ed.on('togglesidebar', () => {
-      console.log('sidebar toggled');
-    });
-  };
-
   const makeCodeView = (editor: Editor) => {
     editor.ui.registry.addView('code', {
       buttons: [
