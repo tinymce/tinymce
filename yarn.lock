@@ -1246,9 +1246,9 @@
     schema-utils "^2.7.0"
 
 "@lambdatest/node-tunnel@^4.0.4":
-  version "4.0.7"
-  resolved "https://registry.yarnpkg.com/@lambdatest/node-tunnel/-/node-tunnel-4.0.7.tgz#dc13da271b53b314aac4506dfef04b6767bb2845"
-  integrity sha512-LnQon3/b6YhbkzhUZ0nrnRRq1bZ0K4nxbJHXZcJd0FeNucH3RTERHyra69BbRyQ8Dc9YPoFFg0jGH4gnmrn6Cw==
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/@lambdatest/node-tunnel/-/node-tunnel-4.0.8.tgz#4c0dae46ee03c16fa77f6651b471d2f0ade761c7"
+  integrity sha512-IY42aDD4Ryqjug9V4wpCjckKpHjC2zrU/XhhorR5ztX088XITRFKUo8U6+gOjy/V8kAB+EgDuIXfK0izXbt9Ow==
   dependencies:
     adm-zip "^0.5.10"
     axios "^1.6.2"
