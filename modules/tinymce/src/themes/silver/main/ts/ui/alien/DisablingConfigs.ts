@@ -1,25 +1,41 @@
-import { Disabling } from '@ephox/alloy';
+import { AlloyComponent, Disabling } from '@ephox/alloy';
 
 type DisablingBehaviour = ReturnType<typeof Disabling['config']>;
 
-const item = (disabled: () => boolean): DisablingBehaviour => Disabling.config({
-  disabled,
+const item = (config: {
+  disabled: () => boolean;
+  onEnabled?: (comp: AlloyComponent) => void;
+  onDisabled?: (comp: AlloyComponent) => void;
+}): DisablingBehaviour => Disabling.config({
+  ...config,
   disableClass: 'tox-collection__item--state-disabled'
 });
 
-const button = (disabled: () => boolean): DisablingBehaviour => Disabling.config({
-  disabled
+const button = (config: {
+  disabled: () => boolean;
+  onEnabled?: (comp: AlloyComponent) => void;
+  onDisabled?: (comp: AlloyComponent) => void;
+}): DisablingBehaviour => Disabling.config({
+  ...config
 });
 
-const splitButton = (disabled: () => boolean): DisablingBehaviour => Disabling.config({
-  disabled,
-  disableClass: 'tox-tbtn--disabled'
-});
-
-const toolbarButton = (disabled: () => boolean): DisablingBehaviour => Disabling.config({
-  disabled,
+const splitButton = (config: {
+  disabled: () => boolean;
+  onEnabled?: (comp: AlloyComponent) => void;
+  onDisabled?: (comp: AlloyComponent) => void;
+}): DisablingBehaviour => Disabling.config({
   disableClass: 'tox-tbtn--disabled',
-  useNative: false
+  ...config
+});
+
+const toolbarButton = (config: {
+  disabled: () => boolean;
+  onEnabled?: (comp: AlloyComponent) => void;
+  onDisabled?: (comp: AlloyComponent) => void;
+}): DisablingBehaviour => Disabling.config({
+  disableClass: 'tox-tbtn--disabled',
+  useNative: false,
+  ...config
 });
 
 export const DisablingConfigs = {

@@ -1,4 +1,4 @@
-import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
 
 import { ChoiceMenuItemSpec, SeparatorMenuItemSpec } from '../../api/Menu';
@@ -25,7 +25,7 @@ export interface ToolbarSplitButtonSpec {
   onSetup?: (api: ToolbarSplitButtonInstanceApi) => (api: ToolbarSplitButtonInstanceApi) => void;
   onAction: (api: ToolbarSplitButtonInstanceApi) => void;
   onItemAction: (api: ToolbarSplitButtonInstanceApi, value: string) => void;
-  allowedModes?: string[];
+  allowedInReadonlyUiMode?: boolean;
 }
 
 export interface ToolbarSplitButton {
@@ -40,7 +40,7 @@ export interface ToolbarSplitButton {
   onSetup: (api: ToolbarSplitButtonInstanceApi) => (api: ToolbarSplitButtonInstanceApi) => void;
   onAction: (api: ToolbarSplitButtonInstanceApi) => void;
   onItemAction: (api: ToolbarSplitButtonInstanceApi, value: string) => void;
-  allowedModes: string[];
+  allowedInReadonlyUiMode: boolean;
 }
 
 export interface ToolbarSplitButtonInstanceApi {
@@ -67,7 +67,7 @@ export const splitButtonSchema = StructureSchema.objOf([
   ComponentSchema.defaultedColumns(1),
   ComponentSchema.onAction,
   ComponentSchema.onItemAction,
-  FieldSchema.defaultedArrayOf('allowedModes', [ 'design' ], ValueType.string)
+  FieldSchema.defaultedBoolean('allowedInReadonlyUiMode', false)
 ]);
 
 export const isSplitButtonButton = (spec: any): spec is ToolbarSplitButton => spec.type === 'splitbutton';

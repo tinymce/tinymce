@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { ToolbarMode } from 'tinymce/core/api/OptionTypes';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 
-describe('browser.tinymce.core.UiEnabledModesTest', () => {
+describe('browser.tinymce.core.UiEnabledModeTest', () => {
   const registerMode = (ed: Editor) => {
     ed.mode.register('testmode', {
       activate: Fun.noop,
@@ -69,7 +69,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         ed.ui.registry.addButton('t3', {
           icon: 'italic',
           text: 'Test Menu Item 3',
-          allowedModes: [ 'design', 'readonly' ],
+          allowedInReadonlyUiMode: true,
           onAction: Fun.noop,
           onSetup: (api) => {
             api.setEnabled(true);
@@ -81,7 +81,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         ed.ui.registry.addButton('t4', {
           icon: 'italic',
           text: 'Test Menu Item 4',
-          allowedModes: [ 'design', 'readonly' ],
+          allowedInReadonlyUiMode: true,
           onAction: Fun.noop,
           onSetup: (api) => {
             api.setEnabled(false);
@@ -93,7 +93,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         ed.ui.registry.addButton('t5', {
           icon: 'italic',
           text: 'Test Menu Item 5',
-          allowedModes: [ 'design', 'readonly' ],
+          allowedInReadonlyUiMode: true,
           onAction: Fun.noop,
         });
       },
@@ -124,7 +124,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         ed.ui.registry.addToggleButton('t3', {
           icon: 'italic',
           text: 'Test Menu Item 3',
-          allowedModes: [ 'design', 'readonly' ],
+          allowedInReadonlyUiMode: true,
           onAction: Fun.noop,
           onSetup: (api) => {
             api.setEnabled(true);
@@ -136,7 +136,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         ed.ui.registry.addToggleButton('t4', {
           icon: 'italic',
           text: 'Test Menu Item 4',
-          allowedModes: [ 'design', 'readonly' ],
+          allowedInReadonlyUiMode: true,
           onAction: Fun.noop,
           onSetup: (api) => {
             api.setEnabled(false);
@@ -148,7 +148,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         ed.ui.registry.addToggleButton('t5', {
           icon: 'italic',
           text: 'Test Menu Item 5',
-          allowedModes: [ 'design', 'readonly' ],
+          allowedInReadonlyUiMode: true,
           onAction: Fun.noop,
         });
       },
@@ -197,7 +197,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         ed.ui.registry.addSplitButton('t3', {
           icon: 'italic',
           text: 'Test Menu Item 3',
-          allowedModes: [ 'design', 'readonly' ],
+          allowedInReadonlyUiMode: true,
           onAction: Fun.noop,
           onItemAction: Fun.noop,
           fetch: (success) => {
@@ -218,7 +218,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         ed.ui.registry.addSplitButton('t4', {
           icon: 'italic',
           text: 'Test Menu Item 4',
-          allowedModes: [ 'design', 'readonly' ],
+          allowedInReadonlyUiMode: true,
           onAction: Fun.noop,
           onSetup: (api) => {
             api.setEnabled(false);
@@ -239,7 +239,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         ed.ui.registry.addSplitButton('t5', {
           icon: 'italic',
           text: 'Test Menu Item 5',
-          allowedModes: [ 'design', 'readonly' ],
+          allowedInReadonlyUiMode: true,
           onAction: Fun.noop,
           onItemAction: Fun.noop,
           fetch: (success) => {
@@ -296,7 +296,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         ed.ui.registry.addMenuButton('t3', {
           icon: 'italic',
           text: 'Test Menu Item 3',
-          allowedModes: [ 'design', 'readonly' ],
+          allowedInReadonlyUiMode: true,
           fetch: (success) => {
             success([
               {
@@ -315,7 +315,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         ed.ui.registry.addMenuButton('t4', {
           icon: 'italic',
           text: 'Test Menu Item 4',
-          allowedModes: [ 'design', 'readonly' ],
+          allowedInReadonlyUiMode: true,
           onSetup: (api) => {
             api.setEnabled(false);
             return Fun.noop;
@@ -334,7 +334,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         ed.ui.registry.addMenuButton('t5', {
           icon: 'italic',
           text: 'Test Menu Item 5',
-          allowedModes: [ 'design', 'readonly' ],
+          allowedInReadonlyUiMode: true,
           fetch: (success) => {
             success([
               {
@@ -414,7 +414,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
             api.setEnabled(true);
             return Fun.noop;
           },
-          allowedModes: [ 'design', 'readonly' ],
+          allowedInReadonlyUiMode: true,
           shortcut: 'Meta+M',
           onAction: Fun.noop
         });
@@ -426,7 +426,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
             api.setEnabled(false);
             return Fun.noop;
           },
-          allowedModes: [ 'design', 'readonly' ],
+          allowedInReadonlyUiMode: true,
           shortcut: 'Meta+M',
           onAction: Fun.noop
         });
@@ -464,7 +464,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
             return Fun.noop;
           },
           shortcut: 'Meta+M',
-          allowedModes: [ 'design', 'readonly' ],
+          allowedInReadonlyUiMode: true,
           getSubmenuItems: Fun.constant('test'),
         });
 
@@ -476,7 +476,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
             return Fun.noop;
           },
           shortcut: 'Meta+M',
-          allowedModes: [ 'design', 'readonly' ],
+          allowedInReadonlyUiMode: true,
           getSubmenuItems: Fun.constant('test'),
         });
       },
@@ -511,7 +511,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
             api.setEnabled(true);
             return Fun.noop;
           },
-          allowedModes: [ 'design', 'readonly' ],
+          allowedInReadonlyUiMode: true,
           shortcut: 'Meta+M',
           onAction: Fun.noop
         });
@@ -519,7 +519,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         ed.ui.registry.addToggleMenuItem('x4', {
           icon: 'italic',
           text: 'Test Menu Item 4',
-          allowedModes: [ 'design', 'readonly' ],
+          allowedInReadonlyUiMode: true,
           onSetup: (api) => {
             api.setEnabled(false);
             return Fun.noop;
@@ -1457,7 +1457,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
       setup: (ed: Editor) => {
         registerMode(ed);
 
-        const getDialogSpec = (allowedModes: string[] = [ 'design' ]): Dialog.DialogSpec<{}> => {
+        const getDialogSpec = (allowedInReadonlyUiMode: boolean = false): Dialog.DialogSpec<{}> => {
           return {
             title: 'Test',
             body: {
@@ -1473,13 +1473,13 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
               {
                 type: 'cancel',
                 text: 'Cancel',
-                allowedModes
+                allowedInReadonlyUiMode
               },
               {
                 type: 'submit',
                 text: 'Submit',
                 buttonType: 'primary',
-                allowedModes
+                allowedInReadonlyUiMode
               }
             ],
             onSubmit: (api: Dialog.DialogInstanceApi<{}>) => {
@@ -1492,7 +1492,7 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         ed.ui.registry.addButton('t1', {
           icon: 'italic',
           text: 'Test Menu Item 1',
-          allowedModes: [ 'design', 'readonly' ],
+          allowedInReadonlyUiMode: true,
           onAction: () => {
             ed.windowManager.open(getDialogSpec());
           }
@@ -1501,9 +1501,44 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
         ed.ui.registry.addButton('t2', {
           icon: 'italic',
           text: 'Test Menu Item 1',
-          allowedModes: [ 'design', 'readonly' ],
+          allowedInReadonlyUiMode: true,
           onAction: () => {
-            ed.windowManager.open(getDialogSpec([ 'design', 'readonly' ]));
+            ed.windowManager.open(getDialogSpec(true));
+          }
+        });
+
+        ed.ui.registry.addButton('t3', {
+          icon: 'italic',
+          text: 'Test Menu Item 1',
+          allowedInReadonlyUiMode: true,
+          onAction: () => {
+            ed.windowManager.open({
+              title: 'Test',
+              body: {
+                type: 'panel',
+                items: [
+                  {
+                    type: 'htmlpanel',
+                    html: '<div><p>Test</p></div>'
+                  }
+                ]
+              },
+              buttons: [
+                {
+                  type: 'cancel',
+                  text: 'Cancel',
+                },
+                {
+                  type: 'submit',
+                  text: 'Submit',
+                  buttonType: 'primary',
+                }
+              ],
+              onSubmit: (api: Dialog.DialogInstanceApi<{}>) => {
+                store.add('onSubmit');
+                api.close();
+              }
+            });
           }
         });
       }
@@ -1522,6 +1557,20 @@ describe('browser.tinymce.core.UiEnabledModesTest', () => {
 
       editor.mode.set('testmode');
       TinyUiActions.clickOnToolbar(editor, '[data-mce-name="t1"]');
+      await TinyUiActions.pWaitForDialog(editor);
+      assertButtonNativelyDisabled('Cancel');
+      assertButtonNativelyDisabled('Submit');
+      TinyUiActions.closeDialog(editor);
+
+      editor.mode.set('design');
+      TinyUiActions.clickOnToolbar(editor, '[data-mce-name="t3"]');
+      await TinyUiActions.pWaitForDialog(editor);
+      assertButtonNativelyEnabled('Cancel');
+      assertButtonNativelyEnabled('Submit');
+      TinyUiActions.closeDialog(editor);
+
+      editor.mode.set('testmode');
+      TinyUiActions.clickOnToolbar(editor, '[data-mce-name="t3"]');
       await TinyUiActions.pWaitForDialog(editor);
       assertButtonNativelyDisabled('Cancel');
       assertButtonNativelyDisabled('Submit');

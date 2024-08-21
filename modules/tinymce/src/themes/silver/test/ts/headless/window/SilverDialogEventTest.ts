@@ -42,7 +42,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
           buttonType: Optional.some('secondary'),
           enabled: true,
           icon: Optional.none(),
-          allowedModes: [ 'design', 'readonly ' ]
+          allowedInReadonlyUiMode: false
         },
         {
           type: 'submit',
@@ -53,7 +53,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
           buttonType: Optional.some('primary'),
           enabled: true,
           icon: Optional.none(),
-          allowedModes: [ 'design', 'readonly ' ]
+          allowedInReadonlyUiMode: false
         }
       ],
       initialData: {},

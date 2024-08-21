@@ -20,7 +20,7 @@ describe('headless.tinymce.themes.silver.components.dialogbutton.DialogFooterBut
         icon: Optional.none(),
         tooltip: Optional.some('Submit'),
         buttonType: Optional.some('primary'),
-        allowedModes: [ 'design' ]
+        allowedInReadonlyUiMode: false
       }, 'submit', backstage)
     ));
 
@@ -46,7 +46,7 @@ describe('headless.tinymce.themes.silver.components.dialogbutton.DialogFooterBut
         buttonType: Optional.some('secondary'),
         icon: Optional.none(),
         align: 'end',
-        allowedModes: [ 'design' ]
+        allowedInReadonlyUiMode: false
       }, 'cancel', backstage)
     ));
 

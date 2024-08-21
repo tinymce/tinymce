@@ -19,7 +19,7 @@ import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import * as MenuParts from '../menus/menu/MenuParts';
 import { focusSearchField, handleRedirectToMenuItem, handleRefetchTrigger, updateAriaOnDehighlight, updateAriaOnHighlight } from '../menus/menu/searchable/SearchableMenu';
 import { RedirectMenuItemInteractionEvent, redirectMenuItemInteractionEvent, RefetchTriggerEvent, refetchTriggerEvent } from '../menus/menu/searchable/SearchableMenuEvents';
-import { MenuButtonClasses } from '../toolbar/button/ButtonClasses';
+import { ToolbarButtonClasses, MenuButtonClasses } from '../toolbar/button/ButtonClasses';
 
 export const updateMenuText = Id.generate('update-menu-text');
 export const updateMenuIcon = Id.generate('update-menu-icon');
@@ -49,7 +49,7 @@ export interface CommonDropdownSpec<T> {
   readonly dropdownBehaviours: Behaviour.NamedConfiguredBehaviour<any, any, any>[];
   readonly searchable?: boolean;
   readonly ariaLabel: Optional<string>;
-  readonly allowedModes?: string[];
+  readonly allowedInReadonlyUiMode?: boolean;
 }
 
 // TODO: Use renderCommonStructure here.
@@ -160,17 +160,29 @@ const renderCommonDropdown = <T>(
 
       dropdownBehaviours: Behaviour.derive([
         ...spec.dropdownBehaviours,
-        DisablingConfigs.button(() => {
-          if (prefix === MenuButtonClasses.Button) {
-            return !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedModes);
+        DisablingConfigs.button({
+          disabled: () => {
+            if (prefix === MenuButtonClasses.Button) {
+              return !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
+            }
+            return spec.disabled || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
+          },
+          onEnabled: (component) => {
+            if (prefix === ToolbarButtonClasses.Button && (Disabling.getLastDisabledState(component) || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode))) {
+              Disabling.set(component, true);
+            }
+          },
+          onDisabled: (comp) => {
+            if (prefix === ToolbarButtonClasses.Button && !Disabling.getLastDisabledState(comp) && sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)) {
+              Disabling.set(comp, false);
+            }
           }
-          return spec.disabled || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedModes);
         }),
         ReadOnly.receivingConfigConditional((comp) => {
           if (prefix === MenuButtonClasses.Button) {
-            return !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedModes);
+            return !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
           }
-          return Disabling.getLastDisabledState(comp) || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedModes);
+          return Disabling.getLastDisabledState(comp) || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
         }),
         // INVESTIGATE (TINY-9012): There was a old comment here about something not quite working, and that
         // we can still get the button focused. It was probably related to Unselecting.

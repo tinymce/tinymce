@@ -81,9 +81,11 @@ const getToolbarBehaviours = (toolbarSpec: ToolbarSpec, modeName: 'cyclic' | 'ac
   });
 
   return Behaviour.derive([
-    DisablingConfigs.toolbarButton(toolbarSpec.providers.isDisabled),
+    DisablingConfigs.toolbarButton({
+      disabled: toolbarSpec.providers.isDisabled
+    }),
     ReadOnly.receivingConfigConditional(() => {
-      return !toolbarSpec.providers.isButtonAllowedInCurrentMode([ 'design', 'readonly' ]);
+      return !toolbarSpec.providers.isButtonAllowedInCurrentMode(true);
     }),
     Keying.config({
       // Tabs between groups
@@ -118,10 +120,13 @@ const renderMoreToolbarCommon = (toolbarSpec: MoreDrawerToolbarSpec) => {
         primary: false,
         buttonType: Optional.none(),
         borderless: false,
-        allowedModes: [ 'design', 'readonly' ],
+        allowedInReadonlyUiMode: true
       }, Optional.none(), toolbarSpec.providers, [
+        DisablingConfigs.button({
+          disabled: toolbarSpec.providers.isDisabled
+        }),
         ReadOnly.receivingConfigConditional(() => {
-          return toolbarSpec.providers.isDisabled() && !toolbarSpec.providers.isButtonAllowedInCurrentMode([ 'design', 'readonly' ]);
+          return toolbarSpec.providers.isDisabled() && !toolbarSpec.providers.isButtonAllowedInCurrentMode(true);
         })
       ], 'overflow-button')
     },

@@ -55,7 +55,7 @@ const renderChoiceItem = (
 
   return Merger.deepMerge(
     renderCommonItem({
-      allowedModes: spec.allowedModes,
+      allowedInReadonlyUiMode: spec.allowedInReadonlyUiMode,
       data: buildData(spec),
       enabled: spec.enabled,
       getApi,

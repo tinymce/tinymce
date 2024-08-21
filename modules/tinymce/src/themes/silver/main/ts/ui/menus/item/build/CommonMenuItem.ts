@@ -1,5 +1,5 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Focusing, ItemTypes, NativeEvents, Replacing
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Disabling, Focusing, ItemTypes, NativeEvents, Replacing
 } from '@ephox/alloy';
 import { Cell, Fun, Optional, Optionals } from '@ephox/katamari';
 
@@ -25,7 +25,7 @@ export interface CommonMenuItemSpec<T> {
   readonly onSetup: (itemApi: T) => OnDestroy<T>;
   readonly triggersSubmenu: boolean;
   readonly enabled: boolean;
-  readonly allowedModes: string[];
+  readonly allowedInReadonlyUiMode?: boolean;
   readonly itemBehaviours: Behaviour.NamedConfiguredBehaviour<any, any, any>[];
   readonly getApi: (comp: AlloyComponent) => T;
   readonly data: ItemDataOutput;
@@ -55,8 +55,20 @@ const renderCommonItem = <T>(spec: CommonMenuItemSpec<T>, structure: ItemStructu
           onControlAttached(spec, editorOffCell),
           onControlDetached(spec, editorOffCell)
         ]),
-        DisablingConfigs.item(() => {
-          return !spec.enabled || !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedModes);
+        DisablingConfigs.item({
+          disabled: () => {
+            return !spec.enabled || !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
+          },
+          onEnabled: (component) => {
+            if (Disabling.getLastDisabledState(component) || !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)) {
+              Disabling.set(component, true);
+            }
+          },
+          onDisabled: (component) => {
+            if (!Disabling.getLastDisabledState(component) && providersBackstage.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)) {
+              Disabling.set(component, false);
+            }
+          }
         }),
         ReadOnly.receivingConfig(),
         Replacing.config({ })
@@ -80,7 +92,7 @@ const renderCommonChoice = (spec: CommonCollectionItemSpec, structure: ItemStruc
         AddEventsBehaviour.config('item-events', [
           AlloyEvents.run(NativeEvents.mouseover(), Focusing.focus)
         ]),
-        DisablingConfigs.item(() => spec.disabled || providersBackstage.isDisabled()),
+        DisablingConfigs.item({ disabled: () => spec.disabled || providersBackstage.isDisabled() }),
         ReadOnly.receivingConfig()
       ]
     ),

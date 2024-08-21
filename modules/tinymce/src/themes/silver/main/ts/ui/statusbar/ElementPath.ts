@@ -52,7 +52,7 @@ const renderElementPath = (editor: Editor, settings: ElementPathSettings, provid
             }
           }),
         }),
-        DisablingConfigs.button(providersBackstage.isDisabled),
+        DisablingConfigs.button({ disabled: providersBackstage.isDisabled }),
         ReadOnly.receivingConfig()
       ])
     });

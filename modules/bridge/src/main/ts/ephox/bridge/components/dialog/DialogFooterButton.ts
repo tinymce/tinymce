@@ -1,4 +1,4 @@
-import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
@@ -16,7 +16,7 @@ interface BaseDialogFooterButtonSpec {
   enabled?: boolean;
   icon?: string;
   buttonType?: 'primary' | 'secondary';
-  allowedModes?: string[];
+  allowedInReadonlyUiMode?: boolean;
 }
 
 export interface DialogFooterNormalButtonSpec extends BaseDialogFooterButtonSpec {
@@ -50,7 +50,7 @@ interface BaseDialogFooterButton {
   enabled: boolean;
   icon: Optional<string>;
   buttonType: Optional<'primary' | 'secondary'>;
-  allowedModes: string[];
+  allowedInReadonlyUiMode: boolean;
 }
 
 export interface DialogFooterNormalButton extends BaseDialogFooterButton {
@@ -84,7 +84,7 @@ const baseFooterButtonFields = [
   ComponentSchema.enabled,
   // this should be defaulted to `secondary` but the implementation needs to manage the deprecation
   FieldSchema.optionStringEnum('buttonType', [ 'primary', 'secondary' ]),
-  FieldSchema.defaultedArrayOf('allowedModes', [ 'design' ], ValueType.string)
+  FieldSchema.defaultedBoolean('allowedInReadonlyUiMode', false)
 ];
 
 export const dialogFooterButtonFields = [

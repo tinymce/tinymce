@@ -31,7 +31,7 @@ export const renderPanelButton = (spec: SwatchPanelButtonSpec, sharedBackstage: 
   toggleClass: 'mce-active',
 
   dropdownBehaviours: Behaviour.derive([
-    DisablingConfigs.button(sharedBackstage.providers.isDisabled),
+    DisablingConfigs.button({ disabled: sharedBackstage.providers.isDisabled }),
     ReadOnly.receivingConfig(),
     Unselecting.config({}),
     Tabstopping.config({})

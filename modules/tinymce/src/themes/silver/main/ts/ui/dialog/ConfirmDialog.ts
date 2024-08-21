@@ -29,7 +29,7 @@ export const setup = (backstage: UiFactoryBackstage): ConfirmDialogApi => {
         align: 'end',
         enabled: true,
         icon: Optional.none(),
-        allowedModes: [ 'design', 'readonly' ]
+        allowedInReadonlyUiMode: true,
       }, 'submit', backstage)
     );
 
@@ -41,7 +41,7 @@ export const setup = (backstage: UiFactoryBackstage): ConfirmDialogApi => {
       align: 'end',
       enabled: true,
       icon: Optional.none(),
-      allowedModes: [ 'design', 'readonly' ]
+      allowedInReadonlyUiMode: true,
     }, 'cancel', backstage);
 
     const titleSpec = Dialogs.pUntitled();

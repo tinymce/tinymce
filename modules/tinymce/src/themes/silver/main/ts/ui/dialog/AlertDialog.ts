@@ -29,7 +29,7 @@ export const setup = (backstage: UiFactoryBackstage): AlertDialogApi => {
         align: 'end',
         enabled: true,
         icon: Optional.none(),
-        allowedModes: [ 'design', 'readonly' ]
+        allowedInReadonlyUiMode: true,
       }, 'cancel', backstage)
     );
 

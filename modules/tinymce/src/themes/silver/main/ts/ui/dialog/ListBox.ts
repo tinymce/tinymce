@@ -107,7 +107,6 @@ export const renderListBox = (spec: ListBoxSpec, backstage: UiFactoryBackstage, 
             }
           )
         ],
-        allowedModes: [ 'design' ]
       },
       'tox-listbox',
       backstage.shared)

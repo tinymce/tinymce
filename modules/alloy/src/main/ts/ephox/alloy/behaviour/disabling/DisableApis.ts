@@ -41,7 +41,7 @@ const ariaEnable = (component: AlloyComponent): void => {
   Attribute.set(component.element, 'aria-disabled', 'false');
 };
 
-const disable = (component: AlloyComponent, disableConfig: DisableConfig, disableState: DisableState, storeState: boolean): void => {
+const disable = (component: AlloyComponent, disableConfig: DisableConfig, disableState: DisableState, storeState: boolean = false): void => {
   disableConfig.disableClass.each((disableClass) => {
     Class.add(component.element, disableClass);
   });
@@ -53,7 +53,7 @@ const disable = (component: AlloyComponent, disableConfig: DisableConfig, disabl
   disableConfig.onDisabled(component);
 };
 
-const enable = (component: AlloyComponent, disableConfig: DisableConfig, disableState: DisableState, storeState: boolean): void => {
+const enable = (component: AlloyComponent, disableConfig: DisableConfig, disableState: DisableState, storeState: boolean = false): void => {
   disableConfig.disableClass.each((disableClass) => {
     Class.remove(component.element, disableClass);
   });
@@ -68,9 +68,14 @@ const enable = (component: AlloyComponent, disableConfig: DisableConfig, disable
 const isDisabled = (component: AlloyComponent, disableConfig: DisableConfig): boolean =>
   hasNative(component, disableConfig) ? nativeIsDisabled(component) : ariaIsDisabled(component);
 
-const set = (component: AlloyComponent, disableConfig: DisableConfig, disableState: DisableState, disabled: boolean, storeState: boolean = false): void => {
+const set = (component: AlloyComponent, disableConfig: DisableConfig, disableState: DisableState, disabled: boolean): void => {
   const f = disabled ? disable : enable;
-  f(component, disableConfig, disableState, storeState);
+  f(component, disableConfig, disableState);
+};
+
+const setAndStoreState = (component: AlloyComponent, disableConfig: DisableConfig, disableState: DisableState, disabled: boolean): void => {
+  const f = disabled ? disable : enable;
+  f(component, disableConfig, disableState, true);
 };
 
 const getLastDisabledState = (_: AlloyComponent, __: DisableConfig, disableState: DisableState): boolean =>
@@ -82,5 +87,6 @@ export {
   isDisabled,
   onLoad,
   set,
+  setAndStoreState,
   getLastDisabledState
 };

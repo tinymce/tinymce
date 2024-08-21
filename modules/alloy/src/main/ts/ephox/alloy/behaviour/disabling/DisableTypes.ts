@@ -10,7 +10,8 @@ export interface DisableBehaviour extends Behaviour.AlloyBehaviour<DisableConfig
   disable: (component: AlloyComponent) => void;
   isDisabled: (component: AlloyComponent) => boolean;
   onLoad: (component: AlloyComponent) => void;
-  set: (component: AlloyComponent, disabled: boolean, storeState?: boolean) => void;
+  set: (component: AlloyComponent, disabled: boolean) => void;
+  setAndStoreState: (component: AlloyComponent, disabled: boolean) => void;
   getLastDisabledState: (component: AlloyComponent) => boolean;
 }
 

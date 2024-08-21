@@ -5,7 +5,7 @@ import {
   FormField as AlloyFormField,
   AlloySpec, AlloyTriggers, Behaviour,
   GuiFactory, Memento,
-  RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, Tabstopping, Tooltipping
+  RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, Tabstopping, Tooltipping, Disabling
 } from '@ephox/alloy';
 import { Dialog, Toolbar } from '@ephox/bridge';
 import { Fun, Merger, Optional, Type } from '@ephox/katamari';
@@ -26,7 +26,7 @@ type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];
 type AlloyButtonSpec = Parameters<typeof AlloyButton['sketch']>[0];
 
 type ButtonSpec = Omit<Dialog.Button, 'type'> & {
-  readonly allowedModes?: string[];
+  readonly allowedInReadonlyUiMode?: boolean;
 };
 type FooterToggleButtonSpec = Omit<Dialog.DialogFooterToggleButton, 'type'>;
 type FooterButtonSpec = Omit<Dialog.DialogFooterNormalButton, 'type'> | Omit<Dialog.DialogFooterMenuButton, 'type'> | FooterToggleButtonSpec;
@@ -50,8 +50,8 @@ export const renderCommonSpec = (
 
   const common = {
     buttonBehaviours: Behaviour.derive([
-      DisablingConfigs.button(() => !spec.enabled || !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedModes)),
-      ReadOnly.receivingConfigConditional(() => !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedModes)),
+      DisablingConfigs.button({ disabled: () => !spec.enabled || providersBackstage.isDisabled() }),
+      ReadOnly.receivingConfig(),
       Tabstopping.config({}),
       ...tooltip.map(
         (t) => Tooltipping.config(
@@ -270,7 +270,6 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
     const fixedSpec: Toolbar.ToolbarMenuButton = {
       ...spec,
       type: 'menubutton',
-      allowedModes: [ 'design' ],
       // Currently, dialog-based menu buttons cannot be searchable.
       search: Optional.none(),
       onSetup: (api) => {
@@ -289,7 +288,24 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
       ...spec,
       borderless: false,
     };
-    return renderButton(buttonSpec, action, backstage.shared.providers, [ ]);
+    return renderButton(buttonSpec, action, backstage.shared.providers, [
+      ...spec.allowedInReadonlyUiMode ? [
+        DisablingConfigs.button({
+          disabled: () => !spec.enabled || !backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode),
+          onEnabled: (component) => {
+            if (Disabling.getLastDisabledState(component) || !backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)) {
+              Disabling.set(component, true);
+            }
+          },
+          onDisabled: (component) => {
+            if (!Disabling.getLastDisabledState(component) && backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)) {
+              Disabling.set(component, false);
+            }
+          }
+        }),
+        ReadOnly.receivingConfigConditional(() => !backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)),
+      ] : []
+    ]);
   } else if (isToggleButtonSpec(spec, buttonType)) {
     return renderToggleButton(spec, backstage.shared.providers, spec.text.or(spec.tooltip).getOrUndefined());
   } else {
@@ -305,7 +321,6 @@ export const renderDialogButton = (spec: ButtonSpec, providersBackstage: UiFacto
     factory: AlloyButton,
     ...renderButtonSpec({
       ...spec,
-      allowedModes: [ 'design' ]
     }, Optional.some(action), providersBackstage, [
       RepresentingConfigs.memory(''),
       ComposingConfigs.self()

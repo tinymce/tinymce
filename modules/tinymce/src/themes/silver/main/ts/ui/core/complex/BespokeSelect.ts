@@ -234,8 +234,7 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
             }
           }),
         })
-      ],
-      allowedModes: [ 'design' ]
+      ]
     },
     ToolbarButtonClasses.Button,
     backstage.shared,
