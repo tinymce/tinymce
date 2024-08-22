@@ -8,8 +8,12 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
+import AccordionPlugin from 'tinymce/plugins/accordion/Plugin';
+import AdvancedListPlugin from 'tinymce/plugins/advlist/Plugin';
+import AutoLinkPlugin from 'tinymce/plugins/autolink/Plugin';
 import CodeSamplePlugin from 'tinymce/plugins/codesample/Plugin';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
+import ListPlugin from 'tinymce/plugins/lists/Plugin';
 import MediaPlugin from 'tinymce/plugins/media/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 
@@ -17,7 +21,8 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'bold',
-    plugins: 'table image codesample media code',
+    plugins: 'autolink table image codesample media code lists accordion advlist',
+    indent: false,
     statusbar: false,
     setup: (ed: Editor) => {
       ed.mode.register('testmode', {
@@ -29,7 +34,15 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
         },
       });
     }
-  }, [ CodeSamplePlugin, ImagePlugin, MediaPlugin, TablePlugin ], true);
+  }, [ AccordionPlugin,
+    AdvancedListPlugin,
+    AutoLinkPlugin,
+    CodeSamplePlugin,
+    ImagePlugin,
+    MediaPlugin,
+    TablePlugin,
+    ListPlugin
+  ], true);
 
   const setMode = (editor: Editor, mode: string) => {
     editor.mode.set(mode);
@@ -278,8 +291,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       await pAssertResizeHandle(editor);
     });
 
-    // TODO: This needs to be addressed
-    it.skip('TINY-10891: Resize bars for tables should be hidden while in readonly mode', () => {
+    it('TINY-10891: Resize bars for tables should be hidden while in readonly mode', () => {
       const editor = hook.editor();
       editor.setContent('<table><tbody><tr><td>a</td></tr></tbody></table>');
 
@@ -293,6 +305,141 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       setMode(editor, 'design');
       mouseOverTable(editor);
       assertResizeBars(editor, true);
+    });
+
+    it('TINY-10891: Pressing tab at the last cell should not create new row', () => {
+      const editor = hook.editor();
+      editor.setContent('<table><tbody><tr><td>a</td></tr></tbody></table>');
+      TinyAssertions.assertContent(editor, '<table><tbody><tr><td>a</td></tr></tbody></table>');
+
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+      TinyContentActions.keystroke(editor, Keys.tab());
+      TinyAssertions.assertContent(editor, '<table><tbody><tr><td>a</td></tr><tr><td>&nbsp;</td></tr></tbody></table>');
+
+      setMode(editor, 'testmode');
+      TinySelections.setCursor(editor, [ 0, 0, 1, 0, 0 ], 0);
+      TinyContentActions.keystroke(editor, Keys.tab());
+      TinyAssertions.assertContent(editor, '<table><tbody><tr><td>a</td></tr><tr><td>&nbsp;</td></tr></tbody></table>');
+
+      setMode(editor, 'design');
+      TinyContentActions.keystroke(editor, Keys.tab());
+      TinyAssertions.assertContent(editor, '<table><tbody><tr><td>a</td></tr><tr><td>&nbsp;</td></tr><tr><td>&nbsp;</td></tr></tbody></table>');
+    });
+
+    it('TINY-10891: Pressing tab/shift+tab on list item should not indent list item', () => {
+      const editor = hook.editor();
+      editor.setContent('<ul><li>a</li><li>b</li><li>c</li></ul>');
+      TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
+      TinyContentActions.keystroke(editor, Keys.tab());
+      TinyAssertions.assertContent(editor, '<ul><li>a<ul><li>b</li></ul></li><li>c</li></ul>');
+
+      setMode(editor, 'testmode');
+      TinySelections.setCursor(editor, [ 0, 0, 1, 0 ], 0);
+      TinyContentActions.keystroke(editor, Keys.tab());
+      TinyAssertions.assertContent(editor, '<ul><li>a<ul><li>b</li></ul></li><li>c</li></ul>');
+
+      TinySelections.setCursor(editor, [ 0, 0, 1, 0 ], 0);
+      TinyContentActions.keystroke(editor, Keys.tab(), { shiftKey: true });
+      TinyAssertions.assertContent(editor, '<ul><li>a<ul><li>b</li></ul></li><li>c</li></ul>');
+
+      setMode(editor, 'design');
+      TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
+      TinyContentActions.keystroke(editor, Keys.tab());
+      TinyAssertions.assertContent(editor, '<ul><li>a<ul><li>b</li><li>c</li></ul></li></ul>');
+    });
+
+    it('TINY-10981: Toggling accordion should be permitted', () => {
+      const editor = hook.editor();
+      editor.setContent(`<details class="mce-accordion"><summary>Accordion summary...</summary><p>Accordion Body</p></details>`);
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 4);
+      TinyContentActions.keystroke(editor, Keys.enter());
+      TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 1 });
+
+      setMode(editor, 'testmode');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 4);
+      TinyContentActions.keystroke(editor, Keys.enter());
+      TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 0 });
+      TinyContentActions.keystroke(editor, Keys.enter());
+      TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 1 });
+
+      setMode(editor, 'design');
+    });
+
+    it('TINY-10981: Toggling accordion should be permitted with execCommand', () => {
+      const editor = hook.editor();
+      editor.setContent(`<details class="mce-accordion"><summary>Accordion summary...</summary><p>Accordion Body</p></details>`);
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 4);
+      editor.execCommand('ToggleAccordion', false, true);
+      TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 1 });
+
+      setMode(editor, 'testmode');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 4);
+      editor.execCommand('ToggleAccordion', false, false);
+      TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 0 });
+      editor.execCommand('ToggleAccordion', false, true);
+      TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 1 });
+
+      setMode(editor, 'design');
+    });
+
+    it('TINY-10981: Executing RemoveAccordion should not permitted when in selectionEnabled mode', () => {
+      const editor = hook.editor();
+      editor.setContent(`<details class="mce-accordion"><summary>Accordion summary...</summary><p>Accordion Body</p></details><details class="mce-accordion"><summary>Accordion summary...</summary><p>Accordion Body</p></details>`);
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 4);
+      editor.execCommand('RemoveAccordion');
+      TinyAssertions.assertContent(editor, '<details class="mce-accordion"><summary>Accordion summary...</summary><p>Accordion Body</p></details>');
+
+      setMode(editor, 'testmode');
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 4);
+      editor.execCommand('RemoveAccordion');
+      TinyAssertions.assertContent(editor, '<details class="mce-accordion"><summary>Accordion summary...</summary><p>Accordion Body</p></details>');
+
+      setMode(editor, 'design');
+    });
+
+    it('TINY-10981: Coverting paragraph to link with autolink should not be permitted', async () => {
+      const editor = hook.editor();
+      editor.setContent(`<p>https://google.com</p>`);
+
+      setMode(editor, 'testmode');
+      TinySelections.setCursor(editor, [ 0, 0 ], 'https://google.com'.length);
+      TinyContentActions.keystroke(editor, Keys.enter());
+      await Waiter.pTryUntil('Wait for content to change', () => TinyAssertions.assertContent(editor, '<p>https://google.com</p>'));
+
+      setMode(editor, 'design');
+      TinySelections.setCursor(editor, [ 0, 0 ], 'https://google.com'.length);
+      TinyContentActions.keystroke(editor, Keys.enter());
+      await Waiter.pTryUntil('Wait for content to change', () => TinyAssertions.assertContent(editor, '<p><a href="https://google.com">https://google.com</a></p><p>&nbsp;</p>'));
+    });
+
+    it('TINY-10981: mceListUpdate command should not be permitted in selectionEnabled mode', () => {
+      const editor = hook.editor();
+      editor.setContent(`<ol><li>test</li></ol><ol><li>test2</li></ol>`);
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 4);
+      editor.execCommand('mceListUpdate', false, { attrs: { contenteditable: false }});
+      TinyAssertions.assertContent(editor, '<ol contenteditable="false"><li>test</li></ol><ol><li>test2</li></ol>');
+
+      setMode(editor, 'testmode');
+      TinySelections.setCursor(editor, [ 1, 0, 0 ], 4);
+      editor.execCommand('mceListUpdate', false, { attrs: { contenteditable: false }});
+      TinyAssertions.assertContent(editor, '<ol contenteditable="false"><li>test</li></ol><ol><li>test2</li></ol>');
+
+      setMode(editor, 'design');
+    });
+
+    it('TINY-10981: RemoveList command should not be permitted in selectionEnabled mode', () => {
+      const editor = hook.editor();
+      editor.setContent(`<ol><li>test</li></ol><ol><li>test2</li></ol>`);
+      TinySelections.setCursor(editor, [ 0, 0, 0 ], 4);
+      editor.execCommand('RemoveList');
+      TinyAssertions.assertContent(editor, '<p>test</p><ol><li>test2</li></ol>');
+
+      setMode(editor, 'testmode');
+      TinySelections.setCursor(editor, [ 1, 0, 0 ], 4);
+      editor.execCommand('RemoveList');
+      TinyAssertions.assertContent(editor, '<p>test</p><ol><li>test2</li></ol>');
+
+      setMode(editor, 'design');
     });
   });
 

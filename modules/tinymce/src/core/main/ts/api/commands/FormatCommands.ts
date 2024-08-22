@@ -8,6 +8,10 @@ import { ContentLanguage } from '../OptionTypes';
 
 const registerExecCommands = (editor: Editor): void => {
   const toggleFormat = (name: string, value?: FormatVars) => {
+    if (editor.mode.isReadOnly()) {
+      return;
+    }
+
     editor.formatter.toggle(name, value);
     editor.nodeChanged();
   };
