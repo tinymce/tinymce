@@ -7,6 +7,8 @@ import { Arr, Fun, Obj, Optional, Optionals } from '@ephox/katamari';
 import { Attribute } from '@ephox/sugar';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
+import * as ReadOnly from '../../ReadOnly';
+import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderLabel } from '../alien/FieldLabeller';
 import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 import { renderCommonDropdown, updateMenuText } from '../dropdown/CommonDropdown';
@@ -93,6 +95,8 @@ export const renderListBox = (spec: ListBoxSpec, backstage: UiFactoryBackstage, 
         presets: 'normal',
         classes: [],
         dropdownBehaviours: [
+          DisablingConfigs.button({ disabled: () => backstage.shared.providers.isDisabled() }),
+          ReadOnly.receivingConfig(),
           Tabstopping.config({}),
           RepresentingConfigs.withComp(
             initialItem.map((item) => item.value),

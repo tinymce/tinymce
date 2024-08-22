@@ -78,7 +78,7 @@ const setAndStoreState = (component: AlloyComponent, disableConfig: DisableConfi
   f(component, disableConfig, disableState, true);
 };
 
-const getLastDisabledState = (_: AlloyComponent, __: DisableConfig, disableState: DisableState): boolean =>
+const getLastDisabledState = (_: AlloyComponent, __: DisableConfig, disableState: DisableState): boolean | undefined =>
   disableState.getLastDisabledState();
 
 export {

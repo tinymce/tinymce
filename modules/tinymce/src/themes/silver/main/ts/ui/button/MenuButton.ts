@@ -6,11 +6,13 @@ import { Attribute, Class, Focus } from '@ephox/sugar';
 import { formActionEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
+import * as ReadOnly from '../../ReadOnly';
+import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderCommonDropdown, updateMenuIcon, updateMenuText } from '../dropdown/CommonDropdown';
 import ItemResponse from '../menus/item/ItemResponse';
 import * as NestedMenus from '../menus/menu/NestedMenus';
 import { getSearchPattern } from '../menus/menu/searchable/SearchableMenu';
-import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
+import { MenuButtonClasses, ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 
 export type MenuButtonSpec = Omit<Toolbar.ToolbarMenuButton, 'type'>;
 
@@ -91,7 +93,38 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
     presets: 'normal',
     classes: [],
     dropdownBehaviours: [
-      ...(tabstopping ? [ Tabstopping.config({ }) ] : [])
+      ...(tabstopping ? [ Tabstopping.config({ }) ] : []),
+      DisablingConfigs.button({
+        disabled: () => {
+          switch (prefix) {
+            case MenuButtonClasses.Button:
+            case ToolbarButtonClasses.Button:
+              return !backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
+            default:
+              return backstage.shared.providers.isDisabled();
+          }
+        },
+        onEnabled: (component) => {
+          if (prefix === ToolbarButtonClasses.Button && (Disabling.getLastDisabledState(component) === true || !backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode))) {
+            Disabling.set(component, true);
+          }
+        },
+        onDisabled: (comp) => {
+          if (prefix === ToolbarButtonClasses.Button && Disabling.getLastDisabledState(comp) === false && backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)) {
+            Disabling.set(comp, false);
+          }
+        }
+      }),
+      ReadOnly.receivingConfigConditional((comp) => {
+        switch (prefix) {
+          case MenuButtonClasses.Button:
+            return !backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
+          case ToolbarButtonClasses.Button:
+            return Disabling.getLastDisabledState(comp) === true || !backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
+          default:
+            return true;
+        }
+      }),
     ],
     allowedInReadonlyUiMode: spec.allowedInReadonlyUiMode
   },

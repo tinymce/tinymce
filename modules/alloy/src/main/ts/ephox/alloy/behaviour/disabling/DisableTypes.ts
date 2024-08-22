@@ -32,6 +32,6 @@ export interface DisableConfigSpec extends Behaviour.BehaviourConfigSpec {
 }
 
 export interface DisableState extends BehaviourState {
-  getLastDisabledState: () => boolean;
+  getLastDisabledState: () => boolean | undefined;
   setLastDisabledState: (state: boolean) => void;
 }

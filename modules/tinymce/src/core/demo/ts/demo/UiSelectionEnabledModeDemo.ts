@@ -30,7 +30,7 @@ export default (): void => {
           ed.on('SwitchMode', toggleActive);
           return () => ed.off('SwitchMode', toggleActive);
         },
-        allowedModes: [ 'design', 'readonly' ]
+        allowedInReadonlyUiMode: true
       };
       ed.ui.registry.addToggleMenuItem(mode, toggleSpec);
       ed.ui.registry.addToggleButton(mode, toggleSpec);

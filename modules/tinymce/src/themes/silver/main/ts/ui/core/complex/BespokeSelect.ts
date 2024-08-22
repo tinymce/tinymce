@@ -7,6 +7,8 @@ import { Menu } from 'tinymce/core/api/ui/Ui';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
+import * as ReadOnly from '../../../ReadOnly';
+import { DisablingConfigs } from '../../alien/DisablingConfigs';
 import { renderCommonDropdown } from '../../dropdown/CommonDropdown';
 import ItemResponse from '../../menus/item/ItemResponse';
 import * as NestedMenus from '../../menus/menu/NestedMenus';
@@ -221,6 +223,8 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
       presets: 'normal',
       classes: spec.icon.isSome() ? [] : [ 'bespoke' ],
       dropdownBehaviours: [
+        DisablingConfigs.button({ disabled: () => backstage.shared.providers.isDisabled() }),
+        ReadOnly.receivingConfig(),
         Tooltipping.config({
           ...backstage.shared.providers.tooltips.getConfig({
             tooltipText: backstage.shared.providers.translate(spec.tooltip),

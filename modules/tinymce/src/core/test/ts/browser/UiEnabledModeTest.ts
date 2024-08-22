@@ -601,7 +601,7 @@ describe('browser.tinymce.core.UiEnabledModeTest', () => {
         TinyUiActions.keystroke(editor, Keys.escape());
       });
 
-      it('TINY-10980: Menu item should be enabled since setEnabled(true) in onSetup callback and toolbar spec allowedModes: [ design, readonly ]', async () => {
+      it('TINY-10980: Menu item should be enabled since setEnabled(true) in onSetup callback and toolbar spec allowedInReadonlyUiMode: true', async () => {
         const editor = hook.editor();
         editor.mode.set('design');
         TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
@@ -627,7 +627,7 @@ describe('browser.tinymce.core.UiEnabledModeTest', () => {
         TinyUiActions.keystroke(editor, Keys.escape());
       });
 
-      it('TINY-10980: Menu item should be disabled since setEnabled(false) in onSetup callback and toolbar spec allowedModes: [ design, readonly ]', async () => {
+      it('TINY-10980: Menu item should be disabled since setEnabled(false) in onSetup callback and toolbar spec allowedInReadonlyUiMode: true', async () => {
         const editor = hook.editor();
         editor.mode.set('design');
         TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
@@ -657,7 +657,7 @@ describe('browser.tinymce.core.UiEnabledModeTest', () => {
 
   Arr.each(setupButtonsScenario, (scenario) => {
     context(scenario.label, () => {
-      context('onSetup callback and toolbar button spec allowedModes: [ readonly ] not present', () => {
+      context('onSetup callback and toolbar button spec allowedInReadonlyUiMode not present', () => {
         const hook = TinyHooks.bddSetup<Editor>({
           base_url: '/project/tinymce/js/tinymce',
           toolbar: 't1',
@@ -687,7 +687,7 @@ describe('browser.tinymce.core.UiEnabledModeTest', () => {
         });
       });
 
-      context('onSetup callback and toolbar button spec allowedModes: [ readonly ] not present, switch to mode onSetup', () => {
+      context('onSetup callback and toolbar button spec allowedInReadonlyUiMode not present, switch to mode onSetup', () => {
         const hook = TinyHooks.bddSetup<Editor>({
           base_url: '/project/tinymce/js/tinymce',
           toolbar: 't1',
@@ -759,7 +759,7 @@ describe('browser.tinymce.core.UiEnabledModeTest', () => {
         });
       });
 
-      context('onSetup callback with setEnabled(true) and toolbar button allowedModes: [ design, readonly ]', () => {
+      context('onSetup callback with setEnabled(true) and toolbar button allowedInReadonlyUiMode: true', () => {
         const hook = TinyHooks.bddSetup<Editor>({
           base_url: '/project/tinymce/js/tinymce',
           toolbar: 't3',
@@ -789,7 +789,7 @@ describe('browser.tinymce.core.UiEnabledModeTest', () => {
         });
       });
 
-      context('onSetup callback with setEnabled(true) and toolbar button allowedModes: [ design, readonly ], switch to mode onSetup ', () => {
+      context('onSetup callback with setEnabled(true) and toolbar button allowedInReadonlyUiMode: true, switch to mode onSetup ', () => {
         const hook = TinyHooks.bddSetup<Editor>({
           base_url: '/project/tinymce/js/tinymce',
           toolbar: 't3',
@@ -809,7 +809,7 @@ describe('browser.tinymce.core.UiEnabledModeTest', () => {
         });
       });
 
-      context('onSetup callback with setEnabled(false) and toolbar button allowedModes: [ design, readonly ]', () => {
+      context('onSetup callback with setEnabled(false) and toolbar button allowedInReadonlyUiMode: true', () => {
         const hook = TinyHooks.bddSetup<Editor>({
           base_url: '/project/tinymce/js/tinymce',
           toolbar: 't4',
@@ -840,7 +840,7 @@ describe('browser.tinymce.core.UiEnabledModeTest', () => {
         });
       });
 
-      context('onSetup callback with setEnabled(false) and toolbar button allowedModes: [ design, readonly ], switch to mode onSetup', () => {
+      context('onSetup callback with setEnabled(false) and toolbar button allowedInReadonlyUiMode: true, switch to mode onSetup', () => {
         const hook = TinyHooks.bddSetup<Editor>({
           base_url: '/project/tinymce/js/tinymce',
           toolbar: 't4',
@@ -861,7 +861,7 @@ describe('browser.tinymce.core.UiEnabledModeTest', () => {
         });
       });
 
-      context('onSetup callback not present and toolbar button allowedModes: [ design, readonly ]', () => {
+      context('onSetup callback not present and toolbar button allowedInReadonlyUiMode: true', () => {
         const hook = TinyHooks.bddSetup<Editor>({
           base_url: '/project/tinymce/js/tinymce',
           toolbar: 't5',
@@ -893,7 +893,7 @@ describe('browser.tinymce.core.UiEnabledModeTest', () => {
         });
       });
 
-      context('onSetup callback not present and toolbar button allowedModes: [ design, readonly ], switch to mode onSetup', () => {
+      context('onSetup callback not present and toolbar button allowedInReadonlyUiMode: true, switch to mode onSetup', () => {
         const hook = TinyHooks.bddSetup<Editor>({
           base_url: '/project/tinymce/js/tinymce',
           toolbar: 't5',
@@ -1007,7 +1007,7 @@ describe('browser.tinymce.core.UiEnabledModeTest', () => {
 
     Arr.each(setupButtonsScenario, (scenario) => {
       context(scenario.label, () => {
-        context('onSetup callback and toolbar button spec allowedModes: [ readonly ] not present', () => {
+        context('onSetup callback and toolbar button spec allowedInReadonlyUiMode not present', () => {
           const hook = TinyHooks.bddSetup<Editor>({
             base_url: '/project/tinymce/js/tinymce',
             toolbar: Arr.range(50, Fun.constant('t1')).join(' | '),
@@ -1129,7 +1129,7 @@ describe('browser.tinymce.core.UiEnabledModeTest', () => {
           });
         });
 
-        context('onSetup callback with setEnabled(true) and toolbar button allowedModes: [ design, readonly ]', () => {
+        context('onSetup callback with setEnabled(true) and toolbar button allowedInReadonlyUiMode: true', () => {
           const hook = TinyHooks.bddSetup<Editor>({
             base_url: '/project/tinymce/js/tinymce',
             toolbar: Arr.range(50, Fun.constant('t3')).join(' | '),
@@ -1190,7 +1190,7 @@ describe('browser.tinymce.core.UiEnabledModeTest', () => {
           });
         });
 
-        context('onSetup callback with setEnabled(false) and toolbar button allowedModes: [ design, readonly ]', () => {
+        context('onSetup callback with setEnabled(false) and toolbar button allowedInReadonlyUiMode: true', () => {
           const hook = TinyHooks.bddSetup<Editor>({
             base_url: '/project/tinymce/js/tinymce',
             toolbar: Arr.range(50, Fun.constant('t4')).join(' | '),
@@ -1251,7 +1251,7 @@ describe('browser.tinymce.core.UiEnabledModeTest', () => {
           });
         });
 
-        context('onSetup callback not present and toolbar button allowedModes: [ design, readonly ]', () => {
+        context('onSetup callback not present and toolbar button allowedInReadonlyUiMode: true', () => {
           const hook = TinyHooks.bddSetup<Editor>({
             base_url: '/project/tinymce/js/tinymce',
             toolbar: Arr.range(50, Fun.constant('t5')).join(' | '),
@@ -1593,6 +1593,110 @@ describe('browser.tinymce.core.UiEnabledModeTest', () => {
       store.assertEq('Clicking on submit should call onSubmit', [ 'onSubmit' ]);
 
       editor.mode.set('design');
+    });
+  });
+
+  context('View Buttons', () => {
+    const hook = TinyHooks.bddSetup<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      toolbar: 't1 t2 t3 t4',
+      setup: (ed: Editor) => {
+        registerMode(ed);
+        ed.ui.registry.addView('myview1', {
+          buttons: [
+            {
+              type: 'group',
+              buttons: [
+                {
+                  type: 'togglebutton',
+                  icon: 'info',
+                  text: 'Test 1',
+                  allowedInReadonlyUiMode: true,
+                  onAction: Fun.noop
+                },
+                {
+                  type: 'togglebutton',
+                  text: 'iconAndText',
+                  icon: 'copy',
+                  borderless: true,
+                  onAction: Fun.noop
+                }
+              ]
+            },
+            {
+              type: 'togglebutton',
+              icon: 'info',
+              onAction: Fun.noop
+            },
+            {
+              type: 'group',
+              buttons: [
+                {
+                  type: 'button',
+                  text: 'Cancel',
+                  onAction: Fun.noop,
+                  buttonType: 'secondary',
+                  allowedInReadonlyUiMode: true
+                },
+                {
+                  type: 'button',
+                  text: 'Save Code',
+                  onAction: Fun.noop,
+                  buttonType: 'primary'
+                }
+              ]
+            }
+          ],
+          onShow: (api: any) => {
+            api.getContainer().innerHTML = '<button>myview1</button>';
+            api.getContainer().querySelector('button')?.focus();
+          },
+          onHide: Fun.noop
+        });
+      }
+    });
+
+    const assertButtonNativelyEnabled = (selector: string) => UiFinder.exists(SugarBody.body(), `[aria-label="${selector}"]:not([disabled="disabled"])`);
+
+    const assertButtonNativelyDisabled = (selector: string) => UiFinder.exists(SugarBody.body(), `[aria-label="${selector}"][disabled="disabled"]`);
+
+    it('TINY-10980: View buttons should be enabled in uiEnabled mode', () => {
+      const editor = hook.editor();
+      editor.execCommand('ToggleView', false, 'myview1');
+      assertButtonNativelyEnabled('Test 1');
+      assertButtonNativelyEnabled('iconAndText');
+      assertButtonNativelyEnabled('Cancel');
+      assertButtonNativelyEnabled('Save Code');
+
+      editor.mode.set('testmode');
+      assertButtonNativelyEnabled('Test 1');
+      assertButtonNativelyDisabled('iconAndText');
+      assertButtonNativelyEnabled('Cancel');
+      assertButtonNativelyDisabled('Save Code');
+
+      editor.mode.set('readonly');
+      assertButtonNativelyDisabled('Test 1');
+      assertButtonNativelyDisabled('iconAndText');
+      assertButtonNativelyDisabled('Cancel');
+      assertButtonNativelyDisabled('Save Code');
+      editor.mode.set('testmode');
+      editor.execCommand('ToggleView', false, 'myview1');
+
+      editor.execCommand('ToggleView', false, 'myview1');
+      assertButtonNativelyEnabled('Test 1');
+      assertButtonNativelyDisabled('iconAndText');
+      assertButtonNativelyEnabled('Cancel');
+      assertButtonNativelyDisabled('Save Code');
+      editor.execCommand('ToggleView', false, 'myview1');
+
+      editor.mode.set('design');
+      editor.execCommand('ToggleView', false, 'myview1');
+      assertButtonNativelyEnabled('Test 1');
+      assertButtonNativelyEnabled('iconAndText');
+      assertButtonNativelyEnabled('Cancel');
+      assertButtonNativelyEnabled('Save Code');
+
+      editor.execCommand('ToggleView', false, 'myview1');
     });
   });
 });

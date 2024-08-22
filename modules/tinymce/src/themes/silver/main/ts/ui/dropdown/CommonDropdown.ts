@@ -1,5 +1,5 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Disabling, Dropdown as AlloyDropdown, Focusing, GuiFactory, Highlighting,
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Dropdown as AlloyDropdown, Focusing, GuiFactory, Highlighting,
   Keying, MaxHeight, Memento, NativeEvents, Replacing, Representing, SimulatedEvent, SketchSpec, SystemEvents, TieredData, Tooltipping, Unselecting
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
@@ -9,8 +9,6 @@ import { EventArgs, SugarElement } from '@ephox/sugar';
 import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button/ButtonEvents';
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
-import * as ReadOnly from '../../ReadOnly';
-import { DisablingConfigs } from '../alien/DisablingConfigs';
 import * as UiUtils from '../alien/UiUtils';
 import { renderLabel, renderReplaceableIconFromPack } from '../button/ButtonSlices';
 import { onControlAttached, onControlDetached, OnDestroy } from '../controls/Controls';
@@ -19,7 +17,6 @@ import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import * as MenuParts from '../menus/menu/MenuParts';
 import { focusSearchField, handleRedirectToMenuItem, handleRefetchTrigger, updateAriaOnDehighlight, updateAriaOnHighlight } from '../menus/menu/searchable/SearchableMenu';
 import { RedirectMenuItemInteractionEvent, redirectMenuItemInteractionEvent, RefetchTriggerEvent, refetchTriggerEvent } from '../menus/menu/searchable/SearchableMenuEvents';
-import { ToolbarButtonClasses, MenuButtonClasses } from '../toolbar/button/ButtonClasses';
 
 export const updateMenuText = Id.generate('update-menu-text');
 export const updateMenuIcon = Id.generate('update-menu-icon');
@@ -160,30 +157,6 @@ const renderCommonDropdown = <T>(
 
       dropdownBehaviours: Behaviour.derive([
         ...spec.dropdownBehaviours,
-        DisablingConfigs.button({
-          disabled: () => {
-            if (prefix === MenuButtonClasses.Button) {
-              return !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
-            }
-            return spec.disabled || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
-          },
-          onEnabled: (component) => {
-            if (prefix === ToolbarButtonClasses.Button && (Disabling.getLastDisabledState(component) || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode))) {
-              Disabling.set(component, true);
-            }
-          },
-          onDisabled: (comp) => {
-            if (prefix === ToolbarButtonClasses.Button && !Disabling.getLastDisabledState(comp) && sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)) {
-              Disabling.set(comp, false);
-            }
-          }
-        }),
-        ReadOnly.receivingConfigConditional((comp) => {
-          if (prefix === MenuButtonClasses.Button) {
-            return !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
-          }
-          return Disabling.getLastDisabledState(comp) || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
-        }),
         // INVESTIGATE (TINY-9012): There was a old comment here about something not quite working, and that
         // we can still get the button focused. It was probably related to Unselecting.
         Unselecting.config({}),

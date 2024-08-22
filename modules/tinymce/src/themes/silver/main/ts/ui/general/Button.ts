@@ -293,12 +293,12 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
         DisablingConfigs.button({
           disabled: () => !spec.enabled || !backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode),
           onEnabled: (component) => {
-            if (Disabling.getLastDisabledState(component) || !backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)) {
+            if (Disabling.getLastDisabledState(component) === true || !backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)) {
               Disabling.set(component, true);
             }
           },
           onDisabled: (component) => {
-            if (!Disabling.getLastDisabledState(component) && backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)) {
+            if (Disabling.getLastDisabledState(component) === false && backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)) {
               Disabling.set(component, false);
             }
           }

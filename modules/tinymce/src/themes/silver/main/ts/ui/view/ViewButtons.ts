@@ -3,6 +3,8 @@ import { Optional } from '@ephox/katamari';
 import { Attribute, Class } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import * as ReadOnly from '../../ReadOnly';
+import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderReplaceableIconFromPack } from '../button/ButtonSlices';
 import { calculateClassesFromButtonType, IconButtonWrapper, renderCommonSpec } from '../general/Button';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
@@ -81,7 +83,14 @@ export const renderButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryB
       .concat(...spec.type === 'togglebutton' && spec.active ? [ ViewButtonClasses.Ticked ] : []),
     attributes: ariaLabelAttributes
   };
-  const extraBehaviours: Behaviours = [];
+  const extraBehaviours: Behaviours = [
+    DisablingConfigs.button({
+      disabled: () => !providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)
+    }),
+    ReadOnly.receivingConfigConditional(() => {
+      return !providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
+    })
+  ];
 
   const iconButtonSpec = renderCommonSpec(buttonSpec, Optional.some(action), extraBehaviours, dom, components, spec.tooltip, providers);
   return AlloyButton.sketch(iconButtonSpec);

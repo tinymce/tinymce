@@ -60,12 +60,12 @@ const renderCommonItem = <T>(spec: CommonMenuItemSpec<T>, structure: ItemStructu
             return !spec.enabled || !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
           },
           onEnabled: (component) => {
-            if (Disabling.getLastDisabledState(component) || !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)) {
+            if (Disabling.getLastDisabledState(component) === true || !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)) {
               Disabling.set(component, true);
             }
           },
           onDisabled: (component) => {
-            if (!Disabling.getLastDisabledState(component) && providersBackstage.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)) {
+            if (Disabling.getLastDisabledState(component) === false && providersBackstage.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)) {
               Disabling.set(component, false);
             }
           }
