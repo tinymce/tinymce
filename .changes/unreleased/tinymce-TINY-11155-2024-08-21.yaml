@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Sidebar could not be toggled until the skin was loaded.
+time: 2024-08-21T10:01:13.080247+10:00
+custom:
+  Issue: TINY-11155
