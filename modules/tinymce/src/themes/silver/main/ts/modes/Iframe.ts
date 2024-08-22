@@ -107,16 +107,19 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   Attachment.attachSystemAfter(eTargetNode, mainUi.mothership);
   attachUiMotherships(editor, uiRoot, uiRefs);
 
-  // TINY-10343: Using `SkinLoaded` instead of `PostRender` because if the skin loading takes too long you run in to rendering problems since things are measured before the CSS is being applied
-  editor.on('SkinLoaded', () => {
-    // Set the sidebar before the toolbar and menubar
-    // - each sidebar has an associated toggle toolbar button that needs to check the
-    //   sidebar that is set to determine its active state on setup
+  editor.on('PostRender', () => {
     OuterContainer.setSidebar(
       outerContainer,
       rawUiConfig.sidebar,
       Options.getSidebarShow(editor)
     );
+  });
+
+  // TINY-10343: Using `SkinLoaded` instead of `PostRender` because if the skin loading takes too long you run in to rendering problems since things are measured before the CSS is being applied
+  editor.on('SkinLoaded', () => {
+    // Set the sidebar before the toolbar and menubar
+    // - each sidebar has an associated toggle toolbar button that needs to check the
+    //   sidebar that is set to determine its active state on setup
 
     setToolbar(editor, uiRefs, rawUiConfig, backstage);
     lastToolbarWidth.set(editor.getWin().innerWidth);
