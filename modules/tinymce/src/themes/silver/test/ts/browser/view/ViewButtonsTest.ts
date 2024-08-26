@@ -1,7 +1,7 @@
-import { UiFinder } from '@ephox/agar';
+import { FocusTools, UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { Class } from '@ephox/sugar';
+import { Class, SugarDocument } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -68,6 +68,18 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsTest', () => {
                   onAction: Fun.noop
                 }
               ]
+            },
+            {
+              type: 'togglebutton',
+              text: 'button-focus-api',
+              tooltip: 'button-focus-api',
+              icon: 'help',
+              onAction: (api) => {
+                // focusing something else and then running api.focus to refocus the button (whitout it we would focus an already focused button)
+                FocusTools.setFocus(TinyDom.container(editor), '.tox-view');
+                FocusTools.isOnSelector('Focus should be on clicked button', SugarDocument.getDocument(), `.tox-view`);
+                api.focus();
+              }
             }
           ],
           onShow: (api: any) => {
@@ -129,6 +141,15 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsTest', () => {
       assert.isFalse(Class.has(buttonActiveFalse, ViewButtonClasses.Ticked), 'button with active false should not have ticked class');
       const buttonNoActive = getButtonByTitle('button-no-active');
       assert.isFalse(Class.has(buttonNoActive, ViewButtonClasses.Ticked), 'button without active flag should not have ticked class');
+    });
+
+    it('TINY-11122: view button should be focused after using focus api function', async () => {
+      const editor = hook.editor();
+      toggleView('myview1');
+      await UiFinder.pWaitFor('buttons should be showed', TinyDom.container(editor), '[aria-label="button-active-true"]');
+
+      clickViewButton(editor, 'button-focus-api');
+      FocusTools.isOnSelector('Focus should be on clicked button', SugarDocument.getDocument(), `button[aria-label='button-focus-api']`);
     });
   });
 });
