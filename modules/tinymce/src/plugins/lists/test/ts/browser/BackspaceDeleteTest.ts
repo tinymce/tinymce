@@ -69,11 +69,7 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
     let inputEventCounter = 0;
     const inputEventHandler = () => inputEventCounter++;
 
-    const li = editor.dom.select('li')[0].childNodes.item(0);
-    const rng = editor.dom.createRng();
-    rng.setStart(li, 0);
-    rng.setEnd(li, 1);
-    editor.selection.setRng(rng);
+    TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
 
     editor.on('input', inputEventHandler);
     editor.plugins.lists.backspaceDelete();
