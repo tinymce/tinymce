@@ -273,7 +273,18 @@ const hasListSelection = (editor: Editor) => {
 const backspaceDeleteRange = (editor: Editor): boolean => {
   if (hasListSelection(editor)) {
     editor.undoManager.transact(() => {
+      // Some delete actions may prevent the input event from being fired. If we do not detect it, we fire it ourselves.
+      let shouldFireInput = true;
+      const inputHandler = () => shouldFireInput = false;
+
+      editor.on('input', inputHandler);
       editor.execCommand('Delete');
+      editor.off('input', inputHandler);
+
+      if (shouldFireInput) {
+        editor.dispatch('input');
+      }
+
       NormalizeLists.normalizeLists(editor.dom, editor.getBody());
     });
 
@@ -312,6 +323,6 @@ const setup = (editor: Editor): void => {
 };
 
 export {
-  setup,
-  backspaceDelete
+  backspaceDelete,
+  setup
 };
