@@ -61,6 +61,24 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteTest', () => {
     assert.equal(editor.selection.getNode().nodeName, 'LI');
   });
 
+  it('TINY-11100: Backspacing with a selection should cause an input event', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul><li>ab</li></ul>');
+
+    editor.focus();
+    let inputEventCounter = 0;
+    const inputEventHandler = () => inputEventCounter++;
+
+    TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
+
+    editor.on('input', inputEventHandler);
+    editor.plugins.lists.backspaceDelete();
+    editor.off('input', inputEventHandler);
+
+    assert.equal(inputEventCounter, 1);
+    TinyAssertions.assertContent(editor, '<ul><li>b</li></ul>');
+  });
+
   it('TBA: Backspace at end of single LI in UL with STRONG', () => {
     const editor = hook.editor();
     const content = '<ul><li><span>a</span><strong>b</strong></li></ul>';
