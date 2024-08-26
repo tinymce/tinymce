@@ -105,14 +105,14 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
           }
         },
         onEnabled: (component) => {
-          if (prefix === ToolbarButtonClasses.Button && (Disabling.getLastDisabledState(component) === true || !backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode))) {
-            Disabling.set(component, true);
-          }
+          Disabling.getLastDisabledState(component)
+            .filter((disabled) => prefix === ToolbarButtonClasses.Button && (disabled || !backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)))
+            .each(() => Disabling.set(component, true));
         },
-        onDisabled: (comp) => {
-          if (prefix === ToolbarButtonClasses.Button && Disabling.getLastDisabledState(comp) === false && backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)) {
-            Disabling.set(comp, false);
-          }
+        onDisabled: (component) => {
+          Disabling.getLastDisabledState(component)
+            .filter((disabled) => prefix === ToolbarButtonClasses.Button && !disabled && backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode))
+            .each(() => Disabling.set(component, false));
         }
       }),
       ReadOnly.receivingConfigConditional((comp) => {
@@ -120,7 +120,7 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
           case MenuButtonClasses.Button:
             return !backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
           case ToolbarButtonClasses.Button:
-            return Disabling.getLastDisabledState(comp) === true || !backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
+            return Disabling.getLastDisabledState(comp).getOr(false) || !backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
           default:
             return true;
         }

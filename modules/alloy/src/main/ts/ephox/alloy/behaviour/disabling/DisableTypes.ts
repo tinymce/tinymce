@@ -12,7 +12,7 @@ export interface DisableBehaviour extends Behaviour.AlloyBehaviour<DisableConfig
   onLoad: (component: AlloyComponent) => void;
   set: (component: AlloyComponent, disabled: boolean) => void;
   setAndStoreState: (component: AlloyComponent, disabled: boolean) => void;
-  getLastDisabledState: (component: AlloyComponent) => boolean;
+  getLastDisabledState: (component: AlloyComponent) => Optional<boolean>;
 }
 
 export interface DisableConfig extends Behaviour.BehaviourConfigDetail {
@@ -32,6 +32,6 @@ export interface DisableConfigSpec extends Behaviour.BehaviourConfigSpec {
 }
 
 export interface DisableState extends BehaviourState {
-  getLastDisabledState: () => boolean | undefined;
+  getLastDisabledState: () => Optional<boolean>;
   setLastDisabledState: (state: boolean) => void;
 }

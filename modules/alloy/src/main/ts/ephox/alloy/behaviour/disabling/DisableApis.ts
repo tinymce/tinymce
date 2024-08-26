@@ -1,4 +1,4 @@
-import { Arr } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Attribute, Class, SugarNode } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
@@ -78,7 +78,7 @@ const setAndStoreState = (component: AlloyComponent, disableConfig: DisableConfi
   f(component, disableConfig, disableState, true);
 };
 
-const getLastDisabledState = (_: AlloyComponent, __: DisableConfig, disableState: DisableState): boolean | undefined =>
+const getLastDisabledState = (_: AlloyComponent, __: DisableConfig, disableState: DisableState): Optional<boolean> =>
   disableState.getLastDisabledState();
 
 export {

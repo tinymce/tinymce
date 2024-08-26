@@ -1,10 +1,10 @@
-import { Cell } from '@ephox/katamari';
+import { Singleton } from '@ephox/katamari';
 
 import { nuState } from '../common/BehaviourState';
 import { DisableState } from './DisableTypes';
 
 const init = (): DisableState => {
-  const lastDisabledState = Cell<boolean | undefined>(undefined);
+  const lastDisabledState = Singleton.value<boolean>();
 
   const readState = () => 'last disabled state:' + lastDisabledState.get();
 

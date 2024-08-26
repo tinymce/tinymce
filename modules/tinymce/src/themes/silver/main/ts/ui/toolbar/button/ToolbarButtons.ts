@@ -139,14 +139,14 @@ const renderCommonStructure = (
         DisablingConfigs.toolbarButton({
           disabled: () => !providersBackstage.isButtonAllowedInCurrentMode(allowedInReadonlyUiMode) || providersBackstage.isDisabled(),
           onEnabled: (component) => {
-            if (Disabling.getLastDisabledState(component) === true || !providersBackstage.isButtonAllowedInCurrentMode(allowedInReadonlyUiMode)) {
-              Disabling.set(component, true);
-            }
+            Disabling.getLastDisabledState(component)
+              .filter((disabled) => disabled || !providersBackstage.isButtonAllowedInCurrentMode(allowedInReadonlyUiMode))
+              .each(() => Disabling.set(component, true));
           },
           onDisabled: (component) => {
-            if (Disabling.getLastDisabledState(component) === false && providersBackstage.isButtonAllowedInCurrentMode(allowedInReadonlyUiMode)) {
-              Disabling.set(component, false);
-            }
+            Disabling.getLastDisabledState(component)
+              .filter((disabled) => !disabled && !providersBackstage.isButtonAllowedInCurrentMode(allowedInReadonlyUiMode))
+              .each(() => Disabling.set(component, false));
           }
         }),
         ReadOnly.receivingConfigConditional(() => {
@@ -242,17 +242,18 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
               return !spec.enabled || !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
             },
             onEnabled: (component) => {
-              if (Disabling.getLastDisabledState(component) === true || !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)) {
-                Disabling.set(component, true);
-              }
-            }, onDisabled: (comp) => {
-              if (Disabling.getLastDisabledState(comp) === false && providersBackstage.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)) {
-                Disabling.set(comp, false);
-              }
+              Disabling.getLastDisabledState(component)
+                .filter((disabled) => disabled || !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode))
+                .each(() => Disabling.set(component, true));
+            },
+            onDisabled: (component) => {
+              Disabling.getLastDisabledState(component)
+                .filter((disabled) => !disabled && providersBackstage.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode))
+                .each(() => Disabling.set(component, false));
             }
           }),
           ReadOnly.receivingConfigConditional((comp: AlloyComponent) => {
-            return Disabling.getLastDisabledState(comp) === true || !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
+            return Disabling.getLastDisabledState(comp).getOr(false) || !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
           })
         ].concat(specialisation.toolbarButtonBehaviours)
       ),
@@ -402,18 +403,18 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
           return !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
         },
         onEnabled: (component) => {
-          if (Disabling.getLastDisabledState(component) === true || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)) {
-            Disabling.set(component, true);
-          }
+          Disabling.getLastDisabledState(component)
+            .filter((disabled) => disabled || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode))
+            .each(() => Disabling.set(component, true));
         },
         onDisabled: (component) => {
-          if (Disabling.getLastDisabledState(component) === false && sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)) {
-            Disabling.set(component, false);
-          }
+          Disabling.getLastDisabledState(component)
+            .filter((disabled) => !disabled && sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode))
+            .each(() => Disabling.set(component, false));
         }
       }),
       ReadOnly.receivingConfigConditional((comp: AlloyComponent) => {
-        return Disabling.getLastDisabledState(comp) === true || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
+        return Disabling.getLastDisabledState(comp).getOr(false) || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
       }),
       AddEventsBehaviour.config('split-dropdown-events', [
         AlloyEvents.runOnAttached((comp, _se) => UiUtils.forceInitialSize(comp)),
@@ -464,18 +465,18 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
               return !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
             },
             onEnabled: (component) => {
-              if (Disabling.getLastDisabledState(component) === true || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)) {
-                Disabling.set(component, true);
-              }
+              Disabling.getLastDisabledState(component)
+                .filter((disabled) => disabled || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode))
+                .each(() => Disabling.set(component, true));
             },
             onDisabled: (component) => {
-              if (Disabling.getLastDisabledState(component) === false && sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)) {
-                Disabling.set(component, false);
-              }
+              Disabling.getLastDisabledState(component)
+                .filter((disabled) => !disabled && sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode))
+                .each(() => Disabling.set(component, false));
             }
           }),
           ReadOnly.receivingConfigConditional((comp: AlloyComponent) => {
-            return Disabling.getLastDisabledState(comp) === true || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
+            return Disabling.getLastDisabledState(comp).getOr(false) || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
           })
         ]), sharedBackstage.providers, undefined, spec.allowedInReadonlyUiMode)
       ),
@@ -492,7 +493,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
             }
           }),
           ReadOnly.receivingConfigConditional((comp: AlloyComponent) => {
-            return Disabling.getLastDisabledState(comp) === true || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
+            return Disabling.getLastDisabledState(comp).getOr(false) || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode);
           }),
           Icons.addFocusableBehaviour()
         ])

@@ -293,14 +293,14 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
         DisablingConfigs.button({
           disabled: () => !spec.enabled || !backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode),
           onEnabled: (component) => {
-            if (Disabling.getLastDisabledState(component) === true || !backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)) {
-              Disabling.set(component, true);
-            }
+            Disabling.getLastDisabledState(component)
+              .filter((disabled) => disabled || !backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode))
+              .each(() => Disabling.set(component, true));
           },
           onDisabled: (component) => {
-            if (Disabling.getLastDisabledState(component) === false && backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)) {
-              Disabling.set(component, false);
-            }
+            Disabling.getLastDisabledState(component)
+              .filter((disabled) => !disabled && backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode))
+              .each(() => Disabling.set(component, false));
           }
         }),
         ReadOnly.receivingConfigConditional(() => !backstage.shared.providers.isButtonAllowedInCurrentMode(spec.allowedInReadonlyUiMode)),
