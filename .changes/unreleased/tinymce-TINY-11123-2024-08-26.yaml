@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Dropdowns would not adjust width after window resize.
+time: 2024-08-26T17:39:32.903555+02:00
+custom:
+  Issue: TINY-11123
