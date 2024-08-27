@@ -39,17 +39,16 @@ const registry = (): Registry.Registry => {
      */
     addButton: bridge.addButton,
 
-    // TODO: change this
     /**
      * Registers a new toolbar label.
      * <br>
-     * For information on creating a basic toolbar button, see:
-     * <a href="https://www.tiny.cloud/docs/tinymce/7/custom-basic-toolbar-button/">
-     * UI Components - Types of toolbar buttons: Basic button</a>.
+     * For information on creating a toolbar label, see:
+     * <a href="https://www.tiny.cloud/docs/tinymce/7/custom-basic-toolbar-button/"> TODO: change this to the correct URL
+     * UI Components - Types of toolbar label: Basic button</a>.
      *
-     * @method addButton
-     * @param {String} name Unique name identifying the button, this button name will be used in the toolbar configuration to reference the button.
-     * @param {Toolbar.ToolbarButtonSpec} obj the button configuration object.
+     * @method addLabel
+     * @param {String} name Unique name identifying the label, this label name will be used in the toolbar configuration to reference the label.
+     * @param {Toolbar.ToolbarLabelSpec} obj the label configuration object.
      */
     addToolbarLabel: bridge.addToolbarLabel,
 
