@@ -139,6 +139,8 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
     const element = SugarElement.fromDom(getTreeItem('.tox-tree__label[aria-label="Dir2"').element.dom.parentElement);
     SelectorFind.child(element, '.tox-icon-custom-state').getOrDie();
     SelectorFind.child(SelectorFind.sibling(element, '.tox-tree--directory__children').getOrDie(), '.tox-icon-custom-state');
+    const element2 = SugarElement.fromDom(getTreeItem('.tox-tree__label[aria-label="Dir"').element.dom.parentElement);
+    assert.isNull(SelectorFind.descendant(element2, '.tox-icon-custom-state').getOrNull());
   });
 
   it('TINY-9614: Basic tree interactions', async () => {
