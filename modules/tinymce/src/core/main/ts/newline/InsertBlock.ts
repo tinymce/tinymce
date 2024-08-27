@@ -36,8 +36,11 @@ const isEmptyAnchor = (dom: DOMUtils, elm: Node): boolean => {
   return elm && elm.nodeName === 'A' && dom.isEmpty(elm);
 };
 
-const containerAndSiblingName = (container: Node, nodeName: string) => {
+const containerAndPreviousSiblingName = (container: Node, nodeName: string) => {
   return container.nodeName === nodeName || (container.previousSibling && container.previousSibling.nodeName === nodeName);
+};
+const containerAndNextSiblingName = (container: Node, nodeName: string) => {
+  return container.nodeName === nodeName || (container.nextSibling && container.nextSibling.nodeName === nodeName);
 };
 
 // Returns true if the block can be split into two blocks or not
@@ -241,7 +244,10 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     }
 
     // Caret can be before/after a table or a hr
-    if (containerAndSiblingName(container, 'TABLE') || containerAndSiblingName(container, 'HR')) {
+    if (containerAndPreviousSiblingName(container, 'TABLE') || containerAndPreviousSiblingName(container, 'HR')) {
+      if (containerAndNextSiblingName(container, 'BR')) {
+        return !start;
+      }
       return (isAfterLastNodeInContainer && !start) || (!isAfterLastNodeInContainer && start);
     }
 
@@ -413,7 +419,7 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
 
     newBlock = parentBlockParent.insertBefore(createNewBlock(), parentBlock);
 
-    const root = containerAndSiblingName(parentBlock, 'HR') || afterTable ? newBlock : prevBrOpt.getOr(parentBlock);
+    const root = containerAndPreviousSiblingName(parentBlock, 'HR') || afterTable ? newBlock : prevBrOpt.getOr(parentBlock);
     NewLineUtils.moveToCaretPosition(editor, root);
   } else {
     // Extract after fragment and insert it after the current block
