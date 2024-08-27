@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: Tree component now allows the addition of a custom icon.
+time: 2024-07-31T10:02:00.266569402+02:00
+custom:
+  Issue: TINY-11131
