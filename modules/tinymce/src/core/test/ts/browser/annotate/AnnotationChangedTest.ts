@@ -90,7 +90,6 @@ describe('browser.tinymce.core.annotate.AnnotationChangedTest', () => {
           activate: Fun.noop,
           deactivate: Fun.noop,
           editorReadOnly: {
-            uiEnabled: false,
             selectionEnabled: true,
           },
         });

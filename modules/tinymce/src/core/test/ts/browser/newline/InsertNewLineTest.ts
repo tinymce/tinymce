@@ -19,7 +19,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         activate: Fun.noop,
         deactivate: Fun.noop,
         editorReadOnly: {
-          uiEnabled: true,
           selectionEnabled: true
         }
       });

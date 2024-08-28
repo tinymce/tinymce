@@ -5,7 +5,6 @@ import { isReadOnly, registerReadOnlyContentFilters, registerReadOnlySelectionBl
 import Editor from './Editor';
 
 export interface ReadOnlyProperty {
-  uiEnabled?: boolean;
   selectionEnabled?: boolean;
 }
 
@@ -26,14 +25,6 @@ export interface EditorMode {
    * @return {boolean} true if the editor content area allows selection.
    */
   isSelectionEnabled: () => boolean;
-
-  /**
-   * Checks if the editor user interface is in a readonly state.
-   *
-   * @method isUiEnabled
-   * @return {boolean} true if the editor user interface is enabled.
-   */
-  isUiEnabled: () => boolean;
 
   /**
    * Checks if the editor content is in a readonly state.
@@ -111,7 +102,6 @@ export const create = (editor: Editor): EditorMode => {
   registerReadOnlySelectionBlockers(editor);
 
   return {
-    isUiEnabled: () => getEditorReadOnlyProperty(activeMode, 'uiEnabled'),
     isSelectionEnabled: () => getEditorReadOnlyProperty(activeMode, 'selectionEnabled'),
     isReadOnly: () => isReadOnly(editor),
     set: (mode: string) => setMode(editor, availableModes.get(), activeMode, mode),

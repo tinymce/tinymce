@@ -23,7 +23,6 @@ describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
         activate: Fun.noop,
         deactivate: Fun.noop,
         editorReadOnly: {
-          uiEnabled: false,
           selectionEnabled: true,
         },
       });

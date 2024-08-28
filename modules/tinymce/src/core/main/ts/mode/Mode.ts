@@ -68,7 +68,6 @@ const registerMode = (availableModes: Record<string, EditorModeApi>, mode: strin
       ...api,
       editorReadOnly: Type.isBoolean(api.editorReadOnly) ? api.editorReadOnly : {
         selectionEnabled: api.editorReadOnly.selectionEnabled ?? false,
-        uiEnabled: api.editorReadOnly.uiEnabled ?? false,
       }
     }
   };

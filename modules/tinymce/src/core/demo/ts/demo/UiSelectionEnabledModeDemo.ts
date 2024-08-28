@@ -30,7 +30,6 @@ export default (): void => {
           ed.on('SwitchMode', toggleActive);
           return () => ed.off('SwitchMode', toggleActive);
         },
-        allowedModes: [ 'design', 'readonly' ]
       };
       ed.ui.registry.addToggleMenuItem(mode, toggleSpec);
       ed.ui.registry.addToggleButton(mode, toggleSpec);
@@ -38,14 +37,14 @@ export default (): void => {
     ed.mode.register('readonlyUIMode', {
       activate: () => console.log('Readonly UI: Activated'),
       deactivate: () => console.log('Readonly UI: Deactivated'),
-      editorReadOnly: { uiEnabled: true, selectionEnabled: false }
+      editorReadOnly: { selectionEnabled: false }
     });
     makeModeUI('readonlyUIMode');
 
     ed.mode.register('readonlySelectionMode', {
       activate: () => console.log('Readonly Selection: Activated'),
       deactivate: () => console.log('Readonly Selection: Deactivated'),
-      editorReadOnly: { selectionEnabled: true, uiEnabled: false }
+      editorReadOnly: { selectionEnabled: true }
     });
     makeModeUI('readonlySelectionMode');
 
