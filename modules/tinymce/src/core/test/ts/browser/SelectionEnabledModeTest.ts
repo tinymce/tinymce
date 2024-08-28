@@ -29,7 +29,6 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
         activate: Fun.noop,
         deactivate: Fun.noop,
         editorReadOnly: {
-          uiEnabled: false,
           selectionEnabled: true,
         },
       });

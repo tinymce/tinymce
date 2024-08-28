@@ -573,7 +573,6 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
           activate: Fun.noop,
           deactivate: Fun.noop,
           editorReadOnly: {
-            uiEnabled: true,
             selectionEnabled: true
           }
         });

@@ -25,9 +25,7 @@ import { formActionEvent, formCancelEvent, formSubmitEvent } from './FormEvents'
 type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];
 type AlloyButtonSpec = Parameters<typeof AlloyButton['sketch']>[0];
 
-type ButtonSpec = Omit<Dialog.Button, 'type'> & {
-  readonly allowedModes?: string[];
-};
+type ButtonSpec = Omit<Dialog.Button, 'type'>;
 type FooterToggleButtonSpec = Omit<Dialog.DialogFooterToggleButton, 'type'>;
 type FooterButtonSpec = Omit<Dialog.DialogFooterNormalButton, 'type'> | Omit<Dialog.DialogFooterMenuButton, 'type'> | FooterToggleButtonSpec;
 
@@ -50,8 +48,8 @@ export const renderCommonSpec = (
 
   const common = {
     buttonBehaviours: Behaviour.derive([
-      DisablingConfigs.button(() => !spec.enabled || !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedModes)),
-      ReadOnly.receivingConfigConditional(() => !providersBackstage.isButtonAllowedInCurrentMode(spec.allowedModes)),
+      DisablingConfigs.button(() => !spec.enabled || providersBackstage.isDisabled()),
+      ReadOnly.receivingConfig(),
       Tabstopping.config({}),
       ...tooltip.map(
         (t) => Tooltipping.config(
@@ -225,7 +223,7 @@ const renderToggleButton = (spec: FooterToggleButtonSpec, providers: UiFactoryBa
     primary: buttonType === 'primary',
     tooltip: spec.tooltip,
     enabled: spec.enabled ?? false,
-    borderless: false,
+    borderless: false
   };
 
   const tooltipAttributes = buttonSpec.tooltip.or(spec.text).map((tooltip) => ({
@@ -270,7 +268,6 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
     const fixedSpec: Toolbar.ToolbarMenuButton = {
       ...spec,
       type: 'menubutton',
-      allowedModes: [ 'design' ],
       // Currently, dialog-based menu buttons cannot be searchable.
       search: Optional.none(),
       onSetup: (api) => {
@@ -287,7 +284,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
     const action = getAction(spec.name, buttonType);
     const buttonSpec = {
       ...spec,
-      borderless: false,
+      borderless: false
     };
     return renderButton(buttonSpec, action, backstage.shared.providers, [ ]);
   } else if (isToggleButtonSpec(spec, buttonType)) {
@@ -303,10 +300,7 @@ export const renderDialogButton = (spec: ButtonSpec, providersBackstage: UiFacto
   const action = getAction(spec.name, 'custom');
   return renderFormField(Optional.none(), AlloyFormField.parts.field({
     factory: AlloyButton,
-    ...renderButtonSpec({
-      ...spec,
-      allowedModes: [ 'design' ]
-    }, Optional.some(action), providersBackstage, [
+    ...renderButtonSpec(spec, Optional.some(action), providersBackstage, [
       RepresentingConfigs.memory(''),
       ComposingConfigs.self()
     ])

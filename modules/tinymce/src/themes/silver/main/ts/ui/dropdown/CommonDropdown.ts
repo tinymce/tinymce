@@ -1,5 +1,5 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Disabling, Dropdown as AlloyDropdown, Focusing, GuiFactory, Highlighting,
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Dropdown as AlloyDropdown, Focusing, GuiFactory, Highlighting,
   Keying, MaxHeight, Memento, NativeEvents, Replacing, Representing, SimulatedEvent, SketchSpec, SystemEvents, TieredData, Tooltipping, Unselecting
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
@@ -19,7 +19,6 @@ import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import * as MenuParts from '../menus/menu/MenuParts';
 import { focusSearchField, handleRedirectToMenuItem, handleRefetchTrigger, updateAriaOnDehighlight, updateAriaOnHighlight } from '../menus/menu/searchable/SearchableMenu';
 import { RedirectMenuItemInteractionEvent, redirectMenuItemInteractionEvent, RefetchTriggerEvent, refetchTriggerEvent } from '../menus/menu/searchable/SearchableMenuEvents';
-import { MenuButtonClasses } from '../toolbar/button/ButtonClasses';
 
 export const updateMenuText = Id.generate('update-menu-text');
 export const updateMenuIcon = Id.generate('update-menu-icon');
@@ -49,7 +48,6 @@ export interface CommonDropdownSpec<T> {
   readonly dropdownBehaviours: Behaviour.NamedConfiguredBehaviour<any, any, any>[];
   readonly searchable?: boolean;
   readonly ariaLabel: Optional<string>;
-  readonly allowedModes?: string[];
 }
 
 // TODO: Use renderCommonStructure here.
@@ -160,18 +158,8 @@ const renderCommonDropdown = <T>(
 
       dropdownBehaviours: Behaviour.derive([
         ...spec.dropdownBehaviours,
-        DisablingConfigs.button(() => {
-          if (prefix === MenuButtonClasses.Button) {
-            return !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedModes);
-          }
-          return spec.disabled || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedModes);
-        }),
-        ReadOnly.receivingConfigConditional((comp) => {
-          if (prefix === MenuButtonClasses.Button) {
-            return !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedModes);
-          }
-          return Disabling.getLastDisabledState(comp) || !sharedBackstage.providers.isButtonAllowedInCurrentMode(spec.allowedModes);
-        }),
+        DisablingConfigs.button(() => spec.disabled || sharedBackstage.providers.isDisabled()),
+        ReadOnly.receivingConfig(),
         // INVESTIGATE (TINY-9012): There was a old comment here about something not quite working, and that
         // we can still get the button focused. It was probably related to Unselecting.
         Unselecting.config({}),

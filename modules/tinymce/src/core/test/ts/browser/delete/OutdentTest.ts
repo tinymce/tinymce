@@ -12,7 +12,6 @@ describe('browser.tinymce.core.delete.OutdentTest', () => {
       ed.mode.register('testmode', {
         editorReadOnly: {
           selectionEnabled: true,
-          uiEnabled: true
         },
         deactivate: Fun.noop,
         activate: Fun.noop

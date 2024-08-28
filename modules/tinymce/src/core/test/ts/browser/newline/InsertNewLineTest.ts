@@ -19,7 +19,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         activate: Fun.noop,
         deactivate: Fun.noop,
         editorReadOnly: {
-          uiEnabled: true,
           selectionEnabled: true
         }
       });
@@ -195,6 +194,15 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         setSelectionTo(editor, [], 1);
         insertNewline(editor, {});
         TinyAssertions.assertContent(editor, '<table><tbody><tr><td>&nbsp;</td></tr></tbody></table><p>&nbsp;</p><div contenteditable="false">&nbsp;</div>');
+        TinyAssertions.assertCursor(editor, [ 1 ], 0);
+      });
+
+      it('TINY-11110: Placed cursor after a table, before the br, and pressed enter', () => {
+        const editor = hook.editor();
+        editor.setContent('<div><table><tbody><tr><td><br></td></tr></tbody></table><br></div>');
+        setSelectionTo(editor, [ 0 ], 1);
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<div><table><tbody><tr><td>&nbsp;</td></tr></tbody></table></div><div>&nbsp;</div>');
         TinyAssertions.assertCursor(editor, [ 1 ], 0);
       });
 
@@ -936,6 +944,16 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         setSelectionTo(editor, [], 1);
         insertNewline(editor, {});
         TinyAssertions.assertContent(editor, '<table><tbody><tr><td>&nbsp;</td></tr></tbody></table><div contenteditable="false">&nbsp;</div>');
+      });
+
+      it('TINY-11110: Placed cursor after a table, before the br, and pressed enter', () => {
+        const editor = hook.editor();
+        editor.setContent('<div><table><tbody><tr><td><br></td></tr></tbody></table><br></div>');
+        editor.mode.set('testmode');
+        setSelectionTo(editor, [ 0 ], 1);
+        insertNewline(editor, { });
+        TinyAssertions.assertContent(editor, '<div><table><tbody><tr><td><br></td></tr></tbody></table><br></div>');
+        TinyAssertions.assertCursor(editor, [ 1 ], 0);
       });
 
       it('TINY-9813: Placed a cursor is placed after a table, with an editable afterwards', () => {

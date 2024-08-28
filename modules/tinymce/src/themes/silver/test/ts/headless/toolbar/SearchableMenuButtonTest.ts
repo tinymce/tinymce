@@ -30,7 +30,6 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
     (store, _doc, _body) => GuiFactory.build(
       renderMenuButton(
         {
-          allowedModes: [ 'design' ],
           text: Optional.some('MailMerge'),
           icon: Optional.none(),
           tooltip: Optional.none(),

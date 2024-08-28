@@ -41,8 +41,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
           primary: false,
           buttonType: Optional.some('secondary'),
           enabled: true,
-          icon: Optional.none(),
-          allowedModes: [ 'design', 'readonly ' ]
+          icon: Optional.none()
         },
         {
           type: 'submit',
@@ -52,8 +51,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
           primary: true,
           buttonType: Optional.some('primary'),
           enabled: true,
-          icon: Optional.none(),
-          allowedModes: [ 'design', 'readonly ' ]
+          icon: Optional.none()
         }
       ],
       initialData: {},
@@ -101,7 +99,6 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
             menuItems: () => ({}),
             translate: I18n.translate,
             isDisabled: Fun.never,
-            isButtonAllowedInCurrentMode: Fun.always,
             getOption: (_settingName: string) => undefined,
             tooltips: {
               getConfig: (): TooltippingTypes.TooltippingConfigSpec => {

@@ -13,7 +13,6 @@ describe('browser.tinymce.core.api.commands.NewBlockCommandsTest', () => {
         activate: Fun.noop,
         deactivate: Fun.noop,
         editorReadOnly: {
-          uiEnabled: true,
           selectionEnabled: true
         }
       });

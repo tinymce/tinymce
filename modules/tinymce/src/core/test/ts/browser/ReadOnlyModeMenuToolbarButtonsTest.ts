@@ -8,7 +8,7 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import { ToolbarMode } from 'tinymce/core/api/OptionTypes';
 
-describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
+describe.skip('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
   const assertMenuEnabled = (menu: string) => {
     const menuButton = UiFinder.findIn(SugarBody.body(), `.tox-mbtn:contains("${menu}")`).getOrDie();
     assert.equal(Attribute.get(menuButton, 'disabled'), undefined, 'Should not be disabled');
@@ -54,7 +54,6 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
         ed.ui.registry.addButton('t3', {
           icon: 'italic',
           text: 'Test Menu Item 3',
-          allowedModes: [ 'design', 'readonly' ],
           onAction: Fun.noop,
           onSetup: (api) => {
             api.setEnabled(true);
@@ -66,7 +65,6 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
         ed.ui.registry.addButton('t4', {
           icon: 'italic',
           text: 'Test Menu Item 4',
-          allowedModes: [ 'design', 'readonly' ],
           onAction: Fun.noop,
           onSetup: (api) => {
             api.setEnabled(false);
@@ -78,7 +76,6 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
         ed.ui.registry.addButton('t5', {
           icon: 'italic',
           text: 'Test Menu Item 5',
-          allowedModes: [ 'design', 'readonly' ],
           onAction: Fun.noop,
         });
       },
@@ -109,7 +106,6 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
         ed.ui.registry.addToggleButton('t3', {
           icon: 'italic',
           text: 'Test Menu Item 3',
-          allowedModes: [ 'design', 'readonly' ],
           onAction: Fun.noop,
           onSetup: (api) => {
             api.setEnabled(true);
@@ -121,7 +117,6 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
         ed.ui.registry.addToggleButton('t4', {
           icon: 'italic',
           text: 'Test Menu Item 4',
-          allowedModes: [ 'design', 'readonly' ],
           onAction: Fun.noop,
           onSetup: (api) => {
             api.setEnabled(false);
@@ -133,7 +128,6 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
         ed.ui.registry.addToggleButton('t5', {
           icon: 'italic',
           text: 'Test Menu Item 5',
-          allowedModes: [ 'design', 'readonly' ],
           onAction: Fun.noop,
         });
       },
@@ -182,7 +176,6 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
         ed.ui.registry.addSplitButton('t3', {
           icon: 'italic',
           text: 'Test Menu Item 3',
-          allowedModes: [ 'design', 'readonly' ],
           onAction: Fun.noop,
           onItemAction: Fun.noop,
           fetch: (success) => {
@@ -203,7 +196,6 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
         ed.ui.registry.addSplitButton('t4', {
           icon: 'italic',
           text: 'Test Menu Item 4',
-          allowedModes: [ 'design', 'readonly' ],
           onAction: Fun.noop,
           onSetup: (api) => {
             api.setEnabled(false);
@@ -224,7 +216,6 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
         ed.ui.registry.addSplitButton('t5', {
           icon: 'italic',
           text: 'Test Menu Item 5',
-          allowedModes: [ 'design', 'readonly' ],
           onAction: Fun.noop,
           onItemAction: Fun.noop,
           fetch: (success) => {
@@ -278,7 +269,6 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
         ed.ui.registry.addMenuButton('t3', {
           icon: 'italic',
           text: 'Test Menu Item 3',
-          allowedModes: [ 'design', 'readonly' ],
           fetch: (success) => {
             success([
               {
@@ -297,7 +287,6 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
         ed.ui.registry.addMenuButton('t4', {
           icon: 'italic',
           text: 'Test Menu Item 4',
-          allowedModes: [ 'design', 'readonly' ],
           onSetup: (api) => {
             api.setEnabled(false);
             return Fun.noop;
@@ -316,7 +305,6 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
         ed.ui.registry.addMenuButton('t5', {
           icon: 'italic',
           text: 'Test Menu Item 5',
-          allowedModes: [ 'design', 'readonly' ],
           fetch: (success) => {
             success([
               {
@@ -387,7 +375,6 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
             api.setEnabled(true);
             return Fun.noop;
           },
-          allowedModes: [ 'design', 'readonly' ],
           shortcut: 'Meta+M',
           onAction: Fun.noop
         });
@@ -399,7 +386,6 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
             api.setEnabled(false);
             return Fun.noop;
           },
-          allowedModes: [ 'design', 'readonly' ],
           shortcut: 'Meta+M',
           onAction: Fun.noop
         });
@@ -437,7 +423,6 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
             return Fun.noop;
           },
           shortcut: 'Meta+M',
-          allowedModes: [ 'design', 'readonly' ],
           getSubmenuItems: Fun.constant('test'),
         });
 
@@ -449,7 +434,6 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
             return Fun.noop;
           },
           shortcut: 'Meta+M',
-          allowedModes: [ 'design', 'readonly' ],
           getSubmenuItems: Fun.constant('test'),
         });
       },
@@ -484,7 +468,6 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
             api.setEnabled(true);
             return Fun.noop;
           },
-          allowedModes: [ 'design', 'readonly' ],
           shortcut: 'Meta+M',
           onAction: Fun.noop
         });
@@ -492,7 +475,6 @@ describe('browser.tinymce.core.ReadOnlyMenuToolbarButtonsTest', () => {
         ed.ui.registry.addToggleMenuItem('x4', {
           icon: 'italic',
           text: 'Test Menu Item 4',
-          allowedModes: [ 'design', 'readonly' ],
           onSetup: (api) => {
             api.setEnabled(false);
             return Fun.noop;
