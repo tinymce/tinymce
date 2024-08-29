@@ -14,6 +14,7 @@ export default {
   translate: I18n.translate,
   isDisabled: Fun.never,
   getOption: <T>(name: string): T | undefined => defaultOptions[name],
+  checkButtonContext: Fun.always,
   tooltips: {
     getConfig: (): TooltippingTypes.TooltippingConfigSpec => {
       return {
