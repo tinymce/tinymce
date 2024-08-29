@@ -1,4 +1,5 @@
 {
+  "root": true,
   "extends": "plugin:@tinymce/editor",
   "parserOptions": {
     "sourceType": "module",
@@ -15,6 +16,7 @@
     "@typescript-eslint/no-this-alias": "off",
     "@typescript-eslint/prefer-for-of": "off",
     "@typescript-eslint/prefer-regexp-exec": "off",
+    "@typescript-eslint/require-await": "off",
     "no-empty": "off",
     "no-underscore-dangle": "off",
     "one-var": "off",

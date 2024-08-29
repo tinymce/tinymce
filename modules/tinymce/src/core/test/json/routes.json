@@ -1,94 +1,8 @@
 [
   {
     "request": {
-      "method": "get",
-      "path": "/custom/json_rpc_ok"
-    },
-
-    "response": {
-      "json": {
-        "result": "Hello JSON-RPC",
-        "error": null,
-        "id": 1
-      }
-    }
-  },
-
-  {
-    "request": {
-      "method": "get",
-      "path": "/custom/json_rpc_fail"
-    },
-
-    "response": {
-      "json": {
-        "result": null,
-        "error": {
-          "message": "General failure",
-          "code": 42
-        },
-        "id": 1
-      }
-    }
-  },
-
-  {
-    "request": {
-      "method": "get",
-      "path": "/custom/404"
-    },
-
-    "response": {
-      "status": 404,
-      "json": {}
-    }
-  },
-
-  {
-    "request": {
-      "method": "get",
-      "path": "/custom/404data"
-    },
-    "response": {
-      "status": 404,
-      "json": {
-        "error": {
-          "type": "not_found"
-        }
-      }
-    }
-  },
-
-  {
-    "request": {
-      "method": "get",
-      "path": "/custom/403"
-    },
-    "response": {
-      "status": 403,
-      "json": {}
-    }
-  },
-
-  {
-    "request": {
-      "method": "get",
-      "path": "/custom/403data"
-    },
-    "response": {
-      "status": 403,
-      "json": {
-        "error": {
-          "type": "error"
-          }
-        }
-      }
-  },
-
-  {
-    "request": {
       "method": "post",
-      "path": "/custom/imageUpload"
+      "path": "/custom/tinymce/imageUpload"
     },
 
     "response": {
@@ -97,69 +11,6 @@
         "location": "uploaded_image.jpg"
       }
 
-    }
-  },
-
-  {
-    "request": {
-      "method": "get",
-      "path": "/custom/jax/service/1/auth/google/start",
-      "query": {
-        "apiKey": "123"
-      }
-    },
-
-    "response": {
-      "status": 302,
-      "headers": {
-        "location": "/project/src/test/html/google_oauth_success.html"
-      },
-      "json": {}
-    }
-  },
-
-  {
-    "request": {
-      "method": "post",
-      "path": "/custom/jax/service/1/upload/create",
-      "headers": {
-        "Authorization": "Bearer faketoken"
-      },
-      "query": {
-        "apiKey": "123"
-      }
-    },
-
-    "response": {
-      "json_file": "create_result.json"
-    }
-  },
-
-  {
-    "request": {
-      "method": "post",
-      "path": "/custom/jax/upload"
-    },
-
-    "response": {
-      "json": {}
-    }
-  },
-
-  {
-    "request": {
-      "method": "post",
-      "path": "/custom/jax/service/1/upload/commit/7cf7e619-9f45-4be3-a37f-e36affd8cb7c",
-      "headers": {
-        "Authorization": "Bearer faketoken"
-      },
-      "query": {
-        "apiKey": "123"
-      }
-    },
-
-    "response": {
-      "json": { "status": "ok" }
     }
   },
   {
@@ -366,7 +217,7 @@
   {
     "request": {
       "method": "get",
-      "path": "/custom/audio.mp3"
+      "path": "/custom/tinymce/audio.mp3"
     },
 
     "response": {
@@ -381,7 +232,7 @@
   {
     "request": {
       "method": "get",
-      "path": "/custom/file.pdf"
+      "path": "/custom/tinymce/file.pdf"
     },
 
     "response": {

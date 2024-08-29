@@ -27,8 +27,9 @@
   "scripts": {
     "test": "bedrock-auto -b chrome-headless -d src/test",
     "test-manual": "bedrock -d src/test",
-    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts",
-    "prepublishOnly": "tsc -b"
+    "lint": "eslint --config ../../.eslintrc.json --max-warnings=0 src/**/*.ts",
+    "prepublishOnly": "tsc -b",
+    "build": "tsc"
   },
   "author": "Tiny Technologies, Inc",
   "license": "Apache-2.0",

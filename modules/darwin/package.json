@@ -34,7 +34,8 @@
   "types": "./lib/main/ts/ephox/darwin/api/Main.d.ts",
   "scripts": {
     "test": "tsc -b",
-    "lint": "eslint --config ../../.eslintrc.json src/**/*.ts",
-    "prepublishOnly": "tsc -b"
+    "lint": "eslint --config ../../.eslintrc.json --max-warnings=0 src/**/*.ts",
+    "prepublishOnly": "tsc -b",
+    "build": "tsc"
   }
 }

@@ -124,7 +124,7 @@ describe('browser.tinymce.plugins.image.DialogTest', () => {
   it('TBA: Insert Image Dialog with upload tab', async () => {
     const editor = hook.editor();
     editor.settings.image_advtab = true;
-    editor.settings.images_upload_url = '/custom/imageUpload';
+    editor.settings.images_upload_url = '/custom/tinymce/imageUpload';
     editor.execCommand('mceImage');
     await pAssertFocused('General tab', '.tox-dialog__body-nav-item:contains("General")');
     pressDown(editor);

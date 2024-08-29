@@ -1,18 +1,16 @@
 {
-  "name": "root",
   "private": true,
   "workspaces": [
     "modules/*"
   ],
   "scripts": {
-    "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('You must use Yarn to install, not NPM')\"",
     "tinymce-grunt": "grunt --gruntfile modules/tinymce/Gruntfile.js",
     "tinymce-rollup": "run-s \"tinymce-grunt dev rollup\"",
     "oxide-icons-build": "yarn -s --cwd modules/oxide-icons-default build",
-    "oxide-icons-ci": "yarn --cwd modules/oxide-icons-default ci",
+    "oxide-icons-ci": "yarn -s --cwd modules/oxide-icons-default ci",
     "oxide-build": "yarn -s --cwd modules/oxide build",
     "oxide-start": "yarn -s --cwd modules/oxide start",
-    "oxide-ci": "yarn --cwd modules/oxide ci",
+    "oxide-ci": "yarn -s --cwd modules/oxide ci",
     "tsc": "tsc -b",
     "watch": "tsc -b -w",
     "eslint": "lerna exec --stream --no-bail -- eslint src/**/*.ts",
@@ -24,18 +22,18 @@
     "test": "run-s local-ci",
     "build": "npm-run-all -p oxide-icons-ci oxide-ci -s tinymce-grunt",
     "prepublishOnly": "run-s oxide-icons-ci",
-    "browser-test": "yarn -s grunt browser-auto",
-    "browser-test-manual": "yarn -s grunt browser-manual",
-    "headless-test": "yarn -s grunt headless-auto",
-    "headless-test-firefox": "yarn -s grunt headless-auto --bedrock-browser=firefox-headless",
-    "headless-test-manual": "yarn -s grunt headless-manual",
+    "browser-test": "grunt browser-auto",
+    "browser-test-manual": "grunt browser-manual",
+    "headless-test": "grunt headless-auto",
+    "headless-test-firefox": "grunt headless-auto --bedrock-browser=firefox-headless",
+    "headless-test-manual": "grunt headless-manual",
     "bedrock": "bedrock --customRoutes modules/tinymce/src/core/test/json/routes.json --polyfills Promise Symbol",
     "test-one": "yarn tsc && yarn bedrock-auto -b chrome-headless -f"
   },
   "devDependencies": {
     "@ephox/bedrock-client": "^12.3.2",
     "@ephox/bedrock-server": "^12.4.0",
-    "@ephox/oxide-icons-tools": "^2.2.2",
+    "@ephox/oxide-icons-tools": "^3.1.1",
     "@ephox/swag": "^4.4.0",
     "@ephox/wrap-jsverify": "^2.0.1",
     "@ephox/wrap-prismjs": "^1.29.1-patchfix.3558",
@@ -86,10 +84,11 @@
     "tsconfig-paths-webpack-plugin": "^3.2.0",
     "tslib": "^2.0.0",
     "twemoji": "^13.0.1",
-    "typescript": "^4.4.2",
+    "typescript": "^4.9.5",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.9.0",
     "webpack-livereload-plugin": "^2.1.1"
-  }
+  },
+  "dependencies": {}
 }

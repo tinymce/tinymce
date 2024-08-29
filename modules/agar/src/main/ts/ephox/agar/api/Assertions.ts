@@ -1,4 +1,5 @@
 import { Assert, TestError, TestLabel } from '@ephox/bedrock-client';
+import { Testable } from '@ephox/dispute';
 import { Obj, Optional } from '@ephox/katamari';
 import { Compare, SugarElement, Truncate } from '@ephox/sugar';
 
@@ -40,7 +41,7 @@ const assertHtml = (label: TestLabel, expected: string, actual: string): void =>
   }
 };
 
-const assertStructure = (label: TestLabel, expected: StructAssert, container: SugarElement<any>): void => {
+const assertStructure = (label: TestLabel, expected: StructAssert, container: SugarElement<Node>): void => {
   Logger.sync(label, () => {
     if (expected.type === 'advanced') {
       expected.doAssert(elementQueue([ container ], Optional.none()));
@@ -54,20 +55,19 @@ const assertHtmlStructure = (label: TestLabel, expected: string, actual: string)
   assertStructure(label, ApproxStructure.fromHtml(expected), SugarElement.fromHtml(actual));
 };
 
-const assertHtmlStructure2 = (label: TestLabel, expected: string, actual: SugarElement<any>): void => {
+const assertHtmlStructure2 = (label: TestLabel, expected: string, actual: SugarElement<Node>): void => {
   assertStructure(label, ApproxStructure.fromHtml(expected), actual);
 };
 
-const assertPresence = (label: TestLabel, expected: Record<string, number>, container: SugarElement<any>): void => {
+const assertPresence = (label: TestLabel, expected: Record<string, number>, container: SugarElement<Node>): void => {
   Obj.each(expected, (num: number, selector: string) => {
     const actual = UiFinder.findAllIn(container, selector).length;
     Assert.eq(TestLabel.concat('Did not find ' + num + ' of ' + selector + ', found: ' + actual + '. Test: ', label), num, actual);
   });
 };
+const assertEq: <T>(message: TestLabel, expected: T, actual: T, tt?: Testable.Testable<T>) => void = Assert.eq;
 
-const assertEq = Assert.eq;
-
-const assertDomEq = (label: TestLabel, expected: SugarElement<any>, actual: SugarElement<any>): void => {
+const assertDomEq = (label: TestLabel, expected: SugarElement<Node>, actual: SugarElement<Node>): void => {
   Assert.eq(
     TestLabel.concat(label, () => '\nExpected : ' + Truncate.getHtml(expected) + '\nActual: ' + Truncate.getHtml(actual)),
     true,
@@ -107,3 +107,4 @@ export {
   cAssertHtmlStructure,
   cAssertStructure
 };
+

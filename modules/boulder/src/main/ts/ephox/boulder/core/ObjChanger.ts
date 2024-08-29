@@ -12,8 +12,8 @@ const narrow = <T extends Record<string, any>, F extends Array<keyof T>>(obj: T,
   return r;
 };
 
-const indexOnKey = <T extends Record<string, any>, K extends keyof T>(array: ArrayLike<T>, key: K): {[A in T[K]]: T} => {
-  const obj = { } as {[A in T[K]]: T};
+const indexOnKey = <T extends Record<string, any>, K extends keyof T>(array: ArrayLike<T>, key: K): { [A in T[K]]: T } => {
+  const obj = { } as { [A in T[K]]: T };
   Arr.each(array, (a) => {
     // FIX: Work out what to do here.
     const keyValue: string | number = a[key];
@@ -26,7 +26,7 @@ const exclude = <T extends Record<string, any>, F extends Array<keyof T>>(obj: T
   const r = { } as Omit<T, F[number]>;
   Obj.each(obj, (v, k) => {
     if (!Arr.contains(fields, k)) {
-      r[k] = v;
+      r[k as string] = v;
     }
   });
   return r;
@@ -37,3 +37,4 @@ export {
   exclude,
   indexOnKey
 };
+
