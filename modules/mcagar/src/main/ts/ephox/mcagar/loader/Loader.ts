@@ -90,6 +90,7 @@ const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: 
 
     tinymce.init({
       promotion: false,
+      license_key: 'gpl',
       ...settings,
       ...targetSettings,
       setup: (editor: Editor) => {
