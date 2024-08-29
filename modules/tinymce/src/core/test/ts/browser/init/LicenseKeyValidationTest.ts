@@ -91,6 +91,7 @@ describe('browser.tinymce.core.init.LicenseKeyValidationTest', () => {
     after(afterHandler);
 
     TinyHooks.bddSetupLight<Editor>({
+      license_key: undefined,
       base_url: '/project/tinymce/js/tinymce'
     });
 
