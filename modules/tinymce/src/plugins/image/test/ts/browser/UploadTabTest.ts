@@ -203,4 +203,21 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
     await pAssertSrcTextValue('logo.jfif');
     closeDialog(editor);
   });
+
+  it('TINY-: DialogFocusAfterErrorTest', async () => {
+    const editor = hook.editor();
+    editor.setContent('');
+    editor.options.set('images_upload_handler', () => {
+      throw Error('This is an upload error');
+    });
+
+    TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
+    await TinyUiActions.pWaitForDialog(editor);
+    TinyUiActions.clickOnUi(editor, '.tox-tab:contains("Upload")');
+    await pTriggerUpload(editor);
+    await TinyUiActions.pWaitForDialog(editor, '[role="dialog"] p:contains("This is an upload error")');
+    TinyUiActions.clickOnUi(editor, 'button:contains("OK")');
+    await FocusTools.pTryOnSelector('After closing the error alert the focus should be on the image dialog', SugarDocument.getDocument(), '[role="tab"]:contains("Upload")');
+    closeDialog(editor);
+  });
 });

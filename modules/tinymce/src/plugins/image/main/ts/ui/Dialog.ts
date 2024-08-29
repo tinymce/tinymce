@@ -29,7 +29,7 @@ interface Helpers {
   readonly imageSize: (url: string) => Promise<Size>;
   readonly addToBlobCache: (blobInfo: BlobInfo) => void;
   readonly createBlobCache: (file: File, blobUri: string, dataUrl: string) => BlobInfo;
-  readonly alertErr: (message: string) => void;
+  readonly alertErr: (message: string, callback: () => void) => void;
   readonly normalizeCss: (cssText: string | undefined) => string;
   readonly parseStyle: (cssText: string) => StyleMap;
   readonly serializeStyle: (stylesArg: StyleMap, name?: string) => string;
@@ -246,7 +246,9 @@ const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDi
             finalize();
           }).catch((err) => {
             finalize();
-            helpers.alertErr(err);
+            helpers.alertErr(err, () => {
+              api.focusSelf();
+            });
           });
         } else {
           helpers.addToBlobCache(blobInfo);
@@ -336,8 +338,8 @@ const addToBlobCache = (editor: Editor) => (blobInfo: BlobInfo): void => {
   editor.editorUpload.blobCache.add(blobInfo);
 };
 
-const alertErr = (editor: Editor) => (message: string): void => {
-  editor.windowManager.alert(message);
+const alertErr = (editor: Editor) => (message: string, callback: () => void): void => {
+  editor.windowManager.alert(message, callback);
 };
 
 const normalizeCss = (editor: Editor) => (cssText: string | undefined): string =>

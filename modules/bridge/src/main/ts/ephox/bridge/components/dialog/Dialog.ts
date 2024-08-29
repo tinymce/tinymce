@@ -13,6 +13,7 @@ export interface DialogInstanceApi<T extends DialogData> {
   setData: (data: Partial<T>) => void;
   setEnabled: (name: string, state: boolean) => void;
   focus: (name: string) => void;
+  focusSelf: () => void;
   showTab: (name: string) => void;
   redial: (nu: DialogSpec<T>) => void;
   block: (msg: string) => void;

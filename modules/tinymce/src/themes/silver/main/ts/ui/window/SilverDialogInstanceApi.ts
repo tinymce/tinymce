@@ -88,6 +88,10 @@ const getDialogApi = <T extends Dialog.DialogData>(
     getCompByName(access, name).each(Focusing.focus);
   };
 
+  const focusSelf = () => {
+    Focusing.focus(access.getRoot());
+  };
+
   const block = (message: string) => {
     if (!Type.isString(message)) {
       throw new Error('The dialogInstanceAPI.block function should be passed a blocking message of type string as an argument');
@@ -152,6 +156,7 @@ const getDialogApi = <T extends Dialog.DialogData>(
     setData,
     setEnabled,
     focus,
+    focusSelf,
     block,
     unblock,
     showTab,
