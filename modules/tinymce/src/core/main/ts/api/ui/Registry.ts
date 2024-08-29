@@ -240,6 +240,8 @@ const registry = (): Registry.Registry => {
      */
     addView: bridge.addView,
 
+    addContext: bridge.addContext,
+
     /* note getAll is an internal method and may not be supported in future revisions */
     getAll: bridge.getAll
   };
