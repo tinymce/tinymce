@@ -184,7 +184,7 @@ const matchWidth = (hotspot: AlloyComponent, container: AlloyComponent, useMinWi
   const menu = Composing.getCurrent(container).getOr(container);
   const buttonWidth = Width.get(hotspot.element);
   if (useMinWidth) {
-    Css.set(menu.element, 'min-width', `var(--dropdown-width)`);
+    Css.set(menu.element, 'min-width', buttonWidth + 'px');
   } else {
     Width.set(menu.element, buttonWidth);
   }
