@@ -4,7 +4,8 @@ import Editor from 'tinymce/core/api/Editor';
 
 const register = (editor: Editor): void => {
   editor.ui.registry.addContext('editable', (editor: Editor) => {
-    return editor.selection.isEditable();
+    console.log('check editable', editor.selection.isEditable());
+    return editor.selection.isEditable() || editor.selection.getNode().className === 'special';
   });
 
   editor.ui.registry.addContext('mode', (editor: Editor, mode: string) => {

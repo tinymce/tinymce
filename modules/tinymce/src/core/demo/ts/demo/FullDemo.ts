@@ -27,6 +27,12 @@ export default (): void => {
         console.log('onHide ' + name);
       }
     });
+
+    ed.ui.registry.addButton('foo', {
+      text: 'Foo',
+      context: 'editable',
+      onAction: () => console.log('foo')
+    });
   };
 
   const makeCodeView = (editor: Editor) => {
@@ -62,6 +68,7 @@ export default (): void => {
   const settings: RawEditorOptions = {
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     content_css: '../../../../js/tinymce/skins/content/default/content.css',
+    editable_root: false,
     content_langs: [
       { title: 'English (US)', code: 'en_us' },
       { title: 'Spanish', code: 'es' },
@@ -122,7 +129,7 @@ export default (): void => {
     // rtl_ui: true,
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
-    toolbar: 'undo redo sidebar1 fontsizeinput | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | align lineheight fontsize fontfamily blocks styles insertfile | styles | ' +
+    toolbar: 'foo undo redo sidebar1 fontsizeinput | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | align lineheight fontsize fontfamily blocks styles insertfile | styles | ' +
     'bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons table codesample code language | ltr rtl',
     contextmenu: 'link linkchecker image table lists configurepermanentpen',
 
