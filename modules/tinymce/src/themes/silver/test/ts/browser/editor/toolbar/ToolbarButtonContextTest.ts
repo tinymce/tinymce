@@ -27,6 +27,17 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
     return () => ed.off('NodeChange', handler);
   };
 
+  const makeToggleButton = (ed: Editor, spec: { name: string; text: string; context: string; onSetup?: (api: any) => (api: any) => void; enabled?: boolean }) => {
+    ed.ui.registry.addToggleButton(spec.name, {
+      icon: 'italic',
+      text: spec.text,
+      onAction: Fun.noop,
+      onSetup: spec.onSetup,
+      context: spec.context,
+      enabled: spec.enabled
+    });
+  };
+
   const makeButton = (ed: Editor, spec: { name: string; text: string; context: string; onSetup?: (api: any) => (api: any) => void; enabled?: boolean }) => {
     ed.ui.registry.addButton(spec.name, {
       icon: 'italic',
@@ -56,6 +67,23 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
       assertButtonEnabled,
       assertButtonDisabled
     },
+    {
+      label: 'Toggle toolbar button',
+      buttonSetupAny: (ed: Editor) => makeToggleButton(ed, { name: 't1', text: 't1', context: 'any' }),
+      buttonSetupModeDesign: (ed: Editor) => makeToggleButton(ed, { name: 't2', text: 't2', context: 'mode:design' }),
+      buttonSetupModeReadonly: (ed: Editor) => makeToggleButton(ed, { name: 't3', text: 't3', context: 'mode:readonly' }),
+      buttonSetupEditable: (ed: Editor) => makeToggleButton(ed, { name: 't4', text: 't4', context: 'editable' }),
+      buttonSetupFormattingBold: (ed: Editor) => makeToggleButton(ed, { name: 't5', text: 't5', context: 'formatting:bold' }),
+      buttonSetupNodeChangeSetEnabledFalse: (ed: Editor) => makeToggleButton(ed, { name: 't6', text: 't6', context: 'mode:design', onSetup: (api) => setupNodeChangeHandler(ed, () => api.setEnabled(false)) }),
+      buttonSetupNodeChangeSetEnabledTrue: (ed: Editor) => makeToggleButton(ed, { name: 't7', text: 't7', context: 'mode:readonly', onSetup: (api) => setupNodeChangeHandler(ed, () => api.setEnabled(true)) }),
+      buttonSetupSetEnabledFalse: (ed: Editor) => makeToggleButton(ed, { name: 't8', text: 't8', context: 'mode:design', onSetup: (api) => () => api.setEnabled(false) }),
+      buttonSetupDoesntMatch: (ed: Editor) => makeToggleButton(ed, { name: 't9', text: 't9', context: 'doesntmatch' }),
+      buttonSetupModeDesign2: (ed: Editor) => makeToggleButton(ed, { name: 't10', text: 't10', context: 'mode:design' }),
+      buttonSetupInsertSpan: (ed: Editor) => makeToggleButton(ed, { name: 't11', text: 't11', context: 'insert:span' }),
+      buttonSetupAnyEnabledFalse: (ed: Editor) => makeToggleButton(ed, { name: 't12', text: 't12', context: 'any', enabled: false }),
+      assertButtonEnabled,
+      assertButtonDisabled
+    }
   ];
 
   Arr.each(setupButtonsScenario, (scenario) => {
