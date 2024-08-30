@@ -62,6 +62,7 @@ describe('browser.tinymce.core.content.EditorResetContentTest', () => {
       editor.resetContent();
       assert.isFalse(hasXssOccurred, 'XSS should not have occurred');
       (editor.getWin() as any)[xssFnName] = null;
+      McEditor.remove(editor);
     };
 
     it('TINY-10236: Excluding data-mce-bogus="all" elements does not cause mXSS',
@@ -85,6 +86,7 @@ describe('browser.tinymce.core.content.EditorResetContentTest', () => {
       editor.setContent('<p>some</p><p>content</p>');
       editor.resetContent();
       TinyAssertions.assertRawContent(editor, '<p>test</p>');
+      McEditor.remove(editor);
     });
 
     it('TINY-10305: Should remove ZWNBSP from initial content as parameter', () => {
@@ -92,6 +94,7 @@ describe('browser.tinymce.core.content.EditorResetContentTest', () => {
       editor.setContent('<p>some</p><p>content</p>');
       editor.resetContent('<p>te\uFEFFst</p>');
       TinyAssertions.assertRawContent(editor, '<p>test</p>');
+      McEditor.remove(editor);
     });
   });
 });
