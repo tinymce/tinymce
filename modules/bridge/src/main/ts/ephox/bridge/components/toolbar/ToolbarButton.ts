@@ -51,7 +51,7 @@ export const baseToolbarButtonFields = [
   ComponentSchema.optionalIcon,
   ComponentSchema.optionalText,
   ComponentSchema.onSetup,
-  FieldSchema.defaultedOf('context', 'mode:design', ValueType.string)
+  FieldSchema.defaultedString('context', 'mode:design')
 ];
 
 export const toolbarButtonSchema = StructureSchema.objOf([
