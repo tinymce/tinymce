@@ -21,126 +21,38 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
 
   const assertButtonDisabled = (selector: string) => UiFinder.exists(SugarBody.body(), `[data-mce-name="${selector}"][aria-disabled="true"]`);
 
+  const setupNodeChangeHandler = (ed: Editor, handler: () => void) => {
+    ed.on('NodeChange', handler);
+    handler();
+    return () => ed.off('NodeChange', handler);
+  };
+
+  const makeButton = (ed: Editor, spec: { name: string; text: string; context: string; onSetup?: (api: any) => (api: any) => void; enabled?: boolean }) => {
+    ed.ui.registry.addButton(spec.name, {
+      icon: 'italic',
+      text: spec.text,
+      onAction: Fun.noop,
+      onSetup: spec.onSetup,
+      context: spec.context,
+      enabled: spec.enabled
+    });
+  };
+
   const setupButtonsScenario = [
     {
       label: 'Normal toolbar button',
-      buttonSetupOne: (ed: Editor) => {
-        ed.ui.registry.addButton('t1', {
-          icon: 'italic',
-          text: 'Test Menu Item 1',
-          onAction: Fun.noop,
-          context: 'any'
-        });
-      },
-      buttonSetupTwo: (ed: Editor) => {
-        ed.ui.registry.addButton('t2', {
-          icon: 'italic',
-          text: 'Test Menu Item 2',
-          onAction: Fun.noop,
-          context: 'mode:design'
-        });
-      },
-      buttonSetupThree: (ed: Editor) => {
-        ed.ui.registry.addButton('t3', {
-          icon: 'italic',
-          text: 'Test Menu Item 3',
-          context: 'mode:readonly',
-          onAction: Fun.noop,
-        });
-      },
-      buttonSetupFour: (ed: Editor) => {
-        ed.ui.registry.addButton('t4', {
-          icon: 'italic',
-          text: 'Test Menu Item 4',
-          onAction: Fun.noop,
-          context: 'editable',
-        });
-      },
-      buttonSetupFive: (ed: Editor) => {
-        ed.ui.registry.addButton('t5', {
-          icon: 'italic',
-          text: 'Test Menu Item 5',
-          context: 'formatting:bold',
-          onAction: Fun.noop,
-        });
-      },
-      buttonSetupSix: (ed: Editor) => {
-        ed.ui.registry.addButton('t6', {
-          icon: 'italic',
-          text: 'Test Menu Item 6',
-          context: 'mode:design',
-          onAction: Fun.noop,
-          onSetup: (api) => {
-            const handler = () => api.setEnabled(false);
-            ed.on('NodeChange', handler);
-            handler();
-            return () => ed.off('NodeChange', handler);
-          }
-        });
-      },
-      buttonSetupSeven: (ed: Editor) => {
-        ed.ui.registry.addButton('t7', {
-          icon: 'italic',
-          text: 'Test Menu Item 7',
-          context: 'mode:readonly',
-          onAction: Fun.noop,
-          onSetup: (api) => {
-            const handler = () => api.setEnabled(true);
-            ed.on('NodeChange', handler);
-            handler();
-            return () => ed.off('NodeChange', handler);
-          }
-        });
-      },
-      buttonSetupEight: (ed: Editor) => {
-        ed.ui.registry.addButton('t8', {
-          icon: 'italic',
-          text: 'Test Menu Item 8',
-          context: 'mode:design',
-          onAction: Fun.noop,
-          onSetup: (api) => {
-            api.setEnabled(false);
-            return Fun.noop;
-          }
-        });
-      },
-      buttonSetupNine: (ed: Editor) => {
-        ed.ui.registry.addButton('t9', {
-          icon: 'italic',
-          text: 'Test Menu Item 9',
-          context: 'doesntmatch',
-          onAction: Fun.noop,
-          onSetup: (api) => {
-            api.setEnabled(false);
-            return Fun.noop;
-          }
-        });
-      },
-      buttonSetupTen: (ed: Editor) => {
-        ed.ui.registry.addButton('t10', {
-          icon: 'italic',
-          text: 'Test Menu Item 10',
-          context: 'mode:design',
-          onAction: Fun.noop,
-        });
-      },
-      buttonSetupEleven: (ed: Editor) => {
-        ed.ui.registry.addButton('t11', {
-          icon: 'italic',
-          text: 'Test Menu Item 11',
-          context: 'insert:span',
-          onAction: Fun.noop,
-        });
-      },
-      buttonSetupTwelve: (ed: Editor) => {
-        ed.ui.registry.addButton('t12', {
-          icon: 'italic',
-          text: 'Test Menu Item 12',
-          context: 'any',
-          onAction: Fun.noop,
-          enabled: false
-        });
-      },
+      buttonSetupAny: (ed: Editor) => makeButton(ed, { name: 't1', text: 't1', context: 'any' }),
+      buttonSetupModeDesign: (ed: Editor) => makeButton(ed, { name: 't2', text: 't2', context: 'mode:design' }),
+      buttonSetupModeReadonly: (ed: Editor) => makeButton(ed, { name: 't3', text: 't3', context: 'mode:readonly' }),
+      buttonSetupEditable: (ed: Editor) => makeButton(ed, { name: 't4', text: 't4', context: 'editable' }),
+      buttonSetupFormattingBold: (ed: Editor) => makeButton(ed, { name: 't5', text: 't5', context: 'formatting:bold' }),
+      buttonSetupNodeChangeSetEnabledFalse: (ed: Editor) => makeButton(ed, { name: 't6', text: 't6', context: 'mode:design', onSetup: (api) => setupNodeChangeHandler(ed, () => api.setEnabled(false)) }),
+      buttonSetupNodeChangeSetEnabledTrue: (ed: Editor) => makeButton(ed, { name: 't7', text: 't7', context: 'mode:readonly', onSetup: (api) => setupNodeChangeHandler(ed, () => api.setEnabled(true)) }),
+      buttonSetupSetEnabledFalse: (ed: Editor) => makeButton(ed, { name: 't8', text: 't8', context: 'mode:design', onSetup: (api) => () => api.setEnabled(false) }),
+      buttonSetupDoesntMatch: (ed: Editor) => makeButton(ed, { name: 't9', text: 't9', context: 'doesntmatch' }),
+      buttonSetupModeDesign2: (ed: Editor) => makeButton(ed, { name: 't10', text: 't10', context: 'mode:design' }),
+      buttonSetupInsertSpan: (ed: Editor) => makeButton(ed, { name: 't11', text: 't11', context: 'insert:span' }),
+      buttonSetupAnyEnabledFalse: (ed: Editor) => makeButton(ed, { name: 't12', text: 't12', context: 'any', enabled: false }),
       assertButtonEnabled,
       assertButtonDisabled
     },
@@ -155,7 +67,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           setup: (ed: Editor) => {
             registerMode(ed);
 
-            scenario.buttonSetupOne(ed);
+            scenario.buttonSetupAny(ed);
           }
         }, [], true);
 
@@ -193,7 +105,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           setup: (ed: Editor) => {
             registerMode(ed);
 
-            scenario.buttonSetupOne(ed);
+            scenario.buttonSetupAny(ed);
             ed.mode.set('testmode');
           }
         }, [], true);
@@ -214,7 +126,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           setup: (ed: Editor) => {
             registerMode(ed);
 
-            scenario.buttonSetupTwo(ed);
+            scenario.buttonSetupModeDesign(ed);
           }
         }, [], true);
 
@@ -253,7 +165,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           setup: (ed: Editor) => {
             registerMode(ed);
 
-            scenario.buttonSetupTwo(ed);
+            scenario.buttonSetupModeDesign(ed);
             ed.mode.set('testmode');
           }
         }, [], true);
@@ -277,7 +189,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           setup: (ed: Editor) => {
             registerMode(ed);
 
-            scenario.buttonSetupThree(ed);
+            scenario.buttonSetupModeReadonly(ed);
           }
         }, [], true);
 
@@ -316,7 +228,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           setup: (ed: Editor) => {
             registerMode(ed);
 
-            scenario.buttonSetupThree(ed);
+            scenario.buttonSetupModeReadonly(ed);
             ed.mode.set('testmode');
           }
         }, [], true);
@@ -339,7 +251,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           setup: (ed: Editor) => {
             registerMode(ed);
 
-            scenario.buttonSetupFour(ed);
+            scenario.buttonSetupEditable(ed);
           }
         }, [], true);
 
@@ -390,7 +302,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           setup: (ed: Editor) => {
             registerMode(ed);
 
-            scenario.buttonSetupFive(ed);
+            scenario.buttonSetupFormattingBold(ed);
           }
         }, [], true);
 
@@ -431,7 +343,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           setup: (ed: Editor) => {
             registerMode(ed);
 
-            scenario.buttonSetupSix(ed);
+            scenario.buttonSetupNodeChangeSetEnabledFalse(ed);
           }
         }, [], true);
 
@@ -465,7 +377,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           setup: (ed: Editor) => {
             registerMode(ed);
 
-            scenario.buttonSetupSeven(ed);
+            scenario.buttonSetupNodeChangeSetEnabledTrue(ed);
           }
         }, [], true);
 
@@ -498,7 +410,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           setup: (ed: Editor) => {
             registerMode(ed);
 
-            scenario.buttonSetupEight(ed);
+            scenario.buttonSetupSetEnabledFalse(ed);
           }
         }, [], true);
 
@@ -529,7 +441,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           setup: (ed: Editor) => {
             registerMode(ed);
 
-            scenario.buttonSetupNine(ed);
+            scenario.buttonSetupDoesntMatch(ed);
           }
         }, [], true);
 
@@ -561,7 +473,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           setup: (ed: Editor) => {
             registerMode(ed);
 
-            scenario.buttonSetupTen(ed);
+            scenario.buttonSetupModeDesign2(ed);
           }
         }, [], true);
 
@@ -593,7 +505,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           statusbar: false,
           setup: (ed: Editor) => {
             registerMode(ed);
-            scenario.buttonSetupEleven(ed);
+            scenario.buttonSetupInsertSpan(ed);
           }
         }, [], true);
 
@@ -615,7 +527,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           statusbar: false,
           setup: (ed: Editor) => {
             registerMode(ed);
-            scenario.buttonSetupTwelve(ed);
+            scenario.buttonSetupAnyEnabledFalse(ed);
           }
         }, [], true);
 
