@@ -222,9 +222,8 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
           DisablingConfigs.toolbarButton(() => {
             return !spec.enabled || !providersBackstage.checkButtonContext(spec.context);
           }),
-          // ReadOnly.receivingConfig(),
-          ButtonState.receivingConfigConditional(() => {
-            return providersBackstage.checkButtonContext(spec.context);
+          ButtonState.toggleButtonStateOnReceive(() => {
+            return !providersBackstage.checkButtonContext(spec.context) || !spec.enabled;
           })
         ].concat(specialisation.toolbarButtonBehaviours)
       ),

@@ -2,7 +2,7 @@ import { UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
-import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -130,6 +130,15 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           text: 'Test Menu Item 11',
           context: 'insert:span',
           onAction: Fun.noop,
+        });
+      },
+      buttonSetupTwelve: (ed: Editor) => {
+        ed.ui.registry.addButton('t12', {
+          icon: 'italic',
+          text: 'Test Menu Item 12',
+          context: 'any',
+          onAction: Fun.noop,
+          enabled: false
         });
       },
       assertButtonEnabled,
@@ -596,6 +605,33 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           editor.setContent('<img src="https://picsum.photos/200/300"/>');
           editor.selection.select(editor.dom.select('img')[0]);
           await Waiter.pTryUntil('Wait until toolbar button is disabled', () => scenario.assertButtonDisabled('t11'));
+        });
+      });
+
+      context('Toolbar button spec enabled: false', () => {
+        const hook = TinyHooks.bddSetup<Editor>({
+          base_url: '/project/tinymce/js/tinymce',
+          toolbar: 't12',
+          statusbar: false,
+          setup: (ed: Editor) => {
+            registerMode(ed);
+            scenario.buttonSetupTwelve(ed);
+          }
+        }, [], true);
+
+        it(`TINY-11211: Toolbar ${scenario.label} should be stay disabled when enabled: false`, async () => {
+          const editor = hook.editor();
+          editor.mode.set('design');
+          scenario.assertButtonDisabled('t12');
+
+          editor.mode.set('readonly');
+          scenario.assertButtonDisabled('t12');
+
+          editor.mode.set('testmode');
+          scenario.assertButtonDisabled('t12');
+
+          editor.mode.set('design');
+          scenario.assertButtonDisabled('t12');
         });
       });
     });

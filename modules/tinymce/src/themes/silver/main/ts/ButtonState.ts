@@ -28,11 +28,11 @@ const setupEventsForButton = (editor: Editor, uiRefs: ReadyUiReferences): void =
   });
 };
 
-const receivingConfigConditional = (shouldDisable: () => boolean): Behaviour.NamedConfiguredBehaviour<any, any> => Receiving.config({
+const toggleButtonStateOnReceive = (shouldDisable: () => boolean): Behaviour.NamedConfiguredBehaviour<any, any> => Receiving.config({
   channels: {
     [ButtonStateChannel]: {
       onReceive: (comp) => {
-        Disabling.set(comp, !shouldDisable());
+        Disabling.set(comp, shouldDisable());
       }
     }
   }
@@ -40,5 +40,5 @@ const receivingConfigConditional = (shouldDisable: () => boolean): Behaviour.Nam
 
 export {
   setupEventsForButton,
-  receivingConfigConditional
+  toggleButtonStateOnReceive
 };
