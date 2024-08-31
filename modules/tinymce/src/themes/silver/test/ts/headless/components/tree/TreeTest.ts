@@ -3,7 +3,7 @@ import { AlloyComponent, AlloyTriggers, GuiFactory, NativeEvents, TestHelpers } 
 import { describe, it } from '@ephox/bedrock-client';
 import { StructureSchema } from '@ephox/boulder';
 import { Dialog } from '@ephox/bridge';
-import { Class, SelectorFind, SugarBody, SugarDocument } from '@ephox/sugar';
+import { Class, SelectorFind, SugarBody, SugarDocument, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import { renderTree } from 'tinymce/themes/silver/ui/dialog/Tree';
@@ -71,6 +71,22 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
         title: 'File 6',
         id: '6',
       },
+      {
+        type: 'directory',
+        id: 'dir2',
+        title: 'Dir2',
+        customStateIcon: 'color-swatch',
+        customStateIconTooltip: 'Test Tooltip 1',
+        children: [
+          {
+            type: 'leaf',
+            title: 'File 3',
+            id: '3',
+            customStateIcon: 'color-swatch',
+            customStateIconTooltip: 'Test Tooltip 2',
+          },
+        ]
+      },
     ];
 
     const treeSpec = StructureSchema.getOrDie(Dialog.createTree({
@@ -117,6 +133,14 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
     const file3Element = SelectorFind.child(dirChildren.element, '.tox-tree--leaf__label').getOrDie();
     const file3 = dirChildren.getSystem().getByDom(file3Element).getOrDie();
     assertLeafSelectedState('File 3', true, file3);
+  });
+
+  it('TINY-11131: Check that custom icon is correct', () => {
+    const element = SugarElement.fromDom(getTreeItem('.tox-tree__label[aria-label="Dir2"').element.dom.parentElement);
+    SelectorFind.child(element, '.tox-icon-custom-state').getOrDie();
+    SelectorFind.child(SelectorFind.sibling(element, '.tox-tree--directory__children').getOrDie(), '.tox-icon-custom-state');
+    const element2 = SugarElement.fromDom(getTreeItem('.tox-tree__label[aria-label="Dir"').element.dom.parentElement);
+    assert.isNull(SelectorFind.descendant(element2, '.tox-icon-custom-state').getOrNull());
   });
 
   it('TINY-9614: Basic tree interactions', async () => {
