@@ -12,7 +12,9 @@ import { buildData, renderCommonItem } from './CommonMenuItem';
 const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean = true): ItemTypes.ItemSpec => {
   const getApi = (component: AlloyComponent): Menu.MenuItemInstanceApi => ({
     isEnabled: () => !Disabling.isDisabled(component),
-    setEnabled: (state: boolean) => Disabling.set(component, !state)
+    setEnabled: (state: boolean) => {
+      Disabling.set(component, !state)
+    }
   });
 
   const structure = renderItemStructure({
@@ -27,6 +29,7 @@ const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, provi
   }, providersBackstage, renderIcons);
 
   return renderCommonItem({
+    context: spec.context,
     data: buildData(spec),
     getApi,
     enabled: spec.enabled,

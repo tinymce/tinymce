@@ -90,7 +90,8 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
     classes: [],
     dropdownBehaviours: [
       ...(tabstopping ? [ Tabstopping.config({ }) ] : [])
-    ]
+    ],
+    context: spec.context
   },
   prefix,
   backstage.shared,

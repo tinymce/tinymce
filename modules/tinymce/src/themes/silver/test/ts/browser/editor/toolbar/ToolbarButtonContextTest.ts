@@ -1,8 +1,8 @@
-import { UiFinder, Waiter } from '@ephox/agar';
-import { context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Fun } from '@ephox/katamari';
+import { Keys, UiFinder, Waiter } from '@ephox/agar';
+import { afterEach, context, describe, it } from '@ephox/bedrock-client';
+import { Arr, Fun, Type } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
-import { TinyHooks } from '@ephox/wrap-mcagar';
+import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -21,10 +21,38 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
 
   const assertButtonDisabled = (selector: string) => UiFinder.exists(SugarBody.body(), `[data-mce-name="${selector}"][aria-disabled="true"]`);
 
+  const assertButtonNativelyDisabled = (selector: string) => UiFinder.exists(SugarBody.body(), `[data-mce-name="${selector}"][disabled="disabled"]`);
+
+  const assertButtonNativelyEnabled = (selector: string) => UiFinder.exists(SugarBody.body(), `[data-mce-name="${selector}"]:not([disabled="disabled"])`);
+
   const setupNodeChangeHandler = (ed: Editor, handler: () => void) => {
     ed.on('NodeChange', handler);
     handler();
     return () => ed.off('NodeChange', handler);
+  };
+
+  const makeMenuButton = (
+    ed: Editor,
+    spec: {
+      name: string;
+      text: string;
+      context: string;
+      onSetup?: (api: any) => (api: any) => void;
+      fetch?: (success: any, fetchContext: any, api: any) => void;
+    }
+  ) => {
+    ed.ui.registry.addMenuButton(spec.name, {
+      icon: 'italic',
+      text: spec.text,
+      onSetup: spec.onSetup,
+      context: spec.context,
+      fetch: (success, fetchContext, api) => {
+        Type.isNonNullable(spec.fetch) ? spec.fetch(success, fetchContext, api) : success([{
+          type: 'menuitem',
+          text: 'test'
+        }]);
+      }
+    });
   };
 
   const makeToggleButton = (ed: Editor, spec: { name: string; text: string; context: string; onSetup?: (api: any) => (api: any) => void; enabled?: boolean }) => {
@@ -89,7 +117,27 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
       buttonSetupAnyEnabledFalse: (ed: Editor) => makeToggleButton(ed, { name: 't12', text: 't12', context: 'mode:design', enabled: false }),
       assertButtonEnabled,
       assertButtonDisabled
-    }
+    },
+    {
+      label: 'Menu toolbar button',
+      buttonSetupAny: (ed: Editor) => makeMenuButton(ed, { name: 't1', text: 't1', context: 'any' }),
+      buttonSetupModeDesign: (ed: Editor) => makeMenuButton(ed, { name: 't2', text: 't2', context: 'mode:design' }),
+      buttonSetupModeReadonly: (ed: Editor) => makeMenuButton(ed, { name: 't3', text: 't3', context: 'mode:readonly' }),
+      buttonSetupEditable: (ed: Editor) => makeMenuButton(ed, { name: 't4', text: 't4', context: 'editable' }),
+      buttonSetupFormattingBold: (ed: Editor) => makeMenuButton(ed, { name: 't5', text: 't5', context: 'formatting:bold' }),
+      buttonSetupNodeChangeSetEnabledFalse: (ed: Editor) => makeMenuButton(ed, { name: 't6', text: 't6', context: 'mode:design', onSetup: (api) => setupNodeChangeHandler(ed, () => api.setEnabled(false)) }),
+      buttonSetupNodeChangeSetEnabledTrue: (ed: Editor) => makeMenuButton(ed, { name: 't7', text: 't7', context: 'mode:readonly', onSetup: (api) => setupNodeChangeHandler(ed, () => api.setEnabled(true)) }),
+      buttonSetupSetEnabledFalse: (ed: Editor) => makeMenuButton(ed, { name: 't8', text: 't8', context: 'mode:design', onSetup: (api) => {
+        api.setEnabled(false);
+        return Fun.noop;
+      } }),
+      buttonSetupDoesntMatch: (ed: Editor) => makeMenuButton(ed, { name: 't9', text: 't9', context: 'doesntmatch' }),
+      buttonSetupModeDesign2: (ed: Editor) => makeMenuButton(ed, { name: 't10', text: 't10', context: 'mode:design' }),
+      buttonSetupInsertSpan: (ed: Editor) => makeMenuButton(ed, { name: 't11', text: 't11', context: 'insert:span' }),
+      buttonSetupAnyEnabledFalse: (ed: Editor) => makeMenuButton(ed, { name: 't12', text: 't12', context: 'any' }),
+      assertButtonEnabled: assertButtonNativelyEnabled,
+      assertButtonDisabled: assertButtonNativelyDisabled
+    },
   ];
 
   Arr.each(setupButtonsScenario, (scenario) => {
@@ -128,6 +176,9 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           scenario.assertButtonEnabled('t1');
 
           editor.setEditableRoot(false);
+          scenario.assertButtonEnabled('t1');
+
+          editor.setEditableRoot(true);
           scenario.assertButtonEnabled('t1');
         });
       });
@@ -554,7 +605,8 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         });
       });
 
-      context('Toolbar button spec enabled: false', () => {
+      // Missing enabled property in menu toolbar button spec
+      (scenario.label === 'Menu toolbar button' ? context.skip : context)('Toolbar button spec enabled: false', () => {
         const hook = TinyHooks.bddSetup<Editor>({
           base_url: '/project/tinymce/js/tinymce',
           toolbar: 't12',
@@ -579,6 +631,449 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           editor.mode.set('design');
           scenario.assertButtonEnabled('t12');
         });
+      });
+    });
+  });
+
+  const makeMenuButtonWithItem = (ed: Editor, label: string, context: string, onSetup?: (api: any) => (api: any) => void, enabled: boolean = true ) => {
+    makeMenuButton(ed, { name: label, text: label, context: 'any', fetch: (success) => {
+      success([{ type: 'menuitem', text: 'test', context, onSetup, enabled }]);
+    } });
+  };
+
+  const menuButtonSetup = {
+    buttonSetupAny: (ed: Editor) => makeMenuButtonWithItem(ed, 't1', 'any'),
+    buttonSetupModeDesign: (ed: Editor) => makeMenuButtonWithItem(ed, 't2', 'mode:design'),
+    buttonSetupModeReadonly: (ed: Editor) => makeMenuButtonWithItem(ed, 't3', 'mode:readonly'),
+    buttonSetupEditable: (ed: Editor) => makeMenuButtonWithItem(ed, 't4', 'editable'),
+    buttonSetupFormattingBold: (ed: Editor) => makeMenuButtonWithItem(ed, 't5', 'formatting:bold'),
+    buttonSetupNodeChangeSetEnabledFalse: (ed: Editor) => makeMenuButtonWithItem(ed, 't6', 'mode:design', (buttonApi) => setupNodeChangeHandler(ed, () => buttonApi.setEnabled(false))),
+    buttonSetupNodeChangeSetEnabledTrue: (ed: Editor) => makeMenuButtonWithItem(ed, 't7', 'mode:readonly', (buttonApi) => setupNodeChangeHandler(ed, () => buttonApi.setEnabled(true))),
+    buttonSetupSetEnabledFalse: (ed: Editor) => makeMenuButtonWithItem(ed, 't8', 'mode:readonly', (buttonApi) => {
+      buttonApi.setEnabled(false);
+      return Fun.noop;
+    }),
+    buttonSetupDoesntMatch: (ed: Editor) => makeMenuButtonWithItem(ed, 't9', 'doesntmatch'),
+    buttonSetupInsertSpan: (ed: Editor) => makeMenuButtonWithItem(ed, 't10', 'insert:span'),
+    buttonSetupAnyEnabledFalse: (ed: Editor) => makeMenuButtonWithItem(ed, 't11', 'any', () => Fun.noop, false)
+  };
+
+  context('Menu item under Menu toolbar button', () => {
+    const assertButtonEnabled = (label: string) => UiFinder.exists(SugarBody.body(), `[aria-label="${label}"]:not([aria-disabled="true"])`);
+
+    const assertButtonDisabled = (label: string) => UiFinder.exists(SugarBody.body(), `[aria-label="${label}"][aria-disabled="true"]`);
+
+    const pCloseMenu = async (editor: Editor): Promise<void> => {
+      const uiRoot = TinyUiActions.getUiRoot(editor);
+      TinyUiActions.keyup(editor, Keys.escape());
+      TinyUiActions.keyup(editor, Keys.escape());
+      await Waiter.pTryUntil('Waiting for menu to be closed', () => UiFinder.notExists(uiRoot, '.tox-menu.tox-selected-menu'));
+    };
+
+    const pWaitForMenu = async (editor: Editor) => TinyUiActions.pWaitForUi(editor, '.tox-menu.tox-selected-menu');
+
+    const pClickToolbarAndWait = (editor: Editor, selector: string) => {
+      TinyUiActions.clickOnToolbar(editor, `[data-mce-name="${selector}"]`);
+      return pWaitForMenu(editor);
+    };
+
+    context('Menu item with context: any', () => {
+      afterEach(async () => await pCloseMenu(hook.editor()));
+
+      const hook = TinyHooks.bddSetup<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        toolbar: 't1',
+        statusbar: false,
+        setup: (ed: Editor) => {
+          registerMode(ed);
+          menuButtonSetup.buttonSetupAny(ed);
+        }
+      }, [], true);
+
+      it('TINY-11211: Menu item should be enabled in all modes', async () => {
+        const editor = hook.editor();
+        await pClickToolbarAndWait(editor, 't1');
+        assertButtonEnabled('test');
+
+        editor.mode.set('testmode');
+        await pClickToolbarAndWait(editor, 't1');
+        assertButtonEnabled('test');
+
+        editor.mode.set('readonly');
+        await pClickToolbarAndWait(editor, 't1');
+        assertButtonEnabled('test');
+      });
+
+      it('TINY-11211: Menu item should be enabled in noneditable selection', async () => {
+        const editor = hook.editor();
+        editor.setContent('<p>a</p>');
+        await pClickToolbarAndWait(editor, 't1');
+        assertButtonEnabled('test');
+        await pCloseMenu(editor);
+
+        editor.setEditableRoot(false);
+        await pClickToolbarAndWait(editor, 't1');
+        assertButtonEnabled('test');
+        await pCloseMenu(editor);
+
+        editor.setEditableRoot(true);
+        await pClickToolbarAndWait(editor, 't1');
+        assertButtonEnabled('test');
+      });
+    });
+
+    context('Menu item with context: mode:design', () => {
+      afterEach(async () => await pCloseMenu(hook.editor()));
+      const hook = TinyHooks.bddSetup<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        toolbar: 't2',
+        statusbar: false,
+        setup: (ed: Editor) => {
+          registerMode(ed);
+          menuButtonSetup.buttonSetupModeDesign(ed);
+        }
+      }, [], true);
+
+      it('TINY-11211: Menu item should be enabled in design mode only', async () => {
+        const editor = hook.editor();
+        await pClickToolbarAndWait(editor, 't2');
+        assertButtonEnabled('test');
+
+        editor.mode.set('testmode');
+        await pClickToolbarAndWait(editor, 't2');
+        assertButtonDisabled('test');
+
+        editor.mode.set('readonly');
+        await pClickToolbarAndWait(editor, 't2');
+        assertButtonDisabled('test');
+        await pCloseMenu(editor);
+
+        editor.mode.set('design');
+        await pClickToolbarAndWait(editor, 't2');
+        assertButtonEnabled('test');
+      });
+    });
+
+    context('Menu item under Menu toolbar button with context: mode:readonly', () => {
+      afterEach(async () => await pCloseMenu(hook.editor()));
+      const hook = TinyHooks.bddSetup<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        toolbar: 't3',
+        statusbar: false,
+        setup: (ed: Editor) => {
+          registerMode(ed);
+          menuButtonSetup.buttonSetupModeReadonly(ed);
+        }
+      }, [], true);
+
+      it('TINY-11211: Menu item should be enabled in readonly mode only', async () => {
+        const editor = hook.editor();
+        await pClickToolbarAndWait(editor, 't3');
+        assertButtonDisabled('test');
+
+        editor.mode.set('testmode');
+        await pClickToolbarAndWait(editor, 't3');
+        assertButtonDisabled('test');
+
+        editor.mode.set('readonly');
+        await pClickToolbarAndWait(editor, 't3');
+        assertButtonEnabled('test');
+        await pCloseMenu(editor);
+
+        editor.mode.set('design');
+        await pClickToolbarAndWait(editor, 't3');
+        assertButtonDisabled('test');
+      });
+    });
+
+    context('Menu item with context: editable', () => {
+      afterEach(async () => await pCloseMenu(hook.editor()));
+      const hook = TinyHooks.bddSetup<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        toolbar: 't4',
+        statusbar: false,
+        setup: (ed: Editor) => {
+          registerMode(ed);
+          menuButtonSetup.buttonSetupEditable(ed);
+        }
+      }, [], true);
+
+      it('TINY-11211: Menu item should be enabled when selection is editable', async () => {
+        const editor = hook.editor();
+        await pClickToolbarAndWait(editor, 't4');
+        assertButtonEnabled('test');
+
+        editor.mode.set('testmode');
+        await pClickToolbarAndWait(editor, 't4');
+        assertButtonDisabled('test');
+
+        editor.mode.set('readonly');
+        await pClickToolbarAndWait(editor, 't4');
+        assertButtonDisabled('test');
+        await pCloseMenu(editor);
+
+        editor.mode.set('design');
+      });
+
+      it('TINY-11211: Menu item should be disabled in non-editable root', async () => {
+        const editor = hook.editor();
+        editor.setEditableRoot(false);
+        await pClickToolbarAndWait(editor, 't4');
+        assertButtonDisabled('test');
+
+        editor.mode.set('testmode');
+        await pClickToolbarAndWait(editor, 't4');
+        assertButtonDisabled('test');
+
+        editor.mode.set('readonly');
+        await pClickToolbarAndWait(editor, 't4');
+        assertButtonDisabled('test');
+        await pCloseMenu(editor);
+
+        editor.mode.set('design');
+        editor.setEditableRoot(true);
+        await pClickToolbarAndWait(editor, 't4');
+        assertButtonEnabled('test');
+      });
+    });
+
+    context('Menu item with context formatting:bold', () => {
+      afterEach(async () => await pCloseMenu(hook.editor()));
+      const hook = TinyHooks.bddSetup<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        toolbar: 't5',
+        statusbar: false,
+        setup: (ed: Editor) => {
+          registerMode(ed);
+          menuButtonSetup.buttonSetupFormattingBold(ed);
+        }
+      }, [], true);
+
+      it('TINY-11211: Menu item should be enabled when selection is editable', async () => {
+        const editor = hook.editor();
+        await pClickToolbarAndWait(editor, 't5');
+        assertButtonEnabled('test');
+
+        editor.mode.set('testmode');
+        await pClickToolbarAndWait(editor, 't5');
+        assertButtonDisabled('test');
+
+        editor.mode.set('readonly');
+        await pClickToolbarAndWait(editor, 't5');
+        assertButtonDisabled('test');
+        await pCloseMenu(editor);
+
+        editor.mode.set('design');
+      });
+
+      it('TINY-11211: Menu item should be disabled in non-editable root', async () => {
+        const editor = hook.editor();
+        editor.setEditableRoot(false);
+        await pClickToolbarAndWait(editor, 't5');
+        assertButtonDisabled('test');
+
+        editor.mode.set('testmode');
+        await pClickToolbarAndWait(editor, 't5');
+        assertButtonDisabled('test');
+
+        editor.mode.set('readonly');
+        await pClickToolbarAndWait(editor, 't5');
+        assertButtonDisabled('test');
+        await pCloseMenu(editor);
+
+        editor.mode.set('design');
+        editor.setEditableRoot(true);
+        await pClickToolbarAndWait(editor, 't5');
+        assertButtonEnabled('test');
+      });
+    });
+
+    context('Menu item with context mode:design, nodeChange setEnabled(false)', () => {
+      afterEach(async () => await pCloseMenu(hook.editor()));
+      const hook = TinyHooks.bddSetup<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        toolbar: 't6',
+        statusbar: false,
+        setup: (ed: Editor) => {
+          registerMode(ed);
+          menuButtonSetup.buttonSetupNodeChangeSetEnabledFalse(ed);
+        }
+      }, [], true);
+
+      it('TINY-11211: Menu item should be enabled when selection is editable', async () => {
+        const editor = hook.editor();
+        await pClickToolbarAndWait(editor, 't6');
+        assertButtonDisabled('test');
+
+        editor.mode.set('testmode');
+        await pClickToolbarAndWait(editor, 't6');
+        assertButtonDisabled('test');
+
+        editor.mode.set('readonly');
+        await pClickToolbarAndWait(editor, 't6');
+        assertButtonDisabled('test');
+        await pCloseMenu(editor);
+
+        editor.mode.set('design');
+        await pClickToolbarAndWait(editor, 't6');
+        assertButtonDisabled('test');
+      });
+    });
+
+    context('Menu item with context mode:design, nodeChange setEnabled(true)', () => {
+      afterEach(async () => await pCloseMenu(hook.editor()));
+      const hook = TinyHooks.bddSetup<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        toolbar: 't7',
+        statusbar: false,
+        setup: (ed: Editor) => {
+          registerMode(ed);
+          menuButtonSetup.buttonSetupNodeChangeSetEnabledTrue(ed);
+        }
+      }, [], true);
+
+      it('TINY-11211: Menu item should be enabled when selection is editable', async () => {
+        const editor = hook.editor();
+        await pClickToolbarAndWait(editor, 't7');
+        assertButtonEnabled('test');
+
+        editor.mode.set('testmode');
+        await pClickToolbarAndWait(editor, 't7');
+        assertButtonEnabled('test');
+
+        editor.mode.set('readonly');
+        await pClickToolbarAndWait(editor, 't7');
+        assertButtonEnabled('test');
+        await pCloseMenu(editor);
+
+        editor.mode.set('design');
+        await pClickToolbarAndWait(editor, 't7');
+        assertButtonEnabled('test');
+      });
+    });
+
+    context('Menu item with context mode:design and onSetup buttonApi setEnabled(false) without NodeChange', () => {
+      afterEach(async () => await pCloseMenu(hook.editor()));
+      const hook = TinyHooks.bddSetup<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        toolbar: 't8',
+        statusbar: false,
+        setup: (ed: Editor) => {
+          registerMode(ed);
+          menuButtonSetup.buttonSetupSetEnabledFalse(ed);
+        }
+      }, [], true);
+
+      it('TINY-11211: Menu item should always be disabled', async () => {
+        const editor = hook.editor();
+        await pClickToolbarAndWait(editor, 't8');
+        assertButtonDisabled('test');
+
+        editor.mode.set('testmode');
+        await pClickToolbarAndWait(editor, 't8');
+        assertButtonDisabled('test');
+
+        editor.mode.set('readonly');
+        await pClickToolbarAndWait(editor, 't8');
+        assertButtonDisabled('test');
+        await pCloseMenu(editor);
+
+        editor.mode.set('design');
+        await pClickToolbarAndWait(editor, 't8');
+        assertButtonDisabled('test');
+      });
+    });
+
+    context('Menu item with context: doesntmatch', () => {
+      afterEach(async () => await pCloseMenu(hook.editor()));
+      const hook = TinyHooks.bddSetup<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        toolbar: 't9',
+        statusbar: false,
+        setup: (ed: Editor) => {
+          registerMode(ed);
+          menuButtonSetup.buttonSetupDoesntMatch(ed);
+        }
+      }, [], true);
+
+      it('TINY-11211: Menu item should fallback to design:mode', async () => {
+        const editor = hook.editor();
+        await pClickToolbarAndWait(editor, 't9');
+        assertButtonEnabled('test');
+
+        editor.mode.set('testmode');
+        await pClickToolbarAndWait(editor, 't9');
+        assertButtonDisabled('test');
+
+        editor.mode.set('readonly');
+        await pClickToolbarAndWait(editor, 't9');
+        assertButtonDisabled('test');
+        await pCloseMenu(editor);
+
+        editor.mode.set('design');
+        await pClickToolbarAndWait(editor, 't9');
+        assertButtonEnabled('test');
+      });
+    });
+
+    context('Menu item with context: insert:span', () => {
+      afterEach(async () => await pCloseMenu(hook.editor()));
+      const hook = TinyHooks.bddSetup<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        toolbar: 't10',
+        statusbar: false,
+        setup: (ed: Editor) => {
+          registerMode(ed);
+          menuButtonSetup.buttonSetupInsertSpan(ed);
+        }
+      }, [], true);
+
+      it('TINY-11211: Menu item should be enabled when span can be inserted in current selection', async () => {
+        const editor = hook.editor();
+        await pClickToolbarAndWait(editor, 't10');
+        assertButtonEnabled('test');
+        await pCloseMenu(editor);
+
+        editor.setContent('<img src="https://picsum.photos/200/300"/>');
+        const image = editor.dom.select('img')[0];
+        let imageLoaded = false;
+        image.onload = () => imageLoaded = true;
+        await Waiter.pTryUntilPredicate('Wait for iframe to finish loading', () => imageLoaded);
+        editor.selection.select(image);
+        await pClickToolbarAndWait(editor, 't10');
+        assertButtonDisabled('test');
+      });
+    });
+
+    context('Menu item with enabled: false', () => {
+      afterEach(async () => await pCloseMenu(hook.editor()));
+      const hook = TinyHooks.bddSetup<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        toolbar: 't11',
+        statusbar: false,
+        setup: (ed: Editor) => {
+          registerMode(ed);
+          menuButtonSetup.buttonSetupAnyEnabledFalse(ed);
+        }
+      }, [], true);
+
+      it('TINY-11211: Menu item should always be disabled', async () => {
+        const editor = hook.editor();
+        await pClickToolbarAndWait(editor, 't11');
+        assertButtonDisabled('test');
+
+        editor.mode.set('testmode');
+        await pClickToolbarAndWait(editor, 't11');
+        assertButtonDisabled('test');
+
+        editor.mode.set('readonly');
+        await pClickToolbarAndWait(editor, 't11');
+        assertButtonDisabled('test');
+        await pCloseMenu(editor);
+
+        editor.mode.set('design');
+        await pClickToolbarAndWait(editor, 't11');
+        assertButtonDisabled('test');
       });
     });
   });

@@ -4,6 +4,7 @@ import {
 import { Cell, Fun, Optional, Optionals } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
+import * as ButtonState from 'tinymce/themes/silver/ButtonState';
 import * as ReadOnly from 'tinymce/themes/silver/ReadOnly';
 import { DisablingConfigs } from 'tinymce/themes/silver/ui/alien/DisablingConfigs';
 import { onControlAttached, onControlDetached, OnDestroy } from 'tinymce/themes/silver/ui/controls/Controls';
@@ -28,6 +29,7 @@ export interface CommonMenuItemSpec<T> {
   readonly itemBehaviours: Behaviour.NamedConfiguredBehaviour<any, any, any>[];
   readonly getApi: (comp: AlloyComponent) => T;
   readonly data: ItemDataOutput;
+  readonly context: string;
 }
 
 export interface CommonCollectionItemSpec {
@@ -54,8 +56,8 @@ const renderCommonItem = <T>(spec: CommonMenuItemSpec<T>, structure: ItemStructu
           onControlAttached(spec, editorOffCell),
           onControlDetached(spec, editorOffCell)
         ]),
-        DisablingConfigs.item(() => !spec.enabled || providersBackstage.isDisabled()),
-        ReadOnly.receivingConfig(),
+        DisablingConfigs.item(() => !spec.enabled || providersBackstage.checkButtonContext(spec.context).shouldDisable),
+        ButtonState.toggleOnReceive(() => providersBackstage.checkButtonContext(spec.context)),
         Replacing.config({ })
       ].concat(spec.itemBehaviours)
     )

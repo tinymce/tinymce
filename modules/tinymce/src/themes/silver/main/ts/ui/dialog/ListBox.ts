@@ -66,6 +66,7 @@ export const renderListBox = (spec: ListBoxSpec, backstage: UiFactoryBackstage, 
     dom: { },
     factory: {
       sketch: (sketchSpec: SketchSpec) => renderCommonDropdown({
+        context: 'mode:design',
         uid: sketchSpec.uid,
         text: initialItem.map((item) => item.text),
         icon: Optional.none(),

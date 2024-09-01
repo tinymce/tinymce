@@ -267,6 +267,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
 
     const fixedSpec: Toolbar.ToolbarMenuButton = {
       ...spec,
+      context: 'mode:design',
       type: 'menubutton',
       // Currently, dialog-based menu buttons cannot be searchable.
       search: Optional.none(),

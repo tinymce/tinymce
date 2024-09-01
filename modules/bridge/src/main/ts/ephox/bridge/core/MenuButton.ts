@@ -20,6 +20,7 @@ export interface BaseMenuButtonSpec {
   // as an additional argument to fetch.
   fetch: (success: SuccessCallback, fetchContext: MenuButtonFetchContext, api: BaseMenuButtonInstanceApi) => void;
   onSetup?: (api: BaseMenuButtonInstanceApi) => (api: BaseMenuButtonInstanceApi) => void;
+  context?: string;
 }
 
 export interface BaseMenuButton {
@@ -29,6 +30,7 @@ export interface BaseMenuButton {
   search: Optional<{ placeholder: Optional<string> }>;
   fetch: (success: SuccessCallback, fetchContext: MenuButtonFetchContext, api: BaseMenuButtonInstanceApi) => void;
   onSetup: (api: BaseMenuButtonInstanceApi) => (api: BaseMenuButtonInstanceApi) => void;
+  context: string;
 }
 
 export interface BaseMenuButtonInstanceApi {
@@ -74,5 +76,6 @@ export const baseMenuButtonFields = [
   ),
 
   FieldSchema.requiredFunction('fetch'),
-  FieldSchema.defaultedFunction('onSetup', () => Fun.noop)
+  FieldSchema.defaultedFunction('onSetup', () => Fun.noop),
+  FieldSchema.defaultedString('context', 'mode:design')
 ];
