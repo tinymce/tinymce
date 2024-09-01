@@ -20,6 +20,10 @@ const register = (editor: Editor): void => {
   editor.ui.registry.addContext('insert', (child: string) => {
     return editor.schema.isValidChild(editor.selection.getNode().tagName, child);
   });
+
+  editor.ui.registry.addContext('!readonly', () => {
+    return editor.mode.get() !== 'readonly';
+  });
 };
 
 export {
