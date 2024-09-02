@@ -1,6 +1,6 @@
 project: tinymce
 kind: Added
-body: New `addContextToolbar` to toolbar.
+body: New `addToolbarLabel` to toolbar.
 time: 2024-08-27T12:28:17.028567894+02:00
 custom:
   Issue: TINY-11095
