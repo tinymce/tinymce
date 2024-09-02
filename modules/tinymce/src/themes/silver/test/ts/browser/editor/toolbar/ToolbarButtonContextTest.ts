@@ -59,7 +59,10 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
       buttonSetupFormattingBold: (ed: Editor) => makeButton(ed, { name: 't5', text: 't5', context: 'formatting:bold' }),
       buttonSetupNodeChangeSetEnabledFalse: (ed: Editor) => makeButton(ed, { name: 't6', text: 't6', context: 'mode:design', onSetup: (api) => setupNodeChangeHandler(ed, () => api.setEnabled(false)) }),
       buttonSetupNodeChangeSetEnabledTrue: (ed: Editor) => makeButton(ed, { name: 't7', text: 't7', context: 'mode:readonly', onSetup: (api) => setupNodeChangeHandler(ed, () => api.setEnabled(true)) }),
-      buttonSetupSetEnabledFalse: (ed: Editor) => makeButton(ed, { name: 't8', text: 't8', context: 'mode:design', onSetup: (api) => () => api.setEnabled(false) }),
+      buttonSetupSetEnabledFalse: (ed: Editor) => makeButton(ed, { name: 't8', text: 't8', context: 'mode:design', onSetup: (api) => {
+        api.setEnabled(false);
+        return Fun.noop;
+      } }),
       buttonSetupDoesntMatch: (ed: Editor) => makeButton(ed, { name: 't9', text: 't9', context: 'doesntmatch' }),
       buttonSetupModeDesign2: (ed: Editor) => makeButton(ed, { name: 't10', text: 't10', context: 'mode:design' }),
       buttonSetupInsertSpan: (ed: Editor) => makeButton(ed, { name: 't11', text: 't11', context: 'insert:span' }),
@@ -76,7 +79,10 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
       buttonSetupFormattingBold: (ed: Editor) => makeToggleButton(ed, { name: 't5', text: 't5', context: 'formatting:bold' }),
       buttonSetupNodeChangeSetEnabledFalse: (ed: Editor) => makeToggleButton(ed, { name: 't6', text: 't6', context: 'mode:design', onSetup: (api) => setupNodeChangeHandler(ed, () => api.setEnabled(false)) }),
       buttonSetupNodeChangeSetEnabledTrue: (ed: Editor) => makeToggleButton(ed, { name: 't7', text: 't7', context: 'mode:readonly', onSetup: (api) => setupNodeChangeHandler(ed, () => api.setEnabled(true)) }),
-      buttonSetupSetEnabledFalse: (ed: Editor) => makeToggleButton(ed, { name: 't8', text: 't8', context: 'mode:design', onSetup: (api) => () => api.setEnabled(false) }),
+      buttonSetupSetEnabledFalse: (ed: Editor) => makeToggleButton(ed, { name: 't8', text: 't8', context: 'mode:design', onSetup: (api) => {
+        api.setEnabled(false);
+        return Fun.noop;
+      } }),
       buttonSetupDoesntMatch: (ed: Editor) => makeToggleButton(ed, { name: 't9', text: 't9', context: 'doesntmatch' }),
       buttonSetupModeDesign2: (ed: Editor) => makeToggleButton(ed, { name: 't10', text: 't10', context: 'mode:design' }),
       buttonSetupInsertSpan: (ed: Editor) => makeToggleButton(ed, { name: 't11', text: 't11', context: 'insert:span' }),
@@ -158,7 +164,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           }
         }, [], true);
 
-        it(`TINY-11211: Toolbar ${scenario.label} should not be enabled in design mode only`, async () => {
+        it(`TINY-11211: Toolbar ${scenario.label} should only be enabled in design mode`, async () => {
           const editor = hook.editor();
           editor.mode.set('design');
           scenario.assertButtonEnabled('t2');
