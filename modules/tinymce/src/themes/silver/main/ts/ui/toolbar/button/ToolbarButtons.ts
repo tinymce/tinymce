@@ -6,7 +6,7 @@ import {
   Unselecting
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
-import { Arr, Cell, Fun, Future, Id, Merger, Optional, Type } from '@ephox/katamari';
+import { Arr, Cell, Fun, Future, Id, Merger, Optional, Strings, Type } from '@ephox/katamari';
 import { Attribute, EventArgs, SelectorFind } from '@ephox/sugar';
 
 import { ToolbarGroupOption } from '../../../api/Options';
