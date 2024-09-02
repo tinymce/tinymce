@@ -6,7 +6,7 @@ import {
   Unselecting
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
-import { Arr, Cell, Fun, Future, Id, Merger, Optional, Type } from '@ephox/katamari';
+import { Arr, Cell, Fun, Future, Id, Merger, Optional, Strings, Type } from '@ephox/katamari';
 import { Attribute, EventArgs, SelectorFind } from '@ephox/sugar';
 
 import { ToolbarGroupOption } from '../../../api/Options';
@@ -220,7 +220,12 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
           )).toArray(),
           // Enable toolbar buttons by default
           DisablingConfigs.toolbarButton(() => !spec.enabled || !providersBackstage.checkButtonContext(spec.context)),
-          ButtonState.toggleOnReceive(() => !spec.enabled || !providersBackstage.checkButtonContext(spec.context)),
+          ButtonState.toggleOnReceive(() => {
+            return {
+              contextType: Strings.contains(spec.context, ':') ? spec.context.split(':')[0] : spec.context,
+              shouldDisable: !providersBackstage.checkButtonContext(spec.context)
+            };
+          }),
         ].concat(specialisation.toolbarButtonBehaviours)
       ),
       // Here we add the commonButtonDisplayEvent behaviour from the structure so we can listen

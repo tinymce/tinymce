@@ -66,7 +66,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
       buttonSetupDoesntMatch: (ed: Editor) => makeButton(ed, { name: 't9', text: 't9', context: 'doesntmatch' }),
       buttonSetupModeDesign2: (ed: Editor) => makeButton(ed, { name: 't10', text: 't10', context: 'mode:design' }),
       buttonSetupInsertSpan: (ed: Editor) => makeButton(ed, { name: 't11', text: 't11', context: 'insert:span' }),
-      buttonSetupAnyEnabledFalse: (ed: Editor) => makeButton(ed, { name: 't12', text: 't12', context: 'any', enabled: false }),
+      buttonSetupAnyEnabledFalse: (ed: Editor) => makeButton(ed, { name: 't12', text: 't12', context: 'mode:design', enabled: false }),
       assertButtonEnabled,
       assertButtonDisabled
     },
@@ -86,7 +86,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
       buttonSetupDoesntMatch: (ed: Editor) => makeToggleButton(ed, { name: 't9', text: 't9', context: 'doesntmatch' }),
       buttonSetupModeDesign2: (ed: Editor) => makeToggleButton(ed, { name: 't10', text: 't10', context: 'mode:design' }),
       buttonSetupInsertSpan: (ed: Editor) => makeToggleButton(ed, { name: 't11', text: 't11', context: 'insert:span' }),
-      buttonSetupAnyEnabledFalse: (ed: Editor) => makeToggleButton(ed, { name: 't12', text: 't12', context: 'any', enabled: false }),
+      buttonSetupAnyEnabledFalse: (ed: Editor) => makeToggleButton(ed, { name: 't12', text: 't12', context: 'mode:design', enabled: false }),
       assertButtonEnabled,
       assertButtonDisabled
     }
@@ -132,7 +132,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         });
       });
 
-      context('Toolbar button spec with context: any, switching modes in editor setup ', () => {
+      context('Toolbar button spec with context: any, switching modes in editor setup', () => {
         const hook = TinyHooks.bddSetup<Editor>({
           base_url: '/project/tinymce/js/tinymce',
           toolbar: 't1',
@@ -255,7 +255,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         });
       });
 
-      context('Toolbar button spec with context: mode:readonly, switching modes in editor setup ', () => {
+      context('Toolbar button spec with context: mode:readonly, switching modes in editor setup', () => {
         const hook = TinyHooks.bddSetup<Editor>({
           base_url: '/project/tinymce/js/tinymce',
           toolbar: 't3',
@@ -451,7 +451,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         it(`TINY-11211: Toolbar ${scenario.label} should be enabled in uiEnabled mode`, async () => {
           const editor = hook.editor();
           editor.mode.set('design');
-          scenario.assertButtonEnabled('t8');
+          scenario.assertButtonDisabled('t8');
 
           editor.mode.set('testmode');
           scenario.assertButtonDisabled('t8');
@@ -577,7 +577,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           scenario.assertButtonDisabled('t12');
 
           editor.mode.set('design');
-          scenario.assertButtonDisabled('t12');
+          scenario.assertButtonEnabled('t12');
         });
       });
     });
