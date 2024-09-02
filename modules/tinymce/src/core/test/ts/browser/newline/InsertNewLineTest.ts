@@ -952,8 +952,8 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         editor.mode.set('testmode');
         setSelectionTo(editor, [ 0 ], 1);
         insertNewline(editor, { });
-        TinyAssertions.assertContent(editor, '<div><table><tbody><tr><td><br></td></tr></tbody></table><br></div>');
-        TinyAssertions.assertCursor(editor, [ 1 ], 0);
+        TinyAssertions.assertContent(editor, '<div><table><tbody><tr><td>&nbsp;</td></tr></tbody></table></div>');
+        TinyAssertions.assertCursor(editor, [ 0 ], 1);
       });
 
       it('TINY-9813: Placed a cursor is placed after a table, with an editable afterwards', () => {
