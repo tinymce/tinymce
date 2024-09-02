@@ -1,6 +1,6 @@
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button, Disabling,
-  FormField as AlloyFormField, GuiFactory, Memento, NativeEvents, Representing, SimpleSpec, SimulatedEvent, SketchSpec,
+  FormField as AlloyFormField, GuiFactory, Memento, NativeEvents, Representing, SimpleSpec, SimulatedEvent,
   SystemEvents, Tabstopping, Toggling
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
@@ -80,15 +80,43 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
     }
   );
 
-  const renderField = (s: SketchSpec) => ({
-    uid: s.uid,
+  const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
+  const pField = AlloyFormField.parts.field(
+    {
+      factory: Button,
+      dom: {
+        tag: 'button',
+        styles: {
+          position: 'relative'
+        },
+        classes: [ 'tox-button', 'tox-button--secondary' ]
+      },
+      components: [
+        GuiFactory.text(providersBackstage.translate('Browse for an image')),
+        memInput.asSpec()
+      ],
+      action: (comp: AlloyComponent) => {
+        const inputComp = memInput.get(comp);
+        inputComp.element.dom.click();
+      },
+      buttonBehaviours: Behaviour.derive([
+        ComposingConfigs.self(),
+        RepresentingConfigs.memory(initialData.getOr([])),
+        Tabstopping.config({ }),
+        DisablingConfigs.button(providersBackstage.isDisabled),
+        ReadOnly.receivingConfig()
+      ])
+    }
+  );
+
+  const wrapper: SimpleSpec = {
     dom: {
       tag: 'div',
       classes: [ 'tox-dropzone-container' ]
     },
     behaviours: Behaviour.derive([
-      RepresentingConfigs.memory(initialData.getOr([])),
-      ComposingConfigs.self(),
+      RepresentingConfigs.memory([]),
+      // ComposingConfigs.self(),
       Disabling.config({}),
       Toggling.config({
         toggleClass: 'dragenter',
@@ -118,37 +146,12 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
               GuiFactory.text(providersBackstage.translate('Drop an image here'))
             ]
           },
-          Button.sketch({
-            dom: {
-              tag: 'button',
-              styles: {
-                position: 'relative'
-              },
-              classes: [ 'tox-button', 'tox-button--secondary' ]
-            },
-            components: [
-              GuiFactory.text(providersBackstage.translate('Browse for an image')),
-              memInput.asSpec()
-            ],
-            action: (comp) => {
-              const inputComp = memInput.get(comp);
-              inputComp.element.dom.click();
-            },
-            buttonBehaviours: Behaviour.derive([
-              Tabstopping.config({ }),
-              DisablingConfigs.button(providersBackstage.isDisabled),
-              ReadOnly.receivingConfig()
-            ])
-          })
+          pField
         ]
       }
     ]
-  });
 
-  const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
-  const pField = AlloyFormField.parts.field({
-    factory: { sketch: renderField }
-  });
+  };
 
-  return renderFormFieldWith(pLabel, pField, [ 'tox-form__group--stretched' ], [ ]);
+  return renderFormFieldWith(pLabel, wrapper, [ 'tox-form__group--stretched' ], []);
 };

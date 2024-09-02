@@ -247,7 +247,7 @@ const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDi
           }).catch((err) => {
             finalize();
             helpers.alertErr(err, () => {
-              api.focusSelf();
+              api.focus('fileinput');
             });
           });
         } else {
