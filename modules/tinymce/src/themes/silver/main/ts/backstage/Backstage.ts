@@ -61,24 +61,16 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
     getOption: editor.options.get,
     tooltips: TooltipsBackstage(lazySinks.dialog),
     checkButtonContext: (specContext: string) => {
-      const resolveContext = () => {
-        if (Strings.contains(specContext, ':')) {
-          return specContext.split(':');
-        } else {
-          return [ specContext ];
-        }
-      };
+      const resolveContext = () => Strings.contains(specContext, ':') ? specContext.split(':') : [ specContext ];
 
       const [ key, value ] = resolveContext();
-
-      return Obj.get(editor.ui.registry.getAll().contexts, key)
-        .fold(() => {
+      const contexts = editor.ui.registry.getAll().contexts;
+      return Obj.get(contexts, key)
+        .fold(
           // Fallback to 'mode:design' if key is not found
-          return Obj.get(editor.ui.registry.getAll().contexts, 'mode').map((pred) => pred(editor, 'design')).getOr(false);
-        },
-        (pred) => {
-          return pred(...[ editor, value ]);
-        });
+          () => Obj.get(contexts, 'mode').map((pred) => pred(editor, 'design')).getOr(false),
+          (pred) => pred(...[ editor, value ])
+        );
     }
   };
 

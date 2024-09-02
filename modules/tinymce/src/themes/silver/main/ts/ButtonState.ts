@@ -15,20 +15,12 @@ const broadcastEvents = (uiRefs: ReadyUiReferences): void => {
 };
 
 const setupEventsForButton = (editor: Editor, uiRefs: ReadyUiReferences): void => {
-  editor.on('init', () => {
-    broadcastEvents(uiRefs);
-  });
-
-  editor.on('SwitchMode', () => {
-    broadcastEvents(uiRefs);
-  });
-
-  editor.on('NodeChange', () => {
+  editor.on('init SwitchMode NodeChange', () => {
     broadcastEvents(uiRefs);
   });
 };
 
-const toggleButtonStateOnReceive = (shouldDisable: () => boolean): Behaviour.NamedConfiguredBehaviour<any, any> => Receiving.config({
+const toggleOnReceive = (shouldDisable: () => boolean): Behaviour.NamedConfiguredBehaviour<any, any> => Receiving.config({
   channels: {
     [ButtonStateChannel]: {
       onReceive: (comp) => {
@@ -40,5 +32,5 @@ const toggleButtonStateOnReceive = (shouldDisable: () => boolean): Behaviour.Nam
 
 export {
   setupEventsForButton,
-  toggleButtonStateOnReceive
+  toggleOnReceive
 };
