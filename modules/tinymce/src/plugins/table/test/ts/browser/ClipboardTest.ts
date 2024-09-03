@@ -789,6 +789,6 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
     assert.equal(dataTransfer.getData('text/html'), '<!-- x-tinymce/html -->' + expectedTable);
     TinySelections.setCursor(editor, [ 1, 0 ], 0);
     Clipboard.pasteItems(TinyDom.body(editor), Arr.mapToObject(dataTransfer.types, (type) => dataTransfer.getData(type)));
-    TinyAssertions.assertContent(editor, inputTable + expectedTable);
+    TinyAssertions.assertContent(editor, inputTable + expectedTable + '<p>&nbsp;</p>');
   });
 });

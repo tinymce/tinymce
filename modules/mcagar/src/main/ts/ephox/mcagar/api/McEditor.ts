@@ -13,6 +13,7 @@ const pFromElement = <T extends EditorType = EditorType>(element: SugarElement<E
     const nuSettings: Record<string, any> = {
       toolbar_mode: 'wrap',
       promotion: false,
+      license_key: 'gpl',
       ...settings
     };
 

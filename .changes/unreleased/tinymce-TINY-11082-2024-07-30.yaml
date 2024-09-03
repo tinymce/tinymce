@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Pasting a table now places the cursor after the table instead of into the last cell.
+time: 2024-07-30T13:39:58.930774+02:00
+custom:
+  Issue: TINY-11082

@@ -27,6 +27,7 @@ describe('browser.tinymce.plugins.table.TableRemoveTrailingBrTest', () => {
       '</tr>',
       '</tbody>',
       '</table>',
+      '<p>&nbsp;</p>'
     ].join('\n');
 
     it('TBA: serialised content should have nbsp\'s in table cells', async () => {
@@ -56,7 +57,8 @@ describe('browser.tinymce.plugins.table.TableRemoveTrailingBrTest', () => {
       editor.setContent('');
       await TableTestUtils.pInsertTableViaGrid(editor, 2, 2);
       TinyAssertions.assertCursor(editor, [ 0, 1, 0, 0 ], 0);
-      TinyAssertions.assertContentPresence(editor, { 'br': 4, 'br:not([data-mce-bogus])': 4 });
+      // Four brs for the table plus one after the table
+      TinyAssertions.assertContentPresence(editor, { 'br': 5, 'br:not([data-mce-bogus])': 4 });
     });
 
     it('TINY-9860: should have correct number of non-bogus brs for nested table', async () => {
@@ -64,8 +66,8 @@ describe('browser.tinymce.plugins.table.TableRemoveTrailingBrTest', () => {
       editor.setContent('');
       await TableTestUtils.pInsertTableViaGrid(editor, 2, 2);
       await TableTestUtils.pInsertTableViaGrid(editor, 2, 2);
-      // Three brs for the outer table and four brs for the inner table
-      TinyAssertions.assertContentPresence(editor, { 'br': 7, 'br:not([data-mce-bogus])': 7 });
+      // Three brs for the outer table and four brs for the inner table plus one after the table
+      TinyAssertions.assertContentPresence(editor, { 'br': 8, 'br:not([data-mce-bogus])': 7 });
     });
   });
 
@@ -84,6 +86,7 @@ describe('browser.tinymce.plugins.table.TableRemoveTrailingBrTest', () => {
       '</tr>',
       '</tbody>',
       '</table>',
+      '<p>&nbsp;</p>'
     ].join('\n');
 
     it('TBA: serialised content should have br\'s in table cells', async () => {
@@ -113,7 +116,8 @@ describe('browser.tinymce.plugins.table.TableRemoveTrailingBrTest', () => {
       editor.setContent('');
       await TableTestUtils.pInsertTableViaGrid(editor, 2, 2);
       TinyAssertions.assertCursor(editor, [ 0, 1, 0, 0 ], 0);
-      TinyAssertions.assertContentPresence(editor, { 'br': 4, 'br:not([data-mce-bogus])': 4 });
+      // Four brs for the table plus one after the table
+      TinyAssertions.assertContentPresence(editor, { 'br': 5, 'br:not([data-mce-bogus])': 4 });
     });
 
     it('TINY-9860: should have correct number of non-bogus brs for nested table', async () => {
@@ -121,8 +125,8 @@ describe('browser.tinymce.plugins.table.TableRemoveTrailingBrTest', () => {
       editor.setContent('');
       await TableTestUtils.pInsertTableViaGrid(editor, 2, 2);
       await TableTestUtils.pInsertTableViaGrid(editor, 2, 2);
-      // Three brs for the outer table and four brs for the inner table
-      TinyAssertions.assertContentPresence(editor, { 'br': 7, 'br:not([data-mce-bogus])': 7 });
+      // Three brs for the outer table and four brs for the inner table plus one after the table
+      TinyAssertions.assertContentPresence(editor, { 'br': 8, 'br:not([data-mce-bogus])': 7 });
     });
   });
 });

@@ -1,6 +1,6 @@
 import { AlloyComponent, Behaviour, Button as AlloyButton, GuiFactory, Memento, Replacing, SimpleOrSketchSpec } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
-import { Attribute, Class } from '@ephox/sugar';
+import { Attribute, Class, Focus } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderReplaceableIconFromPack } from '../button/ButtonSlices';
@@ -38,8 +38,10 @@ export const renderButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryB
     };
     const isActive = () => Class.has(comp.element, ViewButtonClasses.Ticked);
 
+    const focus = () => Focus.focus(comp.element);
+
     if (isToggleButton) {
-      return spec.onAction({ setIcon, setActive, isActive });
+      return spec.onAction({ setIcon, setActive, isActive, focus });
     }
     if (spec.type === 'button') {
       return spec.onAction({ setIcon });

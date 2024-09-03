@@ -117,7 +117,7 @@ describe('browser.tinymce.core.content.insert.InsertContentCommandTest', () => {
     editor.setContent('<h1>abc</h1><p>def</p>');
     LegacyUnit.setSelection(editor, 'h1', 3);
     editor.execCommand('mceInsertContent', false, '<table><tr><td></td></tr></table>');
-    assert.equal(editor.selection.getNode().nodeName, 'TD');
+    assert.equal(editor.selection.getNode().nodeName, 'P');
     TinyAssertions.assertContent(editor, '<h1>abc</h1><table><tbody><tr><td>\u00a0</td></tr></tbody></table><p>def</p>');
   });
 

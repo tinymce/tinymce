@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: Deleting a selection in a list element would sometimes prevent the `input` event
+  from being dispatched.
+time: 2024-08-05T05:07:18.131117218+02:00
+custom:
+  Issue: TINY-11100
