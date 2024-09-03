@@ -10,7 +10,6 @@ import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import * as ButtonState from '../../ButtonState';
-import * as ReadOnly from '../../ReadOnly';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import * as UiUtils from '../alien/UiUtils';
 import { renderLabel, renderReplaceableIconFromPack } from '../button/ButtonSlices';
