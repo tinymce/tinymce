@@ -39,6 +39,8 @@ const registry = (): Registry.Registry => {
      */
     addButton: bridge.addButton,
 
+    addToolbarLabel: bridge.addToolbarLabel,
+
     /**
      * Registers a new contextual form item.
      * Similar to a context menu item, a contextual form is an item with an input
