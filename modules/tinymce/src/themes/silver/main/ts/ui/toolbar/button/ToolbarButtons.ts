@@ -219,13 +219,8 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
             )
           )).toArray(),
           // Enable toolbar buttons by default
-          DisablingConfigs.toolbarButton(() => !spec.enabled || !providersBackstage.checkButtonContext(spec.context)),
-          ButtonState.toggleOnReceive(() => {
-            return {
-              contextType: Strings.contains(spec.context, ':') ? spec.context.split(':')[0] : spec.context,
-              shouldDisable: !providersBackstage.checkButtonContext(spec.context)
-            };
-          }),
+          DisablingConfigs.toolbarButton(() => !spec.enabled || providersBackstage.checkButtonContext(spec.context).shouldDisable),
+          ButtonState.toggleOnReceive(() => providersBackstage.checkButtonContext(spec.context))
         ].concat(specialisation.toolbarButtonBehaviours)
       ),
       // Here we add the commonButtonDisplayEvent behaviour from the structure so we can listen

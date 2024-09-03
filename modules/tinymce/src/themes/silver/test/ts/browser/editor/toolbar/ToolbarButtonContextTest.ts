@@ -267,7 +267,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           }
         }, [], true);
 
-        it(`TINY-11211: Toolbar ${scenario.label} should be enabled in uiEnabled mode`, async () => {
+        it(`TINY-11211: Toolbar ${scenario.label} should only be enabled in readonly mode`, async () => {
           const editor = hook.editor();
           scenario.assertButtonDisabled('t3');
           editor.mode.set('readonly');
@@ -448,7 +448,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           }
         }, [], true);
 
-        it(`TINY-11211: Toolbar ${scenario.label} should be enabled in uiEnabled mode`, async () => {
+        it(`TINY-11211: Toolbar ${scenario.label} should always be disabled`, async () => {
           const editor = hook.editor();
           editor.mode.set('design');
           scenario.assertButtonDisabled('t8');
