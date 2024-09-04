@@ -12,6 +12,7 @@ describe('headless.tinymce.themes.silver.components.dialogbutton.DialogFooterBut
   describe('primary style', () => {
     const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
       renderFooterButton({
+        context: 'any',
         text: 'Submit>Text',
         name: 'Submit',
         enabled: true,
@@ -37,6 +38,7 @@ describe('headless.tinymce.themes.silver.components.dialogbutton.DialogFooterBut
   describe('secondary style', () => {
     const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
       renderFooterButton({
+        context: 'any',
         name: 'test-button',
         text: 'Cancel Button',
         enabled: true,

@@ -34,6 +34,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
       },
       buttons: [
         {
+          context: 'any',
           type: 'cancel',
           name: 'cancel',
           text: 'Cancel',
@@ -44,6 +45,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
           icon: Optional.none()
         },
         {
+          context: 'any',
           type: 'submit',
           name: 'save',
           text: 'Save',
