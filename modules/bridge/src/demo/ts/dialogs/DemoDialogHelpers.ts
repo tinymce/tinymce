@@ -25,7 +25,6 @@ const createDemoApi = <T extends DialogData>(internalStructure: Dialog<T>, initi
     },
     redial: Fun.noop,
     focus: (_name: string) => {},
-    focusSelf: Fun.noop,
     showTab: (_title: string) => {},
     setEnabled: (_name: string, _state: boolean) => {},
     block: (_message: string) => {},
