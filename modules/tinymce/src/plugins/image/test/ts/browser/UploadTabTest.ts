@@ -217,7 +217,7 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
     await pTriggerUpload(editor);
     await TinyUiActions.pWaitForDialog(editor, '[role="dialog"] p:contains("This is an upload error")');
     TinyUiActions.clickOnUi(editor, 'button:contains("OK")');
-    await FocusTools.pTryOnSelector('After closing the error alert the focus should be on the image dialog', SugarDocument.getDocument(), '[role="tab"]:contains("Upload")');
+    await FocusTools.pTryOnSelector('After closing the error alert the focus should be on the browse files button', SugarDocument.getDocument(), 'button:contains("Browse for an image")');
     closeDialog(editor);
   });
 });

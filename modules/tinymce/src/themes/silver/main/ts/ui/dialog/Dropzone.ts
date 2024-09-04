@@ -1,10 +1,11 @@
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button, Disabling,
   FormField as AlloyFormField, GuiFactory, Memento, NativeEvents, Representing, SimpleSpec, SimulatedEvent,
-  SystemEvents, Tabstopping, Toggling
+  SystemEvents, Tabstopping, Toggling,
+  CustomEvent
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Arr, Optional, Strings } from '@ephox/katamari';
+import { Arr, Id, Optional, Strings } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
 import Tools from 'tinymce/core/api/util/Tools';
@@ -16,6 +17,8 @@ import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
 import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 import { formChangeEvent } from '../general/FormEvents';
+
+const browseFilesEvent = Id.generate('browser.files.event');
 
 const filterByExtension = (files: FileList, providersBackstage: UiFactoryBackstageProviders) => {
   const allowedImageFileTypes = Tools.explode(providersBackstage.getOption('images_file_types'));
@@ -43,13 +46,13 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
   const onDrop: AlloyEvents.EventRunHandler<EventArgs> = (comp, se) => {
     if (!Disabling.isDisabled(comp)) {
       const transferEvent = se.event.raw as DragEvent;
-      handleFiles(comp, transferEvent.dataTransfer?.files);
+      AlloyTriggers.emitWith(comp, browseFilesEvent, { files: transferEvent.dataTransfer?.files });
     }
   };
 
   const onSelect = (component: AlloyComponent, simulatedEvent: SimulatedEvent<EventArgs>) => {
     const input = simulatedEvent.event.raw.target as HTMLInputElement;
-    handleFiles(component, input.files);
+    AlloyTriggers.emitWith(component, browseFilesEvent, { files: input.files });
   };
 
   const handleFiles = (component: AlloyComponent, files: FileList | null | undefined) => {
@@ -115,8 +118,6 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
       classes: [ 'tox-dropzone-container' ]
     },
     behaviours: Behaviour.derive([
-      RepresentingConfigs.memory([]),
-      // ComposingConfigs.self(),
       Disabling.config({}),
       Toggling.config({
         toggleClass: 'dragenter',
@@ -153,5 +154,11 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
 
   };
 
-  return renderFormFieldWith(pLabel, wrapper, [ 'tox-form__group--stretched' ], []);
+  return renderFormFieldWith(pLabel, wrapper, [ 'tox-form__group--stretched' ], [ AddEventsBehaviour.config('handle-files', [
+    AlloyEvents.run<CustomEvent>(browseFilesEvent, (comp, se) => {
+      AlloyFormField.getField(comp).each((field) => {
+        handleFiles(field, se.event.files);
+      });
+    })
+  ]) ]);
 };
