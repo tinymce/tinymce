@@ -28,7 +28,7 @@ const toggleOnReceive = (getContext: () => { contextType: string; shouldDisable:
       onReceive: (comp, eventType: string) => {
         const { contextType, shouldDisable } = getContext();
         if (contextType === 'mode') {
-          if (Arr.contains([ 'switchmode' ], eventType)) {
+          if (Arr.contains([ 'switchmode', 'init' ], eventType)) {
             Disabling.set(comp, shouldDisable);
           }
         } else {

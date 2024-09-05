@@ -116,7 +116,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
     store.clear();
   });
 
-  it('TINY-10980: Dialog footer buttons enabled in the correct context', async () => {
+  it('TINY-11211: Dialog footer buttons enabled in the correct context', async () => {
     const editor = hook.editor();
 
     TinyUiActions.clickOnToolbar(editor, '[data-mce-name="t1"]');

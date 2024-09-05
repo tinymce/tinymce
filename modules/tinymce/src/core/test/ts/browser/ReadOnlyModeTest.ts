@@ -1,7 +1,7 @@
 import { ApproxStructure, Mouse, UiFinder, Clipboard } from '@ephox/agar';
 import { Assert, describe, it } from '@ephox/bedrock-client';
-import { Optional, OptionalInstances } from '@ephox/katamari';
-import { Class, Css, Scroll, SelectorFind, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
+import { Fun, Optional, OptionalInstances } from '@ephox/katamari';
+import { Attribute, Class, Css, Scroll, SelectorFind, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -12,11 +12,24 @@ import TablePlugin from 'tinymce/plugins/table/Plugin';
 const tOptional = OptionalInstances.tOptional;
 
 describe('browser.tinymce.core.ReadOnlyModeTest', () => {
+  const registerMode = (editor: Editor) => {
+    editor.mode.register('testmode', {
+      activate: Fun.noop,
+      deactivate: Fun.noop,
+      editorReadOnly: {
+        selectionEnabled: true
+      }
+    });
+  };
+
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'bold',
     plugins: 'table',
-    statusbar: false
+    statusbar: false,
+    setup: (ed: Editor) => {
+      registerMode(ed);
+    }
   }, [ TablePlugin ]);
 
   const setMode = (editor: Editor, mode: string) => {
@@ -75,9 +88,15 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     Mouse.mouseOver(table);
   };
 
-  const assertToolbarDisabled = (expectedState: boolean) => {
+  const assertToolbarButtonDisabled = (expectedState: boolean) => {
     const elm = UiFinder.findIn(SugarBody.body(), 'button[data-mce-name="bold"]').getOrDie();
     assert.equal(Class.has(elm, 'tox-tbtn--disabled'), expectedState, 'Button should have expected disabled state');
+  };
+
+  const assertToolbarDisabled = (expectedState: boolean) => {
+    const elm = UiFinder.findIn(SugarBody.body(), '.tox-toolbar-overlord').getOrDie();
+    assert.equal(Class.has(elm, 'tox-tbtn--disabled'), expectedState, 'Toolbar should have expected disabled state');
+    assert.equal(Attribute.get(elm, 'aria-disabled'), expectedState.toString(), 'Toolbar should have expected disabled state');
   };
 
   const assertHrefOpt = (editor: Editor, selector: string, expectedHref: Optional<string>) => {
@@ -232,10 +251,21 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
   it('TBA: Main toolbar should disable when switching to readonly mode', () => {
     const editor = hook.editor();
     setMode(editor, 'design');
+    assertToolbarButtonDisabled(false);
     assertToolbarDisabled(false);
     setMode(editor, 'readonly');
+    assertToolbarButtonDisabled(true);
     assertToolbarDisabled(true);
     setMode(editor, 'design');
+    assertToolbarButtonDisabled(false);
+    assertToolbarDisabled(false);
+    setMode(editor, 'testmode');
+    assertToolbarDisabled(false);
+    setMode(editor, 'readonly');
+    assertToolbarButtonDisabled(true);
+    assertToolbarDisabled(true);
+    setMode(editor, 'design');
+    assertToolbarButtonDisabled(false);
     assertToolbarDisabled(false);
   });
 
