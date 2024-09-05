@@ -114,8 +114,8 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsContextTest', () => {
           {
             type: 'group',
             buttons: [
-              { type: 'button', text: 'Cancel', onAction: store.adder('Cancel') },
-              { type: 'button', text: 'Save code', buttonType: 'primary', onAction: store.adder('Save code') }
+              { type: 'button', text: 'Cancel', onAction: store.adder('Cancel'), context: 'mode:!readonly' },
+              { type: 'button', text: 'Save code', buttonType: 'primary', onAction: store.adder('Save code'), context: 'mode:!readonly' }
             ]
           },
         ],
@@ -147,7 +147,7 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsContextTest', () => {
     return UiFinder.findIn<HTMLElement>(TinyDom.container(editor), `.tox-view button[aria-label='${title}']`).getOrDie();
   };
 
-  it('TINY-11211: View toggle button context should reflect button state', () => {
+  it('TINY-11211: View toggle button should be clickable and context reflect button state', () => {
     const editor = hook.editor();
 
     toggleView('myview1');
@@ -159,7 +159,7 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsContextTest', () => {
     assert.notEqual(getSvg(editor, 'button-with-toggle'), initialButtonWithToggleButtonSvg, 'after the first toggle icon should change');
     clickViewButton(editor, 'button-with-toggle');
     assert.equal(getSvg(editor, 'button-with-toggle'), initialButtonWithToggleButtonSvg, 'after the second toggle icon should return to the old value');
-    store.sAssertEq('Clicking on button should should be permitted', [ 'button-with-toggle' ]);
+    store.assertEq('Clicking on button should should be permitted', [ 'button-with-toggle', 'button-with-toggle' ]);
 
     assertButtonNativelyEnabled('button-without-toggle');
     const initialbuttonWithoutToggleButtonSvg = getSvg(editor, 'button-without-toggle');
@@ -167,12 +167,13 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsContextTest', () => {
     assert.equal(getSvg(editor, 'button-without-toggle'), initialbuttonWithoutToggleButtonSvg, 'click should not toggle icon');
     clickViewButton(editor, 'button-without-toggle');
     assert.equal(getSvg(editor, 'button-without-toggle'), initialbuttonWithoutToggleButtonSvg, 'click should not toggle icon');
-    store.sAssertEq('Clicking on button should should be permitted', [ 'button-with-toggle', 'button-without-toggle' ]);
+    store.assertEq('Clicking on button should should be permitted', [ 'button-with-toggle', 'button-with-toggle', 'button-without-toggle', 'button-without-toggle' ]);
   });
 
-  it('TINY-9616: if is active is true the button should have ViewButtonClasses.Ticked', async () => {
+  it('TINY-11211: Views buttons should be disabled in readonly mode, clicking on buttons should not trigger onAction', async () => {
     const editor = hook.editor();
     toggleView('myview1');
+    editor.mode.set('readonly');
     await UiFinder.pWaitFor('buttons should be showed', TinyDom.container(editor), '[aria-label="button-active-true"]');
 
     const buttonActiveTrue = getButtonByTitle('button-active-true');
@@ -182,13 +183,21 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsContextTest', () => {
     const buttonNoActive = getButtonByTitle('button-no-active');
     assert.isFalse(Class.has(buttonNoActive, ViewButtonClasses.Ticked), 'button without active flag should not have ticked class');
 
+    assertButtonNativelyDisabled('button-active-true');
+    assertButtonNativelyDisabled('button-active-false');
+    assertButtonNativelyDisabled('button-no-active');
+    assertButtonNativelyDisabled('default-toggle-button');
+    assertButtonNativelyDisabled('default-button');
+    assertButtonNativelyDisabled('button-without-toggle');
+    assertButtonNativelyDisabled('button-with-toggle');
+
     clickViewButton(editor, 'button-active-true');
     clickViewButton(editor, 'button-active-false');
     clickViewButton(editor, 'button-no-active');
-    store.sAssertEq('Clicking on button should should be permitted', [ 'button-active-true', 'button-active-false', 'button-no-active' ]);
+    store.assertEq('Clicking on button should should be permitted', []);
   });
 
-  it('TINY-9616: if is active is t2 rue the button should have ViewButtonClasses.Ticked', async () => {
+  it('TINY-11211: View (normal) button should be clickable and context reflect button state', async () => {
     const editor = hook.editor();
     editor.mode.set('testmode');
     toggleView('myview1');
@@ -196,10 +205,10 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsContextTest', () => {
 
     clickViewButton(editor, 'Save code');
     clickViewButton(editor, 'Cancel');
-    store.sAssertEq('Clicking on button should should be permitted', [ 'Save code', 'Cancel' ]);
+    store.assertEq('Clicking on button should should be permitted', [ 'Save code', 'Cancel' ]);
   });
 
-  it('TINY-9616: View button without context defaults to mode:design', async () => {
+  it('TINY-11211: View buttons without context, should have mode:design and should not trigger onAction when its disabled', async () => {
     const editor = hook.editor();
     editor.mode.set('testmode');
     toggleView('myview1');
@@ -209,6 +218,6 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsContextTest', () => {
     assertButtonNativelyDisabled('default-button');
     clickViewButton(editor, 'default-toggle-button');
     clickViewButton(editor, 'default-button');
-    store.sAssertEq('Clicking on disabled button should execute onAction', []);
+    store.assertEq('Clicking on disabled button should execute onAction', []);
   });
 });
