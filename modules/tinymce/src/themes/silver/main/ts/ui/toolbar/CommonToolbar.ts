@@ -109,7 +109,7 @@ const renderMoreToolbarCommon = (toolbarSpec: MoreDrawerToolbarSpec) => {
         items: []
       }),
       'overflow-button': renderIconButtonSpec({
-        context: '!readonly',
+        context: 'mode:!readonly',
         name: 'more',
         icon: Optional.some('more-drawer'),
         enabled: true,

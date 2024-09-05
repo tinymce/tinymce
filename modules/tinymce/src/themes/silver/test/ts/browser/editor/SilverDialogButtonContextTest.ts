@@ -82,7 +82,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
       ed.ui.registry.addButton('t1', {
         icon: 'italic',
         text: 'Test Menu Item 1',
-        context: '!readonly',
+        context: 'mode:!readonly',
 
         onAction: () => {
           ed.windowManager.open(getDialogSpec('mode:design'));
@@ -92,17 +92,17 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
       ed.ui.registry.addButton('t2', {
         icon: 'italic',
         text: 'Test Menu Item 1',
-        context: '!readonly',
+        context: 'mode:!readonly',
 
         onAction: () => {
-          ed.windowManager.open(getDialogSpec('!readonly'));
+          ed.windowManager.open(getDialogSpec('mode:!readonly'));
         }
       });
 
       ed.ui.registry.addButton('t3', {
         icon: 'italic',
         text: 'Test Menu Item 1',
-        context: '!readonly',
+        context: 'mode:!readonly',
 
         onAction: () => {
           ed.windowManager.open(getDialogSpec());
@@ -228,7 +228,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
               text: 'Previous',
               icon: 'action-prev',
               borderless: true,
-              context: '!readonly'
+              context: 'mode:!readonly'
             },
             {
               type: 'button',
@@ -236,7 +236,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
               text: 'Next',
               icon: 'action-next',
               borderless: true,
-              context: '!readonly'
+              context: 'mode:!readonly'
             }
           ]
         },
@@ -286,7 +286,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
               text: 'Previous',
               icon: 'action-prev',
               borderless: true,
-              context: '!readonly',
+              context: 'mode:!readonly',
               enabled: false
             },
             {
@@ -295,7 +295,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
               text: 'Next',
               icon: 'action-next',
               borderless: true,
-              context: '!readonly'
+              context: 'mode:!readonly'
             }
           ]
         },
@@ -350,7 +350,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
                 type: 'togglemenuitem',
                 name: 'matchcase',
                 text: 'Match case',
-                context: '!readonly'
+                context: 'mode:!readonly'
               }, {
                 type: 'togglemenuitem',
                 name: 'wholewords',

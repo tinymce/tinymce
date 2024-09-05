@@ -52,7 +52,7 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsContextTest', () => {
                   api.setIcon(buttonWithToggle ? 'fullscreen' : 'cut');
                   store.add('button-with-toggle');
                 },
-                context: '!readonly'
+                context: 'mode:!readonly'
               }
             ]
           },
@@ -64,7 +64,7 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsContextTest', () => {
             onAction: () => {
               store.add('button-without-toggle');
             },
-            context: '!readonly'
+            context: 'mode:!readonly'
           },
           {
             type: 'togglebutton',
@@ -90,7 +90,7 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsContextTest', () => {
                 tooltip: 'button-active-true',
                 icon: 'help',
                 onAction: store.adder('button-active-true'),
-                context: '!readonly'
+                context: 'mode:!readonly'
               },
               {
                 type: 'togglebutton',
@@ -99,7 +99,7 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsContextTest', () => {
                 tooltip: 'button-active-false',
                 icon: 'help',
                 onAction: store.adder('button-active-false'),
-                context: '!readonly'
+                context: 'mode:!readonly'
               },
               {
                 type: 'togglebutton',
@@ -107,7 +107,7 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsContextTest', () => {
                 tooltip: 'button-no-active',
                 icon: 'help',
                 onAction: store.adder('button-no-active'),
-                context: '!readonly'
+                context: 'mode:!readonly'
               }
             ]
           },
