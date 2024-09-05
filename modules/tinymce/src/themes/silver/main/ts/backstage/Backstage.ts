@@ -1,6 +1,6 @@
 import { AlloyComponent, AlloySpec } from '@ephox/alloy';
 import { Dialog, Menu } from '@ephox/bridge';
-import { Cell, Optional, Result } from '@ephox/katamari';
+import { Cell, Obj, Optional, Result, Strings } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import I18n, { TranslatedString, Untranslated } from 'tinymce/core/api/util/I18n';
@@ -23,6 +23,7 @@ export interface UiFactoryBackstageProviders {
   readonly isDisabled: () => boolean;
   readonly getOption: Editor['options']['get'];
   readonly tooltips: TooltipsProvider;
+  readonly checkButtonContext: (specContext: string) => { contextType: string; shouldDisable: boolean };
 }
 
 export interface UiFactoryBackstageShared {
@@ -58,7 +59,23 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
     translate: I18n.translate,
     isDisabled: () => editor.mode.isReadOnly() || !editor.ui.isEnabled(),
     getOption: editor.options.get,
-    tooltips: TooltipsBackstage(lazySinks.dialog)
+    tooltips: TooltipsBackstage(lazySinks.dialog),
+    checkButtonContext: (specContext: string) => {
+      const resolveContext = () => Strings.contains(specContext, ':') ? specContext.split(':') : [ specContext ];
+
+      const [ key, value ] = resolveContext();
+      const contexts = editor.ui.registry.getAll().contexts;
+      const enabledInContext = Obj.get(contexts, key)
+        .fold(
+          // Fallback to 'mode:design' if key is not found
+          () => Obj.get(contexts, 'mode').map((pred) => pred('design')).getOr(false),
+          (pred) => pred(value)
+        );
+      return {
+        contextType: key,
+        shouldDisable: !enabledInContext
+      };
+    }
   };
 
   const urlinput = UrlInputBackstage(editor);

@@ -11,6 +11,7 @@ import { Attribute, EventArgs, SelectorFind } from '@ephox/sugar';
 
 import { ToolbarGroupOption } from '../../../api/Options';
 import { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
+import * as ButtonState from '../../../ButtonState';
 import * as ReadOnly from '../../../ReadOnly';
 import * as ConvertShortcut from '../../../ui/alien/ConvertShortcut';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
@@ -49,6 +50,7 @@ interface GeneralToolbarButton<T> {
   readonly shortcut: Optional<string>;
   readonly onAction: (api: T) => void;
   readonly enabled: boolean;
+  readonly context: string;
 }
 
 interface ChoiceFetcher {
@@ -217,8 +219,8 @@ const renderCommonToolbarButton = <T>(spec: GeneralToolbarButton<T>, specialisat
             )
           )).toArray(),
           // Enable toolbar buttons by default
-          DisablingConfigs.toolbarButton(() => !spec.enabled || providersBackstage.isDisabled()),
-          ReadOnly.receivingConfig()
+          DisablingConfigs.toolbarButton(() => !spec.enabled || providersBackstage.checkButtonContext(spec.context).shouldDisable),
+          ButtonState.toggleOnReceive(() => providersBackstage.checkButtonContext(spec.context))
         ].concat(specialisation.toolbarButtonBehaviours)
       ),
       // Here we add the commonButtonDisplayEvent behaviour from the structure so we can listen

@@ -9,6 +9,7 @@ import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 import * as Events from '../api/Events';
 import * as Options from '../api/Options';
 import { UiFactoryBackstage } from '../backstage/Backstage';
+import * as ButtonState from '../ButtonState';
 import * as ReadOnly from '../ReadOnly';
 import { ModeRenderInfo, RenderArgs, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
@@ -198,6 +199,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   });
 
   ReadOnly.setupReadonlyModeSwitch(editor, uiRefs);
+  ButtonState.setupEventsForButton(editor, uiRefs);
 
   const api: Partial<EditorUiApi> = {
     show: render,
