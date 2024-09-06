@@ -1,0 +1,7 @@
+project: tinymce
+kind: Added
+body: New option `allow_mathml_annotation_encodings` to opt-in to keep math annotations
+  with specific encodings.
+time: 2024-09-06T10:31:15.360045+02:00
+custom:
+  Issue: TINY-11166
