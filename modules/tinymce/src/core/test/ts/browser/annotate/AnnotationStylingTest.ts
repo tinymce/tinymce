@@ -71,6 +71,7 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
   const commentBackgroundColor = 'rgb(255, 232, 157)'; // #ffe89d
   const commentActiveBackgroundColor = 'rgb(254, 214, 53)'; // #fed635
   const inlineBoundaryBackgroundColor = 'rgb(180, 215, 255)'; // #b4d7ff
+  const commentActiveBoxShadow = 'rgb(0, 108, 231) 0px 0px 0px 2px';
 
   const getOutline = (elm: SugarElement<Element>): Outline => {
     const color = Css.get(elm, 'outline-color');
@@ -86,7 +87,7 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
   const getBackgroundColor = (elm: SugarElement<Element>) =>
     Css.get(elm, 'background-color');
 
-  const pAssertStyling = (editor: Editor, selector: string, expectedBackgroundColor: string, expectedOutline: Outline, checkOtherNodes: boolean = true) =>
+  const pAssertStyling = (editor: Editor, selector: string, expectedBackgroundColor: string, expectedOutline: Outline, expectedBoxShadow: string = 'none', checkOtherNodes: boolean = true) =>
     Waiter.pTryUntil('Should have correct styling', () => {
       const body = TinyDom.body(editor);
       const elm = UiFinder.findIn(body, selector).getOrDie();
@@ -94,6 +95,7 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
       const actualOutline = getOutline(elm);
       assert.equal(actualBackgroundColor, expectedBackgroundColor);
       assert.deepEqual(actualOutline, expectedOutline);
+      assert.equal(Css.get(elm, 'box-shadow'), expectedBoxShadow);
 
       if (checkOtherNodes) {
         const parents = SelectorFilter.ancestors(elm, '*', (e) => Compare.eq(e, body));
@@ -243,34 +245,34 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
       await pAssertStyling(editor, 'span', commentBackgroundColor, noOutline);
     });
 
-    it('TINY-8698: should have blue background on commented text when it is selected', async () => {
+    it('TINY-8698: should have blue box shadow and yellow background on commented text when it is selected', async () => {
       const editor = hook.editor();
       editor.setContent('<p>one two</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
       editor.annotator.annotate('test-comment', {});
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
-      await pAssertStyling(editor, 'span', inlineBoundaryBackgroundColor, noOutline);
+      await pAssertStyling(editor, 'span', commentActiveBackgroundColor, noOutline, commentActiveBoxShadow);
     });
 
-    it('TINY-8698: should have blue background on commented text when it is selected and yellow background for other related comments', async () => {
+    it('TINY-8698: should have blue box shadow and yellow background on commented text when it is selected and yellow background for other related comments', async () => {
       const editor = hook.editor();
       editor.setContent('<p>one two</p><p>three four</p>');
       TinySelections.setSelection(editor, [ 0, 0 ], 4, [], 2);
       editor.annotator.annotate('test-comment', {});
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
-      await pAssertStyling(editor, 'span[data-mce-selected]', inlineBoundaryBackgroundColor, noOutline);
+      await pAssertStyling(editor, 'span[data-mce-selected]', commentActiveBackgroundColor, noOutline, commentActiveBoxShadow);
       await pAssertStyling(editor, 'span:not([data-mce-selected])', commentActiveBackgroundColor, noOutline);
     });
   });
 
   context('text and block comments', () => {
-    it('TINY-8698: should have blue background on commented text when it is selected and yellow background or outline for other related comments', async () => {
+    it('TINY-8698: should have blue box shadow and yellow background on commented text when it is selected and yellow background or outline for other related comments', async () => {
       const editor = hook.editor();
       editor.setContent(`<p>one two</p><p>${imageHtml}</p>${figureImageHtml}<p>three four</p>`);
       TinySelections.setSelection(editor, [ 0, 0 ], 4, [], 4);
       editor.annotator.annotate('test-comment', {});
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
-      await pAssertStyling(editor, 'span[data-mce-selected]:contains("two")', inlineBoundaryBackgroundColor, noOutline);
+      await pAssertStyling(editor, 'span[data-mce-selected]:contains("two")', commentActiveBackgroundColor, noOutline, commentActiveBoxShadow);
       await pAssertStyling(editor, 'span:not([data-mce-selected]):contains("three four")', commentActiveBackgroundColor, noOutline);
       await pAssertStyling(editor, 'span img', noBackgroundColor, commentActiveOutline);
       await pAssertStyling(editor, 'figure', noBackgroundColor, commentActiveOutline);
@@ -294,8 +296,8 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
       const editor = hook.editor();
       editor.setContent(figureImageHtml);
       TinySelections.setCursor(editor, [ 1, 1, 0 ], 1, true);
-      await pAssertStyling(editor, 'figure.image', noBackgroundColor, selectedOutline, false);
-      await pAssertStyling(editor, 'figcaption', noBackgroundColor, selectedOutline, false);
+      await pAssertStyling(editor, 'figure.image', noBackgroundColor, selectedOutline, 'none', false);
+      await pAssertStyling(editor, 'figcaption', noBackgroundColor, selectedOutline, 'none', false);
     });
 
     it('TINY-8698: should have blue outline for nested editable region when selected noneditable ancestor has a comment', async () => {
@@ -304,8 +306,8 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
       TinySelections.select(editor, 'figure.image', []);
       editor.annotator.annotate('test-comment', {});
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 1, true);
-      await pAssertStyling(editor, 'figure.image', noBackgroundColor, selectedOutline, false);
-      await pAssertStyling(editor, 'figcaption', noBackgroundColor, selectedOutline, false);
+      await pAssertStyling(editor, 'figure.image', noBackgroundColor, selectedOutline, 'none', false);
+      await pAssertStyling(editor, 'figcaption', noBackgroundColor, selectedOutline, 'none', false);
     });
   });
 });
