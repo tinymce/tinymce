@@ -178,7 +178,14 @@ const renderCommonDropdown = <T>(
           onControlDetached(spec, editorOffCell)
         ]),
         AddEventsBehaviour.config(fixWidthBehaviourName, [
-          AlloyEvents.runOnAttached((comp, _se) => spec.listRole === 'listbox' ? Fun.noop : UiUtils.forceInitialSize(comp)),
+          AlloyEvents.runOnAttached((comp, _se) => {
+            if (spec.listRole !== 'listbox') {
+              UiUtils.forceInitialSize(comp);
+            }
+          }),
+        ]),
+        AddEventsBehaviour.config('update-dropdown-width-variable', [
+          AlloyEvents.run(SystemEvents.windowResize(), (comp, _se) => AlloyDropdown.close(comp)),
         ]),
         AddEventsBehaviour.config('menubutton-update-display-text', [
           // These handlers are just using Replacing to replace either the menu
