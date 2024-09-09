@@ -36,8 +36,6 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
     TinyAssertions.assertContent(editor, expected);
   };
 
-
-
   context('Apply inline formats to LIs', () => {
     const testApplyInlineListFormat = testListFormat((editor, format, vars) => editor.formatter.apply(format, vars));
 
@@ -386,7 +384,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
     it('TINY-8961: Apply bold to entire list should not format list items', () => {
       const editor = hookWithNoListFormat.editor();
       editor.setContent('<ul><li>Item 1</li><li>Item 2</li></ul>');
-      TinySelections.setSelection(editor, [0, 0, 0], 0, [0, 1, 0], 6);
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 1, 0 ], 6);
       editor.formatter.apply('bold');
       editor.formatter.apply('italic');
       editor.formatter.apply('underline');
