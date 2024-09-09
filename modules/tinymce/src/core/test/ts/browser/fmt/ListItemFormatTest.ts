@@ -1,7 +1,7 @@
-import { Cursors } from '@ephox/agar';
+import { Cursors, Keys } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Type } from '@ephox/katamari';
-import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
+import { TinyActions, TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { FormatVars } from 'tinymce/core/fmt/FormatTypes';
@@ -14,10 +14,25 @@ interface ListItemFormatCase {
   readonly expected: string;
 }
 
+interface ApplyListFormattingCase {
+  readonly format: string;
+  readonly selector: string;
+  readonly styles?: Record<string, string>;
+  readonly attributes?: Record<string, string>;
+  readonly rawInput: string;
+  readonly selection: Cursors.CursorPath;
+  readonly expected: string;
+}
+
 describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
+  }, [], true);
+
+  const hookWithNoListFormat = TinyHooks.bddSetupLight<Editor>({
+    base_url: '/project/tinymce/js/tinymce',
+    apply_list_formatting: false
   }, [], true);
 
   const testListFormat = (f: (editor: Editor, format: string, vars: FormatVars | undefined) => void) => (testCase: ListItemFormatCase) => {
@@ -30,6 +45,8 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
     f(editor, format, vars);
     TinyAssertions.assertContent(editor, expected);
   };
+
+
 
   context('Apply inline formats to LIs', () => {
     const testApplyInlineListFormat = testListFormat((editor, format, vars) => editor.formatter.apply(format, vars));
@@ -372,6 +389,19 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
           expected: '<ul><li style="text-decoration: underline;">abc</li></ul>',
         })
       );
+    });
+  });
+
+  context('Apply list formatting', () => {
+    it('TINY-8961: Apply bold to entire list should not format list items', () => {
+      const editor = hookWithNoListFormat.editor();
+      editor.setContent('<ul><li>Item 1</li><li>Item 2</li></ul>');
+      TinySelections.setSelection(editor, [0, 0, 0], 0, [0, 1, 0], 6);
+      editor.formatter.apply('bold');
+      editor.formatter.apply('italic');
+      editor.formatter.apply('underline');
+      TinyUiActions.keydown(editor, Keys.tab());
+      TinyAssertions.assertContent(editor, '<ul><li><strong><em><u>Item 1</u></em></strong></li><li><strong><em><u>Item 2</u></em></strong></li></ul>');
     });
   });
 });
