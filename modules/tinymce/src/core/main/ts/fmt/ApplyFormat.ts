@@ -40,8 +40,8 @@ const canFormatBR = (editor: Editor, format: ApplyFormat, node: HTMLBRElement, p
   }
 };
 
-const applyStyles = (dom: DOMUtils, elm: Element, format: ApplyFormat, vars: FormatVars | undefined, editor?: Editor ) => {
-  const isApplyListFormatting = editor ? Options.getApplyListFormatting(editor) : false;
+const applyStyles = (dom: DOMUtils, elm: Element, format: ApplyFormat, vars: FormatVars | undefined, editor: Editor ) => {
+  const isApplyListFormatting = Options.getApplyListFormatting(editor);
 
   each(format.styles, (value, name) => {
     if (isApplyListFormatting || !NodeType.isListItem(elm)) {
@@ -366,7 +366,7 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
       }
 
       ListItemFormat.getExpandedListItemFormat(ed.formatter, name).each((liFmt) => {
-        Arr.each(ListItemFormat.getFullySelectedListItems(ed.selection), (li) => applyStyles(dom, li, liFmt as ApplyFormat, vars));
+        Arr.each(ListItemFormat.getFullySelectedListItems(ed.selection), (li) => applyStyles(dom, li, liFmt as ApplyFormat, vars, ed));
       });
     }
 
