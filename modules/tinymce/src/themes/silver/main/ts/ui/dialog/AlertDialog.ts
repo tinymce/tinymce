@@ -22,6 +22,7 @@ export const setup = (backstage: UiFactoryBackstage): AlertDialogApi => {
 
     const memFooterClose = Memento.record(
       renderFooterButton({
+        context: 'mode:!readonly',
         name: 'close-alert',
         text: 'OK',
         primary: true,

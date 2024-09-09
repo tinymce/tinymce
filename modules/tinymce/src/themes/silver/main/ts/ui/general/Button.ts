@@ -11,7 +11,7 @@ import { Dialog, Toolbar } from '@ephox/bridge';
 import { Fun, Merger, Optional, Type } from '@ephox/katamari';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import * as ReadOnly from '../../ReadOnly';
+import * as ButtonState from '../../ButtonState';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderFormField } from '../alien/FieldLabeller';
@@ -48,8 +48,8 @@ export const renderCommonSpec = (
 
   const common = {
     buttonBehaviours: Behaviour.derive([
-      DisablingConfigs.button(() => !spec.enabled || providersBackstage.isDisabled()),
-      ReadOnly.receivingConfig(),
+      DisablingConfigs.item(() => !spec.enabled || providersBackstage.checkButtonContext(spec.context).shouldDisable),
+      ButtonState.toggleOnReceive(() => providersBackstage.checkButtonContext(spec.context)),
       Tabstopping.config({}),
       ...tooltip.map(
         (t) => Tooltipping.config(
@@ -267,7 +267,6 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
 
     const fixedSpec: Toolbar.ToolbarMenuButton = {
       ...spec,
-      context: 'mode:design',
       type: 'menubutton',
       // Currently, dialog-based menu buttons cannot be searchable.
       search: Optional.none(),
