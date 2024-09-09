@@ -1,7 +1,7 @@
 import { Cursors, Keys } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Type } from '@ephox/katamari';
-import { TinyActions, TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { FormatVars } from 'tinymce/core/fmt/FormatTypes';
@@ -9,16 +9,6 @@ import { FormatVars } from 'tinymce/core/fmt/FormatTypes';
 interface ListItemFormatCase {
   readonly format: string;
   readonly value?: string;
-  readonly rawInput: string;
-  readonly selection: Cursors.CursorPath;
-  readonly expected: string;
-}
-
-interface ApplyListFormattingCase {
-  readonly format: string;
-  readonly selector: string;
-  readonly styles?: Record<string, string>;
-  readonly attributes?: Record<string, string>;
   readonly rawInput: string;
   readonly selection: Cursors.CursorPath;
   readonly expected: string;
