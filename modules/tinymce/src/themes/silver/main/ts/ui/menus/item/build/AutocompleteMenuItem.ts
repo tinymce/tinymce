@@ -98,6 +98,7 @@ const renderAutocompleteItem = (
 
   const tooltipString = spec.text.filter((text) => !useText && text !== '');
   return renderCommonItem({
+    context: 'mode:design',
     data: buildData(spec),
     enabled: spec.enabled,
     getApi: Fun.constant({}),
