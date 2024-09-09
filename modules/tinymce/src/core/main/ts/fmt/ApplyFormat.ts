@@ -40,9 +40,13 @@ const canFormatBR = (editor: Editor, format: ApplyFormat, node: HTMLBRElement, p
   }
 };
 
-const applyStyles = (dom: DOMUtils, elm: Element, format: ApplyFormat, vars: FormatVars | undefined) => {
+const applyStyles = (dom: DOMUtils, elm: Element, format: ApplyFormat, vars: FormatVars | undefined, editor?: Editor ) => {
+  const isApplyListFormatting = editor ? Options.getApplyListFormatting(editor) : false;
+
   each(format.styles, (value, name) => {
-    dom.setStyle(elm, name, FormatUtils.replaceVars(value, vars));
+    if (isApplyListFormatting || !NodeType.isListItem(elm)) {
+      dom.setStyle(elm, name, FormatUtils.replaceVars(value, vars));
+    }
   });
 
   // Needed for the WebKit span spam bug
@@ -68,7 +72,7 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
       fmt.onformat(elm, fmt as any, vars, node);
     }
 
-    applyStyles(dom, elm, fmt, vars);
+    applyStyles(dom, elm, fmt, vars, ed);
 
     each(fmt.attributes, (value, name) => {
       dom.setAttrib(elm, name, FormatUtils.replaceVars(value, vars));

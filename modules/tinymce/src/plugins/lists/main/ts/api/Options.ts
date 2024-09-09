@@ -14,15 +14,21 @@ const register = (editor: Editor): void => {
     processor: 'boolean',
     default: true
   });
+
+  registerOption('apply_list_formatting', {
+    processor: 'boolean',
+    default: true
+  });
 };
 
 const shouldIndentOnTab = option<boolean>('lists_indent_on_tab');
 const getForcedRootBlock = option('forced_root_block');
 const getForcedRootBlockAttrs = option('forced_root_block_attrs');
-
+const getApplyListFormatting = option<boolean>('apply_list_formatting');
 export {
   register,
   shouldIndentOnTab,
   getForcedRootBlock,
-  getForcedRootBlockAttrs
+  getForcedRootBlockAttrs,
+  getApplyListFormatting
 };
