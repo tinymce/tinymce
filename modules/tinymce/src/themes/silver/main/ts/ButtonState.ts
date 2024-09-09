@@ -9,7 +9,7 @@ import { ReadyUiReferences } from './modes/UiReferences';
 
 export interface SetEnabledEvent {
   readonly eventType: 'setEnabled';
-  readonly shouldDisable: boolean;
+  readonly enabled: boolean;
 }
 
 export interface GenericEditorEvent {
@@ -34,21 +34,21 @@ const setupEventsForButton = (editor: Editor, uiRefs: ReadyUiReferences): void =
 
   editor.on('NodeChange', (e: EditorEvent<NodeChangeEvent>) => {
     if (!editor.ui.isEnabled()) {
-      broadcastEvents(uiRefs, { eventType: 'setEnabled', shouldDisable: true });
+      broadcastEvents(uiRefs, { eventType: 'setEnabled', enabled: false });
     } else {
       broadcastEvents(uiRefs, { eventType: e.type });
     }
   });
 };
 
-const isSetEnabledEvent = (event: ButtonStateData): event is SetEnabledEvent => event.eventType === 'setEnabled' && 'shouldDisable' in event;
+const isSetEnabledEvent = (event: ButtonStateData): event is SetEnabledEvent => event.eventType === 'setEnabled' && 'enabled' in event;
 
 const toggleOnReceive = (getContext: () => { contextType: string; shouldDisable: boolean }): Behaviour.NamedConfiguredBehaviour<any, any> => Receiving.config({
   channels: {
     [ButtonStateChannel]: {
       onReceive: (comp, buttonStateData: ButtonStateData) => {
         if (isSetEnabledEvent(buttonStateData)) {
-          Disabling.set(comp, buttonStateData.shouldDisable);
+          Disabling.set(comp, !buttonStateData.enabled);
           return;
         }
 

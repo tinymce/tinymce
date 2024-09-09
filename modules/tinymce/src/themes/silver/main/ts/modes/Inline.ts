@@ -206,7 +206,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
     hide: ui.hide,
     setEnabled: (state) => {
       ReadOnly.broadcastReadonly(uiRefs, !state);
-      ButtonState.broadcastEvents(uiRefs, { eventType: 'setEnabled', shouldDisable: !state });
+      ButtonState.broadcastEvents(uiRefs, { eventType: 'setEnabled', enabled: state });
     },
     isEnabled: () => !Disabling.isDisabled(mainUi.outerContainer)
   };

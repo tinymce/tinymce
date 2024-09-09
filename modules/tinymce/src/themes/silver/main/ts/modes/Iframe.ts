@@ -201,7 +201,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   const api: Partial<EditorUiApi> = {
     setEnabled: (state) => {
       ReadOnly.broadcastReadonly(uiRefs, !state);
-      ButtonState.broadcastEvents(uiRefs, { eventType: 'setEnabled', shouldDisable: !state });
+      ButtonState.broadcastEvents(uiRefs, { eventType: 'setEnabled', enabled: state });
     },
     isEnabled: () => !Disabling.isDisabled(outerContainer)
   };
