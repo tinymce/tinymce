@@ -18,7 +18,7 @@ import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
 import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 import { formChangeEvent } from '../general/FormEvents';
 
-const browseFilesEvent = Id.generate('browser.files.event');
+const browseFilesEvent = Id.generate('browse.files.event');
 
 const filterByExtension = (files: FileList, providersBackstage: UiFactoryBackstageProviders) => {
   const allowedImageFileTypes = Tools.explode(providersBackstage.getOption('images_file_types'));
