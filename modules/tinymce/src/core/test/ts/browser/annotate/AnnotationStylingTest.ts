@@ -79,6 +79,7 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
   const commentBackgroundColor = 'rgb(255, 232, 157)'; // #ffe89d
   const commentActiveBackgroundColor = 'rgb(254, 214, 53)'; // #fed635
   const inlineBoundaryBackgroundColor = 'rgb(180, 215, 255)'; // #b4d7ff
+  const commentActiveBoxShadow = 'rgb(0, 108, 231) 0px 0px 0px 2px';
 
   const getOutline = (elm: SugarElement<Element>): Outline => {
     const color = Css.get(elm, 'outline-color');
@@ -94,7 +95,7 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
   const getBackgroundColor = (elm: SugarElement<Element>) =>
     Css.get(elm, 'background-color');
 
-  const pAssertStyling = (editor: Editor, selector: string, expectedBackgroundColor: string, expectedOutline: Outline, checkOtherNodes: boolean = true) =>
+  const pAssertStyling = (editor: Editor, selector: string, expectedBackgroundColor: string, expectedOutline: Outline, expectedBoxShadow: string = 'none', checkOtherNodes: boolean = true) =>
     Waiter.pTryUntil('Should have correct styling', () => {
       const body = TinyDom.body(editor);
       const elm = UiFinder.findIn(body, selector).getOrDie();
@@ -102,6 +103,7 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
       const actualOutline = getOutline(elm);
       assert.equal(actualBackgroundColor, expectedBackgroundColor);
       assert.deepEqual(actualOutline, expectedOutline);
+      assert.equal(Css.get(elm, 'box-shadow'), expectedBoxShadow);
 
       if (checkOtherNodes) {
         const parents = SelectorFilter.ancestors(elm, '*', (e) => Compare.eq(e, body));
