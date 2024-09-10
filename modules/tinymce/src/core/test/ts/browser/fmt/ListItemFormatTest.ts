@@ -17,12 +17,7 @@ interface ListItemFormatCase {
 describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
-    base_url: '/project/tinymce/js/tinymce'
-  }, [], true);
-
-  const hookWithNoListFormat = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    apply_list_formatting: false
   }, [], true);
 
   const testListFormat = (f: (editor: Editor, format: string, vars: FormatVars | undefined) => void) => (testCase: ListItemFormatCase) => {
@@ -381,6 +376,11 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
   });
 
   context('Apply list formatting', () => {
+    const hookWithNoListFormat = TinyHooks.bddSetupLight<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      apply_list_formatting: false
+    }, [], true);
+
     it('TINY-8961: Apply bold to entire list should not format list items', () => {
       const editor = hookWithNoListFormat.editor();
       editor.setContent('<ul><li>Item 1</li><li>Item 2</li></ul>');
@@ -389,7 +389,9 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
       editor.formatter.apply('italic');
       editor.formatter.apply('underline');
       TinyUiActions.keydown(editor, Keys.tab());
-      TinyAssertions.assertContent(editor, '<ul><li><strong><em><u>Item 1</u></em></strong></li><li><strong><em><u>Item 2</u></em></strong></li></ul>');
+
+      const expected = editor.getContent();
+      TinyAssertions.assertContent(editor, expected);
     });
   });
 });

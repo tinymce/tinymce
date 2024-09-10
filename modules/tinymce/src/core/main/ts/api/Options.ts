@@ -859,6 +859,11 @@ const register = (editor: Editor): void => {
     default: true
   });
 
+  registerOption('apply_list_formatting', {
+    processor: 'boolean',
+    default: true
+  });
+
   // These options must be registered later in the init sequence due to their default values
   editor.on('ScriptsLoaded', () => {
     registerOption('directionality', {

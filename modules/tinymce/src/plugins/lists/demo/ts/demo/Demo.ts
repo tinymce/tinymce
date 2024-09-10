@@ -7,8 +7,7 @@ tinymce.init({
   plugins: 'lists code',
   toolbar: 'numlist bullist | outdent indent | code',
   height: 600,
-  contextmenu: 'lists',
-  apply_list_formatting: true,
+  contextmenu: 'lists'
 });
 
 export {};
