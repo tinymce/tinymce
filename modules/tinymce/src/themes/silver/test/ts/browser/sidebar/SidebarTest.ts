@@ -169,4 +169,69 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
       await pExecCommandAndAssertEvents(editor, 'mysidebar1', [{ name: 'mysidebar1:hide', index: 0 }]);
     });
   });
+
+  const assertButtonEnabled = (selector: string) => UiFinder.notExists(SugarBody.body(), `[data-mce-name="${selector}"][aria-disabled="true"]`);
+
+  const assertButtonDisabled = (selector: string) => UiFinder.exists(SugarBody.body(), `[data-mce-name="${selector}"][aria-disabled="true"]`);
+
+  context('Sidebar toggle button', () => {
+    const hook = TinyHooks.bddSetup<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      toolbar: 'mysidebar1',
+      setup: (editor: Editor) => {
+        editor.mode.register('testmode', {
+          deactivate: Fun.noop,
+          activate: Fun.noop,
+          editorReadOnly: {
+            selectionEnabled: true
+          }
+        });
+
+        const logEvent = (name: string) => (api: Sidebar.SidebarInstanceApi) => {
+          const index = Traverse.findIndex(SugarElement.fromDom(api.element())).getOr(-1);
+          const entry: EventLog = { name, index };
+          store.adder(entry)();
+        };
+        const handleSetup = (eventName: string) => (api: Sidebar.SidebarInstanceApi) => {
+          store.clear();
+          api.element().appendChild(SugarElement.fromHtml('<div style="width: 200px; background: red;"></div>').dom);
+          logEvent(eventName)(api);
+          return Fun.noop;
+        };
+        editor.ui.registry.addSidebar('mysidebar1', {
+          tooltip: 'My sidebar 1',
+          icon: 'bold',
+          onSetup: handleSetup('mysidebar1:render'),
+          onShow: logEvent('mysidebar1:show'),
+          onHide: logEvent('mysidebar1:hide')
+        });
+      }
+    });
+
+    it('TINY-11211: Toggle sidebar button should be disabled in readonly mode', async () => {
+      const editor = hook.editor();
+      assertButtonEnabled('mysidebar1');
+      editor.execCommand('ToggleSidebar', false, 'mysidebar1');
+      await Waiter.pTryUntil('Checking sidebar callbacks', () => store.assertEq('Asserting sidebar callbacks', [
+        { name: 'mysidebar1:render', index: 0 },
+        { name: 'mysidebar1:hide', index: 0 },
+        { name: 'mysidebar1:show', index: 0 }
+      ]));
+      await pExecCommandAndAssertEvents(editor, 'mysidebar1', [{ name: 'mysidebar1:hide', index: 0 }]);
+
+      editor.mode.set('testmode');
+      assertButtonEnabled('mysidebar1');
+      editor.execCommand('ToggleSidebar', false, 'mysidebar1');
+      await Waiter.pTryUntil('Checking sidebar callbacks', () => store.assertEq('Asserting sidebar callbacks', [
+        { name: 'mysidebar1:hide', index: 0 },
+        { name: 'mysidebar1:show', index: 0 }
+      ]));
+      await pExecCommandAndAssertEvents(editor, 'mysidebar1', [{ name: 'mysidebar1:hide', index: 0 }]);
+
+      editor.mode.set('readonly');
+      assertButtonDisabled('mysidebar1');
+
+      editor.mode.set('design');
+    });
+  });
 });

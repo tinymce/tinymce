@@ -9,8 +9,8 @@ import { Traverse } from '@ephox/sugar';
 
 import { ToolbarMode } from '../../api/Options';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import * as ButtonState from '../../ButtonState';
 import * as Channels from '../../Channels';
-import * as ReadOnly from '../../ReadOnly';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderIconButtonSpec } from '../general/Button';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
@@ -81,8 +81,8 @@ const getToolbarBehaviours = (toolbarSpec: ToolbarSpec, modeName: 'cyclic' | 'ac
   });
 
   return Behaviour.derive([
-    DisablingConfigs.toolbarButton(toolbarSpec.providers.isDisabled),
-    ReadOnly.receivingConfig(),
+    DisablingConfigs.toolbarButton(() => toolbarSpec.providers.checkButtonContext('mode:!readonly').shouldDisable),
+    ButtonState.toggleOnReceive(() => toolbarSpec.providers.checkButtonContext('mode:!readonly')),
     Keying.config({
       // Tabs between groups
       mode: modeName,

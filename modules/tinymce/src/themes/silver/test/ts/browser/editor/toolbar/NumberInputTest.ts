@@ -1,6 +1,6 @@
 import { FocusTools, Keys, Mouse, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Optional, Strings } from '@ephox/katamari';
+import { Arr, Fun, Optional, Strings } from '@ephox/katamari';
 import { SugarBody, SugarElement, SugarShadowDom, Value } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -56,7 +56,16 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    toolbar: [ 'fontsizeinput' ]
+    toolbar: [ 'fontsizeinput' ],
+    setup: (ed: Editor) => {
+      ed.mode.register('testmode', {
+        activate: Fun.noop,
+        deactivate: Fun.noop,
+        editorReadOnly: {
+          selectionEnabled: true
+        }
+      });
+    }
   }, []);
 
   it('TINY-9429: plus and minus should increase and decrease font size of the current selection',
@@ -96,6 +105,15 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     TinyUiActions.clickOnToolbar(editor, '.tox-number-input .minus');
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">abc</p>');
 
+    editor.mode.set('testmode');
+
+    TinyUiActions.clickOnToolbar(editor, '.tox-number-input .plus');
+    TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">abc</p>');
+    assert.equal(Value.get(UiFinder.findIn<HTMLInputElement>(TinyUiActions.getUiRoot(editor), '.tox-number-input input').getOrDie()), '16px');
+
+    TinyUiActions.clickOnToolbar(editor, '.tox-number-input .minus');
+    TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">abc</p>');
+
     editor.mode.set('design');
   });
 
@@ -109,6 +127,12 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     await pDisabledShouldNotExist(editor, 'input');
 
     editor.mode.set('readonly');
+
+    await pDisabledShouldExist(editor, '.plus');
+    await pDisabledShouldExist(editor, '.minus');
+    await pDisabledShouldExist(editor, 'input');
+
+    editor.mode.set('testmode');
 
     await pDisabledShouldExist(editor, '.plus');
     await pDisabledShouldExist(editor, '.minus');

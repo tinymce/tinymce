@@ -583,7 +583,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         });
       });
 
-      context('Toolbar button spec with context insert:tr', () => {
+      context('Toolbar button spec with context insert:span', () => {
         const hook = TinyHooks.bddSetup<Editor>({
           base_url: '/project/tinymce/js/tinymce',
           toolbar: 't11',

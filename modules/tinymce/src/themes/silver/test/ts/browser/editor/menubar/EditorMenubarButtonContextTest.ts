@@ -42,7 +42,7 @@ describe('browser.tinymce.themes.silver.editor.menubar.EditorMenubarButtonContex
     }
   }, [], true);
 
-  it('TINY-10980: Menu bar buttons should always be enabled in uiEnabled mode', () => {
+  it('TINY-11211: Menu bar buttons should always be enabled in uiEnabled mode', () => {
     const editor = hook.editor();
 
     editor.mode.set('design');
