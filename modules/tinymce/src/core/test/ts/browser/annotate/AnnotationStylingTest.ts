@@ -270,7 +270,7 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
           TinySelections.setCursor(editor, [ 0, 0 ], 1);
           editor.annotator.annotate('test-comment', {});
           TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
-          await pAssertStyling(editor, 'span', inlineBoundaryBackgroundColor, noOutline);
+          await pAssertStyling(editor, 'span', commentActiveBackgroundColor, noOutline, commentActiveBoxShadow);
         });
 
         it('TINY-8698: should have blue background on commented text when it is selected and yellow background for other related comments', async () => {
@@ -279,7 +279,7 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
           TinySelections.setSelection(editor, [ 0, 0 ], 4, [], 2);
           editor.annotator.annotate('test-comment', {});
           TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
-          await pAssertStyling(editor, 'span[data-mce-selected]', inlineBoundaryBackgroundColor, noOutline);
+          await pAssertStyling(editor, 'span[data-mce-selected]', commentActiveBackgroundColor, noOutline, commentActiveBoxShadow);
           await pAssertStyling(editor, 'span:not([data-mce-selected])', commentActiveBackgroundColor, noOutline);
         });
       });
@@ -291,7 +291,7 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
           TinySelections.setSelection(editor, [ 0, 0 ], 4, [], 4);
           editor.annotator.annotate('test-comment', {});
           TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
-          await pAssertStyling(editor, 'span[data-mce-selected]:contains("two")', inlineBoundaryBackgroundColor, noOutline);
+          await pAssertStyling(editor, 'span[data-mce-selected]:contains("two")', commentActiveBackgroundColor, noOutline, commentActiveBoxShadow);
           await pAssertStyling(editor, 'span:not([data-mce-selected]):contains("three four")', commentActiveBackgroundColor, noOutline);
           await pAssertStyling(editor, 'span img', noBackgroundColor, commentActiveOutline);
           await pAssertStyling(editor, 'figure', noBackgroundColor, commentActiveOutline);
@@ -320,8 +320,8 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
           } else {
             TinySelections.setCursor(editor, [ 0, 1, 0 ], 1, true);
           }
-          await pAssertStyling(editor, 'figure.image', noBackgroundColor, selectedOutline, false);
-          await pAssertStyling(editor, 'figcaption', noBackgroundColor, selectedOutline, false);
+          await pAssertStyling(editor, 'figure.image', noBackgroundColor, selectedOutline, 'none', false);
+          await pAssertStyling(editor, 'figcaption', noBackgroundColor, selectedOutline, 'none', false);
         });
 
         it('TINY-8698: should have blue outline for nested editable region when selected noneditable ancestor has a comment', async () => {
@@ -330,8 +330,8 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
           TinySelections.select(editor, 'figure.image', []);
           editor.annotator.annotate('test-comment', {});
           TinySelections.setCursor(editor, [ 0, 1, 0 ], 1, true);
-          await pAssertStyling(editor, 'figure.image', noBackgroundColor, selectedOutline, false);
-          await pAssertStyling(editor, 'figcaption', noBackgroundColor, selectedOutline, false);
+          await pAssertStyling(editor, 'figure.image', noBackgroundColor, selectedOutline, 'none', false);
+          await pAssertStyling(editor, 'figcaption', noBackgroundColor, selectedOutline, 'none', false);
         });
       });
     });
