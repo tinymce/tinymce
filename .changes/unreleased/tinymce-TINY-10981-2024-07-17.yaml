@@ -1,6 +1,6 @@
 project: tinymce
 kind: Added
-body: new `selectionEnabled` property of the read only mode API, which allows normal cursor movement
+body: New `selectionEnabled` property of the read only mode API, which allows normal cursor movement
   within a read-only editor.
 time: 2024-07-17T18:55:30.212715+08:00
 custom:
