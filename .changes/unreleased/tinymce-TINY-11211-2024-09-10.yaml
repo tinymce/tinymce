@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: Buttons can now be enabled or disabled based on whether their context matches a given predicate, with state updates on `init`, `NodeChange`, and `SwitchMode` events.
+time: 2024-06-04T18:15:54.417924+02:00
+custom:
+  Issue: TINY-10971
