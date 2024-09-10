@@ -44,7 +44,7 @@ const applyStyles = (dom: DOMUtils, elm: Element, format: ApplyFormat, vars: For
   const isApplyListFormatting = Options.getApplyListFormatting(editor);
 
   each(format.styles, (value, name) => {
-    if (isApplyListFormatting || !NodeType.isListItem(elm)) {
+    if (isApplyListFormatting) {
       dom.setStyle(elm, name, FormatUtils.replaceVars(value, vars));
     }
   });
