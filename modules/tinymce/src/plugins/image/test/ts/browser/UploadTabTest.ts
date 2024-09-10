@@ -204,7 +204,7 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
     closeDialog(editor);
   });
 
-  it('TINY-: DialogFocusAfterErrorTest', async () => {
+  it('TINY-11159: After closing the upload error alert the focus should go back to the dialog', async () => {
     const editor = hook.editor();
     editor.setContent('');
     editor.options.set('images_upload_handler', () => {
