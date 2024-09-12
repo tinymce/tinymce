@@ -56,6 +56,7 @@ export interface DomParserSettings {
   allow_html_in_named_anchor?: boolean;
   allow_script_urls?: boolean;
   allow_unsafe_link_target?: boolean;
+  allow_mathml_annotation_encodings?: string[];
   blob_cache?: BlobCache;
   convert_fonts_to_spans?: boolean;
   convert_unsafe_embeds?: boolean;

@@ -73,6 +73,7 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
     allow_svg_data_urls: getOption('allow_svg_data_urls'),
     allow_html_in_named_anchor: getOption('allow_html_in_named_anchor'),
     allow_script_urls: getOption('allow_script_urls'),
+    allow_mathml_annotation_encodings: getOption('allow_mathml_annotation_encodings'),
     allow_unsafe_link_target: getOption('allow_unsafe_link_target'),
     convert_unsafe_embeds: getOption('convert_unsafe_embeds'),
     convert_fonts_to_spans: getOption('convert_fonts_to_spans'),
