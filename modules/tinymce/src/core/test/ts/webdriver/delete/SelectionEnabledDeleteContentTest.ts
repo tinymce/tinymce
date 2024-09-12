@@ -84,7 +84,7 @@ describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
   `<iframe style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" src="https://www.youtube.com/embed/8aGhZQkoFbQ?rel=0" scrolling="no" allowfullscreen="allowfullscreen"></iframe>` +
   `</div>`;
 
-  it('TINY-10891: Deleting text should not be permitted', async () => {
+  it('TINY-10981: Deleting text should not be permitted', async () => {
     const editor = hook.editor();
     editor.setContent('<p>test</p>');
 
@@ -105,7 +105,7 @@ describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
   });
 
   context('Deleting block elements', () => {
-    it('TINY-10891: Deleting media element should not be permitted', async () => {
+    it('TINY-10981: Deleting media element should not be permitted', async () => {
       const editor = hook.editor();
       editor.setContent(`<span class="mce-preview-object mce-object-iframe" contenteditable="false" data-mce-object="iframe" data-mce-p-allowfullscreen="allowfullscreen" data-mce-p-src="https://www.youtube.com/embed/8aGhZQkoFbQ">`
       + `<iframe src="https://www.youtube.com/embed/8aGhZQkoFbQ" width="560" height="314" frameborder="0" allowfullscreen="allowfullscreen" data-mce-src="https://www.youtube.com/embed/8aGhZQkoFbQ"></iframe><span class="mce-shim"></span></span>`);
@@ -123,7 +123,7 @@ describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
       TinyAssertions.assertContent(editor, '');
     });
 
-    it('TINY-10891: Deleting mediaembed element should not be permitted', async () => {
+    it('TINY-10981: Deleting mediaembed element should not be permitted', async () => {
       const editor = hook.editor();
       editor.setContent(iframeMediaEmbedHtml);
 
@@ -140,7 +140,7 @@ describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
       TinyAssertions.assertContent(editor, '');
     });
 
-    it('TINY-10891: Deleting pre block should not be permitted', async () => {
+    it('TINY-10981: Deleting pre block should not be permitted', async () => {
       const editor = hook.editor();
       editor.setContent(preCodeSampleHtml);
 
@@ -159,7 +159,7 @@ describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
 
   });
 
-  it('TINY-10891: Deleting div element (tableofcontents) block should not be permitted', async () => {
+  it('TINY-10981: Deleting div element (tableofcontents) block should not be permitted', async () => {
     const editor = hook.editor();
     editor.setContent(tableOfContentHtml);
 
@@ -181,7 +181,7 @@ describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
     TinyAssertions.assertContent(editor, '');
   });
 
-  it('TINY-10891: Deleting table content should not be permitted in selectionEnabled mode', async () => {
+  it('TINY-10981: Deleting table content should not be permitted in selectionEnabled mode', async () => {
     const editor = hook.editor();
     setMode(editor, 'design');
     editor.setContent(tableHtml);
@@ -226,7 +226,7 @@ describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
       '</table>' ].join('\n'));
   });
 
-  it('TINY-10891: Deleting table element should not be permitted in cusorEnabled mode', async () => {
+  it('TINY-10981: Deleting table element should not be permitted in cusorEnabled mode', async () => {
     const editor = hook.editor();
 
     setMode(editor, 'design');
@@ -254,7 +254,7 @@ describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
     TinyAssertions.assertContent(editor, '');
   });
 
-  it('TINY-10891: Deleting image element should not be permitted in selectionEnabled mode', async () => {
+  it('TINY-10981: Deleting image element should not be permitted in selectionEnabled mode', async () => {
     const editor = hook.editor();
 
     setMode(editor, 'design');

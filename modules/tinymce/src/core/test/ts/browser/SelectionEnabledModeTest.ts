@@ -33,7 +33,9 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
         },
       });
     }
-  }, [ AccordionPlugin,
+  },
+  [
+    AccordionPlugin,
     AdvancedListPlugin,
     AutoLinkPlugin,
     CodeSamplePlugin,
@@ -139,7 +141,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
     Clipboard.pasteItems(TinyDom.body(editor), data);
 
   context('Selection and blocks selection', () => {
-    it('TINY-10891: Allow selection of contenteditable="false" elements in selectionEnabled mode', () => {
+    it('TINY-10981: Allow selection of contenteditable="false" elements in selectionEnabled mode', () => {
       const editor = hook.editor();
 
       setMode(editor, 'design');
@@ -156,7 +158,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       assertFakeSelection(editor, true);
     });
 
-    it('TINY-10891: Allow selection of image elements in selectionEnabled mode', async () => {
+    it('TINY-10981: Allow selection of image elements in selectionEnabled mode', async () => {
       const editor = hook.editor();
 
       setMode(editor, 'design');
@@ -180,7 +182,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       assertFakeSelection(editor, true);
     });
 
-    it('TINY-10891: Allow selection of image elements in selectionEnabled mode but resizing is prohibited', async () => {
+    it('TINY-10981: Allow selection of image elements in selectionEnabled mode but resizing is prohibited', async () => {
       const editor = hook.editor();
 
       setMode(editor, 'design');
@@ -205,7 +207,31 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       await Waiter.pTryUntil('Wait for resizehandle to show', () => assert.isTrue(SelectorExists.descendant(TinyDom.body(editor), '.mce-resizehandle'), 'Should not give the handles at init'));
     });
 
-    it('TINY-10891: Allow selection of pre elements (codesample) in selectionEnabled mode', async () => {
+    it('TINY-10981: Allow selection of figure elements in selectionEnabled mode', async () => {
+      const editor = hook.editor();
+
+      setMode(editor, 'design');
+      editor.setContent('<figure class="image"><img src="https://www.google.com/logos/google.jpg"><figcaption>Image caption</figcaption></figure>');
+      await Waiter.pTryUntil('Waited for image to load', () => assert.isTrue(UiFinder.findIn<HTMLImageElement>(TinyDom.body(editor), 'img').getOrDie().dom.complete));
+      TinySelections.select(editor, 'figure', []);
+      await pAssertOutlineStyle(UiFinder.findIn(TinyDom.body(editor), 'figure').getOrDie(), imageSelectedOutline);
+      assertFakeSelection(editor, true);
+
+      setMode(editor, 'testmode');
+      TinySelections.setCursor(editor, [ 0 ], 0);
+      TinySelections.select(editor, 'figure', []);
+      // Dispatching nodeChanged to update the selection
+      editor.nodeChanged();
+      assertFakeSelection(editor, true);
+      await pAssertOutlineStyle(UiFinder.findIn(TinyDom.body(editor), 'figure').getOrDie(), imageSelectedOutline);
+      assertFakeSelection(editor, true);
+
+      setMode(editor, 'design');
+      TinySelections.select(editor, 'figure', []);
+      assertFakeSelection(editor, true);
+    });
+
+    it('TINY-10981: Allow selection of pre elements (codesample) in selectionEnabled mode', async () => {
       const editor = hook.editor();
 
       setMode(editor, 'design');
@@ -222,7 +248,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       assertFakeSelection(editor, true);
     });
 
-    it('TINY-10891: Allow selection of div element (tableofcontents) in selectionEnabled mode', async () => {
+    it('TINY-10981: Allow selection of div element (tableofcontents) in selectionEnabled mode', async () => {
       const editor = hook.editor();
 
       setMode(editor, 'design');
@@ -239,7 +265,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       assertFakeSelection(editor, true);
     });
 
-    it('TINY-10891: Allow selection of media element in selectionEnabled mode', async () => {
+    it('TINY-10981: Allow selection of media element in selectionEnabled mode', async () => {
       const editor = hook.editor();
 
       setMode(editor, 'design');
@@ -256,7 +282,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       assertFakeSelection(editor, true);
     });
 
-    it('TINY-10891: Allow selection of mediaembed element in selectionEnabled mode', async () => {
+    it('TINY-10981: Allow selection of mediaembed element in selectionEnabled mode', async () => {
       const editor = hook.editor();
 
       setMode(editor, 'design');
@@ -273,7 +299,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       assertFakeSelection(editor, true);
     });
 
-    it('TINY-10891: Table resize should not be shown in selectionEnabled mode', async () => {
+    it('TINY-10981: Table resize should not be shown in selectionEnabled mode', async () => {
       const editor = hook.editor();
 
       setMode(editor, 'design');
@@ -290,7 +316,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       await pAssertResizeHandle(editor);
     });
 
-    it('TINY-10891: Resize bars for tables should be hidden while in readonly mode', () => {
+    it('TINY-10981: Resize bars for tables should be hidden while in readonly mode', () => {
       const editor = hook.editor();
       editor.setContent('<table><tbody><tr><td>a</td></tr></tbody></table>');
 
@@ -306,7 +332,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       assertResizeBars(editor, true);
     });
 
-    it('TINY-10891: Pressing tab at the last cell should not create new row', () => {
+    it('TINY-10981: Pressing tab at the last cell should not create new row', () => {
       const editor = hook.editor();
       editor.setContent('<table><tbody><tr><td>a</td></tr></tbody></table>');
       TinyAssertions.assertContent(editor, '<table><tbody><tr><td>a</td></tr></tbody></table>');
@@ -325,7 +351,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       TinyAssertions.assertContent(editor, '<table><tbody><tr><td>a</td></tr><tr><td>&nbsp;</td></tr><tr><td>&nbsp;</td></tr></tbody></table>');
     });
 
-    it('TINY-10891: Pressing tab/shift+tab on list item should not indent list item', () => {
+    it('TINY-10981: Pressing tab/shift+tab on list item should not indent list item', () => {
       const editor = hook.editor();
       editor.setContent('<ul><li>a</li><li>b</li><li>c</li></ul>');
       TinySelections.setCursor(editor, [ 0, 1, 0 ], 0);
@@ -442,7 +468,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
     });
   });
 
-  it('TINY-10891: Allow cursor to be placed into the editor', () => {
+  it('TINY-10981: Allow cursor to be placed into the editor', () => {
     const editor = hook.editor();
 
     setMode(editor, 'design');
@@ -459,7 +485,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
     TinyAssertions.assertCursor(editor, [ 0, 0 ], 5);
   });
 
-  it('TINY-10891: Allow expanding text selection', () => {
+  it('TINY-10981: Allow expanding text selection', () => {
     const editor = hook.editor();
 
     setMode(editor, 'design');
@@ -476,7 +502,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 5, [ 0, 0 ], 10);
   });
 
-  it('TINY-10891: Keydown events should be blocked when the cursor is in the editor', async () => {
+  it('TINY-10981: Keydown events should be blocked when the cursor is in the editor', async () => {
     const editor = hook.editor();
     editor.setContent('<p>hello there</p>');
 
@@ -502,7 +528,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
     TinyAssertions.assertContent(editor, '<p>helloAA there</p>');
   });
 
-  it('TINY-10891: Pasting should be blocked when the cursor is in the editor', async () => {
+  it('TINY-10981: Pasting should be blocked when the cursor is in the editor', async () => {
     const editor = hook.editor();
 
     setMode(editor, 'design');
@@ -519,7 +545,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
     TinyAssertions.assertContent(editor, '<p>testXX</p>');
   });
 
-  it('TINY-10891: Copying should be permitted when the cursor is in the editor', async () => {
+  it('TINY-10981: Copying should be permitted when the cursor is in the editor', async () => {
     const editor = hook.editor();
     const assertClipboardData = (expectedHtml: string, expectedText: string) => {
       assert.isTrue(dataTransfer.isSet(), 'dataTransfer should be set');
