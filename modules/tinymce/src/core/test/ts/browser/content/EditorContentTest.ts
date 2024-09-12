@@ -720,4 +720,47 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
       TinyAssertions.assertContent(editor, '<noscript>&amp;lt;/noscript&amp;&gt;</noscript>');
     });
   });
+
+  context('math elements', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      custom_elements: 'math',
+      allow_mathml_annotation_encodings: [
+        'application/x-tex',
+        'application/custom',
+        'wiris'
+      ]
+    }, []);
+
+    it('TINY-11166: allow_mathml_annotation_encodings should retain the specified annotation elements', () => {
+      const editor = hook.editor();
+
+      const input = [
+        '<div>',
+        '<math><annotation encoding="application/x-tex">\\frac{1}{2}</annotation></math>',
+        '<math><annotation encoding="application/custom">custom</annotation></math>',
+        '<math><annotation encoding="application/custom" src="foo">custom with src</annotation></math>',
+        '<math><annotation encoding="wiris">{"version":"1.1","math":"&lt;math xmlns="http://www.w3.org/1998/Math/MathML"&gt;&lt;mfrac&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/mfrac&gt;&lt;/math&gt;"}</annotation></math>',
+        '<math><annotation encoding="text/html">html</annotation></math>',
+        '<math><annotation encoding="text/svg">svg</annotation></math>',
+        '</div>'
+      ].join('');
+
+      editor.setContent(input);
+
+      const expected = [
+        '<div>',
+        '<math><annotation encoding="application/x-tex">\\frac{1}{2}</annotation></math>',
+        '<math><annotation encoding="application/custom">custom</annotation></math>',
+        '<math><annotation encoding="application/custom">custom with src</annotation></math>',
+        '<math><annotation encoding="wiris">{"version":"1.1","math":"&lt;math xmlns="http://www.w3.org/1998/Math/MathML"&gt;&lt;mfrac&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/mfrac&gt;&lt;/math&gt;"}</annotation></math>',
+        '<math>html</math>',
+        '<math>svg</math>',
+        '</div>'
+      ].join('');
+
+      TinyAssertions.assertContent(editor, expected);
+    });
+  });
+
 });

@@ -550,7 +550,7 @@ const register = (editor: Editor): void => {
   registerOption('allow_mathml_annotation_encodings', {
     processor: (value) => {
       const valid = Type.isArrayOf(value, Type.isString);
-      return valid ? { value: true, valid } : { valid: false, message: 'Must be an array of strings.' };
+      return valid ? { value, valid } : { valid: false, message: 'Must be an array of strings.' };
     },
     default: []
   });
