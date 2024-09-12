@@ -205,32 +205,55 @@ const getPurifyConfig = (settings: DomParserSettings, mimeType: string): Config 
   return config;
 };
 
-const sanitizeNamespaceElement = (ele: Element) => {
+const sanitizeSvgElement = (ele: Element) => {
+  // xlink:href used to be the way to do links in SVG 1.x https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/xlink:href
+  const xlinkAttrs = [ 'type', 'href', 'role', 'arcrole', 'title', 'show', 'actuate', 'label', 'from', 'to' ].map((name) => `xlink:${name}`);
+  const config: Config = {
+    IN_PLACE: true,
+    USE_PROFILES: {
+      html: true,
+      svg: true,
+      svgFilters: true
+    },
+    ALLOWED_ATTR: xlinkAttrs
+  };
+
+  createDompurify().sanitize(ele, config);
+
+};
+
+const sanitizeMathmlElement = (node: Element, settings: DomParserSettings) => {
+  const config: Config = {
+    IN_PLACE: true,
+    USE_PROFILES: {
+      mathMl: true
+    },
+  };
+
+  const purify = createDompurify();
+
+  purify.addHook('uponSanitizeElement', (node, evt) => {
+    const lcTagName = evt.tagName ?? node.nodeName.toLowerCase();
+    const allowedEncodings = settings.allow_mathml_annotation_encodings;
+
+    if (lcTagName === 'annotation' && Type.isArray(allowedEncodings) && allowedEncodings.length > 0) {
+      const encoding = node.getAttribute('encoding');
+      if (Type.isString(encoding) && Arr.contains(allowedEncodings, encoding)) {
+        evt.allowedTags[lcTagName] = true;
+      }
+    }
+  });
+
+  purify.sanitize(node, config);
+};
+
+const mkSanitizeNamespaceElement = (settings: DomParserSettings) => (ele: Element) => {
   const namespaceType = Namespace.toScopeType(ele);
 
   if (namespaceType === 'svg') {
-    // xlink:href used to be the way to do links in SVG 1.x https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/xlink:href
-    const xlinkAttrs = [ 'type', 'href', 'role', 'arcrole', 'title', 'show', 'actuate', 'label', 'from', 'to' ].map((name) => `xlink:${name}`);
-    const config: Config = {
-      IN_PLACE: true,
-      USE_PROFILES: {
-        html: true,
-        svg: true,
-        svgFilters: true
-      },
-      ALLOWED_ATTR: xlinkAttrs
-    };
-
-    createDompurify().sanitize(ele, config);
+    sanitizeSvgElement(ele);
   } else if (namespaceType === 'math') {
-    const config: Config = {
-      IN_PLACE: true,
-      USE_PROFILES: {
-        mathMl: true
-      },
-    };
-
-    createDompurify().sanitize(ele, config);
+    sanitizeMathmlElement(ele, settings);
   } else {
     throw new Error('Not a namespace element');
   }
@@ -249,7 +272,7 @@ const getSanitizer = (settings: DomParserSettings, schema: Schema): Sanitizer =>
 
     return {
       sanitizeHtmlElement,
-      sanitizeNamespaceElement
+      sanitizeNamespaceElement: mkSanitizeNamespaceElement(settings)
     };
   } else {
     const sanitizeHtmlElement = (body: HTMLElement, _mimeType: MimeType) => {
