@@ -126,6 +126,9 @@ def runHeadlessPod(String cacheName, Boolean runAll) {
         resourceLimitMemory: '4Gi',
         resourceLimitEphemeralStorage: '16Gi'
       ],
+      seleniumOpts: [
+        image: "selenium/standalone-chrome:127.0",
+      ],
       build: cacheName
     ) {
       stage("Headless-chrome") {
