@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: The image dialog lost focus after closing an image upload error alert.
+time: 2024-08-29T09:59:58.154621+02:00
+custom:
+  Issue: TINY-11159
