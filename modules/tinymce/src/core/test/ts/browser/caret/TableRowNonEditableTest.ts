@@ -4,7 +4,7 @@ import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.core.TableRowNonEditable', () => {
+describe('browser.tinymce.core.TableRowNonEditableTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({ base_url: '/project/tinymce/js/tinymce' }, [ ]);
 
   it('TINY-11077: Row with contenteditable="false" above should not shift selection while pressing enter.', async () => {

@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Dialog list dropdown menus now close when the browser window resizes.
+time: 2024-08-26T17:39:32.903555+02:00
+custom:
+  Issue: TINY-11123

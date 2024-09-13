@@ -1739,6 +1739,31 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       assert.equal(serializedHtml, '<div><math> <mrow> </mrow> </math> <math> </math></div>');
     });
 
+    it('TINY-11166: Allow custom annotation mime types only annotation with encoding and no src attributes', () => {
+      const schema = Schema();
+      schema.addValidElements('math[*]');
+      const input = [
+        '<math><annotation encoding="application/x-tex">\\frac{1}{2}</annotation></math>',
+        '<math><annotation encoding="application/custom">custom</annotation></math>',
+        '<math><annotation encoding="application/custom" src="foo">custom with src</annotation></math>',
+        '<math><annotation encoding="wiris">{"version":"1.1","math":"&lt;math xmlns="http://www.w3.org/1998/Math/MathML"&gt;&lt;mfrac&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/mfrac&gt;&lt;/math&gt;"}</annotation></math>',
+        '<math><annotation encoding="text/html">html</annotation></math>',
+        '<math><annotation encoding="text/svg">svg</annotation></math>',
+      ].join('');
+      const allowedAnnotationEncodings = [ 'application/x-tex', 'application/custom', 'wiris' ];
+      const domParser = DomParser({ forced_root_block: 'p', allow_mathml_annotation_encodings: allowedAnnotationEncodings }, schema);
+      const serializedHtml = HtmlSerializer({}, schema).serialize(domParser.parse(input));
+
+      const expected = [
+        '<math><annotation encoding="application/x-tex">\\frac{1}{2}</annotation></math>',
+        '<math><annotation encoding="application/custom">custom</annotation></math>',
+        '<math><annotation encoding="application/custom">custom with src</annotation></math>',
+        '<math><annotation encoding="wiris">{"version":"1.1","math":"&lt;math xmlns="http://www.w3.org/1998/Math/MathML"&gt;&lt;mfrac&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/mfrac&gt;&lt;/math&gt;"}</annotation></math>',
+        '<math>html</math>',
+        '<math>svg</math>'
+      ].join('');
+      assert.equal(serializedHtml, expected);
+    });
   });
 
   context('Special elements', () => {
