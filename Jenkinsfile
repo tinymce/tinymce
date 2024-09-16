@@ -174,16 +174,11 @@ timestamps {
     String primaryBranch = props.primaryBranch
     assert primaryBranch != null && primaryBranch != ""
 
-    stage('Merge') {
+
+    stage('Deps') {
       // cancel build if primary branch doesn't merge cleanly
       gitMerge(primaryBranch)
-    }
-
-    stage('Install') {
       yarnInstall()
-    }
-
-    stage("Validate changelog") {
       // we use a changelog to run changie
       exec("yarn changie-merge")
     }
@@ -191,11 +186,8 @@ timestamps {
     stage('Type check') {
       withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
         exec("yarn ci-all-seq")
+        exec("yarn tinymce-grunt shell:moxiedoc")
       }
-    }
-
-    stage('Moxiedoc check') {
-      exec("yarn tinymce-grunt shell:moxiedoc")
     }
   }
 
