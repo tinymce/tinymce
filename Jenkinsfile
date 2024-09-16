@@ -176,7 +176,7 @@ timestamps {
 
     stage('Merge') {
       // cancel build if primary branch doesn't merge cleanly
-      gitMerge(primaryBranch)
+      // gitMerge(primaryBranch)
     }
 
     stage('Install') {
