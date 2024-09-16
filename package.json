@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@ephox/bedrock-client": "^14.1.0",
-    "@ephox/bedrock-server": "15.0.0-alpha.2",
+    "@ephox/bedrock-server": "15.0.0-alpha.3",
     "@ephox/oxide-icons-tools": "^4.0.0",
     "@ephox/swag": "^4.6.0",
     "@tinymce/eslint-plugin": "^2.3.0",
