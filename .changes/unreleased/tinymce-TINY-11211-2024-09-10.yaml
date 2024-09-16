@@ -1,6 +1,6 @@
 project: tinymce
 kind: Added
-body: New property - `context` for ui components including buttons in dialog, toolbar buttons, menu item, buttons in view and menu buttons. This allows buttons to be enabled or disabled based on whether their context matches a given predicate, with state updates on `init`, `NodeChange`, and `SwitchMode` events.
+body: New `context` property for all ui components. This allows buttons and menu items to be enabled or disabled based on whether their context matches a given predicate; status updates are checked on `init`, `NodeChange`, and `SwitchMode` events.
 time: 2024-06-04T18:15:54.417924+02:00
 custom:
   Issue: TINY-11211
