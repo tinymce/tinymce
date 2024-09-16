@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: Resize handle would be incorrectly located when no other components were added
+  to status bar.
+time: 2024-09-16T17:08:32.128063+02:00
+custom:
+  Issue: TINY-11257
