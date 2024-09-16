@@ -141,7 +141,7 @@ describe('browser.tinymce.core.paste.InternalClipboardTest', () => {
                 '<td>b</td>\n' +
               '</tr>\n' +
             '</tbody>\n' +
-          '</table>', 'ab');
+          '</table>', 'a\tb');
       TinyAssertions.assertSelection(editor, [ 0, 0, 0, 1, 0 ], 0, [ 0, 0, 0, 1, 0 ], 0);
     });
 
