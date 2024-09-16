@@ -1,6 +1,6 @@
 import { Arr, Optional } from '@ephox/katamari';
 import { CopySelected, TableFill, TableLookup } from '@ephox/snooker';
-import { SugarElement, SugarElements, SugarNode } from '@ephox/sugar';
+import { Attribute, Css, Insert, InsertAll, Remove, SugarElement, SugarElements, SugarNode, SugarShadowDom } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -25,15 +25,40 @@ const extractSelected = (cells: SugarElement<HTMLTableCellElement>[]): Optional<
 const serializeElements = (editor: Editor, elements: SugarElement<HTMLElement>[]): string =>
   Arr.map(elements, (elm) => editor.selection.serializer.serialize(elm.dom, {})).join('');
 
-const getTextContent = (elements: SugarElement<HTMLElement>[]): string =>
-  Arr.map(elements, (element) => element.dom.innerText).join('');
+const getTextContent = (editor: Editor, replicaElements: SugarElement<HTMLTableElement>[]): string => {
+  const doc = editor.getDoc();
+  const dos = SugarShadowDom.getRootNode(SugarElement.fromDom(editor.getBody()));
+
+  // Set up offscreen div so that the extracted table element can be inserted into the DOM
+  // TINY-10847: If the table element is detached from the DOM, calling innerText is equivalent to calling
+  // textContent which does not include '\n' and '\t' characters to separate rows and cells respectively
+  const offscreenDiv = SugarElement.fromTag('div', doc);
+  Attribute.set(offscreenDiv, 'data-mce-bogus', 'all');
+  Css.setAll(offscreenDiv, {
+    position: 'fixed',
+    left: '-9999999px',
+    top: '0',
+    overflow: 'hidden',
+    opacity: '0'
+  });
+  const root = SugarShadowDom.getContentContainer(dos);
+  InsertAll.append(offscreenDiv, replicaElements);
+  Insert.append(root, offscreenDiv);
+
+  const textContent = offscreenDiv.dom.innerText;
+
+  Remove.remove(offscreenDiv);
+
+  return textContent;
+};
 
 const registerEvents = (editor: Editor, actions: TableActions): void => {
   editor.on('BeforeGetContent', (e) => {
     const multiCellContext = (cells: SugarElement<HTMLTableCellElement>[]) => {
       e.preventDefault();
-      extractSelected(cells).each((elements) => {
-        e.content = e.format === 'text' ? getTextContent(elements) : serializeElements(editor, elements);
+      extractSelected(cells).each((replicaElements) => {
+        const content = e.format === 'text' ? getTextContent(editor, replicaElements) : serializeElements(editor, replicaElements);
+        e.content = content;
       });
     };
 
