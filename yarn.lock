@@ -962,25 +962,24 @@
   dependencies:
     diff "^5.0.0"
 
-"@ephox/bedrock-runner@^14.1.1":
-  version "14.1.1"
-  resolved "https://registry.yarnpkg.com/@ephox/bedrock-runner/-/bedrock-runner-14.1.1.tgz#7b5387bf9ee7fbb64836e86d865083f9e979231d"
-  integrity sha512-RF9RGGTUVZuxy9CGU6CitkmFkqFqafMozSq0/9iGJnjE3bYBz+AyQuER0kY7Ck+xjkrWtDXhlJWhqhMzRwja+Q==
+"@ephox/bedrock-runner@^15.0.0-alpha.1":
+  version "15.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/@ephox/bedrock-runner/-/bedrock-runner-15.0.0-alpha.1.tgz#453496f5bf47ecd44696fdc0d4c6c742d9805649"
+  integrity sha512-zyxPOBMaubRukP3NjcGlwvX1MAq2LOsdduGjcwOgeE5dcgthtfzoZmmESKFe65TYFIKyNUniJ5ofhJPs4kcw1A==
   dependencies:
     "@ephox/bedrock-common" "^14.1.1"
-    "@ephox/wrap-promise-polyfill" "^2.2.0"
     jquery "^3.4.1"
     querystringify "^2.1.1"
 
-"@ephox/bedrock-server@^14.1.2":
-  version "14.1.4"
-  resolved "https://registry.yarnpkg.com/@ephox/bedrock-server/-/bedrock-server-14.1.4.tgz#f3acd25f31d07717092ed1ea8b762f41def85721"
-  integrity sha512-XhDKPmRnk9kaVuoRsph6hb6DvLBzvIh8KBYMGHMymo0kx4cPCFKNbQOaiRdcRESOdkbqQTU78kR/+ONF9C87bw==
+"@ephox/bedrock-server@15.0.0-alpha.1":
+  version "15.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/@ephox/bedrock-server/-/bedrock-server-15.0.0-alpha.1.tgz#0742abcad6949bb2a278d11f20a03af04abadea4"
+  integrity sha512-7WQJ6AtZaT4xPTkAjpSDKMvtWCjbGnEY6giWcZHOYuO3iHGhYsZ9vxxor3y5ACssyFlbhdKil0fr3Dw1zjbFFA==
   dependencies:
     "@aws-sdk/client-device-farm" "^3.354.0"
     "@ephox/bedrock-client" "^14.1.1"
     "@ephox/bedrock-common" "^14.1.1"
-    "@ephox/bedrock-runner" "^14.1.1"
+    "@ephox/bedrock-runner" "^15.0.0-alpha.1"
     "@jsdevtools/coverage-istanbul-loader" "^3.0.5"
     "@lambdatest/node-tunnel" "^4.0.4"
     "@wdio/globals" "^8.14.1"
@@ -1050,11 +1049,6 @@
     rollup "^2.77.0"
     rollup-plugin-dts "^4.2.2"
     webpack-sources "^2.3.0"
-
-"@ephox/wrap-promise-polyfill@^2.2.0":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@ephox/wrap-promise-polyfill/-/wrap-promise-polyfill-2.2.1.tgz#afaabe10bc4c44d167e2f8fa6e722cbd7817d386"
-  integrity sha512-hg2IKjR3E8awv6ZPUZtHVLa+ZQkaN1ksVacw40Jq2gg6uMU9GkBTcSOl+9PswBzva2Jg0lxX0r0ipMAWemDwsA==
 
 "@eslint-community/eslint-utils@^4.2.0":
   version "4.4.0"
