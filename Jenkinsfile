@@ -119,11 +119,11 @@ def runHeadlessPod(String cacheName, Boolean runAll) {
   return {
     bedrockRemoteTools.nodeConsumerPod(
       nodeOpts: [
-        resourceRequestCpu: '2',
-        resourceRequestMemory: '4Gi',
+        resourceRequestCpu: '4',
+        resourceRequestMemory: '16Gi',
         resourceRequestEphemeralStorage: '16Gi',
-        resourceLimitCpu: '7',
-        resourceLimitMemory: '4Gi',
+        resourceLimitCpu: '4',
+        resourceLimitMemory: '16Gi',
         resourceLimitEphemeralStorage: '16Gi'
       ],
       seleniumOpts: [
