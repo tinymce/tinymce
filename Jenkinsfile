@@ -127,7 +127,7 @@ def runHeadlessPod(String cacheName, Boolean runAll) {
         resourceLimitEphemeralStorage: '16Gi'
       ],
       seleniumOpts: [
-        image: "selenium/standalone-chrome:127.0",
+        // image: "selenium/standalone-chrome:127.0",
       ],
       build: cacheName
     ) {
@@ -241,7 +241,11 @@ timestamps {
   //   }
   // }
 
-  processes['headless'] = runHeadlessPod(cacheName, runAllTests)
+  processes['headless-1'] = runHeadlessPod(cacheName, runAllTests)
+  processes['headless-2'] = runHeadlessPod(cacheName, runAllTests)
+  processes['headless-3'] = runHeadlessPod(cacheName, runAllTests)
+  processes['headless-4'] = runHeadlessPod(cacheName, runAllTests)
+  processes['headless-5'] = runHeadlessPod(cacheName, runAllTests)
 
   stage('Run tests') {
       echo "Running tests [runAll=${runAllTests}]"
