@@ -113,6 +113,23 @@ export default (): void => {
       makeSidebar(ed, 'sidebar1', 'green', 200);
       makeSidebar(ed, 'sidebar2', 'green', 200);
       makeCodeView(ed);
+
+      ed.ui.registry.addContextToolbar('foo', {
+        predicate: (_node) => true,
+        items: [
+          {
+            label: 'Formatting',
+            items: [ 'bold', 'italic' ]
+          },
+          {
+            label: 'History',
+            items: [ 'undo', 'redo' ]
+          }
+        ],
+        position: 'line',
+        scope: 'editor'
+      });
+
     },
     plugins: [
       'autosave', 'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
@@ -122,8 +139,8 @@ export default (): void => {
     // rtl_ui: true,
     add_unload_trigger: false,
     autosave_ask_before_unload: false,
-    toolbar: 'undo redo sidebar1 fontsizeinput | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | align lineheight fontsize fontfamily blocks styles insertfile | styles | ' +
-    'bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons table codesample code language | ltr rtl',
+    // toolbar: 'undo redo sidebar1 fontsizeinput | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | align lineheight fontsize fontfamily blocks styles insertfile | styles | ' +
+    // 'bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons table codesample code language | ltr rtl',
     contextmenu: 'link linkchecker image table lists configurepermanentpen',
 
     // Multiple toolbar array
@@ -137,29 +154,29 @@ export default (): void => {
     // toolbar3: 'bullist numlist outdent indent | link image',
 
     // Toolbar with group names
-    // toolbar: [
-    //   {
-    //     name: 'history', items: [ 'undo', 'redo' ]
-    //   },
-    //   {
-    //     name: 'styles', items: [ 'styles' ]
-    //   },
-    //   {
-    //     name: 'formatting', items: [ 'bold', 'italic']
-    //   },
-    //   {
-    //     name: 'alignment', items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ]
-    //   },
-    //   {
-    //     name: 'indentation', items: [ 'outdent', 'indent' ]
-    //   },
-    //   {
-    //     name: 'permanent pen', items: [ 'permanentpen' ]
-    //   },
-    //   {
-    //     name: 'comments', items: [ 'addcomment' ]
-    //   }
-    // ],
+    toolbar: [
+      {
+        name: 'history', label: 'History', items: [ 'undo', 'redo' ]
+      },
+      {
+        name: 'styles', items: [ 'styles' ]
+      },
+      {
+        name: 'formatting', items: [ 'bold', 'italic' ]
+      },
+      {
+        name: 'alignment', items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ]
+      },
+      {
+        name: 'indentation', items: [ 'outdent', 'indent' ]
+      },
+      {
+        name: 'permanent pen', items: [ 'permanentpen' ]
+      },
+      {
+        name: 'comments', items: [ 'addcomment' ]
+      }
+    ],
     toolbar_mode: 'floating',
     emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js',
     resize_img_proportional: true,

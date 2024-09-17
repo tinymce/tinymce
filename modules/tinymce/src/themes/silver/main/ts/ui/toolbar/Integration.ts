@@ -143,7 +143,7 @@ const convertStringToolbar = (strToolbar: string) => {
 };
 
 const isToolbarGroupSettingArray = (toolbar: ToolbarConfig): toolbar is ToolbarGroupOption[] =>
-  Type.isArrayOf(toolbar, (t): t is ToolbarGroupOption => Obj.has(t, 'name') && Obj.has(t, 'items'));
+  Type.isArrayOf(toolbar, (t): t is ToolbarGroupOption => (Obj.has(t, 'name') || Obj.has(t, 'label')) && Obj.has(t, 'items'));
 
 // Toolbar settings
 // false = disabled
@@ -200,6 +200,7 @@ const identifyButtons = (editor: Editor, toolbarConfig: RenderToolbarConfig, bac
     });
     return {
       title: Optional.from(editor.translate(group.name)),
+      label: Optional.from(editor.translate(group.label)),
       items
     };
   });
