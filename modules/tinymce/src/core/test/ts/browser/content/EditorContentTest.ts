@@ -601,7 +601,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
       });
     });
 
-    context('Content that can cause mXSS via ZWNBSP trimming', () => {
+    context(`Content that can cause mXSS via ZWNBSP trimming with inline: ${options.inline}`, () => {
       const hook = TinyHooks.bddSetupLight<Editor>({
         base_url: '/project/tinymce/js/tinymce',
         ...options
@@ -635,6 +635,8 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         TinyAssertions.assertRawContent(editor, '<p>test</p><!---->');
       });
     });
+
+    // if you add new tests, put them inside the above label context otherwise the results will only be recorded once
   });
 
   context('SVG elements not enabled by default', () => {

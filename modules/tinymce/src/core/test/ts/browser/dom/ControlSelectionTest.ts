@@ -90,7 +90,7 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     const ghost = UiFinder.findIn(editorBody, '.mce-clonedresizable').getOrDie();
     assertGhostElem(ghost);
     Mouse.mouseUp(resizeHandle);
-    Waiter.pTryUntil('ghost element should be removed from DOM', () => {
+    await Waiter.pTryUntil('ghost element should be removed from DOM', () => {
       UiFinder.notExists(editorBody, '.mce-clonedresizable');
     });
   };
