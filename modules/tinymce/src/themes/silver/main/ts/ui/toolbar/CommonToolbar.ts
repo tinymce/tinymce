@@ -2,7 +2,8 @@
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Boxes, Focusing, Keying, SketchSpec,
   SplitFloatingToolbar as AlloySplitFloatingToolbar,
-  SplitSlidingToolbar as AlloySplitSlidingToolbar, Tabstopping, Toolbar as AlloyToolbar, ToolbarGroup as AlloyToolbarGroup
+  SplitSlidingToolbar as AlloySplitSlidingToolbar, Tabstopping, Toolbar as AlloyToolbar, ToolbarGroup as AlloyToolbarGroup,
+  GuiFactory
 } from '@ephox/alloy';
 import { Arr, Optional, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
@@ -39,6 +40,7 @@ export interface MoreDrawerToolbarSpec extends ToolbarSpec {
 
 export interface ToolbarGroup {
   readonly title: Optional<string>;
+  readonly label: Optional<string>;
   readonly items: AlloySpec[];
 }
 
@@ -53,6 +55,15 @@ const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
     },
 
     components: [
+      ...(toolbarGroup.label.map((label) => {
+        return {
+          dom: {
+            tag: 'span',
+            classes: [ 'tox-toolbar__label' ],
+          },
+          components: [ GuiFactory.text(label) ]
+        };
+      }).toArray()),
       AlloyToolbarGroup.parts.items({})
     ],
 
@@ -106,6 +117,7 @@ const renderMoreToolbarCommon = (toolbarSpec: MoreDrawerToolbarSpec) => {
       // This already knows it is a toolbar group
       'overflow-group': renderToolbarGroupCommon({
         title: Optional.none(),
+        label: Optional.none(),
         items: []
       }),
       'overflow-button': renderIconButtonSpec({
