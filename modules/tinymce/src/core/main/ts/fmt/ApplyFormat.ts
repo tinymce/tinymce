@@ -19,7 +19,7 @@ import * as Zwsp from '../text/Zwsp';
 import * as CaretFormat from './CaretFormat';
 import * as ExpandRange from './ExpandRange';
 import { isCaretNode } from './FormatContainer';
-import { ApplyFormat, BlockFormat, FormatVars, InlineFormat } from './FormatTypes';
+import { ApplyFormat, BlockFormat, FormatAttrOrStyleValue, FormatVars, InlineFormat } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 import * as Hooks from './Hooks';
 import * as ListItemFormat from './ListItemFormat';
@@ -40,20 +40,81 @@ const canFormatBR = (editor: Editor, format: ApplyFormat, node: HTMLBRElement, p
   }
 };
 
-const applyStyles = (dom: DOMUtils, elm: Element, format: ApplyFormat, vars: FormatVars | undefined, editor: Editor ) => {
-  const isApplyListFormatting = Options.getApplyListFormatting(editor);
+const markerStyleProperties = [ 'color', 'fontSize', 'fontFamily' ] as const;
+type MarkerStyleProperty = typeof markerStyleProperties[number];
 
-  each(format.styles, (value, name) => {
-    if (isApplyListFormatting) {
-      dom.setStyle(elm, name, FormatUtils.replaceVars(value, vars));
+const propertyNameMap: Record<string, string> = {
+  fontSize: 'font-size',
+  fontFamily: 'font-family',
+  // fontWeight: 'font-weight',
+  // fontStyle: 'font-style'
+};
+
+const createMarkerStyle = (style: FormatAttrOrStyleValue, name: string, vars: FormatVars | undefined): string => {
+  if (markerStyleProperties.includes(name as MarkerStyleProperty)) {
+    const cssPropertyName = propertyNameMap[name] || name;
+
+    let styleValue = '';
+    if (name === 'color') {
+      if (vars !== undefined) {
+        if (Type.isString(vars)) {
+          styleValue = vars;
+        } else if (Type.isObject(vars) && Type.isString(vars.color)) {
+          styleValue = vars.color;
+        }
+      }
+    } else if (Type.isString(style)) {
+      styleValue = style;
     }
-  });
+
+    if (styleValue) {
+      return `li::marker { ${cssPropertyName}: ${styleValue}; }`;
+    }
+  }
+
+  return '';
+};
+
+const applyStyles = (dom: DOMUtils, elm: Element, format: ApplyFormat, vars: FormatVars | undefined, _editor: Editor): void => {
+  if (dom.is(elm, 'li') || dom.getParent(elm, 'li')) {
+    const listItem = dom.is(elm, 'li') ? elm : dom.getParent(elm, 'li');
+    const list = dom.getParent(listItem, 'ol,ul');
+
+    if (list && listItem) {
+      let markerStyles = '';
+
+      each(format.styles, (value, name) => {
+        const markerStyle = createMarkerStyle(value, name, vars);
+
+        if (markerStyle) {
+          markerStyles += markerStyle;
+        } else {
+          const styleValue = FormatUtils.replaceVars(value, vars);
+          const cssPropertyName = propertyNameMap[name] || name;
+          dom.setStyle(listItem, cssPropertyName, styleValue);
+        }
+      });
+
+      if (markerStyles) {
+        const styleId = `mce-list-marker-style-${Date.now()}`;
+        const styleElement = dom.create('style', { id: styleId, type: 'text/css' }, markerStyles);
+        dom.getRoot().appendChild(styleElement);
+
+        dom.setAttrib(list, 'data-mce-marker-style', styleId);
+      }
+    }
+  } else {
+    each(format.styles, (value, name) => {
+      const styleValue = FormatUtils.replaceVars(value, vars);
+      const cssPropertyName = propertyNameMap[name] || name;
+      dom.setStyle(elm, cssPropertyName, styleValue);
+    });
+  }
 
   // Needed for the WebKit span spam bug
   // TODO: Remove this once WebKit/Blink fixes this
   if (format.styles) {
     const styleVal = dom.getAttrib(elm, 'style');
-
     if (styleVal) {
       dom.setAttrib(elm, 'data-mce-style', styleVal);
     }
