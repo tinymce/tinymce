@@ -60,12 +60,13 @@ const renderToolbarGroupWithLabelWrapper = () => {
 };
 
 const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
-  const attributes = toolbarGroup.title.fold(() => ({}),
-    (title) => ({ attributes: { title }}));
+  const attributes = toolbarGroup.label.isNone() ? toolbarGroup.title.fold(() => ({}),
+    (title) => ({ attributes: { title }})) : toolbarGroup.label.fold(() => ({}),
+    (label) => ({ attributes: { title: 'label: ' + label }}));
   // hasWrapper(toolbarGroup)
   return {
     dom: {
-      tag: 'div',
+      tag: toolbarGroup.label.isSome() ? 'fieldset' : 'div',
       classes: [ 'tox-toolbar__group' ].concat(
         toolbarGroup.label.isSome() ? [ 'tox-toolbar__group_with_label' ] : []
       ),
@@ -254,4 +255,9 @@ const renderToolbar = (toolbarSpec: ToolbarSpec): SketchSpec => {
   });
 };
 
-export { renderToolbarGroup, renderToolbar, renderFloatingMoreToolbar, renderSlidingMoreToolbar };
+export {
+  renderToolbarGroup,
+  renderToolbar,
+  renderFloatingMoreToolbar,
+  renderSlidingMoreToolbar
+};
