@@ -165,7 +165,7 @@ const pTestEmbedContentFromUrl = async (editor: Editor, url: string, content: st
 const pSetFormItemNoEvent = pSetSourceInput;
 
 const pAssertEditorContent = (editor: Editor, expected: string): Promise<void> =>
-  Waiter.pTryUntil('Wait for editor value',
+  Waiter.pTryUntil('Waiting for editor value: ' + expected,
     () => TinyAssertions.assertContent(editor, expected)
   );
 
