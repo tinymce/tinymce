@@ -18,14 +18,16 @@ const register = (editor: Editor, toggleState: Cell<boolean>): void => {
     tooltip: 'Show invisible characters',
     icon: 'visualchars',
     onAction,
-    onSetup: toggleActiveState(editor, toggleState)
+    onSetup: toggleActiveState(editor, toggleState),
+    context: 'any'
   });
 
   editor.ui.registry.addToggleMenuItem('visualchars', {
     text: 'Show invisible characters',
     icon: 'visualchars',
     onAction,
-    onSetup: toggleActiveState(editor, toggleState)
+    onSetup: toggleActiveState(editor, toggleState),
+    context: 'any'
   });
 };
 

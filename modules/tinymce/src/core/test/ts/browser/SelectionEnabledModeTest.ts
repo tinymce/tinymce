@@ -1,6 +1,6 @@
 import { ApproxStructure, Mouse, UiFinder, Clipboard, Waiter, Keys } from '@ephox/agar';
 import { afterEach, context, describe, it } from '@ephox/bedrock-client';
-import { Fun, Singleton } from '@ephox/katamari';
+import { Singleton } from '@ephox/katamari';
 import { Attribute, Css, SelectorExists, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -24,15 +24,6 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
     plugins: 'autolink table image codesample media code lists accordion advlist',
     indent: false,
     statusbar: false,
-    setup: (ed: Editor) => {
-      ed.mode.register('testmode', {
-        activate: Fun.noop,
-        deactivate: Fun.noop,
-        editorReadOnly: {
-          selectionEnabled: true,
-        },
-      });
-    }
   },
   [
     AccordionPlugin,
@@ -149,7 +140,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       TinySelections.select(editor, 'div[contenteditable="false"]', []);
       assertFakeSelection(editor, true);
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.select(editor, 'div[contenteditable="false"]', []);
       assertFakeSelection(editor, true);
 
@@ -168,7 +159,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       await pAssertOutlineStyle(UiFinder.findIn(TinyDom.body(editor), 'img').getOrDie(), imageSelectedOutline);
       assertFakeSelection(editor, true);
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.setCursor(editor, [ 0 ], 0);
       TinySelections.select(editor, 'img', []);
       // Dispatching nodeChanged to update the selection
@@ -193,7 +184,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       assertFakeSelection(editor, true);
       await pAssertResizeHandle(editor);
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.setCursor(editor, [ 0 ], 0);
       TinySelections.select(editor, 'img', []);
       editor.nodeChanged();
@@ -217,7 +208,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       await pAssertOutlineStyle(UiFinder.findIn(TinyDom.body(editor), 'figure').getOrDie(), imageSelectedOutline);
       assertFakeSelection(editor, true);
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.setCursor(editor, [ 0 ], 0);
       TinySelections.select(editor, 'figure', []);
       // Dispatching nodeChanged to update the selection
@@ -239,7 +230,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       TinySelections.select(editor, 'pre', []);
       assertFakeSelection(editor, true);
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.select(editor, 'pre', []);
       assertFakeSelection(editor, true);
 
@@ -256,7 +247,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       TinySelections.select(editor, 'div', []);
       assertFakeSelection(editor, true);
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.select(editor, 'div', []);
       assertFakeSelection(editor, true);
 
@@ -273,7 +264,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       TinySelections.select(editor, 'span.mce-preview-object', []);
       assertFakeSelection(editor, true);
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.select(editor, 'span.mce-preview-object', []);
       assertFakeSelection(editor, true);
 
@@ -290,7 +281,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       TinySelections.select(editor, 'div[data-ephox-embed-iri]', []);
       assertFakeSelection(editor, true);
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.select(editor, 'div[data-ephox-embed-iri]', []);
       assertFakeSelection(editor, true);
 
@@ -307,7 +298,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       TinySelections.setSelection(editor, [ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 1);
       await pAssertResizeHandle(editor);
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.setSelection(editor, [ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 1);
       await pAssertNoResizeHandle(editor);
 
@@ -320,7 +311,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       const editor = hook.editor();
       editor.setContent('<table><tbody><tr><td>a</td></tr></tbody></table>');
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
       mouseOverTable(editor);
       assertResizeBars(editor, false);
@@ -341,7 +332,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       TinyContentActions.keystroke(editor, Keys.tab());
       TinyAssertions.assertContent(editor, '<table><tbody><tr><td>a</td></tr><tr><td>&nbsp;</td></tr></tbody></table>');
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.setCursor(editor, [ 0, 0, 1, 0, 0 ], 0);
       TinyContentActions.keystroke(editor, Keys.tab());
       TinyAssertions.assertContent(editor, '<table><tbody><tr><td>a</td></tr><tr><td>&nbsp;</td></tr></tbody></table>');
@@ -358,7 +349,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       TinyContentActions.keystroke(editor, Keys.tab());
       TinyAssertions.assertContent(editor, '<ul><li>a<ul><li>b</li></ul></li><li>c</li></ul>');
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.setCursor(editor, [ 0, 0, 1, 0 ], 0);
       TinyContentActions.keystroke(editor, Keys.tab());
       TinyAssertions.assertContent(editor, '<ul><li>a<ul><li>b</li></ul></li><li>c</li></ul>');
@@ -380,7 +371,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       TinyContentActions.keystroke(editor, Keys.enter());
       TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 1 });
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 4);
       TinyContentActions.keystroke(editor, Keys.enter());
       TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 0 });
@@ -397,7 +388,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       editor.execCommand('ToggleAccordion', false, true);
       TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 1 });
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 4);
       editor.execCommand('ToggleAccordion', false, false);
       TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 0 });
@@ -414,7 +405,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       editor.execCommand('RemoveAccordion');
       TinyAssertions.assertContent(editor, '<details class="mce-accordion"><summary>Accordion summary...</summary><p>Accordion Body</p></details>');
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 4);
       editor.execCommand('RemoveAccordion');
       TinyAssertions.assertContent(editor, '<details class="mce-accordion"><summary>Accordion summary...</summary><p>Accordion Body</p></details>');
@@ -426,7 +417,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       const editor = hook.editor();
       editor.setContent(`<p>https://google.com</p>`);
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.setCursor(editor, [ 0, 0 ], 'https://google.com'.length);
       TinyContentActions.keystroke(editor, Keys.enter());
       await Waiter.pTryUntil('Wait for content to change', () => TinyAssertions.assertContent(editor, '<p>https://google.com</p>'));
@@ -444,7 +435,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       editor.execCommand('mceListUpdate', false, { attrs: { contenteditable: false }});
       TinyAssertions.assertContent(editor, '<ol contenteditable="false"><li>test</li></ol><ol><li>test2</li></ol>');
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.setCursor(editor, [ 1, 0, 0 ], 4);
       editor.execCommand('mceListUpdate', false, { attrs: { contenteditable: false }});
       TinyAssertions.assertContent(editor, '<ol contenteditable="false"><li>test</li></ol><ol><li>test2</li></ol>');
@@ -459,7 +450,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       editor.execCommand('RemoveList');
       TinyAssertions.assertContent(editor, '<p>test</p><ol><li>test2</li></ol>');
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.setCursor(editor, [ 1, 0, 0 ], 4);
       editor.execCommand('RemoveList');
       TinyAssertions.assertContent(editor, '<p>test</p><ol><li>test2</li></ol>');
@@ -476,7 +467,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
     TinySelections.setCursor(editor, [ 0, 0 ], 5);
     TinyAssertions.assertCursor(editor, [ 0, 0 ], 5);
 
-    setMode(editor, 'testmode');
+    setMode(editor, 'readonly');
     TinySelections.setCursor(editor, [ 0, 0 ], 5);
     TinyAssertions.assertCursor(editor, [ 0, 0 ], 5);
 
@@ -493,7 +484,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
     TinySelections.setSelection(editor, [ 0, 0 ], 5, [ 0, 0 ], 10);
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 5, [ 0, 0 ], 10);
 
-    setMode(editor, 'testmode');
+    setMode(editor, 'readonly');
     TinySelections.setSelection(editor, [ 0, 0 ], 5, [ 0, 0 ], 10);
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 5, [ 0, 0 ], 10);
 
@@ -512,7 +503,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
     editor.dispatch('input');
     await Waiter.pWait(50);
 
-    setMode(editor, 'testmode');
+    setMode(editor, 'readonly');
     TinySelections.setCursor(editor, [ 0, 0 ], 5);
     editor.insertContent('A');
     editor.dispatch('input');
@@ -536,7 +527,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
     paste(editor, { 'text/html': '<p>X</p>' }, [ 0, 0 ], 4, [ 0, 0 ], 4);
     TinyAssertions.assertContent(editor, '<p>testX</p>');
 
-    setMode(editor, 'testmode');
+    setMode(editor, 'readonly');
     paste(editor, { 'text/html': '<p>X</p>' }, [ 0, 0 ], 5, [ 0, 0 ], 5);
     TinyAssertions.assertContent(editor, '<p>testX</p>');
 
@@ -564,7 +555,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
     editor.on('copy', copyHandler);
 
     editor.setContent('<p>test</p>');
-    setMode(editor, 'testmode');
+    setMode(editor, 'readonly');
     copy(editor, [ 0, 0 ], 0, [ 0, 0 ], 4);
     assertClipboardData('<!-- x-tinymce/html -->test', 'test');
     paste(editor, { 'text/html': '<p>X</p>' }, [ 0, 0 ], 4, [ 0, 0 ], 4);
@@ -579,7 +570,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
     setMode(editor, 'design');
     editor.setContent('<div contenteditable="false">CEF</div>');
 
-    setMode(editor, 'testmode');
+    setMode(editor, 'readonly');
     TinySelections.setCursor(editor, [], 0);
     const expectedStructure = ApproxStructure.build((s, str, arr) => {
       return s.element('body', {
@@ -626,7 +617,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       const editor = hook.editor();
       editor.setContent(`<p>test</p>${preCodeSampleHtml}`);
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.setCursor(editor, [ 0, 0 ], 4);
 
       TinyContentActions.keystroke(editor, Keys.right());
@@ -643,7 +634,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       const editor = hook.editor();
       editor.setContent(`<p>test</p>${tableOfContentHtml}`);
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.setCursor(editor, [ 0, 0 ], 4);
 
       TinyContentActions.keystroke(editor, Keys.right());
@@ -660,7 +651,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       const editor = hook.editor();
       editor.setContent(`<p>test</p>${mediaElementHtml}`);
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.setCursor(editor, [ 0, 0 ], 4);
 
       TinyContentActions.keystroke(editor, Keys.right());
@@ -679,14 +670,8 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       const editor = hook.editor();
       const body = TinyDom.body(editor);
       assert.equal(Attribute.get(body, 'contenteditable'), 'true');
-      setMode(editor, 'testmode');
-      assert.equal(Attribute.get(body, 'contenteditable'), 'true');
       setMode(editor, 'readonly');
-      assert.equal(Attribute.get(body, 'contenteditable'), 'false');
-      setMode(editor, 'testmode');
       assert.equal(Attribute.get(body, 'contenteditable'), 'true');
-      setMode(editor, 'readonly');
-      assert.equal(Attribute.get(body, 'contenteditable'), 'false');
       setMode(editor, 'design');
       assert.equal(Attribute.get(body, 'contenteditable'), 'true');
     });

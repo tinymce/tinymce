@@ -1,6 +1,5 @@
 import { UiFinder, Waiter, RealMouse } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
 import { Css, SugarElement } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -15,15 +14,6 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
     plugins: 'autolink table image codesample media code lists accordion advlist',
     indent: false,
     statusbar: false,
-    setup: (ed: Editor) => {
-      ed.mode.register('testmode', {
-        activate: Fun.noop,
-        deactivate: Fun.noop,
-        editorReadOnly: {
-          selectionEnabled: true,
-        },
-      });
-    }
   },
   [
     ImagePlugin,
@@ -70,7 +60,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       await pAssertOutlineStyle(UiFinder.findIn(TinyDom.body(editor), 'figure').getOrDie(), imageSelectedOutline);
       assertFakeSelection(editor, true);
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.setCursor(editor, [ 0, 0 ], 0);
       await RealMouse.pClickOn('iframe => body => figure');
       assertFakeSelection(editor, true);

@@ -1,5 +1,4 @@
 import { afterEach, context, describe, it } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -8,15 +7,6 @@ describe('browser.tinymce.core.api.commands.NewBlockCommandsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     indent: false,
-    setup: (editor: Editor) => {
-      editor.mode.register('testmode', {
-        activate: Fun.noop,
-        deactivate: Fun.noop,
-        editorReadOnly: {
-          selectionEnabled: true
-        }
-      });
-    },
   }, [], true);
 
   context('Design mode', () => {
@@ -260,14 +250,14 @@ describe('browser.tinymce.core.api.commands.NewBlockCommandsTest', () => {
     });
   });
 
-  context('TINY-10981: readonly selectionEnabled mode', () => {
+  context('TINY-10981: readonly mode', () => {
     afterEach(() => hook.editor().mode.set('design'));
 
     context('InsertNewBlockBefore command', () => {
       it('TINY-10022: empty editor', () => {
         const editor = hook.editor();
         editor.resetContent();
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         editor.execCommand('InsertNewBlockBefore');
         TinyAssertions.assertContent(editor, '');
         TinyAssertions.assertCursor(editor, [ 0 ], 0);
@@ -278,7 +268,7 @@ describe('browser.tinymce.core.api.commands.NewBlockCommandsTest', () => {
       it('TINY-10022: should insert empty block after paragrpaph with text', () => {
         const editor = hook.editor();
         editor.setContent('<p>AAA</p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0 ], 2);
         editor.execCommand('InsertNewBlockBefore');
         TinyAssertions.assertContent(editor, '<p>AAA</p>');
@@ -290,7 +280,7 @@ describe('browser.tinymce.core.api.commands.NewBlockCommandsTest', () => {
       it('TINY-10022: should insert empty block before paragraph with inline elements', () => {
         const editor = hook.editor();
         editor.setContent('<p><em>AAA</em></p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
         editor.execCommand('InsertNewBlockBefore');
         TinyAssertions.assertContent(editor, '<p><em>AAA</em></p>');
@@ -302,7 +292,7 @@ describe('browser.tinymce.core.api.commands.NewBlockCommandsTest', () => {
       it('TINY-10022: should insert empty block before blockquote', () => {
         const editor = hook.editor();
         editor.setContent('<blockquote><p>AAA</p></blockquote>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
         editor.execCommand('InsertNewBlockBefore');
         TinyAssertions.assertContent(editor, '<blockquote><p>AAA</p></blockquote>');
@@ -314,7 +304,7 @@ describe('browser.tinymce.core.api.commands.NewBlockCommandsTest', () => {
       it('TINY-10022: should insert new empty block between two paragraphs', () => {
         const editor = hook.editor();
         editor.setContent('<p>AAA</p><p>BBB</p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 1, 0 ], 2);
         editor.execCommand('InsertNewBlockBefore');
         TinyAssertions.assertContent(editor, '<p>AAA</p><p>BBB</p>');
@@ -326,7 +316,7 @@ describe('browser.tinymce.core.api.commands.NewBlockCommandsTest', () => {
       it('TINY-10022: should insert new empty block between two blockquotes', () => {
         const editor = hook.editor();
         editor.setContent('<blockquote><p>AAA</p></blockquote><blockquote><p>BBB</p></blockquote>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 1, 0, 0 ], 2);
         editor.execCommand('InsertNewBlockBefore');
         TinyAssertions.assertContent(editor, '<blockquote><p>AAA</p></blockquote><blockquote><p>BBB</p></blockquote>');
@@ -338,7 +328,7 @@ describe('browser.tinymce.core.api.commands.NewBlockCommandsTest', () => {
       it('TINY-10022: insert new empty block within CET root', () => {
         const editor = hook.editor();
         editor.setContent('<div contenteditable="true"><p>AAA</p><p>BBB</p></div>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
         editor.execCommand('InsertNewBlockBefore');
         TinyAssertions.assertContent(editor, '<div contenteditable="true"><p>AAA</p><p>BBB</p></div>');
@@ -350,7 +340,7 @@ describe('browser.tinymce.core.api.commands.NewBlockCommandsTest', () => {
       it('TINY-10022: insert new empty block before start container of ranged selection', () => {
         const editor = hook.editor();
         editor.setContent('<p>AAA</p><p>BBB</p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 1, 0 ], 2);
         editor.execCommand('InsertNewBlockBefore');
         TinyAssertions.assertContent(editor, '<p>AAA</p><p>BBB</p>');
@@ -362,7 +352,7 @@ describe('browser.tinymce.core.api.commands.NewBlockCommandsTest', () => {
       it('TINY-10022: insert new empty block before noneditable block', () => {
         const editor = hook.editor();
         editor.setContent('<p contenteditable="false">AAA</p><p>BBB</p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.select(editor, '[contenteditable]', []);
         editor.execCommand('InsertNewBlockBefore');
         TinyAssertions.assertContent(editor, '<p contenteditable="false">AAA</p><p>BBB</p>');
@@ -393,7 +383,7 @@ describe('browser.tinymce.core.api.commands.NewBlockCommandsTest', () => {
       it('TINY-10022: empty editor', () => {
         const editor = hook.editor();
         editor.resetContent();
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         editor.execCommand('InsertNewBlockAfter');
         TinyAssertions.assertContent(editor, '');
         TinyAssertions.assertCursor(editor, [ 0 ], 0);
@@ -404,7 +394,7 @@ describe('browser.tinymce.core.api.commands.NewBlockCommandsTest', () => {
       it('TINY-10022: should insert empty block after paragrpaph with text', () => {
         const editor = hook.editor();
         editor.setContent('<p>AAA</p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0 ], 2);
         editor.execCommand('InsertNewBlockAfter');
         TinyAssertions.assertContent(editor, '<p>AAA</p>');
@@ -416,7 +406,7 @@ describe('browser.tinymce.core.api.commands.NewBlockCommandsTest', () => {
       it('TINY-10022: should insert empty block after paragraph with inline elements', () => {
         const editor = hook.editor();
         editor.setContent('<p><em>AAA</em></p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
         editor.execCommand('InsertNewBlockAfter');
         TinyAssertions.assertContent(editor, '<p><em>AAA</em></p>');
@@ -428,7 +418,7 @@ describe('browser.tinymce.core.api.commands.NewBlockCommandsTest', () => {
       it('TINY-10022: should insert empty block after blockquote', () => {
         const editor = hook.editor();
         editor.setContent('<blockquote><p>AAA</p></blockquote>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
         editor.execCommand('InsertNewBlockAfter');
         TinyAssertions.assertContent(editor, '<blockquote><p>AAA</p></blockquote>');
@@ -440,7 +430,7 @@ describe('browser.tinymce.core.api.commands.NewBlockCommandsTest', () => {
       it('TINY-10022: should insert new empty block between two paragraphs', () => {
         const editor = hook.editor();
         editor.setContent('<p>AAA</p><p>BBB</p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0 ], 2);
         editor.execCommand('InsertNewBlockAfter');
         TinyAssertions.assertContent(editor, '<p>AAA</p><p>BBB</p>');
@@ -452,7 +442,7 @@ describe('browser.tinymce.core.api.commands.NewBlockCommandsTest', () => {
       it('TINY-10022: should insert new empty block between two blockquotes', () => {
         const editor = hook.editor();
         editor.setContent('<blockquote><p>AAA</p></blockquote><blockquote><p>BBB</p></blockquote>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
         editor.execCommand('InsertNewBlockAfter');
         TinyAssertions.assertContent(editor, '<blockquote><p>AAA</p></blockquote><blockquote><p>BBB</p></blockquote>');
@@ -464,7 +454,7 @@ describe('browser.tinymce.core.api.commands.NewBlockCommandsTest', () => {
       it('TINY-10022: insert new empty block within CET root', () => {
         const editor = hook.editor();
         editor.setContent('<div contenteditable="true"><p>AAA</p><p>BBB</p></div>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
         editor.execCommand('InsertNewBlockAfter');
         TinyAssertions.assertContent(editor, '<div contenteditable="true"><p>AAA</p><p>BBB</p></div>');
@@ -476,7 +466,7 @@ describe('browser.tinymce.core.api.commands.NewBlockCommandsTest', () => {
       it('TINY-10022: insert new empty block after end container of ranged selection', () => {
         const editor = hook.editor();
         editor.setContent('<p>AAA</p><p>BBB</p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 1, 0 ], 2);
         editor.execCommand('InsertNewBlockAfter');
         TinyAssertions.assertContent(editor, '<p>AAA</p><p>BBB</p>');
@@ -488,7 +478,7 @@ describe('browser.tinymce.core.api.commands.NewBlockCommandsTest', () => {
       it('TINY-10022: insert new empty block after noneditable block', () => {
         const editor = hook.editor();
         editor.setContent('<p contenteditable="false">AAA</p><p>BBB</p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.select(editor, '[contenteditable]', []);
         editor.execCommand('InsertNewBlockAfter');
         TinyAssertions.assertContent(editor, '<p contenteditable="false">AAA</p><p>BBB</p>');

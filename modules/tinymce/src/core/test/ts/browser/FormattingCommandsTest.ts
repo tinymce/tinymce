@@ -1,5 +1,4 @@
 import { afterEach, context, describe, it } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
 import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -556,7 +555,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     });
   });
 
-  context('TINY-10981: readonly selectionEnabled mode', () => {
+  context('TINY-10981: readonly mode', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       add_unload_trigger: false,
       disable_nodechange: true,
@@ -568,15 +567,6 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
           'float,margin,margin-top,margin-right,margin-bottom,margin-left,padding-left,text-align,display'
       },
       base_url: '/project/tinymce/js/tinymce',
-      setup: (editor: Editor) => {
-        editor.mode.register('testmode', {
-          activate: Fun.noop,
-          deactivate: Fun.noop,
-          editorReadOnly: {
-            selectionEnabled: true
-          }
-        });
-      }
     }, []);
 
     afterEach(() => hook.editor().mode.set('design'));
@@ -584,7 +574,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     it('Formatting commands (xhtmlTextStyles)', () => {
       const editor = hook.editor();
       editor.setContent('test 123');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       editor.focus();
       editor.execCommand('SelectAll');
       editor.execCommand('Bold');
@@ -641,7 +631,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
       it('TBA - p, JustifyLeft', () => {
         const editor = hook.editor();
         editor.setContent('<p>test 123</p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         editor.execCommand('SelectAll');
         editor.execCommand('JustifyLeft');
         TinyAssertions.assertContent(editor, '<p>test 123</p>');
@@ -651,7 +641,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
       it('TBA - p, JustifyCenter', () => {
         const editor = hook.editor();
         editor.setContent('<p>test 123</p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         editor.execCommand('SelectAll');
         editor.execCommand('JustifyCenter');
         TinyAssertions.assertContent(editor, '<p>test 123</p>');
@@ -661,7 +651,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
       it('TBA - p, JustifyRight', () => {
         const editor = hook.editor();
         editor.setContent('<p>test 123</p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         editor.execCommand('SelectAll');
         editor.execCommand('JustifyRight');
         TinyAssertions.assertContent(editor, '<p>test 123</p>');
@@ -671,7 +661,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
       it('TBA - p, JustifyFull', () => {
         const editor = hook.editor();
         editor.setContent('<p>test 123</p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         editor.execCommand('SelectAll');
         editor.execCommand('JustifyFull');
         TinyAssertions.assertContent(editor, '<p>test 123</p>');
@@ -681,7 +671,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
       it('TINY-7715 - pre, JustifyLeft', () => {
         const editor = hook.editor();
         editor.setContent('<pre>test 123</pre>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         editor.execCommand('SelectAll');
         editor.execCommand('JustifyLeft');
         TinyAssertions.assertContent(editor, '<pre>test 123</pre>');
@@ -691,7 +681,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
       it('TINY-7715 - pre, JustifyCenter', () => {
         const editor = hook.editor();
         editor.setContent('<pre>test 123</pre>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         editor.execCommand('SelectAll');
         editor.execCommand('JustifyCenter');
         TinyAssertions.assertContent(editor, '<pre>test 123</pre>');
@@ -701,7 +691,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
       it('TINY-7715 - pre, JustifyRight', () => {
         const editor = hook.editor();
         editor.setContent('<pre>test 123</pre>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         editor.execCommand('SelectAll');
         editor.execCommand('JustifyRight');
         TinyAssertions.assertContent(editor, '<pre>test 123</pre>');
@@ -711,7 +701,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
       it('TINY-7715 - pre, JustifyFull', () => {
         const editor = hook.editor();
         editor.setContent('<pre>test 123</pre>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         editor.execCommand('SelectAll');
         editor.execCommand('JustifyFull');
         TinyAssertions.assertContent(editor, '<pre>test 123</pre>');
@@ -721,7 +711,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
       it('TBA - img, JustifyLeft', () => {
         const editor = hook.editor();
         editor.setContent('<img src="tinymce/ui/img/raster.gif" />');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         editor.selection.select(editor.dom.select('img')[0]);
         editor.execCommand('JustifyLeft');
         TinyAssertions.assertContent(editor, '<p><img src="tinymce/ui/img/raster.gif"></p>');
@@ -730,7 +720,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
       it('TBA - img, JustifyCenter', () => {
         const editor = hook.editor();
         editor.setContent('<img src="tinymce/ui/img/raster.gif" />');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         editor.selection.select(editor.dom.select('img')[0]);
         editor.execCommand('JustifyCenter');
         TinyAssertions.assertContent(editor, '<p><img src="tinymce/ui/img/raster.gif"></p>');
@@ -739,7 +729,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
       it('TBA - img, JustifyRight', () => {
         const editor = hook.editor();
         editor.setContent('<img src="tinymce/ui/img/raster.gif" />');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         editor.selection.select(editor.dom.select('img')[0]);
         editor.execCommand('JustifyRight');
         TinyAssertions.assertContent(editor, '<p><img src="tinymce/ui/img/raster.gif"></p>');
@@ -750,14 +740,14 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
       const editor = hook.editor();
       editor.focus();
       editor.setContent('<p>test 123</p>');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       editor.execCommand('SelectAll');
       editor.execCommand('mceBlockQuote');
       TinyAssertions.assertContent(editor, '<p>test 123</p>');
 
       editor.mode.set('design');
       editor.setContent('<p>test 123</p><p>test 123</p>');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       editor.execCommand('SelectAll');
       editor.execCommand('mceBlockQuote');
       TinyAssertions.assertContent(editor, '<p>test 123</p><p>test 123</p>');
@@ -766,7 +756,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     it('FormatBlock', () => {
       const editor = hook.editor();
       editor.setContent('<p>test 123</p>');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       editor.execCommand('SelectAll');
       editor.execCommand('FormatBlock', false, 'h1');
       TinyAssertions.assertContent(editor, '<p>test 123</p>');
@@ -821,7 +811,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     it('mceInsertLink (relative)', () => {
       const editor = hook.editor();
       editor.setContent('test 123');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       editor.execCommand('SelectAll');
       editor.execCommand('mceInsertLink', false, 'test');
       TinyAssertions.assertContent(editor, '<p>test 123</p>');
@@ -830,7 +820,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     it('mceInsertLink (link absolute)', () => {
       const editor = hook.editor();
       editor.setContent('<p>test 123</p>');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       editor.execCommand('SelectAll');
       editor.execCommand('mceInsertLink', false, 'http://www.site.com');
       TinyAssertions.assertContent(editor, '<p>test 123</p>');
@@ -839,7 +829,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     it('mceInsertLink (link encoded)', () => {
       const editor = hook.editor();
       editor.setContent('<p>test 123</p>');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       editor.execCommand('SelectAll');
       editor.execCommand('mceInsertLink', false, '"&<>');
       TinyAssertions.assertContent(editor, '<p>test 123</p>');
@@ -848,7 +838,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     it('mceInsertLink (link encoded and with class)', () => {
       const editor = hook.editor();
       editor.setContent('<p>test 123</p>');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       editor.execCommand('SelectAll');
       editor.execCommand('mceInsertLink', false, { href: '"&<>', class: 'test' });
       TinyAssertions.assertContent(editor, '<p>test 123</p>');
@@ -857,7 +847,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     it('mceInsertLink (link with space)', () => {
       const editor = hook.editor();
       editor.setContent('<p>test 123</p>');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       editor.execCommand('SelectAll');
       editor.execCommand('mceInsertLink', false, { href: 'foo bar' });
       TinyAssertions.assertContent(editor, '<p>test 123</p>');
@@ -866,7 +856,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     it('mceInsertLink (link floated img)', () => {
       const editor = hook.editor();
       editor.setContent('<p><img style="float: right;" src="about:blank" /></p>');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       editor.execCommand('SelectAll');
       editor.execCommand('mceInsertLink', false, 'link');
       TinyAssertions.assertContent(editor, '<p><img style="float: right;" src="about:blank"></p>');
@@ -875,7 +865,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     it('mceInsertLink (link adjacent text)', () => {
       const editor = hook.editor();
       editor.setContent('<p><a href="#">a</a>b</p>');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
 
       const rng = editor.dom.createRng();
       rng.setStart(editor.getBody().firstChild?.lastChild as Text, 0);
@@ -889,7 +879,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     it('mceInsertLink (link text inside text)', () => {
       const editor = hook.editor();
       editor.setContent('<p><a href="#"><em>abc</em></a></p>');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       LegacyUnit.setSelection(editor, 'em', 1, 'em', 2);
 
       editor.execCommand('mceInsertLink', false, 'link');
@@ -899,7 +889,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     it('mceInsertLink (link around existing links)', () => {
       const editor = hook.editor();
       editor.setContent('<p><a href="#1">1</a><a href="#2">2</a></p>');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       editor.execCommand('SelectAll');
 
       editor.execCommand('mceInsertLink', false, 'link');
@@ -909,7 +899,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     it('mceInsertLink (link around existing links with different attrs)', () => {
       const editor = hook.editor();
       editor.setContent('<p><a id="a" href="#1">1</a><a id="b" href="#2">2</a></p>');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       editor.execCommand('SelectAll');
 
       editor.execCommand('mceInsertLink', false, 'link');
@@ -922,7 +912,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
         '<p><span id="s1"><strong><a id="a" href="#1"><em>1</em></a></strong></span><span id="s2">' +
         '<em><a id="b" href="#2"><strong>2</strong></a></em></span></p>'
       );
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       editor.execCommand('SelectAll');
 
       editor.execCommand('mceInsertLink', false, 'link');
@@ -936,7 +926,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     it('mceInsertLink (link text inside link)', () => {
       const editor = hook.editor();
       editor.setContent('<p><a href="#">test</a></p>');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
       editor.execCommand('SelectAll');
 
@@ -947,7 +937,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     it('mceInsertLink bug #7331', () => {
       const editor = hook.editor();
       editor.setContent('<table><tbody><tr><td>A</td></tr><tr><td>B</td></tr></tbody></table>');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       const rng = editor.dom.createRng();
       rng.setStart(editor.dom.select('td')[1].firstChild as Text, 0);
       rng.setEnd(editor.getBody(), 1);
@@ -959,7 +949,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     it('unlink', () => {
       const editor = hook.editor();
       editor.setContent('<p><a href="test">test</a> <a href="test">123</a></p>');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       editor.execCommand('SelectAll');
       editor.execCommand('unlink');
       TinyAssertions.assertContent(editor, '<p><a href="test">test</a> <a href="test">123</a></p>');
@@ -968,7 +958,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     it('unlink - unselected a[href] with childNodes', () => {
       const editor = hook.editor();
       editor.setContent('<p><a href="test"><strong><em>test</em></strong></a></p>');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       LegacyUnit.setSelection(editor, 'em', 0);
       editor.execCommand('unlink');
       TinyAssertions.assertContent(editor, '<p><a href="test"><strong><em>test</em></strong></a></p>');
@@ -977,7 +967,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     it('TINY-9172: unlink block links', () => {
       const editor = hook.editor();
       editor.setContent('<a href="test">test</a><div><a href="#"><p>test</p></a></div>');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       editor.execCommand('SelectAll');
       editor.execCommand('unlink');
       TinyAssertions.assertContent(editor, '<p><a href="test">test</a></p><div><a href="#"><p>test</p></a></div>');
@@ -995,7 +985,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     it('subscript/superscript', () => {
       const editor = hook.editor();
       editor.setContent('<p>test 123</p>');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       editor.execCommand('SelectAll');
       editor.execCommand('subscript');
       TinyAssertions.assertContent(editor, '<p>test 123</p>');
@@ -1021,7 +1011,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     it('indent/outdent', () => {
       const editor = hook.editor();
       editor.setContent('<p>test 123</p>');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       editor.execCommand('SelectAll');
       editor.execCommand('Indent');
       TinyAssertions.assertContent(editor, '<p>test 123</p>');
@@ -1046,7 +1036,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     it('indent/outdent table always uses margin', () => {
       const editor = hook.editor();
       editor.setContent('<table><tbody><tr><td>test</td></tr></tbody></table>');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       editor.execCommand('SelectAll');
       editor.execCommand('Indent');
       TinyAssertions.assertContent(editor, '<table><tbody><tr><td>test</td></tr></tbody></table>');
@@ -1070,7 +1060,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
     it('RemoveFormat', () => {
       const editor = hook.editor();
       editor.setContent('<p><em>test</em> <strong>123</strong> <a href="123">123</a> 123</p>');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       editor.execCommand('SelectAll');
       editor.execCommand('RemoveFormat');
       TinyAssertions.assertContent(editor, '<p><em>test</em> <strong>123</strong> <a href="123">123</a> 123</p>');
@@ -1089,7 +1079,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
         '<kbd> kbd tag</kbd> <var> var tag</var> <cite> cite tag</cite> <mark> mark tag</mark> <q> q tag</q> ' +
         '<strike>strike tag</strike> <s>s tag</s> <small>small tag</small></p>'
       );
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       editor.execCommand('SelectAll');
       editor.execCommand('RemoveFormat');
       TinyAssertions.assertContent(editor,

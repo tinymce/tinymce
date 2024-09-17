@@ -1,12 +1,9 @@
 import { Arr, Optional, Strings, Type } from '@ephox/katamari';
-import { Attribute, Class, Compare, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Attribute, Class, Compare, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
-import { EditorReadOnlyType } from '../api/Mode';
 import VK from '../api/util/VK';
 import * as EditorFocus from '../focus/EditorFocus';
-
-const internalContentEditableAttr = 'data-mce-contenteditable';
 
 // Not quite sugar Class.toggle, it's more of a Class.set
 const toggleClass = (elm: SugarElement<Element>, cls: string, state: boolean) => {
@@ -31,20 +28,6 @@ const setContentEditable = (elm: SugarElement<HTMLElement>, state: boolean) => {
   elm.dom.contentEditable = state ? 'true' : 'false';
 };
 
-const switchOffContentEditableTrue = (elm: SugarElement<Node>) => {
-  Arr.each(SelectorFilter.descendants<HTMLElement>(elm, '*[contenteditable="true"]'), (elm) => {
-    Attribute.set(elm, internalContentEditableAttr, 'true');
-    setContentEditable(elm, false);
-  });
-};
-
-const switchOnContentEditableTrue = (elm: SugarElement<Node>) => {
-  Arr.each(SelectorFilter.descendants<HTMLElement>(elm, `*[${internalContentEditableAttr}="true"]`), (elm) => {
-    Attribute.remove(elm, internalContentEditableAttr);
-    setContentEditable(elm, true);
-  });
-};
-
 const removeFakeSelection = (editor: Editor) => {
   Optional.from(editor.selection.getNode()).each((elm) => {
     elm.removeAttribute('data-mce-selected');
@@ -66,7 +49,6 @@ const setEditorReadonly = (editor: Editor) => {
   editor.selection.controlSelection.hideResizeRect();
   editor._selectionOverrides.hideFakeCaret();
   removeFakeSelection(editor);
-  setCommonEditorCommands(editor, true);
 };
 
 const unsetEditorReadonly = (editor: Editor, body: SugarElement<HTMLElement>) => {
@@ -74,7 +56,6 @@ const unsetEditorReadonly = (editor: Editor, body: SugarElement<HTMLElement>) =>
   if (editor.hasEditableRoot()) {
     setContentEditable(body, true);
   }
-  switchOnContentEditableTrue(body);
   setCommonEditorCommands(editor, false);
   if (EditorFocus.hasEditorOrUiFocus(editor)) {
     editor.focus();
@@ -83,21 +64,14 @@ const unsetEditorReadonly = (editor: Editor, body: SugarElement<HTMLElement>) =>
   editor.nodeChanged();
 };
 
-const toggleReadOnly = (editor: Editor, readOnlyMode: EditorReadOnlyType): void => {
+const toggleReadOnly = (editor: Editor, state: boolean): void => {
   const body = SugarElement.fromDom(editor.getBody());
-  const shouldSetReadOnly = Type.isBoolean(readOnlyMode) ? readOnlyMode : true;
+  toggleClass(body, 'mce-content-readonly', state);
 
-  toggleClass(body, 'mce-content-readonly', shouldSetReadOnly);
-
-  if (shouldSetReadOnly) {
+  if (state) {
     setEditorReadonly(editor);
-    if (Type.isBoolean(readOnlyMode) ? readOnlyMode : !readOnlyMode.selectionEnabled) {
-      setContentEditable(body, false);
-      switchOffContentEditableTrue(body);
-    } else {
-      if (editor.hasEditableRoot()) {
-        setContentEditable(body, true);
-      }
+    if (editor.hasEditableRoot()) {
+      setContentEditable(body, true);
     }
   } else {
     unsetEditorReadonly(editor, body);
@@ -105,37 +79,6 @@ const toggleReadOnly = (editor: Editor, readOnlyMode: EditorReadOnlyType): void 
 };
 
 const isReadOnly = (editor: Editor): boolean => editor.readonly;
-
-const registerFilters = (editor: Editor) => {
-  editor.parser.addAttributeFilter('contenteditable', (nodes) => {
-    if (isReadOnly(editor)) {
-      Arr.each(nodes, (node) => {
-        node.attr(internalContentEditableAttr, node.attr('contenteditable'));
-        node.attr('contenteditable', 'false');
-      });
-    }
-  });
-
-  editor.serializer.addAttributeFilter(internalContentEditableAttr, (nodes) => {
-    if (isReadOnly(editor)) {
-      Arr.each(nodes, (node) => {
-        node.attr('contenteditable', node.attr(internalContentEditableAttr));
-      });
-    }
-  });
-
-  editor.serializer.addTempAttr(internalContentEditableAttr);
-};
-
-const registerReadOnlyContentFilters = (editor: Editor): void => {
-  if (editor.serializer) {
-    registerFilters(editor);
-  } else {
-    editor.on('PreInit', () => {
-      registerFilters(editor);
-    });
-  }
-};
 
 const isClickEvent = (e: Event): e is MouseEvent => e.type === 'click';
 
@@ -183,17 +126,27 @@ const registerReadOnlySelectionBlockers = (editor: Editor): void => {
     }
   });
 
-  // When the editor is in readonly && selectionEnabled mode, blocking setContent/insertContent
-  // This is required to prevent content to be modified as `contenteditable="false" has been removed in this mode
-  editor.on('BeforeSetContent', (e) => {
-    if (isReadOnly(editor) && editor.mode.isSelectionEnabled() && !e.initial) {
+  editor.on('BeforeExecCommand', (e) => {
+    if ((e.command === 'Undo' || e.command === 'Redo') && isReadOnly(editor)) {
       e.preventDefault();
     }
   });
 
-  editor.on('ObjectSelected ShowCaret', (e) => {
-    if (isReadOnly(editor) && !editor.mode.isSelectionEnabled()) {
-      e.preventDefault();
+  editor.on('input', (e) => {
+    if (!e.isComposing && isReadOnly(editor)) {
+      const undoLevel = editor.undoManager.add();
+      if (Type.isNonNullable(undoLevel)) {
+        editor.undoManager.undo();
+      }
+    }
+  });
+
+  editor.on('compositionend', () => {
+    if (isReadOnly(editor)) {
+      const undoLevel = editor.undoManager.add();
+      if (Type.isNonNullable(undoLevel)) {
+        editor.undoManager.undo();
+      }
     }
   });
 };
@@ -202,7 +155,6 @@ export {
   isReadOnly,
   getAnchorHrefOpt,
   toggleReadOnly,
-  registerReadOnlyContentFilters,
   processReadonlyEvents,
   registerReadOnlySelectionBlockers
 };

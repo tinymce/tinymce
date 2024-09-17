@@ -9,7 +9,7 @@ import { EventArgs, SugarElement } from '@ephox/sugar';
 import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button/ButtonEvents';
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
-import * as ButtonState from '../../ButtonState';
+import * as UiState from '../../UiState';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import * as UiUtils from '../alien/UiUtils';
 import { renderLabel, renderReplaceableIconFromPack } from '../button/ButtonSlices';
@@ -159,8 +159,8 @@ const renderCommonDropdown = <T>(
 
       dropdownBehaviours: Behaviour.derive([
         ...spec.dropdownBehaviours,
-        DisablingConfigs.button(() => spec.disabled || sharedBackstage.providers.checkButtonContext(spec.context).shouldDisable),
-        ButtonState.toggleOnReceive(() => sharedBackstage.providers.checkButtonContext(spec.context)),
+        DisablingConfigs.button(() => spec.disabled || sharedBackstage.providers.checkUiComponentContext(spec.context).shouldDisable),
+        UiState.toggleOnReceive(() => sharedBackstage.providers.checkUiComponentContext(spec.context)),
         // INVESTIGATE (TINY-9012): There was a old comment here about something not quite working, and that
         // we can still get the button focused. It was probably related to Unselecting.
         Unselecting.config({}),

@@ -9,8 +9,8 @@ import { Traverse } from '@ephox/sugar';
 
 import { ToolbarMode } from '../../api/Options';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import * as ButtonState from '../../ButtonState';
 import * as Channels from '../../Channels';
+import * as UiState from '../../UiState';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderIconButtonSpec } from '../general/Button';
 import { ToolbarButtonClasses } from './button/ButtonClasses';
@@ -81,8 +81,8 @@ const getToolbarBehaviours = (toolbarSpec: ToolbarSpec, modeName: 'cyclic' | 'ac
   });
 
   return Behaviour.derive([
-    DisablingConfigs.toolbarButton(() => toolbarSpec.providers.checkButtonContext('mode:!readonly').shouldDisable),
-    ButtonState.toggleOnReceive(() => toolbarSpec.providers.checkButtonContext('mode:!readonly')),
+    DisablingConfigs.toolbarButton(() => toolbarSpec.providers.checkUiComponentContext('any').shouldDisable),
+    UiState.toggleOnReceive(() => toolbarSpec.providers.checkUiComponentContext('any')),
     Keying.config({
       // Tabs between groups
       mode: modeName,
@@ -109,7 +109,7 @@ const renderMoreToolbarCommon = (toolbarSpec: MoreDrawerToolbarSpec) => {
         items: []
       }),
       'overflow-button': renderIconButtonSpec({
-        context: 'mode:!readonly',
+        context: 'any',
         name: 'more',
         icon: Optional.some('more-drawer'),
         enabled: true,

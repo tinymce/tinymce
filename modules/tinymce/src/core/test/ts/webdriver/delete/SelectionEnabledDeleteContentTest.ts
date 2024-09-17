@@ -1,6 +1,5 @@
 import { ApproxStructure, UiFinder, Waiter, Keys, RealKeys } from '@ephox/agar';
 import { afterEach, context, describe, it } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
 import { Css, SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -18,15 +17,6 @@ describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
     toolbar: 'bold',
     plugins: 'table image codesample media code',
     statusbar: false,
-    setup: (ed: Editor) => {
-      ed.mode.register('testmode', {
-        activate: Fun.noop,
-        deactivate: Fun.noop,
-        editorReadOnly: {
-          selectionEnabled: true,
-        },
-      });
-    }
   }, [ CodeSamplePlugin, ImagePlugin, MediaPlugin, TablePlugin ], true);
 
   const setMode = (editor: Editor, mode: string) => {
@@ -93,7 +83,7 @@ describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
     await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.backspace() ]);
     TinyAssertions.assertContent(editor, '<p>tes</p>');
 
-    setMode(editor, 'testmode');
+    setMode(editor, 'readonly');
     TinySelections.setCursor(editor, [ 0, 0 ], 3);
     await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.backspace() ]);
     TinyAssertions.assertContent(editor, '<p>tes</p>');
@@ -110,7 +100,7 @@ describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
       editor.setContent(`<span class="mce-preview-object mce-object-iframe" contenteditable="false" data-mce-object="iframe" data-mce-p-allowfullscreen="allowfullscreen" data-mce-p-src="https://www.youtube.com/embed/8aGhZQkoFbQ">`
       + `<iframe src="https://www.youtube.com/embed/8aGhZQkoFbQ" width="560" height="314" frameborder="0" allowfullscreen="allowfullscreen" data-mce-src="https://www.youtube.com/embed/8aGhZQkoFbQ"></iframe><span class="mce-shim"></span></span>`);
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.select(editor, 'span.mce-preview-object', []);
       assertFakeSelection(editor, true);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.backspace() ]);
@@ -127,7 +117,7 @@ describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
       const editor = hook.editor();
       editor.setContent(iframeMediaEmbedHtml);
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.select(editor, 'div[data-ephox-embed-iri]', []);
       assertFakeSelection(editor, true);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.backspace() ]);
@@ -144,7 +134,7 @@ describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
       const editor = hook.editor();
       editor.setContent(preCodeSampleHtml);
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.select(editor, 'pre', []);
       assertFakeSelection(editor, true);
       await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.backspace() ]);
@@ -163,7 +153,7 @@ describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
     const editor = hook.editor();
     editor.setContent(tableOfContentHtml);
 
-    setMode(editor, 'testmode');
+    setMode(editor, 'readonly');
     TinySelections.select(editor, 'div', []);
     assertFakeSelection(editor, true);
     await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.backspace() ]);
@@ -204,7 +194,7 @@ describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
     ].join('\n');
     TinyAssertions.assertContent(editor, expectedContent);
 
-    setMode(editor, 'testmode');
+    setMode(editor, 'readonly');
     TinySelections.setSelection(editor, [ 0, 0, 0, 1 ], 0, [ 0, 0, 0, 1 ], 1);
     await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.backspace() ]);
     TinyAssertions.assertContent(editor, expectedContent);
@@ -232,7 +222,7 @@ describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
     setMode(editor, 'design');
     editor.setContent(tableHtml);
 
-    setMode(editor, 'testmode');
+    setMode(editor, 'readonly');
     TinySelections.select(editor, 'table', []);
     await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.backspace() ]);
     TinyAssertions.assertContent(editor, [ '<table style="width: 100%;">',
@@ -264,7 +254,7 @@ describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
     await pAssertOutlineStyle(UiFinder.findIn(TinyDom.body(editor), 'img').getOrDie(), imageSelectedOutline);
     assertFakeSelection(editor, true);
 
-    setMode(editor, 'testmode');
+    setMode(editor, 'readonly');
     TinySelections.setCursor(editor, [ 0 ], 0);
     TinySelections.select(editor, 'img', []);
     // Dispatching nodeChanged to update the selection
@@ -288,7 +278,7 @@ describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
     setMode(editor, 'design');
     editor.setContent('<div contenteditable="false">CEF</div>');
 
-    setMode(editor, 'testmode');
+    setMode(editor, 'readonly');
     TinySelections.setCursor(editor, [], 0);
     const expectedStructure = ApproxStructure.build((s, str, arr) => {
       return s.element('body', {
@@ -335,7 +325,7 @@ describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
       const editor = hook.editor();
       editor.setContent(`<p>test</p>${preCodeSampleHtml}`);
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.setCursor(editor, [ 0, 0 ], 4);
 
       TinyContentActions.keystroke(editor, Keys.right());
@@ -352,7 +342,7 @@ describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
       const editor = hook.editor();
       editor.setContent(`<p>test</p>${tableOfContentHtml}`);
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.setCursor(editor, [ 0, 0 ], 4);
 
       TinyContentActions.keystroke(editor, Keys.right());
@@ -369,7 +359,7 @@ describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
       const editor = hook.editor();
       editor.setContent(`<p>test</p>${mediaElementHtml}`);
 
-      setMode(editor, 'testmode');
+      setMode(editor, 'readonly');
       TinySelections.setCursor(editor, [ 0, 0 ], 4);
 
       TinyContentActions.keystroke(editor, Keys.right());

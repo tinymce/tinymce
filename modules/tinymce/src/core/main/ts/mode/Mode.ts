@@ -1,8 +1,8 @@
-import { Arr, Cell, Obj, Type } from '@ephox/katamari';
+import { Arr, Cell, Obj } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Events from '../api/Events';
-import { EditorModeApi, ReadOnlyProperty } from '../api/Mode';
+import { EditorModeApi } from '../api/Mode';
 import { toggleReadOnly } from './Readonly';
 
 const defaultModes = [ 'design', 'readonly' ];
@@ -51,12 +51,6 @@ const setMode = (editor: Editor, availableModes: Record<string, EditorModeApi>, 
   }
 };
 
-const getEditorReadOnlyProperty = (activeMode: Cell<[ string, EditorModeApi ]>, key: keyof ReadOnlyProperty): boolean => {
-  const [ , api ] = activeMode.get();
-  const editorReadOnly = api.editorReadOnly;
-  return Type.isBoolean(editorReadOnly) ? false : editorReadOnly[key] || false;
-};
-
 const registerMode = (availableModes: Record<string, EditorModeApi>, mode: string, api: EditorModeApi): Record<string, EditorModeApi> => {
   if (Arr.contains(defaultModes, mode)) {
     throw new Error(`Cannot override default mode ${mode}`);
@@ -66,15 +60,12 @@ const registerMode = (availableModes: Record<string, EditorModeApi>, mode: strin
     ...availableModes,
     [mode]: {
       ...api,
-      editorReadOnly: Type.isBoolean(api.editorReadOnly) ? api.editorReadOnly : {
-        selectionEnabled: api.editorReadOnly.selectionEnabled ?? false,
-      }
+      editorReadOnly: api.editorReadOnly
     }
   };
 };
 
 export {
   setMode,
-  registerMode,
-  getEditorReadOnlyProperty
+  registerMode
 };

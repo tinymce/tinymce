@@ -12,7 +12,6 @@ import I18n from 'tinymce/core/api/util/I18n';
 import * as Events from './api/Events';
 import * as Options from './api/Options';
 import * as Backstage from './backstage/Backstage';
-import * as ButtonState from './ButtonState';
 import * as DomEvents from './Events';
 import * as Iframe from './modes/Iframe';
 import * as Inline from './modes/Inline';
@@ -32,6 +31,7 @@ import { renderStatusbar } from './ui/statusbar/Statusbar';
 import * as Throbber from './ui/throbber/Throbber';
 import { RenderToolbarConfig } from './ui/toolbar/Integration';
 import { ViewConfig } from './ui/view/ViewTypes';
+import * as UiState from './UiState';
 
 export interface ModeRenderInfo {
   readonly iframeContainer?: HTMLIFrameElement;
@@ -423,7 +423,7 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
           partThrobber,
         ],
         behaviours: Behaviour.derive([
-          ButtonState.toggleOnReceive(() => backstages.popup.shared.providers.checkButtonContext('mode:!readonly')),
+          UiState.toggleOnReceive(() => backstages.popup.shared.providers.checkUiComponentContext('any')),
           Disabling.config({
             disableClass: 'tox-tinymce--disabled'
           }),

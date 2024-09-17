@@ -1,6 +1,5 @@
 import { Keys } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -8,15 +7,6 @@ import Editor from 'tinymce/core/api/Editor';
 describe('browser.tinymce.core.delete.OutdentTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    setup: (ed: Editor) => {
-      ed.mode.register('testmode', {
-        editorReadOnly: {
-          selectionEnabled: true,
-        },
-        deactivate: Fun.noop,
-        activate: Fun.noop
-      });
-    }
   }, [], true);
 
   const testDeleteOrBackspaceKey = (key: number) => (
@@ -48,7 +38,7 @@ describe('browser.tinymce.core.delete.OutdentTest', () => {
   ) => {
     const editor = hook.editor();
     editor.setContent(setupHtml);
-    editor.mode.set('testmode');
+    editor.mode.set('readonly');
     TinySelections.setCursor(editor, setupPath, setupOffset);
     editor.execCommand('indent');
     editor.nodeChanged();
@@ -75,11 +65,11 @@ describe('browser.tinymce.core.delete.OutdentTest', () => {
     });
   });
 
-  context('TINY-10981: readonly selectionEnabled mode', () => {
+  context('TINY-10981: readonly mode', () => {
     it('Backspace key on text', () => {
-      testSelectionEnabledBackspace('<p>a</p>', [ 0, 0 ], 0, '<p>a</p>', [ 0, 0 ], 0); // outdent
+      testSelectionEnabledBackspace('<p>a</p>', [ 0, 0 ], 0, '<p>a</p>', [ 0, 0 ], 0); // no outdent
       testSelectionEnabledBackspace('<p>aa</p>', [ 0, 0 ], 1, '<p>aa</p>', [ 0, 0 ], 1); // no outdent
-      testSelectionEnabledBackspace('<p>a</p><p>b</p>', [ 1, 0 ], 0, '<p>a</p>\n<p>b</p>', [ 1, 0 ], 0); // outdent
+      testSelectionEnabledBackspace('<p>a</p><p>b</p>', [ 1, 0 ], 0, '<p>a</p>\n<p>b</p>', [ 1, 0 ], 0); // no outdent
       testSelectionEnabledBackspace('<p>a</p><p>bb</p>', [ 1, 0 ], 1, '<p>a</p>\n<p>bb</p>', [ 1, 0 ], 1); // no outdent
     });
   });

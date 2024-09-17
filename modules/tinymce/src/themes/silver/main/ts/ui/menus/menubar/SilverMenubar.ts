@@ -50,7 +50,7 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
         fetch: (callback) => {
           callback(m.getItems());
         },
-        context: 'mode:!readonly'
+        context: 'any'
       };
 
       // Convert to an internal bridge spec

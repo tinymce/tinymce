@@ -12,14 +12,6 @@ describe('browser.tinymce.themes.silver.editor.DisableTest', () => {
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 't1',
     setup: (ed: Editor) => {
-      ed.mode.register('testmode', {
-        activate: Fun.noop,
-        deactivate: Fun.noop,
-        editorReadOnly: {
-          selectionEnabled: true
-        }
-      });
-
       ed.ui.registry.addButton('t1', {
         onAction: Fun.noop,
         text: 'Test1',
@@ -65,13 +57,14 @@ describe('browser.tinymce.themes.silver.editor.DisableTest', () => {
       await pAssertUiDisabled(editor, false);
     });
 
-    it('TINY-6397: Should not be able to enable the UI when in readonly mode', async () => {
+    it('TINY-6397: Should still able to toggle ui state in readonly mode', async () => {
       const editor = hook.editor();
       editor.ui.setEnabled(false);
+      await pAssertUiDisabled(editor, true);
       editor.mode.set('readonly');
-      await pAssertUiDisabled(editor, true);
+      await pAssertUiDisabled(editor, false);
       editor.ui.setEnabled(true);
-      await pAssertUiDisabled(editor, true);
+      await pAssertUiDisabled(editor, false);
       editor.mode.set('design');
     });
 
@@ -83,18 +76,6 @@ describe('browser.tinymce.themes.silver.editor.DisableTest', () => {
       assertButtonDisabled('t1');
       editor.ui.setEnabled(true);
       assertButtonEnabled('t1');
-    });
-
-    it('TINY-11211: Should be able to toggle ui enabled state when editor is not in readonly mode', async () => {
-      const editor = hook.editor();
-      editor.ui.setEnabled(false);
-      await pAssertUiDisabled(editor, true);
-      editor.mode.set('testmode');
-      await pAssertUiDisabled(editor, false);
-      editor.ui.setEnabled(false);
-      await pAssertUiDisabled(editor, true);
-      editor.mode.set('design');
-      await pAssertUiDisabled(editor, false);
     });
   });
 });

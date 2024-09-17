@@ -8,16 +8,6 @@ import Editor from 'tinymce/core/api/Editor';
 import { ToolbarMode } from 'tinymce/core/api/OptionTypes';
 
 describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTest', () => {
-  const registerMode = (ed: Editor) => {
-    ed.mode.register('testmode', {
-      activate: Fun.noop,
-      deactivate: Fun.noop,
-      editorReadOnly: {
-        selectionEnabled: true
-      }
-    });
-  };
-
   const makeButton = (ed: Editor, spec: { name: string; text: string; context: string; onSetup?: (api: any) => (api: any) => void; enabled?: boolean }) => {
     ed.ui.registry.addButton(spec.name, {
       icon: 'italic',
@@ -34,8 +24,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
     handler();
     return () => ed.off('NodeChange', handler);
   };
-
-  const assertButtonNativelyDisabled = (selector: string) => UiFinder.exists(SugarBody.body(), `[data-mce-name="${selector}"][disabled="disabled"]`);
 
   const assertButtonInToolbarDisabled = (selector: string) => {
     const overflow = UiFinder.findIn(SugarBody.body(), '.tox-toolbar__overflow').getOrDie();
@@ -72,8 +60,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
         statusbar: false,
         toolbar_mode: toolbarMode,
         setup: (ed: Editor) => {
-          registerMode(ed);
-
           ed.ui.registry.addButton('t1', {
             icon: 'italic',
             text: 'Test Menu Item 4',
@@ -87,13 +73,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
         editor.mode.set('design');
         assertButtonNativelyEnabled('overflow-button');
 
-        editor.mode.set('testmode');
-        assertButtonNativelyEnabled('overflow-button');
-
         editor.mode.set('readonly');
-        assertButtonNativelyDisabled('overflow-button');
-
-        editor.mode.set('testmode');
         assertButtonNativelyEnabled('overflow-button');
 
         editor.mode.set('design');
@@ -128,8 +108,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             toolbar: Arr.range(50, Fun.constant('t1')).join(' | '),
             width: 1105,
             setup: (ed: Editor) => {
-              registerMode(ed);
-
               scenario.buttonSetupAny(ed);
             }
           }, [], true);
@@ -139,13 +117,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             await pOpenOverflowToolbar(editor);
             assertButtonInToolbarEnabled('t1');
 
-            editor.mode.set('testmode');
-            assertButtonInToolbarEnabled('t1');
-
             editor.mode.set('readonly');
-            assertButtonInToolbarEnabled('t1');
-
-            editor.mode.set('testmode');
             assertButtonInToolbarEnabled('t1');
 
             editor.mode.set('design');
@@ -159,15 +131,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             assertButtonInToolbarEnabled('t1');
             closeOverflowToolbar(editor);
 
-            editor.mode.set('testmode');
-            await pOpenOverflowToolbar(editor);
-            assertButtonInToolbarEnabled('t1');
-            closeOverflowToolbar(editor);
-
             editor.mode.set('readonly');
-            assertButtonNativelyDisabled('overflow-button');
-
-            editor.mode.set('testmode');
             await pOpenOverflowToolbar(editor);
             assertButtonInToolbarEnabled('t1');
             closeOverflowToolbar(editor);
@@ -185,8 +149,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             toolbar: Arr.range(50, Fun.constant('t2')).join(' | '),
             width: 1105,
             setup: (ed: Editor) => {
-              registerMode(ed);
-
               scenario.buttonSetupModeDesign(ed);
             }
           }, [], true);
@@ -197,13 +159,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             await pOpenOverflowToolbar(editor);
             assertButtonInToolbarEnabled('t2');
 
-            editor.mode.set('testmode');
-            assertButtonInToolbarDisabled('t2');
-
             editor.mode.set('readonly');
-            assertButtonInToolbarDisabled('t2');
-
-            editor.mode.set('testmode');
             assertButtonInToolbarDisabled('t2');
 
             editor.mode.set('design');
@@ -217,15 +173,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             assertButtonInToolbarEnabled('t2');
             closeOverflowToolbar(editor);
 
-            editor.mode.set('testmode');
-            await pOpenOverflowToolbar(editor);
-            assertButtonInToolbarDisabled('t2');
-            closeOverflowToolbar(editor);
-
             editor.mode.set('readonly');
-            assertButtonNativelyDisabled('overflow-button');
-
-            editor.mode.set('testmode');
             await pOpenOverflowToolbar(editor);
             assertButtonInToolbarDisabled('t2');
             closeOverflowToolbar(editor);
@@ -243,8 +191,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             toolbar: Arr.range(50, Fun.constant('t3')).join(' | '),
             width: 1105,
             setup: (ed: Editor) => {
-              registerMode(ed);
-
               scenario.buttonSetupModeReadonly(ed);
             }
           }, [], true);
@@ -254,14 +200,8 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             await pOpenOverflowToolbar(editor);
             assertButtonInToolbarDisabled('t3');
 
-            editor.mode.set('testmode');
-            assertButtonInToolbarDisabled('t3');
-
             editor.mode.set('readonly');
             assertButtonInToolbarEnabled('t3');
-
-            editor.mode.set('testmode');
-            assertButtonInToolbarDisabled('t3');
 
             editor.mode.set('design');
             assertButtonInToolbarDisabled('t3');
@@ -276,8 +216,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             width: 1105,
             statusbar: false,
             setup: (ed: Editor) => {
-              registerMode(ed);
-
               scenario.buttonSetupEditable(ed);
             }
           }, [], true);
@@ -287,13 +225,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             await pOpenOverflowToolbar(editor);
             assertButtonInToolbarEnabled('t4');
 
-            editor.mode.set('testmode');
-            assertButtonInToolbarDisabled('t4');
-
             editor.mode.set('readonly');
-            assertButtonInToolbarDisabled('t4');
-
-            editor.mode.set('testmode');
             assertButtonInToolbarDisabled('t4');
 
             editor.mode.set('design');
@@ -309,8 +241,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             width: 1105,
             statusbar: false,
             setup: (ed: Editor) => {
-              registerMode(ed);
-
               scenario.buttonSetupFormattingBold(ed);
             }
           }, [], true);
@@ -320,13 +250,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             await pOpenOverflowToolbar(editor);
             assertButtonInToolbarEnabled('t5');
 
-            editor.mode.set('testmode');
-            assertButtonInToolbarDisabled('t5');
-
             editor.mode.set('readonly');
-            assertButtonInToolbarDisabled('t5');
-
-            editor.mode.set('testmode');
             assertButtonInToolbarDisabled('t5');
 
             editor.mode.set('design');
@@ -342,8 +266,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             width: 1105,
             statusbar: false,
             setup: (ed: Editor) => {
-              registerMode(ed);
-
               scenario.buttonSetupNodeChangeSetEnabledFalse(ed);
             }
           }, [], true);
@@ -353,13 +275,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             await pOpenOverflowToolbar(editor);
             assertButtonInToolbarDisabled('t6');
 
-            editor.mode.set('testmode');
-            assertButtonInToolbarDisabled('t6');
-
             editor.mode.set('readonly');
-            assertButtonInToolbarDisabled('t6');
-
-            editor.mode.set('testmode');
             assertButtonInToolbarDisabled('t6');
 
             editor.mode.set('design');
@@ -376,15 +292,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             assertButtonInToolbarDisabled('t6');
             closeOverflowToolbar(editor);
 
-            editor.mode.set('testmode');
-            await pOpenOverflowToolbar(editor);
-            assertButtonInToolbarDisabled('t6');
-            closeOverflowToolbar(editor);
-
             editor.mode.set('readonly');
-            assertButtonNativelyDisabled('overflow-button');
-
-            editor.mode.set('testmode');
             await pOpenOverflowToolbar(editor);
             assertButtonInToolbarDisabled('t6');
             closeOverflowToolbar(editor);
@@ -403,7 +311,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             width: 1105,
             statusbar: false,
             setup: (ed: Editor) => {
-              registerMode(ed);
               scenario.buttonSetupNodeChangeSetEnabledTrue(ed);
             }
           }, [], true);
@@ -415,14 +322,8 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             await pOpenOverflowToolbar(editor);
             assertButtonInToolbarEnabled('t7');
 
-            editor.mode.set('testmode');
-            assertButtonInToolbarDisabled('t7');
-
             editor.mode.set('readonly');
             assertButtonInToolbarEnabled('t7');
-
-            editor.mode.set('testmode');
-            assertButtonInToolbarDisabled('t7');
 
             editor.mode.set('design');
             assertButtonInToolbarDisabled('t7');
@@ -438,15 +339,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             assertButtonInToolbarEnabled('t7');
             closeOverflowToolbar(editor);
 
-            editor.mode.set('testmode');
-            await pOpenOverflowToolbar(editor);
-            assertButtonInToolbarEnabled('t7');
-            closeOverflowToolbar(editor);
-
             editor.mode.set('readonly');
-            assertButtonNativelyDisabled('overflow-button');
-
-            editor.mode.set('testmode');
             await pOpenOverflowToolbar(editor);
             assertButtonInToolbarEnabled('t7');
             closeOverflowToolbar(editor);
@@ -465,8 +358,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             width: 1105,
             statusbar: false,
             setup: (ed: Editor) => {
-              registerMode(ed);
-
               scenario.buttonSetupSetEnabledFalse(ed);
             }
           }, [], true);
@@ -477,13 +368,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             await pOpenOverflowToolbar(editor);
             assertButtonInToolbarDisabled('t8');
 
-            editor.mode.set('testmode');
-            assertButtonInToolbarDisabled('t8');
-
             editor.mode.set('readonly');
-            assertButtonInToolbarDisabled('t8');
-
-            editor.mode.set('testmode');
             assertButtonInToolbarDisabled('t8');
 
             editor.mode.set('design');
@@ -500,15 +385,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             assertButtonInToolbarDisabled('t8');
             closeOverflowToolbar(editor);
 
-            editor.mode.set('testmode');
-            await pOpenOverflowToolbar(editor);
-            assertButtonInToolbarDisabled('t8');
-            closeOverflowToolbar(editor);
-
             editor.mode.set('readonly');
-            assertButtonNativelyDisabled('overflow-button');
-
-            editor.mode.set('testmode');
             await pOpenOverflowToolbar(editor);
             assertButtonInToolbarDisabled('t8');
             closeOverflowToolbar(editor);
@@ -527,8 +404,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             width: 1105,
             statusbar: false,
             setup: (ed: Editor) => {
-              registerMode(ed);
-
               scenario.buttonSetupDoesntMatch(ed);
             }
           }, [], true);
@@ -538,13 +413,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             await pOpenOverflowToolbar(editor);
             assertButtonInToolbarEnabled('t9');
 
-            editor.mode.set('testmode');
-            assertButtonInToolbarDisabled('t9');
-
             editor.mode.set('readonly');
-            assertButtonInToolbarDisabled('t9');
-
-            editor.mode.set('testmode');
             assertButtonInToolbarDisabled('t9');
 
             editor.mode.set('design');
@@ -560,15 +429,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             assertButtonInToolbarEnabled('t9');
             closeOverflowToolbar(editor);
 
-            editor.mode.set('testmode');
-            await pOpenOverflowToolbar(editor);
-            assertButtonInToolbarDisabled('t9');
-            closeOverflowToolbar(editor);
-
             editor.mode.set('readonly');
-            assertButtonNativelyDisabled('overflow-button');
-
-            editor.mode.set('testmode');
             await pOpenOverflowToolbar(editor);
             assertButtonInToolbarDisabled('t9');
             closeOverflowToolbar(editor);
@@ -588,27 +449,19 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             statusbar: false,
             readonly: true,
             setup: (ed: Editor) => {
-              registerMode(ed);
-
               scenario.buttonSetupModeDesign2(ed);
             }
           }, [], true);
 
           it(`TINY-11211: Should be disabled initially, when the mode is switched, button should behave like mode:design`, async () => {
             const editor = hook.editor();
-            assertButtonNativelyDisabled('overflow-button');
+            assertButtonNativelyEnabled('overflow-button');
 
             editor.mode.set('design');
             await pOpenOverflowToolbar(editor);
             assertButtonInToolbarEnabled('t10');
 
-            editor.mode.set('testmode');
-            assertButtonInToolbarDisabled('t10');
-
-            editor.mode.set('testmode');
-            assertButtonInToolbarDisabled('t10');
-
-            editor.mode.set('testmode');
+            editor.mode.set('readonly');
             assertButtonInToolbarDisabled('t10');
 
             editor.mode.set('design');
@@ -626,7 +479,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             width: 1105,
             statusbar: false,
             setup: (ed: Editor) => {
-              registerMode(ed);
               scenario.buttonSetupInsertSpan(ed);
             }
           }, [], true);
@@ -650,7 +502,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             width: 1105,
             statusbar: false,
             setup: (ed: Editor) => {
-              registerMode(ed);
               scenario.buttonSetupAnyEnabledFalse(ed);
             }
           }, [], true);
@@ -662,13 +513,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             await pOpenOverflowToolbar(editor);
             assertButtonInToolbarDisabled('t12');
 
-            editor.mode.set('testmode');
-            assertButtonInToolbarDisabled('t12');
-
             editor.mode.set('readonly');
-            assertButtonInToolbarDisabled('t12');
-
-            editor.mode.set('testmode');
             assertButtonInToolbarDisabled('t12');
 
             editor.mode.set('design');
@@ -685,15 +530,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             assertButtonInToolbarDisabled('t12');
             closeOverflowToolbar(editor);
 
-            editor.mode.set('testmode');
-            await pOpenOverflowToolbar(editor);
-            assertButtonInToolbarDisabled('t12');
-            closeOverflowToolbar(editor);
-
             editor.mode.set('readonly');
-            assertButtonNativelyDisabled('overflow-button');
-
-            editor.mode.set('testmode');
             await pOpenOverflowToolbar(editor);
             assertButtonInToolbarDisabled('t12');
             closeOverflowToolbar(editor);

@@ -1,4 +1,4 @@
-import { FieldProcessor, StructureSchema } from '@ephox/boulder';
+import { FieldProcessor, FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
@@ -8,11 +8,13 @@ export interface CollectionSpec extends FormComponentWithLabelSpec {
   type: 'collection';
   // TODO TINY-3229 implement collection columns properly
   // columns?: number | 'auto';
+  context?: string;
 }
 
 export interface Collection extends FormComponentWithLabel {
   type: 'collection';
   columns: number | 'auto';
+  context: string;
 }
 
 export interface CollectionItem {
@@ -22,7 +24,8 @@ export interface CollectionItem {
 }
 
 const collectionFields: FieldProcessor[] = formComponentWithLabelFields.concat([
-  ComponentSchema.defaultedColumns('auto')
+  ComponentSchema.defaultedColumns('auto'),
+  FieldSchema.defaultedString('context', 'mode:design')
 ]);
 
 export const collectionSchema = StructureSchema.objOf(collectionFields);

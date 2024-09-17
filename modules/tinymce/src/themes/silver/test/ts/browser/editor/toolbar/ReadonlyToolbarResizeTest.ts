@@ -102,20 +102,20 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ReadonlyToolbarResizeTest
   it('TBA: Test if the toolbar buttons are disabled in readonly mode when toolbar drawer is present', async () => {
     const editor = hook.editor();
     Css.set(TinyDom.container(editor), 'width', '300px');
-    await pAssertToolbarButtonState('Assert the first toolbar button, Bold is disabled', true, (s, str, arr) => [
+    await pAssertToolbarButtonState('Assert the first toolbar button, Bold is disabled', false, (s, str, arr) => [
       disabledButtonStruct(s, str, arr, 'bold'),
       s.theRest()
     ]);
 
     resizeTo(300, 400, 550, 400);
 
-    await pAssertToolbarButtonState('Assert the toolbar buttons are disabled after resizing the editor', true, (s, str, arr) => [
+    await pAssertToolbarButtonState('Assert the toolbar buttons are disabled after resizing the editor', false, (s, str, arr) => [
       disabledButtonStruct(s, str, arr, 'bold'),
       disabledButtonStruct(s, str, arr, 'italic'),
       disabledButtonStruct(s, str, arr, 'underline'),
       disabledButtonStruct(s, str, arr, 'strikethrough'),
       disabledButtonStruct(s, str, arr, 'cut'),
-      disabledButtonStruct(s, str, arr, 'copy'),
+      enabledButtonStruct(s, str, arr, 'copy'),
       disabledButtonStruct(s, str, arr, 'paste'),
       disabledButtonStruct(s, str, arr, 'indent'),
       s.theRest()
@@ -125,7 +125,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ReadonlyToolbarResizeTest
   it('TINY-6014: Test buttons become enabled again when disabling readonly mode and resizing', async () => {
     const editor = hook.editor();
     Css.set(TinyDom.container(editor), 'width', '550px');
-    await pAssertToolbarButtonState('Assert the first toolbar button, Bold is disabled', true, (s, str, arr) => [
+    await pAssertToolbarButtonState('Assert the first toolbar button, Bold is disabled', false, (s, str, arr) => [
       disabledButtonStruct(s, str, arr, 'bold'),
       s.theRest()
     ]);

@@ -1,22 +1,32 @@
-import { Behaviour, Disabling, Receiving } from '@ephox/alloy';
+import { Behaviour, Channels, Disabling, Receiving } from '@ephox/alloy';
 import { Arr } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { NodeChangeEvent, SwitchModeEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
+import * as Options from './api/Options';
 import { ReadyUiReferences } from './modes/UiReferences';
 
-export const ButtonStateChannel = 'silver.buttonstate';
+export const UiStateChannel = 'silver.uistate';
 
 const broadcastEvents = (uiRefs: ReadyUiReferences, data: string): void => {
+  const outerContainer = uiRefs.mainUi.outerContainer;
+  const target = outerContainer.element;
   const motherships = [ uiRefs.mainUi.mothership, ...uiRefs.uiMotherships ];
+
+  if (data === 'setDisabled') {
+    Arr.each(motherships, (m) => {
+      m.broadcastOn([ Channels.dismissPopups() ], { target });
+    });
+  }
+
   Arr.each(motherships, (m) => {
-    m.broadcastOn([ ButtonStateChannel ], data);
+    m.broadcastOn([ UiStateChannel ], data);
   });
 };
 
-const setupEventsForButton = (editor: Editor, uiRefs: ReadyUiReferences): void => {
+const setupEventsForUi = (editor: Editor, uiRefs: ReadyUiReferences): void => {
   editor.on('init SwitchMode', (e: EditorEvent<{} | SwitchModeEvent>) => {
     broadcastEvents(uiRefs, e.type);
   });
@@ -28,11 +38,15 @@ const setupEventsForButton = (editor: Editor, uiRefs: ReadyUiReferences): void =
       broadcastEvents(uiRefs, e.type);
     }
   });
+
+  if (Options.isReadOnly(editor)) {
+    editor.mode.set('readonly');
+  }
 };
 
 const toggleOnReceive = (getContext: () => { contextType: string; shouldDisable: boolean }): Behaviour.NamedConfiguredBehaviour<any, any> => Receiving.config({
   channels: {
-    [ButtonStateChannel]: {
+    [UiStateChannel]: {
       onReceive: (comp, buttonStateData: string) => {
         if (buttonStateData === 'setDisabled' || buttonStateData === 'setEnabled') {
           Disabling.set(comp, buttonStateData === 'setDisabled');
@@ -51,7 +65,7 @@ const toggleOnReceive = (getContext: () => { contextType: string; shouldDisable:
 });
 
 export {
-  setupEventsForButton,
+  setupEventsForUi,
   toggleOnReceive,
   broadcastEvents
 };

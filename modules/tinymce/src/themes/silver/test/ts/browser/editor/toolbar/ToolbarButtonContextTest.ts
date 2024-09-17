@@ -7,16 +7,6 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest', () => {
-  const registerMode = (ed: Editor) => {
-    ed.mode.register('testmode', {
-      activate: Fun.noop,
-      deactivate: Fun.noop,
-      editorReadOnly: {
-        selectionEnabled: true
-      }
-    });
-  };
-
   const assertButtonEnabled = (selector: string) => UiFinder.notExists(SugarBody.body(), `[data-mce-name="${selector}"][aria-disabled="true"]`);
 
   const assertButtonDisabled = (selector: string) => UiFinder.exists(SugarBody.body(), `[data-mce-name="${selector}"][aria-disabled="true"]`);
@@ -29,6 +19,35 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
     ed.on('NodeChange', handler);
     handler();
     return () => ed.off('NodeChange', handler);
+  };
+
+  // Menu/Button part of split button
+  const assertMenuPartEnabled = (selector: string) => UiFinder.notExists(SugarBody.body(), `[data-mce-name="${selector}"] > span.tox-tbtn.tox-tbtn--select[aria-disabled="true"]`);
+
+  const makeSplitButton = (
+    ed: Editor,
+    spec: {
+      name: string;
+      text: string;
+      context: string;
+      onSetup?: (api: any) => (api: any) => void;
+      fetch?: (success: any) => void;
+    }
+  ) => {
+    ed.ui.registry.addSplitButton(spec.name, {
+      icon: 'italic',
+      text: spec.text,
+      onSetup: spec.onSetup,
+      context: spec.context,
+      onAction: Fun.noop,
+      onItemAction: Fun.noop,
+      fetch: (success) => {
+        Type.isNonNullable(spec.fetch) ? spec.fetch(success) : success([{
+          type: 'choiceitem',
+          text: 'test'
+        }]);
+      }
+    });
   };
 
   const makeMenuButton = (
@@ -138,6 +157,29 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
       assertButtonEnabled: assertButtonNativelyEnabled,
       assertButtonDisabled: assertButtonNativelyDisabled
     },
+    {
+      label: 'Split toolbar button',
+      buttonSetupAny: (ed: Editor) => makeSplitButton(ed, { name: 't1', text: 't1', context: 'any' }),
+      buttonSetupModeDesign: (ed: Editor) => makeSplitButton(ed, { name: 't2', text: 't2', context: 'mode:design' }),
+      buttonSetupModeReadonly: (ed: Editor) => makeSplitButton(ed, { name: 't3', text: 't3', context: 'mode:readonly' }),
+      buttonSetupEditable: (ed: Editor) => makeSplitButton(ed, { name: 't4', text: 't4', context: 'editable' }),
+      buttonSetupFormattingBold: (ed: Editor) => makeSplitButton(ed, { name: 't5', text: 't5', context: 'formatting:bold' }),
+      buttonSetupNodeChangeSetEnabledFalse: (ed: Editor) => makeSplitButton(ed, { name: 't6', text: 't6', context: 'mode:design', onSetup: (api) => setupNodeChangeHandler(ed, () => api.setEnabled(false)) }),
+      buttonSetupNodeChangeSetEnabledTrue: (ed: Editor) => makeSplitButton(ed, { name: 't7', text: 't7', context: 'mode:readonly', onSetup: (api) => setupNodeChangeHandler(ed, () => api.setEnabled(true)) }),
+      buttonSetupSetEnabledFalse: (ed: Editor) => makeSplitButton(ed, { name: 't8', text: 't8', context: 'mode:design', onSetup: (api) => {
+        api.setEnabled(false);
+        return Fun.noop;
+      } }),
+      buttonSetupDoesntMatch: (ed: Editor) => makeSplitButton(ed, { name: 't9', text: 't9', context: 'doesntmatch' }),
+      buttonSetupModeDesign2: (ed: Editor) => makeSplitButton(ed, { name: 't10', text: 't10', context: 'mode:design' }),
+      buttonSetupInsertSpan: (ed: Editor) => makeSplitButton(ed, { name: 't11', text: 't11', context: 'insert:span' }),
+      buttonSetupAnyEnabledFalse: (ed: Editor) => makeSplitButton(ed, { name: 't12', text: 't12', context: 'any' }),
+      assertButtonEnabled: (selector: string) => {
+        assertMenuPartEnabled(selector);
+        assertButtonEnabled(selector);
+      },
+      assertButtonDisabled
+    },
   ];
 
   Arr.each(setupButtonsScenario, (scenario) => {
@@ -147,8 +189,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           base_url: '/project/tinymce/js/tinymce',
           toolbar: 't1',
           setup: (ed: Editor) => {
-            registerMode(ed);
-
             scenario.buttonSetupAny(ed);
           }
         }, [], true);
@@ -157,13 +197,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           const editor = hook.editor();
           scenario.assertButtonEnabled('t1');
 
-          editor.mode.set('testmode');
-          scenario.assertButtonEnabled('t1');
-
           editor.mode.set('readonly');
-          scenario.assertButtonEnabled('t1');
-
-          editor.mode.set('testmode');
           scenario.assertButtonEnabled('t1');
 
           editor.mode.set('design');
@@ -188,10 +222,9 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           base_url: '/project/tinymce/js/tinymce',
           toolbar: 't1',
           setup: (ed: Editor) => {
-            registerMode(ed);
 
             scenario.buttonSetupAny(ed);
-            ed.mode.set('testmode');
+            ed.mode.set('readonly');
           }
         }, [], true);
 
@@ -209,8 +242,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           base_url: '/project/tinymce/js/tinymce',
           toolbar: 't2',
           setup: (ed: Editor) => {
-            registerMode(ed);
-
             scenario.buttonSetupModeDesign(ed);
           }
         }, [], true);
@@ -220,13 +251,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           editor.mode.set('design');
           scenario.assertButtonEnabled('t2');
 
-          editor.mode.set('testmode');
-          scenario.assertButtonDisabled('t2');
-
           editor.mode.set('readonly');
-          scenario.assertButtonDisabled('t2');
-
-          editor.mode.set('testmode');
           scenario.assertButtonDisabled('t2');
 
           editor.mode.set('design');
@@ -248,18 +273,13 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           base_url: '/project/tinymce/js/tinymce',
           toolbar: 't2',
           setup: (ed: Editor) => {
-            registerMode(ed);
-
             scenario.buttonSetupModeDesign(ed);
-            ed.mode.set('testmode');
+            ed.mode.set('readonly');
           }
         }, [], true);
 
         it(`TINY-11211: Toolbar ${scenario.label} should be enabled in design mode only`, async () => {
           const editor = hook.editor();
-          scenario.assertButtonDisabled('t2');
-
-          editor.mode.set('readonly');
           scenario.assertButtonDisabled('t2');
 
           editor.mode.set('design');
@@ -272,7 +292,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           base_url: '/project/tinymce/js/tinymce',
           toolbar: 't3',
           setup: (ed: Editor) => {
-            registerMode(ed);
 
             scenario.buttonSetupModeReadonly(ed);
           }
@@ -283,14 +302,8 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           editor.mode.set('design');
           scenario.assertButtonDisabled('t3');
 
-          editor.mode.set('testmode');
-          scenario.assertButtonDisabled('t3');
-
           editor.mode.set('readonly');
           scenario.assertButtonEnabled('t3');
-
-          editor.mode.set('testmode');
-          scenario.assertButtonDisabled('t3');
 
           editor.mode.set('design');
           scenario.assertButtonDisabled('t3');
@@ -311,18 +324,15 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           base_url: '/project/tinymce/js/tinymce',
           toolbar: 't3',
           setup: (ed: Editor) => {
-            registerMode(ed);
-
             scenario.buttonSetupModeReadonly(ed);
-            ed.mode.set('testmode');
+            ed.mode.set('readonly');
           }
         }, [], true);
 
         it(`TINY-11211: Toolbar ${scenario.label} should only be enabled in readonly mode`, async () => {
           const editor = hook.editor();
-          scenario.assertButtonDisabled('t3');
-          editor.mode.set('readonly');
           scenario.assertButtonEnabled('t3');
+
           editor.mode.set('design');
           scenario.assertButtonDisabled('t3');
         });
@@ -334,8 +344,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           toolbar: 't4',
           statusbar: false,
           setup: (ed: Editor) => {
-            registerMode(ed);
-
             scenario.buttonSetupEditable(ed);
           }
         }, [], true);
@@ -345,13 +353,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           editor.mode.set('design');
           scenario.assertButtonEnabled('t4');
 
-          editor.mode.set('testmode');
-          scenario.assertButtonDisabled('t4');
-
           editor.mode.set('readonly');
-          scenario.assertButtonDisabled('t4');
-
-          editor.mode.set('testmode');
           scenario.assertButtonDisabled('t4');
 
           editor.mode.set('design');
@@ -364,13 +366,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           editor.mode.set('design');
           scenario.assertButtonDisabled('t4');
 
-          editor.mode.set('testmode');
-          scenario.assertButtonDisabled('t4');
-
           editor.mode.set('readonly');
-          scenario.assertButtonDisabled('t4');
-
-          editor.mode.set('testmode');
           scenario.assertButtonDisabled('t4');
 
           editor.setEditableRoot(true);
@@ -385,8 +381,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           toolbar: 't5',
           statusbar: false,
           setup: (ed: Editor) => {
-            registerMode(ed);
-
             scenario.buttonSetupFormattingBold(ed);
           }
         }, [], true);
@@ -396,13 +390,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           editor.mode.set('design');
           scenario.assertButtonEnabled('t5');
 
-          editor.mode.set('testmode');
-          scenario.assertButtonDisabled('t5');
-
           editor.mode.set('readonly');
-          scenario.assertButtonDisabled('t5');
-
-          editor.mode.set('testmode');
           scenario.assertButtonDisabled('t5');
 
           editor.mode.set('design');
@@ -426,8 +414,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           toolbar: 't6',
           statusbar: false,
           setup: (ed: Editor) => {
-            registerMode(ed);
-
             scenario.buttonSetupNodeChangeSetEnabledFalse(ed);
           }
         }, [], true);
@@ -437,13 +423,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           editor.mode.set('design');
           scenario.assertButtonDisabled('t6');
 
-          editor.mode.set('testmode');
-          scenario.assertButtonDisabled('t6');
-
           editor.mode.set('readonly');
-          scenario.assertButtonDisabled('t6');
-
-          editor.mode.set('testmode');
           scenario.assertButtonDisabled('t6');
 
           editor.mode.set('design');
@@ -460,8 +440,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           toolbar: 't7',
           statusbar: false,
           setup: (ed: Editor) => {
-            registerMode(ed);
-
             scenario.buttonSetupNodeChangeSetEnabledTrue(ed);
           }
         }, [], true);
@@ -471,14 +449,8 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           editor.mode.set('design');
           scenario.assertButtonEnabled('t7');
 
-          editor.mode.set('testmode');
-          scenario.assertButtonDisabled('t7');
-
           editor.mode.set('readonly');
           scenario.assertButtonEnabled('t7');
-
-          editor.mode.set('testmode');
-          scenario.assertButtonDisabled('t7');
 
           editor.mode.set('design');
           scenario.assertButtonDisabled('t7');
@@ -493,8 +465,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           toolbar: 't8',
           statusbar: false,
           setup: (ed: Editor) => {
-            registerMode(ed);
-
             scenario.buttonSetupSetEnabledFalse(ed);
           }
         }, [], true);
@@ -504,13 +474,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           editor.mode.set('design');
           scenario.assertButtonDisabled('t8');
 
-          editor.mode.set('testmode');
-          scenario.assertButtonDisabled('t8');
-
           editor.mode.set('readonly');
-          scenario.assertButtonDisabled('t8');
-
-          editor.mode.set('testmode');
           scenario.assertButtonDisabled('t8');
 
           editor.mode.set('design');
@@ -524,8 +488,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           toolbar: 't9',
           statusbar: false,
           setup: (ed: Editor) => {
-            registerMode(ed);
-
             scenario.buttonSetupDoesntMatch(ed);
           }
         }, [], true);
@@ -535,13 +497,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           editor.mode.set('design');
           scenario.assertButtonEnabled('t9');
 
-          editor.mode.set('testmode');
-          scenario.assertButtonDisabled('t9');
-
           editor.mode.set('readonly');
-          scenario.assertButtonDisabled('t9');
-
-          editor.mode.set('testmode');
           scenario.assertButtonDisabled('t9');
 
           editor.mode.set('design');
@@ -556,8 +512,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           statusbar: false,
           readonly: true,
           setup: (ed: Editor) => {
-            registerMode(ed);
-
             scenario.buttonSetupModeDesign2(ed);
           }
         }, [], true);
@@ -569,13 +523,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           editor.mode.set('design');
           scenario.assertButtonEnabled('t10');
 
-          editor.mode.set('testmode');
-          scenario.assertButtonDisabled('t10');
-
           editor.mode.set('readonly');
-          scenario.assertButtonDisabled('t10');
-
-          editor.mode.set('testmode');
           scenario.assertButtonDisabled('t10');
 
           editor.mode.set('design');
@@ -589,7 +537,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           toolbar: 't11',
           statusbar: false,
           setup: (ed: Editor) => {
-            registerMode(ed);
             scenario.buttonSetupInsertSpan(ed);
           }
         }, [], true);
@@ -605,14 +552,13 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         });
       });
 
-      // Missing enabled property in menu toolbar button spec
-      (scenario.label === 'Menu toolbar button' ? context.skip : context)('Toolbar button spec enabled: false', () => {
+      // Missing enabled property in menu/split toolbar button spec
+      (scenario.label === 'Menu toolbar button' || scenario.label === 'Split toolbar button' ? context.skip : context)('Toolbar button spec enabled: false', () => {
         const hook = TinyHooks.bddSetup<Editor>({
           base_url: '/project/tinymce/js/tinymce',
           toolbar: 't12',
           statusbar: false,
           setup: (ed: Editor) => {
-            registerMode(ed);
             scenario.buttonSetupAnyEnabledFalse(ed);
           }
         }, [], true);
@@ -621,11 +567,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           const editor = hook.editor();
           editor.mode.set('design');
           scenario.assertButtonDisabled('t12');
-
           editor.mode.set('readonly');
-          scenario.assertButtonDisabled('t12');
-
-          editor.mode.set('testmode');
           scenario.assertButtonDisabled('t12');
 
           editor.mode.set('design');
@@ -685,7 +627,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         toolbar: 't1',
         statusbar: false,
         setup: (ed: Editor) => {
-          registerMode(ed);
           menuButtonSetup.buttonSetupAny(ed);
         }
       }, [], true);
@@ -694,10 +635,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         const editor = hook.editor();
         await pClickToolbarAndWait(editor, 't1');
         assertButtonEnabled('test');
-
-        editor.mode.set('testmode');
-        await pClickToolbarAndWait(editor, 't1');
-        assertButtonEnabled('test');
+        await pCloseMenu(editor);
 
         editor.mode.set('readonly');
         await pClickToolbarAndWait(editor, 't1');
@@ -729,7 +667,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         toolbar: 't2',
         statusbar: false,
         setup: (ed: Editor) => {
-          registerMode(ed);
           menuButtonSetup.buttonSetupModeDesign(ed);
         }
       }, [], true);
@@ -738,10 +675,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         const editor = hook.editor();
         await pClickToolbarAndWait(editor, 't2');
         assertButtonEnabled('test');
-
-        editor.mode.set('testmode');
-        await pClickToolbarAndWait(editor, 't2');
-        assertButtonDisabled('test');
+        await pCloseMenu(editor);
 
         editor.mode.set('readonly');
         await pClickToolbarAndWait(editor, 't2');
@@ -761,7 +695,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         toolbar: 't3',
         statusbar: false,
         setup: (ed: Editor) => {
-          registerMode(ed);
           menuButtonSetup.buttonSetupModeReadonly(ed);
         }
       }, [], true);
@@ -770,10 +703,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         const editor = hook.editor();
         await pClickToolbarAndWait(editor, 't3');
         assertButtonDisabled('test');
-
-        editor.mode.set('testmode');
-        await pClickToolbarAndWait(editor, 't3');
-        assertButtonDisabled('test');
+        await pCloseMenu(editor);
 
         editor.mode.set('readonly');
         await pClickToolbarAndWait(editor, 't3');
@@ -793,7 +723,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         toolbar: 't4',
         statusbar: false,
         setup: (ed: Editor) => {
-          registerMode(ed);
           menuButtonSetup.buttonSetupEditable(ed);
         }
       }, [], true);
@@ -802,10 +731,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         const editor = hook.editor();
         await pClickToolbarAndWait(editor, 't4');
         assertButtonEnabled('test');
-
-        editor.mode.set('testmode');
-        await pClickToolbarAndWait(editor, 't4');
-        assertButtonDisabled('test');
+        await pCloseMenu(editor);
 
         editor.mode.set('readonly');
         await pClickToolbarAndWait(editor, 't4');
@@ -820,10 +746,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         editor.setEditableRoot(false);
         await pClickToolbarAndWait(editor, 't4');
         assertButtonDisabled('test');
-
-        editor.mode.set('testmode');
-        await pClickToolbarAndWait(editor, 't4');
-        assertButtonDisabled('test');
+        await pCloseMenu(editor);
 
         editor.mode.set('readonly');
         await pClickToolbarAndWait(editor, 't4');
@@ -844,7 +767,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         toolbar: 't5',
         statusbar: false,
         setup: (ed: Editor) => {
-          registerMode(ed);
           menuButtonSetup.buttonSetupFormattingBold(ed);
         }
       }, [], true);
@@ -853,10 +775,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         const editor = hook.editor();
         await pClickToolbarAndWait(editor, 't5');
         assertButtonEnabled('test');
-
-        editor.mode.set('testmode');
-        await pClickToolbarAndWait(editor, 't5');
-        assertButtonDisabled('test');
+        await pCloseMenu(editor);
 
         editor.mode.set('readonly');
         await pClickToolbarAndWait(editor, 't5');
@@ -871,10 +790,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         editor.setEditableRoot(false);
         await pClickToolbarAndWait(editor, 't5');
         assertButtonDisabled('test');
-
-        editor.mode.set('testmode');
-        await pClickToolbarAndWait(editor, 't5');
-        assertButtonDisabled('test');
+        await pCloseMenu(editor);
 
         editor.mode.set('readonly');
         await pClickToolbarAndWait(editor, 't5');
@@ -895,7 +811,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         toolbar: 't6',
         statusbar: false,
         setup: (ed: Editor) => {
-          registerMode(ed);
           menuButtonSetup.buttonSetupNodeChangeSetEnabledFalse(ed);
         }
       }, [], true);
@@ -904,10 +819,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         const editor = hook.editor();
         await pClickToolbarAndWait(editor, 't6');
         assertButtonDisabled('test');
-
-        editor.mode.set('testmode');
-        await pClickToolbarAndWait(editor, 't6');
-        assertButtonDisabled('test');
+        await pCloseMenu(editor);
 
         editor.mode.set('readonly');
         await pClickToolbarAndWait(editor, 't6');
@@ -927,7 +839,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         toolbar: 't7',
         statusbar: false,
         setup: (ed: Editor) => {
-          registerMode(ed);
           menuButtonSetup.buttonSetupNodeChangeSetEnabledTrue(ed);
         }
       }, [], true);
@@ -936,10 +847,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         const editor = hook.editor();
         await pClickToolbarAndWait(editor, 't7');
         assertButtonEnabled('test');
-
-        editor.mode.set('testmode');
-        await pClickToolbarAndWait(editor, 't7');
-        assertButtonEnabled('test');
+        await pCloseMenu(editor);
 
         editor.mode.set('readonly');
         await pClickToolbarAndWait(editor, 't7');
@@ -959,7 +867,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         toolbar: 't8',
         statusbar: false,
         setup: (ed: Editor) => {
-          registerMode(ed);
           menuButtonSetup.buttonSetupSetEnabledFalse(ed);
         }
       }, [], true);
@@ -968,10 +875,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         const editor = hook.editor();
         await pClickToolbarAndWait(editor, 't8');
         assertButtonDisabled('test');
-
-        editor.mode.set('testmode');
-        await pClickToolbarAndWait(editor, 't8');
-        assertButtonDisabled('test');
+        await pCloseMenu(editor);
 
         editor.mode.set('readonly');
         await pClickToolbarAndWait(editor, 't8');
@@ -991,7 +895,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         toolbar: 't9',
         statusbar: false,
         setup: (ed: Editor) => {
-          registerMode(ed);
           menuButtonSetup.buttonSetupDoesntMatch(ed);
         }
       }, [], true);
@@ -1000,10 +903,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         const editor = hook.editor();
         await pClickToolbarAndWait(editor, 't9');
         assertButtonEnabled('test');
-
-        editor.mode.set('testmode');
-        await pClickToolbarAndWait(editor, 't9');
-        assertButtonDisabled('test');
+        await pCloseMenu(editor);
 
         editor.mode.set('readonly');
         await pClickToolbarAndWait(editor, 't9');
@@ -1023,7 +923,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         toolbar: 't10',
         statusbar: false,
         setup: (ed: Editor) => {
-          registerMode(ed);
           menuButtonSetup.buttonSetupInsertSpan(ed);
         }
       }, [], true);
@@ -1052,7 +951,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         toolbar: 't11',
         statusbar: false,
         setup: (ed: Editor) => {
-          registerMode(ed);
           menuButtonSetup.buttonSetupAnyEnabledFalse(ed);
         }
       }, [], true);
@@ -1061,10 +959,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         const editor = hook.editor();
         await pClickToolbarAndWait(editor, 't11');
         assertButtonDisabled('test');
-
-        editor.mode.set('testmode');
-        await pClickToolbarAndWait(editor, 't11');
-        assertButtonDisabled('test');
+        await pCloseMenu(editor);
 
         editor.mode.set('readonly');
         await pClickToolbarAndWait(editor, 't11');

@@ -1,22 +1,13 @@
 import { TestStore, UiFinder } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { Class, SugarBody } from '@ephox/sugar';
+import { SugarBody } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import { ViewButtonClasses } from 'tinymce/themes/silver/ui/toolbar/button/ButtonClasses';
 
 describe('browser.tinymce.themes.silver.view.ViewButtonsContextTest', () => {
-  const registerMode = (ed: Editor) => {
-    ed.mode.register('testmode', {
-      activate: Fun.noop,
-      deactivate: Fun.noop,
-      editorReadOnly: true
-    });
-  };
-
   afterEach(() => {
     hook.editor().mode.set('design');
     store.clear();
@@ -34,8 +25,6 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsContextTest', () => {
     toolbar: Arr.range(10, Fun.constant('bold | italic ')).join(''),
     width: 500,
     setup: (editor: Editor) => {
-      registerMode(editor);
-
       let buttonWithToggle = false;
       editor.ui.registry.addView('myview1', {
         buttons: [
@@ -52,7 +41,7 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsContextTest', () => {
                   api.setIcon(buttonWithToggle ? 'fullscreen' : 'cut');
                   store.add('button-with-toggle');
                 },
-                context: 'mode:!readonly'
+                context: 'any'
               }
             ]
           },
@@ -64,7 +53,7 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsContextTest', () => {
             onAction: () => {
               store.add('button-without-toggle');
             },
-            context: 'mode:!readonly'
+            context: 'any'
           },
           {
             type: 'togglebutton',
@@ -90,7 +79,7 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsContextTest', () => {
                 tooltip: 'button-active-true',
                 icon: 'help',
                 onAction: store.adder('button-active-true'),
-                context: 'mode:!readonly'
+                context: 'any'
               },
               {
                 type: 'togglebutton',
@@ -99,7 +88,7 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsContextTest', () => {
                 tooltip: 'button-active-false',
                 icon: 'help',
                 onAction: store.adder('button-active-false'),
-                context: 'mode:!readonly'
+                context: 'any'
               },
               {
                 type: 'togglebutton',
@@ -107,15 +96,15 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsContextTest', () => {
                 tooltip: 'button-no-active',
                 icon: 'help',
                 onAction: store.adder('button-no-active'),
-                context: 'mode:!readonly'
+                context: 'any'
               }
             ]
           },
           {
             type: 'group',
             buttons: [
-              { type: 'button', text: 'Cancel', onAction: store.adder('Cancel'), context: 'mode:!readonly' },
-              { type: 'button', text: 'Save code', buttonType: 'primary', onAction: store.adder('Save code'), context: 'mode:!readonly' }
+              { type: 'button', text: 'Cancel', onAction: store.adder('Cancel'), context: 'any' },
+              { type: 'button', text: 'Save code', buttonType: 'primary', onAction: store.adder('Save code'), context: 'any' }
             ]
           },
         ],
@@ -142,16 +131,11 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsContextTest', () => {
 
   const getSvg = (editor: Editor, name: string) => UiFinder.findIn<HTMLElement>(TinyDom.container(editor), `.tox-view button[aria-label='${name}'] svg`).getOrDie().dom.innerHTML;
 
-  const getButtonByTitle = (title: string) => {
-    const editor = hook.editor();
-    return UiFinder.findIn<HTMLElement>(TinyDom.container(editor), `.tox-view button[aria-label='${title}']`).getOrDie();
-  };
-
   it('TINY-11211: View toggle button should be clickable and context reflect button state', () => {
     const editor = hook.editor();
 
     toggleView('myview1');
-    editor.mode.set('testmode');
+    editor.mode.set('readonly');
 
     assertButtonNativelyEnabled('button-with-toggle');
     const initialButtonWithToggleButtonSvg = getSvg(editor, 'button-with-toggle');
@@ -170,36 +154,9 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsContextTest', () => {
     store.assertEq('Clicking on button should should be permitted', [ 'button-with-toggle', 'button-with-toggle', 'button-without-toggle', 'button-without-toggle' ]);
   });
 
-  it('TINY-11211: Views buttons should be disabled in readonly mode, clicking on buttons should not trigger onAction', async () => {
-    const editor = hook.editor();
-    toggleView('myview1');
-    editor.mode.set('readonly');
-    await UiFinder.pWaitFor('buttons should be showed', TinyDom.container(editor), '[aria-label="button-active-true"]');
-
-    const buttonActiveTrue = getButtonByTitle('button-active-true');
-    assert.isTrue(Class.has(buttonActiveTrue, ViewButtonClasses.Ticked), 'button with active true should have ticked class');
-    const buttonActiveFalse = getButtonByTitle('button-active-false');
-    assert.isFalse(Class.has(buttonActiveFalse, ViewButtonClasses.Ticked), 'button with active false should not have ticked class');
-    const buttonNoActive = getButtonByTitle('button-no-active');
-    assert.isFalse(Class.has(buttonNoActive, ViewButtonClasses.Ticked), 'button without active flag should not have ticked class');
-
-    assertButtonNativelyDisabled('button-active-true');
-    assertButtonNativelyDisabled('button-active-false');
-    assertButtonNativelyDisabled('button-no-active');
-    assertButtonNativelyDisabled('default-toggle-button');
-    assertButtonNativelyDisabled('default-button');
-    assertButtonNativelyDisabled('button-without-toggle');
-    assertButtonNativelyDisabled('button-with-toggle');
-
-    clickViewButton(editor, 'button-active-true');
-    clickViewButton(editor, 'button-active-false');
-    clickViewButton(editor, 'button-no-active');
-    store.assertEq('Clicking on button should should be permitted', []);
-  });
-
   it('TINY-11211: View (normal) button should be clickable and context reflect button state', async () => {
     const editor = hook.editor();
-    editor.mode.set('testmode');
+    editor.mode.set('readonly');
     toggleView('myview1');
     await UiFinder.pWaitFor('buttons should be showed', TinyDom.container(editor), '[aria-label="Save code"]');
 
@@ -210,7 +167,7 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsContextTest', () => {
 
   it('TINY-11211: View buttons without context, should have mode:design and should not trigger onAction when its disabled', async () => {
     const editor = hook.editor();
-    editor.mode.set('testmode');
+    editor.mode.set('readonly');
     toggleView('myview1');
     await UiFinder.pWaitFor('buttons should be showed', TinyDom.container(editor), '[aria-label="Save code"]');
 

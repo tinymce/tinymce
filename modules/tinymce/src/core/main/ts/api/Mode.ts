@@ -1,14 +1,8 @@
 import { Cell, Fun } from '@ephox/katamari';
 
-import { getEditorReadOnlyProperty, registerMode, setMode } from '../mode/Mode';
-import { isReadOnly, registerReadOnlyContentFilters, registerReadOnlySelectionBlockers } from '../mode/Readonly';
+import { registerMode, setMode } from '../mode/Mode';
+import { isReadOnly, registerReadOnlySelectionBlockers } from '../mode/Readonly';
 import Editor from './Editor';
-
-export interface ReadOnlyProperty {
-  selectionEnabled?: boolean;
-}
-
-export type EditorReadOnlyType = boolean | ReadOnlyProperty;
 
 /**
  * TinyMCE Editor Mode API.
@@ -17,15 +11,6 @@ export type EditorReadOnlyType = boolean | ReadOnlyProperty;
  */
 
 export interface EditorMode {
-
-  /**
-   * Checks if the editor content can be selected.
-   *
-   * @method isSelectionEnabled
-   * @return {boolean} true if the editor content area allows selection.
-   */
-  isSelectionEnabled: () => boolean;
-
   /**
    * Checks if the editor content is in a readonly state.
    *
@@ -78,9 +63,9 @@ export interface EditorModeApi {
    * Flags whether the editor should be made readonly while this mode is active.
    *
    * @property editorReadOnly
-   * @type EditorReadOnlyType
+   * @type Boolean
    */
-  editorReadOnly: EditorReadOnlyType;
+  editorReadOnly: boolean;
 }
 
 export const create = (editor: Editor): EditorMode => {
@@ -98,11 +83,9 @@ export const create = (editor: Editor): EditorMode => {
   });
   const activeMode = Cell<[ string, EditorModeApi ]>([ 'design', availableModes.get().design ]);
 
-  registerReadOnlyContentFilters(editor);
   registerReadOnlySelectionBlockers(editor);
 
   return {
-    isSelectionEnabled: () => getEditorReadOnlyProperty(activeMode, 'selectionEnabled'),
     isReadOnly: () => isReadOnly(editor),
     set: (mode: string) => setMode(editor, availableModes.get(), activeMode, mode),
     get: () => {

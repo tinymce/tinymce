@@ -1,6 +1,6 @@
 import { FocusTools, Keys, Mouse, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Fun, Optional, Strings } from '@ephox/katamari';
+import { Arr, Optional, Strings } from '@ephox/katamari';
 import { SugarBody, SugarElement, SugarShadowDom, Value } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -57,15 +57,6 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     toolbar: [ 'fontsizeinput' ],
-    setup: (ed: Editor) => {
-      ed.mode.register('testmode', {
-        activate: Fun.noop,
-        deactivate: Fun.noop,
-        editorReadOnly: {
-          selectionEnabled: true
-        }
-      });
-    }
   }, []);
 
   it('TINY-9429: plus and minus should increase and decrease font size of the current selection',
@@ -105,7 +96,7 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     TinyUiActions.clickOnToolbar(editor, '.tox-number-input .minus');
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">abc</p>');
 
-    editor.mode.set('testmode');
+    editor.mode.set('readonly');
 
     TinyUiActions.clickOnToolbar(editor, '.tox-number-input .plus');
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">abc</p>');
@@ -132,7 +123,7 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     await pDisabledShouldExist(editor, '.minus');
     await pDisabledShouldExist(editor, 'input');
 
-    editor.mode.set('testmode');
+    editor.mode.set('readonly');
 
     await pDisabledShouldExist(editor, '.plus');
     await pDisabledShouldExist(editor, '.minus');
