@@ -127,7 +127,7 @@ def runHeadlessPod(String cacheName, Boolean runAll) {
         resourceLimitEphemeralStorage: '16Gi'
       ],
       seleniumOpts: [
-        image: "selenium/standalone-chrome:127.0",
+        // image: "selenium/standalone-chrome:127.0",
       ],
       build: cacheName
     ) {
@@ -219,29 +219,29 @@ timestamps {
   def processes = [:]
   def runAllTests = env.BRANCH_NAME == props.primaryBranch
 
-  for (int i = 0; i < platforms.size(); i++) {
-    def platform = platforms.get(i)
-    def buckets = platform.buckets ?: 1
-    for (int bucket = 1; bucket <= buckets; bucket ++) {
-      def suffix = buckets == 1 ? "" : "-" + bucket + "-" + buckets
-      def os = String.valueOf(platform.os).startsWith('mac') ? 'Mac' : 'Win'
-      def browserVersion = platform.version ? "-${platform.version}" : ""
-      def s_bucket = "${bucket}"
-      def s_buckets = "${buckets}"
-      if (platform.provider) {
-        // use remote
-        def name = "${os}-${platform.browser}${browserVersion}-${platform.provider}${suffix}"
-        def testName = "${env.BUILD_NUMBER}-${os}-${platform.browser}"
-        processes[name] = runTestPod(cacheName, name, "${testPrefix}_${testName}", platform.browser, platform.provider, platform.os, platform.version, s_bucket, s_buckets, runAllTests)
-      } else {
-        // use local
-        def name = "${os}-${platform.browser}"
-        processes[name] = runTestNode(props.primaryBranch, name, platform.browser, platform.os, s_bucket, s_buckets, runAllTests)
-      }
-    }
-  }
+  // for (int i = 0; i < platforms.size(); i++) {
+  //   def platform = platforms.get(i)
+  //   def buckets = platform.buckets ?: 1
+  //   for (int bucket = 1; bucket <= buckets; bucket ++) {
+  //     def suffix = buckets == 1 ? "" : "-" + bucket + "-" + buckets
+  //     def os = String.valueOf(platform.os).startsWith('mac') ? 'Mac' : 'Win'
+  //     def browserVersion = platform.version ? "-${platform.version}" : ""
+  //     def s_bucket = "${bucket}"
+  //     def s_buckets = "${buckets}"
+  //     if (platform.provider) {
+  //       // use remote
+  //       def name = "${os}-${platform.browser}${browserVersion}-${platform.provider}${suffix}"
+  //       def testName = "${env.BUILD_NUMBER}-${os}-${platform.browser}"
+  //       processes[name] = runTestPod(cacheName, name, "${testPrefix}_${testName}", platform.browser, platform.provider, platform.os, platform.version, s_bucket, s_buckets, runAllTests)
+  //     } else {
+  //       // use local
+  //       def name = "${os}-${platform.browser}"
+  //       processes[name] = runTestNode(props.primaryBranch, name, platform.browser, platform.os, s_bucket, s_buckets, runAllTests)
+  //     }
+  //   }
+  // }
 
-  processes['headless'] = runHeadlessPod(cacheName, runAllTests)
+  processes['headless-1'] = runHeadlessPod(cacheName, runAllTests)
 
   stage('Run tests') {
       echo "Running tests [runAll=${runAllTests}]"
