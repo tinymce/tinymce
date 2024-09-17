@@ -53,10 +53,12 @@ const buildInitGroups = (ctx: InlineContent.ContextForm, providers: UiFactoryBac
   return [
     {
       title: Optional.none(),
+      label: Optional.none(),
       items: [ memInput.asSpec() ]
     },
     {
       title: Optional.none(),
+      label: Optional.none(),
       items: commands.asSpecs() as AlloySpec[]
     }
   ];
