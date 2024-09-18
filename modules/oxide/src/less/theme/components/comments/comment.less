@@ -1,10 +1,9 @@
 //
 // Tiny Comments
 //
-@conversations-background-color: contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 5%));
 
-@comment-selected-background-color: @color-selected-background;
-@comment-selected-border-color: @color-selected-border;
+@comment-selected-background-color: lighten(@color-active, 30%); 
+@comment-selected-border-color: @color-active;
 
 @comment-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
 @comment-border-radius: @panel-border-radius;
@@ -30,7 +29,6 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    background: @conversations-background-color;
     height: 100%;
 
     /* This is to give the sidebar a consistent width. Need a solution for this */
