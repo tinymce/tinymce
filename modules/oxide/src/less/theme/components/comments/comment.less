@@ -136,6 +136,29 @@
     }
   }
 
+  .tox-comment__overlaytext {
+    bottom: 0;
+    flex-direction: column;
+    font-size: @font-size-sm;
+    left: 0;
+    padding: 1em;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: @z-index-comment-overlay-text;
+
+    p {
+      background-color: @comment-background-color;
+      box-shadow: 0 0 8px 8px @comment-background-color;
+      color: @comment-text-color;
+      text-align: center;
+    }
+
+    div:nth-of-type(2) {
+      font-size: .8em;
+    }
+  }
+
   .tox-comment__expander {
     padding-top: @pad-sm;
 
@@ -246,29 +269,6 @@
 
     > div {
       padding-bottom: @pad-md;
-    }
-  }
-
-  .tox-comment__overlaytext {
-    bottom: 0;
-    flex-direction: column;
-    font-size: @font-size-sm;
-    left: 0;
-    padding: 1em;
-    position: absolute;
-    right: 0;
-    top: 0;
-    z-index: @z-index-comment-overlay-text;
-
-    p {
-      background-color: @comment-background-color;
-      box-shadow: 0 0 8px 8px @comment-background-color;
-      color: @comment-text-color;
-      text-align: center;
-    }
-
-    div:nth-of-type(2) {
-      font-size: .8em;
     }
   }
 
