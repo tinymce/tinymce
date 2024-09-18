@@ -136,6 +136,18 @@
     }
   }
 
+  .tox-comment__loading-text {
+    align-items: center;
+    color: @comment-text-color;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    > div {
+      padding-bottom: @pad-md;
+    }
+  }
+
   .tox-comment__overlaytext {
     bottom: 0;
     flex-direction: column;
@@ -258,18 +270,6 @@
     text-align: center;
     top: 0;
     z-index: @z-index-comment-overlay;
-  }
-
-  .tox-comment__loading-text {
-    align-items: center;
-    color: @comment-text-color;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-
-    > div {
-      padding-bottom: @pad-md;
-    }
   }
 
   .tox-comment__busy-spinner {
