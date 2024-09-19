@@ -3,7 +3,7 @@ import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Scroll } from '@ephox/sugar';
-import { TinyDom, LegacyUnit, TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyApis } from '@ephox/wrap-mcagar';
+import { LegacyUnit, TinyApis, TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -285,32 +285,145 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     assert.equal(count, 1);
   });
 
-  it('Extra with changes', () => {
-    const editor = hook.editor();
-    editor.undoManager.clear();
-    editor.setContent('<p>abc</p>');
-    LegacyUnit.setSelection(editor, 'p', 0);
-    editor.undoManager.add();
+  context('Extra', () => {
+    const testExtra = (data: UndoLevel[]) => {
+      assert.lengthOf(data, 3);
+      assert.equal(data[0].content, '<p>abc</p>');
+      assert.deepEqual(data[0].bookmark, { start: [ 0, 0, 0 ], forward: true });
+      assert.deepEqual(data[0].beforeBookmark, { start: [ 0, 0, 0 ], forward: true });
+      assert.equal(data[1].content, '<p>a1c</p>');
+      assert.deepEqual(data[1].bookmark, { start: [ 2, 0, 0 ], forward: true });
+      assert.deepEqual(data[1].beforeBookmark, { start: [ 2, 0, 0 ], forward: true });
+      assert.equal(data[2].content, '<p>a2c</p>');
+      assert.deepEqual(data[2].bookmark, { start: [ 2, 0, 0 ], forward: true });
+      assert.deepEqual(data[1].beforeBookmark, data[2].bookmark);
+    };
+    it('Extra with changes', () => {
+      const editor = hook.editor();
+      editor.undoManager.clear();
+      editor.setContent('<p>abc</p>');
+      LegacyUnit.setSelection(editor, 'p', 0);
+      editor.undoManager.add();
 
-    editor.undoManager.extra(() => {
-      LegacyUnit.setSelection(editor, 'p', 1, 'p', 2);
-      editor.insertContent('1');
-    }, () => {
-      LegacyUnit.setSelection(editor, 'p', 1, 'p', 2);
-      editor.insertContent('2');
+      const result = editor.undoManager.extra(() => {
+        LegacyUnit.setSelection(editor, 'p', 1, 'p', 2);
+        editor.insertContent('1');
+      }, () => {
+        LegacyUnit.setSelection(editor, 'p', 1, 'p', 2);
+        editor.insertContent('2');
+      });
+
+      const data = editor.undoManager.data;
+      assert.isTrue(Type.isNullable(result));
+      testExtra(data);
     });
 
-    const data = editor.undoManager.data;
-    assert.lengthOf(data, 3);
-    assert.equal(data[0].content, '<p>abc</p>');
-    assert.deepEqual(data[0].bookmark, { start: [ 0, 0, 0 ], forward: true });
-    assert.deepEqual(data[0].beforeBookmark, { start: [ 0, 0, 0 ], forward: true });
-    assert.equal(data[1].content, '<p>a1c</p>');
-    assert.deepEqual(data[1].bookmark, { start: [ 2, 0, 0 ], forward: true });
-    assert.deepEqual(data[1].beforeBookmark, { start: [ 2, 0, 0 ], forward: true });
-    assert.equal(data[2].content, '<p>a2c</p>');
-    assert.deepEqual(data[2].bookmark, { start: [ 2, 0, 0 ], forward: true });
-    assert.deepEqual(data[1].beforeBookmark, data[2].bookmark);
+    it('Extra with a promise', async () => {
+      const editor = hook.editor();
+      editor.undoManager.clear();
+      editor.setContent('<p>abc</p>');
+      LegacyUnit.setSelection(editor, 'p', 0);
+      editor.undoManager.add();
+
+      const result: void | Promise<void> = editor.undoManager.extra(
+        () => {
+          return new Promise<void>((resolve) => {
+            setTimeout(() => {
+              LegacyUnit.setSelection(editor, 'p', 1, 'p', 2);
+              editor.insertContent('1');
+              resolve();
+            }, 100);
+          });
+        },
+        () => {
+          LegacyUnit.setSelection(editor, 'p', 1, 'p', 2);
+          editor.insertContent('2');
+        }
+      );
+
+      const data = editor.undoManager.data;
+      if (Type.isNonNullable(result)) {
+        assert.lengthOf(data, 1);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        await result!;
+        testExtra(data);
+      } else {
+        assert.fail();
+      }
+    });
+
+    it('Extra with a promise in the second callback', async () => {
+      const editor = hook.editor();
+      editor.undoManager.clear();
+      editor.setContent('<p>abc</p>');
+      LegacyUnit.setSelection(editor, 'p', 0);
+      editor.undoManager.add();
+
+      const result: void | Promise<void> = editor.undoManager.extra(
+        () => {
+          LegacyUnit.setSelection(editor, 'p', 1, 'p', 2);
+          editor.insertContent('1');
+        },
+        () => {
+          return new Promise<void>((resolve) => {
+            setTimeout(() => {
+              LegacyUnit.setSelection(editor, 'p', 1, 'p', 2);
+              editor.insertContent('2');
+              resolve();
+            }, 100);
+          });
+        }
+      );
+
+      const data = editor.undoManager.data;
+      if (Type.isNonNullable(result)) {
+        assert.lengthOf(data, 2);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        await result!;
+        testExtra(data);
+      } else {
+        assert.fail();
+      }
+    });
+
+    it('Extra with a promise in both callbacks', async () => {
+      const editor = hook.editor();
+      editor.undoManager.clear();
+      editor.setContent('<p>abc</p>');
+      LegacyUnit.setSelection(editor, 'p', 0);
+      editor.undoManager.add();
+
+      const result: void | Promise<void> = editor.undoManager.extra(
+        () => {
+          return new Promise<void>((resolve) => {
+            setTimeout(() => {
+              LegacyUnit.setSelection(editor, 'p', 1, 'p', 2);
+              editor.insertContent('1');
+              resolve();
+            }, 100);
+          });
+        },
+        () => {
+          return new Promise<void>((resolve) => {
+            setTimeout(() => {
+              LegacyUnit.setSelection(editor, 'p', 1, 'p', 2);
+              editor.insertContent('2');
+              resolve();
+            }, 100);
+          });
+        }
+      );
+
+      const data = editor.undoManager.data;
+      if (Type.isNonNullable(result)) {
+        assert.lengthOf(data, 1);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        await result!;
+        testExtra(data);
+      } else {
+        assert.fail();
+      }
+    });
   });
 
   it('Undo added when typing and losing focus', () => {

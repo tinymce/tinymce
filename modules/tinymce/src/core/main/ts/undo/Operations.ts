@@ -1,3 +1,5 @@
+import { Type } from '@ephox/katamari';
+
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';
@@ -6,6 +8,11 @@ import * as Levels from './Levels';
 import { isUnlocked } from './Locks';
 import { endTyping, setTyping } from './TypingState';
 import { Index, Locks, UndoBookmark, UndoLevel, UndoManager } from './UndoManagerTypes';
+
+export interface OperationsExtra {
+  (editor: Editor, undoManager: UndoManager, locks: Locks, index: Index, callback1: () => void, callback2: () => void): void;
+  (editor: Editor, undoManager: UndoManager, locks: Locks, index: Index, callback1: () => Promise<void> | void, callback2: () => Promise<void> | void): Promise<void> ;
+}
 
 export const beforeChange = (editor: Editor, locks: Locks, beforeBookmark: UndoBookmark): void => {
   if (isUnlocked(locks)) {
@@ -92,15 +99,36 @@ export const clear = (editor: Editor, undoManager: UndoManager, index: Index): v
   editor.dispatch('ClearUndos');
 };
 
-export const extra = (editor: Editor, undoManager: UndoManager, index: Index, callback1: () => void, callback2: () => void): void => {
-  if (undoManager.transact(callback1)) {
-    const bookmark = undoManager.data[index.get()].bookmark;
-    const lastLevel = undoManager.data[index.get() - 1];
-    Levels.applyToEditor(editor, lastLevel, true);
+export const extra: OperationsExtra = (editor: Editor, undoManager: UndoManager, locks: Locks, index: Index, callback1, callback2) => {
+  const isPromise = (entry: UndoLevel | null | Promise<UndoLevel | null>): entry is Promise<UndoLevel | null> => {
+    return Type.isNonNullable(entry) && 'then' in entry;
+  };
 
-    if (undoManager.transact(callback2)) {
-      undoManager.data[index.get() - 1].beforeBookmark = bookmark;
+  const extraContinue = (previousOutput: UndoLevel | null) => {
+    if (previousOutput) {
+      const extraEnd = () => {
+        undoManager.data[index.get() - 1].beforeBookmark = bookmark;
+      };
+
+      const bookmark = undoManager.data[index.get()].bookmark;
+      const lastLevel = undoManager.data[index.get() - 1];
+      Levels.applyToEditor(editor, lastLevel, true);
+
+      const continuedResult = transactAsync(undoManager, locks, callback2);
+
+      if (isPromise(continuedResult)) {
+        return continuedResult.then(extraEnd);
+      } else {
+        return extraEnd() as any;
+      }
     }
+  };
+
+  const result1 = transactAsync(undoManager, locks, callback1);
+  if (isPromise(result1)) {
+    return result1.then(extraContinue);
+  } else {
+    return extraContinue(result1);
   }
 };
 
@@ -157,10 +185,39 @@ export const transact = (undoManager: UndoManager, locks: Locks, callback: () =>
   return undoManager.add();
 };
 
+export const transactAsync = (undoManager: UndoManager, locks: Locks, callback: () => void | Promise<void>): UndoLevel | null | Promise<UndoLevel | null> => {
+  endTyping(undoManager, locks);
+  undoManager.beforeChange();
+  const result = ignoreAsync(locks, callback);
+
+  if (result) {
+    return result.then(() => undoManager.add());
+  } else {
+    return undoManager.add();
+  }
+};
+
 export const ignore = (locks: Locks, callback: () => void): void => {
   try {
     locks.set(locks.get() + 1);
     callback();
+  } finally {
+    locks.set(locks.get() - 1);
+  }
+};
+
+const ignoreAsync = (locks: Locks, callback: () => void | Promise<void>): void | Promise<void> => {
+  try {
+    locks.set(locks.get() + 1);
+    const result = callback();
+
+    if (result) {
+      locks.set(locks.get() + 1);
+
+      return result.finally(() => {
+        locks.set(locks.get() - 1);
+      });
+    }
   } finally {
     locks.set(locks.get() - 1);
   }

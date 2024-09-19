@@ -5,7 +5,7 @@ import * as GetBookmark from '../bookmark/GetBookmark';
 import * as Rtc from '../Rtc';
 import * as Levels from '../undo/Levels';
 import { addKeyboardShortcuts, registerEvents } from '../undo/Setup';
-import { Index, Locks, UndoLevel, UndoManager } from '../undo/UndoManagerTypes';
+import { Extra, Index, Locks, UndoLevel, UndoManager } from '../undo/UndoManagerTypes';
 import Editor from './Editor';
 
 /**
@@ -17,6 +17,10 @@ const UndoManager = (editor: Editor): UndoManager => {
   const beforeBookmark = Singleton.value<Bookmark>();
   const locks: Locks = Cell(0);
   const index: Index = Cell(0);
+
+  const extra: Extra = (callback1: () => Promise<void> | void, callback2: () => Promise<void> | void) => {
+    return Rtc.extra(editor, undoManager, locks, index, callback1, callback2) as any;
+  };
 
   /* eslint consistent-this:0 */
   const undoManager = {
@@ -159,10 +163,9 @@ const UndoManager = (editor: Editor): UndoManager => {
      * @method extra
      * @param {Function} callback1 Function that does mutation but gets stored as a "hidden" extra undo level.
      * @param {Function} callback2 Function that does mutation but gets displayed to the user.
+     * @returns {void or Promise<void>}
      */
-    extra: (callback1: () => void, callback2: () => void) => {
-      Rtc.extra(editor, undoManager, index, callback1, callback2);
-    }
+    extra
   };
 
   if (!Rtc.isRtc(editor)) {
