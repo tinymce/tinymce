@@ -127,7 +127,7 @@ def runHeadlessPod(String cacheName, Boolean runAll) {
         resourceLimitEphemeralStorage: '16Gi'
       ],
       seleniumOpts: [
-        // image: "selenium/standalone-chrome:127.0",
+        image: "selenium/standalone-chrome:nightly",
       ],
       build: cacheName
     ) {
