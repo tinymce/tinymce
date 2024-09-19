@@ -163,7 +163,7 @@ const UndoManager = (editor: Editor): UndoManager => {
      * @method extra
      * @param {Function} callback1 Function that does mutation but gets stored as a "hidden" extra undo level.
      * @param {Function} callback2 Function that does mutation but gets displayed to the user.
-     * @returns {void or Promise<void>}
+     * @returns {void or Promise<void>} Optionally returns a promise if either callback returned one.
      */
     extra
   };
