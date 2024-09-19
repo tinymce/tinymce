@@ -69,7 +69,12 @@
       box-shadow: 0px 4px 8px 0px rgba(34, 47, 62, 0.10);
     
       &:focus {
-        border: 1px solid @keyboard-focus-outline-color;
+        border: 2px solid @keyboard-focus-outline-color;
+        margin: -1px;
+    
+        &:not(:first-child) {
+          margin-top: 7px;
+        }
       }
     
       .tox-comment__single {
@@ -330,7 +335,27 @@
         background-position: 268px 0;
       }
     }
+  }
 
+  .tox-ring-loader {
+    width: 10px;
+    height: 10px;
+    border: 1px solid #FFF;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
   }
 }
 //end tox
