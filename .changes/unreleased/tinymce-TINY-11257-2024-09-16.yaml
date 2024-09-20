@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: The editor resize handle was incorrectly rendered when all components were
+  removed from the status bar.
+time: 2024-09-16T17:08:32.128063+02:00
+custom:
+  Issue: TINY-11257
