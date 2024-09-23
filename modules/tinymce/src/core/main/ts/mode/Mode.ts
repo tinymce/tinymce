@@ -58,10 +58,7 @@ const registerMode = (availableModes: Record<string, EditorModeApi>, mode: strin
 
   return {
     ...availableModes,
-    [mode]: {
-      ...api,
-      editorReadOnly: api.editorReadOnly
-    }
+    [mode]: api
   };
 };
 
