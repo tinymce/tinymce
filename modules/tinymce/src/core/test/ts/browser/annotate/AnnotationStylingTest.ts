@@ -56,20 +56,20 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
   };
 
   const commentOutline: Outline = {
-    color: 'rgb(255, 232, 157)', // #ffe89d
+    color: 'rgb(255, 231, 150)', // #ffe796
     width: '3px',
     style: 'solid'
   };
 
   const commentActiveOutline: Outline = {
-    color: 'rgb(254, 214, 53)', // #fed635
+    color: 'rgb(255, 207, 48)', // #ffcf30
     width: '3px',
     style: 'solid'
   };
 
   const noBackgroundColor = 'rgba(0, 0, 0, 0)';
-  const commentBackgroundColor = 'rgb(255, 232, 157)'; // #ffe89d
-  const commentActiveBackgroundColor = 'rgb(254, 214, 53)'; // #fed635
+  const commentBackgroundColor = 'rgb(255, 231, 150)'; // #ffe796
+  const commentActiveBackgroundColor = 'rgb(255, 207, 48)'; // #ffcf30
   const inlineBoundaryBackgroundColor = 'rgb(180, 215, 255)'; // #b4d7ff
   const commentActiveBoxShadow = 'rgb(0, 108, 231) 0px 0px 0px 2px';
 
