@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Read-only editor, which allows normal cursor movement and block element selection within a read-only editor without editing capabilities.
+time: 2024-07-17T18:55:30.212715+08:00
+custom:
+  Issue: TINY-11264
