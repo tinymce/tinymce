@@ -34,9 +34,11 @@
     background: @comment-background-color;
     border: @comment-border;
     border-radius: @comment-border-radius;
-    box-shadow: @comment-box-shadow;
     padding: @comment-padding;
     position: relative;
+    &:hover {
+      box-shadow: @comment-box-shadow;
+    }
   }
 
   .tox-comment__header {
