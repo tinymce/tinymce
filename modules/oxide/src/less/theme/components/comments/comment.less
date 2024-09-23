@@ -83,15 +83,19 @@
         margin-bottom: 12px;
 
         &:focus {
-          border: 1px solid @keyboard-focus-outline-color;
-          border-radius: 6px;
-          margin-left: -8px;
-          margin-right: -8px;
-          padding-left: 7px;
-          padding-right: 7px;
-          padding-top: 2px;
-          margin-top: -3px;
-          margin-bottom: 11px;
+          position: relative;
+
+          &::after {
+            top: -9px;
+            position: absolute;
+            content: "";
+            display: block;
+            bottom: -9px;
+            left: -9px;
+            right: -9px;
+            border-radius: 6px;
+            border: 2px solid @border-color;
+          }
         }
       }
     }
