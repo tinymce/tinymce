@@ -15,13 +15,8 @@ import * as ToggleFormat from './fmt/ToggleFormat';
 import { getSelectedContentInternal } from './selection/GetSelectionContentImpl';
 import { RangeLikeObject } from './selection/RangeTypes';
 import * as Operations from './undo/Operations';
-import { Index, Locks, UndoBookmark, UndoLevel, UndoManager } from './undo/UndoManagerTypes';
+import { Extra, Index, Locks, UndoBookmark, UndoLevel, UndoManager } from './undo/UndoManagerTypes';
 import { addVisualInternal } from './view/VisualAidsImpl';
-
-interface ExtraAPI {
-  (callback1: () => void, callback2: () => void): void;
-  (callback1: () => Promise<void> | void, callback2: () => Promise<void> | void): Promise<void> ;
-}
 
 /** API implemented by the RTC plugin */
 interface RtcRuntimeApi {
@@ -39,7 +34,7 @@ interface RtcRuntimeApi {
     reset: () => void;
     clear: () => void;
     ignore: (fn: () => void) => void;
-    extra: ExtraAPI;
+    extra: Extra;
   };
   formatter: {
     canApply: (format: string) => boolean;
@@ -75,7 +70,7 @@ interface RtcRuntimeApi {
 
 interface RTCExtra {
   (undoManager: UndoManager, locks: Locks, index: Index, callback1: () => void, callback2: () => void): void;
-  (undoManager: UndoManager, locks: Locks, index: Index, callback1: () => Promise<void> | void, callback2: () => Promise<void> | void): Promise<void> ;
+  (undoManager: UndoManager, locks: Locks, index: Index, callback1: () => Promise<void>, callback2: () => Promise<void>): Promise<void> ;
 }
 
 /** A copy of the TinyMCE api definitions that the plugin overrides  */

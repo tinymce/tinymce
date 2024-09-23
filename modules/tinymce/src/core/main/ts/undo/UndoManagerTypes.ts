@@ -28,9 +28,6 @@ export type UndoLevel = NewUndoLevel & { bookmark: Bookmark };
 
 export interface Extra {
   (callback1: () => void, callback2: () => void): void;
-  (callback1: () => Promise<void>, callback2: () => void): Promise<void>;
-  (callback1: () => void, callback2: () => Promise<void>): Promise<void>;
-  // eslint-disable-next-line @typescript-eslint/unified-signatures
   (callback1: () => Promise<void>, callback2: () => Promise<void>): Promise<void>;
 }
 

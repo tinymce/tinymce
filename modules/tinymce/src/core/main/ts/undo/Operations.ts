@@ -11,7 +11,7 @@ import { Index, Locks, UndoBookmark, UndoLevel, UndoManager } from './UndoManage
 
 export interface OperationsExtra {
   (editor: Editor, undoManager: UndoManager, locks: Locks, index: Index, callback1: () => void, callback2: () => void): void;
-  (editor: Editor, undoManager: UndoManager, locks: Locks, index: Index, callback1: () => Promise<void> | void, callback2: () => Promise<void> | void): Promise<void> ;
+  (editor: Editor, undoManager: UndoManager, locks: Locks, index: Index, callback1: () => Promise<void>, callback2: () => Promise<void>): Promise<void> ;
 }
 
 export const beforeChange = (editor: Editor, locks: Locks, beforeBookmark: UndoBookmark): void => {
@@ -100,10 +100,6 @@ export const clear = (editor: Editor, undoManager: UndoManager, index: Index): v
 };
 
 export const extra: OperationsExtra = (editor: Editor, undoManager: UndoManager, locks: Locks, index: Index, callback1, callback2) => {
-  const isPromise = (entry: UndoLevel | null | Promise<UndoLevel | null>): entry is Promise<UndoLevel | null> => {
-    return Type.isNonNullable(entry) && 'then' in entry;
-  };
-
   const extraContinue = (previousOutput: UndoLevel | null) => {
     if (previousOutput) {
       const extraEnd = () => {
@@ -116,7 +112,7 @@ export const extra: OperationsExtra = (editor: Editor, undoManager: UndoManager,
 
       const continuedResult = transactAsync(undoManager, locks, callback2);
 
-      if (isPromise(continuedResult)) {
+      if (Type.isPromiseLike(continuedResult)) {
         return continuedResult.then(extraEnd);
       } else {
         return extraEnd() as any;
@@ -125,7 +121,7 @@ export const extra: OperationsExtra = (editor: Editor, undoManager: UndoManager,
   };
 
   const result1 = transactAsync(undoManager, locks, callback1);
-  if (isPromise(result1)) {
+  if (Type.isPromiseLike(result1)) {
     return result1.then(extraContinue);
   } else {
     return extraContinue(result1);
@@ -211,7 +207,7 @@ const ignoreAsync = (locks: Locks, callback: () => void | Promise<void>): void |
     locks.set(locks.get() + 1);
     const result = callback();
 
-    if (result) {
+    if (Type.isPromiseLike(result)) {
       locks.set(locks.get() + 1);
 
       return result.finally(() => {
