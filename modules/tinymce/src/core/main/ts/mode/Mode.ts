@@ -7,18 +7,9 @@ import { toggleReadOnly } from './Readonly';
 
 const defaultModes = [ 'design', 'readonly' ];
 
-const switchToMode = (editor: Editor, activeMode: Cell<[string, EditorModeApi]>, availableModes: Record<string, EditorModeApi>, mode: string) => {
-  const [ , oldMode ] = activeMode.get();
+const switchToMode = (editor: Editor, activeMode: Cell<string>, availableModes: Record<string, EditorModeApi>, mode: string) => {
+  const oldMode = availableModes[activeMode.get()];
   const newMode = availableModes[mode];
-
-  // if deactivate fails, hope nothing bad happened and abort
-  try {
-    oldMode.deactivate();
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error(`problem while deactivating editor mode ${mode}:`, e);
-    return;
-  }
 
   // if activate fails, hope nothing bad happened and abort
   try {
@@ -28,26 +19,25 @@ const switchToMode = (editor: Editor, activeMode: Cell<[string, EditorModeApi]>,
     console.error(`problem while activating editor mode ${mode}:`, e);
     return;
   }
-
+  oldMode.deactivate();
   if (oldMode.editorReadOnly !== newMode.editorReadOnly) {
     toggleReadOnly(editor, newMode.editorReadOnly);
   }
-  activeMode.set([ mode, newMode ]);
+  activeMode.set(mode);
   Events.fireSwitchMode(editor, mode);
 };
 
-const setMode = (editor: Editor, availableModes: Record<string, EditorModeApi>, activeMode: Cell<[string, EditorModeApi]>, newMode: string): void => {
-  const [ mode ] = activeMode.get();
-  if (newMode === mode) {
+const setMode = (editor: Editor, availableModes: Record<string, EditorModeApi>, activeMode: Cell<string>, mode: string): void => {
+  if (mode === activeMode.get()) {
     return;
-  } else if (!Obj.has(availableModes, newMode)) {
-    throw new Error(`Editor mode '${newMode}' is invalid`);
+  } else if (!Obj.has(availableModes, mode)) {
+    throw new Error(`Editor mode '${mode}' is invalid`);
   }
 
   if (editor.initialized) {
-    switchToMode(editor, activeMode, availableModes, newMode);
+    switchToMode(editor, activeMode, availableModes, mode);
   } else {
-    editor.on('init', () => switchToMode(editor, activeMode, availableModes, newMode));
+    editor.on('init', () => switchToMode(editor, activeMode, availableModes, mode));
   }
 };
 
@@ -58,7 +48,18 @@ const registerMode = (availableModes: Record<string, EditorModeApi>, mode: strin
 
   return {
     ...availableModes,
-    [mode]: api
+    [mode]: {
+      ...api,
+      deactivate: () => {
+        // wrap custom deactivate APIs so they can't break the editor
+        try {
+          api.deactivate();
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.error(`problem while deactivating editor mode ${mode}:`, e);
+        }
+      }
+    }
   };
 };
 

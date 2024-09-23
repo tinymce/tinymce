@@ -6,13 +6,13 @@ import FixedToolbarContainerDemo from './FixedToolbarContainerDemo';
 import FullDemo from './FullDemo';
 import IframeDemo from './IframeDemo';
 import InlineDemo from './InlineDemo';
+import ReadOnlyDemo from './ReadOnlyDemo';
 import ResponsiveDemo from './ResponsiveDemo';
 import ShadowDomDemo from './ShadowDomDemo';
 import ShadowDomInlineDemo from './ShadowDomInlineDemo';
 import SourceDumpDemo from './SourceDumpDemo';
 import StickyToolbarDemo from './StickyToolbarDemo';
 import TinyMceDemo from './TinyMceDemo';
-import UiSelectionEnabledModeDemo from './UiSelectionEnabledModeDemo';
 import ViewDemo from './ViewDemo';
 
 declare const window: any;
@@ -32,6 +32,6 @@ window.demos = {
   StickyToolbarDemo,
   ShadowDomDemo,
   ShadowDomInlineDemo,
-  UiSelectionEnabledModeDemo,
+  ReadOnlyDemo,
   ViewDemo
 };

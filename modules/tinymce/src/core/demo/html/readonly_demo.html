@@ -39,9 +39,12 @@
         </p></textarea>
     </div>
     <div class="tinymce">Inline demo</div>
+
+    <button onclick="tinymce.activeEditor.mode.set('design')">Switch to Design </button>
+    <button onclick="tinymce.activeEditor.mode.set('readonly')">Switch to readonly </button>
     <script src="../../../../js/tinymce/tinymce.js"></script>
     <script src="../../../../scratch/demos/core/demo.js"></script>
-    <script>demos.UiSelectionEnabledModeDemo();</script>
+    <script>demos.ReadOnlyDemo();</script>
   </main>
 </body>
 

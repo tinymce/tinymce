@@ -1,6 +1,6 @@
 import { AlloyComponent, AlloySpec } from '@ephox/alloy';
 import { Dialog, Menu } from '@ephox/bridge';
-import { Cell, Obj, Optional, Result, Strings } from '@ephox/katamari';
+import { Cell, Obj, Optional, Result } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import I18n, { TranslatedString, Untranslated } from 'tinymce/core/api/util/I18n';
@@ -67,7 +67,7 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
         .fold(
           // Fallback to 'mode:design' if key is not found
           () => Obj.get(contexts, 'mode').map((pred) => pred('design')).getOr(false),
-          (pred) => Strings.startsWith(value, '!') ? !pred(value.slice(1)) : pred(value)
+          (pred) => value.charAt(0) === '!' ? !pred(value.slice(1)) : pred(value)
         );
       return {
         contextType: key,

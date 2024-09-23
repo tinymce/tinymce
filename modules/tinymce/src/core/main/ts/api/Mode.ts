@@ -12,7 +12,7 @@ import Editor from './Editor';
 
 export interface EditorMode {
   /**
-   * Checks if the editor content is in a readonly state.
+   * Checks if the editor is in a readonly state.
    *
    * @method isReadOnly
    * @return {Boolean} true if the editor is in a readonly state.
@@ -69,6 +69,7 @@ export interface EditorModeApi {
 }
 
 export const create = (editor: Editor): EditorMode => {
+  const activeMode = Cell('design');
   const availableModes = Cell<Record<string, EditorModeApi>>({
     design: {
       activate: Fun.noop,
@@ -81,17 +82,13 @@ export const create = (editor: Editor): EditorMode => {
       editorReadOnly: true
     }
   });
-  const activeMode = Cell<[ string, EditorModeApi ]>([ 'design', availableModes.get().design ]);
 
   registerReadOnlySelectionBlockers(editor);
 
   return {
     isReadOnly: () => isReadOnly(editor),
     set: (mode: string) => setMode(editor, availableModes.get(), activeMode, mode),
-    get: () => {
-      const [ mode ] = activeMode.get();
-      return mode;
-    },
+    get: () => activeMode.get(),
     register: (mode: string, api: EditorModeApi) => {
       availableModes.set(registerMode(availableModes.get(), mode, api));
     }
