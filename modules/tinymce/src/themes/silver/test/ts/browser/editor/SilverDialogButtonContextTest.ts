@@ -53,7 +53,6 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
             {
               type: 'cancel',
               text: 'Cancel',
-              context
             },
             {
               type: 'submit',
@@ -117,7 +116,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
     editor.mode.set('readonly');
     TinyUiActions.clickOnToolbar(editor, '[data-mce-name="t1"]');
     await TinyUiActions.pWaitForDialog(editor);
-    assertButtonNativelyDisabled('Cancel');
+    assertButtonNativelyEnabled('Cancel');
     assertButtonNativelyDisabled('Submit');
     assertButtonNativelyDisabled('custom-button');
     assertButtonNativelyDisabled('toggle-button');
@@ -135,7 +134,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
     editor.mode.set('readonly');
     TinyUiActions.clickOnToolbar(editor, '[data-mce-name="t3"]');
     await TinyUiActions.pWaitForDialog(editor);
-    assertButtonNativelyDisabled('Cancel');
+    assertButtonNativelyEnabled('Cancel');
     assertButtonNativelyDisabled('Submit');
     assertButtonNativelyDisabled('custom-button');
     assertButtonNativelyDisabled('toggle-button');

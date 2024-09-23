@@ -284,6 +284,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
     const action = getAction(spec.name, buttonType);
     const buttonSpec = {
       ...spec,
+      context: buttonType === 'cancel' ? 'any' : spec.context,
       borderless: false
     };
     return renderButton(buttonSpec, action, backstage.shared.providers, [ ]);

@@ -1,5 +1,6 @@
 import { Keys, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
+import { SugarBody } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -45,6 +46,18 @@ describe('browser.tinymce.plugins.help.PluginTest', () => {
     TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("Help")');
     await pAssertMenuItemEnabled(editor, 'Help');
     TinyUiActions.keystroke(editor, Keys.escape());
+
+    editor.mode.set('design');
+  });
+
+  it('TINY-11264: Help dialog cancel button should be enabled at all time', async () => {
+    const editor = hook.editor();
+
+    editor.mode.set('readonly');
+    TinyUiActions.clickOnToolbar(editor, '[data-mce-name="help"]');
+    await TinyUiActions.pWaitForDialog(editor);
+    UiFinder.exists(SugarBody.body(), `[data-mce-name="Close"]:not([disabled="disabled"])`);
+    TinyUiActions.closeDialog(editor);
 
     editor.mode.set('design');
   });

@@ -36,8 +36,7 @@ const open = (editor: Editor, api: WordCountApi): void => {
         type: 'cancel',
         name: 'close',
         text: 'Close',
-        primary: true,
-        context: 'any'
+        primary: true
       }
     ]
   });
