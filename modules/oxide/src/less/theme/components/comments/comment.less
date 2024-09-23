@@ -2,7 +2,7 @@
 // Tiny Comments
 //
 
-@comment-selected-background-color: lighten(@color-active, 30%); 
+@comment-selected-background-color: lighten(@color-active, 30%);
 @comment-selected-border-color: @color-active;
 
 @comment-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
@@ -51,7 +51,6 @@
     font-weight: 400;
     padding: 8px 0 8px 0;
     color: @comment-text-color;
-  
     line-height: 28px;
   }
 
@@ -59,29 +58,32 @@
     background: @comment-background-color;
     border: @comment-border;
     border-radius: @comment-border-radius;
-    box-shadow: @comment-box-shadow;
     padding: @comment-padding;
     position: relative;
+
+    &:hover {
+      box-shadow: @comment-box-shadow;
+    }
 
     &.tox-comment--selected {
       background-color: @comment-selected-background-color;
       border: 1px solid @comment-selected-border-color;
       box-shadow: 0px 4px 8px 0px rgba(34, 47, 62, 0.10);
-    
+
       &:focus {
         border: 2px solid @keyboard-focus-outline-color;
         margin: -1px;
-    
+
         &:not(:first-child) {
           margin-top: 7px;
         }
       }
-    
+
       .tox-comment__single {
         margin-bottom: 12px;
-    
+
         &:focus {
-          border: 1px solid @keyboard-focus-outline-color; 
+          border: 1px solid @keyboard-focus-outline-color;
           border-radius: 6px;
           margin-left: -8px;
           margin-right: -8px;
