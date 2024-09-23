@@ -83,6 +83,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
         },
         components: [
           renderSplitButton({
+            context: 'any',
             type: 'splitbutton',
             tooltip: Optional.some('tooltip'),
             icon: Optional.none(),

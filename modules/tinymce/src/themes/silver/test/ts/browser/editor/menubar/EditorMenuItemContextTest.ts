@@ -8,19 +8,9 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest', () => {
-  const registerMode = (ed: Editor) => {
-    ed.mode.register('testmode', {
-      activate: Fun.noop,
-      deactivate: Fun.noop,
-      editorReadOnly: {
-        selectionEnabled: true
-      }
-    });
-  };
-
-  const assertMenuDisabled = (menu: string) => {
+  const assertMenuEnabled = (menu: string) => {
     const menuButton = UiFinder.findIn(SugarBody.body(), `.tox-mbtn:contains("${menu}")`).getOrDie();
-    assert.equal(Attribute.get(menuButton, 'disabled'), 'disabled', 'Should be disabled');
+    assert.equal(Attribute.get(menuButton, 'disabled'), undefined, 'Should be disabled');
   };
 
   const setupNodeChangeHandler = (ed: Editor, handler: () => void) => {
@@ -137,8 +127,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
             menutest: { title: 'test', items: 't1 t2 t3 t4 t5 t6 t7 t8 t9 t10 t11 t12 preferences' }
           },
           setup: (ed: Editor) => {
-            registerMode(ed);
-
             scenario.buttonSetupAny(ed);
           }
         }, [], true);
@@ -149,15 +137,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
           await scenario.pAssertMenuItemEnabled(editor, 't1');
           TinyUiActions.keystroke(editor, Keys.escape());
 
-          editor.mode.set('testmode');
-          TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
-          await scenario.pAssertMenuItemEnabled(editor, 't1');
-          TinyUiActions.keystroke(editor, Keys.escape());
-
           editor.mode.set('readonly');
-          assertMenuDisabled('test');
-
-          editor.mode.set('testmode');
           TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
           await scenario.pAssertMenuItemEnabled(editor, 't1');
           TinyUiActions.keystroke(editor, Keys.escape());
@@ -196,10 +176,8 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
             menutest: { title: 'test', items: 't1 t2 t3 t4 t5 t6 t7 t8 t9 t10 t11 t12 preferences' }
           },
           setup: (ed: Editor) => {
-            registerMode(ed);
-
             scenario.buttonSetupAny(ed);
-            ed.mode.set('testmode');
+            ed.mode.set('readonly');
           }
         }, [], true);
 
@@ -225,8 +203,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
             menutest: { title: 'test', items: 't1 t2 t3 t4 t5 t6 t7 t8 t9 t10 t11 t12 preferences' }
           },
           setup: (ed: Editor) => {
-            registerMode(ed);
-
             scenario.buttonSetupModeDesign(ed);
           }
         }, [], true);
@@ -238,15 +214,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
           await scenario.pAssertMenuItemEnabled(editor, 't2');
           TinyUiActions.keystroke(editor, Keys.escape());
 
-          editor.mode.set('testmode');
-          TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
-          await scenario.pAssertMenuItemDisabled(editor, 't2');
-          TinyUiActions.keystroke(editor, Keys.escape());
-
           editor.mode.set('readonly');
-          assertMenuDisabled('test');
-
-          editor.mode.set('testmode');
           TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
           await scenario.pAssertMenuItemDisabled(editor, 't2');
           TinyUiActions.keystroke(editor, Keys.escape());
@@ -280,10 +248,8 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
             menutest: { title: 'test', items: 't1 t2 t3 t4 t5 t6 t7 t8 t9 t10 t11 t12 preferences' }
           },
           setup: (ed: Editor) => {
-            registerMode(ed);
-
             scenario.buttonSetupModeDesign(ed);
-            ed.mode.set('testmode');
+            ed.mode.set('readonly');
           }
         }, [], true);
 
@@ -292,9 +258,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
           TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
           await scenario.pAssertMenuItemDisabled(editor, 't2');
           TinyUiActions.keystroke(editor, Keys.escape());
-
-          editor.mode.set('readonly');
-          assertMenuDisabled('test');
 
           editor.mode.set('design');
           TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
@@ -312,8 +275,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
             menutest: { title: 'test', items: 't1 t2 t3 t4 t5 t6 t7 t8 t9 t10 t11 t12 preferences' }
           },
           setup: (ed: Editor) => {
-            registerMode(ed);
-
             scenario.buttonSetupModeReadonly(ed);
           }
         }, [], true);
@@ -325,17 +286,9 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
           await scenario.pAssertMenuItemDisabled(editor, 't3');
           TinyUiActions.keystroke(editor, Keys.escape());
 
-          editor.mode.set('testmode');
-          TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
-          await scenario.pAssertMenuItemDisabled(editor, 't3');
-          TinyUiActions.keystroke(editor, Keys.escape());
-
           editor.mode.set('readonly');
-          assertMenuDisabled('test');
-
-          editor.mode.set('testmode');
           TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
-          await scenario.pAssertMenuItemDisabled(editor, 't3');
+          await scenario.pAssertMenuItemEnabled(editor, 't3');
           TinyUiActions.keystroke(editor, Keys.escape());
 
           editor.mode.set('design');
@@ -367,20 +320,17 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
             menutest: { title: 'test', items: 't1 t2 t3 t4 t5 t6 t7 t8 t9 t10 t11 t12 preferences' }
           },
           setup: (ed: Editor) => {
-            registerMode(ed);
-
             scenario.buttonSetupModeReadonly(ed);
-            ed.mode.set('testmode');
+            ed.mode.set('readonly');
           }
         }, [], true);
 
         it(`TINY-11211: ${scenario.label} should only be enabled in readonly mode`, async () => {
           const editor = hook.editor();
           TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
-          await scenario.pAssertMenuItemDisabled(editor, 't3');
+          await scenario.pAssertMenuItemEnabled(editor, 't3');
           TinyUiActions.keystroke(editor, Keys.escape());
-          editor.mode.set('readonly');
-          assertMenuDisabled('test');
+
           editor.mode.set('design');
           TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
           await scenario.pAssertMenuItemDisabled(editor, 't3');
@@ -398,8 +348,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
           },
           statusbar: false,
           setup: (ed: Editor) => {
-            registerMode(ed);
-
             scenario.buttonSetupEditable(ed);
           }
         }, [], true);
@@ -411,15 +359,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
           await scenario.pAssertMenuItemEnabled(editor, 't4');
           TinyUiActions.keystroke(editor, Keys.escape());
 
-          editor.mode.set('testmode');
-          TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
-          await scenario.pAssertMenuItemDisabled(editor, 't4');
-          TinyUiActions.keystroke(editor, Keys.escape());
-
           editor.mode.set('readonly');
-          assertMenuDisabled('test');
-
-          editor.mode.set('testmode');
           TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
           await scenario.pAssertMenuItemDisabled(editor, 't4');
           TinyUiActions.keystroke(editor, Keys.escape());
@@ -438,15 +378,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
           await scenario.pAssertMenuItemDisabled(editor, 't4');
           TinyUiActions.keystroke(editor, Keys.escape());
 
-          editor.mode.set('testmode');
-          TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
-          await scenario.pAssertMenuItemDisabled(editor, 't4');
-          TinyUiActions.keystroke(editor, Keys.escape());
-
           editor.mode.set('readonly');
-          assertMenuDisabled('test');
-
-          editor.mode.set('testmode');
           TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
           await scenario.pAssertMenuItemDisabled(editor, 't4');
           TinyUiActions.keystroke(editor, Keys.escape());
@@ -469,8 +401,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
           },
           statusbar: false,
           setup: (ed: Editor) => {
-            registerMode(ed);
-
             scenario.buttonSetupFormattingBold(ed);
           }
         }, [], true);
@@ -482,15 +412,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
           await scenario.pAssertMenuItemEnabled(editor, 't5');
           TinyUiActions.keystroke(editor, Keys.escape());
 
-          editor.mode.set('testmode');
-          TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
-          await scenario.pAssertMenuItemDisabled(editor, 't5');
-          TinyUiActions.keystroke(editor, Keys.escape());
-
           editor.mode.set('readonly');
-          assertMenuDisabled('test');
-
-          editor.mode.set('testmode');
           TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
           await scenario.pAssertMenuItemDisabled(editor, 't5');
           TinyUiActions.keystroke(editor, Keys.escape());
@@ -507,10 +429,12 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
           TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
           await scenario.pAssertMenuItemEnabled(editor, 't5');
           TinyUiActions.keystroke(editor, Keys.escape());
+
           editor.setEditableRoot(false);
           TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
           await scenario.pAssertMenuItemDisabled(editor, 't5');
           TinyUiActions.keystroke(editor, Keys.escape());
+
           editor.setEditableRoot(true);
           TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
           await scenario.pAssertMenuItemEnabled(editor, 't5');
@@ -528,8 +452,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
           },
           statusbar: false,
           setup: (ed: Editor) => {
-            registerMode(ed);
-
             scenario.buttonSetupNodeChangeSetEnabledFalse(ed);
           }
         }, [], true);
@@ -541,15 +463,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
           await scenario.pAssertMenuItemDisabled(editor, 't6');
           TinyUiActions.keystroke(editor, Keys.escape());
 
-          editor.mode.set('testmode');
-          TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
-          await scenario.pAssertMenuItemDisabled(editor, 't6');
-          TinyUiActions.keystroke(editor, Keys.escape());
-
           editor.mode.set('readonly');
-          assertMenuDisabled('test');
-
-          editor.mode.set('testmode');
           TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
           await scenario.pAssertMenuItemDisabled(editor, 't6');
           TinyUiActions.keystroke(editor, Keys.escape());
@@ -573,8 +487,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
           },
           statusbar: false,
           setup: (ed: Editor) => {
-            registerMode(ed);
-
             scenario.buttonSetupNodeChangeSetEnabledTrue(ed);
           }
         }, [], true);
@@ -586,15 +498,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
           await scenario.pAssertMenuItemEnabled(editor, 't7');
           TinyUiActions.keystroke(editor, Keys.escape());
 
-          editor.mode.set('testmode');
-          TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
-          await scenario.pAssertMenuItemEnabled(editor, 't7');
-          TinyUiActions.keystroke(editor, Keys.escape());
-
           editor.mode.set('readonly');
-          assertMenuDisabled('test');
-
-          editor.mode.set('testmode');
           TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
           await scenario.pAssertMenuItemEnabled(editor, 't7');
           TinyUiActions.keystroke(editor, Keys.escape());
@@ -616,8 +520,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
           },
           statusbar: false,
           setup: (ed: Editor) => {
-            registerMode(ed);
-
             scenario.buttonSetupSetEnabledFalse(ed);
           }
         }, [], true);
@@ -629,15 +531,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
           await scenario.pAssertMenuItemDisabled(editor, 't8');
           TinyUiActions.keystroke(editor, Keys.escape());
 
-          editor.mode.set('testmode');
-          TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
-          await scenario.pAssertMenuItemDisabled(editor, 't8');
-          TinyUiActions.keystroke(editor, Keys.escape());
-
           editor.mode.set('readonly');
-          assertMenuDisabled('test');
-
-          editor.mode.set('testmode');
           TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
           await scenario.pAssertMenuItemDisabled(editor, 't8');
           TinyUiActions.keystroke(editor, Keys.escape());
@@ -659,8 +553,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
           },
           statusbar: false,
           setup: (ed: Editor) => {
-            registerMode(ed);
-
             scenario.buttonSetupDoesntMatch(ed);
           }
         }, [], true);
@@ -672,15 +564,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
           await scenario.pAssertMenuItemEnabled(editor, 't9');
           TinyUiActions.keystroke(editor, Keys.escape());
 
-          editor.mode.set('testmode');
-          TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
-          await scenario.pAssertMenuItemDisabled(editor, 't9');
-          TinyUiActions.keystroke(editor, Keys.escape());
-
           editor.mode.set('readonly');
-          assertMenuDisabled('test');
-
-          editor.mode.set('testmode');
           TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
           await scenario.pAssertMenuItemDisabled(editor, 't9');
           TinyUiActions.keystroke(editor, Keys.escape());
@@ -703,15 +587,13 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
           statusbar: false,
           readonly: true,
           setup: (ed: Editor) => {
-            registerMode(ed);
-
             scenario.buttonSetupModeDesign2(ed);
           }
         }, [], true);
 
         it(`TINY-11211: ${scenario.label} should be disabled initially`, async () => {
           hook.editor();
-          assertMenuDisabled('test');
+          assertMenuEnabled('test');
         });
       });
 
@@ -725,7 +607,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
           },
           statusbar: false,
           setup: (ed: Editor) => {
-            registerMode(ed);
             scenario.buttonSetupInsertSpan(ed);
           }
         }, [], true);
@@ -759,7 +640,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
           },
           statusbar: false,
           setup: (ed: Editor) => {
-            registerMode(ed);
             scenario.buttonSetupAnyEnabledFalse(ed);
           }
         }, [], true);
@@ -772,9 +652,6 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
           TinyUiActions.keystroke(editor, Keys.escape());
 
           editor.mode.set('readonly');
-          assertMenuDisabled('test');
-
-          editor.mode.set('testmode');
           TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("test")');
           await scenario.pAssertMenuItemDisabled(editor, 't12');
           TinyUiActions.keystroke(editor, Keys.escape());

@@ -42,14 +42,6 @@ describe('browser.tinymce.core.annotate.AnnotateBlocksTest', () => {
             nodeNames: Arr.map(data?.nodes ?? [], (node) => (node as Node).nodeName.toLowerCase())
           });
         });
-
-        ed.mode.register('testMode', {
-          activate: Fun.noop,
-          deactivate: Fun.noop,
-          editorReadOnly: {
-            selectionEnabled: true,
-          },
-        });
       });
     }
   }, [], true);
@@ -235,7 +227,7 @@ describe('browser.tinymce.core.annotate.AnnotateBlocksTest', () => {
 
   Arr.each([
     { label: 'Normal mode', before: () => hook.editor().mode.set('design'), after: Fun.noop, mode: 'normal' },
-    { label: 'Cursor mode', before: () => hook.editor().mode.set('design'), after: () => hook.editor().mode.set('testMode') },
+    { label: 'Readonly mode', before: () => hook.editor().mode.set('design'), after: () => hook.editor().mode.set('readonly') },
   ], (modeScenario) => {
     context(modeScenario.label, () => {
       const modeTestSetContent = (editor: Editor, content: string, args = {}) => {

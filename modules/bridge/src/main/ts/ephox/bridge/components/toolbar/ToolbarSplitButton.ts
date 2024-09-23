@@ -25,6 +25,7 @@ export interface ToolbarSplitButtonSpec {
   onSetup?: (api: ToolbarSplitButtonInstanceApi) => (api: ToolbarSplitButtonInstanceApi) => void;
   onAction: (api: ToolbarSplitButtonInstanceApi) => void;
   onItemAction: (api: ToolbarSplitButtonInstanceApi, value: string) => void;
+  context?: string;
 }
 
 export interface ToolbarSplitButton {
@@ -39,6 +40,7 @@ export interface ToolbarSplitButton {
   onSetup: (api: ToolbarSplitButtonInstanceApi) => (api: ToolbarSplitButtonInstanceApi) => void;
   onAction: (api: ToolbarSplitButtonInstanceApi) => void;
   onItemAction: (api: ToolbarSplitButtonInstanceApi, value: string) => void;
+  context: string;
 }
 
 export interface ToolbarSplitButtonInstanceApi {
@@ -64,7 +66,8 @@ export const splitButtonSchema = StructureSchema.objOf([
   FieldSchema.defaultedStringEnum('presets', 'normal', [ 'normal', 'color', 'listpreview' ]),
   ComponentSchema.defaultedColumns(1),
   ComponentSchema.onAction,
-  ComponentSchema.onItemAction
+  ComponentSchema.onItemAction,
+  FieldSchema.defaultedString('context', 'mode:design')
 ]);
 
 export const isSplitButtonButton = (spec: any): spec is ToolbarSplitButton => spec.type === 'splitbutton';

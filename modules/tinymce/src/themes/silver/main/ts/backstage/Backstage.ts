@@ -23,7 +23,7 @@ export interface UiFactoryBackstageProviders {
   readonly isDisabled: () => boolean;
   readonly getOption: Editor['options']['get'];
   readonly tooltips: TooltipsProvider;
-  readonly checkButtonContext: (specContext: string) => { contextType: string; shouldDisable: boolean };
+  readonly checkUiComponentContext: (specContext: string) => { contextType: string; shouldDisable: boolean };
 }
 
 export interface UiFactoryBackstageShared {
@@ -57,10 +57,10 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
     icons: () => editor.ui.registry.getAll().icons,
     menuItems: () => editor.ui.registry.getAll().menuItems,
     translate: I18n.translate,
-    isDisabled: () => editor.mode.isReadOnly() || !editor.ui.isEnabled(),
+    isDisabled: () => !editor.ui.isEnabled(),
     getOption: editor.options.get,
     tooltips: TooltipsBackstage(lazySinks.dialog),
-    checkButtonContext: (specContext: string) => {
+    checkUiComponentContext: (specContext: string) => {
       const [ key, value = '' ] = specContext.split(':');
       const contexts = editor.ui.registry.getAll().contexts;
       const enabledInContext = Obj.get(contexts, key)

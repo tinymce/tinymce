@@ -21,7 +21,8 @@ const register = (editor: Editor, fullscreenState: Cell<FullScreenInfo | null>):
     icon: 'fullscreen',
     shortcut: 'Meta+Shift+F',
     onAction,
-    onSetup: makeSetupHandler(editor, fullscreenState)
+    onSetup: makeSetupHandler(editor, fullscreenState),
+    context: 'any'
   });
 
   editor.ui.registry.addToggleButton('fullscreen', {
@@ -29,7 +30,8 @@ const register = (editor: Editor, fullscreenState: Cell<FullScreenInfo | null>):
     icon: 'fullscreen',
     onAction,
     onSetup: makeSetupHandler(editor, fullscreenState),
-    shortcut: 'Meta+Shift+F'
+    shortcut: 'Meta+Shift+F',
+    context: 'any'
   });
 };
 

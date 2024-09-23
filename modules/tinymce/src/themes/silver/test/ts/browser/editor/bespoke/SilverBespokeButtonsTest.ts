@@ -15,15 +15,6 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
     toolbar: 'align fontfamily fontsize blocks styles',
     base_url: '/project/tinymce/js/tinymce',
     content_css: '/project/tinymce/src/themes/silver/test/css/content.css',
-    setup: (ed: Editor) => {
-      ed.mode.register('testmode', {
-        activate: Fun.noop,
-        deactivate: Fun.noop,
-        editorReadOnly: {
-          selectionEnabled: true
-        }
-      });
-    }
   }, []);
 
   const pAssertFocusOnItem = (itemText: string) => FocusTools.pTryOnSelector(
@@ -415,7 +406,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
       editor.mode.set('readonly');
       UiFinder.exists(SugarBody.body(), `[aria-label^="${title}"]:disabled`);
 
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       UiFinder.exists(SugarBody.body(), `[aria-label^="${title}"]:disabled`);
 
       editor.mode.set('design');

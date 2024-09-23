@@ -1,6 +1,6 @@
 import { ApproxStructure, Cursors } from '@ephox/agar';
 import { after, afterEach, before, context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Fun, Type } from '@ephox/katamari';
+import { Arr, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -14,15 +14,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     base_url: '/project/tinymce/js/tinymce',
-    setup: (editor: Editor) => {
-      editor.mode.register('testmode', {
-        activate: Fun.noop,
-        deactivate: Fun.noop,
-        editorReadOnly: {
-          selectionEnabled: true
-        }
-      });
-    }
   }, [], true);
 
   const bookmarkSpan = '<span data-mce-type="bookmark" id="mce_2_start" data-mce-style="overflow:hidden;line-height:0px" style="overflow:hidden;line-height:0px"></span>';
@@ -871,13 +862,13 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     });
   });
 
-  context('TINY-10981: readonly selectionEnabled mode', () => {
+  context('TINY-10981: readonly mode', () => {
     afterEach(() => hook.editor().mode.set('design'));
     context('Enter in paragraph', () => {
       it('Insert block before', () => {
         const editor = hook.editor();
         editor.setContent('<p>ab</p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0 ], 0);
         insertNewline(editor, {});
         TinyAssertions.assertContent(editor, '<p>ab</p>');
@@ -886,7 +877,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       it('Split block in the middle', () => {
         const editor = hook.editor();
         editor.setContent('<p>ab</p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0 ], 1);
         insertNewline(editor, {});
         TinyAssertions.assertContent(editor, '<p>ab</p>');
@@ -895,7 +886,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       it('Insert block after', () => {
         const editor = hook.editor();
         editor.setContent('<p>ab</p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0 ], 2);
         insertNewline(editor, {});
         TinyAssertions.assertContent(editor, '<p>ab</p>');
@@ -904,7 +895,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       it('Insert block after bookmark', () => {
         const editor = hook.editor();
         editor.setContent(`<p>${bookmarkSpan}<br data-mce-bogus="1"></p>`, { format: 'raw' });
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0 ], 1);
         insertNewline(editor, {});
         TinyAssertions.assertContentStructure(editor,
@@ -930,7 +921,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       it('TINY-9098: insert newline on inline CEF element should do nothing', () => {
         const editor = hook.editor();
         editor.setContent('<p>before<span contenteditable="false">x</span>after</p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.select(editor, 'span', []);
         insertNewline(editor, {});
         editor.nodeChanged();
@@ -940,7 +931,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       it('TINY-9813: Placed a cursor is placed after a table, with a noneditable afterwards', () => {
         const editor = hook.editor();
         editor.setContent('<table><tbody><tr><td><br></td></tr></tbody></table><div contenteditable="false"></div>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         setSelectionTo(editor, [], 1);
         insertNewline(editor, {});
         TinyAssertions.assertContent(editor, '<table><tbody><tr><td>&nbsp;</td></tr></tbody></table><div contenteditable="false">&nbsp;</div>');
@@ -949,7 +940,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       it('TINY-11110: Placed cursor after a table, before the br, and pressed enter', () => {
         const editor = hook.editor();
         editor.setContent('<div><table><tbody><tr><td><br></td></tr></tbody></table><br></div>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         setSelectionTo(editor, [ 0 ], 1);
         insertNewline(editor, { });
         TinyAssertions.assertContent(editor, '<div><table><tbody><tr><td>&nbsp;</td></tr></tbody></table></div>');
@@ -959,7 +950,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       it('TINY-9813: Placed a cursor is placed after a table, with an editable afterwards', () => {
         const editor = hook.editor();
         editor.setContent('<table><tbody><tr><td><br></td></tr></tbody></table><div contenteditable="true">&nbsp;</div>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         setSelectionTo(editor, [], 1);
         insertNewline(editor, {});
         TinyAssertions.assertContent(editor, '<table><tbody><tr><td>&nbsp;</td></tr></tbody></table><div contenteditable="true">&nbsp;</div>');
@@ -968,7 +959,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       it('TINY-9813: Placed a cursor is placed after a table, with nothing', () => {
         const editor = hook.editor();
         editor.setContent('<table><tbody><tr><td><br></td></tr></tbody></table>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         setSelectionTo(editor, [], 1);
         insertNewline(editor, {});
         TinyAssertions.assertContent(editor, '<table><tbody><tr><td>&nbsp;</td></tr></tbody></table>');
@@ -977,7 +968,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       it('TINY-9813: Placed a cursor is placed after a table, with a noneditable afterwards, wrapped in div', () => {
         const editor = hook.editor();
         editor.setContent('<div><table><tbody><tr><td><br></td></tr></tbody></table><div contenteditable="false"></div></div>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         setSelectionTo(editor, [ 0 ], 1);
         insertNewline(editor, {});
         TinyAssertions.assertContent(editor, '<div><table><tbody><tr><td>&nbsp;</td></tr></tbody></table><div contenteditable="false">&nbsp;</div></div>');
@@ -996,7 +987,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       it('Insert newline where br is forced (paragraph)', () => {
         const editor = hook.editor();
         editor.setContent('<p>ab</p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0 ], 1);
         insertNewline(editor, {});
         editor.nodeChanged();
@@ -1006,7 +997,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       it('Insert newline where br is forced (div)', () => {
         const editor = hook.editor();
         editor.setContent('<div class="test">ab</div>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0 ], 1);
         insertNewline(editor, {});
         editor.nodeChanged();
@@ -1016,7 +1007,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       it('Insert newline where br is not forced', () => {
         const editor = hook.editor();
         editor.setContent('<div>ab</div>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0 ], 1);
         insertNewline(editor, {});
         editor.nodeChanged();
@@ -1036,7 +1027,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       it('Insert newline where newline is blocked (paragraph)', () => {
         const editor = hook.editor();
         editor.setContent('<p>ab</p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0 ], 1);
         insertNewline(editor, {});
         editor.nodeChanged();
@@ -1046,7 +1037,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       it('Insert newline where newline is blocked (div)', () => {
         const editor = hook.editor();
         editor.setContent('<div class="test">ab</div>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0 ], 1);
         insertNewline(editor, {});
         editor.nodeChanged();
@@ -1056,7 +1047,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       it('Insert newline where newline is not blocked', () => {
         const editor = hook.editor();
         editor.setContent('<div>ab</div>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0 ], 1);
         insertNewline(editor, {});
         editor.nodeChanged();
@@ -1067,7 +1058,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     it('Insert newline before image in link', () => {
       const editor = hook.editor();
       editor.setContent('<p><a href="#">a<img src="about:blank" /></a></p>');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
       insertNewline(editor, {});
       TinyAssertions.assertContent(editor, '<p><a href="#">a<img src="about:blank"></a></p>');
@@ -1079,7 +1070,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         it('TINY-6559: Press Enter in blockquote', () => {
           const editor = hook.editor();
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
           TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
@@ -1089,7 +1080,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         it('TINY-6559: Press Shift+Enter in blockquote', () => {
           const editor = hook.editor();
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, { shiftKey: true });
           TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
@@ -1099,7 +1090,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         it('TINY-6559: Press Enter twice in blockquote', () => {
           const editor = hook.editor();
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
           insertNewline(editor, {});
@@ -1110,7 +1101,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         it('TINY-6559: Press Enter twice in blockquote while between two lines', () => {
           const editor = hook.editor();
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 0 ], 1);
           insertNewline(editor, {});
           insertNewline(editor, {});
@@ -1121,7 +1112,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         it('TINY-6559: Press Enter twice in a div', () => {
           const editor = hook.editor();
           editor.setContent('<div><p>Line 1</p><p>Line 2</p></div>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
           insertNewline(editor, {});
@@ -1132,7 +1123,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         it('TINY-6559: Press Enter twice in a section', () => {
           const editor = hook.editor();
           editor.setContent('<section><p>Line 1</p><p>Line 2</p></section>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
           insertNewline(editor, {});
@@ -1146,7 +1137,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
           const editor = hook.editor();
           editor.options.set('end_container_on_empty_block', 'div');
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
           TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
@@ -1157,7 +1148,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
           const editor = hook.editor();
           editor.options.set('end_container_on_empty_block', 'div');
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, { shiftKey: true });
           TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
@@ -1168,7 +1159,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
           const editor = hook.editor();
           editor.options.set('end_container_on_empty_block', 'div');
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
           insertNewline(editor, {});
@@ -1180,7 +1171,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
           const editor = hook.editor();
           editor.options.set('end_container_on_empty_block', 'div');
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 0 ], 1);
           insertNewline(editor, {});
           insertNewline(editor, {});
@@ -1192,7 +1183,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
           const editor = hook.editor();
           editor.options.set('end_container_on_empty_block', 'div');
           editor.setContent('<div><p>Line 1</p><p>Line 2</p></div>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
           insertNewline(editor, {});
@@ -1203,7 +1194,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         it('TINY-6559: Press Enter twice in a section', () => {
           const editor = hook.editor();
           editor.setContent('<section><p>Line 1</p><p>Line 2</p></section>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
           insertNewline(editor, {});
@@ -1217,7 +1208,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
           const editor = hook.editor();
           editor.options.set('end_container_on_empty_block', 'div,blockquote');
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
           TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
@@ -1228,7 +1219,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
           const editor = hook.editor();
           editor.options.set('end_container_on_empty_block', 'div,blockquote');
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, { shiftKey: true });
           TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
@@ -1239,7 +1230,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
           const editor = hook.editor();
           editor.options.set('end_container_on_empty_block', 'div,blockquote');
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
           insertNewline(editor, {});
@@ -1251,7 +1242,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
           const editor = hook.editor();
           editor.options.set('end_container_on_empty_block', 'div,blockquote');
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 0 ], 1);
           insertNewline(editor, {});
           insertNewline(editor, {});
@@ -1263,7 +1254,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
           const editor = hook.editor();
           editor.options.set('end_container_on_empty_block', 'div,blockquote');
           editor.setContent('<div><p>Line 1</p><p>Line 2</p></div>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
           insertNewline(editor, {});
@@ -1274,7 +1265,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         it('TINY-6559: Press Enter twice in a section', () => {
           const editor = hook.editor();
           editor.setContent('<section><p>Line 1</p><p>Line 2</p></section>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
           insertNewline(editor, {});
@@ -1288,7 +1279,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
           const editor = hook.editor();
           editor.options.set('end_container_on_empty_block', true);
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
           TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
@@ -1299,7 +1290,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
           const editor = hook.editor();
           editor.options.set('end_container_on_empty_block', true);
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, { shiftKey: true });
           TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
@@ -1310,7 +1301,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
           const editor = hook.editor();
           editor.options.set('end_container_on_empty_block', true);
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
           insertNewline(editor, {});
@@ -1322,7 +1313,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
           const editor = hook.editor();
           editor.options.set('end_container_on_empty_block', true);
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 0 ], 1);
           insertNewline(editor, {});
           insertNewline(editor, {});
@@ -1334,7 +1325,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
           const editor = hook.editor();
           editor.options.set('end_container_on_empty_block', true);
           editor.setContent('<div><p>Line 1</p><p>Line 2</p></div>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
           insertNewline(editor, {});
@@ -1345,7 +1336,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         it('TINY-6559: Press Enter twice in a section', () => {
           const editor = hook.editor();
           editor.setContent('<section><p>Line 1</p><p>Line 2</p></section>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
           insertNewline(editor, {});
@@ -1359,7 +1350,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
           const editor = hook.editor();
           editor.options.set('end_container_on_empty_block', false);
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
           TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
@@ -1370,7 +1361,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
           const editor = hook.editor();
           editor.options.set('end_container_on_empty_block', false);
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, { shiftKey: true });
           TinyAssertions.assertContent(editor, '<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
@@ -1381,7 +1372,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
           const editor = hook.editor();
           editor.options.set('end_container_on_empty_block', false);
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
           insertNewline(editor, {});
@@ -1393,7 +1384,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
           const editor = hook.editor();
           editor.options.set('end_container_on_empty_block', false);
           editor.setContent('<blockquote><p>Line 1</p><p>Line 2</p></blockquote>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 0 ], 1);
           insertNewline(editor, {});
           insertNewline(editor, {});
@@ -1405,7 +1396,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
           const editor = hook.editor();
           editor.options.set('end_container_on_empty_block', false);
           editor.setContent('<div><p>Line 1</p><p>Line 2</p></div>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
           insertNewline(editor, {});
@@ -1416,7 +1407,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         it('TINY-6559: Press Enter twice in a section', () => {
           const editor = hook.editor();
           editor.setContent('<section><p>Line 1</p><p>Line 2</p></section>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 1 ], 1);
           insertNewline(editor, {});
           insertNewline(editor, {});
@@ -1438,7 +1429,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       it('Split block in the middle', () => {
         const editor = hook.editor();
         editor.setContent('<p>ab</p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0 ], 1);
         insertNewline(editor, {});
         TinyAssertions.assertContent(editor, '<p>ab</p>');
@@ -1448,7 +1439,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       it('Split block in the middle with shift+enter', () => {
         const editor = hook.editor();
         editor.setContent('<p>ab</p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0 ], 1);
         insertNewline(editor, { shiftKey: true });
         TinyAssertions.assertContent(editor, '<p>ab</p>');
@@ -1467,7 +1458,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         it('Insert newline where br is forced', () => {
           const editor = hook.editor();
           editor.setContent('<p>ab</p>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 0 ], 1);
           insertNewline(editor, {});
           editor.nodeChanged();
@@ -1487,7 +1478,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         it('Insert newline where newline is blocked', () => {
           const editor = hook.editor();
           editor.setContent('<p>ab</p>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 0 ], 1);
           insertNewline(editor, {});
           editor.nodeChanged();
@@ -1508,7 +1499,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       it('Split block in the middle', () => {
         const editor = hook.editor();
         editor.setContent('<p>ab</p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0 ], 1);
         insertNewline(editor, {});
         TinyAssertions.assertContent(editor, '<p>ab</p>');
@@ -1518,7 +1509,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       it('Split block in the middle with shift+enter', () => {
         const editor = hook.editor();
         editor.setContent('<p>ab</p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0 ], 1);
         insertNewline(editor, { shiftKey: true });
         TinyAssertions.assertContent(editor, '<p>ab</p>');
@@ -1537,7 +1528,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         it('Insert newline where br is not forced', () => {
           const editor = hook.editor();
           editor.setContent('<div>ab</div>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 0 ], 1);
           insertNewline(editor, {});
           editor.nodeChanged();
@@ -1557,7 +1548,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         it('Insert newline where newline is blocked', () => {
           const editor = hook.editor();
           editor.setContent('<p>ab</p>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 0 ], 1);
           insertNewline(editor, {});
           editor.nodeChanged();
@@ -1578,7 +1569,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       it('Split block in the middle', () => {
         const editor = hook.editor();
         editor.setContent('<p>ab</p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0 ], 1);
         insertNewline(editor, {});
         TinyAssertions.assertContent(editor, '<p>ab</p>');
@@ -1588,7 +1579,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       it('Split block in the middle with shift+enter', () => {
         const editor = hook.editor();
         editor.setContent('<p>ab</p>');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setCursor(editor, [ 0, 0 ], 1);
         insertNewline(editor, { shiftKey: true });
         TinyAssertions.assertContent(editor, '<p>ab</p>');
@@ -1607,7 +1598,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         it('Insert newline where br is forced', () => {
           const editor = hook.editor();
           editor.setContent('<p>ab</p>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 0 ], 1);
           insertNewline(editor, {});
           editor.nodeChanged();
@@ -1617,7 +1608,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         it('Insert newline where br is not forced', () => {
           const editor = hook.editor();
           editor.setContent('<div>ab</div>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 0 ], 1);
           insertNewline(editor, {});
           editor.nodeChanged();
@@ -1637,7 +1628,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         it('Insert newline where newline is blocked', () => {
           const editor = hook.editor();
           editor.setContent('<p>ab</p>');
-          editor.mode.set('testmode');
+          editor.mode.set('readonly');
           TinySelections.setCursor(editor, [ 0, 0 ], 1);
           insertNewline(editor, {});
           editor.nodeChanged();
@@ -1649,8 +1640,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     it('TINY-9794: Press Enter in a blockquote and then add format and then press Enter again should exit from the blockquote', () => {
       const editor = hook.editor();
       editor.setContent('<blockquote><p>A</p></blockquote>');
-      editor.mode.set('testmode');
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
       insertNewline(editor, {});
       CaretFormat.applyCaretFormat(editor, 'bold');
@@ -1662,7 +1652,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       const editor = hook.editor();
       Arr.each([ 'pre', 'h1', 'div', 'p' ], (tagName) => {
         editor.setContent('abc');
-        editor.mode.set('testmode');
+        editor.mode.set('readonly');
         TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
 
         editor.selection.setContent(`<${tagName}>hello</${tagName}>`);

@@ -97,7 +97,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
         shared: {
           getSink: () => Result.value(sink),
           providers: {
-            checkButtonContext: Fun.constant({ contextType: 'any', shouldDisable: false }),
+            checkUiComponentContext: Fun.constant({ contextType: 'any', shouldDisable: false }),
             icons: () => ({}),
             menuItems: () => ({}),
             translate: I18n.translate,

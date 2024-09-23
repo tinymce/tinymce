@@ -10,12 +10,11 @@ import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 import * as Events from '../api/Events';
 import * as Options from '../api/Options';
 import { UiFactoryBackstage } from '../backstage/Backstage';
-import * as ButtonState from '../ButtonState';
-import * as ReadOnly from '../ReadOnly';
 import { ModeRenderInfo, RenderArgs, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { iframe as loadIframeSkin } from '../ui/skin/Loader';
+import * as UiState from '../UiState';
 import { setToolbar } from './Toolbars';
 import { ReadyUiReferences } from './UiReferences';
 
@@ -151,8 +150,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
     editor.on('remove', unbinder.unbind);
   }
 
-  ReadOnly.setupReadonlyModeSwitch(editor, uiRefs);
-  ButtonState.setupEventsForButton(editor, uiRefs);
+  UiState.setupEventsForUi(editor, uiRefs);
 
   editor.addCommand('ToggleSidebar', (_ui: boolean, value: string) => {
     OuterContainer.toggleSidebar(outerContainer, value);
@@ -200,9 +198,8 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
 
   const api: Partial<EditorUiApi> = {
     setEnabled: (state) => {
-      ReadOnly.broadcastReadonly(uiRefs, !state);
       const eventType = state ? 'setEnabled' : 'setDisabled';
-      ButtonState.broadcastEvents(uiRefs, eventType);
+      UiState.broadcastEvents(uiRefs, eventType);
     },
     isEnabled: () => !Disabling.isDisabled(outerContainer)
   };

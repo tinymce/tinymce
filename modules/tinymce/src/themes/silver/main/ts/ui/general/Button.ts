@@ -11,7 +11,7 @@ import { Dialog, Toolbar } from '@ephox/bridge';
 import { Fun, Merger, Optional, Type } from '@ephox/katamari';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import * as ButtonState from '../../ButtonState';
+import * as UiState from '../../UiState';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderFormField } from '../alien/FieldLabeller';
@@ -48,8 +48,8 @@ export const renderCommonSpec = (
 
   const common = {
     buttonBehaviours: Behaviour.derive([
-      DisablingConfigs.item(() => !spec.enabled || providersBackstage.checkButtonContext(spec.context).shouldDisable),
-      ButtonState.toggleOnReceive(() => providersBackstage.checkButtonContext(spec.context)),
+      DisablingConfigs.item(() => !spec.enabled || providersBackstage.checkUiComponentContext(spec.context).shouldDisable),
+      UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext(spec.context)),
       Tabstopping.config({}),
       ...tooltip.map(
         (t) => Tooltipping.config(
@@ -284,6 +284,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
     const action = getAction(spec.name, buttonType);
     const buttonSpec = {
       ...spec,
+      context: buttonType === 'cancel' ? 'any' : spec.context,
       borderless: false
     };
     return renderButton(buttonSpec, action, backstage.shared.providers, [ ]);

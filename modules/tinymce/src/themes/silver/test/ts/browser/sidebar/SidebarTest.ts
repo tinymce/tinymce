@@ -172,21 +172,11 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
 
   const assertButtonEnabled = (selector: string) => UiFinder.notExists(SugarBody.body(), `[data-mce-name="${selector}"][aria-disabled="true"]`);
 
-  const assertButtonDisabled = (selector: string) => UiFinder.exists(SugarBody.body(), `[data-mce-name="${selector}"][aria-disabled="true"]`);
-
   context('Sidebar toggle button', () => {
     const hook = TinyHooks.bddSetup<Editor>({
       base_url: '/project/tinymce/js/tinymce',
       toolbar: 'mysidebar1',
       setup: (editor: Editor) => {
-        editor.mode.register('testmode', {
-          deactivate: Fun.noop,
-          activate: Fun.noop,
-          editorReadOnly: {
-            selectionEnabled: true
-          }
-        });
-
         const logEvent = (name: string) => (api: Sidebar.SidebarInstanceApi) => {
           const index = Traverse.findIndex(SugarElement.fromDom(api.element())).getOr(-1);
           const entry: EventLog = { name, index };
@@ -219,7 +209,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
       ]));
       await pExecCommandAndAssertEvents(editor, 'mysidebar1', [{ name: 'mysidebar1:hide', index: 0 }]);
 
-      editor.mode.set('testmode');
+      editor.mode.set('readonly');
       assertButtonEnabled('mysidebar1');
       editor.execCommand('ToggleSidebar', false, 'mysidebar1');
       await Waiter.pTryUntil('Checking sidebar callbacks', () => store.assertEq('Asserting sidebar callbacks', [
@@ -229,7 +219,7 @@ describe('browser.tinymce.themes.silver.sidebar.SidebarTest', () => {
       await pExecCommandAndAssertEvents(editor, 'mysidebar1', [{ name: 'mysidebar1:hide', index: 0 }]);
 
       editor.mode.set('readonly');
-      assertButtonDisabled('mysidebar1');
+      assertButtonEnabled('mysidebar1');
 
       editor.mode.set('design');
     });

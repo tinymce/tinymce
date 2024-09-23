@@ -8,14 +8,6 @@ import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 
 describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', () => {
-  const registerMode = (ed: Editor) => {
-    ed.mode.register('testmode', {
-      activate: Fun.noop,
-      deactivate: Fun.noop,
-      editorReadOnly: true
-    });
-  };
-
   const assertButtonEnabled = (menuItemLabel: string) => UiFinder.notExists(SugarBody.body(), `[aria-label="${menuItemLabel}"][aria-disabled="true"]`);
 
   const assertButtonDisabled = (selector: string) => UiFinder.exists(SugarBody.body(), `[aria-label="${selector}"][aria-disabled="true"]`);
@@ -29,8 +21,6 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 't1 t2 t3 t4',
     setup: (ed: Editor) => {
-      registerMode(ed);
-
       const getDialogSpec = (context?: string): Dialog.DialogSpec<{}> => {
         return {
           title: 'Test',
@@ -63,7 +53,6 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
             {
               type: 'cancel',
               text: 'Cancel',
-              context
             },
             {
               type: 'submit',
@@ -82,8 +71,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
       ed.ui.registry.addButton('t1', {
         icon: 'italic',
         text: 'Test Menu Item 1',
-        context: 'mode:!readonly',
-
+        context: 'any',
         onAction: () => {
           ed.windowManager.open(getDialogSpec('mode:design'));
         }
@@ -92,18 +80,16 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
       ed.ui.registry.addButton('t2', {
         icon: 'italic',
         text: 'Test Menu Item 1',
-        context: 'mode:!readonly',
-
+        context: 'any',
         onAction: () => {
-          ed.windowManager.open(getDialogSpec('mode:!readonly'));
+          ed.windowManager.open(getDialogSpec('any'));
         }
       });
 
       ed.ui.registry.addButton('t3', {
         icon: 'italic',
         text: 'Test Menu Item 1',
-        context: 'mode:!readonly',
-
+        context: 'any',
         onAction: () => {
           ed.windowManager.open(getDialogSpec());
         }
@@ -127,10 +113,10 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
     assertButtonNativelyEnabled('toggle-button');
     TinyUiActions.closeDialog(editor);
 
-    editor.mode.set('testmode');
+    editor.mode.set('readonly');
     TinyUiActions.clickOnToolbar(editor, '[data-mce-name="t1"]');
     await TinyUiActions.pWaitForDialog(editor);
-    assertButtonNativelyDisabled('Cancel');
+    assertButtonNativelyEnabled('Cancel');
     assertButtonNativelyDisabled('Submit');
     assertButtonNativelyDisabled('custom-button');
     assertButtonNativelyDisabled('toggle-button');
@@ -145,10 +131,10 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
     assertButtonNativelyEnabled('toggle-button');
     TinyUiActions.closeDialog(editor);
 
-    editor.mode.set('testmode');
+    editor.mode.set('readonly');
     TinyUiActions.clickOnToolbar(editor, '[data-mce-name="t3"]');
     await TinyUiActions.pWaitForDialog(editor);
-    assertButtonNativelyDisabled('Cancel');
+    assertButtonNativelyEnabled('Cancel');
     assertButtonNativelyDisabled('Submit');
     assertButtonNativelyDisabled('custom-button');
     assertButtonNativelyDisabled('toggle-button');
@@ -163,7 +149,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
     assertButtonNativelyEnabled('toggle-button');
     TinyUiActions.closeDialog(editor);
 
-    editor.mode.set('testmode');
+    editor.mode.set('readonly');
     TinyUiActions.clickOnToolbar(editor, '[data-mce-name="t2"]');
     await TinyUiActions.pWaitForDialog(editor);
     assertButtonNativelyEnabled('Cancel');
@@ -181,7 +167,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
       state ? store.add('onYes') : store.add('onNo');
     };
 
-    editor.mode.set('testmode');
+    editor.mode.set('readonly');
     editor.windowManager.confirm('Test', callback);
     store.assertEq('Store should still be empty', []);
     Mouse.clickOn(SugarBody.body(), '[data-mce-name="Yes"');
@@ -202,7 +188,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
 
   it('TINY-11211: Confirm dialog buttons should only be disabled in readonly mode', async () => {
     const editor = hook.editor();
-    editor.mode.set('testmode');
+    editor.mode.set('readonly');
     const callback = () => store.add('OK');
     editor.windowManager.alert('Test', callback);
     Mouse.clickOn(SugarBody.body(), '[data-mce-name="OK"');
@@ -215,7 +201,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
 
   it('TINY-11211: Dialog panel button should be enabled when not in readonly mode, clicking button should be possible', async () => {
     const editor = hook.editor();
-    editor.mode.set('testmode');
+    editor.mode.set('readonly');
     editor.windowManager.open(
       {
         title: 'Test',
@@ -228,7 +214,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
               text: 'Previous',
               icon: 'action-prev',
               borderless: true,
-              context: 'mode:!readonly'
+              context: 'any'
             },
             {
               type: 'button',
@@ -236,7 +222,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
               text: 'Next',
               icon: 'action-next',
               borderless: true,
-              context: 'mode:!readonly'
+              context: 'any'
             }
           ]
         },
@@ -273,7 +259,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
 
   it('TINY-11211: Dialog button setEnabled should overwrite context state', async () => {
     const editor = hook.editor();
-    editor.mode.set('testmode');
+    editor.mode.set('readonly');
     editor.windowManager.open(
       {
         title: 'Test',
@@ -286,7 +272,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
               text: 'Previous',
               icon: 'action-prev',
               borderless: true,
-              context: 'mode:!readonly',
+              context: 'any',
               enabled: false
             },
             {
@@ -295,7 +281,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
               text: 'Next',
               icon: 'action-next',
               borderless: true,
-              context: 'mode:!readonly'
+              context: 'any'
             }
           ]
         },
@@ -330,7 +316,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
 
   it('TINY-11211: Dialog footer togglemenuitem context should reflect button state', async () => {
     const editor = hook.editor();
-    editor.mode.set('testmode');
+    editor.mode.set('readonly');
     editor.windowManager.open(
       {
         title: 'Test',
@@ -350,7 +336,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
                 type: 'togglemenuitem',
                 name: 'matchcase',
                 text: 'Match case',
-                context: 'mode:!readonly'
+                context: 'any'
               }, {
                 type: 'togglemenuitem',
                 name: 'wholewords',
@@ -405,7 +391,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', (
     });
     assertButtonNativelyEnabled('Url');
 
-    editor.mode.set('testmode');
+    editor.mode.set('readonly');
     assertButtonNativelyDisabled('Url');
 
     editor.options.unset('file_picker_callback');

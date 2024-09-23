@@ -29,14 +29,6 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
           })
         });
       });
-
-      editor.mode.register('testMode', {
-        activate: Fun.noop,
-        deactivate: Fun.noop,
-        editorReadOnly: {
-          selectionEnabled: true,
-        },
-      });
     }
   }, [], true);
 
@@ -163,7 +155,7 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
 
   Arr.each([
     { label: 'Normal mode', before: () => hook.editor().mode.set('design'), after: Fun.noop, mode: 'normal' },
-    { label: 'Cursor mode', before: () => hook.editor().mode.set('design'), after: () => hook.editor().mode.set('testMode'), mode: 'testMode' },
+    { label: 'Readonly mode', before: () => hook.editor().mode.set('design'), after: () => hook.editor().mode.set('readonly'), mode: 'readonly' },
   ], (modeScenario) => {
     context(modeScenario.label, () => {
       const modeTestSetContent = (editor: Editor, content: string, args = {}) => {
