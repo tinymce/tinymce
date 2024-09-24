@@ -1,5 +1,5 @@
 import { FocusTools, UiFinder } from '@ephox/agar';
-import { context, describe, it } from '@ephox/bedrock-client';
+import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { Class, SugarDocument } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -10,6 +10,9 @@ import { ViewButtonClasses } from 'tinymce/themes/silver/ui/toolbar/button/Butto
 
 describe('browser.tinymce.themes.silver.view.ViewButtonsTest', () => {
   context('Iframe mode', () => {
+
+    afterEach(() => toggleView('myview1'));
+
     const hook = TinyHooks.bddSetup<Editor>({
       base_url: '/project/tinymce/js/tinymce',
       toolbar_mode: 'floating',
@@ -126,13 +129,11 @@ describe('browser.tinymce.themes.silver.view.ViewButtonsTest', () => {
       assert.equal(getSvg(editor, 'button-without-toggle'), initialbuttonWithoutToggleButtonSvg, 'click should not toggle icon');
       clickViewButton(editor, 'button-without-toggle');
       assert.equal(getSvg(editor, 'button-without-toggle'), initialbuttonWithoutToggleButtonSvg, 'click should not toggle icon');
-
-      toggleView('myview1');
     });
 
     it('TINY-9616: if is active is true the button should have ViewButtonClasses.Ticked', async () => {
       const editor = hook.editor();
-      toggleView('myview2');
+      toggleView('myview1');
       await UiFinder.pWaitFor('buttons should be showed', TinyDom.container(editor), '[aria-label="button-active-true"]');
 
       const buttonActiveTrue = getButtonByTitle('button-active-true');

@@ -8,7 +8,7 @@ import { Css, SugarElement, Traverse } from '@ephox/sugar';
 
 import { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import { UiFactoryBackstageForColorInput } from '../../backstage/ColorInputBackstage';
-import * as ReadOnly from '../../ReadOnly';
+import * as UiState from '../../UiState';
 import { renderLabel } from '../alien/FieldLabeller';
 import * as ColorCache from '../core/color/ColorCache';
 import * as ColorSwatch from '../core/color/ColorSwatch';
@@ -48,9 +48,9 @@ export const renderColorInput = (
 
     inputBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: sharedBackstage.providers.isDisabled
+        disabled: () => sharedBackstage.providers.isDisabled() || sharedBackstage.providers.checkUiComponentContext(spec.context).shouldDisable
       }),
-      ReadOnly.receivingConfig(),
+      UiState.toggleOnReceive(() => sharedBackstage.providers.checkUiComponentContext(spec.context)),
       Tabstopping.config({ }),
       Invalidating.config({
         invalidClass: 'tox-textbox-field-invalid',
@@ -135,7 +135,8 @@ export const renderColorInput = (
       fetch: ColorSwatch.getFetch(colorInputBackstage.getColors(spec.storageKey), spec.storageKey, colorInputBackstage.hasCustomColors()),
       columns: colorInputBackstage.getColorCols(spec.storageKey),
       presets: 'color',
-      onItemAction
+      onItemAction,
+      context: spec.context
     }, sharedBackstage)
   );
 

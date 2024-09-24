@@ -43,7 +43,8 @@ const setup = (editor: Editor): void => {
         return () => {
           editor.off('ToggleSidebar', handleToggle);
         };
-      }
+      },
+      context: 'any'
     });
   });
 };

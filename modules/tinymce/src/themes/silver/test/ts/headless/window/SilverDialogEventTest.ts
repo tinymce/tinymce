@@ -34,6 +34,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
       },
       buttons: [
         {
+          context: 'any',
           type: 'cancel',
           name: 'cancel',
           text: 'Cancel',
@@ -44,6 +45,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
           icon: Optional.none()
         },
         {
+          context: 'any',
           type: 'submit',
           name: 'save',
           text: 'Save',
@@ -95,6 +97,7 @@ describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
         shared: {
           getSink: () => Result.value(sink),
           providers: {
+            checkUiComponentContext: Fun.constant({ contextType: 'any', shouldDisable: false }),
             icons: () => ({}),
             menuItems: () => ({}),
             translate: I18n.translate,

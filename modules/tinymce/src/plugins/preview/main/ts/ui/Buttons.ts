@@ -6,13 +6,15 @@ const register = (editor: Editor): void => {
   editor.ui.registry.addButton('preview', {
     icon: 'preview',
     tooltip: 'Preview',
-    onAction
+    onAction,
+    context: 'any'
   });
 
   editor.ui.registry.addMenuItem('preview', {
     icon: 'preview',
     text: 'Preview',
-    onAction
+    onAction,
+    context: 'any'
   });
 };
 

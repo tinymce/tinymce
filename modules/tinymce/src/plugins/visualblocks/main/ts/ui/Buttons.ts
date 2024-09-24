@@ -18,14 +18,16 @@ const register = (editor: Editor, enabledState: Cell<boolean>): void => {
     icon: 'visualblocks',
     tooltip: 'Show blocks',
     onAction,
-    onSetup: toggleActiveState(editor, enabledState)
+    onSetup: toggleActiveState(editor, enabledState),
+    context: 'any'
   });
 
   editor.ui.registry.addToggleMenuItem('visualblocks', {
     text: 'Show blocks',
     icon: 'visualblocks',
     onAction,
-    onSetup: toggleActiveState(editor, enabledState)
+    onSetup: toggleActiveState(editor, enabledState),
+    context: 'any'
   });
 };
 

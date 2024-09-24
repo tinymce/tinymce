@@ -19,6 +19,7 @@ describe('headless.tinymce.themes.silver.components.checkbox.Checkbox component 
 
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderCheckbox({
+      context: 'any',
       label: 'TestCheckbox',
       name: 'test-check-box',
       enabled: true,

@@ -16,6 +16,7 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
 
   const renderUrlInputWithPickerText = (store: TestStore<string>, pickerText?: string) =>
     renderUrlInput({
+      context: 'any',
       label: Optional.some('UrlInput label'),
       picker_text: Optional.from(pickerText),
       name: 'col1',

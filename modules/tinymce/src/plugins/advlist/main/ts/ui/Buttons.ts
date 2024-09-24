@@ -28,7 +28,7 @@ const makeSetupHandler = (editor: Editor, nodeName: ListType) => (api: Toolbar.T
   const updateButtonState = (editor: Editor, parents: Node[]) => {
     const element = editor.selection.getStart(true);
     api.setActive(ListUtils.inList(editor, parents, nodeName));
-    api.setEnabled(!ListUtils.isWithinNonEditableList(editor, element) && editor.selection.isEditable());
+    api.setEnabled(!ListUtils.isWithinNonEditableList(editor, element));
   };
   const nodeChangeHandler = (e: NodeChangeEvent) => updateButtonState(editor, e.parents);
 
