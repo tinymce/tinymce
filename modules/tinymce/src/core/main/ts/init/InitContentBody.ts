@@ -422,7 +422,7 @@ const contentBodyLoaded = (editor: Editor): void => {
   editor.readonly = Options.isReadOnly(editor);
   editor._editableRoot = Options.hasEditableRoot(editor);
 
-  if (!editor.readonly && editor.hasEditableRoot()) {
+  if (editor.hasEditableRoot()) {
     if (editor.inline && DOM.getStyle(body, 'position', true) === 'static') {
       body.style.position = 'relative';
     }

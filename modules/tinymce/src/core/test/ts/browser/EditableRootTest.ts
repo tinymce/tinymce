@@ -70,7 +70,7 @@ describe('browser.tinymce.core.EditableRootTest', () => {
 
       editor.mode.set('readonly');
       assert.isTrue(editor.hasEditableRoot());
-      assertContentEditableState(editor, false);
+      assertContentEditableState(editor, true);
 
       editor.mode.set('design');
       assert.isTrue(editor.hasEditableRoot());
@@ -90,7 +90,7 @@ describe('browser.tinymce.core.EditableRootTest', () => {
       editor.setEditableRoot(true);
 
       assert.isTrue(editor.hasEditableRoot());
-      assertContentEditableState(editor, false);
+      assertContentEditableState(editor, true);
     });
   });
 });

@@ -30,7 +30,8 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLook
       tooltip: Optional.none(),
       icon: Optional.none(),
       text: Optional.none(),
-      onSetup: () => Fun.noop
+      onSetup: () => Fun.noop,
+      context: 'any'
     }],
     predicate: Fun.always,
     position: 'selection',

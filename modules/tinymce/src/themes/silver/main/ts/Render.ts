@@ -16,7 +16,6 @@ import * as DomEvents from './Events';
 import * as Iframe from './modes/Iframe';
 import * as Inline from './modes/Inline';
 import { LazyUiReferences, ReadyUiReferences, SinkAndMothership } from './modes/UiReferences';
-import * as ReadOnly from './ReadOnly';
 import * as ContextToolbar from './ui/context/ContextToolbar';
 import * as FormatControls from './ui/core/FormatControls';
 import OuterContainer from './ui/general/OuterContainer';
@@ -32,6 +31,7 @@ import { renderStatusbar } from './ui/statusbar/Statusbar';
 import * as Throbber from './ui/throbber/Throbber';
 import { RenderToolbarConfig } from './ui/toolbar/Integration';
 import { ViewConfig } from './ui/view/ViewTypes';
+import * as UiState from './UiState';
 
 export interface ModeRenderInfo {
   readonly iframeContainer?: HTMLIFrameElement;
@@ -423,7 +423,7 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
           partThrobber,
         ],
         behaviours: Behaviour.derive([
-          ReadOnly.receivingConfig(),
+          UiState.toggleOnReceive(() => backstages.popup.shared.providers.checkUiComponentContext('any')),
           Disabling.config({
             disableClass: 'tox-tinymce--disabled'
           }),

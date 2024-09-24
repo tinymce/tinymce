@@ -374,4 +374,14 @@ describe('browser.tinymce.core.textpatterns.TextPatternsTest', () => {
 
     editor.options.unset('text_patterns');
   });
+
+  it('TINY-11264: should not add an empty list item when pressing Enter', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>*</p>');
+    editor.focus();
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    editor.mode.set('readonly');
+    TinyContentActions.keystroke(editor, Keys.enter());
+    TinyAssertions.assertContent(editor, '<p>*</p>');
+  });
 });

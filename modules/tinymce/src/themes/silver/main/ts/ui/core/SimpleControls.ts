@@ -40,17 +40,18 @@ const registerFormatButtons = (editor: Editor): void => {
 
 const registerCommandButtons = (editor: Editor): void => {
   Tools.each([
-    { name: 'copy', text: 'Copy', action: 'Copy', icon: 'copy' },
-    { name: 'help', text: 'Help', action: 'mceHelp', icon: 'help', shortcut: 'Alt+0' },
-    { name: 'selectall', text: 'Select all', action: 'SelectAll', icon: 'select-all', shortcut: 'Meta+A' },
+    { name: 'copy', text: 'Copy', action: 'Copy', icon: 'copy', context: 'any' },
+    { name: 'help', text: 'Help', action: 'mceHelp', icon: 'help', shortcut: 'Alt+0', context: 'any' },
+    { name: 'selectall', text: 'Select all', action: 'SelectAll', icon: 'select-all', shortcut: 'Meta+A', context: 'any' },
     { name: 'newdocument', text: 'New document', action: 'mceNewDocument', icon: 'new-document' },
-    { name: 'print', text: 'Print', action: 'mcePrint', icon: 'print', shortcut: 'Meta+P' },
+    { name: 'print', text: 'Print', action: 'mcePrint', icon: 'print', shortcut: 'Meta+P', context: 'any' },
   ], (btn) => {
     editor.ui.registry.addButton(btn.name, {
       tooltip: btn.text,
       icon: btn.icon,
       onAction: onActionExecCommand(editor, btn.action),
-      shortcut: btn.shortcut
+      shortcut: btn.shortcut,
+      context: btn.context
     });
   });
 
@@ -93,15 +94,16 @@ const registerButtons = (editor: Editor): void => {
 const registerMenuItems = (editor: Editor): void => {
   Tools.each([
     { name: 'newdocument', text: 'New document', action: 'mceNewDocument', icon: 'new-document' },
-    { name: 'copy', text: 'Copy', action: 'Copy', icon: 'copy', shortcut: 'Meta+C' },
-    { name: 'selectall', text: 'Select all', action: 'SelectAll', icon: 'select-all', shortcut: 'Meta+A' },
-    { name: 'print', text: 'Print...', action: 'mcePrint', icon: 'print', shortcut: 'Meta+P' }
+    { name: 'copy', text: 'Copy', action: 'Copy', icon: 'copy', shortcut: 'Meta+C', context: 'any' },
+    { name: 'selectall', text: 'Select all', action: 'SelectAll', icon: 'select-all', shortcut: 'Meta+A', context: 'any' },
+    { name: 'print', text: 'Print...', action: 'mcePrint', icon: 'print', shortcut: 'Meta+P', context: 'any' }
   ], (menuitem) => {
     editor.ui.registry.addMenuItem(menuitem.name, {
       text: menuitem.text,
       icon: menuitem.icon,
       shortcut: menuitem.shortcut,
-      onAction: onActionExecCommand(editor, menuitem.action)
+      onAction: onActionExecCommand(editor, menuitem.action),
+      context: menuitem.context
     });
   });
 

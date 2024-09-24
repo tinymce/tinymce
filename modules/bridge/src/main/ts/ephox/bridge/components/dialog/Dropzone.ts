@@ -1,17 +1,21 @@
-import { StructureSchema } from '@ephox/boulder';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
 import { FormComponentWithLabel, FormComponentWithLabelSpec, formComponentWithLabelFields } from './FormComponent';
 
 export interface DropZoneSpec extends FormComponentWithLabelSpec {
   type: 'dropzone';
+  context?: string;
 }
 
 export interface DropZone extends FormComponentWithLabel {
   type: 'dropzone';
+  context: string;
 }
 
-const dropZoneFields = formComponentWithLabelFields;
+const dropZoneFields = formComponentWithLabelFields.concat([
+  FieldSchema.defaultedString('context', 'mode:design'),
+]);
 
 export const dropZoneSchema = StructureSchema.objOf(dropZoneFields);
 

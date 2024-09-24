@@ -5,6 +5,7 @@ import * as AlignmentButtons from './AlignmentButtons';
 import * as ChoiceControls from './ChoiceControls';
 import * as ColorSwatch from './color/ColorSwatch';
 import * as ComplexControls from './ComplexControls';
+import * as Context from './Context';
 import * as IndentOutdent from './IndentOutdent';
 import * as PasteControls from './PasteControls';
 import * as SimpleControls from './SimpleControls';
@@ -21,6 +22,7 @@ const setup = (editor: Editor, backstage: UiFactoryBackstage): void => {
   IndentOutdent.register(editor);
   ChoiceControls.register(editor);
   PasteControls.register(editor);
+  Context.register(editor);
 };
 
 export {

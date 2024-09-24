@@ -20,6 +20,7 @@ interface BaseButtonSpec<Api extends ViewButtonApi> {
   buttonType?: 'primary' | 'secondary';
   borderless?: boolean;
   onAction: (api: Api) => void;
+  context?: string;
 }
 
 export interface ViewNormalButtonSpec extends BaseButtonSpec<ViewButtonApi> {
@@ -47,6 +48,7 @@ interface BaseButton<Api extends ViewButtonApi> {
   buttonType: 'primary' | 'secondary';
   borderless: boolean;
   onAction: (api: Api) => void;
+  context: string;
 }
 
 export interface ViewNormalButton extends Omit<BaseButton<ViewButtonApi>, 'text'> {
@@ -73,7 +75,8 @@ const baseButtonFields = [
   FieldSchema.optionString('tooltip'),
   FieldSchema.defaultedStringEnum('buttonType', 'secondary', [ 'primary', 'secondary' ]),
   FieldSchema.defaultedBoolean('borderless', false),
-  FieldSchema.requiredFunction('onAction')
+  FieldSchema.requiredFunction('onAction'),
+  FieldSchema.defaultedString('context', 'mode:design')
 ];
 
 const normalButtonFields = [

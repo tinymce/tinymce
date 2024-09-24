@@ -12,7 +12,8 @@ const registerMenuItems = (editor: Editor): void => {
   editor.ui.registry.addToggleMenuItem('visualaid', {
     text: 'Visual aids',
     onSetup: onSetupVisualAidState(editor),
-    onAction: onActionExecCommand(editor, 'mceToggleVisualAid')
+    onAction: onActionExecCommand(editor, 'mceToggleVisualAid'),
+    context: 'any'
   });
 };
 
@@ -20,7 +21,8 @@ const registerToolbarButton = (editor: Editor): void => {
   editor.ui.registry.addButton('visualaid', {
     tooltip: 'Visual aids',
     text: 'Visual aids',
-    onAction: onActionExecCommand(editor, 'mceToggleVisualAid')
+    onAction: onActionExecCommand(editor, 'mceToggleVisualAid'),
+    context: 'any'
   });
 };
 
