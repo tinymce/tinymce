@@ -56,7 +56,7 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    toolbar: [ 'fontsizeinput' ]
+    toolbar: [ 'fontsizeinput' ],
   }, []);
 
   it('TINY-9429: plus and minus should increase and decrease font size of the current selection',
@@ -96,6 +96,15 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     TinyUiActions.clickOnToolbar(editor, '.tox-number-input .minus');
     TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">abc</p>');
 
+    editor.mode.set('readonly');
+
+    TinyUiActions.clickOnToolbar(editor, '.tox-number-input .plus');
+    TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">abc</p>');
+    assert.equal(Value.get(UiFinder.findIn<HTMLInputElement>(TinyUiActions.getUiRoot(editor), '.tox-number-input input').getOrDie()), '16px');
+
+    TinyUiActions.clickOnToolbar(editor, '.tox-number-input .minus');
+    TinyAssertions.assertContent(editor, '<p style="font-size: 16px;">abc</p>');
+
     editor.mode.set('design');
   });
 
@@ -107,6 +116,12 @@ describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
     await pDisabledShouldNotExist(editor, '.plus');
     await pDisabledShouldNotExist(editor, '.minus');
     await pDisabledShouldNotExist(editor, 'input');
+
+    editor.mode.set('readonly');
+
+    await pDisabledShouldExist(editor, '.plus');
+    await pDisabledShouldExist(editor, '.minus');
+    await pDisabledShouldExist(editor, 'input');
 
     editor.mode.set('readonly');
 

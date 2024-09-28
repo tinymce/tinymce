@@ -1,11 +1,9 @@
-import { Arr, Optional, Strings } from '@ephox/katamari';
-import { Attribute, Class, Compare, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Arr, Optional, Strings, Type } from '@ephox/katamari';
+import { Attribute, Class, Compare, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import VK from '../api/util/VK';
 import * as EditorFocus from '../focus/EditorFocus';
-
-const internalContentEditableAttr = 'data-mce-contenteditable';
 
 // Not quite sugar Class.toggle, it's more of a Class.set
 const toggleClass = (elm: SugarElement<Element>, cls: string, state: boolean) => {
@@ -30,20 +28,6 @@ const setContentEditable = (elm: SugarElement<HTMLElement>, state: boolean) => {
   elm.dom.contentEditable = state ? 'true' : 'false';
 };
 
-const switchOffContentEditableTrue = (elm: SugarElement<Node>) => {
-  Arr.each(SelectorFilter.descendants<HTMLElement>(elm, '*[contenteditable="true"]'), (elm) => {
-    Attribute.set(elm, internalContentEditableAttr, 'true');
-    setContentEditable(elm, false);
-  });
-};
-
-const switchOnContentEditableTrue = (elm: SugarElement<Node>) => {
-  Arr.each(SelectorFilter.descendants<HTMLElement>(elm, `*[${internalContentEditableAttr}="true"]`), (elm) => {
-    Attribute.remove(elm, internalContentEditableAttr);
-    setContentEditable(elm, true);
-  });
-};
-
 const removeFakeSelection = (editor: Editor) => {
   Optional.from(editor.selection.getNode()).each((elm) => {
     elm.removeAttribute('data-mce-selected');
@@ -54,67 +38,47 @@ const restoreFakeSelection = (editor: Editor) => {
   editor.selection.setRng(editor.selection.getRng());
 };
 
+const setCommonEditorCommands = (editor: Editor, state: boolean): void => {
+  setEditorCommandState(editor, 'StyleWithCSS', state);
+  setEditorCommandState(editor, 'enableInlineTableEditing', state);
+  setEditorCommandState(editor, 'enableObjectResizing', state);
+};
+
+const setEditorReadonly = (editor: Editor) => {
+  editor.readonly = true;
+  editor.selection.controlSelection.hideResizeRect();
+  editor._selectionOverrides.hideFakeCaret();
+  removeFakeSelection(editor);
+};
+
+const unsetEditorReadonly = (editor: Editor, body: SugarElement<HTMLElement>) => {
+  editor.readonly = false;
+  if (editor.hasEditableRoot()) {
+    setContentEditable(body, true);
+  }
+  setCommonEditorCommands(editor, false);
+  if (EditorFocus.hasEditorOrUiFocus(editor)) {
+    editor.focus();
+  }
+  restoreFakeSelection(editor);
+  editor.nodeChanged();
+};
+
 const toggleReadOnly = (editor: Editor, state: boolean): void => {
   const body = SugarElement.fromDom(editor.getBody());
-
   toggleClass(body, 'mce-content-readonly', state);
 
   if (state) {
-    editor.selection.controlSelection.hideResizeRect();
-    editor._selectionOverrides.hideFakeCaret();
-    removeFakeSelection(editor);
-    editor.readonly = true;
-    setContentEditable(body, false);
-    switchOffContentEditableTrue(body);
-  } else {
-    editor.readonly = false;
+    setEditorReadonly(editor);
     if (editor.hasEditableRoot()) {
       setContentEditable(body, true);
     }
-    switchOnContentEditableTrue(body);
-    setEditorCommandState(editor, 'StyleWithCSS', false);
-    setEditorCommandState(editor, 'enableInlineTableEditing', false);
-    setEditorCommandState(editor, 'enableObjectResizing', false);
-    if (EditorFocus.hasEditorOrUiFocus(editor)) {
-      editor.focus();
-    }
-    restoreFakeSelection(editor);
-    editor.nodeChanged();
+  } else {
+    unsetEditorReadonly(editor, body);
   }
 };
 
 const isReadOnly = (editor: Editor): boolean => editor.readonly;
-
-const registerFilters = (editor: Editor) => {
-  editor.parser.addAttributeFilter('contenteditable', (nodes) => {
-    if (isReadOnly(editor)) {
-      Arr.each(nodes, (node) => {
-        node.attr(internalContentEditableAttr, node.attr('contenteditable'));
-        node.attr('contenteditable', 'false');
-      });
-    }
-  });
-
-  editor.serializer.addAttributeFilter(internalContentEditableAttr, (nodes) => {
-    if (isReadOnly(editor)) {
-      Arr.each(nodes, (node) => {
-        node.attr('contenteditable', node.attr(internalContentEditableAttr));
-      });
-    }
-  });
-
-  editor.serializer.addTempAttr(internalContentEditableAttr);
-};
-
-const registerReadOnlyContentFilters = (editor: Editor): void => {
-  if (editor.serializer) {
-    registerFilters(editor);
-  } else {
-    editor.on('PreInit', () => {
-      registerFilters(editor);
-    });
-  }
-};
 
 const isClickEvent = (e: Event): e is MouseEvent => e.type === 'click';
 
@@ -156,15 +120,33 @@ const processReadonlyEvents = (editor: Editor, e: Event): void => {
 };
 
 const registerReadOnlySelectionBlockers = (editor: Editor): void => {
-  editor.on('ShowCaret', (e) => {
+  editor.on('beforeinput paste cut dragend dragover draggesture dragdrop drop drag', (e) => {
     if (isReadOnly(editor)) {
       e.preventDefault();
     }
   });
 
-  editor.on('ObjectSelected', (e) => {
-    if (isReadOnly(editor)) {
+  editor.on('BeforeExecCommand', (e) => {
+    if ((e.command === 'Undo' || e.command === 'Redo') && isReadOnly(editor)) {
       e.preventDefault();
+    }
+  });
+
+  editor.on('input', (e) => {
+    if (!e.isComposing && isReadOnly(editor)) {
+      const undoLevel = editor.undoManager.add();
+      if (Type.isNonNullable(undoLevel)) {
+        editor.undoManager.undo();
+      }
+    }
+  });
+
+  editor.on('compositionend', () => {
+    if (isReadOnly(editor)) {
+      const undoLevel = editor.undoManager.add();
+      if (Type.isNonNullable(undoLevel)) {
+        editor.undoManager.undo();
+      }
     }
   });
 };
@@ -173,7 +155,6 @@ export {
   isReadOnly,
   getAnchorHrefOpt,
   toggleReadOnly,
-  registerReadOnlyContentFilters,
   processReadonlyEvents,
   registerReadOnlySelectionBlockers
 };

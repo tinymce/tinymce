@@ -33,7 +33,7 @@ const isWithinNonEditable = (editor: Editor, element: Element | null): boolean =
 
 const isWithinNonEditableList = (editor: Editor, element: Element | null): boolean => {
   const parentList = editor.dom.getParent(element, 'ol,ul,dl');
-  return isWithinNonEditable(editor, parentList) && editor.selection.isEditable();
+  return isWithinNonEditable(editor, parentList) || !editor.selection.isEditable();
 };
 
 const setNodeChangeHandler = (editor: Editor, nodeChangeHandler: (e: NodeChangeEvent) => void): () => void => {

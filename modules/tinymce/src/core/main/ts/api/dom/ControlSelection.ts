@@ -115,7 +115,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
   const isResizable = (elm: Element) => {
     const selector = Options.getObjectResizing(editor);
 
-    if (!selector) {
+    if (!selector || editor.mode.isReadOnly()) {
       return false;
     }
 

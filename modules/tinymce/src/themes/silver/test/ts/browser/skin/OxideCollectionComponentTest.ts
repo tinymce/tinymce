@@ -270,13 +270,25 @@ describe('browser.tinymce.themes.silver.skin.OxideCollectionComponentTest', () =
     const chars = [ 'A', '$', '★', '★' ];
     const icons = [ 'delete', ...chars ];
 
-    const buttonSelectors = Arr.map(icons, (label) => `.tox-collection__item[aria-label="${label}"]`);
+    const buttonSelectors = Arr.map(icons, (label) => `.tox-collection__item[data-collection-item-value="${label}"]:not(.tox-collection__item--state-disabled)`);
+    const buttonDisabledSelectors = Arr.map(icons, (label) => `.tox-collection__item[data-collection-item-value="${label}"].tox-collection__item--state-disabled`);
 
     it('TINY-10174: Buttons are rendered', async () => {
       const editor = hook.editor();
       editor.selection.expand();
       const dialog = await openDialog(editor);
-      Arr.each(buttonSelectors, (selector) => UiFinder.findIn(dialog, selector));
+      Arr.each(buttonSelectors, (selector) => UiFinder.exists(dialog, selector));
+      TinyUiActions.closeDialog(editor);
+    });
+
+    it('TINY-11264: Buttons are disabled in readonly mode and enabled when switched to design mode', async () => {
+      const editor = hook.editor();
+      editor.selection.expand();
+      const dialog = await openDialog(editor);
+      editor.mode.set('readonly');
+      Arr.each(buttonDisabledSelectors, (selector) => UiFinder.exists(dialog, selector));
+      editor.mode.set('design');
+      Arr.each(buttonSelectors, (selector) => UiFinder.exists(dialog, selector));
       TinyUiActions.closeDialog(editor);
     });
 

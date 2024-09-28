@@ -6,15 +6,18 @@ import { FormComponentWithLabel, formComponentWithLabelFields, FormComponentWith
 export interface ColorInputSpec extends FormComponentWithLabelSpec {
   type: 'colorinput';
   storageKey?: string;
+  context?: string;
 }
 
 export interface ColorInput extends FormComponentWithLabel {
   type: 'colorinput';
   storageKey: string;
+  context: string;
 }
 
 const colorInputFields = formComponentWithLabelFields.concat([
-  FieldSchema.defaultedString('storageKey', 'default')
+  FieldSchema.defaultedString('storageKey', 'default'),
+  FieldSchema.defaultedString('context', 'mode:design'),
 ]);
 
 export const colorInputSchema = StructureSchema.objOf(colorInputFields);

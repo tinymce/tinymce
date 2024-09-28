@@ -13,6 +13,7 @@ export interface ButtonSpec {
   icon?: string;
   borderless?: boolean;
   buttonType?: 'primary' | 'secondary' | 'toolbar';
+  context?: string;
 }
 
 export interface Button {
@@ -25,6 +26,7 @@ export interface Button {
   icon: Optional<string>;
   borderless: boolean;
   buttonType: Optional<'primary' | 'secondary' | 'toolbar'>;
+  context: string;
 }
 
 const buttonFields = [
@@ -38,6 +40,7 @@ const buttonFields = [
   FieldSchema.optionStringEnum('buttonType', [ 'primary', 'secondary', 'toolbar' ]),
   // this should be removed, but must live here because FieldSchema doesn't have a way to manage deprecated fields
   ComponentSchema.primary,
+  FieldSchema.defaultedString('context', 'mode:design')
 ];
 
 export const buttonSchema = StructureSchema.objOf(buttonFields);

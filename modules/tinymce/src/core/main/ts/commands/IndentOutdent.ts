@@ -60,6 +60,10 @@ const getBlocksToIndent = (editor: Editor): SugarElement<HTMLElement>[] =>
   );
 
 const handle = (editor: Editor, command: string): void => {
+  if (editor.mode.isReadOnly()) {
+    return;
+  }
+
   const { dom } = editor;
   const indentation = Options.getIndentation(editor);
   const indentUnit = /[a-z%]+$/i.exec(indentation)?.[0] ?? 'px';

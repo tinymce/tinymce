@@ -14,6 +14,10 @@ const getTopParentBlock = (editor: Editor, node: Node, root: Element, container:
 };
 
 const insert = (editor: Editor, before: boolean): void => {
+  if (editor.mode.isReadOnly()) {
+    return;
+  }
+
   const dom = editor.dom;
   const rng = editor.selection.getRng();
   const node = before ? editor.selection.getStart() : editor.selection.getEnd();
