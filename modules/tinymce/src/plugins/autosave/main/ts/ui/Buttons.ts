@@ -7,8 +7,9 @@ interface Api {
 }
 
 const makeSetupHandler = (editor: Editor) => (api: Api) => {
-  api.setEnabled(Storage.hasDraft(editor));
-  const editorEventCallback = () => api.setEnabled(Storage.hasDraft(editor));
+  const shouldEnable = () => Storage.hasDraft(editor) && !editor.mode.isReadOnly();
+  api.setEnabled(shouldEnable());
+  const editorEventCallback = () => api.setEnabled(shouldEnable());
   editor.on('StoreDraft RestoreDraft RemoveDraft', editorEventCallback);
   return () => editor.off('StoreDraft RestoreDraft RemoveDraft', editorEventCallback);
 };
