@@ -53,21 +53,21 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
       editor.options.set('media_live_embeds', false);
     });
 
-    it('TBA: Set and assert iframe placeholder structure', () => pTestPlaceholder(hook.editor(),
+    it('TBA: Set and assert iframe placeholder structure', async () => pTestPlaceholder(hook.editor(),
       'https://www.youtube.com/watch?v=P_205ZY52pY',
       '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
       'height="314" sandbox="" allowfullscreen="allowfullscreen"></iframe></p>',
       placeholderStructure
     ));
 
-    it('TBA: Set and assert video placeholder structure', () => pTestPlaceholder(hook.editor(),
+    it('TBA: Set and assert video placeholder structure', async () => pTestPlaceholder(hook.editor(),
       '/custom/tinymce/video.mp4',
       '<p><video controls="controls" width="300" height="150">\n' +
       '<source src="custom/tinymce/video.mp4" type="video/mp4"></video></p>',
       placeholderStructure
     ));
 
-    it('TBA: Set and assert audio placeholder structure', () => pTestPlaceholder(hook.editor(),
+    it('TBA: Set and assert audio placeholder structure', async () => pTestPlaceholder(hook.editor(),
       '/custom/tinymce/audio.mp3',
       '<p><audio src="custom/tinymce/audio.mp3" controls="controls"></audio></p>',
       placeholderStructure
@@ -102,7 +102,7 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
       editor.options.set('media_live_embeds', true);
     });
 
-    it('TBA: Set and assert live iframe embed structure', () => pTestPlaceholder(hook.editor(),
+    it('TBA: Set and assert live iframe embed structure', async () => pTestPlaceholder(hook.editor(),
       'https://www.youtube.com/watch?v=P_205ZY52pY',
       '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
       'height="314" sandbox="" allowfullscreen="allowfullscreen"></iframe></p>',
@@ -127,7 +127,7 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
         ...baseSettings,
         sandbox_iframes: true
       });
-      pTestPlaceholder(editor,
+      await pTestPlaceholder(editor,
         'https://www.youtube.com/watch?v=P_205ZY52pY',
         '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
         'height="314" sandbox="" allowfullscreen="allowfullscreen"></iframe></p>',
