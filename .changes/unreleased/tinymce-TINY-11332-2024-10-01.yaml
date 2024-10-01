@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Upgrade package dependencies.
+time: 2024-10-01T17:01:03.773568+02:00
+custom:
+  Issue: TINY-11332
