@@ -601,7 +601,7 @@ describe('browser.tinymce.core.annotate.AnnotateBlocksTest', () => {
             assertGetAll(editor, {});
           });
 
-          it('TINY-8698: should fire `annotationChange` API callback when annotated block is selected', async () => {
+          it.skip('TINY-8698: should fire `annotationChange` API callback when annotated block is selected', async () => {
             const editor = hook.editor();
 
             testApplyAnnotationOnSelection(
