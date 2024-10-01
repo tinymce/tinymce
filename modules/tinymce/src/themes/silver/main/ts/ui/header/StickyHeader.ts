@@ -53,6 +53,7 @@ const scrollFromBehindHeader = (e: ScrollIntoViewEvent, containerHeader: SugarEl
 };
 
 const isDockedMode = (header: AlloyComponent, mode: 'top' | 'bottom') => Arr.contains(Docking.getModes(header), mode);
+const isFullscreen = (editor: Editor) => editor.hasPlugin('fullscreen') && editor.plugins.fullscreen.isFullscreen();
 
 const updateIframeContentFlow = (header: AlloyComponent): void => {
   const getOccupiedHeight = (elm: SugarElement<HTMLElement>) => Height.getOuter(elm) +
@@ -274,7 +275,7 @@ const getBehaviours = (editor: Editor, sharedBackstage: UiFactoryBackstageShared
           () => {
             const boundsWithoutOffset = Boxes.win();
             const offset = Options.getStickyToolbarOffset(editor);
-            const top = boundsWithoutOffset.y + (isDockedMode(comp, 'top') ? offset : 0);
+            const top = boundsWithoutOffset.y + (isDockedMode(comp, 'top') && !isFullscreen(editor) ? offset : 0);
             const height = boundsWithoutOffset.height - (isDockedMode(comp, 'bottom') ? offset : 0);
             // No scrolling context, so just window
             return {
