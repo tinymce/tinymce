@@ -59,7 +59,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     clearEvents();
   };
 
-  before(() => {
+  before(async () => {
     const canvas = document.createElement('canvas');
     canvas.width = 320;
     canvas.height = 200;
@@ -76,7 +76,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
     testBlobDataUri = canvas.toDataURL();
 
-    return Conversions.uriToBlob(testBlobDataUri);
+    await Conversions.uriToBlob(testBlobDataUri);
   });
 
   const hook = TinyHooks.bddSetupLight<Editor>({
