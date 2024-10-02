@@ -42,6 +42,9 @@ describe('webdriver.tinymce.plugins.fullscreen.FullscreenTrapFocusTest', () => {
     await RealKeys.pSendKeysOn('div[role=toolbar] .tox-tbtn', [ RealKeys.text('enter') ]);
     if (nativeMode) {
       await pIsFullscreen(fullscreen);
+      // Wait for 1.5 seconds to allow animations to complete
+      // The delay is arbitary and may need to be adjusted
+      await Waiter.pWait(1500);
     }
   };
 
