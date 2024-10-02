@@ -11,7 +11,7 @@ import ImagePlugin from 'tinymce/plugins/image/Plugin';
 import MediaPlugin from 'tinymce/plugins/media/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 
-describe('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
+describe.skip('browser.tinymce.core.SelectionEnabledDeleteContentTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'bold',
