@@ -1,4 +1,4 @@
-import { StructureSchema, ValueType } from '@ephox/boulder';
+import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
@@ -8,17 +8,20 @@ export interface CheckboxSpec extends FormComponentSpec {
   type: 'checkbox';
   label: string;
   enabled?: boolean;
+  context?: string;
 }
 
 export interface Checkbox extends FormComponent {
   type: 'checkbox';
   label: string;
   enabled: boolean;
+  context: string;
 }
 
 const checkboxFields = formComponentFields.concat([
   ComponentSchema.label,
-  ComponentSchema.enabled
+  ComponentSchema.enabled,
+  FieldSchema.defaultedString('context', 'mode:design')
 ]);
 
 export const checkboxSchema = StructureSchema.objOf(checkboxFields);

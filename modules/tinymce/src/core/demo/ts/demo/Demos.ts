@@ -6,6 +6,7 @@ import FixedToolbarContainerDemo from './FixedToolbarContainerDemo';
 import FullDemo from './FullDemo';
 import IframeDemo from './IframeDemo';
 import InlineDemo from './InlineDemo';
+import ReadOnlyDemo from './ReadOnlyDemo';
 import ResponsiveDemo from './ResponsiveDemo';
 import ShadowDomDemo from './ShadowDomDemo';
 import ShadowDomInlineDemo from './ShadowDomInlineDemo';
@@ -31,5 +32,6 @@ window.demos = {
   StickyToolbarDemo,
   ShadowDomDemo,
   ShadowDomInlineDemo,
+  ReadOnlyDemo,
   ViewDemo
 };

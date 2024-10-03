@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: In read-only mode the editor now allows normal cursor movement and block element selection, including video playback.
+time: 2024-07-17T18:55:30.212715+08:00
+custom:
+  Issue: TINY-11264

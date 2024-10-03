@@ -12,6 +12,7 @@ describe('headless.tinymce.themes.silver.components.listbox.ListBoxAriaTest', ()
 
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderListBox({
+      context: 'any',
       name: 'selector',
       label: Optional.some('selector'),
       enabled: true,

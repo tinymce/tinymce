@@ -74,7 +74,7 @@ describe('browser.tinymce.themes.silver.editor.core.UndoRedoTest', () => {
 
     // 2. switch to readonly mode
     editor.mode.set('readonly');
-    await pWaitForToolbarState(editor, true);
+    await pWaitForToolbarState(editor, false);
     assertToolbarButtonState('redo', true);
     assertToolbarButtonState('undo', true);
 

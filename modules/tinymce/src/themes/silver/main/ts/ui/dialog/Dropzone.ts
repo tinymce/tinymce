@@ -11,7 +11,7 @@ import { EventArgs } from '@ephox/sugar';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import * as ReadOnly from '../../ReadOnly';
+import * as UiState from '../../UiState';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
@@ -106,8 +106,8 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
         ComposingConfigs.self(),
         RepresentingConfigs.memory(initialData.getOr([])),
         Tabstopping.config({ }),
-        DisablingConfigs.button(providersBackstage.isDisabled),
-        ReadOnly.receivingConfig()
+        DisablingConfigs.button(() => providersBackstage.checkUiComponentContext(spec.context).shouldDisable),
+        UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext(spec.context))
       ])
     }
   );
@@ -118,7 +118,10 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
       classes: [ 'tox-dropzone-container' ]
     },
     behaviours: Behaviour.derive([
-      Disabling.config({}),
+      Disabling.config({
+        disabled: () => providersBackstage.checkUiComponentContext(spec.context).shouldDisable
+      }),
+      UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext(spec.context)),
       Toggling.config({
         toggleClass: 'dragenter',
         toggleOnExecute: false

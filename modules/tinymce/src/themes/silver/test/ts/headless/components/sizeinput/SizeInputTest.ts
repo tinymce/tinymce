@@ -15,6 +15,7 @@ describe.skip('headless.tinymce.themes.silver.components.sizeinput.SizeInputTest
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderSizeInput({
       name: 'dimensions',
+      context: 'any',
       label: Optional.some('size'),
       constrain: true,
       enabled: true

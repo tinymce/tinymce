@@ -17,7 +17,7 @@ const parseCurrentLine = (editor: Editor, offset: number): ParseResult | null =>
   const { dom, selection } = editor;
 
   // Never create a link when we are inside a link
-  if (dom.getParent(selection.getNode(), 'a[href]') !== null) {
+  if (dom.getParent(selection.getNode(), 'a[href]') !== null || editor.mode.isReadOnly()) {
     return null;
   }
 

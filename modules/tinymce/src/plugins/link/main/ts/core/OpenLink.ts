@@ -1,4 +1,4 @@
-import { Singleton, Optional, Optionals } from '@ephox/katamari';
+import { Singleton, Optional, Optionals, Strings } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
@@ -39,7 +39,7 @@ const gotoLink = (editor: Editor, a: HTMLAnchorElement | undefined): void => {
   if (a) {
     const href = Utils.getHref(a);
     if (/^#/.test(href)) {
-      const targetEl = editor.dom.select(href);
+      const targetEl = editor.dom.select(`${href},[name="${Strings.removeLeading(href, '#')}"]`);
       if (targetEl.length) {
         editor.selection.scrollIntoView(targetEl[0], true);
       }

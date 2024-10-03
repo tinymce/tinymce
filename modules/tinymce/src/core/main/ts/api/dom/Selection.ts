@@ -265,6 +265,10 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * @return {Boolean} Will be true if the selection is editable and false if it's not editable.
    */
   const isEditable = (): boolean => {
+    if (editor.mode.isReadOnly()) {
+      return false;
+    }
+
     const rng = getRng();
     const fakeSelectedElements = editor.getBody().querySelectorAll('[data-mce-selected="1"]');
 

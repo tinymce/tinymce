@@ -5,7 +5,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import * as Events from '../../api/Events';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import * as ReadOnly from '../../ReadOnly';
+import * as UiState from '../../UiState';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 
 interface PathData {
@@ -53,7 +53,7 @@ const renderElementPath = (editor: Editor, settings: ElementPathSettings, provid
           }),
         }),
         DisablingConfigs.button(providersBackstage.isDisabled),
-        ReadOnly.receivingConfig()
+        UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext('any'))
       ])
     });
 
@@ -118,7 +118,7 @@ const renderElementPath = (editor: Editor, settings: ElementPathSettings, provid
       Disabling.config({
         disabled: providersBackstage.isDisabled
       }),
-      ReadOnly.receivingConfig(),
+      UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext('any')),
       Tabstopping.config({ }),
       Replacing.config({ }),
       AddEventsBehaviour.config('elementPathEvents', [

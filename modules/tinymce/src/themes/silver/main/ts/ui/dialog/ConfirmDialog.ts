@@ -22,6 +22,7 @@ export const setup = (backstage: UiFactoryBackstage): ConfirmDialogApi => {
 
     const memFooterYes = Memento.record(
       renderFooterButton({
+        context: 'any',
         name: 'yes',
         text: 'Yes',
         primary: true,
@@ -33,6 +34,7 @@ export const setup = (backstage: UiFactoryBackstage): ConfirmDialogApi => {
     );
 
     const footerNo = renderFooterButton({
+      context: 'any',
       name: 'no',
       text: 'No',
       primary: false,

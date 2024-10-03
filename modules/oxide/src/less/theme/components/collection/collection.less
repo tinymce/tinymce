@@ -133,18 +133,37 @@
   }
 
   // Note: Ensure "enabled" is before "active", as active styles should have a higher precedence
-  .tox-collection--list .tox-collection__item--enabled {
+  .tox-collection--list .tox-collection__item--enabled:not(.tox-collection__item--state-disabled) {
     background-color: @collection-list-item-enabled-background-color;
     color: @collection-list-item-label-enabled-text-color;
   }
 
-  .tox-collection--list .tox-collection__item--active {
+  .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
     background-color: @collection-list-item-active-background-color;
+    color: @collection-list-item-label-active-text-color;
+
+    @media (forced-colors: active) {
+      border: solid 1px;
+    }
   }
 
-  .tox-collection--toolbar .tox-collection__item--enabled,
-  .tox-collection--toolbar .tox-collection__item--enabled.tox-collection__item--active,
-  .tox-collection--toolbar .tox-collection__item--enabled.tox-collection__item--active:hover {
+  .tox-collection--grid .tox-collection__item--enabled:not(.tox-collection__item--state-disabled) {
+    background-color: @collection-grid-item-enabled-background-color;
+    color: @collection-grid-item-label-enabled-text-color;
+  }
+
+  .tox-collection--grid .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+    background-color: @collection-grid-item-active-background-color;
+    color: @collection-grid-item-label-active-text-color;
+    position: relative;
+    z-index: 1;
+
+    &:focus::after {
+      .keyboard-focus-outline-mixin(inset);
+    }
+  }
+
+  .tox-collection--toolbar .tox-collection__item--enabled:not(.tox-collection__item--state-disabled) {
     background-color: @collection-toolbar-item-enabled-background-color;
     color: @collection-toolbar-item-label-enabled-text-color;
 
@@ -154,7 +173,8 @@
     }
   }
 
-  .tox-collection--toolbar .tox-collection__item--active {
+  .tox-collection--toolbar .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+    color: @collection-toolbar-item-label-active-text-color;
     background-color: @collection-toolbar-item-active-background-color;
     position: relative;
 
@@ -171,34 +191,6 @@
         .keyboard-focus-outline-mixin();
       }
     }
-  }
-
-  .tox-collection--grid .tox-collection__item--enabled {
-    background-color: @collection-grid-item-enabled-background-color;
-    color: @collection-grid-item-label-enabled-text-color;
-  }
-
-  .tox-collection--grid .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
-    background-color: @collection-grid-item-active-background-color;
-    color: @collection-grid-item-label-active-text-color;
-    position: relative;
-    z-index: 1;
-
-    &:focus::after {
-      .keyboard-focus-outline-mixin(inset);
-    }
-  }
-
-  .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
-    color: @collection-list-item-label-active-text-color;
-
-    @media (forced-colors: active) {
-      border: solid 1px;
-    }
-  }
-
-  .tox-collection--toolbar .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
-    color: @collection-toolbar-item-label-active-text-color;
 
     @media (forced-colors: active) {
       &:hover {

@@ -66,6 +66,7 @@ export const renderListBox = (spec: ListBoxSpec, backstage: UiFactoryBackstage, 
     dom: { },
     factory: {
       sketch: (sketchSpec: SketchSpec) => renderCommonDropdown({
+        context: spec.context,
         uid: sketchSpec.uid,
         text: initialItem.map((item) => item.text),
         icon: Optional.none(),
@@ -129,7 +130,7 @@ export const renderListBox = (spec: ListBoxSpec, backstage: UiFactoryBackstage, 
     components: Arr.flatten<AlloySpec>([ pLabel.toArray(), [ listBoxWrap ]]),
     fieldBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: Fun.constant(!spec.enabled),
+        disabled: () => !spec.enabled || providersBackstage.checkUiComponentContext(spec.context).shouldDisable,
         onDisabled: (comp) => {
           AlloyFormField.getField(comp).each(Disabling.disable);
         },

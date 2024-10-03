@@ -9,12 +9,12 @@ import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 import * as Events from '../api/Events';
 import * as Options from '../api/Options';
 import { UiFactoryBackstage } from '../backstage/Backstage';
-import * as ReadOnly from '../ReadOnly';
 import { ModeRenderInfo, RenderArgs, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { InlineHeader } from '../ui/header/InlineHeader';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { inline as loadInlineSkin } from '../ui/skin/Loader';
+import * as UiState from '../UiState';
 import { setToolbar } from './Toolbars';
 import { ReadyUiReferences } from './UiReferences';
 
@@ -197,13 +197,14 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
     }
   });
 
-  ReadOnly.setupReadonlyModeSwitch(editor, uiRefs);
+  UiState.setupEventsForUi(editor, uiRefs);
 
   const api: Partial<EditorUiApi> = {
     show: render,
     hide: ui.hide,
     setEnabled: (state) => {
-      ReadOnly.broadcastReadonly(uiRefs, !state);
+      const eventType = state ? 'setEnabled' : 'setDisabled';
+      UiState.broadcastEvents(uiRefs, eventType);
     },
     isEnabled: () => !Disabling.isDisabled(mainUi.outerContainer)
   };

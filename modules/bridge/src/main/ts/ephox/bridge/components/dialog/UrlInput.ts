@@ -9,6 +9,7 @@ export interface UrlInputSpec extends FormComponentWithLabelSpec {
   filetype?: 'image' | 'media' | 'file';
   enabled?: boolean;
   picker_text?: string;
+  context?: string;
 }
 
 export interface UrlInput extends FormComponentWithLabel {
@@ -16,6 +17,7 @@ export interface UrlInput extends FormComponentWithLabel {
   filetype: 'image' | 'media' | 'file';
   enabled: boolean;
   picker_text: Optional<string>;
+  context: string;
 }
 
 export interface UrlInputData {
@@ -28,7 +30,8 @@ export interface UrlInputData {
 const urlInputFields = formComponentWithLabelFields.concat([
   FieldSchema.defaultedStringEnum('filetype', 'file', [ 'image', 'media', 'file' ]),
   ComponentSchema.enabled,
-  FieldSchema.optionString('picker_text')
+  FieldSchema.optionString('picker_text'),
+  FieldSchema.defaultedString('context', 'mode:design')
 ]);
 
 export const urlInputSchema = StructureSchema.objOf(urlInputFields);
