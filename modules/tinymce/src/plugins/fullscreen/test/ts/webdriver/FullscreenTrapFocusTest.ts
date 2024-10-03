@@ -1,8 +1,8 @@
-import { FocusTools, RealKeys, Waiter } from '@ephox/agar';
+import { FocusTools, RealMouse, RealKeys, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
 import { Attribute, Insert, Remove, SugarDocument, SugarElement } from '@ephox/sugar';
-import { McEditor, TinyContentActions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
+import { McEditor, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -36,10 +36,8 @@ describe('webdriver.tinymce.plugins.fullscreen.FullscreenTrapFocusTest', () => {
     }
   });
 
-  const pToggleFullscreen = async (editor: Editor, nativeMode: boolean, fullscreen: boolean) => {
-    TinyContentActions.keystroke(editor, 121, { alt: true });
-    await FocusTools.pTryOnSelector('Assert toolbar is focused', SugarDocument.getDocument(), 'div[role=toolbar] .tox-tbtn');
-    await RealKeys.pSendKeysOn('div[role=toolbar] .tox-tbtn', [ RealKeys.text('enter') ]);
+  const pToggleFullscreen = async (nativeMode: boolean, fullscreen: boolean) => {
+    await RealMouse.pClickOn('button[data-mce-name="fullscreen"]');
     if (nativeMode) {
       await pIsFullscreen(fullscreen);
       // Wait for 1.5 seconds to allow animations to complete
@@ -68,7 +66,7 @@ describe('webdriver.tinymce.plugins.fullscreen.FullscreenTrapFocusTest', () => {
           const beforeInput = setupInputBefore(editor);
           const afterInput = setupInputAfter(editor);
 
-          await pToggleFullscreen(editor, mode === 'native', true);
+          await pToggleFullscreen(mode === 'native', true);
 
           await pDoShiftTab();
           await FocusTools.pTryOnSelector('Focus should still be in the iframe when focus is going out', SugarDocument.getDocument(), '.tox-edit-area__iframe');
@@ -79,7 +77,7 @@ describe('webdriver.tinymce.plugins.fullscreen.FullscreenTrapFocusTest', () => {
           await pDoShiftTab();
           await FocusTools.pTryOnSelector('Focus should still be in the iframe when focus is going out 3', SugarDocument.getDocument(), '.tox-edit-area__iframe');
 
-          await pToggleFullscreen(editor, mode === 'native', false);
+          await pToggleFullscreen(mode === 'native', false);
 
           Remove.remove(beforeInput);
           Remove.remove(afterInput);
@@ -90,7 +88,7 @@ describe('webdriver.tinymce.plugins.fullscreen.FullscreenTrapFocusTest', () => {
           const beforeInput = setupInputBefore(editor);
           const afterInput = setupInputAfter(editor);
 
-          await pToggleFullscreen(editor, mode === 'native', true);
+          await pToggleFullscreen(mode === 'native', true);
 
           await pDoTab();
           await FocusTools.pTryOnSelector('Focus should still be in the iframe when focus is going out', SugarDocument.getDocument(), '.tox-edit-area__iframe');
@@ -101,7 +99,7 @@ describe('webdriver.tinymce.plugins.fullscreen.FullscreenTrapFocusTest', () => {
           await pDoTab();
           await FocusTools.pTryOnSelector('Focus should still be in the iframe when focus is going out 3', SugarDocument.getDocument(), '.tox-edit-area__iframe');
 
-          await pToggleFullscreen(editor, mode === 'native', false);
+          await pToggleFullscreen(mode === 'native', false);
 
           Remove.remove(beforeInput);
           Remove.remove(afterInput);
