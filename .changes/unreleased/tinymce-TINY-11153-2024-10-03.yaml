@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: Closing modal dialogs in inline mode, if more than one dialog, would lose focus
+  from the editor.
+time: 2024-10-03T05:39:21.982118585+02:00
+custom:
+  Issue: TINY-11153
