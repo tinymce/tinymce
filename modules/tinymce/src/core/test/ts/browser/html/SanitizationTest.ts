@@ -53,9 +53,10 @@ describe('browser.tinymce.core.html.SanitizationTest', () => {
       expected: '<svg><a xlink:href="url"><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"></circle></a></svg>'
     }));
 
+    // Updated for TINY-11332: Remove html elements inside SVG
     it('Sanitize SVG with mixed HTML', () => testNamespaceSanitizer({
       input: '<svg><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"><desc><script>alert(1)</script><p>hello</p></circle></a></svg>',
-      expected: '<svg><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"><desc><p>hello</p></desc></circle></svg>'
+      expected: '<svg><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"><desc></desc></circle></svg>'
     }));
 
     it('Sanitize SVG with xlink with script url', () => testNamespaceSanitizer({
