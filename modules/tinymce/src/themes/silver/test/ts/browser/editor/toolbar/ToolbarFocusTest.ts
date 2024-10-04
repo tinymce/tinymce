@@ -30,20 +30,20 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarFocusTest', () => 
   };
 
   context('Pressing Alt+F10 focuses the toolbar and escape from the toolbar will focus the editor', () => {
-    it('TINY-6230: Floating toolbar', async () =>
-      await pTestFocus({ toolbar_mode: 'floating' })
+    it('TINY-6230: Floating toolbar', () =>
+      pTestFocus({ toolbar_mode: 'floating' })
     );
 
-    it('TINY-6230: Sliding toolbar', async () =>
-      await pTestFocus({ toolbar_mode: 'sliding' })
+    it('TINY-6230: Sliding toolbar', () =>
+      pTestFocus({ toolbar_mode: 'sliding' })
     );
 
-    it('TINY-6230: Wrap toolbar', async () =>
-      await pTestFocus({ toolbar_mode: 'wrap' })
+    it('TINY-6230: Wrap toolbar', () =>
+      pTestFocus({ toolbar_mode: 'wrap' })
     );
 
-    it('TINY-6230: Multiple toolbars', async () =>
-      await pTestFocus({ toolbar: [ 'undo redo', 'bold italic' ] })
+    it('TINY-6230: Multiple toolbars', () =>
+      pTestFocus({ toolbar: [ 'undo redo', 'bold italic' ] })
     );
   });
 });

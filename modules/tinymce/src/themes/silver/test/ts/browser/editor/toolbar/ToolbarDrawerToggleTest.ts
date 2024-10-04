@@ -50,30 +50,30 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest',
       { mode: 'scrolling', shouldToggle: false }
     ], (test) => {
       // Test iframe
-      it(`TINY-6032: ${test.mode} toolbar`, async () =>
-        await pTestToggle({ toolbar_mode: test.mode }, false)
+      it(`TINY-6032: ${test.mode} toolbar`, () =>
+        pTestToggle({ toolbar_mode: test.mode }, false)
       );
 
-      it(`TINY-6032: ${test.mode} toolbar - small width`, async () =>
-        await pTestToggle({ toolbar_mode: test.mode, width: 50 }, test.shouldToggle)
+      it(`TINY-6032: ${test.mode} toolbar - small width`, () =>
+        pTestToggle({ toolbar_mode: test.mode, width: 50 }, test.shouldToggle)
       );
 
       // Test inline
-      it(`TINY-6032: ${test.mode} toolbar (inline)`, async () =>
-        await pTestToggle({ toolbar_mode: test.mode, inline: true }, false)
+      it(`TINY-6032: ${test.mode} toolbar (inline)`, () =>
+        pTestToggle({ toolbar_mode: test.mode, inline: true }, false)
       );
 
-      it(`TINY-6032: ${test.mode} toolbar - small width (inline)`, async () =>
-        await pTestToggle({ toolbar_mode: test.mode, width: 50, inline: true }, test.shouldToggle)
+      it(`TINY-6032: ${test.mode} toolbar - small width (inline)`, () =>
+        pTestToggle({ toolbar_mode: test.mode, width: 50, inline: true }, test.shouldToggle)
       );
     });
 
-    it('TINY-6032: Multiple toolbars', async () =>
-      await pTestToggle({ toolbar: [ 'undo redo', 'bold italic' ] }, false)
+    it('TINY-6032: Multiple toolbars', () =>
+      pTestToggle({ toolbar: [ 'undo redo', 'bold italic' ] }, false)
     );
 
-    it('TINY-6032: Multiple toolbars (inline)', async () =>
-      await pTestToggle({ toolbar: [ 'undo redo', 'bold italic' ], inline: true }, false)
+    it('TINY-6032: Multiple toolbars (inline)', () =>
+      pTestToggle({ toolbar: [ 'undo redo', 'bold italic' ], inline: true }, false)
     );
   });
 

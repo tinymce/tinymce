@@ -112,8 +112,8 @@ describe('browser.tinymce.themes.silver.editor.buttons.GroupToolbarButtonTest', 
     }))
   ));
 
-  it('TINY-4616: Group toolbars are ignored when using wrap toolbar mode', async () =>
-    await pTestWithEditor({
+  it('TINY-4616: Group toolbars are ignored when using wrap toolbar mode', () =>
+    pTestWithEditor({
       ...defaultToolbarGroupOptions,
       toolbar: 'formatting | underline',
       toolbar_mode: 'wrap'
