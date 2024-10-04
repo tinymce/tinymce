@@ -1,9 +1,13 @@
 // eslint-disable-next-line max-len
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Boxes, Focusing, Keying, SketchSpec,
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec,
   SplitFloatingToolbar as AlloySplitFloatingToolbar,
-  SplitSlidingToolbar as AlloySplitSlidingToolbar, Tabstopping, Toolbar as AlloyToolbar, ToolbarGroup as AlloyToolbarGroup,
-  GuiFactory
+  SplitSlidingToolbar as AlloySplitSlidingToolbar,
+  Toolbar as AlloyToolbar, ToolbarGroup as AlloyToolbarGroup,
+  Behaviour, Boxes, Focusing,
+  GuiFactory,
+  Keying, SketchSpec,
+  Tabstopping
 } from '@ephox/alloy';
 import { Arr, Optional, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
@@ -45,12 +49,16 @@ export interface ToolbarGroup {
 }
 
 const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
-  const attributes = toolbarGroup.title.fold(() => ({}),
-    (title) => ({ attributes: { title }}));
+  const attributes = toolbarGroup.label.isNone() ? toolbarGroup.title.fold(() => ({}),
+    (title) => ({ attributes: { title }})) : toolbarGroup.label.fold(() => ({}),
+    (label) => ({ attributes: { name: label }}));
+
   return {
     dom: {
-      tag: 'div',
-      classes: [ 'tox-toolbar__group' ],
+      tag: toolbarGroup.label.isSome() ? 'fieldset' : 'div',
+      classes: [ 'tox-toolbar__group' ].concat(
+        toolbarGroup.label.isSome() ? [ 'tox-toolbar__group_with_label' ] : []
+      ),
       ...attributes
     },
 
@@ -58,7 +66,7 @@ const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
       ...(toolbarGroup.label.map((label) => {
         return {
           dom: {
-            tag: 'span',
+            tag: 'legend',
             classes: [ 'tox-toolbar__label' ],
           },
           components: [ GuiFactory.text(label) ]
