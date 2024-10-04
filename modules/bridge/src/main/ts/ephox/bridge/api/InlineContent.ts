@@ -4,8 +4,8 @@ import {
 } from '../components/content/Autocompleter';
 import { ContextPosition, ContextScope } from '../components/content/ContextBar';
 import {
-  ContextForm, ContextFormButton, ContextFormButtonInstanceApi, ContextFormButtonSpec, ContextFormInstanceApi, ContextFormSpec,
-  ContextFormToggleButton, ContextFormToggleButtonInstanceApi, ContextFormToggleButtonSpec, createContextForm
+  ContextForm, ContextInputForm, ContextSliderForm, ContextSizeInputForm, ContextFormButton, ContextFormButtonInstanceApi, ContextFormButtonSpec, ContextFormInstanceApi, ContextFormSpec,
+  ContextInputFormSpec, ContextSliderFormSpec, ContextSizeInputFormSpec, ContextFormToggleButton, ContextFormToggleButtonInstanceApi, ContextFormToggleButtonSpec, createContextForm
 } from '../components/content/ContextForm';
 import { ContextToolbar, ContextToolbarSpec, createContextToolbar, contextToolbarToSpec, ToolbarGroup } from '../components/content/ContextToolbar';
 
@@ -25,7 +25,13 @@ export {
 
   ContextFormInstanceApi,
   ContextForm,
+  ContextInputForm,
+  ContextSliderForm,
+  ContextSizeInputForm,
   ContextFormSpec,
+  ContextInputFormSpec,
+  ContextSliderFormSpec,
+  ContextSizeInputFormSpec,
   ContextFormButton,
   ContextFormButtonSpec,
   ContextFormButtonInstanceApi,
