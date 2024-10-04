@@ -8,6 +8,7 @@ import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui
 
 // The V is because this is shared with Typeahead.
 export interface InputDetail extends SingleSketchDetail {
+  type: string;
   uid: string;
   dom: RawDomSchema;
   inputBehaviours: SketchBehaviours;
@@ -22,6 +23,7 @@ export interface InputDetail extends SingleSketchDetail {
 }
 
 export interface InputSpec extends SingleSketchSpec {
+  type?: string;
   uid?: string;
   tag?: string;
   inputClasses?: string[];

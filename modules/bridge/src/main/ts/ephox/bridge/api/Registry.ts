@@ -60,6 +60,9 @@ export const create = (): Registry => {
   const add = <T, S extends T>(collection: Record<string, T>, type: string) => (name: string, spec: S): void => {
     collection[name.toLowerCase()] = { ...spec, type };
   };
+  const addDefaulted = <T, S extends T>(collection: Record<string, T>, type: string) => (name: string, spec: S): void => {
+    collection[name.toLowerCase()] = { type, ...spec };
+  };
   const addIcon = (name: string, svgData: string) => icons[name.toLowerCase()] = svgData;
   const addContext = (name: string, pred: (args: string) => boolean) => contexts[name.toLowerCase()] = pred;
 
@@ -75,7 +78,7 @@ export const create = (): Registry => {
     addAutocompleter: add(popups, 'autocompleter'),
     addContextMenu: add(contextMenus, 'contextmenu'),
     addContextToolbar: add(contextToolbars, 'contexttoolbar'),
-    addContextForm: add(contextToolbars, 'contextform'),
+    addContextForm: addDefaulted(contextToolbars, 'contextform'),
     addSidebar: add(sidebars, 'sidebar'),
     addView: add(views, 'views'),
     addIcon,

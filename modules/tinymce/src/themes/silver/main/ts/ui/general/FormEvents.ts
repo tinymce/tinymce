@@ -41,6 +41,7 @@ export interface FormTabChangeEvent extends CustomEvent {
 }
 
 const formChangeEvent = Id.generate('form-component-change');
+const formInputEvent = Id.generate('form-component-input');
 const formCloseEvent = Id.generate('form-close');
 const formCancelEvent = Id.generate('form-cancel');
 const formActionEvent = Id.generate('form-action');
@@ -52,6 +53,7 @@ const formResizeEvent = Id.generate('form-resize');
 
 export {
   formChangeEvent,
+  formInputEvent,
   formActionEvent,
   formSubmitEvent,
   formCloseEvent,

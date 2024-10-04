@@ -60,7 +60,7 @@ const categorise = (contextToolbars: Record<string, ContextSpecType>, navigate: 
   Arr.each(keys, (key) => {
     const toolbarApi = contextToolbars[key];
     // TS wouldn't really let me do the ternary I wanted :(
-    if (toolbarApi.type === 'contextform') {
+    if (toolbarApi.type === 'contextform' || toolbarApi.type === 'contextsliderform' || toolbarApi.type === 'contextsizeinputform') {
       registerForm(key, toolbarApi);
     } else if (toolbarApi.type === 'contexttoolbar') {
       registerToolbar(key, toolbarApi);

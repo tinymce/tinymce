@@ -1,6 +1,7 @@
 import AnnotationsDemo from './AnnotationsDemo';
 import CommandsDemo from './CommandsDemo';
 import ContentEditableFalseDemo from './ContentEditableFalseDemo';
+import ContextFormDemo from './ContextFormDemo';
 import CustomThemeDemo from './CustomThemeDemo';
 import FixedToolbarContainerDemo from './FixedToolbarContainerDemo';
 import FullDemo from './FullDemo';
@@ -33,5 +34,6 @@ window.demos = {
   ShadowDomDemo,
   ShadowDomInlineDemo,
   ReadOnlyDemo,
-  ViewDemo
+  ViewDemo,
+  ContextFormDemo
 };
