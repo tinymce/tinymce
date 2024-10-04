@@ -220,7 +220,7 @@ describe('browser.tinymce.core.annotate.AnnotationStylingTest', () => {
             await pAssertStyling(editor, selector, backgroundColor, selectedOutline);
           });
 
-          it.skip('TINY-8698: should have active yellow outline when there are several related comments but the element is not selected', async () => {
+          it('TINY-8698: should have active yellow outline when there are several related comments but the element is not selected', async () => {
             const editor = hook.editor();
             editor.execCommand('SelectAll');
             editor.annotator.annotate('test-comment', {});

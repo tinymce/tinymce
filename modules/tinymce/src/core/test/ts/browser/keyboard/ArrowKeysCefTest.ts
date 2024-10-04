@@ -10,7 +10,7 @@ import * as NodeType from 'tinymce/core/dom/NodeType';
 
 import * as KeyUtils from '../../module/test/KeyUtils';
 
-describe.skip('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
+describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     height: 200,
     indent: false,
