@@ -67,7 +67,7 @@ const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
         return {
           dom: {
             tag: 'legend',
-            classes: [ 'tox-toolbar__label' ],
+            classes: [ 'tox-label' ],
           },
           components: [ GuiFactory.text(label) ]
         };
@@ -249,4 +249,5 @@ const renderToolbar = (toolbarSpec: ToolbarSpec): SketchSpec => {
   });
 };
 
-export { renderToolbarGroup, renderToolbar, renderFloatingMoreToolbar, renderSlidingMoreToolbar };
+export { renderFloatingMoreToolbar, renderSlidingMoreToolbar, renderToolbar, renderToolbarGroup };
+
