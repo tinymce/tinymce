@@ -142,12 +142,14 @@ describe('browser.tinymce.plugins.media.core.LiveEmbedNodeTest', () => {
       const editor = await McEditor.pFromSettings<Editor>({ ...baseSettings, sandbox_iframes: false });
       editor.setContent(initialIframeHtml);
       assertStructure(editor, 'iframe', [ ], { sandbox: null }, { });
+      McEditor.remove(editor);
     });
 
     it('TINY-10348: sandbox_iframes: true should havce sandbox attribute in live embed', async () => {
       const editor = await McEditor.pFromSettings<Editor>({ ...baseSettings, sandbox_iframes: true });
       editor.setContent(initialIframeHtml);
       assertStructure(editor, 'iframe', [ ], { sandbox: '' }, { });
+      McEditor.remove(editor);
     });
   });
 });
