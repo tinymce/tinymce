@@ -122,6 +122,12 @@ UnitTest.test('WindowSelectionTest', () => {
         finish: [ 0, 1, 0 ],
         foffset: 'w'.length
       },
+      safari: {
+        start: [ 0 ],
+        soffset: 2,
+        finish: [ 0, 1, 0 ],
+        foffset: 'w'.length
+      },
       fallback: {
         start: [ 0, 1, 0 ],
         soffset: 'world'.length,
@@ -140,12 +146,6 @@ UnitTest.test('WindowSelectionTest', () => {
       fallback: {
         start: [ 0 ],
         soffset: 0,
-        finish: [ 0 ],
-        foffset: 7
-      },
-      safari: {
-        start: [ 0, 0 ],
-        soffset: ''.length,
         finish: [ 0 ],
         foffset: 7
       }
@@ -169,12 +169,6 @@ UnitTest.test('WindowSelectionTest', () => {
         soffset: 7,
         finish: [ 0 ],
         foffset: 0
-      },
-      safari: {
-        start: [ 0 ],
-        soffset: 7,
-        finish: [ 0, 0 ],
-        foffset: ''.length
       }
     },
     Situ.on(find( [ 0 ]), 7),
@@ -184,13 +178,6 @@ UnitTest.test('WindowSelectionTest', () => {
   checkSelection(
     'LTR selection (t I)',
     {
-      // '<p>This <strong>world</strong> is not <strong>w<em>ha[</em>t</strong> I<br><br>]wanted</p><p><br>And even more</p>';
-      safari: {
-        start: [ 0, 3, 2 ],
-        soffset: ''.length,
-        finish: [ 0 ],
-        foffset: 6
-      },
       fallback: {
         start: [ 0, 3, 1 ],
         soffset: 1,
@@ -219,6 +206,12 @@ UnitTest.test('WindowSelectionTest', () => {
         soffset: 6
       },
       chromium: {
+        finish: [ 0, 3, 1 ],
+        foffset: 1,
+        start: [ 0 ],
+        soffset: 6
+      },
+      safari: {
         finish: [ 0, 3, 1 ],
         foffset: 1,
         start: [ 0 ],
@@ -263,12 +256,6 @@ UnitTest.test('WindowSelectionTest', () => {
         soffset: 0,
         finish: [ 0 ],
         foffset: 0
-      },
-      safari: {
-        start: [ 0, 0 ],
-        soffset: 0,
-        finish: [ 0, 0 ],
-        foffset: 0
       }
     },
     Situ.on(find( [ 0 ]), 0 ),
@@ -282,12 +269,6 @@ UnitTest.test('WindowSelectionTest', () => {
         start: [ 0 ],
         soffset: 0,
         finish: [ 0 ],
-        foffset: 0
-      },
-      safari: {
-        start: [ 0, 0 ],
-        soffset: 0,
-        finish: [ 0, 0 ],
         foffset: 0
       }
     },

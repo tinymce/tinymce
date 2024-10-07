@@ -1,7 +1,6 @@
 import { Waiter } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Type } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { TinyApis, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -19,8 +18,6 @@ const defaultExpectedEvents = [
 ];
 
 describe('browser.tinymce.core.content.EditorContentTest', () => {
-  const isSafari = PlatformDetection.detect().browser.isSafari();
-
   const toHtml = (node: AstNode): string => HtmlSerializer({}).serialize(node);
 
   const assertContentTreeEqualToHtml = (editor: Editor, html: string, msg: string) => {
@@ -555,12 +552,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
           const editor = hook.editor();
           editor.setContent('<p><iframe><p>test</p></iframe></p>');
           const content = editor.getContent();
-          assert.equal(content,
-            // TINY-9624: Safari seems to encode the contents of iframes
-            isSafari
-              ? '<p><iframe>&lt;p&gt;test&lt;/p&gt;</iframe></p>'
-              : '<p><iframe><p>test</p></iframe></p>',
-            'getContent should not error when there is iframes with child nodes in content');
+          assert.equal(content, '<p><iframe><p>test</p></iframe></p>', 'getContent should not error when there is iframes with child nodes in content');
         });
 
         it('getContent text with unsanitized content should get text from unsanitized content', () => {
@@ -597,8 +589,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
       it('TINY-10305: setContent html should sanitize content that can cause mXSS via ZWNBSP trimming', () => {
         const editor = hook.editor();
         editor.setContent('<p>test</p><!--\ufeff><iframe onload=alert(document.domain)>-></body>-->');
-        // TINY-10305: Safari escapes text nodes within <iframe>.
-        TinyAssertions.assertRawContent(editor, isSafari ? '<p>test</p><!----><p><iframe>-&gt;&lt;/body&gt;--&gt;&lt;/body&gt;</iframe></p>' : '<p>test</p><!---->');
+        TinyAssertions.assertRawContent(editor, '<p>test</p><!---->');
       });
 
       it('TINY-10305: setContent tree should sanitize content that can cause mXSS via ZWNBSP trimming', () => {
