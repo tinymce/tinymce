@@ -1,0 +1,25 @@
+@placeholder-background-color: @background-color;
+@placeholder-text-color: @text-color-muted;
+@placeholder-border: 2px solid darken(@placeholder-background-color, 11%);
+@placeholder-font-family: monospace, sans-serif;
+
+@placeholder-initial-width: 600px;
+@placeholder-initial-height: 80px;
+
+.tox-uploadcare-placeholder {
+    color: @placeholder-text-color;
+    background-color: @placeholder-background-color;
+    border: @placeholder-border;
+    width: @placeholder-initial-width;
+    height: @placeholder-initial-height;
+    font-family: @placeholder-font-family;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    
+    cursor: auto !important; // to overwrite not-allowed by selected contenteditable=false
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+}
