@@ -31,9 +31,9 @@ export default (): void => {
           type: 'contextformtogglebutton',
           align: 'start',
           text: 'Decorative',
-          onAction: (_formApi, buttonApi) => {
+          onAction: (formApi, buttonApi) => {
             buttonApi.setActive(!buttonApi.isActive());
-            // formApi.setInputEnabled(buttonApi.isActive());
+            formApi.setInputEnabled(!buttonApi.isActive());
           }
         }
       ]

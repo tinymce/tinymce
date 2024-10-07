@@ -54,6 +54,6 @@ export const renderContextFormSliderInput = (
     ])
   });
 
-  return ContextFormGroup.createContextFormFieldFromParts(pLabel, pField);
+  return ContextFormGroup.createContextFormFieldFromParts(pLabel, pField, providers);
 };
 
