@@ -1,7 +1,7 @@
 import { AlloySpec, VerticalDir } from '@ephox/alloy';
 import { StructureSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
-import { Arr, Obj, Optional, Result, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Optionals, Result, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -200,7 +200,7 @@ const identifyButtons = (editor: Editor, toolbarConfig: RenderToolbarConfig, bac
     });
     return {
       title: Optional.from(editor.translate(group.name)),
-      label: Optional.from(editor.translate(group.label)),
+      label: Optionals.someIf(group.label !== undefined, editor.translate(group.label)),
       items
     };
   });
