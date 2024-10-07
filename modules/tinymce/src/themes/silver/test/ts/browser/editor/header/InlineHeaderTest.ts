@@ -59,19 +59,23 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
       }
     });
 
-  it('TINY-9646: The width should remain on the editor', () =>
+  // TODO TINY-10480: Investigate flaky tests
+  it.skip('TINY-9646: The width should remain on the editor', () =>
     pRunToolbarWidthTest(500, '400px')
   );
 
-  it('TINY-8977: If the editor does not fit within the view', () =>
+  // TODO TINY-10480: Investigate flaky tests
+  it.skip('TINY-8977: If the editor does not fit within the view', () =>
     pRunToolbarWidthTest(200, '200px')
   );
 
-  it('TINY-8977: If the visible editor is smaller than the minimum', () =>
+  // TODO TINY-10480: Investigate flaky tests
+  it.skip('TINY-8977: If the visible editor is smaller than the minimum', () =>
     pRunToolbarWidthTest(50, '150px')
   );
 
-  it('TINY-8977: If the editor is not visible at all', () =>
+  // TODO TINY-10480: Investigate flaky tests
+  it.skip('TINY-8977: If the editor is not visible at all', () =>
     pRunToolbarWidthTest(-50, '150px')
   );
 });

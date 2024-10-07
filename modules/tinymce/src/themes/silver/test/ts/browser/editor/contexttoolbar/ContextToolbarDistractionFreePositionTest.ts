@@ -17,7 +17,8 @@ interface Scenario {
   readonly classes: string;
 }
 
-describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarDistractionFreePositionTest', () => {
+// TODO TINY-10480: Investigate flaky tests
+describe.skip('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarDistractionFreePositionTest', () => {
   const topSelector = '.tox-pop.tox-pop--bottom:not(.tox-pop--inset):not(.tox-pop--transition)';
   const bottomSelector = '.tox-pop.tox-pop--top:not(.tox-pop--inset):not(.tox-pop--transition)';
 

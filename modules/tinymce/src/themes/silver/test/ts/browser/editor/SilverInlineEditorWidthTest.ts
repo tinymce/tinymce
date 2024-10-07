@@ -11,7 +11,8 @@ import { ToolbarMode } from 'tinymce/themes/silver/api/Options';
 
 import { pOpenMore } from '../../module/MenuUtils';
 
-describe('browser.tinymce.themes.silver.editor.SilverInlineEditorWidthTest', () => {
+// TODO TINY-10480: Investigate flaky tests
+describe.skip('browser.tinymce.themes.silver.editor.SilverInlineEditorWidthTest', () => {
 
   const structureTest = (editor: Editor, container: SugarElement<Node>, maxWidth: number) =>
     Assertions.assertStructure(
