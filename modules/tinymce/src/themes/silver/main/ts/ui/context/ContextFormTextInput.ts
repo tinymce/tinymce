@@ -50,5 +50,5 @@ export const renderContextFormTextInput = (
     ])
   });
 
-  return ContextFormGroup.createContextFormFieldFromParts(pLabel, pField);
+  return ContextFormGroup.createContextFormFieldFromParts(pLabel, pField, providers);
 };
