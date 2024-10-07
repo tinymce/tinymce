@@ -18,6 +18,7 @@ export interface FormCoupledInputsDetail extends CompositeSketchDetail {
   markers: {
     lockClass: string;
   };
+  onInput: (comp: AlloyComponent) => void;
 }
 
 export interface FormCoupledInputsSpec extends CompositeSketchSpec {
@@ -32,6 +33,7 @@ export interface FormCoupledInputsSpec extends CompositeSketchSpec {
   markers: {
     lockClass: string;
   };
+  onInput?: (comp: AlloyComponent) => void;
 }
 
 export interface FormCoupledInputsApis {

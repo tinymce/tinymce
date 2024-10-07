@@ -37,18 +37,21 @@ export interface ContextFormToggleButtonInstanceApi extends BaseToolbarToggleBut
 export interface ContextFormButtonSpec<T> extends BaseToolbarButtonSpec<ContextFormButtonInstanceApi> {
   type?: 'contextformbutton';
   primary?: boolean;
+  align?: 'start' | 'end';
   onAction: (formApi: ContextFormInstanceApi<T>, api: ContextFormButtonInstanceApi) => void;
 }
 
 export interface ContextFormToggleButtonSpec<T> extends BaseToolbarToggleButtonSpec<ContextFormToggleButtonInstanceApi> {
   type?: 'contextformtogglebutton';
-  onAction: (formApi: ContextFormInstanceApi<T>, buttonApi: ContextFormToggleButtonInstanceApi) => void;
   primary?: boolean;
+  align?: 'start' | 'end';
+  onAction: (formApi: ContextFormInstanceApi<T>, buttonApi: ContextFormToggleButtonInstanceApi) => void;
 }
 
 export interface ContextFormButton<T> extends BaseToolbarButton<ContextFormButtonInstanceApi> {
   type?: 'contextformbutton';
   primary?: boolean;
+  align?: 'start' | 'end';
   onAction: (formApi: ContextFormInstanceApi<T>, buttonApi: ContextFormButtonInstanceApi) => void;
   original: ContextFormButtonSpec<T>;
 }
@@ -56,6 +59,7 @@ export interface ContextFormButton<T> extends BaseToolbarButton<ContextFormButto
 export interface ContextFormToggleButton<T> extends BaseToolbarToggleButton<ContextFormToggleButtonInstanceApi> {
   type?: 'contextformtogglebutton';
   primary?: boolean;
+  align?: 'start' | 'end';
   onAction: (formApi: ContextFormInstanceApi<T>, buttonApi: ContextFormToggleButtonInstanceApi) => void;
   original: ContextFormToggleButtonSpec<T>;
 }
@@ -95,11 +99,13 @@ export interface ContextSizeInputFormSpec extends BaseContextFormSpec<SizeData> 
 
 export type ContextFormSpec = ContextInputFormSpec | ContextSliderFormSpec | ContextSizeInputFormSpec;
 
+export type ContextFormCommand<T> = ContextFormButton<T> | ContextFormToggleButton<T>;
+
 export interface BaseContextForm<T> extends ContextBar {
   initValue: () => T;
   label: Optional<string>;
   launch: Optional<ContextFormLaunchButton | ContextFormLaunchToggleButton>;
-  commands: Array<ContextFormToggleButton<T> | ContextFormButton<T>>;
+  commands: ContextFormCommand<T>[];
   onInput: (api: ContextFormInstanceApi<T>) => void;
 }
 
@@ -121,6 +127,7 @@ export type ContextForm = ContextInputForm | ContextSliderForm | ContextSizeInpu
 
 const contextButtonFields = baseToolbarButtonFields.concat([
   ComponentSchema.defaultedType('contextformbutton'),
+  FieldSchema.defaultedString('align', 'end'),
   ComponentSchema.primary,
   ComponentSchema.onAction,
   FieldSchema.customField('original', Fun.identity)
@@ -128,6 +135,7 @@ const contextButtonFields = baseToolbarButtonFields.concat([
 
 const contextToggleButtonFields = baseToolbarToggleButtonFields.concat([
   ComponentSchema.defaultedType('contextformbutton'),
+  FieldSchema.defaultedString('align', 'end'),
   ComponentSchema.primary,
   ComponentSchema.onAction,
   FieldSchema.customField('original', Fun.identity)

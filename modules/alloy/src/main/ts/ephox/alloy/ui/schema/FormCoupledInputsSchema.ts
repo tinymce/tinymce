@@ -25,7 +25,8 @@ const schema = Fun.constant([
   Fields.onStrictHandler('onLockedChange'),
   Fields.markers([ 'lockClass' ]),
   FieldSchema.defaulted('locked', false),
-  SketchBehaviours.field('coupledFieldBehaviours', [ Composing, Representing ])
+  SketchBehaviours.field('coupledFieldBehaviours', [ Composing, Representing ]),
+  FieldSchema.defaultedFunction('onInput', Fun.noop)
 ]);
 
 const getField = (comp: AlloyComponent, detail: FormCoupledInputsDetail, partName: string) => AlloyParts.getPart(comp, detail, partName).bind(Composing.getCurrent);
@@ -44,6 +45,8 @@ const coupledPart = (selfName: string, otherName: string) => PartType.required<F
                 if (Toggling.isOn(lock)) {
                   detail.onLockedChange(me, other, lock);
                 }
+
+                detail.onInput(me);
               });
             });
           })
