@@ -1,37 +1,35 @@
-import { FieldSchema, StructureSchema } from '@ephox/boulder';
-import { Result, Type } from '@ephox/katamari';
+import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
+import { Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
 import { ContextBar, contextBarFields, ContextBarSpec } from './ContextBar';
 
-export interface ToolbarGroup {
-  title?: string;
+export interface ToolbarGroupSpec {
+  name?: string;
   label?: string;
   items: string[];
 }
 
 export interface ContextToolbarSpec extends ContextBarSpec {
   type?: 'contexttoolbar';
-  items: string | Array<ToolbarGroup>;
+  items: string | ToolbarGroupSpec[];
 }
 
 export interface ContextToolbar extends ContextBar {
   type: 'contexttoolbar';
-  items: string | Array<ToolbarGroup>;
+  items: string | ToolbarGroupSpec[];
 }
 
 const contextToolbarSchema = StructureSchema.objOf([
   ComponentSchema.defaultedType('contexttoolbar'),
-  // TODO: Probably better way of doing this
-  FieldSchema.customField('items', (obj) => {
-    const value = obj.items;
-    if (Type.isString(value)) {
-      return value;
-    } else {
-      return value as ToolbarGroup[]; // TODO Fix magic!
-    }
-  }),
-  // FieldSchema.requiredString('items')
+  FieldSchema.requiredOf('items', StructureSchema.oneOf([
+    ValueType.string,
+    StructureSchema.arrOfObj([
+      FieldSchema.optionString('name'),
+      FieldSchema.optionString('label'),
+      FieldSchema.requiredArrayOf('items', ValueType.string)
+    ])
+  ])),
 ].concat(contextBarFields));
 
 export const createContextToolbar = (spec: ContextToolbarSpec): Result<ContextToolbar, StructureSchema.SchemaError<any>> =>
