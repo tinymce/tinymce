@@ -851,12 +851,12 @@ describe('browser.tinymce.core.content.InsertContentTest', () => {
       extended_valid_elements: 'svg[width|height]'
     }, [], true);
 
-    it('TINY-10237: Inserting SVG elements but filter out things like scripts', () => {
+    it('TINY-10237: Inserting SVG elements but filter out things like scripts and invalid children', () => {
       const editor = hook.editor();
       editor.setContent('<p>ab</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 1);
       editor.insertContent('<svg><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"><desc><script>alert(1)</script><p>hello</p></circle></a></svg>');
-      TinyAssertions.assertContent(editor, '<p>a<svg><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"><desc><p>hello</p></desc></circle></svg>b</p>');
+      TinyAssertions.assertContent(editor, '<p>a<svg><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"><desc></desc></circle></svg>b</p>');
     });
   });
 });

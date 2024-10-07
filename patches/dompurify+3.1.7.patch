@@ -1,0 +1,136 @@
+diff --git a/node_modules/dompurify/dist/purify.es.mjs b/node_modules/dompurify/dist/purify.es.mjs
+index 7a42ce6..3ee3213 100644
+--- a/node_modules/dompurify/dist/purify.es.mjs
++++ b/node_modules/dompurify/dist/purify.es.mjs
+@@ -1169,6 +1169,7 @@ function createDOMPurify() {
+       } = attr;
+       const lcName = transformCaseFunc(name);
+       let value = name === 'value' ? attrValue : stringTrim(attrValue);
++      const initValue = value;
+ 
+       /* Execute a hook if present */
+       hookEvent.attrName = lcName;
+@@ -1183,11 +1184,9 @@ function createDOMPurify() {
+         continue;
+       }
+ 
+-      /* Remove attribute */
+-      _removeAttribute(name, currentNode);
+-
+       /* Did the hooks approve of the attribute? */
+       if (!hookEvent.keepAttr) {
++        _removeAttribute(name, currentNode);
+         continue;
+       }
+ 
+@@ -1207,6 +1206,7 @@ function createDOMPurify() {
+       /* Is `value` valid for this attribute? */
+       const lcTag = transformCaseFunc(currentNode.nodeName);
+       if (!_isValidAttribute(lcTag, lcName, value)) {
++        _removeAttribute(name, currentNode);
+         continue;
+       }
+ 
+@@ -1246,19 +1246,21 @@ function createDOMPurify() {
+       }
+ 
+       /* Handle invalid data-* attribute set by try-catching it */
+-      try {
+-        if (namespaceURI) {
+-          currentNode.setAttributeNS(namespaceURI, name, value);
+-        } else {
+-          /* Fallback to setAttribute() for browser-unrecognized namespaces e.g. "x-schema". */
+-          currentNode.setAttribute(name, value);
+-        }
+-        if (_isClobbered(currentNode)) {
+-          _forceRemove(currentNode);
+-        } else {
+-          arrayPop(DOMPurify.removed);
+-        }
+-      } catch (_) {}
++      if (value !== initValue) {
++        try {
++          if (namespaceURI) {
++            currentNode.setAttributeNS(namespaceURI, name, value);
++          } else {
++            /* Fallback to setAttribute() for browser-unrecognized namespaces e.g. "x-schema". */
++            currentNode.setAttribute(name, value);
++          }
++          if (_isClobbered(currentNode)) {
++            _forceRemove(currentNode);
++          } else {
++            arrayPop(DOMPurify.removed);
++          }
++        } catch (_) {}
++      }
+     }
+ 
+     /* Execute a hook if present */
+diff --git a/node_modules/dompurify/dist/purify.js b/node_modules/dompurify/dist/purify.js
+index 5b07950..d53b568 100644
+--- a/node_modules/dompurify/dist/purify.js
++++ b/node_modules/dompurify/dist/purify.js
+@@ -1175,6 +1175,7 @@
+         } = attr;
+         const lcName = transformCaseFunc(name);
+         let value = name === 'value' ? attrValue : stringTrim(attrValue);
++        const initValue = value;
+ 
+         /* Execute a hook if present */
+         hookEvent.attrName = lcName;
+@@ -1189,11 +1190,9 @@
+           continue;
+         }
+ 
+-        /* Remove attribute */
+-        _removeAttribute(name, currentNode);
+-
+         /* Did the hooks approve of the attribute? */
+         if (!hookEvent.keepAttr) {
++          _removeAttribute(name, currentNode);
+           continue;
+         }
+ 
+@@ -1213,6 +1212,7 @@
+         /* Is `value` valid for this attribute? */
+         const lcTag = transformCaseFunc(currentNode.nodeName);
+         if (!_isValidAttribute(lcTag, lcName, value)) {
++          _removeAttribute(name, currentNode);
+           continue;
+         }
+ 
+@@ -1252,19 +1252,21 @@
+         }
+ 
+         /* Handle invalid data-* attribute set by try-catching it */
+-        try {
+-          if (namespaceURI) {
+-            currentNode.setAttributeNS(namespaceURI, name, value);
+-          } else {
+-            /* Fallback to setAttribute() for browser-unrecognized namespaces e.g. "x-schema". */
+-            currentNode.setAttribute(name, value);
+-          }
+-          if (_isClobbered(currentNode)) {
+-            _forceRemove(currentNode);
+-          } else {
+-            arrayPop(DOMPurify.removed);
+-          }
+-        } catch (_) {}
++        if (value !== initValue) {
++          try {
++            if (namespaceURI) {
++              currentNode.setAttributeNS(namespaceURI, name, value);
++            } else {
++              /* Fallback to setAttribute() for browser-unrecognized namespaces e.g. "x-schema". */
++              currentNode.setAttribute(name, value);
++            }
++            if (_isClobbered(currentNode)) {
++              _forceRemove(currentNode);
++            } else {
++              arrayPop(DOMPurify.removed);
++            }
++          } catch (_) {}
++        }
+       }
+ 
+       /* Execute a hook if present */
