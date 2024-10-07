@@ -93,9 +93,6 @@ export const renderSizeInput = (spec: SizeInputGenericSpec, providersBackstage: 
         }),
         AlloyEvents.run(NativeEvents.change(), (component, _simulatedEvent) => {
           AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name });
-        }),
-        AlloyEvents.run(NativeEvents.input(), (component, _simulatedEvent) => {
-          AlloyTriggers.emitWith(component, formInputEvent, { name: spec.name });
         })
       ]),
       ...spec.onEnter.map((onEnter) => Keying.config({ mode: 'special', onEnter })).toArray()
@@ -157,6 +154,9 @@ export const renderSizeInput = (spec: SizeInputGenericSpec, providersBackstage: 
         });
       });
     },
+    onInput: (current) => {
+      AlloyTriggers.emitWith(current, formInputEvent, { name: spec.name });
+    },
     coupledFieldBehaviours: Behaviour.derive([
       Disabling.config({
         disabled,
@@ -181,7 +181,7 @@ export const renderSizeInput = (spec: SizeInputGenericSpec, providersBackstage: 
           const value2 = optOther.map<string>(Representing.getValue).getOr('');
           converter = makeRatioConverter(value1, value2);
         }),
-        AlloyEvents.run<RatioEvent>(formInputEvent, (component) => {
+        AlloyEvents.run(formInputEvent, (component) => {
           spec.onInput.each((onInput) => onInput(component));
         })
       ])

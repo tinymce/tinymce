@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import { Fun, Merger } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
 
 import { Editor, RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
 
@@ -21,10 +20,19 @@ export default (): void => {
       label: 'Alt',
       commands: [
         {
+          type: 'contextformbutton',
+          align: 'start',
+          icon: 'chevron-left',
+          onAction: (formApi) => {
+            formApi.hide();
+          }
+        },
+        {
           type: 'contextformtogglebutton',
-          // align: 'start',
+          align: 'start',
           text: 'Decorative',
-          onAction: (_formApi, _buttonApi) => {
+          onAction: (_formApi, buttonApi) => {
+            buttonApi.setActive(!buttonApi.isActive());
             // formApi.setInputEnabled(buttonApi.isActive());
           }
         }
@@ -44,14 +52,16 @@ export default (): void => {
       },
       label: 'Size',
       commands: [
-        // {
-        //   type: 'contextbackbutton',
-        //   // align: 'start',
-        //   icon: 'back'
-        // },
         {
           type: 'contextformbutton',
-          // align: 'end',
+          align: 'start',
+          icon: 'chevron-left',
+          onAction: (formApi) => {
+            formApi.hide();
+          }
+        },
+        {
+          type: 'contextformbutton',
           text: 'Reset',
           onAction: (formApi) => {
             formApi.setValue({ width: '400', height: '300' });
@@ -75,14 +85,16 @@ export default (): void => {
       },
       label: 'Brightness',
       commands: [
-        // {
-        //   type: 'contextbackbutton',
-        //   align: 'start',
-        //   icon: 'back'
-        // },
         {
           type: 'contextformbutton',
-          // align: 'end',
+          align: 'start',
+          icon: 'chevron-left',
+          onAction: (formApi) => {
+            formApi.hide();
+          }
+        },
+        {
+          type: 'contextformbutton',
           primary: true,
           text: 'Apply',
           onAction: (formApi) => {
@@ -92,7 +104,6 @@ export default (): void => {
         },
         {
           type: 'contextformbutton',
-          // align: 'end',
           text: 'Reset',
           onAction: (formApi) => {
             formApi.setValue(50);

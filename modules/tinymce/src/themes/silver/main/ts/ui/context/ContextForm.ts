@@ -1,6 +1,6 @@
 import { AlloyComponent, AlloySpec, AlloyTriggers, Memento, SketchSpec } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
-import { Id, Optional } from '@ephox/katamari';
+import { Arr, Id, Optional } from '@ephox/katamari';
 
 import { ToolbarMode } from '../../api/Options';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -20,16 +20,24 @@ const renderInput = (ctx: InlineContent.ContextForm, providers: UiFactoryBacksta
 
 const buildInitGroups = (ctx: InlineContent.ContextForm, providers: UiFactoryBackstageProviders): ToolbarGroup[] => {
   const onEnter = (input: AlloyComponent) => {
-    return commands.findPrimary(input).map((primary) => {
+    return startCommands.findPrimary(input).orThunk(() => endCommands.findPrimary(input)).map((primary) => {
       AlloyTriggers.emitExecute(primary);
       return true;
     });
   };
 
   const memInput = Memento.record(renderInput(ctx, providers, onEnter));
-  const commands = generate(memInput, ctx.commands, providers);
+  // TODO: This any cast is needed since it somehow always picks the first type Type<string> from Type<string> | Type<number> | Type<SizeData>
+  const commandParts = Arr.partition(ctx.commands, (command: InlineContent.ContextFormCommand<any>) => command.align as string === 'start');
+  const startCommands = generate(memInput, commandParts.pass, providers);
+  const endCommands = generate(memInput, commandParts.fail, providers);
 
-  return [
+  return Arr.filter([
+    {
+      title: Optional.none(),
+      label: Optional.none(),
+      items: startCommands.asSpecs() as AlloySpec[]
+    },
     {
       title: Optional.none(),
       label: Optional.none(),
@@ -38,9 +46,9 @@ const buildInitGroups = (ctx: InlineContent.ContextForm, providers: UiFactoryBac
     {
       title: Optional.none(),
       label: Optional.none(),
-      items: commands.asSpecs() as AlloySpec[]
+      items: endCommands.asSpecs() as AlloySpec[]
     }
-  ];
+  ], (group) => group.items.length > 0);
 };
 
 const renderContextForm = (toolbarType: ToolbarMode, ctx: InlineContent.ContextForm, providers: UiFactoryBackstageProviders): SketchSpec =>

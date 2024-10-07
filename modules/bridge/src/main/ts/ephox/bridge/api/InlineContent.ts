@@ -5,7 +5,7 @@ import {
 import { ContextPosition, ContextScope } from '../components/content/ContextBar';
 import {
   ContextForm, ContextInputForm, ContextSliderForm, ContextSizeInputForm, ContextFormButton, ContextFormButtonInstanceApi, ContextFormButtonSpec, ContextFormInstanceApi, ContextFormSpec,
-  ContextInputFormSpec, ContextSliderFormSpec, ContextSizeInputFormSpec, ContextFormToggleButton, ContextFormToggleButtonInstanceApi, ContextFormToggleButtonSpec, createContextForm
+  ContextInputFormSpec, ContextSliderFormSpec, ContextSizeInputFormSpec, ContextFormToggleButton, ContextFormToggleButtonInstanceApi, ContextFormToggleButtonSpec, ContextFormCommand, createContextForm
 } from '../components/content/ContextForm';
 import { ContextToolbar, ContextToolbarSpec, createContextToolbar, contextToolbarToSpec, ToolbarGroup } from '../components/content/ContextToolbar';
 
@@ -38,6 +38,7 @@ export {
   ContextFormToggleButton,
   ContextFormToggleButtonSpec,
   ContextFormToggleButtonInstanceApi,
+  ContextFormCommand,
   createContextForm,
 
   ContextToolbar,
