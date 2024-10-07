@@ -29,7 +29,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest', () => {
   it.skip('TBA: Click on the nbsp button then type some text, and assert content is correct', async () => {
     const editor = hook.editor();
     clickNbspToolbarButton(editor);
-    await RealKeys.pSendKeysOn('iframe => body => p', [ RealKeys.text('test') ]);
+    await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('test') ]);
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
       return s.element('body', {
         children: [
