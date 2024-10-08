@@ -51,11 +51,12 @@ export interface ToolbarGroup {
 const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
   const attributes = toolbarGroup.label.isNone() ? toolbarGroup.title.fold(() => ({}),
     (title) => ({ attributes: { title }})) : toolbarGroup.label.fold(() => ({}),
-    (label) => ({ attributes: { name: label }}));
+    (label) => ({ attributes: { 'aria-label': label }})
+  );
 
   return {
     dom: {
-      tag: toolbarGroup.label.isSome() ? 'fieldset' : 'div',
+      tag: 'div',
       classes: [ 'tox-toolbar__group' ].concat(
         toolbarGroup.label.isSome() ? [ 'tox-toolbar__group_with_label' ] : []
       ),
@@ -66,7 +67,7 @@ const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
       ...(toolbarGroup.label.map((label) => {
         return {
           dom: {
-            tag: 'legend',
+            tag: 'span',
             classes: [ 'tox-label' ],
           },
           components: [ GuiFactory.text(label) ]
