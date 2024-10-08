@@ -1,47 +1,52 @@
-diff --git a/node_modules/dompurify/dist/purify.es.js b/node_modules/dompurify/dist/purify.es.js
-index ee9246e..d297e22 100644
---- a/node_modules/dompurify/dist/purify.es.js
-+++ b/node_modules/dompurify/dist/purify.es.js
-@@ -1190,6 +1190,7 @@ function createDOMPurify() {
-         namespaceURI
+diff --git a/node_modules/dompurify/dist/purify.es.mjs b/node_modules/dompurify/dist/purify.es.mjs
+index 7a42ce6..3a0a69b 100644
+--- a/node_modules/dompurify/dist/purify.es.mjs
++++ b/node_modules/dompurify/dist/purify.es.mjs
+@@ -1169,6 +1169,7 @@ function createDOMPurify() {
        } = attr;
-       value = name === 'value' ? attr.value : stringTrim(attr.value);
+       const lcName = transformCaseFunc(name);
+       let value = name === 'value' ? attrValue : stringTrim(attrValue);
 +      const initValue = value;
-       lcName = transformCaseFunc(name);
+ 
        /* Execute a hook if present */
+       hookEvent.attrName = lcName;
+@@ -1184,10 +1185,10 @@ function createDOMPurify() {
+       }
  
-@@ -1209,11 +1210,11 @@ function createDOMPurify() {
        /* Remove attribute */
- 
- 
 -      _removeAttribute(name, currentNode);
+ 
        /* Did the hooks approve of the attribute? */
- 
- 
        if (!hookEvent.keepAttr) {
 +        _removeAttribute(name, currentNode);
          continue;
        }
-       /* Work around a security issue in jQuery 3.0 */
-@@ -1238,6 +1239,7 @@ function createDOMPurify() {
-       const lcTag = transformCaseFunc(currentNode.nodeName);
  
+@@ -1207,6 +1208,7 @@ function createDOMPurify() {
+       /* Is `value` valid for this attribute? */
+       const lcTag = transformCaseFunc(currentNode.nodeName);
        if (!_isValidAttribute(lcTag, lcName, value)) {
 +        _removeAttribute(name, currentNode);
          continue;
        }
-       /* Full DOM Clobbering protection via namespace isolation,
-@@ -1274,17 +1276,18 @@ function createDOMPurify() {
-       }
-       /* Handle invalid data-* attribute set by try-catching it */
  
--
+@@ -1246,19 +1248,21 @@ function createDOMPurify() {
+       }
+ 
+       /* Handle invalid data-* attribute set by try-catching it */
 -      try {
 -        if (namespaceURI) {
 -          currentNode.setAttributeNS(namespaceURI, name, value);
 -        } else {
 -          /* Fallback to setAttribute() for browser-unrecognized namespaces e.g. "x-schema". */
 -          currentNode.setAttribute(name, value);
+-        }
+-        if (_isClobbered(currentNode)) {
+-          _forceRemove(currentNode);
+-        } else {
+-          arrayPop(DOMPurify.removed);
+-        }
+-      } catch (_) {}
 +      if (value !== initValue) {
 +        try {
 +          if (namespaceURI) {
@@ -50,60 +55,65 @@ index ee9246e..d297e22 100644
 +            /* Fallback to setAttribute() for browser-unrecognized namespaces e.g. "x-schema". */
 +            currentNode.setAttribute(name, value);
 +          }
-+        } catch (_) {
-+          _removeAttribute(name, currentNode);
-         }
--
--        arrayPop(DOMPurify.removed);
--      } catch (_) {}
++          if (_isClobbered(currentNode)) {
++            _forceRemove(currentNode);
++          } else {
++            arrayPop(DOMPurify.removed);
++          }
++        } catch (_) {}
 +      }
      }
-     /* Execute a hook if present */
  
+     /* Execute a hook if present */
 diff --git a/node_modules/dompurify/dist/purify.js b/node_modules/dompurify/dist/purify.js
-index ba807e1..c6512fc 100644
+index 5b07950..2a00fff 100644
 --- a/node_modules/dompurify/dist/purify.js
 +++ b/node_modules/dompurify/dist/purify.js
-@@ -1196,6 +1196,7 @@
-           namespaceURI
+@@ -1175,6 +1175,7 @@
          } = attr;
-         value = name === 'value' ? attr.value : stringTrim(attr.value);
+         const lcName = transformCaseFunc(name);
+         let value = name === 'value' ? attrValue : stringTrim(attrValue);
 +        const initValue = value;
-         lcName = transformCaseFunc(name);
+ 
          /* Execute a hook if present */
+         hookEvent.attrName = lcName;
+@@ -1190,10 +1191,10 @@
+         }
  
-@@ -1215,11 +1216,10 @@
          /* Remove attribute */
- 
- 
 -        _removeAttribute(name, currentNode);
-         /* Did the hooks approve of the attribute? */
  
--
+         /* Did the hooks approve of the attribute? */
          if (!hookEvent.keepAttr) {
 +          _removeAttribute(name, currentNode);
            continue;
          }
-         /* Work around a security issue in jQuery 3.0 */
-@@ -1244,6 +1244,7 @@
-         const lcTag = transformCaseFunc(currentNode.nodeName);
  
+@@ -1213,6 +1214,7 @@
+         /* Is `value` valid for this attribute? */
+         const lcTag = transformCaseFunc(currentNode.nodeName);
          if (!_isValidAttribute(lcTag, lcName, value)) {
 +          _removeAttribute(name, currentNode);
            continue;
          }
-         /* Full DOM Clobbering protection via namespace isolation,
-@@ -1280,17 +1281,18 @@
-         }
-         /* Handle invalid data-* attribute set by try-catching it */
  
--
+@@ -1252,19 +1254,21 @@
+         }
+ 
+         /* Handle invalid data-* attribute set by try-catching it */
 -        try {
 -          if (namespaceURI) {
 -            currentNode.setAttributeNS(namespaceURI, name, value);
 -          } else {
 -            /* Fallback to setAttribute() for browser-unrecognized namespaces e.g. "x-schema". */
 -            currentNode.setAttribute(name, value);
+-          }
+-          if (_isClobbered(currentNode)) {
+-            _forceRemove(currentNode);
+-          } else {
+-            arrayPop(DOMPurify.removed);
+-          }
+-        } catch (_) {}
 +        if (value !== initValue) {
 +          try {
 +            if (namespaceURI) {
@@ -112,13 +122,13 @@ index ba807e1..c6512fc 100644
 +              /* Fallback to setAttribute() for browser-unrecognized namespaces e.g. "x-schema". */
 +              currentNode.setAttribute(name, value);
 +            }
-+          } catch (_) {
-+            _removeAttribute(name, currentNode);
-           }
--
--          arrayPop(DOMPurify.removed);
--        } catch (_) {}
++            if (_isClobbered(currentNode)) {
++              _forceRemove(currentNode);
++            } else {
++              arrayPop(DOMPurify.removed);
++            }
++          } catch (_) {}
 +        }
        }
-       /* Execute a hook if present */
  
+       /* Execute a hook if present */

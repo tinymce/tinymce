@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: 'Invalid HTML elements within an `svg` element are removed. #TINY-1132'
+time: 2024-10-08T17:17:19.103070749+11:00
+custom:
+  Issue: TINY-11332
