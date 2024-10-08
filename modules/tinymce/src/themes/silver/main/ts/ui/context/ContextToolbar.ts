@@ -157,7 +157,7 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     const toolbarType = getToolbarMode(editor) === ToolbarMode.scrolling ? ToolbarMode.scrolling : ToolbarMode.default;
 
     const initGroups = Arr.flatten(Arr.map(toolbars, (ctx) =>
-      ctx.type === 'contexttoolbar' ? buildContextToolbarGroups(allButtons, ctx) : buildContextFormGroups(ctx, sharedBackstage.providers)
+      ctx.type === 'contexttoolbar' ? buildContextToolbarGroups(allButtons, InlineContent.contextToolbarToSpec(ctx)) : buildContextFormGroups(ctx, sharedBackstage.providers)
     ));
 
     return renderToolbar({
