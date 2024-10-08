@@ -81,7 +81,7 @@ export const renderSizeInput = (spec: SizeInputGenericSpec, providersBackstage: 
 
   const getFieldPart = (isField1: boolean) => AlloyFormField.parts.field({
     factory: AlloyInput,
-    inputClasses: spec.inDialog ? [ 'tox-textfield' ] : [ 'tox-textfield', 'tox-textfield--context-form' ],
+    inputClasses: spec.inDialog ? [ 'tox-textfield' ] : [ 'tox-textfield', 'tox-toolbar-textfield', 'tox-textfield-size' ],
     data: isField1 ? spec.width : spec.height,
     inputBehaviours: Behaviour.derive([
       Disabling.config({ disabled }),

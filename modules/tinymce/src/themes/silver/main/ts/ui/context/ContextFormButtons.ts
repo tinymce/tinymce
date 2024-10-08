@@ -12,8 +12,6 @@ import { internalToolbarButtonExecute, InternalToolbarButtonExecuteEvent } from 
 import { renderToolbarButtonWith, renderToolbarToggleButtonWith } from '../toolbar/button/ToolbarButtons';
 import { getFormApi } from './ContextFormApi';
 
-type ContextFormButton = InlineContent.ContextFormToggleButton<any> | InlineContent.ContextFormButton<any>;
-
 interface ContextFormButtonRegistry {
   readonly asSpecs: () => SimpleOrSketchSpec[];
   readonly findPrimary: (compInSystem: AlloyComponent) => Optional<AlloyComponent>;
@@ -56,10 +54,10 @@ const renderContextToggleButton = (memInput: MementoRecord, button: InlineConten
   ]);
 };
 
-const isToggleButton = (button: ContextFormButton): button is InlineContent.ContextFormToggleButton<any> =>
+const isToggleButton = (button: InlineContent.ContextFormCommand<any>): button is InlineContent.ContextFormToggleButton<any> =>
   button.type === 'contextformtogglebutton';
 
-const generateOne = (memInput: MementoRecord, button: ContextFormButton, providersBackstage: UiFactoryBackstageProviders) => {
+const generateOne = (memInput: MementoRecord, button: InlineContent.ContextFormCommand<any>, providersBackstage: UiFactoryBackstageProviders) => {
   if (isToggleButton(button)) {
     return renderContextToggleButton(memInput, button, providersBackstage);
   } else {
@@ -67,7 +65,7 @@ const generateOne = (memInput: MementoRecord, button: ContextFormButton, provide
   }
 };
 
-const generate = (memInput: MementoRecord, buttons: ContextFormButton[], providersBackstage: UiFactoryBackstageProviders): ContextFormButtonRegistry => {
+const generate = (memInput: MementoRecord, buttons: InlineContent.ContextFormCommand<any>[], providersBackstage: UiFactoryBackstageProviders): ContextFormButtonRegistry => {
 
   const mementos = Arr.map(buttons, (button) => Memento.record(
     generateOne(memInput, button, providersBackstage)
