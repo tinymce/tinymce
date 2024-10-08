@@ -28,7 +28,7 @@ const buildInitGroups = (ctx: InlineContent.ContextForm, providers: UiFactoryBac
 
   const memInput = Memento.record(renderInput(ctx, providers, onEnter));
   // TODO: This any cast is needed since it somehow always picks the first type Type<string> from Type<string> | Type<number> | Type<SizeData>
-  const commandParts = Arr.partition(ctx.commands, (command: InlineContent.ContextFormCommand<any>) => command.align as string === 'start');
+  const commandParts = Arr.partition(ctx.commands, (command: InlineContent.ContextFormCommand<any>) => command.align === 'start');
   const startCommands = generate(memInput, commandParts.pass, providers);
   const endCommands = generate(memInput, commandParts.fail, providers);
 
