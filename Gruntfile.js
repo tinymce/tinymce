@@ -7,17 +7,7 @@ const runsHeadless = [
   '@ephox/jax'
 ];
 
-if (!Array.prototype.flatMap) {
-  // simple polyfill for node versions < 11
-  // not at all to ES2019 spec, but if you're relying on that you should use node 11 /shrug
-  const concat = (x, y) => x.concat(y);
-
-  const flatMap = (f, xs) => xs.map(f).reduce(concat, []);
-
-  Array.prototype.flatMap = function (f) {
-    return flatMap(f, this);
-  };
-}
+require("util").inspect.defaultOptions.depth = null;
 
 const filterChanges = (changes, tests) => {
   return changes.filter((change => tests.indexOf(change.name) > -1));
@@ -53,7 +43,7 @@ const bedrockDefaults = {
   singleTimeout: 60000,
 };
 
-const bedrockHeadless = (tests, browser, auto) => {
+const bedrockHeadless = (tests, browser, auto, opts) => {
   if (tests.length === 0) {
     return {};
   } else {
@@ -62,46 +52,51 @@ const bedrockHeadless = (tests, browser, auto) => {
         ...bedrockDefaults,
         name: 'headless-tests',
         browser,
-        useSelenium: true,
         testfiles: testFolders(tests, auto),
 
         // we have a few tests that don't play nicely when combined together in the monorepo
-        retries: 3
+        retries: 3,
+        ...opts
       }
     }
   }
 };
 
-const bedrockBrowser = (tests, browserName, osName, bucket, buckets, chunk, auto) => {
+const bedrockBrowser = (tests, browserName, osName, bucket, buckets, chunk, remote, auto, opts) => {
+  const name = opts.name ? opts.name : `${browserName}-${osName}`;
   if (tests.length === 0) {
     return {};
   } else {
     return {
       browser: {
         ...bedrockDefaults,
-        overallTimeout: 1200000,
-        name: `${browserName}-${osName}`,
+        overallTimeout: 3600000,
+        name: name,
         browser: browserName,
         testfiles: testFolders(tests, auto),
         bucket: bucket,
         buckets: buckets,
         chunk: chunk,
+        remote: remote,
 
         // we have a few tests that don't play nicely when combined together in the monorepo
-        retries: 3
+        retries: 3,
+        ...opts
       }
     };
   }
 };
 
-const fetchLernaProjects = (log, runAllTests) => {
+const fetchLernaProjects = (grunt, runAllTests) => {
   // This has to be sync because grunt can't do async config
   var exec = require('child_process').execSync;
 
   // if JSON parse fails, well, grunt will just fail /shrug
   const parseLernaList = (cmd) => {
     try {
-      return JSON.parse(exec(`yarn -s lerna ${cmd} -a --json --loglevel warn 2>&1`));
+      const output = exec(`yarn -s lerna ${cmd} -a --json --loglevel warn`);
+      grunt.verbose.writeln(`lerna output: ${output}`);
+      return JSON.parse(output);
     } catch (e) {
       // If no changes are found, then lerna returns an exit code of 1, so deal with that gracefully
       if (e.status === 1) {
@@ -115,7 +110,7 @@ const fetchLernaProjects = (log, runAllTests) => {
   const changes = runAllTests ? [] : parseLernaList('changed --no-ignore-changes');
 
   if (changes.length === 0) {
-    log.writeln('No changes found, testing all projects');
+    grunt.log.writeln('No changes found, testing all projects');
     // If there are no changes, use "lerna list" instead of "lerna changed" to test everything
     return parseLernaList('list');
   } else {
@@ -126,11 +121,11 @@ const fetchLernaProjects = (log, runAllTests) => {
 
 module.exports = function (grunt) {
   const runAllTests = grunt.option('ignore-lerna-changed') || false;
-  const changes = fetchLernaProjects(grunt.log, runAllTests);
+  const changes = fetchLernaProjects(grunt, runAllTests);
 
   const bucket = parseInt(grunt.option('bucket'), 10) || 1;
   const buckets = parseInt(grunt.option('buckets'), 10) || 1;
-  const chunk = parseInt(grunt.option('chunk'), 10) || 100;
+  const chunk = parseInt(grunt.option('chunk'), 10) || 1000;
 
   const headlessTests = filterChanges(changes, runsHeadless);
   const browserTests = filterChangesNot(changes, runsHeadless);
@@ -138,6 +133,18 @@ module.exports = function (grunt) {
   const activeBrowser = grunt.option('bedrock-browser') || 'chrome-headless';
   const headlessBrowser = activeBrowser.endsWith("-headless") ? activeBrowser : 'chrome-headless';
   const activeOs = grunt.option('bedrock-os') || 'tests';
+
+  const remote = grunt.option('remote');
+
+  const bedrockOpts = (grunt, availableOpts) => {
+    return availableOpts.reduce((opts, opt) => {
+      const current = grunt.option(opt);
+      if (current) opts[opt] = current;
+      return opts;
+    }, {});
+  };
+
+  const opts = bedrockOpts(grunt, ['name', 'username', 'accesskey', 'sishDomain', 'devicefarmArn', 'devicefarmRegion', 'platformName', 'browserVersion', 'useSelenium']);
   const gruntConfig = {
     shell: {
       tsc: { command: 'yarn -s tsc' },
@@ -146,12 +153,12 @@ module.exports = function (grunt) {
       'yarn-dev': { command: 'yarn -s dev' }
     },
     'bedrock-auto': {
-      ...bedrockHeadless(headlessTests, headlessBrowser, true),
-      ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, chunk, true)
+      ...bedrockHeadless(headlessTests, headlessBrowser, true, opts),
+      ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, chunk, remote, true, opts)
     },
     'bedrock-manual': {
-      ...bedrockHeadless(headlessTests, headlessBrowser, false),
-      ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, chunk, false)
+      ...bedrockHeadless(headlessTests, headlessBrowser, false, opts),
+      ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, chunk, remote, false, opts)
     }
   };
 

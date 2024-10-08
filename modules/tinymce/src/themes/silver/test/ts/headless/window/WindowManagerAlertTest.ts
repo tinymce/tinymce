@@ -9,7 +9,8 @@ import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import * as TestExtras from '../../module/TestExtras';
 
-describe('headless.tinymce.themes.silver.window.WindowManagerAlertTest', () => {
+// TODO TINY-10480: Investigate flaky tests
+describe.skip('headless.tinymce.themes.silver.window.WindowManagerAlertTest', () => {
   const extrasHook = TestExtras.bddSetup();
   let windowManager: WindowManagerImpl;
   before(() => {

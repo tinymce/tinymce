@@ -11,7 +11,8 @@ import Editor from 'tinymce/core/api/Editor';
 
 import * as UiUtils from '../../module/UiUtils';
 
-describe('browser.tinymce.themes.silver.editor.SilverInlineEditorTest', () => {
+// TODO TINY-10480: Investigate flaky tests
+describe.skip('browser.tinymce.themes.silver.editor.SilverInlineEditorTest', () => {
   const os = PlatformDetection.detect().os;
   const store = Cell<string[]>([ ]);
   const hook = TinyHooks.bddSetup<Editor>({

@@ -1,4 +1,5 @@
 import { context, describe, it } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
 import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -10,6 +11,9 @@ import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 
 describe('browser.tinymce.core.dom.SelectionTest', () => {
+  const platform = PlatformDetection.detect();
+  const isSafari = platform.browser.isSafari();
+
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     entities: 'raw',
@@ -1365,7 +1369,8 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
       soffset: 1,
       fpath: [ 1, 0 ],
       foffset: 1,
-      expected: false
+      // TINY-10639: Safari does not allow selection over non-editable content
+      expected: isSafari
     }));
 
     it('TINY-9477: isEditable on selected noneditable table cells should be true since parent is editable', testIsEditableSelection({

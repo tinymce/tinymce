@@ -1,13 +1,10 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
 
 import * as TrimBody from 'tinymce/core/dom/TrimBody';
 
 describe('browser.tinymce.core.dom.TrimBodyTest', () => {
-  const isSafari = PlatformDetection.detect().browser.isSafari();
-
   context('trim', () => {
     it('trim should trim body containing trimmmable nodes', () => {
       const tempAttrs = [ 'data-mce-selected' ];
@@ -179,9 +176,7 @@ describe('browser.tinymce.core.dom.TrimBodyTest', () => {
         const unescapedText = document.createElement('div');
         unescapedText.innerHTML = `<p>Test</p><${plaintext}>Test<p>Test</p>`;
         TrimBody.emptyUnescapedZwspTexts(unescapedText);
-        // TINY-10305: Safari escapes text nodes within <plaintext>.
-        assert.strictEqual(unescapedText.innerHTML,
-          isSafari ? `<p>Test</p><${plaintext}>Test&lt;p&gt;Test&lt;/p&gt;</${plaintext}>` : `<p>Test</p><${plaintext}>Test<p>Test</p></${plaintext}>`);
+        assert.strictEqual(unescapedText.innerHTML, `<p>Test</p><${plaintext}>Test<p>Test</p></${plaintext}>`);
       });
     });
   });
