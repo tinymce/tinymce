@@ -145,7 +145,7 @@ export default (): void => {
     //     name: 'styles', items: [ 'styles' ]
     //   },
     //   {
-    //     name: 'formatting', items: [ 'bold', 'italic' ]
+    //     name: 'formatting', items: [ 'bold', 'italic']
     //   },
     //   {
     //     name: 'alignment', items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ]
