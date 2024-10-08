@@ -1,5 +1,5 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
-import { Result } from '@ephox/katamari';
+import { Arr, Optional, Result, Type } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
 import { ContextBar, contextBarFields, ContextBarSpec } from './ContextBar';
@@ -15,9 +15,15 @@ export interface ContextToolbarSpec extends ContextBarSpec {
   items: string | ToolbarGroupSpec[];
 }
 
+interface ToolbarGroup {
+  name: Optional<string>;
+  label: Optional<string>;
+  items: string[];
+}
+
 export interface ContextToolbar extends ContextBar {
   type: 'contexttoolbar';
-  items: string | ToolbarGroupSpec[];
+  items: string | ToolbarGroup[];
 }
 
 const contextToolbarSchema = StructureSchema.objOf([
@@ -31,6 +37,17 @@ const contextToolbarSchema = StructureSchema.objOf([
     ])
   ])),
 ].concat(contextBarFields));
+
+const toolbarGroupBackToSpec = (toolbarGroup: ToolbarGroup): ToolbarGroupSpec => ({
+  name: toolbarGroup.name.getOrUndefined(),
+  label: toolbarGroup.label.getOrUndefined(),
+  items: toolbarGroup.items
+});
+
+export const contextToolbarToSpec = (contextToolbar: ContextToolbar): ContextToolbarSpec => ({
+  ...contextToolbar,
+  items: Type.isString(contextToolbar.items) ? contextToolbar.items : Arr.map(contextToolbar.items, toolbarGroupBackToSpec)
+});
 
 export const createContextToolbar = (spec: ContextToolbarSpec): Result<ContextToolbar, StructureSchema.SchemaError<any>> =>
   StructureSchema.asRaw<ContextToolbar>('ContextToolbar', contextToolbarSchema, spec);

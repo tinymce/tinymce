@@ -7,7 +7,7 @@ import {
   ContextForm, ContextFormButton, ContextFormButtonInstanceApi, ContextFormButtonSpec, ContextFormInstanceApi, ContextFormSpec,
   ContextFormToggleButton, ContextFormToggleButtonInstanceApi, ContextFormToggleButtonSpec, createContextForm
 } from '../components/content/ContextForm';
-import { ContextToolbar, ContextToolbarSpec, createContextToolbar } from '../components/content/ContextToolbar';
+import { ContextToolbar, ContextToolbarSpec, createContextToolbar, contextToolbarToSpec } from '../components/content/ContextToolbar';
 
 export {
   AutocompleterSpec,
@@ -37,6 +37,7 @@ export {
   ContextToolbar,
   ContextToolbarSpec,
   createContextToolbar,
+  contextToolbarToSpec,
 
   SeparatorItemSpec,
   SeparatorItem,
