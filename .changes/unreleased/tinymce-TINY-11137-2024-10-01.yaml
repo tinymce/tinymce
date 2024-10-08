@@ -1,6 +1,6 @@
 project: tinymce
 kind: Fixed
-body: The `toolbar-sticky-offset` would be applied after entering fullscreen mode.
+body: The `toolbar-sticky-offset` would still be applied after entering fullscreen mode.
 time: 2024-10-01T16:27:44.670057+02:00
 custom:
   Issue: TINY-11137
