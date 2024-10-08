@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Upgraded dependencies. #TINY-11331
-- Inavlid HTML elements within an `svg` element are removed. #TINY-11331
+- Invalid HTML elements within an `svg` element are removed. #TINY-11331
 
 ## 6.8.4 - 2024-06-19
 
