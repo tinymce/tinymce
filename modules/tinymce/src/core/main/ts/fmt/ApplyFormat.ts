@@ -41,6 +41,7 @@ const canFormatBR = (editor: Editor, format: ApplyFormat, node: HTMLBRElement, p
 };
 
 const applyStyles = (dom: DOMUtils, elm: Element, format: ApplyFormat, vars: FormatVars | undefined) => {
+
   each(format.styles, (value, name) => {
     dom.setStyle(elm, name, FormatUtils.replaceVars(value, vars));
   });
