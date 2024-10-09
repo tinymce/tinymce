@@ -178,6 +178,7 @@ const setupPurify = (settings: DomParserSettings, schema: Schema, namespaceTrack
 };
 
 const getPurifyConfig = (settings: DomParserSettings, mimeType: string): Config => {
+  // Current dompurify types only cover up to 3.0.5 which does not include this new setting
   const basePurifyConfig: Config & { SAFE_FOR_XML: boolean } = {
     IN_PLACE: true,
     ALLOW_UNKNOWN_PROTOCOLS: true,
