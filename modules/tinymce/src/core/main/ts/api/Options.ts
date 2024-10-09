@@ -867,11 +867,6 @@ const register = (editor: Editor): void => {
     default: true
   });
 
-  registerOption('apply_list_formatting', {
-    processor: 'boolean',
-    default: true
-  });
-
   // These options must be registered later in the init sequence due to their default values
   editor.on('ScriptsLoaded', () => {
     registerOption('directionality', {
@@ -993,7 +988,6 @@ const getSandboxIframesExclusions = (editor: Editor): string[] => editor.options
 const shouldConvertUnsafeEmbeds = option('convert_unsafe_embeds');
 const getLicenseKey = option('license_key');
 const getApiKey = option('api_key');
-const getApplyListFormatting = option('apply_list_formatting');
 
 export {
   register,
@@ -1103,6 +1097,5 @@ export {
   getLicenseKey,
   getSandboxIframesExclusions,
   shouldConvertUnsafeEmbeds,
-  getApiKey,
-  getApplyListFormatting
+  getApiKey
 };
