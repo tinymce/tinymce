@@ -12,6 +12,7 @@ describe('webdriver.tinymce.themes.silver.dialogs.SizeInputSpaceTest', () => {
   const extrasHook = TestExtras.bddSetup();
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderSizeInput({
+      context: 'any',
       name: 'dimensions',
       label: Optional.some('size'),
       constrain: true,

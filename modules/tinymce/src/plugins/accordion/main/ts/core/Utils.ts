@@ -25,7 +25,7 @@ export const isAtDetailsStart = (editor: Editor): boolean => {
 };
 
 export const isInsertAllowed = (editor: Editor): boolean =>
-  !isInSummary(editor) && editor.dom.isEditable(editor.selection.getNode());
+  !isInSummary(editor) && editor.dom.isEditable(editor.selection.getNode()) && !editor.mode.isReadOnly();
 
 export const getSelectedDetails = (editor: Editor): Optional<HTMLDetailsElement> =>
   Optional.from(editor.dom.getParent(editor.selection.getNode(), isDetails));

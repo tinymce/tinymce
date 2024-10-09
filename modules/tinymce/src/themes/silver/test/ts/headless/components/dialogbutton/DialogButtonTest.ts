@@ -11,6 +11,7 @@ describe('headless.tinymce.themes.silver.components.dialogbutton.DialogButtonTes
   describe('primary style', () => {
     const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
       renderButton({
+        context: 'any',
         name: 'test-button',
         text: 'Button<Text',
         enabled: true,
@@ -46,6 +47,7 @@ describe('headless.tinymce.themes.silver.components.dialogbutton.DialogButtonTes
   describe('secondary style', () => {
     const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
       renderButton({
+        context: 'any',
         name: 'test-button',
         text: 'ButtonText',
         enabled: true,
@@ -73,6 +75,7 @@ describe('headless.tinymce.themes.silver.components.dialogbutton.DialogButtonTes
   describe('toolbar style', () => {
     const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
       renderButton({
+        context: 'any',
         name: 'test-button',
         text: 'ButtonText',
         enabled: true,

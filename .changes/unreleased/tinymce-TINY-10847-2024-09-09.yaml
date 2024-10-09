@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: Copying tables to the clipboard did not correctly separate cells and rows for the "text/plain" MIME
+  type.
+time: 2024-09-09T14:26:53.17475216+10:00
+custom:
+  Issue: TINY-10847

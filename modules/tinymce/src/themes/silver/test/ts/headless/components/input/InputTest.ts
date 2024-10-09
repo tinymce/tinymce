@@ -12,6 +12,7 @@ import TestProviders from '../../../module/TestProviders';
 describe('headless.tinymce.themes.silver.components.input.InputTest', () => {
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderInput({
+      context: 'any',
       name: 'input',
       // Note: The label is intentionally HTML like to ensure the label is rendered as plain text
       label: Optional.some('Solid<Liquid<Gas'),

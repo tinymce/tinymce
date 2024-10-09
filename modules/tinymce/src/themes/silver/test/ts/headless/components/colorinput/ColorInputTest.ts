@@ -22,6 +22,7 @@ describe('headless.tinymce.themes.silver.components.colorinput.ColorInputTest', 
       },
       components: [
         renderColorInput({
+          context: 'any',
           name: 'alpha',
           storageKey: 'test',
           label: Optional.some('test-color-input')

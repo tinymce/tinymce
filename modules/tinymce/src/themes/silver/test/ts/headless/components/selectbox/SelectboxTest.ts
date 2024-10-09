@@ -20,6 +20,7 @@ describe('headless.tinymce.themes.silver.components.selectbox.SelectboxTest', ()
 
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderSelectBox({
+      context: 'any',
       name: 'selector',
       size: 1,
       label: Optional.some('selector'),

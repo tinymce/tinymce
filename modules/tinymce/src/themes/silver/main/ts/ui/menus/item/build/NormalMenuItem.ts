@@ -27,6 +27,7 @@ const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, provi
   }, providersBackstage, renderIcons);
 
   return renderCommonItem({
+    context: spec.context,
     data: buildData(spec),
     getApi,
     enabled: spec.enabled,

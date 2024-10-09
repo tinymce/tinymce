@@ -19,12 +19,12 @@ const isWithinNonEditable = (editor: Editor, element: Element | null): boolean =
 
 const selectionIsWithinNonEditableList = (editor: Editor): boolean => {
   const parentList = Selection.getParentList(editor);
-  return isWithinNonEditable(editor, parentList);
+  return isWithinNonEditable(editor, parentList) || !editor.selection.isEditable();
 };
 
 const isWithinNonEditableList = (editor: Editor, element: Element | null): boolean => {
   const parentList = editor.dom.getParent(element, 'ol,ul,dl');
-  return isWithinNonEditable(editor, parentList);
+  return isWithinNonEditable(editor, parentList) || !editor.selection.isEditable();
 };
 
 const setNodeChangeHandler = (editor: Editor, nodeChangeHandler: (e: NodeChangeEvent) => void): () => void => {

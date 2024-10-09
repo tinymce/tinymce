@@ -5,10 +5,8 @@ export const setEditableRoot = (editor: Editor, state: boolean): void => {
   if (editor._editableRoot !== state) {
     editor._editableRoot = state;
 
-    if (!editor.readonly) {
-      editor.getBody().contentEditable = String(editor.hasEditableRoot());
-      editor.nodeChanged();
-    }
+    editor.getBody().contentEditable = String(editor.hasEditableRoot());
+    editor.nodeChanged();
 
     Events.fireEditableRootStateChange(editor, state);
   }

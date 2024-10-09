@@ -12,6 +12,7 @@ import TestProviders from '../../../module/TestProviders';
 describe('headless.tinymce.themes.silver.components.textarea.TextareaTest', () => {
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderTextarea({
+      context: 'any',
       name: 'textarea',
       label: Optional.some('LabelA'),
       placeholder: Optional.none(),

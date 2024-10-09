@@ -1,6 +1,6 @@
 import { Cursors, Waiter } from '@ephox/agar';
 import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Obj } from '@ephox/katamari';
+import { Arr, Fun, Obj } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -226,498 +226,513 @@ describe('browser.tinymce.core.annotate.AnnotateBlocksTest', () => {
   );
 
   Arr.each([
-    {
-      label: 'image',
-      name: 'img',
-      html: `<p>before${imageHtml}after</p>`,
-      expectedDirectHtml:
-        '<p>before' +
-        annotationSpanWrapper(imageHtml) +
-        'after</p>',
-      expectedRangeHtml:
-        `<p><span ${expectedSpanAnnotationAttrs()}>before` +
-        imageHtml +
-        'after</span></p>',
-      expectedDirectSelection: selectionPath([ 1, 1 ], 0, [ 1, 1 ], 1),
-      afterRemoveSelection: selectionPath([ 1 ], 1, [ 1 ], 2),
-      blockType: 'inline'
-    },
-    {
-      label: 'audio',
-      name: 'audio',
-      html: `<p>before${audioHtml}after</p>`,
-      expectedDirectHtml:
-        '<p>before' +
-        annotationSpanWrapper(audioHtml) +
-        'after</p>',
-      expectedRangeHtml:
-        `<p><span ${expectedSpanAnnotationAttrs()}>before` +
-        audioHtml +
-        'after</span></p>',
-      expectedDirectSelection: selectionPath([ 1, 1 ], 0, [ 1 ], 2),
-      afterRemoveSelection: selectionPath([ 1 ], 1, [ 1 ], 2),
-      blockType: 'inline'
-    },
-    {
-      label: 'video',
-      name: 'video',
-      html: `<p>before<video controls="controls" width="300" height="150"><source src="custom/video.mp4" type="video/mp4"></video>after</p>`,
-      expectedDirectHtml:
-        '<p>before' +
-        annotationSpanWrapper(videoHtml) +
-        'after</p>',
-      expectedRangeHtml:
-        `<p><span ${expectedSpanAnnotationAttrs()}>before` +
-        videoHtml +
-        'after</span></p>',
-      expectedDirectSelection: selectionPath([ 1, 1 ], 0, [ 1 ], 2),
-      afterRemoveSelection: selectionPath([ 1 ], 1, [ 1 ], 2),
-      blockType: 'inline'
-    },
-    {
-      label: 'image with caption',
-      name: 'img',
-      annotationSelector: 'figure',
-      html: figureImageHtml(false),
-      expectedDirectHtml: figureImageHtml(true),
-      expectedRangeHtml: figureImageHtml(true),
-      expectedDirectSelection: selectionPath([], 1, [], 2),
-      blockType: 'root'
-    },
-    {
-      label: 'codesample',
-      name: 'pre',
-      html: codesampleHtml(false),
-      expectedDirectHtml: codesampleHtml(true),
-      expectedRangeHtml: codesampleHtml(true),
-      expectedDirectSelection: selectionPath([], 1, [], 2),
-      blockType: 'root'
-    },
-    {
-      label: 'table of contents',
-      name: 'div',
-      html: tocHtml(false),
-      expectedDirectHtml: tocHtml(true),
-      expectedRangeHtml: tocHtml(true),
-      expectedDirectSelection: selectionPath([], 1, [], 2),
-      blockType: 'root'
-    },
-    {
-      label: 'media iframe (YouTube video)',
-      name: 'iframe',
-      annotationSelector: 'span.mce-preview-object',
-      html:
-        '<p>before' +
-        iframeMediaHtml +
-        'after</p>',
-      expectedDirectHtml:
-        '<p>before' +
-        annotationSpanWrapper(iframeMediaHtml) +
-        'after</p>',
-      expectedRangeHtml:
-        `<p><span ${expectedSpanAnnotationAttrs()}>before` +
-        iframeMediaHtml +
-        'after</span></p>',
-      expectedDirectSelection: selectionPath([ 1, 1 ], 0, [ 1 ], 2),
-      afterRemoveSelection: selectionPath([ 1 ], 1, [ 1 ], 2),
-      blockType: 'inline'
-    },
-    {
-      label: 'media audio',
-      name: 'audio',
-      annotationSelector: 'span.mce-preview-object',
-      html:
-        '<p>before' +
-        audioMediaHtml +
-        'after</p>',
-      expectedDirectHtml:
-        '<p>before' +
-        annotationSpanWrapper(audioMediaHtml) +
-        'after</p>',
-      expectedRangeHtml:
-        `<p><span ${expectedSpanAnnotationAttrs()}>before` +
-        audioMediaHtml +
-        'after</span></p>',
-      expectedDirectSelection: selectionPath([ 1, 1 ], 0, [ 1 ], 2),
-      afterRemoveSelection: selectionPath([ 1 ], 1, [ 1 ], 2),
-      blockType: 'inline'
-    },
-    {
-      label: 'media video',
-      name: 'video',
-      annotationSelector: 'span.mce-preview-object',
-      html:
-        '<p>before' +
-        videoMediaHtml +
-        'after</p>',
-      expectedDirectHtml:
-        '<p>before' +
-        annotationSpanWrapper(videoMediaHtml) +
-        'after</p>',
-      expectedRangeHtml:
-        `<p><span ${expectedSpanAnnotationAttrs()}>before` +
-        videoMediaHtml +
-        'after</span></p>',
-      expectedDirectSelection: selectionPath([ 1, 1 ], 0, [ 1 ], 2),
-      afterRemoveSelection: selectionPath([ 1 ], 1, [ 1 ], 2),
-      blockType: 'inline'
-    },
-    {
-      label: 'mediaembed iframe (YouTube video)',
-      name: 'iframe',
-      annotationSelector: 'div',
-      html: iframeMediaEmbedHtml(false),
-      expectedDirectHtml: iframeMediaEmbedHtml(true),
-      expectedRangeHtml: iframeMediaEmbedHtml(true),
-      expectedDirectSelection: selectionPath([], 1, [], 2),
-      blockType: 'root'
-    },
-    {
-      label: 'mediaembed video',
-      name: 'video',
-      annotationSelector: 'div',
-      html: videoMediaEmbedHtml(false),
-      expectedDirectHtml: videoMediaEmbedHtml(true),
-      expectedRangeHtml: videoMediaEmbedHtml(true),
-      expectedDirectSelection: selectionPath([], 1, [], 2),
-      blockType: 'root'
-    },
-    {
-      label: 'mediaembed audio',
-      name: 'audio',
-      annotationSelector: 'div',
-      html: audioMediaEmbedHtml(false),
-      expectedDirectHtml: audioMediaEmbedHtml(true),
-      expectedRangeHtml: audioMediaEmbedHtml(true),
-      expectedDirectSelection: selectionPath([], 1, [], 2),
-      blockType: 'root'
-    },
-    {
-      label: 'pageembed website',
-      name: 'iframe',
-      annotationSelector: 'div',
-      html: pageEmbedHtml(false),
-      expectedDirectHtml: pageEmbedHtml(true),
-      expectedRangeHtml: pageEmbedHtml(true),
-      expectedDirectSelection: selectionPath([], 1, [], 2),
-      blockType: 'root'
-    },
-  ], (scenario) => {
-    const { label, name, html } = scenario;
-    const selector = scenario.annotationSelector ?? name;
-    const isRootBlock = scenario.blockType === 'root';
+    { label: 'Normal mode', before: () => hook.editor().mode.set('design'), after: Fun.noop, mode: 'normal' },
+    { label: 'Readonly mode', before: () => hook.editor().mode.set('design'), after: () => hook.editor().mode.set('readonly') },
+  ], (modeScenario) => {
+    context(modeScenario.label, () => {
+      const modeTestSetContent = (editor: Editor, content: string, args = {}) => {
+        modeScenario.before();
+        editor.setContent(content, args);
+        modeScenario.after();
+      };
 
-    context(label, () => {
-      beforeEach(() => {
-        const editor = hook.editor();
-        editor.setContent(`<p>Before</p>${html}<p>After</p>`, { format: 'raw' });
+      Arr.each([
+        {
+          label: 'image',
+          name: 'img',
+          html: `<p>before${imageHtml}after</p>`,
+          expectedDirectHtml:
+            '<p>before' +
+            annotationSpanWrapper(imageHtml) +
+            'after</p>',
+          expectedRangeHtml:
+            `<p><span ${expectedSpanAnnotationAttrs()}>before` +
+            imageHtml +
+            'after</span></p>',
+          expectedDirectSelection: selectionPath([ 1, 1 ], 0, [ 1, 1 ], 1),
+          afterRemoveSelection: selectionPath([ 1 ], 1, [ 1 ], 2),
+          blockType: 'inline'
+        },
+        {
+          label: 'audio',
+          name: 'audio',
+          html: `<p>before${audioHtml}after</p>`,
+          expectedDirectHtml:
+            '<p>before' +
+            annotationSpanWrapper(audioHtml) +
+            'after</p>',
+          expectedRangeHtml:
+            `<p><span ${expectedSpanAnnotationAttrs()}>before` +
+            audioHtml +
+            'after</span></p>',
+          expectedDirectSelection: selectionPath([ 1, 1 ], 0, [ 1 ], 2),
+          afterRemoveSelection: selectionPath([ 1 ], 1, [ 1 ], 2),
+          blockType: 'inline'
+        },
+        {
+          label: 'video',
+          name: 'video',
+          html: `<p>before<video controls="controls" width="300" height="150"><source src="custom/video.mp4" type="video/mp4"></video>after</p>`,
+          expectedDirectHtml:
+            '<p>before' +
+            annotationSpanWrapper(videoHtml) +
+            'after</p>',
+          expectedRangeHtml:
+            `<p><span ${expectedSpanAnnotationAttrs()}>before` +
+            videoHtml +
+            'after</span></p>',
+          expectedDirectSelection: selectionPath([ 1, 1 ], 0, [ 1 ], 2),
+          afterRemoveSelection: selectionPath([ 1 ], 1, [ 1 ], 2),
+          blockType: 'inline'
+        },
+        {
+          label: 'image with caption',
+          name: 'img',
+          annotationSelector: 'figure',
+          html: figureImageHtml(false),
+          expectedDirectHtml: figureImageHtml(true),
+          expectedRangeHtml: figureImageHtml(true),
+          expectedDirectSelection: selectionPath([], 1, [], 2),
+          blockType: 'root'
+        },
+        {
+          label: 'codesample',
+          name: 'pre',
+          html: codesampleHtml(false),
+          expectedDirectHtml: codesampleHtml(true),
+          expectedRangeHtml: codesampleHtml(true),
+          expectedDirectSelection: selectionPath([], 1, [], 2),
+          blockType: 'root'
+        },
+        {
+          label: 'table of contents',
+          name: 'div',
+          html: tocHtml(false),
+          expectedDirectHtml: tocHtml(true),
+          expectedRangeHtml: tocHtml(true),
+          expectedDirectSelection: selectionPath([], 1, [], 2),
+          blockType: 'root'
+        },
+        {
+          label: 'media iframe (YouTube video)',
+          name: 'iframe',
+          annotationSelector: 'span.mce-preview-object',
+          html:
+            '<p>before' +
+            iframeMediaHtml +
+            'after</p>',
+          expectedDirectHtml:
+            '<p>before' +
+            annotationSpanWrapper(iframeMediaHtml) +
+            'after</p>',
+          expectedRangeHtml:
+            `<p><span ${expectedSpanAnnotationAttrs()}>before` +
+            iframeMediaHtml +
+            'after</span></p>',
+          expectedDirectSelection: selectionPath([ 1, 1 ], 0, [ 1 ], 2),
+          afterRemoveSelection: selectionPath([ 1 ], 1, [ 1 ], 2),
+          blockType: 'inline'
+        },
+        {
+          label: 'media audio',
+          name: 'audio',
+          annotationSelector: 'span.mce-preview-object',
+          html:
+            '<p>before' +
+            audioMediaHtml +
+            'after</p>',
+          expectedDirectHtml:
+            '<p>before' +
+            annotationSpanWrapper(audioMediaHtml) +
+            'after</p>',
+          expectedRangeHtml:
+            `<p><span ${expectedSpanAnnotationAttrs()}>before` +
+            audioMediaHtml +
+            'after</span></p>',
+          expectedDirectSelection: selectionPath([ 1, 1 ], 0, [ 1 ], 2),
+          afterRemoveSelection: selectionPath([ 1 ], 1, [ 1 ], 2),
+          blockType: 'inline'
+        },
+        {
+          label: 'media video',
+          name: 'video',
+          annotationSelector: 'span.mce-preview-object',
+          html:
+            '<p>before' +
+            videoMediaHtml +
+            'after</p>',
+          expectedDirectHtml:
+            '<p>before' +
+            annotationSpanWrapper(videoMediaHtml) +
+            'after</p>',
+          expectedRangeHtml:
+            `<p><span ${expectedSpanAnnotationAttrs()}>before` +
+            videoMediaHtml +
+            'after</span></p>',
+          expectedDirectSelection: selectionPath([ 1, 1 ], 0, [ 1 ], 2),
+          afterRemoveSelection: selectionPath([ 1 ], 1, [ 1 ], 2),
+          blockType: 'inline'
+        },
+        {
+          label: 'mediaembed iframe (YouTube video)',
+          name: 'iframe',
+          annotationSelector: 'div',
+          html: iframeMediaEmbedHtml(false),
+          expectedDirectHtml: iframeMediaEmbedHtml(true),
+          expectedRangeHtml: iframeMediaEmbedHtml(true),
+          expectedDirectSelection: selectionPath([], 1, [], 2),
+          blockType: 'root'
+        },
+        {
+          label: 'mediaembed video',
+          name: 'video',
+          annotationSelector: 'div',
+          html: videoMediaEmbedHtml(false),
+          expectedDirectHtml: videoMediaEmbedHtml(true),
+          expectedRangeHtml: videoMediaEmbedHtml(true),
+          expectedDirectSelection: selectionPath([], 1, [], 2),
+          blockType: 'root'
+        },
+        {
+          label: 'mediaembed audio',
+          name: 'audio',
+          annotationSelector: 'div',
+          html: audioMediaEmbedHtml(false),
+          expectedDirectHtml: audioMediaEmbedHtml(true),
+          expectedRangeHtml: audioMediaEmbedHtml(true),
+          expectedDirectSelection: selectionPath([], 1, [], 2),
+          blockType: 'root'
+        },
+        {
+          label: 'pageembed website',
+          name: 'iframe',
+          annotationSelector: 'div',
+          html: pageEmbedHtml(false),
+          expectedDirectHtml: pageEmbedHtml(true),
+          expectedRangeHtml: pageEmbedHtml(true),
+          expectedDirectSelection: selectionPath([], 1, [], 2),
+          blockType: 'root'
+        },
+      ], (scenario) => {
+        const { label, name, html } = scenario;
+        const selector = scenario.annotationSelector ?? name;
+        const isRootBlock = scenario.blockType === 'root';
+
+        context(label, () => {
+          beforeEach(() => {
+            const editor = hook.editor();
+            modeTestSetContent(editor, `<p>Before</p>${html}<p>After</p>`, { format: 'raw' });
+          });
+
+          it('TINY-8698: should annotate when directly selected', () => {
+            const editor = hook.editor();
+            testDirectSelectionAnnotation(
+              editor,
+              selector,
+              [ scenario.expectedDirectHtml ],
+              scenario.expectedDirectSelection,
+              { span: isRootBlock ? 0 : 1, block: isRootBlock ? 2 : 0 }
+            );
+            assertGetAll(editor, { 'test-uid-1': isRootBlock ? [ selector ] : [ 'span' ] });
+          });
+
+          it('TINY-8698: should annotate when in ranged selection', () => {
+            const editor = hook.editor();
+            testAllContentSelectionAnnotation(
+              editor,
+              [ scenario.expectedRangeHtml ],
+              selectionPath([], 0, [], 3),
+              { span: isRootBlock ? 2 : 3, block: isRootBlock ? 1 : 0 }
+            );
+            assertGetAll(editor, { 'test-uid-1': isRootBlock ? [ 'span', selector, 'span' ] : [ 'span', 'span', 'span' ] });
+          });
+
+          if (isRootBlock) {
+            it('TINY-8698: should be able to apply ranged annotation after direct selection block annotation', () => {
+              const editor = hook.editor();
+
+              testDirectSelectionAnnotation(
+                editor,
+                selector,
+                [ scenario.expectedDirectHtml ],
+                scenario.expectedDirectSelection,
+                { span: 0, block: 2 }
+              );
+              assertGetAll(editor, { 'test-uid-1': [ selector ] });
+
+              testAllContentSelectionAnnotation(
+                editor,
+                [ scenario.expectedDirectHtml ],
+                selectionPath([], 0, [], 3),
+                { span: 2, block: 1 },
+                2
+              );
+              assertGetAll(editor, { 'test-uid-1': [ selector ], 'test-uid-2': [ 'span', 'span' ] });
+            });
+          }
+
+          it('TINY-8698: should be able to remove annotation and other annotations of the same id when it is directly selected', () => {
+            const editor = hook.editor();
+
+            testAllContentSelectionAnnotation(
+              editor,
+              [ scenario.expectedRangeHtml ],
+              selectionPath([], 0, [], 3),
+              { span: isRootBlock ? 2 : 3, block: isRootBlock ? 1 : 0 }
+            );
+
+            testRemoveAnnotationOnSelection(
+              editor,
+              () => TinySelections.select(editor, selector, []),
+              [
+                `<p>Before</p>`,
+                html,
+                `<p>After</p>`,
+              ],
+              scenario.afterRemoveSelection ?? scenario.expectedDirectSelection,
+              false,
+              { span: 0, block: 0 },
+              true
+            );
+            assertGetAll(editor, {});
+          });
+
+          it('TINY-8698: should be able to remove annotation when another annotation with the same uid is selected', () => {
+            const editor = hook.editor();
+            testAllContentSelectionAnnotation(
+              editor,
+              [ scenario.expectedRangeHtml ],
+              selectionPath([], 0, [], 3),
+              { span: isRootBlock ? 2 : 3, block: isRootBlock ? 1 : 0 }
+            );
+
+            testRemoveAnnotationOnSelection(
+              editor,
+              (editor) => TinySelections.setCursor(editor, [ 0, 0, 0 ], 1),
+              [
+                `<p>Before</p>`,
+                html,
+                `<p>After</p>`,
+              ],
+              selectionPath([ 0, 0 ], 1, [ 0, 0 ], 1),
+              false,
+              { span: 0, block: 0 }
+            );
+            assertGetAll(editor, {});
+          });
+
+          it('TINY-8698: should be able to remove annotation when it is selected without affecting different neighboring annotations', () => {
+            const editor = hook.editor();
+
+            testDirectSelectionAnnotation(
+              editor,
+              selector,
+              [ scenario.expectedDirectHtml ],
+              scenario.expectedDirectSelection,
+              { span: isRootBlock ? 0 : 1, block: isRootBlock ? 2 : 0 }
+            );
+
+            testApplyAnnotationOnSelection(
+              editor,
+              () => TinySelections.setCursor(editor, [ 0, 0 ], 1),
+              [
+                `<p><span ${expectedSpanAnnotationAttrs(2)}>Before</span></p>`,
+                scenario.expectedDirectHtml,
+                `<p>After</p>`,
+              ],
+              // Annotation logic changes selection to word wrap
+              selectionPath([], 0, [], 1),
+              { span: isRootBlock ? 1 : 2, block: isRootBlock ? 1 : 0 }
+            );
+            assertGetAll(editor, { 'test-uid-1': isRootBlock ? [ selector ] : [ 'span' ], 'test-uid-2': [ 'span' ] });
+
+            testRemoveAnnotationOnSelection(
+              editor,
+              () => TinySelections.select(editor, selector, []),
+              [
+                `<p><span ${expectedSpanAnnotationAttrs(2)}>Before</span></p>`,
+                html,
+                `<p>After</p>`,
+              ],
+              scenario.afterRemoveSelection ?? scenario.expectedDirectSelection,
+              false,
+              { span: 1, block: 0 },
+              true
+            );
+            assertGetAll(editor, { 'test-uid-2': [ 'span' ] });
+          });
+
+          it('TINY-8698: should be able to remove annotations when using `removeAll` API', () => {
+            const editor = hook.editor();
+
+            testDirectSelectionAnnotation(
+              editor,
+              selector,
+              [ scenario.expectedDirectHtml ],
+              scenario.expectedDirectSelection,
+              { span: isRootBlock ? 0 : 1, block: isRootBlock ? 2 : 0 }
+            );
+
+            testApplyAnnotationOnSelection(
+              editor,
+              () => TinySelections.setCursor(editor, [ 0, 0 ], 1),
+              [
+                `<p><span ${expectedSpanAnnotationAttrs(2)}>Before</span></p>`,
+                scenario.expectedDirectHtml,
+                `<p>After</p>`,
+              ],
+              // Annotation logic changes selection to word wrap
+              selectionPath([], 0, [], 1),
+              { span: isRootBlock ? 1 : 2, block: isRootBlock ? 1 : 0 }
+            );
+
+            testRemoveAnnotationOnSelection(
+              editor,
+              () => TinySelections.setCursor(editor, [ 2, 0 ], 1),
+              [
+                `<p>Before</p>`,
+                html,
+                `<p>After</p>`,
+              ],
+              selectionPath([ 2, 0 ], 1, [ 2, 0 ], 1),
+              true,
+              { span: 0, block: 0 }
+            );
+            assertGetAll(editor, {});
+          });
+
+          it('TINY-8698: should fire `annotationChange` API callback when annotated block is selected', async () => {
+            const editor = hook.editor();
+
+            testApplyAnnotationOnSelection(
+              editor,
+              () => TinySelections.setSelection(editor, [ 0, 0 ], 3, [], 3),
+              [
+                `<p>Bef<span ${expectedSpanAnnotationAttrs()}>ore</span></p>`,
+                scenario.expectedRangeHtml,
+                `<p><span ${expectedSpanAnnotationAttrs()}>After</span></p>`,
+              ],
+              selectionPath([ 0 ], 1, [], 3),
+              { span: isRootBlock ? 2 : 3, block: isRootBlock ? 1 : 0 }
+            );
+            await Waiter.pWait(100);
+
+            annotationChangeData = [];
+            TinySelections.setCursor(editor, [ 0, 0 ], 1, true);
+            await pAssertAnnotationChangeData([{ state: false, uid: '', nodeNames: [] }]);
+
+            annotationChangeData = [];
+            TinySelections.select(editor, selector, []);
+            await pAssertAnnotationChangeData([{ state: true, uid: 'test-uid-1', nodeNames: isRootBlock ? [ 'span', selector, 'span' ] : [ 'span', 'span', 'span' ] }]);
+          });
+        });
       });
 
-      it('TINY-8698: should annotate when directly selected', () => {
-        const editor = hook.editor();
-        testDirectSelectionAnnotation(
-          editor,
-          selector,
-          [ scenario.expectedDirectHtml ],
-          scenario.expectedDirectSelection,
-          { span: isRootBlock ? 0 : 1, block: isRootBlock ? 2 : 0 }
-        );
-        assertGetAll(editor, { 'test-uid-1': isRootBlock ? [ selector ] : [ 'span' ] });
-      });
-
-      it('TINY-8698: should annotate when in ranged selection', () => {
-        const editor = hook.editor();
-        testAllContentSelectionAnnotation(
-          editor,
-          [ scenario.expectedRangeHtml ],
-          selectionPath([], 0, [], 3),
-          { span: isRootBlock ? 2 : 3, block: isRootBlock ? 1 : 0 }
-        );
-        assertGetAll(editor, { 'test-uid-1': isRootBlock ? [ 'span', selector, 'span' ] : [ 'span', 'span', 'span' ] });
-      });
-
-      if (isRootBlock) {
-        it('TINY-8698: should be able to apply ranged annotation after direct selection block annotation', () => {
+      context('multiple blocks', () => {
+        it('TINY-8698: Should be able to annotate inline block and root block in same selection', () => {
           const editor = hook.editor();
-
-          testDirectSelectionAnnotation(
-            editor,
-            selector,
-            [ scenario.expectedDirectHtml ],
-            scenario.expectedDirectSelection,
-            { span: 0, block: 2 }
-          );
-          assertGetAll(editor, { 'test-uid-1': [ selector ] });
+          modeScenario.before();
+          modeTestSetContent(editor, `<p>Before</p>${figureImageHtml(false)}<p>${imageHtml}</p><p>After</p>`);
+          modeScenario.after();
 
           testAllContentSelectionAnnotation(
             editor,
-            [ scenario.expectedDirectHtml ],
-            selectionPath([], 0, [], 3),
-            { span: 2, block: 1 },
-            2
+            [
+              figureImageHtml(true),
+              '<p>' +
+              `<span ${expectedSpanAnnotationAttrs()}>` +
+              imageHtml +
+              '</span>' +
+              '</p>'
+            ],
+            selectionPath([], 0, [], 4),
+            { span: 3, block: 1 }
           );
-          assertGetAll(editor, { 'test-uid-1': [ selector ], 'test-uid-2': [ 'span', 'span' ] });
+          assertGetAll(editor, { 'test-uid-1': [ 'span', 'figure', 'span', 'span' ] });
         });
-      }
 
-      it('TINY-8698: should be able to remove annotation and other annotations of the same id when it is directly selected', () => {
-        const editor = hook.editor();
+        it('TINY-8698: Should be able to annotate multiple inline blocks in same paragraph', () => {
+          const editor = hook.editor();
+          modeTestSetContent(editor, `<p>Before</p><p>${videoMediaHtml}${iframeMediaHtml}</p><p>After</p>`, { format: 'raw' });
 
-        testAllContentSelectionAnnotation(
-          editor,
-          [ scenario.expectedRangeHtml ],
-          selectionPath([], 0, [], 3),
-          { span: isRootBlock ? 2 : 3, block: isRootBlock ? 1 : 0 }
-        );
-
-        testRemoveAnnotationOnSelection(
-          editor,
-          () => TinySelections.select(editor, selector, []),
-          [
-            `<p>Before</p>`,
-            html,
-            `<p>After</p>`,
-          ],
-          scenario.afterRemoveSelection ?? scenario.expectedDirectSelection,
-          false,
-          { span: 0, block: 0 },
-          true
-        );
-        assertGetAll(editor, {});
+          testAllContentSelectionAnnotation(
+            editor,
+            [
+              '<p>' +
+              annotationSpanWrapper(
+                videoMediaHtml +
+                iframeMediaHtml
+              ) +
+              '</p>'
+            ],
+            selectionPath([], 0, [], 3),
+            { span: 3, block: 0 }
+          );
+          assertGetAll(editor, { 'test-uid-1': [ 'span', 'span', 'span' ] });
+        });
       });
 
-      it('TINY-8698: should be able to remove annotation when another annotation with the same uid is selected', () => {
-        const editor = hook.editor();
-        testAllContentSelectionAnnotation(
-          editor,
-          [ scenario.expectedRangeHtml ],
-          selectionPath([], 0, [], 3),
-          { span: isRootBlock ? 2 : 3, block: isRootBlock ? 1 : 0 }
-        );
+      context('nested annotation', () => {
+        before(function () {
+          // TODO: TINY-8820 Safari appears to have a bug where an annotation cannot be applied to the caption text when it is a collapsed selection
+          // Instead the annotation is applied to the nearest paragaraph which is incorrect
+          if (platform.browser.isSafari()) {
+            this.skip();
+          }
+        });
 
-        testRemoveAnnotationOnSelection(
-          editor,
-          (editor) => TinySelections.setCursor(editor, [ 0, 0, 0 ], 1),
-          [
-            `<p>Before</p>`,
-            html,
-            `<p>After</p>`,
-          ],
-          selectionPath([ 0, 0 ], 1, [ 0, 0 ], 1),
-          false,
-          { span: 0, block: 0 }
-        );
-        assertGetAll(editor, {});
+        it('TINY-8698: should be able to annotate both figure and caption text', () => {
+          const editor = hook.editor();
+          modeTestSetContent(editor, `<p>Before</p>${figureImageHtml(false)}<p>After</p>`);
+
+          testDirectSelectionAnnotation(
+            hook.editor(),
+            'figure',
+            [ figureImageHtml(true) ],
+            selectionPath([], 1, [], 2),
+            { span: 0, block: 2 }
+          );
+
+          testApplyAnnotationOnSelection(
+            editor,
+            () => TinySelections.setCursor(editor, [ 1, 1, 0 ], 1),
+            [
+              '<p>Before</p>',
+              `<figure class="image" contenteditable="false" ${expectedBlockAnnotationAttrs(1)}>${imageHtml}<figcaption><span ${expectedSpanAnnotationAttrs(2)}>Caption</span></figcaption></figure>`,
+              '<p>After</p>'
+            ],
+            selectionPath([ 1 ], 1, [ 1 ], 2),
+            { span: 1, block: 1 }
+          );
+        });
       });
 
-      it('TINY-8698: should be able to remove annotation when it is selected without affecting different neighboring annotations', () => {
-        const editor = hook.editor();
+      context('non-annotatable blocks', () => {
+        it('TINY-8698: should not annotate hr block if directly selected', () => {
+          const editor = hook.editor();
+          modeTestSetContent(editor, '<p>Before</p><hr><p>After</p>');
 
-        testDirectSelectionAnnotation(
-          editor,
-          selector,
-          [ scenario.expectedDirectHtml ],
-          scenario.expectedDirectSelection,
-          { span: isRootBlock ? 0 : 1, block: isRootBlock ? 2 : 0 }
-        );
+          testDirectSelectionAnnotation(
+            editor,
+            'hr',
+            [ '<hr>' ],
+            selectionPath([], 1, [], 2),
+            { span: 0, block: 0 }
+          );
+        });
 
-        testApplyAnnotationOnSelection(
-          editor,
-          () => TinySelections.setCursor(editor, [ 0, 0 ], 1),
-          [
-            `<p><span ${expectedSpanAnnotationAttrs(2)}>Before</span></p>`,
-            scenario.expectedDirectHtml,
-            `<p>After</p>`,
-          ],
-          // Annotation logic changes selection to word wrap
-          selectionPath([], 0, [], 1),
-          { span: isRootBlock ? 1 : 2, block: isRootBlock ? 1 : 0 }
-        );
-        assertGetAll(editor, { 'test-uid-1': isRootBlock ? [ selector ] : [ 'span' ], 'test-uid-2': [ 'span' ] });
+        it('TINY-8698: should not annotate hr block when part of ranged selection', () => {
+          const editor = hook.editor();
+          modeTestSetContent(editor, '<p>Before</p><hr><p>After</p>');
 
-        testRemoveAnnotationOnSelection(
-          editor,
-          () => TinySelections.select(editor, selector, []),
-          [
-            `<p><span ${expectedSpanAnnotationAttrs(2)}>Before</span></p>`,
-            html,
-            `<p>After</p>`,
-          ],
-          scenario.afterRemoveSelection ?? scenario.expectedDirectSelection,
-          false,
-          { span: 1, block: 0 },
-          true
-        );
-        assertGetAll(editor, { 'test-uid-2': [ 'span' ] });
+          testAllContentSelectionAnnotation(
+            editor,
+            [ '<hr>' ],
+            selectionPath([], 0, [], 3),
+            { span: 2, block: 0 }
+          );
+        });
       });
-
-      it('TINY-8698: should be able to remove annotations when using `removeAll` API', () => {
-        const editor = hook.editor();
-
-        testDirectSelectionAnnotation(
-          editor,
-          selector,
-          [ scenario.expectedDirectHtml ],
-          scenario.expectedDirectSelection,
-          { span: isRootBlock ? 0 : 1, block: isRootBlock ? 2 : 0 }
-        );
-
-        testApplyAnnotationOnSelection(
-          editor,
-          () => TinySelections.setCursor(editor, [ 0, 0 ], 1),
-          [
-            `<p><span ${expectedSpanAnnotationAttrs(2)}>Before</span></p>`,
-            scenario.expectedDirectHtml,
-            `<p>After</p>`,
-          ],
-          // Annotation logic changes selection to word wrap
-          selectionPath([], 0, [], 1),
-          { span: isRootBlock ? 1 : 2, block: isRootBlock ? 1 : 0 }
-        );
-
-        testRemoveAnnotationOnSelection(
-          editor,
-          () => TinySelections.setCursor(editor, [ 2, 0 ], 1),
-          [
-            `<p>Before</p>`,
-            html,
-            `<p>After</p>`,
-          ],
-          selectionPath([ 2, 0 ], 1, [ 2, 0 ], 1),
-          true,
-          { span: 0, block: 0 }
-        );
-        assertGetAll(editor, {});
-      });
-
-      it('TINY-8698: should fire `annotationChange` API callback when annotated block is selected', async () => {
-        const editor = hook.editor();
-
-        testApplyAnnotationOnSelection(
-          editor,
-          () => TinySelections.setSelection(editor, [ 0, 0 ], 3, [], 3),
-          [
-            `<p>Bef<span ${expectedSpanAnnotationAttrs()}>ore</span></p>`,
-            scenario.expectedRangeHtml,
-            `<p><span ${expectedSpanAnnotationAttrs()}>After</span></p>`,
-          ],
-          selectionPath([ 0 ], 1, [], 3),
-          { span: isRootBlock ? 2 : 3, block: isRootBlock ? 1 : 0 }
-        );
-        await Waiter.pWait(100);
-
-        annotationChangeData = [];
-        TinySelections.setCursor(editor, [ 0, 0 ], 1, true);
-        await pAssertAnnotationChangeData([{ state: false, uid: '', nodeNames: [] }]);
-
-        annotationChangeData = [];
-        TinySelections.select(editor, selector, []);
-        await pAssertAnnotationChangeData([{ state: true, uid: 'test-uid-1', nodeNames: isRootBlock ? [ 'span', selector, 'span' ] : [ 'span', 'span', 'span' ] }]);
-      });
-    });
-  });
-
-  context('multiple blocks', () => {
-    it('TINY-8698: Should be able to annotate inline block and root block in same selection', () => {
-      const editor = hook.editor();
-      editor.setContent(`<p>Before</p>${figureImageHtml(false)}<p>${imageHtml}</p><p>After</p>`);
-
-      testAllContentSelectionAnnotation(
-        editor,
-        [
-          figureImageHtml(true),
-          '<p>' +
-          `<span ${expectedSpanAnnotationAttrs()}>` +
-          imageHtml +
-          '</span>' +
-          '</p>'
-        ],
-        selectionPath([], 0, [], 4),
-        { span: 3, block: 1 }
-      );
-      assertGetAll(editor, { 'test-uid-1': [ 'span', 'figure', 'span', 'span' ] });
-    });
-
-    it('TINY-8698: Should be able to annotate multiple inline blocks in same paragraph', () => {
-      const editor = hook.editor();
-      editor.setContent(`<p>Before</p><p>${videoMediaHtml}${iframeMediaHtml}</p><p>After</p>`, { format: 'raw' });
-
-      testAllContentSelectionAnnotation(
-        editor,
-        [
-          '<p>' +
-          annotationSpanWrapper(
-            videoMediaHtml +
-            iframeMediaHtml
-          ) +
-          '</p>'
-        ],
-        selectionPath([], 0, [], 3),
-        { span: 3, block: 0 }
-      );
-      assertGetAll(editor, { 'test-uid-1': [ 'span', 'span', 'span' ] });
-    });
-  });
-
-  context('nested annotation', () => {
-    before(function () {
-      // TODO: TINY-8820 Safari appears to have a bug where an annotation cannot be applied to the caption text when it is a collapsed selection
-      // Instead the annotation is applied to the nearest paragaraph which is incorrect
-      if (platform.browser.isSafari()) {
-        this.skip();
-      }
-    });
-
-    it('TINY-8698: should be able to annotate both figure and caption text', () => {
-      const editor = hook.editor();
-      editor.setContent(`<p>Before</p>${figureImageHtml(false)}<p>After</p>`);
-
-      testDirectSelectionAnnotation(
-        hook.editor(),
-        'figure',
-        [ figureImageHtml(true) ],
-        selectionPath([], 1, [], 2),
-        { span: 0, block: 2 }
-      );
-
-      testApplyAnnotationOnSelection(
-        editor,
-        () => TinySelections.setCursor(editor, [ 1, 1, 0 ], 1),
-        [
-          '<p>Before</p>',
-          `<figure class="image" contenteditable="false" ${expectedBlockAnnotationAttrs(1)}>${imageHtml}<figcaption><span ${expectedSpanAnnotationAttrs(2)}>Caption</span></figcaption></figure>`,
-          '<p>After</p>'
-        ],
-        selectionPath([ 1 ], 1, [ 1 ], 2),
-        { span: 1, block: 1 }
-      );
-    });
-  });
-
-  context('non-annotatable blocks', () => {
-    it('TINY-8698: should not annotate hr block if directly selected', () => {
-      const editor = hook.editor();
-      editor.setContent('<p>Before</p><hr><p>After</p>');
-
-      testDirectSelectionAnnotation(
-        editor,
-        'hr',
-        [ '<hr>' ],
-        selectionPath([], 1, [], 2),
-        { span: 0, block: 0 }
-      );
-    });
-
-    it('TINY-8698: should not annotate hr block when part of ranged selection', () => {
-      const editor = hook.editor();
-      editor.setContent('<p>Before</p><hr><p>After</p>');
-
-      testAllContentSelectionAnnotation(
-        editor,
-        [ '<hr>' ],
-        selectionPath([], 0, [], 3),
-        { span: 2, block: 0 }
-      );
     });
   });
 });

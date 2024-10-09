@@ -15,6 +15,7 @@ describe('headless.tinymce.themes.silver.components.checkbox.CheckboxFormChangeT
     },
     components: [
       renderCheckbox({
+        context: 'any',
         label: 'TestCheckbox',
         name: 'test-check-box',
         enabled: true,

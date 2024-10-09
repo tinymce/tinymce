@@ -1,9 +1,10 @@
-import { AlloySpec, AlloyTriggers, Behaviour, Input, Keying, Memento, SketchSpec } from '@ephox/alloy';
+import { AlloySpec, AlloyTriggers, Behaviour, Disabling, Input, Keying, Memento, SketchSpec } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
 import { Id, Optional } from '@ephox/katamari';
 
 import { ToolbarMode } from '../../api/Options';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import * as UiState from '../../UiState';
 import { renderToolbar, ToolbarGroup } from '../toolbar/CommonToolbar';
 import { generate } from './ContextFormButtons';
 
@@ -21,6 +22,10 @@ const buildInitGroups = (ctx: InlineContent.ContextForm, providers: UiFactoryBac
       inputAttributes,
       selectOnFocus: true,
       inputBehaviours: Behaviour.derive([
+        Disabling.config({
+          disabled: () => providers.checkUiComponentContext('mode:design').shouldDisable
+        }),
+        UiState.toggleOnReceive(() => providers.checkUiComponentContext('mode:design')),
         Keying.config({
           mode: 'special',
           onEnter: (input) => commands.findPrimary(input).map((primary) => {

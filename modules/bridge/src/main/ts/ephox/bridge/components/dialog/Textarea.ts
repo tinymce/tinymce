@@ -9,6 +9,7 @@ export interface TextAreaSpec extends FormComponentWithLabelSpec {
   placeholder?: string;
   maximized?: boolean;
   enabled?: boolean;
+  context?: string;
 }
 
 export interface TextArea extends FormComponentWithLabel {
@@ -16,12 +17,14 @@ export interface TextArea extends FormComponentWithLabel {
   maximized: boolean;
   placeholder: Optional<string>;
   enabled: boolean;
+  context: string;
 }
 
 const textAreaFields = formComponentWithLabelFields.concat([
   FieldSchema.optionString('placeholder'),
   FieldSchema.defaultedBoolean('maximized', false),
-  ComponentSchema.enabled
+  ComponentSchema.enabled,
+  FieldSchema.defaultedString('context', 'mode:design'),
 ]);
 
 export const textAreaSchema = StructureSchema.objOf(textAreaFields);

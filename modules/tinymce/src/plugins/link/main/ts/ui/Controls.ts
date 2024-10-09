@@ -115,7 +115,7 @@ const setupContextToolbars = (editor: Editor, openLink: OpenLink.LinkSelection):
 
   const onSetupLink = (buttonApi: InlineContent.ContextFormButtonInstanceApi) => {
     const node = editor.selection.getNode();
-    buttonApi.setEnabled(Utils.isInAnchor(editor, node));
+    buttonApi.setEnabled(Utils.isInAnchor(editor, node) && editor.selection.isEditable());
     return Fun.noop;
   };
 

@@ -32,6 +32,7 @@ export interface Registry {
   addAutocompleter: (name: string, spec: AutocompleterSpec) => void;
   addSidebar: (name: string, spec: SidebarSpec) => void;
   addView: (name: string, spec: ViewSpec) => void;
+  addContext: (name: string, pred: (args: string) => boolean) => void;
 
   getAll: () => {
     buttons: Record<string, ToolbarButtonSpec | GroupToolbarButtonSpec | ToolbarMenuButtonSpec | ToolbarSplitButtonSpec | ToolbarToggleButtonSpec>;
@@ -42,6 +43,7 @@ export interface Registry {
     icons: Record<string, string>;
     sidebars: Record<string, SidebarSpec>;
     views: Record<string, ViewSpec>;
+    contexts: Record<string, (args: string) => boolean>;
   };
 }
 
@@ -52,12 +54,14 @@ export const create = (): Registry => {
   const icons: Record<string, string> = {};
   const contextMenus: Record<string, ContextMenuApi> = {};
   const contextToolbars: Record<string, ContextToolbarSpec | ContextFormSpec> = {};
+  const contexts: Record<string, (args: string) => boolean> = {};
   const sidebars: Record<string, SidebarSpec> = {};
   const views: Record<string, ViewSpec> = {};
   const add = <T, S extends T>(collection: Record<string, T>, type: string) => (name: string, spec: S): void => {
     collection[name.toLowerCase()] = { ...spec, type };
   };
   const addIcon = (name: string, svgData: string) => icons[name.toLowerCase()] = svgData;
+  const addContext = (name: string, pred: (args: string) => boolean) => contexts[name.toLowerCase()] = pred;
 
   return {
     addButton: add(buttons, 'button'),
@@ -75,6 +79,7 @@ export const create = (): Registry => {
     addSidebar: add(sidebars, 'sidebar'),
     addView: add(views, 'views'),
     addIcon,
+    addContext,
 
     getAll: () => ({
       buttons,
@@ -89,7 +94,8 @@ export const create = (): Registry => {
 
       contextToolbars,
       sidebars,
-      views
+      views,
+      contexts
     })
   };
 };

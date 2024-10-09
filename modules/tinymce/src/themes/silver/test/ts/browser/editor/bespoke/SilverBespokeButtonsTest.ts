@@ -14,7 +14,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
   const hook = TinyHooks.bddSetup<Editor>({
     toolbar: 'align fontfamily fontsize blocks styles',
     base_url: '/project/tinymce/js/tinymce',
-    content_css: '/project/tinymce/src/themes/silver/test/css/content.css'
+    content_css: '/project/tinymce/src/themes/silver/test/css/content.css',
   }, []);
 
   const pAssertFocusOnItem = (itemText: string) => FocusTools.pTryOnSelector(
@@ -397,5 +397,26 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
     it('TINY-9669: Disable fontsize on noneditable content', testDisableOnNoneditable('Font size'));
     it('TINY-9669: Disable blocks on noneditable content', testDisableOnNoneditable('Block'));
     it('TINY-9669: Disable styles on noneditable content', testDisableOnNoneditable('Format'));
+  });
+
+  context('Readonly modes', () => {
+    const testDisableInReadonly = (title: string) => () => {
+      const editor = hook.editor();
+      UiFinder.exists(SugarBody.body(), `[aria-label^="${title}"]:not(:disabled)`);
+      editor.mode.set('readonly');
+      UiFinder.exists(SugarBody.body(), `[aria-label^="${title}"]:disabled`);
+
+      editor.mode.set('readonly');
+      UiFinder.exists(SugarBody.body(), `[aria-label^="${title}"]:disabled`);
+
+      editor.mode.set('design');
+      UiFinder.exists(SugarBody.body(), `[aria-label^="${title}"]:not(:disabled)`);
+    };
+
+    it('TINY-11211: Disable align on readonly mode', testDisableInReadonly('Align'));
+    it('TINY-11211: Disable fontfamily on readonly mode', testDisableInReadonly('Font'));
+    it('TINY-11211: Disable fontsize on readonly mode', testDisableInReadonly('Font size'));
+    it('TINY-11211: Disable blocks on readonly mode', testDisableInReadonly('Block'));
+    it('TINY-11211: Disable styles on readonly mode', testDisableInReadonly('Format'));
   });
 });

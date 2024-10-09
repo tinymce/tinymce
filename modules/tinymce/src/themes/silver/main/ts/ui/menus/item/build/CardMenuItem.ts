@@ -73,6 +73,7 @@ export const renderCardMenuItem = (
   };
 
   return renderCommonItem({
+    context: 'mode:design',
     data: buildData({ text: Optional.none(), ...spec }),
     enabled: spec.enabled,
     getApi,

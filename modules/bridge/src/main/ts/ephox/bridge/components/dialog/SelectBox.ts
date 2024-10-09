@@ -14,6 +14,7 @@ export interface SelectBoxSpec extends FormComponentWithLabelSpec {
   items: SelectBoxItemSpec[];
   size?: number;
   enabled?: boolean;
+  context?: string;
 }
 
 export interface SelectBoxItem {
@@ -26,6 +27,7 @@ export interface SelectBox extends FormComponentWithLabel {
   items: SelectBoxItem[];
   size: number;
   enabled: boolean;
+  context: string;
 }
 
 const selectBoxFields: FieldProcessor[] = formComponentWithLabelFields.concat([
@@ -34,7 +36,8 @@ const selectBoxFields: FieldProcessor[] = formComponentWithLabelFields.concat([
     ComponentSchema.value
   ]),
   FieldSchema.defaultedNumber('size', 1),
-  ComponentSchema.enabled
+  ComponentSchema.enabled,
+  FieldSchema.defaultedString('context', 'mode:design')
 ]);
 
 export const selectBoxSchema = StructureSchema.objOf(selectBoxFields);

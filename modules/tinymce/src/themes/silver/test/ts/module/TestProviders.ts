@@ -14,6 +14,7 @@ export default {
   translate: I18n.translate,
   isDisabled: Fun.never,
   getOption: <T>(name: string): T | undefined => defaultOptions[name],
+  checkUiComponentContext: Fun.constant({ contextType: 'any', shouldDisable: false }),
   tooltips: {
     getConfig: (): TooltippingTypes.TooltippingConfigSpec => {
       return {

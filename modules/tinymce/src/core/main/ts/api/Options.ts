@@ -547,6 +547,14 @@ const register = (editor: Editor): void => {
     default: false
   });
 
+  registerOption('allow_mathml_annotation_encodings', {
+    processor: (value) => {
+      const valid = Type.isArrayOf(value, Type.isString);
+      return valid ? { value, valid } : { valid: false, message: 'Must be an array of strings.' };
+    },
+    default: []
+  });
+
   registerOption('convert_fonts_to_spans', {
     processor: 'boolean',
     default: true,
