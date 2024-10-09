@@ -18,14 +18,16 @@
   border-radius: 50%;
   border: @loading-element-border;
   border-bottom-color: transparent;
-}
 
-@keyframes rotation {
-  0% {
-    transform: rotate(0deg);
-  }
+  animation: rotation 1s linear infinite;
 
-  100% {
-    transform: rotate(360deg);
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+  
+    100% {
+      transform: rotate(360deg);
+    }
   }
 }
