@@ -1,6 +1,7 @@
 import { AlloyComponent, SketchSpec } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
 import { Optional } from '@ephox/katamari';
+import { Focus } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as SizeInput from '../sizeinput/SizeInput';
@@ -22,6 +23,7 @@ export const renderContextFormSizeInput = (
     width,
     height,
     onEnter: Optional.some(onEnter),
-    onInput: Optional.some((input) => ctx.onInput(ContextFormApi.getFormApi(input)))
+    onInput: Optional.some((input) => ctx.onInput(ContextFormApi.getFormApi(input))),
+    onAttachField1: (comp) => Focus.focus(comp.element),
   }, providersBackstage);
 };
