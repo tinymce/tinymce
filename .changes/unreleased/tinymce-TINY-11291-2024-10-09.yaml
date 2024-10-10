@@ -1,6 +1,6 @@
 project: tinymce
 kind: Improved
-body: Improved RGB Form input aria-label content
+body: Improved color picker aria support.
 time: 2024-10-09T15:35:37.979796+11:00
 custom:
   Issue: TINY-11291
