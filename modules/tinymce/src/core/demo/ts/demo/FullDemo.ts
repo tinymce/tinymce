@@ -113,6 +113,16 @@ export default (): void => {
       makeSidebar(ed, 'sidebar1', 'green', 200);
       makeSidebar(ed, 'sidebar2', 'green', 200);
       makeCodeView(ed);
+      // ed.ui.registry.addContextToolbar('textselection', {
+      //   predicate: (_node) => true,
+      //   items: 'numlist bullist | undo redo',
+      //   groupsLabels: [
+      //     { name: 'something', items: [] },
+      //     { name: 'something else', items: [] }
+      //   ],
+      //   position: 'selection',
+      //   scope: 'node'
+      // });
     },
     plugins: [
       'autosave', 'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',

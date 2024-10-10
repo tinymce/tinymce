@@ -111,10 +111,12 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     }
   };
 
-  const wrapInPopDialog = (toolbarSpec: AlloySpec) => ({
+  const wrapInPopDialog = (toolbarSpec: AlloySpec, hasLabel?: boolean) => ({
     dom: {
       tag: 'div',
-      classes: [ 'tox-pop__dialog' ]
+      classes: [ 'tox-pop__dialog' ].concat(
+        hasLabel ? [ 'with__lable' ] : []
+      )
     },
     components: [ toolbarSpec ],
     behaviours: Behaviour.derive([
@@ -142,7 +144,7 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
   }));
 
   const buildContextToolbarGroups = (allButtons: Record<string, ContextToolbarButtonType>, ctx: InlineContent.ContextToolbarSpec) =>
-    identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items, allowToolbarGroups: false }, extras.backstage, Optional.some([ 'form:' ]));
+    identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items, allowToolbarGroups: false, groupsLabels: ctx.groupsLabels }, extras.backstage, Optional.some([ 'form:' ]));
 
   const buildContextFormGroups = (ctx: InlineContent.ContextForm, providers: UiFactoryBackstageProviders) => ContextForm.buildInitGroups(ctx, providers);
 
@@ -189,6 +191,9 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
 
     const toolbarSpec = buildToolbar(toolbarApi);
 
+    const isContextToolbar = (api: ContextType): api is InlineContent.ContextToolbar => (api as InlineContent.ContextToolbar).groupsLabels !== undefined;
+    const hasLabel = Arr.exists(toolbarApi, (tApi) => isContextToolbar(tApi) && tApi.groupsLabels.length > 0);
+
     // TINY-4495 ASSUMPTION: Can only do toolbarApi[0].position because ContextToolbarLookup.filterToolbarsByPosition
     // ensures all toolbars returned by ContextToolbarLookup have the same position.
     // And everything else that gets toolbars from elsewhere only returns maximum 1 toolbar
@@ -207,7 +212,7 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     }
 
     // Place the element
-    InlineView.showWithinBounds(contextbar, wrapInPopDialog(toolbarSpec), {
+    InlineView.showWithinBounds(contextbar, wrapInPopDialog(toolbarSpec, hasLabel), {
       anchor,
       transition: {
         classes: [ transitionClass ],
