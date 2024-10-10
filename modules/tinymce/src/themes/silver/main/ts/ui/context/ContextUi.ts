@@ -61,15 +61,9 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
           Class.add(elem, resizingClass);
           const newWidth = Width.get(elem);
           Css.set(elem, 'width', currentWidth + 'px');
-          InlineView.getContent(comp).each((newContents) => {
-            se.event.focus.bind((f) => {
-              Focus.focus(f);
-              return Focus.search(elem);
-            }).orThunk(() => {
-              Keying.focusIn(newContents);
-              return Focus.active(SugarShadowDom.getRootNode(elem));
-            });
-          });
+
+          se.event.focus.each(Focus.focus);
+
           setTimeout(() => {
             Css.set(comp.element, 'width', newWidth + 'px');
           }, 0);
