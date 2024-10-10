@@ -141,8 +141,9 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     });
   }));
 
-  const buildContextToolbarGroups = (allButtons: Record<string, ContextToolbarButtonType>, ctx: InlineContent.ContextToolbarSpec) =>
-    identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items, allowToolbarGroups: false }, extras.backstage, Optional.some([ 'form:' ]));
+  const buildContextToolbarGroups = (allButtons: Record<string, ContextToolbarButtonType>, ctx: InlineContent.ContextToolbarSpec) => {
+    return identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items, allowToolbarGroups: false }, extras.backstage, Optional.some([ 'form:' ]));
+  };
 
   const buildContextFormGroups = (ctx: InlineContent.ContextForm, providers: UiFactoryBackstageProviders) => ContextForm.buildInitGroups(ctx, providers);
 
@@ -156,7 +157,7 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     const toolbarType = getToolbarMode(editor) === ToolbarMode.scrolling ? ToolbarMode.scrolling : ToolbarMode.default;
 
     const initGroups = Arr.flatten(Arr.map(toolbars, (ctx) =>
-      ctx.type === 'contexttoolbar' ? buildContextToolbarGroups(allButtons, ctx) : buildContextFormGroups(ctx, sharedBackstage.providers)
+      ctx.type === 'contexttoolbar' ? buildContextToolbarGroups(allButtons, InlineContent.contextToolbarToSpec(ctx)) : buildContextFormGroups(ctx, sharedBackstage.providers)
     ));
 
     return renderToolbar({
