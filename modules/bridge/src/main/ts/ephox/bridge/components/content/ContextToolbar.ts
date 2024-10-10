@@ -15,7 +15,7 @@ export interface ContextToolbarSpec extends ContextBarSpec {
   items: string | ToolbarGroupSpec[];
 }
 
-interface ToolbarGroup {
+export interface ToolbarGroup {
   name: Optional<string>;
   label: Optional<string>;
   items: string[];
