@@ -93,7 +93,7 @@ export const renderSizeInput = (spec: SizeInputGenericSpec, providersBackstage: 
           AlloyTriggers.emitWith(component, ratioEvent, { isField1 });
         }),
         AlloyEvents.run(NativeEvents.change(), (component, _simulatedEvent) => {
-          AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name });
+          spec.name.each((name) => AlloyTriggers.emitWith(component, formChangeEvent, { name }));
         }),
         AlloyEvents.runOnAttached((component) => {
           if (isField1) {
@@ -160,9 +160,7 @@ export const renderSizeInput = (spec: SizeInputGenericSpec, providersBackstage: 
         });
       });
     },
-    onInput: (current) => {
-      AlloyTriggers.emitWith(current, formInputEvent, { name: spec.name });
-    },
+    onInput: (current) => AlloyTriggers.emit(current, formInputEvent),
     coupledFieldBehaviours: Behaviour.derive([
       Disabling.config({
         disabled,
