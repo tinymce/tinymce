@@ -2,12 +2,12 @@ import { Cell, Fun, Obj, Optional, Type } from '@ephox/katamari';
 
 import Editor from './api/Editor';
 import Formatter from './api/Formatter';
-import { Content, ContentFormat, GetContentArgs, GetSelectionContentArgs, SetContentArgs, SetContentResult, InsertContentDetails } from './content/ContentTypes';
+import { Content, ContentFormat, GetContentArgs, GetSelectionContentArgs, InsertContentDetails, SetContentArgs, SetContentResult } from './content/ContentTypes';
 import { getContentInternal } from './content/GetContentImpl';
 import { insertHtmlAtCaret } from './content/InsertContentImpl';
 import { setContentInternal } from './content/SetContentImpl';
 import * as ApplyFormat from './fmt/ApplyFormat';
-import { FormatChangeCallback, UnbindFormatChanged, RegisteredFormats, formatChangedInternal } from './fmt/FormatChanged';
+import { FormatChangeCallback, RegisteredFormats, UnbindFormatChanged, formatChangedInternal } from './fmt/FormatChanged';
 import { Format, FormatVars } from './fmt/FormatTypes';
 import * as MatchFormat from './fmt/MatchFormat';
 import * as RemoveFormat from './fmt/RemoveFormat';
@@ -15,7 +15,7 @@ import * as ToggleFormat from './fmt/ToggleFormat';
 import { getSelectedContentInternal } from './selection/GetSelectionContentImpl';
 import { RangeLikeObject } from './selection/RangeTypes';
 import * as Operations from './undo/Operations';
-import { Index, Locks, UndoBookmark, UndoLevel, UndoManager } from './undo/UndoManagerTypes';
+import { Extra, Index, Locks, UndoBookmark, UndoLevel, UndoManager } from './undo/UndoManagerTypes';
 import { addVisualInternal } from './view/VisualAidsImpl';
 
 /** API implemented by the RTC plugin */
@@ -34,7 +34,7 @@ interface RtcRuntimeApi {
     reset: () => void;
     clear: () => void;
     ignore: (fn: () => void) => void;
-    extra: (fn1: () => void, fn2: () => void) => void;
+    extra: Extra;
   };
   formatter: {
     canApply: (format: string) => boolean;
@@ -68,6 +68,11 @@ interface RtcRuntimeApi {
   };
 }
 
+interface RTCExtra {
+  (undoManager: UndoManager, locks: Locks, index: Index, callback1: () => void, callback2: () => void): void;
+  (undoManager: UndoManager, locks: Locks, index: Index, callback1: () => Promise<void>, callback2: () => Promise<void>): Promise<void> ;
+}
+
 /** A copy of the TinyMCE api definitions that the plugin overrides  */
 interface RtcAdaptor {
   init: {
@@ -91,7 +96,7 @@ interface RtcAdaptor {
     hasRedo: (undoManager: UndoManager, index: Index) => boolean;
     transact: (undoManager: UndoManager, locks: Locks, callback: () => void) => UndoLevel | null;
     ignore: (locks: Locks, callback: () => void) => void;
-    extra: (undoManager: UndoManager, index: Index, callback1: () => void, callback2: () => void) => void;
+    extra: RTCExtra;
   };
   formatter: {
     match: Formatter['match'];
@@ -147,8 +152,8 @@ const makePlainAdaptor = (editor: Editor): RtcAdaptor => ({
     hasRedo: (undoManager, index) => Operations.hasRedo(undoManager, index),
     transact: (undoManager, locks, callback) => Operations.transact(undoManager, locks, callback),
     ignore: (locks, callback) => Operations.ignore(locks, callback),
-    extra: (undoManager, index, callback1, callback2) =>
-      Operations.extra(editor, undoManager, index, callback1, callback2)
+    extra: (undoManager: UndoManager, locks: Locks, index: Index, callback1, callback2 ) =>
+      Operations.extra(editor, undoManager, locks, index, callback1, callback2) as any
   },
   formatter: {
     match: (name, vars?, node?, similar?) => MatchFormat.match(editor, name, vars, node, similar),
@@ -198,7 +203,7 @@ const makeRtcAdaptor = (rtcEditor: RtcRuntimeApi): RtcAdaptor => {
       hasRedo: undoManager.hasRedo,
       transact: (_undoManager, _locks, fn) => undoManager.transact(fn),
       ignore: (_locks, callback) => undoManager.ignore(callback),
-      extra: (_undoManager, _index, callback1, callback2) => undoManager.extra(callback1, callback2)
+      extra: (_undoManager: UndoManager, _locks: Locks, _index: Index, callback1: () => void | Promise<void>, callback2: () => void | Promise<void>) => undoManager.extra(callback1, callback2) as any
     },
     formatter: {
       match: (name, vars?, _node?, similar?) => formatter.match(name, defaultVars(vars), similar),
@@ -255,7 +260,7 @@ const makeNoopAdaptor = (): RtcAdaptor => {
       hasRedo: Fun.never,
       transact: nul,
       ignore: Fun.noop,
-      extra: Fun.noop
+      extra: Fun.noop as any
     },
     formatter: {
       match: Fun.never,
@@ -372,15 +377,14 @@ export const ignore = (editor: Editor, locks: Locks, callback: () => void): void
   getRtcInstanceWithError(editor).undoManager.ignore(locks, callback);
 };
 
-export const extra = (
+export const extra: Operations.OperationsExtra = (
   editor: Editor,
   undoManager: UndoManager,
+  locks: Locks,
   index: Index,
-  callback1: () => void,
-  callback2: () => void
-): void => {
-  getRtcInstanceWithError(editor).undoManager.extra(undoManager, index, callback1, callback2);
-};
+  callback1,
+  callback2
+) => getRtcInstanceWithError(editor).undoManager.extra(undoManager, locks, index, callback1, callback2) as any;
 
 export const matchFormat = (
   editor: Editor,

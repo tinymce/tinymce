@@ -26,6 +26,11 @@ export interface CompleteUndoLevel extends BaseUndoLevel {
 export type NewUndoLevel = CompleteUndoLevel | FragmentedUndoLevel;
 export type UndoLevel = NewUndoLevel & { bookmark: Bookmark };
 
+export interface Extra {
+  (callback1: () => void, callback2: () => void): void;
+  (callback1: () => Promise<void>, callback2: () => Promise<void>): Promise<void>;
+}
+
 export interface UndoManager {
   data: UndoLevel[];
   typing: boolean;
@@ -40,7 +45,7 @@ export interface UndoManager {
   hasRedo: () => boolean;
   transact: (callback: () => void) => UndoLevel | null;
   ignore: (callback: () => void) => void;
-  extra: (callback1: () => void, callback2: () => void) => void;
+  extra: Extra;
 }
 
 export type Index = Cell<number>;
