@@ -134,7 +134,7 @@ const rgbFormFactory = (
     const helptext = translate(translatePrefix + 'range');
 
     const pLabel = FormField.parts.label({
-      dom: { tag: 'label', attributes: { 'aria-label': description }},
+      dom: { tag: 'label' },
       components: [ GuiFactory.text(label) ]
     });
 
@@ -142,7 +142,8 @@ const rgbFormFactory = (
       data,
       factory: Input,
       inputAttributes: {
-        type: 'text',
+        'type': 'text',
+        'aria-label': description,
         ...name === 'hex' ? { 'aria-live': 'polite' } : {}
       },
       inputClasses: [ getClass('textfield') ],
