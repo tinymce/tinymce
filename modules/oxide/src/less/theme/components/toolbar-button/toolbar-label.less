@@ -3,57 +3,14 @@
 // When making changes here, please review menubar/menubar.less and menubar/menubar-button.less
 //
 
-@toolbar-label-background-color: @background-color;
-@toolbar-label-border-radius: 3px;
-@toolbar-label-border: 0;
-@toolbar-label-box-shadow: none;
-@toolbar-label-font-size: @font-size-sm;
-@toolbar-label-font-style: normal;
-@toolbar-label-font-weight: @font-weight-normal;
-@toolbar-label-height: 28px;
-@toolbar-label-icon-color: @text-color-muted;
 @toolbar-label-spacing-x: 1px;
 @toolbar-label-spacing-y: 5px;
-@toolbar-label-text-color: @text-color-muted;
-@toolbar-label-text-transform: none;
-@toolbar-label-width: auto;
 
 .tox {
   .tox-label--context-toolbar {
-    align-items: center;
-    background: @toolbar-label-background-color;
-    border: @toolbar-label-border;
-    border-radius: @toolbar-label-border-radius;
-    box-shadow: @toolbar-label-box-shadow;
-    color: @toolbar-label-text-color;
-    display: flex;
-    font-size: @toolbar-label-font-size;
-    font-style: @toolbar-label-font-style;
-    font-weight: @toolbar-label-font-weight;
-    height: @toolbar-label-height;
-    justify-content: center;
     margin: (@toolbar-label-spacing-y + 1px) @toolbar-label-spacing-x @toolbar-label-spacing-y 0;
-    outline: none;
-    text-transform: @toolbar-label-text-transform;
-    width: @toolbar-label-width;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
             user-select: none;
-
-    svg {
-      display: block;
-      fill: @toolbar-label-icon-color;
-
-      @media (forced-colors: active) {
-        & {
-          fill: currentColor !important;
-        }
-
-        &.tox-tbtn--enabled,
-        &:focus:not(.tox-tbtn--disabled) {
-          fill: currentColor !important;
-        }
-      }
-    }
   }
 }
