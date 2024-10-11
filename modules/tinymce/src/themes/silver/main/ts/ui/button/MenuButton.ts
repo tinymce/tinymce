@@ -90,7 +90,8 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
     classes: [],
     dropdownBehaviours: [
       ...(tabstopping ? [ Tabstopping.config({ }) ] : [])
-    ]
+    ],
+    context: spec.context
   },
   prefix,
   backstage.shared,
@@ -129,6 +130,7 @@ const getFetch = (items: StoredMenuItem[], getButton: () => MementoRecord, backs
         type: item.type,
         active: false,
         ...text,
+        context: item.context,
         onAction: getMenuItemAction(item),
         onSetup: getMenuItemSetup(item)
       };

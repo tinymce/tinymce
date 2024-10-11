@@ -55,8 +55,7 @@ const getEventTarget = (editor: Editor, eventName: string): Node => {
   return editor.getBody();
 };
 
-const isListening = (editor: Editor) => !editor.hidden && !isReadOnly(editor);
-
+const isListening = (editor: Editor) => !editor.hidden;
 const fireEvent = (editor: Editor, eventName: string, e: Event) => {
   if (isListening(editor)) {
     editor.dispatch(eventName, e);

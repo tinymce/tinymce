@@ -60,17 +60,20 @@ const toggleAccordion = (editor: Editor, state?: boolean): void => {
 };
 
 const removeAccordion = (editor: Editor): void => {
-  Utils.getSelectedDetails(editor).each((details) => {
-    const { nextSibling } = details;
-    if (nextSibling) {
-      editor.selection.select(nextSibling, true);
-      editor.selection.collapse(true);
-    } else {
-      Utils.insertAndSelectParagraphAfter(editor, details);
-    }
+  if (!editor.mode.isReadOnly()) {
+    Utils.getSelectedDetails(editor)
+      .each((details) => {
+        const { nextSibling } = details;
+        if (nextSibling) {
+          editor.selection.select(nextSibling, true);
+          editor.selection.collapse(true);
+        } else {
+          Utils.insertAndSelectParagraphAfter(editor, details);
+        }
 
-    details.remove();
-  });
+        details.remove();
+      });
+  }
 };
 
 const toggleAllAccordions = (editor: Editor, state?: boolean): void => {

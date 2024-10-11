@@ -8,7 +8,7 @@ import { Attribute, Traverse, Value } from '@ephox/sugar';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { UiFactoryBackstageForUrlInput } from '../../backstage/UrlInputBackstage';
-import * as ReadOnly from '../../ReadOnly';
+import * as UiState from '../../UiState';
 import { renderFormFieldDom, renderLabel } from '../alien/FieldLabeller';
 import { renderButton } from '../general/Button';
 import { formChangeEvent, formSubmitEvent } from '../general/FormEvents';
@@ -124,7 +124,7 @@ export const renderUrlInput = (
         })
       ).toArray(),
       Disabling.config({
-        disabled: () => !spec.enabled || providersBackstage.isDisabled()
+        disabled: () => !spec.enabled || providersBackstage.checkUiComponentContext(spec.context).shouldDisable
       }),
       Tabstopping.config({}),
       AddEventsBehaviour.config('urlinput-events',
@@ -227,13 +227,14 @@ export const renderUrlInput = (
       components: [ pField, memStatus.asSpec() ],
       behaviours: Behaviour.derive([
         Disabling.config({
-          disabled: () => !spec.enabled || providersBackstage.isDisabled()
+          disabled: () => !spec.enabled || providersBackstage.checkUiComponentContext(spec.context).shouldDisable
         })
       ])
     }
   );
 
   const memUrlPickerButton = Memento.record(renderButton({
+    context: spec.context,
     name: spec.name,
     icon: Optional.some('browse'),
     text: spec.picker_text.or(spec.label).getOr(''),
@@ -277,7 +278,7 @@ export const renderUrlInput = (
     ]),
     fieldBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: () => !spec.enabled || providersBackstage.isDisabled(),
+        disabled: () => !spec.enabled || providersBackstage.checkUiComponentContext(spec.context).shouldDisable,
         onDisabled: (comp) => {
           AlloyFormField.getField(comp).each(Disabling.disable);
           memUrlPickerButton.getOpt(comp).each(Disabling.disable);
@@ -287,7 +288,7 @@ export const renderUrlInput = (
           memUrlPickerButton.getOpt(comp).each(Disabling.enable);
         }
       }),
-      ReadOnly.receivingConfig(),
+      UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext(spec.context)),
       AddEventsBehaviour.config('url-input-events', [
         AlloyEvents.run<CustomEvent>(browseUrlEvent, openUrlPicker)
       ])

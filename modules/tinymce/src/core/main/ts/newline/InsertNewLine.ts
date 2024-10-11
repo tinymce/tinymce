@@ -15,6 +15,10 @@ interface BreakType {
 }
 
 const insertBreak = (breakType: BreakType, editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
+  if (editor.mode.isReadOnly()) {
+    return;
+  }
+
   if (!editor.selection.isCollapsed()) {
     // IMPORTANT: We want to use the editor execCommand here, so that our `delete` execCommand
     // overrides will be considered.
@@ -35,6 +39,10 @@ const insertBreak = (breakType: BreakType, editor: Editor, evt?: EditorEvent<Key
 };
 
 const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
+  if (editor.mode.isReadOnly()) {
+    return;
+  }
+
   const br = () => insertBreak(InsertBr.linebreak, editor, evt);
   const block = () => insertBreak(InsertBlock.blockbreak, editor, evt);
 

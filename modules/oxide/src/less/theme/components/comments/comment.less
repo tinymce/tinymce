@@ -2,6 +2,9 @@
 // Tiny Comments
 //
 
+@comment-selected-background-color: lighten(@color-active, 30%);
+@comment-selected-border-color: @color-active;
+
 @comment-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
 @comment-border-radius: @panel-border-radius;
 @comment-border: 1px solid @border-color;
@@ -21,22 +24,82 @@
 @z-index-comment-busy-spinner: 20;
 
 .tox {
-  .tox-comment-thread {
-    background: @comment-background-color;
-    position: relative;
 
-    > *:not(:first-child) {
-      margin-top: @pad-sm;
-    }
+  .tox-conversations {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    height: 100%;
+
+    /* This is to give the sidebar a consistent width. Need a solution for this */
+    min-width: 300px;
+    max-width: 300px;
+    width: 300px;
+  }
+
+  .tox-conversations__header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0px 4px 8px 0px rgba(34, 47, 62, 0.1);
+    padding: 8px 12px;
+    background: @background-color;
+  }
+
+  .tox-conversations__title {
+    font-size: 20px;
+    font-weight: 400;
+    padding: 8px 0 8px 0;
+    color: @comment-text-color;
+    line-height: 28px;
   }
 
   .tox-comment {
     background: @comment-background-color;
     border: @comment-border;
     border-radius: @comment-border-radius;
-    box-shadow: @comment-box-shadow;
     padding: @comment-padding;
     position: relative;
+
+    &:hover {
+      box-shadow: @comment-box-shadow;
+    }
+
+    &.tox-comment--selected {
+      background-color: @comment-selected-background-color;
+      border: 1px solid @comment-selected-border-color;
+      box-shadow: 0px 4px 8px 0px rgba(34, 47, 62, 0.10);
+
+      &:focus {
+        border: 2px solid @keyboard-focus-outline-color;
+        margin: -1px;
+
+        &:not(:first-child) {
+          margin-top: 7px;
+        }
+      }
+
+      .tox-comment__single {
+        margin-bottom: 12px;
+
+        &:focus {
+          position: relative;
+
+          &::after {
+            top: -9px;
+            pointer-events: none;
+            position: absolute;
+            content: "";
+            display: block;
+            bottom: -9px;
+            left: -9px;
+            right: -9px;
+            border-radius: 6px;
+            border: 2px solid @keyboard-focus-outline-color;
+          }
+        }
+      }
+    }
   }
 
   .tox-comment__header {
@@ -61,11 +124,62 @@
     margin-top: @pad-sm;
     position: relative;
     text-transform: @comment-text-transform;
+    transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+    white-space: pre-wrap;
+
+    &.tox-comment__body--expanded {
+      max-height: 100em;
+      transition: max-height 1.0s ease-in-out;
+    }
+
+    /* We remove the transitions when wanting to measure and jump straight to collapsed or expanded */
+    &.tox-comment__body--pending {
+      transition: max-height 0s;
+    }
+
+    p {
+      margin: 0;
+    }
 
     textarea {
       resize: none;
       white-space: normal;
       width: 100%;
+    }
+  }
+
+  .tox-comment__loading-text {
+    align-items: center;
+    color: @comment-text-color;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    > div {
+      padding-bottom: @pad-md;
+    }
+  }
+
+  .tox-comment__overlaytext {
+    bottom: 0;
+    flex-direction: column;
+    font-size: @font-size-sm;
+    left: 0;
+    padding: 1em;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: @z-index-comment-overlay-text;
+
+    p {
+      background-color: @comment-background-color;
+      box-shadow: 0 0 8px 8px @comment-background-color;
+      color: @comment-text-color;
+      text-align: center;
+    }
+
+    div:nth-of-type(2) {
+      font-size: .8em;
     }
   }
 
@@ -76,16 +190,39 @@
       color: @comment-text-color-muted;
       font-size: @font-size-sm;
       font-style: normal;
-    }
-  }
 
-  .tox-comment__body p {
-    margin: 0;
+      /* Need a focus highlight on the show more/less button */
+      &:focus {
+        font-weight: bold;
+      }
+    }
   }
 
   .tox-comment__buttonspacing {
     padding-top: @pad-md;
     text-align: center;
+  }
+
+  .tox-tbtn.tox-comment__mention-btn {
+    display: flex;
+    width: 34px;
+    height: 34px;
+    padding: 5px;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    background-color: transparent;
+  }
+
+  .tox-comment-thread {
+    background: @comment-background-color;
+    position: relative;
+    border-radius: 6px;
+    background-color: transparent;
+
+    > *:not(:first-child) {
+      margin-top: @pad-sm;
+    }
   }
 
   .tox-comment-thread__overlay::after {
@@ -147,41 +284,6 @@
     z-index: @z-index-comment-overlay;
   }
 
-  .tox-comment__loading-text {
-    align-items: center;
-    color: @comment-text-color;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-
-    > div {
-      padding-bottom: @pad-md;
-    }
-  }
-
-  .tox-comment__overlaytext {
-    bottom: 0;
-    flex-direction: column;
-    font-size: @font-size-sm;
-    left: 0;
-    padding: 1em;
-    position: absolute;
-    right: 0;
-    top: 0;
-    z-index: @z-index-comment-overlay-text;
-
-    p {
-      background-color: @comment-background-color;
-      box-shadow: 0 0 8px 8px @comment-background-color;
-      color: @comment-text-color;
-      text-align: center;
-    }
-
-    div:nth-of-type(2) {
-      font-size: .8em;
-    }
-  }
-
   .tox-comment__busy-spinner {
     align-items: center;
     background-color: @comment-background-color;
@@ -200,10 +302,67 @@
     flex-direction: column;
     flex-shrink: 1;
     overflow: auto;
+    padding: 12px;
+    scroll-behavior: smooth;
   }
 
-  .tox-conversations {
-    margin: @pad-sm;
+  /* Animation for deleting a comment */
+  .tox-comment--disappearing {
+    transition: opacity 0.5s ease;
+  }
+
+  /* A comment fades to 0 when it is being deleted, then is removed */
+  .tox-comment[data-transitioning-destination="deleting"] {
+    opacity: 0.0;
+  }
+
+  //should this be in comments? Or will we use this in some different places?
+  .tox-skeleton {
+    .tox-skeleton__line {
+      height: 16px;
+      width: 100%;
+      background: linear-gradient(to right, rgba(240, 240, 240, 0.5) 8%, rgba(240, 240, 240, 0.7) 18%, rgba(240, 240, 240, 0.5) 33%);
+      animation: wave 2s infinite ease-out;
+    }
+
+    .tox-skeleton__circle {
+      height: 36px;
+      width: 36px;
+      margin-right: 8px;
+      border-radius: 100%;
+      background: linear-gradient(to right, rgba(240, 240, 240, 0.5) 8%, rgba(240, 240, 240, 0.7) 18%, rgba(240, 240, 240, 0.5) 33%);
+      animation: wave 2s infinite ease-out;
+    }
+
+    @keyframes wave {
+      0% {
+        background-position: -268px 0;
+      }
+      100% {
+        background-position: 268px 0;
+      }
+    }
+  }
+
+  .tox-ring-loader {
+    width: 10px;
+    height: 10px;
+    border: 1px solid #FFF;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
   }
 }
 //end tox

@@ -36,6 +36,8 @@ describe('browser.tinymce.themes.silver.editor.backstage.BackstageSinkTest', () 
             ed.dispatch('SkinLoaded');
           }
         );
+
+        ed.ui.registry.addContext('any', Fun.always);
       });
     },
     theme: false
@@ -70,6 +72,7 @@ describe('browser.tinymce.themes.silver.editor.backstage.BackstageSinkTest', () 
 
   const buildAndAddColorInput = (backstage: Backstage.UiFactoryBackstage): AlloyComponent => {
     const colorInputSpec = backstage.shared.interpreter({
+      context: 'any',
       type: 'colorinput',
       label: Optional.some('color'),
       storageKey: 'test_storage_key',

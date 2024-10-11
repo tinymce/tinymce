@@ -1,21 +1,24 @@
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button, Disabling,
-  FormField as AlloyFormField, GuiFactory, Memento, NativeEvents, Representing, SimpleSpec, SimulatedEvent, SketchSpec,
-  SystemEvents, Tabstopping, Toggling
+  FormField as AlloyFormField, GuiFactory, Memento, NativeEvents, Representing, SimpleSpec, SimulatedEvent,
+  SystemEvents, Tabstopping, Toggling,
+  CustomEvent
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Arr, Optional, Strings } from '@ephox/katamari';
+import { Arr, Id, Optional, Strings } from '@ephox/katamari';
 import { EventArgs } from '@ephox/sugar';
 
 import Tools from 'tinymce/core/api/util/Tools';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import * as ReadOnly from '../../ReadOnly';
+import * as UiState from '../../UiState';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
 import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 import { formChangeEvent } from '../general/FormEvents';
+
+const browseFilesEvent = Id.generate('browse.files.event');
 
 const filterByExtension = (files: FileList, providersBackstage: UiFactoryBackstageProviders) => {
   const allowedImageFileTypes = Tools.explode(providersBackstage.getOption('images_file_types'));
@@ -43,13 +46,13 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
   const onDrop: AlloyEvents.EventRunHandler<EventArgs> = (comp, se) => {
     if (!Disabling.isDisabled(comp)) {
       const transferEvent = se.event.raw as DragEvent;
-      handleFiles(comp, transferEvent.dataTransfer?.files);
+      AlloyTriggers.emitWith(comp, browseFilesEvent, { files: transferEvent.dataTransfer?.files });
     }
   };
 
   const onSelect = (component: AlloyComponent, simulatedEvent: SimulatedEvent<EventArgs>) => {
     const input = simulatedEvent.event.raw.target as HTMLInputElement;
-    handleFiles(component, input.files);
+    AlloyTriggers.emitWith(component, browseFilesEvent, { files: input.files });
   };
 
   const handleFiles = (component: AlloyComponent, files: FileList | null | undefined) => {
@@ -80,16 +83,45 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
     }
   );
 
-  const renderField = (s: SketchSpec) => ({
-    uid: s.uid,
+  const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
+  const pField = AlloyFormField.parts.field(
+    {
+      factory: Button,
+      dom: {
+        tag: 'button',
+        styles: {
+          position: 'relative'
+        },
+        classes: [ 'tox-button', 'tox-button--secondary' ]
+      },
+      components: [
+        GuiFactory.text(providersBackstage.translate('Browse for an image')),
+        memInput.asSpec()
+      ],
+      action: (comp: AlloyComponent) => {
+        const inputComp = memInput.get(comp);
+        inputComp.element.dom.click();
+      },
+      buttonBehaviours: Behaviour.derive([
+        ComposingConfigs.self(),
+        RepresentingConfigs.memory(initialData.getOr([])),
+        Tabstopping.config({ }),
+        DisablingConfigs.button(() => providersBackstage.checkUiComponentContext(spec.context).shouldDisable),
+        UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext(spec.context))
+      ])
+    }
+  );
+
+  const wrapper: SimpleSpec = {
     dom: {
       tag: 'div',
       classes: [ 'tox-dropzone-container' ]
     },
     behaviours: Behaviour.derive([
-      RepresentingConfigs.memory(initialData.getOr([])),
-      ComposingConfigs.self(),
-      Disabling.config({}),
+      Disabling.config({
+        disabled: () => providersBackstage.checkUiComponentContext(spec.context).shouldDisable
+      }),
+      UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext(spec.context)),
       Toggling.config({
         toggleClass: 'dragenter',
         toggleOnExecute: false
@@ -118,37 +150,18 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
               GuiFactory.text(providersBackstage.translate('Drop an image here'))
             ]
           },
-          Button.sketch({
-            dom: {
-              tag: 'button',
-              styles: {
-                position: 'relative'
-              },
-              classes: [ 'tox-button', 'tox-button--secondary' ]
-            },
-            components: [
-              GuiFactory.text(providersBackstage.translate('Browse for an image')),
-              memInput.asSpec()
-            ],
-            action: (comp) => {
-              const inputComp = memInput.get(comp);
-              inputComp.element.dom.click();
-            },
-            buttonBehaviours: Behaviour.derive([
-              Tabstopping.config({ }),
-              DisablingConfigs.button(providersBackstage.isDisabled),
-              ReadOnly.receivingConfig()
-            ])
-          })
+          pField
         ]
       }
     ]
-  });
 
-  const pLabel = spec.label.map((label) => renderLabel(label, providersBackstage));
-  const pField = AlloyFormField.parts.field({
-    factory: { sketch: renderField }
-  });
+  };
 
-  return renderFormFieldWith(pLabel, pField, [ 'tox-form__group--stretched' ], [ ]);
+  return renderFormFieldWith(pLabel, wrapper, [ 'tox-form__group--stretched' ], [ AddEventsBehaviour.config('handle-files', [
+    AlloyEvents.run<CustomEvent>(browseFilesEvent, (comp, se) => {
+      AlloyFormField.getField(comp).each((field) => {
+        handleFiles(field, se.event.files);
+      });
+    })
+  ]) ]);
 };

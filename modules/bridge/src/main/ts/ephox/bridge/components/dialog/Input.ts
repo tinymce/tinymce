@@ -10,6 +10,7 @@ export interface InputSpec extends FormComponentWithLabelSpec {
   placeholder?: string;
   maximized?: boolean;
   enabled?: boolean;
+  context?: string;
 }
 
 export interface Input extends FormComponentWithLabel {
@@ -18,13 +19,15 @@ export interface Input extends FormComponentWithLabel {
   placeholder: Optional<string>;
   maximized: boolean;
   enabled: boolean;
+  context: string;
 }
 
 const inputFields = formComponentWithLabelFields.concat([
   FieldSchema.optionString('inputMode'),
   FieldSchema.optionString('placeholder'),
   FieldSchema.defaultedBoolean('maximized', false),
-  ComponentSchema.enabled
+  ComponentSchema.enabled,
+  FieldSchema.defaultedString('context', 'mode:design'),
 ]);
 
 export const inputSchema = StructureSchema.objOf(inputFields);

@@ -59,7 +59,7 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
 
     selectRangeXY(editor, 'table tr td:nth-child(1)', 'table tr td:nth-child(2)');
 
-    assert.equal(editor.selection.getContent({ format: 'text' }), 'ab');
+    assert.equal(editor.selection.getContent({ format: 'text' }), 'a\tb');
   });
 
   it('TBA: mceTablePasteRowBefore command', () => {
@@ -156,14 +156,14 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
     editor.setContent(
       '<table>' +
       '<thead>' +
-        '<tr><td>Head1</td><td>Head2</td></tr>' +
+      '<tr><td>Head1</td><td>Head2</td></tr>' +
       '</thead>' +
       '<tbody>' +
-        '<tr><td>a</td><td>b</td></tr>' +
-        '<tr><td>c</td><td>d</td></tr>' +
+      '<tr><td>a</td><td>b</td></tr>' +
+      '<tr><td>c</td><td>d</td></tr>' +
       '</tbody>' +
       '<tfoot>' +
-        '<tr><td>Foot1</td><td>Foot2</td></tr>' +
+      '<tr><td>Foot1</td><td>Foot2</td></tr>' +
       '</tfoot>' +
       '</table>'
     );
@@ -178,15 +178,15 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
 
       '<table>' +
       '<thead>' +
-        '<tr><td>Head1</td><td>Head2</td></tr>' +
+      '<tr><td>Head1</td><td>Head2</td></tr>' +
       '</thead>' +
       '<tbody>' +
-        '<tr><td>a</td><td>b</td></tr>' +
-        '<tr><td>c</td><td>d</td></tr>' +
-        '<tr><td>a</td><td>b</td></tr>' +
+      '<tr><td>a</td><td>b</td></tr>' +
+      '<tr><td>c</td><td>d</td></tr>' +
+      '<tr><td>a</td><td>b</td></tr>' +
       '</tbody>' +
       '<tfoot>' +
-        '<tr><td>Foot1</td><td>Foot2</td></tr>' +
+      '<tr><td>Foot1</td><td>Foot2</td></tr>' +
       '</tfoot>' +
       '</table>'
     );
@@ -199,16 +199,16 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
 
       '<table>' +
       '<thead>' +
-        '<tr><td>Head1</td><td>Head2</td></tr>' +
+      '<tr><td>Head1</td><td>Head2</td></tr>' +
       '</thead>' +
       '<tbody>' +
-        '<tr><td>a</td><td>b</td></tr>' +
-        '<tr><td>c</td><td>d</td></tr>' +
-        '<tr><td>a</td><td>b</td></tr>' +
-        '<tr><td>a</td><td>b</td></tr>' +
+      '<tr><td>a</td><td>b</td></tr>' +
+      '<tr><td>c</td><td>d</td></tr>' +
+      '<tr><td>a</td><td>b</td></tr>' +
+      '<tr><td>a</td><td>b</td></tr>' +
       '</tbody>' +
       '<tfoot>' +
-        '<tr><td>Foot1</td><td>Foot2</td></tr>' +
+      '<tr><td>Foot1</td><td>Foot2</td></tr>' +
       '</tfoot>' +
       '</table>'
     );
@@ -760,24 +760,24 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
     const editor = hook.editor();
 
     const inputTable = '<table>' +
-    '<colgroup><col data-col-id="0"><col data-col-id="1"><col data-col-id="2"><col data-col-id="3"><col data-col-id="4"></colgroup>' +
-    '<tbody>' +
-    '<tr><td>&nbsp;</td><td>&nbsp;</td><td>a</td><td>&nbsp;</td><td>&nbsp;</td></tr>' +
-    '<tr><td>&nbsp;</td><td colspan="2">b</td><td>&nbsp;</td><td>&nbsp;</td></tr>' +
-    '<tr><td>&nbsp;</td><td>&nbsp;</td><td colspan="2">c</td><td>&nbsp;</td></tr>' +
-    '<tr><td>&nbsp;</td><td>&nbsp;</td><td>d</td><td>&nbsp;</td><td>&nbsp;</td></tr>' +
-    '</tbody>' +
-    '</table>';
+      '<colgroup><col data-col-id="0"><col data-col-id="1"><col data-col-id="2"><col data-col-id="3"><col data-col-id="4"></colgroup>' +
+      '<tbody>' +
+      '<tr><td>&nbsp;</td><td>&nbsp;</td><td>a</td><td>&nbsp;</td><td>&nbsp;</td></tr>' +
+      '<tr><td>&nbsp;</td><td colspan="2">b</td><td>&nbsp;</td><td>&nbsp;</td></tr>' +
+      '<tr><td>&nbsp;</td><td>&nbsp;</td><td colspan="2">c</td><td>&nbsp;</td></tr>' +
+      '<tr><td>&nbsp;</td><td>&nbsp;</td><td>d</td><td>&nbsp;</td><td>&nbsp;</td></tr>' +
+      '</tbody>' +
+      '</table>';
 
     const expectedTable = '<table>' +
-    '<colgroup><col data-col-id="1"><col data-col-id="2"><col data-col-id="3"></colgroup>' +
-    '<tbody>' +
-    '<tr><td>&nbsp;</td><td>a</td><td>&nbsp;</td></tr>' +
-    '<tr><td colspan="2">b</td><td>&nbsp;</td></tr>' +
-    '<tr><td>&nbsp;</td><td colspan="2">c</td></tr>' +
-    '<tr><td>&nbsp;</td><td>d</td><td>&nbsp;</td></tr>' +
-    '</tbody>' +
-    '</table>';
+      '<colgroup><col data-col-id="1"><col data-col-id="2"><col data-col-id="3"></colgroup>' +
+      '<tbody>' +
+      '<tr><td>&nbsp;</td><td>a</td><td>&nbsp;</td></tr>' +
+      '<tr><td colspan="2">b</td><td>&nbsp;</td></tr>' +
+      '<tr><td>&nbsp;</td><td colspan="2">c</td></tr>' +
+      '<tr><td>&nbsp;</td><td>d</td><td>&nbsp;</td></tr>' +
+      '</tbody>' +
+      '</table>';
 
     editor.setContent(
       inputTable +
@@ -790,5 +790,72 @@ describe('browser.tinymce.plugins.table.ClipboardTest', () => {
     TinySelections.setCursor(editor, [ 1, 0 ], 0);
     Clipboard.pasteItems(TinyDom.body(editor), Arr.mapToObject(dataTransfer.types, (type) => dataTransfer.getData(type)));
     TinyAssertions.assertContent(editor, inputTable + expectedTable + '<p>&nbsp;</p>');
+  });
+
+  it('TINY-10847: should correctly copy table in "text/plain" format', () => {
+    const editor = hook.editor();
+
+    const inputTable = '<table style="width: 100%; border-collapse: collapse;" border="1">' +
+      '<colgroup><col style="width: 50%;" data-col="1"><col style="width: 50%;" data-col="2"></colgroup>' +
+      '<tbody>' +
+      '<tr>' +
+      '<td>1.1</td>' +
+      '<td>1.2</td>' +
+      '</tr>' +
+      '<tr>' +
+      '<td>2.1</td>' +
+      '<td>2.2</td>' +
+      '</tr>' +
+      '</tbody>' +
+      '</table>';
+
+    editor.setContent(
+      inputTable +
+      '<p>&nbsp;</p>'
+    );
+
+    // Select first column
+    selectRangeXY(editor, 'table tr:nth-child(1) td:nth-child(1)', 'table tr:nth-child(2) td:nth-child(1)');
+    let dataTransfer = Clipboard.copy(TinyDom.body(editor));
+    assert.equal(dataTransfer.getData('text/plain'), '1.1\n2.1');
+    assert.equal(
+      dataTransfer.getData('text/html'),
+      '<!-- x-tinymce/html -->' +
+      '<table style="width: 50%; border-collapse: collapse;" border="1">' +
+      '<colgroup><col style="width: 50%;" data-col="1"></colgroup>' +
+      '<tbody>' +
+      '<tr>' +
+      '<td>1.1</td>' +
+      '</tr>' +
+      '<tr>' +
+      '<td>2.1</td>' +
+      '</tr>' +
+      '</tbody>' +
+      '</table>'
+    );
+
+    // Select first row
+    selectRangeXY(editor, 'table tr:nth-child(1) td:nth-child(1)', 'table tr:nth-child(1) td:nth-child(2)');
+    dataTransfer = Clipboard.copy(TinyDom.body(editor));
+    assert.equal(dataTransfer.getData('text/plain'), '1.1\t1.2');
+    assert.equal(
+      dataTransfer.getData('text/html'),
+      '<!-- x-tinymce/html -->' +
+      '<table style="width: 100%; border-collapse: collapse;" border="1">' +
+      '<colgroup><col style="width: 50%;" data-col="1"><col style="width: 50%;" data-col="2"></colgroup>' +
+      '<tbody>' +
+      '<tr>' +
+      '<td>1.1</td>' +
+      '<td>1.2</td>' +
+      '</tr>' +
+      '</tbody>' +
+      '</table>'
+    );
+
+    // Select whole table
+    selectRangeXY(editor, 'table tr:nth-child(1) td:nth-child(1)', 'table tr:nth-child(2) td:nth-child(2)');
+    dataTransfer = Clipboard.copy(TinyDom.body(editor));
+    assert.equal(dataTransfer.getData('text/plain'), '1.1\t1.2\n2.1\t2.2');
+    assert.equal(dataTransfer.getData('text/html'), '<!-- x-tinymce/html -->' + inputTable);
   });
 });

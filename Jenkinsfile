@@ -23,7 +23,7 @@ def runBedrockTest(String name, String command, Boolean runAll, int retry = 0, i
 }
 
 def runHeadlessTests(Boolean runAll) {
-  def bedrockCmd = "yarn grunt headless-auto"
+  def bedrockCmd = "yarn grunt headless-auto --useSelenium=true"
   runBedrockTest('headless', bedrockCmd, runAll)
 }
 
@@ -125,6 +125,9 @@ def runHeadlessPod(String cacheName, Boolean runAll) {
         resourceLimitCpu: '7',
         resourceLimitMemory: '4Gi',
         resourceLimitEphemeralStorage: '16Gi'
+      ],
+      seleniumOpts: [
+        image: "selenium/standalone-chrome:127.0",
       ],
       build: cacheName
     ) {

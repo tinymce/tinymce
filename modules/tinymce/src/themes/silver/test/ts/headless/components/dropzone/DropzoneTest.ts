@@ -11,6 +11,7 @@ import TestProviders from '../../../module/TestProviders';
 describe('headless.tinymce.themes.silver.components.dropzone.DropzoneTest', () => {
   const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderDropZone({
+      context: 'any',
       name: 'drop1',
       label: Optional.some('Dropzone Label')
     }, TestProviders, Optional.none())

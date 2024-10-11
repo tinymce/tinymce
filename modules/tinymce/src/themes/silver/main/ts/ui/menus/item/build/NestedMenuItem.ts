@@ -38,6 +38,7 @@ const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse,
     shortcutContent: spec.shortcut
   }, providersBackstage, renderIcons);
   return renderCommonItem({
+    context: spec.context,
     data: buildData(spec),
     getApi,
     enabled: spec.enabled,

@@ -4,9 +4,9 @@ import {
 import { Cell, Fun, Optional, Optionals } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
-import * as ReadOnly from 'tinymce/themes/silver/ReadOnly';
 import { DisablingConfigs } from 'tinymce/themes/silver/ui/alien/DisablingConfigs';
 import { onControlAttached, onControlDetached, OnDestroy } from 'tinymce/themes/silver/ui/controls/Controls';
+import * as UiState from 'tinymce/themes/silver/UiState';
 
 import { menuItemEventOrder, onMenuItemExecute } from '../ItemEvents';
 import ItemResponse from '../ItemResponse';
@@ -28,11 +28,13 @@ export interface CommonMenuItemSpec<T> {
   readonly itemBehaviours: Behaviour.NamedConfiguredBehaviour<any, any, any>[];
   readonly getApi: (comp: AlloyComponent) => T;
   readonly data: ItemDataOutput;
+  readonly context: string;
 }
 
 export interface CommonCollectionItemSpec {
   readonly onAction: () => void;
   readonly disabled: boolean;
+  readonly context: string;
 }
 
 export const componentRenderPipeline: (xs: Array<Optional<AlloySpec>>) => AlloySpec[] = Optionals.cat;
@@ -54,8 +56,8 @@ const renderCommonItem = <T>(spec: CommonMenuItemSpec<T>, structure: ItemStructu
           onControlAttached(spec, editorOffCell),
           onControlDetached(spec, editorOffCell)
         ]),
-        DisablingConfigs.item(() => !spec.enabled || providersBackstage.isDisabled()),
-        ReadOnly.receivingConfig(),
+        DisablingConfigs.item(() => !spec.enabled || providersBackstage.checkUiComponentContext(spec.context).shouldDisable),
+        UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext(spec.context)),
         Replacing.config({ })
       ].concat(spec.itemBehaviours)
     )
@@ -77,8 +79,8 @@ const renderCommonChoice = (spec: CommonCollectionItemSpec, structure: ItemStruc
         AddEventsBehaviour.config('item-events', [
           AlloyEvents.run(NativeEvents.mouseover(), Focusing.focus)
         ]),
-        DisablingConfigs.item(() => spec.disabled || providersBackstage.isDisabled()),
-        ReadOnly.receivingConfig()
+        DisablingConfigs.item(() => spec.disabled || providersBackstage.checkUiComponentContext(spec.context).shouldDisable),
+        UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext(spec.context))
       ]
     ),
     action: spec.onAction
