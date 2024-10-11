@@ -40,9 +40,16 @@ const get = (editor: Editor): Formats => {
         selector: 'img,audio,video',
         collapsed: false,
         styles: {
-          float: 'left'
+          float: 'left',
         },
         preview: 'font-family font-size'
+      },
+      {
+        selector: '.mce-placeholder',
+        styles: {
+          float: 'left',
+        },
+        ceFalseOverride: true
       },
       {
         selector: 'table',
@@ -91,6 +98,15 @@ const get = (editor: Editor): Formats => {
           marginRight: 'auto'
         },
         preview: false
+      },
+      {
+        selector: '.mce-placeholder',
+        styles: {
+          display: 'block',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+        },
+        ceFalseOverride: true
       },
       {
         selector: 'table',
@@ -145,6 +161,13 @@ const get = (editor: Editor): Formats => {
           float: 'right'
         },
         preview: 'font-family font-size'
+      },
+      {
+        selector: '.mce-placeholder',
+        styles: {
+          float: 'right'
+        },
+        ceFalseOverride: true
       },
       {
         selector: 'table',
