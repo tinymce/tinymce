@@ -68,7 +68,7 @@ const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
         return {
           dom: {
             tag: 'span',
-            classes: [ 'tox-label' ],
+            classes: [ 'tox-label', 'tox-label--context-toolbar' ],
           },
           components: [ GuiFactory.text(label) ]
         };
