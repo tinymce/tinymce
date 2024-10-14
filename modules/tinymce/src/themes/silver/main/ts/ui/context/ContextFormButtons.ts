@@ -20,7 +20,7 @@ interface ContextFormButtonRegistry {
 const runOnExecute = <T, U>(memInput: MementoRecord, original: { onAction: (formApi: InlineContent.ContextFormInstanceApi<U>, buttonApi: T) => void }) =>
   AlloyEvents.run<InternalToolbarButtonExecuteEvent<T>>(internalToolbarButtonExecute, (comp, se) => {
     const input = memInput.get(comp);
-    const formApi = getFormApi(input);
+    const formApi = getFormApi<U>(input);
     original.onAction(formApi, se.event.buttonApi);
   });
 

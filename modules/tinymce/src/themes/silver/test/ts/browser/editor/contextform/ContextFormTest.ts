@@ -81,6 +81,14 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
               };
             },
             onAction: (formApi, _buttonApi) => store.adder('C.' + formApi.getValue())()
+          },
+          {
+            type: 'contextformbutton',
+            icon: 'fake-icon-name',
+            tooltip: 'D',
+            onAction: (formApi, _buttonApi) => {
+              formApi.setInputEnabled(!formApi.isInputEnabled());
+            }
           }
         ]
       });
@@ -222,7 +230,17 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     checkLastButtonGroup('Checking buttons have right state', (s, str, arr) => [
       s.element('button', { classes: [ arr.has('tox-tbtn--disabled') ], attrs: { 'aria-disabled': str.is('true') }}),
       s.element('button', { classes: [ arr.not('tox-tbtn--disabled') ] }),
-      s.element('button', { attrs: { 'aria-pressed': str.is('true') }})
+      s.element('button', { attrs: { 'aria-pressed': str.is('true') }}),
+      s.element('button', { classes: [ arr.not('tox-tbtn--disabled') ] })
     ]);
+  });
+
+  it('TINY-11342: Should enable/disable input when calling setInputEnabled and read the state using isInputEnabled', async () => {
+    const editor = hook.editor();
+    openToolbar(editor, 'test-form');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="D"]');
+    await TinyUiActions.pWaitForUi(editor, '.tox-pop input:disabled');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="D"]');
+    await TinyUiActions.pWaitForUi(editor, '.tox-pop input:not(:disabled)');
   });
 });

@@ -33,7 +33,7 @@ export default (): void => {
           text: 'Decorative',
           onAction: (formApi, buttonApi) => {
             buttonApi.setActive(!buttonApi.isActive());
-            formApi.setInputEnabled(!buttonApi.isActive());
+            formApi.setInputEnabled(!formApi.isInputEnabled());
           }
         }
       ]

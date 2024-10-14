@@ -66,6 +66,7 @@ export interface ContextFormToggleButton<T> extends BaseToolbarToggleButton<Cont
 
 export interface ContextFormInstanceApi<T> {
   setInputEnabled: (state: boolean) => void;
+  isInputEnabled: () => boolean;
   hide: () => void;
   getValue: () => T;
   setValue: (value: T) => void;
