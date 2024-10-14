@@ -2,7 +2,7 @@ import {
   SketchSpec
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Fun, Optional } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as SizeInput from '../sizeinput/SizeInput';
@@ -19,7 +19,6 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
     width: '',
     height: '',
     onEnter: Optional.none(),
-    onInput: Optional.none(),
-    onAttachField1: Fun.noop
+    onInput: Optional.none()
   }, providersBackstage);
 };

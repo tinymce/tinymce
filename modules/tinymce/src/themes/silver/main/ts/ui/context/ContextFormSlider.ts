@@ -1,7 +1,6 @@
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Disabling, FormField, GuiFactory, Input, Keying, NativeEvents, SketchSpec } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
 import { Optional } from '@ephox/katamari';
-import { Focus } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as UiState from '../../UiState';
@@ -50,8 +49,7 @@ export const renderContextFormSliderInput = (
       AddEventsBehaviour.config('slider-events', [
         AlloyEvents.run(NativeEvents.input(), (comp) => {
           ctx.onInput(ContextFormApi.getFormApi(comp));
-        }),
-        AlloyEvents.runOnAttached((comp) => Focus.focus(comp.element))
+        })
       ])
     ])
   });

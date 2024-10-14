@@ -15,6 +15,7 @@ import { renderToolbar } from '../toolbar/CommonToolbar';
 import { identifyButtons } from '../toolbar/Integration';
 import { hideContextToolbarEvent, showContextToolbarEvent } from './ContextEditorEvents';
 import { ContextForm } from './ContextForm';
+import * as ContextFormFocus from './ContextFormFocus';
 import * as ContextToolbarAnchor from './ContextToolbarAnchor';
 import * as ContextToolbarBounds from './ContextToolbarBounds';
 import * as ToolbarLookup from './ContextToolbarLookup';
@@ -262,8 +263,7 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
       Obj.get(scopes.lookupTable, e.toolbarKey).each((ctx) => {
         // ASSUMPTION: this is only used to open one specific toolbar at a time, hence [ctx]
         launchContext([ ctx ], Optionals.someIf(e.target !== editor, e.target));
-        // Forms launched via this way get immediate focus
-        InlineView.getContent(contextbar).each(Keying.focusIn);
+        ContextFormFocus.focusInputIn(contextbar);
       });
     });
 
