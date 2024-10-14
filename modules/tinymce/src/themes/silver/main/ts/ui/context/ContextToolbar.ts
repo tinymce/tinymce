@@ -15,9 +15,9 @@ import { renderToolbar } from '../toolbar/CommonToolbar';
 import { identifyButtons } from '../toolbar/Integration';
 import { hideContextToolbarEvent, showContextToolbarEvent } from './ContextEditorEvents';
 import { ContextForm } from './ContextForm';
-import * as ContextFormFocus from './ContextFormFocus';
 import * as ContextToolbarAnchor from './ContextToolbarAnchor';
 import * as ContextToolbarBounds from './ContextToolbarBounds';
+import * as ContextToolbarFocus from './ContextToolbarFocus';
 import * as ToolbarLookup from './ContextToolbarLookup';
 import * as ToolbarScopes from './ContextToolbarScopes';
 import { forwardSlideEvent, renderContextToolbar } from './ContextUi';
@@ -263,7 +263,7 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
       Obj.get(scopes.lookupTable, e.toolbarKey).each((ctx) => {
         // ASSUMPTION: this is only used to open one specific toolbar at a time, hence [ctx]
         launchContext([ ctx ], Optionals.someIf(e.target !== editor, e.target));
-        ContextFormFocus.focusInputIn(contextbar);
+        ContextToolbarFocus.focusIn(contextbar);
       });
     });
 

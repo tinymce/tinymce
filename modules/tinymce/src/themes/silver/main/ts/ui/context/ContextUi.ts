@@ -5,7 +5,7 @@ import {
 import { Arr, Cell, Id, Optional, Result } from '@ephox/katamari';
 import { Class, Css, EventArgs, Focus, SugarElement, SugarShadowDom, Width } from '@ephox/sugar';
 
-import * as ContextFormFocus from './ContextFormFocus';
+import * as ContextToolbarFocus from './ContextToolbarFocus';
 
 const forwardSlideEvent = Id.generate('forward-slide');
 export interface ForwardSlideEvent extends CustomEvent {
@@ -78,7 +78,7 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
           Css.set(elem, 'width', currentWidth + 'px');
 
           se.event.focus.fold(
-            () => ContextFormFocus.focusInputIn(comp),
+            () => ContextToolbarFocus.focusIn(comp),
             Focus.focus
           );
 
