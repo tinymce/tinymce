@@ -252,7 +252,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
   it('TINY-11342: Input event should trigger onInput', async () => {
     const editor = hook.editor();
     openToolbar(editor, 'test-form');
-    const input = UiFinder.findIn<HTMLInputElement>(SugarDocument.getDocument(), '.tox-pop input').getOrDie();
+    const input = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), '.tox-pop input').getOrDie();
     Value.set(input, 'Hello');
     input.dom.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
     store.assertEq('Input should trigger onInput', [ 'input.Hello' ]);
