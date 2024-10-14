@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, FocusTools, Keys, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Fun, Obj } from '@ephox/katamari';
-import { SugarBody, SugarDocument } from '@ephox/sugar';
+import { SugarBody, SugarDocument, Value } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -32,7 +32,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
             };
           }
         },
-
+        onInput: (formApi) => store.add(`input.${formApi.getValue()}`),
         predicate: (node) => node.nodeName.toLowerCase() === 'a',
         commands: [
           {
@@ -247,5 +247,14 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     await TinyUiActions.pWaitForUi(editor, '.tox-pop input:disabled');
     TinyUiActions.clickOnUi(editor, 'button[aria-label="D"]');
     await TinyUiActions.pWaitForUi(editor, '.tox-pop input:not(:disabled)');
+  });
+
+  it('TINY-11342: Input event should trigger onInput', async () => {
+    const editor = hook.editor();
+    openToolbar(editor, 'test-form');
+    const input = UiFinder.findIn<HTMLInputElement>(SugarDocument.getDocument(), '.tox-pop input').getOrDie();
+    Value.set(input, 'Hello');
+    input.dom.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+    store.assertEq('Input should trigger onInput', [ 'input.Hello' ]);
   });
 });
