@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, FocusTools, Keys, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Fun, Obj } from '@ephox/katamari';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -100,6 +100,17 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     }
   }, [], true);
 
+  afterEach(async () => {
+    const editor = hook.editor();
+
+    store.clear();
+    editor.focus();
+
+    // Simulate clicking elsewhere in the editor
+    clickAway(editor);
+    await pAssertNoPopDialog();
+  });
+
   const openToolbar = (editor: Editor, toolbarKey: string) => {
     editor.dispatch('contexttoolbar-show', {
       toolbarKey
@@ -160,9 +171,6 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     // Check that the context popup still exists;
     UiFinder.exists(SugarBody.body(), '.tox-pop');
     await Waiter.pTryUntil('Check that the editor still has focus', () => editor.hasFocus());
-    // Simulate clicking elsewhere in the editor
-    clickAway(editor);
-    await pAssertNoPopDialog();
   });
 
   it('TBA: Launch a context form from a context toolbar', async () => {
@@ -181,12 +189,9 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     // Check that the context popup still exists;
     UiFinder.exists(SugarBody.body(), '.tox-pop');
     await Waiter.pTryUntil('Check that the editor still has focus', () => editor.hasFocus());
-    // Simulate clicking elsewhere in the editor
-    clickAway(editor);
-    await pAssertNoPopDialog();
   });
 
-  it('TBA: Launching context form does not work if the context toolbar launcher is disabled', () => {
+  it('TBA: Launching context form does not work if the context toolbar launcher is disabled', async () => {
     const editor = hook.editor();
     openToolbar(editor, 'test-toolbar');
     editor.dispatch('test.updateButtonABC', { disable: true });
