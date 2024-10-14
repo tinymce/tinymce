@@ -33,13 +33,13 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarTest', () => {
       providers,
       initGroups: [
         {
-          title: Optional.none(), items: Arr.map([ 'one', 'two', 'three' ], makeButton)
+          title: Optional.none(), label: Optional.none(), items: Arr.map([ 'one', 'two', 'three' ], makeButton)
         },
         {
-          title: Optional.some('group title'), items: Arr.map([ 'four', 'five' ], makeButton)
+          title: Optional.some('group title'), label: Optional.none(), items: Arr.map([ 'four', 'five' ], makeButton)
         },
         {
-          title: Optional.some('another group title'), items: Arr.map([ 'six' ], makeButton)
+          title: Optional.some('another group title'), label: Optional.none(), items: Arr.map([ 'six' ], makeButton)
         }
       ]
     })
@@ -121,10 +121,10 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarTest', () => {
       const doc = SugarDocument.getDocument();
       const groups = Arr.map([
         {
-          title: Optional.none<string>(), items: Arr.map([ 'A', 'B' ], makeButton)
+          title: Optional.none<string>(), label: Optional.none(), items: Arr.map([ 'A', 'B' ], makeButton)
         },
         {
-          title: Optional.none<string>(), items: Arr.map([ 'C' ], makeButton)
+          title: Optional.none<string>(), label: Optional.none(), items: Arr.map([ 'C' ], makeButton)
         }
       ], renderToolbarGroup);
 
