@@ -41,7 +41,7 @@ interface SelectedResizeHandle extends ResizeHandle {
 }
 
 const elementSelectionAttr = 'data-mce-selected';
-const controlElmSelector = 'table,img,figure.image,hr,video,span.mce-preview-object,span.mce-placeholder,details';
+const controlElmSelector = 'table,img,figure.image,hr,video,span.mce-preview-object,.mce-placeholder,details';
 const abs = Math.abs;
 const round = Math.round;
 
