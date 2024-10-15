@@ -13,13 +13,13 @@ import * as Icons from '../icons/Icons';
 
 const english: Record<string, string> = {
   'colorcustom.rgb.red.label': 'R',
-  'colorcustom.rgb.red.description': 'Red component (R)',
+  'colorcustom.rgb.red.description': 'Red channel',
   'colorcustom.rgb.green.label': 'G',
-  'colorcustom.rgb.green.description': 'Green component (G)',
+  'colorcustom.rgb.green.description': 'Green channel',
   'colorcustom.rgb.blue.label': 'B',
-  'colorcustom.rgb.blue.description': 'Blue component (B)',
+  'colorcustom.rgb.blue.description': 'Blue channel',
   'colorcustom.rgb.hex.label': '#',
-  'colorcustom.rgb.hex.description': 'Hex / number color code',
+  'colorcustom.rgb.hex.description': 'Hex color code',
   'colorcustom.rgb.range': 'Range 0 to 255',
   'colorcustom.rgb.invalid': 'Numbers only, 0 to 255',
   'colorcustom.rgb.invalidHex': 'Hexadecimal only, 000000 to FFFFFF',
