@@ -17,7 +17,7 @@ interface ListItemFormatCase {
 describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
-    base_url: '/project/tinymce/js/tinymce',
+    base_url: '/project/tinymce/js/tinymce'
   }, [], true);
 
   const testListFormat = (f: (editor: Editor, format: string, vars: FormatVars | undefined) => void) => (testCase: ListItemFormatCase) => {
