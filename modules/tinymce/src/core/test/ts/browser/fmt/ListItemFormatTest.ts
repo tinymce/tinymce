@@ -1,7 +1,7 @@
-import { Cursors, Keys } from '@ephox/agar';
+import { Cursors } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Type } from '@ephox/katamari';
-import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { FormatVars } from 'tinymce/core/fmt/FormatTypes';
