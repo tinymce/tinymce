@@ -6,7 +6,6 @@ import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
-    apply_list_formatting: false,
     base_url: '/project/tinymce/js/tinymce',
     plugins: 'lists'
   }, [], true);
