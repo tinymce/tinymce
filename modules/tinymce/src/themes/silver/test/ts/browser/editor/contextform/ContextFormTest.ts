@@ -191,7 +191,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     await Waiter.pTryUntil('Check that the editor still has focus', () => editor.hasFocus());
   });
 
-  it('TBA: Launching context form does not work if the context toolbar launcher is disabled', async () => {
+  it('TBA: Launching context form does not work if the context toolbar launcher is disabled', () => {
     const editor = hook.editor();
     openToolbar(editor, 'test-toolbar');
     editor.dispatch('test.updateButtonABC', { disable: true });
@@ -249,7 +249,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     await TinyUiActions.pWaitForUi(editor, '.tox-pop input:not(:disabled)');
   });
 
-  it('TINY-11342: Input event should trigger onInput', async () => {
+  it('TINY-11342: Input event should trigger onInput', () => {
     const editor = hook.editor();
     openToolbar(editor, 'test-form');
     const input = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), '.tox-pop input').getOrDie();
