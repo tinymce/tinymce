@@ -4,20 +4,6 @@ import Env from '../Env';
 
 export const registerCommands = (editor: Editor): void => {
 
-  const handleClipboardError = () => {
-
-    let msg = editor.translate(
-      `Your browser doesn't support direct access to the clipboard. ` +
-        'Please use the Ctrl+X/C/V keyboard shortcuts instead.'
-    );
-
-    if (Env.os.isMacOS() || Env.os.isiOS()) {
-      msg = msg.replace(/Ctrl\+/g, '\u2318+');
-    }
-
-    editor.notificationManager.open({ text: msg, type: 'error' });
-  };
-
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -68,6 +54,20 @@ export const registerCommands = (editor: Editor): void => {
     if (failed || !doc.queryCommandSupported(command)) {
       handleClipboardError();
     }
+  };
+
+  const handleClipboardError = () => {
+
+    let msg = editor.translate(
+      `Your browser doesn't support direct access to the clipboard. ` +
+        'Please use the Ctrl+X/C/V keyboard shortcuts instead.'
+    );
+
+    if (Env.os.isMacOS() || Env.os.isiOS()) {
+      msg = msg.replace(/Ctrl\+/g, '\u2318+');
+    }
+
+    editor.notificationManager.open({ text: msg, type: 'error' });
   };
 
   editor.editorCommands.addCommands({
