@@ -1,6 +1,6 @@
 project: tinymce
 kind: Added
-body: Added `apply_list_formatting` config to disable the list item styling
+body: Added new default styles for list elements.
 time: 2024-09-10T21:52:35.043994+10:00
 custom:
   Issue: TINY-11217
