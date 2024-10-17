@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import Editor from '../Editor';
 import Env from '../Env';
 
@@ -7,7 +6,6 @@ export const registerCommands = (editor: Editor): void => {
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      console.log('copyToClipboard', text);
     } catch (err) {
       handleClipboardError();
     }
@@ -36,26 +34,6 @@ export const registerCommands = (editor: Editor): void => {
     }
   };
 
-  const fallbackClipboardCommand = (editor: Editor, command: string) => {
-    const doc = editor.getDoc();
-    let failed = false;
-
-    try {
-      doc.execCommand(command);
-    } catch (ex) {
-      failed = true;
-    }
-
-    // Chrome reports the paste command as supported, however older IE:s will return false for cut/paste
-    if (command === 'paste' && !doc.queryCommandEnabled(command)) {
-      failed = true;
-    }
-
-    if (failed || !doc.queryCommandSupported(command)) {
-      handleClipboardError();
-    }
-  };
-
   const handleClipboardError = () => {
 
     let msg = editor.translate(
@@ -72,10 +50,7 @@ export const registerCommands = (editor: Editor): void => {
 
   editor.editorCommands.addCommands({
     'Cut,Copy,Paste': (command) => {
-      const clipboard = navigator.clipboard;
-      console.log('command', navigator.clipboard);
-
-      if (clipboard) {
+      if (isSecureContext && navigator.clipboard) {
         switch (command) {
           case 'copy':
             copyToClipboard(editor.selection.getContent());
@@ -88,7 +63,7 @@ export const registerCommands = (editor: Editor): void => {
             break;
         }
       } else {
-        fallbackClipboardCommand(editor, command);
+        handleClipboardError();
       }
     }
   });
