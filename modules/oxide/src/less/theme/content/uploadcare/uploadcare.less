@@ -1,0 +1,29 @@
+@placeholder-initial-width: 600px;
+@placeholder-initial-height: 80px;
+
+@placeholder-background-color: @background-color;
+@placeholder-border: 2px solid darken(@placeholder-background-color, 11%);
+@placeholder-font-family: monospace, sans-serif;
+
+@placeholder-text-color: @text-color-muted;
+@placeholder-icon-fill: @text-color-muted;
+
+tiny-uploadcare-placeholder {
+  display: inline-block;
+  width: @placeholder-initial-width;
+  height: @placeholder-initial-height;
+
+  // shadow DOM (icon + text)
+  --tox-uploadcare-placeholder--content-cursor: auto !important; // to overwrite not-allowed by selected contenteditable=false
+  --tox-uploadcare-placeholder--content-color: @placeholder-text-color;
+  --tox-uploadcare-placeholder--content-background-color: @placeholder-background-color;
+  --tox-uploadcare-placeholder--content-border: @placeholder-border;
+  --tox-uploadcare-placeholder--content-font-family: @placeholder-font-family;
+  --tox-uploadcare-placeholder--content-height: 100%;
+  --tox-uploadcare-placeholder--content-display: flex;
+  --tox-uploadcare-placeholder--content-align-items: center;
+  --tox-uploadcare-placeholder--content-justify-content: center;
+  --tox-uploadcare-placeholder--content-gap: 8px;
+
+  --tox-uploadcare-placeholder--icon-fill: @placeholder-icon-fill;
+}
