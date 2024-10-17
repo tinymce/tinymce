@@ -14,7 +14,8 @@ let plugins = [
   'accordion', 'advlist', 'anchor', 'autolink', 'autoresize', 'autosave', 'charmap', 'code', 'codesample',
   'directionality', 'emoticons', 'help', 'fullscreen', 'image', 'importcss', 'insertdatetime',
   'link', 'lists', 'media', 'nonbreaking', 'pagebreak', 'preview', 'save', 'searchreplace',
-  'table', 'visualblocks', 'visualchars', 'wordcount', 'quickbars', 'reverseorderedlist'
+  'table', 'visualblocks', 'visualchars', 'wordcount', 'quickbars', 'reverseorderedlist', 
+  'happylist'
 ];
 
 let themes = [
