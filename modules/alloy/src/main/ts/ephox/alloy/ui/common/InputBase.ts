@@ -11,6 +11,7 @@ import * as Fields from '../../data/Fields';
 import { InputDetail } from '../types/InputTypes';
 
 const schema: () => FieldProcessor[] = Fun.constant([
+  FieldSchema.defaultedString('type', 'text'),
   FieldSchema.option('data'),
   FieldSchema.defaulted('inputAttributes', { }),
   FieldSchema.defaulted('inputStyles', { }),
@@ -28,7 +29,11 @@ const focusBehaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord =>
     onFocus: !detail.selectOnFocus ? Fun.noop : (component) => {
       const input = component.element;
       const value = Value.get(input);
-      input.dom.setSelectionRange(0, value.length);
+
+      // TODO: There are probably more types that can't handle setSelectionRange
+      if (detail.type !== 'range') {
+        input.dom.setSelectionRange(0, value.length);
+      }
     }
   })
 ]);
@@ -63,7 +68,7 @@ const behaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord => ({
 const dom = (detail: InputDetail): RawDomSchema => ({
   tag: detail.tag,
   attributes: {
-    type: 'text',
+    type: detail.type,
     ...detail.inputAttributes
   },
   styles: detail.inputStyles,
