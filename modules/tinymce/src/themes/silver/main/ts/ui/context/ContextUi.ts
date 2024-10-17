@@ -5,6 +5,8 @@ import {
 import { Arr, Cell, Id, Optional, Result } from '@ephox/katamari';
 import { Class, Css, EventArgs, Focus, SugarElement, SugarShadowDom, Width } from '@ephox/sugar';
 
+import * as ContextToolbarFocus from './ContextToolbarFocus';
+
 const forwardSlideEvent = Id.generate('forward-slide');
 export interface ForwardSlideEvent extends CustomEvent {
   readonly forwardContents: AlloySpec;
@@ -55,21 +57,37 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
           const elem = comp.element;
           // If it was partially through a slide, clear that and measure afresh
           Css.remove(elem, 'width');
+
           const currentWidth = Width.get(elem);
+
+          // Remove these so that we can property measure the width of the context form content
+          Css.remove(elem, 'left');
+          Css.remove(elem, 'right');
+          Css.remove(elem, 'max-width');
 
           InlineView.setContent(comp, se.event.contents);
           Class.add(elem, resizingClass);
+
           const newWidth = Width.get(elem);
+
+          // Reposition without transition to avoid it from being animated from previous position
+          Css.set(elem, 'transition', 'none');
+          InlineView.reposition(comp);
+          Css.remove(elem, 'transition');
+
           Css.set(elem, 'width', currentWidth + 'px');
-          InlineView.getContent(comp).each((newContents) => {
-            se.event.focus.bind((f) => {
+
+          se.event.focus.fold(
+            () => ContextToolbarFocus.focusIn(comp),
+            (f) => {
               Focus.focus(f);
-              return Focus.search(elem);
-            }).orThunk(() => {
-              Keying.focusIn(newContents);
-              return Focus.active(SugarShadowDom.getRootNode(elem));
-            });
-          });
+
+              if (Focus.search(elem).isNone()) {
+                ContextToolbarFocus.focusIn(comp);
+              }
+            }
+          );
+
           setTimeout(() => {
             Css.set(comp.element, 'width', newWidth + 'px');
           }, 0);
