@@ -87,9 +87,21 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
             icon: 'fake-icon-name',
             tooltip: 'D',
             onAction: (formApi, _buttonApi) => {
+              formApi.setValue('before-hide');
+              formApi.hide();
+              store.add('D.' + formApi.getValue());
+              formApi.setValue('after-hide');
+              store.add('D.' + formApi.getValue());
+            }
+          },
+          {
+            type: 'contextformbutton',
+            icon: 'fake-icon-name',
+            tooltip: 'E',
+            onAction: (formApi, _buttonApi) => {
               formApi.setInputEnabled(!formApi.isInputEnabled());
             }
-          }
+          },
         ]
       });
 
@@ -236,6 +248,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
       s.element('button', { classes: [ arr.has('tox-tbtn--disabled') ], attrs: { 'aria-disabled': str.is('true') }}),
       s.element('button', { classes: [ arr.not('tox-tbtn--disabled') ] }),
       s.element('button', { attrs: { 'aria-pressed': str.is('true') }}),
+      s.element('button', { classes: [ arr.not('tox-tbtn--disabled') ] }),
       s.element('button', { classes: [ arr.not('tox-tbtn--disabled') ] })
     ]);
   });
@@ -243,9 +256,9 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
   it('TINY-11342: Should enable/disable input when calling setInputEnabled and read the state using isInputEnabled', async () => {
     const editor = hook.editor();
     openToolbar(editor, 'test-form');
-    TinyUiActions.clickOnUi(editor, 'button[aria-label="D"]');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="E"]');
     await TinyUiActions.pWaitForUi(editor, '.tox-pop input:disabled');
-    TinyUiActions.clickOnUi(editor, 'button[aria-label="D"]');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="E"]');
     await TinyUiActions.pWaitForUi(editor, '.tox-pop input:not(:disabled)');
   });
 
@@ -256,5 +269,12 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     Value.set(input, 'Hello');
     input.dom.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
     store.assertEq('Input should trigger onInput', [ 'input.Hello' ]);
+  });
+
+  it('TINY-11342: Should be able to get value after the context form has been hidden', async () => {
+    const editor = hook.editor();
+    openToolbar(editor, 'test-form');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="D"]');
+    store.assertEq('D should have fired', [ 'D.before-hide', 'D.after-hide' ]);
   });
 });
