@@ -79,7 +79,13 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
 
           se.event.focus.fold(
             () => ContextToolbarFocus.focusIn(comp),
-            Focus.focus
+            (f) => {
+              Focus.focus(f);
+
+              if (Focus.search(elem).isNone()) {
+                ContextToolbarFocus.focusIn(comp);
+              }
+            }
           );
 
           setTimeout(() => {
