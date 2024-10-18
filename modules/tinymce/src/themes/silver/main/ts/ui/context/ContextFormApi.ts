@@ -8,6 +8,8 @@ import {
 import { InlineContent } from '@ephox/bridge';
 import { Singleton } from '@ephox/katamari';
 
+import { backSlideEvent } from './ContextUi';
+
 export const getFormApi = <T>(input: AlloyComponent): InlineContent.ContextFormInstanceApi<T> => {
   const valueState = Singleton.value<T>();
 
@@ -20,6 +22,15 @@ export const getFormApi = <T>(input: AlloyComponent): InlineContent.ContextFormI
         valueState.set(Representing.getValue(input));
       }
 
+      AlloyTriggers.emit(input, SystemEvents.sandboxClose());
+    },
+    back: () => {
+      // Before we hide snapshot the current value since accessing the value of a form field after it's been detached will throw an error
+      if (!valueState.isSet()) {
+        valueState.set(Representing.getValue(input));
+      }
+
+      AlloyTriggers.emit(input, backSlideEvent);
       AlloyTriggers.emit(input, SystemEvents.sandboxClose());
     },
     getValue: () => {
