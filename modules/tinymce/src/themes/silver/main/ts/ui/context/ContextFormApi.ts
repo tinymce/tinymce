@@ -2,11 +2,12 @@ import {
   AlloyComponent,
   AlloyTriggers,
   Disabling,
-  Representing,
-  SystemEvents
+  Representing
 } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
 import { Singleton } from '@ephox/katamari';
+
+import { backSlideEvent } from './ContextUi';
 
 export const getFormApi = <T>(input: AlloyComponent): InlineContent.ContextFormInstanceApi<T> => {
   const valueState = Singleton.value<T>();
@@ -20,7 +21,7 @@ export const getFormApi = <T>(input: AlloyComponent): InlineContent.ContextFormI
         valueState.set(Representing.getValue(input));
       }
 
-      AlloyTriggers.emit(input, SystemEvents.sandboxClose());
+      AlloyTriggers.emit(input, backSlideEvent);
     },
     getValue: () => {
       return valueState.get().getOrThunk(() => Representing.getValue(input));
