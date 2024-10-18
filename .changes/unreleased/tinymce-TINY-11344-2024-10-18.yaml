@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: '`ContextFormApi.hide` were removing a possible previous toolbar too'
+time: 2024-10-18T12:57:25.545660984+02:00
+custom:
+  Issue: TINY-11344
