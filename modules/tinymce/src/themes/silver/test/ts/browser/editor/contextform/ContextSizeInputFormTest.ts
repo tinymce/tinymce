@@ -71,7 +71,7 @@ describe('browser.tinymce.themes.silver.editor.ContextSizeInputFormTest', () => 
             icon: 'fake-icon-name',
             tooltip: 'Back',
             align: 'start',
-            onAction: (formApi, _buttonApi) => formApi.hide()
+            onAction: (formApi) => formApi.back()
           }
         ]
       });
