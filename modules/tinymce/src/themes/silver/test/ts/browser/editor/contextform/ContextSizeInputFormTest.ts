@@ -48,6 +48,33 @@ describe('browser.tinymce.themes.silver.editor.ContextSizeInputFormTest', () => 
           }
         ]
       });
+
+      ed.ui.registry.addContextToolbar('test-toolbar-with-close', {
+        items: 'test-form-with-close undo',
+        position: 'node',
+        scope: 'node',
+        predicate: (node) => node.nodeName.toLowerCase() === 'div',
+      });
+
+      ed.ui.registry.addContextForm('test-form-with-close', {
+        type: 'contextsizeinputform',
+        launch: {
+          type: 'contextformtogglebutton',
+          icon: 'fake-icon-name',
+          tooltip: 'ABC'
+        },
+        initValue: Fun.constant({ width: '100', height: '200' }),
+        onInput: (formApi) => store.add(`input.${JSON.stringify(formApi.getValue())}`),
+        commands: [
+          {
+            type: 'contextformbutton',
+            icon: 'fake-icon-name',
+            tooltip: 'Back',
+            align: 'start',
+            onAction: (formApi, _buttonApi) => formApi.hide()
+          }
+        ]
+      });
     }
   }, [], true);
 
@@ -148,6 +175,16 @@ describe('browser.tinymce.themes.silver.editor.ContextSizeInputFormTest', () => 
     await UiFinder.pWaitFor('Waiting for context toolbar to appear', SugarBody.body(), '.tox-pop[data-alloy-placement="south"]');
     TinyUiActions.clickOnUi(editor, '.tox-pop button[aria-label="ABC"]');
     await UiFinder.pWaitFor('Waiting for context toolbar to appear', SugarBody.body(), '.tox-pop[data-alloy-placement="southwest"] input');
+  });
+
+  it('TINY-11344: pressing `back` it should show the previous toolbar', async () => {
+    const editor = hook.editor();
+    editor.setContent('<div>some div</div>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    await UiFinder.pWaitFor('Waiting for context toolbar to appear', SugarBody.body(), '.tox-pop[data-alloy-placement="south"]');
+    TinyUiActions.clickOnUi(editor, '.tox-pop button[aria-label="ABC"]');
+    TinyUiActions.clickOnUi(editor, '.tox-pop button[aria-label="Back"]');
+    await UiFinder.pWaitFor('Waiting for context toolbar to previous toolbar to apper', SugarBody.body(), '.tox-pop button[aria-label="Undo"]');
   });
 });
 
