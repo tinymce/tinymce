@@ -5,15 +5,15 @@
 @loading-element-width: ~"min(24px, 30%)";
 
 // UPLOADCARE PLACEHOLDER
-@placeholder-initial-width: 600px;
-@placeholder-initial-height: 80px;
+@uploadcare-placeholder-initial-width: 600px;
+@uploadcare-placeholder-initial-height: 80px;
 
-@placeholder-background-color: @background-color;
-@placeholder-border: 2px solid darken(@placeholder-background-color, 11%);
-@placeholder-font-family: monospace, sans-serif;
+@uploadcare-placeholder-background-color: @background-color;
+@uploadcare-placeholder-border: 2px solid darken(@uploadcare-placeholder-background-color, 11%);
+@uploadcare-placeholder-font-family: monospace, sans-serif;
 
-@placeholder-text-color: @text-color-muted;
-@placeholder-icon-fill: @text-color-muted;
+@uploadcare-placeholder-text-color: @text-color-muted;
+@uploadcare-placeholder-icon-fill: @text-color-muted;
 
 .tox-uc-image-overlay {
   position: absolute;
@@ -36,20 +36,20 @@
 
 .tox-uploadcare-placeholder {
   display: inline-block;
-  width: @placeholder-initial-width;
-  height: @placeholder-initial-height;
+  width: @uploadcare-placeholder-initial-width;
+  height: @uploadcare-placeholder-initial-height;
 
   // shadow DOM (icon + text)
   --tox-uploadcare-placeholder--content-cursor: auto !important; // to overwrite not-allowed by selected contenteditable=false
-  --tox-uploadcare-placeholder--content-color: @placeholder-text-color;
-  --tox-uploadcare-placeholder--content-background-color: @placeholder-background-color;
-  --tox-uploadcare-placeholder--content-border: @placeholder-border;
-  --tox-uploadcare-placeholder--content-font-family: @placeholder-font-family;
+  --tox-uploadcare-placeholder--content-color: @uploadcare-placeholder-text-color;
+  --tox-uploadcare-placeholder--content-background-color: @uploadcare-placeholder-background-color;
+  --tox-uploadcare-placeholder--content-border: @uploadcare-placeholder-border;
+  --tox-uploadcare-placeholder--content-font-family: @uploadcare-placeholder-font-family;
   --tox-uploadcare-placeholder--content-height: 100%;
   --tox-uploadcare-placeholder--content-display: flex;
   --tox-uploadcare-placeholder--content-align-items: center;
   --tox-uploadcare-placeholder--content-justify-content: center;
   --tox-uploadcare-placeholder--content-gap: 8px;
 
-  --tox-uploadcare-placeholder--icon-fill: @placeholder-icon-fill;
+  --tox-uploadcare-placeholder--icon-fill: @uploadcare-placeholder-icon-fill;
 }
