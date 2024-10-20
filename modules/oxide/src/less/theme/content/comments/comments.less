@@ -2,12 +2,11 @@
 // Comments
 //
 
-@document-comment-color: lighten(@color-active, 20%); 
-@document-comment-active-color: @color-active;
-@document-comment-background-color: @document-comment-color;
-@document-comment-active-background-color: @document-comment-active-color;
-@document-comment-outline-color: @document-comment-color;
-@document-comment-active-outline-color: @document-comment-active-color;
+@document-comment-background-color: contrast(@content-text-color, lighten(@color-active, 20%), mix(@color-active, @color-black, 20%)); 
+@document-comment-active-background-color: @document-comment-background-color;
+@document-comment-outline-color: @color-active;
+@document-comment-active-outline-color: @color-active;
+
 @document-comment-outline-width: @object-block-selected-outline-width;
 
 .tox-comments-visible {

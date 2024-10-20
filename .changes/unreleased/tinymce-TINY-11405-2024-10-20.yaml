@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: 'Improved dark skin for Tiny Comments plugin.'
+time: 2024-10-20T18:50:52.933712+02:00
+custom:
+  Issue: TINY-11405
