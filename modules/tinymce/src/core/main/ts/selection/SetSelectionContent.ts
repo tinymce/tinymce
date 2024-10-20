@@ -1,5 +1,5 @@
 import { Optional } from '@ephox/katamari';
-import { Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { PredicateExists, PredicateFind, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import BookmarkManager from '../api/dom/BookmarkManager';
 import Editor from '../api/Editor';
@@ -9,6 +9,7 @@ import CaretPosition from '../caret/CaretPosition';
 import { SetSelectionContentArgs } from '../content/ContentTypes';
 import { postProcessSetContent, preProcessSetContent } from '../content/PrePostProcess';
 import * as MergeText from '../delete/MergeText';
+import { isBogus } from '../dom/NodeType';
 import * as ScrollIntoView from '../dom/ScrollIntoView';
 import { needsToBeNbspLeft, needsToBeNbspRight } from '../keyboard/Nbsps';
 
@@ -73,6 +74,20 @@ const rngSetContent = (rng: Range, fragment: DocumentFragment, schema: Schema): 
 
   const prevText = firstChild.bind(Traverse.prevSibling).filter(SugarNode.isText).bind(removeEmpty);
   const nextText = lastChild.bind(Traverse.nextSibling).filter(SugarNode.isText).bind(removeEmpty);
+
+  if (nextText.isNone()) {
+    const nextNestedChildText = lastChild.bind(Traverse.nextSibling).bind((next) => {
+      if (!isBogus(next.dom)) {
+        const candidateDescendant = PredicateFind.descendant(next, (descendant) => SugarNode.isText(descendant));
+        return candidateDescendant.filter((el) => !PredicateExists.ancestor(el, (desc) => isBogus(desc.dom)));
+      } else {
+        return Optional.none();
+      }
+    });
+    nextNestedChildText.each((text) => {
+      rng.setEnd(text.dom, 0);
+    });
+  }
 
   // Join and normalize text
   mergeAndNormalizeText(prevText, firstChild, rng, true, schema);
