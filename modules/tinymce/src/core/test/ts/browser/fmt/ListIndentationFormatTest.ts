@@ -1,7 +1,8 @@
 import { Keys } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Css, SugarElement } from '@ephox/sugar';
-import { TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -39,7 +40,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
 
       TinyContentActions.keydown(editor, Keys.tab());
 
-      checkCss();
+      assert.isTrue(checkCss());
     });
 
     it('TINY-11217: Apply format to partial selection of list item', () => {
@@ -52,7 +53,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
 
       TinyContentActions.keydown(editor, Keys.tab());
 
-      checkCss();
+      assert.isTrue(checkCss());
     });
 
     it('TINY-11217: Apply format to nested lists', () => {
@@ -65,7 +66,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
 
       TinyContentActions.keydown(editor, Keys.tab());
 
-      checkCss();
+      assert.isTrue(checkCss());
     });
 
     it('TINY-11217: Apply format to list with mixed content', () => {
@@ -78,7 +79,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
 
       TinyContentActions.keydown(editor, Keys.tab());
 
-      checkCss();
+      assert.isTrue(checkCss());
     });
 
     it('TINY-11217: Remove all formats from list', () => {
@@ -93,7 +94,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
 
       TinyContentActions.keydown(editor, Keys.tab());
 
-      checkCss();
+      assert.isTrue(checkCss());
     });
 
     it('TINY-11217: Apply format to ordered list', () => {
@@ -106,7 +107,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
 
       TinyContentActions.keydown(editor, Keys.tab());
 
-      checkCss();
+      assert.isTrue(checkCss());
     });
 
     it('TINY-11217: Apply custom format to list', () => {
@@ -120,7 +121,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
 
       TinyContentActions.keydown(editor, Keys.tab());
 
-      checkCss();
+      assert.isTrue(checkCss());
       editor.formatter.unregister('custom_format');
     });
   });
