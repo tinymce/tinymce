@@ -1,44 +1,31 @@
+import { PlatformDetection } from '@ephox/sand';
+
 import Editor from '../Editor';
 import Env from '../Env';
 
 export const registerCommands = (editor: Editor): void => {
+  const browser = PlatformDetection.detect().browser;
 
   const copyToClipboard = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch (err) {
-      handleClipboardError();
-    }
+    await navigator.clipboard.writeText(text);
   };
 
-  const pasteFromClipboard = async () => {
+  const pasteFromClipboard = async (): Promise<void> => {
     let text = '';
-
-    try {
-      text = await navigator.clipboard.readText();
-      console.log('pasteFromClipboard', text);
-      editor.selection.setContent(text);
-    } catch (err) {
-      handleClipboardError();
-    }
-    return text;
+    text = await navigator.clipboard.readText();
+    editor.selection.setContent(text);
   };
 
   const cutToClipboard = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      console.log('cutToClipboard', text);
-      editor.selection.setContent('');
-    } catch (err) {
-      handleClipboardError();
-    }
+    await navigator.clipboard.writeText(text);
+    editor.selection.setContent('');
   };
 
-  const handleClipboardError = () => {
+  const handleSecureContentError = () => {
 
     let msg = editor.translate(
-      `Your browser doesn't support direct access to the clipboard. ` +
-        'Please use the Ctrl+X/C/V keyboard shortcuts instead.'
+      'Error: This operation requires a secure context (HTTPS)' +
+        'Direct access to the clipboard is not allowed in insecure contexts.'
     );
 
     if (Env.os.isMacOS() || Env.os.isiOS()) {
@@ -46,25 +33,70 @@ export const registerCommands = (editor: Editor): void => {
     }
 
     editor.notificationManager.open({ text: msg, type: 'error' });
+
+    return false;
+  };
+
+  const checkPermission = async () => {
+    const permission = browser.isChromium() ? await navigator.permissions.query({ name: 'clipboard-read' as PermissionName }) : { state: 'granted' };
+    if (permission.state === 'granted') {
+      return true;
+    } else if (permission.state === 'denied') {
+      handlePermissionError();
+      return false;
+    } else {
+      // state is 'prompt'
+      try {
+        await navigator.clipboard.readText();
+      } catch (e) {
+        handlePermissionError();
+      }
+
+      return;
+    }
+  };
+
+  const handlePermissionError = () => {
+
+    let msg = editor.translate(
+      'Clipboard permission denied. Please allow clipboard access to use this feature.'
+    );
+
+    if (Env.os.isMacOS() || Env.os.isiOS()) {
+      msg = msg.replace(/Ctrl\+/g, '\u2318+');
+    }
+
+    editor.notificationManager.open({ text: msg, type: 'error' });
+
+    return false;
   };
 
   editor.editorCommands.addCommands({
     'Cut,Copy,Paste': (command) => {
-      if (isSecureContext && navigator.clipboard) {
-        switch (command) {
-          case 'copy':
-            copyToClipboard(editor.selection.getContent());
-            break;
-          case 'paste':
-            pasteFromClipboard();
-            break;
-          case 'cut':
-            cutToClipboard(editor.selection.getContent());
-            break;
+      const executeCommand = async () => {
+        const secureContextCheck = window.isSecureContext ? true : handleSecureContentError();
+        const isPermitted = browser.isChromium() ? await navigator.permissions.query({ name: 'clipboard-read' as PermissionName }) : { state: 'granted' };
+
+        if (secureContextCheck && isPermitted.state === 'granted') {
+          switch (command) {
+            case 'copy':
+              await copyToClipboard(editor.selection.getContent());
+              break;
+            case 'paste':
+              await pasteFromClipboard();
+              break;
+            case 'cut':
+              await cutToClipboard(editor.selection.getContent());
+              break;
+          }
+        } else if (isPermitted.state === 'prompt') {
+          checkPermission();
+        } else {
+          handleSecureContentError();
         }
-      } else {
-        handleClipboardError();
-      }
+      };
+
+      executeCommand();
     }
   });
 };
