@@ -156,7 +156,7 @@ const NotificationManager = (editor: Editor): NotificationManager => {
     });
 
     editor.on('keydown', (e) => {
-      if ((e.altKey) && e.key.toLowerCase() === 'f12') {
+      if (e.altKey && e.key.toLowerCase() === 'f12') {
         e.preventDefault();
         getTopNotification()
           .map((notificationApi) => SugarElement.fromDom(notificationApi.getEl()))
