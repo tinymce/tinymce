@@ -9,6 +9,7 @@ import { Class, Compare, Css, Focus, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
 
+import * as Events from '../../api/Events';
 import { getToolbarMode, ToolbarMode } from '../../api/Options';
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderToolbar } from '../toolbar/CommonToolbar';
@@ -54,7 +55,14 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
       sink,
       onEscape: () => {
         editor.focus();
+        Events.fireContextToolbarClose(editor);
         return Optional.some(true);
+      },
+      onHide: () => {
+        Events.fireContextToolbarClose(editor);
+      },
+      onBack: () => {
+        Events.fireContextFormSlideBack(editor);
       }
     })
   );
