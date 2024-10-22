@@ -155,10 +155,16 @@ const NotificationManager = (editor: Editor): NotificationManager => {
       });
     });
 
-    editor.addShortcut('alt+F12', 'Focus to notification', () =>
-      getTopNotification()
-        .map((notificationApi) => SugarElement.fromDom(notificationApi.getEl()))
-        .each((elm) => Focus.focus(elm)));
+    editor.on('keydown', (e) => {
+      // TODO: Remove this once we remove the use of keycodes
+      const isF12 = e.key?.toLowerCase() === 'f12' || e.keyCode === 123;
+      if (e.altKey && isF12) {
+        e.preventDefault();
+        getTopNotification()
+          .map((notificationApi) => SugarElement.fromDom(notificationApi.getEl()))
+          .each((elm) => Focus.focus(elm));
+      }
+    });
   };
 
   registerEvents(editor);

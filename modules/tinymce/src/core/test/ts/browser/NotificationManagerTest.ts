@@ -2,7 +2,7 @@ import { FocusTools } from '@ephox/agar';
 import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Focus, Insert, Remove, SugarElement, SugarShadowDom } from '@ephox/sugar';
-import { LegacyUnit, TinyContentActions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
+import { LegacyUnit, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -151,7 +151,12 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
 
         const hasFocus = (node: Node) => Focus.search(SugarElement.fromDom(node)).isSome();
 
-        TinyContentActions.keystroke(editor, 123, { alt: true });
+        editor.getBody().dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'F12',
+          altKey: true,
+          bubbles: true
+        }));
+
         await FocusTools.pTryOnSelector('Assert focus should be on notification 1', root, '.tox-notification');
         assert.isTrue(hasFocus(n1.getEl()), 'Focus should be on notification 1');
 
