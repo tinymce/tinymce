@@ -1,5 +1,6 @@
 import { Keys } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
 import { Css, SugarElement } from '@ephox/sugar';
 import { TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -7,6 +8,7 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
+  const platform = PlatformDetection.detect().browser;
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     plugins: 'lists'
@@ -21,8 +23,16 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
     const backgroundColor = Css.get(sugarItem2, 'background-color') === 'rgba(0, 0, 0, 0)';
     const fontStyle = Css.get(sugarItem2, 'font-style') === 'normal';
     const fontWeight = Css.get(sugarItem2, 'font-weight') === '400';
-    const fontFamily = Css.get(sugarItem2, 'font-family') === '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif';
+    const fontFamily = Css.get(sugarItem2, 'font-family') ===
+      (platform.isChromium() ?
+        '-apple-system, "system-ui", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif' :
+        '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif');
 
+    console.log('color', Css.get(sugarItem2, 'color'));
+    console.log('backgroundColor', Css.get(sugarItem2, 'background-color'));
+    console.log('fontStyle', Css.get(sugarItem2, 'font-style'));
+    console.log('fontWeight', Css.get(sugarItem2, 'font-weight'));
+    console.log('fontFamily', Css.get(sugarItem2, 'font-family'));
     return color && backgroundColor && fontStyle && fontWeight && fontFamily;
   };
 
