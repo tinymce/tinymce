@@ -7,7 +7,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
+describe('browser.tinymce.core.fmt.ListIndentationFormatTest', () => {
   const platform = PlatformDetection.detect().browser;
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
