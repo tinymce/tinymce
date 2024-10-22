@@ -45,7 +45,7 @@ describe('browser.tinymce.core.fmt.ListIndentationFormatTest', () => {
 
       TinyContentActions.keydown(editor, Keys.tab());
 
-      assert.isTrue(checkCss());
+     assertListItemStyles();
     });
 
     it('TINY-11217: Apply format to partial selection of list item', () => {
