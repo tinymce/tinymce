@@ -2,7 +2,7 @@ import { FocusTools } from '@ephox/agar';
 import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Focus, Insert, Remove, SugarElement, SugarShadowDom } from '@ephox/sugar';
-import { LegacyUnit, TinyContentActions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
+import { LegacyUnit, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
