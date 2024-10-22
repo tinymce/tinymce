@@ -8,7 +8,8 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.fmt.ListIndentationFormatTest', () => {
-  const platform = PlatformDetection.detect().browser;
+  const browser = PlatformDetection.detect().browser;
+  const platform = PlatformDetection.detect().os;
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     plugins: 'lists'
@@ -22,7 +23,7 @@ describe('browser.tinymce.core.fmt.ListIndentationFormatTest', () => {
     assert.strictEqual(Css.get(sugarItem2, 'font-style'), 'normal', 'Font style should be normal');
     assert.strictEqual(Css.get(sugarItem2, 'font-weight'), '400', 'Font weight should be 400');
     assert.strictEqual(Css.get(sugarItem2, 'font-family'),
-      platform.isChromium() ?
+      !browser.isChromium() || platform.isMacOS() && browser.isChromium ?
         '-apple-system, "system-ui", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif' :
         '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif',
       'Font family should match the expected value');
