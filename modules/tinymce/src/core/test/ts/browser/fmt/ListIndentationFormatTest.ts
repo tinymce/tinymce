@@ -14,7 +14,7 @@ describe('browser.tinymce.core.fmt.ListIndentationFormatTest', () => {
     plugins: 'lists'
   }, [], true);
 
-  const checkCss = () => {
+  const assertListItemStyles = () => {
     const item2 = hook.editor().dom.select('li.testClass')[0];
 
     const sugarItem2 = SugarElement.fromDom(item2);
@@ -28,7 +28,7 @@ describe('browser.tinymce.core.fmt.ListIndentationFormatTest', () => {
         '-apple-system, "system-ui", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif' :
         '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif');
 
-    return color && backgroundColor && fontStyle && fontWeight && fontFamily;
+    assert.isTrue(color && backgroundColor && fontStyle && fontWeight && fontFamily);
   };
 
   context('Apply list formatting', () => {
