@@ -28,11 +28,6 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
         '-apple-system, "system-ui", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif' :
         '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif');
 
-    console.log('color', Css.get(sugarItem2, 'color'));
-    console.log('backgroundColor', Css.get(sugarItem2, 'background-color'));
-    console.log('fontStyle', Css.get(sugarItem2, 'font-style'));
-    console.log('fontWeight', Css.get(sugarItem2, 'font-weight'));
-    console.log('fontFamily', Css.get(sugarItem2, 'font-family'));
     return color && backgroundColor && fontStyle && fontWeight && fontFamily;
   };
 
