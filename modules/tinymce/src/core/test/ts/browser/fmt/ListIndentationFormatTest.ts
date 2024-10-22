@@ -15,20 +15,17 @@ describe('browser.tinymce.core.fmt.ListIndentationFormatTest', () => {
   }, [], true);
 
   const assertListItemStyles = () => {
-    const item2 = hook.editor().dom.select('li.testClass')[0];
+    const sugarItem2 = SugarElement.fromDom(hook.editor().dom.select('li.testClass')[0]);
 
-    const sugarItem2 = SugarElement.fromDom(item2);
-
-    const color = Css.get(sugarItem2, 'color') === 'rgb(34, 47, 62)';
-    const backgroundColor = Css.get(sugarItem2, 'background-color') === 'rgba(0, 0, 0, 0)';
-    const fontStyle = Css.get(sugarItem2, 'font-style') === 'normal';
-    const fontWeight = Css.get(sugarItem2, 'font-weight') === '400';
-    const fontFamily = Css.get(sugarItem2, 'font-family') ===
-      (platform.isChromium() ?
+    assert.strictEqual(Css.get(sugarItem2, 'color'), 'rgb(34, 47, 62)', 'Color should be rgb(34, 47, 62)');
+    assert.strictEqual(Css.get(sugarItem2, 'background-color'), 'rgba(0, 0, 0, 0)', 'Background color should be rgba(0, 0, 0, 0)');
+    assert.strictEqual(Css.get(sugarItem2, 'font-style'), 'normal', 'Font style should be normal');
+    assert.strictEqual(Css.get(sugarItem2, 'font-weight'), '400', 'Font weight should be 400');
+    assert.strictEqual(Css.get(sugarItem2, 'font-family'),
+      platform.isChromium() ?
         '-apple-system, "system-ui", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif' :
-        '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif');
-
-    assert.isTrue(color && backgroundColor && fontStyle && fontWeight && fontFamily);
+        '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif',
+      'Font family should match the expected value');
   };
 
   context('Apply list formatting', () => {
@@ -45,7 +42,7 @@ describe('browser.tinymce.core.fmt.ListIndentationFormatTest', () => {
 
       TinyContentActions.keydown(editor, Keys.tab());
 
-     assertListItemStyles();
+      assertListItemStyles();
     });
 
     it('TINY-11217: Apply format to partial selection of list item', () => {
@@ -58,7 +55,7 @@ describe('browser.tinymce.core.fmt.ListIndentationFormatTest', () => {
 
       TinyContentActions.keydown(editor, Keys.tab());
 
-      assert.isTrue(checkCss());
+      assertListItemStyles();
     });
 
     it('TINY-11217: Apply format to nested lists', () => {
@@ -71,7 +68,7 @@ describe('browser.tinymce.core.fmt.ListIndentationFormatTest', () => {
 
       TinyContentActions.keydown(editor, Keys.tab());
 
-      assert.isTrue(checkCss());
+      assertListItemStyles();
     });
 
     it('TINY-11217: Apply format to list with mixed content', () => {
@@ -84,7 +81,7 @@ describe('browser.tinymce.core.fmt.ListIndentationFormatTest', () => {
 
       TinyContentActions.keydown(editor, Keys.tab());
 
-      assert.isTrue(checkCss());
+      assertListItemStyles();
     });
 
     it('TINY-11217: Remove all formats from list', () => {
@@ -99,7 +96,7 @@ describe('browser.tinymce.core.fmt.ListIndentationFormatTest', () => {
 
       TinyContentActions.keydown(editor, Keys.tab());
 
-      assert.isTrue(checkCss());
+      assertListItemStyles();
     });
 
     it('TINY-11217: Apply format to ordered list', () => {
@@ -112,7 +109,7 @@ describe('browser.tinymce.core.fmt.ListIndentationFormatTest', () => {
 
       TinyContentActions.keydown(editor, Keys.tab());
 
-      assert.isTrue(checkCss());
+      assertListItemStyles();
     });
 
     it('TINY-11217: Apply custom format to list', () => {
@@ -126,7 +123,7 @@ describe('browser.tinymce.core.fmt.ListIndentationFormatTest', () => {
 
       TinyContentActions.keydown(editor, Keys.tab());
 
-      assert.isTrue(checkCss());
+      assertListItemStyles();
       editor.formatter.unregister('custom_format');
     });
   });
