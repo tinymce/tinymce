@@ -2,8 +2,6 @@
 // Comments
 //
 
-
-//
 @document-comment-color: if(@content-ui-darkmode = true, mix(@color-active, @color-black, 20%), lighten(@color-active, 20%)); 
 @document-comment-active-color: @color-active;
 @document-comment-background-color: @document-comment-color;
@@ -13,8 +11,6 @@
 @document-comment-outline-width: @object-block-selected-outline-width;
 
 .tox-comments-visible {
-  --active: @color-active;
-  --if: if(@content-ui-darkmode = true, mix(@color-active, @color-black, 20%), lighten(@color-active, 20%)); 
   .tox-comment[contenteditable="false"],
   span.tox-comment img,
   span.tox-comment > audio,
