@@ -68,6 +68,7 @@ export interface ContextFormInstanceApi<T> {
   setInputEnabled: (state: boolean) => void;
   isInputEnabled: () => boolean;
   hide: () => void;
+  back: () => void;
   getValue: () => T;
   setValue: (value: T) => void;
 }
