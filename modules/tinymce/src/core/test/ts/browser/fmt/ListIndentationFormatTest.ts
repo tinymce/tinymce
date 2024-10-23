@@ -23,7 +23,7 @@ describe('browser.tinymce.core.fmt.ListIndentationFormatTest', () => {
     assert.strictEqual(Css.get(sugarItem2, 'font-style'), 'normal', 'Font style should be normal');
     assert.strictEqual(Css.get(sugarItem2, 'font-weight'), '400', 'Font weight should be 400');
     assert.strictEqual(Css.get(sugarItem2, 'font-family'),
-      platform.isWindows() && !browser.isChromium() || platform.isMacOS() && browser.isChromium() ?
+      platform.isMacOS() && browser.isChromium() ?
         '-apple-system, "system-ui", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif' :
         '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif',
       'Font family should match the expected value');
