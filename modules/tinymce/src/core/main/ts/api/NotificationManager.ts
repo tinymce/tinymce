@@ -156,7 +156,7 @@ const NotificationManager = (editor: Editor): NotificationManager => {
     });
 
     editor.on('keydown', (e) => {
-      // TODO: Remove this once we remove the use of keycodes
+      // TODO: TINY-11429 Remove this once we remove the use of keycodes
       const isF12 = e.key?.toLowerCase() === 'f12' || e.keyCode === 123;
       if (e.altKey && isF12) {
         e.preventDefault();

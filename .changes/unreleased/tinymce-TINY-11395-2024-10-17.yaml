@@ -1,6 +1,6 @@
 project: tinymce
 kind: Fixed
-body: Fixed inability to type '{' character on German keyboard layouts.
+body: Inability to type '{' character on German keyboard layouts.
 time: 2024-10-17T12:00:38.34871+11:00
 custom:
   Issue: TINY-11395
