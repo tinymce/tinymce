@@ -2,9 +2,10 @@ import { ApproxStructure, Assertions, FocusTools, Keys, StructAssert, TestStore,
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Fun, Obj } from '@ephox/katamari';
 import { SugarBody, SugarDocument, Value } from '@ephox/sugar';
-import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
   const store = TestStore();
@@ -100,6 +101,14 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
             tooltip: 'E',
             onAction: (formApi, _buttonApi) => {
               formApi.setInputEnabled(!formApi.isInputEnabled());
+            }
+          },
+          {
+            type: 'contextformbutton',
+            icon: 'fake-icon-name',
+            tooltip: 'F',
+            onAction: (formApi, _buttonApi) => {
+              formApi.back();
             }
           },
         ]
@@ -249,6 +258,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
       s.element('button', { classes: [ arr.not('tox-tbtn--disabled') ] }),
       s.element('button', { attrs: { 'aria-pressed': str.is('true') }}),
       s.element('button', { classes: [ arr.not('tox-tbtn--disabled') ] }),
+      s.element('button', { classes: [ arr.not('tox-tbtn--disabled') ] }),
       s.element('button', { classes: [ arr.not('tox-tbtn--disabled') ] })
     ]);
   });
@@ -276,5 +286,84 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     openToolbar(editor, 'test-form');
     TinyUiActions.clickOnUi(editor, 'button[aria-label="D"]');
     store.assertEq('D should have fired', [ 'D.before-hide', 'D.after-hide' ]);
+  });
+
+  it('TINY-11432: Should trigger ContextFormSlideBack on escape key in context form', async () => {
+    const editor = hook.editor();
+    const doc = SugarDocument.getDocument();
+    const collectEvent = (e: EditorEvent<void>) => store.add(e.type);
+
+    editor.on('ContextFormSlideBack', collectEvent);
+
+    openToolbar(editor, 'test-toolbar');
+    await FocusTools.pTryOnSelector('Focus should now be on button in context toolbar', doc, '.tox-pop button');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="ABC"]');
+    await FocusTools.pTryOnSelector('Focus should now be on button in context toolbar', doc, 'input');
+    TinyUiActions.keystroke(editor, Keys.escape());
+    await FocusTools.pTryOnSelector('Focus should now be back on button in context toolbar', doc, '.tox-pop button');
+
+    store.assertEq('Should have triggered ContextFormSlideBack', [ 'contextformslideback' ]);
+
+    editor.off('ContextFormSlideBack', collectEvent);
+  });
+
+  it('TINY-11432: Should trigger ContextFormSlideBack on back api call in context form', async () => {
+    const editor = hook.editor();
+    const doc = SugarDocument.getDocument();
+    const collectEvent = (e: EditorEvent<void>) => store.add(e.type);
+
+    editor.on('ContextFormSlideBack', collectEvent);
+
+    openToolbar(editor, 'test-toolbar');
+    await FocusTools.pTryOnSelector('Focus should now be on button in context toolbar', doc, '.tox-pop button');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="ABC"]');
+    await FocusTools.pTryOnSelector('Focus should now be on button in context toolbar', doc, 'input');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="F"]');
+    await FocusTools.pTryOnSelector('Focus should now be back on button in context toolbar', doc, '.tox-pop button');
+
+    store.assertEq('Should have triggered ContextFormSlideBack', [ 'contextformslideback' ]);
+
+    editor.off('ContextFormSlideBack', collectEvent);
+  });
+
+  it('TINY-11432: Should trigger ContextToolbarClose on hide api call in context form', async () => {
+    const editor = hook.editor();
+    const doc = SugarDocument.getDocument();
+    const collectEvent = (e: EditorEvent<void>) => store.add(e.type);
+
+    editor.on('ContextToolbarClose', collectEvent);
+
+    openToolbar(editor, 'test-toolbar');
+    await FocusTools.pTryOnSelector('Focus should now be on button in context toolbar', doc, '.tox-pop button');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="ABC"]');
+    await FocusTools.pTryOnSelector('Focus should now be on input in context form', doc, 'input');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="D"]');
+
+    store.assertEq('Should have triggered ContextToolbarClose', [ 'contexttoolbarclose', 'D.before-hide', 'D.after-hide' ]);
+
+    editor.off('ContextToolbarClose', collectEvent);
+  });
+
+  it('TINY-11432: Should trigger ContextToolbarClose when closing ui by clicking away', async () => {
+    const editor = hook.editor();
+    const doc = SugarDocument.getDocument();
+    const collectEvent = (e: EditorEvent<void>) => store.add(e.type);
+
+    editor.on('ContextToolbarClose', collectEvent);
+
+    openToolbar(editor, 'test-toolbar');
+    await FocusTools.pTryOnSelector('Focus should now be on button in context toolbar', doc, '.tox-pop button');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="ABC"]');
+    await FocusTools.pTryOnSelector('Focus should now be on input in context form', doc, 'input');
+
+    // Fake click away inside editor
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    TinyContentActions.trueClick(editor);
+
+    await Waiter.pTryUntil('Watied to context toolbar to close', () => {
+      store.assertEq('Should have triggered ContextToolbarClose', [ 'contexttoolbarclose' ]);
+    });
+
+    editor.off('ContextToolbarClose', collectEvent);
   });
 });

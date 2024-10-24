@@ -23,7 +23,14 @@ export interface ChangeSlideEvent extends CustomEvent {
 
 const resizingClass = 'tox-pop--resizing';
 
-const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: AlloyComponent }): SketchSpec => {
+interface ContextToolbarSpec {
+  readonly onEscape: () => Optional<boolean>;
+  readonly sink: AlloyComponent;
+  readonly onHide: () => void;
+  readonly onBack: () => void;
+}
+
+const renderContextToolbar = (spec: ContextToolbarSpec): SketchSpec => {
   const stack = Cell<Array<{ bar: AlloyComponent; focus: Optional<SugarElement<HTMLElement>> }>>([ ]);
 
   return InlineView.sketch({
@@ -42,6 +49,10 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
       });
       Class.remove(comp.element, resizingClass);
       Css.remove(comp.element, 'width');
+    },
+
+    onHide: () => {
+      spec.onHide();
     },
 
     inlineBehaviours: Behaviour.derive([
@@ -109,6 +120,8 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
         }),
 
         AlloyEvents.run<BackwardSlideEvent>(backSlideEvent, (comp, _se) => {
+          spec.onBack();
+
           Arr.last(stack.get()).each((last) => {
             stack.set(stack.get().slice(0, stack.get().length - 1));
             AlloyTriggers.emitWith(comp, changeSlideEvent, {
@@ -119,13 +132,12 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
             });
           });
         })
-
       ]),
       Keying.config({
         mode: 'special',
         onEscape: (comp) => Arr.last(stack.get()).fold(
           () =>
-          // Escape just focuses the content. It no longer closes the toolbar.
+            // Escape just focuses the content. It no longer closes the toolbar.
             spec.onEscape(),
           (_) => {
             AlloyTriggers.emit(comp, backSlideEvent);
