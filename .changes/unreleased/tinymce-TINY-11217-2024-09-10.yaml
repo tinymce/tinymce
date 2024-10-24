@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: Added new default `li` element styles to the content CSS to prevent child list elements from inheriting certain parent list item styles.
+time: 2024-09-10T21:52:35.043994+10:00
+custom:
+  Issue: TINY-11217
