@@ -3,6 +3,7 @@ import { SelectorFind, Selectors, SugarElement } from '@ephox/sugar';
 
 import * as NodeType from '../../dom/NodeType';
 import * as RangePoint from '../../dom/RangePoint';
+import * as EditorFocus from '../../focus/EditorFocus';
 import Editor from '../Editor';
 import Env from '../Env';
 import * as Events from '../Events';
@@ -441,7 +442,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
       img.removeAttribute(elementSelectionAttr);
     });
 
-    if (Type.isNonNullable(controlElm) && isChildOrEqual(controlElm, rootElement) && editor.hasFocus()) {
+    if (Type.isNonNullable(controlElm) && isChildOrEqual(controlElm, rootElement) && EditorFocus.hasEditorOrUiFocus(editor)) {
       disableGeckoResize();
       const startElm = selection.getStart(true);
 
