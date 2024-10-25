@@ -23,7 +23,7 @@ describe('browser.tinymce.themes.silver.editor.ContextSliderFormTest', () => {
         min: Fun.constant(-100),
         max: Fun.constant(100),
         initValue: Fun.constant(37),
-        onInput: (formApi) => store.add(`input.${formApi.getValue()}`),
+        onInput: (formApi) => store.add(`input.${formApi.getValue()}(${typeof formApi.getValue()})`),
         commands: [
           {
             type: 'contextformbutton',
@@ -121,7 +121,7 @@ describe('browser.tinymce.themes.silver.editor.ContextSliderFormTest', () => {
     const input = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), '.tox-pop input').getOrDie();
     Value.set(input, '42');
     input.dom.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-    store.assertEq('Input should trigger onInput', [ 'input.42' ]);
+    store.assertEq('Input should trigger onInput with the right value and type', [ 'input.42(number)' ]);
   });
 
   it('TINY-11342: Should have min/max attributes set', async () => {
