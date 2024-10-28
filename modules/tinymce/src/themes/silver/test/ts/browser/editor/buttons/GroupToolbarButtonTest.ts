@@ -149,7 +149,7 @@ describe('browser.tinymce.themes.silver.editor.buttons.GroupToolbarButtonTest', 
     pTestWithEditor({
       ...defaultToolbarGroupOptions,
     }, async () => {
-      const toolbarButton = await UiFinder.pWaitFor('Group toolbar button should exist', SugarBody.body(), 'button[data-mce-name="formatting"]')
+      const toolbarButton = await UiFinder.pWaitFor('Group toolbar button should exist', SugarBody.body(), 'button[data-mce-name="formatting"]');
       Mouse.mouseOver(toolbarButton);
       const tooltip = await UiFinder.pWaitFor('Tooltip should be visible after mouse over', SugarBody.body(), '.tox-silver-sink .tox-tooltip__body');
       assert.equal(TextContent.get(tooltip), 'Formatting');
