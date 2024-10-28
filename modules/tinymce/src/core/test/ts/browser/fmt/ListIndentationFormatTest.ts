@@ -13,7 +13,7 @@ describe('browser.tinymce.core.fmt.ListIndentationFormatTest', () => {
   const platform = PlatformDetection.detect().os;
 
   Arr.each([ 'normal', 'dark', 'inline' ], (test) => {
-    context('TINY-11217: Apply list formatting', () => {
+    context(`List formatting and styles (${test})`, () => {
 
       const hook = TinyHooks.bddSetup<Editor>({
         base_url: '/project/tinymce/js/tinymce',
