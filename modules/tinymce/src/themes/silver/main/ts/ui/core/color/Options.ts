@@ -10,13 +10,20 @@ const backgroundId = 'hilitecolor';
 
 const fallbackCols = 5;
 
-const mapColors = (colorMap: string[]): Menu.ChoiceMenuItemSpec[] => {
+const mapColors = (colorMap: string[]): Menu.ChoiceMenuItemSpec[] => mapColorsRaw(colorMap.map((color, index) => {
+  if (index % 2 === 0) {
+    return '#' + Transformations.anyToHex(color).value;
+  }
+  return color;
+}));
+
+const mapColorsRaw = (colorMap: string[]): Menu.ChoiceMenuItemSpec[] => {
   const colors: Menu.ChoiceMenuItemSpec[] = [];
 
   for (let i = 0; i < colorMap.length; i += 2) {
     colors.push({
       text: colorMap[i + 1],
-      value: '#' + Transformations.anyToHex(colorMap[i]).value,
+      value: colorMap[i],
       icon: 'checkmark',
       type: 'choiceitem'
     });
@@ -39,6 +46,14 @@ const register = (editor: Editor): void => {
   const colorProcessor = (value: unknown): any => {
     if (Type.isArrayOf(value, Type.isString)) {
       return { value: mapColors(value), valid: true };
+    } else {
+      return { valid: false, message: 'Must be an array of strings.' };
+    }
+  };
+
+  const colorProcessorRaw = (value: unknown): any => {
+    if (Type.isArrayOf(value, Type.isString)) {
+      return { value: mapColorsRaw(value), valid: true };
     } else {
       return { valid: false, message: 'Must be an array of strings.' };
     }
@@ -82,6 +97,10 @@ const register = (editor: Editor): void => {
       '#000000', 'Black',
       '#ffffff', 'White'
     ]
+  });
+
+  registerOption('color_map_raw', {
+    processor: colorProcessorRaw,
   });
 
   registerOption('color_map_background', {
@@ -128,6 +147,8 @@ const getColors = (editor: Editor, id: string): Menu.ChoiceMenuItemSpec[] => {
     return option<Menu.ChoiceMenuItemSpec[]>('color_map_foreground')(editor);
   } else if (id === backgroundId && editor.options.isSet('color_map_background')) {
     return option<Menu.ChoiceMenuItemSpec[]>('color_map_background')(editor);
+  } else if (editor.options.isSet('color_map_raw')) {
+    return option<Menu.ChoiceMenuItemSpec[]>('color_map_raw')(editor);
   } else {
     return option<Menu.ChoiceMenuItemSpec[]>('color_map')(editor);
   }
@@ -166,6 +187,7 @@ const getDefaultBackgroundColor = option<string>('color_default_background');
 export {
   register,
   mapColors,
+  mapColorsRaw,
   getColorCols,
   hasCustomColors,
   getColors,
