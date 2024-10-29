@@ -1,19 +1,20 @@
 //
 //
 // Accessibility checker
+@overlay-opacity: 80%;
 
-@accessibility-issue-info-heading-text-color: #006ce7;
+@accessibility-issue-info-heading-text-color: contrast(@dialog-background-color, @color-white, mix(@background-color, @color-tint, @overlay-opacity));
 @accessibility-issue-info-body-text-color: contrast(@dialog-background-color, @color-white, @text-color);
 @accessibility-issue-info-background-color: #CCE1FA;
 
-@accessibility-issue-warn-heading-text-color: #FFCC00;
+@accessibility-issue-warn-heading-text-color: contrast(@dialog-background-color, @color-white, darken(#cc8500, 12%));
 @accessibility-issue-warn-body-text-color: contrast(@dialog-background-color, @color-white, @text-color);
 @accessibility-issue-warn-background-color: #FFF4CC;
 @accessibility-issue-warn-icon-background-color: #FFE89D;
 @accessibility-issue-warn-icon-hover-background-color: #F2D574;
 @accessibility-issue-warn-icon-active-background-color: #E8C657;
 
-@accessibility-issue-error-heading-text-color: #CC0000;
+@accessibility-issue-error-heading-text-color: contrast(@dialog-background-color, @color-white, mix(@background-color, @color-error, @overlay-opacity));
 @accessibility-issue-error-body-text-color: contrast(@dialog-background-color, @color-white, @text-color);
 @accessibility-issue-error-background-color: #F4CCCC;
 @accessibility-issue-error-icon-background-color: #F2BFBF;
