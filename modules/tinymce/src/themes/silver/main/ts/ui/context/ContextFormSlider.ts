@@ -1,6 +1,6 @@
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Disabling, FormField, GuiFactory, Input, Keying, NativeEvents, SketchSpec } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
-import { Optional } from '@ephox/katamari';
+import { Optional, Strings } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as UiState from '../../UiState';
@@ -26,6 +26,8 @@ export const renderContextFormSliderInput = (
       max: String(ctx.max())
     },
     data: ctx.initValue().toString(),
+    fromInputValue: (value: string) => Strings.toFloat(value).getOr(ctx.min()),
+    toInputValue: (value: number) => String(value),
     inputBehaviours: Behaviour.derive([
       Disabling.config({
         disabled: () => providers.checkUiComponentContext('mode:design').shouldDisable
