@@ -18,6 +18,8 @@ export interface InputDetail extends SingleSketchDetail {
   tag: string;
   data: Optional<string>;
   onSetValue: (comp: AlloyComponent, data: string) => void;
+  toInputValue: (value: any) => string;
+  fromInputValue: (value: string) => any;
   selectOnFocus: boolean;
   eventOrder: Record<string, string[]>;
 }
@@ -35,6 +37,8 @@ export interface InputSpec extends SingleSketchSpec {
   selectOnFocus?: boolean;
   eventOrder?: Record<string, string[]>;
   onSetValue?: (comp: AlloyComponent, data: string) => void;
+  toInputValue?: (value: any) => string;
+  fromInputValue?: (value: string) => any;
 }
 
 export interface InputSketcher extends SingleSketch<InputSpec> { }
