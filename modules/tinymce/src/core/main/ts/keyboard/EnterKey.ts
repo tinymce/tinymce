@@ -1,4 +1,4 @@
-import { Fun, Optional } from '@ephox/katamari';
+import { Fun, Optional, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import Editor from '../api/Editor';
@@ -19,7 +19,11 @@ const handleEnterKeyEvent = (editor: Editor, event: EditorEvent<KeyboardEvent>) 
 
   event.preventDefault();
 
-  endTypingLevelIgnoreLocks(editor.undoManager);
+  const lastLevel = endTypingLevelIgnoreLocks(editor.undoManager);
+  if (editor.readonly && Type.isNonNullable(lastLevel)) {
+    editor.undoManager.undo();
+  }
+
   editor.undoManager.transact(() => {
     InsertNewLine.insert(editor, event);
   });

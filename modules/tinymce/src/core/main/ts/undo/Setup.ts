@@ -1,4 +1,4 @@
-import { Cell } from '@ephox/katamari';
+import { Cell, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -25,7 +25,10 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
 
   const addNonTypingUndoLevel = (e?: EditorEvent<any>) => {
     setTyping(undoManager, false, locks);
-    undoManager.add({}, e);
+    const lastlLevel = undoManager.add({}, e);
+    if (editor.readonly && Type.isNonNullable(lastlLevel)) {
+      editor.undoManager.undo();
+    }
   };
 
   // Add initial undo level when the editor is initialized
@@ -71,8 +74,10 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
     const isMeta = Env.os.isMacOS() && e.key === 'Meta';
 
     if ((keyCode >= 33 && keyCode <= 36) || (keyCode >= 37 && keyCode <= 40) || keyCode === 45 || e.ctrlKey || isMeta) {
-      addNonTypingUndoLevel();
-      editor.nodeChanged();
+      if (!(editor.readonly && e.isComposing)) {
+        addNonTypingUndoLevel();
+        editor.nodeChanged();
+      }
     }
 
     if (keyCode === 46 || keyCode === 8) {

@@ -1,5 +1,5 @@
 import { isUnlocked } from './Locks';
-import { Locks, UndoManager } from './UndoManagerTypes';
+import { Locks, UndoLevel, UndoManager } from './UndoManagerTypes';
 
 export const setTyping = (undoManager: UndoManager, typing: boolean, locks: Locks): void => {
   if (isUnlocked(locks)) {
@@ -14,9 +14,11 @@ export const endTyping = (undoManager: UndoManager, locks: Locks): void => {
   }
 };
 
-export const endTypingLevelIgnoreLocks = (undoManager: UndoManager): void => {
+export const endTypingLevelIgnoreLocks = (undoManager: UndoManager): UndoLevel | null => {
   if (undoManager.typing) {
     undoManager.typing = false;
-    undoManager.add();
+    return undoManager.add();
   }
+
+  return null;
 };

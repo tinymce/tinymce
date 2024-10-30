@@ -1,4 +1,4 @@
-import { Arr, Optional, Strings, Type } from '@ephox/katamari';
+import { Arr, Optional, Strings, Throttler, Type } from '@ephox/katamari';
 import { Attribute, Class, Compare, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
@@ -132,22 +132,23 @@ const registerReadOnlySelectionBlockers = (editor: Editor): void => {
     }
   });
 
-  editor.on('input', (e) => {
-    if (!e.isComposing && isReadOnly(editor)) {
-      const undoLevel = editor.undoManager.add();
-      if (Type.isNonNullable(undoLevel)) {
-        editor.undoManager.undo();
-      }
+  const debounceUndo = Throttler.last(() => {
+    const level = editor.undoManager.add();
+    if (Type.isNonNullable(level)) {
+      editor.undoManager.undo();
     }
+  }, 30);
+
+  editor.on('compositionstart', () => {
+    debounceUndo.cancel();
+  });
+
+  editor.on('compositonupdate', () => {
+    debounceUndo.cancel();
   });
 
   editor.on('compositionend', () => {
-    if (isReadOnly(editor)) {
-      const undoLevel = editor.undoManager.add();
-      if (Type.isNonNullable(undoLevel)) {
-        editor.undoManager.undo();
-      }
-    }
+    debounceUndo.throttle();
   });
 };
 
