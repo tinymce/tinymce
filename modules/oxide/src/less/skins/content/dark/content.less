@@ -1,15 +1,10 @@
-@import '../../../theme/theme';
-
-@color-active: @color-tint;
-@content-background-color: @color-black;
-
 //
 // Place your HTML here
 //
 
 body {
-  background-color: @content-background-color;
-  color: @content-text-color;
+  background-color: #222f3e;
+  color: #fff;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   line-height: 1.4;
   margin: 1rem;
@@ -88,55 +83,5 @@ code {
     border-right: 2px solid #6d737b;
     margin-right: 1.5rem;
     padding-right: 1rem;
-  }
-}
-//
-// Comments
-//
-
-@document-comment-background-color: contrast(@content-text-color, lighten(@color-active, 20%), mix(@color-active, @color-black, 20%)); 
-@document-comment-active-background-color: @document-comment-background-color;
-@document-comment-outline-color: @color-active;
-@document-comment-active-outline-color: @color-active;
-
-.tox-comments-visible {
-  .tox-comment[contenteditable="false"],
-  span.tox-comment img,
-  span.tox-comment > audio,
-  span.tox-comment > video,
-  span.tox-comment span.mce-preview-object {
-    &:not([data-mce-selected]) {
-      outline-color: @document-comment-outline-color;
-    }
-  }
-
-  .tox-comment[contenteditable="false"][data-mce-annotation-active="true"] {
-    &:not([data-mce-selected]) {
-      outline-color: @document-comment-active-outline-color;
-    }
-  }
-
-  span.tox-comment[data-mce-annotation-active="true"] {
-    & img,
-    & > audio,
-    & > video,
-    & span.mce-preview-object {
-      &:not([data-mce-selected]) {
-        outline-color: @document-comment-active-outline-color;
-      }
-    }
-  }
-
-  span.tox-comment:not([data-mce-selected]) {
-    background-color: @document-comment-background-color;
-  }
-
-  span.tox-comment[data-mce-annotation-active="true"]:not([data-mce-selected="inline-boundary"]) {
-    background-color: @document-comment-active-background-color;
-  }
-
-  span.tox-comment[data-mce-selected] {
-    background-color: @document-comment-active-background-color;
-    box-shadow: 0 0 0 2px @keyboard-focus-outline-color;
   }
 }
