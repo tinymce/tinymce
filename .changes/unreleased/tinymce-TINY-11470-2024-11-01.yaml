@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Removed title attribute from tree elements as it already has a tooltip.
+time: 2024-11-01T19:31:17.273725209+01:00
+custom:
+    Issue: TINY-11470
