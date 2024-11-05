@@ -19,6 +19,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLook
   const createForm = (): InlineContent.ContextForm => ({
     type: 'contextform',
     initValue: Fun.constant('test'),
+    placeholder: Optional.none(),
     label: Optional.none(),
     launch: Optional.none(),
     onInput: Fun.noop,

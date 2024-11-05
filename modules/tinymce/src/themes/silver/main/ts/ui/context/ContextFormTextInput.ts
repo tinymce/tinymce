@@ -1,6 +1,6 @@
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Disabling, FormField, GuiFactory, Input, Keying, NativeEvents, SketchSpec } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
-import { Optional } from '@ephox/katamari';
+import { Fun, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as UiState from '../../UiState';
@@ -17,9 +17,16 @@ export const renderContextFormTextInput = (
     components: [ GuiFactory.text(label) ]
   }));
 
+  const placeholder = ctx.placeholder.fold( Fun.constant({}), (p) => ({ placeholder: providers.translate(p) }));
+
+  const inputAttributes = {
+    ...placeholder,
+  };
+
   const pField = FormField.parts.field({
     factory: Input,
     inputClasses: [ 'tox-toolbar-textfield', 'tox-toolbar-nav-js' ],
+    inputAttributes,
     data: ctx.initValue(),
     selectOnFocus: true,
     inputBehaviours: Behaviour.derive([

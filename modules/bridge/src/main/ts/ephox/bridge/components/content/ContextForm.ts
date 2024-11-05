@@ -114,6 +114,7 @@ export interface BaseContextForm<T> extends ContextBar {
 
 export interface ContextInputForm extends BaseContextForm<string> {
   type: 'contextform';
+  placeholder: Optional<string>;
 }
 
 export interface ContextSliderForm extends BaseContextForm<number> {
