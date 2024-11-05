@@ -88,6 +88,7 @@ export interface BaseContextFormSpec<T> extends ContextBarSpec {
 
 export interface ContextInputFormSpec extends BaseContextFormSpec<string> {
   type?: 'contextform';
+  placeholder?: string;
 }
 
 export interface ContextSliderFormSpec extends BaseContextFormSpec<number> {
@@ -173,6 +174,7 @@ const contextFormFields = [
   ...baseContextFormFields,
   FieldSchema.requiredStringEnum('type', [ 'contextform' ]),
   FieldSchema.defaultedFunction('initValue', Fun.constant('')),
+  FieldSchema.optionString('placeholder'),
 ];
 
 const contextSliderFormFields = [
