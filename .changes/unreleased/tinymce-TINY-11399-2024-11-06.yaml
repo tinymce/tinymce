@@ -1,0 +1,7 @@
+project: tinymce
+kind: Added
+body: '`QuickbarInsertImage` command which can be used to open the file picker or
+  overwrite to get the new behavior when `quickimage` is clicked.'
+time: 2024-11-06T12:59:22.765861016+01:00
+custom:
+  Issue: TINY-11399
