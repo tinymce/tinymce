@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Autocompleter would not activate after applying an inline format like font size in some cases.
-time: 2024-09-24T18:14:17.009975+02:00
-custom:
-  Issue: TINY-11273
