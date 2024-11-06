@@ -35,6 +35,14 @@ describe('browser.tinymce.core.fmt.DefaultFormatsWithSchemaTest', () => {
       editor.setContent('<p><strike>Test</strike></p>');
       TinyAssertions.assertContent(editor, '<p><s>Test</s></p>');
     });
+
+    it('TINY-11390: should only wrap selected text in <samp> tags when applying "Sample" format', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>one two three</p>');
+      TinySelections.setSelection(editor, [ 0, 0 ], 4, [ 0, 0 ], 7);
+      editor.formatter.apply('samp');
+      TinyAssertions.assertContent(editor, '<p>one <samp>two</samp> three</p>');
+    });
   });
 
   context(`schema version: html5-strict`, () => {
@@ -51,6 +59,14 @@ describe('browser.tinymce.core.fmt.DefaultFormatsWithSchemaTest', () => {
       TinyAssertions.assertContent(editor, '<p><s>Test</s></p>');
       toggleInlineStyle(editor, 'Strikethrough');
       editor.setContent('<p>Test</p>');
+    });
+
+    it('TINY-11390: should only wrap selected text in <samp> tags when applying "Sample" format', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>one two three</p>');
+      TinySelections.setSelection(editor, [ 0, 0 ], 4, [ 0, 0 ], 7);
+      editor.formatter.apply('samp');
+      TinyAssertions.assertContent(editor, '<p>one <samp>two</samp> three</p>');
     });
   });
 
@@ -74,6 +90,14 @@ describe('browser.tinymce.core.fmt.DefaultFormatsWithSchemaTest', () => {
       const editor = hook.editor();
       editor.setContent('<p><strike>Test</strike></p>');
       TinyAssertions.assertContent(editor, '<p><span style="text-decoration: line-through;">Test</span></p>');
+    });
+
+    it('TINY-11390: should only wrap the selected text in <samp> tags when applying "Sample" format', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>one two three</p>');
+      TinySelections.setSelection(editor, [ 0, 0 ], 4, [ 0, 0 ], 7);
+      editor.formatter.apply('samp');
+      TinyAssertions.assertContent(editor, '<p>one <samp>two</samp> three</p>');
     });
   });
 });
