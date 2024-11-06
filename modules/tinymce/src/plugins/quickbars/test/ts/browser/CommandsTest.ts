@@ -16,21 +16,21 @@ describe('browser.tinymce.plugins.quickbars.CommandsTest', () => {
       menubar: false,
       setup: (ed: Editor) => {
         if (withPresetedCommand) {
-          ed.addCommand('PickFile', () => store.push('PickFile'));
+          ed.addCommand('QuickbarInsertImage', () => store.push('QII'));
         }
       },
       base_url: '/project/tinymce/js/tinymce'
     }, [ QuickbarsPlugin ], true);
 
-    it('TINY-11399: PickFile should be not overwrite by the plugin if it already exists', async () => {
+    it('TINY-11399: QuickbarInsertImage should be not overwrite by the plugin if it already exists', async () => {
       const editor = hook.editor();
       assert.deepEqual(store, []);
-      editor.execCommand('PickFile');
-      assert.deepEqual(store, withPresetedCommand ? [ 'PickFile' ] : []);
+      editor.execCommand('QuickbarInsertImage');
+      assert.deepEqual(store, withPresetedCommand ? [ 'QII' ] : []);
 
-      editor.addCommand('PickFile', () => store.push('PickFile setted after'));
-      editor.execCommand('PickFile');
-      assert.deepEqual(store, withPresetedCommand ? [ 'PickFile', 'PickFile setted after' ] : [ 'PickFile setted after' ]);
+      editor.addCommand('QuickbarInsertImage', () => store.push('QII setted after'));
+      editor.execCommand('QuickbarInsertImage');
+      assert.deepEqual(store, withPresetedCommand ? [ 'QII', 'QII setted after' ] : [ 'QII setted after' ]);
     });
   });
 });

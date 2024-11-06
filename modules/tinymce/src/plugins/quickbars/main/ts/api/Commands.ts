@@ -5,8 +5,8 @@ import * as Conversions from '../insert/Conversions';
 import * as Picker from '../insert/Picker';
 
 const register = (editor: Editor): void => {
-  if (!editor.queryCommandSupported('PickFile')) {
-    editor.addCommand('PickFile', () => {
+  if (!editor.queryCommandSupported('QuickbarInsertImage')) {
+    editor.addCommand('QuickbarInsertImage', () => {
       Picker.pickFile(editor).then((files) => {
         if (files.length > 0) {
           const blob = files[0];
