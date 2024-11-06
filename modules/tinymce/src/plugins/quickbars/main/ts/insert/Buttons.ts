@@ -6,7 +6,7 @@ const setupButtons = (editor: Editor): void => {
   editor.ui.registry.addButton('quickimage', {
     icon: 'image',
     tooltip: 'Insert image',
-    onAction: () => editor.execCommand('PickFile')
+    onAction: () => editor.execCommand('QuickbarInsertImage')
   });
 
   editor.ui.registry.addButton('quicktable', {
