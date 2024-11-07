@@ -33,6 +33,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
             };
           }
         },
+        onSetup: (_) => store.add('setup'),
         onInput: (formApi) => store.add(`input.${formApi.getValue()}`),
         predicate: (node) => node.nodeName.toLowerCase() === 'a',
         commands: [
@@ -186,7 +187,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     await FocusTools.pTryOnSelector('Focus should go back to input in context form', doc, 'input');
     FocusTools.setActiveValue(doc, 'Words');
     TinyUiActions.keydown(editor, Keys.enter());
-    store.assertEq('B should have fired because it is primary', [ 'B.Words' ]);
+    store.assertEq('B should have fired because it is primary', [ 'setup', 'B.Words' ]);
     hasDialog('Immediate context form should have an inner dialog class');
     TinyUiActions.keyup(editor, Keys.escape());
     // Check that the context popup still exists;
@@ -272,20 +273,30 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     await TinyUiActions.pWaitForUi(editor, '.tox-pop input:not(:disabled)');
   });
 
+  it('TINY-11494: Opening contex form should trigger onSetup', () => {
+    const editor = hook.editor();
+    openToolbar(editor, 'test-form');
+    Waiter.pTryUntil(
+      'Toolbar should be opened',
+      () => UiFinder.exists(SugarBody.body(), '.tox-pop input')
+    );
+    store.assertEq('Opening contex slider form should trigger onSetup', [ 'setup' ]);
+  });
+
   it('TINY-11342: Input event should trigger onInput', () => {
     const editor = hook.editor();
     openToolbar(editor, 'test-form');
     const input = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), '.tox-pop input').getOrDie();
     Value.set(input, 'Hello');
     input.dom.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-    store.assertEq('Input should trigger onInput', [ 'input.Hello' ]);
+    store.assertEq('Input should trigger onInput', [ 'setup', 'input.Hello' ]);
   });
 
   it('TINY-11342: Should be able to get value after the context form has been hidden', async () => {
     const editor = hook.editor();
     openToolbar(editor, 'test-form');
     TinyUiActions.clickOnUi(editor, 'button[aria-label="D"]');
-    store.assertEq('D should have fired', [ 'D.before-hide', 'D.after-hide' ]);
+    store.assertEq('D should have fired', [ 'setup', 'D.before-hide', 'D.after-hide' ]);
   });
 
   it('TINY-11432: Should trigger ContextFormSlideBack on escape key in context form', async () => {
@@ -302,7 +313,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     TinyUiActions.keystroke(editor, Keys.escape());
     await FocusTools.pTryOnSelector('Focus should now be back on button in context toolbar', doc, '.tox-pop button');
 
-    store.assertEq('Should have triggered ContextFormSlideBack', [ 'contextformslideback' ]);
+    store.assertEq('Should have triggered ContextFormSlideBack', [ 'setup', 'contextformslideback' ]);
 
     editor.off('ContextFormSlideBack', collectEvent);
   });
@@ -321,7 +332,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     TinyUiActions.clickOnUi(editor, 'button[aria-label="F"]');
     await FocusTools.pTryOnSelector('Focus should now be back on button in context toolbar', doc, '.tox-pop button');
 
-    store.assertEq('Should have triggered ContextFormSlideBack', [ 'contextformslideback' ]);
+    store.assertEq('Should have triggered ContextFormSlideBack', [ 'setup', 'contextformslideback' ]);
 
     editor.off('ContextFormSlideBack', collectEvent);
   });
@@ -339,7 +350,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     await FocusTools.pTryOnSelector('Focus should now be on input in context form', doc, 'input');
     TinyUiActions.clickOnUi(editor, 'button[aria-label="D"]');
 
-    store.assertEq('Should have triggered ContextToolbarClose', [ 'contexttoolbarclose', 'D.before-hide', 'D.after-hide' ]);
+    store.assertEq('Should have triggered ContextToolbarClose', [ 'setup', 'contexttoolbarclose', 'D.before-hide', 'D.after-hide' ]);
 
     editor.off('ContextToolbarClose', collectEvent);
   });
@@ -361,7 +372,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     TinyContentActions.trueClick(editor);
 
     await Waiter.pTryUntil('Watied to context toolbar to close', () => {
-      store.assertEq('Should have triggered ContextToolbarClose', [ 'contexttoolbarclose' ]);
+      store.assertEq('Should have triggered ContextToolbarClose', [ 'setup', 'contexttoolbarclose' ]);
     });
 
     editor.off('ContextToolbarClose', collectEvent);

@@ -23,6 +23,7 @@ describe('browser.tinymce.themes.silver.editor.ContextSliderFormTest', () => {
         min: Fun.constant(-100),
         max: Fun.constant(100),
         initValue: Fun.constant(37),
+        onSetup: (_) => store.add('setup'),
         onInput: (formApi) => store.add(`input.${formApi.getValue()}(${typeof formApi.getValue()})`),
         commands: [
           {
@@ -121,7 +122,17 @@ describe('browser.tinymce.themes.silver.editor.ContextSliderFormTest', () => {
     const input = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), '.tox-pop input').getOrDie();
     Value.set(input, '42');
     input.dom.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-    store.assertEq('Input should trigger onInput with the right value and type', [ 'input.42(number)' ]);
+    store.assertEq('Input should trigger onInput with the right value and type', [ 'setup', 'input.42(number)' ]);
+  });
+
+  it('TINY-11494: Opening contex slider form should trigger onSetup', async () => {
+    const editor = hook.editor();
+    openToolbar(editor, 'test-form');
+    Waiter.pTryUntil(
+      'Toolbar should be opened',
+      () => UiFinder.exists(SugarBody.body(), '.tox-pop input')
+    );
+    store.assertEq('Opening contex slider form should trigger onSetup', [ 'setup' ]);
   });
 
   it('TINY-11342: Should have min/max attributes set', async () => {

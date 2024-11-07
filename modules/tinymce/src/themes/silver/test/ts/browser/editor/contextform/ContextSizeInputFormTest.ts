@@ -27,6 +27,7 @@ describe('browser.tinymce.themes.silver.editor.ContextSizeInputFormTest', () => 
           tooltip: 'ABC'
         },
         initValue: Fun.constant({ width: '100', height: '200' }),
+        onSetup: (_) => store.add('setup'),
         onInput: (formApi) => store.add(`input.${JSON.stringify(formApi.getValue())}`),
         commands: [
           {
@@ -155,7 +156,17 @@ describe('browser.tinymce.themes.silver.editor.ContextSizeInputFormTest', () => 
     Value.set(inputW, '200');
     inputW.dom.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
     inputW.dom.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
-    store.assertEq('Input should trigger onInput', [ 'input.{"width":"200","height":"400"}' ]);
+    store.assertEq('Input should trigger onInput', [ 'setup', 'input.{"width":"200","height":"400"}' ]);
+  });
+
+  it('TINY-11494: Opening contex size input form should trigger onSetup', async () => {
+    const editor = hook.editor();
+    openToolbar(editor, 'test-form');
+    Waiter.pTryUntil(
+      'Toolbar should be opened',
+      () => UiFinder.exists(SugarBody.body(), '.tox-pop .tox-context-form__group')
+    );
+    store.assertEq('Opening contex size input form should trigger onSetup', [ 'setup' ]);
   });
 
   it('TINY-11342: Clicking `A` button should update the values', async () => {
