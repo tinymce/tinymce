@@ -125,19 +125,7 @@ export default (): void => {
     toolbar: 'undo redo sidebar1 fontsizeinput | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | align lineheight fontsize fontfamily blocks styles insertfile | styles | ' +
     'bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons table codesample code language | ltr rtl',
     contextmenu: 'link linkchecker image table lists configurepermanentpen',
-    color_map_raw: [
-      'var(--black)', 'Black',
-      'var(--gray)', 'Gray',
-      'var(--white)', 'White',
-      'var(--red)', 'Red',
-      'var(--yellow)', 'Yellow',
-      'var(--green)', 'Green',
-      'var(--blue)', 'Blue',
-      'hsb(0, 100%, 100%)', 'White hsb',
-      'hsl(0, 100%, 50%)', 'Red hsl',
-      '#ff00ff', 'Pink', // Example of adding a custom color
-      '#00ffff', 'Cyan'
-    ],
+
     // Multiple toolbar array
     // toolbar: ['undo redo sidebar1 align fontsize insertfile | fontfamily blocks styles insertfile | styles | bold italic',
     // 'alignleft aligncenter alignright alignjustify | print preview media | forecolor backcolor emoticons table codesample code | ltr rtl',

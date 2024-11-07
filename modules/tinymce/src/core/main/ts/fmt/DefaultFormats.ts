@@ -237,6 +237,7 @@ const get = (editor: Editor): Formats => {
     subscript: { inline: 'sub' },
     superscript: { inline: 'sup' },
     code: { inline: 'code' },
+    samp: { inline: 'samp' },
 
     link: {
       inline: 'a', selector: 'a', remove: 'all', split: true, deep: true,
@@ -275,7 +276,7 @@ const get = (editor: Editor): Formats => {
     ]
   };
 
-  Tools.each('p h1 h2 h3 h4 h5 h6 div address pre dt dd samp'.split(/\s/), (name) => {
+  Tools.each('p h1 h2 h3 h4 h5 h6 div address pre dt dd'.split(/\s/), (name) => {
     formats[name] = { block: name, remove: 'all' };
   });
 
