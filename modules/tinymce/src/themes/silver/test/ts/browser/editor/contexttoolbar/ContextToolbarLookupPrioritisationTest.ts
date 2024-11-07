@@ -22,6 +22,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLook
     label: Optional.none(),
     launch: Optional.none(),
     onInput: Fun.noop,
+    onSetup: Fun.noop,
     commands: [{
       onAction: Fun.noop,
       original: {

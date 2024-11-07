@@ -19,6 +19,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
     width: '',
     height: '',
     onEnter: Optional.none(),
-    onInput: Optional.none()
+    onInput: Optional.none(),
+    onSetup: Optional.none()
   }, providersBackstage);
 };

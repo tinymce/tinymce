@@ -49,6 +49,9 @@ export const renderContextFormSliderInput = (
         }
       }),
       AddEventsBehaviour.config('slider-events', [
+        AlloyEvents.runOnAttached((comp) => {
+          ctx.onSetup(ContextFormApi.getFormApi(comp));
+        }),
         AlloyEvents.run(NativeEvents.input(), (comp) => {
           ctx.onInput(ContextFormApi.getFormApi(comp));
         })

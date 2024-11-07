@@ -31,6 +31,7 @@ export interface SizeInputGenericSpec {
   readonly height: string;
   readonly onEnter: Optional<(input: AlloyComponent) => Optional<boolean>>;
   readonly onInput: Optional<(input: AlloyComponent) => void>;
+  readonly onSetup: Optional<(input: AlloyComponent) => void>;
 }
 
 export const renderSizeInput = (spec: SizeInputGenericSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
@@ -181,7 +182,10 @@ export const renderSizeInput = (spec: SizeInputGenericSpec, providersBackstage: 
         }),
         AlloyEvents.run(formInputEvent, (component) => {
           spec.onInput.each((onInput) => onInput(component));
-        })
+        }),
+        AlloyEvents.runOnAttached((component) => {
+          spec.onSetup.each((onSetup) => onSetup(component));
+        }),
       ])
     ])
   });

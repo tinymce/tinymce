@@ -43,6 +43,9 @@ export const renderContextFormTextInput = (
         }
       }),
       AddEventsBehaviour.config('input-events', [
+        AlloyEvents.runOnAttached((comp) => {
+          ctx.onSetup(ContextFormApi.getFormApi(comp));
+        }),
         AlloyEvents.run(NativeEvents.input(), (comp) => {
           ctx.onInput(ContextFormApi.getFormApi(comp));
         })
