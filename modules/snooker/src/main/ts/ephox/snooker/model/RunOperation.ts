@@ -1,5 +1,5 @@
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
-import { Attribute, Compare, ContentEditable, SugarElement } from '@ephox/sugar';
+import { Attribute, Compare, SugarElement } from '@ephox/sugar';
 
 import { Generators, GeneratorsWrapper, SimpleGenerators } from '../api/Generators';
 import * as ResizeBehaviour from '../api/ResizeBehaviour';
@@ -169,15 +169,6 @@ const onCells = (warehouse: Warehouse, target: TargetSelection): Optional<Struct
 
 // Custom unlocked extractors
 
-const onUnlockedRows = (warehouse: Warehouse, target: TargetSelection): Optional<Structs.DetailExt[]> =>
-  extractCells(warehouse, target, (row) => isRowUnlocked(warehouse, row.row));
-
-const onUnlockedRow = (warehouse: Warehouse, target: TargetElement): Optional<Structs.DetailExt> =>
-  onCell(warehouse, target).filter((row) => isRowUnlocked(warehouse, row.row));
-
-const isRowUnlocked = (warehouse: Warehouse, row: number) =>
-  ContentEditable.isEditable(warehouse.all[row].element);
-
 const onUnlockedCell = (warehouse: Warehouse, target: TargetElement): Optional<Structs.DetailExt> =>
   onCell(warehouse, target).filter((detail) => !detail.isLocked);
 
@@ -207,8 +198,6 @@ export {
   onUnlockedCell,
   onUnlockedCells,
   onUnlockedMergable,
-  onUnlockedRow,
-  onUnlockedRows,
   onUnlockedUnmergable,
   onUnmergable,
   run,

@@ -1,6 +1,6 @@
 project: tinymce
 kind: Fixed
-body: Changing table row type from a CEF cell would not work as expected.
+body: Changing table row type from a contenteditable=false cell would not work as expected.
 time: 2024-10-28T20:02:08.185398842+01:00
 custom:
     Issue: TINY-11383
