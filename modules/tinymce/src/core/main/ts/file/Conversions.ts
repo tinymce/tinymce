@@ -22,8 +22,7 @@ const blobUriToBlob = (url: string): Promise<Blob> =>
     }));
 
 const extractBase64Data = (data: string): string => {
-  const whitespaceRemovedData = data.replace(/\s+/g, '');
-  const matches = /([a-z0-9+\/=\s]+)/i.exec(whitespaceRemovedData);
+  const matches = /([a-z0-9+\/=\s]+)/i.exec(data);
   return matches ? matches[1] : '';
 };
 
