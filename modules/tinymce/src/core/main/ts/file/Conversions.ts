@@ -22,8 +22,17 @@ const blobUriToBlob = (url: string): Promise<Blob> =>
     }));
 
 const extractBase64Data = (data: string): string => {
-  const matches = /([a-z0-9+\/=\s]+)/i.exec(data);
+  const whitespaceRemovedData = data.replace(/\s+/g, '');
+  const matches = /([a-z0-9+\/=\s]+)/i.exec(whitespaceRemovedData);
   return matches ? matches[1] : '';
+};
+
+const decodeData = (data: string): string => {
+  try {
+    return decodeURIComponent(data);
+  } catch {
+    return data;
+  }
 };
 
 const parseDataUri = (uri: string): Optional<DataUriResult> => {
@@ -33,7 +42,8 @@ const parseDataUri = (uri: string): Optional<DataUriResult> => {
   const matches = /data:([^/]+\/[^;]+)(;.+)?/.exec(type);
   if (matches) {
     const base64Encoded = matches[2] === ';base64';
-    const extractedData = base64Encoded ? extractBase64Data(data) : decodeURIComponent(data);
+    const decodedData = decodeData(data);
+    const extractedData = base64Encoded ? extractBase64Data(decodedData) : decodedData;
     return Optional.some({
       type: matches[1],
       data: extractedData,
