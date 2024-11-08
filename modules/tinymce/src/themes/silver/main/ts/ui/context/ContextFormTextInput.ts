@@ -17,9 +17,16 @@ export const renderContextFormTextInput = (
     components: [ GuiFactory.text(label) ]
   }));
 
+  const placeholder = ctx.placeholder.map((p) => ({ placeholder: providers.translate(p) })).getOr({});
+
+  const inputAttributes = {
+    ...placeholder,
+  };
+
   const pField = FormField.parts.field({
     factory: Input,
     inputClasses: [ 'tox-toolbar-textfield', 'tox-toolbar-nav-js' ],
+    inputAttributes,
     data: ctx.initValue(),
     selectOnFocus: true,
     inputBehaviours: Behaviour.derive([
