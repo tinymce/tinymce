@@ -1,6 +1,6 @@
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Disabling, FormField, GuiFactory, Input, Keying, NativeEvents, SketchSpec } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
-import { Fun, Optional } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as UiState from '../../UiState';
@@ -17,7 +17,7 @@ export const renderContextFormTextInput = (
     components: [ GuiFactory.text(label) ]
   }));
 
-  const placeholder = ctx.placeholder.fold( Fun.constant({}), (p) => ({ placeholder: providers.translate(p) }));
+  const placeholder = ctx.placeholder.map((p) => ({ placeholder: providers.translate(p) })).getOr({});
 
   const inputAttributes = {
     ...placeholder,
