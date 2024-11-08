@@ -23,7 +23,10 @@ describe('browser.tinymce.themes.silver.editor.ContextSliderFormTest', () => {
         min: Fun.constant(-100),
         max: Fun.constant(100),
         initValue: Fun.constant(37),
-        onSetup: (_) => store.add('setup'),
+        onSetup: (_) => {
+          store.add('setup');
+          return Fun.noop;
+        },
         onInput: (formApi) => store.add(`input.${formApi.getValue()}(${typeof formApi.getValue()})`),
         commands: [
           {
@@ -125,7 +128,7 @@ describe('browser.tinymce.themes.silver.editor.ContextSliderFormTest', () => {
     store.assertEq('Input should trigger onInput with the right value and type', [ 'setup', 'input.42(number)' ]);
   });
 
-  it('TINY-11494: Opening contex slider form should trigger onSetup', async () => {
+  it('TINY-11494: Opening context slider form should trigger onSetup', async () => {
     const editor = hook.editor();
     openToolbar(editor, 'test-form');
     Waiter.pTryUntil(

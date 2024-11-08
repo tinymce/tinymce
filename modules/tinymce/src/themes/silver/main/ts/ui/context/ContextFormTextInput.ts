@@ -1,9 +1,10 @@
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Disabling, FormField, GuiFactory, Input, Keying, NativeEvents, SketchSpec } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
-import { Optional } from '@ephox/katamari';
+import { Cell, Fun, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as UiState from '../../UiState';
+import { onControlAttached, onControlDetached } from '../controls/Controls';
 import * as ContextFormApi from './ContextFormApi';
 import * as ContextFormGroup from './ContextFormGroup';
 
@@ -12,6 +13,8 @@ export const renderContextFormTextInput = (
   providers: UiFactoryBackstageProviders,
   onEnter: (input: AlloyComponent) => Optional<boolean>
 ): SketchSpec => {
+  const editorOffCell = Cell(Fun.noop);
+
   const pLabel = ctx.label.map((label) => FormField.parts.label({
     dom: { tag: 'label', classes: [ 'tox-label' ] },
     components: [ GuiFactory.text(label) ]
@@ -43,9 +46,8 @@ export const renderContextFormTextInput = (
         }
       }),
       AddEventsBehaviour.config('input-events', [
-        AlloyEvents.runOnAttached((comp) => {
-          ctx.onSetup(ContextFormApi.getFormApi(comp));
-        }),
+        onControlAttached<InlineContent.ContextFormInstanceApi<string>>({ onSetup: ctx.onSetup, getApi: ContextFormApi.getFormApi }, editorOffCell),
+        onControlDetached({ getApi: ContextFormApi.getFormApi }, editorOffCell),
         AlloyEvents.run(NativeEvents.input(), (comp) => {
           ctx.onInput(ContextFormApi.getFormApi(comp));
         })

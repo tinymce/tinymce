@@ -33,7 +33,10 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
             };
           }
         },
-        onSetup: (_) => store.add('setup'),
+        onSetup: (_) => {
+          store.add('setup');
+          return Fun.noop;
+        },
         onInput: (formApi) => store.add(`input.${formApi.getValue()}`),
         predicate: (node) => node.nodeName.toLowerCase() === 'a',
         commands: [
@@ -273,7 +276,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     await TinyUiActions.pWaitForUi(editor, '.tox-pop input:not(:disabled)');
   });
 
-  it('TINY-11494: Opening contex form should trigger onSetup', () => {
+  it('TINY-11494: Opening context form should trigger onSetup', () => {
     const editor = hook.editor();
     openToolbar(editor, 'test-form');
     Waiter.pTryUntil(

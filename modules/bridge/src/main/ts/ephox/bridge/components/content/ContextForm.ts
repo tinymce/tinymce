@@ -84,7 +84,7 @@ export interface BaseContextFormSpec<T> extends ContextBarSpec {
   launch?: ContextFormLaunchButtonApi | ContextFormLaunchToggleButtonSpec;
   commands: Array<ContextFormToggleButtonSpec<T> | ContextFormButtonSpec<T>>;
   onInput?: (api: ContextFormInstanceApi<T>) => void;
-  onSetup?: (api: ContextFormInstanceApi<T>) => void;
+  onSetup?: (api: ContextFormInstanceApi<T>) => (api: ContextFormInstanceApi<T>) => void;
 }
 
 export interface ContextInputFormSpec extends BaseContextFormSpec<string> {
@@ -111,7 +111,7 @@ export interface BaseContextForm<T> extends ContextBar {
   launch: Optional<ContextFormLaunchButton | ContextFormLaunchToggleButton>;
   commands: ContextFormCommand<T>[];
   onInput: (api: ContextFormInstanceApi<T>) => void;
-  onSetup: (api: ContextFormInstanceApi<T>) => void;
+  onSetup: (api: ContextFormInstanceApi<T>) => (api: ContextFormInstanceApi<T>) => void;
 }
 
 export interface ContextInputForm extends BaseContextForm<string> {
@@ -167,7 +167,7 @@ const baseContextFormFields = [
     contextformtogglebutton: launchToggleButtonFields
   })),
   FieldSchema.defaultedFunction('onInput', Fun.noop),
-  FieldSchema.defaultedFunction('onSetup', Fun.noop)
+  FieldSchema.defaultedFunction('onSetup', () => Fun.noop)
 ];
 
 const contextFormFields = [
