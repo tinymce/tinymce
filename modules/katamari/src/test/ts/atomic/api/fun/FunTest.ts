@@ -5,42 +5,42 @@ import fc from 'fast-check';
 import * as Fun from 'ephox/katamari/api/Fun';
 
 describe('atomic.katamari.api.fun.FunTest', () => {
-  it('TINY-7494: should compose functions correctly', () => {
+  it('should compose functions correctly', () => {
     const add2 = (n: number) => n + 2;
     const squared = (n: number) => n * n;
     const add2squared = Fun.compose(squared, add2);
     assert.equal(add2squared(2), 16);
   });
 
-  it('TINY-7494: should handle noarg correctly', () => {
+  it('should handle noarg correctly', () => {
     const f0 = (...args: any[]) => {
       return assert.lengthOf(args, 0);
     };
     Fun.noarg(f0)(1, 2, 3);
   });
 
-  it('TINY-7494: should identity correctly', () => {
+  it('should identity correctly', () => {
     assert.isUndefined(Fun.identity(undefined));
     assert.equal(Fun.identity(10), 10);
     assert.deepEqual(Fun.identity([ 1, 2, 4 ]), [ 1, 2, 4 ]);
     assert.deepEqual(Fun.identity({ a: 'a', b: 'b' }), { a: 'a', b: 'b' });
   });
 
-  it('TINY-7494: should handle constant correctly', () => {
+  it('should handle constant correctly', () => {
     assert.isUndefined(Fun.constant(undefined)());
     assert.equal(Fun.constant(10)(), 10);
     assert.deepEqual(Fun.constant({ a: 'a' })(), { a: 'a' });
   });
 
-  it('TINY-7494: should handle never correctly', () => {
+  it('should handle never correctly', () => {
     assert.isFalse(Fun.never());
   });
 
-  it('TINY-7494: should handle always correctly', () => {
+  it('should handle always correctly', () => {
     assert.isTrue(Fun.always());
   });
 
-  it('TINY-7494: should handle curry correctly', () => {
+  it('should handle curry correctly', () => {
     const c = <T>(...args: T[]): T[] => args;
     assert.deepEqual(Fun.curry(c)(), []);
     assert.deepEqual(Fun.curry(c, 'a')(), [ 'a' ]);
@@ -50,16 +50,16 @@ describe('atomic.katamari.api.fun.FunTest', () => {
     assert.deepEqual(Fun.curry(c, 'a', 'b')('c'), [ 'a', 'b', 'c' ]);
   });
 
-  it('TINY-7494: should handle not correctly', () => {
+  it('should handle not correctly', () => {
     assert.isFalse(Fun.not((_x: number) => true)(3));
     assert.isTrue(Fun.not((_x: string) => false)('cat'));
   });
 
-  it('TINY-7494: should throw an error with die', () => {
+  it('should throw an error with die', () => {
     assert.throws(Fun.die('Died!'));
   });
 
-  it('TINY-7494: should handle apply correctly', () => {
+  it('should handle apply correctly', () => {
     let called = false;
     const f = () => {
       called = true;
