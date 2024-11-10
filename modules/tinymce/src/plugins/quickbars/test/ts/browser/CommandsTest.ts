@@ -22,7 +22,7 @@ describe('browser.tinymce.plugins.quickbars.CommandsTest', () => {
       base_url: '/project/tinymce/js/tinymce'
     }, [ QuickbarsPlugin ], true);
 
-    it(`TINY-11399: QuickbarInsertImage should be not overwritten by the plugin if it already exists${withPredefinedCommand ? ' (withPresetedCommand)' : ''}`, async () => {
+    it(`TINY-11399: QuickbarInsertImage should be not overwritten by the plugin if it already exists${withPredefinedCommand ? ' (withPredefinedCommand)' : ''}`, async () => {
       const editor = hook.editor();
       store.assertEq('it should be empty at start', []);
       editor.execCommand('QuickbarInsertImage');
