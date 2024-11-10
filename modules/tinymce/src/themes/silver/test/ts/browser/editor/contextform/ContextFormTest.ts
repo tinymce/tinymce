@@ -13,6 +13,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {
       ed.ui.registry.addContextForm('test-form', {
+        placeholder: 'This is a placeholder',
         launch: {
           type: 'contextformtogglebutton',
           icon: 'fake-icon-name',
@@ -365,5 +366,11 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     });
 
     editor.off('ContextToolbarClose', collectEvent);
+  });
+
+  it('TINY-11459: Input should have a placeholder when specified', () => {
+    const editor = hook.editor();
+    openToolbar(editor, 'test-form');
+    UiFinder.exists(SugarBody.body(), '.tox-pop input[placeholder="This is a placeholder"]');
   });
 });

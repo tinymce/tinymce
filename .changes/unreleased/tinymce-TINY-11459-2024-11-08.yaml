@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: Added a placeholder for context form input field.
+time: 2024-11-08T12:04:46.435171+01:00
+custom:
+  Issue: TINY-11459

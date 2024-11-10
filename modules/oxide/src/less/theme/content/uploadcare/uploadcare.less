@@ -15,16 +15,22 @@
 @uploadcare-placeholder-text-color: @text-color-muted;
 @uploadcare-placeholder-icon-fill: @text-color-muted;
 
-.tox-uc-image-overlay {
-  position: absolute;
-  pointer-events: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+// UPLOADCARE LOADER
+.tox-uc-loading-background {
+  width: 100%;
+  height: 100%;
   background: @uploadcare-overlay-background-color;
 }
 
-.tox-uc-loading-element {
+.tox-uc-loading-spinner-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tox-uc-loading-spinner {
   width: @uploadcare-loading-element-width;
   aspect-ratio: 1 / 1;
   border-radius: 50%;
@@ -34,6 +40,8 @@
   animation: tox-rotation 1s linear infinite;
 }
 
+
+// UPLOADCARE PLACEHOLDER
 .tox-uploadcare-placeholder {
   display: inline-block;
   width: @uploadcare-placeholder-initial-width;
