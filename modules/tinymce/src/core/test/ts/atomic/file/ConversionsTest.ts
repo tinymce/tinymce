@@ -30,5 +30,13 @@ describe('atomic.tinymce.core.file.ConversionsTest', () => {
         base64Encoded: true
       }),
       parseDataUri('data:image/gif;base64,R0lGODdhIAAgAIABAP8AAP///ywAAAAAIAAgAAACHoSPqcvtD6OctNqLs968+w+G4kiW5omm6sq27gubBQA7AA==%A0'));
+    KAssert.eqOptional(
+      'Additional paramaters',
+      Optional.some({
+        type: 'image/png',
+        data: 'R0/yw==',
+        base64Encoded: true
+      }),
+      parseDataUri('data:image/png;attribute=value;base64,R0/yw=='));
   });
 });
