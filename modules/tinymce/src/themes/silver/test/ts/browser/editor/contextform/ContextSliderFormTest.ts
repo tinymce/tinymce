@@ -131,7 +131,7 @@ describe('browser.tinymce.themes.silver.editor.ContextSliderFormTest', () => {
   it('TINY-11494: Opening context slider form should trigger onSetup', async () => {
     const editor = hook.editor();
     openToolbar(editor, 'test-form');
-    Waiter.pTryUntil(
+    await Waiter.pTryUntil(
       'Toolbar should be opened',
       () => UiFinder.exists(SugarBody.body(), '.tox-pop input')
     );
