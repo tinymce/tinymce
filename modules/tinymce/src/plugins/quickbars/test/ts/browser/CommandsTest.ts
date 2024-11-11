@@ -1,6 +1,5 @@
 import { TestStore } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -14,25 +13,46 @@ describe('browser.tinymce.plugins.quickbars.CommandsTest', () => {
       editor.addCommand('QuickbarInsertImage', () => store.add('QII'));
     });
   };
-  Arr.each([ true, false ], (withPredefinedCommand) => {
+
+  const testQuickbarInsertImage = (editor: Editor, expectedPreAddCommand: string[], expectedPostAddCommand: string[]) => {
+    store.clear();
+    store.assertEq('it should be empty at start', []);
+    editor.execCommand('QuickbarInsertImage');
+    store.assertEq('should use predefined command if it exists', expectedPreAddCommand);
+
+    editor.addCommand('QuickbarInsertImage', () => store.add('QII-setted-after'));
+    editor.execCommand('QuickbarInsertImage');
+
+    store.assertEq('it should exec the overwritten command', expectedPostAddCommand);
+  };
+
+  context('QuickbarInsertImage predefined command', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
-      plugins: withPredefinedCommand ? 'fake quickbars' : 'quickbars',
+      plugins: 'quickbars',
+      inline: true,
+      toolbar: false,
+      menubar: false,
+      base_url: '/project/tinymce/js/tinymce'
+    }, [ QuickbarsPlugin ], true);
+
+    it('TINY-11399: it should be possible to overwrite QuickbarInsertImage', async () => {
+      const editor = hook.editor();
+      testQuickbarInsertImage(editor, [], [ 'QII-setted-after' ]);
+    });
+  });
+
+  context('QuickbarInsertImage command', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      plugins: 'fake quickbars',
       inline: true,
       toolbar: false,
       menubar: false,
       base_url: '/project/tinymce/js/tinymce'
     }, [ FakePlugin, QuickbarsPlugin ], true);
 
-    it(`TINY-11399: QuickbarInsertImage should be not overwritten by the plugin if it already exists${withPredefinedCommand ? ' (withPredefinedCommand)' : ''}`, async () => {
-      store.clear();
+    it('TINY-11399: QuickbarInsertImage should be overwritten by the other plugins', async () => {
       const editor = hook.editor();
-      store.assertEq('it should be empty at start', []);
-      editor.execCommand('QuickbarInsertImage');
-      store.assertEq('should use predefined command if it exists', withPredefinedCommand ? [ 'QII' ] : []);
-
-      editor.addCommand('QuickbarInsertImage', () => store.add('QII-setted-after'));
-      editor.execCommand('QuickbarInsertImage');
-      store.assertEq('it should exec the overwritten command', withPredefinedCommand ? [ 'QII', 'QII-setted-after' ] : [ 'QII-setted-after' ]);
+      testQuickbarInsertImage(editor, [ 'QII' ], [ 'QII', 'QII-setted-after' ]);
     });
   });
 });
