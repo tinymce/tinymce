@@ -35,7 +35,9 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
         },
         onSetup: (_) => {
           store.add('setup');
-          return Fun.noop;
+          return () => {
+            store.add('teardown');
+          };
         },
         onInput: (formApi) => store.add(`input.${formApi.getValue()}`),
         predicate: (node) => node.nodeName.toLowerCase() === 'a',
@@ -128,12 +130,13 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
   afterEach(async () => {
     const editor = hook.editor();
 
-    store.clear();
     editor.focus();
 
     // Simulate clicking elsewhere in the editor
     clickAway(editor);
     await pAssertNoPopDialog();
+
+    store.clear();
   });
 
   const openToolbar = (editor: Editor, toolbarKey: string) => {
@@ -299,7 +302,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     const editor = hook.editor();
     openToolbar(editor, 'test-form');
     TinyUiActions.clickOnUi(editor, 'button[aria-label="D"]');
-    store.assertEq('D should have fired', [ 'setup', 'D.before-hide', 'D.after-hide' ]);
+    store.assertEq('D should have fired', [ 'setup', 'teardown', 'D.before-hide', 'D.after-hide' ]);
   });
 
   it('TINY-11432: Should trigger ContextFormSlideBack on escape key in context form', async () => {
@@ -316,7 +319,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     TinyUiActions.keystroke(editor, Keys.escape());
     await FocusTools.pTryOnSelector('Focus should now be back on button in context toolbar', doc, '.tox-pop button');
 
-    store.assertEq('Should have triggered ContextFormSlideBack', [ 'setup', 'contextformslideback' ]);
+    store.assertEq('Should have triggered ContextFormSlideBack', [ 'setup', 'contextformslideback', 'teardown' ]);
 
     editor.off('ContextFormSlideBack', collectEvent);
   });
@@ -335,7 +338,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     TinyUiActions.clickOnUi(editor, 'button[aria-label="F"]');
     await FocusTools.pTryOnSelector('Focus should now be back on button in context toolbar', doc, '.tox-pop button');
 
-    store.assertEq('Should have triggered ContextFormSlideBack', [ 'setup', 'contextformslideback' ]);
+    store.assertEq('Should have triggered ContextFormSlideBack', [ 'setup', 'contextformslideback', 'teardown' ]);
 
     editor.off('ContextFormSlideBack', collectEvent);
   });
@@ -353,7 +356,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     await FocusTools.pTryOnSelector('Focus should now be on input in context form', doc, 'input');
     TinyUiActions.clickOnUi(editor, 'button[aria-label="D"]');
 
-    store.assertEq('Should have triggered ContextToolbarClose', [ 'setup', 'contexttoolbarclose', 'D.before-hide', 'D.after-hide' ]);
+    store.assertEq('Should have triggered ContextToolbarClose', [ 'setup', 'teardown', 'contexttoolbarclose', 'D.before-hide', 'D.after-hide' ]);
 
     editor.off('ContextToolbarClose', collectEvent);
   });
@@ -375,7 +378,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     TinyContentActions.trueClick(editor);
 
     await Waiter.pTryUntil('Watied to context toolbar to close', () => {
-      store.assertEq('Should have triggered ContextToolbarClose', [ 'setup', 'contexttoolbarclose' ]);
+      store.assertEq('Should have triggered ContextToolbarClose', [ 'setup', 'teardown', 'contexttoolbarclose' ]);
     });
 
     editor.off('ContextToolbarClose', collectEvent);

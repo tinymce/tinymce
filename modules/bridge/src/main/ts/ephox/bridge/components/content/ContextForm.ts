@@ -167,7 +167,7 @@ const baseContextFormFields = [
     contextformtogglebutton: launchToggleButtonFields
   })),
   FieldSchema.defaultedFunction('onInput', Fun.noop),
-  FieldSchema.defaultedFunction('onSetup', () => Fun.noop)
+  FieldSchema.defaultedFunction('onSetup', Fun.noop)
 ];
 
 const contextFormFields = [
