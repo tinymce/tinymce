@@ -209,28 +209,30 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
     }
   });
 
-  editor.on('SwitchMode', () => {
+  const showResizeBars = () => {
     tableResize.on((resize) => {
-      if (editor.mode.isReadOnly()) {
-        resize.off();
-        resize.hideBars();
-      } else {
-        resize.on();
-        resize.showBars();
-      }
+      resize.on();
+      resize.showBars();
     });
+  };
+
+  const hideResizeBars = () => {
+    tableResize.on((resize) => {
+      resize.off();
+      resize.hideBars();
+    });
+  };
+
+  editor.on('DisabledStateChange', (e) => {
+    e.state ? hideResizeBars() : showResizeBars();
+  });
+
+  editor.on('SwitchMode', () => {
+    editor.mode.isReadOnly() ? hideResizeBars() : showResizeBars();
   });
 
   editor.on('dragstart dragend', (e) => {
-    tableResize.on((resize) => {
-      if (e.type === 'dragstart') {
-        resize.hideBars();
-        resize.off();
-      } else {
-        resize.on();
-        resize.showBars();
-      }
-    });
+    e.type === 'dragstart' ? hideResizeBars() : showResizeBars();
   });
 
   editor.on('remove', () => {

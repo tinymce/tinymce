@@ -247,6 +247,7 @@ interface BaseEditorOptions {
   width?: number | string;
   xss_sanitization?: boolean;
   license_key?: string;
+  disabled?: boolean;
 
   // Internal settings (used by cloud or tests)
   disable_nodechange?: boolean;
@@ -353,4 +354,5 @@ export interface EditorOptions extends NormalizedEditorOptions {
   visual_table_class: string;
   width: number | string;
   xss_sanitization: boolean;
+  disabled: boolean;
 }

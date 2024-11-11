@@ -28,7 +28,7 @@ const switchToMode = (editor: Editor, activeMode: Cell<string>, availableModes: 
 };
 
 const setMode = (editor: Editor, availableModes: Record<string, EditorModeApi>, activeMode: Cell<string>, mode: string): void => {
-  if (mode === activeMode.get()) {
+  if (mode === activeMode.get() || editor.disabled) {
     return;
   } else if (!Obj.has(availableModes, mode)) {
     throw new Error(`Editor mode '${mode}' is invalid`);

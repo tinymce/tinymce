@@ -27,6 +27,7 @@ import * as TouchEvents from '../events/TouchEvents';
 import * as ForceBlocks from '../ForceBlocks';
 import * as NonEditableFilter from '../html/NonEditableFilter';
 import * as KeyboardOverrides from '../keyboard/KeyboardOverrides';
+import * as Disabled from '../mode/Disabled';
 import { NodeChange } from '../NodeChange';
 import * as Paste from '../paste/Paste';
 import * as Rtc from '../Rtc';
@@ -253,6 +254,9 @@ const moveSelectionToFirstCaretPosition = (editor: Editor) => {
 
 const initEditor = (editor: Editor) => {
   editor.bindPendingEventDelegates();
+  if (editor.disabled) {
+    Disabled.toggleDisabled(editor, true);
+  }
   editor.initialized = true;
   Events.fireInit(editor);
   editor.focus(true);
@@ -263,6 +267,7 @@ const initEditor = (editor: Editor) => {
     initInstanceCallback.call(editor, editor);
   }
   autoFocus(editor);
+  Disabled.registerEventsAndFilters(editor);
 };
 
 const getStyleSheetLoader = (editor: Editor): StyleSheetLoader =>
@@ -420,9 +425,10 @@ const contentBodyLoaded = (editor: Editor): void => {
   // TODO: See if we actually need to disable/re-enable here
   (body as any).disabled = true;
   editor.readonly = Options.isReadOnly(editor);
+  editor.disabled = Options.isDisabled(editor);
   editor._editableRoot = Options.hasEditableRoot(editor);
 
-  if (editor.hasEditableRoot()) {
+  if (!editor.disabled && editor.hasEditableRoot()) {
     if (editor.inline && DOM.getStyle(body, 'position', true) === 'static') {
       body.style.position = 'relative';
     }

@@ -442,6 +442,33 @@ describe('browser.tinymce.core.EditorTest', () => {
     assert.equal(clickCount, 3, 'setMode');
   });
 
+  it('TINY-11488: Verifies click event behavior in disabled and enabled editor states', () => {
+    const editor = hook.editor();
+    let clickCount = 0;
+
+    const isDisabled = (selector: string) => {
+      const elm = UiFinder.findIn(SugarBody.body(), selector);
+      return elm.forall((elm) => Attribute.has(elm, 'disabled') || Class.has(elm, 'tox-tbtn--disabled'));
+    };
+
+    editor.on('click', () => {
+      clickCount++;
+    });
+
+    editor.dom.dispatch(editor.getBody(), 'click');
+    assert.equal(clickCount, 1, 'Click should be counted in enabled state');
+
+    editor.options.set('disabled', true);
+    assert.isTrue(isDisabled('.tox-editor-container button:last-of-type'), 'Button should be disabled in disabled mode');
+    editor.dom.dispatch(editor.getBody(), 'click');
+    assert.equal(clickCount, 1, 'Click should not be counted in disabled state');
+
+    editor.options.set('disabled', false);
+    editor.dom.dispatch(editor.getBody(), 'click');
+    assert.isFalse(isDisabled('.tox-editor-container button:last-of-type'), 'Button should remain enabled in enabled state');
+    assert.equal(clickCount, 2, 'Click should be counted in re-enabled state');
+  });
+
   it('TBA: translate', () => {
     const editor = hook.editor();
     EditorManager.addI18n('en', {

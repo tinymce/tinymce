@@ -61,6 +61,12 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
     getOption: editor.options.get,
     tooltips: TooltipsBackstage(lazySinks.dialog),
     checkUiComponentContext: (specContext: string) => {
+      if (editor.disabled) {
+        return {
+          contextType: 'disabled',
+          shouldDisable: true
+        };
+      }
       const [ key, value = '' ] = specContext.split(':');
       const contexts = editor.ui.registry.getAll().contexts;
       const enabledInContext = Obj.get(contexts, key)

@@ -274,8 +274,8 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
       }, 0);
     });
 
-    editor.on('SwitchMode', () => {
-      if (editor.mode.isReadOnly()) {
+    editor.on('SwitchMode DisabledStateChange', () => {
+      if (editor.mode.isReadOnly() || editor.disabled) {
         close();
       }
     });

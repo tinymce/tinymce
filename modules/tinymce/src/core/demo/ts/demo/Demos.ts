@@ -2,6 +2,7 @@ import AnnotationsDemo from './AnnotationsDemo';
 import CommandsDemo from './CommandsDemo';
 import ContentEditableFalseDemo from './ContentEditableFalseDemo';
 import CustomThemeDemo from './CustomThemeDemo';
+import DisabledDemo from './DisabledDemo';
 import FixedToolbarContainerDemo from './FixedToolbarContainerDemo';
 import FullDemo from './FullDemo';
 import IframeDemo from './IframeDemo';
@@ -21,6 +22,7 @@ window.demos = {
   CommandsDemo,
   ContentEditableFalseDemo,
   CustomThemeDemo,
+  DisabledDemo,
   IframeDemo,
   InlineDemo,
   FixedToolbarContainerDemo,
