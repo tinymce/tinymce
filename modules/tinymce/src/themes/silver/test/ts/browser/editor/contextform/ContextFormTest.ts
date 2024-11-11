@@ -279,10 +279,10 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     await TinyUiActions.pWaitForUi(editor, '.tox-pop input:not(:disabled)');
   });
 
-  it('TINY-11494: Opening context form should trigger onSetup', () => {
+  it('TINY-11494: Opening context form should trigger onSetup', async () => {
     const editor = hook.editor();
     openToolbar(editor, 'test-form');
-    Waiter.pTryUntil(
+    await Waiter.pTryUntil(
       'Toolbar should be opened',
       () => UiFinder.exists(SugarBody.body(), '.tox-pop input')
     );

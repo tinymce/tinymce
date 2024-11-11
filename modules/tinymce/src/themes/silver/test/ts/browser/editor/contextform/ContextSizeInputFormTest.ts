@@ -165,7 +165,7 @@ describe('browser.tinymce.themes.silver.editor.ContextSizeInputFormTest', () => 
   it('TINY-11494: Opening context size input form should trigger onSetup', async () => {
     const editor = hook.editor();
     openToolbar(editor, 'test-form');
-    Waiter.pTryUntil(
+    await Waiter.pTryUntil(
       'Toolbar should be opened',
       () => UiFinder.exists(SugarBody.body(), '.tox-pop .tox-context-form__group')
     );
