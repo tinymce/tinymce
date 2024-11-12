@@ -8,12 +8,13 @@ import {
   Keying,
   NativeEvents, Representing, SketchSpec, Tabstopping, Tooltipping
 } from '@ephox/alloy';
-import { Id, Optional, Unicode } from '@ephox/katamari';
+import { Cell, Fun, Id, Optional, Optionals, Unicode } from '@ephox/katamari';
 
 import { formChangeEvent, formInputEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as UiState from '../../UiState';
+import { onControlAttached, onControlDetached } from '../controls/Controls';
 import * as Icons from '../icons/Icons';
 import { formatSize, makeRatioConverter, noSizeConversion, parseSize, SizeConversion } from '../sizeinput/SizeInputModel';
 
@@ -21,7 +22,7 @@ interface RatioEvent extends CustomEvent {
   readonly isField1: boolean;
 }
 
-export interface SizeInputGenericSpec {
+export interface SizeInputGenericSpec<ApiType = never> {
   readonly inDialog: boolean;
   readonly label: Optional<string>;
   readonly enabled: boolean;
@@ -31,9 +32,11 @@ export interface SizeInputGenericSpec {
   readonly height: string;
   readonly onEnter: Optional<(input: AlloyComponent) => Optional<boolean>>;
   readonly onInput: Optional<(input: AlloyComponent) => void>;
+  readonly onSetup: Optional<(api: ApiType) => (api: ApiType) => void>;
+  readonly getApi: Optional<(input: AlloyComponent) => ApiType>;
 }
 
-export const renderSizeInput = (spec: SizeInputGenericSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
+export const renderSizeInput = <ApiType = never>(spec: SizeInputGenericSpec<ApiType>, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
   let converter: SizeConversion = noSizeConversion;
 
   const ratioEvent = Id.generate('ratio-event');
@@ -118,6 +121,13 @@ export const renderSizeInput = (spec: SizeInputGenericSpec, providersBackstage: 
     formGroup([ AlloyFormField.parts.label(getLabel('Height')), getFieldPart(false) ])
   );
 
+  const editorOffCell = Cell(Fun.noop);
+
+  const controlLifecycleHandlers = Optionals.lift2(spec.onSetup, spec.getApi, (onSetup, getApi) => [
+    onControlAttached<ApiType>( { onSetup, getApi }, editorOffCell),
+    onControlDetached<ApiType>( { getApi }, editorOffCell)
+  ]).getOr([]);
+
   return AlloyFormCoupledInputs.sketch({
     dom: {
       tag: 'div',
@@ -181,7 +191,8 @@ export const renderSizeInput = (spec: SizeInputGenericSpec, providersBackstage: 
         }),
         AlloyEvents.run(formInputEvent, (component) => {
           spec.onInput.each((onInput) => onInput(component));
-        })
+        }),
+        ...controlLifecycleHandlers,
       ])
     ])
   });

@@ -13,7 +13,7 @@ export const renderContextFormSizeInput = (
 ): SketchSpec => {
   const { width, height } = ctx.initValue();
 
-  return SizeInput.renderSizeInput({
+  return SizeInput.renderSizeInput<InlineContent.ContextFormInstanceApi<InlineContent.SizeData>>({
     inDialog: false,
     label: ctx.label,
     enabled: true,
@@ -22,6 +22,8 @@ export const renderContextFormSizeInput = (
     width,
     height,
     onEnter: Optional.some(onEnter),
-    onInput: Optional.some((input) => ctx.onInput(ContextFormApi.getFormApi(input)))
+    onInput: Optional.some((input) => ctx.onInput(ContextFormApi.getFormApi(input))),
+    onSetup: Optional.some(ctx.onSetup),
+    getApi: Optional.some(ContextFormApi.getFormApi<InlineContent.SizeData>)
   }, providersBackstage);
 };

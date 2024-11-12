@@ -14,6 +14,13 @@ export default (): void => {
         text: 'Alt',
         tooltip: 'Alt'
       },
+      onSetup: (api) => {
+        console.log('setup context form');
+
+        return () => {
+          console.log('teardown context form', api.getValue());
+        };
+      },
       onInput: (api) => {
         console.log('text', api.getValue());
       },
