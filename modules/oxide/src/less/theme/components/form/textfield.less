@@ -61,10 +61,15 @@
   }
 
   .tox-toolbar-textfield:extend(.tox .tox-textfield) {
-    border-width: 0;
     margin-bottom: 3px;
     margin-top: 2px;
     max-width: 250px;
+  }
+
+  .tox-toolbar-textfield[disabled] {
+    background-color: @textfield-disabled-background-color;
+    color: @textfield-disabled-text-color;
+    cursor: not-allowed;
   }
 
   .tox-naked-btn {
@@ -82,6 +87,10 @@
       display: block;
       fill: @text-color;
     }
+  }
+
+  .tox-textfield-size {
+    width: 80px;
   }
 }
 

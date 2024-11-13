@@ -1,6 +1,8 @@
 import AnnotationsDemo from './AnnotationsDemo';
 import CommandsDemo from './CommandsDemo';
 import ContentEditableFalseDemo from './ContentEditableFalseDemo';
+import ContextFormDemo from './ContextFormDemo';
+import ContextToolbarDemo from './ContextToolbarDemo';
 import CustomThemeDemo from './CustomThemeDemo';
 import FixedToolbarContainerDemo from './FixedToolbarContainerDemo';
 import FullDemo from './FullDemo';
@@ -20,6 +22,7 @@ declare const window: any;
 window.demos = {
   CommandsDemo,
   ContentEditableFalseDemo,
+  ContextToolbarDemo,
   CustomThemeDemo,
   IframeDemo,
   InlineDemo,
@@ -33,5 +36,6 @@ window.demos = {
   ShadowDomDemo,
   ShadowDomInlineDemo,
   ReadOnlyDemo,
-  ViewDemo
+  ViewDemo,
+  ContextFormDemo
 };
