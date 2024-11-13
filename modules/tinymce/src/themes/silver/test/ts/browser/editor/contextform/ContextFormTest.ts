@@ -1,10 +1,11 @@
 import { ApproxStructure, Assertions, FocusTools, Keys, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Fun, Obj } from '@ephox/katamari';
-import { SugarBody, SugarDocument } from '@ephox/sugar';
-import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
+import { SugarBody, SugarDocument, Value } from '@ephox/sugar';
+import { TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
   const store = TestStore();
@@ -12,6 +13,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     base_url: '/project/tinymce/js/tinymce',
     setup: (ed: Editor) => {
       ed.ui.registry.addContextForm('test-form', {
+        placeholder: 'This is a placeholder',
         launch: {
           type: 'contextformtogglebutton',
           icon: 'fake-icon-name',
@@ -32,7 +34,13 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
             };
           }
         },
-
+        onSetup: (_) => {
+          store.add('setup');
+          return () => {
+            store.add('teardown');
+          };
+        },
+        onInput: (formApi) => store.add(`input.${formApi.getValue()}`),
         predicate: (node) => node.nodeName.toLowerCase() === 'a',
         commands: [
           {
@@ -81,7 +89,35 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
               };
             },
             onAction: (formApi, _buttonApi) => store.adder('C.' + formApi.getValue())()
-          }
+          },
+          {
+            type: 'contextformbutton',
+            icon: 'fake-icon-name',
+            tooltip: 'D',
+            onAction: (formApi, _buttonApi) => {
+              formApi.setValue('before-hide');
+              formApi.hide();
+              store.add('D.' + formApi.getValue());
+              formApi.setValue('after-hide');
+              store.add('D.' + formApi.getValue());
+            }
+          },
+          {
+            type: 'contextformbutton',
+            icon: 'fake-icon-name',
+            tooltip: 'E',
+            onAction: (formApi, _buttonApi) => {
+              formApi.setInputEnabled(!formApi.isInputEnabled());
+            }
+          },
+          {
+            type: 'contextformbutton',
+            icon: 'fake-icon-name',
+            tooltip: 'F',
+            onAction: (formApi, _buttonApi) => {
+              formApi.back();
+            }
+          },
         ]
       });
 
@@ -91,6 +127,18 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
       });
     }
   }, [], true);
+
+  afterEach(async () => {
+    const editor = hook.editor();
+
+    editor.focus();
+
+    // Simulate clicking elsewhere in the editor
+    clickAway(editor);
+    await pAssertNoPopDialog();
+
+    store.clear();
+  });
 
   const openToolbar = (editor: Editor, toolbarKey: string) => {
     editor.dispatch('contexttoolbar-show', {
@@ -146,15 +194,12 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     await FocusTools.pTryOnSelector('Focus should go back to input in context form', doc, 'input');
     FocusTools.setActiveValue(doc, 'Words');
     TinyUiActions.keydown(editor, Keys.enter());
-    store.assertEq('B should have fired because it is primary', [ 'B.Words' ]);
+    store.assertEq('B should have fired because it is primary', [ 'setup', 'B.Words' ]);
     hasDialog('Immediate context form should have an inner dialog class');
     TinyUiActions.keyup(editor, Keys.escape());
     // Check that the context popup still exists;
     UiFinder.exists(SugarBody.body(), '.tox-pop');
     await Waiter.pTryUntil('Check that the editor still has focus', () => editor.hasFocus());
-    // Simulate clicking elsewhere in the editor
-    clickAway(editor);
-    await pAssertNoPopDialog();
   });
 
   it('TBA: Launch a context form from a context toolbar', async () => {
@@ -173,9 +218,6 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     // Check that the context popup still exists;
     UiFinder.exists(SugarBody.body(), '.tox-pop');
     await Waiter.pTryUntil('Check that the editor still has focus', () => editor.hasFocus());
-    // Simulate clicking elsewhere in the editor
-    clickAway(editor);
-    await pAssertNoPopDialog();
   });
 
   it('TBA: Launching context form does not work if the context toolbar launcher is disabled', () => {
@@ -222,7 +264,130 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     checkLastButtonGroup('Checking buttons have right state', (s, str, arr) => [
       s.element('button', { classes: [ arr.has('tox-tbtn--disabled') ], attrs: { 'aria-disabled': str.is('true') }}),
       s.element('button', { classes: [ arr.not('tox-tbtn--disabled') ] }),
-      s.element('button', { attrs: { 'aria-pressed': str.is('true') }})
+      s.element('button', { attrs: { 'aria-pressed': str.is('true') }}),
+      s.element('button', { classes: [ arr.not('tox-tbtn--disabled') ] }),
+      s.element('button', { classes: [ arr.not('tox-tbtn--disabled') ] }),
+      s.element('button', { classes: [ arr.not('tox-tbtn--disabled') ] })
     ]);
+  });
+
+  it('TINY-11342: Should enable/disable input when calling setInputEnabled and read the state using isInputEnabled', async () => {
+    const editor = hook.editor();
+    openToolbar(editor, 'test-form');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="E"]');
+    await TinyUiActions.pWaitForUi(editor, '.tox-pop input:disabled');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="E"]');
+    await TinyUiActions.pWaitForUi(editor, '.tox-pop input:not(:disabled)');
+  });
+
+  it('TINY-11494: Opening context form should trigger onSetup', async () => {
+    const editor = hook.editor();
+    openToolbar(editor, 'test-form');
+    await Waiter.pTryUntil(
+      'Toolbar should be opened',
+      () => UiFinder.exists(SugarBody.body(), '.tox-pop input')
+    );
+    store.assertEq('Opening contex slider form should trigger onSetup', [ 'setup' ]);
+  });
+
+  it('TINY-11342: Input event should trigger onInput', () => {
+    const editor = hook.editor();
+    openToolbar(editor, 'test-form');
+    const input = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), '.tox-pop input').getOrDie();
+    Value.set(input, 'Hello');
+    input.dom.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+    store.assertEq('Input should trigger onInput', [ 'setup', 'input.Hello' ]);
+  });
+
+  it('TINY-11342: Should be able to get value after the context form has been hidden', async () => {
+    const editor = hook.editor();
+    openToolbar(editor, 'test-form');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="D"]');
+    store.assertEq('D should have fired', [ 'setup', 'teardown', 'D.before-hide', 'D.after-hide' ]);
+  });
+
+  it('TINY-11432: Should trigger ContextFormSlideBack on escape key in context form', async () => {
+    const editor = hook.editor();
+    const doc = SugarDocument.getDocument();
+    const collectEvent = (e: EditorEvent<void>) => store.add(e.type);
+
+    editor.on('ContextFormSlideBack', collectEvent);
+
+    openToolbar(editor, 'test-toolbar');
+    await FocusTools.pTryOnSelector('Focus should now be on button in context toolbar', doc, '.tox-pop button');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="ABC"]');
+    await FocusTools.pTryOnSelector('Focus should now be on button in context toolbar', doc, 'input');
+    TinyUiActions.keystroke(editor, Keys.escape());
+    await FocusTools.pTryOnSelector('Focus should now be back on button in context toolbar', doc, '.tox-pop button');
+
+    store.assertEq('Should have triggered ContextFormSlideBack', [ 'setup', 'contextformslideback', 'teardown' ]);
+
+    editor.off('ContextFormSlideBack', collectEvent);
+  });
+
+  it('TINY-11432: Should trigger ContextFormSlideBack on back api call in context form', async () => {
+    const editor = hook.editor();
+    const doc = SugarDocument.getDocument();
+    const collectEvent = (e: EditorEvent<void>) => store.add(e.type);
+
+    editor.on('ContextFormSlideBack', collectEvent);
+
+    openToolbar(editor, 'test-toolbar');
+    await FocusTools.pTryOnSelector('Focus should now be on button in context toolbar', doc, '.tox-pop button');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="ABC"]');
+    await FocusTools.pTryOnSelector('Focus should now be on button in context toolbar', doc, 'input');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="F"]');
+    await FocusTools.pTryOnSelector('Focus should now be back on button in context toolbar', doc, '.tox-pop button');
+
+    store.assertEq('Should have triggered ContextFormSlideBack', [ 'setup', 'contextformslideback', 'teardown' ]);
+
+    editor.off('ContextFormSlideBack', collectEvent);
+  });
+
+  it('TINY-11432: Should trigger ContextToolbarClose on hide api call in context form', async () => {
+    const editor = hook.editor();
+    const doc = SugarDocument.getDocument();
+    const collectEvent = (e: EditorEvent<void>) => store.add(e.type);
+
+    editor.on('ContextToolbarClose', collectEvent);
+
+    openToolbar(editor, 'test-toolbar');
+    await FocusTools.pTryOnSelector('Focus should now be on button in context toolbar', doc, '.tox-pop button');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="ABC"]');
+    await FocusTools.pTryOnSelector('Focus should now be on input in context form', doc, 'input');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="D"]');
+
+    store.assertEq('Should have triggered ContextToolbarClose', [ 'setup', 'teardown', 'contexttoolbarclose', 'D.before-hide', 'D.after-hide' ]);
+
+    editor.off('ContextToolbarClose', collectEvent);
+  });
+
+  it('TINY-11432: Should trigger ContextToolbarClose when closing ui by clicking away', async () => {
+    const editor = hook.editor();
+    const doc = SugarDocument.getDocument();
+    const collectEvent = (e: EditorEvent<void>) => store.add(e.type);
+
+    editor.on('ContextToolbarClose', collectEvent);
+
+    openToolbar(editor, 'test-toolbar');
+    await FocusTools.pTryOnSelector('Focus should now be on button in context toolbar', doc, '.tox-pop button');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="ABC"]');
+    await FocusTools.pTryOnSelector('Focus should now be on input in context form', doc, 'input');
+
+    // Fake click away inside editor
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    TinyContentActions.trueClick(editor);
+
+    await Waiter.pTryUntil('Watied to context toolbar to close', () => {
+      store.assertEq('Should have triggered ContextToolbarClose', [ 'setup', 'teardown', 'contexttoolbarclose' ]);
+    });
+
+    editor.off('ContextToolbarClose', collectEvent);
+  });
+
+  it('TINY-11459: Input should have a placeholder when specified', () => {
+    const editor = hook.editor();
+    openToolbar(editor, 'test-form');
+    UiFinder.exists(SugarBody.body(), '.tox-pop input[placeholder="This is a placeholder"]');
   });
 });
