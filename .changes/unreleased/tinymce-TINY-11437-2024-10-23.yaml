@@ -1,6 +1,6 @@
 project: tinymce
 kind: Fixed
-body: Image selection was removed when calling nodeChanged while having focus inside
+body: Image selection was removed when calling `editor.nodeChanged()` while having focus inside
   the editor UI.
 time: 2024-10-23T12:43:58.517087+02:00
 custom:
