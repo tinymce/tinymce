@@ -6,7 +6,7 @@
 @comment-selected-border-color: @color-active;
 
 @comment-background-color: @background-color;
-@comment-border-color: .bg-luma-checker(@border-color, @comment-background-color)[@result];
+@comment-border-color: @comment-background-color;
 @comment-border-radius: @panel-border-radius;
 @comment-border: 1px solid @comment-border-color;
 @comment-box-shadow: 0 4px 8px 0 fade(@color-black, 10%);
@@ -19,9 +19,6 @@
 @comment-text-color: @text-color;
 @comment-text-transform: initial;
 @comment-text-color-muted: @text-color-muted;
-
-@comment-textarea-border-color: .bg-luma-checker(@border-color, @comment-text-color-muted)[@result];
-@comment-textarea-background-color: .bg-luma-checker(@background-color, @comment-selected-background-color)[@result];
 
 @z-index-comment-overlay: 5;
 @z-index-comment-overlay-text: 10;
@@ -149,17 +146,6 @@
       resize: none;
       white-space: normal;
       width: 100%;
-
-      background-color: @comment-textarea-background-color;
-      border-color: @comment-textarea-border-color;
-
-      &::placeholder {
-        color: @comment-text-color-muted;
-      }
-
-      &:focus {
-        background-color: @comment-textarea-background-color;
-      }
     }
   }
 
