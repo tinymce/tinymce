@@ -38,6 +38,7 @@ export type URLConverterCallback = (url: string, node: Node | string | undefined
 
 export interface ToolbarGroup {
   name?: string;
+  label?: string;
   items: string[];
 }
 

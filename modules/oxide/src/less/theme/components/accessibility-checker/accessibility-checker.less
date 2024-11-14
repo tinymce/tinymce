@@ -1,21 +1,22 @@
 //
 //
 // Accessibility checker
+@accessibility-overlay-opacity: 80%;
 
 @accessibility-issue-info-heading-text-color: contrast(@dialog-background-color, @color-white, @color-tint);
 @accessibility-issue-info-body-text-color: contrast(@dialog-background-color, @color-white, @text-color);
-@accessibility-issue-info-background-color: contrast(@dialog-background-color, fade(darken(@color-tint, 3%), 10%), fade(darken(@color-tint, 3%), 40%));
+@accessibility-issue-info-background-color: mix(@background-color, @color-tint, @accessibility-overlay-opacity);
 
 @accessibility-issue-warn-heading-text-color: contrast(@dialog-background-color, @color-white, darken(#cc8500, 12%));
 @accessibility-issue-warn-body-text-color: contrast(@dialog-background-color, @color-white, @text-color);
-@accessibility-issue-warn-background-color: contrast(@dialog-background-color, fade(orange, 8%), fade(orange, 50%));
+@accessibility-issue-warn-background-color: mix(@background-color, @color-warning, @accessibility-overlay-opacity);
 @accessibility-issue-warn-icon-background-color: #FFE89D;
 @accessibility-issue-warn-icon-hover-background-color: #F2D574;
 @accessibility-issue-warn-icon-active-background-color: #E8C657;
 
 @accessibility-issue-error-heading-text-color: contrast(@dialog-background-color, @color-white, @color-error);
 @accessibility-issue-error-body-text-color: contrast(@dialog-background-color, @color-white, @text-color);
-@accessibility-issue-error-background-color: contrast(@dialog-background-color, fade(@color-error, 10%), fade(@color-error, 50%));
+@accessibility-issue-error-background-color: mix(@background-color, @color-error, @accessibility-overlay-opacity);
 @accessibility-issue-error-icon-background-color: #F2BFBF;
 @accessibility-issue-error-icon-hover-background-color: #E9A4A4;
 @accessibility-issue-error-icon-active-background-color: #EE9494;
@@ -38,11 +39,10 @@
   .accessibility-issue__description {
     align-items: stretch;
     border-radius: @panel-border-radius;
-    display: flex;
     justify-content: space-between;
 
     > div {
-      padding-bottom: @pad-xs;
+      padding-bottom: @pad-md;
 
       > div {
         align-items: center;
@@ -54,6 +54,10 @@
         }
       }
     }
+  }
+
+  .accessibility-issue__contentID {
+    font-weight: @font-weight-bold;
   }
 
   .accessibility-issue__repair {

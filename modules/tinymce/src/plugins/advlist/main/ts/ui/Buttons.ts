@@ -1,4 +1,4 @@
-import { Type } from '@ephox/katamari';
+import { Arr, Obj, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
@@ -36,6 +36,14 @@ const makeSetupHandler = (editor: Editor, nodeName: ListType) => (api: Toolbar.T
 };
 
 const addSplitButton = (editor: Editor, id: string, tooltip: string, cmd: string, nodeName: ListType, styles: string[]): void => {
+  const listStyleTypeAliases: Record<string, string> = {
+    'lower-latin': 'lower-alpha',
+    'upper-latin': 'upper-alpha',
+    'lower-alpha': 'lower-latin',
+    'upper-alpha': 'upper-latin'
+  };
+  const stylesContainsAliasMap = Obj.map(listStyleTypeAliases, (alias) => Arr.contains(styles, alias));
+
   editor.ui.registry.addSplitButton(id, {
     tooltip,
     icon: nodeName === ListType.OrderedList ? 'ordered-list' : 'unordered-list',
@@ -62,7 +70,7 @@ const addSplitButton = (editor: Editor, id: string, tooltip: string, cmd: string
     },
     select: (value) => {
       const listStyleType = ListUtils.getSelectedStyleType(editor);
-      return listStyleType.map((listStyle) => value === listStyle).getOr(false);
+      return listStyleType.exists((listStyle) => value === listStyle || (listStyleTypeAliases[listStyle] === value && !stylesContainsAliasMap[value]));
     },
     onSetup: makeSetupHandler(editor, nodeName)
   });

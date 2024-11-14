@@ -1,65 +1,57 @@
-import { AlloySpec, AlloyTriggers, Behaviour, Disabling, Input, Keying, Memento, SketchSpec } from '@ephox/alloy';
+import { AlloyComponent, AlloySpec, AlloyTriggers, Memento, SketchSpec } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
-import { Id, Optional } from '@ephox/katamari';
+import { Arr, Fun, Id, Optional } from '@ephox/katamari';
 
 import { ToolbarMode } from '../../api/Options';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import * as UiState from '../../UiState';
 import { renderToolbar, ToolbarGroup } from '../toolbar/CommonToolbar';
 import { generate } from './ContextFormButtons';
+import * as ContextFormSizeInput from './ContextFormSizeInput';
+import * as ContextFormSlider from './ContextFormSlider';
+import * as ContextFormTextInput from './ContextFormTextInput';
 
-const buildInitGroups = (ctx: InlineContent.ContextForm, providers: UiFactoryBackstageProviders): ToolbarGroup[] => {
-  // Cannot use the FormField.sketch, because the DOM structure doesn't have a wrapping group
-  const inputAttributes = ctx.label.fold(
-    () => ({ }),
-    (label) => ({ 'aria-label': label })
-  );
+const buildInitGroup = <T>(
+  f: (providers: UiFactoryBackstageProviders, onEnter: (input: AlloyComponent) => Optional<boolean>) => SketchSpec,
+  ctx: InlineContent.BaseContextForm<T>,
+  providers: UiFactoryBackstageProviders
+): ToolbarGroup[] => {
+  const onEnter = (input: AlloyComponent) => {
+    return startCommands.findPrimary(input).orThunk(() => endCommands.findPrimary(input)).map((primary) => {
+      AlloyTriggers.emitExecute(primary);
+      return true;
+    });
+  };
 
-  const memInput = Memento.record(
-    Input.sketch({
-      inputClasses: [ 'tox-toolbar-textfield', 'tox-toolbar-nav-js' ],
-      data: ctx.initValue(),
-      inputAttributes,
-      selectOnFocus: true,
-      inputBehaviours: Behaviour.derive([
-        Disabling.config({
-          disabled: () => providers.checkUiComponentContext('mode:design').shouldDisable
-        }),
-        UiState.toggleOnReceive(() => providers.checkUiComponentContext('mode:design')),
-        Keying.config({
-          mode: 'special',
-          onEnter: (input) => commands.findPrimary(input).map((primary) => {
-            AlloyTriggers.emitExecute(primary);
-            return true;
-          }),
-          // These two lines need to be tested. They are about left and right bypassing
-          // any keyboard handling, and allowing left and right to be processed by the input
-          // Maybe this should go in an alloy sketch for Input?
-          onLeft: (comp, se) => {
-            se.cut();
-            return Optional.none();
-          },
-          onRight: (comp, se) => {
-            se.cut();
-            return Optional.none();
-          }
-        })
-      ])
-    })
-  );
+  const memInput = Memento.record(f(providers, onEnter));
+  const commandParts = Arr.partition(ctx.commands, (command) => command.align === 'start');
+  const startCommands = generate(memInput, commandParts.pass, providers);
+  const endCommands = generate(memInput, commandParts.fail, providers);
 
-  const commands = generate(memInput, ctx.commands, providers);
-
-  return [
+  return Arr.filter([
     {
       title: Optional.none(),
+      label: Optional.none(),
+      items: startCommands.asSpecs() as AlloySpec[]
+    },
+    {
+      title: Optional.none(),
+      label: Optional.none(),
       items: [ memInput.asSpec() ]
     },
     {
       title: Optional.none(),
-      items: commands.asSpecs() as AlloySpec[]
+      label: Optional.none(),
+      items: endCommands.asSpecs() as AlloySpec[]
     }
-  ];
+  ], (group) => group.items.length > 0);
+};
+
+const buildInitGroups = (ctx: InlineContent.ContextForm, providers: UiFactoryBackstageProviders): ToolbarGroup[] => {
+  switch (ctx.type) {
+    case 'contextform': return buildInitGroup(Fun.curry(ContextFormTextInput.renderContextFormTextInput, ctx), ctx, providers);
+    case 'contextsliderform': return buildInitGroup(Fun.curry(ContextFormSlider.renderContextFormSliderInput, ctx), ctx, providers);
+    case 'contextsizeinputform': return buildInitGroup(Fun.curry(ContextFormSizeInput.renderContextFormSizeInput, ctx), ctx, providers);
+  }
 };
 
 const renderContextForm = (toolbarType: ToolbarMode, ctx: InlineContent.ContextForm, providers: UiFactoryBackstageProviders): SketchSpec =>

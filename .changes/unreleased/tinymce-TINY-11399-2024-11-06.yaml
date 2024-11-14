@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: 'New `QuickbarInsertImage` command that is executed by the `quickimage` button.'
+time: 2024-11-06T12:59:22.765861016+01:00
+custom:
+  Issue: TINY-11399
