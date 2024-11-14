@@ -664,4 +664,110 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
     );
     assertEvents();
   });
+
+  it('TINY-11383: Changing row type from body to header on an indexed table should work', async () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<table style="border-collapse: collapse; width: 100%;" border="1" data-snooker-col-series="numeric" data-snooker-locked-cols="0">' +
+      '<colgroup>' +
+      '<col style="width: 10%;"><' +
+      'col style="width: 90%;">' +
+      '</colgroup>' +
+      '<tbody>' +
+      '<tr>' +
+      '<td contenteditable="false" data-mce-selected="1">1</td>' +
+      '<td>&nbsp;</td>' +
+      '</tr>' +
+      '<tr>' +
+      '<td contenteditable="false">2</td>' +
+      '<td>&nbsp;</td>' +
+      '</tr>' +
+      '</tbody>' +
+      '</table>'
+    );
+    await TableTestUtils.pOpenTableDialog(editor);
+    TableTestUtils.assertDialogValues({
+      type: 'body',
+    }, true, generalSelectors);
+
+    TableTestUtils.setDialogValues({
+      type: 'header',
+    }, true, generalSelectors);
+    await TableTestUtils.pClickDialogButton(editor, true);
+
+    TinyAssertions.assertContent(editor,
+      '<table style="width: 100%; border-collapse: collapse;" border="1" data-snooker-col-series="numeric" data-snooker-locked-cols="0">' +
+      '<colgroup>' +
+      '<col style="width: 10%;">' +
+      '<col style="width: 90%;">' +
+      '</colgroup>' +
+      '<thead>' +
+      '<tr>' +
+      '<td contenteditable="false">1</td>' +
+      '<td>&nbsp;</td>' +
+      '</tr>' +
+      '</thead>' +
+      '<tbody>' +
+      '<tr>' +
+      '<td contenteditable="false">2</td>' +
+      '<td>&nbsp;</td>' +
+      '</tr>' +
+      '</tbody>' +
+      '</table>'
+    );
+    assertEvents([{ type: 'tablemodified', structure: true, style: false }]);
+  });
+
+  it('TINY-11383: Changing row type from heander to body on an indexed table should work', async () => {
+    const editor = hook.editor();
+    editor.setContent(
+      '<table style="width: 100%; border-collapse: collapse;" border="1" data-snooker-col-series="numeric" data-snooker-locked-cols="0">' +
+      '<colgroup>' +
+      '<col style="width: 10%;">' +
+      '<col style="width: 90%;">' +
+      '</colgroup>' +
+      '<thead>' +
+      '<tr>' +
+      '<td contenteditable="false" data-mce-selected="1">1</td>' +
+      '<td>&nbsp;</td>' +
+      '</tr>' +
+      '</thead>' +
+      '<tbody>' +
+      '<tr>' +
+      '<td contenteditable="false">2</td>' +
+      '<td>&nbsp;</td>' +
+      '</tr>' +
+      '</tbody>' +
+      '</table>'
+    );
+    await TableTestUtils.pOpenTableDialog(editor);
+    TableTestUtils.assertDialogValues({
+      type: 'header',
+    }, true, generalSelectors);
+
+    TableTestUtils.setDialogValues({
+      type: 'body',
+    }, true, generalSelectors);
+    await TableTestUtils.pClickDialogButton(editor, true);
+
+    TinyAssertions.assertContent(editor,
+      '<table style="width: 100%; border-collapse: collapse;" border="1" data-snooker-col-series="numeric" data-snooker-locked-cols="0">' +
+      '<colgroup>' +
+      '<col style="width: 10%;">' +
+      '<col style="width: 90%;">' +
+      '</colgroup>' +
+      '<tbody>' +
+      '<tr>' +
+      '<td contenteditable="false">1</td>' +
+      '<td>&nbsp;</td>' +
+      '</tr>' +
+      '<tr>' +
+      '<td contenteditable="false">2</td>' +
+      '<td>&nbsp;</td>' +
+      '</tr>' +
+      '</tbody>' +
+      '</table>'
+    );
+    assertEvents([{ type: 'tablemodified', structure: true, style: false }]);
+  });
 });

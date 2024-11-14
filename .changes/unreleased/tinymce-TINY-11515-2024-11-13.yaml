@@ -1,0 +1,7 @@
+project: tinymce
+kind: Improved
+body: The `latin` list style type is now recognised as an alias for the `alpha` list
+  style type.
+time: 2024-11-13T14:21:15.061226667+10:00
+custom:
+  Issue: TINY-11515
