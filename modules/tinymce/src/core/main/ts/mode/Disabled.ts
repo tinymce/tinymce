@@ -1,5 +1,5 @@
 import { Arr, Optional, Strings } from '@ephox/katamari';
-import { Attribute, Compare, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Attribute, Compare, ContentEditable, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import VK from '../api/util/VK';
@@ -9,21 +9,17 @@ const isDisabled = (editor: Editor): boolean => editor.disabled;
 
 const internalContentEditableAttr = 'data-mce-contenteditable';
 
-const setContentEditable = (elm: SugarElement<HTMLElement>, state: boolean) => {
-  elm.dom.contentEditable = state ? 'true' : 'false';
-};
-
 const switchOffContentEditableTrue = (elm: SugarElement<Node>) => {
   Arr.each(SelectorFilter.descendants<HTMLElement>(elm, '*[contenteditable="true"]'), (elm) => {
     Attribute.set(elm, internalContentEditableAttr, 'true');
-    setContentEditable(elm, false);
+    ContentEditable.set(elm, false);
   });
 };
 
 const switchOnContentEditableTrue = (elm: SugarElement<Node>) => {
   Arr.each(SelectorFilter.descendants<HTMLElement>(elm, `*[${internalContentEditableAttr}="true"]`), (elm) => {
     Attribute.remove(elm, internalContentEditableAttr);
-    setContentEditable(elm, true);
+    ContentEditable.set(elm, true);
   });
 };
 
@@ -33,7 +29,7 @@ const toggleDisabled = (editor: Editor, state: boolean): void => {
   if (state) {
     editor.disabled = true;
     ModeUtils.disableEditor(editor);
-    setContentEditable(body, false);
+    ContentEditable.set(body, false);
     switchOffContentEditableTrue(body);
   } else {
     editor.disabled = false;
