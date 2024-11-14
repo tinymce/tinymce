@@ -1,5 +1,6 @@
 import { Cell, Fun } from '@ephox/katamari';
 
+import { registerEventsAndFilters } from '../mode/Disabled';
 import { registerMode, setMode } from '../mode/Mode';
 import { isReadOnly, registerReadOnlyInputBlockers } from '../mode/Readonly';
 import Editor from './Editor';
@@ -84,6 +85,7 @@ export const create = (editor: Editor): EditorMode => {
   });
 
   registerReadOnlyInputBlockers(editor);
+  registerEventsAndFilters(editor);
 
   return {
     isReadOnly: () => isReadOnly(editor),

@@ -1,5 +1,5 @@
 import { Optional } from '@ephox/katamari';
-import { Class, SugarElement } from '@ephox/sugar';
+import { Class, ContentEditable, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import * as EditorFocus from '../focus/EditorFocus';
@@ -24,10 +24,6 @@ const setCommonEditorCommands = (editor: Editor, state: boolean): void => {
   setEditorCommandState(editor, 'StyleWithCSS', state);
   setEditorCommandState(editor, 'enableInlineTableEditing', state);
   setEditorCommandState(editor, 'enableObjectResizing', state);
-};
-
-const setContentEditable = (elm: SugarElement<HTMLElement>, state: boolean) => {
-  elm.dom.contentEditable = state ? 'true' : 'false';
 };
 
 const restoreFakeSelection = (editor: Editor) => {
@@ -56,7 +52,7 @@ const enableEditor = (editor: Editor): void => {
   toggleClass(body, 'mce-content-readonly', false);
 
   if (editor.hasEditableRoot()) {
-    setContentEditable(body, true);
+    ContentEditable.set(body, true);
   }
   setCommonEditorCommands(editor, false);
   if (EditorFocus.hasEditorOrUiFocus(editor)) {

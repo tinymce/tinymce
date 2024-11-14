@@ -7,7 +7,9 @@ import { PlatformDetection } from '@ephox/sand';
 import { Class, Compare, Css, Focus, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { DisabledStateChangeEvent } from 'tinymce/core/api/EventTypes';
 import Delay from 'tinymce/core/api/util/Delay';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import { getToolbarMode, ToolbarMode } from '../../api/Options';
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -274,8 +276,14 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
       }, 0);
     });
 
-    editor.on('SwitchMode DisabledStateChange', () => {
-      if (editor.mode.isReadOnly() || editor.disabled) {
+    editor.on('SwitchMode', () => {
+      if (editor.mode.isReadOnly()) {
+        close();
+      }
+    });
+
+    editor.on('DisabledStateChange', (e: EditorEvent<DisabledStateChangeEvent>) => {
+      if (e.state) {
         close();
       }
     });

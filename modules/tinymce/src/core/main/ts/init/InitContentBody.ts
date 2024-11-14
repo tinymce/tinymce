@@ -267,7 +267,6 @@ const initEditor = (editor: Editor) => {
     initInstanceCallback.call(editor, editor);
   }
   autoFocus(editor);
-  Disabled.registerEventsAndFilters(editor);
 };
 
 const getStyleSheetLoader = (editor: Editor): StyleSheetLoader =>

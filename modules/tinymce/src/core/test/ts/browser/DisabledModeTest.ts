@@ -91,7 +91,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       Assert.eq('href options match', expectedHref, hrefOpt, tOptional());
     };
 
-    it('TBA: Switching to disabled mode while having cef selection should remove fake selection', () => {
+    it('TINY-11488: Switching to disabled mode while having cef selection should remove fake selection', () => {
       const editor = hook.editor();
       editor.setContent('<div contenteditable="false">CEF</div>');
       TinySelections.select(editor, 'div[contenteditable="false"]', []);
@@ -102,7 +102,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       assertFakeSelection(editor, true);
     });
 
-    it('TBA: Selecting cef element while in disabled mode should not add fake selection', () => {
+    it('TINY-11488: Selecting cef element while in disabled mode should not add fake selection', () => {
       const editor = hook.editor();
       editor.setContent('<div contenteditable="false">CEF</div>');
       TinySelections.select(editor, 'div[contenteditable="false"]', []);
@@ -115,7 +115,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       assertFakeSelection(editor, true);
     });
 
-    it('TBA: Setting caret before cef in editor while in disabled mode should not render fake caret', () => {
+    it('TINY-11488: Setting caret before cef in editor while in disabled mode should not render fake caret', () => {
       const editor = hook.editor();
       editor.setContent('<div contenteditable="false">CEF</div>');
       editor.options.set('disabled', true);
@@ -170,7 +170,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       );
     });
 
-    it('TBA: Switching to disabled mode on content with nested contenteditable=true should toggle them to contenteditable=false', async () => {
+    it('TINY-11488: Switching to disabled mode on content with nested contenteditable=true should toggle them to contenteditable=false', async () => {
       const editor = hook.editor();
       editor.setContent('<div contenteditable="false">a<span contenteditable="true">b</span>c</div>');
       TinySelections.select(editor, 'div[contenteditable="false"]', []);
@@ -184,7 +184,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       assertNestedContentEditableTrueDisabled(editor, false, true);
     });
 
-    it('TBA: Setting contents with contenteditable=true should switch them to contenteditable=false while in disabled mode', () => {
+    it('TINY-11488: Setting contents with contenteditable=true should switch them to contenteditable=false while in disabled mode', () => {
       const editor = hook.editor();
       editor.options.set('disabled', true);
       editor.setContent('<div contenteditable="false">a<span contenteditable="true">b</span>c</div>');
@@ -199,7 +199,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       assertNestedContentEditableTrueDisabled(editor, false, true);
     });
 
-    it('TBA: Resize bars for tables should be hidden while in disabled mode', async () => {
+    it('TINY-11488: Resize bars for tables should be hidden while in disabled mode', async () => {
       const editor = hook.editor();
       editor.setContent('<table><tbody><tr><td>a</td></tr></tbody></table>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
@@ -214,7 +214,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       assertResizeBars(editor, true);
     });
 
-    it('TBA: Context toolbar should be hidden in disabled mode', async () => {
+    it('TINY-11488: Context toolbar should be hidden in disabled mode', async () => {
       const editor = hook.editor();
       editor.focus();
       editor.setContent('<table><tbody><tr><td>a</td></tr></tbody></table>');
@@ -228,7 +228,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       UiFinder.sWaitFor('Waited for context toolbar', SugarBody.body(), '.tox-pop');
     });
 
-    it('TBA: Main toolbar should be disabled when switching to disabled mode', () => {
+    it('TINY-11488: Main toolbar should be disabled when switching to disabled mode', () => {
       const editor = hook.editor();
       assertToolbarDisabled(false);
       editor.options.set('disabled', true);
@@ -237,7 +237,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       assertToolbarDisabled(false);
     });
 
-    it('TBA: Menus should close when switching to readonly mode', async () => {
+    it('TINY-11488: Menus should close when switching to disabled mode', async () => {
       const editor = hook.editor();
       const fileMenu = UiFinder.findIn(SugarBody.body(), '.tox-mbtn:contains("File")').getOrDie();
       Mouse.click(fileMenu);
@@ -247,7 +247,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       editor.options.set('disabled', false);
     });
 
-    it('TINY-6248: getAnchorHrefOpt should return an Optional of the href of the closest anchor tag', () => {
+    it('TINY-11488: getAnchorHrefOpt should return an Optional of the href of the closest anchor tag', () => {
       const editor = hook.editor();
       editor.setContent('<p><a href="https://tiny.cloud">external link</a></p>');
       assertHrefOpt(editor, 'a', Optional.some('https://tiny.cloud'));
@@ -257,7 +257,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       assertHrefOpt(editor, 'img', Optional.some('https://tiny.cloud'));
     });
 
-    it('TINY-6248: processReadonlyEvents should scroll to bookmark with id in disabled mode', () => {
+    it('TINY-11488: processReadonlyEvents should scroll to bookmark with id in disabled mode', () => {
       const editor = hook.editor();
       editor.resetContent();
       editor.options.set('disabled', true);
@@ -273,7 +273,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       editor.options.set('disabled', false);
     });
 
-    it('TINY-6800: Copy events should be dispatched even in disabled mode', () => {
+    it('TINY-11488: Copy events should be dispatched even in disabled mode', () => {
       const editor = hook.editor();
       editor.options.set('disabled', true);
 
@@ -287,7 +287,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       editor.options.set('disabled', false);
     });
 
-    it('TINY-6248: processReadonlyEvents should scroll to bookmark with name in disabled mode', async () => {
+    it('TINY-11488: processReadonlyEvents should scroll to bookmark with name in disabled mode', async () => {
       const editor = hook.editor();
       const body = TinyDom.body(editor);
       const doc = TinyDom.document(editor);

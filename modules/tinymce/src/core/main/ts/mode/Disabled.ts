@@ -77,7 +77,7 @@ const isClickEvent = (e: Event): e is MouseEvent => e.type === 'click';
 
 const allowedEvents: ReadonlyArray<string> = [ 'copy' ];
 
-const isDisabledAllowedEvent = (e: Event) => Arr.contains(allowedEvents, e.type);
+const isAllowedEventInDisabledMode = (e: Event) => Arr.contains(allowedEvents, e.type);
 
 const getAnchorHrefOpt = (editor: Editor, elm: SugarElement<Node>): Optional<string> => {
   const isRoot = (elm: SugarElement<Node>) => Compare.eq(elm, SugarElement.fromDom(editor.getBody()));
@@ -104,7 +104,7 @@ const processDisabledEvents = (editor: Editor, e: Event): void => {
         window.open(href, '_blank', 'rel=noopener noreferrer,menubar=yes,toolbar=yes,location=yes,status=yes,resizable=yes,scrollbars=yes');
       }
     });
-  } else if (isDisabledAllowedEvent(e)) {
+  } else if (isAllowedEventInDisabledMode(e)) {
     editor.dispatch(e.type, e);
   }
 };
@@ -127,7 +127,7 @@ const registerDisabledModeEventHandlers = (editor: Editor): void => {
     if (!e.isDefaultPrevented()) {
       toggleDisabled(editor, e.state);
     }
-  }, true);
+  });
 };
 
 const registerEventsAndFilters = (editor: Editor): void => {
