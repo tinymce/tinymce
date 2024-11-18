@@ -7,6 +7,7 @@ import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
 import { fireDisabledStateChange } from './Events';
 import { EditorOptions } from './OptionTypes';
+import Delay from './util/Delay';
 import I18n from './util/I18n';
 import Tools from './util/Tools';
 
@@ -441,8 +442,10 @@ const register = (editor: Editor): void => {
   registerOption('disabled', {
     processor: (value) => {
       if (Type.isBoolean(value)) {
-        if (editor.disabled !== value) {
-          fireDisabledStateChange(editor, value);
+        if (editor.initialized && isDisabled(editor) !== value) {
+          Promise.resolve().then(() => {
+            fireDisabledStateChange(editor, value);
+          });
         }
         return { valid: true, value };
       }

@@ -6,6 +6,7 @@ import { Focus, SugarElement, Traverse } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
+import * as Options from '../../../api/Options';
 import { renderIconFromPack } from '../../button/ButtonSlices';
 import { onControlAttached, onControlDetached } from '../../controls/Controls';
 import { updateMenuText, UpdateMenuTextEvent } from '../../dropdown/CommonDropdown';
@@ -26,7 +27,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
     const comp = api.getComponent();
     currentComp = Optional.some(comp);
     spec.updateInputValue(comp);
-    Disabling.set(comp, !editor.selection.isEditable() || editor.disabled);
+    Disabling.set(comp, !editor.selection.isEditable() || Options.isDisabled(editor));
   });
 
   const getApi = (comp: AlloyComponent): BespokeSelectApi => ({ getComponent: Fun.constant(comp) });
@@ -76,7 +77,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
     const translatedTooltip = backstage.shared.providers.translate(tooltip);
     const altExecuting = Id.generate('altExecuting');
     const onSetup = onSetupEvent(editor, 'NodeChange SwitchMode DisabledStateChange', (api: BespokeSelectApi) => {
-      Disabling.set(api.getComponent(), !editor.selection.isEditable() || editor.disabled);
+      Disabling.set(api.getComponent(), !editor.selection.isEditable() || Options.isDisabled(editor));
     });
 
     const onClick = (comp: AlloyComponent) => {

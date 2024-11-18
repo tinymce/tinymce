@@ -2,10 +2,11 @@ import { Arr, Optional, Strings } from '@ephox/katamari';
 import { Attribute, Compare, ContentEditable, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
+import * as Options from '../api/Options';
 import VK from '../api/util/VK';
 import * as ModeUtils from '../util/ModeUtils';
 
-const isDisabled = (editor: Editor): boolean => editor.disabled;
+const isDisabled = (editor: Editor): boolean => Options.isDisabled(editor);
 
 const internalContentEditableAttr = 'data-mce-contenteditable';
 
@@ -27,12 +28,10 @@ const toggleDisabled = (editor: Editor, state: boolean): void => {
   const body = SugarElement.fromDom(editor.getBody());
 
   if (state) {
-    editor.disabled = true;
     ModeUtils.disableEditor(editor);
     ContentEditable.set(body, false);
     switchOffContentEditableTrue(body);
   } else {
-    editor.disabled = false;
     switchOnContentEditableTrue(body);
     ModeUtils.enableEditor(editor);
   }

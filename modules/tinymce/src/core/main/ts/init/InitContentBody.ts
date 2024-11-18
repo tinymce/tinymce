@@ -254,7 +254,7 @@ const moveSelectionToFirstCaretPosition = (editor: Editor) => {
 
 const initEditor = (editor: Editor) => {
   editor.bindPendingEventDelegates();
-  if (editor.disabled) {
+  if (Disabled.isDisabled(editor)) {
     Disabled.toggleDisabled(editor, true);
   }
   editor.initialized = true;
@@ -424,10 +424,9 @@ const contentBodyLoaded = (editor: Editor): void => {
   // TODO: See if we actually need to disable/re-enable here
   (body as any).disabled = true;
   editor.readonly = Options.isReadOnly(editor);
-  editor.disabled = Options.isDisabled(editor);
   editor._editableRoot = Options.hasEditableRoot(editor);
 
-  if (!editor.disabled && editor.hasEditableRoot()) {
+  if (!Options.isDisabled(editor) && editor.hasEditableRoot()) {
     if (editor.inline && DOM.getStyle(body, 'position', true) === 'static') {
       body.style.position = 'relative';
     }

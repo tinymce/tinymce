@@ -206,7 +206,6 @@ class Editor implements EditorObservable {
   public contentAreaContainer!: HTMLElement;
   public contentDocument!: Document;
   public contentWindow!: Window;
-  public disabled: boolean = false;
   public delegates: Record<string, EventUtilsCallback<any>> | undefined;
   public destroyed: boolean = false;
   public dom!: DOMUtils;
