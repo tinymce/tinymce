@@ -15,6 +15,7 @@ interface ProcessorError {
 
 type SimpleProcessor = (value: unknown) => boolean;
 type Processor<T> = (value: unknown) => ProcessorSuccess<T> | ProcessorError;
+type PostProcessor<T> = (value: T) => void;
 
 export interface BuiltInOptionTypeMap {
   'string': string;
@@ -39,16 +40,19 @@ interface BaseOptionSpec {
 export interface BuiltInOptionSpec<K extends BuiltInOptionType> extends BaseOptionSpec {
   processor: K;
   default?: BuiltInOptionTypeMap[K];
+  postProcess?: PostProcessor<K>;
 }
 
 export interface SimpleOptionSpec<T> extends BaseOptionSpec {
   processor: SimpleProcessor;
   default?: T;
+  postProcess?: PostProcessor<T>;
 }
 
 export interface OptionSpec<T, U> extends BaseOptionSpec {
   processor: Processor<U>;
   default?: T;
+  postProcess?: PostProcessor<U>;
 }
 
 /**
@@ -235,10 +239,27 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>, rawInit
   const registry: Record<string, OptionSpec<any, any>> = {};
   const values: Record<string, any> = {};
 
+  const runPostProcessor = <T>(name: string, value: T) => {
+    const spec = registry[name];
+    if (!isBuiltInSpec(spec) && Type.isNonNullable(spec.postProcess)) {
+      try {
+        spec.postProcess(value);
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(`Error in post-processor for option "${name}":`, error);
+      }
+    }
+  };
+
   const setValue = <T, U>(name: string, value: T, processor: SimpleProcessor | Processor<U>): boolean => {
     const result = processValue(value, processor);
     if (isValidResult(result)) {
+      const oldValue = values[name];
       values[name] = result.value;
+
+      if (oldValue !== result.value) {
+        runPostProcessor(name, result.value);
+      }
       return true;
     } else {
       // eslint-disable-next-line no-console
@@ -257,7 +278,8 @@ const create = (editor: Editor, initialOptions: Record<string, unknown>, rawInit
     registry[name] = {
       ...spec,
       default: defaultValue,
-      processor
+      processor,
+      postProcess: spec.postProcess
     };
 
     // Setup the initial values

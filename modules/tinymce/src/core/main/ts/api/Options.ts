@@ -440,17 +440,12 @@ const register = (editor: Editor): void => {
 
   registerOption('disabled', {
     processor: (value) => {
-      if (Type.isBoolean(value)) {
-        if (editor.initialized && isDisabled(editor) !== value) {
-          // Schedules the callback to run in the next microtask queue once the option is updated
-          Promise.resolve().then(() => {
-            fireDisabledStateChange(editor, value);
-          });
-        }
-        return { valid: true, value };
+      return Type.isBoolean(value) ? { valid: true, value } : { valid: false, message: 'The value must be a boolean.' };
+    },
+    postProcess: (value: unknown) => {
+      if (editor.initialized && Type.isBoolean(value)) {
+        fireDisabledStateChange(editor, value);
       }
-
-      return { valid: false, message: 'The value must be a boolean.' };
     },
     default: false
   });
