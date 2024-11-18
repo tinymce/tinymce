@@ -469,7 +469,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       toolbar: Arr.map(allButtons, (button) => button.name).join(' '),
     }, []);
 
-    // afterEach(() => hook.editor().options.set('disabled', true));
+    afterEach(() => hook.editor().options.set('disabled', true));
 
     it('TINY-11488: Toolbar buttons should reflect the editor disabled state in readonly', async () => {
       const editor = hook.editor();

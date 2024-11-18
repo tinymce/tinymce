@@ -7,7 +7,6 @@ import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
 import { fireDisabledStateChange } from './Events';
 import { EditorOptions } from './OptionTypes';
-import Delay from './util/Delay';
 import I18n from './util/I18n';
 import Tools from './util/Tools';
 
@@ -443,6 +442,7 @@ const register = (editor: Editor): void => {
     processor: (value) => {
       if (Type.isBoolean(value)) {
         if (editor.initialized && isDisabled(editor) !== value) {
+          // Schedules the callback to run in the next microtask queue once the option is updated
           Promise.resolve().then(() => {
             fireDisabledStateChange(editor, value);
           });
