@@ -52,7 +52,11 @@ export const renderContextFormSliderInput = (
         }
       }),
       AddEventsBehaviour.config('slider-events', [
-        onControlAttached<InlineContent.ContextFormInstanceApi<number>>({ onSetup: ctx.onSetup, getApi: ContextFormApi.getFormApi }, editorOffCell),
+        onControlAttached<InlineContent.ContextFormInstanceApi<number>>({
+          onSetup: ctx.onSetup,
+          getApi: ContextFormApi.getFormApi,
+          onBeforeSetup: Keying.focusIn
+        }, editorOffCell),
         onControlDetached({ getApi: ContextFormApi.getFormApi }, editorOffCell),
         AlloyEvents.run(NativeEvents.input(), (comp) => {
           ctx.onInput(ContextFormApi.getFormApi(comp));

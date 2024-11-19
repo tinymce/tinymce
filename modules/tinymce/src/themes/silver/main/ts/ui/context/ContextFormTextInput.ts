@@ -53,7 +53,11 @@ export const renderContextFormTextInput = (
         }
       }),
       AddEventsBehaviour.config('input-events', [
-        onControlAttached<InlineContent.ContextFormInstanceApi<string>>({ onSetup: ctx.onSetup, getApi: ContextFormApi.getFormApi }, editorOffCell),
+        onControlAttached<InlineContent.ContextFormInstanceApi<string>>({
+          onSetup: ctx.onSetup,
+          getApi: ContextFormApi.getFormApi,
+          onBeforeSetup: Keying.focusIn
+        }, editorOffCell),
         onControlDetached({ getApi: ContextFormApi.getFormApi }, editorOffCell),
         AlloyEvents.run(NativeEvents.input(), (comp) => {
           ctx.onInput(ContextFormApi.getFormApi(comp));
