@@ -38,7 +38,6 @@ export const getFormApi = <T>(input: AlloyComponent): InlineContent.ContextFormI
       }
 
       AlloyTriggers.emit(input, backSlideEvent);
-      AlloyTriggers.emit(input, SystemEvents.sandboxClose());
     },
     getValue: () => {
       return valueState.get().getOrThunk(() => Representing.getValue(input));
