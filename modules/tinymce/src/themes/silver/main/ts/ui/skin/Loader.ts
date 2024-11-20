@@ -1,4 +1,4 @@
-import { Fun, Type } from '@ephox/katamari';
+import { Fun, Obj, Optional, Optionals, Type } from '@ephox/katamari';
 import { SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -10,6 +10,24 @@ declare let tinymce: TinyMCE;
 
 import * as Options from '../../api/Options';
 import * as SkinLoaded from './SkinLoaded';
+
+const getSkinResourceIdentifier = (editor: Editor): Optional<string> => {
+  const oxideUiSkinMap: Record<string, string> = {
+    'oxide-dark': 'dark',
+    'oxide': 'default',
+    'tinymce-5': 'tinymce-5',
+    'tinymce-5-dark': 'tinymce-5-dark'
+  };
+
+  const skin = Options.getSkin(editor);
+  if (skin === false) {
+    return Optional.none();
+  } else if (skin === true || Type.isNullable(skin)) {
+    return Obj.get(oxideUiSkinMap, 'oxide');
+  } else {
+    return Obj.get(oxideUiSkinMap, skin).or(Optional.from(skin));
+  }
+};
 
 const loadStylesheet = (editor: Editor, stylesheetUrl: string, styleSheetLoader: StyleSheetLoader): Promise<void> => {
   // Ensure the stylesheet is cleaned up when the editor is destroyed
@@ -23,57 +41,96 @@ const loadRawCss = (editor: Editor, key: string, css: string, styleSheetLoader: 
   return styleSheetLoader.loadRawCss(key, css);
 };
 
-const loadUiSkins = async (editor: Editor, skinUrl: string): Promise<void> => {
-  const skinResourceIdentifier = Options.getSkinUrlOption(editor).getOr('default');
-  const skinUiCss = 'ui/' + skinResourceIdentifier + '/skin.css';
-  const css = tinymce.Resource.get(skinUiCss);
-  if (Type.isString(css)) {
-    loadRawCss(editor, skinUiCss, css, editor.ui.styleSheetLoader);
-  } else {
+const skinIdentifierToResourceKey = (identifier: string, filename: string): string =>
+  'ui/' + identifier + '/' + filename;
+
+const getResourceValue = (resourceKey: string): Optional<string> =>
+  Optional.from(tinymce.Resource.get(resourceKey)).filter(Type.isString);
+
+const loadCSS = (
+  editor: Editor,
+  filenameBase: string,
+  onLoadRaw: (key: string, css: string) => Promise<void>,
+  onLoadStyleSheet: (styleSheetUrl: string) => Promise<void>,
+  skinUrl: string = ''
+) => {
+  const resourceKey = getSkinResourceIdentifier(editor)
+    .map((identifier) => skinIdentifierToResourceKey(identifier, `${filenameBase}.css`));
+  const resourceValue = resourceKey.bind(getResourceValue);
+
+  return Optionals.lift2(resourceKey, resourceValue, (key, css) => {
+    return onLoadRaw(key, css);
+  }).getOrThunk(() => {
     const suffix = editor.editorManager.suffix;
-    const skinUiCss = skinUrl + `/skin${suffix}.css`;
-    return loadStylesheet(editor, skinUiCss, editor.ui.styleSheetLoader);
-  }
+    const skinUiCssUrl = skinUrl + `/${filenameBase}${suffix}.css`;
+    return onLoadStyleSheet(skinUiCssUrl);
+  });
 };
 
-const loadShadowDomUiSkins = async (editor: Editor, skinUrl: string): Promise<void> => {
+const loadUiSkins = (editor: Editor, skinUrl: string): Promise<void> =>
+  loadCSS(
+    editor,
+    'skin',
+    (key, css) => {
+      loadRawCss(editor, key, css, editor.ui.styleSheetLoader);
+      return Promise.resolve();
+    },
+    (url) => {
+      return loadStylesheet(editor, url, editor.ui.styleSheetLoader);
+    },
+    skinUrl
+  );
+
+const loadShadowDomUiSkins = (editor: Editor, skinUrl: string): Promise<void> => {
   const isInShadowRoot = SugarShadowDom.isInShadowRoot(SugarElement.fromDom(editor.getElement()));
-  if (isInShadowRoot) {
+  if (!isInShadowRoot) {
+    return Promise.resolve();
+  } else {
+    return loadCSS(
+      editor,
+      'skin.shadowdom',
+      (key, css) => {
+        loadRawCss(editor, key, css, DOMUtils.DOM.styleSheetLoader);
+        return Promise.resolve();
+      },
+      (url) => {
+        return loadStylesheet(editor, url, DOMUtils.DOM.styleSheetLoader);
+      },
+      skinUrl
+    );
 
-    const skinResourceIdentifier = Options.getSkinUrlOption(editor).getOr('default');
-
-    const shadowDomSkinCss = 'ui/' + skinResourceIdentifier + '/skin.shadowdom.css';
-    const css = tinymce.Resource.get(shadowDomSkinCss);
-
-    if (Type.isString(css)) {
-      loadRawCss(editor, shadowDomSkinCss, css, DOMUtils.DOM.styleSheetLoader);
-    } else {
-      const suffix = editor.editorManager.suffix;
-      const shadowDomSkinCss = skinUrl + `/skin.shadowdom${suffix}.css`;
-      return loadStylesheet(editor, shadowDomSkinCss, DOMUtils.DOM.styleSheetLoader);
-    }
   }
 };
+
+const loadUiContentCSS = (editor: Editor, isInline: boolean, skinUrl?: string): Promise<void> =>
+  loadCSS(
+    editor,
+    isInline ? 'content.inline' : 'content',
+    (key, css) => {
+      if (isInline) {
+        loadRawCss(editor, key, css, editor.ui.styleSheetLoader);
+      } else {
+        // Need to wait until the iframe is in the DOM before trying to load
+        // the style into the iframe document
+        editor.on('PostRender', () => {
+          loadRawCss(editor, key, css, editor.dom.styleSheetLoader);
+        });
+      }
+      return Promise.resolve();
+    },
+    (url) => {
+      if (skinUrl) {
+        editor.contentCSS.push(url);
+      }
+      return Promise.resolve();
+    },
+    skinUrl
+  );
 
 const loadUrlSkin = async (isInline: boolean, editor: Editor): Promise<void> => {
-  const unbundled = () => {
-    const skinResourceIdentifier = Options.getSkinUrl(editor);
-    const suffix = editor.editorManager.suffix;
-    if (skinResourceIdentifier) {
-      editor.contentCSS.push(skinResourceIdentifier + (isInline ? '/content.inline' : '/content') + `${suffix}.css`);
-    }
-  };
-  Options.getSkinUrlOption(editor).fold(unbundled, (skinUrl) => {
-    const skinContentCss = 'ui/' + skinUrl + (isInline ? '/content.inline' : '/content') + '.css';
-    const css = tinymce.Resource.get(skinContentCss);
-    if (Type.isString(css)) {
-      loadRawCss(editor, skinContentCss, css, editor.ui.styleSheetLoader);
-    } else {
-      unbundled();
-    }
-  });
-
   const skinUrl = Options.getSkinUrl(editor);
+
+  await loadUiContentCSS(editor, isInline, skinUrl);
 
   // In Modern Inline, this is explicitly called in editor.on('focus', ...) as well as in render().
   // Seems to work without, but adding a note in case things break later
