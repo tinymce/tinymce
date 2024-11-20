@@ -67,7 +67,7 @@ describe('browser.tinymce.plugins.link.UpdateLinkTest', () => {
     });
   });
 
-  it('TBA: should not touch cursor when updating link', async () => {
+  it('TBA: should move cursor behind updated link', async () => {
     const editor = hook.editor();
     editor.setContent('<p><a href="http://tinymce.com">tiny</a></p>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 2); // ti|ny

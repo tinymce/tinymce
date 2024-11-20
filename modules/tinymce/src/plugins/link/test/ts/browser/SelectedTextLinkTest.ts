@@ -40,14 +40,14 @@ describe('browser.tinymce.plugins.link.SelectedTextLinkTest', () => {
     existence(SugarBody.body(), '.tox-label:contains("Text to display")');
   };
 
-  it('TBA: inserting new link should move selection into the new link', async () => {
+  it('TBA: inserting new link should move cursor behind the new link', async () => {
     const editor = hook.editor();
     editor.setContent('<p>word</p>');
-    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1); // <p>[word]</p>
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 4); // <p>[word]</p>
     await pOpenDialog(editor);
     FocusTools.setActiveValue(doc, 'http://something');
     await TestLinkUi.pClickSave(editor);
-    TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0 ], 1); // <p><a>[word]</a></p>
+    TinyAssertions.assertCursor(editor, [ 0 ], 1); // <p><a>word</a>|</p>
   });
 
   it('TINY-5205: basic text selection with existing link should preserve the text when changing URL', async () => {
