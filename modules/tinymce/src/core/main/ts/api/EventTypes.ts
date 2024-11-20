@@ -174,7 +174,7 @@ export interface OpenNotificationEvent {
 }
 
 export interface DisabledStateChangeEvent {
-  state: boolean;
+  readonly state: boolean;
 }
 
 export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {

@@ -32,7 +32,7 @@ const broadcastEvents = (uiRefs: ReadyUiReferences, messageType: string): void =
 };
 
 const setupEventsForUi = (editor: Editor, uiRefs: ReadyUiReferences): void => {
-  editor.on('init SwitchMode', (event: EditorEvent<{} | SwitchModeEvent>) => {
+  editor.on('init SwitchMode', (event: EditorEvent<{ type: string } | SwitchModeEvent>) => {
     broadcastEvents(uiRefs, event.type);
   });
 

@@ -233,7 +233,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
     editor.mode.isReadOnly() ? hideResizeBars() : showResizeBars();
   });
 
-  editor.on('dragstart dragend', (e: EditorEvent<{}>) => {
+  editor.on('dragstart dragend', (e: EditorEvent<DragEvent>) => {
     e.type === 'dragstart' ? hideResizeBars() : showResizeBars();
   });
 
