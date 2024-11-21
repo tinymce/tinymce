@@ -295,7 +295,7 @@ const register = (editor: Editor): void => {
 };
 
 const isReadOnly = option('readonly');
-const isDisabled = option('disabled');
+const isEnabled = option('enabled');
 const getHeightOption = option('height');
 const getWidthOption = option('width');
 const getMinWidthOption = wrapOptional(option('min_width'));
@@ -440,7 +440,7 @@ export {
   getSkinUrl,
   getSkinUrlOption,
   isReadOnly,
-  isDisabled,
+  isEnabled,
   isSkinDisabled,
   getHeightOption,
   getWidthOption,

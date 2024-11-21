@@ -1,12 +1,12 @@
 import Editor from '../api/Editor';
 import * as Events from '../api/Events';
-import * as Disabled from './Disabled';
+import * as EditorState from './EditorState';
 
 export const setEditableRoot = (editor: Editor, state: boolean): void => {
   if (editor._editableRoot !== state) {
     editor._editableRoot = state;
 
-    if (!Disabled.isDisabled(editor)) {
+    if (EditorState.isEnabled(editor)) {
       editor.getBody().contentEditable = String(editor.hasEditableRoot());
       editor.nodeChanged();
     }

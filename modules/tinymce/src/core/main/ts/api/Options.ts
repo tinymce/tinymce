@@ -5,7 +5,7 @@ import * as Pattern from '../textpatterns/core/Pattern';
 import * as PatternTypes from '../textpatterns/core/PatternTypes';
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
-import { fireDisabledStateChange } from './Events';
+import { fireEnabledStateChange } from './Events';
 import { EditorOptions } from './OptionTypes';
 import I18n from './util/I18n';
 import Tools from './util/Tools';
@@ -438,13 +438,13 @@ const register = (editor: Editor): void => {
     default: false
   });
 
-  registerOption('disabled', {
+  registerOption('enabled', {
     processor: (value) => {
       if (Type.isBoolean(value)) {
-        if (editor.initialized && isDisabled(editor) !== value) {
+        if (editor.initialized && isEnabled(editor) !== value) {
           // Schedules the callback to run in the next microtask queue once the option is updated
           Promise.resolve().then(() => {
-            fireDisabledStateChange(editor, value);
+            fireEnabledStateChange(editor, value);
           });
         }
         return { valid: true, value };
@@ -452,7 +452,7 @@ const register = (editor: Editor): void => {
 
       return { valid: false, message: 'The value must be a boolean.' };
     },
-    default: false
+    default: true
   });
 
   registerOption('readonly', {
@@ -1006,7 +1006,7 @@ const getSandboxIframesExclusions = (editor: Editor): string[] => editor.options
 const shouldConvertUnsafeEmbeds = option('convert_unsafe_embeds');
 const getLicenseKey = option('license_key');
 const getApiKey = option('api_key');
-const isDisabled = option('disabled');
+const isEnabled = option('enabled');
 
 export {
   register,
@@ -1117,5 +1117,5 @@ export {
   getSandboxIframesExclusions,
   shouldConvertUnsafeEmbeds,
   getApiKey,
-  isDisabled
+  isEnabled
 };

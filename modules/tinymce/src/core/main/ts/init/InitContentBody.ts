@@ -27,7 +27,7 @@ import * as TouchEvents from '../events/TouchEvents';
 import * as ForceBlocks from '../ForceBlocks';
 import * as NonEditableFilter from '../html/NonEditableFilter';
 import * as KeyboardOverrides from '../keyboard/KeyboardOverrides';
-import * as Disabled from '../mode/Disabled';
+import * as EditorState from '../mode/EditorState';
 import { NodeChange } from '../NodeChange';
 import * as Paste from '../paste/Paste';
 import * as Rtc from '../Rtc';
@@ -254,8 +254,8 @@ const moveSelectionToFirstCaretPosition = (editor: Editor) => {
 
 const initEditor = (editor: Editor) => {
   editor.bindPendingEventDelegates();
-  if (Disabled.isDisabled(editor)) {
-    Disabled.toggleDisabled(editor, true);
+  if (EditorState.isDisabled(editor)) {
+    EditorState.toggleDisabled(editor, true);
   }
   editor.initialized = true;
   Events.fireInit(editor);
@@ -426,7 +426,7 @@ const contentBodyLoaded = (editor: Editor): void => {
   editor.readonly = Options.isReadOnly(editor);
   editor._editableRoot = Options.hasEditableRoot(editor);
 
-  if (!Options.isDisabled(editor) && editor.hasEditableRoot()) {
+  if (Options.isEnabled(editor) && editor.hasEditableRoot()) {
     if (editor.inline && DOM.getStyle(body, 'position', true) === 'static') {
       body.style.position = 'relative';
     }

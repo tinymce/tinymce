@@ -1,6 +1,6 @@
 import { Cell, Fun } from '@ephox/katamari';
 
-import { registerEventsAndFilters } from '../mode/Disabled';
+import { registerEventsAndFilters } from '../mode/EditorState';
 import { registerMode, setMode } from '../mode/Mode';
 import { isReadOnly, registerReadOnlyInputBlockers } from '../mode/Readonly';
 import Editor from './Editor';

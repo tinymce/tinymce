@@ -62,7 +62,7 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
     getOption: editor.options.get,
     tooltips: TooltipsBackstage(lazySinks.dialog),
     checkUiComponentContext: (specContext: string) => {
-      if (Options.isDisabled(editor)) {
+      if (!Options.isEnabled(editor)) {
         return {
           contextType: 'disabled',
           shouldDisable: true

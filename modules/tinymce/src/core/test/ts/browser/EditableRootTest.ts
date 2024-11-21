@@ -98,25 +98,25 @@ describe('browser.tinymce.core.EditableRootTest', () => {
     it('TINY-11488: Editor editable state should not be impacted by disabled mode toggling', async () => {
       const editor = hook.editor();
 
-      editor.options.set('disabled', true);
+      editor.options.set('enabled', false);
       assert.isTrue(editor.hasEditableRoot(), 'Editable root should be present when disabled');
       await Waiter.pTryUntil('Wait for editor to be disabled', () => assertContentEditableState(editor, false, 'Content should not be editable when disabled'));
 
-      editor.options.set('disabled', false);
+      editor.options.set('enabled', true);
       assert.isTrue(editor.hasEditableRoot(), 'Editable root should remain when re-enabled');
       await Waiter.pTryUntil('Wait for editor to be enabled', () => assertContentEditableState(editor, true, 'Content should be editable when re-enabled'));
 
       editor.setEditableRoot(false);
 
-      editor.options.set('disabled', true);
+      editor.options.set('enabled', false);
       assert.isFalse(editor.hasEditableRoot(), 'Editable root should not be present after disabling');
       await Waiter.pTryUntil('Wait for editor to be disabled', () => assertContentEditableState(editor, false, 'Content should not be editable when disabled with no editable root'));
 
-      editor.options.set('disabled', false);
+      editor.options.set('enabled', true);
       assert.isFalse(editor.hasEditableRoot(), 'Editable root should remain absent when re-enabled');
       await Waiter.pTryUntil('Wait for editor to be enabled', () => assertContentEditableState(editor, false, 'Content should not be editable when re-enabled with no editable root'));
 
-      editor.options.set('disabled', true);
+      editor.options.set('enabled', false);
       editor.setEditableRoot(true);
 
       assert.isTrue(editor.hasEditableRoot(), 'Editable root should be restored');

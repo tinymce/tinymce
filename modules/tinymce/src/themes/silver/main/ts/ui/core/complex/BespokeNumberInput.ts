@@ -23,11 +23,11 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
   const getValueFromCurrentComp = (comp: Optional<AlloyComponent>): string =>
     comp.map((alloyComp) => Representing.getValue(alloyComp)).getOr('');
 
-  const onSetup = onSetupEvent(editor, 'NodeChange SwitchMode DisabledStateChange', (api: BespokeSelectApi) => {
+  const onSetup = onSetupEvent(editor, 'NodeChange SwitchMode EnabledStateChange', (api: BespokeSelectApi) => {
     const comp = api.getComponent();
     currentComp = Optional.some(comp);
     spec.updateInputValue(comp);
-    Disabling.set(comp, !editor.selection.isEditable() || Options.isDisabled(editor));
+    Disabling.set(comp, !editor.selection.isEditable() || !Options.isEnabled(editor));
   });
 
   const getApi = (comp: AlloyComponent): BespokeSelectApi => ({ getComponent: Fun.constant(comp) });
@@ -76,8 +76,8 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
     const editorOffCellStepButton = Cell(Fun.noop);
     const translatedTooltip = backstage.shared.providers.translate(tooltip);
     const altExecuting = Id.generate('altExecuting');
-    const onSetup = onSetupEvent(editor, 'NodeChange SwitchMode DisabledStateChange', (api: BespokeSelectApi) => {
-      Disabling.set(api.getComponent(), !editor.selection.isEditable() || Options.isDisabled(editor));
+    const onSetup = onSetupEvent(editor, 'NodeChange SwitchMode EnabledStateChange', (api: BespokeSelectApi) => {
+      Disabling.set(api.getComponent(), !editor.selection.isEditable() || !Options.isEnabled(editor));
     });
 
     const onClick = (comp: AlloyComponent) => {

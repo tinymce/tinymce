@@ -81,11 +81,11 @@ describe('browser.tinymce.themes.silver.editor.DisableTest', () => {
     });
   });
 
-  context('With disabled option', () => {
+  context('With enabled: false option', () => {
     const hook = TinyHooks.bddSetup<Editor>({
       base_url: '/project/tinymce/js/tinymce',
       toolbar: 't1',
-      disabled: true,
+      enabled: false,
       setup: (ed: Editor) => {
         ed.ui.registry.addButton('t1', {
           onAction: Fun.noop,
@@ -103,7 +103,7 @@ describe('browser.tinymce.themes.silver.editor.DisableTest', () => {
       editor.ui.setEnabled(false);
       await pAssertUiDisabled(editor, true);
 
-      editor.options.set('disabled', false);
+      editor.options.set('enabled', true);
       editor.ui.setEnabled(true);
       await pAssertUiDisabled(editor, false);
       editor.ui.setEnabled(false);

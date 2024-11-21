@@ -6,7 +6,8 @@ import * as Options from '../api/Options';
 import VK from '../api/util/VK';
 import * as ModeUtils from '../util/ModeUtils';
 
-const isDisabled = (editor: Editor): boolean => Options.isDisabled(editor);
+const isEnabled = (editor: Editor): boolean => Options.isEnabled(editor);
+const isDisabled = (editor: Editor): boolean => !isEnabled(editor);
 
 const internalContentEditableAttr = 'data-mce-contenteditable';
 
@@ -24,10 +25,10 @@ const switchOnContentEditableTrue = (elm: SugarElement<Node>) => {
   });
 };
 
-const toggleDisabled = (editor: Editor, state: boolean): void => {
+const toggleDisabled = (editor: Editor, shouldDisable: boolean): void => {
   const body = SugarElement.fromDom(editor.getBody());
 
-  if (state) {
+  if (shouldDisable) {
     ModeUtils.disableEditor(editor);
     ContentEditable.set(body, false);
     switchOffContentEditableTrue(body);
@@ -111,10 +112,9 @@ const registerDisabledModeEventHandlers = (editor: Editor): void => {
     }
   });
 
-  // Preprend to the handlers as this should be the first to fire
-  editor.on('DisabledStateChange', (e) => {
+  editor.on('EnabledStateChange', (e) => {
     if (!e.isDefaultPrevented()) {
-      toggleDisabled(editor, e.state);
+      toggleDisabled(editor, !e.state);
     }
   });
 };
@@ -125,6 +125,7 @@ const registerEventsAndFilters = (editor: Editor): void => {
 };
 
 export {
+  isEnabled,
   isDisabled,
   processDisabledEvents,
   getAnchorHrefOpt,
