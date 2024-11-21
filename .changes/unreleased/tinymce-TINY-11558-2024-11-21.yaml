@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Fixed incorect resource keys for CSS bundling JS files.
+time: 2024-11-21T14:39:55.661765563+10:00
+custom:
+  Issue: TINY-11558

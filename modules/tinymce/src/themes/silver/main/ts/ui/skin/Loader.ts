@@ -1,4 +1,4 @@
-import { Fun, Obj, Optional, Optionals, Type } from '@ephox/katamari';
+import { Fun, Optional, Optionals, Type } from '@ephox/katamari';
 import { SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
@@ -12,18 +12,12 @@ import * as Options from '../../api/Options';
 import * as SkinLoaded from './SkinLoaded';
 
 const getSkinResourceIdentifier = (editor: Editor): Optional<string> => {
-  const oxideUiSkinMap: Record<string, string> = {
-    'oxide-dark': 'dark',
-    'oxide': 'default',
-    'tinymce-5': 'tinymce-5',
-    'tinymce-5-dark': 'tinymce-5-dark'
-  };
-
   const skin = Options.getSkin(editor);
+  // Use falsy check to cover false, undefined/null and empty string
   if (!skin) {
     return Optional.none();
   } else {
-    return Obj.get(oxideUiSkinMap, skin).or(Optional.from(skin));
+    return Optional.from(skin);
   }
 };
 

@@ -9,26 +9,22 @@ import { TinyMCE } from 'tinymce/core/api/Tinymce';
 
 declare const tinymce: TinyMCE;
 
+type ContentSkin = 'default' | 'dark' | 'writer' | 'document' | 'tinymce-5' | 'tinymce-5-dark';
+type UiSkin = 'oxide' | 'oxide-dark' | 'tinymce-5' | 'tinymce-5-dark';
+
 describe('browser.tinymce.core.dom.BundledCssTest', () => {
-  const oxideUiSkinMap: Record<string, string> = {
-    'oxide-dark': 'dark',
-    'oxide': 'default',
-    'tinymce-5': 'tinymce-5',
-    'tinymce-5-dark': 'tinymce-5-dark'
-  };
-
   const baseUrl = '/project/tinymce/js/tinymce/';
-  const skinContentDir = (skin: 'default' | 'dark') => baseUrl + `skins/content/${skin}/`;
-  const skinUiDir = (skin: 'oxide' | 'oxide-dark') => baseUrl + `skins/ui/${skin}/`;
+  const skinContentDir = (skin: ContentSkin) => baseUrl + `skins/content/${skin}/`;
+  const skinUiDir = (skin: UiSkin) => baseUrl + `skins/ui/${skin}/`;
 
-  const skinContentCss = (skin: 'default' | 'dark', withSuffix: boolean) => skinContentDir(skin) + `content${withSuffix ? '.min' : ''}.css`;
-  const skinContentJs = (skin: 'default' | 'dark') => skinContentDir(skin) + `content.js`;
+  const skinContentCss = (skin: ContentSkin, withSuffix: boolean) => skinContentDir(skin) + `content${withSuffix ? '.min' : ''}.css`;
+  const skinContentJs = (skin: ContentSkin) => skinContentDir(skin) + `content.js`;
 
-  const skinUiCss = (skin: 'oxide' | 'oxide-dark', shadowDom: boolean, withSuffix: boolean) => skinUiDir(skin) + `skin${shadowDom ? '.shadowdom' : ''}${withSuffix ? '.min' : ''}.css`;
-  const skinUiJs = (skin: 'oxide' | 'oxide-dark', shadowDom: boolean) => skinUiDir(skin) + `skin${shadowDom ? '.shadowdom' : ''}.js`;
+  const skinUiCss = (skin: UiSkin, shadowDom: boolean, withSuffix: boolean) => skinUiDir(skin) + `skin${shadowDom ? '.shadowdom' : ''}${withSuffix ? '.min' : ''}.css`;
+  const skinUiJs = (skin: UiSkin, shadowDom: boolean) => skinUiDir(skin) + `skin${shadowDom ? '.shadowdom' : ''}.js`;
 
-  const skinUiContentCss = (skin: 'oxide' | 'oxide-dark', inline: boolean, withSuffix: boolean) => skinUiDir(skin) + `content${inline ? '.inline' : ''}${withSuffix ? '.min' : ''}.css`;
-  const skinUiContentJs = (skin: 'oxide' | 'oxide-dark', inline: boolean) => skinUiDir(skin) + `content${inline ? '.inline' : ''}.js`;
+  const skinUiContentCss = (skin: UiSkin, inline: boolean, withSuffix: boolean) => skinUiDir(skin) + `content${inline ? '.inline' : ''}${withSuffix ? '.min' : ''}.css`;
+  const skinUiContentJs = (skin: UiSkin, inline: boolean) => skinUiDir(skin) + `content${inline ? '.inline' : ''}.js`;
 
   const styleTagsToKeys = (styleTags: SugarElement<HTMLStyleElement>[]) => {
     return Arr.map(styleTags, (tag) => tag.dom.dataset.mceKey);
@@ -90,9 +86,9 @@ describe('browser.tinymce.core.dom.BundledCssTest', () => {
     context('inline: ' + inline, () => {
       for (const shadowdom of [ false, true ]) {
         context('shadowdom: ' + shadowdom, () => {
-          for (const contentCss of [ 'default', 'dark' ] as const) {
+          for (const contentCss of [ 'default', 'dark', 'document', 'writer' ] as ContentSkin[]) {
             context('contentCSS: ' + contentCss, () => {
-              for (const skin of [ 'oxide', 'oxide-dark' ] as const) {
+              for (const skin of [ 'oxide', 'oxide-dark', 'tinymce-5', 'tinymce-5-dark' ] as UiSkin[]) {
                 context('skin: ' + skin, () => {
                   context('no bundling', () => {
                     it('TINY-11558: Load CSS styesheets as links', async () => {
@@ -154,10 +150,10 @@ describe('browser.tinymce.core.dom.BundledCssTest', () => {
                   context('bundling', () => {
                     const resourceKeys = [
                       `content/${contentCss}/content.css`,
-                      `ui/${oxideUiSkinMap[skin]}/content.css`,
-                      `ui/${oxideUiSkinMap[skin]}/skin.css`,
-                      `ui/${oxideUiSkinMap[skin]}/skin.shadowdom.css`,
-                      `ui/${oxideUiSkinMap[skin]}/content.inline.css`,
+                      `ui/${skin}/content.css`,
+                      `ui/${skin}/skin.css`,
+                      `ui/${skin}/skin.shadowdom.css`,
+                      `ui/${skin}/content.inline.css`,
                     ];
 
                     const jsScripts = [
@@ -207,7 +203,7 @@ describe('browser.tinymce.core.dom.BundledCssTest', () => {
                           styleTagsToKeys(iframeStyleTags),
                           [
                             contentCss,
-                            `ui/${oxideUiSkinMap[skin]}/content.css`
+                            `ui/${skin}/content.css`
                           ]
                         );
                       }
@@ -222,7 +218,7 @@ describe('browser.tinymce.core.dom.BundledCssTest', () => {
                         assert.includeMembers(
                           styleTagsToKeys(pageStyleTags),
                           [
-                            `ui/${oxideUiSkinMap[skin]}/skin.shadowdom.css`
+                            `ui/${skin}/skin.shadowdom.css`
                           ]
                         );
                       }
@@ -236,8 +232,8 @@ describe('browser.tinymce.core.dom.BundledCssTest', () => {
                       assert.includeMembers(
                         styleTagsToKeys(cssStyleTags),
                         [
-                          `ui/${oxideUiSkinMap[skin]}/skin.css`,
-                          ...inline ? [ `ui/${oxideUiSkinMap[skin]}/content.inline.css` ] : [],
+                          `ui/${skin}/skin.css`,
+                          ...inline ? [ `ui/${skin}/content.inline.css` ] : [],
                         ]
                       );
 
