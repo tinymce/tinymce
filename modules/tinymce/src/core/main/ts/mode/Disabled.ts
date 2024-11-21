@@ -105,13 +105,7 @@ const processDisabledEvents = (editor: Editor, e: Event): void => {
 };
 
 const registerDisabledModeEventHandlers = (editor: Editor): void => {
-  editor.on('ShowCaret', (e) => {
-    if (isDisabled(editor)) {
-      e.preventDefault();
-    }
-  });
-
-  editor.on('ObjectSelected', (e) => {
+  editor.on('ShowCaret ObjectSelected', (e) => {
     if (isDisabled(editor)) {
       e.preventDefault();
     }
