@@ -396,7 +396,7 @@ module.exports = function (grunt) {
         options: {
           process: function (content) {
             return content.replace(
-              /'ui\/(.+)\/(.+\.css)'/,
+              /'ui\/([^\/]+)\/([^']+)'/,
               (_, p1, p2) => `'ui/${oxideUiSkinMap[p1] || p1}/${p2}'`
             );
           },

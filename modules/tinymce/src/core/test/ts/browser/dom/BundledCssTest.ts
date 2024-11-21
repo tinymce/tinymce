@@ -91,7 +91,7 @@ describe('browser.tinymce.core.dom.BundledCssTest', () => {
               for (const skin of [ 'oxide', 'oxide-dark', 'tinymce-5', 'tinymce-5-dark' ] as UiSkin[]) {
                 context('skin: ' + skin, () => {
                   context('no bundling', () => {
-                    it('TINY-11558: Load CSS styesheets as links', async () => {
+                    it('TINY-11558: Load CSS stylesheets as links', async () => {
                       const [ editor, cleanup ] = await pCreateEditor(
                         shadowdom,
                         {
