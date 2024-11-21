@@ -10,6 +10,13 @@ import { TinyMCE } from 'tinymce/core/api/Tinymce';
 declare const tinymce: TinyMCE;
 
 describe('browser.tinymce.core.dom.BundledCssTest', () => {
+  const oxideUiSkinMap: Record<string, string> = {
+    'oxide-dark': 'dark',
+    'oxide': 'default',
+    'tinymce-5': 'tinymce-5',
+    'tinymce-5-dark': 'tinymce-5-dark'
+  };
+
   const baseUrl = '/project/tinymce/js/tinymce/';
   const skinContentDir = (skin: 'default' | 'dark') => baseUrl + `skins/content/${skin}/`;
   const skinUiDir = (skin: 'oxide' | 'oxide-dark') => baseUrl + `skins/ui/${skin}/`;
@@ -87,13 +94,6 @@ describe('browser.tinymce.core.dom.BundledCssTest', () => {
             context('contentCSS: ' + contentCss, () => {
               for (const skin of [ 'oxide', 'oxide-dark' ] as const) {
                 context('skin: ' + skin, () => {
-                  const oxideUiSkinMap: Record<string, string> = {
-                    'oxide-dark': 'dark',
-                    'oxide': 'default',
-                    'tinymce-5': 'tinymce-5',
-                    'tinymce-5-dark': 'tinymce-5-dark'
-                  };
-
                   context('no bundling', () => {
                     it('TINY-11558: Load CSS styesheets as links', async () => {
                       const [ editor, cleanup ] = await pCreateEditor(

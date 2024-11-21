@@ -20,10 +20,8 @@ const getSkinResourceIdentifier = (editor: Editor): Optional<string> => {
   };
 
   const skin = Options.getSkin(editor);
-  if (skin === false) {
+  if (!skin) {
     return Optional.none();
-  } else if (skin === true || Type.isNullable(skin)) {
-    return Obj.get(oxideUiSkinMap, 'oxide');
   } else {
     return Obj.get(oxideUiSkinMap, skin).or(Optional.from(skin));
   }
