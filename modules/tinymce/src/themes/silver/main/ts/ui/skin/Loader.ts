@@ -11,6 +11,15 @@ declare let tinymce: TinyMCE;
 import * as Options from '../../api/Options';
 import * as SkinLoaded from './SkinLoaded';
 
+type CSSDecision = {
+  readonly _kind: 'load-raw';
+  readonly key: string;
+  readonly css: string;
+} | {
+  readonly _kind: 'load-stylesheet';
+  readonly url: string;
+};
+
 const getSkinResourceIdentifier = (editor: Editor): Optional<string> => {
   const skin = Options.getSkin(editor);
   // Use falsy check to cover false, undefined/null and empty string
@@ -39,66 +48,67 @@ const skinIdentifierToResourceKey = (identifier: string, filename: string): stri
 const getResourceValue = (resourceKey: string): Optional<string> =>
   Optional.from(tinymce.Resource.get(resourceKey)).filter(Type.isString);
 
-const loadCSS = (
+const determineCSSDecision = (
   editor: Editor,
   filenameBase: string,
-  onLoadRaw: (key: string, css: string) => Promise<void>,
-  onLoadStyleSheet: (styleSheetUrl: string) => Promise<void>,
   skinUrl: string = ''
-) => {
+): CSSDecision => {
   const resourceKey = getSkinResourceIdentifier(editor)
     .map((identifier) => skinIdentifierToResourceKey(identifier, `${filenameBase}.css`));
   const resourceValue = resourceKey.bind(getResourceValue);
 
-  return Optionals.lift2(resourceKey, resourceValue, (key, css) => {
-    return onLoadRaw(key, css);
+  return Optionals.lift2(resourceKey, resourceValue, (key, css): CSSDecision => {
+    return { _kind: 'load-raw', key, css };
   }).getOrThunk(() => {
     const suffix = editor.editorManager.suffix;
     const skinUiCssUrl = skinUrl + `/${filenameBase}${suffix}.css`;
-    return onLoadStyleSheet(skinUiCssUrl);
+    return { _kind: 'load-stylesheet', url: skinUiCssUrl };
   });
 };
 
-const loadUiSkins = (editor: Editor, skinUrl: string): Promise<void> =>
-  loadCSS(
-    editor,
-    'skin',
-    (key, css) => {
-      loadRawCss(editor, key, css, editor.ui.styleSheetLoader);
+const loadUiSkins = (editor: Editor, skinUrl: string): Promise<void> => {
+  const loader = editor.ui.styleSheetLoader;
+  const decision = determineCSSDecision(editor, 'skin', skinUrl);
+  switch (decision._kind) {
+    case 'load-raw':
+      const { key, css } = decision;
+      loadRawCss(editor, key, css, loader);
       return Promise.resolve();
-    },
-    (url) => {
-      return loadStylesheet(editor, url, editor.ui.styleSheetLoader);
-    },
-    skinUrl
-  );
+    case 'load-stylesheet':
+      const { url } = decision;
+      return loadStylesheet(editor, url, loader);
+    default:
+      return Promise.resolve();
+  }
+};
 
 const loadShadowDomUiSkins = (editor: Editor, skinUrl: string): Promise<void> => {
   const isInShadowRoot = SugarShadowDom.isInShadowRoot(SugarElement.fromDom(editor.getElement()));
   if (!isInShadowRoot) {
     return Promise.resolve();
   } else {
-    return loadCSS(
-      editor,
-      'skin.shadowdom',
-      (key, css) => {
-        loadRawCss(editor, key, css, DOMUtils.DOM.styleSheetLoader);
+    const loader = DOMUtils.DOM.styleSheetLoader;
+    const decision = determineCSSDecision(editor, 'skin.shadowdom', skinUrl);
+    switch (decision._kind) {
+      case 'load-raw':
+        const { key, css } = decision;
+        loadRawCss(editor, key, css, loader);
         return Promise.resolve();
-      },
-      (url) => {
-        return loadStylesheet(editor, url, DOMUtils.DOM.styleSheetLoader);
-      },
-      skinUrl
-    );
-
+      case 'load-stylesheet':
+        const { url } = decision;
+        return loadStylesheet(editor, url, loader);
+      default:
+        return Promise.resolve();
+    }
   }
 };
 
-const loadUiContentCSS = (editor: Editor, isInline: boolean, skinUrl?: string): Promise<void> =>
-  loadCSS(
-    editor,
-    isInline ? 'content.inline' : 'content',
-    (key, css) => {
+const loadUiContentCSS = (editor: Editor, isInline: boolean, skinUrl?: string): Promise<void> => {
+  const filenameBase = isInline ? 'content.inline' : 'content';
+  const decision = determineCSSDecision(editor, filenameBase, skinUrl);
+  switch (decision._kind) {
+    case 'load-raw':
+      const { key, css } = decision;
       if (isInline) {
         loadRawCss(editor, key, css, editor.ui.styleSheetLoader);
       } else {
@@ -109,15 +119,16 @@ const loadUiContentCSS = (editor: Editor, isInline: boolean, skinUrl?: string): 
         });
       }
       return Promise.resolve();
-    },
-    (url) => {
+    case 'load-stylesheet':
+      const { url } = decision;
       if (skinUrl) {
         editor.contentCSS.push(url);
       }
       return Promise.resolve();
-    },
-    skinUrl
-  );
+    default:
+      return Promise.resolve();
+  }
+};
 
 const loadUrlSkin = async (isInline: boolean, editor: Editor): Promise<void> => {
   const skinUrl = Options.getSkinUrl(editor);
