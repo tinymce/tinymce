@@ -26,25 +26,39 @@ describe('browser.tinymce.core.dom.BundledCssTest', () => {
   const skinUiContentCss = (skin: UiSkin, inline: boolean, withSuffix: boolean) => skinUiDir(skin) + `content${inline ? '.inline' : ''}${withSuffix ? '.min' : ''}.css`;
   const skinUiContentJs = (skin: UiSkin, inline: boolean) => skinUiDir(skin) + `content${inline ? '.inline' : ''}.js`;
 
-  const styleTagsToKeys = (styleTags: SugarElement<HTMLStyleElement>[]) => {
-    return Arr.map(styleTags, (tag) => tag.dom.dataset.mceKey);
-  };
+  const styleTagToKey = (styleTag: SugarElement<HTMLStyleElement>) =>
+    styleTag.dom.dataset.mceKey || styleTag.dom.id;
+  const styleTagsToKeys = (styleTags: SugarElement<HTMLStyleElement>[]) =>
+    Arr.map(styleTags, styleTagToKey);
 
-  const linkTagsToKeys = (linkTags: SugarElement<HTMLLinkElement>[], basePath: string) => {
-    return Arr.map(linkTags, (tag) => tag.dom.href.replace(basePath, ''));
-  };
+  const linkTagToKey = (linkTag: SugarElement<HTMLLinkElement>, basePath: string) =>
+    linkTag.dom.href.replace(basePath, '');
+  const linkTagsToKeys = (linkTags: SugarElement<HTMLLinkElement>[], basePath: string) =>
+    Arr.map(linkTags, (tag) => linkTagToKey(tag, basePath));
 
-  const getCssTags = (container: SugarElement<HTMLHeadElement | ShadowRoot>) => {
-    const style =
+  const getCssTags = (container: SugarElement<HTMLHeadElement | ShadowRoot>, basePath: string) => {
+    const styleTags =
       SelectorFilter.descendants<HTMLStyleElement>(
         container,
         'style'
       );
-    const link =
+    // An unrelated style tag is included in Firefox so fitler it out
+    const filterKeys = new Set([ 'mceDefaultStyles' ]);
+    const style = Arr.filter(styleTags, (tag) => {
+      const key = styleTagToKey(tag);
+      return !filterKeys.has(key);
+    });
+
+    const linkTags =
       SelectorFilter.descendants<HTMLLinkElement>(
         container,
         'link'
       );
+    const filterHrefs = new Set([ '/css/bedrock.css' ]);
+    const link = Arr.filter(linkTags, (tag) => {
+      const key = linkTagToKey(tag, basePath);
+      return !filterHrefs.has(key);
+    });
 
     return {
       style,
@@ -52,11 +66,20 @@ describe('browser.tinymce.core.dom.BundledCssTest', () => {
     };
   };
 
-  const getIframeCSSTags = (editor: Editor) =>
-    getCssTags(SugarShadowDom.getStyleContainer(SugarShadowDom.getRootNode(TinyDom.body(editor))));
+  const getCssKeys = (container: SugarElement<HTMLHeadElement | ShadowRoot>, basePath: string) => {
+    const { style, link } = getCssTags(container, basePath);
+    return {
+      style: styleTagsToKeys(style),
+      link: linkTagsToKeys(link, basePath)
+    };
+  };
 
-  const getCSSContainerTags = (editor: Editor) =>
-    getCssTags(SugarShadowDom.getStyleContainer(SugarShadowDom.getRootNode(TinyDom.targetElement(editor))));
+  const getIframeCSSKeys = (editor: Editor, basePath: string) =>
+    getCssKeys(SugarShadowDom.getStyleContainer(SugarShadowDom.getRootNode(TinyDom.body(editor))), basePath);
+  const getCSSContainerKeys = (editor: Editor, basePath: string) =>
+    getCssKeys(SugarShadowDom.getStyleContainer(SugarShadowDom.getRootNode(TinyDom.targetElement(editor))), basePath);
+  const getPageCSSKeys = (basePath: string) =>
+    getCssKeys(SugarHead.head(), basePath);
 
   const pCreateEditor = async (shadowDom: boolean, settings: Record<string, any>) => {
     if (shadowDom) {
@@ -105,41 +128,42 @@ describe('browser.tinymce.core.dom.BundledCssTest', () => {
                       const hostUrl = `${editor.baseURI.protocol}://${editor.baseURI.authority}`;
 
                       if (!inline) {
-                        const { style: iframeStyleTags, link: iframeLinkTags } = getIframeCSSTags(editor);
-                        assert.isEmpty(iframeStyleTags);
-                        assert.lengthOf(iframeLinkTags, 2);
+                        const { style: iframeStyles, link: iframeLinks } = getIframeCSSKeys(editor, hostUrl);
+                        assert.isEmpty(iframeStyles, 'iframe style tags');
+                        assert.lengthOf(iframeLinks, 2, 'iframe link tags');
                         assert.includeMembers(
-                          linkTagsToKeys(iframeLinkTags, hostUrl),
+                          iframeLinks,
                           [
                             skinContentCss(contentCss, false),
                             skinUiContentCss(skin, inline, false),
-                          ]
+                          ],
+                          'iframe link tags'
                         );
                       }
 
                       if (shadowdom) {
-                        const { style: pageStyleTags, link: pageLinkTags } = getCssTags(SugarHead.head());
-                        assert.isEmpty(pageStyleTags);
-                        assert.lengthOf(pageLinkTags, 2);
+                        const { style: pageStyles, link: pageLinks } = getPageCSSKeys(hostUrl);
+                        assert.isEmpty(pageStyles, 'page style tags');
+                        assert.lengthOf(pageLinks, 1, 'page link tags');
                         assert.includeMembers(
-                          linkTagsToKeys(pageLinkTags, hostUrl),
+                          pageLinks,
                           [
-                            skinUiCss(skin, true, false),
-                            '/css/bedrock.css'
-                          ]
+                            skinUiCss(skin, true, false)
+                          ],
+                          'page link tags'
                         );
                       }
 
-                      const { style: cssStyleTags, link: cssLinkTags } = getCSSContainerTags(editor);
-                      assert.isEmpty(cssStyleTags);
-                      assert.lengthOf(cssLinkTags, 1 + (inline ? 1 : 0) + (shadowdom ? 0 : 1));
+                      const { style: cssStyles, link: cssLinks } = getCSSContainerKeys(editor, hostUrl);
+                      assert.isEmpty(cssStyles, 'css style tags');
+                      assert.lengthOf(cssLinks, 1 + (inline ? 1 : 0), 'css link tags');
                       assert.includeMembers(
-                        linkTagsToKeys(cssLinkTags, hostUrl),
+                        cssLinks,
                         [
-                          ...shadowdom ? [] : [ '/css/bedrock.css' ],
                           ...inline ? [ skinUiContentCss(skin, inline, false) ] : [],
                           skinUiCss(skin, false, false),
-                        ]
+                        ],
+                        'css link tags'
                       );
 
                       McEditor.remove(editor);
@@ -196,45 +220,48 @@ describe('browser.tinymce.core.dom.BundledCssTest', () => {
                       const hostUrl = `${editor.baseURI.protocol}://${editor.baseURI.authority}`;
 
                       if (!inline) {
-                        const { style: iframeStyleTags, link: iframeLinkTags } = getIframeCSSTags(editor);
-                        assert.isEmpty(iframeLinkTags);
-                        assert.lengthOf(iframeStyleTags, 2);
+                        const { style: iframeStyles, link: iframeLinks } = getIframeCSSKeys(editor, hostUrl);
+                        assert.isEmpty(iframeLinks, 'iframe link tags');
+                        assert.lengthOf(iframeStyles, 2, 'iframe style tags');
                         assert.includeMembers(
-                          styleTagsToKeys(iframeStyleTags),
+                          iframeStyles,
                           [
                             contentCss,
                             `ui/${skin}/content.css`
-                          ]
+                          ],
+                          'iframe style tags'
                         );
                       }
 
                       if (shadowdom) {
-                        const { style: pageStyleTags, link: pageLinkTags } = getCssTags(SugarHead.head());
-                        assert.deepEqual(
-                          linkTagsToKeys(pageLinkTags, hostUrl),
-                          [ '/css/bedrock.css' ]
+                        const { style: pageStyles, link: pageLinks } = getPageCSSKeys(hostUrl);
+                        assert.isEmpty(
+                          pageLinks,
+                          'page link tags'
                         );
-                        assert.lengthOf(pageStyleTags, 1);
+                        assert.lengthOf(pageStyles, 1, 'page style tags');
                         assert.includeMembers(
-                          styleTagsToKeys(pageStyleTags),
+                          pageStyles,
                           [
                             `ui/${skin}/skin.shadowdom.css`
-                          ]
+                          ],
+                          'page style tags'
                         );
                       }
 
-                      const { style: cssStyleTags, link: cssLinkTags } = getCSSContainerTags(editor);
-                      assert.deepEqual(
-                        linkTagsToKeys(cssLinkTags, hostUrl),
-                        shadowdom ? [] : [ '/css/bedrock.css' ]
+                      const { style: cssStyles, link: cssLinks } = getCSSContainerKeys(editor, hostUrl);
+                      assert.isEmpty(
+                        cssLinks,
+                        'css link tags'
                       );
-                      assert.lengthOf(cssStyleTags, 1 + (inline ? 1 : 0));
+                      assert.lengthOf(cssStyles, 1 + (inline ? 1 : 0), 'css style tags');
                       assert.includeMembers(
-                        styleTagsToKeys(cssStyleTags),
+                        cssStyles,
                         [
                           `ui/${skin}/skin.css`,
                           ...inline ? [ `ui/${skin}/content.inline.css` ] : [],
-                        ]
+                        ],
+                        'css style tags'
                       );
 
                       McEditor.remove(editor);
