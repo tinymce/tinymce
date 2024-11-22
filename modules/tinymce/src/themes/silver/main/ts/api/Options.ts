@@ -442,6 +442,7 @@ export {
   getSkinUrl,
   getSkinUrlOption,
   isReadOnly,
+  isDisabled,
   getSkin,
   isSkinDisabled,
   getHeightOption,
