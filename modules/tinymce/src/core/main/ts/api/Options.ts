@@ -443,6 +443,7 @@ const register = (editor: Editor): void => {
       if (Type.isBoolean(value)) {
         if (editor.initialized && isEnabled(editor) !== value) {
           // Schedules the callback to run in the next microtask queue once the option is updated
+          // TODO: TINY-11586 - Implement `onChange` callback when the value of an option changes
           Promise.resolve().then(() => {
             fireEnabledStateChange(editor, value);
           });
