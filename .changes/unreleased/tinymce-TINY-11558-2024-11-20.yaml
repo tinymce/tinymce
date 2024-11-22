@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Fixed CSS bundling for skin UI content CSS.
+time: 2024-11-20T17:04:10.574250183+10:00
+custom:
+  Issue: TINY-11558
