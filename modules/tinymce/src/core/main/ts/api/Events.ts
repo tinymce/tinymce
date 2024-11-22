@@ -4,7 +4,7 @@ import { RangeLikeObject } from '../selection/RangeTypes';
 import Editor from './Editor';
 import {
   BeforeSetContentEvent, SetContentEvent, PastePlainTextToggleEvent, PastePostProcessEvent, PastePreProcessEvent, GetContentEvent, BeforeGetContentEvent,
-  PreProcessEvent, PostProcessEvent, EditableRootStateChangeEvent, EnabledStateChangeEvent
+  PreProcessEvent, PostProcessEvent, EditableRootStateChangeEvent, DisabledStateChangeEvent
 } from './EventTypes';
 import { ParserArgs } from './html/DomParser';
 import { EditorEvent } from './util/EventDispatcher';
@@ -103,8 +103,8 @@ const firePastePlainTextToggle = (editor: Editor, state: boolean): EditorEvent<P
 const fireEditableRootStateChange = (editor: Editor, state: boolean): EditorEvent<EditableRootStateChangeEvent> =>
   editor.dispatch('EditableRootStateChange', { state });
 
-const fireEnabledStateChange = (editor: Editor, state: boolean): EditorEvent<EnabledStateChangeEvent> =>
-  editor.dispatch('EnabledStateChange', { state });
+const fireDisabledStateChange = (editor: Editor, state: boolean): EditorEvent<DisabledStateChangeEvent> =>
+  editor.dispatch('DisabledStateChange', { state });
 
 export {
   firePreProcess,
@@ -133,5 +133,5 @@ export {
   firePastePostProcess,
   firePastePreProcess,
   fireEditableRootStateChange,
-  fireEnabledStateChange
+  fireDisabledStateChange
 };

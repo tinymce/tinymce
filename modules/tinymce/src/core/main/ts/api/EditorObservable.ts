@@ -1,6 +1,6 @@
 import { Obj } from '@ephox/katamari';
 
-import * as EditorState from '../mode/EditorState';
+import * as Disabled from '../mode/Disabled';
 import DOMUtils from './dom/DOMUtils';
 import { EventUtilsCallback } from './dom/EventUtils';
 import Editor from './Editor';
@@ -55,12 +55,12 @@ const getEventTarget = (editor: Editor, eventName: string): Node => {
   return editor.getBody();
 };
 
-const isListening = (editor: Editor) => !editor.hidden && EditorState.isEnabled(editor);
+const isListening = (editor: Editor) => !editor.hidden && !Disabled.isDisabled(editor);
 const fireEvent = (editor: Editor, eventName: string, e: Event) => {
   if (isListening(editor)) {
     editor.dispatch(eventName, e);
-  } else if (EditorState.isDisabled(editor)) {
-    EditorState.processDisabledEvents(editor, e);
+  } else if (Disabled.isDisabled(editor)) {
+    Disabled.processDisabledEvents(editor, e);
   }
 };
 

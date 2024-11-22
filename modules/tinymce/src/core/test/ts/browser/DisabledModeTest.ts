@@ -6,7 +6,7 @@ import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import * as EditorState from 'tinymce/core/mode/EditorState';
+import * as Disabled from 'tinymce/core/mode/Disabled';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 
 const tOptional = OptionalInstances.tOptional;
@@ -87,38 +87,38 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
 
     const assertHrefOpt = (editor: Editor, selector: string, expectedHref: Optional<string>) => {
       const elm = SugarElement.fromDom(editor.dom.select(selector)[0]);
-      const hrefOpt = EditorState.getAnchorHrefOpt(editor, elm);
+      const hrefOpt = Disabled.getAnchorHrefOpt(editor, elm);
       Assert.eq('href options match', expectedHref, hrefOpt, tOptional());
     };
 
-    it('TINY-11488: Switching to enabled: false mode while having cef selection should remove fake selection', async () => {
+    it('TINY-11488: Switching to disabled mode while having cef selection should remove fake selection', async () => {
       const editor = hook.editor();
       editor.setContent('<div contenteditable="false">CEF</div>');
       TinySelections.select(editor, 'div[contenteditable="false"]', []);
       assertFakeSelection(editor, true);
-      editor.options.set('enabled', false);
+      editor.options.set('disabled', true);
       await Waiter.pTryUntil('Wait for fake selection to be removed', () => assertFakeSelection(editor, false));
-      editor.options.set('enabled', true);
+      editor.options.set('disabled', false);
       await Waiter.pTryUntil('Wait for fake selection to be added', () => assertFakeSelection(editor, true));
     });
 
-    it('TINY-11488: Selecting cef element while in enabled: false mode should not add fake selection', () => {
+    it('TINY-11488: Selecting cef element while in disabled mode should not add fake selection', () => {
       const editor = hook.editor();
       editor.setContent('<div contenteditable="false">CEF</div>');
       TinySelections.select(editor, 'div[contenteditable="false"]', []);
       assertFakeSelection(editor, true);
-      editor.options.set('enabled', false);
+      editor.options.set('disabled', true);
       TinySelections.select(editor, 'div[contenteditable="false"]', []);
       assertFakeSelection(editor, false);
-      editor.options.set('enabled', true);
+      editor.options.set('disabled', false);
       TinySelections.select(editor, 'div[contenteditable="false"]', []);
       assertFakeSelection(editor, true);
     });
 
-    it('TINY-11488: Setting caret before cef in editor while in enabled: false mode should not render fake caret', async () => {
+    it('TINY-11488: Setting caret before cef in editor while in disabled mode should not render fake caret', async () => {
       const editor = hook.editor();
       editor.setContent('<div contenteditable="false">CEF</div>');
-      editor.options.set('enabled', false);
+      editor.options.set('disabled', true);
       TinySelections.setCursor(editor, [], 0);
       await Waiter.pTryUntil('Wait for fake caret to be removed', () => TinyAssertions.assertContentStructure(editor,
         ApproxStructure.build((s, str, _arr) => {
@@ -136,7 +136,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
           });
         })
       ));
-      editor.options.set('enabled', true);
+      editor.options.set('disabled', false);
       await Waiter.pTryUntil('Wait for fake caret to be added', () => TinyAssertions.assertContentStructure(editor,
         ApproxStructure.build((s, str, arr) => {
           return s.element('body', {
@@ -170,27 +170,27 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       ));
     });
 
-    it('TINY-11488: Switching to enabled: false mode on content with nested contenteditable=true should toggle them to contenteditable=false', async () => {
+    it('TINY-11488: Switching to disabled mode on content with nested contenteditable=true should toggle them to contenteditable=false', async () => {
       const editor = hook.editor();
       editor.setContent('<div contenteditable="false">a<span contenteditable="true">b</span>c</div>');
       TinySelections.select(editor, 'div[contenteditable="false"]', []);
       assertFakeSelection(editor, true);
-      editor.options.set('enabled', false);
+      editor.options.set('disabled', true);
       await Waiter.pTryUntil('Wait for content to be updated', () => assertNestedContentEditableTrueDisabled(editor, true, true));
       TinyAssertions.assertContent(editor, '<div contenteditable="false">a<span contenteditable="true">b</span>c</div>');
       assertFakeSelection(editor, false);
-      editor.options.set('enabled', true);
+      editor.options.set('disabled', false);
       await Waiter.pTryUntil('Wait for content to be updated', () => TinyAssertions.assertContent(editor, '<div contenteditable="false">a<span contenteditable="true">b</span>c</div>'));
       assertNestedContentEditableTrueDisabled(editor, false, true);
     });
 
-    it('TINY-11488: Setting contents with contenteditable=true should switch them to contenteditable=false while in enabled: false mode', async () => {
+    it('TINY-11488: Setting contents with contenteditable=true should switch them to contenteditable=false while in disabled mode', async () => {
       const editor = hook.editor();
-      editor.options.set('enabled', false);
+      editor.options.set('disabled', true);
       editor.setContent('<div contenteditable="false">a<span contenteditable="true">b</span>c</div>');
       assertNestedContentEditableTrueDisabled(editor, true, false);
       TinyAssertions.assertContent(editor, '<div contenteditable="false">a<span contenteditable="true">b</span>c</div>');
-      editor.options.set('enabled', true);
+      editor.options.set('disabled', false);
       await Waiter.pTryUntil('Wait for content to be updated', () => TinyAssertions.assertContent(editor, '<div contenteditable="false">a<span contenteditable="true">b</span>c</div>'));
       TinySelections.select(editor, 'div[contenteditable="false"]', []);
       assertNestedContentEditableTrueDisabled(editor, false, true);
@@ -199,53 +199,53 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       assertNestedContentEditableTrueDisabled(editor, false, true);
     });
 
-    it('TINY-11488: Resize bars for tables should be hidden while in enabled: false mode', async () => {
+    it('TINY-11488: Resize bars for tables should be hidden while in disabled mode', async () => {
       const editor = hook.editor();
       editor.setContent('<table><tbody><tr><td>a</td></tr></tbody></table>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
       mouseOverTable(editor);
       assertResizeBars(editor, true);
-      editor.options.set('enabled', false);
+      editor.options.set('disabled', true);
       await Waiter.pTryUntil('Waiting for resize bars to be hidden', () => assertResizeBars(editor, false));
       mouseOverTable(editor);
       assertResizeBars(editor, false);
-      editor.options.set('enabled', true);
+      editor.options.set('disabled', false);
       await Waiter.pTryUntil('Waiting for resize bars to be shown', () => assertResizeBars(editor, false));
       mouseOverTable(editor);
       await Waiter.pTryUntil('Waiting for resize bars to be shown', () => assertResizeBars(editor, true));
     });
 
-    it('TINY-11488: Context toolbar should be hidden in enabled: false mode', async () => {
+    it('TINY-11488: Context toolbar should be hidden in disabled mode', async () => {
       const editor = hook.editor();
       editor.focus();
       editor.setContent('<table><tbody><tr><td>a</td></tr></tbody></table>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
       await UiFinder.pWaitFor('Waited for context toolbar', SugarBody.body(), '.tox-pop');
-      editor.options.set('enabled', false);
+      editor.options.set('disabled', true);
       await UiFinder.pWaitForHidden('Waiting for context toolbar to be hidden', SugarBody.body(), '.tox-pop');
-      editor.options.set('enabled', true);
+      editor.options.set('disabled', false);
       editor.setContent('<table><tbody><tr><td>a</td></tr></tbody></table>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
       await UiFinder.pWaitFor('Waited for context toolbar', SugarBody.body(), '.tox-pop');
     });
 
-    it('TINY-11488: Main toolbar should be disabled when switching to enabled: false mode', async () => {
+    it('TINY-11488: Main toolbar should be disabled when switching to disabled mode', async () => {
       const editor = hook.editor();
       assertToolbarDisabled(false);
-      editor.options.set('enabled', false);
+      editor.options.set('disabled', true);
       await Waiter.pTryUntil('Wait for toolbar to be disabled', () => assertToolbarDisabled(true));
-      editor.options.set('enabled', true);
+      editor.options.set('disabled', false);
       await Waiter.pTryUntil('Wait for toolbar to be enabled', () => assertToolbarDisabled(false));
     });
 
-    it('TINY-11488: Menus should close when switching to enabled: false mode', async () => {
+    it('TINY-11488: Menus should close when switching to disabled mode', async () => {
       const editor = hook.editor();
       const fileMenu = UiFinder.findIn(SugarBody.body(), '.tox-mbtn:contains("File")').getOrDie();
       Mouse.click(fileMenu);
       await UiFinder.pWaitFor('Waited for menu', SugarBody.body(), '.tox-menu');
-      editor.options.set('enabled', false);
+      editor.options.set('disabled', true);
       await UiFinder.pWaitForHidden('Wait for menu to be hidden', SugarBody.body(), '.tox-menu');
-      editor.options.set('enabled', true);
+      editor.options.set('disabled', false);
     });
 
     it('TINY-11488: getAnchorHrefOpt should return an Optional of the href of the closest anchor tag', () => {
@@ -258,10 +258,10 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       assertHrefOpt(editor, 'img', Optional.some('https://tiny.cloud'));
     });
 
-    it('TINY-11488: processReadonlyEvents should scroll to bookmark with id in enabled: false mode', () => {
+    it('TINY-11488: processReadonlyEvents should scroll to bookmark with id in disabled mode', () => {
       const editor = hook.editor();
       editor.resetContent();
-      editor.options.set('enabled', false);
+      editor.options.set('disabled', true);
       editor.setContent('<p><a href="#someBookmark">internal bookmark</a></p><div style="padding-top: 2000px;"></div><p><a id="someBookmark"></a></p>');
 
       const body = TinyDom.body(editor);
@@ -271,12 +271,12 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       Mouse.click(anchor);
       const newPos = Scroll.get(doc).top;
       assert.notEqual(newPos, yPos, 'assert yPos has changed i.e. has scrolled');
-      editor.options.set('enabled', true);
+      editor.options.set('disabled', false);
     });
 
-    it('TINY-11488: Copy events should be dispatched even in enabled: false mode', () => {
+    it('TINY-11488: Copy events should be dispatched even in disabled mode', () => {
       const editor = hook.editor();
-      editor.options.set('enabled', false);
+      editor.options.set('disabled', true);
 
       let copyEventCount = 0;
       const copyHandler = () => copyEventCount++;
@@ -285,15 +285,15 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       Clipboard.copy(TinyDom.body(editor));
       assert.equal(copyEventCount, 1, 'copy event should be fired');
       editor.off('copy', copyHandler);
-      editor.options.set('enabled', true);
+      editor.options.set('disabled', false);
     });
 
-    it('TINY-11488: processReadonlyEvents should scroll to bookmark with name in enabled: false mode', async () => {
+    it('TINY-11488: processReadonlyEvents should scroll to bookmark with name in disabled mode', async () => {
       const editor = hook.editor();
       const body = TinyDom.body(editor);
       const doc = TinyDom.document(editor);
       editor.resetContent();
-      editor.options.set('enabled', false);
+      editor.options.set('disabled', true);
       editor.setContent('<p><a href="#someBookmark">internal bookmark</a></p><div style="padding-top: 2000px;"></div><p><a name="someBookmark"></a></p>');
 
       const yPos = Scroll.get(doc).top;
@@ -301,22 +301,22 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       Mouse.click(anchor);
       const newPos = Scroll.get(doc).top;
       assert.notEqual(newPos, yPos, 'assert yPos has changed i.e. has scrolled');
-      editor.options.set('enabled', true);
+      editor.options.set('disabled', false);
     });
 
     const assertBodyClass = (editor: Editor, cls: string, state: boolean) => {
       assert.equal(Class.has(TinyDom.body(editor), cls), state, 'Should be the expected class state');
     };
 
-    it('TINY-11488: Assert body class when editor is in enabled: false mode', async () => {
+    it('TINY-11488: Assert body class when editor is disabled', async () => {
       const editor = hook.editor();
-      editor.options.set('enabled', false);
+      editor.options.set('disabled', true);
       await Waiter.pTryUntil('Wait for editor to be disabled', () => assertBodyClass(editor, 'mce-content-readonly', true));
 
-      editor.options.set('enabled', true);
+      editor.options.set('disabled', false);
       await Waiter.pTryUntil('Wait for editor to be enabled', () => assertBodyClass(editor, 'mce-content-readonly', false));
 
-      editor.options.set('enabled', false);
+      editor.options.set('disabled', true);
       await Waiter.pTryUntil('Wait for editor to be disabled', () => assertBodyClass(editor, 'mce-content-readonly', true));
     });
   });
@@ -331,6 +331,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
   };
 
   const assertEditorState = (shouldBeEnabled: boolean) => (editor: Editor) => {
+    // assert.equal(editor.disabled, !shouldBeEnabled, `Editor.disabled should be ${!shouldBeEnabled}`);
     assertContentEditableBody(editor)(shouldBeEnabled);
     assertEditorContainerClass(editor)(shouldBeEnabled);
   };
@@ -339,88 +340,88 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
   const assertEditorEnabled = assertEditorState(true);
 
   context('Switching editor mode', () => {
-    const hook = TinyHooks.bddSetup<Editor>({ ...settings, enabled: false }, []);
+    const hook = TinyHooks.bddSetup<Editor>({ ...settings, disabled: true }, []);
 
-    afterEach(() => hook.editor().options.set('enabled', false));
+    afterEach(() => hook.editor().options.set('disabled', true));
 
     // Basic checking of the UI and editor body contentEditable
-    it('TINY-11488: Should be able to switch from enabled: false mode to enabled: true mode', async () => {
+    it('TINY-11488: Should be able to switch from disabled mode to enabled mode', async () => {
       const editor = hook.editor();
       await Waiter.pTryUntil('Wait for editor to be disabled', () => assertEditorDisabled(editor));
-      editor.options.set('enabled', true);
+      editor.options.set('disabled', false);
       await Waiter.pTryUntil('Wait for editor to be enabled', () => assertEditorEnabled(editor));
     });
 
-    it('TINY-11488: Should not allow switching modes when the editor is in enabled: false mode', async () => {
+    it('TINY-11488: Should not allow switching modes when the editor is disabled', async () => {
       const editor = hook.editor();
       await Waiter.pTryUntil('Wait for editor to be disabled', () => assertEditorDisabled(editor));
       editor.mode.set('readonly');
       await Waiter.pTryUntil('Wait for editor to be disabled', () => assertEditorDisabled(editor));
-      editor.options.set('enabled', true);
+      editor.options.set('disabled', false);
       await Waiter.pTryUntil('Wait for editor to be enabled', () => assertEditorEnabled(editor));
       editor.mode.set('readonly');
       await Waiter.pTryUntil('Wait for editor to be enabled', () => assertEditorEnabled(editor));
       editor.mode.set('design');
     });
 
-    it('TINY-11488: UIs should still be disabled when switching to enabled: false in readonly mode', async () => {
+    it('TINY-11488: UIs should still be disabled when switching to disable false in readonly mode', async () => {
       const editor = hook.editor();
-      editor.options.set('enabled', true);
+      editor.options.set('disabled', false);
       editor.mode.set('readonly');
       await Waiter.pTryUntil('Wait for editor to be enabled', () => assertEditorEnabled(editor));
-      editor.options.set('enabled', false);
+      editor.options.set('disabled', true);
       await Waiter.pTryUntil('Wait for editor to be disabled', () => assertEditorDisabled(editor));
-      editor.options.set('enabled', true);
+      editor.options.set('disabled', false);
       await Waiter.pTryUntil('Wait for editor to be enabled', () => assertEditorEnabled(editor));
     });
   });
 
-  context('Default enabled: true', () => {
-    const hook = TinyHooks.bddSetup<Editor>({ ...settings, enabled: true }, []);
+  context('Default disabled: false', () => {
+    const hook = TinyHooks.bddSetup<Editor>({ ...settings, disabled: false }, []);
 
-    afterEach(() => hook.editor().options.set('enabled', false));
+    afterEach(() => hook.editor().options.set('disabled', true));
 
     // Basic checking of the UI and editor body contentEditable
-    it('TINY-11488: Should be able to switch from enabled mode to enabled: false mode', async () => {
+    it('TINY-11488: Should be able to switch from disabled mode to enabled mode', async () => {
       const editor = hook.editor();
       await Waiter.pTryUntil('Wait for editor to be enabled', () => assertEditorEnabled(editor));
-      editor.options.set('enabled', false);
+      editor.options.set('disabled', true);
       await Waiter.pTryUntil('Wait for editor to be disabled', () => assertEditorDisabled(editor));
-      editor.options.set('enabled', true);
+      editor.options.set('disabled', false);
       await Waiter.pTryUntil('Wait for editor to be enabled', () => assertEditorEnabled(editor));
     });
   });
 
-  context('EnabledStateChange Event', () => {
+  context('DisabledStateChange Event', () => {
     const store = TestStore<boolean>();
     const hook = TinyHooks.bddSetup<Editor>({
       ...settings,
-      enabled: false,
+      disabled: true,
       setup: (ed: Editor) => {
-        ed.on('EnabledStateChange', (e) => store.add(e.state));
+        ed.on('DisabledStateChange', (e) => store.add(e.state));
       }
     }, []);
 
     afterEach(() => {
-      hook.editor().options.set('enabled', false);
+      hook.editor().options.set('disabled', true);
       store.clear();
     });
 
-    it('TINY-11488: EnabledStateChange event should be dispatched when state changes', async () => {
+    it('TINY-11488: DisabledStateChange event should be dispatched when state changes', async () => {
       const editor = hook.editor();
       store.assertEq('InitialState', [ ]);
-      editor.options.set('enabled', true);
-      await Waiter.pTryUntil('Wait for store to be updated', () => store.assertEq('Enabled state change event setting to true', [ true ]));
+      editor.options.set('disabled', false);
+      await Waiter.pTryUntil('Wait for store to be updated', () => store.assertEq('Disable state change event setting to false', [ false ]));
 
-      editor.options.set('enabled', true);
-      await Waiter.pTryUntil('Wait for store to be updated', () => store.assertEq('Setting the same value should not dispatch EnabledStateChange', [ true ]));
+      editor.options.set('disabled', false);
+      await Waiter.pTryUntil('Wait for store to be updated', () => store.assertEq('Setting the same value should not dispatch DisabledStateChange', [ false ]));
 
-      editor.options.set('enabled', false);
-      await Waiter.pTryUntil('Wait for store to be updated', () => store.assertEq('Enabled state change event setting to false', [ true, false ]));
+      editor.options.set('disabled', true);
+      await Waiter.pTryUntil('Wait for store to be updated', () => store.assertEq('Disable state change event setting to true', [ false, true ]));
     });
   });
 
-  context('Toolbar button state with enabled: false state and readonly mode/non editable root', () => {
+  context('Toolbar button state with disable state and readonly mode/non editable root', () => {
     const assertButtonState = (button: TestButtonDisabledState, shouldBeDisabled: boolean) => {
       const { name, disabledAttribute } = button;
       const attributeValue = disabledAttribute === 'disabled' ? 'disabled' : 'true';
@@ -463,18 +464,18 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
 
     const hook = TinyHooks.bddSetup<Editor>({
       base_url: '/project/tinymce/js/tinymce',
-      enabled: false,
+      disabled: true,
       plugins: 'searchreplace',
       toolbar: Arr.map(allButtons, (button) => button.name).join(' '),
     }, []);
 
-    afterEach(() => hook.editor().options.set('enabled', false));
+    afterEach(() => hook.editor().options.set('disabled', true));
 
     it('TINY-11488: Toolbar buttons should reflect the editor disabled state in readonly', async () => {
       const editor = hook.editor();
       assertButtonsStateDisabled(allButtons);
 
-      editor.options.set('enabled', true);
+      editor.options.set('disabled', false);
       await Waiter.pTryUntil('Wait for buttons to be enabled', () => assertButtonsStateEnabled(allButtons));
 
       // Set the editor to readonly mode
@@ -483,11 +484,11 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       assertButtonState({ name: 'print', disabledAttribute: 'aria-disabled' }, false);
 
       // Disable the editor again, all buttons should be disabled
-      editor.options.set('enabled', false);
+      editor.options.set('disabled', true);
       await Waiter.pTryUntil('Wait for buttons to be enabled', () => assertButtonsStateDisabled(allButtons));
 
       // Re-enable the editor; only 'print' should be enabled in readonly mode
-      editor.options.set('enabled', true);
+      editor.options.set('disabled', false);
       await Waiter.pTryUntil('Wait for button state update', () => {
         assertButtonsStateDisabled([ ...excludeReadOnlyEnabledButton, ...nativeDisabledToolbarButtons ]);
         assertButtonState({ name: 'print', disabledAttribute: 'aria-disabled' }, false);
@@ -502,7 +503,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       const editor = hook.editor();
       assertButtonsStateDisabled(allButtons);
 
-      editor.options.set('enabled', true);
+      editor.options.set('disabled', false);
 
       await Waiter.pTryUntil('Wait for buttons to be enabled', () => {
         assertButtonsStateEnabled(allButtons);
@@ -514,10 +515,10 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       assertButtonsStateEnabled([{ name: 'print', disabledAttribute: 'aria-disabled' }, { name: 'searchreplace', disabledAttribute: 'aria-disabled' }]);
 
       // Disable the editor again, all buttons should be disabled
-      editor.options.set('enabled', false);
+      editor.options.set('disabled', true);
       await Waiter.pTryUntil('Wait for button state update', () => assertButtonsStateDisabled(allButtons));
 
-      editor.options.set('enabled', true);
+      editor.options.set('disabled', false);
       await Waiter.pTryUntil('Wait for button state update', () => {
         assertButtonsStateDisabled([ ...excludeNonEditableRootButton, ...nativeDisabledToolbarButtons ]);
         assertButtonsStateEnabled([{ name: 'print', disabledAttribute: 'aria-disabled' }, { name: 'searchreplace', disabledAttribute: 'aria-disabled' }]);

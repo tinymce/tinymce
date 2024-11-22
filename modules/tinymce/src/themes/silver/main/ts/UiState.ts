@@ -2,7 +2,7 @@ import { Behaviour, Channels, Disabling, Receiving } from '@ephox/alloy';
 import { Arr } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
-import { EnabledStateChangeEvent, NodeChangeEvent, SwitchModeEvent } from 'tinymce/core/api/EventTypes';
+import { DisabledStateChangeEvent, NodeChangeEvent, SwitchModeEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Options from './api/Options';
@@ -36,16 +36,16 @@ const setupEventsForUi = (editor: Editor, uiRefs: ReadyUiReferences): void => {
     broadcastEvents(uiRefs, event.type);
   });
 
-  editor.on('EnabledStateChange', (event: EditorEvent<EnabledStateChangeEvent>) => {
+  editor.on('DisabledStateChange', (event: EditorEvent<DisabledStateChangeEvent>) => {
     if (!event.isDefaultPrevented()) {
       // When the event state indicates the editor is **enabled** (`event.state` is false),
       // we send an 'init' message instead of 'setEnabled' because the editor might be in read-only mode.
       // Sending 'setEnabled' would enable all the toolbar buttons, which is undesirable if the editor is read-only.
-      const messageType = event.state ? messageInit : messageSetDisabled;
+      const messageType = event.state ? messageSetDisabled : messageInit;
       broadcastEvents(uiRefs, messageType);
 
       // After refreshing the state of the buttons, trigger a NodeChange event.
-      if (event.state) {
+      if (!event.state) {
         editor.nodeChanged();
       }
     }

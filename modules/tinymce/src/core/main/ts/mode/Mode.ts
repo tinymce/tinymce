@@ -3,7 +3,7 @@ import { Arr, Cell, Obj } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import * as Events from '../api/Events';
 import { EditorModeApi } from '../api/Mode';
-import * as EditorState from './EditorState';
+import * as Disabled from './Disabled';
 import { toggleReadOnly } from './Readonly';
 
 const defaultModes = [ 'design', 'readonly' ];
@@ -29,7 +29,7 @@ const switchToMode = (editor: Editor, activeMode: Cell<string>, availableModes: 
 };
 
 const setMode = (editor: Editor, availableModes: Record<string, EditorModeApi>, activeMode: Cell<string>, mode: string): void => {
-  if (mode === activeMode.get() || EditorState.isDisabled(editor)) {
+  if (mode === activeMode.get() || Disabled.isDisabled(editor)) {
     return;
   } else if (!Obj.has(availableModes, mode)) {
     throw new Error(`Editor mode '${mode}' is invalid`);

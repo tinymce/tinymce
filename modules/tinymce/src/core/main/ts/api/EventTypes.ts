@@ -173,7 +173,7 @@ export interface OpenNotificationEvent {
   notification: NotificationApi;
 }
 
-export interface EnabledStateChangeEvent {
+export interface DisabledStateChangeEvent {
   readonly state: boolean;
 }
 
