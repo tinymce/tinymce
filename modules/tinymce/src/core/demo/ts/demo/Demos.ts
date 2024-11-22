@@ -1,4 +1,5 @@
 import AnnotationsDemo from './AnnotationsDemo';
+import BundledCssDemo from './BundledCssDemo';
 import CommandsDemo from './CommandsDemo';
 import ContentEditableFalseDemo from './ContentEditableFalseDemo';
 import ContextFormDemo from './ContextFormDemo';
@@ -37,5 +38,6 @@ window.demos = {
   ShadowDomInlineDemo,
   ReadOnlyDemo,
   ViewDemo,
-  ContextFormDemo
+  ContextFormDemo,
+  BundledCssDemo
 };

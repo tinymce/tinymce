@@ -393,6 +393,14 @@ module.exports = function (grunt) {
         ]
       },
       'ui-skins': {
+        options: {
+          process: function (content) {
+            return content.replace(
+              /'ui\/([^\/]+)\/([^']+)'/,
+              (_, p1, p2) => `'ui/${oxideUiSkinMap[p1] || p1}/${p2}'`
+            );
+          },
+        },
         files: gruntUtils.flatMap(oxideUiSkinMap, function (name, mappedName) {
           return [
             {
