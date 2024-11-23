@@ -1,7 +1,7 @@
 import { FocusTools, Keys, UiFinder } from '@ephox/agar';
 import { describe, it, before, after, context } from '@ephox/bedrock-client';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
-import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
@@ -39,6 +39,16 @@ describe('browser.tinymce.plugins.link.SelectedTextLinkTest', () => {
     const existence = textToDisplayVisible ? UiFinder.exists : UiFinder.notExists;
     existence(SugarBody.body(), '.tox-label:contains("Text to display")');
   };
+
+  it('TBA: inserting new link should move selection into the new link', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>word</p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1); // <p>[word]</p>
+    await pOpenDialog(editor);
+    FocusTools.setActiveValue(doc, 'http://something');
+    await TestLinkUi.pClickSave(editor);
+    TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0 ], 1); // <p><a>[word]</a></p>
+  });
 
   it('TINY-5205: basic text selection with existing link should preserve the text when changing URL', async () => {
     const editor = hook.editor();
