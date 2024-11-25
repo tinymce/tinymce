@@ -123,7 +123,25 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
 
       ed.ui.registry.addContextToolbar('test-toolbar', {
         predicate: Fun.never,
-        items: 'form:test-form'
+        items: 'form:test-form',
+      });
+
+      ed.ui.registry.addContextForm('test-form-focus-on-init', {
+        launch: {
+          type: 'contextformtogglebutton',
+          icon: 'fake-icon-name',
+          tooltip: 'Focus on init',
+        },
+        onSetup: (formApi) => {
+          formApi.setInputEnabled(false);
+          return Fun.noop;
+        },
+        commands: [ ]
+      });
+
+      ed.ui.registry.addContextToolbar('test-toolbar-focus-on-init', {
+        predicate: Fun.never,
+        items: 'form:test-form-focus-on-init',
       });
     }
   }, [], true);
@@ -389,5 +407,14 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     const editor = hook.editor();
     openToolbar(editor, 'test-form');
     UiFinder.exists(SugarBody.body(), '.tox-pop input[placeholder="This is a placeholder"]');
+  });
+
+  it('TINY-11559: Focus should be on toolbar when onSetup disables the main input', () => {
+    const editor = hook.editor();
+    const doc = SugarDocument.getDocument();
+
+    openToolbar(editor, 'test-toolbar-focus-on-init');
+    TinyUiActions.clickOnUi(editor, 'button[data-mce-name="form:test-form-focus-on-init"]');
+    FocusTools.isOnSelector('Focus should be on toolbar', doc, '[role="toolbar"]');
   });
 });

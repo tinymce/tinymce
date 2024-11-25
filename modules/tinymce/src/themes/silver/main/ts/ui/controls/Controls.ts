@@ -9,6 +9,7 @@ export type OnDestroy<T> = (controlApi: T) => void;
 
 export interface OnControlAttachedType<T> extends GetApiType<T> {
   readonly onSetup: (controlApi: T) => OnDestroy<T> | void;
+  readonly onBeforeSetup?: (comp: AlloyComponent) => void;
 }
 
 const runWithApi = <T>(info: GetApiType<T>, comp: AlloyComponent): (f: OnDestroy<T>) => void => {
@@ -25,6 +26,10 @@ const runWithApi = <T>(info: GetApiType<T>, comp: AlloyComponent): (f: OnDestroy
 // the cell and the onAttachedHandler, but that would provide too much complexity.
 const onControlAttached = <T>(info: OnControlAttachedType<T>, editorOffCell: Cell<OnDestroy<T>>): AlloyEvents.AlloyEventKeyAndHandler<EventFormat> =>
   AlloyEvents.runOnAttached((comp) => {
+    if (Type.isFunction(info.onBeforeSetup)) {
+      info.onBeforeSetup(comp);
+    }
+
     const run = runWithApi(info, comp);
     run((api) => {
       const onDestroy = info.onSetup(api);

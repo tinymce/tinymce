@@ -333,6 +333,8 @@ const promotionEnabled = option('promotion');
 const useHelpAccessibility = option('help_accessibility');
 const getDefaultFontStack = option('default_font_stack');
 
+const getSkin = option<string | false>('skin');
+
 const isSkinDisabled = (editor: Editor): boolean =>
   editor.options.get('skin') === false;
 
@@ -439,6 +441,7 @@ export {
   getSkinUrl,
   getSkinUrlOption,
   isReadOnly,
+  getSkin,
   isSkinDisabled,
   getHeightOption,
   getWidthOption,
