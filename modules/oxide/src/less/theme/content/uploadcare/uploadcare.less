@@ -44,6 +44,7 @@
 // UPLOADCARE PLACEHOLDER
 .tox-uploadcare-placeholder {
   display: inline-block;
+  position: relative;
   width: @uploadcare-placeholder-initial-width;
   height: @uploadcare-placeholder-initial-height;
 
@@ -60,4 +61,23 @@
   --tox-uploadcare-placeholder--content-gap: 8px;
 
   --tox-uploadcare-placeholder--icon-fill: @uploadcare-placeholder-icon-fill;
+
+  // shadow DOM (loader)
+
+  --tox-uc-loading-spinner-wrapper-display-none: none;
+  --tox-uc-loading-spinner-wrapper-display: flex;
+  --tox-uc-loading-spinner-wrapper-position: absolute;
+  --tox-uc-loading-spinner-wrapper-top: 0;
+  --tox-uc-loading-spinner-wrapper-left: 0;
+  --tox-uc-loading-spinner-wrapper-width: 100%;
+  --tox-uc-loading-spinner-wrapper-height: 100%;
+  --tox-uc-loading-spinner-wrapper-justify-content: center;
+  --tox-uc-loading-spinner-wrapper-align-items: center;
+  
+  --tox-uc-loading-spinner-aspect-ratio: 1 / 1;
+  --tox-uc-loading-spinner-width: @uploadcare-loading-element-width;
+  --tox-uc-loading-spinner-border-radius: 50%;
+  --tox-uc-loading-spinner-border: @uploadcare-loading-element-border;
+  --tox-uc-loading-spinner-border-bottom-color: transparent;
+  --tox-uc-loading-spinner-animation: tox-rotation 1s linear infinite;
 }
