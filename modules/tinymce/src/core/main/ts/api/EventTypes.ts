@@ -173,6 +173,10 @@ export interface OpenNotificationEvent {
   notification: NotificationApi;
 }
 
+export interface DisabledStateChangeEvent {
+  readonly state: boolean;
+}
+
 export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   'activate': { relatedTarget: Editor | null };
   'deactivate': { relatedTarget: Editor };

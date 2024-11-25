@@ -6,6 +6,7 @@ import Editor from 'tinymce/core/api/Editor';
 import I18n, { TranslatedString, Untranslated } from 'tinymce/core/api/util/I18n';
 import * as UiFactory from 'tinymce/themes/silver/ui/general/UiFactory';
 
+import * as Options from '../api/Options';
 import { IconProvider } from '../ui/icons/Icons';
 import { UiFactoryBackstageAnchors } from './Anchors';
 import * as Anchors from './Anchors';
@@ -61,6 +62,12 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
     getOption: editor.options.get,
     tooltips: TooltipsBackstage(lazySinks.dialog),
     checkUiComponentContext: (specContext: string) => {
+      if (Options.isDisabled(editor)) {
+        return {
+          contextType: 'disabled',
+          shouldDisable: true
+        };
+      }
       const [ key, value = '' ] = specContext.split(':');
       const contexts = editor.ui.registry.getAll().contexts;
       const enabledInContext = Obj.get(contexts, key)

@@ -1,18 +1,14 @@
 import { ApproxStructure, Mouse, UiFinder, Clipboard } from '@ephox/agar';
-import { Assert, describe, it } from '@ephox/bedrock-client';
-import { Optional, OptionalInstances } from '@ephox/katamari';
+import { describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
-import { Attribute, Class, Css, Scroll, SelectorFind, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
+import { Attribute, Class, Css, Scroll, SelectorFind, SugarBody, Traverse } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-import * as Readonly from 'tinymce/core/mode/Readonly';
 import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
-
-const tOptional = OptionalInstances.tOptional;
 
 describe('browser.tinymce.core.ReadOnlyModeTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
@@ -87,12 +83,6 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     const elm = UiFinder.findIn(SugarBody.body(), '.tox-toolbar-overlord').getOrDie();
     assert.equal(Class.has(elm, 'tox-tbtn--disabled'), expectedState, 'Toolbar should have expected disabled state');
     assert.equal(Attribute.get(elm, 'aria-disabled'), expectedState.toString(), 'Toolbar should have expected disabled state');
-  };
-
-  const assertHrefOpt = (editor: Editor, selector: string, expectedHref: Optional<string>) => {
-    const elm = SugarElement.fromDom(editor.dom.select(selector)[0]);
-    const hrefOpt = Readonly.getAnchorHrefOpt(editor, elm);
-    Assert.eq('href options match', expectedHref, hrefOpt, tOptional());
   };
 
   it('TBA: Switching to readonly mode while having cef selection should remove fake selection', () => {
@@ -249,16 +239,6 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     UiFinder.sWaitFor('Waited for menu', SugarBody.body(), '.tox-menu');
     setMode(editor, 'readonly');
     UiFinder.sNotExists(SugarBody.body(), '.tox-menu');
-  });
-
-  it('TINY-6248: getAnchorHrefOpt should return an Optional of the href of the closest anchor tag', () => {
-    const editor = hook.editor();
-    editor.setContent('<p><a href="https://tiny.cloud">external link</a></p>');
-    assertHrefOpt(editor, 'a', Optional.some('https://tiny.cloud'));
-    editor.setContent('<p><a>external link with no href</a></p>');
-    assertHrefOpt(editor, 'a', Optional.none());
-    editor.setContent('<p><a href="https://tiny.cloud"><img src="">nested image </img>inside anchor</a></p>');
-    assertHrefOpt(editor, 'img', Optional.some('https://tiny.cloud'));
   });
 
   const metaKey = PlatformDetection.detect().os.isMacOS() ? { metaKey: true } : { ctrlKey: true };

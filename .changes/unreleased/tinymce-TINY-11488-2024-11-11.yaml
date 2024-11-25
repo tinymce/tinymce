@@ -1,0 +1,7 @@
+project: tinymce
+kind: Added
+body: New `disabled` option to restore the previous `readonly` mode behavior, allowing
+  the editor to be displayed in a disabled state.
+time: 2024-11-11T22:35:34.883095+08:00
+custom:
+  Issue: TINY-11488
