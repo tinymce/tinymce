@@ -14,7 +14,6 @@ export const renderContextFormSizeInput = (
   const { width, height } = ctx.initValue();
 
   return SizeInput.renderSizeInput<InlineContent.ContextFormInstanceApi<InlineContent.SizeData>>({
-    inDialog: false,
     label: ctx.label,
     enabled: true,
     width,

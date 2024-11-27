@@ -26,7 +26,6 @@ interface RatioEvent extends CustomEvent {
 }
 
 export interface SizeInputGenericSpec<ApiType = never> {
-  readonly inDialog: boolean;
   readonly label: Optional<string>;
   readonly enabled: boolean;
   readonly width: string;
@@ -76,7 +75,7 @@ export const renderSizeInput = <ApiType = never>(spec: SizeInputGenericSpec<ApiT
   const formGroup = (components: AlloySpec[]) => ({
     dom: {
       tag: 'div',
-      classes: [ spec.inDialog ? 'tox-form__group' : 'tox-context-form__group' ]
+      classes: [ 'tox-context-form__group' ]
     },
     components
   });
@@ -91,7 +90,7 @@ export const renderSizeInput = <ApiType = never>(spec: SizeInputGenericSpec<ApiT
 
   const getFieldPart = (isField1: boolean) => AlloyFormField.parts.field({
     factory: AlloyInput,
-    inputClasses: spec.inDialog ? [ 'tox-textfield' ] : [ 'tox-textfield', 'tox-toolbar-textfield', 'tox-textfield-size' ],
+    inputClasses: [ 'tox-textfield', 'tox-toolbar-textfield', 'tox-textfield-size' ],
     data: isField1 ? spec.width : spec.height,
     inputBehaviours: Behaviour.derive([
       Disabling.config({ disabled }),
@@ -156,7 +155,7 @@ export const renderSizeInput = <ApiType = never>(spec: SizeInputGenericSpec<ApiT
   return AlloyFormCoupledInputs.sketch({
     dom: {
       tag: 'div',
-      classes: [ spec.inDialog ? 'tox-form__group' : 'tox-context-form__group' ]
+      classes: [ 'tox-context-form__group' ]
     },
     components: [
       {
