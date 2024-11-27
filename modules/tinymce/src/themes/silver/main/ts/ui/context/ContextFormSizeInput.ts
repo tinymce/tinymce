@@ -3,7 +3,7 @@ import { InlineContent } from '@ephox/bridge';
 import { Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import * as SizeInput from '../sizeinput/SizeInput';
+import * as SizeInput from '../sizeinput/SizeInputToolbar';
 import * as ContextFormApi from './ContextFormApi';
 
 export const renderContextFormSizeInput = (
@@ -17,8 +17,6 @@ export const renderContextFormSizeInput = (
     inDialog: false,
     label: ctx.label,
     enabled: true,
-    context: Optional.none(),
-    name: Optional.none(),
     width,
     height,
     onEnter: Optional.some(onEnter),
