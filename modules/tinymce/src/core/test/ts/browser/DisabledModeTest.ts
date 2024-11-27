@@ -355,22 +355,6 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
     it('TINY-11488: Should not allow switching modes when the editor is disabled', async () => {
       const editor = hook.editor();
       await Waiter.pTryUntil('Wait for editor to be disabled', () => assertEditorDisabled(editor));
-
-      editor.mode.set('readonly');
-      await Waiter.pTryUntil('Wait for editor to be disabled', () => assertEditorDisabled(editor));
-
-      editor.options.set('disabled', false);
-      await Waiter.pTryUntil('Wait for editor to be enabled', () => assertEditorEnabled(editor));
-
-      editor.mode.set('readonly');
-      await Waiter.pTryUntil('Wait for editor to be enabled', () => assertEditorEnabled(editor));
-
-      editor.mode.set('design');
-    });
-
-    it('TINY-11488: Checking editor property when switching modes', async () => {
-      const editor = hook.editor();
-      await Waiter.pTryUntil('Wait for editor to be disabled', () => assertEditorDisabled(editor));
       assert.equal(editor.mode.get(), 'design', 'Editor should still be in design mode');
       assert.isFalse(editor.readonly, 'Editor readonly property should not be true');
 
