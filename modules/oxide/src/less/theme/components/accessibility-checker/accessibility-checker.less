@@ -1,20 +1,22 @@
 //
 //
 // Accessibility checker
-@accessibility-overlay-opacity: 80%;
+@accessibility-overlay-opacity-90: 90%;
+@accessibility-overlay-opacity-60: 60%;
+
 @accessibility-issue-body-text-color: contrast(@dialog-background-color, @color-white, @text-color);
 
-@accessibility-issue-info-heading-text-color: contrast(@dialog-background-color, @color-white, @color-tint);
-@accessibility-issue-info-background-color: mix(@background-color, @color-tint, @accessibility-overlay-opacity);
+@accessibility-issue-info-heading-text-color: contrast(@dialog-background-color, mix(@color-white, @color-tint, @accessibility-overlay-opacity-60), @color-tint);
+@accessibility-issue-info-background-color: mix(@background-color, @color-tint, @accessibility-overlay-opacity-90);
 
-@accessibility-issue-warn-heading-text-color: contrast(@dialog-background-color, @color-white, darken(#cc8500, 12%));
-@accessibility-issue-warn-background-color: mix(@background-color, @color-warning, @accessibility-overlay-opacity);
+@accessibility-issue-warn-heading-text-color: contrast(@dialog-background-color, mix(@color-white, @color-warning, @accessibility-overlay-opacity-60), mix(@color-black, @color-warning, @accessibility-overlay-opacity-60));
+@accessibility-issue-warn-background-color: mix(@background-color, @color-warning, @accessibility-overlay-opacity-90);
 @accessibility-issue-warn-icon-background-color: #FFE89D;
 @accessibility-issue-warn-icon-hover-background-color: #F2D574;
 @accessibility-issue-warn-icon-active-background-color: #E8C657;
 
-@accessibility-issue-error-heading-text-color: contrast(@dialog-background-color, @color-white, @color-error);
-@accessibility-issue-error-background-color: mix(@background-color, @color-error, @accessibility-overlay-opacity);
+@accessibility-issue-error-heading-text-color: contrast(@dialog-background-color, mix(@color-white, @color-error, @accessibility-overlay-opacity-60), @color-error);
+@accessibility-issue-error-background-color: mix(@background-color, @color-error, @accessibility-overlay-opacity-90);
 @accessibility-issue-error-icon-background-color: #F2BFBF;
 @accessibility-issue-error-icon-hover-background-color: #E9A4A4;
 @accessibility-issue-error-icon-active-background-color: #EE9494;
@@ -100,7 +102,7 @@
         color: @accessibility-issue-info-heading-text-color;
       }
 
-      .tox-icon svg {
+      .tox-icon.accessibility-issue__icon svg {
         fill: @accessibility-issue-info-heading-text-color;
       }
 
@@ -131,7 +133,7 @@
         color: @accessibility-issue-warn-heading-text-color;
       }
 
-      .tox-icon svg {
+      .tox-icon.accessibility-issue__icon svg {
         fill: @accessibility-issue-warn-heading-text-color;
       }
 
@@ -165,7 +167,7 @@
         color: @accessibility-issue-error-heading-text-color;
       }
 
-      .tox-icon svg {
+      .tox-icon.accessibility-issue__icon svg {
         fill: @accessibility-issue-error-heading-text-color;
       }
 
@@ -202,7 +204,7 @@
         color: @accessibility-issue-success-heading-text-color;
       }
 
-      .tox-icon svg {
+      .tox-icon.accessibility-issue__icon svg {
         fill: @accessibility-issue-success-heading-text-color;
       }
     }
