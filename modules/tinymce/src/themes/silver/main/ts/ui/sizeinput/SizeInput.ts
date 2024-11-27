@@ -4,14 +4,11 @@ import {
   FormField as AlloyFormField,
   Input as AlloyInput,
   AlloySpec, AlloyTriggers, Behaviour, CustomEvent, Disabling,
-  Focusing,
-  FocusInsideModes,
   GuiFactory,
   Keying,
   NativeEvents, Representing, SketchSpec, Tabstopping, Tooltipping
 } from '@ephox/alloy';
 import { Cell, Fun, Id, Optional, Optionals, Unicode } from '@ephox/katamari';
-import { Focus, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import { formChangeEvent, formInputEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
@@ -85,14 +82,6 @@ export const renderSizeInput = <ApiType = never>(spec: SizeInputGenericSpec<ApiT
     components
   });
 
-  const goToParent = (comp: AlloyComponent) => {
-    const focussableWrapperOpt: Optional<SugarElement<HTMLElement>> = SelectorFind.ancestor(comp.element, 'div.tox-focusable-wrapper');
-    return focussableWrapperOpt.fold(Optional.none, (focussableWrapper) => {
-      Focus.focus(focussableWrapper);
-      return Optional.some(true);
-    });
-  };
-
   const getFieldPart = (isField1: boolean) => AlloyFormField.parts.field({
     factory: AlloyInput,
     inputClasses: spec.inDialog ? [ 'tox-textfield' ] : [ 'tox-textfield', 'tox-toolbar-textfield', 'tox-textfield-size' ],
@@ -109,7 +98,7 @@ export const renderSizeInput = <ApiType = never>(spec: SizeInputGenericSpec<ApiT
           spec.name.each((name) => AlloyTriggers.emitWith(component, formChangeEvent, { name }));
         })
       ]),
-      ...spec.onEnter.map((onEnter) => Keying.config({ mode: 'special', onEnter, onEscape: goToParent })).toArray()
+      ...spec.onEnter.map((onEnter) => Keying.config({ mode: 'special', onEnter })).toArray()
     ]),
     selectOnFocus: false
   });
@@ -124,35 +113,13 @@ export const renderSizeInput = <ApiType = never>(spec: SizeInputGenericSpec<ApiT
     ]
   });
 
-  const focusableWrapper = (field: AlloySpec) => ({
-    dom: {
-      tag: 'div',
-      classes: [ 'tox-focusable-wrapper' ],
-    },
-    components: [ field ],
-    behaviours: Behaviour.derive([
-      Tabstopping.config({}),
-      Focusing.config({}),
-      Keying.config({
-        mode: 'special',
-        onEnter: (comp) => {
-          const focussableInputOpt: Optional<SugarElement<HTMLElement>> = SelectorFind.descendant(comp.element, 'input');
-          return focussableInputOpt.fold(Optional.none, (focussableInput) => {
-            Focus.focus(focussableInput);
-            return Optional.some(true);
-          });
-        }
-      })
-    ])
-  });
-
-  const widthField = focusableWrapper(AlloyFormCoupledInputs.parts.field1(
+  const widthField = AlloyFormCoupledInputs.parts.field1(
     formGroup([ AlloyFormField.parts.label(getLabel('Width')), getFieldPart(true) ])
-  ));
+  );
 
-  const heightField = focusableWrapper(AlloyFormCoupledInputs.parts.field2(
+  const heightField = AlloyFormCoupledInputs.parts.field2(
     formGroup([ AlloyFormField.parts.label(getLabel('Height')), getFieldPart(false) ])
-  ));
+  );
 
   const editorOffCell = Cell(Fun.noop);
 
@@ -199,13 +166,6 @@ export const renderSizeInput = <ApiType = never>(spec: SizeInputGenericSpec<ApiT
     },
     onInput: (current) => AlloyTriggers.emit(current, formInputEvent),
     coupledFieldBehaviours: Behaviour.derive([
-      Focusing.config({}),
-      Keying.config({
-        mode: 'flow',
-        focusInside: FocusInsideModes.OnEnterOrSpaceMode,
-        cycles: false,
-        selector: 'button, .tox-focusable-wrapper',
-      }),
       Disabling.config({
         disabled,
         onDisabled: (comp) => {
