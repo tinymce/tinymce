@@ -64,6 +64,7 @@ const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'footnotes', name: 'Footnotes', type: PluginType.Premium },
   { key: 'formatpainter', name: 'Format Painter', type: PluginType.Premium },
   { key: 'editimage', name: 'Image Editing', type: PluginType.Premium },
+  { key: 'uploadcare', name: 'Image Optimizer Powered by Uploadcare', type: PluginType.Premium },
   { key: 'importword', name: 'Import from Word', type: PluginType.Premium },
   { key: 'inlinecss', name: 'Inline CSS', type: PluginType.Premium, slug: 'inline-css' },
   { key: 'linkchecker', name: 'Link Checker', type: PluginType.Premium },
