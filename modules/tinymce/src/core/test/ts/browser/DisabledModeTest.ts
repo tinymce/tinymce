@@ -355,12 +355,24 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
     it('TINY-11488: Should not allow switching modes when the editor is disabled', async () => {
       const editor = hook.editor();
       await Waiter.pTryUntil('Wait for editor to be disabled', () => assertEditorDisabled(editor));
+      assert.equal(editor.mode.get(), 'design', 'Editor should still be in design mode');
+      assert.isFalse(editor.readonly, 'Editor readonly property should not be true');
+
       editor.mode.set('readonly');
       await Waiter.pTryUntil('Wait for editor to be disabled', () => assertEditorDisabled(editor));
+      assert.equal(editor.mode.get(), 'design', 'Editor should still be in design mode');
+      assert.isFalse(editor.readonly, 'Editor readonly property should not be true');
+
       editor.options.set('disabled', false);
       await Waiter.pTryUntil('Wait for editor to be enabled', () => assertEditorEnabled(editor));
+      assert.equal(editor.mode.get(), 'design', 'Editor should still be in design mode');
+      assert.isFalse(editor.readonly, 'Editor readonly property should not be true');
+
       editor.mode.set('readonly');
       await Waiter.pTryUntil('Wait for editor to be enabled', () => assertEditorEnabled(editor));
+      assert.equal(editor.mode.get(), 'readonly', 'Editor switch to readonly mode');
+      assert.isTrue(editor.readonly, 'Editor readonly property should be true');
+
       editor.mode.set('design');
     });
 
@@ -526,6 +538,28 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
 
       editor.setEditableRoot(true);
       assertButtonsStateEnabled(allButtons);
+    });
+  });
+
+  context('With disabled and readonly option', () => {
+    const hook = TinyHooks.bddSetup<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      disabled: true,
+      readonly: true,
+    }, []);
+
+    it('TINY-11488: Should set to disabled and readonly when both option is set', async () => {
+      const editor = hook.editor();
+      assert.equal(hook.editor().mode.get(), 'readonly', 'Editor should be readonly');
+      assert.isTrue(hook.editor().readonly, 'Editor should be readonly');
+
+      editor.mode.set('design');
+      assert.equal(hook.editor().mode.get(), 'readonly', 'Editor should still be in readonly');
+      assert.isTrue(hook.editor().readonly, 'Editor should still be in readonly');
+
+      editor.options.set('disabled', false);
+      assert.equal(hook.editor().mode.get(), 'readonly', 'Editor should still be in readonly');
+      assert.isTrue(hook.editor().readonly, 'Editor should still be in readonly');
     });
   });
 });
