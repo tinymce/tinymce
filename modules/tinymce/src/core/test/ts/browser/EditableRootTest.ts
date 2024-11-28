@@ -1,3 +1,4 @@
+import { Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -5,8 +6,8 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.EditableRootTest', () => {
-  const assertContentEditableState = (editor: Editor, expectedState: boolean) => {
-    assert.equal(editor.getBody().isContentEditable, expectedState);
+  const assertContentEditableState = (editor: Editor, expectedState: boolean, message?: string) => {
+    assert.equal(editor.getBody().isContentEditable, expectedState, message);
   };
 
   const assertRootEditableState = (editor: Editor, expectedState: boolean) => {
@@ -91,6 +92,35 @@ describe('browser.tinymce.core.EditableRootTest', () => {
 
       assert.isTrue(editor.hasEditableRoot());
       assertContentEditableState(editor, true);
+      editor.mode.set('design');
+    });
+
+    it('TINY-11488: Editor editable state should not be impacted by disabled mode toggling', async () => {
+      const editor = hook.editor();
+
+      editor.options.set('disabled', true);
+      assert.isTrue(editor.hasEditableRoot(), 'Editable root should be present when disabled');
+      await Waiter.pTryUntil('Wait for editor to be disabled', () => assertContentEditableState(editor, false, 'Content should not be editable when disabled'));
+
+      editor.options.set('disabled', false);
+      assert.isTrue(editor.hasEditableRoot(), 'Editable root should remain when re-enabled');
+      await Waiter.pTryUntil('Wait for editor to be enabled', () => assertContentEditableState(editor, true, 'Content should be editable when re-enabled'));
+
+      editor.setEditableRoot(false);
+
+      editor.options.set('disabled', true);
+      assert.isFalse(editor.hasEditableRoot(), 'Editable root should not be present after disabling');
+      await Waiter.pTryUntil('Wait for editor to be disabled', () => assertContentEditableState(editor, false, 'Content should not be editable when disabled with no editable root'));
+
+      editor.options.set('disabled', false);
+      assert.isFalse(editor.hasEditableRoot(), 'Editable root should remain absent when re-enabled');
+      await Waiter.pTryUntil('Wait for editor to be enabled', () => assertContentEditableState(editor, false, 'Content should not be editable when re-enabled with no editable root'));
+
+      editor.options.set('disabled', true);
+      editor.setEditableRoot(true);
+
+      assert.isTrue(editor.hasEditableRoot(), 'Editable root should be restored');
+      assertContentEditableState(editor, false, 'Content should remain non-editable when disabled with editable root');
     });
   });
 });
