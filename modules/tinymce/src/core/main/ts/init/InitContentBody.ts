@@ -254,9 +254,6 @@ const moveSelectionToFirstCaretPosition = (editor: Editor) => {
 
 const initEditor = (editor: Editor) => {
   editor.bindPendingEventDelegates();
-  if (Disabled.isDisabled(editor)) {
-    Disabled.toggleDisabled(editor, true);
-  }
   editor.initialized = true;
   Events.fireInit(editor);
   editor.focus(true);
@@ -267,6 +264,9 @@ const initEditor = (editor: Editor) => {
     initInstanceCallback.call(editor, editor);
   }
   autoFocus(editor);
+  if (Disabled.isDisabled(editor)) {
+    Disabled.toggleDisabled(editor, true);
+  }
 };
 
 const getStyleSheetLoader = (editor: Editor): StyleSheetLoader =>
