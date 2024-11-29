@@ -155,3 +155,23 @@
   display: flex;
   align-items: center;
 }
+
+.tox-focusable-wrapper {
+  &:focus {
+    background-color: @toolbar-button-bespoke-focus-background-color;
+    z-index: 1; // Ensure focus outline is on top of other buttons
+
+    &::after {
+      .keyboard-focus-outline-mixin();
+    }
+  }
+
+  &:has(input:focus)::after {
+    .keyboard-focus-outline-mixin();
+  }
+}
+
+// .tox-number-input:focus:not(:active) > button,
+// .tox-number-input:focus:not(:active) > .tox-input-wrapper {
+//   background: @toolbar-button-bespoke-focus-background-color;
+// }

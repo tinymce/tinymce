@@ -118,7 +118,7 @@ export const renderSizeInput = <ApiType = never>(spec: SizeInputGenericSpec<ApiT
   const focusableWrapper = (field: AlloySpec) => ({
     dom: {
       tag: 'div',
-      classes: [ 'tox-focusable-wrapper' ],
+      classes: [ 'tox-focusable-wrapper', 'tox-toolbar-nav-js' ],
     },
     components: [ field ],
     behaviours: Behaviour.derive([
@@ -161,6 +161,7 @@ export const renderSizeInput = <ApiType = never>(spec: SizeInputGenericSpec<ApiT
       {
         dom: {
           tag: 'div',
+          // TODO: is this needed?
           classes: [ 'tox-form__controls-h-stack' ]
         },
         components: [
