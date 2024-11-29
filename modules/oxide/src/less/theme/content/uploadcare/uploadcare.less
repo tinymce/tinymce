@@ -43,7 +43,7 @@
 
 // UPLOADCARE PLACEHOLDER
 .tox-uploadcare-placeholder {
-  all: initial;
+  all: initial; // prevents inheritable styles to leak into the shadow DOM
   display: inline-block;
   position: relative;
   width: @uploadcare-placeholder-initial-width;
@@ -56,7 +56,8 @@
   --tox-uploadcare-placeholder--content-border: @uploadcare-placeholder-border;
   --tox-uploadcare-placeholder--content-font-family: @uploadcare-placeholder-font-family;
   --tox-uploadcare-placeholder--content-height: 100%;
-  --tox-uploadcare-placeholder--content-display: flex;
+  --tox-uploadcare-placeholder--content-width: 100%;
+  --tox-uploadcare-placeholder--content-display: inline-flex; // needs to be inline so the line decoration styles are not inherited https://www.w3.org/TR/css-text-decor-3/#line-decoration
   --tox-uploadcare-placeholder--content-align-items: center;
   --tox-uploadcare-placeholder--content-justify-content: center;
   --tox-uploadcare-placeholder--content-gap: 8px;
