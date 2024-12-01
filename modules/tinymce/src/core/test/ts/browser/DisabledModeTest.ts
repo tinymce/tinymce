@@ -330,8 +330,8 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
     assert.equal(!hasClass, shouldNotHaveClass, 'Editor container should not have class: tox-tinymce--disabled');
   };
 
+  // Basic checking of the UI and editor body contentEditable
   const assertEditorState = (shouldBeEnabled: boolean) => (editor: Editor) => {
-    // assert.equal(editor.disabled, !shouldBeEnabled, `Editor.disabled should be ${!shouldBeEnabled}`);
     assertContentEditableBody(editor)(shouldBeEnabled);
     assertEditorContainerClass(editor)(shouldBeEnabled);
   };
@@ -344,7 +344,6 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
 
     afterEach(() => hook.editor().options.set('disabled', true));
 
-    // Basic checking of the UI and editor body contentEditable
     it('TINY-11488: Should be able to switch from disabled mode to enabled mode', async () => {
       const editor = hook.editor();
       await Waiter.pTryUntil('Wait for editor to be disabled', () => assertEditorDisabled(editor));
@@ -552,14 +551,17 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       const editor = hook.editor();
       assert.equal(hook.editor().mode.get(), 'readonly', 'Editor should be readonly');
       assert.isTrue(hook.editor().readonly, 'Editor should be readonly');
+      assertEditorDisabled(editor);
 
       editor.mode.set('design');
       assert.equal(hook.editor().mode.get(), 'readonly', 'Editor should still be in readonly');
       assert.isTrue(hook.editor().readonly, 'Editor should still be in readonly');
+      assertEditorDisabled(editor);
 
       editor.options.set('disabled', false);
       assert.equal(hook.editor().mode.get(), 'readonly', 'Editor should still be in readonly');
       assert.isTrue(hook.editor().readonly, 'Editor should still be in readonly');
+      await Waiter.pTryUntil('Wait for editor to be enabled', () => assertEditorEnabled(editor));
     });
   });
 });

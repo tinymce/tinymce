@@ -25,6 +25,8 @@
 @textfield-focus-box-shadow: 0 0 0 1px @color-tint;
 @textfield-focus-outline: none;
 
+@toolbar-textfield-height: @toolbar-button-height;
+
 .tox {
   .tox-textfield {
     appearance: none;
@@ -64,6 +66,8 @@
     margin-bottom: 3px;
     margin-top: 2px;
     max-width: 250px;
+    min-height: unset;
+    height: @toolbar-textfield-height;
   }
 
   .tox-toolbar-textfield[disabled] {
