@@ -158,22 +158,13 @@ export const renderSizeInput = <ApiType = never>(spec: SizeInputGenericSpec<ApiT
       classes: [ 'tox-context-form__group' ]
     },
     components: [
-      {
-        dom: {
-          tag: 'div',
-          // TODO: is this needed?
-          classes: [ 'tox-form__controls-h-stack' ]
-        },
-        components: [
-          // NOTE: Form coupled inputs to the FormField.sketch themselves.
-          widthField,
-          heightField,
-          formGroup([
-            getLabel(Unicode.nbsp),
-            pLock
-          ])
-        ]
-      }
+      // NOTE: Form coupled inputs to the FormField.sketch themselves.
+      widthField,
+      heightField,
+      formGroup([
+        getLabel(Unicode.nbsp),
+        pLock
+      ])
     ],
     field1Name: 'width',
     field2Name: 'height',
