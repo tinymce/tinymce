@@ -136,7 +136,9 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
     });
   }, 100);
 
-  editor.on('ElementScroll', scrollThrottler.throttle);
+  if (editor.inline) {
+    editor.on('ElementScroll', scrollThrottler.throttle);
+  }
 
   editor.on('init', () => {
     const rawWire = TableWire.get(editor, isResizable);
