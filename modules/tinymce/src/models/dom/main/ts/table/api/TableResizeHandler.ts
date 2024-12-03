@@ -1,4 +1,4 @@
-import { Arr, Singleton, Strings, Type } from '@ephox/katamari';
+import { Arr, Singleton, Strings, Throttler, Type } from '@ephox/katamari';
 import { Adjustments, ResizeBehaviour, ResizeWire, Sizes, TableConversions, TableGridSize, TableLookup, TableResize, Warehouse } from '@ephox/snooker';
 import { Attribute, Css, SugarElement } from '@ephox/sugar';
 
@@ -48,6 +48,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
   const selectionRng = Singleton.value<Range>();
   const tableResize = Singleton.value<TableResize>();
   const resizeWire = Singleton.value<ResizeWire>();
+  const hoveredTable = Singleton.value<SugarElement<HTMLTableElement>>();
   let startW: number;
   let startRawW: string;
   let startH: number;
@@ -127,16 +128,31 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
     });
   };
 
+  const scrollThrottler = Throttler.last(() => {
+    tableResize.on((resize) => {
+      hoveredTable.on((table) => {
+        resize.refreshBars(table);
+      });
+    });
+  }, 100);
+
+  editor.on('ElementScroll', scrollThrottler.throttle);
+
   editor.on('init', () => {
     const rawWire = TableWire.get(editor, isResizable);
     resizeWire.set(rawWire);
     if (Options.hasTableObjectResizing(editor) && Options.hasTableResizeBars(editor)) {
       const resizing = lazyResizingBehaviour();
+
       const sz = TableResize.create(rawWire, resizing, lazySizing);
 
       if (!editor.mode.isReadOnly()) {
         sz.on();
       }
+
+      sz.events.hoverTable.bind((event) => {
+        event.table.fold(hoveredTable.clear, hoveredTable.set);
+      });
 
       sz.events.startDrag.bind((_event) => {
         selectionRng.set(editor.selection.getRng());
@@ -239,6 +255,8 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
 
   editor.on('remove', () => {
     destroy();
+
+    editor.off('ElementScroll', scrollThrottler.throttle);
   });
 
   const refresh = (table: HTMLTableElement): void => {

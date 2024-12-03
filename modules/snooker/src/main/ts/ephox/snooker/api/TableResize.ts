@@ -1,3 +1,4 @@
+import { Optional } from '@ephox/katamari';
 import { Bindable, Event, Events } from '@ephox/porkbun';
 import { SugarElement } from '@ephox/sugar';
 
@@ -21,10 +22,15 @@ export interface AfterTableResizeEvent {
   readonly type: ResizeType;
 }
 
+export interface TestEvent {
+  readonly table: Optional<SugarElement<HTMLTableElement>>;
+}
+
 interface TableResizeEventRegistry {
   readonly beforeResize: Bindable<BeforeTableResizeEvent>;
   readonly afterResize: Bindable<AfterTableResizeEvent>;
   readonly startDrag: Bindable<{}>;
+  readonly hoverTable: Bindable<TestEvent>;
 }
 
 interface TableResizeEvents {
@@ -33,6 +39,7 @@ interface TableResizeEvents {
     readonly beforeResize: (table: SugarElement<HTMLTableElement>, type: ResizeType) => void;
     readonly afterResize: (table: SugarElement<HTMLTableElement>, type: ResizeType) => void;
     readonly startDrag: () => void;
+    readonly hoverTable: (table: Optional<SugarElement<HTMLTableElement>>) => void;
   };
 }
 
@@ -55,6 +62,7 @@ const create = (wire: ResizeWire, resizing: ResizeBehaviour, lazySizing: (elemen
     beforeResize: Event([ 'table', 'type' ]),
     afterResize: Event([ 'table', 'type' ]),
     startDrag: Event([]),
+    hoverTable: Event([ 'table' ])
   });
 
   manager.events.adjustHeight.bind((event) => {
@@ -68,6 +76,10 @@ const create = (wire: ResizeWire, resizing: ResizeBehaviour, lazySizing: (elemen
 
   manager.events.startAdjust.bind((_event) => {
     events.trigger.startDrag();
+  });
+
+  manager.events.hoverTable.bind((event) => {
+    events.trigger.hoverTable(event.table);
   });
 
   manager.events.adjustWidth.bind((event) => {

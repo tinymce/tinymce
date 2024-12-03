@@ -21,16 +21,22 @@ export interface DragAdjustWidthEvent {
   readonly column: number;
 }
 
+export interface TestEvent {
+  readonly table: Optional<SugarElement<HTMLTableElement>>;
+}
+
 export interface DragAdjustEvents {
   readonly registry: {
     readonly adjustHeight: Bindable<DragAdjustHeightEvent>;
     readonly adjustWidth: Bindable<DragAdjustWidthEvent>;
     readonly startAdjust: Bindable<{}>;
+    readonly hoverTable: Bindable<TestEvent>;
   };
   readonly trigger: {
     readonly adjustHeight: (table: SugarElement<HTMLTableElement>, delta: number, row: number) => void;
     readonly adjustWidth: (table: SugarElement<HTMLTableElement>, delta: number, column: number) => void;
     readonly startAdjust: () => void;
+    readonly hoverTable: (table: Optional<SugarElement<HTMLTableElement>>) => void;
   };
 }
 
@@ -135,12 +141,14 @@ export const BarManager = (wire: ResizeWire): BarManager => {
         */
         if (SugarBody.inBody(event.target)) {
           Bars.destroy(wire);
+          events.trigger.hoverTable(Optional.none());
         }
       },
       (table) => {
         if (resizing.isActive()) {
           hoverTable = Optional.some(table);
           Bars.refresh(wire, table);
+          events.trigger.hoverTable(hoverTable);
         }
       }
     );
@@ -160,7 +168,8 @@ export const BarManager = (wire: ResizeWire): BarManager => {
   const events: DragAdjustEvents = Events.create({
     adjustHeight: Event([ 'table', 'delta', 'row' ]),
     adjustWidth: Event([ 'table', 'delta', 'column' ]),
-    startAdjust: Event([])
+    startAdjust: Event([]),
+    hoverTable: Event([ 'table' ])
   });
 
   return {
