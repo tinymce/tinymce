@@ -18,7 +18,10 @@ const placement = (component: AlloyComponent, anchorInfo: NodeAnchor, origin: Or
     .filter(SugarBody.inBody)
     .bind((target) => {
       const rect = target.dom.getBoundingClientRect();
-      const nodeBox = ContentAnchorCommon.getBox(rect.left, rect.top, rect.width, rect.height);
+      const nodeBox = ContentAnchorCommon.getBox(rect.left, rect.top,
+        Math.min(rect.width, document.documentElement.clientWidth),
+        Math.min(rect.height, document.documentElement.clientHeight)
+      );
       const elem = anchorInfo.node.getOr(component.element);
       return ContentAnchorCommon.calcNewAnchor(nodeBox, rootPoint, anchorInfo, origin, elem);
     });
