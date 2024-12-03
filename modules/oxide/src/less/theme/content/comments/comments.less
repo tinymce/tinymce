@@ -51,5 +51,22 @@
     background-color: @document-comment-active-background-color;
     border-radius: 3px;
     box-shadow: 0 0 0 2px @keyboard-focus-outline-color;
+
+    & img,
+    & > audio,
+    & > video,
+    & span.mce-preview-object {
+      &:not([data-mce-selected]) {
+        box-shadow: 0 0 0 5px @keyboard-focus-outline-color;
+      }
+    }
+
+    &:has(
+      img[data-mce-selected], 
+      > audio[data-mce-selected],
+      > video[data-mce-selected],
+      span.mce-preview-object[data-mce-selected]) {
+      box-shadow: none;
+    }
   }
 }
