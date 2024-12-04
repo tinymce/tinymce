@@ -34,7 +34,7 @@ const northY = (anchor: AnchorBox): number => anchor.y;
 const southY = (anchor: AnchorBox, element: AnchorElement): number => anchor.y + anchor.height - element.height;
 
 // returns centre of anchor minus half the element height - used to vertically centre element to the anchor
-const centreY = (anchor: AnchorBox, element: AnchorElement): number => anchor.y + (anchor.height / 2) - (element.height / 2);
+const centreY = (anchor: AnchorBox, element: AnchorElement, boundsHeight: number): number => anchor.y + (Math.min(anchor.height, boundsHeight) / 2) - (element.height / 2);
 
 // positions element relative to the bottom right of the anchor
 const southwest: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => NuSpotInfo(
@@ -103,9 +103,9 @@ const south: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles:
 );
 
 // positions element with the right edge against the anchor, vertically centered
-const east: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => NuSpotInfo(
+const east: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble, _placee: SugarElement<HTMLElement>, bounds: Boxes.Bounds) => NuSpotInfo(
   eastEdgeX(anchor, element),
-  centreY(anchor, element),
+  centreY(anchor, element, bounds.height),
   bubbles.insetEast(),
   Direction.west(),
   Placement.East,
@@ -114,9 +114,9 @@ const east: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: 
 );
 
 // positions element with the left each against the anchor, vertically centered
-const west: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => NuSpotInfo(
+const west: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble, _placee: SugarElement<HTMLElement>, bounds: Boxes.Bounds) => NuSpotInfo(
   westEdgeX(anchor),
-  centreY(anchor, element),
+  centreY(anchor, element, bounds.height),
   bubbles.insetWest(),
   Direction.east(),
   Placement.West,

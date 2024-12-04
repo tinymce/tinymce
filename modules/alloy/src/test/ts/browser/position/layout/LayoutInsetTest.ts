@@ -65,5 +65,35 @@ describe('LayoutInsetTest', () => {
       const newLayout = LayoutInset.flip(Boxes.bounds(0, 0, 50, 50), { width: 10, height: 10 }, Bubble.fallback(), element, Boxes.win());
       assert.equal(newLayout.placement, Placement.North);
     });
+
+    it('TINY-11549: when the boudaries are smaller than the anchor element the position sohuld respect the middle of the boundaries and not the anchor element', () => {
+      const achorElem = Boxes.bounds(0, 0, 500, 100);
+      const element = { width: 200, height: 50 };
+      const placee = SugarElement.fromTag('div');
+
+      const newLayoutWithBiggerBoudariesNorth = LayoutInset.north(achorElem, element, Bubble.fallback(), placee, Boxes.bounds(0, 0, 1500, 200));
+      assert.equal(newLayoutWithBiggerBoudariesNorth.x, 150);
+
+      const newLayoutWithSmallerBoundariesNorth = LayoutInset.north(achorElem, element, Bubble.fallback(), placee, Boxes.bounds(0, 0, 300, 200));
+      assert.equal(newLayoutWithSmallerBoundariesNorth.x, 50);
+
+      const newLayoutWithBiggerBoudariesSouth = LayoutInset.south(achorElem, element, Bubble.fallback(), placee, Boxes.bounds(0, 0, 1500, 200));
+      assert.equal(newLayoutWithBiggerBoudariesSouth.x, 150);
+
+      const newLayoutWithSmallerBoundariesSouth = LayoutInset.south(achorElem, element, Bubble.fallback(), placee, Boxes.bounds(0, 0, 300, 200));
+      assert.equal(newLayoutWithSmallerBoundariesSouth.x, 50);
+
+      const newLayoutWithBiggerBoudariesWest = LayoutInset.west(achorElem, element, Bubble.fallback(), placee, Boxes.bounds(0, 0, 1500, 2000));
+      assert.equal(newLayoutWithBiggerBoudariesWest.y, 25);
+
+      const newLayoutWithSmallerBoudariesWest = LayoutInset.west(achorElem, element, Bubble.fallback(), placee, Boxes.bounds(0, 0, 1500, 80));
+      assert.equal(newLayoutWithSmallerBoudariesWest.y, 15);
+
+      const newLayoutWithBiggerBoudariesEast = LayoutInset.east(achorElem, element, Bubble.fallback(), placee, Boxes.bounds(0, 0, 1500, 2000));
+      assert.equal(newLayoutWithBiggerBoudariesEast.y, 25);
+
+      const newLayoutWithSmallerBoudariesEast = LayoutInset.east(achorElem, element, Bubble.fallback(), placee, Boxes.bounds(0, 0, 1500, 80));
+      assert.equal(newLayoutWithSmallerBoudariesEast.y, 15);
+    });
   });
 });
