@@ -1241,7 +1241,7 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
   // };
 
   context('Location of table resize bar handler container', () => {
-    context.only('iframe mode', () => {
+    context('iframe mode', () => {
       const hook = TinyHooks.bddSetup<Editor>(defaultSettings, [], true);
 
       it('TINY-11215: The resize bar handler container should be inside the iframe', async () => {
@@ -1253,7 +1253,7 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
       });
     });
 
-    context.only('inline mode', () => {
+    context('inline mode', () => {
       const hook = TinyHooks.bddSetupFromElement<Editor>({ ...defaultSettings, inline: true, plugins: 'table' }, () => {
         const div = SugarElement.fromTag('div');
         Html.set(div, percentTable);
@@ -1331,7 +1331,7 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
         () => scroller.dom.scrollTo(x, y)
       );
 
-    context.only('inline mode with scrollable container', () => {
+    context('inline mode with scrollable container', () => {
       const hook = TinyHooks.bddSetupFromElement<Editor>({ ...defaultSettings, inline: true, plugins: 'table', ui_mode: 'split' }, () => {
         const div = SugarElement.fromTag('div');
         Css.setAll(div, {
