@@ -1,6 +1,6 @@
 project: tinymce
 kind: Fixed
-body: tab navigation for ContextFormSlider.
+body: Keyboard navigation for context form sliders.
 time: 2024-12-05T09:26:33.096250912+01:00
 custom:
   Issue: TINY-11482
