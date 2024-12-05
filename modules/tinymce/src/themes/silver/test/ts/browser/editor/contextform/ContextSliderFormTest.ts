@@ -170,7 +170,15 @@ describe('browser.tinymce.themes.silver.editor.ContextSliderFormTest', () => {
     TinyUiActions.keystroke(editor, Keys.tab());
 
     await FocusTools.pTryOnSelector('Focus should be on the B button', SugarDocument.getDocument(), buttonBSelector);
-    TinyUiActions.keystroke(editor, Keys.tab());
+
+    // Reverse tab navigation
+    await FocusTools.pTryOnSelector('Focus should stay on B button', SugarDocument.getDocument(), buttonBSelector);
+    TinyUiActions.keystroke(editor, Keys.tab(), { shiftKey: true });
+
+    await FocusTools.pTryOnSelector('Focus should be back on slider', SugarDocument.getDocument(), sliderSelector);
+    TinyUiActions.keystroke(editor, Keys.tab(), { shiftKey: true });
+
+    await FocusTools.pTryOnSelector('Focus should be back on A button', SugarDocument.getDocument(), buttonASelector);
   });
 });
 
