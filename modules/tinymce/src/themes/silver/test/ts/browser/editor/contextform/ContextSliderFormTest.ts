@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, FocusTools, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keys, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { Attribute, SugarBody, SugarDocument, Value } from '@ephox/sugar';
@@ -152,6 +152,25 @@ describe('browser.tinymce.themes.silver.editor.ContextSliderFormTest', () => {
     TinyUiActions.clickOnUi(editor, '.tox-pop button[aria-label="A"]');
     const input = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), '.tox-pop input').getOrDie();
     assert.strictEqual(Value.get(input), '100', 'Should be updated slider value');
+  });
+
+  it('TINY-11482: should navigate correctly via keyboard', async () => {
+    const editor = hook.editor();
+    openToolbar(editor, 'test-form');
+
+    const buttonASelector = '.tox-pop button[aria-label="A"]';
+    const sliderSelector = '.tox-pop input';
+    const buttonBSelector = '.tox-pop button[aria-label="B"]';
+
+    FocusTools.setFocus(SugarDocument.getDocument(), buttonASelector);
+    await FocusTools.pTryOnSelector('Focus should be on the A button', SugarDocument.getDocument(), buttonASelector);
+    TinyUiActions.keystroke(editor, Keys.tab());
+
+    await FocusTools.pTryOnSelector('Focus should be on the slider', SugarDocument.getDocument(), sliderSelector);
+    TinyUiActions.keystroke(editor, Keys.tab());
+
+    await FocusTools.pTryOnSelector('Focus should be on the B button', SugarDocument.getDocument(), buttonBSelector);
+    TinyUiActions.keystroke(editor, Keys.tab());
   });
 });
 
