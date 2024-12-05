@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Tooltip would not show for group toolbar button.
+time: 2024-10-28T16:13:31.620188+01:00
+custom:
+  Issue: TINY-11391

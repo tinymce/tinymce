@@ -190,17 +190,17 @@ const onUnlockedUnmergable = (warehouse: Warehouse, target: TargetUnmergable): O
   onUnmergable(warehouse, target).filter((cells) => allUnlocked(warehouse, cells));
 
 export {
-  run,
-  toDetailList,
   onCell,
   onCells,
+  onMergable,
   onPaste,
   onPasteByEditor,
-  onMergable,
-  onUnmergable,
   onUnlockedCell,
   onUnlockedCells,
   onUnlockedMergable,
-  onUnlockedUnmergable
+  onUnlockedUnmergable,
+  onUnmergable,
+  run,
+  toDetailList
 };
 

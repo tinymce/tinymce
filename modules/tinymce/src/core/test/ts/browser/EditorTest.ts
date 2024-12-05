@@ -1,4 +1,4 @@
-import { UiFinder } from '@ephox/agar';
+import { UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
@@ -440,6 +440,35 @@ describe('browser.tinymce.core.EditorTest', () => {
     editor.dom.dispatch(editor.getBody(), 'click');
     assert.isFalse(isDisabled('.tox-editor-container button:last-of-type'), 'setMode');
     assert.equal(clickCount, 3, 'setMode');
+  });
+
+  it('TINY-11488: Verifies click event behavior in disabled and enabled editor states', async () => {
+    const editor = hook.editor();
+    let clickCount = 0;
+
+    const isDisabled = (selector: string) => {
+      const elm = UiFinder.findIn(SugarBody.body(), selector);
+      return elm.forall((elm) => Attribute.has(elm, 'disabled') || Class.has(elm, 'tox-tbtn--disabled'));
+    };
+
+    editor.on('click', () => {
+      clickCount++;
+    });
+
+    editor.dom.dispatch(editor.getBody(), 'click');
+    assert.equal(clickCount, 1, 'Click should be counted in enabled state');
+
+    editor.options.set('disabled', true);
+    await Waiter.pWait(0);
+    assert.isTrue(isDisabled('.tox-editor-container button:last-of-type'), 'Button should be disabled in disabled mode');
+    editor.dom.dispatch(editor.getBody(), 'click');
+    assert.equal(clickCount, 1, 'Click should not be counted in disabled state');
+
+    editor.options.set('disabled', false);
+    await Waiter.pWait(0);
+    editor.dom.dispatch(editor.getBody(), 'click');
+    assert.isFalse(isDisabled('.tox-editor-container button:last-of-type'), 'Button should remain enabled in enabled state');
+    assert.equal(clickCount, 2, 'Click should be counted in re-enabled state');
   });
 
   it('TBA: translate', () => {

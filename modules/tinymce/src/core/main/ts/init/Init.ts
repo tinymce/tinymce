@@ -12,6 +12,7 @@ import ThemeManager, { Theme } from '../api/ThemeManager';
 import { EditorUiApi } from '../api/ui/Ui';
 import Tools from '../api/util/Tools';
 import * as ErrorReporter from '../ErrorReporter';
+import * as Disabled from '../mode/Disabled';
 import { appendContentCssFromSettings } from './ContentCss';
 import * as InitContentBody from './InitContentBody';
 import * as InitIframe from './InitIframe';
@@ -160,7 +161,7 @@ const augmentEditorUiApi = (editor: Editor, api: Partial<EditorUiApi>) => {
     hide: Optional.from(api.hide).getOr(Fun.noop),
     isEnabled: Optional.from(api.isEnabled).getOr(Fun.always),
     setEnabled: (state) => {
-      const shouldSkip = state && editor.mode.get() === 'readonly';
+      const shouldSkip = state && (editor.mode.get() === 'readonly' || Disabled.isDisabled(editor));
       if (!shouldSkip) {
         Optional.from(api.setEnabled).each((f) => f(state));
       }
