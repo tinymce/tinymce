@@ -1,6 +1,6 @@
 project: alloy
 kind: Improved
-body: Anchor center position now also consider boundaries.
+body: Centering an element now also considers boundaries.
 time: 2024-12-04T17:27:08.025517432+01:00
 custom:
   Issue: TINY-11549
