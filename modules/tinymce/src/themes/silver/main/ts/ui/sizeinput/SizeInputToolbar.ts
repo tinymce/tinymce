@@ -10,7 +10,7 @@ import {
   Keying,
   NativeEvents, Representing, SketchSpec, Tabstopping, Tooltipping
 } from '@ephox/alloy';
-import { Cell, Fun, Id, Optional, Optionals, Unicode } from '@ephox/katamari';
+import { Cell, Fun, Id, Optional, Unicode } from '@ephox/katamari';
 import { Focus, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import { formInputEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
@@ -30,10 +30,10 @@ export interface SizeInputGenericSpec<ApiType = never> {
   readonly enabled: boolean;
   readonly width: string;
   readonly height: string;
-  readonly onEnter: Optional<(input: AlloyComponent) => Optional<boolean>>;
-  readonly onInput: Optional<(input: AlloyComponent) => void>;
-  readonly onSetup: Optional<(api: ApiType) => (api: ApiType) => void>;
-  readonly getApi: Optional<(input: AlloyComponent) => ApiType>;
+  readonly onEnter: (input: AlloyComponent) => Optional<boolean>;
+  readonly onInput: (input: AlloyComponent) => void;
+  readonly onSetup: (api: ApiType) => (api: ApiType) => void;
+  readonly getApi: (input: AlloyComponent) => ApiType;
 }
 
 export const renderSizeInput = <ApiType = never>(spec: SizeInputGenericSpec<ApiType>, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
@@ -100,7 +100,7 @@ export const renderSizeInput = <ApiType = never>(spec: SizeInputGenericSpec<ApiT
           AlloyTriggers.emitWith(component, ratioEvent, { isField1 });
         })
       ]),
-      ...spec.onEnter.map((onEnter) => Keying.config({ mode: 'special', onEnter, onEscape: goToParent })).toArray()
+      Keying.config({ mode: 'special', onEnter: spec.onEnter, onEscape: goToParent })
     ]),
     selectOnFocus: false
   });
@@ -147,10 +147,10 @@ export const renderSizeInput = <ApiType = never>(spec: SizeInputGenericSpec<ApiT
 
   const editorOffCell = Cell(Fun.noop);
 
-  const controlLifecycleHandlers = Optionals.lift2(spec.onSetup, spec.getApi, (onSetup, getApi) => [
-    onControlAttached<ApiType>( { onSetup, getApi }, editorOffCell),
-    onControlDetached<ApiType>( { getApi }, editorOffCell)
-  ]).getOr([]);
+  const controlLifecycleHandlers = [
+    onControlAttached<ApiType>( { onSetup: spec.onSetup, getApi: spec.getApi }, editorOffCell),
+    onControlDetached<ApiType>( { getApi: spec.getApi }, editorOffCell)
+  ];
 
   return AlloyFormCoupledInputs.sketch({
     dom: {
@@ -212,9 +212,7 @@ export const renderSizeInput = <ApiType = never>(spec: SizeInputGenericSpec<ApiT
           const value2 = optOther.map<string>(Representing.getValue).getOr('');
           converter = makeRatioConverter(value1, value2);
         }),
-        AlloyEvents.run(formInputEvent, (component) => {
-          spec.onInput.each((onInput) => onInput(component));
-        }),
+        AlloyEvents.run(formInputEvent, spec.onInput),
         ...controlLifecycleHandlers,
       ])
     ])

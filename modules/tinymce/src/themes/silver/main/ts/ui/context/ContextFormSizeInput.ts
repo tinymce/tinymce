@@ -18,9 +18,9 @@ export const renderContextFormSizeInput = (
     enabled: true,
     width,
     height,
-    onEnter: Optional.some(onEnter),
-    onInput: Optional.some((input) => ctx.onInput(ContextFormApi.getFormApi(input))),
-    onSetup: Optional.some(ctx.onSetup),
-    getApi: Optional.some(ContextFormApi.getFormApi<InlineContent.SizeData>)
+    onEnter,
+    onInput: (input) => ctx.onInput(ContextFormApi.getFormApi(input)),
+    onSetup: ctx.onSetup,
+    getApi: ContextFormApi.getFormApi<InlineContent.SizeData>
   }, providersBackstage);
 };
