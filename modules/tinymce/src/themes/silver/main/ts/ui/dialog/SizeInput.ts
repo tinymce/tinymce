@@ -13,8 +13,6 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
     label: spec.label,
     enabled: spec.enabled,
     context: spec.context,
-    name: spec.name,
-    width: '',
-    height: ''
+    name: spec.name
   }, providersBackstage);
 };

@@ -9,7 +9,7 @@ import {
 } from '@ephox/alloy';
 import { Id, Optional, Unicode } from '@ephox/katamari';
 
-import { formChangeEvent, formInputEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
+import { formChangeEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as UiState from '../../UiState';
@@ -25,8 +25,6 @@ export interface SizeInputGenericSpec {
   readonly enabled: boolean;
   readonly context: string;
   readonly name: string;
-  readonly width: string;
-  readonly height: string;
 }
 
 export const renderSizeInput = (spec: SizeInputGenericSpec, providersBackstage: UiFactoryBackstageProviders): SketchSpec => {
@@ -78,7 +76,6 @@ export const renderSizeInput = (spec: SizeInputGenericSpec, providersBackstage: 
   const getFieldPart = (isField1: boolean) => AlloyFormField.parts.field({
     factory: AlloyInput,
     inputClasses: [ 'tox-textfield' ],
-    data: isField1 ? spec.width : spec.height,
     inputBehaviours: Behaviour.derive([
       Disabling.config({ disabled }),
       toggleOnReceive,
@@ -149,7 +146,6 @@ export const renderSizeInput = (spec: SizeInputGenericSpec, providersBackstage: 
         });
       });
     },
-    onInput: (current) => AlloyTriggers.emit(current, formInputEvent),
     coupledFieldBehaviours: Behaviour.derive([
       Disabling.config({
         disabled,
@@ -165,7 +161,7 @@ export const renderSizeInput = (spec: SizeInputGenericSpec, providersBackstage: 
         }
       }),
       UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext('mode:design')),
-      AddEventsBehaviour.config('size-input-events', [
+      AddEventsBehaviour.config('size-input-events2', [
         AlloyEvents.run<RatioEvent>(ratioEvent, (component, simulatedEvent) => {
           const isField1 = simulatedEvent.event.isField1;
           const optCurrent = isField1 ? AlloyFormCoupledInputs.getField1(component) : AlloyFormCoupledInputs.getField2(component);
@@ -178,4 +174,3 @@ export const renderSizeInput = (spec: SizeInputGenericSpec, providersBackstage: 
     ])
   });
 };
-
