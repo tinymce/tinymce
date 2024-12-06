@@ -95,7 +95,7 @@ export const renderSizeInput = <ApiType = never>(spec: SizeInputGenericSpec<ApiT
     inputBehaviours: Behaviour.derive([
       Disabling.config({ disabled }),
       Tabstopping.config({}),
-      AddEventsBehaviour.config('size-input-events', [
+      AddEventsBehaviour.config('size-input-toolbar-events', [
         AlloyEvents.run(NativeEvents.focusin(), (component, _simulatedEvent) => {
           AlloyTriggers.emitWith(component, ratioEvent, { isField1 });
         })
@@ -203,7 +203,7 @@ export const renderSizeInput = <ApiType = never>(spec: SizeInputGenericSpec<ApiT
         }
       }),
       UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext('mode:design')),
-      AddEventsBehaviour.config('size-input-events2', [
+      AddEventsBehaviour.config('size-input-toolbar-events2', [
         AlloyEvents.run<RatioEvent>(ratioEvent, (component, simulatedEvent) => {
           const isField1 = simulatedEvent.event.isField1;
           const optCurrent = isField1 ? AlloyFormCoupledInputs.getField1(component) : AlloyFormCoupledInputs.getField2(component);
