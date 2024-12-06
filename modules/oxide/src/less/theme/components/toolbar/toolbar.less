@@ -155,3 +155,23 @@
   display: flex;
   align-items: center;
 }
+
+.tox-focusable-wrapper {
+  pointer-events: none;
+
+  .tox-textfield-size {
+    pointer-events: all;
+  }
+
+  &:focus {
+    background-color: @toolbar-button-bespoke-focus-background-color;
+    border-radius: @control-border-radius;
+    border-style: solid;
+    border-width: 1px;
+    &:extend(.tox .tox-textfield:focus);
+  }
+
+  &:has(input:focus)::after {
+    .keyboard-focus-outline-mixin();
+  }
+}

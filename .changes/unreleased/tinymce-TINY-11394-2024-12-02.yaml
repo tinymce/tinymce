@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Keyboard navigation for size inputs in context forms.
+time: 2024-12-02T12:24:55.126515322+01:00
+custom:
+  Issue: TINY-11394
