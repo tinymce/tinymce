@@ -138,11 +138,11 @@ export const renderSizeInput = <ApiType = never>(spec: SizeInputGenericSpec<ApiT
   });
 
   const widthField = focusableWrapper(AlloyFormCoupledInputs.parts.field1(
-    formGroup([ AlloyFormField.parts.label(getLabel('Width')), getFieldPart(true) ])
+    formGroup([ AlloyFormField.parts.label(getLabel('Width:')), getFieldPart(true) ])
   ));
 
   const heightField = focusableWrapper(AlloyFormCoupledInputs.parts.field2(
-    formGroup([ AlloyFormField.parts.label(getLabel('Height')), getFieldPart(false) ])
+    formGroup([ AlloyFormField.parts.label(getLabel('Height:')), getFieldPart(false) ])
   ));
 
   const editorOffCell = Cell(Fun.noop);
