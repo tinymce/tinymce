@@ -23,8 +23,8 @@ interface RatioEvent extends CustomEvent {
 export interface SizeInputGenericSpec {
   readonly label: Optional<string>;
   readonly enabled: boolean;
-  readonly context: Optional<string>;
-  readonly name: Optional<string>;
+  readonly context: string;
+  readonly name: string;
   readonly width: string;
   readonly height: string;
 }
@@ -37,8 +37,8 @@ export const renderSizeInput = (spec: SizeInputGenericSpec, providersBackstage: 
   const makeIcon = (iconName: string) =>
     Icons.render(iconName, { tag: 'span', classes: [ 'tox-icon', 'tox-lock-icon__' + iconName ] }, providersBackstage.icons);
 
-  const disabled = () => !spec.enabled || spec.context.exists((context) => providersBackstage.checkUiComponentContext(context).shouldDisable);
-  const toggleOnReceive = spec.context.map((context) => UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext(context)));
+  const disabled = () => !spec.enabled || providersBackstage.checkUiComponentContext(spec.context).shouldDisable;
+  const toggleOnReceive = UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext(spec.context));
 
   const label = spec.label.getOr('Constrain proportions');
   const translatedLabel = providersBackstage.translate(label);
@@ -57,7 +57,7 @@ export const renderSizeInput = (spec: SizeInputGenericSpec, providersBackstage: 
     ],
     buttonBehaviours: Behaviour.derive([
       Disabling.config({ disabled }),
-      ...toggleOnReceive.toArray(),
+      toggleOnReceive,
       Tabstopping.config({}),
       Tooltipping.config(
         providersBackstage.tooltips.getConfig({
@@ -81,14 +81,14 @@ export const renderSizeInput = (spec: SizeInputGenericSpec, providersBackstage: 
     data: isField1 ? spec.width : spec.height,
     inputBehaviours: Behaviour.derive([
       Disabling.config({ disabled }),
-      ...toggleOnReceive.toArray(),
+      toggleOnReceive,
       Tabstopping.config({}),
       AddEventsBehaviour.config('size-input-events', [
         AlloyEvents.run(NativeEvents.focusin(), (component, _simulatedEvent) => {
           AlloyTriggers.emitWith(component, ratioEvent, { isField1 });
         }),
         AlloyEvents.run(NativeEvents.change(), (component, _simulatedEvent) => {
-          spec.name.each((name) => AlloyTriggers.emitWith(component, formChangeEvent, { name }));
+          AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name });
         })
       ])
     ]),

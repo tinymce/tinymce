@@ -2,7 +2,6 @@ import {
   SketchSpec
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
-import { Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as SizeInput from '../sizeinput/SizeInput';
@@ -13,8 +12,8 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
   return SizeInput.renderSizeInput({
     label: spec.label,
     enabled: spec.enabled,
-    context: Optional.some(spec.context),
-    name: Optional.some(spec.name),
+    context: spec.context,
+    name: spec.name,
     width: '',
     height: ''
   }, providersBackstage);
