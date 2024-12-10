@@ -17,7 +17,7 @@ export const renderContextFormSliderInput = (
 
   const pLabel = ctx.label.map((label) => FormField.parts.label({
     dom: { tag: 'label', classes: [ 'tox-label' ] },
-    components: [ GuiFactory.text(label) ]
+    components: [ GuiFactory.text(providers.translate(label)) ]
   }));
 
   const pField = FormField.parts.field({
