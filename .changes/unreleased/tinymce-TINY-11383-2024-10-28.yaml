@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Changing the table row type when a contenteditable=false cell was selected would not work as expected.
-time: 2024-10-28T20:02:08.185398842+01:00
-custom:
-    Issue: TINY-11383

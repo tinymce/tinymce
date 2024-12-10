@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: The `samp` format was being applied as a `block` level format, instead of an `inline` format.
-time: 2024-10-30T08:34:13.33087+10:00
-custom:
-  Issue: TINY-11390

@@ -1,6 +1,0 @@
-project: tinymce
-kind: Added
-body: New `onSetup` function to the context form API.
-time: 2024-11-07T14:00:39.729004+01:00
-custom:
-  Issue: TINY-11494

@@ -1,6 +1,0 @@
-project: tinymce
-kind: Added
-body: It is now possible to create labeled groups in context toolbars.
-time: 2024-10-10T09:48:36.710841346+02:00
-custom:
-  Issue: TINY-11095
