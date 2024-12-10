@@ -4,15 +4,14 @@ import Editor from '../Editor';
 import Env from '../Env';
 
 export const registerCommands = (editor: Editor): void => {
-  const browser = PlatformDetection.detect().browser;
+  const browser = Env.browser;
 
   const copyToClipboard = async (text: string) => {
     await navigator.clipboard.writeText(text);
   };
 
   const pasteFromClipboard = async (): Promise<void> => {
-    let text = '';
-    text = await navigator.clipboard.readText();
+    const text = await navigator.clipboard.readText();
     editor.selection.setContent(text);
   };
 
@@ -23,14 +22,10 @@ export const registerCommands = (editor: Editor): void => {
 
   const handleSecureContentError = () => {
 
-    let msg = editor.translate(
+    const msg = editor.translate(
       'Error: This operation requires a secure context (HTTPS)' +
         'Direct access to the clipboard is not allowed in insecure contexts.'
     );
-
-    if (Env.os.isMacOS() || Env.os.isiOS()) {
-      msg = msg.replace(/Ctrl\+/g, '\u2318+');
-    }
 
     editor.notificationManager.open({ text: msg, type: 'error' });
 
@@ -58,13 +53,9 @@ export const registerCommands = (editor: Editor): void => {
 
   const handlePermissionError = () => {
 
-    let msg = editor.translate(
+    const msg = editor.translate(
       'Clipboard permission denied. Please allow clipboard access to use this feature.'
     );
-
-    if (Env.os.isMacOS() || Env.os.isiOS()) {
-      msg = msg.replace(/Ctrl\+/g, '\u2318+');
-    }
 
     editor.notificationManager.open({ text: msg, type: 'error' });
 
