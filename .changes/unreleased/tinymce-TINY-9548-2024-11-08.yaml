@@ -1,6 +1,0 @@
-project: tinymce
-kind: Improved
-body: Base64 data was not properly decoded due to unhandled URL-encoded characters.
-time: 2024-11-08T09:23:16.862556+10:00
-custom:
-  Issue: TINY-9548
