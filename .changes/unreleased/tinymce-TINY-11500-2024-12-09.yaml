@@ -1,6 +1,6 @@
 project: tinymce
 kind: Fixed
-body: Attribute names with invalid characters were not properly filtered out.
+body: Malformed attribute names caused a parse error when loading content.
 time: 2024-12-09T17:29:29.84038+01:00
 custom:
     Issue: TINY-11500

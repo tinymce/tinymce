@@ -111,8 +111,7 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
 const processAttr = (ele: Element, settings: DomParserSettings, schema: Schema, scope: Namespace.NamespaceType, evt: SanitizeAttributeHookEvent) => {
   const tagName = ele.tagName.toLowerCase();
   const { attrName, attrValue } = evt;
-
-  evt.keepAttr = shouldKeepAttribute(settings, schema, scope, tagName, attrName, attrValue);
+  evt.keepAttr = shouldKeepAttribute(settings, schema, scope, tagName, attrName, attrValue) && Attribute.validateName(attrName);
 
   if (evt.keepAttr) {
     evt.allowedAttributes[attrName] = true;

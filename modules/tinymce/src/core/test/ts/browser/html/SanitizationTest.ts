@@ -7,7 +7,7 @@ import { getSanitizer, MimeType } from 'tinymce/core/html/Sanitization';
 describe('browser.tinymce.core.html.SanitizationTest', () => {
   context('Sanitize html', () => {
     const testHtmlSanitizer = (testCase: { input: string; expected: string; mimeType: MimeType; sanitize?: boolean; validate?: boolean }) => {
-      const sanitizer = getSanitizer({ sanitize: testCase.sanitize ?? true, validate: testCase.validate }, Schema());
+      const sanitizer = getSanitizer({ sanitize: testCase.sanitize ?? true, validate: testCase.validate }, Schema({ valid_elements: '*[*]' }));
 
       const body = document.createElement('body');
       body.innerHTML = testCase.input;
@@ -22,12 +22,20 @@ describe('browser.tinymce.core.html.SanitizationTest', () => {
       mimeType: 'text/html'
     }));
 
-    it('TINY-11500: Sanitize with invalid attribute name in content', () => testHtmlSanitizer({
-      input: '<i gothic",="" sans-serif;"="">test</i>',
-      expected: '<em>test</em>',
-      mimeType: 'text/html',
-      validate: true,
-    }));
+    it('TINY-11500: Sanitize with invalid attribute name in content', () => {
+      testHtmlSanitizer({
+        input: '<i gothic",="" sans-serif;"="">test</i>',
+        expected: '<i>test</i>',
+        mimeType: 'text/html',
+        validate: true,
+      });
+      testHtmlSanitizer({
+        input: '<div 4="" filler="" valid="" sans-serif;"="">test</div>',
+        expected: '<div filler="" valid="">test</div>',
+        mimeType: 'text/html',
+        validate: true,
+      });
+    });
 
     it('Disabled sanitization of iframe HTML', () => testHtmlSanitizer({
       input: '<iframe src="x"><script>alert(1)</script></iframe><iframe src="javascript:alert(1)"></iframe>',
