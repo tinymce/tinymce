@@ -8,11 +8,6 @@ import * as Insert from './Insert';
 import * as InsertAll from './InsertAll';
 import * as Remove from './Remove';
 
-// eslint-disable-next-line max-len
-const startAttributeCharacterLayout = '[A-Za-z:_]|[\u{C0}-\u{D6}]|[\u{D8}-\u{F6}]|[\u{F8}-\u{2FF}]|[\u{370}-\u{37D}]|[\u{37F}-\u{1FFF}]|[\u{200C}-\u{200D}]|[\u{2070}-\u{218F}]|[\u{2C00}-\u{2FEF}]|[\u{3001}-\u{D7FF}]|[\u{F900}-\u{FDCF}]|[\u{FDF0}-\u{FFFD}]';// |[\u{10000}-\u{EFFFF}]';
-const followingAttributeCharacterLayout = startAttributeCharacterLayout + '|"-"|"."|[0-9]|\u{B7}|[\u{0300}-\u{036F}]|[\u{203F}-\u{2040}]';
-const attributeNameRegex = RegExp(`^(${startAttributeCharacterLayout})(${followingAttributeCharacterLayout})*$`);
-
 const clone = <E extends Node> (original: SugarElement<E>, isDeep: boolean): SugarElement<E> =>
   SugarElement.fromDom(original.dom.cloneNode(isDeep) as E);
 
@@ -30,7 +25,7 @@ const shallowAs = <K extends keyof HTMLElementFullTagNameMap> (original: SugarEl
 
   const attributes = Attribute.clone(original);
   Arr.each(Obj.keys(attributes), (key) => {
-    if (!attributeNameRegex.test(key)) {
+    if (!Attribute.validateName(key)) {
       delete attributes[key];
     }
   });

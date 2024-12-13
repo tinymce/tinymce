@@ -111,8 +111,7 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
 const processAttr = (ele: Element, settings: DomParserSettings, schema: Schema, scope: Namespace.NamespaceType, evt: SanitizeAttributeHookEvent) => {
   const tagName = ele.tagName.toLowerCase();
   const { attrName, attrValue } = evt;
-
-  evt.keepAttr = shouldKeepAttribute(settings, schema, scope, tagName, attrName, attrValue);
+  evt.keepAttr = shouldKeepAttribute(settings, schema, scope, tagName, attrName, attrValue) && Attribute.validateName(attrName);
 
   if (evt.keepAttr) {
     evt.allowedAttributes[attrName] = true;
@@ -266,7 +265,9 @@ const getSanitizer = (settings: DomParserSettings, schema: Schema): Sanitizer =>
   if (settings.sanitize) {
     const purify = setupPurify(settings, schema, namespaceTracker);
     const sanitizeHtmlElement = (body: HTMLElement, mimeType: MimeType) => {
+      console.time();
       purify.sanitize(body, getPurifyConfig(settings, mimeType));
+      console.timeEnd();
       purify.removed = [];
       namespaceTracker.reset();
     };
