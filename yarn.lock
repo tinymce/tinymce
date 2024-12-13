@@ -11281,12 +11281,13 @@ tsconfig-paths-webpack-plugin@^3.2.0:
     tsconfig-paths "^3.9.0"
 
 tsconfig-paths-webpack-plugin@^4.0.1:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/tsconfig-paths-webpack-plugin/-/tsconfig-paths-webpack-plugin-4.1.0.tgz#3c6892c5e7319c146eee1e7302ed9e6f2be4f763"
-  integrity sha512-xWFISjviPydmtmgeUAuXp4N1fky+VCtfhOkDUFIv5ea7p4wuTomI4QTrXvFBX2S4jZsmyTSrStQl+E+4w+RzxA==
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/tsconfig-paths-webpack-plugin/-/tsconfig-paths-webpack-plugin-4.2.0.tgz#f7459a8ed1dd4cf66ad787aefc3d37fff3cf07fc"
+  integrity sha512-zbem3rfRS8BgeNK50Zz5SIQgXzLafiHjOwUAvk/38/o1jHn/V5QAgVUcz884or7WYcPaH3N2CIfUc2u0ul7UcA==
   dependencies:
     chalk "^4.1.0"
     enhanced-resolve "^5.7.0"
+    tapable "^2.2.1"
     tsconfig-paths "^4.1.2"
 
 tsconfig-paths@^3.14.1, tsconfig-paths@^3.9.0:
