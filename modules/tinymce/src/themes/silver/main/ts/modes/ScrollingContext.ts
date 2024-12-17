@@ -28,7 +28,7 @@ export const isScroller = (elem: SugarElement<Node> | any): boolean => {
   }
 };
 
-const isFullscreen = (editor: Editor): boolean =>
+export const isFullscreen = (editor: Editor): boolean =>
   editor.plugins.fullscreen && editor.plugins.fullscreen.isFullscreen();
 
 // NOTE: Calculating the list of scrolling ancestors each time this function is called might

@@ -40,9 +40,16 @@ const get = (editor: Editor): Formats => {
         selector: 'img,audio,video',
         collapsed: false,
         styles: {
-          float: 'left'
+          float: 'left',
         },
         preview: 'font-family font-size'
+      },
+      {
+        selector: '.mce-placeholder',
+        styles: {
+          float: 'left',
+        },
+        ceFalseOverride: true
       },
       {
         selector: 'table',
@@ -91,6 +98,15 @@ const get = (editor: Editor): Formats => {
           marginRight: 'auto'
         },
         preview: false
+      },
+      {
+        selector: '.mce-placeholder',
+        styles: {
+          display: 'block',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+        },
+        ceFalseOverride: true
       },
       {
         selector: 'table',
@@ -145,6 +161,13 @@ const get = (editor: Editor): Formats => {
           float: 'right'
         },
         preview: 'font-family font-size'
+      },
+      {
+        selector: '.mce-placeholder',
+        styles: {
+          float: 'right'
+        },
+        ceFalseOverride: true
       },
       {
         selector: 'table',
@@ -214,6 +237,7 @@ const get = (editor: Editor): Formats => {
     subscript: { inline: 'sub' },
     superscript: { inline: 'sup' },
     code: { inline: 'code' },
+    samp: { inline: 'samp' },
 
     link: {
       inline: 'a', selector: 'a', remove: 'all', split: true, deep: true,
@@ -252,7 +276,7 @@ const get = (editor: Editor): Formats => {
     ]
   };
 
-  Tools.each('p h1 h2 h3 h4 h5 h6 div address pre dt dd samp'.split(/\s/), (name) => {
+  Tools.each('p h1 h2 h3 h4 h5 h6 div address pre dt dd'.split(/\s/), (name) => {
     formats[name] = { block: name, remove: 'all' };
   });
 

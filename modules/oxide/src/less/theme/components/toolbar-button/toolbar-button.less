@@ -19,6 +19,8 @@
 @toolbar-button-text-color: contrast(@background-color, @color-white, @color-black);
 @toolbar-button-text-transform: none;
 @toolbar-button-width: 34px;
+@toolbar-button-margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0;
+@toolbar-button-padding: 0;
 
 @toolbar-button-hover-background-color: contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 7%)); // Differentiating against the enabled color
 @toolbar-button-hover-border: @toolbar-button-border;
@@ -67,9 +69,9 @@
     font-weight: @toolbar-button-font-weight;
     height: @toolbar-button-height;
     justify-content: center;
-    margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0;
+    margin: @toolbar-button-margin;
     outline: none;
-    padding: 0;
+    padding: @toolbar-button-padding;
     text-transform: @toolbar-button-text-transform;
     width: @toolbar-button-width;
 

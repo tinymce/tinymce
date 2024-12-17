@@ -2,15 +2,16 @@
 // Tiny Comments
 //
 
-@comment-selected-background-color: lighten(@color-active, 30%);
+@comment-selected-background-color: .bg-luma-checker(lighten(@color-active, 30%), mix(@color-active, @color-black, 20%))[@result];
 @comment-selected-border-color: @color-active;
 
-@comment-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
+@comment-background-color: @background-color;
+@comment-border-color: @comment-background-color;
 @comment-border-radius: @panel-border-radius;
-@comment-border: 1px solid @border-color;
+@comment-border: 1px solid @comment-border-color;
 @comment-box-shadow: 0 4px 8px 0 fade(@color-black, 10%);
 //TODO: Same as menu. Make a common helper variable?
-@comment-font-size: @font-size-sm;
+@comment-font-size: @font-size-md;
 @comment-font-style: normal;
 @comment-font-weight: @font-weight-normal;
 @comment-line-height: @line-height-base;
@@ -145,6 +146,7 @@
       resize: none;
       white-space: normal;
       width: 100%;
+      font-size: @comment-font-size;
     }
   }
 
@@ -255,7 +257,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
-    margin-top: @pad-md;
+    margin-top: @pad-sm;
   }
 
   .tox-comment__gradient::after {
@@ -352,17 +354,7 @@
     border-radius: 50%;
     display: inline-block;
     box-sizing: border-box;
-    animation: rotation 1s linear infinite;
-  }
-
-  @keyframes rotation {
-    0% {
-      transform: rotate(0deg);
-    }
-
-    100% {
-      transform: rotate(360deg);
-    }
+    animation: tox-rotation 1s linear infinite;
   }
 }
 //end tox

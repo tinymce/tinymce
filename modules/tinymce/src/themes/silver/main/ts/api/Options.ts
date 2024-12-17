@@ -295,6 +295,7 @@ const register = (editor: Editor): void => {
 };
 
 const isReadOnly = option('readonly');
+const isDisabled = option('disabled');
 const getHeightOption = option('height');
 const getWidthOption = option('width');
 const getMinWidthOption = wrapOptional(option('min_width'));
@@ -332,6 +333,8 @@ const getSidebarShow = option('sidebar_show');
 const promotionEnabled = option('promotion');
 const useHelpAccessibility = option('help_accessibility');
 const getDefaultFontStack = option('default_font_stack');
+
+const getSkin = option<string | false>('skin');
 
 const isSkinDisabled = (editor: Editor): boolean =>
   editor.options.get('skin') === false;
@@ -439,6 +442,8 @@ export {
   getSkinUrl,
   getSkinUrlOption,
   isReadOnly,
+  isDisabled,
+  getSkin,
   isSkinDisabled,
   getHeightOption,
   getWidthOption,

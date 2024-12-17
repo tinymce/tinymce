@@ -76,6 +76,7 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
         resourceLimitMemory: '4Gi',
         resourceLimitEphemeralStorage: '16Gi'
       ],
+      tag: '20',
       build: cacheName,
       useContainers: ['node', 'aws-cli']
     ) {
@@ -126,6 +127,7 @@ def runHeadlessPod(String cacheName, Boolean runAll) {
         resourceLimitMemory: '4Gi',
         resourceLimitEphemeralStorage: '16Gi'
       ],
+      tag: '20',
       seleniumOpts: [
         image: "selenium/standalone-chrome:127.0",
       ],
@@ -168,6 +170,7 @@ timestamps {
       resourceLimitMemory: '4Gi',
       resourceLimitEphemeralStorage: '16Gi'
     ],
+    tag: '20',
     build: cacheName
   ) {
     props = readProperties(file: 'build.properties')

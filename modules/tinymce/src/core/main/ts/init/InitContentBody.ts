@@ -27,6 +27,7 @@ import * as TouchEvents from '../events/TouchEvents';
 import * as ForceBlocks from '../ForceBlocks';
 import * as NonEditableFilter from '../html/NonEditableFilter';
 import * as KeyboardOverrides from '../keyboard/KeyboardOverrides';
+import * as Disabled from '../mode/Disabled';
 import { NodeChange } from '../NodeChange';
 import * as Paste from '../paste/Paste';
 import * as Rtc from '../Rtc';
@@ -263,6 +264,9 @@ const initEditor = (editor: Editor) => {
     initInstanceCallback.call(editor, editor);
   }
   autoFocus(editor);
+  if (Disabled.isDisabled(editor)) {
+    Disabled.toggleDisabled(editor, true);
+  }
 };
 
 const getStyleSheetLoader = (editor: Editor): StyleSheetLoader =>
@@ -422,7 +426,7 @@ const contentBodyLoaded = (editor: Editor): void => {
   editor.readonly = Options.isReadOnly(editor);
   editor._editableRoot = Options.hasEditableRoot(editor);
 
-  if (editor.hasEditableRoot()) {
+  if (!Options.isDisabled(editor) && editor.hasEditableRoot()) {
     if (editor.inline && DOM.getStyle(body, 'position', true) === 'static') {
       body.style.position = 'relative';
     }
