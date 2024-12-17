@@ -113,7 +113,7 @@ export const renderContextFormSizeInput = (
   const focusableWrapper = (field: AlloySpec) => ({
     dom: {
       tag: 'div',
-      classes: [ 'tox-focusable-wrapper', 'tox-toolbar-nav-js' ],
+      classes: [ 'tox-focusable-wrapper', 'tox-toolbar-nav-item' ],
     },
     components: [ field ],
     behaviours: Behaviour.derive([
