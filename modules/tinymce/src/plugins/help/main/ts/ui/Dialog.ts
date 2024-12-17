@@ -49,7 +49,7 @@ const getNamesFromTabs = (tabs: TabSpecs): TabData => {
 };
 
 const pParseCustomTabs = async (editor: Editor, customTabs: CustomTabSpecs, pluginUrl: string): Promise<TabData> => {
-  const shortcuts = KeyboardShortcutsTab.tab();
+  const shortcuts = KeyboardShortcutsTab.tab(editor);
   const nav = await KeyboardNavTab.pTab(pluginUrl);
   const plugins = PluginsTab.tab(editor);
   const versions = VersionTab.tab();
