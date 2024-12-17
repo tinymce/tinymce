@@ -17,7 +17,7 @@ const makeDndEventFromMouseEvent = (type: DragEventType, mouseEvent: EditorEvent
 const makeDndEvent = (type: DragEventType, target: Element, dataTransfer: DataTransfer): DragEvent => {
   const fail = Fun.die('Function not supported on simulated event.');
 
-  const event: DragEvent = {
+  const event = {
     // Event
     bubbles: true,
     cancelBubble: false,
@@ -47,6 +47,8 @@ const makeDndEvent = (type: DragEventType, target: Element, dataTransfer: DataTr
     clientX: 0,
     clientY: 0,
     ctrlKey: false,
+    layerX: 0,
+    layerY: 0,
     metaKey: false,
     movementX: 0,
     movementY: 0,

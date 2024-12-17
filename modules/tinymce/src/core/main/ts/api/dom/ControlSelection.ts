@@ -73,7 +73,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
   const rootDocument = document;
   const rootElement = editor.getBody();
   let selectedElm: HTMLElement, selectedElmGhost: HTMLElement, resizeHelper: HTMLElement, selectedHandle: SelectedResizeHandle, resizeBackdrop: HTMLElement;
-  let startX: number, startY: number, selectedElmX: number, selectedElmY: number, startW: number, startH: number, ratio: number, resizeStarted: boolean;
+  let startX: number, startY: number, startW: number, startH: number, ratio: number, resizeStarted: boolean;
   let width: number;
   let height: number;
   let startScrollWidth: number;
@@ -223,15 +223,17 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
 
     resizeHelper.innerHTML = width + ' &times; ' + height;
 
-    // Update ghost X position if needed
-    if (selectedHandle[2] < 0 && selectedElmGhost.clientWidth <= width) {
-      dom.setStyle(selectedElmGhost, 'left', selectedElmX + (startW - width));
-    }
+    /* TODO: TINY-11702 dom.setStyle() has no effect because the value is NaN
+      // Update ghost X position if needed
+      if (selectedHandle[2] < 0 && selectedElmGhost.clientWidth <= width) {
+        dom.setStyle(selectedElmGhost, 'left', selectedElmX + (startW - width));
+      }
 
-    // Update ghost Y position if needed
-    if (selectedHandle[3] < 0 && selectedElmGhost.clientHeight <= height) {
-      dom.setStyle(selectedElmGhost, 'top', selectedElmY + (startH - height));
-    }
+      // Update ghost Y position if needed
+      if (selectedHandle[3] < 0 && selectedElmGhost.clientHeight <= height) {
+        dom.setStyle(selectedElmGhost, 'top', selectedElmY + (startH - height));
+      }
+    */
 
     // Calculate how must overflow we got
     deltaX = rootElement.scrollWidth - startScrollWidth;
