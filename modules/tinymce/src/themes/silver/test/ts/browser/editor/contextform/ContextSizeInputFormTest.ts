@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, FocusTools, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keys, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { SugarBody, SugarDocument, Value } from '@ephox/sugar';
@@ -81,6 +81,9 @@ describe('browser.tinymce.themes.silver.editor.ContextSizeInputFormTest', () => 
       });
     }
   }, [], true);
+  const inputWidthSelector = '.tox-pop .tox-toolbar__group:nth-of-type(2) .tox-focusable-wrapper:nth-of-type(1) input';
+  const inputHeightSelector = '.tox-pop .tox-toolbar__group:nth-of-type(2) .tox-focusable-wrapper:nth-of-type(2) input';
+  const buttonASelector = '.tox-pop button[aria-label="A"]';
 
   afterEach(async () => {
     const editor = hook.editor();
@@ -146,8 +149,8 @@ describe('browser.tinymce.themes.silver.editor.ContextSizeInputFormTest', () => 
   it('TINY-11342: Input should have initial value', async () => {
     const editor = hook.editor();
     openToolbar(editor, 'test-form');
-    const inputW = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), '.tox-pop .tox-context-form__group:nth-child(1) input').getOrDie();
-    const inputH = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), '.tox-pop .tox-context-form__group:nth-child(2) input').getOrDie();
+    const inputW = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), inputWidthSelector).getOrDie();
+    const inputH = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), inputHeightSelector).getOrDie();
     assert.strictEqual(Value.get(inputW), '100', 'Should be initial width value');
     assert.strictEqual(Value.get(inputH), '200', 'Should be initial height value');
   });
@@ -155,7 +158,7 @@ describe('browser.tinymce.themes.silver.editor.ContextSizeInputFormTest', () => 
   it('TINY-11342: Input should trigger onInput and constrain the proportions', async () => {
     const editor = hook.editor();
     openToolbar(editor, 'test-form');
-    const inputW = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), '.tox-pop .tox-context-form__group:nth-child(1) input').getOrDie();
+    const inputW = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), inputWidthSelector).getOrDie();
     Value.set(inputW, '200');
     inputW.dom.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
     inputW.dom.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
@@ -175,9 +178,9 @@ describe('browser.tinymce.themes.silver.editor.ContextSizeInputFormTest', () => 
   it('TINY-11342: Clicking `A` button should update the values', async () => {
     const editor = hook.editor();
     openToolbar(editor, 'test-form');
-    TinyUiActions.clickOnUi(editor, '.tox-pop button[aria-label="A"]');
-    const inputW = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), '.tox-pop .tox-context-form__group:nth-child(1) input').getOrDie();
-    const inputH = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), '.tox-pop .tox-context-form__group:nth-child(2) input').getOrDie();
+    TinyUiActions.clickOnUi(editor, buttonASelector);
+    const inputW = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), inputWidthSelector).getOrDie();
+    const inputH = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), inputHeightSelector).getOrDie();
     assert.strictEqual(Value.get(inputW), '200', 'Should be updated width value');
     assert.strictEqual(Value.get(inputH), '400', 'Should be updated height value');
   });
@@ -199,6 +202,52 @@ describe('browser.tinymce.themes.silver.editor.ContextSizeInputFormTest', () => 
     TinyUiActions.clickOnUi(editor, '.tox-pop button[aria-label="ABC"]');
     TinyUiActions.clickOnUi(editor, '.tox-pop button[aria-label="Back"]');
     await UiFinder.pWaitFor('Waiting for context toolbar to previous toolbar to appear', SugarBody.body(), '.tox-pop button[aria-label="Undo"]');
+  });
+
+  it('TINY-11394: should navigate correctly via keyboard', async () => {
+    const editor = hook.editor();
+    openToolbar(editor, 'test-form');
+
+    const buttonBSelector = '.tox-pop button[aria-label="B"]';
+    const focussableWrapperWidthSelector = '.tox-pop .tox-focusable-wrapper:nth-of-type(1)';
+    const focussableWrapperHeightSelector = '.tox-pop .tox-focusable-wrapper:nth-of-type(2)';
+    const lockButtonSelector = '.tox-pop .tox-lock';
+
+    FocusTools.setFocus(SugarDocument.getDocument(), buttonASelector);
+    await FocusTools.pTryOnSelector('Focus should be on the A button', SugarDocument.getDocument(), buttonASelector);
+    TinyUiActions.keystroke(editor, Keys.tab());
+
+    await FocusTools.pTryOnSelector('Focus should be on the first focussable wrapper', SugarDocument.getDocument(), focussableWrapperWidthSelector);
+    TinyUiActions.keystroke(editor, Keys.right());
+
+    await FocusTools.pTryOnSelector('Focus should be on the second focussable wrapper', SugarDocument.getDocument(), focussableWrapperHeightSelector);
+    TinyUiActions.keystroke(editor, Keys.right());
+
+    await FocusTools.pTryOnSelector('Focus should be on the lock button wrapper', SugarDocument.getDocument(), lockButtonSelector);
+    TinyUiActions.keystroke(editor, Keys.right());
+
+    await FocusTools.pTryOnSelector('Focus should stay on the lock button wrapper', SugarDocument.getDocument(), lockButtonSelector);
+    TinyUiActions.keystroke(editor, Keys.left());
+
+    await FocusTools.pTryOnSelector('Focus should be on the second focussable wrapper(2)', SugarDocument.getDocument(), focussableWrapperHeightSelector);
+    TinyUiActions.keystroke(editor, Keys.enter());
+
+    await FocusTools.pTryOnSelector('Focus should be on the second input', SugarDocument.getDocument(), inputHeightSelector);
+    TinyUiActions.keystroke(editor, Keys.escape());
+
+    await FocusTools.pTryOnSelector('Focus should go back to the second focussable wrapper', SugarDocument.getDocument(), focussableWrapperHeightSelector);
+    TinyUiActions.keystroke(editor, Keys.left());
+
+    await FocusTools.pTryOnSelector('Focus should be on the first focussable wrapper(2)', SugarDocument.getDocument(), focussableWrapperWidthSelector);
+    TinyUiActions.keystroke(editor, Keys.enter());
+
+    await FocusTools.pTryOnSelector('Focus should be on the first input', SugarDocument.getDocument(), inputWidthSelector);
+    TinyUiActions.keystroke(editor, Keys.escape());
+
+    await FocusTools.pTryOnSelector('Focus should go back to the first focussable wrapper', SugarDocument.getDocument(), focussableWrapperWidthSelector);
+    TinyUiActions.keystroke(editor, Keys.tab());
+
+    await FocusTools.pTryOnSelector('Focus should be on the B button', SugarDocument.getDocument(), buttonBSelector);
   });
 });
 
