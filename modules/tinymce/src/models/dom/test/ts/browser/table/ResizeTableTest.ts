@@ -1253,9 +1253,13 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
         const table = editor.dom.select('table')[0];
         await hoverOnTable(editor, table, 'row', 0);
         assertContainerAndBarsExist(editor);
-        TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => s.element('div', {
+        TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('div', {
           children: [
+            ...(browser.isFirefox() ? [ s.element('p', { attrs: { 'data-mce-caret': str.is('before') }}) ] : []),
             s.element('table', { children: [ s.anything() ] }),
+            ...(browser.isFirefox() ? [ s.element('div', {
+              classes: [ arr.has('mce-visual-caret') ],
+            }) ] : []),
             s.element('div', { attrs: { id: str.startsWith('resizer-container') }})
           ]
         })));
