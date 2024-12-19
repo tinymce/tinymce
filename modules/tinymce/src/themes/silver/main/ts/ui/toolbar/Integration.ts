@@ -74,7 +74,7 @@ const types: Record<string, BridgeRenderFn<any>> = {
 
   menubutton: renderFromBridge(
     Toolbar.createMenuButton,
-    (s, backstage, _, btnName) => renderMenuButton(s, ToolbarButtonClasses.Button, backstage, Optional.none(), false, btnName)
+    (s, backstage, _, btnName) => renderMenuButton(s, { prefix: ToolbarButtonClasses.Button, backstage, tabstopping: false, btnName })
   ),
 
   splitbutton: renderFromBridge(

@@ -188,9 +188,6 @@ const renderCommonDropdown = <T>(
         AddEventsBehaviour.config('close-on--window-resize', [
           AlloyEvents.run(SystemEvents.windowResize(), (comp, _se) => AlloyDropdown.close(comp)),
         ]),
-        AddEventsBehaviour.config('close-on--window-scroll', [
-          AlloyEvents.run(SystemEvents.windowScroll(), (comp, _se) => AlloyDropdown.close(comp)),
-        ]),
         AddEventsBehaviour.config('menubutton-update-display-text', [
           // These handlers are just using Replacing to replace either the menu
           // text or the icon.
