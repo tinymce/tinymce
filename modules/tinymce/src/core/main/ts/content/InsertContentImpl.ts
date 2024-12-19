@@ -58,16 +58,22 @@ const isTableCellContentSelected = (dom: DOMUtils, rng: Range, cell: Node | null
   }
 };
 
+const isEditableEmptyBlock = (dom: DOMUtils, node: Node): boolean => {
+  if (dom.isBlock(node) && dom.isEditable(node)) {
+    const childNodes = node.childNodes;
+    return (childNodes.length === 1 && NodeType.isBr(childNodes[0])) || childNodes.length === 0;
+  } else {
+    return false;
+  }
+};
+
 const validInsertion = (editor: Editor, value: string, parentNode: Element): void => {
   // Should never insert content into bogus elements, since these can
   // be resize handles or similar
   if (parentNode.getAttribute('data-mce-bogus') === 'all') {
     parentNode.parentNode?.insertBefore(editor.dom.createFragment(value), parentNode);
   } else {
-    // Check if parent is empty or only has one BR element then set the innerHTML of that parent
-    const node = parentNode.firstChild;
-    const node2 = parentNode.lastChild;
-    if (!node || (node === node2 && node.nodeName === 'BR')) {
+    if (isEditableEmptyBlock(editor.dom, parentNode)) {
       editor.dom.setHTML(parentNode, value);
     } else {
       editor.selection.setContent(value, { no_events: true });

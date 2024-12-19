@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: The `insertContent` API was not replacing selected non-editable elements correctly.
+time: 2024-12-19T09:19:26.33408+01:00
+custom:
+  Issue: TINY-11714
