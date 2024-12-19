@@ -1,3 +1,4 @@
+import { Optional } from '@ephox/katamari';
 import { Bindable, Event, Events } from '@ephox/porkbun';
 import { SugarElement } from '@ephox/sugar';
 
@@ -25,6 +26,9 @@ interface TableResizeEventRegistry {
   readonly beforeResize: Bindable<BeforeTableResizeEvent>;
   readonly afterResize: Bindable<AfterTableResizeEvent>;
   readonly startDrag: Bindable<{}>;
+  readonly hoverTable: Bindable<{
+    readonly table: Optional<SugarElement<HTMLTableElement>>;
+  }>;
 }
 
 interface TableResizeEvents {
@@ -33,6 +37,7 @@ interface TableResizeEvents {
     readonly beforeResize: (table: SugarElement<HTMLTableElement>, type: ResizeType) => void;
     readonly afterResize: (table: SugarElement<HTMLTableElement>, type: ResizeType) => void;
     readonly startDrag: () => void;
+    readonly hoverTable: (table: Optional<SugarElement<HTMLTableElement>>) => void;
   };
 }
 
@@ -44,6 +49,7 @@ export interface TableResize {
   readonly showBars: () => void;
   readonly destroy: () => void;
   readonly events: TableResizeEventRegistry;
+  readonly unbindEvents: () => void;
 }
 
 const create = (wire: ResizeWire, resizing: ResizeBehaviour, lazySizing: (element: SugarElement<HTMLTableElement>) => TableSize): TableResize => {
@@ -55,6 +61,7 @@ const create = (wire: ResizeWire, resizing: ResizeBehaviour, lazySizing: (elemen
     beforeResize: Event([ 'table', 'type' ]),
     afterResize: Event([ 'table', 'type' ]),
     startDrag: Event([]),
+    hoverTable: Event([ 'table' ])
   });
 
   manager.events.adjustHeight.bind((event) => {
@@ -68,6 +75,10 @@ const create = (wire: ResizeWire, resizing: ResizeBehaviour, lazySizing: (elemen
 
   manager.events.startAdjust.bind((_event) => {
     events.trigger.startDrag();
+  });
+
+  manager.events.hoverTable.bind((event) => {
+    events.trigger.hoverTable(event.table);
   });
 
   manager.events.adjustWidth.bind((event) => {
@@ -86,7 +97,8 @@ const create = (wire: ResizeWire, resizing: ResizeBehaviour, lazySizing: (elemen
     hideBars: manager.hideBars,
     showBars: manager.showBars,
     destroy: manager.destroy,
-    events: events.registry
+    events: events.registry,
+    unbindEvents: manager.unbindEvents
   };
 };
 

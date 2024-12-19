@@ -43,7 +43,7 @@ const body = (editable: SugarElement<Element>, chrome: SugarElement<Element>, is
   return {
     parent: Fun.constant(chrome),
     view: Fun.constant(editable),
-    origin: Fun.constant(SugarPosition(0, 0)),
+    origin: () => SugarLocation.absolute(editable),
     isResizable
   };
 };
