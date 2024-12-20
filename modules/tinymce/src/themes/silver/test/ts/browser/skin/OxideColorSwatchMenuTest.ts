@@ -198,7 +198,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
     assertFocusIsOnColor('blue');
     TinyUiActions.keydown(editor, Keys.right());
     assertFocusIsOnColor('black');
-    closeSwatchButtonMenu();
+    await closeSwatchButtonMenu();
   });
 
   it('TINY-9395: Check structure of menu color swatch', async () => {
@@ -278,13 +278,13 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
 
     await openAndGetForecolorMenu();
     assertFocusIsOnColor('rgb(0, 0, 0)');
-    closeForecolorMenu();
+    await closeForecolorMenu();
 
     TinySelections.setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 2, true);
 
     await openAndGetForecolorMenu();
     assertFocusIsOnColor('rgb(224, 62, 45)');
-    closeForecolorMenu();
+    await closeForecolorMenu();
   });
 
   it('TINY-9342: selected color is successfully marked even in a tree', async () => {
@@ -295,7 +295,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
 
     await openAndGetBackcolorMenu();
     assertFocusIsOnColor('rgb(224, 62, 45)');
-    closeBackcolorMenu();
+    await closeBackcolorMenu();
   });
 
   it('TINY-9497: Opening the menu with different colors should display in the menu', async () => {
@@ -320,7 +320,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
 
     await openAndGetBackcolorMenu();
     assertFocusIsOnColor('rgb(224, 62, 45)');
-    closeBackcolorMenu();
+    await closeBackcolorMenu();
     await pOpenAndGetMenuForecolorMenu(editor);
     TinyUiActions.clickOnUi(editor, '[role="menuitemradio"][aria-label="Light Gray"]');
     await openAndGetForecolorMenu();

@@ -98,7 +98,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     clearEvents();
   });
 
-  it('TBA: _scanForImages', () => {
+  it('TBA: _scanForImages', async () => {
     const editor = hook.editor();
     setInitialContent(editor, imageHtml(testBlobDataUri));
 
@@ -116,7 +116,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     });
   });
 
-  it('TBA: replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)', () => {
+  it('TBA: replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri)', async () => {
     const editor = hook.editor();
     editor.options.set('automatic_uploads', true);
     editor.options.set('images_upload_handler', (_data: BlobInfo) => {
@@ -125,7 +125,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
     setInitialContent(editor, imageHtml(testBlobDataUri));
 
-    return editor._scanForImages().then((result) => {
+    return editor._scanForImages().then(async (result) => {
       const blobUri = result[0].blobInfo.blobUri();
 
       assertEventsLength(0);
@@ -138,7 +138,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     });
   });
 
-  it(`TBA: don't replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri) since blob uris are retained`, () => {
+  it(`TBA: don't replace uploaded blob uri with result uri (copy/paste of an uploaded blob uri) since blob uris are retained`, async () => {
     const editor = hook.editor();
     editor.options.set('images_replace_blob_uris', false);
     setInitialContent(editor, imageHtml(testBlobDataUri));
@@ -147,7 +147,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
       return Promise.resolve('file.png');
     });
 
-    return editor._scanForImages().then((result) => {
+    return editor._scanForImages().then(async (result) => {
       const blobUri = result[0].blobInfo.blobUri();
 
       assertEventsLength(0);
@@ -160,7 +160,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     });
   });
 
-  it('TBA: uploadImages (callback)', () => {
+  it('TBA: uploadImages (callback)', async () => {
     const editor = hook.editor();
     let uploadedBlobInfo: BlobInfo;
     let uploadUri: string;
@@ -174,7 +174,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     });
 
     assertEventsLength(0);
-    return editor.uploadImages().then((firstResult) => {
+    return editor.uploadImages().then(async (firstResult) => {
       assertResult(editor, 'Upload the images', uploadUri, uploadedBlobInfo, firstResult);
       assertEventsLength(1);
       return editor.uploadImages().then((secondResult) => {
@@ -183,7 +183,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     });
   });
 
-  it('TBA: uploadImages (promise)', () => {
+  it('TBA: uploadImages (promise)', async () => {
     const editor = hook.editor();
     let uploadedBlobInfo: BlobInfo | null;
     let uploadUri: string;
@@ -200,7 +200,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     return editor.uploadImages().then((result) => {
       assertResult(editor, 'Upload the images', uploadUri, uploadedBlobInfo as BlobInfo, result);
       assertEventsLength(1);
-    }).then(() => {
+    }).then(async () => {
       uploadedBlobInfo = null;
 
       return editor.uploadImages().then((result) => {
@@ -210,7 +210,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     });
   });
 
-  it('TBA: uploadImages retain blob urls after upload', () => {
+  it('TBA: uploadImages retain blob urls after upload', async () => {
     const editor = hook.editor();
     let uploadedBlobInfo: BlobInfo | null;
 
@@ -231,7 +231,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     });
 
     assertEventsLength(0);
-    return editor.uploadImages().then((results) => {
+    return editor.uploadImages().then(async (results) => {
       assertResultRetainsUrl(results);
       uploadedBlobInfo = null;
       assertEventsLength(0);
@@ -243,7 +243,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     });
   });
 
-  it('TBA: uploadImages reuse filename', () => {
+  it('TBA: uploadImages reuse filename', async () => {
     const editor = hook.editor();
     let uploadedBlobInfo: BlobInfo;
 
@@ -393,7 +393,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     ]);
   });
 
-  it('TINY-8641: 2 successful upload simultaneous should trigger 1 change', () => {
+  it('TINY-8641: 2 successful upload simultaneous should trigger 1 change', async () => {
     const editor = hook.editor();
     setInitialContent(editor, `<div>
       ${imageHtml(testBlobDataUri)}
@@ -408,7 +408,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     return editor.uploadImages().then(() => assertEventsLength(1));
   });
 
-  it('TINY-8641: 1 successful upload and 1 fail upload simultaneous should trigger 1 change', () => {
+  it('TINY-8641: 1 successful upload and 1 fail upload simultaneous should trigger 1 change', async () => {
     const editor = hook.editor();
     let firstUploadDone = false;
     setInitialContent(editor, `<div>
@@ -477,7 +477,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     TinyAssertions.assertRawContent(editor, '<p>A</p><p><br data-mce-bogus="1"></p><h1><br data-mce-bogus="1"></h1>');
   });
 
-  it('TINY-8641: multiple successful upload and multiple fail upload simultaneous should trigger 1 change', () => {
+  it('TINY-8641: multiple successful upload and multiple fail upload simultaneous should trigger 1 change', async () => {
     const editor = hook.editor();
     let successfulUploadsCounter = 0;
     setInitialContent(editor, `<div>
@@ -500,7 +500,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     return editor.uploadImages().then(() => assertEventsLength(1));
   });
 
-  it(`TBA: Don't upload transparent image`, () => {
+  it(`TBA: Don't upload transparent image`, async () => {
     const editor = hook.editor();
     let uploadCount = 0;
 
@@ -520,7 +520,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     return editor.uploadImages().then(uploadDone);
   });
 
-  it(`TBA: Don't upload bogus image`, () => {
+  it(`TBA: Don't upload bogus image`, async () => {
     const editor = hook.editor();
     let uploadCount = 0;
 
@@ -540,7 +540,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     return editor.uploadImages().then(uploadDone);
   });
 
-  it(`TBA: Don't upload api filtered image`, () => {
+  it(`TBA: Don't upload api filtered image`, async () => {
     const editor = hook.editor();
     let uploadCount = 0, filterCount = 0;
 
@@ -573,7 +573,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     assert.equal(editor.getContent(), '<p><img src="blob:http%3A//host/f8d1e462-8646-485f-87c5-f9bcee5873c6"></p>', 'Retain blobs not in blob cache');
   });
 
-  it('TINY-7735: UploadResult should contain the removed flag if the {remove: true} option was passed to the failure callback', () => {
+  it('TINY-7735: UploadResult should contain the removed flag if the {remove: true} option was passed to the failure callback', async () => {
     const editor = hook.editor();
     let uploadCount = 0;
 
@@ -616,7 +616,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     return editor.uploadImages().then(uploadDone);
   });
 
-  it('TINY-8337: Images with a data URI that does not use base64 encoding are uploaded correctly and not corrupted', () => {
+  it('TINY-8337: Images with a data URI that does not use base64 encoding are uploaded correctly and not corrupted', async () => {
     const editor = hook.editor();
     const svg = `<svg xmlns='http://www.w3.org/2000/svg' height='100' width='100'><circle cx='50' cy='50' r='40' stroke='black' stroke-width='3' fill='red'></svg>`;
     let uploadedBlobInfo: BlobInfo, uploadUri: string;
@@ -630,7 +630,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     });
 
     assertEventsLength(0);
-    return editor.uploadImages().then((firstResult) => {
+    return editor.uploadImages().then(async (firstResult) => {
       assert.equal(uploadedBlobInfo.base64(), btoa(svg), 'base64 data is correctly encoded');
       assert.isAbove(uploadedBlobInfo.blob().size, 100, 'Blob data should not be empty');
       assertResult(editor, 'Upload the images', uploadUri, uploadedBlobInfo, firstResult, '.svg');
@@ -641,7 +641,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     });
   });
 
-  it('TINY-8337: Images with a data URI that are not base64 encoded are not processed if filtered out', () => {
+  it('TINY-8337: Images with a data URI that are not base64 encoded are not processed if filtered out', async () => {
     const editor = hook.editor();
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100"><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="blue"></svg>`;
     const dataUri = 'data:image/svg+xml,' + encodeURIComponent(svg);

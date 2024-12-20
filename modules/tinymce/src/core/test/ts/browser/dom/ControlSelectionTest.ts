@@ -216,7 +216,7 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     editor.setContent(`<p contenteditable="false"><img contenteditable="false" src="${imgSrc}" width="100" height="100"></p>`);
     Mouse.trueClickOn(TinyDom.body(editor), 'img');
     TinySelections.setRawSelection(editor, [ 0 ], 0, [ 0 ], 1); // Triggers a `selectionchange` on Firefox
-    Waiter.pTryUntil('correct selection', () =>
+    await Waiter.pTryUntil('correct selection', () =>
       TinyAssertions.assertContentPresence(editor, {
         'img[data-mce-selected="1"]': 0
       })
@@ -225,7 +225,7 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     editor.setContent(`<p contenteditable="false"><img contenteditable="true" src="${imgSrc}" width="100" height="100"></p>`);
     Mouse.trueClickOn(TinyDom.body(editor), 'img');
     TinySelections.setRawSelection(editor, [ 0 ], 0, [ 0 ], 1); // Triggers a `selectionchange` on Firefox
-    Waiter.pTryUntil('correct selection', () =>
+    await Waiter.pTryUntil('correct selection', () =>
       TinyAssertions.assertContentPresence(editor, {
         'img[data-mce-selected="1"]': 1
       })

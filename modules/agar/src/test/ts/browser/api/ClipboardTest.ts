@@ -149,8 +149,8 @@ describe('ClipboardTest', () => {
     const dataTransfer = pasteState.get().getOrDie('Could not get dataTransfer from state');
 
     assert.equal(dataTransfer.items.length, 2);
-    assertStringItem(dataTransfer.items[0], { type: 'text/html', data: '<!DOCTYPE html>\n<html>\n<body>\n<p>Hello world</p>\n</body>\n</html>\n' });
-    assertStringItem(dataTransfer.items[1], { type: 'text/plain', data: 'Hello world\n' });
+    await assertStringItem(dataTransfer.items[0], { type: 'text/html', data: '<!DOCTYPE html>\n<html>\n<body>\n<p>Hello world</p>\n</body>\n</html>\n' });
+    await assertStringItem(dataTransfer.items[1], { type: 'text/plain', data: 'Hello world\n' });
   });
 
   it('PasteUrlItems as files', async () => {
