@@ -1,7 +1,6 @@
-import { Assertions, Cursors, Waiter } from '@ephox/agar';
+import { Assertions, Waiter } from '@ephox/agar';
 import { after, before, describe, it } from '@ephox/bedrock-client';
-import { Hierarchy, Html, SimRange, SugarElement } from '@ephox/sugar';
-import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -32,31 +31,13 @@ describe('browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest', () 
 
   const pWaitForBookmark = (editor: Editor, startPath: number[], startOffset: number, endPath: number[], endOffset: number) => {
     return Waiter.pTryUntil('wait for selection', () => {
-      assertBookmark(editor, startPath, startOffset, endPath, endOffset);
+      TinyAssertions.assertBookmark(editor, startPath, startOffset, endPath, endOffset);
     });
   };
 
   const focusDiv = () => {
     const input = document.querySelector('#' + testDivId) as HTMLDivElement;
     input.focus();
-  };
-
-  const assertPath = (label: string, root: SugarElement<Node>, expPath: number[], expOffset: number, actElement: Node, actOffset: number) => {
-    const expected = Cursors.calculateOne(root, expPath);
-    const message = () => {
-      const actual = SugarElement.fromDom(actElement);
-      const actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
-      return 'Expected path: ' + JSON.stringify(expPath) + '.\nActual path: ' + JSON.stringify(actPath);
-    };
-    Assertions.assertEq(() => 'Assert incorrect for ' + label + '.\n' + message(), true, expected.dom === actElement);
-    Assertions.assertEq(() => 'Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
-  };
-
-  const assertBookmark = (editor: Editor, startPath: number[], soffset: number, finishPath: number[], foffset: number) => {
-    const actual: SimRange = editor.bookmark.getOrDie('no bookmark');
-    const root = TinyDom.body(editor);
-    assertPath('start', root, startPath, soffset, actual.start.dom, actual.soffset);
-    assertPath('finish', root, finishPath, foffset, actual.finish.dom, actual.foffset);
   };
 
   before(() => addTestDiv());
@@ -68,7 +49,7 @@ describe('browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest', () 
 
     TinySelections.setRawSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
     TinySelections.setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1, false); // Ensure node change doesn't fire
-    assertBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
+    TinyAssertions.assertBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
   });
 
   it('assert selection after no nodechanged, should not restore', () => {
@@ -77,7 +58,7 @@ describe('browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest', () 
 
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
     TinySelections.setRawSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
-    assertBookmark(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
+    TinyAssertions.assertBookmark(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
   });
 
   it('assert selection after nodechanged, should restore', () => {
@@ -86,7 +67,7 @@ describe('browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest', () 
 
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
     TinySelections.setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
-    assertBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
+    TinyAssertions.assertBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
   });
 
   it('assert selection after keyup, should restore', () => {
@@ -96,7 +77,7 @@ describe('browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest', () 
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
     TinySelections.setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1, false);
     editor.dispatch('keyup', { } as KeyboardEvent);
-    assertBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
+    TinyAssertions.assertBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
   });
 
   it('assert selection after mouseup, should restore', () => {
