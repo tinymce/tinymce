@@ -1,3 +1,6 @@
+import { SugarElement } from '@ephox/sugar';
+
+import * as Boxes from '../../alien/Boxes';
 import { nu as NuSpotInfo } from '../view/SpotInfo';
 import { Bubble } from './Bubble';
 import * as Direction from './Direction';
@@ -19,7 +22,7 @@ const labelPrefix = 'layout-inset';
 const westEdgeX = (anchor: AnchorBox): number => anchor.x;
 
 // returns middle of anchor minus half the element width - used to horizontally centre element to the anchor
-const middleX = (anchor: AnchorBox, element: AnchorElement): number => anchor.x + (anchor.width / 2) - (element.width / 2);
+const middleX = (anchor: AnchorBox, element: AnchorElement, boundsWidth: number): number => anchor.x + (Math.min(anchor.width, boundsWidth) / 2) - (element.width / 2);
 
 // returns right edge of anchor minus element width - used to display element to the right, right edge against the anchor
 const eastEdgeX = (anchor: AnchorBox, element: AnchorElement): number => anchor.x + anchor.width - element.width;
@@ -31,7 +34,7 @@ const northY = (anchor: AnchorBox): number => anchor.y;
 const southY = (anchor: AnchorBox, element: AnchorElement): number => anchor.y + anchor.height - element.height;
 
 // returns centre of anchor minus half the element height - used to vertically centre element to the anchor
-const centreY = (anchor: AnchorBox, element: AnchorElement): number => anchor.y + (anchor.height / 2) - (element.height / 2);
+const centreY = (anchor: AnchorBox, element: AnchorElement, boundsHeight: number): number => anchor.y + (Math.min(anchor.height, boundsHeight) / 2) - (element.height / 2);
 
 // positions element relative to the bottom right of the anchor
 const southwest: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => NuSpotInfo(
@@ -78,8 +81,8 @@ const northeast: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubb
 );
 
 // positions element relative to the top of the anchor, horizontally centered
-const north: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => NuSpotInfo(
-  middleX(anchor, element),
+const north: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble, _placee: SugarElement<HTMLElement>, bounds: Boxes.Bounds) => NuSpotInfo(
+  middleX(anchor, element, bounds.width),
   northY(anchor),
   bubbles.insetNorth(),
   Direction.south(),
@@ -89,8 +92,8 @@ const north: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles:
 );
 
 // positions element relative to the bottom of the anchor, horizontally centered
-const south: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => NuSpotInfo(
-  middleX(anchor, element),
+const south: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble, _placee: SugarElement<HTMLElement>, bounds: Boxes.Bounds) => NuSpotInfo(
+  middleX(anchor, element, bounds.width),
   southY(anchor, element),
   bubbles.insetSouth(),
   Direction.north(),
@@ -100,9 +103,9 @@ const south: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles:
 );
 
 // positions element with the right edge against the anchor, vertically centered
-const east: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => NuSpotInfo(
+const east: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble, _placee: SugarElement<HTMLElement>, bounds: Boxes.Bounds) => NuSpotInfo(
   eastEdgeX(anchor, element),
-  centreY(anchor, element),
+  centreY(anchor, element, bounds.height),
   bubbles.insetEast(),
   Direction.west(),
   Placement.East,
@@ -111,9 +114,9 @@ const east: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: 
 );
 
 // positions element with the left each against the anchor, vertically centered
-const west: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble) => NuSpotInfo(
+const west: AnchorLayout = (anchor: AnchorBox, element: AnchorElement, bubbles: Bubble, _placee: SugarElement<HTMLElement>, bounds: Boxes.Bounds) => NuSpotInfo(
   westEdgeX(anchor),
-  centreY(anchor, element),
+  centreY(anchor, element, bounds.height),
   bubbles.insetWest(),
   Direction.east(),
   Placement.West,
