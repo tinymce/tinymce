@@ -1,5 +1,5 @@
 #!groovy
-@Library('waluigi@release/7') _
+@Library('waluigi@feature/TINY-11259') _
 
 standardProperties()
 
@@ -67,7 +67,7 @@ def runBrowserTests(String name, String browser, String platform, String bucket,
 
 def runTestPod(String cacheName, String name, String testname, String browser, String provider, String platform, String version, String bucket, String buckets, Boolean runAll) {
   return {
-    bedrockRemoteTools.nodeConsumerPod(
+    devPods.nodeConsumer(
       nodeOpts: [
         resourceRequestCpu: '2',
         resourceRequestMemory: '4Gi',
@@ -118,19 +118,51 @@ def runTestNode(String branch, String name, String browser, String platform, Str
 
 def runHeadlessPod(String cacheName, Boolean runAll) {
   return {
-    bedrockRemoteTools.nodeConsumerPod(
-      nodeOpts: [
-        resourceRequestCpu: '2',
-        resourceRequestMemory: '4Gi',
-        resourceRequestEphemeralStorage: '16Gi',
-        resourceLimitCpu: '7',
-        resourceLimitMemory: '4Gi',
-        resourceLimitEphemeralStorage: '16Gi'
+    devPods.customConsumer(
+      containers: [
+        [
+          name: 'node',
+          image: "public.ecr.aws/docker/library/node:20",
+          command: 'sleep',
+          args: 'infinity',
+          resourceRequestCpu: '2',
+          resourceRequestMemory: '4Gi',
+          resourceRequestEphemeralStorage: '16Gi',
+          resourceLimitCpu: '7',
+          resourceLimitMemory: '4Gi',
+          resourceLimitEphemeralStorage: '16Gi'
+        ],
+        [
+          name: "selenium",
+          image: "selenium/standalone-chrome:127.0",
+          livenessProbe: [
+            execArgs: "curl --fail --silent --output /dev/null http://localhost:4444/wd/hub/status",
+            initialDelaySeconds: 30,
+            periodSeconds: 5,
+            timeoutSeconds: 15,
+            failureThreshold: 6
+          ],
+          alwaysPullImage: true,
+          resourceRequestCpu: '500m',
+          resourceRequestMemory: '1Gi',
+          resourceLimitCpu: '2',
+          resourceLimitMemory: '1Gi'
+        ],
+        [
+          name: 'aws-cli',
+          image: 'public.ecr.aws/aws-cli/aws-cli:latest',
+          command: 'sleep',
+          args: 'infinity',
+          alwaysPullImage: true,
+          resourceRequestCpu: '500m',
+          resourceRequestMemory: '1Gi',
+          resourceRequestEphemeralStorage: '1Gi',
+          resourceLimitCpu: '500m',
+          resourceLimitMemory: '1Gi',
+          resourceLimitEphemeralStorage: '1Gi'
+        ]
       ],
-      tag: '20',
-      seleniumOpts: [
-        image: "selenium/standalone-chrome:127.0",
-      ],
+      base: 'node',
       build: cacheName
     ) {
       stage("Headless-chrome") {
@@ -161,7 +193,7 @@ def cacheName = "cache_${BUILD_TAG}"
 def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NUMBER}"
 
 timestamps {
-  bedrockRemoteTools.nodeProducerPod(
+  devPods.nodeProducer(
     nodeOpts: [
       resourceRequestCpu: '2',
       resourceRequestMemory: '4Gi',
@@ -251,5 +283,5 @@ timestamps {
       parallel processes
   }
 
-  bedrockRemoteTools.cleanUpPod(cacheName)
+  devPods.cleanUpPod(cacheName)
 }
