@@ -1,5 +1,5 @@
 #!groovy
-@Library('waluigi@feature/TINY-11259') _
+@Library('waluigi@release/7') _
 
 standardProperties()
 
@@ -117,10 +117,7 @@ def runTestNode(String branch, String name, String browser, String platform, Str
 }
 
 def runHeadlessPod(String cacheName, Boolean runAll) {
-  return {
-    devPods.customConsumer(
-      containers: [
-        [
+  Map node = [
           name: 'node',
           image: "public.ecr.aws/docker/library/node:20",
           command: 'sleep',
@@ -131,8 +128,8 @@ def runHeadlessPod(String cacheName, Boolean runAll) {
           resourceLimitCpu: '7',
           resourceLimitMemory: '4Gi',
           resourceLimitEphemeralStorage: '16Gi'
-        ],
-        [
+        ]
+  Map selenium = [
           name: "selenium",
           image: "selenium/standalone-chrome:127.0",
           livenessProbe: [
@@ -147,8 +144,8 @@ def runHeadlessPod(String cacheName, Boolean runAll) {
           resourceRequestMemory: '1Gi',
           resourceLimitCpu: '2',
           resourceLimitMemory: '1Gi'
-        ],
-        [
+        ]
+  Map aws = [
           name: 'aws-cli',
           image: 'public.ecr.aws/aws-cli/aws-cli:latest',
           command: 'sleep',
@@ -161,23 +158,15 @@ def runHeadlessPod(String cacheName, Boolean runAll) {
           resourceLimitMemory: '1Gi',
           resourceLimitEphemeralStorage: '1Gi'
         ]
+  return {
+    devPods.customConsumer(
+      containers: [
+        node,
+        selenium,
+        aws
       ],
       base: 'node',
-      build: cacheName,
-      cacheStep: {
-        stage('headless-cache-step') {
-          tinyAws.withAWSEngineeringCICredentials(role) {
-            sh "aws s3 cp ${cache}/${buildName}.tar.gz ${tar}"
-          }
-        }
-      },
-      environment: {
-        stage('headless-env') {
-          container('node') {
-            sh "tar -zxf ${tar}"
-          }
-        }
-      }
+      build: cacheName
     ) {
       container('node') {
         stage("Headless-chrome") {
@@ -299,5 +288,5 @@ timestamps {
       parallel processes
   }
 
-  devPods.cleanUpPod(cacheName)
+  devPods.cleanUpPod(name: cacheName)
 }
