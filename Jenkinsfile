@@ -67,21 +67,20 @@ def runBrowserTests(String name, String browser, String platform, String bucket,
 
 def runTestPod(String cacheName, String name, String testname, String browser, String provider, String platform, String version, String bucket, String buckets, Boolean runAll) {
   return {
-    bedrockRemoteTools.nodeConsumerPod(
-      nodeOpts: [
-        resourceRequestCpu: '2',
-        resourceRequestMemory: '4Gi',
-        resourceRequestEphemeralStorage: '16Gi',
-        resourceLimitCpu: '7',
-        resourceLimitMemory: '4Gi',
-        resourceLimitEphemeralStorage: '16Gi'
-      ],
-      tag: '20',
-      build: cacheName,
-      useContainers: ['node', 'aws-cli']
-    ) {
-
-      stage("${name}") {
+    stage("${name}") {
+      bedrockRemoteTools.nodeConsumerPod(
+        nodeOpts: [
+          resourceRequestCpu: '2',
+          resourceRequestMemory: '4Gi',
+          resourceRequestEphemeralStorage: '16Gi',
+          resourceLimitCpu: '7',
+          resourceLimitMemory: '4Gi',
+          resourceLimitEphemeralStorage: '16Gi'
+        ],
+        tag: '20',
+        build: cacheName,
+        useContainers: ['node', 'aws-cli']
+      ) {
         grunt('list-changed-browser')
         bedrockRemoteTools.withRemoteCreds(provider) {
           int retry = 0
@@ -118,22 +117,22 @@ def runTestNode(String branch, String name, String browser, String platform, Str
 
 def runHeadlessPod(String cacheName, Boolean runAll) {
   return {
-    bedrockRemoteTools.nodeConsumerPod(
-      nodeOpts: [
-        resourceRequestCpu: '2',
-        resourceRequestMemory: '4Gi',
-        resourceRequestEphemeralStorage: '16Gi',
-        resourceLimitCpu: '7',
-        resourceLimitMemory: '4Gi',
-        resourceLimitEphemeralStorage: '16Gi'
-      ],
-      tag: '20',
-      seleniumOpts: [
-        image: "selenium/standalone-chrome:127.0",
-      ],
-      build: cacheName
-    ) {
-      stage("Headless-chrome") {
+    stage("Headless-chrome") {
+      bedrockRemoteTools.nodeConsumerPod(
+        nodeOpts: [
+          resourceRequestCpu: '2',
+          resourceRequestMemory: '4Gi',
+          resourceRequestEphemeralStorage: '16Gi',
+          resourceLimitCpu: '7',
+          resourceLimitMemory: '4Gi',
+          resourceLimitEphemeralStorage: '16Gi'
+        ],
+        tag: '20',
+        seleniumOpts: [
+          image: "selenium/standalone-chrome:127.0",
+        ],
+        build: cacheName
+      ) {
         yarnInstall()
         grunt('list-changed-headless')
         runHeadlessTests(runAll)
@@ -186,7 +185,7 @@ timestamps {
       exec("yarn changie-merge")
     }
 
-    stage('Type check') {
+    stage('Build') {
       withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
         exec("yarn ci-all-seq")
         exec("yarn tinymce-grunt shell:moxiedoc")
