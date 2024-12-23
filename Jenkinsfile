@@ -163,12 +163,28 @@ def runHeadlessPod(String cacheName, Boolean runAll) {
         ]
       ],
       base: 'node',
-      build: cacheName
+      build: cacheName,
+      cacheStep: {
+        stage('headless-cache-step') {
+          tinyAws.withAWSEngineeringCICredentials(role) {
+            sh "aws s3 cp ${cache}/${buildName}.tar.gz ${tar}"
+          }
+        }
+      },
+      environment: {
+        stage('headless-env') {
+          container('node') {
+            sh "tar -zxf ${tar}"
+          }
+        }
+      }
     ) {
-      stage("Headless-chrome") {
-        yarnInstall()
-        grunt('list-changed-headless')
-        runHeadlessTests(runAll)
+      container('node') {
+        stage("Headless-chrome") {
+          yarnInstall()
+          grunt('list-changed-headless')
+          runHeadlessTests(runAll)
+        }
       }
     }
   }
