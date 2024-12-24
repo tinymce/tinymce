@@ -77,7 +77,7 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
 
     context('with open toolbar drawer', () => {
       before(async function () {
-        this.timeout(10000);
+        this.timeout(7000);
         // Ensure the editor is in view
         StickyUtils.scrollRelativeEditor(-100, isToolbarTop);
         // Open the more drawer

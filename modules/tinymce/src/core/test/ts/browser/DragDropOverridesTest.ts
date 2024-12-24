@@ -31,7 +31,7 @@ describe.skip('browser.tinymce.core.DragDropOverridesTest', () => {
     }, [], true);
 
     before(async function () {
-      this.timeout(10000);
+      this.timeout(7000);
       hook.editor().on('dragstart drop dragend', (e: DragEvent) => {
         events = [ ...events, e ];
       });
