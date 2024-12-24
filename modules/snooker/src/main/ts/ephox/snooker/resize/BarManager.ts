@@ -1,5 +1,5 @@
 import { Dragger } from '@ephox/dragster';
-import { Fun, Optional } from '@ephox/katamari';
+import { Cell, Fun, Optional, Singleton } from '@ephox/katamari';
 import { Bindable, Event, Events } from '@ephox/porkbun';
 import { Attribute, Class, Compare, ContentEditable, Css, DomEvent, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 
@@ -26,11 +26,15 @@ export interface DragAdjustEvents {
     readonly adjustHeight: Bindable<DragAdjustHeightEvent>;
     readonly adjustWidth: Bindable<DragAdjustWidthEvent>;
     readonly startAdjust: Bindable<{}>;
+    readonly hoverTable: Bindable<{
+      readonly table: Optional<SugarElement<HTMLTableElement>>;
+    }>;
   };
   readonly trigger: {
     readonly adjustHeight: (table: SugarElement<HTMLTableElement>, delta: number, row: number) => void;
     readonly adjustWidth: (table: SugarElement<HTMLTableElement>, delta: number, column: number) => void;
     readonly startAdjust: () => void;
+    readonly hoverTable: (table: Optional<SugarElement<HTMLTableElement>>) => void;
   };
 }
 
@@ -42,15 +46,17 @@ export interface BarManager {
   readonly hideBars: () => void;
   readonly showBars: () => void;
   readonly events: DragAdjustEvents['registry'];
+  readonly unbindEvents: () => void;
 }
 
 const resizeBarDragging = Styles.resolve('resizer-bar-dragging');
+const resizerBar = Styles.resolve('resizer-bar');
 
 export const BarManager = (wire: ResizeWire): BarManager => {
   const mutation = BarMutation();
   const resizing = Dragger.transform(mutation, {});
-
-  let hoverTable = Optional.none<SugarElement<HTMLTableElement>>();
+  const hoverTable = Singleton.value<SugarElement<HTMLTableElement>>();
+  const isDragging = Cell<boolean>(false);
 
   const getResizer = (element: SugarElement<Element>, type: string) => {
     return Optional.from(Attribute.get(element, type));
@@ -78,7 +84,7 @@ export const BarManager = (wire: ResizeWire): BarManager => {
   /* Resize the column once the user releases the mouse */
   resizing.events.stop.bind(() => {
     mutation.get().each((target) => {
-      hoverTable.each((table) => {
+      hoverTable.on((table) => {
         getResizer(target, 'data-row').each((row) => {
           const delta = getDelta(target, 'top');
           Attribute.remove(target, 'data-initial-top');
@@ -92,12 +98,13 @@ export const BarManager = (wire: ResizeWire): BarManager => {
         });
 
         Bars.refresh(wire, table);
+        isDragging.set(false);
       });
     });
-
   });
 
   const handler = (target: SugarElement<Element>, dir: string) => {
+    isDragging.set(true);
     events.trigger.startAdjust();
     mutation.assign(target);
     Attribute.set(target, 'data-initial-' + dir, CellUtils.getCssValue(target, dir));
@@ -133,13 +140,14 @@ export const BarManager = (wire: ResizeWire): BarManager => {
         * This is fairly safe to do frequently; it's a single querySelectorAll() on the content and Arr.map on the result.
         * If we _really_ need to optimise it further, we can start caching the bar references in the wire somehow.
         */
-        if (SugarBody.inBody(event.target)) {
+        if (SugarBody.inBody(event.target) && !Class.has(event.target, resizerBar) && !isDragging.get()) {
           Bars.destroy(wire);
         }
       },
       (table) => {
         if (resizing.isActive()) {
-          hoverTable = Optional.some(table);
+          hoverTable.set(table);
+          events.trigger.hoverTable(hoverTable.get());
           Bars.refresh(wire, table);
         }
       }
@@ -147,20 +155,27 @@ export const BarManager = (wire: ResizeWire): BarManager => {
   });
 
   const destroy = () => {
-    mousedown.unbind();
-    mouseover.unbind();
     resizing.destroy();
     Bars.destroy(wire);
   };
 
+  const unbindEvents = () => {
+    mousedown.unbind();
+    mouseover.unbind();
+  };
+
   const refresh = (tbl: SugarElement<HTMLTableElement>) => {
+    if (!hoverTable.isSet()) {
+      hoverTable.set(tbl);
+    }
     Bars.refresh(wire, tbl);
   };
 
   const events: DragAdjustEvents = Events.create({
     adjustHeight: Event([ 'table', 'delta', 'row' ]),
     adjustWidth: Event([ 'table', 'delta', 'column' ]),
-    startAdjust: Event([])
+    startAdjust: Event([]),
+    hoverTable: Event([ 'table' ])
   });
 
   return {
@@ -170,6 +185,7 @@ export const BarManager = (wire: ResizeWire): BarManager => {
     off: resizing.off,
     hideBars: Fun.curry(Bars.hide, wire),
     showBars: Fun.curry(Bars.show, wire),
-    events: events.registry
+    events: events.registry,
+    unbindEvents
   };
 };
