@@ -33,7 +33,7 @@ def runRemoteTests(String name, String browser, String provider, String platform
   def browserVersion = version != null ? " --browserVersion=${version}" : ""
   def bedrockCommand =
   "yarn browser-test" +
-    " --chunk=1000" +
+    " --chunk=700" +
     " --bedrock-browser=" + browser +
     " --remote=" + provider +
     " --bucket=" + bucket +
@@ -48,7 +48,7 @@ def runRemoteTests(String name, String browser, String provider, String platform
 def runBrowserTests(String name, String browser, String platform, String bucket, String buckets, Boolean runAll) {
   def bedrockCommand =
     "yarn grunt browser-auto" +
-      " --chunk=1000" +
+      " --chunk=700" +
       " --bedrock-os=" + platform +
       " --bedrock-browser=" + browser +
       " --bucket=" + bucket +
