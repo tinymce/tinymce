@@ -223,19 +223,16 @@ timestamps {
       yarnInstall()
     }
 
-    stage("Validate changelog") {
-      // we use a changelog to run changie
+    stage('Build') {
+      // verify no errors in changelog merge
       exec("yarn changie-merge")
-    }
-
-    stage('Type check') {
       withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
+        // type check and build TinyMCE
         exec("yarn ci-all-seq")
-      }
-    }
 
-    stage('Moxiedoc check') {
-      exec("yarn tinymce-grunt shell:moxiedoc")
+        // validate documentation generator
+        exec("yarn tinymce-grunt shell:moxiedoc")
+      }
     }
   }
 
