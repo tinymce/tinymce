@@ -67,21 +67,20 @@ def runBrowserTests(String name, String browser, String platform, String bucket,
 
 def runTestPod(String cacheName, String name, String testname, String browser, String provider, String platform, String version, String bucket, String buckets, Boolean runAll) {
   return {
-    devPods.nodeConsumer(
-      nodeOpts: [
-        resourceRequestCpu: '2',
-        resourceRequestMemory: '4Gi',
-        resourceRequestEphemeralStorage: '16Gi',
-        resourceLimitCpu: '7',
-        resourceLimitMemory: '4Gi',
-        resourceLimitEphemeralStorage: '16Gi'
-      ],
-      tag: '20',
-      build: cacheName,
-      useContainers: ['node', 'aws-cli']
-    ) {
-
-      stage("${name}") {
+    stage("${name}") {
+      devPods.nodeConsumer(
+        nodeOpts: [
+          resourceRequestCpu: '2',
+          resourceRequestMemory: '4Gi',
+          resourceRequestEphemeralStorage: '16Gi',
+          resourceLimitCpu: '7',
+          resourceLimitMemory: '4Gi',
+          resourceLimitEphemeralStorage: '16Gi'
+        ],
+        tag: '20',
+        build: cacheName,
+        useContainers: ['node', 'aws-cli']
+      ) {
         grunt('list-changed-browser')
         bedrockRemoteTools.withRemoteCreds(provider) {
           int retry = 0
@@ -159,17 +158,17 @@ def runHeadlessPod(String cacheName, Boolean runAll) {
           resourceLimitEphemeralStorage: '1Gi'
         ]
   return {
-    devPods.customConsumer(
-      containers: [
-        node,
-        selenium,
-        aws
-      ],
-      base: 'node',
-      build: cacheName
-    ) {
-      container('node') {
-        stage("Headless-chrome") {
+    stage("Headless-chrome") {
+      devPods.customConsumer(
+        containers: [
+          node,
+          selenium,
+          aws
+        ],
+        base: 'node',
+        build: cacheName
+      ) {
+        container('node') {
           yarnInstall()
           grunt('list-changed-headless')
           runHeadlessTests(runAll)
