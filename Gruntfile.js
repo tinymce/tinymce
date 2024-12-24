@@ -41,6 +41,7 @@ const bedrockDefaults = {
   customRoutes: 'modules/tinymce/src/core/test/json/routes.json',
   overallTimeout: 15 * 60 * 1000, // 15 minutes
   singleTimeout: 10000,
+  retries: 1,
 };
 
 const bedrockHeadless = (tests, browser, auto, opts) => {
@@ -53,9 +54,6 @@ const bedrockHeadless = (tests, browser, auto, opts) => {
         name: 'headless-tests',
         browser,
         testfiles: testFolders(tests, auto),
-
-        // we have a few tests that don't play nicely when combined together in the monorepo
-        retries: 3,
         ...opts
       }
     }
@@ -77,9 +75,6 @@ const bedrockBrowser = (tests, browserName, osName, bucket, buckets, chunk, remo
         buckets: buckets,
         chunk: chunk,
         remote: remote,
-
-        // we have a few tests that don't play nicely when combined together in the monorepo
-        retries: 3,
         ...opts
       }
     };
