@@ -33,7 +33,7 @@ def runRemoteTests(String name, String browser, String provider, String platform
   def browserVersion = version != null ? " --browserVersion=${version}" : ""
   def bedrockCommand =
   "yarn browser-test" +
-    " --chunk=400" +
+    " --chunk=1000" +
     " --bedrock-browser=" + browser +
     " --remote=" + provider +
     " --bucket=" + bucket +
@@ -48,7 +48,7 @@ def runRemoteTests(String name, String browser, String provider, String platform
 def runBrowserTests(String name, String browser, String platform, String bucket, String buckets, Boolean runAll) {
   def bedrockCommand =
     "yarn grunt browser-auto" +
-      " --chunk=400" +
+      " --chunk=1000" +
       " --bedrock-os=" + platform +
       " --bedrock-browser=" + browser +
       " --bucket=" + bucket +
@@ -68,7 +68,7 @@ def runBrowserTests(String name, String browser, String platform, String bucket,
 def runTestPod(String cacheName, String name, String testname, String browser, String provider, String platform, String version, String bucket, String buckets, Boolean runAll) {
   return {
     stage("${name}") {
-      bedrockRemoteTools.nodeConsumerPod(
+      devPods.nodeConsumer(
         nodeOpts: [
           resourceRequestCpu: '2',
           resourceRequestMemory: '4Gi',
@@ -116,26 +116,63 @@ def runTestNode(String branch, String name, String browser, String platform, Str
 }
 
 def runHeadlessPod(String cacheName, Boolean runAll) {
-  return {
-    stage("Headless-chrome") {
-      bedrockRemoteTools.nodeConsumerPod(
-        nodeOpts: [
+  Map node = [
+          name: 'node',
+          image: "public.ecr.aws/docker/library/node:20",
+          command: 'sleep',
+          args: 'infinity',
           resourceRequestCpu: '2',
           resourceRequestMemory: '4Gi',
           resourceRequestEphemeralStorage: '16Gi',
           resourceLimitCpu: '7',
           resourceLimitMemory: '4Gi',
           resourceLimitEphemeralStorage: '16Gi'
-        ],
-        tag: '20',
-        seleniumOpts: [
+        ]
+  Map selenium = [
+          name: "selenium",
           image: "selenium/standalone-chrome:127.0",
+          livenessProbe: [
+            execArgs: "curl --fail --silent --output /dev/null http://localhost:4444/wd/hub/status",
+            initialDelaySeconds: 30,
+            periodSeconds: 5,
+            timeoutSeconds: 15,
+            failureThreshold: 6
+          ],
+          alwaysPullImage: true,
+          resourceRequestCpu: '500m',
+          resourceRequestMemory: '1Gi',
+          resourceLimitCpu: '2',
+          resourceLimitMemory: '1Gi'
+        ]
+  Map aws = [
+          name: 'aws-cli',
+          image: 'public.ecr.aws/aws-cli/aws-cli:latest',
+          command: 'sleep',
+          args: 'infinity',
+          alwaysPullImage: true,
+          resourceRequestCpu: '500m',
+          resourceRequestMemory: '1Gi',
+          resourceRequestEphemeralStorage: '1Gi',
+          resourceLimitCpu: '500m',
+          resourceLimitMemory: '1Gi',
+          resourceLimitEphemeralStorage: '1Gi'
+        ]
+  return {
+    stage("Headless-chrome") {
+      devPods.customConsumer(
+        containers: [
+          node,
+          selenium,
+          aws
         ],
+        base: 'node',
         build: cacheName
       ) {
-        yarnInstall()
-        grunt('list-changed-headless')
-        runHeadlessTests(runAll)
+        container('node') {
+          yarnInstall()
+          grunt('list-changed-headless')
+          runHeadlessTests(runAll)
+        }
       }
     }
   }
@@ -160,7 +197,7 @@ def cacheName = "cache_${BUILD_TAG}"
 def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NUMBER}"
 
 timestamps {
-  bedrockRemoteTools.nodeProducerPod(
+  devPods.nodeProducer(
     nodeOpts: [
       resourceRequestCpu: '2',
       resourceRequestMemory: '4Gi',
@@ -181,13 +218,16 @@ timestamps {
       // cancel build if primary branch doesn't merge cleanly
       gitMerge(primaryBranch)
       yarnInstall()
-      // we use a changelog to run changie
-      exec("yarn changie-merge")
     }
 
     stage('Build') {
+      // verify no errors in changelog merge
+      exec("yarn changie-merge")
       withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
+        // type check and build TinyMCE
         exec("yarn ci-all-seq")
+
+        // validate documentation generator
         exec("yarn tinymce-grunt shell:moxiedoc")
       }
     }
@@ -242,5 +282,5 @@ timestamps {
       parallel processes
   }
 
-  bedrockRemoteTools.cleanUpPod(cacheName)
+  devPods.cleanUpPod(name: cacheName)
 }
