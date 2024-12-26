@@ -267,7 +267,7 @@ describe.skip('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingC
 
     assertMenuBelowMenubar();
 
-    adjustScrollPosition();
+    await adjustScrollPosition();
     await Waiter.pTryUntil(
       'Waiting until the menu is positioned under the menubar',
       () => assertMenuBelowMenubar()

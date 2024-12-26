@@ -245,7 +245,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
 
   it('TBA: uploadImages reuse filename', async () => {
     const editor = hook.editor();
-    let uploadedBlobInfo: BlobInfo;
+    let uploadedBlobInfo: BlobInfo | undefined;
 
     editor.options.set('images_reuse_filename', true);
     setInitialContent(editor, imageHtml(testBlobDataUri));
@@ -255,7 +255,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
       return Promise.resolve('custom.png?size=small');
     });
 
-    const assertResultReusesFilename = (editor: Editor, _uploadedBlobInfo: BlobInfo, result: UploadResult[]) => {
+    const assertResultReusesFilename = (editor: Editor, _uploadedBlobInfo: BlobInfo | undefined, result: UploadResult[]) => {
       assert.lengthOf(result, 1, 'uploadImages reuse filename');
       assert.isTrue(result[0].status, 'uploadImages reuse filename');
       assert.equal(editor.getContent(), '<p><img src="custom.png?size=small"></p>', 'uploadImages reuse filename');
@@ -264,18 +264,16 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
     };
 
     assertEventsLength(0);
-    return editor.uploadImages().then((result) => {
-      assertResultReusesFilename(editor, uploadedBlobInfo, result);
+    const result = await editor.uploadImages();
+    assertResultReusesFilename(editor, uploadedBlobInfo, result);
 
-      editor.uploadImages().then((_result) => {
-        const img = editor.dom.select('img')[0];
-        assertEventsLength(1);
-        assert.isFalse(hasBlobAsSource(img), 'uploadImages reuse filename');
-        assert.include(img.src, 'custom.png?size=small&', 'Check the cache invalidation string was added');
-        assert.equal(editor.getContent(), '<p><img src="custom.png?size=small"></p>', 'uploadImages reuse filename');
-        editor.options.unset('images_reuse_filename');
-      });
-    });
+    await editor.uploadImages();
+    const img = editor.dom.select('img')[0];
+    assertEventsLength(1);
+    assert.isFalse(hasBlobAsSource(img), 'uploadImages reuse filename');
+    assert.include(img.src, 'custom.png?size=small&', 'Check the cache invalidation string was added');
+    assert.equal(editor.getContent(), '<p><img src="custom.png?size=small"></p>', 'uploadImages reuse filename');
+    editor.options.unset('images_reuse_filename');
   });
 
   it('TBA: uploadConcurrentImages', () => {
