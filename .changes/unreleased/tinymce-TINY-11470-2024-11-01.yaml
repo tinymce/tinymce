@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Removed title attribute from dialog tree elements as they already have a tooltip.
-time: 2024-11-01T19:31:17.273725209+01:00
-custom:
-    Issue: TINY-11470

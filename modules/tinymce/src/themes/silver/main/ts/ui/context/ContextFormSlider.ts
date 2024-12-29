@@ -17,13 +17,13 @@ export const renderContextFormSliderInput = (
 
   const pLabel = ctx.label.map((label) => FormField.parts.label({
     dom: { tag: 'label', classes: [ 'tox-label' ] },
-    components: [ GuiFactory.text(label) ]
+    components: [ GuiFactory.text(providers.translate(label)) ]
   }));
 
   const pField = FormField.parts.field({
     factory: Input,
     type: 'range',
-    inputClasses: [ 'tox-toolbar-slider__input' ],
+    inputClasses: [ 'tox-toolbar-slider__input', 'tox-toolbar-nav-js' ],
     inputAttributes: {
       min: String(ctx.min()),
       max: String(ctx.max())

@@ -27,17 +27,6 @@
     }
   }
 
-  span.tox-comment[data-mce-annotation-active="true"] {
-    & img,
-    & > audio,
-    & > video,
-    & span.mce-preview-object {
-      &:not([data-mce-selected]) {
-        outline: @document-comment-outline-width solid @document-comment-active-outline-color;
-      }
-    }
-  }
-
   span.tox-comment:not([data-mce-selected]) {
     background-color: @document-comment-background-color;
     outline: none;
@@ -51,5 +40,30 @@
     background-color: @document-comment-active-background-color;
     border-radius: 3px;
     box-shadow: 0 0 0 2px @keyboard-focus-outline-color;
+
+    &
+      :has(
+        img[data-mce-selected],
+        > audio[data-mce-selected],
+        > video[data-mce-selected],
+        span.mce-preview-object[data-mce-selected]
+      ) {
+      box-shadow: none;
+    }
+  }
+
+  span.tox-comment[data-mce-selected] img:not([data-mce-selected]),
+  span.tox-comment[data-mce-selected] > audio:not([data-mce-selected]),
+  span.tox-comment[data-mce-selected] > video:not([data-mce-selected]),
+  span.tox-comment[data-mce-selected] span.mce-preview-object:not([data-mce-selected]) {
+    box-shadow: 0 0 0 5px @keyboard-focus-outline-color;
+  }
+
+  span.tox-comment[data-mce-annotation-active="true"] img:not([data-mce-selected]),
+  span.tox-comment[data-mce-annotation-active="true"] > audio:not([data-mce-selected]),
+  span.tox-comment[data-mce-annotation-active="true"] > video:not([data-mce-selected]),
+  span.tox-comment[data-mce-annotation-active="true"] span.mce-preview-object:not([data-mce-selected]) {
+    outline: @document-comment-outline-width solid
+    @document-comment-active-outline-color;
   }
 }
