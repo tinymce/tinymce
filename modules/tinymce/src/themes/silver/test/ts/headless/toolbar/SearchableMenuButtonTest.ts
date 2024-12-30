@@ -41,9 +41,10 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
             collapseSearchResults: true
           }, store)
         },
-        'prefix',
-        extrasHook.access().extras.backstages.popup,
-        Optional.none()
+        {
+          prefix: 'prefix',
+          backstage: extrasHook.access().extras.backstages.popup
+        }
       )
     )
 

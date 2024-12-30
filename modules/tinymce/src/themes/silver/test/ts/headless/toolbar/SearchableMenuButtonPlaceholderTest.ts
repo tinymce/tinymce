@@ -45,9 +45,10 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonPlaceholder
             collapseSearchResults: true
           }, store)
         },
-        'prefix',
-        helpers.access().extras.backstages.popup,
-        Optional.none()
+        {
+          prefix: 'prefix',
+          backstage: helpers.access().extras.backstages.popup
+        }
       )
     )
   );

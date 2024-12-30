@@ -56,12 +56,12 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
       // Convert to an internal bridge spec
       const internal = Toolbar.createMenuButton(buttonSpec).mapError((errInfo) => StructureSchema.formatError(errInfo)).getOrDie();
 
-      return renderMenuButton(internal,
-        MenuButtonClasses.Button,
-        spec.backstage,
+      return renderMenuButton(internal, {
+        prefix: MenuButtonClasses.Button,
+        backstage: spec.backstage,
         // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
-        Optional.some('menuitem')
-      );
+        role: Optional.some('menuitem')
+      });
     });
 
     Replacing.set(comp, newMenus);
