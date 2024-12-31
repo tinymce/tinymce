@@ -207,9 +207,20 @@ const removeStyles = (dom: DOMUtils, elm: Element, format: Format, vars: FormatV
   each(format.styles as any, (value: FormatAttrOrStyleValue | string, name: string | number) => {
     const { name: styleName, value: styleValue } = processFormatAttrOrStyle(name, value, vars);
     const normalizedStyleValue = normalizeStyleValue(styleValue, styleName);
+    const compareNodeStyleValue = FormatUtils.getStyle(dom, compareNode as Element, styleName);
 
-    if (format.remove_similar || Type.isNull(styleValue) || !NodeType.isElement(compareNode) || isEq(FormatUtils.getStyle(dom, compareNode, styleName), normalizedStyleValue)) {
+    if (format.remove_similar || Type.isNull(styleValue) || !NodeType.isElement(compareNode) || isEq(compareNodeStyleValue, normalizedStyleValue)) {
       dom.setStyle(elm, styleName, '');
+    }
+
+    const existingStyleValues = compareNodeStyleValue?.split(' ') || [];
+
+    if (normalizedStyleValue) {
+      const index = existingStyleValues.indexOf(normalizedStyleValue);
+      if (index > -1) {
+        existingStyleValues.splice(index, 1);
+        dom.setStyle(elm, styleName, existingStyleValues.join(' '));
+      }
     }
 
     stylesModified = true;
