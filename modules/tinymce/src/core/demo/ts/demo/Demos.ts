@@ -6,6 +6,7 @@ import ContextFormDemo from './ContextFormDemo';
 import ContextToolbarDemo from './ContextToolbarDemo';
 import CustomThemeDemo from './CustomThemeDemo';
 import DisabledDemo from './DisabledDemo';
+import DummyDemo from './DummyDemo';
 import FixedToolbarContainerDemo from './FixedToolbarContainerDemo';
 import FullDemo from './FullDemo';
 import IframeDemo from './IframeDemo';
@@ -41,5 +42,6 @@ window.demos = {
   ReadOnlyDemo,
   ViewDemo,
   ContextFormDemo,
-  BundledCssDemo
+  BundledCssDemo,
+  DummyDemo
 };

@@ -18,6 +18,7 @@ import {
   DialogFooterMenuButtonSpec, DialogFooterNormalButton, DialogFooterNormalButtonSpec, DialogFooterToggleButton, DialogFooterToggleButtonSpec, DialogFooterToggleMenuItem
 } from '../components/dialog/DialogFooterButton';
 import { createDropZone, DropZone, DropZoneSpec } from '../components/dialog/Dropzone';
+import { Dummy, DummySpec } from '../components/dialog/Dummy';
 import { createGridFields, Grid, GridSpec } from '../components/dialog/Grid';
 import { createHtmlPanel, HtmlPanel, HtmlPanelSpec } from '../components/dialog/HtmlPanel';
 import { createIframe, Iframe, IframeSpec } from '../components/dialog/Iframe';
@@ -115,6 +116,9 @@ export {
   DropZone,
   DropZoneSpec,
   createDropZone,
+
+  Dummy,
+  DummySpec,
 
   Grid,
   GridSpec,

@@ -9,6 +9,7 @@ import { renderColorInput } from '../dialog/ColorInput';
 import { renderColorPicker } from '../dialog/ColorPicker';
 import { renderCustomEditor } from '../dialog/CustomEditor';
 import { renderDropZone } from '../dialog/Dropzone';
+import { renderDummy } from '../dialog/Dummy';
 import { renderGrid } from '../dialog/Grid';
 import { renderIFrame } from '../dialog/IFrame';
 import { renderImagePreview } from '../dialog/ImagePreview';
@@ -71,7 +72,9 @@ const factories: Record<string, FormPartRenderer<any>> = {
   imagepreview: make<Dialog.ImagePreview, Dialog.ImagePreviewData>((spec, _, data) => renderImagePreview(spec, data)),
   table: make<Dialog.Table>((spec, backstage) => renderTable(spec, backstage.shared.providers)),
   tree: make<Dialog.Tree>((spec, backstage) => renderTree(spec, backstage)),
-  panel: make<Dialog.Panel>((spec, backstage) => renderPanel(spec, backstage))
+  panel: make<Dialog.Panel>((spec, backstage) => renderPanel(spec, backstage)),
+
+  dummy: make<Dialog.Dummy>(() => renderDummy()),
 };
 
 const noFormParts: FormTypes.FormParts = {
