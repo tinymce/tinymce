@@ -1,0 +1,47 @@
+body {
+    /* colors */
+    --green10: #E4EEDA;
+    --green20: #D7E6C8;
+    --green30: #A0C47D;
+    --green40: #83B84E;
+
+    /* specing and other px values */
+    --spacing: 8px;
+    --container-height: 400px;
+    --elements-height: 40px;
+    --border-width: 1px;
+
+    /* based on other variables */
+    --borders: var(--border-width) solid var(--green40);
+}
+
+.tox .poc-container .poc-button {
+    border: var(--borders);
+    background-color: var(--green30);
+    padding: var(--spacing);
+    height: var(--elements-height);
+}
+
+.tox .poc-container .poc-input {
+    border: var(--borders);
+    background-color: var(--green30);
+    height: var(--elements-height);
+}
+
+.tox .poc-container {
+    height: var(--container-height);
+    background-color: var(--green10);
+    border: var(--borders);
+    padding: var(--spacing);
+    gap: var(--spacing);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 
+TO DO: 
+ - try to add light-dark()
+ - try to change colors/spacing through 'skinning' (just load additional file with variables? hmmmmmmmmm, can try with editor styleSheetLoader in setup for this one)  
+*/

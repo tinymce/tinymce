@@ -7,6 +7,7 @@ import { ColorInput, ColorInputSpec } from './ColorInput';
 import { ColorPicker, ColorPickerSpec } from './ColorPicker';
 import { CustomEditor, CustomEditorSpec } from './CustomEditor';
 import { DropZone, DropZoneSpec } from './Dropzone';
+import { Dummy, DummySpec } from './Dummy';
 import { Grid, GridSpec } from './Grid';
 import { HtmlPanel, HtmlPanelSpec } from './HtmlPanel';
 import { Iframe, IframeSpec } from './Iframe';
@@ -47,7 +48,8 @@ export type BodyComponentSpec
   | TableSpec
   | TreeSpec
   | PanelSpec
-  | CustomEditorSpec;
+  | CustomEditorSpec
+  | DummySpec;
 
 export type BodyComponent
   = Bar
@@ -73,4 +75,5 @@ export type BodyComponent
   | Table
   | Tree
   | Panel
-  | CustomEditor;
+  | CustomEditor
+  | Dummy;
