@@ -1,47 +1,60 @@
-body {
-    /* colors */
-    --green10: #E4EEDA;
-    --green20: #D7E6C8;
-    --green30: #A0C47D;
-    --green40: #83B84E;
+:root {
+  /* light-dark */
+  color-scheme: light dark;
+  --light-bg: orange;
+  --light-color: darkslategray;
+  --light-code: tomato;
 
-    /* specing and other px values */
-    --spacing: 8px;
-    --container-height: 400px;
-    --elements-height: 40px;
-    --border-width: 1px;
+  --dark-bg: green;
+  --dark-color: ghostwhite;
+  --dark-code: gold;
 
-    /* based on other variables */
-    --borders: var(--border-width) solid var(--green40);
+  /* colors */
+  --green10: #E4EEDA;
+  --green20: #D7E6C8;
+  --green30: #A0C47D;
+  --green40: #83B84E;
+
+  /* specing and other px values */
+  --spacing: 8px;
+  --container-height: 400px;
+  --elements-height: 40px;
+  --border-width: 1px;
+
+  /* based on other variables */
+  --borders: var(--border-width) solid var(--green40);
 }
 
+* {
+  background-color: light-dark(var(--light-bg), var(--dark-bg)) !important;
+  color: light-dark(var(--light-color), var(--dark-color)) !important;
+}
+
+
 .tox .poc-container .poc-button {
-    border: var(--borders);
-    background-color: var(--green30);
-    padding: var(--spacing);
-    height: var(--elements-height);
+  border: var(--borders);
+  padding: var(--spacing);
+  height: var(--elements-height);
 }
 
 .tox .poc-container .poc-input {
-    border: var(--borders);
-    background-color: var(--green30);
-    height: var(--elements-height);
+  border: var(--borders);
+  height: var(--elements-height);
 }
 
 .tox .poc-container {
-    height: var(--container-height);
-    background-color: var(--green10);
-    border: var(--borders);
-    padding: var(--spacing);
-    gap: var(--spacing);
+  height: var(--container-height);
+  border: var(--borders);
+  padding: var(--spacing);
+  gap: var(--spacing);
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* 
-TO DO: 
+/*
+TO DO:
  - try to add light-dark()
- - try to change colors/spacing through 'skinning' (just load additional file with variables? hmmmmmmmmm, can try with editor styleSheetLoader in setup for this one)  
+ - try to change colors/spacing through 'skinning' (just load additional file with variables? hmmmmmmmmm, can try with editor styleSheetLoader in setup for this one)
 */
