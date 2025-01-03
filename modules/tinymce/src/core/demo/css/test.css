@@ -1,14 +1,4 @@
 :root {
-  /* light-dark */
-  color-scheme: light dark;
-  --light-bg: orange;
-  --light-color: darkslategray;
-  --light-code: tomato;
-
-  --dark-bg: green;
-  --dark-color: ghostwhite;
-  --dark-code: gold;
-
   /* colors */
   --green10: #E4EEDA;
   --green20: #D7E6C8;
@@ -19,16 +9,25 @@
   --spacing: 8px;
   --container-height: 400px;
   --elements-height: 40px;
-  --border-width: 1px;
+  --border-width: 2px;
 
   /* based on other variables */
-  --borders: var(--border-width) solid var(--green40);
+  --borders: var(--border-width) solid var(--green30);
+
+  /* light-dark */
+  color-scheme: light dark;
+  --light-bg: var(--green10);
+  --light-color: darkslategray;
+
+  --dark-bg: var(--green40);
+  --dark-color: ghostwhite;
 }
 
-* {
+/* light-dark */
+/* * {
   background-color: light-dark(var(--light-bg), var(--dark-bg)) !important;
   color: light-dark(var(--light-color), var(--dark-color)) !important;
-}
+} */
 
 
 .tox .poc-container .poc-button {
@@ -43,6 +42,9 @@
 }
 
 .tox .poc-container {
+  background-color: light-dark(var(--light-bg), var(--dark-bg));
+  color: light-dark(var(--light-color), var(--dark-color));
+
   height: var(--container-height);
   border: var(--borders);
   padding: var(--spacing);
