@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Fixed error with notifications when toolbar is at the bottom.
+time: 2025-01-06T10:12:46.807235+08:00
+custom:
+  Issue: TINY-11498
