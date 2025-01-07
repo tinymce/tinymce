@@ -33,8 +33,8 @@ const getLinkAttrs = (data: LinkDialogOutput): LinkAttrs => {
 
 const handleExternalTargets = (href: string, assumeExternalTargets: AssumeExternalTargets): string => {
   if ((assumeExternalTargets === AssumeExternalTargets.ALWAYS_HTTP
-        || assumeExternalTargets === AssumeExternalTargets.ALWAYS_HTTPS)
-      && !Utils.hasProtocol(href)) {
+    || assumeExternalTargets === AssumeExternalTargets.ALWAYS_HTTPS)
+    && !Utils.hasProtocol(href)) {
     return assumeExternalTargets + '://' + href;
   }
   return href;
@@ -90,6 +90,10 @@ const linkDomMutation = (editor: Editor, attachState: AttachState, data: LinkDia
   const selectedElm = editor.selection.getNode();
   const anchorElm = Utils.getAnchorElement(editor, selectedElm);
   const linkAttrs = applyLinkOverrides(editor, getLinkAttrs(data));
+  const attributesPostProcess = Options.attributesPostProcess(editor);
+  if (Type.isNonNullable(attributesPostProcess)) {
+    attributesPostProcess(linkAttrs);
+  }
 
   editor.undoManager.transact(() => {
     if (data.href === attachState.href) {
