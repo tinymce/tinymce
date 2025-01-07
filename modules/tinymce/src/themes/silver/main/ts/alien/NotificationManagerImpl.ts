@@ -79,6 +79,8 @@ export default (
       });
     };
 
+    const shouldApplyDocking = () => !Options.isStickyToolbar(editor) || !sharedBackstage.header.isPositionedAtTop();
+
     const notification = GuiFactory.build(
       Notification.sketch({
         text: settings.text,
@@ -112,9 +114,8 @@ export default (
             }),
             Replacing.config({}),
             ...(
-              Options.isStickyToolbar(editor) && !sharedBackstage.header.isPositionedAtTop()
-                ? [ ]
-                : [
+              shouldApplyDocking()
+                ? [
                   Docking.config({
                     contextual: {
                       lazyContext: () => Optional.some(Boxes.box(getBoundsContainer())),
@@ -145,7 +146,7 @@ export default (
                         );
                     }
                   })
-                ]
+                ] : []
             )
           ])
         })
@@ -167,7 +168,9 @@ export default (
       notificationRegion.on((notificationWrapper) => {
         Replacing.append(notificationWrapper, notificationSpec);
         InlineView.reposition(notificationWrapper);
-        Docking.refresh(notificationWrapper);
+        if (shouldApplyDocking()) {
+          Docking.refresh(notificationWrapper);
+        }
         clampComponentsToBounds(notificationWrapper.components());
       });
     }
@@ -181,7 +184,9 @@ export default (
     const reposition = () => {
       notificationRegion.on((region) => {
         InlineView.reposition(region);
-        Docking.refresh(region);
+        if (shouldApplyDocking()) {
+          Docking.refresh(region);
+        }
         clampComponentsToBounds(region.components());
       });
     };
