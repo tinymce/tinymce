@@ -168,7 +168,7 @@ export default (
       notificationRegion.on((notificationWrapper) => {
         Replacing.append(notificationWrapper, notificationSpec);
         InlineView.reposition(notificationWrapper);
-        if (shouldApplyDocking()) {
+        if (notification.hasConfigured(Docking)) {
           Docking.refresh(notificationWrapper);
         }
         clampComponentsToBounds(notificationWrapper.components());
@@ -184,7 +184,7 @@ export default (
     const reposition = () => {
       notificationRegion.on((region) => {
         InlineView.reposition(region);
-        if (shouldApplyDocking()) {
+        if (region.hasConfigured(Docking)) {
           Docking.refresh(region);
         }
         clampComponentsToBounds(region.components());
