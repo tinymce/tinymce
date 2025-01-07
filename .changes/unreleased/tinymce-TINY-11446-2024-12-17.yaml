@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Text input was prevented in form elements in the contents of the editor.
+time: 2024-12-17T09:12:40.242178+01:00
+custom:
+  Issue: TINY-11446
