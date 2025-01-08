@@ -9,7 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 describe('browser.tinymce.core.init.InitIframeAriaTextTest', () => {
   const defaultIframeTitle = 'Rich Text Area';
   const defaultIframeAriaText = 'Rich Text Area';
-  const defaultIframeAriaTextWithHelpPlugin = 'Rich Text Area. Press ALT-0 for help.';
+  const defaultIframeAriaTextWithHelpPlugin = defaultIframeAriaText.concat('. Press ALT-0 for help.');
   const customIframeAriaText = 'Cupidatat magna aliquip.';
   const isFirefox = PlatformDetection.detect().browser.isFirefox();
 

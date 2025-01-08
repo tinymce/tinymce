@@ -510,7 +510,7 @@ const register = (editor: Editor): void => {
 
   registerOption('iframe_aria_text', {
     processor: 'string',
-    default: editor.hasPlugin('help') ? 'Rich Text Area. Press ALT-0 for help.' : 'Rich Text Area'
+    default: 'Rich Text Area'.concat(editor.hasPlugin('help') ? '. Press ALT-0 for help.' : '')
   });
 
   registerOption('setup', {
