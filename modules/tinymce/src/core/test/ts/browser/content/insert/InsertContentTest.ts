@@ -667,6 +667,24 @@ describe('browser.tinymce.core.content.insert.InsertContentTest', () => {
     TinyAssertions.assertRawContent(editor, '<p>foo</p><p>X<span></span>baz</p>');
   });
 
+  it('TINY-11714: Should be able to replace CEF block', () => {
+    const editor = hook.editor();
+    editor.setContent('<div><div contenteditable="false">CEF</div></div>');
+    TinySelections.setSelection(editor, [ 0 ], 1, [ 0 ], 2); // Shifted since fake caret paragraph is before CEF
+    editor.insertContent('X');
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
+    TinyAssertions.assertContent(editor, '<div>X</div>');
+  });
+
+  it('TINY-11714: Should be able to replace CEF inline', () => {
+    const editor = hook.editor();
+    editor.setContent('<div><span contenteditable="false">CEF</span></div>');
+    TinySelections.setSelection(editor, [ 0 ], 1, [ 0 ], 2); // Shifted since fake caret paragraph is before CEF
+    editor.insertContent('X');
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
+    TinyAssertions.assertContent(editor, '<div>X</div>');
+  });
+
   context('Transparent blocks', () => {
     it('TINY-9172: Insert block anchor in regular block', () => {
       const editor = hook.editor();
