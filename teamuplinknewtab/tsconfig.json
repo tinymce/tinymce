@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "target": "es5",
+    "module": "es2015",
+    "importHelpers": true,
+    "lib": ["es2015", "dom"],
+    "declaration": true,
+    "noUnusedLocals": true,
+    "sourceMap": true,
+    "outDir": "lib",
+    "baseUrl": ".",
+    "types": ["mocha"]
+  },
+  "include": [
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts"
+  ]
+}
