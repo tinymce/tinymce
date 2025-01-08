@@ -185,7 +185,7 @@ const renderCommonDropdown = <T>(
             }
           }),
         ]),
-        AddEventsBehaviour.config('update-dropdown-width-variable', [
+        AddEventsBehaviour.config('close-on--window-resize', [
           AlloyEvents.run(SystemEvents.windowResize(), (comp, _se) => AlloyDropdown.close(comp)),
         ]),
         AddEventsBehaviour.config('menubutton-update-display-text', [
