@@ -5,7 +5,7 @@ import { Editor, TinyMCE } from 'tinymce/core/api/PublicApi';
 declare let tinymce: TinyMCE;
 
 export default (): void => {
-  tinymce.init({
+  void tinymce.init({
     selector: 'textarea#editor',
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     content_css: '../../../../js/tinymce/skins/content/default/content.css',

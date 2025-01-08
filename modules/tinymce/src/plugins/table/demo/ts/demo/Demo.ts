@@ -2,7 +2,7 @@ import { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
-tinymce.init({
+void tinymce.init({
   selector: 'div.tinymce',
   plugins: 'table',
   toolbar: 'table tableprops tablecellprops tablerowprops | tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol | tablecutrow tablecopyrow tablepasterowbefore tablepasterowafter |' +

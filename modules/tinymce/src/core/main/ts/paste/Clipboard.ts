@@ -168,7 +168,7 @@ const pasteImageData = (editor: Editor, e: ClipboardEvent | DragEvent, rng: Rang
     if (images.length > 0) {
       e.preventDefault();
 
-      readFilesAsDataUris(images).then((fileResults) => {
+      void readFilesAsDataUris(images).then((fileResults) => {
         if (rng) {
           editor.selection.setRng(rng);
         }

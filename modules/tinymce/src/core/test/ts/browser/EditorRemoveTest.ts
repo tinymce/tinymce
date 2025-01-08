@@ -21,7 +21,7 @@ describe('browser.tinymce.core.EditorRemoveTest', () => {
     assertTextareaDisplayStyle(editor, 'none');
     editor.remove();
     assertTextareaDisplayStyle(editor, expectedStyle);
-    EditorManager.init({ selector: '#tinymce' });
+    void EditorManager.init({ selector: '#tinymce' });
     assertTextareaDisplayStyle(editor, expectedStyle);
     McEditor.remove(editor);
   };

@@ -4,7 +4,7 @@ declare let tinymce: TinyMCE;
 
 export default (): void => {
 
-  tinymce.init({
+  void tinymce.init({
     selector: 'textarea.tiny-text',
     theme: 'silver',
     toolbar: 'styles',
@@ -60,7 +60,7 @@ export default (): void => {
     ]
   });
 
-  tinymce.init({
+  void tinymce.init({
     selector: 'textarea.tiny-text2',
     theme: 'silver',
     toolbar: 'styles',

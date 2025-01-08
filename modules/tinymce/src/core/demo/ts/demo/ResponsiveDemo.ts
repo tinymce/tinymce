@@ -120,6 +120,6 @@ export default (): void => {
     emoticons_database_url: '/src/plugins/emoticons/main/js/emojis.js'
   };
 
-  tinymce.init(settings);
-  // tinymce.init(Merger.deepMerge(settings, { inline: true, selector: 'div.tinymce' }));
+  void tinymce.init(settings);
+  // void tinymce.init(Merger.deepMerge(settings, { inline: true, selector: 'div.tinymce' }));
 };

@@ -12,7 +12,7 @@ export default (): void => {
   const DemoState = MockDemo.mockFeatureState();
   const DemoState2 = MockDemo.mockFeatureState();
 
-  tinymce.init({
+  void tinymce.init({
     selector: 'textarea.tiny-text',
     theme: 'silver',
     // toolbar: [ 'basic-button-1', 'basic-button-2', 'menu-button-1', 'panel-button-1', 'dialog-button', 'MagicButton' ],

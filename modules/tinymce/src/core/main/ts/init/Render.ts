@@ -130,7 +130,7 @@ const loadScripts = (editor: Editor, suffix: string) => {
     // If the editor has been destroyed or the theme and model haven't loaded then
     // don't continue to load the editor
     if (!editor.removed && isThemeLoaded(editor) && isModelLoaded(editor)) {
-      Init.init(editor);
+      void Init.init(editor);
     }
   };
 

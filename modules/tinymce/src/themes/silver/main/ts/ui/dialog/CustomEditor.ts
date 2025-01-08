@@ -43,7 +43,7 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
       AddEventsBehaviour.config('custom-editor-events', [
         AlloyEvents.runOnAttached((component) => {
           memReplaced.getOpt(component).each((ta) => {
-            (isOldCustomEditor(spec)
+            void (isOldCustomEditor(spec)
               ? spec.init(ta.element.dom)
               : Resource.load(spec.scriptId, spec.scriptUrl).then(
                 (init: CustomEditorInitFn) => init(ta.element.dom, spec.settings)

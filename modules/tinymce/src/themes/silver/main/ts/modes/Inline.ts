@@ -118,7 +118,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   const ui = InlineHeader(editor, targetElm, uiRefs, backstage, floatContainer);
   const toolbarPersist = Options.isToolbarPersist(editor);
 
-  loadInlineSkin(editor);
+  void loadInlineSkin(editor);
 
   const render = () => {
     // Because we set the floatContainer immediately afterwards, this is just telling us

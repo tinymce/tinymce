@@ -2,7 +2,7 @@ import { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
-tinymce.init({
+void tinymce.init({
   selector: 'textarea.tinymce',
   plugins: 'codesample code',
   toolbar: 'codesample code',
@@ -10,7 +10,7 @@ tinymce.init({
   height: 600
 });
 
-tinymce.init({
+void tinymce.init({
   selector: 'div.tinymce',
   inline: true,
   plugins: 'codesample code',

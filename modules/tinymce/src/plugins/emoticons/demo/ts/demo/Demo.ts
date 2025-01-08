@@ -2,7 +2,7 @@ import { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
-tinymce.init({
+void tinymce.init({
   selector: 'textarea.tinymce',
   plugins: 'emoticons code',
   toolbar: 'emoticons code',

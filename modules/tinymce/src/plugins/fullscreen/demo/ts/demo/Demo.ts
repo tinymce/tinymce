@@ -2,7 +2,7 @@ import { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
-tinymce.init({
+void tinymce.init({
   selector: 'textarea.tinymce',
   plugins: 'fullscreen code',
   toolbar: 'fullscreen code',
@@ -10,7 +10,7 @@ tinymce.init({
   fullscreen_native: true
 });
 
-tinymce.init({
+void tinymce.init({
   selector: 'textarea.tinymce2',
   plugins: 'fullscreen code',
   toolbar: 'fullscreen code',

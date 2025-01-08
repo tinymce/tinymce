@@ -2,7 +2,7 @@ import { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
-tinymce.init({
+void tinymce.init({
   selector: 'textarea.tinymce',
   plugins: 'table lists image accordion code',
   toolbar: 'table | numlist bullist | image | accordion | code',

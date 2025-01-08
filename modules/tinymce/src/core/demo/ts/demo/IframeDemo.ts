@@ -44,6 +44,6 @@ export default (): void => {
     toolbar: 'undo redo | sidebar1 | print preview media'
   };
 
-  tinymce.init(settings);
-  tinymce.init(Merger.deepMerge(settings, { inline: true, selector: 'div.tinymce' }));
+  void tinymce.init(settings);
+  void tinymce.init(Merger.deepMerge(settings, { inline: true, selector: 'div.tinymce' }));
 };

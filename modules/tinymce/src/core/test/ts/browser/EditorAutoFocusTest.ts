@@ -38,7 +38,7 @@ describe.skip('browser.tinymce.core.EditorAutoFocusTest', () => {
   const pSetupEditorAutoFocus = (id: string, options: RawEditorOptions) => {
     const height = restOfWindowHeight();
     return new Promise((resolve) => {
-      EditorManager.init({
+      void EditorManager.init({
         selector: 'div.tinymce',
         base_url: '/project/tinymce/js/tinymce/',
         menubar: false,

@@ -11,7 +11,7 @@ const pLoadI18nHtml = (baseUrl: string): Promise<string> =>
 
 const initI18nLoad = (editor: Editor, baseUrl: string): void => {
   editor.on('init', () => {
-    pLoadI18nHtml(baseUrl);
+    void pLoadI18nHtml(baseUrl);
   });
 };
 

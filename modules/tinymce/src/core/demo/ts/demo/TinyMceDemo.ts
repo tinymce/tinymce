@@ -11,7 +11,7 @@ export default (): void => {
   const container = SelectorFind.descendant(SugarBody.body(), '#ephox-ui').getOrDie();
   Insert.append(container, textarea);
 
-  tinymce.init({
+  void tinymce.init({
     // imagetools_cors_hosts: ["moxiecode.cachefly.net"],
     // imagetools_proxy: "proxy.php",
     // imagetools_api_key: '123',

@@ -143,7 +143,7 @@ const AddOnManager = <T>(): AddOnManager<T> => {
       return;
     }
 
-    ScriptLoader.ScriptLoader.add(urls[name] + '/langs/' + language + '.js');
+    void ScriptLoader.ScriptLoader.add(urls[name] + '/langs/' + language + '.js');
   };
 
   const requireLangPack = (name: string, languages?: string) => {
@@ -151,7 +151,7 @@ const AddOnManager = <T>(): AddOnManager<T> => {
       if (isLoaded(name)) {
         loadLanguagePack(name, languages);
       } else {
-        waitFor(name, 'loaded').then(() => loadLanguagePack(name, languages));
+        void waitFor(name, 'loaded').then(() => loadLanguagePack(name, languages));
       }
     }
   };

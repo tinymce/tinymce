@@ -315,9 +315,9 @@ const EditorUpload = (editor: Editor): EditorUpload => {
 
   editor.on('SetContent', () => {
     if (Options.isAutomaticUploadsEnabled(editor)) {
-      uploadImagesAuto();
+      void uploadImagesAuto();
     } else {
-      scanForImages();
+      void scanForImages();
     }
   });
 

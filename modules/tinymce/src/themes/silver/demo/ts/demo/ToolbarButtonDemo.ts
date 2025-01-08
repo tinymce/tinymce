@@ -30,7 +30,7 @@ export default (): void => {
     'generated-1', 'generated-2', 'generated-3', 'generated-4', 'generated-5', 'generated-6', 'generated-7', 'generated-8', 'generated-9', 'generated-10'
   ];
 
-  tinymce.init({
+  void tinymce.init({
     selector: 'textarea.tiny-text',
     theme: 'silver',
     toolbar: [ 'disabled-button', 'icon-button', 'icon-button-toggle' ].concat(generatedNames).join(' '),

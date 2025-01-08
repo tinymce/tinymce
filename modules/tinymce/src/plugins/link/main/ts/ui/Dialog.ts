@@ -40,7 +40,7 @@ const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Dialog.Dial
     attach: data.url.meta !== undefined && data.url.meta.attach ? data.url.meta.attach : Fun.noop
   };
 
-  DialogConfirms.preprocess(editor, changedData).then((pData) => {
+  void DialogConfirms.preprocess(editor, changedData).then((pData) => {
     Actions.link(editor, attachState, pData);
   });
 
@@ -153,7 +153,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInsta
 
 const open = (editor: Editor): void => {
   const data = collectData(editor);
-  data.then((info) => {
+  void data.then((info) => {
     const onSubmit = handleSubmit(editor, info);
     return makeDialog(info, onSubmit, editor);
   }).then((spec) => {

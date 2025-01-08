@@ -28,5 +28,5 @@ export default (): void => {
     ]
   };
 
-  tinymce.init(settings);
+  void tinymce.init(settings);
 };

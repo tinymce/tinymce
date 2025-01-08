@@ -11,7 +11,7 @@ const contentStyles = `
 `;
 
 export default (): void => {
-  tinymce.init({
+  void tinymce.init({
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     selector: 'div.tinymce',
     toolbar: 'annotate-alpha get-all-alpha remove-all-alpha remove-alpha',

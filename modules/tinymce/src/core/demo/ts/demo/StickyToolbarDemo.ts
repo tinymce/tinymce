@@ -81,6 +81,6 @@ export default (): void => {
     toolbar_sticky: true
   };
 
-  tinymce.init(stickySettings);
-  tinymce.init({ ...stickySettings, inline: true, selector: '.tinymce' });
+  void tinymce.init(stickySettings);
+  void tinymce.init({ ...stickySettings, inline: true, selector: '.tinymce' });
 };

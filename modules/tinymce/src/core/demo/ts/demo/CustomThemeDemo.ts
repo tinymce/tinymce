@@ -13,7 +13,7 @@ export default (): void => {
   const container = SelectorFind.descendant(SugarBody.body(), '#ephox-ui').getOrDie();
   Insert.append(container, textarea);
 
-  tinymce.init({
+  void tinymce.init({
     selector: 'textarea',
     theme: (editor, target) => {
       const dom = tinymce.DOM;

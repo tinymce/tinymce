@@ -8,7 +8,7 @@ import ButtonSetupDemo from './ButtonSetupDemo';
 declare let tinymce: TinyMCE;
 
 export default (): void => {
-  tinymce.init({
+  void tinymce.init({
     // TODO: Investigate. Should this get the styles (e.g. margin) of the div/textarea?
     selector: 'div.tiny-text',
     inline: false,

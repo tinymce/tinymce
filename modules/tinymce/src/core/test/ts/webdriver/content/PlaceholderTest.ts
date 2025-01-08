@@ -50,13 +50,13 @@ describe('webdriver.tinymce.core.content.PlaceholderTest', () => {
     await pAssertPlaceholderExists(editor);
   };
 
-  it('TINY-3917: Check placeholder restores when deleting content via command', () => {
+  it('TINY-3917: Check placeholder restores when deleting content via command', async () => {
     const editor = hook.editor();
     setContent(editor, '<p>a</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
-    pAssertPlaceholderNotExists(editor);
+    await pAssertPlaceholderNotExists(editor);
     editor.execCommand('Delete');
-    pAssertPlaceholderExists(editor);
+    await pAssertPlaceholderExists(editor);
     assertCount(1);
   });
 

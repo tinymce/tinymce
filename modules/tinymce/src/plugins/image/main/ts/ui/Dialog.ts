@@ -238,7 +238,7 @@ const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDi
         api.focus('src');
       };
 
-      Utils.blobToDataUri(file).then((dataUrl) => {
+      void Utils.blobToDataUri(file).then((dataUrl) => {
         const blobInfo = helpers.createBlobCache(file, blobUri, dataUrl);
         if (info.automaticUploads) {
           helpers.uploadImage(blobInfo).then((result) => {
@@ -308,7 +308,7 @@ const submitHandler = (editor: Editor, info: ImageDialogInfo, helpers: Helpers) 
   };
 
   editor.execCommand('mceUpdateImage', false, toImageData(finalData, info.hasAccessibilityOptions));
-  editor.editorUpload.uploadImagesAuto();
+  void editor.editorUpload.uploadImagesAuto();
 
   api.close();
 };
@@ -374,7 +374,7 @@ export const Dialog = (editor: Editor): { open: () => void } => {
     uploadImage: uploadImage(editor)
   };
   const open = () => {
-    collect(editor)
+    void collect(editor)
       .then((info: ImageDialogInfo): DialogType.DialogSpec<ImageDialogData> => {
         const state = createState(info);
         return {

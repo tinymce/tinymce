@@ -487,14 +487,14 @@ const contentBodyLoaded = (editor: Editor): void => {
 
   setupRtcThunk.fold(() => {
     const cancelProgress = startProgress(editor);
-    loadContentCss(editor).then(() => {
+    void loadContentCss(editor).then(() => {
       initEditorWithInitialContent(editor);
       cancelProgress();
     });
   }, (setupRtc) => {
     editor.setProgressState(true);
 
-    loadContentCss(editor).then(() => {
+    void loadContentCss(editor).then(() => {
       setupRtc().then((_rtcMode) => {
         editor.setProgressState(false);
         initEditorWithInitialContent(editor);

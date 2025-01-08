@@ -37,7 +37,7 @@ describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
   };
 
   const addToQueue = (url: string): void => {
-    ScriptLoader.ScriptLoader.add(url).then(() => loadedCount++);
+    void ScriptLoader.ScriptLoader.add(url).then(() => loadedCount++);
   };
 
   const pLoadQueue = (): Promise<void> =>

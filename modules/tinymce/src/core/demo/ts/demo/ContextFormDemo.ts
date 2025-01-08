@@ -197,7 +197,7 @@ export default (): void => {
     format_empty_lines: true
   };
 
-  tinymce.init(settings);
-  tinymce.init(Merger.deepMerge(settings, { inline: true, selector: 'div.tinymce' }));
+  void tinymce.init(settings);
+  void tinymce.init(Merger.deepMerge(settings, { inline: true, selector: 'div.tinymce' }));
 };
 

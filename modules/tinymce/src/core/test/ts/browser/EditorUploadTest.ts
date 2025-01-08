@@ -274,7 +274,7 @@ describe('browser.tinymce.core.EditorUploadTest', () => {
         assert.include(img.src, 'custom.png?size=small&', 'Check the cache invalidation string was added');
         assert.equal(editor.getContent(), '<p><img src="custom.png?size=small"></p>', 'uploadImages reuse filename');
         editor.options.unset('images_reuse_filename');
-      });
+      }, () => assert.fail());
     });
   });
 
