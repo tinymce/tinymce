@@ -1,10 +1,11 @@
 {
+  "name": "tinymce-teamup",
+  "version": "7.6.0+teamup",
   "private": true,
   "workspaces": [
     "modules/*"
   ],
   "scripts": {
-    "postinstall": "patch-package",
     "tinymce-grunt": "grunt --gruntfile modules/tinymce/Gruntfile.js",
     "tinymce-rollup": "run-s \"tinymce-grunt dev rollup\"",
     "oxide-icons-build": "yarn -s --cwd modules/oxide-icons-default build",
@@ -94,5 +95,14 @@
     "webpack": "^5.74.0",
     "webpack-cli": "^5.1.1",
     "webpack-dev-server": "^4.11.0"
+  },
+  "dependencies": {
+    "gulp": "^5.0.0",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-connect": "^5.7.0",
+    "gulp-minify": "^3.1.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-sourcemaps": "^3.0.0"
   }
 }
