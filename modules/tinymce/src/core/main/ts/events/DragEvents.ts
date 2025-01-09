@@ -46,6 +46,8 @@ const makeDndEvent = (type: DragEventType, target: Element, dataTransfer: DataTr
     buttons: 0,
     clientX: 0,
     clientY: 0,
+    layerX: 0,
+    layerY: 0,
     ctrlKey: false,
     metaKey: false,
     movementX: 0,

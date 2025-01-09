@@ -102,7 +102,7 @@ const doCreate = <
     ...wrappedExtra,
     ...wrappedApis,
     revoke: Fun.curry(revokeBehaviour, name),
-    config: (spec) => {
+    config: (spec: C) => {
       const prepared = StructureSchema.asRawOrDie(name + '-config', configSchema, spec);
 
       return {
