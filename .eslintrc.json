@@ -5,11 +5,8 @@
     "plugin:security-node/recommended"
   ],
   "parserOptions": {
-    "sourceType": "module",
-    "project": [
-      "./tsconfig.json",
-      "modules/*/tsconfig.json"
-    ]
+    "projectService": true,
+    "tsconfigRootDir": "."
   },
   "plugins": [
     "only-warn",
@@ -23,6 +20,14 @@
         "ignoreVoid": false
       }
     ],
+    "@typescript-eslint/no-empty-object-type": "off",
+    "@typescript-eslint/no-unsafe-function-type": "off",
+    "@typescript-eslint/prefer-promise-reject-errors": "off",
+    "@typescript-eslint/no-base-to-string": "off",
+    "@typescript-eslint/no-redundant-type-constituents": "off",
+    "@typescript-eslint/no-unsafe-enum-comparison": "off",
+    // "@typescript-eslint/no-wrapper-object-types": "off",
+
     "@typescript-eslint/camelcase": "off", // leave off
     "@typescript-eslint/member-ordering": "off",
     "@typescript-eslint/no-empty-function": "off",
