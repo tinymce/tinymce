@@ -38,7 +38,7 @@ const Quirks = (editor: Editor): Quirks => {
   const setEditorCommandState = (cmd: string, state: string | boolean) => {
     try {
       editor.getDoc().execCommand(cmd, false, String(state));
-    } catch (ex) {
+    } catch {
       // Ignore
     }
   };

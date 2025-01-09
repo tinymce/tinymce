@@ -314,7 +314,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     const tryCompareBoundaryPoints = (how: number, sourceRange: Range, destinationRange: Range) => {
       try {
         return sourceRange.compareBoundaryPoints(how, destinationRange);
-      } catch (ex) {
+      } catch {
         // Gecko throws wrong document exception if the range points
         // to nodes that where removed from the dom #6690
         // Browsers should mutate existing DOMRange instances so that they always point
@@ -345,7 +345,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
 
         rng = EventProcessRanges.processRanges(editor, [ rng ])[0];
       }
-    } catch (ex) {
+    } catch {
       // IE throws unspecified error here if TinyMCE is placed in a frame/iframe
     }
 
@@ -400,7 +400,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
       try {
         sel.removeAllRanges();
         sel.addRange(rng);
-      } catch (ex) {
+      } catch {
         // IE might throw errors here if the editor is within a hidden container and selection is changed
       }
 
@@ -491,7 +491,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
 
       focusRange.setStart(focusNode, sel.focusOffset);
       focusRange.collapse(true);
-    } catch (e) {
+    } catch {
       // Safari can generate an invalid selection and error. Silently handle it and default to forward.
       // See https://bugs.webkit.org/show_bug.cgi?id=230594.
       return true;

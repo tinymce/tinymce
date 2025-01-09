@@ -464,7 +464,7 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
 
     try {
       doc.readyState = 'loading';
-    } catch (e) {
+    } catch {
       assert.equal(true, true, `IE doesn't allow us to set document.readyState`);
       return;
     }

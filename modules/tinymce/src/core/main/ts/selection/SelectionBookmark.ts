@@ -63,7 +63,7 @@ const bookmarkToNativeRng = (bookmark: SimRange): Optional<Range> => {
     rng.setStart(bookmark.start.dom, bookmark.soffset);
     rng.setEnd(bookmark.finish.dom, bookmark.foffset);
     return Optional.some(rng);
-  } catch (_) {
+  } catch {
     return Optional.none();
   }
 };

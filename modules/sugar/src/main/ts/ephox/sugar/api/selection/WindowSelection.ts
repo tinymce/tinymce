@@ -50,7 +50,7 @@ const setRangeFromRelative = (win: Window, relative: SimSelection): void =>
           // This try catch is for older browsers (Firefox 52) as they're sometimes unable to handle setting backwards selections using selection.extend and error out.
           try {
             setLegacyRtlRange(win, selection, start, soffset, finish, foffset);
-          } catch (e) {
+          } catch {
             // If it does fail, try again with ltr.
             doSetRange(win, finish, foffset, start, soffset);
           }
