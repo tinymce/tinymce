@@ -18,10 +18,8 @@
     "@typescript-eslint/prefer-promise-reject-errors": "off",
     "@typescript-eslint/no-base-to-string": "off",
     "@typescript-eslint/no-redundant-type-constituents": "off",
-    "@typescript-eslint/no-unsafe-enum-comparison": "off",
     "@typescript-eslint/no-duplicate-type-constituents": "off",
     "@typescript-eslint/no-wrapper-object-types": "off",
-    "@typescript-eslint/only-throw-error": "off",
     "@typescript-eslint/no-unused-expressions": [ "error", { "allowTernary": true }],
 
 

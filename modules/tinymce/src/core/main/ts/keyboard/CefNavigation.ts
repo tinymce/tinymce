@@ -33,7 +33,7 @@ const createTextBlock = (editor: Editor): Element => {
 
 const exitPreBlock = (editor: Editor, direction: HDirection, range: Range): void => {
   const caretWalker = CaretWalker(editor.getBody());
-  const getVisualCaretPosition = Fun.curry(CaretUtils.getVisualCaretPosition, direction === 1 ? caretWalker.next : caretWalker.prev);
+  const getVisualCaretPosition = Fun.curry(CaretUtils.getVisualCaretPosition, direction === HDirection.Forwards ? caretWalker.next : caretWalker.prev);
 
   if (range.collapsed) {
     const pre = editor.dom.getParent(range.startContainer, 'PRE');
@@ -45,7 +45,7 @@ const exitPreBlock = (editor: Editor, direction: HDirection, range: Range): void
     if (!caretPos) {
       const newBlock = SugarElement.fromDom(createTextBlock(editor));
 
-      if (direction === 1) {
+      if (direction === HDirection.Forwards) {
         Insert.after(SugarElement.fromDom(pre), newBlock);
       } else {
         Insert.before(SugarElement.fromDom(pre), newBlock);
