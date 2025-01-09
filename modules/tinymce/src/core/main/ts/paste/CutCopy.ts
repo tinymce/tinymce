@@ -22,7 +22,7 @@ const setHtml5Clipboard = (clipboardData: DataTransfer | null, html: string, tex
       clipboardData.setData('text/plain', text);
       clipboardData.setData(InternalHtml.internalHtmlMime(), html);
       return true;
-    } catch (e) {
+    } catch {
       return false;
     }
   } else {

@@ -15,7 +15,7 @@ const setEditorCommandState = (editor: Editor, cmd: string, state: boolean) => {
     // execCommand needs a string for the value, so convert the boolean to a string
     // See: https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand#Parameters
     editor.getDoc().execCommand(cmd, false, String(state));
-  } catch (ex) {
+  } catch {
     // Ignore
   }
 };

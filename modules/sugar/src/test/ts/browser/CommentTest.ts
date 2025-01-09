@@ -26,14 +26,14 @@ UnitTest.test('CommentTest', () => {
   try {
     SugarComment.get(notComment as any);
     Assert.fail('get on non-comment did not throw');
-  } catch (e) {
+  } catch {
     // pass
   }
 
   try {
     SugarComment.set(notComment as any, 'bogus');
     Assert.fail('set on non-comment did not throw');
-  } catch (e) {
+  } catch {
     // pass
   }
 });

@@ -111,7 +111,7 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
       try {
         Highlighting.highlightAt(component, index);
         return Result.error('Expected to get an error because there should be no item with index ' + index);
-      } catch (e) { /* */ }
+      } catch { /* */ }
       return Result.value(v);
     });
 
