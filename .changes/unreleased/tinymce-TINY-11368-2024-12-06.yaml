@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Dialog menu dropdowns now close when the window is scrolled.
+time: 2024-12-06T14:35:39.09459+01:00
+custom:
+  Issue: TINY-11368

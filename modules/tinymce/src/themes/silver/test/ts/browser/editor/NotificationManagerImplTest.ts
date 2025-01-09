@@ -317,6 +317,18 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
 
       notification.close();
     });
+
+    it('TINY-11661: Not specifying a type should fallback to \'info\'', () => {
+      const editor = hook.editor();
+      const notification = editor.notificationManager.open({ text: 'My test notification' });
+      assertStructure('Check notification structure', notification, 'info', 'My test notification');
+    });
+
+    it('TINY-11661: Specifying unsupported type should fallback to \'info\'', () => {
+      const editor = hook.editor();
+      const notification = editor.notificationManager.open({ text: 'My test notification', type: 'madeuptype' as 'info' | 'warning' | 'error' | 'success' });
+      assertStructure('Check notification structure', notification, 'info', 'My test notification');
+    });
   });
 
   context('Bottom toolbar positioning', () => {
