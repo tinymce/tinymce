@@ -15,7 +15,7 @@ UnitTest.test('AttributeTest', () => {
   const checkErr = <K, V>(f: AttrFn<K, V>, element: SugarElement<Node>, k: K, v?: InvalidValue<V>) => {
     try {
       f(element as SugarElement<HTMLElement>, k, v as V);
-    } catch (e) {
+    } catch {
       // expected
       return;
     }

@@ -1273,7 +1273,7 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
         const div = SugarElement.fromTag('div');
         Css.setAll(div, {
           display: 'flex',
-	        flex: '1 1 0%',
+          flex: '1 1 0%',
           position: 'relative',
           height: `${500}px`,
         });

@@ -3,6 +3,7 @@ import { Arr, Obj, Optional } from '@ephox/katamari';
 import Editor from '../Editor';
 import DOMUtils from './DOMUtils';
 
+// eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
 type SelectorChangedCallback = (active: boolean, args: { node: Node; selector: String; parents: Node[] }) => void;
 
 interface SelectorChanged {
