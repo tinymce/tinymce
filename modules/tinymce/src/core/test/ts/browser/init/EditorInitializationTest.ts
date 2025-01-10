@@ -81,7 +81,7 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
   });
 
   it('selector on non existing targets', () => {
-    return void EditorManager.init({
+    return EditorManager.init({
       selector: '#non-existing-id',
     }).then((result) => {
       assert.lengthOf(result, 0, 'Should be a result that is zero length');
