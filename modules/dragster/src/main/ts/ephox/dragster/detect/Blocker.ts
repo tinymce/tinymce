@@ -21,11 +21,12 @@ export const Blocker = (options: Partial<BlockerOptions>): Blocker => {
   const div = SugarElement.fromTag('div');
   Attribute.set(div, 'role', 'presentation');
   Css.setAll(div, {
-    position: 'fixed',
-    left: '0px',
-    top: '0px',
-    width: '100%',
-    height: '100%'
+    'position': 'fixed',
+    'left': '0px',
+    'top': '0px',
+    'width': '100%',
+    'height': '100%',
+    'z-index': '10000'
   });
 
   Class.add(div, Styles.resolve('blocker'));

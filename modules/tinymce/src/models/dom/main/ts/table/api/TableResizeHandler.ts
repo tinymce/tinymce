@@ -1,6 +1,6 @@
-import { Arr, Singleton, Strings, Type } from '@ephox/katamari';
+import { Arr, Cell, Singleton, Strings, Type } from '@ephox/katamari';
 import { Adjustments, ResizeBehaviour, ResizeWire, Sizes, TableConversions, TableGridSize, TableLookup, TableResize, Warehouse } from '@ephox/snooker';
-import { Attribute, Css, SugarElement } from '@ephox/sugar';
+import { Attribute, Css, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { DisabledStateChangeEvent } from 'tinymce/core/api/EventTypes';
@@ -48,6 +48,7 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
   const selectionRng = Singleton.value<Range>();
   const tableResize = Singleton.value<TableResize>();
   const resizeWire = Singleton.value<ResizeWire>();
+  const isDragging = Cell<boolean>(false);
   let startW: number;
   let startRawW: string;
   let startH: number;
@@ -120,14 +121,53 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
   const destroy = () => {
     tableResize.on((sz) => {
       sz.destroy();
+      tableResize.clear();
     });
 
     resizeWire.on((w) => {
       TableWire.remove(editor, w);
+      resizeWire.clear();
     });
   };
 
-  editor.on('init', () => {
+  const bindEvents = (sz: TableResize) => {
+    sz.events.startDrag.bind((_event) => {
+      isDragging.set(true);
+      selectionRng.set(editor.selection.getRng());
+      editor.dispatch('blur', { focusedEditor: null });
+    });
+
+    sz.events.beforeResize.bind((event) => {
+      const rawTable = event.table.dom;
+      Events.fireObjectResizeStart(editor, rawTable, Utils.getPixelWidth(rawTable), Utils.getPixelHeight(rawTable), barResizerPrefix + event.type);
+    });
+
+    sz.events.afterResize.bind((event) => {
+      const table = event.table;
+      const rawTable = table.dom;
+      Utils.removeDataStyle(table);
+
+      selectionRng.on((rng) => {
+        editor.selection.setRng(rng);
+        editor.dispatch('focus', { blurredEditor: null });
+      });
+
+      Events.fireObjectResized(editor, rawTable, Utils.getPixelWidth(rawTable), Utils.getPixelHeight(rawTable), barResizerPrefix + event.type);
+      editor.undoManager.add();
+      isDragging.set(false);
+    });
+
+    sz.events.hoverTable.bind((event) => {
+      event.table.each((e) => {
+        if (editor.inline && !resizeWire.isSet() && !isDragging.get()) {
+          createResizeHandler();
+          refresh(e.dom);
+        }
+      });
+    });
+  };
+
+  const createResizeHandler = () => {
     const rawWire = TableWire.get(editor, isResizable);
     resizeWire.set(rawWire);
     if (Options.hasTableObjectResizing(editor) && Options.hasTableResizeBars(editor)) {
@@ -138,32 +178,32 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
         sz.on();
       }
 
-      sz.events.startDrag.bind((_event) => {
-        selectionRng.set(editor.selection.getRng());
-      });
-
-      sz.events.beforeResize.bind((event) => {
-        const rawTable = event.table.dom;
-        Events.fireObjectResizeStart(editor, rawTable, Utils.getPixelWidth(rawTable), Utils.getPixelHeight(rawTable), barResizerPrefix + event.type);
-      });
-
-      sz.events.afterResize.bind((event) => {
-        const table = event.table;
-        const rawTable = table.dom;
-        Utils.removeDataStyle(table);
-
-        selectionRng.on((rng) => {
-          editor.selection.setRng(rng);
-          editor.focus();
-        });
-
-        Events.fireObjectResized(editor, rawTable, Utils.getPixelWidth(rawTable), Utils.getPixelHeight(rawTable), barResizerPrefix + event.type);
-        editor.undoManager.add();
-      });
-
+      bindEvents(sz);
       tableResize.set(sz);
     }
-  });
+  };
+
+  editor.on('init', () => createResizeHandler());
+
+  if (editor.inline) {
+    editor.on('NodeChange', () => {
+      if (isDragging.get()) {
+        return;
+      }
+
+      const targetElm = editor.selection.getNode();
+      const controlElm = SelectorFind.closest<HTMLElement>(SugarElement.fromDom(targetElm), 'table')
+        .map((e) => e.dom)
+        .getOrUndefined();
+
+      const isChildOrEqual = (node: Node, parent: Node): boolean =>
+        editor.dom.isChildOf(node, parent);
+
+      if (Type.isNullable(controlElm) || !isChildOrEqual(controlElm, editor.getBody())) {
+        destroy();
+      }
+    });
+  }
 
   // If we're updating the table width via the old mechanic, we need to update the constituent cells' widths/heights too.
   editor.on('ObjectResizeStart', (e) => {
@@ -238,7 +278,16 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
   });
 
   editor.on('remove', () => {
-    destroy();
+    tableResize.on((sz) => {
+      sz.destroy();
+      sz.unbindEvents();
+      tableResize.clear();
+    });
+
+    resizeWire.on((w) => {
+      TableWire.remove(editor, w);
+      resizeWire.clear();
+    });
   });
 
   const refresh = (table: HTMLTableElement): void => {
