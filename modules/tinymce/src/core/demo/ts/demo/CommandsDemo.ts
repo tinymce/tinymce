@@ -100,7 +100,7 @@ export default (): void => {
     Insert.append(container, btn);
   });
 
-  void tinymce.init({
+  tinymce.init({
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     selector: 'textarea.tinymce',
     plugins: [

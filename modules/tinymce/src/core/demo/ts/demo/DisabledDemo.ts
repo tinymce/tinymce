@@ -26,7 +26,7 @@ export default (): void => {
   });
   Insert.before(container, toggleDisabledBtn);
 
-  void tinymce.init({
+  tinymce.init({
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     selector: 'div.tinymce',
     height: 1000,

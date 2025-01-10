@@ -99,7 +99,8 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   const lastToolbarWidth = Cell(0);
   const outerContainer = mainUi.outerContainer;
 
-  void loadIframeSkin(editor);
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
+  loadIframeSkin(editor);
 
   const eTargetNode = SugarElement.fromDom(args.targetNode);
   const uiRoot = SugarShadowDom.getContentContainer(SugarShadowDom.getRootNode(eTargetNode));

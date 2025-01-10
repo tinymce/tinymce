@@ -106,10 +106,12 @@ const createImageList = (editor: Editor, callback: (imageList: false | UserListI
   const imageList = Options.getImageList(editor);
 
   if (Type.isString(imageList)) {
-    void fetch(imageList)
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    fetch(imageList)
       .then((res) => {
         if (res.ok) {
-          void res.json().then(callback);
+          // eslint-disable-next-line @typescript-eslint/no-floating-promises
+          res.json().then(callback);
         }
       });
   } else if (Type.isFunction(imageList)) {

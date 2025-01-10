@@ -43,7 +43,8 @@ export const renderCustomEditor = (spec: CustomEditorSpec): SimpleSpec => {
       AddEventsBehaviour.config('custom-editor-events', [
         AlloyEvents.runOnAttached((component) => {
           memReplaced.getOpt(component).each((ta) => {
-            void (isOldCustomEditor(spec)
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises
+            (isOldCustomEditor(spec)
               ? spec.init(ta.element.dom)
               : Resource.load(spec.scriptId, spec.scriptUrl).then(
                 (init: CustomEditorInitFn) => init(ta.element.dom, spec.settings)

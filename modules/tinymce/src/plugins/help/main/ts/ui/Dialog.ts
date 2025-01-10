@@ -68,7 +68,8 @@ const pParseCustomTabs = async (editor: Editor, customTabs: CustomTabSpecs, plug
 };
 
 const init = (editor: Editor, customTabs: CustomTabSpecs, pluginUrl: string) => (): void => {
-  void pParseCustomTabs(editor, customTabs, pluginUrl).then(({ tabs, names }) => {
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
+  pParseCustomTabs(editor, customTabs, pluginUrl).then(({ tabs, names }) => {
     const foundTabs: Optional<Dialog.TabSpec>[] = Arr.map(names, (name) => Obj.get(tabs, name));
     const dialogTabs: Dialog.TabSpec[] = Optionals.cat(foundTabs);
 

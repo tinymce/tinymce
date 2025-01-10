@@ -92,7 +92,8 @@ export const setup = (editor: Editor): void => {
         commenceIfNecessary(lookupInfo.context);
 
         // Wait for the results to return and then display the menu
-        void lookupInfo.lookupData.then((lookupData) => {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        lookupInfo.lookupData.then((lookupData) => {
           // Lookup the active autocompleter to make sure it's still active, if it isn't then do nothing
           activeAutocompleter.get().map((ac) => {
             const context = lookupInfo.context;

@@ -118,7 +118,8 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   const ui = InlineHeader(editor, targetElm, uiRefs, backstage, floatContainer);
   const toolbarPersist = Options.isToolbarPersist(editor);
 
-  void loadInlineSkin(editor);
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
+  loadInlineSkin(editor);
 
   const render = () => {
     // Because we set the floatContainer immediately afterwards, this is just telling us

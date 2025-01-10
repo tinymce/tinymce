@@ -143,7 +143,8 @@ const AddOnManager = <T>(): AddOnManager<T> => {
       return;
     }
 
-    void ScriptLoader.ScriptLoader.add(urls[name] + '/langs/' + language + '.js');
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    ScriptLoader.ScriptLoader.add(urls[name] + '/langs/' + language + '.js');
   };
 
   const requireLangPack = (name: string, languages?: string) => {
@@ -151,7 +152,8 @@ const AddOnManager = <T>(): AddOnManager<T> => {
       if (isLoaded(name)) {
         loadLanguagePack(name, languages);
       } else {
-        void waitFor(name, 'loaded').then(() => loadLanguagePack(name, languages));
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        waitFor(name, 'loaded').then(() => loadLanguagePack(name, languages));
       }
     }
   };

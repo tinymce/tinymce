@@ -17,8 +17,12 @@
   ],
   "rules": {
     // TODO: TINY-11727: Remove when tinymce eslint plugin is updated to have this setting on by default
-    "@typescript-eslint/no-floating-promises": "error",
-
+    "@typescript-eslint/no-floating-promises": [
+      "error",
+      {
+        "ignoreVoid": false
+      }
+    ],
     "@typescript-eslint/camelcase": "off", // leave off
     "@typescript-eslint/member-ordering": "off",
     "@typescript-eslint/no-empty-function": "off",
@@ -40,5 +44,15 @@
     "security-node/non-literal-reg-expr": "off",
     "security-node/detect-crlf": "off",
     "security-node/detect-possible-timing-attacks": "off"
-  }
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/demo/*.ts"
+      ],
+      "rules": {
+        "@typescript-eslint/no-floating-promises": "off"
+      }
+    }
+  ]
 }

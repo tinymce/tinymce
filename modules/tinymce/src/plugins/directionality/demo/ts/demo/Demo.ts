@@ -2,7 +2,7 @@ import { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
-void tinymce.init({
+tinymce.init({
   selector: 'textarea.tinymce',
   plugins: 'directionality code lists',
   toolbar: 'ltr rtl code | bullist numlist',

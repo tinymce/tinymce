@@ -9,7 +9,7 @@ interface Data {
 }
 
 export default (): void => {
-  void tinymce.init({
+  tinymce.init({
     selector: 'textarea.tinymce',
     toolbar: 'tree',
     height: 600,

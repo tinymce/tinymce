@@ -5,7 +5,7 @@ declare let tinymce: TinyMCE;
 const elm = document.querySelector('.tinymce') as HTMLTextAreaElement;
 elm.value = 'The format menu should show "red"';
 
-void tinymce.init({
+tinymce.init({
   selector: 'textarea.tinymce',
   plugins: 'importcss code',
   toolbar: 'styles code',

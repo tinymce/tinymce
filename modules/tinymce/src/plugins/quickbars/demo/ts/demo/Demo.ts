@@ -49,8 +49,8 @@ const dfreeBodyConfig: RawEditorOptions = {
   contextmenu: 'inserttable | cell row column deletetable'
 };
 
-void tinymce.init(quickbarsClassicConfig);
-void tinymce.init(dfreeHeaderConfig);
-void tinymce.init(dfreeBodyConfig);
+tinymce.init(quickbarsClassicConfig);
+tinymce.init(dfreeHeaderConfig);
+tinymce.init(dfreeBodyConfig);
 
 export {};

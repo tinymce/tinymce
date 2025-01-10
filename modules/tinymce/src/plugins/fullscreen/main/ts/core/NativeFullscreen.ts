@@ -35,7 +35,8 @@ export const getFullscreenchangeEventName = (): string => {
 export const requestFullscreen = (sugarElem: SugarElement<Element>): void => {
   const elem = sugarElem.dom;
   if (elem.requestFullscreen) {
-    void elem.requestFullscreen();
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    elem.requestFullscreen();
   } else if ((elem as any).msRequestFullscreen) {
     (elem as any).msRequestFullscreen();
   } else if ((elem as any).webkitRequestFullScreen) {
@@ -46,7 +47,8 @@ export const requestFullscreen = (sugarElem: SugarElement<Element>): void => {
 export const exitFullscreen = (sugarDoc: SugarElement<Document>): void => {
   const doc = sugarDoc.dom;
   if (doc.exitFullscreen) {
-    void doc.exitFullscreen();
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    doc.exitFullscreen();
   } else if ((doc as any).msExitFullscreen) {
     (doc as any).msExitFullscreen();
   } else if ((doc as any).webkitCancelFullScreen) {

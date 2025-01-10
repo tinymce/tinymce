@@ -33,7 +33,8 @@ describe('browser.tinymce.core.EditorRemovedApiTest', () => {
     editor.queryCommandState('bold');
     editor.queryCommandValue('bold');
     editor.queryCommandSupported('bold');
-    void editor.uploadImages();
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    editor.uploadImages();
     editor.setContent('a');
     editor.insertContent('a');
     editor.execCommand('bold');

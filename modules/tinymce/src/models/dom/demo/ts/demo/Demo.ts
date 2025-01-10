@@ -2,7 +2,7 @@ import { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
-void tinymce.init({
+tinymce.init({
   selector: 'div.tinymce',
   setup: (ed) => {
     ed.on('init', () => {

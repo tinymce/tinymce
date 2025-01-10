@@ -15,7 +15,7 @@ export default (init: ShadowRootInit): void => {
   Value.set(node, 'here is some content');
   Insert.append(shadow, node);
 
-  void tinymce.init({
+  tinymce.init({
     target: node.dom,
     plugins: 'advlist charmap code codesample emoticons fullscreen image link lists media preview searchreplace table wordcount'
   });

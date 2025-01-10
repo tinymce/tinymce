@@ -28,7 +28,7 @@ export default (): void => {
     });
   };
 
-  void tinymce.init({
+  tinymce.init({
     selector: 'textarea.tiny-text',
     theme: 'silver',
     toolbar: 'sidebar1 sidebar2 sidebar3',

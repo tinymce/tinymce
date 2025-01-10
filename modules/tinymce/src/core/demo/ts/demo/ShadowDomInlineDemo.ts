@@ -15,7 +15,7 @@ export default (init: ShadowRootInit): void => {
     const node = SugarElement.fromTag('div');
     TextContent.set(node, 'content section ' + i++);
     Insert.append(shadow, node);
-    void tinymce.init({
+    tinymce.init({
       target: node.dom,
       inline: true
     });

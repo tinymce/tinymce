@@ -64,7 +64,7 @@ export default (): void => {
   Global.paintClientRects = paintClientRects;
   Global.logPos = logPos;
 
-  void tinymce.init({
+  tinymce.init({
     selector: 'textarea.tinymce',
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     add_unload_trigger: false,
@@ -75,7 +75,7 @@ export default (): void => {
     height: 400
   });
 
-  void tinymce.init({
+  tinymce.init({
     selector: 'div.tinymce',
     inline: true,
     skin_url: '../../../../js/tinymce/skins/ui/oxide',

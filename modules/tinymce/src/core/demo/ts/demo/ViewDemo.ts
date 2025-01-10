@@ -115,6 +115,6 @@ export default (): void => {
     contextmenu: 'link linkchecker image table lists configurepermanentpen'
   };
 
-  void tinymce.init(settings);
-  void tinymce.init(Merger.deepMerge(settings, { inline: true, selector: 'div.tinymce' }));
+  tinymce.init(settings);
+  tinymce.init(Merger.deepMerge(settings, { inline: true, selector: 'div.tinymce' }));
 };

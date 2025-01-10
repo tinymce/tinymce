@@ -315,9 +315,11 @@ const EditorUpload = (editor: Editor): EditorUpload => {
 
   editor.on('SetContent', () => {
     if (Options.isAutomaticUploadsEnabled(editor)) {
-      void uploadImagesAuto();
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      uploadImagesAuto();
     } else {
-      void scanForImages();
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      scanForImages();
     }
   });
 

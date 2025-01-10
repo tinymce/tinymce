@@ -2,7 +2,7 @@ import { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
-void tinymce.init({
+tinymce.init({
   selector: 'textarea.tinymce',
   theme: 'silver',
   skin_url: '../../../../../js/tinymce/skins/ui/oxide',

@@ -2,7 +2,7 @@ import { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
-void tinymce.init({
+tinymce.init({
   selector: 'textarea.tinymce',
   plugins: 'help link table code emoticons fullscreen advlist anchor',
   toolbar: 'help',
@@ -10,7 +10,7 @@ void tinymce.init({
   menubar: 'view insert tools help'
 });
 
-void tinymce.init({
+tinymce.init({
   selector: 'textarea.tinymce2',
   plugins: 'help link table code emoticons fullscreen advlist anchor',
   toolbar: 'help',
@@ -38,7 +38,7 @@ void tinymce.init({
   ]
 });
 
-void tinymce.init({
+tinymce.init({
   selector: 'textarea.tinymce3',
   plugins: 'help link table code emoticons fullscreen advlist anchor',
   toolbar: 'help addTab',
@@ -72,7 +72,7 @@ void tinymce.init({
   }
 });
 
-void tinymce.init({
+tinymce.init({
   selector: 'textarea.tinymce4',
   plugins: 'help link table code emoticons fullscreen advlist anchor',
   toolbar: 'help addTab',

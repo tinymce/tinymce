@@ -130,7 +130,8 @@ const loadScripts = (editor: Editor, suffix: string) => {
     // If the editor has been destroyed or the theme and model haven't loaded then
     // don't continue to load the editor
     if (!editor.removed && isThemeLoaded(editor) && isModelLoaded(editor)) {
-      void Init.init(editor);
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      Init.init(editor);
     }
   };
 

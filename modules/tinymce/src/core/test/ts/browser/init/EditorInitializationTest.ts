@@ -40,7 +40,8 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
   it('target (initialised properly)', (done) => {
     const elm1 = viewBlock.get().querySelector('#elm-1') as HTMLElement;
 
-    void EditorManager.init({
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    EditorManager.init({
       target: elm1,
       init_instance_callback: (ed) => {
         assert.strictEqual(ed.targetElm, elm1);
@@ -53,7 +54,8 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
     const elm = document.createElement('textarea');
     viewBlock.get().appendChild(elm);
 
-    void EditorManager.init({
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    EditorManager.init({
       target: elm,
       init_instance_callback: (ed) => {
         assert.isAbove(ed.id.length, 0, 'editors id set to: ' + ed.id);
@@ -67,7 +69,8 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
     const elm1 = document.getElementById('elm-1') as HTMLElement;
     const elm2 = document.getElementById('elm-2') as HTMLElement;
 
-    void EditorManager.init({
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    EditorManager.init({
       selector: '#elm-2',
       target: elm1,
       init_instance_callback: (ed) => {
@@ -91,7 +94,8 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
     let count = 0;
     const targets: HTMLElement[] = [];
 
-    void EditorManager.init({
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    EditorManager.init({
       selector: '.elm-even',
       target: elm1,
       init_instance_callback: (ed) => {
@@ -108,7 +112,8 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
   });
 
   it('Test base_url and suffix options', (done) => {
-    void EditorManager.init({
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    EditorManager.init({
       base_url: '/compiled/fake/url',
       suffix: '.min',
       selector: '#elm-1',
@@ -228,7 +233,8 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
   const initAndAssertContent = (html: string, selector: string, expectedEditorContent: string, done: () => void) => {
     viewBlock.update(html);
 
-    void EditorManager.init({
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    EditorManager.init({
       selector,
       init_instance_callback: (ed) => {
         assert.equal(ed.getContent({ format: 'text' }), expectedEditorContent, 'Expect editor to have content');
