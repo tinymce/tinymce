@@ -61,7 +61,7 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
 
       TinyAssertions.assertContent(editor, expectedHtml);
       if (Type.isNonNullable(pAssertAfter)) {
-        pAssertAfter(editor);
+        await pAssertAfter(editor);
       }
       if (Type.isNonNullable(selectionAfter)) {
         TinyAssertions.assertSelection(

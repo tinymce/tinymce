@@ -118,6 +118,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   const ui = InlineHeader(editor, targetElm, uiRefs, backstage, floatContainer);
   const toolbarPersist = Options.isToolbarPersist(editor);
 
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   loadInlineSkin(editor);
 
   const render = () => {

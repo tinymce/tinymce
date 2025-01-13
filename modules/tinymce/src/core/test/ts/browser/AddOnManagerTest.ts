@@ -68,8 +68,8 @@ describe('browser.tinymce.core.AddOnManagerTest', () => {
       assert.isNull(getLanguagePackUrl('sv', 'sv'));
     });
 
-    it('loading language packs works after loading the plugin', () => {
-      AddOnManager.PluginManager.load('plugin', '/root/plugin.js');
+    it('loading language packs works after loading the plugin', async () => {
+      await AddOnManager.PluginManager.load('plugin', '/root/plugin.js');
 
       assert.equal(getLanguagePackUrl('sv_SE'), '/root/langs/sv_SE.js');
       assert.equal(getLanguagePackUrl('sv_SE', 'sv_SE,en_US'), '/root/langs/sv_SE.js');

@@ -36,6 +36,7 @@ describe('browser.tinymce.core.EditorManagerCommandsTest', () => {
   ], (test) => {
     it(`mceToggleEditor (${test.label})`, (done) => {
       viewBlock.update('<textarea id="ed_1" class="tinymce"></textarea>');
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       EditorManager.init({
         selector: 'textarea.tinymce',
         init_instance_callback: (editor1) => {
@@ -51,6 +52,7 @@ describe('browser.tinymce.core.EditorManagerCommandsTest', () => {
 
     it(`mceRemoveEditor (${test.label})`, (done) => {
       viewBlock.update('<textarea id="ed_1" class="tinymce"></textarea>');
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       EditorManager.init({
         selector: 'textarea.tinymce',
         init_instance_callback: (_editor1) => {
@@ -65,6 +67,7 @@ describe('browser.tinymce.core.EditorManagerCommandsTest', () => {
 
   it('mceAddEditor', (done) => {
     viewBlock.update('<textarea id="ed_1" class="tinymce"></textarea><textarea id="ed_2" class="tinymce"></textarea>');
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     EditorManager.init({
       selector: 'textarea#ed_1',
       init_instance_callback: (_editor1) => {

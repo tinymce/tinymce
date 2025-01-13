@@ -240,7 +240,7 @@ describe.skip('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingC
     );
   };
 
-  const pRunMenuDisconnectTestWithAdjustment = async (editor: Editor, adjustScrollPosition: () => Promise<void>): Promise<void> => {
+  const pRunMenuDisconnectTestWithAdjustment = async (editor: Editor, pAdjustScrollPosition: () => Promise<void>): Promise<void> => {
     const header = getEditorUi(editor, ui.editor.stickyHeader);
     // It should not be fixed yet.
     assert.isTrue(Css.getRaw(header, 'position').isNone(), 'We have not yet docked the sticky toolbar');
@@ -267,7 +267,7 @@ describe.skip('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingC
 
     assertMenuBelowMenubar();
 
-    adjustScrollPosition();
+    await pAdjustScrollPosition();
     await Waiter.pTryUntil(
       'Waiting until the menu is positioned under the menubar',
       () => assertMenuBelowMenubar()
