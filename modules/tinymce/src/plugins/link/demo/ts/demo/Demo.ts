@@ -15,6 +15,9 @@ tinymce.init({
   menu: {
     custom: { title: 'Custom', items: 'link unlink openlink' }
   },
+  // link_attributes_postprocess: (attrs: any) => {
+  // attrs.rel += ' noreferrer';
+  // },
   height: 600,
   setup: (ed) => {
     ed.on('init', () => {
