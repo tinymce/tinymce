@@ -1198,7 +1198,7 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     const container = getResizeBarsContainer(editor);
     const containerRect = container.dom.getBoundingClientRect();
 
-    Arr.each(table.rows, (row, rowIndex) => {
+    Arr.each(table.rows, (row: HTMLTableRowElement, rowIndex: number) => {
       const resizer = SelectorFind.descendant<HTMLElement>(container, `.ephox-snooker-resizer-rows[data-row="${rowIndex}"]`).getOrDie('Resizer not found');
       const rowRect = row.getBoundingClientRect();
       const resizerHeight = Height.get(resizer);
@@ -1251,6 +1251,17 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
 
       it('TINY-11215: The resize bar wires should be at the correct location', async () => {
         const editor = hook.editor();
+        const table = editor.dom.select('table')[0];
+        await hoverOnTable(editor, table, 'row', 0);
+        assertResizerPosition(editor, table);
+      });
+
+      it('TINY-11215: The resize bar wires should be at the correct location with resized rows', async () => {
+        const editor = hook.editor();
+        editor.setContent(`<table style="border-collapse: collapse; width: 100%; height: 178.586px;" border="1"><colgroup><col style="width: 33.3112%;"><col style="width: 33.3112%;"><col style="width: 33.3112%;"></colgroup>
+        <tbody><tr style="height: 36.1953px;"><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr style="height: 56.1953px;">
+        <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+        <tr style="height: 86.1953px;"><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>`);
         const table = editor.dom.select('table')[0];
         await hoverOnTable(editor, table, 'row', 0);
         assertResizerPosition(editor, table);

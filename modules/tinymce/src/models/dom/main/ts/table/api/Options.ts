@@ -165,19 +165,16 @@ const fixedContainerSelector = option('fixed_toolbar_container');
 const fixedToolbarContainerTarget = option('fixed_toolbar_container_target');
 const fixedContainerTarget = (editor: Editor): Optional<SugarElement> => {
   if (!editor.inline) {
-    // fixed_toolbar_container(_target) is only available in inline mode
     return Optional.none();
   }
 
   const selector = fixedContainerSelector(editor) ?? '';
   if (selector.length > 0) {
-    // If we have a valid selector
     return SelectorFind.descendant(SugarBody.body(), selector);
   }
 
   const element = fixedToolbarContainerTarget(editor);
   if (Type.isNonNullable(element)) {
-    // If we have a valid target
     return Optional.some(SugarElement.fromDom(element));
   }
 

@@ -53,11 +53,11 @@ const body = (editable: SugarElement<Element>, chrome: SugarElement<Element>, is
   };
 };
 
-const scrollable = (editable: SugarElement<Element>, chrome: SugarElement<Element>, dragOverlay: SugarElement<Element>, isResizable: ResizeCallback): ResizeWire => {
+const scrollable = (editable: SugarElement<Element>, chrome: SugarElement<Element>, dragContainer: SugarElement<Element>, isResizable: ResizeCallback): ResizeWire => {
   return {
     parent: Fun.constant(chrome),
     view: Fun.constant(editable),
-    dragContainer: Fun.constant(dragOverlay),
+    dragContainer: Fun.constant(dragContainer),
     origin: () => SugarLocation.absolute(chrome),
     isResizable
   };
