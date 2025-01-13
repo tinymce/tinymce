@@ -1,10 +1,10 @@
-import { ApproxStructure, Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Cell, Fun, Strings } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TableGridSize } from '@ephox/snooker';
-import { Class, Css, Html, Insert, InsertAll, Remove, SelectorExists, SelectorFilter, SelectorFind, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
-import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
+import { Class, Css, Height, Html, Insert, InsertAll, Remove, SelectorExists, SelectorFilter, SelectorFind, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
+import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -1180,7 +1180,7 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     );
   };
 
-  const getResizeBarsContainer = (editor: Editor) => SelectorFind.descendant(TinyDom.body(editor), '[id^=resizer-container]').getOrDie('Resizer container element not found as a sibling to the editor body');
+  const getResizeBarsContainer = (editor: Editor) => SelectorFind.sibling(TinyDom.body(editor), '[id^=resizer-container]').getOrDie('Resizer container element not found as a sibling to the editor body');
 
   const assertContainerAndBarsExist = (editor: Editor) => {
     const container = getResizeBarsContainer(editor);
@@ -1195,28 +1195,22 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
   };
 
   const assertResizerPosition = (editor: Editor, table: HTMLTableElement) => {
-    const editorBody = editor.getBody();
+    const container = getResizeBarsContainer(editor);
+    const containerRect = container.dom.getBoundingClientRect();
 
     Arr.each(table.rows, (row, rowIndex) => {
-      const resizer = SelectorFind.descendant(TinyDom.body(editor), `.ephox-snooker-resizer-rows[data-row="${rowIndex}"]`).getOrDie('Resizer not found');
-
-      const editorRect = editorBody.getBoundingClientRect();
+      const resizer = SelectorFind.descendant<HTMLElement>(container, `.ephox-snooker-resizer-rows[data-row="${rowIndex}"]`).getOrDie('Resizer not found');
       const rowRect = row.getBoundingClientRect();
-      const rowTopRelativeToEditor = rowRect.top - editorRect.top;
+      const resizerHeight = Height.get(resizer);
 
-      // Get table's border spacing
-      const borderSpacing = parseInt(Css.get(SugarElement.fromDom(table), 'border-spacing'), 10);
-
-      // For all rows except last, offset includes the border spacing
+      const borderSpacing = parseFloat(Css.get(SugarElement.fromDom(table), 'border-spacing'));
       const isLastRow = rowIndex === table.rows.length - 1;
-      const expectedOffset = isLastRow ?
-        19 : // Last row: no need to account for spacing
-        19 + borderSpacing; // Other rows: account for spacing to next row
 
-      const expectedTop = rowTopRelativeToEditor + expectedOffset;
-      const actualResizerTop = parseInt(Strings.removeTrailing(Css.get(resizer, 'top'), 'px'), 10);
+      const distanceFromBottom = containerRect.bottom - rowRect.bottom;
+      const expectedTop = -(distanceFromBottom + resizerHeight / 2 - (isLastRow ? 0 : borderSpacing));
 
-      assert.approximately(actualResizerTop, expectedTop, 5, `Resizer position mismatch for row ${rowIndex} - Expected: ${expectedTop}, Actual: ${actualResizerTop}`);
+      const actualResizerTop = parseFloat(Strings.removeTrailing(Css.get(resizer, 'top'), 'px'));
+      assert.approximately(actualResizerTop, expectedTop, 2, `Resizer position mismatch for row ${rowIndex} - Expected: ${expectedTop}, Actual: ${actualResizerTop}`);
     });
   };
 
@@ -1235,7 +1229,7 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     });
 
     context('inline mode', () => {
-      const hook = TinyHooks.bddSetupFromElement<Editor>({ ...defaultSettings, inline: true, plugins: 'table' }, () => {
+      const hook = TinyHooks.bddSetupFromElement<Editor>({ ...defaultSettings, inline: true, plugins: 'table', ui_mode: 'split' }, () => {
         const div = SugarElement.fromTag('div');
         Html.set(div, percentTable);
         Insert.append(SugarBody.body(), div);
@@ -1248,21 +1242,11 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
         };
       }, [], true);
 
-      it('TINY-11215: The resize bar handler container should be inside the editor body', async () => {
+      it('TINY-11215: The resize bar handler container should be adjacent to the editor body', async () => {
         const editor = hook.editor();
         const table = editor.dom.select('table')[0];
         await hoverOnTable(editor, table, 'row', 0);
         assertContainerAndBarsExist(editor);
-        TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, arr) => s.element('div', {
-          children: [
-            ...(browser.isFirefox() ? [ s.element('p', { attrs: { 'data-mce-caret': str.is('before') }}) ] : []),
-            s.element('table', { children: [ s.anything() ] }),
-            ...(browser.isFirefox() ? [ s.element('div', {
-              classes: [ arr.has('mce-visual-caret') ],
-            }) ] : []),
-            s.element('div', { attrs: { id: str.startsWith('resizer-container') }})
-          ]
-        })));
       });
 
       it('TINY-11215: The resize bar wires should be at the correct location', async () => {
@@ -1274,27 +1258,7 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     });
 
     context('inline mode with scrollable container', () => {
-      const contentStructureWithSingleTable = (editor: Editor) => {
-        TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => s.element('div', {
-          children: [
-            s.element('p', { children: [ s.anything() ] }),
-            s.element('table', { children: [ s.anything() ] }),
-            s.element('div', { attrs: { id: str.startsWith('resizer-container') }})
-          ]
-        })));
-      };
-      const contentStructureWithMultipleTables = (editor: Editor) => {
-        TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => s.element('div', {
-          children: [
-            s.element('table', { children: [ s.anything() ] }),
-            s.element('p', { children: [ s.anything() ] }),
-            s.element('table', { children: [ s.anything() ] }),
-            s.element('div', { attrs: { id: str.startsWith('resizer-container') }})
-          ]
-        })));
-      };
-
-      const hook = TinyHooks.bddSetupFromElement<Editor>({ ...defaultSettings, inline: true, plugins: 'table' }, () => {
+      const hook = TinyHooks.bddSetupFromElement<Editor>({ ...defaultSettings, inline: true, plugins: 'table', ui_mode: 'split' }, () => {
         const div = SugarElement.fromTag('div');
         Css.setAll(div, {
           display: 'flex',
@@ -1329,9 +1293,9 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
         const editor = SugarElement.fromTag('div');
         const paragraph = SugarElement.fromTag('p');
         Html.set(paragraph, `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled`
-          + ` it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, ` +
+          + `it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, ` +
           `remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages` +
-          ` , and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.`);
+          `, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.`);
         const table = SugarElement.fromHtml(largeTable);
         InsertAll.append(editor, [ paragraph, table ]);
 
@@ -1344,11 +1308,10 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
         };
       }, [], true);
 
-      it('TINY-11215: The resize bar handler container should be inside the editor body', async () => {
+      it('TINY-11215: The resize bar handler container should be adjacent to the editor body', async () => {
         const editor = hook.editor();
         const table = editor.dom.select('table')[0];
         await hoverOnTable(editor, table, 'row', 0);
-        contentStructureWithSingleTable(editor);
         assertContainerAndBarsExist(editor);
       });
 
@@ -1356,36 +1319,32 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
         const editor = hook.editor();
         const table = editor.dom.select('table')[0];
         await hoverOnTable(editor, table, 'row', 0);
-        contentStructureWithSingleTable(editor);
         assertContainerAndBarsExist(editor);
         assertResizerPosition(editor, table);
       });
 
-      it('TINY-11215: Scrolling the scrollable container, the table resize wires should still be attached', async () => {
+      it('TINY-11215: Table resize wires should still be attached when scrolled', async () => {
         const editor = hook.editor();
         const table = editor.dom.select('table')[0];
         await hoverOnTable(editor, table, 'row', 0);
         assertContainerAndBarsExist(editor);
-        contentStructureWithSingleTable(editor);
-
         const scrollable = SelectorFind.descendant(SugarBody.body(), '.scrollable').getOrDie();
         scrollable.dom.scrollBy(0, scrollable.dom.scrollHeight / 2);
         assertResizerPosition(editor, table);
         await hoverOnTable(editor, table, 'row', 0);
       });
 
-      it('TINY-11215: Hovering non table element should remove bars within the container', async () => {
+      it('TINY-11215: Hovering non table element should remove the table resize bar container', async () => {
         const editor = hook.editor();
+        editor.resetContent();
         const table = editor.dom.select('table')[0];
         await hoverOnTable(editor, table, 'row', 0);
         assertContainerAndBarsExist(editor);
-        contentStructureWithSingleTable(editor);
-
         hoverOnElement(editor, 'p');
         assertBarsNotExistInContainer(editor);
       });
 
-      it('TINY-11215: Scrolling the scrollable container with multiple tables, the table resize wires should still be attached', async () => {
+      it('TINY-11215: Table resize wires should still be attached when scrolling with multiple tables', async () => {
         const editor = hook.editor();
         editor.insertContent(largeTable);
 
@@ -1396,24 +1355,19 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
         await hoverOnTable(editor, table, 'row', 0);
         assertContainerAndBarsExist(editor);
         assertResizerPosition(editor, table);
-        contentStructureWithMultipleTables(editor);
 
         scrollable.dom.scrollTo(0, scrollable.dom.scrollHeight / 6);
         assertResizerPosition(editor, table);
-        contentStructureWithMultipleTables(editor);
 
         const table2 = editor.dom.select('table')[1];
         await hoverOnTable(editor, table2, 'row', 0);
         assertResizerPosition(editor, table2);
-        contentStructureWithMultipleTables(editor);
 
         scrollable.dom.scrollTo(0, scrollable.dom.scrollHeight / 2);
         assertResizerPosition(editor, table2);
-        contentStructureWithMultipleTables(editor);
 
         scrollable.dom.scrollTo(0, scrollable.dom.scrollHeight / 4);
         assertResizerPosition(editor, table2);
-        contentStructureWithMultipleTables(editor);
       });
     });
   });

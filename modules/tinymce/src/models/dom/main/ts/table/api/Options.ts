@@ -1,5 +1,5 @@
-import { Arr, Optional } from '@ephox/katamari';
-import { SugarElement, Width } from '@ephox/sugar';
+import { Arr, Optional, Type } from '@ephox/katamari';
+import { SelectorFind, SugarBody, SugarElement, Width } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorOptions } from 'tinymce/core/api/OptionTypes';
@@ -161,6 +161,35 @@ const getTableDefaultStyles = (editor: Editor): Record<string, string> => {
 
 const tableUseColumnGroup = option<boolean>('table_use_colgroups');
 
+const fixedContainerSelector = option('fixed_toolbar_container');
+const fixedToolbarContainerTarget = option('fixed_toolbar_container_target');
+const fixedContainerTarget = (editor: Editor): Optional<SugarElement> => {
+  if (!editor.inline) {
+    // fixed_toolbar_container(_target) is only available in inline mode
+    return Optional.none();
+  }
+
+  const selector = fixedContainerSelector(editor) ?? '';
+  if (selector.length > 0) {
+    // If we have a valid selector
+    return SelectorFind.descendant(SugarBody.body(), selector);
+  }
+
+  const element = fixedToolbarContainerTarget(editor);
+  if (Type.isNonNullable(element)) {
+    // If we have a valid target
+    return Optional.some(SugarElement.fromDom(element));
+  }
+
+  return Optional.none();
+};
+
+const useFixedContainer = (editor: Editor): boolean =>
+  editor.inline && fixedContainerTarget(editor).isSome();
+const getUiMode = option<string>('ui_mode');
+const isSplitUiMode = (editor: Editor): boolean =>
+  !useFixedContainer(editor) && getUiMode(editor) === 'split';
+
 export {
   register,
 
@@ -177,5 +206,6 @@ export {
   getTableDefaultAttributes,
   getTableDefaultStyles,
   tableUseColumnGroup,
-  shouldMergeContentOnPaste
+  shouldMergeContentOnPaste,
+  isSplitUiMode
 };
