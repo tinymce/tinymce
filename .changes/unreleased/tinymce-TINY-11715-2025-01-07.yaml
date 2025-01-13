@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Improved visual separation of comments side panel header.
+time: 2025-01-07T14:31:33.554885+01:00
+custom:
+  Issue: TINY-11715
