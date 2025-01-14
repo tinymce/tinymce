@@ -83,11 +83,13 @@ interface EditorSelection {
   normalize: () => Range;
   selectorChanged: (selector: string, callback: (active: boolean, args: {
     node: Node;
+    // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     selector: String;
     parents: Node[];
   }) => void) => EditorSelection;
   selectorChangedWithUnbind: (selector: string, callback: (active: boolean, args: {
     node: Node;
+    // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     selector: String;
     parents: Node[];
   }) => void) => { unbind: () => void };
@@ -525,6 +527,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * @param {String} selector CSS selector to check for.
    * @param {Function} callback Callback with state and args when the selector is matches or not.
    */
+  // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
   const selectorChanged = (selector: string, callback: (active: boolean, args: { node: Node; selector: String; parents: Node[] }) => void) => {
     selectorChangedWithUnbind(selector, callback);
     return exports;
