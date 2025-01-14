@@ -85,7 +85,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
     );
   };
 
-  const openAndGetMenu = (title: string) =>
+  const pOpenAndGetMenu = (title: string) =>
     () => {
       Mouse.clickOn(SugarBody.body(), `[data-mce-name="${title}"] .tox-split-button__chevron`);
       return Waiter.pTryUntil('Waiting for menu', () =>
@@ -101,9 +101,9 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
       );
     };
 
-  const openAndGetSwatchButtonMenu = openAndGetMenu('swatch-button');
+  const pOpenAndGetSwatchButtonMenu = pOpenAndGetMenu('swatch-button');
   const pCloseSwatchButtonMenu = pCloseMenu('swatch-button');
-  const openAndGetForecolorMenu = openAndGetMenu('forecolor');
+  const pOpenAndGetForecolorMenu = pOpenAndGetMenu('forecolor');
   const pCloseForecolorMenu = pCloseMenu('forecolor');
   const pOpenAndGetMenuColorMenu = async (editor: Editor) => {
     const mainButton = 'button:contains("Color")';
@@ -131,7 +131,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
     return Waiter.pTryUntil('The menu should have closed', () => UiFinder.notExists(TinyUiActions.getUiRoot(editor), '[role="menu"] div[aria-label^="Text color"]'));
   };
 
-  const openAndGetBackcolorMenu = openAndGetMenu('backcolor');
+  const pOpenAndGetBackcolorMenu = pOpenAndGetMenu('backcolor');
   const pCloseBackcolorMenu = pCloseMenu('backcolor');
 
   TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
@@ -144,7 +144,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
 
   it('Check structure of color swatch', async () => {
     const editor = hook.editor();
-    const menu = await openAndGetSwatchButtonMenu();
+    const menu = await pOpenAndGetSwatchButtonMenu();
     Assertions.assertStructure(
       'Checking menu structure for color swatches',
       ApproxStructure.build((s, str, arr) => s.element('div', {
@@ -276,13 +276,13 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
     editor.setContent('<p>black</p><p style="color: rgb(224, 62, 45);">red</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2, true);
 
-    await openAndGetForecolorMenu();
+    await pOpenAndGetForecolorMenu();
     assertFocusIsOnColor('rgb(0, 0, 0)');
     await pCloseForecolorMenu();
 
     TinySelections.setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 2, true);
 
-    await openAndGetForecolorMenu();
+    await pOpenAndGetForecolorMenu();
     assertFocusIsOnColor('rgb(224, 62, 45)');
     await pCloseForecolorMenu();
   });
@@ -293,7 +293,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
 
     TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 1, true);
 
-    await openAndGetBackcolorMenu();
+    await pOpenAndGetBackcolorMenu();
     assertFocusIsOnColor('rgb(224, 62, 45)');
     await pCloseBackcolorMenu();
   });
@@ -318,12 +318,12 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
     await pOpenAndGetMenuColorMenu(editor);
     TinyUiActions.clickOnUi(editor, '[role="menuitemradio"][aria-label="red"]');
 
-    await openAndGetBackcolorMenu();
+    await pOpenAndGetBackcolorMenu();
     assertFocusIsOnColor('rgb(224, 62, 45)');
     await pCloseBackcolorMenu();
     await pOpenAndGetMenuForecolorMenu(editor);
     TinyUiActions.clickOnUi(editor, '[role="menuitemradio"][aria-label="Light Gray"]');
-    await openAndGetForecolorMenu();
+    await pOpenAndGetForecolorMenu();
     assertFocusIsOnColor('rgb(236, 240, 241)');
     await pCloseMenuForecolorMenu(editor);
   });

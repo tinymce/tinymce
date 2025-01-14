@@ -129,7 +129,7 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
     await Waiter.pTryUntil('Wait for toolbar to be rendered and contains at least 1 group', () => UiFinder.exists(toolbar, '[data-mce-name="overflow-button"]'));
   };
 
-  const clickOnOverflowButton = async (editor: Editor) => {
+  const clickOnOverflowButton = (editor: Editor) => {
     TinyUiActions.clickOnToolbar(editor, '[data-mce-name="overflow-button"]');
   };
 
