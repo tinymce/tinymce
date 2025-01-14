@@ -26,7 +26,7 @@ export interface CaretWalker {
  * const nextLogicalCaretPosition = caretWalker.next(CaretPosition.fromRangeEnd(range));
  */
 
-export enum HDirection {
+export const enum HDirection {
   Backwards = -1,
   Forwards = 1
 }
