@@ -1,6 +1,6 @@
-import { ApproxStructure, FocusTools, Waiter } from '@ephox/agar';
+import { ApproxStructure, FocusTools } from '@ephox/agar';
 import { describe, it, before, after } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { SugarDocument } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
@@ -10,9 +10,11 @@ import Plugin from 'tinymce/plugins/link/Plugin';
 import { TestLinkUi } from '../module/TestLinkUi';
 
 describe('browser.tinymce.plugins.link.AttributesPostprocess', () => {
-  const newRel = Fun.constant('noopener noreferrer');
+  const newRel = 'noopener noreferrer';
+  const newHref = 'https://www.google.com';
   const attrsOverride = (attrs: any) => {
-    attrs.rel = newRel();
+    attrs.rel = newRel;
+    attrs.href = newHref;
   };
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'link',
@@ -43,22 +45,27 @@ describe('browser.tinymce.plugins.link.AttributesPostprocess', () => {
       target: ''
     });
     await TestLinkUi.pClickSave(editor);
-    await Waiter.pTryUntil('Waiting for content to have correct structure', () => {
-      TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, _arr) => {
-        return s.element('body', {
-          children: [
-            s.element('p', {
-              children: [
-                s.element('a', {
-                  attrs: {
-                    rel: str.is(newRel())
-                  }
-                })
-              ]
-            })
-          ]
-        });
-      }));
-    });
+    TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str, _arr) => {
+      return s.element('body', {
+        children: [
+          s.element('p', {
+            children: [
+              s.element('a', {
+                attrs: {
+                  'rel': str.is(newRel),
+                  'href': str.is(newHref),
+                  'data-mce-href': str.is(newHref)
+                }
+              }),
+              // Firefox adds a bogus BR element
+              ...(PlatformDetection.detect().browser.isFirefox() ?
+                [
+                  s.element('br', {})
+                ] : [])
+            ]
+          })
+        ]
+      });
+    }));
   });
 });

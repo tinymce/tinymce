@@ -99,7 +99,7 @@ const getLinkClassList = option<UserListItem[]>('link_class_list');
 const shouldShowLinkTitle = option<boolean>('link_title');
 const allowUnsafeLinkTarget = option<boolean>('allow_unsafe_link_target');
 const useQuickLink = option<boolean>('link_quicklink');
-const attributesPostProcess = option<Function>('link_attributes_postprocess');
+const attributesPostProcess = option<(attributes: Record<string, string | null | undefined>) => void>('link_attributes_postprocess');
 
 export {
   register,
