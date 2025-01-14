@@ -399,7 +399,7 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
       await pBlurAndScrollX(editorTarget, document.documentElement.scrollWidth);
       editor.focus();
       await pAssertOverflowButtonExist();
-      await clickOnOverflowButton(editor);
+      clickOnOverflowButton(editor);
       editor.focus();
       await pAssertOverflowToolbarGroupsAtAleast(2);
 
