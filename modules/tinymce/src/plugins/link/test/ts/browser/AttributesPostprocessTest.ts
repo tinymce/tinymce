@@ -9,7 +9,7 @@ import Plugin from 'tinymce/plugins/link/Plugin';
 
 import { TestLinkUi } from '../module/TestLinkUi';
 
-describe('browser.tinymce.plugins.link.AttributesPostprocess', () => {
+describe('browser.tinymce.plugins.link.AttributesPostprocessTest', () => {
   const newRel = 'noopener noreferrer';
   const newHref = 'https://www.google.com';
   const attrsOverride = (attrs: any) => {
