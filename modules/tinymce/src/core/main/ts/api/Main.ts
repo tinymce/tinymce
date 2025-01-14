@@ -7,7 +7,7 @@ const exportToModuleLoaders = (tinymce: TinyMCE) => {
   if (typeof module === 'object') {
     try {
       module.exports = tinymce;
-    } catch (_) {
+    } catch {
       // It will thrown an error when running this module
       // within webpack where the module.exports object is sealed
     }

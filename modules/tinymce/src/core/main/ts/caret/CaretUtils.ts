@@ -18,8 +18,8 @@ const isCaretContainerBlock = CaretContainer.isCaretContainerBlock;
 const isElement = NodeType.isElement;
 const isText = NodeType.isText;
 const isCaretCandidate = CaretCandidate.isCaretCandidate;
-const isForwards = (direction: HDirection): boolean => direction > 0;
-const isBackwards = (direction: HDirection): boolean => direction < 0;
+const isForwards = (direction: HDirection): boolean => direction === HDirection.Forwards;
+const isBackwards = (direction: HDirection): boolean => direction === HDirection.Backwards;
 
 const skipCaretContainers = (walk: (shallow?: boolean) => Node | null | undefined, shallow?: boolean): Node | null => {
   let node: Node | null | undefined;

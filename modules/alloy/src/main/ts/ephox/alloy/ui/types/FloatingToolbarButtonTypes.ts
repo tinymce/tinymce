@@ -45,8 +45,8 @@ export interface FloatingToolbarButtonSpec extends CompositeSketchSpec, HasLayou
   };
 
   parts: {
-    'button': Partial<SimpleOrSketchSpec>;
-    'toolbar': Partial<ToolbarSpec>;
+    button: Partial<SimpleOrSketchSpec>;
+    toolbar: Partial<ToolbarSpec>;
   };
 
   onToggled?: (comp: AlloyComponent, state: boolean) => void;

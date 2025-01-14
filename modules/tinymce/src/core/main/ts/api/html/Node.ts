@@ -175,7 +175,7 @@ class AstNode {
   public attr(name: string, value: string | null | undefined): AstNode | undefined;
   public attr(name: Record<string, string | null | undefined> | undefined): AstNode | undefined;
   public attr(name: string): string | undefined;
-  public attr(name?: string | Record<string, string | null | undefined>, value?: string | null | undefined): string | AstNode | undefined {
+  public attr(name?: string | Record<string, string | null | undefined>, value?: string | null): string | AstNode | undefined {
     const self = this;
 
     if (!Type.isString(name)) {

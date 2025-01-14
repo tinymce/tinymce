@@ -19,6 +19,7 @@ import * as ItemEvents from '../util/ItemEvents';
 
 type ItemRole = 'menuitem' | 'menuitemcheckbox' | 'menuitemradio';
 
+// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 const getItemRole = (detail: NormalItemDetail): ItemRole | string =>
   detail.role.fold(
     () => detail.toggling

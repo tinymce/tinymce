@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-wrapper-object-types */
 const getPrototypeOf = Object.getPrototypeOf;
 
 interface Constructor<T extends Object> {

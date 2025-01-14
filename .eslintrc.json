@@ -5,11 +5,8 @@
     "plugin:security-node/recommended"
   ],
   "parserOptions": {
-    "sourceType": "module",
-    "project": [
-      "./tsconfig.json",
-      "modules/*/tsconfig.json"
-    ]
+    "projectService": true,
+    "tsconfigRootDir": "."
   },
   "plugins": [
     "only-warn",
@@ -23,6 +20,7 @@
         "ignoreVoid": false
       }
     ],
+
     "@typescript-eslint/camelcase": "off", // leave off
     "@typescript-eslint/member-ordering": "off",
     "@typescript-eslint/no-empty-function": "off",
