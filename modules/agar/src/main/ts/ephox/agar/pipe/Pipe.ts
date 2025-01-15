@@ -6,6 +6,7 @@ export type RunFn<T, U> = (value: T, next: NextFn<U>, die: DieFn, logs: TestLogs
 
 export const Pipe = <T, U>(f: RunFn<T, U>): RunFn<T, U> => (value: T, next: NextFn<U>, die: DieFn, logs: TestLogs): void => {
   const bounceNext = (value, nextLogs) => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     Promise.resolve().then(() => {
       next(value, nextLogs);
     });

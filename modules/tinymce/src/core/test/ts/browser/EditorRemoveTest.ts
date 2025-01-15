@@ -21,6 +21,7 @@ describe('browser.tinymce.core.EditorRemoveTest', () => {
     assertTextareaDisplayStyle(editor, 'none');
     editor.remove();
     assertTextareaDisplayStyle(editor, expectedStyle);
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     EditorManager.init({ selector: '#tinymce' });
     assertTextareaDisplayStyle(editor, expectedStyle);
     McEditor.remove(editor);

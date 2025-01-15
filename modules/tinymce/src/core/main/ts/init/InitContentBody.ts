@@ -487,6 +487,7 @@ const contentBodyLoaded = (editor: Editor): void => {
 
   setupRtcThunk.fold(() => {
     const cancelProgress = startProgress(editor);
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadContentCss(editor).then(() => {
       initEditorWithInitialContent(editor);
       cancelProgress();
@@ -494,6 +495,7 @@ const contentBodyLoaded = (editor: Editor): void => {
   }, (setupRtc) => {
     editor.setProgressState(true);
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadContentCss(editor).then(() => {
       setupRtc().then((_rtcMode) => {
         editor.setProgressState(false);

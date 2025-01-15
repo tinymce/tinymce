@@ -11,6 +11,7 @@ const pLoadI18nHtml = (baseUrl: string): Promise<string> =>
 
 const initI18nLoad = (editor: Editor, baseUrl: string): void => {
   editor.on('init', () => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     pLoadI18nHtml(baseUrl);
   });
 };

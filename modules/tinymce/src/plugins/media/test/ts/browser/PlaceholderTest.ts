@@ -114,7 +114,7 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
         ...baseSettings,
         sandbox_iframes: false
       });
-      pTestPlaceholder(editor,
+      await pTestPlaceholder(editor,
         'https://www.youtube.com/watch?v=P_205ZY52pY',
         '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
         'height="314" allowfullscreen="allowfullscreen"></iframe></p>',
@@ -127,7 +127,7 @@ describe('browser.tinymce.plugins.media.core.PlaceholderTest', () => {
         ...baseSettings,
         sandbox_iframes: true
       });
-      pTestPlaceholder(editor,
+      await pTestPlaceholder(editor,
         'https://www.youtube.com/watch?v=P_205ZY52pY',
         '<p><iframe src="https://www.youtube.com/embed/P_205ZY52pY" width="560" ' +
         'height="314" sandbox="" allowfullscreen="allowfullscreen"></iframe></p>',
