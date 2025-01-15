@@ -32,7 +32,7 @@
     "headless-test": "grunt headless-auto",
     "headless-test-firefox": "grunt headless-auto --bedrock-browser=firefox-headless",
     "headless-test-manual": "grunt headless-manual",
-    "bedrock": "bedrock --customRoutes modules/tinymce/src/core/test/json/routes.json",
+    "bedrock": "bedrock --chunk=5000 --customRoutes modules/tinymce/src/core/test/json/routes.json",
     "test-one": "yarn tsc && yarn bedrock-auto -b chrome-headless -f"
   },
   "devDependencies": {
