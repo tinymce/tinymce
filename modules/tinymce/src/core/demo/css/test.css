@@ -1,0 +1,38 @@
+:root {
+  /* colors */
+  --green10: #E4EEDA;
+  --green20: #D7E6C8;
+  --green30: #A0C47D;
+  --green40: #83B84E;
+
+  /* specing and other px values */
+  --spacing: 8px;
+  --container-height: 400px;
+  --elements-height: 40px;
+  --border-width: 2px;
+
+  /* based on other variables */
+  --borders: var(--border-width) solid var(--green30);
+
+  /* light-dark */
+  color-scheme: light dark;
+  --light-bg: var(--green10);
+  --light-color: darkslategray;
+
+  --dark-bg: var(--green40);
+  --dark-color: ghostwhite;
+}
+
+/* light-dark */
+/* * {
+  background-color: light-dark(var(--light-bg), var(--dark-bg)) !important;
+  color: light-dark(var(--light-color), var(--dark-color)) !important;
+} */
+
+
+
+/*
+TO DO:
+ - try to add light-dark()
+ - try to change colors/spacing through 'skinning' (just load additional file with variables? hmmmmmmmmm, can try with editor styleSheetLoader in setup for this one)
+*/
