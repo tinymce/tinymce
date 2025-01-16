@@ -29,9 +29,17 @@ const getPreviewHtml = (editor: Editor): string => {
   const preventClicksOnLinksScript = (
     '<script>' +
     'document.addEventListener && document.addEventListener("click", function(e) {' +
-    'for (var elm = e.target; elm; elm = elm.parentNode) {' +
-    'if (elm.nodeName === "A" && !(' + isMetaKeyPressed + ')) {' +
+    'for (let elm = e.target; elm; elm = elm.parentNode) {' +
+    'if (elm.nodeName === "A") {' +
+    'const href = elm.getAttribute("href");' +
+    'if (href && href.startsWith("#") && (' + isMetaKeyPressed + ')) {' +
     'e.preventDefault();' +
+    'document.getElementById(href.substring(1)).scrollIntoView();' +
+    'return;' +
+    '}' +
+    'if (!(' + isMetaKeyPressed + ')) {' +
+    'e.preventDefault();' +
+    '}' +
     '}' +
     '}' +
     '}, false);' +
