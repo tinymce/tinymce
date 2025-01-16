@@ -1017,6 +1017,13 @@
     which "^2.0.0"
     xml-writer "^1.6.0"
 
+"@ephox/dispute@1.0.15-feature.20250115100755050.sha958e4c6":
+  version "1.0.15-feature.20250115100755050.sha958e4c6"
+  resolved "https://registry.yarnpkg.com/@ephox/dispute/-/dispute-1.0.15-feature.20250115100755050.sha958e4c6.tgz#c643d12d7c089d1146566827f3226fc7fefe2638"
+  integrity sha512-SCeW17wYpdYpid5FmuJCU2POXDjrYe2/26Sbor2Kv0WMNX7nM+SbZqpwCrl1Fho0MoBdxEyN5yF+syjvrKtbMw==
+  dependencies:
+    tslib "^2.0.0"
+
 "@ephox/dispute@^1.0.3":
   version "1.0.14"
   resolved "https://registry.yarnpkg.com/@ephox/dispute/-/dispute-1.0.14.tgz#f7a81ec5cfb63561a29711118bc4a3e42f7046df"
