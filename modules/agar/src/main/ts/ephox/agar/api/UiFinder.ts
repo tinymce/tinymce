@@ -56,11 +56,11 @@ const cFindWithState = <T extends Element>(selector: string, predicate: (element
     cHasState(predicate)
   ]);
 
-// Wait for a selector to have state. Max wait time: 8 seconds.
+// Wait for a selector to have state. Max wait time: 5 seconds.
 const cWaitForState = <T extends Element>(message: string, selector: string, predicate: (element: SugarElement<T>) => boolean): Chain<SugarElement<Node>, SugarElement<T>> =>
   Chain.control(
     cFindWithState(selector, predicate),
-    Guard.tryUntil(message, 10, 8000)
+    Guard.tryUntil(message, 10, 5000)
   );
 
 const sExists = <T>(container: SugarElement<Node>, selector: string): Step<T, T> =>
