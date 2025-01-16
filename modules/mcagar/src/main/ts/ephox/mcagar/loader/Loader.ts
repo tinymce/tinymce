@@ -104,7 +104,7 @@ const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: 
             } catch (e: any) {
               onFailure(e);
             }
-          }, 0);
+          }, 100);
         });
 
         editor.once('SkinLoadError', (e) => {
