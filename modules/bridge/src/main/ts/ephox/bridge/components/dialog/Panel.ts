@@ -26,6 +26,7 @@ import { tableSchema } from './Table';
 import { textAreaSchema } from './Textarea';
 import { treeSchema } from './Tree';
 import { urlInputSchema } from './UrlInput';
+import { dummySchema } from './Dummy';
 
 export interface PanelSpec {
   type: 'panel';
@@ -75,7 +76,8 @@ export const itemSchema = StructureSchema.valueThunkOf(
     label: StructureSchema.objOf(createLabelFields(createItemsField('label'))),
     table: tableSchema,
     tree: treeSchema,
-    panel: panelSchema
+    panel: panelSchema,
+    dummy: dummySchema
   })
 );
 

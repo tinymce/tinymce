@@ -12,6 +12,7 @@ import {
 } from '../components/dialog/Dialog';
 import { DialogFooterButtonSpec } from '../components/dialog/DialogFooterButton';
 import { DropZoneSpec } from '../components/dialog/Dropzone';
+import { DummySpec } from '../components/dialog/Dummy';
 import { GridSpec } from '../components/dialog/Grid';
 import { HtmlPanelSpec } from '../components/dialog/HtmlPanel';
 import { IframeSpec } from '../components/dialog/Iframe';
@@ -66,6 +67,8 @@ export {
   DialogTabChangeDetails,
 
   DropZoneSpec,
+
+  DummySpec,
 
   GridSpec,
 
