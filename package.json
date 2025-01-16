@@ -36,8 +36,8 @@
     "test-one": "yarn tsc && yarn bedrock-auto -b chrome-headless -f"
   },
   "devDependencies": {
-    "@ephox/bedrock-client": "^14.1.0",
-    "@ephox/bedrock-server": "15.0.0-alpha.4",
+    "@ephox/bedrock-client": "15.0.0-alpha.7",
+    "@ephox/bedrock-server": "15.0.0-alpha.9",
     "@ephox/oxide-icons-tools": "^4.0.0",
     "@ephox/swag": "^4.6.0",
     "@tinymce/eslint-plugin": "^2.3.0",
