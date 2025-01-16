@@ -477,6 +477,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       base_url: '/project/tinymce/js/tinymce',
       disabled: true,
       plugins: 'searchreplace',
+      focusOnInit: true,
       toolbar: Arr.map(allButtons, (button) => button.name).join(' '),
     }, []);
 
