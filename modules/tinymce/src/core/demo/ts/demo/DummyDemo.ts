@@ -1,4 +1,3 @@
-import { icon } from '@ephox/bridge/src/main/ts/ephox/bridge/core/ComponentSchema';
 import { Optional } from '@ephox/katamari';
 
 import { Editor, RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
