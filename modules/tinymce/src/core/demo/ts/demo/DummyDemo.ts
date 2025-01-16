@@ -40,22 +40,23 @@ export default (): void => {
                     type: 'cancel',
                     name: 'close',
                     text: 'Close',
-                    primary: true
+                    primary: true,
                   },
                   {
                     type: 'togglebutton',
-                    name: 'close',
-                    text: 'Close',
+                    name: 'icon-left',
+                    text: 'Icon Left',
                     primary: true,
                     icon: 'copy',
                     align: 'end'
                   },
                   {
                     type: 'togglebutton',
-                    name: 'close',
-                    text: 'Close',
+                    name: 'icon-right',
+                    text: 'Icon Right',
                     primary: true,
                     icon: 'format-code',
+                    iconLocation: 'end',
                   }
                 ],
                 initialData: {}

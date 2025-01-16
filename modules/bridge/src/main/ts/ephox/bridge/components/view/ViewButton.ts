@@ -44,6 +44,7 @@ export type ViewButtonSpec = ViewNormalButtonSpec | ViewToggleButtonSpec | ViewB
 interface BaseButton<Api extends ViewButtonApi> {
   text: Optional<string>;
   icon: Optional<string>;
+  iconLocation: Optional<'start' | 'end'>;
   tooltip: Optional<string>;
   buttonType: 'primary' | 'secondary';
   borderless: boolean;
@@ -73,6 +74,7 @@ const baseButtonFields = [
   ComponentSchema.optionalText,
   ComponentSchema.optionalIcon,
   FieldSchema.optionString('tooltip'),
+  FieldSchema.defaultedStringEnum('iconLocation', 'start', [ 'start', 'end' ]),
   FieldSchema.defaultedStringEnum('buttonType', 'secondary', [ 'primary', 'secondary' ]),
   FieldSchema.defaultedBoolean('borderless', false),
   FieldSchema.requiredFunction('onAction'),

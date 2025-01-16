@@ -109,6 +109,16 @@ export const calculateClassesFromButtonType = (buttonType: 'primary' | 'secondar
   }
 };
 
+export const calculateClassesFromIconLocation = (iconLocation: 'start' | 'end'): string[] => {
+  switch (iconLocation) {
+    case 'end':
+      return [ 'tox-button--icon-end' ];
+    case 'start':
+    default:
+      return [ 'tox-button--icon-start' ];
+  }
+};
+
 // Maybe the list of extraBehaviours is better than doing a Merger.deepMerge that
 // we do elsewhere? Not sure.
 const renderButtonSpec = (
@@ -128,10 +138,15 @@ const renderButtonSpec = (
   // The old default is based on the now-deprecated 'primary' property. `buttonType` takes precedence now.
   const buttonType = spec.buttonType.getOr(!spec.primary && !spec.borderless ? 'secondary' : 'primary');
 
+  const buttonIconLocation = spec.iconLocation.getOr('start');
+
   const baseClasses = calculateClassesFromButtonType(buttonType);
+
+  const baseIconClasses = calculateClassesFromIconLocation(buttonIconLocation);
 
   const classes = [
     ...baseClasses,
+    ...baseIconClasses,
     ...icon.isSome() ? [ 'tox-button--icon' ] : [],
     ...spec.borderless ? [ 'tox-button--naked' ] : [],
     ...extraClasses
@@ -238,7 +253,8 @@ const renderToggleButton = (spec: FooterToggleButtonSpec, providers: UiFactoryBa
     classes: [
       ...buttonTypeClasses.concat(spec.icon.isSome() ? [ 'tox-button--icon' ] : []),
       ...(spec.active ? [ ViewButtonClasses.Ticked ] : []),
-      ...(showIconAndText ? [ 'tox-button--icon-and-text' ] : [])
+      ...(showIconAndText ? [ 'tox-button--icon-and-text' ] : []),
+      ...(spec.iconLocation.getOr('start') === 'end' ? [ 'tox-button--icon-location-end' ] : []),
     ],
     attributes: {
       ...tooltipAttributes,

@@ -237,6 +237,7 @@ export const renderUrlInput = (
     context: spec.context,
     name: spec.name,
     icon: Optional.some('browse'),
+    iconLocation: Optional.some('start'),
     text: spec.picker_text.or(spec.label).getOr(''),
     enabled: spec.enabled,
     primary: false,

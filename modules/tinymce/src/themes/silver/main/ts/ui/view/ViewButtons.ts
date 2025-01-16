@@ -4,7 +4,7 @@ import { Attribute, Class, Focus } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderReplaceableIconFromPack } from '../button/ButtonSlices';
-import { calculateClassesFromButtonType, IconButtonWrapper, renderCommonSpec } from '../general/Button';
+import { calculateClassesFromButtonType, calculateClassesFromIconLocation, IconButtonWrapper, renderCommonSpec } from '../general/Button';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import { ViewButtonClasses } from '../toolbar/button/ButtonClasses';
 import { ViewButtonWithoutGroup } from './View';
@@ -57,11 +57,13 @@ export const renderButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryB
     buttonType: Optional.from(spec.buttonType),
     tooltip: spec.tooltip,
     icon: spec.icon,
+    iconLocation: Optional.none(),
     enabled: true,
     borderless: spec.borderless
   };
 
   const buttonTypeClasses = calculateClassesFromButtonType(spec.buttonType ?? 'secondary');
+  const buttonIconLocation = calculateClassesFromIconLocation(spec.iconLocation.getOr('start'));
   const optTranslatedText = isToggleButton ? spec.text.map(providers.translate) : Optional.some(providers.translate(spec.text));
   const optTranslatedTextComponed = optTranslatedText.map(GuiFactory.text);
 
@@ -77,6 +79,7 @@ export const renderButton = (spec: ViewButtonWithoutGroup, providers: UiFactoryB
   const dom = {
     tag: 'button',
     classes: buttonTypeClasses
+      .concat(buttonIconLocation)
       .concat(...spec.icon.isSome() && !hasIconAndText ? [ 'tox-button--icon' ] : [])
       .concat(...hasIconAndText ? [ 'tox-button--icon-and-text' ] : [])
       .concat(...spec.borderless ? [ 'tox-button--naked' ] : [])
