@@ -26,25 +26,25 @@ const getPreviewHtml = (editor: Editor): string => {
 
   const isMetaKeyPressed = Env.os.isMacOS() || Env.os.isiOS() ? 'e.metaKey' : 'e.ctrlKey && !e.altKey';
 
-  const preventClicksOnLinksScript = (
-    '<script>' +
-    'document.addEventListener && document.addEventListener("click", function(e) {' +
-    'for (let elm = e.target; elm; elm = elm.parentNode) {' +
-    'if (elm.nodeName === "A") {' +
-    'const href = elm.getAttribute("href");' +
-    'if (href && href.startsWith("#")) {' +
-    'e.preventDefault();' +
-    'document.getElementById(href.substring(1))?.scrollIntoView();' +
-    'return;' +
-    '}' +
-    'if (!(' + isMetaKeyPressed + ')) {' +
-    'e.preventDefault();' +
-    '}' +
-    '}' +
-    '}' +
-    '}, false);' +
-    '</script> '
-  );
+  const preventClicksOnLinksScript = `
+    <script>
+      document.addEventListener && document.addEventListener("click", function(e) {
+        for (let elm = e.target; elm; elm = elm.parentNode) {
+          if (elm.nodeName === "A") {
+            const href = elm.getAttribute("href");
+            if (href && href.startsWith("#")) {
+              e.preventDefault();
+              document.getElementById(href.substring(1))?.scrollIntoView();
+              return;
+            }
+            if (!(${isMetaKeyPressed})) {
+              e.preventDefault();
+            }
+          }
+        }
+      }, false);
+    </script>
+  `;
 
   const directionality = editor.getBody().dir;
   const dirAttr = directionality ? ' dir="' + encode(directionality) + '"' : '';
