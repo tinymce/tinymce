@@ -112,10 +112,10 @@ export const calculateClassesFromButtonType = (buttonType: 'primary' | 'secondar
 export const calculateClassesFromIconLocation = (iconLocation: 'start' | 'end'): string[] => {
   switch (iconLocation) {
     case 'end':
-      return [ 'tox-button--icon-end' ];
+      return [ 'tox-button--icon-location-end' ];
     case 'start':
     default:
-      return [ 'tox-button--icon-start' ];
+      return [ 'tox-button--icon-location-start' ];
   }
 };
 
@@ -133,7 +133,10 @@ const renderButtonSpec = (
   const translatedText = providersBackstage.translate(spec.text);
 
   const icon = spec.icon.map((iconName) => renderIconFromPack(iconName, providersBackstage.icons));
-  const components = [ icon.getOrThunk(() => GuiFactory.text(translatedText)) ];
+  const components = [
+    icon.getOrThunk(() => GuiFactory.text(translatedText)),
+    ...icon.isSome() ? [ GuiFactory.text(translatedText) ] : []
+  ];
 
   // The old default is based on the now-deprecated 'primary' property. `buttonType` takes precedence now.
   const buttonType = spec.buttonType.getOr(!spec.primary && !spec.borderless ? 'secondary' : 'primary');
@@ -142,12 +145,12 @@ const renderButtonSpec = (
 
   const baseClasses = calculateClassesFromButtonType(buttonType);
 
-  const baseIconClasses = calculateClassesFromIconLocation(buttonIconLocation);
+  const baseIconLocationClasses = calculateClassesFromIconLocation(buttonIconLocation);
 
   const classes = [
     ...baseClasses,
-    ...baseIconClasses,
-    ...icon.isSome() ? [ 'tox-button--icon' ] : [],
+    ...baseIconLocationClasses,
+    ...icon.isSome() ? [ 'tox-button--icon', 'tox-button--icon-and-text' ] : [],
     ...spec.borderless ? [ 'tox-button--naked' ] : [],
     ...extraClasses
   ];

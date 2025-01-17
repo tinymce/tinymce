@@ -41,6 +41,8 @@ export default (): void => {
                     name: 'close',
                     text: 'Close',
                     primary: true,
+                    icon: 'copy',
+                    iconLocation: 'end'
                   },
                   {
                     type: 'togglebutton',
