@@ -34,7 +34,7 @@ const getPreviewHtml = (editor: Editor): string => {
     'const href = elm.getAttribute("href");' +
     'if (href && href.startsWith("#") && (' + isMetaKeyPressed + ')) {' +
     'e.preventDefault();' +
-    'document.getElementById(href.substring(1)).scrollIntoView();' +
+    'document.getElementById(href.substring(1))?.scrollIntoView();' +
     'return;' +
     '}' +
     'if (!(' + isMetaKeyPressed + ')) {' +
