@@ -244,12 +244,12 @@ timestamps {
     // [ browser: 'chrome', provider: 'aws', buckets: 2 ],
     // [ browser: 'edge', provider: 'aws', buckets: 2 ], // TINY-10540: Investigate Edge issues in AWS
     // [ browser: 'firefox', provider: 'aws', buckets: 2 ],
-    [ browser: 'chrome', provider: 'lambdatest', buckets: 1 ],
-    [ browser: 'firefox', provider: 'lambdatest', buckets: 1 ],
-    [ browser: 'edge', provider: 'lambdatest', buckets: 1 ],
-    [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ],
-    [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ],
-    [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ]
+    [ browser: 'chrome', provider: 'aws', buckets: 1 ],
+    [ browser: 'firefox', provider: 'aws', buckets: 1 ],
+    [ browser: 'edge', provider: 'aws', buckets: 1 ],
+    // [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ],
+    // [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ],
+    // [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ]
   ];
 
   def processes = [:]
