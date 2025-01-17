@@ -615,6 +615,7 @@ describe('browser.tinymce.core.annotate.AnnotateBlocksTest', () => {
               selectionPath([ 0 ], 1, [], 3),
               { span: isRootBlock ? 2 : 3, block: isRootBlock ? 1 : 0 }
             );
+            // TODO: Selection doesn't work correctly if we don't wait 100ms here
             await Waiter.pWait(100);
 
             annotationChangeData = [];

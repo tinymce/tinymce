@@ -35,7 +35,7 @@ describe.skip('browser.tinymce.core.DragDropOverridesTest', () => {
       hook.editor().on('dragstart drop dragend', (e: DragEvent) => {
         events = [ ...events, e ];
       });
-      await Waiter.pWait(100); // Wait a small amount of time to ensure the events have been bound
+      await Waiter.pWait(17); // Wait a small amount of time to ensure the events have been bound
     });
 
     beforeEach(() => {
@@ -557,7 +557,7 @@ describe.skip('browser.tinymce.core.DragDropOverridesTest', () => {
     }, [], true);
 
     before(async () => {
-      await Waiter.pWait(100); // Wait a small amount of time to ensure the events have been bound
+      await Waiter.pWait(17); // Wait a small amount of time to ensure the events have been bound
     });
 
     it('TINY-8874: Dragging CEF element towards the bottom edge causes scrolling when autoresize is set', async () => {
@@ -620,7 +620,7 @@ describe.skip('browser.tinymce.core.DragDropOverridesTest', () => {
       window.dispatchEvent(new MouseEvent('mousemove', {
         clientY: window.innerHeight,
       }));
-      await Waiter.pWait(100);
+      await Waiter.pWait(17);
       Mouse.mouseUp(target);
       assert.strictEqual(window.scrollY, initialScrollY);
     });

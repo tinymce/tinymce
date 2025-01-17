@@ -118,11 +118,10 @@ const pDragHandle = async (editor: Editor, id: string, dx: number, dy: number): 
   );
   // a real user won't drag within a single frame, so we shouldn't either
   Mouse.mouseDown(resizeHandle);
-  await Waiter.pWait(100);
+  await Waiter.pWait(0);
   Mouse.mouseMoveTo(resizeHandle, dx, dy);
-  await Waiter.pWait(100);
   Mouse.mouseUp(resizeHandle);
-  await Waiter.pWait(100);
+  await Waiter.pWait(0);
 };
 
 const pDragResizeBar = async (editor: Editor, rowOrCol: 'row' | 'column', index: number, dx: number, dy: number): Promise<void> => {
@@ -138,15 +137,13 @@ const pDragResizeBar = async (editor: Editor, rowOrCol: 'row' | 'column', index:
   );
   // a real user won't drag within a single frame, so we shouldn't either
   Mouse.mouseDown(resizeBar);
-  await Waiter.pWait(100);
+  await Waiter.pWait(0);
 
   const blocker = UiFinder.findIn(docElem, 'div.ephox-dragster-blocker').getOrDie();
   Mouse.mouseMove(blocker);
-  await Waiter.pWait(100);
   Mouse.mouseMoveTo(blocker, dx, dy);
-  await Waiter.pWait(100);
   Mouse.mouseUp(blocker);
-  await Waiter.pWait(100);
+  await Waiter.pWait(0);
 };
 
 // The critical part is the target element as this is what Darwin (MouseSelection.ts) uses to determine the fake selection

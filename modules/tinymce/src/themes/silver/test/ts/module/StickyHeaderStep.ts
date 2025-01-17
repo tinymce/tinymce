@@ -38,7 +38,7 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
     before(async () => {
       // Need to wait for a fraction for some reason on safari,
       // otherwise the initial scrolling doesn't work
-      await Waiter.pWait(100);
+      await Waiter.pWait(17);
     });
 
     it('Checking startup structure', async () => {
@@ -149,7 +149,7 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
       await Waiter.pTryUntil('Wait for fullscreen to be deactivated', () => UiFinder.notExists(SugarBody.body(), '.tox-fullscreen'));
       // TODO: Figure out why Chrome 78 needs this wait on MacOS. I suspect it might be because fullscreen sets overflow hidden
       // and we're setting the scroll position before the window has updated
-      await Waiter.pWait(100);
+      await Waiter.pWait(17);
       await StickyUtils.pScrollAndAssertStructure(isToolbarTop, 200, StickyUtils.expectedHalfView);
     });
 
