@@ -32,7 +32,7 @@ const getPreviewHtml = (editor: Editor): string => {
     'for (let elm = e.target; elm; elm = elm.parentNode) {' +
     'if (elm.nodeName === "A") {' +
     'const href = elm.getAttribute("href");' +
-    'if (href && href.startsWith("#") && (' + isMetaKeyPressed + ')) {' +
+    'if (href && href.startsWith("#")) {' +
     'e.preventDefault();' +
     'document.getElementById(href.substring(1))?.scrollIntoView();' +
     'return;' +
