@@ -35,17 +35,18 @@ describe('webdriver.tinymce.plugins.link.OpenLinkTest', () => {
   it('TINY-11009: Open link opens right clicked link when selection is over multiple links', async () => {
     const editor = hook.editor();
     editor.setContent('<p>before <a id="first" href="https://www.exampleone.com">first</a> middle <a id="last" href="https://www.exampletwo.com">last</a> after</p>');
+    UiFinder.exists(SugarBody.body(), '[data-mce-name="openlink"]');
     // Check the open link button is enabled (multiple links)
     TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 0, 4 ], 2);
     await RealMouse.pRightClickOn('iframe => a#first');
-    UiFinder.exists(SugarBody.body(), '[aria-label="Open link"][aria-disabled="false"]');
-    await RealMouse.pClickOn('.tox-collection__item[aria-label="Open link"]');
+    UiFinder.exists(SugarBody.body(), '[data-mce-name="openlink"][aria-disabled="false"]');
+    await RealMouse.pClickOn('.tox-collection__item[data-mce-name="openlink"]');
     store.assertEq('Should open the targeted link', [
       'https://www.exampleone.com/'
     ]);
     await RealMouse.pRightClickOn('iframe => a#last');
-    UiFinder.exists(SugarBody.body(), '[aria-label="Open link"][aria-disabled="false"]');
-    await RealMouse.pClickOn('.tox-collection__item[aria-label="Open link"]');
+    UiFinder.exists(SugarBody.body(), '[data-mce-name="openlink"][aria-disabled="false"]');
+    await RealMouse.pClickOn('.tox-collection__item[data-mce-name="openlink"]');
     store.assertEq('Should open the targeted link', [
       'https://www.exampleone.com/',
       'https://www.exampletwo.com/'

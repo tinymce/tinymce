@@ -436,8 +436,11 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
     const assertButtonState = (button: TestButtonDisabledState, shouldBeDisabled: boolean) => {
       const { name, disabledAttribute } = button;
       const attributeValue = disabledAttribute === 'disabled' ? 'disabled' : 'true';
-      const selector = `[data-mce-name="${name}"][${disabledAttribute}="${attributeValue}"]`;
+      const buttonSelector = `[data-mce-name="${name}"]`;
+      const selector = `${buttonSelector}[${disabledAttribute}="${attributeValue}"]`;
 
+      // start by checking the button itself exists!
+      UiFinder.exists(SugarBody.body(), buttonSelector);
       if (shouldBeDisabled) {
         UiFinder.exists(SugarBody.body(), selector);
       } else {
