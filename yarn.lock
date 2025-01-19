@@ -7525,9 +7525,9 @@ less-plugin-preset-env@^1.2.6:
   integrity sha512-XCyunaMJIGXtz1Dsw8I3jRUgEF3Vh1h9FnQG12ISPtvyE+JUVeDIRyDuPEx2XtEpgqUDXjUvhNbrtUHWyBkiKg==
 
 less@^4.2.0:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/less/-/less-4.2.1.tgz#fe4c9848525ab44614c0cf2c00abd8d031bb619a"
-  integrity sha512-CasaJidTIhWmjcqv0Uj5vccMI7pJgfD9lMkKtlnTHAdJdYK/7l8pM9tumLyJ0zhbD4KJLo/YvTj+xznQd5NBhg==
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/less/-/less-4.2.2.tgz#4b59ede113933b58ab152190edf9180fc36846d8"
+  integrity sha512-tkuLHQlvWUTeQ3doAqnHbNn8T6WX1KA8yvbKG9x4VtKtIjHsVKQZCH11zRgAfbDAXC2UNIg/K9BYAAcEzUIrNg==
   dependencies:
     copy-anything "^2.0.1"
     parse-node-version "^1.0.1"
