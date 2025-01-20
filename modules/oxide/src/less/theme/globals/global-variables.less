@@ -9,23 +9,151 @@
 @prefix: tox;
 
 // Root variables
-// Begin customization by changing these variables as most other variables are derivatives of these.
-@background-color: #fff;
+@background-color: @color-neutral-white;
 @base-value: 16px;
-@color-black: #222f3e;
-@color-tint: #006ce7;
-@color-white: #fff;
-@color-error: #c00;
-@color-error-element-focus-color: #f00;
+@color-black: @color-neutral-black;
+@color-tint: @color-blue-50;
+@color-white: @color-neutral-white;
+@color-error: @color-red-50;
+@color-error-element-focus-color: @color-red-40;
 @color-error-element-focus: 0 0 0 1px @color-error-element-focus-color;
-@color-success: #78AB46;
-@color-warning: #FFCC00;
+@color-success: @color-green-50;
+@color-warning: @color-yellow-50;
 @color-active: #ffcf30;
 
-@font-stack: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+// Color Variables
+// -----------------------------------
+// Neutral Colors
+@color-neutral-white: #FFFFFF;
+@color-neutral-10: #F0F0F0;
+@color-neutral-20: #E3E3E3;
+@color-neutral-30: #D7D7D7;
+@color-neutral-40: #CCCCCC;
+@color-neutral-50: #606973;
+@color-neutral-60: #3D546F;
+@color-neutral-70: #606973;
+@color-neutral-black: #222F3E;
 
-// Content;
+// Red Colors
+@color-red-10: #F5CCCC;
+@color-red-20: #F1B6B6;
+@color-red-30: #FF6666;
+@color-red-40: #FF0000;
+@color-red-50: #CC0000;
+@color-red-60: #A40000;
+@color-red-70: #AD0000;
+@color-red-80: #7A0000;
+@color-red-90: #610000;
 
+// Yellow Colors
+@color-yellow-10: #FFF5CC;
+@color-yellow-20: #FFF0B3;
+@color-yellow-30: #FFE89D;
+@color-yellow-40: #D8BF6C;
+@color-yellow-50: #FFCC00;
+@color-yellow-60: #E3AE00;
+@color-yellow-70: #7F5F01;
+@color-yellow-80: #533F04;
+@color-yellow-90: #332E1B;
+
+// Green Colors
+@color-green-10: #E4EEDA;
+@color-green-20: #D7E6C8;
+@color-green-30: #A0C47D;
+@color-green-40: #83B84E;
+@color-green-50: #78AB46;
+@color-green-60: #51742F;
+@color-green-70: #567832;
+@color-green-80: #3D5723;
+@color-green-90: #30451C;
+
+// Blue Colors
+@color-blue-10: #D6E7FB;
+@color-blue-20: #C6DEF9;
+@color-blue-30: #779ECB;
+@color-blue-40: #67AEFF;
+@color-blue-50: #006CE7;
+@color-blue-60: #0054B4;
+@color-blue-70: #0C2D6E;
+@color-blue-80: #0A2457;
+@color-blue-90: #0A2457;
+
+// Font Variables
+// -----------------------------------
+@font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+@line-height-base: 1.3;
+@font-weight-normal: normal;
+@font-weight-semibold: 600;
+@font-weight-bold: bold;
+@font-size-base: @base-value;
+@font-size-xs: 12px; // Absolute value to not make it too small
+@font-size-sm: @font-size-base * .875;
+@font-size-md: @font-size-base;
+@font-size-lg: @font-size-base * 1.25;
+
+// New line heights
+@line-height-sm: 16px;
+@line-height-md: 18px;
+@line-height-lg: 26px;
+@line-height-xl: 28px;
+
+// New sizes
+@size-xl: 20px;
+@size-lg: 16px;
+@size-md: 14px;
+@size-sm: 12px;
+
+// Spacing Variables
+// -----------------------------------
+@pad-xs: @base-value / 4;
+@pad-sm: @base-value / 2;
+@pad-md: @base-value;
+@pad-lg: @base-value * 1.5;
+@pad-xl: @base-value * 2;
+
+// New spacings
+@spacing-none: 0;
+@spacing-xs: 2px;
+@spacing-sm: 4px;
+@spacing-md: 6px;
+@spacing-lg: 8px;
+@spacing-xl: 12px;
+@spacing-2xl: 16px;
+@spacing-3xl: 24px;
+
+// Corner Radii
+// -----------------------------------
+@corner-radius-none: 0;
+@corner-radius-xs: 2px;
+@corner-radius-sm: 3px;
+@corner-radius-md: 4px;
+@corner-radius-lg: 6px;
+@corner-radius-xl: 8px;
+@corner-radius-2xl: 12px;
+@corner-radius-3xl: 16px;
+@corner-radius-4xl: 24px;
+@corner-radius-full: 999px;
+
+// z-index stack (reserved range 1000-10000)
+// -----------------------------------
+@z-index-fullscreen: 1200;
+@z-index-resize-handle: 1298;
+@z-index-throbber: 1299;
+@z-index-sink: 1300;
+
+// sink z-index stack
+@z-index-loading: 1000;
+@z-index-dialogs: 1100;
+@z-index-menu: 1150;
+
+// Responsive breakpoints
+// -----------------------------------
+@breakpoint-sm-value: 767px;
+@breakpoint-md: ~"only screen and (min-width:1000px)";
+@breakpoint-sm: ~"only screen and (max-width:" @breakpoint-sm-value ~")";
+@breakpoint-gt-sm: ~"only screen and (min-width:" @breakpoint-sm-value + 1px ~")";
+
+// Content
 @content-ui-darkmode: false; // Change this to true to get white icons in the content such as bookmarks.
 
 // Colors
@@ -41,37 +169,5 @@
 @keyboard-focus-outline-width: 2px;
 @keyboard-focus-outline-color: @color-tint;
 
-// Font
-@line-height-base: 1.3;
-@font-weight-normal: normal;
-@font-weight-bold: bold;
-@font-size-base: @base-value;
-@font-size-xs: 12px; // Absolute value to not make it too small
-@font-size-sm: @font-size-base * .875;
-@font-size-md: @font-size-base;
-@font-size-lg: @font-size-base * 1.25;
-
-// Spacings
-@pad-xs: @base-value / 4;
-@pad-sm: @base-value / 2;
-@pad-md: @base-value;
-@pad-lg: @base-value * 1.5;
-@pad-xl: @base-value * 2;
-
-// z-index stack (reserved range 1000-10000)
-@z-index-fullscreen: 1200;
-@z-index-resize-handle: 1298;
-@z-index-throbber: 1299;
-@z-index-sink: 1300;
-
-// sink z-index stack
-// Note: these are rendered inside the sink so aren't affected by the other global z-index variables
-@z-index-loading: 1000;
-@z-index-dialogs: 1100;
-@z-index-menu: 1150;
-
-// Responsive breakpoints
-@breakpoint-sm-value: 767px;
-@breakpoint-md: ~"only screen and (min-width:1000px)";
-@breakpoint-sm: ~"only screen and (max-width:" @breakpoint-sm-value ~")";
-@breakpoint-gt-sm: ~"only screen and (min-width:" @breakpoint-sm-value + 1px ~")";
+// New weights
+@font-weight-regular: 400;
