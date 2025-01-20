@@ -90,6 +90,28 @@ export default (): void => {
   }`;
   tinymce.init(settings('textarea.skin', pinkSkin ));
 
+  // Function to switch the theme
+  const switchTheme = (theme: string) => {
+    const themeLink = document.getElementById('mce-u0') as HTMLLinkElement;
+    if (themeLink) {
+      themeLink.href = theme; // Change the href to the new theme
+    }
+    localStorage.setItem('tinymce-skin', theme); // Cache the selected skin
+  };
+
+  // Load the skin from localStorage on page load
+  const savedSkin = localStorage.getItem('tinymce-skin') || 'http://localhost:3000/js/tinymce/skins/ui/oxide/skin.css'; // Default to 'oxide'
+  switchTheme(savedSkin);
+
+  // Add event listener for the toggle skin button
+  document.getElementById('toggle-skin')?.addEventListener('click', () => {
+    const currentSkin = localStorage.getItem('tinymce-skin') || 'http://localhost:3000/js/tinymce/skins/ui/oxide/skin.css';
+    const newSkin = currentSkin.includes('oxide-dark')
+      ? 'http://localhost:3000/js/tinymce/skins/ui/oxide/skin.css'
+      : 'http://localhost:3000/js/tinymce/skins/ui/oxide-dark/skin.css'; // Toggle skin
+    switchTheme(newSkin);
+  });
+
   /*
     Notes:
       1. We will need to make sure that the skin css is loaded AFTER our css.
