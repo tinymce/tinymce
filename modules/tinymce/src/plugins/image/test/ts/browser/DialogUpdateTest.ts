@@ -71,8 +71,6 @@ describe('browser.tinymce.plugins.image.DialogUpdateTest', () => {
     editor.setContent('<p><img src="https://www.google.com/logos/google.jpg" style="border: 2px solid red; float: left" width="200" height="200"/></p>');
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     editor.execCommand('mceImage');
-    await TinyUiActions.pWaitForDialog(editor);
-
     const dialog = await TinyUiActions.pWaitForDialog(editor);
     Mouse.clickOn(dialog, generalTabSelectors.caption);
     assertInputValue(generalTabSelectors.caption, 'on');
