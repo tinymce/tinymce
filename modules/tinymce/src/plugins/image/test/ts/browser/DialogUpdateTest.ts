@@ -65,7 +65,7 @@ describe('browser.tinymce.plugins.image.DialogUpdateTest', () => {
     assertCleanHtml('Checking output', editor, '<p><img src="https://www.google.com/logos/google.jpg" alt="" width="200"></p>');
   });
 
-  it('TINY-11670: floating images should lose the float if putted in a caption', async () => {
+  it('TINY-11670: floating images should lose the float if put in a caption', async () => {
     const editor = hook.editor();
     editor.options.set('image_caption', true);
     editor.setContent('<p><img src="https://www.google.com/logos/google.jpg" style="border: 2px solid red; float: left" width="200" height="200"/></p>');
@@ -80,7 +80,7 @@ describe('browser.tinymce.plugins.image.DialogUpdateTest', () => {
     editor.options.set('image_caption', false);
   });
 
-  it('TINY-11670: floating images should not lose the float if is not putted in a caption', async () => {
+  it('TINY-11670: floating images should not lose the float if is not put in a caption', async () => {
     const editor = hook.editor();
     editor.setContent('<p><img src="https://www.google.com/logos/google.jpg" style="border: 2px solid red; float: left" width="200" height="200"/></p>');
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
