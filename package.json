@@ -77,7 +77,7 @@
     "postcss": "^8.4.39",
     "postcss-preset-env": "^9.5.15",
     "resolve": "^1.18.1",
-    "rollup": "^3.22.0",
+    "rollup": "^4.28.1",
     "rollup-plugin-string": "^3.0.0",
     "source-map-loader": "^5.0.0",
     "string-replace-loader": "^3.0.3",
