@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: Image caption preserved the `float` style of the image causing a bad allignment
+  of the caption.
+time: 2025-01-20T14:49:52.937631196+01:00
+custom:
+  Issue: TINY-11670

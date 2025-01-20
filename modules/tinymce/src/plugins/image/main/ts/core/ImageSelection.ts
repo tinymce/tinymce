@@ -98,6 +98,7 @@ const writeImageDataToSelection = (editor: Editor, data: ImageData) => {
     syncSrcAttr(editor, image);
 
     if (isFigure(image.parentNode)) {
+      editor.dom.setStyle(image, 'float', '');
       const figure = image.parentNode;
       splitTextBlock(editor, figure);
       editor.selection.select(image.parentNode);
