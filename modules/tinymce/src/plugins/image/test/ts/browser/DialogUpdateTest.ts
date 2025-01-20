@@ -64,4 +64,20 @@ describe('browser.tinymce.plugins.image.DialogUpdateTest', () => {
     TinyUiActions.submitDialog(editor);
     assertCleanHtml('Checking output', editor, '<p><img src="https://www.google.com/logos/google.jpg" alt="" width="200"></p>');
   });
+
+  it('TINY-11670: floating images should lose the float if putted in a caption', async () => {
+    const editor = hook.editor();
+    editor.options.set('image_caption', true);
+    editor.setContent('<p><img src="https://www.google.com/logos/google.jpg" style="border: 2px solid red; float: left" width="200" height="200"/></p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
+    editor.execCommand('mceImage');
+    await TinyUiActions.pWaitForDialog(editor);
+
+    const dialog = await TinyUiActions.pWaitForDialog(editor);
+    Mouse.clickOn(dialog, generalTabSelectors.caption);
+    assertInputValue(generalTabSelectors.caption, 'on');
+
+    TinyUiActions.submitDialog(editor);
+    assertCleanHtml('Checking output', editor, '<figure class="image"><img style="border: 2px solid red;" src="https://www.google.com/logos/google.jpg" width="200" height="200"><figcaption>Caption</figcaption></figure>');
+  });
 });
