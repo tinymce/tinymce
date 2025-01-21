@@ -1,7 +1,7 @@
 import { UiFinder, Waiter } from '@ephox/agar';
-import { after, before, context, it } from '@ephox/bedrock-client';
+import { after, before, beforeEach, context, it } from '@ephox/bedrock-client';
 import { Strings } from '@ephox/katamari';
-import { Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+import { Insert, Remove, Scroll, SugarBody, SugarElement } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -35,9 +35,7 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
 
     PageScroll.bddSetup(hook.editor, 5000);
 
-    before(async () => {
-      // Need to wait for a fraction for some reason on safari,
-      // otherwise the initial scrolling doesn't work
+    beforeEach(async () => {
       await Waiter.pWait(17);
     });
 
@@ -148,8 +146,8 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
       editor.execCommand('mceFullscreen');
       await Waiter.pTryUntil('Wait for fullscreen to be deactivated', () => UiFinder.notExists(SugarBody.body(), '.tox-fullscreen'));
       // TODO: Figure out why Chrome 78 needs this wait on MacOS. I suspect it might be because fullscreen sets overflow hidden
-      // and we're setting the scroll position before the window has updated
-      await Waiter.pWait(17);
+      //       and we're setting the scroll position before the window has updated
+      await Waiter.pWait(100);
       await StickyUtils.pScrollAndAssertStructure(isToolbarTop, 200, StickyUtils.expectedHalfView);
     });
 
