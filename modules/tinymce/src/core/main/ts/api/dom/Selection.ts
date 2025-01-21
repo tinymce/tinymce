@@ -1,4 +1,4 @@
-import { Arr, Thunk, Type } from '@ephox/katamari';
+import { Arr, Optional, Thunk, Type } from '@ephox/katamari';
 import { Compare, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import { Bookmark } from '../../bookmark/BookmarkTypes';
@@ -299,10 +299,23 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
   };
 
   // Note: This is a hot code path, so we don't want to look up the shadow root everytime
-  const getShadowRootOrWindow = Thunk.cached(() => {
+  const getShadowRoot = Thunk.cached(() => {
     const root = SugarElement.fromDom(editor.getBody());
-    return SugarShadowDom.getShadowRoot(root).getOrThunk(() => SugarElement.fromDom(win));
+    return SugarShadowDom.getShadowRoot(root);
   });
+  // Only supported on Chrome at this stage
+  const getShadowRootSel = (): Optional<Selection> =>
+    // TODO: Consider checking getComposedRanges for Safari
+    getShadowRoot().bind((root) => {
+      if ((root.dom as any).getSelection) {
+        return Optional.from((root.dom as any).getSelection());
+      } else {
+        return Optional.none();
+      }
+    });
+
+  const getSelFallback = (): Selection | null =>
+    win.getSelection ? win.getSelection() : (win.document as any).selection;
 
   /**
    * Returns the browsers internal selection object.
@@ -310,18 +323,13 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * @method getSel
    * @return {Selection} Internal browser selection object.
    */
-  // const getSel = (): Selection | null => {
-  //   const root = SugarElement.fromDom(editor.getBody());
-  //   return SugarShadowDom.getNativeSelection(root);
-  // };
 
   const getSel = (): Selection | null => {
     // Safari and Firefox don't implement the DocumentOrShadowRoot.getSelection() API so
     // fallback to the window selection in that case. This will currently return the
     // correct shadow root selection on Firefox, but there's no way to get it on Safari.
     // See https://bugs.webkit.org/show_bug.cgi?id=163921
-    const getSelection = (getShadowRootOrWindow().dom as any).getSelection;
-    return getSelection ? getSelection() : win.getSelection();
+    return getShadowRootSel().getOrThunk(getSelFallback);
   };
 
   /**
