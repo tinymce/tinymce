@@ -60,7 +60,7 @@ const bedrockHeadless = (tests, browser, auto, opts) => {
   }
 };
 
-const bedrockBrowser = (tests, browserName, osName, bucket, buckets, chunk, remote, auto, opts) => {
+const bedrockBrowser = (tests, browserName, osName, bucket, buckets, chunk, auto, opts) => {
   const name = opts.name ? opts.name : `${browserName}-${osName}`;
   if (tests.length === 0) {
     return {};
@@ -74,7 +74,6 @@ const bedrockBrowser = (tests, browserName, osName, bucket, buckets, chunk, remo
         bucket: bucket,
         buckets: buckets,
         chunk: chunk,
-        remote: remote,
         ...opts
       }
     };
@@ -119,7 +118,7 @@ module.exports = function (grunt) {
 
   const bucket = parseInt(grunt.option('bucket'), 10) || 1;
   const buckets = parseInt(grunt.option('buckets'), 10) || 1;
-  const chunk = parseInt(grunt.option('chunk'), 10) || 1000;
+  const chunk = parseInt(grunt.option('chunk'), 10) || 2000;
 
   const headlessTests = filterChanges(changes, runsHeadless);
   const browserTests = filterChangesNot(changes, runsHeadless);
@@ -138,7 +137,9 @@ module.exports = function (grunt) {
     }, {});
   };
 
-  const opts = bedrockOpts(grunt, ['name', 'username', 'accesskey', 'sishDomain', 'devicefarmArn', 'devicefarmRegion', 'platformName', 'browserVersion', 'useSelenium']);
+  const remoteTestingOpts = ['name', 'username', 'accesskey', 'sishDomain', 'devicefarmArn', 'devicefarmRegion', 'platformName', 'browserVersion', 'useSelenium'];
+  const generalBedrockOpts = ['retries', 'remote', 'stopOnFailure', 'delayExit'];
+  const opts = bedrockOpts(grunt, [...remoteTestingOpts, ...generalBedrockOpts]);
   const gruntConfig = {
     shell: {
       tsc: { command: 'yarn -s tsc' },
@@ -148,11 +149,11 @@ module.exports = function (grunt) {
     },
     'bedrock-auto': {
       ...bedrockHeadless(headlessTests, headlessBrowser, true, opts),
-      ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, chunk, remote, true, opts)
+      ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, chunk, true, opts)
     },
     'bedrock-manual': {
       ...bedrockHeadless(headlessTests, headlessBrowser, false, opts),
-      ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, chunk, remote, false, opts)
+      ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, chunk, false, opts)
     }
   };
 
