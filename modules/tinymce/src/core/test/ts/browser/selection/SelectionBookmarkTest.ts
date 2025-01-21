@@ -1,6 +1,6 @@
 import { Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { Fun, Optional } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { Hierarchy, Remove, SimRange, SimSelection, SugarElement, Traverse, WindowSelection } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -23,7 +23,8 @@ describe('browser.tinymce.core.selection.SelectionBookmarkTest', () => {
 
   const getBookmark = (rootPath: number[]) => {
     const root = Hierarchy.follow(SugarElement.fromDom(viewBlock.get()), rootPath).getOrDie();
-    return SelectionBookmark.getBookmark(root);
+    const selection = Traverse.defaultView(root).dom.getSelection();
+    return SelectionBookmark.getBookmark(selection, root);
   };
 
   const validateBookmark = (bookmark: Optional<SimRange>, rootPath: number[]) => {
@@ -182,8 +183,7 @@ describe('browser.tinymce.core.selection.SelectionBookmarkTest', () => {
   });
 
   it('readRange with with win without getSelection should return Optional.none', () => {
-    const mockWin = { getSelection: Fun.constant(null) } as Window;
-    const rngOpt = SelectionBookmark.readRange(mockWin);
+    const rngOpt = SelectionBookmark.readRange(null);
     assertNone(rngOpt);
   });
 });

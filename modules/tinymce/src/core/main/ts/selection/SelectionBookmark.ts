@@ -37,16 +37,13 @@ const shouldStore = (editor: Editor) => editor.inline || Env.browser.isFirefox()
 const nativeRangeToSelectionRange = (r: Range): SimRange =>
   SimSelection.range(SugarElement.fromDom(r.startContainer), r.startOffset, SugarElement.fromDom(r.endContainer), r.endOffset);
 
-const readRange = (win: Window): Optional<SimRange> => {
-  const selection = win.getSelection();
+const readRange = (selection: Selection | null): Optional<SimRange> => {
   const rng = !selection || selection.rangeCount === 0 ? Optional.none() : Optional.from(selection.getRangeAt(0));
   return rng.map(nativeRangeToSelectionRange);
 };
 
-const getBookmark = (root: SugarElement<Node>): Optional<SimRange> => {
-  const win = Traverse.defaultView(root);
-
-  return readRange(win.dom)
+const getBookmark = (selection: Selection | null, root: SugarElement<Node>): Optional<SimRange> => {
+  return readRange(selection)
     .filter(isRngInRoot(root));
 };
 
@@ -69,7 +66,8 @@ const bookmarkToNativeRng = (bookmark: SimRange): Optional<Range> => {
 };
 
 const store = (editor: Editor): void => {
-  const newBookmark = shouldStore(editor) ? getBookmark(SugarElement.fromDom(editor.getBody())) : Optional.none<SimRange>();
+  const root = SugarElement.fromDom(editor.getBody());
+  const newBookmark = shouldStore(editor) ? getBookmark(editor.selection.getSel(), root) : Optional.none<SimRange>();
 
   editor.bookmark = newBookmark.isSome() ? newBookmark : editor.bookmark;
 };

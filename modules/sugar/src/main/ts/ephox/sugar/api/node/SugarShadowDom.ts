@@ -88,3 +88,12 @@ export const isClosedShadowRoot = (sr: SugarElement<ShadowRoot>): boolean =>
  */
 export const isOpenShadowHost = (element: SugarElement<Element>): boolean =>
   Type.isNonNullable(element.dom.shadowRoot);
+
+/**
+ * Return the native selection for the owner document or shadow root.
+ */
+export const getNativeSelection = (node: SugarElement<Node>): Selection | null =>
+  getShadowRoot(node).fold(
+    () => Traverse.defaultView(node).dom.getSelection(),
+    (shadowRoot) => (shadowRoot.dom as any).getSelection()
+  );
