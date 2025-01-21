@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Opening a notification when the toolbar is at the bottom threw an error.
-time: 2025-01-06T10:12:46.807235+08:00
-custom:
-  Issue: TINY-11498
