@@ -9,6 +9,8 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Conversions from 'tinymce/core/file/Conversions';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
+import { pWaitForDialogMeasurements } from '../module/Helpers';
+
 describe('browser.tinymce.plugins.image.UploadTabTest', () => {
   const src = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
   const b64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=';
@@ -189,6 +191,7 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
     await TinyUiActions.pWaitForUi(editor, '.tox-tab:contains("General")');
     await pAssertSrcTextValue('logo.svg');
     closeDialog(editor);
+    await pWaitForDialogMeasurements('logo.svg');
   });
 
   it('TINY-6622: Image uploader retains the file name/extension', async () => {
@@ -202,6 +205,7 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
     await TinyUiActions.pWaitForUi(editor, '.tox-tab:contains("General")');
     await pAssertSrcTextValue('logo.jfif');
     closeDialog(editor);
+    await pWaitForDialogMeasurements('logo.jfif');
   });
 
   it('TINY-11159: After closing the upload error alert the focus should go back to the dialog', async () => {
