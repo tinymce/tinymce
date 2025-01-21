@@ -1,7 +1,7 @@
 import { UiFinder, Waiter } from '@ephox/agar';
 import { after, before, beforeEach, context, it } from '@ephox/bedrock-client';
 import { Strings } from '@ephox/katamari';
-import { Insert, Remove, Scroll, SugarBody, SugarElement } from '@ephox/sugar';
+import { Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
