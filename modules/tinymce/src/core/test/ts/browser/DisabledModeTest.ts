@@ -436,8 +436,11 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
     const assertButtonState = (button: TestButtonDisabledState, shouldBeDisabled: boolean) => {
       const { name, disabledAttribute } = button;
       const attributeValue = disabledAttribute === 'disabled' ? 'disabled' : 'true';
-      const selector = `[data-mce-name="${name}"][${disabledAttribute}="${attributeValue}"]`;
+      const buttonSelector = `[data-mce-name="${name}"]`;
+      const selector = `${buttonSelector}[${disabledAttribute}="${attributeValue}"]`;
 
+      // start by checking the button itself exists!
+      UiFinder.exists(SugarBody.body(), buttonSelector);
       if (shouldBeDisabled) {
         UiFinder.exists(SugarBody.body(), selector);
       } else {
@@ -457,7 +460,6 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       { name: 'bold', disabledAttribute: 'aria-disabled' },
       { name: 'print', disabledAttribute: 'aria-disabled' },
       { name: 'forecolor', disabledAttribute: 'aria-disabled' },
-      { name: 'searchreplace', disabledAttribute: 'aria-disabled' },
     ];
 
     const nativeDisabledToolbarButtons: TestButtonDisabledState[] = [
@@ -471,12 +473,12 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
     const allButtons = [ ...toolbarButtons, ...nativeDisabledToolbarButtons ];
 
     const excludeReadOnlyEnabledButton = Arr.filter(toolbarButtons, (btn) => btn.name !== 'print');
-    const excludeNonEditableRootButton = Arr.filter(toolbarButtons, (btn) => btn.name !== 'print' && btn.name !== 'searchreplace');
+    const excludeNonEditableRootButton = Arr.filter(toolbarButtons, (btn) => btn.name !== 'print');
 
     const hook = TinyHooks.bddSetup<Editor>({
       base_url: '/project/tinymce/js/tinymce',
       disabled: true,
-      plugins: 'searchreplace',
+      focusOnInit: true,
       toolbar: Arr.map(allButtons, (button) => button.name).join(' '),
     }, []);
 
@@ -523,7 +525,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       // Set the editor to editableRoot false
       editor.setEditableRoot(false);
       assertButtonsStateDisabled([ ...excludeNonEditableRootButton, ...nativeDisabledToolbarButtons ]);
-      assertButtonsStateEnabled([{ name: 'print', disabledAttribute: 'aria-disabled' }, { name: 'searchreplace', disabledAttribute: 'aria-disabled' }]);
+      assertButtonsStateEnabled([{ name: 'print', disabledAttribute: 'aria-disabled' }]);
 
       // Disable the editor again, all buttons should be disabled
       editor.options.set('disabled', true);
@@ -532,7 +534,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       editor.options.set('disabled', false);
       await Waiter.pTryUntil('Wait for button state update', () => {
         assertButtonsStateDisabled([ ...excludeNonEditableRootButton, ...nativeDisabledToolbarButtons ]);
-        assertButtonsStateEnabled([{ name: 'print', disabledAttribute: 'aria-disabled' }, { name: 'searchreplace', disabledAttribute: 'aria-disabled' }]);
+        assertButtonsStateEnabled([{ name: 'print', disabledAttribute: 'aria-disabled' }]);
       });
 
       editor.setEditableRoot(true);

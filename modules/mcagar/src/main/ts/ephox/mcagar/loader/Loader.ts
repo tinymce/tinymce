@@ -1,6 +1,6 @@
 import { TestLogs } from '@ephox/agar';
 import { Arr, Fun, FutureResult, Global, Id, Optional, Result } from '@ephox/katamari';
-import { Attribute, DomEvent, Insert, Remove, SelectorFilter, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { Attribute, DomEvent, Insert, Remove, SelectorFilter, SugarBody, SugarElement, SugarHead, SugarShadowDom } from '@ephox/sugar';
 
 import { Editor } from '../alien/EditorTypes';
 import { detectTinymceBaseUrl } from './Urls';
@@ -46,7 +46,7 @@ const loadScript = (url: string): FutureResult<string, Error> => FutureResult.nu
     onError.unbind();
     resolve(Result.error(new Error('Failed to load script: ' + url)));
   });
-  Insert.append(SugarBody.body(), script);
+  Insert.append(SugarHead.head(), script);
 });
 
 const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: Optional<SugarElement<Element>>): void => {
@@ -104,7 +104,7 @@ const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: 
             } catch (e: any) {
               onFailure(e);
             }
-          }, 0);
+          }, 100);
         });
 
         editor.once('SkinLoadError', (e) => {

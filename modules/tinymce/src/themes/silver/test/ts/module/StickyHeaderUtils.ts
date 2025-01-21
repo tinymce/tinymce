@@ -195,7 +195,7 @@ const assertEditorClasses = (docked: boolean): void => {
 const pAssertHeaderPosition = async (toolbarLocation: ToolbarLocation, value: number): Promise<void> => {
   const isToolbarTop = toolbarLocation === ToolbarLocation.top;
   scrollRelativeEditor(-100, isToolbarTop);
-  await Waiter.pWait(100);
+  await Waiter.pWait(17);
   scrollRelativeEditor(200, isToolbarTop);
   const header = UiFinder.findIn(SugarBody.body(), '.tox-editor-header').getOrDie();
 

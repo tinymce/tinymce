@@ -20,6 +20,7 @@ const getToolbarSelector = (type: ToolbarMode, opening: boolean) => {
 };
 
 const pOpenMenuWithSelector = async (label: string, selector: string): Promise<void> => {
+  await UiFinder.pWaitForVisible(`Waiting for button: ${selector}`, SugarBody.body(), selector);
   Mouse.clickOn(SugarBody.body(), selector);
   await UiFinder.pWaitForVisible(`Waiting for menu: ${label}`, SugarBody.body(), '[role="menu"]');
 };

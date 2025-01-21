@@ -6,10 +6,10 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
-import { assertCleanHtml, fakeEvent, fillActiveDialog, generalTabSelectors } from '../../module/Helpers';
+import { assertCleanHtml, fakeEvent, fillActiveDialog, generalTabSelectors, pWaitForDialogMeasurements } from '../../module/Helpers';
 
 describe('browser.tinymce.plugins.image.plugin.PrependAbsoluteTest', () => {
-  const prependUrl = 'http://abc.local/images/';
+  const prependUrl = 'http://localhost/images/';
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'image',
     indent: false,
@@ -32,5 +32,6 @@ describe('browser.tinymce.plugins.image.plugin.PrependAbsoluteTest', () => {
     fakeEvent(srcElem, 'change');
     TinyUiActions.submitDialog(editor);
     assertCleanHtml('Checking output', editor, '<p><img src="' + prependUrl + 'src" alt="alt"></p>');
+    await pWaitForDialogMeasurements(prependUrl + 'src');
   });
 });

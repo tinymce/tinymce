@@ -321,7 +321,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
       it(`TINY-10078 & TINY-10097: Check for throttled iframe load on Safari and iframe scroll position is at bottom after streaming when ${doctypeLabel}`, async () => {
         const frame = getFrameFromFrameNumber(streamFrameNumber);
         const iframe = frame.element.dom as HTMLIFrameElement;
-        const interval = 100;
+        const interval = 34; // slightly longer than 2 frames at 60fps
         const maxNumIntervals = 10;
 
         await pStreamContentInIframe(frame, interval, maxNumIntervals, shouldContentHaveDoctype);

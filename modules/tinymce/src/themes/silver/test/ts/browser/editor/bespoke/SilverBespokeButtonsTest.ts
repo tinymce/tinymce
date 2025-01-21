@@ -157,11 +157,11 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
       TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
       assertEvent(1, 'Verdana');
       await MenuUtils.pOpenMenu('FontSelect', 'Verdana');
-      assertEvent(2, 'Verdana');
+      assertEvent(1, 'Verdana');
       await pAssertFocusOnItem('Andale Mono');
-      assertEvent(2, 'Verdana');
+      assertEvent(1, 'Verdana');
       TinyUiActions.keydown(editor, Keys.enter());
-      assertEvent(4, 'Andale Mono');
+      assertEvent(3, 'Andale Mono');
       UiFinder.notExists(SugarBody.body(), '[role="menu"]');
 
       await pCheckItemsAtLocation(

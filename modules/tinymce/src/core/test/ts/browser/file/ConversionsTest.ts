@@ -12,13 +12,14 @@ describe('browser.tinymce.core.file.ConversionsTest', () => {
     assert.equal(dataUri, 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==');
   });
 
-  it('uriToBlob with invalid src', () => {
-    return Conversions.uriToBlob(invalidBlobUriSrc).then(() => {
+  it('uriToBlob with invalid src', async () => {
+    try {
+      await Conversions.uriToBlob(invalidBlobUriSrc);
       assert.fail('Conversion should fail.');
-    }, (error) => {
+    } catch (error: any) {
       assert.typeOf(error, 'object');
       assert.include(error.message, invalidBlobUriSrc);
-    });
+    }
   });
 
   it('TINY-9548: should handle line feed carriage return characters in base64 data', async () => {

@@ -18,14 +18,14 @@ describe('webdriver.tinymce.themes.silver.throbber.ThrobberTabbingTest', () => {
   before(() => {
     const editor = hook.editor();
     const target = TinyDom.targetElement(editor);
-    const inputBefore = SugarElement.fromHtml('<div><input id="beforeInput" /></div>');
-    const inputAfter = SugarElement.fromHtml('<div><input id="afterInput" /></div>');
+    const inputBefore = SugarElement.fromHtml('<div id="beforeContainer"><input id="beforeInput" /></div>');
+    const inputAfter = SugarElement.fromHtml('<div id="afterContainer"><input id="afterInput" /></div>');
     Insert.before(target, inputBefore);
     Insert.append(SugarBody.body(), inputAfter);
   });
 
   after(() => {
-    Arr.each([ '#beforeInput', '#afterInput' ], (selector) => {
+    Arr.each([ '#beforeContainer', '#afterContainer' ], (selector) => {
       Remove.remove(SelectorFind.descendant(SugarBody.body(), selector).getOrDie());
     });
   });

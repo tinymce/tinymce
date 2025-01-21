@@ -1,4 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
@@ -47,5 +48,5 @@ UnitTest.test('FloatTest', () => {
   Float.setCentered(image);
   Assert.eq('', true, Float.isCentered(image));
 
-  Remove.remove(image);
+  Arr.each([ image, m ], Remove.remove);
 });

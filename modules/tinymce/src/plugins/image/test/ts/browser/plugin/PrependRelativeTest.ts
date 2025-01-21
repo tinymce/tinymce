@@ -6,7 +6,7 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
-import { assertCleanHtml, fakeEvent, fillActiveDialog, generalTabSelectors } from '../../module/Helpers';
+import { assertCleanHtml, fakeEvent, fillActiveDialog, generalTabSelectors, pWaitForDialogMeasurements } from '../../module/Helpers';
 
 describe('browser.tinymce.plugins.image.plugin.PrependRelativeTest', () => {
   const prependUrl = 'testing/images/';
@@ -32,5 +32,6 @@ describe('browser.tinymce.plugins.image.plugin.PrependRelativeTest', () => {
     fakeEvent(srcElem, 'change');
     TinyUiActions.submitDialog(editor);
     assertCleanHtml('Checking output', editor, '<p><img src="' + prependUrl + 'src" alt="alt"></p>');
+    await pWaitForDialogMeasurements(prependUrl + 'src');
   });
 });

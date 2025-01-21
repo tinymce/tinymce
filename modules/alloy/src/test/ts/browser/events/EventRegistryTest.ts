@@ -1,7 +1,7 @@
 import { Assertions, Chain, GeneralSteps, Logger, NamedChain, Pipeline, Step, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Fun, Result } from '@ephox/katamari';
-import { Attribute, Compare, Html, Insert, SelectorFilter, SugarElement, Truncate } from '@ephox/sugar';
+import { Attribute, Compare, Html, Insert, Remove, SelectorFilter, SugarElement, Truncate } from '@ephox/sugar';
 
 import * as DescribedHandler from 'ephox/alloy/events/DescribedHandler';
 import { ElementAndHandler, EventRegistry } from 'ephox/alloy/events/EventRegistry';
@@ -39,6 +39,9 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
   const isRoot = Fun.curry(Compare.eq, page);
 
   Insert.append(body, page);
+  const teardown = () => {
+    Remove.remove(page);
+  };
 
   const events = EventRegistry();
 
@@ -160,5 +163,8 @@ UnitTest.asynctest('EventRegistryTest', (success, failure) => {
       { handler: 'event.only(extra-args)', target: 'comp-1' },
       'event.only', 'comp-5'
     )
-  ], success, failure);
+  ], () => {
+    teardown();
+    success();
+  }, failure);
 });

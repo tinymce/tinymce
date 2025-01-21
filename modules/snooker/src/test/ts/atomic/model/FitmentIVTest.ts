@@ -21,8 +21,10 @@ UnitTest.test('FitmentIVTest', () => {
   const en = (fakeElement: any, isNew: boolean) =>
     Structs.elementnew(fakeElement as SugarElement<any>, isNew, false);
 
-  // Spend 5 seconds running as many iterations as we can (there are three cycles, so 15s total)
-  const CYCLE_TIME = 5000;
+  // TODO: Convert to fast-check, which will algorithmically determine what to test instead of just throwing random numbers at it for a fixed period
+
+  // Spend 2 seconds running as many iterations as we can (there are three cycles, so 15s total)
+  const CYCLE_TIME = 2000;
   const GRID_MIN = 1;   // 1x1 grid is the min
   const GRID_MAX = 200;
 

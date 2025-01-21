@@ -128,6 +128,9 @@ const pSetListBoxItem = async (selector: string, itemText: string): Promise<void
   Mouse.click(itemParent);
 };
 
+const pWaitForDialogMeasurements = async (src: string): Promise<void> =>
+  await UiFinder.pWaitForNotExists('Dialog did not clean up', SugarBody.body(), `img[src*="${src}"]`);
+
 export {
   fillActiveDialog,
   fakeEvent,
@@ -136,5 +139,6 @@ export {
   assertCleanHtml,
   assertInputValue,
   assertInputCheckbox,
-  pSetListBoxItem
+  pSetListBoxItem,
+  pWaitForDialogMeasurements
 };

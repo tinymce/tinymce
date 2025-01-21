@@ -91,20 +91,20 @@ ${listContent}
 
   Arr.each(contentCombinations, (list) =>
     context(list.title, () => {
-      it(`TINY-8920: Pressing backspace key to append to previous list item is disabled when in ${list.title}`, () =>
-        pressKeyInListAndAssertNoChange(list, [ RealKeys.backspace() ])
+      it(`TINY-8920: Pressing backspace key to append to previous list item is disabled when in ${list.title}`, async () =>
+        await pressKeyInListAndAssertNoChange(list, [ RealKeys.backspace() ])
       );
 
-      it(`TINY-8920: Pressing enter key to split into new list item is disabled when in ${list.title}`, () =>
-        pressKeyInListAndAssertNoChange(list, [ RealKeys.combo({}, 'enter') ])
+      it(`TINY-8920: Pressing enter key to split into new list item is disabled when in ${list.title}`, async () =>
+        await pressKeyInListAndAssertNoChange(list, [ RealKeys.combo({}, 'enter') ])
       );
 
-      it(`TINY-8920: Pressing tab key to indent list item is disabled when in ${list.title}`, () =>
-        pressKeyInListAndAssertNoChange(list, [ RealKeys.combo({}, 'tab') ])
+      it(`TINY-8920: Pressing tab key to indent list item is disabled when in ${list.title}`, async () =>
+        await pressKeyInListAndAssertNoChange(list, [ RealKeys.combo({}, 'tab') ])
       );
 
-      it(`TINY-8920: Pressing shift and tab keys to outdent list item is disabled when in ${list.title}`, () =>
-        pressKeyInListAndAssertNoChange(list, [ RealKeys.combo({ shift: true }, 'tab') ])
+      it(`TINY-8920: Pressing shift and tab keys to outdent list item is disabled when in ${list.title}`, async () =>
+        await pressKeyInListAndAssertNoChange(list, [ RealKeys.combo({ shift: true }, 'tab') ])
       );
     })
   );

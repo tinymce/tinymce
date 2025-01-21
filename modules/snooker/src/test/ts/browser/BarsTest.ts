@@ -97,6 +97,8 @@ UnitTest.test('Bars.refresh and Bars.destroy with colgroup table', () => {
   Bars.destroy(resizeCallbackWire);
   assertdBarCounts(container, 0, 0);
   setResizeAttr(container, 'td', 'true');
+
+  Remove.remove(container);
 });
 
 // TODO: TINY-6641 - Test other functions from Bars.ts
