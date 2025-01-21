@@ -188,6 +188,10 @@ describe('browser.tinymce.themes.silver.editor.SilverPopupSinkBoundsTest', () =>
           teardown: () => {
             Remove.remove(scroller);
             Remove.remove(root);
+            if (shadow !== 'outside') {
+              const shadowHost = SugarElement.fromDom((root.dom as ShadowRoot).host);
+              Remove.remove(shadowHost);
+            }
           }
         };
       };
@@ -228,9 +232,7 @@ describe('browser.tinymce.themes.silver.editor.SilverPopupSinkBoundsTest', () =>
         });
 
         const shadowHost = UiFinder.findIn(SugarBody.body(), '.test-shadow-root').getOrDie();
-        const menuRects = Arr.from(shadowHost.dom.shadowRoot?.querySelectorAll('[role=menu]') || []).map((x) => x.getBoundingClientRect());
-
-        return menuRects;
+        return Arr.from(shadowHost.dom.shadowRoot?.querySelectorAll('[role=menu]') || []).map((x) => x.getBoundingClientRect());
       };
 
       const contextMenuScenarios: Scenario[] = [

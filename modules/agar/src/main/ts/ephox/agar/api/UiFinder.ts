@@ -63,6 +63,13 @@ const cWaitForState = <T extends Element>(message: string, selector: string, pre
     Guard.tryUntil(message, 10, 2000)
   );
 
+// Wait for a selector to have state. Max wait time: 2 seconds.
+const cWaitForNotExists = <T extends Element>(message: string, selector: string): Chain<SugarElement<T>, SugarElement<T>> =>
+  Chain.control(
+    cNotExists(selector),
+    Guard.tryUntil(message, 10, 2000)
+  );
+
 const sExists = <T>(container: SugarElement<Node>, selector: string): Step<T, T> =>
   Step.sync<T>(() => exists(container, selector));
 
@@ -88,6 +95,10 @@ const cFindAllIn = <T extends Element>(selector: string): Chain<SugarElement<Nod
 const pWaitFor = <T extends Element>(message: string, container: SugarElement<Node>, selector: string): Promise<SugarElement<T>> =>
   Chain.toPromise(cWaitFor<T>(message, selector))(container);
 
+const pWaitForNotExists = async <T extends Element>(message: string, container: SugarElement<T>, selector: string): Promise<void> => {
+  await Chain.toPromise(cWaitForNotExists<T>(message, selector))(container);
+};
+
 const pWaitForVisible = <T extends HTMLElement>(message: string, container: SugarElement<Node>, selector: string): Promise<SugarElement<T>> =>
   Chain.toPromise(cWaitForVisible<T>(message, selector))(container);
 
@@ -112,6 +123,7 @@ export {
 
   cExists,
   cNotExists,
+  cWaitForNotExists,
 
   cWaitFor,
   cWaitForVisible,
@@ -124,5 +136,6 @@ export {
   pWaitFor,
   pWaitForVisible,
   pWaitForHidden,
-  pWaitForState
+  pWaitForState,
+  pWaitForNotExists
 };
