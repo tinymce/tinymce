@@ -103,7 +103,7 @@ export const BarManager = (wire: ResizeWire): BarManager => {
     Attribute.set(target, 'data-initial-' + dir, CellUtils.getCssValue(target, dir));
     Class.add(target, resizeBarDragging);
     Css.set(target, 'opacity', '0.2');
-    resizing.go(wire.parent());
+    resizing.go(wire.dragContainer());
   };
 
   /* mousedown on resize bar: start dragging when the bar is clicked, storing the initial position. */
@@ -173,3 +173,4 @@ export const BarManager = (wire: ResizeWire): BarManager => {
     events: events.registry
   };
 };
+

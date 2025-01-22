@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: Iframe aria text used to suggest to open help dialog even when the help plugin was not
+  enabled.
+time: 2025-01-07T16:15:55.983669+01:00
+custom:
+  Issue: TINY-11672

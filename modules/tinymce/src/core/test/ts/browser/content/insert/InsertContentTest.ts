@@ -678,11 +678,12 @@ describe('browser.tinymce.core.content.insert.InsertContentTest', () => {
 
   it('TINY-11714: Should be able to replace CEF inline', () => {
     const editor = hook.editor();
-    editor.setContent('<div><span contenteditable="false">CEF</span></div>');
-    TinySelections.setSelection(editor, [ 0 ], 1, [ 0 ], 2); // Shifted since fake caret paragraph is before CEF
+    editor.schema.addCustomElements('~custom-inline');
+    editor.setContent('<p><custom-inline contenteditable="false"></custom-inline></p>');
+    TinySelections.select(editor, 'p custom-inline', []);
     editor.insertContent('X');
     TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
-    TinyAssertions.assertContent(editor, '<div>X</div>');
+    TinyAssertions.assertContent(editor, '<p>X</p>');
   });
 
   context('Transparent blocks', () => {

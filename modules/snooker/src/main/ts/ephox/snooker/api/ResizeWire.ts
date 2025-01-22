@@ -7,6 +7,7 @@ import { SugarElement, SugarLocation, SugarNode, SugarPosition, Traverse } from 
 //       or the document that is a common ancestor of both the content tables and the
 //       resize bars ('parent') and so will listen to events from both (eg, iframe mode)
 // origin: the offset for the point to display the bars in the appropriate position
+// dragContainer: The container where dragster blocker is rendered so we don't run into z-index issues
 // isResizable: a callback that determines if the provided element can be resized using the resize bars
 
 type ResizeCallback = (elm: SugarElement<Element>) => boolean;
@@ -15,6 +16,7 @@ export interface ResizeWire {
   parent: () => SugarElement<Node>;
   view: () => SugarElement<Node>;
   origin: () => SugarPosition;
+  dragContainer: () => SugarElement<Node>;
   isResizable: ResizeCallback;
 }
 
@@ -24,6 +26,7 @@ const only = (element: SugarElement<Document | Element>, isResizable: ResizeCall
   return {
     parent: Fun.constant(parent),
     view: Fun.constant(element),
+    dragContainer: Fun.constant(parent),
     origin: Fun.constant(SugarPosition(0, 0)),
     isResizable
   };
@@ -34,6 +37,7 @@ const detached = (editable: SugarElement<Element>, chrome: SugarElement<Element>
   return {
     parent: Fun.constant(chrome),
     view: Fun.constant(editable),
+    dragContainer: Fun.constant(chrome),
     origin,
     isResizable
   };
@@ -43,7 +47,18 @@ const body = (editable: SugarElement<Element>, chrome: SugarElement<Element>, is
   return {
     parent: Fun.constant(chrome),
     view: Fun.constant(editable),
+    dragContainer: Fun.constant(chrome),
     origin: Fun.constant(SugarPosition(0, 0)),
+    isResizable
+  };
+};
+
+const scrollable = (editable: SugarElement<Element>, chrome: SugarElement<Element>, dragContainer: SugarElement<Element>, isResizable: ResizeCallback): ResizeWire => {
+  return {
+    parent: Fun.constant(chrome),
+    view: Fun.constant(editable),
+    dragContainer: Fun.constant(dragContainer),
+    origin: () => SugarLocation.absolute(chrome),
     isResizable
   };
 };
@@ -51,5 +66,7 @@ const body = (editable: SugarElement<Element>, chrome: SugarElement<Element>, is
 export const ResizeWire = {
   only,
   detached,
-  body
+  body,
+  scrollable
 };
+

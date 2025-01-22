@@ -37,6 +37,7 @@ describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
   };
 
   const addToQueue = (url: string): void => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     ScriptLoader.ScriptLoader.add(url).then(() => loadedCount++);
   };
 
