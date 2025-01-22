@@ -49,7 +49,7 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
   });
 
   // Chromium requires clipboard permissions to be granted, so we can't run the test (and there is no bug)
-  (browser.isChromium() || browser.isSafari() ? it.skip : it)('TINY-8861: press enter after pasting a code sample should not add a newline inside the code', async () => {
+  (browser.isSafari() ? it.skip : it)('TINY-8861: press enter after pasting a code sample should not add a newline inside the code', async () => {
     const editor = hook.editor();
     editor.setContent('<p><br /></p><p><br /></p>');
     await TestUtils.pOpenDialogAndAssertInitial(hook.editor(), 'markup', '');

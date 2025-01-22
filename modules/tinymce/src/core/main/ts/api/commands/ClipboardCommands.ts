@@ -1,5 +1,3 @@
-import { PlatformDetection } from '@ephox/sand';
-
 import Editor from '../Editor';
 import Env from '../Env';
 
