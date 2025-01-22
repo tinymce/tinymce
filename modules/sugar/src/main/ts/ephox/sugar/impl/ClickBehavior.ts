@@ -1,5 +1,5 @@
-const preventDefaultClickLinkBehavior = (isMetaKeyPressed: (e: MouseEvent) => boolean): void => {
-  document.addEventListener('click', (e) => {
+const preventDefaultClickLinkBehavior = (isMetaKeyPressed: (e: MouseEvent) => boolean): () => void => {
+  const handler = (e: MouseEvent) => {
     for (let elm = e.target as Node | null; elm; elm = elm.parentNode) {
       if (elm.nodeName === 'A') {
         const href = (elm as HTMLAnchorElement).getAttribute('href');
@@ -15,7 +15,10 @@ const preventDefaultClickLinkBehavior = (isMetaKeyPressed: (e: MouseEvent) => bo
         }
       }
     }
-  }, false);
+  };
+
+  document.addEventListener('click', handler, false);
+  return () => document.removeEventListener('click', handler, false);
 };
 
 export {
