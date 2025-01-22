@@ -18,7 +18,7 @@ UnitTest.asynctest('TinyLoader should fail (instead of timeout) when exception i
     targetElement,
     failure,
     () => {
-      cleanupEditor.remove();
+      cleanupEditor?.remove();
       Remove.remove(targetElement);
       success();
     });
