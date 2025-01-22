@@ -8,12 +8,8 @@ interface ChoiceOption<T> {
 
 const isTouch: () => boolean = () => PlatformDetection.detect().deviceType.isTouch();
 const isAndroid: () => boolean = () => PlatformDetection.detect().deviceType.isAndroid();
-
-const isMetaKeyPressed = (e: MouseEvent): boolean =>
-  PlatformDetection.detect().os.isMacOS() ||
-  PlatformDetection.detect().os.isiOS()
-    ? e.metaKey
-    : e.ctrlKey && !e.altKey;
+const isMacOS: () => boolean = () => PlatformDetection.detect().os.isMacOS();
+const isiOS: () => boolean = () => PlatformDetection.detect().os.isiOS();
 
 // TODO: Work out what these values are supposed to be.
 const MINIMUM_LARGE_WIDTH = 620;
@@ -56,5 +52,6 @@ export {
   isSmallTouch,
   isLargeDesktop,
   isSmallAndroid,
-  isMetaKeyPressed
+  isMacOS,
+  isiOS
 };

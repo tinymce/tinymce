@@ -1,6 +1,4 @@
-import * as Platform from '../view/Platform';
-
-const preventDefaultClickLinkBehavior = (): void => {
+const preventDefaultClickLinkBehavior = (isMetaKeyPressed: (e: MouseEvent) => boolean): void => {
   document.addEventListener('click', (e) => {
     for (let elm = e.target as Node | null; elm; elm = elm.parentNode) {
       if (elm.nodeName === 'A') {
@@ -12,7 +10,7 @@ const preventDefaultClickLinkBehavior = (): void => {
           return;
         }
 
-        if (!Platform.isMetaKeyPressed(e)) {
+        if (!isMetaKeyPressed(e)) {
           e.preventDefault();
         }
       }

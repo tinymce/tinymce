@@ -1,5 +1,4 @@
 import * as SelectionDirection from '../selection/core/SelectionDirection'; // Used directly by dawin
-import * as ClickBehavior from './dom/ClickBehavior';
 import * as Compare from './dom/Compare';
 import * as DocumentPosition from './dom/DocumentPosition';
 import * as DomFuture from './dom/DomFuture';
@@ -80,7 +79,6 @@ import * as Width from './view/Width';
 import * as WindowVisualViewport from './view/WindowVisualViewport';
 
 export {
-  ClickBehavior,
   Compare,
   DocumentPosition,
   DomFuture,
