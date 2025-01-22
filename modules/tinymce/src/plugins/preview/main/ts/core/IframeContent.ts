@@ -1,5 +1,6 @@
+import { Link } from '@ephox/sugar';
+
 import Editor from 'tinymce/core/api/Editor';
-import Env from 'tinymce/core/api/Env';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Options from '../api/Options';
@@ -9,7 +10,7 @@ const getPreviewHtml = (editor: Editor): string => {
   const encode = editor.dom.encode;
   const contentStyle = Options.getContentStyle(editor) ?? '';
 
-  headHtml += '<base href="' + encode(editor.documentBaseURI.getURI()) + '">';
+  headHtml += `<base href="${encode(editor.documentBaseURI.getURI())}">`;
 
   const cors = Options.shouldUseContentCssCors(editor) ? ' crossorigin="anonymous"' : '';
   Tools.each(editor.contentCSS, (url) => {
@@ -24,28 +25,6 @@ const getPreviewHtml = (editor: Editor): string => {
 
   const bodyClass = Options.getBodyClass(editor);
 
-  const isMetaKeyPressed = Env.os.isMacOS() || Env.os.isiOS() ? 'e.metaKey' : 'e.ctrlKey && !e.altKey';
-
-  const preventClicksOnLinksScript = `
-    <script>
-      document.addEventListener && document.addEventListener("click", function(e) {
-        for (let elm = e.target; elm; elm = elm.parentNode) {
-          if (elm.nodeName === "A") {
-            const href = elm.getAttribute("href");
-            if (href && href.startsWith("#")) {
-              e.preventDefault();
-              document.getElementById(href.substring(1))?.scrollIntoView();
-              return;
-            }
-            if (!(${isMetaKeyPressed})) {
-              e.preventDefault();
-            }
-          }
-        }
-      }, false);
-    </script>
-  `;
-
   const directionality = editor.getBody().dir;
   const dirAttr = directionality ? ' dir="' + encode(directionality) + '"' : '';
 
@@ -57,7 +36,7 @@ const getPreviewHtml = (editor: Editor): string => {
     '</head>' +
     '<body id="' + encode(bodyId) + '" class="mce-content-body ' + encode(bodyClass) + '"' + dirAttr + '>' +
     editor.getContent() +
-    preventClicksOnLinksScript +
+    Link.getPreventClicksOnLinksScript() +
     '</body>' +
     '</html>'
   );

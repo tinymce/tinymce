@@ -1,6 +1,7 @@
 import { SugarElement } from '../node/SugarElement';
 import * as SugarHead from '../node/SugarHead';
 import * as Attribute from '../properties/Attribute';
+import * as ClickBehavior from './ClickBehavior';
 import * as Insert from './Insert';
 
 const addToHead = (doc: SugarElement<Document>, tag: SugarElement<Node>): void => {
@@ -23,6 +24,10 @@ const addStylesheet = (url: string, scope?: SugarElement<Document>): SugarElemen
   return link;
 };
 
+const generateScript = (fn: () => void): string => `<script>(${fn.toString()})()</script>`;
+const getPreventClicksOnLinksScript = (): string => generateScript(ClickBehavior.preventDefaultClickLinkBehavior);
+
 export {
-  addStylesheet
+  addStylesheet,
+  getPreventClicksOnLinksScript
 };
