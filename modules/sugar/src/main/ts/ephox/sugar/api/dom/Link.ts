@@ -1,4 +1,3 @@
-import * as ClickBehavior from '../../impl/ClickBehavior';
 import { SugarElement } from '../node/SugarElement';
 import * as SugarHead from '../node/SugarHead';
 import * as Attribute from '../properties/Attribute';
@@ -25,25 +24,38 @@ const addStylesheet = (url: string, scope?: SugarElement<Document>): SugarElemen
   return link;
 };
 
-const generatePreventClicksOnLinksScript = (
-  fn: (isMetaKeyPressed: (e: MouseEvent) => boolean) => void,
-  isMetaKeyPressed: (e: MouseEvent) => boolean
-): string => {
-  return `<script>(${fn.toString()})(${isMetaKeyPressed.toString()})</script>`;
-};
-
 const getPreventClicksOnLinksScript = (): string => {
-  const isMetaKeyPressed = (e: MouseEvent): boolean =>
-    Platform.isMacOS() || Platform.isiOS()
-      ? e.metaKey
-      : e.ctrlKey && !e.altKey;
+  const isMacOSOrIOS = Platform.isMacOS() || Platform.isiOS();
 
-  const script = generatePreventClicksOnLinksScript(
-    ClickBehavior.preventDefaultClickLinkBehavior,
-    isMetaKeyPressed
-  );
+  const fn = (isMacOSOrIOS: boolean) => {
+    document.addEventListener('click', (e) => {
+      for (let elm = e.target as Node | null; elm; elm = elm.parentNode) {
+        if (elm.nodeName === 'A') {
+          const anchor = elm as HTMLElement;
+          const href = anchor.getAttribute('href');
 
-  return script;
+          if (href && href.startsWith('#')) {
+            e.preventDefault();
+            const targetElement = document.getElementById(href.substring(1));
+
+            if (targetElement) {
+              targetElement.scrollIntoView();
+            }
+
+            return;
+          }
+
+          const isMetaKeyPressed = isMacOSOrIOS ? e.metaKey : e.ctrlKey && !e.altKey;
+
+          if (!isMetaKeyPressed) {
+            e.preventDefault();
+          }
+        }
+      }
+    }, false);
+  };
+
+  return `<script>(${fn.toString()})(${isMacOSOrIOS})</script>`;
 };
 
 export {
