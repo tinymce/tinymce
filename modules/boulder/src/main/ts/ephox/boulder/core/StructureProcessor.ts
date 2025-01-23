@@ -4,11 +4,10 @@ import { SimpleResult, SimpleResultType } from '../alien/SimpleResult';
 import { FieldPresence, FieldPresenceTag, required } from '../api/FieldPresence';
 import { ResultCombine } from '../combine/ResultCombine';
 import * as FieldProcessor from './FieldProcessor';
+import { type FieldProcessor as FieldProcessorType } from './FieldProcessor';
 import * as SchemaError from './SchemaError';
+import { type SchemaError as SchemaErrorType } from './SchemaError';
 import { value } from './Utils';
-
-type FieldProcessorType = FieldProcessor.FieldProcessor;
-type SchemaErrorType = SchemaError.SchemaError;
 
 export type ValueValidator = (a) => SimpleResult<string, any>;
 export type PropExtractor = (path: string[], val: any) => SimpleResult<SchemaErrorType[], any>;
