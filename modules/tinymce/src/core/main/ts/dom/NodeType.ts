@@ -102,6 +102,7 @@ const isBr = matchNodeName<HTMLBRElement>('br');
 const isImg = matchNodeName<HTMLImageElement>('img');
 const isContentEditableTrue = hasContentEditableState('true');
 const isContentEditableFalse = hasContentEditableState('false');
+const isEditableHost = (node: Node): node is HTMLElement => isHTMLElement(node) && node.isContentEditable && Type.isNonNullable(node.parentElement) && !node.parentElement.isContentEditable;
 
 const isTableCell = matchNodeNames<HTMLTableCellElement>([ 'td', 'th' ]);
 const isTableCellOrCaption = matchNodeNames<HTMLTableCellElement>([ 'td', 'th', 'caption' ]);
@@ -124,6 +125,7 @@ export {
   isImg,
   isContentEditableTrue,
   isContentEditableFalse,
+  isEditableHost,
   isMedia,
   isTableCell,
   isTableCellOrCaption,

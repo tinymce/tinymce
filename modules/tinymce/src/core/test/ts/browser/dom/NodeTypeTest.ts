@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { SugarElement } from '@ephox/sugar';
+import { Insert, Remove, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import * as NodeType from 'tinymce/core/dom/NodeType';
@@ -119,5 +119,17 @@ describe('browser.tinymce.core.dom.NodeTypeTest', () => {
     assert.isFalse(NodeType.isTable(SugarElement.fromHtml('<div></div>').dom));
     assert.isFalse(NodeType.isTable(document.createTextNode('test')));
     assert.isFalse(NodeType.isTable(null));
+  });
+
+  it('isEditableHost', () => {
+    const div = SugarElement.fromHtml('<div contenteditable="false"><span contenteditable="true"><b></b></span></div>');
+
+    Insert.append(SugarBody.body(), div);
+
+    assert.isTrue(NodeType.isEditableHost(SelectorFind.descendant(div, 'span').getOrDie().dom), 'Inner span be editable host');
+    assert.isFalse(NodeType.isEditableHost(SelectorFind.descendant(div, 'b').getOrDie().dom), 'Inner b be not a editable host');
+    assert.isFalse(NodeType.isEditableHost(div.dom), 'Non-editable div be not a editable host');
+
+    Remove.remove(div);
   });
 });
