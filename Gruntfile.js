@@ -127,8 +127,6 @@ module.exports = function (grunt) {
   const headlessBrowser = activeBrowser.endsWith("-headless") ? activeBrowser : 'chrome-headless';
   const activeOs = grunt.option('bedrock-os') || 'tests';
 
-  const remote = grunt.option('remote');
-
   const bedrockOpts = (grunt, availableOpts) => {
     return availableOpts.reduce((opts, opt) => {
       const current = grunt.option(opt);
