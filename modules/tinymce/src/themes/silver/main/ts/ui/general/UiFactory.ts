@@ -74,7 +74,7 @@ const factories: Record<string, FormPartRenderer<any>> = {
   tree: make<Dialog.Tree>((spec, backstage) => renderTree(spec, backstage)),
   panel: make<Dialog.Panel>((spec, backstage) => renderPanel(spec, backstage)),
 
-  dummy: make<Dialog.Dummy>(() => renderDummy()),
+  dummy: make<Dialog.Dummy>((spec, backstage) => renderDummy(spec, backstage.shared.providers)),
 };
 
 const noFormParts: FormTypes.FormParts = {

@@ -1,0 +1,42 @@
+.tox .poc-dummy-container .poc-dummy-button {
+  --height: calc(var(--tox-base-value) * 2);
+  height: var(--height);
+
+  font-weight: var(--tox-font-weight-bold);
+  font-size: var(--tox-font-size-md);
+  line-height: 24px;
+
+  border-radius: var(--tox-control-border-radius);
+
+  color: var(--tox-color-white);
+  background-color: var(--tox-color-tint);
+
+  display: flex;
+  align-items: center;
+  gap: var(--tox-pad-xs);
+  padding: var(--tox-pad-xs) var(--tox-pad-md);
+
+  &.poc-dummy-button-icon-none {
+    & .tox-icon {
+      display: none;
+    }
+  }
+
+  &.poc-dummy-button-icon-left {
+    flex-direction: row-reverse;
+  }
+
+  &.poc-dummy-button-icon-right {
+    flex-direction: row;
+  }
+
+  & .tox-icon {
+    display: flex;
+    align-items: center;
+    & svg {
+      fill: var(--tox-color-white); 
+      height: 24px;
+      width: 24px;
+    }
+  }
+}

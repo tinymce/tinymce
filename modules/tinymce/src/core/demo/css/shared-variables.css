@@ -1,0 +1,120 @@
+.tox {
+  --tox-color-scheme: light dark;
+  color-scheme: var(
+    --tox-color-scheme
+  ); /* https://caniuse.com/mdn-css_properties_color-scheme */
+
+  /* CONTENT */
+  --tox-content-ui-color-scheme: var(--tox-color-scheme);
+
+  /* MAIN VARIABLES FROM OXIDE GLOBALS */
+  --tox-base-value: 16px;
+  --tox-color-black: #222f3e;
+  --tox-color-tint: #006ce7;
+  --tox-color-white: #fff;
+  --tox-color-error: #c00;
+  --tox-color-error-element-focus-color: #f00;
+  --tox-color-error-element-focus: 0 0 0 1px
+    var(--tox-color-error-element-focus-color);
+  --tox-color-success: #78ab46;
+  --tox-color-warning: #ffcc00;
+  --tox-color-active: light-dark(#ffcf30, var(--tox-color-tint));
+
+  /* COLORS AND COLOR SCHEME */
+  --tox-background-color-light: var(--tox-color-white);
+  --tox-background-color-dark: var(--tox-color-black);
+  --tox-background-color: light-dark(
+    var(--tox-background-color-light),
+    var(--tox-background-color-dark)
+  ); /* https://caniuse.com/mdn-css_types_color_light-dark */
+
+  --tox-tooltip-background-color: light-dark(var(--tox-color-black), #324053);
+
+  --tox-border-color: hsl(
+    from var(--tox-background-color) h s calc(l - 6.5)
+  ); /* in less it was darken(--toxbackground-color, 6.5%) so a little more readable maybe */
+
+  --tox-separator-color: light-dark(
+    hsl(from var(--tox-border-color) h s calc(l - 4.5)),
+    rgba(255, 255, 255, 0.15)
+  );
+  --tox-editor-header-border: light-dark(
+    none,
+    1px solid var(--tox-separator-color)
+  );
+  --tox-text-color-light: var(--tox-color-black);
+  --tox-text-color-dark: var(--tox-color-white);
+  --tox-text-color: light-dark(
+    var(--tox-text-color-light),
+    var(--tox-text-color-dark)
+  );
+  --tox-text-color-muted: light-dark(
+    hsla(from var(--tox-text-color-light) h s l / 0.7),
+    hsla(from var(--tox-text-color-dark) h s l / 0.5)
+  );
+
+  /* Focus outline */
+  --tox-keyboard-focus-outline-width: 2px;
+  --tox-keyboard-focus-outline-color: light-dark(
+    var(--tox-color-tint),
+    var(--tox-color-white)
+  );
+
+  /* Some useful generic variables */
+  --tox-panel-border-radius: 6px; /* Dialogs, menues etc. */
+  --tox-control-border-radius: 6px; /* Buttons, input fields etc. */
+
+  /* FONTS */
+  --tox-font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  --tox-line-height-base: 1.3;
+  --tox-font-weight-normal: normal;
+  --tox-font-weight-bold: bold;
+  --tox-font-size-base: var(--tox-base-value);
+  --tox-font-size-xs: 12px; /* Absolute value to not make it too small */
+  --tox-font-size-sm: calc(var(--tox-font-size-base) * 0.875);
+  --tox-font-size-md: var(--tox-font-size-base);
+  --tox-font-size-lg: calc(var(--tox-font-size-base) * 1.25);
+
+  /* SPACINGS */
+  --tox-pad-xs: calc(var(--tox-base-value) / 4);
+  --tox-pad-sm: calc(var(--tox-base-value) / 2);
+  --tox-pad-md: var(--tox-base-value);
+  --tox-pad-lg: calc(var(--tox-base-value) * 1.5);
+  --tox-pad-xl: calc(var(--tox-base-value) * 2);
+
+  /* z-index stack (reserved range 1000-10000) */
+  --tox-z-index-fullscreen: 1200;
+  --tox-z-index-resize-handle: 1298;
+  --tox-z-index-throbber: 1299;
+  --tox-z-index-sink: 1300;
+
+  /* sink z-index stack
+    Note: these are rendered inside the sink so aren't affected by the other global z-index variables */
+  --tox-z-index-loading: 1000;
+  --tox-z-index-dialogs: 1100;
+  --tox-z-index-menu: 1150;
+
+  /* Responsive breakpoints */
+  --tox-breakpoint-sm-value: 767px;
+  --tox-breakpoint-md: ~"only screen and (min-width:1000px)";
+  --tox-breakpoint-sm: ~"only screen and (max-width:" --tox-breakpoint-sm-value ~")";
+  --tox-breakpoint-gt-sm: ~"only screen and (min-width:" --tox-breakpoint-sm-value +
+    1px ~")";
+
+  /* HOW DO WE APPRAOCH COLORS */
+  /* 
+      Should we define colors like so to create the exact representation of whats in figma? OR should we calculate colors from main variables like we do in oxide? 
+      Values for green taken from: https://www.figma.com/design/b5fl66Yw0MXFo5qSbKkwxl/%F0%9F%A7%A9-TinyMCE-EDS---Main-Library?node-id=1079-6071&t=8C1Ecl6sj1zJjtzf-0 
+      NOTE: currently colors in figma are can be slighly off
+    */
+  --tox-green10: #e4eeda;
+  --tox-green20: #d7e6c8;
+  --tox-green30: #a0c47d;
+  --tox-green40: #83b84e;
+}
+
+.mce-content-body {
+  color-scheme: var(--tox-content-ui-color-scheme);
+  background-color: light-dark(var(--tox-color-black), var(--tox-color-white));
+}

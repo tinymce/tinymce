@@ -1,0 +1,21 @@
+.tox .poc-dummy-container .poc-dummy-input-label {
+  display: flex;
+  flex-direction: column;
+  color: var(--tox-text-color-muted);
+  font-size: var(--tox-font-size-sm);
+
+  margin-top: calc(-1 * var(--tox-base-value));
+}
+
+.tox .poc-dummy-container .poc-dummy-input {
+  --height: calc(var(--tox-base-value) * 2);
+  min-height: var(--height);
+  font-size: var(--tox-font-size-md);
+  line-height: 24px;
+
+  border-radius: var(--tox-control-border-radius);
+  background-color: light-dark(var(--tox-color-white), #2B3B4E);
+  border: 1px solid var(--tox-border-color);
+  color: var(--tox-text-color-muted);
+}
+
