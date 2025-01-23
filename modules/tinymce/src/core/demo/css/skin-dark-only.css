@@ -1,0 +1,12 @@
+@layer skin {
+  .tox {
+    --tox-color-scheme: dark;
+  }
+}
+
+/*
+  Notes:
+    1. We will need to make sure that the skin css is loaded AFTER our css. ----> HANDLED BY LAYERS
+    2. All of the CSS Custom Properties are public. User will see them and be able to change them easily. We need to document to use the proper layer in the css file or add the layers to CSS loader.
+    3. As the CSS Custom Properties will apply to all `.tox` elements each editor on the website will be skinned. Appying a skin to one editor will mean all editors on the website will be skinned the same way.
+*/

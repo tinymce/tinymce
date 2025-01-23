@@ -1,0 +1,15 @@
+.tox {
+  & .poc-dummy-container {
+    background-color: var(--tox-background-color);
+    color: var(--tox-text-color);
+
+    border: var(--tox-border-color);
+    border-radius: var(--tox-panel-border-radius);
+    padding: var(--tox-pad-md);
+    gap: var(--tox-pad-md);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

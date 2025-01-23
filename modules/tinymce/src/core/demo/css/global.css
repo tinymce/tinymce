@@ -1,0 +1,33 @@
+@layer global, skin, component;
+
+@import "shared-variables.css" layer(global);
+@import "components/container.css";  /* layer(component); */
+@import "components/button.css";  /* layer(component); */
+@import "components/input.css";  /* layer(component); */
+
+
+
+/* 
+CSS Variables (Custom Properties):
+  1. Browser support: https://caniuse.com/css-variables (Widely available across major browsers)
+  2. Scoped
+  3. Newly available, but we could even do type save properties: https://developer.mozilla.org/en-US/docs/Web/CSS/--toxproperty - would be cool to make shared, skinnable properties type safe. 
+
+Nesting: 
+  1. Some older versions of browsres do not support nesting without & nesting selector. It's better to use it everywhere.
+  2. Better organized css. More readable, less boilerplate and repetition. 
+  3. If we were to use nesting the size of of CSS won't blow out after transitioning from preprocessor. 
+  4. Browser support: https://caniuse.com/css-nesting (Newly available across major browsers) 
+  5. IMO with this feature the era of preprocessors is OVER.
+
+Layers: 
+  1. Browser support: https://caniuse.com/css-cascade-layers (Widely available across major browsers)
+
+
+___________________________________________________________________________________________________________________________
+Other CSS4 hot stuff: 
+  1. Relative colors https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_colors/Relative_colors#checking_for_browser_support
+  2. Ich() and lab() color definitions
+  3. Container queries https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_queries
+  4. --toxscope rule that enables scoping CSS and prevents styles leaking. Currently has limited availability but we can keep an eye on this one because OH MY THIS IS SO COOL. (Links: https://developer.mozilla.org/en-US/docs/Web/CSS/--toxscope https://caniuse.com/css-cascade-scope)
+*/
