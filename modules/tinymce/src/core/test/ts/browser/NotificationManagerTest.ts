@@ -232,19 +232,6 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
           Remove.remove(input);
         });
 
-        const hook = tester.setup<Editor>({
-          service_message: 'service notification text',
-          add_unload_trigger: false,
-          disable_nodechange: true,
-          indent: false,
-          entities: 'raw',
-          base_url: '/project/tinymce/js/tinymce',
-          setup: (editor: Editor) => {
-            editor.on('BeforeOpenNotification', (event) => beforeOpenEvents.push(event));
-            editor.on('OpenNotification', (event) => openEvents.push(event));
-          }
-        }, []);
-
         it('TINY-10282: Should not move focus around if the focus is not in the editor', () => {
           const editor = hook.editor();
           resetNotifications(editor);
