@@ -4,7 +4,7 @@ declare let tinymce: TinyMCE;
 
 export default (): void => {
 
-  const settings = (selector: string, skin?: string): RawEditorOptions => ({
+  const settings = (selector: string): RawEditorOptions => ({
     selector,
     setup: (ed) => {
       const Dialog = (editor: Editor): { open: () => void } => {

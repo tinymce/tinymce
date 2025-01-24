@@ -1,4 +1,4 @@
-@layer global, skin, component;
+@layer reset, global, skin, component;
 
 @import "shared-variables.css" layer(global);
 @import "components/container.css";  /* layer(component); */
@@ -11,7 +11,7 @@
 CSS Variables (Custom Properties):
   1. Browser support: https://caniuse.com/css-variables (Widely available across major browsers)
   2. Scoped
-  3. Newly available, but we could even do type save properties: https://developer.mozilla.org/en-US/docs/Web/CSS/--toxproperty - would be cool to make shared, skinnable properties type safe. 
+  3. Newly available, but we could even do type save properties: https://developer.mozilla.org/en-US/docs/Web/CSS/@property - would be cool to make shared, skinnable properties type safe. 
 
 Nesting: 
   1. Some older versions of browsres do not support nesting without & nesting selector. It's better to use it everywhere.
@@ -23,11 +23,21 @@ Nesting:
 Layers: 
   1. Browser support: https://caniuse.com/css-cascade-layers (Widely available across major browsers)
 
+Color scheme:
+  1. https://caniuse.com/mdn-css_properties_color-scheme (Widely available across major browsers)
+  2. Super easy to switch between modes.
+  3. Enables us to decide if we want to have "light dark" and adjust to end user system settings or we can set explicitly dark or light 
+
+Light-dark syntax:
+  1. Enables us to define values for both color schemes.
+  2. Newly available (https://caniuse.com/mdn-css_types_color_light-dark)
+  3. If it is not supported enough we can use prefers-color-scheme media query insted.
+
 
 ___________________________________________________________________________________________________________________________
 Other CSS4 hot stuff: 
   1. Relative colors https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_colors/Relative_colors#checking_for_browser_support
   2. Ich() and lab() color definitions
   3. Container queries https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_queries
-  4. --toxscope rule that enables scoping CSS and prevents styles leaking. Currently has limited availability but we can keep an eye on this one because OH MY THIS IS SO COOL. (Links: https://developer.mozilla.org/en-US/docs/Web/CSS/--toxscope https://caniuse.com/css-cascade-scope)
+  4. @scope rule that enables scoping CSS and prevents styles leaking. Currently has limited availability but we can keep an eye on this one because OH MY THIS IS SO COOL. (Links: https://developer.mozilla.org/en-US/docs/Web/CSS/@scope https://caniuse.com/css-cascade-scope)
 */
