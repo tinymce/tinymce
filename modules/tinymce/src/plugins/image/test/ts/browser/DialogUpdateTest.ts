@@ -77,7 +77,7 @@ describe('browser.tinymce.plugins.image.DialogUpdateTest', () => {
 
     TinyUiActions.submitDialog(editor);
     assertCleanHtml('Checking output', editor, '<figure class="image"><img style="border: 2px solid red;" src="https://www.google.com/logos/google.jpg" width="200" height="200"><figcaption>Caption</figcaption></figure>');
-    editor.options.set('image_caption', false);
+    editor.options.unset('image_caption');
   });
 
   it('TINY-11670: floating images should not lose the float if is not put in a caption', async () => {
