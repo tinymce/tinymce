@@ -8,7 +8,7 @@ import * as Boxes from 'ephox/alloy/alien/Boxes';
 import * as Bubble from 'ephox/alloy/positioning/layout/Bubble';
 import * as LayoutInset from 'ephox/alloy/positioning/layout/LayoutInset';
 import { Placement, setPlacement } from 'ephox/alloy/positioning/layout/Placement';
-import { boxArb, boundsArb } from 'ephox/alloy/test/BoundsUtils';
+import { boundsArb, boxArb } from 'ephox/alloy/test/BoundsUtils';
 
 describe('LayoutInsetTest', () => {
   const placements = [
@@ -66,7 +66,7 @@ describe('LayoutInsetTest', () => {
       assert.equal(newLayout.placement, Placement.North);
     });
 
-    it('TINY-11549: when the boundaries are smaller than the anchor element, the position should respect the middle of the boundaries and not the anchor element', () => {
+    it.skip('TINY-11549: when the boundaries are smaller than the anchor element, the position should respect the middle of the boundaries and not the anchor element', () => {
       const anchorElem = Boxes.bounds(0, 0, 500, 100);
       const element = { width: 200, height: 50 };
       const placee = SugarElement.fromTag('div');

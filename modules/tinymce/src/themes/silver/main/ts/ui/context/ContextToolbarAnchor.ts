@@ -94,7 +94,9 @@ const getAnchorSpec = (editor: Editor, mobile: boolean, data: PositionData, posi
     const newAnchor = {
       ...anchor,
       y: bounds.y,
-      height: bounds.height
+      height: bounds.height,
+      x: bounds.x,
+      width: bounds.width
     };
     return {
       ...layout(newAnchor, element, bubbles, placee, bounds),
