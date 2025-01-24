@@ -707,7 +707,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
 
       editor.setContent('<noscript>&lt;/noscript&gt;&lt;style onload=xss()&gt;&lt;/style&gt;</noscript>');
 
-      await Waiter.pWait(1);
+      await Waiter.pWaitBetweenUserActions();
 
       delete editorWinGlobal.xss;
 

@@ -36,7 +36,7 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
     PageScroll.bddSetup(hook.editor, 5000);
 
     beforeEach(async () => {
-      await Waiter.pWait(17);
+      await Waiter.pWaitBetweenUserActions();
     });
 
     it('Checking startup structure', async () => {

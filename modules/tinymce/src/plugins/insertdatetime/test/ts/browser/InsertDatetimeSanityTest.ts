@@ -41,7 +41,7 @@ describe('browser.tinymce.plugins.insertdatetime.InsertDatetimeSanityTest', () =
 
     editor.mode.set('readonly');
     const content = editor.getContent();
-    await Waiter.pWait(17);
+    await Waiter.pWaitBetweenUserActions();
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     editor.execCommand('mceInsertTime');
 

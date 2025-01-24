@@ -119,7 +119,7 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
   afterEach(async () => {
     // Bedrock used to have a big wait between tests for reporting, that's now gone
     // turns out the table code needs some time to settle in between tests
-    await Waiter.pWait(17);
+    await Waiter.pWaitBetweenUserActions();
     resetState();
   });
 

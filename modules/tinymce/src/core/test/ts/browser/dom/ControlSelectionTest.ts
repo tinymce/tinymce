@@ -75,15 +75,13 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     const resizeHandle = await UiFinder.pWaitForVisible('Wait for resize handlers to show', editorBody, resizeSelector);
     const target = UiFinder.findIn(editorBody, targetSelector).getOrDie();
     Mouse.mouseDown(resizeHandle);
-    // a real user won't drag within a single frame, so we shouldn't either
-    await Waiter.pWait(17);
+    await Waiter.pWaitBetweenUserActions();
     const ghost = UiFinder.findIn(editorBody, '.mce-clonedresizable').getOrDie();
     getAndAssertDimensions(ghost, width, height);
     Mouse.mouseMoveTo(resizeHandle, deltaX, deltaY);
     getAndAssertDimensions(ghost, expectedWidth, expectedHeight);
     Mouse.mouseUp(resizeHandle);
-    // a real user won't drag within a single frame, so we shouldn't either
-    await Waiter.pWait(17);
+    await Waiter.pWaitBetweenUserActions();
     getAndAssertDimensions(target, expectedWidth, expectedHeight);
   };
 
@@ -91,8 +89,7 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     const editorBody = TinyDom.body(editor);
     const resizeHandle = await UiFinder.pWaitForVisible('Wait for resize handlers to show', editorBody, resizeSelector);
     Mouse.mouseDown(resizeHandle);
-    // a real user won't drag within a single frame, so we shouldn't either
-    await Waiter.pWait(17);
+    await Waiter.pWaitBetweenUserActions();
     const ghost = UiFinder.findIn(editorBody, '.mce-clonedresizable').getOrDie();
     assertGhostElem(ghost);
     Mouse.mouseUp(resizeHandle);
