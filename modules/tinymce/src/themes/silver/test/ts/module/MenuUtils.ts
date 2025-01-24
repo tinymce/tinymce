@@ -23,6 +23,7 @@ const pOpenMenuWithSelector = async (label: string, selector: string): Promise<v
   await UiFinder.pWaitForVisible(`Waiting for button: ${selector}`, SugarBody.body(), selector);
   Mouse.clickOn(SugarBody.body(), selector);
   await UiFinder.pWaitForVisible(`Waiting for menu: ${label}`, SugarBody.body(), '[role="menu"]');
+  await Waiter.pWaitBetweenUserActions();
 };
 
 const pOpenMore = async (type: ToolbarMode): Promise<void> => {

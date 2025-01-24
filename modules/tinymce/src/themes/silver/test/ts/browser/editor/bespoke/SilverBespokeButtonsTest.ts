@@ -235,7 +235,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
       TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
       assertEvent(1, 'Paragraph');
       await MenuUtils.pOpenMenu('Format', 'Paragraph:first');
-      assertEvent(2, 'Paragraph');
+      assertEvent(1, 'Paragraph');
       await pAssertFocusOnItem('Paragraph');
       TinyUiActions.keydown(editor, Keys.down());
       await pAssertFocusOnItem('Heading 1');
