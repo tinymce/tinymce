@@ -21,8 +21,6 @@ const getImageSize = (url: string): Promise<ImageDimensions> => new Promise((cal
   const img = document.createElement('img');
 
   const done = (dimensions: Promise<ImageDimensions>): void => {
-    // img.onload = img.onerror = null;
-
     if (img.parentNode) {
       img.parentNode.removeChild(img);
     }
