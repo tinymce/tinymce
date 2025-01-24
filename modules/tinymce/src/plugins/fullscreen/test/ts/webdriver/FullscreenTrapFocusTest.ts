@@ -40,7 +40,7 @@ describe('webdriver.tinymce.plugins.fullscreen.FullscreenTrapFocusTest', () => {
     await RealMouse.pClickOn('button[data-mce-name="fullscreen"]');
     if (nativeMode) {
       await pIsFullscreen(fullscreen);
-      // Wait for 0.5 seconds to allow animations to complete
+      // Wait to allow animations to complete
       // The delay is arbitary and may need to be adjusted
       await Waiter.pWait(300);
     }
