@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Strings } from '@ephox/katamari';
-import { Css, Focus, Scroll, SugarBody, SugarDocument, SugarElement, SugarLocation, Traverse } from '@ephox/sugar';
+import { Css, Focus, Height, Remove, Scroll, SugarBody, SugarDocument, SugarElement, SugarLocation, Traverse, Width } from '@ephox/sugar';
 import { TinyContentActions, TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -38,16 +38,14 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
     assert.approximately(regionLeft, x, diff, `Notification container left position should be ${x}px~=${regionLeft}px`);
   };
 
-  const pAssertDockedPos = (notification: NotificationApi, position: string) =>
+  const pAssertDockedPos = (notification: NotificationApi, position: string, assertLeft: number, assertTop: number) =>
     Waiter.pTryUntil('Wait for notification to be docked', () => {
       const notificationContainer = Traverse.parentElement(SugarElement.fromDom(notification.getEl())).getOrDie();
       const left = notificationContainer.dom.offsetLeft;
       const top = parseInt(Strings.removeTrailing(Css.get(notificationContainer, position), 'px'), 10);
 
-      const assertTop = 0;
-
       assert.equal(Css.get(notificationContainer, 'position'), 'fixed', 'Notification container should be docked (fixed position)');
-      assert.approximately(left, 226, 5, `Notification container left position (${left}) should be 0px`);
+      assert.approximately(left, assertLeft, 5, `Notification container left position (${left}) should be ~${assertLeft}px`);
       assert.approximately(top, assertTop, 5, `Notification container should be docked to ${position}, ${top}px should be ~${assertTop}px`);
     });
 
@@ -207,7 +205,9 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
       });
 
       const notification2 = openNotification(editor, 'success', 'Message');
-      await pAssertDockedPos(notification2, 'top');
+
+      const expectedLeft2 = calculateNotificationHeaderOffset(notification2);
+      await pAssertDockedPos(notification2, 'top', expectedLeft2, 0);
       assertPosition('Partial editor view notification', notification2, 0, 4);
       notification2.close();
 
@@ -218,7 +218,8 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
       });
 
       const notification3 = openNotification(editor, 'success', 'Message');
-      await pAssertDockedPos(notification3, 'top');
+      const expectedLeft3 = calculateNotificationHeaderOffset(notification3);
+      await pAssertDockedPos(notification3, 'top', expectedLeft3, 0);
       assertPosition('Above window notification', notification3, 0, 4);
       notification3.close();
 
@@ -367,6 +368,161 @@ describe('browser.tinymce.themes.silver.editor.NotificationManagerImplTest', () 
 
       nError.close();
       nWarn.close();
+    });
+  });
+
+  const getHeaderWidth = () => {
+    const header = UiFinder.findIn<HTMLElement>(SugarBody.body(), '.tox-editor-header').getOrDie();
+    return Width.get(header);
+  };
+
+  const getHeaderHeight = () => {
+    const header = UiFinder.findIn<HTMLElement>(SugarBody.body(), '.tox-editor-header').getOrDie();
+    return Height.get(header);
+  };
+
+  const getNotificationContainerWidth = (notification: NotificationApi) => {
+    const notificationContainer = Traverse.parentElement(SugarElement.fromDom(notification.getEl())).getOrDie();
+    return Width.get(notificationContainer);
+  };
+
+  const calculateNotificationHeaderOffset = (notification: NotificationApi) => {
+    return (getHeaderWidth() / 2) - (getNotificationContainerWidth(notification) / 2);
+  };
+
+  const calculateNotificationEditorOffset = (notification: NotificationApi, editor: Editor) => {
+    return (Width.get(TinyDom.contentAreaContainer(editor)) / 2) - (getNotificationContainerWidth(notification) / 2);
+  };
+
+  const calculateExpectedTop = (editor: Editor) => {
+    const positionFromTop = SugarLocation.absolute(TinyDom.contentAreaContainer(editor)).top;
+    const sink = UiFinder.findIn<HTMLElement>(SugarBody.body(), '.tox-silver-sink').getOrDie();
+    const relativePosition = SugarLocation.relative(sink).top;
+
+    return -(relativePosition - positionFromTop);
+  };
+
+  const pAssertNotficationAbsolutePosition = async (editor: Editor, notification: NotificationApi) => {
+    const expectedTop = calculateExpectedTop(editor);
+    const expectedLeft = calculateNotificationHeaderOffset(notification);
+
+    await Waiter.pTryUntil('Waiting for region position to be updated', () => assertRegionPosition(notification, expectedLeft, expectedTop));
+  };
+
+  Arr.each([
+    {
+      label: 'Top toolbar',
+      toolbarLocationOption: { toolbar_location: 'top' },
+      // Top toolbar calculation differs since we need to factor in the height of toolbar when it's docked
+      pAssertDockedPosition: async (notification: NotificationApi) => {
+        const headerHeight = getHeaderHeight();
+        const expectedLeft = calculateNotificationHeaderOffset(notification);
+        await pAssertDockedPos(notification, 'top', expectedLeft, 0 + headerHeight);
+      },
+      pAssertAbsolutePosition: pAssertNotficationAbsolutePosition
+    },
+    {
+      label: 'Bottom toolbar',
+      toolbarLocationOption: { toolbar_location: 'bottom' },
+      pAssertDockedPosition: async (notification: NotificationApi, editor: Editor) => {
+        const expectedLeft = calculateNotificationEditorOffset(notification, editor);
+        await pAssertDockedPos(notification, 'top', expectedLeft, 0);
+      },
+      pAssertAbsolutePosition: pAssertNotficationAbsolutePosition
+    }
+  ], (testConfig) => {
+    context(`Sticky toolbar, ${testConfig.label} notification positioning`, () => {
+      const hook = TinyHooks.bddSetup<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        toolbar_sticky: true,
+        width: 600,
+        height: 400,
+        ...testConfig.toolbarLocationOption
+      }, []);
+
+      it(`TINY-11498: Notifications should be docked when using toolbar_sticky, ${testConfig.label}`, async () => {
+        const editor = hook.editor();
+        const cleanup = PageScroll.setup(editor, 2000);
+        const nError = openNotification(editor, 'error', 'Message 1');
+
+        const topOfEditor = SugarLocation.absolute(TinyDom.container(editor)).top;
+        Scroll.to(0, topOfEditor + 100);
+        await testConfig.pAssertDockedPosition(nError, editor);
+
+        Scroll.to(0, topOfEditor + 200);
+        await testConfig.pAssertDockedPosition(nError, editor);
+
+        Scroll.to(0, topOfEditor - 200);
+        await testConfig.pAssertAbsolutePosition(editor, nError);
+
+        nError.close();
+        cleanup();
+      });
+    });
+  });
+
+  Arr.each([
+    {
+      label: 'Inline editor, top toolbar',
+      toolbarLocationOption: { toolbar_location: 'top' },
+      // When the toolbar is at the top, the left position is calculated based on the header width
+      pAssertDockedPosition: async (_: Editor, notification: NotificationApi) => {
+        const headerHeight = getHeaderHeight();
+        const expectedLeft = calculateNotificationHeaderOffset(notification);
+        await pAssertDockedPos(notification, 'top', expectedLeft, 0 + headerHeight);
+      },
+      pAssertAbsolutePosition: pAssertNotficationAbsolutePosition
+    },
+    {
+      label: 'Inline editor, bottom toolbar',
+      toolbarLocationOption: { toolbar_location: 'bottom' },
+      // When the toolbar is at the bottom, the left position should be calculated based on the editor width
+      pAssertDockedPosition: async (editor: Editor, notification: NotificationApi) => {
+        const expectedLeft = calculateNotificationEditorOffset(notification, editor);
+        await pAssertDockedPos(notification, 'top', expectedLeft, 0);
+      },
+      pAssertAbsolutePosition: async (editor: Editor, notification: NotificationApi) => {
+        const expectedLeft = calculateNotificationEditorOffset(notification, editor);
+        const expectedTop = calculateExpectedTop(editor);
+
+        await Waiter.pTryUntil('Waiting for region position to be updated', () => assertRegionPosition(notification, expectedLeft, expectedTop));
+      }
+    }
+  ], (testConfig) => {
+    context(`${testConfig.label} notification positioning`, () => {
+      const hook = TinyHooks.bddSetupFromElement<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        inline: true,
+        height: 400,
+        ...testConfig.toolbarLocationOption
+      }, () => {
+        const div = SugarElement.fromTag('div');
+        Css.set(div, 'width', '750px');
+        return {
+          element: div,
+          teardown: () => {
+            Remove.remove(div);
+          }
+        };
+      }, []);
+
+      it(`TINY-11498: Notifications should be docked when using toolbar_sticky, ${testConfig.label}`, async () => {
+        const editor = hook.editor();
+        editor.setContent(Arr.range(10, (_) => '<p>test</p>').join(''));
+        editor.focus();
+        const cleanup = PageScroll.setup(editor, 2000);
+        const nError = openNotification(editor, 'error', 'Message 1');
+
+        const editorClientRect = TinyDom.contentAreaContainer(editor).dom.getBoundingClientRect();
+        Scroll.to(0, editorClientRect.top + 200);
+        await testConfig.pAssertDockedPosition(editor, nError);
+
+        Scroll.to(0, editorClientRect.top - 200);
+        await testConfig.pAssertAbsolutePosition(editor, nError);
+
+        nError.close();
+        cleanup();
+      });
     });
   });
 
