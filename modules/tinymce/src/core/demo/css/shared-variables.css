@@ -36,7 +36,7 @@
 
   --tox-separator-color: light-dark(
     hsl(from var(--tox-border-color) h s calc(l - 4.5)),
-    rgba(255, 255, 255, 0.15)
+    #ffffff26
   );
   --tox-editor-header-border: light-dark(
     none,
@@ -98,8 +98,8 @@
   /* Responsive breakpoints */
   --tox-breakpoint-sm-value: 767px;
   --tox-breakpoint-md: ~"only screen and (min-width:1000px)";
-  --tox-breakpoint-sm: ~"only screen and (max-width:" --tox-breakpoint-sm-value ~")";
-  --tox-breakpoint-gt-sm: ~"only screen and (min-width:" --tox-breakpoint-sm-value +
+  --tox-breakpoint-sm: ~"only screen and (max-width:" var(--tox-breakpoint-sm-value) ~")";
+  --tox-breakpoint-gt-sm: ~"only screen and (min-width:" var(--tox-breakpoint-sm-value) +
     1px ~")";
 
   /* HOW DO WE APPRAOCH COLORS */
