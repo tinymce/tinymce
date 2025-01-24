@@ -30,7 +30,6 @@ export interface Editor {
   settings?: Record<string, any>;
   options?: any;
   inline: boolean;
-  bookmark: any;
 
   dom: any;
   editorCommands: any;
