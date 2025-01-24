@@ -1,6 +1,7 @@
 import { Assertions, Waiter } from '@ephox/agar';
 import { after, before, describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { SimRange } from '@ephox/sugar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -29,9 +30,16 @@ describe('browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest', () 
     document.body.appendChild(div);
   };
 
+  const assertBookmark = (editor: Editor, startPath: number[], soffset: number, finishPath: number[], foffset: number): void => {
+    const actual: SimRange = editor.bookmark.getOrDie('no bookmark');
+    const root = TinyDom.body(editor);
+    TinyAssertions.assertPath('start', root, startPath, soffset, actual.start.dom, actual.soffset);
+    TinyAssertions.assertPath('finish', root, finishPath, foffset, actual.finish.dom, actual.foffset);
+  };
+
   const pWaitForBookmark = (editor: Editor, startPath: number[], startOffset: number, endPath: number[], endOffset: number) => {
     return Waiter.pTryUntil('wait for selection', () => {
-      TinyAssertions.assertBookmark(editor, startPath, startOffset, endPath, endOffset);
+      assertBookmark(editor, startPath, startOffset, endPath, endOffset);
     });
   };
 
@@ -49,7 +57,7 @@ describe('browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest', () 
 
     TinySelections.setRawSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
     TinySelections.setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1, false); // Ensure node change doesn't fire
-    TinyAssertions.assertBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
+    assertBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
   });
 
   it('assert selection after no nodechanged, should not restore', () => {
@@ -58,7 +66,7 @@ describe('browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest', () 
 
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
     TinySelections.setRawSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
-    TinyAssertions.assertBookmark(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
+    assertBookmark(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
   });
 
   it('assert selection after nodechanged, should restore', () => {
@@ -67,7 +75,7 @@ describe('browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest', () 
 
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
     TinySelections.setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
-    TinyAssertions.assertBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
+    assertBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
   });
 
   it('assert selection after keyup, should restore', () => {
@@ -77,7 +85,7 @@ describe('browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest', () 
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 0);
     TinySelections.setSelection(editor, [ 1, 0 ], 1, [ 1, 0 ], 1, false);
     editor.dispatch('keyup', { } as KeyboardEvent);
-    TinyAssertions.assertBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
+    assertBookmark(editor, [ 1, 0 ], 1, [ 1, 0 ], 1);
   });
 
   it('assert selection after mouseup, should restore', () => {

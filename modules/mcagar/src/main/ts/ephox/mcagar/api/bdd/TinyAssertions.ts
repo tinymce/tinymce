@@ -1,12 +1,12 @@
 import { Assertions, Cursors, StructAssert } from '@ephox/agar';
 import { Optional } from '@ephox/katamari';
-import { Hierarchy, Html, SimRange, SugarElement } from '@ephox/sugar';
+import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
 
 import { Editor, GetContentArgs } from '../../alien/EditorTypes';
 import { Presence } from '../pipeline/TinyApis';
 import { TinyDom } from '../TinyDom';
 
-const assertPath = (label: string, root: SugarElement<Node>, expPath: number[], expOffset: number, actElement: Node, actOffset: number) => {
+const assertPath = (label: string, root: SugarElement<Node>, expPath: number[], expOffset: number, actElement: Node, actOffset: number): void => {
   const expected = Cursors.calculateOne(root, expPath);
   const message = () => {
     const actual = SugarElement.fromDom(actElement);
@@ -46,22 +46,15 @@ const assertSelection = (editor: Editor, startPath: number[], soffset: number, f
   assertPath('finish', body, finishPath, foffset, actual.endContainer, actual.endOffset);
 };
 
-const assertBookmark = (editor: Editor, startPath: number[], soffset: number, finishPath: number[], foffset: number): void => {
-  const actual: SimRange = editor.bookmark.getOrDie('no bookmark');
-  const root = TinyDom.body(editor);
-  assertPath('start', root, startPath, soffset, actual.start.dom, actual.soffset);
-  assertPath('finish', root, finishPath, foffset, actual.finish.dom, actual.foffset);
-};
-
 const assertCursor = (editor: Editor, path: number[], offset: number): void =>
   assertSelection(editor, path, offset, path, offset);
 
 export {
+  assertPath,
   assertContent,
   assertRawContent,
   assertContentPresence,
   assertContentStructure,
   assertCursor,
-  assertSelection,
-  assertBookmark
+  assertSelection
 };
