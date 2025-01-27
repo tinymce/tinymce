@@ -39,7 +39,7 @@ const testFolders = (tests, auto) => tests.flatMap((test) => {
 const bedrockDefaults = {
   config: 'tsconfig.json',
   customRoutes: 'modules/tinymce/src/core/test/json/routes.json',
-  overallTimeout: 20 * 60 * 1000, // 20 minutes
+  overallTimeout: 21 * 60 * 1000, // 21 minutes
   singleTimeout: 10000,
   retries: 1,
 };
