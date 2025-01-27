@@ -290,8 +290,7 @@ describe.skip('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingC
       Html.set(target, paragraphs);
       return target;
     } else {
-      const target = SugarElement.fromTag('textarea');
-      return target;
+      return SugarElement.fromTag('textarea');
     }
   };
 
@@ -689,9 +688,7 @@ describe.skip('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingC
             const elementWithFixed: SugarElement<HTMLElement> = Traverse.parent(dialog).getOrDie(
               'Could not find parent of dialog'
             ) as SugarElement<HTMLElement>;
-            // Trigger docking. On Safari, we seem to need this wait to give it time to
-            // catch up. Not sure of the underlying cause, unfortunately.
-            await Waiter.pWait(0);
+            await Waiter.pWaitBetweenUserActions();
             await adjustments.toDock.action();
 
             await pWaitUntilDockedAtPosition(elementWithFixed, Optional.some({ location: 'top', value: adjustments.toDock.top }));

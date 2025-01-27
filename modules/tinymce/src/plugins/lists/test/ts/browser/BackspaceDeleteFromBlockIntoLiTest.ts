@@ -5,7 +5,7 @@ import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 
-describe('Browser Test: .RemoveTrailingBlockquoteTest', () => {
+describe('browser.tinymce.plugins.lists.BackspaceDeleteFromBlockIntoLiTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     plugins: 'lists',

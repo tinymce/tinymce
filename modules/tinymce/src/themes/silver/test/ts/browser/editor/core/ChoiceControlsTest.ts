@@ -275,7 +275,7 @@ describe('browser.tinymce.themes.silver.editor.core.ChoiceControlsTest', () => {
 
           editor.formatter.apply('lang', { value: 'zh' });
 
-          await Waiter.pWait(0);
+          await Waiter.pWaitBetweenUserActions();
           await pAssertOptions(editor, spec.menuSelector, defaultLanguages, Optional.some('Chinese'));
           spec.close(editor, 'Language');
         });

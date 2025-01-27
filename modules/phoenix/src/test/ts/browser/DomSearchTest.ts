@@ -1,4 +1,4 @@
-import { after, Assert, describe, it } from '@ephox/bedrock-client';
+import { after, Assert, before, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { Attribute, Html, Insert, InsertAll, Remove, SugarElement } from '@ephox/sugar';
 
@@ -10,9 +10,12 @@ interface EntitiesMap {
 }
 
 describe('browser.phoenix.api.DomSearchTest', () => {
-  const body = SugarElement.fromDom(document.body);
-  const container = SugarElement.fromTag('div');
-  Insert.append(body, container);
+  let container: SugarElement<HTMLDivElement>;
+  before(() => {
+    const body = SugarElement.fromDom(document.body);
+    container = SugarElement.fromTag('div');
+    Insert.append(body, container);
+  });
 
   // Taken from: modules/tinymce/src/core/main/ts/api/html/Entities.ts, makes tests easier to read
   const decode = (html: string) => {
