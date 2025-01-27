@@ -932,46 +932,39 @@
   resolved "https://registry.yarnpkg.com/@dual-bundle/import-meta-resolve/-/import-meta-resolve-4.1.0.tgz#519c1549b0e147759e7825701ecffd25e5819f7b"
   integrity sha512-+nxncfwHM5SgAtrVzgpzJOI1ol0PkumhVo469KCf9lUi21IGcY90G98VuHm9VRrUypmAzawAHO9bs6hqeADaVg==
 
-"@ephox/bedrock-client@15.0.0-alpha.10", "@ephox/bedrock-client@^15.0.0-alpha.10":
-  version "15.0.0-alpha.10"
-  resolved "https://registry.yarnpkg.com/@ephox/bedrock-client/-/bedrock-client-15.0.0-alpha.10.tgz#03b07a36ffc15cc52798bdcbb88bcf794273fb50"
-  integrity sha512-2+MGFgFfZ0zcZeXV4hT4QLN/XHvLwonv5E+a9zk3FHHTWhkP6E3ToowrAmuzdONO2HcRp3zvD2aCWglOPYELFA==
+"@ephox/bedrock-client@>=11", "@ephox/bedrock-client@^15.0.0":
+  version "15.0.0"
+  resolved "https://registry.yarnpkg.com/@ephox/bedrock-client/-/bedrock-client-15.0.0.tgz#a2ae8ec5be2b1ff7a4843c32da4879590514d0ed"
+  integrity sha512-jO1REPlAokzLScK4m9Wcykw6SC5+Bv9pBk3LAjEvNgfxydSlgl2ReYTSsL0ZvQRJguzzpE1T7XD3kOfvtRX0FQ==
   dependencies:
-    "@ephox/bedrock-common" "^15.0.0-alpha.7"
+    "@ephox/bedrock-common" "^15.0.0"
     "@ephox/dispute" "^1.0.3"
 
-"@ephox/bedrock-common@*":
-  version "14.1.1"
-  resolved "https://registry.yarnpkg.com/@ephox/bedrock-common/-/bedrock-common-14.1.1.tgz#8391b2c002b1121344fbd60fb73eb8cf6c4e91a4"
-  integrity sha512-h3UR0PqjAZ/ufc51Q08hBZ8ZvV5TQapeoBptOxv/rslu4vN+/KtAbqbXyLQF8KpQ6vD/3u3DXV9a+jTFt0dTfw==
+"@ephox/bedrock-common@>=11", "@ephox/bedrock-common@^15.0.0":
+  version "15.0.0"
+  resolved "https://registry.yarnpkg.com/@ephox/bedrock-common/-/bedrock-common-15.0.0.tgz#988020addd4c11922e906dfef26547ec72384797"
+  integrity sha512-uGR1Oaksv9d9gDEJra2HB/HUCAdcBTiBfKYWEVvu7XofU4lHpoUFlX+7bnDi9h6N0CZ67bEAeqWhTwrN/2dFKw==
   dependencies:
     diff "^5.0.0"
 
-"@ephox/bedrock-common@^15.0.0-alpha.7":
-  version "15.0.0-alpha.7"
-  resolved "https://registry.yarnpkg.com/@ephox/bedrock-common/-/bedrock-common-15.0.0-alpha.7.tgz#af19605bf9595d05dfdf4ae2ca631b045e851ca7"
-  integrity sha512-Zbi33GhQY+nazIfQadZDU+8orspz8ThVI3KAbNNberQDHEI7w2BxmZeCWK7+IuKE2AYJwPF7JzjSutvlALTULQ==
+"@ephox/bedrock-runner@^15.0.0":
+  version "15.0.0"
+  resolved "https://registry.yarnpkg.com/@ephox/bedrock-runner/-/bedrock-runner-15.0.0.tgz#04e1d5c9368aea02743df431612892dbdabbfcee"
+  integrity sha512-HHtQT7P6en9SFflC8t+UpXH+bRl4Vwc7PlExeh5cvBpJsn375rFWl+h0x5NscN1NMsX9TCJqNdi5N3mvbdQWdw==
   dependencies:
-    diff "^5.0.0"
-
-"@ephox/bedrock-runner@^15.0.0-alpha.10":
-  version "15.0.0-alpha.10"
-  resolved "https://registry.yarnpkg.com/@ephox/bedrock-runner/-/bedrock-runner-15.0.0-alpha.10.tgz#1162865d1e719ef6309e33caec4582a89d31f9fc"
-  integrity sha512-Nlotz0k3LHyMbP5tnolhdrLrR43vn8GnntsJtBUsJ71XHbPPHs/xupLf/JTsfoJjp5Sj7Pf3gWjUvI9xbJTnKA==
-  dependencies:
-    "@ephox/bedrock-common" "^15.0.0-alpha.7"
+    "@ephox/bedrock-common" "^15.0.0"
     jquery "^3.4.1"
     querystringify "^2.1.1"
 
-"@ephox/bedrock-server@15.0.0-alpha.10":
-  version "15.0.0-alpha.10"
-  resolved "https://registry.yarnpkg.com/@ephox/bedrock-server/-/bedrock-server-15.0.0-alpha.10.tgz#168d3951cfb02faa86d02e0e7d42e8a3dff479f3"
-  integrity sha512-CFoN+FxvH46fdzxp4Ro/hevXPcwAS0Mb0epdN0KbjrXSSSdcpBtHZ0ANlogJIpmLqaQzedonbTaBCnGmRxEtMA==
+"@ephox/bedrock-server@^15.0.0":
+  version "15.0.0"
+  resolved "https://registry.yarnpkg.com/@ephox/bedrock-server/-/bedrock-server-15.0.0.tgz#c5b5a52951698e4f11480cfe718cf0695ddc4a18"
+  integrity sha512-Gnz+FzAU6bf2MFujMgGgLwCN5KzeOYtQV3M7B/TCuHftnx/yyh6I1fyrNdyy3TuGO3+2jvXKvXzrFSsoetSN1A==
   dependencies:
     "@aws-sdk/client-device-farm" "^3.354.0"
-    "@ephox/bedrock-client" "^15.0.0-alpha.10"
-    "@ephox/bedrock-common" "^15.0.0-alpha.7"
-    "@ephox/bedrock-runner" "^15.0.0-alpha.10"
+    "@ephox/bedrock-client" "^15.0.0"
+    "@ephox/bedrock-common" "^15.0.0"
+    "@ephox/bedrock-runner" "^15.0.0"
     "@jsdevtools/coverage-istanbul-loader" "^3.0.5"
     "@lambdatest/node-tunnel" "^4.0.4"
     "@wdio/globals" "^8.14.1"
