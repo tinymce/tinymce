@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Setting editor height to pt/em values would ignore min/max height settings.
+time: 2025-01-28T12:11:04.210024+01:00
+custom:
+    Issue: TINY-11108

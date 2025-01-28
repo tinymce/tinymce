@@ -5,17 +5,41 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Options from '../../api/Options';
 import * as Utils from './Utils';
 
+const convertValueToPx = (editor: Editor, value: number | string): Optional<number> => {
+  if (typeof value === 'number') {
+    return Optional.from(value);
+  }
+
+  return Utils.parseToInt(value.trim()).orThunk(() => {
+    const splitValue = /^([0-9.]+)(pt|em|px)$/.exec(value);
+
+    if (splitValue) {
+      const type = splitValue[2];
+      const parsed = Number.parseFloat(splitValue[1]);
+
+      if (type === 'em') {
+        return Optional.from(parsed * Number.parseFloat(window.getComputedStyle(editor.targetElm).fontSize));
+      } else if (type === 'pt') {
+        return Optional.from(parsed * (72 / 96));
+      } else if (type === 'px') {
+        Optional.from(parsed);
+      }
+    }
+
+    return Optional.none();
+  });
+};
+
 export const getHeight = (editor: Editor): Optional<number> => {
-  const baseHeight = Options.getHeightOption(editor);
+  const baseHeight = convertValueToPx(editor, Options.getHeightOption(editor));
   const minHeight = Options.getMinHeightOption(editor);
   const maxHeight = Options.getMaxHeightOption(editor);
 
-  return Utils.parseToInt(baseHeight).map((height) => Utils.calcCappedSize(height, minHeight, maxHeight));
+  return baseHeight.map((height) => Utils.calcCappedSize(height, minHeight, maxHeight));
 };
 
 export const getHeightWithFallback = (editor: Editor): string | number => {
-  const height = getHeight(editor);
-  return height.getOr(Options.getHeightOption(editor));
+  return getHeight(editor).getOr(Options.getHeightOption(editor)); // If we can't parse, set the height while ignoring min/max values.
 };
 
 export const getWidth = (editor: Editor): Optional<number> => {
