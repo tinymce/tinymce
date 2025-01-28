@@ -74,7 +74,7 @@ const findWordEndPoint = (
   includeTrailingSpaces: boolean
 ) => {
   let lastTextNode: Text;
-  const closestRoot = dom.getParent(container, (node) => NodeType.isEditableHost(node) || dom.isBlock(node));
+  const closestRoot = dom.getParent(container, (node) => NodeType.isEditingHost(node) || dom.isBlock(node));
   const rootNode = Type.isNonNullable(closestRoot) ? closestRoot : body;
 
   const walk = (container: Node, offset: number, pred: (start: boolean, node: Text, offset: number) => number) => {
@@ -206,7 +206,7 @@ const findParentContainer = (
   }
 
   while (parent) {
-    if (NodeType.isEditableHost(parent)) {
+    if (NodeType.isEditingHost(parent)) {
       return container;
     }
 
@@ -240,7 +240,7 @@ const isSelfOrParentBookmark = (container: Node) => isBookmarkNode(container.par
 
 const expandRng = (dom: DOMUtils, rng: Range, formatList: Format[], expandOptions: ExpandOptions = {}): RangeLikeObject => {
   const { includeTrailingSpace = false, expandToBlock = true } = expandOptions;
-  const editableHost = dom.getParent(rng.commonAncestorContainer, (node) => NodeType.isEditableHost(node)) as HTMLElement;
+  const editableHost = dom.getParent(rng.commonAncestorContainer, (node) => NodeType.isEditingHost(node)) as HTMLElement;
   const root = Type.isNonNullable(editableHost) ? editableHost : dom.getRoot();
   let { startContainer, startOffset, endContainer, endOffset } = rng;
   const format = formatList[0];

@@ -121,14 +121,14 @@ describe('browser.tinymce.core.dom.NodeTypeTest', () => {
     assert.isFalse(NodeType.isTable(null));
   });
 
-  it('isEditableHost', () => {
+  it('isEditingHost', () => {
     const div = SugarElement.fromHtml('<div contenteditable="false"><span contenteditable="true"><b></b></span></div>');
 
     Insert.append(SugarBody.body(), div);
 
-    assert.isTrue(NodeType.isEditableHost(SelectorFind.descendant(div, 'span').getOrDie().dom), 'Inner span be editable host');
-    assert.isFalse(NodeType.isEditableHost(SelectorFind.descendant(div, 'b').getOrDie().dom), 'Inner b be not a editable host');
-    assert.isFalse(NodeType.isEditableHost(div.dom), 'Non-editable div be not a editable host');
+    assert.isTrue(NodeType.isEditingHost(SelectorFind.descendant(div, 'span').getOrDie().dom), 'Inner span be editable host');
+    assert.isFalse(NodeType.isEditingHost(SelectorFind.descendant(div, 'b').getOrDie().dom), 'Inner b be not a editable host');
+    assert.isFalse(NodeType.isEditingHost(div.dom), 'Non-editable div be not a editable host');
 
     Remove.remove(div);
   });
