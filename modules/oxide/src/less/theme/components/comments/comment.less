@@ -307,6 +307,10 @@
     overflow: auto;
     padding: 12px;
     scroll-behavior: smooth;
+
+    &:has(textarea:focus-within) {
+      scroll-behavior: auto;
+    }
   }
 
   /* Animation for deleting a comment */
