@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, FocusTools, Keys, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Fun, Obj } from '@ephox/katamari';
 import { SugarBody, SugarDocument, Value } from '@ephox/sugar';
@@ -142,6 +142,46 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
       ed.ui.registry.addContextToolbar('test-toolbar-focus-on-init', {
         predicate: Fun.never,
         items: 'form:test-form-focus-on-init',
+      });
+
+      ed.ui.registry.addContextForm('text', {
+        type: 'contextform',
+        launch: {
+          type: 'contextformbutton',
+          text: 'Alt',
+          tooltip: 'Alt'
+        },
+        onSetup: Fun.constant,
+        onInput: Fun.noop,
+        label: 'Alt',
+        commands: [
+          {
+            type: 'contextformbutton',
+            align: 'start',
+            tooltip: 'Back',
+            icon: 'chevron-left',
+            onAction: (formApi) => {
+              formApi.back();
+            }
+          },
+          {
+            type: 'contextformtogglebutton',
+            align: 'start',
+            text: 'Decorative',
+            tooltip: 'Decorative',
+            onAction: (formApi, buttonApi) => {
+              buttonApi.setActive(!buttonApi.isActive());
+              formApi.setInputEnabled(!formApi.isInputEnabled());
+            }
+          }
+        ]
+      });
+
+      ed.ui.registry.addContextToolbar('contexttoolbar1', {
+        predicate: (node) => node.nodeName === 'IMG',
+        items: 'text',
+        position: 'node',
+        scope: 'node'
       });
     }
   }, [], true);
@@ -417,5 +457,26 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     openToolbar(editor, 'test-toolbar-focus-on-init');
     TinyUiActions.clickOnUi(editor, 'button[data-mce-name="form:test-form-focus-on-init"]');
     FocusTools.isOnSelector('Focus should be on toolbar', doc, '[role="toolbar"]');
+  });
+
+  it('TINY-11665: it shound not be possible to navigate to the input field if this one is disabled', async () => {
+    const editor = hook.editor();
+    const doc = SugarDocument.getDocument();
+    editor.setContent('<img>');
+
+    TinySelections.select(editor, 'img', []);
+
+    await TinyUiActions.pTriggerContextMenu(editor, 'img', '.tox-silver-sink [role="toolbar"]');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="Alt"]');
+
+    FocusTools.isOnSelector('Focus should be initial on the input', doc, '.tox-pop__dialog input');
+    Keyboard.activeKeydown(doc, Keys.tab());
+    FocusTools.isOnSelector('Focus should be moved on the back button', doc, '.tox-pop__dialog button[aria-label="Back"]');
+
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="Decorative"]');
+    FocusTools.isOnSelector('Focus should on the the button after click', doc, '.tox-pop__dialog button[aria-label="Decorative"]');
+
+    Keyboard.activeKeydown(doc, Keys.tab());
+    FocusTools.isOnSelector('Focus should stay on decorative button since the input is disable', doc, '.tox-pop__dialog button[aria-label="Decorative"]');
   });
 });
