@@ -17,12 +17,14 @@ const convertValueToPx = (editor: Editor, value: number | string): Optional<numb
       const type = splitValue[2];
       const parsed = Number.parseFloat(splitValue[1]);
 
-      if (type === 'em') {
+      if (Number.isNaN(parsed) || parsed < 0) {
+        return Optional.none();
+      } else if (type === 'em') {
         return Optional.from(parsed * Number.parseFloat(window.getComputedStyle(editor.targetElm).fontSize));
       } else if (type === 'pt') {
         return Optional.from(parsed * (72 / 96));
       } else if (type === 'px') {
-        Optional.from(parsed);
+        return Optional.from(parsed);
       }
     }
 
