@@ -232,15 +232,25 @@ const sanitizeMathmlElement = (node: Element, settings: DomParserSettings) => {
   };
 
   const purify = createDompurify();
+  const allowedEncodings = settings.allow_mathml_annotation_encodings;
+  const hasAllowedEncodings = Type.isArray(allowedEncodings) && allowedEncodings.length > 0;
+  const hasValidEncoding = (el: Element) => {
+    const encoding = el.getAttribute('encoding');
+    return hasAllowedEncodings && Type.isString(encoding) && Arr.contains(allowedEncodings, encoding);
+  };
 
   purify.addHook('uponSanitizeElement', (node, evt) => {
     const lcTagName = evt.tagName ?? node.nodeName.toLowerCase();
-    const allowedEncodings = settings.allow_mathml_annotation_encodings;
 
-    if (lcTagName === 'annotation' && Type.isArray(allowedEncodings) && allowedEncodings.length > 0) {
-      const encoding = node.getAttribute('encoding');
-      if (Type.isString(encoding) && Arr.contains(allowedEncodings, encoding)) {
-        evt.allowedTags[lcTagName] = true;
+    if (hasAllowedEncodings && lcTagName === 'semantics') {
+      evt.allowedTags[lcTagName] = true;
+    }
+
+    if (lcTagName === 'annotation') {
+      const keepElement = hasValidEncoding(node);
+      evt.allowedTags[lcTagName] = keepElement;
+      if (!keepElement) {
+        node.remove();
       }
     }
   });
