@@ -39,7 +39,7 @@ const getPreventClicksOnLinksScript = (): string => {
             const targetElement = document.getElementById(href.substring(1));
 
             if (targetElement) {
-              targetElement.scrollIntoView();
+              targetElement.scrollIntoView({ behavior: 'smooth' });
             }
 
             return;
