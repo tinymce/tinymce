@@ -233,24 +233,34 @@ timestamps {
   }
 
   // Local nodes use os: windows | macos; Remote tests use os full name e.g.: macOS Sonoma
-  def platforms = [
-    // Local tests
-    // [ browser: 'edge', os: 'windows' ],
-    // [ browser: 'firefox', os: 'macos' ],
-    // Remote tests
-    // [ browser: 'chrome', provider: 'aws', buckets: 2 ],
-    // [ browser: 'edge', provider: 'aws', buckets: 2 ], // TINY-10540: Investigate Edge issues in AWS
-    // [ browser: 'firefox', provider: 'aws', buckets: 2 ],
-    [ browser: 'chrome', provider: 'lambdatest', buckets: 1 ],
-    [ browser: 'firefox', provider: 'lambdatest', buckets: 1 ],
-    [ browser: 'edge', provider: 'lambdatest', buckets: 1 ],
+  // Local tests (never do this)
+  // [ browser: 'edge', os: 'windows' ],
+  // [ browser: 'firefox', os: 'macos' ],
+  // Remote tests
+  // [ browser: 'chrome', provider: 'aws', buckets: 2 ],
+  // [ browser: 'edge', provider: 'aws', buckets: 2 ], // TINY-10540: Investigate Edge issues in AWS
+  // [ browser: 'firefox', provider: 'aws', buckets: 2 ],
+
+  def branchBuildPlatforms = [
+    [ browser: 'chrome', provider: 'aws', os: 'windows' ],
+    [ browser: 'firefox', provider: 'aws', os: 'windows' ],
+    [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sequoia' ],
+  ]
+
+  def primaryBuildPlatforms = [
+    [ browser: 'chrome', provider: 'aws', buckets: 1 ],
+    [ browser: 'firefox', provider: 'aws', buckets: 1 ],
+    [ browser: 'edge', provider: 'aws', buckets: 1 ],
     [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ],
     [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ],
     [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
   ];
 
+  def buildingPrimary = env.BRANCH_NAME == props.primaryBranch
+  def platforms = buildingPrimary ? primaryBuildPlatforms : branchBuildPlatforms
+
   def processes = [:]
-  def runAllTests = env.BRANCH_NAME == props.primaryBranch
+  def runAllTests = buildingPrimary
 
   for (int i = 0; i < platforms.size(); i++) {
     def platform = platforms.get(i)
