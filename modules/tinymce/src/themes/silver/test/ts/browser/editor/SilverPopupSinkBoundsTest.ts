@@ -226,10 +226,10 @@ describe('browser.tinymce.themes.silver.editor.SilverPopupSinkBoundsTest', () =>
         TinyUiActions.clickOnMenu(editor, 'button:contains("Custom menu")');
         await TinyUiActions.pWaitForUi(editor, '[role=menu]');
 
-        Arr.range(nestedLevel, async (x) => {
+        await Promise.all(Arr.range(nestedLevel, (x) => {
           TinyUiActions.clickOnUi(editor, `[role="menu"] div[aria-label="Nested Item ${x}"]`);
-          await TinyUiActions.pWaitForUi(editor, `[role="menu"] div[aria-label="Nested Item ${x}"]`);
-        });
+          return TinyUiActions.pWaitForUi(editor, `[role="menu"] div[aria-label="Nested Item ${x}"]`);
+        }));
 
         const shadowHost = UiFinder.findIn(SugarBody.body(), '.test-shadow-root').getOrDie();
         return Arr.from(shadowHost.dom.shadowRoot?.querySelectorAll('[role=menu]') || []).map((x) => x.getBoundingClientRect());

@@ -269,7 +269,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
 
       try {
         editor.execCommand('FormatBlock', false, 'div');
-      } catch (ex) {
+      } catch {
         // t.log('Failed: ' + ex.message);
       }
 
@@ -785,7 +785,7 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
 
       try {
         editor.execCommand('FormatBlock', false, 'div');
-      } catch (ex) {
+      } catch {
         // t.log('Failed: ' + ex.message);
       }
 

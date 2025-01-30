@@ -40,7 +40,7 @@
     "@ephox/bedrock-server": "^15.0.0",
     "@ephox/oxide-icons-tools": "^4.0.0",
     "@ephox/swag": "^4.6.0",
-    "@tinymce/eslint-plugin": "^2.3.0",
+    "@tinymce/eslint-plugin": "^2.4.0",
     "@tinymce/moxiedoc": "^0.3.0",
     "@types/chai": "^4.3.3",
     "@types/dompurify": "3.0.5",

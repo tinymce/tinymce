@@ -463,6 +463,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     Obj.each(resizeHandles, (handle) => {
       if (handle.elm) {
         dom.unbind(handle.elm);
+        // eslint-disable-next-line @typescript-eslint/no-array-delete
         delete handle.elm;
       }
     });
@@ -472,7 +473,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     try {
       // Disable object resizing on Gecko
       editor.getDoc().execCommand('enableObjectResizing', false, 'false');
-    } catch (ex) {
+    } catch {
       // Ignore
     }
   };
