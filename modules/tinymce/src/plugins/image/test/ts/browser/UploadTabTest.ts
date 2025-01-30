@@ -9,6 +9,8 @@ import Editor from 'tinymce/core/api/Editor';
 import * as Conversions from 'tinymce/core/file/Conversions';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
+import { pWaitForDialogMeasurements } from '../module/Helpers';
+
 describe('browser.tinymce.plugins.image.UploadTabTest', () => {
   const src = 'http://moxiecode.cachefly.net/tinymce/v9/images/logo.png';
   const b64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=';
@@ -52,12 +54,12 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
   const pAssertSrcTextValue = (expectedValue: string) => Waiter.pTryUntil('Waited for input to change to expected value', () => {
     const input = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), 'label.tox-label:contains("Source") + div > div > input.tox-textfield').getOrDie();
     assert.equal(Value.get(input), expectedValue, 'Assert field source value ');
-  }, 10, 10000);
+  }, 10, 7000);
 
   const pAssertSrcTextValueStartsWith = (expectedValue: string) => Waiter.pTryUntil('Waited for input to change to start with expected value', () => {
     const input = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), 'label.tox-label:contains("Source") + div > div > input.tox-textfield').getOrDie();
     assert.isTrue(Strings.startsWith(Value.get(input), expectedValue), 'Assert field source value');
-  }, 10, 10000);
+  }, 10, 7000);
 
   it('TBA: Upload tab should not be present without images_upload_url or images_upload_handler', async () => {
     const editor = hook.editor();
@@ -189,6 +191,7 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
     await TinyUiActions.pWaitForUi(editor, '.tox-tab:contains("General")');
     await pAssertSrcTextValue('logo.svg');
     closeDialog(editor);
+    await pWaitForDialogMeasurements('logo.svg');
   });
 
   it('TINY-6622: Image uploader retains the file name/extension', async () => {
@@ -202,6 +205,7 @@ describe('browser.tinymce.plugins.image.UploadTabTest', () => {
     await TinyUiActions.pWaitForUi(editor, '.tox-tab:contains("General")');
     await pAssertSrcTextValue('logo.jfif');
     closeDialog(editor);
+    await pWaitForDialogMeasurements('logo.jfif');
   });
 
   it('TINY-11159: After closing the upload error alert the focus should go back to the dialog', async () => {

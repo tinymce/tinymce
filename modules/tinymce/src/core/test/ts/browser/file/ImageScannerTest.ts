@@ -18,13 +18,12 @@ describe('browser.tinymce.core.file.ImageScannerTest', () => {
   const invalidBlobUriSrc = 'blob:70BE8432-BA4D-4787-9AB9-86563351FBF7';
   let blobUriSrc: string | undefined;
 
-  before(() => {
-    return Conversions.uriToBlob(base64Src).then((blob) => {
-      blobUriSrc = URL.createObjectURL(blob);
-    });
+  before(async () => {
+    const blob = await Conversions.uriToBlob(base64Src);
+    blobUriSrc = URL.createObjectURL(blob);
   });
 
-  it('findAll', () => {
+  it('findAll', async () => {
     const imageScanner = ImageScanner(UploadStatus(), BlobCache());
 
     viewBlock.update(
@@ -37,19 +36,18 @@ describe('browser.tinymce.core.file.ImageScannerTest', () => {
       '<img src="' + invalidBlobUriSrc + '">'
     );
 
-    return imageScanner.findAll(viewBlock.get()).then((result) => {
-      assert.lengthOf(result, 4);
-      const base64ImageResult = result[0] as BlobInfoImagePair;
-      const encodedImageResult = result[2] as BlobInfoImagePair;
-      assert.typeOf(result[result.length - 1], 'object', 'Last item is not the image, but error object.');
-      assert.equal('data:image/gif;base64,' + base64ImageResult.blobInfo.base64(), base64Src);
-      LegacyUnit.equalDom(base64ImageResult.image, viewBlock.get().firstChild as HTMLImageElement);
-      assert.equal('data:image/svg+xml;base64,' + encodedImageResult.blobInfo.base64(), 'data:image/svg+xml;base64,' + btoa(svg));
-      LegacyUnit.equalDom(encodedImageResult.image, viewBlock.get().childNodes.item(2));
-    });
+    const result = await imageScanner.findAll(viewBlock.get());
+    assert.lengthOf(result, 4);
+    const base64ImageResult = result[0] as BlobInfoImagePair;
+    const encodedImageResult = result[2] as BlobInfoImagePair;
+    assert.typeOf(result[result.length - 1], 'object', 'Last item is not the image, but error object.');
+    assert.equal('data:image/gif;base64,' + base64ImageResult.blobInfo.base64(), base64Src);
+    LegacyUnit.equalDom(base64ImageResult.image, viewBlock.get().firstChild as HTMLImageElement);
+    assert.equal('data:image/svg+xml;base64,' + encodedImageResult.blobInfo.base64(), 'data:image/svg+xml;base64,' + btoa(svg));
+    LegacyUnit.equalDom(encodedImageResult.image, viewBlock.get().childNodes.item(2));
   });
 
-  it('findAll (filtered)', () => {
+  it('findAll (filtered)', async () => {
     const imageScanner = ImageScanner(UploadStatus(), BlobCache());
 
     const predicate = (img: HTMLImageElement) => {
@@ -61,11 +59,10 @@ describe('browser.tinymce.core.file.ImageScannerTest', () => {
       '<img src="' + base64Src + '" data-skip="1">'
     );
 
-    return imageScanner.findAll(viewBlock.get(), predicate).then((result) => {
-      assert.lengthOf(result, 1);
-      const firstResult = result[0] as BlobInfoImagePair;
-      assert.equal('data:image/gif;base64,' + firstResult.blobInfo.base64(), base64Src);
-      LegacyUnit.equalDom(firstResult.image, viewBlock.get().firstChild as HTMLImageElement);
-    });
+    const result = await imageScanner.findAll(viewBlock.get(), predicate);
+    assert.lengthOf(result, 1);
+    const firstResult = result[0] as BlobInfoImagePair;
+    assert.equal('data:image/gif;base64,' + firstResult.blobInfo.base64(), base64Src);
+    LegacyUnit.equalDom(firstResult.image, viewBlock.get().firstChild as HTMLImageElement);
   });
 });

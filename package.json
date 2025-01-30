@@ -32,12 +32,12 @@
     "headless-test": "grunt headless-auto",
     "headless-test-firefox": "grunt headless-auto --bedrock-browser=firefox-headless",
     "headless-test-manual": "grunt headless-manual",
-    "bedrock": "bedrock --customRoutes modules/tinymce/src/core/test/json/routes.json",
+    "bedrock": "bedrock --chunk=5000 --customRoutes modules/tinymce/src/core/test/json/routes.json",
     "test-one": "yarn tsc && yarn bedrock-auto -b chrome-headless -f"
   },
   "devDependencies": {
-    "@ephox/bedrock-client": "^14.1.0",
-    "@ephox/bedrock-server": "^14.1.2",
+    "@ephox/bedrock-client": "^15.0.0",
+    "@ephox/bedrock-server": "^15.0.0",
     "@ephox/oxide-icons-tools": "^4.0.0",
     "@ephox/swag": "^4.6.0",
     "@tinymce/eslint-plugin": "^2.3.0",

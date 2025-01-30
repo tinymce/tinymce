@@ -9,13 +9,16 @@ import * as TableTestUtils from '../module/test/TableTestUtils';
 describe('browser.tinymce.plugins.table.TableRemoveTrailingBrTest', () => {
   const baseSettings = {
     plugins: 'table code',
-    base_url: '/project/tinymce/js/tinymce'
+    base_url: '/project/tinymce/js/tinymce',
+    table_default_attributes: { },
+    table_default_styles: { width: '200px' },
+    table_sizing_mode: 'fixed'
   };
 
   context('remove_trailing_brs: true', () => {
     const hook = TinyHooks.bddSetup<Editor>({ ...baseSettings, remove_trailing_brs: true }, [ Plugin ], true);
     const tableOutputHtmlStr = [
-      '<table style="border-collapse: collapse; width: 100%;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
+      '<table style="width: 200px;"><colgroup><col style="width: 100px;"><col style="width: 100px;"></colgroup>',
       '<tbody>',
       '<tr>',
       '<td>&nbsp;</td>',
@@ -74,7 +77,7 @@ describe('browser.tinymce.plugins.table.TableRemoveTrailingBrTest', () => {
   context('remove_trailing_brs: false', () => {
     const hook = TinyHooks.bddSetup<Editor>({ ...baseSettings, remove_trailing_brs: false }, [ Plugin ], true);
     const tableOutputHtmlStr = [
-      '<table style="border-collapse: collapse; width: 100%;" border="1"><colgroup><col style="width: 50%;"><col style="width: 50%;"></colgroup>',
+      '<table style="width: 200px;"><colgroup><col style="width: 100px;"><col style="width: 100px;"></colgroup>',
       '<tbody>',
       '<tr>',
       '<td><br></td>',

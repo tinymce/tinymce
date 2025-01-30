@@ -1,5 +1,5 @@
 import { Cursors, Waiter } from '@ephox/agar';
-import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
+import { after, before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Obj } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
@@ -601,6 +601,13 @@ describe('browser.tinymce.core.annotate.AnnotateBlocksTest', () => {
             assertGetAll(editor, {});
           });
 
+          after(async () => {
+            // After the selected annotation test, reset back to no annotation selected so the next loop receives an event immediately
+            annotationChangeData = [];
+            TinySelections.setCursor(hook.editor(), [ 0, 0 ], 1, true);
+            await pAssertAnnotationChangeData([{ state: false, uid: '', nodeNames: [] }]);
+          });
+
           it('TINY-8698: should fire `annotationChange` API callback when annotated block is selected', async () => {
             const editor = hook.editor();
 
@@ -615,7 +622,7 @@ describe('browser.tinymce.core.annotate.AnnotateBlocksTest', () => {
               selectionPath([ 0 ], 1, [], 3),
               { span: isRootBlock ? 2 : 3, block: isRootBlock ? 1 : 0 }
             );
-            await Waiter.pWait(100);
+            await Waiter.pTryUntilPredicate('Annotation has changed', () => annotationChangeData.length > 0);
 
             annotationChangeData = [];
             TinySelections.setCursor(editor, [ 0, 0 ], 1, true);

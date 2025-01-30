@@ -38,7 +38,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerFloatingPosi
   before(async () => {
     // Firefox requires a small wait, otherwise the initial toolbar position is incorrect
     if (PlatformDetection.detect().browser.isFirefox()) {
-      await Waiter.pWait(100);
+      await Waiter.pWaitBetweenUserActions();
     }
   });
 

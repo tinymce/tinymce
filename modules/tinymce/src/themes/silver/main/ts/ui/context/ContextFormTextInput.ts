@@ -28,7 +28,7 @@ export const renderContextFormTextInput = (
 
   const pField = FormField.parts.field({
     factory: Input,
-    inputClasses: [ 'tox-toolbar-textfield', 'tox-toolbar-nav-js' ],
+    inputClasses: [ 'tox-toolbar-textfield', 'tox-toolbar-nav-item' ],
     inputAttributes,
     data: ctx.initValue(),
     selectOnFocus: true,
