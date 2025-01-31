@@ -7655,14 +7655,14 @@ less-plugin-autoprefix@^2.0.0:
     postcss "^6.0.22"
 
 less-plugin-preset-env@^1.2.6:
-  version "1.2.6"
-  resolved "https://registry.yarnpkg.com/less-plugin-preset-env/-/less-plugin-preset-env-1.2.6.tgz#f88a39cb71262d84e12c776bb56be458d1aa8b41"
-  integrity sha512-Ct2M5D7vIsnsRovwGZdBfeAvteOPdvRkG98/LKoqP8vbxX3fx/9vjAqVBs0b7Syl/owFuvFM9zS3iryUe+ycQw==
+  version "1.2.16"
+  resolved "https://registry.yarnpkg.com/less-plugin-preset-env/-/less-plugin-preset-env-1.2.16.tgz#9ef6a91370466d356a32870850f5fa7d11f97ae0"
+  integrity sha512-XCyunaMJIGXtz1Dsw8I3jRUgEF3Vh1h9FnQG12ISPtvyE+JUVeDIRyDuPEx2XtEpgqUDXjUvhNbrtUHWyBkiKg==
 
 less@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/less/-/less-4.2.0.tgz#cbefbfaa14a4cd388e2099b2b51f956e1465c450"
-  integrity sha512-P3b3HJDBtSzsXUl0im2L7gTO5Ubg8mEN6G8qoTS77iXxXX4Hvu4Qj540PZDvQ8V6DmX6iXo98k7Md0Cm1PrLaA==
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/less/-/less-4.2.2.tgz#4b59ede113933b58ab152190edf9180fc36846d8"
+  integrity sha512-tkuLHQlvWUTeQ3doAqnHbNn8T6WX1KA8yvbKG9x4VtKtIjHsVKQZCH11zRgAfbDAXC2UNIg/K9BYAAcEzUIrNg==
   dependencies:
     copy-anything "^2.0.1"
     parse-node-version "^1.0.1"
@@ -10463,9 +10463,9 @@ safe-regex-test@^1.0.3:
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
 sax@^1.2.4:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/sax/-/sax-1.3.0.tgz#a5dbe77db3be05c9d1ee7785dbd3ea9de51593d0"
-  integrity sha512-0s+oAmw9zLl1V1cS9BtZN7JAd0cW5e0QH4W3LWEK6a4LaLEA2OTpGYWDY+6XasBLtz6wkm3u1xRw95mRuJ59WA==
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/sax/-/sax-1.4.1.tgz#44cc8988377f126304d3b3fc1010c733b929ef0f"
+  integrity sha512-+aWOz7yVScEGoKNd4PA10LZ8sk0A/z5+nXQG5giUO5rprX9jgYsTdov9qCchZiPIZezbZH+jRut8nPodFAX4Jg==
 
 schema-utils@^2.7.0:
   version "2.7.1"
