@@ -144,46 +144,6 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
         predicate: Fun.never,
         items: 'form:test-form-focus-on-init',
       });
-
-      ed.ui.registry.addContextForm('text', {
-        type: 'contextform',
-        launch: {
-          type: 'contextformbutton',
-          text: 'Alt',
-          tooltip: 'Alt'
-        },
-        onSetup: Fun.constant,
-        onInput: Fun.noop,
-        label: 'Alt',
-        commands: [
-          {
-            type: 'contextformbutton',
-            align: 'start',
-            tooltip: 'Back',
-            icon: 'chevron-left',
-            onAction: (formApi) => {
-              formApi.back();
-            }
-          },
-          {
-            type: 'contextformtogglebutton',
-            align: 'start',
-            text: 'Decorative',
-            tooltip: 'Decorative',
-            onAction: (formApi, buttonApi) => {
-              buttonApi.setActive(!buttonApi.isActive());
-              formApi.setInputEnabled(!formApi.isInputEnabled());
-            }
-          }
-        ]
-      });
-
-      ed.ui.registry.addContextToolbar('contexttoolbar1', {
-        predicate: (node) => node.nodeName === 'IMG',
-        items: 'text',
-        position: 'node',
-        scope: 'node'
-      });
     }
   }, [], true);
 
@@ -460,24 +420,20 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     assert.isTrue(Attribute.has(input, 'disabled'), 'the input sohuld be disabled');
   });
 
-  it('TINY-11665: it shound not be possible to navigate to the input field if this one is disabled', async () => {
+  it('TINY-11665: it shound not be possible to navigate to the input field if this one is disabled', () => {
     const editor = hook.editor();
     const doc = SugarDocument.getDocument();
-    editor.setContent('<img>');
-
-    TinySelections.select(editor, 'img', []);
-
-    await TinyUiActions.pTriggerContextMenu(editor, 'img', '.tox-silver-sink [role="toolbar"]');
-    TinyUiActions.clickOnUi(editor, 'button[aria-label="Alt"]');
+    openToolbar(editor, 'test-form');
 
     FocusTools.isOnSelector('Focus should be initial on the input', doc, '.tox-pop__dialog input');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="E"]');
+    FocusTools.isOnSelector('Focus should be moved on the "E" button after click', doc, '.tox-pop__dialog button[aria-label="E"]');
     Keyboard.activeKeydown(doc, Keys.tab());
-    FocusTools.isOnSelector('Focus should be moved on the back button', doc, '.tox-pop__dialog button[aria-label="Back"]');
+    FocusTools.isOnSelector('Focus should stay on the "E" button', doc, '.tox-pop__dialog button[aria-label="E"]');
 
-    TinyUiActions.clickOnUi(editor, 'button[aria-label="Decorative"]');
-    FocusTools.isOnSelector('Focus should on the the button after click', doc, '.tox-pop__dialog button[aria-label="Decorative"]');
-
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="E"]');
+    FocusTools.isOnSelector('Focus should on the the button after click', doc, '.tox-pop__dialog button[aria-label="E"]');
     Keyboard.activeKeydown(doc, Keys.tab());
-    FocusTools.isOnSelector('Focus should stay on decorative button since the input is disable', doc, '.tox-pop__dialog button[aria-label="Decorative"]');
+    FocusTools.isOnSelector('Focus should go on the input now that it is enable', doc, '.tox-pop__dialog input');
   });
 });
