@@ -146,7 +146,7 @@ describe('browser.tinymce.plugins.table.LockedColumnDisabledButtonsTest', () => 
 
   const pOpenContextMenu = async (editor: Editor, target: string) => {
     await TinyUiActions.pTriggerContextMenu(editor, target, '.tox-silver-sink [role="menuitem"]');
-    await Waiter.pWait(0);
+    await Waiter.pWaitBetweenUserActions();
   };
 
   const pSelectContextMenuItem = async (editor: Editor, index: number) => {

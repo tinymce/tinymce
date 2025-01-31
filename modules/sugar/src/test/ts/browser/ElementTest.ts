@@ -8,7 +8,7 @@ UnitTest.test('ElementTest', () => {
   const checkErr = <T extends Node | Window>(f: ElementConstructor, node: T | undefined | null) => {
     try {
       f(node as T);
-    } catch (e) {
+    } catch {
       // expected
       return;
     }

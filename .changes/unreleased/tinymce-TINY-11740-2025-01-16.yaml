@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Preview Dialog incorrectly opened anchor links in a new tab.
+time: 2025-01-16T16:12:41.095576+10:00
+custom:
+  Issue: TINY-11740

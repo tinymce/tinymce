@@ -54,7 +54,7 @@ const populateSegments = (segments: Segment[], entry: EntryList | EntryFragment)
 };
 
 const normalizeSegment = (segment: Segment, entry: EntryList): void => {
-  if (SugarNode.name(segment.list) !== entry.listType) {
+  if (SugarNode.name(segment.list) as ListType !== entry.listType) {
     segment.list = Replication.mutate(segment.list, entry.listType);
   }
   Attribute.setAll(segment.list, entry.listAttributes);

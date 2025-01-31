@@ -33,7 +33,7 @@ def runRemoteTests(String name, String browser, String provider, String platform
   def browserVersion = version != null ? " --browserVersion=${version}" : ""
   def bedrockCommand =
   "yarn browser-test" +
-    " --chunk=1000" +
+    " --chunk=2000" +
     " --bedrock-browser=" + browser +
     " --remote=" + provider +
     " --bucket=" + bucket +
@@ -48,7 +48,7 @@ def runRemoteTests(String name, String browser, String provider, String platform
 def runBrowserTests(String name, String browser, String platform, String bucket, String buckets, Boolean runAll) {
   def bedrockCommand =
     "yarn grunt browser-auto" +
-      " --chunk=1000" +
+      " --chunk=2000" +
       " --bedrock-os=" + platform +
       " --bedrock-browser=" + browser +
       " --bucket=" + bucket +
@@ -213,12 +213,10 @@ timestamps {
     String primaryBranch = props.primaryBranch
     assert primaryBranch != null && primaryBranch != ""
 
-    stage('Merge') {
+
+    stage('Deps') {
       // cancel build if primary branch doesn't merge cleanly
       gitMerge(primaryBranch)
-    }
-
-    stage('Install') {
       yarnInstall()
     }
 
@@ -247,9 +245,9 @@ timestamps {
     [ browser: 'chrome', provider: 'lambdatest', buckets: 1 ],
     [ browser: 'firefox', provider: 'lambdatest', buckets: 1 ],
     [ browser: 'edge', provider: 'lambdatest', buckets: 1 ],
-    [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ],
-    [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ],
-    [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ]
+    [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ],
+    [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ],
+    [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
   ];
 
   def processes = [:]

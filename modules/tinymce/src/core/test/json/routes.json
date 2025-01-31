@@ -209,23 +209,21 @@
       "headers": {
         "content-type": "video/mp4"
       },
-      "status": 404,
-      "json": {}
+      "binary_file": "../assets/media/video.mp4"
     }
   },
 
   {
     "request": {
       "method": "get",
-      "path": "/custom/tinymce/audio.mp3"
+      "path": "/custom/audio.mp3"
     },
 
     "response": {
       "headers": {
         "content-type": "audio/mpeg"
       },
-      "status": 404,
-      "json": {}
+      "binary_file": "../assets/media/audio.mp3"
     }
   },
 
