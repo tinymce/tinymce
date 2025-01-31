@@ -1,8 +1,9 @@
 import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Fun, Obj } from '@ephox/katamari';
-import { SugarBody, SugarDocument, Value } from '@ephox/sugar';
+import { Attribute, SugarBody, SugarDocument, Value } from '@ephox/sugar';
 import { TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
@@ -449,14 +450,14 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     UiFinder.exists(SugarBody.body(), '.tox-pop input[placeholder="This is a placeholder"]');
   });
 
-  // TODO: fix and re-enable it or replace/remove it
-  it.skip('TINY-11559: Focus should be on toolbar when onSetup disables the main input', () => {
+  it('TINY-11559: It should be possible to disable the main input via onSetup', async () => {
     const editor = hook.editor();
     const doc = SugarDocument.getDocument();
 
     openToolbar(editor, 'test-toolbar-focus-on-init');
     TinyUiActions.clickOnUi(editor, 'button[data-mce-name="form:test-form-focus-on-init"]');
-    FocusTools.isOnSelector('Focus should be on toolbar', doc, '[role="toolbar"]');
+    const input = await UiFinder.pWaitFor<HTMLInputElement>('getting the main input', doc, '[role="toolbar"] input');
+    assert.isTrue(Attribute.has(input, 'disabled'), 'the input sohuld be disabled');
   });
 
   it('TINY-11665: it shound not be possible to navigate to the input field if this one is disabled', async () => {
