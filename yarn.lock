@@ -2240,9 +2240,9 @@
     "@types/node" "*"
 
 "@types/chai@^4.3.3":
-  version "4.3.16"
-  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.3.16.tgz#b1572967f0b8b60bf3f87fe1d854a5604ea70c82"
-  integrity sha512-PatH4iOdyh3MyWtmHVFXLWCCIhUbopaltqddG9BzB+gMIzee2MJrvd+jouii9Z3wzQJruGWAm7WOMjgfG8hQlQ==
+  version "4.3.20"
+  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.3.20.tgz#cb291577ed342ca92600430841a00329ba05cecc"
+  integrity sha512-/pC9HAB5I/xMlc5FP77qjCnI16ChlJfW0tGa0IUcFn38VJrTV6DeZ60NU5KZBtaOZqjdpwTWohz5HU1RrhiYxQ==
 
 "@types/connect-history-api-fallback@^1.3.5", "@types/connect-history-api-fallback@^1.5.4":
   version "1.5.4"
@@ -2413,9 +2413,9 @@
   integrity sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==
 
 "@types/prismjs@^1.16.6":
-  version "1.26.3"
-  resolved "https://registry.yarnpkg.com/@types/prismjs/-/prismjs-1.26.3.tgz#47fe8e784c2dee24fe636cab82e090d3da9b7dec"
-  integrity sha512-A0D0aTXvjlqJ5ZILMz3rNfDBOx9hHxLZYv2by47Sm/pqW35zzjusrZTryatjN/Rf8Us2gZrJD+KeHbUSTux1Cw==
+  version "1.26.5"
+  resolved "https://registry.yarnpkg.com/@types/prismjs/-/prismjs-1.26.5.tgz#72499abbb4c4ec9982446509d2f14fb8483869d6"
+  integrity sha512-AUZTa7hQ2KY5L7AmtSiqxlhWxb4ina0yd8hNbl4TWuqnv/pFP0nDMb3YrfSBf4hJVGLh2YEIBfKaBW/9UEl6IQ==
 
 "@types/qs@*":
   version "6.9.18"
@@ -2462,9 +2462,9 @@
     "@types/send" "*"
 
 "@types/sizzle@^2.3.3":
-  version "2.3.8"
-  resolved "https://registry.yarnpkg.com/@types/sizzle/-/sizzle-2.3.8.tgz#518609aefb797da19bf222feb199e8f653ff7627"
-  integrity sha512-0vWLNK2D5MT9dg0iOo8GlKguPAU02QjmZitPEsXRuJXU/OGIOt9vT9Fc26wtYuavLxtO45v9PGleoL9Z0k1LHg==
+  version "2.3.9"
+  resolved "https://registry.yarnpkg.com/@types/sizzle/-/sizzle-2.3.9.tgz#d4597dbd4618264c414d7429363e3f50acb66ea2"
+  integrity sha512-xzLEyKB50yqCUPUJkIsrVvoWNfFUbIZI+RspLWt8u+tIW/BetMBZtgV2LY/2o+tYH8dRvQ+eoPf3NdhQCcLE2w==
 
 "@types/sockjs@^0.3.33", "@types/sockjs@^0.3.36":
   version "0.3.36"
