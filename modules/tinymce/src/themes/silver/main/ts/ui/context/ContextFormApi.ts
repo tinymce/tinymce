@@ -9,7 +9,6 @@ import { InlineContent } from '@ephox/bridge';
 import { Singleton } from '@ephox/katamari';
 import { Focus } from '@ephox/sugar';
 
-import * as ContextToolbarFocus from './ContextToolbarFocus';
 import { backSlideEvent } from './ContextUi';
 
 export const getFormApi = <T>(input: AlloyComponent, focusfallbackComp?: AlloyComponent): InlineContent.ContextFormInstanceApi<T> => {
@@ -17,12 +16,8 @@ export const getFormApi = <T>(input: AlloyComponent, focusfallbackComp?: AlloyCo
 
   return ({
     setInputEnabled: (state: boolean) => {
-      if (!state) {
-        if (focusfallbackComp) {
-          Focus.focus(focusfallbackComp.element);
-        } else {
-          ContextToolbarFocus.focusParent(input);
-        }
+      if (!state && focusfallbackComp) {
+        Focus.focus(focusfallbackComp.element);
       }
 
       Disabling.set(input, !state);
