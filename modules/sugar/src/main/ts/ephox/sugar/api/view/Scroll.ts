@@ -88,6 +88,7 @@ const intoView = (element: SugarElement<Element>, alignToTop: boolean): void => 
     (element.dom as any).scrollIntoViewIfNeeded(false); // false=align to nearest edge
   } else {
     element.dom.scrollIntoView(alignToTop); // true=to top, false=to bottom
+    element.dom.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 };
 

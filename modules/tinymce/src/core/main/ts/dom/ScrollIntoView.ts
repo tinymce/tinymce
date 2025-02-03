@@ -117,34 +117,32 @@ const preserveWith = (editor: Editor, f: (startElement: SugarElement<Node>, endE
   editor.selection.setRng(rng);
 };
 
-const scrollToMarker = (editor: Editor, marker: MarkerInfo, viewHeight: number, alignToTop: boolean, doc?: SugarElement<Document>) => {
+const scrollToMarker = (editor: Editor, marker: MarkerInfo, offsetFromTop: number, alignToTop: boolean, doc?: SugarElement<Document>) => {
   const pos = marker.pos;
-  if (alignToTop) {
-    Scroll.to(pos.left, pos.top, doc);
-  } else {
-    // The position we want to scroll to is the...
-    // (absolute position of the marker, minus the view height) plus (the height of the marker)
-    const y = (pos.top - viewHeight) + marker.height;
-    Scroll.to(-editor.getBody().getBoundingClientRect().left, y, doc);
-  }
+  // Calculate the position that will place the element at 25% from the top
+  const targetY = pos.top - offsetFromTop;
+  Scroll.to(pos.left, targetY, doc);
 };
 
 const intoWindowIfNeeded = (editor: Editor, doc: SugarElement<Document>, scrollTop: number, viewHeight: number, marker: MarkerInfo, alignToTop?: boolean) => {
   const viewportBottom = viewHeight + scrollTop;
   const markerTop = marker.pos.top;
   const markerBottom = marker.bottom;
-  const largerThanViewport = markerBottom - markerTop >= viewHeight;
-  // above the screen, scroll to top by default
-  if (markerTop < scrollTop) {
-    scrollToMarker(editor, marker, viewHeight, alignToTop !== false, doc);
-  // completely below the screen. Default scroll to the top if element height is larger
-  // than the viewport, otherwise default to scrolling to the bottom
+  const largerThanViewport = markerBottom - markerTop >= viewHeight * 0.5;
+
+  // Calculate the target position at 25% of viewport height
+  const targetPosition = scrollTop + (viewHeight * 0.25);
+
+  // above the screen or needs repositioning to 25%
+  if (markerTop < scrollTop || markerTop > targetPosition) {
+    scrollToMarker(editor, marker, viewHeight * 0.25, true, doc);
+  // completely below the screen
   } else if (markerTop > viewportBottom) {
     const align = largerThanViewport ? alignToTop !== false : alignToTop === true;
-    scrollToMarker(editor, marker, viewHeight, align, doc);
+    scrollToMarker(editor, marker, viewHeight * 0.25, align, doc);
   // partially below the bottom, only scroll if element height is less than viewport
   } else if (markerBottom > viewportBottom && !largerThanViewport) {
-    scrollToMarker(editor, marker, viewHeight, alignToTop === true, doc);
+    scrollToMarker(editor, marker, viewHeight * 0.25, alignToTop === true, doc);
   }
 };
 
@@ -158,13 +156,13 @@ const intoFrame = (editor: Editor, doc: SugarElement<Document>, scrollTop: numbe
 
   // If the position is outside the iframe viewport, scroll to it
   intoWindowIfNeeded(editor, doc, scrollTop, frameViewHeight, marker, alignToTop);
-
   // If the new position is outside the window viewport, scroll to it
   const op = OuterPosition.find(marker.element);
   const viewportBounds = WindowVisualViewport.getBounds(window);
+
   if (op.top < viewportBounds.y) {
     Scroll.intoView(marker.element, alignToTop !== false);
-  } else if (op.top > viewportBounds.bottom) {
+  } else if (op.top > viewportBounds.bottom * 0.5) {
     Scroll.intoView(marker.element, alignToTop === true);
   }
 };
