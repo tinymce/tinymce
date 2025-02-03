@@ -232,28 +232,35 @@ timestamps {
     }
   }
 
-  // Local nodes use os: windows | macos; Remote tests use os full name e.g.: macOS Sonoma
-  // Local tests (never do this)
+  // Local nodes use os: windows | macos;
+  // Remote tests use os full name e.g.: macOS Sonoma
+
+  // Local tests (never do this, it depends on jenkins nodes)
   // [ browser: 'edge', os: 'windows' ],
   // [ browser: 'firefox', os: 'macos' ],
   // Remote tests
   // [ browser: 'chrome', provider: 'aws', buckets: 2 ],
-  // [ browser: 'edge', provider: 'aws', buckets: 2 ], // TINY-10540: Investigate Edge issues in AWS
+  // [ browser: 'edge', provider: 'aws', buckets: 2 ],
   // [ browser: 'firefox', provider: 'aws', buckets: 2 ],
 
+  def winChrome = [ browser: 'chrome', provider: 'lambdatest', os: 'windows', buckets: 1 ]
+  def winFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'windows', buckets: 1 ]
+  def winEdge = [ browser: 'edge', provider: 'lambdatest', os: 'windows', buckets: 1 ]
+
+  def macChrome = [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
+  def macFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
+  def macSafari = [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
+
   def branchBuildPlatforms = [
-    [ browser: 'chrome', provider: 'aws', os: 'windows' ],
-    [ browser: 'firefox', provider: 'aws', os: 'windows' ],
-    [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sequoia' ],
+    winChrome,
+    winFirefox,
+    macSafari,
   ]
 
-  def primaryBuildPlatforms = [
-    [ browser: 'chrome', provider: 'aws', buckets: 1 ],
-    [ browser: 'firefox', provider: 'aws', buckets: 1 ],
-    [ browser: 'edge', provider: 'aws', buckets: 1 ],
-    [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ],
-    [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ],
-    [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
+  def primaryBuildPlatforms = branchBuildPlatforms + [
+    winEdge,
+    macChrome,
+    macFirefox
   ];
 
   def buildingPrimary = env.BRANCH_NAME == props.primaryBranch
