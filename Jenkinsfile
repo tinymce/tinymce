@@ -27,8 +27,8 @@ def runHeadlessTests(Boolean runAll) {
   runBedrockTest('headless', bedrockCmd, runAll)
 }
 
-def runRemoteTests(String name, String browser, String provider, String platform, String arn, String version, String bucket, String buckets, Boolean runAll, int retry = 0, int timeout = 0) {
-  def awsOpts = " --sishDomain=sish.osu.tiny.work --devicefarmArn=${arn}"
+def runRemoteTests(String name, String browser, String provider, String platform, String version, String bucket, String buckets, Boolean runAll, int retry = 0, int timeout = 0) {
+  def awsOpts = " --sishDomain=sish.osu.tiny.work"
   def platformName = platform != null ? " --platformName='${platform}'" : ""
   def browserVersion = version != null ? " --browserVersion=${version}" : ""
   def bedrockCommand =
@@ -82,11 +82,10 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
         useContainers: ['node', 'aws-cli']
       ) {
         grunt('list-changed-browser')
+        bedrockRemoteTools.tinyWorkSishTunnel()
         bedrockRemoteTools.withRemoteCreds(provider) {
           int retry = 0
-          withCredentials([string(credentialsId: 'devicefarm-testgridarn', variable: 'DF_ARN')]) {
-            runRemoteTests(testname, browser, provider, platform, DF_ARN, version, bucket, buckets, runAll, retry, 180)
-          }
+          runRemoteTests(testname, browser, provider, platform, version, bucket, buckets, runAll, retry, 180)
         }
       }
     }
