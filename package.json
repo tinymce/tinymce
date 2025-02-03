@@ -52,7 +52,7 @@
     "eslint-plugin-only-warn": "^1.1.0",
     "eslint-plugin-security-node": "^1.1.4",
     "fast-check": "^2.23.0",
-    "fork-ts-checker-webpack-plugin": "^8.0.0",
+    "fork-ts-checker-webpack-plugin": "^9.0.2",
     "grunt": "^1.5.3",
     "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-concat": "^2.0.0",
