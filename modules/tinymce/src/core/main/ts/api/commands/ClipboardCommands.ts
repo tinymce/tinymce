@@ -18,55 +18,55 @@ export const registerCommands = (editor: Editor): void => {
     editor.selection.setContent('');
   };
 
-  const handleSecureContentError = () => {
+  const handleError = (message: string): false => {
+    editor.notificationManager.open({ text: editor.translate(message), type: 'error' });
+    return false;
+  };
 
-    const msg = editor.translate(
+  const checkSecureContext = (): boolean =>
+    window.isSecureContext ? true : handleError(
       'Error: This operation requires a secure context (HTTPS).' +
-        'Direct access to the clipboard is not allowed in insecure contexts.'
+      'Direct access to the clipboard is not allowed in insecure contexts.'
     );
 
-    editor.notificationManager.open({ text: msg, type: 'error' });
-
-    return false;
-  };
-
-  const checkPermission = async () => {
-    const permission = browser.isChromium() ? await navigator.permissions.query({ name: 'clipboard-read' as PermissionName }) : { state: 'granted' };
-    if (permission.state === 'granted') {
+  const checkClipboardPermission = async (): Promise<boolean> => {
+    if (!browser.isChromium()) {
       return true;
-    } else if (permission.state === 'denied') {
-      handlePermissionError();
-      return false;
-    } else {
-      // state is 'prompt'
-      try {
-        await navigator.clipboard.readText();
-      } catch (e) {
-        handlePermissionError();
-      }
-
-      return;
     }
-  };
 
-  const handlePermissionError = () => {
+    try {
+      const permission = await navigator.permissions.query({ name: 'clipboard-read' as PermissionName });
 
-    const msg = editor.translate(
-      'Clipboard permission denied. Please allow clipboard access to use this feature.'
-    );
-
-    editor.notificationManager.open({ text: msg, type: 'error' });
-
-    return false;
+      switch (permission.state) {
+        case 'granted':
+          return true;
+        case 'denied':
+          return handleError('Clipboard permission denied. Please allow clipboard access to use this feature.');
+        case 'prompt':
+          try {
+            await navigator.clipboard.readText();
+            return true;
+          } catch {
+            return handleError('Clipboard permission denied. Please allow clipboard access to use this feature.');
+          }
+      }
+    } catch (e) {
+      return handleError('Failed to check clipboard permission.');
+    }
   };
 
   editor.editorCommands.addCommands({
     'Cut,Copy,Paste': (command) => {
       const executeCommand = async () => {
-        const secureContextCheck = window.isSecureContext ? true : handleSecureContentError();
-        const isPermitted = browser.isChromium() ? await navigator.permissions.query({ name: 'clipboard-read' as PermissionName }) : { state: 'granted' };
+        if (!checkSecureContext()) {
+          return;
+        }
 
-        if (secureContextCheck && isPermitted.state === 'granted') {
+        if (!await checkClipboardPermission()) {
+          return;
+        }
+
+        try {
           switch (command) {
             case 'copy':
               await copyToClipboard(editor.selection.getContent());
@@ -78,10 +78,8 @@ export const registerCommands = (editor: Editor): void => {
               await cutToClipboard(editor.selection.getContent());
               break;
           }
-        } else if (isPermitted.state === 'prompt') {
-          checkPermission();
-        } else {
-          handleSecureContentError();
+        } catch (e) {
+          handleError('Failed to execute clipboard operation.');
         }
       };
 
