@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Toolbar groups no longer display a title to prevent overlapping tooltips
+time: 2025-02-03T15:06:52.667595+01:00
+custom:
+    Issue: TINY-11768

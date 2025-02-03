@@ -199,7 +199,7 @@ const identifyButtons = (editor: Editor, toolbarConfig: RenderToolbarConfig, bac
         lookupButton(editor, toolbarConfig.buttons, toolbarItem, toolbarConfig.allowToolbarGroups, backstage, prefixes).toArray();
     });
     return {
-      title: Optional.from(editor.translate(group.name)),
+      title: Optional.none(),
       label: Optionals.someIf(group.label !== undefined, editor.translate(group.label)),
       items
     };
