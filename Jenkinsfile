@@ -255,7 +255,7 @@ timestamps {
     // Local tests
     // [ browser: 'edge', os: 'windows' ],
     // [ browser: 'firefox', os: 'macos' ],
-    [ browser: 'chrome' ]
+    [ browser: 'chrome' ],
     [ browser: 'chrome', provider: 'selenium', buckets: 2 ],
     [ browser: 'firefox', provider: 'selenium', buckets: 2 ],
     // Remote tests
