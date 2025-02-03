@@ -46,7 +46,7 @@
     "@types/dompurify": "3.0.5",
     "@types/prismjs": "^1.16.6",
     "chai": "^4.4.1",
-    "chalk": "^4.1.0",
+    "chalk": "^5.4.1",
     "changie": "^1.14.0",
     "emojilib": "^2.4.0",
     "eslint-plugin-only-warn": "^1.1.0",
