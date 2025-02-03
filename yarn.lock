@@ -6537,13 +6537,13 @@ grunt-terser@^2.0.0:
   dependencies:
     grunt "^1.1.0"
 
-grunt-webpack@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/grunt-webpack/-/grunt-webpack-5.0.0.tgz#0c3e3c516638ed353553dc0bd5af5dbe6ded3858"
-  integrity sha512-C7emzVIGJhZ5V5ZYjylr9sDD9PE9Dh/55NaSzP2P2dhif+m/1gHbjDZQ7PDzguyuzwBz4Qc8voQHR06FSp4CKg==
+grunt-webpack@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/grunt-webpack/-/grunt-webpack-7.0.0.tgz#445fcc45a59651fd4a7fa09d2db64e689cff2716"
+  integrity sha512-HjeKSoE94ZNAqLLBT/Iwew6MoUpyBpRDGIofrO51Btl+X7RzRXh7ERUm844RzOQuFF2IQ51MxsfC1zb7ylJ8XA==
   dependencies:
     deep-for-each "^3.0.0"
-    lodash "^4.17.19"
+    webpack-merge "^6.0.1"
 
 grunt@^1.0.4, grunt@^1.1.0, grunt@^1.5.3:
   version "1.6.1"
@@ -7939,7 +7939,7 @@ lodash.zip@^4.2.0:
   resolved "https://registry.yarnpkg.com/lodash.zip/-/lodash.zip-4.2.0.tgz#ec6662e4896408ed4ab6c542a3990b72cc080020"
   integrity sha512-C7IOaBBK/0gMORRBd8OETNx3kmOkgIWIPvyDpZSCTwUrpYmgZwJkjZeOD8ww4xbOUOs4/attY+pciKvadNfFbg==
 
-lodash@^4.17.10, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.21, lodash@~4.17.19, lodash@~4.17.21:
+lodash@^4.17.10, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.21, lodash@~4.17.19, lodash@~4.17.21:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==

@@ -65,7 +65,7 @@
     "grunt-shell": "^4.0.0",
     "grunt-stylelint": "^0.20.1",
     "grunt-terser": "^2.0.0",
-    "grunt-webpack": "^5.0.0",
+    "grunt-webpack": "^7.0.0",
     "lerna": "^8.1.2",
     "less": "^4.2.0",
     "less-plugin-autoprefix": "^2.0.0",
