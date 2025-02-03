@@ -947,7 +947,7 @@
     jquery "^3.4.1"
     querystringify "^2.1.1"
 
-"@ephox/bedrock-server@^15.0.0":
+"@ephox/bedrock-server@^15.0.2":
   version "15.0.2"
   resolved "https://registry.yarnpkg.com/@ephox/bedrock-server/-/bedrock-server-15.0.2.tgz#3ae3fab478049aff74717de8c4418611f3a41bcb"
   integrity sha512-a0iu8h/dsGJwHmg8wntAaKJ+K6EV5YKTBvlu9ezxvZM7YAyfZCvSRd89a3hmXqVI6H+XzRekDxOVazZXsUeBSQ==
