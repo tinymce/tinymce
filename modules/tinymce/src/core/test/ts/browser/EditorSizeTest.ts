@@ -14,6 +14,7 @@ describe('browser.tinymce.core.EditorSizeTest', () => {
         min_height: 500,
         base_url: '/project/tinymce/js/tinymce'
       }, []);
+
       it('TINY-11108: unitless', () => {
         const editor = hook.editor();
         assert.equal(Height.get(TinyDom.container(editor)), 500);
@@ -27,6 +28,7 @@ describe('browser.tinymce.core.EditorSizeTest', () => {
         min_height: 500,
         base_url: '/project/tinymce/js/tinymce'
       }, []);
+
       it('TINY-11108: using em units', () => {
         const editor = hook.editor();
         assert.equal(Height.get(TinyDom.container(editor)), 500);
@@ -40,6 +42,7 @@ describe('browser.tinymce.core.EditorSizeTest', () => {
         min_height: 500,
         base_url: '/project/tinymce/js/tinymce'
       }, []);
+
       it('TINY-11108: using pt units', () => {
         const editor = hook.editor();
         assert.equal(Height.get(TinyDom.container(editor)), 500);
@@ -53,6 +56,7 @@ describe('browser.tinymce.core.EditorSizeTest', () => {
         min_height: 500,
         base_url: '/project/tinymce/js/tinymce'
       }, []);
+
       it('TINY-11108: using px units', () => {
         const editor = hook.editor();
         assert.equal(Height.get(TinyDom.container(editor)), 500);
@@ -66,6 +70,7 @@ describe('browser.tinymce.core.EditorSizeTest', () => {
         min_height: 500,
         base_url: '/project/tinymce/js/tinymce'
       }, []);
+
       it('TINY-11108: using % units', () => {
         const editor = hook.editor();
         // % not really supported, so we do this.

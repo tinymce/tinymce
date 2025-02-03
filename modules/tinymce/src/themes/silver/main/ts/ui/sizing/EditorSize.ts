@@ -1,39 +1,13 @@
 import { Optional } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Options from '../../api/Options';
 import * as Utils from './Utils';
 
-const convertValueToPx = (editor: Editor, value: number | string): Optional<number> => {
-  if (typeof value === 'number') {
-    return Optional.from(value);
-  }
-
-  return Utils.parseToInt(value.trim()).orThunk(() => {
-    const splitValue = /^([0-9.]+)(pt|em|px)$/.exec(value);
-
-    if (splitValue) {
-      const type = splitValue[2];
-      const parsed = Number.parseFloat(splitValue[1]);
-
-      if (Number.isNaN(parsed) || parsed < 0) {
-        return Optional.none();
-      } else if (type === 'em') {
-        return Optional.from(parsed * Number.parseFloat(window.getComputedStyle(editor.targetElm).fontSize));
-      } else if (type === 'pt') {
-        return Optional.from(parsed * (72 / 96));
-      } else if (type === 'px') {
-        return Optional.from(parsed);
-      }
-    }
-
-    return Optional.none();
-  });
-};
-
 export const getHeight = (editor: Editor): Optional<number> => {
-  const baseHeight = convertValueToPx(editor, Options.getHeightOption(editor));
+  const baseHeight = Utils.convertValueToPx(SugarElement.fromDom(editor.targetElm), Options.getHeightOption(editor));
   const minHeight = Options.getMinHeightOption(editor);
   const maxHeight = Options.getMaxHeightOption(editor);
 

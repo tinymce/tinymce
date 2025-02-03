@@ -1,4 +1,5 @@
 import { Optional, Type } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
 const parseToInt = (val: string | number): Optional<number> => {
   // if size is a number or '_px', will return the number
@@ -17,8 +18,36 @@ const calcCappedSize = (size: number, minSize: Optional<number>, maxSize: Option
   return minOverride.or(maxOverride).getOr(size);
 };
 
+const convertValueToPx = (element: SugarElement<Element>, value: number | string): Optional<number> => {
+  if (typeof value === 'number') {
+    return Optional.from(value);
+  }
+
+  return parseToInt(value.trim()).orThunk(() => {
+    const splitValue = /^([0-9.]+)(pt|em|px)$/.exec(value);
+
+    if (splitValue) {
+      const type = splitValue[2];
+      const parsed = Number.parseFloat(splitValue[1]);
+
+      if (Number.isNaN(parsed) || parsed < 0) {
+        return Optional.none();
+      } else if (type === 'em') {
+        return Optional.from(parsed * Number.parseFloat(window.getComputedStyle(element.dom).fontSize));
+      } else if (type === 'pt') {
+        return Optional.from(parsed * (72 / 96));
+      } else if (type === 'px') {
+        return Optional.from(parsed);
+      }
+    }
+
+    return Optional.none();
+  });
+};
+
 export {
   calcCappedSize,
+  convertValueToPx,
   parseToInt,
   numToPx
 };
