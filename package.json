@@ -82,7 +82,7 @@
     "source-map-loader": "^5.0.0",
     "string-replace-loader": "^3.0.3",
     "stylelint": "^16.6.1",
-    "stylelint-config-standard": "^36.0.0",
+    "stylelint-config-standard": "^37.0.0",
     "stylelint-less": "^3.0.1",
     "stylelint-order": "^6.0.4",
     "terser": "^5.28.1",
