@@ -27,11 +27,11 @@ export const registerCommands = (editor: Editor): void => {
           break;
         case 'paste':
           const text = await navigator.clipboard.readText();
-          editor.selection.setContent(text);
+          editor.insertContent(text);
           break;
         case 'cut':
           await navigator.clipboard.writeText(content);
-          editor.selection.setContent('');
+          editor.insertContent('');
           break;
       }
       return true;
