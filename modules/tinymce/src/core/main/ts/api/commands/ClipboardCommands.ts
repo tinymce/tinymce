@@ -21,7 +21,7 @@ export const registerCommands = (editor: Editor): void => {
   const handleSecureContentError = () => {
 
     const msg = editor.translate(
-      'Error: This operation requires a secure context (HTTPS)' +
+      'Error: This operation requires a secure context (HTTPS).' +
         'Direct access to the clipboard is not allowed in insecure contexts.'
     );
 
