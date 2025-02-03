@@ -2,7 +2,7 @@ import { FocusTools } from '@ephox/agar';
 import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Focus, Insert, Remove, SugarElement, SugarShadowDom } from '@ephox/sugar';
-import { LegacyUnit, TinyContentActions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
+import { LegacyUnit, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -151,7 +151,12 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
 
         const hasFocus = (node: Node) => Focus.search(SugarElement.fromDom(node)).isSome();
 
-        TinyContentActions.keystroke(editor, 123, { alt: true });
+        editor.getBody().dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'F12',
+          altKey: true,
+          bubbles: true
+        }));
+
         await FocusTools.pTryOnSelector('Assert focus should be on notification 1', root, '.tox-notification');
         assert.isTrue(hasFocus(n1.getEl()), 'Focus should be on notification 1');
 
@@ -214,59 +219,47 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
           editor.notificationManager.open(testMsg1);
         }, 'Should never throw exception.');
       });
-    });
 
-    context('focus is placed outside of the editor', () => {
-      const input = SugarElement.fromHtml<HTMLInputElement>('<input class="test-input" />');
+      context('focus is placed outside of the editor', () => {
+        const input = SugarElement.fromHtml<HTMLInputElement>('<input class="test-input" />');
 
-      beforeEach(() => {
-        const body = SugarElement.fromDom(document.body);
-        Insert.append(body, input);
+        beforeEach(() => {
+          const body = SugarElement.fromDom(document.body);
+          Insert.append(body, input);
+        });
+
+        afterEach(() => {
+          Remove.remove(input);
+        });
+
+        it('TINY-10282: Should not move focus around if the focus is not in the editor', () => {
+          const editor = hook.editor();
+          resetNotifications(editor);
+
+          const testMsg1: NotificationSpec = { type: 'warning', text: 'test message 1' };
+          const testMsg2: NotificationSpec = { type: 'error', text: 'test message 2' };
+          const notifications = editor.notificationManager.getNotifications();
+
+          const hasFocus = (node: SugarElement<Node>) =>
+            Focus.search(node).isSome();
+
+          const n1 = editor.notificationManager.open(testMsg1);
+          const n2 = editor.notificationManager.open(testMsg2);
+          assert.lengthOf(notifications, 2, 'Should have two messages added.');
+
+          Focus.focus(input);
+
+          assert.isTrue(hasFocus(input), 'Focus should remain on the input');
+
+          n2.close();
+          assert.isTrue(hasFocus(input), 'Focus should remain on the input');
+
+          n1.close();
+          assert.isTrue(hasFocus(input), 'Focus should remain on the input');
+          assert.isTrue(!editor.hasFocus(), 'Focus should not be on the editor');
+        });
       });
-
-      afterEach(() => {
-        Remove.remove(input);
-      });
-
-      const hook = tester.setup<Editor>({
-        service_message: 'service notification text',
-        add_unload_trigger: false,
-        disable_nodechange: true,
-        indent: false,
-        entities: 'raw',
-        base_url: '/project/tinymce/js/tinymce',
-        setup: (editor: Editor) => {
-          editor.on('BeforeOpenNotification', (event) => beforeOpenEvents.push(event));
-          editor.on('OpenNotification', (event) => openEvents.push(event));
-        }
-      }, []);
-
-      it('TINY-10282: Should not move focus around if the focus is not in the editor', () => {
-        const editor = hook.editor();
-        resetNotifications(editor);
-
-        const testMsg1: NotificationSpec = { type: 'warning', text: 'test message 1' };
-        const testMsg2: NotificationSpec = { type: 'error', text: 'test message 2' };
-        const notifications = editor.notificationManager.getNotifications();
-
-        const hasFocus = (node: SugarElement<Node>) =>
-          Focus.search(node).isSome();
-
-        const n1 = editor.notificationManager.open(testMsg1);
-        const n2 = editor.notificationManager.open(testMsg2);
-        assert.lengthOf(notifications, 2, 'Should have two messages added.');
-
-        Focus.focus(input);
-
-        assert.isTrue(hasFocus(input), 'Focus should remain on the input');
-
-        n2.close();
-        assert.isTrue(hasFocus(input), 'Focus should remain on the input');
-
-        n1.close();
-        assert.isTrue(hasFocus(input), 'Focus should remain on the input');
-        assert.isTrue(!editor.hasFocus(), 'Focus should not be on the editor');
-      });
+      // if you add new tests, put them inside the above label context otherwise the results will only be recorded once
     });
   });
 });

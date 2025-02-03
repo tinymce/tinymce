@@ -9,4 +9,4 @@ export const getText = (rng: Range): string =>
   Zwsp.trim(rng.toString().replace(/\u00A0/g, ' '));
 
 export const isWhitespace = (chr: string): boolean =>
-  chr !== '' && ' \u00a0\f\n\r\t\v'.indexOf(chr) !== -1;
+  chr !== '' && ' \u00a0\ufeff\f\n\r\t\v'.indexOf(chr) !== -1;

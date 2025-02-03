@@ -1,0 +1,85 @@
+// UPLOADCARE LOADER
+@uploadcare-overlay-background-color: rgba(255, 255, 255, 0.5);;
+
+@uploadcare-loading-element-border: 3px solid @color-tint;
+@uploadcare-loading-element-width: ~"min(24px, 30%)";
+
+// UPLOADCARE PLACEHOLDER
+@uploadcare-placeholder-initial-width: 600px;
+@uploadcare-placeholder-initial-height: 80px;
+
+@uploadcare-placeholder-background-color: @background-color;
+@uploadcare-placeholder-border: 2px solid darken(@uploadcare-placeholder-background-color, 11%);
+@uploadcare-placeholder-font-family: monospace, sans-serif;
+
+@uploadcare-placeholder-text-color: @text-color-muted;
+@uploadcare-placeholder-icon-fill: @text-color-muted;
+
+// UPLOADCARE LOADER
+.tox-uc-loading-background {
+  width: 100%;
+  height: 100%;
+  background: @uploadcare-overlay-background-color;
+}
+
+.tox-uc-loading-spinner-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tox-uc-loading-spinner {
+  width: @uploadcare-loading-element-width;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  border: @uploadcare-loading-element-border;
+  border-bottom-color: transparent;
+
+  animation: tox-rotation 1s linear infinite;
+}
+
+
+// UPLOADCARE PLACEHOLDER
+.tox-uploadcare-placeholder {
+  all: initial; // prevents inheritable styles to leak into the shadow DOM
+  display: inline-block;
+  position: relative;
+  width: @uploadcare-placeholder-initial-width;
+  height: @uploadcare-placeholder-initial-height;
+
+  // shadow DOM (icon + text)
+  --tox-uploadcare-placeholder--content-cursor: auto !important; // to overwrite not-allowed by selected contenteditable=false
+  --tox-uploadcare-placeholder--content-color: @uploadcare-placeholder-text-color;
+  --tox-uploadcare-placeholder--content-background-color: @uploadcare-placeholder-background-color;
+  --tox-uploadcare-placeholder--content-border: @uploadcare-placeholder-border;
+  --tox-uploadcare-placeholder--content-font-family: @uploadcare-placeholder-font-family;
+  --tox-uploadcare-placeholder--content-height: 100%;
+  --tox-uploadcare-placeholder--content-width: 100%;
+  --tox-uploadcare-placeholder--content-display: inline-flex; // needs to be inline so the line decoration styles are not inherited https://www.w3.org/TR/css-text-decor-3/#line-decoration
+  --tox-uploadcare-placeholder--content-align-items: center;
+  --tox-uploadcare-placeholder--content-justify-content: center;
+  --tox-uploadcare-placeholder--content-gap: 8px;
+
+  --tox-uploadcare-placeholder--icon-fill: @uploadcare-placeholder-icon-fill;
+
+  // shadow DOM (loader)
+
+  --tox-uc-loading-spinner-wrapper-display-none: none;
+  --tox-uc-loading-spinner-wrapper-display: flex;
+  --tox-uc-loading-spinner-wrapper-position: absolute;
+  --tox-uc-loading-spinner-wrapper-top: 0;
+  --tox-uc-loading-spinner-wrapper-left: 0;
+  --tox-uc-loading-spinner-wrapper-width: 100%;
+  --tox-uc-loading-spinner-wrapper-height: 100%;
+  --tox-uc-loading-spinner-wrapper-justify-content: center;
+  --tox-uc-loading-spinner-wrapper-align-items: center;
+  
+  --tox-uc-loading-spinner-aspect-ratio: 1 / 1;
+  --tox-uc-loading-spinner-width: @uploadcare-loading-element-width;
+  --tox-uc-loading-spinner-border-radius: 50%;
+  --tox-uc-loading-spinner-border: @uploadcare-loading-element-border;
+  --tox-uc-loading-spinner-border-bottom-color: transparent;
+  --tox-uc-loading-spinner-animation: tox-rotation 1s linear infinite;
+}

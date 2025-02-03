@@ -524,7 +524,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
           });
 
           // This is because the toolbar buttons are attached again, so DisablingConfigs onLoad follows the enabled spec
-          it(`TINY-11211: Toolbar ${scenario.label} should be enabled in all modes`, async () => {
+          it(`TINY-11211: Toolbar ${scenario.label} should open and close in all modes`, async () => {
             const editor = hook.editor();
             await pOpenOverflowToolbar(editor);
             assertButtonInToolbarDisabled('t12');

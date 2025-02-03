@@ -47,7 +47,7 @@ const focusBody = (body: HTMLElement & { setActive?: VoidFunction }) => {
     // setActive is better since it doesn't scroll to the element being focused
     try {
       body.setActive();
-    } catch (ex) {
+    } catch {
       body.focus();
     }
   } else {

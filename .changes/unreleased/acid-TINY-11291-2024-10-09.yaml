@@ -1,0 +1,6 @@
+project: acid
+kind: Changed
+body: Moved aria-label from RGB Form label to input
+time: 2024-10-09T15:34:58.784641+11:00
+custom:
+  Issue: TINY-11291

@@ -15,3 +15,12 @@
     }
   }
 }
+
+// TODO: remove me when the size input for toolbar is a separate component. Toolbar buttons should be styled by a toolbar-button.less but we use dialog size input so the classes don't match
+.tox-context-form__group {
+  .tox-button--icon,
+  .tox-button.tox-button--icon {
+    margin: @toolbar-button-margin;
+    padding: @toolbar-button-padding;
+  }
+}

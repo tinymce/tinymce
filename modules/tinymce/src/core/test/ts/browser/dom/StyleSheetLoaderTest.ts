@@ -1,5 +1,5 @@
 import { UiFinder } from '@ephox/agar';
-import { before, describe, it } from '@ephox/bedrock-client';
+import { after, before, describe, it } from '@ephox/bedrock-client';
 import { Attribute, SelectorFilter, SugarElement, SugarHead } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -37,6 +37,10 @@ describe('browser.tinymce.core.dom.StyleSheetLoaderTest', () => {
       contentCssCors: true,
       referrerPolicy: 'origin'
     });
+  });
+
+  after(() => {
+    unloadAllUrls([ contentCss, skinCss ]);
   });
 
   it('TINY-3926: Load and then unload removes the loaded stylesheet', async () => {

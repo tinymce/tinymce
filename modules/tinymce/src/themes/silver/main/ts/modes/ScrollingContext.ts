@@ -18,7 +18,7 @@ const nonScrollingOverflows = [ 'visible', 'hidden', 'clip' ];
 const isScrollingOverflowValue = (value: string): boolean =>
   Strings.trim(value).length > 0 && !Arr.contains(nonScrollingOverflows, value);
 
-export const isScroller = (elem: SugarElement<Node> | any): boolean => {
+export const isScroller = (elem: SugarElement<Node>): boolean => {
   if (SugarNode.isHTMLElement(elem)) {
     const overflowX = Css.get(elem, 'overflow-x');
     const overflowY = Css.get(elem, 'overflow-y');
@@ -28,7 +28,7 @@ export const isScroller = (elem: SugarElement<Node> | any): boolean => {
   }
 };
 
-const isFullscreen = (editor: Editor): boolean =>
+export const isFullscreen = (editor: Editor): boolean =>
   editor.plugins.fullscreen && editor.plugins.fullscreen.isFullscreen();
 
 // NOTE: Calculating the list of scrolling ancestors each time this function is called might

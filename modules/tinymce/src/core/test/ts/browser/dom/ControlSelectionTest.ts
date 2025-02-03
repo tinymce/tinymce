@@ -1,8 +1,8 @@
-import { Assertions, Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { Assertions, FocusTools, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Arr, Cell, Obj, Strings } from '@ephox/katamari';
-import { Attribute, Css, Hierarchy, SugarElement } from '@ephox/sugar';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { Attribute, Css, Hierarchy, SugarDocument, SugarElement } from '@ephox/sugar';
+import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -11,7 +11,7 @@ import Env from 'tinymce/core/api/Env';
 describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
   const imgSrc = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAGUlEQVR4nGK5aLGTATdgwiM3gqUBAQAA//8ukgHZvWHlnwAAAABJRU5ErkJggg==';
   const eventCounter = Cell<Record<string, number>>({});
-  const hook = TinyHooks.bddSetupLight<Editor>({
+  const hook = TinyHooks.bddSetup<Editor>({
     add_unload_trigger: false,
     base_url: '/project/tinymce/js/tinymce',
     content_style: 'body.mce-content-body  { margin: 0 }',
@@ -75,11 +75,13 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     const resizeHandle = await UiFinder.pWaitForVisible('Wait for resize handlers to show', editorBody, resizeSelector);
     const target = UiFinder.findIn(editorBody, targetSelector).getOrDie();
     Mouse.mouseDown(resizeHandle);
+    await Waiter.pWaitBetweenUserActions();
     const ghost = UiFinder.findIn(editorBody, '.mce-clonedresizable').getOrDie();
     getAndAssertDimensions(ghost, width, height);
     Mouse.mouseMoveTo(resizeHandle, deltaX, deltaY);
     getAndAssertDimensions(ghost, expectedWidth, expectedHeight);
     Mouse.mouseUp(resizeHandle);
+    await Waiter.pWaitBetweenUserActions();
     getAndAssertDimensions(target, expectedWidth, expectedHeight);
   };
 
@@ -87,10 +89,11 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     const editorBody = TinyDom.body(editor);
     const resizeHandle = await UiFinder.pWaitForVisible('Wait for resize handlers to show', editorBody, resizeSelector);
     Mouse.mouseDown(resizeHandle);
+    await Waiter.pWaitBetweenUserActions();
     const ghost = UiFinder.findIn(editorBody, '.mce-clonedresizable').getOrDie();
     assertGhostElem(ghost);
     Mouse.mouseUp(resizeHandle);
-    Waiter.pTryUntil('ghost element should be removed from DOM', () => {
+    await Waiter.pTryUntil('ghost element should be removed from DOM', () => {
       UiFinder.notExists(editorBody, '.mce-clonedresizable');
     });
   };
@@ -216,7 +219,7 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     editor.setContent(`<p contenteditable="false"><img contenteditable="false" src="${imgSrc}" width="100" height="100"></p>`);
     Mouse.trueClickOn(TinyDom.body(editor), 'img');
     TinySelections.setRawSelection(editor, [ 0 ], 0, [ 0 ], 1); // Triggers a `selectionchange` on Firefox
-    Waiter.pTryUntil('correct selection', () =>
+    await Waiter.pTryUntil('correct selection', () =>
       TinyAssertions.assertContentPresence(editor, {
         'img[data-mce-selected="1"]': 0
       })
@@ -225,7 +228,7 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     editor.setContent(`<p contenteditable="false"><img contenteditable="true" src="${imgSrc}" width="100" height="100"></p>`);
     Mouse.trueClickOn(TinyDom.body(editor), 'img');
     TinySelections.setRawSelection(editor, [ 0 ], 0, [ 0 ], 1); // Triggers a `selectionchange` on Firefox
-    Waiter.pTryUntil('correct selection', () =>
+    await Waiter.pTryUntil('correct selection', () =>
       TinyAssertions.assertContentPresence(editor, {
         'img[data-mce-selected="1"]': 1
       })
@@ -239,6 +242,17 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     TinyAssertions.assertContentPresence(editor, { 'details[data-mce-selected="1"]': 0 });
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     TinyAssertions.assertContentPresence(editor, { 'details[data-mce-selected="1"]': 1 });
+  });
+
+  it('TINY-11437: Node change while editor UI has focus should not hide control selection', async () => {
+    const editor = hook.editor();
+
+    editor.setContent(`<p><img src="${imgSrc}" width="100" height="100"></p>`);
+    TinySelections.select(editor, 'img', []);
+    TinyContentActions.keystroke(editor, 121, { altKey: true });
+    await FocusTools.pTryOnSelector('Assert toolbar is focused', SugarDocument.getDocument(), 'div[role=toolbar] .tox-tbtn');
+    editor.nodeChanged();
+    TinyAssertions.assertContentPresence(editor, { 'img[data-mce-selected="1"]': 1 });
   });
 
   Arr.each([ 'nw', 'ne', 'se', 'sw' ], (origin) => {

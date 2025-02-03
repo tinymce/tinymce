@@ -17,6 +17,7 @@ export interface SliderValueXY {
   readonly y: number;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-duplicate-type-constituents
 export type SliderValue = SliderValueX | SliderValueY | SliderValueXY;
 
 export interface SliderUpdateEvent extends CustomEvent {

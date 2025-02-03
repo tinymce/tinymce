@@ -27,13 +27,13 @@ def runHeadlessTests(Boolean runAll) {
   runBedrockTest('headless', bedrockCmd, runAll)
 }
 
-def runRemoteTests(String name, String browser, String provider, String platform, String arn, String version, String bucket, String buckets, Boolean runAll, int retry = 0, int timeout = 0) {
-  def awsOpts = " --sishDomain=sish.osu.tiny.work --devicefarmArn=${arn}"
+def runRemoteTests(String name, String browser, String provider, String platform, String version, String bucket, String buckets, Boolean runAll, int retry = 0, int timeout = 0) {
+  def awsOpts = " --sishDomain=sish.osu.tiny.work"
   def platformName = platform != null ? " --platformName='${platform}'" : ""
   def browserVersion = version != null ? " --browserVersion=${version}" : ""
   def bedrockCommand =
   "yarn browser-test" +
-    " --chunk=400" +
+    " --chunk=2000" +
     " --bedrock-browser=" + browser +
     " --remote=" + provider +
     " --bucket=" + bucket +
@@ -48,7 +48,7 @@ def runRemoteTests(String name, String browser, String provider, String platform
 def runBrowserTests(String name, String browser, String platform, String bucket, String buckets, Boolean runAll) {
   def bedrockCommand =
     "yarn grunt browser-auto" +
-      " --chunk=400" +
+      " --chunk=2000" +
       " --bedrock-os=" + platform +
       " --bedrock-browser=" + browser +
       " --bucket=" + bucket +
@@ -67,26 +67,25 @@ def runBrowserTests(String name, String browser, String platform, String bucket,
 
 def runTestPod(String cacheName, String name, String testname, String browser, String provider, String platform, String version, String bucket, String buckets, Boolean runAll) {
   return {
-    bedrockRemoteTools.nodeConsumerPod(
-      nodeOpts: [
-        resourceRequestCpu: '2',
-        resourceRequestMemory: '4Gi',
-        resourceRequestEphemeralStorage: '16Gi',
-        resourceLimitCpu: '7',
-        resourceLimitMemory: '4Gi',
-        resourceLimitEphemeralStorage: '16Gi'
-      ],
-      build: cacheName,
-      useContainers: ['node', 'aws-cli']
-    ) {
-
-      stage("${name}") {
+    stage("${name}") {
+      devPods.nodeConsumer(
+        nodeOpts: [
+          resourceRequestCpu: '2',
+          resourceRequestMemory: '4Gi',
+          resourceRequestEphemeralStorage: '16Gi',
+          resourceLimitCpu: '7',
+          resourceLimitMemory: '4Gi',
+          resourceLimitEphemeralStorage: '16Gi'
+        ],
+        tag: '20',
+        build: cacheName,
+        useContainers: ['node', 'aws-cli']
+      ) {
         grunt('list-changed-browser')
+        bedrockRemoteTools.tinyWorkSishTunnel()
         bedrockRemoteTools.withRemoteCreds(provider) {
           int retry = 0
-          withCredentials([string(credentialsId: 'devicefarm-testgridarn', variable: 'DF_ARN')]) {
-            runRemoteTests(testname, browser, provider, platform, DF_ARN, version, bucket, buckets, runAll, retry, 180)
-          }
+          runRemoteTests(testname, browser, provider, platform, version, bucket, buckets, runAll, retry, 180)
         }
       }
     }
@@ -116,25 +115,63 @@ def runTestNode(String branch, String name, String browser, String platform, Str
 }
 
 def runHeadlessPod(String cacheName, Boolean runAll) {
+  Map node = [
+          name: 'node',
+          image: "public.ecr.aws/docker/library/node:20",
+          command: 'sleep',
+          args: 'infinity',
+          resourceRequestCpu: '2',
+          resourceRequestMemory: '4Gi',
+          resourceRequestEphemeralStorage: '16Gi',
+          resourceLimitCpu: '7',
+          resourceLimitMemory: '4Gi',
+          resourceLimitEphemeralStorage: '16Gi'
+        ]
+  Map selenium = [
+          name: "selenium",
+          image: "selenium/standalone-chrome:127.0",
+          livenessProbe: [
+            execArgs: "curl --fail --silent --output /dev/null http://localhost:4444/wd/hub/status",
+            initialDelaySeconds: 30,
+            periodSeconds: 5,
+            timeoutSeconds: 15,
+            failureThreshold: 6
+          ],
+          alwaysPullImage: true,
+          resourceRequestCpu: '500m',
+          resourceRequestMemory: '1Gi',
+          resourceLimitCpu: '2',
+          resourceLimitMemory: '1Gi'
+        ]
+  Map aws = [
+          name: 'aws-cli',
+          image: 'public.ecr.aws/aws-cli/aws-cli:latest',
+          command: 'sleep',
+          args: 'infinity',
+          alwaysPullImage: true,
+          resourceRequestCpu: '500m',
+          resourceRequestMemory: '1Gi',
+          resourceRequestEphemeralStorage: '1Gi',
+          resourceLimitCpu: '500m',
+          resourceLimitMemory: '1Gi',
+          resourceLimitEphemeralStorage: '1Gi'
+        ]
   return {
-    bedrockRemoteTools.nodeConsumerPod(
-      nodeOpts: [
-        resourceRequestCpu: '2',
-        resourceRequestMemory: '4Gi',
-        resourceRequestEphemeralStorage: '16Gi',
-        resourceLimitCpu: '7',
-        resourceLimitMemory: '4Gi',
-        resourceLimitEphemeralStorage: '16Gi'
-      ],
-      seleniumOpts: [
-        image: "selenium/standalone-chrome:127.0",
-      ],
-      build: cacheName
-    ) {
-      stage("Headless-chrome") {
-        yarnInstall()
-        grunt('list-changed-headless')
-        runHeadlessTests(runAll)
+    stage("Headless-chrome") {
+      devPods.customConsumer(
+        containers: [
+          node,
+          selenium,
+          aws
+        ],
+        base: 'node',
+        build: cacheName
+      ) {
+        container('node') {
+          yarnInstall()
+          grunt('list-changed-headless')
+          runHeadlessTests(runAll)
+        }
       }
     }
   }
@@ -159,7 +196,7 @@ def cacheName = "cache_${BUILD_TAG}"
 def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NUMBER}"
 
 timestamps {
-  bedrockRemoteTools.nodeProducerPod(
+  devPods.nodeProducer(
     nodeOpts: [
       resourceRequestCpu: '2',
       resourceRequestMemory: '4Gi',
@@ -168,34 +205,30 @@ timestamps {
       resourceLimitMemory: '4Gi',
       resourceLimitEphemeralStorage: '16Gi'
     ],
+    tag: '20',
     build: cacheName
   ) {
     props = readProperties(file: 'build.properties')
     String primaryBranch = props.primaryBranch
     assert primaryBranch != null && primaryBranch != ""
 
-    stage('Merge') {
+
+    stage('Deps') {
       // cancel build if primary branch doesn't merge cleanly
       gitMerge(primaryBranch)
-    }
-
-    stage('Install') {
       yarnInstall()
     }
 
-    stage("Validate changelog") {
-      // we use a changelog to run changie
+    stage('Build') {
+      // verify no errors in changelog merge
       exec("yarn changie-merge")
-    }
-
-    stage('Type check') {
       withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
+        // type check and build TinyMCE
         exec("yarn ci-all-seq")
-      }
-    }
 
-    stage('Moxiedoc check') {
-      exec("yarn tinymce-grunt shell:moxiedoc")
+        // validate documentation generator
+        exec("yarn tinymce-grunt shell:moxiedoc")
+      }
     }
   }
 
@@ -211,9 +244,9 @@ timestamps {
     [ browser: 'chrome', provider: 'lambdatest', buckets: 1 ],
     [ browser: 'firefox', provider: 'lambdatest', buckets: 1 ],
     [ browser: 'edge', provider: 'lambdatest', buckets: 1 ],
-    [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ],
-    [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ],
-    [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ]
+    [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ],
+    [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ],
+    [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
   ];
 
   def processes = [:]
@@ -248,5 +281,5 @@ timestamps {
       parallel processes
   }
 
-  bedrockRemoteTools.cleanUpPod(cacheName)
+  devPods.cleanUpPod(name: cacheName)
 }

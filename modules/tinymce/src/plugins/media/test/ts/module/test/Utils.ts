@@ -59,7 +59,7 @@ const pSetValueAndTrigger = (selector: string, value: string, events: string[]) 
   Focus.focus(elem);                                            // fire focusin, required by sizeinput to recalc ratios
   setValueOn(dialog, selector, value);                          // change the value
   Arr.map(events, (event) => fakeEvent(elem, event)); // fire [change, input etc],
-  await Waiter.pWait(0);                                  // Wait needed as paste event is triggered async
+  await Waiter.pWaitBetweenUserActions();
 };
 
 const pPasteSourceValue = (editor: Editor, value: string): Promise<void> =>
@@ -165,7 +165,7 @@ const pTestEmbedContentFromUrl = async (editor: Editor, url: string, content: st
 const pSetFormItemNoEvent = pSetSourceInput;
 
 const pAssertEditorContent = (editor: Editor, expected: string): Promise<void> =>
-  Waiter.pTryUntil('Wait for editor value',
+  Waiter.pTryUntil(`Waiting for editor value: ${expected}`,
     () => TinyAssertions.assertContent(editor, expected)
   );
 

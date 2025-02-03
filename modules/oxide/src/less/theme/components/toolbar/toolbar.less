@@ -114,6 +114,24 @@
   .tox-toolbar-overlord .tox-toolbar--scrolling:first-child {
     background-image: none;
   }
+
+  .tox-focusable-wrapper {
+    border: 1px solid transparent;
+    margin-right: 2px;
+    pointer-events: none;
+  
+    .tox-textfield-size {
+      pointer-events: all;
+    }
+  
+    &:focus {
+      background-color: @toolbar-button-bespoke-focus-background-color;
+      border-radius: @control-border-radius;
+      border-style: solid;
+      border-width: 1px;
+      &:extend(.tox .tox-textfield:focus);
+    }
+  }
 }
 
 // Floating more drawer styles. Uses pop toolbar styles
@@ -139,7 +157,6 @@
 
 // Context toolbar
 .tox-pop .tox-pop__dialog {
-  /* stylelint-disable-next-line no-descending-specificity */
   .tox-toolbar {
     @_toolbar-row-separator-downsize: @_toolbar-height + @pad-xs + @pad-xs * 2;
     @_toolbar-row-separator-image-offset: @_toolbar-height + @pad-xs;
@@ -148,4 +165,10 @@
     background-size: @_toolbar-row-separator-image-size;
     padding: @pad-xs 0;
   }
+}
+
+// Context form group
+.tox-context-form__group {
+  display: flex;
+  align-items: center;
 }

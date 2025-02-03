@@ -5,6 +5,7 @@ import * as Pattern from '../textpatterns/core/Pattern';
 import * as PatternTypes from '../textpatterns/core/PatternTypes';
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
+import { fireDisabledStateChange } from './Events';
 import { EditorOptions } from './OptionTypes';
 import I18n from './util/I18n';
 import Tools from './util/Tools';
@@ -437,6 +438,25 @@ const register = (editor: Editor): void => {
     default: false
   });
 
+  registerOption('disabled', {
+    processor: (value) => {
+      if (Type.isBoolean(value)) {
+        if (editor.initialized && isDisabled(editor) !== value) {
+          // Schedules the callback to run in the next microtask queue once the option is updated
+          // TODO: TINY-11586 - Implement `onChange` callback when the value of an option changes
+          // eslint-disable-next-line @typescript-eslint/no-floating-promises
+          Promise.resolve().then(() => {
+            fireDisabledStateChange(editor, value);
+          });
+        }
+        return { valid: true, value };
+      }
+
+      return { valid: false, message: 'The value must be a boolean.' };
+    },
+    default: false
+  });
+
   registerOption('readonly', {
     processor: 'boolean',
     default: false
@@ -491,7 +511,7 @@ const register = (editor: Editor): void => {
 
   registerOption('iframe_aria_text', {
     processor: 'string',
-    default: 'Rich Text Area. Press ALT-0 for help.'
+    default: 'Rich Text Area'.concat(editor.hasPlugin('help') ? '. Press ALT-0 for help.' : '')
   });
 
   registerOption('setup', {
@@ -988,6 +1008,7 @@ const getSandboxIframesExclusions = (editor: Editor): string[] => editor.options
 const shouldConvertUnsafeEmbeds = option('convert_unsafe_embeds');
 const getLicenseKey = option('license_key');
 const getApiKey = option('api_key');
+const isDisabled = option('disabled');
 
 export {
   register,
@@ -1097,5 +1118,6 @@ export {
   getLicenseKey,
   getSandboxIframesExclusions,
   shouldConvertUnsafeEmbeds,
-  getApiKey
+  getApiKey,
+  isDisabled
 };

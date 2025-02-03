@@ -50,7 +50,7 @@ const removeStyles = (dom: DOMUtils, element: HTMLElement, styles: string[]): vo
 
 const isInline = (editor: Editor, node: Node): boolean => Type.isNonNullable(node) && !NodeType.isBlock(node, editor.schema.getBlockElements());
 
-const getEndPointNode = (editor: Editor, rng: Range, start: Boolean, root: Node): Node => {
+const getEndPointNode = (editor: Editor, rng: Range, start: boolean, root: Node): Node => {
   let container = rng[start ? 'startContainer' : 'endContainer'];
   const offset = rng[start ? 'startOffset' : 'endOffset'];
 

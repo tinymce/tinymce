@@ -86,8 +86,7 @@ describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () 
         const hexInput = inputs[inputs.length - 1];
         hexInput.dom.value = hex;
         fireEvent(hexInput, 'input');
-        // Give form invalidation a chance to run (asynchronous)
-        await Waiter.pWait(0);
+        await Waiter.pWaitBetweenUserActions();
       };
 
       const pOpenDialog = async (editor: Editor) => {

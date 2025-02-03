@@ -1,0 +1,51 @@
+//
+//
+// Accessibility checker
+@accessibility-overlay-opacity-90: 90%;
+@accessibility-overlay-opacity-60: 60%;
+
+@accessibility-issue-info-selection-color: if(@content-ui-darkmode = true, mix(@color-white, @color-tint, @accessibility-overlay-opacity-60), @color-tint);
+@accessibility-issue-info-selection-background-color: mix(@background-color, @color-tint, @accessibility-overlay-opacity-90);
+
+@accessibility-issue-warn-selection-color: if(@content-ui-darkmode = true, mix(@color-white, @color-warning, @accessibility-overlay-opacity-60), @color-warning);
+@accessibility-issue-warn-selection-background-color: mix(@background-color, @color-warning, @accessibility-overlay-opacity-90);
+
+@accessibility-issue-error-selection-color: if(@content-ui-darkmode = true, mix(@color-white, @color-error, @accessibility-overlay-opacity-60), @color-error);
+@accessibility-issue-error-selection-background-color: mix(@background-color, @color-error, @accessibility-overlay-opacity-90);
+
+[data-ephox-foam-a11y-violation] {
+  outline: 2px solid;
+  position: relative;
+}
+
+[data-ephox-foam-a11y-violation][data-ephox-foam-a11y-current-violation] {
+  outline-width: 4px;
+  transition: outline-width .1s ease-in-out, background-color .1s ease-in-out;
+}
+
+[data-ephox-foam-a11y-violation][data-ephox-foam-a11y-severity-info] {
+  outline-color: @accessibility-issue-info-selection-color;
+}
+
+[data-ephox-foam-a11y-violation][data-ephox-foam-a11y-severity-warn] {
+  outline-color: @accessibility-issue-warn-selection-color;
+}
+
+[data-ephox-foam-a11y-violation][data-ephox-foam-a11y-severity-error] {
+  outline-color: @accessibility-issue-error-selection-color;
+}
+
+[data-ephox-foam-a11y-violation][data-ephox-foam-a11y-current-violation="info"] {
+  outline-color: @accessibility-issue-info-selection-color;
+  background-color: @accessibility-issue-info-selection-background-color;
+}
+
+[data-ephox-foam-a11y-violation][data-ephox-foam-a11y-current-violation="warning"] {
+  outline-color: @accessibility-issue-warn-selection-color;
+  background-color: @accessibility-issue-warn-selection-background-color;
+}
+
+[data-ephox-foam-a11y-violation][data-ephox-foam-a11y-current-violation="error"] {
+  outline-color: @accessibility-issue-error-selection-color;
+  background-color: @accessibility-issue-error-selection-background-color;
+}

@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Mouse, StructAssert, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { SugarBody } from '@ephox/sugar';
+import { SelectorFilter, SugarBody, TextContent } from '@ephox/sugar';
 import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -124,9 +124,9 @@ describe('browser.tinymce.themes.silver.editor.buttons.GroupToolbarButtonTest', 
     })
   );
 
-  it('TINY-9496: onSetup function should run when defining custom group toolbar button', () => {
+  it('TINY-9496: onSetup function should run when defining custom group toolbar button', async () => {
     let hasSetupBeenCalled = false;
-    pTestWithEditor({
+    await pTestWithEditor({
       ...defaultToolbarGroupOptions,
       toolbar: 'test',
       setup: (editor: Editor) => {
@@ -145,4 +145,16 @@ describe('browser.tinymce.themes.silver.editor.buttons.GroupToolbarButtonTest', 
     });
   });
 
+  it('TINY-11391: Tooltip should show for toolbar group button', () =>
+    pTestWithEditor({
+      ...defaultToolbarGroupOptions,
+    }, async () => {
+      const toolbarButton = await UiFinder.pWaitFor('Group toolbar button should exist', SugarBody.body(), 'button[data-mce-name="formatting"]');
+      Mouse.mouseOver(toolbarButton);
+      const tooltip = await UiFinder.pWaitFor('Tooltip should be visible after mouse over', SugarBody.body(), '.tox-silver-sink .tox-tooltip__body');
+      assert.equal(TextContent.get(tooltip), 'Formatting');
+      assert.equal(SelectorFilter.all('.tox-silver-sink .tox-tooltip__body').length, 1);
+      return Promise.resolve();
+    })
+  );
 });

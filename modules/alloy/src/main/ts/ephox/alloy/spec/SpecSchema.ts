@@ -8,10 +8,10 @@ export interface BaseSketchSpec {
 }
 
 export interface BaseSketchDetail<T extends BaseSketchSpec> {
-  uid: string;
-  components: AlloySpec[];
-  dom: OptionalDomSchema;
-  originalSpec: T;
+  'uid': string;
+  'components': AlloySpec[];
+  'dom': OptionalDomSchema;
+  'originalSpec': T;
   'debug.sketcher': { };
 }
 

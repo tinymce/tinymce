@@ -3,6 +3,7 @@ import { SelectorFind, Selectors, SugarElement } from '@ephox/sugar';
 
 import * as NodeType from '../../dom/NodeType';
 import * as RangePoint from '../../dom/RangePoint';
+import * as EditorFocus from '../../focus/EditorFocus';
 import Editor from '../Editor';
 import Env from '../Env';
 import * as Events from '../Events';
@@ -72,7 +73,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
   const rootDocument = document;
   const rootElement = editor.getBody();
   let selectedElm: HTMLElement, selectedElmGhost: HTMLElement, resizeHelper: HTMLElement, selectedHandle: SelectedResizeHandle, resizeBackdrop: HTMLElement;
-  let startX: number, startY: number, selectedElmX: number, selectedElmY: number, startW: number, startH: number, ratio: number, resizeStarted: boolean;
+  let startX: number, startY: number, startW: number, startH: number, ratio: number, resizeStarted: boolean;
   let width: number;
   let height: number;
   let startScrollWidth: number;
@@ -222,15 +223,17 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
 
     resizeHelper.innerHTML = width + ' &times; ' + height;
 
-    // Update ghost X position if needed
-    if (selectedHandle[2] < 0 && selectedElmGhost.clientWidth <= width) {
-      dom.setStyle(selectedElmGhost, 'left', selectedElmX + (startW - width));
-    }
+    /* TODO: TINY-11702 dom.setStyle() has no effect because the value is NaN
+      // Update ghost X position if needed
+      if (selectedHandle[2] < 0 && selectedElmGhost.clientWidth <= width) {
+        dom.setStyle(selectedElmGhost, 'left', selectedElmX + (startW - width));
+      }
 
-    // Update ghost Y position if needed
-    if (selectedHandle[3] < 0 && selectedElmGhost.clientHeight <= height) {
-      dom.setStyle(selectedElmGhost, 'top', selectedElmY + (startH - height));
-    }
+      // Update ghost Y position if needed
+      if (selectedHandle[3] < 0 && selectedElmGhost.clientHeight <= height) {
+        dom.setStyle(selectedElmGhost, 'top', selectedElmY + (startH - height));
+      }
+    */
 
     // Calculate how must overflow we got
     deltaX = rootElement.scrollWidth - startScrollWidth;
@@ -441,7 +444,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
       img.removeAttribute(elementSelectionAttr);
     });
 
-    if (Type.isNonNullable(controlElm) && isChildOrEqual(controlElm, rootElement) && editor.hasFocus()) {
+    if (Type.isNonNullable(controlElm) && isChildOrEqual(controlElm, rootElement) && EditorFocus.hasEditorOrUiFocus(editor)) {
       disableGeckoResize();
       const startElm = selection.getStart(true);
 
@@ -460,6 +463,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     Obj.each(resizeHandles, (handle) => {
       if (handle.elm) {
         dom.unbind(handle.elm);
+        // eslint-disable-next-line @typescript-eslint/no-array-delete
         delete handle.elm;
       }
     });
@@ -469,7 +473,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     try {
       // Disable object resizing on Gecko
       editor.getDoc().execCommand('enableObjectResizing', false, 'false');
-    } catch (ex) {
+    } catch {
       // Ignore
     }
   };

@@ -49,7 +49,7 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.MobileContextMenuTest
     await Waiter.pWait(500);
     editor.dispatch('selectionchange');
     Touch.touchEnd(targetElem);
-    await Waiter.pWait(100);
+    await Waiter.pWaitBetweenUserActions();
     await TinyUiActions.pWaitForPopup(editor, '.tox-silver-sink .tox-collection--horizontal [role="menuitem"]');
   };
 

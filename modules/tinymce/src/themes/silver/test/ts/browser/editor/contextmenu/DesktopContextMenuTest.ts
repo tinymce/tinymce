@@ -108,11 +108,11 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.DesktopContextMenuTes
     pressDownArrowKey();
     await pAssertFocusOnItem('Row', '.tox-collection__item:contains("Row")');
     pressDownArrowKey();
-    pAssertFocusOnItem('Column', '.tox-collection__item:contains("Column")');
+    await pAssertFocusOnItem('Column', '.tox-collection__item:contains("Column")');
     pressDownArrowKey();
-    pAssertFocusOnItem('Table Properties', '.tox-collection__item:contains("Table properties")');
+    await pAssertFocusOnItem('Table Properties', '.tox-collection__item:contains("Table properties")');
     pressDownArrowKey();
-    pAssertFocusOnItem('Delete Table', '.tox-collection__item:contains("Delete table")');
+    await pAssertFocusOnItem('Delete Table', '.tox-collection__item:contains("Delete table")');
     Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.up());
     pressEnterKey();
     await pWaitForAndCloseDialog(editor);

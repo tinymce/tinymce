@@ -77,7 +77,7 @@ const createDataTransfer = (): DataTransfer => {
       }
     },
 
-    clearData: (format?: string | undefined): void => {
+    clearData: (format?: string): void => {
       if (Mode.isInReadWriteMode(dataTransfer)) {
         dataTransferImpl.clearData(format);
       }

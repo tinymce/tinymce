@@ -7,8 +7,11 @@ import { PlatformDetection } from '@ephox/sand';
 import { Class, Compare, Css, Focus, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { DisabledStateChangeEvent } from 'tinymce/core/api/EventTypes';
 import Delay from 'tinymce/core/api/util/Delay';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
+import * as Events from '../../api/Events';
 import { getToolbarMode, ToolbarMode } from '../../api/Options';
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderToolbar } from '../toolbar/CommonToolbar';
@@ -17,6 +20,7 @@ import { hideContextToolbarEvent, showContextToolbarEvent } from './ContextEdito
 import { ContextForm } from './ContextForm';
 import * as ContextToolbarAnchor from './ContextToolbarAnchor';
 import * as ContextToolbarBounds from './ContextToolbarBounds';
+import * as ContextToolbarFocus from './ContextToolbarFocus';
 import * as ToolbarLookup from './ContextToolbarLookup';
 import * as ToolbarScopes from './ContextToolbarScopes';
 import { forwardSlideEvent, renderContextToolbar } from './ContextUi';
@@ -53,7 +57,14 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
       sink,
       onEscape: () => {
         editor.focus();
+        Events.fireContextToolbarClose(editor);
         return Optional.some(true);
+      },
+      onHide: () => {
+        Events.fireContextToolbarClose(editor);
+      },
+      onBack: () => {
+        Events.fireContextFormSlideBack(editor);
       }
     })
   );
@@ -141,8 +152,9 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     });
   }));
 
-  const buildContextToolbarGroups = (allButtons: Record<string, ContextToolbarButtonType>, ctx: InlineContent.ContextToolbarSpec) =>
-    identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items, allowToolbarGroups: false }, extras.backstage, Optional.some([ 'form:' ]));
+  const buildContextToolbarGroups = (allButtons: Record<string, ContextToolbarButtonType>, ctx: InlineContent.ContextToolbarSpec) => {
+    return identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items, allowToolbarGroups: false }, extras.backstage, Optional.some([ 'form:' ]));
+  };
 
   const buildContextFormGroups = (ctx: InlineContent.ContextForm, providers: UiFactoryBackstageProviders) => ContextForm.buildInitGroups(ctx, providers);
 
@@ -156,7 +168,7 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     const toolbarType = getToolbarMode(editor) === ToolbarMode.scrolling ? ToolbarMode.scrolling : ToolbarMode.default;
 
     const initGroups = Arr.flatten(Arr.map(toolbars, (ctx) =>
-      ctx.type === 'contexttoolbar' ? buildContextToolbarGroups(allButtons, ctx) : buildContextFormGroups(ctx, sharedBackstage.providers)
+      ctx.type === 'contexttoolbar' ? buildContextToolbarGroups(allButtons, InlineContent.contextToolbarToSpec(ctx)) : buildContextFormGroups(ctx, sharedBackstage.providers)
     ));
 
     return renderToolbar({
@@ -261,8 +273,7 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
       Obj.get(scopes.lookupTable, e.toolbarKey).each((ctx) => {
         // ASSUMPTION: this is only used to open one specific toolbar at a time, hence [ctx]
         launchContext([ ctx ], Optionals.someIf(e.target !== editor, e.target));
-        // Forms launched via this way get immediate focus
-        InlineView.getContent(contextbar).each(Keying.focusIn);
+        ContextToolbarFocus.focusIn(contextbar);
       });
     });
 
@@ -276,6 +287,12 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
 
     editor.on('SwitchMode', () => {
       if (editor.mode.isReadOnly()) {
+        close();
+      }
+    });
+
+    editor.on('DisabledStateChange', (e: EditorEvent<DisabledStateChangeEvent>) => {
+      if (e.state) {
         close();
       }
     });

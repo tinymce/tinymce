@@ -1,7 +1,11 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, CustomEvent, Disabling,
+  AddEventsBehaviour, AlloyComponent, AlloyEvents,
   FormCoupledInputs as AlloyFormCoupledInputs,
-  FormField as AlloyFormField, GuiFactory, Input as AlloyInput, NativeEvents, Representing, SketchSpec, Tabstopping, Tooltipping
+  FormField as AlloyFormField,
+  Input as AlloyInput,
+  AlloySpec, AlloyTriggers, Behaviour, CustomEvent, Disabling,
+  GuiFactory,
+  NativeEvents, Representing, SketchSpec, Tabstopping, Tooltipping
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Id, Unicode } from '@ephox/katamari';
@@ -27,6 +31,9 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
   const makeIcon = (iconName: string) =>
     Icons.render(iconName, { tag: 'span', classes: [ 'tox-icon', 'tox-lock-icon__' + iconName ] }, providersBackstage.icons);
 
+  const disabled = () => !spec.enabled || providersBackstage.checkUiComponentContext(spec.context).shouldDisable;
+  const toggleOnReceive = UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext(spec.context));
+
   const label = spec.label.getOr('Constrain proportions');
   const translatedLabel = providersBackstage.translate(label);
   const pLock = AlloyFormCoupledInputs.parts.lock({
@@ -43,10 +50,8 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
       makeIcon('unlock')
     ],
     buttonBehaviours: Behaviour.derive([
-      Disabling.config({
-        disabled: () => !spec.enabled || providersBackstage.checkUiComponentContext(spec.context).shouldDisable
-      }),
-      UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext(spec.context)),
+      Disabling.config({ disabled }),
+      toggleOnReceive,
       Tabstopping.config({}),
       Tooltipping.config(
         providersBackstage.tooltips.getConfig({
@@ -68,10 +73,8 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
     factory: AlloyInput,
     inputClasses: [ 'tox-textfield' ],
     inputBehaviours: Behaviour.derive([
-      Disabling.config({
-        disabled: () => !spec.enabled || providersBackstage.checkUiComponentContext(spec.context).shouldDisable
-      }),
-      UiState.toggleOnReceive(() => providersBackstage.checkUiComponentContext(spec.context)),
+      Disabling.config({ disabled }),
+      toggleOnReceive,
       Tabstopping.config({}),
       AddEventsBehaviour.config('size-input-events', [
         AlloyEvents.run(NativeEvents.focusin(), (component, _simulatedEvent) => {
@@ -141,7 +144,7 @@ export const renderSizeInput = (spec: SizeInputSpec, providersBackstage: UiFacto
     },
     coupledFieldBehaviours: Behaviour.derive([
       Disabling.config({
-        disabled: () => !spec.enabled || providersBackstage.checkUiComponentContext(spec.context).shouldDisable,
+        disabled,
         onDisabled: (comp) => {
           AlloyFormCoupledInputs.getField1(comp).bind(AlloyFormField.getField).each(Disabling.disable);
           AlloyFormCoupledInputs.getField2(comp).bind(AlloyFormField.getField).each(Disabling.disable);
