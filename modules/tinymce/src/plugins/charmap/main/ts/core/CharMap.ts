@@ -370,18 +370,18 @@ const charmapFilter = (charmap: Char[]): Char[] => {
 
 const charGroupFilter = (charGroups: CharMap[]): CharMap[] => {
   return Tools.grep(charGroups, (item) => {
-    return isArray(x.characters) && typeof x.name === 'string';
+    return isArray(item.characters) && typeof item.name === 'string';
   });
 };
 
 const getCharGroupsFromOption = (optionValue: Char[] | (() => Char[]) | CharMap[] | (() => CharMap[]) | undefined): CharMap[] => {
   let value = typeof optionValue === 'function' ? optionValue() : optionValue;
   
-  if (isArray(map)) {
-    if (isArray(map[0]?.characters) && typeof map[0]?.name === 'string') {
-      return charGroupFilter(map);
+  if (isArray(value)) {
+    if (isArray(value[0]?.characters) && typeof value[0]?.name === 'string') {
+      return charGroupFilter(value);
     } else {
-      return [{ name: UserDefined, characters: charFilter(map) }];
+      return [{ name: UserDefined, characters: charFilter(value) }];
     }
   }
 
