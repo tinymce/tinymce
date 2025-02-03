@@ -888,24 +888,24 @@
   dependencies:
     diff "^5.0.0"
 
-"@ephox/bedrock-runner@^15.0.0":
-  version "15.0.0"
-  resolved "https://registry.yarnpkg.com/@ephox/bedrock-runner/-/bedrock-runner-15.0.0.tgz#04e1d5c9368aea02743df431612892dbdabbfcee"
-  integrity sha512-HHtQT7P6en9SFflC8t+UpXH+bRl4Vwc7PlExeh5cvBpJsn375rFWl+h0x5NscN1NMsX9TCJqNdi5N3mvbdQWdw==
+"@ephox/bedrock-runner@^15.0.2":
+  version "15.0.2"
+  resolved "https://registry.yarnpkg.com/@ephox/bedrock-runner/-/bedrock-runner-15.0.2.tgz#8f4a1a00861b8219f3db60ccf5a40b2e9fb1e2ea"
+  integrity sha512-a5rZy4WXkTWHBGn8CBqmZACCrdmNskQzriuu+u8GWtmmJqdrdr6pnHlNqiojzlo1VDM3ptPnUxADGwivsaRxJw==
   dependencies:
     "@ephox/bedrock-common" "^15.0.0"
     jquery "^3.4.1"
     querystringify "^2.1.1"
 
 "@ephox/bedrock-server@^15.0.0":
-  version "15.0.1"
-  resolved "https://registry.yarnpkg.com/@ephox/bedrock-server/-/bedrock-server-15.0.1.tgz#ae6b123e131725649bc4d6786b6577fefc8b9b1c"
-  integrity sha512-eiQeJzT0ByqZG+ENFRSeuAHsvsbobwtSl+co7C8ULcevANOVXeAxjw6NSre57mOuLsge/FxboKDcwBa55sv38w==
+  version "15.0.2"
+  resolved "https://registry.yarnpkg.com/@ephox/bedrock-server/-/bedrock-server-15.0.2.tgz#3ae3fab478049aff74717de8c4418611f3a41bcb"
+  integrity sha512-a0iu8h/dsGJwHmg8wntAaKJ+K6EV5YKTBvlu9ezxvZM7YAyfZCvSRd89a3hmXqVI6H+XzRekDxOVazZXsUeBSQ==
   dependencies:
     "@aws-sdk/client-device-farm" "^3.354.0"
     "@ephox/bedrock-client" "^15.0.0"
     "@ephox/bedrock-common" "^15.0.0"
-    "@ephox/bedrock-runner" "^15.0.0"
+    "@ephox/bedrock-runner" "^15.0.2"
     "@jsdevtools/coverage-istanbul-loader" "^3.0.5"
     "@lambdatest/node-tunnel" "^4.0.4"
     "@wdio/globals" "^8.14.1"
@@ -6777,15 +6777,7 @@ https-proxy-agent@^5.0.0:
     agent-base "6"
     debug "4"
 
-https-proxy-agent@^7.0.1:
-  version "7.0.5"
-  resolved "https://registry.yarnpkg.com/https-proxy-agent/-/https-proxy-agent-7.0.5.tgz#9e8b5013873299e11fab6fd548405da2d6c602b2"
-  integrity sha512-1e4Wqeblerz+tMKPIq2EMGiiWW1dIjZOksyHWSUm1rmuvw/how9hBHZ38lAGj5ID4Ik6EdkOw7NmWPy6LAwalw==
-  dependencies:
-    agent-base "^7.0.2"
-    debug "4"
-
-https-proxy-agent@^7.0.2, https-proxy-agent@^7.0.6:
+https-proxy-agent@^7.0.1, https-proxy-agent@^7.0.2, https-proxy-agent@^7.0.6:
   version "7.0.6"
   resolved "https://registry.yarnpkg.com/https-proxy-agent/-/https-proxy-agent-7.0.6.tgz#da8dfeac7da130b05c2ba4b59c9b6cd66611a6b9"
   integrity sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==
