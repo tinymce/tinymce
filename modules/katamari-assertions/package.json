@@ -18,7 +18,7 @@
   "license": "GPL-2.0-or-later",
   "dependencies": {
     "@ephox/bedrock-client": ">=11",
-    "@ephox/dispute": "^1.0.3",
+    "@ephox/dispute": "^1.0.15",
     "@ephox/katamari": "^10.0.0"
   },
   "files": [
