@@ -107,6 +107,7 @@ const getToolbarBehaviours = (toolbarSpec: ToolbarSpec, modeName: 'cyclic' | 'ac
       // Tabs between groups
       mode: modeName,
       onEscape: toolbarSpec.onEscape,
+      visibilitySelector: '.tox-toolbar__overflow',
       selector: '.tox-toolbar__group'
     }),
     AddEventsBehaviour.config('toolbar-events', [ onAttached ])
