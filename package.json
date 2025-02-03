@@ -69,7 +69,7 @@
     "lerna": "^8.1.2",
     "less": "^4.2.0",
     "less-plugin-autoprefix": "^2.0.0",
-    "less-plugin-preset-env": "^1.2.6",
+    "less-plugin-preset-env": "^2.0.2",
     "load-grunt-tasks": "^5.1.0",
     "moxie-zip": "0.0.4",
     "npm-run-all": "^4.1.5",

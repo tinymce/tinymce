@@ -7720,10 +7720,10 @@ less-plugin-autoprefix@^2.0.0:
     autoprefixer "^8.6.3"
     postcss "^6.0.22"
 
-less-plugin-preset-env@^1.2.6:
-  version "1.2.16"
-  resolved "https://registry.yarnpkg.com/less-plugin-preset-env/-/less-plugin-preset-env-1.2.16.tgz#9ef6a91370466d356a32870850f5fa7d11f97ae0"
-  integrity sha512-XCyunaMJIGXtz1Dsw8I3jRUgEF3Vh1h9FnQG12ISPtvyE+JUVeDIRyDuPEx2XtEpgqUDXjUvhNbrtUHWyBkiKg==
+less-plugin-preset-env@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/less-plugin-preset-env/-/less-plugin-preset-env-2.0.2.tgz#4f59efaf3daae2a8ffc8d168882ab54d356bc55d"
+  integrity sha512-W+KUk4a7y9JfBLgL6l1lUf0o1F+aXo9/iaAtpOiEpdVi7Y5FGUy9mJ8ii2CjQkvzt9MUA+UyiylMlJL+5wFV4A==
 
 less@^4.2.0:
   version "4.2.2"
