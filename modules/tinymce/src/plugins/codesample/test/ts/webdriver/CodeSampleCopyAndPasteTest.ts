@@ -89,7 +89,7 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
   });
 
   // Safari cannot select the CEF in this scenario, so we can't run the test (and there is no bug)
-  (browser.isChromium() || browser.isSafari() ? it.skip : it)('TINY-8861: copying and pasting a piece of code and a text should leave the cursor on the text after paste', async () => {
+  (browser.isSafari() ? it.skip : it)('TINY-8861: copying and pasting a piece of code and a text should leave the cursor on the text after paste', async () => {
     const editor = hook.editor();
     editor.setContent(
       '<pre class="language-markup" contenteditable="false" data-mce-highlighted="true">test content</pre>' +
