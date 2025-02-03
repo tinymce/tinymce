@@ -117,7 +117,7 @@ def runTestNode(String branch, String name, String browser, String platform, Str
 def runHeadlessPod(String cacheName, Boolean runAll) {
   Map node = [
           name: 'node',
-          image: "public.ecr.aws/docker/library/node:20",
+          image: "public.ecr.aws/docker/library/node:lts",
           command: 'sleep',
           args: 'infinity',
           resourceRequestCpu: '2',
@@ -129,7 +129,7 @@ def runHeadlessPod(String cacheName, Boolean runAll) {
         ]
   Map selenium = [
           name: "selenium",
-          image: "selenium/standalone-chrome:127.0",
+          image: "selenium/standalone-chrome:latest",
           livenessProbe: [
             execArgs: "curl --fail --silent --output /dev/null http://localhost:4444/wd/hub/status",
             initialDelaySeconds: 30,
