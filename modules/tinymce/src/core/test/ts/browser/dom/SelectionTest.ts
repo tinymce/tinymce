@@ -1216,7 +1216,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 6);
   });
 
-  it('TINY-11304: Expanding a word expands does not expand beyond closest editing host', () => {
+  it('TINY-11304: Expanding a word does not expand beyond closest editing host', () => {
     const editor = hook.editor();
     editor.setContent('<div contenteditable="false">a<span contenteditable="true">bc</span>d</div>');
     TinySelections.setCursor(editor, [ 1, 1, 0 ], 1); // Shifted because of fake caret
