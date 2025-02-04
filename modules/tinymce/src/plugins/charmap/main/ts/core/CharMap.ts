@@ -379,9 +379,9 @@ const getCharGroupsFromOption = (optionValue: Char[] | (() => Char[]) | CharMap[
   
   if (isArray(value)) {
     if (isArray(value[0]?.characters) && typeof value[0]?.name === 'string') {
-      return charGroupFilter(value).map(group => ({name: group.name, characters: charFilter(group.characters)}));
+      return charGroupFilter(value).map(group => ({name: group.name, characters: charmapFilter(group.characters)}));
     } else {
-      return [{ name: UserDefined, characters: charFilter(value) }];
+      return [{ name: UserDefined, characters: charmapFilter(value) }];
     }
   }
 
