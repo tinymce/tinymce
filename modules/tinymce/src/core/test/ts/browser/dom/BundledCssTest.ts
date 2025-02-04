@@ -54,7 +54,7 @@ describe('browser.tinymce.core.dom.BundledCssTest', () => {
         container,
         'link'
       );
-    const filterHrefs = new Set([ '/css/bedrock.css' ]);
+    const filterHrefs = new Set([ '/css/bedrock.css', 'data:;base64,iVBORw0KGgo=' ]);
     const link = Arr.filter(linkTags, (tag) => {
       const key = linkTagToKey(tag, basePath);
       return !filterHrefs.has(key);

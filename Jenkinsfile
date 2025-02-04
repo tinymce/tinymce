@@ -27,13 +27,13 @@ def runHeadlessTests(Boolean runAll) {
   runBedrockTest('headless', bedrockCmd, runAll)
 }
 
-def runRemoteTests(String name, String browser, String provider, String platform, String arn, String version, String bucket, String buckets, Boolean runAll, int retry = 0, int timeout = 0) {
-  def awsOpts = " --sishDomain=sish.osu.tiny.work --devicefarmArn=${arn}"
+def runRemoteTests(String name, String browser, String provider, String platform, String version, String bucket, String buckets, Boolean runAll, int retry = 0, int timeout = 0) {
+  def awsOpts = " --sishDomain=sish.osu.tiny.work"
   def platformName = platform != null ? " --platformName='${platform}'" : ""
   def browserVersion = version != null ? " --browserVersion=${version}" : ""
   def bedrockCommand =
   "yarn browser-test" +
-    " --chunk=1000" +
+    " --chunk=2000" +
     " --bedrock-browser=" + browser +
     " --remote=" + provider +
     " --bucket=" + bucket +
@@ -48,7 +48,7 @@ def runRemoteTests(String name, String browser, String provider, String platform
 def runBrowserTests(String name, String browser, String platform, String bucket, String buckets, Boolean runAll) {
   def bedrockCommand =
     "yarn grunt browser-auto" +
-      " --chunk=1000" +
+      " --chunk=2000" +
       " --bedrock-os=" + platform +
       " --bedrock-browser=" + browser +
       " --bucket=" + bucket +
@@ -82,11 +82,10 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
         useContainers: ['node', 'aws-cli']
       ) {
         grunt('list-changed-browser')
+        bedrockRemoteTools.tinyWorkSishTunnel()
         bedrockRemoteTools.withRemoteCreds(provider) {
           int retry = 0
-          withCredentials([string(credentialsId: 'devicefarm-testgridarn', variable: 'DF_ARN')]) {
-            runRemoteTests(testname, browser, provider, platform, DF_ARN, version, bucket, buckets, runAll, retry, 180)
-          }
+          runRemoteTests(testname, browser, provider, platform, version, bucket, buckets, runAll, retry, 180)
         }
       }
     }
@@ -213,12 +212,10 @@ timestamps {
     String primaryBranch = props.primaryBranch
     assert primaryBranch != null && primaryBranch != ""
 
-    stage('Merge') {
+
+    stage('Deps') {
       // cancel build if primary branch doesn't merge cleanly
       gitMerge(primaryBranch)
-    }
-
-    stage('Install') {
       yarnInstall()
     }
 
@@ -247,9 +244,9 @@ timestamps {
     [ browser: 'chrome', provider: 'lambdatest', buckets: 1 ],
     [ browser: 'firefox', provider: 'lambdatest', buckets: 1 ],
     [ browser: 'edge', provider: 'lambdatest', buckets: 1 ],
-    [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ],
-    [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ],
-    [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ]
+    [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ],
+    [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ],
+    [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
   ];
 
   def processes = [:]

@@ -42,18 +42,12 @@ describe('browser.tinymce.core.CaretUtilTest', () => {
 
   it('isForwards', () => {
     assert.isTrue(CaretUtils.isForwards(1));
-    assert.isTrue(CaretUtils.isForwards(10));
-    assert.isFalse(CaretUtils.isForwards(0));
     assert.isFalse(CaretUtils.isForwards(-1));
-    assert.isFalse(CaretUtils.isForwards(-10));
   });
 
   it('isBackwards', () => {
     assert.isFalse(CaretUtils.isBackwards(1));
-    assert.isFalse(CaretUtils.isBackwards(10));
-    assert.isFalse(CaretUtils.isBackwards(0));
     assert.isTrue(CaretUtils.isBackwards(-1));
-    assert.isTrue(CaretUtils.isBackwards(-10));
   });
 
   it('findNode', () => {

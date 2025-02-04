@@ -35,16 +35,26 @@ describe('webdriver.tinymce.plugins.link.OpenLinkTest', () => {
   it('TINY-11009: Open link opens right clicked link when selection is over multiple links', async () => {
     const editor = hook.editor();
     editor.setContent('<p>before <a id="first" href="https://www.exampleone.com">first</a> middle <a id="last" href="https://www.exampletwo.com">last</a> after</p>');
-    // Check the open link button is enabled (multiple links)
+    UiFinder.exists(SugarBody.body(), 'button[data-mce-name="openlink"]');
+    // Click on the first link
     TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 0, 4 ], 2);
     await RealMouse.pRightClickOn('iframe => a#first');
-    UiFinder.exists(SugarBody.body(), '[aria-label="Open link"][aria-disabled="false"]');
+    // Check button is enabled
+    UiFinder.exists(SugarBody.body(), 'button[data-mce-name="openlink"][aria-disabled="false"]');
+    // Check menu item exists and is enabled
+    UiFinder.exists(SugarBody.body(), '.tox-collection__item[aria-label="Open link"]');
+    UiFinder.exists(SugarBody.body(), '.tox-collection__item[aria-label="Open link"][aria-disabled="false"]');
     await RealMouse.pClickOn('.tox-collection__item[aria-label="Open link"]');
     store.assertEq('Should open the targeted link', [
       'https://www.exampleone.com/'
     ]);
+    // Click on the second link
     await RealMouse.pRightClickOn('iframe => a#last');
-    UiFinder.exists(SugarBody.body(), '[aria-label="Open link"][aria-disabled="false"]');
+    // Check button is enabled
+    UiFinder.exists(SugarBody.body(), 'button[data-mce-name="openlink"][aria-disabled="false"]');
+    // Check menu item exists and is enabled
+    UiFinder.exists(SugarBody.body(), '.tox-collection__item[aria-label="Open link"]');
+    UiFinder.exists(SugarBody.body(), '.tox-collection__item[aria-label="Open link"][aria-disabled="false"]');
     await RealMouse.pClickOn('.tox-collection__item[aria-label="Open link"]');
     store.assertEq('Should open the targeted link', [
       'https://www.exampleone.com/',

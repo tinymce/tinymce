@@ -5,8 +5,8 @@ import * as ComponentSchema from '../../core/ComponentSchema';
 import { ChoiceMenuItemSpec } from './ChoiceMenuItem';
 
 export interface FancyActionArgsMap {
-  'inserttable': { numRows: number; numColumns: number };
-  'colorswatch': { value: string };
+  inserttable: { numRows: number; numColumns: number };
+  colorswatch: { value: string };
 }
 
 interface BaseFancyMenuItemSpec<T extends keyof FancyActionArgsMap> {

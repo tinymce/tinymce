@@ -4,7 +4,8 @@ import {
   SplitFloatingToolbar as AlloySplitFloatingToolbar,
   SplitSlidingToolbar as AlloySplitSlidingToolbar,
   Toolbar as AlloyToolbar, ToolbarGroup as AlloyToolbarGroup,
-  Behaviour, Boxes, Focusing,
+  Behaviour, Boxes,
+  Focusing,
   GuiFactory,
   Keying, SketchSpec,
   Tabstopping
@@ -86,7 +87,9 @@ const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
     },
     tgroupBehaviours: Behaviour.derive([
       Tabstopping.config({}),
-      Focusing.config({})
+      Focusing.config({
+        ignore: true
+      })
     ])
   };
 };
