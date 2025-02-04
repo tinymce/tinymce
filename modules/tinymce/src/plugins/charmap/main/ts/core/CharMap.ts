@@ -388,6 +388,16 @@ const getCharGroupsFromOption = (optionValue: Char[] | (() => Char[]) | CharMap[
   return [];
 };
 
+const getCharsFromOption = (optionValue: Char[] | (() => Char[]) | undefined): Char[] => {
+  let value = typeof optionValue === 'function' ? optionValue() : optionValue;
+  
+  if (isArray(value)) {
+    return charmapFilter(value);
+  }
+
+  return [];
+};
+
 const extendCharMap = (editor: Editor, charmap: CharMap[]): CharMap[] => {
   const userCharMap = Options.getCharMap(editor);
   if (userCharMap) {
