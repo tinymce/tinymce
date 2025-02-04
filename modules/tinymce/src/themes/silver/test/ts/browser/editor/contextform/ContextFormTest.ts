@@ -1,8 +1,9 @@
-import { ApproxStructure, Assertions, FocusTools, Keys, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Fun, Obj } from '@ephox/katamari';
-import { SugarBody, SugarDocument, Value } from '@ephox/sugar';
+import { Attribute, SugarBody, SugarDocument, Value } from '@ephox/sugar';
 import { TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
@@ -132,11 +133,15 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
           icon: 'fake-icon-name',
           tooltip: 'Focus on init',
         },
-        onSetup: (formApi) => {
-          formApi.setInputEnabled(false);
-          return Fun.noop;
-        },
-        commands: [ ]
+        commands: [{
+          type: 'contextformbutton',
+          icon: 'fake-icon-name',
+          tooltip: 'A',
+          onAction: (formApi) => {
+            formApi.setInputEnabled(false);
+            return Fun.noop;
+          }
+        }]
       });
 
       ed.ui.registry.addContextToolbar('test-toolbar-focus-on-init', {
@@ -409,12 +414,33 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     UiFinder.exists(SugarBody.body(), '.tox-pop input[placeholder="This is a placeholder"]');
   });
 
-  it('TINY-11559: Focus should be on toolbar when onSetup disables the main input', () => {
+  it('TINY-11559: It should be possible to disable the main input via onSetup', async () => {
     const editor = hook.editor();
     const doc = SugarDocument.getDocument();
 
     openToolbar(editor, 'test-toolbar-focus-on-init');
     TinyUiActions.clickOnUi(editor, 'button[data-mce-name="form:test-form-focus-on-init"]');
-    FocusTools.isOnSelector('Focus should be on toolbar', doc, '[role="toolbar"]');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="A"]');
+
+    FocusTools.isOnSelector('Focus should stay on the "A" button', doc, '.tox-pop__dialog button[aria-label="A"]');
+    const input = await UiFinder.pWaitFor<HTMLInputElement>('getting the main input', doc, '[role="toolbar"] input');
+    assert.isTrue(Attribute.has(input, 'disabled'), 'the input sohuld be disabled');
+  });
+
+  it('TINY-11665: it shound not be possible to navigate to the input field if this one is disabled', () => {
+    const editor = hook.editor();
+    const doc = SugarDocument.getDocument();
+    openToolbar(editor, 'test-form');
+
+    FocusTools.isOnSelector('Focus should be initial on the input', doc, '.tox-pop__dialog input');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="E"]');
+    FocusTools.isOnSelector('Focus should be moved on the "E" button after click', doc, '.tox-pop__dialog button[aria-label="E"]');
+    Keyboard.activeKeydown(doc, Keys.tab());
+    FocusTools.isOnSelector('Focus should stay on the "E" button', doc, '.tox-pop__dialog button[aria-label="E"]');
+
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="E"]');
+    FocusTools.isOnSelector('Focus should on the the button after click', doc, '.tox-pop__dialog button[aria-label="E"]');
+    Keyboard.activeKeydown(doc, Keys.tab());
+    FocusTools.isOnSelector('Focus should go on the input now that it is enable', doc, '.tox-pop__dialog input');
   });
 });
