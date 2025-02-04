@@ -368,13 +368,21 @@ const charmapFilter = (charmap: Char[]): Char[] => {
   });
 };
 
-const getCharsFromOption = (optionValue: Char[] | (() => Char[]) | undefined): Char[] => {
-  if (isArray(optionValue)) {
-    return charmapFilter(optionValue);
-  }
+const charGroupFilter = (charGroups: CharMap[]): CharMap[] => {
+  return Tools.grep(charGroups, (item) => {
+    return isArray(item.characters) && typeof item.name === 'string';
+  });
+};
 
-  if (typeof optionValue === 'function') {
-    return optionValue();
+const getCharGroupsFromOption = (optionValue: Char[] | (() => Char[]) | CharMap[] | (() => CharMap[]) | undefined): CharMap[] => {
+  let value = typeof optionValue === 'function' ? optionValue() : optionValue;
+  
+  if (isArray(value)) {
+    if (isArray(value[0]?.characters) && typeof value[0]?.name === 'string') {
+      return charGroupFilter(value).map(group => ({name: group.name, characters: charmapFilter(group.characters)}));
+    } else {
+      return [{ name: UserDefined, characters: charmapFilter(value) }];
+    }
   }
 
   return [];
@@ -383,7 +391,7 @@ const getCharsFromOption = (optionValue: Char[] | (() => Char[]) | undefined): C
 const extendCharMap = (editor: Editor, charmap: CharMap[]): CharMap[] => {
   const userCharMap = Options.getCharMap(editor);
   if (userCharMap) {
-    charmap = [{ name: UserDefined, characters: getCharsFromOption(userCharMap) }];
+    charmap = getCharGroupsFromOption(userCharMap);
   }
 
   const userCharMapAppend = Options.getCharMapAppend(editor);
