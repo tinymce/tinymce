@@ -133,11 +133,15 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
           icon: 'fake-icon-name',
           tooltip: 'Focus on init',
         },
-        onSetup: (formApi) => {
-          formApi.setInputEnabled(false);
-          return Fun.noop;
-        },
-        commands: [ ]
+        commands: [{
+          type: 'contextformbutton',
+          icon: 'fake-icon-name',
+          tooltip: 'A',
+          onAction: (formApi) => {
+            formApi.setInputEnabled(false);
+            return Fun.noop;
+          }
+        }]
       });
 
       ed.ui.registry.addContextToolbar('test-toolbar-focus-on-init', {
@@ -416,6 +420,9 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
 
     openToolbar(editor, 'test-toolbar-focus-on-init');
     TinyUiActions.clickOnUi(editor, 'button[data-mce-name="form:test-form-focus-on-init"]');
+    TinyUiActions.clickOnUi(editor, 'button[aria-label="A"]');
+
+    FocusTools.isOnSelector('Focus should stay on the "A" button', doc, '.tox-pop__dialog button[aria-label="A"]');
     const input = await UiFinder.pWaitFor<HTMLInputElement>('getting the main input', doc, '[role="toolbar"] input');
     assert.isTrue(Attribute.has(input, 'disabled'), 'the input sohuld be disabled');
   });
