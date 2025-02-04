@@ -50,10 +50,15 @@ export interface ToolbarGroup {
 }
 
 const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
-  const attributes = toolbarGroup.label.isNone() ? toolbarGroup.title.fold(() => ({}),
-    (title) => ({ attributes: { title }})) : toolbarGroup.label.fold(() => ({}),
-    (label) => ({ attributes: { 'aria-label': label }})
-  );
+  const attributes = toolbarGroup.label.isNone() ?
+    toolbarGroup.title.fold(
+      () => ({}),
+      (title) => ({ attributes: { 'aria-label': title }})
+    )
+    : toolbarGroup.label.fold(
+      () => ({}),
+      (label) => ({ attributes: { 'aria-label': label }})
+    );
 
   return {
     dom: {
