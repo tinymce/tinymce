@@ -5,7 +5,7 @@ import { TinyContentActions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar
 
 import Editor from 'tinymce/core/api/Editor';
 
-describe('webdriver.tinymce.themes.silver.editor.TabStoppingTest', () => {
+describe('browser.tinymce.themes.silver.editor.TabStoppingTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     width: 400,
