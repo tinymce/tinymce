@@ -92,28 +92,6 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
   }
 }
 
-def runTestNode(String branch, String name, String browser, String platform, String bucket, String buckets, Boolean runAll) {
-  return {
-    stage(name) {
-      node("bedrock-${platform}") {
-        echo "Bedrock tests for ${name} on $NODE_NAME"
-        checkout(scm)
-        tinyGit.addAuthorConfig()
-        gitMerge(branch)
-
-        // Clean and Install
-        exec("git clean -fdx modules scratch js dist")
-        yarnInstall()
-
-        exec("yarn ci")
-        echo "Running browser tests"
-        //(String name, String browser, String platform, String bucket, String buckets, Boolean runAll)
-        runBrowserTests(name, browser, platform, bucket, buckets, runAll)
-      }
-    }
-  }
-}
-
 def runHeadlessPod(String cacheName, Boolean runAll) {
   Map node = [
           name: 'node',
@@ -232,13 +210,6 @@ timestamps {
     }
   }
 
-  // Local nodes use os: windows | macos;
-  // Remote tests use os full name e.g.: macOS Sonoma
-
-  // Local tests (never do this, it depends on jenkins nodes)
-  // [ browser: 'edge', os: 'windows' ],
-  // [ browser: 'firefox', os: 'macos' ],
-  // Remote tests
   // [ browser: 'chrome', provider: 'aws', buckets: 2 ],
   // [ browser: 'edge', provider: 'aws', buckets: 2 ],
   // [ browser: 'firefox', provider: 'aws', buckets: 2 ],
@@ -284,9 +255,7 @@ timestamps {
         def testName = "${env.BUILD_NUMBER}-${os}-${platform.browser}"
         processes[name] = runTestPod(cacheName, name, "${testPrefix}_${testName}", platform.browser, platform.provider, platform.os, platform.version, s_bucket, s_buckets, runAllTests)
       } else {
-        // use local
-        def name = "${os}-${platform.browser}"
-        processes[name] = runTestNode(props.primaryBranch, name, platform.browser, platform.os, s_bucket, s_buckets, runAllTests)
+        fail("platform provider not specified for ${os}-${platform.browser}${browserVersion}-${suffix}")
       }
     }
   }
