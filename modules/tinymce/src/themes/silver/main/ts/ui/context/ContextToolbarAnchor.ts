@@ -95,8 +95,13 @@ const getAnchorSpec = (editor: Editor, mobile: boolean, data: PositionData, posi
       ...anchor,
       y: bounds.y,
       height: bounds.height,
-      x: bounds.x,
-      width: bounds.width
+      /*
+        TINY-11549: this is needed because otherwise `LayoutInsert` could not work correctly
+        when we switch from a short toolbar to a long one, the short one is positioned at the right of the screen
+        and the content is scrolled horizontally
+      */
+      x: Math.min(anchor.x, bounds.x),
+      width: Math.min(anchor.width, bounds.width)
     };
     return {
       ...layout(newAnchor, element, bubbles, placee, bounds),
