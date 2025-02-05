@@ -47,7 +47,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarPosi
         }
       });
     },
-    with: 600
+    width: 725
   }, [], true);
 
   const scrollTo = (editor: Editor, x: number, y: number, offset = 0) => {
@@ -70,13 +70,6 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarPosi
       `<p><img id="myImg" src="${getGreenImageDataUrl()}" style="height: 200px; width: 2000px"></p>`
     );
     TinySelections.select(editor, 'img', []);
-
-    const editorPos = SugarLocation.absolute(TinyDom.contentAreaContainer(editor));
-    assert.equal(`Debug ->
-      editorMargin: ${Css.get(TinyDom.body(editor), 'margin')},
-      editorPos.left: ${editorPos.left},
-      TinyDom.container.left: ${SugarLocation.absolute(TinyDom.container(editor)).left}
-    `, '');
 
     scrollTo(editor, 360, 0);
 
