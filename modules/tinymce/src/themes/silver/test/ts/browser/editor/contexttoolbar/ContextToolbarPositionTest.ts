@@ -72,7 +72,8 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarPosi
     TinySelections.select(editor, 'img', []);
 
     scrollTo(editor, 360, 0);
-    await pAssertPosition('absolute', 'left', 625);
+    const editorPos = SugarLocation.absolute(TinyDom.contentAreaContainer(editor));
+    await pAssertPosition('absolute', 'left', editorPos.left + 625);
 
     await UiFinder.pWaitFor('button to active nested toolbar should be visible', SugarDocument.getDocument(), 'button[data-mce-name="nested"]');
     TinyUiActions.clickOnUi(editor, 'button[data-mce-name="nested"]');
