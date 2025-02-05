@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Fun } from '@ephox/katamari';
 import {
   Css, Height, Insert, Remove, Scroll, SugarElement, SugarLocation, SugarNode, SugarPosition, SugarText, Traverse, WindowVisualViewport
