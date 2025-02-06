@@ -92,9 +92,7 @@ const getAnchorSpec = (editor: Editor, mobile: boolean, data: PositionData, posi
     const layout = determineInsetLayout(editor, placee, elem, data, bounds);
     // Adjust the anchor box to use the passed y bound coords so that we simulate a "docking" type of behaviour
     const newAnchor = {
-      ...anchor,
-      y: bounds.y,
-      height: bounds.height,
+      ...bounds,
       /*
         TINY-11549: this is needed because otherwise `LayoutInsert` could not work correctly
         when we switch from a short toolbar to a long one, the short one is positioned at the right of the screen
