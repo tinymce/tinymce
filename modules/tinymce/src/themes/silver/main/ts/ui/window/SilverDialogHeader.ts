@@ -1,5 +1,5 @@
 import {
-  AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting, SketchSpec, Tabstopping, Tooltipping
+  AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, Dropdown, GuiFactory, ModalDialog, Reflecting, SketchSpec, Tabstopping, Tooltipping
 } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
@@ -96,6 +96,11 @@ const renderInlineHeader = (
         getSnapPoints: () => [],
         leftAttr: 'data-drag-left',
         topAttr: 'data-drag-top'
+      },
+      onDrag: (comp, target) => {
+        SelectorFind.descendant(target, '.tox-tbtn--select').each((dropdownElement) => {
+          comp.getSystem().getByDom(dropdownElement).each((dropdownComp) => Dropdown.close(dropdownComp));
+        });
       }
     })
   ])

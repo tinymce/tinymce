@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Dialog menu dropdowns now close after dialog is dragged..
+time: 2025-02-06T15:30:03.907875+01:00
+custom:
+  Issue: TINY-11368
