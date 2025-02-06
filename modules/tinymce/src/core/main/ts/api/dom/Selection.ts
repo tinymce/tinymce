@@ -94,7 +94,7 @@ interface EditorSelection {
     parents: Node[];
   }) => void) => { unbind: () => void };
   getScrollContainer: () => HTMLElement | undefined;
-  scrollIntoView: (elm?: HTMLElement, alignToTop?: boolean) => void;
+  scrollIntoView: (elm?: HTMLElement, alignToTop?: boolean, topMargin?: boolean) => void;
   placeCaretAt: (clientX: number, clientY: number) => void;
   getBoundingClientRect: () => ClientRect | DOMRect;
   destroy: () => void;
@@ -549,11 +549,11 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     return scrollContainer;
   };
 
-  const scrollIntoView = (elm?: HTMLElement, alignToTop?: boolean) => {
+  const scrollIntoView = (elm?: HTMLElement, alignToTop?: boolean, topMargin?: boolean) => {
     if (Type.isNonNullable(elm)) {
-      ScrollIntoView.scrollElementIntoView(editor, elm, alignToTop);
+      ScrollIntoView.scrollElementIntoView(editor, elm, alignToTop, topMargin);
     } else {
-      ScrollIntoView.scrollRangeIntoView(editor, getRng(), alignToTop);
+      ScrollIntoView.scrollRangeIntoView(editor, getRng(), alignToTop, topMargin);
     }
   };
 
