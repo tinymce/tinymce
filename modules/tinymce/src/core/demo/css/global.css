@@ -1,6 +1,7 @@
 @layer reset, global, skin, component;
 
-@import "shared-variables.css" layer(global);
+/* @import "shared-variables.css" layer(global); */
+@import "shared-variables-media-query.css" layer(global);
 @import "components/container.css";  /* layer(component); */
 @import "components/button.css";  /* layer(component); */
 @import "components/input.css";  /* layer(component); */
@@ -33,6 +34,8 @@ Light-dark syntax:
   2. Newly available (https://caniuse.com/mdn-css_types_color_light-dark)
   3. If it is not supported enough we can use prefers-color-scheme media query insted.
 
+Relative colors: 
+ 1. Newly available across major browsers https://caniuse.com/css-relative-colors 
 
 ___________________________________________________________________________________________________________________________
 Other CSS4 hot stuff: 
