@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: '`tox-toolbar-textfield` didn''t have a focus style.'
+time: 2025-02-06T13:36:31.256957068+01:00
+custom:
+  Issue: TINY-11658
