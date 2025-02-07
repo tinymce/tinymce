@@ -118,7 +118,7 @@ describe('browser.tinymce.core.keyboard.TableTabKeyNavigationTest', () => {
       TinyAssertions.assertContentPresence(editor, { tr: 1, td: 1 });
       TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
       TinyContentActions.keystroke(editor, Keys.tab());
-      
+
       TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
       TinyAssertions.assertContentPresence(editor, { tr: 1, td: 1 });
       assert.isEmpty(events);
