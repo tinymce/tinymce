@@ -1,6 +1,6 @@
 import { Keys } from '@ephox/agar';
 import { afterEach, context, describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, McEditor, TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { LegacyUnit, TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -116,13 +116,13 @@ describe('browser.tinymce.core.keyboard.TableTabKeyNavigationTest', () => {
       editor.on('TableModified', logEvent);
       editor.setContent('<table contenteditable="false"><tbody><tr><td contenteditable="true">cell 1</td></tr></tbody></table>');
       TinyAssertions.assertContentPresence(editor, { tr: 1, td: 1 });
-      TinySelections.setCursor(editor, [0, 0, 0, 0, 0], 0);
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
       TinyContentActions.keystroke(editor, Keys.tab());
       
-      TinyAssertions.assertCursor(editor, [0, 0, 0, 0, 0], 0);
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
       TinyAssertions.assertContentPresence(editor, { tr: 1, td: 1 });
       assert.isEmpty(events);
-      
+
       editor.off('TableModified', logEvent);
     });
 
