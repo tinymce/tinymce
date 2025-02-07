@@ -7,6 +7,7 @@ import { SelectorFind } from '@ephox/sugar';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { formCancelEvent } from '../general/FormEvents';
 import * as Icons from '../icons/Icons';
+import * as ButtonClasses from '../toolbar/button/ButtonClasses';
 import { titleChannel } from './DialogChannels';
 
 /* eslint-enable max-len */
@@ -98,7 +99,8 @@ const renderInlineHeader = (
         topAttr: 'data-drag-top'
       },
       onDrag: (comp, target) => {
-        SelectorFind.descendant(target, '.tox-tbtn--select').each((dropdownElement) => {
+        const dropdownButtonSelector = '.' + ButtonClasses.ToolbarButtonClasses.MatchWidth;
+        SelectorFind.descendant(target, dropdownButtonSelector).each((dropdownElement) => {
           comp.getSystem().getByDom(dropdownElement).each((dropdownComp) => Dropdown.close(dropdownComp));
         });
       }
