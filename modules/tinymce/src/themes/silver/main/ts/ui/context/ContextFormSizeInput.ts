@@ -117,7 +117,7 @@ export const renderContextFormSizeInput = (
   return AlloyFormCoupledInputs.sketch({
     dom: {
       tag: 'div',
-      classes: [ 'tox-context-form__group' ]
+      classes: [ 'tox-context-form__group', 'tox-context-form-size-input' ]
     },
     components: [
       // NOTE: Form coupled inputs to the FormField.sketch themselves.
