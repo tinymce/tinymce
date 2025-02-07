@@ -60,7 +60,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogDraggedTest', () => {
     return menuButton;
   };
 
-  it('', async () => {
+  it('TINY-11368: should close menu when dialog is dragged', async () => {
     hook.editor();
     const dialog = UiFinder.findIn(SugarBody.body(), '[role="dialog"]').getOrDie();
     const menuButton = openMenuButton(dialog);
