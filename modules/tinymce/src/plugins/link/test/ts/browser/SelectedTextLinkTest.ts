@@ -45,7 +45,7 @@ describe('browser.tinymce.plugins.link.SelectedTextLinkTest', () => {
     editor.setContent('<p><a href="http://oldlink/">word</a></p>');
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     await pOpenDialog(editor);
-    FocusTools.setActiveValue(doc, 'http://something');
+    FocusTools.setActiveValue(doc, 'http://something', 'change');
     await TestLinkUi.pClickSave(editor);
     await TestLinkUi.pAssertContentPresence(editor, {
       'a[href="http://something"]': 1,
@@ -59,7 +59,7 @@ describe('browser.tinymce.plugins.link.SelectedTextLinkTest', () => {
     editor.setContent('<p><strong>word</strong></p><p><strong>other</strong></p>');
     TinySelections.setSelection(editor, [ 0 ], 0, [ 1 ], 1);
     await pOpenDialog(editor, false);
-    FocusTools.setActiveValue(doc, 'http://something');
+    FocusTools.setActiveValue(doc, 'http://something', 'change');
     TinyUiActions.keydown(editor, Keys.enter());
     await TestLinkUi.pAssertContentPresence(editor, {
       'a[href="http://something"]': 2,
@@ -74,7 +74,7 @@ describe('browser.tinymce.plugins.link.SelectedTextLinkTest', () => {
     editor.setContent('<p><a href="http://oldlink/"><strong>word</strong><em>other</em></a></p>');
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     await pOpenDialog(editor);
-    FocusTools.setActiveValue(doc, 'http://something');
+    FocusTools.setActiveValue(doc, 'http://something', 'change');
     await TestLinkUi.pClickSave(editor);
     await TestLinkUi.pAssertContentPresence(editor, {
       'a[href="http://something"]': 1,
@@ -89,7 +89,7 @@ describe('browser.tinymce.plugins.link.SelectedTextLinkTest', () => {
     editor.setContent('<p><a href="http://oldlink/"><strong>word</strong><em>other</em></a></p>');
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     await pOpenDialog(editor);
-    FocusTools.setActiveValue(doc, 'http://something');
+    FocusTools.setActiveValue(doc, 'http://something', 'change');
     TinyUiActions.keydown(editor, Keys.tab());
     FocusTools.setActiveValue(doc, 'new text');
     await TestLinkUi.pClickSave(editor);
@@ -107,7 +107,7 @@ describe('browser.tinymce.plugins.link.SelectedTextLinkTest', () => {
     editor.setContent('<p><a href="http://oldlink/"><strong>word</strong><em>other</em></a></p>');
     TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 2);
     await pOpenDialog(editor);
-    FocusTools.setActiveValue(doc, 'http://something');
+    FocusTools.setActiveValue(doc, 'http://something', 'change');
     await TestLinkUi.pClickSave(editor);
     await TestLinkUi.pAssertContentPresence(editor, {
       'a[href="http://something"]': 1,
@@ -122,7 +122,7 @@ describe('browser.tinymce.plugins.link.SelectedTextLinkTest', () => {
     editor.setContent('<p>a <a href="http://www.google.com/">b</a> c</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 2 ], 2);
     await pOpenDialog(editor);
-    FocusTools.setActiveValue(doc, 'http://something');
+    FocusTools.setActiveValue(doc, 'http://something', 'change');
     await TestLinkUi.pClickSave(editor);
     await TestLinkUi.pAssertContentPresence(editor, {
       'a[href="http://something"]': 1,
@@ -136,7 +136,7 @@ describe('browser.tinymce.plugins.link.SelectedTextLinkTest', () => {
     editor.setContent('<p><a href="http://www.google.com/">a b</a> c</p>');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 2, [ 0, 1 ], 2);
     await pOpenDialog(editor);
-    FocusTools.setActiveValue(doc, 'http://something');
+    FocusTools.setActiveValue(doc, 'http://something', 'change');
     await TestLinkUi.pClickSave(editor);
     await TestLinkUi.pAssertContentPresence(editor, {
       'a[href="http://www.google.com/"]': 1,

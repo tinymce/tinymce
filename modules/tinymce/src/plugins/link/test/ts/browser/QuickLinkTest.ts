@@ -41,7 +41,7 @@ describe('browser.tinymce.plugins.link.QuickLinkTest', () => {
   it('TBA: Checking that QuickLink can insert a link', async () => {
     const editor = hook.editor();
     await pOpenQuickLink(editor);
-    FocusTools.setActiveValue(doc, 'http://tiny.cloud');
+    FocusTools.setActiveValue(doc, 'http://tiny.cloud', 'change');
     TinyUiActions.keydown(editor, Keys.enter());
     TinyAssertions.assertContentPresence(editor, {
       'a[href="http://tiny.cloud"]': 1,
@@ -55,7 +55,7 @@ describe('browser.tinymce.plugins.link.QuickLinkTest', () => {
     editor.setContent('<p>Word</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], ''.length, [ 0, 0 ], 'Word'.length);
     await pOpenQuickLink(editor);
-    FocusTools.setActiveValue(doc, 'http://tiny.cloud/2');
+    FocusTools.setActiveValue(doc, 'http://tiny.cloud/2', 'change');
     TinyUiActions.keydown(editor, Keys.enter());
     TinyAssertions.assertContentPresence(editor, {
       'a[href="http://tiny.cloud/2"]': 1,
@@ -70,7 +70,7 @@ describe('browser.tinymce.plugins.link.QuickLinkTest', () => {
     editor.setContent('<p><img src="image.jpg"></p>');
     TinySelections.select(editor, 'img', []);
     await pOpenQuickLink(editor);
-    FocusTools.setActiveValue(doc, 'http://tiny.cloud/2');
+    FocusTools.setActiveValue(doc, 'http://tiny.cloud/2', 'change');
     TinyUiActions.keydown(editor, Keys.enter());
     TinyAssertions.assertContentPresence(editor, {
       'a[href="http://tiny.cloud/2"]': 1,
@@ -85,7 +85,7 @@ describe('browser.tinymce.plugins.link.QuickLinkTest', () => {
     editor.setContent('<p><a href="http://tiny.cloud/3">Word</a></p>');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 'W'.length, [ 0, 0, 0 ], 'Wo'.length);
     await pOpenQuickLink(editor);
-    FocusTools.setActiveValue(doc, 'http://tiny.cloud/changed/3');
+    FocusTools.setActiveValue(doc, 'http://tiny.cloud/changed/3', 'change');
     TinyUiActions.keydown(editor, Keys.enter());
     TinyAssertions.assertContentPresence(editor, {
       'a[href="http://tiny.cloud/changed/3"]': 1,
@@ -116,7 +116,7 @@ describe('browser.tinymce.plugins.link.QuickLinkTest', () => {
     // add link to word
     TinySelections.setSelection(editor, [ 0, 0 ], ''.length, [ 0, 0 ], 'Word'.length);
     await pOpenQuickLink(editor);
-    FocusTools.setActiveValue(doc, 'http://tiny.cloud/5');
+    FocusTools.setActiveValue(doc, 'http://tiny.cloud/5', 'change');
     TinyUiActions.keydown(editor, Keys.enter());
     // undo
     editor.execCommand('undo');
@@ -132,7 +132,7 @@ describe('browser.tinymce.plugins.link.QuickLinkTest', () => {
     // change the existing link
     TinySelections.setSelection(editor, [ 0, 0, 0 ], ''.length, [ 0, 0, 0 ], 'Word'.length);
     await pOpenQuickLink(editor);
-    FocusTools.setActiveValue(doc, 'http://tiny.cloud/changed/6');
+    FocusTools.setActiveValue(doc, 'http://tiny.cloud/changed/6', 'change');
     TinyUiActions.keydown(editor, Keys.enter());
     // undo (to old link)
     editor.execCommand('undo');
@@ -188,7 +188,7 @@ describe('browser.tinymce.plugins.link.QuickLinkTest', () => {
     editor.setContent('<p>Lorem <em><strong>ipsum</strong></em> dolor sit amet</p>');
     TinySelections.setSelection(editor, [ 0, 1, 0, 0 ], ''.length, [ 0, 1, 0, 0 ], 'ipsum'.length);
     await pOpenQuickLink(editor);
-    FocusTools.setActiveValue(doc, 'http://tiny.cloud/2');
+    FocusTools.setActiveValue(doc, 'http://tiny.cloud/2', 'change');
     TinyUiActions.keydown(editor, Keys.enter());
     TinyAssertions.assertContent(editor, '<p>Lorem <a href="http://tiny.cloud/2"><em><strong>ipsum</strong></em></a> dolor sit amet</p>');
   });
@@ -200,7 +200,7 @@ describe('browser.tinymce.plugins.link.QuickLinkTest', () => {
     // add link to word
     TinySelections.setSelection(editor, [ 0, 0 ], ''.length, [ 0, 0 ], 'Word'.length);
     await pOpenQuickLink(editor);
-    FocusTools.setActiveValue(doc, 'http://tiny.cloud/5');
+    FocusTools.setActiveValue(doc, 'http://tiny.cloud/5', 'change');
     TinyUiActions.keydown(editor, Keys.enter());
     TinyAssertions.assertContent(editor, '<p><a href="http://tiny.cloud/5">Word</a></p>');
 
@@ -210,7 +210,7 @@ describe('browser.tinymce.plugins.link.QuickLinkTest', () => {
     // add link to word
     TinySelections.setSelection(editor, [ 0, 0 ], ''.length, [ 0, 0 ], 'Word'.length);
     await pOpenQuickLink(editor);
-    FocusTools.setActiveValue(doc, 'http://tiny.cloud/5');
+    FocusTools.setActiveValue(doc, 'http://tiny.cloud/5', 'change');
     TinyUiActions.keydown(editor, Keys.enter());
     TinyAssertions.assertContent(editor, '<p><a href="http://tiny.cloud/5" target="_blank" rel="noopener">Word</a></p>');
 

@@ -38,7 +38,7 @@ describe('browser.tinymce.plugins.link.LinkContextMenuTest', () => {
     TinySelections.setSelection(editor, [ 0, 0 ], 'aaa '.length, [ 0, 0 ], 'aaa bbb'.length);
     editor.execCommand('mceLink');
     await TinyUiActions.pWaitForDialog(editor);
-    FocusTools.setActiveValue(SugarDocument.getDocument(), 'http://tiny.cloud');
+    FocusTools.setActiveValue(SugarDocument.getDocument(), 'http://tiny.cloud', 'change');
     TinyUiActions.submitDialog(editor);
     await Waiter.pTryUntil('Wait for content to change', () =>
       TinyAssertions.assertContent(editor, '<p>aaa <a href="http://tiny.cloud">bbb</a> ccc</p>'));
