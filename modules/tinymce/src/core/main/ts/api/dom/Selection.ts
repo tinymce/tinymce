@@ -553,7 +553,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     if (Type.isNonNullable(elm)) {
       ScrollIntoView.scrollElementIntoView(editor, elm, alignToTop, topMargin);
     } else {
-      ScrollIntoView.scrollRangeIntoView(editor, getRng(), alignToTop, topMargin);
+      ScrollIntoView.scrollRangeIntoView(editor, getRng(), alignToTop);
     }
   };
 

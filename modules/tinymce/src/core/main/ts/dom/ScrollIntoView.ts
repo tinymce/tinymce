@@ -119,26 +119,25 @@ const preserveWith = (editor: Editor, f: (startElement: SugarElement<Node>, endE
 
 const scrollToMarker = (editor: Editor, marker: MarkerInfo, viewHeight: number, alignToTop: boolean, doc?: SugarElement<Document>, topMargin?: boolean) => {
   const pos = marker.pos;
-  // const viewWidth = Traverse.defaultView(doc ?? SugarElement.fromDom(editor.getDoc())).dom.innerWidth;
+  const viewWidth = Traverse.defaultView(doc ?? SugarElement.fromDom(editor.getDoc())).dom.innerWidth;
   const viewportLeft = -editor.getBody().getBoundingClientRect().left;
   if (alignToTop) {
     if (topMargin) {
-      // const targetOffset = viewHeight * 0.25;
-      // const y = pos.top - targetOffset;
-      // // If element is off screen to the left, scroll to slightly right of its position
-      // if (pos.left < viewportLeft) {
-      //   Scroll.to(pos.left - 20, y, doc);
-      //   // If element is within first 50% of viewport width, align to left edge
-      // } else if (pos.left < viewWidth * 0.5) {
-      //   Scroll.to(viewportLeft, y, doc);
-      //   // If element is beyond 50% of viewport width, scroll to its position
-      // } else if (pos.left > viewWidth) {
-      //   Scroll.to(pos.left, y, doc);
-      //   // If element is beyond 50% of viewport width, scroll to its position
-      // } else {
-      //   Scroll.to(pos.left, y, doc);
-      // }
-      // console.log('topMargin', topMargin);
+      const targetOffset = viewHeight * 0.25;
+      const y = pos.top - targetOffset;
+      // If element is off screen to the left, scroll to slightly right of its position
+      if (pos.left < viewportLeft) {
+        Scroll.to(pos.left - 20, y, doc);
+        // If element is within first 50% of viewport width, align to left edge
+      } else if (pos.left < viewWidth * 0.5) {
+        Scroll.to(viewportLeft, y, doc);
+        // If element is beyond 50% of viewport width, scroll to its position
+      } else if (pos.left > viewWidth) {
+        Scroll.to(pos.left, y, doc);
+        // If element is beyond 50% of viewport width, scroll to its position
+      } else {
+        Scroll.to(pos.left, y, doc);
+      }
     } else {
       Scroll.to(pos.left, pos.top, doc);
     }
@@ -215,9 +214,9 @@ const scrollElementIntoView = (editor: Editor, element: HTMLElement, alignToTop?
 
 // This method is made to deal with the user pressing enter, it is not useful
 // if we want for example scroll in content after a paste event.
-const scrollRangeIntoView = (editor: Editor, rng: Range, alignToTop?: boolean, topMargin?: boolean): void => {
+const scrollRangeIntoView = (editor: Editor, rng: Range, alignToTop?: boolean): void => {
   const scroller = editor.inline ? rangeIntoWindow : rangeIntoFrame;
-  scroller(editor, rng, alignToTop, topMargin);
+  scroller(editor, rng, alignToTop);
 };
 
 export {
