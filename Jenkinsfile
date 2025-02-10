@@ -266,6 +266,9 @@ timestamps {
   def macFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
   def macSafari = [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
 
+  def selFirefox = [ browser: 'firefox', provider: 'selenium', buckets: 2 ]
+  def seleniumChrome = [ browser: 'chrome', provider: 'selenium', version: '129.0' buckets: 2 ]
+
   def branchBuildPlatforms = [
     winChrome,
     winFirefox,
@@ -279,7 +282,8 @@ timestamps {
   ];
 
   def buildingPrimary = env.BRANCH_NAME == props.primaryBranch
-  def platforms = buildingPrimary ? primaryBuildPlatforms : branchBuildPlatforms
+  // def platforms = buildingPrimary ? primaryBuildPlatforms : branchBuildPlatforms
+  def platforms = [ selFirefox, seleniumChrome ]
 
   def processes = [:]
   def runAllTests = buildingPrimary
