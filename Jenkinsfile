@@ -293,7 +293,6 @@ timestamps {
       def browserVersion = platform.version ? "-${platform.version}" : ""
       def s_bucket = "${bucket}"
       def s_buckets = "${buckets}"
-<<<<<<< HEAD
       switch(platform.provider) {
         case ['aws', 'lambdatest']:
           def name = "${os}-${platform.browser}${browserVersion}-${platform.provider}${suffix}"
@@ -314,15 +313,6 @@ timestamps {
         default:
         processes[name] = { unstable('Missing test provider') }
         break;
-=======
-      if (platform.provider) {
-        // use remote
-        def name = "${os}-${platform.browser}${browserVersion}-${platform.provider}${suffix}"
-        def testName = "${env.BUILD_NUMBER}-${os}-${platform.browser}"
-        processes[name] = runTestPod(cacheName, name, "${testPrefix}_${testName}", platform.browser, platform.provider, platform.os, platform.version, s_bucket, s_buckets, runAllTests)
-      } else {
-        fail("platform provider not specified for ${os}-${platform.browser}${browserVersion}-${suffix}")
->>>>>>> origin/main
       }
     }
   }
