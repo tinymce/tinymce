@@ -50,13 +50,13 @@
     width: 100%;
   }
 
-  .tox-textfield[disabled] {
+  .tox-textfield[disabled], .tox-toolbar-textfield[disabled] {
     background-color: @textfield-disabled-background-color;
     color: @textfield-disabled-text-color;
     cursor: not-allowed;
   }
 
-  .tox-textfield:focus {
+  .tox-textfield:focus, .tox-toolbar-textfield:focus {
     background-color: @textfield-focus-background-color;
     border-color: @textfield-focus-border-color;
     box-shadow: @textfield-focus-box-shadow;
@@ -68,19 +68,6 @@
     min-height: unset;
     height: @toolbar-textfield-height;
     margin: @toolbar-textfield-margin;
-  }
-
-  .tox-toolbar-textfield[disabled] {
-    background-color: @textfield-disabled-background-color;
-    color: @textfield-disabled-text-color;
-    cursor: not-allowed;
-  }
-
-  .tox-toolbar-textfield:focus {
-    background-color: @textfield-focus-background-color;
-    border-color: @textfield-focus-border-color;
-    box-shadow: @textfield-focus-box-shadow;
-    outline: @textfield-focus-outline;
   }
 
   .tox-naked-btn {
