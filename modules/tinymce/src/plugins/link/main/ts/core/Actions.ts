@@ -71,6 +71,7 @@ const updateLink = (editor: Editor, anchorElm: HTMLAnchorElement, text: Optional
   // Move the cursor behind the updated link, so the user can go on typing.
   const rng = editor.dom.createRng();
   rng.setStartAfter(anchorElm);
+  rng.setEndAfter(anchorElm);
   editor.selection.setRng(rng);
 };
 
@@ -83,8 +84,10 @@ const createLink = (editor: Editor, selectedElm: Element, text: Optional<string>
       () => {
         editor.execCommand('mceInsertLink', false, linkAttrs);
         // Now the newly inserted link is selected. Move the cursor behind the new link, so the user can go on typing.
+        const end = editor.selection.getEnd();
         const rng = dom.createRng();
-        rng.setStartAfter(editor.selection.getEnd());
+        rng.setStartAfter(end);
+        rng.setEndAfter(end);
         editor.selection.setRng(rng);
       },
       (text) => {
