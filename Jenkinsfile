@@ -104,33 +104,7 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
   }
 }
 
-<<<<<<< HEAD
-def runTestNode(String branch, String name, String browser, String platform, String bucket, String buckets, Boolean runAll) {
-  return {
-    stage(name) {
-      node("bedrock-${platform}") {
-        echo "Bedrock tests for ${name} on $NODE_NAME"
-        checkout(scm)
-        tinyGit.addAuthorConfig()
-        gitMerge(branch)
-
-        // Clean and Install
-        exec("git clean -fdx modules scratch js dist")
-        yarnInstall()
-
-        exec("yarn ci")
-        echo "Running browser tests"
-        //(String name, String browser, String platform, String bucket, String buckets, Boolean runAll)
-        runBrowserTests(name, browser, platform, bucket, buckets, runAll)
-      }
-    }
-  }
-}
-
 def runHeadlessPod(String cacheName, String browser, Boolean runAll, Closure body) {
-=======
-def runHeadlessPod(String cacheName, Boolean runAll) {
->>>>>>> origin/main
   Map node = [
           name: 'node',
           image: "public.ecr.aws/docker/library/node:20",
@@ -308,11 +282,6 @@ timestamps {
           processes[name] = runHeadlessPod(cacheName, platform.browser) {
             runSeleniumTests(name, platform.browser, s_bucket, s_buckets, runAll)
           }
-        break;
-        // Local testing has been deprecated but in case we go back...
-        case 'local':
-          def name = "${os}-${platform.browser}"
-          processes[name] = runTestNode(props.primaryBranch, name, platform.browser, platform.os, s_bucket, s_buckets, runAllTests)
         break;
         default:
         processes[name] = { unstable('Missing test provider') }
