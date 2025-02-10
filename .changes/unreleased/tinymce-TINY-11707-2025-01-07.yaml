@@ -1,0 +1,7 @@
+project: tinymce
+kind: Added
+body: '`link_attributes_postprocess` option that allows overriding attributes of a
+  link that would be inserted through the link dialog.'
+time: 2025-01-07T20:12:31.813482+01:00
+custom:
+  Issue: TINY-11707

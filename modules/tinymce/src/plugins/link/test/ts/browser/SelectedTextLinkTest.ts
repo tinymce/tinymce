@@ -12,14 +12,6 @@ describe('browser.tinymce.plugins.link.SelectedTextLinkTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'link',
     toolbar: '',
-    setup: (editor: Editor) => {
-      // Simulate comments being enabled
-      editor.on('GetContent', (e) => {
-        if (e.selection) {
-          e.content += '<!-- TinyComments -->';
-        }
-      });
-    },
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ]);
 

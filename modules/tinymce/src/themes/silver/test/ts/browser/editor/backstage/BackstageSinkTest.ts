@@ -31,6 +31,7 @@ describe('browser.tinymce.themes.silver.editor.backstage.BackstageSinkTest', () 
       Options.register(ed);
       ed.on('init', () => {
         const skinUrl = EditorManager.baseURL + '/skins/ui/oxide/skin.css';
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         ed.ui.styleSheetLoader.load(skinUrl).then(
           () => {
             ed.dispatch('SkinLoaded');

@@ -10,7 +10,7 @@ export const registerCommands = (editor: Editor): void => {
       // Try executing the native command
       try {
         doc.execCommand(command);
-      } catch (ex) {
+      } catch {
         // Command failed
         failed = true;
       }

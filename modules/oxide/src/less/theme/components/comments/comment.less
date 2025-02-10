@@ -11,7 +11,7 @@
 @comment-border: 1px solid @comment-border-color;
 @comment-box-shadow: 0 4px 8px 0 fade(@color-black, 10%);
 //TODO: Same as menu. Make a common helper variable?
-@comment-font-size: @font-size-sm;
+@comment-font-size: @font-size-md;
 @comment-font-style: normal;
 @comment-font-weight: @font-weight-normal;
 @comment-line-height: @line-height-base;
@@ -45,6 +45,7 @@
     box-shadow: 0px 4px 8px 0px rgba(34, 47, 62, 0.1);
     padding: 8px 12px;
     background: @background-color;
+    z-index: 1;
   }
 
   .tox-conversations__title {
@@ -306,6 +307,10 @@
     overflow: auto;
     padding: 12px;
     scroll-behavior: smooth;
+
+    &:has(textarea:focus) {
+      scroll-behavior: auto;
+    }
   }
 
   /* Animation for deleting a comment */

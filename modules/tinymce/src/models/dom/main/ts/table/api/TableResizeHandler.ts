@@ -3,6 +3,8 @@ import { Adjustments, ResizeBehaviour, ResizeWire, Sizes, TableConversions, Tabl
 import { Attribute, Css, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { DisabledStateChangeEvent } from 'tinymce/core/api/EventTypes';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Utils from '../core/TableUtils';
 import * as TableWire from '../core/TableWire';
@@ -209,28 +211,30 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
     }
   });
 
-  editor.on('SwitchMode', () => {
+  const showResizeBars = () => {
     tableResize.on((resize) => {
-      if (editor.mode.isReadOnly()) {
-        resize.off();
-        resize.hideBars();
-      } else {
-        resize.on();
-        resize.showBars();
-      }
+      resize.on();
+      resize.showBars();
     });
+  };
+
+  const hideResizeBars = () => {
+    tableResize.on((resize) => {
+      resize.off();
+      resize.hideBars();
+    });
+  };
+
+  editor.on('DisabledStateChange', (e: EditorEvent<DisabledStateChangeEvent>) => {
+    e.state ? hideResizeBars() : showResizeBars();
   });
 
-  editor.on('dragstart dragend', (e) => {
-    tableResize.on((resize) => {
-      if (e.type === 'dragstart') {
-        resize.hideBars();
-        resize.off();
-      } else {
-        resize.on();
-        resize.showBars();
-      }
-    });
+  editor.on('SwitchMode', () => {
+    editor.mode.isReadOnly() ? hideResizeBars() : showResizeBars();
+  });
+
+  editor.on('dragstart dragend', (e: EditorEvent<DragEvent>) => {
+    e.type === 'dragstart' ? hideResizeBars() : showResizeBars();
   });
 
   editor.on('remove', () => {

@@ -618,7 +618,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorMenuItemContextTest
           await scenario.pAssertMenuItemEnabled(editor, 't11');
           TinyUiActions.keystroke(editor, Keys.escape());
 
-          editor.setContent('<img src="https://picsum.photos/200/300"/>');
+          editor.setContent('<img src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" />');
           const image = editor.dom.select('img')[0];
           let imageLoaded = false;
           image.onload = () => imageLoaded = true;

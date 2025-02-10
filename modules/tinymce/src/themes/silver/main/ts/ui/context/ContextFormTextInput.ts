@@ -17,7 +17,7 @@ export const renderContextFormTextInput = (
 
   const pLabel = ctx.label.map((label) => FormField.parts.label({
     dom: { tag: 'label', classes: [ 'tox-label' ] },
-    components: [ GuiFactory.text(label) ]
+    components: [ GuiFactory.text(providers.translate(label)) ]
   }));
 
   const placeholder = ctx.placeholder.map((p) => ({ placeholder: providers.translate(p) })).getOr({});
@@ -28,7 +28,7 @@ export const renderContextFormTextInput = (
 
   const pField = FormField.parts.field({
     factory: Input,
-    inputClasses: [ 'tox-toolbar-textfield', 'tox-toolbar-nav-js' ],
+    inputClasses: [ 'tox-toolbar-textfield', 'tox-toolbar-nav-item' ],
     inputAttributes,
     data: ctx.initValue(),
     selectOnFocus: true,

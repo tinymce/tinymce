@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Keyboard navigation would get stuck on the 'more' toolbar button.
+time: 2025-02-03T14:57:27.798833+01:00
+custom:
+    Issue: TINY-11762

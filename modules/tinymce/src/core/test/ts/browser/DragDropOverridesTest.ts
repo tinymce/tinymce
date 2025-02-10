@@ -31,11 +31,11 @@ describe.skip('browser.tinymce.core.DragDropOverridesTest', () => {
     }, [], true);
 
     before(async function () {
-      this.timeout(10000);
+      this.timeout(7000);
       hook.editor().on('dragstart drop dragend', (e: DragEvent) => {
         events = [ ...events, e ];
       });
-      await Waiter.pWait(100); // Wait a small amount of time to ensure the events have been bound
+      await Waiter.pWaitBetweenUserActions();
     });
 
     beforeEach(() => {
@@ -557,7 +557,7 @@ describe.skip('browser.tinymce.core.DragDropOverridesTest', () => {
     }, [], true);
 
     before(async () => {
-      await Waiter.pWait(100); // Wait a small amount of time to ensure the events have been bound
+      await Waiter.pWaitBetweenUserActions();
     });
 
     it('TINY-8874: Dragging CEF element towards the bottom edge causes scrolling when autoresize is set', async () => {
@@ -620,7 +620,7 @@ describe.skip('browser.tinymce.core.DragDropOverridesTest', () => {
       window.dispatchEvent(new MouseEvent('mousemove', {
         clientY: window.innerHeight,
       }));
-      await Waiter.pWait(100);
+      await Waiter.pWaitBetweenUserActions();
       Mouse.mouseUp(target);
       assert.strictEqual(window.scrollY, initialScrollY);
     });
@@ -705,7 +705,7 @@ describe.skip('browser.tinymce.core.DragDropOverridesTest', () => {
       Mouse.mouseMoveTo(toDrag, xDelta + xOffset, yDelta + yOffset);
 
       // little trick that give "time" to CaretRange.fromPoint to find the position
-      await Waiter.pWait(0);
+      await Waiter.pWaitBetweenUserActions();
       Mouse.mouseUp(toDrag);
     };
 

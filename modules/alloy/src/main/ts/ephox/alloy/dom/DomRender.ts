@@ -29,7 +29,7 @@ const attemptPatch = (definition: DomDefinition.GeneralDefinitionDetail<SugarEle
   try {
     const e = reconcileToDom(definition, obsoleted);
     return Optional.some(e);
-  } catch (err) {
+  } catch {
     return Optional.none();
   }
 };

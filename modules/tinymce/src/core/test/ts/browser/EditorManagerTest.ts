@@ -31,6 +31,7 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
 
   it('get', (done) => {
     viewBlock.update('<textarea class="tinymce"></textarea>');
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     EditorManager.init({
       selector: 'textarea.tinymce',
       init_instance_callback: (editor1) => {
@@ -54,6 +55,7 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
         assert.equal(saveCount, 1);
 
         // Re-init on same id
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         EditorManager.init({
           selector: '#' + (EditorManager.activeEditor as Editor).id,
         });
@@ -82,6 +84,7 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
 
     viewBlock.update('<textarea></textarea>');
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     EditorManager.init({
       selector: 'textarea',
       language: langCode,
@@ -101,6 +104,7 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
   it('Externally destroyed editor', (done) => {
     viewBlock.update('<textarea></textarea>');
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     EditorManager.init({
       selector: 'textarea',
       init_instance_callback: (editor1) => {
@@ -112,6 +116,7 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
           Selectors.one('.tox-silver-sink').each(Remove.remove);
 
           // Re-init the editor will have the same id
+          // eslint-disable-next-line @typescript-eslint/no-floating-promises
           EditorManager.init({
             selector: 'textarea',
             skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
@@ -194,6 +199,7 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
     Tools.each(invalidNames.split(' '), (invalidName) => {
       const elm = DOMUtils.DOM.add(document.body, invalidName, { class: 'targetEditor' }, null);
 
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       EditorManager.init({
         selector: invalidName + '.targetEditor',
         inline: true

@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: The `float` property was not properly removed on the image when converting a image into a captioned image.
+time: 2025-01-20T14:49:52.937631196+01:00
+custom:
+  Issue: TINY-11670
