@@ -31,8 +31,7 @@ describe('browser.tinymce.plugins.link.AnchorFalseTest', () => {
   it('TINY-6256: With anchor top/bottom set to false, they shouldn\'t be shown in the url list options', async () => {
     const editor = hook.editor();
     await TestLinkUi.pOpenLinkDialog(editor);
-    const focused = FocusTools.setActiveValue(SugarDocument.getDocument(), 't');
-    TestLinkUi.fireEvent(focused, 'input');
+    FocusTools.setActiveValue(SugarDocument.getDocument(), 't');
     await TinyUiActions.pWaitForUi(editor, '.tox-dialog__popups .tox-menu');
     UiFinder.notExists(SugarBody.body(), '.tox-dialog__popups .tox-menu .tox-collection__item:contains(<top>)');
     UiFinder.notExists(SugarBody.body(), '.tox-dialog__popups .tox-menu .tox-collection__item:contains(<bottom>)');
