@@ -121,7 +121,7 @@ describe('browser.tinymce.plugins.link.DialogFlowTest', () => {
     TinySelections.setSelection(editor, [ 0, 0 ], ''.length, [ 0, 0 ], 'Something'.length);
     await TestLinkUi.pOpenLinkDialog(editor);
 
-    FocusTools.setActiveValue(SugarDocument.getDocument(), 'http://www.tiny.cloud', 'change');
+    FocusTools.setActiveValue(SugarDocument.getDocument(), 'http://www.tiny.cloud');
     TestLinkUi.assertDialogContents({
       href: 'http://www.tiny.cloud',
       text: 'Something',

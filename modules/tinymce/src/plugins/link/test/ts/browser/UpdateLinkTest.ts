@@ -36,7 +36,7 @@ describe('browser.tinymce.plugins.link.UpdateLinkTest', () => {
       title: 'shouldalsobekept',
       target: ''
     });
-    FocusTools.setActiveValue(SugarDocument.getDocument(), 'http://something', 'change');
+    FocusTools.setActiveValue(SugarDocument.getDocument(), 'http://something');
     TinyUiActions.keydown(editor, Keys.enter());
     await TestLinkUi.pAssertContentPresence(editor, {
       'a[href="http://something"]': 1,
@@ -57,7 +57,7 @@ describe('browser.tinymce.plugins.link.UpdateLinkTest', () => {
       title: 'shouldnotbekept',
       target: ''
     });
-    FocusTools.setActiveValue(SugarDocument.getDocument(), 'http://something', 'change');
+    FocusTools.setActiveValue(SugarDocument.getDocument(), 'http://something');
     await TestLinkUi.pSetInputFieldValue(editor, 'Title', '');
     TinyUiActions.keydown(editor, Keys.enter());
     await TestLinkUi.pAssertContentPresence(editor, {

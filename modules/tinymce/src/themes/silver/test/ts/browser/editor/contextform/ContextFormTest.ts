@@ -217,7 +217,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     await FocusTools.pTryOnSelector('Focus should go back to input in context form', doc, 'input');
     FocusTools.setActiveValue(doc, 'Words');
     TinyUiActions.keydown(editor, Keys.enter());
-    store.assertEq('B should have fired because it is primary', [ 'setup', 'B.Words' ]);
+    store.assertEq('B should have fired because it is primary', [ 'setup', 'input.Words', 'B.Words' ]);
     hasDialog('Immediate context form should have an inner dialog class');
     TinyUiActions.keyup(editor, Keys.escape());
     // Check that the context popup still exists;

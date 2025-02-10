@@ -7,8 +7,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/emoticons/Plugin';
 
-import { fakeEvent } from '../module/test/Utils';
-
 describe('browser.tinymce.plugins.emoticons.EmojiAppendTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'emoticons',
@@ -55,8 +53,7 @@ describe('browser.tinymce.plugins.emoticons.EmojiAppendTest', () => {
       ]
     })), tabList);
 
-    const input = FocusTools.setActiveValue(doc, 'clock');
-    fakeEvent(input, 'input');
+    FocusTools.setActiveValue(doc, 'clock');
     await Waiter.pTryUntil(
       'Wait until clock is the first choice (search should filter)',
       () => {

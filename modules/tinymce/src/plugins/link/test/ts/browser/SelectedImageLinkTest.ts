@@ -30,7 +30,7 @@ describe('browser.tinymce.plugins.link.SelectedImageTest', () => {
     editor.setContent('<p><img src="image.png"></p>');
     TinySelections.select(editor, 'img', []);
     await TestLinkUi.pOpenLinkDialog(editor);
-    FocusTools.setActiveValue(doc, 'http://something', 'change');
+    FocusTools.setActiveValue(doc, 'http://something');
     UiFinder.notExists(SugarBody.body(), '.tox-label:contains("Text to display")');
     await TestLinkUi.pClickSave(editor);
     await TestLinkUi.pAssertContentPresence(editor, {
@@ -45,7 +45,7 @@ describe('browser.tinymce.plugins.link.SelectedImageTest', () => {
     editor.setContent('<p><a href="http://www.google.com/"><img src="image.png"></a></p>');
     TinySelections.select(editor, 'a', []);
     await TestLinkUi.pOpenLinkDialog(editor);
-    FocusTools.setActiveValue(doc, 'http://something', 'change');
+    FocusTools.setActiveValue(doc, 'http://something');
     UiFinder.notExists(SugarBody.body(), '.tox-label:contains("Text to display")');
     await TestLinkUi.pClickSave(editor);
     await TestLinkUi.pAssertContentPresence(editor, {
@@ -60,8 +60,7 @@ describe('browser.tinymce.plugins.link.SelectedImageTest', () => {
     editor.setContent('<p><a href="http://www.google.com/" title="test"><img src="image.png"></a></p>');
     TinySelections.select(editor, 'a', []);
     await TestLinkUi.pOpenLinkDialog(editor);
-    const focused = FocusTools.setActiveValue(doc, '');
-    TestLinkUi.fireEvent(focused, 'input');
+    FocusTools.setActiveValue(doc, '');
     UiFinder.notExists(SugarBody.body(), '.tox-label:contains("Text to display")');
     TestLinkUi.assertDialogContents({
       url: '',
