@@ -104,22 +104,22 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
   }
 }
 
-def runHeadlessPod(String cacheName, String browser, Boolean runAll, Closure body) {
+def runHeadlessPod(String cacheName, String name, String browser, String version, Closure body) {
   Map node = [
           name: 'node',
           image: "public.ecr.aws/docker/library/node:20",
           command: 'sleep',
           args: 'infinity',
-          resourceRequestCpu: '2',
+          resourceRequestCpu: '4',
           resourceRequestMemory: '4Gi',
-          resourceRequestEphemeralStorage: '16Gi',
+          resourceRequestEphemeralStorage: '8Gi',
           resourceLimitCpu: '7',
           resourceLimitMemory: '4Gi',
-          resourceLimitEphemeralStorage: '16Gi'
+          resourceLimitEphemeralStorage: '8Gi'
         ]
   Map selenium = [
           name: "selenium",
-          image: "selenium/standalone-${browser}:127.0",
+          image: "selenium/standalone-${browser}:${version}",
           livenessProbe: [
             execArgs: "curl --fail --silent --output /dev/null http://localhost:4444/wd/hub/status",
             initialDelaySeconds: 30,
@@ -128,10 +128,12 @@ def runHeadlessPod(String cacheName, String browser, Boolean runAll, Closure bod
             failureThreshold: 6
           ],
           alwaysPullImage: true,
-          resourceRequestCpu: '500m',
-          resourceRequestMemory: '1Gi',
+          resourceRequestCpu: '2',
+          resourceRequestMemory: '2Gi',
+          resourceRequestEphemeralStorage: '4Gi',
           resourceLimitCpu: '2',
-          resourceLimitMemory: '1Gi'
+          resourceLimitMemory: '2Gi',
+          resourceLimitEphemeralStorage: '4Gi'
         ]
   Map aws = [
           name: 'aws-cli',
@@ -139,15 +141,15 @@ def runHeadlessPod(String cacheName, String browser, Boolean runAll, Closure bod
           command: 'sleep',
           args: 'infinity',
           alwaysPullImage: true,
-          resourceRequestCpu: '500m',
+          resourceRequestCpu: '1',
           resourceRequestMemory: '1Gi',
           resourceRequestEphemeralStorage: '1Gi',
-          resourceLimitCpu: '500m',
+          resourceLimitCpu: '1',
           resourceLimitMemory: '1Gi',
           resourceLimitEphemeralStorage: '1Gi'
         ]
   return {
-    stage("Headless-chrome") {
+    stage("${name}") {
       devPods.customConsumer(
         containers: [
           node,
@@ -240,8 +242,9 @@ timestamps {
   def macFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
   def macSafari = [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
 
-  def selFirefox = [ browser: 'firefox', provider: 'selenium', buckets: 2 ]
-  def seleniumChrome = [ browser: 'chrome', provider: 'selenium', version: '129.0', buckets: 2 ]
+  def seleniumFirefox = [ browser: 'firefox', provider: 'selenium', buckets: 3 ]
+  def seleniumChrome = [ browser: 'chrome', provider: 'selenium', version: '127.0', buckets: 4 ]
+  def seleniumChromium = [ browser: 'edge', provider: 'selenium', buckets: 2 ]
 
   def branchBuildPlatforms = [
     winChrome,
@@ -256,8 +259,7 @@ timestamps {
   ];
 
   def buildingPrimary = env.BRANCH_NAME == props.primaryBranch
-  // def platforms = buildingPrimary ? primaryBuildPlatforms : branchBuildPlatforms
-  def platforms = [ selFirefox, seleniumChrome ]
+  def platforms = buildingPrimary ? primaryBuildPlatforms : branchBuildPlatforms
 
   def processes = [:]
   def runAllTests = buildingPrimary
@@ -268,19 +270,20 @@ timestamps {
     for (int bucket = 1; bucket <= buckets; bucket ++) {
       def suffix = buckets == 1 ? "" : "-" + bucket + "-" + buckets
       def os = String.valueOf(platform.os).startsWith('mac') ? 'Mac' : 'Win'
-      def browserVersion = platform.version ? "-${platform.version}" : ""
       def s_bucket = "${bucket}"
       def s_buckets = "${buckets}"
       switch(platform.provider) {
         case ['aws', 'lambdatest']:
+          def browserVersion = platform.version ? "-${platform.version}" : ""
           def name = "${os}-${platform.browser}${browserVersion}-${platform.provider}${suffix}"
           def testName = "${env.BUILD_NUMBER}-${os}-${platform.browser}"
           processes[name] = runTestPod(cacheName, name, "${testPrefix}_${testName}", platform.browser, platform.provider, platform.os, platform.version, s_bucket, s_buckets, runAllTests)
         break;
         case 'selenium':
-          def name = "selenium-${platform.browser}-${suffix}";
-          processes[name] = runHeadlessPod(cacheName, platform.browser) {
-            runSeleniumTests(name, platform.browser, s_bucket, s_buckets, runAll)
+          def name = "selenium-${platform.browser}${suffix}";
+          def browserVersion = platform.version ?: 'latest'
+          processes[name] = runHeadlessPod(cacheName, name, platform.browser, browserVersion) {
+            runSeleniumTests(name, platform.browser, s_bucket, s_buckets, runAllTests)
           }
         break;
         default:
@@ -290,8 +293,8 @@ timestamps {
     }
   }
 
-  processes['headless'] = runHeadlessPod(cacheName, 'chrome') {
-    runHeadlessTests(runAll)
+  processes['headless'] = runHeadlessPod(cacheName, 'headless-chrome', 'chrome', '127.0') {
+    runHeadlessTests(runAllTests)
   }
 
   stage('Run tests') {
