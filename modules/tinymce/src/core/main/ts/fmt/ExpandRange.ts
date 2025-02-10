@@ -12,6 +12,11 @@ import * as FormatUtils from './FormatUtils';
 
 type Sibling = 'previousSibling' | 'nextSibling';
 
+export interface ExpandOptions {
+  readonly includeTrailingSpace?: boolean;
+  readonly expandToBlock?: boolean;
+}
+
 const isBookmarkNode = Bookmarks.isBookmarkNode;
 const getParents = FormatUtils.getParents;
 const isWhiteSpaceNode = FormatUtils.isWhiteSpaceNode;
@@ -69,7 +74,8 @@ const findWordEndPoint = (
   includeTrailingSpaces: boolean
 ) => {
   let lastTextNode: Text;
-  const rootNode = dom.getParent(container, dom.isBlock) || body;
+  const closestRoot = dom.getParent(container, (node) => NodeType.isEditingHost(node) || dom.isBlock(node));
+  const rootNode = Type.isNonNullable(closestRoot) ? closestRoot : body;
 
   const walk = (container: Node, offset: number, pred: (start: boolean, node: Text, offset: number) => number) => {
     const textSeeker = TextSeeker(dom);
@@ -185,10 +191,10 @@ const findParentContainer = (
   formatList: Format[],
   container: Node,
   offset: number,
-  start: boolean
+  start: boolean,
+  expandToBlock: boolean
 ) => {
   let parent: Node | null = container;
-
   const siblingName = start ? 'previousSibling' : 'nextSibling';
   const root = dom.getRoot();
 
@@ -200,9 +206,13 @@ const findParentContainer = (
   }
 
   while (parent) {
+    if (NodeType.isEditingHost(parent)) {
+      return container;
+    }
+
     // Stop expanding on block elements
     if (!formatList[0].block_expand && dom.isBlock(parent)) {
-      return parent;
+      return expandToBlock ? parent : container;
     }
 
     // Walk left/right
@@ -228,7 +238,10 @@ const findParentContainer = (
 
 const isSelfOrParentBookmark = (container: Node) => isBookmarkNode(container.parentNode) || isBookmarkNode(container);
 
-const expandRng = (dom: DOMUtils, rng: Range, formatList: Format[], includeTrailingSpace: boolean = false): RangeLikeObject => {
+const expandRng = (dom: DOMUtils, rng: Range, formatList: Format[], expandOptions: ExpandOptions = {}): RangeLikeObject => {
+  const { includeTrailingSpace = false, expandToBlock = true } = expandOptions;
+  const editableHost = dom.getParent(rng.commonAncestorContainer, (node) => NodeType.isEditingHost(node)) as HTMLElement;
+  const root = Type.isNonNullable(editableHost) ? editableHost : dom.getRoot();
   let { startContainer, startOffset, endContainer, endOffset } = rng;
   const format = formatList[0];
 
@@ -283,7 +296,7 @@ const expandRng = (dom: DOMUtils, rng: Range, formatList: Format[], includeTrail
     // Expand left to closest word boundary
     const startPoint = findWordEndPoint(
       dom,
-      dom.getRoot(),
+      root,
       startContainer,
       startOffset,
       true,
@@ -295,7 +308,7 @@ const expandRng = (dom: DOMUtils, rng: Range, formatList: Format[], includeTrail
     });
 
     // Expand right to closest word boundary
-    const endPoint = findWordEndPoint(dom, dom.getRoot(), endContainer, endOffset, false, includeTrailingSpace);
+    const endPoint = findWordEndPoint(dom, root, endContainer, endOffset, false, includeTrailingSpace);
     endPoint.each(({ container, offset }) => {
       endContainer = container;
       endOffset = offset;
@@ -308,11 +321,11 @@ const expandRng = (dom: DOMUtils, rng: Range, formatList: Format[], includeTrail
   // Move start point up the tree
   if (FormatUtils.isInlineFormat(format) || format.block_expand) {
     if (!FormatUtils.isInlineFormat(format) || (!NodeType.isText(startContainer) || startOffset === 0)) {
-      startContainer = findParentContainer(dom, formatList, startContainer, startOffset, true);
+      startContainer = findParentContainer(dom, formatList, startContainer, startOffset, true, expandToBlock);
     }
 
     if (!FormatUtils.isInlineFormat(format) || (!NodeType.isText(endContainer) || endOffset === endContainer.data.length)) {
-      endContainer = findParentContainer(dom, formatList, endContainer, endOffset, false);
+      endContainer = findParentContainer(dom, formatList, endContainer, endOffset, false, expandToBlock);
     }
   }
 
@@ -332,14 +345,14 @@ const expandRng = (dom: DOMUtils, rng: Range, formatList: Format[], includeTrail
     // Non block element then try to expand up the leaf
     if (FormatUtils.isBlockFormat(format)) {
       if (!dom.isBlock(startContainer)) {
-        startContainer = findParentContainer(dom, formatList, startContainer, startOffset, true);
+        startContainer = findParentContainer(dom, formatList, startContainer, startOffset, true, expandToBlock);
         if (NodeType.isText(startContainer)) {
           startOffset = 0;
         }
       }
 
       if (!dom.isBlock(endContainer)) {
-        endContainer = findParentContainer(dom, formatList, endContainer, endOffset, false);
+        endContainer = findParentContainer(dom, formatList, endContainer, endOffset, false, expandToBlock);
         if (NodeType.isText(endContainer)) {
           endOffset = endContainer.data.length;
         }

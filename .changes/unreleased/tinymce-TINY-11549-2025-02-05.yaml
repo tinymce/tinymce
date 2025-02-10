@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: the toolbar did not consider the entire space in some cases if there was a horizontal
+  scroll.
+time: 2025-02-05T08:50:05.34007487+01:00
+custom:
+  Issue: TINY-11549

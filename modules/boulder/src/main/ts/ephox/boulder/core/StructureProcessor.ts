@@ -4,27 +4,26 @@ import { SimpleResult, SimpleResultType } from '../alien/SimpleResult';
 import { FieldPresence, FieldPresenceTag, required } from '../api/FieldPresence';
 import { ResultCombine } from '../combine/ResultCombine';
 import * as FieldProcessor from './FieldProcessor';
+import { type FieldProcessor as FieldProcessorType } from './FieldProcessor';
 import * as SchemaError from './SchemaError';
+import { type SchemaError as SchemaErrorType } from './SchemaError';
 import { value } from './Utils';
 
-type FieldProcessor = FieldProcessor.FieldProcessor;
-type SchemaError = SchemaError.SchemaError;
-
 export type ValueValidator = (a) => SimpleResult<string, any>;
-export type PropExtractor = (path: string[], val: any) => SimpleResult<SchemaError[], any>;
+export type PropExtractor = (path: string[], val: any) => SimpleResult<SchemaErrorType[], any>;
 export interface StructureProcessor {
   readonly extract: PropExtractor;
   readonly toString: () => string;
 }
 
-type SimpleBundle<T> = SimpleResult<SchemaError[], T>;
-type OptionBundle<T> = SimpleResult<SchemaError[], Optional<T>>;
+type SimpleBundle<T> = SimpleResult<SchemaErrorType[], T>;
+type OptionBundle<T> = SimpleResult<SchemaErrorType[], Optional<T>>;
 type SimpleBundler<T, U> = (val: T) => SimpleBundle<U>;
 type OptionBundler<T, U> = (val: Optional<T>) => OptionBundle<U>;
 
-const output = (newKey: string, value: any): FieldProcessor => FieldProcessor.customField(newKey, Fun.constant(value));
+const output = (newKey: string, value: any): FieldProcessorType => FieldProcessor.customField(newKey, Fun.constant(value));
 
-const snapshot = (newKey: string): FieldProcessor => FieldProcessor.customField(newKey, Fun.identity);
+const snapshot = (newKey: string): FieldProcessorType => FieldProcessor.customField(newKey, Fun.identity);
 
 const requiredAccess = <T, U>(path: string[], obj: Record<string, T>, key: string, bundle: SimpleBundler<T, U>): SimpleBundle<U> =>
   // In required mode, if it is undefined, it is an error.
@@ -59,7 +58,7 @@ const extractField = <T, U>(
   obj: Record<string, T>,
   key: string,
   prop: StructureProcessor
-): SimpleResult<SchemaError[], U | Optional<U>> => {
+): SimpleResult<SchemaErrorType[], U | Optional<U>> => {
   const bundle = (av: T): SimpleBundle<U> => prop.extract(path.concat([ key ]), av);
 
   const bundleAsOption = (optValue: Optional<T>): OptionBundle<U> => optValue.fold(
@@ -91,10 +90,10 @@ const extractField = <T, U>(
 const extractFields = <T, U>(
   path: string[],
   obj: Record<string, T>,
-  fields: FieldProcessor[]
-): SimpleResult<SchemaError[], Record<string, U | Optional<U>>> => {
+  fields: FieldProcessorType[]
+): SimpleResult<SchemaErrorType[], Record<string, U | Optional<U>>> => {
   const success: Record<string, U | Optional<U>> = {};
-  const errors: SchemaError[] = [];
+  const errors: SchemaErrorType[] = [];
 
   // PERFORMANCE: We use a for loop here instead of Arr.each as this is a hot code path
   for (const field of fields) {
@@ -131,7 +130,7 @@ const valueThunk = (getDelegate: () => StructureProcessor): StructureProcessor =
 // This is because Obj.keys can return things where the key is set to undefined.
 const getSetKeys = (obj: Record<string, unknown>) => Obj.keys(Obj.filter(obj, Type.isNonNullable));
 
-const objOfOnly = (fields: FieldProcessor[]): StructureProcessor => {
+const objOfOnly = (fields: FieldProcessorType[]): StructureProcessor => {
   const delegate = objOf(fields);
 
   const fieldNames = Arr.foldr(fields, (acc, value) => {
@@ -155,7 +154,7 @@ const objOfOnly = (fields: FieldProcessor[]): StructureProcessor => {
   };
 };
 
-const objOf = (values: FieldProcessor[]): StructureProcessor => {
+const objOf = (values: FieldProcessorType[]): StructureProcessor => {
   const extract = (path: string[], o: Record<string, any>) => extractFields(path, o, values);
 
   const toString = () => {
@@ -190,8 +189,8 @@ const arrOf = (prop: StructureProcessor): StructureProcessor => {
 const oneOf = (props: StructureProcessor[], rawF?: (x: any) => any): StructureProcessor => {
   // If f is not supplied, then use identity.
   const f = rawF !== undefined ? rawF : Fun.identity;
-  const extract = (path: string[], val: any): SimpleResult<SchemaError[], any> => {
-    const errors: Array<SimpleResult<SchemaError[], any>> = [];
+  const extract = (path: string[], val: any): SimpleResult<SchemaErrorType[], any> => {
+    const errors: Array<SimpleResult<SchemaErrorType[], any>> = [];
 
     // Return on first match
     for (const prop of props) {

@@ -64,4 +64,33 @@ describe('browser.tinymce.plugins.image.DialogUpdateTest', () => {
     TinyUiActions.submitDialog(editor);
     assertCleanHtml('Checking output', editor, '<p><img src="https://www.google.com/logos/google.jpg" alt="" width="200"></p>');
   });
+
+  it('TINY-11670: floating images should lose the float if put in a caption', async () => {
+    const editor = hook.editor();
+    editor.options.set('image_caption', true);
+    editor.setContent('<p><img src="https://www.google.com/logos/google.jpg" style="border: 2px solid red; float: left" width="200" height="200"/></p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
+    editor.execCommand('mceImage');
+    const dialog = await TinyUiActions.pWaitForDialog(editor);
+    Mouse.clickOn(dialog, generalTabSelectors.caption);
+    assertInputValue(generalTabSelectors.caption, 'on');
+
+    TinyUiActions.submitDialog(editor);
+    assertCleanHtml('Checking output', editor, '<figure class="image"><img style="border: 2px solid red;" src="https://www.google.com/logos/google.jpg" width="200" height="200"><figcaption>Caption</figcaption></figure>');
+    editor.options.unset('image_caption');
+  });
+
+  it('TINY-11670: floating images should not lose the float if is not put in a caption', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><img src="https://www.google.com/logos/google.jpg" style="border: 2px solid red; float: left" width="200" height="200"/></p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
+    editor.execCommand('mceImage');
+    await TinyUiActions.pWaitForDialog(editor);
+    setInputValue(generalTabSelectors.height, '300');
+    setInputValue(generalTabSelectors.width, '300');
+    assertInputValue(generalTabSelectors.height, '300');
+    assertInputValue(generalTabSelectors.width, '300');
+    TinyUiActions.submitDialog(editor);
+    assertCleanHtml('Checking output', editor, '<p><img style="border: 2px solid red; float: left;" src="https://www.google.com/logos/google.jpg" width="300" height="300"></p>');
+  });
 });

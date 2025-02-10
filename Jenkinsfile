@@ -104,6 +104,7 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
   }
 }
 
+<<<<<<< HEAD
 def runTestNode(String branch, String name, String browser, String platform, String bucket, String buckets, Boolean runAll) {
   return {
     stage(name) {
@@ -127,6 +128,9 @@ def runTestNode(String branch, String name, String browser, String platform, Str
 }
 
 def runHeadlessPod(String cacheName, String browser, Boolean runAll, Closure body) {
+=======
+def runHeadlessPod(String cacheName, Boolean runAll) {
+>>>>>>> origin/main
   Map node = [
           name: 'node',
           image: "public.ecr.aws/docker/library/node:20",
@@ -250,28 +254,35 @@ timestamps {
     }
   }
 
-  // Local nodes use os: windows | macos; Remote tests use os full name e.g.: macOS Sonoma
-  def platforms = [
-    // Local tests
-    // [ browser: 'edge', os: 'windows' ],
-    // [ browser: 'firefox', os: 'macos' ],
-    [ browser: 'chrome' ],
-    [ browser: 'chrome', provider: 'selenium', buckets: 2 ],
-    [ browser: 'firefox', provider: 'selenium', buckets: 2 ],
-    // Remote tests
-    // [ browser: 'chrome', provider: 'aws', buckets: 2 ],
-    // [ browser: 'edge', provider: 'aws', buckets: 2 ], // TINY-10540: Investigate Edge issues in AWS
-    // [ browser: 'firefox', provider: 'aws', buckets: 2 ],
-    // [ browser: 'chrome', provider: 'lambdatest', buckets: 1 ],
-    // [ browser: 'firefox', provider: 'lambdatest', buckets: 1 ],
-    // [ browser: 'edge', provider: 'lambdatest', buckets: 1 ],
-    // [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ],
-    // [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ],
-    [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 2 ]
+  // [ browser: 'chrome', provider: 'aws', buckets: 2 ],
+  // [ browser: 'edge', provider: 'aws', buckets: 2 ],
+  // [ browser: 'firefox', provider: 'aws', buckets: 2 ],
+
+  def winChrome = [ browser: 'chrome', provider: 'lambdatest', os: 'windows', buckets: 1 ]
+  def winFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'windows', buckets: 1 ]
+  def winEdge = [ browser: 'edge', provider: 'lambdatest', os: 'windows', buckets: 1 ]
+
+  def macChrome = [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
+  def macFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
+  def macSafari = [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
+
+  def branchBuildPlatforms = [
+    winChrome,
+    winFirefox,
+    macSafari,
+  ]
+
+  def primaryBuildPlatforms = branchBuildPlatforms + [
+    winEdge,
+    macChrome,
+    macFirefox
   ];
 
+  def buildingPrimary = env.BRANCH_NAME == props.primaryBranch
+  def platforms = buildingPrimary ? primaryBuildPlatforms : branchBuildPlatforms
+
   def processes = [:]
-  def runAllTests = env.BRANCH_NAME == props.primaryBranch
+  def runAllTests = buildingPrimary
 
   for (int i = 0; i < platforms.size(); i++) {
     def platform = platforms.get(i)
@@ -282,6 +293,7 @@ timestamps {
       def browserVersion = platform.version ? "-${platform.version}" : ""
       def s_bucket = "${bucket}"
       def s_buckets = "${buckets}"
+<<<<<<< HEAD
       switch(platform.provider) {
         case ['aws', 'lambdatest']:
           def name = "${os}-${platform.browser}${browserVersion}-${platform.provider}${suffix}"
@@ -302,6 +314,15 @@ timestamps {
         default:
         processes[name] = { unstable('Missing test provider') }
         break;
+=======
+      if (platform.provider) {
+        // use remote
+        def name = "${os}-${platform.browser}${browserVersion}-${platform.provider}${suffix}"
+        def testName = "${env.BUILD_NUMBER}-${os}-${platform.browser}"
+        processes[name] = runTestPod(cacheName, name, "${testPrefix}_${testName}", platform.browser, platform.provider, platform.os, platform.version, s_bucket, s_buckets, runAllTests)
+      } else {
+        fail("platform provider not specified for ${os}-${platform.browser}${browserVersion}-${suffix}")
+>>>>>>> origin/main
       }
     }
   }

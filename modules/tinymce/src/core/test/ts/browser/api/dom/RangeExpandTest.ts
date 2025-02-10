@@ -1,6 +1,8 @@
+import { Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Unicode } from '@ephox/katamari';
-import { TinySelections, TinyHooks } from '@ephox/wrap-mcagar';
+import { Hierarchy, SugarElement } from '@ephox/sugar';
+import { TinySelections, TinyHooks, TinyDom } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
@@ -30,17 +32,23 @@ describe('browser.tinymce.core.api.dom.RangeExpandTest', () => {
     assert.equal(range1.endOffset, range2.endOffset, 'Mismatching end offset');
   };
 
+  const assertRange = (editor: Editor, rng: Range, startPath: number[], startOffset: number, endPath: number[], endOffset: number) => {
+    const startContainer = Hierarchy.follow(TinyDom.body(editor), startPath).getOrDie();
+    const endContainer = Hierarchy.follow(TinyDom.body(editor), endPath).getOrDie();
+
+    Assertions.assertDomEq('Should be expected start container', startContainer, SugarElement.fromDom(rng.startContainer));
+    assert.equal(rng.startOffset, startOffset, 'Should be expected start offset');
+    Assertions.assertDomEq('Should be expected end container', endContainer, SugarElement.fromDom(rng.endContainer));
+    assert.equal(rng.endOffset, endOffset, 'Should be expected end offset');
+  };
+
   it('TINY-9001: The content is empty', () => {
     const editor = hook.editor();
     editor.setContent('');
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 0);
     const startRange = editor.selection.getRng();
-    const endRange = RangeUtils(editor.dom).expand(startRange);
-    const body = editor.getBody();
-    const expectedRange = editor.dom.createRng();
-    expectedRange.setStart(body, 0);
-    expectedRange.setEnd(body, 1);
-    compareRanges(expectedRange, endRange);
+    const expandedRange = RangeUtils(editor.dom).expand(startRange);
+    assertRange(editor, expandedRange, [ 0 ], 0, [ 0 ], 1);
   });
 
   it('TINY-9001: The cursor is in between two spaces', () => {

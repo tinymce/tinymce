@@ -438,7 +438,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorToolbarOptionsTest'
           s.element('div', {
             classes: [ arr.has('tox-toolbar__group') ],
             attrs: {
-              title: str.is('history')
+              'aria-label': str.is('history')
             },
             children: [
               s.element('button', {}),
@@ -448,7 +448,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.EditorToolbarOptionsTest'
           s.element('div', {
             classes: [ arr.has('tox-toolbar__group') ],
             attrs: {
-              title: str.is('formatting')
+              'aria-label': str.is('formatting')
             },
             children: [
               s.element('button', {}),
