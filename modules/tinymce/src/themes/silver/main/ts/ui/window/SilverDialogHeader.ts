@@ -1,5 +1,5 @@
 import {
-  AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, Dropdown, GuiFactory, ModalDialog, Reflecting, SketchSpec, Tabstopping, Tooltipping
+  AlloySpec, AlloyTriggers, Behaviour, Button, Channels, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting, SketchSpec, Tabstopping, Tooltipping
 } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
@@ -7,7 +7,6 @@ import { SelectorFind } from '@ephox/sugar';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { formCancelEvent } from '../general/FormEvents';
 import * as Icons from '../icons/Icons';
-import * as ButtonClasses from '../toolbar/button/ButtonClasses';
 import { titleChannel } from './DialogChannels';
 
 /* eslint-enable max-len */
@@ -99,10 +98,7 @@ const renderInlineHeader = (
         topAttr: 'data-drag-top'
       },
       onDrag: (comp, target) => {
-        const dropdownButtonSelector = '.' + ButtonClasses.ToolbarButtonClasses.MatchWidth;
-        SelectorFind.descendant(target, dropdownButtonSelector).each((dropdownElement) => {
-          comp.getSystem().getByDom(dropdownElement).each((dropdownComp) => Dropdown.close(dropdownComp));
-        });
+        comp.getSystem().broadcastOn([ Channels.dismissPopups() ], { target });
       }
     })
   ])
