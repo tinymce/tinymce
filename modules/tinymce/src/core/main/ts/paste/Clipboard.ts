@@ -87,7 +87,7 @@ const getDataTransferItems = (dataTransfer: DataTransfer | null): ClipboardConte
       const contentType = dataTransfer.types[i];
       try { // IE11 throws exception when contentType is Files (type is present but data cannot be retrieved via getData())
         items[contentType] = dataTransfer.getData(contentType);
-      } catch (ex) {
+      } catch {
         items[contentType] = ''; // useless in general, but for consistency across browsers
       }
     }
@@ -168,6 +168,7 @@ const pasteImageData = (editor: Editor, e: ClipboardEvent | DragEvent, rng: Rang
     if (images.length > 0) {
       e.preventDefault();
 
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       readFilesAsDataUris(images).then((fileResults) => {
         if (rng) {
           editor.selection.setRng(rng);

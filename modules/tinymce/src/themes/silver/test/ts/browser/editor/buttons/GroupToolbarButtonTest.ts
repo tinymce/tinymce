@@ -124,9 +124,9 @@ describe('browser.tinymce.themes.silver.editor.buttons.GroupToolbarButtonTest', 
     })
   );
 
-  it('TINY-9496: onSetup function should run when defining custom group toolbar button', () => {
+  it('TINY-9496: onSetup function should run when defining custom group toolbar button', async () => {
     let hasSetupBeenCalled = false;
-    pTestWithEditor({
+    await pTestWithEditor({
       ...defaultToolbarGroupOptions,
       toolbar: 'test',
       setup: (editor: Editor) => {

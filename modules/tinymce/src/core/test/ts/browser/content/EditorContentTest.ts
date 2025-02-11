@@ -601,7 +601,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
       });
     });
 
-    context('Content that can cause mXSS via ZWNBSP trimming', () => {
+    context(`Content that can cause mXSS via ZWNBSP trimming with inline: ${options.inline}`, () => {
       const hook = TinyHooks.bddSetupLight<Editor>({
         base_url: '/project/tinymce/js/tinymce',
         ...options
@@ -635,6 +635,8 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         TinyAssertions.assertRawContent(editor, '<p>test</p><!---->');
       });
     });
+
+    // if you add new tests, put them inside the above label context otherwise the results will only be recorded once
   });
 
   context('SVG elements not enabled by default', () => {
@@ -705,7 +707,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
 
       editor.setContent('<noscript>&lt;/noscript&gt;&lt;style onload=xss()&gt;&lt;/style&gt;</noscript>');
 
-      await Waiter.pWait(1);
+      await Waiter.pWaitBetweenUserActions();
 
       delete editorWinGlobal.xss;
 
@@ -722,45 +724,83 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
   });
 
   context('math elements', () => {
-    const hook = TinyHooks.bddSetupLight<Editor>({
-      base_url: '/project/tinymce/js/tinymce',
-      custom_elements: 'math',
-      allow_mathml_annotation_encodings: [
-        'application/x-tex',
-        'application/custom',
-        'wiris'
-      ]
-    }, []);
+    context('annotations encodings defined', () => {
+      const hook = TinyHooks.bddSetupLight<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        custom_elements: 'math',
+        allow_mathml_annotation_encodings: [
+          'application/x-tex',
+          'application/custom',
+          'wiris'
+        ]
+      }, []);
 
-    it('TINY-11166: allow_mathml_annotation_encodings should retain the specified annotation elements', () => {
-      const editor = hook.editor();
+      it('TINY-11166: allow_mathml_annotation_encodings should retain the specified annotation elements and the parent semantics element', () => {
+        const editor = hook.editor();
 
-      const input = [
-        '<div>',
-        '<math><annotation encoding="application/x-tex">\\frac{1}{2}</annotation></math>',
-        '<math><annotation encoding="application/custom">custom</annotation></math>',
-        '<math><annotation encoding="application/custom" src="foo">custom with src</annotation></math>',
-        '<math><annotation encoding="wiris">{"version":"1.1","math":"&lt;math xmlns="http://www.w3.org/1998/Math/MathML"&gt;&lt;mfrac&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/mfrac&gt;&lt;/math&gt;"}</annotation></math>',
-        '<math><annotation encoding="text/html">html</annotation></math>',
-        '<math><annotation encoding="text/svg">svg</annotation></math>',
-        '</div>'
-      ].join('');
+        const input = [
+          '<div>',
+          '<math><semantics><mn>1</mn><annotation encoding="application/x-tex">\\frac{1}{2}</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="application/custom">custom</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="application/custom" src="foo">custom with src</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="wiris">{"version":"1.1","math":"&lt;math xmlns="http://www.w3.org/1998/Math/MathML"&gt;&lt;mn&gt;1&gt;&lt;/mn&gt;&lt;/math&gt;"}</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="text/html">html</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="text/svg">svg</annotation></semantics></math>',
+          '</div>'
+        ].join('');
 
-      editor.setContent(input);
+        editor.setContent(input);
 
-      const expected = [
-        '<div>',
-        '<math><annotation encoding="application/x-tex">\\frac{1}{2}</annotation></math>',
-        '<math><annotation encoding="application/custom">custom</annotation></math>',
-        '<math><annotation encoding="application/custom">custom with src</annotation></math>',
-        '<math><annotation encoding="wiris">{"version":"1.1","math":"&lt;math xmlns="http://www.w3.org/1998/Math/MathML"&gt;&lt;mfrac&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/mfrac&gt;&lt;/math&gt;"}</annotation></math>',
-        '<math>html</math>',
-        '<math>svg</math>',
-        '</div>'
-      ].join('');
+        const expected = [
+          '<div>',
+          '<math><semantics><mn>1</mn><annotation encoding="application/x-tex">\\frac{1}{2}</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="application/custom">custom</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="application/custom">custom with src</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="wiris">{"version":"1.1","math":"&lt;math xmlns="http://www.w3.org/1998/Math/MathML"&gt;&lt;mn&gt;1&gt;&lt;/mn&gt;&lt;/math&gt;"}</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn></semantics></math>',
+          '<math><semantics><mn>1</mn></semantics></math>',
+          '</div>'
+        ].join('');
 
-      TinyAssertions.assertContent(editor, expected);
+        TinyAssertions.assertContent(editor, expected);
+      });
+    });
+
+    context('annotations encodings not defined', () => {
+      const hook = TinyHooks.bddSetupLight<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        custom_elements: 'math'
+      }, []);
+
+      it('TINY-11166: not setting allow_mathml_annotation_encodings should not retain the semantics or annotation elements', () => {
+        const editor = hook.editor();
+
+        const input = [
+          '<div>',
+          '<math><semantics><mn>1</mn><annotation encoding="application/x-tex">\\frac{1}{2}</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="application/custom">custom</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="application/custom" src="foo">custom with src</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="wiris">{"version":"1.1","math":"&lt;math xmlns="http://www.w3.org/1998/Math/MathML"&gt;&lt;mn&gt;1&gt;&lt;/mn&gt;&lt;/math&gt;"}</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="text/html">html</annotation></semantics></math>',
+          '<math><semantics><mn>1</mn><annotation encoding="text/svg">svg</annotation></semantics></math>',
+          '</div>'
+        ].join('');
+
+        editor.setContent(input);
+
+        const expected = [
+          '<div>',
+          '<math><mn>1</mn></math>',
+          '<math><mn>1</mn></math>',
+          '<math><mn>1</mn></math>',
+          '<math><mn>1</mn></math>',
+          '<math><mn>1</mn></math>',
+          '<math><mn>1</mn></math>',
+          '</div>'
+        ].join('');
+
+        TinyAssertions.assertContent(editor, expected);
+      });
     });
   });
-
 });

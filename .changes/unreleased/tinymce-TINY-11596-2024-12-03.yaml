@@ -1,0 +1,7 @@
+project: tinymce
+kind: Improved
+body: Improved visual indication of a keyboard focus for a comment annotation when
+  there is an image inside.
+time: 2024-12-03T16:05:49.139224+01:00
+custom:
+  Issue: TINY-11596

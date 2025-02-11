@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Expanding selection to word didn't work inside inline editing host elements.
+time: 2025-01-24T15:07:19.167621+01:00
+custom:
+  Issue: TINY-11304

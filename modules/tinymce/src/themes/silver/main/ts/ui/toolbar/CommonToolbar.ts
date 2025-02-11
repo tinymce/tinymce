@@ -4,7 +4,8 @@ import {
   SplitFloatingToolbar as AlloySplitFloatingToolbar,
   SplitSlidingToolbar as AlloySplitSlidingToolbar,
   Toolbar as AlloyToolbar, ToolbarGroup as AlloyToolbarGroup,
-  Behaviour, Boxes, Focusing,
+  Behaviour, Boxes,
+  Focusing,
   GuiFactory,
   Keying, SketchSpec,
   Tabstopping
@@ -49,10 +50,15 @@ export interface ToolbarGroup {
 }
 
 const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
-  const attributes = toolbarGroup.label.isNone() ? toolbarGroup.title.fold(() => ({}),
-    (title) => ({ attributes: { title }})) : toolbarGroup.label.fold(() => ({}),
-    (label) => ({ attributes: { 'aria-label': label }})
-  );
+  const attributes = toolbarGroup.label.isNone() ?
+    toolbarGroup.title.fold(
+      () => ({}),
+      (title) => ({ attributes: { 'aria-label': title }})
+    )
+    : toolbarGroup.label.fold(
+      () => ({}),
+      (label) => ({ attributes: { 'aria-label': label }})
+    );
 
   return {
     dom: {
@@ -81,12 +87,14 @@ const renderToolbarGroupCommon = (toolbarGroup: ToolbarGroup) => {
       // nav within a group breaks if disabled buttons are first in their group so skip them
       itemSelector: '*:not(.tox-split-button) > .tox-tbtn:not([disabled]), ' +
                     '.tox-split-button:not([disabled]), ' +
-                    '.tox-toolbar-nav-js:not([disabled]), ' +
+                    '.tox-toolbar-nav-item:not([disabled]), ' +
                     '.tox-number-input:not([disabled])'
     },
     tgroupBehaviours: Behaviour.derive([
       Tabstopping.config({}),
-      Focusing.config({})
+      Focusing.config({
+        ignore: true
+      })
     ])
   };
 };
@@ -107,6 +115,7 @@ const getToolbarBehaviours = (toolbarSpec: ToolbarSpec, modeName: 'cyclic' | 'ac
       // Tabs between groups
       mode: modeName,
       onEscape: toolbarSpec.onEscape,
+      visibilitySelector: '.tox-toolbar__overflow',
       selector: '.tox-toolbar__group'
     }),
     AddEventsBehaviour.config('toolbar-events', [ onAttached ])

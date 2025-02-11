@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Not specifying a notification type (or specifying incorrect one) now defaults to 'info'.
+time: 2024-12-23T16:24:11.121022+01:00
+custom:
+  Issue: TINY-11661

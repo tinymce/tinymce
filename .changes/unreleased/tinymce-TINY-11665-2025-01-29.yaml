@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: It was possible to tab to a toolbar group that had all children disabled.
+time: 2025-01-29T14:26:59.278610468+01:00
+custom:
+  Issue: TINY-11665

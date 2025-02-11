@@ -27,8 +27,7 @@ describe('browser.tinymce.plugins.link.UrlInputTest', () => {
   it('TBA: insert url by typing', async () => {
     const editor = hook.editor();
     await TestLinkUi.pOpenLinkDialog(editor);
-    const focused = FocusTools.setActiveValue(SugarDocument.getDocument(), 'http://www.test.com/');
-    TestLinkUi.fireEvent(focused, 'input');
+    FocusTools.setActiveValue(SugarDocument.getDocument(), 'http://www.test.com/');
     TestLinkUi.assertDialogContents({
       href: 'http://www.test.com/',
       text: 'http://www.test.com/'
@@ -39,8 +38,7 @@ describe('browser.tinymce.plugins.link.UrlInputTest', () => {
   it('TINY-2884: insert url by keyboard shortcut', async () => {
     const editor = hook.editor();
     await pOpenLinkDialogWithKeyboard(editor);
-    const focused = FocusTools.setActiveValue(SugarDocument.getDocument(), 'http://www.test.com/');
-    TestLinkUi.fireEvent(focused, 'input');
+    FocusTools.setActiveValue(SugarDocument.getDocument(), 'http://www.test.com/');
     TestLinkUi.assertDialogContents({
       href: 'http://www.test.com/',
       text: 'http://www.test.com/'

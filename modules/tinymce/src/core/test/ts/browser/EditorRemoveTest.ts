@@ -17,11 +17,11 @@ describe('browser.tinymce.core.EditorRemoveTest', () => {
     assert.equal(textareaElement.style.display, expected, 'element does not have the expected style');
   };
 
-  const testRemoveStyles = (editor: Editor, expectedStyle: string) => {
+  const pTestRemoveStyles = async (editor: Editor, expectedStyle: string) => {
     assertTextareaDisplayStyle(editor, 'none');
     editor.remove();
     assertTextareaDisplayStyle(editor, expectedStyle);
-    EditorManager.init({ selector: '#tinymce' });
+    await EditorManager.init({ selector: '#tinymce' });
     assertTextareaDisplayStyle(editor, expectedStyle);
     McEditor.remove(editor);
   };
@@ -72,17 +72,17 @@ describe('browser.tinymce.core.EditorRemoveTest', () => {
 
   it('init editor with no display style', async () => {
     const editor = await McEditor.pFromHtml<Editor>('<textarea id="tinymce"></textarea>', settings);
-    testRemoveStyles(editor, '');
+    await pTestRemoveStyles(editor, '');
   });
 
   it('init editor with display: none', async () => {
     const editor = await McEditor.pFromHtml<Editor>('<textarea id="tinymce" style="display: none;"></textarea>', settings);
-    testRemoveStyles(editor, 'none');
+    await pTestRemoveStyles(editor, 'none');
   });
 
   it('init editor with display: block', async () => {
     const editor = await McEditor.pFromHtml<Editor>('<textarea id="tinymce" style="display: block;"></textarea>', settings);
-    testRemoveStyles(editor, 'block');
+    await pTestRemoveStyles(editor, 'block');
   });
 
   it('TINY-7730: remove editor that unbinds mousedown in the remove handler', async () => {

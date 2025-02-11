@@ -26,6 +26,7 @@
 @textfield-focus-outline: none;
 
 @toolbar-textfield-height: @toolbar-button-height;
+@toolbar-textfield-margin: @toolbar-button-spacing-y 0 (@toolbar-button-spacing-y + 1px) 0;
 
 .tox {
   .tox-textfield {
@@ -49,13 +50,13 @@
     width: 100%;
   }
 
-  .tox-textfield[disabled] {
+  .tox-textfield[disabled], .tox-toolbar-textfield[disabled] {
     background-color: @textfield-disabled-background-color;
     color: @textfield-disabled-text-color;
     cursor: not-allowed;
   }
 
-  .tox-textfield:focus {
+  .tox-textfield:focus, .tox-toolbar-textfield:focus {
     background-color: @textfield-focus-background-color;
     border-color: @textfield-focus-border-color;
     box-shadow: @textfield-focus-box-shadow;
@@ -63,17 +64,10 @@
   }
 
   .tox-toolbar-textfield:extend(.tox .tox-textfield) {
-    margin-bottom: 3px;
-    margin-top: 2px;
     max-width: 250px;
     min-height: unset;
     height: @toolbar-textfield-height;
-  }
-
-  .tox-toolbar-textfield[disabled] {
-    background-color: @textfield-disabled-background-color;
-    color: @textfield-disabled-text-color;
-    cursor: not-allowed;
+    margin: @toolbar-textfield-margin;
   }
 
   .tox-naked-btn {

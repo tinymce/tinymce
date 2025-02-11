@@ -238,6 +238,7 @@ const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDi
         api.focus('src');
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       Utils.blobToDataUri(file).then((dataUrl) => {
         const blobInfo = helpers.createBlobCache(file, blobUri, dataUrl);
         if (info.automaticUploads) {
@@ -308,6 +309,7 @@ const submitHandler = (editor: Editor, info: ImageDialogInfo, helpers: Helpers) 
   };
 
   editor.execCommand('mceUpdateImage', false, toImageData(finalData, info.hasAccessibilityOptions));
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   editor.editorUpload.uploadImagesAuto();
 
   api.close();
@@ -374,6 +376,7 @@ export const Dialog = (editor: Editor): { open: () => void } => {
     uploadImage: uploadImage(editor)
   };
   const open = () => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     collect(editor)
       .then((info: ImageDialogInfo): DialogType.DialogSpec<ImageDialogData> => {
         const state = createState(info);

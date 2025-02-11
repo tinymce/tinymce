@@ -29,9 +29,9 @@ const setFocus = <T extends HTMLElement>(container: SugarElement<Node>, selector
   return elem;
 };
 
-const setActiveValue = (doc: SugarElement<Document | ShadowRoot>, newValue: string): SugarElement<HTMLElement> => {
+const setActiveValue = (doc: SugarElement<Document | ShadowRoot>, newValue: string, eventName: string = 'input'): SugarElement<HTMLElement> => {
   const focused = getFocused(doc).getOrDie();
-  UiControls.setValue(focused as SugarElement<any>, newValue);
+  UiControls.setValue(focused as SugarElement<any>, newValue, eventName);
   return focused;
 };
 
@@ -79,13 +79,13 @@ const sIsOnSelector = <T>(label: string, doc: SugarElement<Document | ShadowRoot
     ])
   );
 
-const sTryOnSelector = <T>(label: string, doc: SugarElement<Document | ShadowRoot>, selector: string): Step<T, T> =>
+const sTryOnSelector = <T>(label: string, doc: SugarElement<Document | ShadowRoot>, selector: string, interval: number = 10, amount: number = 3000): Step<T, T> =>
   Logger.t<T, T>(
     label + '. Focus did not match: ' + selector,
     Waiter.sTryUntil(
       'Waiting for focus',
       sIsOnSelector(label, doc, selector),
-      10, 4000
+      interval, amount
     )
   );
 

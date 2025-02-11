@@ -519,8 +519,7 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       editor.execCommand('ToggleView', true, 'myview1');
       assertViewHtml(0, '<button>myview1</button>');
 
-      // this is needed because otherwise the bug is not reproduced
-      await Waiter.pWait(0);
+      await Waiter.pWaitBetweenUserActions();
 
       editor.execCommand('ToggleView', false, 'myview1');
       assertMainViewVisible();

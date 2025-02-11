@@ -23,7 +23,7 @@ export const renderContextFormSliderInput = (
   const pField = FormField.parts.field({
     factory: Input,
     type: 'range',
-    inputClasses: [ 'tox-toolbar-slider__input' ],
+    inputClasses: [ 'tox-toolbar-slider__input', 'tox-toolbar-nav-item' ],
     inputAttributes: {
       min: String(ctx.min()),
       max: String(ctx.max())

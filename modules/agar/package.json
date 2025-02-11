@@ -25,8 +25,8 @@
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "GPL-2.0-or-later",
   "dependencies": {
-    "@ephox/bedrock-client": "11 || 12 || 13",
-    "@ephox/bedrock-common": "11 || 12 || 13",
+    "@ephox/bedrock-client": ">=11",
+    "@ephox/bedrock-common": ">=11",
     "@ephox/jax": "^8.0.0",
     "@ephox/sand": "^7.0.0",
     "@ephox/sugar": "^10.0.0",

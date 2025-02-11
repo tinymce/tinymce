@@ -5,11 +5,8 @@
     "plugin:security-node/recommended"
   ],
   "parserOptions": {
-    "sourceType": "module",
-    "project": [
-      "./tsconfig.json",
-      "modules/*/tsconfig.json"
-    ]
+    "projectService": true,
+    "tsconfigRootDir": "."
   },
   "plugins": [
     "only-warn",
@@ -37,5 +34,15 @@
     "security-node/non-literal-reg-expr": "off",
     "security-node/detect-crlf": "off",
     "security-node/detect-possible-timing-attacks": "off"
-  }
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/demo/*.ts"
+      ],
+      "rules": {
+        "@typescript-eslint/no-floating-promises": "off"
+      }
+    }
+  ]
 }

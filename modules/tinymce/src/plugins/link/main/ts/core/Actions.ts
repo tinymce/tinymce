@@ -33,8 +33,8 @@ const getLinkAttrs = (data: LinkDialogOutput): LinkAttrs => {
 
 const handleExternalTargets = (href: string, assumeExternalTargets: AssumeExternalTargets): string => {
   if ((assumeExternalTargets === AssumeExternalTargets.ALWAYS_HTTP
-        || assumeExternalTargets === AssumeExternalTargets.ALWAYS_HTTPS)
-      && !Utils.hasProtocol(href)) {
+    || assumeExternalTargets === AssumeExternalTargets.ALWAYS_HTTPS)
+    && !Utils.hasProtocol(href)) {
     return assumeExternalTargets + '://' + href;
   }
   return href;
@@ -67,7 +67,12 @@ const updateLink = (editor: Editor, anchorElm: HTMLAnchorElement, text: Optional
   });
 
   editor.dom.setAttribs(anchorElm, linkAttrs);
-  editor.selection.select(anchorElm);
+
+  // Move the cursor behind the updated link, so the user can go on typing.
+  const rng = editor.dom.createRng();
+  rng.setStartAfter(anchorElm);
+  rng.setEndAfter(anchorElm);
+  editor.selection.setRng(rng);
 };
 
 const createLink = (editor: Editor, selectedElm: Element, text: Optional<string>, linkAttrs: LinkAttrs): void => {
@@ -78,6 +83,12 @@ const createLink = (editor: Editor, selectedElm: Element, text: Optional<string>
     text.fold(
       () => {
         editor.execCommand('mceInsertLink', false, linkAttrs);
+        // Now the newly inserted link is selected. Move the cursor behind the new link, so the user can go on typing.
+        const end = editor.selection.getEnd();
+        const rng = dom.createRng();
+        rng.setStartAfter(end);
+        rng.setEndAfter(end);
+        editor.selection.setRng(rng);
       },
       (text) => {
         editor.insertContent(dom.createHTML('a', linkAttrs, dom.encode(text)));
@@ -90,6 +101,10 @@ const linkDomMutation = (editor: Editor, attachState: AttachState, data: LinkDia
   const selectedElm = editor.selection.getNode();
   const anchorElm = Utils.getAnchorElement(editor, selectedElm);
   const linkAttrs = applyLinkOverrides(editor, getLinkAttrs(data));
+  const attributesPostProcess = Options.attributesPostProcess(editor);
+  if (Type.isNonNullable(attributesPostProcess)) {
+    attributesPostProcess(linkAttrs);
+  }
 
   editor.undoManager.transact(() => {
     if (data.href === attachState.href) {

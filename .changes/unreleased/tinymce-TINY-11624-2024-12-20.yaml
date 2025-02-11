@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Context toolbar inputs had incorrect margins.
+time: 2024-12-20T17:40:15.824417+01:00
+custom:
+  Issue: TINY-11624

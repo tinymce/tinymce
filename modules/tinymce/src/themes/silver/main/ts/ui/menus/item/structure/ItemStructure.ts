@@ -88,7 +88,7 @@ const renderColorStructure = (item: ItemStructureSpec, providerBackstage: UiFact
 };
 
 const renderItemDomStructure = (ariaLabel: Optional<string>): RawDomSchema => {
-  const domTitle = ariaLabel.map((label): { attributes?: { id?: string; 'aria-label': string }} => ({
+  const domTitle = ariaLabel.map((label): { attributes?: { 'id'?: string; 'aria-label': string }} => ({
     attributes: {
       'id': Id.generate('menu-item'),
       'aria-label': I18n.translate(label)

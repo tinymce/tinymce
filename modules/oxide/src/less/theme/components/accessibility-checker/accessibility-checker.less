@@ -86,6 +86,10 @@
 
   .accessibility-issue__repair {
     margin-top: @pad-sm;
+
+    .tox-form__group .tox-form__group--error {
+      color: @accessibility-issue-error-heading-text-color;
+    }
   }
 
   // Wrap all states with `tox-dialog__body-content` class for css specificity of primarily the H2 colors
@@ -138,7 +142,6 @@
         fill: @accessibility-issue-warn-heading-text-color;
       }
 
-      /* stylelint-disable-next-line no-descending-specificity */
       a.tox-button--naked.tox-button--icon {
         background-color: @accessibility-issue-warn-icon-background-color;
         color: @color-black;
@@ -172,7 +175,6 @@
         fill: @accessibility-issue-error-heading-text-color;
       }
 
-      /* stylelint-disable-next-line no-descending-specificity */
       a.tox-button--naked.tox-button--icon {
         background-color: @accessibility-issue-error-icon-background-color;
         color: @color-black;

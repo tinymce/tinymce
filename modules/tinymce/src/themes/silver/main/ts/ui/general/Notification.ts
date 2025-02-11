@@ -30,7 +30,7 @@ export interface NotificationSketchSpec extends Sketcher.SingleSketchSpec {
 // tslint:disable-next-line:no-empty-interface
 export interface NotificationSketchDetail extends Sketcher.SingleSketchDetail {
   readonly text: string;
-  readonly level: Optional<'info' | 'warn' | 'warning' | 'error' | 'success'>;
+  readonly level: 'info' | 'warn' | 'warning' | 'error' | 'success';
   readonly icon: Optional<string>;
   readonly onAction: Function;
   readonly progress: boolean;
@@ -136,8 +136,8 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
 
   const iconChoices = Arr.flatten([
     detail.icon.toArray(),
-    detail.level.toArray(),
-    detail.level.bind((level) => Optional.from(notificationIconMap[level])).toArray()
+    [ detail.level ],
+    Optional.from(notificationIconMap[detail.level]).toArray()
   ]);
 
   const memButton = Memento.record(Button.sketch({
@@ -191,9 +191,7 @@ const factory: UiSketcher.SingleSketchFactory<NotificationSketchDetail, Notifica
         'role': 'alert',
         'aria-labelledby': notificationTextId
       },
-      classes: detail.level.map((level) => [ 'tox-notification', 'tox-notification--in', `tox-notification--${level}` ]).getOr(
-        [ 'tox-notification', 'tox-notification--in' ]
-      )
+      classes: [ 'tox-notification', 'tox-notification--in', `tox-notification--${detail.level}` ],
     },
     behaviours: Behaviour.derive([
       Tabstopping.config({ }),
@@ -217,7 +215,7 @@ export const Notification: NotificationSketcher = Sketcher.single({
   name: 'Notification',
   factory,
   configFields: [
-    FieldSchema.option('level'),
+    FieldSchema.defaultedStringEnum('level', 'info', [ 'success', 'error', 'warning', 'warn', 'info' ]),
     FieldSchema.required('progress'),
     FieldSchema.option('icon'),
     FieldSchema.required('onAction'),
