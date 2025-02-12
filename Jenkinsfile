@@ -286,6 +286,7 @@ timestamps {
   }
 
   processes['headless'] = runSeleniumPod(cacheName, 'headless-chrome', 'chrome', '127.0') {
+    grunt('list-changed-headless')
     runHeadlessTests(runAllTests)
   }
 
