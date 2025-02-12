@@ -104,7 +104,7 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
   }
 }
 
-def runHeadlessPod(String cacheName, String name, String browser, String version, Closure body) {
+def runSeleniumPod(String cacheName, String name, String browser, String version, Closure body) {
   Map node = [
           name: 'node',
           image: "public.ecr.aws/docker/library/node:20",
@@ -161,14 +161,6 @@ def runHeadlessPod(String cacheName, String name, String browser, String version
       ) {
         container('node') {
           body()
-          // yarnInstall()
-          // if (headless) {
-
-          // }
-          // grunt('list-changed-headless')
-          // runHeadlessTests(runAll)
-
-          // runSeleniumTests(String name, String browser, String bucket, String buckets, Boolean runAll, int retyr = 0, int timeout = 0)
         }
       }
     }
@@ -242,9 +234,9 @@ timestamps {
   def macFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
   def macSafari = [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
 
-  def seleniumFirefox = [ browser: 'firefox', provider: 'selenium', buckets: 3 ]
-  def seleniumChrome = [ browser: 'chrome', provider: 'selenium', version: '127.0', buckets: 4 ]
-  def seleniumChromium = [ browser: 'edge', provider: 'selenium', buckets: 2 ]
+  def seleniumFirefox = [ browser: 'firefox', provider: 'selenium', buckets: 1 ]
+  def seleniumChrome = [ browser: 'chrome', provider: 'selenium', version: '127.0', buckets: 1 ]
+  def seleniumChromium = [ browser: 'edge', provider: 'selenium', buckets: 1 ]
 
   def branchBuildPlatforms = [
     winChrome,
@@ -282,18 +274,18 @@ timestamps {
         case 'selenium':
           def name = "selenium-${platform.browser}${suffix}";
           def browserVersion = platform.version ?: 'latest'
-          processes[name] = runHeadlessPod(cacheName, name, platform.browser, browserVersion) {
+          processes[name] = runSeleniumPod(cacheName, name, platform.browser, browserVersion) {
             runSeleniumTests(name, platform.browser, s_bucket, s_buckets, runAllTests)
           }
         break;
         default:
-        processes[name] = { unstable('Missing test provider') }
+        error("Unknown or missing provider for test ${platform.browser}")
         break;
       }
     }
   }
 
-  processes['headless'] = runHeadlessPod(cacheName, 'headless-chrome', 'chrome', '127.0') {
+  processes['headless'] = runSeleniumPod(cacheName, 'headless-chrome', 'chrome', '127.0') {
     runHeadlessTests(runAllTests)
   }
 
