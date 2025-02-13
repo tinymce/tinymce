@@ -226,7 +226,7 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
     TinyUiActions.cancelDialog(editor);
 
     await RealClipboard.pPaste('iframe => body');
-    await pAssertInputEvents(browser.isSafari() ? '&lt;p&gt;abc&lt;/p&gt;' : '', true);
+    await pAssertInputEvents('&lt;p&gt;abc&lt;/p&gt;', false);
     TinyAssertions.assertContent(editor, '<p>&lt;p&gt;abc&lt;/p&gt;abc</p>');
   });
 
