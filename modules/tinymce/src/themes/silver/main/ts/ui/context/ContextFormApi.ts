@@ -11,9 +11,7 @@ import { Focus, SugarElement } from '@ephox/sugar';
 
 import { backSlideEvent } from './ContextUi';
 
-export const getFormApi = <T>(input: AlloyComponent, focusfallbackElement?: SugarElement<HTMLElement>): InlineContent.ContextFormInstanceApi<T> => {
-  const valueState = Singleton.value<T>();
-
+export const getFormApi = <T>(input: AlloyComponent, valueState: Singleton.Value<T>, focusfallbackElement?: SugarElement<HTMLElement>): InlineContent.ContextFormInstanceApi<T> => {
   return ({
     setInputEnabled: (state: boolean) => {
       if (!state && focusfallbackElement) {
@@ -24,29 +22,19 @@ export const getFormApi = <T>(input: AlloyComponent, focusfallbackElement?: Suga
     },
     isInputEnabled: () => !Disabling.isDisabled(input),
     hide: () => {
-      // Before we hide snapshot the current value since accessing the value of a form field after it's been detached will throw an error
-      if (!valueState.isSet()) {
-        valueState.set(Representing.getValue(input));
-      }
-
       AlloyTriggers.emit(input, SystemEvents.sandboxClose());
     },
     back: () => {
-      // Before we hide snapshot the current value since accessing the value of a form field after it's been detached will throw an error
-      if (!valueState.isSet()) {
-        valueState.set(Representing.getValue(input));
-      }
-
       AlloyTriggers.emit(input, backSlideEvent);
     },
     getValue: () => {
       return valueState.get().getOrThunk(() => Representing.getValue(input));
     },
     setValue: (value) => {
-      if (valueState.isSet()) {
-        valueState.set(value);
-      } else {
+      if (input.getSystem().isConnected()) {
         Representing.setValue(input, value);
+      } else {
+        valueState.set(value);
       }
     }
   });
