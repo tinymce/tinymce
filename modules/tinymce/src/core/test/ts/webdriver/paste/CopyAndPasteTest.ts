@@ -15,7 +15,6 @@ import * as PasteEventUtils from '../../module/test/PasteEventUtils';
 describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
   const platform = PlatformDetection.detect();
   const os = platform.os;
-  const browser = platform.browser;
   const isChromeHeadless = () => navigator.userAgent.includes('HeadlessChrome');
 
   const lastBeforeInputEvent = Singleton.value<EditorEvent<InputEvent>>();
