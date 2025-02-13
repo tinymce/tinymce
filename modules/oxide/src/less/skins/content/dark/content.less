@@ -26,23 +26,32 @@ table:not([cellpadding]) td {
 
 /* Set default table styles if a table has a positive border attribute
    and no inline css */
-table[border]:not([border="0"]):not([style*="border-width"]) th,
-table[border]:not([border="0"]):not([style*="border-width"]) td {
+table[border]:where(:not([border="0"]):not([style*="border-width"])) th,
+table[border]:where(:not([border="0"]):not([style*="border-width"])) td {
   border-width: 1px;
 }
 
 /* Set default table styles if a table has a positive border attribute
    and no inline css */
-table[border]:not([border="0"]):not([style*="border-style"]) th,
-table[border]:not([border="0"]):not([style*="border-style"]) td {
+table[border]:where(:not([border="0"]):not([style*="border-style"])) th,
+table[border]:where(:not([border="0"]):not([style*="border-style"])) td {
   border-style: solid;
 }
 
 /* Set default table styles if a table has a positive border attribute
    and no inline css */
-table[border]:not([border="0"]):not([style*="border-color"]) th,
-table[border]:not([border="0"]):not([style*="border-color"]) td {
+table[border]:where(:not([border="0"]):not([style*="border-color"])) th,
+table[border]:where(:not([border="0"]):not([style*="border-color"])) td {
   border-color: #6d737b;
+}
+
+/* Set default table styles if a table has a positive border attribute
+   and no inline css */
+table[border]:where([style*="border-style: dashed"]) td,
+table[border]:where([style*="border-style: dashed"]) th,
+table[border]:where([style*=" dashed "]) td,
+table[border]:where([style*=" dashed "]) th {
+   border-style: dashed;
 }
 
 figure {
