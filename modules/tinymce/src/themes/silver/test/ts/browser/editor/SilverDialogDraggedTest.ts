@@ -44,11 +44,17 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogDraggedTest', () => {
     }
   }, []);
 
-  const dragDialog = (dx: number, dy: number) => {
+  const dragDialog = async (dx: number, dy: number) => {
     const draghandle = UiFinder.findIn(SugarBody.body(), '.tox-dialog__draghandle').getOrDie();
+
     Mouse.mouseDown(draghandle);
-    Mouse.mouseMoveTo(draghandle, dx, dy);
-    Mouse.mouseUp(draghandle);
+    await Waiter.pWaitBetweenUserActions();
+
+    const blocker = UiFinder.findIn(SugarBody.body(), '.blocker').getOrDie();
+    Mouse.mouseMove(blocker);
+    Mouse.mouseMoveTo(blocker, dx, dy);
+    Mouse.mouseUp(blocker);
+    Mouse.mouseMoveTo(SugarBody.body(), 0, 0);
   };
 
   const openMenuButton = (container: SugarElement): SugarElement => {
@@ -65,7 +71,7 @@ describe('browser.tinymce.themes.silver.editor.SilverDialogDraggedTest', () => {
     const dialog = UiFinder.findIn(SugarBody.body(), '[role="dialog"]').getOrDie();
     const menuButton = openMenuButton(dialog);
 
-    dragDialog(10, 10);
+    await dragDialog(10, 10);
 
     await Waiter.pTryUntil(
       'Waiting for menu to close after dialog was dragged',
