@@ -3,7 +3,7 @@ import {
   SketchSpec
 } from '@ephox/alloy';
 import { Arr, Cell, Id, Optional, Result } from '@ephox/katamari';
-import { Class, Css, EventArgs, Focus, SugarElement, SugarShadowDom, Width } from '@ephox/sugar';
+import { Class, Compare, Css, EventArgs, Focus, SugarElement, SugarShadowDom, Width } from '@ephox/sugar';
 
 import * as ContextToolbarFocus from './ContextToolbarFocus';
 
@@ -70,6 +70,7 @@ const renderContextToolbar = (spec: ContextToolbarSpec): SketchSpec => {
           Css.remove(elem, 'width');
 
           const currentWidth = Width.get(elem);
+          const hadFocus = Focus.search(comp.element).isSome();
 
           // Remove these so that we can property measure the width of the context form content
           Css.remove(elem, 'left');
@@ -89,13 +90,21 @@ const renderContextToolbar = (spec: ContextToolbarSpec): SketchSpec => {
           Css.set(elem, 'width', currentWidth + 'px');
 
           se.event.focus.fold(
-            () => ContextToolbarFocus.focusIn(comp),
-            (f) => {
-              Focus.focus(f);
-
-              if (Focus.search(elem).isNone()) {
+            () => {
+              if (hadFocus) {
                 ContextToolbarFocus.focusIn(comp);
               }
+            },
+            (f) => {
+              Focus.active(SugarShadowDom.getRootNode(comp.element)).fold(
+                () => Focus.focus(f),
+                (active) => {
+                  // We need this extra check since if the focus is aleady on the iframe we don't want to call focus on on it again since that closes the context toolbar
+                  if (!Compare.eq(active, f)) {
+                    Focus.focus(f);
+                  }
+                }
+              );
             }
           );
 
