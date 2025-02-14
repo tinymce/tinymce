@@ -122,6 +122,51 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
         ]
       });
 
+      ed.ui.registry.addContextForm('get-value-after-component-detach-form', {
+        type: 'contextsizeinputform',
+        launch: {
+          type: 'contextformtogglebutton',
+          icon: 'fake-icon-name',
+          tooltip: 'ABC',
+        },
+        onSetup: (api) => {
+          api.setValue({ width: '300', height: '300' });
+          store.add('setup');
+
+          return () => {
+            store.add('teardown');
+            setTimeout(() => {
+              store.add(api.getValue()?.width + 'x' + api.getValue()?.height);
+            });
+          };
+        },
+        predicate: Fun.never,
+        commands: [],
+      });
+
+      ed.ui.registry.addContextForm('set-value-after-component-detach-form', {
+        type: 'contextsizeinputform',
+        launch: {
+          type: 'contextformtogglebutton',
+          icon: 'fake-icon-name',
+          tooltip: 'ABC',
+        },
+        onSetup: (api) => {
+          api.setValue({ width: '300', height: '300' });
+          store.add('setup');
+
+          return () => {
+            store.add('teardown');
+            setTimeout(() => {
+              api.setValue({ width: '500', height: '500' });
+              store.add(api.getValue()?.width + 'x' + api.getValue()?.height);
+            });
+          };
+        },
+        predicate: Fun.never,
+        commands: [],
+      });
+
       ed.ui.registry.addContextToolbar('test-toolbar', {
         predicate: Fun.never,
         items: 'form:test-form',
@@ -326,7 +371,34 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     const editor = hook.editor();
     openToolbar(editor, 'test-form');
     TinyUiActions.clickOnUi(editor, 'button[aria-label="D"]');
-    store.assertEq('D should have fired', [ 'setup', 'teardown', 'D.before-hide', 'D.after-hide' ]);
+
+    store.assertEq('Should have triggered ContextToolbarClose', [ 'setup', 'teardown', 'D.before-hide', 'D.after-hide' ]);
+  });
+
+  it('TINY-11781: Should be able to get value after component has been detached', async () => {
+    const editor = hook.editor();
+    openToolbar(editor, 'get-value-after-component-detach-form');
+
+    // Fake click away inside editor
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    TinyContentActions.trueClick(editor);
+
+    await Waiter.pTryUntil('Watied to context form to close', () => {
+      store.assertEq('Should be able to get value', [ 'setup', 'teardown', '300x300' ]);
+    });
+  });
+
+  it('TINY-11781: Should be able to set value after component has been detached', async () => {
+    const editor = hook.editor();
+    openToolbar(editor, 'set-value-after-component-detach-form');
+
+    // Fake click away inside editor
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
+    TinyContentActions.trueClick(editor);
+
+    await Waiter.pTryUntil('Watied to context form to close', () => {
+      store.assertEq('Should be able to set value', [ 'setup', 'teardown', '500x500' ]);
+    });
   });
 
   it('TINY-11432: Should trigger ContextFormSlideBack on escape key in context form', async () => {
