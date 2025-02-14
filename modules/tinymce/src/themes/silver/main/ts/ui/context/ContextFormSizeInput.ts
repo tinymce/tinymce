@@ -145,9 +145,9 @@ export const renderContextFormSizeInput = (
 
   const controlLifecycleHandlers = [
     onControlAttached({
+      onBeforeSetup: (comp) => SelectorFind.descendant<HTMLElement>(comp.element, 'input').each(Focus.focus),
       onSetup: ctx.onSetup,
-      getApi,
-      onBeforeSetup: (comp) => SelectorFind.descendant<HTMLElement>(comp.element, 'input').each(Focus.focus)
+      getApi
     }, editorOffCell),
     onContextFormControlDetached({ getApi }, editorOffCell, valueState),
   ];

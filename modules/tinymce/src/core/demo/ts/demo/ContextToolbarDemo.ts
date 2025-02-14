@@ -44,26 +44,17 @@ export default (): void => {
       });
 
       ed.ui.registry.addContextToolbar('subbar1', {
-        launch: {
-          type: 'contexttoolbarbutton',
-          text: 'Subbar 1'
-        },
+        launch: { text: 'Subbar 1' },
         items: 'navigateback bold italic | undo redo | subbar2'
       });
 
       ed.ui.registry.addContextToolbar('subbar2', {
-        launch: {
-          type: 'contexttoolbarbutton',
-          text: 'Subbar 2'
-        },
+        launch: { text: 'Subbar 2' },
         items: 'navigateback bold italic | undo redo | subbar3'
       });
 
       ed.ui.registry.addContextToolbar('subbar3', {
-        launch: {
-          type: 'contexttoolbarbutton',
-          text: 'Subbar 3'
-        },
+        launch: { text: 'Subbar 3' },
         items: 'navigateback bold italic | undo redo'
       });
     }
