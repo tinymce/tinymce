@@ -24,7 +24,7 @@ import { ToolbarButtonClasses, ViewButtonClasses } from '../toolbar/button/Butto
 import { formActionEvent, formCancelEvent, formSubmitEvent } from './FormEvents';
 
 type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];
-type AlloyButtonSpec = Parameters<typeof AlloyButton['sketch']>[0];
+export type AlloyButtonSpec = Parameters<typeof AlloyButton['sketch']>[0];
 
 type ButtonSpec = Omit<Dialog.Button, 'type'>;
 type FooterToggleButtonSpec = Omit<Dialog.DialogFooterToggleButton, 'type'>;

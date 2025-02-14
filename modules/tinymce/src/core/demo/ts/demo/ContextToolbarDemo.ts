@@ -29,7 +29,7 @@ export default (): void => {
             items: [ 'undo', 'redo' ]
           },
           {
-            items: [ 'undo', 'italic' ]
+            items: [ 'undo', 'italic', 'subbar1' ]
           }
         ],
         position: 'line',
@@ -41,6 +41,30 @@ export default (): void => {
         items: 'bold italic | undo redo',
         position: 'line',
         scope: 'editor'
+      });
+
+      ed.ui.registry.addContextToolbar('subbar1', {
+        launch: {
+          type: 'contexttoolbarbutton',
+          text: 'Subbar 1'
+        },
+        items: 'navigateback bold italic | undo redo | subbar2'
+      });
+
+      ed.ui.registry.addContextToolbar('subbar2', {
+        launch: {
+          type: 'contexttoolbarbutton',
+          text: 'Subbar 2'
+        },
+        items: 'navigateback bold italic | undo redo | subbar3'
+      });
+
+      ed.ui.registry.addContextToolbar('subbar3', {
+        launch: {
+          type: 'contexttoolbarbutton',
+          text: 'Subbar 3'
+        },
+        items: 'navigateback bold italic | undo redo'
       });
     }
   };
