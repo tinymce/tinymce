@@ -31,18 +31,8 @@ const buildInitGroup = <T>(
     {
       title: Optional.none(),
       label: Optional.none(),
-      items: startCommands.asSpecs() as AlloySpec[]
+      items: [ ...startCommands.asSpecs() as AlloySpec[], memInput.asSpec(), ...endCommands.asSpecs() as AlloySpec[] ]
     },
-    {
-      title: Optional.none(),
-      label: Optional.none(),
-      items: [ memInput.asSpec() ]
-    },
-    {
-      title: Optional.none(),
-      label: Optional.none(),
-      items: endCommands.asSpecs() as AlloySpec[]
-    }
   ], (group) => group.items.length > 0);
 };
 
