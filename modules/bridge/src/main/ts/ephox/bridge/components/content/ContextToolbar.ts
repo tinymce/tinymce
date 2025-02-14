@@ -12,7 +12,7 @@ export interface ToolbarGroupSpec {
 }
 
 export interface ContextToolbarLaunchButtonApi extends BaseToolbarButtonSpec<BaseToolbarButtonInstanceApi> {
-  type: 'contexttoolbarbutton';
+  type?: 'contexttoolbarbutton';
 }
 
 export interface ContextToolbarSpec extends ContextBarSpec {
