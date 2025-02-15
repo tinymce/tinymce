@@ -6,7 +6,6 @@ import Env from '../api/Env';
 import { BlobCache, BlobInfo } from '../api/file/BlobCache';
 import { ParserArgs } from '../api/html/DomParser';
 import * as Options from '../api/Options';
-import Delay from '../api/util/Delay';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import VK from '../api/util/VK';
 import * as InputEvents from '../events/InputEvents';
@@ -269,15 +268,14 @@ const registerEventHandlers = (editor: Editor, pasteBin: PasteBin, pasteFormat: 
       e.preventDefault();
       insertClipboardContent(editor, clipboardContent, clipboardContent['text/plain'], plainTextMode, true);
     } else {
+      e.preventDefault();
       // We can't extract the HTML content from the clipboard so we need to allow the paste
       // to run via the pastebin and then extract from there
       pasteBin.create();
-      Delay.setEditorTimeout(editor, () => {
-        // Get the pastebin content and then remove it so the selection is restored
-        const html = pasteBin.getHtml();
-        pasteBin.remove();
-        insertClipboardContent(editor, clipboardContent, html, plainTextMode, false);
-      }, 0);
+      // Get the pastebin content and then remove it so the selection is restored
+      const html = pasteBin.getHtml();
+      pasteBin.remove();
+      insertClipboardContent(editor, clipboardContent, html, plainTextMode, true);
     }
   });
 };
