@@ -1,5 +1,4 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { PlatformDetection } from '@ephox/sand';
 import { LegacyUnit, TinyApis, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -9,8 +8,6 @@ import { ZWSP } from 'tinymce/core/text/Zwsp';
 import * as KeyUtils from '../module/test/KeyUtils';
 
 describe('browser.tinymce.core.FormatterRemoveTest', () => {
-  const browser = PlatformDetection.detect().browser;
-
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
     extended_valid_elements: 'b[style],i,span[style|contenteditable|class]',
@@ -375,14 +372,7 @@ describe('browser.tinymce.core.FormatterRemoveTest', () => {
     editor.setContent(initialContent);
     LegacyUnit.setSelection(editor, 'p:nth-child(2) b', 0, 'p:last-of-type b', 3);
     editor.formatter.remove('format');
-    if (browser.isSafari()) {
-      // Safari 17 will not select the non-editable content
-      // Selection only covers editable "def" and removes format correctly
-      const expectedContent = '<p>abc</p><p>def</p><p contenteditable="false"><b>ghj</b></p>';
-      TinyAssertions.assertContent(editor, expectedContent);
-    } else {
-      TinyAssertions.assertContent(editor, initialContent);
-    }
+    TinyAssertions.assertContent(editor, initialContent);
   });
 
   it('contentEditable: true inside contentEditable: false', () => {
