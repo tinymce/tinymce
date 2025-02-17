@@ -1,4 +1,4 @@
-import { AlloyComponent, AlloyTriggers, Behaviour, Disabling, MementoRecord, SketchSpec, Tabstopping } from '@ephox/alloy';
+import { AlloyComponent, AlloyTriggers, Disabling, MementoRecord, SketchSpec, Tabstopping } from '@ephox/alloy';
 import { Dialog, Menu, Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Optional } from '@ephox/katamari';
 import { Attribute, Class, Focus } from '@ephox/sugar';
@@ -12,16 +12,7 @@ import * as NestedMenus from '../menus/menu/NestedMenus';
 import { getSearchPattern } from '../menus/menu/searchable/SearchableMenu';
 import { ToolbarButtonClasses } from '../toolbar/button/ButtonClasses';
 
-type MenuButtonSpec = Omit<Toolbar.ToolbarMenuButton, 'type'>;
-
-interface MenuButtonConfig {
-  prefix: string;
-  backstage: UiFactoryBackstage;
-  role?: Optional<string>;
-  tabstopping?: boolean;
-  btnName?: string;
-  additionalBehaviours?: Behaviour.NamedConfiguredBehaviour<any, any, any>[];
-}
+export type MenuButtonSpec = Omit<Toolbar.ToolbarMenuButton, 'type'>;
 
 type FetchCallback = (success: (items: Menu.NestedMenuItemContents[]) => void) => void;
 
@@ -59,14 +50,7 @@ const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonI
   })
 });
 
-const renderMenuButton = (spec: MenuButtonSpec, {
-  prefix,
-  backstage,
-  btnName,
-  role = Optional.none(),
-  tabstopping = true,
-  additionalBehaviours = []
-}: MenuButtonConfig): SketchSpec => {
+const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Optional<string>, tabstopping = true, btnName?: string): SketchSpec => {
   return renderCommonDropdown({
     text: spec.text,
     icon: spec.icon,
@@ -105,8 +89,7 @@ const renderMenuButton = (spec: MenuButtonSpec, {
     presets: 'normal',
     classes: [],
     dropdownBehaviours: [
-      ...(tabstopping ? [ Tabstopping.config({ }) ] : []),
-      ...additionalBehaviours
+      ...(tabstopping ? [ Tabstopping.config({ }) ] : [])
     ],
     context: spec.context
   },
