@@ -1,19 +1,21 @@
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Disabling, FormField, GuiFactory, Input, Keying, NativeEvents, SketchSpec } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
-import { Cell, Fun, Optional, Strings } from '@ephox/katamari';
+import { Cell, Fun, Optional, Singleton, Strings } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as UiState from '../../UiState';
-import { onControlAttached, onControlDetached } from '../controls/Controls';
+import { onContextFormControlDetached, onControlAttached } from '../controls/Controls';
 import * as ContextFormApi from './ContextFormApi';
 import * as ContextFormGroup from './ContextFormGroup';
 
 export const renderContextFormSliderInput = (
   ctx: InlineContent.ContextSliderForm,
   providers: UiFactoryBackstageProviders,
-  onEnter: (input: AlloyComponent) => Optional<boolean>
+  onEnter: (input: AlloyComponent) => Optional<boolean>,
+  valueState: Singleton.Value<number>
 ): SketchSpec => {
   const editorOffCell = Cell(Fun.noop);
+  const getApi = (comp: AlloyComponent) => ContextFormApi.getFormApi<number>(comp, valueState);
 
   const pLabel = ctx.label.map((label) => FormField.parts.label({
     dom: { tag: 'label', classes: [ 'tox-label' ] },
@@ -54,12 +56,12 @@ export const renderContextFormSliderInput = (
       AddEventsBehaviour.config('slider-events', [
         onControlAttached<InlineContent.ContextFormInstanceApi<number>>({
           onSetup: ctx.onSetup,
-          getApi: ContextFormApi.getFormApi,
+          getApi,
           onBeforeSetup: Keying.focusIn
         }, editorOffCell),
-        onControlDetached({ getApi: ContextFormApi.getFormApi }, editorOffCell),
+        onContextFormControlDetached({ getApi }, editorOffCell, valueState),
         AlloyEvents.run(NativeEvents.input(), (comp) => {
-          ctx.onInput(ContextFormApi.getFormApi(comp));
+          ctx.onInput(getApi(comp));
         })
       ])
     ])
