@@ -56,15 +56,8 @@ module.exports = function (grunt) {
     shell: {
       prismjs: { command: 'node ./bin/build-prism.js', cwd: '../../' },
       tsc: { command: 'tsc -b' },
-      moxiedoc: { command: 'moxiedoc "src/core/main/ts" -t tinymcenext --fail-on-warning --dry' }
-    },
-
-    eslint: {
-      options: {
-        maxWarnings: 0,
-        fix: grunt.option('fix')
-      },
-      target: [ 'src/**/*.ts' ]
+      moxiedoc: { command: 'moxiedoc "src/core/main/ts" -t tinymcenext --fail-on-warning --dry' },
+      eslint: { command: 'eslint --max-warnings=0 src/**/*.ts' }
     },
 
     globals: {
@@ -972,7 +965,7 @@ module.exports = function (grunt) {
   grunt.registerTask('start', ['webpack-dev-server']);
 
   grunt.registerTask('buildOnly', ['clean:dist', 'prod']);
-  grunt.registerTask('default', ['clean:dist', 'eslint', 'prod']);
+  grunt.registerTask('default', ['clean:dist', 'shell:eslint', 'prod']);
   grunt.registerTask('test', ['bedrock-auto:standard']);
   grunt.registerTask('test-manual', ['bedrock-manual']);
 };

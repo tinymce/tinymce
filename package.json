@@ -60,7 +60,6 @@
     "grunt-contrib-cssmin": "^5.0.0",
     "grunt-contrib-symlink": "^1.0.0",
     "grunt-contrib-watch": "^1.1.0",
-    "grunt-eslint": "^24.0.0",
     "grunt-nuget-pack": "^1.0.1",
     "grunt-shell": "^4.0.0",
     "grunt-stylelint": "^0.20.1",
