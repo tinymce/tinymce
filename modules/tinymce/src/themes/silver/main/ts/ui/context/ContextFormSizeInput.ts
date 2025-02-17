@@ -208,7 +208,7 @@ export const renderContextFormSizeInput = (
           const value2 = optOther.map<string>(Representing.getValue).getOr('');
           converter = makeRatioConverter(value1, value2);
         }),
-        AlloyEvents.run(formInputEvent, (input) => ctx.onInput(ContextFormApi.getFormApi(input, valueState))),
+        AlloyEvents.run(formInputEvent, (input) => ctx.onInput(getApi(input))),
         ...controlLifecycleHandlers,
       ])
     ])

@@ -371,8 +371,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     const editor = hook.editor();
     openToolbar(editor, 'test-form');
     TinyUiActions.clickOnUi(editor, 'button[aria-label="D"]');
-
-    store.assertEq('Should have triggered ContextToolbarClose', [ 'setup', 'teardown', 'D.before-hide', 'D.after-hide' ]);
+    store.assertEq('D should have fired', [ 'setup', 'teardown', 'D.before-hide', 'D.after-hide' ]);
   });
 
   it('TINY-11781: Should be able to get value after component has been detached', async () => {
@@ -383,7 +382,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     TinyContentActions.trueClick(editor);
 
-    await Waiter.pTryUntil('Watied to context form to close', () => {
+    await Waiter.pTryUntil('Waited to context form to close', () => {
       store.assertEq('Should be able to get value', [ 'setup', 'teardown', '300x300' ]);
     });
   });
@@ -396,7 +395,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     TinyContentActions.trueClick(editor);
 
-    await Waiter.pTryUntil('Watied to context form to close', () => {
+    await Waiter.pTryUntil('Waited to context form to close', () => {
       store.assertEq('Should be able to set value', [ 'setup', 'teardown', '500x500' ]);
     });
   });
@@ -473,7 +472,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     TinyContentActions.trueClick(editor);
 
-    await Waiter.pTryUntil('Watied to context toolbar to close', () => {
+    await Waiter.pTryUntil('Waited to context toolbar to close', () => {
       store.assertEq('Should have triggered ContextToolbarClose', [ 'setup', 'teardown', 'contexttoolbarclose' ]);
     });
 
