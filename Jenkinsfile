@@ -251,7 +251,8 @@ timestamps {
   ];
 
   def buildingPrimary = env.BRANCH_NAME == props.primaryBranch
-  def platforms = buildingPrimary ? primaryBuildPlatforms : branchBuildPlatforms
+  // def platforms = buildingPrimary ? primaryBuildPlatforms : branchBuildPlatforms
+  def platforms = [ seleniumChrome, seleniumFirefox ]
 
   def processes = [:]
   def runAllTests = buildingPrimary
@@ -296,4 +297,23 @@ timestamps {
   }
 
   devPods.cleanUpPod(name: cacheName)
+
+  echo "${currentBuild.currentResult}"
+
+  echo "${currentBuild.previousBuild.result}"
+
+  if(currentBuild.resultIsWorseOrEqualTo("UNSTABLE")) {
+    echo "Alert"
+  }
+
+  if(currentBuild.resultIsWorseOrEqualTo("UNSTABLE") && currentBuild.previousBuild.resultIsWorseOrEqualTo("UNSTABLE")) {
+    echo "Two failures"
+    // send slack msg here
+    def slackResponse = slackNotification(
+      channel: "#tiny-textboxio-dev",
+      message: "Build is failing: See ${env.BUILD_URL} :sadpanda: "
+    )
+    slackResponse.addReaction('sad_thonk')
+
+  }
 }
