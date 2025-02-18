@@ -1,6 +1,6 @@
 import { Arr, Fun, Obj, Strings, Type } from '@ephox/katamari';
 import { Attribute, NodeTypes, Remove, Replication, SugarElement } from '@ephox/sugar';
-import createDompurify, { Config, DOMPurifyI, SanitizeAttributeHookEvent, SanitizeElementHookEvent } from 'dompurify';
+import createDompurify, { Config, DOMPurify, UponSanitizeAttributeHookEvent, UponSanitizeElementHookEvent } from 'dompurify';
 
 import { DomParserSettings } from '../api/html/DomParser';
 import Schema from '../api/html/Schema';
@@ -21,7 +21,7 @@ const filteredUrlAttrs = Tools.makeMap('src,href,data,background,action,formacti
 const internalElementAttr = 'data-mce-type';
 
 let uid = 0;
-const processNode = (node: Node, settings: DomParserSettings, schema: Schema, scope: Namespace.NamespaceType, evt?: SanitizeElementHookEvent): void => {
+const processNode = (node: Node, settings: DomParserSettings, schema: Schema, scope: Namespace.NamespaceType, evt?: UponSanitizeElementHookEvent): void => {
   const validate = settings.validate;
   const specialElements = schema.getSpecialElements();
 
@@ -108,7 +108,7 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
   }
 };
 
-const processAttr = (ele: Element, settings: DomParserSettings, schema: Schema, scope: Namespace.NamespaceType, evt: SanitizeAttributeHookEvent) => {
+const processAttr = (ele: Element, settings: DomParserSettings, schema: Schema, scope: Namespace.NamespaceType, evt: UponSanitizeAttributeHookEvent) => {
   const tagName = ele.tagName.toLowerCase();
   const { attrName, attrValue } = evt;
 
@@ -161,7 +161,7 @@ const filterAttributes = (ele: Element, settings: DomParserSettings, schema: Sch
   }
 };
 
-const setupPurify = (settings: DomParserSettings, schema: Schema, namespaceTracker: Namespace.NamespaceTracker): DOMPurifyI => {
+const setupPurify = (settings: DomParserSettings, schema: Schema, namespaceTracker: Namespace.NamespaceTracker): DOMPurify => {
   const purify = createDompurify();
 
   // We use this to add new tags to the allow-list as we parse, if we notice that a tag has been banned but it's still in the schema
@@ -177,7 +177,7 @@ const setupPurify = (settings: DomParserSettings, schema: Schema, namespaceTrack
   return purify;
 };
 
-const getPurifyConfig = (settings: DomParserSettings, mimeType: string): Config => {
+const getPurifyConfig = (settings: DomParserSettings, mimeType: MimeType): Config => {
   // Current dompurify types only cover up to 3.0.5 which does not include this new setting
   const basePurifyConfig: Config & { SAFE_FOR_XML: boolean } = {
     IN_PLACE: true,
@@ -240,17 +240,20 @@ const sanitizeMathmlElement = (node: Element, settings: DomParserSettings) => {
   };
 
   purify.addHook('uponSanitizeElement', (node, evt) => {
-    const lcTagName = evt.tagName ?? node.nodeName.toLowerCase();
+    // We know the node is an element as we have
+    // passed an element to the purify.sanitize function below
+    const elm = node as Element;
+    const lcTagName = evt.tagName ?? elm.nodeName.toLowerCase();
 
     if (hasAllowedEncodings && lcTagName === 'semantics') {
       evt.allowedTags[lcTagName] = true;
     }
 
     if (lcTagName === 'annotation') {
-      const keepElement = hasValidEncoding(node);
+      const keepElement = hasValidEncoding(elm);
       evt.allowedTags[lcTagName] = keepElement;
       if (!keepElement) {
-        node.remove();
+        elm.remove();
       }
     }
   });
