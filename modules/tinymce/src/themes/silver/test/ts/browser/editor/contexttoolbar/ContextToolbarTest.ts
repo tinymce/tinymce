@@ -68,9 +68,12 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarTest
 
     const pNavigateBackByMouse = async (index: number) => {
       Mouse.clickOn(SugarBody.body(), '.tox-tbtn[aria-label="Back"]');
-      await pWaitForToolbarState(index);
 
-      if (index === 0) {
+      const indexAfter = index - 1;
+
+      await pWaitForToolbarState(indexAfter);
+
+      if (indexAfter === 1) {
         UiFinder.notExists(SugarBody.body(), '.tox-tbtn[aria-label="Back"]');
       }
 
@@ -87,33 +90,34 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarTest
 
       Keyboard.activeKeystroke(SugarDocument.getDocument(), Keys.enter());
 
-      await pWaitForToolbarState(index + 1);
+      const indexAfter = index + 1;
+
+      await pWaitForToolbarState(indexAfter);
 
       FocusTools.isOnSelector(
-        `Should move focus to back button on toolbar ${index}`,
+        `Should move focus to back button on toolbar ${indexAfter}`,
         SugarDocument.getDocument(),
         '.tox-tbtn[aria-label="Back"]'
       );
     };
 
     const pNavigateBackByKeyboard = async (index: number) => {
-      if (index < 3) {
-        Keyboard.activeKeystroke(SugarDocument.getDocument(), Keys.left());
-        Keyboard.activeKeystroke(SugarDocument.getDocument(), Keys.left());
-      }
-
+      Keyboard.activeKeystroke(SugarDocument.getDocument(), Keys.left());
+      Keyboard.activeKeystroke(SugarDocument.getDocument(), Keys.left());
       Keyboard.activeKeystroke(SugarDocument.getDocument(), Keys.enter());
 
-      await pWaitForToolbarState(index);
+      const indexAfter = index - 1;
 
-      if (index === 0) {
+      await pWaitForToolbarState(indexAfter);
+
+      if (indexAfter === 1) {
         UiFinder.notExists(SugarBody.body(), '.tox-tbtn[aria-label="Back"]');
       }
 
       FocusTools.isOnSelector(
-        `Should retain focus to subtoolbar button ${index}`,
+        `Should retain focus to subtoolbar button ${indexAfter}`,
         SugarDocument.getDocument(),
-        `.tox-pop .tox-tbtn[data-mce-name="test-subtoolbar${index}"]`
+        `.tox-pop .tox-tbtn[data-mce-name="test-subtoolbar${indexAfter}"]`
       );
     };
 
@@ -129,7 +133,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarTest
         await pNavigateDownInToolbarByMouse(i);
       }
 
-      for (let i = 3; i >= 1; i--) {
+      for (let i = 4; i >= 2; i--) {
         await pNavigateBackByMouse(i);
       }
     });
@@ -147,7 +151,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarTest
         await pNavigateDownInToolbarByKeyboard(i);
       }
 
-      for (let i = 3; i >= 1; i--) {
+      for (let i = 4; i >= 2; i--) {
         await pNavigateBackByKeyboard(i);
       }
     });
