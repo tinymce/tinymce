@@ -459,13 +459,13 @@ describe('browser.tinymce.core.EditorTest', () => {
     assert.equal(clickCount, 1, 'Click should be counted in enabled state');
 
     editor.options.set('disabled', true);
-    await Waiter.pWait(0);
+    await Waiter.pWaitBetweenUserActions();
     assert.isTrue(isDisabled('.tox-editor-container button:last-of-type'), 'Button should be disabled in disabled mode');
     editor.dom.dispatch(editor.getBody(), 'click');
     assert.equal(clickCount, 1, 'Click should not be counted in disabled state');
 
     editor.options.set('disabled', false);
-    await Waiter.pWait(0);
+    await Waiter.pWaitBetweenUserActions();
     editor.dom.dispatch(editor.getBody(), 'click');
     assert.isFalse(isDisabled('.tox-editor-container button:last-of-type'), 'Button should remain enabled in enabled state');
     assert.equal(clickCount, 2, 'Click should be counted in re-enabled state');

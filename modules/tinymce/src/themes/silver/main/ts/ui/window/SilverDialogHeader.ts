@@ -1,5 +1,5 @@
 import {
-  AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting, SketchSpec, Tabstopping, Tooltipping
+  AlloySpec, AlloyTriggers, Behaviour, Button, Channels, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting, SketchSpec, Tabstopping, Tooltipping
 } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
@@ -96,6 +96,9 @@ const renderInlineHeader = (
         getSnapPoints: () => [],
         leftAttr: 'data-drag-left',
         topAttr: 'data-drag-top'
+      },
+      onDrag: (comp, target) => {
+        comp.getSystem().broadcastOn([ Channels.dismissPopups() ], { target });
       }
     })
   ])

@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: The `semantics` element in MathML was not properly retained when `annotation`
+  elements was allowed.
+time: 2025-01-29T08:43:41.042875+01:00
+custom:
+  Issue: TINY-11755

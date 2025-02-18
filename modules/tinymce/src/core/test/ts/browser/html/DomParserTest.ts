@@ -1748,6 +1748,13 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
       assert.equal(serializedHtml, '<div><math> <mrow> </mrow> </math> <math> </math></div>');
     });
 
+    it('TINY-11755: Should retain semantics and annotations if allow_mathml_annotation_encodings is set', () => {
+      const schema = Schema();
+      schema.addValidElements('math[*]');
+      const input = '<math><semantics><annotation encoding="-x-custom-mime">annotation1</annotation><annotation encoding="text/html">annotation2</annotation></semantics></math>';
+      const serializedHtml = HtmlSerializer({}, schema).serialize(DomParser({ allow_mathml_annotation_encodings: [ '-x-custom-mime' ] }, schema).parse(input));
+      assert.equal(serializedHtml, '<math><semantics><annotation encoding="-x-custom-mime">annotation1</annotation></semantics></math>');
+    });
   });
 
   context('Special elements', () => {

@@ -27,8 +27,10 @@ interface Tools {
     <T, R>(arr: ArrayLike<T> | null | undefined, cb: ArrayCallback<T, R>): R[];
     <T, R>(obj: Record<string, T> | null | undefined, cb: ObjCallback<T, R>): R[];
   };
+  // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
   extend: (obj: Object, ext: Object, ...objs: Object[]) => any;
   walk: <T extends Record<string, any>>(obj: T, f: WalkCallback<T>, n?: keyof T, scope?: any) => void;
+  // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
   resolve: (path: string, o?: Object) => any;
   explode: (s: string | string[], d?: string | RegExp) => string[];
   _addCacheSuffix: (url: string) => string;

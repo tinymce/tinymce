@@ -191,7 +191,7 @@ const either = (structAsserts: StructAssert[]): StructAssert => {
       try {
         applyAssert(structAsserts[i], queue);
         return;
-      } catch (e) {
+      } catch {
         mark.reset();
       }
     }
@@ -215,7 +215,7 @@ const repeat = (min: number, max: number | true = min) => (structAssert: StructA
       const mark = queue.mark();
       try {
         applyAssert(structAssert, queue);
-      } catch (e) {
+      } catch {
         mark.reset();
       }
       if (mark.atMark()) {

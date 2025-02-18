@@ -277,7 +277,7 @@ describe('headless.tinymce.themes.silver.sketchers.SilverMenubar Test', () => {
       const menubar = getMenubar();
       const sink = extrasHook.access().getPopupSink();
       Mouse.hoverOn(menubar.element, 'button[role="menuitem"]:contains("Basic Menu Button")');
-      await Waiter.pWait(100);
+      await Waiter.pWaitBetweenUserActions();
       UiFinder.notExists(sink, '[role="menu"]');
       Mouse.clickOn(menubar.element, 'button[role="menuitem"]:contains("Changes")');
       await UiFinder.pWaitForVisible(
