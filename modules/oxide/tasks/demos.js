@@ -3,22 +3,30 @@ const path = require('path');
 const connect = require('connect');
 const liveReload = require('connect-livereload');
 const serveStatic = require('serve-static');
-const chalk = require("chalk");
+
+let chalk;
+(async () => {
+  const chalkModule = await import('chalk');
+  chalk = chalkModule.default;
+})();
 
 module.exports = function (grunt) {
   grunt.registerTask('buildDemos', function() {
     grunt.file.copy('./src/demo/', './build/');
   });
 
-  grunt.registerTask('copyTinymce', function() {
+  grunt.registerTask('copyTinymce', async function() {
+    const done = this.async();
     if (fs.existsSync('../tinymce/js/tinymce/tinymce.min.js')) {
       grunt.file.copy('../tinymce/js/tinymce/', './build/tinymce/');
+      done();
     } else {
       console.log(chalk.red('Local TinyMCE does not exist. Using cloud version instead'));
       console.log(chalk.yellow('Run yarn build in the repository root to build a local version of TinyMCE'));
       const url = 'https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/7-dev/tinymce.min.js';
       const html = fs.readFileSync('./build/index.html', 'utf8');
       fs.writeFileSync('./build/index.html', html.replace('/tinymce/tinymce.min.js', url));
+      done();
     }
   });
 
