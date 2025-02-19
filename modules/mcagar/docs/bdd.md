@@ -22,7 +22,7 @@ Available functions:
 
 ```js
 import { TinyHooks } from '@ephox/mcagar';
-import { Editor } from 'tinymce';
+import type { Editor } from 'tinymce';
 
 import { Plugin } from '../../main/ts/Plugin';
 
