@@ -1,4 +1,5 @@
 import { Fun } from '@ephox/katamari';
+import { PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -9,6 +10,7 @@ import Tools from '../api/util/Tools';
 import VK from '../api/util/VK';
 import * as CaretContainer from '../caret/CaretContainer';
 import * as Empty from '../dom/Empty';
+import * as NodeType from '../dom/NodeType';
 import * as Rtc from '../Rtc';
 
 /**
@@ -162,6 +164,25 @@ const Quirks = (editor: Editor): Quirks => {
         }
       });
     }
+  };
+
+  const manageEnterInFigure = () => {
+    editor.on('keydown', (e) => {
+      if (e.keyCode === VK.ENTER) {
+        const currentNode = SugarElement.fromDom(editor.selection.getNode());
+        if (SugarNode.isTag('figure')(currentNode)) {
+          PredicateFind.descendant(currentNode, SugarNode.isTag('figcaption'))
+            .filter((e) => !NodeType.isContentEditableFalse(e.dom))
+            .bind((figcaption) => PredicateFind.descendant(figcaption, SugarNode.isText))
+            .each((text) => {
+              const rng = editor.dom.createRng();
+              rng.setStart(text.dom, 0);
+              rng.setEnd(text.dom, 0);
+              editor.selection.setRng(rng);
+            });
+        }
+      }
+    });
   };
 
   /**
@@ -683,6 +704,7 @@ const Quirks = (editor: Editor): Quirks => {
     // All browsers
     removeBlockQuoteOnBackSpace();
     emptyEditorWhenDeleting();
+    manageEnterInFigure();
 
     // Windows phone will return a range like [body, 0] on mousedown so
     // it will always normalize to the wrong location
