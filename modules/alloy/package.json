@@ -26,7 +26,7 @@
     "lint": "eslint --config ../../.eslintrc.json --max-warnings=0 src/**/*.ts",
     "start": "grunt dev",
     "prepublishOnly": "tsc -b",
-    "build": "tsc"
+    "build": "tsc -b"
   },
   "repository": {
     "type": "git",

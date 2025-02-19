@@ -78,7 +78,7 @@ module.exports = (grunt) => {
     pkg: packageData,
 
     shell: {
-      command: 'tsc'
+      command: 'tsc -b'
     },
 
     'webpack-dev-server': {

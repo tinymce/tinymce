@@ -14,7 +14,7 @@ module.exports = function(grunt) {
     pkg: packageData,
 
     shell: {
-      command: 'tsc'
+      command: 'tsc -b'
     },
 
     webpack: {

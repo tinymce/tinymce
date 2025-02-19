@@ -14,7 +14,7 @@
     "test-manual": "bedrock -d src/test/ts",
     "lint": "eslint --config ../../.eslintrc.json --max-warnings=0 src/**/*.ts",
     "prepublishOnly": "tsc -b",
-    "build": "tsc"
+    "build": "tsc -b"
   },
   "repository": {
     "type": "git",

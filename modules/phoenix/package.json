@@ -31,7 +31,7 @@
     "test-manual": "bedrock -d src/test",
     "lint": "eslint --config ../../.eslintrc.json --max-warnings=0 src/**/*.ts",
     "prepublishOnly": "tsc -b",
-    "build": "tsc"
+    "build": "tsc -b"
   },
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "GPL-2.0-or-later",

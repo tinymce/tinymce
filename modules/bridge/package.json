@@ -9,7 +9,7 @@
   },
   "scripts": {
     "prepublishOnly": "tsc -b",
-    "build": "tsc",
+    "build": "tsc -b",
     "lint": "eslint --config ../../.eslintrc.json --max-warnings=0 src/**/*.ts"
   },
   "dependencies": {

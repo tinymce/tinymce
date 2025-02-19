@@ -20,7 +20,7 @@
     "test-manual": "bedrock -d src/test/ts",
     "lint": "eslint --config ../../.eslintrc.json --max-warnings=0 src/**/*.ts",
     "prepublishOnly": "tsc -b",
-    "build": "tsc"
+    "build": "tsc -b"
   },
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "GPL-2.0-or-later",
@@ -30,9 +30,6 @@
     "@ephox/sand": "^7.0.0",
     "@ephox/sugar": "^10.0.0",
     "fast-check": "^2.0.0"
-  },
-  "peerDependencies": {
-    "tinymce": ">=4.0.0"
   },
   "main": "./lib/main/ts/ephox/mcagar/api/Main.js",
   "module": "./lib/main/ts/ephox/mcagar/api/Main.js",
