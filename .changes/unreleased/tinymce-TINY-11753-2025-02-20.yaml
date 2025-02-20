@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Now it is possible to move the focus from the whole caption to the caption description pressing enter.
+time: 2025-02-20T08:26:57.188426766+01:00
+custom:
+    Issue: TINY-11753
