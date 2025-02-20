@@ -1,6 +1,0 @@
-project: tinymce
-kind: Changed
-body: Changed the `link` plugin behavior to move the cursor behind a link when inserted or edited via the UI. Patch contributed by Philipp91.
-time: 2025-02-10T10:46:18.966593+10:00
-custom:
-  Issue: '#GH-9998'
