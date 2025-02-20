@@ -12,7 +12,7 @@ import * as Zwsp from 'tinymce/core/text/Zwsp';
 
 describe('browser.tinymce.core.dom.SelectionTest', () => {
   const browser = PlatformDetection.detect().browser;
-  const isOldSafari = browser.isSafari() && (browser.version.major < 18 && browser.version.minor < 3);
+  const isOldSafari = browser.isSafari() && (browser.version.major === 18 && browser.version.minor < 3);
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,

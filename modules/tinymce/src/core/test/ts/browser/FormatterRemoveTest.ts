@@ -10,7 +10,7 @@ import * as KeyUtils from '../module/test/KeyUtils';
 
 describe('browser.tinymce.core.FormatterRemoveTest', () => {
   const browser = PlatformDetection.detect().browser;
-  const isOldSafari = browser.isSafari() && (browser.version.major < 18 && browser.version.minor < 3);
+  const isOldSafari = browser.isSafari() && (browser.version.major === 18 && browser.version.minor < 3);
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
