@@ -15,7 +15,6 @@ import * as PasteEventUtils from '../../module/test/PasteEventUtils';
 describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
   const platform = PlatformDetection.detect();
   const os = platform.os;
-  const browser = platform.browser;
   const isChromeHeadless = () => navigator.userAgent.includes('HeadlessChrome');
 
   const lastBeforeInputEvent = Singleton.value<EditorEvent<InputEvent>>();
@@ -226,7 +225,7 @@ describe('webdriver.tinymce.core.paste.CopyAndPasteTest', () => {
     TinyUiActions.cancelDialog(editor);
 
     await RealClipboard.pPaste('iframe => body');
-    await pAssertInputEvents(browser.isSafari() ? '&lt;p&gt;abc&lt;/p&gt;' : '', true);
+    await pAssertInputEvents('&lt;p&gt;abc&lt;/p&gt;', false);
     TinyAssertions.assertContent(editor, '<p>&lt;p&gt;abc&lt;/p&gt;abc</p>');
   });
 

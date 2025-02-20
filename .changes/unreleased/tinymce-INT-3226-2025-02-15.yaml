@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Pasting plain text now executes without delay, just like pasting html.
+time: 2025-02-15T08:59:57.575722+01:00
+custom:
+  Issue: INT-3226
