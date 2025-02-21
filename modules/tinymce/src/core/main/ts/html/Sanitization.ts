@@ -198,7 +198,7 @@ const getPurifyConfig = (settings: DomParserSettings, mimeType: MimeType): Confi
   // Allow any URI when allowing script urls
   if (settings.allow_script_urls) {
     config.ALLOWED_URI_REGEXP = /.*/;
-  // Allow anything except javascript (or similar) URIs if all html data urls are allowed
+    // Allow anything except javascript (or similar) URIs if all html data urls are allowed
   } else if (settings.allow_html_data_urls) {
     config.ALLOWED_URI_REGEXP = /^(?!(\w+script|mhtml):)/i;
   }
@@ -244,16 +244,33 @@ const sanitizeMathmlElement = (node: Element, settings: DomParserSettings) => {
     // passed an element to the purify.sanitize function below
     const elm = node as Element;
     const lcTagName = evt.tagName ?? elm.nodeName.toLowerCase();
+    let keepElement = !settings.sanitize;
 
     if (hasAllowedEncodings && lcTagName === 'semantics') {
       evt.allowedTags[lcTagName] = true;
     }
 
     if (lcTagName === 'annotation') {
-      const keepElement = hasValidEncoding(elm);
+      keepElement = hasValidEncoding(elm);
+    } else if (Type.isArray(settings.allow_mathml_elements)) {
+      keepElement = settings.allow_mathml_elements.includes(lcTagName);
+    } else {
+      keepElement = true;
+    }
+
+    if (keepElement) {
       evt.allowedTags[lcTagName] = keepElement;
-      if (!keepElement) {
-        elm.remove();
+    } else {
+      elm.remove();
+    }
+  });
+
+  purify.addHook('uponSanitizeAttribute', (_node, event) => {
+    if (Type.isArray(settings.allow_mathml_attributes)) {
+      const keepAttribute = settings.allow_mathml_attributes.includes(event.attrName);
+
+      if (keepAttribute) {
+        event.forceKeepAttr = true;
       }
     }
   });

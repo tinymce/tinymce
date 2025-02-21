@@ -71,6 +71,8 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
   return removeUndefined<DomParserSettings>({
     allow_conditional_comments: getOption('allow_conditional_comments'),
     allow_html_data_urls: getOption('allow_html_data_urls'),
+    allow_mathml_attributes: getOption('allow_mathml_attributes'),
+    allow_mathml_elements: getOption('allow_mathml_elements'),
     allow_svg_data_urls: getOption('allow_svg_data_urls'),
     allow_html_in_named_anchor: getOption('allow_html_in_named_anchor'),
     allow_script_urls: getOption('allow_script_urls'),
