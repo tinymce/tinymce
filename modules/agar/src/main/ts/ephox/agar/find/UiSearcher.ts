@@ -4,6 +4,7 @@ import { SugarElement, Truncate } from '@ephox/sugar';
 
 import * as SizzleFind from '../alien/SizzleFind';
 
+/* TODO: what is this ADT */
 interface TargetAdt {
   fold: <T> (
     self: (element: SugarElement<Node>, selector: string) => T,
