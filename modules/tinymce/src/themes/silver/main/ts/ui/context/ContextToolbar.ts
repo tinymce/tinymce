@@ -177,7 +177,12 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
       initGroups,
       onEscape: Optional.none,
       cyclicKeying: true,
-      providers: sharedBackstage.providers
+      providers: sharedBackstage.providers,
+      overrideKeying: {
+        mode: 'menu',
+        selector: 'button, input, .tox-toolbar__group',
+        moveOnTab: true
+      }
     });
   };
 

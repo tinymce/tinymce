@@ -7,7 +7,7 @@ import {
   Behaviour, Boxes,
   Focusing,
   GuiFactory,
-  Keying, SketchSpec,
+  Keying, KeyingConfigSpec, SketchSpec,
   Tabstopping
 } from '@ephox/alloy';
 import { Arr, Optional, Result } from '@ephox/katamari';
@@ -35,6 +35,8 @@ export interface ToolbarSpec {
   readonly initGroups: ToolbarGroup[];
   readonly attributes?: Record<string, string>;
   readonly providers: UiFactoryBackstageProviders;
+
+  readonly overrideKeying?: KeyingConfigSpec;
 }
 
 export interface MoreDrawerToolbarSpec extends ToolbarSpec {
@@ -111,7 +113,7 @@ const getToolbarBehaviours = (toolbarSpec: ToolbarSpec, modeName: 'cyclic' | 'ac
   return Behaviour.derive([
     DisablingConfigs.toolbarButton(() => toolbarSpec.providers.checkUiComponentContext('any').shouldDisable),
     UiState.toggleOnReceive(() => toolbarSpec.providers.checkUiComponentContext('any')),
-    Keying.config({
+    Keying.config(toolbarSpec.overrideKeying ?? {
       // Tabs between groups
       mode: modeName,
       onEscape: toolbarSpec.onEscape,
