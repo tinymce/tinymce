@@ -36,10 +36,10 @@ export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactor
   const resizeLabel = resizeType === ResizeTypes.Both
     ? 'Press the arrow keys to resize the editor.'
     : 'Press the Up and Down arrow keys to resize the editor.';
-
+  const cursorClass = resizeType === ResizeTypes.Both ? 'tox-statusbar__resize-cursor-both' : 'tox-statusbar__resize-cursor-default'
   return Optional.some(Icons.render('resize-handle', {
     tag: 'div',
-    classes: [ 'tox-statusbar__resize-handle' ],
+    classes: [ 'tox-statusbar__resize-handle', cursorClass ],
     attributes: {
       'aria-label': providersBackstage.translate(resizeLabel),
       'data-mce-name': 'resize-handle'
