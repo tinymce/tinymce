@@ -683,10 +683,17 @@ describe('browser.tinymce.core.keyboard.EnterKeyTest', () => {
     });
   });
 
-  it('TINY-11753: pressing enter when a figure is selected should move the selection into the figcaption', () => {
+  it('TINY-11753: pressing enter when the seleciton is in a CEF element should move the selection into the first CET element', () => {
     const editor = hook.editor();
     editor.setContent('<figure contenteditable="false"><img src="file.png"><figcaption contenteditable="true">Caption</figcaption></figure>');
     TinySelections.select(editor, 'figure', []);
+    TinyAssertions.assertSelection(editor, [], 0, [], 1);
+
+    TinyContentActions.keystroke(editor, Keys.enter());
+    TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 0);
+
+    editor.setContent('<div contenteditable="false"><img src="file.png"><span contenteditable="true">Caption</span></div>');
+    TinySelections.select(editor, 'div', []);
     TinyAssertions.assertSelection(editor, [], 0, [], 1);
 
     TinyContentActions.keystroke(editor, Keys.enter());

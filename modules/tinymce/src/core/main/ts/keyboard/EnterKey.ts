@@ -1,11 +1,12 @@
 import { Fun, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
+import { PredicateFind, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import VK from '../api/util/VK';
 import { Bookmark } from '../bookmark/BookmarkTypes';
+import * as CaretFinder from '../caret/CaretFinder';
 import * as NodeType from '../dom/NodeType';
 import * as InsertNewLine from '../newline/InsertNewLine';
 import { endTypingLevelIgnoreLocks } from '../undo/TypingState';
@@ -28,17 +29,9 @@ const handleEnterKeyEvent = (editor: Editor, event: EditorEvent<KeyboardEvent>) 
 
 const manageEnterInFigure = (editor: Editor) => {
   const currentNode = SugarElement.fromDom(editor.selection.getNode());
-  if (SugarNode.isTag('figure')(currentNode)) {
-    PredicateFind.descendant(currentNode, SugarNode.isTag('figcaption'))
-      .filter((e) => !NodeType.isContentEditableFalse(e.dom))
-      .bind((figcaption) => PredicateFind.descendant(figcaption, SugarNode.isText))
-      .each((text) => {
-        const rng = editor.dom.createRng();
-        rng.setStart(text.dom, 0);
-        rng.setEnd(text.dom, 0);
-        editor.selection.setRng(rng);
-      });
-  }
+  PredicateFind.descendant(currentNode, (e) => NodeType.isContentEditableTrue(e.dom) && NodeType.isEditingHost(e.dom))
+    .bind((e) => CaretFinder.firstPositionIn(e.dom))
+    .each((pos) => editor.selection.setRng(pos.toRange()));
 };
 
 const isCaretAfterKoreanCharacter = (rng: Range): boolean => {
