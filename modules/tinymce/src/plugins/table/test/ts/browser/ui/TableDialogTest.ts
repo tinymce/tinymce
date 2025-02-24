@@ -29,14 +29,14 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
   }, [ Plugin ], true);
 
   const generalSelectors = {
-    width: 'label.tox-label:contains(Width) + input.tox-textfield',
-    height: 'label.tox-label:contains(Height) + input.tox-textfield',
-    cellspacing: 'label.tox-label:contains(Cell spacing) + input.tox-textfield',
-    cellpadding: 'label.tox-label:contains(Cell padding) + input.tox-textfield',
-    border: 'label.tox-label:contains(Border width) + input.tox-textfield',
-    caption: 'label.tox-label:contains(Caption) + label.tox-checkbox > input',
-    align: 'label.tox-label:contains(Alignment) + div.tox-listboxfield > .tox-listbox',
-    class: 'label.tox-label:contains(Class) + div.tox-listboxfield > .tox-listbox'
+    width: 'Width',
+    height: 'Height',
+    cellspacing: 'Cell spacing',
+    cellpadding: 'Cell padding',
+    border: 'Border width',
+    caption: 'Show caption',
+    align: 'Alignment',
+    class: 'Class'
   };
 
   const htmlEmptyTable = '<table><tr><td>X</td></tr></table>';

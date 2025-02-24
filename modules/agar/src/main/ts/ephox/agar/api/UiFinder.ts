@@ -8,6 +8,7 @@ import { Step } from './Step';
 
 const findIn = UiSearcher.findIn;
 const findAllIn = UiSearcher.findAllIn;
+const findTargetByLabel = UiSearcher.findTargetByLabel;
 
 const exists = (container: SugarElement<Node>, selector: string): void => {
   findIn(container, selector).fold(
@@ -111,6 +112,7 @@ const pWaitForState = <T extends Element>(message: string, container: SugarEleme
 export {
   findIn,
   findAllIn,
+  findTargetByLabel,
   exists,
   notExists,
 
