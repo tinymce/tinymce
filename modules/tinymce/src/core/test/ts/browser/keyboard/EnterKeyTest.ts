@@ -1,5 +1,6 @@
+import { Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
+import { LegacyUnit, TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -680,5 +681,15 @@ describe('browser.tinymce.core.keyboard.EnterKeyTest', () => {
       pressEnter(editor, true);
       TinyAssertions.assertContent(editor, initialContent);
     });
+  });
+
+  it('TINY-11753: pressing enter when a figure is selected should move teh selection in the text into the figcaption', () => {
+    const editor = hook.editor();
+    editor.setContent('<figure contenteditable="false"><img src="file.png"><figcaption contenteditable="true">Caption</figcaption></figure>');
+    TinySelections.select(editor, 'figure', []);
+    TinyAssertions.assertSelection(editor, [], 0, [], 1);
+
+    TinyContentActions.keystroke(editor, Keys.enter());
+    TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 0);
   });
 });

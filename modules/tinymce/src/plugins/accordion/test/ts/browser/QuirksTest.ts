@@ -1,7 +1,6 @@
-import { Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
-import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/accordion/Plugin';
@@ -31,15 +30,5 @@ describe('browser.tinymce.plugins.accordion.QuirksTest', () => {
     const event = { target: editor.dom.select('summary')[0] } as unknown as MouseEvent;
     editor.dispatch('click', event );
     TinyAssertions.assertCursor(editor, [ 1, 0 ], 0);
-  });
-
-  it('TINY-11753: pressing enter when a figure is selected should move teh selection in the text into the figcaption', () => {
-    const editor = hook.editor();
-    editor.setContent('<figure contenteditable="false"><img src="file.png"><figcaption contenteditable="true">Caption</figcaption></figure>');
-    TinySelections.select(editor, 'figure', []);
-    TinyAssertions.assertSelection(editor, [], 0, [], 1);
-
-    TinyContentActions.keystroke(editor, Keys.enter());
-    TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 0, [ 0, 1, 0 ], 0);
   });
 });
