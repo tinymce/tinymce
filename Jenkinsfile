@@ -3,6 +3,9 @@
 
 standardProperties()
 
+String ciAccountId = "103651136441"
+String ciRegistry = "${ciAccountId}.dkr.ecr.us-east-2.amazonaws.com"
+
 def runBedrockTest(String name, String command, Boolean runAll, int retry = 0, int timeout = 0) {
   def bedrockCmd = command + (runAll ? " --ignore-lerna-changed=true" : "")
   echo "Running Bedrock cmd: ${command}"
@@ -119,7 +122,7 @@ def runSeleniumPod(String cacheName, String name, String browser, String version
         ]
   Map selenium = [
           name: "selenium",
-          image: "selenium/standalone-${browser}:${version}",
+          image: "${ciRegistry}/docker-hub/selenium/standalone-${browser}:${version}",
           livenessProbe: [
             execArgs: "curl --fail --silent --output /dev/null http://localhost:4444/wd/hub/status",
             initialDelaySeconds: 30,
@@ -234,8 +237,8 @@ timestamps {
   def macFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
   def macSafari = [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
 
-  def seleniumFirefox = [ browser: 'firefox', provider: 'selenium', buckets: 1 ]
-  def seleniumChrome = [ browser: 'chrome', provider: 'selenium', version: '127.0', buckets: 1 ]
+  def seleniumFirefox = [ browser: 'firefox', provider: 'selenium', buckets: 2 ]
+  def seleniumChrome = [ browser: 'chrome', provider: 'selenium', version: '127.0', buckets: 2 ]
   def seleniumChromium = [ browser: 'edge', provider: 'selenium', buckets: 1 ]
 
   def branchBuildPlatforms = [
@@ -251,7 +254,8 @@ timestamps {
   ];
 
   def buildingPrimary = env.BRANCH_NAME == props.primaryBranch
-  def platforms = buildingPrimary ? primaryBuildPlatforms : branchBuildPlatforms
+  // def platforms = buildingPrimary ? primaryBuildPlatforms : branchBuildPlatforms
+  def platforms = [ seleniumFirefox, seleniumChrome ]
 
   def processes = [:]
   def runAllTests = buildingPrimary
