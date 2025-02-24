@@ -8,7 +8,7 @@ import * as Boxes from 'ephox/alloy/alien/Boxes';
 import * as Bubble from 'ephox/alloy/positioning/layout/Bubble';
 import * as LayoutInset from 'ephox/alloy/positioning/layout/LayoutInset';
 import { Placement, setPlacement } from 'ephox/alloy/positioning/layout/Placement';
-import { boundsArb, boxArb } from 'ephox/alloy/test/BoundsUtils';
+import { boxArb, boundsArb } from 'ephox/alloy/test/BoundsUtils';
 
 describe('LayoutInsetTest', () => {
   const placements = [

@@ -4,9 +4,8 @@ import {
   AlloyComponent, AlloyEvents,
   FormField as AlloyFormField,
   AlloySpec, AlloyTriggers, Behaviour,
-  Dropdown,
   GuiFactory, Memento,
-  RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, SystemEvents, Tabstopping, Tooltipping
+  RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, Tabstopping, Tooltipping
 } from '@ephox/alloy';
 import { Dialog, Toolbar } from '@ephox/bridge';
 import { Fun, Merger, Optional, Type } from '@ephox/katamari';
@@ -278,19 +277,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
       fetch: getFetch(menuButtonSpec.items, getButton, backstage)
     };
 
-    const memButton = Memento.record(renderMenuButton(fixedSpec, {
-      prefix: ToolbarButtonClasses.Button,
-      backstage,
-      tabstopping: true,
-      btnName: spec.text.or(spec.tooltip).getOrUndefined(),
-      additionalBehaviours: [
-        AddEventsBehaviour.config('close-on--window-scroll', [
-          AlloyEvents.run(SystemEvents.windowScroll(), (comp, _se) => {
-            Dropdown.close(comp);
-          }),
-        ]),
-      ]
-    }));
+    const memButton = Memento.record(renderMenuButton(fixedSpec, ToolbarButtonClasses.Button, backstage, Optional.none(), true, spec.text.or(spec.tooltip).getOrUndefined()));
 
     return memButton.asSpec();
   } else if (isNormalFooterButtonSpec(spec, buttonType)) {
