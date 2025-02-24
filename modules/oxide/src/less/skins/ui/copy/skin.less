@@ -1,72 +1,69 @@
-@import 'src/less/theme/theme';
+@import '../../../theme/theme';
 
-//
-// Global variables
-//
-@background-color: #0e3f57;
-@color-black: #222f3e;
-@color-tint: #006ce7;
-@color-white: #fff;
-@color-error: #c00;
-@color-success: #78AB46;
-@color-warning: #FFCC00;
-@color-active: #ffcf30;
-@border-color: darken(@background-color, 6.5%);
-@text-color: contrast(@background-color, @color-black, @color-white);
+// Typography
+@font-stack: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 
-// Dialog customization
-@dialog-background-color: @background-color;
-@dialog-header-background-color: @background-color;
-@dialog-footer-background-color: @background-color;
-@dialog-border-color: lighten(@background-color, 10%);
-@dialog-box-shadow: 0 16px 16px -10px fade(@color-black, 25%), 0 0 40px 1px fade(@color-black, 25%);
+// Colors
+@primary-bg: #34495e;
+@border-color: #303e4e;
+@button-text: #bdc3c7;
+@button-gradient-start: #8e44ad;
+@button-gradient-end: #e74c3c;
+@disabled-icon: #bdc3c779;
 
-// Button customization
-@button-background-color: #2980b9;
-@button-hover-background-color: darken(@button-background-color, 10%);
-@button-text-color: @color-white;
-@button-border-radius: 4px;
+// Main editor styles
+.tox {
+  // Editor container
+  .tox-tinymce {
+    border-radius: 6px;
+    font-family: @font-stack;
+  }
 
-// Toolbar customization
-@toolbar-button-background-color: transparent;
-@toolbar-button-hover-background-color: linear-gradient(to right,
-  #ff0000,  /* Red */
-  #8000ff   /* Purple */
-);
-@toolbar-button-icon-color: green;
-@toolbar-button-hover-icon-color: white;
-@toolbar-button-active-background-color: fade(@color-tint, 20%);
-@toolbar-button-enabled-background-color: fade(@color-tint, 40%);
+  // Toolbar styles
+  .tox-toolbar__primary {
+    background-color: @primary-bg;
+    background-image: none;
+  }
 
-// Menu customization
-@menu-background-color: @background-color;
-@menu-border-color: @border-color;
-@menu-border-radius: 6px;
-@menu-box-shadow: 0 4px 8px 0 fade(@color-black, 20%);
+  // Button styles
+  .tox-tbtn {
+    background-color: @primary-bg;
+    color: @button-text;
+    height: 34px;
 
-// Form fields
-@textfield-background-color: lighten(@background-color, 5%);
-@textfield-border-color: @border-color;
-@textfield-text-color: @text-color;
-@textfield-focus-border-color: @color-tint;
-@textfield-focus-box-shadow: 0 0 0 2px fade(@color-tint, 25%);
+    svg {
+      fill: @button-text;
+    }
 
-// Collection items (dropdowns, menus)
-@collection-item-label-text-color: @text-color;
-@collection-item-active-background-color: @color-tint;
-@collection-item-active-text-color: @color-white;
+    &:hover {
+      background: linear-gradient(135deg, @button-gradient-start, @button-gradient-end);
+      color: @color-white;
 
-// Notifications
-@notification-success-background-color: fade(@color-success, 15%);
-@notification-warning-background-color: fade(@color-warning, 15%);
-@notification-error-background-color: fade(@color-error, 15%);
+      svg {
+        fill: @color-white;
+      }
+    }
 
-// Editor chrome
-@tinymce-border-radius: 6px;
-@tinymce-border-width: 1px;
-@tinymce-border-color: @border-color;
-@tinymce-box-shadow: 0 2px 8px fade(@color-black, 15%);
+    &--disabled svg {
+      fill: @disabled-icon !important;
+    }
+  }
+  .tox-tbtn--enabled{
+    background: linear-gradient(135deg, @button-gradient-start, @button-gradient-end);
+    color: @color-white;
 
-// Focus states
-@keyboard-focus-outline-color: @color-tint;
-@keyboard-focus-outline-width: 2px;
+    svg {
+      fill: @color-white;
+    }
+  }
+}
+// Header styles
+.tox:not(.tox-tinymce-inline) .tox-editor-header {
+  background-color: @primary-bg;
+  padding: 0;
+}
+
+// Toolbar group separator
+.tox:not([dir="rtl"]) .tox-toolbar__group:not(:last-of-type) {
+  border-right: 1px solid @border-color;
+}
