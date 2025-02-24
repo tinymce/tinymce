@@ -30,11 +30,11 @@ describe('browser.tinymce.plugins.table.TableCellDialogTest', () => {
   }, [ Plugin ], true);
 
   const generalSelectors = {
-    width: 'label.tox-label:contains(Width) + input.tox-textfield',
-    celltype: 'label.tox-label:contains(Cell type) + div.tox-listboxfield > .tox-listbox',
-    scope: 'label.tox-label:contains(Scope) + div.tox-listboxfield > .tox-listbox',
-    halign: 'label.tox-label:contains(Horizontal align) + div.tox-listboxfield > .tox-listbox',
-    valign: 'label.tox-label:contains(Vertical align) + div.tox-listboxfield > .tox-listbox'
+    width: 'Width',
+    celltype: 'Cell type',
+    scope: 'Scope',
+    halign: 'Horizontal align',
+    valign: 'Vertical align'
   };
 
   let events: string[] = [];

@@ -27,9 +27,9 @@ describe('browser.tinymce.plugins.table.TableRowDialogTest', () => {
   }, [ Plugin ], true);
 
   const generalSelectors = {
-    type: 'label.tox-label:contains(Row type) + div.tox-listboxfield > .tox-listbox',
-    align: 'label.tox-label:contains(Alignment) + div.tox-listboxfield > .tox-listbox',
-    height: 'label.tox-label:contains(Height) + input.tox-textfield'
+    type: 'Row type',
+    align: 'Alignment',
+    height: 'Height'
   };
 
   let events: Array<EditorEvent<TableModifiedEvent>> = [];
