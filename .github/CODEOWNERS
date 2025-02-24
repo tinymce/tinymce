@@ -8,5 +8,5 @@
 /modules/katamari/ @tinymce/tinymce-reviewers @tinymce/integrations-team
 
 # Changelogs should include docs team
-/.changes/ @tinymce/tinymce-reviewers @tinymce/documentation-team
+/.changes/tinymce/ @tinymce/tinymce-reviewers @tinymce/documentation-team
 **/CHANGELOG.md @tinymce/tinymce-reviewers @tinymce/documentation-team
