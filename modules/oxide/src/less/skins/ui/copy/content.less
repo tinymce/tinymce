@@ -27,6 +27,13 @@ a {
   ::selection {
     background-color: @document-selection-color;
   }
+  &:active, &:focus, &:hover {
+    background-color: @document-selection-color;
+  }
+}
+
+.mce-content-body [data-mce-selected="inline-boundary"] {
+  background-color: @document-selection-color;
 }
 
 body {
