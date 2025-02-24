@@ -1,6 +1,5 @@
 import { Arr, Optional } from '@ephox/katamari';
 import { SugarElement, SugarNode, Traverse } from '@ephox/sugar';
-import * as Sizzle from 'sizzle';
 
 import * as SelectorEngine from './SelectorEngine';
 
@@ -23,7 +22,7 @@ const descendants = <T extends Element>(sugarElement: SugarElement<SizzleContext
   toArrayEl(SelectorEngine.selectAll(selector, sugarElement.dom) as T[]);
 
 const matches = <T extends Element>(sugarElement: SugarElement<Node>, selector: string): sugarElement is SugarElement<T> =>
-  SugarNode.isElement(sugarElement) && Sizzle.matchesSelector(sugarElement.dom, selector);
+  SugarNode.isElement(sugarElement) && SelectorEngine.matchesSelector(sugarElement.dom, selector);
 
 const child = <T extends Element>(sugarElement: SugarElement<Node>, selector: string): Optional<SugarElement<T>> => {
   const children = Traverse.children(sugarElement);

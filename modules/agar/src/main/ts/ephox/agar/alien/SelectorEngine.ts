@@ -10,14 +10,14 @@ interface DecodedContainsSelector {
 }
 
 const selectAll = (selector: string, context: SizzleContext): Element[] => {
-  return sizzleEnabled ? Sizzle(selector, context) : selectAllInternal(selector, context);
-};
-
-const selectAllInternal = (selector: string, context: SizzleContext): Element[] =>
-  decodeContains(selector).fold(
+  if (sizzleEnabled) {
+    return Sizzle(selector, context);
+  }
+  return decodeContains(selector).fold(
     () => queryAll(context, selector),
     (decodedContainsSelector) => queryAllWithContains(context, decodedContainsSelector)
   );
+};
 
 const queryAllWithContains = (element: SizzleContext, { baseSelector, text }: DecodedContainsSelector) => {
   const baseSelectorMatch = queryAll(element, baseSelector);
@@ -54,10 +54,23 @@ const hasText = (element: Node, text: string) => {
 };
 
 const matchesSelector = (element: Element, selector: string): boolean => {
-  const root = element.getRootNode();
-  /* TODO: remove this cast */
-  const matches = selectAllInternal(selector, root as Document);
-  return Arr.exists(matches, (e) => e === element);
+  if (sizzleEnabled) {
+    return Sizzle.matchesSelector(element, selector);
+  }
+  return decodeContains(selector).fold(
+    () => matches(selector, element),
+    (decodedContainsSelector) => matchesWithContains(decodedContainsSelector, element)
+  );
+};
+
+const matches = (selector: string, element: Element) => element.matches(selector);
+
+const matchesWithContains = ({ baseSelector, text }: DecodedContainsSelector, element: Element) => {
+  const matchesBaseSelector = matches(baseSelector, element);
+  if (!matchesBaseSelector) {
+    return false;
+  }
+  return hasText(element, text);
 };
 
 export {

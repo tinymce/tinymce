@@ -166,7 +166,6 @@ describe('SelectorEngineTest', () => {
   */
 
   /* TODO: how about :contains() meaning empty string */
-
   it('matchesSelector should match', () => {
     const content = SugarElement.fromHtml(
       '<div id="home-content">' +
@@ -193,5 +192,21 @@ describe('SelectorEngineTest', () => {
     const p = container.dom.querySelector('p');
 
     Assert.eq('matchesSelector should not match', false, SelectorEngine.matchesSelector(p, 'main > section > p'));
+  });
+
+  it('matchesSelector should match with contains', () => {
+    const content = SugarElement.fromHtml(
+      '<div id="home-content">' +
+        '<section>' +
+          '<p>One</p>' +
+          '<p>Two</p>' +
+          '<p>Three</p>' +
+        '</section>' +
+      '</div>'
+    );
+    Insert.append(container, content);
+    const p = Array.from(container.dom.querySelectorAll('p'))[1];
+
+    Assert.eq('matchesSelector should match with contains', true, SelectorEngine.matchesSelector(p, 'p:contains(Two)'));
   });
 });

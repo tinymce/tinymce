@@ -21,11 +21,18 @@ export interface WidthData {
 }
 
 const advSelectors = {
-  borderwidth: 'label.tox-label:contains(Border width) + input.tox-textfield',
-  borderstyle: 'label.tox-label:contains(Border style) + div.tox-listboxfield > .tox-listbox',
-  bordercolor: 'label.tox-label:contains(Border color) + div>input.tox-textfield',
-  backgroundcolor: 'label.tox-label:contains(Background color) + div>input.tox-textfield'
+  borderwidth: 'Border width',
+  borderstyle: 'Border style',
+  bordercolor: 'Border color',
+  backgroundcolor: 'Background color'
 };
+
+// const advSelectors = {
+//   borderwidth: 'label.tox-label:contains(Border width) + input.tox-textfield',
+//   borderstyle: 'label.tox-label:contains(Border style) + div.tox-listboxfield > .tox-listbox',
+//   bordercolor: 'label.tox-label:contains(Border color) + div>input.tox-textfield',
+//   backgroundcolor: 'label.tox-label:contains(Background color) + div>input.tox-textfield'
+// };
 
 const assertTableStructure = (editor: Editor, structure: StructAssert): void => {
   const table = SelectorFind.descendant(TinyDom.body(editor), 'table').getOrDie('A table should exist');
@@ -81,29 +88,29 @@ const pAssertDialogPresence = async (label: string, editor: Editor, expected: Re
 
 const pAssertListBox = async (label: string, editor: Editor, section: string, expected: { title: string; value: string }): Promise<void> => {
   const dialog = await TinyUiActions.pWaitForDialog(editor);
-  const elem = UiFinder.findIn(dialog, 'label:contains("' + section + '") + .tox-listboxfield > .tox-listbox').getOrDie();
+  const elem = UiFinder.findTargetByLabel(dialog, section).getOrDie();
   const value = Attribute.get(elem, 'data-value');
   assert.equal(value, expected.value, 'Checking listbox value: ' + label);
   const text = TextContent.get(elem);
   assert.equal(text, expected.title, 'Checking listbox text: ' + label);
 };
 
-const getInput = (selector: string) =>
-  UiFinder.findIn<HTMLInputElement>(SugarBody.body(), selector).getOrDie();
+const getInput = (labelText: string) =>
+  UiFinder.findTargetByLabel<HTMLInputElement>(SugarBody.body(), labelText).getOrDie();
 
-const assertInputValue = (label: string, selector: string, expected: string | boolean): void => {
-  const input = getInput(selector);
+const assertInputValue = (propertyKey: string, labelText: string, expected: string | boolean): void => {
+  const input = getInput(labelText);
   if (input.dom.type === 'checkbox') {
-    assert.equal(input.dom.checked, expected, `The input value for ${label} should be: ${expected}`);
+    assert.equal(input.dom.checked, expected, `The input value for ${propertyKey} should be: ${expected}`);
   } else if (Class.has(input, 'tox-listbox')) {
-    assert.equal(Attribute.get(input, 'data-value'), String(expected), `The input value for ${label} should be: ${expected}`);
+    assert.equal(Attribute.get(input, 'data-value'), String(expected), `The input value for ${propertyKey} should be: ${expected}`);
   } else {
-    assert.equal(Value.get(input), expected, `The input value for ${label} should be: ${expected}`);
+    assert.equal(Value.get(input), expected, `The input value for ${propertyKey} should be: ${expected}`);
   }
 };
 
-const setInputValue = (selector: string, value: string | boolean): void => {
-  const input = getInput(selector);
+const setInputValue = (labelText: string, value: string | boolean): void => {
+  const input = getInput(labelText);
   if (input.dom.type === 'checkbox') {
     Checked.set(input, value as boolean);
   } else if (Class.has(input, 'tox-listbox')) {
@@ -124,11 +131,13 @@ const gotoAdvancedTab = (): void => {
 const setTabInputValues = (data: Record<string, any>, tabSelectors: Record<string, string>): void => {
   Obj.mapToArray(tabSelectors, (value, key) => {
     if (Obj.has(data, key)) {
+      /* First argument is a selector here not a labelText therofre it will not work */
       setInputValue(tabSelectors[key], data[key]);
     }
   });
 };
 
+/* Fix all general selectors */
 const setDialogValues = (data: Record<string, any>, hasAdvanced: boolean, generalSelectors: Record<string, string>): void => {
   if (hasAdvanced) {
     gotoGeneralTab();
@@ -148,6 +157,7 @@ const assertTabContents = (data: Record<string, any>, tabSelectors: Record<strin
   });
 };
 
+/* Fix all general selectors */
 const assertDialogValues = (data: Record<string, any>, hasAdvanced: boolean, generalSelectors: Record<string, string>): void => {
   if (hasAdvanced) {
     gotoGeneralTab();
@@ -166,7 +176,7 @@ const pInsertTableViaGrid = async (editor: Editor, cols: number, rows: number): 
   );
   const gridSelector = (cols - 1) + (10 * (rows - 1));
   await Waiter.pTryUntil('click table grid', () =>
-    TinyUiActions.clickOnUi(editor, `div.tox-insert-table-picker div[role="button"]:nth(${gridSelector})`)
+    TinyUiActions.clickOnUi(editor, `div.tox-insert-table-picker div[role="button"]:nth-child(${gridSelector + 1})`)
   );
 };
 
