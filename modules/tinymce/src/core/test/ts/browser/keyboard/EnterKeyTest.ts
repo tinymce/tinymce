@@ -683,7 +683,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyTest', () => {
     });
   });
 
-  it('TINY-11753: pressing enter when a figure is selected should move teh selection in the text into the figcaption', () => {
+  it('TINY-11753: pressing enter when a figure is selected should move the selection into the figcaption', () => {
     const editor = hook.editor();
     editor.setContent('<figure contenteditable="false"><img src="file.png"><figcaption contenteditable="true">Caption</figcaption></figure>');
     TinySelections.select(editor, 'figure', []);
