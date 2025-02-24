@@ -23,9 +23,9 @@ interface TableSpec {
 
 describe('browser.tinymce.plugins.table.ui.TableCellDialogStyleWithCssTest', () => {
   const generalSelectors = {
-    cellspacing: 'label.tox-label:contains(Cell spacing) + input.tox-textfield',
-    cellpadding: 'label.tox-label:contains(Cell padding) + input.tox-textfield',
-    borderwidth: 'label.tox-label:contains(Border width) + input.tox-textfield',
+    cellspacing: 'Cell spacing',
+    cellpadding: 'Cell padding',
+    borderwidth: 'Border width',
   } as const;
   type GeneralData = Partial<Record<keyof typeof generalSelectors, string>>;
 
