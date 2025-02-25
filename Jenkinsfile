@@ -105,7 +105,6 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
 }
 
 def runSeleniumPod(String cacheName, String name, String browser, String version, Closure body) {
-  String ciRegistry = devPods.getHubRegistry()
   Map node = [
           name: 'node',
           image: "public.ecr.aws/docker/library/node:20",
@@ -120,7 +119,7 @@ def runSeleniumPod(String cacheName, String name, String browser, String version
         ]
   Map selenium = [
           name: "selenium",
-          image: "${ciRegistry}/docker-hub/selenium/standalone-${browser}:${version}",
+          image: tinyAws.getPullThroughCacheImage("selenium/standalone-${browser}", version),
           livenessProbe: [
             execArgs: "curl --fail --silent --output /dev/null http://localhost:4444/wd/hub/status",
             initialDelaySeconds: 30,
