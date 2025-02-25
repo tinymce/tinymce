@@ -95,17 +95,7 @@ const renderContextToolbar = (spec: ContextToolbarSpec): SketchSpec => {
                 ContextToolbarFocus.focusIn(comp);
               }
             },
-            (f) => {
-              Focus.active(SugarShadowDom.getRootNode(comp.element)).fold(
-                () => Focus.focus(f),
-                (active) => {
-                  // We need this extra check since if the focus is aleady on the iframe we don't want to call focus on it again since that closes the context toolbar
-                  if (!Compare.eq(active, f)) {
-                    Focus.focus(f);
-                  }
-                }
-              );
-            }
+            Focus.focus
           );
 
           setTimeout(() => {
