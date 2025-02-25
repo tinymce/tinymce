@@ -35,6 +35,14 @@ export default (): void => {
           }
         },
         {
+          type: 'contextformbutton',
+          align: 'start',
+          icon: 'close',
+          onAction: (formApi) => {
+            formApi.hide();
+          }
+        },
+        {
           type: 'contextformtogglebutton',
           align: 'start',
           text: 'Decorative',
@@ -63,6 +71,14 @@ export default (): void => {
           type: 'contextformbutton',
           align: 'start',
           icon: 'chevron-left',
+          onAction: (formApi) => {
+            formApi.back();
+          }
+        },
+        {
+          type: 'contextformbutton',
+          align: 'start',
+          icon: 'close',
           onAction: (formApi) => {
             formApi.hide();
           }
@@ -96,6 +112,14 @@ export default (): void => {
           type: 'contextformbutton',
           align: 'start',
           icon: 'chevron-left',
+          onAction: (formApi) => {
+            formApi.back();
+          }
+        },
+        {
+          type: 'contextformbutton',
+          align: 'start',
+          icon: 'close',
           onAction: (formApi) => {
             formApi.hide();
           }
