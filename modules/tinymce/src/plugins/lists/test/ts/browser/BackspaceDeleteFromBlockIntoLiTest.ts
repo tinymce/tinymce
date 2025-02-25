@@ -144,4 +144,82 @@ describe('browser.tinymce.plugins.lists.BackspaceDeleteFromBlockIntoLiTest', () 
     TinyContentActions.keystroke(editor, Keys.delete());
     TinyAssertions.assertContent(editor, '<ol><li>aaa</li><li>ccc</li></ol>');
   });
+
+  it('TINY-11763: backspace from empty div into same li', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul>' +
+        '<li>' +
+          '<div>' +
+            '<strong>One</strong>' +
+            '<div><br></div>' +
+          '</div>' +
+          '<div><strong>Two</strong></div>' +
+        '</li>' +
+      '</ul>');
+    TinySelections.setCursor(editor, [ 0, 0, 0, 1 ], 0);
+    TinyContentActions.keystroke(editor, Keys.backspace());
+
+    TinyAssertions.assertContent(editor, '<ul>' +
+      '<li>' +
+        '<div>' +
+          '<strong>One</strong>' +
+        '</div>' +
+        '<div><strong>Two</strong></div>' +
+      '</li>' +
+    '</ul>');
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0 ], 'One'.length);
+  });
+
+  it('TINY-11763: delete from empty div into same li', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul>' +
+        '<li>' +
+          '<div>' +
+            '<strong>One</strong>' +
+            '<div><br></div>' +
+          '</div>' +
+          '<div><strong>Two</strong></div>' +
+        '</li>' +
+      '</ul>');
+    TinySelections.setCursor(editor, [ 0, 0, 0, 1 ], 0);
+    TinyContentActions.keystroke(editor, Keys.delete());
+
+    TinyAssertions.assertContent(editor, '<ul>' +
+      '<li>' +
+        '<div>' +
+          '<strong>One</strong>' +
+        '</div>' +
+        '<div><strong>Two</strong></div>' +
+      '</li>' +
+    '</ul>');
+    TinyAssertions.assertCursor(editor, [ 0, 0, 1, 0, 0 ], 0);
+  });
+
+  it('TINY-11763: backspace from empty div into nested li', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul>' +
+      '<li>' +
+        '<div>' +
+          '<div><strong>One</strong></div>' +
+          '<ol><li>One</li></ol>' +
+          '<div><br></div>' +
+          '<ol><li>Two</li></ol>' +
+        '</div>' +
+      '</li>' +
+    '</ul>');
+    TinySelections.setCursor(editor, [ 0, 0, 0, 2 ], 0);
+    TinyContentActions.keystroke(editor, Keys.backspace());
+
+    TinyAssertions.assertContent(editor, '<ul>' +
+      '<li>' +
+        '<div>' +
+          '<div><strong>One</strong></div>' +
+          '<ol>' +
+            '<li>One</li>' +
+            '<li>Two</li>' +
+          '</ol>' +
+        '</div>' +
+      '</li>' +
+    '</ul>');
+  });
 });

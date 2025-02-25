@@ -188,15 +188,17 @@ const backspaceDeleteFromListToListCaret = (editor: Editor, isForward: boolean):
 
       return true;
     } else if (willMergeParentIntoChild && !isForward && otherLi !== li) {
+      const commonAncestorParent = rng.commonAncestorContainer.parentElement;
+      if (!commonAncestorParent || dom.isChildOf(otherLi, commonAncestorParent)) {
+        return false;
+      }
+
       editor.undoManager.transact(() => {
-        if (rng.commonAncestorContainer.parentElement) {
-          const bookmark = Bookmark.createBookmark(rng);
-          const oldParentElRef = rng.commonAncestorContainer.parentElement;
-          moveChildren(dom, rng.commonAncestorContainer.parentElement, otherLi);
-          oldParentElRef.remove();
-          const resolvedBookmark = Bookmark.resolveBookmark(bookmark);
-          editor.selection.setRng(resolvedBookmark);
-        }
+        const bookmark = Bookmark.createBookmark(rng);
+        moveChildren(dom, commonAncestorParent, otherLi);
+        commonAncestorParent.remove();
+        const resolvedBookmark = Bookmark.resolveBookmark(bookmark);
+        editor.selection.setRng(resolvedBookmark);
       });
 
       return true;
@@ -231,9 +233,10 @@ const backspaceDeleteIntoListCaret = (editor: Editor, isForward: boolean): boole
 
   if (block && dom.isEmpty(block, undefined, { checkRootAsContent: true })) {
     const rng = ListRangeUtils.normalizeRange(editor.selection.getRng());
-    const otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward, root), 'LI', root);
+    const nextCaretContainer = findNextCaretContainer(editor, rng, isForward, root);
+    const otherLi = dom.getParent(nextCaretContainer, 'LI', root);
 
-    if (otherLi) {
+    if (nextCaretContainer && otherLi) {
       const findValidElement = (element: SugarElement<Node>) => Arr.contains([ 'td', 'th', 'caption' ], SugarNode.name(element));
       const findRoot = (node: SugarElement<Node>) => node.dom === root;
       const otherLiCell = PredicateFind.closest(SugarElement.fromDom(otherLi), findValidElement, findRoot);
@@ -247,7 +250,7 @@ const backspaceDeleteIntoListCaret = (editor: Editor, isForward: boolean): boole
         const parentNode = otherLi.parentNode as HTMLElement;
         removeBlock(dom, block, root);
         ToggleList.mergeWithAdjacentLists(dom, parentNode);
-        editor.selection.select(otherLi, true);
+        editor.selection.select(nextCaretContainer, true);
         editor.selection.collapse(isForward);
       });
 
