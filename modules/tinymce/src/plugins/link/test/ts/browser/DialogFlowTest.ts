@@ -25,13 +25,13 @@ describe('browser.tinymce.plugins.link.DialogFlowTest', () => {
   });
 
   const pAssertInputValue = async (editor: Editor, expected: string, group: string) => {
-    const input = await TestLinkUi.pFindInDialog<HTMLInputElement>(editor, 'label:contains("' + group + '") + input');
+    const input = await TestLinkUi.pFindTargetByLabelInDialog<HTMLInputElement>(editor, group);
     const value = UiControls.getValue(input);
     assert.equal(value, expected, 'Checking input value');
   };
 
   const pAssertUrlStructure = async (editor: Editor, expected: ApproxStructure.Builder<StructAssert>) => {
-    const input = await TestLinkUi.pFindInDialog(editor, 'label:contains("URL") + .tox-form__controls-h-stack input');
+    const input = await TestLinkUi.pFindTargetByLabelInDialog(editor, 'URL');
     Assertions.assertStructure(
       'Checking content of url input',
       ApproxStructure.build(expected),
