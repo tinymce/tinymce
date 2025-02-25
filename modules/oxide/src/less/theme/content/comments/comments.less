@@ -2,7 +2,7 @@
 // Comments
 //
 
-@document-comment-color: if(@content-ui-darkmode = true, mix(@color-active, @color-black, 20%), lighten(@color-active, 20%)); 
+@document-comment-color: if(@content-ui-darkmode = true, mix(@color-active, @color-black, 20%), lighten(@color-active, 20%));
 @document-comment-active-color: @color-active;
 @document-comment-background-color: @document-comment-color;
 @document-comment-active-background-color: if(@content-ui-darkmode = true, mix(@color-active, @color-black, 20%), @document-comment-active-color);
@@ -41,12 +41,10 @@
     border-radius: 3px;
     box-shadow: 0 0 0 2px @keyboard-focus-outline-color;
 
-    &:has(
-        img[data-mce-selected],
+    &:has(img[data-mce-selected],
         > audio[data-mce-selected],
         > video[data-mce-selected],
-        span.mce-preview-object[data-mce-selected]
-      ) {
+        span.mce-preview-object[data-mce-selected]) {
       box-shadow: none;
     }
   }
