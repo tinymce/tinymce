@@ -1,6 +1,6 @@
 import { FocusTools, Keys, Mouse, UiControls, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { SugarBody, SugarDocument, Value } from '@ephox/sugar';
+import { SugarBody, SugarDocument, SugarElement, Value } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -23,7 +23,7 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
   }, [ Plugin ], true);
 
   const contentMenuSelector = '.tox-tinymce-aux .tox-menu .tox-collection__item:contains("List properties...")';
-  const inputSelector = 'label:contains(Start list at number) + input.tox-textfield';
+  const getInputSelector = (doc: SugarElement<Document | ShadowRoot>) => UiFinder.findTargetByLabel(doc, 'Start list at number').getOrDie();
 
   const openContextMenu = async (editor: Editor, selector: string) => {
     Mouse.contextMenuOn(TinyDom.body(editor), selector);
@@ -38,7 +38,7 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
 
   const updateDialog = (editor: Editor, currentValue: string, newValue: string) => {
     const doc = SugarDocument.getDocument();
-    FocusTools.isOnSelector('Check focus is on the input field', doc, inputSelector);
+    FocusTools.isOn('Check focus is on the input field', getInputSelector(doc));
     const input = FocusTools.getFocused<HTMLInputElement>(doc).getOrDie();
     assert.equal(Value.get(input), currentValue, 'Initial input value matches');
     UiControls.setValue(input, newValue);
@@ -130,7 +130,7 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
     editor.setContent('<ol><li>Item 1</li><li>Item 2</li></ol>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
     TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("Custom")');
-    await TinyUiActions.pWaitForUi(editor, '.tox-collection__item:contains("List properties"):not(.tox-collection__item--state-disabled)');
+    await TinyUiActions.pWaitForUi(editor, '.tox-collection__item:not(.tox-collection__item--state-disabled):contains("List properties")');
     TinyUiActions.clickOnMenu(editor, '.tox-mbtn:contains("Custom")');
   });
 
