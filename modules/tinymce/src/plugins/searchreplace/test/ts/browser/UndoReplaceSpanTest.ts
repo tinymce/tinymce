@@ -26,7 +26,7 @@ describe('browser.tinymce.plugins.searchreplace.UndoReplaceSpanTest', () => {
     await Utils.pSetFieldValue(editor, findInputSelector, 'cats');
     await Utils.pSetFieldValue(editor, replaceWithInputSelector, 'dogs');
     Utils.clickFind(editor);
-    await UiFinder.pWaitFor('wait for button to be enabled', SugarBody.body(), 'button[disabled!="disabled"]:contains("Replace")');
+    await UiFinder.pWaitFor('wait for button to be enabled', SugarBody.body(), 'button:not([disabled="disabled"]):contains("Replace")');
     Utils.clickReplace(editor);
     Utils.clickClose(editor);
     editor.undoManager.undo();
