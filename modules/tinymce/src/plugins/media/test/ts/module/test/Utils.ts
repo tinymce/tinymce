@@ -6,14 +6,20 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
+const labels = {
+  embed: 'Paste your embed code below:',
+  source: 'Source',
+  poster: 'Media poster (Image URL)',
+  width: 'Width',
+  height: 'Height'
+};
+
 const selectors = {
-  source: 'label:contains(Source) + div.tox-form__controls-h-stack input.tox-textfield',
-  width: '.tox-form__controls-h-stack label:contains(Width) + input.tox-textfield',
-  height: '.tox-form__controls-h-stack label:contains(Height) + input.tox-textfield',
-  embed: 'label:contains(Paste your embed code below:) + .tox-textarea-wrap textarea.tox-textarea',
   lockIcon: 'button.tox-lock',
   embedButton: 'div.tox-tab:contains(Embed)',
-  poster: 'label:contains(Media poster (Image URL)) + div.tox-form__controls-h-stack input.tox-textfield'
+  sourceLabel: `label:contains(${labels.source})`,
+  widthLabel: `label:contains(${labels.width})`,
+  heightLabel: `label:contains(${labels.height})`
 };
 
 const pOpenDialog = async (editor: Editor): Promise<SugarElement<Element>> => {
@@ -24,55 +30,63 @@ const pOpenDialog = async (editor: Editor): Promise<SugarElement<Element>> => {
 const findInDialog = <T extends HTMLElement>(dialog: SugarElement<Element>, selector: string): SugarElement<T> =>
   UiFinder.findIn<T>(dialog, selector).getOrDie();
 
+const findTargetInDialogByLabel = <T extends HTMLElement>(dialog: SugarElement<Element>, labelText: string): SugarElement<T> =>
+  UiFinder.findTargetByLabel<T>(dialog, labelText).getOrDie();
+
 const pFindInDialog = <T extends HTMLElement>(selector: string) => async (editor: Editor): Promise<SugarElement<T>> => {
   const dialog = await TinyUiActions.pWaitForDialog(editor);
   return findInDialog<T>(dialog, selector);
 };
 
-const getValueOn = (dialog: SugarElement<Element>, selector: string): string => {
-  const elem = findInDialog<HTMLInputElement>(dialog, selector);
+const pFindTargetInDialogByLabel = <T extends HTMLElement>(labelText: string) => async (editor: Editor): Promise<SugarElement<T>> => {
+  const dialog = await TinyUiActions.pWaitForDialog(editor);
+  return findTargetInDialogByLabel<T>(dialog, labelText);
+};
+
+const getValueOn = (dialog: SugarElement<Element>, labelText: string): string => {
+  const elem = findTargetInDialogByLabel<HTMLInputElement>(dialog, labelText);
   return UiControls.getValue(elem);
 };
 
-const setValueOn = (dialog: SugarElement<Element>, selector: string, newValue: string): void => {
-  const elem = findInDialog<HTMLInputElement>(dialog, selector);
+const setValueOn = (dialog: SugarElement<Element>, labelText: string, newValue: string): void => {
+  const elem = findTargetInDialogByLabel<HTMLInputElement>(dialog, labelText);
   UiControls.setValue(elem, newValue);
 };
 
-const pAssertFieldValue = (selector: string) => async (editor: Editor, expected: string): Promise<void> => {
+const pAssertFieldValue = (labelText: string) => async (editor: Editor, expected: string): Promise<void> => {
   const dialog = await TinyUiActions.pWaitForDialog(editor);
-  await Waiter.pTryUntil(`Wait for new ${selector} value`,
+  await Waiter.pTryUntil(`Wait for new ${labelText} value`,
     () => {
-      const value = getValueOn(dialog, selector);
+      const value = getValueOn(dialog, labelText);
       assert.equal(value, expected, `Assert ${expected} value`);
     }, 20, 3000
   );
 };
 
-const pAssertWidthValue = pAssertFieldValue(selectors.width);
-const pAssertHeightValue = pAssertFieldValue(selectors.height);
-const pAssertSourceValue = pAssertFieldValue(selectors.source);
+const pAssertWidthValue = pAssertFieldValue(labels.width);
+const pAssertHeightValue = pAssertFieldValue(labels.height);
+const pAssertSourceValue = pAssertFieldValue(labels.source);
 
-const pSetValueAndTrigger = (selector: string, value: string, events: string[]) => async (editor: Editor): Promise<void> => {
+const pSetValueAndTrigger = (labelText: string, value: string, events: string[]) => async (editor: Editor): Promise<void> => {
   const dialog = await TinyUiActions.pWaitForDialog(editor);
-  const elem = findInDialog(dialog, selector);                  // get the element
+  const elem = findTargetInDialogByLabel(dialog, labelText);                  // get the element
   Focus.focus(elem);                                            // fire focusin, required by sizeinput to recalc ratios
-  setValueOn(dialog, selector, value);                          // change the value
+  setValueOn(dialog, labelText, value);                          // change the value
   Arr.map(events, (event) => fakeEvent(elem, event)); // fire [change, input etc],
   await Waiter.pWaitBetweenUserActions();
 };
 
 const pPasteSourceValue = (editor: Editor, value: string): Promise<void> =>
-  pSetValueAndTrigger(selectors.source, value, [ 'paste' ])(editor);
+  pSetValueAndTrigger(labels.source, value, [ 'paste' ])(editor);
 
 const pPastePosterValue = (editor: Editor, value: string): Promise<void> =>
-  pSetValueAndTrigger(selectors.poster, value, [ 'paste' ])(editor);
+  pSetValueAndTrigger(labels.poster, value, [ 'paste' ])(editor);
 
 const pChangeWidthValue = (editor: Editor, value: string): Promise<void> =>
-  pSetValueAndTrigger(selectors.width, value, [ 'input', 'change' ])(editor);
+  pSetValueAndTrigger(labels.width, value, [ 'input', 'change' ])(editor);
 
 const pChangeHeightValue = (editor: Editor, value: string): Promise<void> =>
-  pSetValueAndTrigger(selectors.height, value, [ 'input', 'change' ])(editor);
+  pSetValueAndTrigger(labels.height, value, [ 'input', 'change' ])(editor);
 
 const pAssertSizeRecalcConstrained = async (editor: Editor): Promise<void> => {
   await pOpenDialog(editor);
@@ -122,8 +136,8 @@ const fakeEvent = (elem: SugarElement<HTMLElement>, name: string): void => {
   element.dispatchEvent(event);
 };
 
-const pFindFilepickerInput = pFindInDialog<HTMLInputElement>(selectors.source);
-const pFindTextarea = pFindInDialog<HTMLTextAreaElement>(selectors.embed);
+const pFindFilepickerInput = pFindTargetInDialogByLabel<HTMLInputElement>(labels.source);
+const pFindTextarea = pFindTargetInDialogByLabel<HTMLTextAreaElement>(labels.embed);
 
 const pSetSourceInput = async (editor: Editor, value: string): Promise<SugarElement<HTMLInputElement>> => {
   const input = await pFindFilepickerInput(editor);
@@ -146,7 +160,7 @@ const pAssertEmbedData = async (editor: Editor, content: string): Promise<void> 
   const dialog = await TinyUiActions.pWaitForDialog(editor);
   await Waiter.pTryUntil('Textarea should have a proper value',
     () => {
-      const elem = findInDialog<HTMLTextAreaElement>(dialog, selectors.embed);
+      const elem = findTargetInDialogByLabel<HTMLTextAreaElement>(dialog, labels.embed);
       const value = UiControls.getValue(elem);
       assert.equal(value, content, 'embed content');
     }
