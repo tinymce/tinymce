@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, FocusTools, Keys, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
-import { afterEach, describe, it } from '@ephox/bedrock-client';
+import { afterEach, before, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { SugarBody, SugarDocument, Value } from '@ephox/sugar';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -126,6 +126,7 @@ describe('browser.tinymce.themes.silver.editor.ContextSizeInputFormTest', () => 
 
   const clickAway = (editor: Editor) => {
     // <a> tags make the context bar appear so click away from an a tag. We have no content so it's probably fine.
+    TinySelections.setCursor(editor, [ 0, 0 ], 0);
     editor.nodeChanged();
   };
 
@@ -187,8 +188,8 @@ describe('browser.tinymce.themes.silver.editor.ContextSizeInputFormTest', () => 
 
   it('TINY-11342: When the context form is opened on the right side and does not fit the popup should be repositioned', async () => {
     const editor = hook.editor();
-    editor.setContent('<p style="float: right"><a href="#" style="padding-right: 100px">link</a></p>');
-    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    editor.setContent('<p style="float: right">a<a href="#" style="padding-right: 100px">link</a></p>');
+    TinySelections.setCursor(editor, [ 0, 1, 0 ], 1);
     await UiFinder.pWaitFor('Waiting for context toolbar to appear', SugarBody.body(), '.tox-pop[data-alloy-placement="south"]');
     TinyUiActions.clickOnUi(editor, '.tox-pop button[aria-label="ABC"]');
     await UiFinder.pWaitFor('Waiting for context toolbar to appear', SugarBody.body(), '.tox-pop[data-alloy-placement="southwest"] input');
@@ -196,8 +197,8 @@ describe('browser.tinymce.themes.silver.editor.ContextSizeInputFormTest', () => 
 
   it('TINY-11344: pressing `back` should show the previous toolbar', async () => {
     const editor = hook.editor();
-    editor.setContent('<div>some div</div>');
-    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    editor.setContent('<p>text</p><div>some div</div>');
+    TinySelections.setCursor(editor, [ 1, 0 ], 1);
     await UiFinder.pWaitFor('Waiting for context toolbar to appear', SugarBody.body(), '.tox-pop[data-alloy-placement="south"]');
     TinyUiActions.clickOnUi(editor, '.tox-pop button[aria-label="ABC"]');
     TinyUiActions.clickOnUi(editor, '.tox-pop button[aria-label="Back"]');

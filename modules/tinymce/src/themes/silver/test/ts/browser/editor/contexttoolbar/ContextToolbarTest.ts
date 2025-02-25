@@ -1,7 +1,7 @@
 import { FocusTools, Keyboard, Keys, Mouse, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
-import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -154,6 +154,46 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarTest
       for (let i = 4; i >= 2; i--) {
         await pNavigateBackByKeyboard(i);
       }
+    });
+
+    it('TINY-11889: Toolbar should not close if you re-focus the editor', async () => {
+      const editor = hook.editor();
+
+      editor.setContent('<p>One <a href="http://tiny.cloud">link</a> Two</p>');
+      TinySelections.setCursor(editor, [ 0, 1, 0 ], 'l'.length);
+
+      await UiFinder.pWaitFor('Waiting for toolbar', SugarBody.body(), '.tox-pop');
+      FocusTools.setFocus(SugarDocument.getDocument(), '.tox-tbtn[data-mce-name="alpha"]');
+
+      editor.focus();
+      await Waiter.pWait(100); // Needs to be longer than the thottler of 17ms
+
+      await UiFinder.pWaitFor('Toolbar should still be available on re-focus', SugarBody.body(), '.tox-pop');
+    });
+
+    it('TINY-11889: Toolbar should close if you press escape when it has focus', async () => {
+      const editor = hook.editor();
+
+      editor.setContent('<p>One <a href="http://tiny.cloud">link</a> Two</p>');
+      TinySelections.setCursor(editor, [ 0, 1, 0 ], 'l'.length);
+
+      await UiFinder.pWaitFor('Waiting for toolbar', SugarBody.body(), '.tox-pop');
+      FocusTools.setFocus(SugarDocument.getDocument(), '.tox-tbtn[data-mce-name="alpha"]');
+      Keyboard.activeKeystroke(SugarDocument.getDocument(), Keys.escape());
+      UiFinder.notExists(SugarBody.body(), '.tox-pop');
+    });
+
+    it('TINY-11889: Toolbar should close if you press escape when editor has focus', async () => {
+      const editor = hook.editor();
+
+      editor.setContent('<p>One <a href="http://tiny.cloud">link</a> Two</p>');
+      TinySelections.setCursor(editor, [ 0, 1, 0 ], 'l'.length);
+
+      await UiFinder.pWaitFor('Waiting for toolbar', SugarBody.body(), '.tox-pop');
+
+      editor.focus();
+      TinyContentActions.keystroke(editor, Keys.escape());
+      UiFinder.notExists(SugarBody.body(), '.tox-pop');
     });
   });
 });
