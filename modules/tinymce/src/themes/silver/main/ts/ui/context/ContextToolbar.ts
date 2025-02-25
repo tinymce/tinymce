@@ -8,6 +8,7 @@ import { Class, Compare, Css, Focus, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { DisabledStateChangeEvent } from 'tinymce/core/api/EventTypes';
+import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import VK from 'tinymce/core/api/util/VK';
 
@@ -288,7 +289,15 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
       });
     });
 
-    editor.on('blur', close);
+    editor.on('focusout', (_e) => {
+      Delay.setEditorTimeout(editor, () => {
+        if (Focus.search(sink.element).isNone() && Focus.search(contextbar.element).isNone() && !editor.hasFocus()) {
+          close();
+        }
+      }, 0);
+    });
+
+    editor.on('OpenWindow', close);
 
     editor.on('SwitchMode', () => {
       if (editor.mode.isReadOnly()) {

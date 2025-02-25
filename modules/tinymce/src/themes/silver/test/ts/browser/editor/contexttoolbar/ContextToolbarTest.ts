@@ -9,6 +9,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarTest
   const store = TestStore();
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
+    toolbar: 'bold',
     setup: (ed: Editor) => {
       ed.ui.registry.addButton('alpha', {
         text: 'Alpha',
@@ -193,6 +194,29 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarTest
 
       editor.focus();
       TinyContentActions.keystroke(editor, Keys.escape());
+      UiFinder.notExists(SugarBody.body(), '.tox-pop');
+    });
+
+    it('TINY-11889: Toolbar should close if you open a dialog', async () => {
+      const editor = hook.editor();
+
+      editor.setContent('<p>One <a href="http://tiny.cloud">link</a> Two</p>');
+      TinySelections.setCursor(editor, [ 0, 1, 0 ], 'l'.length);
+
+      await UiFinder.pWaitFor('Waiting for toolbar', SugarBody.body(), '.tox-pop');
+      editor.dispatch('OpenWindow');
+      UiFinder.notExists(SugarBody.body(), '.tox-pop');
+    });
+
+    it('TINY-11889: Toolbar should close if we move focus to toolbar', async () => {
+      const editor = hook.editor();
+
+      editor.setContent('<p>One <a href="http://tiny.cloud">link</a> Two</p>');
+      TinySelections.setCursor(editor, [ 0, 1, 0 ], 'l'.length);
+
+      await UiFinder.pWaitFor('Waiting for toolbar', SugarBody.body(), '.tox-pop');
+      FocusTools.setFocus(SugarDocument.getDocument(), '.tox-tbtn[data-mce-name="bold"]');
+      await Waiter.pWait(10); // Wait for the 0ms focus event out delay
       UiFinder.notExists(SugarBody.body(), '.tox-pop');
     });
   });
