@@ -3,7 +3,7 @@ import {
   SketchSpec
 } from '@ephox/alloy';
 import { Arr, Cell, Id, Optional, Result } from '@ephox/katamari';
-import { Class, Compare, Css, EventArgs, Focus, SugarElement, SugarShadowDom, Width } from '@ephox/sugar';
+import { Class, Css, EventArgs, Focus, SugarElement, SugarShadowDom, Width } from '@ephox/sugar';
 
 import * as ContextToolbarFocus from './ContextToolbarFocus';
 
@@ -151,7 +151,5 @@ const renderContextToolbar = (spec: ContextToolbarSpec): SketchSpec => {
 };
 
 export {
-  renderContextToolbar,
-  forwardSlideEvent,
-  backSlideEvent
+  backSlideEvent, forwardSlideEvent, renderContextToolbar
 };
