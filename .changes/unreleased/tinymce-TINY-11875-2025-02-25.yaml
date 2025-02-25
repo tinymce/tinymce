@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Skin UI content CSS was truncated when bundling, causing CSS styles to be missing.
+time: 2025-02-25T10:06:08.0508+08:00
+custom:
+    Issue: TINY-11875
