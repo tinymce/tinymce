@@ -251,6 +251,7 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
         tag: 'div',
         classes: [ 'tox-promotion' ],
       },
+      isOnboarding: editor.hasPlugin('onboarding'),
     });
   };
 

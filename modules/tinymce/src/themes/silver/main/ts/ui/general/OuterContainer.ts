@@ -329,13 +329,14 @@ const partHeader = Composite.partType.optional<OuterContainerSketchDetail, Heade
   ]
 });
 
-const partPromotion = Composite.partType.optional<OuterContainerSketchDetail, HeaderSpec>({
+const partPromotion = Composite.partType.optional<OuterContainerSketchDetail, HeaderSpec & { isOnboarding: boolean }>({
   factory: {
     sketch: renderPromotion
   },
   name: 'promotion',
   schema: [
-    FieldSchema.required('dom')
+    FieldSchema.required('dom'),
+    FieldSchema.required('isOnboarding'),
   ]
 });
 
