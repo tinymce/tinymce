@@ -1,6 +1,7 @@
-import { FocusTools, Keys } from '@ephox/agar';
+import { FocusTools, Keys, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { SugarDocument } from '@ephox/sugar';
+import { Fun } from '@ephox/katamari';
+import { SugarDocument, SugarElement } from '@ephox/sugar';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -21,11 +22,13 @@ describe('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', () => {
   const pressTabKey = (editor: Editor) => TinyUiActions.keydown(editor, Keys.tab());
 
   // Assert focus is on the expected form element
-  const pAssertFocusOnItem = (label: string, selector: string) => FocusTools.pTryOnSelector(
-    `Focus should be on: ${label}`,
-    SugarDocument.getDocument(),
-    selector
-  );
+  const pAssertFocusOnItem = (label: string, selectorOrElement: string | SugarElement<Node>) => {
+    if (typeof selectorOrElement === 'string') {
+      return FocusTools.pTryOnSelector(`Focus should be on: ${label}`, SugarDocument.getDocument(), selectorOrElement);
+    }
+    return FocusTools.pTryOn(`Focus should be on: ${label}`, selectorOrElement);
+  };
+  const findTargetByLabel = Fun.curry(UiFinder.findTargetByLabel, SugarDocument.getDocument());
 
   it('TBA: Open dialog, test the tab key navigation cycles through all focusable fields in General and Advanced tabs', async () => {
     const editor = hook.editor();
@@ -39,19 +42,19 @@ describe('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', () => {
     // Keyboard nav within the General tab
     await pAssertFocusOnItem('General Tab', '.tox-dialog__body-nav-item:contains("General")');
     pressTabKey(editor);
-    await pAssertFocusOnItem('Width', 'label:contains("Width") + input');
+    await pAssertFocusOnItem('Width', findTargetByLabel('Width').getOrDie());
     pressTabKey(editor);
-    await pAssertFocusOnItem('Height', 'label:contains("Height") + input');
+    await pAssertFocusOnItem('Height', findTargetByLabel('Height').getOrDie());
     pressTabKey(editor);
-    await pAssertFocusOnItem('Cell spacing', 'label:contains("Cell spacing") + input');
+    await pAssertFocusOnItem('Cell spacing', findTargetByLabel('Cell spacing').getOrDie());
     pressTabKey(editor);
-    await pAssertFocusOnItem('Cell padding', 'label:contains("Cell padding") + input');
+    await pAssertFocusOnItem('Cell padding', findTargetByLabel('Cell padding').getOrDie());
     pressTabKey(editor);
-    await pAssertFocusOnItem('Border width', 'label:contains("Border width") + input');
+    await pAssertFocusOnItem('Border width', findTargetByLabel('Border width').getOrDie());
     pressTabKey(editor);
     await pAssertFocusOnItem('Caption', 'input[type="checkbox"]');
     pressTabKey(editor);
-    await pAssertFocusOnItem('Alignment', 'label:contains("Alignment") + .tox-listboxfield > .tox-listbox');
+    await pAssertFocusOnItem('Alignment', findTargetByLabel('Alignment').getOrDie());
     pressTabKey(editor);
     await pAssertFocusOnItem('Cancel', '.tox-button:contains("Cancel")');
     pressTabKey(editor);
@@ -67,7 +70,7 @@ describe('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', () => {
     // Keyboard nav within the Advanced tab
     await pAssertFocusOnItem('Advanced Tab', '.tox-dialog__body-nav-item:contains("Advanced")');
     pressTabKey(editor);
-    await pAssertFocusOnItem('Border style', 'label:contains("Border style") + .tox-listboxfield > .tox-listbox');
+    await pAssertFocusOnItem('Border style', findTargetByLabel('Border style').getOrDie());
     pressTabKey(editor);
     await pAssertFocusOnItem('Border color', '.tox-form div:nth-child(2) input');
     pressTabKey(editor);
