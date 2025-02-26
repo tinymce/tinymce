@@ -150,6 +150,23 @@ describe('SelectorEngineTest', () => {
     Assert.eq(':contains(Tiny) third li returned', liList[2], matches[2]);
   });
 
+  it(':contains should include text divided between elements', () => {
+    const content = SugarElement.fromHtml(
+      '<p>' +
+        'This is the only p' +
+        '<span>ar</span>' +
+        'agraph ' +
+        '<em>here</em>' +
+      '</p>'
+    );
+    Insert.append(container, content);
+    const p = container.dom.querySelector('p');
+
+    const matches = SelectorEngine.selectAll('p:contains("This is the only paragraph here")', container.dom);
+    Assert.eq(':contains("This is the only paragraph here") one element in array', 1, matches.length);
+    Assert.eq(':contains("This is the only paragraph here") p returned', p, matches[0]);
+  });
+
   /*
   TODO: maybe I should test how to escape " and ' inside "" and ''
   it(':contains should look for quotes', () => {
