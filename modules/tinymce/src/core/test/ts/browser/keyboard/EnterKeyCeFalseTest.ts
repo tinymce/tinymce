@@ -78,7 +78,7 @@ describe('browser.tinymce.core.keyboard.EnterKeyCeFalseTest', () => {
   it('TINY-9101: Pressing Enter on a cE=false block should do nothing', () => {
     const editor = hook.editor();
     editor.setContent('<p>First</p><p contenteditable="false">Second</p><p>Third</p>');
-    TinySelections.select(editor, 'p:eq(1)', [ ]);
+    TinySelections.select(editor, 'p:nth-child(2)', [ ]);
     pressEnter(editor);
     TinyAssertions.assertContent(editor, '<p>First</p><p contenteditable="false">Second</p><p>Third</p>');
     assert.equal(editor.selection.getNode().nodeName, 'P');
