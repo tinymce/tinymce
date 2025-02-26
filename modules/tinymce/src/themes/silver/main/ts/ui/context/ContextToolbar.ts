@@ -144,21 +144,23 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     ])
   });
 
-  const getScopes: () => ScopedToolbars = Thunk.cached(() => ToolbarScopes.categorise(registryContextToolbars, (toolbarApi) => {
+  const navigate = (toolbarApi: InlineContent.ContextForm | InlineContent.ContextToolbar) => {
     // ASSUMPTION: This should only ever show one context toolbar since it's used for context forms hence [toolbarApi]
     const alloySpec = buildToolbar([ toolbarApi ]);
     AlloyTriggers.emitWith(contextbar, forwardSlideEvent, {
       forwardContents: wrapInPopDialog(alloySpec)
     });
-  }));
+  };
+
+  const getScopes: () => ScopedToolbars = Thunk.cached(() => ToolbarScopes.categorise(registryContextToolbars, navigate));
 
   const buildContextToolbarGroups = (allButtons: Record<string, ContextToolbarButtonType>, ctx: InlineContent.ContextToolbarSpec) => {
-    return identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items, allowToolbarGroups: false }, extras.backstage, Optional.some([ 'form:' ]));
+    return identifyButtons(editor, { buttons: allButtons, toolbar: ctx.items, allowToolbarGroups: false }, extras.backstage, Optional.some([ 'form:', 'toolbar:' ]));
   };
 
   const buildContextFormGroups = (ctx: InlineContent.ContextForm, providers: UiFactoryBackstageProviders) => ContextForm.buildInitGroups(ctx, providers);
 
-  const buildToolbar = (toolbars: Array<ContextType>): AlloySpec => {
+  const buildToolbar = (toolbars: ContextType[]): AlloySpec => {
     const { buttons } = editor.ui.registry.getAll();
     const scopes = getScopes();
     const allButtons: Record<string, ContextToolbarButtonType> = { ...buttons, ...scopes.formNavigators };
