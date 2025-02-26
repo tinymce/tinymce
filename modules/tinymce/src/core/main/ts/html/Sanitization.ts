@@ -240,16 +240,16 @@ const sanitizeMathmlElement = (node: Element, settings: DomParserSettings) => {
   };
 
   purify.addHook('uponSanitizeElement', (node, evt) => {
-    // We know the node is an element as we have
-    // passed an element to the purify.sanitize function below
-    const elm = node as Element;
-    const lcTagName = evt.tagName ?? elm.nodeName.toLowerCase();
+    const lcTagName = evt.tagName ?? node.nodeName.toLowerCase();
 
     if (hasAllowedEncodings && lcTagName === 'semantics') {
       evt.allowedTags[lcTagName] = true;
     }
 
     if (lcTagName === 'annotation') {
+      // We know the node is an element as we have
+      // passed an element to the purify.sanitize function below
+      const elm = node as Element;
       const keepElement = hasValidEncoding(elm);
       evt.allowedTags[lcTagName] = keepElement;
       if (!keepElement) {
