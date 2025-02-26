@@ -1,7 +1,7 @@
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Disabling, FormField, GuiFactory, Input, Keying, NativeEvents, SketchSpec } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
 import { Cell, Fun, Optional } from '@ephox/katamari';
-import { Attribute, PredicateFind, SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
+import { SelectorFind } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as UiState from '../../UiState';
@@ -58,10 +58,8 @@ export const renderContextFormTextInput = (
           onSetup: ctx.onSetup,
           getApi: (comp) => {
             const closestFocussableOpt = SelectorFind.ancestor(comp.element, '.tox-toolbar').bind((toolbar) =>
-              PredicateFind.descendant(toolbar, (e) =>
-                SugarNode.isTag('button')(e) && Attribute.get(e, 'disabled') !== 'disabled'
-              )
-            ) as Optional<SugarElement<HTMLButtonElement>>;
+              SelectorFind.descendant<HTMLButtonElement>(toolbar, 'button:enabled')
+            );
 
             return closestFocussableOpt.fold(
               () => ContextFormApi.getFormApi(comp),
