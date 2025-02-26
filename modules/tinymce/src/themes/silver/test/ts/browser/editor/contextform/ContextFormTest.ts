@@ -148,6 +148,32 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
         predicate: Fun.never,
         items: 'form:test-form-focus-on-init',
       });
+
+      ed.ui.registry.addContextForm('test-form-disable-on-setup', {
+        launch: {
+          type: 'contextformtogglebutton',
+          icon: 'fake-icon-name',
+          tooltip: 'Focus on init',
+        },
+        onSetup: (api) => {
+          api.setInputEnabled(false);
+          return Fun.noop;
+        },
+        commands: [{
+          type: 'contextformbutton',
+          icon: 'fake-icon-name',
+          tooltip: 'A',
+          onAction: (formApi) => {
+            formApi.setInputEnabled(false);
+            return Fun.noop;
+          }
+        }]
+      });
+
+      ed.ui.registry.addContextToolbar('test-toolbar-disable-on-setup', {
+        predicate: Fun.never,
+        items: 'test-form-disable-on-setup',
+      });
     }
   }, [], true);
 
@@ -427,7 +453,20 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     assert.isTrue(Attribute.has(input, 'disabled'), 'the input sohuld be disabled');
   });
 
-  it('TINY-11665: it shound not be possible to navigate to the input field if this one is disabled', () => {
+  it('TINY-11890: It should be possible to open a context toolbar with an input disabled via onSetup', async () => {
+    const editor = hook.editor();
+    const doc = SugarDocument.getDocument();
+    editor.dispatch('test.updateButtonABC', { disable: true });
+
+    openToolbar(editor, 'test-toolbar-disable-on-setup');
+    TinyUiActions.clickOnUi(editor, 'button[data-mce-name="test-form-disable-on-setup"]');
+
+    FocusTools.isOnSelector('Focus should stay on the "A" button', doc, '.tox-pop__dialog button[aria-label="A"]');
+    const input = await UiFinder.pWaitFor<HTMLInputElement>('getting the main input', doc, '[role="toolbar"] input');
+    assert.isTrue(Attribute.has(input, 'disabled'), 'the input sohuld be disabled');
+  });
+
+  it('TINY-11665: it shound not be possible to navigate to the input field if this one is disabled', async () => {
     const editor = hook.editor();
     const doc = SugarDocument.getDocument();
     openToolbar(editor, 'test-form');
