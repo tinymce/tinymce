@@ -1,5 +1,4 @@
 import { Arr, Obj, Optional } from '@ephox/katamari';
-import { NodeTypes } from '@ephox/sugar';
 import * as Sizzle from 'sizzle';
 
 const sizzleEnabled = false;
@@ -41,17 +40,8 @@ const unwrapFromQuotes = (pattern: string) => {
   return matchedGroups.content ?? pattern;
 };
 
-const hasText = (element: Node, text: string) => {
-  if (element.nodeType === NodeTypes.TEXT) {
-    return element.textContent.includes(text);
-  }
-  for (const child of Array.from(element.childNodes)) {
-    if (hasText(child, text)) {
-      return true;
-    }
-  }
-  return false;
-};
+const hasText = (element: Node, text: string) =>
+  element.textContent.includes(text);
 
 const matchesSelector = (element: Element, selector: string): boolean => {
   if (sizzleEnabled) {
