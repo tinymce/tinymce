@@ -1,3 +1,4 @@
+/* eslint-disable mocha/no-exclusive-tests */
 import { context, describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
@@ -83,7 +84,7 @@ describe('browser.tinymce.core.html.SanitizationTest', () => {
 
       it('TINY-11756: No special filtering is applied', () => testNamespaceSanitizer({
         input: '<math><semantics><annotation-xml encoding="text/html">A</annotation-xml></semantics></math>',
-        expected: '<math><semantics><annotation-xml encoding="text/html">A</annotation-xml></semantics></math>',
+        expected: '<math></math>',
       }));
 
       it('TINY-11756: Math is allowed, nothing else', () => testNamespaceSanitizer({
@@ -116,7 +117,7 @@ describe('browser.tinymce.core.html.SanitizationTest', () => {
 
       it('TINY-11756: Custom elements, no filtering', () => testNamespaceSanitizer({
         input: '<math display="inline"><semantics><mrow><mi>a</mi></mrow></semantics></math>',
-        expected: '<math display="inline"><semantics><mrow><mi>a</mi></mrow></semantics></math>',
+        expected: '<math display="inline"><mrow><mi>a</mi></mrow></math>',
       }));
 
       it('TINY-11756: Custom elements, allow some', () => testNamespaceSanitizer({
@@ -144,11 +145,19 @@ describe('browser.tinymce.core.html.SanitizationTest', () => {
       it('TINY-11756: Custom attributes, no filter', () => testNamespaceSanitizer({
         input: '<math display="inline"><semantics attribute="test" data-attribute="test"></semantics></math>',
         expected: '<math display="inline"><semantics data-attribute="test"></semantics></math>',
+        mathmlElements: [
+          'math',
+          'semantics',
+        ],
       }));
 
       it('TINY-11756: Custom attributes, some allowed', () => testNamespaceSanitizer({
         input: '<math display="inline"><semantics attribute="test" data-attribute="test"></semantics></math>',
         expected: '<math display="inline"><semantics data-attribute="test"></semantics></math>',
+        mathmlElements: [
+          'math',
+          'semantics',
+        ],
         mathmlAttributes: [
           'display',
         ]
@@ -157,6 +166,10 @@ describe('browser.tinymce.core.html.SanitizationTest', () => {
       it('TINY-11756: Custom attributes, all allowed', () => testNamespaceSanitizer({
         input: '<math display="inline"><semantics attribute="test" data-attribute="test"></semantics></math>',
         expected: '<math display="inline"><semantics attribute="test" data-attribute="test"></semantics></math>',
+        mathmlElements: [
+          'math',
+          'semantics',
+        ],
         mathmlAttributes: [
           'display',
           'attribute',
