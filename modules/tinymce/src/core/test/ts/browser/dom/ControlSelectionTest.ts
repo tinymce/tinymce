@@ -172,7 +172,7 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     TinySelections.select(editor, 'span.mce-object-video', []);
     await pWaitForDragHandles(editorBody, '#mceResizeHandlenw');
     TinyAssertions.assertContentPresence(editor, {
-      'span[data-mce-selected=1] video': 1,
+      'span[data-mce-selected="1"] video': 1,
       'span[data-mce-selected] audio': 0
     });
 
@@ -182,7 +182,7 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     await Waiter.pTryUntil('Wait for resize handles to disappear', () => UiFinder.notExists(editorBody, '#mceResizeHandlenw'));
     TinyAssertions.assertContentPresence(editor, {
       'span[data-mce-selected] video': 0,
-      'span[data-mce-selected=3] audio': 1
+      'span[data-mce-selected="3"] audio': 1
     });
 
     const videoPreviewSpan = editor.dom.select('span')[0];
@@ -190,7 +190,7 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     TinySelections.select(editor, 'span.mce-object-video', []);
     await pWaitForDragHandles(editorBody, '#mceResizeHandlenw');
     TinyAssertions.assertContentPresence(editor, {
-      'span[data-mce-selected=2] video': 1,
+      'span[data-mce-selected="2"] video': 1,
       'span[data-mce-selected] audio': 0
     });
   });
