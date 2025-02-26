@@ -119,7 +119,7 @@ def runSeleniumPod(String cacheName, String name, String browser, String version
         ]
   Map selenium = [
           name: "selenium",
-          image: "selenium/standalone-${browser}:${version}",
+          image: tinyAws.getPullThroughCacheImage("selenium/standalone-${browser}", version),
           livenessProbe: [
             execArgs: "curl --fail --silent --output /dev/null http://localhost:4444/wd/hub/status",
             initialDelaySeconds: 30,
@@ -236,7 +236,7 @@ timestamps {
 
   def seleniumFirefox = [ browser: 'firefox', provider: 'selenium', buckets: 1 ]
   def seleniumChrome = [ browser: 'chrome', provider: 'selenium', version: '127.0', buckets: 1 ]
-  def seleniumChromium = [ browser: 'edge', provider: 'selenium', buckets: 1 ]
+  def seleniumEdge = [ browser: 'edge', provider: 'selenium', buckets: 1 ]
 
   def branchBuildPlatforms = [
     winChrome,
