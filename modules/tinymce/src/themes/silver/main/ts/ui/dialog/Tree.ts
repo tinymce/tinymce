@@ -112,7 +112,7 @@ const renderLeafLabel = ({
   selectedId,
   backstage
 }: RenderLeafLabelProps): SimpleSpec => {
-  const internalMenuButton = leaf.menu.map((btn) => renderMenuButton(btn, { prefix: 'tox-mbtn', backstage, tabstopping: visible }));
+  const internalMenuButton = leaf.menu.map((btn) => renderMenuButton(btn, 'tox-mbtn', backstage, Optional.none(), visible));
   const components = [ renderLabel(leaf.title) ];
   renderCustomStateIcon(leaf, components, backstage);
   internalMenuButton.each((btn) => components.push(btn));
@@ -206,7 +206,7 @@ const renderDirectoryLabel = ({
   noChildren,
   backstage
 }: RenderDirectoryLabelProps): SimpleSpec => {
-  const internalMenuButton = directory.menu.map((btn) => renderMenuButton(btn, { prefix: 'tox-mbtn', backstage }));
+  const internalMenuButton = directory.menu.map((btn) => renderMenuButton(btn, 'tox-mbtn', backstage, Optional.none()));
   const components: SimpleSpec[] = [
     {
       dom: {
