@@ -57,7 +57,7 @@ describe('browser.tinymce.plugins.emoticons.EmojiAppendTest', () => {
     await Waiter.pTryUntil(
       'Wait until clock is the first choice (search should filter)',
       () => {
-        const item = UiFinder.findIn(SugarBody.body(), '.tox-collection__item:first').getOrDie();
+        const item = UiFinder.findIn(SugarBody.body(), '.tox-collection__item:first-child').getOrDie();
         const value = Attribute.get(item, 'data-collection-item-value');
         assert.equal(value, '⏲', 'Search should show custom clock');
       }
