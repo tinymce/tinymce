@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Context forms used to disapear if their input were disabled on `onSetup`.
+time: 2025-02-26T15:59:43.211446802+01:00
+custom:
+    Issue: TINY-11890
