@@ -1,38 +1,37 @@
 diff --git a/node_modules/dompurify/dist/purify.es.mjs b/node_modules/dompurify/dist/purify.es.mjs
-index 7a42ce6..3a0a69b 100644
+index 86186cf..9b57304 100644
 --- a/node_modules/dompurify/dist/purify.es.mjs
 +++ b/node_modules/dompurify/dist/purify.es.mjs
-@@ -1169,6 +1169,7 @@ function createDOMPurify() {
+@@ -1054,6 +1054,7 @@ function createDOMPurify() {
        } = attr;
        const lcName = transformCaseFunc(name);
        let value = name === 'value' ? attrValue : stringTrim(attrValue);
 +      const initValue = value;
- 
        /* Execute a hook if present */
        hookEvent.attrName = lcName;
-@@ -1184,10 +1185,10 @@ function createDOMPurify() {
+       hookEvent.attrValue = value;
+@@ -1080,9 +1081,9 @@ function createDOMPurify() {
+         continue;
        }
- 
        /* Remove attribute */
 -      _removeAttribute(name, currentNode);
- 
        /* Did the hooks approve of the attribute? */
        if (!hookEvent.keepAttr) {
 +        _removeAttribute(name, currentNode);
          continue;
        }
- 
-@@ -1207,6 +1208,7 @@ function createDOMPurify() {
+       /* Work around a security issue in jQuery 3.0 */
+@@ -1099,6 +1100,7 @@ function createDOMPurify() {
        /* Is `value` valid for this attribute? */
        const lcTag = transformCaseFunc(currentNode.nodeName);
        if (!_isValidAttribute(lcTag, lcName, value)) {
 +        _removeAttribute(name, currentNode);
          continue;
        }
- 
-@@ -1246,19 +1248,21 @@ function createDOMPurify() {
+       /* Handle attributes that require Trusted Types */
+@@ -1119,19 +1121,21 @@ function createDOMPurify() {
+         }
        }
- 
        /* Handle invalid data-* attribute set by try-catching it */
 -      try {
 -        if (namespaceURI) {
@@ -63,43 +62,42 @@ index 7a42ce6..3a0a69b 100644
 +        } catch (_) {}
 +      }
      }
- 
      /* Execute a hook if present */
+     _executeHooks(hooks.afterSanitizeAttributes, currentNode, null);
 diff --git a/node_modules/dompurify/dist/purify.js b/node_modules/dompurify/dist/purify.js
-index 5b07950..2a00fff 100644
+index a03f326..7bcc749 100644
 --- a/node_modules/dompurify/dist/purify.js
 +++ b/node_modules/dompurify/dist/purify.js
-@@ -1175,6 +1175,7 @@
+@@ -1060,6 +1060,7 @@
          } = attr;
          const lcName = transformCaseFunc(name);
          let value = name === 'value' ? attrValue : stringTrim(attrValue);
 +        const initValue = value;
- 
          /* Execute a hook if present */
          hookEvent.attrName = lcName;
-@@ -1190,10 +1191,10 @@
+         hookEvent.attrValue = value;
+@@ -1086,9 +1087,9 @@
+           continue;
          }
- 
          /* Remove attribute */
 -        _removeAttribute(name, currentNode);
- 
          /* Did the hooks approve of the attribute? */
          if (!hookEvent.keepAttr) {
 +          _removeAttribute(name, currentNode);
            continue;
          }
- 
-@@ -1213,6 +1214,7 @@
+         /* Work around a security issue in jQuery 3.0 */
+@@ -1105,6 +1106,7 @@
          /* Is `value` valid for this attribute? */
          const lcTag = transformCaseFunc(currentNode.nodeName);
          if (!_isValidAttribute(lcTag, lcName, value)) {
 +          _removeAttribute(name, currentNode);
            continue;
          }
- 
-@@ -1252,19 +1254,21 @@
+         /* Handle attributes that require Trusted Types */
+@@ -1125,19 +1127,21 @@
+           }
          }
- 
          /* Handle invalid data-* attribute set by try-catching it */
 -        try {
 -          if (namespaceURI) {
@@ -130,5 +128,5 @@ index 5b07950..2a00fff 100644
 +          } catch (_) {}
 +        }
        }
- 
        /* Execute a hook if present */
+       _executeHooks(hooks.afterSanitizeAttributes, currentNode, null);
