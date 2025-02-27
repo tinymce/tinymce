@@ -27,11 +27,14 @@ const handleEnterKeyEvent = (editor: Editor, event: EditorEvent<KeyboardEvent>) 
   });
 };
 
-const manageEnterInFigure = (editor: Editor) => {
+const manageEnterOnNonEditable = (editor: Editor, event: EditorEvent<KeyboardEvent>) => {
   const currentNode = SugarElement.fromDom(editor.selection.getNode());
-  PredicateFind.descendant(currentNode, (e) => NodeType.isContentEditableTrue(e.dom) && NodeType.isEditingHost(e.dom))
-    .bind((e) => CaretFinder.firstPositionIn(e.dom))
-    .each((pos) => editor.selection.setRng(pos.toRange()));
+  if (NodeType.isContentEditableFalse(currentNode.dom)) {
+    event.preventDefault();
+    PredicateFind.descendant(currentNode, (e) => NodeType.isContentEditableTrue(e.dom) && NodeType.isEditingHost(e.dom))
+      .bind((e) => CaretFinder.firstPositionIn(e.dom))
+      .each((pos) => editor.selection.setRng(pos.toRange()));
+  }
 };
 
 const isCaretAfterKoreanCharacter = (rng: Range): boolean => {
@@ -80,7 +83,7 @@ const setup = (editor: Editor): void => {
       } else {
         handleEnterKeyEvent(editor, event);
       }
-      manageEnterInFigure(editor);
+      manageEnterOnNonEditable(editor, event);
     }
   });
 
