@@ -5,6 +5,7 @@ import { Arr, Optional, Optionals } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 
 import { renderChoiceItem } from '../item/build/ChoiceItem';
+import { renderImgItem } from '../item/build/ImageItem';
 import ItemResponse from '../item/ItemResponse';
 import * as MenuUtils from './MenuUtils';
 import { SingleMenuItemSpec } from './SingleMenuTypes';
@@ -52,6 +53,19 @@ export const createChoiceItems = (
           itemResponse,
           providersBackstage,
           MenuUtils.menuHasIcons(items)
+        ))
+      );
+    } else if (item.type === 'imageitem') {
+      return BridgeMenu.createImageMenuItem(item).fold(
+        MenuUtils.handleError,
+        (d) => Optional.some(renderImgItem(
+          d,
+          columns === 1,
+          itemPresets,
+          onItemValueHandler,
+          select(d.value),
+          itemResponse,
+          providersBackstage
         ))
       );
     } else {

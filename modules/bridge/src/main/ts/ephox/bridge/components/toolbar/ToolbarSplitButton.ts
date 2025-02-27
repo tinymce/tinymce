@@ -1,16 +1,16 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
 
-import { ChoiceMenuItemSpec, SeparatorMenuItemSpec } from '../../api/Menu';
+import { ChoiceMenuItemSpec, ImageMenuItemSpec, SeparatorMenuItemSpec } from '../../api/Menu';
 import * as ComponentSchema from '../../core/ComponentSchema';
 
 // Temporarily disable separators until things are clearer
-export type ToolbarSplitButtonItemTypes = ChoiceMenuItemSpec | SeparatorMenuItemSpec;
+export type ToolbarSplitButtonItemTypes = ChoiceMenuItemSpec | SeparatorMenuItemSpec | ImageMenuItemSpec;
 export type SuccessCallback = (menu: ToolbarSplitButtonItemTypes[]) => void;
 export type SelectPredicate = (value: string) => boolean;
 
 export type PresetTypes = 'color' | 'normal' | 'listpreview';
-export type PresetItemTypes = 'color' | 'normal';
+export type PresetItemTypes = 'color' | 'img' | 'normal';
 export type ColumnTypes = number | 'auto';
 
 export interface ToolbarSplitButtonSpec {

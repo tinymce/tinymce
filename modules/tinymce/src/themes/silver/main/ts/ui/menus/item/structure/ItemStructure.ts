@@ -6,6 +6,7 @@ import I18n from 'tinymce/core/api/util/I18n';
 
 import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import * as Icons from '../../../icons/Icons';
+import * as Images from '../../../image/Images';
 import * as ItemClasses from '../ItemClasses';
 import { renderHtml, renderShortcut, renderStyledText, renderText } from './ItemSlices';
 
@@ -137,10 +138,22 @@ const renderNormalItemStructure = (info: ItemStructureSpec, providersBackstage: 
   return menuItem;
 };
 
+const renderImgItemStructure = (info: ItemStructureSpec): ItemStructure => {
+  const menuItem = {
+    dom: renderItemDomStructure(info.ariaLabel),
+    optComponents: [
+      Optional.some(Images.render(info.iconContent.getOrDie(), { tag: 'div', classes: [ ItemClasses.iconClass ] })),
+    ]
+  };
+  return menuItem;
+};
+
 // TODO: Maybe need aria-label
 const renderItemStructure = (info: ItemStructureSpec, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean, fallbackIcon: Optional<string> = Optional.none()): ItemStructure => {
   if (info.presets === 'color') {
     return renderColorStructure(info, providersBackstage, fallbackIcon);
+  } else if (info.presets === 'img') {
+    return renderImgItemStructure(info);
   } else {
     return renderNormalItemStructure(info, providersBackstage, renderIcons, fallbackIcon);
   }
