@@ -27,13 +27,6 @@ const advSelectors = {
   backgroundcolor: 'Background color'
 };
 
-// const advSelectors = {
-//   borderwidth: 'label.tox-label:contains(Border width) + input.tox-textfield',
-//   borderstyle: 'label.tox-label:contains(Border style) + div.tox-listboxfield > .tox-listbox',
-//   bordercolor: 'label.tox-label:contains(Border color) + div>input.tox-textfield',
-//   backgroundcolor: 'label.tox-label:contains(Background color) + div>input.tox-textfield'
-// };
-
 const assertTableStructure = (editor: Editor, structure: StructAssert): void => {
   const table = SelectorFind.descendant(TinyDom.body(editor), 'table').getOrDie('A table should exist');
   Assertions.assertStructure('Should be a table the expected structure', structure, table);
@@ -131,13 +124,11 @@ const gotoAdvancedTab = (): void => {
 const setTabInputValues = (data: Record<string, any>, tabSelectors: Record<string, string>): void => {
   Obj.mapToArray(tabSelectors, (value, key) => {
     if (Obj.has(data, key)) {
-      /* First argument is a selector here not a labelText therofre it will not work */
       setInputValue(tabSelectors[key], data[key]);
     }
   });
 };
 
-/* Fix all general selectors */
 const setDialogValues = (data: Record<string, any>, hasAdvanced: boolean, generalSelectors: Record<string, string>): void => {
   if (hasAdvanced) {
     gotoGeneralTab();
@@ -157,7 +148,6 @@ const assertTabContents = (data: Record<string, any>, tabSelectors: Record<strin
   });
 };
 
-/* Fix all general selectors */
 const assertDialogValues = (data: Record<string, any>, hasAdvanced: boolean, generalSelectors: Record<string, string>): void => {
   if (hasAdvanced) {
     gotoGeneralTab();
