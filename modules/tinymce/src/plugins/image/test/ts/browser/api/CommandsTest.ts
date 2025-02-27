@@ -154,4 +154,15 @@ describe('browser.tinymce.plugins.image.api.CommandsTest', () => {
     });
     TinyAssertions.assertContent(editor, '<p><img alt="alt1"></p>');
   });
+
+  it('TINY-11670: floating images should lose the float if put in a caption', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p><img style="border: 2px solid red; float: right" /></p>');
+    TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
+    updateImage(editor, {
+      src: 'javascript:alert(1)',
+      caption: true
+    });
+    TinyAssertions.assertContent(editor, '<figure class="image"><img style="border: 2px solid red;"><figcaption>Caption</figcaption></figure>');
+  });
 });

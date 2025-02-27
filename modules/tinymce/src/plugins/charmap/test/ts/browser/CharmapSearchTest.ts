@@ -8,8 +8,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/charmap/Plugin';
 
-import { fakeEvent } from '../module/Helpers';
-
 describe('browser.tinymce.plugins.charmap.SearchTest', () => {
   before(function () {
     // TODO: TINY-6905: Test is broken on Chromium Edge 86, so we need to investigate
@@ -34,8 +32,7 @@ describe('browser.tinymce.plugins.charmap.SearchTest', () => {
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Special character"]');
     await TinyUiActions.pWaitForDialog(editor);
     await FocusTools.pTryOnSelector('Focus should start on', doc, 'input'); // TODO: Remove duped startup of these tests
-    const input = FocusTools.setActiveValue(doc, 'euro');
-    fakeEvent(input, 'input');
+    FocusTools.setActiveValue(doc, 'euro');
     await Waiter.pTryUntil(
       'Wait until Euro is the first choice (search should filter)',
       () => {

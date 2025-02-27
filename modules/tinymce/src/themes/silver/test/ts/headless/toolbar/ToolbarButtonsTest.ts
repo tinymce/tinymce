@@ -144,7 +144,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
               store.adder('onSetup.4')();
               return Fun.noop;
             }
-          }, { prefix: 'tox-mbtn', backstage: extrasHook.access().extras.backstages.popup })
+          }, 'tox-mbtn', extrasHook.access().extras.backstages.popup, Optional.none())
         ]
       }
     ]

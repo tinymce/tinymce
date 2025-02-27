@@ -61,7 +61,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarTest', () => {
           s.element('div', {
             classes: [ arr.has('tox-toolbar__group') ],
             attrs: {
-              title: str.none()
+              'aria-label': str.none()
             },
             children: [
               s.element('span', {
@@ -78,7 +78,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarTest', () => {
           s.element('div', {
             classes: [ arr.has('tox-toolbar__group') ],
             attrs: {
-              title: str.is('group title')
+              'aria-label': str.is('group title')
             },
             children: [
               s.element('span', {
@@ -92,7 +92,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarTest', () => {
           s.element('div', {
             classes: [ arr.has('tox-toolbar__group') ],
             attrs: {
-              title: str.is('another group title')
+              'aria-label': str.is('another group title')
             },
             children: [
               s.element('span', {

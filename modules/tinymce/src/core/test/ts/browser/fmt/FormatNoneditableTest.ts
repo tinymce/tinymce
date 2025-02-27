@@ -345,7 +345,7 @@ describe('browser.tinymce.core.fmt.FormatNoneditableTest', () => {
                 },
                 {
                   select: () => TinySelections.setCursor(editor, [ 0, 1, 1, 0, 0 ], 1),
-                  expectedHtml: `<p><${format.html}>first</${format.tag}> ${noneditableBeforeHtml}<span contenteditable="true">editable</span>${noneditableAfterHtml} <${format.html}>third</${format.tag}></p>`,
+                  expectedHtml: `<p><${format.html}>first </${format.tag}>${noneditableBeforeHtml}<span contenteditable="true">editable</span>${noneditableAfterHtml}<${format.html}> third</${format.tag}></p>`,
                   pAssertAfter: pAssertToolbar(false)
                 },
               ]);

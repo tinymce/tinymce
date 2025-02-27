@@ -537,7 +537,7 @@ const removeFormatInternal = (ed: Editor, name: string, vars?: FormatVars, node?
     let startContainer: Node;
     let endContainer: Node;
 
-    let expandedRng = ExpandRange.expandRng(dom, rng, formatList, rng.collapsed);
+    let expandedRng = ExpandRange.expandRng(dom, rng, formatList, { includeTrailingSpace: rng.collapsed });
 
     if (format.split) {
       // Split text nodes

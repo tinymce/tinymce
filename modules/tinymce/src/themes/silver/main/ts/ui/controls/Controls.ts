@@ -1,5 +1,5 @@
-import { AlloyComponent, AlloyEvents, EventFormat } from '@ephox/alloy';
-import { Cell, Type } from '@ephox/katamari';
+import { AlloyComponent, AlloyEvents, EventFormat, Representing } from '@ephox/alloy';
+import { Cell, Singleton, Type } from '@ephox/katamari';
 
 export interface GetApiType<T> {
   readonly getApi: (comp: AlloyComponent) => T;
@@ -42,4 +42,10 @@ const onControlAttached = <T>(info: OnControlAttachedType<T>, editorOffCell: Cel
 const onControlDetached = <T>(getApi: GetApiType<T>, editorOffCell: Cell<OnDestroy<T>>): AlloyEvents.AlloyEventKeyAndHandler<EventFormat> =>
   AlloyEvents.runOnDetached((comp) => runWithApi(getApi, comp)(editorOffCell.get()));
 
-export { runWithApi, onControlAttached, onControlDetached };
+const onContextFormControlDetached = <T>(getApi: GetApiType<T>, editorOffCell: Cell<OnDestroy<T>>, valueState: Singleton.Value<T>): AlloyEvents.AlloyEventKeyAndHandler<EventFormat> =>
+  AlloyEvents.runOnDetached((comp) => {
+    valueState.set(Representing.getValue(comp));
+    return runWithApi(getApi, comp)(editorOffCell.get());
+  });
+
+export { runWithApi, onControlAttached, onControlDetached, onContextFormControlDetached };

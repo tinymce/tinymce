@@ -23,10 +23,9 @@ describe('webdriver.tinymce.core.delete.InlineFormatRetentionTest', () => {
     editor.setContent('<p><span style="text-decoration: underline;">abc</span></p><p>&nbsp;</p>');
     TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 3);
     await doNativeBackspace();
-    // firefox natively preserves formats for block deletion
-    TinyAssertions.assertContent(editor, browser.isFirefox() ? '<p><span style="text-decoration: underline;">&nbsp;</span></p><p>&nbsp;</p>' : '<p>&nbsp;</p><p>&nbsp;</p>');
+    TinyAssertions.assertContent(editor, '<p>&nbsp;</p><p>&nbsp;</p>');
     await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.text('d') ]);
-    TinyAssertions.assertContent(editor, browser.isFirefox() ? '<p><span style="text-decoration: underline;">d<br></span></p><p>&nbsp;</p>' : '<p><span style="text-decoration: underline;">d</span></p><p>&nbsp;</p>');
+    TinyAssertions.assertContent(editor, '<p><span style="text-decoration: underline;">d</span></p><p>&nbsp;</p>');
   });
 
   it('TINY-9302: Backspace partial selection of underlined text within block then typing will not produce unexpected formats', async () => {

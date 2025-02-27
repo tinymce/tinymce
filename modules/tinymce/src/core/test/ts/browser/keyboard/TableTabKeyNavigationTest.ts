@@ -111,6 +111,21 @@ describe('browser.tinymce.core.keyboard.TableTabKeyNavigationTest', () => {
       TinyAssertions.assertSelection(editor, [ 0, 0, 2, 0 ], 0, [ 0, 0, 2, 0 ], 0);
     });
 
+    it('TINY-11797: Tabbing in the last cell does not create a new row, when table is not editable', async () => {
+      const editor = hook.editor();
+      editor.on('TableModified', logEvent);
+      editor.setContent('<table contenteditable="false"><tbody><tr><td contenteditable="true">cell 1</td></tr></tbody></table>');
+      TinyAssertions.assertContentPresence(editor, { tr: 1, td: 1 });
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+      TinyContentActions.keystroke(editor, Keys.tab());
+
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+      TinyAssertions.assertContentPresence(editor, { tr: 1, td: 1 });
+      assert.isEmpty(events);
+
+      editor.off('TableModified', logEvent);
+    });
+
     it('TINY-6638: Shift+Tab does nothing on first cell', () => {
       const editor = hook.editor();
       editor.setContent('<table><tbody><tr><td>cell 1</td></tr><tr><td>cell 2</td></tr></tbody></table>');

@@ -708,7 +708,7 @@ describe('browser.tinymce.core.annotate.AnnotateBlocksTest', () => {
               `<figure class="image" contenteditable="false" ${expectedBlockAnnotationAttrs(1)}>${imageHtml}<figcaption><span ${expectedSpanAnnotationAttrs(2)}>Caption</span></figcaption></figure>`,
               '<p>After</p>'
             ],
-            selectionPath([ 1 ], 1, [ 1 ], 2),
+            selectionPath([ 1, 1 ], 0, [ 1, 1 ], 1),
             { span: 1, block: 1 }
           );
         });

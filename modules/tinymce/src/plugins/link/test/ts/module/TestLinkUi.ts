@@ -25,14 +25,6 @@ const clickOnConfirmDialog = (editor: Editor, state: boolean): void => {
   TinyUiActions.clickOnUi(editor, '[role="dialog"].tox-confirm-dialog button:contains("' + (state ? 'Yes' : 'No') + '")');
 };
 
-const fireEvent = (elem: SugarElement, event: string): void => {
-  const evt = new Event(event, {
-    bubbles: true,
-    cancelable: true
-  });
-  elem.dom.dispatchEvent(evt);
-};
-
 const getInput = (selector: string) =>
   UiFinder.findIn<HTMLInputElement>(SugarBody.body(), selector).getOrDie();
 
@@ -114,15 +106,13 @@ const pSetListBoxItem = async (editor: Editor, group: string, itemText: string):
 
 const pSetInputFieldValue = async (editor: Editor, group: string, newValue: string): Promise<void> => {
   const element = await pFindInDialog<HTMLInputElement>(editor, 'label:contains("' + group + '") + input');
-  UiControls.setValue(element, newValue);
-  fireEvent(element, 'input');
+  UiControls.setValue(element, newValue, 'input');
 };
 
 export const TestLinkUi = {
   assertInputValue,
   pAssertContentPresence,
   pOpenLinkDialog,
-  fireEvent,
   pFindInDialog,
   assertDialogContents,
   pClickSave,

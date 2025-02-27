@@ -84,7 +84,7 @@ const create = (cyclicField: FieldProcessor): KeyingType.KeyingType<TabbingConfi
     // 2. Find the index of that tabstop
     // 3. Cycle the tabstop
     // 4. Fire alloy focus on the resultant tabstop
-    const tabstops = SelectorFilter.descendants<HTMLElement>(component.element, tabbingConfig.selector);
+    const tabstops = Arr.filter(SelectorFilter.descendants<HTMLElement>(component.element, tabbingConfig.selector), (element) => isVisible(tabbingConfig, element));
     return findCurrent(component, tabbingConfig).bind((tabstop) => {
       // focused component
       const optStopIndex = Arr.findIndex(tabstops, Fun.curry(Compare.eq, tabstop));

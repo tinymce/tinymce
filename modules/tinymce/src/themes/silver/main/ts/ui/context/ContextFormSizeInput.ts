@@ -11,14 +11,14 @@ import {
   NativeEvents, Representing, SketchSpec, Tabstopping, Tooltipping
 } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
-import { Cell, Fun, Id, Optional, Unicode } from '@ephox/katamari';
+import { Cell, Fun, Id, Optional, Singleton, Unicode } from '@ephox/katamari';
 import { Focus, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import { formInputEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as UiState from '../../UiState';
-import { onControlAttached, onControlDetached } from '../controls/Controls';
+import { onContextFormControlDetached, onControlAttached } from '../controls/Controls';
 import * as Icons from '../icons/Icons';
 import { formatSize, makeRatioConverter, noSizeConversion, parseSize, SizeConversion } from '../sizeinput/SizeInputModel';
 import * as ContextFormApi from './ContextFormApi';
@@ -28,13 +28,14 @@ interface RatioEvent extends CustomEvent {
 export const renderContextFormSizeInput = (
   ctx: InlineContent.ContextSizeInputForm,
   providersBackstage: UiFactoryBackstageProviders,
-  onEnter: (input: AlloyComponent) => Optional<boolean>
+  onEnter: (input: AlloyComponent) => Optional<boolean>,
+  valueState: Singleton.Value<InlineContent.SizeData>
 ): SketchSpec => {
   const { width, height } = ctx.initValue();
   let converter: SizeConversion = noSizeConversion;
   const enabled = true;
   const ratioEvent = Id.generate('ratio-event');
-  const getApi = ContextFormApi.getFormApi<InlineContent.SizeData>;
+  const getApi = (comp: AlloyComponent) => ContextFormApi.getFormApi<InlineContent.SizeData>(comp, valueState);
 
   const makeIcon = (iconName: string) =>
     Icons.render(iconName, { tag: 'span', classes: [ 'tox-icon', 'tox-lock-icon__' + iconName ] }, providersBackstage.icons);
@@ -143,8 +144,12 @@ export const renderContextFormSizeInput = (
   const editorOffCell = Cell(Fun.noop);
 
   const controlLifecycleHandlers = [
-    onControlAttached( { onSetup: ctx.onSetup, getApi }, editorOffCell),
-    onControlDetached( { getApi }, editorOffCell)
+    onControlAttached({
+      onBeforeSetup: (comp) => SelectorFind.descendant<HTMLElement>(comp.element, 'input').each(Focus.focus),
+      onSetup: ctx.onSetup,
+      getApi
+    }, editorOffCell),
+    onContextFormControlDetached({ getApi }, editorOffCell, valueState),
   ];
 
   return AlloyFormCoupledInputs.sketch({
@@ -207,7 +212,7 @@ export const renderContextFormSizeInput = (
           const value2 = optOther.map<string>(Representing.getValue).getOr('');
           converter = makeRatioConverter(value1, value2);
         }),
-        AlloyEvents.run(formInputEvent, (input) => ctx.onInput(ContextFormApi.getFormApi(input))),
+        AlloyEvents.run(formInputEvent, (input) => ctx.onInput(getApi(input))),
         ...controlLifecycleHandlers,
       ])
     ])

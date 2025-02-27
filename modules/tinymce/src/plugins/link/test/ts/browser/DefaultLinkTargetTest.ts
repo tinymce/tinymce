@@ -1,5 +1,5 @@
-import { describe, it, before, after, afterEach } from '@ephox/bedrock-client';
-import { TinyHooks } from '@ephox/wrap-mcagar';
+import { describe, it, before, after, beforeEach } from '@ephox/bedrock-client';
+import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
@@ -21,7 +21,7 @@ describe('browser.tinymce.plugins.link.DefaultLinkTargetTest', () => {
     TestLinkUi.clearHistory();
   });
 
-  afterEach(() => {
+  beforeEach(() => {
     hook.editor().setContent('');
   });
 
@@ -63,6 +63,7 @@ describe('browser.tinymce.plugins.link.DefaultLinkTargetTest', () => {
     editor.options.set('link_default_target', '_blank');
     await TestLinkUi.pInsertLink(editor, 'http://www.google.com');
     await TestLinkUi.pAssertContentPresence(editor, { 'a[target="_blank"]': 1, 'a': 1 });
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
     await TestLinkUi.pOpenLinkDialog(editor);
     await TestLinkUi.pSetListBoxItem(editor, 'Open link in...', 'Current window');
     await TestLinkUi.pClickSave(editor);

@@ -115,10 +115,9 @@ describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () 
             collapseSearchResults: false
           }, store)
         },
-        {
-          prefix: 'prefix',
-          backstage: extrasHook.access().extras.backstages.popup
-        }
+        'prefix',
+        extrasHook.access().extras.backstages.popup,
+        Optional.none()
       )
     )
   );

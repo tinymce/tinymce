@@ -9,6 +9,7 @@ import { getToolbarMode, ToolbarGroupOption, ToolbarMode } from '../../api/Optio
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { ToolbarConfig } from '../../Render';
 import { renderMenuButton } from '../button/MenuButton';
+import { createNavigateBackButton } from '../context/NavigateBackBespokeButton';
 import { createAlignButton } from '../core/complex/AlignBespoke';
 import { createBlocksButton } from '../core/complex/BlocksBespoke';
 import { createFontFamilyButton } from '../core/complex/FontFamilyBespoke';
@@ -74,7 +75,7 @@ const types: Record<string, BridgeRenderFn<any>> = {
 
   menubutton: renderFromBridge(
     Toolbar.createMenuButton,
-    (s, backstage, _, btnName) => renderMenuButton(s, { prefix: ToolbarButtonClasses.Button, backstage, tabstopping: false, btnName })
+    (s, backstage, _, btnName) => renderMenuButton(s, ToolbarButtonClasses.Button, backstage, Optional.none(), false, btnName)
   ),
 
   splitbutton: renderFromBridge(
@@ -121,7 +122,8 @@ const bespokeButtons: Record<string, (editor: Editor, backstage: UiFactoryBackst
   fontsizeinput: createFontSizeInputButton,
   fontfamily: createFontFamilyButton,
   blocks: createBlocksButton,
-  align: createAlignButton
+  align: createAlignButton,
+  navigateback: createNavigateBackButton
 };
 
 const removeUnusedDefaults = (buttons: RenderToolbarConfig['buttons']) => {

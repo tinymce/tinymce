@@ -29,9 +29,9 @@ const setFocus = <T extends HTMLElement>(container: SugarElement<Node>, selector
   return elem;
 };
 
-const setActiveValue = (doc: SugarElement<Document | ShadowRoot>, newValue: string): SugarElement<HTMLElement> => {
+const setActiveValue = (doc: SugarElement<Document | ShadowRoot>, newValue: string, eventName: string = 'input'): SugarElement<HTMLElement> => {
   const focused = getFocused(doc).getOrDie();
-  UiControls.setValue(focused as SugarElement<any>, newValue);
+  UiControls.setValue(focused as SugarElement<any>, newValue, eventName);
   return focused;
 };
 

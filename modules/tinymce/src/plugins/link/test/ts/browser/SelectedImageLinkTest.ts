@@ -60,8 +60,7 @@ describe('browser.tinymce.plugins.link.SelectedImageTest', () => {
     editor.setContent('<p><a href="http://www.google.com/" title="test"><img src="image.png"></a></p>');
     TinySelections.select(editor, 'a', []);
     await TestLinkUi.pOpenLinkDialog(editor);
-    const focused = FocusTools.setActiveValue(doc, '');
-    TestLinkUi.fireEvent(focused, 'input');
+    FocusTools.setActiveValue(doc, '');
     UiFinder.notExists(SugarBody.body(), '.tox-label:contains("Text to display")');
     TestLinkUi.assertDialogContents({
       url: '',
