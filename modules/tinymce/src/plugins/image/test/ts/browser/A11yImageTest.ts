@@ -82,7 +82,7 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
       },
       '<p><img src="src" alt="alt"></p>'
     );
-    // await pTestUiStateEnabled(editor, 'alt');
+    await pTestUiStateEnabled(editor, 'alt');
   });
 
   it('FOAM-11: Decorative image', async () => {

@@ -20,7 +20,7 @@ export interface WidthData {
   readonly isPercent: boolean;
 }
 
-const advSelectors = {
+const advLabels = {
   borderwidth: 'Border width',
   borderstyle: 'Border style',
   bordercolor: 'Border color',
@@ -134,7 +134,7 @@ const setDialogValues = (data: Record<string, any>, hasAdvanced: boolean, genera
     gotoGeneralTab();
     setTabInputValues(data, generalSelectors);
     gotoAdvancedTab();
-    setTabInputValues(data, advSelectors);
+    setTabInputValues(data, advLabels);
   } else {
     setTabInputValues(data, generalSelectors);
   }
@@ -153,7 +153,7 @@ const assertDialogValues = (data: Record<string, any>, hasAdvanced: boolean, gen
     gotoGeneralTab();
     assertTabContents(data, generalSelectors);
     gotoAdvancedTab();
-    assertTabContents(data, advSelectors);
+    assertTabContents(data, advLabels);
   } else {
     assertTabContents(data, generalSelectors);
   }

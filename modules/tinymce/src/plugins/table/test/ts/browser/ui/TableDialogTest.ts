@@ -28,7 +28,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     statusbar: false
   }, [ Plugin ], true);
 
-  const generalSelectors = {
+  const generalLabels = {
     width: 'Width',
     height: 'Height',
     cellspacing: 'Cell spacing',
@@ -59,11 +59,11 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     setTable(editor);
     setCursor(editor);
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(emptyStandardData, false, generalSelectors);
+    TableTestUtils.assertDialogValues(emptyStandardData, false, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, true);
     TableTestUtils.assertElementStructure(editor, 'table', htmlEmptyTable);
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(emptyStandardData, false, generalSelectors);
+    TableTestUtils.assertDialogValues(emptyStandardData, false, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, false);
   });
 
@@ -117,12 +117,12 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     setTable(editor);
     setCursor(editor);
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(emptyStandardData, false, generalSelectors);
-    TableTestUtils.setDialogValues(fullStandardData, false, generalSelectors);
+    TableTestUtils.assertDialogValues(emptyStandardData, false, generalLabels);
+    TableTestUtils.setDialogValues(fullStandardData, false, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, true);
     TableTestUtils.assertApproxElementStructure(editor, 'table', htmlFilledEmptyTable);
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(fullStandardData, false, generalSelectors);
+    TableTestUtils.assertDialogValues(fullStandardData, false, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, false);
   });
 
@@ -146,12 +146,12 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     setTable(editor);
     setCursor(editor);
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(emptyAllOffData, false, generalSelectors);
-    TableTestUtils.setDialogValues(fullAllOffData, false, generalSelectors);
+    TableTestUtils.assertDialogValues(emptyAllOffData, false, generalLabels);
+    TableTestUtils.setDialogValues(fullAllOffData, false, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, true);
     TableTestUtils.assertElementStructure(editor, 'table', htmlFilledAllOffTable);
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(fullAllOffData, false, generalSelectors);
+    TableTestUtils.assertDialogValues(fullAllOffData, false, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, false);
     editor.options.unset('table_appearance_options');
   });
@@ -226,13 +226,13 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     setTable(editor);
     setCursor(editor);
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(emptyAllOnData, true, generalSelectors);
-    TableTestUtils.setDialogValues(fullAllOnData, true, generalSelectors);
+    TableTestUtils.assertDialogValues(emptyAllOnData, true, generalLabels);
+    TableTestUtils.setDialogValues(fullAllOnData, true, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, true);
     TableTestUtils.assertApproxElementStructure(editor, 'table', htmlFilledAllOnTable);
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(fullAllOnData, true, generalSelectors);
-    TableTestUtils.setDialogValues(emptyAllOnData, true, generalSelectors);
+    TableTestUtils.assertDialogValues(fullAllOnData, true, generalLabels);
+    TableTestUtils.setDialogValues(emptyAllOnData, true, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, true);
     TableTestUtils.assertElementStructure(editor, 'table', htmlEmptyTable);
 
@@ -268,7 +268,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     editor.setContent(baseHtml);
     setCursor(editor);
     editor.execCommand('mceTableProps');
-    TableTestUtils.assertDialogValues(baseData, true, generalSelectors);
+    TableTestUtils.assertDialogValues(baseData, true, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, false);
 
     editor.options.unset('table_advtab');
@@ -326,18 +326,18 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     editor.setContent(baseHtml);
     setCursor(editor);
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(baseData, true, generalSelectors);
+    TableTestUtils.assertDialogValues(baseData, true, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, false);
     TinyAssertions.assertContent(editor, baseHtml);
 
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(baseData, true, generalSelectors);
-    TableTestUtils.setDialogValues(newData, true, generalSelectors);
+    TableTestUtils.assertDialogValues(baseData, true, generalLabels);
+    TableTestUtils.setDialogValues(newData, true, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, true);
     TinyAssertions.assertContent(editor, newHtml);
 
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(newData, true, generalSelectors);
+    TableTestUtils.assertDialogValues(newData, true, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, false);
 
     editor.options.unset('table_class_list');
@@ -365,12 +365,12 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     editor.setContent(floatTableHtml);
     setCursor(editor);
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(initialData, false, generalSelectors);
-    TableTestUtils.setDialogValues(newData, false, generalSelectors);
+    TableTestUtils.assertDialogValues(initialData, false, generalLabels);
+    TableTestUtils.setDialogValues(newData, false, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, true);
     TableTestUtils.assertElementStructure(editor, 'table', marginTableHtml);
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(newData, false, generalSelectors);
+    TableTestUtils.assertDialogValues(newData, false, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, false);
     editor.options.unset('table_appearance_options');
   });
@@ -390,12 +390,12 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     editor.setContent('<table style="border-collapse: collapse;" border="1px" width="60%"><tbody><tr><td>&nbsp;</td></tr></tbody></table>');
     setCursor(editor);
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(getExpectedData(1), false, generalSelectors);
-    TableTestUtils.setDialogValues({ border: '2px' }, false, generalSelectors);
+    TableTestUtils.assertDialogValues(getExpectedData(1), false, generalLabels);
+    TableTestUtils.setDialogValues({ border: '2px' }, false, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, true);
     TinyAssertions.assertContent(editor, '<table style="width: 60%; border-width: 2px; border-collapse: collapse;" border="1" width="60%"><tbody><tr><td style="border-width: 2px;">&nbsp;</td></tr></tbody></table>');
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(getExpectedData(2), false, generalSelectors);
+    TableTestUtils.assertDialogValues(getExpectedData(2), false, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, false);
   });
 
@@ -414,12 +414,12 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     editor.setContent('<table style="border-collapse: collapse;" border="1px"><tbody><tr><td>&nbsp;</td></tr></tbody></table>');
     setCursor(editor);
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(getExpectedData(1, ''), false, generalSelectors);
-    TableTestUtils.setDialogValues({ border: '2px' }, false, generalSelectors);
+    TableTestUtils.assertDialogValues(getExpectedData(1, ''), false, generalLabels);
+    TableTestUtils.setDialogValues({ border: '2px' }, false, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, true);
     TinyAssertions.assertContent(editor, '<table style="border-width: 2px; border-collapse: collapse;" border="1"><tbody><tr><td style="border-width: 2px;">&nbsp;</td></tr></tbody></table>');
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(getExpectedData(2, ''), false, generalSelectors);
+    TableTestUtils.assertDialogValues(getExpectedData(2, ''), false, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, false);
   });
 
@@ -442,13 +442,13 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     TinyAssertions.assertContent(editor, inputHtml);
     setCursor(editor);
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(getExpectedData(1, ''), false, generalSelectors);
-    TableTestUtils.setDialogValues({ border: '3px' }, false, generalSelectors);
+    TableTestUtils.assertDialogValues(getExpectedData(1, ''), false, generalLabels);
+    TableTestUtils.setDialogValues({ border: '3px' }, false, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, true);
     // shorthand form is retained
     TinyAssertions.assertContent(editor, '<table style="border: 3px dotted rgb(255, 0, 0); border-collapse: collapse;" border="1"><tbody><tr><td style="border-width: 3px;">&nbsp;</td></tr></tbody></table>');
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(getExpectedData(3, ''), false, generalSelectors);
+    TableTestUtils.assertDialogValues(getExpectedData(3, ''), false, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, false);
   });
 
@@ -515,8 +515,8 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
       editor.setContent(baseHtml);
       setCursor(editor);
       editor.execCommand('mceTableProps');
-      TableTestUtils.assertDialogValues(baseData, true, generalSelectors);
-      TableTestUtils.setDialogValues({ ...baseData, ...newData }, true, generalSelectors);
+      TableTestUtils.assertDialogValues(baseData, true, generalLabels);
+      TableTestUtils.setDialogValues({ ...baseData, ...newData }, true, generalLabels);
       await TableTestUtils.pClickDialogButton(editor, true);
       TinyAssertions.assertContent(editor, expectedHtml);
     };
