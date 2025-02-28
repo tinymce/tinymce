@@ -91,7 +91,7 @@ UnitTest.asynctest('Browser Test: api.ForeignGuiTest', (success, failure) => {
     sAssertChildHasNoUid('First child should have no uid', 0),
     sAssertChildHasRandomUid('Div should have a uid', 3),
 
-    Mouse.sClickOn(root, 'span.clicker:first'),
+    Mouse.sClickOn(root, 'span.clicker:first-child'),
 
     Assertions.sAssertStructure(
       'Checking structure after the first span is clicked',
