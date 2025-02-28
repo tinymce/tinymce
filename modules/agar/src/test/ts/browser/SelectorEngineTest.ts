@@ -167,6 +167,16 @@ describe('SelectorEngineTest', () => {
     Assert.eq(':contains("This is the only paragraph here") p returned', p, matches[0]);
   });
 
+  it('selectAll should throw error when :contains is not at the end', () => {
+    Assert.throws('selectAll should throw error when :contains is not at the end',
+      () => SelectorEngine.selectAll('label:contains(Foo) + input', container.dom));
+  });
+
+  it('matchesSelector should throw error when :contains is not at the end', () => {
+    Assert.throws('matchesSelector should throw error when :contains is not at the end',
+      () => SelectorEngine.matchesSelector(container.dom, 'label:contains(Foo) + input'));
+  });
+
   /*
   TODO: maybe I should test how to escape " and ' inside "" and ''
   it(':contains should look for quotes', () => {

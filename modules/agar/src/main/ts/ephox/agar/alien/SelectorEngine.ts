@@ -1,4 +1,4 @@
-import { Arr, Obj, Optional } from '@ephox/katamari';
+import { Arr, Obj, Optional, Strings } from '@ephox/katamari';
 import * as Sizzle from 'sizzle';
 
 const sizzleEnabled = false;
@@ -41,7 +41,7 @@ const unwrapFromQuotes = (pattern: string) => {
 };
 
 const hasText = (element: Node, text: string) =>
-  element.textContent.includes(text);
+  Strings.contains(element.textContent, text);
 
 const matchesSelector = (element: Element, selector: string): boolean => {
   if (sizzleEnabled) {
