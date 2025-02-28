@@ -20,7 +20,7 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     statusbar: false
   }, [ Plugin ], true);
 
-  const generalSelectors = {
+  const generalLabels = {
     width: 'Width',
     height: 'Height',
     cellspacing: 'Cell spacing',
@@ -50,12 +50,12 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     editor.setContent(getTable(1));
     setCursor(editor);
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(getExpectedData(1), false, generalSelectors);
-    TableTestUtils.setDialogValues({ border: '2px' }, false, generalSelectors);
+    TableTestUtils.assertDialogValues(getExpectedData(1), false, generalLabels);
+    TableTestUtils.setDialogValues({ border: '2px' }, false, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, true);
     TinyAssertions.assertContent(editor, getTable(2));
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(getExpectedData(2), false, generalSelectors);
+    TableTestUtils.assertDialogValues(getExpectedData(2), false, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, false);
   });
 
@@ -74,12 +74,12 @@ describe('browser.tinymce.plugins.table.TableDialogTest', () => {
     editor.setContent('<table style="border-collapse: collapse;" border="1px"><tbody><tr><td>&nbsp;</td></tr></tbody></table>');
     setCursor(editor);
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(getExpectedData(1, ''), false, generalSelectors);
-    TableTestUtils.setDialogValues({ border: '2px' }, false, generalSelectors);
+    TableTestUtils.assertDialogValues(getExpectedData(1, ''), false, generalLabels);
+    TableTestUtils.setDialogValues({ border: '2px' }, false, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, true);
     TinyAssertions.assertContent(editor, '<table style="border-collapse: collapse;" border="2px" width="100%"><tbody><tr><td>&nbsp;</td></tr></tbody></table>');
     await TableTestUtils.pOpenTableDialog(editor);
-    TableTestUtils.assertDialogValues(getExpectedData(2, '100%'), false, generalSelectors);
+    TableTestUtils.assertDialogValues(getExpectedData(2, '100%'), false, generalLabels);
     await TableTestUtils.pClickDialogButton(editor, false);
   });
 });
