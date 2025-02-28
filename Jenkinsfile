@@ -107,7 +107,7 @@ def runHeadlessPod(String cacheName, Boolean runAll) {
         ]
   Map selenium = [
           name: "selenium",
-          image: "selenium/standalone-chrome:127.0",
+          image: tinyAws.getPullThroughCacheImage("selenium/standalone-chrome", "127.0"),
           livenessProbe: [
             execArgs: "curl --fail --silent --output /dev/null http://localhost:4444/wd/hub/status",
             initialDelaySeconds: 30,
