@@ -10,6 +10,7 @@ import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { HeaderSpec, renderHeader } from '../header/CommonHeader';
 import SilverMenubar, { MenubarItemSpec, SilverMenubarSpec } from '../menus/menubar/SilverMenubar';
 import { renderPromotion } from '../promotion/Promotion';
+import { renderPromotionButton } from '../promotionButton/promotionButton';
 import * as Sidebar from '../sidebar/Sidebar';
 import * as Throbber from '../throbber/Throbber';
 import {
@@ -329,14 +330,23 @@ const partHeader = Composite.partType.optional<OuterContainerSketchDetail, Heade
   ]
 });
 
-const partPromotion = Composite.partType.optional<OuterContainerSketchDetail, HeaderSpec & { isOnboarding: boolean }>({
+const partPromotion = Composite.partType.optional<OuterContainerSketchDetail, HeaderSpec>({
   factory: {
     sketch: renderPromotion
   },
   name: 'promotion',
   schema: [
-    FieldSchema.required('dom'),
-    FieldSchema.required('isOnboarding'),
+    FieldSchema.required('dom')
+  ]
+});
+
+const partPromotionButton = Composite.partType.optional<OuterContainerSketchDetail, HeaderSpec & { action: (comp: AlloyComponent) => void }>({
+  factory: {
+    sketch: renderPromotionButton
+  },
+  name: 'promotionButton',
+  schema: [
+    FieldSchema.required('action')
   ]
 });
 
@@ -408,6 +418,7 @@ export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketch
     partSocket,
     partSidebar,
     partPromotion,
+    partPromotionButton,
     partThrobber,
     partViewWrapper,
     partEditorContainer

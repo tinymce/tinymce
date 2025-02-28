@@ -93,6 +93,8 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
   const isToolbarBottom = Options.isToolbarLocationBottom(editor);
   const toolbarMode = Options.getToolbarMode(editor);
 
+  const onboardingCommand = 'mceOnboardingMarketing';
+
   const memAnchorBar = Memento.record({
     dom: {
       tag: 'div',
@@ -209,8 +211,11 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
     const hasMultipleToolbar = Options.isMultipleToolbars(editor);
     const hasToolbar = Options.isToolbarEnabled(editor);
     const hasMenubar = Options.isMenubarEnabled(editor);
+
     const shouldHavePromotion = Options.promotionEnabled(editor);
-    const partPromotion = makePromotion();
+    const hasOnboardingCommand = editor.queryCommandSupported(onboardingCommand);
+    const partPromotion = hasOnboardingCommand ? makeOnboardingPromotion() : makePromotion();
+
     const hasAnyContents = hasMultipleToolbar || hasToolbar || hasMenubar;
 
     const getPartToolbar = () => {
@@ -251,7 +256,12 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
         tag: 'div',
         classes: [ 'tox-promotion' ],
       },
-      isOnboarding: editor.hasPlugin('onboarding'),
+    });
+  };
+
+  const makeOnboardingPromotion = () => {
+    return OuterContainer.parts.promotionButton({
+      action: () => editor.execCommand(onboardingCommand),
     });
   };
 
