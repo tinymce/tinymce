@@ -27,6 +27,11 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
   const pPaste = async (editor: Editor): Promise<void> => {
     if (browser.isSafari()) {
       await pClickEditMenu(editor, 'Paste');
+      // Alternative for Chromium browsers to not engage the broswer prompt for clipboard access
+    } else if (browser.isChromium()) {
+      await navigator.clipboard.readText().then((text) => {
+        editor.execCommand('insertHTML', false, text);
+      });
     } else {
       await RealClipboard.pPaste('iframe => body');
     }
@@ -64,7 +69,6 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
     await pPaste(editor);
     TinyAssertions.assertSelection(editor, [], 1, [], 2);
     TinyAssertions.assertContentPresence(editor, { 'pre[data-mce-selected]': 1 });
-
     // Pressing <enter> should do nothing.
     pressEnter(editor);
     TinyAssertions.assertSelection(editor, [], 1, [], 2);
