@@ -93,8 +93,6 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
   const isToolbarBottom = Options.isToolbarLocationBottom(editor);
   const toolbarMode = Options.getToolbarMode(editor);
 
-  const onboardingCommand = 'mceOnboardingMarketing';
-
   const memAnchorBar = Memento.record({
     dom: {
       tag: 'div',
