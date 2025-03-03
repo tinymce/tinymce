@@ -59,3 +59,7 @@
   box-shadow: 0 0 0 @accessibility-box-shadow-width @accessibility-box-shadow-color;
   z-index: @accessibility-box-shadow-z-index;
 }
+
+html:has([data-ephox-foam-a11y-violation]) {
+  scroll-behavior: smooth;
+}
