@@ -1,4 +1,4 @@
-import { Arr, Fun, Obj, Strings, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
 import { Attribute, NodeTypes, Remove, Replication, SugarElement } from '@ephox/sugar';
 import createDompurify, { Config, DOMPurify, UponSanitizeAttributeHookEvent, UponSanitizeElementHookEvent } from 'dompurify';
 
@@ -239,29 +239,32 @@ const sanitizeMathmlElement = (node: Element, settings: DomParserSettings) => {
     return hasAllowedEncodings && Type.isString(encoding) && Arr.contains(allowedEncodings, encoding);
   };
 
+  const isValidElementOpt = (lcTagName: string) => {
+    if (hasAllowedEncodings && lcTagName === 'semantics') {
+      return Optional.some(true);
+    } else if (lcTagName === 'annotation') {
+      return Optional.some(node.nodeType === NodeTypes.ELEMENT && hasValidEncoding(node));
+    } else if (Type.isArray(settings.allow_mathml_elements)) {
+      return Optional.some(settings.allow_mathml_elements.includes(lcTagName));
+    } else {
+      return Optional.none();
+    }
+  };
+
   purify.addHook('uponSanitizeElement', (node, evt) => {
     // We know the node is an element as we have
     // passed an element to the purify.sanitize function below
     const lcTagName = evt.tagName ?? node.nodeName.toLowerCase();
-    let keepElement;
+    const keepElementOpt = isValidElementOpt(lcTagName);
 
-    if (hasAllowedEncodings && lcTagName === 'semantics') {
-      evt.allowedTags[lcTagName] = true;
-      keepElement = true;
-    } else if (lcTagName === 'annotation') {
-      keepElement = node.nodeType === NodeTypes.ELEMENT && hasValidEncoding(node as Element);
-    } else if (Type.isArray(settings.allow_mathml_elements)) {
-      keepElement = settings.allow_mathml_elements.includes(lcTagName);
-    } else {
-      return;
-    }
-
-    evt.allowedTags[lcTagName] = keepElement;
-    if (!keepElement && settings.sanitize) {
-      if (NodeType.isElement(node)) {
-        node.remove();
+    keepElementOpt.each((keepElement) => {
+      evt.allowedTags[lcTagName] = keepElement;
+      if (!keepElement && settings.sanitize) {
+        if (NodeType.isElement(node)) {
+          node.remove();
+        }
       }
-    }
+    });
   });
 
   purify.addHook('uponSanitizeAttribute', (_node, event) => {
