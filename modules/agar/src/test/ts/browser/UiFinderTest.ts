@@ -1,4 +1,5 @@
 import { afterEach, Assert, beforeEach, describe, it, UnitTest } from '@ephox/bedrock-client';
+import { Testable } from '@ephox/dispute';
 import { Class, Css, Hierarchy, Html, Insert, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 
 import * as Assertions from 'ephox/agar/api/Assertions';
@@ -129,7 +130,7 @@ describe('UiFinderTest', () => {
     Insert.append(container, content);
     const input = container.dom.querySelector('#input-width');
 
-    Assert.eq('Should find target by label', input, UiFinder.findTargetByLabel(container, 'Width').getOrDie().dom);
+    Assert.eq('Should find target by label', input, UiFinder.findTargetByLabel(container, 'Width').getOrDie().dom, Testable.tStrict);
   });
 
   it('Should find input target by label when input inside label', async () => {
@@ -142,7 +143,7 @@ describe('UiFinderTest', () => {
     Insert.append(container, content);
     const input = container.dom.querySelector('#has-border');
 
-    Assert.eq('Should find input inside label', input, UiFinder.findTargetByLabel(container, 'Has Border').getOrDie().dom);
+    Assert.eq('Should find input inside label', input, UiFinder.findTargetByLabel(container, 'Has Border').getOrDie().dom, Testable.tStrict);
   });
 
   it('Should find textarea target by label when textarea inside label', async () => {
@@ -155,6 +156,23 @@ describe('UiFinderTest', () => {
     Insert.append(container, content);
     const input = container.dom.querySelector('#description');
 
-    Assert.eq('Should find textarea inside label', input, UiFinder.findTargetByLabel(container, 'Description').getOrDie().dom);
+    Assert.eq('Should find textarea inside label', input, UiFinder.findTargetByLabel(container, 'Description').getOrDie().dom, Testable.tStrict);
+  });
+
+  it('Should match full label', async () => {
+    const content = SugarElement.fromHtml(
+      '<div>' +
+        '<label for="sort-by">Sort by</label>' +
+        '<input id="sort-by"></input>' +
+        '<label for="sort">Sort</label>' +
+        '<input id="sort"></input>' +
+      '</div>'
+    );
+    Insert.append(container, content);
+    const sortByInput = container.dom.querySelector('#sort-by');
+    const sortInput = container.dom.querySelector('#sort');
+
+    Assert.eq('Should find sortBy', sortByInput, UiFinder.findTargetByLabel(container, 'Sort by').getOrDie().dom, Testable.tStrict);
+    Assert.eq('Should find sort', sortInput, UiFinder.findTargetByLabel(container, 'Sort').getOrDie().dom, Testable.tStrict);
   });
 });
