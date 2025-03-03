@@ -8,7 +8,7 @@ interface PromotionSpec extends SimpleSpec {
 }
 
 const renderPromotion = (spec: PromotionSpec): AlloySpec => {
-  const components = promotionLink ? [
+  const components = spec.promotionLink ? [
     {
       dom: {
         tag: 'a',
