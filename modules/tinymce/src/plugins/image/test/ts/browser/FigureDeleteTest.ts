@@ -6,7 +6,6 @@ import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
 import { generalTabLabels, setInputValue } from '../module/Helpers';
-import { SugarBody } from '@ephox/sugar';
 
 describe('browser.tinymce.plugins.image.FigureDeleteTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
