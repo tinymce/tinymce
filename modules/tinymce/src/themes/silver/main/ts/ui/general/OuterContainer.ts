@@ -9,8 +9,7 @@ import { ToolbarMode } from '../../api/Options';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { HeaderSpec, renderHeader } from '../header/CommonHeader';
 import SilverMenubar, { MenubarItemSpec, SilverMenubarSpec } from '../menus/menubar/SilverMenubar';
-import { renderPromotion } from '../promotion/Promotion';
-import { renderPromotionButton } from '../promotionButton/promotionButton';
+import { PromotionSpec, renderPromotion } from '../promotion/Promotion';
 import * as Sidebar from '../sidebar/Sidebar';
 import * as Throbber from '../throbber/Throbber';
 import {
@@ -330,23 +329,14 @@ const partHeader = Composite.partType.optional<OuterContainerSketchDetail, Heade
   ]
 });
 
-const partPromotion = Composite.partType.optional<OuterContainerSketchDetail, HeaderSpec>({
+const partPromotion = Composite.partType.optional<OuterContainerSketchDetail, PromotionSpec >({
   factory: {
     sketch: renderPromotion
   },
   name: 'promotion',
   schema: [
-    FieldSchema.required('dom')
-  ]
-});
-
-const partPromotionButton = Composite.partType.optional<OuterContainerSketchDetail, HeaderSpec & { action: (comp: AlloyComponent) => void }>({
-  factory: {
-    sketch: renderPromotionButton
-  },
-  name: 'promotionButton',
-  schema: [
-    FieldSchema.required('action')
+    FieldSchema.required('dom'),
+    FieldSchema.required('promotionLink')
   ]
 });
 
@@ -418,7 +408,6 @@ export default Sketcher.composite<OuterContainerSketchSpec, OuterContainerSketch
     partSocket,
     partSidebar,
     partPromotion,
-    partPromotionButton,
     partThrobber,
     partViewWrapper,
     partEditorContainer
