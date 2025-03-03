@@ -67,6 +67,7 @@ describe('browser.tinymce.themes.silver.editor.HtmlPanelTooltipTest', () => {
       TinyUiActions.closeDialog(editor);
     });
 
+    /* TODO: fix */
     it('TINY-9641: Hover custom button in htmlpanel, then tab to navigate away, should hide current tooltip and show tooltip for close button', async () => {
       const editor = hook.editor();
       await pOpenDialogAndWaitForLoad(editor, 'button[data-mce-name="custom-dialog"]');

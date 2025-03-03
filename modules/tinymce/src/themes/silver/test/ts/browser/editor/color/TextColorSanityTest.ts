@@ -159,14 +159,14 @@ describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () =>
       UiFinder.notExists(SugarBody.body(), 'div[data-mce-color="#FF0000"]');
       TinyUiActions.clickOnUi(editor, 'button[data-mce-name="Custom color"]');
       const dialog = await TinyUiActions.pWaitForDialog(editor);
-      const input = UiFinder.findIn<HTMLInputElement>(dialog, 'label:contains("R") + input').getOrDie();
+      const input = UiFinder.findTargetByLabel<HTMLInputElement>(dialog, 'R').getOrDie();
       UiControls.setValue(input, '255');
       const evt = new Event('input', {
         bubbles: true,
         cancelable: true
       });
       input.dom.dispatchEvent(evt);
-      const dialogResult = UiFinder.findIn<HTMLInputElement>(dialog, 'label:contains("#") + input').getOrDie();
+      const dialogResult = UiFinder.findTargetByLabel<HTMLInputElement>(dialog, '#').getOrDie();
       await Waiter.pTryUntil('Dialog has changed', () => dialogResult.dom.value === 'FF0000');
       TinyUiActions.clickOnUi(editor, 'button[data-mce-name="Save"]');
       TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton);
