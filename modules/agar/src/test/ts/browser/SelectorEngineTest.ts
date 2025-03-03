@@ -1,4 +1,5 @@
 import { afterEach, Assert, beforeEach, describe, it } from '@ephox/bedrock-client';
+import { Testable } from '@ephox/dispute';
 import { Insert, Remove, SugarElement } from '@ephox/sugar';
 
 import * as SelectorEngine from 'ephox/agar/alien/SelectorEngine';
@@ -29,7 +30,7 @@ describe('SelectorEngineTest', () => {
 
     const matches = SelectorEngine.selectAll('#myDiv', container.dom);
     Assert.eq('one element in array', 1, matches.length);
-    Assert.eq('div#myDiv returned', divWithId, matches[0]);
+    Assert.eq('div#myDiv returned', divWithId, matches[0], Testable.tStrict);
   });
 
   it('Should find element by class', async () => {
@@ -45,7 +46,7 @@ describe('SelectorEngineTest', () => {
 
     const matches = SelectorEngine.selectAll('.myDiv', container.dom);
     Assert.eq('one element in array', 1, matches.length);
-    Assert.eq('div.myDiv returned', divWithClass, matches[0]);
+    Assert.eq('div.myDiv returned', divWithClass, matches[0], Testable.tStrict);
   });
 
   it('Should find element by tag', async () => {
@@ -61,7 +62,7 @@ describe('SelectorEngineTest', () => {
 
     const matches = SelectorEngine.selectAll('textarea', container.dom);
     Assert.eq('one element in array', 1, matches.length);
-    Assert.eq('textarea returned', textarea, matches[0]);
+    Assert.eq('textarea returned', textarea, matches[0], Testable.tStrict);
   });
 
   it('Should find element by contains', () => {
@@ -77,15 +78,15 @@ describe('SelectorEngineTest', () => {
 
     let matches = SelectorEngine.selectAll('li:contains(Two)', container.dom);
     Assert.eq(':contains(Two) one element in array', 1, matches.length);
-    Assert.eq(':contains(Two) second li returned', secondLi, matches[0]);
+    Assert.eq(':contains(Two) second li returned', secondLi, matches[0], Testable.tStrict);
 
     matches = SelectorEngine.selectAll('li:contains(\'Two\')', container.dom);
     Assert.eq(':contains(\'Two\') one element in array', 1, matches.length);
-    Assert.eq(':contains(\'Two\') second li returned', secondLi, matches[0]);
+    Assert.eq(':contains(\'Two\') second li returned', secondLi, matches[0], Testable.tStrict);
 
     matches = SelectorEngine.selectAll('li:contains("Two")', container.dom);
     Assert.eq(':contains("Two") one element in array', 1, matches.length);
-    Assert.eq(':contains("Two") second li returned', secondLi, matches[0]);
+    Assert.eq(':contains("Two") second li returned', secondLi, matches[0], Testable.tStrict);
   });
 
   it(':contains should be case sensitive', () => {
@@ -109,7 +110,7 @@ describe('SelectorEngineTest', () => {
 
     const matches = SelectorEngine.selectAll('li:contains(This is a sentence)', container.dom);
     Assert.eq(':contains(This is a sentence) one element in array', 1, matches.length);
-    Assert.eq(':contains(This is a sentence) li returned', li, matches[0]);
+    Assert.eq(':contains(This is a sentence) li returned', li, matches[0], Testable.tStrict);
   });
 
   it(':contains should look in descendants', () => {
@@ -129,7 +130,7 @@ describe('SelectorEngineTest', () => {
 
     const matches = SelectorEngine.selectAll('ol:contains(Tiny)', container.dom);
     Assert.eq(':contains(Tiny) one element in array', 1, matches.length);
-    Assert.eq(':contains(Tiny) li returned', ol, matches[0]);
+    Assert.eq(':contains(Tiny) li returned', ol, matches[0], Testable.tStrict);
   });
 
   it(':contains should include partial match', () => {
@@ -145,9 +146,9 @@ describe('SelectorEngineTest', () => {
 
     const matches = SelectorEngine.selectAll('li:contains(Tiny)', container.dom);
     Assert.eq(':contains(Tiny) three elements in array', 3, matches.length);
-    Assert.eq(':contains(Tiny) first li returned', liList[0], matches[0]);
-    Assert.eq(':contains(Tiny) second li returned', liList[1], matches[1]);
-    Assert.eq(':contains(Tiny) third li returned', liList[2], matches[2]);
+    Assert.eq(':contains(Tiny) first li returned', liList[0], matches[0], Testable.tStrict);
+    Assert.eq(':contains(Tiny) second li returned', liList[1], matches[1], Testable.tStrict);
+    Assert.eq(':contains(Tiny) third li returned', liList[2], matches[2], Testable.tStrict);
   });
 
   it(':contains should include text divided between elements', () => {
@@ -164,7 +165,7 @@ describe('SelectorEngineTest', () => {
 
     const matches = SelectorEngine.selectAll('p:contains("This is the only paragraph here")', container.dom);
     Assert.eq(':contains("This is the only paragraph here") one element in array', 1, matches.length);
-    Assert.eq(':contains("This is the only paragraph here") p returned', p, matches[0]);
+    Assert.eq(':contains("This is the only paragraph here") p returned', p, matches[0], Testable.tStrict);
   });
 
   it('selectAll should throw error when :contains is not at the end', () => {
