@@ -1,7 +1,7 @@
 import { Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { Boxes } from '@ephox/alloy';
-import { Arr } from '@ephox/katamari';
-import { SugarBody } from '@ephox/sugar';
+import { Arr, Optional } from '@ephox/katamari';
+import { SugarBody, SugarElement, Visibility } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import { ToolbarMode } from 'tinymce/themes/silver/api/Options';
@@ -41,12 +41,25 @@ const pOpenAlignMenu = (label: string): Promise<void> => {
   return pOpenMenuWithSelector(label, selector);
 };
 
-const pOpenMenu = (label: string, menuText: string): Promise<void> => {
-  const menuTextParts = menuText.indexOf(':') > -1 ? menuText.split(':') : [ menuText ];
-  const btnText = menuTextParts[0];
-  const pseudo = menuTextParts.length > 1 ? ':' + menuTextParts[1] : '';
-  const selector = `button:contains(${btnText})${pseudo}`;
-  return pOpenMenuWithSelector(label, selector);
+const pOpenMenu = async (
+  label: string,
+  menuText: string,
+  resolveAmbiguity: ((elements: SugarElement[]) => SugarElement) = ([ firstElement ]) => firstElement
+): Promise<void> => {
+  const findMenuButton = () => {
+    const buttons = UiFinder.findAllIn(SugarBody.body(), `button:contains(${menuText})`);
+    if (buttons.length > 1) {
+      return Optional.from(resolveAmbiguity(buttons));
+    }
+    return buttons.length > 0 ? Optional.from(buttons[0]) : Optional.none();
+  };
+  await Waiter.pTryUntilPredicate(`Waiting for button: ${menuText}`, () => {
+    const button = findMenuButton();
+    return button.isSome() && Visibility.isVisible(button.getOrDie());
+  });
+  Mouse.click(findMenuButton().getOrDie());
+  await UiFinder.pWaitForVisible(`Waiting for menu: ${label}`, SugarBody.body(), '[role="menu"]');
+  await Waiter.pWaitBetweenUserActions();
 };
 
 const pOpenNestedMenus = (menus: OpenNestedMenus[]): Promise<void> =>
