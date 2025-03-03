@@ -263,7 +263,8 @@ describe('browser.tinymce.themes.silver.skin.OxideCollectionComponentTest', () =
     });
 
     const openDialog = async (editor: Editor) => {
-      TinyUiActions.clickOnToolbar(editor, '.tox-tbtn.tox-tbtn--select:has(.tox-tbtn__select-label:contains("Collection Dialog"))');
+      /* TODO: fix */
+      TinyUiActions.clickOnToolbar(editor, '.tox-tbtn.tox-tbtn--select:contains("Collection Dialog")');
       return await TinyUiActions.pWaitForDialog(editor);
     };
 

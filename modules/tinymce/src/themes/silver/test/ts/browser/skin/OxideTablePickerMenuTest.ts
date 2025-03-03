@@ -84,7 +84,7 @@ describe('browser.tinymce.themes.silver.skin.OxideTablePickerMenuTest', () => {
       ApproxStructure.build((s, str, arr) => insertTablePickerApprox(s, str, arr, 1, 1)),
       menu
     );
-    await FocusTools.pTryOnSelector('Focus should be on first table cell', doc, '.tox-insert-table-picker__selected:last');
+    await FocusTools.pTryOnSelector('Focus should be on first table cell', doc, '.tox-insert-table-picker__selected');
     TinyUiActions.keydown(editor, Keys.down());
     TinyUiActions.keydown(editor, Keys.right());
     Assertions.assertStructure(
@@ -92,7 +92,7 @@ describe('browser.tinymce.themes.silver.skin.OxideTablePickerMenuTest', () => {
       ApproxStructure.build((s, str, arr) => insertTablePickerApprox(s, str, arr, 2, 2)),
       menu
     );
-    await FocusTools.pTryOnSelector('Focus should be on 2 down, 2 across table cell', doc, '.tox-insert-table-picker__selected:last');
+    await FocusTools.pTryOnSelector('Focus should be on 2 down, 2 across table cell', doc, '.tox-insert-table-picker > div[role="button"]:nth-child(12)');
     TinyUiActions.keyup(editor, Keys.escape());
   });
 
