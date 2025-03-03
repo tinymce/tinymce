@@ -10,6 +10,7 @@ import { matchStartNode } from 'tinymce/themes/silver/ui/context/ContextToolbarL
 describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLookupPrioritisationTest', () => {
   const createToolbar = (items: string): InlineContent.ContextToolbar => ({
     type: 'contexttoolbar',
+    launch: Optional.none(),
     items,
     predicate: Fun.always,
     position: 'selection',

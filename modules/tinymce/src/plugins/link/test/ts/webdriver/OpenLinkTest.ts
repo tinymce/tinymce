@@ -35,9 +35,9 @@ describe('webdriver.tinymce.plugins.link.OpenLinkTest', () => {
   it('TINY-11009: Open link opens right clicked link when selection is over multiple links', async () => {
     const editor = hook.editor();
     editor.setContent('<p>before <a id="first" href="https://www.exampleone.com">first</a> middle <a id="last" href="https://www.exampletwo.com">last</a> after</p>');
-    UiFinder.exists(SugarBody.body(), 'button[data-mce-name="openlink"]');
     // Click on the first link
     TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 0, 4 ], 2);
+    UiFinder.exists(SugarBody.body(), 'button[data-mce-name="openlink"]');
     await RealMouse.pRightClickOn('iframe => a#first');
     // Check button is enabled
     UiFinder.exists(SugarBody.body(), 'button[data-mce-name="openlink"][aria-disabled="false"]');
