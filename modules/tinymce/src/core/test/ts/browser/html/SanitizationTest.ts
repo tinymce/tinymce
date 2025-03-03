@@ -1,4 +1,3 @@
-/* eslint-disable mocha/no-exclusive-tests */
 import { context, describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 

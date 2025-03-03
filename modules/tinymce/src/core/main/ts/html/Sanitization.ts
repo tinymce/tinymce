@@ -258,8 +258,8 @@ const sanitizeMathmlElement = (node: Element, settings: DomParserSettings) => {
 
     evt.allowedTags[lcTagName] = keepElement;
     if (!keepElement && settings.sanitize) {
-      if (node.nodeType === NodeTypes.ELEMENT) {
-        (node as Element).remove();
+      if (NodeType.isElement(node)) {
+        node.remove();
       }
     }
   });

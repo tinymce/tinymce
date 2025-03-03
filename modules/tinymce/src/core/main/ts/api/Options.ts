@@ -311,30 +311,11 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('font_css', {
-    processor: (value) => {
-      const valid = Type.isString(value) || Type.isArrayOf(value, Type.isString);
-
-      if (valid) {
-        const newValue = Type.isArray(value) ? value : Arr.map(value.split(','), Strings.trim);
-        return { value: newValue, valid };
-      } else {
-        return { valid: false, message: 'Must be a string or an array of strings.' };
-      }
-    },
-    default: []
+    processor: 'string[]'
   });
 
   registerOption('allow_extra_mathml_attributes', {
-    processor: (value) => {
-      const valid = Type.isArrayOf(value, Type.isString);
-
-      if (valid) {
-        return { value, valid };
-      } else {
-        return { valid: false, message: 'Must be an array of strings.' };
-      }
-    },
-    default: []
+    processor: 'string[]'
   });
 
   registerOption('allow_extra_mathml_elements', {
@@ -1035,8 +1016,8 @@ const shouldConvertUnsafeEmbeds = option('convert_unsafe_embeds');
 const getLicenseKey = option('license_key');
 const getApiKey = option('api_key');
 const isDisabled = option('disabled');
-const allowExtraMathmlAttributes = option('allow_extra_mathml_attributes');
-const allowExtraMathmlElements = option('allow_extra_mathml_elements');
+const getAllowExtraMathmlAttributes = option('allow_extra_mathml_attributes');
+const getAllowExtraMathmlElements = option('allow_extra_mathml_elements');
 
 export {
   register,
@@ -1044,8 +1025,8 @@ export {
   getIframeAttrs,
   getDocType,
   getDocumentBaseUrl,
-  allowExtraMathmlAttributes,
-  allowExtraMathmlElements,
+  getAllowExtraMathmlAttributes,
+  getAllowExtraMathmlElements,
   getBodyId,
   getBodyClass,
   getContentSecurityPolicy,
