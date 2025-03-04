@@ -89,6 +89,7 @@ const renderAutocompleteItem = (
     textContent: Optional.none(),
     htmlContent: useText ? spec.text.map((text) => replaceText(text, matchText)) : Optional.none(),
     ariaLabel: spec.text,
+    labelContent: Optional.none(),
     iconContent: spec.icon,
     shortcutContent: Optional.none(),
     checkMark: Optional.none(),

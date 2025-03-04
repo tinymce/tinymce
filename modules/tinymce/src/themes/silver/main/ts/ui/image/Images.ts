@@ -1,5 +1,5 @@
 import { AddEventsBehaviour, AlloyEvents, Behaviour, SimpleSpec } from '@ephox/alloy';
-import { Arr } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { SelectorFilter, SelectorFind } from '@ephox/sugar';
 
 export type ImageProvider = () => Record<string, string>;
@@ -9,6 +9,7 @@ interface ImageSpec {
   readonly classes: string[];
   readonly attributes?: Record<string, string>;
   readonly behaviours?: Array<Behaviour.NamedConfiguredBehaviour<any, any, any>>;
+  readonly label: Optional<string>;
 }
 
 const getSvgWithLoading = (url: string): string => `<svg width="48" height="48" xmlns="http://www.w3.org/2000/svg">
@@ -35,14 +36,29 @@ const getSvgWithLoading = (url: string): string => `<svg width="48" height="48" 
   />
 </svg>`;
 
+const createLabel = (label: string): SimpleSpec => {
+  return {
+    dom: {
+      tag: 'label',
+      innerHtml: label
+    },
+    components: [],
+    behaviours: Behaviour.derive([])
+  };
+};
+
 const renderImage = (spec: ImageSpec, imageUrl: string): SimpleSpec => {
   return {
     dom: {
       tag: spec.tag,
+      styles: {
+        'display': 'flex',
+        'flex-direction': 'column'
+      },
       attributes: spec.attributes ?? {},
-      innerHtml: getSvgWithLoading(imageUrl)
+      innerHtml: getSvgWithLoading(imageUrl),
     },
-    components: [],
+    components: spec.label.map(createLabel).toArray(),
     behaviours: Behaviour.derive([
       ...spec.behaviours ?? [],
       AddEventsBehaviour.config('render-image-events', [

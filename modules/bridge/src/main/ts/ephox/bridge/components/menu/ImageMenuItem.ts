@@ -7,6 +7,7 @@ import { CommonMenuItem, commonMenuItemFields, CommonMenuItemInstanceApi, Common
 export interface ImageMenuItemSpec extends CommonMenuItemSpec {
   type?: 'imageitem';
   url?: string;
+  label?: string;
 }
 
 export interface ImageMenuItemInstanceApi extends CommonMenuItemInstanceApi {
@@ -18,12 +19,14 @@ export interface ImageMenuItem extends CommonMenuItem {
   type: 'imageitem';
   active: boolean;
   url: Optional<string>;
+  label: Optional<string>;
 }
 
 export const imageMenuItemSchema = StructureSchema.objOf([
   ComponentSchema.type,
   ComponentSchema.active,
-  ComponentSchema.optionalUrl
+  ComponentSchema.optionalUrl,
+  ComponentSchema.optionalLabel
 ].concat(commonMenuItemFields));
 
 export const createImageMenuItem = (spec: ImageMenuItemSpec): Result<ImageMenuItem, StructureSchema.SchemaError<any>> =>
