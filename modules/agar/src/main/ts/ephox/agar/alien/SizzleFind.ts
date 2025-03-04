@@ -8,7 +8,6 @@ type SizzleContext = Element | Document | DocumentFragment;
 const toOptionEl = <T extends Element>(output: T[]): Optional<SugarElement<T>> =>
   output.length === 0 ? Optional.none() : Optional.from(output[0]).map(SugarElement.fromDom);
 
-/* Petrie makes extensive use of :visible, :has() and :contains() which are sizzle extensions */
 const descendant = <T extends Element>(sugarElement: SugarElement<SizzleContext>, selector: string): Optional<SugarElement<T>> => {
   const siz = SelectorEngine.selectAll(selector, sugarElement.dom) as T[];
   return toOptionEl(siz);
@@ -17,7 +16,6 @@ const descendant = <T extends Element>(sugarElement: SugarElement<SizzleContext>
 const toArrayEl = <T extends Node | Window>(elements: T[]): SugarElement<T>[] =>
   Arr.map(elements, SugarElement.fromDom);
 
-/* Petrie makes extensive use of :visible, :has() and :contains() which are sizzle extensions */
 const descendants = <T extends Element>(sugarElement: SugarElement<SizzleContext>, selector: string): SugarElement<T>[] =>
   toArrayEl(SelectorEngine.selectAll(selector, sugarElement.dom) as T[]);
 
