@@ -27,7 +27,7 @@ describe('browser.tinymce.plugins.table.TableAppearanceTest', () => {
       {
         'label:contains("Cell spacing")': 0,
         'label:contains("Cell padding")': 0,
-        'label:contains("Border") + input': 0,
+        'label:contains("Border")': 0,
         'label:contains("Caption")': 0
       },
       dialog
@@ -47,7 +47,7 @@ describe('browser.tinymce.plugins.table.TableAppearanceTest', () => {
       {
         'label:contains("Cell spacing")': 1,
         'label:contains("Cell padding")': 1,
-        'label:contains("Border") + input': 1,
+        'label:contains("Border")': 1,
         'label:contains("Caption")': 1
       },
       dialog

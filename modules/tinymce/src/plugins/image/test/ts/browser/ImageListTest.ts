@@ -4,7 +4,7 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
-import { assertInputValue, generalTabSelectors, pSetListBoxItem, pWaitForDialogMeasurements, setInputValue } from '../module/Helpers';
+import { assertInputValue, generalTabLabels, pSetListBoxItem, pWaitForDialogMeasurements, setInputValue } from '../module/Helpers';
 
 describe('browser.tinymce.plugins.image.ImageListTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -21,11 +21,11 @@ describe('browser.tinymce.plugins.image.ImageListTest', () => {
     ]);
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
     await TinyUiActions.pWaitForDialog(editor);
-    await pSetListBoxItem(generalTabSelectors.images, 'Dog');
+    await pSetListBoxItem(generalTabLabels.images, 'Dog');
     await pWaitForDialogMeasurements('mydog.jpg');
-    assertInputValue(generalTabSelectors.src, 'mydog.jpg');
-    setInputValue(generalTabSelectors.src, 'mycat.jpg');
+    assertInputValue(generalTabLabels.src, 'mydog.jpg');
+    setInputValue(generalTabLabels.src, 'mycat.jpg');
     await pWaitForDialogMeasurements('mycat.jpg');
-    assertInputValue(generalTabSelectors.src, 'mycat.jpg');
+    assertInputValue(generalTabLabels.src, 'mycat.jpg');
   });
 });
