@@ -17,6 +17,7 @@ export interface ItemStructure {
 
 export interface ItemStructureSpec {
   readonly presets: Toolbar.PresetItemTypes;
+  readonly labelContent: Optional<string>;
   readonly iconContent: Optional<string>;
   readonly textContent: Optional<string>;
   readonly htmlContent: Optional<string>;
@@ -142,7 +143,7 @@ const renderImgItemStructure = (info: ItemStructureSpec): ItemStructure => {
   const menuItem = {
     dom: renderItemDomStructure(info.ariaLabel),
     optComponents: [
-      Optional.some(Images.render(info.iconContent.getOrDie(), { tag: 'div', classes: [ ItemClasses.iconClass ] })),
+      Optional.some(Images.render(info.iconContent.getOrDie(), { tag: 'div', classes: [ ItemClasses.iconClass ], label: info.labelContent })),
     ]
   };
   return menuItem;
