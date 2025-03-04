@@ -34,6 +34,7 @@ const renderImgItem = (
     htmlContent: Optional.none(),
     ariaLabel: spec.text,
     iconContent: spec.url,
+    labelContent: spec.label,
     shortcutContent: useText ? spec.shortcut : Optional.none(),
 
     // useText essentially says that we have one column. In one column lists, we should show a tick
