@@ -21,7 +21,7 @@ const wrappedSetTimeout = (callback: () => void, time?: number) => {
   return window.setTimeout(callback, time);
 };
 
-const wrappedSetInterval = (callback: Function, time?: number): number => {
+const wrappedSetInterval = (callback: () => void, time?: number): number => {
   if (!Type.isNumber(time)) {
     time = 0;
   }
