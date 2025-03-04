@@ -1,22 +1,16 @@
 import { Arr, Obj, Optional, Strings } from '@ephox/katamari';
-import * as Sizzle from 'sizzle';
 
-const sizzleEnabled = false;
 type LookupContext = Element | Document | DocumentFragment;
 interface DecodedContainsSelector {
   baseSelector: string;
   text: string;
 }
 
-const selectAll = (selector: string, context: LookupContext): Element[] => {
-  if (sizzleEnabled) {
-    return Sizzle(selector, context);
-  }
-  return decodeContains(selector).fold(
+const selectAll = (selector: string, context: LookupContext): Element[] =>
+  decodeContains(selector).fold(
     () => queryAll(context, selector),
     (decodedContainsSelector) => queryAllWithContains(context, decodedContainsSelector)
   );
-};
 
 const decodeContains = (selector: string): Optional<DecodedContainsSelector> => {
   const regexp = /(?<baseSelector>.*):contains\((?<text>.*)\)$/;
@@ -43,15 +37,11 @@ const queryAllWithContains = (element: LookupContext, { baseSelector, text }: De
 const hasText = (element: Node, text: string) =>
   Strings.contains(element.textContent, text);
 
-const matchesSelector = (element: Element, selector: string): boolean => {
-  if (sizzleEnabled) {
-    return Sizzle.matchesSelector(element, selector);
-  }
-  return decodeContains(selector).fold(
+const matchesSelector = (element: Element, selector: string): boolean =>
+  decodeContains(selector).fold(
     () => matches(selector, element),
     (decodedContainsSelector) => matchesWithContains(decodedContainsSelector, element)
   );
-};
 
 const matches = (selector: string, element: Element) => element.matches(selector);
 
