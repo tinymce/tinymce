@@ -16,7 +16,7 @@
     "node": ">=0.10.26"
   },
   "main": "js/tinymce/tinymce.js",
-  "types": "js/tinymce/tinymce.d.ts",
+  "types": "src/core/main/ts/api/PublicApi.ts",
   "scripts": {
     "build": "grunt buildOnly",
     "test": "grunt test",
