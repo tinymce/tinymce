@@ -2,13 +2,13 @@ import { Arr, Obj, Optional, Strings } from '@ephox/katamari';
 import * as Sizzle from 'sizzle';
 
 const sizzleEnabled = false;
-type SizzleContext = Element | Document | DocumentFragment;
+type LookupContext = Element | Document | DocumentFragment;
 interface DecodedContainsSelector {
   baseSelector: string;
   text: string;
 }
 
-const selectAll = (selector: string, context: SizzleContext): Element[] => {
+const selectAll = (selector: string, context: LookupContext): Element[] => {
   if (sizzleEnabled) {
     return Sizzle(selector, context);
   }
@@ -17,13 +17,6 @@ const selectAll = (selector: string, context: SizzleContext): Element[] => {
     (decodedContainsSelector) => queryAllWithContains(context, decodedContainsSelector)
   );
 };
-
-const queryAllWithContains = (element: SizzleContext, { baseSelector, text }: DecodedContainsSelector) => {
-  const baseSelectorMatch = queryAll(element, baseSelector);
-  return Arr.filter(baseSelectorMatch, (e) => hasText(e, text));
-};
-
-const queryAll = (element: SizzleContext, selector: string) => Array.from(element.querySelectorAll(selector));
 
 const decodeContains = (selector: string): Optional<DecodedContainsSelector> => {
   const regexp = /(?<baseSelector>.*):contains\((?<text>.*)\)$/;
@@ -38,6 +31,13 @@ const unwrapFromQuotes = (pattern: string) => {
   const regexp = /^(?<quote>["'])(?<content>.*)\k<quote>$/;
   const matchedGroups = regexp.exec(pattern)?.groups ?? {};
   return matchedGroups.content ?? pattern;
+};
+
+const queryAll = (element: LookupContext, selector: string) => Array.from(element.querySelectorAll(selector));
+
+const queryAllWithContains = (element: LookupContext, { baseSelector, text }: DecodedContainsSelector) => {
+  const baseSelectorMatch = queryAll(element, baseSelector);
+  return Arr.filter(baseSelectorMatch, (e) => hasText(e, text));
 };
 
 const hasText = (element: Node, text: string) =>

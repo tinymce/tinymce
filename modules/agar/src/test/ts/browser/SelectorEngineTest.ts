@@ -136,7 +136,7 @@ describe('SelectorEngineTest', () => {
   it(':contains should include partial match', () => {
     const content = SugarElement.fromHtml(
       '<ol>' +
-        '<li>Tiny and couple of other words<li>' +
+        '<li>Tiny and couple of other words</li>' +
         '<li>TinyMCE</li>' +
         '<li>Tiny</li>' +
       '</ol>'
@@ -178,22 +178,6 @@ describe('SelectorEngineTest', () => {
       () => SelectorEngine.matchesSelector(container.dom, 'label:contains(Foo) + input'));
   });
 
-  /*
-  TODO: maybe I should test how to escape " and ' inside "" and ''
-  it(':contains should look for quotes', () => {
-    const content = SugarElement.fromHtml(
-      '<div>' +
-        '<div>That\'s interesting</div>' +
-        '<div id="quote">"To be or not to be"</div>' +
-        '<div>To be or not to be</div>' +
-      '</div>'
-    );
-    Insert.append(container, content);
-    const quote = document.querySelector('#quote');
-  });
-  */
-
-  /* TODO: how about :contains() meaning empty string */
   it('matchesSelector should match', () => {
     const content = SugarElement.fromHtml(
       '<div id="home-content">' +
