@@ -119,12 +119,17 @@ const preserveWith = (editor: Editor, f: (startElement: SugarElement<Node>, endE
 
 const scrollToMarker = (editor: Editor, marker: MarkerInfo, viewHeight: number, alignToTop: boolean, doc?: SugarElement<Document>) => {
   const pos = marker.pos;
+  // Use a fixed scroll margin of 30px
+  const scrollMargin = 30;
+
   if (alignToTop) {
-    Scroll.to(pos.left, pos.top, doc);
+    // When scrolling to top, add margin to the top position
+    Scroll.to(pos.left, Math.max(0, pos.top - scrollMargin), doc);
   } else {
     // The position we want to scroll to is the...
     // (absolute position of the marker, minus the view height) plus (the height of the marker)
-    const y = (pos.top - viewHeight) + marker.height;
+    // When scrolling to bottom, add margin to ensure content isn't at the very bottom
+    const y = (pos.top - viewHeight) + marker.height + scrollMargin;
     Scroll.to(-editor.getBody().getBoundingClientRect().left, y, doc);
   }
 };
