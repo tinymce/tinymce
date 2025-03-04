@@ -22,7 +22,7 @@ const renderPromotion = (spec: PromotionSpec): AlloySpec => {
         innerHtml: promotionMessage
       }
     }
-  ] : undefined;
+  ] : [];
 
   return {
     uid: spec.uid,

@@ -83,10 +83,10 @@ export default (): void => {
     );
 
     const getPromotionElement = (): HTMLElement | null => {
-      return SelectorFind.descendant(
-        SugarElement.fromDom(editor.container),
+      return SelectorFind.descendant<HTMLElement>(
+        SugarElement.fromDom(editor.getContainer()),
         '.tox-promotion'
-      ).fold(Fun.constant(null), (promotion) => promotion.dom as HTMLElement);
+      ).map((promotion) => promotion.dom).getOrNull();
     };
 
     return {
