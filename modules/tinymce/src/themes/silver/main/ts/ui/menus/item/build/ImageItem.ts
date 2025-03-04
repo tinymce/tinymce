@@ -10,15 +10,14 @@ import { renderCheckmark } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
-const renderChoiceItem = (
-  spec: Menu.ChoiceMenuItem,
+const renderImgItem = (
+  spec: Menu.ImageMenuItem,
   useText: boolean,
-  presets: Toolbar.PresetItemTypes,
+  _presets: Toolbar.PresetItemTypes,
   onItemValueHandler: (itemValue: string) => void,
   isSelected: boolean,
   itemResponse: ItemResponse,
-  providersBackstage: UiFactoryBackstageProviders,
-  renderIcons: boolean = true
+  providersBackstage: UiFactoryBackstageProviders
 ): ItemTypes.ItemSpec => {
   const getApi = (component: AlloyComponent): Menu.ToggleMenuItemInstanceApi => ({
     setActive: (state) => {
@@ -30,13 +29,12 @@ const renderChoiceItem = (
   });
 
   const structure = renderItemStructure({
-    presets,
+    presets: 'img',
     textContent: useText ? spec.text : Optional.none(),
     htmlContent: Optional.none(),
-    // TODO: this probably need to be passed
-    labelContent: Optional.none(),
     ariaLabel: spec.text,
-    iconContent: spec.icon,
+    iconContent: spec.url,
+    labelContent: spec.label,
     shortcutContent: useText ? spec.shortcut : Optional.none(),
 
     // useText essentially says that we have one column. In one column lists, we should show a tick
@@ -45,7 +43,7 @@ const renderChoiceItem = (
     checkMark: useText ? Optional.some(renderCheckmark(providersBackstage.icons)) : Optional.none(),
     caret: Optional.none(),
     value: spec.value
-  }, providersBackstage, renderIcons);
+  }, providersBackstage, true);
 
   const optTooltipping = spec.text
     .filter(Fun.constant(!useText))
@@ -82,4 +80,4 @@ const renderChoiceItem = (
   );
 };
 
-export { renderChoiceItem };
+export { renderImgItem };
