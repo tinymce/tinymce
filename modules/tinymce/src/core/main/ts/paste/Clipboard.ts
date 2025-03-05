@@ -76,6 +76,27 @@ const pasteText = (editor: Editor, text: string, shouldSimulateInputEvent: boole
   doPaste(editor, html, false, true, shouldSimulateInputEvent);
 };
 
+const getDataFromNativeClipboard = async (): Promise<ClipboardContents> => {
+  const data: ClipboardContents = {};
+
+  try {
+    const clipboardItems = await navigator.clipboard.read();
+
+    for (const clipboardItem of clipboardItems) {
+      for (const type of clipboardItem.types) {
+        const blob = await clipboardItem.getType(type);
+        const text = await blob.text();
+        data[type] = text;
+      }
+    }
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error(err);
+  }
+
+  return data;
+};
+
 /*
  * Gets various content types out of a datatransfer object.
  */
@@ -333,6 +354,7 @@ export {
   pasteText,
   pasteImageData,
   getDataTransferItems,
+  getDataFromNativeClipboard,
   hasHtmlOrText,
   hasContentType
 };

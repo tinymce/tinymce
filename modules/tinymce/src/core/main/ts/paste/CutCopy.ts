@@ -1,4 +1,4 @@
-import { Fun } from '@ephox/katamari';
+import { Fun, Obj } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -11,16 +11,26 @@ interface SelectionContentData {
   readonly text: string;
 }
 
+interface ClipboardDataContent {
+  readonly 'text/html': string;
+  readonly 'text/plain': string;
+  readonly [type: string]: string;
+}
+
 type DoneFn = () => void;
 type FallbackFn = (html: string, done: DoneFn) => void;
 
-const setHtml5Clipboard = (clipboardData: DataTransfer | null, html: string, text: string): boolean => {
+const setHtml5Clipboard = (clipboardData: DataTransfer | null, data: ClipboardDataContent): boolean => {
+  console.log('setHtml5Clipboard');
   if (clipboardData) {
     try {
       clipboardData.clearData();
-      clipboardData.setData('text/html', html);
-      clipboardData.setData('text/plain', text);
-      clipboardData.setData(InternalHtml.internalHtmlMime(), html);
+      // clipboardData.setData('text/html', html);
+      // clipboardData.setData('text/plain', text);
+      // clipboardData.setData(InternalHtml.internalHtmlMime(), html);
+      Obj.each(data, (val, key) => {
+        clipboardData.setData(key, val);
+      });
       return true;
     } catch {
       return false;
@@ -31,7 +41,8 @@ const setHtml5Clipboard = (clipboardData: DataTransfer | null, html: string, tex
 };
 
 const setClipboardData = (evt: ClipboardEvent, data: SelectionContentData, fallback: FallbackFn, done: DoneFn): void => {
-  if (setHtml5Clipboard(evt.clipboardData, data.html, data.text)) {
+  const clipboardDataContent = generateClipboardDataContent(data);
+  if (setHtml5Clipboard(evt.clipboardData, clipboardDataContent)) {
     evt.preventDefault();
     done();
   } else {
@@ -68,10 +79,27 @@ const fallback = (editor: Editor): FallbackFn => (html, done) => {
   }, 0);
 };
 
-const getData = (editor: Editor): SelectionContentData => ({
+const generateClipboardDataContent = (selectionData: SelectionContentData): ClipboardDataContent => {
+  const { html, text } = selectionData;
+  return {
+    'text/html': html,
+    'text/plain': text,
+    [InternalHtml.internalHtmlMime()]: html
+  };
+};
+
+const getSelectionData = (editor: Editor): SelectionContentData => ({
   html: InternalHtml.mark(editor.selection.getContent({ contextual: true })),
   text: editor.selection.getContent({ format: 'text' })
 });
+// const getData = (editor: Editor): SelectionContentData => {
+//   const html = InternalHtml.mark(editor.selection.getContent({ contextual: true }));
+//   return {
+//     html,
+//     text: editor.selection.getContent({ format: 'text' }),
+//     [InternalHtml.internalHtmlMime()]: html
+//   };
+// };
 
 const isTableSelection = (editor: Editor): boolean =>
   !!editor.dom.getParent(editor.selection.getStart(), 'td[data-mce-selected],th[data-mce-selected]', editor.getBody());
@@ -80,8 +108,9 @@ const hasSelectedContent = (editor: Editor): boolean =>
   !editor.selection.isCollapsed() || isTableSelection(editor);
 
 const cut = (editor: Editor) => (evt: EditorEvent<ClipboardEvent>): void => {
+  console.log('cut');
   if (!evt.isDefaultPrevented() && hasSelectedContent(editor) && editor.selection.isEditable()) {
-    setClipboardData(evt, getData(editor), fallback(editor), () => {
+    setClipboardData(evt, getSelectionData(editor), fallback(editor), () => {
       if (Env.browser.isChromium() || Env.browser.isFirefox()) {
         const rng = editor.selection.getRng();
         // Chrome fails to execCommand from another execCommand with this message:
@@ -101,8 +130,9 @@ const cut = (editor: Editor) => (evt: EditorEvent<ClipboardEvent>): void => {
 };
 
 const copy = (editor: Editor) => (evt: EditorEvent<ClipboardEvent>): void => {
+  console.log('copy');
   if (!evt.isDefaultPrevented() && hasSelectedContent(editor)) {
-    setClipboardData(evt, getData(editor), fallback(editor), Fun.noop);
+    setClipboardData(evt, getSelectionData(editor), fallback(editor), Fun.noop);
   }
 };
 
@@ -112,5 +142,7 @@ const register = (editor: Editor): void => {
 };
 
 export {
+  getSelectionData,
+  generateClipboardDataContent,
   register
 };

@@ -1,8 +1,7 @@
 import { RealClipboard, RealMouse, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 // import { PlatformDetection } from '@ephox/sand';
-import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -11,6 +10,9 @@ import Editor from 'tinymce/core/api/Editor';
 // TODO: Test text and HTML
 // TODO: Make sure "Paste as Text" is respected
 // TODO: Make sure doesn't interfere with powerpaste
+// TODO: Add copy,cut,paste command tests
+// TODO: Verify copy,cut,paste event is also fired
+// For pasting, make sure pastepreprocess and pasteprocess are triggered
 
 describe('webdriver.tinymce.core.paste.ClipboardUiTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
@@ -19,13 +21,13 @@ describe('webdriver.tinymce.core.paste.ClipboardUiTest', () => {
   }, []);
   // const platform = PlatformDetection.detect();
 
-  const assertNotification = (editor: Editor) => {
-    const notifications = editor.notificationManager.getNotifications();
-    assert.lengthOf(notifications, 1);
-    notifications[0].settings.type = 'error';
-    notifications[0].settings.text = 'error';
-    notifications[0].close();
-  };
+  // const assertNotification = (editor: Editor) => {
+  //   const notifications = editor.notificationManager.getNotifications();
+  //   assert.lengthOf(notifications, 1);
+  //   notifications[0].settings.type = 'error';
+  //   notifications[0].settings.text = 'error';
+  //   notifications[0].close();
+  // };
 
   // const pClickEditMenu = async (editor: Editor, item: string): Promise<void> => {
   //   TinyUiActions.clickOnMenu(editor, 'button:contains("Edit")');
@@ -46,7 +48,7 @@ describe('webdriver.tinymce.core.paste.ClipboardUiTest', () => {
   it('should be able to use the cut button to cut text within the editor', async () => {
     const editor = hook.editor();
     editor.setContent('<p>abc <strong>def</strong> def</p>');
-    TinySelections.setRawSelection(editor, [ 0, 2 ], 2, [ 0, 2], 4);
+    TinySelections.setRawSelection(editor, [ 0, 2 ], 2, [ 0, 2 ], 4);
     await RealMouse.pClickOn('button[aria-label="Cut"]');
     await Waiter.pTryUntil('editor content removed', () => {
       TinyAssertions.assertContent(editor, '<p>abc <strong>def</strong> d</p>');
