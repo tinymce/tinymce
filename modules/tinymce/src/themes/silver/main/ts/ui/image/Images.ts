@@ -36,17 +36,6 @@ const getSvgWithLoading = (url: string): string => `<svg width="48" height="48" 
   />
 </svg>`;
 
-const createLabel = (label: string): SimpleSpec => {
-  return {
-    dom: {
-      tag: 'label',
-      innerHtml: label
-    },
-    components: [],
-    behaviours: Behaviour.derive([])
-  };
-};
-
 const renderImage = (spec: ImageSpec, imageUrl: string): SimpleSpec => {
   return {
     dom: {
@@ -58,7 +47,7 @@ const renderImage = (spec: ImageSpec, imageUrl: string): SimpleSpec => {
       attributes: spec.attributes ?? {},
       innerHtml: getSvgWithLoading(imageUrl),
     },
-    components: spec.label.map(createLabel).toArray(),
+    components: [],
     behaviours: Behaviour.derive([
       ...spec.behaviours ?? [],
       AddEventsBehaviour.config('render-image-events', [
