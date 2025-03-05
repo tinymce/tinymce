@@ -1,6 +1,7 @@
 import { AlloyComponent, Disabling, ItemTypes, Toggling, Tooltipping } from '@ephox/alloy';
 import { Menu, Toolbar } from '@ephox/bridge';
 import { Fun, Merger, Optional } from '@ephox/katamari';
+import { Insert, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 
@@ -74,7 +75,14 @@ const renderImgItem = (
         toggleClass: ItemClasses.tickedClass,
         toggleOnExecute: false,
         selected: spec.active,
-        exclusive: true
+        exclusive: true,
+        onToggled: (comp: AlloyComponent) => {
+          SelectorFind.descendant(comp.element, '.tox-collection__item-image').each((imgContainer) => {
+            const checkmarkIcon = providersBackstage.icons().checkmark;
+            const iconElement = SugarElement.fromHtml(`<div class="tox-collection__item-image-check">${checkmarkIcon}</div>`);
+            Insert.append(imgContainer, iconElement);
+          });
+        }
       }
     }
   );
