@@ -118,6 +118,19 @@
     user-select: none;
   }
 
+  .tox-collection__item:has(label) {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      width: @collection-item-list-icon-width * 2;
+      white-space: nowrap;
+      overflow: hidden;
+      font-size: 12px;
+      color: @collection-item-label-text-color;
+    }
+  }
+
   .tox-collection--list .tox-collection__item {
     padding: @collection-item-padding;
   }
@@ -200,7 +213,12 @@
     }
   }
 
+  .tox-collection__item-image {
+    border: 1px solid #E3E3E3;
+  }
+
   .tox-collection__item-icon,
+  .tox-collection__item-image,
   .tox-collection__item-checkmark {
     align-items: center;
     display: flex;
