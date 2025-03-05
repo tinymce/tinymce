@@ -14,6 +14,7 @@ const tickedClass = 'tox-collection__item--enabled';
 const separatorClass = 'tox-collection__separator';
 const groupHeadingClass = 'tox-collection__group-heading';
 const iconClass = 'tox-collection__item-icon';
+const imageClass = 'tox-collection__item-image';
 const textClass = 'tox-collection__item-label';
 const accessoryClass = 'tox-collection__item-accessory';
 const caretClass = 'tox-collection__item-caret';
@@ -43,6 +44,7 @@ export {
   separatorClass,
   groupHeadingClass,
   iconClass,
+  imageClass,
   accessoryClass,
   caretClass,
   checkmarkClass,
