@@ -21,7 +21,7 @@ type DoneFn = () => void;
 type FallbackFn = (html: string, done: DoneFn) => void;
 
 const setHtml5Clipboard = (clipboardData: DataTransfer | null, data: ClipboardDataContent): boolean => {
-  console.log('setHtml5Clipboard');
+  // console.log('setHtml5Clipboard');
   if (clipboardData) {
     try {
       clipboardData.clearData();
@@ -108,7 +108,7 @@ const hasSelectedContent = (editor: Editor): boolean =>
   !editor.selection.isCollapsed() || isTableSelection(editor);
 
 const cut = (editor: Editor) => (evt: EditorEvent<ClipboardEvent>): void => {
-  console.log('cut');
+  // console.log('cut');
   if (!evt.isDefaultPrevented() && hasSelectedContent(editor) && editor.selection.isEditable()) {
     setClipboardData(evt, getSelectionData(editor), fallback(editor), () => {
       if (Env.browser.isChromium() || Env.browser.isFirefox()) {
@@ -130,7 +130,7 @@ const cut = (editor: Editor) => (evt: EditorEvent<ClipboardEvent>): void => {
 };
 
 const copy = (editor: Editor) => (evt: EditorEvent<ClipboardEvent>): void => {
-  console.log('copy');
+  // console.log('copy');
   if (!evt.isDefaultPrevented() && hasSelectedContent(editor)) {
     setClipboardData(evt, getSelectionData(editor), fallback(editor), Fun.noop);
   }
