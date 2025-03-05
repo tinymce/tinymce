@@ -122,12 +122,20 @@
     display: flex;
     flex-direction: column;
 
+    .tox-collection__item-icon,
+    .tox-collection__item-image,
+    .tox-collection__item-checkmark {
+      flex-grow: 1;
+    }
+
     label {
       width: @collection-item-list-icon-width * 2;
       white-space: nowrap;
       overflow: hidden;
       font-size: 12px;
       color: @collection-item-label-text-color;
+      text-align: center;
+      align-self: flex-end;
     }
   }
 
@@ -180,6 +188,16 @@
     background-color: @collection-toolbar-item-enabled-background-color;
     color: @collection-toolbar-item-label-enabled-text-color;
 
+    .tox-collection__item-image-check {
+      height: @collection-item-list-icon-height;
+      width: @collection-item-list-icon-width;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      filter: invert(26%) sepia(80%) saturate(2788%) hue-rotate(202deg) brightness(94%) contrast(101%);
+    }
+
     @media (forced-colors: active) {
       border-radius: 3px;
       outline: solid 1px;
@@ -215,10 +233,13 @@
 
   .tox-collection__item-image {
     border: 1px solid #E3E3E3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
   }
 
   .tox-collection__item-icon,
-  .tox-collection__item-image,
   .tox-collection__item-checkmark {
     align-items: center;
     display: flex;
