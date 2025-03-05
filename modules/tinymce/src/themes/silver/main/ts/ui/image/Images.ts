@@ -40,11 +40,8 @@ const renderImage = (spec: ImageSpec, imageUrl: string): SimpleSpec => {
   return {
     dom: {
       tag: spec.tag,
-      styles: {
-        'display': 'flex',
-        'flex-direction': 'column'
-      },
       attributes: spec.attributes ?? {},
+      classes: spec.classes,
       innerHtml: getSvgWithLoading(imageUrl),
     },
     components: [],
