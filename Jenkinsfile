@@ -5,8 +5,8 @@ standardProperties()
 
 def runBedrockTest(String name, String command, Boolean runAll, int retry = 0, int timeout = 0) {
   def bedrockCmd = command + (runAll ? " --ignore-lerna-changed=true" : "")
-  echo "Running Bedrock cmd: ${command}"
-  def testStatus = sh(script: command, returnStatus: true)
+  echo "Running Bedrock cmd: ${bedrockCmd}"
+  def testStatus = sh(script: bedrockCmd, returnStatus: true)
   junit allowEmptyResults: true, testResults: 'scratch/TEST-*.xml'
 
   if (testStatus == 4) {
