@@ -170,7 +170,7 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
   };
 
   const startBlink = () => {
-    cursorInterval = setInterval(() => {
+    cursorInterval = window.setInterval(() => {
       lastVisualCaret.on((caretState) => {
         if (hasFocus()) {
           dom.toggleClass(caretState.caret, 'mce-visual-caret-hidden');
