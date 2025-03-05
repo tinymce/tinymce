@@ -115,7 +115,8 @@ def runSeleniumPod(String cacheName, String name, String browser, String version
           resourceRequestEphemeralStorage: '8Gi',
           resourceLimitCpu: '7',
           resourceLimitMemory: '4Gi',
-          resourceLimitEphemeralStorage: '8Gi'
+          resourceLimitEphemeralStorage: '8Gi',
+          runAsGroup: '1000', runAsUser: '1000'
         ]
   Map selenium = [
           name: "selenium",
