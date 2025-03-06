@@ -37,7 +37,7 @@ interface ImageSpec {
 // </svg>`;
 
 const getInnerHTML = (url: string): string => `
-  <div style="width: 48px; height: 48px; display: flex; align-items: center;">
+  <div style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
     <img src="${url}" />
   </div>
 `;
