@@ -119,7 +119,8 @@ const preserveWith = (editor: Editor, f: (startElement: SugarElement<Node>, endE
 
 const scrollToMarker = (editor: Editor, marker: MarkerInfo, viewHeight: number, alignToTop: boolean, doc?: SugarElement<Document>) => {
   const pos = marker.pos;
-  // Use a fixed scroll margin of 30px
+  // with default font size 16px font and 1.3 line height (~21px per line),
+  // adding roughly 50% extra space gives about 30px of breathing room ensuring comfortable spacing.
   const scrollMargin = 30;
 
   if (alignToTop) {
