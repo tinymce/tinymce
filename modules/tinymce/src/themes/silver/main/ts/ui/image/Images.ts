@@ -1,6 +1,6 @@
 import { AddEventsBehaviour, AlloyEvents, Behaviour, SimpleSpec } from '@ephox/alloy';
-import { Optional } from '@ephox/katamari';
-import { Class, Insert, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Arr, Obj, Optional } from '@ephox/katamari';
+import { Css, Insert, Remove, SelectorFind, SugarElement } from '@ephox/sugar';
 
 export type ImageProvider = () => Record<string, string>;
 
@@ -12,48 +12,48 @@ interface ImageSpec {
   readonly label: Optional<string>;
 }
 
-// const getSvgWithLoading = (url: string): string => `<svg width="48" height="48" xmlns="http://www.w3.org/2000/svg">
-//   <style>
-//     .ball {
-//       animation: bounce 2s infinite;
-//     }
-
-//     @keyframes bounce {
-//       0%, 100% {
-//         cy: 30px;
-//       }
-//       50% {
-//         cy: 170px;
-//       }
-//     }
-//   </style>
-//   <circle class="ball" cx="10" cy="5" r="5" fill="red" />
-//   <image
-//     width="48"
-//     height="48"
-//     preserveaspectratio="xMidYMid slice"
-//     href="${url}"
-//   />
-// </svg>`;
-
 const getInnerHTML = (url: string): string => `
-  <div style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
+  <div style="width: 46px; height: 46px; display: flex; align-items: center; justify-content: center;">
     <img src="${url}" />
   </div>
 `;
 
-const spinnerWrapperClass = 'tox-uc-loading-spinner-wrapper';
-const spinnerElementClass = 'tox-uc-loading-spinner';
+const spinnerWrapperStyles = {
+  'position': 'relative',
+  'width': '100%',
+  'height': '100%',
+  'display': 'flex',
+  'justify-content': 'center',
+  'align-items': 'center'
+};
 
-const addSpinnerElement = (loadingElement: SugarElement) => {
-  Class.add(loadingElement, spinnerWrapperClass);
-
-  const spinnerElement = SugarElement.fromTag('div');
-  Class.add(spinnerElement, spinnerElementClass);
-  Insert.append(loadingElement, spinnerElement);
+const spinnerStyles = {
+  'position': 'absolute',
+  'width': 'min(24px, 30%)',
+  'aspect-ratio': '1 / 1',
+  'border-radius': '50%',
+  'border': '3px solid #207ab7',
+  'border-bottom-color': 'transparent',
+  'animation': 'tox-rotation 1s linear infinite'
 };
 
 const renderImage = (spec: ImageSpec, imageUrl: string): SimpleSpec => {
+  const spinnerElement = SugarElement.fromTag('div');
+  Css.setAll(spinnerElement, spinnerStyles);
+
+  const addSpinnerElement = (loadingElement: SugarElement) => {
+    Css.setAll(loadingElement, spinnerWrapperStyles);
+
+    Insert.append(loadingElement, spinnerElement);
+  };
+
+  const removeSpinnerElement = (loadingElement: SugarElement) => {
+    Arr.each(Obj.keys(spinnerWrapperStyles), (k) => {
+      Css.remove(loadingElement, k);
+    });
+
+    Remove.remove(spinnerElement);
+  };
   return {
     dom: {
       tag: spec.tag,
@@ -69,8 +69,7 @@ const renderImage = (spec: ImageSpec, imageUrl: string): SimpleSpec => {
           addSpinnerElement(component.element);
           SelectorFind.descendant<SVGImageElement>(component.element, 'img').each((image) => {
             image.dom.addEventListener('load', () => {
-              // eslint-disable-next-line no-console
-              console.log('img loaded');
+              removeSpinnerElement(component.element);
             });
           });
         })
