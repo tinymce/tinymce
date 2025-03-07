@@ -2,6 +2,9 @@
 @onboarding-dialog-background-color: @background-color;
 @onboarding-footer-background-color: darken(@background-color, 6%);
 
+@onboarding-dialog-width: 512px;
+@onboarding-dialog-border-radius: 12px;
+
 @onboarding-dialog-step-number-color: #00AD0E;
 
 @onboarding-icon-size: 24px;
@@ -19,19 +22,19 @@
     top: 0;
     left: 0;
     right: 0;
-    z-index: 100;
+    z-index: 1;
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
   .tox-onboarding-dialog {
-    width: 600px;
+    width: @onboarding-dialog-width;
     background-color: @onboarding-dialog-background-color;
     display: flex;
     flex-direction: column;
     box-shadow: @dialog-box-shadow;
-    border-radius: @panel-border-radius;
+    border-radius: @onboarding-dialog-border-radius;
 
     .tox-onboarding-header {
       color: @text-color;
@@ -39,7 +42,7 @@
       justify-content: center;
       align-items: center;
       font-size: @font-size-lg;
-      margin: @pad-lg;
+      margin: @pad-lg 0 @pad-sm;
     }
 
     .tox-onboarding-step {
@@ -68,18 +71,23 @@
       }
 
       &--body {
-        padding: @pad-lg;
+        padding: @pad-lg 0 @pad-lg @pad-md;
 
         &-header {
           color: @text-color;
           font-size: @font-size-sm;
           font-weight: bold;
+          margin-bottom: @pad-xs;
         }
 
         &-details {
           color: @text-color-muted;
           font-size: @font-size-sm;
         }
+      }
+
+      &--action {
+        padding-left: @pad-lg;
       }
     }
 
@@ -88,13 +96,17 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: @pad-sm @pad-lg;
+      padding: @pad-md @pad-lg;
+      border-bottom-left-radius: @onboarding-dialog-border-radius;
+      border-bottom-right-radius: @onboarding-dialog-border-radius;
 
       p {
         display: flex;
         align-items: center;
         justify-content: center;
         gap: @pad-xs;
+        font-size: @font-size-sm;
+        color: @text-color-muted;
       }
 
     }
