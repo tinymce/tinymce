@@ -25,6 +25,9 @@ const staticPartsInner = (s: ApproxStructure.StructApi, arr: ApproxStructure.Arr
   // should not change
   [
     s.element('div', {
+      classes: [ arr.has('tox-promotion') ]
+    }),
+    s.element('div', {
       classes: [ arr.has('tox-menubar') ]
     }),
     s.element('div', {}),
