@@ -163,12 +163,10 @@ describe('headless.tinymce.themes.silver.window.CustomDialogTest', () => {
     );
 
     Keyboard.activeKeydown(doc, Keys.tab());
-    const field2 = UiFinder.findTargetByLabel(doc, labels.field2).getOrDie();
-    await FocusTools.pTryOn('Focus should move to second input (textarea)', field2);
+    await FocusTools.pTryOnByLabel('Focus should move to second input (textarea)', doc, labels.field2);
 
     Keyboard.activeKeydown(doc, Keys.tab());
-    const field3 = UiFinder.findTargetByLabel(doc, labels.field3).getOrDie();
-    await FocusTools.pTryOn('Focus should move to urlinput', field3);
+    await FocusTools.pTryOnByLabel('Focus should move to urlinput', doc, labels.field3);
 
     Keyboard.activeKeydown(doc, Keys.tab());
     await FocusTools.pTryOnSelector(
@@ -205,12 +203,10 @@ describe('headless.tinymce.themes.silver.window.CustomDialogTest', () => {
     assertFocusedCheckbox('Pressing <space> on unchecked checkbox', true);
 
     Keyboard.activeKeydown(doc, Keys.tab());
-    const field6 = UiFinder.findTargetByLabel(doc, labels.field6).getOrDie();
-    await FocusTools.pTryOn('Focus should move to first nested input', field6);
+    await FocusTools.pTryOnByLabel('Focus should move to first nested input', doc, labels.field6);
 
     Keyboard.activeKeydown(doc, Keys.tab());
-    const field7 = UiFinder.findTargetByLabel(doc, labels.field7).getOrDie();
-    await FocusTools.pTryOn('Focus should move to second nested input', field7);
+    await FocusTools.pTryOnByLabel('Focus should move to second nested input', doc, labels.field7);
 
     Keyboard.activeKeydown(doc, Keys.tab());
     await FocusTools.pTryOnSelector(
@@ -244,8 +240,7 @@ describe('headless.tinymce.themes.silver.window.CustomDialogTest', () => {
         return;
       }
       if (dest.label) {
-        const input = UiFinder.findTargetByLabel(doc, dest.label).getOrDie();
-        await FocusTools.pTryOn('Focus should move to ' + dest.testLabel, input);
+        await FocusTools.pTryOnByLabel('Focus should move to ' + dest.testLabel, doc, dest.label);
         return;
       }
     }), Promise.resolve());

@@ -23,7 +23,6 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
   }, [ Plugin ], true);
 
   const contentMenuSelector = '.tox-tinymce-aux .tox-menu .tox-collection__item:contains("List properties...")';
-  const getInputSelector = (doc: SugarElement<Document | ShadowRoot>) => UiFinder.findTargetByLabel(doc, 'Start list at number').getOrDie();
 
   const openContextMenu = async (editor: Editor, selector: string) => {
     Mouse.contextMenuOn(TinyDom.body(editor), selector);
@@ -38,7 +37,7 @@ describe('browser.tinymce.plugins.lists.ListPropertiesTest', () => {
 
   const updateDialog = (editor: Editor, currentValue: string, newValue: string) => {
     const doc = SugarDocument.getDocument();
-    FocusTools.isOn('Check focus is on the input field', getInputSelector(doc));
+    FocusTools.isOnByLabel('Check focus is on the input field', doc, 'Start list at number');
     const input = FocusTools.getFocused<HTMLInputElement>(doc).getOrDie();
     assert.equal(Value.get(input), currentValue, 'Initial input value matches');
     UiControls.setValue(input, newValue);

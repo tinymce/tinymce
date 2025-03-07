@@ -62,9 +62,9 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
     const editor = hook.editor();
     await pInitAndOpenDialog(editor, '', { element: [ 0 ], offset: 0 });
     await pWaitForInputState('Check alt text input is enabled', generalTabLabels.alt, (e) => !Attribute.has(e, 'disabled'));
-    Mouse.click(UiFinder.findTargetByLabel(SugarBody.body(), generalTabLabels.decorative).getOrDie());
+    Mouse.clickByLabel(SugarBody.body(), generalTabLabels.decorative);
     await pWaitForInputState('Check alt text input is disabled', generalTabLabels.alt, (e) => Attribute.has(e, 'disabled') && Attribute.get(e, 'disabled') === 'disabled');
-    Mouse.click(UiFinder.findTargetByLabel(SugarBody.body(), generalTabLabels.decorative).getOrDie());
+    Mouse.clickByLabel(SugarBody.body(), generalTabLabels.decorative);
     await pWaitForInputState('Check alt text input is enabled', generalTabLabels.alt, (e) => !Attribute.has(e, 'disabled'));
     TinyUiActions.submitDialog(editor);
     UiFinder.notExists(SugarBody.body(), 'div[role="dialog"]');
