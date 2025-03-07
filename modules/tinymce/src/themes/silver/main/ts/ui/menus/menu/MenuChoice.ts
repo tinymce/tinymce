@@ -61,7 +61,6 @@ export const createChoiceItems = (
         (d) => Optional.some(renderImgItem(
           d,
           columns === 1,
-          itemPresets,
           onItemValueHandler,
           select(d.value),
           itemResponse,
