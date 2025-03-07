@@ -1,5 +1,5 @@
 import { AlloyComponent, Disabling, ItemTypes, Toggling, Tooltipping } from '@ephox/alloy';
-import { Menu, Toolbar } from '@ephox/bridge';
+import { Menu } from '@ephox/bridge';
 import { Fun, Merger, Optional } from '@ephox/katamari';
 import { Insert, SelectorFind, SugarElement } from '@ephox/sugar';
 
@@ -14,7 +14,6 @@ import { buildData, renderCommonItem } from './CommonMenuItem';
 const renderImgItem = (
   spec: Menu.ImageMenuItem,
   useText: boolean,
-  _presets: Toolbar.PresetItemTypes,
   onItemValueHandler: (itemValue: string) => void,
   isSelected: boolean,
   itemResponse: ItemResponse,
