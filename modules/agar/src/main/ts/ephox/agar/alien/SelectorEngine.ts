@@ -23,8 +23,7 @@ const decodeContains = (selector: string): Optional<DecodedContainsSelector> => 
 
 const unwrapFromQuotes = (pattern: string) => {
   const regexp = /^(?<quote>["'])(?<content>.*)\k<quote>$/;
-  const matchedGroups = regexp.exec(pattern)?.groups ?? {};
-  return matchedGroups.content ?? pattern;
+  return regexp.exec(pattern)?.groups?.content ?? pattern;
 };
 
 const queryAll = (element: LookupContext, selector: string) => Array.from(element.querySelectorAll(selector));

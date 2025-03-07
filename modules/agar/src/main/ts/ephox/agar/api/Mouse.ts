@@ -65,12 +65,22 @@ const triggerOn = <T extends Element>(container: SugarElement<Node>, selector: s
   return ele;
 };
 
+const triggerByLabel = <T extends Element>(container: SugarElement<Node>, label: string, action: (ele: SugarElement<T>) => void): SugarElement<T> => {
+  const ele = UiFinder.findTargetByLabel<T>(container, label).getOrDie();
+  action(ele);
+  return ele;
+};
+
 // Work with selectors
 const sTriggerOn = <T, U extends Element>(container: SugarElement<Node>, selector: string, action: (ele: SugarElement<U>) => void) =>
   Step.sync<T>(() => triggerOn(container, selector, action));
 
 const clickOn = <T extends HTMLElement>(container: SugarElement<Node>, selector: string): SugarElement<T> =>
   triggerOn<T>(container, selector, Clicks.trigger);
+
+/* TODO: add tests */
+const clickByLabel = <T extends HTMLElement>(container: SugarElement<Node>, label: string): SugarElement<T> =>
+  triggerByLabel<T>(container, label, Clicks.trigger);
 
 const dblclickOn = <T extends HTMLElement>(container: SugarElement<Node>, selector: string): SugarElement<T> =>
   triggerOn<T>(container, selector, Clicks.dblclick({ }));
@@ -175,6 +185,7 @@ export {
   mouseOut,
 
   clickOn,
+  clickByLabel,
   dblclickOn,
   contextMenuOn,
   hoverOn,

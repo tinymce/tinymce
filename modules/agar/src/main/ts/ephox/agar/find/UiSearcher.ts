@@ -1,6 +1,6 @@
 import { TestLabel } from '@ephox/bedrock-client';
 import { Adt, Arr, Optional, Result } from '@ephox/katamari';
-import { Attribute, SugarElement, Truncate } from '@ephox/sugar';
+import { Attribute, SugarElement, TextContent, Truncate } from '@ephox/sugar';
 
 import * as SizzleFind from '../alien/SizzleFind';
 
@@ -74,7 +74,7 @@ const findAllIn = <T extends Element>(container: SugarElement<Node>, selector: s
   selectAll(container, selector);
 
 const findTargetByLabel = <T extends Element>(container: SugarElement<Node>, labelText: string): Result<SugarElement<T>, TestLabel> => {
-  const label = Arr.find(selectAll(container, 'label'), (e) => e.dom.textContent === labelText);
+  const label = Arr.find(selectAll(container, 'label'), (e) => TextContent.get(e) === labelText);
   const targetByLabelOptional = label
     .bind((label) => {
       const forAttribute = Optional.from(Attribute.get(label, 'for'));
