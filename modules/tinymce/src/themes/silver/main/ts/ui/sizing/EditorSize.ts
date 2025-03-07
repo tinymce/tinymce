@@ -1,4 +1,5 @@
 import { Optional } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -6,16 +7,15 @@ import * as Options from '../../api/Options';
 import * as Utils from './Utils';
 
 export const getHeight = (editor: Editor): Optional<number> => {
-  const baseHeight = Options.getHeightOption(editor);
+  const baseHeight = Utils.convertValueToPx(SugarElement.fromDom(editor.targetElm), Options.getHeightOption(editor));
   const minHeight = Options.getMinHeightOption(editor);
   const maxHeight = Options.getMaxHeightOption(editor);
 
-  return Utils.parseToInt(baseHeight).map((height) => Utils.calcCappedSize(height, minHeight, maxHeight));
+  return baseHeight.map((height) => Utils.calcCappedSize(height, minHeight, maxHeight));
 };
 
 export const getHeightWithFallback = (editor: Editor): string | number => {
-  const height = getHeight(editor);
-  return height.getOr(Options.getHeightOption(editor));
+  return getHeight(editor).getOr(Options.getHeightOption(editor)); // If we can't parse, set the height while ignoring min/max values.
 };
 
 export const getWidth = (editor: Editor): Optional<number> => {
