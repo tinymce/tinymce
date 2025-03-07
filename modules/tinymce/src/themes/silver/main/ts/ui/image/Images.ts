@@ -14,7 +14,7 @@ interface ImageSpec {
 
 const getInnerHTML = (url: string): string => `
   <div style="width: 46px; height: 46px; display: flex; align-items: center; justify-content: center;">
-    <img style="max-width: 100%;" src="${url}" />
+    <img style="max-width: 100%; max-height: 100%" src="${url}" />
   </div>
 `;
 
