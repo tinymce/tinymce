@@ -19,9 +19,6 @@ const getInnerHTML = (url: string): string => `
 `;
 
 const spinnerWrapperStyles = {
-  'position': 'relative',
-  'width': '100%',
-  'height': '100%',
   'display': 'flex',
   'justify-content': 'center',
   'align-items': 'center'
