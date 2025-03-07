@@ -224,6 +224,12 @@ describe('browser.tinymce.core.annotate.AnnotateBlocksTest', () => {
     '<iframe src="about:blank" width="350px" height="260px" scrolling="no"></iframe>' +
     '</div>'
   );
+  const footnoteHtml = (withAnnotation: boolean) => (
+    `<div class="mce-footnotes" contenteditable="false"${withAnnotation ? ' ' + expectedBlockAnnotationAttrs() : ''}>` +
+    '<hr><ol><li id="footnotes_entry_72291395111727305907324"><a class="mce-footnotes-backlink" href="#footnote_72291395111727305907324">^&nbsp;</a>' +
+    '<span class="mce-footnotes-note" contenteditable="true">This is a footnote</span></li></ol>' +
+    '</div>'
+  );
 
   Arr.each([
     { label: 'Normal mode', before: () => hook.editor().mode.set('design'), after: Fun.noop, mode: 'normal' },
@@ -410,6 +416,16 @@ describe('browser.tinymce.core.annotate.AnnotateBlocksTest', () => {
           html: pageEmbedHtml(false),
           expectedDirectHtml: pageEmbedHtml(true),
           expectedRangeHtml: pageEmbedHtml(true),
+          expectedDirectSelection: selectionPath([], 1, [], 2),
+          blockType: 'root'
+        },
+        {
+          label: 'footnote',
+          name: 'div',
+          annotationSelector: 'div',
+          html: footnoteHtml(false),
+          expectedDirectHtml: footnoteHtml(true),
+          expectedRangeHtml: footnoteHtml(true),
           expectedDirectSelection: selectionPath([], 1, [], 2),
           blockType: 'root'
         },

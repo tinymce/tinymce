@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: When a non-editable element is selected, pressing enter now moves focus into the first editable child.
+time: 2025-02-20T08:26:57.188426766+01:00
+custom:
+    Issue: TINY-11753
