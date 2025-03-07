@@ -117,14 +117,14 @@ describe('browser.tinymce.core.dom.ScrollIntoViewTest', () => {
       const editor = hook.editor();
       await pSetContent(editor, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>');
       scrollIntoView(editor, 'div:nth-child(2)', false);
-      assertScrollPosition(editor, 0, 667);
+      assertScrollPosition(editor, 0, 697);
     });
 
     it('Scroll to element align to top', async () => {
       const editor = hook.editor();
       await pSetContent(editor, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>');
       scrollIntoView(editor, 'div:nth-child(2)', true);
-      assertScrollPosition(editor, 0, 1000);
+      assertScrollPosition(editor, 0, 970);
     });
 
     it(`Scroll to element already in view shouldn't do anything`, async () => {
@@ -139,7 +139,7 @@ describe('browser.tinymce.core.dom.ScrollIntoViewTest', () => {
       const editor = hook.editor();
       await pSetContent(editor, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 600px">a</div>');
       scrollIntoView(editor, 'div:nth-child(3)');
-      assertScrollPosition(editor, 0, 1050);
+      assertScrollPosition(editor, 0, 1020);
     });
 
     it('TINY-7291: Scroll current selection into view', async () => {
@@ -147,7 +147,22 @@ describe('browser.tinymce.core.dom.ScrollIntoViewTest', () => {
       await pSetContent(editor, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 600px">a</div>');
       TinySelections.setCursor(editor, [ 2, 0 ], 0);
       editor.selection.scrollIntoView();
-      assertScrollPosition(editor, 0, 689);
+      assertScrollPosition(editor, 0, 719);
+    });
+
+    it('Scroll to element with margin applied', async () => {
+      const editor = hook.editor();
+      await pSetContent(editor, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>');
+
+      // Test scrolling to top with margin
+      scrollIntoView(editor, 'div:nth-child(2)', true);
+      // The original position would be 1000, but with 30px margin it should be 970
+      assertScrollPosition(editor, 0, 970);
+
+      // Test scrolling to bottom with margin
+      scrollIntoView(editor, 'div:nth-child(2)', false);
+      // The original position would be 667, but with 30px margin it should be 697
+      assertScrollPosition(editor, 0, 970);
     });
 
     it('TINY-9747: when the selection is scrolled into view selection if there is an horizontal scroll it should preserve the correct left position', async () => {
@@ -195,7 +210,7 @@ describe('browser.tinymce.core.dom.ScrollIntoViewTest', () => {
       const editor = hook.editor();
       await pSetContent(editor, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>');
       scrollElementIntoView(editor, 'div:nth-child(2)', false);
-      assertScrollPosition(editor, 0, 667);
+      assertScrollPosition(editor, 0, 697);
     });
 
     it('Scroll to element align to top', async () => {
@@ -203,7 +218,7 @@ describe('browser.tinymce.core.dom.ScrollIntoViewTest', () => {
       scrollReset(editor);
       await pSetContent(editor, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>');
       scrollElementIntoView(editor, 'div:nth-child(2)', true);
-      assertScrollPosition(editor, 0, 1000);
+      assertScrollPosition(editor, 0, 970);
     });
   });
 
@@ -212,11 +227,11 @@ describe('browser.tinymce.core.dom.ScrollIntoViewTest', () => {
       const editor = hook.editor();
       await pSetContent(editor, '<div style="height: 1000px">a</div><div style="height: 50px">b</div><div style="height: 1000px">a</div>');
       scrollRangeIntoView(editor, [ 1, 0 ], 0);
-      assertApproxScrollPosition(editor, 0, 640); // Height of the text content/cursor
+      assertApproxScrollPosition(editor, 0, 669); // Height of the text content/cursor
       scrollRangeIntoView(editor, [ 0, 0 ], 0);
       assertApproxScrollPosition(editor, 0, 0);
       scrollRangeIntoView(editor, [ 2, 0 ], 0);
-      assertApproxScrollPosition(editor, 0, 689);
+      assertApproxScrollPosition(editor, 0, 719);
     });
   });
 
