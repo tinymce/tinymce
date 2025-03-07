@@ -72,7 +72,7 @@ describe('browser.tinymce.plugins.image.DialogUpdateTest', () => {
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     editor.execCommand('mceImage');
     const dialog = await TinyUiActions.pWaitForDialog(editor);
-    Mouse.click(UiFinder.findTargetByLabel(dialog, generalTabLabels.caption).getOrDie());
+    Mouse.clickByLabel(dialog, generalTabLabels.caption);
     assertInputValue(generalTabLabels.caption, 'on');
 
     TinyUiActions.submitDialog(editor);
