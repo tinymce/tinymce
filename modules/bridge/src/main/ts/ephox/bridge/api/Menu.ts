@@ -9,6 +9,7 @@ import {
   createFancyMenuItem, ColorSwatchMenuItem, ColorSwatchMenuItemSpec, FancyActionArgsMap, FancyMenuItem, FancyMenuItemSpec, InsertTableMenuItem,
   InsertTableMenuItemSpec
 } from '../components/menu/FancyMenuItem';
+import { ImageMenuItem, ImageMenuItemInstanceApi, ImageMenuItemSpec, createImageMenuItem } from '../components/menu/ImageMenuItem';
 import { createMenuItem, MenuItem, MenuItemInstanceApi, MenuItemSpec } from '../components/menu/MenuItem';
 import {
   createNestedMenuItem, NestedMenuItem, NestedMenuItemContents, NestedMenuItemInstanceApi, NestedMenuItemSpec
@@ -46,6 +47,11 @@ export {
   ChoiceMenuItem,
   ChoiceMenuItemSpec,
   ChoiceMenuItemInstanceApi,
+
+  ImageMenuItem,
+  ImageMenuItemInstanceApi,
+  ImageMenuItemSpec,
+  createImageMenuItem,
 
   createSeparatorMenuItem,
   SeparatorMenuItem,
