@@ -33,7 +33,6 @@ const renderChoiceItem = (
     presets,
     textContent: useText ? spec.text : Optional.none(),
     htmlContent: Optional.none(),
-    // TODO: this probably need to be passed
     labelContent: spec.label,
     ariaLabel: spec.text,
     iconContent: spec.icon,
