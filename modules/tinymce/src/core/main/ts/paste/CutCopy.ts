@@ -21,13 +21,9 @@ type DoneFn = () => void;
 type FallbackFn = (html: string, done: DoneFn) => void;
 
 const setHtml5Clipboard = (clipboardData: DataTransfer | null, data: ClipboardDataContent): boolean => {
-  // console.log('setHtml5Clipboard');
   if (clipboardData) {
     try {
       clipboardData.clearData();
-      // clipboardData.setData('text/html', html);
-      // clipboardData.setData('text/plain', text);
-      // clipboardData.setData(InternalHtml.internalHtmlMime(), html);
       Obj.each(data, (val, key) => {
         clipboardData.setData(key, val);
       });
