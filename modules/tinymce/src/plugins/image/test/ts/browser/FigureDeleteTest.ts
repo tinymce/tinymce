@@ -1,4 +1,4 @@
-import { Mouse, UiFinder } from '@ephox/agar';
+import { Mouse } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 

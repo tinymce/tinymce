@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, UiFinder } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { SugarBody, SugarDocument, SugarElement } from '@ephox/sugar';
+import { SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 

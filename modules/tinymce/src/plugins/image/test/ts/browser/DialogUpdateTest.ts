@@ -1,4 +1,4 @@
-import { Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { Mouse, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
