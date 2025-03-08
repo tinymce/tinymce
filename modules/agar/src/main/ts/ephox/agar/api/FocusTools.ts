@@ -52,7 +52,6 @@ const isOnSelector = (label: string, doc: SugarElement<Document | ShadowRoot>, s
   }).getOrDie();
 };
 
-/* TODO: add tests */
 const isOnByLabel = (errorLabel: string, doc: SugarElement<Document | ShadowRoot>, label: string): SugarElement<HTMLElement> => {
   const element = UiFinder.findTargetByLabel(doc, label).getOrDie();
   return getFocused(doc).bind((active) => {
@@ -102,7 +101,6 @@ const sTryOnSelector = <T>(label: string, doc: SugarElement<Document | ShadowRoo
 const pTryOnSelector = (label: string, doc: SugarElement<Document | ShadowRoot>, selector: string): Promise<SugarElement<HTMLElement>> =>
   Waiter.pTryUntil(label + '. Focus did not match: ' + selector, () => isOnSelector(label, doc, selector));
 
-/* TODO: add tests */
 const pTryOnByLabel = (errorLabel: string, doc: SugarElement<Document | ShadowRoot>, label: string): Promise<SugarElement<HTMLElement>> =>
   Waiter.pTryUntil(errorLabel + '. Focus did not match label: ' + label, () => isOnByLabel(errorLabel, doc, label));
 
