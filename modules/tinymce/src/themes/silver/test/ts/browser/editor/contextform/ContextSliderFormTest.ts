@@ -69,7 +69,11 @@ describe('browser.tinymce.themes.silver.editor.ContextSliderFormTest', () => {
   };
 
   const checkFirstButtonGroup = (label: string, children: ApproxStructure.Builder<StructAssert[]>) => {
-    const group = UiFinder.findIn(SugarBody.body(), '.tox-pop .tox-toolbar__group:first').getOrDie();
+    const groups = UiFinder.findAllIn(SugarBody.body(), '.tox-pop .tox-toolbar__group');
+    if (groups.length === 0) {
+      throw new Error('Cannot find any toolbar group');
+    }
+    const group = groups[0];
     Assertions.assertStructure(
       label,
       ApproxStructure.build((s, str, arr) => s.element('div', {
@@ -80,7 +84,11 @@ describe('browser.tinymce.themes.silver.editor.ContextSliderFormTest', () => {
   };
 
   const checkLastButtonGroup = (label: string, children: ApproxStructure.Builder<StructAssert[]>) => {
-    const group = UiFinder.findIn(SugarBody.body(), '.tox-pop .tox-toolbar__group:last').getOrDie();
+    const groups = UiFinder.findAllIn(SugarBody.body(), '.tox-pop .tox-toolbar__group');
+    if (groups.length === 0) {
+      throw new Error('Cannot find any toolbar group');
+    }
+    const group = groups[groups.length - 1];
     Assertions.assertStructure(
       label,
       ApproxStructure.build((s, str, arr) => s.element('div', {

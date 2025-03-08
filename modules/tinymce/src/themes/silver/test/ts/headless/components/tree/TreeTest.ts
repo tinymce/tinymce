@@ -161,8 +161,9 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
     store.assertEq('Dir collapsed', [ 'dir-collapsed' ]);
     store.clear();
 
+    const subdir = UiFinder.findIn(dir.element, '.tox-tree--directory').getOrDie();
     assertDirectoryExpandedState('Subdir', false, getTreeItem('.tox-tree--directory .tox-tree--directory'));
-    Mouse.clickOn(dir.element, '.tox-tree--directory .tox-trbtn.tox-tree--directory__label');
+    Mouse.clickOn(subdir, '.tox-trbtn.tox-tree--directory__label');
     assertDirectoryExpandedState('Subdir', true, getTreeItem('.tox-tree--directory .tox-tree--directory'));
     store.assertEq('Subir expanded', [ 'subdir-expanded' ]);
     store.clear();
@@ -180,7 +181,7 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
     Mouse.clickOn(SugarBody.body(), '[aria-label="menuitem"]');
     store.assertEq('menuitem', [ 'menuitem' ]);
 
-    Mouse.clickOn(dir.element, '.tox-tree--directory .tox-trbtn.tox-tree--directory__label');
+    Mouse.clickOn(subdir, '.tox-trbtn.tox-tree--directory__label');
     assertDirectoryExpandedState('Subdir', false, getTreeItem('.tox-tree--directory .tox-tree--directory'));
 
   });

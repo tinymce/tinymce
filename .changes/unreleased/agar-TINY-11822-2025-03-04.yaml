@@ -1,0 +1,6 @@
+project: agar
+kind: Changed
+body: Sizzle has been removed from dependencies.
+time: 2025-03-04T14:40:05.337778+01:00
+custom:
+  Issue: TINY-11822

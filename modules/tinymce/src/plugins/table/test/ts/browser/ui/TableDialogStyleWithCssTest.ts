@@ -22,15 +22,15 @@ interface TableSpec {
 }
 
 describe('browser.tinymce.plugins.table.ui.TableCellDialogStyleWithCssTest', () => {
-  const generalSelectors = {
-    cellspacing: 'label.tox-label:contains(Cell spacing) + input.tox-textfield',
-    cellpadding: 'label.tox-label:contains(Cell padding) + input.tox-textfield',
-    borderwidth: 'label.tox-label:contains(Border width) + input.tox-textfield',
+  const generalLabels = {
+    cellspacing: 'Cell spacing',
+    cellpadding: 'Cell padding',
+    borderwidth: 'Border width',
   } as const;
-  type GeneralData = Partial<Record<keyof typeof generalSelectors, string>>;
+  type GeneralData = Partial<Record<keyof typeof generalLabels, string>>;
 
-  const setDialogValues = (data: GeneralData) => TableTestUtils.setDialogValues(data, false, generalSelectors);
-  const assertDialogValues = (data: GeneralData) => TableTestUtils.assertDialogValues(data, false, generalSelectors);
+  const setDialogValues = (data: GeneralData) => TableTestUtils.setDialogValues(data, false, generalLabels);
+  const assertDialogValues = (data: GeneralData) => TableTestUtils.assertDialogValues(data, false, generalLabels);
 
   const initializeTable = (editor: Editor, table: TableSpec) => {
     const { cellPaddingAttr, cellPaddingStyle, cellSpacingAttr, cellSpacingStyle, cellBorderWidthStyle, borderAttr } = table;
