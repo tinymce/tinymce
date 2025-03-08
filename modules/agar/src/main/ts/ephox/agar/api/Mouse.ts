@@ -78,7 +78,6 @@ const sTriggerOn = <T, U extends Element>(container: SugarElement<Node>, selecto
 const clickOn = <T extends HTMLElement>(container: SugarElement<Node>, selector: string): SugarElement<T> =>
   triggerOn<T>(container, selector, Clicks.trigger);
 
-/* TODO: add tests */
 const clickByLabel = <T extends HTMLElement>(container: SugarElement<Node>, label: string): SugarElement<T> =>
   triggerByLabel<T>(container, label, Clicks.trigger);
 
