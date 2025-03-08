@@ -1,6 +1,6 @@
 import { FocusTools, Keys, Mouse, UiControls, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { SugarBody, SugarDocument, SugarElement, Value } from '@ephox/sugar';
+import { SugarBody, SugarDocument, Value } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
