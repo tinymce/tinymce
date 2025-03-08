@@ -1,4 +1,4 @@
-import { Arr, Obj, Optional, Strings } from '@ephox/katamari';
+import { Arr, Obj, Optional, Result, Strings } from '@ephox/katamari';
 
 type LookupContext = Element | Document | DocumentFragment;
 interface DecodedContainsSelector {
@@ -7,18 +7,27 @@ interface DecodedContainsSelector {
 }
 
 const selectAll = (selector: string, context: LookupContext): Element[] =>
-  decodeContains(selector).fold(
-    () => queryAll(context, selector),
-    (decodedContainsSelector) => queryAllWithContains(context, decodedContainsSelector)
-  );
+  decodeContains(selector)
+    .fold(
+      (deocdeError) => {
+        throw new Error(deocdeError);
+      },
+      (result) => result.fold(
+        () => queryAll(context, selector),
+        (decodedContainsSelector) => queryAllWithContains(context, decodedContainsSelector)
+      )
+    );
 
-const decodeContains = (selector: string): Optional<DecodedContainsSelector> => {
-  const regexp = /(?<baseSelector>.*):contains\((?<text>.*)\)$/;
+const decodeContains = (selector: string): Result<Optional<DecodedContainsSelector>, string> => {
+  const regexp = /(?<baseSelector>.*):contains\((?<text>.*?)\)(?<remainings>.*)/;
   const matchedGroups = regexp.exec(selector)?.groups ?? {};
   if (!Obj.has(matchedGroups, 'baseSelector') || !Obj.has(matchedGroups, 'text')) {
-    return Optional.none();
+    return Result.value(Optional.none());
   }
-  return Optional.some({ baseSelector: matchedGroups.baseSelector, text: unwrapFromQuotes(matchedGroups.text) });
+  if (Obj.has(matchedGroups, 'remainings') && Strings.trim(matchedGroups.remainings) !== '') {
+    return Result.error(`Invalid selector '${selector}'. ':contains' in only supported at the end of the selector`);
+  }
+  return Result.value(Optional.some({ baseSelector: matchedGroups.baseSelector, text: unwrapFromQuotes(matchedGroups.text) }));
 };
 
 const unwrapFromQuotes = (pattern: string) => {
@@ -37,10 +46,16 @@ const hasText = (element: Node, text: string) =>
   Strings.contains(element.textContent, text);
 
 const matchesSelector = (element: Element, selector: string): boolean =>
-  decodeContains(selector).fold(
-    () => matches(selector, element),
-    (decodedContainsSelector) => matchesWithContains(decodedContainsSelector, element)
-  );
+  decodeContains(selector)
+    .fold(
+      (deocdeError) => {
+        throw new Error(deocdeError);
+      },
+      (result) => result.fold(
+        () => matches(selector, element),
+        (decodedContainsSelector) => matchesWithContains(decodedContainsSelector, element)
+      )
+    );
 
 const matches = (selector: string, element: Element) => element.matches(selector);
 
