@@ -1,6 +1,7 @@
 import { afterEach, Assert, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
 import { Insert, Remove, SugarElement } from '@ephox/sugar';
+import { assert } from 'chai';
 
 import * as SelectorEngine from 'ephox/agar/alien/SelectorEngine';
 
@@ -22,7 +23,7 @@ describe('SelectorEngineTest', () => {
       '<div>' +
         '<div class="myDiv"></div>' +
         '<div id="myDiv"></div>' +
-        '<textarea></textarea' +
+        '<textarea></textarea>' +
       '</div>'
     );
     Insert.append(container, content);
@@ -38,7 +39,7 @@ describe('SelectorEngineTest', () => {
       '<div>' +
         '<div class="myDiv"></div>' +
         '<div id="myDiv"></div>' +
-        '<textarea></textarea' +
+        '<textarea></textarea>' +
       '</div>'
     );
     Insert.append(container, content);
@@ -54,7 +55,7 @@ describe('SelectorEngineTest', () => {
       '<div>' +
         '<div class="myDiv"></div>' +
         '<div id="myDiv"></div>' +
-        '<textarea></textarea' +
+        '<textarea></textarea>' +
       '</div>'
     );
     Insert.append(container, content);
@@ -168,14 +169,20 @@ describe('SelectorEngineTest', () => {
     Assert.eq(':contains("This is the only paragraph here") p returned', p, matches[0], Testable.tStrict);
   });
 
-  it('selectAll should throw error when :contains is not at the end', () => {
-    Assert.throws('selectAll should throw error when :contains is not at the end',
-      () => SelectorEngine.selectAll('label:contains(Foo) + input', container.dom));
-  });
+  const assertThrowsContainsAtTheEnd = (selector: string) => {
+    assert.throws(
+      () => SelectorEngine.selectAll(selector, container.dom),
+      `Invalid selector '${selector}'. ':contains' in only supported at the end of the selector`
+    );
+    assert.throws(
+      () => SelectorEngine.matchesSelector(container.dom, selector),
+      `Invalid selector '${selector}'. ':contains' in only supported at the end of the selector`
+    );
+  };
 
-  it('matchesSelector should throw error when :contains is not at the end', () => {
-    Assert.throws('matchesSelector should throw error when :contains is not at the end',
-      () => SelectorEngine.matchesSelector(container.dom, 'label:contains(Foo) + input'));
+  it('Should throw :contains has to be at the end', () => {
+    assertThrowsContainsAtTheEnd('label:contains(Foo) + input');
+    assertThrowsContainsAtTheEnd('.tox-tbtn.tox-tbtn--select:has(.tox-tbtn__select-label:contains(test))');
   });
 
   it('matchesSelector should match', () => {
