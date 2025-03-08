@@ -48,10 +48,10 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
     })), group);
   };
 
-  const pCheckItemsAtLocationPlus = (pBeforeStep: () => Promise<void>, pAfterStep: () => Promise<void>, pOpen: (text: string) => Promise<void>) =>
-    async (label: string, editor: Editor, expectedTicks: boolean[], menuText: string, path: number[], offset: number) => {
+  const pCheckItemsAtLocationPlus = (pBeforeStep: () => Promise<void>, pAfterStep: () => Promise<void>, pOpen: (menu: MenuUtils.OpenMenu) => Promise<void>) =>
+    async (label: string, editor: Editor, expectedTicks: boolean[], menu: MenuUtils.OpenMenu, path: number[], offset: number) => {
       TinySelections.setCursor(editor, path, offset);
-      await pOpen(menuText);
+      await pOpen(menu);
       await pBeforeStep();
       assertItemTicks(label, expectedTicks);
       await pAfterStep();
@@ -60,10 +60,10 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
     };
 
   const pNoop = () => Promise.resolve();
-  const pCheckItemsAtLocation = pCheckItemsAtLocationPlus(pNoop, pNoop, (text) => MenuUtils.pOpenMenu('', text));
+  const pCheckItemsAtLocation = pCheckItemsAtLocationPlus(pNoop, pNoop, MenuUtils.pOpenMenu);
   const pCheckAlignItemsAtLocation = pCheckItemsAtLocationPlus(pNoop, pNoop, () => MenuUtils.pOpenAlignMenu(''));
 
-  const pCheckSubItemsAtLocation = (expectedSubmenu: string, menuAmbigousMapping: ((element: SugarElement[]) => SugarElement)) => pCheckItemsAtLocationPlus(
+  const pCheckSubItemsAtLocation = (expectedSubmenu: string) => pCheckItemsAtLocationPlus(
     async () => {
       Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.right());
       await pAssertFocusOnItem(expectedSubmenu);
@@ -73,7 +73,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
       Keyboard.activeKeyup(SugarDocument.getDocument(), Keys.escape());
       return Promise.resolve();
     },
-    (text) => MenuUtils.pOpenMenu('', text, menuAmbigousMapping)
+    MenuUtils.pOpenMenu
   );
 
   let eventCount = 0;
@@ -129,7 +129,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
         'First paragraph after "centering"',
         editor,
         [ false, true, false, false ],
-        'Center',
+        { name: 'Alignment', text: 'Center' },
         [ 0, 0 ], 'Fi'.length
       );
 
@@ -137,7 +137,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
         'Second paragraph with no set alignment',
         editor,
         [ false, false, false, false ],
-        'Align',
+        { name: 'Alignment', text: 'Align' },
         [ 1, 0 ], 'Se'.length
       );
 
@@ -145,7 +145,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
         'First paragraph with the alignment set to "center" previously',
         editor,
         [ false, true, false, false ],
-        'Center',
+        { name: 'Alignment', text: 'Center' },
         [ 0, 0 ], 'Fi'.length
       );
     }));
@@ -156,7 +156,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
       assertNoEvent();
       TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
       assertEvent(1, 'Verdana');
-      await MenuUtils.pOpenMenu('FontSelect', 'Verdana');
+      await MenuUtils.pOpenMenu({ name: 'FontSelect', text: 'Verdana' });
       assertEvent(1, 'Verdana');
       await pAssertFocusOnItem('Andale Mono');
       assertEvent(1, 'Verdana');
@@ -168,7 +168,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
         'First paragraph after "Andale Mono"',
         editor,
         [ true ].concat(Arr.range(16, Fun.never)),
-        'Andale Mono',
+        { name: 'Font family', text: 'Andale Mono' },
         [ 0, 0, 0 ], 'Fi'.length
       );
 
@@ -176,7 +176,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
         'Second paragraph with no set font',
         editor,
         Arr.range<boolean>(14, Fun.never).concat([ true ]).concat(Arr.range(2, Fun.never)),
-        'Verdana',
+        { name: 'Font family', text: 'Verdana' },
         [ 1, 0 ], 'Se'.length
       );
 
@@ -184,7 +184,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
         'First paragraph with the font set to "Andale Mono" previously',
         editor,
         [ true ].concat(Arr.range(16, Fun.never)),
-        'Andale Mono',
+        { name: 'Font family', text: 'Andale Mono' },
         [ 0, 0, 0 ], 'Fi'.length
       );
     }));
@@ -195,7 +195,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
       assertNoEvent();
       TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
       assertEvent(1, '12pt');
-      await MenuUtils.pOpenMenu('FontSelect', '12pt'); // This might be fragile.
+      await MenuUtils.pOpenMenu({ name: 'FontSelect', text: '12pt' }); // This might be fragile.
       assertEvent(2, '12pt');
       await pAssertFocusOnItem('8pt');
       assertEvent(2, '12pt');
@@ -207,7 +207,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
         'First paragraph after "8pt',
         editor,
         [ true ].concat(Arr.range(6, Fun.never)),
-        '8pt',
+        { name: 'FontSelect', text: '8pt' },
         [ 0, 0, 0 ], 'Fi'.length
       );
 
@@ -215,7 +215,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
         'Second paragraph with no set font size',
         editor,
         Arr.range<boolean>(2, Fun.never).concat([ true ]).concat(Arr.range(4, Fun.never)),
-        '12pt',
+        { name: 'FontSelect', text: '12pt' },
         [ 1, 0 ], 'Se'.length
       );
 
@@ -223,7 +223,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
         'First paragraph with the font set to "8pt" previously',
         editor,
         [ true ].concat(Arr.range(6, Fun.never)),
-        '8pt',
+        { name: 'FontSelect', text: '8pt' },
         [ 0, 0, 0 ], 'Fi'.length
       );
     }));
@@ -234,7 +234,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
       assertNoEvent();
       TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
       assertEvent(1, 'Paragraph');
-      await MenuUtils.pOpenMenu('Format', 'Paragraph');
+      await MenuUtils.pOpenMenu({ name: 'Format', text: 'Paragraph' });
       assertEvent(1, 'Paragraph');
       await pAssertFocusOnItem('Paragraph');
       TinyUiActions.keydown(editor, Keys.down());
@@ -248,7 +248,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
         'First block after "h1',
         editor,
         [ false, true ].concat(Arr.range(6, Fun.never)),
-        'Heading 1',
+        { name: 'Format', text: 'Heading 1' },
         [ 0, 0 ], 'Fi'.length
       );
 
@@ -256,7 +256,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
         'Second paragraph with no set format',
         editor,
         [ true ].concat(Arr.range(7, Fun.never)),
-        'Paragraph',
+        { name: 'Format', text: 'Paragraph' },
         [ 1, 0 ], 'Se'.length
       );
 
@@ -264,7 +264,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
         'First block with the "h1" set previously',
         editor,
         [ false, true ].concat(Arr.range(6, Fun.never)),
-        'Heading 1',
+        { name: 'Format', text: 'Heading 1' },
         [ 0, 0 ], 'Fi'.length
       );
 
@@ -296,12 +296,11 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
 
   it('TBA: Checking style ticks and updating',
     testWithEvents('StylesTextUpdate', async (editor) => {
-      const getLast = <T>(elements: T[]) => elements[elements.length - 1];
       editor.setContent('<p>First paragraph</p><p>Second paragraph</p>');
       assertNoEvent();
       TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
       assertEvent(1, 'Paragraph');
-      await MenuUtils.pOpenMenu('Format', 'Paragraph', getLast);
+      await MenuUtils.pOpenMenu({ name: 'Format', text: 'Paragraph', matchLast: true });
       assertEvent(2, 'Paragraph');
       await pAssertFocusOnItem('Headings');
       TinyUiActions.keydown(editor, Keys.right());
@@ -311,27 +310,27 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
       assertEvent(4, 'Heading 1');
       UiFinder.notExists(SugarBody.body(), '[role="menu"]');
 
-      await pCheckSubItemsAtLocation('Heading 1', getLast)(
+      await pCheckSubItemsAtLocation('Heading 1')(
         'First block after "h1',
         editor,
         [ true ].concat(Arr.range(5, Fun.never)),
-        'Heading 1',
+        { name: 'Format', text: 'Heading 1', matchLast: true },
         [ 0, 0 ], 'Fi'.length
       );
 
-      await pCheckSubItemsAtLocation('Heading 1', getLast)(
+      await pCheckSubItemsAtLocation('Heading 1')(
         'Second paragraph with no set format',
         editor,
         Arr.range(6, Fun.never),
-        'Paragraph',
+        { name: 'Format', text: 'Paragraph', matchLast: true },
         [ 1, 0 ], 'Se'.length
       );
 
-      await pCheckSubItemsAtLocation('Heading 1', getLast)(
+      await pCheckSubItemsAtLocation('Heading 1')(
         'First block with the "h1" set previously',
         editor,
         [ true ].concat(Arr.range(5, Fun.never)),
-        'Heading 1',
+        { name: 'Format', text: 'Heading 1', matchLast: true },
         [ 0, 0 ], 'Fi'.length
       );
 
