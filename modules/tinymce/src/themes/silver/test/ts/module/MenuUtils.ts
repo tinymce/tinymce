@@ -1,7 +1,7 @@
 import { Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { Boxes } from '@ephox/alloy';
 import { Arr, Optional } from '@ephox/katamari';
-import { SugarBody, SugarElement, Visibility } from '@ephox/sugar';
+import { SugarBody, Visibility } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import { ToolbarMode } from 'tinymce/themes/silver/api/Options';
@@ -9,6 +9,11 @@ import { ToolbarMode } from 'tinymce/themes/silver/api/Options';
 export interface OpenNestedMenus {
   readonly label: string;
   readonly selector: string;
+}
+export interface OpenMenu {
+  readonly name: string;
+  readonly text: string;
+  readonly matchLast?: boolean;
 }
 
 const getToolbarSelector = (type: ToolbarMode, opening: boolean) => {
@@ -41,24 +46,21 @@ const pOpenAlignMenu = (label: string): Promise<void> => {
   return pOpenMenuWithSelector(label, selector);
 };
 
-const pOpenMenu = async (
-  label: string,
-  menuText: string,
-  resolveAmbiguity: ((elements: SugarElement[]) => SugarElement) = ([ firstElement ]) => firstElement
-): Promise<void> => {
+const pOpenMenu = async (menu: OpenMenu): Promise<void> => {
   const findMenuButton = () => {
-    const buttons = UiFinder.findAllIn(SugarBody.body(), `button:contains(${menuText})`);
-    if (buttons.length > 1) {
-      return Optional.from(resolveAmbiguity(buttons));
+    const buttons = UiFinder.findAllIn<HTMLElement>(SugarBody.body(), `button:contains(${menu.text})`);
+    if (buttons.length === 0) {
+      return Optional.none();
     }
-    return buttons.length > 0 ? Optional.from(buttons[0]) : Optional.none();
+    return Optional.from(menu.matchLast ? buttons[buttons.length - 1] : buttons[0]);
   };
-  await Waiter.pTryUntilPredicate(`Waiting for button: ${menuText}`, () => {
+
+  await Waiter.pTryUntilPredicate(`Waiting for button: ${menu.text}`, () => {
     const button = findMenuButton();
     return button.isSome() && Visibility.isVisible(button.getOrDie());
   });
   Mouse.click(findMenuButton().getOrDie());
-  await UiFinder.pWaitForVisible(`Waiting for menu: ${label}`, SugarBody.body(), '[role="menu"]');
+  await UiFinder.pWaitForVisible(`Waiting for menu: ${menu.name}`, SugarBody.body(), '[role="menu"]');
   await Waiter.pWaitBetweenUserActions();
 };
 
