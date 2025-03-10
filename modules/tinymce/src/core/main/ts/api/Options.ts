@@ -364,6 +364,15 @@ const register = (editor: Editor): void => {
     processor: 'string'
   });
 
+  registerOption('onboarding', {
+    processor: 'boolean',
+    default: true
+  });
+
+  registerOption('tiny_cloud_entry_url', {
+    processor: 'string'
+  });
+
   registerOption('theme', {
     processor: (value) => value === false || Type.isString(value) || Type.isFunction(value),
     default: 'silver'
