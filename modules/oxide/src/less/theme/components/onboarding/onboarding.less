@@ -1,6 +1,6 @@
 @onboarding-overlay-background-color: darken(@background-color, 6%);
 @onboarding-dialog-background-color: @background-color;
-@onboarding-footer-background-color: darken(@background-color, 6%);
+@onboarding-footer-background-color: contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 5%));
 
 @onboarding-dialog-width: 512px;
 @onboarding-dialog-border-radius: 12px;
@@ -11,8 +11,14 @@
 
 @onboarding-promotion-icon-container-size: 56px;
 @onboarding-promotion-icon-size-border-radius: 12px; 
-@onboarding-promotion-icon-background: linear-gradient(180deg, #fff 24%, #f1f5f9 100%);
+
+@onboarding-promotion-icon-background: linear-gradient(180deg, @dialog-background-color 24%, darken(@dialog-background-color, 6%) 100%);
+
 @onboarding-promotion-icon-box-shadow: 0px 1px 1px 0px #222f3e12, 0px 3px 6px 0px #222f3e06;
+@onboarding-promotion-footer-background-color: darken(@background-color, 6%);
+
+@onboarding-promotion-button-background-color: .bg-luma-checker(#F1EBF9, #55367A)[@result];
+@onboarding-promotion-button-text-color:  .bg-luma-checker(#851AFF, #C290FB)[@result];
 
 .tox {
   .tox-onboarding-overlay {
@@ -52,7 +58,7 @@
       margin: 0 @pad-lg;
 
       &:not(:last-child) {
-        border-bottom: 1px solid darken(@background-color, 6%);
+        border-bottom: 1px solid @tinymce-separator-color;
       }
 
       &--number {
@@ -122,7 +128,7 @@
       display: grid;
       align-items: center;
       grid-template-columns: min-content 1fr min-content;
-      border-bottom: 1px solid darken(@background-color, 6%);
+      border-bottom: 1px solid @tinymce-separator-color;
       padding: @pad-lg 0;
       margin: 0 @pad-md;
 
@@ -152,6 +158,7 @@
         border-radius: @onboarding-promotion-icon-size-border-radius;
         background: @onboarding-promotion-icon-background;
         box-shadow: @onboarding-promotion-icon-box-shadow;
+        color: @color-tint;
       }
     }
 
@@ -173,11 +180,30 @@
     }
 
     &--footer {
-      background-color: @onboarding-footer-background-color;
+      background-color: @onboarding-promotion-footer-background-color;
       color: @text-color-muted;
       font-size: @font-size-xs;
       text-align: center;
       padding: @pad-sm @pad-md;
+    }
+  }
+
+  .tox-promotion-button {
+    display: flex;
+    align-items: center;
+    height: @promotion-button-height;
+    line-height: @promotion-button-height;
+    font-size: @menubar-select-font-size;
+    font-weight: bold;
+    background-color: @onboarding-promotion-button-background-color;
+    color: @onboarding-promotion-button-text-color;
+    padding: @pad-sm @pad-md;
+    cursor: pointer;
+    white-space: nowrap;
+    border-radius: 5px;
+
+    &:focus {
+      outline: 1px solid @onboarding-promotion-button-text-color;
     }
   }
 
