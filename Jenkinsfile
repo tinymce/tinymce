@@ -5,8 +5,8 @@ standardProperties()
 
 def runBedrockTest(String name, String command, Boolean runAll, int retry = 0, int timeout = 0) {
   def bedrockCmd = command + (runAll ? " --ignore-lerna-changed=true" : "")
-  echo "Running Bedrock cmd: ${command}"
-  def testStatus = sh(script: command, returnStatus: true)
+  echo "Running Bedrock cmd: ${bedrockCmd}"
+  def testStatus = sh(script: bedrockCmd, returnStatus: true)
   junit allowEmptyResults: true, testResults: 'scratch/TEST-*.xml'
 
   if (testStatus == 4) {
@@ -115,11 +115,12 @@ def runSeleniumPod(String cacheName, String name, String browser, String version
           resourceRequestEphemeralStorage: '8Gi',
           resourceLimitCpu: '7',
           resourceLimitMemory: '4Gi',
-          resourceLimitEphemeralStorage: '8Gi'
+          resourceLimitEphemeralStorage: '8Gi',
+          runAsGroup: '1000', runAsUser: '1000'
         ]
   Map selenium = [
           name: "selenium",
-          image: "selenium/standalone-${browser}:${version}",
+          image: tinyAws.getPullThroughCacheImage("selenium/standalone-${browser}", version),
           livenessProbe: [
             execArgs: "curl --fail --silent --output /dev/null http://localhost:4444/wd/hub/status",
             initialDelaySeconds: 30,
@@ -236,7 +237,7 @@ timestamps {
 
   def seleniumFirefox = [ browser: 'firefox', provider: 'selenium', buckets: 1 ]
   def seleniumChrome = [ browser: 'chrome', provider: 'selenium', version: '127.0', buckets: 1 ]
-  def seleniumChromium = [ browser: 'edge', provider: 'selenium', buckets: 1 ]
+  def seleniumEdge = [ browser: 'edge', provider: 'selenium', buckets: 1 ]
 
   def branchBuildPlatforms = [
     winChrome,

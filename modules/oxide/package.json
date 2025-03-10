@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "echo 'No tests'",
-    "build": "grunt build --force",
+    "build": "grunt build",
     "start": "grunt start",
     "prepublishOnly": "yarn ci",
     "ci": "grunt build"

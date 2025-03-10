@@ -1,10 +1,12 @@
 import { Fun, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
+import { PredicateFind, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import VK from '../api/util/VK';
 import { Bookmark } from '../bookmark/BookmarkTypes';
+import * as CaretFinder from '../caret/CaretFinder';
 import * as NodeType from '../dom/NodeType';
 import * as InsertNewLine from '../newline/InsertNewLine';
 import { endTypingLevelIgnoreLocks } from '../undo/TypingState';
@@ -23,6 +25,16 @@ const handleEnterKeyEvent = (editor: Editor, event: EditorEvent<KeyboardEvent>) 
   editor.undoManager.transact(() => {
     InsertNewLine.insert(editor, event);
   });
+};
+
+const manageEnterOnNonEditable = (editor: Editor, event: EditorEvent<KeyboardEvent>) => {
+  const currentNode = SugarElement.fromDom(editor.selection.getNode());
+  if (NodeType.isContentEditableFalse(currentNode.dom)) {
+    event.preventDefault();
+    PredicateFind.descendant(currentNode, (e) => NodeType.isContentEditableTrue(e.dom) && NodeType.isEditingHost(e.dom))
+      .bind((e) => CaretFinder.firstPositionIn(e.dom))
+      .each((pos) => editor.selection.setRng(pos.toRange()));
+  }
 };
 
 const isCaretAfterKoreanCharacter = (rng: Range): boolean => {
@@ -71,6 +83,7 @@ const setup = (editor: Editor): void => {
       } else {
         handleEnterKeyEvent(editor, event);
       }
+      manageEnterOnNonEditable(editor, event);
     }
   });
 
