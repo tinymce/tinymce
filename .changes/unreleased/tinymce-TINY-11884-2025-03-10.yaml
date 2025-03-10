@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Long tooltips could overflow narrow browser windows.
+time: 2025-03-10T08:31:21.579191+01:00
+custom:
+    Issue: TINY-11884
