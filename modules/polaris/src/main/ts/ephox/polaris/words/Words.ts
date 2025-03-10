@@ -70,7 +70,7 @@ const findWordsWithIndices = <T>(chars: Word<T>, sChars: string[], characterMap:
         }
 
         // If the word is an abbreviation, include the next character if it's a period.
-        if (sChars[i + 1] === '.' && /^([a-zA-Z]\.)+$/.test(str + '.')) {
+        if (sChars[i + 1] === '.' && /^(([a-zA-Z]{1,2})\.)+$/.test(str + '.')) {
           word.push(chars[i + 1]);
           indices.push({
             start: startOfWord,
