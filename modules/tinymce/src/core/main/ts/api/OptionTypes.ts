@@ -50,6 +50,8 @@ interface BaseEditorOptions {
   add_form_submit_trigger?: boolean;
   add_unload_trigger?: boolean;
   allow_conditional_comments?: boolean;
+  allow_extra_mathml_attributes?: string[];
+  allow_extra_mathml_elements?: string[];
   allow_html_data_urls?: boolean;
   allow_html_in_named_anchor?: boolean;
   allow_script_urls?: boolean;
