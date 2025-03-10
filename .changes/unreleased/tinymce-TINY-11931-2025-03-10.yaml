@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: New `onboarding` option.
+time: 2025-03-10T09:49:22.941053+01:00
+custom:
+    Issue: TINY-11931
