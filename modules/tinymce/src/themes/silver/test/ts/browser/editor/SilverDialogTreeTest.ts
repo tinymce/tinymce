@@ -1,4 +1,4 @@
-import { FocusTools, Keys } from '@ephox/agar';
+import { FocusTools, Keys, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { SugarDocument } from '@ephox/sugar';
@@ -96,7 +96,7 @@ describe('browser.tinymce.themes.silver.editor.DialogTreeTest', () => {
     TinyUiActions.keystroke(editor, Keys.up());
     FocusTools.isOn('Dir', dirElement);
     TinyUiActions.keystroke(editor, Keys.tab());
-    const dirMenuElement = FocusTools.isOnSelector('Dir menu', SugarDocument.getDocument(), '.tox-tree--directory__label:contains("Dir") > .tox-mbtn' );
+    const dirMenuElement = FocusTools.isOn('Dir menu', UiFinder.findIn(dirElement, '.tox-mbtn').getOrDie());
     TinyUiActions.keystroke(editor, Keys.tab());
     FocusTools.isOn('File 5', file5Element);
     TinyUiActions.keystroke(editor, Keys.tab(), { shiftKey: true });
