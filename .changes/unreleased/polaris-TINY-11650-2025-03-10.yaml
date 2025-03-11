@@ -1,6 +1,0 @@
-project: polaris
-kind: Changed
-body: Changed word-capture regex for abbreviations
-time: 2025-03-10T09:56:28.378701+01:00
-custom:
-    Issue: TINY-11650
