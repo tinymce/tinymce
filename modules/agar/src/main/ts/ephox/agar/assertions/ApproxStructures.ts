@@ -1,6 +1,6 @@
 import { Assert, TestLabel } from '@ephox/bedrock-client';
 import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
-import { Attribute, Classes, Css, Html, SugarElement, SugarNode, SugarText, Traverse, Truncate, Value } from '@ephox/sugar';
+import { Attribute, Classes, Css, Html, SugarElement, SugarNode, SugarText, TextContent, Traverse, Truncate, Value } from '@ephox/sugar';
 
 import * as ApproxComparisons from './ApproxComparisons';
 
@@ -43,6 +43,7 @@ export interface ElementFields {
   styles?: Record<string, StringAssert>;
   html?: StringAssert;
   value?: StringAssert;
+  textContent?: StringAssert;
   children?: StructAssert[];
   exactAttrs?: Record<string, StringAssert>;
   exactClasses?: string[];
@@ -109,6 +110,7 @@ const element = (tag: string, fields: ElementFields): StructAssert => {
       const attrs = fields.attrs ?? {};
       const classes = fields.classes ?? [];
       const styles = fields.styles ?? {};
+      const optTextContent = Optional.from(fields.textContent);
       const optHtml = Optional.from(fields.html);
       const optValue = Optional.from(fields.value);
       const optChildren = Optional.from(fields.children);
@@ -133,6 +135,7 @@ const element = (tag: string, fields: ElementFields): StructAssert => {
 
       assertHtml(optHtml, actual);
       assertValue(optValue, actual);
+      assertTextContent(optTextContent, actual);
       assertChildren(optChildren, actual);
     } else {
       Assert.eq('Incorrect node type for: ' + Truncate.getHtml(actual), 1, SugarNode.type(actual));
@@ -338,6 +341,18 @@ const assertValue = (expectedValue: Optional<StringAssert>, actual: SugarElement
     v.strAssert(
       () => 'Checking value of ' + Truncate.getHtml(actual),
       Value.get(actual as SugarElement<any>)
+    );
+  });
+};
+
+const assertTextContent = (expectedValue: Optional<StringAssert>, actual: SugarElement<HTMLElement>) => {
+  expectedValue.each((v) => {
+    if (v.strAssert === undefined) {
+      throw new Error(JSON.stringify(v) + ' is not a *string assertion*.\nSpecified in *expected* value of ' + TextContent.get(actual));
+    }
+    v.strAssert(
+      () => 'Checking value of ' + TextContent.get(actual),
+      TextContent.get(actual)
     );
   });
 };
