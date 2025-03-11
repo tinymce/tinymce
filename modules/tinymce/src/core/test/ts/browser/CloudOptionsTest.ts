@@ -38,7 +38,7 @@ describe('browser.tinymce.core.CloudOptionsTest', () => {
   });
 
   context('Option defined in init', () => {
-    let onboardingOption: boolean;
+    let onboardingOption: boolean | undefined;
     let tinyCloudEntryUrlOption: string;
 
     const addEditorEventHandler = ({ editor }: EditorEvent<{ editor: Editor }>) => {
