@@ -1,4 +1,4 @@
-import { ApproxStructure, Keys, RealClipboard, RealMouse, StructAssert } from '@ephox/agar';
+import { ApproxStructure, Keys, RealMouse, StructAssert } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -25,11 +25,17 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
   };
 
   const pPaste = async (editor: Editor): Promise<void> => {
-    if (browser.isSafari()) {
-      await pClickEditMenu(editor, 'Paste');
-    } else {
-      await RealClipboard.pPaste('iframe => body');
-    }
+    await pClickEditMenu(editor, 'Paste');
+    // if (browser.isSafari()) {
+    //   await pClickEditMenu(editor, 'Paste');
+    //   // Alternative for Chromium browsers to not engage the broswer prompt for clipboard access
+    // } else if (browser.isChromium()) {
+    //   await navigator.clipboard.readText().then((text) => {
+    //     editor.execCommand('insertHTML', false, text);
+    //   });
+    // } else {
+    //   await RealClipboard.pPaste('iframe => body');
+    // }
   };
 
   const getMockPreStructure = (s: ApproxStructure.StructApi, str: ApproxStructure.StringApi): StructAssert =>
@@ -64,7 +70,6 @@ describe('webdriver.tinymce.plugins.codesample.CodeSampleCopyAndPasteTest', () =
     await pPaste(editor);
     TinyAssertions.assertSelection(editor, [], 1, [], 2);
     TinyAssertions.assertContentPresence(editor, { 'pre[data-mce-selected]': 1 });
-
     // Pressing <enter> should do nothing.
     pressEnter(editor);
     TinyAssertions.assertSelection(editor, [], 1, [], 2);
