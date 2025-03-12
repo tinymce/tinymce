@@ -6,6 +6,11 @@ interface DecodedContainsSelector {
   text: string;
 }
 
+const CONTAINS_REGEXP = /(?<baseSelector>.*):contains\((?<text>.*?)\)(?<remainings>.*)/;
+const CONTAINS_REGEXP_SINGLE_QUOTE = /(?<baseSelector>.*):contains\('(?<text>.*?)'\)(?<remainings>.*)/;
+const CONTAINS_REGEXP_DOUBLE_QUOTE = /(?<baseSelector>.*):contains\("(?<text>.*?)"\)(?<remainings>.*)/;
+const CONTAINS_REGEXPS = [ CONTAINS_REGEXP_DOUBLE_QUOTE, CONTAINS_REGEXP_SINGLE_QUOTE, CONTAINS_REGEXP ];
+
 const selectAll = (selector: string, context: LookupContext): Element[] =>
   decodeContains(selector)
     .fold(
@@ -19,20 +24,22 @@ const selectAll = (selector: string, context: LookupContext): Element[] =>
     );
 
 const decodeContains = (selector: string): Result<Optional<DecodedContainsSelector>, string> => {
-  const regexp = /(?<baseSelector>.*):contains\((?<text>.*?)\)(?<remainings>.*)/;
-  const matchedGroups = regexp.exec(selector)?.groups ?? {};
-  if (!Obj.has(matchedGroups, 'baseSelector') || !Obj.has(matchedGroups, 'text')) {
-    return Result.value(Optional.none());
-  }
-  if (Obj.has(matchedGroups, 'remainings') && Strings.trim(matchedGroups.remainings) !== '') {
-    return Result.error(`Invalid selector '${selector}'. ':contains' in only supported at the end of the selector`);
-  }
-  return Result.value(Optional.some({ baseSelector: matchedGroups.baseSelector, text: unwrapFromQuotes(matchedGroups.text) }));
-};
-
-const unwrapFromQuotes = (pattern: string) => {
-  const regexp = /^(?<quote>["'])(?<content>.*)\k<quote>$/;
-  return regexp.exec(pattern)?.groups?.content ?? pattern;
+  const selectorGroups = Arr.findMap(CONTAINS_REGEXPS, (regexp) => {
+    const matchedGroups = regexp.exec(selector)?.groups ?? {};
+    if (Obj.has(matchedGroups, 'baseSelector') && Obj.has(matchedGroups, 'text')) {
+      return Optional.from(matchedGroups);
+    }
+    return Optional.none();
+  });
+  return selectorGroups.fold(
+    () => Result.value(Optional.none()),
+    ({ baseSelector, text, remainings }) => {
+      if (remainings !== undefined && Strings.trim(remainings) !== '') {
+        return Result.error(`Invalid selector '${selector}'. ':contains' is only supported as the last pseudo-class.`);
+      }
+      return Result.value(Optional.some({ baseSelector, text }));
+    }
+  );
 };
 
 const queryAll = (element: LookupContext, selector: string) => Array.from(element.querySelectorAll(selector));
