@@ -114,6 +114,16 @@ describe('SelectorEngineTest', () => {
     Assert.eq(':contains(This is a sentence) li returned', li, matches[0], Testable.tStrict);
   });
 
+  it(':contains should handle text with parenthesis', () => {
+    const content = SugarElement.fromHtml('<ul><li>English (United States)</li></ul>');
+    Insert.append(container, content);
+    const li = container.dom.querySelector('li');
+
+    const matches = SelectorEngine.selectAll('li:contains("English (United States)")', container.dom);
+    Assert.eq(':contains(English (United States)) one element in array', 1, matches.length);
+    Assert.eq(':contains(English (United States)) li returned', li, matches[0], Testable.tStrict);
+  });
+
   it(':contains should look in descendants', () => {
     const content = SugarElement.fromHtml(
       '<ol>' +
@@ -172,11 +182,11 @@ describe('SelectorEngineTest', () => {
   const assertThrowsContainsAtTheEnd = (selector: string) => {
     assert.throws(
       () => SelectorEngine.selectAll(selector, container.dom),
-      `Invalid selector '${selector}'. ':contains' in only supported at the end of the selector`
+      `Invalid selector '${selector}'. ':contains' is only supported as the last pseudo-class.`
     );
     assert.throws(
       () => SelectorEngine.matchesSelector(container.dom, selector),
-      `Invalid selector '${selector}'. ':contains' in only supported at the end of the selector`
+      `Invalid selector '${selector}'. ':contains' is only supported as the last pseudo-class.`
     );
   };
 
