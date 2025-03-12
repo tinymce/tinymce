@@ -12,15 +12,10 @@ const CONTAINS_REGEXP_DOUBLE_QUOTE = /(?<baseSelector>.*):contains\("(?<text>.*?
 const CONTAINS_REGEXPS = [ CONTAINS_REGEXP_DOUBLE_QUOTE, CONTAINS_REGEXP_SINGLE_QUOTE, CONTAINS_REGEXP ];
 
 const selectAll = (selector: string, context: LookupContext): Element[] =>
-  decodeContains(selector)
+  decodeContains(selector).getOrDie()
     .fold(
-      (deocdeError) => {
-        throw new Error(deocdeError);
-      },
-      (result) => result.fold(
-        () => queryAll(context, selector),
-        (decodedContainsSelector) => queryAllWithContains(context, decodedContainsSelector)
-      )
+      () => queryAll(context, selector),
+      (decodedContainsSelector) => queryAllWithContains(context, decodedContainsSelector)
     );
 
 const decodeContains = (selector: string): Result<Optional<DecodedContainsSelector>, string> => {
@@ -53,15 +48,10 @@ const hasText = (element: Node, text: string) =>
   Strings.contains(element.textContent, text);
 
 const matchesSelector = (element: Element, selector: string): boolean =>
-  decodeContains(selector)
+  decodeContains(selector).getOrDie()
     .fold(
-      (deocdeError) => {
-        throw new Error(deocdeError);
-      },
-      (result) => result.fold(
-        () => matches(selector, element),
-        (decodedContainsSelector) => matchesWithContains(decodedContainsSelector, element)
-      )
+      () => matches(selector, element),
+      (decodedContainsSelector) => matchesWithContains(decodedContainsSelector, element)
     );
 
 const matches = (selector: string, element: Element) => element.matches(selector);
