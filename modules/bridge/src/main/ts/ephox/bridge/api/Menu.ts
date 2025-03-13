@@ -7,7 +7,7 @@ import { ChoiceMenuItem, ChoiceMenuItemInstanceApi, ChoiceMenuItemSpec, createCh
 import { ContextMenuApi, ContextMenuContents, ContextMenuItem, ContextSubMenu } from '../components/menu/ContextMenu';
 import {
   createFancyMenuItem, ColorSwatchMenuItem, ColorSwatchMenuItemSpec, FancyActionArgsMap, FancyMenuItem, FancyMenuItemSpec, InsertTableMenuItem,
-  InsertTableMenuItemSpec
+  InsertTableMenuItemSpec, ImageSelectMenuItem, ImageSelectMenuItemSpec
 } from '../components/menu/FancyMenuItem';
 import { ImageMenuItem, ImageMenuItemInstanceApi, ImageMenuItemSpec, createImageMenuItem } from '../components/menu/ImageMenuItem';
 import { createMenuItem, MenuItem, MenuItemInstanceApi, MenuItemSpec } from '../components/menu/MenuItem';
@@ -52,6 +52,8 @@ export {
   ImageMenuItemInstanceApi,
   ImageMenuItemSpec,
   createImageMenuItem,
+  ImageSelectMenuItem,
+  ImageSelectMenuItemSpec,
 
   createSeparatorMenuItem,
   SeparatorMenuItem,

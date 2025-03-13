@@ -1,12 +1,14 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
-import { Result, Optional } from '@ephox/katamari';
+import { Optional, Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
 import { ChoiceMenuItemSpec } from './ChoiceMenuItem';
+import { ImageMenuItemSpec } from './ImageMenuItem';
 
 export interface FancyActionArgsMap {
   inserttable: { numRows: number; numColumns: number };
   colorswatch: { value: string };
+  imageselect: { value: string };
 }
 
 interface BaseFancyMenuItemSpec<T extends keyof FancyActionArgsMap> {
@@ -31,7 +33,15 @@ export interface ColorSwatchMenuItemSpec extends BaseFancyMenuItemSpec<'colorswa
   };
 }
 
-export type FancyMenuItemSpec = InsertTableMenuItemSpec | ColorSwatchMenuItemSpec;
+export interface ImageSelectMenuItemSpec extends BaseFancyMenuItemSpec<'imageselect'> {
+  fancytype: 'imageselect';
+  select?: (value: string) => boolean;
+  initData: {
+    items: (ImageMenuItemSpec | ChoiceMenuItemSpec)[];
+  };
+}
+
+export type FancyMenuItemSpec = InsertTableMenuItemSpec | ColorSwatchMenuItemSpec | ImageSelectMenuItemSpec;
 
 interface BaseFancyMenuItem<T extends keyof FancyActionArgsMap> {
   type: 'fancymenuitem';
@@ -55,7 +65,13 @@ export interface ColorSwatchMenuItem extends BaseFancyMenuItem<'colorswatch'> {
   };
 }
 
-export type FancyMenuItem = InsertTableMenuItem | ColorSwatchMenuItem;
+export interface ImageSelectMenuItem extends BaseFancyMenuItem<'imageselect'> {
+  fancytype: 'imageselect';
+  select: Optional<(value: string) => boolean>;
+  initData: { items: (ImageMenuItemSpec | ChoiceMenuItemSpec)[] };
+}
+
+export type FancyMenuItem = InsertTableMenuItem | ColorSwatchMenuItem | ImageSelectMenuItem;
 
 const baseFields = [
   ComponentSchema.type,
@@ -77,9 +93,25 @@ const colorSwatchFields = [
   ])
 ].concat(baseFields);
 
+const imageSelectFields = [
+  FieldSchema.optionFunction('select'),
+  FieldSchema.requiredObjOf('initData', [
+    FieldSchema.requiredArrayOfObj('items', [
+      FieldSchema.defaultedString('type', 'imageitem'),
+      FieldSchema.defaultedString('icon', ''),
+      // FieldSchema.defaultedBoolean('active', true),
+      FieldSchema.defaultedString('url', ''),
+      FieldSchema.defaultedString('value', ''),
+      FieldSchema.defaultedString('label', ''),
+      FieldSchema.defaultedString('tooltip', 'tooltip'),
+    ])
+  ])
+].concat(baseFields);
+
 export const fancyMenuItemSchema = StructureSchema.choose('fancytype', {
   inserttable: insertTableFields,
-  colorswatch: colorSwatchFields
+  colorswatch: colorSwatchFields,
+  imageselect: imageSelectFields
 });
 
 export const createFancyMenuItem = (spec: FancyMenuItemSpec): Result<FancyMenuItem, StructureSchema.SchemaError<any>> =>

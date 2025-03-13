@@ -33,7 +33,7 @@ const renderImgItem = (
     textContent: useText ? spec.text : Optional.none(),
     htmlContent: Optional.none(),
     ariaLabel: spec.text,
-    iconContent: spec.url,
+    iconContent: Optional.some(spec.url),
     labelContent: spec.label,
     shortcutContent: useText ? spec.shortcut : Optional.none(),
 
@@ -73,7 +73,6 @@ const renderImgItem = (
       toggling: {
         toggleClass: ItemClasses.tickedClass,
         toggleOnExecute: false,
-        selected: spec.active,
         exclusive: true,
         onToggled: (comp: AlloyComponent) => {
           SelectorFind.descendant(comp.element, '.tox-collection__item-image').each((imgContainer) => {
@@ -88,3 +87,4 @@ const renderImgItem = (
 };
 
 export { renderImgItem };
+
