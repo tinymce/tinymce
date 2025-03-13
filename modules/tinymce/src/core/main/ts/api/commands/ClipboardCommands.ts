@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Fun } from '@ephox/katamari';
 
 import * as CutCopy from '../../paste/CutCopy';
@@ -6,7 +7,37 @@ import Editor from '../Editor';
 import Env from '../Env';
 import Delay from '../util/Delay';
 
+const ClipboardUtils = {
+
+  getShortcutText: (): string => {
+    return `${Env.os.isMacOS() ? 'Cmd' : 'Ctrl'}+V`;
+  },
+
+  getBrowserRestrictionsMessage: (browser: string): string => {
+    return `${browser} restricts clipboard access. Please use keyboard shortcut (${ClipboardUtils.getShortcutText()}) instead.`;
+  },
+
+  getRestrictedBrowserName: (): string => {
+    if (Env.browser.isSafari()) {
+      return 'Safari';
+    }
+    if (Env.browser.isFirefox()) {
+      return 'Firefox';
+    }
+    return 'Your browser';
+  },
+
+  hasClipboardRestrictions: (): boolean => {
+    return NativeClipboard.BrowserConfig.requiresUserActivation();
+  }
+};
+
 const errorStatusToErrorMessage = (status: NativeClipboard.BaseClipboardErrorStatus): string => {
+  const restrictedBrowser = ClipboardUtils.getRestrictedBrowserName();
+  if (ClipboardUtils.hasClipboardRestrictions() && (status === 'no-permission' || status === 'unknown')) {
+    return ClipboardUtils.getBrowserRestrictionsMessage(restrictedBrowser);
+  }
+
   switch (status) {
     case 'inactive':
       return 'This operation requires the webpage to be active.';
@@ -14,8 +45,11 @@ const errorStatusToErrorMessage = (status: NativeClipboard.BaseClipboardErrorSta
       return 'This operation requires a secure context (HTTPS).';
     case 'no-permission':
       return 'Clipboard permission denied. Please allow clipboard access to use this feature.';
+    case 'api-unavailable':
+      return 'Browser clipboard functionality is not available in your browser.';
     case 'unknown':
-      return 'An uknown clipboard error occured.';
+    default:
+      return 'An unknown clipboard error occurred.';
   }
 };
 
@@ -23,88 +57,172 @@ const handleErrorNotification = (editor: Editor, message: string): void => {
   editor.notificationManager.open({ text: editor.translate(message), type: 'error' });
 };
 
-const executeNativeClipboardApi = async (editor: Editor, command: string): Promise<void> => {
-  switch (command) {
-    case 'copy': {
-      // TODO: Can we just use copy event?
-      // const event = new window.ClipboardEvent('copy');
-      // const args = editor.dispatch('copy', event);
-      // const data = Clipboard.getDataTransferItems(args.clipboardData);
-      // console.log(data);
+const executeCopy = async (editor: Editor): Promise<void> => {
+  const selectionData = CutCopy.getSelectionData(editor);
+  const data = {
+    [NativeClipboard.CLIPBOARD_CONTENT_TYPES.HTML]: selectionData.html,
+    [NativeClipboard.CLIPBOARD_CONTENT_TYPES.TEXT]: selectionData.text,
+  };
 
-      const selectionData = CutCopy.getSelectionData(editor);
-      const data = {
-        'text/html': selectionData.html,
-        'text/plain': selectionData.text,
-      };
-      const writeResult = await NativeClipboard.write(data);
-      return writeResult.fold(
-        (errorStatus) => {
-          const errorMessage = errorStatusToErrorMessage(errorStatus);
-          handleErrorNotification(editor, errorMessage);
-        },
-        Fun.noop
+  const writeResult = await NativeClipboard.write(data);
+
+  writeResult.fold(
+    (errorStatus) => {
+      const errorMessage = errorStatusToErrorMessage(errorStatus);
+      handleErrorNotification(editor, errorMessage);
+    },
+    Fun.noop
+  );
+};
+
+const executeCut = async (editor: Editor): Promise<void> => {
+  const selectionData = CutCopy.getSelectionData(editor);
+  const data = {
+    [NativeClipboard.CLIPBOARD_CONTENT_TYPES.HTML]: selectionData.html,
+    [NativeClipboard.CLIPBOARD_CONTENT_TYPES.TEXT]: selectionData.text,
+  };
+
+  const writeResult = await NativeClipboard.write(data);
+
+  writeResult.fold(
+    (errorStatus) => {
+      const errorMessage = errorStatusToErrorMessage(errorStatus);
+      handleErrorNotification(editor, errorMessage);
+    },
+    () => deleteSelectedContent(editor)
+  );
+};
+
+const deleteSelectedContent = (editor: Editor): void => {
+  if (Env.browser.isChromium() || Env.browser.isFirefox()) {
+    const rng = editor.selection.getRng();
+    // Chrome and Firefox don't allow executing commands recursively
+    // so we need to use a timeout to detach from the current execution context
+    Delay.setEditorTimeout(editor, () => {
+      editor.selection.setRng(rng);
+      editor.execCommand('Delete');
+    }, 0);
+  } else {
+    editor.execCommand('Delete');
+  }
+};
+
+const processClipboardContents = (editor: Editor, clipboardContents: ClipboardItems): void => {
+  NativeClipboard.clipboardItemsToTypes(clipboardContents)
+    .then((data) => {
+      const usePlainText = editor.queryCommandState('mceTogglePlainTextPaste');
+
+      editor.execCommand('mceInsertClipboardContent', false, {
+        text: usePlainText ? data[NativeClipboard.CLIPBOARD_CONTENT_TYPES.TEXT] : '',
+        html: !usePlainText ? data[NativeClipboard.CLIPBOARD_CONTENT_TYPES.HTML] : ''
+      });
+    })
+    .catch((error) => {
+      console.error('Error processing clipboard data:', error);
+      handleErrorNotification(editor, 'Failed to process clipboard content.');
+    });
+};
+
+const handleClipboardReadError = (editor: Editor, errorStatus: NativeClipboard.BaseClipboardErrorStatus): void => {
+  if (ClipboardUtils.hasClipboardRestrictions() &&
+      (errorStatus === 'unknown' || errorStatus === 'no-permission')) {
+    const browser = ClipboardUtils.getRestrictedBrowserName();
+    handleErrorNotification(
+      editor,
+      ClipboardUtils.getBrowserRestrictionsMessage(browser)
+    );
+  } else {
+    const errorMessage = errorStatusToErrorMessage(errorStatus);
+    handleErrorNotification(editor, errorMessage);
+  }
+};
+
+const executePaste = async (editor: Editor): Promise<void> => {
+  const readStatus = await NativeClipboard.canRead();
+
+  if (readStatus === 'inactive') {
+    if (ClipboardUtils.hasClipboardRestrictions()) {
+      const browser = ClipboardUtils.getRestrictedBrowserName();
+      handleErrorNotification(
+        editor,
+        `${browser} requires clipboard access to be triggered by a direct user action. Please use keyboard shortcut (${ClipboardUtils.getShortcutText()}) instead.`
       );
+      return;
     }
-    case 'cut': {
-      // TODO: Can we just use cut event?
-      // editor.dispatch('cut');
 
-      const selectionData = CutCopy.getSelectionData(editor);
-      const data = {
-        'text/html': selectionData.html,
-        'text/plain': selectionData.text,
-      };
-      const writeResult = await NativeClipboard.write(data);
-      return writeResult.fold(
-        (errorStatus) => {
-          const errorMessage = errorStatusToErrorMessage(errorStatus);
-          handleErrorNotification(editor, errorMessage);
-        },
-        () => {
-          if (Env.browser.isChromium() || Env.browser.isFirefox()) {
-            const rng = editor.selection.getRng();
-            // Chrome fails to execCommand from another execCommand with this message:
-            // "We don't execute document.execCommand() this time, because it is called recursively.""
-            // Firefox 82 now also won't run recursive commands, but it doesn't log an error
-            Delay.setEditorTimeout(editor, () => { // detach
-              // Restore the range before deleting, as Chrome on Android will
-              // collapse the selection after a cut event has fired.
-              editor.selection.setRng(rng);
-              editor.execCommand('Delete');
-            }, 0);
-          } else {
-            editor.execCommand('Delete');
-          }
+    handleErrorNotification(
+      editor,
+      'This operation requires the webpage to be active. Please click on the page and try again.'
+    );
+    return;
+  }
+
+  if (readStatus === 'no-permission') {
+    handleErrorNotification(
+      editor,
+      'Clipboard access is blocked. Please click "Allow" on the permission prompt that appears.'
+    );
+
+    const readResult = await NativeClipboard.read();
+
+    readResult.fold(
+      (errorStatus) => {
+        if (errorStatus !== 'no-permission') {
+          handleClipboardReadError(editor, errorStatus);
         }
-      );
-    }
-    case 'paste':
-      // TODO: Can we just use paste event?
-      // editor.dispatch('paste');
-
+      },
+      (clipboardContents) => processClipboardContents(editor, clipboardContents)
+    );
+  } else if (readStatus !== 'valid') {
+    const errorMessage = errorStatusToErrorMessage(readStatus);
+    handleErrorNotification(editor, errorMessage);
+  } else {
+    try {
       const readResult = await NativeClipboard.read();
-      return readResult.fold(
-        async (errorStatus) => {
-          const errorMessage = errorStatusToErrorMessage(errorStatus);
-          handleErrorNotification(editor, errorMessage);
-        },
-        async (clipboardContents) => {
-          const data = await NativeClipboard.clipboardItemsToTypes(clipboardContents);
-          const usePlainText = editor.queryCommandState('mceTogglePlainTextPaste');
-          editor.execCommand('mceInsertClipboardContent', false, {
-            text: usePlainText ? data['text/plain'] : '',
-            html: !usePlainText ? data['text/html'] : ''
-          });
-        }
+
+      readResult.fold(
+        (errorStatus) => handleClipboardReadError(editor, errorStatus),
+        (clipboardContents) => processClipboardContents(editor, clipboardContents)
       );
+    } catch (error) {
+      if (ClipboardUtils.hasClipboardRestrictions()) {
+        const browser = ClipboardUtils.getRestrictedBrowserName();
+        handleErrorNotification(
+          editor,
+          ClipboardUtils.getBrowserRestrictionsMessage(browser)
+        );
+      } else {
+        console.error('Error reading clipboard:', error);
+        handleErrorNotification(editor, 'Failed to read from clipboard.');
+      }
+    }
+  }
+};
+
+const executeNativeClipboardCommand = async (editor: Editor, command: string): Promise<void> => {
+  try {
+    switch (command) {
+      case 'copy':
+        await executeCopy(editor);
+        break;
+      case 'cut':
+        await executeCut(editor);
+        break;
+      case 'paste':
+        await executePaste(editor);
+        break;
+    }
+  } catch (error) {
+    console.error('Clipboard operation failed:', error);
+    handleErrorNotification(editor, 'Clipboard operation failed.');
   }
 };
 
 const registerCommands = (editor: Editor): void => {
   editor.editorCommands.addCommands({
     'Cut,Copy,Paste': (command) => {
-      executeNativeClipboardApi(editor, command.toLowerCase()).catch(() => {
+      executeNativeClipboardCommand(editor, command.toLowerCase()).catch((error) => {
+        console.error('Clipboard command failed:', error);
         handleErrorNotification(editor, 'Clipboard operation failed.');
       });
     }
