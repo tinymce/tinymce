@@ -30,10 +30,15 @@ interface ContextToolbarSpec {
   readonly onBack: () => void;
 }
 
-const renderContextToolbar = (spec: ContextToolbarSpec): SketchSpec => {
+export interface ContextToolbarRenderResult {
+  readonly sketch: SketchSpec;
+  readonly inSubtoolbar: () => boolean;
+}
+
+const renderContextToolbar = (spec: ContextToolbarSpec): ContextToolbarRenderResult => {
   const stack = Cell<Array<{ bar: AlloyComponent; focus: Optional<SugarElement<HTMLElement>> }>>([ ]);
 
-  return InlineView.sketch({
+  const sketch = InlineView.sketch({
     dom: {
       tag: 'div',
       classes: [ 'tox-pop' ]
@@ -52,6 +57,7 @@ const renderContextToolbar = (spec: ContextToolbarSpec): SketchSpec => {
     },
 
     onHide: () => {
+      stack.set([ ]);
       spec.onHide();
     },
 
@@ -151,6 +157,10 @@ const renderContextToolbar = (spec: ContextToolbarSpec): SketchSpec => {
     lazySink: () => Result.value(spec.sink)
   });
 
+  return {
+    sketch,
+    inSubtoolbar: () => stack.get().length > 0
+  };
 };
 
 export {

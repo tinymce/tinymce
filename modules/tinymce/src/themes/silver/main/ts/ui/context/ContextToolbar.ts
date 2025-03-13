@@ -52,22 +52,22 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
   const lastTrigger = Singleton.value<TriggerCause>();
   const lastContextPosition = Singleton.value<InlineContent.ContextPosition>();
 
-  const contextbar = GuiFactory.build(
-    renderContextToolbar({
-      sink,
-      onEscape: () => {
-        editor.focus();
-        Events.fireContextToolbarClose(editor);
-        return Optional.some(true);
-      },
-      onHide: () => {
-        Events.fireContextToolbarClose(editor);
-      },
-      onBack: () => {
-        Events.fireContextFormSlideBack(editor);
-      }
-    })
-  );
+  const contextToolbarResult = renderContextToolbar({
+    sink,
+    onEscape: () => {
+      editor.focus();
+      Events.fireContextToolbarClose(editor);
+      return Optional.some(true);
+    },
+    onHide: () => {
+      Events.fireContextToolbarClose(editor);
+    },
+    onBack: () => {
+      Events.fireContextFormSlideBack(editor);
+    }
+  });
+
+  const contextbar = GuiFactory.build(contextToolbarResult.sketch);
 
   const getBounds = () => {
     const position = lastContextPosition.get().getOr('node');
@@ -282,7 +282,9 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     editor.on('focusout', (_e) => {
       Delay.setEditorTimeout(editor, () => {
         if (Focus.search(sink.element).isNone() && Focus.search(contextbar.element).isNone()) {
-          close();
+          if (!contextToolbarResult.inSubtoolbar() || !editor.hasFocus()) {
+            close();
+          }
         }
       }, 0);
     });
@@ -322,10 +324,20 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     });
 
     editor.on('NodeChange', (_e) => {
-      Focus.search(contextbar.element).fold(
-        launchContextToolbar.throttle,
-        Fun.noop
-      );
+      if (!contextToolbarResult.inSubtoolbar()) {
+        Focus.search(contextbar.element).fold(
+          launchContextToolbar.throttle,
+          Fun.noop
+        );
+      }
+    });
+
+    editor.on('AddUndo', () => {
+      hideOrRepositionIfNecessary();
+    });
+
+    editor.addCommand('RepositionContextToolbar', () => {
+      hideOrRepositionIfNecessary();
     });
   });
 };
