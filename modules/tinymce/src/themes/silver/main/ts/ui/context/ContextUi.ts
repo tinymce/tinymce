@@ -108,7 +108,6 @@ const renderContextToolbar = (spec: ContextToolbarSpec): ContextToolbarRenderRes
           );
 
           setTimeout(() => {
-            console.log('start');
             Css.set(comp.element, 'width', newWidth + 'px');
           }, 0);
         }),
