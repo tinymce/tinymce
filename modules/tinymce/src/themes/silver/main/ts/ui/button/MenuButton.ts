@@ -1,11 +1,11 @@
-import { AlloyComponent, AlloyTriggers, Disabling, MementoRecord, SketchSpec, Tabstopping } from '@ephox/alloy';
+import { AlloyComponent, AlloyTriggers, Disabling, MementoRecord, SketchSpec, Tabstopping, Tooltipping } from '@ephox/alloy';
 import { Dialog, Menu, Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Optional } from '@ephox/katamari';
 import { Attribute, Class, Focus } from '@ephox/sugar';
 
 import { formActionEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
-import { UiFactoryBackstage } from '../../backstage/Backstage';
+import { UiFactoryBackstage, UiFactoryBackstageShared } from '../../backstage/Backstage';
 import { renderCommonDropdown, updateMenuIcon, updateMenuText } from '../dropdown/CommonDropdown';
 import ItemResponse from '../menus/item/ItemResponse';
 import * as NestedMenus from '../menus/menu/NestedMenus';
@@ -24,7 +24,7 @@ interface StoredMenuButton extends Omit<Dialog.DialogFooterMenuButton, 'items'> 
   readonly items: StoredMenuItem[];
 }
 
-const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonInstanceApi => ({
+const getMenuButtonApi = (component: AlloyComponent, sharedBackstage: UiFactoryBackstageShared, tooltipString: Cell<Optional<string>>): Toolbar.ToolbarMenuButtonInstanceApi => ({
   isEnabled: () => !Disabling.isDisabled(component),
   setEnabled: (state: boolean) => Disabling.set(component, !state),
   setActive: (state: boolean) => {
@@ -40,6 +40,11 @@ const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonI
     }
   },
   isActive: () => Class.has(component.element, ToolbarButtonClasses.Ticked),
+  setTooltip: (tooltip: string) => {
+    const translatedTooltip = sharedBackstage.providers.translate(tooltip);
+    Attribute.set(component.element, 'aria-label', translatedTooltip);
+    tooltipString.set(Optional.some(tooltip));
+  },
   setText: (text: string) => {
     AlloyTriggers.emitWith(component, updateMenuText, {
       text
@@ -51,10 +56,11 @@ const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonI
 });
 
 const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Optional<string>, tabstopping = true, btnName?: string): SketchSpec => {
+  const tooltipString = Cell<Optional<string>>(spec.tooltip);
   return renderCommonDropdown({
     text: spec.text,
     icon: spec.icon,
-    tooltip: spec.tooltip,
+    tooltip: tooltipString.get(),
     ariaLabel: spec.tooltip,
     searchable: spec.search.isSome(),
     // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
@@ -80,16 +86,30 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
           );
         },
         fetchContext,
-        getMenuButtonApi(dropdownComp)
+        getMenuButtonApi(dropdownComp, backstage.shared, tooltipString)
       );
     },
     onSetup: spec.onSetup,
-    getApi: getMenuButtonApi,
+    getApi: (comp) => getMenuButtonApi(comp, backstage.shared, tooltipString),
     columns: 1,
     presets: 'normal',
     classes: [],
     dropdownBehaviours: [
-      ...(tabstopping ? [ Tabstopping.config({ }) ] : [])
+      ...(tabstopping ? [ Tabstopping.config({ }) ] : []),
+      Tooltipping.config({
+        ...backstage.shared.providers.tooltips.getConfig({
+          // TODO: remove this comment after the review, this wasn't used because the `spec.dropdownBehaviours` was overwrite from a defailt `Tooltipping.config`
+          tooltipText: backstage.shared.providers.translate(spec.tooltip.getOr('')),
+          onShow: (comp) => {
+            if (tooltipString.get().exists((tooltipStr) => spec.tooltip.exists((tt) => tt !== tooltipStr))) {
+              const translatedTooltip = backstage.shared.providers.translate(tooltipString.get().getOr(''));
+              Tooltipping.setComponents(comp,
+                backstage.shared.providers.tooltips.getComponents({ tooltipText: translatedTooltip })
+              );
+            }
+          }
+        }),
+      })
     ],
     context: spec.context
   },

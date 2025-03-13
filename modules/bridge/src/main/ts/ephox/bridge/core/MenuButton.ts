@@ -38,6 +38,7 @@ export interface BaseMenuButtonInstanceApi {
   setEnabled: (state: boolean) => void;
   isActive: () => boolean;
   setActive: (state: boolean) => void;
+  setTooltip: (tooltip: string) => void;
   setText: (text: string) => void;
   setIcon: (icon: string) => void;
 }
