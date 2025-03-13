@@ -297,10 +297,8 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
 
     editor.on('focusout', (_e) => {
       Delay.setEditorTimeout(editor, () => {
-        if (Focus.search(sink.element).isNone() && Focus.search(contextbar.element).isNone()) {
-          if (!contextToolbarResult.inSubtoolbar() || !editor.hasFocus()) {
-            close();
-          }
+        if (Focus.search(sink.element).isNone() && Focus.search(contextbar.element).isNone() && !editor.hasFocus()) {
+          close();
         }
       }, 0);
     });
