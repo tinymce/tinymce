@@ -76,6 +76,7 @@ const renderContextToolbar = (spec: ContextToolbarSpec): ContextToolbarRenderRes
           Css.remove(elem, 'width');
 
           const currentWidth = Width.get(elem);
+          const hadFocus = Focus.search(comp.element).isSome();
 
           // Remove these so that we can property measure the width of the context form content
           Css.remove(elem, 'left');
@@ -95,15 +96,21 @@ const renderContextToolbar = (spec: ContextToolbarSpec): ContextToolbarRenderRes
           Css.set(elem, 'width', currentWidth + 'px');
 
           se.event.focus.fold(
-            () => ContextToolbarFocus.focusIn(comp),
-            (f) => {
-              // Check if focus was on a element in the toolbar then focus that
-              // otherwise focus the first element since then it was likely in the editor
-              if (Compare.contains(comp.element, f)) {
-                Focus.focus(f);
-              } else {
+            () => {
+              if (hadFocus) {
                 ContextToolbarFocus.focusIn(comp);
               }
+            },
+            (f) => {
+              Focus.active(SugarShadowDom.getRootNode(comp.element)).fold(
+                () => Focus.focus(f),
+                (active) => {
+                  // We need this extra check since if the focus is aleady on the iframe we don't want to call focus on it again since that closes the context toolbar
+                  if (!Compare.eq(active, f)) {
+                    Focus.focus(f);
+                  }
+                }
+              );
             }
           );
 
