@@ -1,5 +1,8 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, CustomEvent, Dropdown as AlloyDropdown, Focusing, GuiFactory, Highlighting,
+  AddEventsBehaviour, AlloyComponent,
+  Dropdown as AlloyDropdown,
+  AlloyEvents, AlloyTriggers, Behaviour, CustomEvent,
+  Focusing, GuiFactory, Highlighting,
   Keying, MaxHeight, Memento, NativeEvents, Replacing, Representing, SimulatedEvent, SketchSpec, SystemEvents, TieredData, Tooltipping, Unselecting
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
@@ -158,7 +161,6 @@ const renderCommonDropdown = <T>(
       },
 
       dropdownBehaviours: Behaviour.derive([
-        ...spec.dropdownBehaviours,
         DisablingConfigs.button(() => spec.disabled || sharedBackstage.providers.checkUiComponentContext(spec.context).shouldDisable),
         UiState.toggleOnReceive(() => sharedBackstage.providers.checkUiComponentContext(spec.context)),
         // INVESTIGATE (TINY-9012): There was a old comment here about something not quite working, and that
@@ -203,7 +205,8 @@ const renderCommonDropdown = <T>(
               ]);
             });
           })
-        ])
+        ]),
+        ...spec.dropdownBehaviours
       ]),
       eventOrder: Merger.deepMerge(toolbarButtonEventOrder, {
         // INVESTIGATE (TINY-9014): Explain why we need the events in this order.
