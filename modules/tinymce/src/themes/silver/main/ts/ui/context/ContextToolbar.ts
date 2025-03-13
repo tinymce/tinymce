@@ -10,6 +10,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { DisabledStateChangeEvent } from 'tinymce/core/api/EventTypes';
 import Delay from 'tinymce/core/api/util/Delay';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import VK from 'tinymce/core/api/util/VK';
 
 import * as Events from '../../api/Events';
 import { getToolbarMode, ToolbarMode } from '../../api/Options';
@@ -42,6 +43,8 @@ const enum TriggerCause {
 }
 
 const transitionClass = 'tox-pop--transition';
+
+const isToolbarActionKey = (keyCode: number) => keyCode === VK.ENTER || keyCode === VK.SPACEBAR;
 
 const register = (editor: Editor, registryContextToolbars: Record<string, ContextSpecType>, sink: AlloyComponent, extras: Extras): void => {
   const backstage = extras.backstage;
@@ -239,6 +242,12 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     }
   };
 
+  const instantReposition = () => {
+    Css.set(contextbar.element, 'transition', 'none');
+    hideOrRepositionIfNecessary();
+    Css.remove(contextbar.element, 'transition');
+  };
+
   let isDragging = false;
 
   const launchContextToolbar = Throttler.last(() => {
@@ -266,7 +275,14 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     editor.on('ScrollContent ScrollWindow ObjectResized ResizeEditor longpress', hideOrRepositionIfNecessary);
 
     // FIX: Make it go away when the action makes it go away. E.g. deleting a column deletes the table.
-    editor.on('click keyup focus SetContent', launchContextToolbar.throttle);
+    editor.on('click focus SetContent', launchContextToolbar.throttle);
+
+    editor.on('keyup', (e) => {
+      // If you use keyboard to press a button in a subtoolbar then the keyup will happen inside the editor and that should not re-render the toolbar
+      if (!isToolbarActionKey(e.keyCode) || !contextToolbarResult.inSubtoolbar()) {
+        launchContextToolbar.throttle();
+      }
+    });
 
     editor.on(hideContextToolbarEvent, close);
     editor.on(showContextToolbarEvent, (e) => {
@@ -329,15 +345,9 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
           launchContextToolbar.throttle,
           Fun.noop
         );
+      } else {
+        instantReposition();
       }
-    });
-
-    editor.on('AddUndo', () => {
-      hideOrRepositionIfNecessary();
-    });
-
-    editor.addCommand('RepositionContextToolbar', () => {
-      hideOrRepositionIfNecessary();
     });
   });
 };

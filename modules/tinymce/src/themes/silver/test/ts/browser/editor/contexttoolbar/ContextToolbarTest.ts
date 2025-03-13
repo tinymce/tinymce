@@ -127,6 +127,30 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarTest
       );
     };
 
+    const pTestActionKeyOnButton = async (key: number) => {
+      const editor = hook.editor();
+
+      editor.setContent('<p>One <a href="http://tiny.cloud">link</a> Two</p>');
+      TinySelections.setCursor(editor, [ 0, 1, 0 ], 'l'.length);
+      await UiFinder.pWaitFor('Waiting for toolbar', SugarBody.body(), '.tox-pop');
+
+      FocusTools.setFocus(SugarDocument.getDocument(), '.tox-tbtn[data-mce-name="alpha"]');
+      await pNavigateDownInToolbarByKeyboard(1);
+
+      Keyboard.activeKeystroke(SugarDocument.getDocument(), Keys.right());
+      Keyboard.activeKeydown(SugarDocument.getDocument(), key);
+
+      // Fake a command
+      editor.focus();
+      editor.nodeChanged();
+
+      Keyboard.keyup(Keys.enter(), {}, TinyDom.body(editor));
+      await Waiter.pWait(30); // Needs to be longer than the 17ms debounce time in ContextToolbar
+
+      await pWaitForToolbarState(2); // Should still be in the subtoolbar
+      await pClickAway(editor, [ 0, 0 ], 'O'.length);
+    };
+
     it('TINY-11748: Launch button should be able to navigate to a context toolbars and navigateback', async () => {
       const editor = hook.editor();
 
@@ -162,7 +186,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarTest
       }
     });
 
-    it('TINY-11748: RepositionContextToolbar internal command', async () => {
+    it('TINY-11748: nodeChange reposition', async () => {
       const editor = hook.editor();
 
       editor.setContent('<p>One <a href="http://tiny.cloud">link</a> Two</p>');
@@ -175,7 +199,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarTest
       const beforeChangeLeftPos = toolbarEl.dom.getBoundingClientRect().left;
 
       Css.set(paragraph, 'text-align', 'right');
-      editor.execCommand('RepositionContextToolbar');
+      editor.nodeChanged();
 
       await Waiter.pTryUntil('Waited for position to change', () => {
         const afterChangeLeftPos = toolbarEl.dom.getBoundingClientRect().left;
@@ -185,28 +209,8 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarTest
       await pClickAway(editor, [ 0, 0 ], 'O'.length);
     });
 
-    it('TINY-11748: Reposition toolbar on undo level added', async () => {
-      const editor = hook.editor();
+    it('TINY-11748: Using enter to press buttons should not close the subtoolbar', async () => pTestActionKeyOnButton(Keys.enter()));
 
-      editor.resetContent('<p>One <a href="http://tiny.cloud">link</a> Two</p>');
-      TinySelections.setCursor(editor, [ 0, 1, 0 ], 'l'.length);
-      const toolbarEl = await UiFinder.pWaitFor('Waiting for toolbar', SugarBody.body(), '.tox-pop');
-
-      await pNavigateDownInToolbarByMouse(1);
-      const paragraph = UiFinder.findIn(TinyDom.body(editor), 'p').getOrDie();
-      const beforeChangeLeftPos = toolbarEl.dom.getBoundingClientRect().left;
-
-      editor.focus();
-      editor.undoManager.transact(() => {
-        Css.set(paragraph, 'text-align', 'right');
-      });
-
-      await Waiter.pTryUntil('Waited for position to change', () => {
-        const afterChangeLeftPos = toolbarEl.dom.getBoundingClientRect().left;
-        assert.isAbove(afterChangeLeftPos, beforeChangeLeftPos, 'Should have repositioned the toolbar');
-      });
-
-      await pClickAway(editor, [ 0, 0 ], 'O'.length);
-    });
+    it('TINY-11748: Using space to press buttons should not close the subtoolbar', async () => pTestActionKeyOnButton(Keys.space()));
   });
 });
