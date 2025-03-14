@@ -25,31 +25,31 @@ describe('api.Words.words', () => {
     assertWords([ 'Dr.D.', 'Doctor', 'Not.D.' ], 'Dr.D. Doctor Not.D.');
   });
 
-  it('TBA: splits words on whitespace', () => {
+  it('splits words on whitespace', () => {
     assertWords([ 'hello', 'world' ], 'hello world');
   });
 
-  it('TBA: keeps whitespace with setting', () => {
+  it('keeps whitespace with setting', () => {
     assertWords([ 'a', ' ', ' ', ' ', 'b' ], 'a   b', { includeWhitespace: true });
   });
 
-  it('TBA: removes punctuation by default', () => {
+  it('removes punctuation by default', () => {
     assertWords([ 'a', 'b' ], 'a .... b');
   });
 
-  it('TBA: but keeps with setting', () => {
+  it('but keeps with setting', () => {
     assertWords([ 'a', '.', '.', '.', '.', 'b' ], 'a .... b', { includePunctuation: true });
   });
 
-  it('TBA: does not split on katakana words', () => {
+  it('does not split on katakana words', () => {
     assertWords([ '僕', 'の', '名', '前', 'は', 'マティアス' ], '僕の名前はマティアス');
   });
 
-  it('TBA: does not split on numeric separators', () => {
+  it('does not split on numeric separators', () => {
     assertWords([ 'the', 'price', 'is', '3,500.50' ], 'the price is 3,500.50');
   });
 
-  it('TBA: Tests', () => {
+  it('Tests', () => {
     assertWords([ 'http://www.google.com' ], 'http://www.google.com');
     assertWords([ 'https://www.google.com' ], 'https://www.google.com');
     assertWords([ 'http://www.google.com', 'abc' ], 'http://www.google.com abc');
