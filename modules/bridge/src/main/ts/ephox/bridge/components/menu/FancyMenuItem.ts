@@ -37,6 +37,7 @@ export interface ImageSelectMenuItemSpec extends BaseFancyMenuItemSpec<'imagesel
   fancytype: 'imageselect';
   select?: (value: string) => boolean;
   initData: {
+    columns: number;
     items: (ImageMenuItemSpec | ChoiceMenuItemSpec)[];
   };
 }
@@ -68,7 +69,10 @@ export interface ColorSwatchMenuItem extends BaseFancyMenuItem<'colorswatch'> {
 export interface ImageSelectMenuItem extends BaseFancyMenuItem<'imageselect'> {
   fancytype: 'imageselect';
   select: Optional<(value: string) => boolean>;
-  initData: { items: (ImageMenuItemSpec | ChoiceMenuItemSpec)[] };
+  initData: {
+    columns: number;
+    items: (ImageMenuItemSpec | ChoiceMenuItemSpec)[];
+  };
 }
 
 export type FancyMenuItem = InsertTableMenuItem | ColorSwatchMenuItem | ImageSelectMenuItem;
@@ -96,6 +100,7 @@ const colorSwatchFields = [
 const imageSelectFields = [
   FieldSchema.optionFunction('select'),
   FieldSchema.requiredObjOf('initData', [
+    FieldSchema.requiredNumber('columns'),
     FieldSchema.requiredArrayOfObj('items', [
       FieldSchema.defaultedString('type', 'imageitem'),
       FieldSchema.defaultedString('icon', ''),

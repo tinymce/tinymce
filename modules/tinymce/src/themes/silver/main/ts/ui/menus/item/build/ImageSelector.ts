@@ -13,8 +13,7 @@ const isImageMenuItem = (item: any): item is Menu.ImageMenuItemSpec => Type.isOb
 
 const renderImageSelector = (spec: Menu.ImageSelectMenuItem, backstage: UiFactoryBackstage): ItemTypes.WidgetItemSpec => {
   const presets = 'listpreview';
-  const columns = 3; // TODO: make this dynamic
-
+  const columns = spec.initData.columns;
   const menuSpec = createPartialChoiceMenu(
     Id.generate('menu-value'),
     // TODO: should we directly use text?
