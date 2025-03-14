@@ -1,6 +1,6 @@
 project: tinymce
 kind: Improved
-body: Improved scrolling behavior by adding margins when scrolling elements into view, ensuring content isn't at the very edge of the viewport.
+body: `editor.selection.scrollIntoView()` now pads the target scroll area with a small margin, ensuring content doesn't sit at the very edge of the viewport.
 time: 2025-03-03T12:33:56.938421+11:00
 custom:
     Issue: TINY-11786
