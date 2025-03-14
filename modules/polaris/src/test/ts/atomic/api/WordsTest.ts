@@ -22,7 +22,7 @@ describe('api.Words.words', () => {
   };
 
   it('TINY-11560: Keeps dots for shortening.', () => {
-    assertWords([ 'Dr.D.', 'Doctor', 'Not.D' ], 'Dr.D. Doctor Not.D.');
+    assertWords([ 'Dr.D.', 'Doctor', 'Not.D.' ], 'Dr.D. Doctor Not.D.');
   });
 
   it('TBA: splits words on whitespace', () => {
