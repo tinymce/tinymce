@@ -26,9 +26,17 @@ const pPaste = (selector: string): Promise<{}> => {
 const sPaste = <T>(selector: string): Step<T, T> =>
   Step.fromPromise(() => pPaste(selector));
 
+const pCut = (selector: string): Promise<{}> => {
+  const modifiers: KeyModifiers = platform.os.isMacOS() ? { metaKey: true } : { ctrlKey: true };
+  return RealKeys.pSendKeysOn(selector, [
+    RealKeys.combo(modifiers, 'x')
+  ]);
+};
+
 export {
   pCopy,
   pPaste,
+  pCut,
   sCopy,
   sPaste
 };

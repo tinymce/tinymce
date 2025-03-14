@@ -94,7 +94,7 @@ const canRead = async (): Promise<ClipboardReadStatus> => {
         try {
           await navigator.clipboard.read();
           return 'valid';
-        } catch (e) {
+        } catch (_e) {
           return 'no-permission';
         }
       } else if (permissionStatus.state === 'denied') {
@@ -260,7 +260,7 @@ const write = async (data: Record<string, string | Blob>): Promise<Result<Clipbo
 
   try {
     const clipboardItem = create(data);
-    const clipboardItems = [clipboardItem];
+    const clipboardItems = [ clipboardItem ];
     const success = await ClipboardOperations.safeWrite(clipboardItems);
 
     if (success) {
