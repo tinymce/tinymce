@@ -60,6 +60,6 @@
   z-index: @accessibility-box-shadow-z-index;
 }
 
-html:has([data-ephox-foam-a11y-violation]) {
-  scroll-behavior: smooth;
+[data-ephox-foam-a11y-violation][data-ephox-foam-a11y-current-violation]:is(td, th, tr) {
+  position: static;
 }
