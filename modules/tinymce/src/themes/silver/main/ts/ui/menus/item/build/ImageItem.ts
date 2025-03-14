@@ -1,6 +1,7 @@
 import { AlloyComponent, Disabling, ItemTypes, Toggling, Tooltipping } from '@ephox/alloy';
-import { Menu, Toolbar } from '@ephox/bridge';
+import { Menu } from '@ephox/bridge';
 import { Fun, Merger, Optional } from '@ephox/katamari';
+import { Insert, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 
@@ -10,15 +11,13 @@ import { renderCheckmark } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
-const renderChoiceItem = (
-  spec: Menu.ChoiceMenuItem,
+const renderImgItem = (
+  spec: Menu.ImageMenuItem,
   useText: boolean,
-  presets: Toolbar.PresetItemTypes,
   onItemValueHandler: (itemValue: string) => void,
   isSelected: boolean,
   itemResponse: ItemResponse,
-  providersBackstage: UiFactoryBackstageProviders,
-  renderIcons: boolean = true
+  providersBackstage: UiFactoryBackstageProviders
 ): ItemTypes.ItemSpec => {
   const getApi = (component: AlloyComponent): Menu.ToggleMenuItemInstanceApi => ({
     setActive: (state) => {
@@ -30,12 +29,12 @@ const renderChoiceItem = (
   });
 
   const structure = renderItemStructure({
-    presets,
+    presets: 'img',
     textContent: useText ? spec.text : Optional.none(),
     htmlContent: Optional.none(),
-    labelContent: spec.label,
     ariaLabel: spec.text,
-    iconContent: spec.icon,
+    iconContent: Optional.some(spec.url),
+    labelContent: spec.label,
     shortcutContent: useText ? spec.shortcut : Optional.none(),
 
     // useText essentially says that we have one column. In one column lists, we should show a tick
@@ -44,7 +43,7 @@ const renderChoiceItem = (
     checkMark: useText ? Optional.some(renderCheckmark(providersBackstage.icons)) : Optional.none(),
     caret: Optional.none(),
     value: spec.value
-  }, providersBackstage, renderIcons);
+  }, providersBackstage, true);
 
   const optTooltipping = spec.text
     .filter(Fun.constant(!useText))
@@ -74,11 +73,18 @@ const renderChoiceItem = (
       toggling: {
         toggleClass: ItemClasses.tickedClass,
         toggleOnExecute: false,
-        selected: spec.active,
-        exclusive: true
+        exclusive: true,
+        onToggled: (comp: AlloyComponent) => {
+          SelectorFind.descendant(comp.element, '.tox-collection__item-image').each((imgContainer) => {
+            const checkmarkIcon = providersBackstage.icons().checkmark;
+            const iconElement = SugarElement.fromHtml(`<div class="tox-collection__item-image-check">${checkmarkIcon}</div>`);
+            Insert.append(imgContainer, iconElement);
+          });
+        }
       }
     }
   );
 };
 
-export { renderChoiceItem };
+export { renderImgItem };
+

@@ -1,4 +1,4 @@
-import { AlloySpec, RawDomSchema } from '@ephox/alloy';
+import { AlloySpec, Behaviour, RawDomSchema, SimpleSpec } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Fun, Id, Obj, Optional, Type } from '@ephox/katamari';
 
@@ -6,6 +6,7 @@ import I18n from 'tinymce/core/api/util/I18n';
 
 import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import * as Icons from '../../../icons/Icons';
+import * as Images from '../../../image/Images';
 import * as ItemClasses from '../ItemClasses';
 import { renderHtml, renderShortcut, renderStyledText, renderText } from './ItemSlices';
 
@@ -16,6 +17,7 @@ export interface ItemStructure {
 
 export interface ItemStructureSpec {
   readonly presets: Toolbar.PresetItemTypes;
+  readonly labelContent: Optional<string>;
   readonly iconContent: Optional<string>;
   readonly textContent: Optional<string>;
   readonly htmlContent: Optional<string>;
@@ -102,6 +104,17 @@ const renderItemDomStructure = (ariaLabel: Optional<string>): RawDomSchema => {
   };
 };
 
+const createLabel = (label: string): SimpleSpec => {
+  return {
+    dom: {
+      tag: 'label',
+      innerHtml: label
+    },
+    components: [],
+    behaviours: Behaviour.derive([])
+  };
+};
+
 const renderNormalItemStructure = (info: ItemStructureSpec, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean, fallbackIcon: Optional<string>): ItemStructure => {
   // TODO: TINY-3036 Work out a better way of dealing with custom icons
   const iconSpec = { tag: 'div', classes: [ ItemClasses.iconClass ] };
@@ -131,7 +144,19 @@ const renderNormalItemStructure = (info: ItemStructureSpec, providersBackstage: 
       content,
       info.shortcutContent.map(renderShortcut),
       checkmark,
-      info.caret
+      info.caret,
+      info.labelContent.map(createLabel)
+    ]
+  };
+  return menuItem;
+};
+
+const renderImgItemStructure = (info: ItemStructureSpec): ItemStructure => {
+  const menuItem = {
+    dom: renderItemDomStructure(info.ariaLabel),
+    optComponents: [
+      Optional.some(Images.render(info.iconContent.getOrDie(), { tag: 'div', classes: [ ItemClasses.imageClass ], label: info.labelContent })),
+      info.labelContent.map(createLabel)
     ]
   };
   return menuItem;
@@ -141,6 +166,8 @@ const renderNormalItemStructure = (info: ItemStructureSpec, providersBackstage: 
 const renderItemStructure = (info: ItemStructureSpec, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean, fallbackIcon: Optional<string> = Optional.none()): ItemStructure => {
   if (info.presets === 'color') {
     return renderColorStructure(info, providersBackstage, fallbackIcon);
+  } else if (info.presets === 'img') {
+    return renderImgItemStructure(info);
   } else {
     return renderNormalItemStructure(info, providersBackstage, renderIcons, fallbackIcon);
   }
