@@ -311,17 +311,15 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('font_css', {
-    processor: (value) => {
-      const valid = Type.isString(value) || Type.isArrayOf(value, Type.isString);
+    processor: 'string[]'
+  });
 
-      if (valid) {
-        const newValue = Type.isArray(value) ? value : Arr.map(value.split(','), Strings.trim);
-        return { value: newValue, valid };
-      } else {
-        return { valid: false, message: 'Must be a string or an array of strings.' };
-      }
-    },
-    default: []
+  registerOption('allow_extended_mathml_attributes', {
+    processor: 'string[]'
+  });
+
+  registerOption('allow_extended_mathml_elements', {
+    processor: 'string[]'
   });
 
   registerOption('inline_boundaries', {
@@ -1018,6 +1016,8 @@ const shouldConvertUnsafeEmbeds = option('convert_unsafe_embeds');
 const getLicenseKey = option('license_key');
 const getApiKey = option('api_key');
 const isDisabled = option('disabled');
+const getAllowExtendedMathmlAttributes = option('allow_extended_mathml_attributes');
+const getAllowExtendedMathmlElements = option('allow_extended_mathml_elements');
 
 export {
   register,
@@ -1025,6 +1025,8 @@ export {
   getIframeAttrs,
   getDocType,
   getDocumentBaseUrl,
+  getAllowExtendedMathmlAttributes,
+  getAllowExtendedMathmlElements,
   getBodyId,
   getBodyClass,
   getContentSecurityPolicy,
