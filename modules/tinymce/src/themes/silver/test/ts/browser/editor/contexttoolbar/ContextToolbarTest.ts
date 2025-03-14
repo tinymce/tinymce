@@ -31,6 +31,8 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarTest
     }
   }, [], true);
 
+  const pWaitForContextToolbarDebounce = () => Waiter.pWait(30);
+
   const pClickAway = async (editor: Editor, path: number[], offset: number) => {
     editor.focus();
     TinySelections.setCursor(editor, path, offset);
@@ -147,7 +149,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarTest
       editor.nodeChanged();
 
       Keyboard.keyup(Keys.enter(), {}, TinyDom.body(editor));
-      await Waiter.pWait(30); // Needs to be longer than the 17ms debounce time in ContextToolbar
+      await pWaitForContextToolbarDebounce();
 
       await pWaitForToolbarState(2); // Should still be in the subtoolbar
       await pClickAway(editor, [ 0, 0 ], 'O'.length);
@@ -210,9 +212,25 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarTest
         assert.isAbove(afterChangeLeftPos, beforeChangeLeftPos, 'Should have repositioned the toolbar');
       });
 
+      await pWaitForToolbarState(2); // Should still be in the subtoolbar
       await pClickAway(editor, [ 0, 0 ], 'O'.length);
     });
 
+    it('TINY-11748: Should not rerender on focus shift to editor when subtoolbar is showing', async () => {
+      const editor = hook.editor();
+
+      editor.setContent('<p>One <a href="http://tiny.cloud">link</a> Two</p>');
+      TinySelections.setCursor(editor, [ 0, 1, 0 ], 'l'.length);
+      await UiFinder.pWaitFor('Waiting for toolbar', SugarBody.body(), '.tox-pop');
+
+      FocusTools.setFocus(SugarDocument.getDocument(), '.tox-tbtn[data-mce-name="alpha"]');
+      await pNavigateDownInToolbarByKeyboard(1);
+      editor.focus();
+      await pWaitForContextToolbarDebounce();
+      await pWaitForContextToolbarDebounce();
+      await pWaitForToolbarState(2); // Should still be in the subtoolbar
+      await pClickAway(editor, [ 0, 0 ], 'O'.length);
+    });
     it('TINY-11748: Using enter to press buttons should not close the subtoolbar', async () => pTestActionKeyOnButton(Keys.enter()));
 
     it('TINY-11748: Using space to press buttons should not close the subtoolbar', async () => pTestActionKeyOnButton(Keys.space()));

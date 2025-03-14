@@ -243,6 +243,8 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
   };
 
   const instantReposition = () => {
+    // Sometimes when we reposition the toolbar it might be in a transitioning state and
+    // if we try to reposition while that happens the computed position/width will be incorrect.
     Css.set(contextbar.element, 'transition', 'none');
     hideOrRepositionIfNecessary();
     Css.remove(contextbar.element, 'transition');
