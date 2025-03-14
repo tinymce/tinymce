@@ -300,7 +300,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
       assertNoEvent();
       TinySelections.setCursor(editor, [ 0, 0 ], 'Fi'.length);
       assertEvent(1, 'Paragraph');
-      await MenuUtils.pOpenMenu({ name: 'Format', text: 'Paragraph', matchLast: true });
+      await MenuUtils.pOpenMenu({ name: 'Format', text: 'Paragraph', last: true });
       assertEvent(2, 'Paragraph');
       await pAssertFocusOnItem('Headings');
       TinyUiActions.keydown(editor, Keys.right());
@@ -314,7 +314,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
         'First block after "h1',
         editor,
         [ true ].concat(Arr.range(5, Fun.never)),
-        { name: 'Format', text: 'Heading 1', matchLast: true },
+        { name: 'Format', text: 'Heading 1', last: true },
         [ 0, 0 ], 'Fi'.length
       );
 
@@ -322,7 +322,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
         'Second paragraph with no set format',
         editor,
         Arr.range(6, Fun.never),
-        { name: 'Format', text: 'Paragraph', matchLast: true },
+        { name: 'Format', text: 'Paragraph', last: true },
         [ 1, 0 ], 'Se'.length
       );
 
@@ -330,7 +330,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
         'First block with the "h1" set previously',
         editor,
         [ true ].concat(Arr.range(5, Fun.never)),
-        { name: 'Format', text: 'Heading 1', matchLast: true },
+        { name: 'Format', text: 'Heading 1', last: true },
         [ 0, 0 ], 'Fi'.length
       );
 

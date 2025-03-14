@@ -13,7 +13,7 @@ export interface OpenNestedMenus {
 export interface OpenMenu {
   readonly name: string;
   readonly text: string;
-  readonly matchLast?: boolean;
+  readonly last?: boolean;
 }
 
 const getToolbarSelector = (type: ToolbarMode, opening: boolean) => {
@@ -52,7 +52,7 @@ const pOpenMenu = async (menu: OpenMenu): Promise<void> => {
     if (buttons.length === 0) {
       return Optional.none();
     }
-    return Optional.from(menu.matchLast ? buttons[buttons.length - 1] : buttons[0]);
+    return Optional.from(menu.last ? buttons[buttons.length - 1] : buttons[0]);
   };
 
   await Waiter.pTryUntilPredicate(`Waiting for button: ${menu.text}`, () => {
