@@ -31,20 +31,20 @@ describe('headless.tinymce.themes.silver.components.colorpicker.ColorPickerTest'
     Waiter.pTryUntil(
       'Waiting until hex updates the other fields',
       () => {
-        const input = UiFinder.findIn<HTMLInputElement>(component.element, `label:contains("${labelText}") + input`).getOrDie();
+        const input = UiFinder.findTargetByLabel<HTMLInputElement>(component.element, labelText).getOrDie();
         const value = UiControls.getValue(input);
         assert.equal(value, expected, 'Checking value in input');
       }
     );
 
   const setRgbValue = (component: AlloyComponent, value: string, colour: 'R' | 'G' | 'B') => {
-    const input = UiFinder.findIn<HTMLInputElement>(component.element, `label:contains("${colour}") + input`).getOrDie();
+    const input = UiFinder.findTargetByLabel<HTMLInputElement>(component.element, colour).getOrDie();
     UiControls.setValue(input, value);
     fireEvent(input, 'input');
   };
 
   const setHexValue = (component: AlloyComponent, value: string) => {
-    const input = UiFinder.findIn<HTMLInputElement>(component.element, `label:contains("#") + input`).getOrDie();
+    const input = UiFinder.findTargetByLabel<HTMLInputElement>(component.element, '#').getOrDie();
     UiControls.setValue(input, value);
     fireEvent(input, 'input');
   };

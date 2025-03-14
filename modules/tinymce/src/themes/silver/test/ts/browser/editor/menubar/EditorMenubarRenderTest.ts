@@ -1,3 +1,4 @@
+import { UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Css } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -29,7 +30,8 @@ describe('browser.tinymce.themes.silver.editor.menubar.EditorMenubarRenderTest',
   it('TINY-10343: editor menu button with more that one word should not render the word one above the other', async () => {
     const editor = hook.editor();
 
-    const menuButtonText = await TinyUiActions.pWaitForUi(editor, 'button:contains("File foo") span');
+    const menuButton = await TinyUiActions.pWaitForUi(editor, 'button:contains("File foo")');
+    const menuButtonText = UiFinder.findIn(menuButton, 'span').getOrDie();
 
     const delta = 6;
     // Status at the moment of writting of this test:

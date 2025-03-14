@@ -1,0 +1,6 @@
+project: agar
+kind: Changed
+body: Sizzle has been replaced with a custom engine for `:contains` matching. Note this only works at the end of selectors.
+time: 2025-03-04T14:40:05.337778+01:00
+custom:
+  Issue: TINY-11822

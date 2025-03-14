@@ -1,13 +1,13 @@
-import { Cursors, UiFinder } from '@ephox/agar';
+import { Cursors, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { Attribute, SugarBody, Value } from '@ephox/sugar';
+import { Attribute, SugarBody, SugarElement, Value } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
-import { fillActiveDialog, generalTabSelectors, ImageDialogData } from '../module/Helpers';
+import { fillActiveDialog, generalTabLabels, ImageDialogData } from '../module/Helpers';
 
 describe('browser.tinymce.plugins.image.A11yImageTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -39,7 +39,8 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
   const pTestUiStateDisabled = async (editor: Editor) => {
     editor.execCommand('mceImage');
     await TinyUiActions.pWaitForDialog(editor);
-    UiFinder.exists(SugarBody.body(), generalTabSelectors.alt + ':disabled');
+    UiFinder.findTargetByLabel(SugarBody.body(), generalTabLabels.alt)
+      .exists((e) => Attribute.has(e, 'disabled') && Attribute.get(e, 'disabled') === 'disabled');
     TinyUiActions.submitDialog(editor);
     UiFinder.notExists(SugarBody.body(), 'div[role="dialog"]');
   };
@@ -47,21 +48,24 @@ describe('browser.tinymce.plugins.image.A11yImageTest', () => {
   const pTestUiStateEnabled = async (editor: Editor, alt: string) => {
     editor.execCommand('mceImage');
     await TinyUiActions.pWaitForDialog(editor);
-    const altElem = UiFinder.findIn<HTMLInputElement>(SugarBody.body(), generalTabSelectors.alt).getOrDie();
+    const altElem = UiFinder.findTargetByLabel<HTMLInputElement>(SugarBody.body(), generalTabLabels.alt).getOrDie();
     const value = Value.get(altElem);
     assert.equal(value, alt, 'Assert input value');
     TinyUiActions.submitDialog(editor);
     UiFinder.notExists(SugarBody.body(), 'div[role="dialog"]');
   };
 
+  const pWaitForInputState = async (waiterLabel: string, labelText: string, predicate: (input: SugarElement<Element>) => boolean) =>
+    await Waiter.pTryUntilPredicate(waiterLabel, () => UiFinder.findTargetByLabel(SugarBody.body(), labelText).exists(predicate));
+
   it('TBA: Check the decorative checkbox toggles the alt text input', async () => {
     const editor = hook.editor();
     await pInitAndOpenDialog(editor, '', { element: [ 0 ], offset: 0 });
-    await UiFinder.pWaitForState('Check alt text input is enabled', SugarBody.body(), generalTabSelectors.alt, (e) => !Attribute.has(e, 'disabled'));
-    TinyUiActions.clickOnUi(editor, generalTabSelectors.decorative);
-    await UiFinder.pWaitForState('Check alt text input is disabled', SugarBody.body(), generalTabSelectors.alt, (e) => Attribute.has(e, 'disabled') && Attribute.get(e, 'disabled') === 'disabled');
-    TinyUiActions.clickOnUi(editor, generalTabSelectors.decorative);
-    await UiFinder.pWaitForState('Check alt text input is enabled', SugarBody.body(), generalTabSelectors.alt, (e) => !Attribute.has(e, 'disabled'));
+    await pWaitForInputState('Check alt text input is enabled', generalTabLabels.alt, (e) => !Attribute.has(e, 'disabled'));
+    Mouse.clickByLabel(SugarBody.body(), generalTabLabels.decorative);
+    await pWaitForInputState('Check alt text input is disabled', generalTabLabels.alt, (e) => Attribute.has(e, 'disabled') && Attribute.get(e, 'disabled') === 'disabled');
+    Mouse.clickByLabel(SugarBody.body(), generalTabLabels.decorative);
+    await pWaitForInputState('Check alt text input is enabled', generalTabLabels.alt, (e) => !Attribute.has(e, 'disabled'));
     TinyUiActions.submitDialog(editor);
     UiFinder.notExists(SugarBody.body(), 'div[role="dialog"]');
   });

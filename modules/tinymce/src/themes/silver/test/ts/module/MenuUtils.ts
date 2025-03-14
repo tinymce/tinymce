@@ -1,7 +1,7 @@
 import { Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { Boxes } from '@ephox/alloy';
-import { Arr } from '@ephox/katamari';
-import { SugarBody } from '@ephox/sugar';
+import { Arr, Optional } from '@ephox/katamari';
+import { SugarBody, Visibility } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import { ToolbarMode } from 'tinymce/themes/silver/api/Options';
@@ -9,6 +9,11 @@ import { ToolbarMode } from 'tinymce/themes/silver/api/Options';
 export interface OpenNestedMenus {
   readonly label: string;
   readonly selector: string;
+}
+export interface OpenMenu {
+  readonly name: string;
+  readonly text: string;
+  readonly last?: boolean;
 }
 
 const getToolbarSelector = (type: ToolbarMode, opening: boolean) => {
@@ -41,12 +46,22 @@ const pOpenAlignMenu = (label: string): Promise<void> => {
   return pOpenMenuWithSelector(label, selector);
 };
 
-const pOpenMenu = (label: string, menuText: string): Promise<void> => {
-  const menuTextParts = menuText.indexOf(':') > -1 ? menuText.split(':') : [ menuText ];
-  const btnText = menuTextParts[0];
-  const pseudo = menuTextParts.length > 1 ? ':' + menuTextParts[1] : '';
-  const selector = `button:contains(${btnText})${pseudo}`;
-  return pOpenMenuWithSelector(label, selector);
+const pOpenMenu = async (menu: OpenMenu): Promise<void> => {
+  const findMenuButton = () => {
+    const buttons = UiFinder.findAllIn<HTMLElement>(SugarBody.body(), `button:contains(${menu.text})`);
+    if (buttons.length === 0) {
+      return Optional.none();
+    }
+    return Optional.from(menu.last ? buttons[buttons.length - 1] : buttons[0]);
+  };
+
+  await Waiter.pTryUntilPredicate(`Waiting for button: ${menu.text}`, () => {
+    const button = findMenuButton();
+    return button.isSome() && Visibility.isVisible(button.getOrDie());
+  });
+  Mouse.click(findMenuButton().getOrDie());
+  await UiFinder.pWaitForVisible(`Waiting for menu: ${menu.name}`, SugarBody.body(), '[role="menu"]');
+  await Waiter.pWaitBetweenUserActions();
 };
 
 const pOpenNestedMenus = (menus: OpenNestedMenus[]): Promise<void> =>
