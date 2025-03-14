@@ -314,21 +314,12 @@ const register = (editor: Editor): void => {
     processor: 'string[]'
   });
 
-  registerOption('allow_extra_mathml_attributes', {
+  registerOption('allow_extended_mathml_attributes', {
     processor: 'string[]'
   });
 
-  registerOption('allow_extra_mathml_elements', {
-    processor: (value) => {
-      const valid = Type.isArrayOf(value, Type.isString);
-
-      if (valid) {
-        return { value, valid };
-      } else {
-        return { valid: false, message: 'Must be an array of strings.' };
-      }
-    },
-    default: []
+  registerOption('allow_extended_mathml_elements', {
+    processor: 'string[]'
   });
 
   registerOption('inline_boundaries', {
@@ -1016,8 +1007,8 @@ const shouldConvertUnsafeEmbeds = option('convert_unsafe_embeds');
 const getLicenseKey = option('license_key');
 const getApiKey = option('api_key');
 const isDisabled = option('disabled');
-const getAllowExtraMathmlAttributes = option('allow_extra_mathml_attributes');
-const getAllowExtraMathmlElements = option('allow_extra_mathml_elements');
+const getAllowExtendedMathmlAttributes = option('allow_extended_mathml_attributes');
+const getAllowExtendedMathmlElements = option('allow_extended_mathml_elements');
 
 export {
   register,
@@ -1025,8 +1016,8 @@ export {
   getIframeAttrs,
   getDocType,
   getDocumentBaseUrl,
-  getAllowExtraMathmlAttributes,
-  getAllowExtraMathmlElements,
+  getAllowExtendedMathmlAttributes,
+  getAllowExtendedMathmlElements,
   getBodyId,
   getBodyClass,
   getContentSecurityPolicy,

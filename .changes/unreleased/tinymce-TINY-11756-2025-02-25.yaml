@@ -1,6 +1,6 @@
 project: tinymce
 kind: Added
-body: New `allow_extra_mathml_attributes` and `allow_extra_mathml_elements` options.
+body: New `allow_extended_mathml_attributes` and `allow_extended_mathml_elements` options.
 time: 2025-02-25T12:23:54.372384+01:00
 custom:
     Issue: TINY-11756
