@@ -13,18 +13,8 @@ const ClipboardUtils = {
     return `${Env.os.isMacOS() ? 'Cmd' : 'Ctrl'}+V`;
   },
 
-  getBrowserRestrictionsMessage: (browser: string): string => {
-    return `${browser} restricts clipboard access. Please use keyboard shortcut (${ClipboardUtils.getShortcutText()}) instead.`;
-  },
-
-  getRestrictedBrowserName: (): string => {
-    if (Env.browser.isSafari()) {
-      return 'Safari';
-    }
-    if (Env.browser.isFirefox()) {
-      return 'Firefox';
-    }
-    return 'Your browser';
+  getBrowserRestrictionsMessage: (): string => {
+    return `Your browser restricts clipboard access. Please use keyboard shortcut (${ClipboardUtils.getShortcutText()}) instead.`;
   },
 
   hasClipboardRestrictions: (): boolean => {
@@ -33,9 +23,8 @@ const ClipboardUtils = {
 };
 
 const errorStatusToErrorMessage = (status: NativeClipboard.BaseClipboardErrorStatus): string => {
-  const restrictedBrowser = ClipboardUtils.getRestrictedBrowserName();
   if (ClipboardUtils.hasClipboardRestrictions() && (status === 'no-permission' || status === 'unknown')) {
-    return ClipboardUtils.getBrowserRestrictionsMessage(restrictedBrowser);
+    return ClipboardUtils.getBrowserRestrictionsMessage();
   }
 
   switch (status) {
@@ -126,10 +115,9 @@ const processClipboardContents = (editor: Editor, clipboardContents: ClipboardIt
 const handleClipboardReadError = (editor: Editor, errorStatus: NativeClipboard.BaseClipboardErrorStatus): void => {
   if (ClipboardUtils.hasClipboardRestrictions() &&
       (errorStatus === 'unknown' || errorStatus === 'no-permission')) {
-    const browser = ClipboardUtils.getRestrictedBrowserName();
     handleErrorNotification(
       editor,
-      ClipboardUtils.getBrowserRestrictionsMessage(browser)
+      ClipboardUtils.getBrowserRestrictionsMessage()
     );
   } else {
     const errorMessage = errorStatusToErrorMessage(errorStatus);
@@ -142,10 +130,9 @@ const executePaste = async (editor: Editor): Promise<void> => {
 
   if (readStatus === 'inactive') {
     if (ClipboardUtils.hasClipboardRestrictions()) {
-      const browser = ClipboardUtils.getRestrictedBrowserName();
       handleErrorNotification(
         editor,
-        `${browser} requires clipboard access to be triggered by a direct user action. Please use keyboard shortcut (${ClipboardUtils.getShortcutText()}) instead.`
+        `Your browser requires clipboard access to be triggered by a direct user action. Please use keyboard shortcut (${ClipboardUtils.getShortcutText()}) instead.`
       );
       return;
     }
@@ -186,10 +173,9 @@ const executePaste = async (editor: Editor): Promise<void> => {
       );
     } catch (error) {
       if (ClipboardUtils.hasClipboardRestrictions()) {
-        const browser = ClipboardUtils.getRestrictedBrowserName();
         handleErrorNotification(
           editor,
-          ClipboardUtils.getBrowserRestrictionsMessage(browser)
+          ClipboardUtils.getBrowserRestrictionsMessage()
         );
       } else {
         console.error('Error reading clipboard:', error);
