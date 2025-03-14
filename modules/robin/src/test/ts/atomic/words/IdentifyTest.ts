@@ -99,14 +99,14 @@ describe('atomic.robin.words.IdentifyTest', () => {
     ], '<p>Hello World</p>');
 
     check([
-      WordScope('Test', none, some('.')),
+      WordScope('Test.', none, some(' ')),
       WordScope('IF:INTEXT', some('['), some(']')),
       WordScope('Test2', some(']'), some(' ')),
       WordScope('IF', some('/'), some(']')),
     ], 'Test. [IF:INTEXT]Test2 [/IF]');
 
     check([
-      WordScope('Test', none, some('.')),
+      WordScope('Test.', none, some(' ')),
       WordScope('IF', some('/'), some(']')),
       WordScope('Test2', some(']'), some(' ')),
       WordScope('IF:INTEXT', some('['), some(']')),
@@ -117,7 +117,7 @@ describe('atomic.robin.words.IdentifyTest', () => {
     // Note, the smart quotes.
     checkWords(
       [ 'Tale', 'is', 'about', 'an', 'adorable', 'mouse', 'with', 'a', 'lute',
-        'fighting', 'giant', 'crabs', 'Really', 'I’d', 'hope', 'that', 'was',
+        'fighting', 'giant', 'crabs.', 'Really', 'I’d', 'hope', 'that', 'was',
         'enough', 'for', 'you', 'but', 'I\u2019ll', 'throw' ],
       'Tale is about an adorable mouse with a lute fighting giant crabs. ' +
       'Really I’d hope that was enough for you, but I\u2019ll throw');
