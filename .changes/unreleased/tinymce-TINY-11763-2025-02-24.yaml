@@ -1,7 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Deleting an empty block that is between two lists would throw an error when
-  all of the elements were nested inside the same <li>.
-time: 2025-02-24T09:28:23.00493+01:00
-custom:
-  Issue: TINY-11763
