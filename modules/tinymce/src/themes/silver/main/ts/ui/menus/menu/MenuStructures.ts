@@ -254,6 +254,7 @@ export {
   chunk,
   forSwatch,
   forCollection,
+  forImageSelector,
   forCollectionWithSearchResults,
   forCollectionWithSearchField,
   forHorizontalCollection,
