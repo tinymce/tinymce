@@ -25,6 +25,8 @@
 [data-ephox-foam-a11y-violation][data-ephox-foam-a11y-current-violation] {
   outline-width: 4px;
   transition: outline-width .1s ease-in-out, background-color .1s ease-in-out;
+  box-shadow: 0 0 0 @accessibility-box-shadow-width @accessibility-box-shadow-color;
+  z-index: @accessibility-box-shadow-z-index;
 }
 
 [data-ephox-foam-a11y-violation][data-ephox-foam-a11y-severity-info] {
@@ -42,22 +44,16 @@
 [data-ephox-foam-a11y-violation][data-ephox-foam-a11y-current-violation="info"] {
   outline-color: @accessibility-issue-info-selection-color;
   background-color: @accessibility-issue-info-selection-background-color;
-  box-shadow: 0 0 0 @accessibility-box-shadow-width @accessibility-box-shadow-color;
-  z-index: @accessibility-box-shadow-z-index;
 }
 
 [data-ephox-foam-a11y-violation][data-ephox-foam-a11y-current-violation="warning"] {
   outline-color: @accessibility-issue-warn-selection-color;
   background-color: @accessibility-issue-warn-selection-background-color;
-  box-shadow: 0 0 0 @accessibility-box-shadow-width @accessibility-box-shadow-color;
-  z-index: @accessibility-box-shadow-z-index;
 }
 
 [data-ephox-foam-a11y-violation][data-ephox-foam-a11y-current-violation="error"] {
   outline-color: @accessibility-issue-error-selection-color;
   background-color: @accessibility-issue-error-selection-background-color;
-  box-shadow: 0 0 0 @accessibility-box-shadow-width @accessibility-box-shadow-color;
-  z-index: @accessibility-box-shadow-z-index;
 }
 
 [data-ephox-foam-a11y-violation][data-ephox-foam-a11y-current-violation]:is(td, th, tr) {
