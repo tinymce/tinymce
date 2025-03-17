@@ -1,5 +1,6 @@
 import { AlloyComponent, Boxes } from '@ephox/alloy';
 import { Fun, Singleton } from '@ephox/katamari';
+import { SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import ThemeManager, { RenderResult, Theme } from 'tinymce/core/api/ThemeManager';
@@ -81,10 +82,18 @@ export default (): void => {
       notificationRegion
     );
 
+    const getPromotionElement = (): HTMLElement | null => {
+      return SelectorFind.descendant<HTMLElement>(
+        SugarElement.fromDom(editor.getContainer()),
+        '.tox-promotion'
+      ).map((promotion) => promotion.dom).getOrNull();
+    };
+
     return {
       renderUI,
       getWindowManagerImpl: Fun.constant(windowMgr),
-      getNotificationManagerImpl
+      getNotificationManagerImpl,
+      getPromotionElement
     };
   });
 };
