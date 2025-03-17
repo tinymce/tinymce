@@ -1,7 +1,7 @@
 import { AlloyComponent, Disabling, ItemTypes, Toggling, Tooltipping } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Fun, Merger, Optional } from '@ephox/katamari';
-import { Insert, Remove, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Insert, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 
@@ -15,7 +15,7 @@ const renderImgItem = (
   spec: Menu.ImageMenuItem,
   useText: boolean,
   onItemValueHandler: (itemValue: string) => void,
-  select: (value: string) => boolean,
+  isSelected: boolean,
   itemResponse: ItemResponse,
   providersBackstage: UiFactoryBackstageProviders
 ): ItemTypes.ItemSpec => {
@@ -53,9 +53,6 @@ const renderImgItem = (
       })
     ));
 
-  const checkmarkIcon = providersBackstage.icons().checkmark;
-  const iconElement = SugarElement.fromHtml(`<div class="tox-collection__item-image-check">${checkmarkIcon}</div>`);
-
   return Merger.deepMerge(
     renderCommonItem({
       context: spec.context,
@@ -64,10 +61,10 @@ const renderImgItem = (
       getApi,
       onAction: (api) => {
         onItemValueHandler(spec.value);
-        api.setActive(select(spec.value));
+        api.setActive(true);
       },
       onSetup: (api) => {
-        api.setActive(select(spec.value));
+        api.setActive(isSelected);
         return Fun.noop;
       },
       triggersSubmenu: false,
@@ -82,11 +79,9 @@ const renderImgItem = (
         exclusive: true,
         onToggled: (comp: AlloyComponent) => {
           SelectorFind.descendant(comp.element, '.tox-collection__item-image').each((imgContainer) => {
-            if (select(spec.value)) {
-              Insert.append(imgContainer, iconElement);
-            } else {
-              Remove.remove(iconElement);
-            }
+            const checkmarkIcon = providersBackstage.icons().checkmark;
+            const iconElement = SugarElement.fromHtml(`<div class="tox-collection__item-image-check">${checkmarkIcon}</div>`);
+            Insert.append(imgContainer, iconElement);
           });
         }
       }
