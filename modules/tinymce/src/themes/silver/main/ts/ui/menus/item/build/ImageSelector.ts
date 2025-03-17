@@ -12,7 +12,7 @@ import ItemResponse from '../ItemResponse';
 const isImageMenuItem = (item: any): item is Menu.ImageMenuItemSpec => Type.isObject(item) && Obj.has(item, 'tooltip');
 
 const renderImageSelector = (spec: Menu.ImageSelectMenuItem, backstage: UiFactoryBackstage): ItemTypes.WidgetItemSpec => {
-  const presets = 'listpreview';
+  const presets = 'imageselector';
   const columns = spec.initData.columns;
   const menuSpec = createPartialChoiceMenu(
     Id.generate('menu-value'),
@@ -41,7 +41,7 @@ const renderImageSelector = (spec: Menu.ImageSelectMenuItem, backstage: UiFactor
     data: { value: Id.generate('widget-id') },
     dom: {
       tag: 'div',
-      classes: [ 'tox-fancymenuitem' ]
+      classes: [ 'tox-fancymenuitem', 'tox-collection--toolbar' ]
     },
     autofocus: true,
     components: [
