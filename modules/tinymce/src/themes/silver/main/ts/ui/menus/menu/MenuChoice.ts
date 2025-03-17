@@ -62,7 +62,7 @@ export const createChoiceItems = (
           d,
           columns === 1,
           onItemValueHandler,
-          select(d.value),
+          select,
           itemResponse,
           providersBackstage
         ))

@@ -1,7 +1,7 @@
 import { AlloyComponent, Disabling, ItemTypes, Toggling, Tooltipping } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
 import { Fun, Merger, Optional } from '@ephox/katamari';
-import { Insert, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Insert, Remove, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 
@@ -15,7 +15,7 @@ const renderImgItem = (
   spec: Menu.ImageMenuItem,
   useText: boolean,
   onItemValueHandler: (itemValue: string) => void,
-  isSelected: boolean,
+  select: (value: string) => boolean,
   itemResponse: ItemResponse,
   providersBackstage: UiFactoryBackstageProviders
 ): ItemTypes.ItemSpec => {
@@ -53,15 +53,21 @@ const renderImgItem = (
       })
     ));
 
+  const checkmarkIcon = providersBackstage.icons().checkmark;
+  const iconElement = SugarElement.fromHtml(`<div class="tox-collection__item-image-check">${checkmarkIcon}</div>`);
+
   return Merger.deepMerge(
     renderCommonItem({
       context: spec.context,
       data: buildData(spec),
       enabled: spec.enabled,
       getApi,
-      onAction: (_api) => onItemValueHandler(spec.value),
+      onAction: (api) => {
+        onItemValueHandler(spec.value);
+        api.setActive(select(spec.value));
+      },
       onSetup: (api) => {
-        api.setActive(isSelected);
+        api.setActive(select(spec.value));
         return Fun.noop;
       },
       triggersSubmenu: false,
@@ -76,9 +82,11 @@ const renderImgItem = (
         exclusive: true,
         onToggled: (comp: AlloyComponent) => {
           SelectorFind.descendant(comp.element, '.tox-collection__item-image').each((imgContainer) => {
-            const checkmarkIcon = providersBackstage.icons().checkmark;
-            const iconElement = SugarElement.fromHtml(`<div class="tox-collection__item-image-check">${checkmarkIcon}</div>`);
-            Insert.append(imgContainer, iconElement);
+            if (select(spec.value)) {
+              Insert.append(imgContainer, iconElement);
+            } else {
+              Remove.remove(iconElement);
+            }
           });
         }
       }
