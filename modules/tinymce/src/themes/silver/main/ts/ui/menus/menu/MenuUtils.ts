@@ -4,7 +4,7 @@ import { InlineContent, Menu, Toolbar } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 
 import { components as menuComponents, dom as menuDom } from './MenuParts';
-import { forCollection, forCollectionWithSearchField, forCollectionWithSearchResults, forHorizontalCollection, forSwatch, forToolbar, StructureSpec } from './MenuStructures';
+import { forCollection, forCollectionWithSearchField, forCollectionWithSearchResults, forHorizontalCollection, forImageSelector, forSwatch, forToolbar, StructureSpec } from './MenuStructures';
 import { SearchMenuWithFieldMode, SearchMenuWithResultsMode } from './searchable/SearchableMenu';
 import { SingleMenuItemSpec } from './SingleMenuTypes';
 
@@ -20,7 +20,7 @@ export interface PartialMenuSpec {
 export type MenuLayoutType = UnsearchableMenuLayout | SearchableMenuLayout;
 
 export interface UnsearchableMenuLayout {
-  readonly menuType: 'color' | 'normal' | 'listpreview';
+  readonly menuType: 'color' | 'normal' | 'listpreview' | 'imageselector';
 }
 
 export interface SearchableMenuLayout {
@@ -63,6 +63,14 @@ export const createPartialMenuWithAlloyItems = (value: string, hasIcons: boolean
 
   if (menuLayout.menuType === 'color') {
     const structure = forSwatch(columns);
+    return {
+      value,
+      dom: structure.dom,
+      components: structure.components,
+      items
+    };
+  } else if (menuLayout.menuType === 'imageselector' && columns !== 'auto') {
+    const structure = forImageSelector(columns);
     return {
       value,
       dom: structure.dom,

@@ -93,6 +93,10 @@
     }
   }
 
+  .tox-collection--list .tox-collection__group:has(.tox-fancymenuitem) {
+    margin: 0px;
+  }
+
   // Group headings should only be used on collection lists.
   .tox-collection__group-heading {
     background-color: @collection-group-label-background-color;
@@ -233,6 +237,7 @@
 
   .tox-collection__item-image {
     border: 1px solid #E3E3E3;
+    border-radius: 3px;
     display: flex;
     flex-direction: column;
     justify-content: center;

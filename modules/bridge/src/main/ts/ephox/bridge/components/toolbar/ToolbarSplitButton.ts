@@ -9,7 +9,7 @@ export type ToolbarSplitButtonItemTypes = ChoiceMenuItemSpec | SeparatorMenuItem
 export type SuccessCallback = (menu: ToolbarSplitButtonItemTypes[]) => void;
 export type SelectPredicate = (value: string) => boolean;
 
-export type PresetTypes = 'color' | 'normal' | 'listpreview';
+export type PresetTypes = 'color' | 'normal' | 'listpreview' | 'imageselector';
 export type PresetItemTypes = 'color' | 'img' | 'normal';
 export type ColumnTypes = number | 'auto';
 

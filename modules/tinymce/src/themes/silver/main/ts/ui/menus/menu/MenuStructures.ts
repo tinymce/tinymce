@@ -1,4 +1,4 @@
-import { AlloySpec, ItemTypes, Menu as AlloyMenu, RawDomSchema, SimpleSpec } from '@ephox/alloy';
+import { Menu as AlloyMenu, AlloySpec, ItemTypes, RawDomSchema, SimpleSpec } from '@ephox/alloy';
 import { Arr, Fun, Id, Obj } from '@ephox/katamari';
 
 import I18n from 'tinymce/core/api/util/I18n';
@@ -37,6 +37,32 @@ const forSwatch = (columns: number | 'auto'): StructureSpec => ({
             {
               tag: 'div',
               classes: [ 'tox-swatches__row' ]
+            },
+            columns
+          ) : Fun.identity
+        })
+      ]
+    }
+  ]
+});
+
+const forImageSelector = (columns: number | 'auto'): StructureSpec => ({
+  dom: {
+    tag: 'div',
+    classes: [ 'tox-menu', 'tox-image-selector-menu' ]
+  },
+  components: [
+    {
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-image-selector' ]
+      },
+      components: [
+        AlloyMenu.parts.items({
+          preprocess: columns !== 'auto' ? chunk(
+            {
+              tag: 'div',
+              classes: [ 'tox-image-selector__row' ]
             },
             columns
           ) : Fun.identity
