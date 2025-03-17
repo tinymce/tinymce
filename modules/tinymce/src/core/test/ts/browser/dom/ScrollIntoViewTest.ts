@@ -161,7 +161,7 @@ describe('browser.tinymce.core.dom.ScrollIntoViewTest', () => {
 
       // Test scrolling to bottom with margin
       scrollIntoView(editor, 'div:nth-child(2)', false);
-      // The original position would be 667, but with 30px margin it should be 697
+      // The original position would be 667, but with 30px margin it should be 970
       assertScrollPosition(editor, 0, 970);
     });
 
