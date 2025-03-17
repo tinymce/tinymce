@@ -311,7 +311,17 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('font_css', {
-    processor: 'string[]'
+    processor: (value) => {
+      const valid = Type.isString(value) || Type.isArrayOf(value, Type.isString);
+
+      if (valid) {
+        const newValue = Type.isArray(value) ? value : Arr.map(value.split(','), Strings.trim);
+        return { value: newValue, valid };
+      } else {
+        return { valid: false, message: 'Must be a string or an array of strings.' };
+      }
+    },
+    default: []
   });
 
   registerOption('allow_extended_mathml_attributes', {

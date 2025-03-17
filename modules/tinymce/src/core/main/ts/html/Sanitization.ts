@@ -239,11 +239,11 @@ const sanitizeMathmlElement = (node: Element, settings: DomParserSettings) => {
     return hasAllowedEncodings && Type.isString(encoding) && Arr.contains(allowedEncodings, encoding);
   };
 
-  const isValidElementOpt = (lcTagName: string) => {
+  const isValidElementOpt = (node: Node, lcTagName: string) => {
     if (hasAllowedEncodings && lcTagName === 'semantics') {
       return Optional.some(true);
     } else if (lcTagName === 'annotation') {
-      return Optional.some(node.nodeType === NodeTypes.ELEMENT && hasValidEncoding(node));
+      return Optional.some(NodeType.isElement(node) && hasValidEncoding(node));
     } else if (Type.isArray(settings.allow_mathml_elements)) {
       return Optional.some(settings.allow_mathml_elements.includes(lcTagName));
     } else {
@@ -255,7 +255,7 @@ const sanitizeMathmlElement = (node: Element, settings: DomParserSettings) => {
     // We know the node is an element as we have
     // passed an element to the purify.sanitize function below
     const lcTagName = evt.tagName ?? node.nodeName.toLowerCase();
-    const keepElementOpt = isValidElementOpt(lcTagName);
+    const keepElementOpt = isValidElementOpt(node, lcTagName);
 
     keepElementOpt.each((keepElement) => {
       evt.allowedTags[lcTagName] = keepElement;
