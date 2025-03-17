@@ -23,7 +23,7 @@ const renderImageSelector = (spec: Menu.ImageSelectMenuItem, backstage: UiFactor
     },
     columns,
     presets,
-    ItemResponse.BUBBLE_TO_SANDBOX,
+    ItemResponse.CLOSE_ON_EXECUTE,
     spec.select.getOr(Fun.never),
     backstage.shared.providers
   );
