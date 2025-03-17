@@ -71,7 +71,6 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarTest
     const pNavigateDownInToolbarByMouse = async (index: number) => {
       Mouse.clickOn(SugarBody.body(), `.tox-tbtn[data-mce-name="test-subtoolbar${index}"]`);
       await pWaitForToolbarState(index + 1);
-      // FocusTools.isOnSelector('Should be on first button', SugarDocument.getDocument(), '.tox-tbtn:nth-child(1)');
       FocusTools.isOnSelector('Should remain editor iframe', SugarDocument.getDocument(), 'iframe');
     };
 
@@ -86,7 +85,6 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarTest
         UiFinder.notExists(SugarBody.body(), '.tox-tbtn[aria-label="Back"]');
       }
 
-      // FocusTools.isOnSelector('Should be on first button', SugarDocument.getDocument(), '.tox-tbtn:nth-child(1)');
       FocusTools.isOnSelector('Should remain editor iframe', SugarDocument.getDocument(), 'iframe');
     };
 
@@ -192,7 +190,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarTest
       await pClickAway(editor, [ 0, 0 ], 'O'.length);
     });
 
-    it('TINY-11748: nodeChange reposition', async () => {
+    it('TINY-11748: nodeChange subtoolbar reposition', async () => {
       const editor = hook.editor();
 
       editor.setContent('<p>One <a href="http://tiny.cloud">link</a> Two</p>');
@@ -216,7 +214,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarTest
       await pClickAway(editor, [ 0, 0 ], 'O'.length);
     });
 
-    it('TINY-11748: Should not rerender on focus shift to editor when subtoolbar is showing', async () => {
+    it('TINY-11748: Should not re-render on focus shift to editor when subtoolbar is showing', async () => {
       const editor = hook.editor();
 
       editor.setContent('<p>One <a href="http://tiny.cloud">link</a> Two</p>');
@@ -231,6 +229,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarTest
       await pWaitForToolbarState(2); // Should still be in the subtoolbar
       await pClickAway(editor, [ 0, 0 ], 'O'.length);
     });
+
     it('TINY-11748: Using enter to press buttons should not close the subtoolbar', async () => pTestActionKeyOnButton(Keys.enter()));
 
     it('TINY-11748: Using space to press buttons should not close the subtoolbar', async () => pTestActionKeyOnButton(Keys.space()));
