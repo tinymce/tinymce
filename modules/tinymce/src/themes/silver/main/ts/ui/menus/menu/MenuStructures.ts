@@ -46,32 +46,6 @@ const forSwatch = (columns: number | 'auto'): StructureSpec => ({
   ]
 });
 
-const forImageSelector = (columns: number | 'auto'): StructureSpec => ({
-  dom: {
-    tag: 'div',
-    classes: [ 'tox-menu', 'tox-image-selector-menu' ]
-  },
-  components: [
-    {
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-image-selector' ]
-      },
-      components: [
-        AlloyMenu.parts.items({
-          preprocess: columns !== 'auto' ? chunk(
-            {
-              tag: 'div',
-              classes: [ 'tox-image-selector__row' ]
-            },
-            columns
-          ) : Fun.identity
-        })
-      ]
-    }
-  ]
-});
-
 const forToolbar = (columns: number): StructureSpec => ({
   dom: {
     tag: 'div',
