@@ -244,8 +244,8 @@ const sanitizeMathmlElement = (node: Element, settings: DomParserSettings) => {
       return Optional.some(true);
     } else if (lcTagName === 'annotation') {
       return Optional.some(NodeType.isElement(node) && hasValidEncoding(node));
-    } else if (Type.isArray(settings.allow_mathml_elements)) {
-      return Optional.some(settings.allow_mathml_elements.includes(lcTagName));
+    } else if (Type.isArray(settings.extended_mathml_elements)) {
+      return Optional.some(settings.extended_mathml_elements.includes(lcTagName));
     } else {
       return Optional.none();
     }
@@ -268,8 +268,8 @@ const sanitizeMathmlElement = (node: Element, settings: DomParserSettings) => {
   });
 
   purify.addHook('uponSanitizeAttribute', (_node, event) => {
-    if (Type.isArray(settings.allow_mathml_attributes)) {
-      const keepAttribute = settings.allow_mathml_attributes.includes(event.attrName);
+    if (Type.isArray(settings.extended_mathml_attributes)) {
+      const keepAttribute = settings.extended_mathml_attributes.includes(event.attrName);
 
       if (keepAttribute) {
         event.forceKeepAttr = true;

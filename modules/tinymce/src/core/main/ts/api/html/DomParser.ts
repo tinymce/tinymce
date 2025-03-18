@@ -57,12 +57,12 @@ export interface DomParserSettings {
   allow_script_urls?: boolean;
   allow_unsafe_link_target?: boolean;
   allow_mathml_annotation_encodings?: string[];
-  allow_mathml_elements?: string[];
-  allow_mathml_attributes?: string[];
   blob_cache?: BlobCache;
   convert_fonts_to_spans?: boolean;
   convert_unsafe_embeds?: boolean;
   document?: Document;
+  extended_mathml_elements?: string[];
+  extended_mathml_attributes?: string[];
   fix_list_elements?: boolean;
   font_size_legacy_values?: string;
   forced_root_block?: boolean | string;

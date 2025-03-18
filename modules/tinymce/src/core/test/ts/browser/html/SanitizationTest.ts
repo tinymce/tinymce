@@ -32,7 +32,7 @@ describe('browser.tinymce.core.html.SanitizationTest', () => {
 
   context('Santitize non-html', () => {
     const testNamespaceSanitizer = (testCase: { input: string; expected: string; sanitize?: boolean; mathmlElements?: string[]; mathmlAttributes?: string[] }) => {
-      const sanitizer = getSanitizer({ sanitize: testCase.sanitize ?? true, allow_mathml_elements: testCase.mathmlElements, allow_mathml_attributes: testCase.mathmlAttributes }, Schema({ custom_elements: 'math' }));
+      const sanitizer = getSanitizer({ sanitize: testCase.sanitize ?? true, extended_mathml_elements: testCase.mathmlElements, extended_mathml_attributes: testCase.mathmlAttributes }, Schema({ custom_elements: 'math' }));
 
       const body = document.createElement('body');
       body.innerHTML = testCase.input;
