@@ -324,11 +324,11 @@ const register = (editor: Editor): void => {
     default: []
   });
 
-  registerOption('allow_extended_mathml_attributes', {
+  registerOption('extended_mathml_attributes', {
     processor: 'string[]'
   });
 
-  registerOption('allow_extended_mathml_elements', {
+  registerOption('extended_mathml_elements', {
     processor: 'string[]'
   });
 
@@ -1017,8 +1017,8 @@ const shouldConvertUnsafeEmbeds = option('convert_unsafe_embeds');
 const getLicenseKey = option('license_key');
 const getApiKey = option('api_key');
 const isDisabled = option('disabled');
-const getAllowExtendedMathmlAttributes = option('allow_extended_mathml_attributes');
-const getAllowExtendedMathmlElements = option('allow_extended_mathml_elements');
+const getExtendedMathmlAttributes = option('extended_mathml_attributes');
+const getExtendedMathmlElements = option('extended_mathml_elements');
 
 export {
   register,
@@ -1026,8 +1026,8 @@ export {
   getIframeAttrs,
   getDocType,
   getDocumentBaseUrl,
-  getAllowExtendedMathmlAttributes,
-  getAllowExtendedMathmlElements,
+  getExtendedMathmlAttributes,
+  getExtendedMathmlElements,
   getBodyId,
   getBodyClass,
   getContentSecurityPolicy,

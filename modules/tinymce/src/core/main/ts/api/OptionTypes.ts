@@ -50,8 +50,6 @@ interface BaseEditorOptions {
   add_form_submit_trigger?: boolean;
   add_unload_trigger?: boolean;
   allow_conditional_comments?: boolean;
-  allow_extended_mathml_attributes?: string[];
-  allow_extended_mathml_elements?: string[];
   allow_html_data_urls?: boolean;
   allow_html_in_named_anchor?: boolean;
   allow_script_urls?: boolean;
@@ -107,6 +105,8 @@ interface BaseEditorOptions {
   end_container_on_empty_block?: boolean | string;
   entities?: string;
   entity_encoding?: EntityEncoding;
+  extended_mathml_attributes?: string[];
+  extended_mathml_elements?: string[];
   extended_valid_elements?: string;
   event_root?: string;
   file_picker_callback?: FilePickerCallback;
