@@ -1,0 +1,6 @@
+project: tinymce
+kind: Changed
+body: Changed promotional text and link.
+time: 2025-03-05T07:58:09.769634+01:00
+custom:
+    Issue: TINY-11905

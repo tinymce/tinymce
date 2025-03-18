@@ -1,0 +1,6 @@
+project: polaris
+kind: Fixed
+body: Changed word-capture regex for abbreviations to allow larger abbreviations.
+time: 2025-03-10T09:56:28.378701+01:00
+custom:
+    Issue: TINY-11560

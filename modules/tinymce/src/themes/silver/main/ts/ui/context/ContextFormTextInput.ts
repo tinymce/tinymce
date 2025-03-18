@@ -1,6 +1,7 @@
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Disabling, FormField, GuiFactory, Input, Keying, NativeEvents, SketchSpec } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
 import { Cell, Fun, Optional, Singleton } from '@ephox/katamari';
+import { SelectorFind } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as UiState from '../../UiState';
@@ -15,7 +16,7 @@ export const renderContextFormTextInput = (
   valueState: Singleton.Value<string>
 ): SketchSpec => {
   const editorOffCell = Cell(Fun.noop);
-  const getApi = (comp: AlloyComponent) => ContextFormApi.getFormApi<string>(comp, valueState);
+  const getFormApi = (comp: AlloyComponent) => ContextFormApi.getFormApi<string>(comp, valueState);
 
   const pLabel = ctx.label.map((label) => FormField.parts.label({
     dom: { tag: 'label', classes: [ 'tox-label' ] },
@@ -57,12 +58,21 @@ export const renderContextFormTextInput = (
       AddEventsBehaviour.config('input-events', [
         onControlAttached<InlineContent.ContextFormInstanceApi<string>>({
           onSetup: ctx.onSetup,
-          getApi,
+          getApi: (comp) => {
+            const closestFocussableOpt = SelectorFind.ancestor(comp.element, '.tox-toolbar').bind((toolbar) =>
+              SelectorFind.descendant<HTMLButtonElement>(toolbar, 'button:enabled')
+            );
+
+            return closestFocussableOpt.fold(
+              () => ContextFormApi.getFormApi(comp, valueState),
+              (closestFocussable) => ContextFormApi.getFormApi(comp, valueState, closestFocussable)
+            );
+          },
           onBeforeSetup: Keying.focusIn
         }, editorOffCell),
-        onContextFormControlDetached({ getApi }, editorOffCell, valueState),
+        onContextFormControlDetached({ getApi: getFormApi }, editorOffCell, valueState),
         AlloyEvents.run(NativeEvents.input(), (comp) => {
-          ctx.onInput(getApi(comp));
+          ctx.onInput(getFormApi(comp));
         })
       ])
     ])
