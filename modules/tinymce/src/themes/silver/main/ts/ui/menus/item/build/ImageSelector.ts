@@ -1,6 +1,6 @@
 import { Menu as AlloyMenu, ItemTypes, ItemWidget, MenuTypes } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Fun, Id, Obj, Type } from '@ephox/katamari';
+import { Fun, Id, Type } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
@@ -9,7 +9,7 @@ import { deriveMenuMovement } from '../../menu/MenuMovement';
 import * as MenuParts from '../../menu/MenuParts';
 import ItemResponse from '../ItemResponse';
 
-const isImageMenuItem = (item: any): item is Menu.ImageMenuItemSpec => Type.isObject(item) && Obj.has(item, 'tooltip');
+const isImageMenuItem = (item: unknown): item is Menu.ImageMenuItemSpec => Type.isObject(item) && 'tooltip' in item;
 
 const renderImageSelector = (spec: Menu.ImageSelectMenuItem, backstage: UiFactoryBackstage): ItemTypes.WidgetItemSpec => {
   const presets = 'imageselector';
@@ -32,7 +32,7 @@ const renderImageSelector = (spec: Menu.ImageSelectMenuItem, backstage: UiFactor
     ...menuSpec,
     markers: MenuParts.markers(presets),
     movement: deriveMenuMovement(columns, presets),
-    // TINY-10806: Avoid duplication of ARIA role="menu" in the accessibility tree for Color Swatch menu item.
+    // TINY-10806: Avoid duplication of ARIA role="menu" in the accessibility tree for Image Selector menu item.
     showMenuRole: false
   };
 
