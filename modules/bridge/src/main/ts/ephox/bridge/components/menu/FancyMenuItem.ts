@@ -108,7 +108,8 @@ const imageSelectFields = [
       FieldSchema.defaultedString('url', ''),
       FieldSchema.defaultedString('value', ''),
       FieldSchema.defaultedString('label', ''),
-      FieldSchema.defaultedString('tooltip', 'tooltip'),
+      // TODO: change this
+      FieldSchema.defaulted('tooltip', undefined)
     ])
   ])
 ].concat(baseFields);
