@@ -242,7 +242,8 @@ timestamps {
   def branchBuildPlatforms = [
     winChrome,
     winFirefox,
-    macSafari,
+    // TODO: Re-enable when lambda test fixes their browsers
+    // macSafari,
   ]
 
   def primaryBuildPlatforms = branchBuildPlatforms + [
