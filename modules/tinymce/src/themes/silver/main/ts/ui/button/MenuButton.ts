@@ -96,20 +96,24 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
     classes: [],
     dropdownBehaviours: [
       ...(tabstopping ? [ Tabstopping.config({ }) ] : []),
-      Tooltipping.config({
-        ...backstage.shared.providers.tooltips.getConfig({
-          // TODO: remove this comment after the review, this wasn't used because the `spec.dropdownBehaviours` was overwrite from a defailt `Tooltipping.config`
-          tooltipText: backstage.shared.providers.translate(spec.tooltip.getOr('')),
-          onShow: (comp) => {
-            if (tooltipString.get().exists((tooltipStr) => spec.tooltip.exists((tt) => tt !== tooltipStr))) {
-              const translatedTooltip = backstage.shared.providers.translate(tooltipString.get().getOr(''));
-              Tooltipping.setComponents(comp,
-                backstage.shared.providers.tooltips.getComponents({ tooltipText: translatedTooltip })
-              );
-            }
-          }
-        }),
-      })
+      ...(spec.tooltip.fold(
+        () => [],
+        (tooltip) =>
+          [ Tooltipping.config({
+            ...backstage.shared.providers.tooltips.getConfig({
+              // TODO: remove this comment after the review, this wasn't used because the `spec.dropdownBehaviours` was overwrite from a defailt `Tooltipping.config`
+              tooltipText: backstage.shared.providers.translate(tooltip),
+              onShow: (comp) => {
+                if (tooltipString.get().exists((tooltipStr) => spec.tooltip.exists((tt) => tt !== tooltipStr))) {
+                  const translatedTooltip = backstage.shared.providers.translate(tooltipString.get().getOr(''));
+                  Tooltipping.setComponents(comp,
+                    backstage.shared.providers.tooltips.getComponents({ tooltipText: translatedTooltip })
+                  );
+                }
+              }
+            })
+          }) ]
+      ))
     ],
     context: spec.context
   },
