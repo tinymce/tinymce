@@ -1,4 +1,4 @@
-import { AlloySpec, Behaviour, RawDomSchema, SimpleSpec } from '@ephox/alloy';
+import { AlloySpec, RawDomSchema, SimpleSpec } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Fun, Id, Obj, Optional, Type } from '@ephox/katamari';
 
@@ -110,8 +110,7 @@ const createLabel = (label: string): SimpleSpec => {
       tag: 'label',
       innerHtml: label
     },
-    components: [],
-    behaviours: Behaviour.derive([])
+    components: []
   };
 };
 
@@ -173,4 +172,4 @@ const renderItemStructure = (info: ItemStructureSpec, providersBackstage: UiFact
   }
 };
 
-export { renderItemStructure, renderItemDomStructure };
+export { renderItemDomStructure, renderItemStructure };
