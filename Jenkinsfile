@@ -218,14 +218,14 @@ timestamps {
   def winFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'windows', buckets: 1 ]
   def winEdge = [ browser: 'edge', provider: 'lambdatest', os: 'windows', buckets: 1 ]
 
-  def macChrome = [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
-  def macFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
-  def macSafari = [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sequoia', buckets: 1 ]
+  def macChrome = [ browser: 'chrome', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ]
+  def macFirefox = [ browser: 'firefox', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ]
+  def macSafari = [ browser: 'safari', provider: 'lambdatest', os: 'macOS Sonoma', buckets: 1 ]
 
   def branchBuildPlatforms = [
     winChrome,
     winFirefox,
-    macSafari,
+    // macSafari,
   ]
 
   def primaryBuildPlatforms = branchBuildPlatforms + [
