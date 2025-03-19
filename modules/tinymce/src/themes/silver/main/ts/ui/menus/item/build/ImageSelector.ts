@@ -1,6 +1,6 @@
 import { Menu as AlloyMenu, ItemTypes, ItemWidget, MenuTypes } from '@ephox/alloy';
 import { Menu } from '@ephox/bridge';
-import { Fun, Id, Type } from '@ephox/katamari';
+import { Fun, Id } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
@@ -9,15 +9,12 @@ import { deriveMenuMovement } from '../../menu/MenuMovement';
 import * as MenuParts from '../../menu/MenuParts';
 import ItemResponse from '../ItemResponse';
 
-const isImageMenuItem = (item: unknown): item is Menu.ImageMenuItemSpec => Type.isObject(item) && 'tooltip' in item;
-
 const renderImageSelector = (spec: Menu.ImageSelectMenuItem, backstage: UiFactoryBackstage): ItemTypes.WidgetItemSpec => {
   const presets = 'imageselector';
   const columns = spec.initData.columns;
   const menuSpec = createPartialChoiceMenu(
     Id.generate('menu-value'),
-    // TODO: should we directly use text?
-    spec.initData.items.map((i) => ({ ...i, text: isImageMenuItem(i) ? i.tooltip : i.text })),
+    spec.initData.items,
     (value) => {
       spec.onAction({ value });
     },

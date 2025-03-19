@@ -66,6 +66,26 @@ export const createChoiceItems = (
           providersBackstage
         ))
       );
+    } else if (item.type === 'resetimage') {
+      return BridgeMenu.createResetImageItem(item).fold(
+        MenuUtils.handleError,
+        (d) => Optional.some(renderChoiceItem(
+          ({
+            ...d,
+            type: 'choiceitem',
+            text: d.tooltip,
+            icon: Optional.some(d.icon),
+            label: Optional.some(d.label),
+          }),
+          columns === 1,
+          itemPresets,
+          onItemValueHandler,
+          select(d.value),
+          itemResponse,
+          providersBackstage,
+          MenuUtils.menuHasIcons(items)
+        ))
+      );
     } else {
       return Optional.none();
     }

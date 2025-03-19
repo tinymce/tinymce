@@ -42,7 +42,7 @@ describe('browser.tinymce.themes.silver.editor.color.ImageSelectorTest', () => {
                   {
                     url: 'fakeurl2', type: 'imageitem', text: 'Fake 2', label: 'Fake 2', tooltip: 'Fake 2', value: 'fake2' },
                   {
-                    icon: 'color-swatch-remove-color', type: 'choiceitem', text: 'None', label: 'None', value: 'none'
+                    icon: 'color-swatch-remove-color', type: 'resetimage', tooltip: 'None', label: 'None', value: 'none'
                   }
                 ]
               }

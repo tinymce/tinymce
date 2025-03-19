@@ -4,6 +4,14 @@ import { Optional, Result } from '@ephox/katamari';
 import * as ComponentSchema from '../../core/ComponentSchema';
 import { CommonMenuItem, commonMenuItemFields, CommonMenuItemInstanceApi, CommonMenuItemSpec } from './CommonMenuItem';
 
+export interface ResetImageItemSpec extends CommonMenuItemSpec {
+  icon: string; // 'color-swatch-remove-color';
+  type: 'resetimage';
+  label: string;
+  tooltip?: string;
+  value: string;
+}
+
 export interface ImageMenuItemSpec extends CommonMenuItemSpec {
   type?: 'imageitem';
   url: string;
@@ -14,6 +22,15 @@ export interface ImageMenuItemSpec extends CommonMenuItemSpec {
 export interface ImageMenuItemInstanceApi extends CommonMenuItemInstanceApi {
   isActive: () => boolean;
   setActive: (state: boolean) => void;
+}
+
+export interface ResetImageItem extends CommonMenuItem {
+  icon: string; // 'color-swatch-remove-color';
+  active: boolean;
+  type: 'resetimage';
+  label: string;
+  tooltip: Optional<string>;
+  value: string;
 }
 
 export interface ImageMenuItem extends CommonMenuItem {
@@ -32,5 +49,17 @@ export const imageMenuItemSchema = StructureSchema.objOf([
   ComponentSchema.optionalTooltip
 ].concat(commonMenuItemFields));
 
+export const resetImageItemSchema = StructureSchema.objOf([
+  ComponentSchema.type,
+  ComponentSchema.active,
+  ComponentSchema.icon,
+  ComponentSchema.label,
+  ComponentSchema.optionalTooltip,
+  ComponentSchema.value
+].concat(commonMenuItemFields));
+
 export const createImageMenuItem = (spec: ImageMenuItemSpec): Result<ImageMenuItem, StructureSchema.SchemaError<any>> =>
   StructureSchema.asRaw('imagemenuitem', imageMenuItemSchema, spec);
+
+export const createResetImageItem = (spec: ResetImageItemSpec): Result<ResetImageItem, StructureSchema.SchemaError<any>> =>
+  StructureSchema.asRaw('resetImageItem', resetImageItemSchema, spec);
