@@ -9,6 +9,7 @@
     "@ephox/sand": "^7.0.0",
     "@ephox/sugar": "^10.0.0"
   },
+  "sideEffects": false,
   "files": [
     "lib/main",
     "lib/demo",
