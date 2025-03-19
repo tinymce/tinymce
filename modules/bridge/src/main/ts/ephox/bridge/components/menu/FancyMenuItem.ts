@@ -101,16 +101,8 @@ const imageSelectFields = [
   FieldSchema.optionFunction('select'),
   FieldSchema.requiredObjOf('initData', [
     FieldSchema.requiredNumber('columns'),
-    FieldSchema.requiredArrayOfObj('items', [
-      FieldSchema.defaultedString('type', 'imageitem'),
-      FieldSchema.defaultedString('icon', ''),
-      // FieldSchema.defaultedBoolean('active', true),
-      FieldSchema.defaultedString('url', ''),
-      FieldSchema.defaultedString('value', ''),
-      FieldSchema.defaultedString('label', ''),
-      // TODO: change this
-      FieldSchema.defaulted('tooltip', undefined)
-    ])
+    // Note: We don't validate the items as they are instead validated by imageMenuItemSchema when rendering
+    FieldSchema.defaultedArrayOf('items', [], ValueType.anyValue())
   ])
 ].concat(baseFields);
 
