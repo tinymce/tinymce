@@ -16,11 +16,6 @@
     margin: @toolbar-button-spacing-y 0 (@toolbar-button-spacing-y + 1) @toolbar-group-padding-x;
   }
 
-
-  // tox-menu-nav__js tox-collection__item tox-collection__item--active
-  // .tox .tox-collection--toolbar .tox-collection__item--active:not(.tox-collection__item--state-disabled):focus
-  // .tox .tox-collection--list .tox-collection__item--active:not(.tox-collection__item--state-disabled) {
-
   // Remove menu border/padding when image-selector is used in a collection list context
   .tox-collection--list .tox-collection__group {
     border: 0;
@@ -52,18 +47,6 @@
   .tox-image-selector__row {
     display: flex;
   }
-
-  // .tox-swatch {
-  //   height: @image-selector-size;
-  //   transition: transform .15s, box-shadow .15s;
-  //   width: @image-selector-size;
-
-  //   &:hover,
-  //   &:focus {
-  //     box-shadow: 0 0 0 1px @image-selector-outline-color inset;
-  //     transform: scale(.8);
-  //   }
-  // }
 
   .tox-image-selector--remove {
     align-items: center;
@@ -97,27 +80,6 @@
       background: @toolbar-button-hover-background-color;
     }
   }
-
-  // div.tox-image-selector:not(.tox-image-selector--remove) {
-  //   svg {
-  //     display: none;
-  //     fill: @image-selector-picker-button-icon-fill;
-  //     height: @image-selector-picker-button-icon-height;
-  //     margin: calc((@image-selector-size - @image-selector-picker-button-icon-height) / 2) calc((@image-selector-size - @image-selector-picker-button-icon-width) / 2);
-  //     width: @image-selector-picker-button-icon-width;
-
-  //     path {
-  //       fill: #fff;
-  //       paint-order: stroke;
-  //       stroke: #222f3e;
-  //       stroke-width: 2px;
-  //     }
-  //   }
-
-  //   &.tox-collection__item--enabled svg {
-  //     display: block;
-  //   }
-  // }
 }
 
 .tox:not([dir=rtl]) {
