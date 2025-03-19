@@ -16,17 +16,18 @@
     margin: @toolbar-button-spacing-y 0 (@toolbar-button-spacing-y + 1) @toolbar-group-padding-x;
   }
 
-  // Remove menu border/padding when image-selector is used in a collection list context
-  .tox-collection--list .tox-collection__group {
-    border: 0;
-    margin: -@collection-item-separator-margin-y -@menu-item-collection-list-padding;
-  }
-
   .tox-image-selector-menu {
     border: 0;
     border-radius: 3px;
     margin: -@collection-item-separator-margin-y -@menu-item-collection-list-padding;
     padding: 4px;
+    
+    // Remove menu border/padding when image-selector is used in a collection list context
+    .tox-collection--list .tox-collection__group {
+      border: 0;
+      padding: 0;
+      margin: -@collection-item-separator-margin-y -@menu-item-collection-list-padding;
+    }
 
     .tox-collection__item {
       max-width: 48px;
