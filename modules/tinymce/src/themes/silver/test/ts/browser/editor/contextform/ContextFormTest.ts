@@ -1,8 +1,8 @@
-import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Fun, Obj } from '@ephox/katamari';
 import { Attribute, SugarBody, SugarDocument, Value } from '@ephox/sugar';
-import { TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -273,7 +273,8 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
 
   const clickAway = (editor: Editor) => {
     // <a> tags make the context bar appear so click away from an a tag. We have no content so it's probably fine.
-    editor.nodeChanged();
+    TinySelections.setCursor(editor, [ ], 0);
+    Mouse.trueClick(TinyDom.body(editor));
   };
 
   const pAssertNoPopDialog = () => Waiter.pTryUntil(
@@ -408,9 +409,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     const editor = hook.editor();
     openToolbar(editor, 'get-value-after-component-detach-form');
 
-    // Fake click away inside editor
-    TinySelections.setCursor(editor, [ 0, 0 ], 0);
-    TinyContentActions.trueClick(editor);
+    clickAway(editor);
 
     await Waiter.pTryUntil('Waited to context form to close', () => {
       store.assertEq('Should be able to get value', [ 'setup', 'teardown', '300x300' ]);
@@ -421,9 +420,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     const editor = hook.editor();
     openToolbar(editor, 'set-value-after-component-detach-form');
 
-    // Fake click away inside editor
-    TinySelections.setCursor(editor, [ 0, 0 ], 0);
-    TinyContentActions.trueClick(editor);
+    clickAway(editor);
 
     await Waiter.pTryUntil('Waited to context form to close', () => {
       store.assertEq('Should be able to set value', [ 'setup', 'teardown', '500x500' ]);
@@ -498,9 +495,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
     TinyUiActions.clickOnUi(editor, 'button[aria-label="ABC"]');
     await FocusTools.pTryOnSelector('Focus should now be on input in context form', doc, 'input');
 
-    // Fake click away inside editor
-    TinySelections.setCursor(editor, [ 0, 0 ], 0);
-    TinyContentActions.trueClick(editor);
+    clickAway(editor);
 
     await Waiter.pTryUntil('Waited to context toolbar to close', () => {
       store.assertEq('Should have triggered ContextToolbarClose', [ 'setup', 'teardown', 'contexttoolbarclose' ]);
