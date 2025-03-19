@@ -60,7 +60,6 @@ export const createChoiceItems = (
         MenuUtils.handleError,
         (d) => Optional.some(renderImgItem(
           d,
-          columns === 1,
           onItemValueHandler,
           select(d.value),
           itemResponse,

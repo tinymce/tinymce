@@ -7,13 +7,11 @@ import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Bac
 
 import * as ItemClasses from '../ItemClasses';
 import ItemResponse from '../ItemResponse';
-import { renderCheckmark } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
 const renderImgItem = (
   spec: Menu.ImageMenuItem,
-  useText: boolean,
   onItemValueHandler: (itemValue: string) => void,
   isSelected: boolean,
   itemResponse: ItemResponse,
@@ -30,23 +28,18 @@ const renderImgItem = (
 
   const structure = renderItemStructure({
     presets: 'img',
-    textContent: useText ? spec.text : Optional.none(),
+    textContent: Optional.none(),
     htmlContent: Optional.none(),
     ariaLabel: spec.text,
     iconContent: Optional.some(spec.url),
     labelContent: spec.label,
-    shortcutContent: useText ? spec.shortcut : Optional.none(),
-
-    // useText essentially says that we have one column. In one column lists, we should show a tick
-    // The tick is controlled by the tickedClass (via css). It is always present
-    // but is hidden unless the tickedClass is present.
-    checkMark: useText ? Optional.some(renderCheckmark(providersBackstage.icons)) : Optional.none(),
+    shortcutContent: Optional.none(),
+    checkMark: Optional.none(),
     caret: Optional.none(),
     value: spec.value
   }, providersBackstage, true);
 
   const optTooltipping = spec.text
-    .filter(Fun.constant(!useText))
     .map((t) => Tooltipping.config(
       providersBackstage.tooltips.getConfig({
         tooltipText: providersBackstage.translate(t)
