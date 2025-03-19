@@ -30,7 +30,7 @@ const renderImgItem = (
     presets: 'img',
     textContent: Optional.none(),
     htmlContent: Optional.none(),
-    ariaLabel: spec.text,
+    ariaLabel: spec.tooltip,
     iconContent: Optional.some(spec.url),
     labelContent: spec.label,
     shortcutContent: Optional.none(),
@@ -39,7 +39,7 @@ const renderImgItem = (
     value: spec.value
   }, providersBackstage, true);
 
-  const optTooltipping = spec.text
+  const optTooltipping = spec.tooltip
     .map((t) => Tooltipping.config(
       providersBackstage.tooltips.getConfig({
         tooltipText: providersBackstage.translate(t)

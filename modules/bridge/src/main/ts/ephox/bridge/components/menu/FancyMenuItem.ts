@@ -3,7 +3,7 @@ import { Optional, Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
 import { ChoiceMenuItemSpec } from './ChoiceMenuItem';
-import { ImageMenuItemSpec } from './ImageMenuItem';
+import { ImageMenuItemSpec, ResetImageItemSpec } from './ImageMenuItem';
 
 export interface FancyActionArgsMap {
   inserttable: { numRows: number; numColumns: number };
@@ -38,7 +38,7 @@ export interface ImageSelectMenuItemSpec extends BaseFancyMenuItemSpec<'imagesel
   select?: (value: string) => boolean;
   initData: {
     columns: number;
-    items: (ImageMenuItemSpec | ChoiceMenuItemSpec)[];
+    items: (ImageMenuItemSpec | ResetImageItemSpec)[];
   };
 }
 
@@ -71,7 +71,7 @@ export interface ImageSelectMenuItem extends BaseFancyMenuItem<'imageselect'> {
   select: Optional<(value: string) => boolean>;
   initData: {
     columns: number;
-    items: (ImageMenuItemSpec | ChoiceMenuItemSpec)[];
+    items: (ImageMenuItemSpec | ResetImageItemSpec)[];
   };
 }
 
