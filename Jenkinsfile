@@ -225,7 +225,7 @@ timestamps {
   def branchBuildPlatforms = [
     winChrome,
     winFirefox,
-    macSafari,
+    // macSafari,
   ]
 
   def primaryBuildPlatforms = branchBuildPlatforms + [
