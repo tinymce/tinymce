@@ -5,7 +5,7 @@ import * as ComponentSchema from '../../core/ComponentSchema';
 import { CommonMenuItem, commonMenuItemFields, CommonMenuItemInstanceApi, CommonMenuItemSpec } from './CommonMenuItem';
 
 export interface ResetImageItemSpec extends CommonMenuItemSpec {
-  icon: string; // 'color-swatch-remove-color';
+  icon: string;
   type: 'resetimage';
   label: string;
   tooltip?: string;
@@ -25,7 +25,7 @@ export interface ImageMenuItemInstanceApi extends CommonMenuItemInstanceApi {
 }
 
 export interface ResetImageItem extends CommonMenuItem {
-  icon: string; // 'color-swatch-remove-color';
+  icon: string;
   active: boolean;
   type: 'resetimage';
   label: string;
