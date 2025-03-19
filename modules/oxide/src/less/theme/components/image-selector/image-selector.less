@@ -3,6 +3,8 @@
 //
 
 @image-selector-size: 30px;
+@image-selector-menu-padding: 4px;
+@image-selector-image-width: 48px;
 @image-selector-picker-button-icon-fill: @text-color;
 @image-selector-picker-button-icon-height: 24px;
 @image-selector-picker-button-icon-width: 24px;
@@ -18,10 +20,10 @@
 
   .tox-image-selector-menu {
     border: 0;
-    border-radius: 3px;
+    border-radius: @collection-item-radius;
     margin: -@collection-item-separator-margin-y -@menu-item-collection-list-padding;
-    padding: 4px;
-    
+    padding: @image-selector-menu-padding;
+
     // Remove menu border/padding when image-selector is used in a collection list context
     .tox-collection--list .tox-collection__group {
       border: 0;
@@ -30,12 +32,12 @@
     }
 
     .tox-collection__item {
-      max-width: 48px;
+      max-width: @image-selector-image-width;
     }
 
     .tox-collection__item-icon {
       border: 1px solid #E3E3E3;
-      border-radius: 3px;
+      border-radius: @collection-item-radius;
       margin-bottom: 4px;
       width: 100%;
 
