@@ -15,6 +15,7 @@
   },
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "GPL-2.0-or-later",
+  "sideEffects": false,
   "files": [
     "lib/main",
     "lib/demo",

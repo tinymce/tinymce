@@ -17,6 +17,7 @@
     "TinyMCE",
     "Icons"
   ],
+  "sideEffects": false,
   "files": [
     "dist",
     "README.md",

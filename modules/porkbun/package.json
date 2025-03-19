@@ -7,6 +7,7 @@
     "url": "https://github.com/tinymce/tinymce.git",
     "directory": "modules/porkbun"
   },
+  "sideEffects": false,
   "files": [
     "lib/main",
     "lib/demo",
