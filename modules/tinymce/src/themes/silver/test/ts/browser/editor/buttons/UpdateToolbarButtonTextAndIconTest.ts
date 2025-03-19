@@ -1,6 +1,6 @@
-import { Mouse } from '@ephox/agar';
+import { Mouse, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { Css, SugarElement } from '@ephox/sugar';
+import { Css, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import { TinyHooks, TinyUi, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -76,7 +76,7 @@ describe('browser.tinymce.themes.silver.editor.buttons.UpdateToolbarButtonTextAn
 
   it('TINY-9268: Normal toolbar button can update its text', async () => {
     const selectorForToolbarButtonWithLabel = (label: string) =>
-      `.tox-tbtn.tox-tbtn--select:has(.tox-tbtn__select-label:contains("${label}"))`;
+      `.tox-tbtn.tox-tbtn--select:contains("${label}")`;
     const editor = hook.editor();
     const button = await TinyUi(editor).pWaitForUi(selectorForToolbarButtonWithLabel('Before'));
     const initialWidth = Css.get(button, 'width');
@@ -88,7 +88,7 @@ describe('browser.tinymce.themes.silver.editor.buttons.UpdateToolbarButtonTextAn
 
   it('TINY-9268: Toggle toolbar button can update its text', async () => {
     const selectorForToolbarButtonWithLabel = (label: string) =>
-      `.tox-tbtn.tox-tbtn--select:has(.tox-tbtn__select-label:contains("${label}"))`;
+      `.tox-tbtn.tox-tbtn--select:contains("${label}")`;
     const editor = hook.editor();
     const button = await TinyUi(editor).pWaitForUi(selectorForToolbarButtonWithLabel('ToggleBefore'));
     const initialWidth = Css.get(button, 'width');
@@ -100,7 +100,7 @@ describe('browser.tinymce.themes.silver.editor.buttons.UpdateToolbarButtonTextAn
 
   it('TINY-9268: menu toolbar button can update its text when clicking on menu item', async () => {
     const selectorForToolbarButtonWithLabel = (label: string) =>
-      `.tox-tbtn.tox-tbtn--select:has(.tox-tbtn__select-label:contains("${label}"))`;
+      `.tox-tbtn.tox-tbtn--select:contains("${label}")`;
     const editor = hook.editor();
     const button = await TinyUi(editor).pWaitForUi(selectorForToolbarButtonWithLabel('MenuBefore'));
     const initialWidth = Css.get(button, 'width');
@@ -114,7 +114,11 @@ describe('browser.tinymce.themes.silver.editor.buttons.UpdateToolbarButtonTextAn
 
   it('TINY-9268: toolbar split button can update its text when clicking on it or one of its items', async () => {
     const selectorForToolbarButtonWithLabel = (label: string) =>
-      `.tox-tbtn.tox-tbtn--select:has(.tox-tbtn__select-label:contains("${label}"))`;
+      `.tox-tbtn.tox-tbtn--select:contains("${label}")`;
+    const getChevron = (label: string) => {
+      const button = UiFinder.findIn(SugarBody.body(), selectorForToolbarButtonWithLabel(label)).getOrDie();
+      return UiFinder.findIn(Traverse.parent(button).getOrDie(), '.tox-split-button__chevron').getOrDie();
+    };
     const editor = hook.editor();
     const button = await TinyUi(editor).pWaitForUi(selectorForToolbarButtonWithLabel('SplitBefore'));
     const initialWidth = Css.get(button, 'width');
@@ -122,7 +126,7 @@ describe('browser.tinymce.themes.silver.editor.buttons.UpdateToolbarButtonTextAn
     await TinyUiActions.pWaitForUi(editor, selectorForToolbarButtonWithLabel('Split After After After After After After'));
     const currentWidth = Css.get(button, 'width');
     assert.equal(initialWidth, currentWidth);
-    TinyUiActions.clickOnToolbar(editor, `${selectorForToolbarButtonWithLabel('Split After After After After After After')} + .tox-split-button__chevron`);
+    Mouse.click(getChevron('Split After After After After After After'));
     const menuItem = await TinyUi(editor).pWaitForUi( '[aria-label="Menu item 1"]');
     Mouse.click(menuItem);
     await TinyUiActions.pWaitForUi(editor, selectorForToolbarButtonWithLabel('Split Item After After After After After After'));

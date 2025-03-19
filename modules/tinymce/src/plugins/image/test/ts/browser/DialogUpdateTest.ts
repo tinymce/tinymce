@@ -6,7 +6,7 @@ import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
-import { assertCleanHtml, assertInputValue, fakeEvent, fillActiveDialog, generalTabSelectors, setInputValue } from '../module/Helpers';
+import { assertCleanHtml, assertInputValue, fakeEvent, fillActiveDialog, generalTabLabels, setInputValue } from '../module/Helpers';
 
 describe('browser.tinymce.plugins.image.DialogUpdateTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -26,8 +26,8 @@ describe('browser.tinymce.plugins.image.DialogUpdateTest', () => {
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     editor.execCommand('mceImage');
     await TinyUiActions.pWaitForDialog(editor);
-    assertInputValue(generalTabSelectors.src, '#1');
-    assertInputValue(generalTabSelectors.title, 'title');
+    assertInputValue(generalTabLabels.src, '#1');
+    assertInputValue(generalTabLabels.title, 'title');
     fillActiveDialog({
       src: { value: '#2' },
       title: ''
@@ -42,14 +42,14 @@ describe('browser.tinymce.plugins.image.DialogUpdateTest', () => {
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     editor.execCommand('mceImage');
     await TinyUiActions.pWaitForDialog(editor);
-    assertInputValue(generalTabSelectors.src, 'https://www.google.com/logos/google.jpg');
-    assertInputValue(generalTabSelectors.height, '200');
-    assertInputValue(generalTabSelectors.width, '200');
+    assertInputValue(generalTabLabels.src, 'https://www.google.com/logos/google.jpg');
+    assertInputValue(generalTabLabels.height, '200');
+    assertInputValue(generalTabLabels.width, '200');
 
-    const input = setInputValue(generalTabSelectors.src, '');
+    const input = setInputValue(generalTabLabels.src, '');
     fakeEvent(input, 'change');
-    assertInputValue(generalTabSelectors.height, '');
-    assertInputValue(generalTabSelectors.width, '');
+    assertInputValue(generalTabLabels.height, '');
+    assertInputValue(generalTabLabels.width, '');
     TinyUiActions.submitDialog(editor);
     assertCleanHtml('Checking output', editor, '');
   });
@@ -60,7 +60,7 @@ describe('browser.tinymce.plugins.image.DialogUpdateTest', () => {
     editor.execCommand('mceImage');
     await TinyUiActions.pWaitForDialog(editor);
     Mouse.clickOn(SugarBody.body(), 'button[data-mce-name="Browse files"]');
-    await Waiter.pTryUntil('Wait for width to be populated', () => assertInputValue(generalTabSelectors.width, '200'));
+    await Waiter.pTryUntil('Wait for width to be populated', () => assertInputValue(generalTabLabels.width, '200'));
     TinyUiActions.submitDialog(editor);
     assertCleanHtml('Checking output', editor, '<p><img src="https://www.google.com/logos/google.jpg" alt="" width="200"></p>');
   });
@@ -72,8 +72,8 @@ describe('browser.tinymce.plugins.image.DialogUpdateTest', () => {
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     editor.execCommand('mceImage');
     const dialog = await TinyUiActions.pWaitForDialog(editor);
-    Mouse.clickOn(dialog, generalTabSelectors.caption);
-    assertInputValue(generalTabSelectors.caption, 'on');
+    Mouse.clickByLabel(dialog, generalTabLabels.caption);
+    assertInputValue(generalTabLabels.caption, 'on');
 
     TinyUiActions.submitDialog(editor);
     assertCleanHtml('Checking output', editor, '<figure class="image"><img style="border: 2px solid red;" src="https://www.google.com/logos/google.jpg" width="200" height="200"><figcaption>Caption</figcaption></figure>');
@@ -86,10 +86,10 @@ describe('browser.tinymce.plugins.image.DialogUpdateTest', () => {
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     editor.execCommand('mceImage');
     await TinyUiActions.pWaitForDialog(editor);
-    setInputValue(generalTabSelectors.height, '300');
-    setInputValue(generalTabSelectors.width, '300');
-    assertInputValue(generalTabSelectors.height, '300');
-    assertInputValue(generalTabSelectors.width, '300');
+    setInputValue(generalTabLabels.height, '300');
+    setInputValue(generalTabLabels.width, '300');
+    assertInputValue(generalTabLabels.height, '300');
+    assertInputValue(generalTabLabels.width, '300');
     TinyUiActions.submitDialog(editor);
     assertCleanHtml('Checking output', editor, '<p><img style="border: 2px solid red; float: left;" src="https://www.google.com/logos/google.jpg" width="300" height="300"></p>');
   });

@@ -241,7 +241,11 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTest', () => {
   };
 
   const checkLastButtonGroup = (label: string, children: ApproxStructure.Builder<StructAssert[]>) => {
-    const group = UiFinder.findIn(SugarBody.body(), '.tox-pop .tox-toolbar__group:last').getOrDie();
+    const groups = UiFinder.findAllIn(SugarBody.body(), '.tox-pop .tox-toolbar__group');
+    if (groups.length === 0) {
+      throw new Error('Cannot find any toolbar group');
+    }
+    const group = groups[groups.length - 1];
     Assertions.assertStructure(
       label,
       ApproxStructure.build((s, str, arr) => s.element('div', {

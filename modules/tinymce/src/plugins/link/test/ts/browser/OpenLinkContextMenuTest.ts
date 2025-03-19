@@ -99,7 +99,7 @@ describe('browser.tinymce.plugins.link.OpenLinkContextMenuTest', () => {
     await TinyUiActions.pTriggerContextMenu(editor, 'img', '.tox-silver-sink [role="menuitem"]');
     TinyUiActions.keydown(editor, Keys.down());
     TinyUiActions.keydown(editor, Keys.down());
-    await pAssertFocusOnItem('Open link', '.tox-collection__item:contains("Open link"):not([aria-disabled="true"])');
+    await pAssertFocusOnItem('Open link', '.tox-collection__item:not([aria-disabled="true"]):contains("Open link")');
     TinyUiActions.keydown(editor, Keys.enter());
     store.assertEq('Should open the targeted link', [
       'https://www.exampleimage.com/'
