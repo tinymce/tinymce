@@ -195,7 +195,10 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    filter: invert(26%) sepia(80%) saturate(2788%) hue-rotate(202deg) brightness(94%) contrast(101%);
+
+    svg path {
+      stroke: @color-tint;
+    }
   }
 
   .tox-collection--toolbar .tox-collection__item--enabled:not(.tox-collection__item--state-disabled) {
@@ -241,6 +244,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    margin-bottom: 4px;
     position: relative;
   }
 
