@@ -1,6 +1,7 @@
 import { AddEventsBehaviour, AlloyEvents, Behaviour, SimpleSpec } from '@ephox/alloy';
 import { Arr, Obj, Optional } from '@ephox/katamari';
 import { Css, Insert, Remove, SelectorFind, SugarElement } from '@ephox/sugar';
+import createDompurify from 'dompurify';
 
 export type ImageProvider = () => Record<string, string>;
 
@@ -12,11 +13,11 @@ interface ImageSpec {
   readonly label: Optional<string>;
 }
 
-const getInnerHTML = (url: string): string => `
+const getInnerHTML = (url: string): string => createDompurify().sanitize(`
   <div style="width: 46px; height: 46px; display: flex; align-items: center; justify-content: center;">
     <img style="max-width: 100%; max-height: 100%" src="${url}" />
   </div>
-`;
+`);
 
 const spinnerWrapperStyles = {
   'display': 'flex',
