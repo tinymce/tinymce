@@ -33,7 +33,7 @@ describe('browser.tinymce.themes.silver.editor.color.ImageSelectorTest', () => {
                 editor.insertContent(`<p>${data.value}</p>`);
                 api.setTooltip('new tooltip: ' + data.value);
               },
-              select: (value) => value === 'Item 1',
+              select: (value) => value === 'fake2',
               initData: {
                 columns: 3,
                 items: [
@@ -64,6 +64,7 @@ describe('browser.tinymce.themes.silver.editor.color.ImageSelectorTest', () => {
     await TinyUiActions.pWaitForUi(editor, '.tox-menu');
 
     TinyUiActions.clickOnUi(editor, 'div[aria-label="Fake 2"]');
+    await checkTooltip(editor, 'button[data-mce-name="image-selector"]', 'new tooltip: fake2');
     TinyAssertions.assertContent(editor, '<p>fake2</p>');
   });
 
@@ -75,4 +76,12 @@ describe('browser.tinymce.themes.silver.editor.color.ImageSelectorTest', () => {
     await TooltipUtils.pAssertNoTooltip(editor, async () => await TooltipUtils.pTriggerTooltipWithMouse(editor, 'div:has(img[src="fakeurl1"])'), '');
   });
 
+  it('TINY-11847: selected items should have a check', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>Text</p>');
+    TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="image-selector"]');
+
+    await TinyUiActions.pWaitForUi(editor, '.tox-menu');
+    await TinyUiActions.pWaitForUi(editor, 'div[aria-label="Fake 2"] .tox-collection__item-image-check');
+  });
 });
