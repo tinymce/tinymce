@@ -62,12 +62,12 @@ const getMenuButtonApi = (component: AlloyComponent, sharedBackstage: UiFactoryB
 });
 
 const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Optional<string>, tabstopping = true, btnName?: string): SketchSpec => {
-  const tooltipString = Cell<Optional<string>>(spec.tooltip);
+  const currentTooltip = Cell<Optional<string>>(spec.tooltip);
   const classes = spec.buttonType === 'bordered' ? [ 'bordered' ] : [];
   return renderCommonDropdown({
     text: spec.text,
     icon: spec.icon,
-    tooltip: tooltipString.get(),
+    tooltip: currentTooltip.get(),
     ariaLabel: spec.tooltip,
     searchable: spec.search.isSome(),
     // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
@@ -93,11 +93,11 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
           );
         },
         fetchContext,
-        getMenuButtonApi(dropdownComp, backstage.shared, tooltipString)
+        getMenuButtonApi(dropdownComp, backstage.shared, currentTooltip)
       );
     },
     onSetup: spec.onSetup,
-    getApi: (comp) => getMenuButtonApi(comp, backstage.shared, tooltipString),
+    getApi: (comp) => getMenuButtonApi(comp, backstage.shared, currentTooltip),
     columns: 1,
     presets: 'normal',
     classes,
@@ -111,8 +111,8 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
               // TODO: remove this comment after the review, this wasn't used because the `spec.dropdownBehaviours` was overwrite from a defailt `Tooltipping.config`
               tooltipText: backstage.shared.providers.translate(tooltip),
               onShow: (comp) => {
-                if (tooltipString.get().exists((tooltipStr) => spec.tooltip.exists((tt) => tt !== tooltipStr))) {
-                  const translatedTooltip = backstage.shared.providers.translate(tooltipString.get().getOr(''));
+                if (currentTooltip.get().exists((tooltipStr) => spec.tooltip.exists((tt) => tt !== tooltipStr))) {
+                  const translatedTooltip = backstage.shared.providers.translate(currentTooltip.get().getOr(''));
                   Tooltipping.setComponents(comp,
                     backstage.shared.providers.tooltips.getComponents({ tooltipText: translatedTooltip })
                   );
