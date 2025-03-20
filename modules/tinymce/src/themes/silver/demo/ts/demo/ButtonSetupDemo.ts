@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { Toolbar } from '@ephox/bridge';
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -242,6 +242,56 @@ export default {
           }
         ];
       }
+    });
+
+    // eslint-disable-next-line max-len
+    const logoUrl = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iMjA5IiB2aWV3Qm94PSIwIDAgNjQwIDIwOSI+CiAgICA8ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGZpbGw9IiNGRkYiPgogICAgICAgICAgICA8cGF0aCBkPSJNNTUyLjUzNSA0OS43TDU3My4zNSAxMDhsNS45MDQgMjEuMSA3LjAwNi0yMS4xIDIwLjgxNS01OC4zSDYzOGwtNTQuNDQyIDE1MS43LTMzLjQyNSA2LjYgMTQuMzEtNDAuMy00Mi42MzItMTE4aDMwLjcyNHpNMTMyLjI0NyAyLjAxNWMzNC4wNDUuMjAzIDY3LjU4NCAyOC40MzMgNjcuNTg0IDY5LjYxNCAwIDAgLjE2NCAxMC40MDkuMTY5IDIyLjk3NHYxLjY4N2MtLjAwMiAyLjU0OC0uMDExIDUuMTY4LS4wMyA3Ljc5M2wtLjAxMyAxLjc1Yy0uMTA2IDEyLjI0OC0uNDMxIDI0LjI5OC0xLjIzNyAyOS40NC00Ljg1IDMxLjQ2OC0yOC4yODYgNTMuMTIxLTYwLjYxNCA1OC42ODYtMjkuMTk1IDUuNjY2LTQ2LjU3MSA5LjEwNy01Mi4xMjcgMTAuMTE5LTEuNDA3LjI5My01LjU2Ni44OTMtOS42OTggMS4zNDVsLS44NTQuMDkxYy0yLjY5Ni4yODEtNS4yOTkuNDg2LTcuMDI2LjQ4NkMzMi44NCAyMDYgLjQxMiAxNzkuMjg4LjAwOCAxMzYuMzg2di0uMzQyLS4xNDhsLS4wMDEtLjM3di0uMjIzbC0uMDAxLS41MTQtLjAwMy0xLjY3NnYtLjgxNS0uNDM3TDAgMTI5LjQwNnYtNC43NDgtLjY1NGwuMDAxLTIuMDNjLjAwMy00LjE1OC4wMTItOC44Ny4wMy0xMy42NWwuMDA1LTEuNTk2Yy4wNDgtMTEuNzEuMTUzLTIzLjUxMS4zNzUtMjguMzIgMS43MTgtMzEuNDY4IDIyLjkzMi01Ni44NjUgNjQuMjUtNjQuOTYgMCAwIDQ3Ljg4Ni05LjMwOCA1Mi42MzQtMTAuMjE5IDQuODQ5LS45MSAxMC4xMDItMS4zMTUgMTQuOTUtMS4yMTR6bTI0Ljg1MiAzNS4zMTNMNzYuMjggNTMuMDExdjMyLjQ4bC0zMy4zMzcgNi40NzZ2NzguODIxbDgwLjkyLTE1Ljc4NHYtMzIuMzc5bDMzLjIzNi02LjQ3NVYzNy4zMjh6TTI5Ni4wMzkgMTh2MzEuOGgzMC4wMjN2MjdoLTMwLjAyM3Y1MS40Yy4yIDguOCA2LjQwNSAxNC4zIDEzLjAxIDE0LjYgNS4xMDQuMTUgOS40NzYtLjkzOCAxMS4zNDMtMS40OWwuMjUtLjA3NmMuNDY0LS4xNDIuNzE2LS4yMzQuNzE2LS4yMzRsNi41MDUgMjEuM2MtNi45MDUgNC4zLTE2LjExMiA2LjQtMjcuODIxIDYuNC0xOC4yMTQgMC0zMy42MjYtMTQuMS0zNC4wMjYtMzR2LTU4SDI0NXYtMjdoMjEuMDE2VjIzLjhsMzAuMDIzLTUuOHpNNDY3Ljk3IDQ2LjdjMjYuNjUyIDAgNDcuNjE0IDIxLjY2IDQ4LjIyNSA0OS4xNjVsLjAxMi44MzV2NzBoLTMwLjAyM3YtNjUuNWMtLjMtMTUuNS0xMS42MDktMjcuNS0yNy41Mi0yNy41LTE1LjA2IDAtMjguMzU0IDEyLjY0My0yOC41MjIgMjcuNTQ4VjE2Ni43aC0zMC4wMjR2LTExN2gyNy4xMjFMNDI4LjQ0IDY1YzEwLjcwOC0xMi40IDI0LjYxOS0xOC4zIDM5LjUzLTE4LjN6bS04OS44NjggM3YxMTdoLTMwLjAyM3YtMTE3aDMwLjAyM3ptLTI1NC4yNCAyNi40ODJ2NDYuMzQybC00Ny41ODIgOS4zMDlWODUuNDlsNDcuNTgyLTkuMzA5ek0zNzguMTAyIDJ2MjkuMWwtMzAuMDIzIDUuOFY3LjhMMzc4LjEwMiAyeiIvPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+Cg==';
+
+    ed.ui.registry.addMenuButton('image-selector-button', {
+      buttonType: 'bordered',
+      icon: 'color-swatch-remove-color',
+      tooltip: 'something',
+      onSetup: (api) => {
+        api.setTooltip('NEW TOOLTIP');
+        api.setIconColor('#FF0000');
+        return Fun.noop;
+      },
+      fetch: (callback, _fetchContext, _api) => callback([{
+        type: 'fancymenuitem',
+        fancytype: 'imageselect',
+        onAction: (data) => {
+          console.log('data onAction: ', data.value);
+        },
+        select: (value) => {
+          return value === 'first-img';
+        },
+        initData: {
+          columns: 3,
+          items: [
+            {
+              url: logoUrl,
+              type: 'imageitem',
+              text: 'Logo',
+              label: 'Label',
+              tooltip: 'Logo tooltip',
+              value: 'first-img'
+            }, {
+              url: logoUrl,
+              type: 'imageitem',
+              text: 'Logo',
+              label: 'Label',
+              tooltip: 'Logo tooltip',
+              value: 'second-img'
+            }, {
+              icon: 'color-swatch-remove-color',
+              type: 'resetimage',
+              tooltip: 'None',
+              label: 'None',
+              value: 'none'
+            }
+          ]
+        }
+      }])
     });
   }
 };
