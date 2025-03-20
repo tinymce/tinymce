@@ -12,6 +12,7 @@ export interface MenuButtonFetchContext {
 }
 
 export interface BaseMenuButtonSpec {
+  buttonType?: 'default' | 'bordered';
   text?: string;
   tooltip?: string;
   icon?: string;
@@ -24,6 +25,7 @@ export interface BaseMenuButtonSpec {
 }
 
 export interface BaseMenuButton {
+  buttonType: 'default' | 'bordered';
   text: Optional<string>;
   tooltip: Optional<string>;
   icon: Optional<string>;
@@ -40,10 +42,12 @@ export interface BaseMenuButtonInstanceApi {
   setActive: (state: boolean) => void;
   setTooltip: (tooltip: string) => void;
   setText: (text: string) => void;
+  setIconColor: (value: string) => void;
   setIcon: (icon: string) => void;
 }
 
 export const baseMenuButtonFields = [
+  FieldSchema.defaultedString('buttonType', 'default'),
   FieldSchema.optionString('text'),
   FieldSchema.optionString('tooltip'),
   FieldSchema.optionString('icon'),

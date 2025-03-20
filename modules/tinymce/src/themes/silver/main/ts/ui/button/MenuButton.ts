@@ -1,7 +1,7 @@
 import { AlloyComponent, AlloyTriggers, Disabling, MementoRecord, SketchSpec, Tabstopping, Tooltipping } from '@ephox/alloy';
 import { Dialog, Menu, Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Optional } from '@ephox/katamari';
-import { Attribute, Class, Focus } from '@ephox/sugar';
+import { Attribute, Class, Focus, SelectorFind } from '@ephox/sugar';
 
 import { formActionEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
@@ -39,6 +39,12 @@ const getMenuButtonApi = (component: AlloyComponent, sharedBackstage: UiFactoryB
       Attribute.remove(elm, 'aria-pressed');
     }
   },
+  setIconColor: (value) => {
+    SelectorFind.descendant(component.element, `.tox-tbtn__icon-wrap svg path`).each((underlinePath) => {
+      Attribute.set(underlinePath, 'stroke', value);
+      Attribute.set(underlinePath, 'fill', value);
+    });
+  },
   isActive: () => Class.has(component.element, ToolbarButtonClasses.Ticked),
   setTooltip: (tooltip: string) => {
     const translatedTooltip = sharedBackstage.providers.translate(tooltip);
@@ -57,6 +63,7 @@ const getMenuButtonApi = (component: AlloyComponent, sharedBackstage: UiFactoryB
 
 const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Optional<string>, tabstopping = true, btnName?: string): SketchSpec => {
   const tooltipString = Cell<Optional<string>>(spec.tooltip);
+  const classes = spec.buttonType === 'bordered' ? [ 'bordered' ] : [];
   return renderCommonDropdown({
     text: spec.text,
     icon: spec.icon,
@@ -93,7 +100,7 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
     getApi: (comp) => getMenuButtonApi(comp, backstage.shared, tooltipString),
     columns: 1,
     presets: 'normal',
-    classes: [],
+    classes,
     dropdownBehaviours: [
       ...(tabstopping ? [ Tabstopping.config({ }) ] : []),
       ...(spec.tooltip.fold(
