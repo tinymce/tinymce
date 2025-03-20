@@ -62,4 +62,4 @@ export const createImageMenuItem = (spec: ImageMenuItemSpec): Result<ImageMenuIt
   StructureSchema.asRaw('imagemenuitem', imageMenuItemSchema, spec);
 
 export const createResetImageItem = (spec: ResetImageItemSpec): Result<ResetImageItem, StructureSchema.SchemaError<any>> =>
-  StructureSchema.asRaw('resetImageItem', resetImageItemSchema, spec);
+  StructureSchema.asRaw('resetimageitem', resetImageItemSchema, spec);
