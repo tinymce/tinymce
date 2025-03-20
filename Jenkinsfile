@@ -240,8 +240,8 @@ timestamps {
   def seleniumEdge = [ browser: 'edge', provider: 'selenium', buckets: 1 ]
 
   def branchBuildPlatforms = [
-    // winChrome,
-    // winFirefox,
+    winChrome,
+    winFirefox,
     macSafari,
   ]
 
