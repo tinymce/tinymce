@@ -1,6 +1,6 @@
 import { AddEventsBehaviour, AlloyEvents, Behaviour, SimpleSpec } from '@ephox/alloy';
 import { Arr, Obj } from '@ephox/katamari';
-import { Css, Insert, Remove, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Css, Insert, Ready, Remove, SelectorFind, SugarElement } from '@ephox/sugar';
 import createDompurify from 'dompurify';
 
 export type ImageProvider = () => Record<string, string>;
@@ -64,11 +64,10 @@ const renderImage = (spec: ImageSpec, imageUrl: string): SimpleSpec => {
       AddEventsBehaviour.config('render-image-events', [
         AlloyEvents.runOnAttached((component) => {
           addSpinnerElement(component.element);
-          SelectorFind.descendant<SVGImageElement>(component.element, 'img').each((image) => {
-            image.dom.addEventListener('load', () => {
+          SelectorFind.descendant<HTMLImageElement>(component.element, 'img').each((image) => {
+            Ready.image(image).then(() => {
               removeSpinnerElement(component.element);
-            });
-            image.dom.addEventListener('error', () => {
+            }).catch(() => {
               removeSpinnerElement(component.element);
             });
           });
