@@ -1,7 +1,7 @@
 import { AddEventsBehaviour, AlloyEvents, Behaviour, SimpleSpec } from '@ephox/alloy';
 import { Arr, Obj } from '@ephox/katamari';
 import { Css, Insert, Ready, Remove, SelectorFind, SugarElement } from '@ephox/sugar';
-import createDompurify from 'dompurify';
+
 
 export type ImageProvider = () => Record<string, string>;
 
@@ -11,12 +11,6 @@ interface ImageSpec {
   readonly attributes?: Record<string, string>;
   readonly behaviours?: Array<Behaviour.NamedConfiguredBehaviour<any, any, any>>;
 }
-
-const getInnerHTML = (url: string): string => createDompurify().sanitize(`
-  <div style="width: 46px; height: 46px; display: flex; align-items: center; justify-content: center;">
-    <img style="max-width: 100%; max-height: 100%" src="${url}" />
-  </div>
-`);
 
 const spinnerWrapperStyles = {
   'display': 'flex',
@@ -56,9 +50,22 @@ const renderImage = (spec: ImageSpec, imageUrl: string): SimpleSpec => {
       tag: spec.tag,
       attributes: spec.attributes ?? {},
       classes: spec.classes,
-      innerHtml: getInnerHTML(imageUrl),
     },
-    components: [],
+    components: [{
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-image-selector-image-wrapper' ]
+      },
+      components: [
+        {
+          dom: {
+            tag: 'img',
+            attributes: { src: imageUrl },
+            classes: [ 'tox-image-selector-image-img' ]
+          }
+        }
+      ]
+    }],
     behaviours: Behaviour.derive([
       ...spec.behaviours ?? [],
       AddEventsBehaviour.config('render-image-events', [
