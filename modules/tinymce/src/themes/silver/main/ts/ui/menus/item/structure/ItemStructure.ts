@@ -1,4 +1,4 @@
-import { AlloySpec, RawDomSchema, SimpleSpec } from '@ephox/alloy';
+import { AlloySpec, GuiFactory, RawDomSchema, SimpleSpec } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Fun, Id, Obj, Optional, Type } from '@ephox/katamari';
 
@@ -107,10 +107,11 @@ const renderItemDomStructure = (ariaLabel: Optional<string>): RawDomSchema => {
 const createLabel = (label: string): SimpleSpec => {
   return {
     dom: {
-      tag: 'label',
-      innerHtml: label
+      tag: 'label'
     },
-    components: []
+    components: [
+      GuiFactory.text(label)
+    ]
   };
 };
 
