@@ -154,7 +154,7 @@ const renderImgItemStructure = (info: ItemStructureSpec): ItemStructure => {
   const menuItem = {
     dom: renderItemDomStructure(info.ariaLabel),
     optComponents: [
-      Optional.some(Images.render(info.iconContent.getOrDie(), { tag: 'div', classes: [ ItemClasses.imageClass ], label: info.labelContent })),
+      Optional.some(Images.render(info.iconContent.getOrDie(), { tag: 'div', classes: [ ItemClasses.imageClass ] })),
       info.labelContent.map(createLabel)
     ]
   };

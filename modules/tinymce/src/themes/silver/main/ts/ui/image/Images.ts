@@ -1,5 +1,5 @@
 import { AddEventsBehaviour, AlloyEvents, Behaviour, SimpleSpec } from '@ephox/alloy';
-import { Arr, Obj, Optional } from '@ephox/katamari';
+import { Arr, Obj } from '@ephox/katamari';
 import { Css, Insert, Remove, SelectorFind, SugarElement } from '@ephox/sugar';
 import createDompurify from 'dompurify';
 
@@ -10,7 +10,6 @@ interface ImageSpec {
   readonly classes: string[];
   readonly attributes?: Record<string, string>;
   readonly behaviours?: Array<Behaviour.NamedConfiguredBehaviour<any, any, any>>;
-  readonly label: Optional<string>;
 }
 
 const getInnerHTML = (url: string): string => createDompurify().sanitize(`
