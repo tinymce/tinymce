@@ -68,6 +68,9 @@ const renderImage = (spec: ImageSpec, imageUrl: string): SimpleSpec => {
             image.dom.addEventListener('load', () => {
               removeSpinnerElement(component.element);
             });
+            image.dom.addEventListener('error', () => {
+              removeSpinnerElement(component.element);
+            });
           });
         })
       ]),
