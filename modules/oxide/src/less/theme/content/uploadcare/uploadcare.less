@@ -46,7 +46,7 @@
   all: initial; // prevents inheritable styles to leak into the shadow DOM
   display: inline-block;
   position: relative;
-  width: @uploadcare-placeholder-initial-width;
+  width: min(100%, @uploadcare-placeholder-initial-width);
   height: @uploadcare-placeholder-initial-height;
 
   // shadow DOM (icon + text)
