@@ -6,13 +6,14 @@
 @image-selector-loading-element-width: ~"min(24px, 30%)";
 
 @image-selector-size: 30px;
-@image-selector-menu-padding: 4px;
+@image-selector-menu-padding: @pad-xs;
+@image-selector-icon-margin: @pad-xs;
 @image-selector-image-side: 48px;
 @image-selector-item-icon-border-color: @border-color;
 @image-selector-picker-button-icon-fill: @text-color;
 @image-selector-picker-button-icon-height: 24px;
 @image-selector-picker-button-icon-width: 24px;
-@image-selector-remove-color-stroke-color: #e74c3c;
+@image-selector-remove-color-stroke-color: @color-error;
 @image-selector-outline-color: rgba(127, 127, 127, .3);
 
 .tox {
@@ -59,7 +60,7 @@
     .tox-collection__item-icon {
       border: 1px solid @image-selector-item-icon-border-color;
       border-radius: @collection-item-radius;
-      margin-bottom: 4px;
+      margin-bottom: @image-selector-icon-margin;
       width: 100%;
 
       svg path {
