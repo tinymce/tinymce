@@ -2,7 +2,6 @@ import { AddEventsBehaviour, AlloyEvents, Behaviour, SimpleSpec } from '@ephox/a
 import { Arr, Obj } from '@ephox/katamari';
 import { Css, Insert, Ready, Remove, SelectorFind, SugarElement } from '@ephox/sugar';
 
-
 export type ImageProvider = () => Record<string, string>;
 
 interface ImageSpec {
