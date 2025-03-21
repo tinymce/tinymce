@@ -1,7 +1,7 @@
 import { AlloyComponent, AlloyTriggers, Disabling, MementoRecord, SketchSpec, Tabstopping, Tooltipping } from '@ephox/alloy';
 import { Dialog, Menu, Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Optional } from '@ephox/katamari';
-import { Attribute, Class, Focus, SelectorFind } from '@ephox/sugar';
+import { Attribute, Class, Focus } from '@ephox/sugar';
 
 import { formActionEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
@@ -38,12 +38,6 @@ const getMenuButtonApi = (component: AlloyComponent, sharedBackstage: UiFactoryB
       Class.remove(elm, ToolbarButtonClasses.Ticked);
       Attribute.remove(elm, 'aria-pressed');
     }
-  },
-  setIconColor: (value) => {
-    SelectorFind.descendant(component.element, `.tox-tbtn__icon-wrap svg path`).each((underlinePath) => {
-      Attribute.set(underlinePath, 'stroke', value);
-      Attribute.set(underlinePath, 'fill', value);
-    });
   },
   isActive: () => Class.has(component.element, ToolbarButtonClasses.Ticked),
   setTooltip: (tooltip: string) => {
