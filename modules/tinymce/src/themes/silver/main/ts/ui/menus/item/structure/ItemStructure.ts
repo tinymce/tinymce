@@ -89,7 +89,7 @@ const renderColorStructure = (item: ItemStructureSpec, providerBackstage: UiFact
   };
 };
 
-const renderItemDomStructure = (ariaLabel: Optional<string>): RawDomSchema => {
+const renderItemDomStructure = (ariaLabel: Optional<string>, classes: string[]): RawDomSchema => {
   const domTitle = ariaLabel.map((label): { attributes?: { 'id'?: string; 'aria-label': string }} => ({
     attributes: {
       'id': Id.generate('menu-item'),
@@ -99,7 +99,7 @@ const renderItemDomStructure = (ariaLabel: Optional<string>): RawDomSchema => {
 
   return {
     tag: 'div',
-    classes: [ ItemClasses.navClass, ItemClasses.selectableClass ],
+    classes: [ ItemClasses.navClass, ItemClasses.selectableClass ].concat(classes),
     ...domTitle
   };
 };
@@ -138,7 +138,7 @@ const renderNormalItemStructure = (info: ItemStructureSpec, providersBackstage: 
   );
 
   const menuItem = {
-    dom: renderItemDomStructure(info.ariaLabel),
+    dom: renderItemDomStructure(info.ariaLabel, []),
     optComponents: [
       leftIcon,
       content,
@@ -153,7 +153,7 @@ const renderNormalItemStructure = (info: ItemStructureSpec, providersBackstage: 
 
 const renderImgItemStructure = (info: ItemStructureSpec): ItemStructure => {
   const menuItem = {
-    dom: renderItemDomStructure(info.ariaLabel),
+    dom: renderItemDomStructure(info.ariaLabel, [ ItemClasses.imageSelectorClasll ]),
     optComponents: [
       Optional.some(Images.render(info.iconContent.getOrDie(), { tag: 'div', classes: [ ItemClasses.imageClass ] })),
       info.labelContent.map(createLabel)
