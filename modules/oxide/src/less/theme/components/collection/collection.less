@@ -119,13 +119,17 @@
     display: flex;
     -webkit-touch-callout: none;
     user-select: none;
+  }
 
+  .tox-collection__item-image-selector {
+    flex-direction: column;
+    
     .tox-collection__item-icon,
     .tox-collection__item-image,
     .tox-collection__item-checkmark {
       flex-grow: 1;
     }
-
+  
     label {
       width: @collection-item-list-icon-width * 2;
       white-space: nowrap;
@@ -135,10 +139,6 @@
       text-align: center;
       align-self: flex-end;
     }
-  }
-
-  .tox-collection__item-image-selector {
-    flex-direction: column;
   }
 
   .tox-collection--list .tox-collection__item {
