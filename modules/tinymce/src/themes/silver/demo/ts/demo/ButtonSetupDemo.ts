@@ -253,7 +253,6 @@ export default {
       tooltip: 'something',
       onSetup: (api) => {
         api.setTooltip('NEW TOOLTIP');
-        api.setIconColor('#FF0000');
         return Fun.noop;
       },
       fetch: (callback, _fetchContext, _api) => callback([{
