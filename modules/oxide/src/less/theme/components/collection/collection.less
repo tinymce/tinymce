@@ -37,6 +37,8 @@
 @collection-item-list-icon-height: 24px;
 @collection-item-list-icon-width: 24px;
 
+@collection-item-image-border-color: @border-color;
+
 @collection-item-list-image-radius: 50%;
 
 @collection-group-label-background-color: lighten(@collection-item-separator-color, 10%);
@@ -235,7 +237,7 @@
   }
 
   .tox-collection__item-image {
-    border: 1px solid #E3E3E3;
+    border: 1px solid @collection-item-image-border-color;
     border-radius: 3px;
     display: flex;
     flex-direction: column;
