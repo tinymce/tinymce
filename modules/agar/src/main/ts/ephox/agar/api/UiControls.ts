@@ -1,5 +1,5 @@
 import { Type } from '@ephox/katamari';
-import { SugarElement, Value } from '@ephox/sugar';
+import { Attribute, Class, SugarElement, Value } from '@ephox/sugar';
 
 import { Chain } from './Chain';
 import { Step } from './Step';
@@ -16,7 +16,11 @@ const fireEvent = (elem: SugarElement<Node>, event: string) => {
 };
 
 const setValue = (element: SugarElement<TogglableElement>, newValue: string, eventName?: string): void => {
-  Value.set(element, newValue);
+  if (Class.has(element, 'tox-listbox')) {
+    Attribute.set(element, 'data-value', newValue);
+  } else {
+    Value.set(element, newValue);
+  }
   if (Type.isNonNullable(eventName)) {
     fireEvent(element, eventName);
   }
