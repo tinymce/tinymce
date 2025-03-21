@@ -103,6 +103,7 @@ describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () 
       renderMenuButton(
         {
           context: 'any',
+          buttonType: 'default',
           text: Optional.some('MailMerge'),
           icon: Optional.none(),
           tooltip: Optional.none(),

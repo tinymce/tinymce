@@ -3,17 +3,28 @@
 // When making changes here, please review menubar/menubar.less and menubar/menubar-button.less
 //
 
+@toolbar-button-bordered: @border-color;
 @toolbar-button-select-padding: 4px;
 @toolbar-button-bespoke-background-color: contrast(@background-color, darken(@background-color, 3%), lighten(@background-color, 7%));
 @toolbar-button-bespoke-focus-background-color: @toolbar-button-bespoke-background-color;
 @toolbar-button-bespoke-label-max-width: 7em;
 @toolbar-button-bespoke-spacing-x: 4px;
+@toolbar-button-remove-color: @image-selector-remove-color-stroke-color;
 
 .tox {
   .tox-tbtn--select {
     margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0;
     padding: 0 @toolbar-button-select-padding;
     width: auto;
+  }
+
+  .tox-tbtn--bordered {
+    border: 1px solid @toolbar-button-bordered;
+  }
+
+  [data-mce-name="uploadcare-enhance-filter"] .color-swatch-remove-color path {
+    fill: @toolbar-button-remove-color;
+    stroke: @toolbar-button-remove-color;
   }
 
   .tox-tbtn__select-label {

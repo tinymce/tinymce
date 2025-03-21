@@ -37,6 +37,9 @@
 @collection-item-list-icon-height: 24px;
 @collection-item-list-icon-width: 24px;
 
+@collection-item-image-border-color: @border-color;
+@collection-item-image-margin-bottom: @pad-xs;
+
 @collection-item-list-image-radius: 50%;
 
 @collection-group-label-background-color: lighten(@collection-item-separator-color, 10%);
@@ -118,6 +121,26 @@
     user-select: none;
   }
 
+  .tox-collection__item-image-selector {
+    flex-direction: column;
+    
+    .tox-collection__item-icon,
+    .tox-collection__item-image,
+    .tox-collection__item-checkmark {
+      flex-grow: 1;
+    }
+  
+    label {
+      width: @collection-item-list-icon-width * 2;
+      white-space: nowrap;
+      overflow: hidden;
+      font-size: 12px;
+      color: @collection-item-label-text-color;
+      text-align: center;
+      align-self: flex-end;
+    }
+  }
+
   .tox-collection--list .tox-collection__item {
     padding: @collection-item-padding;
   }
@@ -163,6 +186,19 @@
     }
   }
 
+  .tox-collection__item-image-check {
+    height: @collection-item-list-icon-height;
+    width: @collection-item-list-icon-width;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    svg path {
+      stroke: @color-tint;
+    }
+  }
+
   .tox-collection--toolbar .tox-collection__item--enabled:not(.tox-collection__item--state-disabled) {
     background-color: @collection-toolbar-item-enabled-background-color;
     color: @collection-toolbar-item-label-enabled-text-color;
@@ -198,6 +234,16 @@
         outline: solid 1px;
       }
     }
+  }
+
+  .tox-collection__item-image {
+    border: 1px solid @collection-item-image-border-color;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: @collection-item-image-margin-bottom;
+    position: relative;
   }
 
   .tox-collection__item-icon,
