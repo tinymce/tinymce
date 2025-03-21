@@ -2,6 +2,9 @@
 // Image selector
 //
 
+@image-selector-loading-element-border: 3px solid @color-tint;
+@image-selector-loading-element-width: ~"min(24px, 30%)";
+
 @image-selector-size: 30px;
 @image-selector-menu-padding: 4px;
 @image-selector-image-side: 48px;
@@ -12,6 +15,23 @@
 @image-selector-outline-color: rgba(127, 127, 127, .3);
 
 .tox {
+  .tox-image-selector-loading-spinner-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .tox-image-selector-loading-spinner {
+    position: absolute;
+    width: @image-selector-loading-element-width;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    border: @image-selector-loading-element-border;
+    border-bottom-color: transparent;
+
+    animation: tox-rotation 1s linear infinite;
+  }
+
   .tox-toolbar .tox-image-selector,
   .tox-toolbar__primary .tox-image-selector,
   .tox-toolbar__overflow .tox-image-selector {

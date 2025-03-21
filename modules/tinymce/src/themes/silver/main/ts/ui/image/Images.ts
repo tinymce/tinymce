@@ -1,6 +1,5 @@
 import { AddEventsBehaviour, AlloyEvents, Behaviour, SimpleSpec } from '@ephox/alloy';
-import { Arr, Obj } from '@ephox/katamari';
-import { Css, Insert, Ready, Remove, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Class, Insert, Ready, Remove, SelectorFind, SugarElement } from '@ephox/sugar';
 
 export type ImageProvider = () => Record<string, string>;
 
@@ -11,39 +10,21 @@ interface ImageSpec {
   readonly behaviours?: Array<Behaviour.NamedConfiguredBehaviour<any, any, any>>;
 }
 
-const spinnerWrapperStyles = {
-  'display': 'flex',
-  'justify-content': 'center',
-  'align-items': 'center'
-};
-
-const spinnerStyles = {
-  'position': 'absolute',
-  'width': 'min(24px, 30%)',
-  'aspect-ratio': '1 / 1',
-  'border-radius': '50%',
-  'border': '3px solid #207ab7',
-  'border-bottom-color': 'transparent',
-  'animation': 'tox-rotation 1s linear infinite'
-};
-
 const renderImage = (spec: ImageSpec, imageUrl: string): SimpleSpec => {
   const spinnerElement = SugarElement.fromTag('div');
-  Css.setAll(spinnerElement, spinnerStyles);
+  Class.add(spinnerElement, 'tox-image-selector-loading-spinner');
 
   const addSpinnerElement = (loadingElement: SugarElement) => {
-    Css.setAll(loadingElement, spinnerWrapperStyles);
+    Class.add(loadingElement, 'tox-image-selector-loading-spinner-wrapper');
 
     Insert.append(loadingElement, spinnerElement);
   };
 
   const removeSpinnerElement = (loadingElement: SugarElement) => {
-    Arr.each(Obj.keys(spinnerWrapperStyles), (k) => {
-      Css.remove(loadingElement, k);
-    });
-
+    Class.remove(loadingElement, 'tox-image-selector-loading-spinner-wrapper');
     Remove.remove(spinnerElement);
   };
+
   return {
     dom: {
       tag: spec.tag,
