@@ -9,6 +9,7 @@
 @toolbar-button-bespoke-focus-background-color: @toolbar-button-bespoke-background-color;
 @toolbar-button-bespoke-label-max-width: 7em;
 @toolbar-button-bespoke-spacing-x: 4px;
+@toolbar-button-remove-color: @image-selector-remove-color-stroke-color;
 
 .tox {
   .tox-tbtn--select {
@@ -19,6 +20,11 @@
 
   .tox-tbtn--bordered {
     border: 1px solid @toolbar-button-bordered;
+  }
+
+  [data-mce-name="uploadcare-enhance-filter"] .color-swatch-remove-color path {
+    fill: @toolbar-button-remove-color;
+    stroke: @toolbar-button-remove-color;
   }
 
   .tox-tbtn__select-label {
