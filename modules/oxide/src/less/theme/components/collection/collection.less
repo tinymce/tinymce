@@ -119,11 +119,6 @@
     display: flex;
     -webkit-touch-callout: none;
     user-select: none;
-  }
-
-  .tox-collection__item:has(label) {
-    display: flex;
-    flex-direction: column;
 
     .tox-collection__item-icon,
     .tox-collection__item-image,
@@ -140,6 +135,10 @@
       text-align: center;
       align-self: flex-end;
     }
+  }
+
+  .tox-collection__item:has(label) {
+    flex-direction: column;
   }
 
   .tox-collection--list .tox-collection__item {
