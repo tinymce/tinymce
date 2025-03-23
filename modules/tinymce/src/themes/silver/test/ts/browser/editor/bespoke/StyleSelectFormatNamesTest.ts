@@ -91,7 +91,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.StyleSelectFormatNamesTes
   };
 
   it('Configured style_formats are included in the styles toolbar button', async () => {
-    await MenuUtils.pOpenMenu('Format', 'Formats:last');
+    await MenuUtils.pOpenMenu({ name: 'Format', text: 'Formats', last: true });
     assertStyleSelectMenuItems('Checking style select items', [
       { title: 'Named inline format', element: 'span' },
       { title: 'Named block format', element: 'h1' },

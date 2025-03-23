@@ -18,7 +18,7 @@ describe('browser.tinymce.plugins.insertdatetime.InsertDatetimeSanityTest', () =
     const editor = hook.editor();
     TinyUiActions.clickOnToolbar(editor, '[aria-haspopup="true"]');
     await TinyUiActions.pWaitForUi(editor, '[role="menu"]');
-    TinyUiActions.clickOnUi(editor, '[role="menu"] [role="menuitemradio"]:first');
+    TinyUiActions.clickOnUi(editor, '[role="menu"] [role="menuitemradio"]:first-child');
 
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s) => {
       return s.element('body', {
@@ -37,7 +37,7 @@ describe('browser.tinymce.plugins.insertdatetime.InsertDatetimeSanityTest', () =
     const editor = hook.editor();
     TinyUiActions.clickOnToolbar(editor, '[aria-haspopup="true"]');
     await TinyUiActions.pWaitForUi(editor, '[role="menu"]');
-    TinyUiActions.clickOnUi(editor, '[role="menu"] [role="menuitemradio"]:first');
+    TinyUiActions.clickOnUi(editor, '[role="menu"] [role="menuitemradio"]:first-child');
 
     editor.mode.set('readonly');
     const content = editor.getContent();

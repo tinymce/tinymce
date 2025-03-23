@@ -78,7 +78,7 @@ UnitTest.asynctest('AlloyTriggersRetargetTest', (success, failure) => {
     (_doc, _body, _gui, component, store) => [
       Logger.t(
         'Trigger a click on the original recipient',
-        Chain.isolate(component, Chain.fromChains([
+        Chain.isolate(component.element, Chain.fromChains([
           UiFinder.cFindIn('.original-recipient'),
           Mouse.cClickWith({ })
         ]))
