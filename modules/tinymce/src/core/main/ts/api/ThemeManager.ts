@@ -19,6 +19,7 @@ export interface Theme {
   renderUI?: () => Promise<RenderResult> | RenderResult;
   getNotificationManagerImpl?: () => NotificationManagerImpl;
   getWindowManagerImpl?: () => WindowManagerImpl;
+  getPromotionElement?: () => HTMLElement | null;
 }
 
 type ThemeManager = AddOnManager<void | Theme>;

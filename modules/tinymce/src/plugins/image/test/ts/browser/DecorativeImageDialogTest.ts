@@ -6,7 +6,7 @@ import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
-import { assertCleanHtml, assertInputCheckbox, assertInputValue, fillActiveDialog, generalTabSelectors } from '../module/Helpers';
+import { assertCleanHtml, assertInputCheckbox, assertInputValue, fillActiveDialog, generalTabLabels } from '../module/Helpers';
 
 describe('browser.tinymce.plugins.image.DecorativeImageDialogTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -49,8 +49,8 @@ describe('browser.tinymce.plugins.image.DecorativeImageDialogTest', () => {
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     editor.execCommand('mceImage');
     await TinyUiActions.pWaitForDialog(editor);
-    assertInputValue(generalTabSelectors.src, '#1');
-    assertInputValue(generalTabSelectors.alt, 'alt1');
+    assertInputValue(generalTabLabels.src, '#1');
+    assertInputValue(generalTabLabels.alt, 'alt1');
     fillActiveDialog({
       src: {
         value: 'src'
@@ -67,9 +67,9 @@ describe('browser.tinymce.plugins.image.DecorativeImageDialogTest', () => {
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     editor.execCommand('mceImage');
     await TinyUiActions.pWaitForDialog(editor);
-    assertInputValue(generalTabSelectors.src, '#1');
-    assertInputValue(generalTabSelectors.alt, 'alt1');
-    assertInputCheckbox(generalTabSelectors.decorative, false);
+    assertInputValue(generalTabLabels.src, '#1');
+    assertInputValue(generalTabLabels.alt, 'alt1');
+    assertInputCheckbox(generalTabLabels.decorative, false);
     fillActiveDialog({
       decorative: true
     });
@@ -83,9 +83,9 @@ describe('browser.tinymce.plugins.image.DecorativeImageDialogTest', () => {
     TinySelections.setSelection(editor, [ 0 ], 0, [ 0 ], 1);
     editor.execCommand('mceImage');
     await TinyUiActions.pWaitForDialog(editor);
-    assertInputValue(generalTabSelectors.src, '#1');
-    assertInputValue(generalTabSelectors.alt, '');
-    assertInputCheckbox(generalTabSelectors.decorative, true);
+    assertInputValue(generalTabLabels.src, '#1');
+    assertInputValue(generalTabLabels.alt, '');
+    assertInputCheckbox(generalTabLabels.decorative, true);
     fillActiveDialog({
       decorative: false
     });

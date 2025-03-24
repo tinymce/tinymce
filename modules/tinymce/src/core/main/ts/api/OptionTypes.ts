@@ -105,6 +105,8 @@ interface BaseEditorOptions {
   end_container_on_empty_block?: boolean | string;
   entities?: string;
   entity_encoding?: EntityEncoding;
+  extended_mathml_attributes?: string[];
+  extended_mathml_elements?: string[];
   extended_valid_elements?: string;
   event_root?: string;
   file_picker_callback?: FilePickerCallback;
@@ -172,6 +174,7 @@ interface BaseEditorOptions {
   noneditable_regexp?: RegExp | RegExp[];
   nowrap?: boolean;
   object_resizing?: boolean | string;
+  onboarding?: boolean;
   pad_empty_with_br?: boolean;
   paste_as_text?: boolean;
   paste_block_drop?: boolean;

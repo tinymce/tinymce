@@ -31,8 +31,8 @@ describe('browser.tinymce.core.html.SanitizationTest', () => {
   });
 
   context('Santitize non-html', () => {
-    const testNamespaceSanitizer = (testCase: { input: string; expected: string; sanitize?: boolean }) => {
-      const sanitizer = getSanitizer({ sanitize: testCase.sanitize ?? true }, Schema({ custom_elements: 'math' }));
+    const testNamespaceSanitizer = (testCase: { input: string; expected: string; sanitize?: boolean; mathmlElements?: string[]; mathmlAttributes?: string[] }) => {
+      const sanitizer = getSanitizer({ sanitize: testCase.sanitize ?? true, extended_mathml_elements: testCase.mathmlElements, extended_mathml_attributes: testCase.mathmlAttributes }, Schema({ custom_elements: 'math' }));
 
       const body = document.createElement('body');
       body.innerHTML = testCase.input;
@@ -69,15 +69,111 @@ describe('browser.tinymce.core.html.SanitizationTest', () => {
       sanitize: false
     }));
 
-    it('TINY-10809: Sanitize MathML', () => testNamespaceSanitizer({
-      input: '<math><script>alert(1)</script><mrow><msup><mi>a</mi><mn>2</mn></msup></mrow></math>',
-      expected: '<math><mrow><msup><mi>a</mi><mn>2</mn></msup></mrow></math>'
-    }));
+    context('mathml', () => {
+      it('TINY-10809: Sanitize MathML', () => testNamespaceSanitizer({
+        input: '<math><script>alert(1)</script><mrow><msup><mi>a</mi><mn>2</mn></msup></mrow></math>',
+        expected: '<math><mrow><msup><mi>a</mi><mn>2</mn></msup></mrow></math>'
+      }));
 
-    it('TINY-10809: Disabled sanitization of MathML', () => testNamespaceSanitizer({
-      input: '<math><script>alert(1)</script><mrow><msup><mi>a</mi><mn>2</mn></msup></mrow></math>',
-      expected: '<math><script>alert(1)</script><mrow><msup><mi>a</mi><mn>2</mn></msup></mrow></math>',
-      sanitize: false
-    }));
+      it('TINY-10809: Disabled sanitization of MathML', () => testNamespaceSanitizer({
+        input: '<math><script>alert(1)</script><mrow><msup><mi>a</mi><mn>2</mn></msup></mrow></math>',
+        expected: '<math><script>alert(1)</script><mrow><msup><mi>a</mi><mn>2</mn></msup></mrow></math>',
+        sanitize: false
+      }));
+
+      it('TINY-11756: No special filtering is applied', () => testNamespaceSanitizer({
+        input: '<math><semantics><annotation-xml encoding="text/html">A</annotation-xml></semantics></math>',
+        expected: '<math></math>',
+      }));
+
+      it('TINY-11756: Math is allowed, nothing else', () => testNamespaceSanitizer({
+        input: '<math><semantics><annotation-xml encoding="text/html">A</annotation-xml></semantics></math>',
+        expected: '<math></math>',
+        mathmlElements: [
+          'math',
+        ],
+      }));
+
+      it('TINY-11756: Math and semanics is allowed, nothing else', () => testNamespaceSanitizer({
+        input: '<math><semantics><annotation-xml encoding="text/html">A</annotation-xml></semantics></math>',
+        expected: '<math><semantics></semantics></math>',
+        mathmlElements: [
+          'math',
+          'semantics'
+        ],
+      }));
+
+      it('TINY-11756: All the elements are allowed', () => testNamespaceSanitizer({
+        input: '<math><semantics><annotation-xml encoding="text/html">A</annotation-xml></semantics></math>',
+        expected: '<math><semantics><annotation-xml encoding="text/html">A</annotation-xml></semantics></math>',
+        mathmlElements: [
+          'math',
+          'semantics',
+          'annotation-xml',
+          '#text'
+        ],
+      }));
+
+      it('TINY-11756: Custom elements, no filtering', () => testNamespaceSanitizer({
+        input: '<math display="inline"><semantics><mrow><mi>a</mi></mrow></semantics></math>',
+        expected: '<math display="inline"><mrow><mi>a</mi></mrow></math>',
+      }));
+
+      it('TINY-11756: Custom elements, allow some', () => testNamespaceSanitizer({
+        input: '<math display="inline"><semantics><mrow><mi>a</mi></mrow><mi>a</mi></semantics></math>',
+        expected: '<math display="inline"><semantics><mi></mi></semantics></math>',
+        mathmlElements: [
+          'math',
+          'semantics',
+          'mi',
+        ],
+      }));
+
+      it('TINY-11756: Custom elements, allow all', () => testNamespaceSanitizer({
+        input: '<math display="inline"><semantics><mrow><mi>a</mi></mrow><mi>a</mi></semantics></math>',
+        expected: '<math display="inline"><semantics><mrow><mi>a</mi></mrow><mi>a</mi></semantics></math>',
+        mathmlElements: [
+          'math',
+          'semantics',
+          'mi',
+          '#text',
+          'mrow'
+        ],
+      }));
+
+      it('TINY-11756: Custom attributes, no filter', () => testNamespaceSanitizer({
+        input: '<math display="inline"><semantics attribute="test" data-attribute="test"></semantics></math>',
+        expected: '<math display="inline"><semantics data-attribute="test"></semantics></math>',
+        mathmlElements: [
+          'math',
+          'semantics',
+        ],
+      }));
+
+      it('TINY-11756: Custom attributes, some allowed', () => testNamespaceSanitizer({
+        input: '<math display="inline"><semantics attribute="test" data-attribute="test"></semantics></math>',
+        expected: '<math display="inline"><semantics data-attribute="test"></semantics></math>',
+        mathmlElements: [
+          'math',
+          'semantics',
+        ],
+        mathmlAttributes: [
+          'display',
+        ]
+      }));
+
+      it('TINY-11756: Custom attributes, all allowed', () => testNamespaceSanitizer({
+        input: '<math display="inline"><semantics attribute="test" data-attribute="test"></semantics></math>',
+        expected: '<math display="inline"><semantics attribute="test" data-attribute="test"></semantics></math>',
+        mathmlElements: [
+          'math',
+          'semantics',
+        ],
+        mathmlAttributes: [
+          'display',
+          'attribute',
+        ]
+      }));
+    });
   });
 });

@@ -27,6 +27,12 @@ describe('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', () => {
     selector
   );
 
+  const pAssertFocusOnItemByLabel = (label: string) => FocusTools.pTryOnByLabel(
+    `Focus should be on input with label: ${label}`,
+    SugarDocument.getDocument(),
+    label
+  );
+
   it('TBA: Open dialog, test the tab key navigation cycles through all focusable fields in General and Advanced tabs', async () => {
     const editor = hook.editor();
     // Create table and set focus
@@ -39,19 +45,19 @@ describe('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', () => {
     // Keyboard nav within the General tab
     await pAssertFocusOnItem('General Tab', '.tox-dialog__body-nav-item:contains("General")');
     pressTabKey(editor);
-    await pAssertFocusOnItem('Width', 'label:contains("Width") + input');
+    await pAssertFocusOnItemByLabel('Width');
     pressTabKey(editor);
-    await pAssertFocusOnItem('Height', 'label:contains("Height") + input');
+    await pAssertFocusOnItemByLabel('Height');
     pressTabKey(editor);
-    await pAssertFocusOnItem('Cell spacing', 'label:contains("Cell spacing") + input');
+    await pAssertFocusOnItemByLabel('Cell spacing');
     pressTabKey(editor);
-    await pAssertFocusOnItem('Cell padding', 'label:contains("Cell padding") + input');
+    await pAssertFocusOnItemByLabel('Cell padding');
     pressTabKey(editor);
-    await pAssertFocusOnItem('Border width', 'label:contains("Border width") + input');
+    await pAssertFocusOnItemByLabel('Border width');
     pressTabKey(editor);
     await pAssertFocusOnItem('Caption', 'input[type="checkbox"]');
     pressTabKey(editor);
-    await pAssertFocusOnItem('Alignment', 'label:contains("Alignment") + .tox-listboxfield > .tox-listbox');
+    await pAssertFocusOnItemByLabel('Alignment');
     pressTabKey(editor);
     await pAssertFocusOnItem('Cancel', '.tox-button:contains("Cancel")');
     pressTabKey(editor);
@@ -67,7 +73,7 @@ describe('browser.tinymce.plugins.table.TableDialogKeyboardNavTest', () => {
     // Keyboard nav within the Advanced tab
     await pAssertFocusOnItem('Advanced Tab', '.tox-dialog__body-nav-item:contains("Advanced")');
     pressTabKey(editor);
-    await pAssertFocusOnItem('Border style', 'label:contains("Border style") + .tox-listboxfield > .tox-listbox');
+    await pAssertFocusOnItemByLabel('Border style');
     pressTabKey(editor);
     await pAssertFocusOnItem('Border color', '.tox-form div:nth-child(2) input');
     pressTabKey(editor);

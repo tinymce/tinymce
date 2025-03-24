@@ -209,8 +209,9 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
     const hasMultipleToolbar = Options.isMultipleToolbars(editor);
     const hasToolbar = Options.isToolbarEnabled(editor);
     const hasMenubar = Options.isMenubarEnabled(editor);
-    const shouldHavePromotion = Options.promotionEnabled(editor);
-    const partPromotion = makePromotion();
+    const shouldHavePromotionLink = Options.promotionEnabled(editor);
+    const partPromotion = makePromotion(shouldHavePromotionLink);
+
     const hasAnyContents = hasMultipleToolbar || hasToolbar || hasMenubar;
 
     const getPartToolbar = () => {
@@ -223,7 +224,7 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
       }
     };
 
-    const menubarCollection = shouldHavePromotion ? [ partPromotion, partMenubar ] : [ partMenubar ];
+    const menubarCollection = [ partPromotion, partMenubar ];
 
     return OuterContainer.parts.header({
       dom: {
@@ -245,12 +246,13 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
     });
   };
 
-  const makePromotion = () => {
+  const makePromotion = (promotionLink: boolean) => {
     return OuterContainer.parts.promotion({
       dom: {
         tag: 'div',
         classes: [ 'tox-promotion' ],
       },
+      promotionLink
     });
   };
 
