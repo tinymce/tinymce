@@ -7,6 +7,7 @@ import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Bac
 
 import * as ItemClasses from '../ItemClasses';
 import ItemResponse from '../ItemResponse';
+import { renderCheckmark } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
@@ -34,7 +35,7 @@ const renderImgItem = (
     iconContent: Optional.some(spec.url),
     labelContent: spec.label,
     shortcutContent: Optional.none(),
-    checkMark: Optional.none(),
+    checkMark: Optional.some(renderCheckmark(providersBackstage.icons)),
     caret: Optional.none(),
     value: spec.value
   }, providersBackstage, true);
@@ -69,16 +70,8 @@ const renderImgItem = (
       toggling: {
         toggleClass: ItemClasses.tickedClass,
         toggleOnExecute: false,
-        exclusive: true,
-        onToggled: (comp: AlloyComponent) => {
-          SelectorFind.descendant(comp.element, '.tox-collection__item-image').each((imgContainer) => {
-            const checkmarkIcon = providersBackstage.icons().checkmark;
-            const iconElement = SugarElement.fromTag('div');
-            Class.add(iconElement, 'tox-collection__item-image-check');
-            Html.set(iconElement, checkmarkIcon);
-            Insert.append(imgContainer, iconElement);
-          });
-        }
+        selected: spec.active,
+        exclusive: true
       }
     }
   );
