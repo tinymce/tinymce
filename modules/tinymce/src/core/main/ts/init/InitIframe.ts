@@ -15,8 +15,9 @@ interface BoxInfo {
 
 const DOM = DOMUtils.DOM;
 
-const createIframeElement = (id: string, title: TranslatedString, customAttrs: {}, tabindex: Optional<number>) => {
+const createIframeElement = (id: string, title: TranslatedString, customAttrs: Record<string, string | number | boolean>, tabindex: Optional<number>) => {
   const iframe = SugarElement.fromTag('iframe');
+  const clipboardPermissions = 'clipboard-read clipboard-write';
 
   // This can also be explicitly set by customAttrs, so do this first
   tabindex.each((t) => Attribute.set(iframe, 'tabindex', t));
@@ -27,7 +28,8 @@ const createIframeElement = (id: string, title: TranslatedString, customAttrs: {
     id: id + '_ifr',
     frameBorder: '0',
     allowTransparency: 'true',
-    title
+    title,
+    allow: clipboardPermissions
   });
 
   Class.add(iframe, 'tox-edit-area__iframe');

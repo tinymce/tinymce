@@ -125,6 +125,7 @@ describe('webdriver.tinymce.core.paste.ClipboardUiTest', () => {
     });
 
     describe('Paste button', () => {
+      // TODO: This test is failing because the clipboard permissions are not set correctly.
       it('should paste text within the editor (iframe mode)', async () => {
         const editor = iframeHook.editor();
         setupTestContent(editor);
@@ -156,6 +157,7 @@ describe('webdriver.tinymce.core.paste.ClipboardUiTest', () => {
       }
     });
 
+    // TODO: This test is failing because the clipboard permissions are not set correctly.
     it('should use Cut command from Edit menu', async () => {
       const editor = iframeHook.editor();
       setupTestContent(editor);
@@ -295,6 +297,7 @@ describe('webdriver.tinymce.core.paste.ClipboardUiTest', () => {
     });
   });
 
+  // TODO: This test is failing because the clipboard permissions are not set correctly.
   describe('Clipboard events', () => {
     it('should fire clipboard events when using commands', async () => {
       const editor = iframeHook.editor();
