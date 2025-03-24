@@ -1,4 +1,5 @@
-import { AddEventsBehaviour, AlloyEvents, Behaviour, SimpleSpec } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, AlloySpec, Behaviour, SimpleSpec } from '@ephox/alloy';
+import { Optional } from '@ephox/katamari';
 import { Class, Insert, Ready, Remove, SelectorFind, SugarElement } from '@ephox/sugar';
 
 export type ImageProvider = () => Record<string, string>;
@@ -8,6 +9,7 @@ interface ImageSpec {
   readonly classes: string[];
   readonly attributes?: Record<string, string>;
   readonly behaviours?: Array<Behaviour.NamedConfiguredBehaviour<any, any, any>>;
+  readonly checkMark: Optional<AlloySpec>;
 }
 
 const renderImage = (spec: ImageSpec, imageUrl: string): SimpleSpec => {
@@ -31,21 +33,24 @@ const renderImage = (spec: ImageSpec, imageUrl: string): SimpleSpec => {
       attributes: spec.attributes ?? {},
       classes: spec.classes,
     },
-    components: [{
-      dom: {
-        tag: 'div',
-        classes: [ 'tox-image-selector-image-wrapper' ]
+    components: [
+      {
+        dom: {
+          tag: 'div',
+          classes: [ 'tox-image-selector-image-wrapper' ]
+        },
+        components: [
+          {
+            dom: {
+              tag: 'img',
+              attributes: { src: imageUrl },
+              classes: [ 'tox-image-selector-image-img' ]
+            }
+          },
+        ]
       },
-      components: [
-        {
-          dom: {
-            tag: 'img',
-            attributes: { src: imageUrl },
-            classes: [ 'tox-image-selector-image-img' ]
-          }
-        }
-      ]
-    }],
+      ...spec.checkMark.toArray()
+    ],
     behaviours: Behaviour.derive([
       ...spec.behaviours ?? [],
       AddEventsBehaviour.config('render-image-events', [
