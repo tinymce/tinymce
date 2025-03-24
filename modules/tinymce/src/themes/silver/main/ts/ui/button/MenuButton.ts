@@ -1,12 +1,12 @@
-import { AlloyComponent, AlloyTriggers, Disabling, MementoRecord, SketchSpec, Tabstopping, Tooltipping } from '@ephox/alloy';
+import { AlloyComponent, AlloyTriggers, Disabling, MementoRecord, SketchSpec, Tabstopping } from '@ephox/alloy';
 import { Dialog, Menu, Toolbar } from '@ephox/bridge';
-import { Arr, Cell, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Cell, Optional } from '@ephox/katamari';
 import { Attribute, Class, Focus } from '@ephox/sugar';
 
 import { formActionEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
-import { UiFactoryBackstage, UiFactoryBackstageShared } from '../../backstage/Backstage';
-import { renderCommonDropdown, updateMenuIcon, updateMenuText } from '../dropdown/CommonDropdown';
+import { UiFactoryBackstage } from '../../backstage/Backstage';
+import { renderCommonDropdown, updateMenuIcon, updateMenuText, updateTooltiptext } from '../dropdown/CommonDropdown';
 import ItemResponse from '../menus/item/ItemResponse';
 import * as NestedMenus from '../menus/menu/NestedMenus';
 import { getSearchPattern } from '../menus/menu/searchable/SearchableMenu';
@@ -24,7 +24,7 @@ interface StoredMenuButton extends Omit<Dialog.DialogFooterMenuButton, 'items'> 
   readonly items: StoredMenuItem[];
 }
 
-const getMenuButtonApi = (component: AlloyComponent, sharedBackstage: UiFactoryBackstageShared, tooltipString: Cell<Optional<string>>): Toolbar.ToolbarMenuButtonInstanceApi => ({
+const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonInstanceApi => ({
   isEnabled: () => !Disabling.isDisabled(component),
   setEnabled: (state: boolean) => Disabling.set(component, !state),
   setActive: (state: boolean) => {
@@ -41,9 +41,9 @@ const getMenuButtonApi = (component: AlloyComponent, sharedBackstage: UiFactoryB
   },
   isActive: () => Class.has(component.element, ToolbarButtonClasses.Ticked),
   setTooltip: (tooltip: string) => {
-    const translatedTooltip = sharedBackstage.providers.translate(tooltip);
-    Attribute.set(component.element, 'aria-label', translatedTooltip);
-    tooltipString.set(Optional.some(tooltip));
+    AlloyTriggers.emitWith(component, updateTooltiptext, {
+      text: tooltip
+    });
   },
   setText: (text: string) => {
     AlloyTriggers.emitWith(component, updateMenuText, {
@@ -56,12 +56,12 @@ const getMenuButtonApi = (component: AlloyComponent, sharedBackstage: UiFactoryB
 });
 
 const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Optional<string>, tabstopping = true, btnName?: string): SketchSpec => {
-  const currentTooltip = Cell<Optional<string>>(spec.tooltip);
+  // const currentTooltip = Cell<Optional<string>>(spec.tooltip);
   const classes = spec.buttonType === 'bordered' ? [ 'bordered' ] : [];
   return renderCommonDropdown({
     text: spec.text,
     icon: spec.icon,
-    tooltip: currentTooltip.get(),
+    tooltip: spec.tooltip,
     ariaLabel: spec.tooltip,
     searchable: spec.search.isSome(),
     // https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-2/menubar-2.html
@@ -87,34 +87,16 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
           );
         },
         fetchContext,
-        getMenuButtonApi(dropdownComp, backstage.shared, currentTooltip)
+        getMenuButtonApi(dropdownComp)
       );
     },
     onSetup: spec.onSetup,
-    getApi: (comp) => getMenuButtonApi(comp, backstage.shared, currentTooltip),
+    getApi: (comp) => getMenuButtonApi(comp),
     columns: 1,
     presets: 'normal',
     classes,
     dropdownBehaviours: [
       ...(tabstopping ? [ Tabstopping.config({ }) ] : []),
-      ...(spec.tooltip.fold(
-        () => [],
-        (tooltip) =>
-          [ Tooltipping.config({
-            ...backstage.shared.providers.tooltips.getConfig({
-              // TODO: remove this comment after the review, this wasn't used because the `spec.dropdownBehaviours` was overwrite from a defailt `Tooltipping.config`
-              tooltipText: backstage.shared.providers.translate(tooltip),
-              onShow: (comp) => {
-                if (Optionals.lift2(currentTooltip.get(), spec.tooltip, (tooltipStr, tt) => tt !== tooltipStr).getOr(false)) {
-                  const translatedTooltip = backstage.shared.providers.translate(currentTooltip.get().getOr(''));
-                  Tooltipping.setComponents(comp,
-                    backstage.shared.providers.tooltips.getComponents({ tooltipText: translatedTooltip })
-                  );
-                }
-              }
-            })
-          }) ]
-      ))
     ],
     context: spec.context
   },
