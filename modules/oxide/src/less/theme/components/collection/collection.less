@@ -121,23 +121,25 @@
     user-select: none;
   }
 
-  .tox-collection__item-image-selector {
-    flex-direction: column;
-    
-    .tox-collection__item-icon,
-    .tox-collection__item-image,
-    .tox-collection__item-checkmark {
-      flex-grow: 1;
-    }
+  .tox-image-selector-menu {
+    .tox-collection__item-image-selector, .tox-collection__item {
+      flex-direction: column;
   
-    label {
-      width: @collection-item-list-icon-width * 2;
-      white-space: nowrap;
-      overflow: hidden;
-      font-size: @font-size-xs;
-      color: @collection-item-label-text-color;
-      text-align: center;
-      align-self: flex-end;
+      .tox-collection__item-icon,
+      .tox-collection__item-image,
+      .tox-collection__item-checkmark {
+        flex-grow: 1;
+      }
+  
+      label {
+        width: @collection-item-list-icon-width * 2;
+        white-space: nowrap;
+        overflow: hidden;
+        font-size: @font-size-xs;
+        color: @collection-item-label-text-color;
+        text-align: center;
+        align-self: flex-end;
+      }
     }
   }
 
