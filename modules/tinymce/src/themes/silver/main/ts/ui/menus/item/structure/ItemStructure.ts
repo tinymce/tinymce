@@ -156,6 +156,7 @@ const renderImgItemStructure = (info: ItemStructureSpec): ItemStructure => {
     dom: renderItemDomStructure(info.ariaLabel, [ ItemClasses.imageSelectorClasll ]),
     optComponents: [
       Optional.some(Images.render(info.iconContent.getOrDie(), { tag: 'div', classes: [ ItemClasses.imageClass ] })),
+      info.checkMark,
       info.labelContent.map(createLabel)
     ]
   };
