@@ -167,6 +167,14 @@ const renderCommonDropdown = <T>(
       },
 
       dropdownBehaviours: Behaviour.derive([
+        ...spec.dropdownBehaviours,
+        DisablingConfigs.button(() => spec.disabled || sharedBackstage.providers.checkUiComponentContext(spec.context).shouldDisable),
+        UiState.toggleOnReceive(() => sharedBackstage.providers.checkUiComponentContext(spec.context)),
+        // INVESTIGATE (TINY-9012): There was a old comment here about something not quite working, and that
+        // we can still get the button focused. It was probably related to Unselecting.
+        Unselecting.config({}),
+        Replacing.config({}),
+
         ...(spec.tooltip.map((t) => Tooltipping.config(
           sharedBackstage.providers.tooltips.getConfig({
             tooltipText: sharedBackstage.providers.translate(t),
@@ -180,13 +188,6 @@ const renderCommonDropdown = <T>(
             }
           })
         ))).toArray(),
-        ...spec.dropdownBehaviours,
-        DisablingConfigs.button(() => spec.disabled || sharedBackstage.providers.checkUiComponentContext(spec.context).shouldDisable),
-        UiState.toggleOnReceive(() => sharedBackstage.providers.checkUiComponentContext(spec.context)),
-        // INVESTIGATE (TINY-9012): There was a old comment here about something not quite working, and that
-        // we can still get the button focused. It was probably related to Unselecting.
-        Unselecting.config({}),
-        Replacing.config({}),
 
         // This is the generic way to make onSetup and onDestroy call as the component is attached /
         // detached from the page/DOM.
