@@ -43,10 +43,16 @@ const errorStatusToErrorMessage = (status: NativeClipboard.BaseClipboardErrorSta
 };
 
 const handleErrorNotification = (editor: Editor, message: string): void => {
-  editor.notificationManager.open({ text: editor.translate(message), type: 'error' });
+  const type = ClipboardUtils.hasClipboardRestrictions() ? 'info' : 'error';
+  editor.notificationManager.open({ text: editor.translate(message), type });
 };
 
 const executeCopy = async (editor: Editor): Promise<void> => {
+  if (ClipboardUtils.hasClipboardRestrictions()) {
+    handleErrorNotification(editor, ClipboardUtils.getBrowserRestrictionsMessage());
+    return;
+  }
+
   const selectionData = CutCopy.getSelectionData(editor);
   const data = {
     [NativeClipboard.CLIPBOARD_CONTENT_TYPES.HTML]: selectionData.html,
@@ -65,6 +71,11 @@ const executeCopy = async (editor: Editor): Promise<void> => {
 };
 
 const executeCut = async (editor: Editor): Promise<void> => {
+  if (ClipboardUtils.hasClipboardRestrictions()) {
+    handleErrorNotification(editor, ClipboardUtils.getBrowserRestrictionsMessage());
+    return;
+  }
+
   const selectionData = CutCopy.getSelectionData(editor);
   const data = {
     [NativeClipboard.CLIPBOARD_CONTENT_TYPES.HTML]: selectionData.html,
@@ -126,17 +137,14 @@ const handleClipboardReadError = (editor: Editor, errorStatus: NativeClipboard.B
 };
 
 const executePaste = async (editor: Editor): Promise<void> => {
+  if (ClipboardUtils.hasClipboardRestrictions()) {
+    handleErrorNotification(editor, ClipboardUtils.getBrowserRestrictionsMessage());
+    return;
+  }
+
   const readStatus = await NativeClipboard.canRead();
 
   if (readStatus === 'inactive') {
-    if (ClipboardUtils.hasClipboardRestrictions()) {
-      handleErrorNotification(
-        editor,
-        `Your browser requires clipboard access to be triggered by a direct user action. Please use keyboard shortcut (${ClipboardUtils.getShortcutText()}) instead.`
-      );
-      return;
-    }
-
     handleErrorNotification(
       editor,
       'This operation requires the webpage to be active. Please click on the page and try again.'
@@ -172,20 +180,18 @@ const executePaste = async (editor: Editor): Promise<void> => {
         (clipboardContents) => processClipboardContents(editor, clipboardContents)
       );
     } catch (error) {
-      if (ClipboardUtils.hasClipboardRestrictions()) {
-        handleErrorNotification(
-          editor,
-          ClipboardUtils.getBrowserRestrictionsMessage()
-        );
-      } else {
-        console.error('Error reading clipboard:', error);
-        handleErrorNotification(editor, 'Failed to read from clipboard.');
-      }
+      console.error('Error reading clipboard:', error);
+      handleErrorNotification(editor, 'Failed to read from clipboard.');
     }
   }
 };
 
 const executeNativeClipboardCommand = async (editor: Editor, command: string): Promise<void> => {
+  if (ClipboardUtils.hasClipboardRestrictions()) {
+    handleErrorNotification(editor, ClipboardUtils.getBrowserRestrictionsMessage());
+    return;
+  }
+
   try {
     switch (command) {
       case 'copy':
