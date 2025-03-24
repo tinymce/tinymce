@@ -63,10 +63,9 @@ const tab = (editor: Editor): Dialog.TabSpec & { name: string } => {
   const getPluginKeys = (editor: Editor) => {
     const keys = Obj.keys(editor.plugins);
     const forcedPlugins = Options.getForcedPlugins(editor);
+    const hiddenPlugins = Type.isUndefined(forcedPlugins) ? [ 'onboarding' ] : forcedPlugins.concat([ 'onboarding' ] );
 
-    return Type.isUndefined(forcedPlugins) ?
-      keys :
-      Arr.filter(keys, (k) => !Arr.contains(forcedPlugins, k));
+    return Arr.filter(keys, (k) => !Arr.contains(hiddenPlugins, k));
   };
 
   const pluginLister = (editor: Editor) => {
