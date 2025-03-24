@@ -6,8 +6,8 @@ import {
   Keying, MaxHeight, Memento, NativeEvents, Replacing, Representing, SimulatedEvent, SketchSpec, SystemEvents, TieredData, Tooltipping, Unselecting
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
-import { Arr, Cell, Fun, Future, Id, Merger, Optional, Type } from '@ephox/katamari';
-import { EventArgs, SugarElement } from '@ephox/sugar';
+import { Arr, Cell, Fun, Future, Id, Merger, Optional, Optionals, Type } from '@ephox/katamari';
+import { EventArgs, Attribute, SugarElement } from '@ephox/sugar';
 
 import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button/ButtonEvents';
 
@@ -25,6 +25,7 @@ import { RedirectMenuItemInteractionEvent, redirectMenuItemInteractionEvent, Ref
 
 export const updateMenuText = Id.generate('update-menu-text');
 export const updateMenuIcon = Id.generate('update-menu-icon');
+export const updateTooltiptext = Id.generate('update-tooltip-text');
 
 export interface UpdateMenuTextEvent extends CustomEvent {
   readonly text: string;
@@ -32,6 +33,10 @@ export interface UpdateMenuTextEvent extends CustomEvent {
 
 export interface UpdateMenuIconEvent extends CustomEvent {
   readonly icon: string;
+}
+
+export interface UpdateTooltipTextEvent extends CustomEvent {
+  readonly text: string;
 }
 
 export interface CommonDropdownSpec<T> {
@@ -62,6 +67,7 @@ const renderCommonDropdown = <T>(
   btnName?: string
 ): SketchSpec => {
   const editorOffCell = Cell(Fun.noop);
+  const tooltip = Cell<Optional<string>>(spec.tooltip);
 
   // We need mementos for display text and display icon because on the events
   // updateMenuText and updateMenuIcon respectively, their contents are changed
@@ -163,7 +169,15 @@ const renderCommonDropdown = <T>(
       dropdownBehaviours: Behaviour.derive([
         ...(spec.tooltip.map((t) => Tooltipping.config(
           sharedBackstage.providers.tooltips.getConfig({
-            tooltipText: sharedBackstage.providers.translate(t)
+            tooltipText: sharedBackstage.providers.translate(t),
+            onShow: (comp) => {
+              if (Optionals.lift2(tooltip.get(), spec.tooltip, (tooltipStr, tt) => tt !== tooltipStr).getOr(false)) {
+                const translatedTooltip = sharedBackstage.providers.translate(tooltip.get().getOr(''));
+                Tooltipping.setComponents(comp,
+                  sharedBackstage.providers.tooltips.getComponents({ tooltipText: translatedTooltip })
+                );
+              }
+            }
           })
         ))).toArray(),
         ...spec.dropdownBehaviours,
@@ -204,6 +218,11 @@ const renderCommonDropdown = <T>(
                 renderReplaceableIconFromPack(se.event.icon, sharedBackstage.providers.icons)
               ]);
             });
+          }),
+          AlloyEvents.run<UpdateMenuIconEvent>(updateTooltiptext, (comp, se) => {
+            const translatedTooltip = sharedBackstage.providers.translate(se.event.text);
+            Attribute.set(comp.element, 'aria-label', translatedTooltip);
+            tooltip.set(Optional.some(se.event.text));
           })
         ])
       ]),
