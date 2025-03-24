@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Autolink will no longer override already existing links when autolinking
+time: 2025-03-24T10:14:25.612794+01:00
+custom:
+    Issue: TINY-11836
