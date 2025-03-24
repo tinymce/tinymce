@@ -52,9 +52,10 @@ const renderImage = (spec: ImageSpec, imageUrl: string): SimpleSpec => {
         AlloyEvents.runOnAttached((component) => {
           addSpinnerElement(component.element);
           SelectorFind.descendant<HTMLImageElement>(component.element, 'img').each((image) => {
-            Ready.image(image).finally(() => {
-              removeSpinnerElement(component.element);
-            }).catch(() => {
+            Ready.image(image).catch((e) => {
+              // eslint-disable-next-line no-console
+              console.error(e);
+            }).finally(() => {
               removeSpinnerElement(component.element);
             });
           });
