@@ -29,7 +29,8 @@
     left: 0;
     right: 0;
     z-index: 1;
-    display: flex;
+    overflow: auto;
+    display: grid;
     justify-content: center;
     align-items: center;
   }
@@ -41,6 +42,7 @@
     flex-direction: column;
     box-shadow: @dialog-box-shadow;
     border-radius: @onboarding-dialog-border-radius;
+    margin: @pad-sm;
 
     .tox-onboarding-header {
       color: @text-color;
