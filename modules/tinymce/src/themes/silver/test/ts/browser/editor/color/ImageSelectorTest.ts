@@ -74,14 +74,15 @@ describe('browser.tinymce.themes.silver.editor.color.ImageSelectorTest', () => {
     TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="image-selector"]');
     await TinyUiActions.pWaitForUi(editor, '.tox-menu');
     await TooltipUtils.pAssertNoTooltip(editor, async () => await TooltipUtils.pTriggerTooltipWithMouse(editor, 'div:has(img[src="fakeurl1"])'), '');
+    TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="image-selector"]');
   });
 
   it('TINY-11847: selected items should have a check', async () => {
     const editor = hook.editor();
     editor.setContent('<p>Text</p>');
     TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="image-selector"]');
-
     await TinyUiActions.pWaitForUi(editor, '.tox-menu');
-    await TinyUiActions.pWaitForUi(editor, 'div[aria-label="Fake 2"] .tox-collection__item-image-check');
+    await TinyUiActions.pWaitForUi(editor, 'div[aria-label="Fake 2"] .tox-collection__item-checkmark');
+    TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="image-selector"]');
   });
 });

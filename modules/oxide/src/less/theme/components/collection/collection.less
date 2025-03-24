@@ -141,6 +141,20 @@
         align-self: flex-end;
       }
     }
+
+    .tox-collection__item-checkmark {
+      height: @collection-item-list-icon-height;
+      width: @collection-item-list-icon-width;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      svg path {
+        stroke: @color-tint;
+      }
+    }
+
   }
 
   .tox-collection--list .tox-collection__item {
@@ -185,19 +199,6 @@
 
     &:focus::after {
       .keyboard-focus-outline-mixin(inset);
-    }
-  }
-
-  .tox-collection__item-image-check {
-    height: @collection-item-list-icon-height;
-    width: @collection-item-list-icon-width;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    svg path {
-      stroke: @color-tint;
     }
   }
 
