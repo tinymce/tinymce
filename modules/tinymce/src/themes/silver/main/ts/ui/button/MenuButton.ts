@@ -1,6 +1,6 @@
 import { AlloyComponent, AlloyTriggers, Disabling, MementoRecord, SketchSpec, Tabstopping, Tooltipping } from '@ephox/alloy';
 import { Dialog, Menu, Toolbar } from '@ephox/bridge';
-import { Arr, Cell, Optional } from '@ephox/katamari';
+import { Arr, Cell, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Class, Focus } from '@ephox/sugar';
 
 import { formActionEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
@@ -105,7 +105,7 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
               // TODO: remove this comment after the review, this wasn't used because the `spec.dropdownBehaviours` was overwrite from a defailt `Tooltipping.config`
               tooltipText: backstage.shared.providers.translate(tooltip),
               onShow: (comp) => {
-                if (currentTooltip.get().exists((tooltipStr) => spec.tooltip.exists((tt) => tt !== tooltipStr))) {
+                if (Optionals.lift2(currentTooltip.get(), spec.tooltip, (tooltipStr, tt) => tt !== tooltipStr).getOr(false)) {
                   const translatedTooltip = backstage.shared.providers.translate(currentTooltip.get().getOr(''));
                   Tooltipping.setComponents(comp,
                     backstage.shared.providers.tooltips.getComponents({ tooltipText: translatedTooltip })
