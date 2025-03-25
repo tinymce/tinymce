@@ -56,7 +56,6 @@ const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonI
 });
 
 const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Optional<string>, tabstopping = true, btnName?: string): SketchSpec => {
-  // const currentTooltip = Cell<Optional<string>>(spec.tooltip);
   const classes = spec.buttonType === 'bordered' ? [ 'bordered' ] : [];
   return renderCommonDropdown({
     text: spec.text,
