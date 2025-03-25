@@ -1,12 +1,12 @@
-import { RealMouse, UiFinder } from '@ephox/agar';
+import { Mouse, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
-import { TinyHooks } from '@ephox/wrap-mcagar';
+import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
-describe('webdriver.tinymce.plugins.lists.ContextMenuTest', () => {
+describe('browser.tinymce.plugins.lists.ContextMenuTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     plugins: 'lists',
     toolbar: 'numlist bullist',
@@ -24,7 +24,12 @@ describe('webdriver.tinymce.plugins.lists.ContextMenuTest', () => {
         <li>ol</li>
       </ol>`
     );
-    await RealMouse.pRightClickOn('iframe => ol > li');
+    /*
+      We have to manually set the selection, which is fine, but in this test case, it does not test anything.
+      The origin of this bug was a issue in firefox that was causing not setting up the selection right.
+    */
+    TinySelections.setCursor(editor, [ 1, 0 ], 0);
+    Mouse.contextMenuOn(TinyDom.body(editor), 'ol > li');
     UiFinder.exists(SugarBody.body(), '[aria-label="List properties..."][aria-disabled="false"]');
   });
 });
