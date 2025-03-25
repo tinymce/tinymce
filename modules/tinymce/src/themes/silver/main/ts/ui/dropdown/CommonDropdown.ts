@@ -7,7 +7,7 @@ import {
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional, Optionals, Type } from '@ephox/katamari';
-import { EventArgs, Attribute, SugarElement } from '@ephox/sugar';
+import { Attribute, EventArgs, SugarElement } from '@ephox/sugar';
 
 import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button/ButtonEvents';
 
@@ -220,7 +220,7 @@ const renderCommonDropdown = <T>(
               ]);
             });
           }),
-          AlloyEvents.run<UpdateMenuIconEvent>(updateTooltiptext, (comp, se) => {
+          AlloyEvents.run<UpdateTooltipTextEvent>(updateTooltiptext, (comp, se) => {
             const translatedTooltip = sharedBackstage.providers.translate(se.event.text);
             Attribute.set(comp.element, 'aria-label', translatedTooltip);
             tooltip.set(Optional.some(se.event.text));
