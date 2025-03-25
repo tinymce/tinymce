@@ -155,7 +155,11 @@
       }
     }
 
-    .tox-collection__item-image-selector.tox-collection__item--enabled:not(.tox-collection__item--state-disabled) {
+    .tox-image-selector__row .tox-collection__item-image-selector.tox-collection__item--active:not(.tox-collection__item--state-disabled) {
+      background-color: @background-color;
+    }
+
+    .tox-image-selector__row .tox-collection__item-image-selector.tox-collection__item--enabled:not(.tox-collection__item--state-disabled) {
       background-color: @background-color;
       opacity: 0.8;
     }
