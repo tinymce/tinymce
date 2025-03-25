@@ -151,6 +151,7 @@
       transform: translate(-50%, -50%);
 
       svg path {
+        fill: @color-tint;
         stroke: @color-tint;
       }
     }
@@ -160,8 +161,10 @@
     }
 
     .tox-image-selector__row .tox-collection__item-image-selector.tox-collection__item--enabled:not(.tox-collection__item--state-disabled) {
+      z-index: 2;
       background-color: @background-color;
       opacity: 0.8;
+      background-clip: content-box;
     }
   }
 
