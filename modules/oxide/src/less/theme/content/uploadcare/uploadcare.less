@@ -14,6 +14,7 @@
 
 @uploadcare-placeholder-text-color: @text-color-muted;
 @uploadcare-placeholder-icon-fill: @text-color-muted;
+@uploadcare-placeholder-icon-min-width: 24px;
 
 // UPLOADCARE LOADER
 .tox-uc-loading-background {
@@ -46,7 +47,7 @@
   all: initial; // prevents inheritable styles to leak into the shadow DOM
   display: inline-block;
   position: relative;
-  width: @uploadcare-placeholder-initial-width;
+  width: min(100%, @uploadcare-placeholder-initial-width);
   height: @uploadcare-placeholder-initial-height;
 
   // shadow DOM (icon + text)
@@ -63,6 +64,7 @@
   --tox-uploadcare-placeholder--content-gap: 8px;
 
   --tox-uploadcare-placeholder--icon-fill: @uploadcare-placeholder-icon-fill;
+  --tox-uploadcare-placeholder--icon-min-width: @uploadcare-placeholder-icon-min-width;
 
   // shadow DOM (loader)
 
