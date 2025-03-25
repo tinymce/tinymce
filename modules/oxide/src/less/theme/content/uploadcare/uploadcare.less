@@ -5,7 +5,7 @@
 @uploadcare-loading-element-width: ~"min(24px, 30%)";
 
 // UPLOADCARE PLACEHOLDER
-@uploadcare-placeholder-initial-width: 600px;
+@uploadcare-placeholder-width: ~"min(100%, 600px)";
 @uploadcare-placeholder-initial-height: 80px;
 
 @uploadcare-placeholder-background-color: @background-color;
@@ -47,7 +47,7 @@
   all: initial; // prevents inheritable styles to leak into the shadow DOM
   display: inline-block;
   position: relative;
-  width: ~"min(100%, @uploadcare-placeholder-initial-width)";
+  width: @uploadcare-placeholder-width;
   height: @uploadcare-placeholder-initial-height;
 
   // shadow DOM (icon + text)
