@@ -37,6 +37,9 @@
 @collection-item-list-icon-height: 24px;
 @collection-item-list-icon-width: 24px;
 
+@collection-item-image-border-color: @border-color;
+@collection-item-image-margin-bottom: @pad-xs;
+
 @collection-item-list-image-radius: 50%;
 
 @collection-group-label-background-color: lighten(@collection-item-separator-color, 10%);
@@ -116,6 +119,46 @@
     display: flex;
     -webkit-touch-callout: none;
     user-select: none;
+  }
+
+  .tox-image-selector-menu {
+    .tox-collection__item-image-selector, .tox-collection__item {
+      flex-direction: column;
+  
+      .tox-collection__item-icon,
+      .tox-collection__item-image,
+      .tox-collection__item-checkmark {
+        flex-grow: 1;
+      }
+  
+      label {
+        width: @collection-item-list-icon-width * 2;
+        white-space: nowrap;
+        overflow: hidden;
+        font-size: @font-size-xs;
+        color: @collection-item-label-text-color;
+        text-align: center;
+        align-self: flex-end;
+      }
+    }
+
+    .tox-collection__item-checkmark {
+      height: @collection-item-list-icon-height;
+      width: @collection-item-list-icon-width;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      svg path {
+        stroke: @color-tint;
+      }
+    }
+
+    .tox-collection__item-image-selector.tox-collection__item--enabled:not(.tox-collection__item--state-disabled) {
+      background-color: @background-color;
+      opacity: 0.8;
+    }
   }
 
   .tox-collection--list .tox-collection__item {
@@ -198,6 +241,16 @@
         outline: solid 1px;
       }
     }
+  }
+
+  .tox-collection__item-image {
+    border: 1px solid @collection-item-image-border-color;
+    border-radius: @control-border-radius;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: @collection-item-image-margin-bottom;
+    position: relative;
   }
 
   .tox-collection__item-icon,

@@ -1,5 +1,5 @@
 import { AlloyComponent, Disabling, ItemTypes, Toggling, Tooltipping } from '@ephox/alloy';
-import { Menu, Toolbar } from '@ephox/bridge';
+import { Menu } from '@ephox/bridge';
 import { Fun, Merger, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
@@ -10,15 +10,12 @@ import { renderCheckmark } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
-const renderChoiceItem = (
-  spec: Menu.ChoiceMenuItem,
-  useText: boolean,
-  presets: Toolbar.PresetItemTypes,
+const renderImgItem = (
+  spec: Menu.ImageMenuItem,
   onItemValueHandler: (itemValue: string) => void,
   isSelected: boolean,
   itemResponse: ItemResponse,
-  providersBackstage: UiFactoryBackstageProviders,
-  renderIcons: boolean = true
+  providersBackstage: UiFactoryBackstageProviders
 ): ItemTypes.ItemSpec => {
   const getApi = (component: AlloyComponent): Menu.ToggleMenuItemInstanceApi => ({
     setActive: (state) => {
@@ -30,24 +27,19 @@ const renderChoiceItem = (
   });
 
   const structure = renderItemStructure({
-    presets,
-    textContent: useText ? spec.text : Optional.none(),
+    presets: 'img',
+    textContent: Optional.none(),
     htmlContent: Optional.none(),
+    ariaLabel: spec.tooltip,
+    iconContent: Optional.some(spec.url),
     labelContent: spec.label,
-    ariaLabel: spec.text,
-    iconContent: spec.icon,
-    shortcutContent: useText ? spec.shortcut : Optional.none(),
-
-    // useText essentially says that we have one column. In one column lists, we should show a tick
-    // The tick is controlled by the tickedClass (via css). It is always present
-    // but is hidden unless the tickedClass is present.
-    checkMark: useText ? Optional.some(renderCheckmark(providersBackstage.icons)) : Optional.none(),
+    shortcutContent: Optional.none(),
+    checkMark: Optional.some(renderCheckmark(providersBackstage.icons)),
     caret: Optional.none(),
     value: spec.value
-  }, providersBackstage, renderIcons);
+  }, providersBackstage, true);
 
-  const optTooltipping = spec.text
-    .filter(Fun.constant(!useText))
+  const optTooltipping = spec.tooltip
     .map((t) => Tooltipping.config(
       providersBackstage.tooltips.getConfig({
         tooltipText: providersBackstage.translate(t)
@@ -60,7 +52,10 @@ const renderChoiceItem = (
       data: buildData(spec),
       enabled: spec.enabled,
       getApi,
-      onAction: (_api) => onItemValueHandler(spec.value),
+      onAction: (api) => {
+        onItemValueHandler(spec.value);
+        api.setActive(true);
+      },
       onSetup: (api) => {
         api.setActive(isSelected);
         return Fun.noop;
@@ -81,4 +76,5 @@ const renderChoiceItem = (
   );
 };
 
-export { renderChoiceItem };
+export { renderImgItem };
+

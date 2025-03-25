@@ -31,6 +31,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
       renderMenuButton(
         {
           context: 'any',
+          buttonType: 'default',
           text: Optional.some('MailMerge'),
           icon: Optional.none(),
           tooltip: Optional.none(),
