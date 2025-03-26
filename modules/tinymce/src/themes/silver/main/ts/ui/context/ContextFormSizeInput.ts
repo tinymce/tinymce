@@ -11,7 +11,7 @@ import {
   NativeEvents, Representing, SketchSpec, Tabstopping, Tooltipping
 } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
-import { Cell, Fun, Id, Optional, Singleton, Unicode } from '@ephox/katamari';
+import { Cell, Fun, Id, Optional, Singleton } from '@ephox/katamari';
 import { Focus, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import { formInputEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
@@ -47,7 +47,7 @@ export const renderContextFormSizeInput = (
   const pLock = AlloyFormCoupledInputs.parts.lock({
     dom: {
       tag: 'button',
-      classes: [ 'tox-lock', 'tox-button', 'tox-button--naked', 'tox-button--icon' ],
+      classes: [ 'tox-lock', 'tox-lock-context-form-size-input', 'tox-button', 'tox-button--naked', 'tox-button--icon' ],
       attributes: {
         'aria-label': translatedLabel,
         'data-mce-name': label
@@ -161,9 +161,7 @@ export const renderContextFormSizeInput = (
       // NOTE: Form coupled inputs to the FormField.sketch themselves.
       widthField,
       formGroup([
-        getLabel(Unicode.nbsp),
-        pLock,
-        getLabel(Unicode.nbsp)
+        pLock
       ]),
       heightField
     ],
