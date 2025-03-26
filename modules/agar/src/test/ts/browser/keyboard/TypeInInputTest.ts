@@ -65,7 +65,7 @@ describe('browser.agar.keyboard.TypeInInputTest', () => {
       await UiControls.pType(input, 'abcde');
       Assert.fail('Should fail on input');
     } catch (e) {
-      Assert.eq('Should be expected error', 'Input does not have a text selection properties', e.message);
+      Assert.eq('Should be expected error', 'Element does not have text selection properties', e.message);
     }
 
     Remove.remove(input);

@@ -8,7 +8,7 @@ const typeCharInInput = (input: SugarElement<HTMLInputElement | HTMLTextAreaElem
   const { selectionStart, selectionEnd } = rawInput;
 
   if (Type.isNullable(selectionStart) || Type.isNullable(selectionEnd)) {
-    throw new Error('Input does not have a text selection properties');
+    throw new Error('Element does not have text selection properties');
   }
 
   const value = Value.get(input);
