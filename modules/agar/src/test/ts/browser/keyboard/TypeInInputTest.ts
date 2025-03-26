@@ -71,11 +71,11 @@ describe('browser.agar.keyboard.TypeInInputTest', () => {
     Remove.remove(input);
   };
 
-  it('TINY-11986: Typing in an input element', () => pTestOnTag('<input text="text">'));
+  it('TINY-11986: Typing in an input element', () => pTestOnTag('<input type="text">'));
   it('TINY-11986: Typing in a textarea element', () => pTestOnTag('<textarea></textarea>'));
   it('TINY-11986: Typing in a non text element should fail', () => pTestOnTagFail('<input type="button"></button>'));
   it('TINY-11986: Typing on element using selector', async () => {
-    const input = SugarElement.fromHtml<HTMLInputElement>('<input text="text">');
+    const input = SugarElement.fromHtml<HTMLInputElement>('<input type="text">');
     const container = SugarElement.fromTag('div');
     Insert.append(container, input);
     Insert.append(SugarBody.body(), container);
