@@ -46,6 +46,11 @@ const sSetValueOn = <T>(container: SugarElement<Node>, selector: string, newValu
 
 const pType = Keyboard.pTypeTextInInput;
 
+const pTypeOn = async (container: SugarElement<Node>, selector: string, text: string, speed: number = 0): Promise<void> => {
+  const input = UiFinder.findIn<HTMLTextAreaElement | HTMLInputElement>(container, selector).getOrDie();
+  await Keyboard.pTypeTextInInput(input, text, speed);
+};
+
 export {
   setValue,
   setValueOn,
@@ -57,5 +62,6 @@ export {
   cSetValue,
   cGetValue,
 
-  pType
+  pType,
+  pTypeOn
 };
