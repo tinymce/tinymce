@@ -160,11 +160,12 @@ export const renderContextFormSizeInput = (
     components: [
       // NOTE: Form coupled inputs to the FormField.sketch themselves.
       widthField,
-      heightField,
       formGroup([
         getLabel(Unicode.nbsp),
-        pLock
-      ])
+        pLock,
+        getLabel(Unicode.nbsp)
+      ]),
+      heightField
     ],
     field1Name: 'width',
     field2Name: 'height',
