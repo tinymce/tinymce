@@ -11,10 +11,10 @@ interface StoreDataItem {
 }
 
 describe('browser.agar.keyboard.TypeInInputTest', () => {
-  it('TINY-11986: Typing in an input element', async () => {
+  const pTestOnTag = async (tagHtml: string) => {
     const store = TestStore.TestStore<StoreDataItem>();
 
-    const input = SugarElement.fromHtml<HTMLInputElement>('<input type="text">');
+    const input = SugarElement.fromHtml<HTMLInputElement | HTMLTextAreaElement>(tagHtml);
     Insert.append(SugarBody.body(), input);
 
     DomEvent.bind(input, 'keydown', ({ raw, kill }) => {
@@ -54,6 +54,23 @@ describe('browser.agar.keyboard.TypeInInputTest', () => {
     ]);
 
     Remove.remove(input);
-  });
+  };
+
+  const pTestOnTagFail = async (tagHtml: string) => {
+    const input = SugarElement.fromHtml<HTMLInputElement | HTMLTextAreaElement>(tagHtml);
+
+    try {
+      await UiControls.pType(input, 'abcde');
+      Assert.fail('Should fail on input');
+    } catch (e) {
+      Assert.eq('Should be expected error', 'Input does not have a text selection properties', e.message);
+    }
+
+    Remove.remove(input);
+  };
+
+  it('TINY-11986: Typing in an input element', () => pTestOnTag('<input text="text">'));
+  it('TINY-11986: Typing in a textarea element', () => pTestOnTag('<textarea></textarea>'));
+  it('TINY-11986: Typing in a non text element should fail', () => pTestOnTagFail('<input type="button"></button>'));
 });
 
