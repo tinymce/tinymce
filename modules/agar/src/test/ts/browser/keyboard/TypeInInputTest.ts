@@ -20,16 +20,16 @@ describe('browser.agar.keyboard.TypeInInputTest', () => {
     DomEvent.bind(input, 'keydown', ({ raw, kill }) => {
       if (raw.charCode === 100) {
         kill();
-      } else {
-        store.add({ type: 'keydown', data: raw.charCode.toString() });
       }
+
+      store.add({ type: 'keydown', data: raw.charCode.toString() });
     });
     DomEvent.bind(input, 'beforeinput', ({ raw, kill }) => {
       if (raw.data === 'e') {
         kill();
-      } else {
-        store.add({ type: 'beforeinput', inputType: raw.inputType, data: raw.data });
       }
+
+      store.add({ type: 'beforeinput', inputType: raw.inputType, data: raw.data });
     });
     DomEvent.bind<InputEvent>(input, 'input', ({ raw }) => store.add({ type: 'input', inputType: raw.inputType, data: raw.data }));
     DomEvent.bind(input, 'keyup', ({ raw }) => store.add({ type: 'keyup', data: raw.charCode.toString() }));
@@ -50,7 +50,9 @@ describe('browser.agar.keyboard.TypeInInputTest', () => {
       { type: 'beforeinput', inputType: 'insertText', data: 'c' },
       { type: 'input', inputType: 'insertText', data: 'c' },
       { type: 'keyup', data: '99' },
-      { type: 'keydown', data: '101' }
+      { type: 'keydown', data: '100' },
+      { type: 'keydown', data: '101' },
+      { type: 'beforeinput', inputType: 'insertText', data: 'e' }
     ]);
 
     Remove.remove(input);
