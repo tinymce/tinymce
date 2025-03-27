@@ -4,11 +4,23 @@ import { DomEvent, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar'
 import * as TestStore from 'ephox/agar/api/TestStore';
 import * as UiControls from 'ephox/agar/api/UiControls';
 
-interface StoreDataItem {
-  readonly type: string;
-  readonly inputType?: string;
+interface InputStoreDataItem {
+  readonly type: 'beforeinput' | 'input';
+  readonly inputType: string;
   readonly data: string;
 }
+
+interface KeyboardStoreDataItem {
+  readonly type: 'keydown' | 'keypress' | 'keyup';
+  readonly which: number;
+  readonly key: string;
+  readonly code: string;
+  readonly keyCode: number;
+  readonly charCode: number;
+  readonly shiftKey: boolean;
+}
+
+type StoreDataItem = InputStoreDataItem | KeyboardStoreDataItem;
 
 describe('browser.agar.keyboard.TypeInInputTest', () => {
   const pTestOnTag = async (tagHtml: string) => {
@@ -18,41 +30,80 @@ describe('browser.agar.keyboard.TypeInInputTest', () => {
     Insert.append(SugarBody.body(), input);
 
     DomEvent.bind(input, 'keydown', ({ raw, kill }) => {
-      if (raw.charCode === 100) {
+      if (raw.keyCode === 68) {
         kill();
       }
 
-      store.add({ type: 'keydown', data: raw.charCode.toString() });
+      store.add({
+        type: 'keydown',
+        which: raw.which,
+        key: raw.key,
+        code: raw.code,
+        keyCode: raw.keyCode,
+        charCode: raw.charCode,
+        shiftKey: raw.shiftKey
+      });
+    });
+    DomEvent.bind(input, 'keypress', ({ raw, kill }) => {
+      if (raw.charCode === 'e'.charCodeAt(0)) {
+        kill();
+      }
+
+      store.add({
+        type: 'keypress',
+        which: raw.which,
+        key: raw.key,
+        code: raw.code,
+        keyCode: raw.keyCode,
+        charCode: raw.charCode,
+        shiftKey: raw.shiftKey
+      });
     });
     DomEvent.bind(input, 'beforeinput', ({ raw, kill }) => {
-      if (raw.data === 'e') {
+      if (raw.data === 'f') {
         kill();
       }
 
       store.add({ type: 'beforeinput', inputType: raw.inputType, data: raw.data });
     });
     DomEvent.bind<InputEvent>(input, 'input', ({ raw }) => store.add({ type: 'input', inputType: raw.inputType, data: raw.data }));
-    DomEvent.bind(input, 'keyup', ({ raw }) => store.add({ type: 'keyup', data: raw.charCode.toString() }));
+    DomEvent.bind(input, 'keyup', ({ raw }) => {
+      store.add({
+        type: 'keyup',
+        which: raw.which,
+        key: raw.key,
+        code: raw.code,
+        keyCode: raw.keyCode,
+        charCode: raw.charCode,
+        shiftKey: raw.shiftKey
+      });
+    });
 
-    await UiControls.pType(input, 'abcde');
-    Assert.eq('Should be expected input value d and e is prevented', 'abc', UiControls.getValue(input));
+    await UiControls.pType(input, 'aBcdef');
+    Assert.eq('Should be expected input value d, e, f is prevented', 'aBc', UiControls.getValue(input));
 
     store.assertEq('Should have correct events', [
-      { type: 'keydown', data: '97' },
+      { type: 'keydown', which: 65, key: 'a', code: 'KeyA', keyCode: 65, charCode: 0, shiftKey: false },
+      { type: 'keypress', which: 97, key: 'a', code: 'KeyA', keyCode: 97, charCode: 97, shiftKey: false },
       { type: 'beforeinput', inputType: 'insertText', data: 'a' },
       { type: 'input', inputType: 'insertText', data: 'a' },
-      { type: 'keyup', data: '97' },
-      { type: 'keydown', data: '98' },
-      { type: 'beforeinput', inputType: 'insertText', data: 'b' },
-      { type: 'input', inputType: 'insertText', data: 'b' },
-      { type: 'keyup', data: '98' },
-      { type: 'keydown', data: '99' },
+      { type: 'keyup', which: 65, key: 'a', code: 'KeyA', keyCode: 65, charCode: 0, shiftKey: false },
+      { type: 'keydown', which: 66, key: 'B', code: 'KeyB', keyCode: 66, charCode: 0, shiftKey: true },
+      { type: 'keypress', which: 66, key: 'B', code: 'KeyB', keyCode: 66, charCode: 66, shiftKey: true },
+      { type: 'beforeinput', inputType: 'insertText', data: 'B' },
+      { type: 'input', inputType: 'insertText', data: 'B' },
+      { type: 'keyup', which: 66, key: 'B', code: 'KeyB', keyCode: 66, charCode: 0, shiftKey: true },
+      { type: 'keydown', which: 67, key: 'c', code: 'KeyC', keyCode: 67, charCode: 0, shiftKey: false },
+      { type: 'keypress', which: 99, key: 'c', code: 'KeyC', keyCode: 99, charCode: 99, shiftKey: false },
       { type: 'beforeinput', inputType: 'insertText', data: 'c' },
       { type: 'input', inputType: 'insertText', data: 'c' },
-      { type: 'keyup', data: '99' },
-      { type: 'keydown', data: '100' },
-      { type: 'keydown', data: '101' },
-      { type: 'beforeinput', inputType: 'insertText', data: 'e' }
+      { type: 'keyup', which: 67, key: 'c', code: 'KeyC', keyCode: 67, charCode: 0, shiftKey: false },
+      { type: 'keydown', which: 68, key: 'd', code: 'KeyD', keyCode: 68, charCode: 0, shiftKey: false },
+      { type: 'keydown', which: 69, key: 'e', code: 'KeyE', keyCode: 69, charCode: 0, shiftKey: false },
+      { type: 'keypress', which: 101, key: 'e', code: 'KeyE', keyCode: 101, charCode: 101, shiftKey: false },
+      { type: 'keydown', which: 70, key: 'f', code: 'KeyF', keyCode: 70, charCode: 0, shiftKey: false },
+      { type: 'keypress', which: 102, key: 'f', code: 'KeyF', keyCode: 102, charCode: 102, shiftKey: false },
+      { type: 'beforeinput', inputType: 'insertText', data: 'f' }
     ]);
 
     Remove.remove(input);

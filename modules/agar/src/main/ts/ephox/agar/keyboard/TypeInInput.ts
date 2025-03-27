@@ -2,6 +2,7 @@ import { Type } from '@ephox/katamari';
 import { SugarElement, Value } from '@ephox/sugar';
 
 import * as Waiter from '../api/Waiter';
+import { getKeyEventFromData } from './Keycodes';
 
 const typeCharInInput = (input: SugarElement<HTMLInputElement | HTMLTextAreaElement>, chr: string) => {
   const rawInput = input.dom;
@@ -15,9 +16,14 @@ const typeCharInInput = (input: SugarElement<HTMLInputElement | HTMLTextAreaElem
   const before = value.substring(0, selectionStart);
   const after = value.substring(selectionEnd);
   const view = rawInput.ownerDocument.defaultView;
-  const charCode = chr.charCodeAt(0);
 
-  if (!rawInput.dispatchEvent(new view.KeyboardEvent('keydown', { charCode, cancelable: true, bubbles: true }))) {
+  const keydownEvent = getKeyEventFromData(view, 'keydown', chr).getOrDie(`Could not find keydown event for char: ${chr}`);
+  if (!rawInput.dispatchEvent(keydownEvent)) {
+    return;
+  }
+
+  const keypressEvent = getKeyEventFromData(view, 'keypress', chr).getOrDie(`Could not find keypress event for char: ${chr}`);
+  if (!rawInput.dispatchEvent(keypressEvent)) {
     return;
   }
 
@@ -27,9 +33,12 @@ const typeCharInInput = (input: SugarElement<HTMLInputElement | HTMLTextAreaElem
 
   Value.set(input, before + chr + after);
   rawInput.selectionStart = selectionStart + 1;
+  rawInput.selectionEnd = selectionStart + 1;
 
-  rawInput.dispatchEvent(new view.InputEvent('input', { inputType: 'insertText', data: chr, cancelable: true, bubbles: true }));
-  rawInput.dispatchEvent(new view.KeyboardEvent('keyup', { charCode, cancelable: true, bubbles: true }));
+  rawInput.dispatchEvent(new view.InputEvent('input', { inputType: 'insertText', data: chr, cancelable: false, bubbles: true }));
+
+  const keyupEvent = getKeyEventFromData(view, 'keyup', chr).getOrDie(`Could not find keyup event for char: ${chr}`);
+  rawInput.dispatchEvent(keyupEvent);
 };
 
 export const pTypeTextInInput = async (input: SugarElement<HTMLInputElement | HTMLTextAreaElement>, text: string, speed: number = 0): Promise<void> => {
