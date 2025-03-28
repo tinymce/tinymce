@@ -85,11 +85,6 @@
     position: absolute;
     right: -1px;
     top: -1px;
-
-    @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-      // Provide a darker border color for IE11
-      border-color: darken(@table-selection-color, 50%);
-    }
   }
 
   img[data-mce-selected]::selection {
