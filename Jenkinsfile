@@ -83,10 +83,10 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
       devPods.nodeConsumer(
         nodeOpts: [
           resourceRequestCpu: '2',
-          resourceRequestMemory: '4Gi',
+          resourceRequestMemory: '6Gi',
           resourceRequestEphemeralStorage: '16Gi',
           resourceLimitCpu: '7',
-          resourceLimitMemory: '4Gi',
+          resourceLimitMemory: '6Gi',
           resourceLimitEphemeralStorage: '16Gi'
         ],
         tag: '20',
