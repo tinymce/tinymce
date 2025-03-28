@@ -245,7 +245,11 @@ const sanitizeMathmlElement = (node: Element, settings: DomParserSettings) => {
     } else if (lcTagName === 'annotation') {
       return Optional.some(NodeType.isElement(node) && hasValidEncoding(node));
     } else if (Type.isArray(settings.extended_mathml_elements)) {
-      return Optional.some(settings.extended_mathml_elements.includes(lcTagName));
+      if (settings.extended_mathml_elements.includes(lcTagName)) {
+        return Optional.from(true);
+      } else {
+        return Optional.none();
+      }
     } else {
       return Optional.none();
     }

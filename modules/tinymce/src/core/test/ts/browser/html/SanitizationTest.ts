@@ -121,7 +121,7 @@ describe('browser.tinymce.core.html.SanitizationTest', () => {
 
       it('TINY-11756: Custom elements, allow some', () => testNamespaceSanitizer({
         input: '<math display="inline"><semantics><mrow><mi>a</mi></mrow><mi>a</mi></semantics></math>',
-        expected: '<math display="inline"><semantics><mi></mi></semantics></math>',
+        expected: '<math display="inline"><semantics><mrow><mi>a</mi></mrow><mi>a</mi></semantics></math>',
         mathmlElements: [
           'math',
           'semantics',
