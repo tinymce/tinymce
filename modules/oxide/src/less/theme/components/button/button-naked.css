@@ -1,0 +1,52 @@
+/*
+  Naked button
+  Extends button.less and button-icon-less
+  Note: button--naked is for removing button chrome on button--icon
+*/
+
+.tox {
+  .tox-button--naked {
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: unset;
+    color: var(--button-naked-icon-color);
+
+    &[disabled] {
+      background-color: var(--button-naked-disabled-background-color);
+      border-color: var(--button-naked-disabled-border-color);
+      box-shadow: var(--button-naked-disabled-box-shadow);
+      color: var(--button-naked-disabled-icon-color);
+    }
+
+    &:hover:not(:disabled) {
+      background-color: var(--button-naked-hover-background-color);
+      border-color: var(--button-naked-focus-border-color);
+      box-shadow: var(--button-naked-hover-box-shadow);
+      color: var(--button-naked-hover-icon-color);
+    }
+
+    &:focus:not(:disabled) {
+      background-color: var(--button-naked-focus-background-color);
+      border-color: var(--button-naked-focus-border-color);
+      box-shadow: var(--button-naked-focus-box-shadow);
+      color: var(--button-naked-focus-icon-color);
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--button-naked-active-background-color);
+      border-color: var(--button-naked-active-border-color);
+      box-shadow: var(--button-naked-active-box-shadow);
+      color: var(--button-naked-active-icon-color);
+    }
+
+    .tox-icon svg {
+      fill: currentColor;
+    }
+  }
+
+  .tox-button--naked.tox-button--icon {
+    &:hover:not(:disabled) {
+      color: var(--button-naked-hover-icon-color);
+    }
+  }
+}

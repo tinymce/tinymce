@@ -4,71 +4,58 @@
 // Note: button--naked is for removing button chrome on button--icon
 //
 
-@button-naked-icon-color: @text-color;
-
-@button-naked-hover-background-color: .bg-luma-checker(fade(@button-naked-icon-color, 12%), fade(@button-naked-icon-color, 20%))[@result];
-@button-naked-hover-border-color: transparent;
-@button-naked-hover-box-shadow: unset;
-@button-naked-hover-icon-color: @button-naked-icon-color;
-
-@button-naked-disabled-background-color: @button-naked-hover-background-color;
-@button-naked-disabled-border-color: transparent;
-@button-naked-disabled-box-shadow: unset;
-@button-naked-disabled-icon-color: fade(@button-naked-icon-color, 50%);
-
-@button-naked-focus-background-color: @button-naked-hover-background-color;
-@button-naked-focus-border-color: @button-naked-hover-border-color;
-@button-naked-focus-box-shadow: @button-naked-hover-box-shadow;
-@button-naked-focus-icon-color: @button-naked-hover-icon-color;
-
-@button-naked-active-background-color: .bg-luma-checker(fade(@button-naked-icon-color, 18%), fade(@button-naked-icon-color, 30%))[@result];
-@button-naked-active-border-color: transparent;
-@button-naked-active-box-shadow: unset;
-@button-naked-active-icon-color: @button-naked-icon-color;
+@import (inline) 'button-naked.css';
 
 .tox {
-  .tox-button--naked {
-    background-color: transparent;
-    border-color: transparent;
-    box-shadow: unset;
-    color: @button-naked-icon-color;
+  @button-naked-icon-color: var(--text-color);
 
-    &[disabled] {
-      background-color: @button-naked-disabled-background-color;
-      border-color: @button-naked-disabled-border-color;
-      box-shadow: @button-naked-disabled-box-shadow;
-      color: @button-naked-disabled-icon-color;
-    }
+  @button-naked-hover-background-color: .bg-luma-checker(
+      fade(@button-naked-icon-color, 12%),
+      fade(@button-naked-icon-color, 20%)
+    )
+    [ @result];
+  @button-naked-hover-border-color: transparent;
+  @button-naked-hover-box-shadow: unset;
+  @button-naked-hover-icon-color: @button-naked-icon-color;
 
-    &:hover:not(:disabled) {
-      background-color: @button-naked-hover-background-color;
-      border-color: @button-naked-focus-border-color;
-      box-shadow: @button-naked-hover-box-shadow;
-      color: @button-naked-hover-icon-color;
-    }
+  @button-naked-disabled-background-color: @button-naked-hover-background-color;
+  @button-naked-disabled-border-color: transparent;
+  @button-naked-disabled-box-shadow: unset;
+  @button-naked-disabled-icon-color: fade(@button-naked-icon-color, 50%);
 
-    &:focus:not(:disabled) {
-      background-color: @button-naked-focus-background-color;
-      border-color: @button-naked-focus-border-color;
-      box-shadow: @button-naked-focus-box-shadow;
-      color: @button-naked-focus-icon-color;
-    }
+  @button-naked-focus-background-color: @button-naked-hover-background-color;
+  @button-naked-focus-border-color: @button-naked-hover-border-color;
+  @button-naked-focus-box-shadow: @button-naked-hover-box-shadow;
+  @button-naked-focus-icon-color: @button-naked-hover-icon-color;
 
-    &:active:not(:disabled) {
-      background-color: @button-naked-active-background-color;
-      border-color: @button-naked-active-border-color;
-      box-shadow: @button-naked-active-box-shadow;
-      color: @button-naked-active-icon-color;
-    }
+  @button-naked-active-background-color: .bg-luma-checker(
+      fade(@button-naked-icon-color, 18%),
+      fade(@button-naked-icon-color, 30%)
+    )
+    [ @result];
+  @button-naked-active-border-color: transparent;
+  @button-naked-active-box-shadow: unset;
+  @button-naked-active-icon-color: @button-naked-icon-color;
 
-    .tox-icon svg {
-      fill: currentColor;
-    }
-  }
+  --button-naked-icon-color: @button-naked-icon-color;
 
-  .tox-button--naked.tox-button--icon {
-    &:hover:not(:disabled) {
-      color: @button-naked-hover-icon-color;
-    }
-  }
+  --button-naked-hover-background-color: @button-naked-hover-background-color;
+  --button-naked-hover-border-color: @button-naked-hover-border-color;
+  --button-naked-hover-box-shadow: @button-naked-hover-box-shadow;
+  --button-naked-hover-icon-color: @button-naked-hover-icon-color;
+
+  --button-naked-disabled-background-color: @button-naked-disabled-background-color;
+  --button-naked-disabled-border-color: @button-naked-disabled-border-color;
+  --button-naked-disabled-box-shadow: @button-naked-disabled-box-shadow;
+  --button-naked-disabled-icon-color: @button-naked-disabled-icon-color;
+
+  --button-naked-focus-background-color: @button-naked-focus-background-color;
+  --button-naked-focus-border-color: @button-naked-focus-border-color;
+  --button-naked-focus-box-shadow: @button-naked-focus-box-shadow;
+  --button-naked-focus-icon-color: @button-naked-focus-icon-color;
+
+  --button-naked-active-background-color: @button-naked-active-background-color;
+  --button-naked-active-border-color: @button-naked-active-border-color;
+  --button-naked-active-box-shadow: @button-naked-active-box-shadow;
+  --button-naked-active-icon-color: @button-naked-active-icon-color;
 }

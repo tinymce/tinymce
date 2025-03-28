@@ -1,0 +1,100 @@
+/*
+Secondary button
+Extends button.less
+*/
+
+.tox {
+  .tox-button--secondary {
+    background-color: var(--button-secondary-background-color);
+    background-image: var(--button-secondary-background-image);
+    background-position: var(--button-secondary-background-position);
+    background-repeat: var(--button-secondary-background-repeat);
+    border-color: var(--button-secondary-border-color);
+    border-radius: var(--button-secondary-border-radius);
+    border-style: var(--button-secondary-border-style);
+    border-width: var(--button-secondary-border-width);
+    box-shadow: var(--button-secondary-box-shadow);
+    color: var(--button-secondary-text-color);
+    font-size: var(--button-secondary-font-size);
+    font-style: var(--button-secondary-font-style);
+    font-weight: var(--button-secondary-font-weight);
+    letter-spacing: var(--button-secondary-letter-spacing);
+    outline: var(--button-secondary-outline);
+    padding: var(--button-padding-y) var(--button-padding-x);
+    text-decoration: var(--button-secondary-text-decoration);
+    text-transform: var(--button-secondary-text-transform);
+
+    &[disabled] {
+      background-color: var(--button-secondary-disabled-background-color);
+      background-image: var(--button-secondary-disabled-background-image);
+      border-color: var(--button-secondary-disabled-border-color);
+      box-shadow: var(--button-secondary-disabled-box-shadow);
+      color: var(--button-secondary-disabled-text-color);
+    }
+
+    &:focus:not(:disabled) {
+      background-color: var(--button-secondary-focus-background-color);
+      background-image: var(--button-secondary-focus-background-image);
+      border-color: var(--button-secondary-focus-border-color);
+      box-shadow: var(--button-secondary-focus-box-shadow);
+      color: var(--button-secondary-focus-text-color);
+    }
+
+    &:hover:not(:disabled) {
+      background-color: var(--button-secondary-hover-background-color);
+      background-image: var(--button-secondary-hover-background-image);
+      border-color: var(--button-secondary-hover-border-color);
+      box-shadow: var(--button-secondary-hover-box-shadow);
+      color: var(--button-secondary-hover-text-color);
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--button-secondary-active-background-color);
+      background-image: var(--button-secondary-active-background-image);
+      border-color: var(--button-secondary-active-border-color);
+      box-shadow: var(--button-secondary-active-box-shadow);
+      color: var(--button-secondary-active-text-color);
+    }
+
+    /* Enabled state */
+    &.tox-button--enabled {
+      background-color: var(--button-secondary-enabled-background-color);
+      background-image: var(--button-secondary-enabled-background-image);
+      border-color: var(--button-secondary-enabled-border-color);
+      box-shadow: var(--button-secondary-enabled-box-shadow);
+      color: var(--button-secondary-enabled-text-color);
+
+      &[disabled] {
+        background-color: var(--button-secondary-enabled-background-color);
+        background-image: var(--button-secondary-enabled-background-image);
+        border-color: var(--button-secondary-enabled-border-color);
+        box-shadow: var(--button-secondary-enabled-box-shadow);
+        color: var(--button-secondary-disabled-text-color);
+      }
+
+      &:focus:not(:disabled) {
+        background-color: var(--button-secondary-enabled-focus-background-color);
+        background-image: var(--button-secondary-enabled-focus-background-image);
+        border-color: var(--button-secondary-enabled-focus-border-color);
+        box-shadow: var(--button-secondary-enabled-focus-box-shadow);
+        color: var(--button-secondary-enabled-focus-text-color);
+      }
+
+      &:hover:not(:disabled) {
+        background-color: var(--button-secondary-enabled-hover-background-color);
+        background-image: var(--button-secondary-enabled-hover-background-image);
+        border-color: var(--button-secondary-enabled-hover-border-color);
+        box-shadow: var(--button-secondary-enabled-hover-box-shadow);
+        color: var(--button-secondary-enabled-hover-text-color);
+      }
+
+      &:active:not(:disabled) {
+        background-color: var(--button-secondary-enabled-active-background-color);
+        background-image: var(--button-secondary-enabled-active-background-image);
+        border-color: var(--button-secondary-enabled-active-border-color);
+        box-shadow: var(--button-secondary-enabled-active-box-shadow);
+        color: var(--button-secondary-enabled-active-text-color);
+      }
+    }
+  }
+}

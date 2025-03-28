@@ -1,0 +1,70 @@
+.tox {
+  // Root variables
+  // Begin customization by changing these variables as most other variables are derivatives of these.
+  --background-color: @background-color; 
+  --base-value: @base-value;
+  --color-black: @color-black;
+  --color-tint: @color-tint;
+  --color-white: @color-white;
+  --color-error: @color-error;
+  --color-error-element-focus-color: @color-error-element-focus-color;
+  --color-error-element-focus: @color-error-element-focus;
+  --color-success: @color-success;
+  --color-warning: @color-warning;
+  --color-active: @color-active;
+
+  --font-stack: @font-stack;
+
+  // Content;
+  --content-ui-darkmode: @content-ui-darkmode;
+
+  // Colors
+  --border-color: @border-color;
+  --text-color: @text-color;
+  --text-color-muted: @text-color-muted;
+
+  // Some useful generic variables
+  --panel-border-radius: @panel-border-radius; 
+  --control-border-radius: @control-border-radius;
+
+  // Focus outline
+  --keyboard-focus-outline-width: @keyboard-focus-outline-width;
+  --keyboard-focus-outline-color: @keyboard-focus-outline-color;
+
+ // Font
+  --line-height-base: @line-height-base;
+  --font-weight-normal: @font-weight-normal;
+  --font-weight-bold: @font-weight-bold;
+  --font-size-base: @font-size-base;
+  --font-size-xs: @font-size-xs;
+  --font-size-sm: @font-size-sm;
+  --font-size-md: @font-size-md;
+  --font-size-lg: @font-size-lg;
+
+  /* SPACINGS */
+  --pad-xs: @pad-xs;
+  --pad-sm: @pad-sm;
+  --pad-md: @pad-md;
+  --pad-lg: @pad-lg;
+  --pad-xl: @pad-xl;
+
+  /* z-index stack (reserved range 1000-10000) */
+  --z-index-fullscreen: @z-index-fullscreen;
+  --z-index-resize-handle: @z-index-resize-handle;
+  --z-index-throbber: @z-index-throbber;
+  --z-index-sink: @z-index-sink;
+
+  /* sink z-index stack
+    Note: these are rendered inside the sink so aren't affected by the other global z-index variables */
+  --z-index-loading: @z-index-loading;
+  --z-index-dialogs: @z-index-dialogs;
+  --z-index-menu: @z-index-menu;
+
+  /* Responsive breakpoints */
+  --breakpoint-sm-value: @breakpoint-sm-value;
+  --breakpoint-md: @breakpoint-md;
+  --breakpoint-sm: @breakpoint-sm;
+  --breakpoint-gt-sm: @breakpoint-gt-sm;
+}
+
+
