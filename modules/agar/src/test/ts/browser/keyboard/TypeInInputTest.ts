@@ -30,7 +30,7 @@ describe('browser.agar.keyboard.TypeInInputTest', () => {
     Insert.append(SugarBody.body(), input);
 
     DomEvent.bind(input, 'keydown', ({ raw, kill }) => {
-      if (raw.keyCode === 68) {
+      if (raw.code === 'KeyD') {
         kill();
       }
 
@@ -45,7 +45,7 @@ describe('browser.agar.keyboard.TypeInInputTest', () => {
       });
     });
     DomEvent.bind(input, 'keypress', ({ raw, kill }) => {
-      if (raw.charCode === 'e'.charCodeAt(0)) {
+      if (raw.code === 'KeyE') {
         kill();
       }
 
