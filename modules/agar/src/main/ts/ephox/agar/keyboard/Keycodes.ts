@@ -158,6 +158,7 @@ export const getKeyEventFromData = (view: typeof globalThis, event: 'keypress' |
         key: key.key,
         code: key.code,
         keyCode: charCode,
+        which: charCode,
         charCode,
         shiftKey: key.shiftKey === true,
         cancelable: true,
@@ -168,6 +169,7 @@ export const getKeyEventFromData = (view: typeof globalThis, event: 'keypress' |
         key: key.key,
         code: key.code,
         keyCode: key.keyCode,
+        which: key.keyCode,
         shiftKey: key.shiftKey === true,
         cancelable: true,
         bubbles: true
