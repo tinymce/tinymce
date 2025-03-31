@@ -802,5 +802,34 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         TinyAssertions.assertContent(editor, expected);
       });
     });
+
+    context('TINY-11756: Test for elements and attributes', () => {
+      const hook = TinyHooks.bddSetupLight<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        custom_elements: 'math',
+        extended_mathml_elements: [ 'semantics' ],
+        extended_mathml_attributes: [ 'data-badAttribute' ]
+      }, []);
+
+      it('TINY-11756: extended mathml should allow elements and attributes', () => {
+        const editor = hook.editor();
+
+        const input = [
+          '<div>',
+          '<math><mn data-badAttribute="value">1</mn><semantics>2</semantics></math>',
+          '</div>'
+        ].join('');
+
+        editor.setContent(input);
+
+        const expected = [
+          '<div>',
+          '<math><mn data-badattribute="value">1</mn><semantics>2</semantics></math>',
+          '</div>'
+        ].join('');
+
+        TinyAssertions.assertContent(editor, expected);
+      });
+    });
   });
 });
