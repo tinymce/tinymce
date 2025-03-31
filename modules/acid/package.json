@@ -1,6 +1,6 @@
 {
   "name": "@ephox/acid",
-  "description": "Color library including Alloy UI component for a color picker",
+  "description": "Color library",
   "version": "7.0.0",
   "repository": {
     "type": "git",
@@ -8,10 +8,7 @@
     "directory": "modules/acid"
   },
   "dependencies": {
-    "@ephox/alloy": "^15.0.0",
-    "@ephox/boulder": "^8.0.0",
-    "@ephox/katamari": "^10.0.0",
-    "@ephox/sugar": "^10.0.0"
+    "@ephox/katamari": "^10.0.0"
   },
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "GPL-2.0-or-later",
