@@ -56,6 +56,19 @@ describe('atomic.polaris.api.SearchFindTest', () => {
     checkAll([[ 1, 5 ]], ' [wo] and more', Pattern.unsafetoken(Safe.sanitise('[') + '[^' + Safe.sanitise(']') + ']*' + Safe.sanitise(']')));
   });
 
+  it('TINY-11560: Overlapping detected areas should not exist.', () => {
+    checkMany(
+      [
+        [ 0, 2, 'A' ],
+        [ 3, 7, 'B' ],
+      ],
+      'D. dd.D.',
+      [
+        testData(Pattern.safeword('D.'), 'A'),
+        testData(Pattern.safeword('dd.D'), 'B'),
+      ]);
+  });
+
   it('TINY-10062: checkMany ', () => {
     checkMany([], '', []);
     checkMany([
