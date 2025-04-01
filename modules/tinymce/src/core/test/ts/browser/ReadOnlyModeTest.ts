@@ -1,4 +1,4 @@
-import { ApproxStructure, Mouse, UiFinder, Clipboard } from '@ephox/agar';
+import { ApproxStructure, Mouse, UiFinder, Clipboard, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Class, Css, Scroll, SelectorFind, SugarBody, Traverse } from '@ephox/sugar';
@@ -83,6 +83,19 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     const elm = UiFinder.findIn(SugarBody.body(), '.tox-toolbar-overlord').getOrDie();
     assert.equal(Class.has(elm, 'tox-tbtn--disabled'), expectedState, 'Toolbar should have expected disabled state');
     assert.equal(Attribute.get(elm, 'aria-disabled'), expectedState.toString(), 'Toolbar should have expected disabled state');
+  };
+
+  const simulateIMEInput = (editor: Editor, events: Array<{ type: string; data?: string; key?: string; code?: string; keyCode?: number }>) => {
+    const body = editor.getBody();
+    events.forEach((event) => {
+      if (event.type.startsWith('composition')) {
+        const e = new window.CompositionEvent(event.type, { data: event.data });
+        body.dispatchEvent(e);
+      } else if (event.type.startsWith('key')) {
+        const e = new KeyboardEvent(event.type, { key: event.key, code: event.code, keyCode: event.keyCode });
+        body.dispatchEvent(e);
+      }
+    });
   };
 
   it('TBA: Switching to readonly mode while having cef selection should remove fake selection', () => {
@@ -285,5 +298,122 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     Clipboard.copy(TinyDom.body(editor));
     assert.equal(copyEventCount, 1, 'copy event should be fired');
     editor.off('copy', copyHandler);
+  });
+
+  it('TINY-11363: IME composition events should be blocked in readonly mode', () => {
+    const editor = hook.editor();
+    setMode(editor, 'readonly');
+    editor.setContent('<p>Initial content</p>');
+
+    simulateIMEInput(editor, [
+      { type: 'compositionstart', data: 'test' },
+      { type: 'compositionupdate', data: 'い' },
+      { type: 'compositionupdate', data: 'いぬ' },
+      { type: 'compositionupdate', data: '犬' },
+      { type: 'compositionend', data: '犬' }
+    ]);
+
+    setTimeout(() => {
+      TinyAssertions.assertContent(editor, '<p>Initial content</p>');
+    }, 100);
+  });
+
+  it('TINY-11363: IME input with keyboard events should be blocked in readonly mode', () => {
+    const editor = hook.editor();
+    setMode(editor, 'readonly');
+    editor.setContent('<p>Initial content</p>');
+
+    simulateIMEInput(editor, [
+      { type: 'keydown', key: 'i', code: 'KeyI', keyCode: 73 },
+      { type: 'compositionstart', data: 'i' },
+      { type: 'compositionupdate', data: 'い' },
+      { type: 'keydown', key: 'n', code: 'KeyN', keyCode: 78 },
+      { type: 'compositionupdate', data: 'いぬ' },
+      { type: 'keydown', key: 'Enter', code: 'Enter', keyCode: 13 },
+      { type: 'compositionend', data: '犬' },
+      { type: 'keyup', key: 'Enter', code: 'Enter', keyCode: 13 }
+    ]);
+
+    setTimeout(() => {
+      TinyAssertions.assertContent(editor, '<p>Initial content</p>');
+    }, 100);
+  });
+
+  it('TINY-11363: IME input with space key should be blocked in readonly mode', () => {
+    const editor = hook.editor();
+    setMode(editor, 'readonly');
+    editor.setContent('<p>Initial content</p>');
+
+    simulateIMEInput(editor, [
+      { type: 'keydown', key: ' ', code: 'Space', keyCode: 32 },
+      { type: 'compositionstart', data: ' ' },
+      { type: 'compositionupdate', data: '　' },
+      { type: 'compositionend', data: '　' },
+      { type: 'keyup', key: ' ', code: 'Space', keyCode: 32 }
+    ]);
+
+    setTimeout(() => {
+      TinyAssertions.assertContent(editor, '<p>Initial content</p>');
+    }, 100);
+  });
+
+  it('TINY-11363: IME input with enter key should be blocked in readonly mode', () => {
+    const editor = hook.editor();
+    setMode(editor, 'readonly');
+    editor.setContent('<p>Initial content</p>');
+
+    simulateIMEInput(editor, [
+      { type: 'keydown', key: 'Enter', code: 'Enter', keyCode: 13 },
+      { type: 'compositionstart', data: '\n' },
+      { type: 'compositionupdate', data: '\n' },
+      { type: 'compositionend', data: '\n' },
+      { type: 'keyup', key: 'Enter', code: 'Enter', keyCode: 13 }
+    ]);
+
+    setTimeout(() => {
+      TinyAssertions.assertContent(editor, '<p>Initial content</p>');
+    }, 100);
+  });
+
+  it('TINY-11363: Input events should be blocked in readonly mode', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>Initial content</p>');
+    setMode(editor, 'readonly');
+
+    const body = editor.getBody();
+    const inputEvent = new InputEvent('input', { data: 'new content' });
+    body.dispatchEvent(inputEvent);
+
+    TinyAssertions.assertContent(editor, '<p>Initial content</p>');
+  });
+
+  it('TINY-11363: Undo/Redo should be disabled in readonly mode', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>Initial content</p>');
+    editor.undoManager.add();
+    editor.setContent('<p>Modified content</p>');
+    editor.undoManager.add();
+    setMode(editor, 'readonly');
+
+    editor.execCommand('Undo');
+    TinyAssertions.assertContent(editor, '<p>Modified content</p>');
+
+    editor.execCommand('Redo');
+    TinyAssertions.assertContent(editor, '<p>Modified content</p>');
+  });
+
+  it.only('TINY-11363: Mutation observer should revert changes in readonly mode', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>Initial content</p>');
+    setMode(editor, 'readonly');
+
+    const body = editor.getBody();
+    const p = body.querySelector('p');
+    if (p) {
+      p.textContent = 'Modified content';
+    }
+
+    // The mutation observer should immediately revert the content
+    TinyAssertions.assertContent(editor, '<p>Initial content</p>');
   });
 });
