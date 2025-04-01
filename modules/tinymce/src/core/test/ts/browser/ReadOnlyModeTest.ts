@@ -2,7 +2,7 @@ import { ApproxStructure, Mouse, UiFinder, Clipboard, Waiter } from '@ephox/agar
 import { describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Class, Css, Scroll, SelectorFind, SugarBody, Traverse } from '@ephox/sugar';
-import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -310,12 +310,9 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
       { type: 'compositionupdate', data: 'い' },
       { type: 'compositionupdate', data: 'いぬ' },
       { type: 'compositionupdate', data: '犬' },
-      { type: 'compositionend', data: '犬' }
     ]);
 
-    setTimeout(() => {
-      TinyAssertions.assertContent(editor, '<p>Initial content</p>');
-    }, 100);
+    TinyAssertions.assertContent(editor, '<p>Initial content</p>');
   });
 
   it('TINY-11363: IME input with keyboard events should be blocked in readonly mode', () => {
@@ -334,9 +331,7 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
       { type: 'keyup', key: 'Enter', code: 'Enter', keyCode: 13 }
     ]);
 
-    setTimeout(() => {
-      TinyAssertions.assertContent(editor, '<p>Initial content</p>');
-    }, 100);
+    TinyAssertions.assertContent(editor, '<p>Initial content</p>');
   });
 
   it('TINY-11363: IME input with space key should be blocked in readonly mode', () => {
@@ -352,9 +347,7 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
       { type: 'keyup', key: ' ', code: 'Space', keyCode: 32 }
     ]);
 
-    setTimeout(() => {
-      TinyAssertions.assertContent(editor, '<p>Initial content</p>');
-    }, 100);
+    TinyAssertions.assertContent(editor, '<p>Initial content</p>');
   });
 
   it('TINY-11363: IME input with enter key should be blocked in readonly mode', () => {
@@ -370,9 +363,7 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
       { type: 'keyup', key: 'Enter', code: 'Enter', keyCode: 13 }
     ]);
 
-    setTimeout(() => {
-      TinyAssertions.assertContent(editor, '<p>Initial content</p>');
-    }, 100);
+    TinyAssertions.assertContent(editor, '<p>Initial content</p>');
   });
 
   it('TINY-11363: Input events should be blocked in readonly mode', () => {
@@ -402,16 +393,14 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     TinyAssertions.assertContent(editor, '<p>Modified content</p>');
   });
 
-  it.only('TINY-11363: Mutation observer should revert changes in readonly mode', () => {
+  it('TINY-11363: Mutation observer should revert changes in readonly mode', () => {
     const editor = hook.editor();
     editor.setContent('<p>Initial content</p>');
     setMode(editor, 'readonly');
 
-    const body = editor.getBody();
-    const p = body.querySelector('p');
-    if (p) {
-      p.textContent = 'Modified content';
-    }
+    // insert "i"
+    TinySelections.setCursor(editor, [ 0 ], 0);
+    TinyContentActions.keydown(editor, 73);
 
     // The mutation observer should immediately revert the content
     TinyAssertions.assertContent(editor, '<p>Initial content</p>');
