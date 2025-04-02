@@ -1,5 +1,4 @@
 import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, StructAssert, UiFinder } from '@ephox/agar';
-import { TestHelpers } from '@ephox/alloy';
 import { before, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, SugarBody, SugarDocument, SugarElement } from '@ephox/sugar';
@@ -7,6 +6,8 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
+
+import * as GuiSetup from '../../module/GuiSetup';
 
 describe('browser.tinymce.themes.silver.skin.OxideCollectionComponentTest', () => {
   context('Check structure of collection in a dialog', () => {
@@ -93,7 +94,7 @@ describe('browser.tinymce.themes.silver.skin.OxideCollectionComponentTest', () =
       }
     }, []);
 
-    TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
+    GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
       ':focus { outline: 2px solid green; }'
     ]);
 

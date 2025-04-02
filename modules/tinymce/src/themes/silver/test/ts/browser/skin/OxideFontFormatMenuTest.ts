@@ -1,10 +1,11 @@
 import { ApproxStructure, Assertions, FocusTools, Keys } from '@ephox/agar';
-import { TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
+
+import * as GuiSetup from '../../module/GuiSetup';
 
 describe('browser.tinymce.themes.silver.skin.OxideFontFormatMenuTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
@@ -30,7 +31,7 @@ describe('browser.tinymce.themes.silver.skin.OxideFontFormatMenuTest', () => {
     ]
   }, []);
 
-  TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
+  GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
     ':focus { background-color: rgb(222, 224, 226); }',
     '.tox-collection__item-label > * { margin: 0px; }'
   ]);

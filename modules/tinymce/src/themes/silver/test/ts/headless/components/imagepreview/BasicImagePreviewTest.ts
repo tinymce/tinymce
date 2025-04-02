@@ -1,11 +1,13 @@
 import { ApproxStructure, Assertions, UiFinder } from '@ephox/agar';
-import { AlloyComponent, GuiFactory, Memento, Representing, TestHelpers } from '@ephox/alloy';
+import { AlloyComponent, GuiFactory, Memento, Representing } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { Ready } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import { ImagePreviewDataSpec, renderImagePreview } from 'tinymce/themes/silver/ui/dialog/ImagePreview';
+
+import * as GuiSetup from '../../../module/GuiSetup';
 
 describe('headless.tinymce.themes.silver.components.imagepreview.BasicImagePreviewTest', () => {
   const testImageUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==';
@@ -15,7 +17,7 @@ describe('headless.tinymce.themes.silver.components.imagepreview.BasicImagePrevi
     height: Optional.some('200px'),
   }, Optional.none()));
 
-  const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+  const hook = GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     {
       dom: {
         tag: 'div',

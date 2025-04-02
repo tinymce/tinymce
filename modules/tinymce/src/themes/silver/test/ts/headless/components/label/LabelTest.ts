@@ -1,11 +1,12 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
-import { AlloyComponent, GuiFactory, Memento, TestHelpers } from '@ephox/alloy';
+import { AlloyComponent, GuiFactory, Memento } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderLabel } from 'tinymce/themes/silver/ui/dialog/Label';
 
+import * as GuiSetup from '../../../module/GuiSetup';
 import TestProviders from '../../../module/TestProviders';
 
 describe('headless.tinymce.themes.silver.components.label.LabelTest', () => {
@@ -53,7 +54,7 @@ describe('headless.tinymce.themes.silver.components.label.LabelTest', () => {
     for: Optional.none()
   }, sharedBackstage, getCompByName));
 
-  const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build({
+  const hook = GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build({
     dom: { tag: 'div' },
     components: [ memBasicLabel.asSpec(), memHtmlLabel.asSpec(), memCenterLabel.asSpec(), memEndLabel.asSpec() ]
   }));

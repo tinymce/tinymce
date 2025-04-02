@@ -1,10 +1,11 @@
 import { ApproxStructure, Assertions, FocusTools, Keys, TestStore } from '@ephox/agar';
-import { TestHelpers } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
+
+import * as GuiSetup from '../../module/GuiSetup';
 
 describe('browser.tinymce.themes.silver.skin.OxideListCollectionMenuTest', () => {
   const store = TestStore();
@@ -47,7 +48,7 @@ describe('browser.tinymce.themes.silver.skin.OxideListCollectionMenuTest', () =>
     }
   }, []);
 
-  TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
+  GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
     ':focus { background-color: rgb(222, 224, 226); }'
   ]);
 

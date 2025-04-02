@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys } from '@ephox/agar';
-import { Behaviour, Focusing, GuiFactory, Keying, TestHelpers, Toolbar } from '@ephox/alloy';
+import { Behaviour, Focusing, GuiFactory, Keying, Toolbar } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
 import { SugarDocument } from '@ephox/sugar';
@@ -7,6 +7,7 @@ import { SugarDocument } from '@ephox/sugar';
 import { ToolbarMode } from 'tinymce/themes/silver/api/Options';
 import { renderToolbar, renderToolbarGroup } from 'tinymce/themes/silver/ui/toolbar/CommonToolbar';
 
+import * as GuiSetup from '../../module/GuiSetup';
 import TestProviders from '../../module/TestProviders';
 
 describe('headless.tinymce.themes.silver.toolbar.ToolbarTest', () => {
@@ -24,7 +25,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarTest', () => {
     ])
   });
 
-  const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
+  const hook = GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
     renderToolbar({
       type: ToolbarMode.default,
       uid: 'test-toolbar-uid',
@@ -45,7 +46,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarTest', () => {
     })
   ));
 
-  TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
+  GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
     '.tox-toolbar { padding: 0.3em; background: blue; display: flex; flex-direction: row;}',
     '.tox-toolbar__group { background: black; color: white; display: flex; margin: 0.2em; }',
     '.test-toolbar-item { margin: 0.2em; padding: 0.2em; display: flex; }'
