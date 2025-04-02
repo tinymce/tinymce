@@ -1,5 +1,4 @@
 import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
-import { TestHelpers } from '@ephox/alloy';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
@@ -8,6 +7,8 @@ import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
+
+import * as GuiSetup from '../../module/GuiSetup';
 
 describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
   const store = TestStore();
@@ -134,7 +135,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
   const pOpenAndGetBackcolorMenu = pOpenAndGetMenu('backcolor');
   const pCloseBackcolorMenu = pCloseMenu('backcolor');
 
-  TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
+  GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
     ':focus { transform: scale(0.8) }'
   ]);
 

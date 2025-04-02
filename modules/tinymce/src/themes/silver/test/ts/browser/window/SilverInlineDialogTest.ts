@@ -1,5 +1,4 @@
 import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, TestStore, UiFinder, Waiter } from '@ephox/agar';
-import { TestHelpers } from '@ephox/alloy';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Arr, Strings } from '@ephox/katamari';
 import { SugarBody, SugarDocument, Css } from '@ephox/sugar';
@@ -11,6 +10,7 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 import { WindowParams } from 'tinymce/core/api/WindowManager';
 
 import * as DialogUtils from '../../module/DialogUtils';
+import * as GuiSetup from '../../module/GuiSetup';
 
 describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
   const store = TestStore();
@@ -18,7 +18,7 @@ describe('browser.tinymce.themes.silver.window.SilverInlineDialogTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, []);
 
-  TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
+  GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
     '.tox-dialog { background: white; border: 2px solid black; padding: 1em; margin: 1em; }'
   ]);
 

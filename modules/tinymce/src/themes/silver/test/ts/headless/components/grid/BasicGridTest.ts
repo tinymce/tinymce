@@ -1,11 +1,12 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
-import { GuiFactory, TestHelpers } from '@ephox/alloy';
+import { GuiFactory } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 
 import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderGrid } from 'tinymce/themes/silver/ui/dialog/Grid';
 
+import * as GuiSetup from '../../../module/GuiSetup';
 import TestProviders from '../../../module/TestProviders';
 
 describe('headless.tinymce.themes.silver.components.grid.GridTest', () => {
@@ -14,7 +15,7 @@ describe('headless.tinymce.themes.silver.components.grid.GridTest', () => {
     providers: TestProviders
   } as UiFactoryBackstageShared;
 
-  const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+  const hook = GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderGrid({
       columns: 10,
       items: [
