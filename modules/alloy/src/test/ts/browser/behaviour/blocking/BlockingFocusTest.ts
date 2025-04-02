@@ -9,7 +9,7 @@ import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 const memBlockRoot = Memento.record({
   dom: {

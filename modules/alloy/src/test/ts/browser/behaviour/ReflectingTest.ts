@@ -7,8 +7,8 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Reflecting } from 'ephox/alloy/api/behaviour/Reflecting';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('ReflectingTest', (success, failure) => {
 
