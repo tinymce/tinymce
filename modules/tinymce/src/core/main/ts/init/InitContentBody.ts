@@ -78,6 +78,8 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
     allow_unsafe_link_target: getOption('allow_unsafe_link_target'),
     convert_unsafe_embeds: getOption('convert_unsafe_embeds'),
     convert_fonts_to_spans: getOption('convert_fonts_to_spans'),
+    extended_mathml_attributes: getOption('extended_mathml_attributes'),
+    extended_mathml_elements: getOption('extended_mathml_elements'),
     fix_list_elements: getOption('fix_list_elements'),
     font_size_legacy_values: getOption('font_size_legacy_values'),
     forced_root_block: getOption('forced_root_block'),

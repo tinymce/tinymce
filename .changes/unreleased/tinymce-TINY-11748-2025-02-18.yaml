@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: New subtoolbar support for context toolbars.
+time: 2025-02-18T09:03:17.435561+01:00
+custom:
+    Issue: TINY-11748

@@ -5186,7 +5186,7 @@ eslint-visitor-keys@^4.2.0:
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-4.2.0.tgz#687bacb2af884fcdda8a6e7d65c606f46a14cd45"
   integrity sha512-UyLnSehNt62FFhSwjZlHmeokpRK59rcz29j+F1/aDgbkbRTk7wIc9XzdoasMUbRNKDM0qQt/+BJ4BrpFeABemw==
 
-eslint@^8.44.0, eslint@^8.57.0:
+eslint@^8.57.0:
   version "8.57.1"
   resolved "https://registry.yarnpkg.com/eslint/-/eslint-8.57.1.tgz#7df109654aba7e3bbe5c8eae533c5e461d3c6ca9"
   integrity sha512-ypowyDxpVSYpkXr9WPv2PAZCtNip1Mv5KTW0SCurXv/9iOpcrH9PaqUElksqEB6pChqHGDRCFTyrZlGhnLNGiA==
@@ -6374,14 +6374,6 @@ grunt-contrib-watch@^1.1.0:
     gaze "^1.1.0"
     lodash "^4.17.10"
     tiny-lr "^1.1.1"
-
-grunt-eslint@^24.0.0:
-  version "24.3.0"
-  resolved "https://registry.yarnpkg.com/grunt-eslint/-/grunt-eslint-24.3.0.tgz#2b82d107f6963de91daf58cf8311221a806a6de5"
-  integrity sha512-dUPiRgX8fhmh4uwTAn9xrzg7HV5j5DhGmZZGJdHfjy/AN9G4jD+5IjfbcAJ209JcIG8m4B7xz3crIhuDSm3siQ==
-  dependencies:
-    chalk "^4.1.2"
-    eslint "^8.44.0"
 
 grunt-known-options@~2.0.0:
   version "2.0.0"

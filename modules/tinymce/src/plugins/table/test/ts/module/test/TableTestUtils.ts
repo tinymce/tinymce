@@ -20,11 +20,11 @@ export interface WidthData {
   readonly isPercent: boolean;
 }
 
-const advSelectors = {
-  borderwidth: 'label.tox-label:contains(Border width) + input.tox-textfield',
-  borderstyle: 'label.tox-label:contains(Border style) + div.tox-listboxfield > .tox-listbox',
-  bordercolor: 'label.tox-label:contains(Border color) + div>input.tox-textfield',
-  backgroundcolor: 'label.tox-label:contains(Background color) + div>input.tox-textfield'
+const advLabels = {
+  borderwidth: 'Border width',
+  borderstyle: 'Border style',
+  bordercolor: 'Border color',
+  backgroundcolor: 'Background color'
 };
 
 const assertTableStructure = (editor: Editor, structure: StructAssert): void => {
@@ -81,29 +81,29 @@ const pAssertDialogPresence = async (label: string, editor: Editor, expected: Re
 
 const pAssertListBox = async (label: string, editor: Editor, section: string, expected: { title: string; value: string }): Promise<void> => {
   const dialog = await TinyUiActions.pWaitForDialog(editor);
-  const elem = UiFinder.findIn(dialog, 'label:contains("' + section + '") + .tox-listboxfield > .tox-listbox').getOrDie();
+  const elem = UiFinder.findTargetByLabel(dialog, section).getOrDie();
   const value = Attribute.get(elem, 'data-value');
   assert.equal(value, expected.value, 'Checking listbox value: ' + label);
   const text = TextContent.get(elem);
   assert.equal(text, expected.title, 'Checking listbox text: ' + label);
 };
 
-const getInput = (selector: string) =>
-  UiFinder.findIn<HTMLInputElement>(SugarBody.body(), selector).getOrDie();
+const getInput = (labelText: string) =>
+  UiFinder.findTargetByLabel<HTMLInputElement>(SugarBody.body(), labelText).getOrDie();
 
-const assertInputValue = (label: string, selector: string, expected: string | boolean): void => {
-  const input = getInput(selector);
+const assertInputValue = (propertyKey: string, labelText: string, expected: string | boolean): void => {
+  const input = getInput(labelText);
   if (input.dom.type === 'checkbox') {
-    assert.equal(input.dom.checked, expected, `The input value for ${label} should be: ${expected}`);
+    assert.equal(input.dom.checked, expected, `The input value for ${propertyKey} should be: ${expected}`);
   } else if (Class.has(input, 'tox-listbox')) {
-    assert.equal(Attribute.get(input, 'data-value'), String(expected), `The input value for ${label} should be: ${expected}`);
+    assert.equal(Attribute.get(input, 'data-value'), String(expected), `The input value for ${propertyKey} should be: ${expected}`);
   } else {
-    assert.equal(Value.get(input), expected, `The input value for ${label} should be: ${expected}`);
+    assert.equal(Value.get(input), expected, `The input value for ${propertyKey} should be: ${expected}`);
   }
 };
 
-const setInputValue = (selector: string, value: string | boolean): void => {
-  const input = getInput(selector);
+const setInputValue = (labelText: string, value: string | boolean): void => {
+  const input = getInput(labelText);
   if (input.dom.type === 'checkbox') {
     Checked.set(input, value as boolean);
   } else if (Class.has(input, 'tox-listbox')) {
@@ -134,7 +134,7 @@ const setDialogValues = (data: Record<string, any>, hasAdvanced: boolean, genera
     gotoGeneralTab();
     setTabInputValues(data, generalSelectors);
     gotoAdvancedTab();
-    setTabInputValues(data, advSelectors);
+    setTabInputValues(data, advLabels);
   } else {
     setTabInputValues(data, generalSelectors);
   }
@@ -153,7 +153,7 @@ const assertDialogValues = (data: Record<string, any>, hasAdvanced: boolean, gen
     gotoGeneralTab();
     assertTabContents(data, generalSelectors);
     gotoAdvancedTab();
-    assertTabContents(data, advSelectors);
+    assertTabContents(data, advLabels);
   } else {
     assertTabContents(data, generalSelectors);
   }
@@ -166,7 +166,7 @@ const pInsertTableViaGrid = async (editor: Editor, cols: number, rows: number): 
   );
   const gridSelector = (cols - 1) + (10 * (rows - 1));
   await Waiter.pTryUntil('click table grid', () =>
-    TinyUiActions.clickOnUi(editor, `div.tox-insert-table-picker div[role="button"]:nth(${gridSelector})`)
+    TinyUiActions.clickOnUi(editor, `div.tox-insert-table-picker div[role="button"]:nth-child(${gridSelector + 1})`)
   );
 };
 

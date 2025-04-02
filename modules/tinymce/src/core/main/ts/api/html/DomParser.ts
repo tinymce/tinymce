@@ -61,6 +61,8 @@ export interface DomParserSettings {
   convert_fonts_to_spans?: boolean;
   convert_unsafe_embeds?: boolean;
   document?: Document;
+  extended_mathml_elements?: string[];
+  extended_mathml_attributes?: string[];
   fix_list_elements?: boolean;
   font_size_legacy_values?: string;
   forced_root_block?: boolean | string;

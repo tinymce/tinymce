@@ -84,20 +84,10 @@ const fetchLernaProjects = (grunt, runAllTests) => {
   // This has to be sync because grunt can't do async config
   var exec = require('child_process').execSync;
 
-  // if JSON parse fails, well, grunt will just fail /shrug
   const parseLernaList = (cmd) => {
-    try {
-      const output = exec(`yarn -s lerna ${cmd} -a --json --loglevel warn`);
-      grunt.verbose.writeln(`lerna output: ${output}`);
-      return JSON.parse(output);
-    } catch (e) {
-      // If no changes are found, then lerna returns an exit code of 1, so deal with that gracefully
-      if (e.status === 1) {
-        return [];
-      } else {
-        throw e;
-      }
-    }
+    const output = exec(`yarn -s lerna ${cmd} -a --json --loglevel warn`);
+    grunt.verbose.writeln(`lerna output: ${output}`);
+    return JSON.parse(output);
   };
 
   const changes = runAllTests ? [] : parseLernaList('changed --no-ignore-changes');

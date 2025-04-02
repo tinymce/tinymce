@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Focus outline was misaligned with comment card border on saving an edit.
+time: 2025-02-10T16:04:44.938101+01:00
+custom:
+  Issue: TINY-11329

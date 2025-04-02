@@ -20,6 +20,7 @@ const renderNormalItem = (spec: Menu.MenuItem, itemResponse: ItemResponse, provi
     iconContent: spec.icon,
     textContent: spec.text,
     htmlContent: Optional.none(),
+    labelContent: Optional.none(),
     ariaLabel: spec.text,
     caret: Optional.none(),
     checkMark: Optional.none(),

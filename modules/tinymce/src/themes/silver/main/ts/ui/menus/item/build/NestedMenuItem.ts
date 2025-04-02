@@ -33,6 +33,7 @@ const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse,
     textContent: spec.text,
     htmlContent: Optional.none(),
     ariaLabel: spec.text,
+    labelContent: Optional.none(),
     caret: Optional.some(caret),
     checkMark: Optional.none(),
     shortcutContent: spec.shortcut

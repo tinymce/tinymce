@@ -18,15 +18,15 @@ const wrappedSetTimeout = (callback: () => void, time?: number) => {
     time = 0;
   }
 
-  return setTimeout(callback, time);
+  return window.setTimeout(callback, time);
 };
 
-const wrappedSetInterval = (callback: Function, time?: number): number => {
+const wrappedSetInterval = (callback: () => void, time?: number): number => {
   if (!Type.isNumber(time)) {
     time = 0;
   }
 
-  return setInterval(callback, time);
+  return window.setInterval(callback, time);
 };
 
 const Delay: Delay = {
@@ -62,7 +62,7 @@ const Delay: Delay = {
       if (!editor.removed) {
         callback();
       } else {
-        clearInterval(timer);
+        window.clearInterval(timer);
       }
     }, time);
 

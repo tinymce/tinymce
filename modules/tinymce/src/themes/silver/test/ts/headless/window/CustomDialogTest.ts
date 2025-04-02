@@ -47,16 +47,19 @@ describe('headless.tinymce.themes.silver.window.CustomDialogTest', () => {
 
   const selectors = {
     field1: 'input', // nothing more useful, because it does not have a label
-    field2: 'label:contains("F2") + .tox-textarea-wrap textarea',
-    field3: 'label:contains("F3") + .tox-form__controls-h-stack input',
     field4_a: '.tox-collection__item:contains("a")',
     field4_b: '.tox-collection__item:contains("b")',
     field5: 'input[type="checkbox"]',
-    field6: 'label:contains("nested1") + input',
-    field7: 'label:contains("nested2") + input',
     field8: 'button:contains("Cancel")',
     field9: 'button:contains("Save")',
     browseButton: 'button[data-mce-name="F3"]'
+  };
+
+  const labels = {
+    field2: 'F2',
+    field3: 'F3',
+    field6: 'nested1',
+    field7: 'nested2'
   };
 
   it('', async () => {
@@ -160,18 +163,10 @@ describe('headless.tinymce.themes.silver.window.CustomDialogTest', () => {
     );
 
     Keyboard.activeKeydown(doc, Keys.tab());
-    await FocusTools.pTryOnSelector(
-      'Focus should move to second input (textarea)',
-      doc,
-      selectors.field2
-    );
+    await FocusTools.pTryOnByLabel('Focus should move to second input (textarea)', doc, labels.field2);
 
     Keyboard.activeKeydown(doc, Keys.tab());
-    await FocusTools.pTryOnSelector(
-      'Focus should move to urlinput',
-      doc,
-      selectors.field3
-    );
+    await FocusTools.pTryOnByLabel('Focus should move to urlinput', doc, labels.field3);
 
     Keyboard.activeKeydown(doc, Keys.tab());
     await FocusTools.pTryOnSelector(
@@ -208,18 +203,10 @@ describe('headless.tinymce.themes.silver.window.CustomDialogTest', () => {
     assertFocusedCheckbox('Pressing <space> on unchecked checkbox', true);
 
     Keyboard.activeKeydown(doc, Keys.tab());
-    await FocusTools.pTryOnSelector(
-      'Focus should move to first nested input',
-      doc,
-      selectors.field6
-    );
+    await FocusTools.pTryOnByLabel('Focus should move to first nested input', doc, labels.field6);
 
     Keyboard.activeKeydown(doc, Keys.tab());
-    await FocusTools.pTryOnSelector(
-      'Focus should move to second nested input',
-      doc,
-      selectors.field7
-    );
+    await FocusTools.pTryOnByLabel('Focus should move to second nested input', doc, labels.field7);
 
     Keyboard.activeKeydown(doc, Keys.tab());
     await FocusTools.pTryOnSelector(
@@ -237,22 +224,25 @@ describe('headless.tinymce.themes.silver.window.CustomDialogTest', () => {
 
     // Now, navigate backwards
     await Arr.foldl([
-      { label: 'cancel', selector: selectors.field8 },
-      { label: 'nested2', selector: selectors.field7 },
-      { label: 'nested1', selector: selectors.field6 },
-      { label: 'checkbox', selector: selectors.field5 },
-      { label: 'charmap', selector: selectors.field4_a },
-      { label: 'browse button', selector: selectors.browseButton },
-      { label: 'f3', selector: selectors.field3 },
-      { label: 'f2', selector: selectors.field2 },
-      { label: 'first input', selector: selectors.field1 }
+      { testLabel: 'cancel', selector: selectors.field8 },
+      { testLabel: 'nested2', label: labels.field7 },
+      { testLabel: 'nested1', label: labels.field6 },
+      { testLabel: 'checkbox', selector: selectors.field5 },
+      { testLabel: 'charmap', selector: selectors.field4_a },
+      { testLabel: 'browse button', selector: selectors.browseButton },
+      { testLabel: 'f3', label: labels.field3 },
+      { testLabel: 'f2', label: labels.field2 },
+      { testLabel: 'first input', selector: selectors.field1 }
     ], (p, dest) => p.then(async () => {
       Keyboard.activeKeydown(doc, Keys.tab(), { shiftKey: true });
-      await FocusTools.pTryOnSelector(
-        'Focus should move to ' + dest.label,
-        doc,
-        dest.selector
-      );
+      if (dest.selector) {
+        await FocusTools.pTryOnSelector('Focus should move to ' + dest.testLabel, doc, dest.selector);
+        return;
+      }
+      if (dest.label) {
+        await FocusTools.pTryOnByLabel('Focus should move to ' + dest.testLabel, doc, dest.label);
+        return;
+      }
     }), Promise.resolve());
 
     store.assertEq('Checking the testLog is empty', []);
