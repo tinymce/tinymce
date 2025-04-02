@@ -55,6 +55,11 @@ const registerReadOnlyInputBlockers = (editor: Editor): void => {
   // Set up mutation observer to detect and revert unintended changes
   const observer = new MutationObserver((mutations) => {
     if (isReadOnly(editor)) {
+      // Skip if we're in an undo transaction (annotation changes)
+      if (editor.undoManager.typing || editor.undoManager.data.length > 0) {
+        return;
+      }
+
       mutations.forEach((mutation) => {
         if (mutation.type === 'characterData' || mutation.type === 'childList') {
           // Revert the changes by restoring the previous content
