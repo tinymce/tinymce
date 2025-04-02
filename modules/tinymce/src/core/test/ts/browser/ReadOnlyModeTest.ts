@@ -1,4 +1,4 @@
-import { ApproxStructure, Mouse, UiFinder, Clipboard, Waiter } from '@ephox/agar';
+import { ApproxStructure, Mouse, UiFinder, Clipboard } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Class, Css, Scroll, SelectorFind, SugarBody, Traverse } from '@ephox/sugar';
