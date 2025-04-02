@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Deleting an empty block within <li> would move cursor at the end of the <li>.
-time: 2025-02-19T22:32:09.312262+01:00
-custom:
-  Issue: TINY-11763

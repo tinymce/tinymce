@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Exception was thrown when trying to use context form API after component was detached.
-time: 2025-02-13T11:14:01.865459+01:00
-custom:
-  Issue: TINY-11781
