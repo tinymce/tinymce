@@ -1,11 +1,12 @@
 import Editor from 'tinymce/core/api/Editor';
+import * as Options from '../api/Options';
 
 import * as Anchor from '../core/Anchor';
 
 const insertAnchor = (editor: Editor, newId: string): boolean => {
   if (!Anchor.isValidId(newId)) {
     editor.windowManager.alert(
-      'ID should start with a letter, followed only by letters, numbers, dashes, dots, colons or underscores.'
+      Options.anchorInvalidMessage(editor)
     );
     return false;
   } else {
@@ -27,7 +28,7 @@ const open = (editor: Editor): void => {
           name: 'id',
           type: 'input',
           label: 'ID',
-          placeholder: 'example'
+          placeholder: Options.anchorNamePlaceholder(editor),
         }
       ]
     },
