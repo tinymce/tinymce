@@ -1,5 +1,5 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Boxes, Docking, GuiFactory, HotspotAnchorSpec, InlineView, Keying,
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Boxes, Channels, Docking, GuiFactory, HotspotAnchorSpec, InlineView, Keying,
   MakeshiftAnchorSpec, ModalDialog, NodeAnchorSpec, SelectionAnchorSpec, SystemEvents
 } from '@ephox/alloy';
 import { StructureProcessor, StructureSchema } from '@ephox/boulder';
@@ -240,6 +240,9 @@ const setup = (extras: WindowManagerSetup): WindowManagerImpl => {
         // 'ResizeWindow` as that's handled by docking already.
         editor.on('ResizeEditor', refreshDocking);
       }
+      editor.on('ScrollWindow', () => {
+        dialogUi.dialog.getSystem().broadcastOn([ Channels.repositionPopups() ], { target: dialogUi.dialog.element });
+      });
 
       // Set the initial data in the dialog and focus the first focusable item
       dialogUi.instanceApi.setData(initialData);
