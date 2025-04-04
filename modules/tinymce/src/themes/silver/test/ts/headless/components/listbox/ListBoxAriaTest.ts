@@ -1,16 +1,17 @@
 import { ApproxStructure, Assertions, Mouse, UiFinder } from '@ephox/agar';
-import { GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
+import { GuiFactory, Representing } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 
 import { renderListBox } from 'tinymce/themes/silver/ui/dialog/ListBox';
 
+import * as GuiSetup from '../../../module/GuiSetup';
 import * as TestExtras from '../../../module/TestExtras';
 
 describe('headless.tinymce.themes.silver.components.listbox.ListBoxAriaTest', () => {
   const extrasHook = TestExtras.bddSetup();
 
-  const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+  const hook = GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderListBox({
       context: 'any',
       name: 'selector',

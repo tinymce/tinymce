@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Mouse, Waiter } from '@ephox/agar';
-import { AlloyComponent, GuiFactory, TestHelpers } from '@ephox/alloy';
+import { AlloyComponent, GuiFactory } from '@ephox/alloy';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Menu, Toolbar } from '@ephox/bridge';
 import { Cell, Fun, Optional } from '@ephox/katamari';
@@ -9,6 +9,7 @@ import { assert } from 'chai';
 import { renderMenuButton } from 'tinymce/themes/silver/ui/button/MenuButton';
 import { renderSplitButton, renderToolbarButton, renderToolbarToggleButton } from 'tinymce/themes/silver/ui/toolbar/button/ToolbarButtons';
 
+import * as GuiSetup from '../../module/GuiSetup';
 import TestBackstage from '../../module/TestBackstage';
 import * as TestExtras from '../../module/TestExtras';
 
@@ -17,7 +18,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
   const shouldActivate = Cell(false);
   const extrasHook = TestExtras.bddSetup();
 
-  const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build({
+  const hook = GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build({
     dom: {
       tag: 'div'
     },

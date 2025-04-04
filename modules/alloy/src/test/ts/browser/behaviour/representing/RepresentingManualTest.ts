@@ -4,8 +4,8 @@ import { Html } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import * as RepresentPipes from 'ephox/alloy/test/behaviour/RepresentPipes';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('RepresentingTest (mode: manual)', (success, failure) => {
   GuiSetup.setup((store, _doc, _body) => GuiFactory.build({

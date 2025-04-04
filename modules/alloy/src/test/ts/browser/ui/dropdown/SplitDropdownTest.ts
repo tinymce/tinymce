@@ -10,12 +10,12 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { SplitDropdown } from 'ephox/alloy/api/ui/SplitDropdown';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { TestItem } from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('SplitDropdown List', (success, failure) => {
 

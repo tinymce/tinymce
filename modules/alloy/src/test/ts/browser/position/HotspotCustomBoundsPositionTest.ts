@@ -6,11 +6,11 @@ import { Css } from '@ephox/sugar';
 import * as Boxes from 'ephox/alloy/alien/Boxes';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as Layout from 'ephox/alloy/positioning/layout/Layout';
 import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 

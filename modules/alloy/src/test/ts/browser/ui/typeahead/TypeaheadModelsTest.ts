@@ -10,12 +10,12 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import * as MenuEvents from 'ephox/alloy/menu/util/MenuEvents';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import { TestItem } from 'ephox/alloy/test/dropdown/TestDropdownMenu';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 import { TypeaheadSpec } from 'ephox/alloy/ui/types/TypeaheadTypes';
 

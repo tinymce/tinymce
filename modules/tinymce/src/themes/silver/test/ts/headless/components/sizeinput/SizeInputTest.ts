@@ -1,18 +1,19 @@
 import { ApproxStructure, Assertions, FocusTools, Mouse, UiFinder } from '@ephox/agar';
-import { AlloyComponent, GuiFactory, NativeEvents, Representing, TestHelpers } from '@ephox/alloy';
+import { AlloyComponent, GuiFactory, NativeEvents, Representing } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 
 import { renderSizeInput } from 'tinymce/themes/silver/ui/dialog/SizeInput';
 
 import * as DomUtils from '../../../module/DomUtils';
+import * as GuiSetup from '../../../module/GuiSetup';
 import * as RepresentingUtils from '../../../module/RepresentingUtils';
 import TestBackstage from '../../../module/TestBackstage';
 
 // TODO TINY-10480: Investigate flaky tests
 describe.skip('headless.tinymce.themes.silver.components.sizeinput.SizeInputTest', () => {
   const backstage = TestBackstage();
-  const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+  const hook = GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderSizeInput({
       name: 'dimensions',
       context: 'any',

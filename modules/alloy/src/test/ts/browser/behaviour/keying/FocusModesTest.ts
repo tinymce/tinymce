@@ -8,8 +8,8 @@ import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { FocusInsideModes } from 'ephox/alloy/keying/KeyingModeTypes';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('Focus Modes Test', (success, failure) => {
 

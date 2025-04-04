@@ -10,7 +10,7 @@ import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('Browser Test: behaviour.keying.FocusManagersTest', (success, failure) => {
   const createManager = (prefix: string) => {

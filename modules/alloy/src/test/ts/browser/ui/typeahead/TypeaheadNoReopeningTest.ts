@@ -8,12 +8,12 @@ import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import { TestItem } from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 
 UnitTest.asynctest('Browser Test: .ui.typeahead.TypeaheadNoReopeningTest', (success, failure) => {

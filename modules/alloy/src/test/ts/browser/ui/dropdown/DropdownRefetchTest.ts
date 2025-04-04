@@ -10,12 +10,12 @@ import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { Dropdown } from 'ephox/alloy/api/ui/Dropdown';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { TestItem } from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 interface TestDatum {
   readonly code: string;

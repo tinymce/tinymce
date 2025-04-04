@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
-import { GuiFactory, TestHelpers } from '@ephox/alloy';
+import { GuiFactory } from '@ephox/alloy';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Singleton } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
@@ -7,12 +7,13 @@ import { assert } from 'chai';
 
 import { renderHtmlPanel } from 'tinymce/themes/silver/ui/general/HtmlPanel';
 
+import * as GuiSetup from '../../../module/GuiSetup';
 import TestBackstage from '../../../module/TestBackstage';
 
 describe('headless.tinymce.themes.silver.components.htmlpanel.HtmlPanelTest', () => {
   const innerHtml = '<br><br><hr>';
 
-  const assertPanelStructure = (hook: TestHelpers.GuiSetup.Hook<SugarElement<Document>>, role: string, stretched: boolean) => {
+  const assertPanelStructure = (hook: GuiSetup.Hook<SugarElement<Document>>, role: string, stretched: boolean) => {
     Assertions.assertStructure(
       'Checking initial structure',
       ApproxStructure.build((s, str, _arr) => s.element('div', {
@@ -33,7 +34,7 @@ describe('headless.tinymce.themes.silver.components.htmlpanel.HtmlPanelTest', ()
   context('Presentation', () => {
     const initEl = Singleton.value<HTMLElement>();
     const backstage = TestBackstage();
-    const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+    const hook = GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
       renderHtmlPanel({
         html: innerHtml,
         presets: 'presentation',
@@ -51,7 +52,7 @@ describe('headless.tinymce.themes.silver.components.htmlpanel.HtmlPanelTest', ()
   context('Presentation stretched', () => {
     const initEl = Singleton.value<HTMLElement>();
     const backstage = TestBackstage();
-    const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+    const hook = GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
       renderHtmlPanel({
         html: innerHtml,
         presets: 'presentation',
@@ -69,7 +70,7 @@ describe('headless.tinymce.themes.silver.components.htmlpanel.HtmlPanelTest', ()
   context('Document', () => {
     const initEl = Singleton.value<HTMLElement>();
     const backstage = TestBackstage();
-    const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+    const hook = GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
       renderHtmlPanel({
         html: innerHtml,
         presets: 'document',
@@ -87,7 +88,7 @@ describe('headless.tinymce.themes.silver.components.htmlpanel.HtmlPanelTest', ()
   context('Document stretched', () => {
     const initEl = Singleton.value<HTMLElement>();
     const backstage = TestBackstage();
-    const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+    const hook = GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
       renderHtmlPanel({
         html: innerHtml,
         presets: 'document',

@@ -8,7 +8,7 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('AlloyTriggersRetargetTest', (success, failure) => {
   /*

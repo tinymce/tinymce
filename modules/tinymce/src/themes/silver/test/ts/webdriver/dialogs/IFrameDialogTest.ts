@@ -1,5 +1,4 @@
 import { FocusTools, RealKeys, RealMouse, UiFinder, Waiter } from '@ephox/agar';
-import { TestHelpers } from '@ephox/alloy';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
@@ -10,6 +9,7 @@ import { Dialog } from 'tinymce/core/api/ui/Ui';
 import { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
+import * as GuiSetup from '../../module/GuiSetup';
 import * as TestExtras from '../../module/TestExtras';
 
 describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
@@ -21,7 +21,7 @@ describe('webdriver.tinymce.themes.silver.dialogs.IFrameDialogTest', () => {
     windowManager = WindowManager.setup(extrasHook.access().extras);
   });
 
-  TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
+  GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
     '[role="dialog"] { border: 1px solid black; padding: 2em; background-color: rgb(131,193,249); top: 40px; position: absolute; }',
 
     ':focus { outline: 3px solid green; !important; }',

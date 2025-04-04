@@ -13,12 +13,12 @@ import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import * as MenuEvents from 'ephox/alloy/menu/util/MenuEvents';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import { TestItem } from 'ephox/alloy/test/dropdown/TestDropdownMenu';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 
 describe('browser.alloy.ui.typeahead.TypeaheadWithDifferentMothershipsTest', () => {

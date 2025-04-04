@@ -3,7 +3,7 @@ import { UnitTest } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('ComponentApisTest', (success, failure) => {
   interface TestApiInterface {

@@ -1,5 +1,5 @@
 import { RealKeys, UiControls } from '@ephox/agar';
-import { GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
+import { GuiFactory, Representing } from '@ephox/alloy';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Future, Optional } from '@ephox/katamari';
 import { SelectorFind, SugarDocument, Value } from '@ephox/sugar';
@@ -8,12 +8,13 @@ import { assert } from 'chai';
 import { ApiUrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
 import { renderUrlInput } from 'tinymce/themes/silver/ui/dialog/UrlInput';
 
+import * as GuiSetup from '../../../module/GuiSetup';
 import * as TestExtras from '../../../module/TestExtras';
 
 describe('webdriver.tinymce.themes.silver.components.urlinput.UrlInputTest', () => {
   const extrasHook = TestExtras.bddSetup();
 
-  const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
+  const hook = GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
     renderUrlInput({
       context: 'any',
       label: Optional.some('UrlInput label'),
@@ -33,7 +34,7 @@ describe('webdriver.tinymce.themes.silver.components.urlinput.UrlInputTest', () 
     }, Optional.none())
   ));
 
-  TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
+  GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
     '.tox-menu { background: white; }',
     '.tox-collection__item--active { background: #cadbee }'
   ]);

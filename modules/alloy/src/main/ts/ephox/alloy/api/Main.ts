@@ -87,8 +87,6 @@ import * as Channels from './messages/Channels';
 import * as Attachment from './system/Attachment';
 import * as ForeignGui from './system/ForeignGui';
 import * as Gui from './system/Gui';
-// Test code - should eventually move to a separate project
-import * as TestHelpers from './testhelpers/TestHelpers';
 import { Button } from './ui/Button';
 import { Container } from './ui/Container';
 import { CustomList } from './ui/CustomList';
@@ -279,7 +277,5 @@ export {
   DockingTypes,
   Layouts,
   TooltippingTypes,
-  FocusInsideModes,
-
-  TestHelpers
+  FocusInsideModes
 };
