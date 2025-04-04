@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Removed deprecated CSS media selector `-ms-high-contrast`.
+time: 2025-03-25T14:21:59.569893+01:00
+custom:
+  Issue: TINY-11876
