@@ -1,4 +1,3 @@
-import { ColourPicker } from '@ephox/acid';
 import { AlloyComponent, AlloyTriggers, Behaviour, Composing, Form, Memento, NativeEvents, Representing, SimpleSpec } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Arr, Optional, Strings, Type } from '@ephox/katamari';
@@ -8,6 +7,7 @@ import { Untranslated } from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import * as RepresentingConfigs from '../alien/RepresentingConfigs';
+import * as ColourPicker from '../colorpicker/ColourPicker';
 import { formActionEvent } from '../general/FormEvents';
 import * as Icons from '../icons/Icons';
 

@@ -1,3 +1,4 @@
+import { ColourTypes, HexColour, RgbaColour } from '@ephox/acid';
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, EventFormat, Focusing, Form, FormField, FormTypes, GuiFactory, Input, Invalidating,
   Memento, Representing, SimpleSpec, SimulatedEvent, Sketcher, SketchSpec,
@@ -6,9 +7,6 @@ import {
 import { Cell, Fun, Future, Id, Merger, Optional, Result } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 
-import { Hex, Rgba } from '../../api/colour/ColourTypes';
-import * as HexColour from '../../api/colour/HexColour';
-import * as RgbaColour from '../../api/colour/RgbaColour';
 import * as ColourEvents from '../ColourEvents';
 
 const validInput = Id.generate('valid-input');
@@ -46,7 +44,7 @@ export interface RgbFormSpec extends Sketcher.SingleSketchSpec {
 // tslint:enable:no-empty-interface
 
 export interface RgbFormSketcher extends Sketcher.SingleSketch<RgbFormSpec> {
-  updateHex: (slider: AlloyComponent, colour: Hex) => void;
+  updateHex: (slider: AlloyComponent, colour: ColourTypes.Hex) => void;
 }
 
 export type RgbIconCreation = (name: string, errId: Optional<string>, icon?: string, label?: string) => SimpleSpec;
@@ -236,7 +234,7 @@ const rgbFormFactory = (
     };
   };
 
-  const copyRgbToHex = (form: AlloyComponent, rgba: Rgba) => {
+  const copyRgbToHex = (form: AlloyComponent, rgba: ColourTypes.Rgba) => {
     const hex = HexColour.fromRgba(rgba);
     Form.getField(form, 'hex').each((hexField: AlloyComponent) => {
       // Not amazing, but it turns out that if we have an invalid RGB field, and no hex code
@@ -251,7 +249,7 @@ const rgbFormFactory = (
     return hex;
   };
 
-  const copyRgbToForm = (form: AlloyComponent, rgb: Rgba): void => {
+  const copyRgbToForm = (form: AlloyComponent, rgb: ColourTypes.Rgba): void => {
     const red = rgb.red; const green = rgb.green; const blue = rgb.blue;
     Representing.setValue(form, { red, green, blue });
   };
@@ -271,7 +269,7 @@ const rgbFormFactory = (
     }
   );
 
-  const updatePreview = (anyInSystem: AlloyComponent, hex: Hex) => {
+  const updatePreview = (anyInSystem: AlloyComponent, hex: ColourTypes.Hex) => {
     memPreview.getOpt(anyInSystem).each((preview: AlloyComponent) => {
       Css.set(preview.element, 'background-color', '#' + hex.value);
     });
@@ -285,7 +283,7 @@ const rgbFormFactory = (
       hex: Cell(Optional.some('ffffff'))
     };
 
-    const copyHexToRgb = (form: AlloyComponent, hex: Hex) => {
+    const copyHexToRgb = (form: AlloyComponent, hex: ColourTypes.Hex) => {
       const rgb = RgbaColour.fromHex(hex);
       copyRgbToForm(form, rgb);
       setValueRgb(rgb);
@@ -306,7 +304,7 @@ const rgbFormFactory = (
     );
 
     // TODO: Find way to use this for palette and slider updates
-    const setValueRgb = (rgb: Rgba): void => {
+    const setValueRgb = (rgb: ColourTypes.Rgba): void => {
       const red = rgb.red; const green = rgb.green; const blue = rgb.blue;
       set('red', Optional.some(red));
       set('green', Optional.some(green));
@@ -409,7 +407,7 @@ const rgbFormFactory = (
       })),
       {
         apis: {
-          updateHex: (form: AlloyComponent, hex: Hex) => {
+          updateHex: (form: AlloyComponent, hex: ColourTypes.Hex) => {
             Representing.setValue(form, {
               hex: hex.value
             });
@@ -422,7 +420,7 @@ const rgbFormFactory = (
   };
 
   interface Apis {
-    updateHex(form: AlloyComponent, hex: Hex): void;
+    updateHex(form: AlloyComponent, hex: ColourTypes.Hex): void;
   }
 
   const rgbFormSketcher = Sketcher.single({
@@ -430,7 +428,7 @@ const rgbFormFactory = (
     name: 'RgbForm',
     configFields: [],
     apis: {
-      updateHex: (apis: Apis, form: AlloyComponent, hex: Hex) => {
+      updateHex: (apis: Apis, form: AlloyComponent, hex: ColourTypes.Hex) => {
         apis.updateHex(form, hex);
       }
     },
