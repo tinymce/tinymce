@@ -17,7 +17,7 @@ reviews:
   collapse_walkthrough: false
   changed_files_summary: true
   sequence_diagrams: true
-  assess_linked_issues: true
+  assess_linked_issues: false
   related_issues: true
   related_prs: true
   suggested_labels: false
