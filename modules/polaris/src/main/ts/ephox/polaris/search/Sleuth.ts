@@ -10,7 +10,7 @@ const removeOverlapped = <T extends PRange>(array: T[]): T[] => {
   const sorted = sort(array);
 
   return Arr.foldl(sorted, (acc, item) => {
-    const overlaps = Arr.exists(acc, (a) => item.start >= a.start && item.finish <= a.finish);
+    const overlaps = Arr.exists(acc, (a) => (item.start >= a.start && item.finish <= a.finish) || (item.finish > a.start && item.start < a.start) || (item.finish > a.finish && item.start < a.finish));
     const matchingStartIndex = Arr.findIndex(acc, (a) => item.start === a.start);
 
     // If there's no item with matching start in acc and within the start and finish, then we append, else we skip the item
