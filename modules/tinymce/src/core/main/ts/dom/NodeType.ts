@@ -100,7 +100,7 @@ const isDocument = isNodeType<Document>(9);
 const isDocumentFragment = isNodeType<DocumentFragment>(11);
 const isBr = matchNodeName<HTMLBRElement>('br');
 const isImg = matchNodeName<HTMLImageElement>('img');
-const isAnchor = matchNodeName<HTMLImageElement>('a');
+const isAnchor = matchNodeName<HTMLAnchorElement>('a');
 const isContentEditableTrue = hasContentEditableState('true');
 const isContentEditableFalse = hasContentEditableState('false');
 const isEditingHost = (node: Node): node is HTMLElement => isHTMLElement(node) && node.isContentEditable && Type.isNonNullable(node.parentElement) && !node.parentElement.isContentEditable;
