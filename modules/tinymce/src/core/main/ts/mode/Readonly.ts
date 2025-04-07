@@ -55,24 +55,26 @@ const registerReadOnlyInputBlockers = (editor: Editor): void => {
   // Set up mutation observer to detect and revert unintended changes
   const observer = new MutationObserver((mutations) => {
     if (isReadOnly(editor)) {
-      // Skip if we're in an undo transaction (annotation changes)
-      if (editor.undoManager.typing || editor.undoManager.data.length > 0) {
-        return;
-      }
+      let needsRevert = false;
 
       mutations.forEach((mutation) => {
         if (mutation.type === 'characterData' || mutation.type === 'childList') {
-          // Revert the changes by restoring the previous content
-          const undoLevel = editor.undoManager.add();
-          if (Type.isNonNullable(undoLevel)) {
-            editor.undoManager.undo();
-          }
+          // Mark that we need to revert
+          needsRevert = true;
         }
       });
+
+      // Only create one undo level for all mutations in this batch
+      if (needsRevert) {
+        const undoLevel = editor.undoManager.add();
+        if (Type.isNonNullable(undoLevel)) {
+          editor.undoManager.undo();
+        }
+      }
     }
   });
 
-  editor.on('init', () => {
+  editor.on('compositionstart', () => {
     observer.observe(editor.getBody(), {
       characterData: true,
       childList: true,
@@ -80,7 +82,7 @@ const registerReadOnlyInputBlockers = (editor: Editor): void => {
     });
   });
 
-  editor.on('remove', () => {
+  editor.on('compositionend', () => {
     observer.disconnect();
   });
 };
