@@ -943,7 +943,7 @@ module.exports = function (grunt) {
   grunt.registerTask('start', ['webpack-dev-server']);
 
   grunt.registerTask('buildOnly', ['clean:dist', 'prod']);
-  grunt.registerTask('default', ['clean:dist', 'prod']);
+  grunt.registerTask('default', ['clean:dist', 'shell:eslint', 'prod']);
   grunt.registerTask('test', ['bedrock-auto:standard']);
   grunt.registerTask('test-manual', ['bedrock-manual']);
 };
