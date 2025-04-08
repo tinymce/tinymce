@@ -43,12 +43,12 @@ const detached = (editable: SugarElement<Element>, chrome: SugarElement<Element>
   };
 };
 
-const body = (editable: SugarElement<Element>, chrome: SugarElement<Element>, isResizable: ResizeCallback): ResizeWire => {
+const body = (editable: SugarElement<Element>, isResizable: ResizeCallback): ResizeWire => {
   return {
-    parent: Fun.constant(chrome),
+    parent: Fun.constant(editable),
     view: Fun.constant(editable),
-    dragContainer: Fun.constant(chrome),
-    origin: Fun.constant(SugarPosition(0, 0)),
+    dragContainer: Fun.constant(editable),
+    origin: Fun.constant(SugarLocation.absolute(editable)),
     isResizable
   };
 };
