@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Keyboard, Keys, Mouse, UiFinder } from '@ephox/agar';
-import { AlloyComponent, Disabling, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
+import { AlloyComponent, Disabling, GuiFactory, Representing } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { Attribute } from '@ephox/sugar';
@@ -7,13 +7,14 @@ import { assert } from 'chai';
 
 import { renderListBox } from 'tinymce/themes/silver/ui/dialog/ListBox';
 
+import * as GuiSetup from '../../../module/GuiSetup';
 import * as RepresentingUtils from '../../../module/RepresentingUtils';
 import * as TestExtras from '../../../module/TestExtras';
 
 describe('headless.tinymce.themes.silver.components.listbox.ListBoxTest', () => {
   const extrasHook = TestExtras.bddSetup();
 
-  const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+  const hook = GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderListBox({
       name: 'selector',
       context: 'any',

@@ -1,15 +1,16 @@
 import { ApproxStructure, Assertions, Mouse } from '@ephox/agar';
-import { GuiFactory, TestHelpers } from '@ephox/alloy';
+import { GuiFactory } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 
 import { renderButton } from 'tinymce/themes/silver/ui/general/Button';
 
+import * as GuiSetup from '../../../module/GuiSetup';
 import TestProviders from '../../../module/TestProviders';
 
 describe('headless.tinymce.themes.silver.components.dialogbutton.DialogButtonTest', () => {
   describe('primary style', () => {
-    const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
+    const hook = GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
       renderButton({
         context: 'any',
         name: 'test-button',
@@ -45,7 +46,7 @@ describe('headless.tinymce.themes.silver.components.dialogbutton.DialogButtonTes
   });
 
   describe('secondary style', () => {
-    const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
+    const hook = GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
       renderButton({
         context: 'any',
         name: 'test-button',
@@ -73,7 +74,7 @@ describe('headless.tinymce.themes.silver.components.dialogbutton.DialogButtonTes
   });
 
   describe('toolbar style', () => {
-    const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
+    const hook = GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
       renderButton({
         context: 'any',
         name: 'test-button',

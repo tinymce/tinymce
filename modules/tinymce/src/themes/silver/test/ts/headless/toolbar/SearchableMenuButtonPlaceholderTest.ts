@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Keyboard, Keys, Mouse, UiFinder } from '@ephox/agar';
-import { GuiFactory, TestHelpers } from '@ephox/alloy';
+import { GuiFactory } from '@ephox/alloy';
 import { after, before, describe, it } from '@ephox/bedrock-client';
 import { Fun, Id, Optional } from '@ephox/katamari';
 import { SugarDocument } from '@ephox/sugar';
@@ -9,12 +9,13 @@ import { renderMenuButton } from 'tinymce/themes/silver/ui/button/MenuButton';
 
 import { fetchMailMergeData } from '../../module/CommonMailMergeFetch';
 import { structMenuWith, structSearchField } from '../../module/CommonMenuTestStructures';
+import * as GuiSetup from '../../module/GuiSetup';
 import * as TestExtras from '../../module/TestExtras';
 
 describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonPlaceholderTest', () => {
   const helpers = TestExtras.bddSetup();
 
-  TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
+  GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
     `.tox-menu .tox-collection__item--active {
       background-color: black;
     }`,
@@ -30,7 +31,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonPlaceholder
   const translateInput = 'translation-input';
   const translateOutput = Id.generate('translation-output');
 
-  const hook = TestHelpers.GuiSetup.bddSetup(
+  const hook = GuiSetup.bddSetup(
     (store, _doc, _body) => GuiFactory.build(
       renderMenuButton(
         {

@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Keyboard, Keys, Mouse, TestStore, UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { Container, Disabling, Focusing, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
+import { Container, Disabling, Focusing, GuiFactory, Representing } from '@ephox/alloy';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Future, Optional } from '@ephox/katamari';
 import { Attribute, SelectorFind, SugarDocument, Value } from '@ephox/sugar';
@@ -9,6 +9,7 @@ import { ApiUrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
 import { LinkTargetType } from 'tinymce/themes/silver/ui/core/LinkTargets';
 import { renderUrlInput } from 'tinymce/themes/silver/ui/dialog/UrlInput';
 
+import * as GuiSetup from '../../../module/GuiSetup';
 import * as TestExtras from '../../../module/TestExtras';
 
 describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () => {
@@ -52,7 +53,7 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
       })
     }, Optional.none());
 
-  const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
+  const hook = GuiSetup.bddSetup((store, _doc, _body) => GuiFactory.build(
     Container.sketch({
       dom: {
         tag: 'div'
@@ -64,7 +65,7 @@ describe('headless.tinymce.themes.silver.components.urlinput.UrlInputTest', () =
     })
   ), () => extrasHook.access().getPopupMothership());
 
-  TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
+  GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
     '.tox-menu { background: white; }',
     '.tox-collection__item--active { background: #cadbee }'
   ]);
