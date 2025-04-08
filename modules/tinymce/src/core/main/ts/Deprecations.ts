@@ -23,7 +23,12 @@ const deprecatedOptions: string[] = [];
 
 const removedPlugins = 'bbcode,colorpicker,contextmenu,fullpage,legacyoutput,spellchecker,template,textcolor,rtc'.split(',');
 
-const deprecatedPlugins: DeprecatedPlugin[] = [];
+const deprecatedPlugins: DeprecatedPlugin[] = [
+  {
+    name: 'export',
+    replacedWith: 'exportpdf'
+  },
+];
 
 const getMatchingOptions = (options: RawEditorOptions, searchingFor: string[]): string[] => {
   const settingNames = Arr.filter(searchingFor, (setting) => Obj.has(options, setting));
