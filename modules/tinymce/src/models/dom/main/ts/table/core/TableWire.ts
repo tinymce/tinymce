@@ -36,8 +36,7 @@ const getInlineResizeWire = (editor: Editor, isResizable: (elm: SugarElement<Ele
     return ResizeWire.scrollable(editorBody, container, body, isResizable);
   }
 
-  Insert.append(body, container);
-  return ResizeWire.body(editorBody, container, isResizable);
+  return ResizeWire.body(editorBody, isResizable);
 };
 
 const get = (editor: Editor, isResizable: (elm: SugarElement<Element>) => boolean): ResizeWire => {
