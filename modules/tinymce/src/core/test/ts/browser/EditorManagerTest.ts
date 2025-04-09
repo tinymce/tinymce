@@ -1,4 +1,4 @@
-import { after, afterEach, before, describe, it } from '@ephox/bedrock-client';
+import { after, afterEach, before, context, describe, it } from '@ephox/bedrock-client';
 import { Remove, Selectors } from '@ephox/sugar';
 import { assert } from 'chai';
 import 'tinymce';
@@ -7,10 +7,13 @@ import 'tinymce/models/dom/Main';
 // eslint-disable-next-line @tinymce/no-main-module-imports
 import 'tinymce/themes/silver/Main';
 
+declare const tinymce: TinyMCE;
+
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import PluginManager from 'tinymce/core/api/PluginManager';
+import { TinyMCE } from 'tinymce/core/api/Tinymce';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as ViewBlock from '../module/test/ViewBlock';
@@ -237,5 +240,49 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
     });
 
     assert.notEqual(editor1.editorUid, editor2.editorUid);
+  });
+
+  context('locked properties', () => {
+    const lockedEditorManagerProperties = [ 'majorVersion', 'minorVersion', 'releaseDate', 'pageUid' ] as const;
+    const lockedEditorProperties = [ 'editorUid' ] as const;
+
+    it('EditorManager object', async () => {
+      for (const property of lockedEditorManagerProperties) {
+        assert.throws(() => {
+          EditorManager[property] = 'some_random_value';
+        });
+        assert.throws(() => {
+          delete EditorManager[property];
+        });
+        assert.notStrictEqual(EditorManager[property], 'some_random_value');
+      }
+    });
+
+    it('tinymce global', async () => {
+      for (const property of lockedEditorManagerProperties) {
+        assert.throws(() => {
+          tinymce[property] = 'some_random_value';
+        });
+        assert.throws(() => {
+          delete tinymce[property];
+        });
+        assert.notStrictEqual(tinymce[property], 'some_random_value');
+      }
+    });
+
+    it('Editor instance', async () => {
+      viewBlock.update('<textarea class="tinymce"></textarea><textarea class="tinymce"></textarea>');
+      await EditorManager.init({
+        selector: 'textarea.tinymce',
+        setup: (editor) => {
+          for (const property of lockedEditorProperties) {
+            assert.throws(() => {
+              editor[property] = 'some_random_value';
+            });
+            assert.notStrictEqual(editor[property], 'some_random_value');
+          }
+        },
+      });
+    });
   });
 });
