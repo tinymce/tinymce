@@ -8,7 +8,7 @@ type UserId = string;
 interface User {
   id: UserId;
   name: string;
-  avatar?: URL;
+  avatar?: string;
   description?: string;
   [key: string]: any;
 }

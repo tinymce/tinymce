@@ -27,6 +27,7 @@ import * as TouchEvents from '../events/TouchEvents';
 import * as ForceBlocks from '../ForceBlocks';
 import * as NonEditableFilter from '../html/NonEditableFilter';
 import * as KeyboardOverrides from '../keyboard/KeyboardOverrides';
+import UserLookup from '../lookup/UserLookup';
 import * as Disabled from '../mode/Disabled';
 import { NodeChange } from '../NodeChange';
 import * as Paste from '../paste/Paste';
@@ -439,6 +440,7 @@ const contentBodyLoaded = (editor: Editor): void => {
   (body as any).disabled = false;
 
   editor.editorUpload = EditorUpload(editor);
+  editor.userLookup = UserLookup(editor);
   editor.schema = Schema(mkSchemaSettings(editor));
   editor.dom = DOMUtils(doc, {
     keep_values: true,
