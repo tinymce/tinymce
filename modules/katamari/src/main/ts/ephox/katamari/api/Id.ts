@@ -1,4 +1,6 @@
+import * as IdUtils from '../util/IdUtilts';
 import * as Num from './Num';
+import * as Type from './Type';
 
 /**
  * Generate a unique identifier.
@@ -13,7 +15,7 @@ import * as Num from './Num';
  */
 let unique = 0;
 
-export const generate = (prefix: string): string => {
+const generate = (prefix: string): string => {
   const date = new Date();
   const time = date.getTime();
   const random = Math.floor(Num.random() * 1000000000);
@@ -21,4 +23,22 @@ export const generate = (prefix: string): string => {
   unique++;
 
   return prefix + '_' + random + unique + String(time);
+};
+
+/**
+ * Generate a uuidv4 string
+ * In accordance with RFC 4122 (https://datatracker.ietf.org/doc/html/rfc4122)
+ */
+const uuidV4 = (): `${string}-${string}-${string}-${string}-${string}` => {
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  if (Type.isFunction(window.crypto.randomUUID) && window.isSecureContext) {
+    return window.crypto.randomUUID();
+  } else {
+    return IdUtils.uuidV4String();
+  }
+};
+
+export {
+  generate,
+  uuidV4
 };
