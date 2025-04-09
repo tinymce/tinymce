@@ -904,11 +904,11 @@ const register = (editor: Editor): void => {
     default: true
   });
 
-  registerOption('current_user', {
+  registerOption('current_user_id', {
     processor: 'string',
   });
 
-  registerOption('fetch_user', {
+  registerOption('fetch_user_by_id', {
     processor: 'function',
   });
 
@@ -1041,8 +1041,8 @@ const getApiKey = option('api_key');
 const isDisabled = option('disabled');
 const getExtendedMathmlAttributes = option('extended_mathml_attributes');
 const getExtendedMathmlElements = option('extended_mathml_elements');
-const getCurrentUser = option('current_user');
-const getFetchUser = option('fetch_user');
+const getCurrentUserId = option('current_user_id');
+const getFetchUserById = option('fetch_user_by_id');
 const getUserCache = option('user_cache');
 
 export {
@@ -1157,7 +1157,7 @@ export {
   shouldConvertUnsafeEmbeds,
   getApiKey,
   isDisabled,
-  getFetchUser,
-  getCurrentUser,
+  getFetchUserById,
+  getCurrentUserId,
   getUserCache
 };
