@@ -15,7 +15,7 @@ interface User {
 
 interface UserLookup {
   getCurrentUserId: () => UserId;
-  fetchUser: (id: UserId) => Promise<User>;
+  fetchUserById: (id: UserId) => Promise<User>;
 }
 
 const UserLookup = (editor: Editor): UserLookup => {
@@ -28,18 +28,21 @@ const UserLookup = (editor: Editor): UserLookup => {
     userCache[userId] = user;
   };
 
-  const fetchUser = (userId: UserId): Promise<User> => new Promise((resolve, reject) =>
-    lookup(userId)
-      .fold(() => Options.getFetchUser(editor)(userId)
-        .then((user: User) => {
-          store(user, userId);
-          resolve(user);
-        })
-        .catch(reject),
-      resolve
-      ));
+  const fetchUserById = (userId: UserId): Promise<User> =>
+    new Promise((resolve, reject) =>
+      lookup(userId)
+        .fold(() =>
+          Options.getFetchUserById(editor)(userId)
+            .then((user: User) => {
+              store(user, userId);
+              resolve(user);
+            })
+            .catch(reject),
+        resolve
+        )
+    );
 
-  const getCurrentUserId = () => Options.getCurrentUser(editor);
+  const getCurrentUserId = () => Options.getCurrentUserId(editor);
 
   editor.on('init', () => {
     Obj.each(Options.getUserCache(editor), store);
@@ -47,7 +50,7 @@ const UserLookup = (editor: Editor): UserLookup => {
 
   return {
     getCurrentUserId,
-    fetchUser
+    fetchUserById
   };
 };
 
