@@ -904,6 +904,19 @@ const register = (editor: Editor): void => {
     default: true
   });
 
+  registerOption('current_user', {
+    processor: 'string',
+  });
+
+  registerOption('fetch_user', {
+    processor: 'function',
+  });
+
+  registerOption('user_cache', {
+    processor: 'object',
+    default: {},
+  });
+
   // These options must be registered later in the init sequence due to their default values
   editor.on('ScriptsLoaded', () => {
     registerOption('directionality', {
@@ -1028,6 +1041,9 @@ const getApiKey = option('api_key');
 const isDisabled = option('disabled');
 const getExtendedMathmlAttributes = option('extended_mathml_attributes');
 const getExtendedMathmlElements = option('extended_mathml_elements');
+const getCurrentUser = option('current_user');
+const getFetchUser = option('fetch_user');
+const getUserCache = option('user_cache');
 
 export {
   register,
@@ -1140,5 +1156,8 @@ export {
   getSandboxIframesExclusions,
   shouldConvertUnsafeEmbeds,
   getApiKey,
-  isDisabled
+  isDisabled,
+  getFetchUser,
+  getCurrentUser,
+  getUserCache
 };
