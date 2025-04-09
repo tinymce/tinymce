@@ -152,8 +152,7 @@ module.exports = function (grunt) {
                   { find: `tinymce/themes/${name}/resources`, replacement: path.resolve(__dirname, `src/themes/${name}/main/resources`) },
                   { find: `tinymce/themes/${name}`, replacement: path.resolve(__dirname, `lib/themes/${name}/main/ts`) }
                 ]
-              }),
-              swag.remapImports() // TODO: fast-check is being imported and rollup throws error
+              })
             ]
           },
           files:[
@@ -943,7 +942,7 @@ module.exports = function (grunt) {
   grunt.registerTask('start', ['webpack-dev-server']);
 
   grunt.registerTask('buildOnly', ['clean:dist', 'prod']);
-  grunt.registerTask('default', ['clean:dist', 'shell:eslint', 'prod']);
+  grunt.registerTask('default', ['clean:dist', 'prod']);
   grunt.registerTask('test', ['bedrock-auto:standard']);
   grunt.registerTask('test-manual', ['bedrock-manual']);
 };

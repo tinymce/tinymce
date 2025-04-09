@@ -1,9 +1,9 @@
-import { Keys } from '@ephox/agar';
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Disabling, Focusing, FocusInsideModes, Input, Keying, Memento, NativeEvents, Representing, SystemEvents, Tooltipping } from '@ephox/alloy';
 import { Arr, Cell, Fun, Id, Optional, Type } from '@ephox/katamari';
 import { Focus, SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import VK from 'tinymce/core/api/util/VK';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
 import * as Options from '../../../api/Options';
@@ -109,7 +109,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
           onControlAttached({ onSetup, getApi }, editorOffCellStepButton),
           onControlDetached({ getApi }, editorOffCellStepButton),
           AlloyEvents.run(NativeEvents.keydown(), (comp, se) => {
-            if (se.event.raw.keyCode === Keys.space() || se.event.raw.keyCode === Keys.enter()) {
+            if (se.event.raw.keyCode === VK.SPACEBAR || se.event.raw.keyCode === VK.ENTER) {
               if (!Disabling.isDisabled(comp)) {
                 action(false);
               }
