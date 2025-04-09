@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
@@ -360,6 +360,28 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
       TinyUiActions.keyup(editor, Keys.escape());
       TinyUiActions.keyup(editor, Keys.escape());
     }));
+
+  context('Empty styles provided', () => {
+    const hookStyleless = TinyHooks.bddSetup<Editor>({
+      toolbar: 'align fontfamily fontsize blocks styles',
+      base_url: '/project/tinymce/js/tinymce',
+      content_css: '/project/tinymce/src/themes/silver/test/css/content.css',
+      style_formats: [],
+    }, []);
+
+    it('TINY-12005: Empty styles should disable the buttons.', async () => {
+      const editor = hookStyleless.editor();
+      editor.setContent('<p>Content</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 2);
+      editor.focus();
+      const menuItemSelector = 'div[aria-label^="Formats"][role^="menuitem"][aria-disabled="true"]';
+      await Waiter.pTryUntil('Editor must have focus', () => assert.isTrue(editor.hasFocus()));
+      UiFinder.exists(SugarBody.body(), 'button[aria-label^="Format"]:disabled');
+      UiFinder.notExists(SugarBody.body(), menuItemSelector);
+      Mouse.clickOn(SugarBody.body(), '.tox-edit-focus [role="menubar"] [role="menuitem"]:contains("Format")');
+      await Waiter.pTryUntil('Format menu item should be disabled', () => UiFinder.exists(SugarBody.body(), menuItemSelector));
+    });
+  });
 
   it('TBA: Checking toolbar keyboard navigation', async () => {
     const editor = hook.editor();
