@@ -7,6 +7,7 @@ import * as EditorRemove from '../EditorRemove';
 import { BlobInfoImagePair } from '../file/ImageScanner';
 import * as EditorFocus from '../focus/EditorFocus';
 import * as Render from '../init/Render';
+import UserLookup from '../lookup/UserLookup';
 import * as EditableRoot from '../mode/EditableRoot';
 import { NodeChange } from '../NodeChange';
 import { normalizeOptions } from '../options/NormalizeOptions';
@@ -183,6 +184,14 @@ class Editor implements EditorObservable {
    * @type tinymce.EditorUpload
    */
   public editorUpload!: EditorUpload;
+
+  /**
+   * Editor user lookup API
+   *
+   * @property userLookup
+   * @type tinymce.UserLookup
+   */
+  public userLookup!: UserLookup;
 
   public shortcuts: Shortcuts;
   public loadedCSS: Record<string, any> = {};
