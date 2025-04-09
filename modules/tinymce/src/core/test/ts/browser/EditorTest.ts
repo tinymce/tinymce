@@ -1,9 +1,9 @@
 import { UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
+import { Fun, Obj } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Class, SugarBody } from '@ephox/sugar';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { McEditor, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -15,6 +15,7 @@ import URI from 'tinymce/core/api/util/URI';
 import { UndoLevel } from 'tinymce/core/undo/UndoManagerTypes';
 
 import * as HtmlUtils from '../module/test/HtmlUtils';
+import * as UuidUtils from '../module/test/UuidUtils';
 
 describe('browser.tinymce.core.EditorTest', () => {
   const browser = PlatformDetection.detect().browser;
@@ -578,6 +579,27 @@ describe('browser.tinymce.core.EditorTest', () => {
       checkWithManager('Plugin does exist with spaces and commas', 'Has, ParticularPlugin, In, List', 'ParticularPlugin', true, true);
       checkWithManager('Plugin does not patch to OtherPlugin', 'Has OtherPlugin In List', 'Plugin', true, false);
       checkWithManager('Plugin which has not loaded does not return true', 'Has ParticularPlugin In List', 'ParticularPlugin', false, false);
+    });
+  });
+
+  context('editorUid', () => {
+    it('TINY-12021: should exist and be unique', async () => {
+      const editor = hook.editor();
+      const editor2 = await McEditor.pCreate<Editor>();
+      UuidUtils.assertIsUuid(editor.editorUid);
+      UuidUtils.assertIsUuid(editor2.editorUid);
+      assert.notStrictEqual(editor.editorUid, editor2.editorUid);
+      McEditor.remove(editor2);
+    });
+
+    it('TINY-12020: should be locked', () => {
+      const editor = hook.editor();
+      const keys = new Set(Obj.keys(editor));
+      assert.isTrue(keys.has('editorUid'), `expected editorUid when enumerating editor`);
+      assert.throws(() => {
+        editor.editorUid = 'some_random_value';
+      });
+      assert.notStrictEqual(editor.editorUid, 'some_random_value');
     });
   });
 });
