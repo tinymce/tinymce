@@ -121,10 +121,6 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
     tableResize.on((sz) => {
       sz.destroy();
     });
-
-    resizeWire.on((w) => {
-      TableWire.remove(editor, w);
-    });
   };
 
   editor.on('init', () => {

@@ -48,17 +48,7 @@ const body = (editable: SugarElement<Element>, isResizable: ResizeCallback): Res
     parent: Fun.constant(editable),
     view: Fun.constant(editable),
     dragContainer: Fun.constant(editable),
-    origin: Fun.constant(SugarLocation.absolute(editable)),
-    isResizable
-  };
-};
-
-const scrollable = (editable: SugarElement<Element>, chrome: SugarElement<Element>, dragContainer: SugarElement<Element>, isResizable: ResizeCallback): ResizeWire => {
-  return {
-    parent: Fun.constant(chrome),
-    view: Fun.constant(editable),
-    dragContainer: Fun.constant(dragContainer),
-    origin: () => SugarLocation.absolute(chrome),
+    origin: () => SugarLocation.absolute(editable),
     isResizable
   };
 };
@@ -66,7 +56,6 @@ const scrollable = (editable: SugarElement<Element>, chrome: SugarElement<Elemen
 export const ResizeWire = {
   only,
   detached,
-  body,
-  scrollable
+  body
 };
 
