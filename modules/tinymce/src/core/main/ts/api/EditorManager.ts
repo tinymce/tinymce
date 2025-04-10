@@ -1,4 +1,4 @@
-import { Arr, Obj, Type } from '@ephox/katamari';
+import { Arr, Obj, Type, Id } from '@ephox/katamari';
 
 import * as ErrorReporter from '../ErrorReporter';
 import * as FocusController from '../focus/FocusController';
@@ -99,6 +99,7 @@ interface EditorManager extends Observable<EditorManagerEventMap> {
   documentBaseURL: string;
   i18n: I18n;
   suffix: string;
+  pageUid: string;
 
   add (this: EditorManager, editor: Editor): Editor;
   addI18n: (code: string, item: Record<string, string>) => void;
@@ -137,6 +138,14 @@ const EditorManager: EditorManager = {
 
   documentBaseURL: null as any,
   suffix: null as any,
+
+  /**
+   * A uuid string to anonymously identify the page tinymce is loaded in
+   *
+   * @property pageUid
+   * @type String
+   */
+  pageUid: null as any,
 
   /**
    * Major version of TinyMCE build.
@@ -186,6 +195,7 @@ const EditorManager: EditorManager = {
     const self = this;
     let baseURL = '';
     let suffix = '';
+    self.pageUid = Id.uuidV4();
 
     // Get base URL for the current document
     let documentBaseURL = URI.getDocumentBaseUrl(document.location);
