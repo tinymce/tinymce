@@ -7,7 +7,7 @@ type UserId = string;
 
 export interface User {
   id: UserId;
-  name: string;
+  name?: string;
   avatar?: string;
   description?: string;
   [key: string]: any;
