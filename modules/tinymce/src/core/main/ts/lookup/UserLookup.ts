@@ -5,7 +5,7 @@ import * as Options from '../api/Options';
 
 type UserId = string;
 
-interface User {
+export interface User {
   id: UserId;
   name: string;
   avatar?: string;
@@ -50,7 +50,7 @@ const UserLookup = (editor: Editor): UserLookup => {
 
   return {
     getCurrentUserId,
-    fetchUserById
+    fetchUserById,
   };
 };
 
