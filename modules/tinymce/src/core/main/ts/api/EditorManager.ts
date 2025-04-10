@@ -285,6 +285,17 @@ const EditorManager: EditorManager = {
     self.suffix = suffix;
 
     FocusController.setup(self);
+
+    // Lock certain properties to reduce misuse
+    Arr.each(
+      [ 'majorVersion', 'minorVersion', 'releaseDate', 'pageUid' ],
+      (property) =>
+        Object.defineProperty(self, property, {
+          writable: false,
+          configurable: false,
+          enumerable: false,
+        })
+    );
   },
 
   /**
