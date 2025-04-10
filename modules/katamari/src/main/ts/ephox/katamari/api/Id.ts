@@ -1,6 +1,5 @@
 import * as IdUtils from '../util/IdUtilts';
 import * as Num from './Num';
-import * as Type from './Type';
 
 /**
  * Generate a unique identifier.
@@ -31,7 +30,7 @@ const generate = (prefix: string): string => {
  */
 const uuidV4 = (): `${string}-${string}-${string}-${string}-${string}` => {
   // eslint-disable-next-line @typescript-eslint/unbound-method
-  if (Type.isFunction(window.crypto.randomUUID) && window.isSecureContext) {
+  if (window.isSecureContext) {
     return window.crypto.randomUUID();
   } else {
     return IdUtils.uuidV4String();
