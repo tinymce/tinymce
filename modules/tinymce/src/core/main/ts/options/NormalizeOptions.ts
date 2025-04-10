@@ -3,6 +3,7 @@ import { PlatformDetection } from '@ephox/sand';
 
 import { NormalizedEditorOptions, RawEditorOptions } from '../api/OptionTypes';
 import Tools from '../api/util/Tools';
+import * as CloudOptions from './CloudOptions';
 
 interface SectionResult {
   sections: () => Record<string, Partial<RawEditorOptions>>;
@@ -119,13 +120,14 @@ const combineOptions = (isMobileDevice: boolean, isPhone: boolean, defaultOption
   // Use mobile mode by default on phones, so patch in the mobile override options
   const deviceOverrideOptions = isMobileDevice ? { mobile: getMobileOverrideOptions(options.mobile ?? {}, isPhone) } : { };
   const sectionResult = extractSections([ 'mobile' ], Merger.deepMerge(deviceOverrideOptions, options));
+  const mergedDefaultOverrides = { ...defaultOverrideOptions, ...CloudOptions.getCloudOptions() };
 
   const extendedOptions = Tools.extend(
     // Default options
     defaultOptions,
 
     // tinymce.overrideOptions options
-    defaultOverrideOptions,
+    mergedDefaultOverrides,
 
     // User options
     sectionResult.options(),
@@ -135,11 +137,11 @@ const combineOptions = (isMobileDevice: boolean, isPhone: boolean, defaultOption
 
     // Forced options
     {
-      external_plugins: getExternalPlugins(defaultOverrideOptions, sectionResult.options())
+      external_plugins: getExternalPlugins(mergedDefaultOverrides, sectionResult.options())
     }
   );
 
-  return processPlugins(isMobileDevice, sectionResult, defaultOverrideOptions, extendedOptions);
+  return processPlugins(isMobileDevice, sectionResult, mergedDefaultOverrides, extendedOptions);
 };
 
 const normalizeOptions = (defaultOverrideOptions: RawEditorOptions, options: RawEditorOptions): NormalizedEditorOptions => {

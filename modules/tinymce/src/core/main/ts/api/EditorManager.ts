@@ -2,6 +2,7 @@ import { Arr, Obj, Type } from '@ephox/katamari';
 
 import * as ErrorReporter from '../ErrorReporter';
 import * as FocusController from '../focus/FocusController';
+import * as CloudOptions from '../options/CloudOptions';
 import AddOnManager from './AddOnManager';
 import DOMUtils from './dom/DOMUtils';
 import { EventUtilsEvent } from './dom/EventUtils';
@@ -297,6 +298,8 @@ const EditorManager: EditorManager = {
    * });
    */
   overrideDefaults(defaultOptions) {
+    CloudOptions.storeCloudOptions(defaultOptions);
+
     const baseUrl = defaultOptions.base_url;
     if (baseUrl) {
       this._setBaseUrl(baseUrl);
