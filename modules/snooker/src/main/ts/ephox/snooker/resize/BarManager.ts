@@ -125,10 +125,10 @@ export const BarManager = (wire: ResizeWire): BarManager => {
     SelectorFind.closest<HTMLTableElement>(target, 'table', isRoot).filter(ContentEditable.isEditable);
 
   const isResizer = (target: SugarElement<Element>): boolean =>
-    target.dom.classList.contains('ephox-snooker-resizer-bar') || target.dom.classList.contains('ephox-dragster-blocker');
+    Class.has(target, 'ephox-snooker-resizer-bar') || Class.has(target, 'ephox-dragster-blocker');
 
   /* mouseover on table: When the mouse moves within the CONTENT AREA (NOT THE TABLE), refresh the bars. */
-  const mouseover = DomEvent.bind(wire.view(), 'mouseover', (event) => {
+  const mouseover = DomEvent.bind<MouseEvent, Element>(wire.view(), 'mouseover', (event) => {
     findClosestEditableTable(event.target).fold(
       () => {
         /*
@@ -138,7 +138,7 @@ export const BarManager = (wire: ResizeWire): BarManager => {
         *
         * Because the resizers were moved into the editor for inline mode, we need to check if the event target is not a resizer.
         */
-        if (SugarBody.inBody(event.target) && !isResizer(event.target as SugarElement)) {
+        if (SugarBody.inBody(event.target) && !isResizer(event.target)) {
           Bars.destroy(wire);
         }
       },
