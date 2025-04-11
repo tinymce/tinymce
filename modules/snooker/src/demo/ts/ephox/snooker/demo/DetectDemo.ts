@@ -131,9 +131,9 @@ Ready.document(() => {
 
   const lazyTableSize = (table: SugarElement<HTMLTableElement>) => TableSize.getTableSize(table);
   const isResizable = Fun.always;
-  const ltrManager = TableResize.create(ResizeWire.body(tester, ltrs, isResizable), ResizeBehaviour.preserveTable(), lazyTableSize);
+  const ltrManager = TableResize.create(ResizeWire.body(tester, isResizable), ResizeBehaviour.preserveTable(), lazyTableSize);
   ltrManager.on();
-  const rtlManager = TableResize.create(ResizeWire.body(subject3, rtls, isResizable), ResizeBehaviour.preserveTable(), lazyTableSize);
+  const rtlManager = TableResize.create(ResizeWire.body(subject3, isResizable), ResizeBehaviour.preserveTable(), lazyTableSize);
   rtlManager.on();
 
   // For firefox.
