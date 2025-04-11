@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Inline dialog dropdowns reposition when the dialog is dragged or the window is scrolled.
+time: 2025-04-11T17:34:13.78284+02:00
+custom:
+  Issue: TINY-11368
