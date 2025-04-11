@@ -369,17 +369,24 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
       style_formats: [],
     }, []);
 
-    it('TINY-12005: Empty styles should disable the buttons.', async () => {
+    it('TINY-12005: Empty styles should disable the menu button', async () => {
       const editor = hookStyleless.editor();
       editor.setContent('<p>Content</p>');
       TinySelections.setCursor(editor, [ 0, 0 ], 2);
       editor.focus();
       const menuItemSelector = 'div[aria-label^="Formats"][role^="menuitem"][aria-disabled="true"]';
-      await Waiter.pTryUntil('Editor must have focus', () => assert.isTrue(editor.hasFocus()));
-      UiFinder.exists(SugarBody.body(), 'button[aria-label^="Format"]:disabled');
       UiFinder.notExists(SugarBody.body(), menuItemSelector);
       Mouse.clickOn(SugarBody.body(), '.tox-edit-focus [role="menubar"] [role="menuitem"]:contains("Format")');
       await Waiter.pTryUntil('Format menu item should be disabled', () => UiFinder.exists(SugarBody.body(), menuItemSelector));
+    });
+
+    it('TINY-12005: Empty styles should disable thetoolbar button', async () => {
+      const editor = hookStyleless.editor();
+      editor.setContent('<p>Content</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 2);
+      editor.focus();
+      await Waiter.pTryUntil('Editor must have focus', () => assert.isTrue(editor.hasFocus()));
+      UiFinder.exists(SugarBody.body(), 'button[aria-label^="Format"]:disabled');
     });
   });
 
