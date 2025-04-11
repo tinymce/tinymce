@@ -13,16 +13,4 @@ tinymce.init({
   }
 });
 
-tinymce.init({
-  selector: 'div.tinymce',
-  inline: true,
-  plugins: 'searchreplace',
-  toolbar: 'searchreplace',
-  height: 600,
-  menubar: 'custom',
-  menu: {
-    custom: { title: 'Custom', items: 'searchreplace' }
-  }
-});
-
 export {};
