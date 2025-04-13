@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Exception when pressing tab in the last cell of a non-editable table.
-time: 2025-02-07T15:43:51.409042+01:00
-custom:
-  Issue: TINY-11797

@@ -2,6 +2,7 @@ import { Type } from '@ephox/katamari';
 import { SugarElement, Value } from '@ephox/sugar';
 
 import { Chain } from './Chain';
+import * as Keyboard from './Keyboard';
 import { Step } from './Step';
 import * as UiFinder from './UiFinder';
 
@@ -43,6 +44,13 @@ const sSetValue = <T>(element: SugarElement<TogglableElement>, newValue: string)
 const sSetValueOn = <T>(container: SugarElement<Node>, selector: string, newValue: string): Step<T, T> =>
   Step.sync(() => setValueOn(container, selector, newValue));
 
+const pType = Keyboard.pTypeTextInInput;
+
+const pTypeOn = async (container: SugarElement<Node>, selector: string, text: string, speed: number = 0): Promise<void> => {
+  const input = UiFinder.findIn<HTMLTextAreaElement | HTMLInputElement>(container, selector).getOrDie();
+  await Keyboard.pTypeTextInInput(input, text, speed);
+};
+
 export {
   setValue,
   setValueOn,
@@ -52,5 +60,8 @@ export {
   sSetValue,
 
   cSetValue,
-  cGetValue
+  cGetValue,
+
+  pType,
+  pTypeOn
 };

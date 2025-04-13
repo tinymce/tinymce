@@ -83,10 +83,10 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
       devPods.nodeConsumer(
         nodeOpts: [
           resourceRequestCpu: '2',
-          resourceRequestMemory: '4Gi',
+          resourceRequestMemory: '6Gi',
           resourceRequestEphemeralStorage: '16Gi',
           resourceLimitCpu: '7',
-          resourceLimitMemory: '4Gi',
+          resourceLimitMemory: '6Gi',
           resourceLimitEphemeralStorage: '16Gi'
         ],
         tag: '20',
@@ -129,11 +129,11 @@ def runSeleniumPod(String cacheName, String name, String browser, String version
             failureThreshold: 6
           ],
           alwaysPullImage: true,
-          resourceRequestCpu: '2',
-          resourceRequestMemory: '2Gi',
+          resourceRequestCpu: '1',
+          resourceRequestMemory: '500Mi',
+          resourceLimitCpu: '1',
+          resourceLimitMemory: '500Mi',
           resourceRequestEphemeralStorage: '4Gi',
-          resourceLimitCpu: '2',
-          resourceLimitMemory: '2Gi',
           resourceLimitEphemeralStorage: '4Gi'
         ]
   Map aws = [
@@ -142,13 +142,9 @@ def runSeleniumPod(String cacheName, String name, String browser, String version
           command: 'sleep',
           args: 'infinity',
           alwaysPullImage: true,
-          resourceRequestCpu: '1',
-          resourceRequestMemory: '1Gi',
           resourceRequestEphemeralStorage: '1Gi',
-          resourceLimitCpu: '1',
-          resourceLimitMemory: '1Gi',
           resourceLimitEphemeralStorage: '1Gi'
-        ]
+        ] + devPods.lowRes()
   return {
     stage("${name}") {
       devPods.customConsumer(
