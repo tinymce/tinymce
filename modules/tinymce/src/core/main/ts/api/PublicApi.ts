@@ -1,4 +1,5 @@
 import { Bookmark } from '../bookmark/BookmarkTypes';
+import { LicenseKeyManager } from '../init/LicenseKeyManager';
 import { UndoManager } from '../undo/UndoManagerTypes';
 
 import AddOnManager from './AddOnManager';
@@ -134,5 +135,6 @@ export {
   TextPatterns,
   Theme,
   Model,
-  WriterSettings
+  WriterSettings,
+  LicenseKeyManager
 };

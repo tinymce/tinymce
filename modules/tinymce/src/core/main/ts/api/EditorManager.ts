@@ -2,7 +2,7 @@ import { Arr, Obj, Type, Id } from '@ephox/katamari';
 
 import * as ErrorReporter from '../ErrorReporter';
 import * as FocusController from '../focus/FocusController';
-
+import LicenseKeyManagerLoader, { LicenseKeyManagerAddon } from '../init/LicenseKeyManager';
 import AddOnManager from './AddOnManager';
 import DOMUtils from './dom/DOMUtils';
 import { EventUtilsEvent } from './dom/EventUtils';
@@ -119,6 +119,7 @@ interface EditorManager extends Observable<EditorManagerEventMap> {
   translate: (text: Untranslated) => TranslatedString;
   triggerSave: () => void;
   _setBaseUrl (this: EditorManager, baseUrl: string): void;
+  _addLicenseKeyManager (this: EditorManager, addOn: LicenseKeyManagerAddon): Promise<void>;
 }
 
 const isQuirksMode = document.compatMode !== 'CSS1Compat';
@@ -756,7 +757,12 @@ const EditorManager: EditorManager = {
   _setBaseUrl(baseUrl: string) {
     this.baseURL = new URI(this.documentBaseURL).toAbsolute(baseUrl.replace(/\/+$/, ''));
     this.baseURI = new URI(this.baseURL);
-  }
+  },
+
+  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+  _addLicenseKeyManager(addOn: LicenseKeyManagerAddon) {
+    return LicenseKeyManagerLoader.add(addOn);
+  },
 };
 
 EditorManager.setup();

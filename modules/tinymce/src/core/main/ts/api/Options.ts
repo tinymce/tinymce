@@ -724,6 +724,24 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('license_key', {
+    processor: (value) => {
+      // Cloud-issued license keys need to be lazily fetched
+      if (Type.isFunction(value)) {
+        const newValue = value(editor);
+        if (Type.isPromiseLike(newValue)) {
+          return { value: newValue, valid: true };
+        } else {
+          return { valid: false, message: 'Must be a string or Promise<string>.' };
+        }
+      } else if (Type.isString(value) || Type.isPromiseLike(value)) {
+        return { value, valid: true };
+      } else {
+        return { valid: false, message: 'Must be a string or Promise<string>.' };
+      }
+    },
+  });
+
+  registerOption('license_key_manager_url', {
     processor: 'string'
   });
 
@@ -1025,6 +1043,7 @@ const shouldSandboxIframes = option('sandbox_iframes');
 const getSandboxIframesExclusions = (editor: Editor): string[] => editor.options.get('sandbox_iframes_exclusions');
 const shouldConvertUnsafeEmbeds = option('convert_unsafe_embeds');
 const getLicenseKey = option('license_key');
+const getLicenseKeyManagerUrl = option('license_key_manager_url');
 const getApiKey = option('api_key');
 const isDisabled = option('disabled');
 const getExtendedMathmlAttributes = option('extended_mathml_attributes');
@@ -1138,6 +1157,7 @@ export {
   shouldUseDocumentWrite,
   shouldSandboxIframes,
   getLicenseKey,
+  getLicenseKeyManagerUrl,
   getSandboxIframesExclusions,
   shouldConvertUnsafeEmbeds,
   getApiKey,
