@@ -1,3 +1,4 @@
+import { Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
@@ -21,9 +22,12 @@ describe('browser.tinymce.core.FakeCaretImageCaptionTest', () => {
     );
 
     TinySelections.setCursor(editor, [], 0);
-    TinyAssertions.assertContentPresence(editor, { '.mce-visual-caret': 1 });
-    // it's used `setRawSelection` instead of `setCursor` because `setCursor` remove the fake caret even with the old code
+    await Waiter.pTryUntil('Wait for fake caret to be added', () => {
+      TinyAssertions.assertContentPresence(editor, { '.mce-visual-caret': 1 });
+    });
     TinySelections.setRawSelection(editor, [ 1, 1 ], 0, [ 1, 1 ], 0);
-    TinyAssertions.assertContentPresence(editor, { '.mce-visual-caret': 0 });
+    await Waiter.pTryUntil('Wait for fake caret to be removed', () => {
+      TinyAssertions.assertContentPresence(editor, { '.mce-visual-caret': 0 });
+    });
   });
 });
