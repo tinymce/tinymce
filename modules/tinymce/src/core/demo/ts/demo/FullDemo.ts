@@ -109,6 +109,7 @@ export default (): void => {
     },
     image_caption: true,
     theme: 'silver',
+    license_key: 'gpl',
     setup: (ed) => {
       makeSidebar(ed, 'sidebar1', 'green', 200);
       makeSidebar(ed, 'sidebar2', 'green', 200);
