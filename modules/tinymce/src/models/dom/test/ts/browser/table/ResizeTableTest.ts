@@ -12,7 +12,6 @@ import { ObjectResizeEvent, TableModifiedEvent } from 'tinymce/core/api/EventTyp
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as TableTestUtils from '../../module/table/TableTestUtils';
-import { tab } from 'tinymce/plugins/help/ui/KeyboardShortcutsTab';
 
 type Unit = 'px' | '%';
 
