@@ -161,10 +161,11 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
     });
 
     editor.on('NodeChange', (e) => {
-      if (NodeType.isContentEditableFalse(e.element.parentNode)) {
-        if (!isFakeCaretTarget(e.element.nextSibling) && !isFakeCaretTarget(e.element.previousSibling)) {
-          fakeCaret.hide();
-        }
+      if (
+        NodeType.isContentEditableFalse(e.element.parentNode) &&
+          !isFakeCaretTarget(e.element.nextSibling) && !isFakeCaretTarget(e.element.previousSibling)
+      ) {
+        fakeCaret.hide();
       }
     });
 
