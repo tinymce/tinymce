@@ -1,3 +1,4 @@
+// import LicenseKeyManager from '../init/LicenseKeyManager';
 import { RangeLikeObject } from '../selection/RangeTypes';
 import { UndoManager as UndoManagerType } from '../undo/UndoManagerTypes';
 import AddOnManager from './AddOnManager';
@@ -145,6 +146,7 @@ interface TinyMCE extends EditorManager {
   ThemeManager: ThemeManager;
   ModelManager: ModelManager;
   IconManager: IconManager;
+  // LicenseKeyManager: LicenseKeyManager;
   Resource: Resource;
   FakeClipboard: FakeClipboard;
 
@@ -240,6 +242,7 @@ const publicApi = {
   ThemeManager,
   ModelManager,
   IconManager,
+  // LicenseKeyManager,
   Resource,
   FakeClipboard,
 

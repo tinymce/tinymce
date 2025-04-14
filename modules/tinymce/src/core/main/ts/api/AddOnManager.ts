@@ -100,6 +100,7 @@ type WaitState = 'added' | 'loaded';
 
 export type AddOnConstructor<T> = (editor: Editor, url: string) => T;
 
+// TODO: Have a look at adding an integrity function
 interface AddOnManager<T> {
   items: AddOnConstructor<T>[];
   urls: Record<string, string>;
