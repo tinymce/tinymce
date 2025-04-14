@@ -160,6 +160,14 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
       }
     });
 
+    editor.on('NodeChange', (e) => {
+      if (NodeType.isContentEditableFalse(e.element.parentNode)) {
+        if (!isFakeCaretTarget(e.element.nextSibling) && !isFakeCaretTarget(e.element.previousSibling)) {
+          fakeCaret.hide();
+        }
+      }
+    });
+
     editor.on('SetSelectionRange', (e) => {
       // If the range is set inside a short ended element, then move it
       // to the side as IE for example will try to add content inside
