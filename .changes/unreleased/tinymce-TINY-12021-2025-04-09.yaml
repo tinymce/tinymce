@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: Added `pageUid` and `editorUid` properties to tinymce global and editor instance respectively.
+time: 2025-04-09T13:00:36.019555+10:00
+custom:
+    Issue: TINY-12021

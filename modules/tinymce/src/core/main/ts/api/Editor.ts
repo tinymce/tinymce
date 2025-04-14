@@ -1,4 +1,4 @@
-import { Arr, Fun, Type } from '@ephox/katamari';
+import { Arr, Fun, Type, Id } from '@ephox/katamari';
 
 import * as EditorContent from '../content/EditorContent';
 import * as Deprecations from '../Deprecations';
@@ -97,6 +97,14 @@ class Editor implements EditorObservable {
    * @type String
    */
   public id: string;
+
+  /**
+   * A uuid string to uniquely identify an editor across any page.
+   *
+   * @property editorUid
+   * @type String
+   */
+  public editorUid: string;
 
   /**
    * Name/Value object containing plugin instances.
@@ -279,6 +287,7 @@ class Editor implements EditorObservable {
     const self = this;
 
     this.id = id;
+    this.editorUid = Id.uuidV4();
     this.hidden = false;
     const normalizedOptions = normalizeOptions(editorManager.defaultOptions, options);
 
