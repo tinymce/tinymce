@@ -3,7 +3,7 @@ import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Cell, Fun, Strings } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TableGridSize } from '@ephox/snooker';
-import { Class, Css, Height, Html, Insert, InsertAll, Remove, SelectorExists, SelectorFilter, SelectorFind, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
+import { Class, Css, Height, Html, Insert, InsertAll, Remove, SelectorExists, SelectorFilter, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 

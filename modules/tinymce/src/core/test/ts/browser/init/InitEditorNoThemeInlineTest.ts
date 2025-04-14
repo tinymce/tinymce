@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions } from '@ephox/agar';
+import { Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { SelectorFind, SugarBody, Traverse } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
