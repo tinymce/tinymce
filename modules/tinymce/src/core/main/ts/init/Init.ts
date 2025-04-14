@@ -17,6 +17,7 @@ import * as Disabled from '../mode/Disabled';
 import { appendContentCssFromSettings } from './ContentCss';
 import * as InitContentBody from './InitContentBody';
 import * as InitIframe from './InitIframe';
+import LicenseKeyManagerLoader from './LicenseKeyManager';
 
 const DOM = DOMUtils.DOM;
 
@@ -95,6 +96,10 @@ const initModel = (editor: Editor) => {
   const model = Options.getModel(editor);
   const Model = ModelManager.get(model) as AddOnConstructor<Model>;
   editor.model = Model(editor, ModelManager.urls[model]);
+};
+
+const initLicenseKeyManager = (editor: Editor) => {
+  LicenseKeyManagerLoader.init(editor);
 };
 
 const renderFromLoadedTheme = (editor: Editor) => {
@@ -177,6 +182,7 @@ const init = async (editor: Editor): Promise<void> => {
   initIcons(editor);
   initTheme(editor);
   initModel(editor);
+  initLicenseKeyManager(editor);
   initPlugins(editor);
   const renderInfo = await renderThemeUi(editor);
   augmentEditorUiApi(editor, Optional.from(renderInfo.api).getOr({}));

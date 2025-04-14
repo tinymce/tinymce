@@ -39,7 +39,6 @@ import * as TextPattern from '../textpatterns/TextPatterns';
 import Quirks from '../util/Quirks';
 
 import * as ContentCss from './ContentCss';
-import * as LicenseKeyValidation from './LicenseKeyValidation';
 
 declare const escape: any;
 declare let tinymce: TinyMCE;
@@ -485,8 +484,6 @@ const contentBodyLoaded = (editor: Editor): void => {
   const setupRtcThunk = Rtc.setup(editor);
 
   preInit(editor);
-
-  LicenseKeyValidation.validateEditorLicenseKey(editor);
 
   setupRtcThunk.fold(() => {
     const cancelProgress = startProgress(editor);
