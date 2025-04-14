@@ -162,6 +162,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
 
     editor.on('NodeChange', (e) => {
       if (
+        fakeCaret.isShowing() &&
         NodeType.isContentEditableFalse(e.element.parentNode) &&
           !isFakeCaretTarget(e.element.nextSibling) && !isFakeCaretTarget(e.element.previousSibling)
       ) {
