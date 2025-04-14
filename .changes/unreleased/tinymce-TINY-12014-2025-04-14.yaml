@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: 'Bullet list icons were changed to better represent its behavior.'
+time: 2025-04-14T15:30:10.513139+02:00
+custom:
+  Issue: TINY-12014
