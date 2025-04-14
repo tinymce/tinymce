@@ -98,7 +98,7 @@ const renderInlineHeader = (
         topAttr: 'data-drag-top'
       },
       onDrag: (comp, target) => {
-        comp.getSystem().broadcastOn([ Channels.dismissPopups() ], { target });
+        comp.getSystem().broadcastOn([ Channels.repositionPopups() ], { target });
       }
     })
   ])
