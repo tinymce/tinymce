@@ -52,7 +52,7 @@ const addSplitButton = (editor: Editor, id: string, tooltip: string, cmd: string
     fetch: (callback) => {
       const items = Tools.map(styles, (styleValue): Menu.ChoiceMenuItemSpec => {
         const iconStyle = nodeName === ListType.OrderedList ? 'num' : 'bull';
-        const iconName = styleValue === 'disc' || styleValue === 'decimal' ? 'default' : styleValue;
+        const iconName = styleValue === 'decimal' ? 'default' : styleValue;
         const itemValue = normalizeStyleValue(styleValue);
         const displayText = styleValueToText(styleValue);
         return {
