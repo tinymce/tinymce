@@ -3,7 +3,7 @@ import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Cell, Fun, Strings } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TableGridSize } from '@ephox/snooker';
-import { Class, Css, Height, Html, Insert, InsertAll, Remove, SelectorExists, SelectorFilter, SelectorFind, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
+import { Class, Css, Height, Html, Insert, InsertAll, Remove, SelectorExists, SelectorFilter, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -1180,51 +1180,63 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
     );
   };
 
-  const getResizeBarsContainer = (editor: Editor) => SelectorFind.sibling(TinyDom.body(editor), '[id^=resizer-container]').getOrDie('Resizer container element not found as a sibling to the editor body');
-
-  const assertContainerAndBarsExist = (editor: Editor) => {
-    const container = getResizeBarsContainer(editor);
-    const resizeBars = Traverse.children(container);
-    assert.isAbove(resizeBars.length, 0, 'Should have resize bars within the container');
+  const assertBarsExistInTheEditorBody = (editor: Editor) => {
+    const resizeBars = SelectorFilter.children(TinyDom.body(editor), '.ephox-snooker-resizer-bar');
+    assert.isAbove(resizeBars.length, 0, 'Should have resize bars within the editor body');
   };
 
-  const assertBarsNotExistInContainer = (editor: Editor) => {
-    const container = getResizeBarsContainer(editor);
-    const resizeBars = Traverse.children(container);
-    assert.equal(resizeBars.length, 0, 'Resize bars should not exist in the container');
+  const assertBarsNotExistInTheEditorBody = (editor: Editor) => {
+    const resizeBars = SelectorFilter.children(TinyDom.body(editor), '.ephox-snooker-resizer-bar');
+    assert.equal(resizeBars.length, 0, 'Resize bars should not exist in the editor');
   };
 
   const assertResizerPosition = (editor: Editor, table: HTMLTableElement) => {
-    const container = getResizeBarsContainer(editor);
-    const containerRect = container.dom.getBoundingClientRect();
+    const editorBody = TinyDom.body(editor);
+    const editorBodyRect = editorBody.dom.getBoundingClientRect();
 
     Arr.each(table.rows, (row: HTMLTableRowElement, rowIndex: number) => {
-      const resizer = SelectorFind.descendant<HTMLElement>(container, `.ephox-snooker-resizer-rows[data-row="${rowIndex}"]`).getOrDie('Resizer not found');
+      const resizer = SelectorFind.descendant<HTMLElement>(editorBody, `.ephox-snooker-resizer-rows[data-row="${rowIndex}"]`).getOrDie('Resizer not found');
       const rowRect = row.getBoundingClientRect();
       const resizerHeight = Height.get(resizer);
 
-      const borderSpacing = parseFloat(Css.get(SugarElement.fromDom(table), 'border-spacing'));
-      const isLastRow = rowIndex === table.rows.length - 1;
-
-      const distanceFromBottom = containerRect.bottom - rowRect.bottom;
-      const expectedTop = -(distanceFromBottom + resizerHeight / 2 - (isLastRow ? 0 : borderSpacing));
+      const distanceFromTop = rowRect.top + rowRect.height - editorBodyRect.top;
+      const expectedTop = distanceFromTop - resizerHeight / 2;
 
       const actualResizerTop = parseFloat(Strings.removeTrailing(Css.get(resizer, 'top'), 'px'));
       assert.approximately(actualResizerTop, expectedTop, 2, `Resizer position mismatch for row ${rowIndex} - Expected: ${expectedTop}, Actual: ${actualResizerTop}`);
     });
   };
 
-  context('Location of table resize bar handler container', () => {
+  const clickOnResizer = (editor: Editor, rowIndex: number) => {
+    const editorBody = TinyDom.body(editor);
+    const resizer = SelectorFind.descendant<HTMLElement>(editorBody, `.ephox-snooker-resizer-rows[data-row="${rowIndex}"]`).getOrDie('Resizer not found');
+    Mouse.trueClick(resizer);
+  };
+
+  context('Location of table resize bars', () => {
     context('iframe mode', () => {
       const hook = TinyHooks.bddSetup<Editor>(defaultSettings, [], true);
 
-      it('TINY-11215: The resize bar handler container should be inside the iframe', async () => {
+      it('TINY-11215: The resize bars should be inside the the editor body', async () => {
         const editor = hook.editor();
         TableTestUtils.insertRaw(editor, percentTable);
         const table = editor.dom.select('table')[0];
         await hoverOnTable(editor, table, 'row', 0);
-        const resizerBars = SelectorFilter.siblings(TinyDom.body(editor), '.ephox-snooker-resizer-bar');
+        const resizerBars = SelectorFilter.children(TinyDom.body(editor), '.ephox-snooker-resizer-bar');
         assert.isAbove(resizerBars.length, 0, 'Resizer bars should exist');
+      });
+
+      it('TINY-11981: Hovering non table element should remove the table resize bars', async () => {
+        const editor = hook.editor();
+        editor.setContent(`<p>This is non table element</p><table style="border-collapse: collapse; width: 100%; height: 178.586px;" border="1"><colgroup><col style="width: 33.3112%;"><col style="width: 33.3112%;"><col style="width: 33.3112%;"></colgroup>
+          <tbody><tr style="height: 36.1953px;"><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr style="height: 56.1953px;">
+          <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+          <tr style="height: 86.1953px;"><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>`);
+        const table = editor.dom.select('table')[0];
+        await hoverOnTable(editor, table, 'row', 0);
+        assertBarsExistInTheEditorBody(editor);
+        hoverOnElement(editor, 'p');
+        assertBarsNotExistInTheEditorBody(editor);
       });
     });
 
@@ -1242,17 +1254,19 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
         };
       }, [], true);
 
-      it('TINY-11215: The resize bar handler container should be adjacent to the editor body', async () => {
+      it('TINY-11215: The resize bars should be inside the editor body', async () => {
         const editor = hook.editor();
         const table = editor.dom.select('table')[0];
         await hoverOnTable(editor, table, 'row', 0);
-        assertContainerAndBarsExist(editor);
+        assertBarsExistInTheEditorBody(editor);
       });
 
       it('TINY-11215: The resize bar wires should be at the correct location', async () => {
         const editor = hook.editor();
         const table = editor.dom.select('table')[0];
         await hoverOnTable(editor, table, 'row', 0);
+        assertResizerPosition(editor, table);
+        clickOnResizer(editor, 0);
         assertResizerPosition(editor, table);
       });
 
@@ -1265,6 +1279,19 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
         const table = editor.dom.select('table')[0];
         await hoverOnTable(editor, table, 'row', 0);
         assertResizerPosition(editor, table);
+      });
+
+      it('TINY-11981: Hovering non table element should remove the table resize bars', async () => {
+        const editor = hook.editor();
+        editor.setContent(`<p>This is non table element</p><table style="border-collapse: collapse; width: 100%; height: 178.586px;" border="1"><colgroup><col style="width: 33.3112%;"><col style="width: 33.3112%;"><col style="width: 33.3112%;"></colgroup>
+          <tbody><tr style="height: 36.1953px;"><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr style="height: 56.1953px;">
+          <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+          <tr style="height: 86.1953px;"><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>`);
+        const table = editor.dom.select('table')[0];
+        await hoverOnTable(editor, table, 'row', 0);
+        assertBarsExistInTheEditorBody(editor);
+        hoverOnElement(editor, 'p');
+        assertBarsNotExistInTheEditorBody(editor);
       });
     });
 
@@ -1319,18 +1346,20 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
         };
       }, [], true);
 
-      it('TINY-11215: The resize bar handler container should be adjacent to the editor body', async () => {
+      it('TINY-11215: The resize bars should be inside the editor body', async () => {
         const editor = hook.editor();
         const table = editor.dom.select('table')[0];
         await hoverOnTable(editor, table, 'row', 0);
-        assertContainerAndBarsExist(editor);
+        assertBarsExistInTheEditorBody(editor);
       });
 
       it('TINY-11215: Resize bar handler should render at the correct location, close to the bottom of tr', async () => {
         const editor = hook.editor();
         const table = editor.dom.select('table')[0];
         await hoverOnTable(editor, table, 'row', 0);
-        assertContainerAndBarsExist(editor);
+        assertBarsExistInTheEditorBody(editor);
+        assertResizerPosition(editor, table);
+        clickOnResizer(editor, 0);
         assertResizerPosition(editor, table);
       });
 
@@ -1338,21 +1367,21 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
         const editor = hook.editor();
         const table = editor.dom.select('table')[0];
         await hoverOnTable(editor, table, 'row', 0);
-        assertContainerAndBarsExist(editor);
+        assertBarsExistInTheEditorBody(editor);
         const scrollable = SelectorFind.descendant(SugarBody.body(), '.scrollable').getOrDie();
         scrollable.dom.scrollBy(0, scrollable.dom.scrollHeight / 2);
         assertResizerPosition(editor, table);
         await hoverOnTable(editor, table, 'row', 0);
       });
 
-      it('TINY-11215: Hovering non table element should remove the table resize bar container', async () => {
+      it('TINY-11215: Hovering non table element should remove the table resize bars', async () => {
         const editor = hook.editor();
         editor.resetContent();
         const table = editor.dom.select('table')[0];
         await hoverOnTable(editor, table, 'row', 0);
-        assertContainerAndBarsExist(editor);
+        assertBarsExistInTheEditorBody(editor);
         hoverOnElement(editor, 'p');
-        assertBarsNotExistInContainer(editor);
+        assertBarsNotExistInTheEditorBody(editor);
       });
 
       it('TINY-11215: Table resize wires should still be attached when scrolling with multiple tables', async () => {
@@ -1364,7 +1393,7 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
 
         const table = editor.dom.select('table')[0];
         await hoverOnTable(editor, table, 'row', 0);
-        assertContainerAndBarsExist(editor);
+        assertBarsExistInTheEditorBody(editor);
         assertResizerPosition(editor, table);
 
         scrollable.dom.scrollTo(0, scrollable.dom.scrollHeight / 6);
@@ -1380,6 +1409,22 @@ describe('browser.tinymce.models.dom.table.ResizeTableTest', () => {
         scrollable.dom.scrollTo(0, scrollable.dom.scrollHeight / 4);
         assertResizerPosition(editor, table2);
       });
+    });
+  });
+
+  context('Table resizers as part of the content', () => {
+    const hook = TinyHooks.bddSetup<Editor>(defaultSettings, [], true);
+
+    it('TINY-11981: getContent should return content without resize bars', async () => {
+      const insertTable = '<table style="width: 200px;"><tbody><tr><td>Content</td><td>Content</td></tr></tbody></table>';
+      const editor = hook.editor();
+      editor.setContent(insertTable);
+      const table = editor.dom.select('table')[0];
+      await hoverOnTable(editor, table, 'row', 0);
+      const resizerBars = SelectorFilter.children(TinyDom.body(editor), '.ephox-snooker-resizer-bar');
+      assert.isAbove(resizerBars.length, 0, 'Resizer bars should exist');
+      const content = editor.getContent();
+      assert.equal(content, insertTable, 'Content should not include resize bars');
     });
   });
 });
