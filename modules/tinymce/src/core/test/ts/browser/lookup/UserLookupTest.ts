@@ -36,7 +36,6 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
     const user = await editor.userLookup
       .fetchUserById(userId)
-      .then(Fun.identity)
       .catch(() => {
         assert.fail('Should not throw an error');
       });
