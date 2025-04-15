@@ -910,7 +910,7 @@ const register = (editor: Editor): void => {
 
   registerOption('fetch_user_by_id', {
     processor: 'function',
-    default: () => Promise.reject()
+    default: () => Promise.reject('fetch_user_by_id option not defined')
   });
 
   registerOption('user_cache', {
