@@ -48,7 +48,7 @@ const addSplitButton = (editor: Editor, id: string, tooltip: string, cmd: string
     tooltip,
     icon: nodeName === ListType.OrderedList ? 'ordered-list' : 'unordered-list',
     presets: 'listpreview',
-    columns: 3,
+    columns: nodeName === ListType.OrderedList ? 3 : 4,
     fetch: (callback) => {
       const items = Tools.map(styles, (styleValue): Menu.ChoiceMenuItemSpec => {
         const iconStyle = nodeName === ListType.OrderedList ? 'num' : 'bull';
