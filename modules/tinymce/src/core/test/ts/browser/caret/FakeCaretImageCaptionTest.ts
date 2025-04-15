@@ -15,8 +15,11 @@ describe('browser.tinymce.core.FakeCaretImageCaptionTest', () => {
     image_caption: true
   }, [ ImagePlugin ]);
 
-  // skiped on FireFox since `setRawSelection` seems not to work on it
-  (isFirefox ? it.skip : it)('TINY-11997: should hide after tabbing inside figcaption', async () => {
+  it('TINY-11997: should hide after tabbing inside figcaption', async function () {
+    // skiped on FireFox since `setRawSelection` seems not to work on it
+    if (isFirefox) {
+      this.skip();
+    }
     const editor = hook.editor();
     editor.setContent(
       '<figure class="image">' +
