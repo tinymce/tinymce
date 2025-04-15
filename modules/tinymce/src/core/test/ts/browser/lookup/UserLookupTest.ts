@@ -19,7 +19,7 @@ describe('browser.tinymce.core.UserLookupTest', () => {
             avatar: 'test-avatar.png',
             description: 'Test Description',
           } as User);
-        }, 100);
+        }, 0);
       });
     },
   });
