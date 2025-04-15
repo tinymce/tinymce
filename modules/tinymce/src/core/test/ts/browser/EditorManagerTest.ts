@@ -1,4 +1,5 @@
 import { after, afterEach, before, describe, it } from '@ephox/bedrock-client';
+import { Obj } from '@ephox/katamari';
 import { Remove, Selectors } from '@ephox/sugar';
 import { assert } from 'chai';
 import 'tinymce';
@@ -13,22 +14,16 @@ import EditorManager from 'tinymce/core/api/EditorManager';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import Tools from 'tinymce/core/api/util/Tools';
 
+import * as UuidUtils from '../module/test/UuidUtils';
 import * as ViewBlock from '../module/test/ViewBlock';
 
 describe('browser.tinymce.core.EditorManagerTest', () => {
   const viewBlock = ViewBlock.bddSetup();
 
-  const assertIsUuid = (uuid: string): void => {
-    // From https://github.com/uuidjs/uuid/blob/main/src/regex.js
-    const v4Regex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-    assert.isString(uuid);
-    assert.match(uuid, v4Regex);
-  };
-
   before(() => {
     EditorManager._setBaseUrl('/project/tinymce/js/tinymce');
     // Check pageUid is defined before any editors are created
-    assertIsUuid(EditorManager.pageUid);
+    UuidUtils.assertIsUuid(EditorManager.pageUid);
   });
 
   after(() => {
@@ -223,19 +218,44 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
     });
   });
 
-  it('pageUid/editorUid', async () => {
+  it('TINY-12021: pageUid', async () => {
     const pageUid = EditorManager.pageUid;
-    assertIsUuid(pageUid);
+    UuidUtils.assertIsUuid(pageUid);
 
     viewBlock.update('<textarea class="tinymce"></textarea><textarea class="tinymce"></textarea>');
-    const [ editor1, editor2 ] = await EditorManager.init({
+    await EditorManager.init({
       selector: 'textarea.tinymce',
       setup: (editor) => {
         assert.equal(editor.editorManager.pageUid, pageUid);
-        assertIsUuid(editor.editorUid);
       },
     });
+  });
 
-    assert.notEqual(editor1.editorUid, editor2.editorUid);
+  it('TINY-12020: EditorManager should have correct locked properties', async () => {
+    const lockedEditorManagerProperties = [ 'majorVersion', 'minorVersion', 'releaseDate', 'pageUid' ] as const;
+    const lockedPropertiesSet = new Set<string>(lockedEditorManagerProperties);
+
+    const descriptors = Object.getOwnPropertyDescriptors(EditorManager);
+    Obj.each(descriptors, (descriptor, key) => {
+      if (lockedPropertiesSet.has(key)) {
+        assert.isFalse(descriptor.configurable, `${key} should not be configurable`);
+        assert.isFalse(descriptor.writable, `${key} should not be writable`);
+        assert.isTrue(descriptor.enumerable, `${key} should be enumerable`);
+      } else {
+        assert.isTrue(descriptor.configurable, `${key} should be configurable`);
+        assert.isTrue(descriptor.writable, `${key} should be writable`);
+        assert.isTrue(descriptor.enumerable, `${key} should be enumerable`);
+      }
+    });
+
+    for (const property of lockedEditorManagerProperties) {
+      assert.throws(() => {
+        EditorManager[property] = 'some_random_value';
+      });
+      assert.throws(() => {
+        delete EditorManager[property];
+      });
+      assert.notStrictEqual(EditorManager[property], 'some_random_value');
+    }
   });
 });
