@@ -347,6 +347,13 @@ class Editor implements EditorObservable {
 
     this.mode = createMode(self);
 
+    // Lock certain properties to reduce misuse
+    Object.defineProperty(this, 'editorUid', {
+      writable: false,
+      configurable: false,
+      enumerable: true,
+    });
+
     // Call setup
     editorManager.dispatch('SetupEditor', { editor: this });
     const setupCallback = Options.getSetupCallback(self);
