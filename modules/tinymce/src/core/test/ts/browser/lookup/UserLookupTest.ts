@@ -1,5 +1,4 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { Fun } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
