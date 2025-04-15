@@ -10,7 +10,7 @@ import * as Options from '../api/Options';
  * @class tinymce.UserLookup
  * @example
  * // Retrieve the current user ID
- * tinymce.activeEditor.UserLookup.getCurrentUserId();
+ * tinymce.activeEditor.userLookup.getCurrentUserId();
  *
  * // Fetch user information by ID
  * tinymce.activeEditor.userLookup.fetchUserById('user-id').then((user) => {
