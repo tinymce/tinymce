@@ -145,7 +145,7 @@ const EditorManager: EditorManager = {
    * @property pageUid
    * @type String
    */
-  pageUid: null as any,
+  pageUid: Id.uuidV4(),
 
   /**
    * Major version of TinyMCE build.
@@ -195,7 +195,6 @@ const EditorManager: EditorManager = {
     const self = this;
     let baseURL = '';
     let suffix = '';
-    self.pageUid = Id.uuidV4();
 
     // Get base URL for the current document
     let documentBaseURL = URI.getDocumentBaseUrl(document.location);
@@ -285,6 +284,17 @@ const EditorManager: EditorManager = {
     self.suffix = suffix;
 
     FocusController.setup(self);
+
+    // Lock certain properties to reduce misuse
+    Arr.each(
+      [ 'majorVersion', 'minorVersion', 'releaseDate', 'pageUid' ],
+      (property) =>
+        Object.defineProperty(self, property, {
+          writable: false,
+          configurable: false,
+          enumerable: true,
+        })
+    );
   },
 
   /**
