@@ -33,6 +33,7 @@ describe('browser.tinymce.core.FakeCaretImageCaptionTest', () => {
       TinyAssertions.assertContentPresence(editor, { '.mce-visual-caret': 1 });
     });
     TinySelections.setRawSelection(editor, [ 1, 1, 0 ], 0, [ 1, 1, 0 ], 0);
+    editor.selection.getNode().focus();
     await Waiter.pTryUntil('Wait for fake caret to be removed', () => {
       TinyAssertions.assertContentPresence(editor, { '.mce-visual-caret': 0 });
     });

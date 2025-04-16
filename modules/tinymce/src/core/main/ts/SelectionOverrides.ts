@@ -160,11 +160,11 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
       }
     });
 
-    editor.on('NodeChange', (e) => {
+    editor.on('focusin', (e) => {
       if (
         fakeCaret.isShowing() &&
-        NodeType.isContentEditableFalse(e.element.parentNode) &&
-          !isFakeCaretTarget(e.element.nextSibling) && !isFakeCaretTarget(e.element.previousSibling)
+        NodeType.isContentEditableFalse(e.target.parentNode) &&
+          !isFakeCaretTarget(e.target.nextSibling) && !isFakeCaretTarget(e.target.previousSibling)
       ) {
         fakeCaret.hide();
       }
