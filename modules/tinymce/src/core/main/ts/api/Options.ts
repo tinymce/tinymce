@@ -909,13 +909,7 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('fetch_user_by_id', {
-    processor: 'function',
-    default: () => Promise.reject('fetch_user_by_id option not defined')
-  });
-
-  registerOption('user_cache', {
-    processor: 'object',
-    default: {},
+    processor: 'function'
   });
 
   // These options must be registered later in the init sequence due to their default values
@@ -1044,7 +1038,6 @@ const getExtendedMathmlAttributes = option('extended_mathml_attributes');
 const getExtendedMathmlElements = option('extended_mathml_elements');
 const getCurrentUserId = option('current_user_id');
 const getFetchUserById = option('fetch_user_by_id');
-const getUserCache = option('user_cache');
 
 export {
   register,
@@ -1159,6 +1152,5 @@ export {
   getApiKey,
   isDisabled,
   getFetchUserById,
-  getCurrentUserId,
-  getUserCache
+  getCurrentUserId
 };
