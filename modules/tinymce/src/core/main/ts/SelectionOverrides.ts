@@ -160,13 +160,14 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
       }
     });
 
-    editor.on('focusin', (e) => {
-      if (
-        fakeCaret.isShowing() &&
-        NodeType.isContentEditableFalse(e.target.parentNode) &&
-          !isFakeCaretTarget(e.target.nextSibling) && !isFakeCaretTarget(e.target.previousSibling)
-      ) {
+    editor.on('focusin', () => {
+      if (fakeCaret.isShowing()) {
         fakeCaret.hide();
+
+        const rng = setElementSelection(editor.selection.getRng(), true);
+        if (rng) {
+          editor.selection.setRng(rng);
+        }
       }
     });
 
