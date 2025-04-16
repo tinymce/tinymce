@@ -1,6 +1,6 @@
 project: tinymce
 kind: Added
-body: New `UserLookup` API to provide a unified user uid system for fetching/caching user information across TinyMCE plugins.
+body: New `UserLookup` API to provide consistent user management and fetching/caching user information across TinyMCE plugins.
 time: 2025-04-15T15:04:14.502586+10:00
 custom:
     Issue: TINY-11974
