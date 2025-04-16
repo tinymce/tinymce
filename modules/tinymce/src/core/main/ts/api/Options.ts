@@ -1026,6 +1026,7 @@ const shouldConvertUnsafeEmbeds = option('convert_unsafe_embeds');
 const getLicenseKey = option('license_key');
 const getApiKey = option('api_key');
 const isDisabled = option('disabled');
+const getAllowedMathmlAnnotationEncodings = option('allow_mathml_annotation_encodings');
 const getExtendedMathmlAttributes = option('extended_mathml_attributes');
 const getExtendedMathmlElements = option('extended_mathml_elements');
 
@@ -1035,6 +1036,7 @@ export {
   getIframeAttrs,
   getDocType,
   getDocumentBaseUrl,
+  getAllowedMathmlAnnotationEncodings,
   getExtendedMathmlAttributes,
   getExtendedMathmlElements,
   getBodyId,
