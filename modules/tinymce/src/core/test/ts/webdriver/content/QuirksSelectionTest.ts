@@ -14,7 +14,7 @@ describe('browser.tinymce.selection.QuirksSelectionTest', () => {
 
   it('TINY-11676: pressing enter after clicking on a `p` containg a floating `img` in FireFox should not duplicate the image', async () => {
     const editor = hook.editor();
-    const initialContent = '<p><strong><img style="display: block; margin-left: auto; margin-right: auto;" src="img.jpg" width="354" height="116"></strong></p>';
+    const initialContent = '<p><strong><img style="display: block; margin-left: auto;" src="img.jpg" width="1" height="1"></strong></p>';
     editor.setContent(initialContent);
     await RealMouse.pClickOn('iframe => body => p');
     editor.execCommand('mceInsertNewLine');
