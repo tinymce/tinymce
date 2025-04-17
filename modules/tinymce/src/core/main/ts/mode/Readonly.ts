@@ -26,7 +26,8 @@ const toggleReadOnly = (editor: Editor, state: boolean): void => {
 const isReadOnly = (editor: Editor): boolean => editor.readonly;
 
 const registerReadOnlyInputBlockers = (editor: Editor): void => {
-  editor.on('beforeinput paste cut dragend dragover draggesture dragdrop drop drag', (e) => {
+  // Block all input events in readonly mode
+  editor.on('beforeinput compositionstart compositionupdate compositionend input paste cut dragend dragover draggesture dragdrop drop drag', (e) => {
     if (isReadOnly(editor)) {
       e.preventDefault();
     }
@@ -38,22 +39,51 @@ const registerReadOnlyInputBlockers = (editor: Editor): void => {
     }
   });
 
-  editor.on('input', (e) => {
-    if (!e.isComposing && isReadOnly(editor)) {
-      const undoLevel = editor.undoManager.add();
-      if (Type.isNonNullable(undoLevel)) {
-        editor.undoManager.undo();
+  // Prevent undo level additions during composition
+  editor.on('input compositionend', (e) => {
+    if (isReadOnly(editor)) {
+      // Skip undo level addition during composition
+      if (!e.isComposing) {
+        const undoLevel = editor.undoManager.add();
+        if (Type.isNonNullable(undoLevel)) {
+          editor.undoManager.undo();
+        }
       }
     }
   });
 
-  editor.on('compositionend', () => {
+  // Set up mutation observer to detect and revert unintended changes
+  const observer = new MutationObserver((mutations) => {
     if (isReadOnly(editor)) {
-      const undoLevel = editor.undoManager.add();
-      if (Type.isNonNullable(undoLevel)) {
-        editor.undoManager.undo();
+      let needsRevert = false;
+
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'characterData' || mutation.type === 'childList') {
+          // Mark that we need to revert
+          needsRevert = true;
+        }
+      });
+
+      // Only create one undo level for all mutations in this batch
+      if (needsRevert) {
+        const undoLevel = editor.undoManager.add();
+        if (Type.isNonNullable(undoLevel)) {
+          editor.undoManager.undo();
+        }
       }
     }
+  });
+
+  editor.on('compositionstart', () => {
+    observer.observe(editor.getBody(), {
+      characterData: true,
+      childList: true,
+      subtree: true
+    });
+  });
+
+  editor.on('compositionend', () => {
+    observer.disconnect();
   });
 };
 
