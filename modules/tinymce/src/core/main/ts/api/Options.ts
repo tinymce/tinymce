@@ -904,6 +904,14 @@ const register = (editor: Editor): void => {
     default: true
   });
 
+  registerOption('current_user_id', {
+    processor: 'string',
+  });
+
+  registerOption('fetch_user_by_id', {
+    processor: 'function'
+  });
+
   // These options must be registered later in the init sequence due to their default values
   editor.on('ScriptsLoaded', () => {
     registerOption('directionality', {
@@ -1028,6 +1036,8 @@ const getApiKey = option('api_key');
 const isDisabled = option('disabled');
 const getExtendedMathmlAttributes = option('extended_mathml_attributes');
 const getExtendedMathmlElements = option('extended_mathml_elements');
+const getCurrentUserId = option('current_user_id');
+const getFetchUserById = option('fetch_user_by_id');
 
 export {
   register,
@@ -1140,5 +1150,7 @@ export {
   getSandboxIframesExclusions,
   shouldConvertUnsafeEmbeds,
   getApiKey,
-  isDisabled
+  isDisabled,
+  getFetchUserById,
+  getCurrentUserId
 };
