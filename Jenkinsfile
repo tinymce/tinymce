@@ -193,7 +193,11 @@ timestamps {
       resourceLimitEphemeralStorage: '16Gi'
     ],
     tag: '20',
-    build: cacheName
+    build: cacheName,
+    precacheStep: {
+      sh "mkdir -p /tmp && tar -zcf /tmp/file.tar.gz ./* && cp /tmp/file.tar.gz ./file.tar.gz"
+      sh "ls -l ./file.tar.gz"
+    }
   ) {
     props = readProperties(file: 'build.properties')
     String primaryBranch = props.primaryBranch
@@ -201,9 +205,11 @@ timestamps {
 
 
     stage('Deps') {
+      sh 'du -sh ./'
       // cancel build if primary branch doesn't merge cleanly
       gitMerge(primaryBranch)
       yarnInstall()
+      sh 'du -sh ./'
     }
 
     stage('Build') {
@@ -236,9 +242,11 @@ timestamps {
   def seleniumEdge = [ browser: 'edge', provider: 'selenium', buckets: 1 ]
 
   def branchBuildPlatforms = [
-    winChrome,
-    winFirefox,
-    macSafari,
+    // winChrome,
+    // winFirefox,
+    // macSafari,
+    seleniumFirefox,
+    seleniumChrome
   ]
 
   def primaryBuildPlatforms = branchBuildPlatforms + [
