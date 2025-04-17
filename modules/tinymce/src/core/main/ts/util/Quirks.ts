@@ -250,6 +250,20 @@ const Quirks = (editor: Editor): Quirks => {
   };
 
   /**
+   * Fixes a Gecko a selection bug where if there is a floating image
+   * more details here: https://bugzilla.mozilla.org/show_bug.cgi?id=1959606
+   */
+  const fixFirefoxImageSelection = () => {
+    editor.on('selectionchange', () => {
+      const rng = editor.selection.getRng();
+      if (rng.collapsed && rng.startContainer.nodeName === 'IMG') {
+        editor.selection.select(rng.startContainer);
+        editor.selection.collapse(true);
+      }
+    });
+  };
+
+  /**
    * Fixes a Gecko bug where the style attribute gets added to the wrong element when deleting between two block elements.
    *
    * Fixes do backspace/delete on this:
@@ -713,6 +727,7 @@ const Quirks = (editor: Editor): Quirks => {
 
     // Gecko
     if (isGecko) {
+      fixFirefoxImageSelection();
       removeHrOnBackspace();
       focusBody();
       removeStylesWhenDeletingAcrossBlockElements();
