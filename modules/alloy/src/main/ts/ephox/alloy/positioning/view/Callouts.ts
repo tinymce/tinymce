@@ -16,7 +16,7 @@ import { applyTransitionCss } from './Transitions';
  */
 
 const elementSize = (p: SugarElement<HTMLElement>): AnchorElement => ({
-  width: Width.getOuter(p),
+  width: Math.ceil(Width.getOuterExact(p)),
   height: Height.getOuter(p)
 });
 
