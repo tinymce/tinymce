@@ -7,7 +7,7 @@ import * as EditorRemove from '../EditorRemove';
 import { BlobInfoImagePair } from '../file/ImageScanner';
 import * as EditorFocus from '../focus/EditorFocus';
 import * as Render from '../init/Render';
-import UserLookup from '../lookup/UserLookup';
+import type { UserLookup } from '../lookup/UserLookup';
 import * as EditableRoot from '../mode/EditableRoot';
 import { NodeChange } from '../NodeChange';
 import { normalizeOptions } from '../options/NormalizeOptions';
