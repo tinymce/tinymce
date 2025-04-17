@@ -160,8 +160,8 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
       }
     });
 
-    editor.on('focusin', () => {
-      if (fakeCaret.isShowing()) {
+    editor.on('focusin', (e) => {
+      if (fakeCaret.isShowing() && NodeType.isContentEditableFalse(e.target.parentNode)) {
         fakeCaret.hide();
 
         const rng = setElementSelection(editor.selection.getRng(), true);
