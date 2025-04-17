@@ -1,3 +1,4 @@
+import { StructureSchema } from '@ephox/boulder';
 import { Obj, Type, Arr } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
@@ -13,12 +14,12 @@ import * as Options from '../api/Options';
  * tinymce.activeEditor.userLookup.getCurrentUserId();
  *
  * // Fetch user information by ID
- * tinymce.activeEditor.userLookup.fetchUserById('user-id').then((user) => {
- *  if (user) {
- *   console.log('User found:', user);
+ * tinymce.activeEditor.userLookup.fetchUserById('user-id').then((users) => {
+ *  if (users.length > 0) {
+ *   console.log('Users found:', users);
  *  };
  * }).catch((error) => {
- *  console.error('Error fetching user:', error);
+ *  console.error('Error fetching users:', error);
  * });
  */
 
@@ -30,6 +31,11 @@ export interface User {
   avatar?: string;
   description?: string;
   [key: string]: any;
+}
+
+interface UserError {
+  input: any;
+  errors: string[];
 }
 
 export interface UserLookup {
@@ -46,7 +52,7 @@ export interface UserLookup {
    *
    * @method fetchUserById
    * @param {string} id - The user ID to fetch.
-   * @return {Promise<User>} A promise that resolves to the user information.
+   * @return {Promise<User[]>} A promise that resolves to an array of users and information about them.
    */
   fetchUserById: (id: UserId) => Promise<User[]>;
 }
@@ -58,6 +64,45 @@ const isUserObject = (val: unknown): val is User =>
   && !(Type.isNonNullable((val as User).name) && !Type.isString((val as User).name))
   && !(Type.isNonNullable((val as User).avatar) && !Type.isString((val as User).avatar))
   && !(Type.isNonNullable((val as User).description) && !Type.isString((val as User).description));
+
+const formatUserError = (error: UserError): string =>
+  StructureSchema.formatError({
+    input: error.input,
+    errors: error.errors,
+  });
+
+const handleError = (e: unknown, userId: UserId): User[] => {
+  const message = e instanceof Error
+    ? e.message
+    : formatUserError({
+      input: e,
+      errors: [ 'Something went wrong with fetch_user_by_id option' ]
+    });
+
+  // eslint-disable-next-line no-console
+  console.error(message);
+  return [{ id: userId }];
+};
+
+const validateResponse = (items: unknown): User[] => {
+  if (!Array.isArray(items) || items.length === 0) {
+    throw new Error(formatUserError({
+      input: items,
+      errors: [ 'fetch_user_by_id must return an array with at least one User object' ]
+    }));
+  }
+
+  const users = Arr.filter(items, (item) => isUserObject(item));
+
+  if (users.length === 0) {
+    throw new Error(formatUserError({
+      input: items,
+      errors: [ 'fetch_user_by_id must return an array with at least one User object with a string id property' ]
+    }));
+  }
+
+  return users as User[];
+};
 
 const isValidUserId = (userId: unknown): userId is UserId =>
   Type.isString(userId)
@@ -74,53 +119,33 @@ const UserLookup = (editor: Editor): UserLookup => {
   };
 
   const fetchUserById = (userId: UserId): Promise<User[]> => {
-    const fetchUserByIdFn = Options.getFetchUserById(editor);
-    const result = fetchUserByIdFn(userId);
-
     if (!isValidUserId(userId)) {
-      return Promise.reject(new Error('fetch_user_by_id must be a string'));
+      return Promise.reject(new Error(formatUserError({
+        input: userId,
+        errors: [ 'Provided userId must be a non-empty string' ]
+      })));
     };
 
     return lookup(userId).fold(
-      () => {
-        if (!Type.isPromiseLike(result)) {
-          throw new Error('fetch_user_by_id must return a promise');
+      async () => {
+        try {
+          const fetchFn = Options.getFetchUserById(editor);
+          const result = fetchFn(userId);
+
+          if (!Type.isPromiseLike(result)) {
+            throw new Error(formatUserError({
+              input: result,
+              errors: [ 'fetch_user_by_id must return a Promise' ]
+            }));
+          }
+
+          const response = await result;
+          const users = validateResponse(response);
+          Arr.each(users, (user) => store(user, user.id));
+          return users;
+        } catch (e) {
+          return handleError(e, userId);
         }
-
-        return result.then((items) => {
-          if (Array.isArray(items) && items.length > 0) {
-            // Filter out the invalid ones and console log them as an error
-            const users: User[] = Arr.filter(items, (item) => {
-              if (isUserObject(item)) {
-                store(item, item.id);
-                return item.id === userId;
-              } else {
-                // eslint-disable-next-line no-console
-                console.error('Invalid user object:', item);
-                return false;
-              }
-            });
-
-            if (users.length === 0) {
-              throw new Error('fetch_user_by_id must return an array with at least one User object with a string id property');
-            }
-
-            return users;
-          } else {
-            throw new Error('fetch_user_by_id must return an array with at least one User object with a string id property');
-          }
-        }).catch((e) => {
-          if (e instanceof Error) {
-            // Log error the message to console
-            // eslint-disable-next-line no-console
-            console.error(e.message);
-          } else {
-            // eslint-disable-next-line no-console
-            console.error('Something went wrong with fetch_user_by_id option.');
-          }
-
-          return [ { id: userId } as User ];
-        });
       },
       (user) => {
         return Promise.resolve([ user ]);
