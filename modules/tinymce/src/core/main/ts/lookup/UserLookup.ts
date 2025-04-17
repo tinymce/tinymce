@@ -32,7 +32,7 @@ export interface User {
   [key: string]: any;
 }
 
-interface UserLookup {
+export interface UserLookup {
   /**
    * Retrieves the current user ID from the editor.
    *
@@ -112,4 +112,7 @@ const UserLookup = (editor: Editor): UserLookup => {
   };
 };
 
-export default UserLookup;
+const createUserLookup = (editor: Editor): UserLookup =>
+  UserLookup(editor);
+
+export { createUserLookup };

@@ -1,5 +1,5 @@
 import { Bookmark } from '../bookmark/BookmarkTypes';
-import { User } from '../lookup/UserLookup';
+import type { User } from '../lookup/UserLookup';
 import { UndoManager } from '../undo/UndoManagerTypes';
 import AddOnManager from './AddOnManager';
 import Annotator from './Annotator';
