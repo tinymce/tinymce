@@ -6,6 +6,7 @@ import URI from 'tinymce/core/api/util/URI';
 
 import * as Options from '../api/Options';
 import { UserListItem } from '../ui/DialogTypes';
+
 import { ImageData } from './ImageData';
 
 export interface ImageDimensions {

@@ -7,6 +7,7 @@ import Schema from '../api/html/Schema';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';
+
 import * as DeleteUtils from './DeleteUtils';
 import * as MergeBlocks from './MergeBlocks';
 

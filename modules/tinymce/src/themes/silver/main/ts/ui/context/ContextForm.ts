@@ -5,6 +5,7 @@ import { Arr, Fun, Id, Optional, Singleton } from '@ephox/katamari';
 import { ToolbarMode } from '../../api/Options';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderToolbar, ToolbarGroup } from '../toolbar/CommonToolbar';
+
 import { generate } from './ContextFormButtons';
 import * as ContextFormSizeInput from './ContextFormSizeInput';
 import * as ContextFormSlider from './ContextFormSlider';

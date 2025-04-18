@@ -4,6 +4,7 @@ import { Dialog, DialogManager } from '@ephox/bridge';
 import { Cell, Merger, Obj, Optional, Type } from '@ephox/katamari';
 
 import { formBlockEvent, formCloseEvent, formUnblockEvent } from '../general/FormEvents';
+
 import { bodyChannel, dialogChannel, footerChannel, titleChannel } from './DialogChannels';
 import * as SilverDialogCommon from './SilverDialogCommon';
 import { FooterState } from './SilverDialogFooter';

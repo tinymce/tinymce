@@ -10,6 +10,7 @@ import * as BoundaryCaret from '../keyboard/BoundaryCaret';
 import * as BoundaryLocation from '../keyboard/BoundaryLocation';
 import * as BoundarySelection from '../keyboard/BoundarySelection';
 import * as InlineUtils from '../keyboard/InlineUtils';
+
 import * as DeleteElement from './DeleteElement';
 import { execNativeDeleteCommand } from './DeleteUtils';
 

@@ -9,6 +9,7 @@ import Tools from '../api/util/Tools';
 import { IdBookmark, IndexBookmark } from '../bookmark/BookmarkTypes';
 import * as GetBookmark from '../bookmark/GetBookmark';
 import * as NodeType from '../dom/NodeType';
+
 import * as TableCellSelection from './TableCellSelection';
 
 const getStartNode = (rng: Range) => {

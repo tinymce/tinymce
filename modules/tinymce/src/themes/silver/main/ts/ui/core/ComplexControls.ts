@@ -1,6 +1,7 @@
 import Editor from 'tinymce/core/api/Editor';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
+
 import { createAlignMenu } from './complex/AlignBespoke';
 import { createBlocksMenu } from './complex/BlocksBespoke';
 import { createFontFamilyMenu } from './complex/FontFamilyBespoke';

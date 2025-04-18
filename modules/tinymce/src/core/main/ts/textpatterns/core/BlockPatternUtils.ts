@@ -8,6 +8,7 @@ import * as Options from '../../api/Options';
 import Tools from '../../api/util/Tools';
 import { generatePathRange, resolvePathRange } from '../utils/PathRange';
 import * as Utils from '../utils/Utils';
+
 import { BlockPattern, BlockPatternMatch, Pattern, PatternSet } from './PatternTypes';
 
 type StripPattern = (dom: DOMUtils, block: Node, pattern: BlockPattern) => void;

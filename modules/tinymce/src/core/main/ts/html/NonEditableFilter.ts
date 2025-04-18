@@ -11,7 +11,7 @@ const hasClass = (checkClassName: string) => (node: AstNode): boolean =>
   (' ' + node.attr('class') + ' ').indexOf(checkClassName) !== -1;
 
 const replaceMatchWithSpan = (editor: Editor, content: string, cls: string) => {
-  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+
   return function (match: string): string {
     const args = arguments, index = args[args.length - 2];
     const prevChar = index > 0 ? content.charAt(index - 1) : '';

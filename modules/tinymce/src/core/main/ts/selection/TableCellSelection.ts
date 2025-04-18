@@ -3,6 +3,7 @@ import { SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import * as ElementType from '../dom/ElementType';
+
 import * as MultiRange from './MultiRange';
 
 const getCellsFromRanges = (ranges: Range[]): SugarElement<HTMLTableCellElement>[] =>

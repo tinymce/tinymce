@@ -20,6 +20,7 @@ import { hasAnyRanges, moveEndPoint } from '../../selection/SelectionUtils';
 import * as SetSelectionContent from '../../selection/SetSelectionContent';
 import Editor from '../Editor';
 import AstNode from '../html/Node';
+
 import BookmarkManager from './BookmarkManager';
 import ControlSelection from './ControlSelection';
 import DOMUtils from './DOMUtils';

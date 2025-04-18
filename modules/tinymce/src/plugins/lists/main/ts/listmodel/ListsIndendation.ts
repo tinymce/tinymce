@@ -7,6 +7,7 @@ import { fireListEvent } from '../api/Events';
 import { ListAction } from '../core/ListAction';
 import * as Selection from '../core/Selection';
 import { createTextBlock } from '../core/TextBlock';
+
 import { composeList } from './ComposeList';
 import { Entry, isEntryComment, isEntryList, isIndented, isSelected } from './Entry';
 import { Indentation, indentEntry } from './Indentation';

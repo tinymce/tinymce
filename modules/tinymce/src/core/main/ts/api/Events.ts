@@ -1,6 +1,7 @@
 import { AutocompleterEventArgs, AutocompleterUpdateActiveRange } from '../autocomplete/AutocompleteTypes';
 import { FormatVars } from '../fmt/FormatTypes';
 import { RangeLikeObject } from '../selection/RangeTypes';
+
 import Editor from './Editor';
 import {
   BeforeSetContentEvent, SetContentEvent, PastePlainTextToggleEvent, PastePostProcessEvent, PastePreProcessEvent, GetContentEvent, BeforeGetContentEvent,

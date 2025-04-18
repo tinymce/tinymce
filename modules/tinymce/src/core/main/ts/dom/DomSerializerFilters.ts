@@ -4,6 +4,7 @@ import DOMUtils from '../api/dom/DOMUtils';
 import DomParser from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
 import * as Zwsp from '../text/Zwsp';
+
 import { DomSerializerSettings } from './DomSerializerImpl';
 import * as RemoveTrailingBr from './RemoveTrailingBr';
 

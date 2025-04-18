@@ -4,6 +4,7 @@ import { Compare, Css, Insert, Replication, SelectorFind, SugarElement, SugarFra
 import Schema from '../api/html/Schema';
 import * as ElementType from '../dom/ElementType';
 import * as Parents from '../dom/Parents';
+
 import * as SelectionUtils from './SelectionUtils';
 import * as SimpleTableModel from './SimpleTableModel';
 import * as TableCellSelection from './TableCellSelection';

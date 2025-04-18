@@ -1,6 +1,7 @@
 import { Arr, Fun, Obj, Optional, Type, Unique } from '@ephox/katamari';
 
 import Tools from '../util/Tools';
+
 import DOMUtils from './DOMUtils';
 
 /**

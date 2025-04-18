@@ -6,6 +6,7 @@ import { UiFactoryBackstage } from '../backstage/Backstage';
 import { RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { identifyButtons } from '../ui/toolbar/Integration';
+
 import { ReadyUiReferences } from './UiReferences';
 
 // Set toolbar(s) depending on if multiple toolbars is configured or not

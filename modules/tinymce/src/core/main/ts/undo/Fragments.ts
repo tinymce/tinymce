@@ -3,6 +3,7 @@ import { Arr, Fun } from '@ephox/katamari';
 import Entities from '../api/html/Entities';
 import * as NodeType from '../dom/NodeType';
 import * as Zwsp from '../text/Zwsp';
+
 import * as Diff from './Diff';
 
 /**

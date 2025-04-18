@@ -7,6 +7,7 @@ import Editor from '../../api/Editor';
 import { createMarker, Marker, rangeFromMarker, removeMarker } from '../utils/Marker';
 import { generatePathRange, generatePathRangeFromRange } from '../utils/PathRange';
 import * as Utils from '../utils/Utils';
+
 import { InlinePattern, InlinePatternMatch, PatternSet } from './PatternTypes';
 
 interface PatternDetails {

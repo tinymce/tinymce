@@ -16,6 +16,7 @@ import * as RangeWalk from '../selection/RangeWalk';
 import * as SelectionUtils from '../selection/SelectionUtils';
 import * as TableCellSelection from '../selection/TableCellSelection';
 import * as Zwsp from '../text/Zwsp';
+
 import * as CaretFormat from './CaretFormat';
 import * as ExpandRange from './ExpandRange';
 import { isCaretNode } from './FormatContainer';

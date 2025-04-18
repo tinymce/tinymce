@@ -1,4 +1,5 @@
 import Editor from '../api/Editor';
+
 import { normalizeNbspsInEditor } from './Nbsps';
 
 const setup = (editor: Editor): void => {

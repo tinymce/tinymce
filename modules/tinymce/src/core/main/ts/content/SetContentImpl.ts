@@ -12,6 +12,7 @@ import * as NodeType from '../dom/NodeType';
 import * as EditorFocus from '../focus/EditorFocus';
 import * as FilterNode from '../html/FilterNode';
 import * as Zwsp from '../text/Zwsp';
+
 import { Content, isTreeNode, SetContentArgs, SetContentResult } from './ContentTypes';
 
 const moveSelection = (editor: Editor): void => {

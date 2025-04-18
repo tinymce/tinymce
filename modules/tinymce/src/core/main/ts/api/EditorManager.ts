@@ -2,6 +2,7 @@ import { Arr, Obj, Type } from '@ephox/katamari';
 
 import * as ErrorReporter from '../ErrorReporter';
 import * as FocusController from '../focus/FocusController';
+
 import AddOnManager from './AddOnManager';
 import DOMUtils from './dom/DOMUtils';
 import { EventUtilsEvent } from './dom/EventUtils';
@@ -477,7 +478,6 @@ const EditorManager: EditorManager = {
    *   ed.windowManager.alert('Hello world!');
    * });
    */
-  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
   get(id?: number | string): any {
     if (arguments.length === 0) {
       return editors.slice(0);

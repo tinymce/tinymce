@@ -1,6 +1,7 @@
 import { AlloyEvents, AlloyTriggers, EventFormat, SystemEvents } from '@ephox/alloy';
 
 import { GetApiType, runWithApi } from '../../controls/Controls';
+
 import ItemResponse from './ItemResponse';
 
 export interface OnMenuItemExecuteType<T> extends GetApiType<T> {

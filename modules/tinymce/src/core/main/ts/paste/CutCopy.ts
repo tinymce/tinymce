@@ -4,6 +4,7 @@ import Editor from '../api/Editor';
 import Env from '../api/Env';
 import Delay from '../api/util/Delay';
 import { EditorEvent } from '../api/util/EventDispatcher';
+
 import * as InternalHtml from './InternalHtml';
 
 interface SelectionContentData {

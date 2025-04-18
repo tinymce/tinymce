@@ -7,6 +7,7 @@ import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import * as Icons from '../../../icons/Icons';
 import * as ItemClasses from '../ItemClasses';
+
 import { renderHtml, renderShortcut, renderStyledText, renderText } from './ItemSlices';
 
 export interface ItemStructure {

@@ -9,6 +9,7 @@ import { Plugin } from 'tinymce/core/api/PluginManager';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Options from '../api/Options';
+
 import { generate, SelectorFormatItem } from './SelectorModel';
 
 type Filter = (value: string, imported?: boolean) => boolean;

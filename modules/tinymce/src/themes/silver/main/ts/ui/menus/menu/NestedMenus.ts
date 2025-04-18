@@ -5,6 +5,7 @@ import { Id, Merger, Obj, Optional } from '@ephox/katamari';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
 import ItemResponse from '../item/ItemResponse';
+
 import { expand } from './MenuConversion';
 import { MenuSearchMode } from './searchable/SearchableMenu';
 import { createPartialMenu } from './SingleMenu';

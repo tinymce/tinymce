@@ -7,6 +7,7 @@ import Editor from 'tinymce/core/api/Editor';
 import URI from 'tinymce/core/api/util/URI';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
+
 import { bodySendMessageChannel, dialogChannel } from './DialogChannels';
 import { renderIframeBody } from './SilverDialogBody';
 import * as SilverDialogCommon from './SilverDialogCommon';

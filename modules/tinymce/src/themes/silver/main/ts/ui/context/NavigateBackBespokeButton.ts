@@ -8,6 +8,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import * as ButtonEvents from '../toolbar/button/ButtonEvents';
 import * as ToolbarButtons from '../toolbar/button/ToolbarButtons';
+
 import * as ContextUi from './ContextUi';
 
 export const createNavigateBackButton = (editor: Editor, backstage: UiFactoryBackstage): SketchSpec => {

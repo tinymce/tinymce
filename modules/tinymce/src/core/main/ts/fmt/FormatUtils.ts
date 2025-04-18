@@ -14,6 +14,7 @@ import * as NodeType from '../dom/NodeType';
 import * as SelectionUtils from '../selection/SelectionUtils';
 import * as Whitespace from '../text/Whitespace';
 import { ZWSP } from '../text/Zwsp';
+
 import { isCaretNode } from './FormatContainer';
 import { BlockFormat, Format, FormatAttrOrStyleValue, FormatVars, InlineFormat, MixedFormat, SelectorFormat } from './FormatTypes';
 

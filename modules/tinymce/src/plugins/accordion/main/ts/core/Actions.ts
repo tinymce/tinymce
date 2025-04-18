@@ -5,6 +5,7 @@ import { Attribute, SelectorFind, SugarElement } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Events from '../api/Events';
+
 import * as Identifiers from './Identifiers';
 import * as Utils from './Utils';
 

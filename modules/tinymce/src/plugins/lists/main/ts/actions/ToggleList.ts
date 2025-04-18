@@ -13,6 +13,7 @@ import { listToggleActionFromListName } from '../core/ListAction';
 import * as NodeType from '../core/NodeType';
 import * as Selection from '../core/Selection';
 import { isCustomList, isWithinNonEditableList } from '../core/Util';
+
 import { flattenListSelection } from './Indendation';
 
 interface ListDetail {

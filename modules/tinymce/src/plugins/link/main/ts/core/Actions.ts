@@ -7,6 +7,7 @@ import URI from 'tinymce/core/api/util/URI';
 import * as Options from '../api/Options';
 import { AssumeExternalTargets } from '../api/Types';
 import { AttachState, LinkDialogOutput } from '../ui/DialogTypes';
+
 import * as Utils from './Utils';
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions

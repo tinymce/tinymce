@@ -6,6 +6,7 @@ import Formatter from '../api/Formatter';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as NodeType from '../dom/NodeType';
+
 import { Format, InlineFormat } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 

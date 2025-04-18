@@ -8,6 +8,7 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Events from '../../../api/Events';
 import { composeUnbinders, onSetupEditableToggle } from '../ControlUtils';
+
 import * as ColorCache from './ColorCache';
 import * as Options from './Options';
 

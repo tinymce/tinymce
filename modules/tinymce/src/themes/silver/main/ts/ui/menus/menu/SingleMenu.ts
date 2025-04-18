@@ -9,6 +9,7 @@ import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
 import { tooltipBehaviour } from '../item/build/AutocompleteMenuItem';
 import ItemResponse from '../item/ItemResponse';
 import * as MenuItems from '../item/MenuItems';
+
 import { deriveMenuMovement } from './MenuMovement';
 import { markers as getMenuMarkers } from './MenuParts';
 import * as MenuUtils from './MenuUtils';

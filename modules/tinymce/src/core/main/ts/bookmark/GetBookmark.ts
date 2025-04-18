@@ -9,6 +9,7 @@ import * as NodeType from '../dom/NodeType';
 import { rangeInsertNode } from '../selection/RangeInsertNode';
 import * as RangeNodes from '../selection/RangeNodes';
 import * as Zwsp from '../text/Zwsp';
+
 import { Bookmark, IdBookmark, IndexBookmark, PathBookmark, RangeBookmark, StringPathBookmark } from './BookmarkTypes';
 import * as CaretBookmark from './CaretBookmark';
 

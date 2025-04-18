@@ -8,6 +8,7 @@ import Schema from '../api/html/Schema';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import { insertNbspAtPosition, insertSpaceAtPosition } from '../caret/InsertText';
+
 import * as BoundaryLocation from './BoundaryLocation';
 import * as InlineUtils from './InlineUtils';
 import { needsToHaveNbsp } from './Nbsps';

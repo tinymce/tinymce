@@ -1,6 +1,7 @@
 import { Obj, Type } from '@ephox/katamari';
 
 import { isWhitespaceText } from '../../text/Whitespace';
+
 import { SchemaMap } from './Schema';
 
 export type Attributes = Array<{ name: string; value: string }> & { map: Record<string, string> };

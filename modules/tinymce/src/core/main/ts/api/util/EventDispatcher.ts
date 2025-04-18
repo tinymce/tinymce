@@ -1,6 +1,7 @@
 import { Arr, Fun, Obj } from '@ephox/katamari';
 
 import * as EventUtils from '../../events/EventUtils';
+
 import Tools from './Tools';
 
 export type MappedEvent<T extends {}, K extends string> = K extends keyof T ? T[K] : any;

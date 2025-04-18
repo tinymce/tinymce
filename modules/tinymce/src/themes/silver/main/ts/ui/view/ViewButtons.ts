@@ -7,6 +7,7 @@ import { renderReplaceableIconFromPack } from '../button/ButtonSlices';
 import { calculateClassesFromButtonType, IconButtonWrapper, renderCommonSpec } from '../general/Button';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import { ViewButtonClasses } from '../toolbar/button/ButtonClasses';
+
 import { ViewButtonWithoutGroup } from './View';
 
 type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];

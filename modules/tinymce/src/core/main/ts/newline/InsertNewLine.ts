@@ -5,6 +5,7 @@ import * as Options from '../api/Options';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import * as DeleteUtils from '../delete/DeleteUtils';
 import * as InputEvents from '../events/InputEvents';
+
 import * as InsertBlock from './InsertBlock';
 import * as InsertBr from './InsertBr';
 import * as NewLineAction from './NewLineAction';

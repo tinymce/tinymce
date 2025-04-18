@@ -1,6 +1,7 @@
 import { Arr, Obj, Optional } from '@ephox/katamari';
 
 import Tools from '../api/util/Tools';
+
 import { Attribute, AttributePattern, ElementRule, SchemaElement } from './SchemaTypes';
 import * as SchemaUtils from './SchemaUtils';
 

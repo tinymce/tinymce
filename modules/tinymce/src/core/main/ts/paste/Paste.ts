@@ -2,6 +2,7 @@ import { Cell } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
+
 import * as Clipboard from './Clipboard';
 import * as Commands from './Commands';
 import * as CutCopy from './CutCopy';

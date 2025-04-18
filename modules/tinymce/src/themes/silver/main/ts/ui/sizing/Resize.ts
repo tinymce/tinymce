@@ -5,6 +5,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import * as Events from '../../api/Events';
 import * as Options from '../../api/Options';
+
 import * as Utils from './Utils';
 
 interface EditorDimensions {

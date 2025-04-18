@@ -4,6 +4,7 @@ import { SugarElement, SugarNode } from '@ephox/sugar';
 import Schema from '../api/html/Schema';
 import * as ElementType from '../dom/ElementType';
 import * as Parents from '../dom/Parents';
+
 import * as CaretFinder from './CaretFinder';
 import { CaretPosition } from './CaretPosition';
 import { getElementFromPosition, getElementFromPrevPosition } from './CaretUtils';

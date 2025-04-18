@@ -7,6 +7,7 @@ import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 
 import * as Utils from '../core/Utils';
 import * as TableTargets from '../queries/TableTargets';
+
 import * as TableSelection from './TableSelection';
 
 type UiApi = Menu.MenuItemInstanceApi | Toolbar.ToolbarButtonInstanceApi;

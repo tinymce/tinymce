@@ -14,6 +14,7 @@ import Styles, { StyleMap } from '../html/Styles';
 import { URLConverter } from '../OptionTypes';
 import { MappedEvent } from '../util/EventDispatcher';
 import Tools from '../util/Tools';
+
 import EventUtils, { EventUtilsCallback } from './EventUtils';
 import StyleSheetLoader from './StyleSheetLoader';
 
@@ -1096,6 +1097,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     ', endOffset: ' + r.endOffset
   );
 
+  // eslint-disable-next-line consistent-this
   const self: DOMUtils = {
     doc,
     settings,

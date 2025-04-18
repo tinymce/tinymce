@@ -8,6 +8,7 @@ import * as UiFactory from 'tinymce/themes/silver/ui/general/UiFactory';
 
 import * as Options from '../api/Options';
 import { IconProvider } from '../ui/icons/Icons';
+
 import { UiFactoryBackstageAnchors } from './Anchors';
 import * as Anchors from './Anchors';
 import { ColorInputBackstage, UiFactoryBackstageForColorInput } from './ColorInputBackstage';

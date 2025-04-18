@@ -16,6 +16,7 @@ import * as RangeWalk from '../selection/RangeWalk';
 import * as SelectionUtils from '../selection/SelectionUtils';
 import * as SplitRange from '../selection/SplitRange';
 import * as TableCellSelection from '../selection/TableCellSelection';
+
 import * as CaretFormat from './CaretFormat';
 import * as ExpandRange from './ExpandRange';
 import { Format, FormatAttrOrStyleValue, FormatVars } from './FormatTypes';

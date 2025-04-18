@@ -4,6 +4,7 @@ import { Compare, SugarElement, Traverse } from '@ephox/sugar';
 import { getClientRects, NodeClientRect } from '../dom/Dimensions';
 import * as NodeType from '../dom/NodeType';
 import * as ClientRect from '../geom/ClientRect';
+
 import * as CaretCandidate from './CaretCandidate';
 import { isFakeCaretTarget } from './FakeCaret';
 

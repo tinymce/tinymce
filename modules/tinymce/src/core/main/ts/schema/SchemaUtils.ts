@@ -1,6 +1,7 @@
 import { Arr, Obj, Type } from '@ephox/katamari';
 
 import Tools from '../api/util/Tools';
+
 import { ElementRule } from './SchemaTypes';
 
 export const split = (items: string | undefined, delim?: string): string[] => {

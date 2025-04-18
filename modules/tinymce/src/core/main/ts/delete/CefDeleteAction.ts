@@ -10,6 +10,7 @@ import * as CaretUtils from '../caret/CaretUtils';
 import * as ElementType from '../dom/ElementType';
 import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
+
 import * as DeleteUtils from './DeleteUtils';
 
 export interface DeleteActionAdt {
