@@ -38,4 +38,35 @@ describe('browser.tinymce.core.FakeCaretImageCaptionTest', () => {
       TinyAssertions.assertContentPresence(editor, { '.mce-visual-caret': 0 });
     });
   });
+
+  it('TINY-11997: should hide after tabbing inside CEF', async function () {
+    // skiped on FireFox since `setRawSelection` seems not to work on it
+    if (isFirefox) {
+      this.skip();
+    }
+    const editor = hook.editor();
+    editor.setContent(
+      '<div contenteditable="false">' +
+        '<div>' +
+          '<div>' +
+            '<div contenteditable="true">' +
+              '<p>abc</p>' +
+              '<p>foo</p>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    );
+    editor.focus();
+    TinySelections.setRawSelection(editor, [], 0, [], 0);
+    editor.selection.getNode().focus();
+    await Waiter.pTryUntil('Wait for fake caret to be added', () => {
+      TinyAssertions.assertContentPresence(editor, { '.mce-visual-caret': 1 });
+    });
+    TinySelections.setRawSelection(editor, [ 1, 0, 0, 0, 0 ], 0, [ 1, 0, 0, 0, 0 ], 0);
+    editor.selection.getNode().focus();
+    await Waiter.pTryUntil('Wait for fake caret to be removed', () => {
+      TinyAssertions.assertContentPresence(editor, { '.mce-visual-caret': 0 });
+    });
+  });
 });

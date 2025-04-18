@@ -161,7 +161,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
     });
 
     editor.on('focusin', (e) => {
-      if (fakeCaret.isShowing() && NodeType.isContentEditableFalse(e.target.parentNode)) {
+      if (fakeCaret.isShowing() && !NodeType.matchNodeNames([ 'body' ])(e.target) && !editor.dom.isEditable(e.target.parentNode)) {
         fakeCaret.hide();
 
         const rng = setElementSelection(editor.selection.getRng(), true);
