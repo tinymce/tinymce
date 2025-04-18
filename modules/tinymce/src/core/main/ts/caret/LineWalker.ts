@@ -3,6 +3,7 @@ import { Fun } from '@ephox/katamari';
 import * as Dimensions from '../dom/Dimensions';
 import * as ClientRect from '../geom/ClientRect';
 import * as ArrUtils from '../util/ArrUtils';
+
 import * as CaretCandidate from './CaretCandidate';
 import CaretPosition from './CaretPosition';
 import * as CaretUtils from './CaretUtils';

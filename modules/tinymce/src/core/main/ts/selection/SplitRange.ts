@@ -1,4 +1,5 @@
 import * as NodeType from '../dom/NodeType';
+
 import { RangeLikeObject } from './RangeTypes';
 
 const splitText = (node: Text, offset: number) => {

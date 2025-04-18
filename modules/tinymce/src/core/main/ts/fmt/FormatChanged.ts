@@ -4,6 +4,7 @@ import Editor from '../api/Editor';
 import { FormatEvent } from '../api/EventTypes';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import * as NodeType from '../dom/NodeType';
+
 import { FormatVars } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 import * as MatchFormat from './MatchFormat';

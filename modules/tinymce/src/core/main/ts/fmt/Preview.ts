@@ -6,6 +6,7 @@ import Editor from '../api/Editor';
 import Schema from '../api/html/Schema';
 import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';
+
 import { ApplyFormat, BlockFormat, FormatAttrOrStyleValue, InlineFormat, SelectorFormat } from './FormatTypes';
 
 /**

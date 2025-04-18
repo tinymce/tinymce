@@ -3,6 +3,7 @@ import { Cell, Fun } from '@ephox/katamari';
 import { registerEventsAndFilters } from '../mode/Disabled';
 import { registerMode, setMode } from '../mode/Mode';
 import { isReadOnly, registerReadOnlyInputBlockers } from '../mode/Readonly';
+
 import Editor from './Editor';
 
 /**

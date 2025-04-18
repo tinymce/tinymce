@@ -39,6 +39,8 @@
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^5.1.1",
-    "@rollup/plugin-node-resolve": "^16.0.1"
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "eslint-plugin-oxlint": "^0.16.3",
+    "oxlint": "^0.16.3"
   }
 }

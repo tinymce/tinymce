@@ -10,6 +10,7 @@ import * as Events from '../Events';
 import * as Options from '../Options';
 import { EditorEvent } from '../util/EventDispatcher';
 import VK from '../util/VK';
+
 import DOMUtils from './DOMUtils';
 import EditorSelection from './Selection';
 

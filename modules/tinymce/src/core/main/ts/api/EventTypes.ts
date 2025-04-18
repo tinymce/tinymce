@@ -3,6 +3,7 @@ import { GetContentArgs, SetContentArgs } from '../content/ContentTypes';
 import { FormatVars } from '../fmt/FormatTypes';
 import { RangeLikeObject } from '../selection/RangeTypes';
 import { UndoLevel } from '../undo/UndoManagerTypes';
+
 import { SetAttribEvent } from './dom/DOMUtils';
 import Editor from './Editor';
 import { ParserArgs } from './html/DomParser';

@@ -6,6 +6,7 @@ import Delay from 'tinymce/core/api/util/Delay';
 import * as Options from '../api/Options';
 import { AssumeExternalTargets } from '../api/Types';
 import * as Utils from '../core/Utils';
+
 import { LinkDialogOutput } from './DialogTypes';
 
 interface Transformer {

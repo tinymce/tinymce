@@ -11,6 +11,7 @@ import * as Events from '../api/Events';
 import * as Options from '../api/Options';
 import * as Utils from '../core/Utils';
 import * as TableSelection from '../selection/TableSelection';
+
 import { getAdvancedTab } from './DialogAdvancedTab';
 import * as Helpers from './Helpers';
 import * as TableDialogGeneralTab from './TableDialogGeneralTab';

@@ -7,6 +7,7 @@ import Schema from '../api/html/Schema';
 import Tools from '../api/util/Tools';
 import * as URI from '../api/util/URI';
 import * as NodeType from '../dom/NodeType';
+
 import * as Namespace from './Namespace';
 
 export type MimeType = 'text/html' | 'application/xhtml+xml';

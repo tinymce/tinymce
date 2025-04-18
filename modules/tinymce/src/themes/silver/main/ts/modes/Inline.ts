@@ -15,6 +15,7 @@ import { InlineHeader } from '../ui/header/InlineHeader';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { inline as loadInlineSkin } from '../ui/skin/Loader';
 import * as UiState from '../UiState';
+
 import { setToolbar } from './Toolbars';
 import { ReadyUiReferences } from './UiReferences';
 

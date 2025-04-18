@@ -1,5 +1,6 @@
 import EditorSelection from '../api/dom/Selection';
 import * as NodeType from '../dom/NodeType';
+
 import { Bookmark } from './BookmarkTypes';
 import * as GetBookmark from './GetBookmark';
 import * as ResolveBookmark from './ResolveBookmark';
