@@ -7,6 +7,7 @@ import * as Options from '../api/Options';
 import * as Actions from '../core/Actions';
 import { ListOptions } from '../core/ListOptions';
 import * as Utils from '../core/Utils';
+
 import { DialogChanges } from './DialogChanges';
 import { DialogConfirms } from './DialogConfirms';
 import { DialogInfo } from './DialogInfo';

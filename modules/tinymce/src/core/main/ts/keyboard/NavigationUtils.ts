@@ -14,6 +14,7 @@ import * as LineWalker from '../caret/LineWalker';
 import * as ScrollIntoView from '../dom/ScrollIntoView';
 import * as RangeNodes from '../selection/RangeNodes';
 import * as ArrUtils from '../util/ArrUtils';
+
 import { isCefAtEdgeSelected } from './CefUtils';
 import * as InlineUtils from './InlineUtils';
 

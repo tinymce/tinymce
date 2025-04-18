@@ -6,6 +6,7 @@ import * as ExpandRange from '../fmt/ExpandRange';
 import * as RangeWalk from '../selection/RangeWalk';
 import * as SelectionUtils from '../selection/SelectionUtils';
 import * as TableCellSelection from '../selection/TableCellSelection';
+
 import { ChildContext, context } from './AnnotationContext';
 import { AnnotatorSettings } from './AnnotationsRegistry';
 import * as Markings from './Markings';

@@ -7,6 +7,7 @@ import { Logo } from 'tinymce/themes/silver/resources/StatusbarLogo';
 import * as Options from '../../api/Options';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as ConvertShortcut from '../alien/ConvertShortcut';
+
 import * as ElementPath from './ElementPath';
 import * as ResizeHandler from './ResizeHandle';
 import { renderWordCount } from './WordCount';

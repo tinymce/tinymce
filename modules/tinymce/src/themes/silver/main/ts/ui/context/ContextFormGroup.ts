@@ -2,6 +2,7 @@ import { AlloySpec, Behaviour, Disabling, FormField, SketchSpec } from '@ephox/a
 import { Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+
 import * as ContextToolbarFocus from './ContextToolbarFocus';
 
 export const createContextFormFieldFromParts = (

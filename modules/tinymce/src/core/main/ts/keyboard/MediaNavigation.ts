@@ -2,6 +2,7 @@ import Editor from '../api/Editor';
 import { isAfterMedia, isBeforeMedia } from '../caret/CaretPositionPredicates';
 import { HDirection } from '../caret/CaretWalker';
 import * as NodeType from '../dom/NodeType';
+
 import * as NavigationUtils from './NavigationUtils';
 
 const moveH = (editor: Editor, forward: boolean): boolean => {

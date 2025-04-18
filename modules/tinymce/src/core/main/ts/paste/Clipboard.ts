@@ -12,6 +12,7 @@ import VK from '../api/util/VK';
 import * as InputEvents from '../events/InputEvents';
 import * as Conversions from '../file/Conversions';
 import * as Whitespace from '../text/Whitespace';
+
 import * as InternalHtml from './InternalHtml';
 import * as Newlines from './Newlines';
 import { PasteBin, isDefaultPasteBinContent } from './PasteBin';

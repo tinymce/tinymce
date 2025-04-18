@@ -6,6 +6,7 @@ import * as Rtc from '../Rtc';
 import * as Levels from '../undo/Levels';
 import { addKeyboardShortcuts, registerEvents } from '../undo/Setup';
 import { Index, Locks, UndoLevel, UndoManager } from '../undo/UndoManagerTypes';
+
 import Editor from './Editor';
 
 /**

@@ -1,4 +1,5 @@
 import * as EventUtils from '../../events/EventUtils';
+
 import EventDispatcher, { EditorEvent, MappedEvent } from './EventDispatcher';
 
 interface Observable<T extends {}> {

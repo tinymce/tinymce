@@ -5,6 +5,7 @@ import { Cell, Fun, Optional, Singleton, Strings } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as UiState from '../../UiState';
 import { onContextFormControlDetached, onControlAttached } from '../controls/Controls';
+
 import * as ContextFormApi from './ContextFormApi';
 import * as ContextFormGroup from './ContextFormGroup';
 

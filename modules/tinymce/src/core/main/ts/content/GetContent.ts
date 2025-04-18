@@ -2,6 +2,7 @@ import { Fun } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Rtc from '../Rtc';
+
 import { Content, GetContentArgs, ContentFormat } from './ContentTypes';
 import { postProcessGetContent, preProcessGetContent } from './PrePostProcess';
 

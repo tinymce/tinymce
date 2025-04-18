@@ -9,6 +9,7 @@ import CaretPosition from '../caret/CaretPosition';
 import * as NodeType from '../dom/NodeType';
 import { getParentCaretContainer } from '../fmt/FormatContainer';
 import * as Zwsp from '../text/Zwsp';
+
 import {
   Bookmark, IdBookmark, IndexBookmark, isIdBookmark, isIndexBookmark, isPathBookmark, isRangeBookmark, isStringPathBookmark, PathBookmark,
   StringPathBookmark
