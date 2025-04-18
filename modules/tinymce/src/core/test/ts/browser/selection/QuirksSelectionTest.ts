@@ -1,4 +1,4 @@
-import { UiFinder } from '@ephox/agar';
+import { UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Unicode } from '@ephox/katamari';
 import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
@@ -24,7 +24,7 @@ describe('browser.tinymce.selection.QuirksSelectionTest', () => {
     if (point) {
       editor.selection.getSel()?.setBaseAndExtent(point.offsetNode, point.offset, point.offsetNode, point.offset);
     }
-
+    await Waiter.pTryUntil('selection now should be on the `strong`', () => TinyAssertions.assertCursor(editor, [ 0, 0 ], 0));
     editor.execCommand('mceInsertNewLine');
     TinyAssertions.assertContent(editor, `<p>${Unicode.nbsp}</p>` + initialContent);
   });
