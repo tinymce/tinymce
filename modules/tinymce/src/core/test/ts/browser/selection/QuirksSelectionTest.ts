@@ -1,6 +1,7 @@
 import { UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Unicode } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -11,8 +12,14 @@ describe('browser.tinymce.selection.QuirksSelectionTest', () => {
     entities: 'raw',
     base_url: '/project/tinymce/js/tinymce'
   }, []);
+  const platform = PlatformDetection.detect();
 
-  it('TINY-11676: pressing enter after clicking on a `p` containg a floating `img` in FireFox should not duplicate the image', async () => {
+  it('TINY-11676: pressing enter after clicking on a `p` containg a floating `img` in FireFox should not duplicate the image', async function () {
+    // Safari doesn't have `caretPositionFromPoint`
+    if (platform.browser.isSafari()) {
+      this.skip();
+    }
+
     const editor = hook.editor();
     const initialContent = '<p><strong><img style="display: block; margin-left: auto;" src="img.jpg" width="1" height="1"></strong></p>';
     editor.setContent(initialContent);
