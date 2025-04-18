@@ -10,6 +10,7 @@ import { Hex } from '../api/colour/ColourTypes';
 import * as HsvColour from '../api/colour/HsvColour';
 import * as RgbaColour from '../api/colour/RgbaColour';
 import * as Transformations from '../api/colour/Transformations';
+
 import * as ColourEvents from './ColourEvents';
 import * as HueSlider from './components/HueSlider';
 import * as RgbForm from './components/RgbForm';
