@@ -6,6 +6,7 @@ import { PlatformDetection } from '@ephox/sand';
 import { Compare, Css, SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { ExecCommandArgs } from 'tinymce/core/api/EditorCommands';
 import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 import I18n from 'tinymce/core/api/util/I18n';
 
@@ -475,8 +476,12 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
       OuterContainer.focusToolbar(outerContainer);
     });
 
-    editor.addCommand('ToggleToolbarDrawer', (_ui, options?: { skipFocus: boolean }) => {
+    editor.addCommand('ToggleToolbarDrawer', (_ui, options?: { skipFocus: boolean }, args?: ExecCommandArgs) => {
       if (options?.skipFocus) {
+        // eslint-disable-next-line no-console
+        console.warn('ToggleToolbarDrawer skipFocus is deprecated see migration guide: ....');
+        OuterContainer.toggleToolbarDrawerWithoutFocusing(outerContainer);
+      } else if (args?.skip_focus) {
         OuterContainer.toggleToolbarDrawerWithoutFocusing(outerContainer);
       } else {
         OuterContainer.toggleToolbarDrawer(outerContainer);
