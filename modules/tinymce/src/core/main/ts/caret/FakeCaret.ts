@@ -12,6 +12,7 @@ import * as CaretContainerRemove from './CaretContainerRemove';
 type GeomClientRect = ClientRect.ClientRect;
 
 export interface FakeCaret {
+  isShowing: () => boolean;
   show: (before: boolean, element: Element) => Range | null;
   hide: () => void;
   getCss: () => string;
@@ -211,6 +212,7 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
   );
 
   return {
+    isShowing: lastVisualCaret.isSet,
     show,
     hide,
     getCss,
