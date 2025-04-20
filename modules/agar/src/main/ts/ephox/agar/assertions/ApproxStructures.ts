@@ -20,7 +20,7 @@ export interface ElementQueue {
   peek(): Optional<SugarElement<Node>>;
   take(): Optional<SugarElement<Node>>;
   mark(): {
-    reset: () => void ;
+    reset: () => void;
     atMark: () => boolean;
   };
 }
