@@ -1,6 +1,7 @@
 import { Arr } from '@ephox/katamari';
 
 import { PRange, PRegExp } from '../pattern/Types';
+
 import * as Find from './Find';
 
 const sort = <T extends PRange>(array: T[]): T[] => Arr.sort(array, (a, b) => a.start - b.start);
