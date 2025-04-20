@@ -2,6 +2,7 @@ import { FieldProcessor, FieldSchema, StructureSchema, ValueType } from '@ephox/
 import { Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
+
 import { FormComponentWithLabel, formComponentWithLabelFields, FormComponentWithLabelSpec } from './FormComponent';
 
 export interface ListBoxSingleItemSpec {
