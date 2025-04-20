@@ -13,6 +13,7 @@ import * as Removal from '../mutant/Removal';
 import * as Styling from '../mutant/Styling';
 import * as Tracks from '../mutant/Tracks';
 import * as Up from '../mutant/Up';
+
 import { Gene } from './Gene';
 import { Universe } from './Universe';
 
