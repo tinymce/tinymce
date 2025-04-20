@@ -63,7 +63,6 @@ describe('atomic.katamari.api.struct.AdtTest', () => {
     const targetStr = 'target';
     const blockStr = 'block';
 
-    // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
     const tag = function (target: string, block: string) {
       assert.equal(arguments.length, 2);
       assert.equal(target, targetStr);
