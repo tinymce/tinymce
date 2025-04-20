@@ -2,6 +2,7 @@ import { Arr, Optional } from '@ephox/katamari';
 import { Attribute, Css, SugarElement } from '@ephox/sugar';
 
 import * as Sizes from '../resize/Sizes';
+
 import { redistribute } from './Sizes';
 import * as TableLookup from './TableLookup';
 

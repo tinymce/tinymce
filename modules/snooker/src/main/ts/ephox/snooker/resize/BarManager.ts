@@ -6,6 +6,7 @@ import { Attribute, Class, Compare, ContentEditable, Css, DomEvent, SelectorFind
 import { ResizeWire } from '../api/ResizeWire';
 import * as Styles from '../style/Styles';
 import * as CellUtils from '../util/CellUtils';
+
 import { BarMutation } from './BarMutation';
 import * as Bars from './Bars';
 

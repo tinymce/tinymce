@@ -2,6 +2,7 @@ import { Arr, Optional } from '@ephox/katamari';
 
 import { PlatformInfo } from '../info/PlatformInfo';
 import { UaInfo } from '../info/UaInfo';
+
 import { Version } from './Version';
 
 // There are no native typescript types for navigator.UserAgentData at this stage so have to manually define it
