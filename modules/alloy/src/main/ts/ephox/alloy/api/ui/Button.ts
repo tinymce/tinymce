@@ -7,6 +7,7 @@ import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
 import { SketchBehaviours } from '../component/SketchBehaviours';
 import { SketchSpec } from '../component/SpecTypes';
+
 import * as Sketcher from './Sketcher';
 import { SingleSketchFactory } from './UiSketcher';
 

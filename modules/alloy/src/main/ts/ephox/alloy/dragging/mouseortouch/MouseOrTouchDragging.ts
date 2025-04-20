@@ -9,6 +9,7 @@ import { DraggingState } from '../common/DraggingTypes';
 import * as DragUtils from '../common/DragUtils';
 import * as MouseDragging from '../mouse/MouseDragging';
 import * as TouchDragging from '../touch/TouchDragging';
+
 import { MouseOrTouchDraggingConfig } from './MouseOrTouchDraggingTypes';
 
 const events = <E>(dragConfig: MouseOrTouchDraggingConfig<E>, dragState: DraggingState, updateStartState: (comp: AlloyComponent) => void) => [

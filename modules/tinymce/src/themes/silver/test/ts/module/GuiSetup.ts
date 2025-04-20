@@ -145,10 +145,10 @@ const bddSetup = <T = string>(
   createComponent: (store: TestStore<T>, doc: SugarElement<Document>, body: SugarElement<Node>) => AlloyComponent,
   createGui?: () => Gui.GuiSystem
 ): Hook<SugarElement<Document>, T> =>
-  bddSetupIn(() => ({
-    root: SugarDocument.getDocument(),
-    teardown: Fun.noop
-  }), createComponent, createGui);
+    bddSetupIn(() => ({
+      root: SugarDocument.getDocument(),
+      teardown: Fun.noop
+    }), createComponent, createGui);
 
 /**
  * Setup in a Shadow Root, run list of untyped Steps, then tear down.

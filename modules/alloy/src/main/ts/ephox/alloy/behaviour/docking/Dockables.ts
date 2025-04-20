@@ -5,6 +5,7 @@ import * as Boxes from '../../alien/Boxes';
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { NuPositionCss, PositionCss } from '../../positioning/view/PositionCss';
+
 import { DockingContext, DockingDecision, DockingMode, DockingState, DockingViewport, DockToBottomDecision, DockToTopDecision, InitialDockingPosition } from './DockingTypes';
 
 export interface StaticMorph {

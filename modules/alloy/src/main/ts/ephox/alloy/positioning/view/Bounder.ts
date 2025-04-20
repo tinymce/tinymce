@@ -7,6 +7,7 @@ import * as Direction from '../layout/Direction';
 import * as LayoutBounds from '../layout/LayoutBounds';
 import { AnchorBox, AnchorElement, AnchorLayout } from '../layout/LayoutTypes';
 import { Placement } from '../layout/Placement';
+
 import { RepositionDecision } from './Reposition';
 import { SpotInfo } from './SpotInfo';
 

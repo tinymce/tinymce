@@ -4,6 +4,7 @@ import { SugarBody, SugarElement } from '@ephox/sugar';
 import { AlloyComponent } from '../api/component/ComponentApi';
 import { ElementAndHandler, EventRegistry, UidAndHandler } from '../events/EventRegistry';
 import * as AlloyLogger from '../log/AlloyLogger';
+
 import * as Tagger from './Tagger';
 
 export interface Registry {

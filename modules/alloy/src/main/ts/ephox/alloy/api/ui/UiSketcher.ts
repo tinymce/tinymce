@@ -6,6 +6,7 @@ import { PartTypeAdt } from '../../parts/PartType';
 import * as Tagger from '../../registry/Tagger';
 import * as SpecSchema from '../../spec/SpecSchema';
 import { AlloySpec, SketchSpec } from '../component/SpecTypes';
+
 import { CompositeSketchDetail, CompositeSketchSpec, SingleSketchDetail, SingleSketchSpec } from './Sketcher';
 
 export type SingleSketchFactory<D extends SingleSketchDetail, S extends SingleSketchSpec> = (detail: D, specWithUid: S) => SketchSpec;

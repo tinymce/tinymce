@@ -8,6 +8,7 @@ import * as AlloyTriggers from '../api/events/AlloyTriggers';
 import * as SystemEvents from '../api/events/SystemEvents';
 import { NativeSimulatedEvent } from '../events/SimulatedEvent';
 import * as KeyMatch from '../navigation/KeyMatch';
+
 import { GeneralKeyingConfig, KeyRuleHandler } from './KeyingModeTypes';
 
 const doDefaultExecute = (

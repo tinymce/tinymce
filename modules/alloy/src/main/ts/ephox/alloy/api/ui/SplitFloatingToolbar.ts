@@ -12,6 +12,7 @@ import * as GuiFactory from '../component/GuiFactory';
 import * as Memento from '../component/Memento';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import { AlloySpec } from '../component/SpecTypes';
+
 import { FloatingToolbarButton } from './FloatingToolbarButton';
 import * as Sketcher from './Sketcher';
 import { ToolbarGroup } from './ToolbarGroup';

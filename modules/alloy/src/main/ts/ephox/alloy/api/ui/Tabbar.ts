@@ -5,6 +5,7 @@ import { TabbarDetail, TabbarSketcher, TabbarSpec } from '../../ui/types/TabbarT
 import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
 import * as SketchBehaviours from '../component/SketchBehaviours';
+
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 

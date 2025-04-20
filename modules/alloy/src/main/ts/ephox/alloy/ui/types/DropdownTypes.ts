@@ -7,6 +7,7 @@ import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { AnchorOverrides, AnchorSpec, HasLayoutAnchor, HasLayoutAnchorSpec } from '../../positioning/mode/Anchoring';
+
 import { TieredData, TieredMenuSpec } from './TieredMenuTypes';
 
 // F is the fetched data

@@ -7,6 +7,7 @@ import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
 import { Representing } from '../behaviour/Representing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
+
 import * as Sketcher from './Sketcher';
 import { SingleSketchFactory } from './UiSketcher';
 
