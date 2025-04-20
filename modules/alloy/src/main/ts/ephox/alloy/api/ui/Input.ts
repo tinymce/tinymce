@@ -1,6 +1,7 @@
 import * as InputBase from '../../ui/common/InputBase';
 import { InputDetail, InputSketcher, InputSpec } from '../../ui/types/InputTypes';
 import { SketchSpec } from '../component/SpecTypes';
+
 import * as Sketcher from './Sketcher';
 import { SingleSketchFactory } from './UiSketcher';
 

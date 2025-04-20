@@ -7,6 +7,7 @@ import * as AlloyEvents from '../../api/events/AlloyEvents';
 import { DomDefinitionDetail } from '../../dom/DomDefinition';
 import { DomModification } from '../../dom/DomModification';
 import { EventFormat, NativeSimulatedEvent } from '../../events/SimulatedEvent';
+
 import { DropEvent } from './DropEvent';
 import { DragnDropImageClone } from './ImageClone';
 

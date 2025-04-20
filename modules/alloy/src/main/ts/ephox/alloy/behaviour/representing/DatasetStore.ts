@@ -2,6 +2,7 @@ import { FieldSchema } from '@ephox/boulder';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
+
 import { DatasetRepresentingState, DatasetStoreConfig, RepresentingConfig } from './RepresentingTypes';
 import { dataset as datasetState } from './RepresentState';
 

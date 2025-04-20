@@ -16,6 +16,7 @@ import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import * as AlloyParts from '../../parts/AlloyParts';
 import { WidgetItemDetail } from '../../ui/types/ItemTypes';
 import * as ItemEvents from '../util/ItemEvents';
+
 import * as WidgetParts from './WidgetParts';
 
 const builder = (detail: WidgetItemDetail) => {

@@ -7,6 +7,7 @@ import * as Attachment from '../../api/system/Attachment';
 import * as Patching from '../../dom/Patching';
 import * as InternalAttachment from '../../system/InternalAttachment';
 import { Stateless } from '../common/BehaviourState';
+
 import { withoutReuse, withReuse } from './ReplacingAll';
 import { ReplacingConfig } from './ReplacingTypes';
 

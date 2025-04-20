@@ -5,6 +5,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchSpec } from '../../api/ui/Sketcher';
+
 import { CommonDropdownDetail } from './DropdownTypes';
 import { InputDetail, InputSpec } from './InputTypes';
 import { ItemDataTuple } from './ItemTypes';
