@@ -30,7 +30,7 @@ export interface User {
   name?: string;
   avatar?: string;
   description?: string;
-  [key: string]: any;
+  custom?: Record<string, any>;
 }
 
 interface UserError {

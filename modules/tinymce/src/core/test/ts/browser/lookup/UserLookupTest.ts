@@ -194,7 +194,9 @@ describe('browser.tinymce.core.UserLookupTest', () => {
         [
           {
             id: userId,
-            unexpectedProperty: 'Unexpected Value'
+            custom: {
+              unexpectedProperty: 'Unexpected Value'
+            }
           }
         ]
       )
@@ -202,6 +204,6 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
     const users = await editor.userLookup.fetchUserById(userId);
 
-    assert.deepEqual(users, [{ id: userId, unexpectedProperty: 'Unexpected Value' }], 'Should return a user object with the provided ID');
+    assert.deepEqual(users, [{ id: userId, custom: { unexpectedProperty: 'Unexpected Value' }}], 'Should return a user object with the provided ID');
   });
 });
