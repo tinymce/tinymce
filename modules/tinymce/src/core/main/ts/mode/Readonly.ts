@@ -27,7 +27,7 @@ const isReadOnly = (editor: Editor): boolean => editor.readonly;
 
 const registerReadOnlyInputBlockers = (editor: Editor): void => {
   // Block all input events in readonly mode
-  editor.on('beforeinput compositionstart compositionupdate compositionend input paste cut dragend dragover draggesture dragdrop drop drag', (e) => {
+  editor.on('beforeinput input paste cut dragend dragover draggesture dragdrop drop drag', (e) => {
     if (isReadOnly(editor)) {
       e.preventDefault();
     }
@@ -75,11 +75,13 @@ const registerReadOnlyInputBlockers = (editor: Editor): void => {
   });
 
   editor.on('compositionstart', () => {
-    observer.observe(editor.getBody(), {
-      characterData: true,
-      childList: true,
-      subtree: true
-    });
+    if (isReadOnly(editor)) {
+      observer.observe(editor.getBody(), {
+        characterData: true,
+        childList: true,
+        subtree: true
+      });
+    }
   });
 
   editor.on('compositionend', () => {
