@@ -9,7 +9,7 @@ describe('browser.tinymce.core.UserLookupTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     current_user_id: 'test-user-1',
-    fetch_user_by_id: (userId: string): Promise<User[]> => {
+    fetch_users_by_id: (userId: string): Promise<User[]> => {
       return new Promise((resolve) => {
         setTimeout(() => {
           resolve(
@@ -38,10 +38,12 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     const userId = 'test-user-1';
 
     const users = await editor.userLookup
-      .fetchUserById(userId)
+      .fetchUsersById(userId)
       .catch(() => {
         assert.fail('Should not throw an error');
       });
+
+    console.warn('users', users);
 
     assert.equal(users[0].id, userId, 'Should return user with correct ID');
     assert.equal(users[0].name, 'Test User', 'Should return user with correct name');
@@ -63,10 +65,10 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     const userId = 'test-user-1';
 
     // Fetch and cache
-    const firstCall = await editor.userLookup.fetchUserById(userId);
+    const firstCall = await editor.userLookup.fetchUsersById(userId);
 
     // Return cached data
-    const secondCall = await editor.userLookup.fetchUserById(userId);
+    const secondCall = await editor.userLookup.fetchUsersById(userId);
 
     assert.deepEqual(firstCall, secondCall, 'Should return same user data from cache');
   });
@@ -77,9 +79,9 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
     // Make multiple concurrent requests
     const requests = Promise.all([
-      editor.userLookup.fetchUserById(userId),
-      editor.userLookup.fetchUserById(userId),
-      editor.userLookup.fetchUserById(userId)
+      editor.userLookup.fetchUsersById(userId),
+      editor.userLookup.fetchUsersById(userId),
+      editor.userLookup.fetchUsersById(userId)
     ]);
 
     const results = await requests;
@@ -93,7 +95,7 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     const editor = hook.editor();
 
     try {
-      await editor.userLookup.fetchUserById('');
+      await editor.userLookup.fetchUsersById('');
       assert.fail('Should throw error for empty string ID');
     } catch (error) {
       assert.isDefined(error, 'Should handle empty string ID with error');
@@ -106,7 +108,7 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     const userName = 'Invalid User';
 
     // Override with malformed data
-    editor.options.set('fetch_user_by_id', () =>
+    editor.options.set('fetch_users_by_id', () =>
       Promise.resolve(
         [
           {
@@ -117,7 +119,7 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       )
     );
 
-    const users = await editor.userLookup.fetchUserById(userId);
+    const users = await editor.userLookup.fetchUsersById(userId);
 
     assert.deepEqual(users, [{ id: userId }]);
     assert.isFalse(users[0]?.name === userName);
@@ -127,23 +129,23 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     const editor = hook.editor();
 
     try {
-      await editor.userLookup.fetchUserById(123 as any);
+      await editor.userLookup.fetchUsersById(123 as any);
       assert.fail('Should throw error for non-string ID');
     } catch (error) {
       assert.isDefined(error, 'Should handle non-string ID with error');
     }
   });
 
-  it('Should reject if fetch_user_by_id is not defined', async () => {
+  it('Should reject if fetch_users_by_id is not defined', async () => {
     const editor = hook.editor();
 
-    editor.options.unset('fetch_user_by_id');
+    editor.options.unset('fetch_users_by_id');
 
     try {
-      await editor.userLookup.fetchUserById('test-user');
-      assert.fail('Should throw error when fetch_user_by_id is not defined');
+      await editor.userLookup.fetchUsersById('test-user');
+      assert.fail('Should throw error when fetch_users_by_id is not defined');
     } catch (error) {
-      assert.isDefined(error, 'Should reject with error when fetch_user_by_id is not defined');
+      assert.isDefined(error, 'Should reject with error when fetch_users_by_id is not defined');
     }
   });
 
@@ -151,21 +153,21 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     const editor = hook.editor();
     const userId = 'non-existent-user-id';
 
-    // Override fetch_user_by_id to simulate an error
-    editor.options.set('fetch_user_by_id', async (id: string) =>
+    // Override fetch_users_by_id to simulate an error
+    editor.options.set('fetch_users_by_id', async (id: string) =>
       Promise.reject(new Error(`User ${id} not found`)));
 
-    const users = await editor.userLookup.fetchUserById(userId);
+    const users = await editor.userLookup.fetchUsersById(userId);
 
     assert.deepEqual(users, [{ id: userId }], 'Should return a user object with the provided ID');
   });
 
-  it('Should throw an error if fetch_user_by_id is not returning a promise', async () => {
+  it('Should throw an error if fetch_users_by_id is not returning a promise', async () => {
     const editor = hook.editor();
     const userId = 'test-user-1';
 
-    // Override fetch_user_by_id to return a non-promise value
-    editor.options.set('fetch_user_by_id', () => {
+    // Override fetch_users_by_id to return a non-promise value
+    editor.options.set('fetch_users_by_id', () => {
       return [
         {
           id: userId,
@@ -177,8 +179,8 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     });
 
     try {
-      await editor.userLookup.fetchUserById(userId);
-      assert.fail('Should throw error when fetch_user_by_id is not returning a promise');
+      await editor.userLookup.fetchUsersById(userId);
+      assert.fail('Should throw error when fetch_users_by_id is not returning a promise');
     } catch (error) {
       assert.isDefined(error, 'Should handle non-promise return value with error');
     }
@@ -188,8 +190,8 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     const editor = hook.editor();
     const userId = 'unexpected-user-id';
 
-    // Override fetch_user_by_id to return unexpected data structure
-    editor.options.set('fetch_user_by_id', () =>
+    // Override fetch_users_by_id to return unexpected data structure
+    editor.options.set('fetch_users_by_id', () =>
       Promise.resolve(
         [
           {
@@ -202,7 +204,7 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       )
     );
 
-    const users = await editor.userLookup.fetchUserById(userId);
+    const users = await editor.userLookup.fetchUsersById(userId);
 
     assert.deepEqual(users, [{ id: userId, custom: { unexpectedProperty: 'Unexpected Value' }}], 'Should return a user object with the provided ID');
   });

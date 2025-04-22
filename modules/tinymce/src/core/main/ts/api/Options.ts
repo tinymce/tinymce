@@ -908,7 +908,7 @@ const register = (editor: Editor): void => {
     processor: 'string',
   });
 
-  registerOption('fetch_user_by_id', {
+  registerOption('fetch_users_by_id', {
     processor: 'function'
   });
 
@@ -1037,7 +1037,7 @@ const isDisabled = option('disabled');
 const getExtendedMathmlAttributes = option('extended_mathml_attributes');
 const getExtendedMathmlElements = option('extended_mathml_elements');
 const getCurrentUserId = option('current_user_id');
-const getFetchUserById = option('fetch_user_by_id');
+const getFetchUsersById = option('fetch_users_by_id');
 
 export {
   register,
@@ -1151,6 +1151,6 @@ export {
   shouldConvertUnsafeEmbeds,
   getApiKey,
   isDisabled,
-  getFetchUserById,
+  getFetchUsersById,
   getCurrentUserId
 };

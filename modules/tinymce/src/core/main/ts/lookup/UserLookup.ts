@@ -14,7 +14,7 @@ import * as Options from '../api/Options';
  * tinymce.activeEditor.userLookup.getCurrentUserId();
  *
  * // Fetch user information by ID
- * tinymce.activeEditor.userLookup.fetchUserById('user-id').then((users) => {
+ * tinymce.activeEditor.userLookup.fetchUsersById('user-id').then((users) => {
  *  if (users.length > 0) {
  *   console.log('Users found:', users);
  *  };
@@ -50,11 +50,11 @@ export interface UserLookup {
   /**
    * Fetches user information using a provided ID.
    *
-   * @method fetchUserById
+   * @method fetchUsersById
    * @param {string} id - The user ID to fetch.
    * @return {Promise<User[]>} A promise that resolves to an array of users and information about them.
    */
-  fetchUserById: (id: UserId) => Promise<User[]>;
+  fetchUsersById: (id: UserId) => Promise<User[]>;
 }
 
 const isUserObject = (val: unknown): val is User =>
@@ -76,7 +76,7 @@ const handleError = (e: unknown, userId: UserId): User[] => {
     ? e.message
     : formatUserError({
       input: e,
-      errors: [ 'Something went wrong with fetch_user_by_id option' ]
+      errors: [ 'Something went wrong with fetch_users_by_id option' ]
     });
 
   // eslint-disable-next-line no-console
@@ -88,7 +88,7 @@ const validateResponse = (items: unknown): User[] => {
   if (!Array.isArray(items) || items.length === 0) {
     throw new Error(formatUserError({
       input: items,
-      errors: [ 'fetch_user_by_id must return an array with at least one User object' ]
+      errors: [ 'fetch_users_by_id must return an array with at least one User object' ]
     }));
   }
 
@@ -97,7 +97,7 @@ const validateResponse = (items: unknown): User[] => {
   if (users.length === 0) {
     throw new Error(formatUserError({
       input: items,
-      errors: [ 'fetch_user_by_id must return an array with at least one User object with a string id property' ]
+      errors: [ 'fetch_users_by_id must return an array with at least one User object with a string id property' ]
     }));
   }
 
@@ -118,7 +118,7 @@ const UserLookup = (editor: Editor): UserLookup => {
     userCache[userId] = user;
   };
 
-  const fetchUserById = (userId: UserId): Promise<User[]> => {
+  const fetchUsersById = (userId: UserId): Promise<User[]> => {
     if (!isValidUserId(userId)) {
       return Promise.reject(new Error(formatUserError({
         input: userId,
@@ -129,13 +129,13 @@ const UserLookup = (editor: Editor): UserLookup => {
     return lookup(userId).fold(
       async () => {
         try {
-          const fetchFn = Options.getFetchUserById(editor);
+          const fetchFn = Options.getFetchUsersById(editor);
           const result = fetchFn(userId);
 
           if (!Type.isPromiseLike(result)) {
             throw new Error(formatUserError({
               input: result,
-              errors: [ 'fetch_user_by_id must return a Promise' ]
+              errors: [ 'fetch_users_by_id must return a Promise' ]
             }));
           }
 
@@ -157,7 +157,7 @@ const UserLookup = (editor: Editor): UserLookup => {
 
   return {
     getCurrentUserId,
-    fetchUserById,
+    fetchUsersById,
   };
 };
 
