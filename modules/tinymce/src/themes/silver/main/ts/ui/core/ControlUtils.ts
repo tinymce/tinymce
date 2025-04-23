@@ -1,4 +1,4 @@
-import { Singleton, Type } from '@ephox/katamari';
+import { Fun, Singleton } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
@@ -10,9 +10,9 @@ const composeUnbinders = (f: VoidFunction, g: VoidFunction): VoidFunction => () 
   g();
 };
 
-const onSetupEditableToggle = <T extends Toolbar.ToolbarButtonInstanceApi | Menu.MenuItemInstanceApi>(editor: Editor, require?: () => boolean): (api: T) => VoidFunction =>
+const onSetupEditableToggle = <T extends Toolbar.ToolbarButtonInstanceApi | Menu.MenuItemInstanceApi>(editor: Editor, enabledPredicate: () => boolean = Fun.always): (api: T) => VoidFunction =>
   onSetupEvent<T>(editor, 'NodeChange', (api) => {
-    api.setEnabled(editor.selection.isEditable() && (Type.isFunction(require) ? require() : true));
+    api.setEnabled(editor.selection.isEditable() && enabledPredicate());
   });
 
 const onSetupFormatToggle = (editor: Editor, name: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi): VoidFunction => {
