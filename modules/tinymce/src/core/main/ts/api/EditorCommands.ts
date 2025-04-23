@@ -12,7 +12,7 @@ import Editor from './Editor';
  */
 
 export type EditorCommandCallback<S> = (this: S, ui: boolean, value: any, args?: ExecCommandArgs) => void;
-export type EditorCommandsCallback = (command: string, ui: boolean, value: any, args?: ExecCommandArgs) => void;
+export type EditorCommandsCallback = (command: string, ui: boolean, value?: any, args?: ExecCommandArgs) => void;
 
 interface Commands {
   state: Record<string, (command: string) => boolean>;

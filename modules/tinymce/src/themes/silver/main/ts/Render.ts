@@ -9,6 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { ExecCommandArgs } from 'tinymce/core/api/EditorCommands';
 import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 import I18n from 'tinymce/core/api/util/I18n';
+import * as Deprecations from 'tinymce/core/Deprecations';
 
 import * as Events from './api/Events';
 import * as Options from './api/Options';
@@ -478,8 +479,7 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
 
     editor.addCommand('ToggleToolbarDrawer', (_ui, options?: { skipFocus: boolean }, args?: ExecCommandArgs) => {
       if (options?.skipFocus) {
-        // eslint-disable-next-line no-console
-        console.warn('ToggleToolbarDrawer skipFocus is deprecated see migration guide: ....');
+        Deprecations.logFeatureDeprecationWarning('skipFocus');
         OuterContainer.toggleToolbarDrawerWithoutFocusing(outerContainer);
       } else if (args?.skip_focus) {
         OuterContainer.toggleToolbarDrawerWithoutFocusing(outerContainer);
