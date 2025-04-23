@@ -9,8 +9,8 @@ import Editor from 'tinymce/core/api/Editor';
 import { ExecCommandArgs } from 'tinymce/core/api/EditorCommands';
 import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 import I18n from 'tinymce/core/api/util/I18n';
-import * as Deprecations from 'tinymce/core/Deprecations';
 
+import * as Deprecations from '../../../../core/main/ts/Deprecations';
 import * as Events from './api/Events';
 import * as Options from './api/Options';
 import * as Backstage from './backstage/Backstage';
