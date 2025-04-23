@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Waiter } from '@ephox/agar';
-import { GuiFactory, TestHelpers } from '@ephox/alloy';
+import { GuiFactory } from '@ephox/alloy';
 import { after, before, describe, it } from '@ephox/bedrock-client';
 import { Cell, Fun, Global, Optional } from '@ephox/katamari';
 import { Class, SugarElement } from '@ephox/sugar';
@@ -8,6 +8,7 @@ import Resource from 'tinymce/core/api/Resource';
 import { TinyMCE } from 'tinymce/core/api/Tinymce';
 import { renderCustomEditor } from 'tinymce/themes/silver/ui/dialog/CustomEditor';
 
+import * as GuiSetup from '../../../module/GuiSetup';
 import * as RepresentingUtils from '../../../module/RepresentingUtils';
 
 declare const tinymce: TinyMCE;
@@ -43,7 +44,7 @@ describe('headless.tinymce.themes.silver.components.customeditor.BasicCustomEdit
     origTiny = undefined;
   });
 
-  const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+  const hook = GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderCustomEditor({
       type: 'customeditor',
       name: 'customeditor',

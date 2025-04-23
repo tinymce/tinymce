@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, UiFinder } from '@ephox/agar';
-import { AlloyComponent, AlloyTriggers, GuiFactory, NativeEvents, TestHelpers } from '@ephox/alloy';
+import { AlloyComponent, AlloyTriggers, GuiFactory, NativeEvents } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { StructureSchema } from '@ephox/boulder';
 import { Dialog } from '@ephox/bridge';
@@ -8,11 +8,12 @@ import { assert } from 'chai';
 
 import { renderTree } from 'tinymce/themes/silver/ui/dialog/Tree';
 
+import * as GuiSetup from '../../../module/GuiSetup';
 import * as TestExtras from '../../../module/TestExtras';
 
 describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
   const extrasHook = TestExtras.bddSetup();
-  const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => {
+  const hook = GuiSetup.bddSetup((store, _doc, _body) => {
     const fullTree: Dialog.TreeItemSpec [] = [
       {
         type: 'directory',

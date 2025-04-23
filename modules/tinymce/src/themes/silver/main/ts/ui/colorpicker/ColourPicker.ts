@@ -1,3 +1,4 @@
+import { ColourTypes, HsvColour, RgbaColour, Transformations } from '@ephox/acid';
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Composing, Keying, Memento, RawDomSchema,
   SimulatedEvent, Sketcher, Slider
@@ -5,15 +6,11 @@ import {
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Cell, Fun } from '@ephox/katamari';
 
-import { Untranslated } from '../alien/I18n';
-import { Hex } from '../api/colour/ColourTypes';
-import * as HsvColour from '../api/colour/HsvColour';
-import * as RgbaColour from '../api/colour/RgbaColour';
-import * as Transformations from '../api/colour/Transformations';
 import * as ColourEvents from './ColourEvents';
 import * as HueSlider from './components/HueSlider';
 import * as RgbForm from './components/RgbForm';
 import * as SaturationBrightnessPalette from './components/SaturationBrightnessPalette';
+import { Untranslated } from './I18n';
 
 export interface ColourPickerDetail extends Sketcher.SingleSketchDetail {
   readonly dom: RawDomSchema;
@@ -59,37 +56,37 @@ const makeFactory = (
       rgbForm.sketch({})
     );
 
-    const updatePalette = (anyInSystem: AlloyComponent, _hex: Hex, hue: number) => {
+    const updatePalette = (anyInSystem: AlloyComponent, _hex: ColourTypes.Hex, hue: number) => {
       memPalette.getOpt(anyInSystem).each((palette) => {
         sbPalette.setHue(palette, hue);
       });
     };
 
-    const updateFields = (anyInSystem: AlloyComponent, hex: Hex) => {
+    const updateFields = (anyInSystem: AlloyComponent, hex: ColourTypes.Hex) => {
       memRgb.getOpt(anyInSystem).each((form) => {
         rgbForm.updateHex(form, hex);
       });
     };
 
-    const updateSlider = (anyInSystem: AlloyComponent, _hex: Hex, hue: number) => {
+    const updateSlider = (anyInSystem: AlloyComponent, _hex: ColourTypes.Hex, hue: number) => {
       memSlider.getOpt(anyInSystem).each((slider) => {
         Slider.setValue(slider, hueDegreesToSlider(hue));
       });
     };
 
-    const updatePaletteThumb = (anyInSystem: AlloyComponent, hex: Hex) => {
+    const updatePaletteThumb = (anyInSystem: AlloyComponent, hex: ColourTypes.Hex) => {
       memPalette.getOpt(anyInSystem).each((palette) => {
         sbPalette.setThumb(palette, hex);
       });
     };
 
-    const updateState = (hex: Hex, hue: number) => {
+    const updateState = (hex: ColourTypes.Hex, hue: number) => {
       const rgba = RgbaColour.fromHex(hex);
       state.paletteRgba.set(rgba);
       state.paletteHue.set(hue);
     };
 
-    const runUpdates = (anyInSystem: AlloyComponent, hex: Hex, hue: number, updates: ((anyInSystem: AlloyComponent, hex: Hex, hue: number) => void)[]) => {
+    const runUpdates = (anyInSystem: AlloyComponent, hex: ColourTypes.Hex, hue: number, updates: ((anyInSystem: AlloyComponent, hex: ColourTypes.Hex, hue: number) => void)[]) => {
       updateState(hex, hue);
       Arr.each(updates, (update) => {
         update(anyInSystem, hex, hue);

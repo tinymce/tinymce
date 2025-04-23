@@ -1,5 +1,5 @@
 import { Mouse, TestStore, UiFinder, Waiter } from '@ephox/agar';
-import { AlloyComponent, Behaviour, GuiFactory, ModalDialog, Positioning, TestHelpers, TooltippingTypes } from '@ephox/alloy';
+import { AlloyComponent, Behaviour, GuiFactory, ModalDialog, Positioning, TooltippingTypes } from '@ephox/alloy';
 import { before, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { ValueType } from '@ephox/boulder';
 import { DialogManager } from '@ephox/bridge';
@@ -10,8 +10,10 @@ import I18n from 'tinymce/core/api/util/I18n';
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderDialog } from 'tinymce/themes/silver/ui/window/SilverDialog';
 
+import * as GuiSetup from '../../module/GuiSetup';
+
 describe('headless.tinymce.themes.silver.window.SilverDialogEventTest', () => {
-  const hook = TestHelpers.GuiSetup.bddSetup(() =>
+  const hook = GuiSetup.bddSetup(() =>
     // Build the sink for the component
     GuiFactory.build({
       dom: {
