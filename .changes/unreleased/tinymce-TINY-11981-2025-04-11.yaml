@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Table resizers are now visible when inline editor has a z-index property.
+time: 2025-04-11T17:03:57.705164+02:00
+custom:
+  Issue: TINY-11981
