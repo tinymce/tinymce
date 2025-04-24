@@ -119,9 +119,7 @@ const logWarnings = (rawOptions: RawEditorOptions, normalizedOptions: Normalized
   logDeprecatedWarnings(rawOptions, normalizedOptions);
 };
 
-// TODO: add migration URL in ToggleToolbarDrawer message #TINY-12087
 const deprecatedFeatures = {
-  skipFocus: 'ToggleToolbarDrawer skipFocus is deprecated see migration guide: ....',
   fire: 'The "fire" event api has been deprecated and will be removed in TinyMCE 9. Use "dispatch" instead.'
 };
 
