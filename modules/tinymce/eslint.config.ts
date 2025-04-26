@@ -1,7 +1,5 @@
 import rootConfig from "../../eslint.config";
 import { defineConfig } from "eslint/config";
-//import oxlint from 'eslint-plugin-oxlint';
-
 
 export default defineConfig([
   ...rootConfig,
@@ -27,5 +25,3 @@ export default defineConfig([
     },
   }
 ])
-
-
