@@ -254,11 +254,26 @@ const Quirks = (editor: Editor): Quirks => {
    * more details here: https://bugzilla.mozilla.org/show_bug.cgi?id=1959606
    */
   const fixFirefoxImageSelection = () => {
-    editor.on('selectionchange', () => {
-      const rng = editor.selection.getRng();
-      if (rng.collapsed && rng.startContainer.nodeName === 'IMG') {
-        editor.selection.select(rng.startContainer);
-        editor.selection.collapse(true);
+    const isEditableImage = (node: Node): node is HTMLImageElement => node.nodeName === 'IMG' && editor.dom.isEditable(node);
+
+    editor.on('mousedown', (e) => {
+      const caretPos = editor.getDoc().caretPositionFromPoint(e.clientX, e.clientY);
+
+      if (caretPos && isEditableImage(caretPos.offsetNode)) {
+        const rect = caretPos.offsetNode.getBoundingClientRect();
+
+        e.preventDefault();
+
+        if (!editor.hasFocus()) {
+          editor.focus();
+        }
+
+        editor.selection.select(caretPos.offsetNode);
+        if (e.clientX < rect.left || e.clientY < rect.top) {
+          editor.selection.collapse(true);
+        } else if (e.clientX > rect.right || e.clientY > rect.bottom) {
+          editor.selection.collapse(false);
+        }
       }
     });
   };
