@@ -40,7 +40,7 @@ describe('browser.tinymce.core.FakeCaretImageCaptionTest', () => {
   });
 
   it('TINY-11997: should hide after tabbing inside CEF', async function () {
-    // skiped on FireFox since `setRawSelection` seems not to work on it
+    // skipped on FireFox since `setRawSelection` seems not to work on it
     if (isFirefox) {
       this.skip();
     }
