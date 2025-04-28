@@ -228,12 +228,22 @@ const deleteSelectedContent = (editor: Editor): void => {
   if (isTableCellContentSelected(dom, rng, startCell)) {
     TableDelete.deleteCellContents(editor, rng, SugarElement.fromDom(startCell as HTMLTableCellElement));
   // TINY-9193: If the selection is over the whole text node in an element then Firefox incorrectly moves the caret to the previous line
-  } else if (rng.startContainer === rng.endContainer && rng.endOffset - rng.startOffset === 1 && NodeType.isText(rng.startContainer.childNodes[rng.startOffset])) {
+  // TINY-11953: If the selection is over the whole anchor node, then Chrome incorrectly removes parent node alongside with it's child - anchor
+  } else if (isSelectionOverWholeAnchor(rng) || isSelectionOverWholeTextNode(rng)) {
     rng.deleteContents();
   } else {
     editor.getDoc().execCommand('Delete', false);
   }
 };
+
+const isSelectionOverWholeTextNode = (range: Range): boolean => isSelectionOverWholeNode(range, NodeType.isText);
+
+const isSelectionOverWholeAnchor = (range: Range): boolean => isSelectionOverWholeNode(range, NodeType.isAnchor);
+
+const isSelectionOverWholeNode = (range: Range, nodeTypePredicate: (n: Node) => boolean): boolean =>
+  range.startContainer === range.endContainer
+    && range.endOffset - range.startOffset === 1
+    && nodeTypePredicate(range.startContainer.childNodes[range.startOffset]);
 
 const findMarkerNode = (scope: AstNode): Optional<AstNode> => {
   for (let markerNode: AstNode | null | undefined = scope; markerNode; markerNode = markerNode.walk()) {

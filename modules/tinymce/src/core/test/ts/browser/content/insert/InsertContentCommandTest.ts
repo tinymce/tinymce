@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
+import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -425,5 +425,13 @@ describe('browser.tinymce.core.content.insert.InsertContentCommandTest', () => {
     LegacyUnit.setSelection(editor, 'p', 2, 'p', 3);
     editor.execCommand('mceInsertContent', false, 'X');
     assert.equal(JSON.stringify(editor.getContent()), '"<p>a X c</p>"');
+  });
+
+  it('TINY-11953: mceInsertContent - insert content with <a> selected preserves parent tag', () => {
+    const editor = hook.editor();
+    editor.setContent('<div class="d"><p class="p"><a href="https://google.com">Link</a></p></div>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 1);
+    editor.execCommand('mceInsertContent', false, 'Some content');
+    TinyAssertions.assertContent(editor, '<div class="d"><p class="p">Some content</p></div>');
   });
 });

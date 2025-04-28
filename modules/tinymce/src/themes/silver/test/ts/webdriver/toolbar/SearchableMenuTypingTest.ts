@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, FocusTools, KeyPressAdt, Mouse, RealKeys, StructAssert, UiFinder } from '@ephox/agar';
-import { GuiFactory, TestHelpers } from '@ephox/alloy';
+import { GuiFactory } from '@ephox/alloy';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun, Id, Optional } from '@ephox/katamari';
 import { Attribute, Focus, SugarDocument, SugarElement, SugarNode, Value } from '@ephox/sugar';
@@ -8,12 +8,13 @@ import { renderMenuButton } from 'tinymce/themes/silver/ui/button/MenuButton';
 
 import { fetchMailMergeData } from '../../module/CommonMailMergeFetch';
 import { structMenuWith, structSearchField, structSearchLeafItem, structSearchParentItem, structSearchResultsWith } from '../../module/CommonMenuTestStructures';
+import * as GuiSetup from '../../module/GuiSetup';
 import * as TestExtras from '../../module/TestExtras';
 
 describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () => {
   const extrasHook = TestExtras.bddSetup();
 
-  TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
+  GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
     `.tox-menu .tox-collection__item--active {
       background-color: black;
     }`,
@@ -98,7 +99,7 @@ describe('webdriver.tinymce.themes.silver.toolbar.SearchableMenuTypingTest', () 
     );
   };
 
-  const hook = TestHelpers.GuiSetup.bddSetup(
+  const hook = GuiSetup.bddSetup(
     (store, _doc, _body) => GuiFactory.build(
       renderMenuButton(
         {

@@ -10,8 +10,8 @@ import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'advlist lists',
-    advlist_bullet_styles: 'default,lower-alpha,lower-greek,lower-roman,upper-alpha,upper-roman',
-    advlist_number_styles: 'default,circle,square',
+    advlist_bullet_styles: 'default,circle,disc,square',
+    advlist_number_styles: 'default,lower-alpha,lower-greek,lower-roman,upper-alpha,upper-roman',
     toolbar: 'numlist bullist',
     base_url: '/project/tinymce/js/tinymce'
   }, [ AdvListPlugin, ListsPlugin ]);
@@ -21,7 +21,7 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
     await TinyUiActions.pWaitForUi(editor, '.tox-menu.tox-selected-menu');
   };
 
-  const assertNumListStructure = () => {
+  const assertBullListStructure = () => {
     Assertions.assertStructure('A basic alert dialog should have these components',
       ApproxStructure.build((s, str, arr) => s.element('div', {
         classes: [ arr.has('tox-tiered-menu') ],
@@ -76,6 +76,21 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
                     ],
                     attrs: {
                       'role': str.is('menuitemradio'),
+                      'aria-label': str.is('Disc')
+                    },
+                    children: [
+                      s.element('div', {
+                        classes: [ arr.has('tox-collection__item-icon') ]
+                      })
+                    ]
+                  }),
+                  s.element('div', {
+                    classes: [
+                      arr.has('tox-menu-nav__js'),
+                      arr.has('tox-collection__item')
+                    ],
+                    attrs: {
+                      'role': str.is('menuitemradio'),
                       'aria-label': str.is('Square')
                     },
                     children: [
@@ -94,7 +109,7 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
     );
   };
 
-  const assertBullListStructure = () => {
+  const assertNumListStructure = () => {
     Assertions.assertStructure('A basic alert dialog should have these components',
       ApproxStructure.build((s, str, arr) => s.element('div', {
         classes: [ arr.has('tox-tiered-menu') ],

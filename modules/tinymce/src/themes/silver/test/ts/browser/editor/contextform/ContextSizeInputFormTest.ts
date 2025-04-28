@@ -82,7 +82,7 @@ describe('browser.tinymce.themes.silver.editor.ContextSizeInputFormTest', () => 
     }
   }, [], true);
   const inputWidthSelector = '.tox-pop .tox-toolbar__group:nth-of-type(2) .tox-focusable-wrapper:nth-of-type(1) input';
-  const inputHeightSelector = '.tox-pop .tox-toolbar__group:nth-of-type(2) .tox-focusable-wrapper:nth-of-type(2) input';
+  const inputHeightSelector = '.tox-pop .tox-toolbar__group:nth-of-type(2) .tox-focusable-wrapper:nth-of-type(3) input';
   const buttonASelector = '.tox-pop button[aria-label="A"]';
 
   afterEach(async () => {
@@ -219,35 +219,35 @@ describe('browser.tinymce.themes.silver.editor.ContextSizeInputFormTest', () => 
 
     const buttonBSelector = '.tox-pop button[aria-label="B"]';
     const focussableWrapperWidthSelector = '.tox-pop .tox-focusable-wrapper:nth-of-type(1)';
-    const focussableWrapperHeightSelector = '.tox-pop .tox-focusable-wrapper:nth-of-type(2)';
+    const focussableWrapperHeightSelector = '.tox-pop .tox-focusable-wrapper:nth-of-type(3)';
     const lockButtonSelector = '.tox-pop .tox-lock';
 
     FocusTools.setFocus(SugarDocument.getDocument(), buttonASelector);
     await FocusTools.pTryOnSelector('Focus should be on the A button', SugarDocument.getDocument(), buttonASelector);
     TinyUiActions.keystroke(editor, Keys.tab());
 
-    await FocusTools.pTryOnSelector('Focus should be on the first focussable wrapper', SugarDocument.getDocument(), focussableWrapperWidthSelector);
-    TinyUiActions.keystroke(editor, Keys.right());
-
-    await FocusTools.pTryOnSelector('Focus should be on the second focussable wrapper', SugarDocument.getDocument(), focussableWrapperHeightSelector);
+    await FocusTools.pTryOnSelector('Focus should be on the first focussable wrapper (width)', SugarDocument.getDocument(), focussableWrapperWidthSelector);
     TinyUiActions.keystroke(editor, Keys.right());
 
     await FocusTools.pTryOnSelector('Focus should be on the lock button wrapper', SugarDocument.getDocument(), lockButtonSelector);
     TinyUiActions.keystroke(editor, Keys.right());
 
-    await FocusTools.pTryOnSelector('Focus should stay on the lock button wrapper', SugarDocument.getDocument(), lockButtonSelector);
-    TinyUiActions.keystroke(editor, Keys.left());
+    await FocusTools.pTryOnSelector('Focus should be on the second focussable wrapper (height)', SugarDocument.getDocument(), focussableWrapperHeightSelector);
+    TinyUiActions.keystroke(editor, Keys.right());
 
-    await FocusTools.pTryOnSelector('Focus should be on the second focussable wrapper(2)', SugarDocument.getDocument(), focussableWrapperHeightSelector);
+    await FocusTools.pTryOnSelector('Focus should stay on the second focussable wrapper (height)', SugarDocument.getDocument(), focussableWrapperHeightSelector);
     TinyUiActions.keystroke(editor, Keys.enter());
 
     await FocusTools.pTryOnSelector('Focus should be on the second input', SugarDocument.getDocument(), inputHeightSelector);
     TinyUiActions.keystroke(editor, Keys.escape());
 
-    await FocusTools.pTryOnSelector('Focus should go back to the second focussable wrapper', SugarDocument.getDocument(), focussableWrapperHeightSelector);
+    await FocusTools.pTryOnSelector('Focus should go back to the second focussable wrapper (height)', SugarDocument.getDocument(), focussableWrapperHeightSelector);
     TinyUiActions.keystroke(editor, Keys.left());
 
-    await FocusTools.pTryOnSelector('Focus should be on the first focussable wrapper(2)', SugarDocument.getDocument(), focussableWrapperWidthSelector);
+    await FocusTools.pTryOnSelector('Focus should be on the lock button wrapper', SugarDocument.getDocument(), lockButtonSelector);
+    TinyUiActions.keystroke(editor, Keys.left());
+
+    await FocusTools.pTryOnSelector('Focus should be on the first focussable wrapper (width)(2)', SugarDocument.getDocument(), focussableWrapperWidthSelector);
     TinyUiActions.keystroke(editor, Keys.enter());
 
     await FocusTools.pTryOnSelector('Focus should be on the first input', SugarDocument.getDocument(), inputWidthSelector);

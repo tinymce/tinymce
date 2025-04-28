@@ -4,9 +4,9 @@ import { Arr } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { SplitSlidingToolbar } from 'ephox/alloy/api/ui/SplitSlidingToolbar';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialToolbarGroup';
 
 UnitTest.asynctest('SplitSlidingToolbarTest', (success, failure) => {
