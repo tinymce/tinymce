@@ -30,6 +30,8 @@ describe('browser.tinymce.selection.QuirksSelectionTest', () => {
     const point = editor.getDoc().caretPositionFromPoint(clientX, clientY);
     if (point) {
       editor.selection.getSel()?.setBaseAndExtent(point.offsetNode, point.offset, point.offsetNode, point.offset);
+    } else {
+      throw new Error('caretPositionFromPoint returned null - coordinates may be negative or outside viewport');
     }
     await Waiter.pTryUntil('selection now should be on the `strong`', () => TinyAssertions.assertCursor(editor, [ 0, 0 ], 0));
     editor.execCommand('mceInsertNewLine');
