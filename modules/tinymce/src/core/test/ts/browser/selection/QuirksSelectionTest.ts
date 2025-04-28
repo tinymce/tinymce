@@ -22,7 +22,7 @@ describe('browser.tinymce.selection.QuirksSelectionTest', () => {
       }
 
       const editor = hook.editor();
-      const initialContent = '<p><strong><img style="display: block; margin-left: auto;" src="img.jpg" width="1" height="1"></strong></p>';
+      const initialContent = '<p><strong><img style="display: block; margin-left: auto; margin-right: auto;" src="img.jpg" width="1" height="1"></strong></p>';
       editor.setContent(initialContent);
       const imgElement = await UiFinder.pWaitFor<HTMLElement>('', TinyDom.body(editor), 'img');
       const pRect = imgElement.dom.getBoundingClientRect();
