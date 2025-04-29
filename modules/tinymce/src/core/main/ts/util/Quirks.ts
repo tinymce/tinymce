@@ -1,4 +1,4 @@
-import { Fun } from '@ephox/katamari';
+import { Fun, Optional, Optionals } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -246,6 +246,36 @@ const Quirks = (editor: Editor): Quirks => {
         e.preventDefault();
         selection.select(target);
       }
+    });
+  };
+
+  /**
+   * Fixes a Gecko a selection bug where if there is a floating image
+   * more details here: https://bugzilla.mozilla.org/show_bug.cgi?id=1959606
+   */
+  const fixFirefoxImageSelection = () => {
+    const isEditableImage = (node: Node): node is HTMLImageElement => node.nodeName === 'IMG' && editor.dom.isEditable(node);
+
+    editor.on('mousedown', (e) => {
+      Optionals.lift2(Optional.from(e.clientX), Optional.from(e.clientY), (clientX, clientY) => {
+        const caretPos = editor.getDoc().caretPositionFromPoint(clientX, clientY);
+        if (caretPos && isEditableImage(caretPos.offsetNode)) {
+          const rect = caretPos.offsetNode.getBoundingClientRect();
+
+          e.preventDefault();
+
+          if (!editor.hasFocus()) {
+            editor.focus();
+          }
+
+          editor.selection.select(caretPos.offsetNode);
+          if (e.clientX < rect.left || e.clientY < rect.top) {
+            editor.selection.collapse(true);
+          } else if (e.clientX > rect.right || e.clientY > rect.bottom) {
+            editor.selection.collapse(false);
+          }
+        }
+      });
     });
   };
 
@@ -713,6 +743,7 @@ const Quirks = (editor: Editor): Quirks => {
 
     // Gecko
     if (isGecko) {
+      fixFirefoxImageSelection();
       removeHrOnBackspace();
       focusBody();
       removeStylesWhenDeletingAcrossBlockElements();
