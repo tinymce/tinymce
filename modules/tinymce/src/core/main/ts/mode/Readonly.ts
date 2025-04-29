@@ -1,4 +1,4 @@
-import { Type } from '@ephox/katamari';
+import { Arr, Type } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
@@ -25,9 +25,29 @@ const toggleReadOnly = (editor: Editor, state: boolean): void => {
 
 const isReadOnly = (editor: Editor): boolean => editor.readonly;
 
+const rollbackChange = (editor: Editor): void => {
+  const undoLevel = editor.undoManager.add();
+  if (Type.isNonNullable(undoLevel)) {
+    editor.undoManager.undo();
+  }
+};
+
+const hasContentMutations = (mutations: MutationRecord[]): boolean =>
+  Arr.exists(mutations, (mutation) =>
+    mutation.type === 'characterData' || mutation.type === 'childList'
+  );
+
 const registerReadOnlyInputBlockers = (editor: Editor): void => {
-  // Block all input events in readonly mode
-  editor.on('beforeinput input paste cut dragend dragover draggesture dragdrop drop drag', (e) => {
+  const handleMutations = (mutations: MutationRecord[]) => {
+    if (isReadOnly(editor) && hasContentMutations(mutations)) {
+      rollbackChange(editor);
+    }
+  };
+
+  // Set up mutation observer to detect and revert unintended changes
+  const observer = new MutationObserver(handleMutations);
+
+  editor.on('beforeinput paste cut dragend dragover draggesture dragdrop drop drag', (e) => {
     if (isReadOnly(editor)) {
       e.preventDefault();
     }
@@ -36,41 +56,6 @@ const registerReadOnlyInputBlockers = (editor: Editor): void => {
   editor.on('BeforeExecCommand', (e) => {
     if ((e.command === 'Undo' || e.command === 'Redo') && isReadOnly(editor)) {
       e.preventDefault();
-    }
-  });
-
-  // Prevent undo level additions during composition
-  editor.on('input compositionend', (e) => {
-    if (isReadOnly(editor)) {
-      // Skip undo level addition during composition
-      if (!e.isComposing) {
-        const undoLevel = editor.undoManager.add();
-        if (Type.isNonNullable(undoLevel)) {
-          editor.undoManager.undo();
-        }
-      }
-    }
-  });
-
-  // Set up mutation observer to detect and revert unintended changes
-  const observer = new MutationObserver((mutations) => {
-    if (isReadOnly(editor)) {
-      let needsRevert = false;
-
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'characterData' || mutation.type === 'childList') {
-          // Mark that we need to revert
-          needsRevert = true;
-        }
-      });
-
-      // Only create one undo level for all mutations in this batch
-      if (needsRevert) {
-        const undoLevel = editor.undoManager.add();
-        if (Type.isNonNullable(undoLevel)) {
-          editor.undoManager.undo();
-        }
-      }
     }
   });
 
@@ -85,6 +70,10 @@ const registerReadOnlyInputBlockers = (editor: Editor): void => {
   });
 
   editor.on('compositionend', () => {
+    if (isReadOnly(editor)) {
+      const records = observer.takeRecords();
+      handleMutations(records);
+    }
     observer.disconnect();
   });
 };
