@@ -1,0 +1,6 @@
+project: tinymce
+kind: Changed
+body: Changed the default value of advlist_bullet_styles option to `default,disc,circle,square`.
+time: 2025-04-28T15:32:56.639902+02:00
+custom:
+  Issue: TINY-12083
