@@ -44,7 +44,8 @@ export interface UserLookup {
    * Fetches user information using a provided array of userIds.
    *
    * @method fetchUsers
-   * @param {string[]} userIds - The user ID to fetch.
+   * @param {string[]} userIds - A list of user IDs to fetch information for.
+   * @throws {Error} Throws an error if any of the user IDs are invalid or if the fetch fails.
    * @return {Promise<User>[]} A promise that resolves to an array of users and information about them.
    */
   fetchUsers: (userIds: UserId[]) => Promise<User>[];
