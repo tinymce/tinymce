@@ -26,7 +26,7 @@ const removedPlugins = 'bbcode,colorpicker,contextmenu,fullpage,legacyoutput,spe
 const deprecatedPlugins: DeprecatedPlugin[] = [
   {
     name: 'export',
-    replacedWith: 'exportpdf'
+    replacedWith: 'Export to PDF'
   },
 ];
 
