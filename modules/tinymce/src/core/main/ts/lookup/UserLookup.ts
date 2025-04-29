@@ -12,13 +12,12 @@ import * as Options from '../api/Options';
  * // Retrieve the current user ID
  * tinymce.activeEditor.userLookup.getCurrentUserId();
  *
- * // Fetch user information by ID
- * tinymce.activeEditor.userLookup.fetchUsers(['user-id']).then((users) => {
- *  if (users.length > 0) {
- *   console.log('Users found:', users);
- *  };
+ * // Fetch user information by IDs which returns array of promises
+ * const promises = tinymce.activeEditor.userLookup.fetchUsers(['user-1', 'user-2']);
+ * Promise.all(promises).then((users) => {
+ *   users.forEach(user => console.log('User found:', user));
  * }).catch((error) => {
- *  console.error('Error fetching users:', error);
+ *   console.error('Error fetching users:', error);
  * });
  */
 
