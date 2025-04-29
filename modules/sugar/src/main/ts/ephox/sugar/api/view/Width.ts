@@ -1,5 +1,6 @@
 import { Dimension } from '../../impl/Dimension';
 import * as RuntimeSize from '../../impl/RuntimeSize';
+import * as SugarBody from '../node/SugarBody';
 import { SugarElement } from '../node/SugarElement';
 import * as Css from '../properties/Css';
 
@@ -8,11 +9,18 @@ const api = Dimension('width', (element: SugarElement<HTMLElement>) =>
   element.dom.offsetWidth
 );
 
+const apiExact = Dimension('width', (element: SugarElement<HTMLElement>) => {
+  const dom = element.dom;
+  return SugarBody.inBody(element) ? dom.getBoundingClientRect().width : dom.offsetWidth;
+});
+
 const set = (element: SugarElement<HTMLElement>, h: string | number): void => api.set(element, h);
 
 const get = (element: SugarElement<HTMLElement>): number => api.get(element);
 
 const getOuter = (element: SugarElement<HTMLElement>): number => api.getOuter(element);
+
+const getOuterExact = (element: SugarElement<HTMLElement>): number => apiExact.getOuter(element);
 
 const getInner = RuntimeSize.getInnerWidth;
 
@@ -30,6 +38,7 @@ export {
   get,
   getInner,
   getOuter,
+  getOuterExact,
   getRuntime,
   setMax
 };
