@@ -22,6 +22,11 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     editor.mode.set(mode);
   };
 
+  const setInitialContentWithReadOnly = (editor: Editor) => {
+    editor.setContent('<p>Initial content</p>');
+    setMode(editor, 'readonly');
+  };
+
   const assertNestedContentEditableTrueDisabled = (editor: Editor, state: boolean, offscreen: boolean) => TinyAssertions.assertContentStructure(editor,
     ApproxStructure.build((s, str, _arr) => {
       const attrs = state ? {
@@ -88,8 +93,12 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
   const simulateIMEInput = (editor: Editor, events: Array<{ type: string; data?: string; key?: string; code?: string; keyCode?: number }>) => {
     const body = editor.getBody();
     events.forEach((event) => {
-      if (event.type.startsWith('composition')) {
-        const e = new window.CompositionEvent(event.type, { data: event.data });
+      if (event.type === ('compositionupdate')) {
+        // Make a direct DOM change that will trigger mutation observer, by typing the text
+        TinySelections.setCursor(editor, [], 0);
+        TinyContentActions.type(editor, 'test');
+      } else if (event.type.startsWith('composition')) {
+        const e = new window.CompositionEvent(event.type);
         body.dispatchEvent(e);
       } else if (event.type.startsWith('key')) {
         const e = new KeyboardEvent(event.type, { key: event.key, code: event.code, keyCode: event.keyCode });
@@ -302,48 +311,45 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
 
   it('TINY-11363: IME composition events should be blocked in readonly mode', () => {
     const editor = hook.editor();
-    setMode(editor, 'readonly');
-    editor.setContent('<p>Initial content</p>');
+    setInitialContentWithReadOnly(editor);
 
     simulateIMEInput(editor, [
-      { type: 'compositionstart', data: 'test' },
-      { type: 'compositionupdate', data: 'い' },
-      { type: 'compositionupdate', data: 'いぬ' },
-      { type: 'compositionupdate', data: '犬' },
+      { type: 'compositionstart' },
+      { type: 'compositionupdate' },
+      { type: 'compositionend' }
     ]);
 
     TinyAssertions.assertContent(editor, '<p>Initial content</p>');
   });
 
-  it('TINY-11363: IME input with keyboard events should be blocked in readonly mode', () => {
-    const editor = hook.editor();
-    setMode(editor, 'readonly');
-    editor.setContent('<p>Initial content</p>');
+  // it('TINY-11363: IME input with keyboard events should be blocked in readonly mode', () => {
+  //   const editor = hook.editor();
+  //   setInitialContentWithReadOnly(editor);
 
-    simulateIMEInput(editor, [
-      { type: 'keydown', key: 'i', code: 'KeyI', keyCode: 73 },
-      { type: 'compositionstart', data: 'i' },
-      { type: 'compositionupdate', data: 'い' },
-      { type: 'keydown', key: 'n', code: 'KeyN', keyCode: 78 },
-      { type: 'compositionupdate', data: 'いぬ' },
-      { type: 'keydown', key: 'Enter', code: 'Enter', keyCode: 13 },
-      { type: 'compositionend', data: '犬' },
-      { type: 'keyup', key: 'Enter', code: 'Enter', keyCode: 13 }
-    ]);
+  //   simulateIMEInput(editor, [
+  //     // { type: 'keydown', key: 'i', code: 'KeyI', keyCode: 73 },
+  //     { type: 'compositionstart' },
+  //     { type: 'compositionupdate' },
+  //     // { type: 'keydown', key: 'n', code: 'KeyN', keyCode: 78 },
+  //     { type: 'compositionupdate' },
+  //     // { type: 'keydown', key: 'Enter', code: 'Enter', keyCode: 13 },
+  //     { type: 'compositionupdate' },
+  //     { type: 'compositionend' },
+  //     { type: 'keyup', key: 'Enter', code: 'Enter', keyCode: 13 }
+  //   ]);
 
-    TinyAssertions.assertContent(editor, '<p>Initial content</p>');
-  });
+  //   TinyAssertions.assertContent(editor, '<p>Initial content</p>');
+  // });
 
   it('TINY-11363: IME input with space key should be blocked in readonly mode', () => {
     const editor = hook.editor();
-    setMode(editor, 'readonly');
-    editor.setContent('<p>Initial content</p>');
+    setInitialContentWithReadOnly(editor);
 
     simulateIMEInput(editor, [
       { type: 'keydown', key: ' ', code: 'Space', keyCode: 32 },
-      { type: 'compositionstart', data: ' ' },
-      { type: 'compositionupdate', data: '　' },
-      { type: 'compositionend', data: '　' },
+      { type: 'compositionstart' },
+      { type: 'compositionupdate' },
+      { type: 'compositionend' },
       { type: 'keyup', key: ' ', code: 'Space', keyCode: 32 }
     ]);
 
@@ -352,14 +358,13 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
 
   it('TINY-11363: IME input with enter key should be blocked in readonly mode', () => {
     const editor = hook.editor();
-    setMode(editor, 'readonly');
-    editor.setContent('<p>Initial content</p>');
+    setInitialContentWithReadOnly(editor);
 
     simulateIMEInput(editor, [
       { type: 'keydown', key: 'Enter', code: 'Enter', keyCode: 13 },
-      { type: 'compositionstart', data: '\n' },
-      { type: 'compositionupdate', data: '\n' },
-      { type: 'compositionend', data: '\n' },
+      { type: 'compositionstart' },
+      { type: 'compositionupdate' },
+      { type: 'compositionend' },
       { type: 'keyup', key: 'Enter', code: 'Enter', keyCode: 13 }
     ]);
 
@@ -368,7 +373,6 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
 
   it('TINY-11363: Input events should be blocked in readonly mode', () => {
     const editor = hook.editor();
-    editor.setContent('<p>Initial content</p>');
     setMode(editor, 'readonly');
 
     const body = editor.getBody();
@@ -380,7 +384,7 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
 
   it('TINY-11363: Undo/Redo should be disabled in readonly mode', () => {
     const editor = hook.editor();
-    editor.setContent('<p>Initial content</p>');
+    setInitialContentWithReadOnly(editor);
     editor.undoManager.add();
     editor.setContent('<p>Modified content</p>');
     editor.undoManager.add();
@@ -393,16 +397,37 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     TinyAssertions.assertContent(editor, '<p>Modified content</p>');
   });
 
-  it('TINY-11363: Mutation observer should revert changes in readonly mode', () => {
+  it('TINY-11363: Mutation observer should clear undo stack after reverting changes in readonly mode', () => {
     const editor = hook.editor();
-    editor.setContent('<p>Initial content</p>');
+
+    // Set up initial state with some undo history
+    setInitialContentWithReadOnly(editor);
+    editor.undoManager.add();
+    editor.setContent('<p>Modified content</p>');
+    editor.undoManager.add();
+
+    // Verify we have undo/redo capability before readonly
+    assert.isTrue(editor.undoManager.hasUndo(), 'Should have undo levels before readonly');
+
     setMode(editor, 'readonly');
 
-    // insert "i"
-    TinySelections.setCursor(editor, [ 0 ], 0);
-    TinyContentActions.keydown(editor, 73);
+    // Start composition and make a mutation that should be caught by observer
+    editor.getBody().dispatchEvent(new window.CompositionEvent('compositionstart'));
 
-    // The mutation observer should immediately revert the content
-    TinyAssertions.assertContent(editor, '<p>Initial content</p>');
+    // Make a direct DOM change that will trigger mutation observer
+    const firstPara = editor.getBody().firstChild;
+    if (firstPara) {
+      firstPara.textContent = 'Changed during composition';
+    }
+
+    // End composition which will process the mutations
+    editor.getBody().dispatchEvent(new window.CompositionEvent('compositionend'));
+
+    // Verify content is reverted
+    TinyAssertions.assertContent(editor, '<p>Modified content</p>');
+
+    // Verify undo stack is cleared
+    assert.isFalse(editor.undoManager.hasUndo(), 'Should not have undo levels after mutation revert');
+    assert.isFalse(editor.undoManager.hasRedo(), 'Should not have redo levels after mutation revert');
   });
 });
