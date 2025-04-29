@@ -1,4 +1,4 @@
-import { Fun } from '@ephox/katamari';
+import { Fun, Optional, Optionals } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -257,23 +257,25 @@ const Quirks = (editor: Editor): Quirks => {
     const isEditableImage = (node: Node): node is HTMLImageElement => node.nodeName === 'IMG' && editor.dom.isEditable(node);
 
     editor.on('mousedown', (e) => {
-      const caretPos = editor.getDoc().caretPositionFromPoint(Math.ceil(e.clientX), Math.ceil(e.clientY));
-      if (caretPos && isEditableImage(caretPos.offsetNode)) {
-        const rect = caretPos.offsetNode.getBoundingClientRect();
+      Optionals.lift2(Optional.from(e.clientX), Optional.from(e.clientY), (clientX, clientY) => {
+        const caretPos = editor.getDoc().caretPositionFromPoint(clientX, clientY);
+        if (caretPos && isEditableImage(caretPos.offsetNode)) {
+          const rect = caretPos.offsetNode.getBoundingClientRect();
 
-        e.preventDefault();
+          e.preventDefault();
 
-        if (!editor.hasFocus()) {
-          editor.focus();
+          if (!editor.hasFocus()) {
+            editor.focus();
+          }
+
+          editor.selection.select(caretPos.offsetNode);
+          if (e.clientX < rect.left || e.clientY < rect.top) {
+            editor.selection.collapse(true);
+          } else if (e.clientX > rect.right || e.clientY > rect.bottom) {
+            editor.selection.collapse(false);
+          }
         }
-
-        editor.selection.select(caretPos.offsetNode);
-        if (e.clientX < rect.left || e.clientY < rect.top) {
-          editor.selection.collapse(true);
-        } else if (e.clientX > rect.right || e.clientY > rect.bottom) {
-          editor.selection.collapse(false);
-        }
-      }
+      });
     });
   };
 
