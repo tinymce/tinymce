@@ -29,6 +29,7 @@ const rollbackChange = (editor: Editor): void => {
   const undoLevel = editor.undoManager.add();
   if (Type.isNonNullable(undoLevel)) {
     editor.undoManager.undo();
+    editor.undoManager.clear();
   }
 };
 
