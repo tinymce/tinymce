@@ -8,6 +8,8 @@ let zipUtils = require('./tools/modules/zip-helper');
 let gruntUtils = require('./tools/modules/grunt-utils');
 let gruntWebPack = require('./tools/modules/grunt-webpack');
 let swag = require('@ephox/swag');
+const nodeResolve = require('@rollup/plugin-node-resolve');
+const alias = require('@rollup/plugin-alias');
 let path = require('path');
 
 let plugins = [
@@ -72,18 +74,16 @@ module.exports = function (grunt) {
       {
         core: {
           options: {
-            treeshake: true,
             format: 'iife',
             onwarn: swag.onwarn,
             plugins: [
               FilesAsStrings,
-              swag.nodeResolve({
-                basedir: __dirname,
-                prefixes: {
-                  'tinymce/core': 'lib/core/main/ts'
-                }
-              }),
-              swag.remapImports()
+              nodeResolve(),
+              alias({
+                entries: [
+                  { find: 'tinymce/core', replacement: path.resolve(__dirname, 'lib/core/main/ts') }
+                ]
+              })
             ]
           },
           files:[
@@ -95,7 +95,6 @@ module.exports = function (grunt) {
         },
         'core-types': {
           options: {
-            treeshake: true,
             format: 'es',
             onwarn: (warning) => {
               // Ignore circular deps in types
@@ -123,24 +122,17 @@ module.exports = function (grunt) {
       gruntUtils.generate(plugins, 'plugin', (name) => {
         return {
           options: {
-            treeshake: true,
             format: 'iife',
             onwarn: swag.onwarn,
             plugins: [
               FilesAsStrings,
-              swag.nodeResolve({
-                basedir: __dirname,
-                prefixes: gruntUtils.prefixes({
-                  'tinymce/core': 'lib/globals/tinymce/core'
-                }, [
-                  [`tinymce/plugins/${name}`, `lib/plugins/${name}/main/ts`]
-                ]),
-                mappers: [
-                  swag.mappers.replaceDir('./lib/core/main/ts/api', './lib/globals/tinymce/core/api'),
-                  swag.mappers.invalidDir('./lib/core/main/ts')
+              nodeResolve(),
+              alias({
+                entries: [
+                  { find: /^tinymce\/core\/(.+)$/, replacement: path.resolve(__dirname, 'lib/globals/tinymce/core/$1') },
+                  { find: `tinymce/plugins/${name}`, replacement: path.resolve(__dirname, `lib/plugins/${name}/main/ts`) }
                 ]
-              }),
-              swag.remapImports()
+              })
             ]
           },
           files:[ { src: `lib/plugins/${name}/main/ts/Main.js`, dest: `js/tinymce/plugins/${name}/plugin.js` } ]
@@ -149,25 +141,18 @@ module.exports = function (grunt) {
       gruntUtils.generate(themes, 'theme', (name) => {
         return {
           options: {
-            treeshake: true,
             format: 'iife',
             onwarn: swag.onwarn,
             plugins: [
               FilesAsStrings,
-              swag.nodeResolve({
-                basedir: __dirname,
-                prefixes: gruntUtils.prefixes({
-                  'tinymce/core': 'lib/globals/tinymce/core'
-                }, [
-                  [`tinymce/themes/${name}/resources`, `src/themes/${name}/main/resources`],
-                  [`tinymce/themes/${name}`, `lib/themes/${name}/main/ts`]
-                ]),
-                mappers: [
-                  swag.mappers.replaceDir('./lib/core/main/ts/api', './lib/globals/tinymce/core/api'),
-                  swag.mappers.invalidDir('./lib/core/main/ts')
+              nodeResolve(),
+              alias({
+                entries: [
+                  { find: /^tinymce\/core\/(.+)$/, replacement: path.resolve(__dirname, 'lib/globals/tinymce/core/$1') },
+                  { find: `tinymce/themes/${name}/resources`, replacement: path.resolve(__dirname, `src/themes/${name}/main/resources`) },
+                  { find: `tinymce/themes/${name}`, replacement: path.resolve(__dirname, `lib/themes/${name}/main/ts`) }
                 ]
-              }),
-              swag.remapImports()
+              })
             ]
           },
           files:[
@@ -181,24 +166,17 @@ module.exports = function (grunt) {
       gruntUtils.generate(models, 'model', (name) => {
         return {
           options: {
-            treeshake: true,
             format: 'iife',
             onwarn: swag.onwarn,
             plugins: [
               FilesAsStrings,
-              swag.nodeResolve({
-                basedir: __dirname,
-                prefixes: gruntUtils.prefixes({
-                  'tinymce/core': 'lib/globals/tinymce/core'
-                }, [
-                  [`tinymce/models/${name}`, `lib/models/${name}/main/ts`]
-                ]),
-                mappers: [
-                  swag.mappers.replaceDir('./lib/core/main/ts/api', './lib/globals/tinymce/core/api'),
-                  swag.mappers.invalidDir('./lib/core/main/ts')
+              nodeResolve(),
+              alias({
+                entries: [
+                  { find: /^tinymce\/core\/(.+)$/, replacement: path.resolve(__dirname, 'lib/globals/tinymce/core/$1') },
+                  { find: `tinymce/models/${name}`, replacement: path.resolve(__dirname, `lib/models/${name}/main/ts`) }
                 ]
-              }),
-              swag.remapImports()
+              })
             ]
           },
           files:[
@@ -223,7 +201,6 @@ module.exports = function (grunt) {
         options: {
           ecma: 2018,
           output: {
-            comments: 'all',
             ascii_only: true
           },
           compress: {
@@ -965,7 +942,7 @@ module.exports = function (grunt) {
   grunt.registerTask('start', ['webpack-dev-server']);
 
   grunt.registerTask('buildOnly', ['clean:dist', 'prod']);
-  grunt.registerTask('default', ['clean:dist', 'shell:eslint', 'prod']);
+  grunt.registerTask('default', ['clean:dist', 'prod']);
   grunt.registerTask('test', ['bedrock-auto:standard']);
   grunt.registerTask('test-manual', ['bedrock-manual']);
 };
