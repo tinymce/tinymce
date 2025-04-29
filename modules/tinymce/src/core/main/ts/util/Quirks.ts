@@ -257,8 +257,7 @@ const Quirks = (editor: Editor): Quirks => {
     const isEditableImage = (node: Node): node is HTMLImageElement => node.nodeName === 'IMG' && editor.dom.isEditable(node);
 
     editor.on('mousedown', (e) => {
-      const caretPos = editor.getDoc().caretPositionFromPoint(e.clientX, e.clientY);
-
+      const caretPos = editor.getDoc().caretPositionFromPoint(Math.ceil(e.clientX), Math.ceil(e.clientY));
       if (caretPos && isEditableImage(caretPos.offsetNode)) {
         const rect = caretPos.offsetNode.getBoundingClientRect();
 
