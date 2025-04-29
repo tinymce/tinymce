@@ -1,4 +1,3 @@
-import { StructureSchema } from '@ephox/boulder';
 import { Obj, Type, Arr } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
@@ -14,7 +13,7 @@ import * as Options from '../api/Options';
  * tinymce.activeEditor.userLookup.getCurrentUserId();
  *
  * // Fetch user information by ID
- * tinymce.activeEditor.userLookup.fetchUsersById('user-id').then((users) => {
+ * tinymce.activeEditor.userLookup.fetchUsers(['user-id']).then((users) => {
  *  if (users.length > 0) {
  *   console.log('Users found:', users);
  *  };
@@ -33,11 +32,6 @@ export interface User {
   custom?: Record<string, any>;
 }
 
-interface UserError {
-  input: any;
-  errors: string[];
-}
-
 export interface UserLookup {
   /**
    * Retrieves the current user ID from the editor.
@@ -48,13 +42,13 @@ export interface UserLookup {
   getCurrentUserId: () => UserId;
 
   /**
-   * Fetches user information using a provided ID.
+   * Fetches user information using a provided array of userIds.
    *
-   * @method fetchUsersById
-   * @param {string} id - The user ID to fetch.
-   * @return {Promise<User[]>} A promise that resolves to an array of users and information about them.
+   * @method fetchUsers
+   * @param {string[]} userIds - The user ID to fetch.
+   * @return {Promise<User>[]} A promise that resolves to an array of users and information about them.
    */
-  fetchUsersById: (id: UserId) => Promise<User[]>;
+  fetchUsers: (userIds: UserId[]) => Promise<User>[];
 }
 
 const isUserObject = (val: unknown): val is User =>
@@ -65,43 +59,17 @@ const isUserObject = (val: unknown): val is User =>
   && !(Type.isNonNullable((val as User).avatar) && !Type.isString((val as User).avatar))
   && !(Type.isNonNullable((val as User).description) && !Type.isString((val as User).description));
 
-const formatUserError = (error: UserError): string =>
-  StructureSchema.formatError({
-    input: error.input,
-    errors: error.errors,
-  });
-
-const handleError = (e: unknown, userId: UserId): User[] => {
-  const message = e instanceof Error
-    ? e.message
-    : formatUserError({
-      input: e,
-      errors: [ 'Something went wrong with fetch_users_by_id option' ]
-    });
-
-  // eslint-disable-next-line no-console
-  console.error(message);
-  return [{ id: userId }];
-};
-
 const validateResponse = (items: unknown): User[] => {
-  if (!Array.isArray(items) || items.length === 0) {
-    throw new Error(formatUserError({
-      input: items,
-      errors: [ 'fetch_users_by_id must return an array with at least one User object' ]
-    }));
+  if (!Array.isArray(items)) {
+    throw new Error('fetch_users must return an array');
+  }
+
+  if (items.length === 0) {
+    return [];
   }
 
   const users = Arr.filter(items, (item) => isUserObject(item));
-
-  if (users.length === 0) {
-    throw new Error(formatUserError({
-      input: items,
-      errors: [ 'fetch_users_by_id must return an array with at least one User object with a string id property' ]
-    }));
-  }
-
-  return users as User[];
+  return users;
 };
 
 const isValidUserId = (userId: unknown): userId is UserId =>
@@ -109,55 +77,94 @@ const isValidUserId = (userId: unknown): userId is UserId =>
   && userId.length > 0;
 
 const UserLookup = (editor: Editor): UserLookup => {
-  const userCache: Record<UserId, User> = {};
+  const userCache: Record<UserId, Promise<User>> = {};
+  const pendingResolvers = new Map<UserId, {
+    resolve: (user: User) => void;
+    reject: (error: unknown) => void;
+  }>();
 
   const lookup = (userId: UserId) =>
     Obj.get(userCache, userId);
 
-  const store = (user: User, userId: UserId) => {
+  const store = (user: Promise<User>, userId: UserId) => {
     userCache[userId] = user;
   };
 
-  const fetchUsersById = (userId: UserId): Promise<User[]> => {
-    if (!isValidUserId(userId)) {
-      return Promise.reject(new Error(formatUserError({
-        input: userId,
-        errors: [ 'Provided userId must be a non-empty string' ]
-      })));
-    };
-
-    return lookup(userId).fold(
-      async () => {
-        try {
-          const fetchFn = Options.getFetchUsersById(editor);
-          const result = fetchFn(userId);
-
-          if (!Type.isPromiseLike(result)) {
-            throw new Error(formatUserError({
-              input: result,
-              errors: [ 'fetch_users_by_id must return a Promise' ]
-            }));
-          }
-
-          const response = await result;
-          const users = validateResponse(response);
-          Arr.each(users, (user) => store(user, user.id));
-          return users;
-        } catch (e) {
-          return handleError(e, userId);
-        }
-      },
-      (user) => {
-        return Promise.resolve([ user ]);
+  const resolveWithFallbacks = (userIds: UserId[], error: unknown) => {
+    Arr.each(userIds, (userId) => {
+      const pending = pendingResolvers.get(userId);
+      if (pending) {
+        pending.reject(error);
+        pendingResolvers.delete(userId);
       }
+    });
+  };
+
+  const fetchUsers = (userIds: UserId[]): Promise<User>[] => {
+    if (Arr.forall(userIds, (userId) => !isValidUserId(userId))) {
+      throw new Error('Invalid userId provided. All userIds must be a non-empty string.');
+    }
+
+    const { fail: uncachedIds } = Arr.partition(userIds, (userId) =>
+      lookup(userId).isSome()
     );
+
+    Arr.each(uncachedIds, (userId) => {
+      const newPromise = new Promise<User>((resolve, reject) => {
+        pendingResolvers.set(userId, { resolve, reject });
+      });
+
+      store(newPromise, userId);
+    });
+
+    if (uncachedIds.length > 0) {
+      const fetchUsersFn = Options.getFetchUsers(editor);
+
+      if (!Type.isFunction(fetchUsersFn)) {
+        throw new Error('fetch_users option is not defined');
+      }
+
+      fetchUsersFn(uncachedIds).then((items: unknown) => {
+        try {
+          const users = validateResponse(items);
+          const foundUserIds = new Set(users.map((user) => user.id));
+
+          // Resolve found users
+          Arr.each(users, (user) => {
+            const pending = pendingResolvers.get(user.id);
+            if (pending) {
+              pending.resolve(user);
+              pendingResolvers.delete(user.id);
+            }
+          });
+
+          // Reject promises for users not found in the response
+          uncachedIds.forEach((userId) => {
+            const pending = pendingResolvers.get(userId);
+            if (pending && !foundUserIds.has(userId)) {
+              pending.reject(new Error(`User ${userId} not found`));
+              pendingResolvers.delete(userId);
+            }
+          });
+        } catch (error: unknown) {
+          resolveWithFallbacks(uncachedIds, error);
+        }
+      }).catch((error: unknown) => {
+        resolveWithFallbacks(uncachedIds, error);
+      });
+    }
+
+    return Arr.map(userIds, (userId) => {
+      const userPromise = lookup(userId);
+      return userPromise.getOr(Promise.resolve({ id: userId }));
+    });
   };
 
   const getCurrentUserId = (): string => Options.getCurrentUserId(editor);
 
   return {
     getCurrentUserId,
-    fetchUsersById,
+    fetchUsers,
   };
 };
 

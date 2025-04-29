@@ -1,27 +1,30 @@
 import { describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
 import type { User } from 'tinymce/core/lookup/UserLookup';
 
+const createMockUser = (id: string): User => ({
+  id,
+  name: 'Test User',
+  avatar: 'test-avatar.png',
+  description: 'Test Description'
+});
+
 describe('browser.tinymce.core.UserLookupTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     current_user_id: 'test-user-1',
-    fetch_users_by_id: (userId: string): Promise<User[]> => {
+    fetch_users: (userIds: string[]): Promise<User[]> => {
       return new Promise((resolve) => {
         setTimeout(() => {
-          resolve(
-            [
-              {
-                id: userId,
-                name: 'Test User',
-                avatar: 'test-avatar.png',
-                description: 'Test Description',
-              }
-            ]
+          const users = Arr.bind(userIds, (id) =>
+            id.startsWith('non-existent') ? [] : [ createMockUser(id) ]
           );
+
+          resolve(users);
         }, 0);
       });
     },
@@ -33,179 +36,261 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     assert.equal(currentUserId, 'test-user-1', 'Should return the configured user ID');
   });
 
-  it('Should fetch user information', async () => {
+  it('Should fetch users and return array of promises', () => {
     const editor = hook.editor();
-    const userId = 'test-user-1';
+    const userIds = [ 'test-user-1' ];
 
-    const users = await editor.userLookup
-      .fetchUsersById(userId)
-      .catch(() => {
-        assert.fail('Should not throw an error');
-      });
+    const promises = editor.userLookup.fetchUsers(userIds);
 
-    console.warn('users', users);
-
-    assert.equal(users[0].id, userId, 'Should return user with correct ID');
-    assert.equal(users[0].name, 'Test User', 'Should return user with correct name');
-    assert.equal(users[0].avatar, 'test-avatar.png', 'Should return user with correct avatar');
-    assert.equal(users[0].description, 'Test Description', 'Should return user with correct description');
+    assert.lengthOf(promises, 1, 'Should return array with one promise');
+    assert.isTrue(promises[0] instanceof Promise, 'Should return a Promise');
   });
 
-  it('Should handle undefined user ID', () => {
+  it('Should return multiple promises for multiple userIds', () => {
     const editor = hook.editor();
+    const userIds = [ 'test-user-1', 'test-user-2' ];
 
-    editor.options.unset('current_user_id');
+    const promises = editor.userLookup.fetchUsers(userIds);
 
-    const currentUserId = editor.userLookup.getCurrentUserId();
-    assert.isUndefined(currentUserId, 'Should return undefined when no user ID is set');
-  });
-
-  it('Should return cached user data on second call', async () => {
-    const editor = hook.editor();
-    const userId = 'test-user-1';
-
-    // Fetch and cache
-    const firstCall = await editor.userLookup.fetchUsersById(userId);
-
-    // Return cached data
-    const secondCall = await editor.userLookup.fetchUsersById(userId);
-
-    assert.deepEqual(firstCall, secondCall, 'Should return same user data from cache');
-  });
-
-  it('Should handle multiple concurrent requests for same user', async () => {
-    const editor = hook.editor();
-    const userId = 'test-user-1';
-
-    // Make multiple concurrent requests
-    const requests = Promise.all([
-      editor.userLookup.fetchUsersById(userId),
-      editor.userLookup.fetchUsersById(userId),
-      editor.userLookup.fetchUsersById(userId)
-    ]);
-
-    const results = await requests;
-
-    // All requests should return the same data
-    assert.deepEqual(results[0], results[1], 'First and second requests should match');
-    assert.deepEqual(results[1], results[2], 'Second and third requests should match');
+    assert.lengthOf(promises, 2, 'Should return array with two promises');
+    assert.isTrue(promises[0] instanceof Promise, 'First item should be a Promise');
+    assert.isTrue(promises[1] instanceof Promise, 'Second item should be a Promise');
   });
 
   it('Should throw an error for empty string ids', async () => {
     const editor = hook.editor();
-
+    const userIds = [ '' ];
     try {
-      await editor.userLookup.fetchUsersById('');
+      await Promise.all(editor.userLookup.fetchUsers(userIds));
       assert.fail('Should throw error for empty string ID');
     } catch (error) {
       assert.isDefined(error, 'Should handle empty string ID with error');
     }
   });
 
-  it('Should handle malformed user data', async () => {
+  it('Should resolve with user data when fetching a single user', async () => {
     const editor = hook.editor();
-    const userId = 'malformed-user-id';
-    const userName = 'Invalid User';
+    const userId = 'test-user-1';
+    const expected = {
+      id: userId,
+      name: 'Test User',
+      avatar: 'test-avatar.png',
+      description: 'Test Description'
+    };
 
-    // Override with malformed data
-    editor.options.set('fetch_users_by_id', () =>
-      Promise.resolve(
-        [
-          {
-            // Missing required id field
-            name: 'Invalid User'
-          } as any
-        ]
-      )
-    );
+    const [ userPromise ] = editor.userLookup.fetchUsers([ userId ]);
+    const user = await userPromise;
 
-    const users = await editor.userLookup.fetchUsersById(userId);
-
-    assert.deepEqual(users, [{ id: userId }]);
-    assert.isFalse(users[0]?.name === userName);
+    assert.deepEqual(user, expected, 'Should return the expected user data');
   });
 
-  it('Should handle non-string user IDs', async () => {
-    const editor = hook.editor();
-
-    try {
-      await editor.userLookup.fetchUsersById(123 as any);
-      assert.fail('Should throw error for non-string ID');
-    } catch (error) {
-      assert.isDefined(error, 'Should handle non-string ID with error');
-    }
-  });
-
-  it('Should reject if fetch_users_by_id is not defined', async () => {
-    const editor = hook.editor();
-
-    editor.options.unset('fetch_users_by_id');
-
-    try {
-      await editor.userLookup.fetchUsersById('test-user');
-      assert.fail('Should throw error when fetch_users_by_id is not defined');
-    } catch (error) {
-      assert.isDefined(error, 'Should reject with error when fetch_users_by_id is not defined');
-    }
-  });
-
-  it('Should handle errors gracefully by always returning a User as long as an userId was provided.', async () => {
-    const editor = hook.editor();
-    const userId = 'non-existent-user-id';
-
-    // Override fetch_users_by_id to simulate an error
-    editor.options.set('fetch_users_by_id', async (id: string) =>
-      Promise.reject(new Error(`User ${id} not found`)));
-
-    const users = await editor.userLookup.fetchUsersById(userId);
-
-    assert.deepEqual(users, [{ id: userId }], 'Should return a user object with the provided ID');
-  });
-
-  it('Should throw an error if fetch_users_by_id is not returning a promise', async () => {
+  it('Should cache and return same data for subsequent requests', async () => {
     const editor = hook.editor();
     const userId = 'test-user-1';
 
-    // Override fetch_users_by_id to return a non-promise value
-    editor.options.set('fetch_users_by_id', () => {
-      return [
-        {
-          id: userId,
-          name: 'Test User',
-          avatar: 'test-avatar.png',
-          description: 'Test Description',
-        }
-      ];
-    });
+    const [ firstPromise ] = editor.userLookup.fetchUsers([ userId ]);
+    const firstUser = await firstPromise;
+
+    // Second request should use cached data
+    const [ secondPromise ] = editor.userLookup.fetchUsers([ userId ]);
+    const secondUser = await secondPromise;
+
+    assert.deepEqual(firstUser, secondUser, 'Should return same data from cache');
+  });
+
+  it('Should reject promise for non-existent users', async () => {
+    const editor = hook.editor();
+    const nonExistentId = 'non-existent-user';
+
+    const [ userPromise ] = editor.userLookup.fetchUsers([ nonExistentId ]);
 
     try {
-      await editor.userLookup.fetchUsersById(userId);
-      assert.fail('Should throw error when fetch_users_by_id is not returning a promise');
+      await userPromise;
+      assert.fail('Should reject for non-existent user');
     } catch (error) {
-      assert.isDefined(error, 'Should handle non-promise return value with error');
+      assert.instanceOf(error, Error);
+      assert.equal(error.message, `User ${nonExistentId} not found`);
     }
   });
 
-  it('Should handle custom properties on the User object as long as userId has been provided', async () => {
+  it('Should handle repeated requests for non-existent users', async () => {
     const editor = hook.editor();
-    const userId = 'unexpected-user-id';
+    const nonExistentId = 'non-existent-user';
 
-    // Override fetch_users_by_id to return unexpected data structure
-    editor.options.set('fetch_users_by_id', () =>
-      Promise.resolve(
-        [
-          {
-            id: userId,
-            custom: {
-              unexpectedProperty: 'Unexpected Value'
-            }
-          }
-        ]
-      )
-    );
+    const [ firstPromise ] = editor.userLookup.fetchUsers([ nonExistentId ]);
+    try {
+      await firstPromise;
+      assert.fail('First request should reject');
+    } catch (error) {
+      assert.instanceOf(error, Error);
+      assert.equal(error.message, `User ${nonExistentId} not found`);
+    }
 
-    const users = await editor.userLookup.fetchUsersById(userId);
+    // Second request should use cached rejection
+    const [ secondPromise ] = editor.userLookup.fetchUsers([ nonExistentId ]);
+    try {
+      await secondPromise;
+      assert.fail('Second request should reject');
+    } catch (error) {
+      assert.instanceOf(error, Error);
+      assert.equal(error.message, `User ${nonExistentId} not found`);
+    }
+  });
 
-    assert.deepEqual(users, [{ id: userId, custom: { unexpectedProperty: 'Unexpected Value' }}], 'Should return a user object with the provided ID');
+  it('Should handle mix of existing and non-existent users', async () => {
+    const editor = hook.editor();
+    const existingId = 'test-user-1';
+    const nonExistentId = 'non-existent-user';
+
+    const [ existingPromise, nonExistentPromise ] = editor.userLookup.fetchUsers([ existingId, nonExistentId ]);
+
+    const existingUser = await existingPromise;
+    assert.deepEqual(existingUser, {
+      id: existingId,
+      name: 'Test User',
+      avatar: 'test-avatar.png',
+      description: 'Test Description'
+    }, 'Should return full user object for existing user');
+
+    try {
+      await nonExistentPromise;
+      assert.fail('Should reject for non-existent user');
+    } catch (error) {
+      assert.instanceOf(error, Error);
+      assert.equal(error.message, `User ${nonExistentId} not found`);
+    }
+  });
+
+  it('Should handle concurrent requests for the same user', async () => {
+    const editor = hook.editor();
+    const userId = 'test-user-1';
+
+    // Make multiple concurrent requests
+    const [ promise1 ] = editor.userLookup.fetchUsers([ userId ]);
+    const [ promise2 ] = editor.userLookup.fetchUsers([ userId ]);
+    const [ promise3 ] = editor.userLookup.fetchUsers([ userId ]);
+
+    const [ user1, user2, user3 ] = await Promise.all([ promise1, promise2, promise3 ]);
+
+    assert.deepEqual(user1, user2, 'First and second requests should match');
+    assert.deepEqual(user2, user3, 'Second and third requests should match');
+  });
+
+  it('Should handle invalid user IDs gracefully', async () => {
+    const editor = hook.editor();
+    const invalidIds = [ '', ' ', undefined, null, false, 123 ] as any[];
+
+    Arr.each(invalidIds, (invalidId) => {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        editor.userLookup.fetchUsers([ invalidId ]);
+        assert.fail(`Should throw for invalid ID: ${invalidId}`);
+      } catch (error) {
+        assert.isDefined(error, `Should handle invalid ID: ${invalidId}`);
+      }
+    });
+  });
+
+  it('Should maintain separate caches for different user IDs', async () => {
+    const editor = hook.editor();
+    const userId1 = 'test-user-1';
+    const userId2 = 'test-user-2';
+
+    const [ promise1 ] = editor.userLookup.fetchUsers([ userId1 ]);
+    const user1 = await promise1;
+
+    const [ promise2 ] = editor.userLookup.fetchUsers([ userId2 ]);
+    const user2 = await promise2;
+
+    assert.notDeepEqual(user1, user2, 'Different users should have different data');
+    assert.equal(user1.id, userId1, 'First user should have correct ID');
+    assert.equal(user2.id, userId2, 'Second user should have correct ID');
+  });
+
+  it('Should handle large batches of users efficiently', async () => {
+    const editor = hook.editor();
+    const userIds = Arr.range(100, (i) => `test-user-${i}`);
+
+    const promises = editor.userLookup.fetchUsers(userIds);
+    const users = await Promise.all(promises);
+
+    assert.lengthOf(users, 100, 'Should resolve all users');
+    Arr.each(users, (user, index) => {
+      assert.equal(user.id, `test-user-${index}`, `User ${index} should have correct ID`);
+    });
+  });
+
+  it('Should handle custom user properties', async () => {
+    const editor = hook.editor();
+    const userId = 'test-user-custom';
+    const customUser = {
+      id: userId,
+      name: 'Test User',
+      avatar: 'test-avatar.png',
+      description: 'Test Description',
+      custom: {
+        role: 'admin',
+        department: 'IT'
+      }
+    };
+
+    // Override fetch_users for this test
+    editor.options.set('fetch_users', () => Promise.resolve([ customUser ]));
+
+    const [ userPromise ] = editor.userLookup.fetchUsers([ userId ]);
+    const user = await userPromise;
+
+    assert.deepEqual(user, customUser, 'Should preserve custom properties');
+    assert.deepEqual(user.custom, customUser.custom, 'Should have custom object');
+  });
+
+  it('Should handle network failures gracefully', async () => {
+    const editor = hook.editor();
+    const userId = 'test-user-network-error';
+    const originalFetchUsers = editor.options.get('fetch_users');
+
+    try {
+      // Override fetch_users to simulate network failure
+      editor.options.set('fetch_users', () => Promise.reject(new Error('Network error')));
+
+      const [ userPromise ] = editor.userLookup.fetchUsers([ userId ]);
+
+      try {
+        await userPromise;
+        assert.fail('Should reject on network failure');
+      } catch (error) {
+        assert.instanceOf(error, Error);
+        assert.equal(error.message, 'Network error');
+      }
+    } finally {
+      // Restore the original fetch_users function we overrode
+      editor.options.set('fetch_users', originalFetchUsers);
+    }
+  });
+
+  it('Should handle malformed server responses', async () => {
+    const editor = hook.editor();
+    const userId = 'test-user-malformed';
+    const originalFetchUsers = editor.options.get('fetch_users');
+
+    try {
+      // Override fetch_users to return invalid data
+      editor.options.set('fetch_users', () => Promise.resolve([{
+        invalid: 'data'
+      }] as any));
+
+      const [ userPromise ] = editor.userLookup.fetchUsers([ userId ]);
+
+      try {
+        await userPromise;
+        assert.fail('Should reject for invalid data');
+      } catch (error) {
+        assert.instanceOf(error, Error);
+        assert.equal(error.message, `User ${userId} not found`);
+      }
+    } finally {
+      // Restore the original fetch_users function we overrode
+      editor.options.set('fetch_users', originalFetchUsers);
+    }
   });
 });
