@@ -127,7 +127,7 @@ const UserLookup = (editor: Editor): UserLookup => {
       fetchUsersFn(uncachedIds).then((items: unknown) => {
         try {
           const users = validateResponse(items);
-          const foundUserIds = new Set(users.map((user) => user.id));
+          const foundUserIds = new Set(Arr.map(users, (user) => user.id));
 
           // Resolve found users
           Arr.each(users, (user) => {
