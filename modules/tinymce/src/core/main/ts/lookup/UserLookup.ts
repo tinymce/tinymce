@@ -1,4 +1,4 @@
-import { Obj, Type, Arr } from '@ephox/katamari';
+import { Obj, Type, Arr, Optional } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
@@ -90,14 +90,11 @@ const UserLookup = (editor: Editor): UserLookup => {
     userCache[userId] = user;
   };
 
-  const resolveWithFallbacks = (userIds: UserId[], error: unknown) => {
-    Arr.each(userIds, (userId) => {
-      const pending = pendingResolvers.get(userId);
-      if (pending) {
-        pending.reject(error);
-        pendingResolvers.delete(userId);
-      }
-    });
+  const finallyReject = (userId: UserId, error: Error) => {
+    return Optional.from(pendingResolvers.get(userId)).each(({ reject }) => {
+      reject(error);
+      pendingResolvers.delete(userId);
+    })
   };
 
   const fetchUsers = (userIds: UserId[]): Promise<User>[] => {
@@ -125,33 +122,36 @@ const UserLookup = (editor: Editor): UserLookup => {
       }
 
       fetchUsersFn(uncachedIds).then((items: unknown) => {
-        try {
-          const users = validateResponse(items);
-          const foundUserIds = new Set(Arr.map(users, (user) => user.id));
+          try {
+            const users = validateResponse(items);
+            const foundUserIds = new Set(Arr.map(users, (user) => user.id));
 
-          // Resolve found users
-          Arr.each(users, (user) => {
-            const pending = pendingResolvers.get(user.id);
-            if (pending) {
-              pending.resolve(user);
-              pendingResolvers.delete(user.id);
-            }
-          });
+            // Resolve found users
+            Arr.each(users, (user) => {
+              const pending = pendingResolvers.get(user.id);
+              if (pending) {
+                pending.resolve(user);
+                pendingResolvers.delete(user.id);
+              }
+            });
 
-          // Reject promises for users not found in the response
-          Arr.each(uncachedIds, (userId) => {
-            const pending = pendingResolvers.get(userId);
-            if (pending && !foundUserIds.has(userId)) {
-              pending.reject(new Error(`User ${userId} not found`));
-              pendingResolvers.delete(userId);
-            }
-          });
-        } catch (error: unknown) {
-          resolveWithFallbacks(uncachedIds, error);
-        }
-      }).catch((error: unknown) => {
-        resolveWithFallbacks(uncachedIds, error);
-      });
+            // Reject promises for users not found in the response
+            Arr.each(uncachedIds, (userId) => {
+              if (!foundUserIds.has(userId)) {
+                finallyReject(userId, new Error(`User ${userId} not found`));
+              }
+            });
+          } catch (error: unknown) {
+            Arr.each(uncachedIds, (userId) =>
+              finallyReject(userId, error instanceof Error ? error : new Error('Invalid response'))
+            );
+          }
+        })
+        .catch((error: unknown) => {
+          Arr.each(uncachedIds, (userId) =>
+            finallyReject(userId, error instanceof Error ? error : new Error('Network error'))
+          );
+        });
     }
 
     return Arr.map(userIds, (userId) => {
