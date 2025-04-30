@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Obj } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
-import { assert } from 'chai';
+import { expect } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
 import type { User } from 'tinymce/core/lookup/UserLookup';
@@ -38,7 +38,7 @@ describe('browser.tinymce.core.UserLookupTest', () => {
   it('Should return the configured user ID', () => {
     const editor = hook.editor();
     const currentUserId = editor.userLookup.getCurrentUserId();
-    assert.equal(currentUserId, 'test-user-1', 'Should return the configured user ID');
+    expect(currentUserId).to.equal('test-user-1', 'Should return the configured user ID');
   });
 
   it('Should fetch users and return array of promises', () => {
@@ -47,8 +47,9 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
     const promises = editor.userLookup.fetchUsers(userIds);
 
-    assert.lengthOf(promises, 1, 'Should return array with one promise');
-    assert.isTrue(promises[0] instanceof Promise, 'Should return a Promise');
+    expect(promises).to.be.an('array', 'Should return an array of promises');
+    expect(promises).to.have.lengthOf(1, 'Should return array with one promise');
+    expect(promises[0]).to.be.instanceOf(Promise, 'Should return a Promise');
   });
 
   it('Should return multiple promises for multiple userIds', () => {
@@ -57,19 +58,22 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
     const promises = editor.userLookup.fetchUsers(userIds);
 
-    assert.lengthOf(promises, 2, 'Should return array with two promises');
-    assert.isTrue(promises[0] instanceof Promise, 'First item should be a Promise');
-    assert.isTrue(promises[1] instanceof Promise, 'Second item should be a Promise');
+    expect(promises).to.have.lengthOf(2, 'Should return array with two promises');
+    expect(promises[0]).to.be.instanceOf(Promise, 'First item should be a Promise');
+    expect(promises[1]).to.be.instanceOf(Promise, 'Second item should be a Promise');
   });
 
   it('Should throw an error for empty string ids', async () => {
     const editor = hook.editor();
     const userIds = [ '' ];
+    const [ userPromise ] = editor.userLookup.fetchUsers(userIds);
+
     try {
-      await Promise.all(editor.userLookup.fetchUsers(userIds));
-      assert.fail('Should throw error for empty string ID');
-    } catch (error) {
-      assert.isDefined(error, 'Should handle empty string ID with error');
+      await userPromise;
+      expect.fail('Should throw error for empty string ID');
+    } catch (err: unknown) {
+      expect(err).to.be.instanceOf(Error);
+      expect(err).to.have.property('message', 'User  not found');
     }
   });
 
@@ -80,14 +84,14 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     const [ userPromise ] = editor.userLookup.fetchUsers([ userId ]);
     const user = await userPromise;
 
-    assert.equal(user.id, userId, 'Should have correct ID');
-    assert.equal(user.name, 'Test User', 'Should have correct name');
-    assert.equal(user.avatar, 'test-avatar.png', 'Should have correct avatar');
-    assert.equal(user.description, 'Test Description', 'Should have correct description');
+    expect(user.id).to.equal(userId, 'Should have correct ID');
+    expect(user.name).to.equal('Test User', 'Should have correct name');
+    expect(user.avatar).to.equal('test-avatar.png', 'Should have correct avatar');
+    expect(user.description).to.equal('Test Description', 'Should have correct description');
 
-    const userKeys = Object.keys(user).sort();
+    const userKeys = Obj.keys(user).sort();
     const expectedKeys = [ 'id', 'name', 'avatar', 'description' ].sort();
-    assert.deepEqual(userKeys, expectedKeys, 'Should have exactly the expected properties');
+    expect(userKeys).to.deep.equal(expectedKeys, 'Should have exactly the expected properties');
   });
 
   it('Should cache and return same data for subsequent requests', async () => {
@@ -101,7 +105,7 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     const [ secondPromise ] = editor.userLookup.fetchUsers([ userId ]);
     const secondUser = await secondPromise;
 
-    assert.deepEqual(firstUser, secondUser, 'Should return same data from cache');
+    expect(firstUser).to.deep.equal(secondUser, 'Should return same data from cache');
   });
 
   it('Should reject promise for non-existent users', async () => {
@@ -112,10 +116,10 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
     try {
       await userPromise;
-      assert.fail('Should reject for non-existent user');
+      expect(false, 'Should reject for non-existent user');
     } catch (error) {
-      assert.instanceOf(error, Error);
-      assert.equal(error.message, `User ${nonExistentId} not found`);
+      expect(error).to.be.instanceOf(Error);
+      expect(error).to.have.property('message', `User ${nonExistentId} not found`, 'Should have correct error message');
     }
   });
 
@@ -126,20 +130,20 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     const [ firstPromise ] = editor.userLookup.fetchUsers([ nonExistentId ]);
     try {
       await firstPromise;
-      assert.fail('First request should reject');
+      expect(false, 'First request should reject');
     } catch (error) {
-      assert.instanceOf(error, Error);
-      assert.equal(error.message, `User ${nonExistentId} not found`);
+      expect(error).to.be.instanceOf(Error);
+      expect(error).to.have.property('message', `User ${nonExistentId} not found`, 'Should have correct error message');
     }
 
     // Second request should use cached rejection
     const [ secondPromise ] = editor.userLookup.fetchUsers([ nonExistentId ]);
     try {
       await secondPromise;
-      assert.fail('Second request should reject');
+      expect(false, 'Second request should reject');
     } catch (error) {
-      assert.instanceOf(error, Error);
-      assert.equal(error.message, `User ${nonExistentId} not found`);
+      expect(error).to.be.instanceOf(Error);
+      expect(error).to.have.property('message', `User ${nonExistentId} not found`, 'Should have correct error message');
     }
   });
 
@@ -151,7 +155,7 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     const [ existingPromise, nonExistentPromise ] = editor.userLookup.fetchUsers([ existingId, nonExistentId ]);
 
     const existingUser = await existingPromise;
-    assert.deepEqual(existingUser, {
+    expect(existingUser).to.deep.equal({
       id: existingId,
       name: 'Test User',
       avatar: 'test-avatar.png',
@@ -160,10 +164,10 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
     try {
       await nonExistentPromise;
-      assert.fail('Should reject for non-existent user');
+      expect.fail('Should reject for non-existent user');
     } catch (error) {
-      assert.instanceOf(error, Error);
-      assert.equal(error.message, `User ${nonExistentId} not found`);
+      expect(error).to.be.instanceOf(Error);
+      expect(error).to.have.property('message', `User ${nonExistentId} not found`, 'Should have correct error message');
     }
   });
 
@@ -178,8 +182,8 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
     const [ user1, user2, user3 ] = await Promise.all([ promise1, promise2, promise3 ]);
 
-    assert.deepEqual(user1, user2, 'First and second requests should match');
-    assert.deepEqual(user2, user3, 'Second and third requests should match');
+    expect(user1).to.deep.equal(user2, 'First and second requests should match');
+    expect(user2).to.deep.equal(user3, 'Second and third requests should match');
   });
 
   it('Should handle invalid user IDs gracefully', async () => {
@@ -192,16 +196,12 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
       try {
         await promise;
-        assert.fail(`Promise should reject for invalid ID: ${invalidId}`);
+        expect.fail(`Promise should reject for invalid ID: ${invalidId}`);
       } catch (error) {
-        assert.instanceOf(error, Error, `Should get Error for invalid ID: ${invalidId}`);
-
-        const expectedMessage = `User ${invalidId} not found`;
-        assert.equal(
-          error.message,
-          expectedMessage,
-          `Expected "${expectedMessage}" but got "${error.message}"`
-        );
+        expect(error).to.be.instanceOf(Error, `Should get Error for invalid ID: ${invalidId}`);
+        if (error instanceof Error) {
+          expect(error.message).to.equal(`User ${invalidId} not found`, `Expected "User ${invalidId} not found" but got "${error.message}"`);
+        }
       }
     }));
   });
@@ -217,9 +217,9 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     const [ promise2 ] = editor.userLookup.fetchUsers([ userId2 ]);
     const user2 = await promise2;
 
-    assert.notDeepEqual(user1, user2, 'Different users should have different data');
-    assert.equal(user1.id, userId1, 'First user should have correct ID');
-    assert.equal(user2.id, userId2, 'Second user should have correct ID');
+    expect(user1).to.not.deep.equal(user2, 'Different users should have different data');
+    expect(user1.id).to.equal(userId1, 'First user should have correct ID');
+    expect(user2.id).to.equal(userId2, 'Second user should have correct ID');
   });
 
   it('Should handle large batches of users efficiently', async () => {
@@ -229,9 +229,9 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     const promises = editor.userLookup.fetchUsers(userIds);
     const users = await Promise.all(promises);
 
-    assert.lengthOf(users, 100, 'Should resolve all users');
+    expect(users).to.have.lengthOf(100, 'Should resolve all users');
     Arr.each(users, (user, index) => {
-      assert.equal(user.id, `test-user-${index}`, `User ${index} should have correct ID`);
+      expect(user.id).to.equal(`test-user-${index}`, `User ${index} should have correct ID`);
     });
   });
 
@@ -255,8 +255,8 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     const [ userPromise ] = editor.userLookup.fetchUsers([ userId ]);
     const user = await userPromise;
 
-    assert.deepEqual(user, customUser, 'Should preserve custom properties');
-    assert.deepEqual(user.custom, customUser.custom, 'Should have custom object');
+    expect(user).to.deep.equal(customUser, 'Should preserve custom properties');
+    expect(user.custom).to.deep.equal(customUser.custom, 'Should have custom object');
   });
 
   it('Should handle network failures gracefully', async () => {
@@ -272,10 +272,10 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
       try {
         await userPromise;
-        assert.fail('Should reject on network failure');
+        expect.fail('Should reject on network failure');
       } catch (error) {
-        assert.instanceOf(error, Error);
-        assert.equal(error.message, 'Network error');
+        expect(error).to.be.instanceOf(Error);
+        expect(error).to.have.property('message', 'Network error', 'Should have network error message');
       }
     } finally {
       // Restore the original fetch_users function we overrode
@@ -298,10 +298,10 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
       try {
         await userPromise;
-        assert.fail('Should reject for invalid data');
+        expect.fail('Should reject for invalid data');
       } catch (error) {
-        assert.instanceOf(error, Error);
-        assert.equal(error.message, `User ${userId} not found`);
+        expect(error).to.be.instanceOf(Error);
+        expect(error).to.have.property('message', `User ${userId} not found`, 'Should have correct error message');
       }
     } finally {
       // Restore the original fetch_users function we overrode
@@ -315,11 +315,17 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
     try {
       lookup.getCurrentUserId = Fun.constant('new-id');
-      assert.fail('Should not allow modifying getCurrentUserId');
+      expect.fail('Should not allow modifying getCurrentUserId');
     } catch (error) {
-      assert.isDefined(error, 'Should throw when trying to modify frozen function');
+      expect(error).to.be.instanceOf(Error);
+      if (error instanceof Error) {
+        expect(error.message).to.equal(
+          `Cannot assign to read only property 'getCurrentUserId' of object '#<Object>'`,
+          'Should throw error when trying to modify frozen function'
+        );
+      }
     }
 
-    assert.equal(lookup.getCurrentUserId(), 'test-user-1', 'Should maintain original value');
+    expect(lookup.getCurrentUserId()).to.equal('test-user-1', 'Should maintain original value');
   });
 });
