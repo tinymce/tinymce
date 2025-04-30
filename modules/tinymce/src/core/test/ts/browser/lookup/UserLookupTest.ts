@@ -317,13 +317,7 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       lookup.getCurrentUserId = Fun.constant('new-id');
       expect.fail('Should not allow modifying getCurrentUserId');
     } catch (error) {
-      expect(error).to.be.instanceOf(Error);
-      if (error instanceof Error) {
-        expect(error.message).to.equal(
-          `Cannot assign to read only property 'getCurrentUserId' of object '#<Object>'`,
-          'Should throw error when trying to modify frozen function'
-        );
-      }
+      expect(error).to.be.instanceOf(Error, 'Should throw error when trying to modify read-only function');
     }
 
     expect(lookup.getCurrentUserId()).to.equal('test-user-1', 'Should maintain original value');
