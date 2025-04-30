@@ -98,10 +98,6 @@ const validateResponse = (items: unknown): User[] => {
   return Arr.map(valid, (result) => transformResult(result.getOrDie()));
 };
 
-const isValidUserId = (userId: unknown): userId is UserId =>
-  Type.isString(userId)
-  && userId.length > 0;
-
 const UserLookup = (editor: Editor): UserLookup => {
   const userCache: Record<UserId, Promise<User>> = {};
   const pendingResolvers = new Map<UserId, {
@@ -124,8 +120,8 @@ const UserLookup = (editor: Editor): UserLookup => {
   };
 
   const fetchUsers = (userIds: UserId[]): Promise<User>[] => {
-    if (Arr.forall(userIds, (userId) => !isValidUserId(userId))) {
-      throw new Error('Invalid userId provided. All userIds must be a non-empty string.');
+    if (!Array.isArray(userIds)) {
+      return [];
     }
 
     const { fail: uncachedIds } = Arr.partition(userIds, (userId) =>

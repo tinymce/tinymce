@@ -20,8 +20,13 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     fetch_users: (userIds: string[]): Promise<User[]> => {
       return new Promise((resolve) => {
         setTimeout(() => {
-          const users = Arr.bind(userIds, (id) =>
-            id.startsWith('non-existent') ? [] : [ createMockUser(id) ]
+          const validIds = Arr.filter(userIds, (id): id is string =>
+            typeof id === 'string' && id.length > 0
+          );
+
+          // Only create users for valid test IDs
+          const users = Arr.bind(validIds, (id) =>
+            id.startsWith('test-user-') ? [ createMockUser(id) ] : []
           );
 
           resolve(users);
@@ -181,15 +186,24 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     const editor = hook.editor();
     const invalidIds = [ '', ' ', undefined, null, false, 123 ] as any[];
 
-    Arr.each(invalidIds, (invalidId) => {
+    // Test each invalid ID asynchronously
+    await Promise.all(Arr.map(invalidIds, async (invalidId) => {
+      const [ promise ] = editor.userLookup.fetchUsers([ invalidId ]);
+
       try {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        editor.userLookup.fetchUsers([ invalidId ]);
-        assert.fail(`Should throw for invalid ID: ${invalidId}`);
+        await promise;
+        assert.fail(`Promise should reject for invalid ID: ${invalidId}`);
       } catch (error) {
-        assert.isDefined(error, `Should handle invalid ID: ${invalidId}`);
+        assert.instanceOf(error, Error, `Should get Error for invalid ID: ${invalidId}`);
+
+        const expectedMessage = `User ${invalidId} not found`;
+        assert.equal(
+          error.message,
+          expectedMessage,
+          `Expected "${expectedMessage}" but got "${error.message}"`
+        );
       }
-    });
+    }));
   });
 
   it('Should maintain separate caches for different user IDs', async () => {
