@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
+import { Arr, Fun } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -292,5 +292,19 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       // Restore the original fetch_users function we overrode
       editor.options.set('fetch_users', originalFetchUsers);
     }
+  });
+
+  it('Should have frozen getCurrentUserId but mutable fetchUsers', () => {
+    const editor = hook.editor();
+    const lookup = editor.userLookup;
+
+    try {
+      lookup.getCurrentUserId = Fun.constant('new-id');
+      assert.fail('Should not allow modifying getCurrentUserId');
+    } catch (error) {
+      assert.isDefined(error, 'Should throw when trying to modify frozen function');
+    }
+
+    assert.equal(lookup.getCurrentUserId(), 'test-user-1', 'Should maintain original value');
   });
 });

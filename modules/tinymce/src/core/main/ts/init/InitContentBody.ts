@@ -440,7 +440,20 @@ const contentBodyLoaded = (editor: Editor): void => {
   (body as any).disabled = false;
 
   editor.editorUpload = EditorUpload(editor);
-  editor.userLookup = createUserLookup(editor);
+
+  const userLookupApi = createUserLookup(editor);
+  const userLookup = {
+    getCurrentUserId: userLookupApi.getCurrentUserId,
+    fetchUsers: userLookupApi.fetchUsers
+  };
+
+  Object.defineProperty(userLookup, 'getCurrentUserId', {
+    value: userLookupApi.getCurrentUserId,
+    writable: false,
+    configurable: false
+  });
+
+  editor.userLookup = userLookup;
   editor.schema = Schema(mkSchemaSettings(editor));
   editor.dom = DOMUtils(doc, {
     keep_values: true,
