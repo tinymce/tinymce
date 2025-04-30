@@ -132,48 +132,54 @@ const UserLookup = (editor: Editor): UserLookup => {
       const newPromise = new Promise<User>((resolve, reject) => {
         pendingResolvers.set(userId, { resolve, reject });
       });
-
       store(newPromise, userId);
     });
 
     if (uncachedIds.length > 0) {
-      const fetchUsersFn = Options.getFetchUsers(editor);
+      Optional.from(Options.getFetchUsers(editor)).fold(
+        () => {
+          Arr.each(uncachedIds, (userId) => {
+            const pending = pendingResolvers.get(userId);
+            if (pending) {
+              pending.resolve({ id: userId });
+              pendingResolvers.delete(userId);
+            }
+          });
+        },
+        (fetchUsersFn) => {
+          fetchUsersFn(uncachedIds).then((items: unknown) => {
+            try {
+              const users = validateResponse(items);
+              const foundUserIds = new Set(Arr.map(users, (user) => user.id));
 
-      if (!Type.isFunction(fetchUsersFn)) {
-        throw new Error('fetch_users option is not defined');
-      }
+              // Resolve found users
+              Arr.each(users, (user) => {
+                const pending = pendingResolvers.get(user.id);
+                if (pending) {
+                  pending.resolve(user);
+                  pendingResolvers.delete(user.id);
+                }
+              });
 
-      fetchUsersFn(uncachedIds).then((items: unknown) => {
-          try {
-            const users = validateResponse(items);
-            const foundUserIds = new Set(Arr.map(users, (user) => user.id));
-
-            // Resolve found users
-            Arr.each(users, (user) => {
-              const pending = pendingResolvers.get(user.id);
-              if (pending) {
-                pending.resolve(user);
-                pendingResolvers.delete(user.id);
-              }
-            });
-
-            // Reject promises for users not found in the response
-            Arr.each(uncachedIds, (userId) => {
-              if (!foundUserIds.has(userId)) {
-                finallyReject(userId, new Error(`User ${userId} not found`));
-              }
-            });
-          } catch (error: unknown) {
+              // Reject promises for users not found in the response
+              Arr.each(uncachedIds, (userId) => {
+                if (!foundUserIds.has(userId)) {
+                  finallyReject(userId, new Error(`User ${userId} not found`));
+                }
+              });
+            } catch (error: unknown) {
+              Arr.each(uncachedIds, (userId) =>
+                finallyReject(userId, error instanceof Error ? error : new Error('Invalid response'))
+              );
+            }
+          })
+          .catch((error: unknown) => {
             Arr.each(uncachedIds, (userId) =>
-              finallyReject(userId, error instanceof Error ? error : new Error('Invalid response'))
+              finallyReject(userId, error instanceof Error ? error : new Error('Network error'))
             );
-          }
-        })
-        .catch((error: unknown) => {
-          Arr.each(uncachedIds, (userId) =>
-            finallyReject(userId, error instanceof Error ? error : new Error('Network error'))
-          );
-        });
+          });
+        }
+      );
     }
 
     return Arr.map(userIds, (userId) => {

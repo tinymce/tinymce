@@ -909,7 +909,18 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('fetch_users', {
-    processor: 'function'
+    processor: (value) => {
+      if (value === undefined) {
+        return { valid: true, value: undefined };
+      }
+      if (Type.isFunction(value)) {
+        return { valid: true, value };
+      }
+      return {
+        valid: false,
+        message: 'fetch_users must be a function that returns a Promise<User[]>'
+      };
+    }
   });
 
   // These options must be registered later in the init sequence due to their default values
