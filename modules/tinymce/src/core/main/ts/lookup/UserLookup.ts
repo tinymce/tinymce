@@ -1,4 +1,4 @@
-import { Obj, Type, Arr, Optional } from '@ephox/katamari';
+import { Type, Arr, Optional, Fun } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
@@ -99,18 +99,18 @@ const validateResponse = (items: unknown): User[] => {
 };
 
 const UserLookup = (editor: Editor): UserLookup => {
-  const userCache: Record<UserId, Promise<User>> = {};
+  const userCache = new Map<UserId, Promise<User>>();
   const pendingResolvers = new Map<UserId, {
     resolve: (user: User) => void;
     reject: (error: unknown) => void;
   }>();
 
   const lookup = (userId: UserId) =>
-    Obj.get(userCache, userId);
+    Optional.from(userCache.get(userId)).map(Fun.identity);
 
   const store = (user: Promise<User>, userId: UserId) => {
-    userCache[userId] = user;
-  };
+    userCache.set(userId, user);
+  }
 
   const finallyReject = (userId: UserId, error: Error) => {
     return Optional.from(pendingResolvers.get(userId)).each(({ reject }) => {
