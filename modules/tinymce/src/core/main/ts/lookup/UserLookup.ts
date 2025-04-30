@@ -1,5 +1,5 @@
 import { StructureSchema, FieldSchema } from '@ephox/boulder';
-import { Arr, Optional, Fun } from '@ephox/katamari';
+import { Arr, Optional, Fun, Results } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
@@ -80,23 +80,18 @@ const validateResponse = (items: unknown): User[] => {
     StructureSchema.asRaw<User>('Invalid user object', userSchema, item)
   );
 
-  const { pass: valid, fail: invalid } = Arr.partition(results, (result) => result.isValue());
-
-  const errors = Arr.map(invalid, (result, idx) =>
-    result.fold(
-      (schemaError) => `User at index ${idx}: ${StructureSchema.formatError(schemaError)}`,
-      () => {
-        throw new Error('Unreachable'); // This should never happen due to partioning.
-      }
-    )
-  );
+  const { errors, values } = Results.partition(results);
 
   if (errors.length > 0) {
+    const formattedErrors = Arr.map(errors, (error, idx) =>
+      `User at index ${idx}: ${StructureSchema.formatError(error)}`
+    );
+
     // eslint-disable-next-line no-console
-    console.warn('User validation errors:\n' + errors.join('\n'));
+    console.warn('User validation errors:\n' + formattedErrors.join('\n'));
   }
 
-  return Arr.map(valid, (result) => transformResult(result.getOrDie()));
+  return Arr.map(values, (result) => transformResult(result));
 };
 
 const UserLookup = (editor: Editor): UserLookup => {
