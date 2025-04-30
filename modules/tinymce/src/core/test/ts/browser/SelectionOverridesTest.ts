@@ -1,7 +1,7 @@
 import { Mouse } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Scroll, SugarElement, Traverse } from '@ephox/sugar';
+import { Scroll, SugarElement, SugarLocation, Traverse } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -37,7 +37,9 @@ describe('browser.tinymce.core.SelectionOverridesTest', () => {
     const clientY = rect.top + (rect.height / 2);
 
     const target = Traverse.parentElement(SugarElement.fromDom(contentEditableElm)).getOrThunk(() => TinyDom.documentElement(editor));
-    Mouse.point('mousedown', 0, target, clientX, clientY);
+    const dx = clientX - SugarLocation.absolute(target).left;
+    const dy = clientY - SugarLocation.absolute(target).top;
+    Mouse.event('mousedown', { dx, dy, button: 0 })(target);
     // Check the scroll position has not changed
     assert.equal(getScrollTop(editor), scrollTop);
     // Check fake caret has been added

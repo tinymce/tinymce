@@ -37,7 +37,7 @@ interface Tools {
 }
 
 /**
- * This class contains various utlity functions. These are also exposed
+ * This class contains various utility functions. These are also exposed
  * directly on the tinymce namespace.
  *
  * @class tinymce.util.Tools

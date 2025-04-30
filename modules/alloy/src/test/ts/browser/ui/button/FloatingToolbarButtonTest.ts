@@ -7,10 +7,10 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { FloatingToolbarButton } from 'ephox/alloy/api/ui/FloatingToolbarButton';
 import * as Layout from 'ephox/alloy/positioning/layout/Layout';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 import * as TestPartialToolbarGroup from 'ephox/alloy/test/toolbar/TestPartialToolbarGroup';
 

@@ -10,8 +10,8 @@ import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 describe('browser.alloy.behaviour.keying.FlowKeyingTest', () => {
 

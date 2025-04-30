@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, UiFinder } from '@ephox/agar';
-import { AlloyTriggers, GuiFactory, NativeEvents, TestHelpers } from '@ephox/alloy';
+import { AlloyTriggers, GuiFactory, NativeEvents } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
 import { Attribute, SugarDocument, SugarElement } from '@ephox/sugar';
@@ -8,12 +8,13 @@ import { renderMenuButton } from 'tinymce/themes/silver/ui/button/MenuButton';
 
 import { fetchMailMergeData } from '../../module/CommonMailMergeFetch';
 import { structMenuWith, structSearchField, structSearchLeafItem, structSearchParentItem, structSearchResultsWith } from '../../module/CommonMenuTestStructures';
+import * as GuiSetup from '../../module/GuiSetup';
 import * as TestExtras from '../../module/TestExtras';
 
 describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () => {
   const extrasHook = TestExtras.bddSetup();
 
-  TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
+  GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
     `.tox-menu .tox-collection__item--active {
       background-color: black;
     }`,
@@ -26,7 +27,7 @@ describe('headless.tinymce.themes.silver.toolbar.SearchableMenuButtonTest', () =
 
   const structNoPlaceholderSearch = structSearchField(Optional.none());
 
-  const hook = TestHelpers.GuiSetup.bddSetup(
+  const hook = GuiSetup.bddSetup(
     (store, _doc, _body) => GuiFactory.build(
       renderMenuButton(
         {

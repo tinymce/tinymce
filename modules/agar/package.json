@@ -35,6 +35,7 @@
   "devDependencies": {
     "@ephox/katamari-assertions": "^5.0.0"
   },
+  "sideEffects": false,
   "files": [
     "lib/main",
     "lib/demo",

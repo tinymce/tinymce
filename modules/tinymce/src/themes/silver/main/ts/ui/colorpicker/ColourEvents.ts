@@ -1,7 +1,6 @@
+import { ColourTypes } from '@ephox/acid';
 import { CustomEvent, SliderTypes } from '@ephox/alloy';
 import { Id } from '@ephox/katamari';
-
-import { Hex } from '../api/colour/ColourTypes';
 
 const fieldsUpdate = Id.generate('rgb-hex-update');
 const sliderUpdate = Id.generate('slider-update');
@@ -16,7 +15,7 @@ export interface PaletteUpdateEvent extends CustomEvent {
 }
 
 export interface FieldsUpdateEvent extends CustomEvent {
-  readonly hex: Hex;
+  readonly hex: ColourTypes.Hex;
 }
 
 export {

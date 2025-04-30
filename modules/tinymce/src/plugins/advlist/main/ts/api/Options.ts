@@ -17,7 +17,7 @@ const register = (editor: Editor): void => {
 
   registerOption('advlist_bullet_styles', {
     processor: 'string[]',
-    default: 'default,circle,square'.split(',')
+    default: 'default,disc,circle,square'.split(',')
   });
 };
 

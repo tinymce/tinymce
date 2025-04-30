@@ -1,0 +1,49 @@
+@mentions-avatar-width: 42px;
+@mentions-avatar-height: 42px;
+@mentions-line-height: 21px;
+
+.tox-mentions__card-common {
+  z-index: 1200;
+}
+  
+.tox {
+  // Unique to mentions hover card
+  &.tox-mentions__card {
+    background: @background-color;
+    border: 1px solid @border-color;
+    display: flex;
+    padding: @pad-xs @pad-sm;
+
+    .tox-mentions__container {
+      display: flex;
+      flex-direction: column;
+      align-self: center;
+      margin: 0 @pad-xs;
+    }
+  }
+
+  // Shared between mentions hover card and autocompleter items
+  .tox-mentions__avatar {
+    width: @mentions-avatar-width;
+    height: @mentions-avatar-height;
+    border-radius: 50%;
+    margin-right: @pad-xs;
+  }
+
+  .tox-mentions__username {
+    font-size: @font-size-sm;
+    line-height: @mentions-line-height;
+  }
+
+  .tox-mentions__description {
+    font-size: @font-size-xs;
+    line-height: @mentions-line-height;
+    color: @text-color-muted;
+  }
+
+  .tox-collection__item--active {
+    .tox-mentions__description {
+      color: inherit;
+    }
+  }
+}

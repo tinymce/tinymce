@@ -17,8 +17,9 @@
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "GPL-2.0-or-later",
   "dependencies": {
-    "@ephox/dispute": "^1.0.15"
+    "@ephox/dispute": "^1.0.16"
   },
+  "sideEffects": false,
   "files": [
     "lib/main",
     "lib/demo",

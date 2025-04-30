@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
-import { AlloyComponent, AlloyTriggers, Container, GuiFactory, Invalidating, NativeEvents, Representing, TestHelpers } from '@ephox/alloy';
+import { AlloyComponent, AlloyTriggers, Container, GuiFactory, Invalidating, NativeEvents, Representing } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
 import { SelectorFind, SugarDocument, Traverse } from '@ephox/sugar';
@@ -7,6 +7,7 @@ import { assert } from 'chai';
 
 import { renderColorInput } from 'tinymce/themes/silver/ui/dialog/ColorInput';
 
+import * as GuiSetup from '../../../module/GuiSetup';
 import * as TestExtras from '../../../module/TestExtras';
 
 type StringAssert = ReturnType<ApproxStructure.StringApi['is']>;
@@ -15,7 +16,7 @@ type ArrayAssert = ReturnType<ApproxStructure.ArrayApi['has']>;
 describe('headless.tinymce.themes.silver.components.colorinput.ColorInputTest', () => {
   const extrasHook = TestExtras.bddSetup();
 
-  const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+  const hook = GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     Container.sketch({
       dom: {
         classes: [ 'colorinput-container' ]
@@ -42,7 +43,7 @@ describe('headless.tinymce.themes.silver.components.colorinput.ColorInputTest', 
     })
   ));
 
-  TestHelpers.GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
+  GuiSetup.bddAddStyles(SugarDocument.getDocument(), [
     '.tox-textbox-field-invalid input { outline: 2px solid red; }',
     '.tox-color-input span { padding: 4px 8px; }',
     '.tox-swatch { padding: 8px 4px }'

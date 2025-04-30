@@ -1,12 +1,14 @@
-import { Behaviour, GuiFactory, Replacing, TestHelpers } from '@ephox/alloy';
+import { Behaviour, GuiFactory, Replacing } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Cell, Fun } from '@ephox/katamari';
 
 import { SimpleBehaviours } from 'tinymce/themes/silver/ui/alien/SimpleBehaviours';
 import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/controls/Controls';
 
+import * as GuiSetup from '../../module/GuiSetup';
+
 describe('headless.tinymce.themes.silver.configs.ControlOnSetup Test', () => {
-  const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build({
+  const hook = GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build({
     dom: {
       tag: 'div',
       classes: [ 'test-container' ]

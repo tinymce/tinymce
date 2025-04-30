@@ -10,7 +10,7 @@ const col = (column: number, x: number, y: number, w: number, h: number): SugarE
     width: w + 'px'
   });
 
-  Attribute.setAll(bar, { 'data-column': column, 'role': 'presentation' });
+  Attribute.setAll(bar, { 'data-mce-bogus': 'all', 'data-column': column, 'role': 'presentation' });
   return bar;
 };
 
@@ -24,7 +24,7 @@ const row = (r: number, x: number, y: number, w: number, h: number): SugarElemen
     width: w + 'px'
   });
 
-  Attribute.setAll(bar, { 'data-row': r, 'role': 'presentation' });
+  Attribute.setAll(bar, { 'data-mce-bogus': 'all', 'data-row': r, 'role': 'presentation' });
   return bar;
 };
 

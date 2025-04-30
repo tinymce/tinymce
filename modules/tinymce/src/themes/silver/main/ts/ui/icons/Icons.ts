@@ -23,6 +23,7 @@ const rtlTransform: Record<string, boolean> = {
   'paste-column-before': true,
   'unordered-list': true,
   'list-bull-circle': true,
+  'list-bull-disc': true,
   'list-bull-default': true,
   'list-bull-square': true
 };

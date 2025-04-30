@@ -3,12 +3,15 @@
   "version": "15.0.0",
   "description": "Ui Framework",
   "dependencies": {
-    "@ephox/agar": "^9.0.0",
     "@ephox/boulder": "^8.0.0",
     "@ephox/katamari": "^10.0.0",
     "@ephox/sand": "^7.0.0",
     "@ephox/sugar": "^10.0.0"
   },
+  "devDependencies": {
+    "@ephox/agar": "^9.0.0"
+  },
+  "sideEffects": false,
   "files": [
     "lib/main",
     "lib/demo",
