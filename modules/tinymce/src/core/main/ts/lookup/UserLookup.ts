@@ -1,8 +1,8 @@
-import { Type, Arr, Optional, Fun } from '@ephox/katamari';
+import { StructureSchema, FieldSchema } from '@ephox/boulder';
+import { Arr, Optional, Fun } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
-import { StructureSchema, FieldSchema } from '@ephox/boulder';
 
 /**
  * TinyMCE User Lookup API
@@ -92,6 +92,7 @@ const validateResponse = (items: unknown): User[] => {
   );
 
   if (errors.length > 0) {
+    // eslint-disable-next-line no-console
     console.warn('User validation errors:\n' + errors.join('\n'));
   }
 
@@ -110,13 +111,13 @@ const UserLookup = (editor: Editor): UserLookup => {
 
   const store = (user: Promise<User>, userId: UserId) => {
     userCache.set(userId, user);
-  }
+  };
 
   const finallyReject = (userId: UserId, error: Error) => {
     return Optional.from(pendingResolvers.get(userId)).each(({ reject }) => {
       reject(error);
       pendingResolvers.delete(userId);
-    })
+    });
   };
 
   const fetchUsers = (userIds: UserId[]): Promise<User>[] => {
@@ -147,9 +148,9 @@ const UserLookup = (editor: Editor): UserLookup => {
           });
         },
         (fetchUsersFn) => {
-          fetchUsersFn(uncachedIds).then((items: unknown) => {
-            try {
-              const users = validateResponse(items);
+          fetchUsersFn(uncachedIds)
+            .then(validateResponse)
+            .then((users: User[]) => {
               const foundUserIds = new Set(Arr.map(users, (user) => user.id));
 
               // Resolve found users
@@ -167,17 +168,15 @@ const UserLookup = (editor: Editor): UserLookup => {
                   finallyReject(userId, new Error(`User ${userId} not found`));
                 }
               });
-            } catch (error: unknown) {
+            })
+            .catch((error: unknown) => {
               Arr.each(uncachedIds, (userId) =>
-                finallyReject(userId, error instanceof Error ? error : new Error('Invalid response'))
+                finallyReject(
+                  userId,
+                  error instanceof Error ? error : new Error('Network error')
+                )
               );
-            }
-          })
-          .catch((error: unknown) => {
-            Arr.each(uncachedIds, (userId) =>
-              finallyReject(userId, error instanceof Error ? error : new Error('Network error'))
-            );
-          });
+            });
         }
       );
     }
