@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Editor did not scroll into viewport on receiving focus on Chrome and Safari.
+time: 2025-04-25T13:53:34.434967+02:00
+custom:
+  Issue: TINY-12017
