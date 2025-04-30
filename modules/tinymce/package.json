@@ -33,7 +33,9 @@
     "@ephox/darwin": "^9.0.0",
     "@tinymce/oxide": "^3.0.0",
     "@tinymce/oxide-icons-default": "^3.0.0",
-    "dompurify": "3.2.4"
+    "@types/prismjs": "^1.16.6",
+    "dompurify": "3.2.4",
+    "prismjs": "^1.27.0"
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^5.1.1",
