@@ -2,6 +2,7 @@ import { Obj, Type, Arr, Optional } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
+import { StructureSchema, FieldSchema } from '@ephox/boulder';
 
 /**
  * TinyMCE User Lookup API
@@ -51,25 +52,50 @@ export interface UserLookup {
   fetchUsers: (userIds: UserId[]) => Promise<User>[];
 }
 
-const isUserObject = (val: unknown): val is User =>
-  Type.isObject(val)
-  && val.hasOwnProperty('id')
-  && Type.isNonNullable((val as User).id) && Type.isString((val as User).id as UserId)
-  && !(Type.isNonNullable((val as User).name) && !Type.isString((val as User).name))
-  && !(Type.isNonNullable((val as User).avatar) && !Type.isString((val as User).avatar))
-  && !(Type.isNonNullable((val as User).description) && !Type.isString((val as User).description));
+const userSchema = StructureSchema.objOf([
+  FieldSchema.required('id'),
+  FieldSchema.optionString('name'),
+  FieldSchema.optionString('avatar'),
+  FieldSchema.optionString('description'),
+  FieldSchema.option('custom')
+]);
+
+const transformResult = (user: any): User => {
+  const customValue = user.custom?.getOrUndefined();
+  return {
+    id: user.id,
+    name: user.name?.getOrUndefined(),
+    avatar: user.avatar?.getOrUndefined(),
+    description: user.description?.getOrUndefined(),
+    ...(customValue !== undefined && { custom: customValue })
+  };
+};
 
 const validateResponse = (items: unknown): User[] => {
   if (!Array.isArray(items)) {
     throw new Error('fetch_users must return an array');
   }
 
-  if (items.length === 0) {
-    return [];
+  const results = Arr.map(items, (item) =>
+    StructureSchema.asRaw<User>('Invalid user object', userSchema, item)
+  );
+
+  const { pass: valid, fail: invalid } = Arr.partition(results, (result) => result.isValue());
+
+  const errors = Arr.map(invalid, (result, idx) =>
+    result.fold(
+      (schemaError) => `User at index ${idx}: ${StructureSchema.formatError(schemaError)}`,
+      () => {
+        throw new Error('Unreachable'); // This should never happen due to partioning.
+      }
+    )
+  );
+
+  if (errors.length > 0) {
+    console.warn('User validation errors:\n' + errors.join('\n'));
   }
 
-  const users = Arr.filter(items, (item) => isUserObject(item));
-  return users;
+  return Arr.map(valid, (result) => transformResult(result.getOrDie()));
 };
 
 const isValidUserId = (userId: unknown): userId is UserId =>

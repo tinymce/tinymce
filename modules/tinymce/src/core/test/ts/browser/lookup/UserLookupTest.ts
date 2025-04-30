@@ -71,17 +71,18 @@ describe('browser.tinymce.core.UserLookupTest', () => {
   it('Should resolve with user data when fetching a single user', async () => {
     const editor = hook.editor();
     const userId = 'test-user-1';
-    const expected = {
-      id: userId,
-      name: 'Test User',
-      avatar: 'test-avatar.png',
-      description: 'Test Description'
-    };
 
     const [ userPromise ] = editor.userLookup.fetchUsers([ userId ]);
     const user = await userPromise;
 
-    assert.deepEqual(user, expected, 'Should return the expected user data');
+    assert.equal(user.id, userId, 'Should have correct ID');
+    assert.equal(user.name, 'Test User', 'Should have correct name');
+    assert.equal(user.avatar, 'test-avatar.png', 'Should have correct avatar');
+    assert.equal(user.description, 'Test Description', 'Should have correct description');
+
+    const userKeys = Object.keys(user).sort();
+    const expectedKeys = [ 'id', 'name', 'avatar', 'description' ].sort();
+    assert.deepEqual(userKeys, expectedKeys, 'Should have exactly the expected properties');
   });
 
   it('Should cache and return same data for subsequent requests', async () => {
