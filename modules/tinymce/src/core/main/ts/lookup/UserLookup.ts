@@ -139,7 +139,7 @@ const UserLookup = (editor: Editor): UserLookup => {
           });
 
           // Reject promises for users not found in the response
-          uncachedIds.forEach((userId) => {
+          Arr.each(uncachedIds, (userId) => {
             const pending = pendingResolvers.get(userId);
             if (pending && !foundUserIds.has(userId)) {
               pending.reject(new Error(`User ${userId} not found`));
