@@ -904,7 +904,7 @@ const register = (editor: Editor): void => {
     default: true
   });
 
-  registerOption('current_user_id', {
+  registerOption('user_id', {
     processor: 'string',
   });
 
@@ -1047,7 +1047,7 @@ const getApiKey = option('api_key');
 const isDisabled = option('disabled');
 const getExtendedMathmlAttributes = option('extended_mathml_attributes');
 const getExtendedMathmlElements = option('extended_mathml_elements');
-const getCurrentUserId = option('current_user_id');
+const getCurrentUserId = option('user_id');
 const getFetchUsers = option('fetch_users');
 
 export {

@@ -16,7 +16,7 @@ const createMockUser = (id: string): User => ({
 describe('browser.tinymce.core.UserLookupTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
-    current_user_id: 'test-user-1',
+    user_id: 'test-user-1',
     fetch_users: (userIds: string[]): Promise<User[]> => {
       return new Promise((resolve) => {
         setTimeout(() => {
