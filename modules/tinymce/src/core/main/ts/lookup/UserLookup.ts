@@ -1,5 +1,5 @@
 import { StructureSchema, FieldSchema } from '@ephox/boulder';
-import { Arr, Optional, Fun, Results } from '@ephox/katamari';
+import { Arr, Optional, Fun, Results, Obj } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
@@ -32,6 +32,8 @@ export interface User {
   custom?: Record<string, any>;
 }
 
+type OptionalUserFields = Pick<User, 'name' | 'avatar' | 'description' | 'custom'>;
+
 export interface UserLookup {
   /**
    * Retrieves the current user ID from the editor.
@@ -60,14 +62,34 @@ const userSchema = StructureSchema.objOf([
   FieldSchema.option('custom')
 ]);
 
+const objectCat = <T extends Record<string, any>>(
+  obj: { [K in keyof T]: Optional<T[K]> }
+): Partial<T> => {
+  const result = {} as Partial<T>;
+
+  Obj.each(obj, (value, key) => {
+    value.each((v) => {
+      result[key as keyof T] = v;
+    });
+  });
+
+  return result;
+};
+
+const extractOptionalField = <T>(field: any): Optional<T> =>
+  field?.fold(Optional.none, Optional.some) ?? Optional.none();
+
 const transformResult = (user: any): User => {
-  const customValue = user.custom?.getOrUndefined();
+  const optionalFields: { [K in keyof OptionalUserFields]: Optional<OptionalUserFields[K]> } = {
+    name: extractOptionalField(user.name),
+    avatar: extractOptionalField(user.avatar),
+    description: extractOptionalField(user.description),
+    custom: extractOptionalField(user.custom)
+  };
+
   return {
     id: user.id,
-    name: user.name?.getOrUndefined(),
-    avatar: user.avatar?.getOrUndefined(),
-    description: user.description?.getOrUndefined(),
-    ...(customValue !== undefined && { custom: customValue })
+    ...objectCat(optionalFields)
   };
 };
 

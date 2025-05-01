@@ -322,4 +322,67 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
     expect(lookup.getCurrentUserId()).to.equal('test-user-1', 'Should maintain original value');
   });
+
+  it('Should handle various combinations of optional properties correctly', async () => {
+    const editor = hook.editor();
+    const testCases = [
+      {
+        input: { id: 'user-1' },
+        expected: { id: 'user-1' }
+      },
+      {
+        input: { id: 'user-2', name: 'John' },
+        expected: { id: 'user-2', name: 'John' }
+      },
+      {
+        input: {
+          id: 'user-3',
+          name: undefined,
+          avatar: null,
+          description: '',
+          custom: {}
+        },
+        expected: { id: 'user-3', description: '', custom: {}}
+      },
+      {
+        input: {
+          id: 'user-4',
+          name: 'Jane',
+          avatar: 'avatar.jpg',
+          description: null,
+          custom: { role: 'admin' }
+        },
+        expected: {
+          id: 'user-4',
+          name: 'Jane',
+          avatar: 'avatar.jpg',
+          custom: { role: 'admin' }
+        }
+      }
+    ];
+
+    // Override the fetch_users fn to return our test cases
+    editor.options.set('fetch_users', () => Promise.resolve(Arr.map(testCases, (c) => c.input)));
+
+    const userIds = Arr.map(testCases, (c) => c.input.id);
+    const promises = editor.userLookup.fetchUsers(userIds);
+
+    const users = await Promise.all(promises);
+
+    Arr.each(users, (user, index) => {
+      const expected = testCases[index].expected;
+      const actualKeys = Obj.keys(user).sort();
+      const expectedKeys = Obj.keys(expected).sort();
+
+      expect(actualKeys).to.deep.equal(
+        expectedKeys,
+        `User ${index + 1}: Should only include non-empty properties`
+      );
+
+      expect(user).to.deep.equal(
+        expected,
+        `User ${index + 1}: Should match expected structure`
+      );
+    });
+  });
 });
