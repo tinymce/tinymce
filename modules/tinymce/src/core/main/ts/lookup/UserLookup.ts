@@ -113,7 +113,7 @@ const validateResponse = (items: unknown): User[] => {
     console.warn('User validation errors:\n' + formattedErrors.join('\n'));
   }
 
-  return Arr.map(values, (result) => transformResult(result));
+  return Arr.map(values, transformResult);
 };
 
 const UserLookup = (editor: Editor): UserLookup => {
