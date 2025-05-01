@@ -124,7 +124,7 @@ const UserLookup = (editor: Editor): UserLookup => {
   }>();
 
   const lookup = (userId: UserId) =>
-    Optional.from(userCache.get(userId)).map(Fun.identity);
+    Optional.from(userCache.get(userId));
 
   const store = (user: Promise<User>, userId: UserId) => {
     userCache.set(userId, user);
