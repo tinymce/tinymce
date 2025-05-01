@@ -201,7 +201,7 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
       onSetupEvent(editor, 'NodeChange', (api: BespokeSelectApi) => {
         const comp = api.getComponent();
         spec.updateText(comp);
-        Disabling.set(api.getComponent(), !editor.selection.isEditable());
+        Disabling.set(api.getComponent(), (!editor.selection.isEditable() || getStyleItems().length === 0));
       })(api),
       () => editor.off(textUpdateEventName, handler)
     );

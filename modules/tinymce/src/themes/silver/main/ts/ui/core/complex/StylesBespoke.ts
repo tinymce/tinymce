@@ -82,7 +82,7 @@ const createStylesMenu = (editor: Editor, backstage: UiFactoryBackstage): void =
   const menuItems = createMenuItems(backstage, getSpec(editor, dataset));
   editor.ui.registry.addNestedMenuItem('styles', {
     text: menuTitle,
-    onSetup: onSetupEditableToggle(editor),
+    onSetup: onSetupEditableToggle(editor, () => menuItems.getStyleItems().length > 0),
     getSubmenuItems: () => menuItems.items.validateItems(menuItems.getStyleItems())
   });
 };
