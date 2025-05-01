@@ -252,8 +252,7 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
       const [ userPromise ] = editor.userLookup.fetchUsers([ userId ]);
 
-      expect(userPromise).to.eventually.be.rejectedWith(Error);
-      expect(userPromise).to.eventually.have.property('message', 'Network error');
+      await expect(userPromise).to.be.rejectedWith('Network error');
     } finally {
       // Restore the original fetch_users function we overrode
       editor.options.set('fetch_users', originalFetchUsers);
@@ -273,8 +272,7 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
       const [ userPromise ] = editor.userLookup.fetchUsers([ userId ]);
 
-      expect(userPromise).to.eventually.be.rejectedWith(Error);
-      expect(userPromise).to.eventually.have.property('message', `User ${userId} not found`);
+      await expect(userPromise).to.be.rejectedWith(`User ${userId} not found`);
     } finally {
       // Restore the original fetch_users function we overrode
       editor.options.set('fetch_users', originalFetchUsers);
