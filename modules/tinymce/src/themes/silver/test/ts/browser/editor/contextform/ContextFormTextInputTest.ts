@@ -1,8 +1,8 @@
-import { TestStore, UiFinder, Waiter } from '@ephox/agar';
+import { Mouse, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
-import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -73,6 +73,8 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTextInputTest', () => 
     store.clear();
     editor.focus();
 
+    // Simulate clicking elsewhere in the editor
+    clickAway(editor);
     await pAssertNoPopDialog();
   });
 
@@ -80,6 +82,11 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTextInputTest', () => 
     editor.dispatch('contexttoolbar-show', {
       toolbarKey
     });
+  };
+
+  const clickAway = (editor: Editor) => {
+    TinySelections.setCursor(editor, [ ], 0);
+    Mouse.trueClick(TinyDom.body(editor));
   };
 
   const pAssertNoPopDialog = () => Waiter.pTryUntil(
