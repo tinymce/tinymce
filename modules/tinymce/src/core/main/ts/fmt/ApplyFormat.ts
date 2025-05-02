@@ -56,32 +56,34 @@ const applyStyles = (dom: DOMUtils, elm: Element, format: ApplyFormat, vars: For
   }
 };
 
+const setElementFormat = (ed: Editor, elm: Element, fmt: ApplyFormat, vars?: FormatVars, node?: Node | RangeLikeObject | null): void => {
+  const dom = ed.dom;
+
+  if (Type.isFunction(fmt.onformat)) {
+    fmt.onformat(elm, fmt as any, vars, node);
+  }
+
+  applyStyles(dom, elm, fmt, vars);
+
+  each(fmt.attributes, (value, name) => {
+    dom.setAttrib(elm, name, FormatUtils.replaceVars(value, vars));
+  });
+
+  each(fmt.classes, (value) => {
+    const newValue = FormatUtils.replaceVars(value, vars);
+
+    if (!dom.hasClass(elm, newValue)) {
+      dom.addClass(elm, newValue);
+    }
+  });
+};
+
 const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: Node | RangeLikeObject | null): void => {
   const formatList = ed.formatter.get(name) as ApplyFormat[];
   const format = formatList[0];
   const isCollapsed = !node && ed.selection.isCollapsed();
   const dom = ed.dom;
   const selection = ed.selection;
-
-  const setElementFormat = (elm: Element, fmt: ApplyFormat = format) => {
-    if (Type.isFunction(fmt.onformat)) {
-      fmt.onformat(elm, fmt as any, vars, node);
-    }
-
-    applyStyles(dom, elm, fmt, vars);
-
-    each(fmt.attributes, (value, name) => {
-      dom.setAttrib(elm, name, FormatUtils.replaceVars(value, vars));
-    });
-
-    each(fmt.classes, (value) => {
-      const newValue = FormatUtils.replaceVars(value, vars);
-
-      if (!dom.hasClass(elm, newValue)) {
-        dom.addClass(elm, newValue);
-      }
-    });
-  };
 
   const applyNodeStyle = (formatList: ApplyFormat[], node: Node) => {
     let found = false;
@@ -103,7 +105,7 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
       }
 
       if (dom.is(node, format.selector) && !isCaretNode(node)) {
-        setElementFormat(node as Element, format);
+        setElementFormat(ed, node as Element, format, vars, node);
         found = true;
         return false;
       }
@@ -117,7 +119,7 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
   const createWrapElement = (wrapName: string | undefined): HTMLElement | null => {
     if (Type.isString(wrapName)) {
       const wrapElm = dom.create(wrapName);
-      setElementFormat(wrapElm);
+      setElementFormat(ed, wrapElm, format, vars, node);
       return wrapElm;
     } else {
       return null;
@@ -195,7 +197,7 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
 
         if (canRenameBlock(node, parentName, isEditableDescendant)) {
           const elm = dom.rename(node as Element, wrapName);
-          setElementFormat(elm);
+          setElementFormat(ed, elm, format, vars, node);
           newWrappers.push(elm);
           currentWrapElm = null;
           return;
@@ -251,16 +253,16 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
 
     // Apply formats to links as well to get the color of the underline to change as well
     if (format.links === true) {
-      Arr.each(newWrappers, (node) => {
-        const process = (node: Node) => {
-          if (node.nodeName === 'A') {
-            setElementFormat(node as HTMLAnchorElement, format);
+      Arr.each(newWrappers, (wrapper) => {
+        const process = (target: Node) => {
+          if (target.nodeName === 'A') {
+            setElementFormat(ed, target as HTMLAnchorElement, format, vars, node);
           }
 
-          Arr.each(Arr.from(node.childNodes), process);
+          Arr.each(Arr.from(target.childNodes), process);
         };
 
-        process(node);
+        process(wrapper);
       });
     }
 
@@ -284,7 +286,7 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
           .filter((child) => dom.getContentEditable(child) !== 'false' && MatchFormat.matchName(dom, child, format));
         return childElement.map((child) => {
           const clone = dom.clone(child, false) as Element;
-          setElementFormat(clone);
+          setElementFormat(ed, clone, format, vars, node);
 
           dom.replace(clone, node, true);
           dom.remove(child, true);
@@ -379,5 +381,6 @@ const applyFormat = (editor: Editor, name: string, vars?: FormatVars, node?: Nod
 };
 
 export {
+  setElementFormat,
   applyFormat
 };

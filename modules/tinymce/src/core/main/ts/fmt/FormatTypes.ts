@@ -1,3 +1,5 @@
+import { Type } from '@ephox/katamari';
+
 import { RangeLikeObject } from '../selection/RangeTypes';
 
 export type ApplyFormat = BlockFormat | InlineFormat | SelectorFormat;
@@ -80,3 +82,7 @@ export interface RemoveBlockFormat extends Block, CommonRemoveFormat<RemoveBlock
 export interface RemoveInlineFormat extends Inline, CommonRemoveFormat<RemoveInlineFormat> {}
 
 export interface RemoveSelectorFormat extends Selector, CommonRemoveFormat<RemoveSelectorFormat> {}
+
+export const isApplyFormat = (format: Format): format is ApplyFormat =>
+  !Type.isArray(format.attributes) && !Type.isArray(format.styles);
+
