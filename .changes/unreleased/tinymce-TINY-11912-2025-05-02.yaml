@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Fixed an issue where the context form API `onSetup` was referencing the incorrect element.
+time: 2025-05-02T11:53:34.496928541+02:00
+custom:
+    Issue: TINY-11912
