@@ -2534,6 +2534,17 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     TinyAssertions.assertContent(editor, '<details><summary><h1>hello<em>world</em></h1></summary>body</details>');
   });
 
+  it('TINY-12004: Re-order elements on strikethrough', () => {
+    const editor = hook.editor();
+
+    editor.setContent('<p>abc</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
+    editor.formatter.apply('fontsize', { value: '36pt' });
+    editor.formatter.apply('strikethrough');
+
+    TinyAssertions.assertContent(editor, '<p><span style="font-size: 36pt;"><s>abc</s></span></p>');
+  });
+
   context('TINY-10312: should not partially apply block format when caret is positioned between words', () => {
     it('TINY-10312: should apply heading formatting to whole `summary` content', () => {
       const editor = hook.editor();
@@ -2559,5 +2570,4 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
       TinyAssertions.assertContent(editor, '<ul><li><blockquote>a bc d</blockquote></li></ul>');
     });
   });
-
 });

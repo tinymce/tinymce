@@ -385,4 +385,12 @@ describe('browser.tinymce.core.content.insert.MergeInsertedInlineElementsTest', 
     Arr.each(nonInheritableColorStyles, (colorStyle) => testMergingNonInheritableStyles(colorStyle, colorStyleValues));
     Arr.each(nonInheritablePixelStyles, (pixelStyle) => testMergingNonInheritableStyles(pixelStyle, pixelStyleValues));
   });
+
+  it('TINY-12004: Re-order strikethrough and font size on merge', () => {
+    const initial = '<span style="text-decoration: line-through;">test</span>';
+    const inserted = '<span style="font-size: 36pt;">test</span>';
+    const expected = '<span style="text-decoration: line-through;">te</span><span style="font-size: 36pt;"><span style="text-decoration: line-through;">test</span></span><span style="text-decoration: line-through;">st</span>';
+
+    testMergeNestedElements(initial, inserted, expected, [ 0, 0, 0 ], 2);
+  });
 });

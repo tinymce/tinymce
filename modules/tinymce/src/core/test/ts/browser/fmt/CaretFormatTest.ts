@@ -891,4 +891,15 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
       });
     }));
   });
+
+  it('TINY-12004: Re-order formats for strikethrough', () => {
+    const editor = hook.editor();
+
+    editor.setContent('');
+    editor.formatter.apply('fontsize', { value: '36pt' });
+    editor.formatter.apply('strikethrough');
+    TinyContentActions.type(editor, 'x');
+
+    TinyAssertions.assertContent(editor, '<p><span style="font-size: 36pt;"><s>x</s></span></p>');
+  });
 });
