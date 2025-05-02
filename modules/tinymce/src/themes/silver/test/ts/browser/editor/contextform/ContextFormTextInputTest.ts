@@ -102,7 +102,7 @@ describe('browser.tinymce.themes.silver.editor.ContextFormTextInputTest', () => 
     store.assertEq('Input should be disabled by setup', [ 'input-enable-false', 'input-enable-false' ]);
   });
 
-  it('TINY-11912: disabling the input via commans should results in a disabled input also in other the commands', () => {
+  it('TINY-11912: disabling the input via commands should results in a disabled input also in other commands', () => {
     const editor = hook.editor();
     openToolbar(editor, 'test-form');
     store.assertEq('Input should be disabled by setup', [ 'input-enable-false' ]);
