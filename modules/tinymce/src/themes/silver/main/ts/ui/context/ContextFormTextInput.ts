@@ -1,7 +1,7 @@
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Disabling, FormField, GuiFactory, Input, Keying, NativeEvents, SketchSpec } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
 import { Cell, Fun, Optional, Singleton } from '@ephox/katamari';
-import { SelectorFind } from '@ephox/sugar';
+import { SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as UiState from '../../UiState';
@@ -17,7 +17,14 @@ export const renderContextFormTextInput = (
   valueState: Singleton.Value<string>
 ): SketchSpec => {
   const editorOffCell = Cell(Fun.noop);
-  const getFormApi = (comp: AlloyComponent) => ContextFormApi.getFormApi<string>(comp, valueState);
+  const getFormParentApi = (comp: AlloyComponent, focusfallbackElement?: SugarElement<HTMLElement>) => {
+    const parent = Traverse.parent(comp.element);
+    const parentCompOpt = parent.bind((parent) => comp.getSystem().getByDom(parent).toOptional());
+    return parentCompOpt.map((parentComp) => ContextFormApi.getFormApi<string>(parentComp, valueState, focusfallbackElement)).getOrThunk(() => {
+      // Fallback to the current component if no parent is found
+      return ContextFormApi.getFormApi<string>(comp, valueState, focusfallbackElement);
+    });
+  };
 
   const pLabel = ctx.label.map((label) => FormField.parts.label({
     dom: { tag: 'label', classes: [ 'tox-label' ] },
@@ -65,15 +72,15 @@ export const renderContextFormTextInput = (
             );
 
             return closestFocussableOpt.fold(
-              () => ContextFormApi.getFormApi(comp, valueState),
-              (closestFocussable) => ContextFormApi.getFormApi(comp, valueState, closestFocussable)
+              () => getFormParentApi(comp),
+              (closestFocussable) => getFormParentApi(comp, closestFocussable)
             );
           },
           onBeforeSetup: Keying.focusIn
         }, editorOffCell),
-        onContextFormControlDetached({ getApi: getFormApi }, editorOffCell, valueState),
+        onContextFormControlDetached({ getApi: getFormParentApi }, editorOffCell, valueState),
         AlloyEvents.run(NativeEvents.input(), (comp) => {
-          ctx.onInput(getFormApi(comp));
+          ctx.onInput(getFormParentApi(comp));
         })
       ])
     ])
