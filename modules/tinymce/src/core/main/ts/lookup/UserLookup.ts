@@ -193,10 +193,7 @@ const UserLookup = (editor: Editor): UserLookup => {
       );
     }
 
-    return Arr.map(userIds, (userId) => {
-      const userPromise = lookup(userId);
-      return userPromise.getOr(Promise.resolve({ id: userId }));
-    });
+    return Arr.map(userIds, (userId) => lookup(userId).getOr(Promise.resolve({ id: userId })));
   };
 
   const getUserId = (): string => Options.getUserId(editor);
