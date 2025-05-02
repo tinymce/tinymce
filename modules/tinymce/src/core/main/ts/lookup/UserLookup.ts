@@ -127,10 +127,24 @@ const UserLookup = (editor: Editor): UserLookup => {
   };
 
   const finallyReject = (userId: UserId, error: Error) =>
-    Optional.from(pendingResolvers.get(userId)).each(({ reject }) => {
-      reject(error);
-      pendingResolvers.delete(userId);
-    });
+    Optional
+      .from(pendingResolvers.get(userId))
+      .each(({ reject }) => {
+        reject(error);
+        pendingResolvers.delete(userId);
+      });
+
+  const finallyResolve = (userId: UserId, user?: User) =>
+    Optional
+      .from(pendingResolvers.get(userId))
+      .each(({ resolve }) => {
+        resolve(
+          Optional
+            .from(user)
+            .getOr({ id: userId })
+        );
+        pendingResolvers.delete(userId);
+      });
 
   const fetchUsers = (userIds: UserId[]): Promise<User>[] => {
     if (!Array.isArray(userIds)) {
@@ -150,15 +164,7 @@ const UserLookup = (editor: Editor): UserLookup => {
 
     if (uncachedIds.length > 0) {
       Optional.from(Options.getFetchUsers(editor)).fold(
-        () => {
-          Arr.each(uncachedIds, (userId) => {
-            const pending = pendingResolvers.get(userId);
-            if (pending) {
-              pending.resolve({ id: userId });
-              pendingResolvers.delete(userId);
-            }
-          });
-        },
+        () => Arr.each(uncachedIds, (userId) => finallyResolve(userId)),
         (fetchUsersFn) => {
           fetchUsersFn(uncachedIds)
             .then(validateResponse)
@@ -166,13 +172,7 @@ const UserLookup = (editor: Editor): UserLookup => {
               const foundUserIds = new Set(Arr.map(users, (user) => user.id));
 
               // Resolve found users
-              Arr.each(users, (user) => {
-                const pending = pendingResolvers.get(user.id);
-                if (pending) {
-                  pending.resolve(user);
-                  pendingResolvers.delete(user.id);
-                }
-              });
+              Arr.each(users, (user) => finallyResolve(user.id, user));
 
               // Reject promises for users not found in the response
               Arr.each(uncachedIds, (userId) => {
