@@ -1,5 +1,5 @@
 import { StructureSchema, FieldSchema } from '@ephox/boulder';
-import { Arr, Optional, Results, Obj, Fun } from '@ephox/katamari';
+import { Arr, Optional, Results, Obj } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
