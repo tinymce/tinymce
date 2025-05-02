@@ -11,7 +11,7 @@ import * as Options from '../api/Options';
  * @class tinymce.UserLookup
  * @example
  * // Retrieve the current user ID
- * tinymce.activeEditor.userLookup.getCurrentUserId();
+ * tinymce.activeEditor.userLookup.getUserId();
  *
  * // Fetch user information by IDs which returns array of promises
  * const promises = tinymce.activeEditor.userLookup.fetchUsers(['user-1', 'user-2']);
@@ -44,10 +44,10 @@ export interface UserLookup {
   /**
    * Retrieves the current user ID from the editor.
    *
-   * @method getCurrentUserId
+   * @method getUserId
    * @return {string} The current user ID.
    */
-  getCurrentUserId: () => UserId;
+  getUserId: () => UserId;
 
   /**
    * Fetches user information using a provided array of userIds.
@@ -200,10 +200,10 @@ const UserLookup = (editor: Editor): UserLookup => {
     });
   };
 
-  const getCurrentUserId = (): string => Options.getCurrentUserId(editor);
+  const getUserId = (): string => Options.getUserId(editor);
 
   return {
-    getCurrentUserId,
+    getUserId,
     fetchUsers,
   };
 };

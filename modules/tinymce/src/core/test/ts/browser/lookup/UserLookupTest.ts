@@ -39,25 +39,25 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     },
   });
 
-  context('TINY-11974: UserLookup API - getCurrentUserID', () => {
+  context('TINY-11974: UserLookup API - getUserId', () => {
     it('Should return the configured user ID', () => {
       const editor = hook.editor();
-      const currentUserId = editor.userLookup.getCurrentUserId();
+      const currentUserId = editor.userLookup.getUserId();
       expect(currentUserId).to.equal('test-user-1', 'Should return the configured user ID');
     });
 
-    it('Should have frozen getCurrentUserId but mutable fetchUsers', () => {
+    it('Should have frozen getUserId but mutable fetchUsers', () => {
       const editor = hook.editor();
       const lookup = editor.userLookup;
 
       try {
-        lookup.getCurrentUserId = Fun.constant('new-id');
-        expect.fail('Should not allow modifying getCurrentUserId');
+        lookup.getUserId = Fun.constant('new-id');
+        expect.fail('Should not allow modifying getUserId');
       } catch (error) {
         expect(error).to.be.instanceOf(Error, 'Should throw error when trying to modify read-only function');
       }
 
-      expect(lookup.getCurrentUserId()).to.equal('test-user-1', 'Should maintain original value');
+      expect(lookup.getUserId()).to.equal('test-user-1', 'Should maintain original value');
     });
   });
 

@@ -443,12 +443,12 @@ const contentBodyLoaded = (editor: Editor): void => {
 
   const userLookupApi = createUserLookup(editor);
   const userLookup = {
-    getCurrentUserId: userLookupApi.getCurrentUserId,
+    getUserId: userLookupApi.getUserId,
     fetchUsers: userLookupApi.fetchUsers
   };
 
-  Object.defineProperty(userLookup, 'getCurrentUserId', {
-    value: userLookupApi.getCurrentUserId,
+  Object.defineProperty(userLookup, 'getUserId', {
+    value: userLookupApi.getUserId,
     writable: false,
     configurable: false
   });

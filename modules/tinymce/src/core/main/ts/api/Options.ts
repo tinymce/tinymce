@@ -1047,7 +1047,7 @@ const getApiKey = option('api_key');
 const isDisabled = option('disabled');
 const getExtendedMathmlAttributes = option('extended_mathml_attributes');
 const getExtendedMathmlElements = option('extended_mathml_elements');
-const getCurrentUserId = option('user_id');
+const getUserId = option('user_id');
 const getFetchUsers = option('fetch_users');
 
 export {
@@ -1163,5 +1163,5 @@ export {
   getApiKey,
   isDisabled,
   getFetchUsers,
-  getCurrentUserId
+  getUserId
 };
