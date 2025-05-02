@@ -20,10 +20,8 @@ export const renderContextFormTextInput = (
   const getFormParentApi = (comp: AlloyComponent, focusfallbackElement?: SugarElement<HTMLElement>) => {
     const parent = Traverse.parent(comp.element);
     const parentCompOpt = parent.bind((parent) => comp.getSystem().getByDom(parent).toOptional());
-    return parentCompOpt.map((parentComp) => ContextFormApi.getFormApi<string>(parentComp, valueState, focusfallbackElement)).getOrThunk(() => {
-      // Fallback to the current component if no parent is found
-      return ContextFormApi.getFormApi<string>(comp, valueState, focusfallbackElement);
-    });
+    return parentCompOpt.map((parentComp) => ContextFormApi.getFormApi<string>(parentComp, valueState, focusfallbackElement))
+      .getOr(ContextFormApi.getFormApi<string>(comp, valueState, focusfallbackElement));
   };
 
   const pLabel = ctx.label.map((label) => FormField.parts.label({
