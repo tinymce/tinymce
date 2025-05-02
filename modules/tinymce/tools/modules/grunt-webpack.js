@@ -60,10 +60,6 @@ let create = (entries, tsConfig, outDir = '.') => {
           type: 'asset/source'
         },
         {
-          test: /\.(js|mjs|ts)$/,
-          use: [ '@ephox/swag/webpack/remapper' ]
-        },
-        {
           test: /\.ts$/,
           use: [
             {
