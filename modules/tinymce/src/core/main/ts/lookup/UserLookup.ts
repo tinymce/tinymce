@@ -126,12 +126,11 @@ const UserLookup = (editor: Editor): UserLookup => {
     userCache.set(userId, user);
   };
 
-  const finallyReject = (userId: UserId, error: Error) => {
-    return Optional.from(pendingResolvers.get(userId)).each(({ reject }) => {
+  const finallyReject = (userId: UserId, error: Error) =>
+    Optional.from(pendingResolvers.get(userId)).each(({ reject }) => {
       reject(error);
       pendingResolvers.delete(userId);
     });
-  };
 
   const fetchUsers = (userIds: UserId[]): Promise<User>[] => {
     if (!Array.isArray(userIds)) {
