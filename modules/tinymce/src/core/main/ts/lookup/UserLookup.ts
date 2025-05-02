@@ -1,5 +1,5 @@
 import { StructureSchema, FieldSchema } from '@ephox/boulder';
-import { Arr, Optional, Results, Obj } from '@ephox/katamari';
+import { Arr, Optional, Results, Obj, Fun } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
@@ -32,7 +32,13 @@ export interface User {
   custom?: Record<string, any>;
 }
 
-type OptionalUserFields = Pick<User, 'name' | 'avatar' | 'description' | 'custom'>;
+export interface ValidatedUser {
+  id: UserId;
+  name: Optional<string>;
+  avatar: Optional<string>;
+  description: Optional<string>;
+  custom: Optional<Record<string, any>>;
+}
 
 export interface UserLookup {
   /**
@@ -62,7 +68,7 @@ const userSchema = StructureSchema.objOf([
   FieldSchema.option('custom')
 ]);
 
-const objectCat = <T extends Record<string, any>>(
+const objectCat = <T extends object>(
   obj: { [K in keyof T]: Optional<T[K]> }
 ): Partial<T> => {
   const result = {} as Partial<T>;
@@ -76,30 +82,13 @@ const objectCat = <T extends Record<string, any>>(
   return result;
 };
 
-const extractOptionalField = <T>(field: any): Optional<T> =>
-  field?.fold(Optional.none, Optional.some) ?? Optional.none();
-
-const transformResult = (user: any): User => {
-  const optionalFields: { [K in keyof OptionalUserFields]: Optional<OptionalUserFields[K]> } = {
-    name: extractOptionalField(user.name),
-    avatar: extractOptionalField(user.avatar),
-    description: extractOptionalField(user.description),
-    custom: extractOptionalField(user.custom)
-  };
-
-  return {
-    id: user.id,
-    ...objectCat(optionalFields)
-  };
-};
-
 const validateResponse = (items: unknown): User[] => {
   if (!Array.isArray(items)) {
     throw new Error('fetch_users must return an array');
   }
 
   const results = Arr.map(items, (item) =>
-    StructureSchema.asRaw<User>('Invalid user object', userSchema, item)
+    StructureSchema.asRaw<ValidatedUser>('Invalid user object', userSchema, item)
   );
 
   const { errors, values } = Results.partition(results);
@@ -113,7 +102,14 @@ const validateResponse = (items: unknown): User[] => {
     console.warn('User validation errors:\n' + formattedErrors.join('\n'));
   }
 
-  return Arr.map(values, transformResult);
+  return Arr.map(values, (user) => {
+    const { id, ...rest } = user;
+
+    return {
+      id,
+      ...objectCat(rest),
+    };
+  });
 };
 
 const UserLookup = (editor: Editor): UserLookup => {
