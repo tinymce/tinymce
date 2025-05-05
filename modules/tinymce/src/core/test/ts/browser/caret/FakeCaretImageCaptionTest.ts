@@ -6,6 +6,7 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 
+// this
 describe('browser.tinymce.core.FakeCaretImageCaptionTest', () => {
   const browser = PlatformDetection.detect().browser;
   const isFirefox = browser.isFirefox();
@@ -37,6 +38,7 @@ describe('browser.tinymce.core.FakeCaretImageCaptionTest', () => {
     await Waiter.pTryUntil('Wait for fake caret to be removed', () => {
       TinyAssertions.assertContentPresence(editor, { '.mce-visual-caret': 0 });
     });
+    TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 0);
   });
 
   it('TINY-11997: should hide after tabbing inside CEF', async function () {
@@ -68,5 +70,6 @@ describe('browser.tinymce.core.FakeCaretImageCaptionTest', () => {
     await Waiter.pTryUntil('Wait for fake caret to be removed', () => {
       TinyAssertions.assertContentPresence(editor, { '.mce-visual-caret': 0 });
     });
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
   });
 });

@@ -2,6 +2,7 @@ import { Arr, Obj, Type, Unicode } from '@ephox/katamari';
 import { Attribute, Compare, Css, Focus, Insert, InsertAll, Remove, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import Editor from './api/Editor';
+import Env from './api/Env';
 import VK from './api/util/VK';
 import * as CaretContainer from './caret/CaretContainer';
 import * as CaretUtils from './caret/CaretUtils';
@@ -30,6 +31,8 @@ const getContentEditableRoot = (editor: Editor, node: Node) => CefUtils.getConte
 
 const SelectionOverrides = (editor: Editor): SelectionOverrides => {
   const selection = editor.selection, dom = editor.dom;
+  const browser = Env.browser;
+  const isGecko = browser.isFirefox();
 
   const rootNode = editor.getBody();
   const fakeCaret = FakeCaret(editor, rootNode, dom.isBlock, () => EditorFocus.hasFocus(editor));
@@ -162,6 +165,10 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
 
     editor.on('focusin', (e) => {
       if (fakeCaret.isShowing() && e.target !== editor.getBody() && !editor.dom.isEditable(e.target.parentNode)) {
+        if (isGecko) {
+          editor.selection.select(e.target);
+        }
+
         fakeCaret.hide();
 
         const rng = setElementSelection(editor.selection.getRng(), true);
