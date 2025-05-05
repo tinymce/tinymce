@@ -1,7 +1,6 @@
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const TsConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const path = require('path');
-const swag = require('@ephox/swag');
 
 const create = (inFile, outFile) => {
   const tsConfig = "tsconfig.json";
@@ -38,10 +37,6 @@ const create = (inFile, outFile) => {
           resolve: {
             fullySpecified: false
           }
-        },
-        {
-          test: /\.js$|\.ts$/,
-          use: ['@ephox/swag/webpack/remapper']
         },
         {
           test: /\.ts$/,
@@ -97,40 +92,12 @@ module.exports = (grunt) => {
         }
       }
     },
-
-    rollup: {
-      options: {
-        treeshake: true,
-        name: 'plugin',
-        format: 'iife',
-        banner: '(function () {',
-        footer: 'plugin();})()',
-        onwarn: swag.onwarn,
-        plugins: [
-          swag.nodeResolve({
-            basedir: __dirname
-          }),
-          swag.remapImports()
-        ]
-      }
-    },
-
-    watch: {
-      skins: {
-        files: ['src/**/*'],
-        tasks: ['rollup'],
-        options: {
-          spawn: false
-        }
-      }
-    }
-
   });
 
   require('load-grunt-tasks')(grunt, {
     requireResolution: true,
     config: "../../package.json",
-    pattern: ['grunt-*', '@ephox/bedrock', '@ephox/swag']
+    pattern: ['grunt-*', '@ephox/bedrock']
   });
 
   grunt.registerTask('dev', ['webpack-dev-server']);
