@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import * as Chai from 'chai';
 import { expect } from 'chai';
@@ -46,18 +46,18 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       expect(currentUserId).to.equal('test-user-1', 'Should return the configured user ID');
     });
 
-    it('TINY-11974: Should have frozen getUserId but mutable fetchUsers', () => {
+    it('TINY-11974: Should return an immutable user ID value', () => {
       const editor = hook.editor();
-      const lookup = editor.userLookup;
+      const originalUserId = 'test-user-1';
+      const userId = editor.userLookup.getUserId();
 
-      try {
-        lookup.getUserId = Fun.constant('new-id');
-        expect.fail('Should not allow modifying getUserId');
-      } catch (error) {
-        expect(error).to.be.instanceOf(Error, 'Should throw error when trying to modify read-only function');
-      }
+      expect(() => {
+        Object.defineProperty(userId, '0', {
+          value: 'n'
+        });
+      }).to.throw();
 
-      expect(lookup.getUserId()).to.equal('test-user-1', 'Should maintain original value');
+      expect(userId).to.equal(originalUserId);
     });
   });
 

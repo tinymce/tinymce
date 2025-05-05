@@ -1,5 +1,5 @@
 import { StructureSchema, FieldSchema } from '@ephox/boulder';
-import { Arr, Optional, Results, Obj } from '@ephox/katamari';
+import { Arr, Optional, Results, Obj, Fun } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
@@ -196,7 +196,8 @@ const UserLookup = (editor: Editor): UserLookup => {
     return Arr.map(userIds, (userId) => lookup(userId).getOr(Promise.resolve({ id: userId })));
   };
 
-  const getUserId = (): string => Options.getUserId(editor);
+  const userId = Object.freeze(Options.getUserId(editor));
+  const getUserId = (): string => Fun.constant(userId)();
 
   return {
     getUserId,

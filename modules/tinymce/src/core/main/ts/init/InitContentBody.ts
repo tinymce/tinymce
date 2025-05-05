@@ -447,12 +447,6 @@ const contentBodyLoaded = (editor: Editor): void => {
     fetchUsers: userLookupApi.fetchUsers
   };
 
-  Object.defineProperty(userLookup, 'getUserId', {
-    value: userLookupApi.getUserId,
-    writable: false,
-    configurable: false
-  });
-
   editor.userLookup = userLookup;
   editor.schema = Schema(mkSchemaSettings(editor));
   editor.dom = DOMUtils(doc, {
