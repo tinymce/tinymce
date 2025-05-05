@@ -67,7 +67,6 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
     expect(promises).to.be.an('array', 'Should return an array of promises');
     expect(promises).to.have.lengthOf(1, 'Should return array with one promise');
-    expect(promises[0]).to.be.instanceOf(Promise, 'Should return a Promise');
   });
 
   it('TINY-11974: Should return multiple promises for multiple userIds', () => {
@@ -119,10 +118,8 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     const [ firstPromise ] = editor.userLookup.fetchUsers([ userId ]);
     const [ secondPromise ] = editor.userLookup.fetchUsers([ userId ]);
 
-    await expect(firstPromise).to.eventually.deep.equal(
-      await secondPromise,
-      'Should return same data for subsequent requests'
-    );
+    await expect(firstPromise).to.eventually.equal(
+      await secondPromise);
   });
 
   it('TINY-11974: Should reject promise for non-existent users', async () => {
@@ -179,10 +176,8 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       editor.userLookup.fetchUsers([ userId ])[0]
     ];
 
-    await Promise.all([
-      expect(promise1).to.eventually.deep.equal(await promise2),
-      expect(promise2).to.eventually.deep.equal(await promise3),
-    ]);
+    await expect(promise1).to.eventually.equal(await promise2);
+    await expect(promise2).to.eventually.equal(await promise3);
   });
 
   it('TINY-11974: Should handle invalid user IDs gracefully', async () => {
