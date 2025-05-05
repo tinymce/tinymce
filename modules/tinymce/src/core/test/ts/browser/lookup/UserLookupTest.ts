@@ -6,7 +6,7 @@ import { expect } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
 import type Editor from 'tinymce/core/api/Editor';
-import type { User } from 'tinymce/core/lookup/UserLookup';
+import { createUserLookup, type User } from 'tinymce/core/lookup/UserLookup';
 
 Chai.use(chaiAsPromised);
 
@@ -136,19 +136,6 @@ describe('browser.tinymce.core.UserLookupTest', () => {
         `User ${nonExistentId} not found`,
         'Should reject for non-existent user'
       );
-    });
-
-    it('TINY-11974: Should handle repeated requests for non-existent users', async () => {
-      const editor = hook.editor();
-      const nonExistentId = 'non-existent-user';
-      const errorMessage = `User ${nonExistentId} not found`;
-
-      const [ firstPromise ] = editor.userLookup.fetchUsers([ nonExistentId ]);
-      await expect(firstPromise).to.eventually.be.rejectedWith(errorMessage);
-
-      // Second request should use cached rejection
-      const [ secondPromise ] = editor.userLookup.fetchUsers([ nonExistentId ]);
-      await expect(secondPromise).to.eventually.be.rejectedWith(errorMessage);
     });
 
     it('TINY-11974: Should handle mix of existing and non-existent users', async () => {
@@ -336,6 +323,34 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       const [ userPromise ] = editor.userLookup.fetchUsers([ userId ]);
 
       await expect(userPromise).to.be.rejectedWith(`User ${userId} not found`);
+    });
+
+    it('TINY-11974: Should handle repeated requests for non-existent users', async () => {
+      const editor = hook.editor();
+      const nonExistentId = 'non-existent-user';
+      let fetchCount = 0;
+
+      // Clear any existing user cache
+      editor.userLookup = createUserLookup(editor);
+
+      // Override fetch_users to track the calls
+      editor.options.set('fetch_users', () => {
+        fetchCount++;
+        return Promise.resolve([]);
+      });
+
+      // Trigger fetch
+      const [ firstPromise ] = editor.userLookup.fetchUsers([ nonExistentId ]);
+
+      // Use cache
+      const [ secondPromise ] = editor.userLookup.fetchUsers([ nonExistentId ]);
+
+      await expect(firstPromise).to.eventually.be.rejectedWith(`User ${nonExistentId} not found`);
+      await expect(secondPromise).to.eventually.be.rejectedWith(`User ${nonExistentId} not found`);
+
+      // fetch_users should only have been called once during the initial fetch
+      // and not during the cache lookup for the second promise
+      expect(fetchCount).to.equal(1, 'Should only fetch once');
     });
   });
 });
