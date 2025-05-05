@@ -185,9 +185,9 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     const invalidIds = [ '', ' ', undefined, null, false, 123 ] as any[];
 
     // Test each invalid ID asynchronously
-    await Promise.all(Arr.map(invalidIds, async (invalidId) => {
+    await Promise.all(Arr.map(invalidIds, (invalidId) => {
       const [ promise ] = editor.userLookup.fetchUsers([ invalidId ]);
-      await expect(promise).to.be.rejectedWith(
+      return expect(promise).to.be.rejectedWith(
         `User ${invalidId} not found`,
         `Should reject for invalid ID: ${invalidId}`
       );
