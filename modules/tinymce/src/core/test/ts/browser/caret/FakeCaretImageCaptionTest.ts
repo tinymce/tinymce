@@ -6,7 +6,6 @@ import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 
-// this
 describe('browser.tinymce.core.FakeCaretImageCaptionTest', () => {
   const browser = PlatformDetection.detect().browser;
   const isFirefox = browser.isFirefox();
