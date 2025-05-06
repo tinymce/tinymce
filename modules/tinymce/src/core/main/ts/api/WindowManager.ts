@@ -1,4 +1,5 @@
 import { Arr, Optional } from '@ephox/katamari';
+import { Focus, SugarElement } from '@ephox/sugar';
 
 import * as SelectionBookmark from '../selection/SelectionBookmark';
 import WindowManagerImpl from '../ui/WindowManagerImpl';
@@ -53,7 +54,10 @@ export interface WindowManagerImpl {
 }
 
 const WindowManager = (editor: Editor): WindowManager => {
-  let dialogs: InstanceApi<any>[] = [];
+  const dialogs: Array<{
+    instanceApi: InstanceApi<any>;
+    triggerElement: Optional<SugarElement<HTMLElement>>;
+  }> = [];
 
   const getImplementation = (): WindowManagerImpl => {
     const theme = editor.theme;
@@ -78,19 +82,27 @@ const WindowManager = (editor: Editor): WindowManager => {
     });
   };
 
-  const addDialog = <T extends Dialog.DialogData>(dialog: InstanceApi<T>) => {
-    dialogs.push(dialog);
-    fireOpenEvent(dialog);
+  const addDialog = <T extends Dialog.DialogData>(dialog: InstanceApi<T>, triggerElement: Optional<SugarElement<HTMLElement>>, shouldFireEvent: boolean) => {
+    dialogs.push({ instanceApi: dialog, triggerElement });
+    if (shouldFireEvent) {
+      fireOpenEvent(dialog);
+    }
   };
 
   const closeDialog = <T extends Dialog.DialogData>(dialog: InstanceApi<T>) => {
     fireCloseEvent(dialog);
-    dialogs = Arr.filter(dialogs, (otherDialog) => {
-      return otherDialog !== dialog;
-    });
+
+    const dialogIndex = dialogs.findIndex(({ instanceApi }) => instanceApi === dialog);
+    const dialogTriggerElement = dialogs[dialogIndex].triggerElement;
+
+    dialogs.splice(dialogIndex, 1);
+
     // Move focus back to editor when the last window is closed
     if (dialogs.length === 0) {
       editor.focus();
+    } else {
+      // Move focus to the element that was active before the dialog was opened
+      dialogTriggerElement.each((el) => Focus.focus(el));
     }
   };
 
@@ -102,9 +114,11 @@ const WindowManager = (editor: Editor): WindowManager => {
     editor.editorManager.setActive(editor);
     SelectionBookmark.store(editor);
 
+    const activeEl = Focus.active();
+
     editor.ui.show();
     const dialog = openDialog();
-    addDialog(dialog);
+    addDialog(dialog, activeEl, true);
     return dialog;
   };
 
@@ -117,24 +131,40 @@ const WindowManager = (editor: Editor): WindowManager => {
   };
 
   const alert = (message: string, callback?: () => void, scope?: any) => {
+    const activeEl = Focus.active();
     const windowManagerImpl = getImplementation();
-    windowManagerImpl.alert(message, funcBind(scope ? scope : windowManagerImpl, callback));
+    windowManagerImpl.alert(message, funcBind(scope ? scope : windowManagerImpl, () => {
+      if (dialogs.length !== 0) {
+        // If there are some dialogs, the alert was probably triggered from the dialog
+        // Move focus to the element that was active before the alert was opened
+        activeEl.each((el) => Focus.focus(el));
+      }
+      callback?.();
+    }));
   };
 
   const confirm = (message: string, callback?: (state: boolean) => void, scope?: any) => {
+    const activeEl = Focus.active();
     const windowManagerImpl = getImplementation();
-    windowManagerImpl.confirm(message, funcBind(scope ? scope : windowManagerImpl, callback));
+    windowManagerImpl.confirm(message, funcBind(scope ? scope : windowManagerImpl, (state: boolean) => {
+      if (dialogs.length !== 0) {
+        // If there are some dialogs, the confirm was probably triggered from the dialog
+        // Move focus to the element that was active before the confirm was opened
+        activeEl.each((el) => Focus.focus(el));
+      }
+      callback?.(state);
+    }));
   };
 
   const close = () => {
-    getTopDialog().each((dialog) => {
+    getTopDialog().each(({ instanceApi: dialog }) => {
       getImplementation().close(dialog);
       closeDialog(dialog);
     });
   };
 
   editor.on('remove', () => {
-    Arr.each(dialogs, (dialog) => {
+    Arr.each(dialogs, ({ instanceApi: dialog }) => {
       getImplementation().close(dialog);
     });
   });
