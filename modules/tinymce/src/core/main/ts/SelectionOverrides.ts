@@ -165,12 +165,14 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
 
     editor.on('focusin', (e) => {
       if (fakeCaret.isShowing() && e.target !== editor.getBody() && !editor.dom.isEditable(e.target.parentNode)) {
-        if (isGecko) {
-          editor.selection.select(e.target);
-        }
 
         fakeCaret.hide();
 
+        if (isGecko && editor.selection.getRng().commonAncestorContainer === editor.getBody()) {
+          const rng = editor.dom.createRng();
+          rng.selectNode(e.target);
+          editor.selection.setRng(rng);
+        }
         const rng = setElementSelection(editor.selection.getRng(), true);
         if (rng) {
           editor.selection.setRng(rng);
