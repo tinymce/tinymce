@@ -162,7 +162,13 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
 
     editor.on('focusin', (e) => {
       if (fakeCaret.isShowing() && e.target !== editor.getBody() && !editor.dom.isEditable(e.target.parentNode)) {
+
         fakeCaret.hide();
+
+        if (!e.target.contains(editor.selection.getNode())) {
+          editor.selection.select(e.target, true);
+          editor.selection.collapse(true);
+        }
 
         const rng = setElementSelection(editor.selection.getRng(), true);
         if (rng) {
