@@ -168,7 +168,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
 
         fakeCaret.hide();
 
-        if (isGecko && editor.selection.getRng().commonAncestorContainer === editor.getBody()) {
+        if (isGecko && editor.selection.getNode() === editor.getBody()) {
           const rng = editor.dom.createRng();
           rng.selectNode(e.target);
           editor.selection.setRng(rng);
