@@ -114,17 +114,6 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       );
     });
 
-    it('TINY-11974: Should cache and return same data for subsequent requests', async () => {
-      const editor = hook.editor();
-      const userId = 'test-user-1';
-
-      const [ firstPromise ] = editor.userLookup.fetchUsers([ userId ]);
-      const [ secondPromise ] = editor.userLookup.fetchUsers([ userId ]);
-
-      await expect(firstPromise).to.eventually.equal(
-        await secondPromise);
-    });
-
     it('TINY-11974: Should reject promise for non-existent users', async () => {
       const editor = hook.editor();
       const nonExistentId = 'non-existent-user';
@@ -182,21 +171,6 @@ describe('browser.tinymce.core.UserLookupTest', () => {
           `Should reject for invalid ID: ${invalidId}`
         );
       }));
-    });
-
-    it('TINY-11974: Should maintain separate caches for different user IDs', async () => {
-      const editor = hook.editor();
-      const userId1 = 'test-user-1';
-      const userId2 = 'test-user-2';
-
-      const [ promise1 ] = editor.userLookup.fetchUsers([ userId1 ]);
-      const [ promise2 ] = editor.userLookup.fetchUsers([ userId2 ]);
-
-      await Promise.all([
-        expect(promise1).to.eventually.have.property('id').that.equals(userId1),
-        expect(promise2).to.eventually.have.property('id').that.equals(userId2),
-        expect(promise1).to.eventually.not.equal(promise2)
-      ]);
     });
 
     it('TINY-11974: Should handle large batches of users efficiently', async () => {
@@ -351,6 +325,45 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       // fetch_users should only have been called once during the initial fetch
       // and not during the cache lookup for the second promise
       expect(fetchCount).to.equal(1, 'Should only fetch once');
+    });
+
+    it('TINY-11974: Should maintain separate caches for different user IDs', async () => {
+      const editor = hook.editor();
+      let fetchCount = 0;
+
+      editor.userLookup = createUserLookup(editor);
+
+      editor.options.set('fetch_users', (userIds: string[]): Promise<User[]> => {
+        fetchCount++;
+        return Promise.resolve(Arr.map(userIds, createMockUser));
+      });
+
+      const userId1 = 'test-user-1';
+      const userId2 = 'test-user-2';
+
+      // First requests for each ID
+      const [ promise1a ] = editor.userLookup.fetchUsers([ userId1 ]);
+      const [ promise2a ] = editor.userLookup.fetchUsers([ userId2 ]);
+
+      // Second requests for each ID (should hit cache)
+      const [ promise1b ] = editor.userLookup.fetchUsers([ userId1 ]);
+      const [ promise2b ] = editor.userLookup.fetchUsers([ userId2 ]);
+
+      await Promise.all([
+        // Verify correct data first
+        expect(promise1a).to.eventually.have.property('id').that.equals(userId1),
+        expect(promise2a).to.eventually.have.property('id').that.equals(userId2),
+
+        // Verify cache hits (same promise instances)
+        expect(promise1a).to.equal(promise1b),
+        expect(promise2a).to.equal(promise2b),
+
+        // Verify different caches (different promise instances)
+        expect(promise1a).to.not.equal(promise2a)
+      ]);
+
+      // Verify fetch count
+      expect(fetchCount).to.equal(2, 'Should fetch exactly twice - once for each unique ID');
     });
   });
 });
