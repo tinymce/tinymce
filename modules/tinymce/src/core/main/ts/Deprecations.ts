@@ -124,6 +124,16 @@ const logWarnings = (rawOptions: RawEditorOptions, normalizedOptions: Normalized
   logDeprecatedWarnings(rawOptions, normalizedOptions);
 };
 
+const deprecatedFeatures = {
+  fire: 'The "fire" event api has been deprecated and will be removed in TinyMCE 9. Use "dispatch" instead.'
+};
+
+const logFeatureDeprecationWarning = (feature: keyof typeof deprecatedFeatures): void => {
+  // eslint-disable-next-line no-console
+  console.warn(deprecatedFeatures[feature], new Error().stack);
+};
+
 export {
-  logWarnings
+  logWarnings,
+  logFeatureDeprecationWarning
 };

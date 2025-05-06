@@ -6,12 +6,14 @@ import { PlatformDetection } from '@ephox/sand';
 import { Compare, Css, SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { ExecCommandArgs } from 'tinymce/core/api/EditorCommands';
 import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 import I18n from 'tinymce/core/api/util/I18n';
 
 import * as Events from './api/Events';
 import * as Options from './api/Options';
 import * as Backstage from './backstage/Backstage';
+import * as Deprecations from './Deprecations';
 import * as DomEvents from './Events';
 import * as Iframe from './modes/Iframe';
 import * as Inline from './modes/Inline';
@@ -475,8 +477,11 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
       OuterContainer.focusToolbar(outerContainer);
     });
 
-    editor.addCommand('ToggleToolbarDrawer', (_ui, options?: { skipFocus: boolean }) => {
+    editor.addCommand('ToggleToolbarDrawer', (_ui, options?: { skipFocus: boolean }, args?: ExecCommandArgs) => {
       if (options?.skipFocus) {
+        Deprecations.logFeatureDeprecationWarning('skipFocus');
+        OuterContainer.toggleToolbarDrawerWithoutFocusing(outerContainer);
+      } else if (args?.skip_focus) {
         OuterContainer.toggleToolbarDrawerWithoutFocusing(outerContainer);
       } else {
         OuterContainer.toggleToolbarDrawer(outerContainer);
