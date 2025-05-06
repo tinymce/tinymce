@@ -92,18 +92,19 @@ const WindowManager = (editor: Editor): WindowManager => {
   const closeDialog = <T extends Dialog.DialogData>(dialog: InstanceApi<T>) => {
     fireCloseEvent(dialog);
 
-    const dialogIndex = dialogs.findIndex(({ instanceApi }) => instanceApi === dialog);
-    const dialogTriggerElement = dialogs[dialogIndex].triggerElement;
+    Arr.findIndex(dialogs, ({ instanceApi }) => instanceApi === dialog).each( (dialogIndex) => {
+      const dialogTriggerElement = dialogs[dialogIndex].triggerElement;
 
-    dialogs.splice(dialogIndex, 1);
+      dialogs.splice(dialogIndex, 1);
 
-    // Move focus back to editor when the last window is closed
-    if (dialogs.length === 0) {
-      editor.focus();
-    } else {
-      // Move focus to the element that was active before the dialog was opened
-      dialogTriggerElement.each((el) => Focus.focus(el));
-    }
+      // Move focus back to editor when the last window is closed
+      if (dialogs.length === 0) {
+        editor.focus();
+      } else {
+        // Move focus to the element that was active before the dialog was opened
+        dialogTriggerElement.each((el) => Focus.focus(el));
+      }
+    });
   };
 
   const getTopDialog = () => {
