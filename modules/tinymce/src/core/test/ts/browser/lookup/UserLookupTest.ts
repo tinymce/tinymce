@@ -155,8 +155,10 @@ describe('browser.tinymce.core.UserLookupTest', () => {
         editor.userLookup.fetchUsers([ userId ])[0]
       ];
 
-      await expect(promise1).to.eventually.equal(await promise2);
-      await expect(promise2).to.eventually.equal(await promise3);
+      const [ value1, value2, value3 ] = await Promise.all([ promise1, promise2, promise3 ]);
+
+      expect(value1).to.equal(value2);
+      expect(value2).to.equal(value3);
     });
 
     it('TINY-11974: Should handle invalid user IDs gracefully', async () => {
