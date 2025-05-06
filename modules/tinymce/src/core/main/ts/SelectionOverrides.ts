@@ -165,11 +165,11 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
 
         fakeCaret.hide();
 
-        if (editor.selection.getNode() === editor.getBody()) {
-          const rng = editor.dom.createRng();
-          rng.selectNode(e.target);
-          editor.selection.setRng(rng);
+        if (!e.target.contains(editor.selection.getNode())) {
+          editor.selection.select(e.target, true);
+          editor.selection.collapse(true);
         }
+
         const rng = setElementSelection(editor.selection.getRng(), true);
         if (rng) {
           editor.selection.setRng(rng);
