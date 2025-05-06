@@ -27,7 +27,7 @@ import * as TouchEvents from '../events/TouchEvents';
 import * as ForceBlocks from '../ForceBlocks';
 import * as NonEditableFilter from '../html/NonEditableFilter';
 import * as KeyboardOverrides from '../keyboard/KeyboardOverrides';
-import { createUserLookup } from '../lookup/UserLookup';
+import * as UserLookup from '../lookup/UserLookup';
 import * as Disabled from '../mode/Disabled';
 import { NodeChange } from '../NodeChange';
 import * as Paste from '../paste/Paste';
@@ -441,7 +441,7 @@ const contentBodyLoaded = (editor: Editor): void => {
 
   editor.editorUpload = EditorUpload(editor);
 
-  const userLookupApi = createUserLookup(editor);
+  const userLookupApi = UserLookup.createUserLookup(editor);
   const userLookup = {
     getUserId: userLookupApi.getUserId,
     fetchUsers: userLookupApi.fetchUsers

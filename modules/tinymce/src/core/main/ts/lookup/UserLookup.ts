@@ -1,5 +1,5 @@
 import { StructureSchema, FieldSchema } from '@ephox/boulder';
-import { Arr, Optional, Results, Obj, Fun } from '@ephox/katamari';
+import { Arr, Optional, Results, Obj, Fun, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
@@ -54,8 +54,7 @@ export interface UserLookup {
    *
    * @method fetchUsers
    * @param {string[]} userIds - A list of user IDs to fetch information for.
-   * @throws {Error} Throws an error if any of the user IDs are invalid or if the fetch fails.
-   * @return {Promise<User>[]} A promise that resolves to an array of users and information about them.
+   * @return {Promise<User>[]} A promise that resolves to an array of users and information about them. Promises will reject if users are not found or if the fetch fails.
    */
   fetchUsers: (userIds: UserId[]) => Promise<User>[];
 }
@@ -138,11 +137,7 @@ const UserLookup = (editor: Editor): UserLookup => {
     Optional
       .from(pendingResolvers.get(userId))
       .each(({ resolve }) => {
-        resolve(
-          Optional
-            .from(user)
-            .getOr({ id: userId })
-        );
+        resolve(Type.isObject(user) ? user : { id: userId });
         pendingResolvers.delete(userId);
       });
 
@@ -151,9 +146,7 @@ const UserLookup = (editor: Editor): UserLookup => {
       return [];
     }
 
-    const { fail: uncachedIds } = Arr.partition(userIds, (userId) =>
-      lookup(userId).isSome()
-    );
+    const uncachedIds = Arr.filter(userIds, (userId) => !lookup(userId).isSome());
 
     Arr.each(uncachedIds, (userId) => {
       const newPromise = new Promise<User>((resolve, reject) => {
@@ -196,8 +189,7 @@ const UserLookup = (editor: Editor): UserLookup => {
     return Arr.map(userIds, (userId) => lookup(userId).getOr(Promise.resolve({ id: userId })));
   };
 
-  const userId = Object.freeze(Options.getUserId(editor));
-  const getUserId = (): string => Fun.constant(userId)();
+  const getUserId = Fun.constant(Options.getUserId(editor));
 
   return {
     getUserId,
