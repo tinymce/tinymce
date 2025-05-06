@@ -1,5 +1,5 @@
 import { Arr, Fun, Obj, Optional, Optionals, Unicode } from '@ephox/katamari';
-import { Css, SugarElement } from '@ephox/sugar';
+import { Attribute, Css, Insert, Remove, SugarElement, Traverse } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
@@ -215,6 +215,9 @@ const createNewBlock = (
         }
       }
     } while ((node = node.parentNode) && node !== editableRoot);
+
+    flattenFontSize(SugarElement.fromDom(block), SugarElement.fromDom(caretNode));
+    mergeSameTypeElements(SugarElement.fromDom(block), SugarElement.fromDom(caretNode));
   }
 
   setForcedBlockAttrs(editor, block);
@@ -222,6 +225,47 @@ const createNewBlock = (
   emptyBlock(caretNode);
 
   return block;
+};
+
+const flattenFontSize = (block: SugarElement, node: SugarElement, fontSize: string | null = null) => {
+  if (block.dom === node.dom) {
+    return;
+  }
+
+  if (fontSize !== null) {
+    Css.remove(node, 'font-size');
+    Attribute.remove(node, 'data-mce-style');
+  } else {
+    fontSize = Css.getRaw(node, 'font-size').getOr(null);
+  }
+
+  const parent = Traverse.parentElement(node);
+  if (parent.isSome()) {
+    flattenFontSize(block, parent.getOrDie(), fontSize);
+  }
+};
+
+const mergeSameTypeElements = (block: SugarElement, node: SugarElement) => {
+  if (block.dom === node.dom) {
+    return;
+  }
+
+  const parent = Traverse.parentElement(node).getOrNull();
+  if (parent === null || parent.dom === block.dom) {
+    return;
+  }
+  const grandparent = Traverse.parentElement(parent).getOrNull();
+  if (grandparent === null) {
+    return;
+  }
+
+  if (Attribute.hasNone(parent) && parent.dom.nodeName === node.dom.nodeName) {
+    Remove.remove(parent);
+    Insert.append(grandparent, node);
+    mergeSameTypeElements(block, grandparent);
+    return;
+  }
+  mergeSameTypeElements(block, parent);
 };
 
 export {
