@@ -403,7 +403,9 @@ const Quirks = (editor: Editor): Quirks => {
   };
 
   /*
-    this fix the left and right arrows navigation to leave a `<figcaption>`
+   * Firefox-specific fix for arrow key navigation. In Firefox, users can't move the caret out of a
+   * `<figcaption>` element using the left and right arrow keys. This function handles those keystrokes
+   * to allow navigation to the previous/next sibling of the figure element.
   */
   const arrowInFigcaption = () => {
     editor.on('keydown', (e) => {
