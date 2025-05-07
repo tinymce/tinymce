@@ -193,6 +193,20 @@ describe('browser.tinymce.core.UserLookupTest', () => {
         expect(Promise.resolve(user)).to.eventually.have.property('id').that.equals(`test-user-${index}`)
       ));
     });
+  });
+
+  context('fetchUsers with override', () => {
+    let originalFetchUsers: (userIds: string[]) => Promise<User[]>;
+
+    beforeEach(() => {
+      const editor = hook.editor();
+      originalFetchUsers = editor.options.get('fetch_users');
+    });
+
+    afterEach(() => {
+      const editor = hook.editor();
+      editor.options.set('fetch_users', originalFetchUsers);
+    });
 
     it('TINY-11974: Should handle various combinations of optional properties correctly', async () => {
       const editor = hook.editor();
@@ -243,20 +257,6 @@ describe('browser.tinymce.core.UserLookupTest', () => {
         'Should resolve with expected user objects'
       );
     });
-  });
-
-  context('fetchUsers with override', () => {
-    let editor: Editor;
-    let originalFetchUsers: (userIds: string[]) => Promise<User[]>;
-
-    beforeEach(() => {
-      editor = hook.editor();
-      originalFetchUsers = editor.options.get('fetch_users');
-    });
-
-    afterEach(() => {
-      editor.options.set('fetch_users', originalFetchUsers);
-    });
 
     it('TINY-11974: Should handle custom user properties', async () => {
       const editor = hook.editor();
@@ -279,7 +279,6 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       const [ userPromise ] = editor.userLookup.fetchUsers([ userId ]);
 
       await expect(userPromise).to.eventually.deep.equal(customUser);
-      await expect(userPromise).to.eventually.have.deep.property('custom', customUser.custom);
     });
 
     it('TINY-11974: Should handle network failures gracefully', async () => {
