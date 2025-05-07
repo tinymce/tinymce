@@ -193,10 +193,10 @@ const UserLookup = (editor: Editor): UserLookup => {
 
   const userId = Options.getUserId(editor);
 
-  return {
+  return Object.freeze({
     userId,
     fetchUsers,
-  };
+  });
 };
 
 const createUserLookup = (editor: Editor): UserLookup =>

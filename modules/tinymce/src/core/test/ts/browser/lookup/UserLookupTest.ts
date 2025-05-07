@@ -59,6 +59,13 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
       expect(userId).to.equal(originalUserId);
     });
+
+    it('TINY-11974: Should prevent userId re-assignment', () => {
+      const editor = hook.editor();
+      expect(() => {
+        editor.userLookup.userId = 'different-user';
+      }).to.throw();
+    });
   });
 
   context('fetchUsers', () => {
