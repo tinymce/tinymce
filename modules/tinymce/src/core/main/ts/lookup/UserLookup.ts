@@ -44,7 +44,7 @@ export interface UserLookup {
   /**
    * The current user's ID.
    *
-   * @type {string}
+   * @type String
    */
   userId: UserId;
 
