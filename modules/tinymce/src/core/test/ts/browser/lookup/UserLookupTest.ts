@@ -1,3 +1,4 @@
+import { TestStore } from '@ephox/agar';
 import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
@@ -309,15 +310,15 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
     it('TINY-11974: Should handle repeated requests for non-existent users', async () => {
       const editor = hook.editor();
+      const store = TestStore<string>();
       const nonExistentId = 'non-existent-user';
-      let fetchCount = 0;
 
       // Clear any existing user cache
       editor.userLookup = createUserLookup(editor);
 
       // Override fetch_users to track the calls
-      editor.options.set('fetch_users', () => {
-        fetchCount++;
+      editor.options.set('fetch_users', (userIds: string[]) => {
+        Arr.each(userIds, (id) => store.add(id));
         return Promise.resolve([]);
       });
 
@@ -332,17 +333,17 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
       // fetch_users should only have been called once during the initial fetch
       // and not during the cache lookup for the second promise
-      expect(fetchCount).to.equal(1, 'Should only fetch once');
+      store.assertEq('Should only fetch once', [ nonExistentId ]);
     });
 
     it('TINY-11974: Should maintain separate caches for different user IDs', async () => {
       const editor = hook.editor();
-      let fetchCount = 0;
+      const store = TestStore<string>();
 
       editor.userLookup = createUserLookup(editor);
 
       editor.options.set('fetch_users', (userIds: string[]): Promise<User[]> => {
-        fetchCount++;
+        Arr.each(userIds, (id) => store.add(id));
         return Promise.resolve(Arr.map(userIds, createMockUser));
       });
 
@@ -371,7 +372,7 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       ]);
 
       // Verify fetch count
-      expect(fetchCount).to.equal(2, 'Should fetch exactly twice - once for each unique ID');
+      store.assertEq('Should fetch exactly twice - once for each unique ID', [ userId1, userId2 ]);
     });
 
     it('TINY-11974: Should throw an exception when fetch_users has not been configured', () => {
