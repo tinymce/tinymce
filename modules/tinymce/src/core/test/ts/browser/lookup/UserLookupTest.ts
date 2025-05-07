@@ -39,17 +39,17 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     },
   });
 
-  context('getUserId', () => {
+  context('userId', () => {
     it('TINY-11974: Should return the configured user ID', () => {
       const editor = hook.editor();
-      const currentUserId = editor.userLookup.getUserId();
+      const currentUserId = editor.userLookup.userId;
       expect(currentUserId).to.equal('test-user-1', 'Should return the configured user ID');
     });
 
     it('TINY-11974: Should return an immutable user ID value', () => {
       const editor = hook.editor();
       const originalUserId = 'test-user-1';
-      const userId = editor.userLookup.getUserId();
+      const userId = editor.userLookup.userId;
 
       expect(() => {
         Object.defineProperty(userId, '0', {

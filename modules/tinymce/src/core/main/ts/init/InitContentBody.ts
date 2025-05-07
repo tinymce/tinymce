@@ -441,13 +441,7 @@ const contentBodyLoaded = (editor: Editor): void => {
 
   editor.editorUpload = EditorUpload(editor);
 
-  const userLookupApi = UserLookup.createUserLookup(editor);
-  const userLookup = {
-    getUserId: userLookupApi.getUserId,
-    fetchUsers: userLookupApi.fetchUsers
-  };
-
-  editor.userLookup = userLookup;
+  editor.userLookup = UserLookup.createUserLookup(editor);
   editor.schema = Schema(mkSchemaSettings(editor));
   editor.dom = DOMUtils(doc, {
     keep_values: true,

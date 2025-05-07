@@ -1,5 +1,5 @@
 import { StructureSchema, FieldSchema } from '@ephox/boulder';
-import { Arr, Optional, Results, Obj, Fun, Type } from '@ephox/katamari';
+import { Arr, Optional, Results, Obj, Type } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
@@ -42,12 +42,11 @@ export interface ValidatedUser {
 
 export interface UserLookup {
   /**
-   * Retrieves the current user ID from the editor.
+   * The current user's ID.
    *
-   * @method getUserId
-   * @return {string} The current user ID.
+   * @type {string}
    */
-  getUserId: () => UserId;
+  userId: UserId;
 
   /**
    * Fetches user information using a provided array of userIds.
@@ -192,10 +191,10 @@ const UserLookup = (editor: Editor): UserLookup => {
     return Arr.map(userIds, (userId) => lookup(userId).getOr(Promise.resolve({ id: userId })));
   };
 
-  const getUserId = Fun.constant(Options.getUserId(editor));
+  const userId = Options.getUserId(editor);
 
   return {
-    getUserId,
+    userId,
     fetchUsers,
   };
 };
