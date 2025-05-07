@@ -1,5 +1,5 @@
 import { TestStore } from '@ephox/agar';
-import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-client';
+import { afterEach, before, context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import * as Chai from 'chai';
@@ -38,6 +38,13 @@ describe('browser.tinymce.core.UserLookupTest', () => {
         }, 0);
       });
     },
+  });
+
+  let originalFetchUsers: (userIds: string[]) => Promise<User[]>;
+
+  before(() => {
+    const editor = hook.editor();
+    originalFetchUsers = editor.options.get('fetch_users');
   });
 
   context('userId', () => {
@@ -197,13 +204,6 @@ describe('browser.tinymce.core.UserLookupTest', () => {
   });
 
   context('fetchUsers with override', () => {
-    let originalFetchUsers: (userIds: string[]) => Promise<User[]>;
-
-    beforeEach(() => {
-      const editor = hook.editor();
-      originalFetchUsers = editor.options.get('fetch_users');
-    });
-
     afterEach(() => {
       const editor = hook.editor();
       editor.options.set('fetch_users', originalFetchUsers);
