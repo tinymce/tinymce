@@ -10,8 +10,8 @@ import * as Options from '../api/Options';
  *
  * @class tinymce.UserLookup
  * @example
- * // Retrieve the current user ID
- * tinymce.activeEditor.userLookup.getUserId();
+ * // Get the current user's ID
+ * tinymce.activeEditor.userLookup.userId;
  *
  * // Fetch user information by IDs which returns array of promises
  * const promises = tinymce.activeEditor.userLookup.fetchUsers(['user-1', 'user-2']);
