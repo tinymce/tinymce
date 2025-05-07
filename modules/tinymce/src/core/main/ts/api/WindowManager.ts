@@ -82,11 +82,9 @@ const WindowManager = (editor: Editor): WindowManager => {
     });
   };
 
-  const addDialog = <T extends Dialog.DialogData>(dialog: InstanceApi<T>, triggerElement: Optional<SugarElement<HTMLElement>>, shouldFireEvent: boolean) => {
+  const addDialog = <T extends Dialog.DialogData>(dialog: InstanceApi<T>, triggerElement: Optional<SugarElement<HTMLElement>>) => {
     dialogs.push({ instanceApi: dialog, triggerElement });
-    if (shouldFireEvent) {
-      fireOpenEvent(dialog);
-    }
+    fireOpenEvent(dialog);
   };
 
   const closeDialog = <T extends Dialog.DialogData>(dialog: InstanceApi<T>) => {
@@ -119,7 +117,7 @@ const WindowManager = (editor: Editor): WindowManager => {
 
     editor.ui.show();
     const dialog = openDialog();
-    addDialog(dialog, activeEl, true);
+    addDialog(dialog, activeEl);
     return dialog;
   };
 
