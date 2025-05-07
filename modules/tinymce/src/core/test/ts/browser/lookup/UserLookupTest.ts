@@ -263,7 +263,7 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       const editor = hook.editor();
       const userId = 'test-user-custom';
 
-      const customUser = {
+      editor.options.set('fetch_users', () => Promise.resolve([{
         id: userId,
         name: 'Test User',
         avatar: 'test-avatar.png',
@@ -272,14 +272,20 @@ describe('browser.tinymce.core.UserLookupTest', () => {
           role: 'admin',
           department: 'IT'
         }
-      };
-
-      // Override fetch_users for this test
-      editor.options.set('fetch_users', () => Promise.resolve([ customUser ]));
+      }]));
 
       const [ userPromise ] = editor.userLookup.fetchUsers([ userId ]);
 
-      await expect(userPromise).to.eventually.deep.equal(customUser);
+      await expect(userPromise).to.eventually.deep.equal({
+        id: userId,
+        name: 'Test User',
+        avatar: 'test-avatar.png',
+        description: 'Test Description',
+        custom: {
+          role: 'admin',
+          department: 'IT'
+        }
+      });
     });
 
     it('TINY-11974: Should handle network failures gracefully', async () => {
