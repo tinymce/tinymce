@@ -1,10 +1,12 @@
 import { Keys } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
+import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.keyboard.ArrowKeysContentEndpointTest', () => {
+  const platform = PlatformDetection.detect();
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     base_url: '/project/tinymce/js/tinymce',
@@ -75,6 +77,30 @@ describe('browser.tinymce.core.keyboard.ArrowKeysContentEndpointTest', () => {
       TinyAssertions.assertContent(editor, '<figure><figcaption>a</figcaption></figure><p class="x">&nbsp;</p>');
       TinyAssertions.assertSelection(editor, [ 1 ], 0, [ 1 ], 0);
       editor.options.unset('forced_root_block_attrs');
+    });
+
+    it('TINY-11982: Arrow left at figcaption start should move the caret before the figure', function () {
+      if (!platform.browser.isFirefox()) {
+        this.skip();
+      }
+      const editor = hook.editor();
+      editor.setContent('<p><figure contenteditable="false"><img src="tinymce/ui/img/raster.gif" /><figcaption contenteditable="true">abc</figcaption></figure></p>');
+
+      TinySelections.setCursor(editor, [ 1, 1, 0 ], 0);
+      TinyContentActions.keydown(editor, Keys.left());
+      TinyAssertions.assertCursor(editor, [ 0 ], 0);
+    });
+
+    it('TINY-11982: Arrow right at figcaption end should move the caret after the figure', function () {
+      if (!platform.browser.isFirefox()) {
+        this.skip();
+      }
+      const editor = hook.editor();
+      editor.setContent('<p><figure contenteditable="false"><img src="tinymce/ui/img/raster.gif" /><figcaption contenteditable="true">abc</figcaption></figure></p>');
+
+      TinySelections.setCursor(editor, [ 1, 1, 0 ], 'abc'.length);
+      TinyContentActions.keydown(editor, Keys.right());
+      TinyAssertions.assertCursor(editor, [ 2 ], 0);
     });
   });
 });
