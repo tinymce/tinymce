@@ -1,5 +1,5 @@
 import { StructureSchema, FieldSchema } from '@ephox/boulder';
-import { Arr, Optional, Results, Obj, Type } from '@ephox/katamari';
+import { Arr, Optional, Results, Obj } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
@@ -44,6 +44,7 @@ export interface UserLookup {
   /**
    * The current user's ID.
    *
+   * @property userId
    * @type String
    */
   userId: UserId;
@@ -133,29 +134,23 @@ const UserLookup = (editor: Editor): UserLookup => {
         pendingResolvers.delete(userId);
       });
 
-  const finallyResolve = (userId: UserId, user?: User) =>
+  const finallyResolve = (userId: UserId, user: User) =>
     Optional
       .from(pendingResolvers.get(userId))
       .each(({ resolve }) => {
-        resolve(Type.isObject(user) ? user : { id: userId });
+        resolve(user);
         pendingResolvers.delete(userId);
       });
 
   const fetchUsers = (userIds: UserId[]): Promise<User>[] => {
-    if (!Array.isArray(userIds)) {
+    const fetchUsersFn = Options.getFetchUsers(editor);
+    if (!fetchUsersFn) {
+      throw new Error('fetch_users option must be configured');
+    } else if (!Array.isArray(userIds)) {
       return [];
     }
 
     const uncachedIds = Arr.filter(userIds, (userId) => !lookup(userId).isSome());
-
-    if (uncachedIds.length === 0) {
-      return Arr.map(userIds, (userId) => lookup(userId).getOr(Promise.resolve({ id: userId })));
-    }
-
-    const fetchUsersFn = Options.getFetchUsers(editor);
-    if (!fetchUsersFn) {
-      throw new Error('fetch_users option must be configured');
-    }
 
     Arr.each(uncachedIds, (userId) => {
       const newPromise = new Promise<User>((resolve, reject) => {
@@ -164,29 +159,31 @@ const UserLookup = (editor: Editor): UserLookup => {
       store(newPromise, userId);
     });
 
-    fetchUsersFn(uncachedIds)
-      .then(validateResponse)
-      .then((users: User[]) => {
-        const foundUserIds = new Set(Arr.map(users, (user) => user.id));
+    if (uncachedIds.length > 0) {
+      fetchUsersFn(uncachedIds)
+        .then(validateResponse)
+        .then((users: User[]) => {
+          const foundUserIds = new Set(Arr.map(users, (user) => user.id));
 
-        // Resolve found users
-        Arr.each(users, (user) => finallyResolve(user.id, user));
+          // Resolve found users
+          Arr.each(users, (user) => finallyResolve(user.id, user));
 
-        // Reject promises for users not found in the response
-        Arr.each(uncachedIds, (userId) => {
-          if (!foundUserIds.has(userId)) {
-            finallyReject(userId, new Error(`User ${userId} not found`));
-          }
+          // Reject promises for users not found in the response
+          Arr.each(uncachedIds, (userId) => {
+            if (!foundUserIds.has(userId)) {
+              finallyReject(userId, new Error(`User ${userId} not found`));
+            }
+          });
+        })
+        .catch((error: unknown) => {
+          Arr.each(uncachedIds, (userId) =>
+            finallyReject(
+              userId,
+              error instanceof Error ? error : new Error('Network error')
+            )
+          );
         });
-      })
-      .catch((error: unknown) => {
-        Arr.each(uncachedIds, (userId) =>
-          finallyReject(
-            userId,
-            error instanceof Error ? error : new Error('Network error')
-          )
-        );
-      });
+    };
 
     return Arr.map(userIds, (userId) => lookup(userId).getOr(Promise.resolve({ id: userId })));
   };
