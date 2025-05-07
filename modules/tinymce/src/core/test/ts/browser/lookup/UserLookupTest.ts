@@ -367,5 +367,20 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       // Verify fetch count
       expect(fetchCount).to.equal(2, 'Should fetch exactly twice - once for each unique ID');
     });
+
+    it('TINY-11974: Should throw an exception when fetch_users has not been configured', () => {
+      const editor = hook.editor();
+
+      editor.options.unset('fetch_users');
+
+      editor.userLookup = createUserLookup(editor);
+
+      const userIds = [ 'test-user-1' ];
+
+      expect(() => {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        editor.userLookup.fetchUsers(userIds);
+      }).to.throw('fetch_users option must be configured');
+    });
   });
 });
