@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Fixed an issue where it wasn't possible to navigate out of a `figcaption` using the left and right arrow keys in Firefox.
+time: 2025-05-07T11:32:56.183932266+02:00
+custom:
+    Issue: TINY-11982
