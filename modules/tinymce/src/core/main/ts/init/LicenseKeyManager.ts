@@ -95,10 +95,7 @@ const setup = (): LicenseKeyManagerLoader => {
   const load = (editor: Editor, suffix: string): void => {
     const licenseKey = Options.getLicenseKey(editor);
     if (licenseKey !== 'gpl' && !Obj.has(addOnManager.urls, ADDON_KEY)) {
-      // const licenseKeyManagerUrl = Options.getLicenseKeyManagerUrl(editor);
-      // const url = Type.isString(licenseKeyManagerUrl)
-      //   ? editor.documentBaseURI.toAbsolute(licenseKeyManagerUrl)
-      //   : `licensing/${ADDON_KEY}/license${suffix}.js`;
+      // const externalUrl = Options.getExternalPlugins(editor)[PLUGIN_CODE];
       const url = `plugins/${PLUGIN_CODE}/plugin${suffix}.js`;
 
       addOnManager.load(ADDON_KEY, url).catch(() => {
