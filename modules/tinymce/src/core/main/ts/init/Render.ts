@@ -113,7 +113,8 @@ const loadPlugins = (editor: Editor, suffix: string) => {
   Arr.each(Options.getPlugins(editor), (plugin) => {
     plugin = Tools.trim(plugin);
 
-    if (plugin && !PluginManager.urls[plugin] && !hasSkipLoadPrefix(plugin)) {
+    // TODO: Add license plugin check and skip it
+    if (plugin && !PluginManager.urls[plugin] && !hasSkipLoadPrefix(plugin) && plugin !== 'licensekeymanager') {
       loadPlugin(plugin, `plugins/${plugin}/plugin${suffix}.js`);
     }
   });

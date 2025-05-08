@@ -251,7 +251,7 @@ interface BaseEditorOptions {
   visual_table_class?: string;
   width?: number | string;
   xss_sanitization?: boolean;
-  license_key?: string | Promise<string>;
+  license_key?: string;
   license_key_manager_url?: string;
   disabled?: boolean;
 
