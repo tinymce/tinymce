@@ -408,10 +408,11 @@ const Quirks = (editor: Editor): Quirks => {
    * to allow navigation to the previous/next sibling of the figure element.
   */
   const arrowInFigcaption = () => {
+    const isFigcaption = SugarNode.isTag('figcaption');
     editor.on('keydown', (e) => {
       if (e.keyCode === VK.LEFT || e.keyCode === VK.RIGHT) {
         const currentNode = SugarElement.fromDom(editor.selection.getNode());
-        if (SugarNode.isTag('figcaption')(currentNode) && editor.selection.isCollapsed()) {
+        if (isFigcaption(currentNode) && editor.selection.isCollapsed()) {
           Traverse.parent(currentNode).bind((parent) => {
             if (editor.selection.getRng().startOffset === 0 && e.keyCode === VK.LEFT) {
               return Traverse.prevSibling(parent);
