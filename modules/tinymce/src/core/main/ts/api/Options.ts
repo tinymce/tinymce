@@ -726,6 +726,10 @@ const register = (editor: Editor): void => {
     processor: 'string'
   });
 
+  registerOption('license_key_manager_url', {
+    processor: 'string'
+  });
+
   registerOption('paste_block_drop', {
     processor: 'boolean',
     default: false
@@ -1024,6 +1028,7 @@ const shouldSandboxIframes = option('sandbox_iframes');
 const getSandboxIframesExclusions = (editor: Editor): string[] => editor.options.get('sandbox_iframes_exclusions');
 const shouldConvertUnsafeEmbeds = option('convert_unsafe_embeds');
 const getLicenseKey = option('license_key');
+const getLicenseKeyManagerUrl = option('license_key_manager_url');
 const getApiKey = option('api_key');
 const isDisabled = option('disabled');
 const getExtendedMathmlAttributes = option('extended_mathml_attributes');
@@ -1137,6 +1142,7 @@ export {
   shouldUseDocumentWrite,
   shouldSandboxIframes,
   getLicenseKey,
+  getLicenseKeyManagerUrl,
   getSandboxIframesExclusions,
   shouldConvertUnsafeEmbeds,
   getApiKey,
