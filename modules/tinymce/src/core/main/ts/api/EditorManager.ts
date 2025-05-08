@@ -3,6 +3,7 @@ import { Arr, Obj, Type, Id } from '@ephox/katamari';
 import * as ErrorReporter from '../ErrorReporter';
 import * as FocusController from '../focus/FocusController';
 import LicenseKeyManagerLoader, { LicenseKeyManagerAddon } from '../init/LicenseKeyManager';
+
 import AddOnManager from './AddOnManager';
 import DOMUtils from './dom/DOMUtils';
 import { EventUtilsEvent } from './dom/EventUtils';
@@ -759,10 +760,7 @@ const EditorManager: EditorManager = {
     this.baseURI = new URI(this.baseURL);
   },
 
-  // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-  _addLicenseKeyManager(addOn: LicenseKeyManagerAddon) {
-    return LicenseKeyManagerLoader.add(addOn);
-  },
+  _addLicenseKeyManager: (addOn: LicenseKeyManagerAddon) => LicenseKeyManagerLoader.add(addOn),
 };
 
 EditorManager.setup();

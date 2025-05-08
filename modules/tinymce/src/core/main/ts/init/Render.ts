@@ -100,6 +100,12 @@ const loadIcons = (scriptLoader: ScriptLoader, editor: Editor, suffix: string) =
 
 const loadPlugins = (editor: Editor, suffix: string) => {
   const loadPlugin = (name: string, url: string) => {
+    // If licensekeymanager is included in the plugins list
+    // or through external_plugins, skip it
+    if (name === 'licensekeymanager') {
+      return;
+    }
+
     PluginManager.load(name, url).catch(() => {
       ErrorReporter.pluginLoadError(editor, url, name);
     });
@@ -113,8 +119,7 @@ const loadPlugins = (editor: Editor, suffix: string) => {
   Arr.each(Options.getPlugins(editor), (plugin) => {
     plugin = Tools.trim(plugin);
 
-    // TODO: Add license plugin check and skip it
-    if (plugin && !PluginManager.urls[plugin] && !hasSkipLoadPrefix(plugin) && plugin !== 'licensekeymanager') {
+    if (plugin && !PluginManager.urls[plugin] && !hasSkipLoadPrefix(plugin)) {
       loadPlugin(plugin, `plugins/${plugin}/plugin${suffix}.js`);
     }
   });
