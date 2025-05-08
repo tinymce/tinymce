@@ -3,6 +3,7 @@ import { Obj, Type } from '@ephox/katamari';
 import AddOnManager, { AddOnConstructor } from '../api/AddOnManager';
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
+
 import * as ForceReadonly from './ForceReadonly';
 
 export type LicenseKeyManagerAddon = AddOnConstructor<LicenseKeyManager>;
@@ -95,10 +96,7 @@ const setup = (): LicenseKeyManagerLoader => {
   const load = (editor: Editor, suffix: string): void => {
     const licenseKey = Options.getLicenseKey(editor);
     if (licenseKey !== 'gpl' && !Obj.has(addOnManager.urls, ADDON_KEY)) {
-      // const licenseKeyManagerUrl = Options.getLicenseKeyManagerUrl(editor);
-      // const url = Type.isString(licenseKeyManagerUrl)
-      //   ? editor.documentBaseURI.toAbsolute(licenseKeyManagerUrl)
-      //   : `licensing/${ADDON_KEY}/license${suffix}.js`;
+      // const externalUrl = Options.getExternalPlugins(editor)[PLUGIN_CODE];
       const url = `plugins/${PLUGIN_CODE}/plugin${suffix}.js`;
 
       addOnManager.load(ADDON_KEY, url).catch(() => {
@@ -128,7 +126,11 @@ const setup = (): LicenseKeyManagerLoader => {
 
     // CommercialLicenseKeyManager should be nonnullable here as the
     // editor will not load without a license key manager constructor
-    const CommercialLicenseKeyManager = addOnManager.get(ADDON_KEY)!;
+    const CommercialLicenseKeyManager = addOnManager.get(ADDON_KEY);
+    if (Type.isNullable(CommercialLicenseKeyManager)) {
+      return;
+    }
+
     const commercialLicenseKeyManagerApi = CommercialLicenseKeyManager(editor, addOnManager.urls[ADDON_KEY]);
     editor.licenseKeyManager = commercialLicenseKeyManagerApi || {};
     // TODO: Freeze editor.licenseKeyManager property
