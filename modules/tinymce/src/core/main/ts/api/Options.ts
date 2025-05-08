@@ -724,21 +724,7 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('license_key', {
-    processor: (value) => {
-      // Cloud-issued license keys need to be lazily fetched
-      if (Type.isFunction(value)) {
-        const newValue = value(editor);
-        if (Type.isPromiseLike(newValue)) {
-          return { value: newValue, valid: true };
-        } else {
-          return { valid: false, message: 'Must be a string or Promise<string>.' };
-        }
-      } else if (Type.isString(value) || Type.isPromiseLike(value)) {
-        return { value, valid: true };
-      } else {
-        return { valid: false, message: 'Must be a string or Promise<string>.' };
-      }
-    },
+    processor: 'string'
   });
 
   registerOption('license_key_manager_url', {

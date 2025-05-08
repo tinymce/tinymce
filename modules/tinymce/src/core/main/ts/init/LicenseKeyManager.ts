@@ -14,9 +14,15 @@ interface LicenseKeyManagerLoader {
   readonly init: (editor: Editor) => void;
 }
 
+interface ValidateData {
+  plugin?: string;
+  [key: string]: any;
+}
+
+// TODO: Can we do better than just a Promise<boolean>?
 export interface LicenseKeyManager {
-  readonly verify?: (editor: Editor) => Promise<void>;
-  readonly validate?: <T>(editor: Editor, data?: T) => Promise<void>;
+  readonly verify?: (editor: Editor) => Promise<boolean>;
+  readonly validate?: (editor: Editor, data?: ValidateData) => Promise<boolean>;
 }
 
 const displayNotification = (editor: Editor, message: string) => {
@@ -26,25 +32,21 @@ const displayNotification = (editor: Editor, message: string) => {
   });
 };
 
-// Gracefully handle any exceptions for promise rejections
-// const getLicenseKeySafe = async (editor: Editor): Promise<Optional<string>> => {
-//   try {
-//     const licenseKey = await Options.getLicenseKey(editor);
-//     return Optional.from(licenseKey).filter(Type.isString);
-//   } catch {
-//     return Optional.none();
-//   }
-// };
-
-const promiseNoop = () => Promise.resolve();
-
 const GplLicenseKeyManager: LicenseKeyManager = {
-  verify: promiseNoop,
-  // TODO: TINY-11819: Consider blocking of premium plugins
-  validate: promiseNoop,
+  verify: () => Promise.resolve(true),
+  validate: (_editor, data) => {
+    const { plugin } = data || {};
+    // Premium plugins are not allowed if 'gpl' is given as the license_key
+    if (Type.isString(plugin)) {
+      return Promise.resolve(false);
+    } else {
+      return Promise.resolve(true);
+    }
+  },
 };
 
-const ENTERPRISE_KEY = 'enterprise';
+const ADDON_KEY = 'commercial';
+const PLUGIN_CODE = 'licensekeymanager';
 
 // TODO: TINY-12081: Add tests for this
 
@@ -85,28 +87,23 @@ const ENTERPRISE_KEY = 'enterprise';
 const setup = (): LicenseKeyManagerLoader => {
   const addOnManager = AddOnManager<LicenseKeyManager>();
 
+  // TODO: TINY-12081: Add integrity/checksum check
   const add = async (addOn: LicenseKeyManagerAddon): Promise<void> => {
-    // TODO: TINY-12081: Only add when have a valid checksum
-    // const isValid = await verifyAddon(ENTERPRISE_CHECKSUMS, addOn);
-    // if (!isValid) {
-    //   addOnManager.remove(ENTERPRISE_KEY);
-    //   // eslint-disable-next-line no-console
-    //   console.error(`${ENTERPRISE_KEY} license handler does not match known checksums`);
-    // }
-    addOnManager.add(ENTERPRISE_KEY, addOn);
+    addOnManager.add(ADDON_KEY, addOn);
   };
 
   const load = (editor: Editor, suffix: string): void => {
     const licenseKey = Options.getLicenseKey(editor);
-    if (licenseKey !== 'gpl' && !Obj.has(addOnManager.urls, ENTERPRISE_KEY)) {
-      const licenseKeyManagerUrl = Options.getLicenseKeyManagerUrl(editor);
-      const url = Type.isString(licenseKeyManagerUrl)
-        ? editor.documentBaseURI.toAbsolute(licenseKeyManagerUrl)
-        : `licensing/${ENTERPRISE_KEY}/license${suffix}.js`;
+    if (licenseKey !== 'gpl' && !Obj.has(addOnManager.urls, ADDON_KEY)) {
+      // const licenseKeyManagerUrl = Options.getLicenseKeyManagerUrl(editor);
+      // const url = Type.isString(licenseKeyManagerUrl)
+      //   ? editor.documentBaseURI.toAbsolute(licenseKeyManagerUrl)
+      //   : `licensing/${ADDON_KEY}/license${suffix}.js`;
+      const url = `plugins/${PLUGIN_CODE}/plugin${suffix}.js`;
 
-      addOnManager.load(ENTERPRISE_KEY, url).catch(() => {
+      addOnManager.load(ADDON_KEY, url).catch(() => {
         // eslint-disable-next-line no-console
-        console.error(`Failed to load license key manager: ${ENTERPRISE_KEY} from url ${url}`);
+        console.error(`Failed to load license key manager from url ${url}`);
         displayNotification(editor, 'Failed to load license key manager');
       });
     }
@@ -117,44 +114,37 @@ const setup = (): LicenseKeyManagerLoader => {
     if (licenseKey === 'gpl') {
       return true;
     } else {
-      return Type.isNonNullable(addOnManager.get(ENTERPRISE_KEY));
+      return Type.isNonNullable(addOnManager.get(ADDON_KEY));
     }
   };
 
   // TODO: Should there be a sanity check the license key string starts with some prefix?
   const init = (editor: Editor): void => {
     const licenseKey = Options.getLicenseKey(editor);
-    if (Type.isNullable(licenseKey)) {
-      // eslint-disable-next-line no-console
-      console.error(`License key missing`);
-      displayNotification(editor, 'Failed to intialize license key manager');
-      // TODO: Confirm this is the correct action
-      ForceReadonly.forceReadonly(editor);
-      return;
-    }
     if (licenseKey === 'gpl') {
       editor.licenseKeyManager = GplLicenseKeyManager;
       return;
     }
 
-    const EnterpriseLicenseKeyManager = addOnManager.get(ENTERPRISE_KEY);
-    if (Type.isNonNullable(EnterpriseLicenseKeyManager)) {
-      const EnterpriseLicenseKeyManagerApi = EnterpriseLicenseKeyManager(editor, addOnManager.urls.enterprise);
-      editor.licenseKeyManager = EnterpriseLicenseKeyManagerApi || {};
-      const verify = editor.licenseKeyManager.verify;
-      const validate = editor.licenseKeyManager.validate;
-      if (!Type.isFunction(verify) || !Type.isFunction(validate)) {
-        // eslint-disable-next-line no-console
-        console.error(`Incorrect license key manager API`);
-        displayNotification(editor, 'Failed to intialize license key manager');
-        ForceReadonly.forceReadonly(editor);
-        return;
-      }
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      verify(editor);
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      validate(editor);
+    // CommercialLicenseKeyManager should be nonnullable here as the
+    // editor will not load without a license key manager constructor
+    const CommercialLicenseKeyManager = addOnManager.get(ADDON_KEY)!;
+    const commercialLicenseKeyManagerApi = CommercialLicenseKeyManager(editor, addOnManager.urls[ADDON_KEY]);
+    editor.licenseKeyManager = commercialLicenseKeyManagerApi || {};
+    // TODO: Freeze editor.licenseKeyManager property
+    const verify = editor.licenseKeyManager.verify;
+    const validate = editor.licenseKeyManager.validate;
+    if (!Type.isFunction(verify) || !Type.isFunction(validate)) {
+      // eslint-disable-next-line no-console
+      console.error(`Incorrect license key manager API`);
+      displayNotification(editor, 'Failed to intialize license key manager');
+      ForceReadonly.forceReadonly(editor);
+      return;
     }
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    verify(editor);
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    validate(editor);
   };
 
   return {
