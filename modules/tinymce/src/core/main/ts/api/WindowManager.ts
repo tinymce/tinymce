@@ -1,5 +1,5 @@
 import { Arr, Optional } from '@ephox/katamari';
-import { Focus, SugarElement } from '@ephox/sugar';
+import { Focus, SugarBody, SugarElement } from '@ephox/sugar';
 
 import * as SelectionBookmark from '../selection/SelectionBookmark';
 import WindowManagerImpl from '../ui/WindowManagerImpl';
@@ -54,7 +54,7 @@ export interface WindowManagerImpl {
 }
 
 const WindowManager = (editor: Editor): WindowManager => {
-  const dialogs: Array<{
+  let dialogs: Array<{
     instanceApi: InstanceApi<any>;
     triggerElement: Optional<SugarElement<HTMLElement>>;
   }> = [];
@@ -90,19 +90,21 @@ const WindowManager = (editor: Editor): WindowManager => {
   const closeDialog = <T extends Dialog.DialogData>(dialog: InstanceApi<T>) => {
     fireCloseEvent(dialog);
 
-    Arr.findIndex(dialogs, ({ instanceApi }) => instanceApi === dialog).each( (dialogIndex) => {
-      const dialogTriggerElement = dialogs[dialogIndex].triggerElement;
-
-      dialogs.splice(dialogIndex, 1);
-
-      // Move focus back to editor when the last window is closed
-      if (dialogs.length === 0) {
-        editor.focus();
-      } else {
-        // Move focus to the element that was active before the dialog was opened
-        dialogTriggerElement.each((el) => Focus.focus(el));
+    let dialogTriggerElement: Optional<SugarElement<HTMLElement>> = Optional.none();
+    dialogs = Arr.filter(dialogs, ({ instanceApi, triggerElement }) => {
+      if (instanceApi === dialog) {
+        dialogTriggerElement = triggerElement;
       }
+      return instanceApi !== dialog;
     });
+
+    // Move focus back to editor when the last window is closed
+    if (dialogs.length === 0) {
+      editor.focus();
+    } else {
+      // Move focus to the element that was active before the dialog was opened
+      dialogTriggerElement.filter(SugarBody.inBody).each(Focus.focus);
+    }
   };
 
   const getTopDialog = () => {
