@@ -421,10 +421,7 @@ const Quirks = (editor: Editor): Quirks => {
               return Optional.none();
             }
           }).each((targetSibling) => {
-            const rng = editor.dom.createRng();
-            rng.setStart(targetSibling.dom, 0);
-            rng.setEnd(targetSibling.dom, 0);
-            editor.selection.setRng(rng);
+            editor.selection.setCursorLocation(targetSibling.dom, 0);
           });
         }
 
