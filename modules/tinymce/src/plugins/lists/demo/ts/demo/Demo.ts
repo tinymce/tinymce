@@ -4,7 +4,7 @@ declare let tinymce: TinyMCE;
 
 tinymce.init({
   selector: 'textarea.tinymce',
-  plugins: 'lists code',
+  plugins: 'code',
   toolbar: 'numlist bullist | outdent indent | code',
   height: 600,
   contextmenu: 'lists'

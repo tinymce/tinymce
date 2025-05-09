@@ -1,15 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Lists Demo Page</title>
-  </head>
 
-  <body>
+<head>
+  <title>Lists Demo Page</title>
+</head>
+
+<body>
   <h2>Lists Demo Page</h2>
-    <div id="ephox-ui">
-      <textarea cols="30" rows="10" class="tinymce"></textarea>
+  <div id="ephox-ui">
+    <textarea cols="30" rows="10" class="tinymce">
+          <ul>
+            <li>
+              One
+              <ul>
+                <li>One</li>
+                <li>Two</li>
+              </ul>
+            </li>
+            <li>Two</li>
+          </ul>
+          <hr>
+          <ul>
+            <li>
+            <p>One</p>
+              <ul>
+                <li>
+                  <p>One</p>
+                </li>
+                <li>
+                  <p>Two</p>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <p>Two</p>
+            </li>
+          </ul>
+      </textarea>
     </div>
     <script src="../../../../../js/tinymce/tinymce.js"></script>
     <script src="../../../../../scratch/demos/plugins/lists/demo.js"></script>
-  </body>
+    </body>
+
 </html>
