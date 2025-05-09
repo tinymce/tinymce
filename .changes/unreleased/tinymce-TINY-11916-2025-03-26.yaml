@@ -1,6 +1,0 @@
-project: tinymce
-kind: Changed
-body: ContextFormSizeInput's lock button now is in the middle instead that at the end.
-time: 2025-03-26T15:30:32.704440073+01:00
-custom:
-    Issue: TINY-11916

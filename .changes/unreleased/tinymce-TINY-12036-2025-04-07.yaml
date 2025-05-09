@@ -1,6 +1,0 @@
-project: tinymce
-kind: Improved
-body: Resize cursor is now the correct direction for each resize mode. Patch contributed by daniloff200.
-time: 2025-04-07T10:20:26.931887+10:00
-custom:
-    Issue: '#GH-10189'

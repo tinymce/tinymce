@@ -1,6 +1,0 @@
-project: tinymce
-kind: Improved
-body: If `style_formats` is empty the button is now disabled.
-time: 2025-04-09T05:23:10.683947+02:00
-custom:
-    Issue: TINY-12005

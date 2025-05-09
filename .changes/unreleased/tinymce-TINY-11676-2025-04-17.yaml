@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Pressing enter before a floating image sometimes duplicated the image.
-time: 2025-04-17T09:09:49.451619873+02:00
-custom:
-    Issue: TINY-11676
