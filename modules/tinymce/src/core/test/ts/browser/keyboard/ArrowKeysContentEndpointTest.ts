@@ -84,7 +84,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysContentEndpointTest', () => {
         this.skip();
       }
       const editor = hook.editor();
-      editor.setContent('<p><figure contenteditable="false"><img src="tinymce/ui/img/raster.gif" /><figcaption contenteditable="true">abc</figcaption></figure></p>');
+      editor.setContent('<p>&nbsp;</p><figure contenteditable="false"><img src="tinymce/ui/img/raster.gif" /><figcaption contenteditable="true">abc</figcaption></figure><p>&nbsp;</p>');
 
       TinySelections.setCursor(editor, [ 1, 1, 0 ], 0);
       TinyContentActions.keydown(editor, Keys.left());
@@ -96,7 +96,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysContentEndpointTest', () => {
         this.skip();
       }
       const editor = hook.editor();
-      editor.setContent('<p><figure contenteditable="false"><img src="tinymce/ui/img/raster.gif" /><figcaption contenteditable="true">abc</figcaption></figure></p>');
+      editor.setContent('<p>&nbsp;</p><figure contenteditable="false"><img src="tinymce/ui/img/raster.gif" /><figcaption contenteditable="true">abc</figcaption></figure><p>&nbsp;</p>');
 
       TinySelections.setCursor(editor, [ 1, 1, 0 ], 'abc'.length);
       TinyContentActions.keydown(editor, Keys.right());
