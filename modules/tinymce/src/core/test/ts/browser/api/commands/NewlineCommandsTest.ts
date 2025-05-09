@@ -110,6 +110,15 @@ describe('browser.tinymce.core.api.commands.NewlineCommandTest', () => {
     TinyAssertions.assertCursor(editor, [ 0 ], 2);
   });
 
+  it('TINY-12045: Newline after image should not cause an error.', () => {
+    const editor = hook.editor();
+    editor.setContent('<div><img alt="icon" src="URL" width="100" height="100"><p>Text</p></div>');
+    TinySelections.setCursor(editor, [ 0 ], 1);
+    editor.execCommand('mceInsertNewLine');
+    TinyAssertions.assertContent(editor, '<div><img src="URL" alt="icon" width="100" height="100"></div><p>Text</p>');
+    TinyAssertions.assertCursor(editor, [ 1, 0 ], 0);
+  });
+
   context('TINY-8458: InsertLineBreak and newline_behavior', () => {
     before(() => {
       hook.editor().options.set('newline_behavior', 'block');
