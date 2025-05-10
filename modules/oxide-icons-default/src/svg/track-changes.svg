@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <path d="M7 3h7.414L19 7.586V19c0 1.103-.897 2-2 2H7c-1.103 0-2-.897-2-2V5c0-1.102.897-2 2-2Zm0 16h10.001L17 9h-3V5H7v14Z" clip-rule="evenodd"/>
+  <path d="M9 7h2v2H9V7Zm2 4h4v2h-4v-2Zm-2 4h3v2H9v-2Z"/>
+  <path d="M9 7h2v2H9V7Zm4 8h2v2h-2v-2Z"/>
+</svg>
