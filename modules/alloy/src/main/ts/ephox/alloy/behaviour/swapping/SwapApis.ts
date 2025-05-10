@@ -2,6 +2,7 @@ import { Class, SugarElement } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Stateless } from '../common/BehaviourState';
+
 import { SwappingConfig } from './SwappingTypes';
 
 const swap = (element: SugarElement<Element>, addCls: string, removeCls: string): void => {

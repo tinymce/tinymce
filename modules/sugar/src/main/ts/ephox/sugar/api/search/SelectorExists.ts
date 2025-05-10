@@ -1,4 +1,5 @@
 import { SugarElement } from '../node/SugarElement';
+
 import * as SelectorFind from './SelectorFind';
 
 const any = (selector: string): boolean =>

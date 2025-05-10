@@ -2,6 +2,7 @@ import { FieldProcessor, FieldSchema } from '@ephox/boulder';
 import { Optional } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
+
 import { BodyComponent, BodyComponentSpec } from './BodyComponent';
 
 type Alignment = 'start' | 'center' | 'end';

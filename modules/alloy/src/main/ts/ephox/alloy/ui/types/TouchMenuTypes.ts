@@ -8,6 +8,7 @@ import { AlloySpec, RawDomSchema, SimpleOrSketchSpec } from '../../api/component
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { TransitionProperties } from '../../behaviour/transitioning/TransitioningTypes';
 import { AnchorSpec } from '../../positioning/mode/Anchoring';
+
 import { CommonDropdownDetail } from './DropdownTypes';
 import { ItemDataTuple, ItemSpec } from './ItemTypes';
 import { TabviewSpec } from './TabviewTypes';

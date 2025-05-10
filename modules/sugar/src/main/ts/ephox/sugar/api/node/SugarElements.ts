@@ -1,6 +1,7 @@
 import { Arr } from '@ephox/katamari';
 
 import * as Traverse from '../search/Traverse';
+
 import { SugarElement } from './SugarElement';
 
 type ElementTuple<T> = { [K in keyof T]: SugarElement<T[K]> };

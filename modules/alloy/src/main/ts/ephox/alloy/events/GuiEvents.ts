@@ -3,6 +3,7 @@ import { DomEvent, EventArgs, SelectorExists, SugarElement, SugarNode } from '@e
 
 import * as Keys from '../alien/Keys';
 import * as SystemEvents from '../api/events/SystemEvents';
+
 import * as TapEvent from './TapEvent';
 
 const isDangerous = (event: EventArgs<KeyboardEvent>): boolean => {

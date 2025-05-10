@@ -13,6 +13,7 @@ import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import { EventFormat, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import * as AlloyParts from '../../parts/AlloyParts';
 import { SliderDetail, SliderSpec, SliderUpdateEvent, SliderValue } from '../types/SliderTypes';
+
 import * as ModelCommon from './ModelCommon';
 
 const sketch: CompositeSketchFactory<SliderDetail, SliderSpec> = (detail: SliderDetail, components: AlloySpec[], _spec: SliderSpec, _externals) => {

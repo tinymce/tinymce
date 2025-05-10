@@ -1,5 +1,6 @@
 import { SugarElement } from '../node/SugarElement';
 import * as Traverse from '../search/Traverse';
+
 import * as Compare from './Compare';
 
 const makeRange = (start: SugarElement<Node>, soffset: number, finish: SugarElement<Node>, foffset: number): Range => {

@@ -2,6 +2,7 @@ import { Type } from '@ephox/katamari';
 import { SugarElement, Value } from '@ephox/sugar';
 
 import * as Waiter from '../api/Waiter';
+
 import { getKeyEventFromData } from './Keycodes';
 
 const typeCharInInput = (input: SugarElement<HTMLInputElement | HTMLTextAreaElement>, chr: string) => {
@@ -47,4 +48,3 @@ export const pTypeTextInInput = async (input: SugarElement<HTMLInputElement | HT
     await (speed === 0 ? Promise.resolve() : Waiter.pWait(speed));
   }
 };
-

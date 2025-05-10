@@ -8,6 +8,7 @@ import { Arr, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+
 import { renderButton } from './ViewButtons';
 
 interface ViewHeaderSpec extends SimpleSpec {

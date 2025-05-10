@@ -2,6 +2,7 @@ import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../../core/ComponentSchema';
+
 import { cardImageSchema } from './CardImage';
 import { CardItem, CardItemSpec } from './CardItem';
 import { cardTextSchema } from './CardText';

@@ -1,4 +1,5 @@
 import { ArrayAssert, StringAssert, StructAssert, StructAssertAdv, StructAssertBasic } from '../assertions/ApproxStructures';
+
 import * as ApproxStructure from './ApproxStructure';
 import * as Arbitraries from './Arbitraries';
 import * as Assertions from './Assertions';

@@ -2,6 +2,7 @@ import { Result } from '@ephox/katamari';
 import { Compare, Focus, SugarElement, SugarShadowDom, Truncate } from '@ephox/sugar';
 
 import * as SizzleFind from '../alien/SizzleFind';
+
 import { Chain } from './Chain';
 import * as Guard from './Guard';
 import * as Logger from './Logger';

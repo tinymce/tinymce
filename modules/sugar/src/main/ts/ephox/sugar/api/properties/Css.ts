@@ -4,6 +4,7 @@ import * as Style from '../../impl/Style';
 import * as SugarBody from '../node/SugarBody';
 import { SugarElement } from '../node/SugarElement';
 import * as SugarNode from '../node/SugarNode';
+
 import * as Attribute from './Attribute';
 
 const internalSet = (dom: Node, property: string, value: string): void => {

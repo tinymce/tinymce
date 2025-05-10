@@ -21,6 +21,7 @@ import { Toggling } from '../behaviour/Toggling';
 import { AlloyComponent } from '../component/ComponentApi';
 import { SketchBehaviours } from '../component/SketchBehaviours';
 import { AlloySpec, SketchSpec } from '../component/SpecTypes';
+
 import { Button } from './Button';
 import * as Sketcher from './Sketcher';
 import { Toolbar } from './Toolbar';

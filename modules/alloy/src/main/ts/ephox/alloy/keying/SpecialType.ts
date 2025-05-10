@@ -7,6 +7,7 @@ import * as Fields from '../data/Fields';
 import { NativeSimulatedEvent } from '../events/SimulatedEvent';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
+
 import { SpecialConfig } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 import { stopEventForFirefox } from './KeyingTypes';

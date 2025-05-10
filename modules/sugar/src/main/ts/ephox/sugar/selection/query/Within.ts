@@ -10,8 +10,8 @@ import * as SelectionDirection from '../core/SelectionDirection';
 
 const withinContainer = <T extends Element>(win: Window, ancestor: SugarElement<Element>, outerRange: Range, selector: string): SugarElement<T>[] => {
   const innerRange = NativeRange.create(win);
-  const self = Selectors.is<T>(ancestor, selector) ? [ ancestor ] : [];
-  const elements = self.concat(SelectorFilter.descendants<T>(ancestor, selector));
+  const ancestorArray = Selectors.is<T>(ancestor, selector) ? [ ancestor ] : [];
+  const elements = ancestorArray.concat(SelectorFilter.descendants<T>(ancestor, selector));
   return Arr.filter(elements, (elem) => {
     // Mutate the selection to save creating new ranges each time
     NativeRange.selectNodeContentsUsing(innerRange, elem);

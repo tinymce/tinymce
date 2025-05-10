@@ -5,6 +5,7 @@ import * as TextDescent from '../alien/TextDescent';
 import * as TextSearch from '../alien/TextSearch';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
+
 import { AutocompleteContext, getContext } from './AutocompleteContext';
 import { AutocompleterDatabase } from './Autocompleters';
 import { AutocompleteLookupData } from './AutocompleteTypes';

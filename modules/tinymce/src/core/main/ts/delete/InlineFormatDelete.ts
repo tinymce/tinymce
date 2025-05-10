@@ -9,6 +9,7 @@ import * as Parents from '../dom/Parents';
 import * as CaretFormat from '../fmt/CaretFormat';
 import * as FormatContainer from '../fmt/FormatContainer';
 import * as FormatUtils from '../fmt/FormatUtils';
+
 import * as DeleteElement from './DeleteElement';
 import * as DeleteUtils from './DeleteUtils';
 

@@ -2,6 +2,7 @@ import { Fun, Result } from '@ephox/katamari';
 import { SugarElement, Truncate, Visibility } from '@ephox/sugar';
 
 import * as UiSearcher from '../find/UiSearcher';
+
 import { Chain } from './Chain';
 import * as Guard from './Guard';
 import { Step } from './Step';

@@ -5,6 +5,7 @@ import { Gather, Traverse } from '@ephox/phoenix';
 import { ZonePosition } from '../api/general/ZonePosition';
 import { ZoneViewports } from '../api/general/ZoneViewports';
 import { WordDecisionItem } from '../words/WordDecision';
+
 import { LanguageZones, ZoneDetails } from './LanguageZones';
 
 // Figure out which direction to take the next step in. Returns None if the traversal should stop.

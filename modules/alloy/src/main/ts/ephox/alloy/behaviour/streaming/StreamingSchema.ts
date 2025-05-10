@@ -4,6 +4,7 @@ import { Throttler } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
 import { EventFormat, SimulatedEvent } from '../../events/SimulatedEvent';
+
 import * as StreamingState from './StreamingState';
 import { StreamingConfig, StreamingState as StreamingStateType, ThrottleStreamingConfig } from './StreamingTypes';
 

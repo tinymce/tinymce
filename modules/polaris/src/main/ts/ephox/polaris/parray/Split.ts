@@ -1,6 +1,7 @@
 import { Arr } from '@ephox/katamari';
 
 import { PRange } from '../pattern/Types';
+
 import * as Query from './Query';
 import * as Translate from './Translate';
 

@@ -14,6 +14,7 @@ import {
 import { findClosestPositionInAboveCell, findClosestPositionInBelowCell } from '../caret/TableCells';
 import * as NodeType from '../dom/NodeType';
 import * as ForceBlocks from '../ForceBlocks';
+
 import * as NavigationUtils from './NavigationUtils';
 
 type PositionsUntilFn = (scope: HTMLElement, start: CaretPosition) => LineInfo;

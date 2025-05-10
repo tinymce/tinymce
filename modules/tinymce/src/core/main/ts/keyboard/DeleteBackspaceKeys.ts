@@ -17,6 +17,7 @@ import * as MediaDelete from '../delete/MediaDelete';
 import * as Outdent from '../delete/Outdent';
 import * as TableDelete from '../delete/TableDelete';
 import * as InputEvents from '../events/InputEvents';
+
 import * as MatchKeys from './MatchKeys';
 
 const platform = PlatformDetection.detect();

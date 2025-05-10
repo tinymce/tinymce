@@ -8,6 +8,7 @@ import { Replacing } from '../behaviour/Replacing';
 import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import { AlloySpec } from '../component/SpecTypes';
+
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 

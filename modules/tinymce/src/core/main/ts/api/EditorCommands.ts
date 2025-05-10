@@ -1,6 +1,7 @@
 import { Arr, Obj, Type } from '@ephox/katamari';
 
 import * as SelectionBookmark from '../selection/SelectionBookmark';
+
 import Editor from './Editor';
 
 /**

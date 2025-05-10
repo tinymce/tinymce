@@ -11,6 +11,7 @@ import * as DomMovement from '../navigation/DomMovement';
 import * as DomNavigation from '../navigation/DomNavigation';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
+
 import { FlowConfig, KeyRuleHandler } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';

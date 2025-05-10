@@ -21,8 +21,8 @@ const gChooseIn = <T extends Node>(target: SugarElement<T>): fc.Arbitrary<{ elem
 };
 
 const gChooseFrom = (root: SugarElement<Node>, exclusions: SelectionExclusions) => {
-  const self = exclusions.containers(root) ? [] : [ root ];
-  const everything = PredicateFilter.descendants(root, Fun.not(exclusions.containers)).concat(self);
+  const rootArray = exclusions.containers(root) ? [] : [ root ];
+  const everything = PredicateFilter.descendants(root, Fun.not(exclusions.containers)).concat(rootArray);
   return fc.constantFrom(...(everything.length > 0 ? everything : [ root ])).chain(gChooseIn);
 };
 

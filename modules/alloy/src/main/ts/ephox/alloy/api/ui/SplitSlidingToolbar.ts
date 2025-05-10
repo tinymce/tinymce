@@ -18,6 +18,7 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import { AlloySpec } from '../component/SpecTypes';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as AlloyTriggers from '../events/AlloyTriggers';
+
 import { Button } from './Button';
 import * as Sketcher from './Sketcher';
 import { Toolbar } from './Toolbar';

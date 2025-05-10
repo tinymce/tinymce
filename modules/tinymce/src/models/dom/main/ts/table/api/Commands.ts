@@ -10,6 +10,7 @@ import * as Events from '../api/Events';
 import * as Utils from '../core/TableUtils';
 import * as TableTargets from '../queries/TableTargets';
 import * as TableSelection from '../selection/TableSelection';
+
 import * as FakeClipboard from './Clipboard';
 import * as Options from './Options';
 

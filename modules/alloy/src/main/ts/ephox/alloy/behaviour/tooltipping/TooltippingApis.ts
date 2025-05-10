@@ -2,6 +2,7 @@ import { Replacing } from '../../api/behaviour/Replacing';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec } from '../../api/component/SpecTypes';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
+
 import { ExclusivityChannel, ImmediateHideTooltipEvent, ImmediateShowTooltipEvent } from './TooltippingCommunication';
 import { TooltippingConfig, TooltippingState } from './TooltippingTypes';
 

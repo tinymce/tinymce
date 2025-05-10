@@ -2,6 +2,7 @@ import { Arr, Cell, Obj, Optional, Optionals, Singleton, Throttler } from '@epho
 import { Attribute } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
+
 import { AnnotationsRegistry } from './AnnotationsRegistry';
 import * as Identification from './Identification';
 import * as Markings from './Markings';

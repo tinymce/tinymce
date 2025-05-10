@@ -14,6 +14,7 @@ import { UncurriedHandler } from '../../events/EventRegistry';
 import { AlloyBehaviour } from '../behaviour/Behaviour';
 import { NoContextApi, singleton } from '../system/NoContextApi';
 import { AlloySystemApi } from '../system/SystemApi';
+
 import * as CompBehaviours from './CompBehaviours';
 import { AlloyComponent } from './ComponentApi';
 import { ComponentDetail } from './SpecTypes';

@@ -14,6 +14,7 @@ import * as AnchorLayouts from '../../positioning/mode/AnchorLayouts';
 import { ButtonSpec } from '../types/ButtonTypes';
 import { FloatingToolbarButtonDetail } from '../types/FloatingToolbarButtonTypes';
 import { ToolbarSpec } from '../types/ToolbarTypes';
+
 import * as ToolbarSchema from './ToolbarSchema';
 
 const schema = Fun.constant([

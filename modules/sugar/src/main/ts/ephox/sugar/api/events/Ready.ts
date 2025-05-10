@@ -1,6 +1,7 @@
 import { Arr } from '@ephox/katamari';
 
 import { SugarElement } from '../node/SugarElement';
+
 import * as DomEvent from './DomEvent';
 
 const documentReady = (f: () => void): void => {

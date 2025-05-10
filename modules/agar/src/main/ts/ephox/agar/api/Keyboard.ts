@@ -3,6 +3,7 @@ import { Focus, SugarElement, Traverse } from '@ephox/sugar';
 
 import { keyevent, MixedKeyModifiers } from '../keyboard/FakeKeys';
 import * as TypeInInput from '../keyboard/TypeInInput';
+
 import { Step } from './Step';
 
 export type KeyModifiers = MixedKeyModifiers;

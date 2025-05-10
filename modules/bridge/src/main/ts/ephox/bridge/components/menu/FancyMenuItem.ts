@@ -2,6 +2,7 @@ import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
+
 import { ChoiceMenuItemSpec } from './ChoiceMenuItem';
 import { ImageMenuItemSpec, ResetImageItemSpec } from './ImageMenuItem';
 

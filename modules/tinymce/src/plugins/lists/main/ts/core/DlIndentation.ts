@@ -4,6 +4,7 @@ import { Replication, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import Editor from 'tinymce/core/api/Editor';
 
 import { Indentation } from '../listmodel/Indentation';
+
 import * as SplitList from './SplitList';
 
 const isDescriptionDetail = SugarNode.isTag('dd');

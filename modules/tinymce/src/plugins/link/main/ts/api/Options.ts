@@ -4,6 +4,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { EditorOptions } from 'tinymce/core/api/OptionTypes';
 
 import { UserListItem } from '../ui/DialogTypes';
+
 import { AssumeExternalTargets } from './Types';
 
 type UserLinkListCallback = (callback: (items: UserListItem[]) => void) => void;

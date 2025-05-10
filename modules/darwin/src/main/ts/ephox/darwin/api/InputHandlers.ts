@@ -7,6 +7,7 @@ import { MouseSelection } from '../mouse/MouseSelection';
 import * as KeyDirection from '../navigation/KeyDirection';
 import * as CellSelection from '../selection/CellSelection';
 import { Response } from '../selection/Response';
+
 import { SelectionAnnotation } from './SelectionAnnotation';
 import * as SelectionKeys from './SelectionKeys';
 import { WindowBridge } from './WindowBridge';

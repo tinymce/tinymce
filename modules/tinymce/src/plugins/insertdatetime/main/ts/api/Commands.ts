@@ -1,6 +1,7 @@
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Actions from '../core/Actions';
+
 import * as Options from './Options';
 
 const register = (editor: Editor): void => {

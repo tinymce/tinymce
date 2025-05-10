@@ -10,6 +10,7 @@ import { Representing } from '../behaviour/Representing';
 import { AlloyComponent } from '../component/ComponentApi';
 import { SketchBehaviours } from '../component/SketchBehaviours';
 import { SketchSpec } from '../component/SpecTypes';
+
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 

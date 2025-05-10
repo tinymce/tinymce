@@ -1,6 +1,7 @@
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Dialog from '../ui/Dialog';
+
 import * as Options from './Options';
 
 interface CommandOptions {

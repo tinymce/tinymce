@@ -3,6 +3,7 @@ import { Toolbar } from '@ephox/bridge';
 import { Arr } from '@ephox/katamari';
 
 import { classForPreset } from '../item/ItemClasses';
+
 import { classes as getMenuClasses } from './MenuClasses';
 
 const markers = (presets: Toolbar.PresetTypes): TieredMenuTypes.TieredMenuSpec['markers'] => {

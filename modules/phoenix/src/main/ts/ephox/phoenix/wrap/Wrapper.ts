@@ -5,6 +5,7 @@ import * as Spot from '../api/data/Spot';
 import { SpotPoints, Wrapter } from '../api/data/Types';
 import * as Split from '../api/general/Split';
 import * as Contiguous from '../util/Contiguous';
+
 import * as Navigation from './Navigation';
 
 type Group<E> = Contiguous.Group<E>;

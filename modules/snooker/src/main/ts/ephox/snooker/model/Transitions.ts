@@ -4,6 +4,7 @@ import { Generators } from '../api/Generators';
 import * as Structs from '../api/Structs';
 import { Warehouse } from '../api/Warehouse';
 import { CompElm, RowCell, RowElement } from '../util/TableTypes';
+
 import * as TableGrid from './TableGrid';
 
 const toDetails = <R extends RowElement>(grid: Structs.RowCells<R>[], comparator: CompElm): Structs.RowDetailNew<Structs.DetailNew<RowCell<R>>, R>[] => {

@@ -12,6 +12,7 @@ import { AlloyComponent } from '../component/ComponentApi';
 import * as GuiFactory from '../component/GuiFactory';
 import * as SystemEvents from '../events/SystemEvents';
 import { Container } from '../ui/Container';
+
 import * as Attachment from './Attachment';
 import { AlloySystemApi } from './SystemApi';
 

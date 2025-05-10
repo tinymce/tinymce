@@ -6,6 +6,7 @@ import * as Structs from '../api/Structs';
 import * as MergingOperations from '../operate/MergingOperations';
 import * as LockedColumnUtils from '../util/LockedColumnUtils';
 import { CompElm } from '../util/TableTypes';
+
 import * as Fitment from './Fitment';
 import * as GridRow from './GridRow';
 

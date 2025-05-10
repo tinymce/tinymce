@@ -7,6 +7,7 @@ import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 import * as Events from '../../../api/Events';
 import { updateMenuIcon } from '../../dropdown/CommonDropdown';
 import { onSetupEditableToggle } from '../ControlUtils';
+
 import { createMenuItems, createSelectButton, FormatterFormatItem, SelectedFormat, SelectSpec } from './BespokeSelect';
 import { buildBasicStaticDataset } from './SelectDatasets';
 import * as Tooltip from './utils/Tooltip';

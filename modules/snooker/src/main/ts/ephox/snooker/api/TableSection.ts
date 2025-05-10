@@ -3,6 +3,7 @@ import { Replication, SugarElement, SugarNode } from '@ephox/sugar';
 
 import { findTableRowHeaderType, RowHeaderType } from '../lookup/Type';
 import { CompElm, Subst } from '../util/TableTypes';
+
 import * as Structs from './Structs';
 import { Warehouse } from './Warehouse';
 

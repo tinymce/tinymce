@@ -1,5 +1,6 @@
 import { RangeLikeObject } from '../selection/RangeTypes';
 import { UndoManager as UndoManagerType } from '../undo/UndoManagerTypes';
+
 import AddOnManager from './AddOnManager';
 import Annotator from './Annotator';
 import BookmarkManager from './dom/BookmarkManager';

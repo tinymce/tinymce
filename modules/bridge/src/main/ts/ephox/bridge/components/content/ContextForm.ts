@@ -6,6 +6,7 @@ import { BaseToolbarButton, baseToolbarButtonFields, BaseToolbarButtonInstanceAp
 import {
   BaseToolbarToggleButton, baseToolbarToggleButtonFields, BaseToolbarToggleButtonInstanceApi, BaseToolbarToggleButtonSpec
 } from '../toolbar/ToolbarToggleButton';
+
 import { ContextBar, contextBarFields, ContextBarSpec } from './ContextBar';
 
 export interface ContextFormLaunchButtonApi extends BaseToolbarButtonSpec<BaseToolbarButtonInstanceApi> {

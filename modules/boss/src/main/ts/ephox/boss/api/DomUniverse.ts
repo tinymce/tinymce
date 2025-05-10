@@ -5,6 +5,7 @@ import {
 } from '@ephox/sugar';
 
 import TagBoundaries from '../common/TagBoundaries';
+
 import { Universe } from './Universe';
 
 export default (): Universe<SugarElement, Document> => {

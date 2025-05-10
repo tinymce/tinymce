@@ -1,4 +1,5 @@
 import * as StrAppend from '../str/StrAppend';
+
 import { Optional } from './Optional';
 import * as Type from './Type';
 

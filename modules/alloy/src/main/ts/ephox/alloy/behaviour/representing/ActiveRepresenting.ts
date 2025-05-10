@@ -1,5 +1,6 @@
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as Behaviour from '../common/Behaviour';
+
 import * as RepresentApis from './RepresentApis';
 import { RepresentingConfig, RepresentingState } from './RepresentingTypes';
 

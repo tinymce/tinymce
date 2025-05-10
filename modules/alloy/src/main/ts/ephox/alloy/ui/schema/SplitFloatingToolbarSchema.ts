@@ -7,6 +7,7 @@ import * as PartType from '../../parts/PartType';
 import * as SplitToolbarBase from '../common/SplitToolbarBase';
 import { SplitFloatingToolbarDetail } from '../types/SplitFloatingToolbarTypes';
 import { ToolbarSpec } from '../types/ToolbarTypes';
+
 import * as ToolbarSchema from './ToolbarSchema';
 
 const schema = Fun.constant([

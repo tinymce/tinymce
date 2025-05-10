@@ -2,6 +2,7 @@ import { Optional } from '@ephox/katamari';
 import { Awareness, RawRect, SugarElement, SugarNode } from '@ephox/sugar';
 
 import { WindowBridge } from '../api/WindowBridge';
+
 import * as Carets from './Carets';
 
 type Carets = Carets.Carets;

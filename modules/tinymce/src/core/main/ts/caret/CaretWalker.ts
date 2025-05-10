@@ -2,6 +2,7 @@ import { Arr, Fun } from '@ephox/katamari';
 
 import * as NodeType from '../dom/NodeType';
 import * as ArrUtils from '../util/ArrUtils';
+
 import * as CaretCandidate from './CaretCandidate';
 import CaretPosition from './CaretPosition';
 import { findNode, isBackwards, isForwards } from './CaretUtils';

@@ -6,6 +6,7 @@ import * as AnnotationFilter from '../annotate/AnnotationFilter';
 import { create } from '../annotate/AnnotationsRegistry';
 import { findAll, identify } from '../annotate/Identification';
 import { annotateWithBookmark, Decorator, DecoratorData, removeDirectAnnotation } from '../annotate/Wrapping';
+
 import Editor from './Editor';
 
 export type AnnotationListenerApi = AnnotationChanges.AnnotationListener;

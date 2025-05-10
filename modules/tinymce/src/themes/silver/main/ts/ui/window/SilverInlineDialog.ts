@@ -12,6 +12,7 @@ import * as Backstage from '../../backstage/Backstage';
 import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 import * as FormEvents from '../general/FormEvents';
 import * as NavigableObject from '../general/NavigableObject';
+
 import * as DialogChannels from './DialogChannels';
 import * as SilverDialogBody from './SilverDialogBody';
 import * as SilverDialogCommon from './SilverDialogCommon';

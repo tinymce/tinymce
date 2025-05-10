@@ -2,6 +2,7 @@ import { Cell, Fun, Singleton } from '@ephox/katamari';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { nuState } from '../common/BehaviourState';
+
 import { TooltippingState } from './TooltippingTypes';
 
 const init = (): TooltippingState => {

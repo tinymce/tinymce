@@ -3,6 +3,7 @@ import { PlatformDetection } from '@ephox/sand';
 
 import * as Pattern from '../textpatterns/core/Pattern';
 import * as PatternTypes from '../textpatterns/core/PatternTypes';
+
 import DOMUtils from './dom/DOMUtils';
 import Editor from './Editor';
 import { fireDisabledStateChange } from './Events';

@@ -3,6 +3,7 @@ import { Attribute, Class, Html, SugarElement, SugarNode } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Stateless } from '../common/BehaviourState';
+
 import { InvalidatingConfig } from './InvalidateTypes';
 
 const ariaElements = [

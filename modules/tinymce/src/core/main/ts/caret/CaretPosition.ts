@@ -6,6 +6,7 @@ import * as ClientRect from '../geom/ClientRect';
 import * as RangeNodes from '../selection/RangeNodes';
 import * as ExtendingChar from '../text/ExtendingChar';
 import * as Predicate from '../util/Predicate';
+
 import * as CaretCandidate from './CaretCandidate';
 
 type GeomClientRect = ClientRect.ClientRect;

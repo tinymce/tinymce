@@ -4,6 +4,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
 
 import * as Selection from '../core/Selection';
+
 import * as NodeType from './NodeType';
 
 const isCustomList = (list: HTMLElement): boolean =>

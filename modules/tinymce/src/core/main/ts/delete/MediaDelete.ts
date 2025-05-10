@@ -7,6 +7,7 @@ import * as CaretUtils from '../caret/CaretUtils';
 import { HDirection } from '../caret/CaretWalker';
 import * as NodeType from '../dom/NodeType';
 import * as InlineUtils from '../keyboard/InlineUtils';
+
 import * as DeleteElement from './DeleteElement';
 
 const deleteElement = (editor: Editor, forward: boolean, element: Node | undefined): Optional<() => void> => {

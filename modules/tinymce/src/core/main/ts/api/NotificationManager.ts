@@ -4,6 +4,7 @@ import { Focus, SugarElement } from '@ephox/sugar';
 import * as EditorView from '../EditorView';
 import * as EditorFocus from '../focus/EditorFocus';
 import NotificationManagerImpl from '../ui/NotificationManagerImpl';
+
 import Editor from './Editor';
 import * as Options from './Options';
 

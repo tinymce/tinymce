@@ -1,6 +1,7 @@
 import { PlatformDetection } from '@ephox/sand';
 
 import { KeyModifiers } from '../keyboard/FakeKeys';
+
 import { RealKeys } from './RealKeys';
 import { Step } from './Step';
 

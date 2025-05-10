@@ -14,6 +14,7 @@ import * as TransformOperations from '../operate/TransformOperations';
 import * as Adjustments from '../resize/Adjustments';
 import * as ColUtils from '../util/ColUtils';
 import { CompElm } from '../util/TableTypes';
+
 import { Generators, GeneratorsMerging, GeneratorsModification, GeneratorsTransform, SimpleGenerators } from './Generators';
 import * as Structs from './Structs';
 import * as TableContent from './TableContent';

@@ -4,6 +4,7 @@ import { SugarElement } from '../../api/node/SugarElement';
 import * as SugarNode from '../../api/node/SugarNode';
 import * as Traverse from '../../api/search/Traverse';
 import * as Geometry from '../alien/Geometry';
+
 import * as TextPoint from './TextPoint';
 
 /**

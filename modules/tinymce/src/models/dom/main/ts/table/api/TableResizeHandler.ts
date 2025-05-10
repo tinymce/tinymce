@@ -9,6 +9,7 @@ import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as Utils from '../core/TableUtils';
 import * as TableWire from '../core/TableWire';
 import * as TableSize from '../queries/TableSize';
+
 import * as Events from './Events';
 import * as Options from './Options';
 

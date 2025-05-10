@@ -7,6 +7,7 @@ import * as EventHandler from '../../construct/EventHandler';
 import { EventFormat, SimulatedEvent } from '../../events/SimulatedEvent';
 import { AlloyComponent } from '../component/ComponentApi';
 import { CompositeSketchDetail } from '../ui/Sketcher';
+
 import * as AlloyTriggers from './AlloyTriggers';
 import * as SystemEvents from './SystemEvents';
 

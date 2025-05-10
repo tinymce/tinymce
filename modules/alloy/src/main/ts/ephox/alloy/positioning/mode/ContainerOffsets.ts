@@ -4,6 +4,7 @@ import { Compare, Scroll, SugarElement, SugarLocation, SugarPosition, Traverse }
 import * as CssPosition from '../../alien/CssPosition';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { OriginAdt } from '../layout/Origins';
+
 import { NodeAnchor, SelectionAnchor } from './Anchoring';
 
 // In one mode, the window is inside an iframe. If that iframe is in the

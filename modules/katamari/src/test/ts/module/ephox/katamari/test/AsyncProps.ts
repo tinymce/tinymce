@@ -1,4 +1,3 @@
-/* eslint-disable @tinymce/no-unimported-promise */
 import { Assert } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
 

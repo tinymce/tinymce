@@ -1,4 +1,5 @@
 import { nu as NuSpotInfo } from '../view/SpotInfo';
+
 import * as Direction from './Direction';
 import { AnchorBoxBounds, boundsRestriction } from './LayoutBounds';
 import { AnchorBox, AnchorElement, AnchorLayout } from './LayoutTypes';

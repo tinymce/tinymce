@@ -5,6 +5,7 @@ import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
 import * as ArrUtils from '../util/ArrUtils';
+
 import { Format, FormatVars } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 

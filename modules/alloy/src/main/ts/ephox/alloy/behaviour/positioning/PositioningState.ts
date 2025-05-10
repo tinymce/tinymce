@@ -2,6 +2,7 @@ import { Obj, Optional, Type } from '@ephox/katamari';
 
 import { PlacerResult } from '../../positioning/layout/LayoutTypes';
 import { nuState } from '../common/BehaviourState';
+
 import { PositioningState } from './PositioningTypes';
 
 export const init = (): PositioningState => {

@@ -2,6 +2,7 @@ import { Fun } from '@ephox/katamari';
 import { Focus, SugarElement } from '@ephox/sugar';
 
 import * as Clicks from '../mouse/Clicks';
+
 import { Chain } from './Chain';
 import { Step } from './Step';
 import * as UiFinder from './UiFinder';

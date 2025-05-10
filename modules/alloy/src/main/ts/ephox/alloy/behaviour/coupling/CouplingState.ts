@@ -2,6 +2,7 @@ import { Fun, Obj, Optional } from '@ephox/katamari';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { nuState } from '../common/BehaviourState';
+
 import { CouplingConfig, CouplingState } from './CouplingTypes';
 
 // Unfortunately, the Coupling APIs currently throw errors when the coupled name

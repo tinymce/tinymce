@@ -13,8 +13,8 @@ UnitTest.test('Arbitraries Test', () => {
   const assertProperty = (label: string, element: SugarElement<Node>, assertion: (node: SugarElement<Node>) => boolean): boolean => {
     Insert.append(SugarBody.body(), element);
 
-    const self = SugarNode.isElement(element) ? [ element ] : [];
-    const descendants = SelectorFilter.descendants(element, '*').concat(self);
+    const elementArray = SugarNode.isElement(element) ? [ element ] : [];
+    const descendants = SelectorFilter.descendants(element, '*').concat(elementArray);
     const failing = Arr.filter(descendants, assertion);
     Remove.remove(element);
     if (failing.length > 0) {

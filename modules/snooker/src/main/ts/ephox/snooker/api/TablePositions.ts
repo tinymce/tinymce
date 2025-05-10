@@ -3,6 +3,7 @@ import { Compare, SugarElement } from '@ephox/sugar';
 
 import * as CellFinder from '../selection/CellFinder';
 import * as CellGroup from '../selection/CellGroup';
+
 import { Bounds } from './Structs';
 import * as TableLookup from './TableLookup';
 import { Warehouse } from './Warehouse';

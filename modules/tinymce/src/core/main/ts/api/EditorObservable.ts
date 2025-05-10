@@ -1,6 +1,7 @@
 import { Obj } from '@ephox/katamari';
 
 import * as Disabled from '../mode/Disabled';
+
 import DOMUtils from './dom/DOMUtils';
 import { EventUtilsCallback } from './dom/EventUtils';
 import Editor from './Editor';

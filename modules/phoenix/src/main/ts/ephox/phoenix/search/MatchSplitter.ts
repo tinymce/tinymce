@@ -3,6 +3,7 @@ import { Arr } from '@ephox/katamari';
 import { PositionArray, PRange } from '@ephox/polaris';
 
 import { SearchResult, SpotRange } from '../api/data/Types';
+
 import * as Splitter from './Splitter';
 
 /**

@@ -1,6 +1,7 @@
 import { Singleton } from '@ephox/katamari';
 
 import { nuState } from '../common/BehaviourState';
+
 import { BlockingState } from './BlockingTypes';
 
 export const init = (): BlockingState => {

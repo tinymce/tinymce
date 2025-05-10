@@ -3,6 +3,7 @@ import { Menu } from '@ephox/bridge';
 import { Obj, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from '../../../../backstage/Backstage';
+
 import { renderColorSwatchItem } from './ColorSwatchItem';
 import { renderImageSelector } from './ImageSelector';
 import { renderInsertTableMenuItem } from './InsertTableMenuItem';

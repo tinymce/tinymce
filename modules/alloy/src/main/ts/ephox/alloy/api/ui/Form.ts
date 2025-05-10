@@ -9,6 +9,7 @@ import { Representing } from '../behaviour/Representing';
 import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import { AlloySpec, SimpleOrSketchSpec, SketchSpec } from '../component/SpecTypes';
+
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
 

@@ -7,6 +7,7 @@ import { PartTypeAdt } from '../../parts/PartType';
 import { BaseSketchDetail, BaseSketchSpec } from '../../spec/SpecSchema';
 import { AlloyComponent } from '../component/ComponentApi';
 import { AlloySpec, SketchSpec } from '../component/SpecTypes';
+
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';
 

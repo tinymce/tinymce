@@ -4,6 +4,7 @@ import { Arr, Fun, Result } from '@ephox/katamari';
 import * as AsyncActions from '../pipe/AsyncActions';
 import * as GeneralActions from '../pipe/GeneralActions';
 import { DieFn, NextFn, Pipe, RunFn } from '../pipe/Pipe';
+
 import { addLogging, GuardFn } from './Guard';
 import { Pipeline } from './Pipeline';
 import { Step } from './Step';

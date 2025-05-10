@@ -5,6 +5,7 @@ import Editor from '../api/Editor';
 import { isCaretNode } from '../fmt/FormatContainer';
 import * as FormatUtils from '../fmt/FormatUtils';
 import { ZWSP } from '../text/Zwsp';
+
 import { isAnnotation } from './Identification';
 
 export const enum ChildContext {

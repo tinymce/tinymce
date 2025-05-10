@@ -8,6 +8,7 @@ import * as Blocks from '../lookup/Blocks';
 import * as CellUtils from '../util/CellUtils';
 import { CellElement } from '../util/TableTypes';
 import * as Util from '../util/Util';
+
 import { height, width } from './BarPositions';
 import * as Sizes from './Sizes';
 

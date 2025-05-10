@@ -2,6 +2,7 @@ import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
+
 import { DialogToggleMenuItem, dialogToggleMenuItemSchema, DialogToggleMenuItemSpec } from './ToggleMenuItem';
 
 export type DialogFooterMenuButtonItemSpec = DialogToggleMenuItemSpec;

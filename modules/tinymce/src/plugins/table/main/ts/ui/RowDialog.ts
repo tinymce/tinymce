@@ -11,6 +11,7 @@ import * as Options from '../api/Options';
 import * as Utils from '../core/Utils';
 import { ephemera } from '../selection/Ephemera';
 import * as TableSelection from '../selection/TableSelection';
+
 import { getAdvancedTab } from './DialogAdvancedTab';
 import { DomModifier } from './DomModifier';
 import * as Helpers from './Helpers';

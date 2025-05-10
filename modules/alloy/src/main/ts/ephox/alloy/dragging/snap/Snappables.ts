@@ -4,6 +4,7 @@ import { SugarPosition } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as DragCoord from '../../api/data/DragCoord';
 import { SnapConfig, SnapOutput, SnapPin, SnapsConfig } from '../common/DraggingTypes';
+
 import * as Presnaps from './Presnaps';
 
 // Types of coordinates

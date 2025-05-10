@@ -1,4 +1,5 @@
 import * as Seeker from '../gather/Seeker'; // robin is using this directly
+
 import { Focus } from './data/Focus';
 import { GatherResult } from './data/GatherResult';
 import { InjectPosition } from './data/InjectPosition';

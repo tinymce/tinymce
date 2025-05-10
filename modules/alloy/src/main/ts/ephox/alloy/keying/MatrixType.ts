@@ -10,6 +10,7 @@ import * as DomPinpoint from '../navigation/DomPinpoint';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import * as MatrixNavigation from '../navigation/MatrixNavigation';
+
 import { KeyRuleHandler, MatrixConfig } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';

@@ -6,6 +6,7 @@ import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Options from '../api/Options';
 import { LinkTarget, LinkTargets } from '../ui/core/LinkTargets';
+
 import { addToHistory, getHistory } from './UrlInputHistory';
 
 export interface LinkInformation {

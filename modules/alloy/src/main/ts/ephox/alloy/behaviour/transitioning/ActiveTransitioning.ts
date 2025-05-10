@@ -3,6 +3,7 @@ import { EventArgs } from '@ephox/sugar';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import { Stateless } from '../common/BehaviourState';
+
 import * as TransitionApis from './TransitionApis';
 import { TransitioningConfig } from './TransitioningTypes';
 

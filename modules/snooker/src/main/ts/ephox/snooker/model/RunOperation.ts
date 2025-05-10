@@ -12,6 +12,7 @@ import { Warehouse } from '../api/Warehouse';
 import * as Redraw from '../operate/Redraw';
 import * as LockedColumnUtils from '../util/LockedColumnUtils';
 import { CompElm, RowCell, RowElement } from '../util/TableTypes';
+
 import * as Transitions from './Transitions';
 
 export interface OperationBehaviours {

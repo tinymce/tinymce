@@ -5,6 +5,7 @@ import { SugarBody } from '@ephox/sugar';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
 import * as Origins from '../layout/Origins';
+
 import { Anchoring, NodeAnchor } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 import * as ContainerOffsets from './ContainerOffsets';

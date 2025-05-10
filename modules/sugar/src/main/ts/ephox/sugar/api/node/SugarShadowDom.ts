@@ -2,6 +2,7 @@ import { Arr, Optional, Type } from '@ephox/katamari';
 
 import { HTMLElementFullTagNameMap } from '../../alien/DomTypes';
 import * as Traverse from '../search/Traverse';
+
 import { SugarElement } from './SugarElement';
 import * as SugarHead from './SugarHead';
 import * as SugarNode from './SugarNode';

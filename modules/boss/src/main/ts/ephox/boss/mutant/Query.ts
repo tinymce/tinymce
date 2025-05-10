@@ -1,13 +1,14 @@
 import { Arr, Optional } from '@ephox/katamari';
 
 import { Gene } from '../api/Gene';
+
 import * as Properties from './Properties';
 import * as Up from './Up';
 
 const extract = (item: Gene): string[] => {
-  const self = item.id;
+  const { id } = item;
   const rest = item.children && item.children.length > 0 ? Arr.bind(item.children, extract) : [];
-  return [ self ].concat(rest);
+  return [ id ].concat(rest);
 };
 
 // TODO: This is broken. See TINY-6501, but the gist is that the behaviour of this function should match

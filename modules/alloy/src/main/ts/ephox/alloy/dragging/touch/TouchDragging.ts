@@ -11,6 +11,7 @@ import * as BlockerUtils from '../common/BlockerUtils';
 import * as DraggingSchema from '../common/DraggingSchema';
 import { DraggingState } from '../common/DraggingTypes';
 import * as DragUtils from '../common/DragUtils';
+
 import * as TouchBlockerEvents from './TouchBlockerEvents';
 import * as TouchData from './TouchData';
 import { TouchDraggingConfig } from './TouchDraggingTypes';

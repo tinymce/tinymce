@@ -12,6 +12,7 @@ import * as NativeEvents from '../../api/events/NativeEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Attachment from '../../api/system/Attachment';
 import { ReceivingInternalEvent } from '../../events/SimulatedEvent';
+
 import * as TooltippingApis from './TooltippingApis';
 import { ExclusivityChannel, HideTooltipEvent, ImmediateHideTooltipEvent, ImmediateShowTooltipEvent, ShowTooltipEvent } from './TooltippingCommunication';
 import { TooltippingConfig, TooltippingState } from './TooltippingTypes';

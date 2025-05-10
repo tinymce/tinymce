@@ -4,6 +4,7 @@ import { DomModification } from '../../dom/DomModification';
 import { ConfiguredPart } from '../../parts/AlloyParts';
 import { AlloyBehaviourRecord } from '../behaviour/Behaviour';
 import { AlloyEventRecord } from '../events/AlloyEvents';
+
 import { AlloyComponent } from './ComponentApi';
 
 export type AlloySpec = SimpleOrSketchSpec | PremadeSpec | ConfiguredPart;

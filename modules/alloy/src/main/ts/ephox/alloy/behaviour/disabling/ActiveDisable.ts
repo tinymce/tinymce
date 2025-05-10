@@ -4,6 +4,7 @@ import { DomDefinitionDetail } from '../../dom/DomDefinition';
 import * as DomModification from '../../dom/DomModification';
 import * as Behaviour from '../common/Behaviour';
 import { Stateless } from '../common/BehaviourState';
+
 import * as DisableApis from './DisableApis';
 import { DisableConfig } from './DisableTypes';
 

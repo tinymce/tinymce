@@ -2,6 +2,7 @@ import { Arr, Type } from '@ephox/katamari';
 
 import { SugarElement } from '../api/node/SugarElement';
 import * as Css from '../api/properties/Css';
+
 import * as Style from './Style';
 
 export interface Dimension {

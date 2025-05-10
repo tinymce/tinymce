@@ -17,6 +17,7 @@ import { getToolbarMode, ToolbarMode } from '../../api/Options';
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderToolbar } from '../toolbar/CommonToolbar';
 import { identifyButtons } from '../toolbar/Integration';
+
 import { hideContextToolbarEvent, showContextToolbarEvent } from './ContextEditorEvents';
 import { ContextForm } from './ContextForm';
 import * as ContextToolbarAnchor from './ContextToolbarAnchor';

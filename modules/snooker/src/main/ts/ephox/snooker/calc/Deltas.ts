@@ -2,6 +2,7 @@ import { Arr, Fun } from '@ephox/katamari';
 
 import { ResizeBehaviour } from '../api/ResizeBehaviour';
 import { TableSize } from '../api/TableSize';
+
 import { ColumnContext } from './ColumnContext';
 
 /*

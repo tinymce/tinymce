@@ -6,6 +6,7 @@ import { AlloySpec, SimpleOrSketchSpec, SketchSpec } from '../api/component/Spec
 import { CompositeSketchDetail } from '../api/ui/Sketcher';
 import * as Fields from '../data/Fields';
 import * as UiSubstitutes from '../spec/UiSubstitutes';
+
 import * as PartSubstitutes from './PartSubstitutes';
 import * as PartType from './PartType';
 

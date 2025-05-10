@@ -10,6 +10,7 @@ import { AlloyBehaviourRecord } from '../behaviour/Behaviour';
 import { AlloyComponent } from '../component/ComponentApi';
 import * as GuiFactory from '../component/GuiFactory';
 import { AlloyEventRecord } from '../events/AlloyEvents';
+
 import * as Gui from './Gui';
 
 export interface ForeignGuiSpec {

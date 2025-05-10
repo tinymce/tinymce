@@ -4,6 +4,7 @@ import { Classes, Css } from '@ephox/sugar';
 import * as Boxes from '../../alien/Boxes';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { applyPositionCss, PositionCss } from '../../positioning/view/PositionCss';
+
 import * as Dockables from './Dockables';
 import { DockingConfig, DockingDecision, DockingMode, DockingState, DockingViewport } from './DockingTypes';
 

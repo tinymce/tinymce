@@ -2,6 +2,7 @@ import { Optional } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as StructureBookmark from '../bookmark/StructureBookmark';
+
 import { execNativeDeleteCommand, execNativeForwardDeleteCommand } from './DeleteUtils';
 
 export const backspaceDelete = (editor: Editor, forward: boolean): Optional<() => void> => {

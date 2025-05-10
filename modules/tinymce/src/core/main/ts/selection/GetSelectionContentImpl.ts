@@ -7,6 +7,7 @@ import { Content, ContentFormat, GetSelectionContentArgs } from '../content/Cont
 import { postProcessGetContent, preProcessGetContent } from '../content/PrePostProcess';
 import * as CharType from '../text/CharType';
 import * as Zwsp from '../text/Zwsp';
+
 import * as EventProcessRanges from './EventProcessRanges';
 import * as FragmentReader from './FragmentReader';
 import * as MultiRange from './MultiRange';

@@ -26,6 +26,7 @@ import { NormalItemSpec } from '../../ui/types/ItemTypes';
 import { HighlightOnOpen, TieredData } from '../../ui/types/TieredMenuTypes';
 import { TypeaheadData, TypeaheadDetail, TypeaheadSpec } from '../../ui/types/TypeaheadTypes';
 import * as InputBase from '../common/InputBase';
+
 import * as TypeaheadEvents from './TypeaheadEvents';
 
 interface ItemExecuteEvent extends CustomEvent {

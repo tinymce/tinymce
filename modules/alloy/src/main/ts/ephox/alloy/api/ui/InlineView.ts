@@ -19,6 +19,7 @@ import { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import { AlloySpec, SketchSpec } from '../component/SpecTypes';
 import * as SystemEvents from '../events/SystemEvents';
+
 import * as Sketcher from './Sketcher';
 import { tieredMenu as TieredMenu } from './TieredMenu';
 import { SingleSketchFactory } from './UiSketcher';

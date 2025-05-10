@@ -5,6 +5,7 @@ import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import { DomDefinitionDetail } from '../../dom/DomDefinition';
 import * as DomModification from '../../dom/DomModification';
+
 import * as SlidingApis from './SlidingApis';
 import { SlidingConfig, SlidingState } from './SlidingTypes';
 

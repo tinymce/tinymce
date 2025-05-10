@@ -9,6 +9,7 @@ import * as Utils from '../core/TableUtils';
 import * as TableTargets from '../queries/TableTargets';
 import * as Ephemera from '../selection/Ephemera';
 import * as TableSelection from '../selection/TableSelection';
+
 import { TableActions } from './TableActions';
 
 const extractSelected = (cells: SugarElement<HTMLTableCellElement>[]): Optional<SugarElement<HTMLTableElement>[]> => {

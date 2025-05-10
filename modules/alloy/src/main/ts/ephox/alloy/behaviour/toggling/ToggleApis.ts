@@ -1,6 +1,7 @@
 import { Class } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
+
 import { TogglingConfig, TogglingState } from './TogglingTypes';
 
 const updateAriaState = (component: AlloyComponent, toggleConfig: TogglingConfig, toggleState: TogglingState): void => {

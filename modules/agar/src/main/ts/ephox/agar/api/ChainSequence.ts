@@ -1,6 +1,7 @@
 import { Arr } from '@ephox/katamari';
 
 import { DieFn, NextFn } from '../pipe/Pipe';
+
 import { Chain } from './Chain';
 import { TestLogs } from './TestLogs';
 

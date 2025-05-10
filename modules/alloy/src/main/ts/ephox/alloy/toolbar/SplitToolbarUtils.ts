@@ -9,6 +9,7 @@ import * as GuiFactory from '../api/component/GuiFactory';
 import { Toolbar } from '../api/ui/Toolbar';
 import * as AlloyParts from '../parts/AlloyParts';
 import { SplitToolbarBaseDetail } from '../ui/types/SplitToolbarBaseTypes';
+
 import * as Overflows from './Overflows';
 
 const setGroups = (toolbar: AlloyComponent, storedGroups: AlloyComponent[]): void => {

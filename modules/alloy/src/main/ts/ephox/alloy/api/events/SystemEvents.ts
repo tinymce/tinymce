@@ -4,6 +4,7 @@ import { SugarElement } from '@ephox/sugar';
 
 import { CustomEvent } from '../../events/SimulatedEvent';
 import { AlloyComponent } from '../component/ComponentApi';
+
 import * as NativeEvents from './NativeEvents';
 
 const prefixName = (name: string) => Fun.constant('alloy.' + name);

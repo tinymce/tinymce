@@ -5,6 +5,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import { SliderModelDetailParts, SliderValueXY, TwoDSliderDetail } from '../types/SliderTypes';
+
 import * as EdgeActions from './EdgeActions';
 import * as HorizontalModel from './HorizontalModel';
 import * as ModelCommon from './ModelCommon';

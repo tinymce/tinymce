@@ -13,6 +13,7 @@ import { isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../..
 import { getSanitizer, internalElementAttr } from '../../html/Sanitization';
 import { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
+
 import AstNode from './Node';
 import Schema, { SchemaMap, SchemaRegExpMap, getTextRootBlockElements } from './Schema';
 

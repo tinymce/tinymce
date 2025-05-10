@@ -12,6 +12,7 @@ import * as Placement from '../../positioning/layout/Placement';
 import * as SimpleLayout from '../../positioning/layout/SimpleLayout';
 import { Anchoring } from '../../positioning/mode/Anchoring';
 import { Transition } from '../../positioning/view/Transitions';
+
 import { PlacementDetail, PlacementSpec, PositioningConfig, PositioningState } from './PositioningTypes';
 import { PlacementSchema } from './PositionSchema';
 

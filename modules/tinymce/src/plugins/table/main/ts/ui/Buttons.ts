@@ -6,6 +6,7 @@ import { Toolbar } from 'tinymce/core/api/ui/Ui';
 import * as FakeClipboard from '../api/Clipboard';
 import * as Options from '../api/Options';
 import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
+
 import { verticalAlignValues } from './CellAlignValues';
 import { applyTableCellStyle, changeColumnHeader, changeRowHeader, filterNoneItem, buildColorMenu, generateMenuItemsCallback } from './UiUtils';
 

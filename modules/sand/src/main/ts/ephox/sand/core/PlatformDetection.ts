@@ -4,6 +4,7 @@ import { DeviceType } from '../detect/DeviceType';
 import * as UaData from '../detect/UaData';
 import * as UaString from '../detect/UaString';
 import { PlatformInfo } from '../info/PlatformInfo';
+
 import { Browser } from './Browser';
 import { OperatingSystem } from './OperatingSystem';
 

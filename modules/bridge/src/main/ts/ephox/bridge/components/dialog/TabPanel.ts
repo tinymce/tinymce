@@ -2,6 +2,7 @@ import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
+
 import { BodyComponent, BodyComponentSpec } from './BodyComponent';
 import { itemSchema } from './Panel';
 

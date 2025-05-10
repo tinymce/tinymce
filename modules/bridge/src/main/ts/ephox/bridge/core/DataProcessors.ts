@@ -17,6 +17,7 @@ import { sliderInputDataProcessor } from '../components/dialog/Slider';
 import { textAreaDataProcessor } from '../components/dialog/Textarea';
 import { dialogToggleMenuItemDataProcessor } from '../components/dialog/ToggleMenuItem';
 import { urlInputDataProcessor } from '../components/dialog/UrlInput';
+
 import { getAllObjects } from './ObjUtils';
 
 interface NamedItem {

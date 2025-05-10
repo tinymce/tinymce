@@ -9,6 +9,7 @@ import { NativeSimulatedEvent } from '../events/SimulatedEvent';
 import * as ArrNavigation from '../navigation/ArrNavigation';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
+
 import { KeyRuleStatelessHandler, TabbingConfig } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 

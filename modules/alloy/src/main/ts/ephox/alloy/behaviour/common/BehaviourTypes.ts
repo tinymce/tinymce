@@ -5,6 +5,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloyEventRecord } from '../../api/events/AlloyEvents';
 import { DomDefinitionDetail } from '../../dom/DomDefinition';
 import { DomModification } from '../../dom/DomModification';
+
 import { BehaviourConfigAndState } from './BehaviourBlob';
 import { BehaviourState, BehaviourStateInitialiser } from './BehaviourState';
 

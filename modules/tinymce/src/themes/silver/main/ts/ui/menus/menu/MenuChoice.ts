@@ -7,6 +7,7 @@ import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Bac
 import { renderChoiceItem } from '../item/build/ChoiceItem';
 import { renderImgItem } from '../item/build/ImageItem';
 import ItemResponse from '../item/ItemResponse';
+
 import * as MenuUtils from './MenuUtils';
 import { SingleMenuItemSpec } from './SingleMenuTypes';
 

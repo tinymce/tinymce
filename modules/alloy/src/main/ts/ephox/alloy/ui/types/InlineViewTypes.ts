@@ -9,6 +9,7 @@ import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
 import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
 import { PlacementSpec } from '../../behaviour/positioning/PositioningTypes';
+
 import { TieredData, TieredMenuSpec } from './TieredMenuTypes';
 
 export interface InlineViewDetail extends SingleSketchDetail {

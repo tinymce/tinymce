@@ -3,6 +3,7 @@ import { Dialog, DialogManager } from '@ephox/bridge';
 import { Cell, Fun, Id, Optional, Optionals } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
+
 import { dialogChannel } from './DialogChannels';
 import { renderModalBody } from './SilverDialogBody';
 import * as SilverDialogCommon from './SilverDialogCommon';

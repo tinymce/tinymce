@@ -2,6 +2,7 @@ import { Arr, Obj, Optional } from '@ephox/katamari';
 import { Attribute, SugarNode } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
+
 import { AriaTogglingConfig } from './TogglingTypes';
 
 const updatePressed = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status: boolean): void => {

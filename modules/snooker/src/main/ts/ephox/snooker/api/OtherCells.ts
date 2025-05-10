@@ -4,6 +4,7 @@ import { SugarElement } from '@ephox/sugar';
 import * as GridRow from '../model/GridRow';
 import { onCells, TargetSelection, toDetailList } from '../model/RunOperation';
 import * as Transitions from '../model/Transitions';
+
 import { Generators } from './Generators';
 import { DetailExt, RowCells } from './Structs';
 import { Warehouse } from './Warehouse';

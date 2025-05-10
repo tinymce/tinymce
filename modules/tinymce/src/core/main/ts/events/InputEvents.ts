@@ -2,6 +2,7 @@ import { Fun } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import { EditorEvent } from '../api/util/EventDispatcher';
+
 import { clone } from './EventUtils';
 
 interface SpecificsInput {

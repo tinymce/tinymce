@@ -8,6 +8,7 @@ import * as CustomSpec from '../../spec/CustomSpec';
 import { NoContextApi } from '../system/NoContextApi';
 import { AlloySystemApi } from '../system/SystemApi';
 import * as GuiTypes from '../ui/GuiTypes';
+
 import * as Component from './Component';
 import { AlloyComponent } from './ComponentApi';
 import { AlloySpec, PremadeSpec, SimpleOrSketchSpec, SketchSpec } from './SpecTypes';

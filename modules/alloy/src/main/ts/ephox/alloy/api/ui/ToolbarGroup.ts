@@ -2,6 +2,7 @@ import * as ToolbarGroupSchema from '../../ui/schema/ToolbarGroupSchema';
 import { ToolbarGroupDetail, ToolbarGroupSketcher, ToolbarGroupSpec } from '../../ui/types/ToolbarGroupTypes';
 import { Keying } from '../behaviour/Keying';
 import * as SketchBehaviours from '../component/SketchBehaviours';
+
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 

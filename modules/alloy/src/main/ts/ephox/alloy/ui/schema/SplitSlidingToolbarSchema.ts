@@ -13,6 +13,7 @@ import * as SplitToolbarBase from '../common/SplitToolbarBase';
 import { ButtonSpec } from '../types/ButtonTypes';
 import { SplitSlidingToolbarDetail } from '../types/SplitSlidingToolbarTypes';
 import { ToolbarSpec } from '../types/ToolbarTypes';
+
 import * as ToolbarSchema from './ToolbarSchema';
 
 const schema = Fun.constant([

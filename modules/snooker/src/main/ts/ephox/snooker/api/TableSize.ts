@@ -4,6 +4,7 @@ import { Css, SugarBody, SugarElement, Width } from '@ephox/sugar';
 import * as ColumnSizes from '../resize/ColumnSizes';
 import * as Sizes from '../resize/Sizes';
 import * as CellUtils from '../util/CellUtils';
+
 import { Warehouse } from './Warehouse';
 
 export interface TableSize {

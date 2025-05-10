@@ -1,6 +1,7 @@
 import { Arr, Fun, Id, Obj, Result } from '@ephox/katamari';
 
 import { DieFn, NextFn } from '../pipe/Pipe';
+
 import { Chain } from './Chain';
 import { TestLogs } from './TestLogs';
 
@@ -30,9 +31,9 @@ const asChain = <T>(chains: NamedChain[]): Chain<T, any> =>
 const write = (name: string, chain: Chain<NamedData, any>): Chain<NamedData, NamedData> =>
   Chain.on((input, next, die, initLogs) => {
     chain.runChain(input, (output, newLogs) => {
-      const self = wrapSingle(name, output);
+      const data = wrapSingle(name, output);
       return next(
-        { ...input, ...self },
+        { ...input, ...data },
         newLogs
       );
     }, die, initLogs);
@@ -43,8 +44,8 @@ const write = (name: string, chain: Chain<NamedData, any>): Chain<NamedData, Nam
 const partialWrite = <T>(name: string, chain: Chain<T, any>): Chain<T, NamedData> =>
   Chain.on((input, next, die, initLogs) => {
     chain.runChain(input, (output, newLogs) => {
-      const self = wrapSingle(name, output);
-      return next(self, newLogs);
+      const data = wrapSingle(name, output);
+      return next(data, newLogs);
     }, die, initLogs);
   });
 
@@ -127,6 +128,5 @@ export const NamedChain = {
   bundle,
   output,
   outputInput,
-
   pipeline
 };

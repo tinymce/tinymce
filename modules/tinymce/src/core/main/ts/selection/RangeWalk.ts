@@ -1,5 +1,6 @@
 import DOMUtils from '../api/dom/DOMUtils';
 import * as NodeType from '../dom/NodeType';
+
 import * as RangeNodes from './RangeNodes';
 import { RangeLikeObject } from './RangeTypes';
 

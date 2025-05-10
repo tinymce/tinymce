@@ -1,4 +1,5 @@
 import { SugarElement } from '../node/SugarElement';
+
 import * as Attribute from './Attribute';
 
 export interface AttributeProperty {

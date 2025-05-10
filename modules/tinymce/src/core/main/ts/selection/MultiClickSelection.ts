@@ -6,6 +6,7 @@ import Schema from '../api/html/Schema';
 import { isCaretCandidate } from '../caret/CaretCandidate';
 import { CaretPosition } from '../caret/CaretPosition';
 import * as NodeType from '../dom/NodeType';
+
 import * as RangeNormalizer from './RangeNormalizer';
 
 const isBr = NodeType.isBr;

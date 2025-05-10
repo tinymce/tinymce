@@ -6,6 +6,7 @@ import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Options from '../../api/Options';
+
 import { composeUnbinders, onSetupEditableToggle } from './ControlUtils';
 
 const makeSetupHandler = (editor: Editor, pasteAsText: Cell<boolean>) => (api: Toolbar.ToolbarToggleButtonInstanceApi | Menu.ToggleMenuItemInstanceApi) => {

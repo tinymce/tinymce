@@ -1,6 +1,7 @@
 import { SandHTMLElement } from '@ephox/sand';
 
 import { HTMLElementFullTagNameMap } from '../../alien/DomTypes';
+
 import * as NodeTypes from './NodeTypes';
 import { SugarElement } from './SugarElement';
 

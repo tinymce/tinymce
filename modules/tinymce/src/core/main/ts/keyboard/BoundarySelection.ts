@@ -8,6 +8,7 @@ import * as CaretContainerRemove from '../caret/CaretContainerRemove';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as WordSelection from '../selection/WordSelection';
+
 import * as BoundaryCaret from './BoundaryCaret';
 import * as BoundaryLocation from './BoundaryLocation';
 import * as InlineUtils from './InlineUtils';

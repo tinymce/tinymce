@@ -3,6 +3,7 @@ import { Singleton } from '@ephox/katamari';
 import { Chain } from '../api/Chain';
 import * as GeneralSteps from '../api/GeneralSteps';
 import { Step } from '../api/Step';
+
 import { createFileList } from './FileList';
 
 interface Props {
@@ -30,6 +31,7 @@ const createChangeEvent = (win: Window): Event => {
 };
 
 const cPatchInputElement = (files: File[]) => Chain.op<any>(() => {
+  const HTMLInputElement = window.HTMLInputElement;
   const currentProps = {
     files: Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'files'),
     // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -48,6 +50,7 @@ const cPatchInputElement = (files: File[]) => Chain.op<any>(() => {
 });
 
 const cUnpatchInputElement = Chain.op<any>(() => {
+  const HTMLInputElement = window.HTMLInputElement;
   inputPrototypeState.on((props) => {
     Object.defineProperty(HTMLInputElement.prototype, 'files', props.files);
     HTMLInputElement.prototype.click = props.click;

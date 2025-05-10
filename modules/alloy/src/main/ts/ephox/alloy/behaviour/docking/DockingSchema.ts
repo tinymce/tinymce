@@ -3,6 +3,7 @@ import { Optional } from '@ephox/katamari';
 
 import * as Boxes from '../../alien/Boxes';
 import * as Fields from '../../data/Fields';
+
 import { DockingViewport } from './DockingTypes';
 
 export default [

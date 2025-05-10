@@ -5,6 +5,7 @@ import DomParser, { DomParserSettings } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
 import Tools from '../api/util/Tools';
 import * as BlobCacheUtils from '../file/BlobCacheUtils';
+
 import * as Embed from './Embed';
 
 const isBogusImage = (img: AstNode): boolean =>

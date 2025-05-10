@@ -6,6 +6,7 @@ import { WindowBridge } from '../api/WindowBridge';
 import { KeyDirection } from '../navigation/KeyDirection';
 import { Response } from '../selection/Response';
 import * as Util from '../selection/Util';
+
 import * as KeySelection from './KeySelection';
 import * as TableKeys from './TableKeys';
 

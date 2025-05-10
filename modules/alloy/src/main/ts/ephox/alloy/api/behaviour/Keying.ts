@@ -8,6 +8,7 @@ import {
   MenuConfigSpec, SpecialConfigSpec
 } from '../../keying/KeyingModeTypes';
 import { AlloyComponent } from '../component/ComponentApi';
+
 import * as Behaviour from './Behaviour';
 
 export interface KeyingBehaviour<D extends GeneralKeyingConfig> extends Behaviour.AlloyBehaviour<KeyingConfigSpec, D> {
