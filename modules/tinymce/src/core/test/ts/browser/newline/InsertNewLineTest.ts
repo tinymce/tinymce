@@ -1663,7 +1663,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     });
   });
 
-  context('TINY-12073: nested inline elements', () => {
+  context('nested inline elements', () => {
     it('TINY-12073: Press enter in nested span, should flatten spans and preserve one font-size', () => {
       const editor = hook.editor();
       editor.setContent('<p><span style="font-size: 24pt;">Lorem <span style="font-size: 10pt;">Ipsum</span></span></p>');
