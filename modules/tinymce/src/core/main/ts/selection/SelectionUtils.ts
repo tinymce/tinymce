@@ -136,10 +136,16 @@ const preserve = (selection: EditorSelection, fillBookmark: boolean, executor: (
   selection.moveToBookmark(bookmark);
 };
 
+const isSelectionOverWholeNode = (range: Range, nodeTypePredicate: (n: Node) => boolean): boolean =>
+  range.startContainer === range.endContainer
+    && range.endOffset - range.startOffset === 1
+    && nodeTypePredicate(range.startContainer.childNodes[range.startOffset]);
+
 export {
   hasAllContentsSelected,
   moveEndPoint,
   hasAnyRanges,
   runOnRanges,
-  preserve
+  preserve,
+  isSelectionOverWholeNode
 };

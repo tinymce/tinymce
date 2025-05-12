@@ -14,6 +14,7 @@ import * as InlineFormatDelete from './InlineFormatDelete';
 import * as MediaDelete from './MediaDelete';
 import * as Outdent from './Outdent';
 import * as TableDelete from './TableDelete';
+import * as TagDelete from './TagDelete';
 
 const findAction = (editor: Editor, caret: Cell<Text | null>, forward: boolean) =>
   Arr.findMap([
@@ -27,7 +28,8 @@ const findAction = (editor: Editor, caret: Cell<Text | null>, forward: boolean) 
     MediaDelete.backspaceDelete,
     BlockRangeDelete.backspaceDelete,
     InlineFormatDelete.backspaceDelete,
-    DivDelete.backspaceDelete
+    DivDelete.backspaceDelete,
+    TagDelete.backspaceDelete,
   ], (item) => item(editor, forward))
     .filter((_) => editor.selection.isEditable());
 

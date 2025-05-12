@@ -16,6 +16,7 @@ import * as InlineFormatDelete from '../delete/InlineFormatDelete';
 import * as MediaDelete from '../delete/MediaDelete';
 import * as Outdent from '../delete/Outdent';
 import * as TableDelete from '../delete/TableDelete';
+import * as TagDelete from '../delete/TagDelete';
 import * as InputEvents from '../events/InputEvents';
 
 import * as MatchKeys from './MatchKeys';
@@ -70,7 +71,8 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: K
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(InlineFormatDelete.backspaceDelete, editor, false) },
     { keyCode: VK.DELETE, action: MatchKeys.action(InlineFormatDelete.backspaceDelete, editor, true) },
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(DivDelete.backspaceDelete, editor, false) },
-    { keyCode: VK.DELETE, action: MatchKeys.action(DivDelete.backspaceDelete, editor, true) }
+    { keyCode: VK.DELETE, action: MatchKeys.action(DivDelete.backspaceDelete, editor, true) },
+    { keyCode: VK.BACKSPACE, action: MatchKeys.action(TagDelete.backspaceDelete, editor) },
   ], evt)
     .filter((_) => editor.selection.isEditable())
     .each((applyAction) => {
@@ -112,6 +114,7 @@ const setup = (editor: Editor, caret: Cell<Text | null>): void => {
   editor.on('keydown', (evt: EditorEvent<KeyboardEvent>) => {
     isBackspaceKeydown = evt.keyCode === VK.BACKSPACE;
 
+    debugger;
     if (!evt.isDefaultPrevented()) {
       executeKeydownOverride(editor, caret, evt);
     }

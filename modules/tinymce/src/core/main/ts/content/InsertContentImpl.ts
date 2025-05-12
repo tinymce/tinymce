@@ -237,14 +237,9 @@ const deleteSelectedContent = (editor: Editor): void => {
   }
 };
 
-const isSelectionOverWholeTextNode = (range: Range): boolean => isSelectionOverWholeNode(range, NodeType.isText);
+const isSelectionOverWholeTextNode = (range: Range): boolean => SelectionUtils.isSelectionOverWholeNode(range, NodeType.isText);
 
-const isSelectionOverWholeAnchor = (range: Range): boolean => isSelectionOverWholeNode(range, NodeType.isAnchor);
-
-const isSelectionOverWholeNode = (range: Range, nodeTypePredicate: (n: Node) => boolean): boolean =>
-  range.startContainer === range.endContainer
-    && range.endOffset - range.startOffset === 1
-    && nodeTypePredicate(range.startContainer.childNodes[range.startOffset]);
+const isSelectionOverWholeAnchor = (range: Range): boolean => SelectionUtils.isSelectionOverWholeNode(range, NodeType.isAnchor);
 
 const findMarkerNode = (scope: AstNode): Optional<AstNode> => {
   for (let markerNode: AstNode | null | undefined = scope; markerNode; markerNode = markerNode.walk()) {
