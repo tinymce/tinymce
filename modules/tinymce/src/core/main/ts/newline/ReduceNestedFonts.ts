@@ -1,44 +1,25 @@
+import { Arr, Optional } from '@ephox/katamari';
 import { Attribute, Compare, Css, Remove, SugarElement, Traverse, SugarNode } from '@ephox/sugar';
 
 const reduceFontStyleNesting = (block: Element, node: Element): void => {
   const blockSugar = SugarElement.fromDom(block);
   const nodeSugar = SugarElement.fromDom(node);
-  flattenFontSize(blockSugar, nodeSugar);
-  mergeSameTypeElements(blockSugar, nodeSugar);
-};
+  const isEndBlock = (element: SugarElement) => Compare.eq(element, blockSugar);
+  const elements = [ nodeSugar, ...Traverse.parentsElement(nodeSugar, isEndBlock) ];
+  let fontSize = Optional.none<string>();
 
-const flattenFontSize = (block: SugarElement, node: SugarElement, fontSize: string | null = null): void => {
-  if (Compare.eq(block, node)) {
-    return;
-  }
-
-  if (fontSize !== null) {
-    Css.remove(node, 'font-size');
-    Attribute.remove(node, 'data-mce-style');
-  } else {
-    fontSize = Css.getRaw(node, 'font-size').getOr(null);
-  }
-
-  Traverse.parentElement(node).each((parent) => flattenFontSize(block, parent, fontSize));
-};
-
-const mergeSameTypeElements = (block: SugarElement, node: SugarElement): void => {
-  if (Compare.eq(block, node)) {
-    return;
-  }
-
-  Traverse.parentElement(node).each((parent) => {
-    if (Compare.eq(parent, block)) {
-      return;
+  Arr.each(elements, (element, index) => {
+    if (fontSize.isSome()) {
+      Css.remove(element, 'font-size');
+      Attribute.remove(element, 'data-mce-style');
+    } else {
+      fontSize = Css.getRaw(element, 'font-size');
     }
 
-    Traverse.parentElement(parent).each((grandparent) => {
-      if (Attribute.hasNone(parent) && SugarNode.name(parent) === SugarNode.name(node)) {
-        Remove.unwrap(parent);
-        mergeSameTypeElements(block, grandparent);
-        return;
+    Optional.from(elements[index - 1]).each((previousElement) => {
+      if (Attribute.hasNone(element) && SugarNode.name(element) === SugarNode.name(previousElement)) {
+        Remove.unwrap(element);
       }
-      mergeSameTypeElements(block, parent);
     });
   });
 };
