@@ -90,13 +90,8 @@ const WindowManager = (editor: Editor): WindowManager => {
   const closeDialog = <T extends Dialog.DialogData>(dialog: InstanceApi<T>) => {
     fireCloseEvent(dialog);
 
-    let dialogTriggerElement: Optional<SugarElement<HTMLElement>> = Optional.none();
-    dialogs = Arr.filter(dialogs, ({ instanceApi, triggerElement }) => {
-      if (instanceApi === dialog) {
-        dialogTriggerElement = triggerElement;
-      }
-      return instanceApi !== dialog;
-    });
+    dialogs = Arr.filter(dialogs, ({ instanceApi }) => instanceApi !== dialog);
+    const dialogTriggerElement = Arr.findMap(dialogs, ({ instanceApi, triggerElement }) => instanceApi === dialog ? triggerElement : Optional.none());
 
     // Move focus back to editor when the last window is closed
     if (dialogs.length === 0) {
@@ -131,15 +126,19 @@ const WindowManager = (editor: Editor): WindowManager => {
     return storeSelectionAndOpenDialog(() => getImplementation().openUrl(args, closeDialog));
   };
 
+  const tryToRestoreFocus = (activeEl: Optional<SugarElement<HTMLElement>>): void => {
+    if (dialogs.length !== 0) {
+      // If there are some dialogs, the confirm/alert was probably triggered from the dialog
+      // Move focus to the element that was active before the confirm/alert was opened
+      activeEl.each((el) => Focus.focus(el));
+    }
+  };
+
   const alert = (message: string, callback?: () => void, scope?: any) => {
     const activeEl = Focus.active();
     const windowManagerImpl = getImplementation();
     windowManagerImpl.alert(message, funcBind(scope ? scope : windowManagerImpl, () => {
-      if (dialogs.length !== 0) {
-        // If there are some dialogs, the alert was probably triggered from the dialog
-        // Move focus to the element that was active before the alert was opened
-        activeEl.each((el) => Focus.focus(el));
-      }
+      tryToRestoreFocus(activeEl);
       callback?.();
     }));
   };
@@ -148,11 +147,7 @@ const WindowManager = (editor: Editor): WindowManager => {
     const activeEl = Focus.active();
     const windowManagerImpl = getImplementation();
     windowManagerImpl.confirm(message, funcBind(scope ? scope : windowManagerImpl, (state: boolean) => {
-      if (dialogs.length !== 0) {
-        // If there are some dialogs, the confirm was probably triggered from the dialog
-        // Move focus to the element that was active before the confirm was opened
-        activeEl.each((el) => Focus.focus(el));
-      }
+      tryToRestoreFocus(activeEl);
       callback?.(state);
     }));
   };
