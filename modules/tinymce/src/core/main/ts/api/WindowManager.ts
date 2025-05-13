@@ -147,7 +147,7 @@ const WindowManager = (editor: Editor): WindowManager => {
     const activeEl = Focus.active();
     const windowManagerImpl = getImplementation();
     windowManagerImpl.confirm(message, funcBind(scope ? scope : windowManagerImpl, (state: boolean) => {
-      tryToRestoreFocus(activeEl);
+      restoreFocus(activeEl);
       callback?.(state);
     }));
   };
