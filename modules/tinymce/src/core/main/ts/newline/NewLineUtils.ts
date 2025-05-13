@@ -1,5 +1,5 @@
 import { Arr, Fun, Obj, Optional, Optionals, Unicode } from '@ephox/katamari';
-import { Css, Insert, SugarElement, Traverse } from '@ephox/sugar';
+import { Css, Insert, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
@@ -35,12 +35,13 @@ const moveToCaretPosition = (editor: Editor, root: Node): void => {
 
   if (/^(LI|DT|DD)$/.test(root.nodeName)) {
     const firstChild = firstNonWhiteSpaceNodeSibling(root.firstChild);
-
     if (firstChild && /^(UL|OL|DL)$/.test(firstChild.nodeName)) {
       root.insertBefore(dom.doc.createTextNode(Unicode.nbsp), root.firstChild);
     } else if (firstChild && dom.isEmpty(firstChild)) {
       const element = Traverse.leftmostLeaf(SugarElement.fromDom(firstChild));
-      Insert.append(element, SugarElement.fromText(Unicode.nbsp));
+      if (SugarNode.name(element) !== 'br') {
+        Insert.append(element, SugarElement.fromText(Unicode.nbsp));
+      }
     }
   }
 
