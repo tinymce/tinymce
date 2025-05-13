@@ -126,7 +126,7 @@ const WindowManager = (editor: Editor): WindowManager => {
     return storeSelectionAndOpenDialog(() => getImplementation().openUrl(args, closeDialog));
   };
 
-  const tryToRestoreFocus = (activeEl: Optional<SugarElement<HTMLElement>>): void => {
+  const restoreFocus = (activeEl: Optional<SugarElement<HTMLElement>>): void => {
     if (dialogs.length !== 0) {
       // If there are some dialogs, the confirm/alert was probably triggered from the dialog
       // Move focus to the element that was active before the confirm/alert was opened
@@ -138,7 +138,7 @@ const WindowManager = (editor: Editor): WindowManager => {
     const activeEl = Focus.active();
     const windowManagerImpl = getImplementation();
     windowManagerImpl.alert(message, funcBind(scope ? scope : windowManagerImpl, () => {
-      tryToRestoreFocus(activeEl);
+      restoreFocus(activeEl);
       callback?.();
     }));
   };
