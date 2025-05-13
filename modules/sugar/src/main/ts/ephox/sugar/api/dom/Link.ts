@@ -2,6 +2,7 @@ import { SugarElement } from '../node/SugarElement';
 import * as SugarHead from '../node/SugarHead';
 import * as Attribute from '../properties/Attribute';
 import * as Platform from '../view/Platform';
+
 import * as Insert from './Insert';
 
 const addToHead = (doc: SugarElement<Document>, tag: SugarElement<Node>): void => {

@@ -5,6 +5,7 @@ import * as ColumnSizes from '../resize/ColumnSizes';
 import * as Redistribution from '../resize/Redistribution';
 import * as Sizes from '../resize/Sizes';
 import * as CellUtils from '../util/CellUtils';
+
 import { DetailExt, RowDetail, Column, Detail } from './Structs';
 import { Warehouse } from './Warehouse';
 

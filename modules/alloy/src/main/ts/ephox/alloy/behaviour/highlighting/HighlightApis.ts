@@ -5,6 +5,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import { Stateless } from '../common/BehaviourState';
+
 import { HighlightingConfig } from './HighlightingTypes';
 
 // THIS IS NOT API YET

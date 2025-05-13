@@ -3,6 +3,7 @@ import { Attribute, Class } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Stateless } from '../common/BehaviourState';
+
 import { TransitioningConfig, TransitionProperties } from './TransitioningTypes';
 
 export interface TransitionRoute {

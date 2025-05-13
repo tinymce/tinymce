@@ -3,6 +3,7 @@ import { Arr, Optional, Result, Type } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
 import { baseToolbarButtonFields, BaseToolbarButtonInstanceApi, BaseToolbarButtonSpec } from '../toolbar/ToolbarButton';
+
 import { ContextBar, contextBarFields, ContextBarSpec } from './ContextBar';
 
 export interface ToolbarGroupSpec {

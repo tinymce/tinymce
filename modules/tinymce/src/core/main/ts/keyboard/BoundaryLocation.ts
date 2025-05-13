@@ -5,6 +5,7 @@ import CaretPosition from '../caret/CaretPosition';
 import * as CaretUtils from '../caret/CaretUtils';
 import { getParentCaretContainer } from '../fmt/FormatContainer';
 import * as LazyEvaluator from '../util/LazyEvaluator';
+
 import * as InlineUtils from './InlineUtils';
 
 export interface LocationAdt {

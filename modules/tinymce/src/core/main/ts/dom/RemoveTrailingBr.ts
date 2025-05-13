@@ -6,6 +6,7 @@ import Schema from '../api/html/Schema';
 import Tools from '../api/util/Tools';
 import * as TransparentElements from '../content/TransparentElements';
 import { isEmpty, paddEmptyNode } from '../html/ParserUtils';
+
 import { DomSerializerSettings } from './DomSerializerImpl';
 
 export const addNodeFilter = (settings: DomSerializerSettings, htmlParser: DomParser, schema: Schema): void => {

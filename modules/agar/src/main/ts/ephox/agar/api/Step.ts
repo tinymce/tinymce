@@ -3,6 +3,7 @@ import { Failure } from '@ephox/bedrock-common';
 import * as AsyncActions from '../pipe/AsyncActions';
 import * as GeneralActions from '../pipe/GeneralActions';
 import { DieFn, NextFn, Pipe, RunFn } from '../pipe/Pipe';
+
 import { addLogging, GuardFn } from './Guard';
 import { addLogEntry, TestLogs } from './TestLogs';
 

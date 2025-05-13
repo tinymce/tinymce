@@ -4,6 +4,7 @@ import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
 import { NodeChangeEvent, SetSelectionRangeEvent } from '../api/EventTypes';
 import { EditorEvent } from '../api/util/EventDispatcher';
+
 import * as SelectionBookmark from './SelectionBookmark';
 
 type StoreThrottler = Throttler.Throttler<[]>;

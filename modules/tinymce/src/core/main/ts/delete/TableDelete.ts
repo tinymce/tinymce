@@ -11,6 +11,7 @@ import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as Parents from '../dom/Parents';
 import * as TableCellSelection from '../selection/TableCellSelection';
+
 import * as DeleteElement from './DeleteElement';
 import { deleteRangeContents } from './DeleteUtils';
 import * as TableDeleteAction from './TableDeleteAction';

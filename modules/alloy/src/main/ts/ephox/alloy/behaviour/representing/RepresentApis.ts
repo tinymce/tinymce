@@ -1,4 +1,5 @@
 import { AlloyComponent } from '../../api/component/ComponentApi';
+
 import { RepresentingConfig, RepresentingState } from './RepresentingTypes';
 
 const onLoad = (component: AlloyComponent, repConfig: RepresentingConfig, repState: RepresentingState): void => {

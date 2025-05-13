@@ -5,6 +5,7 @@ import Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import * as LazyEvaluator from '../util/LazyEvaluator';
+
 import * as ContextSelectors from './ContextSelectors';
 import * as NewLineUtils from './NewLineUtils';
 

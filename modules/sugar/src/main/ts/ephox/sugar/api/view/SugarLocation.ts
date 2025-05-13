@@ -1,5 +1,6 @@
 import { inBody } from '../node/SugarBody';
 import { SugarElement } from '../node/SugarElement';
+
 import { SugarPosition } from './SugarPosition';
 
 const boxPosition = (dom: Element): SugarPosition => {

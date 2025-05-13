@@ -11,6 +11,7 @@ import * as Utils from '../core/TableUtils';
 import { ephemera } from '../selection/Ephemera';
 import { getCellsFromSelection } from '../selection/TableSelection';
 import * as TableSelection from '../selection/TableSelection';
+
 import * as Events from './Events';
 import * as Options from './Options';
 import { TableResizeHandler } from './TableResizeHandler';

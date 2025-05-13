@@ -7,6 +7,7 @@ import * as NodeType from '../dom/NodeType';
 import * as RangeNodes from '../selection/RangeNodes';
 import { RangeLikeObject } from '../selection/RangeTypes';
 import { isContent, isNbsp, isWhiteSpace } from '../text/CharType';
+
 import { Format } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 

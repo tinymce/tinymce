@@ -20,6 +20,7 @@ import { RgbaColour, Transformations } from '@ephox/acid';
 import { Obj, Unicode } from '@ephox/katamari';
 
 import { URLConverter } from '../OptionTypes';
+
 import Schema, { SchemaMap } from './Schema';
 
 export type StyleMap = Record<string, string | number>;
@@ -58,6 +59,7 @@ const Styles = (settings: StylesSettings = {}, schema?: Schema): Styles => {
     encodingLookup[invisibleChar + i] = encodingItems[i];
   }
 
+  // eslint-disable-next-line consistent-this
   const self: Styles = {
     /**
      * Parses the specified style value into an object collection. This parser will also

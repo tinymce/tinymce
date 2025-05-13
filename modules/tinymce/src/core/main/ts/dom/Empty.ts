@@ -4,6 +4,7 @@ import { Compare, ContentEditable, SugarNode, SugarElement, Traverse, PredicateE
 import DomTreeWalker from '../api/dom/TreeWalker';
 import Schema from '../api/html/Schema';
 import { isWhitespaceText, isZwsp } from '../text/Whitespace';
+
 import * as NodeType from './NodeType';
 
 interface IsEmptyOptions {
