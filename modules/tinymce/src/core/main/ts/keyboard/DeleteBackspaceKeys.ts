@@ -114,7 +114,6 @@ const setup = (editor: Editor, caret: Cell<Text | null>): void => {
   editor.on('keydown', (evt: EditorEvent<KeyboardEvent>) => {
     isBackspaceKeydown = evt.keyCode === VK.BACKSPACE;
 
-    debugger;
     if (!evt.isDefaultPrevented()) {
       executeKeydownOverride(editor, caret, evt);
     }
