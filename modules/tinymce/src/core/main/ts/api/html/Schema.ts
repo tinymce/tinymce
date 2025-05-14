@@ -157,7 +157,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     'blockquote center dir fieldset header footer article section hgroup aside main nav figure');
   const blockElementsMap = createLookupTable('block_elements', 'hr table tbody thead tfoot ' +
     'th tr td li ol ul caption dl dt dd noscript menu isindex option ' +
-    'datalist select optgroup figcaption details summary html body multicol listing', textBlockElementsMap);
+    'datalist select optgroup figcaption details summary html body multicol listing colgroup col', textBlockElementsMap);
   const textInlineElementsMap = createLookupTable('text_inline_elements', 'span strong b em i font s strike u var cite ' +
     'dfn code mark q sup sub samp');
 
