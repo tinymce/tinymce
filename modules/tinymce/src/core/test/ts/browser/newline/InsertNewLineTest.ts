@@ -8,7 +8,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as CaretFormat from 'tinymce/core/fmt/CaretFormat';
-import { insertNewLine } from 'tinymce/core/newline/InsertDetailsNewLine';
 import * as InsertNewLine from 'tinymce/core/newline/InsertNewLine';
 
 describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
@@ -1665,6 +1664,12 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
   });
 
   context('nested inline elements', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      indent: false,
+      base_url: '/project/tinymce/js/tinymce',
+      extended_valid_elements: 'span[*]'
+    }, [], true);
+
     it('TINY-12073: Press enter in nested span, should flatten spans and preserve one font-size', () => {
       const editor = hook.editor();
       editor.setContent('<p><span style="font-size: 24pt;">Lorem <span style="font-size: 10pt;">Ipsum</span></span></p>');
