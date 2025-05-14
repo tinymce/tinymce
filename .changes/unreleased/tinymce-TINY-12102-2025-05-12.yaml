@@ -1,7 +1,6 @@
 project: tinymce
 kind: Fixed
-body: New list item was not inserted correctly, if existing list item had <p> tag
-  inside.
+body: New list item was not inserted correctly when existing list item had a block element inside.
 time: 2025-05-12T15:19:38.897889+02:00
 custom:
   Issue: TINY-12102
