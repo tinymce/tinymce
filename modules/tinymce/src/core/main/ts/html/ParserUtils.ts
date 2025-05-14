@@ -52,11 +52,22 @@ const findClosestEditingHost = (scope: AstNode): Optional<AstNode> => {
   return Optional.from(editableNode);
 };
 
+const getAllDescendants = (scope: AstNode): AstNode[] => {
+  const collection: AstNode[] = [];
+
+  for (let node = scope.firstChild; node; node = node.walk()) {
+    collection.push(node);
+  }
+
+  return collection;
+};
+
 export {
   paddEmptyNode,
   isPaddedWithNbsp,
   hasOnlyChild,
   isEmpty,
   isLineBreakNode,
-  findClosestEditingHost
+  findClosestEditingHost,
+  getAllDescendants
 };

@@ -557,14 +557,13 @@ describe('browser.tinymce.core.content.insert.InsertContentTest', () => {
       editor,
       '<table>' +
         '<button>' +
-          '<a>' +
-            '<meta>' +
-            '</meta>' +
+          '<a href="#">' +
+            '<meta>foo</meta>' +
           '</a>' +
         '</button>' +
       '</table>'
     );
-    TinyAssertions.assertContent(editor, '');
+    TinyAssertions.assertContent(editor, '<p><button><a href="#">foo</a></button></p>');
 
     editor.setContent('');
     TinySelections.setCursor(editor, [ 0 ], 0);
@@ -578,8 +577,8 @@ describe('browser.tinymce.core.content.insert.InsertContentTest', () => {
                 '<button>' +
                   '<img/>' +
                   '<button>' +
-                    '<a>' +
-                      '<meta></meta>' +
+                    '<a href="#">' +
+                      '<meta>foo</meta>' +
                     '</a>' +
                   '</button>' +
                   '<img/>' +
@@ -600,7 +599,7 @@ describe('browser.tinymce.core.content.insert.InsertContentTest', () => {
               '<button>' +
                 '<img>' +
               '</button>' +
-              '<button></button>' +
+              '<button><a href="#">foo</a></button>' +
               '<img>' +
             '</td>' +
           '</tr>' +
@@ -684,6 +683,15 @@ describe('browser.tinymce.core.content.insert.InsertContentTest', () => {
     editor.insertContent('X');
     TinyAssertions.assertCursor(editor, [ 0, 0 ], 1);
     TinyAssertions.assertContent(editor, '<p>X</p>');
+  });
+
+  it('TINY-11927: Inserting invalid content should clean away invalid children', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>ad</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], 1);
+    editor.insertContent('<b><summary>bc</summary></b>');
+    TinyAssertions.assertContentPresence(editor, { summary: 0 });
+    TinyAssertions.assertContent(editor, '<p>a<strong>bc</strong>d</p>');
   });
 
   context('Transparent blocks', () => {
