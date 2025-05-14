@@ -1,4 +1,5 @@
 import * as IdUtils from '../util/IdUtilts';
+
 import * as Num from './Num';
 
 /**
@@ -29,7 +30,7 @@ const generate = (prefix: string): string => {
  * In accordance with RFC 4122 (https://datatracker.ietf.org/doc/html/rfc4122)
  */
 const uuidV4 = (): `${string}-${string}-${string}-${string}-${string}` => {
-  // eslint-disable-next-line @typescript-eslint/unbound-method
+
   if (window.isSecureContext) {
     return window.crypto.randomUUID();
   } else {
