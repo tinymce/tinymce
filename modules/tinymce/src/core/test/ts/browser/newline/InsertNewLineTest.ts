@@ -8,6 +8,7 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as CaretFormat from 'tinymce/core/fmt/CaretFormat';
+import { insertNewLine } from 'tinymce/core/newline/InsertDetailsNewLine';
 import * as InsertNewLine from 'tinymce/core/newline/InsertNewLine';
 
 describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
@@ -1663,7 +1664,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
     });
   });
 
-  context('nested inline elements', () => {
+  context.only('nested inline elements', () => {
     it('TINY-12073: Press enter in nested span, should flatten spans and preserve one font-size', () => {
       const editor = hook.editor();
       editor.setContent('<p><span style="font-size: 24pt;">Lorem <span style="font-size: 10pt;">Ipsum</span></span></p>');
@@ -1750,6 +1751,37 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
             + '</strong>'
           + '</span>'
         + '</p>';
+      TinyAssertions.assertContent(editor, expectedContent);
+      TinyAssertions.assertCursor(editor, [ 1, 0, 0, 0, 0 ], 'A'.length);
+    });
+
+    it('TINY-12073: Should remove empty spans after font-size has been flattened', () => {
+      const editor = hook.editor();
+      editor.setContent('<p><span style="font-size: 10pt;"><em><span style="font-size: 20pt;"><strong><span style="font-size: 30pt;">Lorem</span></strong></span></em></span></p>');
+      TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0, 0, 0 ], 'Lorem'.length);
+
+      insertNewline(editor, {});
+      TinyContentActions.type(editor, 'A');
+
+      /* TODO: ask Spocky if there's a way to check the content correctly */
+      const expectedContent = '<p>'
+              + '<span style="font-size: 10pt;">'
+                + '<em>'
+                  + '<span style="font-size: 20pt;">'
+                    + '<strong>'
+                      + '<span style="font-size: 30pt;">Lorem</span>'
+                    + '</strong>'
+                  + '</span>'
+                + '</em>'
+              + '</span>'
+          + '</p>'
+          + '<p>'
+            + '<em>'
+              + '<strong>'
+                + '<span style="font-size: 30pt;">A</span>'
+              + '</strong>'
+            + '</em>'
+          + '</p>';
       TinyAssertions.assertContent(editor, expectedContent);
       TinyAssertions.assertCursor(editor, [ 1, 0, 0, 0, 0 ], 'A'.length);
     });

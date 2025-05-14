@@ -67,27 +67,6 @@ const parents = (element: SugarElement<Node>, isRoot?: (e: SugarElement<Node>) =
   return ret;
 };
 
-const parentsElement = (element: SugarElement<Element>, isRoot?: (e: SugarElement<Element>) => boolean): SugarElement<Element>[] => {
-  const stop = Type.isFunction(isRoot) ? isRoot : Fun.never;
-
-  // This is used a *lot* so it needs to be performant, not recursive
-  let dom: Element = element.dom;
-  const ret: SugarElement<Element>[] = [];
-
-  while (dom.parentElement !== null && dom.parentElement !== undefined) {
-    const rawParent = dom.parentElement;
-    const p = SugarElement.fromDom(rawParent);
-    ret.push(p);
-
-    if (stop(p) === true) {
-      break;
-    } else {
-      dom = rawParent;
-    }
-  }
-  return ret;
-};
-
 const siblings = (element: SugarElement<Node>): SugarElement<Node>[] => {
   // TODO: Refactor out children so we can just not add self instead of filtering afterwards
   const filterSelf = <E> (elements: SugarElement<E>[]) => Arr.filter(elements, (x) => !Compare.eq(element, x));
@@ -156,7 +135,6 @@ export {
   parentElement,
   findIndex,
   parents,
-  parentsElement,
   siblings,
   prevSibling,
   offsetParent,
