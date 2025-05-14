@@ -1763,7 +1763,6 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       insertNewline(editor, {});
       TinyContentActions.type(editor, 'A');
 
-      /* TODO: ask Spocky if there's a way to check the content correctly */
       const expectedContent = '<p>'
               + '<span style="font-size: 10pt;">'
                 + '<em>'
