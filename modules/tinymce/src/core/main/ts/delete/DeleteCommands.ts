@@ -13,8 +13,8 @@ import * as InlineBoundaryDelete from './InlineBoundaryDelete';
 import * as InlineFormatDelete from './InlineFormatDelete';
 import * as MediaDelete from './MediaDelete';
 import * as Outdent from './Outdent';
+import * as SelectedHTMLElementDelete from './SelectedHTMLElementDelete';
 import * as TableDelete from './TableDelete';
-import * as TagDelete from './TagDelete';
 
 const findAction = (editor: Editor, caret: Cell<Text | null>, forward: boolean) =>
   Arr.findMap([
@@ -29,7 +29,7 @@ const findAction = (editor: Editor, caret: Cell<Text | null>, forward: boolean) 
     BlockRangeDelete.backspaceDelete,
     InlineFormatDelete.backspaceDelete,
     DivDelete.backspaceDelete,
-    TagDelete.backspaceDelete,
+    SelectedHTMLElementDelete.backspaceDelete,
   ], (item) => item(editor, forward))
     .filter((_) => editor.selection.isEditable());
 

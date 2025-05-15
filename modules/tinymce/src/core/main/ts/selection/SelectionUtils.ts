@@ -141,11 +141,19 @@ const isSelectionOverWholeNode = (range: Range, nodeTypePredicate: (n: Node) => 
     && range.endOffset - range.startOffset === 1
     && nodeTypePredicate(range.startContainer.childNodes[range.startOffset]);
 
+const isSelectionOverWholeHTMLElement = (range: Range): boolean => isSelectionOverWholeNode(range, NodeType.isHTMLElement);
+
+const isSelectionOverWholeTextNode = (range: Range): boolean => isSelectionOverWholeNode(range, NodeType.isText);
+
+const isSelectionOverWholeAnchor = (range: Range): boolean => isSelectionOverWholeNode(range, NodeType.isAnchor);
+
 export {
   hasAllContentsSelected,
   moveEndPoint,
   hasAnyRanges,
   runOnRanges,
   preserve,
-  isSelectionOverWholeNode
+  isSelectionOverWholeHTMLElement,
+  isSelectionOverWholeTextNode,
+  isSelectionOverWholeAnchor
 };
