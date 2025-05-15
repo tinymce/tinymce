@@ -5,6 +5,7 @@ import { NoState, Stateless } from '../behaviour/common/BehaviourState';
 import * as Fields from '../data/Fields';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
+
 import { EscapingConfig, KeyRuleHandler } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 

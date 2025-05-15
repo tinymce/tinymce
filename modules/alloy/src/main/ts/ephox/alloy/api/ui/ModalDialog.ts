@@ -19,6 +19,7 @@ import * as AlloyEvents from '../events/AlloyEvents';
 import * as NativeEvents from '../events/NativeEvents';
 import * as SystemEvents from '../events/SystemEvents';
 import * as Attachment from '../system/Attachment';
+
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 

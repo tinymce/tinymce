@@ -8,6 +8,7 @@ import * as RangeNodes from '../../selection/RangeNodes';
 import { RangeLikeObject } from '../../selection/RangeTypes';
 import * as RangeWalk from '../../selection/RangeWalk';
 import * as SplitRange from '../../selection/SplitRange';
+
 import DOMUtils from './DOMUtils';
 
 interface RangeUtils {

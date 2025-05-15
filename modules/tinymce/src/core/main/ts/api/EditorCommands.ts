@@ -1,6 +1,7 @@
 import { Arr, Obj, Type } from '@ephox/katamari';
 
 import * as SelectionBookmark from '../selection/SelectionBookmark';
+
 import Editor from './Editor';
 
 /**
@@ -11,8 +12,8 @@ import Editor from './Editor';
  * @class tinymce.EditorCommands
  */
 
-export type EditorCommandCallback<S> = (this: S, ui: boolean, value: any) => void;
-export type EditorCommandsCallback = (command: string, ui: boolean, value?: any) => void;
+export type EditorCommandCallback<S> = (this: S, ui: boolean, value: any, args?: ExecCommandArgs) => void;
+export type EditorCommandsCallback = (command: string, ui: boolean, value?: any, args?: ExecCommandArgs) => void;
 
 interface Commands {
   state: Record<string, (command: string) => boolean>;
@@ -78,8 +79,8 @@ class EditorCommands {
 
     const func = this.commands.exec[lowerCaseCommand];
     if (Type.isFunction(func)) {
-      func(lowerCaseCommand, ui, value);
-      editor.dispatch('ExecCommand', { command, ui, value });
+      func(lowerCaseCommand, ui, value, args);
+      editor.dispatch('ExecCommand', { command, ui, value, args });
       return true;
     }
 
@@ -151,7 +152,7 @@ class EditorCommands {
   public addCommand(command: string, callback: EditorCommandCallback<Editor>): void;
   public addCommand(command: string, callback: EditorCommandCallback<any>, scope?: any): void {
     const lowerCaseCommand = command.toLowerCase();
-    this.commands.exec[lowerCaseCommand] = (_command, ui, value) => callback.call(scope ?? this.editor, ui, value);
+    this.commands.exec[lowerCaseCommand] = (_command, ui, value, args) => callback.call(scope ?? this.editor, ui, value, args);
   }
 
   /**

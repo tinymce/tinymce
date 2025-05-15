@@ -1,4 +1,5 @@
 import Editor from '../api/Editor';
+
 import * as ApplyFormat from './ApplyFormat';
 import { FormatVars } from './FormatTypes';
 import * as MatchFormat from './MatchFormat';

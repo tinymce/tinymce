@@ -2,6 +2,7 @@ import { Optional } from '@ephox/katamari';
 
 import ClosestOrAncestor from '../../impl/ClosestOrAncestor';
 import { SugarElement } from '../node/SugarElement';
+
 import * as PredicateFind from './PredicateFind';
 import * as Selectors from './Selectors';
 

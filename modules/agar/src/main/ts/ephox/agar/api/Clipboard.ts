@@ -5,6 +5,7 @@ import { createCopyEvent, createCutEvent, createPasteEvent } from '../clipboard/
 import { createDataTransfer } from '../datatransfer/DataTransfer';
 import { getWindowFromElement } from '../dragndrop/DndEvents';
 import * as BlobReader from '../file/BlobReader';
+
 import { Chain } from './Chain';
 import * as ChainSequence from './ChainSequence';
 import { Step } from './Step';

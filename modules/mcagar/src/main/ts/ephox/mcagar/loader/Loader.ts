@@ -3,6 +3,7 @@ import { Arr, Fun, FutureResult, Global, Id, Optional, Result } from '@ephox/kat
 import { Attribute, DomEvent, Insert, Remove, SelectorFilter, SugarBody, SugarElement, SugarHead, SugarShadowDom } from '@ephox/sugar';
 
 import { Editor } from '../alien/EditorTypes';
+
 import { detectTinymceBaseUrl } from './Urls';
 
 export type SuccessCallback = (v?: any, logs?: TestLogs) => void;

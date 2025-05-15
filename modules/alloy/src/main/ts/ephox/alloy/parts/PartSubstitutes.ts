@@ -3,6 +3,7 @@ import { Arr, Fun, Merger } from '@ephox/katamari';
 import { AlloySpec } from '../api/component/SpecTypes';
 import { CompositeSketchDetail, CompositeSketchSpec } from '../api/ui/Sketcher';
 import * as UiSubstitutes from '../spec/UiSubstitutes';
+
 import { Substitutions } from './AlloyParts';
 import * as PartType from './PartType';
 

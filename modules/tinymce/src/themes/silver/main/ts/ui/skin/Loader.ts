@@ -9,6 +9,7 @@ import { TinyMCE } from 'tinymce/core/api/Tinymce';
 declare let tinymce: TinyMCE;
 
 import * as Options from '../../api/Options';
+
 import * as SkinLoaded from './SkinLoaded';
 
 type CSSDecision = {

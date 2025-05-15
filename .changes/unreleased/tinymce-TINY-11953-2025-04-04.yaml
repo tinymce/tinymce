@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: The `mceInsertContent` command could delete the parent block element when an anchor was selected.
-time: 2025-04-04T19:39:28.708179+02:00
-custom:
-  Issue: TINY-11953

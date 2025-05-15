@@ -11,6 +11,7 @@ import * as UiState from '../../UiState';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 import * as Icons from '../icons/Icons';
+
 import { formChangeEvent } from './FormEvents';
 
 type CheckboxSpec = Omit<Dialog.Checkbox, 'type'>;

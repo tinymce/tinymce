@@ -6,6 +6,7 @@ import * as CaretContainerRemove from '../caret/CaretContainerRemove';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as NodeType from '../dom/NodeType';
+
 import { LocationAdt } from './BoundaryLocation';
 
 const insertInlinePos = (pos: CaretPosition, before: boolean) => {

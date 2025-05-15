@@ -1,5 +1,6 @@
 import * as ClassList from '../../impl/ClassList';
 import { SugarElement } from '../node/SugarElement';
+
 import * as Attribute from './Attribute';
 import { Toggler } from './Toggler';
 

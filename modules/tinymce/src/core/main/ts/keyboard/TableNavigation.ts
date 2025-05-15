@@ -1,6 +1,6 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { CellLocation, CellNavigation, TableLookup } from '@ephox/snooker';
-import { Compare, ContentEditable, CursorPosition, Insert, PredicateExists, PredicateFind, SimSelection, SugarElement, SugarNode, WindowSelection } from '@ephox/sugar';
+import { Compare, ContentEditable, CursorPosition, Insert, PredicateExists, PredicateFind, SimSelection, SugarElement, SugarNode, Traverse, WindowSelection } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import * as CaretFinder from '../caret/CaretFinder';
@@ -14,6 +14,7 @@ import {
 import { findClosestPositionInAboveCell, findClosestPositionInBelowCell } from '../caret/TableCells';
 import * as NodeType from '../dom/NodeType';
 import * as ForceBlocks from '../ForceBlocks';
+
 import * as NavigationUtils from './NavigationUtils';
 
 type PositionsUntilFn = (scope: HTMLElement, start: CaretPosition) => LineInfo;
@@ -127,13 +128,17 @@ const getCellFirstCursorPosition = (cell: SugarElement<Node>): Range => {
   return WindowSelection.toNative(selection);
 };
 
+const rowHasEditableCell = (cell: SugarElement<HTMLTableCellElement | HTMLTableCaptionElement>) => {
+  return isCellEditable(cell) || Traverse.siblings(cell).some((element) => SugarNode.isHTMLElement(element) && isCellEditable(element));
+};
+
 const tabGo = (editor: Editor, isRoot: (e: SugarElement<Node>) => boolean, cell: CellLocation): Optional<Range> => {
   return cell.fold<Optional<Range>>(Optional.none, Optional.none, (_current, next) => {
     return CursorPosition.first(next).map((cell) => {
       return getCellFirstCursorPosition(cell);
     });
   }, (current) => {
-    if (editor.mode.isReadOnly() || !isCellInEditableTable(current)) {
+    if (editor.mode.isReadOnly() || !isCellInEditableTable(current) || !rowHasEditableCell(current)) {
       return Optional.none();
     }
 
@@ -152,7 +157,7 @@ const tabForward = (editor: Editor, isRoot: (e: SugarElement<Node>) => boolean, 
 const tabBackward = (editor: Editor, isRoot: (e: SugarElement<Node>) => boolean, cell: SugarElement<HTMLTableCellElement>) =>
   tabGo(editor, isRoot, CellNavigation.prev(cell, isCellEditable));
 
-const isCellEditable = (cell: SugarElement<HTMLTableCellElement>) =>
+const isCellEditable = (cell: SugarElement<HTMLElement>) =>
   ContentEditable.isEditable(cell) || PredicateExists.descendant(cell, isEditableHTMLElement);
 
 const isEditableHTMLElement = (node: SugarElement<Node>) =>
@@ -188,8 +193,8 @@ const handleTab = (editor: Editor, forward: boolean): boolean => {
 };
 
 export {
+  handleTab,
   isFakeCaretTableBrowser,
   moveH,
-  moveV,
-  handleTab
+  moveV
 };

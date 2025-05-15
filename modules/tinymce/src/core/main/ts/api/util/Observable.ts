@@ -1,4 +1,6 @@
+import * as Deprecations from '../../Deprecations';
 import * as EventUtils from '../../events/EventUtils';
+
 import EventDispatcher, { EditorEvent, MappedEvent } from './EventDispatcher';
 
 interface Observable<T extends {}> {
@@ -59,8 +61,7 @@ const Observable: Observable<any> = {
    * instance.fire('event', {...});
    */
   fire<K extends string, U extends MappedEvent<any, K>>(name: K, args?: U, bubble?: boolean) {
-    // eslint-disable-next-line no-console
-    console.warn('The "fire" event api has been deprecated and will be removed in TinyMCE 9. Use "dispatch" instead.', new Error().stack);
+    Deprecations.logFeatureDeprecationWarning('fire');
     return this.dispatch(name, args, bubble);
   },
 

@@ -6,6 +6,7 @@ import { Arr, Optional } from '@ephox/katamari';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderFooterButton } from '../general/Button';
+
 import { footerChannel } from './DialogChannels';
 
 export interface DialogMemButton {

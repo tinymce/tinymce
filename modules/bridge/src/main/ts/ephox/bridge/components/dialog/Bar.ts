@@ -1,6 +1,7 @@
 import { FieldProcessor } from '@ephox/boulder';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
+
 import { BodyComponent, BodyComponentSpec } from './BodyComponent';
 
 export interface BarSpec {

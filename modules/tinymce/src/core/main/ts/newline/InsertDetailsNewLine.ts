@@ -3,6 +3,7 @@ import { Obj, Type } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import * as NodeType from '../dom/NodeType';
+
 import * as NewLineUtils from './NewLineUtils';
 
 export const getDetailsRoot = (editor: Editor, element: Element): HTMLDetailsElement | null =>

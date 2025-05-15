@@ -17,6 +17,7 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import { AlloySpec, SketchSpec } from '../component/SpecTypes';
 import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as SystemEvents from '../events/SystemEvents';
+
 import * as Sketcher from './Sketcher';
 import * as TieredMenu from './TieredMenu';
 import { CompositeSketchFactory } from './UiSketcher';

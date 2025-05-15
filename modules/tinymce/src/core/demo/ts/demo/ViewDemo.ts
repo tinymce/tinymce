@@ -34,7 +34,6 @@ export default (): void => {
                 icon: 'copy',
                 borderless: true,
                 onAction: () => {
-                  // eslint-disable-next-line no-console
                   console.log('iconAndText');
                 }
               }
@@ -58,7 +57,6 @@ export default (): void => {
                 type: 'togglebutton',
                 icon: 'plus',
                 onAction: () => {
-                  // eslint-disable-next-line no-console
                   console.log('Plus');
                 }
               },
@@ -67,7 +65,6 @@ export default (): void => {
                 type: 'togglebutton',
                 icon: 'minus',
                 onAction: () => {
-                  // eslint-disable-next-line no-console
                   console.log('Minus');
                 }
               }

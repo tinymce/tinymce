@@ -3,6 +3,7 @@ import { Attribute, Class, SugarNode } from '@ephox/sugar';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { Stateless } from '../../behaviour/common/BehaviourState';
+
 import { DisableConfig } from './DisableTypes';
 
 // Just use "disabled" attribute for these, not "aria-disabled"

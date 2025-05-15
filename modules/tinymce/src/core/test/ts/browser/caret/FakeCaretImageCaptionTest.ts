@@ -37,6 +37,7 @@ describe('browser.tinymce.core.FakeCaretImageCaptionTest', () => {
     await Waiter.pTryUntil('Wait for fake caret to be removed', () => {
       TinyAssertions.assertContentPresence(editor, { '.mce-visual-caret': 0 });
     });
+    TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 0);
   });
 
   it('TINY-11997: should hide after tabbing inside CEF', async function () {
@@ -68,5 +69,6 @@ describe('browser.tinymce.core.FakeCaretImageCaptionTest', () => {
     await Waiter.pTryUntil('Wait for fake caret to be removed', () => {
       TinyAssertions.assertContentPresence(editor, { '.mce-visual-caret': 0 });
     });
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
   });
 });

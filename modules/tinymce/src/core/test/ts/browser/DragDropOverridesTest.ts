@@ -676,7 +676,6 @@ describe.skip('browser.tinymce.core.DragDropOverridesTest', () => {
 
     const getContentWithCefElements = (elementsNames: string[]): string => {
       if (!Arr.contains(elementsNames, 'toDrag') || !Arr.contains(elementsNames, 'destination')) {
-      // eslint-disable-next-line no-throw-literal
         throw new Error('This function require to have an element named toDrag and one destination');
       }
       return `<div>${Arr.foldl(elementsNames, (acc, elementName) =>

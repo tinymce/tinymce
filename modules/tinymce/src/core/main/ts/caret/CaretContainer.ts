@@ -1,6 +1,7 @@
 import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
 import * as Zwsp from '../text/Zwsp';
+
 import { CaretPosition } from './CaretPosition';
 
 /**

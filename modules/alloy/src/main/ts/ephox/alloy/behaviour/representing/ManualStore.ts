@@ -4,6 +4,7 @@ import { Fun } from '@ephox/katamari';
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
 import { NoState } from '../common/BehaviourState';
+
 import { ManualRepresentingState, ManualStoreConfig, RepresentingConfig } from './RepresentingTypes';
 
 interface ManualRepresentingConfig extends RepresentingConfig {

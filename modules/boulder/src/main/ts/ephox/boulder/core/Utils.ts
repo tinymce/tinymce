@@ -1,6 +1,7 @@
 import { Fun } from '@ephox/katamari';
 
 import { SimpleResult } from '../alien/SimpleResult';
+
 import * as SchemaError from './SchemaError';
 import { StructureProcessor, ValueValidator } from './StructureProcessor';
 
