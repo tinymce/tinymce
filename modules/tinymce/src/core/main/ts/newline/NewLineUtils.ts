@@ -10,6 +10,7 @@ import * as ElementType from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 import * as ScrollIntoView from '../dom/ScrollIntoView';
 import { isCaretNode } from '../fmt/FormatContainer';
+
 import * as ReduceNestedFonts from './ReduceNestedFonts';
 
 const firstNonWhiteSpaceNodeSibling = (node: Node | null): Node | null => {
