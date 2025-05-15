@@ -1,43 +1,53 @@
-import { Dragging, Focusing, Keying, SimpleSpec, Tabstopping, Tooltipping } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Dragging, Focusing, Keying, NativeEvents, SimpleSpec, SystemEvents, Tabstopping, Tooltipping } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
-import { SugarPosition } from '@ephox/sugar';
+import { Attribute, SugarPosition } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Options from '../../api/Options';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as Icons from '../icons/Icons';
-import { resize, ResizeTypes } from '../sizing/Resize';
+import * as Resize from '../sizing/Resize';
 
-const getResizeType = (editor: Editor): ResizeTypes => {
+const getResizeType = (editor: Editor): Resize.ResizeTypes => {
   const resize = Options.getResize(editor);
   if (resize === false) {
-    return ResizeTypes.None;
+    return Resize.ResizeTypes.None;
   } else if (resize === 'both') {
-    return ResizeTypes.Both;
+    return Resize.ResizeTypes.Both;
   } else {
-    return ResizeTypes.Vertical;
+    return Resize.ResizeTypes.Vertical;
   }
 };
 
-const keyboardHandler = (editor: Editor, resizeType: ResizeTypes, x: number, y: number): Optional<boolean> => {
+const getAriaValuetext = (dimensions: Resize.EditorDimensions, resizeType: Resize.ResizeTypes): string => {
+  return resizeType === Resize.ResizeTypes.Both
+    ? `Editor's height: ${dimensions.height} pixels, Editor's width: ${dimensions.width} pixels`
+    : `Editor's height: ${dimensions.height} pixels`;
+};
+
+const setAriaValuetext = (comp: AlloyComponent, dimensions: Resize.EditorDimensions, resizeType: Resize.ResizeTypes) => {
+  Attribute.set(comp.element, 'aria-valuetext', getAriaValuetext(dimensions, resizeType));
+};
+
+const keyboardHandler = (editor: Editor, resizeType: Resize.ResizeTypes, x: number, y: number): Optional<boolean> => {
   const scale = 20;
   const delta = SugarPosition(x * scale, y * scale);
-  resize(editor, delta, resizeType);
+  Resize.resize(editor, delta, resizeType);
   return Optional.some(true);
 };
 
 export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactoryBackstageProviders): Optional<SimpleSpec> => {
   const resizeType = getResizeType(editor);
-  if (resizeType === ResizeTypes.None) {
+  if (resizeType === Resize.ResizeTypes.None) {
     return Optional.none();
   }
 
-  const resizeLabel = resizeType === ResizeTypes.Both
+  const resizeLabel = resizeType === Resize.ResizeTypes.Both
     ? 'Press the arrow keys to resize the editor.'
     : 'Press the Up and Down arrow keys to resize the editor.';
 
-  const cursorClass = resizeType === ResizeTypes.Both
+  const cursorClass = resizeType === Resize.ResizeTypes.Both
     ? 'tox-statusbar__resize-cursor-both'
     : 'tox-statusbar__resize-cursor-default';
 
@@ -46,13 +56,17 @@ export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactor
     classes: [ 'tox-statusbar__resize-handle', cursorClass ],
     attributes: {
       'aria-label': providersBackstage.translate(resizeLabel),
-      'data-mce-name': 'resize-handle'
+      'data-mce-name': 'resize-handle',
+      'role': 'separator'
     },
     behaviours: [
       Dragging.config({
         mode: 'mouse',
         repositionTarget: false,
-        onDrag: (_comp, _target, delta) => resize(editor, delta, resizeType),
+        onDrag: (comp, _target, delta) => {
+          const newDimentions = Resize.resize(editor, delta, resizeType);
+          setAriaValuetext(comp, newDimentions, resizeType);
+        },
         blockerClass: 'tox-blocker'
       }),
       Keying.config({
@@ -68,7 +82,17 @@ export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactor
         providersBackstage.tooltips.getConfig({
           tooltipText: providersBackstage.translate('Resize')
         })
-      )
-    ]
+      ),
+      AddEventsBehaviour.config('set-aria-valuetext', [
+        AlloyEvents.runOnAttached((comp) => {
+          editor.on('init', () => {
+            setAriaValuetext(comp, Resize.getOriginalDimensions(editor), resizeType);
+          });
+        })
+      ])
+    ],
+    eventOrder: {
+      [SystemEvents.attachedToDom()]: [ 'add-focusable', 'set-aria-valuetext' ]
+    }
   }, providersBackstage.icons));
 };
