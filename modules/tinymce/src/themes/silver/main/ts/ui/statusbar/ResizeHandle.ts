@@ -30,10 +30,13 @@ const setAriaValuetext = (comp: AlloyComponent, dimensions: Resize.EditorDimensi
   Attribute.set(comp.element, 'aria-valuetext', getAriaValuetext(dimensions, resizeType));
 };
 
-const keyboardHandler = (editor: Editor, resizeType: Resize.ResizeTypes, x: number, y: number): Optional<boolean> => {
+const keyboardHandler = (editor: Editor, comp: AlloyComponent, resizeType: Resize.ResizeTypes, x: number, y: number): Optional<boolean> => {
   const scale = 20;
   const delta = SugarPosition(x * scale, y * scale);
-  Resize.resize(editor, delta, resizeType);
+
+  const newDimentions = Resize.resize(editor, delta, resizeType);
+  setAriaValuetext(comp, newDimentions, resizeType);
+
   return Optional.some(true);
 };
 
@@ -71,10 +74,10 @@ export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactor
       }),
       Keying.config({
         mode: 'special',
-        onLeft: () => keyboardHandler(editor, resizeType, -1, 0),
-        onRight: () => keyboardHandler(editor, resizeType, 1, 0),
-        onUp: () => keyboardHandler(editor, resizeType, 0, -1),
-        onDown: () => keyboardHandler(editor, resizeType, 0, 1),
+        onLeft: (comp) => keyboardHandler(editor, comp, resizeType, -1, 0),
+        onRight: (comp) => keyboardHandler(editor, comp, resizeType, 1, 0),
+        onUp: (comp) => keyboardHandler(editor, comp, resizeType, 0, -1),
+        onDown: (comp) => keyboardHandler(editor, comp, resizeType, 0, 1),
       }),
       Tabstopping.config({}),
       Focusing.config({}),
