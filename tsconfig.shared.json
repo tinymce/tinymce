@@ -3,7 +3,7 @@
     "moduleResolution": "node",
     "target": "es2018",
     "module": "es2015",
-    "lib": ["es2020", "dom"],
+    "lib": ["es2022", "dom"],
     "importHelpers": true,
     "declaration": true,
     "declarationMap": true,
