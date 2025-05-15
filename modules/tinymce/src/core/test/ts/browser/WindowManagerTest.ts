@@ -83,7 +83,12 @@ describe('browser.tinymce.core.WindowManagerTest', () => {
             title: 'Dialog 2',
             body: {
               type: 'panel',
-              items: []
+              items: [
+                {
+                  type: 'input',
+                  name: 'input',
+                }
+              ]
             },
             buttons: []
           });
@@ -100,6 +105,7 @@ describe('browser.tinymce.core.WindowManagerTest', () => {
 
     Mouse.trueClickOn(SugarBody.body(), triggerButtonSelector);
     await TinyUiActions.pWaitForPopup(editor, '.tox-confirm-dialog');
+    await FocusTools.pTryOnSelector('Focus should be inside confirmation dialog', SugarDocument.getDocument(), '[role="dialog"].tox-confirm-dialog button:contains("Yes")');
     TinyUiActions.clickOnUi(editor, '[role="dialog"].tox-confirm-dialog button:contains("Yes")');
 
     await FocusTools.pTryOnSelector('Focus should be restored to the trigger button', SugarDocument.getDocument(), triggerButtonSelector);
@@ -114,6 +120,7 @@ describe('browser.tinymce.core.WindowManagerTest', () => {
 
     Mouse.trueClickOn(SugarBody.body(), triggerButtonSelector);
     await TinyUiActions.pWaitForPopup(editor, '.tox-alert-dialog');
+    await FocusTools.pTryOnSelector('Focus should be inside alert dialog', SugarDocument.getDocument(), '[role="dialog"].tox-alert-dialog button:contains("OK")');
     TinyUiActions.clickOnUi(editor, '[role="dialog"].tox-alert-dialog button:contains("OK")');
 
     await FocusTools.pTryOnSelector('Focus should be restored to the trigger button', SugarDocument.getDocument(), triggerButtonSelector);
@@ -128,6 +135,7 @@ describe('browser.tinymce.core.WindowManagerTest', () => {
 
     Mouse.trueClickOn(SugarBody.body(), triggerButtonSelector);
     await TinyUiActions.pWaitForDialogByTitle(editor, 'Dialog 2');
+    await FocusTools.pTryOnSelector('Focus should be inside Dialog 2', SugarDocument.getDocument(), 'input');
     TinyUiActions.closeDialogByTitle(editor, 'Dialog 2');
 
     await FocusTools.pTryOnSelector('Focus should be restored to the trigger button', SugarDocument.getDocument(), triggerButtonSelector);
