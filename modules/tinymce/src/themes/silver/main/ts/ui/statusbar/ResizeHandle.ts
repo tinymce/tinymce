@@ -1,4 +1,4 @@
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Dragging, Focusing, Keying, NativeEvents, SimpleSpec, SystemEvents, Tabstopping, Tooltipping } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Dragging, Focusing, Keying, SimpleSpec, SystemEvents, Tabstopping, Tooltipping } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { Attribute, SugarPosition } from '@ephox/sugar';
 
