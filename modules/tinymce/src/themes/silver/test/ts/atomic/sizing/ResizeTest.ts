@@ -35,7 +35,7 @@ describe('atomic.tinymce.themes.silver.sizing.ResizeTest', () => {
     const chromeHeight = 100; // just need something smaller
     const editor = mockEditor(containerHeight, containerHeight - chromeHeight);
     const deltas = SugarPosition(leftDelta, topDelta);
-    const actual = getDimensions(editor, deltas, resizeType, containerHeight, width);
+    const actual = getDimensions(editor, deltas, resizeType);
     assert.deepEqual(actual, expected, label);
   };
 
