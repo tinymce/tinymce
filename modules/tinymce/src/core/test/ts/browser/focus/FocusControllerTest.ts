@@ -1,5 +1,5 @@
 import { after, before, context, describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 import { Attribute, Scroll, SugarDocument, SugarElement, SugarLocation, WindowVisualViewport } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -88,7 +88,7 @@ describe('browser.tinymce.core.focus.FocusControllerTest', () => {
     }, [], false);
 
     const assertEditorBodyInsideViewport = (editor: Editor) => {
-      const iframe = editor.iframeElement!;
+      const iframe = Optional.from(editor.iframeElement).getOrDie();
       const iframeBounds = SugarLocation.viewport(SugarElement.fromDom(iframe));
       const scroll = Scroll.get(SugarDocument.getDocument());
       const iframeTop = iframeBounds.top + scroll.top;

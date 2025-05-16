@@ -2,6 +2,7 @@ import { StructureSchema } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
+
 import { BaseToolbarButton, BaseToolbarButtonSpec, baseToolbarButtonFields, BaseToolbarButtonInstanceApi } from './ToolbarButton';
 
 export interface BaseToolbarToggleButtonSpec<I extends BaseToolbarButtonInstanceApi> extends BaseToolbarButtonSpec<I> {

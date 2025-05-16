@@ -3,6 +3,7 @@ import { Cell } from '@ephox/katamari';
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Options from '../api/Options';
+
 import * as VisualBlocks from './VisualBlocks';
 
 const setup = (editor: Editor, pluginUrl: string, enabledState: Cell<boolean>): void => {

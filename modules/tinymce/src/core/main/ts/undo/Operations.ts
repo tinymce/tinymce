@@ -2,6 +2,7 @@ import Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';
 import * as GetBookmark from '../bookmark/GetBookmark';
+
 import * as Levels from './Levels';
 import { isUnlocked } from './Locks';
 import { endTyping, setTyping } from './TypingState';

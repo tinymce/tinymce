@@ -1,0 +1,7 @@
+project: tinymce
+kind: Improved
+body: Focus is now restored to a dialog after closing an alert, confirmation or another
+  dialog.
+time: 2025-05-07T17:44:52.025973+02:00
+custom:
+  Issue: TINY-12038

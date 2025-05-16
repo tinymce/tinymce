@@ -4,6 +4,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import * as Options from '../api/Options';
+
 import { verticalAlignValues } from './CellAlignValues';
 import * as UiUtils from './UiUtils';
 

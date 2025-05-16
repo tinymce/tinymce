@@ -1,4 +1,5 @@
 import { Fun, Optional, Optionals } from '@ephox/katamari';
+import { SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -401,6 +402,34 @@ const Quirks = (editor: Editor): Quirks => {
     });
   };
 
+  /*
+   * Firefox-specific fix for arrow key navigation. In Firefox, users can't move the caret out of a
+   * `<figcaption>` element using the left and right arrow keys. This function handles those keystrokes
+   * to allow navigation to the previous/next sibling of the figure element.
+  */
+  const arrowInFigcaption = () => {
+    const isFigcaption = SugarNode.isTag('figcaption');
+    editor.on('keydown', (e) => {
+      if (e.keyCode === VK.LEFT || e.keyCode === VK.RIGHT) {
+        const currentNode = SugarElement.fromDom(editor.selection.getNode());
+        if (isFigcaption(currentNode) && editor.selection.isCollapsed()) {
+          Traverse.parent(currentNode).bind((parent) => {
+            if (editor.selection.getRng().startOffset === 0 && e.keyCode === VK.LEFT) {
+              return Traverse.prevSibling(parent);
+            } else if (editor.selection.getRng().endOffset === currentNode.dom.textContent?.length && e.keyCode === VK.RIGHT) {
+              return Traverse.nextSibling(parent);
+            } else {
+              return Optional.none();
+            }
+          }).each((targetSibling) => {
+            editor.selection.setCursorLocation(targetSibling.dom, 0);
+          });
+        }
+
+      }
+    });
+  };
+
   /**
    * Sets various Gecko editing options on mouse down and before a execCommand to disable inline table editing that is broken etc.
    */
@@ -743,6 +772,7 @@ const Quirks = (editor: Editor): Quirks => {
 
     // Gecko
     if (isGecko) {
+      arrowInFigcaption();
       fixFirefoxImageSelection();
       removeHrOnBackspace();
       focusBody();

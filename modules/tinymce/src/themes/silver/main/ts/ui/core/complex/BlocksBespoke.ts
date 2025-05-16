@@ -8,6 +8,7 @@ import * as Events from '../../../api/Events';
 import { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { onActionToggleFormat, onSetupEditableToggle } from '../ControlUtils';
+
 import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import { findNearest } from './utils/FormatDetection';

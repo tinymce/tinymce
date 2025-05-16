@@ -10,6 +10,7 @@ import { Arr, Fun, Optional, Singleton } from '@ephox/katamari';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { internalToolbarButtonExecute, InternalToolbarButtonExecuteEvent } from '../toolbar/button/ButtonEvents';
 import { renderToolbarButtonWith, renderToolbarToggleButtonWith } from '../toolbar/button/ToolbarButtons';
+
 import { getFormApi } from './ContextFormApi';
 
 interface ContextFormButtonRegistry {

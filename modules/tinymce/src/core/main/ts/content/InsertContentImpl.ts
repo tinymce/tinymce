@@ -24,6 +24,7 @@ import * as ParserUtils from '../html/ParserUtils';
 import * as RangeNormalizer from '../selection/RangeNormalizer';
 import * as SelectionUtils from '../selection/SelectionUtils';
 import * as Zwsp from '../text/Zwsp';
+
 import { InsertContentDetails } from './ContentTypes';
 import * as InsertList from './InsertList';
 

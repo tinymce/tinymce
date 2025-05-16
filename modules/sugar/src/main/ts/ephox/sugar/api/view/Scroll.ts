@@ -5,6 +5,7 @@ import * as Insert from '../dom/Insert';
 import * as Remove from '../dom/Remove';
 import * as SugarBody from '../node/SugarBody';
 import { SugarElement } from '../node/SugarElement';
+
 import * as SugarLocation from './SugarLocation';
 import { SugarPosition } from './SugarPosition';
 

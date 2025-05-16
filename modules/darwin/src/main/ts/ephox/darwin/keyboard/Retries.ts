@@ -5,6 +5,7 @@ import { PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
 import { WindowBridge } from '../api/WindowBridge';
 import { Situs } from '../selection/Situs';
+
 import * as Carets from './Carets';
 import * as Rectangles from './Rectangles';
 

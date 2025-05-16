@@ -34,7 +34,6 @@ export const createCharmapDialog = (): void => {
       onAction: (api, details) => {
         if (details.name === 'chars') {
           // Would log '@' if the At sign is clicked these values doesn't have to be part of the state model
-          // eslint-disable-next-line no-console
           console.log({
             char: details.value
           });

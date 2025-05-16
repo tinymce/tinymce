@@ -9,6 +9,7 @@ import { Attribute, Css } from '@ephox/sugar';
 
 import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { SimpleBehaviours } from '../alien/SimpleBehaviours';
+
 import View from './View';
 import { ViewConfig } from './ViewTypes';
 

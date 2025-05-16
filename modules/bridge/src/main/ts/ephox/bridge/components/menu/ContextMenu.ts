@@ -1,4 +1,5 @@
 import { SeparatorMenuItemSpec } from '../../api/Menu';
+
 import { CommonMenuItemSpec } from './CommonMenuItem';
 
 export interface ContextMenuItem extends CommonMenuItemSpec {

@@ -1,6 +1,7 @@
 
 import { UploadHandler } from '../file/Uploader';
 import { DynamicPatternsLookup, Pattern, RawDynamicPatternsLookup, RawPattern } from '../textpatterns/core/PatternTypes';
+
 import Editor from './Editor';
 import { PastePostProcessEvent, PastePreProcessEvent } from './EventTypes';
 import { Formats } from './fmt/Format';

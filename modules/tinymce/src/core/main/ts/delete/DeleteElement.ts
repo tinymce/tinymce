@@ -9,6 +9,7 @@ import CaretPosition from '../caret/CaretPosition';
 import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
 import * as FormatUtils from '../fmt/FormatUtils';
+
 import * as MergeText from './MergeText';
 
 const needsReposition = (pos: CaretPosition, elm: Node): boolean => {

@@ -6,6 +6,7 @@ import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 import { isFigure, isImage } from '../core/ImageData';
 import * as ImageSelection from '../core/ImageSelection';
 import * as Utils from '../core/Utils';
+
 import { Dialog } from './Dialog';
 
 const onSetupEditable = (editor: Editor) => (api: Toolbar.ToolbarButtonInstanceApi | Menu.MenuItemInstanceApi): VoidFunction => {

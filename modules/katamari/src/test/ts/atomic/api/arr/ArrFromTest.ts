@@ -6,8 +6,7 @@ import * as Arr from 'ephox/katamari/api/Arr';
 describe('atomic.katamari.api.arr.ArrFromTest', () => {
   it('works with arguments values', () => {
 
-    // eslint-disable-next-line prefer-arrow/prefer-arrow-functions,@typescript-eslint/no-unused-vars
-    const func = function (...args: number[]) {
+    const func = function (..._args: number[]) {
       assert.deepEqual(Arr.from(arguments), [ 1, 2, 3 ]);
     };
     func(1, 2, 3);

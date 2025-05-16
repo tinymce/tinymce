@@ -5,6 +5,7 @@ import Editor from '../api/Editor';
 import { isPathBookmark } from '../bookmark/BookmarkTypes';
 import * as TrimBody from '../dom/TrimBody';
 import * as Zwsp from '../text/Zwsp';
+
 import * as Fragments from './Fragments';
 import { CompleteUndoLevel, FragmentedUndoLevel, NewUndoLevel, UndoLevel } from './UndoManagerTypes';
 

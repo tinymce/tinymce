@@ -8,6 +8,7 @@ import * as Preview from '../fmt/Preview';
 import * as FormatShortcuts from '../keyboard/FormatShortcuts';
 import * as Rtc from '../Rtc';
 import { RangeLikeObject } from '../selection/RangeTypes';
+
 import Editor from './Editor';
 
 /**

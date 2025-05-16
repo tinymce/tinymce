@@ -5,6 +5,7 @@ import { Compare, SugarElement, Truncate } from '@ephox/sugar';
 
 import { elementQueue, StructAssert } from '../assertions/ApproxStructures';
 import * as Differ from '../assertions/Differ';
+
 import * as ApproxStructure from './ApproxStructure';
 import { Chain } from './Chain';
 import * as Logger from './Logger';

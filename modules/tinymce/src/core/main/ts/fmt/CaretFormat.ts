@@ -10,6 +10,7 @@ import * as PaddingBr from '../dom/PaddingBr';
 import * as SplitRange from '../selection/SplitRange';
 import { isWhiteSpace } from '../text/CharType';
 import * as Zwsp from '../text/Zwsp';
+
 import * as ExpandRange from './ExpandRange';
 import { CARET_ID, getParentCaretContainer, isCaretNode } from './FormatContainer';
 import { FormatVars } from './FormatTypes';

@@ -1,6 +1,7 @@
 import { SugarElement } from '../node/SugarElement';
 import * as Scroll from '../view/Scroll';
 import { SugarPosition } from '../view/SugarPosition';
+
 import * as DomEvent from './DomEvent';
 import { EventUnbinder } from './Types';
 

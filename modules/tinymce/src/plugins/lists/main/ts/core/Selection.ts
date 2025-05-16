@@ -6,6 +6,7 @@ import Schema from 'tinymce/core/api/html/Schema';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Options from '../api/Options';
+
 import * as NodeType from './NodeType';
 
 const listNames = [ 'OL', 'UL', 'DL' ];

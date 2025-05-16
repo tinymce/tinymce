@@ -5,6 +5,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 import * as Options from '../api/Options';
 import * as Utils from '../core/Utils';
+
 import { LinkDialogInfo } from './DialogTypes';
 import { AnchorListOptions } from './sections/AnchorListOptions';
 import { ClassListOptions } from './sections/ClassListOptions';

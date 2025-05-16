@@ -300,7 +300,7 @@ describe('browser.tinymce.core.EditorTest', () => {
     let lastArgs: IArguments | undefined;
 
     const callback = function (this: {}) { // Arrow function cannot be used with 'arguments'.
-      // eslint-disable-next-line
+      // eslint-disable-next-line consistent-this
       lastScope = this;
       lastArgs = arguments;
     };
@@ -326,7 +326,7 @@ describe('browser.tinymce.core.EditorTest', () => {
     let currentState: boolean;
 
     const callback = function (this: {}) { // Arrow function cannot be used with 'this'.
-      // eslint-disable-next-line
+      // eslint-disable-next-line consistent-this
       lastScope = this;
       return currentState;
     };
@@ -371,7 +371,7 @@ describe('browser.tinymce.core.EditorTest', () => {
     let currentValue: string;
 
     const callback = function (this: {}) { // Arrow function cannot be used with 'this'.
-      // eslint-disable-next-line
+      // eslint-disable-next-line consistent-this
       lastScope = this;
       return currentValue;
     };

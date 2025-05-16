@@ -12,6 +12,7 @@ import * as SketchBehaviours from '../component/SketchBehaviours';
 import { AlloySpec, SketchSpec } from '../component/SpecTypes';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as SystemEvents from '../events/SystemEvents';
+
 import * as Sketcher from './Sketcher';
 import { CompositeSketchFactory } from './UiSketcher';
 

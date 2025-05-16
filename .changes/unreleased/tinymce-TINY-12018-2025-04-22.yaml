@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Tab to create a new row in tables with a non-editable final row would freeze the editor.
+time: 2025-04-22T18:44:33.789955+02:00
+custom:
+    Issue: TINY-12018

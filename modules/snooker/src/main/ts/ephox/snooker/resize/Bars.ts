@@ -5,6 +5,7 @@ import { ResizeWire } from '../api/ResizeWire';
 import { Warehouse } from '../api/Warehouse';
 import * as Blocks from '../lookup/Blocks';
 import * as Styles from '../style/Styles';
+
 import * as Bar from './Bar';
 import * as BarPositions from './BarPositions';
 

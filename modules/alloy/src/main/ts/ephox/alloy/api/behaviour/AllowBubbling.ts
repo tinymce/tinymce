@@ -4,6 +4,7 @@ import * as ActiveAllowBubbling from '../../behaviour/allowbubbling/ActiveAllowB
 import AllowBubblingSchema from '../../behaviour/allowbubbling/AllowBubblingSchema';
 import { AllowBubblingBehavior } from '../../behaviour/allowbubbling/AllowBubblingTypes';
 import { SetupBehaviourCellState } from '../../behaviour/common/BehaviourCellState';
+
 import * as Behaviour from './Behaviour';
 
 const AllowBubbling: AllowBubblingBehavior = Behaviour.create({

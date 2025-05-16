@@ -8,6 +8,7 @@ import * as ItemClasses from '../ItemClasses';
 import ItemResponse from '../ItemResponse';
 import { renderCheckmark } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
+
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
 const renderImgItem = (
@@ -77,4 +78,3 @@ const renderImgItem = (
 };
 
 export { renderImgItem };
-

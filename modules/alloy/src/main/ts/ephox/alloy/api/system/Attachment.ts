@@ -3,6 +3,7 @@ import { Insert, Remove, SugarBody, SugarElement, Traverse } from '@ephox/sugar'
 
 import * as InternalAttachment from '../../system/InternalAttachment';
 import { AlloyComponent } from '../component/ComponentApi';
+
 import { GuiSystem } from './Gui';
 
 const attach = (parent: AlloyComponent, child: AlloyComponent): void => {

@@ -8,6 +8,7 @@ import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import * as Icons from '../../../icons/Icons';
 import * as Images from '../../../image/Images';
 import * as ItemClasses from '../ItemClasses';
+
 import { renderHtml, renderShortcut, renderStyledText, renderText } from './ItemSlices';
 
 export interface ItemStructure {

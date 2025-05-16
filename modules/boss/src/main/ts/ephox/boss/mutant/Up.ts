@@ -1,6 +1,7 @@
 import { Fun, Optional } from '@ephox/katamari';
 
 import { Gene } from '../api/Gene';
+
 import * as Comparator from './Comparator';
 
 const selector = (item: Gene, query: string): Optional<Gene> => {

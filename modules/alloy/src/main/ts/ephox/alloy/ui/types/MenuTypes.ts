@@ -9,6 +9,7 @@ import { FocusManager } from '../../api/focus/FocusManagers';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { CustomEvent } from '../../events/SimulatedEvent';
 import { FlatgridConfigSpec, MatrixConfigSpec, MenuConfigSpec } from '../../keying/KeyingModeTypes';
+
 import { ItemSpec } from './ItemTypes';
 
 export interface MenuGridMovementSpec {

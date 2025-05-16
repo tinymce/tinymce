@@ -1,6 +1,7 @@
 import { Arr, Cell, Fun } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
+
 import * as BlockBoundaryDelete from './BlockBoundaryDelete';
 import * as BlockRangeDelete from './BlockRangeDelete';
 import * as CaretBoundaryDelete from './CaretBoundaryDelete';

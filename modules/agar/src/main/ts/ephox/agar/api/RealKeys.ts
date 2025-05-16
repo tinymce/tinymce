@@ -2,6 +2,7 @@ import { Adt, Arr, Optional } from '@ephox/katamari';
 
 import { KeyModifiers, MixedKeyModifiers, newModifiers } from '../keyboard/FakeKeys';
 import * as SeleniumAction from '../server/SeleniumAction';
+
 import { Step } from './Step';
 
 export interface KeyPressAdt {

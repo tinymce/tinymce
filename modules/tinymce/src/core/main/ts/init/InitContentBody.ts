@@ -38,6 +38,7 @@ import { hasAnyRanges } from '../selection/SelectionUtils';
 import SelectionOverrides from '../SelectionOverrides';
 import * as TextPattern from '../textpatterns/TextPatterns';
 import Quirks from '../util/Quirks';
+
 import * as ContentCss from './ContentCss';
 import * as LicenseKeyValidation from './LicenseKeyValidation';
 

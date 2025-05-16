@@ -58,7 +58,6 @@ describe('browser.tinymce.core.annotate.AnnotationChangedTest', () => {
         });
 
         // NOTE: Have to use old function syntax here when accessing "arguments"
-        // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
         const listener: AnnotationListenerApi = function (state, name, obj) {
           // NOTE: These failures won't stop the tests, but they will stop it before it updates
           // the changes in changes.set

@@ -6,6 +6,7 @@ import { WindowBridge } from '../api/WindowBridge';
 import { Carets } from '../keyboard/Carets';
 import { Retries } from '../keyboard/Retries';
 import { Situs } from '../selection/Situs';
+
 import { BeforeAfter, BeforeAfterFailureConstructor } from './BeforeAfter';
 
 export interface KeyDirection {

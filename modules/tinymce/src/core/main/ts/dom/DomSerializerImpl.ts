@@ -12,6 +12,7 @@ import { WriterSettings } from '../api/html/Writer';
 import { URLConverter } from '../api/OptionTypes';
 import Tools from '../api/util/Tools';
 import * as Zwsp from '../text/Zwsp';
+
 import * as DomSerializerFilters from './DomSerializerFilters';
 import * as DomSerializerPreProcess from './DomSerializerPreProcess';
 import { isWsPreserveElement } from './ElementType';
