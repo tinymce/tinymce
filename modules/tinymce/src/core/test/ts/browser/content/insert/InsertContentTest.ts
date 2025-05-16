@@ -106,18 +106,6 @@ describe('browser.tinymce.core.content.insert.InsertContentTest', () => {
     TinyAssertions.assertContent(editor, '<p><strong><em>a123bc</em></strong></p>');
   });
 
-  it('TINY-1231: insertAtCaret - list into empty table cell with invalid contents', () => {
-    const editor = hook.editor();
-    editor.setContent('<table class="mce-item-table"><tbody><tr><td><br></td></tr></tbody></table>', { format: 'raw' });
-    TinySelections.setSelection(editor, [ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 0);
-    InsertContent.insertAtCaret(editor, {
-      content: '<meta http-equiv="content-type" content="text/html; charset=utf-8"><ul><li>a</li></ul>',
-      paste: true
-    });
-    TinyAssertions.assertContent(editor, '<table><tbody><tr><td><ul><li>a</li></ul></td></tr></tbody></table>');
-    TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0, 0, 0, 0 ], 1, [ 0, 0, 0, 0, 0, 0, 0 ], 1);
-  });
-
   it('TBA: insertAtCaret - content into single table cell with all content selected', () => {
     const editor = hook.editor();
     editor.setContent('<table class="mce-item-table"><tbody><tr><td>content</td></tr></tbody></table>', { format: 'raw' });
@@ -549,66 +537,6 @@ describe('browser.tinymce.core.content.insert.InsertContentTest', () => {
       '</p>');
   });
 
-  it('TINY-7756: Content with nested elements that will be invalid if parent is unwrapped', () => {
-    const editor = hook.editor();
-    editor.setContent('');
-    TinySelections.setCursor(editor, [ 0 ], 0);
-    InsertContent.insertAtCaret(
-      editor,
-      '<table>' +
-        '<button>' +
-          '<a href="#">' +
-            '<meta>foo</meta>' +
-          '</a>' +
-        '</button>' +
-      '</table>'
-    );
-    TinyAssertions.assertContent(editor, '<p><button><a href="#">foo</a></button></p>');
-
-    editor.setContent('');
-    TinySelections.setCursor(editor, [ 0 ], 0);
-    InsertContent.insertAtCaret(
-      editor,
-      '<table>' +
-        '<tbody>' +
-          '<tr>' +
-            '<td>' +
-              '<meta>' +
-                '<button>' +
-                  '<img/>' +
-                  '<button>' +
-                    '<a href="#">' +
-                      '<meta>foo</meta>' +
-                    '</a>' +
-                  '</button>' +
-                  '<img/>' +
-                '</button>' +
-              '</meta>' +
-            '</td>' +
-          '</tr>' +
-        '</tbody>' +
-      '</table>'
-    );
-
-    TinyAssertions.assertContent(
-      editor,
-      '<table>' +
-        '<tbody>' +
-          '<tr>' +
-            '<td>' +
-              '<button>' +
-                '<img>' +
-              '</button>' +
-              '<button><a href="#">foo</a></button>' +
-              '<img>' +
-            '</td>' +
-          '</tr>' +
-        '</tbody>' +
-      '</table>' +
-      `<p>${Unicode.nbsp}</p>`
-    );
-  });
-
   it('TINY-7842: Inserting content into a contenteditable=true block within a contenteditable=false parent', () => {
     const editor = hook.editor();
     editor.setContent(
@@ -685,13 +613,105 @@ describe('browser.tinymce.core.content.insert.InsertContentTest', () => {
     TinyAssertions.assertContent(editor, '<p>X</p>');
   });
 
-  it('TINY-11927: Inserting invalid content should clean away invalid children', () => {
-    const editor = hook.editor();
-    editor.setContent('<p>ad</p>');
-    TinySelections.setCursor(editor, [ 0, 0 ], 1);
-    editor.insertContent('<b><summary>bc</summary></b>');
-    TinyAssertions.assertContentPresence(editor, { summary: 0 });
-    TinyAssertions.assertContent(editor, '<p>a<strong>bc</strong>d</p>');
+  context('Invalid content', () => {
+    it('TINY-11927: Inserting invalid content should clean away invalid children', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>ad</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 1);
+      editor.insertContent('<b><summary>bc</summary></b>');
+      TinyAssertions.assertContentPresence(editor, { summary: 0 });
+      TinyAssertions.assertContent(editor, '<p>a<strong>bc</strong>d</p>');
+    });
+
+    it('TINY-11927: Should retain list blocks that are wrapped in multiple spans', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>ab</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 1);
+      editor.insertContent('<meta charset="utf-8"><span data-something="true"><span class="something">test</span><ul><li>list</li></ul></span></span>');
+      TinyAssertions.assertContentPresence(editor, { summary: 0 });
+      TinyAssertions.assertContent(editor, '<p>a<span data-something="true"><span class="something">test</span></span></p><ul><li>list</li></ul><p>b</p>');
+    });
+
+    it('TINY-11927: Should retain table blocks that are wrapped in paragraph', () => {
+      const editor = hook.editor();
+      editor.setContent('<p>ab</p>');
+      TinySelections.setCursor(editor, [ 0, 0 ], 1);
+      editor.insertContent('<p><table><tbody><tr><td>cell</td></tr></tbody></table></p>');
+      TinyAssertions.assertContentPresence(editor, { summary: 0 });
+      TinyAssertions.assertContent(editor, '<p>a</p><table><tbody><tr><td>cell</td></tr></tbody></table><p>b</p>');
+    });
+
+    it('TINY-1231: insertAtCaret - list into empty table cell with invalid contents', () => {
+      const editor = hook.editor();
+      editor.setContent('<table class="mce-item-table"><tbody><tr><td><br></td></tr></tbody></table>', { format: 'raw' });
+      TinySelections.setSelection(editor, [ 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0 ], 0);
+      InsertContent.insertAtCaret(editor, {
+        content: '<meta http-equiv="content-type" content="text/html; charset=utf-8"><ul><li>a</li></ul>',
+        paste: true
+      });
+      TinyAssertions.assertContent(editor, '<table><tbody><tr><td><ul><li>a</li></ul></td></tr></tbody></table>');
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0, 0, 0, 0 ], 1, [ 0, 0, 0, 0, 0, 0, 0 ], 1);
+    });
+
+    it('TINY-7756: Content with nested elements that will be invalid if parent is unwrapped', () => {
+      const editor = hook.editor();
+      editor.setContent('');
+      TinySelections.setCursor(editor, [ 0 ], 0);
+      InsertContent.insertAtCaret(
+        editor,
+        '<table>' +
+        '<button>' +
+          '<a href="#">' +
+            '<meta>foo</meta>' +
+          '</a>' +
+        '</button>' +
+      '</table>'
+      );
+      TinyAssertions.assertContent(editor, '<p><button><a href="#">foo</a></button></p>');
+
+      editor.setContent('');
+      TinySelections.setCursor(editor, [ 0 ], 0);
+      InsertContent.insertAtCaret(
+        editor,
+        '<table>' +
+        '<tbody>' +
+          '<tr>' +
+            '<td>' +
+              '<meta>' +
+                '<button>' +
+                  '<img/>' +
+                  '<button>' +
+                    '<a href="#">' +
+                      '<meta>foo</meta>' +
+                    '</a>' +
+                  '</button>' +
+                  '<img/>' +
+                '</button>' +
+              '</meta>' +
+            '</td>' +
+          '</tr>' +
+        '</tbody>' +
+      '</table>'
+      );
+
+      TinyAssertions.assertContent(
+        editor,
+        '<table>' +
+        '<tbody>' +
+          '<tr>' +
+            '<td>' +
+              '<button>' +
+                '<img>' +
+              '</button>' +
+              '<button><a href="#">foo</a></button>' +
+              '<img>' +
+            '</td>' +
+          '</tr>' +
+        '</tbody>' +
+      '</table>' +
+      `<p>${Unicode.nbsp}</p>`
+      );
+    });
   });
 
   context('Transparent blocks', () => {
