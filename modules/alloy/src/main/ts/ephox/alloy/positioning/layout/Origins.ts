@@ -5,6 +5,7 @@ import * as Boxes from '../../alien/Boxes';
 import * as OuterPosition from '../../frame/OuterPosition';
 import { NuPositionCss, PositionCss } from '../view/PositionCss';
 import { RepositionDecision } from '../view/Reposition';
+
 import * as Direction from './Direction';
 
 type NoneOrigin<T> = () => T;

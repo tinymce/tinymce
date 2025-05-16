@@ -1,6 +1,7 @@
 import { Type } from '@ephox/katamari';
 
 import * as Namespace from '../../html/Namespace';
+
 import AstNode, { Attributes } from './Node';
 import Schema from './Schema';
 import Writer, { WriterSettings } from './Writer';

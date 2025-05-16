@@ -4,6 +4,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { Menu } from 'tinymce/core/api/ui/Ui';
 
 import * as Options from '../../../api/Options';
+
 import { MenubarItemSpec } from './SilverMenubar';
 
 interface MenuSpec {

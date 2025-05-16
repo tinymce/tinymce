@@ -1,6 +1,7 @@
 import Editor from '../api/Editor';
 import Tools from '../api/util/Tools';
 import * as NodeType from '../dom/NodeType';
+
 import { Format, Formats, FormatVars } from './FormatTypes';
 
 const get = (editor: Editor): Formats => {

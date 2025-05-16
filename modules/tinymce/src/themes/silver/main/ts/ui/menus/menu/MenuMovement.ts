@@ -4,6 +4,7 @@ import { Optional } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
 import { colorClass, selectableClass } from '../item/ItemClasses';
+
 import { markers as getMenuMarkers } from './MenuParts';
 
 export const deriveMenuMovement = (columns: number | 'auto', presets: Toolbar.PresetTypes): MenuTypes.MenuMovementSpec => {

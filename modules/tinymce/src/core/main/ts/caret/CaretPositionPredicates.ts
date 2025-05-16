@@ -5,6 +5,7 @@ import BookmarkManager from '../api/dom/BookmarkManager';
 import * as NodeType from '../dom/NodeType';
 import { isWhiteSpace } from '../text/CharType';
 import * as Zwsp from '../text/Zwsp';
+
 import CaretPosition from './CaretPosition';
 import { getChildNodeAtRelativeOffset } from './CaretUtils';
 

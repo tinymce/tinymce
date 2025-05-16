@@ -6,6 +6,7 @@ import * as Options from '../api/Options';
 import { readImageDataFromSelection } from '../core/ImageSelection';
 import { ListUtils } from '../core/ListUtils';
 import * as Utils from '../core/Utils';
+
 import { ImageDialogInfo, ListItem } from './DialogTypes';
 
 const collect = (editor: Editor): Promise<ImageDialogInfo> => {

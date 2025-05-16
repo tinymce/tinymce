@@ -5,6 +5,7 @@ import { Compare, EventArgs, SugarElement } from '@ephox/sugar';
 import { DelayedFunction } from '../alien/DelayedFunction';
 import * as NativeEvents from '../api/events/NativeEvents';
 import * as SystemEvents from '../api/events/SystemEvents';
+
 import { GuiEventSettings } from './GuiEvents';
 
 type EventHandler = (event: EventArgs<Event>) => Optional<boolean>;

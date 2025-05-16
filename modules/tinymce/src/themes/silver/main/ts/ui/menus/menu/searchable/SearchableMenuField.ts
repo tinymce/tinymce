@@ -4,6 +4,7 @@ import { Attribute, EventArgs, SelectorFind } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import { selectableClass as usualItemClass } from '../../item/ItemClasses';
+
 import { redirectMenuItemInteractionEvent, RedirectMenuItemInteractionEventData, refetchTriggerEvent } from './SearchableMenuEvents';
 
 export interface MenuSearcherSpec {

@@ -3,6 +3,7 @@ import { Cell } from '@ephox/katamari';
 import Editor from '../api/Editor';
 import Env from '../api/Env';
 import { EditorEvent } from '../api/util/EventDispatcher';
+
 import * as Levels from './Levels';
 import { endTyping, setTyping } from './TypingState';
 import { Locks, UndoLevel, UndoManager } from './UndoManagerTypes';

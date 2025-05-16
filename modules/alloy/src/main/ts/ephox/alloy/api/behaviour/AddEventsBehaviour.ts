@@ -3,6 +3,7 @@ import { Fun } from '@ephox/katamari';
 
 import { NoState } from '../../behaviour/common/BehaviourState';
 import { AlloyEventKeyAndHandler, AlloyEventRecord, derive } from '../events/AlloyEvents';
+
 import { AlloyBehaviour, create as createBehaviour, NamedConfiguredBehaviour } from './Behaviour';
 
 // AlloyEventKeyAndHandler type argument needs to be any here to satisfy an array of handlers

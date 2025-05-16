@@ -9,6 +9,7 @@ import { CaretPosition } from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';
 import * as RangeNodes from '../selection/RangeNodes';
 import * as SelectionBookmark from '../selection/SelectionBookmark';
+
 import * as FocusController from './FocusController';
 
 const getContentEditableHost = (editor: Editor, node: Node): HTMLElement | null =>

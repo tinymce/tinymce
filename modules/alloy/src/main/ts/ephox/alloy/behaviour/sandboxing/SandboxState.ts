@@ -2,6 +2,7 @@ import { Fun, Singleton } from '@ephox/katamari';
 
 import { AlloyComponent } from '../../api/component/ComponentApi';
 import { nuState } from '../common/BehaviourState';
+
 import { SandboxingState } from './SandboxingTypes';
 
 const init = (): SandboxingState => {

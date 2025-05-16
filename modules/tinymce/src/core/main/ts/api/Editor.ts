@@ -15,6 +15,7 @@ import SelectionOverrides from '../SelectionOverrides';
 import { UndoManager } from '../undo/UndoManagerTypes';
 import Quirks from '../util/Quirks';
 import * as VisualAids from '../view/VisualAids';
+
 import AddOnManager from './AddOnManager';
 import Annotator from './Annotator';
 import * as Commands from './commands/Commands';

@@ -1,4 +1,3 @@
-// eslint-disable-next-line max-len
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec,
   SplitFloatingToolbar as AlloySplitFloatingToolbar,
@@ -19,6 +18,7 @@ import * as Channels from '../../Channels';
 import * as UiState from '../../UiState';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderIconButtonSpec } from '../general/Button';
+
 import { ToolbarButtonClasses } from './button/ButtonClasses';
 
 export interface MoreDrawerData {

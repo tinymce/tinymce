@@ -9,6 +9,7 @@ import VK from 'tinymce/core/api/util/VK';
 
 import { flattenListSelection, outdentListSelection } from '../actions/Indendation';
 import * as ToggleList from '../actions/ToggleList';
+
 import * as Bookmark from './Bookmark';
 import * as NodeType from './NodeType';
 import * as NormalizeLists from './NormalizeLists';

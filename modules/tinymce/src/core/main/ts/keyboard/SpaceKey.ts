@@ -2,6 +2,7 @@ import Editor from '../api/Editor';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import VK from '../api/util/VK';
 import * as InputEvents from '../events/InputEvents';
+
 import * as InsertSpace from './InsertSpace';
 import * as MatchKeys from './MatchKeys';
 

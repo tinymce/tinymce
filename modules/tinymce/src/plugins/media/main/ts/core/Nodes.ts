@@ -6,6 +6,7 @@ import AstNode from 'tinymce/core/api/html/Node';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 
 import * as Options from '../api/Options';
+
 import { Parser } from './Parser';
 
 declare let escape: any;

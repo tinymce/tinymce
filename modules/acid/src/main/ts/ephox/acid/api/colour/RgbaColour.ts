@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Optional } from '@ephox/katamari';
 
 import { Hex, Hsv, Rgba } from './ColourTypes';
@@ -135,12 +134,12 @@ const toString = (rgba: Rgba): string => `rgba(${rgba.red},${rgba.green},${rgba.
 const red = rgbaColour(255, 0, 0, 1);
 
 export {
-  rgbaColour,
-  isRgbaComponent,
-  fromHsv,
   fromHex,
+  fromHsv,
   fromString,
   getColorFormat,
-  toString,
-  red
+  isRgbaComponent,
+  red,
+  rgbaColour,
+  toString
 };

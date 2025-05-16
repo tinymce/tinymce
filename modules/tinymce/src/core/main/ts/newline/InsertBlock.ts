@@ -16,6 +16,7 @@ import * as NodeType from '../dom/NodeType';
 import * as NormalizeRange from '../selection/NormalizeRange';
 import { isWhitespaceText } from '../text/Whitespace';
 import * as Zwsp from '../text/Zwsp';
+
 import * as InsertDetailsNewLine from './InsertDetailsNewLine';
 import * as InsertLi from './InsertLi';
 import * as NewLineUtils from './NewLineUtils';
@@ -429,7 +430,13 @@ const insert = (editor: Editor, evt?: EditorEvent<KeyboardEvent>): void => {
     trimZwsp(fragment);
     trimLeadingLineBreaks(fragment);
     newBlock = fragment.firstChild as Element;
-    dom.insertAfter(fragment, parentBlock);
+    if (parentBlock === newBlock) { // Can't add yourself to yourself. Additionally the newBlock is removed from the DOM earlier, so even if you could, it'd still not work.
+      if (Type.isNonNullable(parentBlockParent)) {
+        dom.insertAfter(fragment, parentBlockParent);
+      }
+    } else {
+      dom.insertAfter(fragment, parentBlock);
+    }
     trimInlineElementsOnLeftSideOfBlock(dom, nonEmptyElementsMap, newBlock);
     addBrToBlockIfNeeded(dom, parentBlock);
 

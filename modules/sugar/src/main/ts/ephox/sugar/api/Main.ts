@@ -1,4 +1,5 @@
 import * as SelectionDirection from '../selection/core/SelectionDirection'; // Used directly by dawin
+
 import * as Compare from './dom/Compare';
 import * as DocumentPosition from './dom/DocumentPosition';
 import * as DomFuture from './dom/DomFuture';

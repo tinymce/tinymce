@@ -3,6 +3,7 @@ import { Arr, Fun, Merger, Obj, Optional, Thunk, Type } from '@ephox/katamari';
 import { SimpleResult, SimpleResultType } from '../alien/SimpleResult';
 import { FieldPresence, FieldPresenceTag, required } from '../api/FieldPresence';
 import { ResultCombine } from '../combine/ResultCombine';
+
 import * as FieldProcessor from './FieldProcessor';
 import { type FieldProcessor as FieldProcessorType } from './FieldProcessor';
 import * as SchemaError from './SchemaError';

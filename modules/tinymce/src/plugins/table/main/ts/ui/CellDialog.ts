@@ -10,6 +10,7 @@ import * as Events from '../api/Events';
 import * as Options from '../api/Options';
 import * as Utils from '../core/Utils';
 import * as TableSelection from '../selection/TableSelection';
+
 import * as CellDialogGeneralTab from './CellDialogGeneralTab';
 import { getAdvancedTab } from './DialogAdvancedTab';
 import { DomModifier } from './DomModifier';

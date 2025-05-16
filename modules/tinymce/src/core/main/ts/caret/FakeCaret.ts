@@ -6,6 +6,7 @@ import Env from '../api/Env';
 import * as Options from '../api/Options';
 import * as NodeType from '../dom/NodeType';
 import * as ClientRect from '../geom/ClientRect';
+
 import * as CaretContainer from './CaretContainer';
 import * as CaretContainerRemove from './CaretContainerRemove';
 

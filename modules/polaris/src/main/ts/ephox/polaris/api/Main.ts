@@ -1,5 +1,6 @@
 import { PRange, PRegExp } from '../pattern/Types';
 import { WordOptions } from '../words/Words';
+
 import * as Arrays from './Arrays';
 import * as Pattern from './Pattern';
 import * as PositionArray from './PositionArray';
