@@ -11,6 +11,7 @@ interface IconSpec {
   readonly classes: string[];
   readonly attributes?: Record<string, string>;
   readonly behaviours?: Array<Behaviour.NamedConfiguredBehaviour<any, any, any>>;
+  readonly eventOrder?: Record<string, string[]>;
 }
 
 // Icons that need to be transformed in RTL
@@ -87,7 +88,8 @@ const renderIcon = (spec: IconSpec, iconName: string, icons: Record<string, stri
     behaviours: Behaviour.derive([
       ...spec.behaviours ?? [],
       addFocusableBehaviour()
-    ])
+    ]),
+    eventOrder: spec.eventOrder ?? {}
   };
 };
 
