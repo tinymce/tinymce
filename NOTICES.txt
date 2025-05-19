@@ -16,6 +16,6 @@ license: MIT
 
 prism-themes
 owner: Lea Verou
-repo: https://github.com/PrismJS/prism
+repo: https://github.com/PrismJS/prism-themes
 version: 1.9.0
 license: MIT
