@@ -150,7 +150,7 @@ const UserLookup = (editor: Editor): UserLookup => {
       return [];
     }
 
-    const uncachedIds = Arr.filter(userIds, (userId) => !lookup(userId).isSome());
+    const uncachedIds = Arr.unique(Arr.filter((userIds), (userId) => !lookup(userId).isSome()));
 
     Arr.each(uncachedIds, (userId) => {
       const newPromise = new Promise<User>((resolve, reject) => {
