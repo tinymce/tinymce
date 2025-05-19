@@ -3,7 +3,9 @@ import {
   GuiFactory,
   Keying, Memento, NativeEvents, Replacing, SketchSpec, SplitDropdown as AlloySplitDropdown, SystemEvents, TieredData, TieredMenuTypes, Toggling,
   Tooltipping,
-  Unselecting
+  Unselecting,
+  AlloySpec,
+  TieredMenu
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional, Type } from '@ephox/katamari';
@@ -303,140 +305,120 @@ const fetchChoices = (getApi: (comp: AlloyComponent) => Toolbar.ToolbarSplitButt
         )
       )));
 
-// TODO: hookup onSetup and onDestroy
-const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: UiFactoryBackstageShared, btnName?: string): SketchSpec => {
-  const tooltipString = Cell<string>(spec.tooltip.getOr(''));
+const getSplitButtonApi = (component: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => ({
+  isEnabled: () => !Disabling.isDisabled(component),
+  setEnabled: (state: boolean) => Disabling.set(component, !state),
+  setText: (text: string) => AlloyTriggers.emitWith(component, updateMenuText, { text }),
+  setIcon: (icon: string) => AlloyTriggers.emitWith(component, updateMenuIcon, { icon }),
+  setIconFill: (_id: string, _value: string) => {},
+  isActive: () => false,
+  setActive: (_state: boolean) => {},
+  setTooltip: (_tooltip: string) => {}
+});
 
-  const getApi = (comp: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => ({
-    isEnabled: () => !Disabling.isDisabled(comp),
-    setEnabled: (state: boolean) => Disabling.set(comp, !state),
-    setIconFill: (id, value) => {
-      SelectorFind.descendant(comp.element, `svg path[class="${id}"], rect[class="${id}"]`).each((underlinePath) => {
-        Attribute.set(underlinePath, 'fill', value);
-      });
-    },
-    setActive: (state) => {
-      // Toggle the pressed aria state component
-      Attribute.set(comp.element, 'aria-pressed', state);
-      // Toggle the inner button state, as that's the toggle component of the split button
-      SelectorFind.descendant(comp.element, 'span').each((button) => {
-        comp.getSystem().getByDom(button).each((buttonComp) => Toggling.set(buttonComp, state));
-      });
-    },
-    isActive: () => SelectorFind.descendant(comp.element, 'span').exists((button) => comp.getSystem().getByDom(button).exists(Toggling.isOn)),
-    setText: (text: string) =>
-      SelectorFind.descendant(comp.element, 'span').each((button) =>
-        comp.getSystem().getByDom(button).each((buttonComp) =>
-          AlloyTriggers.emitWith(buttonComp, updateMenuText, {
-            text
-          }))
-      ),
-    setIcon: (icon: string) =>
-      SelectorFind.descendant(comp.element, 'span').each((button) =>
-        comp.getSystem().getByDom(button).each((buttonComp) =>
-          AlloyTriggers.emitWith(buttonComp, updateMenuIcon, {
-            icon
-          }))
-      ),
-    setTooltip: (tooltip: string) => {
-      const translatedTooltip = sharedBackstage.providers.translate(tooltip);
-      Attribute.set(comp.element, 'aria-label', translatedTooltip);
-      tooltipString.set(tooltip);
-    }
-  });
-
-  const editorOffCell = Cell(Fun.noop);
-  const specialisation = {
-    getApi,
-    onSetup: spec.onSetup
-  };
-  return AlloySplitDropdown.sketch({
-    dom: {
-      tag: 'div',
-      classes: [ ToolbarButtonClasses.SplitButton ],
-      attributes: {
-        'aria-pressed': false,
-        ...getTooltipAttributes(spec.tooltip, sharedBackstage.providers),
-        ...(Type.isNonNullable(btnName) ? { 'data-mce-name': btnName } : {})
-      }
-    },
-
-    onExecute: (button: AlloyComponent) => {
-      const api = getApi(button);
-      if (api.isEnabled()) {
-        spec.onAction(api);
-      }
-    },
-
-    onItemExecute: (_a, _b, _c) => { },
-
-    splitDropdownBehaviours: Behaviour.derive([
-      AddEventsBehaviour.config('split-dropdown-events', [
-        AlloyEvents.runOnAttached((comp, _se) => UiUtils.forceInitialSize(comp)),
-        AlloyEvents.run(focusButtonEvent, Focusing.focus),
-        onControlAttached(specialisation, editorOffCell),
-        onControlDetached(specialisation, editorOffCell)
-      ]),
-      DisablingConfigs.splitButton(() => sharedBackstage.providers.isDisabled() || sharedBackstage.providers.checkUiComponentContext(spec.context).shouldDisable),
-      UiState.toggleOnReceive(() => sharedBackstage.providers.checkUiComponentContext(spec.context)),
-      Unselecting.config({ }),
-      ...(spec.tooltip.map((tooltip) => {
-        return Tooltipping.config(
-          {
-            ...sharedBackstage.providers.tooltips.getConfig({
-              tooltipText: sharedBackstage.providers.translate(tooltip),
-              onShow: (comp) => {
-                if (tooltipString.get() !== tooltip) {
-                  const translatedTooltip = sharedBackstage.providers.translate(tooltipString.get());
-                  Tooltipping.setComponents(comp,
-                    sharedBackstage.providers.tooltips.getComponents({ tooltipText: translatedTooltip })
-                  );
-                }
-              }
-            }),
+const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: UiFactoryBackstageShared, btnName?: string): AlloySpec[] => {
+  const openDropdownMenu = (chevronButton: AlloyComponent) => {
+    fetchChoices(getSplitButtonApi, spec, sharedBackstage.providers)(chevronButton).get((optTieredData) => {
+      optTieredData.each((tieredData) => {
+        const menuSpec = TieredMenu.sketch({
+          dom: {
+            tag: 'div',
+            classes: [ 'tox-menu', 'tox-selected-menu' ]
+          },
+          data: tieredData,
+          markers: MenuParts.markers(spec.presets),
+          onEscape: (comp, _item) => {
+            chevronButton.getSystem().removeFromGui(comp);
+            return Optional.some(true);
+          },
+          onExecute: (comp, _item) => {
+            chevronButton.getSystem().removeFromGui(comp);
+            return Optional.some(true);
+          },
+          onOpenMenu: () => {},
+          onOpenSubmenu: () => {},
+          eventOrder: {
+            'alloy.execute': [
+              'disabling',
+              'alloy.base.behaviour',
+              'toggling',
+              'close-on-execute'
+            ]
+          },
+          tmenuBehaviours: Behaviour.derive([
+            AddEventsBehaviour.config('close-on-execute', [
+              AlloyEvents.runOnExecute((comp, _simulatedEvent) => {
+                chevronButton.getSystem().removeFromGui(comp);
+              })
+            ])
+          ])
+        });
+        const menu = chevronButton.getSystem().build(menuSpec);
+        chevronButton.getSystem().addToGui(menu);
+        const chevronEl = chevronButton.element.dom as HTMLElement;
+        const menuEl = menu.element.dom as HTMLElement;
+        const parentRect = chevronEl.offsetParent
+          ? (chevronEl.offsetParent as HTMLElement).getBoundingClientRect()
+          : { left: 0, top: 0 };
+        menuEl.style.position = 'absolute';
+        menuEl.style.top = `${chevronEl.offsetTop + chevronEl.offsetHeight}px`;
+        menuEl.style.left = `${chevronEl.offsetLeft}px`;
+        setTimeout(() => {
+          const firstItem = menuEl.querySelector('.tox-collection__item');
+          if (firstItem) (firstItem as HTMLElement).focus();
+        }, 0);
+        const onDocClick = (e: MouseEvent) => {
+          if (!menuEl.contains(e.target as Node)) {
+            chevronButton.getSystem().removeFromGui(menu);
+            document.removeEventListener('mousedown', onDocClick);
           }
-        );
-      }).toArray())
-    ]),
+        };
+        document.addEventListener('mousedown', onDocClick);
+      });
+    });
+  };
 
-    eventOrder: {
-      [SystemEvents.attachedToDom()]: [ 'alloy.base.behaviour', 'split-dropdown-events', 'tooltipping' ],
-      [SystemEvents.detachedFromDom()]: [ 'split-dropdown-events', 'tooltipping' ]
-    },
-
-    toggleClass: ToolbarButtonClasses.Ticked,
-    lazySink: sharedBackstage.getSink,
-    fetch: fetchChoices(getApi, spec, sharedBackstage.providers),
-
-    parts: {
-      // FIX: hasIcons
-      menu: MenuParts.part(false, spec.columns, spec.presets)
-    },
-
-    components: [
-      AlloySplitDropdown.parts.button(
-        renderCommonStructure(spec.icon, spec.text, Optional.none(), Optional.some([
+  return [
+    AlloyButton.sketch({
+      ...renderCommonStructure(
+        spec.icon,
+        spec.text,
+        Optional.none(),
+        Optional.some([
           Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, toggleOnExecute: false }),
           DisablingConfigs.toolbarButton(Fun.never),
           UiState.toggleOnReceive(Fun.constant({ contextType: 'any', shouldDisable: false }))
-        ]), sharedBackstage.providers, spec.context)
+        ]),
+        sharedBackstage.providers,
+        spec.context,
+        btnName
       ),
-      AlloySplitDropdown.parts.arrow({
-        dom: {
-          tag: 'button',
-          classes: [ ToolbarButtonClasses.Button, 'tox-split-button__chevron' ],
-          innerHtml: Icons.get('chevron-down', sharedBackstage.providers.icons)
-        },
-        buttonBehaviours: Behaviour.derive([
-          DisablingConfigs.splitButton(Fun.never),
-          UiState.toggleOnReceive(Fun.constant({ contextType: 'any', shouldDisable: false }))
-        ])
-      }),
-      AlloySplitDropdown.parts['aria-descriptor']({
-        text: sharedBackstage.providers.translate('To open the popup, press Shift+Enter')
-      })
-    ]
-  });
+      action: (button) => {
+        if (spec.onAction) {
+          const api = getSplitButtonApi(button);
+          if (api.isEnabled()) {
+            spec.onAction(api);
+          }
+        }
+      }
+    }),
+    AlloyButton.sketch({
+      dom: {
+        tag: 'button',
+        classes: [ ToolbarButtonClasses.Button, 'tox-split-button__chevron' ],
+        innerHtml: Icons.get('chevron-down', sharedBackstage.providers.icons),
+        attributes: {
+          'aria-label': sharedBackstage.providers.translate('Show menu'),
+          ...(Type.isNonNullable(btnName) ? { 'data-mce-name': btnName + '-chevron' } : {})
+        }
+      },
+      buttonBehaviours: Behaviour.derive([
+        DisablingConfigs.splitButton(Fun.never),
+        UiState.toggleOnReceive(Fun.constant({ contextType: 'any', shouldDisable: false }))
+      ]),
+      action: openDropdownMenu
+    })
+  ];
 };
 
 export {

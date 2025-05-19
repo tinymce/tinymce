@@ -105,7 +105,7 @@ const types: Record<string, BridgeRenderFn<any>> = {
   )
 };
 
-const extractFrom = (spec: ToolbarButton & { type: string }, backstage: UiFactoryBackstage, editor: Editor, btnName: string): Optional<AlloySpec> =>
+const extractFrom = (spec: ToolbarButton & { type: string }, backstage: UiFactoryBackstage, editor: Editor, btnName: string): Optional<AlloySpec | AlloySpec[]> =>
   Obj.get(types, spec.type).fold(
     () => {
       // eslint-disable-next-line no-console
@@ -172,16 +172,11 @@ const createToolbar = (toolbarConfig: RenderToolbarConfig): ToolbarGroupOption[]
   }
 };
 
-const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem: string, allowToolbarGroups: boolean, backstage: UiFactoryBackstage, prefixes: Optional<string[]>): Optional<AlloySpec> =>
+const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem: string, allowToolbarGroups: boolean, backstage: UiFactoryBackstage, prefixes: Optional<string[]>): Optional<AlloySpec | AlloySpec[]> =>
   Obj.get(buttons, toolbarItem.toLowerCase())
     .orThunk(() => prefixes.bind((ps) => Arr.findMap(ps, (prefix) => Obj.get(buttons, prefix + toolbarItem.toLowerCase()))))
     .fold(
       () => Obj.get(bespokeButtons, toolbarItem.toLowerCase()).map((r) => r(editor, backstage)),
-      // TODO: Add back after TINY-3232 is implemented
-      // .orThunk(() => {
-      //   console.error('No representation for toolbarItem: ' + toolbarItem);
-      //   return Optional.none();
-      // ),
       (spec) => {
         if (spec.type === 'grouptoolbarbutton' && !allowToolbarGroups) {
           // TODO change this message when sliding is available
@@ -198,8 +193,12 @@ const identifyButtons = (editor: Editor, toolbarConfig: RenderToolbarConfig, bac
   const toolbarGroups = createToolbar(toolbarConfig);
   const groups = Arr.map(toolbarGroups, (group) => {
     const items = Arr.bind(group.items, (toolbarItem) => {
-      return toolbarItem.trim().length === 0 ? [] :
-        lookupButton(editor, toolbarConfig.buttons, toolbarItem, toolbarConfig.allowToolbarGroups, backstage, prefixes).toArray();
+      if (toolbarItem.trim().length === 0) {
+        return [];
+      }
+      return lookupButton(editor, toolbarConfig.buttons, toolbarItem, toolbarConfig.allowToolbarGroups, backstage, prefixes)
+        .map((spec) => Array.isArray(spec) ? spec : [ spec ])
+        .getOr([]);
     });
     return {
       title: Optional.from(editor.translate(group.name)),
