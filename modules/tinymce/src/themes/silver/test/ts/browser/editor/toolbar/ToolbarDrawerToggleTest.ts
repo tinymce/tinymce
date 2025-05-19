@@ -185,4 +185,46 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarDrawerToggleTest',
       });
     });
   });
+
+  it('TINY-12125: Toolbar drawer should close when the editor loses focus', async () => {
+    const editor = await McEditor.pFromSettings<Editor>({
+      menubar: false,
+      statusbar: false,
+      width: 200,
+      toolbar_mode: 'floating',
+      base_url: '/project/tinymce/js/tinymce'
+    });
+    await UiUtils.pWaitForEditorToRender();
+
+    assertToolbarToggleState(editor, false);
+
+    TinyUiActions.clickOnUi(editor, 'button[data-mce-name="overflow-button"]');
+    await pWaitForOverflowToolbar(editor, 'floating');
+
+    editor.dispatch('blur');
+
+    assertToolbarToggleState(editor, false);
+    McEditor.remove(editor);
+  });
+
+  it('TINY-12125: Toolbar drawer should stay open when the editor loses focus if the toolbar is in sliding mode', async () => {
+    const editor = await McEditor.pFromSettings<Editor>({
+      menubar: false,
+      statusbar: false,
+      width: 200,
+      toolbar_mode: 'sliding',
+      base_url: '/project/tinymce/js/tinymce'
+    });
+    await UiUtils.pWaitForEditorToRender();
+
+    assertToolbarToggleState(editor, false);
+
+    TinyUiActions.clickOnUi(editor, 'button[data-mce-name="overflow-button"]');
+    await pWaitForOverflowToolbar(editor, 'sliding');
+
+    editor.dispatch('blur');
+
+    await pWaitForOverflowToolbar(editor, 'sliding');
+    McEditor.remove(editor);
+  });
 });
