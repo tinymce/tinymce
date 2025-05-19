@@ -252,7 +252,6 @@ interface BaseEditorOptions {
   width?: number | string;
   xss_sanitization?: boolean;
   license_key?: string;
-  license_key_manager_url?: string;
   disabled?: boolean;
 
   // Internal settings (used by cloud or tests)

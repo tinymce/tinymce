@@ -49,42 +49,6 @@ const GplLicenseKeyManager: LicenseKeyManager = {
 const ADDON_KEY = 'commercial';
 const PLUGIN_CODE = 'licensekeymanager';
 
-// TODO: TINY-12081: Add tests for this
-
-// // https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest
-
-// /**
-//  * NOTE: Only works in a secure context
-//  */
-// const hash = async (algorithm: Algorithm, message: string): Promise<string> => {
-//   const msgUint8 = new window.TextEncoder().encode(message); // encode as (utf-8) Uint8Array
-//   const hashBuffer = await window.crypto.subtle.digest(algorithm, msgUint8); // hash the message
-//   const hashArray = Array.from(new Uint8Array(hashBuffer)); // convert buffer to byte array
-//   const hashHex = hashArray
-//     .map((b) => b.toString(16).padStart(2, '0'))
-//     .join(''); // convert bytes to hex string
-//   return hashHex;
-// };
-
-// TODO: TINY-12081: Work out how to get actual accurate checksum values
-// const ENTERPRISE_CHECKSUMS = [ 'a' ];
-// const verifyAddon = async (checksums: string[], addOn: LicenseKeyManagerAddon): Promise<boolean> => {
-//   if (window.isSecureContext) {
-//     const contents = addOn.toString();
-//     try {
-//       const hash = await Hash.hash('SHA-256', contents);
-//       const isValidChecksum = checksums.includes(hash);
-//       return isValidChecksum;
-//     } catch {
-//       // eslint-disable-next-line no-console
-//       console.error('Unable to verify integrity of license key manager');
-//       return false;
-//     }
-//   } else {
-//     return true;
-//   }
-// };
-
 const setup = (): LicenseKeyManagerLoader => {
   const addOnManager = AddOnManager<LicenseKeyManager>();
 
@@ -96,7 +60,6 @@ const setup = (): LicenseKeyManagerLoader => {
   const load = (editor: Editor, suffix: string): void => {
     const licenseKey = Options.getLicenseKey(editor);
     if (licenseKey !== 'gpl' && !Obj.has(addOnManager.urls, ADDON_KEY)) {
-      // const externalUrl = Options.getExternalPlugins(editor)[PLUGIN_CODE];
       const url = `plugins/${PLUGIN_CODE}/plugin${suffix}.js`;
 
       addOnManager.load(ADDON_KEY, url).catch(() => {
@@ -116,11 +79,19 @@ const setup = (): LicenseKeyManagerLoader => {
     }
   };
 
-  // TODO: Should there be a sanity check the license key string starts with some prefix?
   const init = (editor: Editor): void => {
+    const lockLicenseKeyManager = () => {
+      Object.defineProperty(editor, 'licenseKeyManager', {
+        writable: false,
+        configurable: false,
+        enumerable: true,
+      });
+    };
+
     const licenseKey = Options.getLicenseKey(editor);
     if (licenseKey === 'gpl') {
       editor.licenseKeyManager = GplLicenseKeyManager;
+      lockLicenseKeyManager();
       return;
     }
 
@@ -133,7 +104,7 @@ const setup = (): LicenseKeyManagerLoader => {
 
     const commercialLicenseKeyManagerApi = CommercialLicenseKeyManager(editor, addOnManager.urls[ADDON_KEY]);
     editor.licenseKeyManager = commercialLicenseKeyManagerApi || {};
-    // TODO: Freeze editor.licenseKeyManager property
+    lockLicenseKeyManager();
     const verify = editor.licenseKeyManager.verify;
     const validate = editor.licenseKeyManager.validate;
     if (!Type.isFunction(verify) || !Type.isFunction(validate)) {
@@ -157,6 +128,6 @@ const setup = (): LicenseKeyManagerLoader => {
   };
 };
 
-const LicenseKeyManagerLoader: LicenseKeyManagerLoader = Object.freeze(setup());
+const LicenseKeyManagerLoader: LicenseKeyManagerLoader = setup();
 
 export default LicenseKeyManagerLoader;
