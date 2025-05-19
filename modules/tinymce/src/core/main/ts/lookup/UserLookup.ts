@@ -13,9 +13,15 @@ import * as Options from '../api/Options';
  * // Get the current user's ID
  * tinymce.activeEditor.userLookup.userId;
  *
- * // Fetch user information by IDs which returns array of promises
- * const promises = tinymce.activeEditor.userLookup.fetchUsers(['user-1', 'user-2']);
- * Promise.all(promises).then((users) => {
+ * // Fetch user information by IDs which returns a record of promises
+ * const userPromises = tinymce.activeEditor.userLookup.fetchUsers(['user-1', 'user-2']);
+ *
+ * // Access individual promises by user ID
+ * userPromises['user-1'].then(user => console.log('User 1:', user));
+ * userPromises['user-2'].then(user => console.log('User 2:', user));
+ *
+ * // Or wait for all promises
+ * Promise.all(Object.values(userPromises)).then((users) => {
  *   users.forEach(user => console.log('User found:', user));
  * }).catch((error) => {
  *   console.error('Error fetching users:', error);
@@ -54,10 +60,10 @@ export interface UserLookup {
    *
    * @method fetchUsers
    * @param {string[]} userIds - A list of user IDs to fetch information for.
-   * @return {Promise<User>[]} A promise that resolves to an array of users and information about them. Promises will reject if users are not found or if the fetch fails.
+   * @return {Record<UserId, Promise<User>>} An object where each key is a user ID and its value is a Promise that resolves to the user's data or rejects if the user is not found.
    * @throws {Error} When fetch_users option is not configured.
    */
-  fetchUsers: (userIds: UserId[]) => Promise<User>[];
+  fetchUsers: (userIds: UserId[]) => Record<UserId, Promise<User>>;
 }
 
 const userSchema = StructureSchema.objOf([
@@ -142,12 +148,12 @@ const UserLookup = (editor: Editor): UserLookup => {
         pendingResolvers.delete(userId);
       });
 
-  const fetchUsers = (userIds: UserId[]): Promise<User>[] => {
+  const fetchUsers = (userIds: UserId[]): Record<UserId, Promise<User>> => {
     const fetchUsersFn = Options.getFetchUsers(editor);
     if (!fetchUsersFn) {
       throw new Error('fetch_users option must be configured');
     } else if (!Array.isArray(userIds)) {
-      return [];
+      return {};
     }
 
     const uncachedIds = Arr.unique(Arr.filter((userIds), (userId) => !lookup(userId).isSome()));
@@ -185,7 +191,10 @@ const UserLookup = (editor: Editor): UserLookup => {
         });
     };
 
-    return Arr.map(userIds, (userId) => lookup(userId).getOr(Promise.resolve({ id: userId })));
+    return userIds.reduce((acc, userId) => ({
+      ...acc,
+      [userId]: lookup(userId).getOr(Promise.resolve({ id: userId }))
+    }), {} as Record<UserId, Promise<User>>);
   };
 
   const userId = Options.getUserId(editor);
