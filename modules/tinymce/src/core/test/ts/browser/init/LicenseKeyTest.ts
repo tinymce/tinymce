@@ -35,13 +35,13 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
 
       it('TINY-12058: verify should return false', async () => {
         const editor = hook.editor();
-        const result = await editor.licenseKeyManager.verify?.(editor);
+        const result = await editor.licenseKeyManager.verify?.();
         assert.isFalse(result);
       });
 
       it('TINY-12058: validate should return true by default', async () => {
         const editor = hook.editor();
-        const result = await editor.licenseKeyManager.validate?.(editor);
+        const result = await editor.licenseKeyManager.validate?.();
         assert.isFalse(result);
       });
     });
@@ -61,13 +61,13 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
 
       it('TINY-12058: verify should return false', async () => {
         const editor = hook.editor();
-        const result = await editor.licenseKeyManager.verify?.(editor);
+        const result = await editor.licenseKeyManager.verify?.();
         assert.isFalse(result);
       });
 
       it('TINY-12058: validate should return true by default', async () => {
         const editor = hook.editor();
-        const result = await editor.licenseKeyManager.validate?.(editor);
+        const result = await editor.licenseKeyManager.validate?.();
         assert.isFalse(result);
       });
     });
@@ -88,7 +88,7 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
 
     it('TINY-12058: verify should return true', async () => {
       const editor = hook.editor();
-      const result = await editor.licenseKeyManager.verify?.(editor);
+      const result = await editor.licenseKeyManager.verify?.();
       assert.isTrue(result);
     });
 
@@ -100,7 +100,7 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
 
     it('TINY-12058: validate should return false when given any plugin', async () => {
       const editor = hook.editor();
-      const result = await editor.licenseKeyManager.validate?.(editor, { plugin: 'foo' });
+      const result = await editor.licenseKeyManager.validate?.({ plugin: 'foo' });
       assert.isFalse(result);
     });
   });

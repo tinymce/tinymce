@@ -3,8 +3,7 @@ import { Obj, Type } from '@ephox/katamari';
 import AddOnManager, { AddOnConstructor } from '../api/AddOnManager';
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
-
-import * as ForceReadonly from './ForceReadonly';
+import * as ErrorReporter from '../ErrorReporter';
 
 export type LicenseKeyManagerAddon = AddOnConstructor<LicenseKeyManager>;
 
@@ -22,27 +21,16 @@ interface ValidateData {
 
 // TODO: Can we do better than just a Promise<boolean>?
 export interface LicenseKeyManager {
-  readonly verify?: (editor: Editor) => Promise<boolean>;
-  readonly validate?: (editor: Editor, data?: ValidateData) => Promise<boolean>;
+  readonly verify: () => Promise<boolean>;
+  readonly validate: (data?: ValidateData) => Promise<boolean>;
 }
-
-const displayNotification = (editor: Editor, message: string) => {
-  editor.notificationManager.open({
-    type: 'error',
-    text: message
-  });
-};
 
 const GplLicenseKeyManager: LicenseKeyManager = {
   verify: () => Promise.resolve(true),
-  validate: (_editor, data) => {
+  validate: (data) => {
     const { plugin } = data || {};
     // Premium plugins are not allowed if 'gpl' is given as the license_key
-    if (Type.isString(plugin)) {
-      return Promise.resolve(false);
-    } else {
-      return Promise.resolve(true);
-    }
+    return Promise.resolve(!Type.isString(plugin));
   },
 };
 
@@ -60,17 +48,18 @@ const setup = (): LicenseKeyManagerLoader => {
   const load = (editor: Editor, suffix: string): void => {
     const licenseKey = Options.getLicenseKey(editor);
     if (licenseKey !== 'gpl' && !Obj.has(addOnManager.urls, ADDON_KEY)) {
+      // TODO: Consider if need to be able to specify a custom URL
+      // e.g. license_key_manager_url or specify through external_plugins
+      // Might make automated testing easier as well
       const url = `plugins/${PLUGIN_CODE}/plugin${suffix}.js`;
 
       addOnManager.load(ADDON_KEY, url).catch(() => {
-        // eslint-disable-next-line no-console
-        console.error(`Failed to load license key manager from url ${url}`);
-        displayNotification(editor, 'Failed to load license key manager');
+        ErrorReporter.licenseKeyManagerLoadError(editor, url, ADDON_KEY);
       });
     }
   };
 
-  const isLoaded = (editor: Editor) => {
+  const isLoaded = (editor: Editor): boolean => {
     const licenseKey = Options.getLicenseKey(editor);
     if (licenseKey === 'gpl') {
       return true;
@@ -80,8 +69,9 @@ const setup = (): LicenseKeyManagerLoader => {
   };
 
   const init = (editor: Editor): void => {
-    const lockLicenseKeyManager = () => {
+    const setLicenseKeyManager = (licenseKeyManager: LicenseKeyManager) => {
       Object.defineProperty(editor, 'licenseKeyManager', {
+        value: licenseKeyManager,
         writable: false,
         configurable: false,
         enumerable: true,
@@ -90,34 +80,30 @@ const setup = (): LicenseKeyManagerLoader => {
 
     const licenseKey = Options.getLicenseKey(editor);
     if (licenseKey === 'gpl') {
-      editor.licenseKeyManager = GplLicenseKeyManager;
-      lockLicenseKeyManager();
+      setLicenseKeyManager(GplLicenseKeyManager);
       return;
     }
 
     // CommercialLicenseKeyManager should be nonnullable here as the
     // editor will not load without a license key manager constructor
-    const CommercialLicenseKeyManager = addOnManager.get(ADDON_KEY);
-    if (Type.isNullable(CommercialLicenseKeyManager)) {
-      return;
-    }
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const CommercialLicenseKeyManager = addOnManager.get(ADDON_KEY)!;
 
     const commercialLicenseKeyManagerApi = CommercialLicenseKeyManager(editor, addOnManager.urls[ADDON_KEY]);
-    editor.licenseKeyManager = commercialLicenseKeyManagerApi || {};
-    lockLicenseKeyManager();
+    setLicenseKeyManager(commercialLicenseKeyManagerApi);
+
     const verify = editor.licenseKeyManager.verify;
     const validate = editor.licenseKeyManager.validate;
-    if (!Type.isFunction(verify) || !Type.isFunction(validate)) {
-      // eslint-disable-next-line no-console
-      console.error(`Incorrect license key manager API`);
-      displayNotification(editor, 'Failed to intialize license key manager');
-      ForceReadonly.forceReadonly(editor);
-      return;
-    }
+
+    // TODO: Might be able to just call verify/validate in the actual license key manager addon instead
+    // If we don't need to call verify in core here, then don't really need it
+    // on the API and it could all be integrated into one validate API call
+    // Premium plugins don't need a specific verify API either
+
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    verify(editor);
+    verify();
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    validate(editor);
+    validate();
   };
 
   return {
