@@ -1,6 +1,6 @@
 import { TestStore } from '@ephox/agar';
 import { afterEach, before, context, describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
+import { Arr, Type } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import * as Chai from 'chai';
 import { expect } from 'chai';
@@ -220,11 +220,19 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       const testCases = [
         {
           input: { id: 'user-1' },
-          expected: { id: 'user-1' }
+          expected: {
+            id: 'user-1',
+            name: 'user-1',
+            avatar: (value: string) => value.startsWith('data:image/svg+xml,')
+          }
         },
         {
           input: { id: 'user-2', name: 'John' },
-          expected: { id: 'user-2', name: 'John' }
+          expected: {
+            id: 'user-2',
+            name: 'John',
+            avatar: (value: string) => value.startsWith('data:image/svg+xml,')
+          }
         },
         {
           input: {
@@ -234,7 +242,13 @@ describe('browser.tinymce.core.UserLookupTest', () => {
             description: '',
             custom: {}
           },
-          expected: { id: 'user-3', description: '', custom: {}}
+          expected: {
+            id: 'user-3',
+            name: 'user-3',
+            avatar: (value: string) => value.startsWith('data:image/svg+xml,'),
+            description: '',
+            custom: {}
+          }
         },
         {
           input: {
@@ -258,16 +272,20 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
       const userIds = Arr.map(testCases, (c) => c.input.id);
       const promises = editor.userLookup.fetchUsers(userIds);
+      const results = await Promise.all(Arr.map(userIds, (id) => promises[id]));
 
-      // Get array of promises from record
-      const promiseResults = await Promise.all(
-        Arr.map(userIds, (id) => promises[id])
-      );
+      Arr.each(results, (result, index) => {
+        const expected = testCases[index].expected;
 
-      expect(promiseResults).to.deep.equal(
-        Arr.map(testCases, (c) => c.expected),
-        'Should resolve with expected user objects'
-      );
+        Arr.each(Object.entries(expected), ([ key, value ]) => {
+          if (Type.isFunction(value)) {
+            Chai.assert.isTrue(value(result[key as keyof typeof result]),
+              `An avatar should be an SVG data URL for user ${result.id}`);
+          } else {
+            expect(result[key as keyof typeof result]).to.deep.equal(value);
+          }
+        });
+      });
     });
 
     it('TINY-11974: Should handle custom user properties', async () => {

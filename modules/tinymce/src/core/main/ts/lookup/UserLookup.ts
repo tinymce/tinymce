@@ -1,5 +1,5 @@
 import { StructureSchema, FieldSchema } from '@ephox/boulder';
-import { Arr, Optional, Results, Obj } from '@ephox/katamari';
+import { Arr, Optional, Results, Obj, Num } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
@@ -66,6 +66,54 @@ export interface UserLookup {
   fetchUsers: (userIds: UserId[]) => Record<UserId, Promise<User>>;
 }
 
+export const AvatarColors = [
+  '#2DC26B', // Green
+  '#F1C40F', // Yellow
+  '#E03E2D', // Red
+  '#B96AD9', // Purple
+  '#3598DB', // Blue
+
+  '#169179', // Dark Turquoise
+  '#E67E23', // Orange
+  '#BA372A', // Dark Red
+  '#843FA1', // Dark Purple
+  '#236FA1', // Dark Blue
+
+  '#95A5A6', // Gray
+  '#7E8C8D', // Dark Gray
+  '#34495E', // Navy Blue
+];
+
+const getFirstChar = (name: string): string => {
+  if (Intl.Segmenter) {
+    const segmenter = new Intl.Segmenter();
+    const iterator = segmenter.segment(name)[Symbol.iterator]();
+    return `${iterator.next().value?.segment}`;
+  } else {
+    return name.trim()[0];
+  }
+};
+
+const getRandomColor = (): string => {
+  const colorIdx = Math.floor(Num.random() * AvatarColors.length);
+  return AvatarColors[colorIdx];
+};
+
+const generate = (name: string, color: string, size: number = 36): string => {
+  const halfSize = size / 2;
+  return `<svg height="${size}" width="${size}" xmlns="http://www.w3.org/2000/svg">` +
+    `<circle cx="${halfSize}" cy="${halfSize}" r="${halfSize}" fill="${color}"/>` +
+    `<text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" fill="#FFF" font-family="sans-serif" font-size="${halfSize}">` +
+    getFirstChar(name) +
+    `</text>` +
+    '</svg>';
+};
+
+const deriveAvatar = (name: string): string => {
+  const avatarSvg = generate(name, getRandomColor());
+  return 'data:image/svg+xml,' + encodeURIComponent(avatarSvg);
+};
+
 const userSchema = StructureSchema.objOf([
   FieldSchema.required('id'),
   FieldSchema.optionString('name'),
@@ -109,10 +157,12 @@ const validateResponse = (items: unknown): User[] => {
   }
 
   return Arr.map(values, (user) => {
-    const { id, ...rest } = user;
+    const { id, name, avatar, ...rest } = user;
 
     return {
       id,
+      name: name.getOr(id),
+      avatar: avatar.getOr(deriveAvatar(name.getOr(id))),
       ...objectCat(rest),
     };
   });
