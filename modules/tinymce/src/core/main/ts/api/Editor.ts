@@ -6,6 +6,7 @@ import * as NodeType from '../dom/NodeType';
 import * as EditorRemove from '../EditorRemove';
 import { BlobInfoImagePair } from '../file/ImageScanner';
 import * as EditorFocus from '../focus/EditorFocus';
+import { LicenseKeyManager } from '../init/LicenseKeyManager';
 import * as Render from '../init/Render';
 import { type UserLookup, createUserLookup } from '../lookup/UserLookup';
 import * as EditableRoot from '../mode/EditableRoot';
@@ -252,6 +253,7 @@ class Editor implements EditorObservable {
   public model!: Model;
   public undoManager!: UndoManager;
   public windowManager!: WindowManager;
+  public licenseKeyManager!: LicenseKeyManager;
   public _beforeUnload: (() => void) | undefined;
   public _eventDispatcher: EventDispatcher<NativeEventMap> | undefined;
   public _nodeChangeDispatcher!: NodeChange;
