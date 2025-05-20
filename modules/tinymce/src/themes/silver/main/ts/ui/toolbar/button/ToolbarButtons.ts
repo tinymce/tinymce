@@ -1,15 +1,18 @@
 import {
   AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button as AlloyButton, Disabling, FloatingToolbarButton, Focusing,
   GuiFactory,
-  Keying, Memento, NativeEvents, Replacing, SketchSpec, SplitDropdown as AlloySplitDropdown, SystemEvents, TieredData, TieredMenuTypes, Toggling,
+  Keying, Memento, NativeEvents, Replacing, SketchSpec, Dropdown as AlloyDropdown, SystemEvents, TieredData, TieredMenuTypes, Toggling,
   Tooltipping,
   Unselecting,
   AlloySpec,
-  TieredMenu
+  TieredMenu,
+  Positioning,
+  Sandboxing,
+  AnchorSpec
 } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional, Type } from '@ephox/katamari';
-import { Attribute, EventArgs, SelectorFind } from '@ephox/sugar';
+import { Attribute, EventArgs, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import { ToolbarGroupOption } from '../../../api/Options';
 import { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
@@ -315,89 +318,37 @@ const getSplitButtonApi = (component: AlloyComponent): Toolbar.ToolbarSplitButto
   setActive: (_state: boolean) => {},
   setTooltip: (_tooltip: string) => {}
 });
+
 // TODO: hookup onSetup and onDestroy
 const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: UiFactoryBackstageShared, btnName?: string): AlloySpec[] => {
-  const openDropdownMenu = (chevronButton: AlloyComponent) => {
-    sharedBackstage.getSink().toOptional().each((sink) => {
-      fetchChoices(getSplitButtonApi, spec, sharedBackstage.providers)(chevronButton).get((optTieredData) => {
-        optTieredData.each((tieredData) => {
-          let menu: AlloyComponent;
-          let onDocClick: (e: MouseEvent) => void;
-
-          const closeMenu = () => {
-            sink.getSystem().removeFromGui(menu);
-            document.removeEventListener('mousedown', onDocClick);
-          };
-
-          const menuSpec = TieredMenu.sketch({
-            dom: {
-              tag: 'div',
-              classes: [ 'tox-menu', 'tox-selected-menu' ]
-            },
-            data: tieredData,
-            markers: MenuParts.markers(spec.presets),
-            onEscape: (_item) => {
-              closeMenu();
-              return Optional.some(true);
-            },
-            onExecute: (_item) => {
-              closeMenu();
-              return Optional.some(true);
-            },
-            onOpenMenu: () => Fun.noop,
-            onOpenSubmenu: () => Fun.noop,
-            eventOrder: {
-              'alloy.execute': [
-                'disabling',
-                'alloy.base.behaviour',
-                'toggling',
-                'close-on-execute'
-              ]
-            },
-            tmenuBehaviours: Behaviour.derive([
-              AddEventsBehaviour.config('close-on-execute', [
-                AlloyEvents.runOnExecute((_comp, _simulatedEvent) => {
-                  closeMenu();
-                })
-              ]),
-              // Add handler for sandboxClose event
-              AddEventsBehaviour.config('custom-sandbox-close', [
-                AlloyEvents.run(SystemEvents.sandboxClose(), () => {
-                  closeMenu();
-                })
-              ])
-            ])
-          });
-
-          menu = sink.getSystem().build(menuSpec);
-          sink.getSystem().addToGui(menu);
-
-          const chevronRect = chevronButton.element.dom.getBoundingClientRect();
-          const sinkRect = sink.element.dom.getBoundingClientRect();
-          const menuEl = menu.element.dom as HTMLElement;
-          menuEl.style.position = 'absolute';
-          menuEl.style.top = `${chevronRect.bottom - sinkRect.top}px`;
-          menuEl.style.left = `${chevronRect.left - sinkRect.left}px`;
-
-          setTimeout(() => {
-            const firstItem = menuEl.querySelector('.tox-collection__item');
-            if (firstItem) {
-              (firstItem as HTMLElement).focus();
-            }
-          }, 0);
-
-          onDocClick = (e: MouseEvent) => {
-            if (!menuEl.contains(e.target as Node)) {
-              closeMenu();
-            }
-          };
-
-          document.addEventListener('mousedown', onDocClick);
-        });
-      });
-    });
-  };
-
+  const editorOffCell = Cell(Fun.noop);
+  const arrow = AlloyDropdown.sketch({
+    dom: {
+      tag: 'button',
+      classes: [ ToolbarButtonClasses.Button, 'tox-split-button__chevron' ],
+      innerHtml: Icons.get('chevron-down', sharedBackstage.providers.icons),
+      attributes: {
+        'aria-label': sharedBackstage.providers.translate('Show menu'),
+        ...(Type.isNonNullable(btnName) ? { 'data-mce-name': btnName + '-chevron' } : {})
+      }
+    },
+    components: [],
+    toggleClass: ToolbarButtonClasses.Ticked,
+    dropdownBehaviours: Behaviour.derive([
+      AddEventsBehaviour.config('split-dropdown-events', [
+        AlloyEvents.runOnAttached((comp, _se) => UiUtils.forceInitialSize(comp)),
+        onControlAttached({ getApi: getSplitButtonApi, onSetup: spec.onSetup }, editorOffCell),
+      ]),
+      DisablingConfigs.splitButton(Fun.never),
+      UiState.toggleOnReceive(Fun.constant({ contextType: 'any', shouldDisable: false })),
+      Unselecting.config({ })
+    ]),
+    lazySink: sharedBackstage.getSink,
+    fetch: fetchChoices(getSplitButtonApi, spec, sharedBackstage.providers),
+    parts: {
+      menu: MenuParts.part(false, spec.columns, spec.presets)
+    }
+  });
   return [
     AlloyButton.sketch({
       ...renderCommonStructure(
@@ -422,22 +373,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         }
       }
     }),
-    AlloyButton.sketch({
-      dom: {
-        tag: 'button',
-        classes: [ ToolbarButtonClasses.Button, 'tox-split-button__chevron' ],
-        innerHtml: Icons.get('chevron-down', sharedBackstage.providers.icons),
-        attributes: {
-          'aria-label': sharedBackstage.providers.translate('Show menu'),
-          ...(Type.isNonNullable(btnName) ? { 'data-mce-name': btnName + '-chevron' } : {})
-        }
-      },
-      buttonBehaviours: Behaviour.derive([
-        DisablingConfigs.splitButton(Fun.never),
-        UiState.toggleOnReceive(Fun.constant({ contextType: 'any', shouldDisable: false }))
-      ]),
-      action: openDropdownMenu
-    })
+    arrow
   ];
 };
 
