@@ -27,9 +27,7 @@ export const getOriginalDimensions = (editor: Editor): EditorDimensions => {
   };
 };
 
-export const getDimensions = (editor: Editor, deltas: SugarPosition, resizeType: ResizeTypes): EditorDimensions => {
-  const originalDimentions = getOriginalDimensions(editor);
-
+export const getDimensions = (editor: Editor, deltas: SugarPosition, resizeType: ResizeTypes, originalDimentions: EditorDimensions): EditorDimensions => {
   const dimensions = {
     height: Utils.calcCappedSize(
       originalDimentions.height + deltas.top,
@@ -52,7 +50,8 @@ export const getDimensions = (editor: Editor, deltas: SugarPosition, resizeType:
 export const resize = (editor: Editor, deltas: SugarPosition, resizeType: ResizeTypes): EditorDimensions => {
   const container = SugarElement.fromDom(editor.getContainer());
 
-  const dimensions = getDimensions(editor, deltas, resizeType);
+  const originalDimentions = getOriginalDimensions(editor);
+  const dimensions = getDimensions(editor, deltas, resizeType, originalDimentions);
   Obj.each(dimensions, (val, dim) => {
     if (Type.isNumber(val)) {
       Css.set(container, dim, Utils.numToPx(val));
