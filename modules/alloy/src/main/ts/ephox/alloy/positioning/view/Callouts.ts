@@ -17,7 +17,7 @@ import { applyTransitionCss } from './Transitions';
  */
 
 const elementSize = (p: SugarElement<HTMLElement>): AnchorElement => ({
-  width: Math.round(Width.getOuter(p)),
+  width: Math.ceil(Width.getOuter(p)),
   height: Height.getOuter(p)
 });
 
@@ -69,7 +69,10 @@ const setPlacement = (element: SugarElement<HTMLElement>, decision: RepositionDe
 };
 
 export {
-  layout, position, setClasses,
-  setHeight, setPlacement, setWidth
+  layout,
+  setClasses,
+  setHeight,
+  setWidth,
+  position,
+  setPlacement
 };
-
