@@ -3,7 +3,7 @@ import {
   SketchSpec
 } from '@ephox/alloy';
 import { Arr, Cell, Id, Optional, Result } from '@ephox/katamari';
-import { Class, Compare, Css, EventArgs, Focus, SugarElement, SugarNode, SugarShadowDom, Width } from '@ephox/sugar';
+import { Class, Compare, Css, EventArgs, Focus, SugarElement, SugarShadowDom, Width } from '@ephox/sugar';
 
 import * as ContextToolbarFocus from './ContextToolbarFocus';
 
@@ -28,6 +28,7 @@ interface ContextToolbarSpec {
   readonly sink: AlloyComponent;
   readonly onHide: () => void;
   readonly onBack: () => void;
+  readonly focusElement: (el: SugarElement<any>) => void;
 }
 
 export interface ContextToolbarRenderResult {
@@ -107,7 +108,7 @@ const renderContextToolbar = (spec: ContextToolbarSpec): ContextToolbarRenderRes
                 (active) => {
                   // We need this extra check since if the focus is aleady on the iframe we don't want to call focus on it again since that closes the context toolbar
                   if (!Compare.eq(active, f)) {
-                    Focus.focus(f);
+                    spec.focusElement(f);
                   }
                 }
               );
@@ -121,13 +122,10 @@ const renderContextToolbar = (spec: ContextToolbarSpec): ContextToolbarRenderRes
 
         AlloyEvents.run<ForwardSlideEvent>(forwardSlideEvent, (comp, se) => {
           InlineView.getContent(comp).each((oldContents) => {
-            const isIframe = SugarNode.isTag('iframe');
-            const activeElement = Focus.active(SugarShadowDom.getRootNode(comp.element));
-            const hasSelectionInside = activeElement.exists((e) => !isIframe(e) && e.dom.contains(se.event.currentSelection));
             stack.set(stack.get().concat([
               {
                 bar: oldContents,
-                focus: hasSelectionInside ? Focus.active(SugarElement.fromDom(se.event.currentSelection)) : activeElement
+                focus: Focus.active(SugarShadowDom.getRootNode(comp.element))
               }
             ]));
           });

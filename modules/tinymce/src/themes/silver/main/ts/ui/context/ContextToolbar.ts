@@ -68,6 +68,13 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     },
     onBack: () => {
       Events.fireContextFormSlideBack(editor);
+    },
+    focusElement: (el) => {
+      if (editor.getBody().contains(el.dom)) {
+        editor.focus();
+      } else {
+        Focus.focus(el);
+      }
     }
   });
 
@@ -152,8 +159,7 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     // ASSUMPTION: This should only ever show one context toolbar since it's used for context forms hence [toolbarApi]
     const alloySpec = buildToolbar([ toolbarApi ]);
     AlloyTriggers.emitWith(contextbar, forwardSlideEvent, {
-      forwardContents: wrapInPopDialog(alloySpec),
-      currentSelection: editor.selection.getNode()
+      forwardContents: wrapInPopDialog(alloySpec)
     });
   };
 
