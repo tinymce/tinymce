@@ -14,7 +14,6 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       tinymce._addLicenseKeyManager(() => {
         return {
-          verify: () => Promise.resolve(false),
           validate: () => Promise.resolve(false)
         };
       });
@@ -29,19 +28,12 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
       it('TINY-12058: editor.licenseKeyManager should be defined', () => {
         const editor = hook.editor();
         assert.isObject(editor.licenseKeyManager);
-        assert.isFunction(editor.licenseKeyManager.verify);
         assert.isFunction(editor.licenseKeyManager.validate);
-      });
-
-      it('TINY-12058: verify should return false', async () => {
-        const editor = hook.editor();
-        const result = await editor.licenseKeyManager.verify?.();
-        assert.isFalse(result);
       });
 
       it('TINY-12058: validate should return true by default', async () => {
         const editor = hook.editor();
-        const result = await editor.licenseKeyManager.validate?.();
+        const result = await editor.licenseKeyManager.validate({});
         assert.isFalse(result);
       });
     });
@@ -55,19 +47,12 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
       it('TINY-12058: editor.licenseKeyManager should be defined', () => {
         const editor = hook.editor();
         assert.isObject(editor.licenseKeyManager);
-        assert.isFunction(editor.licenseKeyManager.verify);
         assert.isFunction(editor.licenseKeyManager.validate);
-      });
-
-      it('TINY-12058: verify should return false', async () => {
-        const editor = hook.editor();
-        const result = await editor.licenseKeyManager.verify?.();
-        assert.isFalse(result);
       });
 
       it('TINY-12058: validate should return true by default', async () => {
         const editor = hook.editor();
-        const result = await editor.licenseKeyManager.validate?.();
+        const result = await editor.licenseKeyManager.validate({});
         assert.isFalse(result);
       });
     });
@@ -82,25 +67,18 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
     it('TINY-12058: editor.licenseKeyManager should be defined', () => {
       const editor = hook.editor();
       assert.isObject(editor.licenseKeyManager);
-      assert.isFunction(editor.licenseKeyManager.verify);
       assert.isFunction(editor.licenseKeyManager.validate);
-    });
-
-    it('TINY-12058: verify should return true', async () => {
-      const editor = hook.editor();
-      const result = await editor.licenseKeyManager.verify?.();
-      assert.isTrue(result);
     });
 
     it('TINY-12058: validate should return true by default', async () => {
       const editor = hook.editor();
-      const result = await editor.licenseKeyManager.validate?.(editor);
+      const result = await editor.licenseKeyManager.validate({});
       assert.isTrue(result);
     });
 
     it('TINY-12058: validate should return false when given any plugin', async () => {
       const editor = hook.editor();
-      const result = await editor.licenseKeyManager.validate?.({ plugin: 'foo' });
+      const result = await editor.licenseKeyManager.validate({ plugin: 'foo' });
       assert.isFalse(result);
     });
   });

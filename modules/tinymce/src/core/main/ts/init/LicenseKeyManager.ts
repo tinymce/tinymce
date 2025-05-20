@@ -19,16 +19,13 @@ interface ValidateData {
   [key: string]: any;
 }
 
-// TODO: Can we do better than just a Promise<boolean>?
 export interface LicenseKeyManager {
-  readonly verify: () => Promise<boolean>;
-  readonly validate: (data?: ValidateData) => Promise<boolean>;
+  readonly validate: (data: ValidateData) => Promise<boolean>;
 }
 
 const GplLicenseKeyManager: LicenseKeyManager = {
-  verify: () => Promise.resolve(true),
   validate: (data) => {
-    const { plugin } = data || {};
+    const { plugin } = data;
     // Premium plugins are not allowed if 'gpl' is given as the license_key
     return Promise.resolve(!Type.isString(plugin));
   },
@@ -92,18 +89,14 @@ const setup = (): LicenseKeyManagerLoader => {
     const commercialLicenseKeyManagerApi = CommercialLicenseKeyManager(editor, addOnManager.urls[ADDON_KEY]);
     setLicenseKeyManager(commercialLicenseKeyManagerApi);
 
-    const verify = editor.licenseKeyManager.verify;
     const validate = editor.licenseKeyManager.validate;
 
-    // TODO: Might be able to just call verify/validate in the actual license key manager addon instead
-    // If we don't need to call verify in core here, then don't really need it
-    // on the API and it could all be integrated into one validate API call
-    // Premium plugins don't need a specific verify API either
-
+    // Validation of the license key is done asynchronously and does
+    // not block initialization of the editor
+    // The validate function is expected to set the editor to the correct
+    // state depending on if the license key is valid or not
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    verify();
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    validate();
+    validate({});
   };
 
   return {
