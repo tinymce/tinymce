@@ -289,6 +289,14 @@ module.exports = function (grunt) {
             'js/tinymce/tinymce.js'
           ],
           dest: 'js/tinymce/tinymce.js'
+        },
+        'license-headers': {
+          src: [
+            'src/core/text/build-header.js',
+            'src/core/text/tinymce-license-headers.js',
+            `js/tinymce/tinymce.min.js`
+          ],
+          dest: `js/tinymce/tinymce.min.js`
         }
       },
       gruntUtils.generate(plugins, 'plugin', function (name) {
@@ -923,7 +931,8 @@ module.exports = function (grunt) {
     'rollup',
     'concat',
     'copy',
-    'terser'
+    'terser',
+    'concat:license-headers'
   ]);
 
   grunt.registerTask('prod', [
