@@ -339,7 +339,13 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
   // Helper to get ARIA label for the chevron/dropdown button
   const getChevronAriaLabel = () => {
     const name = btnName || sharedBackstage.providers.translate('toolbar button');
-    return `Open more ${name} selections`;
+    return `More ${name} selections`;
+  };
+
+  // Helper for chevron tooltip
+  const getChevronTooltip = () => {
+    const name = btnName || sharedBackstage.providers.translate('toolbar button');
+    return `More ${name} selections`;
   };
 
   const updateAriaExpanded = (expanded: boolean, comp: AlloyComponent) => {
@@ -369,7 +375,10 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
       ]),
       DisablingConfigs.splitButton(Fun.never),
       UiState.toggleOnReceive(Fun.constant({ contextType: 'any', shouldDisable: false })),
-      Unselecting.config({ })
+      Unselecting.config({ }),
+      Tooltipping.config(sharedBackstage.providers.tooltips.getConfig({
+        tooltipText: getChevronTooltip()
+      }))
     ]),
     lazySink: sharedBackstage.getSink,
     fetch: fetchChoices(getSplitButtonApi, spec, sharedBackstage.providers),
@@ -400,7 +409,12 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
           AddEventsBehaviour.config('split-main-aria-events', [
             AlloyEvents.run('alloy-dropdown-open', (comp) => updateAriaExpanded(true, comp)),
             AlloyEvents.run('alloy-dropdown-close', (comp) => updateAriaExpanded(false, comp)),
-          ])
+          ]),
+          ...(spec.tooltip.isSome() ? [
+            Tooltipping.config(sharedBackstage.providers.tooltips.getConfig({
+              tooltipText: sharedBackstage.providers.translate(spec.tooltip.getOr(''))
+            }))
+          ] : [])
         ]),
         sharedBackstage.providers,
         spec.context,
