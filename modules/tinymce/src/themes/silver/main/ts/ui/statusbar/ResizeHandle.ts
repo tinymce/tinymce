@@ -3,6 +3,7 @@ import { Optional } from '@ephox/katamari';
 import { Attribute, SugarPosition } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import I18n from 'tinymce/core/api/util/I18n';
 
 import * as Options from '../../api/Options';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -22,8 +23,8 @@ const getResizeType = (editor: Editor): Resize.ResizeTypes => {
 
 const getAriaValuetext = (dimensions: Resize.EditorDimensions, resizeType: Resize.ResizeTypes): string => {
   return resizeType === Resize.ResizeTypes.Both
-    ? `Editor's height: ${dimensions.height} pixels, Editor's width: ${dimensions.width} pixels`
-    : `Editor's height: ${dimensions.height} pixels`;
+    ? I18n.translate([ `Editor's height: {0} pixels, Editor's width: {1} pixels`, dimensions.height, dimensions.width ])
+    : I18n.translate([ `Editor's height: {0} pixels`, dimensions.height ]);
 };
 
 const setAriaValuetext = (comp: AlloyComponent, dimensions: Resize.EditorDimensions, resizeType: Resize.ResizeTypes) => {
@@ -47,8 +48,8 @@ export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactor
   }
 
   const resizeLabel = resizeType === Resize.ResizeTypes.Both
-    ? 'Press the arrow keys to resize the editor.'
-    : 'Press the Up and Down arrow keys to resize the editor.';
+    ? I18n.translate('Press the arrow keys to resize the editor.')
+    : I18n.translate('Press the Up and Down arrow keys to resize the editor.');
 
   const cursorClass = resizeType === Resize.ResizeTypes.Both
     ? 'tox-statusbar__resize-cursor-both'
@@ -88,9 +89,14 @@ export const renderResizeHandler = (editor: Editor, providersBackstage: UiFactor
       ),
       AddEventsBehaviour.config('set-aria-valuetext', [
         AlloyEvents.runOnAttached((comp) => {
-          editor.on('init', () => {
+          const setInitialValuetext = () => {
             setAriaValuetext(comp, Resize.getOriginalDimensions(editor), resizeType);
-          });
+          };
+          if (editor._skinLoaded) {
+            setInitialValuetext();
+          } else {
+            editor.once('SkinLoaded', setInitialValuetext);
+          }
         })
       ])
     ],
