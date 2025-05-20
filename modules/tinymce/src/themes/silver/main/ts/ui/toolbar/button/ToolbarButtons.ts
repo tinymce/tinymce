@@ -4,7 +4,7 @@ import {
   Keying, Memento, NativeEvents, Replacing, SketchSpec, Dropdown as AlloyDropdown, SystemEvents, TieredData, TieredMenuTypes, Toggling,
   Tooltipping,
   Unselecting,
-  AlloySpec} from '@ephox/alloy';
+  AlloySpec } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional, Type } from '@ephox/katamari';
 import { Attribute, EventArgs } from '@ephox/sugar';
