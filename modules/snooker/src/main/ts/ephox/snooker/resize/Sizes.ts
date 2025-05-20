@@ -79,7 +79,7 @@ export const getRawHeight = (element: SugarElement<HTMLElement>): Optional<strin
 
 // Get a percentage size for a percentage parent table
 export const getPercentageWidth = (cell: SugarElement<HTMLTableCellElement | HTMLTableColElement>): number =>
-  getPercentSize(cell, (elm) => Math.round(Width.get(elm)), Width.getInner);
+  getPercentSize(cell, Width.get, Width.getInner);
 
 export const getPixelWidth = (cell: SugarElement<HTMLTableCellElement | HTMLTableColElement>): number =>
   // For col elements use the computed width as col elements aren't affected by borders, padding, etc...
