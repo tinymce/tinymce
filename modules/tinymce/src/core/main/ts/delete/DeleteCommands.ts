@@ -1,6 +1,9 @@
 import { Arr, Cell, Fun } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
+import * as Options from '../api/Options';
+import * as Delete from '../lists/actions/Delete';
+import * as NormalizeLists from '../lists/lists/NormalizeLists';
 
 import * as BlockBoundaryDelete from './BlockBoundaryDelete';
 import * as BlockRangeDelete from './BlockRangeDelete';
@@ -65,10 +68,18 @@ const forwardDeleteCommand = (editor: Editor, caret: Cell<Text | null>): void =>
 const setup = (editor: Editor, caret: Cell<Text | null>): void => {
   editor.addCommand('delete', () => {
     deleteCommand(editor, caret);
+
+    if (Delete.hasListSelection(editor) && Options.shouldHaveListFeatures(editor)) {
+      NormalizeLists.normalizeLists(editor.dom, editor.getBody());
+    }
   });
 
   editor.addCommand('forwardDelete', () => {
     forwardDeleteCommand(editor, caret);
+
+    if (Delete.hasListSelection(editor) && Options.shouldHaveListFeatures(editor)) {
+      NormalizeLists.normalizeLists(editor.dom, editor.getBody());
+    }
   });
 };
 

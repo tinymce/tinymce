@@ -6,6 +6,7 @@ import Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import { isList, isListItem, isTable } from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
+import { indentListSelection, outdentListSelection } from '../lists/actions/Indendation';
 
 type IndentStyle = 'margin-left' | 'margin-right' | 'padding-left' | 'padding-right';
 
@@ -73,6 +74,14 @@ const handle = (editor: Editor, command: string): void => {
   Arr.each(getBlocksToIndent(editor), (block) => {
     indentElement(dom, command, useMargin, indentValue, indentUnit, block.dom);
   });
+
+  if (Options.shouldHaveListFeatures(editor)) {
+    if (command === 'indent') {
+      indentListSelection(editor);
+    } else {
+      outdentListSelection(editor);
+    }
+  }
 };
 
 const indent = (editor: Editor): void => handle(editor, 'indent');
