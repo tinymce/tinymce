@@ -305,75 +305,89 @@ const fetchChoices = (getApi: (comp: AlloyComponent) => Toolbar.ToolbarSplitButt
         )
       )));
 
-const getSplitButtonApi = (component: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => ({
-  isEnabled: () => !Disabling.isDisabled(component),
-  setEnabled: (state: boolean) => Disabling.set(component, !state),
-  setText: (text: string) => AlloyTriggers.emitWith(component, updateMenuText, { text }),
-  setIcon: (icon: string) => AlloyTriggers.emitWith(component, updateMenuIcon, { icon }),
-  setIconFill: (_id: string, _value: string) => {},
-  isActive: () => false,
-  setActive: (_state: boolean) => {},
-  setTooltip: (_tooltip: string) => {}
-});
-
+      const getSplitButtonApi = (component: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => ({
+        isEnabled: () => !Disabling.isDisabled(component),
+        setEnabled: (state: boolean) => Disabling.set(component, !state),
+        setText: (text: string) => AlloyTriggers.emitWith(component, updateMenuText, { text }),
+        setIcon: (icon: string) => AlloyTriggers.emitWith(component, updateMenuIcon, { icon }),
+        setIconFill: (_id: string, _value: string) => {},
+        isActive: () => false,
+        setActive: (_state: boolean) => {},
+        setTooltip: (_tooltip: string) => {}
+      });
+// TODO: hookup onSetup and onDestroy
 const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: UiFactoryBackstageShared, btnName?: string): AlloySpec[] => {
   const openDropdownMenu = (chevronButton: AlloyComponent) => {
-    fetchChoices(getSplitButtonApi, spec, sharedBackstage.providers)(chevronButton).get((optTieredData) => {
-      optTieredData.each((tieredData) => {
-        const menuSpec = TieredMenu.sketch({
-          dom: {
-            tag: 'div',
-            classes: [ 'tox-menu', 'tox-selected-menu' ]
-          },
-          data: tieredData,
-          markers: MenuParts.markers(spec.presets),
-          onEscape: (comp, _item) => {
-            chevronButton.getSystem().removeFromGui(comp);
-            return Optional.some(true);
-          },
-          onExecute: (comp, _item) => {
-            chevronButton.getSystem().removeFromGui(comp);
-            return Optional.some(true);
-          },
-          onOpenMenu: () => {},
-          onOpenSubmenu: () => {},
-          eventOrder: {
-            'alloy.execute': [
-              'disabling',
-              'alloy.base.behaviour',
-              'toggling',
-              'close-on-execute'
-            ]
-          },
-          tmenuBehaviours: Behaviour.derive([
-            AddEventsBehaviour.config('close-on-execute', [
-              AlloyEvents.runOnExecute((comp, _simulatedEvent) => {
-                chevronButton.getSystem().removeFromGui(comp);
-              })
-            ])
-          ])
-        });
-        const menu = chevronButton.getSystem().build(menuSpec);
-        chevronButton.getSystem().addToGui(menu);
-        const chevronEl = chevronButton.element.dom as HTMLElement;
-        const menuEl = menu.element.dom as HTMLElement;
-        const parentRect = chevronEl.offsetParent
-          ? (chevronEl.offsetParent as HTMLElement).getBoundingClientRect()
-          : { left: 0, top: 0 };
-        menuEl.style.position = 'absolute';
-        menuEl.style.top = `${chevronEl.offsetTop + chevronEl.offsetHeight}px`;
-        menuEl.style.left = `${chevronEl.offsetLeft}px`;
-        setTimeout(() => {
-          const firstItem = menuEl.querySelector('.tox-collection__item');
-          if (firstItem) (firstItem as HTMLElement).focus();
-        }, 0);
-        const onDocClick = (e: MouseEvent) => {
-          if (!menuEl.contains(e.target as Node)) {
-            chevronButton.getSystem().removeFromGui(menu);
+    sharedBackstage.getSink().toOptional().each((sink) => {
+      fetchChoices(getSplitButtonApi, spec, sharedBackstage.providers)(chevronButton).get((optTieredData) => {
+        optTieredData.each((tieredData) => {
+          let menu: AlloyComponent;
+          let onDocClick: (e: MouseEvent) => void;
+
+          const closeMenu = () => {
+            sink.getSystem().removeFromGui(menu);
             document.removeEventListener('mousedown', onDocClick);
-          }
-        };
-        document.addEventListener('mousedown', onDocClick);
+          };
+
+          const menuSpec = TieredMenu.sketch({
+            dom: {
+              tag: 'div',
+              classes: [ 'tox-menu', 'tox-selected-menu' ]
+            },
+            data: tieredData,
+            markers: MenuParts.markers(spec.presets),
+            onEscape: (comp, _item) => {
+              closeMenu();
+              return Optional.some(true);
+            },
+            onExecute: (comp, _item) => {
+              closeMenu();
+              return Optional.some(true);
+            },
+            onOpenMenu: () => {},
+            onOpenSubmenu: () => {},
+            eventOrder: {
+              'alloy.execute': [
+                'disabling',
+                'alloy.base.behaviour',
+                'toggling',
+                'close-on-execute'
+              ]
+            },
+            tmenuBehaviours: Behaviour.derive([
+              AddEventsBehaviour.config('close-on-execute', [
+                AlloyEvents.runOnExecute((_comp, _simulatedEvent) => {
+                  closeMenu();
+                })
+              ])
+            ])
+          });
+
+          menu = sink.getSystem().build(menuSpec);
+          sink.getSystem().addToGui(menu);
+
+          const chevronRect = chevronButton.element.dom.getBoundingClientRect();
+          const sinkRect = sink.element.dom.getBoundingClientRect();
+          const menuEl = menu.element.dom as HTMLElement;
+          menuEl.style.position = 'absolute';
+          menuEl.style.top = `${chevronRect.bottom - sinkRect.top}px`;
+          menuEl.style.left = `${chevronRect.left - sinkRect.left}px`;
+
+          setTimeout(() => {
+            const firstItem = menuEl.querySelector('.tox-collection__item');
+            if (firstItem) {
+              (firstItem as HTMLElement).focus();
+            }
+          }, 0);
+
+          onDocClick = (e: MouseEvent) => {
+            if (!menuEl.contains(e.target as Node)) {
+              closeMenu();
+            }
+          };
+
+          document.addEventListener('mousedown', onDocClick);
+        });
       });
     });
   };
@@ -385,7 +399,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         spec.text,
         Optional.none(),
         Optional.some([
-          Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, toggleOnExecute: false }),
+          Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, aria: { mode: 'pressed' }, toggleOnExecute: false }),
           DisablingConfigs.toolbarButton(Fun.never),
           UiState.toggleOnReceive(Fun.constant({ contextType: 'any', shouldDisable: false }))
         ]),

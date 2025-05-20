@@ -28,7 +28,7 @@ export interface RenderToolbarConfig {
   readonly allowToolbarGroups: boolean;
 }
 
-type BridgeRenderFn<S> = (spec: S, backstage: UiFactoryBackstage, editor: Editor, btnName: string) => AlloySpec;
+type BridgeRenderFn<S> = (spec: S, backstage: UiFactoryBackstage, editor: Editor, btnName: string) => AlloySpec | AlloySpec[];
 
 const defaultToolbar = [
   {
@@ -172,22 +172,21 @@ const createToolbar = (toolbarConfig: RenderToolbarConfig): ToolbarGroupOption[]
   }
 };
 
-const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem: string, allowToolbarGroups: boolean, backstage: UiFactoryBackstage, prefixes: Optional<string[]>): Optional<AlloySpec | AlloySpec[]> =>
-  Obj.get(buttons, toolbarItem.toLowerCase())
-    .orThunk(() => prefixes.bind((ps) => Arr.findMap(ps, (prefix) => Obj.get(buttons, prefix + toolbarItem.toLowerCase()))))
-    .fold(
-      () => Obj.get(bespokeButtons, toolbarItem.toLowerCase()).map((r) => r(editor, backstage)),
-      (spec) => {
-        if (spec.type === 'grouptoolbarbutton' && !allowToolbarGroups) {
-          // TODO change this message when sliding is available
-          // eslint-disable-next-line no-console
-          console.warn(`Ignoring the '${toolbarItem}' toolbar button. Group toolbar buttons are only supported when using floating toolbar mode and cannot be nested.`);
-          return Optional.none();
-        } else {
-          return extractFrom(spec, backstage, editor, toolbarItem.toLowerCase());
-        }
+const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem: string, allowToolbarGroups: boolean, backstage: UiFactoryBackstage, prefixes: Optional<string[]>): Optional<AlloySpec | AlloySpec[]> => Obj.get(buttons, toolbarItem.toLowerCase())
+  .orThunk(() => prefixes.bind((ps) => Arr.findMap(ps, (prefix) => Obj.get(buttons, prefix + toolbarItem.toLowerCase()))))
+  .fold(
+    () => Obj.get(bespokeButtons, toolbarItem.toLowerCase()).map((r) => r(editor, backstage)),
+    (spec) => {
+      if (spec.type === 'grouptoolbarbutton' && !allowToolbarGroups) {
+        // TODO change this message when sliding is available
+        // eslint-disable-next-line no-console
+        console.warn(`Ignoring the '${toolbarItem}' toolbar button. Group toolbar buttons are only supported when using floating toolbar mode and cannot be nested.`);
+        return Optional.none();
+      } else {
+        return extractFrom(spec, backstage, editor, toolbarItem.toLowerCase());
       }
-    );
+    }
+  );
 
 const identifyButtons = (editor: Editor, toolbarConfig: RenderToolbarConfig, backstage: UiFactoryBackstage, prefixes: Optional<string[]>): ToolbarGroup[] => {
   const toolbarGroups = createToolbar(toolbarConfig);
