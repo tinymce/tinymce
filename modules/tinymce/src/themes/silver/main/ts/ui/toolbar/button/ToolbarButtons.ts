@@ -319,17 +319,43 @@ const getSplitButtonApi = (component: AlloyComponent): Toolbar.ToolbarSplitButto
   setTooltip: (_tooltip: string) => {}
 });
 
-// TODO: hookup onSetup and onDestroy
 const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: UiFactoryBackstageShared, btnName?: string): AlloySpec[] => {
   const editorOffCell = Cell(Fun.noop);
+  const menuId = Id.generate('tox-split-menu');
+  const expandedCell = Cell(false);
+
+  const getAriaAttributes = () => ({
+    'aria-haspopup': 'menu',
+    'aria-expanded': String(expandedCell.get()),
+    'aria-controls': menuId
+  });
+
+  // Helper to get ARIA label for the main button
+  const getMainButtonAriaLabel = () => {
+    const name = btnName || sharedBackstage.providers.translate('toolbar button');
+    return `${name} button`;
+  };
+
+  // Helper to get ARIA label for the chevron/dropdown button
+  const getChevronAriaLabel = () => {
+    const name = btnName || sharedBackstage.providers.translate('toolbar button');
+    return `Open more ${name} selections`;
+  };
+
+  const updateAriaExpanded = (expanded: boolean, comp: AlloyComponent) => {
+    expandedCell.set(expanded);
+    Attribute.set(comp.element, 'aria-expanded', String(expanded));
+  };
+
   const arrow = AlloyDropdown.sketch({
     dom: {
       tag: 'button',
       classes: [ ToolbarButtonClasses.Button, 'tox-split-button__chevron' ],
       innerHtml: Icons.get('chevron-down', sharedBackstage.providers.icons),
       attributes: {
-        'aria-label': sharedBackstage.providers.translate('Show menu'),
-        ...(Type.isNonNullable(btnName) ? { 'data-mce-name': btnName + '-chevron' } : {})
+        'aria-label': getChevronAriaLabel(),
+        ...(Type.isNonNullable(btnName) ? { 'data-mce-name': btnName + '-chevron' } : {}),
+        ...getAriaAttributes()
       }
     },
     components: [],
@@ -338,6 +364,8 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
       AddEventsBehaviour.config('split-dropdown-events', [
         AlloyEvents.runOnAttached((comp, _se) => UiUtils.forceInitialSize(comp)),
         onControlAttached({ getApi: getSplitButtonApi, onSetup: spec.onSetup }, editorOffCell),
+        AlloyEvents.run('alloy-dropdown-open', (comp) => updateAriaExpanded(true, comp)),
+        AlloyEvents.run('alloy-dropdown-close', (comp) => updateAriaExpanded(false, comp)),
       ]),
       DisablingConfigs.splitButton(Fun.never),
       UiState.toggleOnReceive(Fun.constant({ contextType: 'any', shouldDisable: false })),
@@ -346,7 +374,17 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     lazySink: sharedBackstage.getSink,
     fetch: fetchChoices(getSplitButtonApi, spec, sharedBackstage.providers),
     parts: {
-      menu: MenuParts.part(false, spec.columns, spec.presets)
+      menu: {
+        ...MenuParts.part(false, spec.columns, spec.presets),
+        dom: {
+          tag: MenuParts.part(false, spec.columns, spec.presets).dom?.tag ?? 'div',
+          ...MenuParts.part(false, spec.columns, spec.presets).dom,
+          attributes: {
+            ...(MenuParts.part(false, spec.columns, spec.presets).dom?.attributes ?? {}),
+            id: menuId
+          }
+        }
+      }
     }
   });
   return [
@@ -358,12 +396,32 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         Optional.some([
           Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, aria: { mode: 'pressed' }, toggleOnExecute: false }),
           DisablingConfigs.toolbarButton(Fun.never),
-          UiState.toggleOnReceive(Fun.constant({ contextType: 'any', shouldDisable: false }))
+          UiState.toggleOnReceive(Fun.constant({ contextType: 'any', shouldDisable: false })),
+          AddEventsBehaviour.config('split-main-aria-events', [
+            AlloyEvents.run('alloy-dropdown-open', (comp) => updateAriaExpanded(true, comp)),
+            AlloyEvents.run('alloy-dropdown-close', (comp) => updateAriaExpanded(false, comp)),
+          ])
         ]),
         sharedBackstage.providers,
         spec.context,
         btnName
       ),
+      dom: {
+        ...renderCommonStructure(
+          spec.icon,
+          spec.text,
+          Optional.none(),
+          Optional.none(),
+          sharedBackstage.providers,
+          spec.context,
+          btnName
+        ).dom,
+        attributes: {
+          ...getAriaAttributes(),
+          'aria-label': getMainButtonAriaLabel(),
+          ...(Type.isNonNullable(btnName) ? { 'data-mce-name': btnName } : {})
+        }
+      },
       action: (button) => {
         if (spec.onAction) {
           const api = getSplitButtonApi(button);
