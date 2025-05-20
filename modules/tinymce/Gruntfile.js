@@ -285,6 +285,7 @@ module.exports = function (grunt) {
         core: {
           src: [
             'src/core/text/build-header.js',
+            `src/core/text/tinymce-license-header.js`,
             'js/tinymce/tinymce.js'
           ],
           dest: 'js/tinymce/tinymce.js'
