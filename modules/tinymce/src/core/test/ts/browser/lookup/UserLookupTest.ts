@@ -250,15 +250,17 @@ describe('browser.tinymce.core.UserLookupTest', () => {
             id: 'user-3',
             name: undefined,
             avatar: null,
-            description: '',
-            custom: {}
+            custom: {
+              description: ''
+            }
           },
           expected: {
             id: 'user-3',
             name: 'user-3',
             avatar: (value: string) => value.startsWith('data:image/svg+xml,'),
-            description: '',
-            custom: {}
+            custom: {
+              description: ''
+            }
           }
         },
         {
@@ -266,14 +268,16 @@ describe('browser.tinymce.core.UserLookupTest', () => {
             id: 'user-4',
             name: 'Jane',
             avatar: 'avatar.jpg',
-            description: null,
-            custom: { role: 'admin' }
+            custom: {
+              role: 'admin',
+              description: null
+            }
           },
           expected: {
             id: 'user-4',
             name: 'Jane',
             avatar: 'avatar.jpg',
-            custom: { role: 'admin' }
+            custom: { role: 'admin', description: null }
           }
         }
       ];
@@ -307,10 +311,10 @@ describe('browser.tinymce.core.UserLookupTest', () => {
         id: userId,
         name: 'Test User',
         avatar: 'test-avatar.png',
-        description: 'Test Description',
         custom: {
           role: 'admin',
-          department: 'IT'
+          department: 'IT',
+          description: 'Test Description',
         }
       }]));
 
@@ -321,10 +325,10 @@ describe('browser.tinymce.core.UserLookupTest', () => {
         id: userId,
         name: 'Test User',
         avatar: 'test-avatar.png',
-        description: 'Test Description',
         custom: {
           role: 'admin',
-          department: 'IT'
+          department: 'IT',
+          description: 'Test Description'
         }
       });
     });

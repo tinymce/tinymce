@@ -46,7 +46,6 @@ export interface ValidatedUser {
   id: UserId;
   name: Optional<string>;
   avatar: Optional<string>;
-  description: Optional<string>;
   custom: Optional<Record<string, any>>;
 }
 
@@ -122,7 +121,6 @@ const userSchema = StructureSchema.objOf([
   FieldSchema.required('id'),
   FieldSchema.optionString('name'),
   FieldSchema.optionString('avatar'),
-  FieldSchema.optionString('description'),
   FieldSchema.option('custom')
 ]);
 
