@@ -3,16 +3,14 @@ import { Obj } from '@ephox/katamari';
 import { Remove, Selectors } from '@ephox/sugar';
 import { assert } from 'chai';
 import 'tinymce';
-// eslint-disable-next-line @tinymce/no-main-module-imports
-import 'tinymce/models/dom/Main';
-// eslint-disable-next-line @tinymce/no-main-module-imports
-import 'tinymce/themes/silver/Main';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import Tools from 'tinymce/core/api/util/Tools';
+import Model from 'tinymce/models/dom/Model';
+import Theme from 'tinymce/themes/silver/Theme';
 
 import * as UuidUtils from '../module/test/UuidUtils';
 import * as ViewBlock from '../module/test/ViewBlock';
@@ -21,6 +19,8 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
   const viewBlock = ViewBlock.bddSetup();
 
   before(() => {
+    Theme();
+    Model();
     EditorManager._setBaseUrl('/project/tinymce/js/tinymce');
     // Check pageUid is defined before any editors are created
     UuidUtils.assertIsUuid(EditorManager.pageUid);
@@ -42,6 +42,7 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     EditorManager.init({
       selector: 'textarea.tinymce',
+      license_key: 'gpl',
       init_instance_callback: (editor1) => {
         assert.lengthOf(EditorManager.get(), 1);
         assert.equal(EditorManager.get(0), EditorManager.activeEditor);
@@ -66,6 +67,7 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         EditorManager.init({
           selector: '#' + (EditorManager.activeEditor as Editor).id,
+          license_key: 'gpl',
         });
 
         assert.lengthOf(EditorManager.get(), 1);
@@ -96,6 +98,7 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
     EditorManager.init({
       selector: 'textarea',
       language: langCode,
+      license_key: 'gpl',
       language_url: langUrl,
       init_instance_callback: (_ed) => {
         const scripts = Tools.grep(document.getElementsByTagName('script'), (script) => {
@@ -115,6 +118,7 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     EditorManager.init({
       selector: 'textarea',
+      license_key: 'gpl',
       init_instance_callback: (editor1) => {
         setTimeout(() => {
           // Destroy the editor by setting innerHTML common ajax pattern
@@ -127,6 +131,7 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
           // eslint-disable-next-line @typescript-eslint/no-floating-promises
           EditorManager.init({
             selector: 'textarea',
+            license_key: 'gpl',
             skin_url: '/project/tinymce/js/tinymce/skins/ui/oxide',
             content_css: '/project/tinymce/js/tinymce/skins/content/default',
             init_instance_callback: (editor2) => {
@@ -171,6 +176,7 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
 
     assert.deepEqual(new Editor('ed2', {
       base_url: '/project/tinymce/js/tinymce',
+      license_key: 'gpl',
       external_plugins: {
         plugina: '//domain/plugina2.js',
         pluginc: '//domain/pluginc.js'
@@ -185,7 +191,8 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
     });
 
     assert.deepEqual(new Editor('ed3', {
-      base_url: '/project/tinymce/js/tinymce'
+      base_url: '/project/tinymce/js/tinymce',
+      license_key: 'gpl',
     }, EditorManager).options.get('external_plugins'), {
       plugina: '//domain/plugina.js',
       pluginb: '//domain/pluginb.js'
@@ -210,6 +217,7 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       EditorManager.init({
         selector: invalidName + '.targetEditor',
+        license_key: 'gpl',
         inline: true
       });
 
@@ -225,6 +233,7 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
     viewBlock.update('<textarea class="tinymce"></textarea><textarea class="tinymce"></textarea>');
     await EditorManager.init({
       selector: 'textarea.tinymce',
+      license_key: 'gpl',
       setup: (editor) => {
         assert.equal(editor.editorManager.pageUid, pageUid);
       },
