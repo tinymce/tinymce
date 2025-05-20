@@ -43,6 +43,7 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     EditorManager.init({
       target: elm1,
+      license_key: 'gpl',
       init_instance_callback: (ed) => {
         assert.strictEqual(ed.targetElm, elm1);
         done();
@@ -57,6 +58,7 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     EditorManager.init({
       target: elm,
+      license_key: 'gpl',
       init_instance_callback: (ed) => {
         assert.isAbove(ed.id.length, 0, 'editors id set to: ' + ed.id);
         assert.strictEqual(ed.targetElm, elm);
@@ -73,6 +75,7 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
     EditorManager.init({
       selector: '#elm-2',
       target: elm1,
+      license_key: 'gpl',
       init_instance_callback: (ed) => {
         assert.strictEqual(ed.targetElm, elm2);
         done();
@@ -83,6 +86,7 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
   it('selector on non existing targets', () => {
     return EditorManager.init({
       selector: '#non-existing-id',
+      license_key: 'gpl',
     }).then((result) => {
       assert.lengthOf(result, 0, 'Should be a result that is zero length');
     });
@@ -98,6 +102,7 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
     EditorManager.init({
       selector: '.elm-even',
       target: elm1,
+      license_key: 'gpl',
       init_instance_callback: (ed) => {
         assert.notStrictEqual(ed.targetElm, elm1, 'target option ignored');
         assert.notInclude(targets, ed.targetElm);
@@ -117,6 +122,7 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
       base_url: '/compiled/fake/url',
       suffix: '.min',
       selector: '#elm-1',
+      license_key: 'gpl',
       init_instance_callback: (ed) => {
         assert.equal(EditorManager.suffix, '.min', 'Should have set suffix on EditorManager');
         assert.equal(ed.suffix, '.min', 'Should have set suffix on editor');
@@ -135,6 +141,7 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
     viewBlock.update('<div class="tinymce-editor"><p>a</p></div>');
     await EditorManager.init({
       selector: '.tinymce-editor',
+      license_key: 'gpl',
       inline: true,
       promotion: false,
       toolbar_mode: 'wrap',
@@ -161,6 +168,7 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
 
     return EditorManager.init({
       selector: '.tinymce-editor',
+      license_key: 'gpl',
       inline: true,
       promotion: false,
       toolbar_mode: 'wrap'
@@ -239,6 +247,7 @@ describe('browser.tinymce.core.init.EditorInitializationTest', () => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     EditorManager.init({
       selector,
+      license_key: 'gpl',
       init_instance_callback: (ed) => {
         assert.equal(ed.getContent({ format: 'text' }), expectedEditorContent, 'Expect editor to have content');
         done();

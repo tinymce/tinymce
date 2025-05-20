@@ -42,6 +42,7 @@ describe.skip('browser.tinymce.core.EditorAutoFocusTest', () => {
       EditorManager.init({
         selector: 'div.tinymce',
         base_url: '/project/tinymce/js/tinymce/',
+        license_key: 'gpl',
         menubar: false,
         statusbar: false,
         height,
