@@ -32,11 +32,15 @@ type UserId = string;
 
 export interface User {
   id: UserId;
-  name?: string;
-  avatar?: string;
-  description?: string;
+  name: string;
+  avatar: string;
   custom?: Record<string, any>;
 }
+
+interface ExpectedUser {
+  id: UserId;
+  [key: string]: any;
+};
 
 export interface ValidatedUser {
   id: UserId;
@@ -136,7 +140,7 @@ const objectCat = <T extends object>(
   return result;
 };
 
-const validateResponse = (items: unknown): User[] => {
+const validateResponse = (items: unknown): ExpectedUser[] => {
   if (!Array.isArray(items)) {
     throw new Error('fetch_users must return an array');
   }
@@ -190,11 +194,16 @@ const UserLookup = (editor: Editor): UserLookup => {
         pendingResolvers.delete(userId);
       });
 
-  const finallyResolve = (userId: UserId, user: User) =>
+  const finallyResolve = (userId: UserId, user: ExpectedUser) =>
     Optional
       .from(pendingResolvers.get(userId))
       .each(({ resolve }) => {
-        resolve(user);
+        resolve({
+          ...user,
+          id: user.id,
+          name: Optional.from(user.name).getOr(user.id),
+          avatar: Optional.from(user.avatar).getOr(deriveAvatar(user.name)),
+        });
         pendingResolvers.delete(userId);
       });
 
@@ -218,7 +227,7 @@ const UserLookup = (editor: Editor): UserLookup => {
     if (uncachedIds.length > 0) {
       fetchUsersFn(uncachedIds)
         .then(validateResponse)
-        .then((users: User[]) => {
+        .then((users: ExpectedUser[]) => {
           const foundUserIds = new Set(Arr.map(users, (user) => user.id));
 
           // Resolve found users
@@ -243,7 +252,13 @@ const UserLookup = (editor: Editor): UserLookup => {
 
     return userIds.reduce((acc, userId) => ({
       ...acc,
-      [userId]: lookup(userId).getOr(Promise.resolve({ id: userId }))
+      [userId]: lookup(userId).getOr(
+        Promise.resolve({
+          id: userId,
+          name: userId,
+          avatar: deriveAvatar(userId)
+        })
+      ),
     }), {} as Record<UserId, Promise<User>>);
   };
 

@@ -11,18 +11,25 @@ import { createUserLookup, type User } from 'tinymce/core/lookup/UserLookup';
 
 Chai.use(chaiAsPromised);
 
+interface ExpectedUser {
+  id: string;
+  [key: string]: any;
+};
+
 const createMockUser = (id: string): User => ({
   id,
   name: 'Test User',
   avatar: 'test-avatar.png',
-  description: 'Test Description'
+  custom: {
+    description: 'Test Description'
+  }
 });
 
 describe('browser.tinymce.core.UserLookupTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     user_id: 'test-user-1',
-    fetch_users: (userIds: string[]): Promise<User[]> => {
+    fetch_users: (userIds: string[]): Promise<ExpectedUser[]> => {
       return new Promise((resolve) => {
         setTimeout(() => {
           const validIds = Arr.filter(userIds, (id): id is string =>
@@ -123,7 +130,9 @@ describe('browser.tinymce.core.UserLookupTest', () => {
         id: userId,
         name: 'Test User',
         avatar: 'test-avatar.png',
-        description: 'Test Description'
+        custom: {
+          description: 'Test Description'
+        }
       };
 
       await expect(userPromise).to.eventually.deep.equal(
@@ -159,7 +168,9 @@ describe('browser.tinymce.core.UserLookupTest', () => {
         id: existingId,
         name: 'Test User',
         avatar: 'test-avatar.png',
-        description: 'Test Description'
+        custom: {
+          description: 'Test Description'
+        }
       });
 
       await expect(nonExistentPromise).to.be.rejectedWith(`User ${nonExistentId} not found`);
