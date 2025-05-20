@@ -1,18 +1,13 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button as AlloyButton, Disabling, FloatingToolbarButton, Focusing,
+  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button as AlloyButton, Disabling, FloatingToolbarButton,
   GuiFactory,
   Keying, Memento, NativeEvents, Replacing, SketchSpec, Dropdown as AlloyDropdown, SystemEvents, TieredData, TieredMenuTypes, Toggling,
   Tooltipping,
   Unselecting,
-  AlloySpec,
-  TieredMenu,
-  Positioning,
-  Sandboxing,
-  AnchorSpec
-} from '@ephox/alloy';
+  AlloySpec} from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional, Type } from '@ephox/katamari';
-import { Attribute, EventArgs, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Attribute, EventArgs } from '@ephox/sugar';
 
 import { ToolbarGroupOption } from '../../../api/Options';
 import { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
