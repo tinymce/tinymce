@@ -305,16 +305,16 @@ const fetchChoices = (getApi: (comp: AlloyComponent) => Toolbar.ToolbarSplitButt
         )
       )));
 
-      const getSplitButtonApi = (component: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => ({
-        isEnabled: () => !Disabling.isDisabled(component),
-        setEnabled: (state: boolean) => Disabling.set(component, !state),
-        setText: (text: string) => AlloyTriggers.emitWith(component, updateMenuText, { text }),
-        setIcon: (icon: string) => AlloyTriggers.emitWith(component, updateMenuIcon, { icon }),
-        setIconFill: (_id: string, _value: string) => {},
-        isActive: () => false,
-        setActive: (_state: boolean) => {},
-        setTooltip: (_tooltip: string) => {}
-      });
+const getSplitButtonApi = (component: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => ({
+  isEnabled: () => !Disabling.isDisabled(component),
+  setEnabled: (state: boolean) => Disabling.set(component, !state),
+  setText: (text: string) => AlloyTriggers.emitWith(component, updateMenuText, { text }),
+  setIcon: (icon: string) => AlloyTriggers.emitWith(component, updateMenuIcon, { icon }),
+  setIconFill: (_id: string, _value: string) => {},
+  isActive: () => Fun.never(),
+  setActive: (_state: boolean) => {},
+  setTooltip: (_tooltip: string) => {}
+});
 // TODO: hookup onSetup and onDestroy
 const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: UiFactoryBackstageShared, btnName?: string): AlloySpec[] => {
   const openDropdownMenu = (chevronButton: AlloyComponent) => {
@@ -336,16 +336,16 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
             },
             data: tieredData,
             markers: MenuParts.markers(spec.presets),
-            onEscape: (comp, _item) => {
+            onEscape: (_item) => {
               closeMenu();
               return Optional.some(true);
             },
-            onExecute: (comp, _item) => {
+            onExecute: (_item) => {
               closeMenu();
               return Optional.some(true);
             },
-            onOpenMenu: () => {},
-            onOpenSubmenu: () => {},
+            onOpenMenu: () => Fun.noop,
+            onOpenSubmenu: () => Fun.noop,
             eventOrder: {
               'alloy.execute': [
                 'disabling',
@@ -357,6 +357,12 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
             tmenuBehaviours: Behaviour.derive([
               AddEventsBehaviour.config('close-on-execute', [
                 AlloyEvents.runOnExecute((_comp, _simulatedEvent) => {
+                  closeMenu();
+                })
+              ]),
+              // Add handler for sandboxClose event
+              AddEventsBehaviour.config('custom-sandbox-close', [
+                AlloyEvents.run(SystemEvents.sandboxClose(), () => {
                   closeMenu();
                 })
               ])
