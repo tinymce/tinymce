@@ -199,8 +199,8 @@ const UserLookup = (editor: Editor): UserLookup => {
         resolve({
           ...user,
           id: user.id,
-          name: Optional.from(user.name).getOr(user.id),
-          avatar: Optional.from(user.avatar).getOr(deriveAvatar(user.id)),
+          name: user.name,
+          avatar: user.avatar,
         });
         pendingResolvers.delete(userId);
       });
