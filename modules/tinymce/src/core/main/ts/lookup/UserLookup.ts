@@ -251,16 +251,16 @@ const UserLookup = (editor: Editor): UserLookup => {
         });
     };
 
-    return userIds.reduce((acc, userId) => ({
-      ...acc,
-      [userId]: lookup(userId).getOr(
+    return Arr.foldl<UserId, Record<UserId, Promise<User>>>(userIds, (acc, userId) => {
+      acc[userId] = lookup(userId).getOr(
         Promise.resolve({
           id: userId,
           name: userId,
           avatar: deriveAvatar(userId)
         })
-      ),
-    }), {} as Record<UserId, Promise<User>>);
+      );
+      return acc;
+    }, {});
   };
 
   const userId = Options.getUserId(editor);
