@@ -47,7 +47,7 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     },
   });
 
-  let originalFetchUsers: (userIds: string[]) => Promise<User[]>;
+  let originalFetchUsers: ((userIds: string[]) => Promise<ExpectedUser[]>) | undefined;
 
   before(() => {
     const editor = hook.editor();
@@ -212,7 +212,7 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       const userIds = Arr.range(100, (i) => `test-user-${i}`);
 
       const promises = editor.userLookup.fetchUsers(userIds);
-      const users = await Promise.all(Arr.map(userIds, (id) => promises[id]));
+      const users = await Promise.all(Object.values(promises));
 
       await Promise.all(Arr.map(users, async (user, index) =>
         expect(Promise.resolve(user)).to.eventually.have.property('id').that.equals(`test-user-${index}`)
@@ -287,7 +287,7 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
       const userIds = Arr.map(testCases, (c) => c.input.id);
       const promises = editor.userLookup.fetchUsers(userIds);
-      const results = await Promise.all(Arr.map(userIds, (id) => promises[id]));
+      const results = await Promise.all(Object.values(promises));
 
       Arr.each(results, (result, index) => {
         const expected = testCases[index].expected;
@@ -434,20 +434,6 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
       // Verify fetch count
       store.assertEq('Should fetch exactly twice - once for each unique ID', [ userId1, userId2 ]);
-    });
-
-    it('TINY-11974: Should throw an exception when fetch_users has not been configured', () => {
-      const editor = hook.editor();
-
-      editor.options.unset('fetch_users');
-
-      editor.userLookup = createUserLookup(editor);
-
-      const userIds = [ 'test-user-1' ];
-
-      expect(() => {
-        editor.userLookup.fetchUsers(userIds);
-      }).to.throw('fetch_users option must be configured');
     });
   });
 });

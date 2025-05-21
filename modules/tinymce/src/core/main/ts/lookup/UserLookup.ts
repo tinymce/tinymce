@@ -37,7 +37,7 @@ export interface User {
   custom?: Record<string, any>;
 }
 
-interface ExpectedUser {
+export interface ExpectedUser {
   id: UserId;
   [key: string]: any;
 };
@@ -56,7 +56,7 @@ export interface UserLookup {
    * @property userId
    * @type String
    */
-  userId: UserId;
+  userId?: UserId;
 
   /**
    * Fetches user information using a provided array of userIds.
@@ -69,7 +69,7 @@ export interface UserLookup {
   fetchUsers: (userIds: UserId[]) => Record<UserId, Promise<User>>;
 }
 
-export const AvatarColors = [
+const AvatarColors = [
   '#2DC26B', // Green
   '#F1C40F', // Yellow
   '#E03E2D', // Red
@@ -138,7 +138,7 @@ const objectCat = <T extends object>(
   return result;
 };
 
-const validateResponse = (items: unknown): ExpectedUser[] => {
+const validateResponse = (items: unknown): User[] => {
   if (!Array.isArray(items)) {
     throw new Error('fetch_users must return an array');
   }
@@ -192,24 +192,27 @@ const UserLookup = (editor: Editor): UserLookup => {
         pendingResolvers.delete(userId);
       });
 
-  const finallyResolve = (userId: UserId, user: ExpectedUser) =>
+  const finallyResolve = (userId: UserId, user: User) =>
     Optional
       .from(pendingResolvers.get(userId))
       .each(({ resolve }) => {
-        resolve({
-          ...user,
-          id: user.id,
-          name: user.name,
-          avatar: user.avatar,
-        });
+        resolve(user);
         pendingResolvers.delete(userId);
       });
 
   const fetchUsers = (userIds: UserId[]): Record<UserId, Promise<User>> => {
     const fetchUsersFn = Options.getFetchUsers(editor);
     if (!fetchUsersFn) {
-      throw new Error('fetch_users option must be configured');
-    } else if (!Array.isArray(userIds)) {
+      Arr.each(userIds, (userId) => {
+        finallyResolve(userId, {
+          id: userId,
+          name: userId,
+          avatar: deriveAvatar(userId)
+        });
+      });
+    }
+
+    if (!Array.isArray(userIds)) {
       return {};
     }
 
@@ -222,10 +225,10 @@ const UserLookup = (editor: Editor): UserLookup => {
       store(newPromise, userId);
     });
 
-    if (uncachedIds.length > 0) {
+    if (uncachedIds.length > 0 && fetchUsersFn) {
       fetchUsersFn(uncachedIds)
         .then(validateResponse)
-        .then((users: ExpectedUser[]) => {
+        .then((users: User[]) => {
           const foundUserIds = new Set(Arr.map(users, (user) => user.id));
 
           // Resolve found users
