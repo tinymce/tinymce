@@ -21,7 +21,7 @@ export const renderContextFormTextInput = (
     const parent = Traverse.parent(comp.element);
     const parentCompOpt = parent.bind((parent) => comp.getSystem().getByDom(parent).toOptional());
     return parentCompOpt.map((parentComp) => ContextFormApi.getFormApi<string>(parentComp, valueState, focusfallbackElement))
-      .getOr(ContextFormApi.getFormApi<string>(comp, valueState, focusfallbackElement));
+      .getOrThunk(() => ContextFormApi.getFormApi<string>(comp, valueState, focusfallbackElement));
   };
 
   const pLabel = ctx.label.map((label) => FormField.parts.label({
