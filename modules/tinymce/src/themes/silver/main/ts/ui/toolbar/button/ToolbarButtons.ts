@@ -368,7 +368,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         AlloyEvents.run('alloy-dropdown-open', (comp) => updateAriaExpanded(true, comp)),
         AlloyEvents.run('alloy-dropdown-close', (comp) => updateAriaExpanded(false, comp)),
       ]),
-      DisablingConfigs.splitButton(Fun.never),
+      DisablingConfigs.splitButton(() => sharedBackstage.providers.checkUiComponentContext(spec.context).shouldDisable),
       UiState.toggleOnReceive(Fun.constant({ contextType: 'any', shouldDisable: false })),
       Unselecting.config({ }),
       Tooltipping.config(sharedBackstage.providers.tooltips.getConfig({
@@ -399,7 +399,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         Optional.none(),
         Optional.some([
           Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, aria: { mode: 'pressed' }, toggleOnExecute: false }),
-          DisablingConfigs.toolbarButton(Fun.never),
+          DisablingConfigs.toolbarButton(() => sharedBackstage.providers.checkUiComponentContext(spec.context).shouldDisable),
           UiState.toggleOnReceive(Fun.constant({ contextType: 'any', shouldDisable: false })),
           AddEventsBehaviour.config('split-main-aria-events', [
             AlloyEvents.run('alloy-dropdown-open', (comp) => updateAriaExpanded(true, comp)),
