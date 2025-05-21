@@ -1,6 +1,7 @@
 const gulp = require('gulp');
 const connect = require('gulp-connect');
 const clean = require('gulp-clean');
+const header = require('gulp-header');
 const less = require('gulp-less');
 const lessAutoprefix = require('less-plugin-autoprefix');
 const gulpStylelint = require('gulp-stylelint');
@@ -119,6 +120,16 @@ gulp.task('generateJs', function() {
 });
 
 //
+// Add license headers
+//
+gulp.task('addLicenseHeaders', function() {
+  const license = fs.readFileSync('src/text/build-header.js', 'utf-8');
+  return gulp.src(['build/skins/**/content.css','build/skins/**/content.*.css','build/skins/**/content.js','build/skins/**/content.*.js'])
+    .pipe(header(license))
+    .pipe(gulp.dest('./build/skins'))
+});
+
+//
 // watch and rebuild CSS for Oxide demos
 //
 gulp.task('monitor', function (done) {
@@ -147,7 +158,7 @@ gulp.task('clean', function () {
 //
 // Build project and watch LESS file changes
 //
-gulp.task('css', gulp.series('lint', 'less', 'generateJs', 'minifyCss'));
+gulp.task('css', gulp.series('lint', 'less', 'generateJs', 'minifyCss','addLicenseHeaders'));
 gulp.task('build', gulp.series('clean', 'css'));
 gulp.task('default', gulp.series('build'));
 
