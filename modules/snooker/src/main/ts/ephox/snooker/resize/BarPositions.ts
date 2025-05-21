@@ -29,7 +29,7 @@ const colInfo = (col: number, x: number): ColInfo => ({
 
 const rtlEdge = (cell: SugarElement<HTMLElement>): number => {
   const pos = SugarLocation.absolute(cell);
-  return pos.left + Math.round(Width.getOuter(cell));
+  return pos.left + Width.getOuter(cell);
 };
 
 const ltrEdge = (cell: SugarElement<HTMLElement>): number => {
