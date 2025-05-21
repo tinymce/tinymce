@@ -7,14 +7,9 @@ import { expect } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
 import type Editor from 'tinymce/core/api/Editor';
-import { createUserLookup, type User } from 'tinymce/core/lookup/UserLookup';
+import { createUserLookup, type User, type ExpectedUser } from 'tinymce/core/lookup/UserLookup';
 
 Chai.use(chaiAsPromised);
-
-interface ExpectedUser {
-  id: string;
-  [key: string]: any;
-};
 
 const createMockUser = (id: string): User => ({
   id,
