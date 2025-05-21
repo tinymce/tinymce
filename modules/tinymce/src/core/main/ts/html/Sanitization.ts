@@ -26,6 +26,29 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
   const validate = settings.validate;
   const specialElements = schema.getSpecialElements();
 
+  /*
+    This check has been added during the upgrade from DomPurify 2.3.4 to 2.3.6.
+    It has been found in the DomPurify source code, and has been adjusted to use our API's.
+    Since 2.3.6, this if statement is only run if the SAFE_FOR_XML flag is set to true.
+    We have disabled this flag during the previous DomPurify version upgrade.
+
+    This if statement removes any element that has a child Text node that contains HTML markup.
+    It's detected by the regular expression which matches any opening or closing HTML tag.
+    We wanted to keep this check in place, but at the same time we couldn't set SAFE_FOR_XML to true.
+  */
+  const isNode = (value: unknown): value is Node => typeof Node === 'function' && value instanceof Node;
+  if (
+    settings.sanitize &&
+    NodeType.isElement(node) &&
+    node.hasChildNodes() &&
+    !isNode(node.firstElementChild) &&
+    /<[/\w!]/g.test(node.innerHTML) &&
+    /<[/\w!]/g.test(node.textContent ?? '')
+  ) {
+    Remove.remove(SugarElement.fromDom(node));
+    return;
+  }
+
   // Pad conditional comments if they aren't allowed
   if (node.nodeType === NodeTypes.COMMENT && !settings.allow_conditional_comments && /^\[if/i.test(node.nodeValue ?? '')) {
     node.nodeValue = ' ' + node.nodeValue;
