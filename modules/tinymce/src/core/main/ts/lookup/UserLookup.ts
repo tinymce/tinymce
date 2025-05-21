@@ -205,6 +205,13 @@ const UserLookup = (editor: Editor): UserLookup => {
 
     if (!Array.isArray(userIds)) {
       return {};
+    } else if (!fetchUsersFn) {
+      return Arr.mapToObject(userIds, (userId) =>
+        Promise.resolve({
+          id: userId,
+          name: userId,
+          avatar: deriveAvatar(userId)
+        }));
     }
 
     const uncachedIds = Arr.unique(Arr.filter((userIds), (userId) => !lookup(userId).isSome()));
@@ -216,40 +223,30 @@ const UserLookup = (editor: Editor): UserLookup => {
       store(newPromise, userId);
     });
 
-    if (uncachedIds.length > 0) {
-      if (fetchUsersFn) {
-        fetchUsersFn(uncachedIds)
-          .then(validateResponse)
-          .then((users: User[]) => {
-            const foundUserIds = new Set(Arr.map(users, (user) => user.id));
+    if (uncachedIds.length > 0 && fetchUsersFn) {
+      fetchUsersFn(uncachedIds)
+        .then(validateResponse)
+        .then((users: User[]) => {
+          const foundUserIds = new Set(Arr.map(users, (user) => user.id));
 
-            // Resolve found users
-            Arr.each(users, (user) => finallyResolve(user.id, user));
+          // Resolve found users
+          Arr.each(users, (user) => finallyResolve(user.id, user));
 
-            // Reject promises for users not found in the response
-            Arr.each(uncachedIds, (userId) => {
-              if (!foundUserIds.has(userId)) {
-                finallyReject(userId, new Error(`User ${userId} not found`));
-              }
-            });
-          })
-          .catch((error: unknown) => {
-            Arr.each(uncachedIds, (userId) =>
-              finallyReject(
-                userId,
-                error instanceof Error ? error : new Error('Network error')
-              )
-            );
+          // Reject promises for users not found in the response
+          Arr.each(uncachedIds, (userId) => {
+            if (!foundUserIds.has(userId)) {
+              finallyReject(userId, new Error(`User ${userId} not found`));
+            }
           });
-      } else {
-        Arr.each(uncachedIds, (userId) => {
-          finallyResolve(userId, {
-            id: userId,
-            name: userId,
-            avatar: deriveAvatar(userId)
-          });
+        })
+        .catch((error: unknown) => {
+          Arr.each(uncachedIds, (userId) =>
+            finallyReject(
+              userId,
+              error instanceof Error ? error : new Error('Network error')
+            )
+          );
         });
-      }
     };
 
     return Arr.foldl<UserId, Record<UserId, Promise<User>>>(userIds, (acc, userId) => {
