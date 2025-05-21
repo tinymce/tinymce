@@ -223,7 +223,7 @@ const UserLookup = (editor: Editor): UserLookup => {
       store(newPromise, userId);
     });
 
-    if (uncachedIds.length > 0 && fetchUsersFn) {
+    if (uncachedIds.length > 0) {
       fetchUsersFn(uncachedIds)
         .then(validateResponse)
         .then((users: User[]) => {
