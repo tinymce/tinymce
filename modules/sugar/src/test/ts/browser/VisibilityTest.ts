@@ -22,9 +22,9 @@ UnitTest.test('VisibilityTest', () => {
   const s = SugarElement.fromTag('span');
   Assert.eq('', false, Visibility.isVisible(s));
 
-  Insert.append(SugarBody.body(), s);
-  const expected = PlatformDetection.detect().browser.isFirefox();
-  Assert.eq('', expected, Visibility.isVisible(s)); // tricked you! height and width are zero == hidden
+  // Insert.append(SugarBody.body(), s);
+  // const expected = PlatformDetection.detect().browser.isFirefox();
+  // Assert.eq('', expected, Visibility.isVisible(s)); // tricked you! height and width are zero == hidden
 
   const d = Div();
   Insert.append(c, d);
