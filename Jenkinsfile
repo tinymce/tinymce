@@ -168,6 +168,7 @@ timestamps {
       resourceLimitMemory: '4Gi',
       resourceLimitEphemeralStorage: '16Gi'
     ],
+    tag: '20',
     build: cacheName
   ) {
     props = readProperties(file: 'build.properties')

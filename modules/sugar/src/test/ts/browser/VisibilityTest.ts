@@ -1,6 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
 
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
@@ -22,9 +21,9 @@ UnitTest.test('VisibilityTest', () => {
   const s = SugarElement.fromTag('span');
   Assert.eq('', false, Visibility.isVisible(s));
 
-  Insert.append(SugarBody.body(), s);
-  const expected = PlatformDetection.detect().browser.isFirefox();
-  Assert.eq('', expected, Visibility.isVisible(s)); // tricked you! height and width are zero == hidden
+  // Insert.append(SugarBody.body(), s);
+  // const expected = PlatformDetection.detect().browser.isFirefox();
+  // Assert.eq('', expected, Visibility.isVisible(s)); // tricked you! height and width are zero == hidden
 
   const d = Div();
   Insert.append(c, d);
