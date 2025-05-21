@@ -6,7 +6,7 @@ import Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import { isList, isListItem, isTable } from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
-import { indentListSelection, outdentListSelection } from '../lists/actions/Indendation';
+import { indentListSelection, outdentListSelection } from '../lists/actions/Indentation';
 
 type IndentStyle = 'margin-left' | 'margin-right' | 'padding-left' | 'padding-right';
 

@@ -1,6 +1,6 @@
 project: tinymce
 kind: Changed
-body: Moved functionality from lists-plugin into core.
+body: Moved essential parts of the `lists` plugin into core.
 time: 2025-05-21T06:12:42.151817+02:00
 custom:
     Issue: TINY-12121

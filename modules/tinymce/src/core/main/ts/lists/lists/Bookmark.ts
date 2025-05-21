@@ -11,7 +11,15 @@ interface Bookmark {
   endContainer?: Node;
   endOffset?: number;
 }
-
+/**
+ * Returns a range bookmark. This will convert indexed bookmarks into temporary span elements with
+ * index 0 so that they can be restored properly after the DOM has been modified. Text bookmarks will not have spans
+ * added to them since they can be restored after a dom operation.
+ *
+ * So this: <p><b>|</b><b>|</b></p>
+ * becomes: <p><b><span data-mce-type="bookmark">|</span></b><b data-mce-type="bookmark">|</span></b></p>
+ *
+ */
 const createBookmark = (rng: Range): Bookmark => {
   const bookmark: Partial<Bookmark> = {};
 

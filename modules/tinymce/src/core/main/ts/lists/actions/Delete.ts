@@ -12,7 +12,7 @@ import * as ListRangeUtils from '../lists/RangeUtils';
 import * as Selection from '../lists/Selection';
 import * as Util from '../lists/Util';
 
-import { flattenListSelection, outdentListSelection } from './Indendation';
+import { flattenListSelection, outdentListSelection } from './Indentation';
 import * as ToggleList from './ToggleList';
 
 const findNextCaretContainer = (editor: Editor, rng: Range, isForward: boolean, root: Node): Node | null => {

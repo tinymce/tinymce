@@ -1037,7 +1037,7 @@ const getExtendedMathmlElements = option('extended_mathml_elements');
 const shouldHaveListFeatures = (editor: Editor): boolean => {
   return editor.hasPlugin('lists') || editor.hasPlugin('advlist');
 };
-const shouldIndentOnTab = (editor: Editor): boolean => option('lists_indent_on_tab')(editor) && shouldHaveListFeatures(editor);
+const shouldIndentOnTab = (editor: Editor): boolean => editor.options.get('lists_indent_on_tab') && shouldHaveListFeatures(editor);
 
 export {
   register,

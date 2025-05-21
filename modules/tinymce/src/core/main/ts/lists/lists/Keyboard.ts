@@ -2,7 +2,7 @@
 import Editor from '../../api/Editor';
 import * as Options from '../../api/Options';
 import VK from '../../api/util/VK';
-import { indentListSelection, outdentListSelection } from '../actions/Indendation';
+import { indentListSelection, outdentListSelection } from '../actions/Indentation';
 
 const setupTabKey = (editor: Editor): void => {
   editor.on('keydown', (e) => {

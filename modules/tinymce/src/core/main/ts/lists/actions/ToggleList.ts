@@ -13,7 +13,7 @@ import * as NodeType from '../lists/NodeType';
 import * as Selection from '../lists/Selection';
 import { isCustomList, isWithinNonEditableList } from '../lists/Util';
 
-import { flattenListSelection } from './Indendation';
+import { flattenListSelection } from './Indentation';
 
 interface ListDetail {
   readonly 'list-style-type'?: string;

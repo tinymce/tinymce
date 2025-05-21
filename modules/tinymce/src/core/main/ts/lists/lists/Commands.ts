@@ -2,7 +2,7 @@ import { Type } from '@ephox/katamari';
 
 import Editor from '../../api/Editor';
 import { backspaceDelete } from '../actions/Delete';
-import { flattenListSelection } from '../actions/Indendation';
+import { flattenListSelection } from '../actions/Indentation';
 import * as ToggleList from '../actions/ToggleList';
 import { updateList } from '../actions/Update';
 
