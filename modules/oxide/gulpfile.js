@@ -1,7 +1,6 @@
 const gulp = require('gulp');
 const connect = require('gulp-connect');
 const clean = require('gulp-clean');
-const header = require('gulp-header');
 const less = require('gulp-less');
 const lessAutoprefix = require('less-plugin-autoprefix');
 const gulpStylelint = require('gulp-stylelint');
@@ -122,11 +121,16 @@ gulp.task('generateJs', function() {
 //
 // Add license headers
 //
-gulp.task('addLicenseHeaders', function() {
+gulp.task('addLicenseHeaders', function(done) {
   const license = fs.readFileSync('src/text/build-header.js', 'utf-8');
-  return gulp.src(['build/skins/**/content.css','build/skins/**/content.*.css','build/skins/**/content.js','build/skins/**/content.*.js'])
-    .pipe(header(license))
-    .pipe(gulp.dest('./build/skins'))
+  gulp.src(['build/skins/**/content.css','build/skins/**/content.*.css','build/skins/**/content.js','build/skins/**/content.*.js'], { read:false }).on('data', (file) => {
+    const filePath = file.path;
+    const content = fs.readFileSync(filePath, 'utf8');
+    if (!content.startsWith(license)) {
+      const newContent = licenseText + '\n' + content;
+      fs.writeFileSync(filePath, newContent, 'utf8');
+    }
+  }).on('end', done);
 });
 
 //
