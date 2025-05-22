@@ -55,7 +55,7 @@ const findClosestEditingHost = (scope: AstNode): Optional<AstNode> => {
 const getAllDescendants = (scope: AstNode): AstNode[] => {
   const collection: AstNode[] = [];
 
-  for (let node = scope.firstChild; node; node = node.walk()) {
+  for (let node = scope.firstChild; Type.isNonNullable(node); node = node.walk()) {
     collection.push(node);
   }
 
