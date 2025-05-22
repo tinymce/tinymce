@@ -20,7 +20,7 @@ describe('browser.tinymce.core.delete.SelectedHTMLElementDeleteTest', () => {
     TinyContentActions.keystroke(editor, Keys.backspace());
 
     await Waiter.pTryUntil(`The HTML element should be correctly deleted`,
-      () => TinyAssertions.assertContent(editor, '<table style="border-collapse: collapse; width: 100%;" border="1"><colgroup> <col style="width: 49.9417%;"> <col style="width: 49.9417%;"></colgroup><tbody><tr><td>'
+      () => TinyAssertions.assertContent(editor, '<table style="border-collapse: collapse; width: 100%;" border="1"><colgroup><col style="width: 49.9417%;"><col style="width: 49.9417%;"></colgroup><tbody><tr><td>'
       + '<p>This is a p</p>'
       + '</td><td>&nbsp;</td></tr></tbody></table>')
     );
@@ -36,7 +36,7 @@ describe('browser.tinymce.core.delete.SelectedHTMLElementDeleteTest', () => {
     TinyContentActions.keystroke(editor, Keys.delete());
 
     await Waiter.pTryUntil(`The HTML element should be correctly deleted`,
-      () => TinyAssertions.assertContent(editor, '<table style="border-collapse: collapse; width: 100%;" border="1"><colgroup> <col style="width: 49.9417%;"> <col style="width: 49.9417%;"></colgroup><tbody><tr><td>'
+      () => TinyAssertions.assertContent(editor, '<table style="border-collapse: collapse; width: 100%;" border="1"><colgroup><col style="width: 49.9417%;"><col style="width: 49.9417%;"></colgroup><tbody><tr><td>'
       + '<p>This is a p</p>'
       + '</td><td>&nbsp;</td></tr></tbody></table>')
     );
@@ -52,7 +52,7 @@ describe('browser.tinymce.core.delete.SelectedHTMLElementDeleteTest', () => {
     Clipboard.cut(TinyDom.body(editor));
 
     await Waiter.pTryUntil(`The HTML element should be correctly deleted`,
-      () => TinyAssertions.assertContent(editor, '<table style="border-collapse: collapse; width: 100%;" border="1"><colgroup> <col style="width: 49.9417%;"> <col style="width: 49.9417%;"></colgroup><tbody><tr><td>'
+      () => TinyAssertions.assertContent(editor, '<table style="border-collapse: collapse; width: 100%;" border="1"><colgroup><col style="width: 49.9417%;"><col style="width: 49.9417%;"></colgroup><tbody><tr><td>'
       + '<p>This is a p</p>'
       + '</td><td>&nbsp;</td></tr></tbody></table>')
     );
