@@ -394,10 +394,9 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
       menu: {
         ...MenuParts.part(false, spec.columns, spec.presets),
         dom: {
-          tag: MenuParts.part(false, spec.columns, spec.presets).dom?.tag ?? 'div',
           ...MenuParts.part(false, spec.columns, spec.presets).dom,
+          tag: 'div',
           attributes: {
-            ...(MenuParts.part(false, spec.columns, spec.presets).dom?.attributes ?? {}),
             id: menuId
           }
         }
@@ -414,10 +413,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
           Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, aria: { mode: 'pressed' }, toggleOnExecute: false }),
           DisablingConfigs.toolbarButton(() => sharedBackstage.providers.checkUiComponentContext(spec.context).shouldDisable),
           UiState.toggleOnReceive(Fun.constant({ contextType: 'any', shouldDisable: false })),
-          AddEventsBehaviour.config('split-main-aria-events', [
-            AlloyEvents.run('alloy-dropdown-open', (comp) => updateAriaExpanded(true, comp)),
-            AlloyEvents.run('alloy-dropdown-close', (comp) => updateAriaExpanded(false, comp)),
-          ]),
+          AddEventsBehaviour.config('split-main-aria-events', []),
           ...(spec.tooltip.isSome() ? [
             Tooltipping.config(sharedBackstage.providers.tooltips.getConfig({
               tooltipText: sharedBackstage.providers.translate(spec.tooltip.getOr(''))
@@ -439,7 +435,6 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
           btnName
         ).dom,
         attributes: {
-          ...getAriaAttributes(),
           'aria-label': getMainButtonAriaLabel(),
           ...(Type.isNonNullable(btnName) ? { 'data-mce-name': btnName } : {})
         }
