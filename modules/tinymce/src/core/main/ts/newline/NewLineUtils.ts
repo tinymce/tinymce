@@ -11,6 +11,8 @@ import * as NodeType from '../dom/NodeType';
 import * as ScrollIntoView from '../dom/ScrollIntoView';
 import { isCaretNode } from '../fmt/FormatContainer';
 
+import * as ReduceNestedFonts from './ReduceNestedFonts';
+
 const firstNonWhiteSpaceNodeSibling = (node: Node | null): Node | null => {
   while (node) {
     if (NodeType.isElement(node) || (NodeType.isText(node) && node.data && /[\r\n\s]/.test(node.data))) {
@@ -215,6 +217,8 @@ const createNewBlock = (
         }
       }
     } while ((node = node.parentNode) && node !== editableRoot);
+
+    ReduceNestedFonts.reduceFontStyleNesting(block, caretNode);
   }
 
   setForcedBlockAttrs(editor, block);
