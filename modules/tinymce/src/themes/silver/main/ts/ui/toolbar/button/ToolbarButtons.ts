@@ -7,7 +7,7 @@ import {
   AlloySpec } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional, Type } from '@ephox/katamari';
-import { Attribute, EventArgs } from '@ephox/sugar';
+import { Attribute, EventArgs, SelectorFind, Class, Traverse } from '@ephox/sugar';
 
 import { ToolbarGroupOption } from '../../../api/Options';
 import { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
@@ -303,16 +303,39 @@ const fetchChoices = (getApi: (comp: AlloyComponent) => Toolbar.ToolbarSplitButt
         )
       )));
 
-const getSplitButtonApi = (component: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => ({
-  isEnabled: () => !Disabling.isDisabled(component),
-  setEnabled: (state: boolean) => Disabling.set(component, !state),
-  setText: (text: string) => AlloyTriggers.emitWith(component, updateMenuText, { text }),
-  setIcon: (icon: string) => AlloyTriggers.emitWith(component, updateMenuIcon, { icon }),
-  setIconFill: (_id: string, _value: string) => {},
-  isActive: () => Fun.never(),
-  setActive: (_state: boolean) => {},
-  setTooltip: (_tooltip: string) => {}
-});
+const getSplitButtonApi = (component: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => {
+  const system = component.getSystem();
+  const element = component.element;
+  const isChevron = Class.has(element, 'tox-split-button__chevron');
+
+  const mainOpt = isChevron ?
+    Traverse.prevSibling(element).bind((el) => system.getByDom(el).toOptional()) :
+    Optional.some(component);
+
+  const chevronOpt = isChevron ?
+    Optional.some(component) :
+    Traverse.nextSibling(element).bind((el) => system.getByDom(el).toOptional().filter((comp) => Class.has(comp.element, 'tox-split-button__chevron')));
+
+  const applyBoth = (f: (c: AlloyComponent) => void) => {
+    mainOpt.each(f);
+    chevronOpt.each(f);
+  };
+
+  return {
+    isEnabled: () => mainOpt.exists((c) => !Disabling.isDisabled(c)),
+    setEnabled: (state: boolean) => applyBoth((c) => Disabling.set(c, !state)),
+    setText: (text: string) => mainOpt.each((c) => AlloyTriggers.emitWith(c, updateMenuText, { text })),
+    setIcon: (icon: string) => mainOpt.each((c) => AlloyTriggers.emitWith(c, updateMenuIcon, { icon })),
+    setIconFill: (id: string, value: string) => applyBoth((c) => {
+      SelectorFind.descendant(c.element, `svg path[class="${id}"], rect[class="${id}"]`).each((underlinePath) => {
+        Attribute.set(underlinePath, 'fill', value);
+      });
+    }),
+    isActive: () => mainOpt.exists((c) => Toggling.isOn(c)),
+    setActive: (state: boolean) => mainOpt.each((c) => Toggling.set(c, state)),
+    setTooltip: (tooltip: string) => applyBoth((c) => Attribute.set(c.element, 'aria-label', tooltip))
+  };
+};
 
 const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: UiFactoryBackstageShared, btnName?: string): AlloySpec[] => {
   const editorOffCell = Cell(Fun.noop);
@@ -325,23 +348,13 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     'aria-controls': menuId
   });
 
+  const getButtonName = () => btnName || sharedBackstage.providers.translate('toolbar button');
+
   // Helper to get ARIA label for the main button
-  const getMainButtonAriaLabel = () => {
-    const name = btnName || sharedBackstage.providers.translate('toolbar button');
-    return `${name} button`;
-  };
+  const getMainButtonAriaLabel = () => getButtonName();
 
-  // Helper to get ARIA label for the chevron/dropdown button
-  const getChevronAriaLabel = () => {
-    const name = btnName || sharedBackstage.providers.translate('toolbar button');
-    return `More ${name} selections`;
-  };
-
-  // Helper for chevron tooltip
-  const getChevronTooltip = () => {
-    const name = btnName || sharedBackstage.providers.translate('toolbar button');
-    return `More ${name} selections`;
-  };
+  // Helper to get ARIA label and tooltip for the chevron/dropdown button
+  const getChevronTooltip = () => `${getButtonName()} menu`;
 
   const updateAriaExpanded = (expanded: boolean, comp: AlloyComponent) => {
     expandedCell.set(expanded);
@@ -354,7 +367,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
       classes: [ ToolbarButtonClasses.Button, 'tox-split-button__chevron' ],
       innerHtml: Icons.get('chevron-down', sharedBackstage.providers.icons),
       attributes: {
-        'aria-label': getChevronAriaLabel(),
+        'aria-label': getChevronTooltip(),
         ...(Type.isNonNullable(btnName) ? { 'data-mce-name': btnName + '-chevron' } : {}),
         ...getAriaAttributes()
       }
