@@ -106,7 +106,7 @@ describe('browser.tinymce.core.lists.RetainContentTest', () => {
   context('Editor operations', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       indent: false,
-      plugins: 'lists',
+      plugins: '',
       base_url: '/project/tinymce/js/tinymce'
     }, [ ], true);
     const numRuns = 10;

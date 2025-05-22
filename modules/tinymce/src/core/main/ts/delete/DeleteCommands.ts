@@ -1,7 +1,6 @@
 import { Arr, Cell, Fun } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
-import * as Options from '../api/Options';
 import * as Delete from '../lists/actions/Delete';
 import * as NormalizeLists from '../lists/lists/NormalizeLists';
 
@@ -69,7 +68,7 @@ const setup = (editor: Editor, caret: Cell<Text | null>): void => {
   editor.addCommand('delete', () => {
     deleteCommand(editor, caret);
 
-    if (Delete.hasListSelection(editor) && Options.shouldHaveListFeatures(editor)) {
+    if (Delete.hasListSelection(editor) ) {
       NormalizeLists.normalizeLists(editor.dom, editor.getBody());
     }
   });
@@ -77,7 +76,7 @@ const setup = (editor: Editor, caret: Cell<Text | null>): void => {
   editor.addCommand('forwardDelete', () => {
     forwardDeleteCommand(editor, caret);
 
-    if (Delete.hasListSelection(editor) && Options.shouldHaveListFeatures(editor)) {
+    if (Delete.hasListSelection(editor) ) {
       NormalizeLists.normalizeLists(editor.dom, editor.getBody());
     }
   });

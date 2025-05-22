@@ -6,7 +6,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.lists.TableInListTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
-    plugins: 'lists',
+    plugins: '',
     toolbar: 'bullist numlist indent outdent',
     text_patterns: [
       { start: '*', cmd: 'InsertUnorderedList', trigger: 'enter' },

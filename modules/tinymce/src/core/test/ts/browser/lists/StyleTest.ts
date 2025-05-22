@@ -8,7 +8,6 @@ import * as InsertNewLine from 'tinymce/core/newline/InsertNewLine';
 describe('browser.tinymce.core.lists.StyleTest', () => {
   Arr.each([
     { plugins: '', setupModules: [] },
-    { plugins: 'lists', setupModules: [ ] },
   ], ({ plugins, setupModules }) => {
     const hook = TinyHooks.bddSetup<Editor>({
       plugins,

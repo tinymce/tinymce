@@ -7,7 +7,7 @@ import Editor from 'tinymce/core/api/Editor';
 describe('browser.tinymce.core.lists.BackspaceDeleteFromBlockIntoLiTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     indent: false,
-    plugins: 'lists',
+    plugins: '',
     toolbar: '',
     base_url: '/project/tinymce/js/tinymce'
   });

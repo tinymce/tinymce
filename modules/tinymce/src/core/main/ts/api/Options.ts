@@ -1034,10 +1034,7 @@ const getApiKey = option('api_key');
 const isDisabled = option('disabled');
 const getExtendedMathmlAttributes = option('extended_mathml_attributes');
 const getExtendedMathmlElements = option('extended_mathml_elements');
-const shouldHaveListFeatures = (editor: Editor): boolean => {
-  return editor.hasPlugin('lists') || editor.hasPlugin('advlist');
-};
-const shouldIndentOnTab = (editor: Editor): boolean => editor.options.get('lists_indent_on_tab') && shouldHaveListFeatures(editor);
+const shouldIndentOnTab = option('lists_indent_on_tab');
 
 export {
   register,
@@ -1151,6 +1148,5 @@ export {
   shouldConvertUnsafeEmbeds,
   getApiKey,
   isDisabled,
-  shouldHaveListFeatures,
   shouldIndentOnTab
 };

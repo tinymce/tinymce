@@ -6,7 +6,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.lists.CutDeleteTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
-    plugins: 'lists',
+    plugins: '',
     indent: false,
     base_url: '/project/tinymce/js/tinymce'
   } );

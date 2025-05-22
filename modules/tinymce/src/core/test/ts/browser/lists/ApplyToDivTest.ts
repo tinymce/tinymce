@@ -5,7 +5,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.lists.ApplyToDivTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
-    plugins: 'lists',
+    plugins: '',
     forced_root_block: 'div',
     base_url: '/project/tinymce/js/tinymce'
   });

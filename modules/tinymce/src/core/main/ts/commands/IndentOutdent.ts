@@ -75,12 +75,10 @@ const handle = (editor: Editor, command: string): void => {
     indentElement(dom, command, useMargin, indentValue, indentUnit, block.dom);
   });
 
-  if (Options.shouldHaveListFeatures(editor)) {
-    if (command === 'indent') {
-      indentListSelection(editor);
-    } else {
-      outdentListSelection(editor);
-    }
+  if (command === 'indent') {
+    indentListSelection(editor);
+  } else {
+    outdentListSelection(editor);
   }
 };
 

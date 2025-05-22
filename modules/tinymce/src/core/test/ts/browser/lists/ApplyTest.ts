@@ -6,7 +6,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.lists.ApplyTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
-    plugins: 'lists',
+    plugins: '',
     add_unload_trigger: false,
     disable_nodechange: true,
     indent: false,
