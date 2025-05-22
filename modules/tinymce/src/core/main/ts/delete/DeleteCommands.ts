@@ -13,6 +13,7 @@ import * as InlineBoundaryDelete from './InlineBoundaryDelete';
 import * as InlineFormatDelete from './InlineFormatDelete';
 import * as MediaDelete from './MediaDelete';
 import * as Outdent from './Outdent';
+import * as SelectedHTMLElementDelete from './SelectedHTMLElementDelete';
 import * as TableDelete from './TableDelete';
 
 const findAction = (editor: Editor, caret: Cell<Text | null>, forward: boolean) =>
@@ -27,7 +28,8 @@ const findAction = (editor: Editor, caret: Cell<Text | null>, forward: boolean) 
     MediaDelete.backspaceDelete,
     BlockRangeDelete.backspaceDelete,
     InlineFormatDelete.backspaceDelete,
-    DivDelete.backspaceDelete
+    DivDelete.backspaceDelete,
+    SelectedHTMLElementDelete.backspaceDelete,
   ], (item) => item(editor, forward))
     .filter((_) => editor.selection.isEditable());
 

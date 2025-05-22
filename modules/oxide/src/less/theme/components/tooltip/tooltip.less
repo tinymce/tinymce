@@ -13,13 +13,13 @@
 @tooltip-padding-y: @pad-xs;
 @tooltip-text-color: @color-white;
 @tooltip-text-transform: none;
-@tooltip-max-width: 15em;
+@tooltip-max-width: min(80%, 15em);
 
 .tox {
   .tox-tooltip {
     display: inline-block;
     max-width: @tooltip-max-width;
-    padding: @tooltip-arrow-size;
+    padding: @tooltip-arrow-size 0 0 0;
 
     /*
      * The pointer-events: none is designed to make mouse events bleed through the tooltip
