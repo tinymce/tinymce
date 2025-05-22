@@ -1,7 +1,7 @@
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Disabling, FormField, GuiFactory, Input, Keying, NativeEvents, SketchSpec } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
 import { Cell, Fun, Optional, Singleton } from '@ephox/katamari';
-import { SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
+import { SelectorFind } from '@ephox/sugar';
 
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as UiState from '../../UiState';
@@ -17,11 +17,7 @@ export const renderContextFormTextInput = (
   valueState: Singleton.Value<string>
 ): SketchSpec => {
   const editorOffCell = Cell(Fun.noop);
-  const getFormParentApi = (comp: AlloyComponent, focusfallbackElement?: SugarElement<HTMLElement>) => {
-    const parent = Traverse.parent(comp.element);
-    const parentCompOpt = parent.bind((parent) => comp.getSystem().getByDom(parent).toOptional());
-    return ContextFormApi.getFormApi<string>(parentCompOpt.getOr(comp), valueState, focusfallbackElement);
-  };
+  const getFormApi = (comp: AlloyComponent) => ContextFormApi.getFormParentApi<string>(comp, valueState);
 
   const pLabel = ctx.label.map((label) => FormField.parts.label({
     dom: { tag: 'label', classes: [ 'tox-label' ] },
@@ -69,15 +65,15 @@ export const renderContextFormTextInput = (
             );
 
             return closestFocussableOpt.fold(
-              () => getFormParentApi(comp),
-              (closestFocussable) => getFormParentApi(comp, closestFocussable)
+              () => ContextFormApi.getFormParentApi(comp, valueState),
+              (closestFocussable) => ContextFormApi.getFormParentApi(comp, valueState, closestFocussable)
             );
           },
           onBeforeSetup: Keying.focusIn
         }, editorOffCell),
-        onContextFormControlDetached({ getApi: getFormParentApi }, editorOffCell, valueState),
+        onContextFormControlDetached({ getApi: getFormApi }, editorOffCell, valueState),
         AlloyEvents.run(NativeEvents.input(), (comp) => {
-          ctx.onInput(getFormParentApi(comp));
+          ctx.onInput(getFormApi(comp));
         })
       ])
     ])
