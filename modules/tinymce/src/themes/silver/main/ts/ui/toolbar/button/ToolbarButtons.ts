@@ -348,8 +348,6 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     'aria-controls': menuId
   });
 
-  const getButtonName = () => btnName || sharedBackstage.providers.translate('toolbar button');
-
   // Helper to get ARIA label for the main button
   const getMainButtonAriaLabel = () => {
     const label = spec.tooltip.map((tooltip) => sharedBackstage.providers.translate(tooltip))

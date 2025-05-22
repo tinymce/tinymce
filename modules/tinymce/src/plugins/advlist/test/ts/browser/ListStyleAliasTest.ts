@@ -135,9 +135,7 @@ describe('browser.tinymce.plugins.advlist.ListStyleAliasTest', () => {
         '</ol>'
       ].join(''));
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
-      console.log('clicking on split list btn for Numbered list');
       await pClickOnSplitListBtnFor(editor, 'Numbered list');
-      console.log('clicking on lower alpha menu item');
       TinyUiActions.clickOnUi(editor, 'div.tox-selected-menu[role="menu"] div[aria-label="Lower Alpha"]');
 
       TinyAssertions.assertContent(editor, [
