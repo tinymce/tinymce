@@ -125,9 +125,6 @@ const leaf = (element: SugarElement<Node>, offset: number): ElementAndOffset<Nod
   return cs.length > 0 && offset < cs.length ? spot(cs[offset], 0) : spot(element, offset);
 };
 
-const leftmostLeaf = (element: SugarElement<Node>): SugarElement<Node> =>
-  firstChild(element).fold(Fun.constant(element), leftmostLeaf);
-
 export {
   owner,
   documentOrOwner,
@@ -150,6 +147,5 @@ export {
   lastChild,
   childNodesCount,
   hasChildNodes,
-  leaf,
-  leftmostLeaf
+  leaf
 };

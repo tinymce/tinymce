@@ -1,5 +1,6 @@
 import { Arr, Fun, Obj, Optional, Optionals, Unicode } from '@ephox/katamari';
-import { Css, Insert, SugarElement, Traverse } from '@ephox/sugar';
+import { DomDescent } from '@ephox/phoenix';
+import { Css, Insert, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
@@ -38,7 +39,7 @@ const moveToCaretPosition = (editor: Editor, root: Node): void => {
     if (firstChild && /^(UL|OL|DL)$/.test(firstChild.nodeName)) {
       root.insertBefore(dom.doc.createTextNode(Unicode.nbsp), root.firstChild);
     } else if (firstChild && dom.isEmpty(firstChild)) {
-      const element = Traverse.leftmostLeaf(SugarElement.fromDom(firstChild));
+      const element = DomDescent.toLeaf(SugarElement.fromDom(firstChild), 0).element;
       if (!ElementType.isBr(element)) {
         Insert.append(element, SugarElement.fromText(Unicode.nbsp));
       }
