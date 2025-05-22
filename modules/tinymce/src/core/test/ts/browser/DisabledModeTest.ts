@@ -486,19 +486,21 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
 
     it('TINY-11488: Toolbar buttons should reflect the editor disabled state in readonly', async () => {
       const editor = hook.editor();
-      assertButtonsStateDisabled(allButtons);
+      await Waiter.pTryUntil('Wait for initial disabled state', () => assertButtonsStateDisabled(allButtons));
 
       editor.options.set('disabled', false);
       await Waiter.pTryUntil('Wait for buttons to be enabled', () => assertButtonsStateEnabled(allButtons));
 
       // Set the editor to readonly mode
       editor.mode.set('readonly');
-      assertButtonsStateDisabled([ ...excludeReadOnlyEnabledButton, ...nativeDisabledToolbarButtons ]);
-      assertButtonState({ name: 'print', disabledAttribute: 'aria-disabled' }, false);
+      await Waiter.pTryUntil('Wait for readonly mode', () => {
+        assertButtonsStateDisabled([ ...excludeReadOnlyEnabledButton, ...nativeDisabledToolbarButtons ]);
+        assertButtonState({ name: 'print', disabledAttribute: 'aria-disabled' }, false);
+      });
 
       // Disable the editor again, all buttons should be disabled
       editor.options.set('disabled', true);
-      await Waiter.pTryUntil('Wait for buttons to be enabled', () => assertButtonsStateDisabled(allButtons));
+      await Waiter.pTryUntil('Wait for buttons to be disabled', () => assertButtonsStateDisabled(allButtons));
 
       // Re-enable the editor; only 'print' should be enabled in readonly mode
       editor.options.set('disabled', false);
@@ -509,7 +511,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
 
       // Switch back to design mode; all buttons should be enabled
       editor.mode.set('design');
-      assertButtonsStateEnabled(allButtons);
+      await Waiter.pTryUntil('Wait for design mode', () => assertButtonsStateEnabled(allButtons));
     });
 
     it('TINY-11488: Toolbar buttons should reflect the editor disabled state in noneditable root', async () => {
