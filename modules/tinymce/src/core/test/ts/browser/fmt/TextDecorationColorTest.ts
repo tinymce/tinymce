@@ -32,13 +32,13 @@ describe('browser.tinymce.core.fmt.TextDecorationColorTest', () => {
   }, [], true);
 
   const pApplyForecolor = async (editor: Editor) => {
-    TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color menu"]');
+    TinyUiActions.clickOnToolbar(editor, 'button.tox-split-button__chevron[aria-label^="Text color"]');
     await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
     TinyUiActions.clickOnUi(editor, `div[data-mce-color="${textColorHex.toUpperCase()}"]`);
   };
 
   const pRemoveForecolor = async (editor: Editor) => {
-    TinyUiActions.clickOnToolbar(editor, '[aria-label="Text color menu"]');
+    TinyUiActions.clickOnToolbar(editor, 'button.tox-split-button__chevron[aria-label^="Text color"]');
     await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
     TinyUiActions.clickOnUi(editor, '.tox-swatch--remove');
   };

@@ -351,10 +351,14 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
   const getButtonName = () => btnName || sharedBackstage.providers.translate('toolbar button');
 
   // Helper to get ARIA label for the main button
-  const getMainButtonAriaLabel = () => getButtonName();
+  const getMainButtonAriaLabel = () => {
+    const label = spec.tooltip.map((tooltip) => sharedBackstage.providers.translate(tooltip))
+      .getOr(sharedBackstage.providers.translate('Text color'));
+    return label;
+  };
 
   // Helper to get ARIA label and tooltip for the chevron/dropdown button
-  const getChevronTooltip = () => `${getButtonName()} menu`;
+  const getChevronTooltip = () => `${getMainButtonAriaLabel()} menu`;
 
   const updateAriaExpanded = (expanded: boolean, comp: AlloyComponent) => {
     expandedCell.set(expanded);
@@ -403,6 +407,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
       }
     }
   });
+
   return [
     AlloyButton.sketch({
       ...renderCommonStructure(
