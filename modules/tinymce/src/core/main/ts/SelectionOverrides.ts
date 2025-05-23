@@ -168,7 +168,7 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
         }
         if (!e.target.contains(editor.selection.getNode())) {
           editor.selection.select(e.target, true);
-          editor.selection.collapse(true);
+          editor.selection.collapse(editor.selection.isCollapsed());
         }
 
         const rng = setElementSelection(editor.selection.getRng(), true);
