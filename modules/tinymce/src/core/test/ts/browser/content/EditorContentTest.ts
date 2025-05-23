@@ -607,7 +607,8 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         ...options
       }, []);
 
-      it('TINY-10305: setContent html should sanitize content that can cause mXSS via ZWNBSP trimming', () => {
+      /* Failing for both inline and iframe */
+      it.only('TINY-10305: setContent html should sanitize content that can cause mXSS via ZWNBSP trimming', () => {
         const editor = hook.editor();
         editor.setContent('<p>test</p><!--\ufeff><iframe onload=alert(document.domain)>-></body>-->');
         TinyAssertions.assertRawContent(editor, '<p>test</p><!---->');

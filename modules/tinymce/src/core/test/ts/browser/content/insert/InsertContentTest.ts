@@ -877,7 +877,8 @@ describe('browser.tinymce.core.content.insert.InsertContentTest', () => {
       TinyAssertions.assertRawContent(editor, '<p>insertion</p><p>initial</p>');
     });
 
-    it('TINY-10305: Should sanitize content that can cause mXSS via ZWNBSP trimming', () => {
+    /* Failing */
+    it.only('TINY-10305: Should sanitize content that can cause mXSS via ZWNBSP trimming', () => {
       const editor = hook.editor();
       editor.setContent('<p>initial</p>');
       TinySelections.setCursor(editor, [ 0 ], 0);

@@ -14,6 +14,11 @@ tinymce.init({
       char: '\ud83e\udd2f'
     }
   }
+}).then(([ editor ]) => {
+  console.log('editor', editor);
+  editor.setContent('<p>test</p><!--\ufeff><iframe onload=alert(document.domain)>-></body>-->');
+  // editor.setContent('<!--\ufeff><iframe onload=alert(document.domain)>-></body>-->');
+  // editor.setContent('<iframe src="x"><script>alert(1)</script></iframe><iframe src="javascript:alert(1)"></iframe>');
 });
 
 export {};

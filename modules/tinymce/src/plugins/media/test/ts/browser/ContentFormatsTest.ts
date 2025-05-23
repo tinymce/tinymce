@@ -153,7 +153,8 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     editor.options.unset('media_live_embeds');
   });
 
-  it('TBA: XSS content', () => {
+  /* Failing */
+  it.only('TBA: XSS content', () => {
     const editor = hook.editor();
     const testXss = (input: string, expectedOutput: string) => {
       editor.setContent(input);
