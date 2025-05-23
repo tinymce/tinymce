@@ -441,13 +441,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       // start by checking the button itself exists!
       UiFinder.exists(SugarBody.body(), buttonSelector);
 
-      // For split buttons like forecolor, we need to check the button elements within the container
-      let selector: string;
-      if (name === 'forecolor') {
-        selector = `${buttonSelector}[${disabledAttribute}="${attributeValue}"]`;
-      } else {
-        selector = `${buttonSelector}[${disabledAttribute}="${attributeValue}"]`;
-      }
+      const selector = `${buttonSelector}[${disabledAttribute}="${attributeValue}"]`;
 
       if (shouldBeDisabled) {
         UiFinder.exists(SugarBody.body(), selector);
