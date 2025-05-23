@@ -919,7 +919,7 @@ const register = (editor: Editor): void => {
       }
       return {
         valid: false,
-        message: 'fetch_users must be a function that returns a Promise<User[]>'
+        message: 'fetch_users must be a function that returns a Promise<ExpectedUser[]>'
       };
     }
   });
