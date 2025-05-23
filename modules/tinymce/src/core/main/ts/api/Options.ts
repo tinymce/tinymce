@@ -907,6 +907,7 @@ const register = (editor: Editor): void => {
 
   registerOption('user_id', {
     processor: 'string',
+    default: 'Anonymous'
   });
 
   registerOption('fetch_users', {
