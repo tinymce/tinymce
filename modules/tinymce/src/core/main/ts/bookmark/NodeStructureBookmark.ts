@@ -5,7 +5,7 @@ import * as NodeType from '../dom/NodeType';
 
 import * as NormalizeBookmarkPoint from './NormalizeBookmarkPoint';
 
-// TODO: This is a clone of the list bookmark code if we move lists to core then de-duplicate this
+// TODO: This is a clone of the list bookmark code if we move lists to core then de-duplicate this #TINY-12172
 
 const DOM = DOMUtils.DOM;
 
