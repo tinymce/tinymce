@@ -91,7 +91,7 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
       editor.userLookup = createUserLookup(editor);
 
-      expect(editor.userLookup.userId).to.equal('anonymous', 'Should default to anonymous');
+      expect(editor.userLookup.userId).to.equal('Anonymous', 'Should default to anonymous');
     });
   });
 
