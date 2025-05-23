@@ -34,7 +34,7 @@ describe('browser.tinymce.plugins.advlist.AdvlistOptionsAndToolbarTest', () => {
     base_url: '/project/tinymce/js/tinymce',
   };
 
-  const clickListBtn = (editor: Editor, type: ListType, isSplitBtn: boolean) => {
+  const clickListBtn = (editor: Editor, type: ListType) => {
     const title = `${type === 'number' ? 'Numbered' : 'Bullet'} list`;
     TinyUiActions.clickOnToolbar(editor, `button[aria-label="${title}"]`);
   };
@@ -263,9 +263,9 @@ describe('browser.tinymce.plugins.advlist.AdvlistOptionsAndToolbarTest', () => {
         editor.setContent(initialContent);
         editor.focus();
 
-        clickListBtn(editor, type, splitBtns[type]);
+        clickListBtn(editor, type);
         TinyAssertions.assertContent(editor, scenario.expectedContent);
-        clickListBtn(editor, type, splitBtns[type]);
+        clickListBtn(editor, type);
         TinyAssertions.assertContent(editor, finalContent);
 
         McEditor.remove(editor);
