@@ -42,14 +42,22 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     },
   });
 
+  let originalUserId: string | undefined;
   let originalFetchUsers: ((userIds: string[]) => Promise<ExpectedUser[]>) | undefined;
 
   before(() => {
     const editor = hook.editor();
+    originalUserId = editor.options.get('user_id');
     originalFetchUsers = editor.options.get('fetch_users');
   });
 
   context('userId', () => {
+    afterEach(() => {
+      const editor = hook.editor();
+      editor.options.set('user_id', originalUserId);
+      editor.userLookup = createUserLookup(editor);
+    });
+
     it('TINY-11974: Should return the configured user ID', () => {
       const editor = hook.editor();
       const currentUserId = editor.userLookup.userId;
@@ -75,6 +83,15 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       expect(() => {
         editor.userLookup.userId = 'different-user';
       }).to.throw();
+    });
+
+    it('TINY-11974: Should default to "anonymous" when no user_id is provided', () => {
+      const editor = hook.editor();
+      editor.options.unset('user_id');
+
+      editor.userLookup = createUserLookup(editor);
+
+      expect(editor.userLookup.userId).to.equal('anonymous', 'Should default to anonymous');
     });
   });
 

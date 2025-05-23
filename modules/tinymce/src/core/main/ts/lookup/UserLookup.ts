@@ -10,7 +10,7 @@ import * as Options from '../api/Options';
  *
  * @class tinymce.UserLookup
  * @example
- * // Get the current user's ID
+ * // Get the current user's ID from the editor options, otherwise defaulting to 'anonymous'.
  * tinymce.activeEditor.userLookup.userId;
  *
  * // Fetch user information by IDs which returns a record of promises
@@ -51,12 +51,12 @@ export interface ValidatedUser {
 
 export interface UserLookup {
   /**
-   * The current user's ID.
+   * The current user's ID retrieved from the editor options, or defaults to 'anonymous'.
    *
    * @property userId
    * @type String
    */
-  userId?: UserId;
+  userId: UserId;
 
   /**
    * Fetches user information using a provided array of userIds.
@@ -261,10 +261,11 @@ const UserLookup = (editor: Editor): UserLookup => {
     }, {});
   };
 
-  const userId = Options.getUserId(editor);
+  const providedUserId = Options.getUserId(editor);
+  const fallbackUserId = 'anonymous';
 
   return Object.freeze({
-    userId,
+    userId: providedUserId || fallbackUserId,
     fetchUsers,
   });
 };
