@@ -1,4 +1,4 @@
-import { FocusTools, Keys, Mouse, UiFinder } from '@ephox/agar';
+import { FocusTools, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { before, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Css, SugarBody, SugarElement } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
@@ -106,5 +106,31 @@ describe('browser.tinymce.themes.silver.editor.sizing.ResizeTTest', () => {
       TinyUiActions.keystroke(editor, Keys.up());
     }
     assertEditorSize(container, 400, 400);
+  });
+
+  it('TINY-11421: Aria-valuetext should update on resize', async () => {
+    const editor = hook.editor();
+    const container = editor.getContainer();
+    await UiFinder.pWaitForVisible('Wait for resize handle to be visible', SugarBody.body(), '.tox-statusbar__resize-handle');
+    const resizeHandle = UiFinder.findIn(SugarBody.body(), '.tox-statusbar__resize-handle').getOrDie();
+
+    await Waiter.pTryUntil('Editor should initialize with the width and height from the config', () => {
+      assertEditorSize(SugarElement.fromDom(container), 400, 400);
+      assert.equal(
+        resizeHandle.dom.getAttribute('aria-valuetext'),
+        `Editor's height: ${container.offsetHeight} pixels, Editor's width: ${container.offsetWidth} pixels`,
+        'aria-valuetext should have original editors dimentions before resize'
+      );
+    });
+
+    Mouse.mouseDown(resizeHandle);
+    resizeToPos(container.offsetWidth, container.offsetHeight, 300, 300);
+
+    assertEditorSize(SugarElement.fromDom(container), 300, 300);
+    assert.equal(
+      resizeHandle.dom.getAttribute('aria-valuetext'),
+      `Editor's height: 300 pixels, Editor's width: 300 pixels`,
+      'aria-valuetext should have updated editors dimentions after resize'
+    );
   });
 });

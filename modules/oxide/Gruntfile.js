@@ -64,6 +64,21 @@ module.exports = function (grunt) {
     pattern: ['grunt-*']
   });
 
+  grunt.registerTask('addLicenseHeaders', () => {
+    const files = grunt.file.expand([
+      'build/**/content.css',
+      'build/**/content.*.css',
+      'build/**/content.js',
+      'build/**/content.*.js'
+    ]);
+    const licenseHeaders = grunt.file.read('src/text/build-header.js');
+
+    for (var i of files) {
+      const data = grunt.file.read(i);
+      grunt.file.write(i, licenseHeaders + data);
+    }
+  });
+
   //
   // Build project and watch LESS file changes
   //
@@ -78,7 +93,8 @@ module.exports = function (grunt) {
     'stylelint',
     'compileLess',
     'cssmin',
-    'generateJsSkins'
+    'generateJsSkins',
+    'addLicenseHeaders'
   ]);
 
   grunt.registerTask('start', [

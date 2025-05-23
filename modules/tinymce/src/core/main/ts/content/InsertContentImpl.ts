@@ -370,10 +370,9 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
     const editingHost = markerNode.bind(ParserUtils.findClosestEditingHost).getOr(root);
     markerNode.each((marker) => marker.replace(fragment));
 
-    const toExtract = fragment.children();
-    const parent = fragment.parent ?? root;
+    const fragmentNodes = ParserUtils.getAllDescendants(fragment);
     fragment.unwrap();
-    const invalidChildren = Arr.filter(toExtract, (node) => InvalidNodes.isInvalid(editor.schema, node, parent));
+    const invalidChildren = Arr.filter(fragmentNodes, (node) => InvalidNodes.isInvalid(editor.schema, node));
     InvalidNodes.cleanInvalidNodes(invalidChildren, editor.schema, editingHost);
     FilterNode.filter(parser.getNodeFilters(), parser.getAttributeFilters(), root);
     value = serializer.serialize(root);

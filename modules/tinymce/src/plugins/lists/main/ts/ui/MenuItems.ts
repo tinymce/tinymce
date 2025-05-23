@@ -2,9 +2,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
 import { Menu } from 'tinymce/core/api/ui/Ui';
 
-import { isOlNode } from '../core/NodeType';
-import { getParentList } from '../core/Selection';
-import * as Util from '../core/Util';
+import * as Util from './Util';
 
 const setupMenuButtonHandler = (editor: Editor, listName: string) => (api: Menu.MenuItemInstanceApi): () => void => {
   const menuButtonHandler = (e: NodeChangeEvent) =>
@@ -24,8 +22,8 @@ const register = (editor: Editor): void => {
 
   editor.ui.registry.addContextMenu('lists', {
     update: (node) => {
-      const parentList = getParentList(editor, node);
-      return isOlNode(parentList) ? [ 'listprops' ] : [ ];
+      const parentList = Util.getParentList(editor, node);
+      return Util.isOlNode(parentList) ? [ 'listprops' ] : [ ];
     }
   });
 };
