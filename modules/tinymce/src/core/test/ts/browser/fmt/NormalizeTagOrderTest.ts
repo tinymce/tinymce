@@ -94,7 +94,7 @@ describe('browser.tinymce.core.fmt.NormalizeTagOrderTest', () => {
 
       it('TINY-12004: Switch order of strikethrough and font size when font size is wrapped in b and i', () => testNormalizeFontSizeElementsAfterApply({
         format: 'fontsize',
-        html: '<p><s><b><i><span style="font-size: 40px;">Hello</span></></b></s></p>',
+        html: '<p><s><b><i><span style="font-size: 40px;">Hello</span></i></b></s></p>',
         selection: { startPath: [ 0, 0, 0, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 0, 0, 0, 0 ], foffset: 'Hello'.length },
         expectedHtml: '<p><b><i><span style="font-size: 40px;"><s>Hello</s></span></i></b></p>',
         expectedSelection: { startPath: [ 0, 0, 0, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 0, 0, 0, 0 ], foffset: 'Hello'.length }
