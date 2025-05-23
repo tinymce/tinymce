@@ -36,11 +36,7 @@ describe('browser.tinymce.plugins.advlist.AdvlistOptionsAndToolbarTest', () => {
 
   const clickListBtn = (editor: Editor, type: ListType, isSplitBtn: boolean) => {
     const title = `${type === 'number' ? 'Numbered' : 'Bullet'} list`;
-    if (isSplitBtn) {
-      TinyUiActions.clickOnToolbar(editor, `button[aria-label="${title}"]`);
-    } else {
-      TinyUiActions.clickOnToolbar(editor, `button[aria-label="${title}"]`);
-    }
+    TinyUiActions.clickOnToolbar(editor, `button[aria-label="${title}"]`);
   };
 
   const pAssertListBtnStructures = async (splitBtns: SplitBtns) => {

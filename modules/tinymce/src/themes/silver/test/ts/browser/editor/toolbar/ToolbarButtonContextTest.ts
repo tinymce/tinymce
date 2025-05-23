@@ -178,7 +178,10 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         assertMenuPartEnabled(selector);
         assertButtonEnabled(selector);
       },
-      assertButtonDisabled
+      assertButtonDisabled: (selector: string) => {
+        UiFinder.exists(SugarBody.body(), `button[data-mce-name="${selector}"][aria-disabled="true"]`);
+        UiFinder.exists(SugarBody.body(), `button[data-mce-name="${selector}-chevron"][aria-disabled="true"]`);
+      }
     },
   ];
 

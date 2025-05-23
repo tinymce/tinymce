@@ -42,7 +42,8 @@ describe('browser.tinymce.themes.silver.editor.TooltipShortcutTest', () => {
     });
 
     const pResetColorToDefault = async (editor: Editor, selector: string) => {
-      TinyUiActions.clickOnToolbar(editor, selector);
+      const chevronSelector = selector.replace('"]', '-chevron"]');
+      TinyUiActions.clickOnToolbar(editor, chevronSelector);
       await pSelectSwatchColor(editor, '#000000');
     };
 
@@ -52,7 +53,8 @@ describe('browser.tinymce.themes.silver.editor.TooltipShortcutTest', () => {
     };
 
     const pSelectCustomColor = async (editor: Editor, selector: string) => {
-      TinyUiActions.clickOnToolbar(editor, selector);
+      const chevronSelector = selector.replace('"]', '-chevron"]');
+      TinyUiActions.clickOnToolbar(editor, chevronSelector);
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       TinyUiActions.clickOnUi(editor, 'button[data-mce-name="Custom color"]');
       const dialog = await TinyUiActions.pWaitForDialog(editor);
@@ -96,7 +98,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipShortcutTest', () => {
         it(`TINY-10474: Tooltip text is the changed color - forecolor - ${scenario.label}`, async () => {
           const editor = hook.editor();
           const toolbarButtonSelector = `button[data-mce-name="forecolor"]`;
-          TinyUiActions.clickOnToolbar(editor, toolbarButtonSelector);
+          TinyUiActions.clickOnToolbar(editor, `button[data-mce-name="forecolor-chevron"]`);
           await pSelectSwatchColor(editor, '#BFEDD2');
           await TooltipUtils.pAssertTooltip(editor, () => TooltipUtils.pTriggerTooltipWithMouse(editor, toolbarButtonSelector), `Text color ${scenario.expectedColor}`);
           await TooltipUtils.pCloseTooltip(editor, toolbarButtonSelector);
@@ -120,7 +122,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipShortcutTest', () => {
         it(`TINY-10474: Tooltip text is the changed color - backcolor - ${scenario.label}`, async () => {
           const editor = hook.editor();
           const toolbarButtonSelector = `button[data-mce-name="backcolor"]`;
-          TinyUiActions.clickOnToolbar(editor, toolbarButtonSelector);
+          TinyUiActions.clickOnToolbar(editor, `button[data-mce-name="backcolor-chevron"]`);
           await pSelectSwatchColor(editor, '#BFEDD2');
           await TooltipUtils.pAssertTooltip(editor, () => TooltipUtils.pTriggerTooltipWithMouse(editor, toolbarButtonSelector), `Background color ${scenario.expectedColor}`);
           await TooltipUtils.pCloseTooltip(editor, toolbarButtonSelector);

@@ -250,9 +250,9 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
     TinyUiActions.keyup(editor, Keys.escape());
   });
 
-  const assertButtonEnabled = (selector: string) => UiFinder.exists(SugarBody.body(), `[data-mce-name="${selector}"] > .tox-tbtn:not([aria-disabled="true"])`);
+  const assertButtonEnabled = (selector: string) => UiFinder.exists(SugarBody.body(), `button[data-mce-name="${selector}"]:not([aria-disabled="true"])`);
 
-  const assertButtonDisabled = (selector: string) => UiFinder.exists(SugarBody.body(), `[data-mce-name="${selector}"] > .tox-tbtn[aria-disabled="true"]`);
+  const assertButtonDisabled = (selector: string) => UiFinder.exists(SugarBody.body(), `button[data-mce-name="${selector}"][aria-disabled="true"]`);
 
   const assertMenuPartEnabled = (selector: string) => UiFinder.exists(SugarBody.body(), `button[data-mce-name="${selector}-chevron"]:not([aria-disabled="true"])`);
 
