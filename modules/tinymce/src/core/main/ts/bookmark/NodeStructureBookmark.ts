@@ -1,3 +1,5 @@
+import { Global } from '@ephox/katamari';
+
 import DOMUtils from '../api/dom/DOMUtils';
 import * as NodeType from '../dom/NodeType';
 
@@ -33,12 +35,10 @@ const createBookmark = (rng: Range): Bookmark => {
       const offsetNode = DOM.create('span', { 'data-mce-type': 'bookmark' });
 
       if (container.hasChildNodes()) {
-        offset = Math.min(offset, container.childNodes.length - 1);
-
-        if (start) {
-          container.insertBefore(offsetNode, container.childNodes[offset]);
+        if (offset === container.childNodes.length) {
+          container.appendChild(offsetNode);
         } else {
-          DOM.insertAfter(offsetNode, container.childNodes[offset]);
+          container.insertBefore(offsetNode, container.childNodes[offset]);
         }
       } else {
         container.appendChild(offsetNode);
@@ -118,6 +118,9 @@ const resolveBookmark = (bookmark: Bookmark): Range => {
 
   return NormalizeBookmarkPoint.normalizeRange(rng);
 };
+
+Global.createBookmark = createBookmark;
+Global.resolveBookmark = resolveBookmark;
 
 export {
   createBookmark,
