@@ -28,7 +28,7 @@ interface ContextToolbarSpec {
   readonly sink: AlloyComponent;
   readonly onHide: () => void;
   readonly onBack: () => void;
-  readonly focusElement: (el: SugarElement<any>) => void;
+  readonly focusElement: (el: SugarElement<HTMLElement>) => void;
 }
 
 export interface ContextToolbarRenderResult {
