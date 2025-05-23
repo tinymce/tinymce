@@ -384,7 +384,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         AlloyEvents.run('alloy-dropdown-close', (comp) => updateAriaExpanded(false, comp)),
       ]),
       DisablingConfigs.splitButton(() => sharedBackstage.providers.checkUiComponentContext(spec.context).shouldDisable),
-      UiState.toggleOnReceive(Fun.constant({ contextType: 'any', shouldDisable: false })),
+      UiState.toggleOnReceive(() => sharedBackstage.providers.checkUiComponentContext(spec.context)),
       Unselecting.config({ }),
       Tooltipping.config(sharedBackstage.providers.tooltips.getConfig({
         tooltipText: getChevronTooltip()
@@ -415,7 +415,7 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         Optional.some([
           Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, aria: { mode: 'pressed' }, toggleOnExecute: false }),
           DisablingConfigs.toolbarButton(() => sharedBackstage.providers.checkUiComponentContext(spec.context).shouldDisable),
-          UiState.toggleOnReceive(Fun.constant({ contextType: 'any', shouldDisable: false })),
+          UiState.toggleOnReceive(() => sharedBackstage.providers.checkUiComponentContext(spec.context)),
           AddEventsBehaviour.config('split-main-aria-events', []),
           ...(spec.tooltip.isSome() ? [
             Tooltipping.config(sharedBackstage.providers.tooltips.getConfig({

@@ -444,7 +444,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       // For split buttons like forecolor, we need to check the button elements within the container
       let selector: string;
       if (name === 'forecolor') {
-        selector = `${buttonSelector} button[${disabledAttribute}="${attributeValue}"]`;
+        selector = `${buttonSelector}[${disabledAttribute}="${attributeValue}"]`;
       } else {
         selector = `${buttonSelector}[${disabledAttribute}="${attributeValue}"]`;
       }
