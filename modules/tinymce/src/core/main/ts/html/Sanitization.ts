@@ -180,7 +180,7 @@ const setupPurify = (settings: DomParserSettings, schema: Schema, namespaceTrack
 
 const getPurifyConfig = (settings: DomParserSettings, mimeType: MimeType): Config => {
   // Current dompurify types only cover up to 3.0.5 which does not include this new setting
-  const basePurifyConfig: Config & { SAFE_FOR_XML: boolean } = {
+  const basePurifyConfig: Config = {
     IN_PLACE: true,
     ALLOW_UNKNOWN_PROTOCOLS: true,
     // Deliberately ban all tags and attributes by default, and then un-ban them on demand in hooks
@@ -189,7 +189,6 @@ const getPurifyConfig = (settings: DomParserSettings, mimeType: MimeType): Confi
     ALLOWED_TAGS: [ '#comment', '#cdata-section', 'body' ],
     ALLOWED_ATTR: [],
     // TINY-11332: New settings for dompurify 3.1.7
-    SAFE_FOR_XML: false
   };
   const config = { ...basePurifyConfig };
 
