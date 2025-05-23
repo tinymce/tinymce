@@ -40,8 +40,8 @@ describe('browser.tinymce.themes.silver.editor.toolbar.SplitButtonPopupPositionW
     it('TINY-10973: the split button popups should be rendered close to the split button', async () => {
       const editor = hook.editor();
       editor.execCommand('mceFullScreen');
-      const button = await TinyUiActions.pWaitForUi(editor, '[aria-label^="Numbered list"]');
-      TinyUiActions.clickOnToolbar(editor, '[aria-label^="Numbered list"] > .tox-tbtn + .tox-split-button__chevron');
+      const button = await TinyUiActions.pWaitForUi(editor, 'button[role="button"][aria-label^="Numbered list"]');
+      TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="numlist-chevron"][aria-label^="Numbered list"]');
       const popup = await TinyUiActions.pWaitForUi(editor, '.tox-collection');
 
       const buttonRect = button.dom.getBoundingClientRect();
