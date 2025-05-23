@@ -1,5 +1,5 @@
 import { StructureSchema, FieldSchema } from '@ephox/boulder';
-import { Arr, Optional, Results, Obj } from '@ephox/katamari';
+import { Arr, Optional, Results, Obj, Num } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
@@ -13,9 +13,15 @@ import * as Options from '../api/Options';
  * // Get the current user's ID
  * tinymce.activeEditor.userLookup.userId;
  *
- * // Fetch user information by IDs which returns array of promises
- * const promises = tinymce.activeEditor.userLookup.fetchUsers(['user-1', 'user-2']);
- * Promise.all(promises).then((users) => {
+ * // Fetch user information by IDs which returns a record of promises
+ * const userPromises = tinymce.activeEditor.userLookup.fetchUsers(['user-1', 'user-2']);
+ *
+ * // Access individual promises by user ID
+ * userPromises['user-1'].then(user => console.log('User 1:', user));
+ * userPromises['user-2'].then(user => console.log('User 2:', user));
+ *
+ * // Or wait for all promises
+ * Promise.all(Object.values(userPromises)).then((users) => {
  *   users.forEach(user => console.log('User found:', user));
  * }).catch((error) => {
  *   console.error('Error fetching users:', error);
@@ -26,17 +32,20 @@ type UserId = string;
 
 export interface User {
   id: UserId;
-  name?: string;
-  avatar?: string;
-  description?: string;
+  name: string;
+  avatar: string;
   custom?: Record<string, any>;
 }
+
+export interface ExpectedUser {
+  id: UserId;
+  [key: string]: any;
+};
 
 export interface ValidatedUser {
   id: UserId;
   name: Optional<string>;
   avatar: Optional<string>;
-  description: Optional<string>;
   custom: Optional<Record<string, any>>;
 }
 
@@ -47,24 +56,71 @@ export interface UserLookup {
    * @property userId
    * @type String
    */
-  userId: UserId;
+  userId?: UserId;
 
   /**
    * Fetches user information using a provided array of userIds.
    *
    * @method fetchUsers
    * @param {string[]} userIds - A list of user IDs to fetch information for.
-   * @return {Promise<User>[]} A promise that resolves to an array of users and information about them. Promises will reject if users are not found or if the fetch fails.
+   * @return {Record<UserId, Promise<User>>} An object where each key is a user ID and its value is a Promise that resolves to the user's data or rejects if the user is not found.
    * @throws {Error} When fetch_users option is not configured.
    */
-  fetchUsers: (userIds: UserId[]) => Promise<User>[];
+  fetchUsers: (userIds: UserId[]) => Record<UserId, Promise<User>>;
 }
+
+const AvatarColors = [
+  '#2DC26B', // Green
+  '#F1C40F', // Yellow
+  '#E03E2D', // Red
+  '#B96AD9', // Purple
+  '#3598DB', // Blue
+
+  '#169179', // Dark Turquoise
+  '#E67E23', // Orange
+  '#BA372A', // Dark Red
+  '#843FA1', // Dark Purple
+  '#236FA1', // Dark Blue
+
+  '#95A5A6', // Gray
+  '#7E8C8D', // Dark Gray
+  '#34495E', // Navy Blue
+];
+
+const getFirstChar = (name: string): string => {
+  if (Intl.Segmenter) {
+    const segmenter = new Intl.Segmenter();
+    const iterator = segmenter.segment(name)[Symbol.iterator]();
+    return `${iterator.next().value?.segment}`;
+  } else {
+    return name.trim()[0];
+  }
+};
+
+const getRandomColor = (): string => {
+  const colorIdx = Math.floor(Num.random() * AvatarColors.length);
+  return AvatarColors[colorIdx];
+};
+
+const generate = (name: string, color: string, size: number = 36): string => {
+  const halfSize = size / 2;
+  return `<svg height="${size}" width="${size}" xmlns="http://www.w3.org/2000/svg">` +
+    `<circle cx="${halfSize}" cy="${halfSize}" r="${halfSize}" fill="${color}"/>` +
+    `<text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" fill="#FFF" font-family="sans-serif" font-size="${halfSize}">` +
+    getFirstChar(name) +
+    `</text>` +
+    '</svg>';
+};
+
+const deriveAvatar = (name: string): string => {
+  const avatarSvg = generate(name, getRandomColor());
+  return 'data:image/svg+xml,' + encodeURIComponent(avatarSvg);
+};
 
 const userSchema = StructureSchema.objOf([
   FieldSchema.required('id'),
   FieldSchema.optionString('name'),
   FieldSchema.optionString('avatar'),
-  FieldSchema.optionString('description'),
   FieldSchema.option('custom')
 ]);
 
@@ -103,10 +159,12 @@ const validateResponse = (items: unknown): User[] => {
   }
 
   return Arr.map(values, (user) => {
-    const { id, ...rest } = user;
+    const { id, name, avatar, ...rest } = user;
 
     return {
       id,
+      name: name.getOr(id),
+      avatar: avatar.getOr(deriveAvatar(name.getOr(id))),
       ...objectCat(rest),
     };
   });
@@ -142,15 +200,21 @@ const UserLookup = (editor: Editor): UserLookup => {
         pendingResolvers.delete(userId);
       });
 
-  const fetchUsers = (userIds: UserId[]): Promise<User>[] => {
+  const fetchUsers = (userIds: UserId[]): Record<UserId, Promise<User>> => {
     const fetchUsersFn = Options.getFetchUsers(editor);
-    if (!fetchUsersFn) {
-      throw new Error('fetch_users option must be configured');
-    } else if (!Array.isArray(userIds)) {
-      return [];
+
+    if (!Array.isArray(userIds)) {
+      return {};
+    } else if (!fetchUsersFn) {
+      return Arr.mapToObject(userIds, (userId) =>
+        Promise.resolve({
+          id: userId,
+          name: userId,
+          avatar: deriveAvatar(userId)
+        }));
     }
 
-    const uncachedIds = Arr.filter(userIds, (userId) => !lookup(userId).isSome());
+    const uncachedIds = Arr.unique(Arr.filter((userIds), (userId) => !lookup(userId).isSome()));
 
     Arr.each(uncachedIds, (userId) => {
       const newPromise = new Promise<User>((resolve, reject) => {
@@ -185,7 +249,16 @@ const UserLookup = (editor: Editor): UserLookup => {
         });
     };
 
-    return Arr.map(userIds, (userId) => lookup(userId).getOr(Promise.resolve({ id: userId })));
+    return Arr.foldl<UserId, Record<UserId, Promise<User>>>(userIds, (acc, userId) => {
+      acc[userId] = lookup(userId).getOr(
+        Promise.resolve({
+          id: userId,
+          name: userId,
+          avatar: deriveAvatar(userId)
+        })
+      );
+      return acc;
+    }, {});
   };
 
   const userId = Options.getUserId(editor);

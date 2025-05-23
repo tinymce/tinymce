@@ -288,6 +288,14 @@ module.exports = function (grunt) {
             'js/tinymce/tinymce.js'
           ],
           dest: 'js/tinymce/tinymce.js'
+        },
+        'license-headers': {
+          src: [
+            'src/core/text/build-header.js',
+            'src/core/text/tinymce-license-headers.js',
+            `js/tinymce/tinymce.min.js`
+          ],
+          dest: `js/tinymce/tinymce.min.js`
         }
       },
       gruntUtils.generate(plugins, 'plugin', function (name) {
@@ -349,6 +357,10 @@ module.exports = function (grunt) {
           {
             src: '../../README.md',
             dest: 'js/tinymce/README.md'
+          },
+          {
+            src: '../../NOTICES.txt',
+            dest: 'js/tinymce/notices.txt'
           }
         ]
       },
@@ -444,6 +456,7 @@ module.exports = function (grunt) {
           'js/tinymce/tinymce.d.ts',
           'js/tinymce/tinymce.min.js',
           'js/tinymce/license.md',
+          'js/tinymce/notices.txt',
           'CHANGELOG.md',
           'LICENSE.md',
           'README.md'
@@ -487,6 +500,7 @@ module.exports = function (grunt) {
               'patches',
               '.yarnrc',
               'LICENSE.md',
+              'NOTICES.txt',
               'README.md',
               'lerna.json',
               'package.json',
@@ -570,7 +584,8 @@ module.exports = function (grunt) {
           'js/tinymce/icons',
           'js/tinymce/themes',
           'js/tinymce/models',
-          'js/tinymce/license.md'
+          'js/tinymce/license.md',
+          'js/tinymce/notices.txt'
         ]
       },
 
@@ -707,7 +722,8 @@ module.exports = function (grunt) {
           'js/tinymce/tinymce.min.js',
           'js/tinymce/license.md',
           'CHANGELOG.md',
-          'js/tinymce/README.md'
+          'js/tinymce/README.md',
+          'js/tinymce/notices.txt'
         ]
       }
     },
@@ -757,6 +773,7 @@ module.exports = function (grunt) {
           { src: 'js/tinymce/tinymce.d.ts', dest: '/content/scripts/tinymce/tinymce.d.ts' },
           { src: 'js/tinymce/tinymce.min.js', dest: '/content/scripts/tinymce/tinymce.min.js' },
           { src: 'js/tinymce/license.md', dest: '/content/scripts/tinymce/license.md' },
+          { src: 'js/tinymce/notices.txt', dest: '/content/scripts/tinymce/notices.txt' },
           { src: 'tools/nuget/build/TinyMCE.targets', dest: '/build/TinyMCE.targets' }
         ]
       },
@@ -913,7 +930,8 @@ module.exports = function (grunt) {
     'rollup',
     'concat',
     'copy',
-    'terser'
+    'terser',
+    'concat:license-headers'
   ]);
 
   grunt.registerTask('prod', [

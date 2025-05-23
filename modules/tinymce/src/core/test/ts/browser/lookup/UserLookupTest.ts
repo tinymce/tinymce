@@ -1,13 +1,13 @@
 import { TestStore } from '@ephox/agar';
 import { afterEach, before, context, describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
+import { Arr, Type } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import * as Chai from 'chai';
 import { expect } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
 import type Editor from 'tinymce/core/api/Editor';
-import { createUserLookup, type User } from 'tinymce/core/lookup/UserLookup';
+import { createUserLookup, type User, type ExpectedUser } from 'tinymce/core/lookup/UserLookup';
 
 Chai.use(chaiAsPromised);
 
@@ -15,14 +15,16 @@ const createMockUser = (id: string): User => ({
   id,
   name: 'Test User',
   avatar: 'test-avatar.png',
-  description: 'Test Description'
+  custom: {
+    description: 'Test Description'
+  }
 });
 
 describe('browser.tinymce.core.UserLookupTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     user_id: 'test-user-1',
-    fetch_users: (userIds: string[]): Promise<User[]> => {
+    fetch_users: (userIds: string[]): Promise<ExpectedUser[]> => {
       return new Promise((resolve) => {
         setTimeout(() => {
           const validIds = Arr.filter(userIds, (id): id is string =>
@@ -40,7 +42,7 @@ describe('browser.tinymce.core.UserLookupTest', () => {
     },
   });
 
-  let originalFetchUsers: (userIds: string[]) => Promise<User[]>;
+  let originalFetchUsers: ((userIds: string[]) => Promise<ExpectedUser[]>) | undefined;
 
   before(() => {
     const editor = hook.editor();
@@ -77,14 +79,15 @@ describe('browser.tinymce.core.UserLookupTest', () => {
   });
 
   context('fetchUsers', () => {
-    it('TINY-11974: Should fetch users and return array of promises', () => {
+    it('TINY-11974: Should fetch users and return record of promises', () => {
       const editor = hook.editor();
       const userIds = [ 'test-user-1' ];
 
       const promises = editor.userLookup.fetchUsers(userIds);
 
-      expect(promises).to.be.an('array', 'Should return an array of promises');
-      expect(promises).to.have.lengthOf(1, 'Should return array with one promise');
+      expect(promises).to.be.an('object', 'Should return a record of promises');
+      expect(Object.keys(promises)).to.have.lengthOf(1, 'Should have one promise');
+      expect(promises['test-user-1']).to.be.instanceOf(Promise, 'Should be a Promise');
     });
 
     it('TINY-11974: Should return multiple promises for multiple userIds', () => {
@@ -93,34 +96,38 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
       const promises = editor.userLookup.fetchUsers(userIds);
 
-      expect(promises).to.have.lengthOf(2, 'Should return array with two promises');
-      expect(promises[0]).to.be.instanceOf(Promise, 'First item should be a Promise');
-      expect(promises[1]).to.be.instanceOf(Promise, 'Second item should be a Promise');
+      expect(Object.keys(promises)).to.have.lengthOf(2, 'Should have two promises');
+      expect(promises['test-user-1']).to.be.instanceOf(Promise, 'First should be a Promise');
+      expect(promises['test-user-2']).to.be.instanceOf(Promise, 'Second should be a Promise');
     });
 
     it('TINY-11974: Should throw an error for empty string ids', async () => {
       const editor = hook.editor();
       const userIds = [ '' ];
-      const [ userPromise ] = editor.userLookup.fetchUsers(userIds);
+      const promises = editor.userLookup.fetchUsers(userIds);
 
-      await expect(userPromise).to.eventually.be.rejectedWith(
-        Error,
-        'User  not found',
-        'Should throw error for empty string ID'
-      );
+      await expect(promises[''])
+        .to.eventually.be.rejectedWith(
+          Error,
+          'User  not found',
+          'Should throw error for empty string ID'
+        );
     });
 
     it('TINY-11974: Should resolve with user data when fetching a single user', async () => {
       const editor = hook.editor();
       const userId = 'test-user-1';
 
-      const [ userPromise ] = editor.userLookup.fetchUsers([ userId ]);
+      const promises = editor.userLookup.fetchUsers([ userId ]);
+      const userPromise = promises[userId];
 
       const expectedUser = {
         id: userId,
         name: 'Test User',
         avatar: 'test-avatar.png',
-        description: 'Test Description'
+        custom: {
+          description: 'Test Description'
+        }
       };
 
       await expect(userPromise).to.eventually.deep.equal(
@@ -133,7 +140,8 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       const editor = hook.editor();
       const nonExistentId = 'non-existent-user';
 
-      const [ userPromise ] = editor.userLookup.fetchUsers([ nonExistentId ]);
+      const promises = editor.userLookup.fetchUsers([ nonExistentId ]);
+      const userPromise = promises[nonExistentId];
 
       await expect(userPromise).to.eventually.be.rejectedWith(
         Error,
@@ -147,13 +155,17 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       const existingId = 'test-user-1';
       const nonExistentId = 'non-existent-user';
 
-      const [ existingPromise, nonExistentPromise ] = editor.userLookup.fetchUsers([ existingId, nonExistentId ]);
+      const promises = editor.userLookup.fetchUsers([ existingId, nonExistentId ]);
+      const existingPromise = promises[existingId];
+      const nonExistentPromise = promises[nonExistentId];
 
       await expect(existingPromise).to.eventually.deep.equal({
         id: existingId,
         name: 'Test User',
         avatar: 'test-avatar.png',
-        description: 'Test Description'
+        custom: {
+          description: 'Test Description'
+        }
       });
 
       await expect(nonExistentPromise).to.be.rejectedWith(`User ${nonExistentId} not found`);
@@ -182,7 +194,7 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
       // Test each invalid ID asynchronously
       await Promise.all(Arr.map(invalidIds, (invalidId) => {
-        const [ promise ] = editor.userLookup.fetchUsers([ invalidId ]);
+        const promise = editor.userLookup.fetchUsers([ invalidId ])[invalidId];
         return expect(promise).to.be.rejectedWith(
           `User ${invalidId} not found`,
           `Should reject for invalid ID: ${invalidId}`
@@ -195,7 +207,7 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       const userIds = Arr.range(100, (i) => `test-user-${i}`);
 
       const promises = editor.userLookup.fetchUsers(userIds);
-      const users = await Promise.all(promises);
+      const users = await Promise.all(Object.values(promises));
 
       await Promise.all(Arr.map(users, async (user, index) =>
         expect(Promise.resolve(user)).to.eventually.have.property('id').that.equals(`test-user-${index}`)
@@ -214,35 +226,53 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       const testCases = [
         {
           input: { id: 'user-1' },
-          expected: { id: 'user-1' }
+          expected: {
+            id: 'user-1',
+            name: 'user-1',
+            avatar: (value: string) => value.startsWith('data:image/svg+xml,')
+          }
         },
         {
           input: { id: 'user-2', name: 'John' },
-          expected: { id: 'user-2', name: 'John' }
+          expected: {
+            id: 'user-2',
+            name: 'John',
+            avatar: (value: string) => value.startsWith('data:image/svg+xml,')
+          }
         },
         {
           input: {
             id: 'user-3',
             name: undefined,
             avatar: null,
-            description: '',
-            custom: {}
+            custom: {
+              description: ''
+            }
           },
-          expected: { id: 'user-3', description: '', custom: {}}
+          expected: {
+            id: 'user-3',
+            name: 'user-3',
+            avatar: (value: string) => value.startsWith('data:image/svg+xml,'),
+            custom: {
+              description: ''
+            }
+          }
         },
         {
           input: {
             id: 'user-4',
             name: 'Jane',
             avatar: 'avatar.jpg',
-            description: null,
-            custom: { role: 'admin' }
+            custom: {
+              role: 'admin',
+              description: null
+            }
           },
           expected: {
             id: 'user-4',
             name: 'Jane',
             avatar: 'avatar.jpg',
-            custom: { role: 'admin' }
+            custom: { role: 'admin', description: null }
           }
         }
       ];
@@ -252,11 +282,20 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
       const userIds = Arr.map(testCases, (c) => c.input.id);
       const promises = editor.userLookup.fetchUsers(userIds);
+      const results = await Promise.all(Object.values(promises));
 
-      await expect(Promise.all(promises)).to.eventually.deep.equal(
-        Arr.map(testCases, (c) => c.expected),
-        'Should resolve with expected user objects'
-      );
+      Arr.each(results, (result, index) => {
+        const expected = testCases[index].expected;
+
+        Arr.each(Object.entries(expected), ([ key, value ]) => {
+          if (Type.isFunction(value)) {
+            Chai.assert.isTrue(value(result[key as keyof typeof result]),
+              `An avatar should be an SVG data URL for user ${result.id}`);
+          } else {
+            expect(result[key as keyof typeof result]).to.deep.equal(value);
+          }
+        });
+      });
     });
 
     it('TINY-11974: Should handle custom user properties', async () => {
@@ -267,23 +306,24 @@ describe('browser.tinymce.core.UserLookupTest', () => {
         id: userId,
         name: 'Test User',
         avatar: 'test-avatar.png',
-        description: 'Test Description',
         custom: {
           role: 'admin',
-          department: 'IT'
+          department: 'IT',
+          description: 'Test Description',
         }
       }]));
 
-      const [ userPromise ] = editor.userLookup.fetchUsers([ userId ]);
+      const promises = editor.userLookup.fetchUsers([ userId ]);
+      const userPromise = promises[userId];
 
       await expect(userPromise).to.eventually.deep.equal({
         id: userId,
         name: 'Test User',
         avatar: 'test-avatar.png',
-        description: 'Test Description',
         custom: {
           role: 'admin',
-          department: 'IT'
+          department: 'IT',
+          description: 'Test Description'
         }
       });
     });
@@ -295,7 +335,8 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       // Override fetch_users to simulate network failure
       editor.options.set('fetch_users', () => Promise.reject(new Error('Network error')));
 
-      const [ userPromise ] = editor.userLookup.fetchUsers([ userId ]);
+      const promises = editor.userLookup.fetchUsers([ userId ]);
+      const userPromise = promises[userId];
 
       await expect(userPromise).to.be.rejectedWith('Network error');
     });
@@ -309,7 +350,8 @@ describe('browser.tinymce.core.UserLookupTest', () => {
         invalid: 'data'
       }] as any));
 
-      const [ userPromise ] = editor.userLookup.fetchUsers([ userId ]);
+      const promises = editor.userLookup.fetchUsers([ userId ]);
+      const userPromise = promises[userId];
 
       await expect(userPromise).to.be.rejectedWith(`User ${userId} not found`);
     });
@@ -329,13 +371,15 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       });
 
       // Trigger fetch
-      const [ firstPromise ] = editor.userLookup.fetchUsers([ nonExistentId ]);
+      const firstPromises = editor.userLookup.fetchUsers([ nonExistentId ]);
+      const firstUserPromise = firstPromises[nonExistentId];
 
       // Use cache
-      const [ secondPromise ] = editor.userLookup.fetchUsers([ nonExistentId ]);
+      const secondPromises = editor.userLookup.fetchUsers([ nonExistentId ]);
+      const secondUserPromise = secondPromises[nonExistentId];
 
-      await expect(firstPromise).to.eventually.be.rejectedWith(`User ${nonExistentId} not found`);
-      await expect(secondPromise).to.eventually.be.rejectedWith(`User ${nonExistentId} not found`);
+      await expect(firstUserPromise).to.eventually.be.rejectedWith(`User ${nonExistentId} not found`);
+      await expect(secondUserPromise).to.eventually.be.rejectedWith(`User ${nonExistentId} not found`);
 
       // fetch_users should only have been called once during the initial fetch
       // and not during the cache lookup for the second promise
@@ -357,12 +401,18 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       const userId2 = 'test-user-2';
 
       // First requests for each ID
-      const [ promise1a ] = editor.userLookup.fetchUsers([ userId1 ]);
-      const [ promise2a ] = editor.userLookup.fetchUsers([ userId2 ]);
+      const promises1a = editor.userLookup.fetchUsers([ userId1 ]);
+      const promise1a = promises1a[userId1];
+
+      const promises2a = editor.userLookup.fetchUsers([ userId2 ]);
+      const promise2a = promises2a[userId2];
 
       // Second requests for each ID (should hit cache)
-      const [ promise1b ] = editor.userLookup.fetchUsers([ userId1 ]);
-      const [ promise2b ] = editor.userLookup.fetchUsers([ userId2 ]);
+      const promises1b = editor.userLookup.fetchUsers([ userId1 ]);
+      const promise1b = promises1b[userId1];
+
+      const promises2b = editor.userLookup.fetchUsers([ userId2 ]);
+      const promise2b = promises2b[userId2];
 
       await Promise.all([
         // Verify correct data first
@@ -379,21 +429,6 @@ describe('browser.tinymce.core.UserLookupTest', () => {
 
       // Verify fetch count
       store.assertEq('Should fetch exactly twice - once for each unique ID', [ userId1, userId2 ]);
-    });
-
-    it('TINY-11974: Should throw an exception when fetch_users has not been configured', () => {
-      const editor = hook.editor();
-
-      editor.options.unset('fetch_users');
-
-      editor.userLookup = createUserLookup(editor);
-
-      const userIds = [ 'test-user-1' ];
-
-      expect(() => {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        editor.userLookup.fetchUsers(userIds);
-      }).to.throw('fetch_users option must be configured');
     });
   });
 });
