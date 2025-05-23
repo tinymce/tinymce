@@ -2,7 +2,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
 import { Toolbar } from 'tinymce/core/api/ui/Ui';
 
-import * as Util from '../core/Util';
+import * as Util from './Util';
 
 const setupToggleButtonHandler = (editor: Editor, listName: string) => (api: Toolbar.ToolbarToggleButtonInstanceApi): () => void => {
   const toggleButtonHandler = (e: NodeChangeEvent) => {
