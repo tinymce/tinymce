@@ -7,8 +7,8 @@ import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.color.TextColorFormattingTest', () => {
   const selectors = {
-    backcolorSplitButton: '[aria-label^="Background color"] > .tox-tbtn + .tox-split-button__chevron',
-    forecolorSplitButton: '[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron'
+    backcolorSplitButton: 'button[data-mce-name="backcolor-chevron"][aria-label^="Background color"]',
+    forecolorSplitButton: 'button[data-mce-name="forecolor-chevron"][aria-label^="Text color"]'
   };
 
   const hook = TinyHooks.bddSetupLight<Editor>({
