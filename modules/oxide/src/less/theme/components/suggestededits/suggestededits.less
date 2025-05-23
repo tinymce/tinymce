@@ -1,31 +1,31 @@
 //
 // Suggested Edits
 //
-@suggestededits-added-color: #78AB46;
-@suggestededits-modified-color: #006CE7;
-@suggestededits-removed-color: #CC0000;
+@suggestededits-added-color: @color-success;
+@suggestededits-modified-color: @color-tint;
+@suggestededits-removed-color: @color-error;
 
-@suggestededits-color-tint: #006ce7;
-@suggestededits-text-color: #222f3e;
+@suggestededits-color-tint: @color-tint;
+@suggestededits-text-color: @text-color;
 
-@suggestededits-dark-transparent-color: rgba(34, 47, 62, .2);
+@suggestededits-dark-transparent-color: transparentize(@color-black, 0.1);
 
-@suggestededits-background-color: #fff;
-@suggestededits-border-color: #e0e0e0;
-@suggestededits-sidebar-background-color: #f0f0f0;
+@suggestededits-background-color: @background-color;
+@suggestededits-border-color: @border-color;
+@suggestededits-sidebar-background-color: contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 10%));;
 
 @suggestededits-button-background-color: @suggestededits-sidebar-background-color;
-@suggestededits-button-active-background-color: #d0d0d0;
+@suggestededits-button-active-background-color: contrast(@background-color, darken(@suggestededits-button-background-color, 6%), lighten(@suggestededits-button-background-color, 10%));
 @suggestededits-button-hover-background-color: @suggestededits-border-color;
 @suggestededits-button-color: @suggestededits-text-color;
 @suggestededits-button-primary-background-color: @suggestededits-color-tint;
-@suggestededits-button-primary-active-background-color: #0056b3;
-@suggestededits-button-primary-hover-background-color: #007bff;
-@suggestededits-button-primary-color: #fff;
+@suggestededits-button-primary-active-background-color: @button-active-background-color;
+@suggestededits-button-primary-hover-background-color: @button-hover-background-color;
+@suggestededits-button-primary-color: contrast(@background-color, @color-white, @color-black);
 
 @suggestededits-card-hover-shadow-color: @suggestededits-dark-transparent-color;
 @suggestededits-card-resolved-background-color: @suggestededits-dark-transparent-color;
-@suggestededits-card-selected-border-color: #006ce7;
+@suggestededits-card-selected-border-color: @suggestededits-color-tint;
 
 .tox {
   .tox-suggestededits__sink {
@@ -137,6 +137,7 @@
         background-color: @suggestededits-sidebar-background-color;
         display: flex;
         flex-direction: column;
+        justify-content: flex-end;
         min-width: 248px;
         width: 316px;
       }
