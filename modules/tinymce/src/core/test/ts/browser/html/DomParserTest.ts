@@ -1105,12 +1105,31 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         );
       });
 
-      it('TINY-8205: Fixes up invalid children even when top-level element does not fit the context', () => {
+      it('TINY-11927: Parser should just mark result as invalid when parsing in context', () => {
         const parser = DomParser(scenario.settings);
         const html = '<p>Hello world! <button>This is a button with a meta tag in it<meta /></button></p>';
-        const serializedHtml = serializer.serialize(parser.parse(html, { context: 'p' }));
+        const parserArgs: ParserArgs = { context: 'p' };
+        const serializedHtml = serializer.serialize(parser.parse(html, parserArgs));
 
-        assert.equal(serializedHtml, '<p>Hello world! <button>This is a button with a meta tag in it</button></p>');
+        assert.equal(serializedHtml, '<p>Hello world! <button>This is a button with a meta tag in it<meta></button></p>', 'Should not have removed anything that is for the second pass');
+        assert.isTrue(parserArgs.invalid);
+      });
+
+      it('TINY-11927: Parser should just mark context parses as invalid then split with full context', () => {
+        const parser = DomParser(scenario.settings);
+        const html = '<p>B<button>C<meta>D</button>E</p>';
+        const parserArgs: ParserArgs = { context: 'span' };
+        const serializedHtml = serializer.serialize(parser.parse(html, parserArgs));
+
+        assert.equal(serializedHtml, '<p>B<button>C<meta>D</button>E</p>', 'Should not have removed anything that is for the second pass');
+        assert.isTrue(parserArgs.invalid, 'Should be marked as invalid');
+
+        const fullHtml = `<div><em>A${serializedHtml}F</em></div>`;
+        const fullParserArgs: ParserArgs = {};
+        const fullSerializedHtml = serializer.serialize(parser.parse(fullHtml, fullParserArgs));
+
+        assert.equal(fullSerializedHtml, '<div><em>A</em><p>B<button>CD</button>E</p><em>F</em></div>', 'Should split the em to produce a valid fragment');
+        assert.isUndefined(fullParserArgs.invalid, 'Should not be marked as invalid');
       });
 
       it('TINY-7756: should prevent dom clobbering overriding document/form properties', () => {

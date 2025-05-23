@@ -1,0 +1,6 @@
+project: tinymce
+kind: Changed
+body: DomParser no longer tries to fix some nodes when parsed with a context.
+time: 2025-05-16T13:38:04.735513+02:00
+custom:
+    Issue: TINY-11927

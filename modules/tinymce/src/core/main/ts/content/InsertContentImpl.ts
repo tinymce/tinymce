@@ -230,21 +230,12 @@ const deleteSelectedContent = (editor: Editor): void => {
     TableDelete.deleteCellContents(editor, rng, SugarElement.fromDom(startCell as HTMLTableCellElement));
   // TINY-9193: If the selection is over the whole text node in an element then Firefox incorrectly moves the caret to the previous line
   // TINY-11953: If the selection is over the whole anchor node, then Chrome incorrectly removes parent node alongside with it's child - anchor
-  } else if (isSelectionOverWholeAnchor(rng) || isSelectionOverWholeTextNode(rng)) {
+  } else if (SelectionUtils.isSelectionOverWholeAnchor(rng) || SelectionUtils.isSelectionOverWholeTextNode(rng)) {
     rng.deleteContents();
   } else {
     editor.getDoc().execCommand('Delete', false);
   }
 };
-
-const isSelectionOverWholeTextNode = (range: Range): boolean => isSelectionOverWholeNode(range, NodeType.isText);
-
-const isSelectionOverWholeAnchor = (range: Range): boolean => isSelectionOverWholeNode(range, NodeType.isAnchor);
-
-const isSelectionOverWholeNode = (range: Range, nodeTypePredicate: (n: Node) => boolean): boolean =>
-  range.startContainer === range.endContainer
-    && range.endOffset - range.startOffset === 1
-    && nodeTypePredicate(range.startContainer.childNodes[range.startOffset]);
 
 const findMarkerNode = (scope: AstNode): Optional<AstNode> => {
   for (let markerNode: AstNode | null | undefined = scope; markerNode; markerNode = markerNode.walk()) {
@@ -379,10 +370,9 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
     const editingHost = markerNode.bind(ParserUtils.findClosestEditingHost).getOr(root);
     markerNode.each((marker) => marker.replace(fragment));
 
-    const toExtract = fragment.children();
-    const parent = fragment.parent ?? root;
+    const fragmentNodes = ParserUtils.getAllDescendants(fragment);
     fragment.unwrap();
-    const invalidChildren = Arr.filter(toExtract, (node) => InvalidNodes.isInvalid(editor.schema, node, parent));
+    const invalidChildren = Arr.filter(fragmentNodes, (node) => InvalidNodes.isInvalid(editor.schema, node));
     InvalidNodes.cleanInvalidNodes(invalidChildren, editor.schema, editingHost);
     FilterNode.filter(parser.getNodeFilters(), parser.getAttributeFilters(), root);
     value = serializer.serialize(root);

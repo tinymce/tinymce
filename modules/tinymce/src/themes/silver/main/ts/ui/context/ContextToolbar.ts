@@ -68,6 +68,13 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
     },
     onBack: () => {
       Events.fireContextFormSlideBack(editor);
+    },
+    focusElement: (el) => {
+      if (editor.getBody().contains(el.dom)) {
+        editor.focus();
+      } else {
+        Focus.focus(el);
+      }
     }
   });
 

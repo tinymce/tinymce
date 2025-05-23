@@ -91,8 +91,8 @@ const WindowManager = (editor: Editor): WindowManager => {
   const closeDialog = <T extends Dialog.DialogData>(dialog: InstanceApi<T>) => {
     fireCloseEvent(dialog);
 
-    dialogs = Arr.filter(dialogs, ({ instanceApi }) => instanceApi !== dialog);
     const dialogTriggerElement = Arr.findMap(dialogs, ({ instanceApi, triggerElement }) => instanceApi === dialog ? triggerElement : Optional.none());
+    dialogs = Arr.filter(dialogs, ({ instanceApi }) => instanceApi !== dialog);
 
     // Move focus back to editor when the last window is closed
     if (dialogs.length === 0) {

@@ -491,9 +491,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     // Fix invalid children or report invalid children in a contextual parsing
     if (validate && invalidChildren.length > 0) {
       if (args.context) {
-        const { pass: topLevelChildren, fail: otherChildren } = Arr.partition(invalidChildren, (child) => child.parent === rootNode);
-        InvalidNodes.cleanInvalidNodes(otherChildren, schema, rootNode, matchFinder);
-        args.invalid = topLevelChildren.length > 0;
+        args.invalid = true;
       } else {
         InvalidNodes.cleanInvalidNodes(invalidChildren, schema, rootNode, matchFinder);
       }
