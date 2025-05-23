@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Mouse, StructAssert } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
@@ -890,5 +890,29 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
         ]
       });
     }));
+  });
+
+  context('Tag order normalization', () => {
+    it('TINY-12004: Re-order formats for strikethrough after font size', () => {
+      const editor = hook.editor();
+
+      editor.setContent('');
+      editor.formatter.apply('fontsize', { value: '36pt' });
+      editor.formatter.apply('strikethrough');
+      TinyContentActions.type(editor, 'x');
+
+      TinyAssertions.assertContent(editor, '<p><span style="font-size: 36pt;"><s>x</s></span></p>');
+    });
+
+    it('TINY-12004: Retain order formats for font size after strikethrough', () => {
+      const editor = hook.editor();
+
+      editor.setContent('');
+      editor.formatter.apply('strikethrough');
+      editor.formatter.apply('fontsize', { value: '36pt' });
+      TinyContentActions.type(editor, 'x');
+
+      TinyAssertions.assertContent(editor, '<p><span style="font-size: 36pt;"><s>x</s></span></p>');
+    });
   });
 });

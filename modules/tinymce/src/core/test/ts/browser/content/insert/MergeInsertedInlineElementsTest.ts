@@ -385,4 +385,12 @@ describe('browser.tinymce.core.content.insert.MergeInsertedInlineElementsTest', 
     Arr.each(nonInheritableColorStyles, (colorStyle) => testMergingNonInheritableStyles(colorStyle, colorStyleValues));
     Arr.each(nonInheritablePixelStyles, (pixelStyle) => testMergingNonInheritableStyles(pixelStyle, pixelStyleValues));
   });
+
+  it('TINY-12004: Re-order strikethrough and font size if font size is inserted into strikethrough', () => {
+    const initial = '<s>test</s>';
+    const inserted = '<span style="font-size: 36pt;">test</span>';
+    const expected = '<s>te</s><span style="font-size: 36pt;"><s>test</s></span><s>st</s>';
+
+    testMergeNestedElements(initial, inserted, expected, [ 0, 0, 0 ], 2);
+  });
 });

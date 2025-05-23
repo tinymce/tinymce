@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Strikethrough elements was not always placed inside font size altering elements when applying formatting or pasting contents.
+time: 2025-05-23T13:10:50.881205+02:00
+custom:
+    Issue: TINY-12004

@@ -651,6 +651,14 @@ const removeFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node |
   }
 };
 
+const removeFormatOnElement = (editor: Editor, format: Format, vars: FormatVars | undefined, node: Element): Optional<Element> => {
+  return removeNodeFormatInternal(editor, format, vars, node).fold(
+    () => Optional.some(node),
+    (newName) => Optional.some(editor.dom.rename(node, newName)),
+    Optional.none
+  );
+};
+
 /**
  * Removes the specified format for the specified node. It will also remove the node if it doesn't have
  * any attributes if the format specifies it to do so.
@@ -676,5 +684,6 @@ const removeNodeFormat = (editor: Editor, format: Format, vars: FormatVars | und
 
 export {
   removeFormat,
+  removeFormatOnElement,
   removeNodeFormat
 };

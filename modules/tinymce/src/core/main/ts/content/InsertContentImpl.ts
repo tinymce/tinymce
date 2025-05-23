@@ -1,5 +1,5 @@
 import { Arr, Optional, Type } from '@ephox/katamari';
-import { Remove, SugarElement } from '@ephox/sugar';
+import { Remove, SugarElement, SugarElements } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
@@ -17,6 +17,7 @@ import * as CefUtils from '../dom/CefUtils';
 import ElementUtils from '../dom/ElementUtils';
 import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
+import * as NormalizeTagOrder from '../fmt/NormalizeTagOrder';
 import * as AstNodeType from '../html/AstNodeType';
 import * as FilterNode from '../html/FilterNode';
 import * as InvalidNodes from '../html/InvalidNodes';
@@ -120,6 +121,8 @@ const reduceInlineTextElements = (editor: Editor, merge: boolean | undefined): v
         }
       }
     });
+
+    NormalizeTagOrder.normalizeElements(editor, SugarElements.fromDom(fragments));
   }
 };
 
