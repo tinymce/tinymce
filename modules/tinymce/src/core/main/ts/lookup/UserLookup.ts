@@ -261,11 +261,10 @@ const UserLookup = (editor: Editor): UserLookup => {
     }, {});
   };
 
-  const providedUserId = Options.getUserId(editor);
-  const fallbackUserId = 'Anonymous';
+  const userId = Options.getUserId(editor);
 
   return Object.freeze({
-    userId: providedUserId || fallbackUserId,
+    userId,
     fetchUsers,
   });
 };
