@@ -3,7 +3,7 @@ import { Arr, Optional, OptionalInstances } from '@ephox/katamari';
 import { assert } from 'chai';
 import fc from 'fast-check';
 
-import { parseStartValue, parseDetail, ListDetail } from 'tinymce/plugins/lists/core/ListNumbering';
+import { ListDetail, parseDetail, parseStartValue } from 'tinymce/plugins/lists/ui/ListNumbering';
 
 describe('atomic.tinymce.plugins.lists.core.ListNumberingTest', () => {
   const tOptional = OptionalInstances.tOptional;
