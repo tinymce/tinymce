@@ -937,6 +937,11 @@ const register = (editor: Editor): void => {
       default: DOM.getAttrib(editor.getElement(), 'placeholder')
     });
   });
+
+  registerOption('lists_indent_on_tab', {
+    processor: 'boolean',
+    default: true
+  });
 };
 
 const getIframeAttrs = option('iframe_attrs');
@@ -1050,6 +1055,7 @@ const getExtendedMathmlAttributes = option('extended_mathml_attributes');
 const getExtendedMathmlElements = option('extended_mathml_elements');
 const getUserId = option('user_id');
 const getFetchUsers = option('fetch_users');
+const shouldIndentOnTab = option('lists_indent_on_tab');
 
 export {
   register,
@@ -1164,5 +1170,6 @@ export {
   getApiKey,
   isDisabled,
   getFetchUsers,
-  getUserId
+  getUserId,
+  shouldIndentOnTab
 };

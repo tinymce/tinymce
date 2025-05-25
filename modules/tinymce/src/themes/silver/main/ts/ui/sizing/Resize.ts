@@ -8,35 +8,56 @@ import * as Options from '../../api/Options';
 
 import * as Utils from './Utils';
 
-interface EditorDimensions {
+export interface EditorDimensions {
   readonly height: number;
-  width?: number;
+  readonly width: number;
 }
 
 export enum ResizeTypes {
   None, Both, Vertical
 }
 
-export const getDimensions = (editor: Editor, deltas: SugarPosition, resizeType: ResizeTypes, originalHeight: number, originalWidth: number): EditorDimensions => {
-  const dimensions: EditorDimensions = {
-    height: Utils.calcCappedSize(originalHeight + deltas.top, Options.getMinHeightOption(editor), Options.getMaxHeightOption(editor))
+export const getOriginalDimensions = (editor: Editor): EditorDimensions => {
+  const container = SugarElement.fromDom(editor.getContainer());
+  const originalHeight: number = Height.get(container);
+  const originalWidth: number = Width.get(container);
+  return {
+    height: originalHeight,
+    width: originalWidth,
   };
+};
 
-  if (resizeType === ResizeTypes.Both) {
-    dimensions.width = Utils.calcCappedSize(originalWidth + deltas.left, Options.getMinWidthOption(editor), Options.getMaxWidthOption(editor));
-  }
+export const getDimensions = (editor: Editor, deltas: SugarPosition, resizeType: ResizeTypes, originalDimentions: EditorDimensions): EditorDimensions => {
+  const dimensions = {
+    height: Utils.calcCappedSize(
+      originalDimentions.height + deltas.top,
+      Options.getMinHeightOption(editor),
+      Options.getMaxHeightOption(editor)
+    ),
+    width:
+      resizeType === ResizeTypes.Both
+        ? Utils.calcCappedSize(
+          originalDimentions.width + deltas.left,
+          Options.getMinWidthOption(editor),
+          Options.getMaxWidthOption(editor)
+        )
+        : originalDimentions.width,
+  };
 
   return dimensions;
 };
 
-export const resize = (editor: Editor, deltas: SugarPosition, resizeType: ResizeTypes): void => {
+export const resize = (editor: Editor, deltas: SugarPosition, resizeType: ResizeTypes): EditorDimensions => {
   const container = SugarElement.fromDom(editor.getContainer());
 
-  const dimensions = getDimensions(editor, deltas, resizeType, Height.get(container), Width.get(container));
+  const originalDimentions = getOriginalDimensions(editor);
+  const dimensions = getDimensions(editor, deltas, resizeType, originalDimentions);
   Obj.each(dimensions, (val, dim) => {
     if (Type.isNumber(val)) {
       Css.set(container, dim, Utils.numToPx(val));
     }
   });
   Events.fireResizeEditor(editor);
+
+  return dimensions;
 };
