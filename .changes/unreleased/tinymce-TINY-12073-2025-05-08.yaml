@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Nested font sizes were causing too much spacing between lines.
+time: 2025-05-08T12:12:48.954715+02:00
+custom:
+  Issue: TINY-12073

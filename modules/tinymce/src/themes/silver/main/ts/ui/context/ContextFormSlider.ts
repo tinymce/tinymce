@@ -16,7 +16,7 @@ export const renderContextFormSliderInput = (
   valueState: Singleton.Value<number>
 ): SketchSpec => {
   const editorOffCell = Cell(Fun.noop);
-  const getApi = (comp: AlloyComponent) => ContextFormApi.getFormApi<number>(comp, valueState);
+  const getApi = (comp: AlloyComponent) => ContextFormApi.getFormParentApi(comp, valueState);
 
   const pLabel = ctx.label.map((label) => FormField.parts.label({
     dom: { tag: 'label', classes: [ 'tox-label' ] },

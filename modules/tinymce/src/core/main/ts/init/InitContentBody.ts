@@ -27,6 +27,7 @@ import * as TouchEvents from '../events/TouchEvents';
 import * as ForceBlocks from '../ForceBlocks';
 import * as NonEditableFilter from '../html/NonEditableFilter';
 import * as KeyboardOverrides from '../keyboard/KeyboardOverrides';
+import * as Lists from '../lists/Lists';
 import * as UserLookup from '../lookup/UserLookup';
 import * as Disabled from '../mode/Disabled';
 import { NodeChange } from '../NodeChange';
@@ -470,6 +471,7 @@ const contentBodyLoaded = (editor: Editor): void => {
   editor._nodeChangeDispatcher = new NodeChange(editor);
   editor._selectionOverrides = SelectionOverrides(editor);
 
+  Lists.setup(editor);
   TouchEvents.setup(editor);
   DetailsElement.setup(editor);
   NonEditableFilter.setup(editor);
