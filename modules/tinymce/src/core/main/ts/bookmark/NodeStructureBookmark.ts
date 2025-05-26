@@ -1,5 +1,3 @@
-import { Global } from '@ephox/katamari';
-
 import DOMUtils from '../api/dom/DOMUtils';
 import * as NodeType from '../dom/NodeType';
 
@@ -118,9 +116,6 @@ const resolveBookmark = (bookmark: Bookmark): Range => {
 
   return NormalizeBookmarkPoint.normalizeRange(rng);
 };
-
-Global.createBookmark = createBookmark;
-Global.resolveBookmark = resolveBookmark;
 
 export {
   createBookmark,
