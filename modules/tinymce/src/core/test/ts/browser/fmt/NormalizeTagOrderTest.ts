@@ -142,7 +142,7 @@ describe('browser.tinymce.core.fmt.NormalizeTagOrderTest', () => {
 
       it('TINY-12004: Should not wrap existing strikethroughs with strikethrough by removing styles from inner ones', () => testNormalizeFontSizeElementsAfterApply({
         format: 'fontsize',
-        html: '<p><span style="text-decoration: line-through"><span style="font-size: 40px;"><s>Hello</s> <span style="text-decoration: line-through; color: red;">world</span></span></s></p>',
+        html: '<p><span style="text-decoration: line-through"><span style="font-size: 40px;"><s>Hello</s> <span style="text-decoration: line-through; color: red;">world</span></span></p>',
         selection: { startPath: [ 0, 0, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 0, 2, 0 ], foffset: 'world'.length },
         expectedHtml: '<p><span style="font-size: 40px;"><span style="text-decoration: line-through;">Hello <span style="color: red;">world</span></span></span></p>',
         expectedSelection: { startPath: [ 0, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 0, 2, 0 ], foffset: 'world'.length }
@@ -174,7 +174,7 @@ describe('browser.tinymce.core.fmt.NormalizeTagOrderTest', () => {
     });
 
     context('Applying strikethrough', () => {
-      it('TINY-12004: Switch order of strikethrough and font size when applying strike though on text that has font size elements', () => testNormalizeFontSizeElementsAfterApply({
+      it('TINY-12004: Switch order of strikethrough and font size when applying strikethrough on text that has font size elements', () => testNormalizeFontSizeElementsAfterApply({
         format: 'strikethrough',
         html: '<p><s>one<span style="font-size: 40px;">two</span>three</s></p>',
         selection: { startPath: [ 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 2 ], foffset: 'three'.length },
@@ -184,7 +184,7 @@ describe('browser.tinymce.core.fmt.NormalizeTagOrderTest', () => {
     });
 
     context('Applying subscript', () => {
-      it('TINY-12004: Switch order of subscript and font size when applying strike though on text that has font size elements', () => testNormalizeFontSizeElementsAfterApply({
+      it('TINY-12004: Switch order of subscript and font size when applying subscript on text that has font size elements', () => testNormalizeFontSizeElementsAfterApply({
         format: 'subscript',
         html: '<p><s>one<sub>two</sub>three</s></p>',
         selection: { startPath: [ 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 2 ], foffset: 'three'.length },
