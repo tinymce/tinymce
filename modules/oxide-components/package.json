@@ -35,11 +35,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test-watch": "vitest",
-<<<<<<< HEAD
-    "test": "playwright install && playwright install-deps && vitest --watch=false",
-=======
     "test": "vitest --watch=false",
->>>>>>> 00340af2e0 (TINY-12133: setup oxide-components repo)
     "test-storybook": "vitest --project storybook",
     "ci": "yarn lint && yarn test"
   },
