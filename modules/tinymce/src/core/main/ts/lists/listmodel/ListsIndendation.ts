@@ -36,8 +36,8 @@ const composeEntries = (editor: Editor, entries: Entry[]): SugarElement<Node>[] 
     return groupIsIndented ? indentedComposer(editor, entries) : outdentedComposer(editor, entries);
   });
 
-const indentSelectedEntries = (entries: Entry[], indentation: Indentation): void => {
-  Arr.each(Arr.filter(entries, isSelected), (entry) => indentEntry(indentation, entry));
+const indentSelectedEntries = (editor: Editor, entries: Entry[], indentation: Indentation): void => {
+  Arr.each(Arr.filter(entries, isSelected), (entry) => indentEntry(editor, indentation, entry));
 };
 
 const getItemSelection = (editor: Editor): Optional<ItemSelection> => {
@@ -53,7 +53,7 @@ const listIndentation = (editor: Editor, lists: SugarElement<HTMLElement>[], ind
   const entrySets: EntrySet[] = parseLists(lists, getItemSelection(editor));
 
   Arr.each(entrySets, (entrySet) => {
-    indentSelectedEntries(entrySet.entries, indentation);
+    indentSelectedEntries(editor, entrySet.entries, indentation);
     const composedLists = composeEntries(editor, entrySet.entries);
     Arr.each(composedLists, (composedList) => {
       fireListEvent(editor, indentation === Indentation.Indent ? ListAction.IndentList : ListAction.OutdentList, composedList.dom);
@@ -64,5 +64,6 @@ const listIndentation = (editor: Editor, lists: SugarElement<HTMLElement>[], ind
 };
 
 export {
+  getItemSelection,
   listIndentation
 };
