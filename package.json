@@ -22,7 +22,11 @@
     "changie-merge": "changie merge -u '## Unreleased'",
     "changie-batch": "changie batch auto --project",
     "ci": "npm-run-all -p oxide-ci oxide-icons-ci oxide-components-ci -p tsc \"tinymce-grunt dev\"",
+<<<<<<< HEAD
     "ci-seq": "run-s oxide-ci oxide-icons-ci oxide-components-ci tsc \"tinymce-grunt dev\"",
+=======
+    "ci-seq": "run-s oxide-ci oxide-icons oxide-components-ci tsc \"tinymce-grunt dev\"",
+>>>>>>> 00340af2e0 (TINY-12133: setup oxide-components repo)
     "ci-all": "npm-run-all -p changie-merge eslint ci -s tinymce-rollup",
     "ci-all-seq": "npm-run-all -p eslint ci-seq -s tinymce-rollup",
     "local-ci": "run-s -s ci-all test",
