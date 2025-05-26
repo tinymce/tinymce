@@ -182,41 +182,70 @@ def cacheName = "cache_${BUILD_TAG}"
 
 def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NUMBER}"
 
+def hiRes = [
+  resourceRequestCpu: '2',
+  resourceRequestMemory: '4Gi',
+  resourceRequestEphemeralStorage: '16Gi',
+  resourceLimitCpu: '7.5',
+  resourceLimitMemory: '4Gi',
+  resourceLimitEphemeralStorage: '16Gi'
+]
+def lowRes = []
+def containers = [
+  devPods.getContainerDefaultArgs([ name: 'node', image: "public.ecr.aws/docker/library/node:20", runAsGroup: '1000', runAsUser: '1000' ]) + hiRes,
+  devPods.getContainerDefaultArgs([ name: 'aws-cli', image: 'public.ecr.aws/aws-cli/aws-cli:latest', runAsGroup: '1000', runAsUser: '1000' ]),
+  devPods.getContainerDefaultArgs([ name: 'playwright', image: tinyAws.getPullThroughCacheImage('mcr.microsoft.com/playwright:v1.52.0-noble')]) + hiRes
+]
+
 timestamps {
-  devPods.nodeProducer(
-    nodeOpts: [
-      resourceRequestCpu: '2',
-      resourceRequestMemory: '4Gi',
-      resourceRequestEphemeralStorage: '16Gi',
-      resourceLimitCpu: '7.5',
-      resourceLimitMemory: '4Gi',
-      resourceLimitEphemeralStorage: '16Gi'
-    ],
-    tag: '20',
-    build: cacheName
+  devPods.custom(
+    containers: containers
   ) {
-    props = readProperties(file: 'build.properties')
-    String primaryBranch = props.primaryBranch
-    assert primaryBranch != null && primaryBranch != ""
+    container('node') {
+      // env and build
+      // Make yarn fallback to the npm registry otherwise we get publish errors
+      setDefaultRegistry()
+      // Setup git information
+      tinyGit.addAuthorConfig()
+      tinyGit.addGitHubToKnownHosts()
+
+      props = readProperties(file: 'build.properties')
+      String primaryBranch = props.primaryBranch
+      assert primaryBranch != null && primaryBranch != ""
 
 
-    stage('Deps') {
-      // cancel build if primary branch doesn't merge cleanly
-      gitMerge(primaryBranch)
-      yarnInstall()
+      stage('Deps') {
+        // cancel build if primary branch doesn't merge cleanly
+        gitMerge(primaryBranch)
+        yarnInstall()
+      }
+
     }
 
-    stage('Build') {
-      // verify no errors in changelog merge
-      exec("yarn changie-merge")
-      withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
-        // type check and build TinyMCE
-        exec("yarn ci-all-seq")
+    container('playwright'){
+      // test step
+      exec('yarn -s --cwd modules/oxide-components test-manual')
+    }
 
-        // validate documentation generator
-        exec("yarn tinymce-grunt shell:moxiedoc")
+    container('node') {
+      // rest of ci
+      stage('Build') {
+        // verify no errors in changelog merge
+        exec("yarn changie-merge")
+        withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
+          // type check and build TinyMCE
+          exec("yarn ci-all-seq")
+
+          // validate documentation generator
+          exec("yarn tinymce-grunt shell:moxiedoc")
+        }
       }
     }
+
+    container('aws-cli') {
+      // cahce step
+    }
+
   }
 
   // [ browser: 'chrome', provider: 'aws', buckets: 2 ],
@@ -287,10 +316,10 @@ timestamps {
     runHeadlessTests(runAllTests)
   }
 
-  stage('Run tests') {
-      echo "Running tests [runAll=${runAllTests}]"
-      parallel processes
-  }
+  // stage('Run tests') {
+  //     echo "Running tests [runAll=${runAllTests}]"
+  //     parallel processes
+  // }
 
-  devPods.cleanUpPod(name: cacheName)
+  // devPods.cleanUpPod(name: cacheName)
 }
