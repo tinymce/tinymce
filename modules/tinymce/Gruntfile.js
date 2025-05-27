@@ -226,7 +226,6 @@ module.exports = function (grunt) {
         options: {
           ecma: 2018,
           output: {
-            comments: 'all',
             ascii_only: true
           },
           compress: {
@@ -316,21 +315,38 @@ module.exports = function (grunt) {
           dest: 'js/tinymce/tinymce.js'
         },
         'license-headers': {
-          src: [
-            'src/core/text/build-header.js',
-            'src/core/text/tinymce-license-headers.js',
-            `js/tinymce/tinymce.min.js`
-          ],
-          dest: `js/tinymce/tinymce.min.js`
+          files: [
+            {
+              src: [
+              'src/core/text/build-header.js',
+              'src/core/text/tinymce-license-headers.js',
+              `js/tinymce/tinymce.min.js`
+              ],
+              dest: 'js/tinymce/tinymce.min.js'
+            },
+          ]
         }
       },
       gruntUtils.generate(plugins, 'plugin', function (name) {
+        var customLicense = {
+          codesample: ['src/core/text/prism-header.js']
+        };
+        var license = ['src/core/text/build-header.js'].concat(customLicense[name]?customLicense[name]:[]);
         return {
-          src: [
-            'src/core/text/build-header.js',
-            `js/tinymce/plugins/${name}/plugin.js`
-          ],
-          dest: `js/tinymce/plugins/${name}/plugin.js`
+          files: [
+            {
+              src: license.concat([
+                `js/tinymce/plugins/${name}/plugin.js`
+              ]),
+              dest: `js/tinymce/plugins/${name}/plugin.js`
+            },
+            {
+              src: license.concat([
+                `js/tinymce/plugins/${name}/plugin.min.js`
+              ]),
+              dest: `js/tinymce/plugins/${name}/plugin.min.js`
+            }
+          ]
         };
       }),
       gruntUtils.generate(themes, 'theme', function (name) {
@@ -947,10 +963,9 @@ module.exports = function (grunt) {
     'emoji',
     'html-i18n',
     'rollup',
-    'concat',
     'copy',
     'terser',
-    'concat:license-headers'
+    'concat',
   ]);
 
   grunt.registerTask('prod', [
