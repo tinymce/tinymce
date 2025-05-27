@@ -190,11 +190,11 @@ def hiRes = [
   resourceLimitMemory: '4Gi',
   resourceLimitEphemeralStorage: '16Gi'
 ]
-def lowRes = []
+
 def containers = [
   devPods.getContainerDefaultArgs([ name: 'node', image: "public.ecr.aws/docker/library/node:20", runAsGroup: '1000', runAsUser: '1000' ]) + hiRes,
-  devPods.getContainerDefaultArgs([ name: 'aws-cli', image: 'public.ecr.aws/aws-cli/aws-cli:latest', runAsGroup: '1000', runAsUser: '1000' ]),
-  devPods.getContainerDefaultArgs([ name: 'playwright', image: tinyAws.getPullThroughCacheImage('mcr.microsoft.com/playwright:v1.52.0-noble')]) + hiRes
+  devPods.getContainerDefaultArgs([ name: 'aws-cli', image: 'public.ecr.aws/aws-cli/aws-cli:latest', runAsGroup: '1000', runAsUser: '1000' ]) + devPods.lowRes(),
+  devPods.getContainerDefaultArgs([ name: 'playwright', image: 'mcr.microsoft.com/playwright:v1.52.0-noble']) + devPods.lowRes()
 ]
 
 timestamps {
@@ -204,7 +204,7 @@ timestamps {
     container('node') {
       // env and build
       // Make yarn fallback to the npm registry otherwise we get publish errors
-      setDefaultRegistry()
+      devPods.setDefaultRegistry()
       // Setup git information
       tinyGit.addAuthorConfig()
       tinyGit.addGitHubToKnownHosts()
@@ -220,15 +220,6 @@ timestamps {
         yarnInstall()
       }
 
-    }
-
-    container('playwright'){
-      // test step
-      exec('yarn -s --cwd modules/oxide-components test-manual')
-    }
-
-    container('node') {
-      // rest of ci
       stage('Build') {
         // verify no errors in changelog merge
         exec("yarn changie-merge")
@@ -240,10 +231,26 @@ timestamps {
           exec("yarn tinymce-grunt shell:moxiedoc")
         }
       }
+
     }
 
+    container('playwright'){
+      // Run any playwright test in the Playwright container
+      stage('Playwright') {
+        exec('yarn -s --cwd modules/oxide-components test-manual')
+      }
+    }
+
+    // Prep cache
+    container('node') {
+      sh "mkdir -p /tmp && tar -zcf /tmp/file.tar.gz ./* && cp /tmp/file.tar.gz ./file.tar.gz"
+    }
+
+    // Cache
     container('aws-cli') {
-      // cahce step
+      tinyAws.withAWSEngineeringCICredentials('tinymce_pipeline_cache') {
+        sh "aws s3 cp ${tar} ${cache}/${buildName}.tar.gz"
+      }
     }
 
   }
@@ -316,10 +323,10 @@ timestamps {
     runHeadlessTests(runAllTests)
   }
 
-  // stage('Run tests') {
-  //     echo "Running tests [runAll=${runAllTests}]"
-  //     parallel processes
-  // }
+  stage('Run tests') {
+      echo "Running tests [runAll=${runAllTests}]"
+      parallel processes
+  }
 
-  // devPods.cleanUpPod(name: cacheName)
+  devPods.cleanUpPod(name: cacheName)
 }
