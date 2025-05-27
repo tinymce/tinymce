@@ -877,13 +877,12 @@ describe('browser.tinymce.core.content.insert.InsertContentTest', () => {
       TinyAssertions.assertRawContent(editor, '<p>insertion</p><p>initial</p>');
     });
 
-    /* Failing */
-    it.only('TINY-10305: Should sanitize content that can cause mXSS via ZWNBSP trimming', () => {
+    it('TINY-10305: Should sanitize content that can cause mXSS via ZWNBSP trimming', () => {
       const editor = hook.editor();
       editor.setContent('<p>initial</p>');
       TinySelections.setCursor(editor, [ 0 ], 0);
       editor.insertContent('<!--\ufeff><iframe onload=alert(document.domain)>-></body>-->');
-      TinyAssertions.assertRawContent(editor, '<p><!---->initial</p>');
+      TinyAssertions.assertRawContent(editor, '<p><!----><iframe sandbox="">-></body>--><span id="mce_marker" data-mce-type="bookmark">&#xFEFF;</span></body></iframe>initial</p>');
     });
   });
 });

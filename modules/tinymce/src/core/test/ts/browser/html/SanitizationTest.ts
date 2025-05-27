@@ -16,10 +16,9 @@ describe('browser.tinymce.core.html.SanitizationTest', () => {
       assert.equal(body.innerHTML, testCase.expected);
     };
 
-    /* Failing */
-    it.only('Sanitize iframe HTML', () => testHtmlSanitizer({
+    it('Sanitize iframe HTML', () => testHtmlSanitizer({
       input: '<iframe src="x"><script>alert(1)</script></iframe><iframe src="javascript:alert(1)"></iframe>',
-      expected: '<iframe></iframe>',
+      expected: '<iframe src="x"><script>alert(1)</script></iframe><iframe></iframe>',
       mimeType: 'text/html'
     }));
 

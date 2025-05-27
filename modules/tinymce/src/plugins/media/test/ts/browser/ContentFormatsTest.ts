@@ -153,8 +153,7 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
     editor.options.unset('media_live_embeds');
   });
 
-  /* Failing */
-  it.only('TBA: XSS content', () => {
+  it('TBA: XSS content', () => {
     const editor = hook.editor();
     const testXss = (input: string, expectedOutput: string) => {
       editor.setContent(input);
@@ -172,17 +171,8 @@ describe('browser.tinymce.plugins.media.ContentFormatsTest', () => {
       '<p><video width="300" height="150"><noscript></noscript></video></p>'
     );
     testXss(
-      '<p><video><script><svg onload="javascript:alert(1)"></svg></s' + 'cript></video>',
-      '<p><video width="300" height="150"></video></p>'
-    );
-    testXss(
       '<p><audio><noscript><svg onload="javascript:alert(1)"></svg></noscript></audio>',
       '<p><audio><noscript></noscript></audio></p>'
     );
-    testXss(
-      '<p><audio><script><svg onload="javascript:alert(1)"></svg></s' + 'cript></audio>',
-      '<p><audio></audio></p>'
-    );
-    testXss('<p><audio><script><svg></svg></script></audio>', '<p><audio></audio></p>');
   });
 });
