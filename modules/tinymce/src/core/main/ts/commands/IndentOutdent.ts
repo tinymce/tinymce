@@ -7,6 +7,7 @@ import * as Options from '../api/Options';
 import { isList, isListItem, isTable } from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 import { indentListSelection, outdentListSelection } from '../lists/actions/Indentation';
+import * as ListIndentation from '../lists/listmodel/ListsIndendation';
 
 type IndentStyle = 'margin-left' | 'margin-right' | 'padding-left' | 'padding-right';
 
@@ -50,7 +51,7 @@ const canOutdent = (editor: Editor): boolean => {
 };
 
 const canIndent = (editor: Editor): boolean =>
-  !editor.mode.isReadOnly() && canIndent(editor);
+  !editor.mode.isReadOnly() && ListIndentation.canIndent(editor);
 
 const isListComponent = (el: SugarElement<Node>): boolean =>
   isList(el) || isListItem(el);
