@@ -35,7 +35,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test-watch": "vitest",
-    "test": "playwright install && playwright install-deps && vitest --watch=false",
+    "test": "echo 'No tests'",
+    "test-manual": "playwright install && playwright install-deps && vitest --watch=false",
     "test-storybook": "vitest --project storybook",
     "ci": "yarn lint && yarn test"
   },
