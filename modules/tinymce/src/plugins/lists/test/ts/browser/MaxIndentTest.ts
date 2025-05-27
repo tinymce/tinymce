@@ -1,17 +1,29 @@
 import { UiFinder } from '@ephox/agar';
-import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
+import { afterEach, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 
-const olZeroIndentList = '<ol>\n<li>a</li>\n</ol>';
-const olOneIndentList = '<ol>\n<li style="list-style-type: none;">\n<ol>\n<li>a</li>\n</ol>\n</li>\n</ol>';
-const olTwoIndentList = '<ol>\n<li style="list-style-type: none;">\n<ol>\n<li style="list-style-type: none;">\n<ol>\n<li>a</li>\n</ol>\n</li>\n</ol>\n</li>\n</ol>';
-const olThreeIndentList = '<ol>\n<li style="list-style-type: none;">\n<ol>\n<li style="list-style-type: none;">\n<ol>\n<li style="list-style-type: none;">\n<ol>\n<li>a</li>\n</ol>\n</li>\n</ol>\n</li>\n</ol>\n</li>\n</ol>';
+const olZeroIndentList = '<ol><li>a</li></ol>';
+const olOneIndentList = '<ol><li style="list-style-type: none;"><ol><li>a</li></ol></li></ol>';
+const olTwoIndentList = '<ol><li style="list-style-type: none;"><ol><li style="list-style-type: none;"><ol><li>a</li></ol></li></ol></li></ol>';
+const olThreeIndentList = '<ol><li style="list-style-type: none;"><ol><li style="list-style-type: none;"><ol><li style="list-style-type: none;"><ol><li>a</li></ol></li></ol></li></ol></li></ol>';
 
 describe('browser.tinymce.plugins.lists.MaxIndentTest', () => {
+  const hook = TinyHooks.bddSetupLight<Editor>({
+    plugins: 'lists',
+    list_max_depth: 2,
+    base_url: '/project/tinymce/js/tinymce',
+    toolbar: 'indent outdent',
+    indent: false,
+  }, [ Plugin ], true);
+
+  afterEach(() => {
+    hook.editor().options.unset('list_max_depth');
+  });
+
   const indentIsDisabled = () =>
     UiFinder.exists(SugarBody.body(), '[aria-label="Increase indent"][aria-disabled="true"]');
 
@@ -19,18 +31,11 @@ describe('browser.tinymce.plugins.lists.MaxIndentTest', () => {
     UiFinder.exists(SugarBody.body(), '[aria-label="Increase indent"]:not([aria-disabled="true"])');
 
   context('With a depth of two', () => {
-    const hook = TinyHooks.bddSetupLight<Editor>({
-      plugins: 'lists',
-      list_max_depth: 2,
-      base_url: '/project/tinymce/js/tinymce',
-      toolbar: 'indent outdent'
-    }, [ Plugin ]);
-
     beforeEach(() => {
-      hook.editor().focus();
+      hook.editor().options.set('list_max_depth', 2);
     });
 
-    it('TINY-11937: Indent single LI  until hitting the max depth', () => {
+    it('TINY-11937: Indent single LI until hitting the max depth', () => {
       const editor = hook.editor();
       editor.setContent(olZeroIndentList);
 
@@ -70,31 +75,24 @@ describe('browser.tinymce.plugins.lists.MaxIndentTest', () => {
 
     it('TINY-11937: Can indent wider selections until all are at max level.', () => {
       const editor = hook.editor();
-      editor.setContent('<ol><li>C</li>\n<li style="list-style-type: none;">\n<ol><li>B</li>\n<li style="list-style-type: none;">\n<ol>\n<li>a</li>\n</ol>\n</li>\n</ol>\n</li>\n</ol>');
+      editor.setContent('<ol><li>C</li><li style="list-style-type: none;"><ol><li>B</li><li style="list-style-type: none;"><ol><li>a</li></ol></li></ol></li></ol>');
 
       TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 1, 0, 1, 0, 0 ], 1);
       indentIsEnabled();
       editor.execCommand('Indent');
-      TinyAssertions.assertContent( editor, '<ol>\n<li style="list-style-type: none;">\n<ol>\n<li>C\n<ol>\n<li>B</li>\n<li>a</li>\n</ol>\n</li>\n</ol>\n</li>\n</ol>');
+      TinyAssertions.assertContent( editor, '<ol><li style="list-style-type: none;"><ol><li>C<ol><li>B</li><li>a</li></ol></li></ol></li></ol>');
       indentIsEnabled();
       editor.execCommand('Indent');
-      TinyAssertions.assertContent( editor, '<ol>\n<li style="list-style-type: none;">\n<ol>\n<li style="list-style-type: none;">\n<ol>\n<li>C</li>\n<li>B</li>\n<li>a</li>\n</ol>\n</li>\n</ol>\n</li>\n</ol>');
+      TinyAssertions.assertContent( editor, '<ol><li style="list-style-type: none;"><ol><li style="list-style-type: none;"><ol><li>C</li><li>B</li><li>a</li></ol></li></ol></li></ol>');
     });
   });
 
   context('With a depth of zero', () => {
-    const hook = TinyHooks.bddSetupLight<Editor>({
-      plugins: 'lists',
-      list_max_depth: 0,
-      base_url: '/project/tinymce/js/tinymce',
-      toolbar: 'indent outdent'
-    }, [ Plugin ]);
-
     beforeEach(() => {
-      hook.editor().focus();
+      hook.editor().options.set('list_max_depth', 0);
     });
 
-    it('TINY-11937: Indent single LI  until hitting the max depth', () => {
+    it('TINY-11937: Indent single LI until hitting the max depth', () => {
       const editor = hook.editor();
       editor.setContent(olZeroIndentList);
 

@@ -7,9 +7,6 @@ import * as Options from '../api/Options';
 import { isList, isListItem, isTable } from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';
 import { indentListSelection, outdentListSelection } from '../lists/actions/Indentation';
-import { getItemSelection } from '../lists/listmodel/ListsIndendation';
-import { parseLists } from '../lists/listmodel/ParseLists';
-import { getSelectedListRoots } from '../lists/lists/Selection';
 
 type IndentStyle = 'margin-left' | 'margin-right' | 'padding-left' | 'padding-right';
 
@@ -52,17 +49,8 @@ const canOutdent = (editor: Editor): boolean => {
   return !editor.mode.isReadOnly() && (blocks.length > 1 || validateBlocks(editor, blocks));
 };
 
-const canIndent = (editor: Editor): boolean => {
-  const max = Options.getListMaxDepth(editor);
-  return !editor.mode.isReadOnly() && max.map((max) => {
-    const blocks = getSelectedListRoots(editor);
-    if (blocks.length > 0) {
-      return parseLists(SugarElements.fromDom(blocks), getItemSelection(editor)).some((entry) => entry.entries.some((value) => value.depth < max));
-    } else {
-      return true;
-    }
-  }).getOr(true);
-};
+const canIndent = (editor: Editor): boolean =>
+  !editor.mode.isReadOnly() && canIndent(editor);
 
 const isListComponent = (el: SugarElement<Node>): boolean =>
   isList(el) || isListItem(el);

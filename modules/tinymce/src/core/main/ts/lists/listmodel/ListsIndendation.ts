@@ -1,7 +1,8 @@
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
-import { InsertAll, Remove, SugarElement, SugarFragment } from '@ephox/sugar';
+import { InsertAll, Remove, SugarElement, SugarElements, SugarFragment } from '@ephox/sugar';
 
 import Editor from '../../api/Editor';
+import * as Options from '../../api/Options';
 import { fireListEvent } from '../events/Events';
 import { ListAction } from '../lists/ListAction';
 import * as Selection from '../lists/Selection';
@@ -63,7 +64,17 @@ const listIndentation = (editor: Editor, lists: SugarElement<HTMLElement>[], ind
   });
 };
 
+const canIndent = (editor: Editor): boolean =>
+  Options.getListMaxDepth(editor).map((max) => {
+    const blocks = Selection.getSelectedListRoots(editor);
+    if (blocks.length > 0) {
+      return parseLists(SugarElements.fromDom(blocks), getItemSelection(editor)).some((entry) => entry.entries.some((value) => value.depth < max));
+    } else {
+      return true;
+    }
+  }).getOr(true);
+
 export {
-  getItemSelection,
+  canIndent,
   listIndentation
 };
