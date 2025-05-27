@@ -249,7 +249,7 @@ timestamps {
     // Cache
     container('aws-cli') {
       tinyAws.withAWSEngineeringCICredentials('tinymce_pipeline_cache') {
-        sh "aws s3 cp ${tar} ${cache}/${buildName}.tar.gz"
+        sh "aws s3 cp ./file.tar.gz s3://tiny-freerange-testing/remote-builds/${cacheName}.tar.gz"
       }
     }
 
