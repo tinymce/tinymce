@@ -12,16 +12,17 @@
 
 @suggestededits-background-color: @background-color;
 @suggestededits-border-color: @border-color;
-@suggestededits-sidebar-background-color: contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 10%));;
+@suggestededits-sidebar-background-color: contrast(@suggestededits-background-color, darken(@suggestededits-background-color, 6%), lighten(@suggestededits-background-color, 10%));
 
 @suggestededits-button-background-color: @suggestededits-sidebar-background-color;
-@suggestededits-button-active-background-color: contrast(@background-color, darken(@suggestededits-button-background-color, 6%), lighten(@suggestededits-button-background-color, 10%));
-@suggestededits-button-hover-background-color: @suggestededits-border-color;
+@suggestededits-button-active-background-color: @toolbar-button-active-background-color;
+@suggestededits-button-hover-background-color: contrast(@suggestededits-button-background-color, darken(@suggestededits-button-background-color, 6%), lighten(@suggestededits-button-background-color, 10%));
 @suggestededits-button-color: @suggestededits-text-color;
-@suggestededits-button-primary-background-color: @suggestededits-color-tint;
-@suggestededits-button-primary-active-background-color: @button-active-background-color;
+
+@suggestededits-button-primary-background-color: @button-background-color;
 @suggestededits-button-primary-hover-background-color: @button-hover-background-color;
-@suggestededits-button-primary-color: contrast(@background-color, @color-white, @color-black);
+@suggestededits-button-primary-active-background-color: @button-active-background-color;
+@suggestededits-button-primary-color: @button-text-color;
 
 @suggestededits-card-hover-shadow-color: @suggestededits-dark-transparent-color;
 @suggestededits-card-resolved-background-color: @suggestededits-dark-transparent-color;
@@ -35,23 +36,6 @@
     .tox-tiered-menu {
       .tox-collection--list {
         position: absolute;
-
-        .tox-collection__group {
-          .tox-collection__item {
-            align-items: start;
-            border-radius: 4px;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            user-select: none;
-            width: 100%;
-          }
-
-          .tox-collection__item:hover {
-            background-color: @suggestededits-color-tint;
-            color: @suggestededits-background-color;
-          }
-        }
       }
     }
   }
@@ -131,6 +115,7 @@
         height: 100%;
         width: 100%;
         overflow: scroll;
+        background-color: @color-white; // This allows the content CSS to be applied correctly
       }
 
       .tox-suggestededits__sidebar {
@@ -182,17 +167,20 @@
 
       .tox-suggestededits__button.tox-suggestededits__button--primary:hover {
         background-color: @suggestededits-button-primary-hover-background-color;
-        color: @suggestededits-button-primary-color;
       }
 
       .tox-suggestededits__button.tox-suggestededits__button--primary:active {
         background-color: @suggestededits-button-primary-active-background-color;
-        color: @suggestededits-button-primary-color;
       }
 
       .tox-suggestededits__button.tox-suggestededits__button--dropdown {
         font-weight: bold;
         outline: 0;
+
+        svg {
+          display: block;
+          fill: @suggestededits-text-color;
+        }
       }
 
       .tox-suggestededits__button.tox-suggestededits__button--input {
@@ -211,7 +199,6 @@
       .tox-suggestededits__button.tox-suggestededits__button--input:hover {
         background-color: @suggestededits-button-background-color;
       }
-
 
       .tox-suggestededits__button:active {
         background: @suggestededits-button-active-background-color;
@@ -407,12 +394,14 @@
               }
 
               .tox-suggestededits__card--suggestion {
+                color: @suggestededits-text-color;
                 width: 100%;
               }
 
               .tox-suggestededits__card--textarea {
                 border: 2px solid @suggestededits-border-color;
                 border-radius: 6px;
+                color: @suggestededits-text-color;
                 gap: 8px;
                 padding: 5px 6px;
                 resize: none;
