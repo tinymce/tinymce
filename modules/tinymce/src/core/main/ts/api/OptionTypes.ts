@@ -357,6 +357,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   toolbar_sticky_offset: number;
   text_patterns: Pattern[];
   text_patterns_lookup: DynamicPatternsLookup;
+  user_id: string;
   visual: boolean;
   visual_anchor_class: string;
   visual_table_class: string;
