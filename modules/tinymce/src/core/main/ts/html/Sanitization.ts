@@ -26,6 +26,19 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
   const validate = settings.validate;
   const specialElements = schema.getSpecialElements();
 
+  const isNode = (value: unknown): value is Node => typeof Node === 'function' && value instanceof Node;
+  if (
+    settings.sanitize &&
+    NodeType.isElement(node) &&
+    node.hasChildNodes() &&
+    !isNode(node.firstElementChild) &&
+    /<[/\w!]/g.test(node.innerHTML) &&
+    /<[/\w!]/g.test(node.textContent ?? '')
+  ) {
+    Remove.remove(SugarElement.fromDom(node));
+    return;
+  }
+
   // Pad conditional comments if they aren't allowed
   if (node.nodeType === NodeTypes.COMMENT && !settings.allow_conditional_comments && /^\[if/i.test(node.nodeValue ?? '')) {
     node.nodeValue = ' ' + node.nodeValue;
