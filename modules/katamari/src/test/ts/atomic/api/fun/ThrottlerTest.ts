@@ -1,10 +1,10 @@
-import { Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
 import * as Throttler from 'ephox/katamari/api/Throttler';
 
 describe('atomic.katamari.api.fun.ThrottlerTest', () => {
+  const pWait = (time: number): Promise<void> => new Promise((r) => setTimeout(r, time));
 
   it('Throttler.adaptable', () => new Promise<void>((success) => {
     const data: string[] = [];
@@ -98,22 +98,22 @@ describe('atomic.katamari.api.fun.ThrottlerTest', () => {
 
     throttler.throttle(false, 'cat');
     throttler.throttle(true, 'dog');
-    await Waiter.pWait(delay + 1);
+    await pWait(delay + 1);
     assert.deepEqual(data, [ 'dog' ]);
 
     throttler.throttle(true, 'cat');
     throttler.throttle(false, 'dog');
-    await Waiter.pWait(delay + 1);
+    await pWait(delay + 1);
     assert.deepEqual(data, [ 'dog', 'cat' ]);
 
     throttler.throttle(false, 'cat');
     throttler.throttle(false, 'dog');
-    await Waiter.pWait(delay + 1);
+    await pWait(delay + 1);
     assert.deepEqual(data, [ 'dog', 'cat', 'cat' ]);
 
     throttler.throttle(true, 'cat');
     throttler.throttle(true, 'dog');
-    await Waiter.pWait(delay + 1);
+    await pWait(delay + 1);
     assert.deepEqual(data, [ 'dog', 'cat', 'cat', 'dog' ]);
   });
 });
