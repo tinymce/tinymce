@@ -105,6 +105,29 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
   }
 }
 
+def runPlaywrightPod(String cacheName, String name, Closure body) {
+
+  def containers = [
+    devPods.getContainerDefaultArgs([ name: 'node', image: "public.ecr.aws/docker/library/node:20", runAsGroup: '1000', runAsUser: '1000' ]) + devPods.hiRes(),
+    devPods.getContainerDefaultArgs([ name: 'aws-cli', image: 'public.ecr.aws/aws-cli/aws-cli:latest', runAsGroup: '1000', runAsUser: '1000' ]) + devPods.lowRes(),
+    devPods.getContainerDefaultArgs([ name: 'playwright', image: 'mcr.microsoft.com/playwright:v1.52.0-noble']) + devPods.hiRes()
+  ]
+
+  return {
+    stage("${name}") {
+      devPods.customConsumer(
+        containers: containers,
+        base: 'node',
+        build: cacheName
+      ) {
+        container('playwright') {
+          body()
+        }
+      }
+    }
+  }
+}
+
 def runSeleniumPod(String cacheName, String name, String browser, String version, Closure body) {
   Map node = [
           name: 'node',
@@ -183,6 +206,7 @@ def cacheName = "cache_${BUILD_TAG}"
 
 def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NUMBER}"
 
+<<<<<<< HEAD
 def hiRes = [
   resourceRequestCpu: '2',
   resourceRequestMemory: '4Gi',
@@ -206,60 +230,43 @@ timestamps { alertWorseResult(
   ) {
   devPods.custom(
     containers: containers
+=======
+timestamps {
+  devPods.nodeProducer(
+    nodeOpts: [
+      resourceRequestCpu: '2',
+      resourceRequestMemory: '4Gi',
+      resourceRequestEphemeralStorage: '16Gi',
+      resourceLimitCpu: '7.5',
+      resourceLimitMemory: '4Gi',
+      resourceLimitEphemeralStorage: '16Gi'
+    ],
+    tag: '20',
+    build: cacheName
+>>>>>>> f6777a4226 (TIN-12133: Move playwright test in parallel with other testing)
   ) {
-    container('node') {
-      // env and build
-      // Make yarn fallback to the npm registry otherwise we get publish errors
-      devPods.setDefaultRegistry()
-      // Setup git information
-      tinyGit.addAuthorConfig()
-      tinyGit.addGitHubToKnownHosts()
-
-      props = readProperties(file: 'build.properties')
-      String primaryBranch = props.primaryBranch
-      assert primaryBranch != null && primaryBranch != ""
+    props = readProperties(file: 'build.properties')
+    String primaryBranch = props.primaryBranch
+    assert primaryBranch != null && primaryBranch != ""
 
 
-      stage('Deps') {
-        // cancel build if primary branch doesn't merge cleanly
-        gitMerge(primaryBranch)
-        yarnInstall()
-      }
-
-      stage('Build') {
-        // verify no errors in changelog merge
-        exec("yarn changie-merge")
-        withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
-          // type check and build TinyMCE
-          exec("yarn ci-all-seq")
-
-          // validate documentation generator
-          exec("yarn tinymce-grunt shell:moxiedoc")
-        }
-      }
-
+    stage('Deps') {
+      // cancel build if primary branch doesn't merge cleanly
+      gitMerge(primaryBranch)
+      yarnInstall()
     }
 
-    container('playwright'){
-      // Run any playwright test in the Playwright container
-      stage('Playwright') {
-        exec('yarn -s --cwd modules/oxide-components test-manual')
-        junit allowEmptyResults: true, testResults: 'modules/oxide-components/test-results.xml'
+    stage('Build') {
+      // verify no errors in changelog merge
+      exec("yarn changie-merge")
+      withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
+        // type check and build TinyMCE
+        exec("yarn ci-all-seq")
+
+        // validate documentation generator
+        exec("yarn tinymce-grunt shell:moxiedoc")
       }
     }
-
-    // Prep cache
-    container('node') {
-      sh "mkdir -p /tmp && tar -zcf /tmp/file.tar.gz ./* && cp /tmp/file.tar.gz ./file.tar.gz"
-    }
-
-    // Cache
-    container('aws-cli') {
-      tinyAws.withAWSEngineeringCICredentials('tinymce_pipeline_cache') {
-        sh "aws s3 cp ./file.tar.gz s3://tiny-freerange-testing/remote-builds/${cacheName}.tar.gz"
-      }
-    }
-
   }
 
   // [ browser: 'chrome', provider: 'aws', buckets: 2 ],
@@ -330,8 +337,13 @@ timestamps { alertWorseResult(
     runHeadlessTests(runAllTests)
   }
 
+  processes['playwright'] = runPlaywrightPod(cacheName, 'playwright-tests') {
+    exec('yarn -s --cwd modules/oxide-components test-manual')
+    junit allowEmptyResults: true, testResults: 'modules/oxide-components/test-results.xml'
+  }
+
   stage('Run tests') {
       echo "Running tests [runAll=${runAllTests}]"
       parallel processes
   }
-}}
+}
