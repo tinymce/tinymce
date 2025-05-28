@@ -104,6 +104,29 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
   }
 }
 
+def runPlaywrightPod(String cacheName, String name, Closure body) {
+
+  def containers = [
+    devPods.getContainerDefaultArgs([ name: 'node', image: "public.ecr.aws/docker/library/node:20", runAsGroup: '1000', runAsUser: '1000' ]) + devPods.hiRes(),
+    devPods.getContainerDefaultArgs([ name: 'aws-cli', image: 'public.ecr.aws/aws-cli/aws-cli:latest', runAsGroup: '1000', runAsUser: '1000' ]) + devPods.lowRes(),
+    devPods.getContainerDefaultArgs([ name: 'playwright', image: 'mcr.microsoft.com/playwright:v1.52.0-noble']) + devPods.hiRes()
+  ]
+
+  return {
+    stage("${name}") {
+      devPods.customConsumer(
+        containers: containers,
+        base: 'node',
+        build: cacheName
+      ) {
+        container('playwright') {
+          body()
+        }
+      }
+    }
+  }
+}
+
 def runSeleniumPod(String cacheName, String name, String browser, String version, Closure body) {
   Map node = [
           name: 'node',
@@ -285,6 +308,11 @@ timestamps {
   processes['headless'] = runSeleniumPod(cacheName, 'headless-chrome', 'chrome', '127.0') {
     grunt('list-changed-headless')
     runHeadlessTests(runAllTests)
+  }
+
+  processes['playwright'] = runPlaywrightPod(cacheName, 'playwright-tests') {
+    exec('yarn -s --cwd modules/oxide-components test-manual')
+    junit allowEmptyResults: true, testResults: 'modules/oxide-components/test-results.xml'
   }
 
   stage('Run tests') {
