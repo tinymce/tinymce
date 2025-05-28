@@ -89,7 +89,7 @@ describe('atomic.katamari.api.fun.ThrottlerTest', () => {
     }, 200);
   }));
 
-  it('Throttler.withPriority', () => async () => {
+  it('Throttler.withPriority', async () => {
     const delay = 1;
     const data: string[] = [];
     const throttler = Throttler.withPriority((value: string) => {
