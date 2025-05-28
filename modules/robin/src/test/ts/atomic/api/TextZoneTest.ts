@@ -1,6 +1,7 @@
 import { Assert, context, describe, it } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Fun, Optional } from '@ephox/katamari';
+import { assert } from 'chai';
 
 import * as TextZone from 'ephox/robin/api/general/TextZone';
 import { ArbIds, arbIds, ArbRangeIds, arbRangeIds } from 'ephox/robin/test/Arbitraries';
@@ -235,6 +236,46 @@ describe('atomic.robin.zone.TextZoneTest', () => {
         arbRangeIds(doc1, Fun.always),
         checkRangeProp
       );
+    });
+  });
+
+  context('Fuzzy match language code', () => {
+    const testFuzzyLanguageCode = (testCase: { contentLang: string; onlyLang: string; expectedLang: string }) => {
+      const doc = TestUniverse(Gene('root', 'root', [ Gene('d1', 'div', [ TextGene('t1', 'one') ], {}, { lang: testCase.contentLang }) ]));
+      const zone = TextZone.single(doc, doc.find(doc.get(), 'd1').getOrDie(), 'en-US', testCase.onlyLang).getOrDie('Expected a zone to be returned');
+
+      assert.equal(zone.lang, testCase.expectedLang, 'Expected the zone language to match');
+    };
+
+    it('TINY-12101: Should match uppercase with dash', () => testFuzzyLanguageCode({
+      contentLang: 'en-GB',
+      onlyLang: 'en-GB',
+      expectedLang: 'en-GB'
+    }));
+
+    it('TINY-12101: Should match lowercase with dash', () => testFuzzyLanguageCode({
+      contentLang: 'en-gb',
+      onlyLang: 'en-GB',
+      expectedLang: 'en-gb'
+    }));
+
+    it('TINY-12101: Should match uppercase with underscore', () => testFuzzyLanguageCode({
+      contentLang: 'en-GB',
+      onlyLang: 'en-GB',
+      expectedLang: 'en-GB'
+    }));
+
+    it('TINY-12101: Should match lowercase with underscore', () => testFuzzyLanguageCode({
+      contentLang: 'en_gb',
+      onlyLang: 'en-GB',
+      expectedLang: 'en_gb'
+    }));
+
+    it('TINY-12101: Should not match language code that are different', () => {
+      const doc = TestUniverse(Gene('root', 'root', [ Gene('d1', 'div', [ TextGene('t1', 'one') ], {}, { lang: 'sv-SE' }) ]));
+      const zone = TextZone.single(doc, doc.find(doc.get(), 'd1').getOrDie(), 'en-US', 'en-GB');
+
+      assert.isTrue(zone.isNone(), 'Expected the zone to be none since the language codes are different');
     });
   });
 });
