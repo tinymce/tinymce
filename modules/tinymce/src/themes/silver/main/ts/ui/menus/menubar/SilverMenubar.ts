@@ -4,7 +4,7 @@ import {
 } from '@ephox/alloy';
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional, Throttler } from '@ephox/katamari';
 import { Compare, EventArgs, SelectorFind } from '@ephox/sugar';
 
 import { Menu } from 'tinymce/core/api/ui/Ui';
@@ -42,6 +42,12 @@ export interface MenubarItemSpec {
 }
 
 const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubarSpec> = (detail, spec) => {
+  const throttledOpen = Throttler.withPriority((nuComp: AlloyComponent, prevComp: AlloyComponent) => {
+    Dropdown.expand(nuComp);
+    Dropdown.close(prevComp);
+    Focusing.focus(nuComp);
+  }, 0);
+
   const setMenus = (comp: AlloyComponent, menus: MenubarItemSpec[]) => {
     const newMenus = Arr.map(menus, (m) => {
       const buttonSpec: Toolbar.ToolbarMenuButtonSpec = {
@@ -92,9 +98,7 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
                 // Now, find the components, and expand the hovered one, and close the active one
                 comp.getSystem().getByDom(activeButton).each((activeComp) => {
                   comp.getSystem().getByDom(hoveredButton).each((hoveredComp) => {
-                    Dropdown.expand(hoveredComp);
-                    Dropdown.close(activeComp);
-                    Focusing.focus(hoveredComp);
+                    throttledOpen.throttle(false, hoveredComp, activeComp);
                   });
                 });
               }
@@ -106,8 +110,7 @@ const factory: UiSketcher.SingleSketchFactory<SilverMenubarDetail, SilverMenubar
           se.event.prevFocus.bind((prev) => comp.getSystem().getByDom(prev).toOptional()).each((prev) => {
             se.event.newFocus.bind((nu) => comp.getSystem().getByDom(nu).toOptional()).each((nu) => {
               if (Dropdown.isOpen(prev)) {
-                Dropdown.expand(nu);
-                Dropdown.close(prev);
+                throttledOpen.throttle(true, nu, prev);
               }
             });
           });

@@ -1,3 +1,4 @@
+import { Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
@@ -87,4 +88,32 @@ describe('atomic.katamari.api.fun.ThrottlerTest', () => {
       }, 200);
     }, 200);
   }));
+
+  it('Throttler.withPriority', () => async () => {
+    const delay = 1;
+    const data: string[] = [];
+    const throttler = Throttler.withPriority((value: string) => {
+      data.push(value);
+    }, delay);
+
+    throttler.throttle(false, 'cat');
+    throttler.throttle(true, 'dog');
+    await Waiter.pWait(delay + 1);
+    assert.deepEqual(data, [ 'dog' ]);
+
+    throttler.throttle(true, 'cat');
+    throttler.throttle(false, 'dog');
+    await Waiter.pWait(delay + 1);
+    assert.deepEqual(data, [ 'dog', 'cat' ]);
+
+    throttler.throttle(false, 'cat');
+    throttler.throttle(false, 'dog');
+    await Waiter.pWait(delay + 1);
+    assert.deepEqual(data, [ 'dog', 'cat', 'cat' ]);
+
+    throttler.throttle(true, 'cat');
+    throttler.throttle(true, 'dog');
+    await Waiter.pWait(delay + 1);
+    assert.deepEqual(data, [ 'dog', 'cat', 'cat', 'dog' ]);
+  });
 });

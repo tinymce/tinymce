@@ -5,6 +5,43 @@ export interface Throttler<A extends any[]> {
   readonly throttle: (...args: A) => void;
 }
 
+export interface ThrottlerWithPriority<A extends any[]> {
+  readonly cancel: () => void;
+  readonly throttle: (hasPriority: boolean, ...args: A) => void;
+}
+
+// Run a function fn after rate ms. If another invocation occurs
+// during the time it is waiting, it will overwrite the args if it hasPriority: true otherwise it is ignored.
+export const withPriority = <A extends any[]>(fn: (...a: A) => void, rate: number): ThrottlerWithPriority<A> => {
+  let timer: number | null = null;
+  let args: A | null = null;
+  const cancel = () => {
+    if (!Type.isNull(timer)) {
+      clearTimeout(timer);
+      timer = null;
+      args = null;
+    }
+  };
+  const throttle = (hasPriority: boolean, ...newArgs: A) => {
+    if (hasPriority || !args) {
+      args = newArgs;
+    }
+    if (Type.isNull(timer)) {
+      timer = setTimeout(() => {
+        const tempArgs = args;
+        timer = null;
+        args = null;
+        fn.apply(null, tempArgs as A);
+      }, rate);
+    }
+  };
+
+  return {
+    cancel,
+    throttle
+  };
+};
+
 // Run a function fn after rate ms. If another invocation occurs
 // during the time it is waiting, update the arguments f will run
 // with (but keep the current schedule)
