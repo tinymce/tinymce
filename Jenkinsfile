@@ -244,6 +244,7 @@ timestamps { alertWorseResult(
       // Run any playwright test in the Playwright container
       stage('Playwright') {
         exec('yarn -s --cwd modules/oxide-components test-manual')
+        junit allowEmptyResults: true, testResults: 'modules/oxide-components/test-results.xml'
       }
     }
 
