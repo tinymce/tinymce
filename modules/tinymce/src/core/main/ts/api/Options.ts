@@ -1,4 +1,4 @@
-import { Arr, Obj, Strings, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Strings, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import * as Pattern from '../textpatterns/core/Pattern';
@@ -923,6 +923,13 @@ const register = (editor: Editor): void => {
     processor: 'boolean',
     default: true
   });
+
+  registerOption('list_max_depth', {
+    processor: (value) => {
+      const valid = Type.isNumber(value);
+      return valid ? { value: value < 0 ? undefined : value + 1, valid } : { valid: false, message: 'Must be a number' };  // Internally we count a list as starting with one indent, so up the count to match this. If it's less than 0 just ignore it.
+    },
+  });
 };
 
 const getIframeAttrs = option('iframe_attrs');
@@ -1035,6 +1042,8 @@ const isDisabled = option('disabled');
 const getExtendedMathmlAttributes = option('extended_mathml_attributes');
 const getExtendedMathmlElements = option('extended_mathml_elements');
 const shouldIndentOnTab = option('lists_indent_on_tab');
+const getListMaxDepth = (editor: Editor): Optional<number> =>
+  Optional.from(editor.options.get('list_max_depth'));
 
 export {
   register,
@@ -1148,5 +1157,6 @@ export {
   shouldConvertUnsafeEmbeds,
   getApiKey,
   isDisabled,
-  shouldIndentOnTab
+  shouldIndentOnTab,
+  getListMaxDepth
 };

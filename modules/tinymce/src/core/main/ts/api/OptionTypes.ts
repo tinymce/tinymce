@@ -160,6 +160,7 @@ interface BaseEditorOptions {
   language_load?: boolean;
   language_url?: string;
   line_height_formats?: string;
+  list_max_depth?: number;
   max_height?: number;
   max_width?: number;
   menu?: Record<string, { title: string; items: string }>;
