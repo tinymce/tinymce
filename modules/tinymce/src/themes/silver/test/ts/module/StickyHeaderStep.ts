@@ -85,8 +85,20 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
         }
       });
 
+      beforeEach(async () => {
+        const editor = hook.editor();
+
+        // Open the more drawer if it was closed during the previous test
+        if (toolbarMode !== ToolbarMode.default && !editor.queryCommandState('ToggleToolbarDrawer')) {
+          await MenuUtils.pOpenMore(toolbarMode);
+          MenuUtils.assertMoreDrawerInViewport(toolbarMode);
+        }
+      });
+
       after(async () => {
-        if (toolbarMode !== ToolbarMode.default) {
+        const editor = hook.editor();
+
+        if (toolbarMode !== ToolbarMode.default && editor.queryCommandState('ToggleToolbarDrawer')) {
           await MenuUtils.pCloseMore(toolbarMode);
         }
       });
