@@ -1,4 +1,6 @@
+import { UiFinder } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
+import { SugarBody } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -48,5 +50,16 @@ describe('browser.tinymce.plugins.codesample.CodeSampleSanityTest', () => {
     editor.setContent('<pre class="language-markup"><code>test content</code></pre>');
     TinyAssertions.assertCursor(editor, [ 0 ], 0);
     TinyAssertions.assertContent(editor, '<pre class="language-markup"><code>test content</code></pre>');
+  });
+
+  it('TINY-12120: Spellcheck is enforced.', async () => {
+    const editor = hook.editor();
+    await TestUtils.pOpenDialogAndAssertInitial(editor, 'markup', '');
+    await UiFinder.pWaitFor('Should not have spellchecking', SugarBody.body(), 'textarea:not([spellcheck="true"])');
+    await TestUtils.pCancelDialog(editor);
+    editor.options.set('browser_spellcheck', true);
+    await TestUtils.pOpenDialogAndAssertInitial(editor, 'markup', '');
+    await UiFinder.pWaitFor('Should not have spellchecking', SugarBody.body(), 'textarea[spellcheck="true"]');
+    await TestUtils.pCancelDialog(editor);
   });
 });

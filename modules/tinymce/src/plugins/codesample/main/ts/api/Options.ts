@@ -24,9 +24,11 @@ const register = (editor: Editor): void => {
 
 const getLanguages = option<LanguageSpec[] | undefined>('codesample_languages');
 const useGlobalPrismJS = option<boolean>('codesample_global_prismjs');
+const shouldBrowserSpellcheck = option('browser_spellcheck');
 
 export {
   register,
   getLanguages,
+  shouldBrowserSpellcheck,
   useGlobalPrismJS
 };
