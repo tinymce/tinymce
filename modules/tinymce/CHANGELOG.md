@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 6.8.6 - 2025-05-29
+
+### Improved
+- Update `Notices` file and minified notices. #TINY-12105
+
 ## 6.8.5 - 2024-10-10
 
 ### Fixed
