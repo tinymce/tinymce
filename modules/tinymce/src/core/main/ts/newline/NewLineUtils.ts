@@ -1,6 +1,6 @@
 import { Arr, Fun, Obj, Optional, Optionals, Unicode } from '@ephox/katamari';
 import { DomDescent } from '@ephox/phoenix';
-import { Css, Insert, SugarElement } from '@ephox/sugar';
+import { Css, Insert, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
@@ -14,16 +14,16 @@ import { isCaretNode } from '../fmt/FormatContainer';
 
 import * as ReduceNestedFonts from './ReduceNestedFonts';
 
-const firstNonWhiteSpaceNodeSibling = (node: Node | null): Node | null => {
+const firstNonWhiteSpaceNodeSibling = (node: Node | null): Optional<SugarElement<Node>> => {
   while (node) {
     if (NodeType.isElement(node) || (NodeType.isText(node) && node.data && /[\r\n\s]/.test(node.data))) {
-      return node;
+      return Optional.from(SugarElement.fromDom(node));
     }
 
     node = node.nextSibling;
   }
 
-  return null;
+  return Optional.none();
 };
 
 const moveToCaretPosition = (editor: Editor, root: Node): void => {
@@ -35,15 +35,24 @@ const moveToCaretPosition = (editor: Editor, root: Node): void => {
   }
 
   if (/^(LI|DT|DD)$/.test(root.nodeName)) {
-    const firstChild = firstNonWhiteSpaceNodeSibling(root.firstChild);
-    if (firstChild && /^(UL|OL|DL)$/.test(firstChild.nodeName)) {
-      root.insertBefore(dom.doc.createTextNode(Unicode.nbsp), root.firstChild);
-    } else if (firstChild && dom.isEmpty(firstChild)) {
-      const element = DomDescent.toLeaf(SugarElement.fromDom(firstChild), 0).element;
-      if (!ElementType.isBr(element)) {
-        Insert.append(element, SugarElement.fromText(Unicode.nbsp));
-      }
-    }
+    const isList = (e: SugarElement) => /^(ul|ol|dl)$/.test(SugarNode.name(e));
+    const findFirstList = (e: SugarElement) => isList(e) ? Optional.from(e) : PredicateFind.descendant(e, isList);
+    const isEmpty = (e: SugarElement) => dom.isEmpty(e.dom);
+    firstNonWhiteSpaceNodeSibling(root.firstChild).each((firstChild) => {
+      findFirstList(firstChild).fold(
+        () => {
+          if (isEmpty(firstChild)) {
+            const element = DomDescent.toLeaf(firstChild, 0).element;
+            if (!ElementType.isBr(element)) {
+              Insert.append(element, SugarElement.fromText(Unicode.nbsp));
+            }
+          }
+        },
+        (firstList) => {
+          Insert.before(firstList, SugarElement.fromText(Unicode.nbsp));
+        }
+      );
+    });
   }
 
   const rng = dom.createRng();
