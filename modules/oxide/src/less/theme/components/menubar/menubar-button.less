@@ -76,6 +76,7 @@
     z-index: 1; // Ensure focus outline is on top of other buttons
 
     &::after {
+      pointer-events: none;
       .keyboard-focus-outline-mixin();
     }
   }

@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Using arrow navigation between buttons when a button had the mouse over could stop the navigation.
+time: 2025-05-29T08:27:40.214839736+02:00
+custom:
+    Issue: TINY-12163
