@@ -27,14 +27,21 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
   const specialElements = schema.getSpecialElements();
 
   /*
-    This check has been added during the upgrade from DomPurify 2.3.4 to 2.3.6.
-    It has been found in the DomPurify source code, and has been adjusted to use our API's.
-    Since 2.3.6, this if statement is only run if the SAFE_FOR_XML flag is set to true.
-    We have disabled this flag during the previous DomPurify version upgrade.
-
-    This if statement removes any element that has a child Text node that contains HTML markup.
-    It's detected by the regular expression which matches any opening or closing HTML tag.
+    This check has been added during the upgrade from DOMPurify 3.2.4 to 3.2.6.
+    It has been found in the DOMPurify source code, and has been adjusted to use our API's.
+    Since 3.2.6, this if statement is only run if the SAFE_FOR_XML flag is set to true.
+    We have disabled this flag during the previous DOMPurify version upgrade. (from 3.0.5 to 3.1.7)
     We wanted to keep this check in place, but at the same time we couldn't set SAFE_FOR_XML to true.
+
+    This if statement removes any element that:
+    1) Has child nodes
+    2) Has no firstElementChild (meaning it can only has text nodes or comment nodes or CDATA sections)
+    3) Both the innerHTML and textContent of the element contain HTML markup
+
+    However in reality, this if statement will only be executed if the element has a child Text node that contains HTML markup,
+    as `node.textContent` will ignore Comment and CDATA nodes.
+
+    The regular expression used will match any opening or closing HTML tag, but also comments.
   */
   const isNode = (value: unknown): value is Node => typeof Node === 'function' && value instanceof Node;
   if (
@@ -42,6 +49,7 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
     NodeType.isElement(node) &&
     node.hasChildNodes() &&
     !isNode(node.firstElementChild) &&
+    // TODO: discuss this regexp
     /<[/\w]/g.test(node.innerHTML) &&
     /<[/\w]/g.test(node.textContent ?? '')
   ) {
