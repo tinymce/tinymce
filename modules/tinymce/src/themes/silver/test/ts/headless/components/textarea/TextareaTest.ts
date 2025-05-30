@@ -18,7 +18,8 @@ describe('headless.tinymce.themes.silver.components.textarea.TextareaTest', () =
       label: Optional.some('LabelA'),
       placeholder: Optional.none(),
       maximized: false,
-      enabled: true
+      enabled: true,
+      spellcheck: Optional.from(true),
     }, TestProviders, Optional.none())
   ));
 
@@ -39,7 +40,8 @@ describe('headless.tinymce.themes.silver.components.textarea.TextareaTest', () =
               s.element('textarea', {
                 classes: [ arr.has('tox-textarea') ],
                 attrs: {
-                  'data-alloy-tabstop': str.is('true')
+                  'data-alloy-tabstop': str.is('true'),
+                  'spellcheck': str.is('true'),
                 }
               })
             ]

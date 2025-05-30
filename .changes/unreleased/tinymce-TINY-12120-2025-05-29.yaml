@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Codesample dialog would not disable spellcheck as expected.
+time: 2025-05-29T12:07:11.402791+02:00
+custom:
+    Issue: TINY-12120
