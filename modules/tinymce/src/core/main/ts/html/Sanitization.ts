@@ -49,9 +49,8 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
     NodeType.isElement(node) &&
     node.hasChildNodes() &&
     !isNode(node.firstElementChild) &&
-    // TODO: discuss this regexp
-    /<[/\w]/g.test(node.innerHTML) &&
-    /<[/\w]/g.test(node.textContent ?? '')
+    /<[/\w!]/g.test(node.innerHTML) &&
+    /<[/\w!]/g.test(node.textContent ?? '')
   ) {
     Remove.remove(SugarElement.fromDom(node));
     return;
