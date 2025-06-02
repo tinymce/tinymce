@@ -49,6 +49,10 @@ const deleteCommand = (editor: Editor, caret: Cell<Text | null>): void => {
     },
     Fun.call
   );
+
+  if (Delete.hasListSelection(editor) ) {
+    NormalizeLists.normalizeLists(editor.dom, editor.getBody());
+  }
 };
 
 const forwardDeleteCommand = (editor: Editor, caret: Cell<Text | null>): void => {
@@ -62,23 +66,19 @@ const forwardDeleteCommand = (editor: Editor, caret: Cell<Text | null>): void =>
     },
     Fun.call
   );
+
+  if (Delete.hasListSelection(editor) ) {
+    NormalizeLists.normalizeLists(editor.dom, editor.getBody());
+  }
 };
 
 const setup = (editor: Editor, caret: Cell<Text | null>): void => {
   editor.addCommand('delete', () => {
     deleteCommand(editor, caret);
-
-    if (Delete.hasListSelection(editor) ) {
-      NormalizeLists.normalizeLists(editor.dom, editor.getBody());
-    }
   });
 
   editor.addCommand('forwardDelete', () => {
     forwardDeleteCommand(editor, caret);
-
-    if (Delete.hasListSelection(editor) ) {
-      NormalizeLists.normalizeLists(editor.dom, editor.getBody());
-    }
   });
 };
 

@@ -1,9 +1,10 @@
-import { Fun } from '@ephox/katamari';
+import { Cell, Fun } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
 import Delay from '../api/util/Delay';
 import { EditorEvent } from '../api/util/EventDispatcher';
+import * as DeleteCommands from '../delete/DeleteCommands';
 
 import * as InternalHtml from './InternalHtml';
 
@@ -80,7 +81,7 @@ const isTableSelection = (editor: Editor): boolean =>
 const hasSelectedContent = (editor: Editor): boolean =>
   !editor.selection.isCollapsed() || isTableSelection(editor);
 
-const cut = (editor: Editor) => (evt: EditorEvent<ClipboardEvent>): void => {
+const cut = (editor: Editor, caret: Cell<Text | null>) => (evt: EditorEvent<ClipboardEvent>): void => {
   if (!evt.isDefaultPrevented() && hasSelectedContent(editor) && editor.selection.isEditable()) {
     setClipboardData(evt, getData(editor), fallback(editor), () => {
       if (Env.browser.isChromium() || Env.browser.isFirefox()) {
@@ -92,10 +93,10 @@ const cut = (editor: Editor) => (evt: EditorEvent<ClipboardEvent>): void => {
           // Restore the range before deleting, as Chrome on Android will
           // collapse the selection after a cut event has fired.
           editor.selection.setRng(rng);
-          editor.execCommand('Delete');
+          DeleteCommands.deleteCommand(editor, caret);
         }, 0);
       } else {
-        editor.execCommand('Delete');
+        DeleteCommands.deleteCommand(editor, caret);
       }
     });
   }
@@ -107,8 +108,8 @@ const copy = (editor: Editor) => (evt: EditorEvent<ClipboardEvent>): void => {
   }
 };
 
-const register = (editor: Editor): void => {
-  editor.on('cut', cut(editor));
+const register = (editor: Editor, caret: Cell<Text | null>): void => {
+  editor.on('cut', cut(editor, caret));
   editor.on('copy', copy(editor));
 };
 
