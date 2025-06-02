@@ -287,7 +287,6 @@ class Editor implements EditorObservable {
     this.options = createOptions(self, normalizedOptions, options);
     Options.register(self);
 
-    // UserLookup requires options to already be registered.
     this.userLookup = createUserLookup(this);
 
     const getOption = this.options.get;
