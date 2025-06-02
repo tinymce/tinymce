@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "outDir": "./dist",
+    "outDir": "./lib",
     "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": [

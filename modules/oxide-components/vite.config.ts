@@ -9,6 +9,7 @@ export default defineConfig({
   build: {
     emptyOutDir: false,
     sourcemap: true,
+    outDir: 'lib',
     lib: {
       entry: resolve(__dirname, 'src/main.tsx'),
       name: 'oxide-components',
