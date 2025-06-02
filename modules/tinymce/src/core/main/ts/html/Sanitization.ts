@@ -21,11 +21,7 @@ interface Sanitizer {
 const filteredUrlAttrs = Tools.makeMap('src,href,data,background,action,formaction,poster,xlink:href');
 const internalElementAttr = 'data-mce-type';
 
-let uid = 0;
-const processNode = (node: Node, settings: DomParserSettings, schema: Schema, scope: Namespace.NamespaceType, evt?: UponSanitizeElementHookEvent): void => {
-  const validate = settings.validate;
-  const specialElements = schema.getSpecialElements();
-
+const isElementWithHTMLTextContent = (node: Node): boolean => {
   /*
     This check has been added during the upgrade from DOMPurify 3.2.4 to 3.2.6.
     It has been found in the DOMPurify source code, and has been adjusted to use our API's.
@@ -44,14 +40,21 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
     The regular expression used will match any opening or closing HTML tag, but also comments.
   */
   const isNode = (value: unknown): value is Node => typeof Node === 'function' && value instanceof Node;
-  if (
-    settings.sanitize &&
+  return (
     NodeType.isElement(node) &&
     node.hasChildNodes() &&
     !isNode(node.firstElementChild) &&
-    /<[/\w!]/g.test(node.innerHTML) &&
-    /<[/\w!]/g.test(node.textContent ?? '')
-  ) {
+    /<[/\w!]/.test(node.innerHTML) &&
+    /<[/\w!]/.test(node.textContent ?? '')
+  );
+};
+
+let uid = 0;
+const processNode = (node: Node, settings: DomParserSettings, schema: Schema, scope: Namespace.NamespaceType, evt?: UponSanitizeElementHookEvent): void => {
+  const validate = settings.validate;
+  const specialElements = schema.getSpecialElements();
+
+  if (settings.sanitize && isElementWithHTMLTextContent(node)) {
     Remove.remove(SugarElement.fromDom(node));
     return;
   }
