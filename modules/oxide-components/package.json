@@ -16,7 +16,7 @@
   "license": "GPL-2.0-or-later",
   "sideEffects": false,
   "files": [
-    "dist",
+    "lib",
     "src",
     "tsconfig.json",
     "README.md",
@@ -24,9 +24,9 @@
     "CHANGELOG.txt",
     "LICENSE.txt"
   ],
-  "main": "dist/main.js",
-  "module": "dist/main.js",
-  "types": "dist/main.d.ts",
+  "main": "lib/main.js",
+  "module": "lib/main.js",
+  "types": "lib/main.d.ts",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

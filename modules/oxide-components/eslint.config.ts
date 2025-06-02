@@ -27,7 +27,7 @@ export default defineConfig(
         ],
       },
     },
-    { ignores: [ 'dist' ] },
+    { ignores: [ 'lib' ] },
     storybook.configs['flat/recommended']
   ]
 );
