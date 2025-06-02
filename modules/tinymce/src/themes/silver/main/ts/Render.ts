@@ -490,7 +490,7 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
 
     editor.addQueryStateHandler('ToggleToolbarDrawer', () => OuterContainer.isToolbarDrawerToggled(outerContainer));
 
-    editor.on('blur', (_e) => {
+    editor.on('blur', () => {
       if (Options.getToolbarMode(editor) === Options.ToolbarMode.floating && OuterContainer.isToolbarDrawerToggled(outerContainer)) {
         OuterContainer.toggleToolbarDrawerWithoutFocusing(outerContainer);
       }
