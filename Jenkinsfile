@@ -311,7 +311,7 @@ timestamps {
   }
 
   processes['playwright'] = runPlaywrightPod(cacheName, 'playwright-tests') {
-    exec('yarn -s --cwd modules/oxide-components test-manual')
+    exec('yarn -s --cwd modules/oxide-components test-ci')
     junit allowEmptyResults: true, testResults: 'modules/oxide-components/test-results.xml'
   }
 
