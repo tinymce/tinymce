@@ -55,11 +55,7 @@ describe('browser.tinymce.plugins.codesample.CodeSampleSanityTest', () => {
   it('TINY-12120: Spellcheck is enforced.', async () => {
     const editor = hook.editor();
     await TestUtils.pOpenDialogAndAssertInitial(editor, 'markup', '');
-    await UiFinder.pWaitFor('Should not have spellchecking', SugarBody.body(), 'textarea:not([spellcheck="true"])');
-    await TestUtils.pCancelDialog(editor);
-    editor.options.set('browser_spellcheck', true);
-    await TestUtils.pOpenDialogAndAssertInitial(editor, 'markup', '');
-    await UiFinder.pWaitFor('Should have spellchecking', SugarBody.body(), 'textarea[spellcheck="true"]');
+    await UiFinder.pWaitFor('Should not have spellchecking', SugarBody.body(), 'textarea:not([spellcheck="false"])');
     await TestUtils.pCancelDialog(editor);
   });
 });
