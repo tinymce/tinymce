@@ -36,7 +36,7 @@
     "build-storybook": "storybook build",
     "test-watch": "vitest",
     "test": "echo 'No tests'",
-    "test-manual": "playwright install && playwright install-deps && vitest --watch=false --reporter=junit --outputFile=test-results.xml",
+    "test-ci": "vitest --watch=false --reporter=junit --outputFile=test-results.xml",
     "test-storybook": "vitest --project storybook",
     "ci": "yarn lint && yarn test"
   },
