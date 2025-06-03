@@ -1,4 +1,3 @@
-import { Fun } from '@ephox/katamari';
 import { Compare, SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from '../../api/Editor';
@@ -22,10 +21,7 @@ const hasLastChildList = (el: SugarElement<HTMLElement>): boolean =>
   Traverse.lastChild(el).exists(isList);
 
 const canIncreaseDepthOfList = (editor: Editor, amount: number): boolean => {
-  return Options.getListMaxDepth(editor).fold(
-    Fun.always,
-    (max: number) => max > amount
-  );
+  return Options.getListMaxDepth(editor).map((max: number) => max >= amount).getOr(true);
 };
 
 export {

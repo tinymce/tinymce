@@ -68,7 +68,7 @@ const canIndent = (editor: Editor): boolean =>
   Options.getListMaxDepth(editor).map((max) => {
     const blocks = editor.selection.getSelectedBlocks();
     return Arr.exists(blocks, (element) => {
-      return SelectorFind.closest(SugarElement.fromDom(element), 'li').map((sugarElement) => SelectorFilter.ancestors(sugarElement, 'ol,ul').length < max).getOr(true);
+      return SelectorFind.closest(SugarElement.fromDom(element), 'li').map((sugarElement) => SelectorFilter.ancestors(sugarElement, 'ol,ul').length <= max).getOr(true);
     });
   }).getOr(true);
 

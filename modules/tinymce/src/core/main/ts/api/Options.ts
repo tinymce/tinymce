@@ -927,7 +927,14 @@ const register = (editor: Editor): void => {
   registerOption('list_max_depth', {
     processor: (value) => {
       const valid = Type.isNumber(value);
-      return valid ? { value: value < 0 ? undefined : value + 1, valid } : { valid: false, message: 'Must be a number' };  // Internally we count a list as starting with one indent, so up the count to match this. If it's less than 0 just ignore it.
+      if (valid) {
+        if (value < 0) {
+          throw new Error('list_max_depth cannot be set to lower than 0');
+        }
+        return { value, valid };
+      } else {
+        return { valid: false, message: 'Must be a number' };
+      }
     },
   });
 };
