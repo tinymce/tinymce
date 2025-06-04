@@ -28,7 +28,8 @@ const open = (editor: Editor): void => {
         {
           type: 'textarea',
           name: 'code',
-          label: 'Code view'
+          label: 'Code view',
+          spellcheck: false,
         }
       ]
     },
