@@ -482,7 +482,7 @@ const contentBodyLoaded = (editor: Editor): void => {
   DeleteCommands.setup(editor, caret);
   ForceBlocks.setup(editor);
   Placeholder.setup(editor);
-  Paste.setup(editor);
+  Paste.setup(editor, caret);
 
   const setupRtcThunk = Rtc.setup(editor);
 
