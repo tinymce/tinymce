@@ -93,9 +93,11 @@ const cut = (editor: Editor, caret: Cell<Text | null>) => (evt: EditorEvent<Clip
           // Restore the range before deleting, as Chrome on Android will
           // collapse the selection after a cut event has fired.
           editor.selection.setRng(rng);
+          // Delete command is called directly without using editor.execCommand to avoid running editor.focus() which side effect was selection normalization and additional undo level
           DeleteCommands.deleteCommand(editor, caret);
         }, 0);
       } else {
+        // Delete command is called directly without using editor.execCommand to avoid running editor.focus() which side effect was selection normalization and additional undo level
         DeleteCommands.deleteCommand(editor, caret);
       }
     });
