@@ -4,6 +4,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as Levels from 'tinymce/core/undo/Levels';
+import { NewUndoLevel } from 'tinymce/core/undo/UndoManagerTypes';
 
 describe('browser.tinymce.core.undo.ForcedRootBlockTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -14,11 +15,16 @@ describe('browser.tinymce.core.undo.ForcedRootBlockTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [], true);
 
+  const assertEqualExceptUUID = (fullActual: NewUndoLevel, expected: Omit<NewUndoLevel, 'uuid'>) => {
+    const { uuid: _, ...actual } = fullActual;
+    assert.deepEqual(actual, expected);
+  };
+
   it('createFromEditor', () => {
     const editor = hook.editor();
     editor.getBody().innerHTML = '<strong>a</strong> <span>b</span>';
 
-    assert.deepEqual(Levels.createFromEditor(editor), {
+    assertEqualExceptUUID(Levels.createFromEditor(editor), {
       beforeBookmark: null,
       bookmark: null,
       content: '<strong>a</strong> <span>b</span>',
@@ -31,7 +37,7 @@ describe('browser.tinymce.core.undo.ForcedRootBlockTest', () => {
     const editor = hook.editor();
     editor.getBody().innerHTML = '<iframe src="about:blank"></iframe> <strong>a</strong> <span>b</span>';
 
-    assert.deepEqual(Levels.createFromEditor(editor), {
+    assertEqualExceptUUID(Levels.createFromEditor(editor), {
       beforeBookmark: null,
       bookmark: null,
       content: '',
