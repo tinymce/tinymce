@@ -5,7 +5,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import * as Levels from 'tinymce/core/undo/Levels';
-import { UndoLevel } from 'tinymce/core/undo/UndoManagerTypes';
+import { NewUndoLevel, UndoLevel } from 'tinymce/core/undo/UndoManagerTypes';
 
 describe('browser.tinymce.core.undo.LevelsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -20,8 +20,13 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
     return editor.selection.getBookmark(2, true);
   };
 
+  const assertEqualExceptUUID = (fullActual: NewUndoLevel, expected: Omit<NewUndoLevel, 'uuid'>) => {
+    const { uuid: _, ...actual } = fullActual;
+    assert.deepEqual(actual, expected);
+  };
+
   it('createFragmentedLevel', () => {
-    assert.deepEqual(Levels.createFragmentedLevel([ 'a', 'b' ]), {
+    assertEqualExceptUUID(Levels.createFragmentedLevel([ 'a', 'b' ]), {
       beforeBookmark: null,
       bookmark: null,
       content: '',
@@ -31,7 +36,7 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
   });
 
   it('createCompleteLevel', () => {
-    assert.deepEqual(Levels.createCompleteLevel('a'), {
+    assertEqualExceptUUID(Levels.createCompleteLevel('a'), {
       beforeBookmark: null,
       bookmark: null,
       content: 'a',
@@ -42,7 +47,7 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
 
   it('createFromEditor', () => {
     const editor = hook.editor();
-    assert.deepEqual(Levels.createFromEditor(editor), {
+    assertEqualExceptUUID(Levels.createFromEditor(editor), {
       beforeBookmark: null,
       bookmark: null,
       content: '<p><br data-mce-bogus="1"></p>',
@@ -52,7 +57,7 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
 
     TinyApis(editor).setRawContent('<iframe src="about:blank"></iframe>a<!--b-->c');
 
-    assert.deepEqual(Levels.createFromEditor(editor), {
+    assertEqualExceptUUID(Levels.createFromEditor(editor), {
       beforeBookmark: null,
       bookmark: null,
       content: '',
@@ -65,7 +70,7 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
     const editor = hook.editor();
     TinyApis(editor).setRawContent('<p data-mce-bogus="all">a</p> <span>b</span> <span data-mce-selected="true">c</span>');
 
-    assert.deepEqual(Levels.createFromEditor(editor), {
+    assertEqualExceptUUID(Levels.createFromEditor(editor), {
       beforeBookmark: null,
       bookmark: null,
       content: ' <span>b</span> <span>c</span>',
@@ -78,7 +83,7 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
     const editor = hook.editor();
     TinyApis(editor).setRawContent('<iframe src="about:blank"></iframe> <p data-mce-bogus="all">a</p> <span>b</span> <span data-mce-selected="true">c</span>');
 
-    assert.deepEqual(Levels.createFromEditor(editor), {
+    assertEqualExceptUUID(Levels.createFromEditor(editor), {
       beforeBookmark: null,
       bookmark: null,
       content: '',
@@ -98,7 +103,7 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
     const editor = hook.editor();
     TinyApis(editor).setRawContent('<p>a</p> <!-- \ufeff --> <p>b</p> <!-- c --> <!-- d\ufeff -->');
 
-    assert.deepEqual(Levels.createFromEditor(editor), {
+    assertEqualExceptUUID(Levels.createFromEditor(editor), {
       beforeBookmark: null,
       bookmark: null,
       content: '<p>a</p> <!----> <p>b</p> <!-- c --> <!---->',
@@ -112,7 +117,7 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
       const editor = hook.editor();
       TinyApis(editor).setRawContent(`<p>a</p> <${parent}>b\ufeffc</${parent}> <p>d</p> <${parent}>e</${parent}>`);
 
-      assert.deepEqual(Levels.createFromEditor(editor), {
+      assertEqualExceptUUID(Levels.createFromEditor(editor), {
         beforeBookmark: null,
         bookmark: null,
         content: `<p>a</p> <${parent}></${parent}> <p>d</p> <${parent}>e</${parent}>`,
@@ -126,7 +131,7 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
     const editor = hook.editor();
     TinyApis(editor).setRawContent('<p>a</p> <iframe>b\ufeffc</iframe> <p>d</p> <iframe>e</iframe>');
 
-    assert.deepEqual(Levels.createFromEditor(editor), {
+    assertEqualExceptUUID(Levels.createFromEditor(editor), {
       beforeBookmark: null,
       bookmark: null,
       content: '',
@@ -139,7 +144,7 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
     const editor = hook.editor();
     TinyApis(editor).setRawContent('<p>a</p> <plaintext>b\ufeffc <p>d</p> e');
 
-    assert.deepEqual(Levels.createFromEditor(editor), {
+    assertEqualExceptUUID(Levels.createFromEditor(editor), {
       beforeBookmark: null,
       bookmark: null,
       content: '<p>a</p> <plaintext></plaintext>',

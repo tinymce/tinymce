@@ -5,6 +5,7 @@ import Editor from '../api/Editor';
 import { isPathBookmark } from '../bookmark/BookmarkTypes';
 import * as TrimBody from '../dom/TrimBody';
 import * as Zwsp from '../text/Zwsp';
+import * as Uuid from '../util/Uuid';
 
 import * as Fragments from './Fragments';
 import { CompleteUndoLevel, FragmentedUndoLevel, NewUndoLevel, UndoLevel } from './UndoManagerTypes';
@@ -21,6 +22,7 @@ const createFragmentedLevel = (fragments: string[]): FragmentedUndoLevel => {
     fragments,
     content: '',
     bookmark: null,
+    uuid: Uuid.uuid('undo'),
     beforeBookmark: null
   };
 };
@@ -31,6 +33,7 @@ const createCompleteLevel = (content: string): CompleteUndoLevel => {
     fragments: null,
     content,
     bookmark: null,
+    uuid: Uuid.uuid('undo'),
     beforeBookmark: null
   };
 };

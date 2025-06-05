@@ -9,6 +9,7 @@ interface BaseUndoLevel {
   type: UndoLevelType;
   bookmark: Bookmark | null;
   beforeBookmark: Bookmark | null;
+  uuid: string;
 }
 
 export interface FragmentedUndoLevel extends BaseUndoLevel {
