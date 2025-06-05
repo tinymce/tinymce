@@ -1,0 +1,6 @@
+project: tinymce
+kind: Changed
+body: 'Tags that treat their content as text (e.g. script, style, iframe) will be removed if they contain HTML comments (<!-- -->), unless xss_sanitization is set '
+time: 2025-06-05T10:21:30.55774+02:00
+custom:
+    Issue: TINY-12056
