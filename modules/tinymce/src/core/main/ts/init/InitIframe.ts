@@ -63,11 +63,23 @@ const getIframeHtml = (editor: Editor) => {
   return iframeHTML;
 };
 
+const getIframeAriaRequired = (editor: Editor): {} => {
+  const editorElAriaRequiredOverride = editor.getElement().getAttribute('aria-required');
+  if (editorElAriaRequiredOverride !== null) {
+    return { 'aria-required': editorElAriaRequiredOverride };
+  }
+  return Options.isIframeAriaRequired(editor) ? { 'aria-required': 'true' } : {};
+};
+
 const createIframe = (editor: Editor, boxInfo: BoxInfo) => {
   const iframeTitle = Env.browser.isFirefox() ? Options.getIframeAriaText(editor) : 'Rich Text Area';
   const translatedTitle = editor.translate(iframeTitle);
   const tabindex = Attribute.getOpt(SugarElement.fromDom(editor.getElement()), 'tabindex').bind(Strings.toInt);
-  const ifr = createIframeElement(editor.id, translatedTitle, Options.getIframeAttrs(editor), tabindex).dom;
+  const iframeAttrs = {
+    ...Options.getIframeAttrs(editor),
+    ...getIframeAriaRequired(editor)
+  };
+  const ifr = createIframeElement(editor.id, translatedTitle, iframeAttrs, tabindex).dom;
 
   ifr.onload = () => {
     ifr.onload = null;

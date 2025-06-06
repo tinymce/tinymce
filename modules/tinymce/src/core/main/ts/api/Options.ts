@@ -532,6 +532,11 @@ const register = (editor: Editor): void => {
     default: 'Rich Text Area'.concat(editor.hasPlugin('help') ? '. Press ALT-0 for help.' : '')
   });
 
+  registerOption('iframe_aria_required', {
+    processor: 'boolean',
+    default: false
+  });
+
   registerOption('setup', {
     processor: 'function'
   });
@@ -991,6 +996,7 @@ const isVisualAidsEnabled = option('visual');
 const getVisualAidsTableClass = option('visual_table_class');
 const getVisualAidsAnchorClass = option('visual_anchor_class');
 const getIframeAriaText = option('iframe_aria_text');
+const isIframeAriaRequired = option('iframe_aria_required');
 const getSetupCallback = option('setup');
 const getInitInstanceCallback = option('init_instance_callback');
 const getUrlConverterCallback = option('urlconverter_callback');
@@ -1113,6 +1119,7 @@ export {
   getInitInstanceCallback,
   getUrlConverterCallback,
   getIframeAriaText,
+  isIframeAriaRequired,
   getAutoFocus,
   shouldBrowserSpellcheck,
   getProtect,

@@ -135,6 +135,7 @@ interface BaseEditorOptions {
   icons_url?: string;
   id?: string;
   iframe_aria_text?: string;
+  iframe_aria_required?: boolean;
   iframe_attrs?: Record<string, string>;
   images_file_types?: string;
   images_replace_blob_uris?: boolean;
