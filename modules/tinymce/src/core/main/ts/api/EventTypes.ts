@@ -102,6 +102,10 @@ export interface UndoRedoEvent {
   level: UndoLevel;
 }
 
+export interface DiscardUndoEvent {
+  levels: UndoLevel[];
+}
+
 export interface WindowEvent<T extends Dialog.DialogData> {
   dialog: InstanceApi<T>;
 }
@@ -235,6 +239,7 @@ export interface EditorEventMap extends Omit<NativeEventMap, 'blur' | 'focus'> {
   Undo: UndoRedoEvent;
   BeforeAddUndo: AddUndoEvent;
   AddUndo: AddUndoEvent;
+  DiscardUndo: DiscardUndoEvent;
   change: ChangeEvent;
   CloseWindow: WindowEvent<any>;
   OpenWindow: WindowEvent<any>;

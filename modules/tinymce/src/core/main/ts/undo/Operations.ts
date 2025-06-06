@@ -1,3 +1,5 @@
+import { Type } from '@ephox/katamari';
+
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';
@@ -53,11 +55,11 @@ export const addUndoLevel = (
 
   if (customUndoRedoLevels) {
     if (undoManager.data.length > customUndoRedoLevels) {
-      for (let i = 0; i < undoManager.data.length - 1; i++) {
-        undoManager.data[i] = undoManager.data[i + 1];
+      const discarded = undoManager.data.shift();
+      // it should never be undefined, but TypeScript doesn't know that
+      if (!Type.isUndefined(discarded)) {
+        editor.dispatch('DiscardUndo', { levels: [ discarded ] });
       }
-
-      undoManager.data.length--;
       index.set(undoManager.data.length);
     }
   }
@@ -67,7 +69,9 @@ export const addUndoLevel = (
 
   // Crop array if needed
   if (index.get() < undoManager.data.length - 1) {
+    const discarding = undoManager.data.slice(index.get());
     undoManager.data.length = index.get() + 1;
+    editor.dispatch('DiscardUndo', { levels: discarding });
   }
 
   undoManager.data.push(newLevel);

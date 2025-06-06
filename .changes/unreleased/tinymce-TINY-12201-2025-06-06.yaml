@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: new `DiscardUndo` event is dispatched when an undo level is discarded by either editing after undo or the `custom_undo_redo_levels` limit
+time: 2025-06-06T10:52:08.37869+10:00
+custom:
+    Issue: TINY-12201
