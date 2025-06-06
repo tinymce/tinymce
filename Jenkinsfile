@@ -1,5 +1,5 @@
 #!groovy
-@Library('waluigi@release/7') _
+@Library('waluigi@feature/TINY-11840') _
 
 standardProperties()
 
@@ -182,7 +182,7 @@ def cacheName = "cache_${BUILD_TAG}"
 
 def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NUMBER}"
 
-timestamps {
+timestamps { alertWorseResult( cleanUp: { devPods.cleanUpPod(name: cacheName) }, name: 'tinymce') {
   devPods.nodeProducer(
     nodeOpts: [
       resourceRequestCpu: '2',
@@ -291,6 +291,4 @@ timestamps {
       echo "Running tests [runAll=${runAllTests}]"
       parallel processes
   }
-
-  devPods.cleanUpPod(name: cacheName)
-}
+}}
