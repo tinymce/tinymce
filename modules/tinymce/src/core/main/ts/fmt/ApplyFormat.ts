@@ -231,6 +231,8 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
       });
     }
 
+    NormalizeTagOrder.normalizeFontSizeElementsAfterApply(ed, name, SugarElements.fromDom(newWrappers));
+
     // Cleanup
     Arr.each(newWrappers, (node) => {
       const getChildCount = (node: Node) => {
@@ -283,8 +285,6 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
         MergeFormats.mergeSiblings(ed, format, vars, node);
       }
     });
-
-    NormalizeTagOrder.normalizeFontSizeElementsAfterApply(ed, name, SugarElements.fromDom(newWrappers));
   };
 
   // TODO: TINY-9142: Remove this to make nested noneditable formatting work
