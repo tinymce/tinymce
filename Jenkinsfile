@@ -182,7 +182,7 @@ def cacheName = "cache_${BUILD_TAG}"
 
 def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NUMBER}"
 
-timestamps { alertWorseResult( cleanUp: { devPods.cleanUpPod(name: cacheName) }, name: 'tinymce') {
+timestamps { alertWorseResult( cleanupStep: { devPods.cleanUpPod(build: cacheName) }, name: 'tinymce') {
   devPods.nodeProducer(
     nodeOpts: [
       resourceRequestCpu: '2',
