@@ -184,8 +184,9 @@ def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NU
 
 timestamps { alertWorseResult(
   cleanupStep: { devPods.cleanUpPod(build: cacheName) },
+  branches: ['main','release/7', 'feature/TINY-11840'],
   channel: '#tiny-textboxio-dev',
-  name: 'tinymce'
+  name: 'TinyMCE'
   ) {
   devPods.nodeProducer(
     nodeOpts: [
