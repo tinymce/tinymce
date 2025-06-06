@@ -3,11 +3,21 @@
   .tox-button.tox-button--icon-and-text,
   .tox-button.tox-button--secondary.tox-button--icon-and-text {
     display: flex;
+    justify-content: center;
     padding: @button-padding-y * 1.25 @button-padding-y; // Slightly more than regular icon button, but less than regular button
+    
 
     .tox-icon svg {
       display: block;
       fill: currentColor;
+    }
+
+    .tox-icon.tox-icon--success svg {
+      fill: @color-success;
+    }
+
+    .tox-icon.tox-icon--error svg {
+      fill: @color-error;
     }
   }
 }
