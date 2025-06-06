@@ -8,16 +8,12 @@ import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 
 describe('browser.tinymce.plugins.advlist.ListStyleAliasTest', () => {
   const pClickOnSplitListBtnFor = async (editor: Editor, label: string) => {
-    TinyUiActions.clickOnToolbar(editor, '[aria-label="' + label + '"] > .tox-tbtn + .tox-split-button__chevron');
+    TinyUiActions.clickOnToolbar(editor, `button[aria-label="${label} menu"]`);
     return TinyUiActions.pWaitForUi(editor, '.tox-menu.tox-selected-menu');
   };
 
-  const clickListBtnFor = (editor: Editor, label: string, isSplitBtn: boolean) => {
-    if (isSplitBtn) {
-      TinyUiActions.clickOnToolbar(editor, `[aria-label="${label}"] > .tox-tbtn`);
-    } else {
-      TinyUiActions.clickOnToolbar(editor, `[aria-label="${label}"]`);
-    }
+  const clickListBtnFor = (editor: Editor, label: string) => {
+    TinyUiActions.clickOnToolbar(editor, `button[aria-label="${label}"]`);
   };
 
   const pClickAndAssertCheckedListStyleType = async (editor: Editor, styleTypeLabel: string) => {
@@ -92,7 +88,7 @@ describe('browser.tinymce.plugins.advlist.ListStyleAliasTest', () => {
       ].join(''));
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
 
-      clickListBtnFor(editor, 'Numbered list', true);
+      clickListBtnFor(editor, 'Numbered list');
 
       TinyAssertions.assertContent(editor, [
         '<p>abc</p>\n',
@@ -117,7 +113,7 @@ describe('browser.tinymce.plugins.advlist.ListStyleAliasTest', () => {
       TinySelections.setCursor(editor, [ 0, 0, 1, 0 ], 1);
 
       await pClickAndAssertCheckedListStyleType(editor, 'Lower Alpha');
-      clickListBtnFor(editor, 'Numbered list', true);
+      clickListBtnFor(editor, 'Numbered list');
 
       TinyAssertions.assertContent(editor, [
         `<ol style="list-style-type: lower-latin;">\n`,
@@ -139,7 +135,6 @@ describe('browser.tinymce.plugins.advlist.ListStyleAliasTest', () => {
         '</ol>'
       ].join(''));
       TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
-
       await pClickOnSplitListBtnFor(editor, 'Numbered list');
       TinyUiActions.clickOnUi(editor, 'div.tox-selected-menu[role="menu"] div[aria-label="Lower Alpha"]');
 
