@@ -1,4 +1,7 @@
+import Editor from '../../api/Editor';
+
 import { Entry } from './Entry';
+import { canIncreaseDepthOfList } from './Util';
 
 export const enum Indentation {
   Indent = 'Indent',
@@ -6,10 +9,14 @@ export const enum Indentation {
   Flatten = 'Flatten'
 }
 
-export const indentEntry = (indentation: Indentation, entry: Entry): void => {
+export const indentEntry = (editor: Editor, indentation: Indentation, entry: Entry): void => {
   switch (indentation) {
     case Indentation.Indent:
-      entry.depth++;
+      if (canIncreaseDepthOfList(editor, entry.depth)) {
+        entry.depth++;
+      } else {
+        return;
+      }
       break;
 
     case Indentation.Outdent:

@@ -14,5 +14,6 @@ export const registerCommands = (editor: Editor): void => {
 
   editor.editorCommands.addCommands({
     Outdent: () => IndentOutdent.canOutdent(editor),
+    Indent: () => IndentOutdent.canIndent(editor),
   }, 'state');
 };

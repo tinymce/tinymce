@@ -19,7 +19,7 @@ const registerButtons = (editor: Editor): void => {
   editor.ui.registry.addButton('indent', {
     tooltip: 'Increase indent',
     icon: 'indent',
-    onSetup: onSetupEditableToggle(editor),
+    onSetup: onSetupEditableToggle(editor, () => editor.queryCommandState('indent')),
     onAction: onActionExecCommand(editor, 'indent')
   });
 };

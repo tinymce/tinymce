@@ -1,7 +1,8 @@
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
-import { InsertAll, Remove, SugarElement, SugarFragment } from '@ephox/sugar';
+import { InsertAll, Remove, SelectorFilter, SelectorFind, SugarElement, SugarFragment } from '@ephox/sugar';
 
 import Editor from '../../api/Editor';
+import * as Options from '../../api/Options';
 import { fireListEvent } from '../events/Events';
 import { ListAction } from '../lists/ListAction';
 import * as Selection from '../lists/Selection';
@@ -36,8 +37,8 @@ const composeEntries = (editor: Editor, entries: Entry[]): SugarElement<Node>[] 
     return groupIsIndented ? indentedComposer(editor, entries) : outdentedComposer(editor, entries);
   });
 
-const indentSelectedEntries = (entries: Entry[], indentation: Indentation): void => {
-  Arr.each(Arr.filter(entries, isSelected), (entry) => indentEntry(indentation, entry));
+const indentSelectedEntries = (editor: Editor, entries: Entry[], indentation: Indentation): void => {
+  Arr.each(Arr.filter(entries, isSelected), (entry) => indentEntry(editor, indentation, entry));
 };
 
 const getItemSelection = (editor: Editor): Optional<ItemSelection> => {
@@ -53,7 +54,7 @@ const listIndentation = (editor: Editor, lists: SugarElement<HTMLElement>[], ind
   const entrySets: EntrySet[] = parseLists(lists, getItemSelection(editor));
 
   Arr.each(entrySets, (entrySet) => {
-    indentSelectedEntries(entrySet.entries, indentation);
+    indentSelectedEntries(editor, entrySet.entries, indentation);
     const composedLists = composeEntries(editor, entrySet.entries);
     Arr.each(composedLists, (composedList) => {
       fireListEvent(editor, indentation === Indentation.Indent ? ListAction.IndentList : ListAction.OutdentList, composedList.dom);
@@ -63,6 +64,15 @@ const listIndentation = (editor: Editor, lists: SugarElement<HTMLElement>[], ind
   });
 };
 
+const canIndent = (editor: Editor): boolean =>
+  Options.getListMaxDepth(editor).forall((max) => {
+    const blocks = editor.selection.getSelectedBlocks();
+    return Arr.exists(blocks, (element) => {
+      return SelectorFind.closest(SugarElement.fromDom(element), 'li').forall((sugarElement) => SelectorFilter.ancestors(sugarElement, 'ol,ul').length <= max);
+    });
+  });
+
 export {
+  canIndent,
   listIndentation
 };
