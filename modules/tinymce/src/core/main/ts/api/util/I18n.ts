@@ -123,6 +123,7 @@ const translate = (text: Untranslated): TranslatedString => {
   };
 
   const removeContext = (str: string) => str.replace(/{context:\w+}$/, '');
+  const replaceWithEllipsisChar = (text: string) => text.replace('...', '…');
 
   // empty strings
   if (isEmpty(text)) {
@@ -131,18 +132,18 @@ const translate = (text: Untranslated): TranslatedString => {
 
   // Raw, already translated
   if (isRaw(text)) {
-    return toString(text.raw);
+    return replaceWithEllipsisChar(toString(text.raw));
   }
 
   // Tokenised {translations}
   if (isTokenised(text)) {
     const values = text.slice(1);
     const substitued = getLangData(text[0]).replace(/\{([0-9]+)\}/g, ($1, $2) => Obj.has(values, $2) ? toString(values[$2]) : $1);
-    return removeContext(substitued);
+    return replaceWithEllipsisChar(removeContext(substitued));
   }
 
   // straight forward translation mapping
-  return removeContext(getLangData(text));
+  return replaceWithEllipsisChar(removeContext(getLangData(text)));
 };
 
 /**

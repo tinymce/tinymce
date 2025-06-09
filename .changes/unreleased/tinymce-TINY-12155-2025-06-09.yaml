@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Replaced three dots with the ellipsis character for all translations.
+time: 2025-06-09T16:19:26.867596+02:00
+custom:
+  Issue: TINY-12155
