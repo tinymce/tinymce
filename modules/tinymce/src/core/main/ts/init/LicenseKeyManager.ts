@@ -1,4 +1,4 @@
-import { Obj, Type } from '@ephox/katamari';
+import { Fun, Obj, Type } from '@ephox/katamari';
 
 import AddOnManager, { AddOnConstructor } from '../api/AddOnManager';
 import Editor from '../api/Editor';
@@ -44,12 +44,23 @@ const setup = (): LicenseKeyManagerLoader => {
 
   const load = (editor: Editor, suffix: string): void => {
     const licenseKey = Options.getLicenseKey(editor);
-    if (licenseKey !== 'gpl' && !Obj.has(addOnManager.urls, ADDON_KEY)) {
-      // TODO: Consider if need to be able to specify a custom URL
-      // e.g. license_key_manager_url or specify through external_plugins
-      // Might make automated testing easier as well
-      const url = `plugins/${PLUGIN_CODE}/plugin${suffix}.js`;
+    const plugins = new Set(Options.getPlugins(editor));
+    const hasApiKey = Type.isString(Options.getApiKey(editor));
 
+    // Early return if addonConstructor already exists
+    if (Obj.has(addOnManager.urls, ADDON_KEY)) {
+      return;
+    }
+
+    // Try loading commercial license key manager when
+    // - license_key is not 'gpl'; or
+    // - an API key is present; or
+    // - the licensekeymanager has been explicity listed, most likely through the forced_plugins option
+    if (licenseKey?.toLowerCase() === 'gpl' && !hasApiKey && !plugins.has(PLUGIN_CODE)) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      add(Fun.constant(GplLicenseKeyManager));
+    } else {
+      const url = `plugins/${PLUGIN_CODE}/plugin${suffix}.js`;
       addOnManager.load(ADDON_KEY, url).catch(() => {
         ErrorReporter.licenseKeyManagerLoadError(editor, url, ADDON_KEY);
       });
@@ -75,19 +86,12 @@ const setup = (): LicenseKeyManagerLoader => {
       });
     };
 
-    const licenseKey = Options.getLicenseKey(editor);
-    if (licenseKey === 'gpl') {
-      setLicenseKeyManager(GplLicenseKeyManager);
-      return;
-    }
-
-    // CommercialLicenseKeyManager should be nonnullable here as the
     // editor will not load without a license key manager constructor
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const CommercialLicenseKeyManager = addOnManager.get(ADDON_KEY)!;
+    const LicenseKeyManager = addOnManager.get(ADDON_KEY)!;
 
-    const commercialLicenseKeyManagerApi = CommercialLicenseKeyManager(editor, addOnManager.urls[ADDON_KEY]);
-    setLicenseKeyManager(commercialLicenseKeyManagerApi);
+    const licenseKeyManagerApi = LicenseKeyManager(editor, addOnManager.urls[ADDON_KEY]);
+    setLicenseKeyManager(licenseKeyManagerApi);
 
     const validate = editor.licenseKeyManager.validate;
 
