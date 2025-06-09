@@ -1,3 +1,6 @@
+@button-icon-success-color: @color-success;
+@button-icon-error-color: @color-error;
+
 .tox {
   .tox-button--icon-and-text,
   .tox-button.tox-button--icon-and-text,
@@ -5,7 +8,6 @@
     display: flex;
     justify-content: center;
     padding: @button-padding-y * 1.25 @button-padding-y; // Slightly more than regular icon button, but less than regular button
-    
 
     .tox-icon svg {
       display: block;
@@ -13,11 +15,11 @@
     }
 
     .tox-icon.tox-icon--success svg {
-      fill: @color-success;
+      fill: @button-icon-success-color;
     }
 
     .tox-icon.tox-icon--error svg {
-      fill: @color-error;
+      fill: @button-icon-error-color
     }
   }
 }
