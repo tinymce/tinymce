@@ -1726,6 +1726,20 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     });
   });
 
+  context('Table elements', () => {
+    it('Should strip whitespace elements in table element', () => {
+      const input = '<table>  \t\r\n  <tbody>  \t\r\n <tr> \t\r\n <td> \t\r\n  test  \t\r\n </td> \t\r\n  </tr> \t\r\n </tbody>  \t\r\n  </table>';
+      const serializedHtml = HtmlSerializer({}, schema).serialize(DomParser().parse(input));
+      assert.equal(serializedHtml, '<table><tbody><tr><td>test</td></tr></tbody></table>');
+    });
+
+    it('TINY-12092: Should strip whitespace around colgroup and col elements', () => {
+      const input = '<table> \t\r\n <colgroup> \t\r\n <col> \t\r\n </colgroup>  \t\r\n  <tbody>  \t\r\n <tr> \t\r\n <td> \t\r\n  test  \t\r\n </td> \t\r\n  </tr> \t\r\n </tbody>  \t\r\n  </table>';
+      const serializedHtml = HtmlSerializer({}, schema).serialize(DomParser().parse(input));
+      assert.equal(serializedHtml, '<table><colgroup><col></colgroup><tbody><tr><td>test</td></tr></tbody></table>');
+    });
+  });
+
   context('Math elements', () => {
     it('TINY-10809: Should not wrap math elements', () => {
       const schema = Schema();

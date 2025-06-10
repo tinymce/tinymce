@@ -441,6 +441,7 @@ const contentBodyLoaded = (editor: Editor): void => {
   (body as any).disabled = false;
 
   editor.editorUpload = EditorUpload(editor);
+
   editor.schema = Schema(mkSchemaSettings(editor));
   editor.dom = DOMUtils(doc, {
     keep_values: true,
