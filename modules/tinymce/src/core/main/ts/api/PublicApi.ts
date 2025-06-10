@@ -1,6 +1,6 @@
 import { Bookmark } from '../bookmark/BookmarkTypes';
 import type { User, ExpectedUser } from '../lookup/UserLookup';
-import { UndoManager } from '../undo/UndoManagerTypes';
+import { UndoManager, UndoLevel } from '../undo/UndoManagerTypes';
 
 import AddOnManager from './AddOnManager';
 import Annotator from './Annotator';
@@ -21,6 +21,7 @@ import EditorManager from './EditorManager';
 import EditorObservable from './EditorObservable';
 import Env from './Env';
 import * as Events from './EventTypes';
+import { EditorEventMap } from './EventTypes';
 import FakeClipboard from './FakeClipboard';
 import * as Formats from './fmt/Format';
 import FocusManager from './FocusManager';
@@ -122,6 +123,7 @@ export {
   EditorOptions,
   EditorEvent,
   EditorModeApi,
+  EditorEventMap,
   Bookmark,
   Events,
   Formats,
@@ -137,5 +139,6 @@ export {
   Model,
   WriterSettings,
   User,
-  ExpectedUser
+  ExpectedUser,
+  UndoLevel
 };
