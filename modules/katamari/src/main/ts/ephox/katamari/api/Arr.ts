@@ -196,6 +196,16 @@ export const findIndex = <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): Optiona
   return Optional.none();
 };
 
+export const findLastIndex = <T>(arr: ArrayLike<T>, pred: ArrayPredicate<T>): Optional<number> => {
+  for (let i = arr.length - 1; i >= 0; i--) {
+    if (pred(arr[i], i)) {
+      return Optional.some(i);
+    }
+  }
+
+  return Optional.none();
+};
+
 export const flatten = <T>(xs: ArrayLike<T[]>): T[] => {
   // Note, this is possible because push supports multiple arguments:
   // http://jsperf.com/concat-push/6

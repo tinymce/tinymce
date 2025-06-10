@@ -331,34 +331,6 @@
     opacity: 0.0;
   }
 
-  //should this be in comments? Or will we use this in some different places?
-  .tox-skeleton {
-    .tox-skeleton__line {
-      height: 16px;
-      width: 100%;
-      background: linear-gradient(to right, rgba(240, 240, 240, 0.5) 8%, rgba(240, 240, 240, 0.7) 18%, rgba(240, 240, 240, 0.5) 33%);
-      animation: wave 2s infinite ease-out;
-    }
-
-    .tox-skeleton__circle {
-      height: 36px;
-      width: 36px;
-      margin-right: @pad-sm;
-      border-radius: 100%;
-      background: linear-gradient(to right, rgba(240, 240, 240, 0.5) 8%, rgba(240, 240, 240, 0.7) 18%, rgba(240, 240, 240, 0.5) 33%);
-      animation: wave 2s infinite ease-out;
-    }
-
-    @keyframes wave {
-      0% {
-        background-position: -268px 0;
-      }
-      100% {
-        background-position: 268px 0;
-      }
-    }
-  }
-
   .tox-ring-loader {
     width: 10px;
     height: 10px;

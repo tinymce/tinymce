@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: HTML schema did not treat `colgroup` or `col` elements as block elements.
+time: 2025-05-13T22:28:14.566677+08:00
+custom:
+    Issue: TINY-12092

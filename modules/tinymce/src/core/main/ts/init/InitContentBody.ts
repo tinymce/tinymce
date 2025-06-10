@@ -441,6 +441,7 @@ const contentBodyLoaded = (editor: Editor): void => {
   (body as any).disabled = false;
 
   editor.editorUpload = EditorUpload(editor);
+
   editor.schema = Schema(mkSchemaSettings(editor));
   editor.dom = DOMUtils(doc, {
     keep_values: true,
@@ -482,7 +483,7 @@ const contentBodyLoaded = (editor: Editor): void => {
   DeleteCommands.setup(editor, caret);
   ForceBlocks.setup(editor);
   Placeholder.setup(editor);
-  Paste.setup(editor);
+  Paste.setup(editor, caret);
 
   const setupRtcThunk = Rtc.setup(editor);
 

@@ -1,4 +1,5 @@
 import { Bookmark } from '../bookmark/BookmarkTypes';
+import type { User, ExpectedUser } from '../lookup/UserLookup';
 import { UndoManager } from '../undo/UndoManagerTypes';
 
 import AddOnManager from './AddOnManager';
@@ -134,5 +135,7 @@ export {
   TextPatterns,
   Theme,
   Model,
-  WriterSettings
+  WriterSettings,
+  User,
+  ExpectedUser
 };
