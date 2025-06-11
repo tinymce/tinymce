@@ -72,7 +72,7 @@ describe('browser.tinymce.core.focus.HighlightOnFocus', () => {
     it('TINY-9277: Content area should be highlighted on focus and removed when shifted to toolbar', async () => {
       const editor = hook.editor();
       assertHighlightOnFocus(editor);
-      TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="forecolor-chevron"][aria-label^="Text color"]');
+      TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="forecolor-chevron"]');
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       await pAssertIsNotHighlighted(editor);
       TinyUiActions.keyup(editor, Keys.escape());

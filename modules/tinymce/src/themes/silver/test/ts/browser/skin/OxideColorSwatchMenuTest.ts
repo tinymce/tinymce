@@ -88,16 +88,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
 
   const pOpenAndGetMenu = (title: string) =>
     () => {
-      let ariaLabelPrefix = '';
-      if (title === 'forecolor') {
-        ariaLabelPrefix = 'Text color';
-      } else if (title === 'backcolor') {
-        ariaLabelPrefix = 'Background color';
-      } else {
-        // For custom buttons like swatch-button, just use the title
-        ariaLabelPrefix = title;
-      }
-      Mouse.clickOn(SugarBody.body(), `button[data-mce-name="${title}-chevron"][aria-label^="${ariaLabelPrefix}"]`);
+      Mouse.clickOn(SugarBody.body(), `button[data-mce-name="${title}-chevron"]`);
       return Waiter.pTryUntil('Waiting for menu', () =>
         UiFinder.findIn(SugarBody.body(), '[role="menu"]').getOrDie()
       );
@@ -105,16 +96,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
 
   const pCloseMenu = (title: string) =>
     () => {
-      let ariaLabelPrefix = '';
-      if (title === 'forecolor') {
-        ariaLabelPrefix = 'Text color';
-      } else if (title === 'backcolor') {
-        ariaLabelPrefix = 'Background color';
-      } else {
-        // For custom buttons like swatch-button, just use the title
-        ariaLabelPrefix = title;
-      }
-      Mouse.clickOn(SugarBody.body(), `button[data-mce-name="${title}-chevron"][aria-label^="${ariaLabelPrefix}"]`);
+      Mouse.clickOn(SugarBody.body(), `button[data-mce-name="${title}-chevron"]`);
       return Waiter.pTryUntil('Waiting for menu', () =>
         UiFinder.notExists(SugarBody.body(), '[role="menu"]')
       );
