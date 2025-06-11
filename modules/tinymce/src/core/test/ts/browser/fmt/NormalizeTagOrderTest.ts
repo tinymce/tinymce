@@ -7,11 +7,11 @@ import Editor from 'tinymce/core/api/Editor';
 import * as NormalizeTagOrder from 'tinymce/core/fmt/NormalizeTagOrder';
 
 interface TestCase {
-  format: string;
-  html: string;
-  selection: Cursors.CursorPath;
-  expectedHtml: string;
-  expectedSelection: Cursors.CursorPath;
+  readonly format: string;
+  readonly html: string;
+  readonly selection: Cursors.CursorPath;
+  readonly expectedHtml: string;
+  readonly expectedSelection: Cursors.CursorPath;
 }
 
 describe('browser.tinymce.core.fmt.NormalizeTagOrderTest', () => {
@@ -74,6 +74,14 @@ describe('browser.tinymce.core.fmt.NormalizeTagOrderTest', () => {
         selection: { startPath: [ 0, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 0, 0 ], foffset: 'Hello'.length },
         expectedHtml: '<p><span style="color: red;"><span style="font-size: 40px;"><span style="text-decoration: line-through;">Hello</span></span></span></p>',
         expectedSelection: { startPath: [ 0, 0, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 0, 0, 0 ], foffset: 'Hello'.length }
+      }));
+
+      it('TINY-12004: Switch order of strikethrough and font size when strikethrough is mixed with other styles on a s element', () => testNormalizeFontSizeElementsAfterApply({
+        format: 'fontsize',
+        html: '<p><s style="color: red">one<span style="font-size: 40px;">two</span>three</s></p>',
+        selection: { startPath: [ 0, 0, 1, 0 ], soffset: 0, finishPath: [ 0, 0, 1, 0 ], foffset: 'two'.length },
+        expectedHtml: '<p><s style="color: red;">one</s><span style="color: red;"><span style="font-size: 40px;"><s>two</s></span></span><s style="color: red;">three</s></p>',
+        expectedSelection: { startPath: [ 0, 1, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 1, 0, 0, 0 ], foffset: 'two'.length }
       }));
 
       it('TINY-12004: Switch order of strikethrough and font size with mixed content', () => testNormalizeFontSizeElementsAfterApply({
@@ -170,6 +178,22 @@ describe('browser.tinymce.core.fmt.NormalizeTagOrderTest', () => {
         selection: { startPath: [ 0, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 2, 0 ], foffset: 'world'.length },
         expectedHtml: '<p><span style="font-size: 40px;"><s>Hello</s></span><s> </s><span style="font-size: 32px;"><s>world</s></span></p>',
         expectedSelection: { startPath: [ 0, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 2, 0, 0 ], foffset: 'world'.length }
+      }));
+
+      it('TINY-12004: Switch order with multiple nested font size alterting elements', () => testNormalizeFontSizeElementsAfterApply({
+        format: 'fontsize',
+        html: '<p><s><sub><sup><span style="font-size: 40px;">Hello</span></sup></sub></s></p>',
+        selection: { startPath: [ 0, 0, 0, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 0, 0, 0, 0 ], foffset: 'Hello'.length },
+        expectedHtml: '<p><sub><sup><span style="font-size: 40px;"><s>Hello</s></span></sup></sub></p>',
+        expectedSelection: { startPath: [ 0, 0, 0, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 0, 0, 0, 0 ], foffset: 'Hello'.length }
+      }));
+
+      it('TINY-12004: Switch order with mixed font size and superscript with additional text content', () => testNormalizeFontSizeElementsAfterApply({
+        format: 'fontsize',
+        html: '<p><s><span style="font-size: 40px;">E=mc<sup>2</sup></span></s></p>',
+        selection: { startPath: [ 0, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 0, 1, 0 ], foffset: '2'.length },
+        expectedHtml: '<p><span style="font-size: 40px;"><s>E=mc</s><sup><s>2</s></sup></span></p>',
+        expectedSelection: { startPath: [ 0, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 0, 1, 0, 0 ], foffset: '2'.length }
       }));
     });
 

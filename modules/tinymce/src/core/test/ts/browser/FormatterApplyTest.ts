@@ -2576,6 +2576,16 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
 
       TinyAssertions.assertContent(editor, '<p><span style="font-size: 36pt;"><s>abc</s></span></p>');
     });
+
+    it('TINY-12004: Tag order should be altered when applying strikethrough even if selection has strikethrough siblings', () => {
+      const editor = hook.editor();
+
+      editor.setContent('<p><s>one</s><span style="font-size: 36pt;">two</span><s>three</s></p>');
+      TinySelections.setSelection(editor, [ 0, 1, 0 ], 0, [ 0, 1, 0 ], 3);
+      editor.formatter.apply('strikethrough');
+
+      TinyAssertions.assertContent(editor, '<p><s>one</s><span style="font-size: 36pt;"><s>two</s></span><s>three</s></p>');
+    });
   });
 
   context('TINY-10312: should not partially apply block format when caret is positioned between words', () => {
