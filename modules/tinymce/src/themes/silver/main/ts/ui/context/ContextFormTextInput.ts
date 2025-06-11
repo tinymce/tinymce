@@ -17,7 +17,7 @@ export const renderContextFormTextInput = (
   valueState: Singleton.Value<string>
 ): SketchSpec => {
   const editorOffCell = Cell(Fun.noop);
-  const getFormApi = (comp: AlloyComponent) => ContextFormApi.getFormApi<string>(comp, valueState);
+  const getFormApi = (comp: AlloyComponent) => ContextFormApi.getFormParentApi<string>(comp, valueState);
 
   const pLabel = ctx.label.map((label) => FormField.parts.label({
     dom: { tag: 'label', classes: [ 'tox-label' ] },
@@ -65,8 +65,8 @@ export const renderContextFormTextInput = (
             );
 
             return closestFocussableOpt.fold(
-              () => ContextFormApi.getFormApi(comp, valueState),
-              (closestFocussable) => ContextFormApi.getFormApi(comp, valueState, closestFocussable)
+              () => ContextFormApi.getFormParentApi(comp, valueState),
+              (closestFocussable) => ContextFormApi.getFormParentApi(comp, valueState, closestFocussable)
             );
           },
           onBeforeSetup: Keying.focusIn

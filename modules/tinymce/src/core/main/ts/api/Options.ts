@@ -905,6 +905,26 @@ const register = (editor: Editor): void => {
     default: true
   });
 
+  registerOption('user_id', {
+    processor: 'string',
+    default: 'Anonymous'
+  });
+
+  registerOption('fetch_users', {
+    processor: (value) => {
+      if (value === undefined) {
+        return { valid: true, value: undefined };
+      }
+      if (Type.isFunction(value)) {
+        return { valid: true, value };
+      }
+      return {
+        valid: false,
+        message: 'fetch_users must be a function that returns a Promise<ExpectedUser[]>'
+      };
+    }
+  });
+
   // These options must be registered later in the init sequence due to their default values
   editor.on('ScriptsLoaded', () => {
     registerOption('directionality', {
@@ -1048,6 +1068,8 @@ const getApiKey = option('api_key');
 const isDisabled = option('disabled');
 const getExtendedMathmlAttributes = option('extended_mathml_attributes');
 const getExtendedMathmlElements = option('extended_mathml_elements');
+const getUserId = option('user_id');
+const getFetchUsers = option('fetch_users');
 const shouldIndentOnTab = option('lists_indent_on_tab');
 const getListMaxDepth = (editor: Editor): Optional<number> =>
   Optional.from(editor.options.get('list_max_depth'));
@@ -1165,5 +1187,7 @@ export {
   getApiKey,
   isDisabled,
   shouldIndentOnTab,
-  getListMaxDepth
+  getListMaxDepth,
+  getFetchUsers,
+  getUserId
 };

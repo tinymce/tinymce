@@ -1,5 +1,6 @@
 
 import { UploadHandler } from '../file/Uploader';
+import { ExpectedUser } from '../lookup/UserLookup';
 import { DynamicPatternsLookup, Pattern, RawDynamicPatternsLookup, RawPattern } from '../textpatterns/core/PatternTypes';
 
 import Editor from './Editor';
@@ -110,6 +111,7 @@ interface BaseEditorOptions {
   extended_mathml_elements?: string[];
   extended_valid_elements?: string;
   event_root?: string;
+  fetch_users?: (userIds: string[]) => Promise<ExpectedUser[]>;
   file_picker_callback?: FilePickerCallback;
   file_picker_types?: string;
   file_picker_validator_handler?: FilePickerValidationCallback;
@@ -216,6 +218,7 @@ interface BaseEditorOptions {
   style_formats_merge?: boolean;
   submit_patch?: boolean;
   suffix?: string;
+  user_id?: string;
   table_tab_navigation?: boolean;
   target?: HTMLElement;
   text_patterns?: RawPattern[] | false;
@@ -355,6 +358,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   toolbar_sticky_offset: number;
   text_patterns: Pattern[];
   text_patterns_lookup: DynamicPatternsLookup;
+  user_id: string;
   visual: boolean;
   visual_anchor_class: string;
   visual_table_class: string;

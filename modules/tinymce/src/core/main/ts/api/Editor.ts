@@ -7,6 +7,7 @@ import * as EditorRemove from '../EditorRemove';
 import { BlobInfoImagePair } from '../file/ImageScanner';
 import * as EditorFocus from '../focus/EditorFocus';
 import * as Render from '../init/Render';
+import { type UserLookup, createUserLookup } from '../lookup/UserLookup';
 import * as EditableRoot from '../mode/EditableRoot';
 import { NodeChange } from '../NodeChange';
 import { normalizeOptions } from '../options/NormalizeOptions';
@@ -185,6 +186,14 @@ class Editor implements EditorObservable {
    */
   public editorUpload!: EditorUpload;
 
+  /**
+   * Editor user lookup API
+   *
+   * @property userLookup
+   * @type tinymce.UserLookup
+   */
+  public userLookup!: UserLookup;
+
   public shortcuts: Shortcuts;
   public loadedCSS: Record<string, any> = {};
   public editorCommands: EditorCommands;
@@ -277,6 +286,9 @@ class Editor implements EditorObservable {
 
     this.options = createOptions(self, normalizedOptions, options);
     Options.register(self);
+
+    this.userLookup = createUserLookup(this);
+
     const getOption = this.options.get;
 
     if (getOption('deprecation_warnings')) {

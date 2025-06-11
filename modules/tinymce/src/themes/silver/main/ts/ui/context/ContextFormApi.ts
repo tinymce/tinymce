@@ -7,7 +7,7 @@ import {
 } from '@ephox/alloy';
 import { InlineContent } from '@ephox/bridge';
 import { Singleton } from '@ephox/katamari';
-import { Focus, SugarElement } from '@ephox/sugar';
+import { Focus, SugarElement, Traverse } from '@ephox/sugar';
 
 import { backSlideEvent } from './ContextUi';
 
@@ -38,4 +38,10 @@ export const getFormApi = <T>(input: AlloyComponent, valueState: Singleton.Value
       }
     }
   });
+};
+
+export const getFormParentApi = <T>(comp: AlloyComponent, valueState: Singleton.Value<T>, focusfallbackElement?: SugarElement<HTMLElement>): InlineContent.ContextFormInstanceApi<T> => {
+  const parent = Traverse.parent(comp.element);
+  const parentCompOpt = parent.bind((parent) => comp.getSystem().getByDom(parent).toOptional());
+  return getFormApi<T>(parentCompOpt.getOr(comp), valueState, focusfallbackElement);
 };
