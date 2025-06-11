@@ -3,6 +3,7 @@ import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 import { AddOnConstructor } from '../api/AddOnManager';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
+import { fireCloseTooltips } from '../api/Events';
 import IconManager from '../api/IconManager';
 import ModelManager, { Model } from '../api/ModelManager';
 import * as Options from '../api/Options';
@@ -10,7 +11,9 @@ import { ThemeInitFunc } from '../api/OptionTypes';
 import PluginManager from '../api/PluginManager';
 import ThemeManager, { Theme } from '../api/ThemeManager';
 import { EditorUiApi } from '../api/ui/Ui';
+import { EditorEvent } from '../api/util/EventDispatcher';
 import Tools from '../api/util/Tools';
+import VK from '../api/util/VK';
 import * as ErrorReporter from '../ErrorReporter';
 import * as Disabled from '../mode/Disabled';
 
@@ -43,6 +46,28 @@ const initPlugin = (editor: Editor, initializedPlugins: string[], plugin: string
       ErrorReporter.pluginInitError(editor, plugin, e);
     }
   }
+};
+
+const initTooltipClosing = (editor: Editor) => {
+  const closeTooltipsListener = (event: KeyboardEvent | EditorEvent<KeyboardEvent>) => {
+    if (event.keyCode === VK.ESC && !event.defaultPrevented) {
+      if (fireCloseTooltips(editor).isDefaultPrevented()) {
+        event.preventDefault();
+      }
+    }
+  };
+
+  document.addEventListener('keyup', closeTooltipsListener);
+  if (!editor.inline) {
+    editor.on('keyup', closeTooltipsListener);
+  }
+
+  editor.on('remove', () => {
+    document.removeEventListener('keyup', closeTooltipsListener);
+    if (!editor.inline) {
+      editor.off('keyup', closeTooltipsListener);
+    }
+  });
 };
 
 const trimLegacyPrefix = (name: string) => {
@@ -175,6 +200,7 @@ const init = async (editor: Editor): Promise<void> => {
   editor.dispatch('ScriptsLoaded');
 
   initIcons(editor);
+  initTooltipClosing(editor);
   initTheme(editor);
   initModel(editor);
   initPlugins(editor);

@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Tooltips can be closed by pressing escape.
+time: 2025-06-11T06:53:35.140164+02:00
+custom:
+    Issue: TINY-12054

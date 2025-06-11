@@ -26,6 +26,14 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMotherships: Gui.Gui
     { target: evt.target }
   );
 
+  const fireCloseTooltips = (event: Event) => {
+    broadcastOn(Channels.closeTooltips(), {
+      closedTooltip: () => {
+        event.preventDefault();
+      }
+    });
+  };
+
   // Document touch events
   const doc = SugarDocument.getDocument();
   const onTouchstart = DomEvent.bind(doc, 'touchstart', fireDismissPopups);
@@ -112,6 +120,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMotherships: Gui.Gui
     editor.on('ResizeEditor', onEditorResize);
     editor.on('AfterProgressState', onEditorProgress);
     editor.on('DismissPopups', onDismissPopups);
+    editor.on('CloseActivePopups', fireCloseTooltips);
 
     Arr.each([ mothership, ...uiMotherships ], (gui) => {
       gui.element.dom.addEventListener('focusin', onFocusIn);
@@ -130,6 +139,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMotherships: Gui.Gui
     editor.off('ResizeEditor', onEditorResize);
     editor.off('AfterProgressState', onEditorProgress);
     editor.off('DismissPopups', onDismissPopups);
+    editor.off('CloseActivePopups', fireCloseTooltips);
 
     Arr.each([ mothership, ...uiMotherships ], (gui) => {
       gui.element.dom.removeEventListener('focusin', onFocusIn);

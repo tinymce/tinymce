@@ -10,6 +10,7 @@ import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
+import { closeTooltips } from '../../api/messages/Channels';
 import * as Attachment from '../../api/system/Attachment';
 import { ReceivingInternalEvent } from '../../events/SimulatedEvent';
 
@@ -190,7 +191,11 @@ const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): Allo
         // to rely on receiving.
         const receivingData = message as unknown as ReceivingInternalEvent;
         if (!receivingData.universal) {
-          if (Arr.contains(receivingData.channels, ExclusivityChannel)) {
+          if (Arr.contains(receivingData.channels, ExclusivityChannel) || Arr.contains(receivingData.channels, closeTooltips())) {
+            if (receivingData.data.closedTooltip && state.isShowing()) {
+              receivingData.data.closedTooltip();
+            }
+
             hide(comp);
           }
         }
