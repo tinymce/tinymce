@@ -20,6 +20,12 @@ const pAssertNoTooltip = async (_: Editor, pTriggerTooltip: () => Promise<void>,
   UiFinder.notExists(SugarBody.body(), tooltipSelector);
 };
 
+const pAssertNoTooltipShown = async (): Promise<void> => {
+  await Waiter.pTryUntil('Tooltip is not shown', () =>
+    UiFinder.notExists(SugarBody.body(), tooltipSelector)
+  );
+};
+
 const pTriggerTooltipWithMouse = async (editor: Editor, selector: string): Promise<void> => {
   const button = await TinyUiActions.pWaitForUi(editor, selector) as SugarElement<HTMLElement>;
   Mouse.mouseOver(button);
@@ -52,11 +58,12 @@ const pOpenMenu = (editor: Editor, buttonSelector: string): Promise<SugarElement
 };
 
 export {
-  pAssertTooltip,
   pAssertNoTooltip,
-  pTriggerTooltipWithMouse,
-  pTriggerTooltipWithKeyboard,
-  pCloseTooltip,
+  pAssertNoTooltipShown,
+  pAssertTooltip,
   pCloseMenu,
-  pOpenMenu
+  pCloseTooltip,
+  pOpenMenu,
+  pTriggerTooltipWithKeyboard,
+  pTriggerTooltipWithMouse
 };

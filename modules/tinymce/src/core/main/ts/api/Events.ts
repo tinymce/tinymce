@@ -107,32 +107,36 @@ const fireEditableRootStateChange = (editor: Editor, state: boolean): EditorEven
 const fireDisabledStateChange = (editor: Editor, state: boolean): EditorEvent<DisabledStateChangeEvent> =>
   editor.dispatch('DisabledStateChange', { state });
 
+const fireCloseTooltips = (editor: Editor): EditorEvent<DisabledStateChangeEvent> =>
+  editor.dispatch('CloseActivePopups');
+
 export {
-  firePreProcess,
-  firePostProcess,
-  fireRemove,
-  fireDetach,
-  fireSwitchMode,
-  fireObjectResizeStart,
-  fireObjectResized,
-  firePreInit,
-  firePostRender,
-  fireInit,
-  firePlaceholderToggle,
-  fireError,
-  fireFormatApply,
-  fireFormatRemove,
-  fireBeforeSetContent,
-  fireSetContent,
-  fireBeforeGetContent,
-  fireGetContent,
+  fireAutocompleterEnd,
   fireAutocompleterStart,
   fireAutocompleterUpdate,
   fireAutocompleterUpdateActiveRange,
-  fireAutocompleterEnd,
+  fireBeforeGetContent,
+  fireBeforeSetContent,
+  fireCloseTooltips,
+  fireDetach,
+  fireDisabledStateChange,
+  fireEditableRootStateChange,
+  fireError,
+  fireFormatApply,
+  fireFormatRemove,
+  fireGetContent,
+  fireInit,
+  fireObjectResized,
+  fireObjectResizeStart,
   firePastePlainTextToggle,
   firePastePostProcess,
   firePastePreProcess,
-  fireEditableRootStateChange,
-  fireDisabledStateChange
+  firePlaceholderToggle,
+  firePostProcess,
+  firePostRender,
+  firePreInit,
+  firePreProcess,
+  fireRemove,
+  fireSetContent,
+  fireSwitchMode
 };

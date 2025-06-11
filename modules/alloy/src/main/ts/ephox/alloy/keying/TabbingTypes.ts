@@ -4,6 +4,7 @@ import { Compare, Height, SelectorFilter, SelectorFind, SugarElement, Traverse }
 
 import * as Keys from '../alien/Keys';
 import { AlloyComponent } from '../api/component/ComponentApi';
+import { closeTooltips } from '../api/messages/Channels';
 import { NoState, Stateless } from '../behaviour/common/BehaviourState';
 import { NativeSimulatedEvent } from '../events/SimulatedEvent';
 import * as ArrNavigation from '../navigation/ArrNavigation';
@@ -114,8 +115,19 @@ const create = (cyclicField: FieldProcessor): KeyingType.KeyingType<TabbingConfi
   const execute: KeyRuleStatelessHandler<TabbingConfig> = (component, simulatedEvent, tabbingConfig) =>
     tabbingConfig.onEnter.bind((f) => f(component, simulatedEvent));
 
-  const exit: KeyRuleStatelessHandler<TabbingConfig> = (component, simulatedEvent, tabbingConfig) =>
-    tabbingConfig.onEscape.bind((f) => f(component, simulatedEvent));
+  const exit: KeyRuleStatelessHandler<TabbingConfig> = (component, simulatedEvent, tabbingConfig) => {
+    component.getSystem().broadcastOn([ closeTooltips() ], {
+      closedTooltip: () => {
+        simulatedEvent.stop();
+      }
+    });
+
+    if (!simulatedEvent.isStopped()) {
+      return tabbingConfig.onEscape.bind((f) => f(component, simulatedEvent) );
+    } else {
+      return Optional.none();
+    }
+  };
 
   const getKeydownRules = Fun.constant([
     KeyRules.rule(KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB) ]), goBackwards),

@@ -1,8 +1,8 @@
-import { Waiter } from '@ephox/agar';
+import { Keys, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { SugarElement, TextContent } from '@ephox/sugar';
-import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
+import { TinyContentActions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -128,6 +128,14 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
         const buttonSelector = 'div[data-mce-name="split-button"]';
         await TooltipUtils.pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Split Button');
         await TooltipUtils.pCloseTooltip(editor, buttonSelector);
+      });
+
+      it(`TINY-12054: Should trigger tooltip with ${test.label} - And escape closes it.`, async () => {
+        const editor = hook.editor();
+        const buttonSelector = 'div[data-mce-name="split-button"]';
+        await TooltipUtils.pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Split Button');
+        TinyContentActions.keyup(editor, Keys.escape());
+        await TooltipUtils.pAssertNoTooltipShown();
       });
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - Toolbar Split Button Menu - forecolor`, async () => {
