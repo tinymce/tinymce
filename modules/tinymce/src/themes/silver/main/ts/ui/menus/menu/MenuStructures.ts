@@ -23,7 +23,10 @@ const chunk = <I>(rowDom: RawDomSchema, numColumns: number) => (items: I[]): Arr
 const forSwatch = (columns: number | 'auto'): StructureSpec => ({
   dom: {
     tag: 'div',
-    classes: [ 'tox-menu', 'tox-swatches-menu' ]
+    classes: [ 'tox-menu', 'tox-swatches-menu' ],
+    attributes: {
+      'aria-label': 'Use arrow keys to navigate left/right up/down.'
+    }
   },
   components: [
     {
@@ -145,12 +148,19 @@ const insertItemsPlaceholder = (
   });
 };
 
+export const hasWidget = (items: ItemTypes.ItemSpec[]): boolean =>
+  Arr.exists(items, (item) => item.type === 'widget');
+
 const forCollection = (columns: number | 'auto', initItems: ItemTypes.ItemSpec[], _hasIcons: boolean = true): StructureSpec => ({
   dom: {
     tag: 'div',
     classes: [ 'tox-menu', 'tox-collection' ].concat(
       columns === 1 ? [ 'tox-collection--list' ] : [ 'tox-collection--grid' ]
-    )
+    ),
+    attributes: {
+      // widget item can be inserttable, colorswatch or imageselect - all of them are navigated with arrow keys
+      ...hasWidget(initItems) ? { 'aria-label': 'Use arrow keys to navigate left/right up/down.' } : {}
+    },
   },
   components: [
     // We don't need to add IDs for each item because there are no
