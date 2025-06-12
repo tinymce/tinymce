@@ -52,7 +52,8 @@ def runRemoteTests(String name, String browser, String provider, String platform
     " --buckets=" + buckets +
     " --name=" + name +
     "${provider == 'aws' ? awsOpts : ''}" +
-    "${platformName}"
+    "${platformName}" +
+    "${browserVersion}"
     runBedrockTest(name, bedrockCommand, runAll, retry, timeout)
 }
 
