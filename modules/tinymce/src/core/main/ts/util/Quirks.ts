@@ -260,7 +260,7 @@ const Quirks = (editor: Editor): Quirks => {
     editor.on('mousedown', (e) => {
       Optionals.lift2(Optional.from(e.clientX), Optional.from(e.clientY), (clientX, clientY) => {
         const caretPos = editor.getDoc().caretPositionFromPoint(clientX, clientY);
-        const img = caretPos?.offsetNode.childNodes[caretPos.offset - 1];
+        const img = caretPos?.offsetNode.childNodes[caretPos.offset - (caretPos.offset > 0 ? 1 : 0)];
 
         if (img && isEditableImage(img)) {
           const rect = img.getBoundingClientRect();
