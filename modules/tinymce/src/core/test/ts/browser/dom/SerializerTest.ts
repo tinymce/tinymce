@@ -658,7 +658,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
   });
 
   it('CDATA', () => {
-    const ser = DomSerializer({ fix_list_elements: true, preserve_cdata: true });
+    const ser = DomSerializer({ fix_list_elements: true, preserve_cdata: true, sanitize: false });
     ser.setRules('span');
 
     setTestHtml('123<!--[CDATA[<test>]]-->abc');
