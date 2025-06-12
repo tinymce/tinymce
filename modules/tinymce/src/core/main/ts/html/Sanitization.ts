@@ -21,43 +21,10 @@ interface Sanitizer {
 const filteredUrlAttrs = Tools.makeMap('src,href,data,background,action,formaction,poster,xlink:href');
 const internalElementAttr = 'data-mce-type';
 
-const isElementWithHTMLTextContent = (node: Node): boolean => {
-  /*
-    This check has been added during the upgrade from DOMPurify 3.2.4 to 3.2.6.
-    It has been found in the DOMPurify source code, and has been adjusted to use our API's.
-    Since 3.2.6, this if statement is only run if the SAFE_FOR_XML flag is set to true.
-    We have disabled this flag during the previous DOMPurify version upgrade. (from 3.0.5 to 3.1.7)
-    We wanted to keep this check in place, but at the same time we couldn't set SAFE_FOR_XML to true.
-
-    This if statement removes any element that:
-    1) Has child nodes
-    2) Has no firstElementChild (meaning it can only has text nodes or comment nodes or CDATA sections)
-    3) Both the innerHTML and textContent of the element contain HTML markup
-
-    However in reality, this if statement will only be executed if the element has a child Text node that contains HTML markup,
-    as `node.textContent` will ignore Comment and CDATA nodes.
-
-    The regular expression used will match any opening or closing HTML tag, but also comments.
-  */
-  const isNode = (value: unknown): value is Node => typeof Node === 'function' && value instanceof Node;
-  return (
-    NodeType.isElement(node) &&
-    node.hasChildNodes() &&
-    !isNode(node.firstElementChild) &&
-    /<[/\w!]/.test(node.innerHTML) &&
-    /<[/\w!]/.test(node.textContent ?? '')
-  );
-};
-
 let uid = 0;
 const processNode = (node: Node, settings: DomParserSettings, schema: Schema, scope: Namespace.NamespaceType, evt?: UponSanitizeElementHookEvent): void => {
   const validate = settings.validate;
   const specialElements = schema.getSpecialElements();
-
-  if (settings.sanitize && isElementWithHTMLTextContent(node)) {
-    Remove.remove(SugarElement.fromDom(node));
-    return;
-  }
 
   // Pad conditional comments if they aren't allowed
   if (node.nodeType === NodeTypes.COMMENT && !settings.allow_conditional_comments && /^\[if/i.test(node.nodeValue ?? '')) {
@@ -212,17 +179,14 @@ const setupPurify = (settings: DomParserSettings, schema: Schema, namespaceTrack
 };
 
 const getPurifyConfig = (settings: DomParserSettings, mimeType: MimeType): Config => {
-  // Current dompurify types only cover up to 3.0.5 which does not include this new setting
-  const basePurifyConfig: Config & { SAFE_FOR_XML: boolean } = {
+  const basePurifyConfig: Config = {
     IN_PLACE: true,
     ALLOW_UNKNOWN_PROTOCOLS: true,
     // Deliberately ban all tags and attributes by default, and then un-ban them on demand in hooks
     // #comment and #cdata-section are always allowed as they aren't controlled via the schema
     // body is also allowed due to the DOMPurify checking the root node before sanitizing
     ALLOWED_TAGS: [ '#comment', '#cdata-section', 'body' ],
-    ALLOWED_ATTR: [],
-    // TINY-11332: New settings for dompurify 3.1.7
-    SAFE_FOR_XML: false
+    ALLOWED_ATTR: []
   };
   const config = { ...basePurifyConfig };
 
