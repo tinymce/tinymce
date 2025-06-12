@@ -92,7 +92,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingTypingTest', () => {
           s.element('p', {
             children: [
               s.text(str.is(isFirefoxPre139 ? Unicode.nbsp + ' ' : Unicode.nbsp + Unicode.nbsp))
-            ].concat(isFirefox ? [ s.element('br', {}) ] : [])
+            ].concat(isFirefoxPre139 ? [ s.element('br', {}) ] : [])
           })
         ]
       });
