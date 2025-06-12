@@ -1,7 +1,6 @@
 import { Assert, context, describe, it } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Fun, Optional } from '@ephox/katamari';
-import { assert } from 'chai';
 
 import * as TextZone from 'ephox/robin/api/general/TextZone';
 import { ArbIds, arbIds, ArbRangeIds, arbRangeIds } from 'ephox/robin/test/Arbitraries';
@@ -244,7 +243,7 @@ describe('atomic.robin.zone.TextZoneTest', () => {
       const doc = TestUniverse(Gene('root', 'root', [ Gene('d1', 'div', [ TextGene('t1', 'one') ], {}, { lang: testCase.contentLang }) ]));
       const zone = TextZone.single(doc, doc.find(doc.get(), 'd1').getOrDie(), 'en-US', testCase.onlyLang).getOrDie('Expected a zone to be returned');
 
-      assert.equal(zone.lang, testCase.expectedLang, 'Expected the zone language to match');
+      Assert.eq('Expected the zone language to match', zone.lang, testCase.expectedLang);
     };
 
     it('TINY-12101: Should match uppercase with dash', () => testFuzzyLanguageCode({
@@ -275,7 +274,7 @@ describe('atomic.robin.zone.TextZoneTest', () => {
       const doc = TestUniverse(Gene('root', 'root', [ Gene('d1', 'div', [ TextGene('t1', 'one') ], {}, { lang: 'sv-SE' }) ]));
       const zone = TextZone.single(doc, doc.find(doc.get(), 'd1').getOrDie(), 'en-US', 'en-GB');
 
-      assert.isTrue(zone.isNone(), 'Expected the zone to be none since the language codes are different');
+      Assert.eq('Expected the zone to be none since the language codes are different', zone.isNone(), true);
     });
   });
 });
