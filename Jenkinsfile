@@ -1,5 +1,5 @@
 #!groovy
-@Library('waluigi@feature/TINY-11840') _
+@Library('waluigi@release/7') _
 
 standardProperties()
 
@@ -184,8 +184,8 @@ def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NU
 
 timestamps { alertWorseResult(
   cleanupStep: { devPods.cleanUpPod(build: cacheName) },
-  branches: ['main','release/7', 'feature/TINY-11840'],
-  channel: '#tiny-textboxio-dev',
+  branches: ['main', 'release/7', 'release/8'],
+  channel: '#tinymce-build-status',
   name: 'TinyMCE'
   ) {
   devPods.nodeProducer(
