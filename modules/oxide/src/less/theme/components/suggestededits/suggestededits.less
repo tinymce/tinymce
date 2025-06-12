@@ -131,85 +131,6 @@
         padding: 4px 12px;
       }
 
-      .tox-suggestededits__button {
-        align-items: center;
-        background-color: @suggestededits-button-background-color;
-        color: @suggestededits-button-color;
-        border: 0;
-        border-radius: 3px;
-        box-shadow: none;
-        display: flex;
-        flex: 0 0 auto;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: normal;
-        height: 28px;
-        justify-content: center;
-        margin: 6px 1px 5px 0;
-        outline: none;
-        padding: 0 4px;
-        text-transform: none;
-
-        .tox-suggestededits__button--label {
-          cursor: default;
-          height: initial;
-          margin: 0 4px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-      }
-
-      .tox-suggestededits__button.tox-suggestededits__button--primary {
-        background-color: @suggestededits-button-primary-background-color;
-        color: @suggestededits-button-primary-color;
-      }
-
-      .tox-suggestededits__button.tox-suggestededits__button--primary:hover {
-        background-color: @suggestededits-button-primary-hover-background-color;
-      }
-
-      .tox-suggestededits__button.tox-suggestededits__button--primary:active {
-        background-color: @suggestededits-button-primary-active-background-color;
-      }
-
-      .tox-suggestededits__button.tox-suggestededits__button--dropdown {
-        font-weight: bold;
-        outline: 0;
-
-        svg {
-          display: block;
-          fill: @suggestededits-text-color;
-        }
-      }
-
-      .tox-suggestededits__button.tox-suggestededits__button--input {
-        background-color: @suggestededits-background-color;
-        border: 1px solid @suggestededits-sidebar-background-color;
-        border-radius: 6px;
-        font-size: 14px;
-        font-weight: bold;
-        width: 100%;
-
-        .tox-suggestededits__button--label {
-          padding: 6px 0px;
-        }
-      }
-
-      .tox-suggestededits__button.tox-suggestededits__button--input:hover {
-        background-color: @suggestededits-button-background-color;
-      }
-
-      .tox-suggestededits__button:active {
-        background: @suggestededits-button-active-background-color;
-        border: 0;
-      }
-
-      .tox-suggestededits__button:hover {
-        background: @suggestededits-button-hover-background-color;
-        border: 0;
-      }
-
       .tox-suggestededits__sidebar-content {
         display: flex;
         flex: 1;
@@ -235,7 +156,7 @@
             align-self: stretch;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
             padding: 8px;
 
             .tox-suggestededits__card--header {
@@ -246,10 +167,6 @@
               align-items: center;
               gap: 8px;
               width: 100%;
-
-              .tox-suggestededits__button {
-                margin: 0;
-              }
 
               .tox-suggestededits__card--user {
                 display: flex;
@@ -355,6 +272,7 @@
               flex-direction: column;
               align-self: stretch;
               flex: auto;
+              gap: 6px;
               width: 100%;
 
               .tox-suggestededits__operations {
@@ -438,28 +356,6 @@
 
               &.tox-suggestededits__card--feedback-buttons {
                 justify-content: right;
-              }
-
-              .tox-suggestededits__button {
-                font-weight: bold;
-              }
-
-              .tox-suggestededits__button.tox-suggestededits__button--status {
-                width: calc(50% - 4px);
-              }
-
-              .tox-suggestededits__button.tox-suggestededits__button--revert {
-                width: 100%;
-              }
-
-              .tox-suggestededits__button.tox-suggestededits__button--status.tox-suggestededits__button--status-accept .tox-icon svg {
-                margin-top: 2px;
-                fill: @suggestededits-added-color;
-              }
-
-              .tox-suggestededits__button.tox-suggestededits__button--status.tox-suggestededits__button--status-reject .tox-icon svg {
-                margin-top: 2px;
-                fill: @suggestededits-removed-color;
               }
             }
           }
