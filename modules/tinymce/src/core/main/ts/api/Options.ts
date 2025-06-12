@@ -81,6 +81,11 @@ const register = (editor: Editor): void => {
     default: ''
   });
 
+  registerOption('crossorigin', {
+    processor: 'string',
+    default: ''
+  });
+
   registerOption('language_load', {
     processor: 'boolean',
     default: true
@@ -984,6 +989,7 @@ const getImagesUploadCredentials = option('images_upload_credentials');
 const getImagesUploadHandler = option('images_upload_handler');
 const shouldUseContentCssCors = option('content_css_cors');
 const getReferrerPolicy = option('referrer_policy');
+const getCrossOrigin = option('crossorigin');
 const getLanguageCode = option('language');
 const getLanguageUrl = option('language_url');
 const shouldIndentUseMargin = option('indent_use_margin');
@@ -1106,6 +1112,7 @@ export {
   getImagesUploadHandler,
   shouldUseContentCssCors,
   getReferrerPolicy,
+  getCrossOrigin,
   getLanguageCode,
   getLanguageUrl,
   shouldIndentUseMargin,
