@@ -32,6 +32,7 @@ const DOM = DOMUtils.DOM;
 
 export interface ScriptLoaderSettings {
   referrerPolicy?: ReferrerPolicy;
+  crossOrigin?: string;
 }
 
 export interface ScriptLoaderConstructor {
@@ -63,6 +64,10 @@ class ScriptLoader {
 
   public _setReferrerPolicy(referrerPolicy: ReferrerPolicy): void {
     this.settings.referrerPolicy = referrerPolicy;
+  }
+
+  public _setCrossOrigin(crossOrigin: string): void {
+    this.settings.crossOrigin = crossOrigin;
   }
 
   /**
@@ -109,6 +114,10 @@ class ScriptLoader {
       if (this.settings.referrerPolicy) {
         // Note: Don't use elm.referrerPolicy = ... here as it doesn't work on Safari
         dom.setAttrib(elm, 'referrerpolicy', this.settings.referrerPolicy);
+      }
+
+      if (this.settings.crossOrigin) {
+        dom.setAttrib(elm, 'crossorigin', this.settings.crossOrigin);
       }
 
       elm.onload = done;
