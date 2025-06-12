@@ -46,7 +46,7 @@ describe('browser.tinymce.core.dom.CrossOriginTest', () => {
 
     setTimeout(() => {
       observer.disconnect();
-      reject(new Error(`Timed out waiting for scripts to load after ${Date.now() - time}ms`));
+      reject(new Error(`Timed out waiting for script to appear in the dom after ${Date.now() - time}ms`));
     }, timeout);
 
     await ScriptLoader.ScriptLoader.loadScript(url);
