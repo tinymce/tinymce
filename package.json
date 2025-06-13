@@ -4,7 +4,6 @@
     "modules/*"
   ],
   "scripts": {
-    "postinstall": "patch-package",
     "tinymce-grunt": "grunt --gruntfile modules/tinymce/Gruntfile.js",
     "tinymce-rollup": "run-s \"tinymce-grunt dev rollup\"",
     "oxide-icons-build": "yarn -s --cwd modules/oxide-icons-default build",
@@ -73,7 +72,6 @@
     "load-grunt-tasks": "^5.1.0",
     "moxie-zip": "0.0.4",
     "npm-run-all": "^4.1.5",
-    "patch-package": "^8.0.0",
     "postcss": "^8.4.39",
     "postcss-preset-env": "^10.1.3",
     "resolve": "^1.18.1",
