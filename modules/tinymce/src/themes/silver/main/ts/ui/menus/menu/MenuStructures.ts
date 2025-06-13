@@ -25,7 +25,7 @@ const forSwatch = (columns: number | 'auto'): StructureSpec => ({
     tag: 'div',
     classes: [ 'tox-menu', 'tox-swatches-menu' ],
     attributes: {
-      'aria-label': 'Use arrow keys to navigate left/right up/down.'
+      'aria-label': 'Use arrow keys to navigate.'
     }
   },
   components: [
@@ -159,7 +159,7 @@ const forCollection = (columns: number | 'auto', initItems: ItemTypes.ItemSpec[]
     ),
     attributes: {
       // widget item can be inserttable, colorswatch or imageselect - all of them are navigated with arrow keys
-      ...hasWidget(initItems) ? { 'aria-label': 'Use arrow keys to navigate left/right up/down.' } : {}
+      ...hasWidget(initItems) ? { 'aria-label': 'Use arrow keys to navigate.' } : {}
     },
   },
   components: [
