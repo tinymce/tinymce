@@ -103,7 +103,7 @@ const register = (editor: Editor): void => {
 
   registerOption('document_base_url', {
     processor: 'string',
-    default: editor.documentBaseUrl
+    default: editor.editorManager.documentBaseURL
   });
 
   registerOption('body_id', {
