@@ -123,7 +123,7 @@ const translate = (text: Untranslated): TranslatedString => {
   };
 
   const removeContext = (str: string) => str.replace(/{context:\w+}$/, '');
-  const replaceWithEllipsisChar = (text: string) => text.replace('...', '…');
+  const replaceWithEllipsisChar = (text: string) => text.replaceAll('...', '…');
 
   // empty strings
   if (isEmpty(text)) {
