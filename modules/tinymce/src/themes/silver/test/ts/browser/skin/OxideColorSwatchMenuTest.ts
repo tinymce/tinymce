@@ -88,7 +88,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
 
   const pOpenAndGetMenu = (title: string) =>
     () => {
-      Mouse.clickOn(SugarBody.body(), `[data-mce-name="${title}"] .tox-split-button__chevron`);
+      Mouse.clickOn(SugarBody.body(), `button[data-mce-name="${title}-chevron"]`);
       return Waiter.pTryUntil('Waiting for menu', () =>
         UiFinder.findIn(SugarBody.body(), '[role="menu"]').getOrDie()
       );
@@ -96,7 +96,7 @@ describe('browser.tinymce.themes.silver.skin.OxideColorSwatchMenuTest', () => {
 
   const pCloseMenu = (title: string) =>
     () => {
-      Mouse.clickOn(SugarBody.body(), `[data-mce-name="${title}"] .tox-split-button__chevron`);
+      Mouse.clickOn(SugarBody.body(), `button[data-mce-name="${title}-chevron"]`);
       return Waiter.pTryUntil('Waiting for menu', () =>
         UiFinder.notExists(SugarBody.body(), '[role="menu"]')
       );
