@@ -260,16 +260,17 @@ const Quirks = (editor: Editor): Quirks => {
     editor.on('mousedown', (e) => {
       Optionals.lift2(Optional.from(e.clientX), Optional.from(e.clientY), (clientX, clientY) => {
         const caretPos = editor.getDoc().caretPositionFromPoint(clientX, clientY);
-        if (caretPos && isEditableImage(caretPos.offsetNode)) {
-          const rect = caretPos.offsetNode.getBoundingClientRect();
+        const img = caretPos?.offsetNode.childNodes[caretPos.offset - (caretPos.offset > 0 ? 1 : 0)] || caretPos?.offsetNode;
 
+        if (img && isEditableImage(img)) {
+          const rect = img.getBoundingClientRect();
           e.preventDefault();
 
           if (!editor.hasFocus()) {
             editor.focus();
           }
 
-          editor.selection.select(caretPos.offsetNode);
+          editor.selection.select(img);
           if (e.clientX < rect.left || e.clientY < rect.top) {
             editor.selection.collapse(true);
           } else if (e.clientX > rect.right || e.clientY > rect.bottom) {
