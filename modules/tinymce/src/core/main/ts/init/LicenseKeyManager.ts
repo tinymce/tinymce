@@ -52,18 +52,18 @@ const setup = (): LicenseKeyManagerLoader => {
       return;
     }
 
-    // Try loading commercial license key manager when
+    // Try loading external license key manager when
     // - license_key is not 'gpl'; or
     // - an API key is present; or
     // - the licensekeymanager has been explicity listed, most likely through the forced_plugins option
-    if (licenseKey?.toLowerCase() === 'gpl' && !hasApiKey && !plugins.has(PLUGIN_CODE)) {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      add(Fun.constant(GplLicenseKeyManager));
-    } else {
+    if (licenseKey?.toLowerCase() !== 'gpl' || hasApiKey || plugins.has(PLUGIN_CODE)) {
       const url = `plugins/${PLUGIN_CODE}/plugin${suffix}.js`;
       addOnManager.load(ADDON_KEY, url).catch(() => {
         ErrorReporter.licenseKeyManagerLoadError(editor, url, ADDON_KEY);
       });
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      add(Fun.constant(GplLicenseKeyManager));
     }
   };
 
