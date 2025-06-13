@@ -1,0 +1,92 @@
+//
+// Suggested Edits
+//
+
+@added-background-color: saturate(lighten(@color-success, 34%), 25%);
+@modified-background-color: desaturate(lighten(@color-tint, 44%), 12%);
+@removed-background-color: desaturate(lighten(@color-error, 40%), 25%);
+
+@selected-outline-color: @color-tint;
+@selected-box-shadow: 0 -2px 0 0 @selected-outline-color inset, 0 -2px 0 0 @selected-outline-color;
+
+.tox-suggestededits__annotation--added,
+.tox-suggestededits__annotation--modified,
+.tox-suggestededits__annotation--removed {
+  text-decoration: none;
+}
+
+.tox-suggestededits__annotation--added__highlight {
+	background-color: @added-background-color;
+  text-decoration: underline;
+}
+
+.tox-suggestededits__annotation--added__selected {
+	background-color: @added-background-color;
+	box-shadow: @selected-box-shadow;
+  text-decoration: none;
+}
+
+.tox-suggestededits__annotation--modified__highlight {
+	background-color: @modified-background-color;
+	text-decoration: underline;
+}
+
+.tox-suggestededits__annotation--modified__selected {
+	background-color: @modified-background-color;
+  box-shadow: @selected-box-shadow;
+  text-decoration: none;
+}
+
+.tox-suggestededits__annotation--removed__highlight {
+	background-color: @removed-background-color;
+	text-decoration: 'strike-through';
+}
+
+.tox-suggestededits__annotation--removed__selected {
+	background-color: @removed-background-color;
+	box-shadow: @selected-box-shadow;
+	text-decoration: 'strike-through';
+}
+
+.tox-suggestededits__annotation--added.tox-suggestededits__annotation--added__hidden,
+.tox-suggestededits__annotation--modified.tox-suggestededits__annotation--modified__hidden,
+.tox-suggestededits__annotation--removed.tox-suggestededits__annotation--removed__hidden {
+  display: none;
+  text-decoration: none;
+}
+
+*:has(> div > iframe) {
+  &.tox-suggestededits__annotation--added,
+  &.tox-suggestededits__annotation--modified,
+  &.tox-suggestededits__annotation--removed {
+    padding: 7px;
+    margin: 5px;
+  }
+}
+
+img,
+video {
+  &.tox-suggestededits__annotation--added__highlight {
+    outline: 0.25em solid @added-background-color;
+  }
+
+  &.tox-suggestededits__annotation--added__selected {
+    outline: 0.25em solid @color-success;
+  }
+
+  &.tox-suggestededits__annotation--modified__highlight {
+    outline: 0.25em solid @modified-background-color;
+  }
+
+  &.tox-suggestededits__annotation--modified__selected {
+    outline: 0.25em solid @color-tint;
+  }
+
+  &.tox-suggestededits__annotation--removed__highlight {
+    outline: 0.25em solid @removed-background-color;
+  }
+
+  &.tox-suggestededits__annotation--removed__selected {
+    outline: 0.25em solid @color-error;
+  }
+}

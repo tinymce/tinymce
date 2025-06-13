@@ -1,6 +1,5 @@
 import {
-  AddEventsBehaviour, AlloyEvents, AlloyTriggers, Behaviour, Disabling, FormField as AlloyFormField, Input as AlloyInput, Invalidating, Keying,
-  NativeEvents, Representing, SketchSpec, SystemEvents, Tabstopping
+  AddEventsBehaviour, AlloyEvents, FormField as AlloyFormField, Input as AlloyInput, AlloyTriggers, Behaviour, Disabling, Invalidating, Keying, NativeEvents, Representing, SketchSpec, SystemEvents, Tabstopping
 } from '@ephox/alloy';
 import { Dialog } from '@ephox/bridge';
 import { Arr, Fun, Future, Optional, Result } from '@ephox/katamari';
@@ -29,6 +28,7 @@ export interface TextField {
   readonly maximized: boolean;
   readonly data: Optional<string>;
   readonly context: string;
+  readonly spellcheck: Optional<boolean>;
 }
 
 type InputSpec = Omit<Dialog.Input, 'type'>;
@@ -79,8 +79,10 @@ const renderTextField = (spec: TextField, providersBackstage: UiFactoryBackstage
 
   const placeholder = spec.placeholder.fold( Fun.constant({}), (p) => ({ placeholder: providersBackstage.translate(p) }));
   const inputMode = spec.inputMode.fold(Fun.constant({}), (mode) => ({ inputmode: mode }));
+  const spellcheck = spec.spellcheck.fold(Fun.constant({}), (spellchecker) => ({ spellcheck: spellchecker }));
 
   const inputAttributes = {
+    ...spellcheck,
     ...placeholder,
     ...inputMode,
     'data-mce-name': spec.name
@@ -141,7 +143,8 @@ const renderInput = (spec: InputSpec, providersBackstage: UiFactoryBackstageProv
   validation: Optional.none(),
   maximized: spec.maximized,
   data: initialData,
-  context: spec.context
+  context: spec.context,
+  spellcheck: Optional.none(),
 }, providersBackstage);
 
 const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBackstageProviders, initialData: Optional<string>): SketchSpec => renderTextField({
@@ -156,7 +159,8 @@ const renderTextarea = (spec: TextAreaSpec, providersBackstage: UiFactoryBacksta
   validation: Optional.none(),
   maximized: spec.maximized,
   data: initialData,
-  context: spec.context
+  context: spec.context,
+  spellcheck: spec.spellcheck,
 }, providersBackstage);
 
 export {

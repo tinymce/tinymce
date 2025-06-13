@@ -11,7 +11,7 @@ import { PasteBin } from './PasteBin';
 import * as PrePostProcess from './PrePostProcess';
 import * as Quirks from './Quirks';
 
-const setup = (editor: Editor): void => {
+const setup = (editor: Editor, caret: Cell<Text | null>): void => {
   const draggingInternallyState = Cell(false);
   const pasteFormat = Cell(Options.isPasteAsTextEnabled(editor) ? 'text' : 'html');
   const pasteBin = PasteBin(editor);
@@ -25,7 +25,7 @@ const setup = (editor: Editor): void => {
   // IMPORTANT: The following event hooks need to be setup later so that other things
   // can hook in and prevent the event so core paste doesn't handle them.
   editor.on('PreInit', () => {
-    CutCopy.register(editor);
+    CutCopy.register(editor, caret);
     DragDrop.setup(editor, draggingInternallyState);
     Clipboard.registerEventsAndFilters(editor, pasteBin, pasteFormat);
   });

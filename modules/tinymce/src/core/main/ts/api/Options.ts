@@ -1,4 +1,4 @@
-import { Arr, Obj, Strings, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Strings, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import * as Pattern from '../textpatterns/core/Pattern';
@@ -905,6 +905,26 @@ const register = (editor: Editor): void => {
     default: true
   });
 
+  registerOption('user_id', {
+    processor: 'string',
+    default: 'Anonymous'
+  });
+
+  registerOption('fetch_users', {
+    processor: (value) => {
+      if (value === undefined) {
+        return { valid: true, value: undefined };
+      }
+      if (Type.isFunction(value)) {
+        return { valid: true, value };
+      }
+      return {
+        valid: false,
+        message: 'fetch_users must be a function that returns a Promise<ExpectedUser[]>'
+      };
+    }
+  });
+
   // These options must be registered later in the init sequence due to their default values
   editor.on('ScriptsLoaded', () => {
     registerOption('directionality', {
@@ -922,6 +942,20 @@ const register = (editor: Editor): void => {
   registerOption('lists_indent_on_tab', {
     processor: 'boolean',
     default: true
+  });
+
+  registerOption('list_max_depth', {
+    processor: (value) => {
+      const valid = Type.isNumber(value);
+      if (valid) {
+        if (value < 0) {
+          throw new Error('list_max_depth cannot be set to lower than 0');
+        }
+        return { value, valid };
+      } else {
+        return { valid: false, message: 'Must be a number' };
+      }
+    },
   });
 };
 
@@ -1034,7 +1068,11 @@ const getApiKey = option('api_key');
 const isDisabled = option('disabled');
 const getExtendedMathmlAttributes = option('extended_mathml_attributes');
 const getExtendedMathmlElements = option('extended_mathml_elements');
+const getUserId = option('user_id');
+const getFetchUsers = option('fetch_users');
 const shouldIndentOnTab = option('lists_indent_on_tab');
+const getListMaxDepth = (editor: Editor): Optional<number> =>
+  Optional.from(editor.options.get('list_max_depth'));
 
 export {
   register,
@@ -1148,5 +1186,8 @@ export {
   shouldConvertUnsafeEmbeds,
   getApiKey,
   isDisabled,
-  shouldIndentOnTab
+  shouldIndentOnTab,
+  getListMaxDepth,
+  getFetchUsers,
+  getUserId
 };

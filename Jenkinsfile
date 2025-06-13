@@ -52,7 +52,8 @@ def runRemoteTests(String name, String browser, String provider, String platform
     " --buckets=" + buckets +
     " --name=" + name +
     "${provider == 'aws' ? awsOpts : ''}" +
-    "${platformName}"
+    "${platformName}" +
+    "${browserVersion}"
     runBedrockTest(name, bedrockCommand, runAll, retry, timeout)
 }
 
@@ -182,7 +183,12 @@ def cacheName = "cache_${BUILD_TAG}"
 
 def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NUMBER}"
 
-timestamps {
+timestamps { alertWorseResult(
+  cleanupStep: { devPods.cleanUpPod(build: cacheName) },
+  branches: ['main', 'release/7', 'release/8'],
+  channel: '#tinymce-build-status',
+  name: 'TinyMCE'
+  ) {
   devPods.nodeProducer(
     nodeOpts: [
       resourceRequestCpu: '2',
@@ -291,6 +297,4 @@ timestamps {
       echo "Running tests [runAll=${runAllTests}]"
       parallel processes
   }
-
-  devPods.cleanUpPod(name: cacheName)
-}
+}}

@@ -1,0 +1,22 @@
+.tox {
+  .tox-button--secondary.tox-button--secondary--outline {
+    background-color: @background-color;
+    border-color: @button-secondary-background-color;
+
+    &:hover:not(:disabled) {
+      background-color: @button-secondary-background-color;
+      border-color: @button-secondary-hover-background-color;
+    }
+
+    &:active:not(:disabled) {
+      background-color: @button-secondary-hover-background-color;
+      border-color: @button-secondary-hover-background-color;
+    }
+
+    &[disabled] {
+      background-color: @background-color;
+      border-color: @button-secondary-background-color;
+      color: @button-secondary-disabled-text-color;
+    }
+  }
+}
