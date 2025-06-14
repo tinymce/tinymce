@@ -23,10 +23,8 @@ const formatsToActOn = [ 'strikethrough', ...fontSizeAlteringFormats ] as const;
 const hasFormat = (formatter: Formatter, el: SugarElement<Node>, format: string): el is SugarElement<Element> =>
   Type.isNonNullable(formatter.matchNode(el.dom, format, {}, format === 'fontsize'));
 
-const isFontSizeAlteringElement = (formatter: Formatter) => (el: SugarElement<Node>): el is SugarElement<Element> =>
+const isFontSizeAlteringElement = (formatter: Formatter, el: SugarElement<Node>): el is SugarElement<Element> =>
   Arr.exists(fontSizeAlteringFormats, (format) => hasFormat(formatter, el, format));
-
-const isFontSizeAlteringFormat = (format: string) => Arr.contains(fontSizeAlteringFormats, format);
 
 const isNormalizingFormat = (format: string) => Arr.contains(formatsToActOn, format);
 
@@ -148,17 +146,20 @@ const normalizeFontSizeElementsWithFormat = (
 };
 
 const collectFontSizeElements = (formatter: Formatter, wrappers: SugarElement<Element>[]) =>
-  Arr.bind(wrappers, (wrapper) => PredicateFilter.descendants(wrapper, isFontSizeAlteringElement(formatter)));
+  Arr.bind(wrappers, (wrapper) => {
+    const fontSizeDescendants = PredicateFilter.descendants(wrapper, (el) => isFontSizeAlteringElement(formatter, el));
+    return isFontSizeAlteringElement(formatter, wrapper) ? [ wrapper, ...fontSizeDescendants ] : fontSizeDescendants;
+  });
 
 export const normalizeFontSizeElementsAfterApply = (editor: Editor, appliedFormat: string, wrappers: SugarElement<Element>[]): void => {
   if (isNormalizingFormat(appliedFormat)) {
-    const fontSizeElements = isFontSizeAlteringFormat(appliedFormat) ? wrappers : collectFontSizeElements(editor.formatter, wrappers);
+    const fontSizeElements = collectFontSizeElements(editor.formatter, wrappers);
     normalizeFontSizeElementsWithFormat(editor, 'strikethrough', fontSizeElements);
   }
 };
 
 export const normalizeElements = (editor: Editor, elements: SugarElement<Element>[]): void => {
-  const fontSizeElements = Arr.filter(elements, isFontSizeAlteringElement(editor.formatter));
+  const fontSizeElements = Arr.filter(elements, (el) => isFontSizeAlteringElement(editor.formatter, el));
   normalizeFontSizeElementsWithFormat(editor, 'strikethrough', fontSizeElements);
 };
 
