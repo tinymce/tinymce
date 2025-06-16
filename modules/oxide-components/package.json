@@ -31,7 +31,6 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint --max-warnings=0 src/**/*.ts?",
-    "preview": "vite preview",
     "start": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test-watch": "vitest",
