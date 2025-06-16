@@ -259,9 +259,9 @@ describe('atomic.robin.zone.TextZoneTest', () => {
     }));
 
     it('TINY-12101: Should match uppercase with underscore', () => testFuzzyLanguageCode({
-      contentLang: 'en-GB',
+      contentLang: 'en_GB',
       onlyLang: 'en-GB',
-      expectedLang: 'en-GB'
+      expectedLang: 'en_GB'
     }));
 
     it('TINY-12101: Should match lowercase with underscore', () => testFuzzyLanguageCode({
