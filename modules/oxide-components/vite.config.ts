@@ -6,12 +6,20 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // https://vite.dev/config/
 export default defineConfig({
+  resolve: {
+    alias: {
+      'oxide-components': resolve(__dirname, 'src/main/ts'),
+    },
+  },
+  server: {
+    open: './src/demo/html/index.html',
+  },
   build: {
     emptyOutDir: false,
     sourcemap: true,
     outDir: 'lib',
     lib: {
-      entry: resolve(__dirname, 'src/main.tsx'),
+      entry: resolve(__dirname, 'src/main/ts/main.tsx'),
       name: 'oxide-components',
       fileName: 'main',
       formats: [ 'es' ],

@@ -26,7 +26,7 @@
     "noUncheckedSideEffectImports": true
   },
   "include": [
-    "src"
+    "src/main/ts"
   ],
   "exclude": [
     "src/**/*.stories.*"
