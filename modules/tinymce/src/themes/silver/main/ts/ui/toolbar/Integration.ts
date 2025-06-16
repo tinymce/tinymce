@@ -176,6 +176,11 @@ const lookupButton = (editor: Editor, buttons: Record<string, any>, toolbarItem:
   .orThunk(() => prefixes.bind((ps) => Arr.findMap(ps, (prefix) => Obj.get(buttons, prefix + toolbarItem.toLowerCase()))))
   .fold(
     () => Obj.get(bespokeButtons, toolbarItem.toLowerCase()).map((r) => r(editor, backstage)),
+    // TODO: Add back after TINY-3232 is implemented
+    // .orThunk(() => {
+    //   console.error('No representation for toolbarItem: ' + toolbarItem);
+    //   return Optional.none();
+    // ),
     (spec) => {
       if (spec.type === 'grouptoolbarbutton' && !allowToolbarGroups) {
         // TODO change this message when sliding is available
