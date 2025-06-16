@@ -20,7 +20,7 @@
 
   .tox-split-button:focus {
     background: @toolbar-button-focus-background-color;
-    box-shadow: @toolbar-button-focus-box-shadow;
+    box-shadow: 0 0 0 1px @toolbar-button-hover-background-color inset, @toolbar-button-focus-box-shadow;
     color: @toolbar-button-focus-text-color;
     position: relative;
     z-index: 1; // Ensure focus outline is on top of other buttons
@@ -53,6 +53,11 @@
     border-radius: 0;
   }
 
+  // Preserve chevron border on hover (overrides .tox-tbtn:hover border: 0)
+  .tox-split-button__chevron:hover {
+    border-left: 1px solid @border-color-light;
+  }
+
   .tox-split-button__chevron svg {
 
     @media (forced-colors: active) {
@@ -79,6 +84,14 @@
     color: @toolbar-button-disabled-text-color;
   }
 
+  .tox-split-button.tox-tbtn--disabled .tox-split-button__chevron {
+    border-left: 1px solid @border-color-light;
+  }
+
+  .tox-split-button.tox-tbtn--disabled .tox-split-button__chevron:hover {
+    border-left: 1px solid @border-color-light;
+  }
+
   // Increase the chevron size and decrease the button size on touch devices
   &.tox-platform-touch {
     .tox-split-button .tox-tbtn--select {
@@ -91,6 +104,11 @@
 
     .tox-split-button__chevron {
       width: @toolbar-button-chevron-width + @toolbar-split-button-chevron-touch-padding;
+      border-left: 1px solid @border-color-light; // Ensure border is preserved on touch
+    }
+
+    .tox-split-button__chevron:hover {
+      border-left: 1px solid @border-color-light;
     }
   }
 
