@@ -1,0 +1,7 @@
+project: tinymce
+kind: Changed
+body: Comments with HTML like content, attributes with HTML
+  like values, elements with HTML Comment like textContent are no longer retained.
+time: 2025-06-16T15:59:32.909609+02:00
+custom:
+  Issue: TINY-12056
