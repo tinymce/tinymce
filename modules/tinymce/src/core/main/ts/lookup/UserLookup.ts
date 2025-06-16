@@ -85,7 +85,7 @@ const AvatarColors = [
   '#51742F', // Green
   '#385021', // Dark Green
   '#CF4900', // Orange
-  '#CF4900', // Dark Orange
+  '#A84600', // Dark Orange
   '#CC0000', // Red
   '#6A1B9A', // Dark Red
   '#9C27B0', // Purple
