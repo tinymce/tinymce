@@ -17,6 +17,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () =
   }, [ Plugin ]);
 
   const isFirefox = Env.browser.isFirefox();
+  const isFirefoxPre139 = Env.browser.isFirefox() && Env.browser.version.major < 139;
 
   const clickNbspToolbarButton = (editor: Editor) => TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Nonbreaking space"]');
 
@@ -110,7 +111,7 @@ describe('webdriver.tinymce.plugins.nonbreaking.NonbreakingWrapTypingTest', () =
               ]
             }),
             s.text(str.is(Unicode.zeroWidth + Unicode.nbsp))
-          ].concat(isFirefox ? [ s.element('br', {}) ] : [])
+          ].concat(isFirefoxPre139 ? [ s.element('br', {}) ] : [])
         })
       ]
     })));
