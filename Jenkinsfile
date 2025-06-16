@@ -206,32 +206,12 @@ def cacheName = "cache_${BUILD_TAG}"
 
 def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NUMBER}"
 
-<<<<<<< HEAD
-def hiRes = [
-  resourceRequestCpu: '2',
-  resourceRequestMemory: '4Gi',
-  resourceRequestEphemeralStorage: '16Gi',
-  resourceLimitCpu: '7.5',
-  resourceLimitMemory: '4Gi',
-  resourceLimitEphemeralStorage: '16Gi'
-]
-
-def containers = [
-  devPods.getContainerDefaultArgs([ name: 'node', image: "public.ecr.aws/docker/library/node:20", runAsGroup: '1000', runAsUser: '1000' ]) + hiRes,
-  devPods.getContainerDefaultArgs([ name: 'aws-cli', image: 'public.ecr.aws/aws-cli/aws-cli:latest', runAsGroup: '1000', runAsUser: '1000' ]) + devPods.lowRes(),
-  devPods.getContainerDefaultArgs([ name: 'playwright', image: 'mcr.microsoft.com/playwright:v1.52.0-noble']) + devPods.hiRes()
-]
-
 timestamps { alertWorseResult(
   cleanupStep: { devPods.cleanUpPod(build: cacheName) },
   branches: ['main', 'release/7', 'release/8'],
   channel: '#tinymce-build-status',
   name: 'TinyMCE'
   ) {
-  devPods.custom(
-    containers: containers
-=======
-timestamps {
   devPods.nodeProducer(
     nodeOpts: [
       resourceRequestCpu: '2',
@@ -243,7 +223,6 @@ timestamps {
     ],
     tag: '20',
     build: cacheName
->>>>>>> f6777a4226 (TIN-12133: Move playwright test in parallel with other testing)
   ) {
     props = readProperties(file: 'build.properties')
     String primaryBranch = props.primaryBranch
@@ -346,4 +325,5 @@ timestamps {
       echo "Running tests [runAll=${runAllTests}]"
       parallel processes
   }
-}
+
+}}
