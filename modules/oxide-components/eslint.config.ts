@@ -6,6 +6,8 @@ import globals from 'globals';
 
 import rootConfig from '../../eslint.config.ts';
 
+const storybookConfig = storybook.configs['flat/recommended'];
+
 export default defineConfig(
   [
     ...rootConfig,
@@ -28,6 +30,6 @@ export default defineConfig(
       },
     },
     { ignores: [ 'lib' ] },
-    storybook.configs['flat/recommended']
+    storybookConfig
   ]
 );

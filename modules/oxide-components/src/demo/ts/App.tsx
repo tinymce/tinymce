@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-
 import { Button } from 'oxide-components/Button/Button.component';
+import React, { useState } from 'react';
 
 const App: React.FC = () => {
   const [ count, setCount ] = useState(0);
