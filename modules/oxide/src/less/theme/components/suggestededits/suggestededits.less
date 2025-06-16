@@ -249,12 +249,14 @@
               .tox-suggestededits__resolution.tox-suggestededits__resolution--accepted {
                 .tox-icon svg {
                   fill: @suggestededits-added-color;
+                  transform: scale(83.35%);
                 }
               }
 
               .tox-suggestededits__resolution.tox-suggestededits__resolution--rejected {
                 .tox-icon svg {
                   fill: @suggestededits-removed-color;
+                  transform: scale(83.35%);
                 }
               }
             }
@@ -333,6 +335,11 @@
                 color: @suggestededits-text-color;
                 font-size: 12px;
                 line-height: 18px;
+
+                .tox-icon svg {
+                  fill: contrast(@suggestededits-background-color, #222F3E80, #FFFFFF80);
+                  transform: scale(50%) translate(-8px, 16px);
+                }
               }
             }
 
