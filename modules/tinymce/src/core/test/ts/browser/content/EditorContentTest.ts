@@ -831,5 +831,20 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         TinyAssertions.assertContent(editor, expected);
       });
     });
+
+    context('Template elements', () => {
+      const hook = TinyHooks.bddSetupLight<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        extended_valid_elements: 'template',
+        indent: false
+      }, []);
+
+      it('TINY-12157: Template elements should be retained if configured in', () => {
+        const editor = hook.editor();
+
+        editor.setContent('<template>foo<script>alert(1)</script></template><p><template>bar</template></p>');
+        TinyAssertions.assertContent(editor, '<template>foo</template><p><template>bar</template></p>');
+      });
+    });
   });
 });

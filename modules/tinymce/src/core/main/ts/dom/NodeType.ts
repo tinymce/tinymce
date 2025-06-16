@@ -107,6 +107,7 @@ const isEditingHost = (node: Node): node is HTMLElement => isHTMLElement(node) &
 
 const isTableCell = matchNodeNames<HTMLTableCellElement>([ 'td', 'th' ]);
 const isTableCellOrCaption = matchNodeNames<HTMLTableCellElement>([ 'td', 'th', 'caption' ]);
+const isTemplate = matchNodeName<HTMLTemplateElement>('template');
 const isMedia = matchNodeNames<HTMLElement>([ 'video', 'audio', 'object', 'embed' ]);
 const isListItem = matchNodeName<HTMLLIElement>('li');
 const isDetails = matchNodeName<HTMLDetailsElement>('details');
@@ -140,6 +141,7 @@ export {
   isBogusAll,
   isTable,
   isTextareaOrInput,
+  isTemplate,
   isListItem,
   isDetails,
   isSummary
