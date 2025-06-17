@@ -140,8 +140,8 @@ export {
   isBogus,
   isBogusAll,
   isTable,
-  isTextareaOrInput,
   isTemplate,
+  isTextareaOrInput,
   isListItem,
   isDetails,
   isSummary

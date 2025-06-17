@@ -1362,17 +1362,17 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
           const html = '<template foo="1" bar="2"><p>Paragraph inside template</p><img onerror="alert(1)"><script>alert(2)</script></template>';
           const serializedHtml = serializer.serialize(parser.parse(html));
 
-          if (scenario.settings.sanitize === false) {
-            assert.equal(
-              serializedHtml,
-              '<template foo="1"><p>Paragraph inside template</p><img onerror="alert(1)"><script>alert(2)</script></template>',
-              'Should retain configured attributes and scripts inside template element when not sanitizing'
-            );
-          } else {
+          if (scenario.isSanitizeEnabled) {
             assert.equal(
               serializedHtml,
               '<template foo="1"><p>Paragraph inside template</p><img></template>',
               'Should retain configured attributes and remove scripts inside template element when sanitizing'
+            );
+          } else {
+            assert.equal(
+              serializedHtml,
+              '<template foo="1"><p>Paragraph inside template</p><img onerror="alert(1)"><script>alert(2)</script></template>',
+              'Should retain configured attributes and scripts inside template element when not sanitizing'
             );
           }
         });

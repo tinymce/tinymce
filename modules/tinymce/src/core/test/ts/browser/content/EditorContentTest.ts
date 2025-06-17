@@ -839,7 +839,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         indent: false
       }, []);
 
-      it('TINY-12157: Template elements should be retained if configured in', () => {
+      it('TINY-12157: Template elements should be retained when enabled via extended_valid_elements', () => {
         const editor = hook.editor();
 
         editor.setContent('<template>foo<script>alert(1)</script></template><p><template>bar</template></p>');
