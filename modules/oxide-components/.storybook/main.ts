@@ -5,19 +5,23 @@ import type { StorybookConfig } from '@storybook/react-vite';
 const require = createRequire(import.meta.url);
 
 const config: StorybookConfig = {
-  "stories": [
+  stories: [
     "../src/**/*.mdx",
     "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"
   ],
-  "addons": [
+  addons: [
     getAbsolutePath("@storybook/addon-onboarding"),
     getAbsolutePath("@chromatic-com/storybook"),
     getAbsolutePath("@storybook/addon-a11y"),
-    getAbsolutePath("@storybook/addon-vitest")
+    getAbsolutePath("@storybook/addon-vitest"),
+    getAbsolutePath("@storybook/addon-docs"),
   ],
-  "framework": {
+  framework: {
     "name": "@storybook/react-vite",
     "options": {}
+  },
+  docs:{
+    defaultName: "Documentation"
   }
 };
 export default config;

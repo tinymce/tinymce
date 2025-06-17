@@ -47,6 +47,7 @@
     "@chromatic-com/storybook": "^4.0.0",
     "@eslint/js": "^9.25.0",
     "@storybook/addon-a11y": "^9.0.10",
+    "@storybook/addon-docs": "^9.0.11",
     "@storybook/addon-onboarding": "^9.0.10",
     "@storybook/addon-vitest": "^9.0.10",
     "@storybook/react-vite": "^9.0.10",
@@ -62,9 +63,11 @@
     "eslint-plugin-storybook": "^9.0.10",
     "globals": "^16.0.0",
     "playwright": "^1.52.0",
+    "postcss": "^8.4.39",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "storybook": "^9.0.10",
+    "terser": "^5.28.1",
     "vite": "^6.3.5",
     "vitest": "^3.1.4"
   }
