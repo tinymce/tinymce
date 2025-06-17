@@ -31,6 +31,8 @@ import Schema, { SchemaMap, SchemaRegExpMap, getTextRootBlockElements } from './
  * @version 3.4
  */
 
+const extraBlockLikeElements = [ 'script', 'style', 'template', 'param' ];
+
 const makeMap = Tools.makeMap, extend = Tools.extend;
 
 export interface ParserArgs {
@@ -165,7 +167,7 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
   const validate = settings.validate;
   const nonEmptyElements = schema.getNonEmptyElements();
   const whitespaceElements = schema.getWhitespaceElements();
-  const blockElements: Record<string, string> = extend(makeMap('script,style,head,html,body,title,meta,param,template'), schema.getBlockElements());
+  const blockElements: Record<string, string> = extend(makeMap(extraBlockLikeElements), schema.getBlockElements());
   const textRootBlockElements = getTextRootBlockElements(schema);
   const allWhiteSpaceRegExp = /[ \t\r\n]+/g;
   const startWhiteSpaceRegExp = /^[ \t\r\n]+/;
@@ -398,7 +400,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
   };
 
   const addRootBlocks = (rootNode: AstNode, rootBlockName: string): void => {
-    const blockElements = extend(makeMap('script,style,head,html,body,template,title,meta,param'), schema.getBlockElements());
+    const blockElements = extend(makeMap(extraBlockLikeElements), schema.getBlockElements());
     const startWhiteSpaceRegExp = /^[ \t\r\n]+/;
     const endWhiteSpaceRegExp = /[ \t\r\n]+$/;
 
