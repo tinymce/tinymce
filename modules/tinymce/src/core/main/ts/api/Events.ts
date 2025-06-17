@@ -108,7 +108,7 @@ const fireDisabledStateChange = (editor: Editor, state: boolean): EditorEvent<Di
   editor.dispatch('DisabledStateChange', { state });
 
 const fireCloseTooltips = (editor: Editor): EditorEvent<DisabledStateChangeEvent> =>
-  editor.dispatch('CloseActivePopups');
+  editor.dispatch('CloseActiveTooltips');
 
 export {
   firePreProcess,

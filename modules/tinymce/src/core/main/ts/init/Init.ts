@@ -3,7 +3,7 @@ import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 import { AddOnConstructor } from '../api/AddOnManager';
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
-import { fireCloseTooltips } from '../api/Events';
+import * as Events from '../api/Events';
 import IconManager from '../api/IconManager';
 import ModelManager, { Model } from '../api/ModelManager';
 import * as Options from '../api/Options';
@@ -51,7 +51,7 @@ const initPlugin = (editor: Editor, initializedPlugins: string[], plugin: string
 const initTooltipClosing = (editor: Editor) => {
   const closeTooltipsListener = (event: KeyboardEvent | EditorEvent<KeyboardEvent>) => {
     if (event.keyCode === VK.ESC && !event.defaultPrevented) {
-      if (fireCloseTooltips(editor).isDefaultPrevented()) {
+      if (Events.fireCloseTooltips(editor).isDefaultPrevented()) {
         event.preventDefault();
       }
     }

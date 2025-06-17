@@ -120,7 +120,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMotherships: Gui.Gui
     editor.on('ResizeEditor', onEditorResize);
     editor.on('AfterProgressState', onEditorProgress);
     editor.on('DismissPopups', onDismissPopups);
-    editor.on('CloseActivePopups', fireCloseTooltips);
+    editor.on('CloseActiveTooltips', fireCloseTooltips);
 
     Arr.each([ mothership, ...uiMotherships ], (gui) => {
       gui.element.dom.addEventListener('focusin', onFocusIn);
@@ -139,7 +139,7 @@ const setup = (editor: Editor, mothership: Gui.GuiSystem, uiMotherships: Gui.Gui
     editor.off('ResizeEditor', onEditorResize);
     editor.off('AfterProgressState', onEditorProgress);
     editor.off('DismissPopups', onDismissPopups);
-    editor.off('CloseActivePopups', fireCloseTooltips);
+    editor.off('CloseActiveTooltips', fireCloseTooltips);
 
     Arr.each([ mothership, ...uiMotherships ], (gui) => {
       gui.element.dom.removeEventListener('focusin', onFocusIn);
