@@ -9,6 +9,7 @@ import CaretPosition from '../caret/CaretPosition';
 import { SetSelectionContentArgs } from '../content/ContentTypes';
 import { postProcessSetContent, preProcessSetContent } from '../content/PrePostProcess';
 import * as MergeText from '../delete/MergeText';
+import * as Deprecations from '../Deprecations';
 import * as ScrollIntoView from '../dom/ScrollIntoView';
 import { needsToBeNbspLeft, needsToBeNbspRight } from '../keyboard/Nbsps';
 
@@ -104,6 +105,7 @@ const cleanContent = (editor: Editor, args: SetSelectionContentArgs) => {
 };
 
 const setContent = (editor: Editor, content: string, args: Partial<SetSelectionContentArgs> = {}): void => {
+  Deprecations.logFeatureDeprecationWarning('selectionSetContent');
   const defaultedArgs = setupArgs(args, content);
   preProcessSetContent(editor, defaultedArgs).each((updatedArgs) => {
     // Sanitize the content
