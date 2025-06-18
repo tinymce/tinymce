@@ -304,23 +304,18 @@ const fetchChoices = (getApi: (comp: AlloyComponent) => Toolbar.ToolbarSplitButt
         )
       )));
 
-const makeSplitButtonApi = (tooltipString: Cell<string>, sharedBackstage: UiFactoryBackstageShared, chevronTooltip: string) => (component: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => {
+const makeSplitButtonApi = (tooltipString: Cell<string>, sharedBackstage: UiFactoryBackstageShared) => (component: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => {
   const system = component.getSystem();
   const element = component.element;
   const isChevron = Class.has(element, 'tox-split-button__chevron');
-  const parentOpt = Traverse.parent(element);
 
   const mainOpt = isChevron ?
-    parentOpt.bind((parent) =>
-      SelectorFind.descendant(parent, 'button:not(.tox-split-button__chevron)')
-    ).bind((el) => system.getByDom(el).toOptional()) :
+    Traverse.prevSibling(element).bind((el) => system.getByDom(el).toOptional()) :
     Optional.some(component);
 
   const chevronOpt = isChevron ?
     Optional.some(component) :
-    parentOpt.bind((parent) =>
-      SelectorFind.descendant(parent, '.tox-split-button__chevron')
-    ).bind((el) => system.getByDom(el).toOptional());
+    Traverse.nextSibling(element).bind((el) => system.getByDom(el).toOptional().filter((comp) => Class.has(comp.element, 'tox-split-button__chevron')));
 
   const applyBoth = (f: (c: AlloyComponent) => void) => {
     mainOpt.each(f);
@@ -342,9 +337,7 @@ const makeSplitButtonApi = (tooltipString: Cell<string>, sharedBackstage: UiFact
     setTooltip: (tooltip: string) => {
       tooltipString.set(tooltip);
       mainOpt.each((c) => Attribute.set(c.element, 'aria-label', sharedBackstage.providers.translate(tooltip)));
-      chevronOpt.each((c) => {
-        Attribute.set(c.element, 'aria-label', chevronTooltip);
-      });
+      chevronOpt.each((c) => Attribute.set(c.element, 'aria-label', sharedBackstage.providers.translate(`${tooltip} menu`)));
     }
   };
 };
@@ -352,21 +345,7 @@ const makeSplitButtonApi = (tooltipString: Cell<string>, sharedBackstage: UiFact
 const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: UiFactoryBackstageShared, btnName?: string): AlloySpec[] => {
   const editorOffCell = Cell(Fun.noop);
   const tooltipString = Cell<string>(spec.tooltip.getOr(''));
-
-  const getChevronTooltip = () => {
-    const baseTooltip = spec.tooltip.getOr('Text color');
-    let staticTooltip;
-    if (baseTooltip.includes('Background color')) {
-      staticTooltip = 'Background color';
-    } else if (baseTooltip.includes('Text color')) {
-      staticTooltip = 'Text color';
-    } else {
-      staticTooltip = baseTooltip;
-    }
-    return sharedBackstage.providers.translate(`${staticTooltip} menu`);
-  };
-
-  const getApi = makeSplitButtonApi(tooltipString, sharedBackstage, getChevronTooltip());
+  const getApi = makeSplitButtonApi(tooltipString, sharedBackstage);
   const menuId = Id.generate('tox-split-menu');
   const expandedCell = Cell(false);
 
@@ -376,11 +355,15 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     'aria-controls': menuId
   });
 
+  // Helper to get ARIA label for the main button
   const getMainButtonAriaLabel = () => {
     const label = spec.tooltip.map((tooltip) => sharedBackstage.providers.translate(tooltip))
       .getOr(sharedBackstage.providers.translate('Text color'));
     return label;
   };
+
+  // Helper to get ARIA label and tooltip for the chevron/dropdown button
+  const getChevronTooltip = () => `${getMainButtonAriaLabel()} menu`;
 
   const updateAriaExpanded = (expanded: boolean, comp: AlloyComponent) => {
     expandedCell.set(expanded);
@@ -411,17 +394,20 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
       UiState.toggleOnReceive(() => sharedBackstage.providers.checkUiComponentContext(spec.context)),
       Unselecting.config({ }),
       Tooltipping.config(sharedBackstage.providers.tooltips.getConfig({
-        tooltipText: getChevronTooltip()
+        tooltipText: getChevronTooltip(),
+        onShow: (comp) => {
+          if (tooltipString.get() !== spec.tooltip.getOr('')) {
+            const translated = sharedBackstage.providers.translate(`${tooltipString.get()} menu`);
+            Tooltipping.setComponents(comp,
+              sharedBackstage.providers.tooltips.getComponents({ tooltipText: translated })
+            );
+          }
+        }
       }))
     ]),
     lazySink: sharedBackstage.getSink,
     fetch: fetchChoices(getApi, spec, sharedBackstage.providers),
-    getHotspot: (comp) => {
-      const parentOpt = Traverse.parent(comp.element);
-      return parentOpt.bind((parent) =>
-        SelectorFind.descendant(parent, 'button:not(.tox-split-button__chevron)')
-      ).bind((el) => comp.getSystem().getByDom(el).toOptional());
-    },
+    getHotspot: (comp) => Traverse.prevSibling(comp.element).bind((el) => comp.getSystem().getByDom(el).toOptional()),
     onOpen: (_anchor, _comp, menu) => {
       Highlighting.highlightBy(menu, (item) => Class.has(item.element, 'tox-collection__item--active'));
       Highlighting.getHighlighted(menu).each(Keying.focusIn);
