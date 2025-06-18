@@ -73,7 +73,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.MultipleSplitButtonPositi
       const chevrons = UiFinder.findAllIn(SugarBody.body(), '.tox-split-button__chevron');
       assert.equal(chevrons.length, 3, 'Should have 3 split button chevrons');
 
-      const mainButtons = UiFinder.findAllIn(SugarBody.body(), '[data-mce-name="split1"], [data-mce-name="split2"], [data-mce-name="split3"]');
+      const mainButtons = UiFinder.findAllIn(SugarBody.body(), '.tox-split-button__main');
       assert.equal(mainButtons.length, 3, 'Should have 3 main split buttons');
     });
 
@@ -84,6 +84,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.MultipleSplitButtonPositi
       const chevrons = UiFinder.findAllIn(SugarBody.body(), '.tox-split-button__chevron');
       assert.isTrue(chevrons.length >= 3, 'Should have at least 3 chevrons');
 
+      // Click the first split button's chevron using data-mce-name
       TinyUiActions.clickOnUi(editor, '[data-mce-name="split1-chevron"]');
       await TinyUiActions.pWaitForUi(editor, '.tox-collection');
 
@@ -92,6 +93,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.MultipleSplitButtonPositi
 
       TinyUiActions.keystroke(editor, 27);
 
+      // Click the second split button's chevron using data-mce-name
       TinyUiActions.clickOnUi(editor, '[data-mce-name="split2-chevron"]');
       await TinyUiActions.pWaitForUi(editor, '.tox-collection');
 
@@ -143,14 +145,10 @@ describe('browser.tinymce.themes.silver.editor.toolbar.MultipleSplitButtonPositi
       const editor = hook.editor();
       await TinyUiActions.pWaitForUi(editor, '.tox-editor-header');
 
-      const mainButtons = UiFinder.findAllIn(SugarBody.body(), '[data-mce-name="split1"], [data-mce-name="split2"]');
-      const chevrons = UiFinder.findAllIn(SugarBody.body(), '[data-mce-name="split1-chevron"], [data-mce-name="split2-chevron"]');
-      assert.isTrue(mainButtons.length >= 2, 'Should have at least 2 main split buttons');
-
-      const button1 = mainButtons[0];
-      const button2 = mainButtons[1];
-      const chevron1 = chevrons[0];
-      const chevron2 = chevrons[1];
+      const button1 = UiFinder.findIn(SugarBody.body(), '[data-mce-name="split1"]').getOrDie();
+      const button2 = UiFinder.findIn(SugarBody.body(), '[data-mce-name="split2"]').getOrDie();
+      const chevron1 = UiFinder.findIn(SugarBody.body(), '[data-mce-name="split1-chevron"]').getOrDie();
+      const chevron2 = UiFinder.findIn(SugarBody.body(), '[data-mce-name="split2-chevron"]').getOrDie();
 
       assert.isFalse(button1.dom.classList.contains('tox-tbtn--enabled'), 'First button should initially be inactive');
       assert.isFalse(button2.dom.classList.contains('tox-tbtn--enabled'), 'Second button should initially be inactive');

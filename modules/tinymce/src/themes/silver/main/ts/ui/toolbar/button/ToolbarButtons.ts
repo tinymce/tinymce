@@ -451,61 +451,61 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     }
   });
 
-  return [
-    AlloyButton.sketch({
+  const mainButton = AlloyButton.sketch({
+    ...renderCommonStructure(
+      spec.icon,
+      spec.text,
+      Optional.none(),
+      Optional.some([
+        Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, aria: { mode: 'pressed' }, toggleOnExecute: false }),
+        DisablingConfigs.toolbarButton(() => sharedBackstage.providers.checkUiComponentContext(spec.context).shouldDisable),
+        UiState.toggleOnReceive(() => sharedBackstage.providers.checkUiComponentContext(spec.context)),
+        AddEventsBehaviour.config('split-main-aria-events', []),
+        ...(spec.tooltip.isSome() ? [
+          Tooltipping.config(sharedBackstage.providers.tooltips.getConfig({
+            tooltipText: sharedBackstage.providers.translate(spec.tooltip.getOr('')),
+            onShow: (comp) => {
+              if (tooltipString.get() !== spec.tooltip.getOr('')) {
+                const translated = sharedBackstage.providers.translate(tooltipString.get());
+                Tooltipping.setComponents(comp,
+                  sharedBackstage.providers.tooltips.getComponents({ tooltipText: translated })
+                );
+              }
+            }
+          }))
+        ] : [])
+      ]),
+      sharedBackstage.providers,
+      spec.context,
+      btnName
+    ),
+    dom: {
       ...renderCommonStructure(
         spec.icon,
         spec.text,
         Optional.none(),
-        Optional.some([
-          Toggling.config({ toggleClass: ToolbarButtonClasses.Ticked, aria: { mode: 'pressed' }, toggleOnExecute: false }),
-          DisablingConfigs.toolbarButton(() => sharedBackstage.providers.checkUiComponentContext(spec.context).shouldDisable),
-          UiState.toggleOnReceive(() => sharedBackstage.providers.checkUiComponentContext(spec.context)),
-          AddEventsBehaviour.config('split-main-aria-events', []),
-          ...(spec.tooltip.isSome() ? [
-            Tooltipping.config(sharedBackstage.providers.tooltips.getConfig({
-              tooltipText: sharedBackstage.providers.translate(spec.tooltip.getOr('')),
-              onShow: (comp) => {
-                if (tooltipString.get() !== spec.tooltip.getOr('')) {
-                  const translated = sharedBackstage.providers.translate(tooltipString.get());
-                  Tooltipping.setComponents(comp,
-                    sharedBackstage.providers.tooltips.getComponents({ tooltipText: translated })
-                  );
-                }
-              }
-            }))
-          ] : [])
-        ]),
+        Optional.none(),
         sharedBackstage.providers,
         spec.context,
         btnName
-      ),
-      dom: {
-        ...renderCommonStructure(
-          spec.icon,
-          spec.text,
-          Optional.none(),
-          Optional.none(),
-          sharedBackstage.providers,
-          spec.context,
-          btnName
-        ).dom,
-        attributes: {
-          'aria-label': getMainButtonAriaLabel(),
-          ...(Type.isNonNullable(btnName) ? { 'data-mce-name': btnName } : {})
-        }
-      },
-      action: (button) => {
-        if (spec.onAction) {
-          const api = getApi(button);
-          if (api.isEnabled()) {
-            spec.onAction(api);
-          }
+      ).dom,
+      classes: [ ToolbarButtonClasses.Button, 'tox-split-button__main' ],
+      attributes: {
+        'aria-label': getMainButtonAriaLabel(),
+        ...(Type.isNonNullable(btnName) ? { 'data-mce-name': btnName } : {})
+      }
+    },
+    action: (button) => {
+      if (spec.onAction) {
+        const api = getApi(button);
+        if (api.isEnabled()) {
+          spec.onAction(api);
         }
       }
-    }),
-    arrow
-  ];
+    }
+  });
+
+  return [ mainButton, arrow ];
 };
 
 export {
