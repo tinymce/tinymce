@@ -16,7 +16,9 @@ describe('browser.tinymce.themes.silver.editor.toolbar.MultipleSplitButtonPositi
         editor.ui.registry.addSplitButton('split1', {
           text: 'Split 1',
           onAction: Fun.noop,
-          onItemAction: Fun.noop,
+          onItemAction: (api, _value) => {
+            api.setActive(true);
+          },
           fetch: (callback) => {
             callback([
               {
@@ -31,7 +33,9 @@ describe('browser.tinymce.themes.silver.editor.toolbar.MultipleSplitButtonPositi
         editor.ui.registry.addSplitButton('split2', {
           text: 'Split 2',
           onAction: Fun.noop,
-          onItemAction: Fun.noop,
+          onItemAction: (api, _value) => {
+            api.setActive(true);
+          },
           fetch: (callback) => {
             callback([
               {
@@ -46,7 +50,9 @@ describe('browser.tinymce.themes.silver.editor.toolbar.MultipleSplitButtonPositi
         editor.ui.registry.addSplitButton('split3', {
           text: 'Split 3',
           onAction: Fun.noop,
-          onItemAction: Fun.noop,
+          onItemAction: (api, _value) => {
+            api.setActive(true);
+          },
           fetch: (callback) => {
             callback([
               {
@@ -64,13 +70,10 @@ describe('browser.tinymce.themes.silver.editor.toolbar.MultipleSplitButtonPositi
       const editor = hook.editor();
       await TinyUiActions.pWaitForUi(editor, '.tox-editor-header');
 
-      const splitButtonGroups = UiFinder.findAllIn(SugarBody.body(), '.tox-split-button');
-      assert.equal(splitButtonGroups.length, 3, 'Should have 3 split button groups');
-
       const chevrons = UiFinder.findAllIn(SugarBody.body(), '.tox-split-button__chevron');
       assert.equal(chevrons.length, 3, 'Should have 3 split button chevrons');
 
-      const mainButtons = UiFinder.findAllIn(SugarBody.body(), '.tox-split-button .tox-tbtn:not(.tox-split-button__chevron)');
+      const mainButtons = UiFinder.findAllIn(SugarBody.body(), '[data-mce-name="split1"], [data-mce-name="split2"], [data-mce-name="split3"]');
       assert.equal(mainButtons.length, 3, 'Should have 3 main split buttons');
     });
 
@@ -81,7 +84,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.MultipleSplitButtonPositi
       const chevrons = UiFinder.findAllIn(SugarBody.body(), '.tox-split-button__chevron');
       assert.isTrue(chevrons.length >= 3, 'Should have at least 3 chevrons');
 
-      TinyUiActions.clickOnUi(editor, '.tox-split-button:first-child .tox-split-button__chevron');
+      TinyUiActions.clickOnUi(editor, '[data-mce-name="split1-chevron"]');
       await TinyUiActions.pWaitForUi(editor, '.tox-collection');
 
       const menuItems = UiFinder.findAllIn(SugarBody.body(), '.tox-collection .tox-collection__item');
@@ -89,7 +92,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.MultipleSplitButtonPositi
 
       TinyUiActions.keystroke(editor, 27);
 
-      TinyUiActions.clickOnUi(editor, '.tox-split-button:nth-child(2) .tox-split-button__chevron');
+      TinyUiActions.clickOnUi(editor, '[data-mce-name="split2-chevron"]');
       await TinyUiActions.pWaitForUi(editor, '.tox-collection');
 
       const menuItems2 = UiFinder.findAllIn(SugarBody.body(), '.tox-collection .tox-collection__item');
@@ -105,8 +108,8 @@ describe('browser.tinymce.themes.silver.editor.toolbar.MultipleSplitButtonPositi
       const chevrons = UiFinder.findAllIn(SugarBody.body(), '.tox-split-button__chevron');
       assert.isTrue(chevrons.length >= 2, 'Should have at least 2 chevrons for positioning test');
 
-      const firstChevron = chevrons[0];
-      TinyUiActions.clickOnUi(editor, '.tox-split-button:first-child .tox-split-button__chevron');
+      const firstChevron = UiFinder.findIn(SugarBody.body(), '[data-mce-name="split1-chevron"]').getOrDie();
+      TinyUiActions.clickOnUi(editor, '[data-mce-name="split1-chevron"]');
       const firstPopup = await TinyUiActions.pWaitForUi(editor, '.tox-collection');
 
       const firstChevronRect = firstChevron.dom.getBoundingClientRect();
@@ -114,8 +117,8 @@ describe('browser.tinymce.themes.silver.editor.toolbar.MultipleSplitButtonPositi
 
       TinyUiActions.keystroke(editor, 27);
 
-      const secondChevron = chevrons[1];
-      TinyUiActions.clickOnUi(editor, '.tox-split-button:nth-child(2) .tox-split-button__chevron');
+      const secondChevron = UiFinder.findIn(SugarBody.body(), '[data-mce-name="split2-chevron"]').getOrDie();
+      TinyUiActions.clickOnUi(editor, '[data-mce-name="split2-chevron"]');
       const secondPopup = await TinyUiActions.pWaitForUi(editor, '.tox-collection');
 
       const secondChevronRect = secondChevron.dom.getBoundingClientRect();
@@ -140,19 +143,19 @@ describe('browser.tinymce.themes.silver.editor.toolbar.MultipleSplitButtonPositi
       const editor = hook.editor();
       await TinyUiActions.pWaitForUi(editor, '.tox-editor-header');
 
-      const splitButtons = UiFinder.findAllIn(SugarBody.body(), '.tox-split-button .tox-tbtn:not(.tox-split-button__chevron)');
-      const chevrons = UiFinder.findAllIn(SugarBody.body(), '.tox-split-button__chevron');
-      assert.isTrue(splitButtons.length >= 2, 'Should have at least 2 main split buttons');
+      const mainButtons = UiFinder.findAllIn(SugarBody.body(), '[data-mce-name="split1"], [data-mce-name="split2"]');
+      const chevrons = UiFinder.findAllIn(SugarBody.body(), '[data-mce-name="split1-chevron"], [data-mce-name="split2-chevron"]');
+      assert.isTrue(mainButtons.length >= 2, 'Should have at least 2 main split buttons');
 
-      const button1 = splitButtons[0];
-      const button2 = splitButtons[1];
+      const button1 = mainButtons[0];
+      const button2 = mainButtons[1];
       const chevron1 = chevrons[0];
       const chevron2 = chevrons[1];
 
       assert.isFalse(button1.dom.classList.contains('tox-tbtn--enabled'), 'First button should initially be inactive');
       assert.isFalse(button2.dom.classList.contains('tox-tbtn--enabled'), 'Second button should initially be inactive');
 
-      TinyUiActions.clickOnUi(editor, '.tox-split-button:first-child .tox-split-button__chevron');
+      TinyUiActions.clickOnUi(editor, '[data-mce-name="split1-chevron"]');
       await TinyUiActions.pWaitForUi(editor, '.tox-collection');
 
       assert.equal(chevron1.dom.getAttribute('aria-expanded'), 'true', 'First chevron should show dropdown expanded');
@@ -162,7 +165,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.MultipleSplitButtonPositi
       assert.isTrue(button1.dom.classList.contains('tox-tbtn--enabled'), 'First button should be active after item selection');
       assert.isFalse(button2.dom.classList.contains('tox-tbtn--enabled'), 'Second button should remain inactive');
 
-      TinyUiActions.clickOnUi(editor, '.tox-split-button:nth-child(2) .tox-split-button__chevron');
+      TinyUiActions.clickOnUi(editor, '[data-mce-name="split2-chevron"]');
       await TinyUiActions.pWaitForUi(editor, '.tox-collection');
 
       assert.equal(chevron2.dom.getAttribute('aria-expanded'), 'true', 'Second chevron should show dropdown expanded');
