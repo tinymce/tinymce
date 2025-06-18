@@ -114,7 +114,7 @@ describe('browser.tinymce.themes.silver.editor.buttons.UpdateToolbarButtonTextAn
 
   it('TINY-9268: toolbar split button can update its text when clicking on it or one of its items', async () => {
     const selectorForToolbarButtonWithLabel = (label: string) =>
-      `.tox-tbtn.tox-tbtn--select:contains("${label}")`;
+      `.tox-split-button__main:contains("${label}")`;
     const getChevron = (label: string) => {
       const button = UiFinder.findIn(SugarBody.body(), selectorForToolbarButtonWithLabel(label)).getOrDie();
       return UiFinder.findIn(Traverse.parent(button).getOrDie(), '.tox-split-button__chevron').getOrDie();

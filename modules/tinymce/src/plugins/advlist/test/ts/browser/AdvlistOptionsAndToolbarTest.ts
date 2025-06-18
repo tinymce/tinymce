@@ -48,7 +48,7 @@ describe('browser.tinymce.plugins.advlist.AdvlistOptionsAndToolbarTest', () => {
         children: [
           ...splitBtns.number ? [
             s.element('button', {
-              classes: [ arr.has('tox-tbtn') ],
+              classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__main') ],
               attrs: {
                 'data-mce-name': str.is('numlist'),
                 'aria-label': str.is('Numbered list')
@@ -72,7 +72,7 @@ describe('browser.tinymce.plugins.advlist.AdvlistOptionsAndToolbarTest', () => {
           ],
           ...splitBtns.bullet ? [
             s.element('button', {
-              classes: [ arr.has('tox-tbtn') ],
+              classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__main') ],
               attrs: {
                 'data-mce-name': str.is('bullist'),
                 'aria-label': str.is('Bullet list')
@@ -104,7 +104,7 @@ describe('browser.tinymce.plugins.advlist.AdvlistOptionsAndToolbarTest', () => {
     Waiter.pTryUntil('Wait for toolbar button state', () => {
       const button = UiFinder.findIn(SugarBody.body(), `button[aria-label="${name}"]`).getOrDie();
       return Assertions.assertStructure('', ApproxStructure.build((s, str) => s.element('button', {
-        exactClasses: [ 'tox-tbtn', ...(state ? [ 'tox-tbtn--enabled' ] : [] ) ],
+        exactClasses: [ 'tox-tbtn', 'tox-split-button__main', ...(state ? [ 'tox-tbtn--enabled' ] : [] ) ],
         attrs: {
           'aria-pressed': state ? str.is('true') : str.is('false')
         }
@@ -345,7 +345,7 @@ describe('browser.tinymce.plugins.advlist.AdvlistOptionsAndToolbarTest', () => {
       Waiter.pTryUntil('Wait for context toolbar button state', () => {
         const button = UiFinder.findIn(SugarBody.body(), `.tox-pop__dialog button[aria-label="${name}"]`).getOrDie();
         return Assertions.assertStructure('', ApproxStructure.build((s, _) => s.element('button', {
-          exactClasses: [ 'tox-tbtn', ...(state ? [ 'tox-tbtn--enabled' ] : [] ) ]
+          exactClasses: [ 'tox-tbtn', 'tox-split-button__main', ...(state ? [ 'tox-tbtn--enabled' ] : [] ) ]
         })), button);
       });
 
