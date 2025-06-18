@@ -117,8 +117,7 @@ const processAttr = (ele: Element, settings: DomParserSettings, schema: Schema, 
 
   if (evt.keepAttr) {
     evt.allowedAttributes[attrName] = true;
-
-    if (isBooleanAttribute(attrName, schema) && evt.attrValue !== 'false') {
+    if (isBooleanAttribute(attrName, schema) && !Obj.has(schema.getCustomElements(), ele.nodeName.toLowerCase())) {
       evt.attrValue = attrName;
     }
 
