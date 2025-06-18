@@ -24,13 +24,6 @@
         border-radius: @toolbar-button-border-radius 0 0 @toolbar-button-border-radius;
       }
     }
-
-    &:hover {
-      background: @toolbar-button-hover-background-color;
-      border: @toolbar-button-hover-border;
-      box-shadow: @toolbar-button-hover-box-shadow;
-      color: @toolbar-button-hover-text-color;
-    }
   }
 
   // Split button chevron component (right side)
@@ -41,8 +34,8 @@
     margin-left: 0;
 
     &:focus {
-        border: @toolbar-button-border;
-        border-left: 1px solid @border-color-light;
+      border: @toolbar-button-border;
+      border-left: 1px solid @border-color-light;
       box-shadow: @toolbar-button-focus-box-shadow;
       background: @toolbar-button-focus-background-color;
       color: @toolbar-button-focus-text-color;
@@ -57,11 +50,7 @@
 
     // Preserve chevron border on hover (overrides .tox-tbtn:hover border: 0)
     &:hover {
-      background: @toolbar-button-hover-background-color;
-      border: @toolbar-button-hover-border;
       border-left: 1px solid @border-color-light;
-      box-shadow: @toolbar-button-hover-box-shadow;
-      color: @toolbar-button-hover-text-color;
     }
 
     svg {
