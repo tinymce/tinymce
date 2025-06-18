@@ -10,10 +10,16 @@ import { LanguageZones } from './LanguageZones';
 import * as TextZones from './TextZones';
 import { Zone } from './Zones';
 
+// Since we support these formats both mixed cases and either - and _ we need to normalize the code
+const normalizeCode = (lang: string): string => lang.toLowerCase().replace(/_/g, '-');
+
+const isEqualCode = (lang: string, onlyLang: string): boolean =>
+  normalizeCode(lang) === normalizeCode(onlyLang);
+
 // a Text Zone enforces a language, and returns Optional.some only if a single zone was identified
 // with that language.
 const filterZone = <E>(zone: Zone<E>, onlyLang: string): Optional<Zone<E>> => {
-  return zone.lang === onlyLang ? Optional.some(zone) : Optional.none<Zone<E>>();
+  return isEqualCode(zone.lang, onlyLang) ? Optional.some(zone) : Optional.none<Zone<E>>();
 };
 
 const fromBoundedWith = <E, D>(universe: Universe<E, D>, left: E, right: E, envLang: string, onlyLang: string, transform: (universe: Universe<E, D>, item: E) => WordDecisionItem<E>): Optional<Zone<E>> => {

@@ -23,7 +23,7 @@ const DOM = DOMUtils.DOM;
 const initPlugin = (editor: Editor, initializedPlugins: string[], plugin: string) => {
   const Plugin = PluginManager.get(plugin);
 
-  const pluginUrl = PluginManager.urls[plugin] || editor.documentBaseUrl.replace(/\/$/, '');
+  const pluginUrl = PluginManager.urls[plugin] || editor.editorManager.documentBaseURL.replace(/\/$/, '');
   plugin = Tools.trim(plugin);
   if (Plugin && Tools.inArray(initializedPlugins, plugin) === -1) {
     if (editor.plugins[plugin]) {
@@ -83,7 +83,7 @@ const initTheme = (editor: Editor) => {
     editor.theme = Theme(editor, ThemeManager.urls[theme]) || {};
 
     if (Type.isFunction(editor.theme.init)) {
-      editor.theme.init(editor, ThemeManager.urls[theme] || editor.documentBaseUrl.replace(/\/$/, ''));
+      editor.theme.init(editor, ThemeManager.urls[theme] || editor.editorManager.documentBaseURL.replace(/\/$/, ''));
     }
   } else {
     // Theme set to false or null doesn't produce a theme api
