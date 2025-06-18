@@ -29,6 +29,10 @@
 @suggestededits-card-selected-border-color: @suggestededits-color-tint;
 
 .tox {
+  [data-mce-name="suggestededits"] .tox-icon .tox-icon--badge {
+    fill: @color-tint;
+  }
+
   .tox-view .tox-suggestededits__pane {
     padding: 0;      /* Override the default padding of tox-view__pane */
   }
@@ -198,12 +202,6 @@
                   .tox-suggestededits__card--name {
                     color: @suggestededits-text-color;
                   }
-
-                  .tox-suggestededits__card--timestamp {
-                    color: @suggestededits-text-color;
-                    font-size: 12px;
-                    line-height: 18px;
-                  }
                 }
               }
 
@@ -250,23 +248,15 @@
                 text-align: center;
               }
 
-              .tox-suggestededits__resolution.tox-suggestededits__resolution--accept {
-                background-color: @suggestededits-added-color;
-
+              .tox-suggestededits__resolution.tox-suggestededits__resolution--accepted {
                 .tox-icon svg {
-                  fill: @suggestededits-background-color;
-                  transform: scale(0.8);
-                  margin-top: 4px;
+                  fill: @suggestededits-added-color;
                 }
               }
 
-              .tox-suggestededits__resolution.tox-suggestededits__resolution--reject {
-                background-color: @suggestededits-removed-color;
-
+              .tox-suggestededits__resolution.tox-suggestededits__resolution--rejected {
                 .tox-icon svg {
-                  fill: @suggestededits-background-color;
-                  transform: scale(0.8);
-                  margin-top: 4px;
+                  fill: @suggestededits-removed-color;
                 }
               }
             }
@@ -345,6 +335,11 @@
                 color: @suggestededits-text-color;
                 font-size: 12px;
                 line-height: 18px;
+
+                .tox-icon svg {
+                  fill: contrast(@suggestededits-background-color, #222F3E80, #FFFFFF80);
+                  transform: translate(0px, 8px);
+                }
               }
             }
 
