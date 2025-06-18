@@ -136,7 +136,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.MultipleSplitButtonPositi
       TinyUiActions.keystroke(editor, 27);
     });
 
-        it('TINY-8665: Active states should be updated correctly for each split button', async () => {
+    it('TINY-8665: Active states should be updated correctly for each split button', async () => {
       const editor = hook.editor();
       await TinyUiActions.pWaitForUi(editor, '.tox-editor-header');
 
