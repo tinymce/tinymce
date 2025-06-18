@@ -9,7 +9,28 @@
   // Split button main component (left side)
   .tox-split-button__main {
     border-radius: @toolbar-button-border-radius 0 0 @toolbar-button-border-radius;
-    margin-right: 0; // Remove default button margin between main and chevron
+    margin-right: 0;
+
+    &:focus {
+      border: @toolbar-button-border;
+      box-shadow: @toolbar-button-focus-box-shadow;
+      background: @toolbar-button-focus-background-color;
+      color: @toolbar-button-focus-text-color;
+      position: relative;
+      z-index: 1;
+
+      &::after {
+        .keyboard-focus-outline-mixin();
+        border-radius: @toolbar-button-border-radius 0 0 @toolbar-button-border-radius;
+      }
+    }
+
+    &:hover {
+      background: @toolbar-button-hover-background-color;
+      border: @toolbar-button-hover-border;
+      box-shadow: @toolbar-button-hover-box-shadow;
+      color: @toolbar-button-hover-text-color;
+    }
   }
 
   // Split button chevron component (right side)
@@ -17,11 +38,30 @@
     width: @toolbar-button-chevron-width;
     border-left: 1px solid @border-color-light;
     border-radius: 0 @toolbar-button-border-radius @toolbar-button-border-radius 0;
-    margin-left: 0; // Remove default button margin between main and chevron
+    margin-left: 0;
+
+    &:focus {
+        border: @toolbar-button-border;
+        border-left: 1px solid @border-color-light;
+      box-shadow: @toolbar-button-focus-box-shadow;
+      background: @toolbar-button-focus-background-color;
+      color: @toolbar-button-focus-text-color;
+      position: relative;
+      z-index: 1;
+
+      &::after {
+        .keyboard-focus-outline-mixin();
+        border-radius: 0 @toolbar-button-border-radius @toolbar-button-border-radius 0;
+      }
+    }
 
     // Preserve chevron border on hover (overrides .tox-tbtn:hover border: 0)
     &:hover {
+      background: @toolbar-button-hover-background-color;
+      border: @toolbar-button-hover-border;
       border-left: 1px solid @border-color-light;
+      box-shadow: @toolbar-button-hover-box-shadow;
+      color: @toolbar-button-hover-text-color;
     }
 
     svg {
@@ -46,6 +86,10 @@
       &:hover {
         border-left: 1px solid @border-color-light;
       }
+
+      &:focus {
+        border-left: 1px solid @border-color-light;
+      }
     }
   }
 
@@ -61,12 +105,22 @@
       box-shadow: @toolbar-button-disabled-box-shadow;
       color: @toolbar-button-disabled-text-color;
     }
+
+    &:focus {
+      background: @toolbar-button-disabled-background-color;
+      box-shadow: @toolbar-button-disabled-box-shadow;
+      color: @toolbar-button-disabled-text-color;
+    }
   }
 
   .tox-split-button__chevron.tox-tbtn--disabled {
     border-left: 1px solid @border-color-light;
 
     &:hover {
+      border-left: 1px solid @border-color-light;
+    }
+
+    &:focus {
       border-left: 1px solid @border-color-light;
     }
   }
