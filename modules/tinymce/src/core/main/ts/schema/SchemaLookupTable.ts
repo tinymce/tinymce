@@ -126,7 +126,7 @@ export const makeSchema = (type: SchemaType): SchemaLookupTable => {
     add('canvas', 'width height', flowContent);
     add('data', 'value', phrasingContent);
     add('video', 'src crossorigin poster preload autoplay mediagroup loop ' +
-      'controlslist disablepictureinpicture disableremoteplayback playsinline' +
+      'controlslist disablepictureinpicture disableremoteplayback playsinline ' +
       'muted controls width height buffered', [ flowContent, 'track source' ].join(' '));
     add('audio', 'src crossorigin preload autoplay mediagroup loop muted controls ' +
       'buffered volume', [ flowContent, 'track source' ].join(' '));
