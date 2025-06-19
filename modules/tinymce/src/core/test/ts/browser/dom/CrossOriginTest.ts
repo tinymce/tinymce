@@ -7,8 +7,7 @@ import { assert } from 'chai';
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
-
-type CrossOrigin = 'anonymous' | 'use-credentials' | '';
+import * as OptionTypes from 'tinymce/core/api/OptionTypes';
 
 describe('browser.tinymce.core.dom.CrossOriginTest', () => {
   const settings = {
@@ -72,7 +71,7 @@ describe('browser.tinymce.core.dom.CrossOriginTest', () => {
   });
 
   context('Using global setter', () => {
-    const pTestCrossOriginSetter = async (crossOrigin: CrossOrigin) => {
+    const pTestCrossOriginSetter = async (crossOrigin: OptionTypes.CrossOrigin) => {
       ScriptLoader.ScriptLoader._setCrossOrigin(crossOrigin);
       assertCrossOriginAttribute(await pLoadScript(scriptUrl), crossOrigin);
     };
@@ -105,7 +104,7 @@ describe('browser.tinymce.core.dom.CrossOriginTest', () => {
   });
 
   context('Using overrideDefaults', () => {
-    const pTestCrossOriginEditorOption = async (crossOrigin: CrossOrigin) => {
+    const pTestCrossOriginEditorOption = async (crossOrigin: OptionTypes.CrossOrigin) => {
       EditorManager.overrideDefaults({
         crossorigin: crossOrigin
       });

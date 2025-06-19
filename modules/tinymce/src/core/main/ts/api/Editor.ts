@@ -313,10 +313,7 @@ class Editor implements EditorObservable {
       DOMUtils.DOM.styleSheetLoader._setReferrerPolicy(referrerPolicy);
     }
 
-    const crossOrigin = Options.getCrossOrigin(self);
-    if (Type.isNonNullable(crossOrigin)) {
-      ScriptLoader.ScriptLoader._setCrossOrigin(crossOrigin);
-    }
+    ScriptLoader.ScriptLoader._setCrossOrigin(Options.getCrossOrigin(self));
 
     const contentCssCors = Options.hasContentCssCors(self);
     if (Type.isNonNullable(contentCssCors)) {
