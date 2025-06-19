@@ -37,7 +37,7 @@
     "test": "echo 'No tests'",
     "test-ci": "vitest --watch=false --reporter=junit --outputFile=scratch/test-results.xml",
     "test-storybook": "vitest --project storybook",
-    "ci": "yarn lint && yarn build && yarn test"
+    "ci": "yarn lint && yarn build-storybook && yarn build && yarn test"
   },
   "peerDependencies": {
     "react": "^18.3.1",
