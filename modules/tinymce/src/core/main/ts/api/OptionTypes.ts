@@ -196,7 +196,7 @@ interface BaseEditorOptions {
   protect?: RegExp[];
   readonly?: boolean;
   referrer_policy?: ReferrerPolicy;
-  crossorigin?: 'anonymous' | 'use-credentials';
+  crossorigin?: '' | 'anonymous' | 'use-credentials';
   relative_urls?: boolean;
   remove_script_host?: boolean;
   remove_trailing_brs?: boolean;

@@ -117,7 +117,7 @@ class ScriptLoader {
       }
 
       const crossOrigin = this.settings.crossOrigin;
-      if (Type.isString(crossOrigin) && crossOrigin.length > 0) {
+      if (Type.isString(crossOrigin)) {
         dom.setAttrib(elm, 'crossorigin', crossOrigin);
       }
 
