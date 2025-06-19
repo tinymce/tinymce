@@ -10,8 +10,8 @@ import * as ColorSwatch from 'tinymce/themes/silver/ui/core/color/ColorSwatch';
 
 describe('browser.tinymce.themes.silver.editor.color.ColorPickerSanityTest', () => {
   const selectors = {
-    backcolorToolbar: '[aria-label^="Background color"] > .tox-tbtn + .tox-split-button__chevron',
-    forecolorToolbar: '[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron'
+    backcolorToolbar: 'button[data-mce-name="backcolor-chevron"][aria-label^="Background color"]',
+    forecolorToolbar: 'button[data-mce-name="forecolor-chevron"][aria-label^="Text color"]'
   };
 
   Arr.each([

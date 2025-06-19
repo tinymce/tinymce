@@ -17,7 +17,10 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
   }, [ AdvListPlugin, ListsPlugin ]);
 
   const pClickOnSplitBtnFor = async (editor: Editor, label: string) => {
-    TinyUiActions.clickOnToolbar(editor, '[aria-label="' + label + '"] > .tox-tbtn + .tox-split-button__chevron');
+    const selector = label === 'Numbered list' ?
+      'button[data-mce-name="numlist-chevron"][aria-label^="Numbered list"]' :
+      'button[data-mce-name="bullist-chevron"][aria-label^="Bullet list"]';
+    TinyUiActions.clickOnToolbar(editor, selector);
     await TinyUiActions.pWaitForUi(editor, '.tox-menu.tox-selected-menu');
   };
 
@@ -247,11 +250,13 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
     TinyUiActions.keyup(editor, Keys.escape());
   });
 
-  const assertButtonEnabled = (selector: string) => UiFinder.exists(SugarBody.body(), `[data-mce-name="${selector}"][aria-disabled="false"]`);
+  const assertButtonEnabled = (selector: string) => UiFinder.exists(SugarBody.body(), `button[data-mce-name="${selector}"]:not([aria-disabled="true"])`);
 
-  const assertButtonDisabled = (selector: string) => UiFinder.exists(SugarBody.body(), `[data-mce-name="${selector}"][aria-disabled="true"]`);
+  const assertButtonDisabled = (selector: string) => UiFinder.exists(SugarBody.body(), `button[data-mce-name="${selector}"][aria-disabled="true"]`);
 
-  const assertMenuPartEnabled = (selector: string) => UiFinder.notExists(SugarBody.body(), `[data-mce-name="${selector}"] > span.tox-tbtn.tox-tbtn--select[aria-disabled="false"]`);
+  const assertMenuPartEnabled = (selector: string) => UiFinder.exists(SugarBody.body(), `button[data-mce-name="${selector}-chevron"]:not([aria-disabled="true"])`);
+
+  const assertMenuPartDisabled = (selector: string) => UiFinder.exists(SugarBody.body(), `button[data-mce-name="${selector}-chevron"][aria-disabled="true"]`);
 
   it('TINY-112674: Advlist split buttons should be disabled in readonly mode', async () => {
     const editor = hook.editor();
@@ -263,11 +268,15 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
     editor.mode.set('readonly');
     assertButtonDisabled('numlist');
     assertButtonDisabled('bullist');
+    assertMenuPartDisabled('numlist');
+    assertMenuPartDisabled('bullist');
 
     editor.mode.set('design');
     editor.setEditableRoot(false);
     assertButtonDisabled('numlist');
     assertButtonDisabled('bullist');
+    assertMenuPartDisabled('numlist');
+    assertMenuPartDisabled('bullist');
 
     editor.setEditableRoot(true);
     assertButtonEnabled('numlist');
@@ -282,6 +291,8 @@ describe('browser.tinymce.plugins.advlist.SplitButtonTest', () => {
     TinySelections.setCursor(editor, [ 1, 0, 0 ], 1);
     assertButtonDisabled('numlist');
     assertButtonDisabled('bullist');
+    assertMenuPartDisabled('numlist');
+    assertMenuPartDisabled('bullist');
 
     TinySelections.setCursor(editor, [ 2, 0, 0 ], 1);
     assertButtonEnabled('numlist');
