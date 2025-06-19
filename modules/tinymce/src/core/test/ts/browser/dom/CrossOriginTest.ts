@@ -24,7 +24,7 @@ describe('browser.tinymce.core.dom.CrossOriginTest', () => {
   const isScript = SugarNode.isTag('script');
 
   const pLoadScript = async (url: string, timeout: number = 1000) => {
-    let resolve: (scripts: SugarElement<HTMLScriptElement>) => void;
+    let resolve: (script: SugarElement<HTMLScriptElement>) => void;
     let reject: (reason: Error) => void;
     const time = Date.now();
     const observePromise = new Promise<SugarElement<HTMLScriptElement>>((res, rej) => {
