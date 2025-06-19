@@ -27,7 +27,7 @@ const isValidTarget = (schema: Schema, node: Node) => {
     return true;
   } else if (NodeType.isElement(node)) {
     return !isBlockElement(schema.getBlockElements(), node) && !Bookmarks.isBookmarkNode(node) &&
-      !TransparentElements.isTransparentBlock(schema, node) && !Namespace.isNonHtmlElementRoot(node);
+      !TransparentElements.isTransparentBlock(schema, node) && !Namespace.isNonHtmlElementRoot(node) && !NodeType.isTemplate(node);
   } else {
     return false;
   }

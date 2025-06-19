@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Added better support for template elements.
+time: 2025-06-16T14:23:46.798759+02:00
+custom:
+  Issue: TINY-12157
