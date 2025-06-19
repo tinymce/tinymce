@@ -125,7 +125,8 @@ const logWarnings = (rawOptions: RawEditorOptions, normalizedOptions: Normalized
 };
 
 const deprecatedFeatures = {
-  fire: 'The "fire" event api has been deprecated and will be removed in TinyMCE 9. Use "dispatch" instead.'
+  fire: 'The "fire" event api has been deprecated and will be removed in TinyMCE 9. Use "dispatch" instead.',
+  selectionSetContent: 'The "setContent" method has been deprecated and will be removed in TinyMCE 9.'
 };
 
 const logFeatureDeprecationWarning = (feature: keyof typeof deprecatedFeatures): void => {
