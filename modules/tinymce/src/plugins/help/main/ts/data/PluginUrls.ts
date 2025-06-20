@@ -77,6 +77,7 @@ const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'powerpaste', name: 'PowerPaste', type: PluginType.Premium, slug: 'introduction-to-powerpaste' },
   { key: 'revisionhistory', name: 'Revision History', type: PluginType.Premium },
   { key: 'tinymcespellchecker', name: 'Spell Checker', type: PluginType.Premium, slug: 'introduction-to-tiny-spellchecker' },
+  { key: 'suggestededits', name: 'Suggested Edits', type: PluginType.Premium },
   { key: 'autocorrect', name: 'Spelling Autocorrect', type: PluginType.Premium },
   { key: 'tableofcontents', name: 'Table of Contents', type: PluginType.Premium },
   { key: 'advtemplate', name: 'Templates', type: PluginType.Premium, slug: 'advanced-templates' },
