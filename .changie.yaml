@@ -43,9 +43,6 @@ projects:
   - label: mcagar
     key: mcagar
     changelog: modules/mcagar/CHANGELOG.md
-  - label: oxide-components
-    key: oxide-components
-    changelog: modules/oxide-components/CHANGELOG.md
   - label: phoenix
     key: phoenix
     changelog: modules/phoenix/CHANGELOG.md
