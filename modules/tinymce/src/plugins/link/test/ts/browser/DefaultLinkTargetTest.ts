@@ -65,7 +65,7 @@ describe('browser.tinymce.plugins.link.DefaultLinkTargetTest', () => {
     await TestLinkUi.pAssertContentPresence(editor, { 'a[target="_blank"]': 1, 'a': 1 });
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 2);
     await TestLinkUi.pOpenLinkDialog(editor);
-    await TestLinkUi.pSetListBoxItem(editor, 'Open link in...', 'Current window');
+    await TestLinkUi.pSetListBoxItem(editor, 'Open link in…', 'Current window');
     await TestLinkUi.pClickSave(editor);
     await TestLinkUi.pAssertContentPresence(editor, { 'a:not([target="_blank"])': 1, 'a': 1 });
   });

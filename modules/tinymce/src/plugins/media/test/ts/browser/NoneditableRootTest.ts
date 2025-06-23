@@ -31,11 +31,11 @@ describe('browser.tinymce.plugins.media.NoneditableRootTest', () => {
         editor.setContent('<div>Noneditable content</div><div contenteditable="true">Editable content</div>');
         TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
         TinyUiActions.clickOnMenu(editor, 'button:contains("Insert")');
-        await TinyUiActions.pWaitForUi(editor, '[role="menuitem"][aria-label="Media..."][aria-disabled="true"]');
+        await TinyUiActions.pWaitForUi(editor, '[role="menuitem"][aria-label="Media…"][aria-disabled="true"]');
         TinyUiActions.keystroke(editor, Keys.escape());
         TinySelections.setSelection(editor, [ 1, 0 ], 0, [ 1, 0 ], 2);
         TinyUiActions.clickOnMenu(editor, 'button:contains("Insert")');
-        await TinyUiActions.pWaitForUi(editor, '[role="menuitem"][aria-label="Media..."][aria-disabled="false"]');
+        await TinyUiActions.pWaitForUi(editor, '[role="menuitem"][aria-label="Media…"][aria-disabled="false"]');
         TinyUiActions.keystroke(editor, Keys.escape());
       });
     });
@@ -65,8 +65,8 @@ describe('browser.tinymce.plugins.media.NoneditableRootTest', () => {
       editor.focus();
       editor.setContent('<div class="mceEditable"><div class="random"><h1 style="text-align: center;">Test</h1><div id="test" contenteditable="false"><a href="www.google.com">test</a></div></div></div>');
       findAndFocusEditableElement(editor, '#test');
-      await TinyUiActions.pTriggerContextMenu(editor, '#test', '[role="menuitem"]:contains("Media...")');
-      TinyUiActions.clickOnUi(editor, '[role="menuitem"]:contains("Media...")');
+      await TinyUiActions.pTriggerContextMenu(editor, '#test', '[role="menuitem"]:contains("Media…")');
+      TinyUiActions.clickOnUi(editor, '[role="menuitem"]:contains("Media…")');
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
       await TinyUiActions.pWaitForDialog(editor);
       TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
@@ -126,8 +126,8 @@ describe('browser.tinymce.plugins.media.NoneditableRootTest', () => {
       const media = `<iframe src="https://www.youtube.com/embed/b3XFjWInBog" width="560" height="314" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`;
       editor.setContent('<div class="mceEditable" contenteditable="true"><div class="random"><h1 style="text-align: center;">Test</h1><div id="test">' + media + '</div></div></div>');
       findAndFocusEditableElement(editor, '.mce-preview-object');
-      await TinyUiActions.pTriggerContextMenu(editor, '#test', '[role="menuitem"]:contains("Media...")');
-      TinyUiActions.clickOnUi(editor, '[role="menuitem"]:contains("Media...")');
+      await TinyUiActions.pTriggerContextMenu(editor, '#test', '[role="menuitem"]:contains("Media…")');
+      TinyUiActions.clickOnUi(editor, '[role="menuitem"]:contains("Media…")');
       await TinyUiActions.pWaitForDialog(editor);
       await Utils.pSetSourceInput(editor, 'https://www.youtube.com/embed/b3XFjWInBog');
       TinyUiActions.submitDialog(editor);
@@ -197,8 +197,8 @@ describe('browser.tinymce.plugins.media.NoneditableRootTest', () => {
       const media = `<iframe src="https://www.youtube.com/embed/b3XFjWInBog" width="560" height="314" frameborder="0" allowfullscreen="allowfullscreen"></iframe>`;
       editor.setContent('<div class="mceEditable" contenteditable="true"><div class="random"><h1 style="text-align: center;">Test</h1><div id="test">' + media + '</div></div></div>');
       findAndFocusEditableElement(editor, '.mce-preview-object');
-      await TinyUiActions.pTriggerContextMenu(editor, '#test', '[role="menuitem"]:contains("Media...")');
-      TinyUiActions.clickOnUi(editor, '[role="menuitem"]:contains("Media...")');
+      await TinyUiActions.pTriggerContextMenu(editor, '#test', '[role="menuitem"]:contains("Media…")');
+      TinyUiActions.clickOnUi(editor, '[role="menuitem"]:contains("Media…")');
       await TinyUiActions.pWaitForDialog(editor);
       await Utils.pSetSourceInput(editor, 'https://www.youtube.com/embed/b3XFjWInBog');
       TinyUiActions.submitDialog(editor);

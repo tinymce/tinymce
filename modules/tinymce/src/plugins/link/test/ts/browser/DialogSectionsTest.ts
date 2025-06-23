@@ -76,7 +76,7 @@ describe('browser.tinymce.plugins.link.DialogSectionsTest', () => {
     checkSections([
       {
         option: { key: 'link_target_list', value },
-        selector: 'label:contains("Open link in...")',
+        selector: 'label:contains("Open link in…")',
         exists
       }
     ]);
