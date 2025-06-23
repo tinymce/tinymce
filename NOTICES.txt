@@ -1,7 +1,7 @@
 Below is a list of third party libraries that this software uses:
 ----------------------------------------------------------------
 
-dompurify - Patched by Tiny
+dompurify
 owner: Mario Heiderich
 repo: https://github.com/cure53/DOMPurify
 version: 3.2.6
