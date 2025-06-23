@@ -104,8 +104,7 @@ const cleanContent = (editor: Editor, args: SetSelectionContentArgs) => {
   }
 };
 
-const setContent = (editor: Editor, content: string, args: Partial<SetSelectionContentArgs> = {}): void => {
-  Deprecations.logFeatureDeprecationWarning('selectionSetContent');
+const setContentInternal = (editor: Editor, content: string, args: Partial<SetSelectionContentArgs> = {}): void => {
   const defaultedArgs = setupArgs(args, content);
   preProcessSetContent(editor, defaultedArgs).each((updatedArgs) => {
     // Sanitize the content
@@ -121,6 +120,12 @@ const setContent = (editor: Editor, content: string, args: Partial<SetSelectionC
   });
 };
 
+const setContentExternal = (editor: Editor, content: string, args: Partial<SetSelectionContentArgs> = {}): void => {
+  Deprecations.logFeatureDeprecationWarning('selectionSetContent');
+  setContentInternal(editor, content, args);
+};
+
 export {
-  setContent
+  setContentInternal,
+  setContentExternal
 };

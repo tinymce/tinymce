@@ -8,6 +8,7 @@ import { GetContentEvent, SetContentEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { Bookmark } from 'tinymce/core/bookmark/BookmarkTypes';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
+import * as SetSelectionContent from 'tinymce/core/selection/SetSelectionContent';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 
 describe('browser.tinymce.core.dom.SelectionTest', () => {
@@ -93,7 +94,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     rng.setStart(editor.getBody(), 0);
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
-    editor.selection.setContent('<div>test</div>');
+    SetSelectionContent.setContentInternal(editor, '<div>test</div>');
     LegacyUnit.equal(editor.getContent(), '<div>test</div>', 'Set contents at selection');
 
     // Insert XSS at selection
@@ -102,7 +103,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     rng.setStart(editor.getBody(), 0);
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
-    editor.selection.setContent('<img src="a" onerror="alert(1)" />');
+    SetSelectionContent.setContentInternal(editor, '<img src="a" onerror="alert(1)" />');
     LegacyUnit.equal(editor.getContent(), '<p><img src="a"></p>', 'Set XSS at selection');
 
     // Set contents at selection (collapsed)
@@ -111,7 +112,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     rng.setStart(editor.getBody(), 0);
     rng.setEnd(editor.getBody(), 0);
     editor.selection.setRng(rng);
-    editor.selection.setContent('<div>test</div>');
+    SetSelectionContent.setContentInternal(editor, '<div>test</div>');
     LegacyUnit.equal(editor.getContent(), '<div>test</div>\n<p>text</p>', 'Set contents at selection (collapsed)');
 
     // Insert in middle of paragraph
@@ -120,7 +121,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     rng.setStart(editor.getBody().firstChild?.firstChild as Text, 'before'.length);
     rng.setEnd(editor.getBody().firstChild?.firstChild as Text, 'before'.length);
     editor.selection.setRng(rng);
-    editor.selection.setContent('<br />');
+    SetSelectionContent.setContentInternal(editor, '<br />');
     LegacyUnit.equal(editor.getContent(), '<p>before<br>after</p>', 'Set contents at selection (inside paragraph)');
 
     // Check the caret is left in the correct position.
@@ -135,7 +136,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     rng.setStart(editor.getBody(), 0);
     rng.setEnd(editor.getBody(), 0);
     editor.selection.setRng(rng);
-    editor.selection.setContent('');
+    SetSelectionContent.setContentInternal(editor, '');
     LegacyUnit.equal(editor.getContent(), '<p>text</p>', 'Set contents to empty at selection (collapsed)');
     rng = editor.selection.getRng();
     LegacyUnit.equalDom(rng.startContainer, editor.getBody(), 'Selection start container');
@@ -154,7 +155,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     rng.setStart(editor.getBody(), 0);
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
-    editor.selection.setContent('<div>text</div>');
+    SetSelectionContent.setContentInternal(editor, '<div>text</div>');
     LegacyUnit.equal(eventObj?.content, '<div>text</div>', 'Set selected contents, onSetContent event');
     editor.off('SetContent', handler);
   });

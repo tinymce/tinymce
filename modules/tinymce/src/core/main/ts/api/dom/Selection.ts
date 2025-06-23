@@ -166,8 +166,9 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * @example
    * // Inserts some HTML contents at the current selection
    * tinymce.activeEditor.selection.setContent('<strong>Some contents</strong>');
+   * @deprecated TODO add depreacated message and verify it's being shown
    */
-  const setContent = (content: string, args?: Partial<SetSelectionContentArgs>) => SetSelectionContent.setContent(editor, content, args);
+  const setContent = (content: string, args?: Partial<SetSelectionContentArgs>) => SetSelectionContent.setContentExternal(editor, content, args);
 
   /**
    * Returns the start element of a selection range. If the start is in a text
@@ -456,7 +457,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * tinymce.activeEditor.selection.setNode(tinymce.activeEditor.dom.create('img', { src: 'some.gif', title: 'some title' }));
    */
   const setNode = (elm: Element): Element => {
-    setContent(dom.getOuterHTML(elm));
+    SetSelectionContent.setContentInternal(editor, dom.getOuterHTML(elm));
     return elm;
   };
 
