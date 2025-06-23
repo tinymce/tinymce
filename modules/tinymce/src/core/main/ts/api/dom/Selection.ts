@@ -603,7 +603,6 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     collapse,
     setCursorLocation,
     getContent,
-    /* TODO: add jsdoc here */
     setContent,
     getBookmark,
     moveToBookmark,
