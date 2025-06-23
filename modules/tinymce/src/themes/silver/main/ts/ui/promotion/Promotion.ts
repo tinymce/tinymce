@@ -1,6 +1,6 @@
 import { AlloySpec, SimpleSpec } from '@ephox/alloy';
 
-const promotionMessage = '💝Get all features';
+const promotionMessage = '💝 Get all features';
 const promotionLink = 'https://www.tiny.cloud/tinymce-upgrade-to-cloud/?utm_campaign=self_hosted_upgrade_promo&utm_source=tiny&utm_medium=referral';
 
 interface PromotionSpec extends SimpleSpec {
