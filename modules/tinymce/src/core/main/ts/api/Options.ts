@@ -580,6 +580,11 @@ const register = (editor: Editor): void => {
     default: false
   });
 
+  registerOption('allow_html_in_comments', {
+    processor: 'boolean',
+    default: false
+  });
+
   registerOption('allow_script_urls', {
     processor: 'boolean',
     default: false
@@ -1049,6 +1054,7 @@ const isSmartPasteEnabled = option('smart_paste');
 const isPasteAsTextEnabled = option('paste_as_text');
 const getPasteTabSpaces = option('paste_tab_spaces');
 const shouldAllowHtmlDataUrls = option('allow_html_data_urls');
+const shouldAllowHtmlInComments = option('allow_html_in_comments');
 const getTextPatterns = option('text_patterns');
 const getTextPatternsLookup = option('text_patterns_lookup');
 const getNonEditableClass = option('noneditable_class');
@@ -1173,6 +1179,7 @@ export {
   isPasteAsTextEnabled,
   getPasteTabSpaces,
   shouldAllowHtmlDataUrls,
+  shouldAllowHtmlInComments,
   getAllowedImageFileTypes,
   getTextPatterns,
   getTextPatternsLookup,
