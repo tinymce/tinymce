@@ -6,8 +6,8 @@ import { LegacyUnit, TinyAssertions, TinyDom, TinyHooks, TinySelections, TinySta
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
-
 import * as SetSelectionContent from 'tinymce/core/selection/SetSelectionContent';
+
 import * as KeyUtils from '../module/test/KeyUtils';
 
 describe('browser.tinymce.core.FormatterApplyTest', () => {
