@@ -846,5 +846,20 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         TinyAssertions.assertContent(editor, '<template>foo</template><p><template>bar</template></p>');
       });
     });
+
+    context('allow_html_in_comments', () => {
+      const hook = TinyHooks.bddSetupLight<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        allow_html_in_comments: true,
+        indent: false
+      }, []);
+
+      it('TINY-12220: Should retain HTML like data in comments', () => {
+        const editor = hook.editor();
+
+        editor.setContent('<!-- <b>foo</b> -->');
+        TinyAssertions.assertContent(editor, '<!-- <b>foo</b> -->');
+      });
+    });
   });
 });

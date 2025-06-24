@@ -1682,7 +1682,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
     });
 
     context('allow_html_in_comments', () => {
-      it('TINY-11019: Should allow html in comment elements', () => {
+      it('TINY-12220: Should allow html in comment elements', () => {
         const parser = DomParser({ ...scenario.settings, allow_html_in_comments: true }, schema);
         const serializer = HtmlSerializer({}, schema);
 
@@ -1693,7 +1693,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         assert.equal(serializedHtml, initialHtml, 'Should match the initial HTML');
       });
 
-      it('TINY-11019: Should allow html in comment if sanitize is set to false', () => {
+      it('TINY-12220: Should allow html in comment if sanitize is set to false', () => {
         const parser = DomParser({ ...scenario.settings }, schema);
         const serializer = HtmlSerializer({}, schema);
 

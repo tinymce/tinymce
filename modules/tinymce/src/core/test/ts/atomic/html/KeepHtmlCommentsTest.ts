@@ -5,7 +5,7 @@ import * as fc from 'fast-check';
 import * as KeepHtmlComments from 'tinymce/core/html/KeepHtmlComments';
 
 describe('atomic.tinymce.core.html.KeepHtmlComments', () => {
-  it('encodeData/decodeData', () => {
+  it('TINY-12220: encodeData/decodeData', () => {
     assert.equal(KeepHtmlComments.encodeData('<>&'), '&lt;&gt;&amp;', 'Encoding data with special characters');
     assert.equal(KeepHtmlComments.encodeData('<>&&amp;&lt;&gt;'), '&lt;&gt;&amp;&amp;amp;&amp;lt;&amp;gt;', 'Encoding data existing encoding');
     assert.equal(KeepHtmlComments.encodeData('<>&abc<>&'), '&lt;&gt;&amp;abc&lt;&gt;&amp;', 'Encoding data with mixed content');
@@ -15,7 +15,7 @@ describe('atomic.tinymce.core.html.KeepHtmlComments', () => {
     assert.equal(KeepHtmlComments.decodeData(KeepHtmlComments.decodeData('<>&abc<>&')), '<>&abc<>&', 'Decoding should decode encoded data');
   });
 
-  it('property test encodeData/decodeData', () => {
+  it('TINY-12220: property test encodeData/decodeData', () => {
     fc.assert(fc.property(
       fc.string(),
       (text) => {
