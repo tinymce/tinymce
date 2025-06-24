@@ -169,6 +169,8 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
   const getContent = (args?: Partial<GetSelectionContentArgs>): any => GetSelectionContent.getContent(editor, args);
 
   /**
+   * This method has been deprecated. Use "editor.insertContent" instead.
+   *
    * Sets the current selection to the specified content. If any contents is selected it will be replaced
    * with the contents passed in to this function. If there is no selection the contents will be inserted
    * where the caret is placed in the editor/page.
@@ -179,7 +181,6 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * @example
    * // Inserts some HTML contents at the current selection
    * tinymce.activeEditor.selection.setContent('<strong>Some contents</strong>');
-   * @deprecated This method has been deprecated. Use "editor.insertContent" instead.
    */
   const setContent = (content: string, args?: Partial<SetSelectionContentArgs>) => SetSelectionContent.setContentExternal(editor, content, args);
 
