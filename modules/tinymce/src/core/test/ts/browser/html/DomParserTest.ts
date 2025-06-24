@@ -1700,8 +1700,6 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         const initialHtml = '<p>foo<!-- <b>bar</b> --></p><!-- <b>baz</b> -->';
         const fragment = parser.parse(initialHtml);
         const serializedHtml = serializer.serialize(fragment);
-
-        // TODO: Fix this when TINY-12056 is merged
         const expectedHtml = scenario.isSanitizeEnabled ? '<p>foo</p>' : initialHtml;
 
         assert.equal(serializedHtml, expectedHtml, 'Should match the expected HTML');
