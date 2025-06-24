@@ -6,8 +6,8 @@ import DOMUtils from '../../api/dom/DOMUtils';
 import DomTreeWalker from '../../api/dom/TreeWalker';
 import Editor from '../../api/Editor';
 import Tools from '../../api/util/Tools';
+import * as NodeStructureBookmark from '../../bookmark/NodeStructureBookmark';
 import { fireListEvent } from '../events/Events';
-import * as Bookmark from '../lists/Bookmark';
 import { listToggleActionFromListName } from '../lists/ListAction';
 import * as NodeType from '../lists/NodeType';
 import * as Selection from '../lists/Selection';
@@ -232,7 +232,7 @@ const applyList = (editor: Editor, listName: string, detail: ListDetail): void =
     listItemName = 'DT';
   }
 
-  const bookmark = Bookmark.createBookmark(rng);
+  const bookmark = NodeStructureBookmark.createBookmark(rng);
 
   const selectedTextBlocks = Arr.filter(getSelectedTextBlocks(editor, rng, root), editor.dom.isEditable);
 
@@ -264,7 +264,7 @@ const applyList = (editor: Editor, listName: string, detail: ListDetail): void =
     }
   });
 
-  editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
+  editor.selection.setRng(NodeStructureBookmark.resolveBookmark(bookmark));
 };
 
 const isValidLists = (list1: Node | null, list2: Node | null): boolean => {
@@ -349,7 +349,7 @@ const toggleMultipleLists = (editor: Editor, parentList: HTMLElement | null, lis
     flattenListSelection(editor);
   } else {
     applyList(editor, listName, detail);
-    const bookmark = Bookmark.createBookmark(editor.selection.getRng());
+    const bookmark = NodeStructureBookmark.createBookmark(editor.selection.getRng());
     const allLists = parentIsList ? [ parentList, ...lists ] : lists;
 
     const updateFunction = (parentIsList && isCustomList(parentList)) ? updateCustomList : updateList;
@@ -358,7 +358,7 @@ const toggleMultipleLists = (editor: Editor, parentList: HTMLElement | null, lis
       updateFunction(editor, elm, listName, detail);
     });
 
-    editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
+    editor.selection.setRng(NodeStructureBookmark.resolveBookmark(bookmark));
   }
 };
 
@@ -375,7 +375,7 @@ const toggleSingleList = (editor: Editor, parentList: HTMLElement | null, listNa
     if (parentList.nodeName === listName && !hasListStyleDetail(detail) && !isCustomList(parentList)) {
       flattenListSelection(editor);
     } else {
-      const bookmark = Bookmark.createBookmark(editor.selection.getRng());
+      const bookmark = NodeStructureBookmark.createBookmark(editor.selection.getRng());
       if (isCustomList(parentList)) {
         parentList.classList.forEach((cls, _, classList) => {
           if (cls.startsWith('tox-')) {
@@ -389,7 +389,7 @@ const toggleSingleList = (editor: Editor, parentList: HTMLElement | null, listNa
       updateListWithDetails(editor.dom, parentList, detail);
       const newList = editor.dom.rename(parentList, listName) as HTMLElement;
       mergeWithAdjacentLists(editor.dom, newList);
-      editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
+      editor.selection.setRng(NodeStructureBookmark.resolveBookmark(bookmark));
       applyList(editor, listName, detail);
       fireListEvent(editor, listToggleActionFromListName(listName), newList);
     }

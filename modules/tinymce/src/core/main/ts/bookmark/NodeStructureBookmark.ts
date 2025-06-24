@@ -7,12 +7,14 @@ import * as NormalizeBookmarkPoint from './NormalizeBookmarkPoint';
 
 const DOM = DOMUtils.DOM;
 
-interface Bookmark {
+export interface Bookmark {
   startContainer: Node;
   startOffset: number;
   endContainer?: Node;
   endOffset?: number;
 }
+
+const defaultMarker = () => DOM.create('span', { 'data-mce-type': 'bookmark' });
 
 /**
  * Returns a range bookmark. This will convert indexed bookmarks into temporary span elements with
@@ -22,7 +24,7 @@ interface Bookmark {
  * So this: <p><b>|</b><b>|</b></p>
  * becomes: <p><b><span data-mce-type="bookmark">|</span></b><b data-mce-type="bookmark">|</span></b></p>
  */
-const createBookmark = (rng: Range): Bookmark => {
+const createBookmark = (rng: Range, createMarker: () => HTMLElement = defaultMarker): Bookmark => {
   const bookmark: Partial<Bookmark> = {};
 
   const setupEndPoint = (start?: boolean) => {
@@ -30,7 +32,7 @@ const createBookmark = (rng: Range): Bookmark => {
     let offset = rng[start ? 'startOffset' : 'endOffset'];
 
     if (NodeType.isElement(container)) {
-      const offsetNode = DOM.create('span', { 'data-mce-type': 'bookmark' });
+      const offsetNode = createMarker();
 
       if (container.hasChildNodes()) {
         if (offset === container.childNodes.length) {
