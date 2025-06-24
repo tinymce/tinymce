@@ -857,8 +857,8 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         it('TINY-12220: Should retain HTML like data in comments', () => {
           const editor = hook.editor();
 
-          editor.setContent('<!-- <b>foo</b> -->');
-          TinyAssertions.assertContent(editor, '<!-- <b>foo</b> -->');
+          editor.setContent('<p><!-- <b>foo</b> -->foo</p>');
+          TinyAssertions.assertContent(editor, '<p><!-- <b>foo</b> -->foo</p>');
         });
       });
 
@@ -871,8 +871,8 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         it('TINY-12220: Should NOT retain HTML like data in comments', () => {
           const editor = hook.editor();
 
-          editor.setContent('<!-- <b>foo</b> -->');
-          TinyAssertions.assertContent(editor, '');
+          editor.setContent('<p><!-- <b>foo</b> -->foo</p>');
+          TinyAssertions.assertContent(editor, '<p>foo</p>');
         });
       });
 
@@ -884,8 +884,8 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         it('TINY-12220: Should NOT retain HTML like data in comments', () => {
           const editor = hook.editor();
 
-          editor.setContent('<!-- <b>foo</b> -->');
-          TinyAssertions.assertContent(editor, '');
+          editor.setContent('<p><!-- <b>foo</b> -->foo</p>');
+          TinyAssertions.assertContent(editor, '<p>foo</p>');
         });
       });
     });
