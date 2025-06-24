@@ -33,7 +33,7 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
       node.nodeValue = ' ' + node.nodeValue;
     }
 
-    if (settings.allow_html_in_comments && Type.isString(node.nodeValue)) {
+    if (settings.sanitize && settings.allow_html_in_comments && Type.isString(node.nodeValue)) {
       node.nodeValue = KeepHtmlComments.encodeData(node.nodeValue);
     }
   }
