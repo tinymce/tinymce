@@ -715,14 +715,13 @@ class Editor implements EditorObservable {
    *
    * @method load
    * @param {Object} args Optional content object, this gets passed around through the whole load process.
-   * @return {String} HTML string that got set into the editor.
    */
-  public load(args: Partial<EditorContent.SetContentArgs> = {}): string {
+  public load(args: Partial<EditorContent.SetContentArgs> = {}): void {
     const self = this;
     const elm = self.getElement();
 
     if (self.removed) {
-      return '';
+      return;
     }
 
     if (elm) {
@@ -733,7 +732,7 @@ class Editor implements EditorObservable {
 
       const value = NodeType.isTextareaOrInput(elm) ? elm.value : elm.innerHTML;
 
-      const html = self.setContent(value, loadArgs);
+      self.setContent(value, loadArgs);
 
       if (!loadArgs.no_events) {
         self.dispatch('LoadContent', {
@@ -741,10 +740,6 @@ class Editor implements EditorObservable {
           element: elm
         });
       }
-
-      return html;
-    } else {
-      return '';
     }
   }
 
@@ -824,7 +819,6 @@ class Editor implements EditorObservable {
    * @method setContent
    * @param {String} content Content to set to editor, normally HTML contents but can be other formats as well.
    * @param {Object} args Optional content object, this gets passed around through the whole set process.
-   * @return {String} HTML string that got set into the editor.
    * @example
    * // Sets the HTML contents of the activeEditor editor
    * tinymce.activeEditor.setContent('<span>some</span> html');
@@ -835,11 +829,9 @@ class Editor implements EditorObservable {
    * // Sets the content of the activeEditor editor using the specified format
    * tinymce.activeEditor.setContent('<p>Some html</p>', { format: 'html' });
    */
-  public setContent(content: string, args?: Partial<EditorContent.SetContentArgs>): string;
-  public setContent(content: AstNode, args?: Partial<EditorContent.SetContentArgs>): AstNode;
-  public setContent(content: EditorContent.Content, args?: Partial<EditorContent.SetContentArgs>): EditorContent.Content;
-  public setContent(content: EditorContent.Content, args?: Partial<EditorContent.SetContentArgs>): EditorContent.Content {
-    return EditorContent.setContent(this, content, args);
+  public setContent(content: string | AstNode, args?: Partial<EditorContent.SetContentArgs>): void;
+  public setContent(content: EditorContent.Content, args?: Partial<EditorContent.SetContentArgs>): void {
+    EditorContent.setContent(this, content, args);
   }
 
   /**
