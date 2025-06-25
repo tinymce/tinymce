@@ -134,7 +134,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
 
       it(`TINY-12054: Should trigger tooltip with ${test.label} - And escape closes it.`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'div[data-mce-name="split-button"]';
+        const buttonSelector = 'button[data-mce-name="split-button"]';
         await TooltipUtils.pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Split Button');
         TinyContentActions.keyup(editor, Keys.escape());
         await TooltipUtils.pAssertNoTooltipShown();
