@@ -304,7 +304,7 @@ const fetchChoices = (getApi: (comp: AlloyComponent) => Toolbar.ToolbarSplitButt
         )
       )));
 
-const makeSplitButtonApi = (tooltipString: Cell<string>, sharedBackstage: UiFactoryBackstageShared) => (component: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => {
+const makeSplitButtonApi = (tooltipString: Cell<string>, sharedBackstage: UiFactoryBackstageShared, spec: Toolbar.ToolbarSplitButton) => (component: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => {
   const system = component.getSystem();
   const element = component.element;
   const isChevron = Class.has(element, 'tox-split-button__chevron');
@@ -337,13 +337,11 @@ const makeSplitButtonApi = (tooltipString: Cell<string>, sharedBackstage: UiFact
     setTooltip: (tooltip: string) => {
       tooltipString.set(tooltip);
       mainOpt.each((c) => Attribute.set(c.element, 'aria-label', sharedBackstage.providers.translate(tooltip)));
-      // For chevron, extract base tooltip from color-specific tooltips
-      let chevronText = tooltip;
-      const match = tooltip.match(/^(Text color|Background color)(\s|$)/);
-      if (match) {
-        chevronText = match[1];
-      }
-      chevronOpt.each((c) => Attribute.set(c.element, 'aria-label', sharedBackstage.providers.translate(`${chevronText} menu`)));
+      // For chevron, use the explicit chevronTooltip if provided, otherwise fall back to default behavior
+      const chevronTooltipText = spec.chevronTooltip
+        .map((chevronTooltip) => sharedBackstage.providers.translate(chevronTooltip))
+        .getOr(`${sharedBackstage.providers.translate(tooltip)} menu`);
+      chevronOpt.each((c) => Attribute.set(c.element, 'aria-label', chevronTooltipText));
     }
   };
 };
@@ -351,7 +349,7 @@ const makeSplitButtonApi = (tooltipString: Cell<string>, sharedBackstage: UiFact
 const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: UiFactoryBackstageShared, btnName?: string): AlloySpec[] => {
   const editorOffCell = Cell(Fun.noop);
   const tooltipString = Cell<string>(spec.tooltip.getOr(''));
-  const getApi = makeSplitButtonApi(tooltipString, sharedBackstage);
+  const getApi = makeSplitButtonApi(tooltipString, sharedBackstage, spec);
   const menuId = Id.generate('tox-split-menu');
   const expandedCell = Cell(false);
 
@@ -370,16 +368,12 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
 
   // Helper to get ARIA label and tooltip for the chevron/dropdown button
   const getChevronTooltip = () => {
-    const mainLabel = getMainButtonAriaLabel();
-    // For color buttons, extract the base part (e.g., "Text color" from "Text color black")
-    if (spec.presets === 'color') {
-      // Match patterns like "Text color" or "Background color" (with or without color name after)
-      const match = mainLabel.match(/^(Text color|Background color)(\s|$)/);
-      if (match) {
-        return `${match[1]} menu`;
-      }
-    }
-    return `${mainLabel} menu`;
+    return spec.chevronTooltip
+      .map((tooltip) => sharedBackstage.providers.translate(tooltip))
+      .getOrThunk(() => {
+        const mainLabel = getMainButtonAriaLabel();
+        return `${mainLabel} menu`;
+      });
   };
 
   const updateAriaExpanded = (expanded: boolean, comp: AlloyComponent) => {
@@ -414,17 +408,11 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
         tooltipText: getChevronTooltip(),
         onShow: (comp) => {
           if (tooltipString.get() !== spec.tooltip.getOr('')) {
-            let chevronText = tooltipString.get();
-            // For color buttons, extract the base part (e.g., "Text color" from "Text color black")
-            if (spec.presets === 'color') {
-              const match = chevronText.match(/^(Text color|Background color)(\s|$)/);
-              if (match) {
-                chevronText = match[1];
-              }
-            }
-            const translated = sharedBackstage.providers.translate(`${chevronText} menu`);
+            const chevronTooltipText = spec.chevronTooltip
+              .map((chevronTooltip) => sharedBackstage.providers.translate(chevronTooltip))
+              .getOr(`${sharedBackstage.providers.translate(tooltipString.get())} menu`);
             Tooltipping.setComponents(comp,
-              sharedBackstage.providers.tooltips.getComponents({ tooltipText: translated })
+              sharedBackstage.providers.tooltips.getComponents({ tooltipText: chevronTooltipText })
             );
           }
         }

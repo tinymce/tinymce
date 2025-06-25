@@ -87,6 +87,7 @@ describe('headless.tinymce.themes.silver.toolbar.ToolbarButtonsTest', () => {
             context: 'any',
             type: 'splitbutton',
             tooltip: Optional.some('tooltip'),
+            chevronTooltip: Optional.none(),
             icon: Optional.none(),
             text: Optional.some('button3'),
             columns: 1,

@@ -103,8 +103,12 @@ describe('browser.tinymce.plugins.advlist.AdvlistOptionsAndToolbarTest', () => {
   const pAssertButtonToggledState = (name: string, state: boolean) =>
     Waiter.pTryUntil('Wait for toolbar button state', () => {
       const button = UiFinder.findIn(SugarBody.body(), `button[aria-label="${name}"]`).getOrDie();
-      return Assertions.assertStructure('', ApproxStructure.build((s, str) => s.element('button', {
-        exactClasses: [ 'tox-tbtn', 'tox-split-button__main', ...(state ? [ 'tox-tbtn--enabled' ] : [] ) ],
+      return Assertions.assertStructure('', ApproxStructure.build((s, str, arr) => s.element('button', {
+        classes: [
+          arr.has('tox-tbtn'),
+          arr.has('tox-split-button__main'),
+          ...(state ? [ arr.has('tox-tbtn--enabled') ] : [])
+        ],
         attrs: {
           'aria-pressed': state ? str.is('true') : str.is('false')
         }
@@ -344,8 +348,12 @@ describe('browser.tinymce.plugins.advlist.AdvlistOptionsAndToolbarTest', () => {
     const pAssertButtonToggledState = (name: string, state: boolean) =>
       Waiter.pTryUntil('Wait for context toolbar button state', () => {
         const button = UiFinder.findIn(SugarBody.body(), `.tox-pop__dialog button[aria-label="${name}"]`).getOrDie();
-        return Assertions.assertStructure('', ApproxStructure.build((s, _) => s.element('button', {
-          exactClasses: [ 'tox-tbtn', 'tox-split-button__main', ...(state ? [ 'tox-tbtn--enabled' ] : [] ) ]
+        return Assertions.assertStructure('', ApproxStructure.build((s, _, arr) => s.element('button', {
+          classes: [
+            arr.has('tox-tbtn'),
+            arr.has('tox-split-button__main'),
+            ...(state ? [ arr.has('tox-tbtn--enabled') ] : [])
+          ]
         })), button);
       });
 
