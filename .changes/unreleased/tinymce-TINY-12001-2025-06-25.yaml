@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: Support for TinyMCE 8 license keys and license key manager.
+time: 2025-06-25T10:02:01.705807+10:00
+custom:
+    Issue: TINY-12001
