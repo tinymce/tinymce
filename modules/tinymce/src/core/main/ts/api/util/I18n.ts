@@ -1,4 +1,4 @@
-import { Arr, Cell, Obj, Type } from '@ephox/katamari';
+import { Arr, Cell, Obj, Type, Unicode } from '@ephox/katamari';
 
 /**
  * I18n class that handles translation of TinyMCE UI.
@@ -123,7 +123,7 @@ const translate = (text: Untranslated): TranslatedString => {
   };
 
   const removeContext = (str: string) => str.replace(/{context:\w+}$/, '');
-  const replaceWithEllipsisChar = (text: string) => text.replaceAll('...', '…');
+  const replaceWithEllipsisChar = (text: string) => text.replaceAll('...', Unicode.ellipsis);
 
   // empty strings
   if (isEmpty(text)) {
