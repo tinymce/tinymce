@@ -2,6 +2,11 @@ module.exports = function (grunt) {
   grunt.loadTasks('./tasks');
 
   grunt.initConfig({
+    shell: {
+      generateTsDefinitions: {
+        command: 'node ./tasks/ts-skins.js ./build'
+      }
+    },
     // Clean specified directories
     clean: {
       build: ['./build'],
@@ -94,7 +99,8 @@ module.exports = function (grunt) {
     'compileLess',
     'cssmin',
     'generateJsSkins',
-    'addLicenseHeaders'
+    'addLicenseHeaders',
+    'shell:generateTsDefinitions'
   ]);
 
   grunt.registerTask('start', [
