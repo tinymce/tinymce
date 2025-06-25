@@ -55,6 +55,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
           ed.ui.registry.addSplitButton('split-button', {
             text: 'Split Button',
             tooltip: 'Split Button',
+            chevronTooltip: 'Split Button menu',
             fetch: (success) => {
               success([
                 {
@@ -70,6 +71,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
           ed.ui.registry.addSplitButton('split-button-with-icon', {
             icon: 'bold',
             tooltip: 'Split Button with Icon',
+            chevronTooltip: 'Split Button with Icon menu',
             presets: 'listpreview',
             columns: 3,
             fetch: (success) => {
@@ -403,6 +405,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
           ed.ui.registry.addSplitButton('split-button', {
             text: 'Split Button',
             tooltip: 'Split Button',
+            chevronTooltip: 'Split Button menu',
             fetch: (success) => {
               success([
                 {
