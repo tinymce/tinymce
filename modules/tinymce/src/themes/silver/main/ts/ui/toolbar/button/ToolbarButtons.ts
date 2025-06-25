@@ -457,10 +457,10 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
       spec.text,
       Optional.none(),
       Optional.some([
-        Toggling.config({ 
-          toggleClass: ToolbarButtonClasses.Ticked, 
-          aria: spec.presets === 'color' ? { mode: 'none' } : { mode: 'pressed' }, 
-          toggleOnExecute: false 
+        Toggling.config({
+          toggleClass: ToolbarButtonClasses.Ticked,
+          aria: spec.presets === 'color' ? { mode: 'none' } : { mode: 'pressed' },
+          toggleOnExecute: false
         }),
         DisablingConfigs.toolbarButton(() => sharedBackstage.providers.checkUiComponentContext(spec.context).shouldDisable),
         UiState.toggleOnReceive(() => sharedBackstage.providers.checkUiComponentContext(spec.context)),
