@@ -66,6 +66,19 @@ interface EditorSelection {
     (args: { format: 'tree' } & Partial<GetSelectionContentArgs>): AstNode;
     (args?: Partial<GetSelectionContentArgs>): string;
   };
+  /**
+   * Sets the current selection to the specified content. If any contents is selected it will be replaced
+   * with the contents passed in to this function. If there is no selection the contents will be inserted
+   * where the caret is placed in the editor/page.
+   *
+   * @method setContent
+   * @param {String} content HTML contents to set could also be other formats depending on settings.
+   * @param {Object} args Optional settings object with for example data format.
+   * @example
+   * // Inserts some HTML contents at the current selection
+   * tinymce.activeEditor.selection.setContent('<strong>Some contents</strong>');
+   * @deprecated This method has been deprecated. Use "editor.insertContent" instead.
+   */
   setContent: (content: string, args?: Partial<SetSelectionContentArgs>) => void;
   getBookmark: (type?: number, normalized?: boolean) => Bookmark;
   moveToBookmark: (bookmark: Bookmark) => void;
@@ -156,6 +169,8 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
   const getContent = (args?: Partial<GetSelectionContentArgs>): any => GetSelectionContent.getContent(editor, args);
 
   /**
+   * This method has been deprecated. Use "editor.insertContent" instead.
+   *
    * Sets the current selection to the specified content. If any contents is selected it will be replaced
    * with the contents passed in to this function. If there is no selection the contents will be inserted
    * where the caret is placed in the editor/page.
@@ -167,7 +182,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * // Inserts some HTML contents at the current selection
    * tinymce.activeEditor.selection.setContent('<strong>Some contents</strong>');
    */
-  const setContent = (content: string, args?: Partial<SetSelectionContentArgs>) => SetSelectionContent.setContent(editor, content, args);
+  const setContent = (content: string, args?: Partial<SetSelectionContentArgs>) => SetSelectionContent.setContentExternal(editor, content, args);
 
   /**
    * Returns the start element of a selection range. If the start is in a text
@@ -456,7 +471,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * tinymce.activeEditor.selection.setNode(tinymce.activeEditor.dom.create('img', { src: 'some.gif', title: 'some title' }));
    */
   const setNode = (elm: Element): Element => {
-    setContent(dom.getOuterHTML(elm));
+    SetSelectionContent.setContentInternal(editor, dom.getOuterHTML(elm));
     return elm;
   };
 

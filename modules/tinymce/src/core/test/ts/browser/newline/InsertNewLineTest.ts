@@ -9,6 +9,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as CaretFormat from 'tinymce/core/fmt/CaretFormat';
 import * as InsertNewLine from 'tinymce/core/newline/InsertNewLine';
+import * as SetSelectionContent from 'tinymce/core/selection/SetSelectionContent';
 
 describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -854,7 +855,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         editor.setContent('abc');
         TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
 
-        editor.selection.setContent(`<${tagName}>hello</${tagName}>`);
+        SetSelectionContent.setContentInternal(editor, `<${tagName}>hello</${tagName}>`);
         assert.doesNotThrow(() => {
           insertNewline(editor, {});
         });
@@ -1655,7 +1656,7 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
         editor.mode.set('readonly');
         TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 3);
 
-        editor.selection.setContent(`<${tagName}>hello</${tagName}>`);
+        SetSelectionContent.setContentInternal(editor, (`<${tagName}>hello</${tagName}>`));
         assert.doesNotThrow(() => {
           insertNewline(editor, {});
         });
