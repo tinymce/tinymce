@@ -47,6 +47,8 @@ export interface ToolbarGroup {
 export type ToolbarMode = 'floating' | 'sliding' | 'scrolling' | 'wrap';
 export type ToolbarLocation = 'top' | 'bottom' | 'auto';
 
+export type CrossOrigin = '' | 'anonymous' | 'use-credentials';
+
 interface BaseEditorOptions {
   a11y_advanced_options?: boolean;
   add_form_submit_trigger?: boolean;
@@ -196,6 +198,7 @@ interface BaseEditorOptions {
   protect?: RegExp[];
   readonly?: boolean;
   referrer_policy?: ReferrerPolicy;
+  crossorigin?: CrossOrigin;
   relative_urls?: boolean;
   remove_script_host?: boolean;
   remove_trailing_brs?: boolean;
@@ -301,6 +304,7 @@ export interface EditorOptions extends NormalizedEditorOptions {
   content_css: string[];
   contextmenu: string[];
   convert_unsafe_embeds: boolean;
+  crossorigin: CrossOrigin;
   custom_colors: boolean;
   default_font_stack: string[];
   document_base_url: string;

@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: New toolbar icons for suggested edits plugin.
+time: 2025-04-15T13:25:03.909148+02:00
+custom:
+    Issue: TINY-12070

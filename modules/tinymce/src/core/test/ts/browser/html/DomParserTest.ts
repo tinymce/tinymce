@@ -1049,7 +1049,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         assert.equal(serializedHtml, '<div><!--[CDATA[<!--x----><!--y-->--&gt;]]&gt;</div>');
 
         const serializedXHtml = serializer.serialize(parser.parse('<div><![CDATA[<!--x--><!--y-->--><!--]]></div>', { format: 'xhtml' }));
-        assert.equal(serializedXHtml, '<div><![CDATA[<!--x--><!--y-->--><!--]]></div>');
+        assert.equal(serializedXHtml, scenario.isSanitizeEnabled ? '' : '<div><![CDATA[<!--x--><!--y-->--><!--]]></div>');
       });
 
       it('TINY-7756: Parsing invalid nested children', () => {
@@ -1346,6 +1346,68 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
 
         const serializedHtml = serializer.serialize(parser.parse(html));
         assert.equal(serializedHtml, '<p>paragraph</p><p>div</p>');
+      });
+
+      context('Template elements', () => {
+        it('TINY-12157: Templates should not be enabled by default', () => {
+          const parser = DomParser(scenario.settings);
+          const html = '<template><p>Paragraph inside template</p></template>';
+          const serializedHtml = serializer.serialize(parser.parse(html));
+
+          assert.equal(serializedHtml, '', 'Should not parse template since it is not enabled by default');
+        });
+
+        it('TINY-12157: Added support for retaining nodes inside template elements', () => {
+          const parser = DomParser(scenario.settings, Schema({ extended_valid_elements: 'template[foo]' }));
+          const html = '<template foo="1" bar="2"><p>Paragraph inside template</p><img onerror="alert(1)"><script>alert(2)</script></template>';
+          const serializedHtml = serializer.serialize(parser.parse(html));
+
+          if (scenario.isSanitizeEnabled) {
+            assert.equal(
+              serializedHtml,
+              '<template foo="1"><p>Paragraph inside template</p><img></template>',
+              'Should retain configured attributes and remove scripts inside template element when sanitizing'
+            );
+          } else {
+            assert.equal(
+              serializedHtml,
+              '<template foo="1"><p>Paragraph inside template</p><img onerror="alert(1)"><script>alert(2)</script></template>',
+              'Should retain configured attributes and scripts inside template element when not sanitizing'
+            );
+          }
+        });
+
+        it('TINY-12157: Should not execute filters on content inside templates', () => {
+          const html = '<template><p>Paragraph inside template</p></template><p>Paragraph outside template</p>';
+          const parser = DomParser(scenario.settings, Schema({ extended_valid_elements: 'template' }));
+
+          parser.addNodeFilter('p', (nodes) => {
+            Arr.each(nodes, (node) => {
+              node.attr('processed', 'true');
+            });
+          });
+
+          const serializedHtml = serializer.serialize(parser.parse(html));
+
+          assert.equal(
+            serializedHtml,
+            '<template><p>Paragraph inside template</p></template><p processed="true">Paragraph outside template</p>',
+            'Since templates are holders of arbitrary content, filters should not be applied to their contents'
+          );
+        });
+
+        it('TINY-12157: Whitespace is trimmed as if the template was a block element', () => {
+          const html = '<template>\n<p>Paragraph inside template</p>\n</template>';
+          const parser = DomParser(scenario.settings, Schema({ extended_valid_elements: 'template' }));
+
+          const serializedHtml = serializer.serialize(parser.parse(html));
+
+          assert.equal(
+            serializedHtml,
+            '<template><p>Paragraph inside template</p></template>',
+            'Whitespace should be trimmed as if the template was a block element'
+          );
+        });
       });
 
       context('validate: false', () => {

@@ -1,10 +1,10 @@
 Below is a list of third party libraries that this software uses:
 ----------------------------------------------------------------
 
-dompurify - Patched by Tiny
+dompurify
 owner: Mario Heiderich
 repo: https://github.com/cure53/DOMPurify
-version: 3.2.4
+version: 3.2.6
 license: MPL-2.0 OR Apache-2.0
 
 prismjs

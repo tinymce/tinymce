@@ -70,21 +70,32 @@ export interface UserLookup {
 }
 
 const AvatarColors = [
-  '#2DC26B', // Green
-  '#F1C40F', // Yellow
-  '#E03E2D', // Red
-  '#B96AD9', // Purple
-  '#3598DB', // Blue
-
-  '#169179', // Dark Turquoise
-  '#E67E23', // Orange
-  '#BA372A', // Dark Red
-  '#843FA1', // Dark Purple
-  '#236FA1', // Dark Blue
-
-  '#95A5A6', // Gray
-  '#7E8C8D', // Dark Gray
-  '#34495E', // Navy Blue
+  '#E41B60', // Pink
+  '#AD1457', // Dark Pink
+  '#1939EC', // Indigo
+  '#001CB5', // Dark Indigo
+  '#648000', // Lime
+  '#465B00', // Dark Lime
+  '#006CE7', // Blue
+  '#0054B4', // Dark Blue
+  '#00838F', // Cyan
+  '#006064', // Dark Cyan
+  '#00866F', // Turquoise
+  '#004D40', // Dark Turquoise
+  '#51742F', // Green
+  '#385021', // Dark Green
+  '#CF4900', // Orange
+  '#A84600', // Dark Orange
+  '#CC0000', // Red
+  '#6A1B9A', // Dark Red
+  '#9C27B0', // Purple
+  '#6A00AB', // Dark Purple
+  '#3041BA', // Navy Blue
+  '#0A1877', // Dark Navy Blue
+  '#774433', // Brown
+  '#452B24', // Dark Brown
+  '#607D8B', // Blue Gray
+  '#455A64', // Dark Blue Gray
 ];
 
 const getFirstChar = (name: string): string => {

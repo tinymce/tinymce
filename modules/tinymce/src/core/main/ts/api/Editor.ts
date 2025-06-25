@@ -88,7 +88,6 @@ const extend = Tools.extend, each = Tools.each;
  */
 
 class Editor implements EditorObservable {
-  public documentBaseUrl: string;
   public baseUri: URI;
 
   /**
@@ -274,7 +273,6 @@ class Editor implements EditorObservable {
    */
   public constructor(id: string, options: RawEditorOptions, editorManager: EditorManager) {
     this.editorManager = editorManager;
-    this.documentBaseUrl = editorManager.documentBaseURL;
 
     // Patch in the EditorObservable functions
     extend(this, EditorObservable);
@@ -312,6 +310,8 @@ class Editor implements EditorObservable {
       ScriptLoader.ScriptLoader._setReferrerPolicy(referrerPolicy);
       DOMUtils.DOM.styleSheetLoader._setReferrerPolicy(referrerPolicy);
     }
+
+    ScriptLoader.ScriptLoader._setCrossOrigin(Options.getCrossOrigin(self));
 
     const contentCssCors = Options.hasContentCssCors(self);
     if (Type.isNonNullable(contentCssCors)) {
