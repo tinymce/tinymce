@@ -1,5 +1,6 @@
-import styles from '@tinymce/oxide/skins/ui/default/skin.ts';
 import type { ButtonHTMLAttributes } from 'react';
+
+import { classes } from '../utils/Styles';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
@@ -13,7 +14,7 @@ export const Button: React.FC<ButtonProps> = ({
   return (
     <button
       type={type}
-      className={styles['tox-button']}
+      className={classes([ 'tox-button' ])}
       {...props}
     >
       {children}

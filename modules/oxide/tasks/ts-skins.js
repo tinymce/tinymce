@@ -10,9 +10,9 @@ const files = fs.readdirSync(process.argv[2], {
 files.forEach(file => {
   if (file.endsWith('.css')) {
     creator.create(process.argv[2] + '/' + file).then(content => {
-      let result = 'export default {\n';
+      let result = 'export interface Classes {\n';
       content.tokens.forEach((token) => {
-        result += `  "${token}": "${token}",\n`;
+        result += `  "${token}": string;\n`;
       });
       result += '};\n';
       fs.writeFileSync(process.argv[2] + '/' + file.replace('.css', '.ts'), result);

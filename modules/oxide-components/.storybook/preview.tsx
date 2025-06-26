@@ -6,15 +6,15 @@ import {
   Title
 } from '@storybook/addon-docs/blocks';
 import type { Preview, ReactRenderer } from '@storybook/react-vite';
-import styles from '@tinymce/oxide/skins/ui/default/skin.ts';
 import type { PartialStoryFn } from 'storybook/internal/csf';
 
 // @ts-expect-error the bundler handles this just fine but tsc is not happy with it
 import '@tinymce/oxide/build/skins/ui/default/skin.css';
+import { classes } from '../src/main/ts/utils/Styles';
 
 const preview: Preview = {
   decorators: [
-    (Story: PartialStoryFn<ReactRenderer>): JSX.Element => <div className={styles.tox}><Story /></div>
+    (Story: PartialStoryFn<ReactRenderer>): JSX.Element => <div className={classes([ 'tox' ])}><Story /></div>
   ],
   parameters: {
     controls: {
