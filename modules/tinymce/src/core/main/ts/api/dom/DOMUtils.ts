@@ -65,6 +65,7 @@ export interface DOMUtilsSettings {
   onSetAttrib: (event: SetAttribEvent) => void;
   contentCssCors: boolean;
   referrerPolicy: ReferrerPolicy;
+  crossOrigin: (url: string, resourceType: 'script' | 'stylesheet') => string;
 }
 
 export type Target = Node | Window;
@@ -332,7 +333,16 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
   const boxModel = true;
   const styleSheetLoader = StyleSheetLoaderRegistry.instance.forElement(SugarElement.fromDom(doc), {
     contentCssCors: settings.contentCssCors,
-    referrerPolicy: settings.referrerPolicy
+    referrerPolicy: settings.referrerPolicy,
+    crossOrigin: (url) => {
+      const crossOrigin = settings.crossOrigin;
+
+      if (Type.isFunction(crossOrigin)) {
+        return crossOrigin(url, 'stylesheet');
+      } else {
+        return '';
+      }
+    }
   });
   const boundEvents: Array<[ Target, string, Callback<any>, any ]> = [];
   const schema = settings.schema ? settings.schema : Schema({});
