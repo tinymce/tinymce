@@ -1,5 +1,5 @@
-import { after, afterEach, context, describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
+import { after, afterEach, before, context, describe, it } from '@ephox/bedrock-client';
+import { Arr, Fun } from '@ephox/katamari';
 import { Attribute, SugarElement, SugarNode } from '@ephox/sugar';
 import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -8,8 +8,9 @@ import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import * as OptionTypes from 'tinymce/core/api/OptionTypes';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
-describe('browser.tinymce.core.dom.CrossOriginTest', () => {
+describe('browser.tinymce.core.dom.CrossOriginScriptTest', () => {
   const settings = {
     base_url: '/project/tinymce/js/tinymce',
     menubar: false,
@@ -18,7 +19,7 @@ describe('browser.tinymce.core.dom.CrossOriginTest', () => {
   const scriptUrl = '/project/tinymce/src/core/test/assets/js/test.js';
 
   after(() => {
-    ScriptLoader.ScriptLoader._setCrossOrigin('');
+    ScriptLoader.ScriptLoader._setCrossOrigin(Fun.constant(''));
   });
 
   const isScript = SugarNode.isTag('script');
@@ -57,23 +58,30 @@ describe('browser.tinymce.core.dom.CrossOriginTest', () => {
     return observePromise;
   };
 
-  const assertCrossOriginAttribute = (script: SugarElement<HTMLScriptElement>, crossOrigin: string) => {
-    if (crossOrigin === '') {
+  const assertCrossOriginAttribute = (script: SugarElement<HTMLScriptElement>, expectedCrossOrigin: string) => {
+    if (expectedCrossOrigin === '') {
       assert.isFalse(Attribute.has(script, 'crossorigin'), 'Crossorigin attribute should not be set');
     } else {
-      assert.equal(Attribute.get(script, 'crossorigin'), crossOrigin, `Crossorigin attribute should be set to "${crossOrigin}"`);
+      assert.equal(Attribute.get(script, 'crossorigin'), expectedCrossOrigin, `Crossorigin attribute should be set to "${expectedCrossOrigin}"`);
     }
   };
 
   afterEach(() => {
-    ScriptLoader.ScriptLoader._setCrossOrigin('');
+    ScriptLoader.ScriptLoader._setCrossOrigin(Fun.constant(''));
     EditorManager.overrideDefaults({ crossorigin: undefined });
   });
 
   context('Using global setter', () => {
-    const pTestCrossOriginSetter = async (crossOrigin: OptionTypes.CrossOrigin) => {
-      ScriptLoader.ScriptLoader._setCrossOrigin(crossOrigin);
+    const pTestCrossOriginSetter = async (crossOrigin: string) => {
+      let crossOriginUrl: string | undefined;
+
+      ScriptLoader.ScriptLoader._setCrossOrigin((url) => {
+        crossOriginUrl = url;
+        return crossOrigin;
+      });
+
       assertCrossOriginAttribute(await pLoadScript(scriptUrl), crossOrigin);
+      assert.equal(crossOriginUrl, scriptUrl, 'Cross origin url should be set');
     };
 
     it('TINY-12228: Should support setting anonymous crossorigin', () => pTestCrossOriginSetter('anonymous'));
@@ -83,9 +91,17 @@ describe('browser.tinymce.core.dom.CrossOriginTest', () => {
 
   context('Using editor option', () => {
     const pTestCrossOriginEditorOption = async (crossOrigin: string) => {
-      const editor = await McEditor.pFromSettings<Editor>({ ...settings, crossorigin: crossOrigin });
+      let crossOriginUrl: string | undefined;
+      const editor = await McEditor.pFromSettings<Editor>({
+        ...settings,
+        crossorigin: (url: string) => {
+          crossOriginUrl = url;
+          return crossOrigin;
+        }
+      });
 
       assertCrossOriginAttribute(await pLoadScript(scriptUrl), crossOrigin);
+      assert.equal(crossOriginUrl, scriptUrl, 'Cross origin url should be set');
 
       McEditor.remove(editor);
     };
@@ -94,7 +110,7 @@ describe('browser.tinymce.core.dom.CrossOriginTest', () => {
     it('TINY-12228: Should support use-credentials crossorigin option', () => pTestCrossOriginEditorOption('use-credentials'));
     it('TINY-12228: Should support setting empty crossorigin option', () => pTestCrossOriginEditorOption(''));
     it('TINY-12228: Not setting a value removes the crossorigin global state', async () => {
-      ScriptLoader.ScriptLoader._setCrossOrigin('anonymous');
+      ScriptLoader.ScriptLoader._setCrossOrigin(Fun.constant('anonymous'));
 
       const editor = await McEditor.pFromSettings<Editor>(settings);
       assertCrossOriginAttribute(await pLoadScript(scriptUrl), '');
@@ -104,10 +120,62 @@ describe('browser.tinymce.core.dom.CrossOriginTest', () => {
   });
 
   context('Using overrideDefaults', () => {
-    const pTestCrossOriginEditorOption = async (crossOrigin: OptionTypes.CrossOrigin) => {
+    const pTestCrossOriginEditorOption = async (crossOrigin: OptionTypes.CrossOrigin, expectedCrossOrigin: string) => {
+      let crossOriginUrl: string | undefined;
+      let crossOriginResourceType: string | undefined;
+
       EditorManager.overrideDefaults({
-        crossorigin: crossOrigin
+        crossorigin: (url, resourceType) => {
+          crossOriginUrl = url;
+          crossOriginResourceType = resourceType;
+
+          return crossOrigin(url, resourceType);
+        }
       });
+
+      const editor = await McEditor.pFromSettings<Editor>(settings);
+
+      assertCrossOriginAttribute(await pLoadScript(scriptUrl), expectedCrossOrigin);
+      assert.equal(crossOriginUrl, scriptUrl, 'Cross origin url should be set');
+      assert.equal(crossOriginResourceType, 'script', 'Cross origin resource type should be script');
+
+      McEditor.remove(editor);
+    };
+
+    it('TINY-12228: Should support anonymous in crossorigin option', () => pTestCrossOriginEditorOption(Fun.constant('anonymous'), 'anonymous'));
+    it('TINY-12228: Should support use-credentials crossorigin option', () => pTestCrossOriginEditorOption(Fun.constant('use-credentials'), 'use-credentials'));
+    it('TINY-12228: Should support setting empty crossorigin option', () => pTestCrossOriginEditorOption(Fun.constant(''), ''));
+    it('TINY-12228: Not setting a value does not override defaults value for crossorigin', async () => {
+      EditorManager.overrideDefaults({
+        crossorigin: Fun.constant('anonymous')
+      });
+
+      const editor = await McEditor.pFromSettings<Editor>(settings);
+      assertCrossOriginAttribute(await pLoadScript(scriptUrl), 'anonymous');
+
+      McEditor.remove(editor);
+    });
+  });
+
+  context('Using AddEditor event patch', () => {
+    let patchedCrossOrigin: '' | 'anonymous' | 'use-credentials' = '';
+
+    const patchCrossOrigin = (e: EditorEvent<{ editor: Editor }>) => {
+      e.editor.options.set('crossorigin', () => {
+        return patchedCrossOrigin;
+      });
+    };
+
+    before(() => {
+      EditorManager.on('AddEditor', patchCrossOrigin);
+    });
+
+    after(() => {
+      EditorManager.off('AddEditor', patchCrossOrigin);
+    });
+
+    const pTestCrossOriginAddEventPatch = async (crossOrigin: '' | 'anonymous' | 'use-credentials') => {
+      patchedCrossOrigin = crossOrigin;
 
       const editor = await McEditor.pFromSettings<Editor>(settings);
 
@@ -116,18 +184,8 @@ describe('browser.tinymce.core.dom.CrossOriginTest', () => {
       McEditor.remove(editor);
     };
 
-    it('TINY-12228: Should support anonymous in crossorigin option', () => pTestCrossOriginEditorOption('anonymous'));
-    it('TINY-12228: Should support use-credentials crossorigin option', () => pTestCrossOriginEditorOption('use-credentials'));
-    it('TINY-12228: Should support setting empty crossorigin option', () => pTestCrossOriginEditorOption(''));
-    it('TINY-12228: Not setting a value does not override defaults value for crossorigin', async () => {
-      EditorManager.overrideDefaults({
-        crossorigin: 'anonymous'
-      });
-
-      const editor = await McEditor.pFromSettings<Editor>(settings);
-      assertCrossOriginAttribute(await pLoadScript(scriptUrl), 'anonymous');
-
-      McEditor.remove(editor);
-    });
+    it('TINY-12228: Should support anonymous in crossorigin option', () => pTestCrossOriginAddEventPatch('anonymous'));
+    it('TINY-12228: Should support use-credentials crossorigin option', () => pTestCrossOriginAddEventPatch('use-credentials'));
+    it('TINY-12228: Should support setting empty crossorigin option', () => pTestCrossOriginAddEventPatch(''));
   });
 });
