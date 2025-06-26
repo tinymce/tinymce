@@ -38,7 +38,7 @@ describe('Editor Autocompleter Reload test', () => {
 
             const extras: InlineContent.AutocompleterContents[] = Obj.keys(meta).length === 0 ? [
               { type: 'separator' },
-              { value: '', text: 'Load more...', meta: { reload: true }}
+              { value: '', text: 'Load more…', meta: { reload: true }}
             ] : [ ];
 
             resolve([
@@ -69,7 +69,7 @@ describe('Editor Autocompleter Reload test', () => {
         { title: 'd', text: 'd' }
       ],
       [
-        { title: 'Load more...', text: 'Load more...' }
+        { title: 'Load more…', text: 'Load more…' }
       ]
     ]
   });
@@ -109,7 +109,7 @@ describe('Editor Autocompleter Reload test', () => {
     action: () => Promise.resolve(),
     assertion: pAssertInitialMenu,
     postAction: async (editor) => {
-      TinyUiActions.clickOnUi(editor, '.tox-collection__item:contains("Load more...")');
+      TinyUiActions.clickOnUi(editor, '.tox-collection__item:contains("Load more…")');
       await TinyUiActions.pWaitForUi(editor, '.tox-collection__item:contains("ra")');
     },
     postAssertion: pAssertReloadedMenu

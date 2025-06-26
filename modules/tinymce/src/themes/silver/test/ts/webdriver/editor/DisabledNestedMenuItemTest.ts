@@ -42,7 +42,7 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemT
         text: 'Services',
         getSubmenuItems: () => [{
           type: 'menuitem',
-          text: 'Services Preferences...',
+          text: 'Services Preferences…',
         }]
       });
     }
@@ -64,7 +64,7 @@ describe('webdriver.tinymce.themes.silver.editor.menubar.DisabledNestedMenuItemT
   };
 
   const assertServicesMenuIsOpen = () => {
-    UiFinder.exists(SugarBody.body(), '[role="menuitem"]:contains("Services Preferences...")');
+    UiFinder.exists(SugarBody.body(), '[role="menuitem"]:contains("Services Preferences…")');
   };
 
   afterEach(() => {

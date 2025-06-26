@@ -41,7 +41,7 @@ describe('browser.tinymce.themes.silver.throbber.ThrobberTest', () => {
         children: [
           s.element('div', {
             attrs: {
-              'aria-label': str.is('Loading...'),
+              'aria-label': str.is('Loading…'),
               'tabindex': str.is('0'),
             },
             classes: [ arr.has('tox-throbber__busy-spinner') ],

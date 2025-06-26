@@ -18,7 +18,7 @@ describe('browser.tinymce.plugins.link.LinkContextMenuTest', () => {
   const pressDownArrowKey = (editor: Editor) => TinyUiActions.keydown(editor, Keys.down());
 
   const pTestContextMenuItems = async (editor: Editor) => {
-    await pAssertFocusOnItem('Link...', '.tox-collection__item:contains("Link...")');
+    await pAssertFocusOnItem('Link…', '.tox-collection__item:contains("Link…")');
     pressDownArrowKey(editor);
     await pAssertFocusOnItem('Remove link', '.tox-collection__item:contains("Remove link")');
     pressDownArrowKey(editor);
