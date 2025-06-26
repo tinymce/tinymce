@@ -18,9 +18,12 @@
     color: @text-color;
 
     input {
-      display: none;
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
     }
-    
+
     .tox-toggle__slider {
       position: relative;
       cursor: pointer;
@@ -53,7 +56,7 @@
     }
     
     input:focus + .tox-toggle__slider {
-      box-shadow: 0 0 1px @color-tint;
+      box-shadow: 0 0 0 1px @background-color, 0 0 0 3px @keyboard-focus-outline-color;
     }
     
     input:checked + .tox-toggle__slider:before {
