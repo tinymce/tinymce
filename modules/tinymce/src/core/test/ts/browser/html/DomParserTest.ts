@@ -1680,6 +1680,31 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         });
       });
     });
+
+    context('allow_html_in_comments', () => {
+      it('TINY-12220: Should allow html in comment elements', () => {
+        const parser = DomParser({ ...scenario.settings, allow_html_in_comments: true }, schema);
+        const serializer = HtmlSerializer({}, schema);
+
+        const initialHtml = '<!-- <b>test</b> -->';
+        const fragment = parser.parse(initialHtml);
+        const serializedHtml = serializer.serialize(fragment);
+
+        assert.equal(serializedHtml, initialHtml, 'Should match the initial HTML');
+      });
+
+      it('TINY-12220: Should allow html in comment if sanitize is set to false', () => {
+        const parser = DomParser({ ...scenario.settings }, schema);
+        const serializer = HtmlSerializer({}, schema);
+
+        const initialHtml = '<p>foo<!-- <b>bar</b> --></p><!-- <b>baz</b> -->';
+        const fragment = parser.parse(initialHtml);
+        const serializedHtml = serializer.serialize(fragment);
+        const expectedHtml = scenario.isSanitizeEnabled ? '<p>foo</p>' : initialHtml;
+
+        assert.equal(serializedHtml, expectedHtml, 'Should match the expected HTML');
+      });
+    });
   });
 
   context('TINY-9600: sanitize: false with unsafe input', () => {
