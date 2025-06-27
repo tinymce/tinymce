@@ -149,6 +149,7 @@ const getToolTipText = (editor: Editor, format: ColorFormat, lastColor: string) 
 const registerTextColorButton = (editor: Editor, name: string, format: ColorFormat, lastColor: Cell<string>) => {
   editor.ui.registry.addSplitButton(name, {
     tooltip: getToolTipText(editor, format, lastColor.get()),
+    chevronTooltip: name === 'forecolor' ? 'Text color menu' : 'Background color menu',
     presets: 'color',
     icon: name === 'forecolor' ? 'text-color' : 'highlight-bg-color',
     select: select(editor, format),

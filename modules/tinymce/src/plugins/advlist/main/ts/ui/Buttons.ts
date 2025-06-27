@@ -46,6 +46,7 @@ const addSplitButton = (editor: Editor, id: string, tooltip: string, cmd: string
 
   editor.ui.registry.addSplitButton(id, {
     tooltip,
+    chevronTooltip: `${tooltip} menu`,
     icon: nodeName === ListType.OrderedList ? 'ordered-list' : 'unordered-list',
     presets: 'listpreview',
     columns: nodeName === ListType.OrderedList ? 3 : 4,

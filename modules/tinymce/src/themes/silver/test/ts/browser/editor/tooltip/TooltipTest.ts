@@ -55,6 +55,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
           ed.ui.registry.addSplitButton('split-button', {
             text: 'Split Button',
             tooltip: 'Split Button',
+            chevronTooltip: 'Split Button menu',
             fetch: (success) => {
               success([
                 {
@@ -70,6 +71,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
           ed.ui.registry.addSplitButton('split-button-with-icon', {
             icon: 'bold',
             tooltip: 'Split Button with Icon',
+            chevronTooltip: 'Split Button with Icon menu',
             presets: 'listpreview',
             columns: 3,
             fetch: (success) => {
@@ -125,14 +127,14 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - Toolbar addSplitButton`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'div[data-mce-name="split-button"]';
+        const buttonSelector = 'button[data-mce-name="split-button"]';
         await TooltipUtils.pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Split Button');
         await TooltipUtils.pCloseTooltip(editor, buttonSelector);
       });
 
       it(`TINY-12054: Should trigger tooltip with ${test.label} - And escape closes it.`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'div[data-mce-name="split-button"]';
+        const buttonSelector = 'button[data-mce-name="split-button"]';
         await TooltipUtils.pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Split Button');
         TinyContentActions.keyup(editor, Keys.escape());
         await TooltipUtils.pAssertNoTooltipShown();
@@ -140,7 +142,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - Toolbar Split Button Menu - forecolor`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'div[data-mce-name="forecolor"] > .tox-tbtn + .tox-split-button__chevron';
+        const buttonSelector = 'button[data-mce-name="forecolor-chevron"]';
         await TooltipUtils.pOpenMenu(editor, buttonSelector);
         await Waiter.pWait(300);
         const menuSelector = 'div[data-mce-name="Red"]';
@@ -153,7 +155,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - Toolbar Split Button Menu - listpreview`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'div[data-mce-name="split-button-with-icon"]  > .tox-tbtn + .tox-split-button__chevron';
+        const buttonSelector = 'button[data-mce-name="split-button-with-icon-chevron"]';
         await TooltipUtils.pOpenMenu(editor, buttonSelector);
         const menuSelector = 'div[aria-label="Lower Alpha 1"]';
         await TooltipUtils.pAssertTooltip(editor, () => test.pTriggerTooltip(editor, menuSelector), 'Lower Alpha 1');
@@ -403,6 +405,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
           ed.ui.registry.addSplitButton('split-button', {
             text: 'Split Button',
             tooltip: 'Split Button',
+            chevronTooltip: 'Split Button menu',
             fetch: (success) => {
               success([
                 {
@@ -420,7 +423,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
 
       it(`TINY-10453: Should not show tooltip with ${test.label} - Contains text and no icon`, async () => {
         const editor = hook.editor();
-        const buttonSelector = 'div[data-mce-name="split-button"] > .tox-tbtn + .tox-split-button__chevron';
+        const buttonSelector = 'button[data-mce-name="split-button-chevron"]';
         await TooltipUtils.pOpenMenu(editor, buttonSelector);
         const menuSelector = '[aria-label="Choice item 1"]';
         await TooltipUtils.pAssertNoTooltip(editor, () => test.pTriggerTooltip(editor, menuSelector), '');

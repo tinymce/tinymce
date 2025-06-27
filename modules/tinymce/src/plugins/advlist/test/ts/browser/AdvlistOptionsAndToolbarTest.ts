@@ -34,13 +34,9 @@ describe('browser.tinymce.plugins.advlist.AdvlistOptionsAndToolbarTest', () => {
     base_url: '/project/tinymce/js/tinymce',
   };
 
-  const clickListBtn = (editor: Editor, type: ListType, isSplitBtn: boolean) => {
+  const clickListBtn = (editor: Editor, type: ListType) => {
     const title = `${type === 'number' ? 'Numbered' : 'Bullet'} list`;
-    if (isSplitBtn) {
-      TinyUiActions.clickOnToolbar(editor, `[aria-label="${title}"] > .tox-tbtn`);
-    } else {
-      TinyUiActions.clickOnToolbar(editor, `[aria-label="${title}"]`);
-    }
+    TinyUiActions.clickOnToolbar(editor, `button[aria-label="${title}"]`);
   };
 
   const pAssertListBtnStructures = async (splitBtns: SplitBtns) => {
@@ -50,22 +46,54 @@ describe('browser.tinymce.plugins.advlist.AdvlistOptionsAndToolbarTest', () => {
       ApproxStructure.build((s, str, arr) => s.element('div', {
         classes: [ arr.has('tox-toolbar__group') ],
         children: [
-          s.element(splitBtns.number ? 'div' : 'button', {
-            classes: splitBtns.number ?
-              [ arr.not('tox-tbtn'), arr.has('tox-split-button') ] :
-              [ arr.has('tox-tbtn'), arr.not('tox-split-button') ],
-            attrs: {
-              'data-mce-name': str.is('numlist'),
-            }
-          }),
-          s.element(splitBtns.bullet ? 'div' : 'button', {
-            classes: splitBtns.bullet ?
-              [ arr.not('tox-tbtn'), arr.has('tox-split-button') ] :
-              [ arr.has('tox-tbtn'), arr.not('tox-split-button') ],
-            attrs: {
-              'data-mce-name': str.is('bullist'),
-            }
-          })
+          ...splitBtns.number ? [
+            s.element('button', {
+              classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__main') ],
+              attrs: {
+                'data-mce-name': str.is('numlist'),
+                'aria-label': str.is('Numbered list')
+              }
+            }),
+            s.element('button', {
+              classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ],
+              attrs: {
+                'data-mce-name': str.is('numlist-chevron'),
+                'aria-label': str.is('Numbered list menu')
+              }
+            })
+          ] : [
+            s.element('button', {
+              classes: [ arr.has('tox-tbtn') ],
+              attrs: {
+                'data-mce-name': str.is('numlist'),
+                'aria-label': str.is('Numbered list')
+              }
+            })
+          ],
+          ...splitBtns.bullet ? [
+            s.element('button', {
+              classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__main') ],
+              attrs: {
+                'data-mce-name': str.is('bullist'),
+                'aria-label': str.is('Bullet list')
+              }
+            }),
+            s.element('button', {
+              classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ],
+              attrs: {
+                'data-mce-name': str.is('bullist-chevron'),
+                'aria-label': str.is('Bullet list menu')
+              }
+            })
+          ] : [
+            s.element('button', {
+              classes: [ arr.has('tox-tbtn') ],
+              attrs: {
+                'data-mce-name': str.is('bullist'),
+                'aria-label': str.is('Bullet list')
+              }
+            })
+          ]
         ]
       })),
       toolbarGroup
@@ -74,14 +102,16 @@ describe('browser.tinymce.plugins.advlist.AdvlistOptionsAndToolbarTest', () => {
 
   const pAssertButtonToggledState = (name: string, state: boolean) =>
     Waiter.pTryUntil('Wait for toolbar button state', () => {
-      const button = UiFinder.findIn(SugarBody.body(), `div.tox-split-button[aria-label="${name}"]`).getOrDie();
-      return Assertions.assertStructure('', ApproxStructure.build((s, _, __) => s.element('div', {
-        children: [
-          s.element('span', {
-            exactClasses: [ 'tox-tbtn', ...(state ? [ 'tox-tbtn--enabled' ] : [] ) ]
-          }),
-          s.theRest()
-        ]
+      const button = UiFinder.findIn(SugarBody.body(), `button[aria-label="${name}"]`).getOrDie();
+      return Assertions.assertStructure('', ApproxStructure.build((s, str, arr) => s.element('button', {
+        classes: [
+          arr.has('tox-tbtn'),
+          arr.has('tox-split-button__main'),
+          ...(state ? [ arr.has('tox-tbtn--enabled') ] : [])
+        ],
+        attrs: {
+          'aria-pressed': state ? str.is('true') : str.is('false')
+        }
       })), button);
     });
 
@@ -237,9 +267,9 @@ describe('browser.tinymce.plugins.advlist.AdvlistOptionsAndToolbarTest', () => {
         editor.setContent(initialContent);
         editor.focus();
 
-        clickListBtn(editor, type, splitBtns[type]);
+        clickListBtn(editor, type);
         TinyAssertions.assertContent(editor, scenario.expectedContent);
-        clickListBtn(editor, type, splitBtns[type]);
+        clickListBtn(editor, type);
         TinyAssertions.assertContent(editor, finalContent);
 
         McEditor.remove(editor);
@@ -317,13 +347,12 @@ describe('browser.tinymce.plugins.advlist.AdvlistOptionsAndToolbarTest', () => {
 
     const pAssertButtonToggledState = (name: string, state: boolean) =>
       Waiter.pTryUntil('Wait for context toolbar button state', () => {
-        const button = UiFinder.findIn(SugarBody.body(), `.tox-pop__dialog .tox-split-button[aria-label="${name}"]`).getOrDie();
-        return Assertions.assertStructure('', ApproxStructure.build((s, _, __) => s.element('div', {
-          children: [
-            s.element('span', {
-              exactClasses: [ 'tox-tbtn', ...(state ? [ 'tox-tbtn--enabled' ] : [] ) ]
-            }),
-            s.theRest()
+        const button = UiFinder.findIn(SugarBody.body(), `.tox-pop__dialog button[aria-label="${name}"]`).getOrDie();
+        return Assertions.assertStructure('', ApproxStructure.build((s, _, arr) => s.element('button', {
+          classes: [
+            arr.has('tox-tbtn'),
+            arr.has('tox-split-button__main'),
+            ...(state ? [ arr.has('tox-tbtn--enabled') ] : [])
           ]
         })), button);
       });
