@@ -455,6 +455,7 @@ const contentBodyLoaded = (editor: Editor): void => {
     schema: editor.schema,
     contentCssCors: Options.shouldUseContentCssCors(editor),
     referrerPolicy: Options.getReferrerPolicy(editor),
+    crossOrigin: Options.getCrossOrigin(editor),
     onSetAttrib: (e) => {
       editor.dispatch('SetAttrib', e);
     },
