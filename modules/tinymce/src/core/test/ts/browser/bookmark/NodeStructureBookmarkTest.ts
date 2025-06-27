@@ -2,7 +2,7 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { Hierarchy, Html, Insert, SugarElement, Traverse } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import * as StructureBookmark from 'tinymce/core/bookmark/StructureBookmark';
+import * as NodeStructureBookmark from 'tinymce/core/bookmark/NodeStructureBookmark';
 
 interface BookmarkTestCase {
   html: string;
@@ -18,7 +18,7 @@ interface BookmarkTestCase {
   expectedEndOffset?: number;
 }
 
-describe('browser.tinymce.core.StructureBookmarkTest', () => {
+describe('browser.tinymce.core.NodeStructureBookmarkTest', () => {
   const testBookmark = (testCase: BookmarkTestCase) => {
     const { html, startPath, startOffset, endPath, endOffset, mutation } = testCase;
     const { expectedHtml, expectedStartPath, expectedStartOffset, expectedEndPath, expectedEndOffset } = testCase;
@@ -33,11 +33,11 @@ describe('browser.tinymce.core.StructureBookmarkTest', () => {
     inputRange.setStart(startContainer.dom, startOffset);
     inputRange.setEnd(endContainer.dom, endOffset);
 
-    const bm = StructureBookmark.getBookmark(inputRange, () => document.createElement('span'));
+    const bm = NodeStructureBookmark.createBookmark(inputRange, () => document.createElement('span'));
     if (mutation) {
       mutation(scope);
     }
-    const resolvedRange = StructureBookmark.resolveBookmark(bm);
+    const resolvedRange = NodeStructureBookmark.resolveBookmark(bm);
 
     const actualStartPath = Hierarchy.path(scope, SugarElement.fromDom(resolvedRange.startContainer)).getOrDie('Failed to get start container');
     const actualEndPath = Hierarchy.path(scope, SugarElement.fromDom(resolvedRange.endContainer)).getOrDie('Failed to get end container');
