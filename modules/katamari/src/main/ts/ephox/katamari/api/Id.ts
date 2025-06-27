@@ -1,4 +1,4 @@
-import * as IdUtils from '../util/IdUtilts';
+import * as IdUtils from '../util/IdUtils';
 
 import * as Num from './Num';
 

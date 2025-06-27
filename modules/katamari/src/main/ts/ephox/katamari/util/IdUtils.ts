@@ -1,6 +1,6 @@
 /* eslint-disable no-bitwise */
 
-const uuidV4Bytes = (): Uint8Array<ArrayBuffer> => {
+const uuidV4Bytes = (): Uint8Array => {
   const bytes = window.crypto.getRandomValues(new Uint8Array(16));
 
   // https://tools.ietf.org/html/rfc4122#section-4.1.3
@@ -22,10 +22,11 @@ const uuidV4String = (): `${string}-${string}-${string}-${string}-${string}` => 
     let buff = '';
     for (let i = startIndex; i <= endIndex; ++i) {
       const hexByte = uuid[i].toString(16).padStart(2, '0');
-      buff = buff + hexByte;
+      buff += hexByte;
     }
     return buff;
   };
+  // RFC 4122 UUID format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
   return `${getHexRange(0, 3)}-${getHexRange(4, 5)}-${getHexRange(6, 7)}-${getHexRange(8, 9)}-${getHexRange(10, 15)}`;
 };
 

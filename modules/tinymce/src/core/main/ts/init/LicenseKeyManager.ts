@@ -86,14 +86,12 @@ const setup = (): LicenseKeyManagerLoader => {
     const licenseKeyManagerApi = LicenseKeyManager(editor, addOnManager.urls[ADDON_KEY]);
     setLicenseKeyManager(licenseKeyManagerApi);
 
-    const validate = editor.licenseKeyManager.validate;
-
     // Validation of the license key is done asynchronously and does
     // not block initialization of the editor
     // The validate function is expected to set the editor to the correct
     // state depending on if the license key is valid or not
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    validate({});
+    editor.licenseKeyManager.validate({});
   };
 
   return {

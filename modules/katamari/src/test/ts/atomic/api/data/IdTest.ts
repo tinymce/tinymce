@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import fc from 'fast-check';
 
 import * as Id from 'ephox/katamari/api/Id';
-import * as IdUtils from 'ephox/katamari/util/IdUtilts';
+import * as IdUtils from 'ephox/katamari/util/IdUtils';
 
 describe('atomic.katamari.api.data.IdTest', () => {
   context('generate', () => {
