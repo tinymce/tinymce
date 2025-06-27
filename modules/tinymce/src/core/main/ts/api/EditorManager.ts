@@ -120,7 +120,7 @@ interface EditorManager extends Observable<EditorManagerEventMap> {
   translate: (text: Untranslated) => TranslatedString;
   triggerSave: () => void;
   _setBaseUrl (this: EditorManager, baseUrl: string): void;
-  _addLicenseKeyManager (this: EditorManager, addOn: LicenseKeyManagerAddon): Promise<void>;
+  _addLicenseKeyManager (this: EditorManager, addOn: LicenseKeyManagerAddon): void;
 }
 
 const isQuirksMode = document.compatMode !== 'CSS1Compat';
@@ -290,7 +290,7 @@ const EditorManager: EditorManager = {
 
     // Lock certain properties to reduce misuse
     Arr.each(
-      [ 'majorVersion', 'minorVersion', 'releaseDate', 'pageUid' ],
+      [ 'majorVersion', 'minorVersion', 'releaseDate', 'pageUid', '_addLicenseKeyManager' ],
       (property) =>
         Object.defineProperty(self, property, {
           writable: false,

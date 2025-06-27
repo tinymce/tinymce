@@ -241,7 +241,7 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
   });
 
   it('TINY-12020: EditorManager should have correct locked properties', async () => {
-    const lockedEditorManagerProperties = [ 'majorVersion', 'minorVersion', 'releaseDate', 'pageUid' ] as const;
+    const lockedEditorManagerProperties = [ 'majorVersion', 'minorVersion', 'releaseDate', 'pageUid', '_addLicenseKeyManager' ] as const;
     const lockedPropertiesSet = new Set<string>(lockedEditorManagerProperties);
 
     const descriptors = Object.getOwnPropertyDescriptors(EditorManager);
@@ -259,7 +259,7 @@ describe('browser.tinymce.core.EditorManagerTest', () => {
 
     for (const property of lockedEditorManagerProperties) {
       assert.throws(() => {
-        EditorManager[property] = 'some_random_value';
+        (EditorManager[property] as any) = 'some_random_value';
       });
       assert.throws(() => {
         delete EditorManager[property];

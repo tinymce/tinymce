@@ -10,7 +10,7 @@ export type LicenseKeyManagerAddon = AddOnConstructor<LicenseKeyManager>;
 interface LicenseKeyManagerLoader {
   readonly load: (editor: Editor, suffix: string) => void;
   readonly isLoaded: (editor: Editor) => boolean;
-  readonly add: (addOn: LicenseKeyManagerAddon) => Promise<void>;
+  readonly add: (addOn: LicenseKeyManagerAddon) => void;
   readonly init: (editor: Editor) => void;
 }
 
@@ -31,14 +31,13 @@ const GplLicenseKeyManager: LicenseKeyManager = {
   },
 };
 
-const ADDON_KEY = 'commercial';
+const ADDON_KEY = 'manager';
 const PLUGIN_CODE = 'licensekeymanager';
 
 const setup = (): LicenseKeyManagerLoader => {
   const addOnManager = AddOnManager<LicenseKeyManager>();
 
-  // TODO: TINY-12081: Add integrity/checksum check
-  const add = async (addOn: LicenseKeyManagerAddon): Promise<void> => {
+  const add = (addOn: LicenseKeyManagerAddon): void => {
     addOnManager.add(ADDON_KEY, addOn);
   };
 
@@ -62,18 +61,12 @@ const setup = (): LicenseKeyManagerLoader => {
         ErrorReporter.licenseKeyManagerLoadError(editor, url, ADDON_KEY);
       });
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       add(Fun.constant(GplLicenseKeyManager));
     }
   };
 
-  const isLoaded = (editor: Editor): boolean => {
-    const licenseKey = Options.getLicenseKey(editor);
-    if (licenseKey === 'gpl') {
-      return true;
-    } else {
-      return Type.isNonNullable(addOnManager.get(ADDON_KEY));
-    }
+  const isLoaded = (_editor: Editor): boolean => {
+    return Type.isNonNullable(addOnManager.get(ADDON_KEY));
   };
 
   const init = (editor: Editor): void => {

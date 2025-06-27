@@ -11,7 +11,6 @@ declare const tinymce: TinyMCE;
 describe('browser.tinymce.core.init.LicenseKeyTest', () => {
   context('Non-GPL License Key Manager', () => {
     before(() => {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       tinymce._addLicenseKeyManager(() => {
         return {
           validate: () => Promise.resolve(false)
