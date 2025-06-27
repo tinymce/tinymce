@@ -30,7 +30,7 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
         assert.isFunction(editor.licenseKeyManager.validate);
       });
 
-      it('TINY-12058: validate should return true by default', async () => {
+      it('TINY-12058: validate should return false by default', async () => {
         const editor = hook.editor();
         const result = await editor.licenseKeyManager.validate({});
         assert.isFalse(result);
