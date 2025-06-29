@@ -1,8 +1,0 @@
-{
-  "rules": {
-    "@tinymce/no-implicit-dom-globals": [ "error", {
-      "allowed": [ "HTMLInputElement" ],
-      "appendDefaults": true
-    }]
-  }
-}
