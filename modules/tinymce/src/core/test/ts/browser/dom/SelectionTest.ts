@@ -8,11 +8,12 @@ import { GetContentEvent, SetContentEvent } from 'tinymce/core/api/EventTypes';
 import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import { Bookmark } from 'tinymce/core/bookmark/BookmarkTypes';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
+import * as SetSelectionContent from 'tinymce/core/selection/SetSelectionContent';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 
 describe('browser.tinymce.core.dom.SelectionTest', () => {
-  const platform = PlatformDetection.detect();
-  const isSafari = platform.browser.isSafari();
+  const browser = PlatformDetection.detect().browser;
+  const isOldSafari = browser.isSafari() && (browser.version.major === 18 && browser.version.minor < 3);
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
@@ -93,7 +94,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     rng.setStart(editor.getBody(), 0);
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
-    editor.selection.setContent('<div>test</div>');
+    SetSelectionContent.setContentInternal(editor, '<div>test</div>');
     LegacyUnit.equal(editor.getContent(), '<div>test</div>', 'Set contents at selection');
 
     // Insert XSS at selection
@@ -102,7 +103,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     rng.setStart(editor.getBody(), 0);
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
-    editor.selection.setContent('<img src="a" onerror="alert(1)" />');
+    SetSelectionContent.setContentInternal(editor, '<img src="a" onerror="alert(1)" />');
     LegacyUnit.equal(editor.getContent(), '<p><img src="a"></p>', 'Set XSS at selection');
 
     // Set contents at selection (collapsed)
@@ -111,7 +112,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     rng.setStart(editor.getBody(), 0);
     rng.setEnd(editor.getBody(), 0);
     editor.selection.setRng(rng);
-    editor.selection.setContent('<div>test</div>');
+    SetSelectionContent.setContentInternal(editor, '<div>test</div>');
     LegacyUnit.equal(editor.getContent(), '<div>test</div>\n<p>text</p>', 'Set contents at selection (collapsed)');
 
     // Insert in middle of paragraph
@@ -120,7 +121,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     rng.setStart(editor.getBody().firstChild?.firstChild as Text, 'before'.length);
     rng.setEnd(editor.getBody().firstChild?.firstChild as Text, 'before'.length);
     editor.selection.setRng(rng);
-    editor.selection.setContent('<br />');
+    SetSelectionContent.setContentInternal(editor, '<br />');
     LegacyUnit.equal(editor.getContent(), '<p>before<br>after</p>', 'Set contents at selection (inside paragraph)');
 
     // Check the caret is left in the correct position.
@@ -135,7 +136,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     rng.setStart(editor.getBody(), 0);
     rng.setEnd(editor.getBody(), 0);
     editor.selection.setRng(rng);
-    editor.selection.setContent('');
+    SetSelectionContent.setContentInternal(editor, '');
     LegacyUnit.equal(editor.getContent(), '<p>text</p>', 'Set contents to empty at selection (collapsed)');
     rng = editor.selection.getRng();
     LegacyUnit.equalDom(rng.startContainer, editor.getBody(), 'Selection start container');
@@ -154,7 +155,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     rng.setStart(editor.getBody(), 0);
     rng.setEnd(editor.getBody(), 1);
     editor.selection.setRng(rng);
-    editor.selection.setContent('<div>text</div>');
+    SetSelectionContent.setContentInternal(editor, '<div>text</div>');
     LegacyUnit.equal(eventObj?.content, '<div>text</div>', 'Set selected contents, onSetContent event');
     editor.off('SetContent', handler);
   });
@@ -1062,6 +1063,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
   it('selectorChanged', () => {
     const editor = hook.editor();
     let newState: boolean | undefined;
+    // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     let newArgs: { node: Node; selector: String; parents: Node[] } | undefined;
 
     editor.selection.selectorChanged('a[href]', (state, args) => {
@@ -1089,6 +1091,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
   it('selectorChangedWithUnbind', () => {
     const editor = hook.editor();
     let newState: boolean | undefined;
+    // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     let newArgs: { node: Node; selector: String; parents: Node[] } | undefined;
     let calls = 0;
 
@@ -1120,6 +1123,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
   it('TINY-3463: selectorChanged should setup the active state if already selected', () => {
     const editor = hook.editor();
     let newState: boolean | undefined;
+    // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     let newArgs: { node: Node; selector: String; parents: Node[] } | undefined;
 
     editor.setContent('<p>some <a href="#">text</a></p>');
@@ -1214,6 +1218,14 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
     TinySelections.setCursor(editor, [ 0, 0 ], 4);
     editor.selection.expand({ type: 'word' });
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 6);
+  });
+
+  it('TINY-11304: Expanding a word does not expand beyond closest editing host', () => {
+    const editor = hook.editor();
+    editor.setContent('<div contenteditable="false">a<span contenteditable="true">bc</span>d</div>');
+    TinySelections.setCursor(editor, [ 1, 1, 0 ], 1); // Shifted because of fake caret
+    editor.selection.expand({ type: 'word' });
+    TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 0, [ 0, 1, 0 ], 2);
   });
 
   it('TINY-9259: Should be able to get selection range on hidden editors', () => {
@@ -1370,7 +1382,7 @@ describe('browser.tinymce.core.dom.SelectionTest', () => {
       fpath: [ 1, 0 ],
       foffset: 1,
       // TINY-10639: Safari does not allow selection over non-editable content
-      expected: isSafari
+      expected: isOldSafari
     }));
 
     it('TINY-9477: isEditable on selected noneditable table cells should be true since parent is editable', testIsEditableSelection({

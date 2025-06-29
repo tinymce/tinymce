@@ -1,4 +1,6 @@
+import * as Deprecations from '../../Deprecations';
 import * as EventUtils from '../../events/EventUtils';
+
 import EventDispatcher, { EditorEvent, MappedEvent } from './EventDispatcher';
 
 interface Observable<T extends {}> {
@@ -47,7 +49,7 @@ const Observable: Observable<any> = {
    * Fires the specified event by name. Consult the
    * <a href="https://www.tiny.cloud/docs/tinymce/7/events/">event reference</a> for more details on each event.
    * <br>
-   * <em>Deprecated in TinyMCE 6.0 and has been marked for removal in TinyMCE 7.0. Use <code>dispatch</code> instead.</em>
+   * <em>Deprecated in TinyMCE 6.0 and has been marked for removal in TinyMCE 9.0. Use <code>dispatch</code> instead.</em>
    *
    * @method fire
    * @param {String} name Name of the event to fire.
@@ -59,6 +61,7 @@ const Observable: Observable<any> = {
    * instance.fire('event', {...});
    */
   fire<K extends string, U extends MappedEvent<any, K>>(name: K, args?: U, bubble?: boolean) {
+    Deprecations.logFeatureDeprecationWarning('fire');
     return this.dispatch(name, args, bubble);
   },
 

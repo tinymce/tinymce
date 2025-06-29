@@ -11,12 +11,15 @@ import * as Fields from '../../data/Fields';
 import { InputDetail } from '../types/InputTypes';
 
 const schema: () => FieldProcessor[] = Fun.constant([
+  FieldSchema.defaultedString('type', 'text'),
   FieldSchema.option('data'),
   FieldSchema.defaulted('inputAttributes', { }),
   FieldSchema.defaulted('inputStyles', { }),
   FieldSchema.defaulted('tag', 'input'),
   FieldSchema.defaulted('inputClasses', [ ]),
   Fields.onHandler('onSetValue'),
+  FieldSchema.defaultedFunction('fromInputValue', Fun.identity),
+  FieldSchema.defaultedFunction('toInputValue', Fun.identity),
   FieldSchema.defaulted('styles', { }),
   FieldSchema.defaulted('eventOrder', { }),
   SketchBehaviours.field('inputBehaviours', [ Representing, Focusing ]),
@@ -28,7 +31,11 @@ const focusBehaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord =>
     onFocus: !detail.selectOnFocus ? Fun.noop : (component) => {
       const input = component.element;
       const value = Value.get(input);
-      input.dom.setSelectionRange(0, value.length);
+
+      // TODO: There are probably more types that can't handle setSelectionRange
+      if (detail.type !== 'range') {
+        input.dom.setSelectionRange(0, value.length);
+      }
     }
   })
 ]);
@@ -44,13 +51,13 @@ const behaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord => ({
           // Propagating its Optional
           ...detail.data.map((data) => ({ initialValue: data } as { initialValue?: string })).getOr({ }),
           getValue: (input) => {
-            return Value.get(input.element);
+            return detail.fromInputValue(Value.get(input.element));
           },
           setValue: (input, data) => {
             const current = Value.get(input.element);
             // Only set it if it has changed ... otherwise the cursor goes to the end.
             if (current !== data) {
-              Value.set(input.element, data);
+              Value.set(input.element, detail.toInputValue(data));
             }
           }
         },
@@ -63,7 +70,7 @@ const behaviours = (detail: InputDetail): Behaviour.AlloyBehaviourRecord => ({
 const dom = (detail: InputDetail): RawDomSchema => ({
   tag: detail.tag,
   attributes: {
-    type: 'text',
+    type: detail.type,
     ...detail.inputAttributes
   },
   styles: detail.inputStyles,

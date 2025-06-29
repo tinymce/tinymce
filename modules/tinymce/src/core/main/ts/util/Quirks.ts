@@ -1,4 +1,5 @@
-import { Fun } from '@ephox/katamari';
+import { Fun, Optional, Optionals } from '@ephox/katamari';
+import { SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
 import Env from '../api/Env';
@@ -38,7 +39,7 @@ const Quirks = (editor: Editor): Quirks => {
   const setEditorCommandState = (cmd: string, state: string | boolean) => {
     try {
       editor.getDoc().execCommand(cmd, false, String(state));
-    } catch (ex) {
+    } catch {
       // Ignore
     }
   };
@@ -250,6 +251,37 @@ const Quirks = (editor: Editor): Quirks => {
   };
 
   /**
+   * Fixes a Gecko a selection bug where if there is a floating image
+   * more details here: https://bugzilla.mozilla.org/show_bug.cgi?id=1959606
+   */
+  const fixFirefoxImageSelection = () => {
+    const isEditableImage = (node: Node): node is HTMLImageElement => node.nodeName === 'IMG' && editor.dom.isEditable(node);
+
+    editor.on('mousedown', (e) => {
+      Optionals.lift2(Optional.from(e.clientX), Optional.from(e.clientY), (clientX, clientY) => {
+        const caretPos = editor.getDoc().caretPositionFromPoint(clientX, clientY);
+        const img = caretPos?.offsetNode.childNodes[caretPos.offset - (caretPos.offset > 0 ? 1 : 0)] || caretPos?.offsetNode;
+
+        if (img && isEditableImage(img)) {
+          const rect = img.getBoundingClientRect();
+          e.preventDefault();
+
+          if (!editor.hasFocus()) {
+            editor.focus();
+          }
+
+          editor.selection.select(img);
+          if (e.clientX < rect.left || e.clientY < rect.top) {
+            editor.selection.collapse(true);
+          } else if (e.clientX > rect.right || e.clientY > rect.bottom) {
+            editor.selection.collapse(false);
+          }
+        }
+      });
+    });
+  };
+
+  /**
    * Fixes a Gecko bug where the style attribute gets added to the wrong element when deleting between two block elements.
    *
    * Fixes do backspace/delete on this:
@@ -367,6 +399,34 @@ const Quirks = (editor: Editor): Quirks => {
         rng.setStart(container, 0);
         rng.setEnd(container, 0);
         selection.setRng(rng);
+      }
+    });
+  };
+
+  /*
+   * Firefox-specific fix for arrow key navigation. In Firefox, users can't move the caret out of a
+   * `<figcaption>` element using the left and right arrow keys. This function handles those keystrokes
+   * to allow navigation to the previous/next sibling of the figure element.
+  */
+  const arrowInFigcaption = () => {
+    const isFigcaption = SugarNode.isTag('figcaption');
+    editor.on('keydown', (e) => {
+      if (e.keyCode === VK.LEFT || e.keyCode === VK.RIGHT) {
+        const currentNode = SugarElement.fromDom(editor.selection.getNode());
+        if (isFigcaption(currentNode) && editor.selection.isCollapsed()) {
+          Traverse.parent(currentNode).bind((parent) => {
+            if (editor.selection.getRng().startOffset === 0 && e.keyCode === VK.LEFT) {
+              return Traverse.prevSibling(parent);
+            } else if (editor.selection.getRng().endOffset === currentNode.dom.textContent?.length && e.keyCode === VK.RIGHT) {
+              return Traverse.nextSibling(parent);
+            } else {
+              return Optional.none();
+            }
+          }).each((targetSibling) => {
+            editor.selection.setCursorLocation(targetSibling.dom, 0);
+          });
+        }
+
       }
     });
   };
@@ -713,6 +773,8 @@ const Quirks = (editor: Editor): Quirks => {
 
     // Gecko
     if (isGecko) {
+      arrowInFigcaption();
+      fixFirefoxImageSelection();
       removeHrOnBackspace();
       focusBody();
       removeStylesWhenDeletingAcrossBlockElements();

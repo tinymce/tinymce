@@ -9,6 +9,7 @@ import { renderItemDomStructure } from 'tinymce/themes/silver/ui/menus/item/stru
 import * as ItemClasses from '../ItemClasses';
 import ItemResponse from '../ItemResponse';
 import { renderContainer, renderHtml, renderImage } from '../structure/ItemSlices';
+
 import { replaceText } from './AutocompleteMenuItem';
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
@@ -60,7 +61,7 @@ export const renderCardMenuItem = (
   });
 
   const structure = {
-    dom: renderItemDomStructure(spec.label),
+    dom: renderItemDomStructure(spec.label, []),
     optComponents: [
       Optional.some({
         dom: {

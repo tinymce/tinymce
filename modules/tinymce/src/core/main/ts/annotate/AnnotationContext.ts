@@ -5,6 +5,7 @@ import Editor from '../api/Editor';
 import { isCaretNode } from '../fmt/FormatContainer';
 import * as FormatUtils from '../fmt/FormatUtils';
 import { ZWSP } from '../text/Zwsp';
+
 import { isAnnotation } from './Identification';
 
 export const enum ChildContext {
@@ -30,13 +31,15 @@ const validBlocks = [
   'div.tiny-pageembed',
   // Tableofcontents plugin
   'div.mce-toc',
-  'div[data-mce-toc]'
+  'div[data-mce-toc]',
+  // Footnootes plugin
+  'div.mce-footnotes'
 ];
 
 const isZeroWidth = (elem: SugarElement<Node>): boolean =>
   SugarNode.isText(elem) && SugarText.get(elem) === ZWSP;
 
-const context = (editor: Editor, elem: SugarElement<Node>, wrapName: string, nodeName: string): ChildContext => Traverse.parent(elem).fold(
+const context = (editor: Editor, elem: SugarElement<Node>, wrapName: string, nodeName: string): ChildContext => Traverse.parentElement(elem).fold(
   () => ChildContext.Skipping,
 
   (parent) => {

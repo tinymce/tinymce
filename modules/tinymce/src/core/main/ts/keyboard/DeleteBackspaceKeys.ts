@@ -15,8 +15,10 @@ import * as InlineBoundaryDelete from '../delete/InlineBoundaryDelete';
 import * as InlineFormatDelete from '../delete/InlineFormatDelete';
 import * as MediaDelete from '../delete/MediaDelete';
 import * as Outdent from '../delete/Outdent';
+import * as SelectedHTMLElementDelete from '../delete/SelectedHTMLElementDelete';
 import * as TableDelete from '../delete/TableDelete';
 import * as InputEvents from '../events/InputEvents';
+
 import * as MatchKeys from './MatchKeys';
 
 const platform = PlatformDetection.detect();
@@ -69,7 +71,9 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: K
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(InlineFormatDelete.backspaceDelete, editor, false) },
     { keyCode: VK.DELETE, action: MatchKeys.action(InlineFormatDelete.backspaceDelete, editor, true) },
     { keyCode: VK.BACKSPACE, action: MatchKeys.action(DivDelete.backspaceDelete, editor, false) },
-    { keyCode: VK.DELETE, action: MatchKeys.action(DivDelete.backspaceDelete, editor, true) }
+    { keyCode: VK.DELETE, action: MatchKeys.action(DivDelete.backspaceDelete, editor, true) },
+    { keyCode: VK.BACKSPACE, action: MatchKeys.action(SelectedHTMLElementDelete.backspaceDelete, editor, false) },
+    { keyCode: VK.DELETE, action: MatchKeys.action(SelectedHTMLElementDelete.backspaceDelete, editor, true) },
   ], evt)
     .filter((_) => editor.selection.isEditable())
     .each((applyAction) => {

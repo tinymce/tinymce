@@ -6,12 +6,14 @@ import { PlatformDetection } from '@ephox/sand';
 import { Compare, Css, SugarBody, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { ExecCommandArgs } from 'tinymce/core/api/EditorCommands';
 import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 import I18n from 'tinymce/core/api/util/I18n';
 
 import * as Events from './api/Events';
 import * as Options from './api/Options';
 import * as Backstage from './backstage/Backstage';
+import * as Deprecations from './Deprecations';
 import * as DomEvents from './Events';
 import * as Iframe from './modes/Iframe';
 import * as Inline from './modes/Inline';
@@ -209,8 +211,9 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
     const hasMultipleToolbar = Options.isMultipleToolbars(editor);
     const hasToolbar = Options.isToolbarEnabled(editor);
     const hasMenubar = Options.isMenubarEnabled(editor);
-    const shouldHavePromotion = Options.promotionEnabled(editor);
-    const partPromotion = makePromotion();
+    const shouldHavePromotionLink = Options.promotionEnabled(editor);
+    const partPromotion = makePromotion(shouldHavePromotionLink);
+
     const hasAnyContents = hasMultipleToolbar || hasToolbar || hasMenubar;
 
     const getPartToolbar = () => {
@@ -223,7 +226,7 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
       }
     };
 
-    const menubarCollection = shouldHavePromotion ? [ partPromotion, partMenubar ] : [ partMenubar ];
+    const menubarCollection = [ partPromotion, partMenubar ];
 
     return OuterContainer.parts.header({
       dom: {
@@ -245,12 +248,13 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
     });
   };
 
-  const makePromotion = () => {
+  const makePromotion = (promotionLink: boolean) => {
     return OuterContainer.parts.promotion({
       dom: {
         tag: 'div',
         classes: [ 'tox-promotion' ],
       },
+      promotionLink
     });
   };
 
@@ -473,8 +477,11 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
       OuterContainer.focusToolbar(outerContainer);
     });
 
-    editor.addCommand('ToggleToolbarDrawer', (_ui, options?: { skipFocus: boolean }) => {
+    editor.addCommand('ToggleToolbarDrawer', (_ui, options?: { skipFocus: boolean }, args?: ExecCommandArgs) => {
       if (options?.skipFocus) {
+        Deprecations.logFeatureDeprecationWarning('skipFocus');
+        OuterContainer.toggleToolbarDrawerWithoutFocusing(outerContainer);
+      } else if (args?.skip_focus) {
         OuterContainer.toggleToolbarDrawerWithoutFocusing(outerContainer);
       } else {
         OuterContainer.toggleToolbarDrawer(outerContainer);
@@ -482,6 +489,12 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
     });
 
     editor.addQueryStateHandler('ToggleToolbarDrawer', () => OuterContainer.isToolbarDrawerToggled(outerContainer));
+
+    editor.on('blur', () => {
+      if (Options.getToolbarMode(editor) === Options.ToolbarMode.floating && OuterContainer.isToolbarDrawerToggled(outerContainer)) {
+        OuterContainer.toggleToolbarDrawerWithoutFocusing(outerContainer);
+      }
+    });
   };
 
   const renderUIWithRefs = (uiRefs: ReadyUiReferences): ModeRenderInfo => {

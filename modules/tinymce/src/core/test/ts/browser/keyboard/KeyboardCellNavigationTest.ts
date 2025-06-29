@@ -69,6 +69,34 @@ describe('browser.tinymce.core.table.KeyboardCellNavigationTest', () => {
     TinyAssertions.assertCursor(editor, [ 0, 0, 2, 1 ], 0);
   });
 
+  it('TINY-12018: Tabbing forwards should not create a new row if it would not be editable', () => {
+    const editor = hook.editor();
+    const table = '<table>\n<tbody>\n<tr>\n<td>A</td>\n<td>B</td>\n</tr>\n<tr>\n<td contenteditable="false">C</td>\n<td contenteditable="false">D</td>\n</tr>\n</tbody>\n</table>';
+    editor.setContent(table );
+    TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0 ], 0);
+
+    TinyContentActions.keydown(editor, Keys.tab());
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 0 ], 0);
+    TinyContentActions.keydown(editor, Keys.tab());
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 0 ], 0);
+    TinyAssertions.assertContent(editor, table);
+  });
+
+  it('TINY-12018: Tabbing forwards should create a row if the last row is editable ( Last Cell )', () => {
+    const editor = hook.editor();
+    const tableStart = '<table>\n<tbody>\n<tr>\n<td>A</td>\n<td>B</td>\n</tr>\n<tr>\n<td contenteditable="false">C</td>\n<td>D</td>\n</tr>\n</tbody>\n</table>';
+    const tableEnd = '<table>\n<tbody>\n<tr>\n<td>A</td>\n<td>B</td>\n</tr>\n<tr>\n<td contenteditable="false">C</td>\n<td>D</td>\n</tr>\n<tr>\n<td>&nbsp;</td>\n<td>&nbsp;</td>\n</tr>\n</tbody>\n</table>';
+    editor.setContent(tableStart );
+    TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0 ], 0);
+
+    TinyContentActions.keydown(editor, Keys.tab());
+    TinyAssertions.assertCursor(editor, [ 0, 0, 1, 1, 0 ], 0);
+    TinyContentActions.keydown(editor, Keys.tab());
+    TinyAssertions.assertCursor(editor, [ 0, 0, 2, 0 ], 0);
+    TinyAssertions.assertContent(editor, tableEnd);
+
+  });
+
   it('TINY-7705: Tabbing backwards should ignore cef cells', () => {
     const editor = hook.editor();
     editor.setContent(
@@ -84,5 +112,27 @@ describe('browser.tinymce.core.table.KeyboardCellNavigationTest', () => {
     // Move to cell "b"
     TinyContentActions.keydown(editor, Keys.tab(), { shiftKey: true });
     TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 0 ], 0);
+  });
+
+  it('TINY-11797: Tabbing forwards in cef table should include cef cells with editable content', () => {
+    const editor = hook.editor();
+    editor.setContent('<table contenteditable="false"><tbody><tr><td contenteditable="true">cell 1</td><td><div contenteditable="true">cell 2</div></td></tr></tbody></table>');
+    TinyAssertions.assertContentPresence(editor, { tr: 1, td: 2, div: 1 });
+    TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0 ], 0);
+    TinyContentActions.keystroke(editor, Keys.tab());
+
+    // Assert cursor is inside contenteditable div
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 0, 0 ], 0);
+  });
+
+  it('TINY-11797: Tabbing backwards in cef table should include cef cells with editable content', () => {
+    const editor = hook.editor();
+    editor.setContent('<table contenteditable="false"><tbody><tr><td><div contenteditable="true">cell 1</div></td><td contenteditable="true">cell 2</td></tr></tbody></table>');
+    TinyAssertions.assertContentPresence(editor, { tr: 1, td: 2, div: 1 });
+    TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0 ], 0);
+    TinyContentActions.keystroke(editor, Keys.tab(), { shift: true });
+
+    // Assert cursor is inside contenteditable div
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0, 0 ], 0);
   });
 });

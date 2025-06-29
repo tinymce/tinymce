@@ -129,7 +129,7 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
     await Waiter.pTryUntil('Wait for toolbar to be rendered and contains at least 1 group', () => UiFinder.exists(toolbar, '[data-mce-name="overflow-button"]'));
   };
 
-  const clickOnOverflowButton = async (editor: Editor) => {
+  const clickOnOverflowButton = (editor: Editor) => {
     TinyUiActions.clickOnToolbar(editor, '[data-mce-name="overflow-button"]');
   };
 
@@ -404,11 +404,11 @@ describe('browser.tinymce.themes.silver.editor.header.InlineHeaderTest', () => {
       await pAssertOverflowToolbarGroupsAtAleast(2);
 
       Scroll.to(SugarLocation.absolute(editorTarget).left + 200 - window.innerWidth, 0);
-      await Waiter.pWait(100);
+      await Waiter.pWaitBetweenUserActions();
       assert.notEqual(Scroll.get().left, 0, 'Scroll should be reset to 0');
 
       Scroll.to(document.documentElement.scrollWidth, 0);
-      await Waiter.pWait(100);
+      await Waiter.pWaitBetweenUserActions();
       assert.notEqual(Scroll.get().left, 0, 'Scroll should be reset to 0');
     });
   });

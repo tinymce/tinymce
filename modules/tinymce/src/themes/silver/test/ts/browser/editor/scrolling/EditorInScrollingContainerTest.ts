@@ -240,7 +240,7 @@ describe.skip('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingC
     );
   };
 
-  const pRunMenuDisconnectTestWithAdjustment = async (editor: Editor, adjustScrollPosition: () => Promise<void>): Promise<void> => {
+  const pRunMenuDisconnectTestWithAdjustment = async (editor: Editor, pAdjustScrollPosition: () => Promise<void>): Promise<void> => {
     const header = getEditorUi(editor, ui.editor.stickyHeader);
     // It should not be fixed yet.
     assert.isTrue(Css.getRaw(header, 'position').isNone(), 'We have not yet docked the sticky toolbar');
@@ -267,7 +267,7 @@ describe.skip('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingC
 
     assertMenuBelowMenubar();
 
-    adjustScrollPosition();
+    await pAdjustScrollPosition();
     await Waiter.pTryUntil(
       'Waiting until the menu is positioned under the menubar',
       () => assertMenuBelowMenubar()
@@ -290,8 +290,7 @@ describe.skip('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingC
       Html.set(target, paragraphs);
       return target;
     } else {
-      const target = SugarElement.fromTag('textarea');
-      return target;
+      return SugarElement.fromTag('textarea');
     }
   };
 
@@ -689,9 +688,7 @@ describe.skip('browser.tinymce.themes.silver.editor.scrolling.EditorInScrollingC
             const elementWithFixed: SugarElement<HTMLElement> = Traverse.parent(dialog).getOrDie(
               'Could not find parent of dialog'
             ) as SugarElement<HTMLElement>;
-            // Trigger docking. On Safari, we seem to need this wait to give it time to
-            // catch up. Not sure of the underlying cause, unfortunately.
-            await Waiter.pWait(0);
+            await Waiter.pWaitBetweenUserActions();
             await adjustments.toDock.action();
 
             await pWaitUntilDockedAtPosition(elementWithFixed, Optional.some({ location: 'top', value: adjustments.toDock.top }));

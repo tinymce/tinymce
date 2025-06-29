@@ -70,7 +70,7 @@ describe('browser.tinymce.themes.silver.editor.AutocompleterTooltipTest', () => 
       editor.focus();
       await TooltipUtils.pAssertTooltip(editor, async () => await pOpenAutocompleter(editor, '+'), 'p-aa');
       await TooltipUtils.pAssertTooltip(editor, async () => {
-        TooltipUtils.pTriggerTooltipWithMouse(editor, '.tox-collection__item .tox-collection__item-icon:contains("ab")');
+        await TooltipUtils.pTriggerTooltipWithMouse(editor, '.tox-collection__item .tox-collection__item-icon:contains("ab")');
         await TinyUiActions.pWaitForUi(editor, '.tox-silver-sink .tox-tooltip__body:contains("p-ab")');
         return Promise.resolve();
       }, 'p-ab');

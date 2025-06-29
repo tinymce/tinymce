@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, UiFinder } from '@ephox/agar';
-import { AlloyComponent, AlloyTriggers, GuiFactory, NativeEvents, TestHelpers } from '@ephox/alloy';
+import { AlloyComponent, AlloyTriggers, GuiFactory, NativeEvents } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { StructureSchema } from '@ephox/boulder';
 import { Dialog } from '@ephox/bridge';
@@ -8,11 +8,12 @@ import { assert } from 'chai';
 
 import { renderTree } from 'tinymce/themes/silver/ui/dialog/Tree';
 
+import * as GuiSetup from '../../../module/GuiSetup';
 import * as TestExtras from '../../../module/TestExtras';
 
 describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
   const extrasHook = TestExtras.bddSetup();
-  const hook = TestHelpers.GuiSetup.bddSetup((store, _doc, _body) => {
+  const hook = GuiSetup.bddSetup((store, _doc, _body) => {
     const fullTree: Dialog.TreeItemSpec [] = [
       {
         type: 'directory',
@@ -161,8 +162,9 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
     store.assertEq('Dir collapsed', [ 'dir-collapsed' ]);
     store.clear();
 
+    const subdir = UiFinder.findIn(dir.element, '.tox-tree--directory').getOrDie();
     assertDirectoryExpandedState('Subdir', false, getTreeItem('.tox-tree--directory .tox-tree--directory'));
-    Mouse.clickOn(dir.element, '.tox-tree--directory .tox-trbtn.tox-tree--directory__label');
+    Mouse.clickOn(subdir, '.tox-trbtn.tox-tree--directory__label');
     assertDirectoryExpandedState('Subdir', true, getTreeItem('.tox-tree--directory .tox-tree--directory'));
     store.assertEq('Subir expanded', [ 'subdir-expanded' ]);
     store.clear();
@@ -180,7 +182,7 @@ describe('headless.tinymce.themes.silver.tree.TreeTest', () => {
     Mouse.clickOn(SugarBody.body(), '[aria-label="menuitem"]');
     store.assertEq('menuitem', [ 'menuitem' ]);
 
-    Mouse.clickOn(dir.element, '.tox-tree--directory .tox-trbtn.tox-tree--directory__label');
+    Mouse.clickOn(subdir, '.tox-trbtn.tox-tree--directory__label');
     assertDirectoryExpandedState('Subdir', false, getTreeItem('.tox-tree--directory .tox-tree--directory'));
 
   });

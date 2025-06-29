@@ -1,11 +1,14 @@
 import { Arr, Obj, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
+import type { TinyMCE } from 'tinymce/core/api/Tinymce';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import I18n from 'tinymce/core/api/util/I18n';
 
 import * as Options from '../api/Options';
 import * as PluginUrls from '../data/PluginUrls';
+
+declare let tinymce: TinyMCE;
 
 interface PluginData {
   // The name is just used for sorting alphabetically.
@@ -56,17 +59,16 @@ const tab = (editor: Editor): Dialog.TabSpec & { name: string } => {
   }, (x) => {
     // We know this plugin, so use our stored details.
     const name = x.type === PluginUrls.PluginType.Premium ? `${x.name}*` : x.name;
-    const html = makeLink({ name, url: `https://www.tiny.cloud/docs/tinymce/7/${x.slug}/` });
+    const html = makeLink({ name, url: `https://www.tiny.cloud/docs/tinymce/${tinymce.majorVersion}/${x.slug}/` });
     return { name, html };
   });
 
   const getPluginKeys = (editor: Editor) => {
     const keys = Obj.keys(editor.plugins);
     const forcedPlugins = Options.getForcedPlugins(editor);
+    const hiddenPlugins = Type.isUndefined(forcedPlugins) ? [ 'onboarding' ] : forcedPlugins.concat([ 'onboarding' ] );
 
-    return Type.isUndefined(forcedPlugins) ?
-      keys :
-      Arr.filter(keys, (k) => !Arr.contains(forcedPlugins, k));
+    return Arr.filter(keys, (k) => !Arr.contains(hiddenPlugins, k));
   };
 
   const pluginLister = (editor: Editor) => {

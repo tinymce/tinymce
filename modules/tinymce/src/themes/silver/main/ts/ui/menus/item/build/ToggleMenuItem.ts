@@ -8,6 +8,7 @@ import * as ItemClasses from '../ItemClasses';
 import ItemResponse from '../ItemResponse';
 import { renderCheckmark } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
+
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
 const renderToggleMenuItem = (
@@ -31,6 +32,7 @@ const renderToggleMenuItem = (
     iconContent: spec.icon,
     textContent: spec.text,
     htmlContent: Optional.none(),
+    labelContent: Optional.none(),
     ariaLabel: spec.text,
     checkMark: Optional.some(renderCheckmark(providersBackstage.icons)),
     caret: Optional.none(),

@@ -100,6 +100,7 @@ export const renderImagePreview = (spec: ImagePreviewSpec, initialData: Optional
 
       applyFramePositioning();
 
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       Ready.image(img).then((img) => {
         // Ensure the component hasn't been removed while the image was loading
         // if it is disconnected, just do nothing

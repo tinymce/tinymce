@@ -130,7 +130,7 @@ describe('browser.tinymce.core.fmt.FontInfoTest', () => {
         const fontFamily = FontInfo.getFontFamily(body, firstChildElement);
         assert.typeOf(fontFamily, 'string', 'Should return a string');
         done();
-      } catch (error) {
+      } catch {
         done('getFontFamily did not return a string');
       }
     }, false);

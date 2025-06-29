@@ -1,15 +1,16 @@
 import { ApproxStructure, Assertions, Waiter } from '@ephox/agar';
-import { AlloyComponent, Composing, Container, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
+import { AlloyComponent, Composing, Container, GuiFactory, Representing } from '@ephox/alloy';
 import { describe, context, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import { renderIFrame } from 'tinymce/themes/silver/ui/dialog/IFrame';
 
+import * as GuiSetup from '../../../module/GuiSetup';
 import TestProviders from '../../../module/TestProviders';
 
 describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
-  const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+  const hook = GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     Container.sketch({
       dom: {
         tag: 'div'
@@ -321,7 +322,7 @@ describe('headless.tinymce.themes.silver.components.iframe.IFrameTest', () => {
       it(`TINY-10078 & TINY-10097: Check for throttled iframe load on Safari and iframe scroll position is at bottom after streaming when ${doctypeLabel}`, async () => {
         const frame = getFrameFromFrameNumber(streamFrameNumber);
         const iframe = frame.element.dom as HTMLIFrameElement;
-        const interval = 100;
+        const interval = 34; // slightly longer than 2 frames at 60fps
         const maxNumIntervals = 10;
 
         await pStreamContentInIframe(frame, interval, maxNumIntervals, shouldContentHaveDoctype);

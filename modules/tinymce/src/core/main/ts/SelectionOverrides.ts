@@ -160,6 +160,24 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
       }
     });
 
+    editor.on('focusin', (e) => {
+      // for medias the selection is already managed in `MediaFocus.ts`
+      if (editor.selection.isCollapsed() && !NodeType.isMedia(e.target) && editor.getBody().contains(e.target) && e.target !== editor.getBody() && !editor.dom.isEditable(e.target.parentNode)) {
+        if (fakeCaret.isShowing()) {
+          fakeCaret.hide();
+        }
+        if (!e.target.contains(editor.selection.getNode())) {
+          editor.selection.select(e.target, true);
+          editor.selection.collapse(true);
+        }
+
+        const rng = setElementSelection(editor.selection.getRng(), true);
+        if (rng) {
+          editor.selection.setRng(rng);
+        }
+      }
+    });
+
     editor.on('SetSelectionRange', (e) => {
       // If the range is set inside a short ended element, then move it
       // to the side as IE for example will try to add content inside

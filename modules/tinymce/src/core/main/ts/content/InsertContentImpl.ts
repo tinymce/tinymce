@@ -1,5 +1,5 @@
 import { Arr, Optional, Type } from '@ephox/katamari';
-import { Remove, SugarElement } from '@ephox/sugar';
+import { Remove, SugarElement, SugarElements } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
@@ -17,13 +17,16 @@ import * as CefUtils from '../dom/CefUtils';
 import ElementUtils from '../dom/ElementUtils';
 import * as NodeType from '../dom/NodeType';
 import * as PaddingBr from '../dom/PaddingBr';
+import * as NormalizeTagOrder from '../fmt/NormalizeTagOrder';
 import * as AstNodeType from '../html/AstNodeType';
 import * as FilterNode from '../html/FilterNode';
 import * as InvalidNodes from '../html/InvalidNodes';
 import * as ParserUtils from '../html/ParserUtils';
 import * as RangeNormalizer from '../selection/RangeNormalizer';
 import * as SelectionUtils from '../selection/SelectionUtils';
+import * as SetSelectionContent from '../selection/SetSelectionContent';
 import * as Zwsp from '../text/Zwsp';
+
 import { InsertContentDetails } from './ContentTypes';
 import * as InsertList from './InsertList';
 
@@ -58,19 +61,25 @@ const isTableCellContentSelected = (dom: DOMUtils, rng: Range, cell: Node | null
   }
 };
 
+const isEditableEmptyBlock = (dom: DOMUtils, node: Node): boolean => {
+  if (dom.isBlock(node) && dom.isEditable(node)) {
+    const childNodes = node.childNodes;
+    return (childNodes.length === 1 && NodeType.isBr(childNodes[0])) || childNodes.length === 0;
+  } else {
+    return false;
+  }
+};
+
 const validInsertion = (editor: Editor, value: string, parentNode: Element): void => {
   // Should never insert content into bogus elements, since these can
   // be resize handles or similar
   if (parentNode.getAttribute('data-mce-bogus') === 'all') {
     parentNode.parentNode?.insertBefore(editor.dom.createFragment(value), parentNode);
   } else {
-    // Check if parent is empty or only has one BR element then set the innerHTML of that parent
-    const node = parentNode.firstChild;
-    const node2 = parentNode.lastChild;
-    if (!node || (node === node2 && node.nodeName === 'BR')) {
+    if (isEditableEmptyBlock(editor.dom, parentNode)) {
       editor.dom.setHTML(parentNode, value);
     } else {
-      editor.selection.setContent(value, { no_events: true });
+      SetSelectionContent.setContentInternal(editor, value, { no_events: true });
     }
   }
 };
@@ -113,6 +122,8 @@ const reduceInlineTextElements = (editor: Editor, merge: boolean | undefined): v
         }
       }
     });
+
+    NormalizeTagOrder.normalizeElements(editor, SugarElements.fromDom(fragments));
   }
 };
 
@@ -222,7 +233,8 @@ const deleteSelectedContent = (editor: Editor): void => {
   if (isTableCellContentSelected(dom, rng, startCell)) {
     TableDelete.deleteCellContents(editor, rng, SugarElement.fromDom(startCell as HTMLTableCellElement));
   // TINY-9193: If the selection is over the whole text node in an element then Firefox incorrectly moves the caret to the previous line
-  } else if (rng.startContainer === rng.endContainer && rng.endOffset - rng.startOffset === 1 && NodeType.isText(rng.startContainer.childNodes[rng.startOffset])) {
+  // TINY-11953: If the selection is over the whole anchor node, then Chrome incorrectly removes parent node alongside with it's child - anchor
+  } else if (SelectionUtils.isSelectionOverWholeAnchor(rng) || SelectionUtils.isSelectionOverWholeTextNode(rng)) {
     rng.deleteContents();
   } else {
     editor.getDoc().execCommand('Delete', false);
@@ -337,7 +349,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
     // to parse and process the parent it's inserted into
 
     // Insert bookmark node and get the parent
-    editor.selection.setContent(bookmarkHtml);
+    SetSelectionContent.setContentInternal(editor, bookmarkHtml);
     let parentNode: Node | null = selection.getNode();
     let tempNode: Node | null;
     const rootNode = editor.getBody();
@@ -362,10 +374,9 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
     const editingHost = markerNode.bind(ParserUtils.findClosestEditingHost).getOr(root);
     markerNode.each((marker) => marker.replace(fragment));
 
-    const toExtract = fragment.children();
-    const parent = fragment.parent ?? root;
+    const fragmentNodes = ParserUtils.getAllDescendants(fragment);
     fragment.unwrap();
-    const invalidChildren = Arr.filter(toExtract, (node) => InvalidNodes.isInvalid(editor.schema, node, parent));
+    const invalidChildren = Arr.filter(fragmentNodes, (node) => InvalidNodes.isInvalid(editor.schema, node));
     InvalidNodes.cleanInvalidNodes(invalidChildren, editor.schema, editingHost);
     FilterNode.filter(parser.getNodeFilters(), parser.getAttributeFilters(), root);
     value = serializer.serialize(root);

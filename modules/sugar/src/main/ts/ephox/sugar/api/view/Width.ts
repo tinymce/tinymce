@@ -1,12 +1,13 @@
 import { Dimension } from '../../impl/Dimension';
 import * as RuntimeSize from '../../impl/RuntimeSize';
+import * as SugarBody from '../node/SugarBody';
 import { SugarElement } from '../node/SugarElement';
 import * as Css from '../properties/Css';
 
-const api = Dimension('width', (element: SugarElement<HTMLElement>) =>
-  // IMO passing this function is better than using dom['offset' + 'width']
-  element.dom.offsetWidth
-);
+const api = Dimension('width', (element: SugarElement<HTMLElement>) => {
+  const dom = element.dom;
+  return SugarBody.inBody(element) ? dom.getBoundingClientRect().width : dom.offsetWidth;
+});
 
 const set = (element: SugarElement<HTMLElement>, h: string | number): void => api.set(element, h);
 

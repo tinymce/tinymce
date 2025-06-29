@@ -17,7 +17,7 @@ const sharedOne: SharedOneFn = oneAll;
 type SubsetFn = <E, D>(universe: Universe<E, D>, start: E, end: E) => Optional<E[]>;
 const subset: SubsetFn = SubsetFn.subset;
 
-type AncestorsFn = <E, D>(universe: Universe<E, D>, start: E, finish: E, isRoot?: ((x: E) => boolean) | undefined) => AncestorsFnResult<E>;
+type AncestorsFn = <E, D>(universe: Universe<E, D>, start: E, finish: E, isRoot?: ((x: E) => boolean)) => AncestorsFnResult<E>;
 const ancestors: AncestorsFn = SubsetFn.ancestors;
 
 type BreakToLeftFn = <E, D>(universe: Universe<E, D>, parent: E, child: E) => Optional<LeftRight<E>>;

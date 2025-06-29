@@ -12,7 +12,7 @@
     "build": "tsc",
     "test": "bedrock-auto -b chrome-headless -d src/test/ts",
     "test-manual": "bedrock --testdirs src/test/ts/browser src/test/ts/atomic",
-    "lint": "eslint --config ../../.eslintrc.json --max-warnings=0 src/**/*.ts"
+    "lint": "eslint --max-warnings=0 src/**/*.ts"
   },
   "keywords": [
     "testing",
@@ -25,18 +25,17 @@
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "GPL-2.0-or-later",
   "dependencies": {
-    "@ephox/bedrock-client": "11 || 12 || 13",
-    "@ephox/bedrock-common": "11 || 12 || 13",
+    "@ephox/bedrock-client": ">=11",
+    "@ephox/bedrock-common": ">=11",
     "@ephox/jax": "^8.0.0",
     "@ephox/sand": "^7.0.0",
     "@ephox/sugar": "^10.0.0",
-    "@types/sizzle": "^2.3.3",
-    "fast-check": "^2.0.0",
-    "sizzle": "^2.3.4"
+    "fast-check": "^2.0.0"
   },
   "devDependencies": {
     "@ephox/katamari-assertions": "^5.0.0"
   },
+  "sideEffects": false,
   "files": [
     "lib/main",
     "lib/demo",

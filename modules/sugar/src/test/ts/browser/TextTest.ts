@@ -26,14 +26,14 @@ UnitTest.test('TextTest', () => {
   try {
     SugarText.get(notText as any);
     Assert.fail('get on non-text did not throw');
-  } catch (e) {
+  } catch {
     // pass
   }
 
   try {
     SugarText.set(notText as any, 'bogus');
     Assert.fail('set on non-text did not throw');
-  } catch (e) {
+  } catch {
     // pass
   }
 });

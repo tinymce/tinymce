@@ -4,6 +4,7 @@ import { RepresentingBehaviour } from '../../behaviour/representing/Representing
 import RepresentSchema from '../../behaviour/representing/RepresentSchema';
 import * as RepresentState from '../../behaviour/representing/RepresentState';
 import { AlloyComponent } from '../component/ComponentApi';
+
 import * as Behaviour from './Behaviour';
 
 // The self-reference is clumsy.

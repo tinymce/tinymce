@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Toolbar drawer now closes when the editor loses focus.
+time: 2025-05-19T19:50:54.021145+02:00
+custom:
+    Issue: TINY-12125

@@ -7,6 +7,7 @@ import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
 import { DomDefinitionDetail } from '../../dom/DomDefinition';
 import * as DomModification from '../../dom/DomModification';
 import { CustomEvent } from '../../events/SimulatedEvent';
+
 import { BehaviourConfigAndState } from './BehaviourBlob';
 import { BehaviourState, BehaviourStateInitialiser } from './BehaviourState';
 import {
@@ -102,7 +103,7 @@ const doCreate = <
     ...wrappedExtra,
     ...wrappedApis,
     revoke: Fun.curry(revokeBehaviour, name),
-    config: (spec) => {
+    config: (spec: C) => {
       const prepared = StructureSchema.asRawOrDie(name + '-config', configSchema, spec);
 
       return {

@@ -6,6 +6,7 @@ import URI from 'tinymce/core/api/util/URI';
 
 import * as Options from '../api/Options';
 import { UserListItem } from '../ui/DialogTypes';
+
 import { ImageData } from './ImageData';
 
 export interface ImageDimensions {
@@ -21,8 +22,6 @@ const getImageSize = (url: string): Promise<ImageDimensions> => new Promise((cal
   const img = document.createElement('img');
 
   const done = (dimensions: Promise<ImageDimensions>): void => {
-    img.onload = img.onerror = null;
-
     if (img.parentNode) {
       img.parentNode.removeChild(img);
     }
@@ -30,16 +29,16 @@ const getImageSize = (url: string): Promise<ImageDimensions> => new Promise((cal
     callback(dimensions);
   };
 
-  img.onload = () => {
+  img.addEventListener('load', () => {
     const width = parseIntAndGetMax(img.width, img.clientWidth);
     const height = parseIntAndGetMax(img.height, img.clientHeight);
     const dimensions = { width, height };
     done(Promise.resolve(dimensions));
-  };
+  });
 
-  img.onerror = () => {
+  img.addEventListener('error', () => {
     done(Promise.reject(`Failed to get image dimensions for: ${url}`));
-  };
+  });
 
   const style = img.style;
   style.visibility = 'hidden';
@@ -106,9 +105,11 @@ const createImageList = (editor: Editor, callback: (imageList: false | UserListI
   const imageList = Options.getImageList(editor);
 
   if (Type.isString(imageList)) {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     fetch(imageList)
       .then((res) => {
         if (res.ok) {
+          // eslint-disable-next-line @typescript-eslint/no-floating-promises
           res.json().then(callback);
         }
       });

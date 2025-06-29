@@ -1,15 +1,16 @@
 import { FocusTools, Keyboard, Keys, TestStore } from '@ephox/agar';
-import { AddEventsBehaviour, AlloyEvents, Behaviour, GuiFactory, TestHelpers } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, Behaviour, GuiFactory } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
 import { FormChangeEvent, formChangeEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
+import * as GuiSetup from '../../../module/GuiSetup';
 import TestProviders from '../../../module/TestProviders';
 
 describe('headless.tinymce.themes.silver.components.checkbox.CheckboxFormChangeTest', () => {
-  const hook = TestHelpers.GuiSetup.bddSetup((store: TestStore<string | number | symbol>, _doc, _body) => GuiFactory.build({
+  const hook = GuiSetup.bddSetup((store: TestStore<string | number | symbol>, _doc, _body) => GuiFactory.build({
     dom: {
       tag: 'div'
     },

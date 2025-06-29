@@ -1,5 +1,6 @@
 import { Arr, Fun, Obj, Optional, Optionals, Unicode } from '@ephox/katamari';
-import { Css, SugarElement } from '@ephox/sugar';
+import { DomDescent } from '@ephox/phoenix';
+import { Css, Insert, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
@@ -11,16 +12,18 @@ import * as NodeType from '../dom/NodeType';
 import * as ScrollIntoView from '../dom/ScrollIntoView';
 import { isCaretNode } from '../fmt/FormatContainer';
 
-const firstNonWhiteSpaceNodeSibling = (node: Node | null): Node | null => {
+import * as ReduceNestedFonts from './ReduceNestedFonts';
+
+const firstNonWhiteSpaceNodeSibling = (node: Node | null): Optional<SugarElement<Node>> => {
   while (node) {
     if (NodeType.isElement(node) || (NodeType.isText(node) && node.data && /[\r\n\s]/.test(node.data))) {
-      return node;
+      return Optional.from(SugarElement.fromDom(node));
     }
 
     node = node.nextSibling;
   }
 
-  return null;
+  return Optional.none();
 };
 
 const moveToCaretPosition = (editor: Editor, root: Node): void => {
@@ -32,11 +35,24 @@ const moveToCaretPosition = (editor: Editor, root: Node): void => {
   }
 
   if (/^(LI|DT|DD)$/.test(root.nodeName)) {
-    const firstChild = firstNonWhiteSpaceNodeSibling(root.firstChild);
-
-    if (firstChild && /^(UL|OL|DL)$/.test(firstChild.nodeName)) {
-      root.insertBefore(dom.doc.createTextNode(Unicode.nbsp), root.firstChild);
-    }
+    const isList = (e: SugarElement) => /^(ul|ol|dl)$/.test(SugarNode.name(e));
+    const findFirstList = (e: SugarElement) => isList(e) ? Optional.from(e) : PredicateFind.descendant(e, isList);
+    const isEmpty = (e: SugarElement) => dom.isEmpty(e.dom);
+    firstNonWhiteSpaceNodeSibling(root.firstChild).each((firstChild) => {
+      findFirstList(firstChild).fold(
+        () => {
+          if (isEmpty(firstChild)) {
+            const element = DomDescent.toLeaf(firstChild, 0).element;
+            if (!ElementType.isBr(element)) {
+              Insert.append(element, SugarElement.fromText(Unicode.nbsp));
+            }
+          }
+        },
+        (firstList) => {
+          Insert.before(firstList, SugarElement.fromText(Unicode.nbsp));
+        }
+      );
+    });
   }
 
   const rng = dom.createRng();
@@ -215,6 +231,8 @@ const createNewBlock = (
         }
       }
     } while ((node = node.parentNode) && node !== editableRoot);
+
+    ReduceNestedFonts.reduceFontStyleNesting(block, caretNode);
   }
 
   setForcedBlockAttrs(editor, block);

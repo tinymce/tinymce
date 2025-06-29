@@ -7,7 +7,7 @@ import Editor from 'tinymce/core/api/Editor';
 
 const pOpenContextMenu = async (editor: Editor, selector: string): Promise<void> => {
   await TinyUiActions.pTriggerContextMenu(editor, selector, '.tox-silver-sink .tox-menu.tox-collection [role="menuitem"]');
-  await Waiter.pWait(0);
+  await Waiter.pWaitBetweenUserActions();
 };
 
 const assertContentMenuPosition = (left: number, top: number, diff: number = 3): void => {

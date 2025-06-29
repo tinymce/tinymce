@@ -327,7 +327,7 @@ describe.skip('browser.tinymce.plugins.quickbars.ToolbarPositionTest', () => {
       });
     });
 
-    context('Selection outside table', () => {
+    context(`Selection outside table with layout ${tableLayout}`, () => {
       // Skipping safari, the quickbar toolbar is positioned differently in safari and chrome, see TINY-9851
       const skipIfSafari = PlatformDetection.detect().browser.isSafari() ? it.skip : it;
 

@@ -10,6 +10,7 @@ import * as PaddingBr from '../dom/PaddingBr';
 import * as SplitRange from '../selection/SplitRange';
 import { isWhiteSpace } from '../text/CharType';
 import * as Zwsp from '../text/Zwsp';
+
 import * as ExpandRange from './ExpandRange';
 import { CARET_ID, getParentCaretContainer, isCaretNode } from './FormatContainer';
 import { FormatVars } from './FormatTypes';
@@ -307,7 +308,7 @@ const removeCaretFormat = (editor: Editor, name: string, vars?: FormatVars, simi
     rng.collapse(true);
 
     // Expand the range to the closest word and split it at those points
-    let expandedRng = ExpandRange.expandRng(dom, rng, formatList, true);
+    let expandedRng = ExpandRange.expandRng(dom, rng, formatList, { includeTrailingSpace: true });
     expandedRng = SplitRange.split(expandedRng);
 
     // TODO: Figure out how on earth this works, as it shouldn't since remove format

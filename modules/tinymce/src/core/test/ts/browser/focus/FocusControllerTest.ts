@@ -1,5 +1,6 @@
-import { context, describe, it } from '@ephox/bedrock-client';
-import { Arr } from '@ephox/katamari';
+import { after, before, context, describe, it } from '@ephox/bedrock-client';
+import { Arr, Optional } from '@ephox/katamari';
+import { Attribute, Scroll, SugarDocument, SugarElement, SugarLocation, WindowVisualViewport } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -73,11 +74,49 @@ describe('browser.tinymce.core.focus.FocusControllerTest', () => {
 
       it('isUIElement on editor sibling is false', () => {
         const editor = hook.editor();
-        const inputElm = DOMUtils.DOM.create('input', { }, null);
+        const inputElm = DOMUtils.DOM.create('input', {}, null);
         editor.getContainer().parentNode?.appendChild(inputElm);
         assert.isFalse(FocusController.isUIElement(editor, inputElm), 'Should be false as not sitting inside editor');
         DOMUtils.DOM.remove(inputElm);
       });
+    });
+  });
+
+  context('Editor should be inside the viewport once focused', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      base_url: '/project/tinymce/js/tinymce'
+    }, [], false);
+
+    const assertEditorBodyInsideViewport = (editor: Editor) => {
+      const iframe = Optional.from(editor.iframeElement).getOrDie();
+      const iframeBounds = SugarLocation.viewport(SugarElement.fromDom(iframe));
+      const scroll = Scroll.get(SugarDocument.getDocument());
+      const iframeTop = iframeBounds.top + scroll.top;
+      const viewportBounds = WindowVisualViewport.getBounds(window);
+
+      assert.isAbove(iframeTop, viewportBounds.y, 'Editor\'s iframe should be inside the viewport');
+      assert.isBelow(iframeTop, viewportBounds.bottom, 'Editor\'s iframe should be inside the viewport');
+    };
+
+    before(() => {
+      const editor = hook.editor();
+      const container = editor.getContainer();
+      const expanderDiv = SugarElement.fromTag('div');
+      Attribute.set(expanderDiv, 'style', 'height: 3000px; width: 100px');
+      Attribute.set(expanderDiv, 'class', 'remove-on-cleanup');
+
+      container.parentNode?.insertBefore(expanderDiv.dom, container);
+    });
+
+    after(() => {
+      const elements = document.querySelectorAll('.remove-on-cleanup');
+      elements.forEach((element) => element.parentNode?.removeChild(element));
+    });
+
+    it('TINY-12017: Editor is inside the viewport once focused', async () => {
+      const editor = hook.editor();
+      editor.getBody().focus();
+      assertEditorBodyInsideViewport(editor);
     });
   });
 });

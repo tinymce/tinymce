@@ -1,7 +1,7 @@
 import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
-import { Attribute, EventArgs, Html, Insert, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Attribute, EventArgs, Html, Insert, Remove, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import * as Debugging from 'ephox/alloy/debugging/Debugging';
 import * as Triggers from 'ephox/alloy/events/Triggers';
@@ -85,6 +85,10 @@ UnitTest.asynctest('TriggersTest', (success, failure) => {
 
   Insert.append(body, container);
 
+  const teardown = () => {
+    Remove.remove(container);
+  };
+
   const cases = [
     { expected: [ 'gamma', 'beta', 'alpha' ], target: 'gamma', type: 'no.stop' },
     { expected: [ 'beta', 'alpha' ], target: 'beta', type: 'no.stop' },
@@ -126,5 +130,8 @@ UnitTest.asynctest('TriggersTest', (success, failure) => {
     c.type
   ));
 
-  Pipeline.async({}, steps, success, failure);
+  Pipeline.async({}, steps, () => {
+    teardown();
+    success();
+  }, failure);
 });

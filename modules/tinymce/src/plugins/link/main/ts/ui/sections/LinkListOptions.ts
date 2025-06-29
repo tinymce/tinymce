@@ -10,7 +10,7 @@ const parseJson = (text: string): Optional<ListItem[]> => {
   // Do some proper modelling.
   try {
     return Optional.some(JSON.parse(text));
-  } catch (err) {
+  } catch {
     return Optional.none();
   }
 };

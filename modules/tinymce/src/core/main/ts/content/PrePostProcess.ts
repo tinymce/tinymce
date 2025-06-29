@@ -6,6 +6,7 @@ import DomParser, { DomParserSettings } from '../api/html/DomParser';
 import HtmlSerializer from '../api/html/Serializer';
 import * as Options from '../api/Options';
 import { EditorEvent } from '../api/util/EventDispatcher';
+
 import { Content, GetContentArgs, isTreeNode, SetContentArgs } from './ContentTypes';
 
 const serializeContent = (content: Content): string =>

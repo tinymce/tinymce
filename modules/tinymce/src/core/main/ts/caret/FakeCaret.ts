@@ -6,12 +6,14 @@ import Env from '../api/Env';
 import * as Options from '../api/Options';
 import * as NodeType from '../dom/NodeType';
 import * as ClientRect from '../geom/ClientRect';
+
 import * as CaretContainer from './CaretContainer';
 import * as CaretContainerRemove from './CaretContainerRemove';
 
 type GeomClientRect = ClientRect.ClientRect;
 
 export interface FakeCaret {
+  isShowing: () => boolean;
   show: (before: boolean, element: Element) => Range | null;
   hide: () => void;
   getCss: () => string;
@@ -170,7 +172,7 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
   };
 
   const startBlink = () => {
-    cursorInterval = setInterval(() => {
+    cursorInterval = window.setInterval(() => {
       lastVisualCaret.on((caretState) => {
         if (hasFocus()) {
           dom.toggleClass(caretState.caret, 'mce-visual-caret-hidden');
@@ -211,6 +213,7 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
   );
 
   return {
+    isShowing: lastVisualCaret.isSet,
     show,
     hide,
     getCss,

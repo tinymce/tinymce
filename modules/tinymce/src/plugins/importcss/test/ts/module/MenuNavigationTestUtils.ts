@@ -13,8 +13,6 @@ const pAssertFocusOnItem = (doc: SugarElement<Document>, text: string): Promise<
     `.tox-collection__item:contains(${text})`
   );
 
-const pDelay = () => Waiter.pWait(0);
-
 const pProcessNavigation = async (doc: SugarElement<Document>, navigation: Navigation[]): Promise<void> => {
   if (navigation.length === 0) {
     return;
@@ -32,7 +30,7 @@ const pProcessNavigation = async (doc: SugarElement<Document>, navigation: Navig
 
       for (const si of nav.subitems.slice(1).concat(nav.subitems.slice(0, 1))) {
         Keyboard.activeKeydown(doc, Keys.down());
-        await pDelay();
+        await Waiter.pWaitBetweenUserActions();
         await pAssertFocusOnItem(doc, si);
       }
 
@@ -43,7 +41,7 @@ const pProcessNavigation = async (doc: SugarElement<Document>, navigation: Navig
     }
 
     await pAssertFocusOnItem(doc, nav.item);
-    await pDelay();
+    await Waiter.pWaitBetweenUserActions();
 
     // Move to the next one if not the last item
     if (i < navigation.length) {

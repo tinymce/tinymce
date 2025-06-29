@@ -1,5 +1,5 @@
 import { Arr, Fun, Obj, Type } from '@ephox/katamari';
-import { PredicateExists, SugarElement } from '@ephox/sugar';
+import { PredicateExists, SugarElement, SugarElements } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import Editor from '../api/Editor';
@@ -16,6 +16,8 @@ import * as RangeWalk from '../selection/RangeWalk';
 import * as SelectionUtils from '../selection/SelectionUtils';
 import * as TableCellSelection from '../selection/TableCellSelection';
 import * as Zwsp from '../text/Zwsp';
+
+import * as ApplyElementFormat from './ApplyElementFormat';
 import * as CaretFormat from './CaretFormat';
 import * as ExpandRange from './ExpandRange';
 import { isCaretNode } from './FormatContainer';
@@ -25,6 +27,7 @@ import * as Hooks from './Hooks';
 import * as ListItemFormat from './ListItemFormat';
 import * as MatchFormat from './MatchFormat';
 import * as MergeFormats from './MergeFormats';
+import * as NormalizeTagOrder from './NormalizeTagOrder';
 
 const each = Tools.each;
 
@@ -40,48 +43,12 @@ const canFormatBR = (editor: Editor, format: ApplyFormat, node: HTMLBRElement, p
   }
 };
 
-const applyStyles = (dom: DOMUtils, elm: Element, format: ApplyFormat, vars: FormatVars | undefined) => {
-  each(format.styles, (value, name) => {
-    dom.setStyle(elm, name, FormatUtils.replaceVars(value, vars));
-  });
-
-  // Needed for the WebKit span spam bug
-  // TODO: Remove this once WebKit/Blink fixes this
-  if (format.styles) {
-    const styleVal = dom.getAttrib(elm, 'style');
-
-    if (styleVal) {
-      dom.setAttrib(elm, 'data-mce-style', styleVal);
-    }
-  }
-};
-
 const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: Node | RangeLikeObject | null): void => {
   const formatList = ed.formatter.get(name) as ApplyFormat[];
   const format = formatList[0];
   const isCollapsed = !node && ed.selection.isCollapsed();
   const dom = ed.dom;
   const selection = ed.selection;
-
-  const setElementFormat = (elm: Element, fmt: ApplyFormat = format) => {
-    if (Type.isFunction(fmt.onformat)) {
-      fmt.onformat(elm, fmt as any, vars, node);
-    }
-
-    applyStyles(dom, elm, fmt, vars);
-
-    each(fmt.attributes, (value, name) => {
-      dom.setAttrib(elm, name, FormatUtils.replaceVars(value, vars));
-    });
-
-    each(fmt.classes, (value) => {
-      const newValue = FormatUtils.replaceVars(value, vars);
-
-      if (!dom.hasClass(elm, newValue)) {
-        dom.addClass(elm, newValue);
-      }
-    });
-  };
 
   const applyNodeStyle = (formatList: ApplyFormat[], node: Node) => {
     let found = false;
@@ -103,7 +70,7 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
       }
 
       if (dom.is(node, format.selector) && !isCaretNode(node)) {
-        setElementFormat(node as Element, format);
+        ApplyElementFormat.setElementFormat(ed, node as Element, format, vars, node);
         found = true;
         return false;
       }
@@ -117,7 +84,7 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
   const createWrapElement = (wrapName: string | undefined): HTMLElement | null => {
     if (Type.isString(wrapName)) {
       const wrapElm = dom.create(wrapName);
-      setElementFormat(wrapElm);
+      ApplyElementFormat.setElementFormat(ed, wrapElm, format, vars, node);
       return wrapElm;
     } else {
       return null;
@@ -195,7 +162,7 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
 
         if (canRenameBlock(node, parentName, isEditableDescendant)) {
           const elm = dom.rename(node as Element, wrapName);
-          setElementFormat(elm);
+          ApplyElementFormat.setElementFormat(ed, elm, format, vars, node);
           newWrappers.push(elm);
           currentWrapElm = null;
           return;
@@ -251,18 +218,20 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
 
     // Apply formats to links as well to get the color of the underline to change as well
     if (format.links === true) {
-      Arr.each(newWrappers, (node) => {
-        const process = (node: Node) => {
-          if (node.nodeName === 'A') {
-            setElementFormat(node as HTMLAnchorElement, format);
+      Arr.each(newWrappers, (wrapper) => {
+        const process = (target: Node) => {
+          if (target.nodeName === 'A') {
+            ApplyElementFormat.setElementFormat(ed, target as HTMLAnchorElement, format, vars, node);
           }
 
-          Arr.each(Arr.from(node.childNodes), process);
+          Arr.each(Arr.from(target.childNodes), process);
         };
 
-        process(node);
+        process(wrapper);
       });
     }
+
+    NormalizeTagOrder.normalizeFontSizeElementsAfterApply(ed, name, SugarElements.fromDom(newWrappers));
 
     // Cleanup
     Arr.each(newWrappers, (node) => {
@@ -284,7 +253,7 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
           .filter((child) => dom.getContentEditable(child) !== 'false' && MatchFormat.matchName(dom, child, format));
         return childElement.map((child) => {
           const clone = dom.clone(child, false) as Element;
-          setElementFormat(clone);
+          ApplyElementFormat.setElementFormat(ed, clone, format, vars, node);
 
           dom.replace(clone, node, true);
           dom.remove(child, true);
@@ -362,7 +331,7 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
       }
 
       ListItemFormat.getExpandedListItemFormat(ed.formatter, name).each((liFmt) => {
-        Arr.each(ListItemFormat.getFullySelectedListItems(ed.selection), (li) => applyStyles(dom, li, liFmt as ApplyFormat, vars));
+        Arr.each(ListItemFormat.getFullySelectedListItems(ed.selection), (li) => ApplyElementFormat.applyStyles(dom, li, liFmt as ApplyFormat, vars));
       });
     }
 
@@ -372,12 +341,9 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
   Events.fireFormatApply(ed, name, node, vars);
 };
 
-const applyFormat = (editor: Editor, name: string, vars?: FormatVars, node?: Node | RangeLikeObject | null): void => {
+export const applyFormat = (editor: Editor, name: string, vars?: FormatVars, node?: Node | RangeLikeObject | null): void => {
   if (node || editor.selection.isEditable()) {
     applyFormatAction(editor, name, vars, node);
   }
 };
 
-export {
-  applyFormat
-};

@@ -39,8 +39,9 @@ const testFolders = (tests, auto) => tests.flatMap((test) => {
 const bedrockDefaults = {
   config: 'tsconfig.json',
   customRoutes: 'modules/tinymce/src/core/test/json/routes.json',
-  overallTimeout: 180000,
-  singleTimeout: 60000,
+  overallTimeout: 21 * 60 * 1000, // 21 minutes
+  singleTimeout: 10000,
+  retries: 1,
 };
 
 const bedrockHeadless = (tests, browser, auto, opts) => {
@@ -53,16 +54,13 @@ const bedrockHeadless = (tests, browser, auto, opts) => {
         name: 'headless-tests',
         browser,
         testfiles: testFolders(tests, auto),
-
-        // we have a few tests that don't play nicely when combined together in the monorepo
-        retries: 3,
         ...opts
       }
     }
   }
 };
 
-const bedrockBrowser = (tests, browserName, osName, bucket, buckets, chunk, remote, auto, opts) => {
+const bedrockBrowser = (tests, browserName, osName, bucket, buckets, chunk, auto, opts) => {
   const name = opts.name ? opts.name : `${browserName}-${osName}`;
   if (tests.length === 0) {
     return {};
@@ -70,17 +68,12 @@ const bedrockBrowser = (tests, browserName, osName, bucket, buckets, chunk, remo
     return {
       browser: {
         ...bedrockDefaults,
-        overallTimeout: 3600000,
         name: name,
         browser: browserName,
         testfiles: testFolders(tests, auto),
         bucket: bucket,
         buckets: buckets,
         chunk: chunk,
-        remote: remote,
-
-        // we have a few tests that don't play nicely when combined together in the monorepo
-        retries: 3,
         ...opts
       }
     };
@@ -91,20 +84,10 @@ const fetchLernaProjects = (grunt, runAllTests) => {
   // This has to be sync because grunt can't do async config
   var exec = require('child_process').execSync;
 
-  // if JSON parse fails, well, grunt will just fail /shrug
   const parseLernaList = (cmd) => {
-    try {
-      const output = exec(`yarn -s lerna ${cmd} -a --json --loglevel warn`);
-      grunt.verbose.writeln(`lerna output: ${output}`);
-      return JSON.parse(output);
-    } catch (e) {
-      // If no changes are found, then lerna returns an exit code of 1, so deal with that gracefully
-      if (e.status === 1) {
-        return [];
-      } else {
-        throw e;
-      }
-    }
+    const output = exec(`yarn -s lerna ${cmd} -a --json --loglevel warn`);
+    grunt.verbose.writeln(`lerna output: ${output}`);
+    return JSON.parse(output);
   };
 
   const changes = runAllTests ? [] : parseLernaList('changed --no-ignore-changes');
@@ -125,7 +108,7 @@ module.exports = function (grunt) {
 
   const bucket = parseInt(grunt.option('bucket'), 10) || 1;
   const buckets = parseInt(grunt.option('buckets'), 10) || 1;
-  const chunk = parseInt(grunt.option('chunk'), 10) || 1000;
+  const chunk = parseInt(grunt.option('chunk'), 10) || 2000;
 
   const headlessTests = filterChanges(changes, runsHeadless);
   const browserTests = filterChangesNot(changes, runsHeadless);
@@ -133,8 +116,6 @@ module.exports = function (grunt) {
   const activeBrowser = grunt.option('bedrock-browser') || 'chrome-headless';
   const headlessBrowser = activeBrowser.endsWith("-headless") ? activeBrowser : 'chrome-headless';
   const activeOs = grunt.option('bedrock-os') || 'tests';
-
-  const remote = grunt.option('remote');
 
   const bedrockOpts = (grunt, availableOpts) => {
     return availableOpts.reduce((opts, opt) => {
@@ -144,7 +125,9 @@ module.exports = function (grunt) {
     }, {});
   };
 
-  const opts = bedrockOpts(grunt, ['name', 'username', 'accesskey', 'sishDomain', 'devicefarmArn', 'devicefarmRegion', 'platformName', 'browserVersion', 'useSelenium']);
+  const remoteTestingOpts = ['name', 'username', 'accesskey', 'sishDomain', 'devicefarmArn', 'devicefarmRegion', 'platformName', 'browserVersion', 'useSelenium'];
+  const generalBedrockOpts = ['retries', 'remote', 'stopOnFailure', 'delayExit'];
+  const opts = bedrockOpts(grunt, [...remoteTestingOpts, ...generalBedrockOpts]);
   const gruntConfig = {
     shell: {
       tsc: { command: 'yarn -s tsc' },
@@ -154,11 +137,11 @@ module.exports = function (grunt) {
     },
     'bedrock-auto': {
       ...bedrockHeadless(headlessTests, headlessBrowser, true, opts),
-      ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, chunk, remote, true, opts)
+      ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, chunk, true, opts)
     },
     'bedrock-manual': {
       ...bedrockHeadless(headlessTests, headlessBrowser, false, opts),
-      ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, chunk, remote, false, opts)
+      ...bedrockBrowser(browserTests, activeBrowser, activeOs, bucket, buckets, chunk, false, opts)
     }
   };
 

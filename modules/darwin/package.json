@@ -7,6 +7,7 @@
     "url": "https://github.com/tinymce/tinymce.git",
     "directory": "modules/darwin"
   },
+  "sideEffects": false,
   "files": [
     "lib/main",
     "lib/demo",
@@ -33,7 +34,7 @@
   "types": "./lib/main/ts/ephox/darwin/api/Main.d.ts",
   "scripts": {
     "test": "tsc -b",
-    "lint": "eslint --config ../../.eslintrc.json --max-warnings=0 src/**/*.ts",
+    "lint": "eslint --max-warnings=0 src/**/*.ts",
     "prepublishOnly": "tsc -b",
     "build": "tsc"
   }

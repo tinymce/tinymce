@@ -5,46 +5,61 @@ import fc from 'fast-check';
 import * as Fun from 'ephox/katamari/api/Fun';
 
 describe('atomic.katamari.api.fun.FunTest', () => {
-  it('unit tests', () => {
+  it('should compose functions correctly', () => {
     const add2 = (n: number) => n + 2;
-
     const squared = (n: number) => n * n;
-
     const add2squared = Fun.compose(squared, add2);
+    assert.equal(add2squared(2), 16);
+  });
 
+  it('should handle noarg correctly', () => {
     const f0 = (...args: any[]) => {
       return assert.lengthOf(args, 0);
     };
     Fun.noarg(f0)(1, 2, 3);
+  });
 
-    assert.equal(add2squared(2), 16);
-
+  it('should identity correctly', () => {
     assert.isUndefined(Fun.identity(undefined));
     assert.equal(Fun.identity(10), 10);
     assert.deepEqual(Fun.identity([ 1, 2, 4 ]), [ 1, 2, 4 ]);
     assert.deepEqual(Fun.identity({ a: 'a', b: 'b' }), { a: 'a', b: 'b' });
+  });
 
+  it('should handle constant correctly', () => {
     assert.isUndefined(Fun.constant(undefined)());
     assert.equal(Fun.constant(10)(), 10);
     assert.deepEqual(Fun.constant({ a: 'a' })(), { a: 'a' });
+  });
 
+  it('should handle never correctly', () => {
     assert.isFalse(Fun.never());
+  });
+
+  it('should handle always correctly', () => {
     assert.isTrue(Fun.always());
+  });
 
+  it('should handle curry correctly', () => {
     const c = <T>(...args: T[]): T[] => args;
-
     assert.deepEqual(Fun.curry(c)(), []);
     assert.deepEqual(Fun.curry(c, 'a')(), [ 'a' ]);
     assert.deepEqual(Fun.curry(c, 'a')('b'), [ 'a', 'b' ]);
     assert.deepEqual(Fun.curry(c)('a', 'b'), [ 'a', 'b' ]);
     assert.deepEqual(Fun.curry(c)('a', 'b', 'c'), [ 'a', 'b', 'c' ]);
     assert.deepEqual(Fun.curry(c, 'a', 'b')('c'), [ 'a', 'b', 'c' ]);
+  });
 
+  it('should handle not correctly', () => {
     assert.isFalse(Fun.not((_x: number) => true)(3));
     assert.isTrue(Fun.not((_x: string) => false)('cat'));
+  });
 
+  it('should throw an error with die', () => {
     assert.throws(Fun.die('Died!'));
+  });
 
+  it('should handle apply correctly', () => {
     let called = false;
     const f = () => {
       called = true;

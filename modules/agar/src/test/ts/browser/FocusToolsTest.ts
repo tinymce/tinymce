@@ -57,7 +57,7 @@ UnitTest.asynctest('FocusToolsTest', (success, failure) => {
       ),
 
       Step.control(
-        FocusTools.sTryOnSelector('tryUntilNotCheck (sTryOnSelector)', doc, '.not-really-there'),
+        FocusTools.sTryOnSelector('tryUntilNotCheck (sTryOnSelector)', doc, '.not-really-there', 10, 100),
         Guard.tryUntilNot(
           'Focus should not be on something that is not there'
         )

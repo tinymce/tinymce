@@ -1,5 +1,5 @@
 import { UiFinder, Waiter } from '@ephox/agar';
-import { after, before, context, it } from '@ephox/bedrock-client';
+import { after, before, beforeEach, context, it } from '@ephox/bedrock-client';
 import { Strings } from '@ephox/katamari';
 import { Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
@@ -35,10 +35,8 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
 
     PageScroll.bddSetup(hook.editor, 5000);
 
-    before(async () => {
-      // Need to wait for a fraction for some reason on safari,
-      // otherwise the initial scrolling doesn't work
-      await Waiter.pWait(100);
+    beforeEach(async () => {
+      await Waiter.pWaitBetweenUserActions();
     });
 
     it('Checking startup structure', async () => {
@@ -77,7 +75,7 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
 
     context('with open toolbar drawer', () => {
       before(async function () {
-        this.timeout(10000);
+        this.timeout(7000);
         // Ensure the editor is in view
         StickyUtils.scrollRelativeEditor(-100, isToolbarTop);
         // Open the more drawer
@@ -87,8 +85,20 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
         }
       });
 
+      beforeEach(async () => {
+        const editor = hook.editor();
+
+        // Open the more drawer if it was closed during the previous test
+        if (toolbarMode !== ToolbarMode.default && !editor.queryCommandState('ToggleToolbarDrawer')) {
+          await MenuUtils.pOpenMore(toolbarMode);
+          MenuUtils.assertMoreDrawerInViewport(toolbarMode);
+        }
+      });
+
       after(async () => {
-        if (toolbarMode !== ToolbarMode.default) {
+        const editor = hook.editor();
+
+        if (toolbarMode !== ToolbarMode.default && editor.queryCommandState('ToggleToolbarDrawer')) {
           await MenuUtils.pCloseMore(toolbarMode);
         }
       });
@@ -116,7 +126,7 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
         await StickyUtils.pOpenMenuAndTestScrolling(() => MenuUtils.pOpenNestedMenus([
           {
             label: 'Open menu bar Format menu',
-            selector: 'button:contains(Format)[role=menuitem]'
+            selector: 'button[role=menuitem]:contains(Format)'
           },
           {
             label: 'then Formats submenu',
@@ -148,7 +158,7 @@ const testStickyHeader = (toolbarMode: ToolbarMode, toolbarLocation: ToolbarLoca
       editor.execCommand('mceFullscreen');
       await Waiter.pTryUntil('Wait for fullscreen to be deactivated', () => UiFinder.notExists(SugarBody.body(), '.tox-fullscreen'));
       // TODO: Figure out why Chrome 78 needs this wait on MacOS. I suspect it might be because fullscreen sets overflow hidden
-      // and we're setting the scroll position before the window has updated
+      //       and we're setting the scroll position before the window has updated
       await Waiter.pWait(100);
       await StickyUtils.pScrollAndAssertStructure(isToolbarTop, 200, StickyUtils.expectedHalfView);
     });

@@ -5,7 +5,7 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
-import { assertCleanHtml, assertInputValue, generalTabSelectors, setInputValue } from '../module/Helpers';
+import { assertCleanHtml, assertInputValue, generalTabLabels, setInputValue } from '../module/Helpers';
 
 // TODO TINY-10480: Investigate flaky tests
 describe.skip('browser.tinymce.plugins.image.ImageResizeTest', () => {
@@ -25,9 +25,9 @@ describe.skip('browser.tinymce.plugins.image.ImageResizeTest', () => {
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
     const dialog = await TinyUiActions.pWaitForDialog(editor);
     Mouse.clickOn(dialog, 'button.tox-browse-url');
-    await Waiter.pTryUntil('did not find width input with value 1', () => assertInputValue(generalTabSelectors.width, '1'));
-    setInputValue(generalTabSelectors.height, '5');
-    await Waiter.pTryUntil('did not find width input with value 5', () => assertInputValue(generalTabSelectors.width, '5'));
+    await Waiter.pTryUntil('did not find width input with value 1', () => assertInputValue(generalTabLabels.width, '1'));
+    setInputValue(generalTabLabels.height, '5');
+    await Waiter.pTryUntil('did not find width input with value 5', () => assertInputValue(generalTabLabels.width, '5'));
     TinyUiActions.submitDialog(editor);
     assertCleanHtml('Checking output', editor, '<p><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="5" height="5"></p>');
   });

@@ -12,6 +12,7 @@ import ItemResponse from '../../menus/item/ItemResponse';
 import * as NestedMenus from '../../menus/menu/NestedMenus';
 import { ToolbarButtonClasses } from '../../toolbar/button/ButtonClasses';
 import { composeUnbinders, onSetupEvent } from '../ControlUtils';
+
 import { SelectDataset } from './SelectDatasets';
 import { NestedStyleFormat } from './StyleFormat';
 import * as FormatRegister from './utils/FormatRegister';
@@ -201,7 +202,7 @@ const createSelectButton = (editor: Editor, backstage: UiFactoryBackstage, spec:
       onSetupEvent(editor, 'NodeChange', (api: BespokeSelectApi) => {
         const comp = api.getComponent();
         spec.updateText(comp);
-        Disabling.set(api.getComponent(), !editor.selection.isEditable());
+        Disabling.set(api.getComponent(), (!editor.selection.isEditable() || getStyleItems().length === 0));
       })(api),
       () => editor.off(textUpdateEventName, handler)
     );

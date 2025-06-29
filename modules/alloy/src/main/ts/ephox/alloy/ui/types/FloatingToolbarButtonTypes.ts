@@ -6,6 +6,7 @@ import { AlloyComponent } from '../../api/component/ComponentApi';
 import { AlloySpec, SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 import { HasLayoutAnchor, HasLayoutAnchorSpec } from '../../positioning/mode/Anchoring';
+
 import { ToolbarSpec } from './ToolbarTypes';
 
 export interface FloatingToolbarButtonDetail extends CompositeSketchDetail, HasLayoutAnchor {
@@ -45,8 +46,8 @@ export interface FloatingToolbarButtonSpec extends CompositeSketchSpec, HasLayou
   };
 
   parts: {
-    'button': Partial<SimpleOrSketchSpec>;
-    'toolbar': Partial<ToolbarSpec>;
+    button: Partial<SimpleOrSketchSpec>;
+    toolbar: Partial<ToolbarSpec>;
   };
 
   onToggled?: (comp: AlloyComponent, state: boolean) => void;

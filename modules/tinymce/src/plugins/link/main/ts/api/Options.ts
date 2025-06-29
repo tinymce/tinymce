@@ -4,6 +4,7 @@ import Editor from 'tinymce/core/api/Editor';
 import { EditorOptions } from 'tinymce/core/api/OptionTypes';
 
 import { UserListItem } from '../ui/DialogTypes';
+
 import { AssumeExternalTargets } from './Types';
 
 type UserLinkListCallback = (callback: (items: UserListItem[]) => void) => void;
@@ -82,6 +83,10 @@ const register = (editor: Editor): void => {
     processor: 'boolean',
     default: false
   });
+
+  registerOption('link_attributes_postprocess', {
+    processor: 'function',
+  });
 };
 
 const assumeExternalTargets = option<AssumeExternalTargets>('link_assume_external_targets');
@@ -95,6 +100,7 @@ const getLinkClassList = option<UserListItem[]>('link_class_list');
 const shouldShowLinkTitle = option<boolean>('link_title');
 const allowUnsafeLinkTarget = option<boolean>('allow_unsafe_link_target');
 const useQuickLink = option<boolean>('link_quicklink');
+const attributesPostProcess = option<(attributes: Record<string, string | null | undefined>) => void>('link_attributes_postprocess');
 
 export {
   register,
@@ -108,5 +114,6 @@ export {
   shouldShowLinkTitle,
   allowUnsafeLinkTarget,
   useQuickLink,
-  getDefaultLinkProtocol
+  getDefaultLinkProtocol,
+  attributesPostProcess
 };

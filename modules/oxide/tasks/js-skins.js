@@ -20,7 +20,15 @@ module.exports = function (grunt) {
           grunt.log.error(err);
           return done(false);
         }
-        const content = `tinymce.Resource.add('${file.replace(/\.min.css$/, '.css')}', \`${data.split("\n")[0]}\`)`
+
+        const fileLines = data.split("\n");
+        // Check if the minified CSS file has more than 2 lines
+        // Line 1: The minified CSS content
+        // Line 2: The sourcemap comment, eg: (/*# sourceMappingURL=content.min.css.map */)
+        if (fileLines.length > 2) {
+          grunt.fail.fatal(`Failed to create JS resource for ${srcPath}. Expected minified CSS contains ${fileLines.length} lines instead of the expected 2 or fewer.`);
+        }
+        const content = `tinymce.Resource.add('${file.replace(/\.min.css$/, '.css')}', \`${fileLines[0]}\`)`
         grunt.file.write(destPath, content);
         processed++;
 

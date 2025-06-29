@@ -1,6 +1,9 @@
 import { Arr, Cell, Fun } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
+import * as Delete from '../lists/actions/Delete';
+import * as NormalizeLists from '../lists/lists/NormalizeLists';
+
 import * as BlockBoundaryDelete from './BlockBoundaryDelete';
 import * as BlockRangeDelete from './BlockRangeDelete';
 import * as CaretBoundaryDelete from './CaretBoundaryDelete';
@@ -12,6 +15,7 @@ import * as InlineBoundaryDelete from './InlineBoundaryDelete';
 import * as InlineFormatDelete from './InlineFormatDelete';
 import * as MediaDelete from './MediaDelete';
 import * as Outdent from './Outdent';
+import * as SelectedHTMLElementDelete from './SelectedHTMLElementDelete';
 import * as TableDelete from './TableDelete';
 
 const findAction = (editor: Editor, caret: Cell<Text | null>, forward: boolean) =>
@@ -26,7 +30,8 @@ const findAction = (editor: Editor, caret: Cell<Text | null>, forward: boolean) 
     MediaDelete.backspaceDelete,
     BlockRangeDelete.backspaceDelete,
     InlineFormatDelete.backspaceDelete,
-    DivDelete.backspaceDelete
+    DivDelete.backspaceDelete,
+    SelectedHTMLElementDelete.backspaceDelete,
   ], (item) => item(editor, forward))
     .filter((_) => editor.selection.isEditable());
 
@@ -44,6 +49,10 @@ const deleteCommand = (editor: Editor, caret: Cell<Text | null>): void => {
     },
     Fun.call
   );
+
+  if (Delete.hasListSelection(editor) ) {
+    NormalizeLists.normalizeLists(editor.dom, editor.getBody());
+  }
 };
 
 const forwardDeleteCommand = (editor: Editor, caret: Cell<Text | null>): void => {
@@ -57,6 +66,10 @@ const forwardDeleteCommand = (editor: Editor, caret: Cell<Text | null>): void =>
     },
     Fun.call
   );
+
+  if (Delete.hasListSelection(editor) ) {
+    NormalizeLists.normalizeLists(editor.dom, editor.getBody());
+  }
 };
 
 const setup = (editor: Editor, caret: Cell<Text | null>): void => {

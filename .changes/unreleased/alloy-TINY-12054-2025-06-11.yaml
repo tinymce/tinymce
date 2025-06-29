@@ -1,0 +1,6 @@
+project: alloy
+kind: Improved
+body: Tooltips close when recieving a message in the close tooltips channel.
+time: 2025-06-11T06:53:35.140151+02:00
+custom:
+    Issue: TINY-12054

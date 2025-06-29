@@ -10,7 +10,6 @@ import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
-import { GuiSetup } from 'ephox/alloy/api/testhelpers/TestHelpers';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import { PlacementSpec } from 'ephox/alloy/behaviour/positioning/PositioningTypes';
@@ -18,6 +17,7 @@ import * as Layout from 'ephox/alloy/positioning/layout/Layout';
 import * as LayoutInset from 'ephox/alloy/positioning/layout/LayoutInset';
 import { Layouts } from 'ephox/alloy/positioning/mode/Anchoring';
 import { TransitionMode } from 'ephox/alloy/positioning/view/Transitions';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as PositionTestUtils from 'ephox/alloy/test/PositionTestUtils';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 

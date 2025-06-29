@@ -8,6 +8,7 @@ import { TypedItem } from '../api/data/TypedItem';
 import { SearchResult, SpotRange } from '../api/data/Types';
 import * as Family from '../api/general/Family';
 import * as TypedList from '../extract/TypedList';
+
 import * as MatchSplitter from './MatchSplitter';
 
 const gen = <E, D>(universe: Universe<E, D>, input: E[]): SpotRange<E>[] => {

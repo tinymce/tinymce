@@ -14,7 +14,7 @@ UnitTest.test('ValueTest', () => {
   try {
     Value.set(ta, undefined as any);
     success = true;
-  } catch (e) {
+  } catch {
     // expected
   }
 

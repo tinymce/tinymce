@@ -1,7 +1,7 @@
-import { Assertions, Cursors, Waiter } from '@ephox/agar';
+import { Assertions, Waiter } from '@ephox/agar';
 import { after, before, describe, it } from '@ephox/bedrock-client';
-import { Hierarchy, Html, SimRange, SugarElement } from '@ephox/sugar';
-import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { SimRange } from '@ephox/sugar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Editor from 'tinymce/core/api/Editor';
@@ -30,6 +30,13 @@ describe('browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest', () 
     document.body.appendChild(div);
   };
 
+  const assertBookmark = (editor: Editor, startPath: number[], soffset: number, finishPath: number[], foffset: number): void => {
+    const actual: SimRange = editor.bookmark.getOrDie('no bookmark');
+    const root = TinyDom.body(editor);
+    TinyAssertions.assertPath('start', root, startPath, soffset, actual.start.dom, actual.soffset);
+    TinyAssertions.assertPath('finish', root, finishPath, foffset, actual.finish.dom, actual.foffset);
+  };
+
   const pWaitForBookmark = (editor: Editor, startPath: number[], startOffset: number, endPath: number[], endOffset: number) => {
     return Waiter.pTryUntil('wait for selection', () => {
       assertBookmark(editor, startPath, startOffset, endPath, endOffset);
@@ -39,24 +46,6 @@ describe('browser.tinymce.core.selection.SelectionBookmarkInlineEditorTest', () 
   const focusDiv = () => {
     const input = document.querySelector('#' + testDivId) as HTMLDivElement;
     input.focus();
-  };
-
-  const assertPath = (label: string, root: SugarElement<Node>, expPath: number[], expOffset: number, actElement: Node, actOffset: number) => {
-    const expected = Cursors.calculateOne(root, expPath);
-    const message = () => {
-      const actual = SugarElement.fromDom(actElement);
-      const actPath = Hierarchy.path(root, actual).getOrDie('could not find path to root');
-      return 'Expected path: ' + JSON.stringify(expPath) + '.\nActual path: ' + JSON.stringify(actPath);
-    };
-    Assertions.assertEq(() => 'Assert incorrect for ' + label + '.\n' + message(), true, expected.dom === actElement);
-    Assertions.assertEq(() => 'Offset mismatch for ' + label + ' in :\n' + Html.getOuter(expected), expOffset, actOffset);
-  };
-
-  const assertBookmark = (editor: Editor, startPath: number[], soffset: number, finishPath: number[], foffset: number) => {
-    const actual: SimRange = editor.bookmark.getOrDie('no bookmark');
-    const root = TinyDom.body(editor);
-    assertPath('start', root, startPath, soffset, actual.start.dom, actual.soffset);
-    assertPath('finish', root, finishPath, foffset, actual.finish.dom, actual.foffset);
   };
 
   before(() => addTestDiv());

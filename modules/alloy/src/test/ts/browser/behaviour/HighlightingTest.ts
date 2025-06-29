@@ -7,9 +7,9 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Highlighting } from 'ephox/alloy/api/behaviour/Highlighting';
 import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 UnitTest.asynctest('HighlightingTest', (success, failure) => {
 
@@ -111,7 +111,7 @@ UnitTest.asynctest('HighlightingTest', (success, failure) => {
       try {
         Highlighting.highlightAt(component, index);
         return Result.error('Expected to get an error because there should be no item with index ' + index);
-      } catch (e) { /* */ }
+      } catch { /* */ }
       return Result.value(v);
     });
 

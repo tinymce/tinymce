@@ -143,6 +143,7 @@ const AddOnManager = <T>(): AddOnManager<T> => {
       return;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     ScriptLoader.ScriptLoader.add(urls[name] + '/langs/' + language + '.js');
   };
 
@@ -151,6 +152,7 @@ const AddOnManager = <T>(): AddOnManager<T> => {
       if (isLoaded(name)) {
         loadLanguagePack(name, languages);
       } else {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         waitFor(name, 'loaded').then(() => loadLanguagePack(name, languages));
       }
     }

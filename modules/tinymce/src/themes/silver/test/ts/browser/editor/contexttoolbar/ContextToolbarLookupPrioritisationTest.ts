@@ -10,6 +10,7 @@ import { matchStartNode } from 'tinymce/themes/silver/ui/context/ContextToolbarL
 describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLookupPrioritisationTest', () => {
   const createToolbar = (items: string): InlineContent.ContextToolbar => ({
     type: 'contexttoolbar',
+    launch: Optional.none(),
     items,
     predicate: Fun.always,
     position: 'selection',
@@ -19,8 +20,11 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarLook
   const createForm = (): InlineContent.ContextForm => ({
     type: 'contextform',
     initValue: Fun.constant('test'),
+    placeholder: Optional.none(),
     label: Optional.none(),
     launch: Optional.none(),
+    onInput: Fun.noop,
+    onSetup: () => Fun.noop,
     commands: [{
       onAction: Fun.noop,
       original: {

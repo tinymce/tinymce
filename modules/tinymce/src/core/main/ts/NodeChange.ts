@@ -98,7 +98,7 @@ class NodeChange {
     let node: Element | undefined;
 
     // Fix for bug #1896577 it seems that this can not be fired while the editor is loading
-    if (editor.initialized && selection && !Options.shouldDisableNodeChange(editor)) {
+    if (editor.initialized && selection && !Options.shouldDisableNodeChange(editor) && !Options.isDisabled(editor)) {
       // Get start node
       const root = editor.getBody();
       node = selection.getStart(true) || root;

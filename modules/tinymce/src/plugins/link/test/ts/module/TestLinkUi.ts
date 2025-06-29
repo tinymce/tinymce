@@ -8,12 +8,12 @@ import Editor from 'tinymce/core/api/Editor';
 
 const doc = SugarDocument.getDocument();
 
-const selectors = {
-  href: 'label.tox-label:contains(URL) + div>div>input.tox-textfield',
-  text: 'label.tox-label:contains(Text to display) + input.tox-textfield',
-  title: 'label.tox-label:contains(Title) + input.tox-textfield',
-  target: 'label.tox-label:contains(Open link in...) + div.tox-listboxfield > .tox-listbox',
-  linklist: 'label.tox-label:contains(Link list) + div.tox-listboxfield > .tox-listbox'
+const labels = {
+  href: 'URL',
+  text: 'Text to display',
+  title: 'Title',
+  target: 'Open link in…',
+  linklist: 'Link list'
 };
 
 const pOpenLinkDialog = async (editor: Editor): Promise<void> => {
@@ -25,30 +25,22 @@ const clickOnConfirmDialog = (editor: Editor, state: boolean): void => {
   TinyUiActions.clickOnUi(editor, '[role="dialog"].tox-confirm-dialog button:contains("' + (state ? 'Yes' : 'No') + '")');
 };
 
-const fireEvent = (elem: SugarElement, event: string): void => {
-  const evt = new Event(event, {
-    bubbles: true,
-    cancelable: true
-  });
-  elem.dom.dispatchEvent(evt);
-};
+const getInput = (labelText: string) =>
+  UiFinder.findTargetByLabel<HTMLInputElement>(SugarBody.body(), labelText).getOrDie();
 
-const getInput = (selector: string) =>
-  UiFinder.findIn<HTMLInputElement>(SugarBody.body(), selector).getOrDie();
-
-const assertInputValue = (label: string, selector: string, expected: string | boolean): void => {
-  const input = getInput(selector);
+const assertInputValue = (propertyKey: string, labelText: string, expected: string | boolean): void => {
+  const input = getInput(labelText);
   if (input.dom.type === 'checkbox') {
-    assert.equal(input.dom.checked, expected, `The input value for ${label} should be: ${expected}`);
+    assert.equal(input.dom.checked, expected, `The input value for ${propertyKey} should be: ${expected}`);
   } else if (Class.has(input, 'tox-listbox')) {
-    assert.equal(Attribute.get(input, 'data-value'), String(expected), `The input value for ${label} should be: ${expected}`);
+    assert.equal(Attribute.get(input, 'data-value'), String(expected), `The input value for ${propertyKey} should be: ${expected}`);
   } else {
-    assert.equal(Value.get(input), expected, `The input value for ${label} should be: ${expected}`);
+    assert.equal(Value.get(input), expected, `The input value for ${propertyKey} should be: ${expected}`);
   }
 };
 
 const assertDialogContents = (expected: Record<string, any>): void => {
-  Obj.mapToArray(selectors, (value, key) => {
+  Obj.mapToArray(labels, (value, key) => {
     if (Obj.has(expected, key)) {
       assertInputValue(key, value, expected[key]);
     }
@@ -99,12 +91,17 @@ const pFindInDialog = async <T extends Element>(editor: Editor, selector: string
   return UiFinder.findIn<T>(dialog, selector).getOrDie();
 };
 
+const pFindTargetByLabelInDialog = async <T extends Element>(editor: Editor, label: string): Promise<SugarElement<T>> => {
+  const dialog = await TinyUiActions.pWaitForDialog(editor);
+  return UiFinder.findTargetByLabel<T>(dialog, label).getOrDie();
+};
+
 const clearHistory = (): void => {
   localStorage.removeItem('tinymce-url-history');
 };
 
 const pSetListBoxItem = async (editor: Editor, group: string, itemText: string): Promise<void> => {
-  const element = await pFindInDialog(editor, 'label:contains("' + group + '") + .tox-listboxfield .tox-listbox');
+  const element = await pFindTargetByLabelInDialog(editor, group);
   Mouse.click(element);
   const list = await UiFinder.pWaitForVisible('Wait for list to open', SugarBody.body(), '.tox-menu.tox-collection--list');
   const item = UiFinder.findIn(list, '.tox-collection__item-label:contains(' + itemText + ')').getOrDie();
@@ -113,17 +110,16 @@ const pSetListBoxItem = async (editor: Editor, group: string, itemText: string):
 };
 
 const pSetInputFieldValue = async (editor: Editor, group: string, newValue: string): Promise<void> => {
-  const element = await pFindInDialog<HTMLInputElement>(editor, 'label:contains("' + group + '") + input');
-  UiControls.setValue(element, newValue);
-  fireEvent(element, 'input');
+  const element = await pFindTargetByLabelInDialog<HTMLInputElement>(editor, group);
+  UiControls.setValue(element, newValue, 'input');
 };
 
 export const TestLinkUi = {
   assertInputValue,
   pAssertContentPresence,
   pOpenLinkDialog,
-  fireEvent,
   pFindInDialog,
+  pFindTargetByLabelInDialog,
   assertDialogContents,
   pClickSave,
   pClickCancel,

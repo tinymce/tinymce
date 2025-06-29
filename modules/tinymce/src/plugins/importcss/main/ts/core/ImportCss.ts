@@ -9,6 +9,7 @@ import { Plugin } from 'tinymce/core/api/PluginManager';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Options from '../api/Options';
+
 import { generate, SelectorFormatItem } from './SelectorModel';
 
 type Filter = (value: string, imported?: boolean) => boolean;
@@ -90,7 +91,7 @@ const getSelectors = (editor: Editor, doc: Document, fileFilter: Filter | undefi
 
     try {
       rules = styleSheet.cssRules || styleSheet.rules;
-    } catch (e) {
+    } catch {
       // Firefox fails on rules to remote domain for example:
       // @import url(//fonts.googleapis.com/css?family=Pathway+Gothic+One);
     }
@@ -120,7 +121,7 @@ const getSelectors = (editor: Editor, doc: Document, fileFilter: Filter | undefi
     Tools.each(doc.styleSheets, (styleSheet) => {
       append(styleSheet);
     });
-  } catch (e) {
+  } catch {
     // Ignore
   }
 

@@ -1,7 +1,7 @@
 import { AlloySpec, VerticalDir } from '@ephox/alloy';
 import { StructureSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
-import { Arr, Obj, Optional, Result, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Optionals, Result, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -9,11 +9,13 @@ import { getToolbarMode, ToolbarGroupOption, ToolbarMode } from '../../api/Optio
 import { UiFactoryBackstage } from '../../backstage/Backstage';
 import { ToolbarConfig } from '../../Render';
 import { renderMenuButton } from '../button/MenuButton';
+import { createNavigateBackButton } from '../context/NavigateBackBespokeButton';
 import { createAlignButton } from '../core/complex/AlignBespoke';
 import { createBlocksButton } from '../core/complex/BlocksBespoke';
 import { createFontFamilyButton } from '../core/complex/FontFamilyBespoke';
 import { createFontSizeButton, createFontSizeInputButton } from '../core/complex/FontSizeBespoke';
 import { createStylesButton } from '../core/complex/StylesBespoke';
+
 import { ToolbarButtonClasses } from './button/ButtonClasses';
 import { renderFloatingToolbarButton, renderSplitButton, renderToolbarButton, renderToolbarToggleButton } from './button/ToolbarButtons';
 import { ToolbarGroup } from './CommonToolbar';
@@ -121,7 +123,8 @@ const bespokeButtons: Record<string, (editor: Editor, backstage: UiFactoryBackst
   fontsizeinput: createFontSizeInputButton,
   fontfamily: createFontFamilyButton,
   blocks: createBlocksButton,
-  align: createAlignButton
+  align: createAlignButton,
+  navigateback: createNavigateBackButton
 };
 
 const removeUnusedDefaults = (buttons: RenderToolbarConfig['buttons']) => {
@@ -143,7 +146,7 @@ const convertStringToolbar = (strToolbar: string) => {
 };
 
 const isToolbarGroupSettingArray = (toolbar: ToolbarConfig): toolbar is ToolbarGroupOption[] =>
-  Type.isArrayOf(toolbar, (t): t is ToolbarGroupOption => Obj.has(t, 'name') && Obj.has(t, 'items'));
+  Type.isArrayOf(toolbar, (t): t is ToolbarGroupOption => (Obj.has(t, 'name') || Obj.has(t, 'label')) && Obj.has(t, 'items'));
 
 // Toolbar settings
 // false = disabled
@@ -200,6 +203,7 @@ const identifyButtons = (editor: Editor, toolbarConfig: RenderToolbarConfig, bac
     });
     return {
       title: Optional.from(editor.translate(group.name)),
+      label: Optionals.someIf(group.label !== undefined, editor.translate(group.label)),
       items
     };
   });

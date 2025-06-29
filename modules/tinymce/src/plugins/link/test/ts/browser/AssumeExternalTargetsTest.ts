@@ -1,4 +1,4 @@
-import { describe, it, context, before } from '@ephox/bedrock-client';
+import { describe, it, context, before, beforeEach } from '@ephox/bedrock-client';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -14,6 +14,10 @@ describe('browser.tinymce.plugins.link.AssumeExternalTargetsTest', () => {
   }, [ Plugin ]);
 
   context('Default setting', () => {
+    beforeEach(() => {
+      hook.editor().setContent('');
+    });
+
     it('TBA: www-urls are prompted to add https:// prefix, accept', async () => {
       const editor = hook.editor();
       await TestLinkUi.pInsertLink(editor, 'www.google.com');
@@ -41,6 +45,9 @@ describe('browser.tinymce.plugins.link.AssumeExternalTargetsTest', () => {
     before(() => {
       const editor = hook.editor();
       editor.options.set('link_assume_external_targets', true);
+    });
+    beforeEach(() => {
+      hook.editor().setContent('');
     });
 
     it('TBA: www-urls are prompted to add https:// prefix', async () => {
@@ -73,6 +80,9 @@ describe('browser.tinymce.plugins.link.AssumeExternalTargetsTest', () => {
       const editor = hook.editor();
       editor.options.set('link_assume_external_targets', 'http');
     });
+    beforeEach(() => {
+      hook.editor().setContent('');
+    });
 
     it('TBA: add http:// prefix to www-urls', async () => {
       const editor = hook.editor();
@@ -91,6 +101,9 @@ describe('browser.tinymce.plugins.link.AssumeExternalTargetsTest', () => {
     before(() => {
       const editor = hook.editor();
       editor.options.set('link_assume_external_targets', 'https');
+    });
+    beforeEach(() => {
+      hook.editor().setContent('');
     });
 
     it('TBA: add https:// prefix to www-urls', async () => {

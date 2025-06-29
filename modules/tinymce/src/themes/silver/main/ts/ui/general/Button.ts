@@ -20,6 +20,7 @@ import { renderIconFromPack, renderReplaceableIconFromPack } from '../button/But
 import { getFetch, renderMenuButton, StoredMenuButton } from '../button/MenuButton';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import { ToolbarButtonClasses, ViewButtonClasses } from '../toolbar/button/ButtonClasses';
+
 import { formActionEvent, formCancelEvent, formSubmitEvent } from './FormEvents';
 
 type Behaviours = Behaviour.NamedConfiguredBehaviour<any, any, any>[];
@@ -267,6 +268,7 @@ export const renderFooterButton = (spec: FooterButtonSpec, buttonType: string, b
 
     const fixedSpec: Toolbar.ToolbarMenuButton = {
       ...spec,
+      buttonType: 'default',
       type: 'menubutton',
       // Currently, dialog-based menu buttons cannot be searchable.
       search: Optional.none(),

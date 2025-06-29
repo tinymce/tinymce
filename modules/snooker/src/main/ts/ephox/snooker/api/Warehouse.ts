@@ -5,6 +5,7 @@ import * as Structs from '../api/Structs';
 import * as DetailsList from '../model/DetailsList';
 import * as LockedColumnUtils from '../util/LockedColumnUtils';
 import { CompElm } from '../util/TableTypes';
+
 import * as TableLookup from './TableLookup';
 
 export interface Warehouse {

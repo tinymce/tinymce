@@ -20,6 +20,7 @@ import { hasAnyRanges, moveEndPoint } from '../../selection/SelectionUtils';
 import * as SetSelectionContent from '../../selection/SetSelectionContent';
 import Editor from '../Editor';
 import AstNode from '../html/Node';
+
 import BookmarkManager from './BookmarkManager';
 import ControlSelection from './ControlSelection';
 import DOMUtils from './DOMUtils';
@@ -65,6 +66,19 @@ interface EditorSelection {
     (args: { format: 'tree' } & Partial<GetSelectionContentArgs>): AstNode;
     (args?: Partial<GetSelectionContentArgs>): string;
   };
+  /**
+   * Sets the current selection to the specified content. If any contents is selected it will be replaced
+   * with the contents passed in to this function. If there is no selection the contents will be inserted
+   * where the caret is placed in the editor/page.
+   *
+   * @method setContent
+   * @param {String} content HTML contents to set could also be other formats depending on settings.
+   * @param {Object} args Optional settings object with for example data format.
+   * @example
+   * // Inserts some HTML contents at the current selection
+   * tinymce.activeEditor.selection.setContent('<strong>Some contents</strong>');
+   * @deprecated This method has been deprecated. Use "editor.insertContent" instead.
+   */
   setContent: (content: string, args?: Partial<SetSelectionContentArgs>) => void;
   getBookmark: (type?: number, normalized?: boolean) => Bookmark;
   moveToBookmark: (bookmark: Bookmark) => void;
@@ -83,11 +97,13 @@ interface EditorSelection {
   normalize: () => Range;
   selectorChanged: (selector: string, callback: (active: boolean, args: {
     node: Node;
+    // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     selector: String;
     parents: Node[];
   }) => void) => EditorSelection;
   selectorChangedWithUnbind: (selector: string, callback: (active: boolean, args: {
     node: Node;
+    // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     selector: String;
     parents: Node[];
   }) => void) => { unbind: () => void };
@@ -153,6 +169,8 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
   const getContent = (args?: Partial<GetSelectionContentArgs>): any => GetSelectionContent.getContent(editor, args);
 
   /**
+   * This method has been deprecated. Use "editor.insertContent" instead.
+   *
    * Sets the current selection to the specified content. If any contents is selected it will be replaced
    * with the contents passed in to this function. If there is no selection the contents will be inserted
    * where the caret is placed in the editor/page.
@@ -164,7 +182,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * // Inserts some HTML contents at the current selection
    * tinymce.activeEditor.selection.setContent('<strong>Some contents</strong>');
    */
-  const setContent = (content: string, args?: Partial<SetSelectionContentArgs>) => SetSelectionContent.setContent(editor, content, args);
+  const setContent = (content: string, args?: Partial<SetSelectionContentArgs>) => SetSelectionContent.setContentExternal(editor, content, args);
 
   /**
    * Returns the start element of a selection range. If the start is in a text
@@ -314,7 +332,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
     const tryCompareBoundaryPoints = (how: number, sourceRange: Range, destinationRange: Range) => {
       try {
         return sourceRange.compareBoundaryPoints(how, destinationRange);
-      } catch (ex) {
+      } catch {
         // Gecko throws wrong document exception if the range points
         // to nodes that where removed from the dom #6690
         // Browsers should mutate existing DOMRange instances so that they always point
@@ -345,7 +363,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
 
         rng = EventProcessRanges.processRanges(editor, [ rng ])[0];
       }
-    } catch (ex) {
+    } catch {
       // IE throws unspecified error here if TinyMCE is placed in a frame/iframe
     }
 
@@ -400,7 +418,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
       try {
         sel.removeAllRanges();
         sel.addRange(rng);
-      } catch (ex) {
+      } catch {
         // IE might throw errors here if the editor is within a hidden container and selection is changed
       }
 
@@ -453,7 +471,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * tinymce.activeEditor.selection.setNode(tinymce.activeEditor.dom.create('img', { src: 'some.gif', title: 'some title' }));
    */
   const setNode = (elm: Element): Element => {
-    setContent(dom.getOuterHTML(elm));
+    SetSelectionContent.setContentInternal(editor, dom.getOuterHTML(elm));
     return elm;
   };
 
@@ -491,7 +509,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
 
       focusRange.setStart(focusNode, sel.focusOffset);
       focusRange.collapse(true);
-    } catch (e) {
+    } catch {
       // Safari can generate an invalid selection and error. Silently handle it and default to forward.
       // See https://bugs.webkit.org/show_bug.cgi?id=230594.
       return true;
@@ -525,6 +543,7 @@ const EditorSelection = (dom: DOMUtils, win: Window, serializer: DomSerializer, 
    * @param {String} selector CSS selector to check for.
    * @param {Function} callback Callback with state and args when the selector is matches or not.
    */
+  // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
   const selectorChanged = (selector: string, callback: (active: boolean, args: { node: Node; selector: String; parents: Node[] }) => void) => {
     selectorChangedWithUnbind(selector, callback);
     return exports;

@@ -1,4 +1,4 @@
-import { AlloySpec, ItemTypes, Menu as AlloyMenu, RawDomSchema, SimpleSpec } from '@ephox/alloy';
+import { Menu as AlloyMenu, AlloySpec, ItemTypes, RawDomSchema, SimpleSpec } from '@ephox/alloy';
 import { Arr, Fun, Id, Obj } from '@ephox/katamari';
 
 import I18n from 'tinymce/core/api/util/I18n';
@@ -12,6 +12,8 @@ export interface StructureSpec extends SimpleSpec {
   readonly components: AlloySpec[];
 }
 
+const widgetAriaLabel = 'Use arrow keys to navigate.';
+
 const chunk = <I>(rowDom: RawDomSchema, numColumns: number) => (items: I[]): Array<{ dom: RawDomSchema; components: I[] }> => {
   const chunks = Arr.chunk(items, numColumns);
   return Arr.map(chunks, (c) => ({
@@ -23,7 +25,10 @@ const chunk = <I>(rowDom: RawDomSchema, numColumns: number) => (items: I[]): Arr
 const forSwatch = (columns: number | 'auto'): StructureSpec => ({
   dom: {
     tag: 'div',
-    classes: [ 'tox-menu', 'tox-swatches-menu' ]
+    classes: [ 'tox-menu', 'tox-swatches-menu' ],
+    attributes: {
+      'aria-label': I18n.translate(widgetAriaLabel)
+    }
   },
   components: [
     {
@@ -37,6 +42,32 @@ const forSwatch = (columns: number | 'auto'): StructureSpec => ({
             {
               tag: 'div',
               classes: [ 'tox-swatches__row' ]
+            },
+            columns
+          ) : Fun.identity
+        })
+      ]
+    }
+  ]
+});
+
+const forImageSelector = (columns: number | 'auto'): StructureSpec => ({
+  dom: {
+    tag: 'div',
+    classes: [ 'tox-menu', 'tox-image-selector-menu' ]
+  },
+  components: [
+    {
+      dom: {
+        tag: 'div',
+        classes: [ 'tox-image-selector' ]
+      },
+      components: [
+        AlloyMenu.parts.items({
+          preprocess: columns !== 'auto' ? chunk(
+            {
+              tag: 'div',
+              classes: [ 'tox-image-selector__row' ]
             },
             columns
           ) : Fun.identity
@@ -119,12 +150,19 @@ const insertItemsPlaceholder = (
   });
 };
 
+export const hasWidget = (items: ItemTypes.ItemSpec[]): boolean =>
+  Arr.exists(items, (item) => item.type === 'widget');
+
 const forCollection = (columns: number | 'auto', initItems: ItemTypes.ItemSpec[], _hasIcons: boolean = true): StructureSpec => ({
   dom: {
     tag: 'div',
     classes: [ 'tox-menu', 'tox-collection' ].concat(
       columns === 1 ? [ 'tox-collection--list' ] : [ 'tox-collection--grid' ]
-    )
+    ),
+    attributes: {
+      // widget item can be inserttable, colorswatch or imageselect - all of them are navigated with arrow keys
+      ...hasWidget(initItems) ? { 'aria-label': I18n.translate(widgetAriaLabel) } : {}
+    },
   },
   components: [
     // We don't need to add IDs for each item because there are no
@@ -228,6 +266,7 @@ export {
   chunk,
   forSwatch,
   forCollection,
+  forImageSelector,
   forCollectionWithSearchResults,
   forCollectionWithSearchField,
   forHorizontalCollection,

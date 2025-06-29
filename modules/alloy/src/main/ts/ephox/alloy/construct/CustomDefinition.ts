@@ -11,15 +11,15 @@ import { DomModification, nu as NuModification } from '../dom/DomModification';
 
 // NB: Tsc requires AlloyEventHandler to be imported here.
 export interface CustomDetail<A> {
-  dom: StructDomSchema;
+  'dom': StructDomSchema;
   // By this stage, the components are built.
-  components: AlloyComponent[];
-  uid: string;
-  events: AlloyEventRecord;
-  apis: A;
-  eventOrder: Record<string, string[]>;
-  domModification: Optional<DomModification>;
-  originalSpec: SimpleOrSketchSpec;
+  'components': AlloyComponent[];
+  'uid': string;
+  'events': AlloyEventRecord;
+  'apis': A;
+  'eventOrder': Record<string, string[]>;
+  'domModification': Optional<DomModification>;
+  'originalSpec': SimpleOrSketchSpec;
   'debug.sketcher': string;
 }
 

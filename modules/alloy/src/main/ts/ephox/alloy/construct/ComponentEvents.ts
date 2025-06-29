@@ -11,6 +11,7 @@ import { BehaviourState } from '../behaviour/common/BehaviourState';
 import * as DescribedHandler from '../events/DescribedHandler';
 import { UncurriedHandler } from '../events/EventRegistry';
 import { EventFormat, SimulatedEvent } from '../events/SimulatedEvent';
+
 import * as EventHandler from './EventHandler';
 
 /*

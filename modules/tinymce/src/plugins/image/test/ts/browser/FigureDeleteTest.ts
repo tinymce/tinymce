@@ -5,7 +5,7 @@ import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox
 import Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
-import { generalTabSelectors, setInputValue } from '../module/Helpers';
+import { generalTabLabels, setInputValue } from '../module/Helpers';
 
 describe('browser.tinymce.plugins.image.FigureDeleteTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -21,7 +21,7 @@ describe('browser.tinymce.plugins.image.FigureDeleteTest', () => {
     TinySelections.setSelection(editor, [], 1, [], 2);
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
     await TinyUiActions.pWaitForDialog(editor);
-    setInputValue(generalTabSelectors.src, '');
+    setInputValue(generalTabLabels.src, '');
     TinyUiActions.submitDialog(editor);
     TinyAssertions.assertContent(editor, '');
   });
@@ -32,7 +32,7 @@ describe('browser.tinymce.plugins.image.FigureDeleteTest', () => {
     TinySelections.setSelection(editor, [], 1, [], 2);
     TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Insert/edit image"]');
     const dialog = await TinyUiActions.pWaitForDialog(editor);
-    Mouse.clickOn(dialog, 'label:contains("Show caption") input[type="checkbox"]');
+    Mouse.clickByLabel(dialog, 'Show caption');
     TinyUiActions.submitDialog(editor);
     TinyAssertions.assertContentPresence(editor, { img: 1, figure: 0, figcaption: 0 });
   });

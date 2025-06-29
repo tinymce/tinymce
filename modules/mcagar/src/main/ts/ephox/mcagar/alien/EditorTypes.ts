@@ -1,3 +1,6 @@
+/*
+  This file exists to avoid depending on the tinymce package, because mcagar supports multiple versions of the editor.
+ */
 type EventCallback = (event: any) => void;
 
 export interface EditorSelection {

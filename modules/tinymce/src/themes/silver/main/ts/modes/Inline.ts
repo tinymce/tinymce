@@ -15,6 +15,7 @@ import { InlineHeader } from '../ui/header/InlineHeader';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { inline as loadInlineSkin } from '../ui/skin/Loader';
 import * as UiState from '../UiState';
+
 import { setToolbar } from './Toolbars';
 import { ReadyUiReferences } from './UiReferences';
 
@@ -118,6 +119,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   const ui = InlineHeader(editor, targetElm, uiRefs, backstage, floatContainer);
   const toolbarPersist = Options.isToolbarPersist(editor);
 
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   loadInlineSkin(editor);
 
   const render = () => {

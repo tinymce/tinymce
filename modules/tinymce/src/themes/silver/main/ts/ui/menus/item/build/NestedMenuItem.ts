@@ -8,6 +8,7 @@ import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Bac
 import ItemResponse from '../ItemResponse';
 import { renderDownwardsCaret, renderSubmenuCaret } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
+
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
 // Note, this does not create a valid SketchSpec.
@@ -33,6 +34,7 @@ const renderNestedItem = (spec: Menu.NestedMenuItem, itemResponse: ItemResponse,
     textContent: spec.text,
     htmlContent: Optional.none(),
     ariaLabel: spec.text,
+    labelContent: Optional.none(),
     caret: Optional.some(caret),
     checkMark: Optional.none(),
     shortcutContent: spec.shortcut

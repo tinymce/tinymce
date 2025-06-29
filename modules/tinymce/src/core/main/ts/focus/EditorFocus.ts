@@ -9,6 +9,7 @@ import { CaretPosition } from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';
 import * as RangeNodes from '../selection/RangeNodes';
 import * as SelectionBookmark from '../selection/SelectionBookmark';
+
 import * as FocusController from './FocusController';
 
 const getContentEditableHost = (editor: Editor, node: Node): HTMLElement | null =>
@@ -47,7 +48,7 @@ const focusBody = (body: HTMLElement & { setActive?: VoidFunction }) => {
     // setActive is better since it doesn't scroll to the element being focused
     try {
       body.setActive();
-    } catch (ex) {
+    } catch {
       body.focus();
     }
   } else {

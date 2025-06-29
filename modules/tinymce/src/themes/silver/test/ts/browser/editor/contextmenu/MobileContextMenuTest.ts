@@ -49,7 +49,7 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.MobileContextMenuTest
     await Waiter.pWait(500);
     editor.dispatch('selectionchange');
     Touch.touchEnd(targetElem);
-    await Waiter.pWait(100);
+    await Waiter.pWaitBetweenUserActions();
     await TinyUiActions.pWaitForPopup(editor, '.tox-silver-sink .tox-collection--horizontal [role="menuitem"]');
   };
 
@@ -106,7 +106,7 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.MobileContextMenuTest
 
   const mobileContextMenuSelector = 'div.tox-collection--horizontal';
   const selectors = {
-    link: '.tox-collection__item:contains("Link...")',
+    link: '.tox-collection__item:contains("Link…")',
     removelink: '.tox-collection__item:contains("Remove link")',
     openlink: '.tox-collection__item:contains("Open link")',
     cell: '.tox-collection__item:contains("Cell")',

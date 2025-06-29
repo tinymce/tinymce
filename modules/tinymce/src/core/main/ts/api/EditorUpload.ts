@@ -6,6 +6,7 @@ import { BlobInfoImagePair, BlobUriError, ImageScanner } from '../file/ImageScan
 import { Uploader } from '../file/Uploader';
 import { UploadStatus } from '../file/UploadStatus';
 import * as Rtc from '../Rtc';
+
 import Editor from './Editor';
 import Env from './Env';
 import { BlobCache, BlobInfo } from './file/BlobCache';
@@ -315,8 +316,10 @@ const EditorUpload = (editor: Editor): EditorUpload => {
 
   editor.on('SetContent', () => {
     if (Options.isAutomaticUploadsEnabled(editor)) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       uploadImagesAuto();
     } else {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       scanForImages();
     }
   });

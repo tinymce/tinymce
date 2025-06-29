@@ -14,6 +14,7 @@ import Styles, { StyleMap } from '../html/Styles';
 import { URLConverter } from '../OptionTypes';
 import { MappedEvent } from '../util/EventDispatcher';
 import Tools from '../util/Tools';
+
 import EventUtils, { EventUtilsCallback } from './EventUtils';
 import StyleSheetLoader from './StyleSheetLoader';
 
@@ -1096,6 +1097,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
     ', endOffset: ' + r.endOffset
   );
 
+  // eslint-disable-next-line consistent-this
   const self: DOMUtils = {
     doc,
     settings,
@@ -1276,7 +1278,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
      * @return {String} String with new HTML element, for example: <a href="#">test</a>.
      * @example
      * // Creates a html chunk and inserts it at the current selection/caret location
-     * tinymce.activeEditor.selection.setContent(tinymce.activeEditor.dom.createHTML('a', { href: 'test.html' }, 'some line'));
+     * tinymce.activeEditor.insertContent(tinymce.activeEditor.dom.createHTML('a', { href: 'test.html' }, 'some line'));
      */
     createHTML,
 

@@ -1,5 +1,5 @@
-import { AlloyComponent, AlloyEvents, EventFormat } from '@ephox/alloy';
-import { Cell, Type } from '@ephox/katamari';
+import { AlloyComponent, AlloyEvents, EventFormat, Representing } from '@ephox/alloy';
+import { Cell, Singleton, Type } from '@ephox/katamari';
 
 export interface GetApiType<T> {
   readonly getApi: (comp: AlloyComponent) => T;
@@ -9,6 +9,7 @@ export type OnDestroy<T> = (controlApi: T) => void;
 
 export interface OnControlAttachedType<T> extends GetApiType<T> {
   readonly onSetup: (controlApi: T) => OnDestroy<T> | void;
+  readonly onBeforeSetup?: (comp: AlloyComponent) => void;
 }
 
 const runWithApi = <T>(info: GetApiType<T>, comp: AlloyComponent): (f: OnDestroy<T>) => void => {
@@ -25,6 +26,10 @@ const runWithApi = <T>(info: GetApiType<T>, comp: AlloyComponent): (f: OnDestroy
 // the cell and the onAttachedHandler, but that would provide too much complexity.
 const onControlAttached = <T>(info: OnControlAttachedType<T>, editorOffCell: Cell<OnDestroy<T>>): AlloyEvents.AlloyEventKeyAndHandler<EventFormat> =>
   AlloyEvents.runOnAttached((comp) => {
+    if (Type.isFunction(info.onBeforeSetup)) {
+      info.onBeforeSetup(comp);
+    }
+
     const run = runWithApi(info, comp);
     run((api) => {
       const onDestroy = info.onSetup(api);
@@ -37,4 +42,10 @@ const onControlAttached = <T>(info: OnControlAttachedType<T>, editorOffCell: Cel
 const onControlDetached = <T>(getApi: GetApiType<T>, editorOffCell: Cell<OnDestroy<T>>): AlloyEvents.AlloyEventKeyAndHandler<EventFormat> =>
   AlloyEvents.runOnDetached((comp) => runWithApi(getApi, comp)(editorOffCell.get()));
 
-export { runWithApi, onControlAttached, onControlDetached };
+const onContextFormControlDetached = <T>(getApi: GetApiType<T>, editorOffCell: Cell<OnDestroy<T>>, valueState: Singleton.Value<T>): AlloyEvents.AlloyEventKeyAndHandler<EventFormat> =>
+  AlloyEvents.runOnDetached((comp) => {
+    valueState.set(Representing.getValue(comp));
+    return runWithApi(getApi, comp)(editorOffCell.get());
+  });
+
+export { runWithApi, onControlAttached, onControlDetached, onContextFormControlDetached };

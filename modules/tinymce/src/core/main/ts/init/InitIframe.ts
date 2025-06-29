@@ -6,6 +6,7 @@ import Editor from '../api/Editor';
 import Env from '../api/Env';
 import * as Options from '../api/Options';
 import { TranslatedString } from '../api/util/I18n';
+
 import * as InitContentBody from './InitContentBody';
 
 interface BoxInfo {
@@ -40,7 +41,7 @@ const getIframeHtml = (editor: Editor) => {
 
   // We only need to override paths if we have to
   // IE has a bug where it remove site absolute urls to relative ones if this is specified
-  if (Options.getDocumentBaseUrl(editor) !== editor.documentBaseUrl) {
+  if (Options.getDocumentBaseUrl(editor) !== editor.editorManager.documentBaseURL) {
     iframeHTML += '<base href="' + editor.documentBaseURI.getURI() + '" />';
   }
 

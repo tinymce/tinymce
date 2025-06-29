@@ -16,8 +16,7 @@ describe('browser.tinymce.plugins.image.ContextMenuTest', () => {
   }, [ Plugin ], true);
 
   const pOpenContextMenu = async (editor: Editor, target: string) => {
-    // Not sure why this is needed, but without the browser deselects the contextmenu target
-    await Waiter.pWait(0);
+    await Waiter.pWaitBetweenUserActions();
     await TinyUiActions.pTriggerContextMenu(editor, target, '.tox-silver-sink [role="menuitem"]');
   };
 

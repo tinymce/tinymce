@@ -14,6 +14,7 @@ import * as TransformOperations from '../operate/TransformOperations';
 import * as Adjustments from '../resize/Adjustments';
 import * as ColUtils from '../util/ColUtils';
 import { CompElm } from '../util/TableTypes';
+
 import { Generators, GeneratorsMerging, GeneratorsModification, GeneratorsTransform, SimpleGenerators } from './Generators';
 import * as Structs from './Structs';
 import * as TableContent from './TableContent';
@@ -419,39 +420,106 @@ const pasteColumnsExtractor = (before: boolean) => (warehouse: Warehouse, target
 const headerCellGenerator = Generators.transform('th');
 const bodyCellGenerator = Generators.transform('td');
 
-export const insertRowBefore = RunOperation.run(opInsertRowBefore, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification);
-export const insertRowsBefore = RunOperation.run(opInsertRowsBefore, RunOperation.onCells, Fun.noop, Fun.noop, Generators.modification);
-export const insertRowAfter = RunOperation.run(opInsertRowAfter, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification);
-export const insertRowsAfter = RunOperation.run(opInsertRowsAfter, RunOperation.onCells, Fun.noop, Fun.noop, Generators.modification);
-export const insertColumnBefore = RunOperation.run(opInsertColumnBefore, insertColumnExtractor(true), adjustAndRedistributeWidths, Fun.noop, Generators.modification);
-export const insertColumnsBefore = RunOperation.run(opInsertColumnsBefore, insertColumnsExtractor(true), adjustAndRedistributeWidths, Fun.noop, Generators.modification);
-export const insertColumnAfter = RunOperation.run(opInsertColumnAfter, insertColumnExtractor(false), adjustAndRedistributeWidths, Fun.noop, Generators.modification);
-export const insertColumnsAfter = RunOperation.run(opInsertColumnsAfter, insertColumnsExtractor(false), adjustAndRedistributeWidths, Fun.noop, Generators.modification);
-export const splitCellIntoColumns = RunOperation.run(opSplitCellIntoColumns, RunOperation.onUnlockedCell, resize, Fun.noop, Generators.modification);
-export const splitCellIntoRows = RunOperation.run(opSplitCellIntoRows, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, Generators.modification);
-export const eraseColumns = RunOperation.run(opEraseColumns, eraseColumnsExtractor, adjustAndRedistributeWidths, prune, Generators.modification);
-export const eraseRows = RunOperation.run(opEraseRows, RunOperation.onCells, Fun.noop, prune, Generators.modification);
-export const makeColumnHeader = RunOperation.run(opMakeColumnHeader, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, headerCellGenerator);
-export const makeColumnsHeader = RunOperation.run(opMakeColumnsHeader, RunOperation.onUnlockedCells, Fun.noop, Fun.noop, headerCellGenerator);
-export const unmakeColumnHeader = RunOperation.run(opUnmakeColumnHeader, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, bodyCellGenerator);
-export const unmakeColumnsHeader = RunOperation.run(opUnmakeColumnsHeader, RunOperation.onUnlockedCells, Fun.noop, Fun.noop, bodyCellGenerator);
-export const makeRowHeader = RunOperation.run(opMakeRowHeader, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, headerCellGenerator);
-export const makeRowsHeader = RunOperation.run(opMakeRowsHeader, RunOperation.onUnlockedCells, Fun.noop, Fun.noop, headerCellGenerator);
-export const makeRowBody = RunOperation.run(opMakeRowBody, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, bodyCellGenerator);
-export const makeRowsBody = RunOperation.run(opMakeRowsBody, RunOperation.onUnlockedCells, Fun.noop, Fun.noop, bodyCellGenerator);
-export const makeRowFooter = RunOperation.run(opMakeRowFooter, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, bodyCellGenerator);
-export const makeRowsFooter = RunOperation.run(opMakeRowsFooter, RunOperation.onUnlockedCells, Fun.noop, Fun.noop, bodyCellGenerator);
-export const makeCellHeader = RunOperation.run(opMakeCellHeader, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, headerCellGenerator);
-export const makeCellsHeader = RunOperation.run(opMakeCellsHeader, RunOperation.onUnlockedCells, Fun.noop, Fun.noop, headerCellGenerator);
-export const unmakeCellHeader = RunOperation.run(opUnmakeCellHeader, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, bodyCellGenerator);
-export const unmakeCellsHeader = RunOperation.run(opUnmakeCellsHeader, RunOperation.onUnlockedCells, Fun.noop, Fun.noop, bodyCellGenerator);
-export const mergeCells = RunOperation.run(opMergeCells, RunOperation.onUnlockedMergable, resize, Fun.noop, Generators.merging);
-export const unmergeCells = RunOperation.run(opUnmergeCells, RunOperation.onUnlockedUnmergable, resize, Fun.noop, Generators.merging);
-export const pasteCells = RunOperation.run(opPasteCells, RunOperation.onPaste, resize, Fun.noop, Generators.modification);
-export const pasteColsBefore = RunOperation.run(opPasteColsBefore, pasteColumnsExtractor(true), Fun.noop, Fun.noop, Generators.modification);
-export const pasteColsAfter = RunOperation.run(opPasteColsAfter, pasteColumnsExtractor(false), Fun.noop, Fun.noop, Generators.modification);
-export const pasteRowsBefore = RunOperation.run(opPasteRowsBefore, RunOperation.onPasteByEditor, Fun.noop, Fun.noop, Generators.modification);
-export const pasteRowsAfter = RunOperation.run(opPasteRowsAfter, RunOperation.onPasteByEditor, Fun.noop, Fun.noop, Generators.modification);
+type TableOp<T> = (table: SugarElement<HTMLTableElement>, target: T, generators: Generators, behaviours?: RunOperation.OperationBehaviours) => Optional<RunOperation.RunOperationOutput>;
+
+export const insertRowBefore: TableOp<RunOperation.TargetElement> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opInsertRowBefore, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification, table, target, generators, behaviours);
+
+export const insertRowsBefore: TableOp<RunOperation.TargetSelection> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opInsertRowsBefore, RunOperation.onCells, Fun.noop, Fun.noop, Generators.modification, table, target, generators, behaviours);
+
+export const insertRowAfter: TableOp<RunOperation.TargetElement> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opInsertRowAfter, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification, table, target, generators, behaviours);
+
+export const insertRowsAfter: TableOp<RunOperation.TargetSelection> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opInsertRowsAfter, RunOperation.onCells, Fun.noop, Fun.noop, Generators.modification, table, target, generators, behaviours);
+
+export const insertColumnBefore: TableOp<RunOperation.TargetElement> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opInsertColumnBefore, insertColumnExtractor(true), adjustAndRedistributeWidths, Fun.noop, Generators.modification, table, target, generators, behaviours);
+
+export const insertColumnsBefore: TableOp<RunOperation.TargetSelection> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opInsertColumnsBefore, insertColumnsExtractor(true), adjustAndRedistributeWidths, Fun.noop, Generators.modification, table, target, generators, behaviours);
+
+export const insertColumnAfter: TableOp<RunOperation.TargetElement> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opInsertColumnAfter, insertColumnExtractor(false), adjustAndRedistributeWidths, Fun.noop, Generators.modification, table, target, generators, behaviours);
+
+export const insertColumnsAfter: TableOp<RunOperation.TargetSelection> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opInsertColumnsAfter, insertColumnsExtractor(false), adjustAndRedistributeWidths, Fun.noop, Generators.modification, table, target, generators, behaviours);
+
+export const splitCellIntoColumns: TableOp<RunOperation.TargetElement> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opSplitCellIntoColumns, RunOperation.onUnlockedCell, resize, Fun.noop, Generators.modification, table, target, generators, behaviours);
+
+export const splitCellIntoRows: TableOp<RunOperation.TargetElement> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opSplitCellIntoRows, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, Generators.modification, table, target, generators, behaviours);
+
+export const eraseColumns: TableOp<RunOperation.TargetSelection> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opEraseColumns, eraseColumnsExtractor, adjustAndRedistributeWidths, prune, Generators.modification, table, target, generators, behaviours);
+
+export const eraseRows: TableOp<RunOperation.TargetSelection> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opEraseRows, RunOperation.onCells, Fun.noop, prune, Generators.modification, table, target, generators, behaviours);
+
+export const makeColumnHeader: TableOp<RunOperation.TargetElement> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opMakeColumnHeader, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, headerCellGenerator, table, target, generators, behaviours);
+
+export const makeColumnsHeader: TableOp<RunOperation.TargetSelection> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opMakeColumnsHeader, RunOperation.onUnlockedCells, Fun.noop, Fun.noop, headerCellGenerator, table, target, generators, behaviours);
+
+export const unmakeColumnHeader: TableOp<RunOperation.TargetElement> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opUnmakeColumnHeader, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, bodyCellGenerator, table, target, generators, behaviours);
+
+export const unmakeColumnsHeader: TableOp<RunOperation.TargetSelection> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opUnmakeColumnsHeader, RunOperation.onUnlockedCells, Fun.noop, Fun.noop, bodyCellGenerator, table, target, generators, behaviours);
+
+export const makeRowHeader: TableOp<RunOperation.TargetElement> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opMakeRowHeader, RunOperation.onCell, Fun.noop, Fun.noop, headerCellGenerator, table, target, generators, behaviours);
+
+export const makeRowsHeader: TableOp<RunOperation.TargetSelection> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opMakeRowsHeader, RunOperation.onCells, Fun.noop, Fun.noop, headerCellGenerator, table, target, generators, behaviours);
+
+export const makeRowBody: TableOp<RunOperation.TargetElement> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opMakeRowBody, RunOperation.onCell, Fun.noop, Fun.noop, bodyCellGenerator, table, target, generators, behaviours);
+
+export const makeRowsBody: TableOp<RunOperation.TargetSelection> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opMakeRowsBody, RunOperation.onCells, Fun.noop, Fun.noop, bodyCellGenerator, table, target, generators, behaviours);
+
+export const makeRowFooter: TableOp<RunOperation.TargetElement> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opMakeRowFooter, RunOperation.onCell, Fun.noop, Fun.noop, bodyCellGenerator, table, target, generators, behaviours);
+
+export const makeRowsFooter: TableOp<RunOperation.TargetSelection> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opMakeRowsFooter, RunOperation.onCells, Fun.noop, Fun.noop, bodyCellGenerator, table, target, generators, behaviours);
+
+export const makeCellHeader: TableOp<RunOperation.TargetElement> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opMakeCellHeader, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, headerCellGenerator, table, target, generators, behaviours);
+
+export const makeCellsHeader: TableOp<RunOperation.TargetSelection> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opMakeCellsHeader, RunOperation.onUnlockedCells, Fun.noop, Fun.noop, headerCellGenerator, table, target, generators, behaviours);
+
+export const unmakeCellHeader: TableOp<RunOperation.TargetElement> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opUnmakeCellHeader, RunOperation.onUnlockedCell, Fun.noop, Fun.noop, bodyCellGenerator, table, target, generators, behaviours);
+
+export const unmakeCellsHeader: TableOp<RunOperation.TargetSelection> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opUnmakeCellsHeader, RunOperation.onUnlockedCells, Fun.noop, Fun.noop, bodyCellGenerator, table, target, generators, behaviours);
+
+export const mergeCells: TableOp<RunOperation.TargetMergable> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opMergeCells, RunOperation.onUnlockedMergable, resize, Fun.noop, Generators.merging, table, target, generators, behaviours);
+
+export const unmergeCells: TableOp<RunOperation.TargetUnmergable> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opUnmergeCells, RunOperation.onUnlockedUnmergable, resize, Fun.noop, Generators.merging, table, target, generators, behaviours);
+
+export const pasteCells: TableOp<RunOperation.TargetPaste> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opPasteCells, RunOperation.onPaste, resize, Fun.noop, Generators.modification, table, target, generators, behaviours);
+
+export const pasteColsBefore: TableOp<RunOperation.TargetPasteRows> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opPasteColsBefore, pasteColumnsExtractor(true), Fun.noop, Fun.noop, Generators.modification, table, target, generators, behaviours);
+
+export const pasteColsAfter: TableOp<RunOperation.TargetPasteRows> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opPasteColsAfter, pasteColumnsExtractor(false), Fun.noop, Fun.noop, Generators.modification, table, target, generators, behaviours);
+
+export const pasteRowsBefore: TableOp<RunOperation.TargetPasteRows> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opPasteRowsBefore, RunOperation.onPasteByEditor, Fun.noop, Fun.noop, Generators.modification, table, target, generators, behaviours);
+
+export const pasteRowsAfter: TableOp<RunOperation.TargetPasteRows> = (table, target, generators, behaviours?) =>
+  RunOperation.run(opPasteRowsAfter, RunOperation.onPasteByEditor, Fun.noop, Fun.noop, Generators.modification, table, target, generators, behaviours);
 
 export const getColumnsType = opGetColumnsType;
 export const getCellsType = opGetCellsType;

@@ -23,13 +23,13 @@ describe('ClipboardTest', () => {
     }
   };
 
-  const assertStringItem = async (item: DataTransferItem, expected: { type: string; data: string }): Promise<void> => {
+  const pAssertStringItem = async (item: DataTransferItem, expected: { type: string; data: string }): Promise<void> => {
     assert.equal(item.type, expected.type);
     assert.equal(item.kind, 'string');
     assert.equal(await getItemData(item), expected.data);
   };
 
-  const assertFileItem = async (item: DataTransferItem, expected: { type: string; name: string; data: string }): Promise<void> => {
+  const pAssertFileItem = async (item: DataTransferItem, expected: { type: string; name: string; data: string }): Promise<void> => {
     assert.equal(item.type, expected.type);
     assert.equal(item.kind, 'file');
     assert.equal(item.getAsFile().name, expected.name);
@@ -88,8 +88,8 @@ describe('ClipboardTest', () => {
     const dataTransfer = pasteState.get().getOrDie('Could not get dataTransfer from state');
 
     assert.equal(dataTransfer.items.length, 2);
-    await assertStringItem(dataTransfer.items[0], { type: 'text/plain', data: 'Hello world!' });
-    await assertStringItem(dataTransfer.items[1], { type: 'text/html', data: '<b>Hello world!</b>' });
+    await pAssertStringItem(dataTransfer.items[0], { type: 'text/plain', data: 'Hello world!' });
+    await pAssertStringItem(dataTransfer.items[1], { type: 'text/html', data: '<b>Hello world!</b>' });
   });
 
   it('Paste text and html files', async () => {
@@ -103,8 +103,8 @@ describe('ClipboardTest', () => {
     const dataTransfer = pasteState.get().getOrDie('Could not get dataTransfer from state');
 
     assert.equal(dataTransfer.items.length, 2);
-    await assertFileItem(dataTransfer.items[1], { type: 'text/html', name: 'a.html', data: '<b>Hello world!</b>' });
-    await assertFileItem(dataTransfer.items[0], { type: 'text/plain', name: 'a.txt', data: 'Hello world!' });
+    await pAssertFileItem(dataTransfer.items[1], { type: 'text/html', name: 'a.html', data: '<b>Hello world!</b>' });
+    await pAssertFileItem(dataTransfer.items[0], { type: 'text/plain', name: 'a.txt', data: 'Hello world!' });
   });
 
   it('Paste using dataTransfer mutator', async () => {
@@ -118,8 +118,8 @@ describe('ClipboardTest', () => {
     const dataTransfer = pasteState.get().getOrDie('Could not get dataTransfer from state');
 
     assert.equal(dataTransfer.items.length, 2);
-    await assertFileItem(dataTransfer.items[0], { type: 'text/plain', name: 'a.txt', data: 'Hello world!' });
-    await assertStringItem(dataTransfer.items[1], { type: 'text/html', data: '<b>Hello world!</b>' });
+    await pAssertFileItem(dataTransfer.items[0], { type: 'text/plain', name: 'a.txt', data: 'Hello world!' });
+    await pAssertStringItem(dataTransfer.items[1], { type: 'text/html', data: '<b>Hello world!</b>' });
   });
 
   it('Cut', async () => {
@@ -127,7 +127,7 @@ describe('ClipboardTest', () => {
     const dataTransfer = cut(pastebin);
 
     assert.equal(dataTransfer.items.length, 1);
-    await assertStringItem(dataTransfer.items[0], { type: 'text/plain', data: 'cut-data' });
+    await pAssertStringItem(dataTransfer.items[0], { type: 'text/plain', data: 'cut-data' });
   });
 
   it('Copy', async () => {
@@ -135,7 +135,7 @@ describe('ClipboardTest', () => {
     const dataTransfer = copy(pastebin);
 
     assert.equal(dataTransfer.items.length, 1);
-    await assertStringItem(dataTransfer.items[0], { type: 'text/plain', data: 'copy-data' });
+    await pAssertStringItem(dataTransfer.items[0], { type: 'text/plain', data: 'copy-data' });
   });
 
   it('PasteUrlItems as strings', async () => {
@@ -149,8 +149,8 @@ describe('ClipboardTest', () => {
     const dataTransfer = pasteState.get().getOrDie('Could not get dataTransfer from state');
 
     assert.equal(dataTransfer.items.length, 2);
-    assertStringItem(dataTransfer.items[0], { type: 'text/html', data: '<!DOCTYPE html>\n<html>\n<body>\n<p>Hello world</p>\n</body>\n</html>\n' });
-    assertStringItem(dataTransfer.items[1], { type: 'text/plain', data: 'Hello world\n' });
+    await pAssertStringItem(dataTransfer.items[0], { type: 'text/html', data: '<!DOCTYPE html>\n<html>\n<body>\n<p>Hello world</p>\n</body>\n</html>\n' });
+    await pAssertStringItem(dataTransfer.items[1], { type: 'text/plain', data: 'Hello world\n' });
   });
 
   it('PasteUrlItems as files', async () => {
@@ -164,8 +164,8 @@ describe('ClipboardTest', () => {
     const dataTransfer = pasteState.get().getOrDie('Could not get dataTransfer from state');
 
     assert.equal(dataTransfer.items.length, 2);
-    await assertFileItem(dataTransfer.items[0], { type: 'text/html', name: 'clipboard.html', data: '<!DOCTYPE html>\n<html>\n<body>\n<p>Hello world</p>\n</body>\n</html>\n' });
-    await assertFileItem(dataTransfer.items[1], { type: 'text/plain', name: 'clipboard.txt', data: 'Hello world\n' });
+    await pAssertFileItem(dataTransfer.items[0], { type: 'text/html', name: 'clipboard.html', data: '<!DOCTYPE html>\n<html>\n<body>\n<p>Hello world</p>\n</body>\n</html>\n' });
+    await pAssertFileItem(dataTransfer.items[1], { type: 'text/plain', name: 'clipboard.txt', data: 'Hello world\n' });
   });
 
   context('DataTransfer instance type', () => {

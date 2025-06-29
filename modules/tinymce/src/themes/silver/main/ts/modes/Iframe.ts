@@ -15,6 +15,7 @@ import OuterContainer from '../ui/general/OuterContainer';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
 import { iframe as loadIframeSkin } from '../ui/skin/Loader';
 import * as UiState from '../UiState';
+
 import { setToolbar } from './Toolbars';
 import { ReadyUiReferences } from './UiReferences';
 
@@ -99,6 +100,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   const lastToolbarWidth = Cell(0);
   const outerContainer = mainUi.outerContainer;
 
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   loadIframeSkin(editor);
 
   const eTargetNode = SugarElement.fromDom(args.targetNode);

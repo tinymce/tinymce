@@ -1,23 +1,25 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
-import { Disabling, GuiFactory, Representing, TestHelpers } from '@ephox/alloy';
+import { Disabling, GuiFactory, Representing } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import { renderTextarea } from 'tinymce/themes/silver/ui/dialog/TextField';
 
+import * as GuiSetup from '../../../module/GuiSetup';
 import * as RepresentingUtils from '../../../module/RepresentingUtils';
 import TestProviders from '../../../module/TestProviders';
 
 describe('headless.tinymce.themes.silver.components.textarea.TextareaTest', () => {
-  const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+  const hook = GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderTextarea({
       context: 'any',
       name: 'textarea',
       label: Optional.some('LabelA'),
       placeholder: Optional.none(),
       maximized: false,
-      enabled: true
+      enabled: true,
+      spellcheck: Optional.from(true),
     }, TestProviders, Optional.none())
   ));
 
@@ -38,7 +40,8 @@ describe('headless.tinymce.themes.silver.components.textarea.TextareaTest', () =
               s.element('textarea', {
                 classes: [ arr.has('tox-textarea') ],
                 attrs: {
-                  'data-alloy-tabstop': str.is('true')
+                  'data-alloy-tabstop': str.is('true'),
+                  'spellcheck': str.is('true'),
                 }
               })
             ]

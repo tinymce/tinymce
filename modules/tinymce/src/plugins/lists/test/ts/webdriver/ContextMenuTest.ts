@@ -14,7 +14,7 @@ describe('webdriver.tinymce.plugins.lists.ContextMenuTest', () => {
     contextmenu: 'lists'
   }, [ Plugin ], true);
 
-  it('TINY-10490: open contextmenu directly on a li of a ol should have `List properties...` enabled', async () => {
+  it('TINY-10490: open contextmenu directly on a li of a ol should have `List properties…` enabled', async () => {
     const editor = hook.editor();
     editor.setContent(`
       <ul>
@@ -25,6 +25,6 @@ describe('webdriver.tinymce.plugins.lists.ContextMenuTest', () => {
       </ol>`
     );
     await RealMouse.pRightClickOn('iframe => ol > li');
-    UiFinder.exists(SugarBody.body(), '[aria-label="List properties..."][aria-disabled="false"]');
+    UiFinder.exists(SugarBody.body(), '[aria-label="List properties…"][aria-disabled="false"]');
   });
 });

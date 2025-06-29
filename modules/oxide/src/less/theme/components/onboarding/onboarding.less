@@ -1,0 +1,237 @@
+@onboarding-overlay-background-color: darken(@background-color, 6%);
+@onboarding-dialog-background-color: @background-color;
+@onboarding-footer-background-color: contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 5%));
+
+@onboarding-dialog-width: 512px;
+@onboarding-dialog-border-radius: 12px;
+
+@onboarding-dialog-step-number-color: #00AD0E;
+
+@onboarding-icon-size: 24px;
+
+@onboarding-promotion-icon-container-size: 56px;
+@onboarding-promotion-icon-size-border-radius: 12px; 
+
+@onboarding-promotion-icon-background: linear-gradient(180deg, @dialog-background-color 24%, darken(@dialog-background-color, 6%) 100%);
+
+@onboarding-promotion-icon-box-shadow: 0px 1px 1px 0px #222f3e12, 0px 3px 6px 0px #222f3e06;
+@onboarding-promotion-footer-background-color: darken(@background-color, 6%);
+
+@onboarding-promotion-button-background-color: .bg-luma-checker(#F1EBF9, #55367A)[@result];
+@onboarding-promotion-button-text-color:  .bg-luma-checker(#851AFF, #C290FB)[@result];
+
+.tox {
+  .tox-onboarding-overlay {
+    height: 100%;
+    background-color: @onboarding-overlay-background-color;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    overflow: auto;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .tox-onboarding-dialog {
+    max-width: @onboarding-dialog-width;
+    background-color: @onboarding-dialog-background-color;
+    display: flex;
+    flex-direction: column;
+    box-shadow: @dialog-box-shadow;
+    border-radius: @onboarding-dialog-border-radius;
+    margin: @pad-sm;
+
+    .tox-onboarding-header {
+      color: @text-color;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: @font-size-lg;
+      margin: @pad-lg 0 @pad-sm;
+    }
+
+    .tox-onboarding-step {
+      display: grid;
+      grid-template-columns: min-content 1fr min-content;
+      align-items: center;
+      margin: 0 @pad-lg;
+
+      &:not(:last-child) {
+        border-bottom: 1px solid @tinymce-separator-color;
+      }
+
+      &--number {
+        width: 24px;
+        aspect-ratio: 1 / 1;
+        border-radius: 50%;
+        border: 1px solid @onboarding-dialog-step-number-color;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        font-size: @font-size-xs;
+        font-weight: bold;
+        color: @onboarding-dialog-step-number-color;
+      }
+
+      &--body {
+        padding: @pad-lg 0 @pad-lg @pad-md;
+
+        &-header {
+          color: @text-color;
+          font-size: @font-size-sm;
+          font-weight: bold;
+          margin-bottom: @pad-xs;
+        }
+
+        &-details {
+          color: @text-color-muted;
+          font-size: @font-size-sm;
+        }
+      }
+
+      &--action {
+        padding-left: @pad-lg;
+      }
+    }
+
+    .tox-onboarding-footer {
+      background-color: @onboarding-footer-background-color;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: @pad-md @pad-lg;
+      border-bottom-left-radius: @onboarding-dialog-border-radius;
+      border-bottom-right-radius: @onboarding-dialog-border-radius;
+
+      p {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: @pad-xs;
+        font-size: @font-size-sm;
+        color: @text-color-muted;
+      }
+
+    }
+
+    svg {
+      width: @onboarding-icon-size;
+      fill: @text-color-muted;
+    }
+  }
+
+  .tox-promotion-dialog {
+    .tox-promotion-dialog-plugin {
+      display: grid;
+      align-items: center;
+      grid-template-columns: min-content 1fr min-content;
+      border-bottom: 1px solid @tinymce-separator-color;
+      padding: @pad-lg 0;
+      margin: 0 @pad-md;
+
+			&--body {
+				margin: 0 @pad-md;
+
+				.tox-promotion-dialog-plugin-header {
+					color: @text-color;
+					font-size: @font-size-sm;
+					font-weight: bold;
+					margin-bottom: @pad-xs;
+				}
+				
+				.tox-promotion-dialog-plugin-details {
+					color: @text-color-muted;
+					font-size: @font-size-sm;
+				}
+			}
+
+      &--icon {
+        display: grid;
+        place-content: center;
+        width: @onboarding-promotion-icon-container-size;
+        height: @onboarding-promotion-icon-container-size;
+        line-height: @onboarding-icon-size;
+        font-size: @onboarding-icon-size;
+        border-radius: @onboarding-promotion-icon-size-border-radius;
+        background: @onboarding-promotion-icon-background;
+        box-shadow: @onboarding-promotion-icon-box-shadow;
+        color: @color-tint;
+      }
+    }
+
+    &--subtitle {
+      margin: @pad-md;
+      color: @text-color-muted;
+      font-size: @font-size-sm;
+    }
+
+    &--explore {
+      text-align: center;
+      margin: @pad-md;
+      color: @text-color-muted;
+      font-size: @font-size-sm;
+
+      a {
+        color: @color-tint;
+      }
+    }
+
+    &--footer {
+      background-color: @onboarding-promotion-footer-background-color;
+      color: @text-color-muted;
+      font-size: @font-size-xs;
+      text-align: center;
+      padding: @pad-md;
+    }
+  }
+
+  .tox-promotion-button {
+    display: flex;
+    align-items: center;
+    height: @promotion-button-height;
+    line-height: @promotion-button-height;
+    font-size: @menubar-select-font-size;
+    font-weight: bold;
+    background-color: @onboarding-promotion-button-background-color;
+    color: @onboarding-promotion-button-text-color;
+    padding: @pad-sm @pad-md;
+    cursor: pointer;
+    white-space: nowrap;
+    border-radius: 5px;
+
+    &:focus {
+      outline: 1px solid @onboarding-promotion-button-text-color;
+    }
+  }
+
+  .tox-onboarding-dialog,
+	.tox-promotion-dialog--footer {
+    a {
+      color: @text-color-muted;
+      cursor: pointer;
+      text-decoration: @dialog-body-link-text-decoration;
+
+      &:hover,
+      &:focus {
+        color: @dialog-body-link-hover-color;
+        text-decoration: @dialog-body-link-hover-text-decoration;
+      }
+
+      &:focus-visible {
+        border-radius: @dialog-body-link-focus-outline-border-radius;
+        outline: 2px solid @dialog-body-link-focus-outline-color;
+        outline-offset: 2px;
+      }
+
+      &:active {
+        color: @dialog-body-link-active-color;
+        text-decoration: @dialog-body-link-active-text-decoration;
+      }
+    }
+  }
+}

@@ -97,11 +97,7 @@ const renderCustomStateIcon = (container: Dialog.Directory | Dialog.Leaf, compon
           )
         ]
       ),
-      [ 'tox-icon-custom-state' ],
-      container.customStateIconTooltip.fold(
-        () => ({}),
-        (tooltip) => ({ title: tooltip })
-      )
+      [ 'tox-icon-custom-state' ]
     ))
   );
 };

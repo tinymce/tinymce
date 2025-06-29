@@ -36,54 +36,24 @@ describe('webdriver.tinymce.core.delete.ShortcutDeleteTest', () => {
         return s.element('body', {
           children: [
             s.element('p', {
-              // firefox preserves formats
-              children: browser.isFirefox()
-                ? [
-                  s.element('strong', {
-                    children: [
-                      s.element('em', {
-                        children: [
-                          s.element('span', {
-                            attrs: {
-                              style: str.is('text-decoration: underline;')
-                            },
-                            children: [
-                              s.element('span', {
-                                attrs: {
-                                  'id': str.is('_mce_caret'),
-                                  'data-mce-bogus': str.is('1'),
-                                  'data-mce-type': str.is('format-caret')
-                                },
-                                children: [
-                                  s.text(str.is(Zwsp.ZWSP))
-                                ]
-                              })
-                            ]
-                          })
-                        ]
-                      })
-                    ]
-                  })
-                ]
-                : [
-                  s.element('span', {
-                    attrs: {
-                      'id': str.is('_mce_caret'),
-                      'data-mce-bogus': str.is('1'),
-                      'data-mce-type': str.is('format-caret')
-                    },
-                    children: [
-                      s.text(str.is(Zwsp.ZWSP))
-                    ]
-                  })
-                ]
+              children: [
+                s.element('span', {
+                  attrs: {
+                    'id': str.is('_mce_caret'),
+                    'data-mce-bogus': str.is('1'),
+                    'data-mce-type': str.is('format-caret')
+                  },
+                  children: [
+                    s.text(str.is(Zwsp.ZWSP))
+                  ]
+                })
+              ]
             })
           ]
         });
       })
     );
-    const selPath = browser.isFirefox() ? [ 0, 0, 0, 0, 0, 0 ] : [ 0, 0, 0 ];
-    TinyAssertions.assertCursor(editor, selPath, 0);
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
   };
 
   const assertStructureAndCursorFormattedCaret = (editor: Editor): void => {
@@ -128,9 +98,7 @@ describe('webdriver.tinymce.core.delete.ShortcutDeleteTest', () => {
   };
 
   const assertContentDeletionThenTyping = (editor: Editor): void =>
-    TinyAssertions.assertContent(editor, browser.isFirefox()
-      ? '<p><span style="text-decoration: underline;">d</span></p>'
-      : '<p>d</p>');
+    TinyAssertions.assertContent(editor, '<p>d</p>');
 
   const ctrlModifier: BackspaceDeleteModifier = os.isMacOS() ? { alt: true } : { ctrl: true };
 

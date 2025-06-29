@@ -1,5 +1,5 @@
 import {
-  AlloySpec, AlloyTriggers, Behaviour, Button, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting, SketchSpec, Tabstopping, Tooltipping
+  AlloySpec, AlloyTriggers, Behaviour, Button, Channels, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting, SketchSpec, Tabstopping, Tooltipping
 } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
@@ -7,9 +7,8 @@ import { SelectorFind } from '@ephox/sugar';
 import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { formCancelEvent } from '../general/FormEvents';
 import * as Icons from '../icons/Icons';
-import { titleChannel } from './DialogChannels';
 
-/* eslint-enable max-len */
+import { titleChannel } from './DialogChannels';
 
 export interface WindowHeaderSpec {
   title: string;
@@ -96,6 +95,9 @@ const renderInlineHeader = (
         getSnapPoints: () => [],
         leftAttr: 'data-drag-left',
         topAttr: 'data-drag-top'
+      },
+      onDrag: (comp, target) => {
+        comp.getSystem().broadcastOn([ Channels.repositionPopups() ], { target });
       }
     })
   ])

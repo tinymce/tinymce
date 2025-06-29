@@ -25,8 +25,7 @@ describe('browser.tinymce.plugins.table.TableToolbarTest', () => {
     editor.focus();
     editor.setContent(tableHtml);
     TinySelections.setSelection(editor, [ 0, 0, 0, 0, 0 ], 0, [ 0, 0, 0, 0, 0 ], 1);
-    // Wait for a while to allow the toolbar a chance to render
-    await Waiter.pWait(100);
+    await Waiter.pWaitBetweenUserActions();
     UiFinder.notExists(SugarBody.body(), 'div.tox-pop div.tox-toolbar');
     McEditor.remove(editor);
   });

@@ -2,6 +2,7 @@ import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as Fields from '../../data/Fields';
+
 import * as ToggleModes from './ToggleModes';
 
 export default [

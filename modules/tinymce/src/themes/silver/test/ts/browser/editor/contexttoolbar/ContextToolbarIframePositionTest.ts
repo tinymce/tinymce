@@ -227,7 +227,7 @@ describe('browser.tinymce.themes.silver.editor.contexttoolbar.ContextToolbarIFra
   it('TINY-4023: Context toolbar is visible in fullscreen mode', async () => {
     const editor = hook.editor();
     TinyUiActions.clickOnToolbar(editor, fullscreenButtonSelector);
-    TinyUiActions.pWaitForUi(editor, fullscreenSelector);
+    await TinyUiActions.pWaitForUi(editor, fullscreenSelector);
     editor.setContent(`<p><img src="${getGreenImageDataUrl()}" style="height: 380px; width: 100px"></p>`);
     TinySelections.select(editor, 'img', []);
     await UiFinder.pWaitForVisible('Waiting for toolbar to appear to below the content', SugarBody.body(), bottomSelector);

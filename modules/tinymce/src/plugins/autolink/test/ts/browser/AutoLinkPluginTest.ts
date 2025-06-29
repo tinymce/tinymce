@@ -203,6 +203,14 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     TinyAssertions.assertContent(editor, '<p><a href="https://www.domain.com/"><strong>https://www.domain.com/&nbsp;</strong></a></p>');
   });
 
+  it('TINY-11836: Should not create links if the content is already a link or part of it.', () => {
+    const editor = hook.editor();
+    editor.setContent('<p><a href="https://www.domain.com/" target="_blank" rel="noopener">www.domain.com</a></p>');
+    TinySelections.setCursor(editor, [ 0 ], 1);
+    KeyUtils.type(editor, '\n');
+    TinyAssertions.assertContent(editor, '<p><a href="https://www.domain.com/" target="_blank" rel="noopener">www.domain.com</a></p><p>&nbsp;</p>');
+  });
+
   it('TINY-8091: should trigger when typing in the middle of brackets', () => {
     const editor = hook.editor();
     assert.equal(typeUrl(editor, '(https://www.domain.com'), '<p>(<a href="https://www.domain.com">https://www.domain.com</a>&nbsp;</p>');

@@ -4,6 +4,7 @@ import { Insert, SugarElement } from '@ephox/sugar';
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import * as InputEvents from '../events/InputEvents';
+
 import * as NewLineUtils from './NewLineUtils';
 
 const getTopParentBlock = (editor: Editor, node: Node, root: Element, container: Node): Optional<SugarElement<Node>> => {

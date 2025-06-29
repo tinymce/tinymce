@@ -8,6 +8,7 @@ import * as ItemClasses from '../ItemClasses';
 import ItemResponse from '../ItemResponse';
 import { renderCheckmark } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
+
 import { buildData, renderCommonItem } from './CommonMenuItem';
 
 const renderChoiceItem = (
@@ -33,6 +34,7 @@ const renderChoiceItem = (
     presets,
     textContent: useText ? spec.text : Optional.none(),
     htmlContent: Optional.none(),
+    labelContent: spec.label,
     ariaLabel: spec.text,
     iconContent: spec.icon,
     shortcutContent: useText ? spec.shortcut : Optional.none(),

@@ -58,7 +58,7 @@ const insertImageAtCaret = (editor: Editor, data: ImageData): void => {
 
   editor.dom.setAttrib(elm, 'data-mce-id', '__mcenew');
   editor.focus();
-  editor.selection.setContent(elm.outerHTML);
+  editor.insertContent(elm.outerHTML);
 
   const insertedElm = editor.dom.select('*[data-mce-id="__mcenew"]')[0];
   editor.dom.setAttrib(insertedElm, 'data-mce-id', null);
@@ -98,6 +98,7 @@ const writeImageDataToSelection = (editor: Editor, data: ImageData) => {
     syncSrcAttr(editor, image);
 
     if (isFigure(image.parentNode)) {
+      editor.dom.setStyle(image, 'float', '');
       const figure = image.parentNode;
       splitTextBlock(editor, figure);
       editor.selection.select(image.parentNode);

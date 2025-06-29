@@ -334,7 +334,7 @@ class EventUtils {
       try {
         // IE will fail here since it can't delete properties from window
         delete target[this.expando];
-      } catch (ex) {
+      } catch {
         // IE will set it to null
         target[this.expando] = null;
       }

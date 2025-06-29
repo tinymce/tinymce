@@ -2,6 +2,7 @@ import { Universe } from '@ephox/boss';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 
 import { LanguageZones } from '../zone/LanguageZones';
+
 import * as ClusterSearch from './ClusterSearch';
 import { WordDecision, WordDecisionItem } from './WordDecision';
 

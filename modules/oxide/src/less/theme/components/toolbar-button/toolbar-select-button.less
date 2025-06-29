@@ -3,6 +3,7 @@
 // When making changes here, please review menubar/menubar.less and menubar/menubar-button.less
 //
 
+@toolbar-button-bordered: @border-color;
 @toolbar-button-select-padding: 4px;
 @toolbar-button-bespoke-background-color: contrast(@background-color, darken(@background-color, 3%), lighten(@background-color, 7%));
 @toolbar-button-bespoke-focus-background-color: @toolbar-button-bespoke-background-color;
@@ -14,6 +15,10 @@
     margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0;
     padding: 0 @toolbar-button-select-padding;
     width: auto;
+  }
+
+  .tox-tbtn--bordered, .tox-tbtn--bordered:focus, .tox-tbtn--bordered:hover {
+    border: 1px solid @toolbar-button-bordered;
   }
 
   .tox-tbtn__select-label {

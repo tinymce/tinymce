@@ -42,4 +42,79 @@ describe('browser.tinymce.core.TableRowNonEditableTest', () => {
 </tbody>
 </table>`);
   });
+
+  it('TINY-11383: selecting a CEF cell should still allow changing row type to header', () => {
+    const editor = hook.editor();
+    editor.setContent(`<table style="border-collapse: collapse; width: 100%;" border="1" data-snooker-col-series="numeric" data-snooker-locked-cols="0">
+<tbody>
+<tr>
+<td contenteditable="false">1</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>`
+    );
+
+    TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
+    editor.execCommand('mceTableRowType', false, { type: 'header' });
+    TinyAssertions.assertContent(editor, `<table style="border-collapse: collapse; width: 100%;" border="1" data-snooker-col-series="numeric" data-snooker-locked-cols="0">
+<thead>
+<tr>
+<td contenteditable="false">1</td>
+<td>&nbsp;</td>
+</tr>
+</thead>
+</table>`
+    );
+  });
+
+  it('TINY-11383: selecting a CEF cell should still allow changing row type to footer', () => {
+    const editor = hook.editor();
+    editor.setContent(`<table style="border-collapse: collapse; width: 100%;" border="1" data-snooker-col-series="numeric" data-snooker-locked-cols="0">
+<tbody>
+<tr>
+<td contenteditable="false">1</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>`
+    );
+
+    TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
+    editor.execCommand('mceTableRowType', false, { type: 'footer' });
+    TinyAssertions.assertContent(editor, `<table style="border-collapse: collapse; width: 100%;" border="1" data-snooker-col-series="numeric" data-snooker-locked-cols="0">
+<tfoot>
+<tr>
+<td contenteditable="false">1</td>
+<td>&nbsp;</td>
+</tr>
+</tfoot>
+</table>`
+    );
+  });
+
+  it('TINY-11383: selecting a CEF cell should still allow changing row type to body', () => {
+    const editor = hook.editor();
+    editor.setContent(`<table style="border-collapse: collapse; width: 100%;" border="1" data-snooker-col-series="numeric" data-snooker-locked-cols="0">
+<thead>
+<tr>
+<td contenteditable="false">1</td>
+<td>&nbsp;</td>
+</tr>
+</thead>
+</table>`
+    );
+
+    TinySelections.setSelection(editor, [ 0, 0, 0 ], 0, [ 0, 0, 0 ], 1);
+    editor.execCommand('mceTableRowType', false, { type: 'body' });
+    TinyAssertions.assertContent(editor, `<table style="border-collapse: collapse; width: 100%;" border="1" data-snooker-col-series="numeric" data-snooker-locked-cols="0">
+<tbody>
+<tr>
+<td contenteditable="false">1</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>`
+    );
+  });
 });

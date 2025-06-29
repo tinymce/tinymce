@@ -4,6 +4,7 @@ import TextSeeker from 'tinymce/core/api/dom/TextSeeker';
 import Editor from 'tinymce/core/api/Editor';
 
 import * as Options from '../api/Options';
+
 import { findChar, freefallRtl, hasProtocol, isBracketOrSpace, isPunctuation } from './Utils';
 
 interface ParseResult {
@@ -23,7 +24,7 @@ const parseCurrentLine = (editor: Editor, offset: number): ParseResult | null =>
 
   const rng = selection.getRng();
   const textSeeker = TextSeeker(dom, (node) => {
-    return dom.isBlock(node) || Obj.has(voidElements, node.nodeName.toLowerCase()) || dom.getContentEditable(node) === 'false';
+    return dom.isBlock(node) || Obj.has(voidElements, node.nodeName.toLowerCase()) || dom.getContentEditable(node) === 'false' || dom.getParent(node, 'a[href]') !== null;
   });
 
   // Descend down the end container to find the text node

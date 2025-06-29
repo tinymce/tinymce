@@ -47,6 +47,11 @@ const pTimeout = <T, R>(label: string, p: () => R, limit: number = defaultAmount
 
 const pWait = (time: number): Promise<void> => Step.toPromise(Step.wait<void>(time))(undefined);
 
+const pWaitBetweenUserActions = (): Promise<void> =>
+  // a real user won't perform multiple actions within a single frame, so we shouldn't either.
+  // 17ms was chosen instead of requestAnimationFrame() because we want at least one full frame to complete between now and the next action.
+  pWait(17);
+
 export {
   sTryUntilPredicate,
   sTryUntil,
@@ -60,5 +65,6 @@ export {
   pTryUntil,
   pTryUntilNot,
   pTimeout,
-  pWait
+  pWait,
+  pWaitBetweenUserActions
 };

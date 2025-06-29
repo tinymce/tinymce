@@ -1,10 +1,15 @@
-import { context, describe, it } from '@ephox/bedrock-client';
+import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import I18n from 'tinymce/core/api/util/I18n';
 
 describe('browser.tinymce.core.util.I18nTest', () => {
+  afterEach(() => {
+    // reset code after each test
+    I18n.setCode('en');
+  });
+
   it('Translate strings', () => {
     const translate = I18n.translate;
 
@@ -14,7 +19,7 @@ describe('browser.tinymce.core.util.I18nTest', () => {
       'value:{0}{1}': 'value translation:{0}{1}',
       'text{context:something}': 'text translation with context',
       'value:{0}{1}{context:something}': 'value translation:{0}{1} with context',
-      'empty string': ''
+      'empty string': '',
     });
 
     I18n.setCode('code');
@@ -63,8 +68,6 @@ describe('browser.tinymce.core.util.I18nTest', () => {
 
     // When any translation string is the same as a key, a wrong translation will be made in nested translation calls.
     assert.equal(translate(translate(translate(translate('text')))), 'this should return the wrong translation when a translation matches a key, in nested translate calls');
-
-    I18n.setCode('en');
   });
 
   it('Switch language', () => {
@@ -85,8 +88,6 @@ describe('browser.tinymce.core.util.I18nTest', () => {
     assert.equal(I18n.getCode(), 'code2', 'Should have switched language code');
     assert.isTrue(I18n.isRtl(), 'Should be in in rtl mode');
     assert.equal(I18n.translate('text'), 'translation2', 'Should be get code2 translation');
-
-    I18n.setCode('en');
   });
 
   context('Case sensitive translations', () => {
@@ -120,5 +121,21 @@ describe('browser.tinymce.core.util.I18nTest', () => {
       assertTranslation('Test', 'Test');
       assertTranslation('TEST', 'TEST');
     });
+  });
+
+  it('TINY-12155: three dots should be replaced with ellipsis char by the translate function', () => {
+    I18n.add('ellipsis', {
+      'three dots...': 'three dots should be replaced with ellipsis char...',
+      'translated to six dots ellipsis...': 'six dots ellipsis......',
+      'dots here... and here...': 'dots will be replaced with ellipsis char here... and here...',
+      'ellipsis char…': 'the ellipsis char in translated…',
+    });
+
+    I18n.setCode('ellipsis');
+
+    assert.equal(I18n.translate('three dots...'), 'three dots should be replaced with ellipsis char…');
+    assert.equal(I18n.translate('translated to six dots ellipsis...'), 'six dots ellipsis……');
+    assert.equal(I18n.translate('dots here... and here...'), 'dots will be replaced with ellipsis char here… and here…');
+    assert.equal(I18n.translate('ellipsis char…'), 'the ellipsis char in translated…');
   });
 });

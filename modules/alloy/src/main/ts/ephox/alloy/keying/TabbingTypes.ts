@@ -4,11 +4,13 @@ import { Compare, Height, SelectorFilter, SelectorFind, SugarElement, Traverse }
 
 import * as Keys from '../alien/Keys';
 import { AlloyComponent } from '../api/component/ComponentApi';
+import * as Channels from '../api/messages/Channels';
 import { NoState, Stateless } from '../behaviour/common/BehaviourState';
 import { NativeSimulatedEvent } from '../events/SimulatedEvent';
 import * as ArrNavigation from '../navigation/ArrNavigation';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
+
 import { KeyRuleStatelessHandler, TabbingConfig } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 
@@ -84,7 +86,7 @@ const create = (cyclicField: FieldProcessor): KeyingType.KeyingType<TabbingConfi
     // 2. Find the index of that tabstop
     // 3. Cycle the tabstop
     // 4. Fire alloy focus on the resultant tabstop
-    const tabstops = SelectorFilter.descendants<HTMLElement>(component.element, tabbingConfig.selector);
+    const tabstops = Arr.filter(SelectorFilter.descendants<HTMLElement>(component.element, tabbingConfig.selector), (element) => isVisible(tabbingConfig, element));
     return findCurrent(component, tabbingConfig).bind((tabstop) => {
       // focused component
       const optStopIndex = Arr.findIndex(tabstops, Fun.curry(Compare.eq, tabstop));
@@ -113,8 +115,19 @@ const create = (cyclicField: FieldProcessor): KeyingType.KeyingType<TabbingConfi
   const execute: KeyRuleStatelessHandler<TabbingConfig> = (component, simulatedEvent, tabbingConfig) =>
     tabbingConfig.onEnter.bind((f) => f(component, simulatedEvent));
 
-  const exit: KeyRuleStatelessHandler<TabbingConfig> = (component, simulatedEvent, tabbingConfig) =>
-    tabbingConfig.onEscape.bind((f) => f(component, simulatedEvent));
+  const exit: KeyRuleStatelessHandler<TabbingConfig> = (component, simulatedEvent, tabbingConfig) => {
+    component.getSystem().broadcastOn([ Channels.closeTooltips() ], {
+      closedTooltip: () => {
+        simulatedEvent.stop();
+      }
+    });
+
+    if (!simulatedEvent.isStopped()) {
+      return tabbingConfig.onEscape.bind((f) => f(component, simulatedEvent) );
+    } else {
+      return Optional.none();
+    }
+  };
 
   const getKeydownRules = Fun.constant([
     KeyRules.rule(KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB) ]), goBackwards),

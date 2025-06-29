@@ -39,7 +39,7 @@
 @dialog-body-text-color: @text-color;
 @dialog-body-text-transform: none;
 
-@dialog-body-link-color: @color-tint;
+@dialog-body-link-color: contrast(@background-color, mix(@color-white, @color-tint, 50%), mix(@color-black, @color-tint, 60%));
 @dialog-body-link-text-decoration: underline;
 @dialog-body-link-hover-color: darken(@dialog-body-link-color, 20%);
 @dialog-body-link-hover-text-decoration: underline;
@@ -623,7 +623,7 @@
     .tox-dialog__footer-end {
       >* {
         margin-right: @pad-sm;
-      }
-    }
+  }
+}
   }
 }

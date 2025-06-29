@@ -25,6 +25,9 @@ const staticPartsInner = (s: ApproxStructure.StructApi, arr: ApproxStructure.Arr
   // should not change
   [
     s.element('div', {
+      classes: [ arr.has('tox-promotion') ]
+    }),
+    s.element('div', {
       classes: [ arr.has('tox-menubar') ]
     }),
     s.element('div', {}),
@@ -195,7 +198,7 @@ const assertEditorClasses = (docked: boolean): void => {
 const pAssertHeaderPosition = async (toolbarLocation: ToolbarLocation, value: number): Promise<void> => {
   const isToolbarTop = toolbarLocation === ToolbarLocation.top;
   scrollRelativeEditor(-100, isToolbarTop);
-  await Waiter.pWait(100);
+  await Waiter.pWaitBetweenUserActions();
   scrollRelativeEditor(200, isToolbarTop);
   const header = UiFinder.findIn(SugarBody.body(), '.tox-editor-header').getOrDie();
 

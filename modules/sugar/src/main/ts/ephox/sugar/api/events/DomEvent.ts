@@ -2,6 +2,7 @@ import { Fun } from '@ephox/katamari';
 
 import * as FilteredEvent from '../../impl/FilteredEvent';
 import { SugarElement } from '../node/SugarElement';
+
 import { EventHandler, EventUnbinder } from './Types';
 
 const filter = Fun.always; // no filter on plain DomEvents

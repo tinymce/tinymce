@@ -15,6 +15,7 @@ UnitTest.test('Atomic Test: api.FieldSchemaTest', () => {
 
     StructureSchema.asRaw('spec', schema, input).fold(
       (err) => {
+        // eslint-disable-next-line @typescript-eslint/only-throw-error
         throw err;
       },
       (value) => Assert.eq(label, expected, value)

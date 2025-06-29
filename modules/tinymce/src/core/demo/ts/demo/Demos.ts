@@ -1,7 +1,11 @@
 import AnnotationsDemo from './AnnotationsDemo';
+import BundledCssDemo from './BundledCssDemo';
 import CommandsDemo from './CommandsDemo';
 import ContentEditableFalseDemo from './ContentEditableFalseDemo';
+import ContextFormDemo from './ContextFormDemo';
+import ContextToolbarDemo from './ContextToolbarDemo';
 import CustomThemeDemo from './CustomThemeDemo';
+import DisabledDemo from './DisabledDemo';
 import FixedToolbarContainerDemo from './FixedToolbarContainerDemo';
 import FullDemo from './FullDemo';
 import IframeDemo from './IframeDemo';
@@ -20,7 +24,9 @@ declare const window: any;
 window.demos = {
   CommandsDemo,
   ContentEditableFalseDemo,
+  ContextToolbarDemo,
   CustomThemeDemo,
+  DisabledDemo,
   IframeDemo,
   InlineDemo,
   FixedToolbarContainerDemo,
@@ -33,5 +39,7 @@ window.demos = {
   ShadowDomDemo,
   ShadowDomInlineDemo,
   ReadOnlyDemo,
-  ViewDemo
+  ViewDemo,
+  ContextFormDemo,
+  BundledCssDemo
 };

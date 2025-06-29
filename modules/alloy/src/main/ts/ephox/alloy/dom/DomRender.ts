@@ -3,6 +3,7 @@ import { Attribute, Classes, Css, Html, InsertAll, SugarElement, SugarNode, Valu
 
 import { isPremade } from '../api/ui/GuiTypes';
 import * as Tagger from '../registry/Tagger';
+
 import * as DomDefinition from './DomDefinition';
 import { reconcileToDom } from './Reconcile';
 
@@ -29,7 +30,7 @@ const attemptPatch = (definition: DomDefinition.GeneralDefinitionDetail<SugarEle
   try {
     const e = reconcileToDom(definition, obsoleted);
     return Optional.some(e);
-  } catch (err) {
+  } catch {
     return Optional.none();
   }
 };

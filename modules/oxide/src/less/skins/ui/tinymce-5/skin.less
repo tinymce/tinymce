@@ -124,10 +124,15 @@
   }
 
   .tox-tbtn,
+  .tox-label,
   .tox-number-input,
   .tox-tbtn--select,
   .tox-split-button {
     margin: @toolbar-button-spacing-y @toolbar-button-spacing-x (@toolbar-button-spacing-y + 1px) 0;
+  }
+
+  .tox-tbtn--bordered, .tox-tbtn--bordered:focus, .tox-tbtn--bordered:hover {
+    border: 1px solid @border-color;
   }
 
   .tox-toolbar,
@@ -197,7 +202,7 @@
       width: auto;
     }
 
-    a { /* stylelint-disable-line no-descending-specificity */
+    a {
       align-items: center;
       display: inline-flex;
     }

@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Chain, Mouse, UiControls, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Result } from '@ephox/katamari';
-import { Class } from '@ephox/sugar';
+import { Attribute, Class } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
@@ -12,10 +12,10 @@ import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
-import * as GuiSetup from 'ephox/alloy/api/testhelpers/GuiSetup';
 import { FormCoupledInputs } from 'ephox/alloy/api/ui/FormCoupledInputs';
 import { FormField } from 'ephox/alloy/api/ui/FormField';
 import { Input } from 'ephox/alloy/api/ui/Input';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 interface MakeConfig {
   className: string;
@@ -23,6 +23,7 @@ interface MakeConfig {
   field1Name?: string;
   field2Name?: string;
   coupledFieldBehaviours?: Behaviour.AlloyBehaviourRecord;
+  onInput?: (comp: AlloyComponent) => void;
 }
 
 UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
@@ -73,7 +74,8 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
     locked: config.locked,
     field1Name: config.field1Name,
     field2Name: config.field2Name,
-    coupledFieldBehaviours: config.coupledFieldBehaviours
+    coupledFieldBehaviours: config.coupledFieldBehaviours,
+    onInput: config.onInput
   });
 
   GuiSetup.setup((store, _doc, _body) => GuiFactory.build(
@@ -82,7 +84,7 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
         tag: 'div'
       },
       components: [
-        make({ className: 'default' }),
+        make({ className: 'default', onInput: (comp) => store.add(`input:${Attribute.get(comp.element, 'class')}`) }),
         make({ className: 'start-locked', locked: true }),
         make({ className: 'renamed-fields', field1Name: 'width', field2Name: 'height' }),
         make({
@@ -202,6 +204,32 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
           ])
       ]);
 
+    const sTestOnInput = (selector: string) =>
+      Chain.asStep(component.element, [
+        Chain.fromParent(
+          UiFinder.cFindIn(selector),
+          [
+            Chain.fromChains([
+              UiFinder.cFindIn('.field1 input'),
+              Chain.binder((elem) => component.getSystem().getByDom(elem)),
+              Chain.op((input) => AlloyTriggers.emit(input, NativeEvents.input())),
+              Chain.op(() => {
+                store.assertEq('input', [ 'input:field1' ]);
+              })
+            ]),
+            Chain.fromChains([
+              store.cClear,
+              UiFinder.cFindIn('.field2 input'),
+              Chain.binder((elem) => component.getSystem().getByDom(elem)),
+              Chain.op((input) => AlloyTriggers.emit(input, NativeEvents.input())),
+              Chain.op(() => {
+                store.assertEq('input', [ 'input:field2' ]);
+              })
+            ])
+          ]
+        )
+      ]);
+
     return [
       sTestStructure('.default', false),
       sTestStructure('.start-locked', true),
@@ -219,10 +247,12 @@ UnitTest.asynctest('FormCoupledInputsTest', (success, failure) => {
       sTestCopying('.start-locked', '.field2 input', { field1: '', field2: 'dfgh' }, { field1: '', field2: 'dfgh' }),
       sTestCopying('.default', '.field1 input', { field1: 'asdf', field2: '' }, { field1: 'asdf', field2: 'asdf' }),
       sTestCopying('.default', '.field2 input', { field1: '', field2: 'lkjh' }, { field1: 'lkjh', field2: 'lkjh' }),
-      store.sAssertEq('click', []),
+      store.sClear,
       Mouse.sClickOn(component.element, '.behaviour-tester'),
       store.sAssertEq('click', [ 'click' ]),
-      sTestApi()
+      sTestApi(),
+      store.sClear,
+      sTestOnInput('.default')
     ];
   }, success, failure);
 });

@@ -1,6 +1,6 @@
 import { HsvColour } from '@ephox/acid';
 import { UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { AlloyComponent, GuiFactory, TestHelpers } from '@ephox/alloy';
+import { AlloyComponent, GuiFactory } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
@@ -8,11 +8,12 @@ import { assert } from 'chai';
 
 import { renderColorPicker } from 'tinymce/themes/silver/ui/dialog/ColorPicker';
 
+import * as GuiSetup from '../../../module/GuiSetup';
 import * as RepresentingUtils from '../../../module/RepresentingUtils';
 import TestProviders from '../../../module/TestProviders';
 
 describe('headless.tinymce.themes.silver.components.colorpicker.ColorPickerTest', () => {
-  const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+  const hook = GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderColorPicker({
       label: Optional.some('ColorPicker label'),
       name: 'col1'
@@ -31,20 +32,20 @@ describe('headless.tinymce.themes.silver.components.colorpicker.ColorPickerTest'
     Waiter.pTryUntil(
       'Waiting until hex updates the other fields',
       () => {
-        const input = UiFinder.findIn<HTMLInputElement>(component.element, `label:contains("${labelText}") + input`).getOrDie();
+        const input = UiFinder.findTargetByLabel<HTMLInputElement>(component.element, labelText).getOrDie();
         const value = UiControls.getValue(input);
         assert.equal(value, expected, 'Checking value in input');
       }
     );
 
   const setRgbValue = (component: AlloyComponent, value: string, colour: 'R' | 'G' | 'B') => {
-    const input = UiFinder.findIn<HTMLInputElement>(component.element, `label:contains("${colour}") + input`).getOrDie();
+    const input = UiFinder.findTargetByLabel<HTMLInputElement>(component.element, colour).getOrDie();
     UiControls.setValue(input, value);
     fireEvent(input, 'input');
   };
 
   const setHexValue = (component: AlloyComponent, value: string) => {
-    const input = UiFinder.findIn<HTMLInputElement>(component.element, `label:contains("#") + input`).getOrDie();
+    const input = UiFinder.findTargetByLabel<HTMLInputElement>(component.element, '#').getOrDie();
     UiControls.setValue(input, value);
     fireEvent(input, 'input');
   };

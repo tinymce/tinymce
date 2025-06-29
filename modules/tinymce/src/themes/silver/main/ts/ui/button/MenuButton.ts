@@ -6,7 +6,7 @@ import { Attribute, Class, Focus } from '@ephox/sugar';
 import { formActionEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
-import { renderCommonDropdown, updateMenuIcon, updateMenuText } from '../dropdown/CommonDropdown';
+import { renderCommonDropdown, updateMenuIcon, updateMenuText, updateTooltiptext } from '../dropdown/CommonDropdown';
 import ItemResponse from '../menus/item/ItemResponse';
 import * as NestedMenus from '../menus/menu/NestedMenus';
 import { getSearchPattern } from '../menus/menu/searchable/SearchableMenu';
@@ -40,6 +40,11 @@ const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonI
     }
   },
   isActive: () => Class.has(component.element, ToolbarButtonClasses.Ticked),
+  setTooltip: (tooltip: string) => {
+    AlloyTriggers.emitWith(component, updateTooltiptext, {
+      text: tooltip
+    });
+  },
   setText: (text: string) => {
     AlloyTriggers.emitWith(component, updateMenuText, {
       text
@@ -51,6 +56,7 @@ const getMenuButtonApi = (component: AlloyComponent): Toolbar.ToolbarMenuButtonI
 });
 
 const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFactoryBackstage, role: Optional<string>, tabstopping = true, btnName?: string): SketchSpec => {
+  const classes = spec.buttonType === 'bordered' ? [ 'bordered' ] : [];
   return renderCommonDropdown({
     text: spec.text,
     icon: spec.icon,
@@ -84,12 +90,12 @@ const renderMenuButton = (spec: MenuButtonSpec, prefix: string, backstage: UiFac
       );
     },
     onSetup: spec.onSetup,
-    getApi: getMenuButtonApi,
+    getApi: (comp) => getMenuButtonApi(comp),
     columns: 1,
     presets: 'normal',
-    classes: [],
+    classes,
     dropdownBehaviours: [
-      ...(tabstopping ? [ Tabstopping.config({ }) ] : [])
+      ...(tabstopping ? [ Tabstopping.config({ }) ] : []),
     ],
     context: spec.context
   },

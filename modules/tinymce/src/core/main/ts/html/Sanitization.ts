@@ -1,12 +1,14 @@
-import { Arr, Fun, Obj, Strings, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
 import { Attribute, NodeTypes, Remove, Replication, SugarElement } from '@ephox/sugar';
-import createDompurify, { Config, DOMPurifyI, SanitizeAttributeHookEvent, SanitizeElementHookEvent } from 'dompurify';
+import createDompurify, { Config, DOMPurify, UponSanitizeAttributeHookEvent, UponSanitizeElementHookEvent } from 'dompurify';
 
 import { DomParserSettings } from '../api/html/DomParser';
 import Schema from '../api/html/Schema';
 import Tools from '../api/util/Tools';
 import * as URI from '../api/util/URI';
 import * as NodeType from '../dom/NodeType';
+
+import * as KeepHtmlComments from './KeepHtmlComments';
 import * as Namespace from './Namespace';
 
 export type MimeType = 'text/html' | 'application/xhtml+xml';
@@ -21,13 +23,19 @@ const filteredUrlAttrs = Tools.makeMap('src,href,data,background,action,formacti
 const internalElementAttr = 'data-mce-type';
 
 let uid = 0;
-const processNode = (node: Node, settings: DomParserSettings, schema: Schema, scope: Namespace.NamespaceType, evt?: SanitizeElementHookEvent): void => {
+const processNode = (node: Node, settings: DomParserSettings, schema: Schema, scope: Namespace.NamespaceType, evt?: UponSanitizeElementHookEvent): void => {
   const validate = settings.validate;
   const specialElements = schema.getSpecialElements();
 
-  // Pad conditional comments if they aren't allowed
-  if (node.nodeType === NodeTypes.COMMENT && !settings.allow_conditional_comments && /^\[if/i.test(node.nodeValue ?? '')) {
-    node.nodeValue = ' ' + node.nodeValue;
+  if (node.nodeType === NodeTypes.COMMENT) {
+    // Pad conditional comments if they aren't allowed
+    if (!settings.allow_conditional_comments && /^\[if/i.test(node.nodeValue ?? '')) {
+      node.nodeValue = ' ' + node.nodeValue;
+    }
+
+    if (settings.sanitize && settings.allow_html_in_comments && Type.isString(node.nodeValue)) {
+      node.nodeValue = KeepHtmlComments.encodeData(node.nodeValue);
+    }
   }
 
   const lcTagName = evt?.tagName ?? node.nodeName.toLowerCase();
@@ -108,7 +116,7 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
   }
 };
 
-const processAttr = (ele: Element, settings: DomParserSettings, schema: Schema, scope: Namespace.NamespaceType, evt: SanitizeAttributeHookEvent) => {
+const processAttr = (ele: Element, settings: DomParserSettings, schema: Schema, scope: Namespace.NamespaceType, evt: UponSanitizeAttributeHookEvent) => {
   const tagName = ele.tagName.toLowerCase();
   const { attrName, attrValue } = evt;
 
@@ -161,7 +169,7 @@ const filterAttributes = (ele: Element, settings: DomParserSettings, schema: Sch
   }
 };
 
-const setupPurify = (settings: DomParserSettings, schema: Schema, namespaceTracker: Namespace.NamespaceTracker): DOMPurifyI => {
+const setupPurify = (settings: DomParserSettings, schema: Schema, namespaceTracker: Namespace.NamespaceTracker): DOMPurify => {
   const purify = createDompurify();
 
   // We use this to add new tags to the allow-list as we parse, if we notice that a tag has been banned but it's still in the schema
@@ -177,18 +185,15 @@ const setupPurify = (settings: DomParserSettings, schema: Schema, namespaceTrack
   return purify;
 };
 
-const getPurifyConfig = (settings: DomParserSettings, mimeType: string): Config => {
-  // Current dompurify types only cover up to 3.0.5 which does not include this new setting
-  const basePurifyConfig: Config & { SAFE_FOR_XML: boolean } = {
+const getPurifyConfig = (settings: DomParserSettings, mimeType: MimeType): Config => {
+  const basePurifyConfig: Config = {
     IN_PLACE: true,
     ALLOW_UNKNOWN_PROTOCOLS: true,
     // Deliberately ban all tags and attributes by default, and then un-ban them on demand in hooks
     // #comment and #cdata-section are always allowed as they aren't controlled via the schema
     // body is also allowed due to the DOMPurify checking the root node before sanitizing
     ALLOWED_TAGS: [ '#comment', '#cdata-section', 'body' ],
-    ALLOWED_ATTR: [],
-    // TINY-11332: New settings for dompurify 3.1.7
-    SAFE_FOR_XML: false
+    ALLOWED_ATTR: []
   };
   const config = { ...basePurifyConfig };
 
@@ -198,7 +203,7 @@ const getPurifyConfig = (settings: DomParserSettings, mimeType: string): Config 
   // Allow any URI when allowing script urls
   if (settings.allow_script_urls) {
     config.ALLOWED_URI_REGEXP = /.*/;
-  // Allow anything except javascript (or similar) URIs if all html data urls are allowed
+    // Allow anything except javascript (or similar) URIs if all html data urls are allowed
   } else if (settings.allow_html_data_urls) {
     config.ALLOWED_URI_REGEXP = /^(?!(\w+script|mhtml):)/i;
   }
@@ -232,15 +237,51 @@ const sanitizeMathmlElement = (node: Element, settings: DomParserSettings) => {
   };
 
   const purify = createDompurify();
+  const allowedEncodings = settings.allow_mathml_annotation_encodings;
+  const hasAllowedEncodings = Type.isArray(allowedEncodings) && allowedEncodings.length > 0;
+  const hasValidEncoding = (el: Element) => {
+    const encoding = el.getAttribute('encoding');
+    return hasAllowedEncodings && Type.isString(encoding) && Arr.contains(allowedEncodings, encoding);
+  };
+
+  const isValidElementOpt = (node: Node, lcTagName: string) => {
+    if (hasAllowedEncodings && lcTagName === 'semantics') {
+      return Optional.some(true);
+    } else if (lcTagName === 'annotation') {
+      return Optional.some(NodeType.isElement(node) && hasValidEncoding(node));
+    } else if (Type.isArray(settings.extended_mathml_elements)) {
+      if (settings.extended_mathml_elements.includes(lcTagName)) {
+        return Optional.from(true);
+      } else {
+        return Optional.none();
+      }
+    } else {
+      return Optional.none();
+    }
+  };
 
   purify.addHook('uponSanitizeElement', (node, evt) => {
+    // We know the node is an element as we have
+    // passed an element to the purify.sanitize function below
     const lcTagName = evt.tagName ?? node.nodeName.toLowerCase();
-    const allowedEncodings = settings.allow_mathml_annotation_encodings;
+    const keepElementOpt = isValidElementOpt(node, lcTagName);
 
-    if (lcTagName === 'annotation' && Type.isArray(allowedEncodings) && allowedEncodings.length > 0) {
-      const encoding = node.getAttribute('encoding');
-      if (Type.isString(encoding) && Arr.contains(allowedEncodings, encoding)) {
-        evt.allowedTags[lcTagName] = true;
+    keepElementOpt.each((keepElement) => {
+      evt.allowedTags[lcTagName] = keepElement;
+      if (!keepElement && settings.sanitize) {
+        if (NodeType.isElement(node)) {
+          node.remove();
+        }
+      }
+    });
+  });
+
+  purify.addHook('uponSanitizeAttribute', (_node, event) => {
+    if (Type.isArray(settings.extended_mathml_attributes)) {
+      const keepAttribute = settings.extended_mathml_attributes.includes(event.attrName);
+
+      if (keepAttribute) {
+        event.forceKeepAttr = true;
       }
     }
   });

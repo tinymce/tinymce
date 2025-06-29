@@ -17,7 +17,7 @@ describe('browser.tinymce.core.EditorRemovedApiTest', () => {
     assert.equal(result, expectedValue, 'Should be expected value on a removed editor');
   };
 
-  it('Try to access/execute things on an editor that does not exists', () => {
+  it('Try to access/execute things on an editor that does not exists', async () => {
     const editor = hook.editor();
     editor.remove();
     tryAccess('getBody', null);
@@ -33,7 +33,7 @@ describe('browser.tinymce.core.EditorRemovedApiTest', () => {
     editor.queryCommandState('bold');
     editor.queryCommandValue('bold');
     editor.queryCommandSupported('bold');
-    editor.uploadImages();
+    await editor.uploadImages();
     editor.setContent('a');
     editor.insertContent('a');
     editor.execCommand('bold');

@@ -2,6 +2,7 @@ import { Arr } from '@ephox/katamari';
 
 import * as SugarBody from '../node/SugarBody';
 import { SugarElement } from '../node/SugarElement';
+
 import * as Traverse from './Traverse';
 
 // maybe TraverseWith, similar to traverse but with a predicate?

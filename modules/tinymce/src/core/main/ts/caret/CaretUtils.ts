@@ -3,6 +3,7 @@ import { PredicateFind, SugarElement } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import * as NodeType from '../dom/NodeType';
+
 import * as CaretCandidate from './CaretCandidate';
 import * as CaretContainer from './CaretContainer';
 import { CaretPosition } from './CaretPosition';
@@ -18,8 +19,8 @@ const isCaretContainerBlock = CaretContainer.isCaretContainerBlock;
 const isElement = NodeType.isElement;
 const isText = NodeType.isText;
 const isCaretCandidate = CaretCandidate.isCaretCandidate;
-const isForwards = (direction: HDirection): boolean => direction > 0;
-const isBackwards = (direction: HDirection): boolean => direction < 0;
+const isForwards = (direction: HDirection): boolean => direction === HDirection.Forwards;
+const isBackwards = (direction: HDirection): boolean => direction === HDirection.Backwards;
 
 const skipCaretContainers = (walk: (shallow?: boolean) => Node | null | undefined, shallow?: boolean): Node | null => {
   let node: Node | null | undefined;

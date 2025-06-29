@@ -73,7 +73,7 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.DesktopContextMenuTes
   it('TBA: Test context menus on empty editor', async () => {
     const editor = hook.editor();
     await pOpenContextMenu(editor, 'p');
-    await pAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")');
+    await pAssertFocusOnItem('Link', '.tox-collection__item:contains("Link…")');
     pressEnterKey();
     await pWaitForAndCloseDialog(editor);
   });
@@ -83,13 +83,13 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.DesktopContextMenuTes
     editor.setContent('<p><a href="http://tiny.cloud/">Tiny</a></p>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 'Ti'.length);
     await pOpenContextMenu(editor, 'a');
-    await pAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")');
+    await pAssertFocusOnItem('Link', '.tox-collection__item:contains("Link…")');
     pressDownArrowKey();
     await pAssertFocusOnItem('Remove Link', '.tox-collection__item:contains("Remove link")');
     pressDownArrowKey();
     await pAssertFocusOnItem('Open Link', '.tox-collection__item:contains("Open link")');
     pressDownArrowKey();
-    await pAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")');
+    await pAssertFocusOnItem('Link', '.tox-collection__item:contains("Link…")');
     pressEnterKey();
     await pWaitForAndCloseDialog(editor);
     await pOpenContextMenu(editor, 'a');
@@ -102,17 +102,17 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.DesktopContextMenuTes
     const editor = hook.editor();
     editor.setContent(tableHtml);
     await pOpenContextMenu(editor, 'td');
-    await pAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")');
+    await pAssertFocusOnItem('Link', '.tox-collection__item:contains("Link…")');
     pressDownArrowKey();
     await pAssertFocusOnItem('Cell', '.tox-collection__item:contains("Cell")');
     pressDownArrowKey();
     await pAssertFocusOnItem('Row', '.tox-collection__item:contains("Row")');
     pressDownArrowKey();
-    pAssertFocusOnItem('Column', '.tox-collection__item:contains("Column")');
+    await pAssertFocusOnItem('Column', '.tox-collection__item:contains("Column")');
     pressDownArrowKey();
-    pAssertFocusOnItem('Table Properties', '.tox-collection__item:contains("Table properties")');
+    await pAssertFocusOnItem('Table Properties', '.tox-collection__item:contains("Table properties")');
     pressDownArrowKey();
-    pAssertFocusOnItem('Delete Table', '.tox-collection__item:contains("Delete table")');
+    await pAssertFocusOnItem('Delete Table', '.tox-collection__item:contains("Delete table")');
     Keyboard.activeKeydown(SugarDocument.getDocument(), Keys.up());
     pressEnterKey();
     await pWaitForAndCloseDialog(editor);
@@ -122,7 +122,7 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.DesktopContextMenuTes
     const editor = hook.editor();
     editor.setContent(imageInTableHtml);
     await pOpenContextMenu(editor, 'img');
-    await pAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")');
+    await pAssertFocusOnItem('Link', '.tox-collection__item:contains("Link…")');
     pressDownArrowKey();
     await pAssertFocusOnItem('Image', '.tox-collection__item:contains("Image")');
     pressDownArrowKey();
@@ -145,7 +145,7 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.DesktopContextMenuTes
     const editor = hook.editor();
     editor.setContent(linkInTableHtml);
     await pOpenContextMenu(editor, 'a');
-    await pAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")');
+    await pAssertFocusOnItem('Link', '.tox-collection__item:contains("Link…")');
     pressDownArrowKey();
     await pAssertFocusOnItem('Remove Link', '.tox-collection__item:contains("Remove link")');
     pressDownArrowKey();
@@ -168,7 +168,7 @@ describe('browser.tinymce.themes.silver.editor.contextmenu.DesktopContextMenuTes
     editor.setContent(placeholderImageInTableHtml);
     TinySelections.select(editor, 'img', []);
     await pOpenContextMenu(editor, 'img');
-    await pAssertFocusOnItem('Link', '.tox-collection__item:contains("Link...")');
+    await pAssertFocusOnItem('Link', '.tox-collection__item:contains("Link…")');
     pressDownArrowKey();
     await pAssertFocusOnItem('Cell', '.tox-collection__item:contains("Cell")');
     pressDownArrowKey();

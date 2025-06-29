@@ -957,8 +957,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
 
       it('TINY-11211: Menu item should always be disabled', async () => {
         const editor = hook.editor();
-        // Wait for NodeChange to be processed
-        await Waiter.pWait(0);
+        await Waiter.pWaitBetweenUserActions();
         await pClickToolbarAndWait(editor, 't11');
         assertButtonDisabled('test');
         await pCloseMenu(editor);

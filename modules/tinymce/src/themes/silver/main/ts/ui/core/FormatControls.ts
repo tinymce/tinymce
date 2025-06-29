@@ -1,6 +1,7 @@
 import Editor from 'tinymce/core/api/Editor';
 
 import { UiFactoryBackstage } from '../../backstage/Backstage';
+
 import * as AlignmentButtons from './AlignmentButtons';
 import * as ChoiceControls from './ChoiceControls';
 import * as ColorSwatch from './color/ColorSwatch';

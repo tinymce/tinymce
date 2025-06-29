@@ -4,6 +4,7 @@ import { Optional } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
 import { colorClass, selectableClass } from '../item/ItemClasses';
+
 import { markers as getMenuMarkers } from './MenuParts';
 
 export const deriveMenuMovement = (columns: number | 'auto', presets: Toolbar.PresetTypes): MenuTypes.MenuMovementSpec => {
@@ -20,7 +21,13 @@ export const deriveMenuMovement = (columns: number | 'auto', presets: Toolbar.Pr
       }
     } as MenuTypes.MenuGridMovementSpec;
   } else {
-    const rowClass = presets === 'color' ? 'tox-swatches__row' : 'tox-collection__group';
+    const rowClass: Record<Toolbar.PresetTypes, string>[Toolbar.PresetTypes] = {
+      color: 'tox-swatches__row',
+      imageselector: 'tox-image-selector__row',
+      listpreview: 'tox-collection__group',
+      normal: 'tox-collection__group'
+    }[presets];
+
     return {
       mode: 'matrix',
       rowSelector: '.' + rowClass,

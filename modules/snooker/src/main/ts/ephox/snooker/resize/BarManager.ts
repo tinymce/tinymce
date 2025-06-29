@@ -6,6 +6,7 @@ import { Attribute, Class, Compare, ContentEditable, Css, DomEvent, SelectorFind
 import { ResizeWire } from '../api/ResizeWire';
 import * as Styles from '../style/Styles';
 import * as CellUtils from '../util/CellUtils';
+
 import { BarMutation } from './BarMutation';
 import * as Bars from './Bars';
 
@@ -103,7 +104,7 @@ export const BarManager = (wire: ResizeWire): BarManager => {
     Attribute.set(target, 'data-initial-' + dir, CellUtils.getCssValue(target, dir));
     Class.add(target, resizeBarDragging);
     Css.set(target, 'opacity', '0.2');
-    resizing.go(wire.parent());
+    resizing.go(wire.dragContainer());
   };
 
   /* mousedown on resize bar: start dragging when the bar is clicked, storing the initial position. */
@@ -124,16 +125,21 @@ export const BarManager = (wire: ResizeWire): BarManager => {
   const findClosestEditableTable = (target: SugarElement<Node>): Optional<SugarElement<HTMLTableElement>> =>
     SelectorFind.closest<HTMLTableElement>(target, 'table', isRoot).filter(ContentEditable.isEditable);
 
+  const isResizer = (target: SugarElement<Element>): boolean =>
+    Class.has(target, 'ephox-snooker-resizer-bar') || Class.has(target, 'ephox-dragster-blocker');
+
   /* mouseover on table: When the mouse moves within the CONTENT AREA (NOT THE TABLE), refresh the bars. */
-  const mouseover = DomEvent.bind(wire.view(), 'mouseover', (event) => {
+  const mouseover = DomEvent.bind<MouseEvent, Element>(wire.view(), 'mouseover', (event) => {
     findClosestEditableTable(event.target).fold(
       () => {
         /*
         * mouseout is not reliable within ContentEditable, so for all other mouseover events we clear bars.
         * This is fairly safe to do frequently; it's a single querySelectorAll() on the content and Arr.map on the result.
         * If we _really_ need to optimise it further, we can start caching the bar references in the wire somehow.
+        *
+        * Because the resizers were moved into the editor for inline mode, we need to check if the event target is not a resizer.
         */
-        if (SugarBody.inBody(event.target)) {
+        if (SugarBody.inBody(event.target) && !isResizer(event.target)) {
           Bars.destroy(wire);
         }
       },
@@ -173,3 +179,4 @@ export const BarManager = (wire: ResizeWire): BarManager => {
     events: events.registry
   };
 };
+

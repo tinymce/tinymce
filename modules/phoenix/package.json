@@ -7,6 +7,7 @@
     "url": "https://github.com/tinymce/tinymce.git",
     "directory": "modules/phoenix"
   },
+  "sideEffects": false,
   "files": [
     "lib/main",
     "lib/demo",
@@ -29,7 +30,7 @@
   },
   "scripts": {
     "test-manual": "bedrock -d src/test",
-    "lint": "eslint --config ../../.eslintrc.json --max-warnings=0 src/**/*.ts",
+    "lint": "eslint --max-warnings=0 src/**/*.ts",
     "prepublishOnly": "tsc -b",
     "build": "tsc"
   },

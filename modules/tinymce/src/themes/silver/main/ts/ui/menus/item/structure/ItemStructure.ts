@@ -1,4 +1,4 @@
-import { AlloySpec, RawDomSchema } from '@ephox/alloy';
+import { AlloySpec, GuiFactory, RawDomSchema, SimpleSpec } from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Fun, Id, Obj, Optional, Type } from '@ephox/katamari';
 
@@ -6,7 +6,9 @@ import I18n from 'tinymce/core/api/util/I18n';
 
 import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import * as Icons from '../../../icons/Icons';
+import * as Images from '../../../image/Images';
 import * as ItemClasses from '../ItemClasses';
+
 import { renderHtml, renderShortcut, renderStyledText, renderText } from './ItemSlices';
 
 export interface ItemStructure {
@@ -16,6 +18,7 @@ export interface ItemStructure {
 
 export interface ItemStructureSpec {
   readonly presets: Toolbar.PresetItemTypes;
+  readonly labelContent: Optional<string>;
   readonly iconContent: Optional<string>;
   readonly textContent: Optional<string>;
   readonly htmlContent: Optional<string>;
@@ -87,8 +90,8 @@ const renderColorStructure = (item: ItemStructureSpec, providerBackstage: UiFact
   };
 };
 
-const renderItemDomStructure = (ariaLabel: Optional<string>): RawDomSchema => {
-  const domTitle = ariaLabel.map((label): { attributes?: { id?: string; 'aria-label': string }} => ({
+const renderItemDomStructure = (ariaLabel: Optional<string>, classes: string[]): RawDomSchema => {
+  const domTitle = ariaLabel.map((label): { attributes?: { 'id'?: string; 'aria-label': string }} => ({
     attributes: {
       'id': Id.generate('menu-item'),
       'aria-label': I18n.translate(label)
@@ -97,8 +100,19 @@ const renderItemDomStructure = (ariaLabel: Optional<string>): RawDomSchema => {
 
   return {
     tag: 'div',
-    classes: [ ItemClasses.navClass, ItemClasses.selectableClass ],
+    classes: [ ItemClasses.navClass, ItemClasses.selectableClass ].concat(classes),
     ...domTitle
+  };
+};
+
+const createLabel = (label: string): SimpleSpec => {
+  return {
+    dom: {
+      tag: 'label'
+    },
+    components: [
+      GuiFactory.text(label)
+    ]
   };
 };
 
@@ -125,13 +139,25 @@ const renderNormalItemStructure = (info: ItemStructureSpec, providersBackstage: 
   );
 
   const menuItem = {
-    dom: renderItemDomStructure(info.ariaLabel),
+    dom: renderItemDomStructure(info.ariaLabel, []),
     optComponents: [
       leftIcon,
       content,
       info.shortcutContent.map(renderShortcut),
       checkmark,
-      info.caret
+      info.caret,
+      info.labelContent.map(createLabel)
+    ]
+  };
+  return menuItem;
+};
+
+const renderImgItemStructure = (info: ItemStructureSpec): ItemStructure => {
+  const menuItem = {
+    dom: renderItemDomStructure(info.ariaLabel, [ ItemClasses.imageSelectorClasll ]),
+    optComponents: [
+      Optional.some(Images.render(info.iconContent.getOrDie(), { tag: 'div', classes: [ ItemClasses.imageClass ], checkMark: info.checkMark })),
+      info.labelContent.map(createLabel)
     ]
   };
   return menuItem;
@@ -141,9 +167,11 @@ const renderNormalItemStructure = (info: ItemStructureSpec, providersBackstage: 
 const renderItemStructure = (info: ItemStructureSpec, providersBackstage: UiFactoryBackstageProviders, renderIcons: boolean, fallbackIcon: Optional<string> = Optional.none()): ItemStructure => {
   if (info.presets === 'color') {
     return renderColorStructure(info, providersBackstage, fallbackIcon);
+  } else if (info.presets === 'img') {
+    return renderImgItemStructure(info);
   } else {
     return renderNormalItemStructure(info, providersBackstage, renderIcons, fallbackIcon);
   }
 };
 
-export { renderItemStructure, renderItemDomStructure };
+export { renderItemDomStructure, renderItemStructure };

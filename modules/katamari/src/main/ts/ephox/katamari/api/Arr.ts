@@ -9,11 +9,9 @@ type ArrayGuardPredicate<T, U extends T> = (x: T, i: number) => x is U;
 type ArrayPredicate<T> = ArrayMorphism<T, boolean>;
 type Comparator<T> = (a: T, b: T) => number;
 
-/* eslint-disable @typescript-eslint/unbound-method */
 const nativeSlice = Array.prototype.slice;
 const nativeIndexOf = Array.prototype.indexOf;
 const nativePush = Array.prototype.push;
-/* eslint-enable */
 
 const rawIndexOf = <T> (ts: ArrayLike<T>, t: T): number =>
   nativeIndexOf.call(ts, t);
@@ -191,6 +189,16 @@ export const findIndex = <T>(xs: ArrayLike<T>, pred: ArrayPredicate<T>): Optiona
   for (let i = 0, len = xs.length; i < len; i++) {
     const x = xs[i];
     if (pred(x, i)) {
+      return Optional.some(i);
+    }
+  }
+
+  return Optional.none();
+};
+
+export const findLastIndex = <T>(arr: ArrayLike<T>, pred: ArrayPredicate<T>): Optional<number> => {
+  for (let i = arr.length - 1; i >= 0; i--) {
+    if (pred(arr[i], i)) {
       return Optional.some(i);
     }
   }

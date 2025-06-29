@@ -71,6 +71,14 @@ const fireToggleView = (editor: Editor): void => {
   editor.dispatch('ToggleView');
 };
 
+const fireContextToolbarClose = (editor: Editor): void => {
+  editor.dispatch('ContextToolbarClose');
+};
+
+const fireContextFormSlideBack = (editor: Editor): void => {
+  editor.dispatch('ContextFormSlideBack');
+};
+
 export {
   fireSkinLoaded,
   fireSkinLoadError,
@@ -88,5 +96,7 @@ export {
   fireBlocksTextUpdate,
   fireFontFamilyTextUpdate,
   fireToggleSidebar,
-  fireToggleView
+  fireToggleView,
+  fireContextToolbarClose,
+  fireContextFormSlideBack
 };

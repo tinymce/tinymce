@@ -5,7 +5,7 @@ import { Attribute, Css, Hierarchy, Html, Insert, Remove, SelectorFilter, SugarB
 
 import * as TableOperations from 'ephox/snooker/api/TableOperations';
 import { TableSection } from 'ephox/snooker/api/TableSection';
-import { TargetElement, TargetPaste, TargetPasteRows, TargetSelection, OperationCallback } from 'ephox/snooker/model/RunOperation';
+import { OperationCallback, TargetElement, TargetPaste, TargetPasteRows, TargetSelection } from 'ephox/snooker/model/RunOperation';
 import * as Bridge from 'ephox/snooker/test/Bridge';
 
 interface TargetLocation {
@@ -244,9 +244,9 @@ const checkDelete = (
 
   }, (expectedHtml) => {
     Assertions.assertHtml(label, expectedHtml, Html.getOuter(table));
-    Remove.remove(container);
   });
 
+  Remove.remove(container);
   // Ensure all the resize bars are destroyed before of running the next test.
 };
 
@@ -266,9 +266,7 @@ const checkMerge = (
   Insert.append(SugarBody.body(), container);
 
   const target = Bridge.targetStub(selection, bounds, table);
-  const generators = Bridge.generators;
-
-  TableOperations.mergeCells(table, target, generators);
+  TableOperations.mergeCells(table, target, Bridge.generators);
 
   // Let's get rid of size information.
   const all = [ table ].concat(SelectorFilter.descendants(table, 'td,th'));

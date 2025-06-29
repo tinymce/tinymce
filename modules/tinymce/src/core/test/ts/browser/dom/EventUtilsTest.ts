@@ -450,7 +450,7 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
   });
 
   it('ready/DOMContentLoaded (domLoaded = true)', () => {
-    let evt: EventUtilsEvent<any> | undefined;
+    let evt: EventUtilsEvent<unknown> | undefined;
 
     eventUtils.bind(window, 'ready', (e) => {
       evt = e;
@@ -460,11 +460,11 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
 
   it('ready/DOMContentLoaded (document.readyState check)', () => {
     const doc = document as any;
-    let evt: EventUtilsEvent<any> | undefined;
+    let evt: EventUtilsEvent<unknown> | undefined;
 
     try {
       doc.readyState = 'loading';
-    } catch (e) {
+    } catch {
       assert.equal(true, true, `IE doesn't allow us to set document.readyState`);
       return;
     }
@@ -481,7 +481,7 @@ describe('browser.tinymce.core.dom.EventUtilsTest', () => {
     eventUtils.bind(window, 'ready', (e) => {
       evt = e;
     });
-    assert.equal(evt.type, 'ready');
+    assert.equal(evt?.type, 'ready');
   });
 
   it('isDefaultPrevented', () => {

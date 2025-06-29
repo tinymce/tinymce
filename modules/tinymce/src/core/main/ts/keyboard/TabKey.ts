@@ -2,6 +2,7 @@ import Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import { EditorEvent } from '../api/util/EventDispatcher';
 import VK from '../api/util/VK';
+
 import * as MatchKeys from './MatchKeys';
 import * as TableNavigation from './TableNavigation';
 

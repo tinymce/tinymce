@@ -1,16 +1,17 @@
 import { ApproxStructure, Assertions, FocusTools, RealKeys, UiFinder } from '@ephox/agar';
-import { GuiFactory, TestHelpers } from '@ephox/alloy';
+import { GuiFactory } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import { renderSizeInput } from 'tinymce/themes/silver/ui/dialog/SizeInput';
 
+import * as GuiSetup from '../../module/GuiSetup';
 import * as TestExtras from '../../module/TestExtras';
 
 describe('webdriver.tinymce.themes.silver.dialogs.SizeInputSpaceTest', () => {
   const extrasHook = TestExtras.bddSetup();
-  const hook = TestHelpers.GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
+  const hook = GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
     renderSizeInput({
       context: 'any',
       name: 'dimensions',

@@ -38,9 +38,11 @@ describe.skip('browser.tinymce.core.EditorAutoFocusTest', () => {
   const pSetupEditorAutoFocus = (id: string, options: RawEditorOptions) => {
     const height = restOfWindowHeight();
     return new Promise((resolve) => {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       EditorManager.init({
         selector: 'div.tinymce',
         base_url: '/project/tinymce/js/tinymce/',
+        license_key: 'gpl',
         menubar: false,
         statusbar: false,
         height,

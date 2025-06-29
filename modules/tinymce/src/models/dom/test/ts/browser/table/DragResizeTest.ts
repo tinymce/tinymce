@@ -1,7 +1,7 @@
 import { Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Cell } from '@ephox/katamari';
-import { Attribute, Height, Hierarchy, SelectorFind, SugarElement, Width } from '@ephox/sugar';
+import { Attribute, Css, Height, Hierarchy, SelectorFind, SugarBody, SugarElement, Width } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -20,6 +20,7 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
     Mouse.mouseDown(elem);
     Mouse.mouseMoveTo(elem, dx, dy);
     Mouse.mouseUpTo(elem, dx, dy);
+    Mouse.mouseMoveTo(SugarBody.body(), 0, 0);
   };
 
   const dragDropBlocker = (container: SugarElement<HTMLElement>, selector: string, dx: number, dy: number) => {
@@ -28,7 +29,8 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
     const blocker = UiFinder.findIn(container, 'div.ephox-dragster-blocker').getOrDie();
     Mouse.mouseMove(blocker);
     Mouse.mouseMoveTo(blocker, dx, dy);
-    Mouse.mouseUpTo(blocker, dx, dy);
+    Mouse.mouseUp(blocker);
+    Mouse.mouseMoveTo(SugarBody.body(), 0, 0);
   };
 
   const mouseover = (container: SugarElement<HTMLElement>, selector: string) => {
@@ -40,6 +42,7 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
 
   const setStateFrom = (editor: Editor, path: number[]) => {
     const element = Hierarchy.follow(TinyDom.body(editor), path).getOrDie('could not find element') as SugarElement<HTMLElement>;
+    Css.reflow(element);
     const height = Height.get(element);
     const width = Width.get(element);
 
@@ -113,7 +116,10 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
     Attribute.set(elm, 'data-mce-resize', 'false');
   };
 
-  afterEach(() => {
+  afterEach(async () => {
+    // Bedrock used to have a big wait between tests for reporting, that's now gone
+    // turns out the table code needs some time to settle in between tests
+    await Waiter.pWaitBetweenUserActions();
     resetState();
   });
 
@@ -164,6 +170,32 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
     mouseover(TinyDom.body(editor), 'td');
     dragDropBlocker(TinyDom.documentElement(editor), 'div[data-column="0"]', 50, 0);
     assertSizeChange(editor, [ 0, 0, 0, 0 ], { dh: 0, dw: 50 });
+    assertNoDataStyle(editor, [ 0 ]);
+  });
+
+  it('TBA: Resize table smaller with handle, then resize row height bigger by dragging middle border', async () => {
+    const editor = hook.editor();
+    editor.setContent(tableHtml);
+    setStateFrom(editor, [ 0 ]);
+    await pWaitForSelection(editor);
+    dragDrop(TinyDom.body(editor), '#mceResizeHandlese', -10, -10);
+    assertSizeChange(editor, [ 0 ], { dh: -10, dw: -10 });
+    mouseover(TinyDom.body(editor), 'td');
+    dragDropBlocker(TinyDom.documentElement(editor), 'div[data-row="0"]', 0, 50);
+    assertSizeChange(editor, [ 0 ], { dh: 40, dw: -10 });
+    assertNoDataStyle(editor, [ 0 ]);
+  });
+
+  it('TBA: Resize table smaller with handle, then resize row height smaller by dragging middle border', async () => {
+    const editor = hook.editor();
+    editor.setContent(tableHtml);
+    setStateFrom(editor, [ 0 ]);
+    await pWaitForSelection(editor);
+    dragDrop(TinyDom.body(editor), '#mceResizeHandlese', -10, -10);
+    assertSizeChange(editor, [ 0 ], { dh: -10, dw: -10 });
+    mouseover(TinyDom.body(editor), 'td');
+    dragDropBlocker(TinyDom.documentElement(editor), 'div[data-row="0"]', 0, -20);
+    assertSizeChange(editor, [ 0 ], { dh: -30, dw: -10 });
     assertNoDataStyle(editor, [ 0 ]);
   });
 
@@ -254,6 +286,7 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
           setStateFrom(editor, [ 0 ]);
           await pWaitForSelection(editor);
           dragDrop(TinyDom.body(editor), '#mceResizeHandlese', 50, 50);
+          assertSizeChange(editor, [ 0 ], { dh: 50, dw: 50 });
           mouseover(TinyDom.body(editor), 'td');
           dragDropBlocker(TinyDom.documentElement(editor), 'div[data-row="0"]', 0, 50);
           assertSizeChange(editor, [ 0 ], { dh: 100, dw: 50 });
@@ -262,37 +295,15 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
 
         it('TBA: Resize table bigger with handle, then resize row height smaller by dragging middle border', async () => {
           const editor = hook.editor();
+          editor.setContent('');
           editor.setContent(content);
           setStateFrom(editor, [ 0 ]);
           await pWaitForSelection(editor);
           dragDrop(TinyDom.body(editor), '#mceResizeHandlese', 50, 50);
+          assertSizeChange(editor, [ 0 ], { dh: 50, dw: 50 });
           mouseover(TinyDom.body(editor), 'td');
           dragDropBlocker(TinyDom.documentElement(editor), 'div[data-row="0"]', 0, -30);
           assertSizeChange(editor, [ 0 ], { dh: 20, dw: 50 });
-          assertNoDataStyle(editor, [ 0 ]);
-        });
-
-        it('TBA: Resize table smaller with handle, then resize row height bigger by dragging middle border', async () => {
-          const editor = hook.editor();
-          editor.setContent(tableHtml);
-          setStateFrom(editor, [ 0 ]);
-          await pWaitForSelection(editor);
-          dragDrop(TinyDom.body(editor), '#mceResizeHandlese', -10, -10);
-          mouseover(TinyDom.body(editor), 'td');
-          dragDropBlocker(TinyDom.documentElement(editor), 'div[data-row="0"]', 0, 50);
-          assertSizeChange(editor, [ 0 ], { dh: 40, dw: -10 });
-          assertNoDataStyle(editor, [ 0 ]);
-        });
-
-        it('TBA: Resize table smaller with handle, then resize row height smaller by dragging middle border', async () => {
-          const editor = hook.editor();
-          editor.setContent(tableHtml);
-          setStateFrom(editor, [ 0 ]);
-          await pWaitForSelection(editor);
-          dragDrop(TinyDom.body(editor), '#mceResizeHandlese', -10, -10);
-          mouseover(TinyDom.body(editor), 'td');
-          dragDropBlocker(TinyDom.documentElement(editor), 'div[data-row="0"]', 0, -20);
-          assertSizeChange(editor, [ 0 ], { dh: -30, dw: -10 });
           assertNoDataStyle(editor, [ 0 ]);
         });
       });
@@ -305,6 +316,7 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
     setStateFrom(editor, [ 0 ]);
     await pWaitForSelection(editor);
     dragDrop(TinyDom.body(editor), '#mceResizeHandlese', 50, 50);
+    assertSizeChange(editor, [ 0 ], { dh: 50, dw: 50 });
     mouseover(TinyDom.body(editor), 'td');
     dragDropBlocker(TinyDom.documentElement(editor), 'div[data-column="0"]', 50, 0);
     assertSizeChange(editor, [ 0 ], { dh: 50, dw: 50 });
@@ -317,6 +329,7 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
     setStateFrom(editor, [ 0 ]);
     await pWaitForSelection(editor);
     dragDrop(TinyDom.body(editor), '#mceResizeHandlese', 50, 50);
+    assertSizeChange(editor, [ 0 ], { dh: 50, dw: 50 });
     mouseover(TinyDom.body(editor), 'td');
     dragDropBlocker(TinyDom.documentElement(editor), 'div[data-column="0"]', -30, 0);
     assertSizeChange(editor, [ 0 ], { dh: 50, dw: 50 });
@@ -329,6 +342,7 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
     setStateFrom(editor, [ 0 ]);
     await pWaitForSelection(editor);
     dragDrop(TinyDom.body(editor), '#mceResizeHandlese', -10, -10);
+    assertSizeChange(editor, [ 0 ], { dh: -10, dw: -10 });
     mouseover(TinyDom.body(editor), 'td');
     dragDropBlocker(TinyDom.documentElement(editor), 'div[data-column="0"]', 50, 0);
     assertSizeChange(editor, [ 0 ], { dh: -10, dw: -10 });
@@ -341,6 +355,7 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
     setStateFrom(editor, [ 0 ]);
     await pWaitForSelection(editor);
     dragDrop(TinyDom.body(editor), '#mceResizeHandlese', -10, -10);
+    assertSizeChange(editor, [ 0 ], { dh: -10, dw: -10 });
     mouseover(TinyDom.body(editor), 'td');
     dragDropBlocker(TinyDom.documentElement(editor), 'div[data-column="0"]', -20, 0);
     assertSizeChange(editor, [ 0 ], { dh: -10, dw: -10 });
@@ -360,6 +375,7 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
     );
     // Verify resize handle can be used and the other column without data-mce-resize="false" can be resized
     dragDrop(TinyDom.body(editor), '#mceResizeHandlese', 50, 50);
+    assertSizeChange(editor, [ 0 ], { dh: 50, dw: 50 });
     mouseover(TinyDom.body(editor), 'td');
     dragDropBlocker(TinyDom.documentElement(editor), 'div[data-column="1"]', 50, 0);
     assertSizeChange(editor, [ 0 ], { dh: 50, dw: 100 });
@@ -384,6 +400,7 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
     );
     // Verify resize handle can be used and the other column without data-mce-resize="false" can be resized
     dragDrop(TinyDom.body(editor), '#mceResizeHandlese', 50, 50);
+    assertSizeChange(editor, [ 0 ], { dh: 50, dw: 50 });
     mouseover(TinyDom.body(editor), 'td');
     dragDropBlocker(TinyDom.documentElement(editor), 'div[data-column="1"]', 50, 0);
     assertSizeChange(editor, [ 0 ], { dh: 50, dw: 100 });
@@ -408,6 +425,7 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
     );
     // Verify resize handle can be used and the other column without data-mce-resize="false" can be resized
     dragDrop(TinyDom.body(editor), '#mceResizeHandlese', 50, 50);
+    assertSizeChange(editor, [ 0 ], { dh: 50, dw: 50 });
     mouseover(TinyDom.body(editor), 'td');
     dragDropBlocker(TinyDom.documentElement(editor), 'div[data-column="1"]', 50, 0);
     assertSizeChange(editor, [ 0 ], { dh: 50, dw: 100 });
@@ -427,6 +445,7 @@ describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
     );
     // Verify resize handle can be used and the other row without data-mce-resize="false" can be resized
     dragDrop(TinyDom.body(editor), '#mceResizeHandlese', 50, 50);
+    assertSizeChange(editor, [ 0 ], { dh: 50, dw: 50 });
     mouseover(TinyDom.body(editor), 'td');
     dragDropBlocker(TinyDom.documentElement(editor), 'div[data-row="1"]', 0, 50);
     assertSizeChange(editor, [ 0 ], { dh: 100, dw: 50 });

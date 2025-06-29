@@ -92,8 +92,12 @@ const pWaitForAndAssertInputEvents = async (beforeinputEvent: SingletonEvent<Inp
 const pWaitForAndAssertEventsDoNotFire = async (events: SingletonEvent<any>[]): Promise<void> => {
   const thrown = Cell<boolean>(false);
   try {
-    await Waiter.pTryUntilPredicate('Did not fire any paste event',
-      () => Arr.exists(events, (e) => e.isSet()));
+    await Waiter.pTryUntilPredicate(
+      'Did not fire any paste event',
+      () => Arr.exists(events, (e) => e.isSet()),
+      100,
+      500
+    );
   } catch {
     thrown.set(true);
   }

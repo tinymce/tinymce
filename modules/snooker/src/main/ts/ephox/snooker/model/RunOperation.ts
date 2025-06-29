@@ -12,6 +12,7 @@ import { Warehouse } from '../api/Warehouse';
 import * as Redraw from '../operate/Redraw';
 import * as LockedColumnUtils from '../util/LockedColumnUtils';
 import { CompElm, RowCell, RowElement } from '../util/TableTypes';
+
 import * as Transitions from './Transitions';
 
 export interface OperationBehaviours {
@@ -101,42 +102,50 @@ export type GenWrap<GW extends GeneratorsWrapper> = (g: Generators) => GW;
 
 export type OperationCallback<T> = (table: SugarElement<HTMLTableElement>, target: T, generators: Generators, behaviours?: OperationBehaviours) => Optional<RunOperationOutput>;
 
-const run = <RAW, INFO, GW extends GeneratorsWrapper>
-(operation: Operation<INFO, GW>, extract: Extract<RAW, INFO>, adjustment: Adjustment<INFO>, postAction: PostAction, genWrappers: GenWrap<GW>): OperationCallback<RAW> =>
-  (table: SugarElement<HTMLTableElement>, target: RAW, generators: Generators, behaviours?: OperationBehaviours): Optional<RunOperationOutput> => {
-    const warehouse = Warehouse.fromTable(table);
-    const tableSection = Optional.from(behaviours?.section).getOrThunk(TableSection.fallback);
-    const output = extract(warehouse, target).map((info) => {
-      const model = fromWarehouse(warehouse, generators);
-      const result = operation(model, info, Compare.eq, genWrappers(generators), tableSection);
-      const lockedColumns = LockedColumnUtils.getLockedColumnsFromGrid(result.grid);
-      const grid = toDetailList(result.grid);
-      return {
-        info,
-        grid,
-        cursor: result.cursor,
-        lockedColumns
-      };
-    });
+const run = <RAW, INFO, GW extends GeneratorsWrapper> (
+  operation: Operation<INFO, GW>,
+  extract: Extract<RAW, INFO>,
+  adjustment: Adjustment<INFO>,
+  postAction: PostAction,
+  genWrappers: GenWrap<GW>,
+  table: SugarElement<HTMLTableElement>,
+  target: RAW,
+  generators: Generators,
+  behaviours?: OperationBehaviours
+): Optional<RunOperationOutput> => {
+  const warehouse = Warehouse.fromTable(table);
+  const tableSection = Optional.from(behaviours?.section).getOrThunk(TableSection.fallback);
+  const output = extract(warehouse, target).map((info) => {
+    const model = fromWarehouse(warehouse, generators);
+    const result = operation(model, info, Compare.eq, genWrappers(generators), tableSection);
+    const lockedColumns = LockedColumnUtils.getLockedColumnsFromGrid(result.grid);
+    const grid = toDetailList(result.grid);
+    return {
+      info,
+      grid,
+      cursor: result.cursor,
+      lockedColumns
+    };
+  });
 
-    return output.bind((out) => {
-      const newElements = Redraw.render(table, out.grid);
-      const tableSizing = Optional.from(behaviours?.sizing).getOrThunk(() => TableSize.getTableSize(table));
-      const resizing = Optional.from(behaviours?.resize).getOrThunk(ResizeBehaviour.preserveTable);
-      adjustment(table, out.grid, out.info, { sizing: tableSizing, resize: resizing, section: tableSection });
-      postAction(table);
-      // Update locked cols attribute
-      Attribute.remove(table, LockedColumnUtils.LOCKED_COL_ATTR);
-      if (out.lockedColumns.length > 0) {
-        Attribute.set(table, LockedColumnUtils.LOCKED_COL_ATTR, out.lockedColumns.join(','));
-      }
-      return Optional.some({
-        cursor: out.cursor,
-        newRows: newElements.newRows,
-        newCells: newElements.newCells
-      });
+  return output.bind((out) => {
+    const newElements = Redraw.render(table, out.grid);
+    const tableSizing = Optional.from(behaviours?.sizing).getOrThunk(() => TableSize.getTableSize(table));
+    const resizing = Optional.from(behaviours?.resize).getOrThunk(ResizeBehaviour.preserveTable);
+    adjustment(table, out.grid, out.info, { sizing: tableSizing, resize: resizing, section: tableSection });
+    postAction(table);
+    // Update locked cols attribute
+    Attribute.remove(table, LockedColumnUtils.LOCKED_COL_ATTR);
+    if (out.lockedColumns.length > 0) {
+      Attribute.set(table, LockedColumnUtils.LOCKED_COL_ATTR, out.lockedColumns.join(','));
+    }
+    return Optional.some({
+      cursor: out.cursor,
+      newRows: newElements.newRows,
+      newCells: newElements.newCells
     });
-  };
+  });
+};
 
 const onCell = (warehouse: Warehouse, target: TargetElement): Optional<Structs.DetailExt> =>
   TableLookup.cell(target.element).bind((cell) => findInWarehouse(warehouse, cell));
@@ -190,17 +199,17 @@ const onUnlockedUnmergable = (warehouse: Warehouse, target: TargetUnmergable): O
   onUnmergable(warehouse, target).filter((cells) => allUnlocked(warehouse, cells));
 
 export {
-  run,
-  toDetailList,
   onCell,
   onCells,
+  onMergable,
   onPaste,
   onPasteByEditor,
-  onMergable,
-  onUnmergable,
   onUnlockedCell,
   onUnlockedCells,
   onUnlockedMergable,
-  onUnlockedUnmergable
+  onUnlockedUnmergable,
+  onUnmergable,
+  run,
+  toDetailList
 };
 

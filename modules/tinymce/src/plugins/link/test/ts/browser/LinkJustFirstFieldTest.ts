@@ -30,8 +30,7 @@ describe('browser.tinymce.plugins.link.JustFirstFieldTest', () => {
     editor.execCommand('mceLink');
     await TinyUiActions.pWaitForDialog(editor);
     await FocusTools.pTryOnSelector('Selector should be in first field of dialog', doc, '.tox-dialog input');
-    const focused = FocusTools.setActiveValue(doc, 'http://goo');
-    TestLinkUi.fireEvent(focused, 'input');
+    FocusTools.setActiveValue(doc, 'http://goo');
     TinyUiActions.keydown(editor, Keys.enter());
     await TestLinkUi.pAssertContentPresence(editor, {
       'a[href="http://goo"]': 1

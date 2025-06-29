@@ -38,7 +38,7 @@ describe('browser.tinymce.plugins.media.IsCachedResponseTest', () => {
     await TinyUiActions.pWaitForDialog(editor);
     const input = await Utils.pSetSourceInput(editor, 'test');
     Utils.fakeEvent(input, 'paste');
-    await Waiter.pWait(0); // wait is needed because paste is triggered async
+    await Waiter.pWaitBetweenUserActions();
     await Utils.pAssertEmbedData(editor, '<div>x</div>');
     await Utils.pSetSourceInput(editor, 'XXX');
     TinyUiActions.submitDialog(editor);

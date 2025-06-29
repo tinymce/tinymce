@@ -3,10 +3,13 @@ import { Adjustments, ResizeBehaviour, ResizeWire, Sizes, TableConversions, Tabl
 import { Attribute, Css, SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import { DisabledStateChangeEvent } from 'tinymce/core/api/EventTypes';
+import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Utils from '../core/TableUtils';
 import * as TableWire from '../core/TableWire';
 import * as TableSize from '../queries/TableSize';
+
 import * as Events from './Events';
 import * as Options from './Options';
 
@@ -119,10 +122,6 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
     tableResize.on((sz) => {
       sz.destroy();
     });
-
-    resizeWire.on((w) => {
-      TableWire.remove(editor, w);
-    });
   };
 
   editor.on('init', () => {
@@ -209,28 +208,30 @@ export const TableResizeHandler = (editor: Editor): TableResizeHandler => {
     }
   });
 
-  editor.on('SwitchMode', () => {
+  const showResizeBars = () => {
     tableResize.on((resize) => {
-      if (editor.mode.isReadOnly()) {
-        resize.off();
-        resize.hideBars();
-      } else {
-        resize.on();
-        resize.showBars();
-      }
+      resize.on();
+      resize.showBars();
     });
+  };
+
+  const hideResizeBars = () => {
+    tableResize.on((resize) => {
+      resize.off();
+      resize.hideBars();
+    });
+  };
+
+  editor.on('DisabledStateChange', (e: EditorEvent<DisabledStateChangeEvent>) => {
+    e.state ? hideResizeBars() : showResizeBars();
   });
 
-  editor.on('dragstart dragend', (e) => {
-    tableResize.on((resize) => {
-      if (e.type === 'dragstart') {
-        resize.hideBars();
-        resize.off();
-      } else {
-        resize.on();
-        resize.showBars();
-      }
-    });
+  editor.on('SwitchMode', () => {
+    editor.mode.isReadOnly() ? hideResizeBars() : showResizeBars();
+  });
+
+  editor.on('dragstart dragend', (e: EditorEvent<DragEvent>) => {
+    e.type === 'dragstart' ? hideResizeBars() : showResizeBars();
   });
 
   editor.on('remove', () => {

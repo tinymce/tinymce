@@ -2,6 +2,8 @@ import { Arr } from '@ephox/katamari';
 import { Focus, SugarElement, Traverse } from '@ephox/sugar';
 
 import { keyevent, MixedKeyModifiers } from '../keyboard/FakeKeys';
+import * as TypeInInput from '../keyboard/TypeInInput';
+
 import { Step } from './Step';
 
 export type KeyModifiers = MixedKeyModifiers;
@@ -49,6 +51,8 @@ const sKeyup = sFakeKey(keyupTypes);
 const sKeypress = sFakeKey(keypressTypes);
 const sKeystroke = sFakeKey(keystrokeTypes);
 
+const pTypeTextInInput = TypeInInput.pTypeTextInInput;
+
 export {
   keydown,
   keyup,
@@ -63,5 +67,6 @@ export {
   sKeydown,
   sKeyup,
   sKeypress,
-  sKeystroke
+  sKeystroke,
+  pTypeTextInInput
 };

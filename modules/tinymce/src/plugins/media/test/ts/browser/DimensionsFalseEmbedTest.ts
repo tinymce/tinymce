@@ -47,9 +47,9 @@ describe('browser.tinymce.plugins.media.DimensionsFalseEmbedTest', () => {
   it('TBA: Open dialog, assert dimensions fields are not present while media_dimensions is false', async () => {
     const editor = hook.editor();
     const dialog = await Utils.pOpenDialog(editor);
-    UiFinder.exists(dialog, Utils.selectors.source);
-    UiFinder.notExists(dialog, Utils.selectors.width);
-    UiFinder.notExists(dialog, Utils.selectors.height);
+    UiFinder.exists(dialog, Utils.selectors.sourceLabel);
+    UiFinder.notExists(dialog, Utils.selectors.widthLabel);
+    UiFinder.notExists(dialog, Utils.selectors.heightLabel);
     TinyUiActions.submitDialog(editor);
     await Waiter.pTryUntil(
       'Wait for dialog to close',

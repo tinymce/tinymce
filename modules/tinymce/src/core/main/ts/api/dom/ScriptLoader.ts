@@ -1,6 +1,7 @@
 import { Arr, Fun, Obj, Optional, Type, Unique } from '@ephox/katamari';
 
 import Tools from '../util/Tools';
+
 import DOMUtils from './DOMUtils';
 
 /**
@@ -31,6 +32,7 @@ const DOM = DOMUtils.DOM;
 
 export interface ScriptLoaderSettings {
   referrerPolicy?: ReferrerPolicy;
+  crossOrigin?: string;
 }
 
 export interface ScriptLoaderConstructor {
@@ -62,6 +64,10 @@ class ScriptLoader {
 
   public _setReferrerPolicy(referrerPolicy: ReferrerPolicy): void {
     this.settings.referrerPolicy = referrerPolicy;
+  }
+
+  public _setCrossOrigin(crossOrigin: string): void {
+    this.settings.crossOrigin = crossOrigin;
   }
 
   /**
@@ -108,6 +114,11 @@ class ScriptLoader {
       if (this.settings.referrerPolicy) {
         // Note: Don't use elm.referrerPolicy = ... here as it doesn't work on Safari
         dom.setAttrib(elm, 'referrerpolicy', this.settings.referrerPolicy);
+      }
+
+      const crossOrigin = this.settings.crossOrigin;
+      if (Type.isString(crossOrigin)) {
+        dom.setAttrib(elm, 'crossorigin', crossOrigin);
       }
 
       elm.onload = done;

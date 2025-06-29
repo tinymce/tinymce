@@ -6,6 +6,7 @@ import * as NodeType from '../../dom/NodeType';
 import * as FilterNode from '../../html/FilterNode';
 import * as FilterRegistry from '../../html/FilterRegistry';
 import * as InvalidNodes from '../../html/InvalidNodes';
+import * as KeepHtmlComments from '../../html/KeepHtmlComments';
 import * as LegacyFilter from '../../html/LegacyFilter';
 import * as Namespace from '../../html/Namespace';
 import * as ParserFilters from '../../html/ParserFilters';
@@ -13,6 +14,7 @@ import { isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../..
 import { getSanitizer, internalElementAttr } from '../../html/Sanitization';
 import { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
+
 import AstNode from './Node';
 import Schema, { SchemaMap, SchemaRegExpMap, getTextRootBlockElements } from './Schema';
 
@@ -29,6 +31,8 @@ import Schema, { SchemaMap, SchemaRegExpMap, getTextRootBlockElements } from './
  * @class tinymce.html.DomParser
  * @version 3.4
  */
+
+const extraBlockLikeElements = [ 'script', 'style', 'template', 'param' ];
 
 const makeMap = Tools.makeMap, extend = Tools.extend;
 
@@ -53,6 +57,7 @@ export interface DomParserSettings {
   allow_html_data_urls?: boolean;
   allow_svg_data_urls?: boolean;
   allow_conditional_comments?: boolean;
+  allow_html_in_comments?: boolean;
   allow_html_in_named_anchor?: boolean;
   allow_script_urls?: boolean;
   allow_unsafe_link_target?: boolean;
@@ -61,6 +66,8 @@ export interface DomParserSettings {
   convert_fonts_to_spans?: boolean;
   convert_unsafe_embeds?: boolean;
   document?: Document;
+  extended_mathml_elements?: string[];
+  extended_mathml_attributes?: string[];
   fix_list_elements?: boolean;
   font_size_legacy_values?: string;
   forced_root_block?: boolean | string;
@@ -88,7 +95,13 @@ interface DomParser {
 
 type WalkerCallback = (node: AstNode) => void;
 
-const transferChildren = (parent: AstNode, nativeParent: Node, specialElements: SchemaRegExpMap, nsSanitizer: (el: Element) => void) => {
+const transferChildren = (
+  parent: AstNode,
+  nativeParent: Node,
+  specialElements: SchemaRegExpMap,
+  nsSanitizer: (el: Element) => void,
+  decodeComments: boolean
+) => {
   const parentName = parent.name;
   // Exclude the special elements where the content is RCDATA as their content needs to be parsed instead of being left as plain text
   // See: https://html.spec.whatwg.org/multipage/parsing.html#parsing-html-fragments
@@ -115,12 +128,19 @@ const transferChildren = (parent: AstNode, nativeParent: Node, specialElements: 
       if (isSpecial) {
         child.raw = true;
       }
-    } else if (NodeType.isComment(nativeChild) || NodeType.isCData(nativeChild) || NodeType.isPi(nativeChild)) {
+    } else if (NodeType.isComment(nativeChild)) {
+      child.value = decodeComments ? KeepHtmlComments.decodeData(nativeChild.data) : nativeChild.data;
+    } else if (NodeType.isCData(nativeChild) || NodeType.isPi(nativeChild)) {
       child.value = nativeChild.data;
     }
 
-    if (!Namespace.isNonHtmlElementRootName(child.name)) {
-      transferChildren(child, nativeChild, specialElements, nsSanitizer);
+    if (NodeType.isTemplate(nativeChild)) {
+      const content = AstNode.create('#text');
+      content.value = nativeChild.innerHTML;
+      content.raw = true;
+      child.append(content);
+    } else if (!Namespace.isNonHtmlElementRootName(child.name)) {
+      transferChildren(child, nativeChild, specialElements, nsSanitizer, decodeComments);
     }
 
     parent.append(child);
@@ -157,7 +177,7 @@ const whitespaceCleaner = (root: AstNode, schema: Schema, settings: DomParserSet
   const validate = settings.validate;
   const nonEmptyElements = schema.getNonEmptyElements();
   const whitespaceElements = schema.getWhitespaceElements();
-  const blockElements: Record<string, string> = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
+  const blockElements: Record<string, string> = extend(makeMap(extraBlockLikeElements), schema.getBlockElements());
   const textRootBlockElements = getTextRootBlockElements(schema);
   const allWhiteSpaceRegExp = /[ \t\r\n]+/g;
   const startWhiteSpaceRegExp = /^[ \t\r\n]+/;
@@ -282,6 +302,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     validate: true,
     root_name: 'body',
     sanitize: true,
+    allow_html_in_comments: false,
     ...settings
   };
 
@@ -390,7 +411,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
   };
 
   const addRootBlocks = (rootNode: AstNode, rootBlockName: string): void => {
-    const blockElements = extend(makeMap('script,style,head,html,body,title,meta,param'), schema.getBlockElements());
+    const blockElements = extend(makeMap(extraBlockLikeElements), schema.getBlockElements());
     const startWhiteSpaceRegExp = /^[ \t\r\n]+/;
     const endWhiteSpaceRegExp = /[ \t\r\n]+$/;
 
@@ -462,7 +483,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
 
     // Create the AST representation
     const rootNode = new AstNode(rootName, 11);
-    transferChildren(rootNode, element, schema.getSpecialElements(), sanitizer.sanitizeNamespaceElement);
+    transferChildren(rootNode, element, schema.getSpecialElements(), sanitizer.sanitizeNamespaceElement, defaultedSettings.sanitize && defaultedSettings.allow_html_in_comments);
 
     // This next line is needed to fix a memory leak in chrome and firefox.
     // For more information see TINY-9186
@@ -488,9 +509,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     // Fix invalid children or report invalid children in a contextual parsing
     if (validate && invalidChildren.length > 0) {
       if (args.context) {
-        const { pass: topLevelChildren, fail: otherChildren } = Arr.partition(invalidChildren, (child) => child.parent === rootNode);
-        InvalidNodes.cleanInvalidNodes(otherChildren, schema, rootNode, matchFinder);
-        args.invalid = topLevelChildren.length > 0;
+        args.invalid = true;
       } else {
         InvalidNodes.cleanInvalidNodes(invalidChildren, schema, rootNode, matchFinder);
       }

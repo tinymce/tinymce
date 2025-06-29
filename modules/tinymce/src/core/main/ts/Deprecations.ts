@@ -23,7 +23,12 @@ const deprecatedOptions: string[] = [];
 
 const removedPlugins = 'bbcode,colorpicker,contextmenu,fullpage,legacyoutput,spellchecker,template,textcolor,rtc'.split(',');
 
-const deprecatedPlugins: DeprecatedPlugin[] = [];
+const deprecatedPlugins: DeprecatedPlugin[] = [
+  {
+    name: 'export',
+    replacedWith: 'Export to PDF'
+  },
+];
 
 const getMatchingOptions = (options: RawEditorOptions, searchingFor: string[]): string[] => {
   const settingNames = Arr.filter(searchingFor, (setting) => Obj.has(options, setting));
@@ -119,6 +124,17 @@ const logWarnings = (rawOptions: RawEditorOptions, normalizedOptions: Normalized
   logDeprecatedWarnings(rawOptions, normalizedOptions);
 };
 
+const deprecatedFeatures = {
+  fire: 'The "fire" event api has been deprecated and will be removed in TinyMCE 9. Use "dispatch" instead.',
+  selectionSetContent: 'The "editor.selection.setContent" method has been deprecated and will be removed in TinyMCE 9. Use "editor.insertContent" instead.'
+};
+
+const logFeatureDeprecationWarning = (feature: keyof typeof deprecatedFeatures): void => {
+  // eslint-disable-next-line no-console
+  console.warn(deprecatedFeatures[feature], new Error().stack);
+};
+
 export {
-  logWarnings
+  logWarnings,
+  logFeatureDeprecationWarning
 };

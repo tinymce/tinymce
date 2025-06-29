@@ -21,7 +21,7 @@ try {
   // Make sure we can set a value, as storage may also be full
   localStorage.setItem(test, test);
   localStorage.removeItem(test);
-} catch (e) {
+} catch {
   localStorage = FakeStorage.create();
 }
 

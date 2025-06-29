@@ -5,6 +5,7 @@ import { SimpleGenerators } from '../api/Generators';
 import * as Structs from '../api/Structs';
 import * as LockedColumnUtils from '../util/LockedColumnUtils';
 import { CellElement } from '../util/TableTypes';
+
 import * as GridRow from './GridRow';
 
 export interface Delta {

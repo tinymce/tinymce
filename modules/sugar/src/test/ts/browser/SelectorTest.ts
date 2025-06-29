@@ -67,19 +67,19 @@ UnitTest.test('SelectorTest', () => {
   Checkers.checkList([ TestPage.s1, TestPage.s2, TestPage.s3, TestPage.s4 ], SelectorFilter.descendants(TestPage.container, 'span'));
   Checkers.checkList([], SelectorFilter.descendants(TestPage.container, 'blockquote'));
 
-  Assert.eq('', true, SelectorExists.any('p'));
-  Assert.eq('', false, SelectorExists.any('table'));
-  Assert.eq('', true, SelectorExists.ancestor(TestPage.t1, 'p'));
-  Assert.eq('', false, SelectorExists.ancestor(TestPage.t1, 'span'));
-  Assert.eq('', true, SelectorExists.sibling(TestPage.p2, 'p'));
-  Assert.eq('', false, SelectorExists.sibling(TestPage.t1, 'p'));
-  Assert.eq('', true, SelectorExists.child(TestPage.p1, 'span'));
-  Assert.eq('', false, SelectorExists.child(TestPage.p2, 'label'));
-  Assert.eq('', true, SelectorExists.descendant(TestPage.p2, 'span'));
-  Assert.eq('', false, SelectorExists.closest(TestPage.p1, 'span'));
-  Assert.eq('', true, SelectorExists.closest(TestPage.p1, 'p'));
-  Assert.eq('', true, SelectorExists.closest(TestPage.s1, 'p'));
-  Assert.eq('', true, SelectorExists.closest(TestPage.t1, 'p'));
+  Assert.eq('expect to find a paragraph', true, SelectorExists.any('p'));
+  Assert.eq('do not expect any tables', false, SelectorExists.any('table'));
+  Assert.eq('expect t1 is in a paragraph', true, SelectorExists.ancestor(TestPage.t1, 'p'));
+  Assert.eq('do not expect t1 is in a span', false, SelectorExists.ancestor(TestPage.t1, 'span'));
+  Assert.eq('expect t2 is in a paragraph', true, SelectorExists.sibling(TestPage.p2, 'p'));
+  Assert.eq('do not expect t1 beside a paragraph', false, SelectorExists.sibling(TestPage.t1, 'p'));
+  Assert.eq('expect a span in p1', true, SelectorExists.child(TestPage.p1, 'span'));
+  Assert.eq('do not expect a label in p2', false, SelectorExists.child(TestPage.p2, 'label'));
+  Assert.eq('expect a span in p2', true, SelectorExists.descendant(TestPage.p2, 'span'));
+  Assert.eq('do not expect a span in p1', false, SelectorExists.closest(TestPage.p1, 'span'));
+  Assert.eq('expect the closest of p1 is a paragraph', true, SelectorExists.closest(TestPage.p1, 'p'));
+  Assert.eq('expect the closest of s1 is a paragraph', true, SelectorExists.closest(TestPage.s1, 'p'));
+  Assert.eq('expect the closest of t1 is a paragraph', true, SelectorExists.closest(TestPage.t1, 'p'));
 
   // simple selectors
   Assert.eq('Text node should not match "p"', false, Selectors.is(TestPage.t1, 'p'));

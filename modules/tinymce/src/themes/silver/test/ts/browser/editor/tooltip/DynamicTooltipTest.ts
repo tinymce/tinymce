@@ -56,7 +56,8 @@ describe('browser.tinymce.themes.silver.editor.TooltipShortcutTest', () => {
       await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
       TinyUiActions.clickOnUi(editor, 'button[data-mce-name="Custom color"]');
       const dialog = await TinyUiActions.pWaitForDialog(editor);
-      const input = UiFinder.findIn<HTMLInputElement>(dialog, 'label:contains("#") + input').getOrDie();
+      const input = UiFinder.findTargetByLabel<HTMLInputElement>(dialog, '#').getOrDie();
+
       UiControls.setValue(input, '123123');
       const evt = new Event('input', {
         bubbles: true,

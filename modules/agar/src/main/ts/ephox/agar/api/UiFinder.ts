@@ -2,12 +2,14 @@ import { Fun, Result } from '@ephox/katamari';
 import { SugarElement, Truncate, Visibility } from '@ephox/sugar';
 
 import * as UiSearcher from '../find/UiSearcher';
+
 import { Chain } from './Chain';
 import * as Guard from './Guard';
 import { Step } from './Step';
 
 const findIn = UiSearcher.findIn;
 const findAllIn = UiSearcher.findAllIn;
+const findTargetByLabel = UiSearcher.findTargetByLabel;
 
 const exists = (container: SugarElement<Node>, selector: string): void => {
   findIn(container, selector).fold(
@@ -56,11 +58,18 @@ const cFindWithState = <T extends Element>(selector: string, predicate: (element
     cHasState(predicate)
   ]);
 
-// Wait for a selector to have state. Max wait time: 10 seconds.
+// Wait for a selector to have state. Max wait time: 2 seconds.
 const cWaitForState = <T extends Element>(message: string, selector: string, predicate: (element: SugarElement<T>) => boolean): Chain<SugarElement<Node>, SugarElement<T>> =>
   Chain.control(
     cFindWithState(selector, predicate),
-    Guard.tryUntil(message, 10, 10000)
+    Guard.tryUntil(message, 10, 2000)
+  );
+
+// Wait for a selector to have state. Max wait time: 2 seconds.
+const cWaitForNotExists = <T extends Element>(message: string, selector: string): Chain<SugarElement<T>, SugarElement<T>> =>
+  Chain.control(
+    cNotExists(selector),
+    Guard.tryUntil(message, 10, 2000)
   );
 
 const sExists = <T>(container: SugarElement<Node>, selector: string): Step<T, T> =>
@@ -88,6 +97,10 @@ const cFindAllIn = <T extends Element>(selector: string): Chain<SugarElement<Nod
 const pWaitFor = <T extends Element>(message: string, container: SugarElement<Node>, selector: string): Promise<SugarElement<T>> =>
   Chain.toPromise(cWaitFor<T>(message, selector))(container);
 
+const pWaitForNotExists = async <T extends Element>(message: string, container: SugarElement<T>, selector: string): Promise<void> => {
+  await Chain.toPromise(cWaitForNotExists<T>(message, selector))(container);
+};
+
 const pWaitForVisible = <T extends HTMLElement>(message: string, container: SugarElement<Node>, selector: string): Promise<SugarElement<T>> =>
   Chain.toPromise(cWaitForVisible<T>(message, selector))(container);
 
@@ -100,6 +113,7 @@ const pWaitForState = <T extends Element>(message: string, container: SugarEleme
 export {
   findIn,
   findAllIn,
+  findTargetByLabel,
   exists,
   notExists,
 
@@ -112,6 +126,7 @@ export {
 
   cExists,
   cNotExists,
+  cWaitForNotExists,
 
   cWaitFor,
   cWaitForVisible,
@@ -124,5 +139,6 @@ export {
   pWaitFor,
   pWaitForVisible,
   pWaitForHidden,
-  pWaitForState
+  pWaitForState,
+  pWaitForNotExists
 };

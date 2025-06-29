@@ -1,15 +1,17 @@
-import { Keys } from '@ephox/agar';
 import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, Behaviour, Button, Disabling, Focusing, FocusInsideModes, Input, Keying, Memento, NativeEvents, Representing, SystemEvents, Tooltipping } from '@ephox/alloy';
 import { Arr, Cell, Fun, Id, Optional, Type } from '@ephox/katamari';
 import { Focus, SugarElement, Traverse } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
+import VK from 'tinymce/core/api/util/VK';
 import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
+import * as Options from '../../../api/Options';
 import { renderIconFromPack } from '../../button/ButtonSlices';
 import { onControlAttached, onControlDetached } from '../../controls/Controls';
 import { updateMenuText, UpdateMenuTextEvent } from '../../dropdown/CommonDropdown';
 import { onSetupEvent } from '../ControlUtils';
+
 import { NumberInputSpec } from './FontSizeBespoke';
 
 interface BespokeSelectApi {
@@ -22,11 +24,11 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
   const getValueFromCurrentComp = (comp: Optional<AlloyComponent>): string =>
     comp.map((alloyComp) => Representing.getValue(alloyComp)).getOr('');
 
-  const onSetup = onSetupEvent(editor, 'NodeChange SwitchMode', (api: BespokeSelectApi) => {
+  const onSetup = onSetupEvent(editor, 'NodeChange SwitchMode DisabledStateChange', (api: BespokeSelectApi) => {
     const comp = api.getComponent();
     currentComp = Optional.some(comp);
     spec.updateInputValue(comp);
-    Disabling.set(comp, !editor.selection.isEditable());
+    Disabling.set(comp, !editor.selection.isEditable() || Options.isDisabled(editor));
   });
 
   const getApi = (comp: AlloyComponent): BespokeSelectApi => ({ getComponent: Fun.constant(comp) });
@@ -75,8 +77,8 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
     const editorOffCellStepButton = Cell(Fun.noop);
     const translatedTooltip = backstage.shared.providers.translate(tooltip);
     const altExecuting = Id.generate('altExecuting');
-    const onSetup = onSetupEvent(editor, 'NodeChange SwitchMode', (api: BespokeSelectApi) => {
-      Disabling.set(api.getComponent(), !editor.selection.isEditable());
+    const onSetup = onSetupEvent(editor, 'NodeChange SwitchMode DisabledStateChange', (api: BespokeSelectApi) => {
+      Disabling.set(api.getComponent(), !editor.selection.isEditable() || Options.isDisabled(editor));
     });
 
     const onClick = (comp: AlloyComponent) => {
@@ -108,7 +110,7 @@ const createBespokeNumberInput = (editor: Editor, backstage: UiFactoryBackstage,
           onControlAttached({ onSetup, getApi }, editorOffCellStepButton),
           onControlDetached({ getApi }, editorOffCellStepButton),
           AlloyEvents.run(NativeEvents.keydown(), (comp, se) => {
-            if (se.event.raw.keyCode === Keys.space() || se.event.raw.keyCode === Keys.enter()) {
+            if (se.event.raw.keyCode === VK.SPACEBAR || se.event.raw.keyCode === VK.ENTER) {
               if (!Disabling.isDisabled(comp)) {
                 action(false);
               }

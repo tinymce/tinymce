@@ -1,5 +1,8 @@
 import { Editor } from './EditorTypes';
 
+/*
+  This file exists to avoid depending on the tinymce package, because mcagar supports multiple versions of the editor.
+ */
 const get = <R>(editor: Editor, name: string): R => {
   if (editor.options) {
     return editor.options.get(name);

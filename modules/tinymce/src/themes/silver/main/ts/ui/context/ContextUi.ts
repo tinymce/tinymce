@@ -3,7 +3,9 @@ import {
   SketchSpec
 } from '@ephox/alloy';
 import { Arr, Cell, Id, Optional, Result } from '@ephox/katamari';
-import { Class, Css, EventArgs, Focus, SugarElement, SugarShadowDom, Width } from '@ephox/sugar';
+import { Class, Compare, Css, EventArgs, Focus, SugarElement, SugarShadowDom, Width } from '@ephox/sugar';
+
+import * as ContextToolbarFocus from './ContextToolbarFocus';
 
 const forwardSlideEvent = Id.generate('forward-slide');
 export interface ForwardSlideEvent extends CustomEvent {
@@ -21,10 +23,23 @@ export interface ChangeSlideEvent extends CustomEvent {
 
 const resizingClass = 'tox-pop--resizing';
 
-const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: AlloyComponent }): SketchSpec => {
+interface ContextToolbarSpec {
+  readonly onEscape: () => Optional<boolean>;
+  readonly sink: AlloyComponent;
+  readonly onHide: () => void;
+  readonly onBack: () => void;
+  readonly focusElement: (el: SugarElement<HTMLElement>) => void;
+}
+
+export interface ContextToolbarRenderResult {
+  readonly sketch: SketchSpec;
+  readonly inSubtoolbar: () => boolean;
+}
+
+const renderContextToolbar = (spec: ContextToolbarSpec): ContextToolbarRenderResult => {
   const stack = Cell<Array<{ bar: AlloyComponent; focus: Optional<SugarElement<HTMLElement>> }>>([ ]);
 
-  return InlineView.sketch({
+  const sketch = InlineView.sketch({
     dom: {
       tag: 'div',
       classes: [ 'tox-pop' ]
@@ -42,6 +57,11 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
       Css.remove(comp.element, 'width');
     },
 
+    onHide: () => {
+      stack.set([ ]);
+      spec.onHide();
+    },
+
     inlineBehaviours: Behaviour.derive([
       AddEventsBehaviour.config('context-toolbar-events', [
         AlloyEvents.runOnSource<EventArgs<TransitionEvent>>(NativeEvents.transitionend(), (comp, se) => {
@@ -55,21 +75,46 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
           const elem = comp.element;
           // If it was partially through a slide, clear that and measure afresh
           Css.remove(elem, 'width');
+
           const currentWidth = Width.get(elem);
+          const hadFocus = Focus.search(comp.element).isSome();
+
+          // Remove these so that we can property measure the width of the context form content
+          Css.remove(elem, 'left');
+          Css.remove(elem, 'right');
+          Css.remove(elem, 'max-width');
 
           InlineView.setContent(comp, se.event.contents);
           Class.add(elem, resizingClass);
+
           const newWidth = Width.get(elem);
+
+          // Reposition without transition to avoid it from being animated from previous position
+          Css.set(elem, 'transition', 'none');
+          InlineView.reposition(comp);
+          Css.remove(elem, 'transition');
+
           Css.set(elem, 'width', currentWidth + 'px');
-          InlineView.getContent(comp).each((newContents) => {
-            se.event.focus.bind((f) => {
-              Focus.focus(f);
-              return Focus.search(elem);
-            }).orThunk(() => {
-              Keying.focusIn(newContents);
-              return Focus.active(SugarShadowDom.getRootNode(elem));
-            });
-          });
+
+          se.event.focus.fold(
+            () => {
+              if (hadFocus) {
+                ContextToolbarFocus.focusIn(comp);
+              }
+            },
+            (f) => {
+              Focus.active(SugarShadowDom.getRootNode(comp.element)).fold(
+                () => Focus.focus(f),
+                (active) => {
+                  // We need this extra check since if the focus is aleady on the iframe we don't want to call focus on it again since that closes the context toolbar
+                  if (!Compare.eq(active, f)) {
+                    spec.focusElement(f);
+                  }
+                }
+              );
+            }
+          );
+
           setTimeout(() => {
             Css.set(comp.element, 'width', newWidth + 'px');
           }, 0);
@@ -91,6 +136,8 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
         }),
 
         AlloyEvents.run<BackwardSlideEvent>(backSlideEvent, (comp, _se) => {
+          spec.onBack();
+
           Arr.last(stack.get()).each((last) => {
             stack.set(stack.get().slice(0, stack.get().length - 1));
             AlloyTriggers.emitWith(comp, changeSlideEvent, {
@@ -101,13 +148,12 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
             });
           });
         })
-
       ]),
       Keying.config({
         mode: 'special',
         onEscape: (comp) => Arr.last(stack.get()).fold(
           () =>
-          // Escape just focuses the content. It no longer closes the toolbar.
+            // Escape just focuses the content. It no longer closes the toolbar.
             spec.onEscape(),
           (_) => {
             AlloyTriggers.emit(comp, backSlideEvent);
@@ -119,6 +165,10 @@ const renderContextToolbar = (spec: { onEscape: () => Optional<boolean>; sink: A
     lazySink: () => Result.value(spec.sink)
   });
 
+  return {
+    sketch,
+    inSubtoolbar: () => stack.get().length > 0
+  };
 };
 
 export {

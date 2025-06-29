@@ -2,6 +2,7 @@ import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Optional, Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
+
 import { FormComponentWithLabel, formComponentWithLabelFields, FormComponentWithLabelSpec } from './FormComponent';
 
 export interface TextAreaSpec extends FormComponentWithLabelSpec {
@@ -10,6 +11,7 @@ export interface TextAreaSpec extends FormComponentWithLabelSpec {
   maximized?: boolean;
   enabled?: boolean;
   context?: string;
+  spellcheck?: boolean;
 }
 
 export interface TextArea extends FormComponentWithLabel {
@@ -18,6 +20,7 @@ export interface TextArea extends FormComponentWithLabel {
   placeholder: Optional<string>;
   enabled: boolean;
   context: string;
+  spellcheck: Optional<boolean>;
 }
 
 const textAreaFields = formComponentWithLabelFields.concat([
@@ -25,6 +28,7 @@ const textAreaFields = formComponentWithLabelFields.concat([
   FieldSchema.defaultedBoolean('maximized', false),
   ComponentSchema.enabled,
   FieldSchema.defaultedString('context', 'mode:design'),
+  FieldSchema.optionBoolean('spellcheck'),
 ]);
 
 export const textAreaSchema = StructureSchema.objOf(textAreaFields);

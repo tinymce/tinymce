@@ -166,9 +166,10 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
     // Start loading
     const styleElem = SugarElement.fromTag('style', doc.dom);
     Attribute.setAll(styleElem, {
-      rel: 'stylesheet',
-      type: 'text/css',
-      id: state.id
+      'rel': 'stylesheet',
+      'type': 'text/css',
+      'id': state.id,
+      'data-mce-key': key
     });
 
     styleElem.dom.innerHTML = css;

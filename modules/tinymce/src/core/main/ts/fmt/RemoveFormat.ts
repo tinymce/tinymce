@@ -16,6 +16,7 @@ import * as RangeWalk from '../selection/RangeWalk';
 import * as SelectionUtils from '../selection/SelectionUtils';
 import * as SplitRange from '../selection/SplitRange';
 import * as TableCellSelection from '../selection/TableCellSelection';
+
 import * as CaretFormat from './CaretFormat';
 import * as ExpandRange from './ExpandRange';
 import { Format, FormatAttrOrStyleValue, FormatVars } from './FormatTypes';
@@ -537,7 +538,7 @@ const removeFormatInternal = (ed: Editor, name: string, vars?: FormatVars, node?
     let startContainer: Node;
     let endContainer: Node;
 
-    let expandedRng = ExpandRange.expandRng(dom, rng, formatList, rng.collapsed);
+    let expandedRng = ExpandRange.expandRng(dom, rng, formatList, { includeTrailingSpace: rng.collapsed });
 
     if (format.split) {
       // Split text nodes
@@ -650,6 +651,14 @@ const removeFormat = (ed: Editor, name: string, vars?: FormatVars, node?: Node |
   }
 };
 
+const removeFormatOnElement = (editor: Editor, format: Format, vars: FormatVars | undefined, node: Element): Optional<Element> => {
+  return removeNodeFormatInternal(editor, format, vars, node).fold(
+    () => Optional.some(node),
+    (newName) => Optional.some(editor.dom.rename(node, newName)),
+    Optional.none
+  );
+};
+
 /**
  * Removes the specified format for the specified node. It will also remove the node if it doesn't have
  * any attributes if the format specifies it to do so.
@@ -675,5 +684,6 @@ const removeNodeFormat = (editor: Editor, format: Format, vars: FormatVars | und
 
 export {
   removeFormat,
+  removeFormatOnElement,
   removeNodeFormat
 };

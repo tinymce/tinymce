@@ -3,6 +3,7 @@ import { Optional } from '@ephox/katamari';
 import { SugarElement } from '../node/SugarElement';
 import * as PredicateFind from '../search/PredicateFind';
 import * as Traverse from '../search/Traverse';
+
 import * as Awareness from './Awareness';
 
 const first = (element: SugarElement<Node>): Optional<SugarElement<Node & ChildNode>> =>
