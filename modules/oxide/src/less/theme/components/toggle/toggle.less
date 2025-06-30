@@ -21,32 +21,32 @@
       width: 0;
       height: 0;
     }
+  }
 
-    &__slider {
-      position: relative;
-      cursor: pointer;
-      box-sizing: border-box;
-      -webkit-transition: 0.4s;
-      transition: 0.4s;
-      border-radius: 34px; 
-      width: 28px;
-      height: 16px;
-      background-color: var(--tox-private-slider-background-color);
-      border: 1px solid var(--tox-private-slider-border-color);
-    }
+  .tox-toggle__slider {
+    position: relative;
+    cursor: pointer;
+    box-sizing: border-box;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+    border-radius: 34px; 
+    width: 28px;
+    height: 16px;
+    background-color: var(--tox-private-slider-background-color);
+    border: 1px solid var(--tox-private-slider-border-color);
+  }
 
-    &__slider:before {
-      position: absolute;
-      content: "";
-      height: 12px;
-      width: 12px;
-      left: 1px;
-      bottom: 1px;
-      -webkit-transition: 0.4s;
-      transition: 0.4s;
-      border-radius: 50%;
-      background-color: var(--tox-private-slider-handle-background-color);
-    }
+  .tox-toggle__slider:before {
+    position: absolute;
+    content: "";
+    height: 12px;
+    width: 12px;
+    left: 1px;
+    bottom: 1px;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+    border-radius: 50%;
+    background-color: var(--tox-private-slider-handle-background-color);
   }
     
   input:checked + .tox-toggle__slider {
