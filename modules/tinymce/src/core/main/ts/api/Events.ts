@@ -107,6 +107,9 @@ const fireEditableRootStateChange = (editor: Editor, state: boolean): EditorEven
 const fireDisabledStateChange = (editor: Editor, state: boolean): EditorEvent<DisabledStateChangeEvent> =>
   editor.dispatch('DisabledStateChange', { state });
 
+const fireCloseTooltips = (editor: Editor): EditorEvent<DisabledStateChangeEvent> =>
+  editor.dispatch('CloseActiveTooltips');
+
 export {
   firePreProcess,
   firePostProcess,
@@ -134,5 +137,6 @@ export {
   firePastePostProcess,
   firePastePreProcess,
   fireEditableRootStateChange,
-  fireDisabledStateChange
+  fireDisabledStateChange,
+  fireCloseTooltips
 };

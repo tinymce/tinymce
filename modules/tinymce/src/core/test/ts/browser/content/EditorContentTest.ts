@@ -831,5 +831,63 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         TinyAssertions.assertContent(editor, expected);
       });
     });
+
+    context('Template elements', () => {
+      const hook = TinyHooks.bddSetupLight<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        extended_valid_elements: 'template',
+        indent: false
+      }, []);
+
+      it('TINY-12157: Template elements should be retained when enabled via extended_valid_elements', () => {
+        const editor = hook.editor();
+
+        editor.setContent('<template>foo<script>alert(1)</script></template><p><template>bar</template></p>');
+        TinyAssertions.assertContent(editor, '<template>foo</template><p><template>bar</template></p>');
+      });
+    });
+
+    context('allow_html_in_comments', () => {
+      context('allow_html_in_comments: true', () => {
+        const hook = TinyHooks.bddSetupLight<Editor>({
+          base_url: '/project/tinymce/js/tinymce',
+          allow_html_in_comments: true
+        }, []);
+
+        it('TINY-12220: Should retain HTML like data in comments', () => {
+          const editor = hook.editor();
+
+          editor.setContent('<p><!-- <b>foo</b> -->foo</p>');
+          TinyAssertions.assertContent(editor, '<p><!-- <b>foo</b> -->foo</p>');
+        });
+      });
+
+      context('allow_html_in_comments: false', () => {
+        const hook = TinyHooks.bddSetupLight<Editor>({
+          base_url: '/project/tinymce/js/tinymce',
+          allow_html_in_comments: false
+        }, []);
+
+        it('TINY-12220: Should NOT retain HTML like data in comments', () => {
+          const editor = hook.editor();
+
+          editor.setContent('<p><!-- <b>foo</b> -->foo</p>');
+          TinyAssertions.assertContent(editor, '<p>foo</p>');
+        });
+      });
+
+      context('allow_html_in_comments default', () => {
+        const hook = TinyHooks.bddSetupLight<Editor>({
+          base_url: '/project/tinymce/js/tinymce'
+        }, []);
+
+        it('TINY-12220: Should NOT retain HTML like data in comments', () => {
+          const editor = hook.editor();
+
+          editor.setContent('<p><!-- <b>foo</b> -->foo</p>');
+          TinyAssertions.assertContent(editor, '<p>foo</p>');
+        });
+      });
+    });
   });
 });

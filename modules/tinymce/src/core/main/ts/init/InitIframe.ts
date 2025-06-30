@@ -41,7 +41,7 @@ const getIframeHtml = (editor: Editor) => {
 
   // We only need to override paths if we have to
   // IE has a bug where it remove site absolute urls to relative ones if this is specified
-  if (Options.getDocumentBaseUrl(editor) !== editor.documentBaseUrl) {
+  if (Options.getDocumentBaseUrl(editor) !== editor.editorManager.documentBaseURL) {
     iframeHTML += '<base href="' + editor.documentBaseURI.getURI() + '" />';
   }
 

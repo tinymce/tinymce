@@ -181,8 +181,8 @@ describe('browser.tinymce.plugins.lists.NoneditableRootTest', () => {
       await TinyState.withNoneditableRootEditorAsync(hook.editor(), async (editor) => {
         setupEditor(editor);
 
-        await TinyUiActions.pTriggerContextMenu(editor, 'li', '.tox-silver-sink [role="menuitem"]:contains("List properties...")');
-        UiFinder.exists(SugarBody.body(), '[role="menuitem"][aria-disabled="true"]:contains("List properties...")');
+        await TinyUiActions.pTriggerContextMenu(editor, 'li', '.tox-silver-sink [role="menuitem"]:contains("List properties…")');
+        UiFinder.exists(SugarBody.body(), '[role="menuitem"][aria-disabled="true"]:contains("List properties…")');
       });
     });
 

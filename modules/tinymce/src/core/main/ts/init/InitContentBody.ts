@@ -40,7 +40,6 @@ import * as TextPattern from '../textpatterns/TextPatterns';
 import Quirks from '../util/Quirks';
 
 import * as ContentCss from './ContentCss';
-import * as LicenseKeyValidation from './LicenseKeyValidation';
 
 declare const escape: any;
 declare let tinymce: TinyMCE;
@@ -76,6 +75,7 @@ const mkParserSettings = (editor: Editor): DomParserSettings => {
     allow_svg_data_urls: getOption('allow_svg_data_urls'),
     allow_html_in_named_anchor: getOption('allow_html_in_named_anchor'),
     allow_script_urls: getOption('allow_script_urls'),
+    allow_html_in_comments: getOption('allow_html_in_comments'),
     allow_mathml_annotation_encodings: getOption('allow_mathml_annotation_encodings'),
     allow_unsafe_link_target: getOption('allow_unsafe_link_target'),
     convert_unsafe_embeds: getOption('convert_unsafe_embeds'),
@@ -488,8 +488,6 @@ const contentBodyLoaded = (editor: Editor): void => {
   const setupRtcThunk = Rtc.setup(editor);
 
   preInit(editor);
-
-  LicenseKeyValidation.validateEditorLicenseKey(editor);
 
   setupRtcThunk.fold(() => {
     const cancelProgress = startProgress(editor);

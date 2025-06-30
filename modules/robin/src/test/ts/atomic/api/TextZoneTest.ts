@@ -1,4 +1,4 @@
-import { Assert, UnitTest } from '@ephox/bedrock-client';
+import { Assert, context, describe, it } from '@ephox/bedrock-client';
 import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Fun, Optional } from '@ephox/katamari';
 
@@ -8,7 +8,7 @@ import * as PropertyAssertions from 'ephox/robin/test/PropertyAssertions';
 import { assertProps, rawOne, RawZone } from 'ephox/robin/test/ZoneObjects';
 import { Zone } from 'ephox/robin/zone/Zones';
 
-UnitTest.test('TextZoneTest', () => {
+describe('atomic.robin.zone.TextZoneTest', () => {
   const doc1 = TestUniverse(Gene('root', 'root', [
     Gene('div1', 'div', [
       Gene('p1', 'p', [
@@ -49,172 +49,232 @@ UnitTest.test('TextZoneTest', () => {
     ], {}, { lang: 'fr' })
   ]));
 
-  const checkZone = (label: string, expected: Optional<RawZone>, actual: Optional<Zone<Gene>>) => {
-    expected.fold(() => {
-      actual.fold(
+  context('Basic tests', () => {
+    const checkZone = (label: string, expected: Optional<RawZone>, actual: Optional<Zone<Gene>>) => {
+      expected.fold(() => {
+        actual.fold(
         // Good
-        Fun.noop,
-        (act) => {
-          Assert.fail(label + '\nShould not have created zone: ' + JSON.stringify(
-            JSON.stringify(rawOne(doc1, act))
-          ));
-        }
-      );
-    }, (exp) => {
-      actual.fold(() => {
-        Assert.fail(label + '\nDid not find a zone. Expected to find: ' + JSON.stringify(exp, null, 2));
-      }, (act) => {
-        Assert.eq(label + '\nTesting zone: ', exp, rawOne(doc1, act));
+          Fun.noop,
+          (act) => {
+            Assert.fail(label + '\nShould not have created zone: ' + JSON.stringify(
+              JSON.stringify(rawOne(doc1, act))
+            ));
+          }
+        );
+      }, (exp) => {
+        actual.fold(() => {
+          Assert.fail(label + '\nDid not find a zone. Expected to find: ' + JSON.stringify(exp, null, 2));
+        }, (act) => {
+          Assert.eq(label + '\nTesting zone: ', exp, rawOne(doc1, act));
+        });
       });
+    };
+
+    const checkSingle = (expected: Optional<RawZone>, startId: string, onlyLang: string) => {
+      const item = doc1.find(doc1.get(), startId).getOrDie();
+      const actual = TextZone.single(doc1, item, 'en', onlyLang);
+      checkZone(startId, expected, actual);
+    };
+
+    const checkRange = (expected: Optional<RawZone>, startId: string, finishId: string, onlyLang: string) => {
+      const item1 = doc1.find(doc1.get(), startId).getOrDie();
+      const item2 = doc1.find(doc1.get(), finishId).getOrDie();
+      const actual = TextZone.range(doc1, item1, 0, item2, 0, 'en', onlyLang);
+      checkZone(startId + '->' + finishId, expected, actual);
+    };
+
+    it('Basic zone for one text field', () => {
+      checkSingle(
+        Optional.some({
+          lang: 'en',
+          words: [ 'one' ],
+          elements: [ 'en-a' ]
+        }),
+        'en-a',
+        'en'
+      );
     });
-  };
 
-  const checkSingle = (label: string, expected: Optional<RawZone>, startId: string, onlyLang: string) => {
-    const item = doc1.find(doc1.get(), startId).getOrDie();
-    const actual = TextZone.single(doc1, item, 'en', onlyLang);
-    checkZone(label + ' ' + startId, expected, actual);
-  };
-
-  const checkRange = (label: string, expected: Optional<RawZone>, startId: string, finishId: string, onlyLang: string) => {
-    const item1 = doc1.find(doc1.get(), startId).getOrDie();
-    const item2 = doc1.find(doc1.get(), finishId).getOrDie();
-    const actual = TextZone.range(doc1, item1, 0, item2, 0, 'en', onlyLang);
-    checkZone(label + ' ' + startId + '->' + finishId, expected, actual);
-  };
-
-  checkSingle(
-    'Basic zone for one text field',
-    Optional.some({
-      lang: 'en',
-      words: [ 'one' ],
-      elements: [ 'en-a' ]
-    }),
-    'en-a',
-    'en'
-  );
-
-  checkSingle(
-    'Basic zone for isolated span should be none because no text nodes inside',
-    Optional.none(),
-    'span-isolated',
-    'en'
-  );
-
-  checkSingle(
-    'Basic zone for semi isolated span should have the partial words outside it',
-    Optional.some({
-      lang: 'en',
-      words: [ 'on' ],
-      elements: [ 'en-j', 'en-k' ]
-    }),
-    'span-semi-isolated',
-    'en'
-  );
-
-  checkRange(
-    'Basic ranged zone for two adjacent english text nodes should create zone with them',
-    Optional.some({
-      lang: 'en',
-      words: [ 'two' ],
-      elements: [ 'en-b', 'en-c' ]
-    }),
-    'en-b', 'en-c',
-    'en'
-  );
-
-  checkRange(
-    'Basic ranged zone for an english text node next to another one (but not part of the range) should create zone with them',
-    Optional.some({
-      lang: 'en',
-      words: [ 'two' ],
-      elements: [ 'en-b', 'en-c' ]
-    }),
-    'en-b', 'en-b',
-    'en'
-  );
-
-  checkRange(
-    'Basic ranged zone for an english text node to a german text node should create no zone',
-    Optional.none(),
-    'en-b', 'de-a',
-    'en'
-  );
-
-  const checkSingleProp = (info: ArbIds) => {
-    const item = doc1.find(doc1.get(), info.startId).getOrDie();
-    const actual = TextZone.single(doc1, item, 'en', 'en');
-    return actual.forall((zone) => {
-      assertProps('Testing zone for single(' + info.startId + ')', doc1, [ zone ]);
-      return true;
+    it('Basic zone for isolated span should be none because no text nodes inside', () => {
+      checkSingle(
+        Optional.none(),
+        'span-isolated',
+        'en'
+      );
     });
-  };
 
-  const checkRangeProp = (info: ArbRangeIds) => {
-    const item1 = doc1.find(doc1.get(), info.startId).getOrDie();
-    const item2 = doc1.find(doc1.get(), info.finishId).getOrDie();
-    const actual = TextZone.range(doc1, item1, 0, item2, 0, 'en', 'en');
-    return actual.forall((zone) => {
-      assertProps('Testing zone for range(' + info.startId + '->' + info.finishId + ')', doc1, [ zone ]);
-      return true;
+    it('Basic zone for semi isolated span should have the partial words outside it', () => {
+      checkSingle(
+        Optional.some({
+          lang: 'en',
+          words: [ 'on' ],
+          elements: [ 'en-j', 'en-k' ]
+        }),
+        'span-semi-isolated',
+        'en'
+      );
     });
-  };
 
-  PropertyAssertions.check(
-    'Check text single',
-    arbIds(doc1, doc1.property().isText),
-    checkSingleProp
-  );
+    it('Basic ranged zone for two adjacent english text nodes should create zone with them', () => {
+      checkRange(
+        Optional.some({
+          lang: 'en',
+          words: [ 'two' ],
+          elements: [ 'en-b', 'en-c' ]
+        }),
+        'en-b', 'en-c',
+        'en'
+      );
+    });
 
-  PropertyAssertions.check(
-    'Check text range',
-    arbRangeIds(doc1, doc1.property().isText),
-    checkRangeProp
-  );
+    it('Basic ranged zone for an english text node next to another one (but not part of the range) should create zone with them', () => {
+      checkRange(
+        Optional.some({
+          lang: 'en',
+          words: [ 'two' ],
+          elements: [ 'en-b', 'en-c' ]
+        }),
+        'en-b', 'en-b',
+        'en'
+      );
+    });
 
-  PropertyAssertions.check('Check that empty tags produce no zone', arbIds(doc1, doc1.property().isEmptyTag), (info) => {
-    const item = doc1.find(doc1.get(), info.startId).getOrDie();
-    // Consider other offsets
-    const actual = TextZone.range(doc1, item, 0, item, 0, 'en', 'en');
-    return actual.isNone();
+    it('Basic ranged zone for an english text node to a german text node should create no zone', () => {
+      checkRange(
+        Optional.none(),
+        'en-b', 'de-a',
+        'en'
+      );
+    });
   });
 
-  PropertyAssertions.check(
-    'Check empty range',
-    arbRangeIds(doc1, doc1.property().isEmptyTag),
-    checkRangeProp
-  );
+  context('Property tests', () => {
+    const checkSingleProp = (info: ArbIds) => {
+      const item = doc1.find(doc1.get(), info.startId).getOrDie();
+      const actual = TextZone.single(doc1, item, 'en', 'en');
+      return actual.forall((zone) => {
+        assertProps('Testing zone for single(' + info.startId + ')', doc1, [ zone ]);
+        return true;
+      });
+    };
 
-  PropertyAssertions.check(
-    'Check boundary single',
-    arbIds(doc1, doc1.property().isBoundary),
-    checkSingleProp
-  );
+    const checkRangeProp = (info: ArbRangeIds) => {
+      const item1 = doc1.find(doc1.get(), info.startId).getOrDie();
+      const item2 = doc1.find(doc1.get(), info.finishId).getOrDie();
+      const actual = TextZone.range(doc1, item1, 0, item2, 0, 'en', 'en');
+      return actual.forall((zone) => {
+        assertProps('Testing zone for range(' + info.startId + '->' + info.finishId + ')', doc1, [ zone ]);
+        return true;
+      });
+    };
 
-  PropertyAssertions.check(
-    'Check boundary range',
-    arbRangeIds(doc1, doc1.property().isBoundary),
-    checkRangeProp
-  );
+    it('Check text single', () => {
+      PropertyAssertions.check(
+        arbIds(doc1, doc1.property().isText),
+        checkSingleProp
+      );
+    });
 
-  PropertyAssertions.check(
-    'Check inline tag single',
-    arbRangeIds(doc1, (item: Gene) => {
-      return !(doc1.property().isBoundary(item) || doc1.property().isEmptyTag(item) || doc1.property().isText(item));
-    }),
-    checkSingleProp
-  );
+    it('Check text range', () => {
+      PropertyAssertions.check(
+        arbRangeIds(doc1, doc1.property().isText),
+        checkRangeProp
+      );
+    });
 
-  PropertyAssertions.check(
-    'Check inline tag range',
-    arbRangeIds(doc1, (item: Gene) => {
-      return !(doc1.property().isBoundary(item) || doc1.property().isEmptyTag(item) || doc1.property().isText(item));
-    }),
-    checkRangeProp
-  );
+    it('Check that empty tags produce no zone', () => {
+      PropertyAssertions.check(arbIds(doc1, doc1.property().isEmptyTag), (info) => {
+        const item = doc1.find(doc1.get(), info.startId).getOrDie();
+        // Consider other offsets
+        const actual = TextZone.range(doc1, item, 0, item, 0, 'en', 'en');
+        return actual.isNone();
+      });
+    });
 
-  PropertyAssertions.check(
-    'Check any tag range',
-    arbRangeIds(doc1, Fun.always),
-    checkRangeProp
-  );
+    it('Check empty range', () => {
+      PropertyAssertions.check(
+        arbRangeIds(doc1, doc1.property().isEmptyTag),
+        checkRangeProp
+      );
+    });
+
+    it('Check boundary single', () => {
+      PropertyAssertions.check(
+        arbIds(doc1, doc1.property().isBoundary),
+        checkSingleProp
+      );
+    });
+
+    it('Check boundary range', () => {
+      PropertyAssertions.check(
+        arbRangeIds(doc1, doc1.property().isBoundary),
+        checkRangeProp
+      );
+    });
+
+    it('Check inline tag single', () => {
+      PropertyAssertions.check(
+        arbRangeIds(doc1, (item: Gene) => {
+          return !(doc1.property().isBoundary(item) || doc1.property().isEmptyTag(item) || doc1.property().isText(item));
+        }),
+        checkSingleProp
+      );
+    });
+
+    it('Check inline tag range', () => {
+      PropertyAssertions.check(
+        arbRangeIds(doc1, (item: Gene) => {
+          return !(doc1.property().isBoundary(item) || doc1.property().isEmptyTag(item) || doc1.property().isText(item));
+        }),
+        checkRangeProp
+      );
+    });
+
+    it('Check any tag range', () => {
+      PropertyAssertions.check(
+        arbRangeIds(doc1, Fun.always),
+        checkRangeProp
+      );
+    });
+  });
+
+  context('Fuzzy match language code', () => {
+    const testFuzzyLanguageCode = (testCase: { contentLang: string; onlyLang: string; expectedLang: string }) => {
+      const doc = TestUniverse(Gene('root', 'root', [ Gene('d1', 'div', [ TextGene('t1', 'one') ], {}, { lang: testCase.contentLang }) ]));
+      const zone = TextZone.single(doc, doc.find(doc.get(), 'd1').getOrDie(), 'en-US', testCase.onlyLang).getOrDie('Expected a zone to be returned');
+
+      Assert.eq('Expected the zone language to match', testCase.expectedLang, zone.lang);
+    };
+
+    it('TINY-12101: Should match uppercase with dash', () => testFuzzyLanguageCode({
+      contentLang: 'en-GB',
+      onlyLang: 'en-GB',
+      expectedLang: 'en-GB'
+    }));
+
+    it('TINY-12101: Should match lowercase with dash', () => testFuzzyLanguageCode({
+      contentLang: 'en-gb',
+      onlyLang: 'en-GB',
+      expectedLang: 'en-gb'
+    }));
+
+    it('TINY-12101: Should match uppercase with underscore', () => testFuzzyLanguageCode({
+      contentLang: 'en_GB',
+      onlyLang: 'en-GB',
+      expectedLang: 'en_GB'
+    }));
+
+    it('TINY-12101: Should match lowercase with underscore', () => testFuzzyLanguageCode({
+      contentLang: 'en_gb',
+      onlyLang: 'en-GB',
+      expectedLang: 'en_gb'
+    }));
+
+    it('TINY-12101: Should not match language code that are different', () => {
+      const doc = TestUniverse(Gene('root', 'root', [ Gene('d1', 'div', [ TextGene('t1', 'one') ], {}, { lang: 'sv-SE' }) ]));
+      const zone = TextZone.single(doc, doc.find(doc.get(), 'd1').getOrDie(), 'en-US', 'en-GB');
+
+      Assert.eq('Expected the zone to be none since the language codes are different', true, zone.isNone());
+    });
+  });
 });

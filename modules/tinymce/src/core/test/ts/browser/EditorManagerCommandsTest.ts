@@ -5,6 +5,7 @@ import { assert } from 'chai';
 import 'tinymce';
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
+import Model from 'tinymce/models/dom/Model';
 import Theme from 'tinymce/themes/silver/Theme';
 
 import * as ViewBlock from '../module/test/ViewBlock';
@@ -14,6 +15,7 @@ describe('browser.tinymce.core.EditorManagerCommandsTest', () => {
 
   before(() => {
     Theme();
+    Model();
     EditorManager._setBaseUrl('/project/tinymce/js/tinymce');
   });
 
@@ -38,6 +40,7 @@ describe('browser.tinymce.core.EditorManagerCommandsTest', () => {
       viewBlock.update('<textarea id="ed_1" class="tinymce"></textarea>');
       await EditorManager.init({
         selector: 'textarea.tinymce',
+        license_key: 'gpl',
         init_instance_callback: (editor1) => {
           assert.isFalse(editor1.isHidden(), 'editor should be visible');
           EditorManager.execCommand('mceToggleEditor', false, test.value);
@@ -53,6 +56,7 @@ describe('browser.tinymce.core.EditorManagerCommandsTest', () => {
       viewBlock.update('<textarea id="ed_1" class="tinymce"></textarea>');
       await EditorManager.init({
         selector: 'textarea.tinymce',
+        license_key: 'gpl',
         init_instance_callback: (_editor1) => {
           assert.lengthOf(EditorManager.get(), 1);
           EditorManager.execCommand('mceRemoveEditor', false, test.value);
@@ -67,12 +71,14 @@ describe('browser.tinymce.core.EditorManagerCommandsTest', () => {
     viewBlock.update('<textarea id="ed_1" class="tinymce"></textarea><textarea id="ed_2" class="tinymce"></textarea>');
     await EditorManager.init({
       selector: 'textarea#ed_1',
+      license_key: 'gpl',
       init_instance_callback: (_editor1) => {
         assert.lengthOf(EditorManager.get(), 1);
         assert.isFalse(EditorManager.get('ed_1')?.mode.isReadOnly());
         EditorManager.execCommand('mceAddEditor', false, {
           id: 'ed_2',
           options: {
+            license_key: 'gpl',
             readonly: true,
             init_instance_callback: (editor2: Editor) => {
               assert.lengthOf(EditorManager.get(), 2);
