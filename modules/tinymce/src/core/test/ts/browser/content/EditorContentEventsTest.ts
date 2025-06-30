@@ -151,4 +151,22 @@ describe('browser.tinymce.core.content.EditorContentEventsTest', () => {
       assert.equal(lastEvent.test, data.test);
     });
   });
+
+  it('TINY-12146: reset content dispatches a SetContent event with initial true', () => {
+    const editor = hook.editor();
+    const lastEventState = Singleton.value<SetContentEvent>();
+    editor.once('SetContent', (e) => lastEventState.set(e));
+    editor.resetContent();
+    const lastEvent = lastEventState.get().getOrDie('Should be set');
+    assert.equal(lastEvent.initial, true);
+  });
+
+  it('TINY-12146: reset content with content dispatches a SetContent event with initial true', () => {
+    const editor = hook.editor();
+    const lastEventState = Singleton.value<SetContentEvent>();
+    editor.once('SetContent', (e) => lastEventState.set(e));
+    editor.resetContent('<p>hello</p>');
+    const lastEvent = lastEventState.get().getOrDie('Should be set');
+    assert.equal(lastEvent.initial, true);
+  });
 });
