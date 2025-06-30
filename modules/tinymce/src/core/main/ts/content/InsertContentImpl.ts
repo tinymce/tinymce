@@ -24,6 +24,7 @@ import * as InvalidNodes from '../html/InvalidNodes';
 import * as ParserUtils from '../html/ParserUtils';
 import * as RangeNormalizer from '../selection/RangeNormalizer';
 import * as SelectionUtils from '../selection/SelectionUtils';
+import * as SetSelectionContent from '../selection/SetSelectionContent';
 import * as Zwsp from '../text/Zwsp';
 
 import { InsertContentDetails } from './ContentTypes';
@@ -78,7 +79,7 @@ const validInsertion = (editor: Editor, value: string, parentNode: Element): voi
     if (isEditableEmptyBlock(editor.dom, parentNode)) {
       editor.dom.setHTML(parentNode, value);
     } else {
-      editor.selection.setContent(value, { no_events: true });
+      SetSelectionContent.setContentInternal(editor, value, { no_events: true });
     }
   }
 };
@@ -348,7 +349,7 @@ export const insertHtmlAtCaret = (editor: Editor, value: string, details: Insert
     // to parse and process the parent it's inserted into
 
     // Insert bookmark node and get the parent
-    editor.selection.setContent(bookmarkHtml);
+    SetSelectionContent.setContentInternal(editor, bookmarkHtml);
     let parentNode: Node | null = selection.getNode();
     let tempNode: Node | null;
     const rootNode = editor.getBody();

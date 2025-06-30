@@ -846,5 +846,48 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         TinyAssertions.assertContent(editor, '<template>foo</template><p><template>bar</template></p>');
       });
     });
+
+    context('allow_html_in_comments', () => {
+      context('allow_html_in_comments: true', () => {
+        const hook = TinyHooks.bddSetupLight<Editor>({
+          base_url: '/project/tinymce/js/tinymce',
+          allow_html_in_comments: true
+        }, []);
+
+        it('TINY-12220: Should retain HTML like data in comments', () => {
+          const editor = hook.editor();
+
+          editor.setContent('<p><!-- <b>foo</b> -->foo</p>');
+          TinyAssertions.assertContent(editor, '<p><!-- <b>foo</b> -->foo</p>');
+        });
+      });
+
+      context('allow_html_in_comments: false', () => {
+        const hook = TinyHooks.bddSetupLight<Editor>({
+          base_url: '/project/tinymce/js/tinymce',
+          allow_html_in_comments: false
+        }, []);
+
+        it('TINY-12220: Should NOT retain HTML like data in comments', () => {
+          const editor = hook.editor();
+
+          editor.setContent('<p><!-- <b>foo</b> -->foo</p>');
+          TinyAssertions.assertContent(editor, '<p>foo</p>');
+        });
+      });
+
+      context('allow_html_in_comments default', () => {
+        const hook = TinyHooks.bddSetupLight<Editor>({
+          base_url: '/project/tinymce/js/tinymce'
+        }, []);
+
+        it('TINY-12220: Should NOT retain HTML like data in comments', () => {
+          const editor = hook.editor();
+
+          editor.setContent('<p><!-- <b>foo</b> -->foo</p>');
+          TinyAssertions.assertContent(editor, '<p>foo</p>');
+        });
+      });
+    });
   });
 });

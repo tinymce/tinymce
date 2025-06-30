@@ -1,11 +1,14 @@
 import { Arr, Obj, Type } from '@ephox/katamari';
 
 import Editor from 'tinymce/core/api/Editor';
+import type { TinyMCE } from 'tinymce/core/api/Tinymce';
 import { Dialog } from 'tinymce/core/api/ui/Ui';
 import I18n from 'tinymce/core/api/util/I18n';
 
 import * as Options from '../api/Options';
 import * as PluginUrls from '../data/PluginUrls';
+
+declare let tinymce: TinyMCE;
 
 interface PluginData {
   // The name is just used for sorting alphabetically.
@@ -56,7 +59,7 @@ const tab = (editor: Editor): Dialog.TabSpec & { name: string } => {
   }, (x) => {
     // We know this plugin, so use our stored details.
     const name = x.type === PluginUrls.PluginType.Premium ? `${x.name}*` : x.name;
-    const html = makeLink({ name, url: `https://www.tiny.cloud/docs/tinymce/7/${x.slug}/` });
+    const html = makeLink({ name, url: `https://www.tiny.cloud/docs/tinymce/${tinymce.majorVersion}/${x.slug}/` });
     return { name, html };
   });
 

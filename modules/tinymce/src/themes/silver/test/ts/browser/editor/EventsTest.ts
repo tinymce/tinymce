@@ -13,7 +13,7 @@ describe('browser.tinymce.themes.silver.editor.EventsTest', () => {
     menubar: 'file edit'
   };
 
-  const contextMenuItemSelector = '[role="menuitem"]:contains("Link...")';
+  const contextMenuItemSelector = '[role="menuitem"]:contains("Link…")';
   const fileMenuSelector = '[role="menuitem"]:contains("New document")';
   const editMenuSelector = '[role="menuitem"]:contains("Cut")';
   const fileMenuButtonSelector = 'button:contains("File")';

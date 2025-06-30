@@ -12,7 +12,7 @@ const labels = {
   href: 'URL',
   text: 'Text to display',
   title: 'Title',
-  target: 'Open link in...',
+  target: 'Open link in…',
   linklist: 'Link list'
 };
 
