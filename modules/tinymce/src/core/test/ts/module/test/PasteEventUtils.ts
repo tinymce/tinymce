@@ -71,10 +71,9 @@ const pWaitForAndAssertInputEvents = async (beforeinputEvent: SingletonEvent<Inp
     inputEvent.on((e) => {
       assert.equal(e.inputType, 'insertFromPaste', 'beforeinput event type should be "insertFromPaste"');
       if (
-        isNative &&
         // TINY-11373: Chromium >= 129, e.data is no longer null when pasting plain text
         // TINY-12342: Chromium >= 137 and Edge >= 137, e.data is null when pasting rich text
-        (browser.isChromium() && browser.version.major >= 129 && browser.version.major < 137) ||
+        (isNative && browser.isChromium() && browser.version.major >= 129 && browser.version.major < 137) ||
         (browser.isEdge() && browser.version.major > 136)
       ) {
         assert.isNotNull(e.data, 'input event data should not be null');
