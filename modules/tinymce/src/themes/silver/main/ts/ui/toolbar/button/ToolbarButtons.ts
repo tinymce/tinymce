@@ -340,7 +340,7 @@ const makeSplitButtonApi = (tooltipString: Cell<string>, sharedBackstage: UiFact
       // For chevron, use the explicit chevronTooltip if provided, otherwise fall back to default behavior
       const chevronTooltipText = spec.chevronTooltip
         .map((chevronTooltip) => sharedBackstage.providers.translate(chevronTooltip))
-        .getOr(sharedBackstage.providers.translate([ '{0} menu', sharedBackstage.providers.translate(tooltip) ]));
+        .getOr(sharedBackstage.providers.translate(`${tooltip} menu`));
       chevronOpt.each((c) => Attribute.set(c.element, 'aria-label', chevronTooltipText));
     }
   };
