@@ -36,7 +36,7 @@
     border: 1px solid var(--tox-private-slider-border-color);
   }
 
-  .tox-toggle__slider:before {
+  .tox-toggle__slider::before {
     position: absolute;
     content: "";
     height: 12px;
@@ -58,14 +58,14 @@
     box-shadow: 0 0 0 1px @background-color, 0 0 0 3px @keyboard-focus-outline-color;
   }
   
-  input:checked + .tox-toggle__slider:before {
+  input:checked + .tox-toggle__slider::before {
     -webkit-transform: translateX(12px);
     -ms-transform: translateX(12px);
     transform: translateX(12px);
     --tox-private-slider-handle-background-color: @color-white;
   }
 
-  input:disabled + .tox-toggle__slider:before {
+  input:disabled + .tox-toggle__slider::before {
     opacity: 50%;
   }
 }
