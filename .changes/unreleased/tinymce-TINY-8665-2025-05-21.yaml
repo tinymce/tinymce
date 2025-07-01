@@ -1,6 +1,6 @@
 project: tinymce
 kind: Changed
-body: Split buttons are now rendered as separate action and chevron buttons
+body: Split buttons are now rendered as separate action and chevron buttons.
 time: 2025-05-21T12:30:15.353209+10:00
 custom:
     Issue: TINY-8665
