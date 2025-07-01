@@ -11,10 +11,10 @@ import { getColorCols } from 'tinymce/themes/silver/ui/core/color/Options';
 
 describe('browser.tinymce.themes.silver.editor.color.TextColorSanityTest', () => {
   const selectors = {
-    backcolorButton: 'div[data-mce-name="backcolor"] .tox-tbtn',
-    forecolorButton: 'div[data-mce-name="forecolor"] .tox-tbtn',
-    backcolorSplitButton: '[aria-label^="Background color"] > .tox-tbtn + .tox-split-button__chevron',
-    forecolorSplitButton: '[aria-label^="Text color"] > .tox-tbtn + .tox-split-button__chevron'
+    backcolorButton: 'button[data-mce-name="backcolor"]',
+    forecolorButton: 'button[data-mce-name="forecolor"]',
+    backcolorSplitButton: 'button[data-mce-name="backcolor-chevron"][aria-label^="Background color"]',
+    forecolorSplitButton: 'button[data-mce-name="forecolor-chevron"][aria-label^="Text color"]'
   };
 
   const assertUiElementDoesNotExist = (editor: Editor, selector: string) =>

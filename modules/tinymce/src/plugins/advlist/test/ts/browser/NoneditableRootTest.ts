@@ -27,8 +27,8 @@ describe('browser.tinymce.plugins.advlist.NoneditableRootTest', () => {
       TinyState.withNoneditableRootEditor<Editor>(hook.editor(), (editor) => {
         setupEditor(editor);
 
-        UiFinder.exists(TinyDom.container(editor), 'div[data-mce-name="numlist"][aria-disabled="true"]');
-        UiFinder.exists(TinyDom.container(editor), 'div[data-mce-name="bullist"][aria-disabled="true"]');
+        UiFinder.exists(TinyDom.container(editor), 'button[data-mce-name="numlist"][aria-disabled="true"]');
+        UiFinder.exists(TinyDom.container(editor), 'button[data-mce-name="bullist"][aria-disabled="true"]');
       });
     });
 

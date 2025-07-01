@@ -16,6 +16,7 @@ export type ColumnTypes = number | 'auto';
 export interface ToolbarSplitButtonSpec {
   type?: 'splitbutton';
   tooltip?: string;
+  chevronTooltip?: string;
   icon?: string;
   text?: string;
   select?: SelectPredicate;
@@ -31,6 +32,7 @@ export interface ToolbarSplitButtonSpec {
 export interface ToolbarSplitButton {
   type: 'splitbutton';
   tooltip: Optional<string>;
+  chevronTooltip: Optional<string>;
   icon: Optional<string>;
   text: Optional<string>;
   select: Optional<SelectPredicate>;
@@ -57,6 +59,7 @@ export interface ToolbarSplitButtonInstanceApi {
 export const splitButtonSchema = StructureSchema.objOf([
   ComponentSchema.type,
   ComponentSchema.optionalTooltip,
+  ComponentSchema.optionalChevronTooltip,
   ComponentSchema.optionalIcon,
   ComponentSchema.optionalText,
   ComponentSchema.optionalSelect,

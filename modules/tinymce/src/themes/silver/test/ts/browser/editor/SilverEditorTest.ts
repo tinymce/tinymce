@@ -229,65 +229,41 @@ describe('browser.tinymce.themes.silver.editor.SilverEditorTest', () => {
                               }),
 
                               // Splitbutton with text
-                              s.element('div', {
-                                classes: [ arr.has('tox-split-button') ],
+                              s.element('button', {
+                                classes: [ arr.has('tox-tbtn') ],
                                 children: [
                                   s.element('span', {
-                                    classes: [ arr.has('tox-tbtn') ],
-                                    children: [
-                                      s.element('span', {
-                                        classes: [ arr.has('tox-tbtn__select-label') ],
-                                        html: str.is('Delta')
-                                      })
-                                    ]
-                                  }),
+                                    classes: [ arr.has('tox-tbtn__select-label') ],
+                                    html: str.is('Delta')
+                                  })
+                                ]
+                              }),
+
+                              // Splitbutton chevron with text
+                              s.element('button', {
+                                classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ],
+                                children: [
+                                  s.element('svg', {})
+                                ]
+                              }),
+
+                              // Splitbutton with icon
+                              s.element('button', {
+                                classes: [ arr.has('tox-tbtn') ],
+                                children: [
                                   s.element('span', {
-                                    classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ],
                                     children: [
                                       s.element('svg', {})
-                                    ]
-                                  }),
-                                  s.element('span', {
-                                    attrs: {
-                                      'aria-hidden': str.is('true'),
-                                      'style': str.is('display: none;')
-                                    },
-                                    children: [
-                                      s.text(str.is('To open the popup, press Shift+Enter'))
                                     ]
                                   })
                                 ]
                               }),
 
-                              // Splitbutton with icon
-                              s.element('div', {
-                                classes: [ arr.has('tox-split-button') ],
+                              // Splitbutton chevron with icon
+                              s.element('button', {
+                                classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ],
                                 children: [
-                                  s.element('span', {
-                                    classes: [ arr.has('tox-tbtn') ],
-                                    children: [
-                                      s.element('span', {
-                                        children: [
-                                          s.element('svg', {})
-                                        ]
-                                      })
-                                    ]
-                                  }),
-                                  s.element('span', {
-                                    classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ],
-                                    children: [
-                                      s.element('svg', {})
-                                    ]
-                                  }),
-                                  s.element('span', {
-                                    attrs: {
-                                      'aria-hidden': str.is('true'),
-                                      'style': str.is('display: none;')
-                                    },
-                                    children: [
-                                      s.text(str.is('To open the popup, press Shift+Enter'))
-                                    ]
-                                  })
+                                  s.element('svg', {})
                                 ]
                               })
                             ]
@@ -401,10 +377,10 @@ describe('browser.tinymce.themes.silver.editor.SilverEditorTest', () => {
 
   it('TBA: Clicking on a split button primary part should not toggle. It is up to the setActive api to do that', () => {
     const editor = hook.editor();
-    TinyUiActions.clickOnToolbar(editor, '.tox-split-button:contains("Delta")');
-    const button = UiFinder.findIn(TinyDom.container(editor), '.tox-split-button > .tox-tbtn:contains("Delta")').getOrDie();
+    TinyUiActions.clickOnToolbar(editor, 'button.tox-tbtn:contains("Delta")');
+    const button = UiFinder.findIn(TinyDom.container(editor), 'button.tox-tbtn:contains("Delta")').getOrDie();
     Assertions.assertStructure('Delta button should not be pressed',
-      ApproxStructure.build((s, str, arr) => s.element('span', {
+      ApproxStructure.build((s, str, arr) => s.element('button', {
         classes: [ arr.not('tox-tbtn--enabled') ]
       })),
       button
@@ -414,9 +390,9 @@ describe('browser.tinymce.themes.silver.editor.SilverEditorTest', () => {
   it('TBA: Using the api should toggle a split button', () => {
     const editor = hook.editor();
     editor.dispatch('splitbutton1-toggle');
-    const button = UiFinder.findIn(TinyDom.container(editor), '.tox-split-button > .tox-tbtn:contains("Delta")').getOrDie();
+    const button = UiFinder.findIn(TinyDom.container(editor), 'button.tox-tbtn:contains("Delta")').getOrDie();
     Assertions.assertStructure('Delta button should be pressed',
-      ApproxStructure.build((s, str, arr) => s.element('span', {
+      ApproxStructure.build((s, str, arr) => s.element('button', {
         classes: [ arr.has('tox-tbtn--enabled') ]
       })),
       button
