@@ -1,7 +1,8 @@
-import { Arr, Obj, Type } from '@ephox/katamari';
+import { Arr, Obj, Type, Id } from '@ephox/katamari';
 
 import * as ErrorReporter from '../ErrorReporter';
 import * as FocusController from '../focus/FocusController';
+import LicenseKeyManagerLoader, { LicenseKeyManagerAddon } from '../init/LicenseKeyManager';
 
 import AddOnManager from './AddOnManager';
 import DOMUtils from './dom/DOMUtils';
@@ -100,6 +101,7 @@ interface EditorManager extends Observable<EditorManagerEventMap> {
   documentBaseURL: string;
   i18n: I18n;
   suffix: string;
+  pageUid: string;
 
   add (this: EditorManager, editor: Editor): Editor;
   addI18n: (code: string, item: Record<string, string>) => void;
@@ -118,6 +120,7 @@ interface EditorManager extends Observable<EditorManagerEventMap> {
   translate: (text: Untranslated) => TranslatedString;
   triggerSave: () => void;
   _setBaseUrl (this: EditorManager, baseUrl: string): void;
+  _addLicenseKeyManager (this: EditorManager, addOn: LicenseKeyManagerAddon): void;
 }
 
 const isQuirksMode = document.compatMode !== 'CSS1Compat';
@@ -138,6 +141,14 @@ const EditorManager: EditorManager = {
 
   documentBaseURL: null as any,
   suffix: null as any,
+
+  /**
+   * A uuid string to anonymously identify the page tinymce is loaded in
+   *
+   * @property pageUid
+   * @type String
+   */
+  pageUid: Id.uuidV4(),
 
   /**
    * Major version of TinyMCE build.
@@ -276,6 +287,17 @@ const EditorManager: EditorManager = {
     self.suffix = suffix;
 
     FocusController.setup(self);
+
+    // Lock certain properties to reduce misuse
+    Arr.each(
+      [ 'majorVersion', 'minorVersion', 'releaseDate', 'pageUid', '_addLicenseKeyManager' ],
+      (property) =>
+        Object.defineProperty(self, property, {
+          writable: false,
+          configurable: false,
+          enumerable: true,
+        })
+    );
   },
 
   /**
@@ -736,7 +758,9 @@ const EditorManager: EditorManager = {
   _setBaseUrl(baseUrl: string) {
     this.baseURL = new URI(this.documentBaseURL).toAbsolute(baseUrl.replace(/\/+$/, ''));
     this.baseURI = new URI(this.baseURL);
-  }
+  },
+
+  _addLicenseKeyManager: (addOn: LicenseKeyManagerAddon) => LicenseKeyManagerLoader.add(addOn),
 };
 
 EditorManager.setup();

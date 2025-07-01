@@ -20,6 +20,7 @@ import * as StyleSheetLoaderRegistry from '../dom/StyleSheetLoaderRegistry';
 import * as ErrorReporter from '../ErrorReporter';
 
 import * as Init from './Init';
+import LicenseKeyManagerLoader from './LicenseKeyManager';
 
 interface UrlMeta {
   readonly url: string;
@@ -68,6 +69,10 @@ const loadModel = (editor: Editor, suffix: string): void => {
   }
 };
 
+const loadLicenseKeyManager = (editor: Editor, suffix: string): void => {
+  LicenseKeyManagerLoader.load(editor, suffix);
+};
+
 const getIconsUrlMetaFromUrl = (editor: Editor): Optional<UrlMeta> => Optional.from(Options.getIconsUrl(editor))
   .filter(Strings.isNotEmpty)
   .map((url) => ({
@@ -95,6 +100,12 @@ const loadIcons = (scriptLoader: ScriptLoader, editor: Editor, suffix: string) =
 
 const loadPlugins = (editor: Editor, suffix: string) => {
   const loadPlugin = (name: string, url: string) => {
+    // If licensekeymanager is included in the plugins list
+    // or through external_plugins, skip it
+    if (name === 'licensekeymanager') {
+      return;
+    }
+
     PluginManager.load(name, url).catch(() => {
       ErrorReporter.pluginLoadError(editor, url, name);
     });
@@ -124,13 +135,22 @@ const isModelLoaded = (editor: Editor): boolean => {
   return Type.isNonNullable(ModelManager.get(model));
 };
 
+const isLicenseKeyManagerLoaded = (editor: Editor): boolean => {
+  return LicenseKeyManagerLoader.isLoaded(editor);
+};
+
 const loadScripts = (editor: Editor, suffix: string) => {
   const scriptLoader = ScriptLoader.ScriptLoader;
 
   const initEditor = () => {
-    // If the editor has been destroyed or the theme and model haven't loaded then
+    // If the editor has been destroyed or the theme, model, licenseKeyManager haven't loaded then
     // don't continue to load the editor
-    if (!editor.removed && isThemeLoaded(editor) && isModelLoaded(editor)) {
+    if (
+      !editor.removed &&
+      isThemeLoaded(editor) &&
+      isModelLoaded(editor) &&
+      isLicenseKeyManagerLoaded(editor)
+    ) {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       Init.init(editor);
     }
@@ -138,6 +158,7 @@ const loadScripts = (editor: Editor, suffix: string) => {
 
   loadTheme(editor, suffix);
   loadModel(editor, suffix);
+  loadLicenseKeyManager(editor, suffix);
   loadLanguage(scriptLoader, editor);
   loadIcons(scriptLoader, editor, suffix);
   loadPlugins(editor, suffix);

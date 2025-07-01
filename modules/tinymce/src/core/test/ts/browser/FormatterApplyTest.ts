@@ -6,6 +6,7 @@ import { LegacyUnit, TinyAssertions, TinyDom, TinyHooks, TinySelections, TinySta
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
+import * as SetSelectionContent from 'tinymce/core/selection/SetSelectionContent';
 
 import * as KeyUtils from '../module/test/KeyUtils';
 
@@ -1878,7 +1879,7 @@ describe('browser.tinymce.core.FormatterApplyTest', () => {
     });
     editor.formatter.apply('format');
     assert.equal(getContent(editor), '', 'empty TinyMCE');
-    editor.selection.setContent('a');
+    SetSelectionContent.setContentInternal(editor, 'a');
     assert.equal(getContent(editor), '<p><strong>a</strong></p>', 'bold text inside TinyMCE');
   });
 

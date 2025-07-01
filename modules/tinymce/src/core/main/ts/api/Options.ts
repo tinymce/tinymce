@@ -580,6 +580,11 @@ const register = (editor: Editor): void => {
     default: false
   });
 
+  registerOption('allow_html_in_comments', {
+    processor: 'boolean',
+    default: false
+  });
+
   registerOption('allow_script_urls', {
     processor: 'boolean',
     default: false

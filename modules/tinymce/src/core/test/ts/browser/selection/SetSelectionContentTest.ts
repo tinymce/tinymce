@@ -24,7 +24,7 @@ describe('browser.tinymce.selection.SetSelectionContentTest', () => {
     };
 
     editor.on('BeforeSetContent', handler);
-    SetSelectionContent.setContent(editor, content, args);
+    SetSelectionContent.setContentInternal(editor, content, args);
     editor.off('BeforeSetContent', handler);
   };
 
@@ -32,7 +32,7 @@ describe('browser.tinymce.selection.SetSelectionContentTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>b</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
-    SetSelectionContent.setContent(editor, 'a', {});
+    SetSelectionContent.setContentInternal(editor, 'a', {});
     TinyAssertions.assertContent(editor, '<p>ab</p>');
   });
 
@@ -48,7 +48,7 @@ describe('browser.tinymce.selection.SetSelectionContentTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>abc</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 2);
-    SetSelectionContent.setContent(editor, 'X', {});
+    SetSelectionContent.setContentInternal(editor, 'X', {});
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, _arr) => s.element('body', {
         children: [
@@ -67,7 +67,7 @@ describe('browser.tinymce.selection.SetSelectionContentTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>ab</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
-    SetSelectionContent.setContent(editor, 'X', {});
+    SetSelectionContent.setContentInternal(editor, 'X', {});
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, _arr) => s.element('body', {
         children: [
@@ -86,7 +86,7 @@ describe('browser.tinymce.selection.SetSelectionContentTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>a</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
-    SetSelectionContent.setContent(editor, 'X', {});
+    SetSelectionContent.setContentInternal(editor, 'X', {});
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, _arr) => s.element('body', {
         children: [
@@ -105,7 +105,7 @@ describe('browser.tinymce.selection.SetSelectionContentTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>a</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
-    SetSelectionContent.setContent(editor, 'X', {});
+    SetSelectionContent.setContentInternal(editor, 'X', {});
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, _arr) => s.element('body', {
         children: [
@@ -123,7 +123,7 @@ describe('browser.tinymce.selection.SetSelectionContentTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>a</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
-    SetSelectionContent.setContent(editor, 'b<em>c</em>', {});
+    SetSelectionContent.setContentInternal(editor, 'b<em>c</em>', {});
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, _arr) => s.element('body', {
         children: [
@@ -146,7 +146,7 @@ describe('browser.tinymce.selection.SetSelectionContentTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>a</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
-    SetSelectionContent.setContent(editor, '<em>b</em>c', {});
+    SetSelectionContent.setContentInternal(editor, '<em>b</em>c', {});
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, _arr) => s.element('body', {
         children: [
@@ -170,7 +170,7 @@ describe('browser.tinymce.selection.SetSelectionContentTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>a&nbsp;</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 2);
-    SetSelectionContent.setContent(editor, 'b', {});
+    SetSelectionContent.setContentInternal(editor, 'b', {});
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, _arr) => s.element('body', {
         children: [
@@ -188,7 +188,7 @@ describe('browser.tinymce.selection.SetSelectionContentTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>a b c</p>');
     TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 3);
-    SetSelectionContent.setContent(editor, ' b ', {});
+    SetSelectionContent.setContentInternal(editor, ' b ', {});
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, _arr) => s.element('body', {
         children: [
@@ -206,7 +206,7 @@ describe('browser.tinymce.selection.SetSelectionContentTest', () => {
     const editor = hook.editor();
     editor.setContent('<p>&nbsp;&nbsp;</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
-    SetSelectionContent.setContent(editor, ' a b ', {});
+    SetSelectionContent.setContentInternal(editor, ' a b ', {});
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, _arr) => s.element('body', {
         children: [
@@ -225,7 +225,7 @@ describe('browser.tinymce.selection.SetSelectionContentTest', () => {
     const editor = hook.editor();
     editor.setContent('<p></p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
-    SetSelectionContent.setContent(editor, ' a b ', {});
+    SetSelectionContent.setContentInternal(editor, ' a b ', {});
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, _arr) => s.element('body', {
         children: [
@@ -244,7 +244,7 @@ describe('browser.tinymce.selection.SetSelectionContentTest', () => {
     const editor = hook.editor();
     editor.setContent('<pre></pre>');
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
-    SetSelectionContent.setContent(editor, '   a <br>  b  ', {});
+    SetSelectionContent.setContentInternal(editor, '   a <br>  b  ', {});
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, _arr) => s.element('body', {
         children: [
@@ -265,7 +265,7 @@ describe('browser.tinymce.selection.SetSelectionContentTest', () => {
     const editor = hook.editor();
     editor.setContent('<pre>a b c</pre>');
     TinySelections.setSelection(editor, [ 0, 0 ], 2, [ 0, 0 ], 5);
-    SetSelectionContent.setContent(editor, ' b <br> c ', {});
+    SetSelectionContent.setContentInternal(editor, ' b <br> c ', {});
     TinyAssertions.assertContentStructure(editor,
       ApproxStructure.build((s, str, _arr) => s.element('body', {
         children: [
@@ -290,7 +290,7 @@ describe('browser.tinymce.selection.SetSelectionContentTest', () => {
       lastSetContent = e;
     });
 
-    SetSelectionContent.setContent(editor, '<img src="" onload="alert(1)">');
+    SetSelectionContent.setContentInternal(editor, '<img src="" onload="alert(1)">');
 
     assert.equal(lastSetContent?.content, '<img src="">');
   });

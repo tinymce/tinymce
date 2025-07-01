@@ -1,4 +1,4 @@
-import { Arr, Fun, Type } from '@ephox/katamari';
+import { Arr, Fun, Type, Id } from '@ephox/katamari';
 
 import * as EditorContent from '../content/EditorContent';
 import * as Deprecations from '../Deprecations';
@@ -6,6 +6,7 @@ import * as NodeType from '../dom/NodeType';
 import * as EditorRemove from '../EditorRemove';
 import { BlobInfoImagePair } from '../file/ImageScanner';
 import * as EditorFocus from '../focus/EditorFocus';
+import { LicenseKeyManager } from '../init/LicenseKeyManager';
 import * as Render from '../init/Render';
 import { type UserLookup, createUserLookup } from '../lookup/UserLookup';
 import * as EditableRoot from '../mode/EditableRoot';
@@ -97,6 +98,14 @@ class Editor implements EditorObservable {
    * @type String
    */
   public id: string;
+
+  /**
+   * A uuid string to uniquely identify an editor across any page.
+   *
+   * @property editorUid
+   * @type String
+   */
+  public editorUid: string;
 
   /**
    * Name/Value object containing plugin instances.
@@ -243,6 +252,7 @@ class Editor implements EditorObservable {
   public model!: Model;
   public undoManager!: UndoManager;
   public windowManager!: WindowManager;
+  public licenseKeyManager!: LicenseKeyManager;
   public _beforeUnload: (() => void) | undefined;
   public _eventDispatcher: EventDispatcher<NativeEventMap> | undefined;
   public _nodeChangeDispatcher!: NodeChange;
@@ -279,6 +289,7 @@ class Editor implements EditorObservable {
     const self = this;
 
     this.id = id;
+    this.editorUid = Id.uuidV4();
     this.hidden = false;
     const normalizedOptions = normalizeOptions(editorManager.defaultOptions, options);
 
@@ -349,6 +360,13 @@ class Editor implements EditorObservable {
     };
 
     this.mode = createMode(self);
+
+    // Lock certain properties to reduce misuse
+    Object.defineProperty(this, 'editorUid', {
+      writable: false,
+      configurable: false,
+      enumerable: true,
+    });
 
     // Call setup
     editorManager.dispatch('SetupEditor', { editor: this });

@@ -22,7 +22,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
   };
 
   // Menu/Button part of split button
-  const assertMenuPartEnabled = (selector: string) => UiFinder.notExists(SugarBody.body(), `[data-mce-name="${selector}"] > span.tox-tbtn.tox-tbtn--select[aria-disabled="true"]`);
+  const assertMenuPartEnabled = (selector: string) => UiFinder.notExists(SugarBody.body(), `[data-mce-name="${selector}-chevron"][aria-disabled="true"]`);
 
   const makeSplitButton = (
     ed: Editor,
@@ -178,7 +178,10 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         assertMenuPartEnabled(selector);
         assertButtonEnabled(selector);
       },
-      assertButtonDisabled
+      assertButtonDisabled: (selector: string) => {
+        UiFinder.exists(SugarBody.body(), `button[data-mce-name="${selector}"][aria-disabled="true"]`);
+        UiFinder.exists(SugarBody.body(), `button[data-mce-name="${selector}-chevron"][aria-disabled="true"]`);
+      }
     },
   ];
 

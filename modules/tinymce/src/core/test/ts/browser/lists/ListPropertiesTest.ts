@@ -21,7 +21,7 @@ describe('browser.tinymce.core.lists.ListPropertiesTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ ], true);
 
-  const contentMenuSelector = '.tox-tinymce-aux .tox-menu .tox-collection__item:contains("List properties...")';
+  const contentMenuSelector = '.tox-tinymce-aux .tox-menu .tox-collection__item:contains("List properties…")';
 
   const openContextMenu = async (editor: Editor, selector: string) => {
     Mouse.contextMenuOn(TinyDom.body(editor), selector);

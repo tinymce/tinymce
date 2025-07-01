@@ -21,6 +21,7 @@ export const optionalRole = FieldSchema.optionString('role');
 export const optionalIcon = FieldSchema.optionString('icon');
 export const optionalUrl = FieldSchema.optionString('url');
 export const optionalTooltip = FieldSchema.optionString('tooltip');
+export const optionalChevronTooltip = FieldSchema.optionString('chevronTooltip');
 export const optionalLabel = FieldSchema.optionString('label');
 export const optionalShortcut = FieldSchema.optionString('shortcut');
 export const optionalSelect = FieldSchema.optionFunction('select');

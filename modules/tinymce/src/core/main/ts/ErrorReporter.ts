@@ -53,6 +53,10 @@ const modelLoadError = (editor: Editor, url: string, name: string): void => {
   logError(editor, 'ModelLoadError', createLoadError('model', url, name));
 };
 
+const licenseKeyManagerLoadError = (editor: Editor, url: string, name: string): void => {
+  logError(editor, 'LicenseKeyManagerLoadError', createLoadError('license key manager', url, name));
+};
+
 const pluginInitError = (editor: Editor, name: string, err: any): void => {
   const message = I18n.translate([ 'Failed to initialize plugin: {0}', name ]);
   fireError(editor, 'PluginLoadError', { message });
@@ -77,6 +81,7 @@ export {
   languageLoadError,
   themeLoadError,
   modelLoadError,
+  licenseKeyManagerLoadError,
   pluginInitError,
   uploadError,
   displayError,
