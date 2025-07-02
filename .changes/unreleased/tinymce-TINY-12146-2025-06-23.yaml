@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: When `editor.resetContent()` is used, the resulting `SetContent` event now has the `initial` flag set in the event arguments.
+time: 2025-06-23T16:49:46.479886+10:00
+custom:
+    Issue: TINY-12146
