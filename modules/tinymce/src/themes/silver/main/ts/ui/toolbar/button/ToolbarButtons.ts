@@ -1,14 +1,31 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button as AlloyButton, Disabling, FloatingToolbarButton,
+  AddEventsBehaviour,
+  AlloyComponent,
+  AlloyEvents,
+  AlloySpec,
+  AlloyTriggers,
+  Behaviour,
+  Button as AlloyButton,
+  Disabling,
+  Dropdown as AlloyDropdown,
+  FloatingToolbarButton,
   GuiFactory,
-  Keying, Memento, NativeEvents, Replacing, SketchSpec, Dropdown as AlloyDropdown, SystemEvents, TieredData, TieredMenuTypes, Toggling,
   Highlighting,
+  Keying,
+  Memento,
+  NativeEvents,
+  Replacing,
+  SketchSpec,
+  SystemEvents,
+  TieredData,
+  TieredMenuTypes,
+  Toggling,
   Tooltipping,
-  Unselecting,
-  AlloySpec } from '@ephox/alloy';
+  Unselecting
+} from '@ephox/alloy';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional, Type } from '@ephox/katamari';
-import { Attribute, EventArgs, SelectorFind, Class, Traverse } from '@ephox/sugar';
+import { Attribute, Class, EventArgs, SelectorFind, Traverse } from '@ephox/sugar';
 
 import { ToolbarGroupOption } from '../../../api/Options';
 import { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
@@ -307,35 +324,55 @@ const fetchChoices = (getApi: (comp: AlloyComponent) => Toolbar.ToolbarSplitButt
 const makeSplitButtonApi = (tooltipString: Cell<string>, sharedBackstage: UiFactoryBackstageShared, spec: Toolbar.ToolbarSplitButton) => (component: AlloyComponent): Toolbar.ToolbarSplitButtonInstanceApi => {
   const system = component.getSystem();
   const element = component.element;
-  const isChevron = Class.has(element, 'tox-split-button__chevron');
+  const getComponents = () => {
+    const isChevron = Class.has(element, 'tox-split-button__chevron');
 
-  const mainOpt = isChevron ?
-    Traverse.prevSibling(element).bind((el) => system.getByDom(el).toOptional()) :
-    Optional.some(component);
+    const mainOpt = isChevron ?
+      Traverse.prevSibling(element).bind((el) => system.getByDom(el).toOptional()) :
+      Optional.some(component);
 
-  const chevronOpt = isChevron ?
-    Optional.some(component) :
-    Traverse.nextSibling(element).bind((el) => system.getByDom(el).toOptional().filter((comp) => Class.has(comp.element, 'tox-split-button__chevron')));
+    const chevronOpt = isChevron ?
+      Optional.some(component) :
+      Traverse.nextSibling(element).bind((el) => system.getByDom(el).toOptional().filter((comp) => Class.has(comp.element, 'tox-split-button__chevron')));
+    return { mainOpt, chevronOpt };
+  };
 
   const applyBoth = (f: (c: AlloyComponent) => void) => {
+    const { mainOpt, chevronOpt } = getComponents();
     mainOpt.each(f);
     chevronOpt.each(f);
   };
 
   return {
-    isEnabled: () => mainOpt.exists((c) => !Disabling.isDisabled(c)),
+    isEnabled: () => {
+      const { mainOpt } = getComponents();
+      return mainOpt.exists((c) => !Disabling.isDisabled(c));
+    },
     setEnabled: (state: boolean) => applyBoth((c) => Disabling.set(c, !state)),
-    setText: (text: string) => mainOpt.each((c) => AlloyTriggers.emitWith(c, updateMenuText, { text })),
-    setIcon: (icon: string) => mainOpt.each((c) => AlloyTriggers.emitWith(c, updateMenuIcon, { icon })),
+    setText: (text: string) => {
+      const { mainOpt } = getComponents();
+      mainOpt.each((c) => AlloyTriggers.emitWith(c, updateMenuText, { text }));
+    },
+    setIcon: (icon: string) => {
+      const { mainOpt } = getComponents();
+      mainOpt.each((c) => AlloyTriggers.emitWith(c, updateMenuIcon, { icon }));
+    },
     setIconFill: (id: string, value: string) => applyBoth((c) => {
       SelectorFind.descendant(c.element, `svg path[class="${id}"], rect[class="${id}"]`).each((underlinePath) => {
         Attribute.set(underlinePath, 'fill', value);
       });
     }),
-    isActive: () => mainOpt.exists((c) => Toggling.isOn(c)),
-    setActive: (state: boolean) => mainOpt.each((c) => Toggling.set(c, state)),
+    isActive: () => {
+      const { mainOpt } = getComponents();
+      return mainOpt.exists((c) => Toggling.isOn(c));
+    },
+    setActive: (state: boolean) => {
+      const { mainOpt } = getComponents();
+      mainOpt.each((c) => Toggling.set(c, state));
+    },
     setTooltip: (tooltip: string) => {
       tooltipString.set(tooltip);
+      const { mainOpt, chevronOpt } = getComponents();
       mainOpt.each((c) => Attribute.set(c.element, 'aria-label', sharedBackstage.providers.translate(tooltip)));
       // For chevron, use the explicit chevronTooltip if provided, otherwise fall back to default behavior
       const chevronTooltipText = spec.chevronTooltip
@@ -361,9 +398,8 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
 
   // Helper to get ARIA label for the main button
   const getMainButtonAriaLabel = () => {
-    const label = spec.tooltip.map((tooltip) => sharedBackstage.providers.translate(tooltip))
+    return spec.tooltip.map((tooltip) => sharedBackstage.providers.translate(tooltip))
       .getOr(sharedBackstage.providers.translate('Text color'));
-    return label;
   };
 
   // Helper to get ARIA label and tooltip for the chevron/dropdown button

@@ -7,6 +7,11 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 
+interface EditorWithTestApis extends Editor {
+  testSplitButtonApi?: () => any;
+  testSplitButtonNoChevronApi?: () => any;
+}
+
 import * as TooltipUtils from '../../../module/TooltipUtils';
 
 interface TestScenario {
@@ -132,6 +137,20 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
         await TooltipUtils.pCloseTooltip(editor, buttonSelector);
       });
 
+      it(`TINY-8665: Should trigger chevron tooltip with ${test.label} - Toolbar addSplitButton chevron`, async () => {
+        const editor = hook.editor();
+        const chevronSelector = 'button[data-mce-name="split-button-chevron"]';
+        await TooltipUtils.pAssertTooltip(editor, () => test.pTriggerTooltip(editor, chevronSelector), 'Split Button menu');
+        await TooltipUtils.pCloseTooltip(editor, chevronSelector);
+      });
+
+      it(`TINY-8665: Should trigger chevron tooltip with ${test.label} - Toolbar addSplitButton with icon chevron`, async () => {
+        const editor = hook.editor();
+        const chevronSelector = 'button[data-mce-name="split-button-with-icon-chevron"]';
+        await TooltipUtils.pAssertTooltip(editor, () => test.pTriggerTooltip(editor, chevronSelector), 'Split Button with Icon menu');
+        await TooltipUtils.pCloseTooltip(editor, chevronSelector);
+      });
+
       it(`TINY-12054: Should trigger tooltip with ${test.label} - And escape closes it.`, async () => {
         const editor = hook.editor();
         const buttonSelector = 'button[data-mce-name="split-button"]';
@@ -161,6 +180,87 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
         await TooltipUtils.pAssertTooltip(editor, () => test.pTriggerTooltip(editor, menuSelector), 'Lower Alpha 1');
         await TooltipUtils.pCloseTooltip(editor, menuSelector);
         await TooltipUtils.pCloseMenu(menuSelector);
+      });
+    });
+
+    context('SetTooltip API for split buttons', () => {
+      const hook = TinyHooks.bddSetup<EditorWithTestApis>({
+        base_url: '/project/tinymce/js/tinymce',
+        toolbar: 'test-split-button test-split-button-no-chevron',
+        setup: (ed: EditorWithTestApis) => {
+          let splitButtonApi: any = null;
+          let splitButtonNoChevronApi: any = null;
+
+          ed.ui.registry.addSplitButton('test-split-button', {
+            text: 'Initial Tooltip',
+            tooltip: 'Initial Tooltip',
+            chevronTooltip: 'Initial Chevron Tooltip',
+            fetch: (success) => {
+              success([{ type: 'choiceitem', text: 'Item 1' }]);
+            },
+            onAction: Fun.noop,
+            onItemAction: Fun.noop,
+            onSetup: (api) => {
+              splitButtonApi = api;
+              return Fun.noop;
+            }
+          });
+
+          ed.ui.registry.addSplitButton('test-split-button-no-chevron', {
+            text: 'No Chevron',
+            tooltip: 'No Chevron Tooltip',
+            // No chevronTooltip - should auto-generate
+            fetch: (success) => {
+              success([{ type: 'choiceitem', text: 'Item 1' }]);
+            },
+            onAction: Fun.noop,
+            onItemAction: Fun.noop,
+            onSetup: (api) => {
+              splitButtonNoChevronApi = api;
+              return Fun.noop;
+            }
+          });
+
+          // Expose APIs for testing
+          ed.testSplitButtonApi = () => splitButtonApi;
+          ed.testSplitButtonNoChevronApi = () => splitButtonNoChevronApi;
+        }
+      });
+
+      it(`TINY-8665: setTooltip should update both main and chevron tooltips with ${test.label}`, async () => {
+        const editor = hook.editor();
+        const api = editor.testSplitButtonApi?.();
+
+        // Update tooltip
+        api.setTooltip('Updated Tooltip');
+
+        // Test main button tooltip
+        const mainSelector = 'button[data-mce-name="test-split-button"]';
+        await TooltipUtils.pAssertTooltip(editor, () => test.pTriggerTooltip(editor, mainSelector), 'Updated Tooltip');
+        await TooltipUtils.pCloseTooltip(editor, mainSelector);
+
+        // Test chevron button tooltip (should use explicit chevronTooltip)
+        const chevronSelector = 'button[data-mce-name="test-split-button-chevron"]';
+        await TooltipUtils.pAssertTooltip(editor, () => test.pTriggerTooltip(editor, chevronSelector), 'Initial Chevron Tooltip');
+        await TooltipUtils.pCloseTooltip(editor, chevronSelector);
+      });
+
+      it(`TINY-8665: setTooltip should auto-generate chevron tooltip when not explicitly set with ${test.label}`, async () => {
+        const editor = hook.editor();
+        const api = editor.testSplitButtonNoChevronApi?.();
+
+        // Update tooltip
+        api.setTooltip('New Tooltip');
+
+        // Test main button tooltip
+        const mainSelector = 'button[data-mce-name="test-split-button-no-chevron"]';
+        await TooltipUtils.pAssertTooltip(editor, () => test.pTriggerTooltip(editor, mainSelector), 'New Tooltip');
+        await TooltipUtils.pCloseTooltip(editor, mainSelector);
+
+        // Test chevron button tooltip (should auto-generate from main tooltip)
+        const chevronSelector = 'button[data-mce-name="test-split-button-no-chevron-chevron"]';
+        await TooltipUtils.pAssertTooltip(editor, () => test.pTriggerTooltip(editor, chevronSelector), 'New Tooltip menu');
+        await TooltipUtils.pCloseTooltip(editor, chevronSelector);
       });
     });
 
