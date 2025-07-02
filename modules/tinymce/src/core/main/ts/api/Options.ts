@@ -83,7 +83,7 @@ const register = (editor: Editor): void => {
 
   registerOption('crossorigin', {
     processor: 'function',
-    default: Fun.constant('')
+    default: Fun.constant(undefined)
   });
 
   registerOption('language_load', {

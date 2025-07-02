@@ -65,7 +65,7 @@ export interface DOMUtilsSettings {
   onSetAttrib: (event: SetAttribEvent) => void;
   contentCssCors: boolean;
   referrerPolicy: ReferrerPolicy;
-  crossOrigin: (url: string, resourceType: 'script' | 'stylesheet') => string;
+  crossOrigin: (url: string, resourceType: 'script' | 'stylesheet') => string | undefined;
 }
 
 export type Target = Node | Window;
@@ -340,7 +340,7 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       if (Type.isFunction(crossOrigin)) {
         return crossOrigin(url, 'stylesheet');
       } else {
-        return '';
+        return undefined;
       }
     }
   });
