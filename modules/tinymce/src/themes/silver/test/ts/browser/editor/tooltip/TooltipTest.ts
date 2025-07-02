@@ -1,6 +1,6 @@
 import { Keys, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Fun } from '@ephox/katamari';
+import { Arr, Fun, Optional } from '@ephox/katamari';
 import { SugarElement, TextContent } from '@ephox/sugar';
 import { TinyContentActions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -8,8 +8,8 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 
 interface EditorWithTestApis extends Editor {
-  testSplitButtonApi?: () => any;
-  testSplitButtonNoChevronApi?: () => any;
+  testSplitButtonApi?: () => Optional<any>;
+  testSplitButtonNoChevronApi?: () => Optional<any>;
 }
 
 import * as TooltipUtils from '../../../module/TooltipUtils';
@@ -222,14 +222,14 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
           });
 
           // Expose APIs for testing
-          ed.testSplitButtonApi = () => splitButtonApi;
-          ed.testSplitButtonNoChevronApi = () => splitButtonNoChevronApi;
+          ed.testSplitButtonApi = () => Optional.from(splitButtonApi);
+          ed.testSplitButtonNoChevronApi = () => Optional.from(splitButtonNoChevronApi);
         }
       });
 
       it(`TINY-8665: setTooltip should update both main and chevron tooltips with ${test.label}`, async () => {
         const editor = hook.editor();
-        const api = editor.testSplitButtonApi!();
+        const api = editor.testSplitButtonApi?.()?.getOrDie('Split button API not available');
 
         // Update tooltip
         api.setTooltip('Updated Tooltip');
@@ -247,7 +247,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
 
       it(`TINY-8665: setTooltip should auto-generate chevron tooltip when not explicitly set with ${test.label}`, async () => {
         const editor = hook.editor();
-        const api = editor.testSplitButtonNoChevronApi!();
+        const api = editor.testSplitButtonNoChevronApi?.()?.getOrDie('Split button no-chevron API not available');
 
         // Update tooltip
         api.setTooltip('New Tooltip');
