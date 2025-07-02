@@ -229,7 +229,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
 
       it(`TINY-8665: setTooltip should update both main and chevron tooltips with ${test.label}`, async () => {
         const editor = hook.editor();
-        const api = editor.testSplitButtonApi?.();
+        const api = editor.testSplitButtonApi!();
 
         // Update tooltip
         api.setTooltip('Updated Tooltip');
@@ -247,7 +247,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
 
       it(`TINY-8665: setTooltip should auto-generate chevron tooltip when not explicitly set with ${test.label}`, async () => {
         const editor = hook.editor();
-        const api = editor.testSplitButtonNoChevronApi?.();
+        const api = editor.testSplitButtonNoChevronApi!();
 
         // Update tooltip
         api.setTooltip('New Tooltip');
