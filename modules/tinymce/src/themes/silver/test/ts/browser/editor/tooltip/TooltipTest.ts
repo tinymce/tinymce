@@ -14,6 +14,22 @@ interface EditorWithTestApis extends Editor {
 
 import * as TooltipUtils from '../../../module/TooltipUtils';
 
+const getSplitButtonApi = (editor: EditorWithTestApis) => {
+  const apiFunction = editor.testSplitButtonApi;
+  if (!apiFunction) {
+    throw new Error('Split button test API function not registered');
+  }
+  return apiFunction().getOrDie('Split button API not available');
+};
+
+const getSplitButtonNoChevronApi = (editor: EditorWithTestApis) => {
+  const apiFunction = editor.testSplitButtonNoChevronApi;
+  if (!apiFunction) {
+    throw new Error('Split button no-chevron test API function not registered');
+  }
+  return apiFunction().getOrDie('Split button no-chevron API not available');
+};
+
 interface TestScenario {
   readonly label: string;
   readonly pTriggerTooltip: (editor: Editor, selector: string) => Promise<void>;
@@ -229,7 +245,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
 
       it(`TINY-8665: setTooltip should update both main and chevron tooltips with ${test.label}`, async () => {
         const editor = hook.editor();
-        const api = editor.testSplitButtonApi?.()?.getOrDie('Split button API not available');
+        const api = getSplitButtonApi(editor);
 
         // Update tooltip
         api.setTooltip('Updated Tooltip');
@@ -247,7 +263,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
 
       it(`TINY-8665: setTooltip should auto-generate chevron tooltip when not explicitly set with ${test.label}`, async () => {
         const editor = hook.editor();
-        const api = editor.testSplitButtonNoChevronApi?.()?.getOrDie('Split button no-chevron API not available');
+        const api = getSplitButtonNoChevronApi(editor);
 
         // Update tooltip
         api.setTooltip('New Tooltip');
