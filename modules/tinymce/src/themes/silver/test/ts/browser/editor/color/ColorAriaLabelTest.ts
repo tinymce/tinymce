@@ -24,6 +24,12 @@ describe('browser.tinymce.themes.silver.editor.color.ColorAriaLabelTest', () => 
   const selectors = {
     backcolorSplitButton: Fun.constant(`button[data-mce-name="backcolor-chevron"][aria-label="Background color menu"]`),
     forecolorSplitButton: Fun.constant(`button[data-mce-name="forecolor-chevron"][aria-label="Text color menu"]`),
+    backcolorMainButton: (color: string = '') => Strings.isEmpty(color) ?
+      `button[data-mce-name="backcolor"][aria-label^="Background color"]` :
+      `button[data-mce-name="backcolor"][aria-label^="Background color ${color}"]`,
+    forecolorMainButton: (color: string = '') => Strings.isEmpty(color) ?
+      `button[data-mce-name="forecolor"][aria-label^="Text color"]` :
+      `button[data-mce-name="forecolor"][aria-label^="Text color ${color}"]`,
     backcolorMenuItem: (color: string = '') => Strings.isEmpty(color) ?
       `[role="menu"] div[aria-label^="Background color"]` :
       `[role="menu"] div[aria-label^="Background color ${color}"]`,
@@ -182,6 +188,75 @@ describe('browser.tinymce.themes.silver.editor.color.ColorAriaLabelTest', () => 
         await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
         TinyUiActions.clickOnUi(editor, selectors.swatchItemColor('Remove color'));
         UiFinder.exists(SugarBody.body(), selectors.backcolorSplitButton()); // Still static
+      });
+
+      // Tests for main button icon section
+      it('TINY-9697: Forecolor main button - default color appended to aria-label', () => {
+        hook.editor();
+        UiFinder.exists(SugarBody.body(), selectors.forecolorMainButton(scenario.buttonColor));
+      });
+
+      it('TINY-9697: Backcolor main button - default color appended to aria-label', () => {
+        hook.editor();
+        UiFinder.exists(SugarBody.body(), selectors.backcolorMainButton(scenario.buttonColor));
+      });
+
+      it('TINY-9697: Forecolor main button - aria-label changes when color is selected', async () => {
+        const editor = hook.editor();
+        TinyUiActions.clickOnToolbar(editor, selectors.forecolorSplitButton());
+        await pSelectSwatchColor(editor, '#BFEDD2');
+        UiFinder.exists(SugarBody.body(), selectors.forecolorMainButton(scenario.expectedColor));
+      });
+
+      it('TINY-9697: Backcolor main button - aria-label changes when color is selected', async () => {
+        const editor = hook.editor();
+        TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton());
+        await pSelectSwatchColor(editor, '#BFEDD2');
+        UiFinder.exists(SugarBody.body(), selectors.backcolorMainButton(scenario.expectedColor));
+      });
+
+      it('TINY-9697: Forecolor main button - aria-label changes when custom color is selected', async () => {
+        const editor = hook.editor();
+        TinyUiActions.clickOnToolbar(editor, selectors.forecolorSplitButton());
+        await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
+        TinyUiActions.clickOnUi(editor, 'button[data-mce-name="Custom color"]');
+        const dialog = await TinyUiActions.pWaitForDialog(editor);
+        const input = UiFinder.findTargetByLabel<HTMLInputElement>(dialog, '#').getOrDie();
+        UiControls.setValue(input, '123123');
+        TinyUiActions.clickOnUi(editor, 'button[data-mce-name="Save"]');
+        UiFinder.exists(SugarBody.body(), selectors.forecolorMainButton('#123123'));
+      });
+
+      it('TINY-9697: Backcolor main button - aria-label changes when custom color is selected', async () => {
+        const editor = hook.editor();
+        TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton());
+        await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
+        TinyUiActions.clickOnUi(editor, 'button[data-mce-name="Custom color"]');
+        const dialog = await TinyUiActions.pWaitForDialog(editor);
+        const input = UiFinder.findTargetByLabel<HTMLInputElement>(dialog, '#').getOrDie();
+        UiControls.setValue(input, '123123');
+        TinyUiActions.clickOnUi(editor, 'button[data-mce-name="Save"]');
+        UiFinder.exists(SugarBody.body(), selectors.backcolorMainButton('#123123'));
+      });
+
+      it('TINY-9697: Forecolor main button - Remove color should remove color in aria-label', async () => {
+        const editor = hook.editor();
+        TinyUiActions.clickOnToolbar(editor, selectors.forecolorSplitButton());
+        await pSelectSwatchColor(editor, '#BFEDD2');
+        TinyUiActions.clickOnToolbar(editor, selectors.forecolorSplitButton());
+        await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
+        TinyUiActions.clickOnUi(editor, selectors.swatchItemColor('Remove color'));
+        UiFinder.exists(SugarBody.body(), selectors.forecolorMainButton());
+      });
+
+      it('TINY-9697: Backcolor main button - Remove color should remove color in aria-label', async () => {
+        const editor = hook.editor();
+        TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton());
+        await pSelectSwatchColor(editor, '#BFEDD2');
+        TinyUiActions.clickOnToolbar(editor, selectors.backcolorSplitButton());
+        await TinyUiActions.pWaitForUi(editor, '.tox-swatches');
+        TinyUiActions.clickOnUi(editor, selectors.swatchItemColor('Remove color'));
+        UiFinder.exists(SugarBody.body(), selectors.backcolorMainButton());
       });
     });
   });
