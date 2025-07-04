@@ -5,7 +5,7 @@ import Editor from './api/Editor';
 import Schema, { SchemaMap } from './api/html/Schema';
 import * as Options from './api/Options';
 import * as Bookmarks from './bookmark/Bookmarks';
-import * as StructureBookmark from './bookmark/StructureBookmark';
+import * as NodeStructureBookmark from './bookmark/NodeStructureBookmark';
 import * as TransparentElements from './content/TransparentElements';
 import * as NodeType from './dom/NodeType';
 import * as PaddingBr from './dom/PaddingBr';
@@ -62,7 +62,7 @@ const addRootBlocks = (editor: Editor) => {
   const rootNode = editor.getBody();
   let rootBlockNode: Node | undefined | null;
   let tempNode: Node;
-  let bm: StructureBookmark.StructureBookmark | null = null;
+  let bm: NodeStructureBookmark.Bookmark | null = null;
 
   const forcedRootBlock = Options.getForcedRootBlock(editor);
   if (!startNode || !NodeType.isElement(startNode)) {
@@ -104,7 +104,7 @@ const addRootBlocks = (editor: Editor) => {
 
       if (!rootBlockNode) {
         if (!bm && editor.hasFocus()) {
-          bm = StructureBookmark.getBookmark(editor.selection.getRng(), () => document.createElement('span'));
+          bm = NodeStructureBookmark.createBookmark(editor.selection.getRng(), () => document.createElement('span'));
         }
 
         // Firefox will remove the last BR element if you insert nodes next to it using DOM APIs like insertBefore
@@ -128,7 +128,7 @@ const addRootBlocks = (editor: Editor) => {
   }
 
   if (bm) {
-    editor.selection.setRng(StructureBookmark.resolveBookmark(bm));
+    editor.selection.setRng(NodeStructureBookmark.resolveBookmark(bm));
     editor.nodeChanged();
   }
 };
