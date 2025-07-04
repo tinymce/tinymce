@@ -39,13 +39,13 @@
 
 .tox-suggestededits__annotation--removed__highlight {
 	background-color: @removed-background-color;
-	text-decoration: 'strike-through';
+	text-decoration: line-through;
 }
 
 .tox-suggestededits__annotation--removed__selected {
 	background-color: @removed-background-color;
 	box-shadow: @selected-box-shadow;
-	text-decoration: 'strike-through';
+	text-decoration: line-through;
 }
 
 .tox-suggestededits__annotation--added.tox-suggestededits__annotation--added__hidden,
@@ -65,28 +65,38 @@
 }
 
 img,
-video {
+video,
+iframe {
   &.tox-suggestededits__annotation--added__highlight {
     outline: 0.25em solid @added-background-color;
+    padding: 0.25em;
   }
 
   &.tox-suggestededits__annotation--added__selected {
-    outline: 0.25em solid @color-success;
+    border: 0.25em solid @added-background-color;
+    outline: 0.125em solid @selected-outline-color;
+    padding: 0em;
   }
 
   &.tox-suggestededits__annotation--modified__highlight {
     outline: 0.25em solid @modified-background-color;
+    padding: 0.25em;
   }
 
   &.tox-suggestededits__annotation--modified__selected {
-    outline: 0.25em solid @color-tint;
+    border: 0.25em solid @modified-background-color;
+    outline: 0.125em solid @selected-outline-color;
+    padding: 0em;
   }
 
   &.tox-suggestededits__annotation--removed__highlight {
     outline: 0.25em solid @removed-background-color;
+    padding: 0.25em;
   }
 
   &.tox-suggestededits__annotation--removed__selected {
-    outline: 0.25em solid @color-error;
+    border: 0.25em solid @removed-background-color;
+    outline: 0.125em solid @selected-outline-color;
+    padding: 0em;
   }
 }
