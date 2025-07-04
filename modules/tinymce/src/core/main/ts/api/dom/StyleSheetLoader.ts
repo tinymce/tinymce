@@ -18,13 +18,13 @@ interface StyleSheetLoader {
   unloadAll: (urls: string[]) => void;
   _setReferrerPolicy: (referrerPolicy: ReferrerPolicy) => void;
   _setContentCssCors: (contentCssCors: boolean) => void;
-  _setCrossOrigin: (crossOrigin: (url: string) => string) => void;
+  _setCrossOrigin: (crossOrigin: (url: string) => string | undefined) => void;
 }
 
 export interface StyleSheetLoaderSettings {
   maxLoadTime?: number;
   contentCssCors?: boolean;
-  crossOrigin?: (url: string) => string;
+  crossOrigin?: (url: string) => string | undefined;
   referrerPolicy?: ReferrerPolicy;
 }
 
@@ -44,7 +44,7 @@ const getCrossOrigin = (url: string, settings: StyleSheetLoaderSettings) => {
   } else if (Type.isFunction(crossOriginFn)) {
     return crossOriginFn(url);
   } else {
-    return '';
+    return undefined;
   }
 };
 
@@ -63,7 +63,7 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
     settings.contentCssCors = contentCssCors;
   };
 
-  const _setCrossOrigin = (crossOrigin: (url: string) => string) => {
+  const _setCrossOrigin = (crossOrigin: (url: string) => string | undefined) => {
     settings.crossOrigin = crossOrigin;
   };
 
@@ -153,7 +153,7 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
       });
 
       const crossorigin = getCrossOrigin(url, settings);
-      if (crossorigin !== '') {
+      if (crossorigin !== undefined) {
         Attribute.set(linkElem, 'crossOrigin', crossorigin);
       };
 

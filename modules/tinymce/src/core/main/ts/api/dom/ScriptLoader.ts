@@ -32,7 +32,7 @@ const DOM = DOMUtils.DOM;
 
 export interface ScriptLoaderSettings {
   referrerPolicy?: ReferrerPolicy;
-  crossOrigin?: (url: string) => string;
+  crossOrigin?: (url: string) => string | undefined;
 }
 
 export interface ScriptLoaderConstructor {
@@ -66,7 +66,7 @@ class ScriptLoader {
     this.settings.referrerPolicy = referrerPolicy;
   }
 
-  public _setCrossOrigin(crossOrigin: (url: string) => string): void {
+  public _setCrossOrigin(crossOrigin: (url: string) => string | undefined): void {
     this.settings.crossOrigin = crossOrigin;
   }
 
@@ -118,7 +118,10 @@ class ScriptLoader {
 
       const crossOrigin = this.settings.crossOrigin;
       if (Type.isFunction(crossOrigin)) {
-        dom.setAttrib(elm, 'crossorigin', crossOrigin(url));
+        const resultCrossOrigin = crossOrigin(url);
+        if (resultCrossOrigin !== undefined) {
+          dom.setAttrib(elm, 'crossorigin', resultCrossOrigin);
+        }
       }
 
       elm.onload = done;
