@@ -11,6 +11,7 @@ interface Data {
 export default (): void => {
   tinymce.init({
     selector: 'textarea.tinymce',
+    license_key: 'gpl',
     toolbar: 'tree',
     height: 600,
     setup: (ed) => {

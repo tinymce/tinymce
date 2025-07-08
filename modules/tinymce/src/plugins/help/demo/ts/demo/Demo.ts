@@ -4,6 +4,7 @@ declare let tinymce: TinyMCE;
 
 tinymce.init({
   selector: 'textarea.tinymce',
+  license_key: 'gpl',
   plugins: 'help link table code emoticons fullscreen advlist anchor',
   toolbar: 'help',
   height: 300,
@@ -11,6 +12,7 @@ tinymce.init({
 });
 
 tinymce.init({
+  license_key: 'gpl',
   selector: 'textarea.tinymce2',
   plugins: 'help link table code emoticons fullscreen advlist anchor',
   toolbar: 'help',
@@ -39,6 +41,7 @@ tinymce.init({
 });
 
 tinymce.init({
+  license_key: 'gpl',
   selector: 'textarea.tinymce3',
   plugins: 'help link table code emoticons fullscreen advlist anchor',
   toolbar: 'help addTab',
@@ -73,6 +76,7 @@ tinymce.init({
 });
 
 tinymce.init({
+  license_key: 'gpl',
   selector: 'textarea.tinymce4',
   plugins: 'help link table code emoticons fullscreen advlist anchor',
   toolbar: 'help addTab',

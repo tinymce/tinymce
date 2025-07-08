@@ -4,6 +4,7 @@ declare let tinymce: TinyMCE;
 
 tinymce.init({
   selector: 'textarea.tinymce',
+  license_key: 'gpl',
   plugins: 'table lists image accordion code',
   toolbar: 'table | numlist bullist | image | accordion | code',
   menu: { insert: { title: 'Insert', items: 'table | image | accordion' }},

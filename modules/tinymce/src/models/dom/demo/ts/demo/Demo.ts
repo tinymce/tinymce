@@ -4,6 +4,7 @@ declare let tinymce: TinyMCE;
 
 tinymce.init({
   selector: 'div.tinymce',
+  license_key: 'gpl',
   setup: (ed) => {
     ed.on('init', () => {
       const runtimeModel = ed.model;

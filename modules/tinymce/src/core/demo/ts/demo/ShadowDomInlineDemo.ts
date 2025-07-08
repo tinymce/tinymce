@@ -17,6 +17,7 @@ export default (init: ShadowRootInit): void => {
     Insert.append(shadow, node);
     tinymce.init({
       target: node.dom,
+      license_key: 'gpl',
       inline: true
     });
   };
