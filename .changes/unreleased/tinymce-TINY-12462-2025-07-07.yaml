@@ -1,0 +1,6 @@
+project: tinymce
+kind: Changed
+body: The default value of `pagebreak_split_block` is now `true` to match the new `pagebreak_separator` default.
+time: 2025-07-07T22:26:20.509659+01:00
+custom:
+    Issue: TINY-12462

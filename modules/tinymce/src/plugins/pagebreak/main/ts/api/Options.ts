@@ -17,7 +17,7 @@ const register = (editor: Editor): void => {
 
   registerOption('pagebreak_split_block', {
     processor: 'boolean',
-    default: false
+    default: true
   });
 };
 
