@@ -17,7 +17,7 @@ const nonTypingKeycodes = [
   // page up/down, insert
   33, 34, 45,
   // alt, shift, ctrl
-  16, 17, 18,
+  16, 17,
   // meta/windows key
   91, 92, 93,
   // direction
@@ -40,8 +40,8 @@ const isDeleteEvent = (e: EditorEvent<KeyboardEvent>): boolean => {
 const isNonTypingKeyboardEvent = (e: EditorEvent<unknown>): boolean => {
   if (isKeyboardEvent(e)) {
     const keyCode = e.keyCode;
-    // Ctrl/Meta/Alt key pressed, F1-12 or non typing keycode
-    return !isDeleteEvent(e) && (VK.metaKeyPressed(e) || e.altKey || keyCode >= 112 && keyCode <= 123 || Arr.contains(nonTypingKeycodes, keyCode));
+    // Ctrl/Meta key pressed, F1-12 or non typing keycode
+    return !isDeleteEvent(e) && (VK.metaKeyPressed(e) || keyCode >= 112 && keyCode <= 123 || Arr.contains(nonTypingKeycodes, keyCode));
   } else {
     return false;
   }
@@ -75,10 +75,6 @@ const setup = (editor: Editor): void => {
   const placeholder = Options.getPlaceholder(editor) ?? '';
 
   const updatePlaceholder = (e: EditorEvent<unknown>, initial?: boolean) => {
-    if (isNonTypingKeyboardEvent(e)) {
-      return;
-    }
-
     // Check to see if we should show the placeholder
     const body = editor.getBody();
     const showPlaceholder = isTypingKeyboardEvent(e) ? false : isVisuallyEmpty(dom, body, rootBlock);
