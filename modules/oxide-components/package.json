@@ -71,7 +71,7 @@
     "vite": "^6.3.5",
     "vitest": "^3.1.4"
   },
-  "workspaces":{
+  "workspaces": {
     "nohoist": [
       "**/storybook",
       "**/@storybook/**",
