@@ -20,10 +20,23 @@
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "GPL-2.0-or-later",
   "sideEffects": false,
+  "exports": {
+    "./skins/ui/default/skin.ts": "./build/skins/ui/default/skin.ts",
+    "./skins/ui/default/skin.css": "./build/skins/ui/default/skin.css",
+    "./build/*": "./build/*"
+  },
+  "typesVersions": {
+    "*": {
+      "./skins/ui/default/skin.ts": ["./build/skins/ui/default/skin.ts"],
+      "./skins/ui/default/skin.css": ["./build/skins/ui/default/skin.css"]
+    }
+  },
   "files": [
     "build/skins/content/**/*.css",
+    "build/skins/content/**/*.d.css.ts",
     "build/skins/content/**/*.css.map",
     "build/skins/ui/**/*.css",
+    "build/skins/ui/**/*.d.css.ts",
     "build/skins/ui/**/*.css.map",
     "build/skins/ui/**/*.woff",
     "src/less/**/*",
@@ -40,6 +53,7 @@
   "devDependencies": {
     "connect": "^3.7.0",
     "connect-livereload": "^0.6.1",
-    "stylelint-config-recommended-less": "^3.0.1"
+    "stylelint-config-recommended-less": "^3.0.1",
+    "typed-css-modules": "^0.9.1"
   }
 }

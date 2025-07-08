@@ -26,7 +26,8 @@
     "noUncheckedSideEffectImports": true
   },
   "include": [
-    "src/main/ts"
+    "src/main/ts",
+    ".storybook/preview.tsx"
   ],
   "exclude": [
     "src/**/*.stories.*"
