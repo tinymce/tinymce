@@ -32,6 +32,7 @@ export default (): void => {
 
   tinymce.init({
     selector: 'textarea.tiny-text',
+    license_key: 'gpl',
     theme: 'silver',
     toolbar: [ 'disabled-button', 'icon-button', 'icon-button-toggle' ].concat(generatedNames).join(' '),
     plugins: [

@@ -4,6 +4,7 @@ declare let tinymce: TinyMCE;
 
 tinymce.init({
   selector: 'textarea.tinymce',
+  license_key: 'gpl',
   plugins: 'insertdatetime code',
   toolbar: 'insertdatetime code',
   height: 600,

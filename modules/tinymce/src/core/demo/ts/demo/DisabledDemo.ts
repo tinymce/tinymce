@@ -29,6 +29,7 @@ export default (): void => {
   tinymce.init({
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     selector: 'div.tinymce',
+    license_key: 'gpl',
     height: 1000,
     plugins: 'accordion image table emoticons charmap codesample insertdatetime',
     // eslint-disable-next-line max-len

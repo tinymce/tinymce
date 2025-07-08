@@ -7,6 +7,7 @@ elm.value = 'The format menu should show "red"';
 
 tinymce.init({
   selector: 'textarea.tinymce',
+  license_key: 'gpl',
   plugins: 'importcss code',
   toolbar: 'styles code',
   height: 600,

@@ -30,6 +30,7 @@ export default (): void => {
 
   tinymce.init({
     selector: 'textarea.tiny-text',
+    license_key: 'gpl',
     theme: 'silver',
     toolbar: 'sidebar1 sidebar2 sidebar3',
     plugins: [
