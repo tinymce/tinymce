@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: Added parser option `useDocumentNotBody` to allow parser to include header and other components, and made it more capable when adding whole documents.
+time: 2025-07-04T07:22:38.998267+02:00
+custom:
+    Issue: TINY-12307
