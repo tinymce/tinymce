@@ -17,6 +17,7 @@ export default (init: ShadowRootInit): void => {
 
   tinymce.init({
     target: node.dom,
+    license_key: 'gpl',
     plugins: 'advlist charmap code codesample emoticons fullscreen image link lists media preview searchreplace table wordcount'
   });
 };

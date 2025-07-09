@@ -30,6 +30,7 @@ export default (): void => {
     },
 
     selector: 'textarea.tinymce',
+    license_key: 'gpl',
     toolbar1: 'demoButton bold italic',
     menubar: false
   });

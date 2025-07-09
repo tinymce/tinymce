@@ -11,6 +11,7 @@ export default (): void => {
   tinymce.init({
     // TODO: Investigate. Should this get the styles (e.g. margin) of the div/textarea?
     selector: 'div.tiny-text',
+    license_key: 'gpl',
     inline: false,
     theme: 'silver',
     toolbar: [ 'styles', 'MagicButton', 'code', 'undo', 'redo', 'preview', '|', 'help', 'link', '|', 'align', 'alignleft', 'alignright', 'aligncenter',

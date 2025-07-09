@@ -1,4 +1,3 @@
-
 import { UploadHandler } from '../file/Uploader';
 import { ExpectedUser } from '../lookup/UserLookup';
 import { DynamicPatternsLookup, Pattern, RawDynamicPatternsLookup, RawPattern } from '../textpatterns/core/PatternTypes';
@@ -47,7 +46,7 @@ export interface ToolbarGroup {
 export type ToolbarMode = 'floating' | 'sliding' | 'scrolling' | 'wrap';
 export type ToolbarLocation = 'top' | 'bottom' | 'auto';
 
-export type CrossOrigin = '' | 'anonymous' | 'use-credentials';
+export type CrossOrigin = (url: string, resourceType: 'script' | 'stylesheet') => 'anonymous' | 'use-credentials' | undefined;
 
 interface BaseEditorOptions {
   a11y_advanced_options?: boolean;

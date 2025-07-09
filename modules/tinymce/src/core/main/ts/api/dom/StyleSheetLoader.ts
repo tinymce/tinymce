@@ -1,4 +1,4 @@
-import { Arr, Fun, Obj } from '@ephox/katamari';
+import { Arr, Fun, Obj, Type } from '@ephox/katamari';
 import { Attribute, Insert, Remove, SelectorFind, SugarElement, SugarShadowDom, Traverse } from '@ephox/sugar';
 
 import Tools from '../util/Tools';
@@ -18,11 +18,13 @@ interface StyleSheetLoader {
   unloadAll: (urls: string[]) => void;
   _setReferrerPolicy: (referrerPolicy: ReferrerPolicy) => void;
   _setContentCssCors: (contentCssCors: boolean) => void;
+  _setCrossOrigin: (crossOrigin: (url: string) => string | undefined) => void;
 }
 
 export interface StyleSheetLoaderSettings {
   maxLoadTime?: number;
   contentCssCors?: boolean;
+  crossOrigin?: (url: string) => string | undefined;
   referrerPolicy?: ReferrerPolicy;
 }
 
@@ -33,6 +35,18 @@ interface StyleState {
   failed: Array<() => void>;
   count: number;
 }
+
+const getCrossOrigin = (url: string, settings: StyleSheetLoaderSettings) => {
+  const crossOriginFn = settings.crossOrigin;
+
+  if (settings.contentCssCors) {
+    return 'anonymous';
+  } else if (Type.isFunction(crossOriginFn)) {
+    return crossOriginFn(url);
+  } else {
+    return undefined;
+  }
+};
 
 const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings: StyleSheetLoaderSettings = {}): StyleSheetLoader => {
   let idCount = 0;
@@ -47,6 +61,10 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
 
   const _setContentCssCors = (contentCssCors: boolean) => {
     settings.contentCssCors = contentCssCors;
+  };
+
+  const _setCrossOrigin = (crossOrigin: (url: string) => string | undefined) => {
+    settings.crossOrigin = crossOrigin;
   };
 
   const addStyle = (element: SugarElement<HTMLStyleElement>) => {
@@ -134,9 +152,10 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
         id: state.id
       });
 
-      if (settings.contentCssCors) {
-        Attribute.set(linkElem, 'crossOrigin', 'anonymous');
-      }
+      const crossorigin = getCrossOrigin(url, settings);
+      if (crossorigin !== undefined) {
+        Attribute.set(linkElem, 'crossOrigin', crossorigin);
+      };
 
       if (settings.referrerPolicy) {
         // Note: Don't use link.referrerPolicy = ... here as it doesn't work on Safari
@@ -250,7 +269,8 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
     unloadRawCss,
     unloadAll,
     _setReferrerPolicy,
-    _setContentCssCors
+    _setContentCssCors,
+    _setCrossOrigin
   };
 };
 

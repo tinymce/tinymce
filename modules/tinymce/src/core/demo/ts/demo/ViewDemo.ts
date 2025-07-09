@@ -8,6 +8,7 @@ declare let tinymce: TinyMCE;
 export default (): void => {
   const settings: RawEditorOptions = {
     selector: 'textarea',
+    license_key: 'gpl',
     setup: (ed) => {
       let isToggled = false;
       let isToggled2 = false;

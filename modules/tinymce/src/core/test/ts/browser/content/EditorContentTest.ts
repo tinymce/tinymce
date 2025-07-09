@@ -289,7 +289,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
           const content = '<div data-some-attribute="title=<br/>">abc</div>';
           const editor = hook.editor();
           editor.setContent(content);
-          TinyAssertions.assertContent(editor, content, { format: 'raw' });
+          TinyAssertions.assertContent(editor, '<div data-some-attribute="title=&lt;br/&gt;">abc</div>');
         });
 
         const initialContent = '<p>initial</p>';

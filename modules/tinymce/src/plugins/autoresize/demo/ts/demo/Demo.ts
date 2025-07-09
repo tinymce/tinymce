@@ -4,6 +4,7 @@ declare let tinymce: TinyMCE;
 
 tinymce.init({
   selector: 'textarea.tinymce',
+  license_key: 'gpl',
   theme: 'silver',
   plugins: 'autoresize code',
   toolbar: 'autoresize code',

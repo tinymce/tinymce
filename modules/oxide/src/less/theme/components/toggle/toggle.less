@@ -1,0 +1,71 @@
+.tox {
+  .tox-toggle {
+    // private variables scoped to tox-toggle class
+    --tox-private-slider-background-color: @background-color;
+    --tox-private-slider-border-color: .bg-luma-checker(hsl(from @color-white h s calc(l - 11)), hsla(from @color-white h s l / 15%))[@result]; // to be figured out after the spike with conditionals in CSS
+    --tox-private-slider-handle-background-color: @text-color;
+
+    display: flex;
+    align-items: center;
+    gap: @pad-xs;
+    padding: @pad-xs;
+    font-weight: @font-weight-normal;
+    line-height: 24px; // the same as in button and textfield. Button component is referencing the textfield variable so maybe it should be a global API? The textfield has a fixed value for line-height
+    white-space: nowrap;
+    background-color: @background-color;
+    color: @text-color;
+
+    input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+  }
+
+  .tox-toggle__slider {
+    position: relative;
+    cursor: pointer;
+    box-sizing: border-box;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+    border-radius: 34px; 
+    width: 28px;
+    height: 16px;
+    background-color: var(--tox-private-slider-background-color);
+    border: 1px solid var(--tox-private-slider-border-color);
+  }
+
+  .tox-toggle__slider::before {
+    position: absolute;
+    content: "";
+    height: 12px;
+    width: 12px;
+    left: 1px;
+    bottom: 1px;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+    border-radius: 50%;
+    background-color: var(--tox-private-slider-handle-background-color);
+  }
+    
+  input:checked + .tox-toggle__slider {
+    --tox-private-slider-background-color: @color-tint;
+    --tox-private-slider-border-color: @color-tint;
+  }
+  
+  input:focus + .tox-toggle__slider {
+    box-shadow: 0 0 0 1px @color-white, 0 0 0 2px @color-tint;
+  }
+  
+  input:checked + .tox-toggle__slider::before {
+    -webkit-transform: translateX(12px);
+    -ms-transform: translateX(12px);
+    transform: translateX(12px);
+    --tox-private-slider-handle-background-color: @color-white;
+  }
+
+  input:disabled + .tox-toggle__slider::before {
+    opacity: 50%;
+  }
+}

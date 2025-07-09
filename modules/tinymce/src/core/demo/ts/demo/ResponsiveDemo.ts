@@ -27,6 +27,7 @@ export default (): void => {
     content_css: '../../../../js/tinymce/skins/content/default/content.css',
     images_upload_url: 'd',
     selector: '#ephox-ui textarea',
+    license_key: 'gpl',
     // rtl_ui: true,
     link_list: [
       { title: 'My page 1', value: 'http://www.tinymce.com' },

@@ -15,6 +15,7 @@ export default (): void => {
 
   tinymce.init({
     selector: 'textarea',
+    license_key: 'gpl',
     theme: (editor, target) => {
       const dom = tinymce.DOM;
 

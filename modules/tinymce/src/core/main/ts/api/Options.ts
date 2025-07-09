@@ -1,4 +1,4 @@
-import { Arr, Obj, Optional, Strings, Type } from '@ephox/katamari';
+import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import * as Pattern from '../textpatterns/core/Pattern';
@@ -82,8 +82,8 @@ const register = (editor: Editor): void => {
   });
 
   registerOption('crossorigin', {
-    processor: 'string',
-    default: ''
+    processor: 'function',
+    default: Fun.constant(undefined)
   });
 
   registerOption('language_load', {
