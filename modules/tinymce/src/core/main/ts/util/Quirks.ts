@@ -148,7 +148,7 @@ const Quirks = (editor: Editor): Quirks => {
 
         if (e.target === editor.getDoc().documentElement) {
           rng = selection.getRng();
-          editor.getBody().focus();
+          editor.getBody().focus({ preventScroll: editor.getDoc().getSelection()?.anchorNode === null });
 
           if (e.type === 'mousedown') {
             if (CaretContainer.isCaretContainer(rng.startContainer)) {
@@ -260,7 +260,7 @@ const Quirks = (editor: Editor): Quirks => {
     editor.on('mousedown', (e) => {
       Optionals.lift2(Optional.from(e.clientX), Optional.from(e.clientY), (clientX, clientY) => {
         const caretPos = editor.getDoc().caretPositionFromPoint(clientX, clientY);
-        const img = caretPos?.offsetNode.childNodes[caretPos.offset - (caretPos.offset > 0 ? 1 : 0)] || caretPos?.offsetNode;
+        const img = caretPos?.offsetNode?.childNodes[caretPos.offset - (caretPos.offset > 0 ? 1 : 0)] || caretPos?.offsetNode;
 
         if (img && isEditableImage(img)) {
           const rect = img.getBoundingClientRect();
