@@ -2,12 +2,22 @@
 // Global styling
 //
 
+// To be decided if we want CSS Custom Properties out of these.
 @tinymce-border-color: @border-color;
 @tinymce-border-radius: 10px;
 @tinymce-border-width: 2px;
 @tinymce-box-shadow: none;
-@tinymce-separator-color: darken(@border-color, 4.5%);
-@editor-header-inline-background-color: @background-color;
+
+@tinymce-separator-color: darken(@border-color, 4.5%); // created global Custom Property as this is used in multiple different components
+
+@editor-header-inline-background-color: @background-color; 
+
+
+.tox {
+  color: var(--tox-private-color-black, @color-black);
+  font-family: var(--tox-private-font-stack, @font-stack);
+  font-size: var(--tox-private-font-size-base, @font-size-base);
+}
 
 .tox-tinymce {
   border: @tinymce-border-width solid @tinymce-border-color;
@@ -16,7 +26,7 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  font-family: @font-stack;
+  font-family: var(--tox-private-font-stack, @font-stack);
   overflow: hidden;
   position: relative;
   visibility: inherit !important;
@@ -42,14 +52,8 @@
 }
 
 .tox-tinymce-aux {
-  font-family: @font-stack;
-  z-index: @z-index-sink;
-}
-
-// Reset focus states
-.tox-tinymce *:focus,
-.tox-tinymce-aux *:focus {
-  outline: none;
+  font-family: var(--tox-private-font-stack, @font-stack);
+  z-index: var(--tox-private-z-index-sink, @z-index-sink);
 }
 
 .keyboard-focus-outline-mixin(@_inset: ~'') {
@@ -65,11 +69,6 @@
   @media (forced-colors: active) {
     border: 2px solid highlight;
   }
-}
-
-// Reset firefox focus states
-button::-moz-focus-inner {
-  border: 0;
 }
 
 // RTL

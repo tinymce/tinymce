@@ -5,10 +5,7 @@
 .tox {
   box-shadow: none;
   box-sizing: content-box;
-  color: @color-black;
   cursor: auto;
-  font-family: @font-stack;
-  font-size: @font-size-base;
   font-style: normal;
   font-weight: normal;
   line-height: normal;
@@ -63,4 +60,15 @@
 .tox[dir=rtl] {
   direction: rtl;
   text-align: right;
+}
+
+// Reset focus states
+.tox-tinymce *:focus,
+.tox-tinymce-aux *:focus {
+  outline: none;
+}
+
+// Reset firefox focus states
+button::-moz-focus-inner {
+  border: 0;
 }
