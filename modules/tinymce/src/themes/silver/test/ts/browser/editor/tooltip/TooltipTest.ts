@@ -36,7 +36,6 @@ interface TestScenario {
 }
 
 describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
-
   Arr.each([
     { label: 'Mouse', pTriggerTooltip: TooltipUtils.pTriggerTooltipWithMouse },
     { label: 'Keyboard', pTriggerTooltip: TooltipUtils.pTriggerTooltipWithKeyboard },
@@ -130,6 +129,13 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
         const buttonSelector = 'button[data-mce-name="basic-button"]';
         await TooltipUtils.pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Button');
         await TooltipUtils.pCloseTooltip(editor, buttonSelector);
+      });
+
+      it(`TINY-10453: Should trigger tooltip with ${test.label} - Toolbar addButton`, async () => {
+        const editor = hook.editor();
+        const buttonSelector = 'button[data-mce-name="basic-button"]';
+        await TooltipUtils.pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Button');
+        await TooltipUtils.pHoverOverTooltipBeforeClosing(editor, buttonSelector, 500);
       });
 
       it(`TINY-10453: Should trigger tooltip with ${test.label} - Toolbar addToggleButton`, async () => {

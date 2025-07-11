@@ -45,6 +45,20 @@ const pCloseTooltip = async (editor: Editor, selector: string): Promise<void> =>
     () => UiFinder.notExists(SugarBody.body(), tooltipSelector));
 };
 
+const pHoverOverTooltipBeforeClosing = async (editor: Editor, selector: string, timeout: number): Promise<void> => {
+  const button = await TinyUiActions.pWaitForUi(editor, selector) as SugarElement<HTMLElement>;
+  const tooltip = await TinyUiActions.pWaitForUi(editor, tooltipSelector) as SugarElement<HTMLElement>;
+  Mouse.mouseOut(button);
+  Mouse.mouseOver(tooltip);
+  await Waiter.pWait(timeout);
+  UiFinder.exists(SugarBody.body(), tooltipSelector);
+  Mouse.mouseOut(tooltip);
+  editor.focus();
+  await Waiter.pTryUntil(
+    'Waiting for tooltip to NO LONGER be in DOM',
+    () => UiFinder.notExists(SugarBody.body(), tooltipSelector));
+};
+
 const pCloseMenu = (selector: string): Promise<void> => {
   Mouse.clickOn(SugarBody.body(), selector);
   return Waiter.pTryUntil('Waiting for menu', () =>
@@ -58,12 +72,13 @@ const pOpenMenu = (editor: Editor, buttonSelector: string): Promise<SugarElement
 };
 
 export {
-  pAssertTooltip,
   pAssertNoTooltip,
   pAssertNoTooltipShown,
-  pTriggerTooltipWithMouse,
-  pTriggerTooltipWithKeyboard,
-  pCloseTooltip,
+  pAssertTooltip,
   pCloseMenu,
-  pOpenMenu
+  pCloseTooltip,
+  pHoverOverTooltipBeforeClosing,
+  pOpenMenu,
+  pTriggerTooltipWithKeyboard,
+  pTriggerTooltipWithMouse
 };
