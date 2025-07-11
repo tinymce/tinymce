@@ -23,7 +23,8 @@
   "exports": {
     "./skins/ui/default/skin.ts": "./build/skins/ui/default/skin.ts",
     "./skins/ui/default/skin.css": "./build/skins/ui/default/skin.css",
-    "./build/*": "./build/*"
+    "./build/*": "./build/*",
+    "./src/less/*": "./src/less/*"
   },
   "typesVersions": {
     "*": {
