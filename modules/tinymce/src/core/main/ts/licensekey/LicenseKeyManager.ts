@@ -1,15 +1,17 @@
-import { Fun, Obj, Type } from '@ephox/katamari';
+import { Type } from '@ephox/katamari';
 
 import AddOnManager, { AddOnConstructor } from '../api/AddOnManager';
 import Editor from '../api/Editor';
-import * as Options from '../api/Options';
 import * as ErrorReporter from '../ErrorReporter';
+import * as ForceDisable from '../ForceDisable';
+
+import * as LicenseKeyReporting from './LicenseKeyReporting';
+import * as LicenseKeyUtils from './LicenseKeyUtils';
 
 export type LicenseKeyManagerAddon = AddOnConstructor<LicenseKeyManager>;
 
 interface LicenseKeyManagerLoader {
   readonly load: (editor: Editor, suffix: string) => void;
-  readonly isLoaded: (editor: Editor) => boolean;
   readonly add: (addOn: LicenseKeyManagerAddon) => void;
   readonly init: (editor: Editor) => void;
 }
@@ -23,6 +25,12 @@ export interface LicenseKeyManager {
   readonly validate: (data: ValidateData) => Promise<boolean>;
 }
 
+const NoLicenseKeyManager: LicenseKeyManager = {
+  validate: () => {
+    return Promise.resolve(false);
+  },
+};
+
 const GplLicenseKeyManager: LicenseKeyManager = {
   validate: (data) => {
     const { plugin } = data;
@@ -32,7 +40,7 @@ const GplLicenseKeyManager: LicenseKeyManager = {
 };
 
 const ADDON_KEY = 'manager';
-const PLUGIN_CODE = 'licensekeymanager';
+const PLUGIN_CODE = LicenseKeyUtils.PLUGIN_CODE;
 
 const setup = (): LicenseKeyManagerLoader => {
   const addOnManager = AddOnManager<LicenseKeyManager>();
@@ -42,31 +50,13 @@ const setup = (): LicenseKeyManagerLoader => {
   };
 
   const load = (editor: Editor, suffix: string): void => {
-    const licenseKey = Options.getLicenseKey(editor);
-    const plugins = new Set(Options.getPlugins(editor));
-    const hasApiKey = Type.isString(Options.getApiKey(editor));
-
-    // Early return if addonConstructor already exists
-    if (Obj.has(addOnManager.urls, ADDON_KEY)) {
-      return;
-    }
-
-    // Try loading external license key manager when
-    // - license_key is not 'gpl'; or
-    // - an API key is present; or
-    // - the licensekeymanager has been explicity listed, most likely through the forced_plugins option
-    if (licenseKey?.toLowerCase() !== 'gpl' || hasApiKey || plugins.has(PLUGIN_CODE)) {
+    const strategy = LicenseKeyUtils.determineStrategy(editor);
+    if (strategy.type === 'use_plugin') {
       const url = `plugins/${PLUGIN_CODE}/plugin${suffix}.js`;
       addOnManager.load(ADDON_KEY, url).catch(() => {
-        ErrorReporter.licenseKeyManagerLoadError(editor, url, ADDON_KEY);
+        ErrorReporter.licenseKeyManagerLoadError(editor, url);
       });
-    } else {
-      add(Fun.constant(GplLicenseKeyManager));
     }
-  };
-
-  const isLoaded = (_editor: Editor): boolean => {
-    return Type.isNonNullable(addOnManager.get(ADDON_KEY));
   };
 
   const init = (editor: Editor): void => {
@@ -79,12 +69,31 @@ const setup = (): LicenseKeyManagerLoader => {
       });
     };
 
-    // editor will not load without a license key manager constructor
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const LicenseKeyManager = addOnManager.get(ADDON_KEY)!;
+    const strategy = LicenseKeyUtils.determineStrategy(editor);
 
-    const licenseKeyManagerApi = LicenseKeyManager(editor, addOnManager.urls[ADDON_KEY]);
-    setLicenseKeyManager(licenseKeyManagerApi);
+    switch (strategy.type) {
+      case 'use_gpl': {
+        setLicenseKeyManager(GplLicenseKeyManager);
+        break;
+      }
+      case 'use_plugin': {
+        const LicenseKeyManager = addOnManager.get(ADDON_KEY);
+        // Check if license key manager plugin is loaded
+        if (Type.isNonNullable(LicenseKeyManager)) {
+          const licenseKeyManagerApi = LicenseKeyManager(editor, addOnManager.urls[ADDON_KEY]);
+          setLicenseKeyManager(licenseKeyManagerApi);
+        } else {
+          ForceDisable.forceDisable(editor);
+          setLicenseKeyManager(NoLicenseKeyManager);
+          if (strategy.onlineStatus === 'offline' && strategy.licenseKeyType === 'no_key') {
+            LicenseKeyReporting.reportNoKeyError(editor);
+          } else {
+            LicenseKeyReporting.reportLoadError(editor, strategy.onlineStatus);
+          }
+        }
+        break;
+      }
+    }
 
     // Validation of the license key is done asynchronously and does
     // not block initialization of the editor
@@ -96,7 +105,6 @@ const setup = (): LicenseKeyManagerLoader => {
 
   return {
     load,
-    isLoaded,
     add,
     init
   };
