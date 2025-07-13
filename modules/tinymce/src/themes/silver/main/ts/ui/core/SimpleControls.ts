@@ -36,6 +36,13 @@ const registerFormatButtons = (editor: Editor): void => {
       shortcut
     });
   }
+
+  editor.ui.registry.addToggleButton('codeformat', {
+    icon: 'sourcecode',
+    tooltip: 'Code',
+    onSetup: onSetupStateToggle(editor, 'code'),
+    onAction: onActionToggleFormat(editor, 'code')
+  });
 };
 
 const registerCommandButtons = (editor: Editor): void => {
