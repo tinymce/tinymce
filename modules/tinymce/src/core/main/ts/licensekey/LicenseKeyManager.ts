@@ -25,19 +25,29 @@ export interface LicenseKeyManager {
   readonly validate: (data: ValidateData) => Promise<boolean>;
 }
 
-const NoLicenseKeyManager: LicenseKeyManager = {
-  validate: () => {
-    return Promise.resolve(false);
-  },
-};
-
-const GplLicenseKeyManager: LicenseKeyManager = {
+const NoLicenseKeyManager = (editor: Editor): LicenseKeyManager => ({
   validate: (data) => {
     const { plugin } = data;
-    // Premium plugins are not allowed if 'gpl' is given as the license_key
-    return Promise.resolve(!Type.isString(plugin));
+    const hasPlugin = Type.isString(plugin);
+    // Premium plugins are not allowed
+    if (hasPlugin) {
+      LicenseKeyReporting.reportInvalidPlugin(editor, plugin);
+    }
+    return Promise.resolve(false);
   },
-};
+});
+
+const GplLicenseKeyManager = (editor: Editor): LicenseKeyManager => ({
+  validate: (data) => {
+    const { plugin } = data;
+    const hasPlugin = Type.isString(plugin);
+    // Premium plugins are not allowed if 'gpl' is given as the license_key
+    if (hasPlugin) {
+      LicenseKeyReporting.reportInvalidPlugin(editor, plugin);
+    }
+    return Promise.resolve(!hasPlugin);
+  },
+});
 
 const ADDON_KEY = 'manager';
 const PLUGIN_CODE = LicenseKeyUtils.PLUGIN_CODE;
@@ -71,27 +81,28 @@ const setup = (): LicenseKeyManagerLoader => {
 
     const strategy = LicenseKeyUtils.determineStrategy(editor);
 
-    switch (strategy.type) {
-      case 'use_gpl': {
-        setLicenseKeyManager(GplLicenseKeyManager);
-        break;
-      }
-      case 'use_plugin': {
-        const LicenseKeyManager = addOnManager.get(ADDON_KEY);
-        // Check if license key manager plugin is loaded
-        if (Type.isNonNullable(LicenseKeyManager)) {
-          const licenseKeyManagerApi = LicenseKeyManager(editor, addOnManager.urls[ADDON_KEY]);
-          setLicenseKeyManager(licenseKeyManagerApi);
-        } else {
+    const LicenseKeyManager = addOnManager.get(ADDON_KEY);
+    // Use plugin if it is already loaded as it can handle all license key types
+    if (Type.isNonNullable(LicenseKeyManager)) {
+      const licenseKeyManagerApi = LicenseKeyManager(editor, addOnManager.urls[ADDON_KEY]);
+      setLicenseKeyManager(licenseKeyManagerApi);
+    } else {
+      switch (strategy.type) {
+        case 'use_gpl': {
+          setLicenseKeyManager(GplLicenseKeyManager(editor));
+          break;
+        }
+        case 'use_plugin': {
+          // We know the plugin hasn't loaded and it is required
           ForceDisable.forceDisable(editor);
-          setLicenseKeyManager(NoLicenseKeyManager);
+          setLicenseKeyManager(NoLicenseKeyManager(editor));
           if (strategy.onlineStatus === 'offline' && strategy.licenseKeyType === 'no_key') {
             LicenseKeyReporting.reportNoKeyError(editor);
           } else {
             LicenseKeyReporting.reportLoadError(editor, strategy.onlineStatus);
           }
+          break;
         }
-        break;
       }
     }
 

@@ -123,12 +123,12 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
       McEditor.remove(editor);
     });
 
-    it('TINY-12001: should use gpl license key manager with GPL license_key set', async () => {
+    it('TINY-12001: should use non-gpl license key manager with GPL license_key set as plugin is loaded', async () => {
       const editor = await McEditor.pFromSettings<Editor>({
         base_url: '/project/tinymce/js/tinymce',
         license_key: 'gpl',
       });
-      await pAssertApi(editor, true);
+      await pAssertApi(editor, false);
       await pAssertEditorStatus(editor, {
         isEditorDisabled: false,
         consoleErrorMessages: [],
@@ -157,26 +157,27 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
         base_url: '/project/tinymce/js/tinymce',
         license_key: 'gpl',
       });
-      const editor2 = await McEditor.pFromSettings<Editor>({
-        base_url: '/project/tinymce/js/tinymce',
-        license_key: 'foo',
-      });
-      const editor3 = await McEditor.pFromSettings<Editor>({
-        base_url: '/project/tinymce/js/tinymce',
-        license_key: undefined,
-      });
-
-      await pAssertApi(editor1, true);
+      await pAssertApi(editor1, false);
       await pAssertEditorStatus(editor1, {
         isEditorDisabled: false,
         consoleErrorMessages: [],
         notificationMessages: [],
+      });
+
+      const editor2 = await McEditor.pFromSettings<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        license_key: 'foo',
       });
       await pAssertApi(editor2, false);
       await pAssertEditorStatus(editor2, {
         isEditorDisabled: false,
         consoleErrorMessages: [],
         notificationMessages: [],
+      });
+
+      const editor3 = await McEditor.pFromSettings<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        license_key: undefined,
       });
       await pAssertApi(editor3, false);
       await pAssertEditorStatus(editor3, {
@@ -229,14 +230,14 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
       await pAssertEditorStatus(editor, {
         isEditorDisabled: true,
         consoleErrorMessages: [
-          `The editor is disabled because a TinyMCE license key could not be validated. ` +
+          `The editor is disabled because the TinyMCE license key could not be validated. ` +
             `The TinyMCE Commercial License Key Manager plugin is required for the provided license key to be validated but could not be loaded. ` +
             `Read more: https://www.tiny.cloud/docs/tinymce/latest/license-key/`,
         ],
         notificationMessages: [
           {
             type: 'warning',
-            text: 'The editor is disabled because a TinyMCE license key could not be validated.',
+            text: 'The editor is disabled because the TinyMCE license key could not be validated.',
           },
         ],
       });
@@ -267,14 +268,14 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
       await pAssertEditorStatus(editor, {
         isEditorDisabled: true,
         consoleErrorMessages: [
-          `The editor is disabled because a TinyMCE API key could not be validated. ` +
+          `The editor is disabled because the TinyMCE API key could not be validated. ` +
             `The TinyMCE Commercial License Key Manager plugin is required for the provided API key to be validated but could not be loaded. ` +
             `Read more: https://www.tiny.cloud/docs/tinymce/latest/license-key/`,
         ],
         notificationMessages: [
           {
             type: 'warning',
-            text: 'The editor is disabled because a TinyMCE API key could not be validated.',
+            text: 'The editor is disabled because the TinyMCE API key could not be validated.',
           },
         ],
       });
@@ -302,14 +303,14 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
       await pAssertEditorStatus(editor2, {
         isEditorDisabled: true,
         consoleErrorMessages: [
-          `The editor is disabled because a TinyMCE license key could not be validated. ` +
+          `The editor is disabled because the TinyMCE license key could not be validated. ` +
             `The TinyMCE Commercial License Key Manager plugin is required for the provided license key to be validated but could not be loaded. ` +
             `Read more: https://www.tiny.cloud/docs/tinymce/latest/license-key/`,
         ],
         notificationMessages: [
           {
             type: 'warning',
-            text: 'The editor is disabled because a TinyMCE license key could not be validated.',
+            text: 'The editor is disabled because the TinyMCE license key could not be validated.',
           },
         ],
       });

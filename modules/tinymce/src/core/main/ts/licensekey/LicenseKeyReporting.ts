@@ -28,7 +28,7 @@ const reportNoKeyError = (editor: Editor): void => {
 
 const reportLoadError = (editor: Editor, onlineStatus: OnlineStatus): void => {
   const key = `${onlineStatus === 'online' ? 'API' : 'license'} key`;
-  const baseMessage = `The editor is disabled because a TinyMCE ${key} could not be validated.`;
+  const baseMessage = `The editor is disabled because the TinyMCE ${key} could not be validated.`;
   MessageReporter.reportMessage(editor, {
     console: {
       type: 'error',
@@ -45,7 +45,21 @@ const reportLoadError = (editor: Editor, onlineStatus: OnlineStatus): void => {
   });
 };
 
+const reportInvalidPlugin = (editor: Editor, pluginCode: string): void => {
+  const baseMessage = `The "${pluginCode}" plugin requires a valid TinyMCE license key.`;
+  MessageReporter.reportMessage(editor, {
+    console: {
+      type: 'error',
+      message: [
+        `${baseMessage}`,
+        DOCS_URL_MESSAGE
+      ].join(' ')
+    }
+  });
+};
+
 export {
   reportNoKeyError,
-  reportLoadError
+  reportLoadError,
+  reportInvalidPlugin
 };

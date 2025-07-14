@@ -6,11 +6,14 @@ import * as Options from '../api/Options';
 export type OnlineStatus = 'online' | 'offline';
 export type LicenseKeyType = 'no_key' | 'gpl' | 'non_gpl';
 
-interface UsePlugin {
-  readonly type: 'use_plugin';
+interface LicenseState {
   readonly onlineStatus: OnlineStatus;
   readonly licenseKeyType: LicenseKeyType;
   readonly forcePlugin: boolean;
+}
+
+interface UsePlugin extends LicenseState {
+  readonly type: 'use_plugin';
 }
 
 interface UseGpl {
