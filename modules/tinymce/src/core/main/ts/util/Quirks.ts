@@ -150,7 +150,9 @@ const Quirks = (editor: Editor): Quirks => {
           rng = selection.getRng();
           // TINY-12245: this is needed to avoid the scroll back to the top when the content is scrolled, there is no selection and the user is clicking on a non selectable editor element
           // example content scrolled by browser search and user click on the horizontal scroll bar
-          editor.getBody().focus({ preventScroll: editor.getDoc().getSelection()?.anchorNode === null });
+          if (editor.getDoc().getSelection()?.anchorNode !== null) {
+            editor.getBody().focus();
+          }
 
           if (e.type === 'mousedown') {
             if (CaretContainer.isCaretContainer(rng.startContainer)) {
