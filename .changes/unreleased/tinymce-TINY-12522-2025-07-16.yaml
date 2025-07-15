@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: '`onboarding` plugin overlay now shows above popups.'
+time: 2025-07-16T10:04:27.570324+10:00
+custom:
+    Issue: TINY-12522
