@@ -5,7 +5,8 @@ import Editor from '../Editor';
 
 const registerExecCommands = (editor: Editor): void => {
   const toggleFormat = (name: string, value?: FormatVars) => {
-    editor.formatter.toggle(name, value);
+    const targetElm = editor.inline ? editor.targetElm : undefined;
+    editor.formatter.toggle(name, value, targetElm);
     editor.nodeChanged();
   };
 
