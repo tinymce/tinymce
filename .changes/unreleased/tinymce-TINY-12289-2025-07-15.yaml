@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: 'Tooltips no longer show above editor views'
+time: 2025-07-15T10:29:27.169269+10:00
+custom:
+    Issue: TINY-12289
