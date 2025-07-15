@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Made default avatars to be persisted between sessions.
+time: 2025-07-15T16:07:34.048259+02:00
+custom:
+  Issue: TINY-12532
