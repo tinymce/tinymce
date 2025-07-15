@@ -2,7 +2,7 @@ import { Arr, Obj, Type, Id } from '@ephox/katamari';
 
 import * as ErrorReporter from '../ErrorReporter';
 import * as FocusController from '../focus/FocusController';
-import LicenseKeyManagerLoader, { LicenseKeyManagerAddon } from '../init/LicenseKeyManager';
+import LicenseKeyManagerLoader, { LicenseKeyManagerAddon } from '../licensekey/LicenseKeyManager';
 
 import AddOnManager from './AddOnManager';
 import DOMUtils from './dom/DOMUtils';
