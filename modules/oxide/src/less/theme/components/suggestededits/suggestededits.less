@@ -28,6 +28,10 @@
 @suggestededits-card-resolved-background-color: @suggestededits-dark-transparent-color;
 @suggestededits-card-selected-border-color: @suggestededits-color-tint;
 
+// this file is imported above `view.less`, but we need a variable from it
+// TODO: replace `.tox-suggestededits__toolbar` with `.tox-view__toolbar`
+@view-header-padding: (@pad-sm + @keyboard-focus-outline-width);
+
 .tox {
   [data-mce-name="suggestededits"] .tox-icon .tox-icon--badge {
     fill: @color-tint;
@@ -62,7 +66,7 @@
       gap: 8px;
       justify-content: space-between;
       overflow-x: auto;
-      padding: 10px 10px 2px 10px;
+      padding: @view-header-padding;
       width: 100%;
 
       .tox-suggestededits__toolbar--start {
@@ -98,7 +102,6 @@
       display: flex;
       flex: 1;
       height: inherit;
-      margin-top: 8px;
       overflow-x: auto;
       overflow-y: hidden;
       position: relative;
