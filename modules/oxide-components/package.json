@@ -26,7 +26,7 @@
   ],
   "main": "lib/main.js",
   "module": "lib/main.js",
-  "types": "lib/main.d.ts",
+  "types": "lib/src/main/ts/main.d.ts",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -62,7 +62,7 @@
     "eslint-plugin-react-refresh": "^0.4.19",
     "eslint-plugin-storybook": "^9.0.10",
     "globals": "^16.0.0",
-    "playwright": "^1.52.0",
+    "playwright": "1.53.1",
     "postcss": "^8.4.39",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

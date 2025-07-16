@@ -31,5 +31,13 @@
   ],
   "exclude": [
     "src/**/*.stories.*"
+  ],
+  "references": [
+    {
+      "path": "../katamari/tsconfig.json"
+    },
+    {
+      "path": "../sugar/tsconfig.json"
+    }
   ]
 }
