@@ -32,7 +32,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     children: 'Button',
-  },
+  }
 };
 
 export const ButtonWithCounter: Story = {
