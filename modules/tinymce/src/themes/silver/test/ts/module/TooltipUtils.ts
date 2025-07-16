@@ -46,8 +46,8 @@ const pCloseTooltip = async (editor: Editor, selector: string): Promise<void> =>
 };
 
 const pHoverOverTooltipBeforeClosing = async (editor: Editor, selector: string, timeout: number): Promise<void> => {
-  const button = await TinyUiActions.pWaitForUi(editor, selector) as SugarElement<HTMLElement>;
-  const tooltip = await TinyUiActions.pWaitForUi(editor, tooltipSelector) as SugarElement<HTMLElement>;
+  const button = await UiFinder.pWaitForVisible('Waiting for button to appear', TinyUiActions.getUiRoot(editor), selector);
+  const tooltip = await UiFinder.pWaitForVisible('Waiting for tooltip to appear', TinyUiActions.getUiRoot(editor), tooltipSelector);
   Mouse.mouseOut(button);
   Mouse.mouseOver(tooltip);
   await Waiter.pWait(timeout);

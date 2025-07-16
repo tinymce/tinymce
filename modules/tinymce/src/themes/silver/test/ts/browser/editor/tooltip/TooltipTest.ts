@@ -131,7 +131,7 @@ describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
         await TooltipUtils.pCloseTooltip(editor, buttonSelector);
       });
 
-      it(`TINY-10453: Should trigger tooltip with ${test.label} - Toolbar addButton`, async () => {
+      it(`TINY-12053: Should trigger tooltip with ${test.label} - Toolbar addButton`, async () => {
         const editor = hook.editor();
         const buttonSelector = 'button[data-mce-name="basic-button"]';
         await TooltipUtils.pAssertTooltip(editor, () => test.pTriggerTooltip(editor, buttonSelector), 'Button');
