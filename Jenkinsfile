@@ -319,6 +319,9 @@ timestamps { alertWorseResult(
   processes['playwright'] = runPlaywrightPod(cacheName, 'playwright-tests') {
     exec('yarn -s --cwd modules/oxide-components test-ci')
     junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
+    exec('yarn -s --cwd modules/oxide-components test-visual-ci')
+    junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results-visual.xml'
+    archiveArtifacts artifacts: 'modules/oxide-components/test-results/**/*.png', allowEmptyArchive: true, fingerprint: true
   }
 
   stage('Run tests') {

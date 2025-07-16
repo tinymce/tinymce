@@ -2,7 +2,7 @@ import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import * as FocusManagers from './FocusManagers';
-import { FocusInsideModes } from './KeyingModeTypes';
+import { FocusInsideModes, type GeneralKeyingConfig } from './KeyingModeTypes';
 import * as KeyRules from './KeyRules';
 
 type GetRulesFunc<C> = (component: SugarElement<HTMLElement>, event: KeyboardEvent, keyingConfig: C) => Array<KeyRules.KeyRule<C>>;
@@ -19,18 +19,18 @@ export interface Handlers {
   readonly focus: (event: FocusEvent) => void;
 }
 
-const typical = <C>(
-  config: Partial<C>,
+const typical = <C extends Omit<GeneralKeyingConfig, 'focusManager' | 'focusInside' | 'focusIn'>>(
+  config: C,
   getKeydownRules: (comp: SugarElement<HTMLElement>, se: KeyboardEvent, keyingConfig: C) => Array<KeyRules.KeyRule<C>>,
   getKeyupRules: (comp: SugarElement<HTMLElement>, se: KeyboardEvent, keyingConfig: C) => Array<KeyRules.KeyRule<C>>,
   optFocusIn: (keyingConfig: C) => Optional<(comp: SugarElement<HTMLElement>, keyingConfig: C) => void>): KeyingType => {
 
-  const keyingConfig = {
+  const keyingConfig: C = {
     ...config,
     focusManager: FocusManagers.dom(),
     focusInside: FocusInsideModes.OnFocusMode,
     focusIn: optFocusIn
-  } as C;
+  };
 
   const processKey = (component: SugarElement<HTMLElement>, event: KeyboardEvent, getRules: GetRulesFunc<C>): Optional<boolean> => {
     const rules = getRules(component, event, keyingConfig);

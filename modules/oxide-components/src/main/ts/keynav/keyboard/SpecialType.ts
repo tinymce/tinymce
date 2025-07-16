@@ -42,7 +42,6 @@ interface FullSpecialConfig extends SpecialKeyRuleHandlers {
 export const create = (source: SugarElement<HTMLElement>, props: SpecialConfig): KeyingType.Handlers => {
 
   const getKeydownRules = (_component: SugarElement<HTMLElement>, _simulatedEvent: KeyboardEvent, config: FullSpecialConfig): Array<KeyRules.KeyRule<FullSpecialConfig>> => [
-    KeyRules.rule(KeyMatch.inSet(Keys.SPACE), config.onSpace),
     KeyRules.rule(
       KeyMatch.inSet(Keys.ENTER), config.onEnter
     ),
@@ -99,7 +98,6 @@ export const create = (source: SugarElement<HTMLElement>, props: SpecialConfig):
 };
 
 export const toBeHandled = (key: KeyboardEvent): boolean => Arr.exists([
-  KeyMatch.inSet(Keys.SPACE),
   KeyMatch.inSet(Keys.ENTER),
   KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.ENTER) ]),
   KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB) ]),

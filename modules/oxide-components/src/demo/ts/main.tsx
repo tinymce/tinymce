@@ -5,8 +5,12 @@ import '@tinymce/oxide/build/skins/ui/default/skin.css';
 
 import App from './App.tsx';
 
-// @ts-expect-error this is just a test file
-createRoot(document.getElementById('root')).render(
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error('Failed to find the root element');
+}
+
+createRoot(rootElement).render(
   <StrictMode>
     <div className="tox">
       <App />
