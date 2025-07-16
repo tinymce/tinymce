@@ -1,3 +1,5 @@
+/// <reference types="@vitest/browser/providers/playwright" />
+
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
