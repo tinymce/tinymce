@@ -1,6 +1,0 @@
-project: tinymce
-kind: Changed
-body: Default value for `pagebreak_separator` option to better suit modern standards.
-time: 2025-05-04T23:51:29.511658+01:00
-custom:
-    Issue: TINY-12013
