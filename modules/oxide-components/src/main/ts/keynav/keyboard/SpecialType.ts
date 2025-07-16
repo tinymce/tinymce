@@ -1,6 +1,7 @@
 import { Arr, Optional, Type } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
+import type { GeneralKeyingConfig } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 // import { KeyHandlerApi } from './KeyingType';
 import * as KeyMatch from './KeyMatch';
@@ -35,14 +36,15 @@ export interface SpecialConfig extends SpecialKeyHandlers {
   readonly selector: string;
 }
 
-interface FullSpecialConfig extends SpecialKeyRuleHandlers {
+interface FullSpecialKeyRuleHandler extends SpecialKeyRuleHandlers {
   readonly selector: string;
 }
+
+interface FullSpecialConfig extends FullSpecialKeyRuleHandler, GeneralKeyingConfig {}
 
 export const create = (source: SugarElement<HTMLElement>, props: SpecialConfig): KeyingType.Handlers => {
 
   const getKeydownRules = (_component: SugarElement<HTMLElement>, _simulatedEvent: KeyboardEvent, config: FullSpecialConfig): Array<KeyRules.KeyRule<FullSpecialConfig>> => [
-    KeyRules.rule(KeyMatch.inSet(Keys.SPACE), config.onSpace),
     KeyRules.rule(
       KeyMatch.inSet(Keys.ENTER), config.onEnter
     ),
@@ -76,7 +78,7 @@ export const create = (source: SugarElement<HTMLElement>, props: SpecialConfig):
     }
   };
 
-  const partialConfig: FullSpecialConfig = {
+  const partialConfig: FullSpecialKeyRuleHandler = {
     selector: props.selector,
     onSpace: toKeyHandler(props.onSpace),
     onEnter: toKeyHandler(props.onEnter),
@@ -99,7 +101,6 @@ export const create = (source: SugarElement<HTMLElement>, props: SpecialConfig):
 };
 
 export const toBeHandled = (key: KeyboardEvent): boolean => Arr.exists([
-  KeyMatch.inSet(Keys.SPACE),
   KeyMatch.inSet(Keys.ENTER),
   KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.ENTER) ]),
   KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB) ]),
