@@ -49,7 +49,7 @@ const djb2Hash = (key: string, maxValue: number) => {
 };
 
 const getColor = (id: string): string => {
-  const colorIdx = djb2Hash(id, AvatarColors.length - 1);
+  const colorIdx = djb2Hash(id ?? '', AvatarColors.length - 1);
   return AvatarColors[colorIdx];
 };
 
