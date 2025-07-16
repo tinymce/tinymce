@@ -1,4 +1,4 @@
-import { Fun, Optional, Optionals } from '@ephox/katamari';
+import { Fun, Optional, Optionals, Type } from '@ephox/katamari';
 import { SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import Editor from '../api/Editor';
@@ -266,7 +266,7 @@ const Quirks = (editor: Editor): Quirks => {
         const caretPos = editor.getDoc().caretPositionFromPoint(clientX, clientY);
         const img = caretPos?.offsetNode?.childNodes[caretPos.offset - (caretPos.offset > 0 ? 1 : 0)] || caretPos?.offsetNode;
 
-        if (img && isEditableImage(img)) {
+        if (Type.isNonNullable(img) && isEditableImage(img)) {
           const rect = img.getBoundingClientRect();
           e.preventDefault();
 
