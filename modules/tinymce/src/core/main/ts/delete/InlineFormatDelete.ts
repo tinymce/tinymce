@@ -166,5 +166,7 @@ const refreshCaret = (editor: Editor): boolean => {
 
 export {
   backspaceDelete,
-  refreshCaret
+  refreshCaret,
+  getFormatNodesAtStart,
+  updateCaretFormat
 };

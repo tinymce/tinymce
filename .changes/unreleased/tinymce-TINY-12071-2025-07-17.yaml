@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Using CMD+backspace would not preserve inline formatting.
+time: 2025-07-17T16:37:10.416589+02:00
+custom:
+  Issue: TINY-12071
