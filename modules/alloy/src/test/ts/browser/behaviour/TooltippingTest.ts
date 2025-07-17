@@ -42,10 +42,10 @@ describe('Tooltipping Behaviour', () => {
             GuiFactory.text(`${name}-tooltip`)
           ]
         }),
-        Focusing.config({}),
+        Focusing.config({ }),
         // Add receiving to ensure the default event order is configured
         Receiving.config({
-          channels: {}
+          channels: { }
         })
       ])
     });
@@ -66,7 +66,7 @@ describe('Tooltipping Behaviour', () => {
           mode: 'flow',
           selector: 'button'
         }),
-        Replacing.config({})
+        Replacing.config({ })
       ])
     });
 
