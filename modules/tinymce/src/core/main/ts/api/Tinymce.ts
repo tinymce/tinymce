@@ -99,6 +99,7 @@ interface TinyMCE extends EditorManager {
     I18n: I18n;
     LocalStorage: Storage;
     ImageUploader: ImageUploader;
+    AvatarGenerator: AvatarGenerator;
   };
 
   dom: {
