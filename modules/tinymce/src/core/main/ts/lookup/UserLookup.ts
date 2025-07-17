@@ -1,8 +1,9 @@
 import { StructureSchema, FieldSchema } from '@ephox/boulder';
-import { Arr, Optional, Results, Obj, Num } from '@ephox/katamari';
+import { Arr, Optional, Results, Obj } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
+import AvatarGenerator from '../api/util/AvatarGenerator';
 
 /**
  * TinyMCE User Lookup API
@@ -69,65 +70,6 @@ export interface UserLookup {
   fetchUsers: (userIds: UserId[]) => Record<UserId, Promise<User>>;
 }
 
-const AvatarColors = [
-  '#E41B60', // Pink
-  '#AD1457', // Dark Pink
-  '#1939EC', // Indigo
-  '#001CB5', // Dark Indigo
-  '#648000', // Lime
-  '#465B00', // Dark Lime
-  '#006CE7', // Blue
-  '#0054B4', // Dark Blue
-  '#00838F', // Cyan
-  '#006064', // Dark Cyan
-  '#00866F', // Turquoise
-  '#004D40', // Dark Turquoise
-  '#51742F', // Green
-  '#385021', // Dark Green
-  '#CF4900', // Orange
-  '#A84600', // Dark Orange
-  '#CC0000', // Red
-  '#6A1B9A', // Dark Red
-  '#9C27B0', // Purple
-  '#6A00AB', // Dark Purple
-  '#3041BA', // Navy Blue
-  '#0A1877', // Dark Navy Blue
-  '#774433', // Brown
-  '#452B24', // Dark Brown
-  '#607D8B', // Blue Gray
-  '#455A64', // Dark Blue Gray
-];
-
-const getFirstChar = (name: string): string => {
-  if (Intl.Segmenter) {
-    const segmenter = new Intl.Segmenter();
-    const iterator = segmenter.segment(name)[Symbol.iterator]();
-    return `${iterator.next().value?.segment}`;
-  } else {
-    return name.trim()[0];
-  }
-};
-
-const getRandomColor = (): string => {
-  const colorIdx = Math.floor(Num.random() * AvatarColors.length);
-  return AvatarColors[colorIdx];
-};
-
-const generate = (name: string, color: string, size: number = 36): string => {
-  const halfSize = size / 2;
-  return `<svg height="${size}" width="${size}" xmlns="http://www.w3.org/2000/svg">` +
-    `<circle cx="${halfSize}" cy="${halfSize}" r="${halfSize}" fill="${color}"/>` +
-    `<text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" fill="#FFF" font-family="sans-serif" font-size="${halfSize}">` +
-    getFirstChar(name) +
-    `</text>` +
-    '</svg>';
-};
-
-const deriveAvatar = (name: string): string => {
-  const avatarSvg = generate(name, getRandomColor());
-  return 'data:image/svg+xml,' + encodeURIComponent(avatarSvg);
-};
-
 const userSchema = StructureSchema.objOf([
   FieldSchema.required('id'),
   FieldSchema.optionString('name'),
@@ -175,7 +117,7 @@ const validateResponse = (items: unknown): User[] => {
     return {
       id,
       name: name.getOr(id),
-      avatar: avatar.getOr(deriveAvatar(name.getOr(id))),
+      avatar: avatar.getOr(AvatarGenerator.create(name.getOr(id)).getImageSource()),
       ...objectCat(rest),
     };
   });
@@ -221,7 +163,7 @@ const UserLookup = (editor: Editor): UserLookup => {
         Promise.resolve({
           id: userId,
           name: userId,
-          avatar: deriveAvatar(userId)
+          avatar: AvatarGenerator.create(userId).getImageSource(),
         }));
     }
 
@@ -265,7 +207,7 @@ const UserLookup = (editor: Editor): UserLookup => {
         Promise.resolve({
           id: userId,
           name: userId,
-          avatar: deriveAvatar(userId)
+          avatar: AvatarGenerator.create(userId).getImageSource(),
         })
       );
       return acc;
