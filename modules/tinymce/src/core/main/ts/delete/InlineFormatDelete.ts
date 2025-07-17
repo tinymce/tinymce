@@ -40,7 +40,7 @@ const getFormatNodes = (editor: Editor, parentInlines: SugarElement<Node>[]): No
   return Arr.bind(parentInlines, (elm) => isFormatElement(elm) ? [ elm.dom ] : [ ]);
 };
 
-const getFormatNodesAtStart = (editor: Editor) => {
+const getFormatNodesAtStart = (editor: Editor): Node[] => {
   const parentInlines = getParentInlines(editor);
   return getFormatNodes(editor, parentInlines);
 };
