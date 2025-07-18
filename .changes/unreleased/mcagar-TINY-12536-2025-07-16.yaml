@@ -1,0 +1,6 @@
+project: mcagar
+kind: Fixed
+body: Loader will catch errors thrown by `tinymce.init` and report them to the caller.
+time: 2025-07-16T14:36:55.407731349+10:00
+custom:
+    Issue: TINY-12536
