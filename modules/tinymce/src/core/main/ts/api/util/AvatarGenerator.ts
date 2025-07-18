@@ -145,12 +145,13 @@ const initCache = (): AvatarCache => {
 const globalCache = initCache();
 
 const create = (name: string, options: ImageSourceOptions = {}): AvatarBuilder => {
-  const { color = getRandomColor(), size = 36, useCache = false } = options;
-  const cacheKey = `${name}-${color}-${size}`;
+  const { size = 36, useCache = false } = options;
+  const cacheKey = `${name}-${size}`;
 
   if (useCache) {
     const imageSource = globalCache.lookup(cacheKey).getOrThunk(() => {
       // Generate and cache new avatar
+      const color = options.color ?? getRandomColor();
       const newImageSource = getImageSource(name, color, size);
       globalCache.store(cacheKey, newImageSource);
       return newImageSource;
@@ -163,6 +164,7 @@ const create = (name: string, options: ImageSourceOptions = {}): AvatarBuilder =
   }
 
   // Non-cached path
+  const color = options.color ?? getRandomColor();
   const svg = getSvg(name, color, size);
   const imageSource = getImageSource(name, color, size);
 

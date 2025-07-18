@@ -17,33 +17,33 @@ describe('browser.tinymce.core.util.AvatarGeneratorTest', () => {
   };
 
   context('Basic functionality', () => {
-    it('Should create an avatar builder', () => {
+    it('TINY-12211: Should create an avatar builder', () => {
       const builder = AvatarGenerator.create('John Doe');
       assert.isObject(builder, 'Should return a builder object');
       assert.isFunction(builder.getSvg, 'Should have getSvg method');
       assert.isFunction(builder.getImageSource, 'Should have getImageSource method');
     });
 
-    it('Should generate SVG with default options', () => {
+    it('TINY-12211: Should generate SVG with default options', () => {
       const svg = AvatarGenerator.create('John Doe').getSvg();
       assertValidSvg(svg);
       assert.isTrue(svg.includes('>J<'), 'Should contain first character');
       assert.isTrue(svg.includes('height="36"'), 'Should use default size');
     });
 
-    it('Should generate image source with default options', () => {
+    it('TINY-12211: Should generate image source with default options', () => {
       const src = AvatarGenerator.create('John Doe').getImageSource();
       assertValidImageSource(src);
     });
 
-    it('Should respect custom color option', () => {
+    it('TINY-12211: Should respect custom color option', () => {
       const color = '#FF0000';
       const svg = AvatarGenerator.create('John Doe', { color }).getSvg();
       assertValidSvg(svg);
       assert.isTrue(svg.includes(`fill="${color}"`), 'Should use custom color');
     });
 
-    it('Should respect custom size option', () => {
+    it('TINY-12211: Should respect custom size option', () => {
       const size = 48;
       const svg = AvatarGenerator.create('John Doe', { size }).getSvg();
       assertValidSvg(svg);
@@ -51,18 +51,18 @@ describe('browser.tinymce.core.util.AvatarGeneratorTest', () => {
       assert.isTrue(svg.includes(`width="${size}"`), 'Should use custom size');
     });
 
-    it('Should handle empty name', () => {
+    it('TINY-12211: Should handle empty name', () => {
       const svg = AvatarGenerator.create('').getSvg();
       assertValidSvg(svg);
     });
 
-    it('Should handle unicode characters', () => {
+    it('TINY-12211: Should handle unicode characters', () => {
       const svg = AvatarGenerator.create('🚀 Space').getSvg();
       assertValidSvg(svg);
       assert.isTrue(svg.includes('>🚀<') || svg.includes('>S<'), 'Should contain first character or fallback');
     });
 
-    it('Should reuse options for both SVG and image source', () => {
+    it('TINY-12211: Should reuse options for both SVG and image source', () => {
       const builder = AvatarGenerator.create('John Doe', {
         color: '#FF0000',
         size: 48
@@ -80,7 +80,7 @@ describe('browser.tinymce.core.util.AvatarGeneratorTest', () => {
   });
 
   context('Cache behavior', () => {
-    it('Should not cache by default', () => {
+    it('TINY-12211: Should not cache by default', () => {
       // Create two builders with same parameters
       const builder1 = AvatarGenerator.create('John Doe', { color: '#FF0000' });
       const builder2 = AvatarGenerator.create('John Doe', { color: '#FF0000' });
@@ -95,7 +95,7 @@ describe('browser.tinymce.core.util.AvatarGeneratorTest', () => {
       assert.notEqual(builder1, builder2, 'Builders should be different instances');
     });
 
-    it('Should reuse cached avatar when enabled', () => {
+    it('TINY-12211: Should reuse cached avatar when enabled', () => {
       // Create builder with cache enabled
       const builder1 = AvatarGenerator.create('John Doe', {
         color: '#FF0000',
@@ -110,7 +110,7 @@ describe('browser.tinymce.core.util.AvatarGeneratorTest', () => {
       assert.strictEqual(src1, src2, 'Should reuse cached avatar');
     });
 
-    it('Should cache different avatars separately', () => {
+    it('TINY-12211: Should cache different avatars separately', () => {
       // Create builders for different names
       const builder1 = AvatarGenerator.create('John Doe', {
         color: '#FF0000',
@@ -132,7 +132,7 @@ describe('browser.tinymce.core.util.AvatarGeneratorTest', () => {
       assert.notEqual(builder1, builder2, 'Builders should be different instances');
     });
 
-    it('Should cache based on all options', () => {
+    it('TINY-12211: Should cache based on all options', () => {
       // Create builders with different sizes
       const builder1 = AvatarGenerator.create('John Doe', {
         color: '#FF0000',
@@ -156,7 +156,7 @@ describe('browser.tinymce.core.util.AvatarGeneratorTest', () => {
       assert.notEqual(builder1, builder2, 'Builders should be different instances');
     });
 
-    it('Should cache SVG and image source separately', () => {
+    it('TINY-12211: Should cache SVG and image source separately', () => {
       const builder = AvatarGenerator.create('John Doe', {
         color: '#FF0000',
         useCache: true
@@ -173,6 +173,116 @@ describe('browser.tinymce.core.util.AvatarGeneratorTest', () => {
       assert.strictEqual(img1, img2, 'Should reuse cached image source');
       // But SVG and image source should be different
       assert.notEqual(svg1, img1, 'SVG and image source should be different formats');
+    });
+
+    it('TINY-12211: Should handle cache miss and then cache hit correctly', () => {
+      // First call should be a cache miss and store the result
+      const builder1 = AvatarGenerator.create('Cache Test', {
+        color: '#FF0000',
+        size: 36,
+        useCache: true
+      });
+
+      const firstImageSource = builder1.getImageSource();
+      const firstSvg = builder1.getSvg();
+
+      // Verify the first call generated valid content
+      assertValidImageSource(firstImageSource);
+      assertValidSvg(firstSvg);
+      assert.include(firstSvg, '>C<', 'Should contain first character');
+      assert.include(firstSvg, 'height="36"', 'Should use specified size');
+
+      // Second call with same name/size should be a cache hit (ignoring color)
+      const builder2 = AvatarGenerator.create('Cache Test', {
+        color: '#00FF00', // Different color, but should still hit cache
+        size: 36,
+        useCache: true
+      });
+
+      const secondImageSource = builder2.getImageSource();
+      const secondSvg = builder2.getSvg();
+
+      // Results should be identical (same cached content, color ignored)
+      assert.strictEqual(firstImageSource, secondImageSource, 'Same name/size should hit cache regardless of color');
+      assert.strictEqual(firstSvg, secondSvg, 'SVGs should be identical (cache hit)');
+
+      // Third call with different size should be a cache miss
+      const builder3 = AvatarGenerator.create('Cache Test', {
+        color: '#FF0000',
+        size: 48, // Different size
+        useCache: true
+      });
+
+      const thirdImageSource = builder3.getImageSource();
+      const thirdSvg = builder3.getSvg();
+
+      // Should be different from cached result (different size)
+      assert.notEqual(firstImageSource, thirdImageSource, 'Different size should produce different result');
+      assert.notEqual(firstSvg, thirdSvg, 'Different size should produce different SVG');
+      assert.include(thirdSvg, 'height="48"', 'Should use new size');
+    });
+
+    it('TINY-12211: Should cache based on complete cache key', () => {
+      // Test that cache key includes name and size (but NOT color)
+      const baseParams = {
+        color: '#FF0000',
+        size: 36,
+        useCache: true
+      };
+
+      // Different names should have different cache entries (even if they look the same)
+      const johnAvatar1 = AvatarGenerator.create('John Doe', baseParams).getImageSource();
+      const janeAvatar1 = AvatarGenerator.create('Jane Doe', baseParams).getImageSource();
+
+      // Get them again to verify separate caching
+      const johnAvatar2 = AvatarGenerator.create('John Doe', baseParams).getImageSource();
+      const janeAvatar2 = AvatarGenerator.create('Jane Doe', baseParams).getImageSource();
+
+      // Each name should hit its own cache
+      assert.strictEqual(johnAvatar1, johnAvatar2, 'John should hit his cache');
+      assert.strictEqual(janeAvatar1, janeAvatar2, 'Jane should hit her cache');
+
+      // The actual appearance doesn't matter - they could be identical and still be correctly cached separately
+
+      // Different sizes (same name) should have different cache entries
+      const size36Avatar = AvatarGenerator.create('John Doe', { ...baseParams, size: 36 }).getImageSource();
+      const size48Avatar = AvatarGenerator.create('John Doe', { ...baseParams, size: 48 }).getImageSource();
+      assert.notEqual(size36Avatar, size48Avatar, 'Different sizes should produce different results');
+
+      // Same name and size should share cache EVEN with different colors specified
+      const redAvatar = AvatarGenerator.create('John Doe', { ...baseParams, color: '#FF0000' }).getImageSource();
+      const blueAvatar = AvatarGenerator.create('John Doe', { ...baseParams, color: '#0000FF' }).getImageSource();
+      assert.strictEqual(redAvatar, blueAvatar, 'Same name/size should share cache regardless of color');
+    });
+
+    it('TINY-12211: Should not interfere between cached and non-cached calls', () => {
+      const params = {
+        color: '#FF0000',
+        size: 36
+      };
+
+      // Non-cached call
+      const nonCachedAvatar = AvatarGenerator.create('Mixed Test', params).getImageSource();
+
+      // Cached call with same parameters
+      const cachedAvatar = AvatarGenerator.create('Mixed Test', {
+        ...params,
+        useCache: true
+      }).getImageSource();
+
+      // Should produce the same result but not interfere with each other
+      assert.equal(nonCachedAvatar, cachedAvatar, 'Results should be identical');
+
+      // Another non-cached call should still work independently
+      const nonCachedAvatar2 = AvatarGenerator.create('Mixed Test', params).getImageSource();
+      assert.equal(nonCachedAvatar, nonCachedAvatar2, 'Non-cached calls should be consistent');
+
+      // Another cached call should hit the cache
+      const cachedAvatar2 = AvatarGenerator.create('Mixed Test', {
+        ...params,
+        useCache: true
+      }).getImageSource();
+      assert.strictEqual(cachedAvatar, cachedAvatar2, 'Cached calls should reuse cache');
     });
   });
 });
