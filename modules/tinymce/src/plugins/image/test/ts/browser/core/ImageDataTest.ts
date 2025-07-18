@@ -156,7 +156,7 @@ describe('browser.tinymce.plugins.image.core.ImageDataTest', () => {
       vspace: '',
       border: '',
       borderStyle: '',
-      isDecorative: false
+      isDecorative: true
     }, data);
     assertStructure(ApproxStructure.build((s, str) => {
       return s.element('img', {
@@ -747,7 +747,7 @@ describe('browser.tinymce.plugins.image.core.ImageDataTest', () => {
   });
 
   it('TINY-12545: Read decorative image with role="none" and title=""', () => {
-    const image = createHtml('<img src="some.gif" role="" title="">');
+    const image = createHtml('<img src="some.gif" role="none" title="">');
     const data = readFromImage(image);
     assertModel({
       src: 'some.gif',

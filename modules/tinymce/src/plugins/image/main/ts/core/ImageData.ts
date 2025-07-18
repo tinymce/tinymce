@@ -157,7 +157,8 @@ const isImage = (elm: Node): elm is HTMLImageElement =>
 const getIsDecorative = (image: HTMLElement): boolean => {
   const alt = DOM.getAttrib(image, 'alt');
   const role = DOM.getAttrib(image, 'role');
-  return (alt.length === 0) || (role === 'presentation') || (role === 'none');
+  const hasAlt = image.hasAttribute('alt');
+  return (hasAlt && alt.length === 0) || (role === 'presentation') || (role === 'none');
 };
 
 const getAlt = (image: HTMLElement): string => {
