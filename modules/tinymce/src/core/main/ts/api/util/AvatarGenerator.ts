@@ -1,33 +1,68 @@
-import { Num } from '@ephox/katamari';
+import { Fun, Num, Obj, Optional } from '@ephox/katamari';
+
+/**
+ * This class handles generating default avatars for users.
+ *
+ * @class tinymce.util.AvatarGenerator
+ * @example
+ * // Get an image source URL for use in an <img> element
+ * const imgSrc = tinymce.util.AvatarGenerator.create('John Doe').getImageSource();
+ *
+ * // Get raw SVG with custom color and size
+ * const svg = tinymce.util.AvatarGenerator.create('John Doe', {
+ *   color: '#FF0000',
+ *   size: 48
+ * }).getSvg();
+ *
+ * // Use caching for repeated avatars
+ * const avatar = tinymce.util.AvatarGenerator.create('John Doe', {
+ *   useCache: true
+ * }).getImageSource();
+ */
 
 interface ImageSourceOptions {
+  /** The color of the avatar background */
   color?: string;
+  /** The size of the avatar in pixels (default: 36) */
   size?: number;
+  /** Whether to cache the generated avatar. Cache is shared globally across the editor instance. */
+  useCache?: boolean;
 }
 
 interface AvatarBuilder {
-  /** Get the avatar as an SVG string */
+  /**
+   * Gets the avatar as an SVG string.
+   *
+   * @method getSvg
+   * @return {string} The SVG markup.
+   */
   getSvg: () => string;
-  /** Get the avatar as an image source URL for use in <img> elements */
+
+  /**
+   * Gets the avatar as a data URI that can be used as an image source.
+   *
+   * @method getImageSource
+   * @return {string} Data URI containing the encoded SVG.
+   */
   getImageSource: () => string;
+}
+
+interface AvatarCache {
+  readonly lookup: (cacheKey: string) => Optional<string>;
+  readonly store: (cacheKey: string, imageSource: string) => void;
 }
 
 interface AvatarGenerator {
   /**
    * Creates an avatar builder that can output different formats.
    *
-   * @param {string} name - The name to use in the avatar.
-   * @param {Object} [options] - Options for the avatar.
-   * @param {string} [options.color] - The color of the avatar background.
-   * @param {number} [options.size=36] - The size of the avatar.
-   * @returns {AvatarBuilder} A builder for getting different avatar formats
-   *
-   * @example
-   * // Get an image source URL
-   * const imgSrc = AvatarGenerator.create('John Doe').getImageSource();
-   *
-   * // Get raw SVG
-   * const svg = AvatarGenerator.create('John Doe', { color: '#FF0000' }).getSvg();
+   * @method create
+   * @param {string} name The name to use in the avatar.
+   * @param {Object} options Options for the avatar.
+   * @param {string} options.color The color of the avatar background.
+   * @param {number} options.size The size of the avatar in pixels (default: 36).
+   * @param {boolean} options.useCache Whether to cache the generated avatar.
+   * @return {AvatarBuilder} A builder for getting different avatar formats.
    */
   create: (name: string, options?: ImageSourceOptions) => AvatarBuilder;
 }
@@ -86,13 +121,54 @@ const getSvg = (name: string, color: string, size: number = 36): string => {
     '</svg>';
 };
 
-const create = (name: string, options: ImageSourceOptions = {}): AvatarBuilder => {
-  const { color = getRandomColor(), size = 36 } = options;
+const getImageSource = (name: string, color: string, size: number): string => {
+  const svg = getSvg(name, color, size);
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+};
+
+const initCache = (): AvatarCache => {
+  const cache: Record<string, string> = {};
+
+  const lookup = (cacheKey: string) =>
+    Obj.get(cache, cacheKey);
+
+  const store = (cacheKey: string, imageSource: string) => {
+    cache[cacheKey] = imageSource;
+  };
 
   return {
-    getSvg: () => getSvg(name, color, size),
-    getImageSource: () =>
-      'data:image/svg+xml,' + encodeURIComponent(getSvg(name, color, size))
+    lookup,
+    store
+  };
+};
+
+const globalCache = initCache();
+
+const create = (name: string, options: ImageSourceOptions = {}): AvatarBuilder => {
+  const { color = getRandomColor(), size = 36, useCache = false } = options;
+  const cacheKey = `${name}-${color}-${size}`;
+
+  if (useCache) {
+    const imageSource = globalCache.lookup(cacheKey).getOrThunk(() => {
+      // Generate and cache new avatar
+      const newImageSource = getImageSource(name, color, size);
+      globalCache.store(cacheKey, newImageSource);
+      return newImageSource;
+    });
+
+    return {
+      getSvg: () => decodeURIComponent(imageSource.replace('data:image/svg+xml,', '')),
+      getImageSource: Fun.constant(imageSource)
+    };
+  }
+
+  // Non-cached path
+  const svg = getSvg(name, color, size);
+  const imageSource = getImageSource(name, color, size);
+
+  return {
+    getSvg: Fun.constant(svg),
+    getImageSource: Fun.constant(imageSource)
   };
 };
 
