@@ -154,8 +154,18 @@ const isFigure = (elm: Node | null): elm is HTMLElement =>
 const isImage = (elm: Node): elm is HTMLImageElement =>
   elm.nodeName === 'IMG';
 
-const getIsDecorative = (image: HTMLElement): boolean =>
-  DOM.getAttrib(image, 'alt').length === 0 && DOM.getAttrib(image, 'role') === 'presentation';
+const getIsDecorative = (image: HTMLElement): boolean => {
+  const alt = DOM.getAttrib(image, 'alt');
+  const role = DOM.getAttrib(image, 'role');
+  // WCAG Technique H67: Using null alt text and no title attribute on img elements for images that AT should ignore
+  // Source: https://www.w3.org/TR/WCAG20-TECHS/H67.html
+  // Key point: Decorative images should have alt="" and either no title or empty title (title="")
+  // ARIA 1.2 Specification: Defines role="presentation" and role="none" as synonymous roles
+  // Source: https://www.w3.org/TR/wai-aria-1.2/
+  // Key point: These roles remove semantic meaning and prohibit aria-label and aria-labelledby
+  const hasAlt = image.hasAttribute('alt');
+  return (hasAlt && alt.length === 0) || (role === 'presentation') || (role === 'none');
+};
 
 const getAlt = (image: HTMLElement): string => {
   if (getIsDecorative(image)) {
