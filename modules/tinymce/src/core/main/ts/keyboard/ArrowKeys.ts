@@ -6,6 +6,7 @@ import VK from '../api/util/VK';
 
 import * as BoundarySelection from './BoundarySelection';
 import * as CefNavigation from './CefNavigation';
+import * as CetContentEndpointNavigation from './CetContentEndpointNavigation';
 import * as ContentEndpointNavigation from './ContentEndpointNavigation';
 import * as DetailsNavigation from './DetailsNavigation';
 import * as MatchKeys from './MatchKeys';
@@ -14,6 +15,7 @@ import * as TableNavigation from './TableNavigation';
 
 const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: KeyboardEvent) => {
   const isMac = Env.os.isMacOS() || Env.os.isiOS();
+  const isFirefox = Env.browser.isFirefox();
 
   MatchKeys.execute([
     { keyCode: VK.RIGHT, action: MatchKeys.action(CefNavigation.moveH, editor, true) },
@@ -40,7 +42,11 @@ const executeKeydownOverride = (editor: Editor, caret: Cell<Text | null>, evt: K
     { keyCode: VK.RIGHT, ctrlKey: !isMac, altKey: isMac, action: MatchKeys.action(BoundarySelection.moveNextWord, editor, caret) },
     { keyCode: VK.LEFT, ctrlKey: !isMac, altKey: isMac, action: MatchKeys.action(BoundarySelection.movePrevWord, editor, caret) },
     { keyCode: VK.UP, action: MatchKeys.action(ContentEndpointNavigation.moveV, editor, false) },
-    { keyCode: VK.DOWN, action: MatchKeys.action(ContentEndpointNavigation.moveV, editor, true) }
+    { keyCode: VK.DOWN, action: MatchKeys.action(ContentEndpointNavigation.moveV, editor, true) },
+    ...( isFirefox ? [
+      { keyCode: VK.UP, action: MatchKeys.action(CetContentEndpointNavigation.moveV, editor, false) },
+      { keyCode: VK.DOWN, action: MatchKeys.action(CetContentEndpointNavigation.moveV, editor, true) }
+    ] : [])
   ], evt).each((_) => {
     evt.preventDefault();
   });
