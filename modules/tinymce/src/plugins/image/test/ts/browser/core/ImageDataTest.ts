@@ -685,4 +685,144 @@ describe('browser.tinymce.plugins.image.core.ImageDataTest', () => {
       });
     }), newData);
   });
+
+  it('TINY-12545: Read decorative image with only alt=""', () => {
+    const image = createHtml('<img src="some.gif" alt="">');
+    const data = readFromImage(image);
+    assertModel({
+      src: 'some.gif',
+      alt: '',
+      title: '',
+      width: '',
+      height: '',
+      class: '',
+      style: '',
+      caption: false,
+      hspace: '',
+      vspace: '',
+      border: '',
+      borderStyle: '',
+      isDecorative: true
+    }, data);
+  });
+
+  it('TINY-12545: Read decorative image with empty alt and title=""', () => {
+    const image = createHtml('<img src="some.gif" alt="" title="">');
+    const data = readFromImage(image);
+    assertModel({
+      src: 'some.gif',
+      alt: '',
+      title: '',
+      width: '',
+      height: '',
+      class: '',
+      style: '',
+      caption: false,
+      hspace: '',
+      vspace: '',
+      border: '',
+      borderStyle: '',
+      isDecorative: true
+    }, data);
+  });
+
+  it('TINY-12545: Read decorative image with only role="presentation"', () => {
+    const image = createHtml('<img src="some.gif" role="presentation">');
+    const data = readFromImage(image);
+    assertModel({
+      src: 'some.gif',
+      alt: '',
+      title: '',
+      width: '',
+      height: '',
+      class: '',
+      style: '',
+      caption: false,
+      hspace: '',
+      vspace: '',
+      border: '',
+      borderStyle: '',
+      isDecorative: true
+    }, data);
+  });
+
+  it('TINY-12545: Read decorative image with role="none" and title=""', () => {
+    const image = createHtml('<img src="some.gif" role="" title="">');
+    const data = readFromImage(image);
+    assertModel({
+      src: 'some.gif',
+      alt: '',
+      title: '',
+      width: '',
+      height: '',
+      class: '',
+      style: '',
+      caption: false,
+      hspace: '',
+      vspace: '',
+      border: '',
+      borderStyle: '',
+      isDecorative: true
+    }, data);
+  });
+
+  it('TINY-12545: Read decorative image with both alt="" and role="presentation" and title=""', () => {
+    const image = createHtml('<img src="some.gif" alt="" role="presentation" title="">');
+    const data = readFromImage(image);
+    assertModel({
+      src: 'some.gif',
+      alt: '',
+      title: '',
+      width: '',
+      height: '',
+      class: '',
+      style: '',
+      caption: false,
+      hspace: '',
+      vspace: '',
+      border: '',
+      borderStyle: '',
+      isDecorative: true
+    }, data);
+  });
+
+  it('TINY-12545: Read non-decorative image with alt text', () => {
+    const image = createHtml('<img src="some.gif" alt="description">');
+    const data = readFromImage(image);
+    assertModel({
+      src: 'some.gif',
+      alt: 'description',
+      title: '',
+      width: '',
+      height: '',
+      class: '',
+      style: '',
+      caption: false,
+      hspace: '',
+      vspace: '',
+      border: '',
+      borderStyle: '',
+      isDecorative: false
+    }, data);
+  });
+
+  it('TINY-12545: Read non-decorative image with no accessibility attributes', () => {
+    const image = createHtml('<img src="some.gif">');
+    const data = readFromImage(image);
+    assertModel({
+      src: 'some.gif',
+      alt: '',
+      title: '',
+      width: '',
+      height: '',
+      class: '',
+      style: '',
+      caption: false,
+      hspace: '',
+      vspace: '',
+      border: '',
+      borderStyle: '',
+      isDecorative: false
+    }, data);
+  });
 });
