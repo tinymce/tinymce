@@ -1,0 +1,17 @@
+.DS_Store
+*~
+*.iws
+*.sublime-workspace
+
+package-lock.json
+yarn-error.log*
+lerna-debug.log
+scratch
+lib
+tsconfig.tsbuildinfo
+modules/*/LICENSE.TXT
+
+/dist
+/js
+/tmp
+/.idea

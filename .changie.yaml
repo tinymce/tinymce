@@ -3,8 +3,8 @@ unreleasedDir: unreleased
 headerPath: ./header.tpl.md
 versionExt: md
 versionFormat: '## {{.Version}} - {{.Time.Format "2006-01-02"}}'
-kindFormat: '### {{.Kind}}'
-changeFormat: '- {{.Body}} #{{.Custom.Issue}}'
+kindFormat: "### {{.Kind}}"
+changeFormat: "- {{.Body}} #{{.Custom.Issue}}"
 fragmentFileFormat: '{{.Project}}-{{.Custom.Issue}}-{{.Time.Format "2006-01-02"}}'
 projects:
   - label: acid
@@ -68,20 +68,20 @@ projects:
     key: tinymce
     changelog: modules/tinymce/CHANGELOG.md
 kinds:
-- label: Added
-  auto: minor
-- label: Improved
-  auto: minor
-- label: Changed
-  auto: major
-- label: Deprecated
-  auto: minor
-- label: Removed
-  auto: major
-- label: Fixed
-  auto: patch
-- label: Security
-  auto: patch
+  - label: Added
+    auto: minor
+  - label: Improved
+    auto: minor
+  - label: Changed
+    auto: major
+  - label: Deprecated
+    auto: minor
+  - label: Removed
+    auto: major
+  - label: Fixed
+    auto: patch
+  - label: Security
+    auto: patch
 
 newlines:
   afterChangelogHeader: 1
@@ -90,7 +90,7 @@ newlines:
   beforeKind: 1
 envPrefix: CHANGIE_
 custom:
-- key: Issue
-  label: Issue (TINY-XXXX+)
-  type: string
-  minLength: 7
+  - key: Issue
+    label: Issue (TINY-XXXX+)
+    type: string
+    minLength: 7
