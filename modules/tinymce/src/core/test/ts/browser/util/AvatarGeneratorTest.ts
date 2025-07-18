@@ -1,7 +1,7 @@
 import { describe, it, context } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
-import AvatarGenerator from 'tinymce/core/api/util/AvatarGenerator';
+import { createAvatarGenerator as AvatarGenerator } from 'tinymce/core/api/util/AvatarGenerator';
 
 describe('browser.tinymce.core.util.AvatarGeneratorTest', () => {
   const assertValidSvg = (svg: string) => {

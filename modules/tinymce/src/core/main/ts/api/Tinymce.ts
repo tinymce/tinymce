@@ -38,7 +38,7 @@ import Resource from './Resource';
 import Shortcuts, { ShortcutsConstructor } from './Shortcuts';
 import ThemeManager from './ThemeManager';
 import UndoManager from './UndoManager';
-import AvatarGenerator from './util/AvatarGenerator';
+import { AvatarGenerator, createAvatarGenerator } from './util/AvatarGenerator';
 import Delay from './util/Delay';
 import EventDispatcher, { EventDispatcherConstructor } from './util/EventDispatcher';
 import I18n from './util/I18n';
@@ -195,7 +195,7 @@ const publicApi = {
     I18n,
     LocalStorage,
     ImageUploader,
-    AvatarGenerator
+    AvatarGenerator: createAvatarGenerator
   },
 
   dom: {

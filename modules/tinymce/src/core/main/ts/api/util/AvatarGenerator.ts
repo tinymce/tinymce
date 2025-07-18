@@ -22,11 +22,11 @@ import { Fun, Num, Obj, Optional } from '@ephox/katamari';
 
 interface ImageSourceOptions {
   /** The color of the avatar background */
-  color?: string;
+  readonly color?: string;
   /** The size of the avatar in pixels (default: 36) */
-  size?: number;
+  readonly size?: number;
   /** Whether to cache the generated avatar. Cache is shared globally across the editor instance. */
-  useCache?: boolean;
+  readonly useCache?: boolean;
 }
 
 interface AvatarBuilder {
@@ -36,7 +36,7 @@ interface AvatarBuilder {
    * @method getSvg
    * @return {string} The SVG markup.
    */
-  getSvg: () => string;
+  readonly getSvg: () => string;
 
   /**
    * Gets the avatar as a data URI that can be used as an image source.
@@ -44,7 +44,7 @@ interface AvatarBuilder {
    * @method getImageSource
    * @return {string} Data URI containing the encoded SVG.
    */
-  getImageSource: () => string;
+  readonly getImageSource: () => string;
 }
 
 interface AvatarCache {
@@ -52,7 +52,7 @@ interface AvatarCache {
   readonly store: (cacheKey: string, imageSource: string) => void;
 }
 
-interface AvatarGenerator {
+export interface AvatarGenerator {
   /**
    * Creates an avatar builder that can output different formats.
    *
@@ -64,7 +64,7 @@ interface AvatarGenerator {
    * @param {boolean} options.useCache Whether to cache the generated avatar.
    * @return {AvatarBuilder} A builder for getting different avatar formats.
    */
-  create: (name: string, options?: ImageSourceOptions) => AvatarBuilder;
+  readonly create: (name: string, options?: ImageSourceOptions) => AvatarBuilder;
 }
 
 const AvatarColors = [
@@ -111,7 +111,7 @@ const getRandomColor = (): string => {
   return AvatarColors[colorIdx];
 };
 
-const getSvg = (name: string, color: string, size: number = 36): string => {
+const getSvg = (name: string, color: string, size: number): string => {
   const halfSize = size / 2;
   return `<svg height="${size}" width="${size}" xmlns="http://www.w3.org/2000/svg">` +
     `<circle cx="${halfSize}" cy="${halfSize}" r="${halfSize}" fill="${color}"/>` +
@@ -172,8 +172,8 @@ const create = (name: string, options: ImageSourceOptions = {}): AvatarBuilder =
   };
 };
 
-const AvatarGenerator: AvatarGenerator = {
+const createAvatarGenerator: AvatarGenerator = {
   create
 };
 
-export default AvatarGenerator;
+export { createAvatarGenerator };

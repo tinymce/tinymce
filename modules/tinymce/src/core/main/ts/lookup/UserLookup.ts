@@ -3,7 +3,7 @@ import { Arr, Optional, Results, Obj } from '@ephox/katamari';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
-import AvatarGenerator from '../api/util/AvatarGenerator';
+import { createAvatarGenerator as AvatarGenerator } from '../api/util/AvatarGenerator';
 
 /**
  * TinyMCE User Lookup API
