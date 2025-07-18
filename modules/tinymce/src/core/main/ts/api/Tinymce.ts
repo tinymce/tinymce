@@ -38,6 +38,7 @@ import Resource from './Resource';
 import Shortcuts, { ShortcutsConstructor } from './Shortcuts';
 import ThemeManager from './ThemeManager';
 import UndoManager from './UndoManager';
+import { AvatarGenerator, createAvatarGenerator } from './util/AvatarGenerator';
 import Delay from './util/Delay';
 import EventDispatcher, { EventDispatcherConstructor } from './util/EventDispatcher';
 import I18n from './util/I18n';
@@ -98,6 +99,7 @@ interface TinyMCE extends EditorManager {
     I18n: I18n;
     LocalStorage: Storage;
     ImageUploader: ImageUploader;
+    AvatarGenerator: AvatarGenerator;
   };
 
   dom: {
@@ -192,7 +194,8 @@ const publicApi = {
     Observable,
     I18n,
     LocalStorage,
-    ImageUploader
+    ImageUploader,
+    AvatarGenerator: createAvatarGenerator
   },
 
   dom: {

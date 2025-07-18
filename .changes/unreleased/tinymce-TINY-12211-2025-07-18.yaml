@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: New AvatarGenerator to centralize avatar generation logic across plugins
+time: 2025-07-18T14:46:22.467469+10:00
+custom:
+    Issue: TINY-12211
