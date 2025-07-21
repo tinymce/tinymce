@@ -1,7 +1,0 @@
-project: tinymce
-kind: Added
-body: New `allow_html_in_comments` option to allow HTML like contents inside comment
-  data.
-time: 2025-06-24T07:48:32.222278+02:00
-custom:
-  Issue: TINY-12220

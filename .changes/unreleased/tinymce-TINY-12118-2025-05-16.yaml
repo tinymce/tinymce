@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: The `contextform` subtoolbar is no longer dismissed when using the back button in inline editors.
-time: 2025-05-16T14:25:44.523886887+02:00
-custom:
-    Issue: TINY-12118
