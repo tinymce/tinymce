@@ -8,6 +8,7 @@ import * as SpecialType from './keyboard/SpecialType';
 import * as TabbingType from './keyboard/TabbingType';
 
 interface BaseProps {
+  /** The container element to bind keyboard events to. */
   containerRef: RefObject<HTMLElement>;
 }
 
