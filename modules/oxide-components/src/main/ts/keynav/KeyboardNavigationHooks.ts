@@ -2,12 +2,13 @@ import { Fun } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { useEffect, type RefObject } from 'react';
 
-import * as FlowType from './keyboard/FlowType';
+import * as FlowType from './keyboard/flowtype/FlowType';
 import * as KeyingType from './keyboard/KeyingType';
 import * as SpecialType from './keyboard/SpecialType';
 import * as TabbingType from './keyboard/TabbingType';
 
 interface BaseProps {
+  /** The container element to bind keyboard events to. */
   containerRef: RefObject<HTMLElement>;
 }
 
