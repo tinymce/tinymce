@@ -3,16 +3,18 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "target": "ES2022",
     "lib": [
-      "ES2022"
+      "ES2022",
+      "DOM"
     ],
     "types": [
       "node"
     ],
-    "module": "esnext",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "module": "ESNext",
     "skipLibCheck": true,
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
-    "allowSyntheticDefaultImports": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
     "noEmit": true,
@@ -21,12 +23,17 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "jsx": "react-jsx",
+    "paths": {
+      "oxide-components/*": ["src/main/ts/*"]
+    }
   },
   "include": [
-    "vite.config.ts",
-    "vitest.config.ts",
-    "playwright.config.ts",
+    "src/test/**/*.spec.ts",
+    "src/test/**/*.spec.tsx"
+  ],
+  "exclude": [
     "src/test/ts/visual.spec.ts"
   ]
 }

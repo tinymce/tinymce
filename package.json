@@ -9,7 +9,7 @@
     "oxide-icons-build": "yarn -s --cwd modules/oxide-icons-default build",
     "oxide-icons-ci": "yarn -s --cwd modules/oxide-icons-default ci",
     "oxide-components-ci": "yarn -s --cwd modules/oxide-components ci",
-    "oxide-components-build": "yarn -s --cwd modules/oxide-components build",
+    "oxide-components-build": "yarn -s lerna run build --scope @tinymce/oxide-components --include-dependencies",
     "oxide-build": "yarn -s --cwd modules/oxide build",
     "oxide-start": "yarn -s --cwd modules/oxide start",
     "oxide-ci": "yarn -s --cwd modules/oxide ci",
