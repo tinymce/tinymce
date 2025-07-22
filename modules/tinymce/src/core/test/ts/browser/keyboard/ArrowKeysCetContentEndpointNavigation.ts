@@ -25,10 +25,10 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCetContentEndpointNavigation', 
       '</figure>' +
       '<p>Last line</p>'
     );
-    TinySelections.setCursor(editor, [1, 1, 0], 'Figcaption'.length);
+    TinySelections.setCursor(editor, [ 1, 1, 0 ], 'Figcaption'.length);
     TinyContentActions.keydown(editor, Keys.down());
 
-    TinyAssertions.assertCursor(editor, [2, 0], 'Last line'.length);
+    TinyAssertions.assertCursor(editor, [ 2, 0 ], 'Last line'.length);
   });
 
   it('TINY-12459: should move cursor to end of previous paragraph when pressing up arrow at end of figcaption', () => {
@@ -41,10 +41,10 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCetContentEndpointNavigation', 
       '</figure>' +
       '<p>Last line</p>'
     );
-    TinySelections.setCursor(editor, [1, 1, 0], 'Figcaption'.length);
+    TinySelections.setCursor(editor, [ 1, 1, 0 ], 'Figcaption'.length);
     TinyContentActions.keydown(editor, Keys.up());
 
-    TinyAssertions.assertCursor(editor, [0, 0], 'First line'.length);
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 'First line'.length);
   });
 
   it('TINY-12459: should move cursor to end of next paragraph when pressing down arrow with selection in figcaption', () => {
@@ -57,10 +57,10 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCetContentEndpointNavigation', 
       '</figure>' +
       '<p>Last line</p>'
     );
-    TinySelections.setSelection(editor, [1, 1, 0], 0, [1, 1, 0], 'Fig'.length);
+    TinySelections.setSelection(editor, [ 1, 1, 0 ], 0, [ 1, 1, 0 ], 'Fig'.length);
     TinyContentActions.keydown(editor, Keys.down());
 
-    TinyAssertions.assertCursor(editor, [2, 0], 'Last line'.length);
+    TinyAssertions.assertCursor(editor, [ 2, 0 ], 'Last line'.length);
   });
 
   it('TINY-12459: should move cursor to end of previous paragraph when pressing up arrow with selection in figcaption', () => {
@@ -73,10 +73,10 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCetContentEndpointNavigation', 
       '</figure>' +
       '<p>Last line</p>'
     );
-    TinySelections.setSelection(editor, [1, 1, 0], 0, [1, 1, 0], 'Fig'.length);
+    TinySelections.setSelection(editor, [ 1, 1, 0 ], 0, [ 1, 1, 0 ], 'Fig'.length);
     TinyContentActions.keydown(editor, Keys.up());
 
-    TinyAssertions.assertCursor(editor, [0, 0], 'First line'.length);
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 'First line'.length);
   });
 
   it('TINY-12459: should move cursor to previous paragraph when pressing up arrow with selection across inner contenteditable paragraphs', () => {
@@ -91,10 +91,10 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCetContentEndpointNavigation', 
       '</div>' +
       '<p>Line below</p>'
     );
-    TinySelections.setSelection(editor, [1, 0, 0, 0], '#1 Inner '.length, [1, 0, 1, 0], '#2 Inner'.length);
+    TinySelections.setSelection(editor, [ 1, 0, 0, 0 ], '#1 Inner '.length, [ 1, 0, 1, 0 ], '#2 Inner'.length);
     TinyContentActions.keydown(editor, Keys.up());
 
-    TinyAssertions.assertCursor(editor, [0, 0], 'Line abo'.length);
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 'Line abo'.length);
   });
 
   it('TINY-12459: should move cursor to next paragraph when pressing down arrow with selection across inner contenteditable paragraphs', () => {
@@ -109,9 +109,9 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCetContentEndpointNavigation', 
       '</div>' +
       '<p>Line below</p>'
     );
-    TinySelections.setSelection(editor, [1, 0, 0, 0], '#1 Inner '.length, [1, 0, 1, 0], '#2 Inner'.length);
+    TinySelections.setSelection(editor, [ 1, 0, 0, 0 ], '#1 Inner '.length, [ 1, 0, 1, 0 ], '#2 Inner'.length);
     TinyContentActions.keydown(editor, Keys.down());
 
-    TinyAssertions.assertCursor(editor, [2, 0], 'Line bel'.length);
+    TinyAssertions.assertCursor(editor, [ 2, 0 ], 'Line bel'.length);
   });
 });
