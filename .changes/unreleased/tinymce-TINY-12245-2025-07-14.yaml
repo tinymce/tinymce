@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Clicking on a non selectable element when the selection is off screen no longer scrolls to the selection
+time: 2025-07-14T09:15:42.517772534+02:00
+custom:
+    Issue: TINY-12245
