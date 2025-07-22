@@ -37,7 +37,12 @@ const getFirstChar = (name: string): string => {
   }
 };
 
-// For a given string returns integer between 0 and maxValue (inclusive).
+/* For a given string returns integer between 0 and maxValue (inclusive).
+  This function is based on the djb2 hash algorithm reported by Dan Bernstein.
+  You can find more informations here: http://www.cse.yorku.ca/~oz/hash.html
+  The hashing algorithm is using bitwise operators to multiply by 32, and later to ensure a positive integer.
+  The result is then reduced to the range of 0 to maxValue using modulo operation.
+*/
 const djb2Hash = (key: string, maxValue: number) => {
   let hash = 5381;
   for (let i = 0; i < key.length; i++) {
