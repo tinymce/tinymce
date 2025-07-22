@@ -1,6 +1,0 @@
-project: tinymce
-kind: Improved
-body: Updated Image plugin decorative image check to align with accessbility standard
-time: 2025-07-18T11:42:48.981666+10:00
-custom:
-    Issue: TINY-12545

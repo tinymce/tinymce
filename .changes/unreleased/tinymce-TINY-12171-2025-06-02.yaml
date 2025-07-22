@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Cutting a whole HTML element would add an empty paragraph.
-time: 2025-06-02T16:50:34.903546+02:00
-custom:
-  Issue: TINY-12171

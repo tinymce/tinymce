@@ -1,6 +1,0 @@
-project: tinymce
-kind: Improved
-body: Resize handles are more accessible with `role` and `aria-valuetext` attributes.
-time: 2025-05-15T10:54:59.419258+02:00
-custom:
-  Issue: TINY-11421

@@ -1,6 +1,0 @@
-project: tinymce
-kind: Changed
-body: New `list_max_depth` option that limits the maximum list indent depth.
-time: 2025-05-09T06:34:32.331653+02:00
-custom:
-    Issue: TINY-11937
