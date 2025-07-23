@@ -1,6 +1,0 @@
-project: tinymce
-kind: Deprecated
-body: Deprecated `skipFocus` option for ToggleToolbarDrawer command. To skip focus use `skip_focus` option.
-time: 2025-04-23T13:58:50.774276+02:00
-custom:
-  Issue: TINY-12044

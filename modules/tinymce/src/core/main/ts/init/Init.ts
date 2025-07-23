@@ -15,12 +15,12 @@ import { EditorEvent } from '../api/util/EventDispatcher';
 import Tools from '../api/util/Tools';
 import VK from '../api/util/VK';
 import * as ErrorReporter from '../ErrorReporter';
+import LicenseKeyManagerLoader from '../licensekey/LicenseKeyManager';
 import * as Disabled from '../mode/Disabled';
 
 import { appendContentCssFromSettings } from './ContentCss';
 import * as InitContentBody from './InitContentBody';
 import * as InitIframe from './InitIframe';
-import LicenseKeyManagerLoader from './LicenseKeyManager';
 
 const DOM = DOMUtils.DOM;
 

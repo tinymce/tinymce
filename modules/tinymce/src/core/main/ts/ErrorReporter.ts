@@ -53,8 +53,8 @@ const modelLoadError = (editor: Editor, url: string, name: string): void => {
   logError(editor, 'ModelLoadError', createLoadError('model', url, name));
 };
 
-const licenseKeyManagerLoadError = (editor: Editor, url: string, name: string): void => {
-  logError(editor, 'LicenseKeyManagerLoadError', createLoadError('license key manager', url, name));
+const licenseKeyManagerLoadError = (editor: Editor, url: string): void => {
+  logError(editor, 'LicenseKeyManagerLoadError', createLoadError('license key manager', url));
 };
 
 const pluginInitError = (editor: Editor, name: string, err: any): void => {

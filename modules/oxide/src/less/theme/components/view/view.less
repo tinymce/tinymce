@@ -1,4 +1,4 @@
-@view-header-padding: (@pad-sm + @keyboard-focus-outline-width) (@pad-sm + @keyboard-focus-outline-width) @keyboard-focus-outline-width (@pad-sm + @keyboard-focus-outline-width);    // Account for outline/border of the buttons
+@view-header-padding: (@pad-sm + @keyboard-focus-outline-width);    // Account for outline/border of the buttons
 @view-header-padding-mobile: @pad-sm;
 @view-pane-padding: @pad-sm;
 
@@ -20,6 +20,8 @@
     flex: 1 1 auto;
     flex-direction: column;
     overflow: hidden;
+    z-index: @z-index-view;
+    background-color: @background-color;
   }
 
   .tox-view__header {
