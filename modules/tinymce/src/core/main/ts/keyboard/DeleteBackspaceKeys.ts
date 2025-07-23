@@ -102,8 +102,7 @@ const executeKeyupOverride = (editor: Editor, evt: KeyboardEvent, isBackspaceKey
         keyCode: isFirefox ? 224 : 91,
         action: MatchKeys.action(() => {
           InlineFormatDelete.updateCaretFormat(editor, formatNodes);
-          InlineFormatDelete.refreshCaret(editor);
-          return true;
+          return InlineFormatDelete.refreshCaret(editor);
         })
       }] : []
     ] : [
@@ -129,6 +128,7 @@ const setup = (editor: Editor, caret: Cell<Text | null>): void => {
   editor.on('keyup', (evt: EditorEvent<KeyboardEvent>) => {
     if (!evt.isDefaultPrevented()) {
       executeKeyupOverride(editor, evt, isBackspaceKeydown, formatNodes);
+      formatNodes.length = 0;
     }
 
     isBackspaceKeydown = false;
