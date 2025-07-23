@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Attempting to add a newline directly after a block element such as an image would cause an error.
-time: 2025-05-06T10:00:58.65126+02:00
-custom:
-    Issue: TINY-12045

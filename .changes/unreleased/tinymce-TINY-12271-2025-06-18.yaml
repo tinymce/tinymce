@@ -1,6 +1,0 @@
-project: tinymce
-kind: Changed
-body: Added space to promotion message for ease of reading.
-time: 2025-06-18T08:43:32.812414+02:00
-custom:
-    Issue: TINY-12271

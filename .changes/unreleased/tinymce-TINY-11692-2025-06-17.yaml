@@ -1,6 +1,0 @@
-project: tinymce
-kind: Deprecated
-body: Deprecated 'editor.selection.setContent' method.
-time: 2025-06-17T14:26:32.309574+02:00
-custom:
-  Issue: TINY-11692

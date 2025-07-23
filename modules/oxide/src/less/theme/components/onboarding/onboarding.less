@@ -10,7 +10,7 @@
 @onboarding-icon-size: 24px;
 
 @onboarding-promotion-icon-container-size: 56px;
-@onboarding-promotion-icon-size-border-radius: 12px; 
+@onboarding-promotion-icon-size-border-radius: 12px;
 
 @onboarding-promotion-icon-background: linear-gradient(180deg, @dialog-background-color 24%, darken(@dialog-background-color, 6%) 100%);
 
@@ -28,7 +28,7 @@
     top: 0;
     left: 0;
     right: 0;
-    z-index: 1;
+    z-index: @z-index-onboarding-overlay;
     overflow: auto;
     display: grid;
     justify-content: center;
@@ -143,7 +143,7 @@
 					font-weight: bold;
 					margin-bottom: @pad-xs;
 				}
-				
+
 				.tox-promotion-dialog-plugin-details {
 					color: @text-color-muted;
 					font-size: @font-size-sm;

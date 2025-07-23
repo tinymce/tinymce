@@ -70,37 +70,50 @@ describe('browser.tinymce.plugins.image.core.ImageDataTest', () => {
     assert.equal(ImageData.getStyleValue(normalizeCss, { ...ImageData.defaultData(), style: 'border: 1px solid red', border: '2', borderStyle: 'dotted' }), 'border: 2px dotted red;', 'Should produce compact border');
   });
 
+  // Base objects for test assertions
+  const baseImageData = {
+    src: 'some.gif',
+    alt: '',
+    title: '',
+    width: '',
+    height: '',
+    class: '',
+    style: '',
+    caption: false,
+    hspace: '',
+    vspace: '',
+    border: '',
+    borderStyle: '',
+    isDecorative: false
+  };
+
   it('TBA: Create image from data', () => {
     const image = create({
-      src: 'some.gif',
+      ...baseImageData,
       alt: 'alt',
       title: 'title',
       width: '100',
       height: '200',
       class: 'class',
       style: 'border: 1px solid red',
-      caption: false,
       hspace: '2',
       vspace: '3',
       border: '4',
-      borderStyle: 'dotted',
-      isDecorative: false
+      borderStyle: 'dotted'
     });
     const data = readFromImage(image);
     assertModel({
-      src: 'some.gif',
+      ...baseImageData,
       alt: 'alt',
       title: 'title',
       width: '100',
       height: '200',
       class: 'class',
       style: 'border: 4px dotted red; margin: 3px 2px;',
-      caption: false,
       hspace: '2',
       vspace: '3',
       border: '4',
-      borderStyle: 'dotted',
-      isDecorative: false
+      borderStyle: 'dotted'
     }, data);
     assertStructure(ApproxStructure.build((s, str) => {
       return s.element('img', {
@@ -127,36 +140,11 @@ describe('browser.tinymce.plugins.image.core.ImageDataTest', () => {
   });
 
   it('TBA: Create image with empty fields except src', () => {
-    const image = create({
-      src: 'some.gif',
-      alt: '',
-      title: '',
-      width: '',
-      height: '',
-      class: '',
-      style: '',
-      caption: false,
-      hspace: '',
-      vspace: '',
-      border: '',
-      borderStyle: '',
-      isDecorative: false
-    });
+    const image = create(baseImageData);
     const data = readFromImage(image);
     assertModel({
-      src: 'some.gif',
-      alt: '',
-      title: '',
-      width: '',
-      height: '',
-      class: '',
-      style: '',
-      caption: false,
-      hspace: '',
-      vspace: '',
-      border: '',
-      borderStyle: '',
-      isDecorative: false
+      ...baseImageData,
+      isDecorative: true
     }, data);
     assertStructure(ApproxStructure.build((s, str) => {
       return s.element('img', {
@@ -184,7 +172,7 @@ describe('browser.tinymce.plugins.image.core.ImageDataTest', () => {
 
   it('TBA: Create figure from data', () => {
     const image = create({
-      src: 'some.gif',
+      ...baseImageData,
       alt: 'alt',
       title: 'title',
       width: '100',
@@ -195,12 +183,11 @@ describe('browser.tinymce.plugins.image.core.ImageDataTest', () => {
       hspace: '2',
       vspace: '3',
       border: '4',
-      borderStyle: 'dotted',
-      isDecorative: false
+      borderStyle: 'dotted'
     });
     const data = readFromImage(image);
     assertModel({
-      src: 'some.gif',
+      ...baseImageData,
       alt: 'alt',
       title: 'title',
       width: '100',
@@ -211,8 +198,7 @@ describe('browser.tinymce.plugins.image.core.ImageDataTest', () => {
       hspace: '2',
       vspace: '3',
       border: '4',
-      borderStyle: 'dotted',
-      isDecorative: false
+      borderStyle: 'dotted'
     }, data);
     assertStructure(ApproxStructure.build((s, str) => {
       return s.element('figure', {
@@ -256,14 +242,13 @@ describe('browser.tinymce.plugins.image.core.ImageDataTest', () => {
 
   it('TBA: Create decorative image from data', () => {
     const image = create({
-      src: 'some.gif',
+      ...baseImageData,
       alt: 'alt',
       title: 'title',
       width: '100',
       height: '200',
       class: 'class',
       style: 'border: 1px solid red',
-      caption: false,
       hspace: '2',
       vspace: '3',
       border: '4',
@@ -272,14 +257,13 @@ describe('browser.tinymce.plugins.image.core.ImageDataTest', () => {
     });
     const data = readFromImage(image);
     assertModel({
-      src: 'some.gif',
+      ...baseImageData,
       alt: '',
       title: 'title',
       width: '100',
       height: '200',
       class: 'class',
       style: 'border: 4px dotted red; margin: 3px 2px;',
-      caption: false,
       hspace: '2',
       vspace: '3',
       border: '4',
@@ -314,21 +298,7 @@ describe('browser.tinymce.plugins.image.core.ImageDataTest', () => {
   it('TBA: Read/write model to simple image without change', () => {
     const image = createHtml('<img src="some.gif">');
     const data = readFromImage(image);
-    assertModel({
-      src: 'some.gif',
-      alt: '',
-      title: '',
-      width: '',
-      height: '',
-      class: '',
-      style: '',
-      caption: false,
-      hspace: '',
-      vspace: '',
-      border: '',
-      borderStyle: '',
-      isDecorative: false
-    }, data);
+    assertModel(baseImageData, data);
     writeToImage(data);
     assertStructure(ApproxStructure.build((s, str) => {
       return s.element('img', {
@@ -357,19 +327,17 @@ describe('browser.tinymce.plugins.image.core.ImageDataTest', () => {
     const image = createHtml('<img src="some.gif" class="class" width="100" height="200" style="margin: 1px 2px; border: 1px solid red" alt="alt" title="title">');
     const data = readFromImage(image);
     assertModel({
-      src: 'some.gif',
+      ...baseImageData,
       alt: 'alt',
       title: 'title',
       width: '100',
       height: '200',
       class: 'class',
       style: 'border: 1px solid red; margin: 1px 2px;',
-      caption: false,
       hspace: '2',
       vspace: '1',
       border: '1',
-      borderStyle: 'solid',
-      isDecorative: false
+      borderStyle: 'solid'
     }, data);
     writeToImage(data);
     assertStructure(ApproxStructure.build((s, str) => {
@@ -483,19 +451,9 @@ describe('browser.tinymce.plugins.image.core.ImageDataTest', () => {
     const image = createHtml('<img src="some.gif" alt="alt">');
     const data = readFromImage(image);
     const newData = updateModel({
+      ...baseImageData,
       src: 'some2.gif',
-      alt: null,
-      title: '',
-      width: '',
-      height: '',
-      class: '',
-      style: '',
-      caption: false,
-      hspace: '',
-      vspace: '',
-      border: '',
-      borderStyle: '',
-      isDecorative: false
+      alt: null
     }, data);
     writeToImage(newData);
     assertStructure(ApproxStructure.build((s, str) => {
@@ -600,19 +558,10 @@ describe('browser.tinymce.plugins.image.core.ImageDataTest', () => {
     const image = createHtml('<img src="some.gif" style="width: 100px; height: 200px">');
     const data = readFromImage(image);
     assertModel({
-      src: 'some.gif',
-      alt: '',
-      title: '',
+      ...baseImageData,
       width: '100',
       height: '200',
-      class: '',
-      style: 'height: 200px; width: 100px;',
-      caption: false,
-      hspace: '',
-      vspace: '',
-      border: '',
-      borderStyle: '',
-      isDecorative: false
+      style: 'height: 200px; width: 100px;'
     }, data);
     writeToImage(data);
     assertStructure(ApproxStructure.build((s, str) => {
@@ -643,19 +592,10 @@ describe('browser.tinymce.plugins.image.core.ImageDataTest', () => {
     const image = createHtml('<img src="some.gif" style="width: 100px; height: 200px">');
     const data = readFromImage(image);
     assertModel({
-      src: 'some.gif',
-      alt: '',
-      title: '',
+      ...baseImageData,
       width: '100',
       height: '200',
-      class: '',
-      style: 'height: 200px; width: 100px;',
-      caption: false,
-      hspace: '',
-      vspace: '',
-      border: '',
-      borderStyle: '',
-      isDecorative: false
+      style: 'height: 200px; width: 100px;'
     }, data);
     const newData = updateModel({
       width: '150',
@@ -684,5 +624,65 @@ describe('browser.tinymce.plugins.image.core.ImageDataTest', () => {
         }
       });
     }), newData);
+  });
+
+  it('TINY-12545: Read decorative image with only alt=""', () => {
+    const image = createHtml('<img src="some.gif" alt="">');
+    const data = readFromImage(image);
+    assertModel({
+      ...baseImageData,
+      isDecorative: true
+    }, data);
+  });
+
+  it('TINY-12545: Read decorative image with empty alt and title=""', () => {
+    const image = createHtml('<img src="some.gif" alt="" title="">');
+    const data = readFromImage(image);
+    assertModel({
+      ...baseImageData,
+      isDecorative: true
+    }, data);
+  });
+
+  it('TINY-12545: Read decorative image with only role="presentation"', () => {
+    const image = createHtml('<img src="some.gif" role="presentation">');
+    const data = readFromImage(image);
+    assertModel({
+      ...baseImageData,
+      isDecorative: true
+    }, data);
+  });
+
+  it('TINY-12545: Read decorative image with role="none" and title=""', () => {
+    const image = createHtml('<img src="some.gif" role="none" title="">');
+    const data = readFromImage(image);
+    assertModel({
+      ...baseImageData,
+      isDecorative: true
+    }, data);
+  });
+
+  it('TINY-12545: Read decorative image with both alt="" and role="presentation" and title=""', () => {
+    const image = createHtml('<img src="some.gif" alt="" role="presentation" title="">');
+    const data = readFromImage(image);
+    assertModel({
+      ...baseImageData,
+      isDecorative: true
+    }, data);
+  });
+
+  it('TINY-12545: Read non-decorative image with alt text', () => {
+    const image = createHtml('<img src="some.gif" alt="description">');
+    const data = readFromImage(image);
+    assertModel({
+      ...baseImageData,
+      alt: 'description'
+    }, data);
+  });
+
+  it('TINY-12545: Read non-decorative image with no accessibility attributes', () => {
+    const image = createHtml('<img src="some.gif">');
+    const data = readFromImage(image);
+    assertModel(baseImageData, data);
   });
 });
