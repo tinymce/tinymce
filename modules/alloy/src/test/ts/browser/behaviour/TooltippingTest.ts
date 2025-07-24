@@ -1,7 +1,7 @@
-import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, StructAssert, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Fun, Result } from '@ephox/katamari';
-import { SelectorFind, SugarElement } from '@ephox/sugar';
+import { SelectorFind } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
@@ -18,7 +18,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 
 describe('Tooltipping Behaviour', () => {
-  const makeComponent = (_store: TestStore, _doc: SugarElement<Document>, _body: SugarElement<Node>) => {
+  const makeComponent = () => {
     const lazySink = (): Result<AlloyComponent, any> => memSink.getOpt(me).fold(
       () => Result.error('Could not find test sink'),
       Result.value
