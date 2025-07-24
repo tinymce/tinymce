@@ -20,27 +20,37 @@
   --tox-private-button-font-style: normal;
   --tox-private-button-font-weight: var(--tox-private-font-weight-bold);
 
-
-  // Button state variables - to be decided if we want them. 
-  // If we do, they should inherit from button base variables (as they do now). While skinning the change of the base variable will result with others being calculated/inherited from it. In this case it is also possible to skin each state separately. 
-  // If we don't, they should be removed. Different states of the button should use base button variables and calculate from them if neccessary, but not create new variables. In this case it is NOT possible to skin each state separately. 
-  // This is a product decision yet to be made. 
+  /* 
+    Button state variables - to be decided if we want them. 
+    If we do: 
+      1. They should inherit from button base variables (as they do now).
+      2. While skinning the change of the base variable will result with others being calculated/inherited from it. 
+      3. In this case it is also possible to skin each state separately. 
+    If we don't: 
+      1. They should be removed. 
+      2. Different states of the button should use base button variables and calculate from them if neccessary, but not create new variables. 
+      3. In this case it is NOT possible to skin each state separately. 
+  */
+  // Disabled state
   --tox-private-button-disabled-background-color: var(--tox-private-button-background-color);
   --tox-private-button-disabled-border-color: var(--tox-private-button-border-color);
   --tox-private-button-disabled-box-shadow: var(--tox-private-button-box-shadow);
   --tox-private-button-disabled-text-color: hsl(from var(--tox-private-button-text-color) h s l / 50%);
 
+  // Focus state
   --tox-private-button-focus-background-color: hsl(from var(--tox-private-button-background-color) h s calc(l - 5));
   --tox-private-button-focus-border-color: var(--tox-private-button-focus-background-color);
   --tox-private-button-focus-box-shadow: var(--tox-private-button-box-shadow);
   --tox-private-button-focus-text-color: var(--tox-private-button-text-color);
   --tox-private-button-focus-outline: inset 0 0 0 1px var(--tox-private-color-white), 0 0 0 2px var(--tox-private-color-tint);
-
+  
+  // Hover state
   --tox-private-button-hover-background-color:  hsl(from var(--tox-private-button-background-color) h s calc(l - 5));
   --tox-private-button-hover-border-color: var(--tox-private-button-hover-background-color);
   --tox-private-button-hover-box-shadow: var(--tox-private-button-box-shadow);
   --tox-private-button-hover-text-color: var(--tox-private-button-text-color);
-
+  
+  // Active state
   --tox-private-button-active-background-color:  hsl(from var(--tox-private-button-background-color) h s calc(l - 10));
   --tox-private-button-active-border-color: var(--tox-private-button-active-background-color);
   --tox-private-button-active-box-shadow: var(--tox-private-button-box-shadow);
@@ -52,16 +62,19 @@
   --tox-private-button-enabled-box-shadow: var(--tox-private-button-box-shadow);
   --tox-private-button-enabled-text-color: var(--tox-private-button-text-color);
 
+  // Enabled + focus state
   --tox-private-button-enabled-focus-background-color: hsl(from var(--tox-private-button-enabled-background-color) h s calc(l - 5));
   --tox-private-button-enabled-focus-border-color: var(--tox-private-button-enabled-focus-background-color);
   --tox-private-button-enabled-focus-box-shadow: var(--tox-private-button-enabled-box-shadow);
   --tox-private-button-enabled-focus-text-color: var(--tox-private-button-enabled-text-color);
 
+  // Enabled + hover state
   --tox-private-button-enabled-hover-background-color: hsl(from var(--tox-private-button-enabled-background-color) h s calc(l - 5));
   --tox-private-button-enabled-hover-border-color: var(--tox-private-button-enabled-hover-background-color);
   --tox-private-button-enabled-hover-box-shadow: var(--tox-private-button-enabled-box-shadow);
   --tox-private-button-enabled-hover-text-color: var(--tox-private-button-enabled-text-color);
 
+  // Enabled + active state
   --tox-private-button-enabled-active-background-color: hsl(from var(--tox-private-button-enabled-background-color) h s calc(l - 10));
   --tox-private-button-enabled-active-border-color: var(--tox-private-button-enabled-active-background-color);
   --tox-private-button-enabled-active-box-shadow: var(--tox-private-button-enabled-box-shadow);
