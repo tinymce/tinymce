@@ -33,6 +33,7 @@
     "@ephox/darwin": "^9.0.0",
     "@tinymce/oxide": "^3.0.0",
     "@tinymce/oxide-icons-default": "^3.0.0",
+    "@tinymce/oxide-components": "^0.0.2",
     "@types/prismjs": "^1.16.6",
     "dompurify": "3.2.6",
     "prismjs": "^1.27.0"

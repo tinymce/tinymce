@@ -1,10 +1,9 @@
 import { StructureSchema, FieldSchema } from '@ephox/boulder';
 import { Arr, Optional, Results, Obj } from '@ephox/katamari';
+import { DefaultAvatar } from '@tinymce/oxide-components';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
-
-import * as DefaultAvatar from './DefaultAvatar';
 
 /**
  * TinyMCE User Lookup API
@@ -118,7 +117,7 @@ const validateResponse = (items: unknown): User[] => {
     return {
       id,
       name: name.getOr(id),
-      avatar: avatar.getOr(DefaultAvatar.derive(id, name.getOr(id))),
+      avatar: avatar.getOr(DefaultAvatar.generateUserAvatar({ id, name: name.getOr(id) })),
       ...objectCat(rest),
     };
   });
@@ -164,7 +163,7 @@ const UserLookup = (editor: Editor): UserLookup => {
         Promise.resolve({
           id: userId,
           name: userId,
-          avatar: DefaultAvatar.derive(userId, userId)
+          avatar: DefaultAvatar.generateUserAvatar({ id: userId, name: userId })
         }));
     }
 
@@ -208,7 +207,7 @@ const UserLookup = (editor: Editor): UserLookup => {
         Promise.resolve({
           id: userId,
           name: userId,
-          avatar: DefaultAvatar.derive(userId, userId)
+          avatar: DefaultAvatar.generateUserAvatar({ id: userId, name: userId })
         })
       );
       return acc;
