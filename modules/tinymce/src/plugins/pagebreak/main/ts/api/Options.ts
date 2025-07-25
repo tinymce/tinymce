@@ -12,7 +12,7 @@ const register = (editor: Editor): void => {
 
   registerOption('pagebreak_separator', {
     processor: 'string',
-    default: '<div style="break-after: page"></div>'
+    default: '<!-- pagebreak -->'
   });
 
   registerOption('pagebreak_split_block', {

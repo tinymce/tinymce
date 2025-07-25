@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Strikethrough format could be added outside font size format, which renders incorrectly in some browsers.
-time: 2025-05-23T13:10:50.881205+02:00
-custom:
-    Issue: TINY-12004

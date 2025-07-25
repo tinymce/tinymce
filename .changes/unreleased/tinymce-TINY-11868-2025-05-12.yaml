@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Deleting a whole element would sometimes modify nearby content.
-time: 2025-05-12T16:25:50.246721+02:00
-custom:
-  Issue: TINY-11868

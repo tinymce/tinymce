@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Default avatars are now generated with a consistent color based on the user id.
+time: 2025-07-15T16:07:34.048259+02:00
+custom:
+  Issue: TINY-12532

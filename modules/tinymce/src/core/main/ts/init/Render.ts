@@ -18,9 +18,9 @@ import WindowManager from '../api/WindowManager';
 import * as NodeType from '../dom/NodeType';
 import * as StyleSheetLoaderRegistry from '../dom/StyleSheetLoaderRegistry';
 import * as ErrorReporter from '../ErrorReporter';
+import LicenseKeyManagerLoader from '../licensekey/LicenseKeyManager';
 
 import * as Init from './Init';
-import LicenseKeyManagerLoader from './LicenseKeyManager';
 
 interface UrlMeta {
   readonly url: string;
@@ -135,21 +135,16 @@ const isModelLoaded = (editor: Editor): boolean => {
   return Type.isNonNullable(ModelManager.get(model));
 };
 
-const isLicenseKeyManagerLoaded = (editor: Editor): boolean => {
-  return LicenseKeyManagerLoader.isLoaded(editor);
-};
-
 const loadScripts = (editor: Editor, suffix: string) => {
   const scriptLoader = ScriptLoader.ScriptLoader;
 
   const initEditor = () => {
-    // If the editor has been destroyed or the theme, model, licenseKeyManager haven't loaded then
+    // If the editor has been destroyed or the theme, model haven't loaded then
     // don't continue to load the editor
     if (
       !editor.removed &&
       isThemeLoaded(editor) &&
-      isModelLoaded(editor) &&
-      isLicenseKeyManagerLoaded(editor)
+      isModelLoaded(editor)
     ) {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       Init.init(editor);
