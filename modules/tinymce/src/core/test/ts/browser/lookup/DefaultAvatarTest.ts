@@ -1,3 +1,6 @@
+/*
+TODO: Move to oxide-components
+
 import { describe, it } from '@ephox/bedrock-client';
 import { expect } from 'chai';
 
@@ -19,3 +22,4 @@ describe('browser.tinymce.core.DefaultAvatarTest', () => {
   });
 });
 
+*/
