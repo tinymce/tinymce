@@ -1,7 +1,7 @@
 import { UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Focus } from '@ephox/sugar';
-import { TinyHooks, TinyAssertions, TinySelections, TinyDom } from '@ephox/wrap-mcagar';
+import { TinyHooks, TinyAssertions, TinySelections, TinyDom, TinyContentActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
@@ -21,7 +21,13 @@ describe('browser.tinymce.selection.FigcaptionTest', () => {
     TinySelections.setSelection(editor, [], 0, [], 1);
     const figcaption = UiFinder.findIn<HTMLElement>(TinyDom.body(editor), 'figcaption').getOrDie();
     Focus.focus(figcaption);
+    TinyContentActions.type(editor, 'prefix-');
 
-    TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 0);
+    TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 'prefix-'.length);
+    TinyAssertions.assertContent(editor, [
+      '<figure contenteditable="false"><img src="https://www.google.com/logos/google.jpg">',
+      '<figcaption contenteditable="true">prefix-Caption</figcaption>',
+      '</figure>'
+    ].join('\n'));
   });
 });
