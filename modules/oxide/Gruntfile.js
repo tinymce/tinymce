@@ -94,7 +94,8 @@ module.exports = function (grunt) {
     'compileLess',
     'cssmin',
     'generateJsSkins',
-    'addLicenseHeaders'
+    'addLicenseHeaders',
+    'generateTsDefinitions'
   ]);
 
   grunt.registerTask('start', [
