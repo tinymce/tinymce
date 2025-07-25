@@ -58,19 +58,20 @@ const getColor = (id: string): string => {
   return AvatarColors[colorIdx];
 };
 
-const generate = (name: string, color: string, size: number = 36): string => {
+const generateAvatarSvg = (content: string, color: string, size: number): string => {
   const halfSize = size / 2;
   return `<svg height="${size}" width="${size}" xmlns="http://www.w3.org/2000/svg">` +
     `<circle cx="${halfSize}" cy="${halfSize}" r="${halfSize}" fill="${color}"/>` +
     `<text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" fill="#FFF" font-family="sans-serif" font-size="${halfSize}">` +
-    getFirstChar(name) +
+    getFirstChar(content) +
     `</text>` +
-    '</svg>';
+  '</svg>';
 };
 
-const derive = (id: string, name: string): string => {
-  const avatarSvg = generate(name, getColor(id));
-  return 'data:image/svg+xml,' + encodeURIComponent(avatarSvg);
-};
+const generateAvatar = (content: string, color: string, size: number): string =>
+  'data:image/svg+xml,' + encodeURIComponent(generateAvatarSvg(content, color, size));
 
-export { derive };
+const generateUserAvatar = (user: { id: string; name: string }, config = { size: 36 }): string =>
+  generateAvatar(user.name, getColor(user.id), config.size);
+
+export { generateAvatar, generateUserAvatar };
