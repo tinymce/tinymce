@@ -64,7 +64,7 @@ export default (): void => {
           align: 'start',
           icon: 'chevron-left',
           onAction: (formApi) => {
-            formApi.hide();
+            formApi.back();
           }
         },
         {
@@ -97,7 +97,7 @@ export default (): void => {
           align: 'start',
           icon: 'chevron-left',
           onAction: (formApi) => {
-            formApi.hide();
+            formApi.back();
           }
         },
         {
