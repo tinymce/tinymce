@@ -1,0 +1,7 @@
+project: tinymce
+kind: Fixed
+body: Navigating between elements with contenteditable="true" was not
+  possible on Firefox using the keyboard.
+time: 2025-07-21T11:54:37.708699+02:00
+custom:
+  Issue: TINY-12459
