@@ -10,7 +10,7 @@ In line with the United States National Infrastructure Advisory Council (NIAC) [
 
 Tiny will communicate with you regarding the status of your report and will, with your permission, publicly attribute the security issue’s discovery to you after the issue has been fixed and disclosed.
 
-For details on how to report security issues to Tiny, refer to the [Reporting TinyMCE security issues documentation](https://tiny.cloud/docs/tinymce/7/security/#reportingtinymcesecurityissues).
+For details on how to report security issues to Tiny, refer to the [Reporting TinyMCE security issues documentation](https://tiny.cloud/docs/tinymce/8/security/#reportingtinymcesecurityissues).
 
 ## Supported Versions
 
@@ -18,6 +18,7 @@ Tiny Technologies, Inc. supports the following community versions of TinyMCE:
 
 | Version | Supported                      |
 |---------| ------------------------------ |
+| 8.0.x   | &#10004;                       |
 | 7.9.x   | &#10004;                       |
 | 6.8.x   | &#10006;                       |
 | 5.10.x  | &#10006;                       |

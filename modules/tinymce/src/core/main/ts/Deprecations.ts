@@ -77,8 +77,8 @@ const logRemovedWarnings = (rawOptions: RawEditorOptions, normalizedOptions: Nor
     const optionsMessage = hasRemovedOptions ? `\n\nOptions:${listJoiner}${removedOptions.join(listJoiner)}` : '';
     // eslint-disable-next-line no-console
     console.warn(
-      'The following deprecated features are currently enabled and have been removed in TinyMCE 7.0. These features will no longer work and should be removed from the TinyMCE configuration. ' +
-      'See https://www.tiny.cloud/docs/tinymce/7/migration-from-6x/ for more information.' +
+      'The following deprecated features are currently enabled and have been removed in TinyMCE 8.0. These features will no longer work and should be removed from the TinyMCE configuration. ' +
+      'See https://www.tiny.cloud/docs/tinymce/8/migration-from-7x/ for more information.' +
       themesMessage +
       pluginsMessage +
       optionsMessage
