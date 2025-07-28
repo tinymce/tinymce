@@ -26,6 +26,7 @@
     "vite.config.ts",
     "vitest.config.ts",
     "playwright.config.ts",
-    "src/test/ts/visual.spec.ts"
+    "src/test/ts/visual.spec.ts",
+    "src/test/**/*.spec.ts"
   ]
 }
