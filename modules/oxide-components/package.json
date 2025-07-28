@@ -27,6 +27,23 @@
   "main": "lib/main.js",
   "module": "lib/main.js",
   "types": "lib/src/main/ts/main.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/src/main/ts/main.d.ts",
+      "module": "./lib/main.js",
+      "default": "./lib/main.js"
+    },
+    "./utils": {
+      "types": "./lib/src/main/ts/utils.d.ts",
+      "module": "./lib/utils.js",
+      "default": "./lib/utils.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "utils": ["./lib/src/main/ts/utils.d.ts"]
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "yarn build-storybook && tsc -b && vite build",

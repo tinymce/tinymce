@@ -79,5 +79,6 @@
     { "path": "../sand" },
     { "path": "../snooker" },
     { "path": "../sugar" }
+    // TODO: add oxide-components
   ]
 }
