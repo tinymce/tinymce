@@ -8,7 +8,7 @@ import * as NodeType from '../dom/NodeType';
 
 import * as NavigationUtils from './NavigationUtils';
 
-const getClosestCetBlock = (position: CaretPosition, root: SugarElement<HTMLElement>) => {
+const getClosestCetBlock = (position: CaretPosition, root: SugarElement<HTMLElement>): Optional<SugarElement<HTMLElement>> => {
   const isRoot = (el: SugarElement<Node>): boolean => Compare.eq(el, root);
   const isCet = (el: SugarElement<Node>): el is SugarElement<HTMLElement> => NodeType.isContentEditableTrue(el.dom);
   const startNode = SugarElement.fromDom(position.container());
@@ -22,7 +22,7 @@ const moveVertically = (editor: Editor, position: CaretPosition, down: boolean):
   return getNextPosition(editor.getBody(), position).map((nextPosition) => nextPosition.toRange());
 };
 
-const moveToNextOrPreviousLine = (editor: Editor, down: boolean) => {
+const moveToNextOrPreviousLine = (editor: Editor, down: boolean): boolean => {
   const startPosition = CaretPosition.fromRangeStart(editor.selection.getRng());
   const endPosition = CaretPosition.fromRangeEnd(editor.selection.getRng());
   const root = SugarElement.fromDom(editor.getBody());
