@@ -63,7 +63,7 @@ const generateAvatarSvg = (content: string, color: string, size: number): string
   return `<svg height="${size}" width="${size}" xmlns="http://www.w3.org/2000/svg">` +
     `<circle cx="${halfSize}" cy="${halfSize}" r="${halfSize}" fill="${color}"/>` +
     `<text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" fill="#FFF" font-family="sans-serif" font-size="${halfSize}">` +
-    getFirstChar(content) +
+    content +
     `</text>` +
   '</svg>';
 };
@@ -72,6 +72,6 @@ const generateAvatar = (content: string, color: string, size: number): string =>
   'data:image/svg+xml,' + encodeURIComponent(generateAvatarSvg(content, color, size));
 
 const generateUserAvatar = (user: { id: string; name: string }, config = { size: 36 }): string =>
-  generateAvatar(user.name, getColor(user.id), config.size);
+  generateAvatar(getFirstChar(user.name), getColor(user.id), config.size);
 
 export { generateAvatar, generateUserAvatar };
