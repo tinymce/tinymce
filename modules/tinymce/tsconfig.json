@@ -78,7 +78,7 @@
     { "path": "../robin" },
     { "path": "../sand" },
     { "path": "../snooker" },
-    { "path": "../sugar" }
-    // TODO: add oxide-components
+    { "path": "../sugar" },
+    { "path": "../oxide-components" }
   ]
 }
