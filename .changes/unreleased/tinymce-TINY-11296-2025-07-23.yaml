@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: NVDA would announce iframe_aria_text multiple times.
+time: 2025-07-23T14:03:45.80369+02:00
+custom:
+  Issue: TINY-11296
