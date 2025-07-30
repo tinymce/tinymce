@@ -1,7 +1,8 @@
 //
-// Naked button
-// Extends button.less and button-icon-less
-// Note: button--naked is for removing button chrome on button--icon
+// Naked button - varinat of the button
+// Variat class `tox-button--naked` should be added next to the base `tox-button` class.
+// Note: naked button is mainly used for removing button chrome on button--icon
+// For base button styles see button.less
 //
 
 @button-naked-icon-color: @text-color;
@@ -26,49 +27,78 @@
 @button-naked-active-box-shadow: unset;
 @button-naked-active-icon-color: @button-naked-icon-color;
 
-.tox {
+@layer tox-atomic-component {
+  .tox-button--naked when (@custom-properties-enabled = true) {
+    // Naked button variant only styles the text color as the background and boreder are transparent by design
+    --tox-private-button-naked-text-color: var(--tox-private-text-color);
+
+    /* 
+      Button state variables - to be decided if we want them. 
+      If we do: 
+        1. They should inherit from button base variables (as they do now).
+        2. While skinning the change of the base variable will result with others being calculated/inherited from it. 
+        3. In this case it is also possible to skin each state separately. 
+      If we don't: 
+        1. They should be removed. 
+        2. Different states of the button should use base button variables and calculate from them if neccessary, but not create new variables. 
+        3. In this case it is NOT possible to skin each state separately. 
+    */
+    --tox-private-button-naked-disabled-text-color: hsl(from var(--tox-private-button-naked-text-color) h s l / 50%);
+
+    --tox-private-button-naked-focus-background-color: light-dark(
+      hsl(from var(--tox-private-button-naked-text-color) h s l / 12%),
+      hsl(from var(--tox-private-button-naked-text-color) h s l / 20%)
+    );
+    --tox-private-button-naked-focus-border-color: var(--tox-private-button-naked-focus-background-color);
+    --tox-private-button-naked-focus-text-color: var(--tox-private-button-naked-text-color);
+    
+    --tox-private-button-naked-hover-background-color: light-dark(
+      hsl(from var(--tox-private-button-naked-text-color) h s l / 12%),
+      hsl(from var(--tox-private-button-naked-text-color) h s l / 20%)
+    );
+    --tox-private-button-naked-hover-border-color: var(--tox-private-button-naked-hover-background-color);
+    --tox-private-button-naked-hover-text-color: var(--tox-private-button-naked-text-color);
+    
+    --tox-private-button-naked-active-background-color: light-dark(
+      hsl(from var(--tox-private-button-naked-text-color) h s l / 18%),
+      hsl(from var(--tox-private-button-naked-text-color) h s l / 30%)
+    );
+    --tox-private-button-naked-active-border-color: var(--tox-private-button-naked-active-background-color);
+    --tox-private-button-naked-active-text-color: var(--tox-private-button-naked-text-color);
+  }
+
   .tox-button--naked {
     background-color: transparent;
     border-color: transparent;
     box-shadow: unset;
-    color: @button-naked-icon-color;
+    color: var(--tox-private-button-naked-text-color, @button-naked-icon-color);
 
     &[disabled] {
       background-color: @button-naked-disabled-background-color;
       border-color: @button-naked-disabled-border-color;
-      box-shadow: @button-naked-disabled-box-shadow;
-      color: @button-naked-disabled-icon-color;
+      color: var(--tox-private-button-naked-disabled-text-color, @button-naked-disabled-icon-color);
+      cursor: not-allowed;
     }
-
-    &:hover:not(:disabled) {
-      background-color: @button-naked-hover-background-color;
-      border-color: @button-naked-focus-border-color;
-      box-shadow: @button-naked-hover-box-shadow;
-      color: @button-naked-hover-icon-color;
-    }
-
+    
     &:focus:not(:disabled) {
-      background-color: @button-naked-focus-background-color;
-      border-color: @button-naked-focus-border-color;
+      background-color: var(--tox-private-button-naked-focus-background-color, @button-naked-focus-background-color);
+      border-color: var(--tox-private-button-naked-focus-border-color, @button-naked-focus-border-color);
+      color: var(--tox-private-button-naked-focus-text-color, @button-naked-focus-icon-color);
       box-shadow: @button-naked-focus-box-shadow;
-      color: @button-naked-focus-icon-color;
     }
-
-    &:active:not(:disabled) {
-      background-color: @button-naked-active-background-color;
-      border-color: @button-naked-active-border-color;
-      box-shadow: @button-naked-active-box-shadow;
-      color: @button-naked-active-icon-color;
-    }
-
-    .tox-icon svg {
-      fill: currentColor;
-    }
-  }
-
-  .tox-button--naked.tox-button--icon {
+    
     &:hover:not(:disabled) {
-      color: @button-naked-hover-icon-color;
+      background-color: var(--tox-private-button-naked-hover-background-color, @button-naked-hover-background-color);
+      border-color: var(--tox-private-button-naked-hover-background-color, @button-naked-hover-border-color);
+      color: var(--tox-private-button-naked-hover-text-color, @button-naked-hover-icon-color);
+      box-shadow: @button-naked-hover-box-shadow;
+    }
+    
+    &:active:not(:disabled) {
+      background-color: var(--tox-private-button-naked-active-background-color, @button-naked-active-background-color);
+      border-color: var(--tox-private-button-naked-active-border-color, @button-naked-active-border-color);
+      color: var(--tox-private-button-naked-active-text-color, @button-naked-active-icon-color);
+      box-shadow: @button-naked-active-box-shadow;
     }
   }
 }
