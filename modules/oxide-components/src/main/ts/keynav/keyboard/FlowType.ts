@@ -11,11 +11,17 @@ import * as KeyRules from './KeyRules';
 import * as Keys from './Keys';
 
 export interface FlowConfig {
+  /**  The selector used to find the next element to focus. */
   readonly selector: string;
+  /**  The function to execute when we press enter while the element is focused. */
   readonly execute?: (focused: SugarElement<HTMLElement>) => Optional<boolean>;
+  /** The function to execute when we press escape while the element is focused. */
   readonly escape?: (focused: SugarElement<HTMLElement>) => Optional<boolean>;
+  /** Whether to allow vertical movement.  */
   readonly allowVertical?: boolean;
+  /** Whether to allow horizontal movement. */
   readonly allowHorizontal?: boolean;
+  /** Whether to allow cycling through elements. */
   readonly cycles?: boolean;
   readonly focusIn?: boolean;
   readonly closest?: boolean;
@@ -27,7 +33,7 @@ export const create = (source: SugarElement<HTMLElement>, config: FlowConfig): K
   const defaultExecute = (
     focused: SugarElement<HTMLElement>
   ): Optional<boolean> => {
-    focused.dom.dispatchEvent(new window.Event('click'));
+    focused.dom.click();
     return Optional.some(true);
   };
 
