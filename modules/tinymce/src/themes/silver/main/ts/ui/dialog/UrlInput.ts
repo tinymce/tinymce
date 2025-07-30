@@ -66,8 +66,7 @@ export const renderUrlInput = (
     inputClasses: [ 'tox-textfield' ],
     sandboxClasses: [ 'tox-dialog__popups' ],
     inputAttributes: {
-      'aria-errormessage': errorId,
-      'type': 'url'
+      type: 'url'
     },
     minChars: 0,
     responseTime: 0,
@@ -110,9 +109,11 @@ export const renderUrlInput = (
               return FutureResult.nu((completer) => {
                 handler({ type: spec.filetype, url: urlEntry.value }, (validation) => {
                   if (validation.status === 'invalid') {
+                    Attribute.set(input.element, 'aria-errormessage', errorId);
                     const err = Result.error(validation.message);
                     completer(err);
                   } else {
+                    Attribute.remove(input.element, 'aria-errormessage');
                     const val = Result.value(validation.message);
                     completer(val);
                   }
