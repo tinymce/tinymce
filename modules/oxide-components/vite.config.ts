@@ -19,9 +19,11 @@ export default defineConfig({
     sourcemap: true,
     outDir: 'lib',
     lib: {
-      entry: resolve(__dirname, 'src/main/ts/main.ts'),
+      entry: {
+        main: resolve(__dirname, 'src/main/ts/main.ts'),
+        utils: resolve(__dirname, 'src/main/ts/utils.ts')
+      },
       name: 'oxide-components',
-      fileName: 'main',
       formats: [ 'es' ],
     },
     rollupOptions: {
