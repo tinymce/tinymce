@@ -78,7 +78,6 @@
     { "path": "../robin" },
     { "path": "../sand" },
     { "path": "../snooker" },
-    { "path": "../sugar" },
-    { "path": "../oxide-components" }
+    { "path": "../sugar" }
   ]
 }
