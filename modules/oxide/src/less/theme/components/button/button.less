@@ -1,91 +1,10 @@
-//
-// Button
-//
+/*
+  Button - base button styles and variables. 
+  These affect each button variant - primary, secondary, secondary-outlined and naked. 
+  Variat classes should be added next to the base `tox-button` class.
+*/
 
-.tox-button when (@custom-properties-enabled = true) {
-  //Base variables
-  --tox-private-button-background-color: var(--tox-private-color-tint);
-  --tox-private-button-text-color: var(--tox-private-color-white);
-  
-  --tox-private-button-border-width: 1px;
-  --tox-private-button-border-style: solid;
-  --tox-private-button-border-color: var(--tox-private-button-background-color);
-  
-  --tox-private-button-padding-x: var(--tox-private-pad-md);
-  --tox-private-button-padding-y: var(--tox-private-pad-xs);
-  
-  --tox-private-button-box-shadow: none;
 
-  --tox-private-button-font-size: var(--tox-private-font-size-sm);
-  --tox-private-button-font-style: normal;
-  --tox-private-button-font-weight: var(--tox-private-font-weight-bold);
-
-  /* 
-    Button state variables - to be decided if we want them. 
-    If we do: 
-      1. They should inherit from button base variables (as they do now).
-      2. While skinning the change of the base variable will result with others being calculated/inherited from it. 
-      3. In this case it is also possible to skin each state separately. 
-    If we don't: 
-      1. They should be removed. 
-      2. Different states of the button should use base button variables and calculate from them if neccessary, but not create new variables. 
-      3. In this case it is NOT possible to skin each state separately. 
-  */
-  // Disabled state
-  --tox-private-button-disabled-background-color: var(--tox-private-button-background-color);
-  --tox-private-button-disabled-border-color: var(--tox-private-button-border-color);
-  --tox-private-button-disabled-box-shadow: var(--tox-private-button-box-shadow);
-  --tox-private-button-disabled-text-color: hsl(from var(--tox-private-button-text-color) h s l / 50%);
-
-  // Focus state
-  --tox-private-button-focus-background-color: hsl(from var(--tox-private-button-background-color) h s calc(l - 5));
-  --tox-private-button-focus-border-color: var(--tox-private-button-focus-background-color);
-  --tox-private-button-focus-box-shadow: var(--tox-private-button-box-shadow);
-  --tox-private-button-focus-text-color: var(--tox-private-button-text-color);
-  --tox-private-button-focus-outline: inset 0 0 0 1px var(--tox-private-color-white), 0 0 0 2px var(--tox-private-color-tint);
-  
-  // Hover state
-  --tox-private-button-hover-background-color:  hsl(from var(--tox-private-button-background-color) h s calc(l - 5));
-  --tox-private-button-hover-border-color: var(--tox-private-button-hover-background-color);
-  --tox-private-button-hover-box-shadow: var(--tox-private-button-box-shadow);
-  --tox-private-button-hover-text-color: var(--tox-private-button-text-color);
-  
-  // Active state
-  --tox-private-button-active-background-color:  hsl(from var(--tox-private-button-background-color) h s calc(l - 10));
-  --tox-private-button-active-border-color: var(--tox-private-button-active-background-color);
-  --tox-private-button-active-box-shadow: var(--tox-private-button-box-shadow);
-  --tox-private-button-active-text-color: var(--tox-private-button-text-color);
-
-  // Enabled state
-  --tox-private-button-enabled-background-color:  hsl(from var(--tox-private-button-background-color) h s calc(l - 10));
-  --tox-private-button-enabled-border-color: var(--tox-private-button-enabled-background-color);
-  --tox-private-button-enabled-box-shadow: var(--tox-private-button-box-shadow);
-  --tox-private-button-enabled-text-color: var(--tox-private-button-text-color);
-
-  // Enabled + focus state
-  --tox-private-button-enabled-focus-background-color: hsl(from var(--tox-private-button-enabled-background-color) h s calc(l - 5));
-  --tox-private-button-enabled-focus-border-color: var(--tox-private-button-enabled-focus-background-color);
-  --tox-private-button-enabled-focus-box-shadow: var(--tox-private-button-enabled-box-shadow);
-  --tox-private-button-enabled-focus-text-color: var(--tox-private-button-enabled-text-color);
-
-  // Enabled + hover state
-  --tox-private-button-enabled-hover-background-color: hsl(from var(--tox-private-button-enabled-background-color) h s calc(l - 5));
-  --tox-private-button-enabled-hover-border-color: var(--tox-private-button-enabled-hover-background-color);
-  --tox-private-button-enabled-hover-box-shadow: var(--tox-private-button-enabled-box-shadow);
-  --tox-private-button-enabled-hover-text-color: var(--tox-private-button-enabled-text-color);
-
-  // Enabled + active state
-  --tox-private-button-enabled-active-background-color: hsl(from var(--tox-private-button-enabled-background-color) h s calc(l - 10));
-  --tox-private-button-enabled-active-border-color: var(--tox-private-button-enabled-active-background-color);
-  --tox-private-button-enabled-active-box-shadow: var(--tox-private-button-enabled-box-shadow);
-  --tox-private-button-enabled-active-text-color: var(--tox-private-button-enabled-text-color);
-}
-
-@button-background-color: @color-tint;
-@button-background-image: none;
-@button-background-position: 0 0;
-@button-background-repeat: repeat;
-@button-border-color: @button-background-color;
 @button-border-radius: @control-border-radius;
 @button-border-style: solid;
 @button-border-width: 1px;
@@ -99,176 +18,114 @@
 @button-padding-x: @pad-md;
 @button-padding-y: @pad-xs;
 @button-text-align: center;
-@button-text-color: contrast(@button-background-color, @color-black, @color-white);
 @button-text-decoration: none;
 @button-text-transform: none;
 
-@button-disabled-background-color: @button-background-color;
-@button-disabled-background-image: @button-background-image;
-@button-disabled-border-color: @button-background-color;
-@button-disabled-box-shadow: @button-box-shadow;
-@button-disabled-text-color: fade(@button-text-color, 50%);
-
-@button-focus-background-color: @button-hover-background-color;
-@button-focus-background-image: @button-hover-background-image;
-@button-focus-border-color: @button-hover-border-color;
-@button-focus-box-shadow: @button-hover-box-shadow;
-@button-focus-text-color: @button-hover-text-color;
 @button-focus-outline: inset 0 0 0 1px @color-white, 0 0 0 2px @color-tint;
 
-@button-hover-background-color: darken(@button-background-color, 5%);
-@button-hover-background-image: @button-background-image;
-@button-hover-border-color: @button-hover-background-color;
-@button-hover-box-shadow: @button-box-shadow;
-@button-hover-text-color: @button-text-color;
+@button-icon-success-color: @color-success;
+@button-icon-error-color: @color-error;
 
-@button-active-background-color: darken(@button-background-color, 10%);
-@button-active-background-image: @button-background-image;
-@button-active-border-color: @button-active-background-color;
-@button-active-box-shadow: @button-box-shadow;
-@button-active-text-color: @button-text-color;
+@layer tox-atomic-component {
+  .tox-button when (@custom-properties-enabled = true) {
+    --tox-private-button-border-width: 1px;
+    --tox-private-button-border-style: solid;
 
-// Enabled state
-@button-enabled-background-color: darken(@button-background-color, 10%);
-@button-enabled-background-image: @button-background-image;
-@button-enabled-border-color: @button-enabled-background-color;
-@button-enabled-box-shadow: @button-box-shadow;
-@button-enabled-text-color: @button-text-color;
-
-@button-enabled-focus-background-color: @button-enabled-hover-background-color;
-@button-enabled-focus-background-image: @button-hover-background-image;
-@button-enabled-focus-border-color: @button-enabled-hover-background-color;
-@button-enabled-focus-box-shadow: @button-enabled-box-shadow;
-@button-enabled-focus-text-color: @button-enabled-text-color;
-
-@button-enabled-hover-background-color: darken(@button-enabled-background-color, 5%);
-@button-enabled-hover-background-image: @button-hover-background-image;
-@button-enabled-hover-border-color: @button-enabled-hover-background-color;
-@button-enabled-hover-box-shadow: @button-enabled-box-shadow;
-@button-enabled-hover-text-color: @button-enabled-text-color;
-
-@button-enabled-active-background-color: darken(@button-enabled-background-color, 10%);
-@button-enabled-active-background-image: @button-background-image;
-@button-enabled-active-border-color: @button-enabled-active-background-color;
-@button-enabled-active-box-shadow: @button-enabled-box-shadow;
-@button-enabled-active-text-color: @button-enabled-text-color;
-
-
-.tox-button {
-  background-color: var(--tox-private-button-background-color, @button-background-color);
-  background-image: @button-background-image;
-  background-position: @button-background-position;
-  background-repeat: @button-background-repeat;
-  border-width: var(--tox-private-button-border-width, @button-border-width);
-  border-style: var(--tox-private-button-border-style, @button-border-style);
-  border-color: var(--tox-private-button-border-color, @button-border-color);
-  border-radius: var(--tox-private-control-border-radius, @button-border-radius);
-  box-shadow: var(--tox-private-button-box-shadow, @button-box-shadow);
-  box-sizing: border-box;
-  color: var(--tox-private-button-text-color, @button-text-color);
-  cursor: pointer;
-  display: inline-block;
-  font-family: var(--tox-private-font-stack, @button-font-family);
-  font-size: var(--tox-private-button-font-size, @button-font-size);
-  font-style: var(--tox-private-button-font-style, @button-font-style);
-  font-weight: var(--tox-private-button-font-weight, @button-font-weight);
-  letter-spacing: @button-letter-spacing;
-  line-height: var(--tox-private-control-line-height, @button-line-height);
-  margin: 0;
-  outline: none;
-  padding: var(--tox-private-button-padding-y, @button-padding-y) var(--tox-private-button-padding-x, @button-padding-x);
-  position: relative;
-  text-align: @button-text-align;
-  text-decoration: @button-text-decoration;
-  text-transform: @button-text-transform;
-  white-space: nowrap;
-
-  &::before {
+    --tox-private-button-padding-x: var(--tox-private-pad-md);
+    --tox-private-button-padding-y: var(--tox-private-pad-xs);
+    
+    --tox-private-button-font-size: var(--tox-private-font-size-sm);
+    --tox-private-button-font-style: normal;
+    --tox-private-button-font-weight: var(--tox-private-font-weight-bold); 
+    --tox-private-button-focus-outline: inset 0 0 0 1px var(--tox-private-color-white), 0 0 0 2px var(--tox-private-color-tint);
+  }
+  
+  .tox-button {  
+    border-width: var(--tox-private-button-border-width, @button-border-width);
+    border-style: var(--tox-private-button-border-style, @button-border-style);
     border-radius: var(--tox-private-control-border-radius, @button-border-radius);
-    bottom: calc(-1 * var(--tox-private-button-border-width, @button-border-width));
-    box-shadow: var(--tox-private-button-focus-outline, @button-focus-outline);
-    content: '';
-    left: calc(-1 * var(--tox-private-button-border-width, @button-border-width));
-    opacity: 0;
-    pointer-events: none;
-    position: absolute;
-    right: calc(-1 * var(--tox-private-button-border-width, @button-border-width));
-    top: calc(-1 * var(--tox-private-button-border-width, @button-border-width));
-  }
+    font-family: var(--tox-private-font-stack, @button-font-family);
+    font-size: var(--tox-private-button-font-size, @button-font-size);
+    font-style: var(--tox-private-button-font-style, @button-font-style);
+    font-weight: var(--tox-private-button-font-weight, @button-font-weight);
+    line-height: var(--tox-private-control-line-height, @button-line-height);
+    padding: var(--tox-private-button-padding-y, @button-padding-y) var(--tox-private-button-padding-x, @button-padding-x);
+    text-align: @button-text-align;
+    text-decoration: @button-text-decoration;
+    text-transform: @button-text-transform;
+    letter-spacing: @button-letter-spacing;
+    box-shadow: @button-box-shadow;
+    box-sizing: border-box;
+    cursor: pointer;
+    margin: 0;
+    outline: none;
+    position: relative;
+    white-space: nowrap;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
 
-  &[disabled] {
-    background-color: var(--tox-private-button-disabled-background-color, @button-disabled-background-color);
-    background-image: @button-disabled-background-image;
-    border-color: var(--tox-private-button-disabled-border-color, @button-disabled-border-color);
-    box-shadow: var(--tox-private-button-disabled-box-shadow, @button-disabled-box-shadow);
-    color: var(--tox-private-button-disabled-text-color, @button-disabled-text-color);
-    cursor: not-allowed;
-  }
-
-  &:focus:not(:disabled) {
-    background-color: var(--tox-private-button-focus-background-color, @button-focus-background-color);
-    background-image: @button-focus-background-image;
-    border-color: var(--tox-private-button-focus-border-color, @button-focus-border-color);
-    box-shadow: var(--tox-private-button-focus-box-shadow, @button-focus-box-shadow);
-    color: var(--tox-private-button-focus-text-color, @button-focus-text-color);
-
+    // The before element is used for visible focus outline. 
+    // The same result can be achieved with box-shadow on the button element.
+    // Using the button element instead of before would mean removing following variables (currently all equal to box-shadow: none)  
+    //  1. @button-box-shadow
+    //  2. All of the box-shadow raletad variables for different states (for example: @button-disabled-box-shadow, @button-hover-box-shadow) 
+    // The before element can be removed if we decide to use box-shadow on button element.
     &::before {
-      opacity: 1;
+      border-radius: var(--tox-private-control-border-radius, @button-border-radius);
+      bottom: calc(-1 * var(--tox-private-button-border-width, @button-border-width));
+      box-shadow: var(--tox-private-button-focus-outline, @button-focus-outline);
+      content: '';
+      left: calc(-1 * var(--tox-private-button-border-width, @button-border-width));
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
+      right: calc(-1 * var(--tox-private-button-border-width, @button-border-width));
+      top: calc(-1 * var(--tox-private-button-border-width, @button-border-width));
     }
-  }
-
-  &:hover:not(:disabled) {
-    background-color: var(--tox-private-button-hover-background-color, @button-hover-background-color);
-    background-image: @button-hover-background-image;
-    border-color: var(--tox-private-button-hover-background-color, @button-hover-border-color);
-    box-shadow: var(--tox-private-button-hover-box-shadow, @button-hover-box-shadow);
-    color: var(--tox-private-button-hover-text-color, @button-hover-text-color);
-  }
-
-  &:active:not(:disabled) {
-    background-color: var(--tox-private-button-active-background-color, @button-active-background-color);
-    background-image: @button-active-background-image;
-    border-color: var(--tox-private-button-active-border-color, @button-active-border-color);
-    box-shadow: var(--tox-private-button-active-box-shadow, @button-active-box-shadow);
-    color: var(--tox-private-button-active-text-color, @button-active-text-color);
-  }
-
-  // Enabled state
-  &.tox-button--enabled {
-    background-color: var(--tox-private-button-enabled-background-color, @button-enabled-background-color);
-    background-image: @button-enabled-background-image;
-    border-color: var(--tox-private-button-enabled-border-color, @button-enabled-border-color);
-    box-shadow: var(--tox-private-button-enabled-box-shadow, @button-enabled-box-shadow);
-    color: var(--tox-private-button-enabled-text-color, @button-enabled-text-color);
-
-    &[disabled] {
-      color: var(--tox-private-button-disabled-text-color, @button-disabled-text-color);
-      cursor: not-allowed;
-    }
-
+    
     &:focus:not(:disabled) {
-      background-color: var(--tox-private-button-enabled-focus-background-color, @button-enabled-focus-background-color);
-      background-image: @button-enabled-focus-background-image;
-      border-color: var(--tox-private-button-enabled-focus-border-color, @button-enabled-focus-border-color);
-      box-shadow: var(--tox-private-button-enabled-focus-box-shadow, @button-enabled-focus-box-shadow);
-      color: var(--tox-private-button-enabled-focus-text-color, @button-enabled-focus-text-color);
+      background-color: var(--tox-private-button-focus-background-color, @button-focus-background-color);
+      background-image: @button-focus-background-image;
+      border-color: var(--tox-private-button-focus-border-color, @button-focus-border-color);
+      box-shadow: var(--tox-private-button-focus-box-shadow, @button-focus-box-shadow);
+      color: var(--tox-private-button-focus-text-color, @button-focus-text-color);
+      
+      &::before {
+        opacity: 1;
+      }
     }
 
-    &:hover:not(:disabled) {
-      background-color: var(--tox-private-button-enabled-hover-background-color, @button-enabled-hover-background-color);
-      background-image: @button-enabled-hover-background-image;
-      border-color: var(--tox-private-button-enabled-hover-border-color, @button-enabled-hover-border-color);
-      box-shadow: var(--tox-private-button-enabled-hover-box-shadow, @button-enabled-hover-box-shadow);
-      color: var(--tox-private-button-enabled-hover-text-color, @button-enabled-hover-text-color);
+    &.tox-button--icon, &:has(.tox-icon:only-child) {    
+      padding: @button-padding-y; // Use padding-y as horizontal padding to make icon button square-ish
     }
 
-    &:active:not(:disabled) {
-      background-color: var(--tox-private-button-enabled-active-background-color, @button-enabled-active-background-color);
-      background-image: @button-enabled-active-background-image;
-      border-color: var(--tox-private-button-enabled-active-border-color, @button-enabled-active-border-color);
-      box-shadow: var(--tox-private-button-enabled-active-box-shadow, @button-enabled-active-box-shadow);
-      color: var(--tox-private-button-enabled-active-text-color, @button-enabled-active-text-color);
+    .tox-icon svg {
+      display: block;
+      fill: currentColor;
     }
+
+    .tox-icon.tox-icon--success svg {
+      fill: var(--tox-private-color-success, @button-icon-success-color);
+    }
+
+    .tox-icon.tox-icon--error svg {
+      fill: var(--tox-private-color-error, @button-icon-error-color)
+    }
+  }
+  
+  .tox-button--stretch {
+    width: 100%;
   }
 }
 
+// TODO: remove me when the size input for toolbar is a separate component. Toolbar buttons should be styled by a toolbar-button.less but we use dialog size input so the classes don't match
+.tox-context-form__group {
+  .tox-button--icon,
+  .tox-button.tox-button--icon {
+    margin: @toolbar-button-margin;
+    padding: @toolbar-button-padding;
+  }
+}
+ 
