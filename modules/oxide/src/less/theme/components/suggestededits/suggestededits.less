@@ -58,42 +58,18 @@
     display: flex;
     flex-direction: column;
 
-    .tox-suggestededits__toolbar {
-      display: flex;
-      align-content: center;
-      align-self: stretch;
-      flex-direction: row;
-      gap: 8px;
-      justify-content: space-between;
-      overflow-x: auto;
-      padding: @view-header-padding;
-      width: 100%;
+    .tox-suggestededits__align-right {
+      margin-left: auto;
+    }
 
-      .tox-suggestededits__toolbar--start {
-        display: flex;
-        align-items: start;
-        flex: 0;
-        gap: 8px;
-        width: 100%;
-      }
-
-      .tox-suggestededits__toolbar--end {
-        display: flex;
-        align-items: end;
-        flex: 0;
-        gap: 8px;
-        width: 100%;
-      }
-
-      .tox-suggestededits__title {
-        color: @suggestededits-text-color;
-        font-size: 20px;
-        font-weight: 700;
-        line-height: 24px;
-        padding: 4px 16px;
-        text-align: center;
-        white-space: nowrap;
-      }
+    .tox-suggestededits__title {
+      color: @suggestededits-text-color;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 24px;
+      padding: 4px 16px;
+      text-align: center;
+      white-space: nowrap;
     }
 
     .tox-suggestededits {
