@@ -5,7 +5,6 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.FormattingCommandsTest', () => {
-
   context('Design mode', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       add_unload_trigger: false,
@@ -292,129 +291,141 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
       TinyAssertions.assertContent(editor, '<p><a href="http://www.site.com">test 123</a></p>');
     });
 
-    it('mceInsertLink (relative)', () => {
-      const editor = hook.editor();
-      editor.setContent('test 123');
-      editor.execCommand('SelectAll');
-      editor.execCommand('mceInsertLink', false, 'test');
-      TinyAssertions.assertContent(editor, '<p><a href="test">test 123</a></p>');
-    });
+    context('mceInsertLink', () => {
+      it('TINY-12504: &amp; is replaced by & in link hrefs', () => {
+        const editor = hook.editor();
+        editor.setContent('test 123');
+        editor.execCommand('SelectAll');
+        editor.execCommand('mceInsertLink', false, 'link.com?a&amp;b');
+        const links = editor.getBody().getElementsByTagName('a');
+        assert.equal(links[0].getAttribute('href'), 'link.com?a&b');
+        TinyAssertions.assertContent(editor, '<p><a href="link.com?a&amp;b">test 123</a></p>');
+      });
 
-    it('mceInsertLink (link absolute)', () => {
-      const editor = hook.editor();
-      editor.setContent('<p>test 123</p>');
-      editor.execCommand('SelectAll');
-      editor.execCommand('mceInsertLink', false, 'http://www.site.com');
-      TinyAssertions.assertContent(editor, '<p><a href="http://www.site.com">test 123</a></p>');
-    });
+      it('mceInsertLink (relative)', () => {
+        const editor = hook.editor();
+        editor.setContent('test 123');
+        editor.execCommand('SelectAll');
+        editor.execCommand('mceInsertLink', false, 'test');
+        TinyAssertions.assertContent(editor, '<p><a href="test">test 123</a></p>');
+      });
 
-    it('mceInsertLink (link encoded)', () => {
-      const editor = hook.editor();
-      editor.setContent('<p>test 123</p>');
-      editor.execCommand('SelectAll');
-      editor.execCommand('mceInsertLink', false, '"&<>');
-      TinyAssertions.assertContent(editor, '<p><a href="&quot;&amp;&lt;&gt;">test 123</a></p>');
-    });
+      it('mceInsertLink (link absolute)', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>test 123</p>');
+        editor.execCommand('SelectAll');
+        editor.execCommand('mceInsertLink', false, 'http://www.site.com');
+        TinyAssertions.assertContent(editor, '<p><a href="http://www.site.com">test 123</a></p>');
+      });
 
-    it('mceInsertLink (link encoded and with class)', () => {
-      const editor = hook.editor();
-      editor.setContent('<p>test 123</p>');
-      editor.execCommand('SelectAll');
-      editor.execCommand('mceInsertLink', false, { href: '"&<>', class: 'test' });
-      TinyAssertions.assertContent(editor, '<p><a class="test" href="&quot;&amp;&lt;&gt;">test 123</a></p>');
-    });
+      it('mceInsertLink (link encoded)', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>test 123</p>');
+        editor.execCommand('SelectAll');
+        editor.execCommand('mceInsertLink', false, '"&<>');
+        TinyAssertions.assertContent(editor, '<p><a href="&quot;&amp;&lt;&gt;">test 123</a></p>');
+      });
 
-    it('mceInsertLink (link with space)', () => {
-      const editor = hook.editor();
-      editor.setContent('<p>test 123</p>');
-      editor.execCommand('SelectAll');
-      editor.execCommand('mceInsertLink', false, { href: 'foo bar' });
-      TinyAssertions.assertContent(editor, '<p><a href="foo%20bar">test 123</a></p>');
-    });
+      it('mceInsertLink (link encoded and with class)', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>test 123</p>');
+        editor.execCommand('SelectAll');
+        editor.execCommand('mceInsertLink', false, { href: '"&<>', class: 'test' });
+        TinyAssertions.assertContent(editor, '<p><a class="test" href="&quot;&amp;&lt;&gt;">test 123</a></p>');
+      });
 
-    it('mceInsertLink (link floated img)', () => {
-      const editor = hook.editor();
-      editor.setContent('<p><img style="float: right;" src="about:blank" /></p>');
-      editor.execCommand('SelectAll');
-      editor.execCommand('mceInsertLink', false, 'link');
-      TinyAssertions.assertContent(editor, '<p><a href="link"><img style="float: right;" src="about:blank"></a></p>');
-    });
+      it('mceInsertLink (link with space)', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>test 123</p>');
+        editor.execCommand('SelectAll');
+        editor.execCommand('mceInsertLink', false, { href: 'foo bar' });
+        TinyAssertions.assertContent(editor, '<p><a href="foo%20bar">test 123</a></p>');
+      });
 
-    it('mceInsertLink (link adjacent text)', () => {
-      const editor = hook.editor();
-      editor.setContent('<p><a href="#">a</a>b</p>');
+      it('mceInsertLink (link floated img)', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><img style="float: right;" src="about:blank" /></p>');
+        editor.execCommand('SelectAll');
+        editor.execCommand('mceInsertLink', false, 'link');
+        TinyAssertions.assertContent(editor, '<p><a href="link"><img style="float: right;" src="about:blank"></a></p>');
+      });
 
-      const rng = editor.dom.createRng();
-      rng.setStart(editor.getBody().firstChild?.lastChild as Text, 0);
-      rng.setEnd(editor.getBody().firstChild?.lastChild as Text, 1);
-      editor.selection.setRng(rng);
+      it('mceInsertLink (link adjacent text)', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><a href="#">a</a>b</p>');
 
-      editor.execCommand('mceInsertLink', false, 'link');
-      TinyAssertions.assertContent(editor, '<p><a href="#">a</a><a href="link">b</a></p>');
-    });
+        const rng = editor.dom.createRng();
+        rng.setStart(editor.getBody().firstChild?.lastChild as Text, 0);
+        rng.setEnd(editor.getBody().firstChild?.lastChild as Text, 1);
+        editor.selection.setRng(rng);
 
-    it('mceInsertLink (link text inside text)', () => {
-      const editor = hook.editor();
-      editor.setContent('<p><a href="#"><em>abc</em></a></p>');
-      LegacyUnit.setSelection(editor, 'em', 1, 'em', 2);
+        editor.execCommand('mceInsertLink', false, 'link');
+        TinyAssertions.assertContent(editor, '<p><a href="#">a</a><a href="link">b</a></p>');
+      });
 
-      editor.execCommand('mceInsertLink', false, 'link');
-      TinyAssertions.assertContent(editor, '<p><a href="link"><em>abc</em></a></p>');
-    });
+      it('mceInsertLink (link text inside text)', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><a href="#"><em>abc</em></a></p>');
+        LegacyUnit.setSelection(editor, 'em', 1, 'em', 2);
 
-    it('mceInsertLink (link around existing links)', () => {
-      const editor = hook.editor();
-      editor.setContent('<p><a href="#1">1</a><a href="#2">2</a></p>');
-      editor.execCommand('SelectAll');
+        editor.execCommand('mceInsertLink', false, 'link');
+        TinyAssertions.assertContent(editor, '<p><a href="link"><em>abc</em></a></p>');
+      });
 
-      editor.execCommand('mceInsertLink', false, 'link');
-      TinyAssertions.assertContent(editor, '<p><a href="link">12</a></p>');
-    });
+      it('mceInsertLink (link around existing links)', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><a href="#1">1</a><a href="#2">2</a></p>');
+        editor.execCommand('SelectAll');
 
-    it('mceInsertLink (link around existing links with different attrs)', () => {
-      const editor = hook.editor();
-      editor.setContent('<p><a id="a" href="#1">1</a><a id="b" href="#2">2</a></p>');
-      editor.execCommand('SelectAll');
+        editor.execCommand('mceInsertLink', false, 'link');
+        TinyAssertions.assertContent(editor, '<p><a href="link">12</a></p>');
+      });
 
-      editor.execCommand('mceInsertLink', false, 'link');
-      TinyAssertions.assertContent(editor, '<p><a href="link">12</a></p>');
-    });
+      it('mceInsertLink (link around existing links with different attrs)', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><a id="a" href="#1">1</a><a id="b" href="#2">2</a></p>');
+        editor.execCommand('SelectAll');
 
-    it('mceInsertLink (link around existing complex contents with links)', () => {
-      const editor = hook.editor();
-      editor.setContent(
-        '<p><span id="s1"><strong><a id="a" href="#1"><em>1</em></a></strong></span><span id="s2">' +
+        editor.execCommand('mceInsertLink', false, 'link');
+        TinyAssertions.assertContent(editor, '<p><a href="link">12</a></p>');
+      });
+
+      it('mceInsertLink (link around existing complex contents with links)', () => {
+        const editor = hook.editor();
+        editor.setContent(
+          '<p><span id="s1"><strong><a id="a" href="#1"><em>1</em></a></strong></span><span id="s2">' +
         '<em><a id="b" href="#2"><strong>2</strong></a></em></span></p>'
-      );
-      editor.execCommand('SelectAll');
+        );
+        editor.execCommand('SelectAll');
 
-      editor.execCommand('mceInsertLink', false, 'link');
-      TinyAssertions.assertContent(
-        editor,
-        '<p><a href="link"><span id="s1"><strong><em>1</em>' +
+        editor.execCommand('mceInsertLink', false, 'link');
+        TinyAssertions.assertContent(
+          editor,
+          '<p><a href="link"><span id="s1"><strong><em>1</em>' +
         '</strong></span><span id="s2"><em><strong>2</strong></em></span></a></p>'
-      );
-    });
+        );
+      });
 
-    it('mceInsertLink (link text inside link)', () => {
-      const editor = hook.editor();
-      editor.setContent('<p><a href="#">test</a></p>');
-      LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
-      editor.execCommand('SelectAll');
+      it('mceInsertLink (link text inside link)', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><a href="#">test</a></p>');
+        LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
+        editor.execCommand('SelectAll');
 
-      editor.execCommand('mceInsertLink', false, 'link');
-      TinyAssertions.assertContent(editor, '<p><a href="link">test</a></p>');
-    });
+        editor.execCommand('mceInsertLink', false, 'link');
+        TinyAssertions.assertContent(editor, '<p><a href="link">test</a></p>');
+      });
 
-    it('mceInsertLink bug #7331', () => {
-      const editor = hook.editor();
-      editor.setContent('<table><tbody><tr><td>A</td></tr><tr><td>B</td></tr></tbody></table>');
-      const rng = editor.dom.createRng();
-      rng.setStart(editor.dom.select('td')[1].firstChild as Text, 0);
-      rng.setEnd(editor.getBody(), 1);
-      editor.selection.setRng(rng);
-      editor.execCommand('mceInsertLink', false, { href: 'x' });
-      TinyAssertions.assertContent(editor, '<table><tbody><tr><td>A</td></tr><tr><td><a href=\"x\">B</a></td></tr></tbody></table>');
+      it('mceInsertLink bug #7331', () => {
+        const editor = hook.editor();
+        editor.setContent('<table><tbody><tr><td>A</td></tr><tr><td>B</td></tr></tbody></table>');
+        const rng = editor.dom.createRng();
+        rng.setStart(editor.dom.select('td')[1].firstChild as Text, 0);
+        rng.setEnd(editor.getBody(), 1);
+        editor.selection.setRng(rng);
+        editor.execCommand('mceInsertLink', false, { href: 'x' });
+        TinyAssertions.assertContent(editor, '<table><tbody><tr><td>A</td></tr><tr><td><a href=\"x\">B</a></td></tr></tbody></table>');
+      });
     });
 
     it('unlink', () => {
@@ -808,142 +819,153 @@ describe('browser.tinymce.core.FormattingCommandsTest', () => {
       TinyAssertions.assertContent(editor, '<p><a href="http://www.site.com">test 123</a></p>');
     });
 
-    it('mceInsertLink (relative)', () => {
-      const editor = hook.editor();
-      editor.setContent('test 123');
-      editor.mode.set('readonly');
-      editor.execCommand('SelectAll');
-      editor.execCommand('mceInsertLink', false, 'test');
-      TinyAssertions.assertContent(editor, '<p>test 123</p>');
-    });
+    context('mceInsertLink', () => {
+      it('TINY-12504: &amp; is replaced by & in link hrefs', () => {
+        const editor = hook.editor();
+        editor.setContent('test 123');
+        editor.mode.set('readonly');
+        editor.execCommand('SelectAll');
+        editor.execCommand('mceInsertLink', false, 'link.com?a&amp;b');
+        TinyAssertions.assertContent(editor, '<p>test 123</p>');
+      });
 
-    it('mceInsertLink (link absolute)', () => {
-      const editor = hook.editor();
-      editor.setContent('<p>test 123</p>');
-      editor.mode.set('readonly');
-      editor.execCommand('SelectAll');
-      editor.execCommand('mceInsertLink', false, 'http://www.site.com');
-      TinyAssertions.assertContent(editor, '<p>test 123</p>');
-    });
+      it('mceInsertLink (relative)', () => {
+        const editor = hook.editor();
+        editor.setContent('test 123');
+        editor.mode.set('readonly');
+        editor.execCommand('SelectAll');
+        editor.execCommand('mceInsertLink', false, 'test');
+        TinyAssertions.assertContent(editor, '<p>test 123</p>');
+      });
 
-    it('mceInsertLink (link encoded)', () => {
-      const editor = hook.editor();
-      editor.setContent('<p>test 123</p>');
-      editor.mode.set('readonly');
-      editor.execCommand('SelectAll');
-      editor.execCommand('mceInsertLink', false, '"&<>');
-      TinyAssertions.assertContent(editor, '<p>test 123</p>');
-    });
+      it('mceInsertLink (link absolute)', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>test 123</p>');
+        editor.mode.set('readonly');
+        editor.execCommand('SelectAll');
+        editor.execCommand('mceInsertLink', false, 'http://www.site.com');
+        TinyAssertions.assertContent(editor, '<p>test 123</p>');
+      });
 
-    it('mceInsertLink (link encoded and with class)', () => {
-      const editor = hook.editor();
-      editor.setContent('<p>test 123</p>');
-      editor.mode.set('readonly');
-      editor.execCommand('SelectAll');
-      editor.execCommand('mceInsertLink', false, { href: '"&<>', class: 'test' });
-      TinyAssertions.assertContent(editor, '<p>test 123</p>');
-    });
+      it('mceInsertLink (link encoded)', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>test 123</p>');
+        editor.mode.set('readonly');
+        editor.execCommand('SelectAll');
+        editor.execCommand('mceInsertLink', false, '"&<>');
+        TinyAssertions.assertContent(editor, '<p>test 123</p>');
+      });
 
-    it('mceInsertLink (link with space)', () => {
-      const editor = hook.editor();
-      editor.setContent('<p>test 123</p>');
-      editor.mode.set('readonly');
-      editor.execCommand('SelectAll');
-      editor.execCommand('mceInsertLink', false, { href: 'foo bar' });
-      TinyAssertions.assertContent(editor, '<p>test 123</p>');
-    });
+      it('mceInsertLink (link encoded and with class)', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>test 123</p>');
+        editor.mode.set('readonly');
+        editor.execCommand('SelectAll');
+        editor.execCommand('mceInsertLink', false, { href: '"&<>', class: 'test' });
+        TinyAssertions.assertContent(editor, '<p>test 123</p>');
+      });
 
-    it('mceInsertLink (link floated img)', () => {
-      const editor = hook.editor();
-      editor.setContent('<p><img style="float: right;" src="about:blank" /></p>');
-      editor.mode.set('readonly');
-      editor.execCommand('SelectAll');
-      editor.execCommand('mceInsertLink', false, 'link');
-      TinyAssertions.assertContent(editor, '<p><img style="float: right;" src="about:blank"></p>');
-    });
+      it('mceInsertLink (link with space)', () => {
+        const editor = hook.editor();
+        editor.setContent('<p>test 123</p>');
+        editor.mode.set('readonly');
+        editor.execCommand('SelectAll');
+        editor.execCommand('mceInsertLink', false, { href: 'foo bar' });
+        TinyAssertions.assertContent(editor, '<p>test 123</p>');
+      });
 
-    it('mceInsertLink (link adjacent text)', () => {
-      const editor = hook.editor();
-      editor.setContent('<p><a href="#">a</a>b</p>');
-      editor.mode.set('readonly');
+      it('mceInsertLink (link floated img)', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><img style="float: right;" src="about:blank" /></p>');
+        editor.mode.set('readonly');
+        editor.execCommand('SelectAll');
+        editor.execCommand('mceInsertLink', false, 'link');
+        TinyAssertions.assertContent(editor, '<p><img style="float: right;" src="about:blank"></p>');
+      });
 
-      const rng = editor.dom.createRng();
-      rng.setStart(editor.getBody().firstChild?.lastChild as Text, 0);
-      rng.setEnd(editor.getBody().firstChild?.lastChild as Text, 1);
-      editor.selection.setRng(rng);
+      it('mceInsertLink (link adjacent text)', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><a href="#">a</a>b</p>');
+        editor.mode.set('readonly');
 
-      editor.execCommand('mceInsertLink', false, 'link');
-      TinyAssertions.assertContent(editor, '<p><a href="#">a</a>b</p>');
-    });
+        const rng = editor.dom.createRng();
+        rng.setStart(editor.getBody().firstChild?.lastChild as Text, 0);
+        rng.setEnd(editor.getBody().firstChild?.lastChild as Text, 1);
+        editor.selection.setRng(rng);
 
-    it('mceInsertLink (link text inside text)', () => {
-      const editor = hook.editor();
-      editor.setContent('<p><a href="#"><em>abc</em></a></p>');
-      editor.mode.set('readonly');
-      LegacyUnit.setSelection(editor, 'em', 1, 'em', 2);
+        editor.execCommand('mceInsertLink', false, 'link');
+        TinyAssertions.assertContent(editor, '<p><a href="#">a</a>b</p>');
+      });
 
-      editor.execCommand('mceInsertLink', false, 'link');
-      TinyAssertions.assertContent(editor, '<p><a href="#"><em>abc</em></a></p>');
-    });
+      it('mceInsertLink (link text inside text)', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><a href="#"><em>abc</em></a></p>');
+        editor.mode.set('readonly');
+        LegacyUnit.setSelection(editor, 'em', 1, 'em', 2);
 
-    it('mceInsertLink (link around existing links)', () => {
-      const editor = hook.editor();
-      editor.setContent('<p><a href="#1">1</a><a href="#2">2</a></p>');
-      editor.mode.set('readonly');
-      editor.execCommand('SelectAll');
+        editor.execCommand('mceInsertLink', false, 'link');
+        TinyAssertions.assertContent(editor, '<p><a href="#"><em>abc</em></a></p>');
+      });
 
-      editor.execCommand('mceInsertLink', false, 'link');
-      TinyAssertions.assertContent(editor, '<p><a href="#1">1</a><a href="#2">2</a></p>');
-    });
+      it('mceInsertLink (link around existing links)', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><a href="#1">1</a><a href="#2">2</a></p>');
+        editor.mode.set('readonly');
+        editor.execCommand('SelectAll');
 
-    it('mceInsertLink (link around existing links with different attrs)', () => {
-      const editor = hook.editor();
-      editor.setContent('<p><a id="a" href="#1">1</a><a id="b" href="#2">2</a></p>');
-      editor.mode.set('readonly');
-      editor.execCommand('SelectAll');
+        editor.execCommand('mceInsertLink', false, 'link');
+        TinyAssertions.assertContent(editor, '<p><a href="#1">1</a><a href="#2">2</a></p>');
+      });
 
-      editor.execCommand('mceInsertLink', false, 'link');
-      TinyAssertions.assertContent(editor, '<p><a id="a" href="#1">1</a><a id="b" href="#2">2</a></p>');
-    });
+      it('mceInsertLink (link around existing links with different attrs)', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><a id="a" href="#1">1</a><a id="b" href="#2">2</a></p>');
+        editor.mode.set('readonly');
+        editor.execCommand('SelectAll');
 
-    it('mceInsertLink (link around existing complex contents with links)', () => {
-      const editor = hook.editor();
-      editor.setContent(
-        '<p><span id="s1"><strong><a id="a" href="#1"><em>1</em></a></strong></span><span id="s2">' +
+        editor.execCommand('mceInsertLink', false, 'link');
+        TinyAssertions.assertContent(editor, '<p><a id="a" href="#1">1</a><a id="b" href="#2">2</a></p>');
+      });
+
+      it('mceInsertLink (link around existing complex contents with links)', () => {
+        const editor = hook.editor();
+        editor.setContent(
+          '<p><span id="s1"><strong><a id="a" href="#1"><em>1</em></a></strong></span><span id="s2">' +
         '<em><a id="b" href="#2"><strong>2</strong></a></em></span></p>'
-      );
-      editor.mode.set('readonly');
-      editor.execCommand('SelectAll');
+        );
+        editor.mode.set('readonly');
+        editor.execCommand('SelectAll');
 
-      editor.execCommand('mceInsertLink', false, 'link');
-      TinyAssertions.assertContent(
-        editor,
-        '<p><span id="s1"><strong><a id="a" href="#1"><em>1</em></a></strong></span><span id="s2">' +
+        editor.execCommand('mceInsertLink', false, 'link');
+        TinyAssertions.assertContent(
+          editor,
+          '<p><span id="s1"><strong><a id="a" href="#1"><em>1</em></a></strong></span><span id="s2">' +
         '<em><a id="b" href="#2"><strong>2</strong></a></em></span></p>'
-      );
-    });
+        );
+      });
 
-    it('mceInsertLink (link text inside link)', () => {
-      const editor = hook.editor();
-      editor.setContent('<p><a href="#">test</a></p>');
-      editor.mode.set('readonly');
-      LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
-      editor.execCommand('SelectAll');
+      it('mceInsertLink (link text inside link)', () => {
+        const editor = hook.editor();
+        editor.setContent('<p><a href="#">test</a></p>');
+        editor.mode.set('readonly');
+        LegacyUnit.setSelection(editor, 'p', 0, 'p', 1);
+        editor.execCommand('SelectAll');
 
-      editor.execCommand('mceInsertLink', false, 'link');
-      TinyAssertions.assertContent(editor, '<p><a href="#">test</a></p>');
-    });
+        editor.execCommand('mceInsertLink', false, 'link');
+        TinyAssertions.assertContent(editor, '<p><a href="#">test</a></p>');
+      });
 
-    it('mceInsertLink bug #7331', () => {
-      const editor = hook.editor();
-      editor.setContent('<table><tbody><tr><td>A</td></tr><tr><td>B</td></tr></tbody></table>');
-      editor.mode.set('readonly');
-      const rng = editor.dom.createRng();
-      rng.setStart(editor.dom.select('td')[1].firstChild as Text, 0);
-      rng.setEnd(editor.getBody(), 1);
-      editor.selection.setRng(rng);
-      editor.execCommand('mceInsertLink', false, { href: 'x' });
-      TinyAssertions.assertContent(editor, '<table><tbody><tr><td>A</td></tr><tr><td>B</td></tr></tbody></table>');
+      it('mceInsertLink bug #7331', () => {
+        const editor = hook.editor();
+        editor.setContent('<table><tbody><tr><td>A</td></tr><tr><td>B</td></tr></tbody></table>');
+        editor.mode.set('readonly');
+        const rng = editor.dom.createRng();
+        rng.setStart(editor.dom.select('td')[1].firstChild as Text, 0);
+        rng.setEnd(editor.getBody(), 1);
+        editor.selection.setRng(rng);
+        editor.execCommand('mceInsertLink', false, { href: 'x' });
+        TinyAssertions.assertContent(editor, '<table><tbody><tr><td>A</td></tr><tr><td>B</td></tr></tbody></table>');
+      });
     });
 
     it('unlink', () => {
