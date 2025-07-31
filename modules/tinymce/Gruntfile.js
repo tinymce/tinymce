@@ -10,6 +10,7 @@ let gruntWebPack = require('./tools/modules/grunt-webpack');
 let swag = require('@ephox/swag');
 const nodeResolve = require('@rollup/plugin-node-resolve');
 const alias = require('@rollup/plugin-alias');
+const noReactPlugin = require('./tools/plugins/no-react-plugin');
 let path = require('path');
 
 let plugins = [
@@ -77,6 +78,7 @@ module.exports = function (grunt) {
             format: 'iife',
             onwarn: swag.onwarn,
             plugins: [
+              noReactPlugin(),
               FilesAsStrings,
               nodeResolve(),
               alias({
@@ -103,6 +105,7 @@ module.exports = function (grunt) {
               }
             },
             plugins: [
+              noReactPlugin(),
               FilesAsStrings,
               swag.dts({
                 respectExternal: true,
@@ -125,6 +128,7 @@ module.exports = function (grunt) {
             format: 'iife',
             onwarn: swag.onwarn,
             plugins: [
+              noReactPlugin(),
               FilesAsStrings,
               nodeResolve(),
               alias({
@@ -144,6 +148,7 @@ module.exports = function (grunt) {
             format: 'iife',
             onwarn: swag.onwarn,
             plugins: [
+              noReactPlugin(),
               FilesAsStrings,
               nodeResolve(),
               alias({
@@ -169,6 +174,7 @@ module.exports = function (grunt) {
             format: 'iife',
             onwarn: swag.onwarn,
             plugins: [
+              noReactPlugin(),
               FilesAsStrings,
               nodeResolve(),
               alias({
