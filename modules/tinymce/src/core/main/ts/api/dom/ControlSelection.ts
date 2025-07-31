@@ -42,8 +42,17 @@ interface SelectedResizeHandle extends ResizeHandle {
   };
 }
 
+const ucVideoNodeName = 'uc-video' as const;
+
+interface UcVideo extends HTMLElement {
+  nodeName: typeof ucVideoNodeName;
+  width: number;
+  height: number;
+}
+
+const isUcVideo = (el: Element): el is UcVideo => el.nodeName.toLowerCase() === ucVideoNodeName;
 const elementSelectionAttr = 'data-mce-selected';
-const controlElmSelector = 'table,img,figure.image,hr,video,span.mce-preview-object,details';
+const controlElmSelector = `table,img,figure.image,hr,video,span.mce-preview-object,details,${ucVideoNodeName}`;
 const abs = Math.abs;
 const round = Math.round;
 
@@ -163,7 +172,11 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
         if (target.style[name] || !editor.schema.isValid(target.nodeName.toLowerCase(), name)) {
           dom.setStyle(target, name, value);
         } else {
-          dom.setAttrib(target, name, '' + value);
+          if (isUcVideo(target)) {
+            target[name] = value;
+          } else {
+            dom.setAttrib(target, name, '' + value);
+          }
         }
       });
     }
