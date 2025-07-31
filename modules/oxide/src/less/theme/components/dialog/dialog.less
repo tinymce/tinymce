@@ -76,7 +76,7 @@
 @z-index-dialogs-offset-dialog: 2;
 @z-index-dialogs-offset-busy-spinner: 3;
 
-.tox {
+@layer tox-component {
   .tox-dialog-wrap {
     align-items: center;
     bottom: 0;
@@ -559,71 +559,72 @@
   .tox-dialog-dock-transition.tox-dialog-dock-fadein {
     transition-delay: 0s;
   }
-}
 
-.tox:not([dir=rtl]) {
-  .tox-dialog__body-nav {
 
-    @media @breakpoint-sm {
-      body:not(.tox-force-desktop) & {
-        margin-right: 0;
+  .tox:not([dir=rtl]) {
+    .tox-dialog__body-nav {
+
+      @media @breakpoint-sm {
+        body:not(.tox-force-desktop) & {
+          margin-right: 0;
+        }
       }
     }
-  }
 
-  .tox-dialog__body-nav-item {
+    .tox-dialog__body-nav-item {
 
-    @media @breakpoint-sm {
-      body:not(.tox-force-desktop) & {
-        &:not(:first-child) {
+      @media @breakpoint-sm {
+        body:not(.tox-force-desktop) & {
+          &:not(:first-child) {
+            margin-left: @pad-sm;
+          }
+        }
+      }
+    }
+
+    .tox-dialog__footer {
+      .tox-dialog__footer-start,
+      .tox-dialog__footer-end {
+        >* {
           margin-left: @pad-sm;
         }
       }
     }
   }
 
-  .tox-dialog__footer {
-    .tox-dialog__footer-start,
-    .tox-dialog__footer-end {
-      >* {
-        margin-left: @pad-sm;
+  // RTL
+  .tox[dir=rtl] {
+    .tox-dialog__body {
+      text-align: right;
+    }
+
+    .tox-dialog__body-nav {
+
+      @media @breakpoint-sm {
+        body:not(.tox-force-desktop) & {
+          margin-left: 0;
+        }
       }
     }
-  }
-}
 
-// RTL
-.tox[dir=rtl] {
-  .tox-dialog__body {
-    text-align: right;
-  }
+    .tox-dialog__body-nav-item {
 
-  .tox-dialog__body-nav {
-
-    @media @breakpoint-sm {
-      body:not(.tox-force-desktop) & {
-        margin-left: 0;
+      @media @breakpoint-sm {
+        body:not(.tox-force-desktop) & {
+          &:not(:first-child) {
+            margin-right: @pad-sm;
+          }
+        }
       }
     }
-  }
 
-  .tox-dialog__body-nav-item {
-
-    @media @breakpoint-sm {
-      body:not(.tox-force-desktop) & {
-        &:not(:first-child) {
+    .tox-dialog__footer {
+      .tox-dialog__footer-start,
+      .tox-dialog__footer-end {
+        >* {
           margin-right: @pad-sm;
         }
       }
     }
-  }
-
-  .tox-dialog__footer {
-    .tox-dialog__footer-start,
-    .tox-dialog__footer-end {
-      >* {
-        margin-right: @pad-sm;
-  }
-}
   }
 }
