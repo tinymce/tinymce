@@ -44,6 +44,7 @@ export interface ParserArgs {
   format?: string;
   invalid?: boolean;
   no_events?: boolean;
+  useDocumentNotBody?: boolean;
 
   // TODO finish typing the parser args
   [key: string]: any;
@@ -80,6 +81,7 @@ export interface DomParserSettings {
   sandbox_iframes_exclusions?: string[];
   sanitize?: boolean;
   validate?: boolean;
+  useDocumentNotBody?: boolean;
 }
 
 interface DomParser {
@@ -309,7 +311,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
   const parser = new DOMParser();
   const sanitizer = getSanitizer(defaultedSettings, schema);
 
-  const parseAndSanitizeWithContext = (html: string, rootName: string, format: string = 'html'): Element => {
+  const parseAndSanitizeWithContext = (html: string, rootName: string, format: string = 'html', useDocumentNotBody: boolean = false): Element => {
     const mimeType = format === 'xhtml' ? 'application/xhtml+xml' : 'text/html';
     // Determine the root element to wrap the HTML in when parsing. If we're dealing with a
     // special element then we need to wrap it so the internal content is handled appropriately.
@@ -318,7 +320,11 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     const makeWrap = () => {
       if (format === 'xhtml') {
         // If parsing XHTML then the content must contain the xmlns declaration, see https://www.w3.org/TR/xhtml1/normative.html#strict
-        return `<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body>${content}</body></html>`;
+        if (useDocumentNotBody) {
+          return `<html xmlns="http://www.w3.org/1999/xhtml">${content}</html>`;
+        } else {
+          return `<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body>${content}</body></html>`;
+        }
       } else if (/^[\s]*<head/i.test(html) || /^[\s]*<html/i.test(html) || /^[\s]*<!DOCTYPE/i.test(html)) {
         return `<html>${content}</html>`;
       } else {
@@ -326,7 +332,8 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
       }
     };
 
-    const body = parser.parseFromString(makeWrap(), mimeType).body;
+    const document = parser.parseFromString(makeWrap(), mimeType);
+    const body = useDocumentNotBody ? document.documentElement : document.body;
     sanitizer.sanitizeHtmlElement(body, mimeType);
     return isSpecialRoot ? body.firstChild as Element : body;
   };
@@ -474,10 +481,10 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
    */
   const parse = (html: string, args: ParserArgs = {}): AstNode => {
     const validate = defaultedSettings.validate;
-    const rootName = args.context ?? defaultedSettings.root_name;
+    const rootName = args.context ?? (defaultedSettings.useDocumentNotBody ? 'html' : defaultedSettings.root_name);
 
     // Parse and sanitize the content
-    const element = parseAndSanitizeWithContext(html, rootName, args.format);
+    const element = parseAndSanitizeWithContext(html, rootName, args.format, defaultedSettings.useDocumentNotBody);
 
     TransparentElements.updateChildren(schema, element);
 
