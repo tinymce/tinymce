@@ -12,6 +12,21 @@ export default defineConfig({
   test: {
     projects: [
       {
+        test: {
+          name: 'browser',
+          include: [ 'src/test/ts/browser/**/*.spec.ts' ],
+          browser: {
+            provider: 'playwright',
+            enabled: true,
+            headless: true,
+            screenshotFailures: false,
+            instances: [
+              { browser: 'chromium' }
+            ]
+          }
+        },
+      },
+      {
         extends: 'vite.config.ts',
         plugins: [
           // The plugin will run tests for the stories defined in your Storybook config
