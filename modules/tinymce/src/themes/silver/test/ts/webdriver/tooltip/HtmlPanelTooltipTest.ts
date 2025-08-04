@@ -60,8 +60,8 @@ describe('browser.tinymce.themes.silver.editor.HtmlPanelTooltipTest', () => {
       const editor = hook.editor();
       await pOpenDialogAndWaitForLoad(editor, 'button[data-mce-name="custom-dialog"]');
       await TooltipUtils.pAssertTooltip(editor, async () => {
+        await RealKeys.pSendKeysOn('button[data-mce-name="test"]', [ RealKeys.combo({}, 'escape') ]);
         await RealMouse.pMoveToOn('[data-mce-tooltip="test-button"]');
-        await RealKeys.pSendKeysOn('[data-mce-tooltip="test-button"]', [ RealKeys.combo({}, 'escape') ]);
         await TinyUiActions.pWaitForUi(editor, '.tox-silver-sink .tox-tooltip__body:contains("test-button")');
         return Promise.resolve();
       }, 'test-button');
@@ -72,8 +72,8 @@ describe('browser.tinymce.themes.silver.editor.HtmlPanelTooltipTest', () => {
       const editor = hook.editor();
       await pOpenDialogAndWaitForLoad(editor, 'button[data-mce-name="custom-dialog"]');
       await TooltipUtils.pAssertTooltip(editor, async () => {
+        await RealKeys.pSendKeysOn('button[data-mce-name="test"]', [ RealKeys.combo({}, 'escape') ]);
         await RealMouse.pMoveToOn('[data-mce-tooltip="test-button"]');
-        await RealKeys.pSendKeysOn('[data-mce-tooltip="test-button"]', [ RealKeys.combo({}, 'escape') ]);
         await TinyUiActions.pWaitForUi(editor, '.tox-silver-sink .tox-tooltip__body:contains("test-button")');
         await RealKeys.pSendKeysOn('[data-mce-tooltip="test-button"]', [ RealKeys.combo({}, 'tab') ]);
         await TinyUiActions.pWaitForUi(editor, '.tox-silver-sink .tox-tooltip__body:contains("Close")');
