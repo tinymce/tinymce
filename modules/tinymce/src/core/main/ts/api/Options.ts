@@ -355,7 +355,7 @@ const register = (editor: Editor): void => {
         if (value === false || deviceDetection.isiPhone() || deviceDetection.isiPad()) {
           return { value: '', valid };
         } else {
-          return { value: value === true ? 'table,img,figure.image,div,video,iframe' : value, valid };
+          return { value: value === true ? 'table,img,figure.image,div,video,iframe,uc-video' : value, valid };
         }
       } else {
         return { valid: false, message: 'Must be boolean or a string' };
