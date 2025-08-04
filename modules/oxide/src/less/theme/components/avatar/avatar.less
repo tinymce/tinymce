@@ -1,0 +1,17 @@
+@user-avatar-height: 36px;
+@user-avatar-width: @user-avatar-height;
+
+.tox {
+  .tox-avatar {
+    align-items: center;
+    display: flex;
+  }
+
+  .tox-avatar img {
+    height: @user-avatar-height;
+    width: @user-avatar-width;
+    border-radius: 50%;
+    object-fit: cover;
+    vertical-align: middle;
+  }
+}
