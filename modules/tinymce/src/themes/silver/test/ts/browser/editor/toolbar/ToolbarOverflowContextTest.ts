@@ -7,7 +7,7 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import { ToolbarMode } from 'tinymce/core/api/OptionTypes';
 
-import { getGreenImageDataUrl } from '../../../module/Assets';
+import * as Assets from '../../../module/Assets';
 
 describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTest', () => {
   const makeButton = (ed: Editor, spec: { name: string; text: string; context: string; onSetup?: (api: any) => (api: any) => void; enabled?: boolean }) => {
@@ -493,7 +493,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             await pOpenOverflowToolbar(editor);
             assertButtonInToolbarEnabled('t11');
 
-            editor.setContent(`<img src="${getGreenImageDataUrl()}"/>`);
+            editor.setContent(`<img src="${Assets.getGreenImageDataUrl()}"/>`);
             editor.selection.select(editor.dom.select('img')[0]);
             await Waiter.pTryUntil('Wait until toolbar button is disabled', () => assertButtonInToolbarDisabled('t11'));
           });
