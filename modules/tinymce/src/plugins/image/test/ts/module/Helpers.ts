@@ -1,5 +1,5 @@
 import { Assertions, Mouse, UiFinder } from '@ephox/agar';
-import { Obj, Optional, Type } from '@ephox/katamari';
+import { Fun, Obj, Optional, Type } from '@ephox/katamari';
 import { Attribute, Checked, Class, Focus, SugarBody, SugarElement, Traverse, Value } from '@ephox/sugar';
 import { assert } from 'chai';
 
@@ -131,6 +131,8 @@ const pSetListBoxItem = async (labelText: string, itemText: string): Promise<voi
 const pWaitForDialogMeasurements = async (src: string): Promise<void> =>
   await UiFinder.pWaitForNotExists('Dialog did not clean up', SugarBody.body(), `img[src*="${src}"]`);
 
+const getGreenImageDataUrl = Fun.constant('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFElEQVR42mNk+A+ERADGUYX0VQgAXAYT9xTSUocAAAAASUVORK5CYII=');
+
 export {
   fillActiveDialog,
   fakeEvent,
@@ -140,5 +142,6 @@ export {
   assertInputValue,
   assertInputCheckbox,
   pSetListBoxItem,
-  pWaitForDialogMeasurements
+  pWaitForDialogMeasurements,
+  getGreenImageDataUrl
 };
