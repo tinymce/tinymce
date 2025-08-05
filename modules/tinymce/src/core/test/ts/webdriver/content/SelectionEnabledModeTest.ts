@@ -7,6 +7,8 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 
+import * as Assets from '../../module/Assets';
+
 describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
@@ -54,7 +56,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       const editor = hook.editor();
 
       setMode(editor, 'design');
-      editor.setContent('<h3>test</h3><figure class="image"><img src="https://www.google.com/logos/google.jpg"><figcaption>Image caption</figcaption></figure>');
+      editor.setContent(`<h3>test</h3><figure class="image"><img src="${Assets.getGreenImageDataUrl()}"><figcaption>Image caption</figcaption></figure>`);
       await Waiter.pTryUntil('Waited for image to load', () => assert.isTrue(UiFinder.findIn<HTMLImageElement>(TinyDom.body(editor), 'img').getOrDie().dom.complete));
       await RealMouse.pClickOn('iframe => body => figure');
       await pAssertOutlineStyle(UiFinder.findIn(TinyDom.body(editor), 'figure').getOrDie(), imageSelectedOutline);
