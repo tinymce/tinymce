@@ -559,7 +559,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           editor.mode.set('design');
           scenario.assertButtonEnabled('t11');
 
-          editor.setContent(`<img src="${getGreenImageDataUrl()}"/>`);
+          editor.setContent(`<img src="${Assets.getGreenImageDataUrl()}"/>`);
           editor.selection.select(editor.dom.select('img')[0]);
           await Waiter.pTryUntil('Wait until toolbar button is disabled', () => scenario.assertButtonDisabled('t11'));
         });
