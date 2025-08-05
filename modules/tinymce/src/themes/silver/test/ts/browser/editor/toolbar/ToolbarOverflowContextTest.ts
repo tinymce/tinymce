@@ -7,6 +7,8 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import Editor from 'tinymce/core/api/Editor';
 import { ToolbarMode } from 'tinymce/core/api/OptionTypes';
 
+import * as Assets from '../../../module/Assets';
+
 describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTest', () => {
   const makeButton = (ed: Editor, spec: { name: string; text: string; context: string; onSetup?: (api: any) => (api: any) => void; enabled?: boolean }) => {
     ed.ui.registry.addButton(spec.name, {
@@ -90,10 +92,12 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
       buttonSetupFormattingBold: (ed: Editor) => makeButton(ed, { name: 't5', text: 't5', context: 'formatting:bold' }),
       buttonSetupNodeChangeSetEnabledFalse: (ed: Editor) => makeButton(ed, { name: 't6', text: 't6', context: 'mode:design', onSetup: (api) => setupNodeChangeHandler(ed, () => api.setEnabled(false)) }),
       buttonSetupNodeChangeSetEnabledTrue: (ed: Editor) => makeButton(ed, { name: 't7', text: 't7', context: 'mode:readonly', onSetup: (api) => setupNodeChangeHandler(ed, () => api.setEnabled(true)) }),
-      buttonSetupSetEnabledFalse: (ed: Editor) => makeButton(ed, { name: 't8', text: 't8', context: 'mode:design', onSetup: (api) => {
-        api.setEnabled(false);
-        return Fun.noop;
-      } }),
+      buttonSetupSetEnabledFalse: (ed: Editor) => makeButton(ed, {
+        name: 't8', text: 't8', context: 'mode:design', onSetup: (api) => {
+          api.setEnabled(false);
+          return Fun.noop;
+        }
+      }),
       buttonSetupDoesntMatch: (ed: Editor) => makeButton(ed, { name: 't9', text: 't9', context: 'doesntmatch' }),
       buttonSetupModeDesign2: (ed: Editor) => makeButton(ed, { name: 't10', text: 't10', context: 'mode:design' }),
       buttonSetupInsertSpan: (ed: Editor) => makeButton(ed, { name: 't11', text: 't11', context: 'insert:span' }),
@@ -489,7 +493,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarOverflowContextTes
             await pOpenOverflowToolbar(editor);
             assertButtonInToolbarEnabled('t11');
 
-            editor.setContent('<img src="https://picsum.photos/200/300"/>');
+            editor.setContent(`<img src="${Assets.getGreenImageDataUrl()}"/>`);
             editor.selection.select(editor.dom.select('img')[0]);
             await Waiter.pTryUntil('Wait until toolbar button is disabled', () => assertButtonInToolbarDisabled('t11'));
           });
