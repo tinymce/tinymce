@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Cursor movement did not operate correctly after a `figure` was selected.
+time: 2025-07-24T09:16:50.556078+02:00
+custom:
+  Issue: TINY-12458
