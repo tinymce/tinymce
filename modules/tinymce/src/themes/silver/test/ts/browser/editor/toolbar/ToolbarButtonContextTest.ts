@@ -6,7 +6,7 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
-import { getGreenImageDataUrl } from '../../../module/Assets';
+import * as Assets from '../../../module/Assets';
 
 describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest', () => {
   const assertButtonEnabled = (selector: string) => UiFinder.notExists(SugarBody.body(), `[data-mce-name="${selector}"][aria-disabled="true"]`);
@@ -948,7 +948,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         assertButtonEnabled('test');
         await pCloseMenu(editor);
 
-        editor.setContent(`<img src="${getGreenImageDataUrl()}"/>`);
+        editor.setContent(`<img src="${Assets.getGreenImageDataUrl()}"/>`);
         const image = editor.dom.select('img')[0];
         let imageLoaded = false;
         image.onload = () => imageLoaded = true;
