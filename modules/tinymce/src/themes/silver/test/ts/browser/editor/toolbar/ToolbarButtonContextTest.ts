@@ -6,6 +6,8 @@ import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 import Editor from 'tinymce/core/api/Editor';
 
+import * as Assets from '../../../module/Assets';
+
 describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest', () => {
   const assertButtonEnabled = (selector: string) => UiFinder.notExists(SugarBody.body(), `[data-mce-name="${selector}"][aria-disabled="true"]`);
 
@@ -106,10 +108,12 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
       buttonSetupFormattingBold: (ed: Editor) => makeButton(ed, { name: 't5', text: 't5', context: 'formatting:bold' }),
       buttonSetupNodeChangeSetEnabledFalse: (ed: Editor) => makeButton(ed, { name: 't6', text: 't6', context: 'mode:design', onSetup: (api) => setupNodeChangeHandler(ed, () => api.setEnabled(false)) }),
       buttonSetupNodeChangeSetEnabledTrue: (ed: Editor) => makeButton(ed, { name: 't7', text: 't7', context: 'mode:readonly', onSetup: (api) => setupNodeChangeHandler(ed, () => api.setEnabled(true)) }),
-      buttonSetupSetEnabledFalse: (ed: Editor) => makeButton(ed, { name: 't8', text: 't8', context: 'mode:design', onSetup: (api) => {
-        api.setEnabled(false);
-        return Fun.noop;
-      } }),
+      buttonSetupSetEnabledFalse: (ed: Editor) => makeButton(ed, {
+        name: 't8', text: 't8', context: 'mode:design', onSetup: (api) => {
+          api.setEnabled(false);
+          return Fun.noop;
+        }
+      }),
       buttonSetupDoesntMatch: (ed: Editor) => makeButton(ed, { name: 't9', text: 't9', context: 'doesntmatch' }),
       buttonSetupModeDesign2: (ed: Editor) => makeButton(ed, { name: 't10', text: 't10', context: 'mode:design' }),
       buttonSetupInsertSpan: (ed: Editor) => makeButton(ed, { name: 't11', text: 't11', context: 'insert:span' }),
@@ -126,10 +130,12 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
       buttonSetupFormattingBold: (ed: Editor) => makeToggleButton(ed, { name: 't5', text: 't5', context: 'formatting:bold' }),
       buttonSetupNodeChangeSetEnabledFalse: (ed: Editor) => makeToggleButton(ed, { name: 't6', text: 't6', context: 'mode:design', onSetup: (api) => setupNodeChangeHandler(ed, () => api.setEnabled(false)) }),
       buttonSetupNodeChangeSetEnabledTrue: (ed: Editor) => makeToggleButton(ed, { name: 't7', text: 't7', context: 'mode:readonly', onSetup: (api) => setupNodeChangeHandler(ed, () => api.setEnabled(true)) }),
-      buttonSetupSetEnabledFalse: (ed: Editor) => makeToggleButton(ed, { name: 't8', text: 't8', context: 'mode:design', onSetup: (api) => {
-        api.setEnabled(false);
-        return Fun.noop;
-      } }),
+      buttonSetupSetEnabledFalse: (ed: Editor) => makeToggleButton(ed, {
+        name: 't8', text: 't8', context: 'mode:design', onSetup: (api) => {
+          api.setEnabled(false);
+          return Fun.noop;
+        }
+      }),
       buttonSetupDoesntMatch: (ed: Editor) => makeToggleButton(ed, { name: 't9', text: 't9', context: 'doesntmatch' }),
       buttonSetupModeDesign2: (ed: Editor) => makeToggleButton(ed, { name: 't10', text: 't10', context: 'mode:design' }),
       buttonSetupInsertSpan: (ed: Editor) => makeToggleButton(ed, { name: 't11', text: 't11', context: 'insert:span' }),
@@ -146,10 +152,12 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
       buttonSetupFormattingBold: (ed: Editor) => makeMenuButton(ed, { name: 't5', text: 't5', context: 'formatting:bold' }),
       buttonSetupNodeChangeSetEnabledFalse: (ed: Editor) => makeMenuButton(ed, { name: 't6', text: 't6', context: 'mode:design', onSetup: (api) => setupNodeChangeHandler(ed, () => api.setEnabled(false)) }),
       buttonSetupNodeChangeSetEnabledTrue: (ed: Editor) => makeMenuButton(ed, { name: 't7', text: 't7', context: 'mode:readonly', onSetup: (api) => setupNodeChangeHandler(ed, () => api.setEnabled(true)) }),
-      buttonSetupSetEnabledFalse: (ed: Editor) => makeMenuButton(ed, { name: 't8', text: 't8', context: 'mode:design', onSetup: (api) => {
-        api.setEnabled(false);
-        return Fun.noop;
-      } }),
+      buttonSetupSetEnabledFalse: (ed: Editor) => makeMenuButton(ed, {
+        name: 't8', text: 't8', context: 'mode:design', onSetup: (api) => {
+          api.setEnabled(false);
+          return Fun.noop;
+        }
+      }),
       buttonSetupDoesntMatch: (ed: Editor) => makeMenuButton(ed, { name: 't9', text: 't9', context: 'doesntmatch' }),
       buttonSetupModeDesign2: (ed: Editor) => makeMenuButton(ed, { name: 't10', text: 't10', context: 'mode:design' }),
       buttonSetupInsertSpan: (ed: Editor) => makeMenuButton(ed, { name: 't11', text: 't11', context: 'insert:span' }),
@@ -166,10 +174,12 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
       buttonSetupFormattingBold: (ed: Editor) => makeSplitButton(ed, { name: 't5', text: 't5', context: 'formatting:bold' }),
       buttonSetupNodeChangeSetEnabledFalse: (ed: Editor) => makeSplitButton(ed, { name: 't6', text: 't6', context: 'mode:design', onSetup: (api) => setupNodeChangeHandler(ed, () => api.setEnabled(false)) }),
       buttonSetupNodeChangeSetEnabledTrue: (ed: Editor) => makeSplitButton(ed, { name: 't7', text: 't7', context: 'mode:readonly', onSetup: (api) => setupNodeChangeHandler(ed, () => api.setEnabled(true)) }),
-      buttonSetupSetEnabledFalse: (ed: Editor) => makeSplitButton(ed, { name: 't8', text: 't8', context: 'mode:design', onSetup: (api) => {
-        api.setEnabled(false);
-        return Fun.noop;
-      } }),
+      buttonSetupSetEnabledFalse: (ed: Editor) => makeSplitButton(ed, {
+        name: 't8', text: 't8', context: 'mode:design', onSetup: (api) => {
+          api.setEnabled(false);
+          return Fun.noop;
+        }
+      }),
       buttonSetupDoesntMatch: (ed: Editor) => makeSplitButton(ed, { name: 't9', text: 't9', context: 'doesntmatch' }),
       buttonSetupModeDesign2: (ed: Editor) => makeSplitButton(ed, { name: 't10', text: 't10', context: 'mode:design' }),
       buttonSetupInsertSpan: (ed: Editor) => makeSplitButton(ed, { name: 't11', text: 't11', context: 'insert:span' }),
@@ -549,7 +559,7 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
           editor.mode.set('design');
           scenario.assertButtonEnabled('t11');
 
-          editor.setContent('<img src="https://picsum.photos/200/300"/>');
+          editor.setContent(`<img src="${Assets.getGreenImageDataUrl()}"/>`);
           editor.selection.select(editor.dom.select('img')[0]);
           await Waiter.pTryUntil('Wait until toolbar button is disabled', () => scenario.assertButtonDisabled('t11'));
         });
@@ -580,10 +590,12 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
     });
   });
 
-  const makeMenuButtonWithItem = (ed: Editor, label: string, context: string, onSetup?: (api: any) => (api: any) => void, enabled: boolean = true ) => {
-    makeMenuButton(ed, { name: label, text: label, context: 'any', fetch: (success) => {
-      success([{ type: 'menuitem', text: 'test', context, onSetup, enabled }]);
-    } });
+  const makeMenuButtonWithItem = (ed: Editor, label: string, context: string, onSetup?: (api: any) => (api: any) => void, enabled: boolean = true) => {
+    makeMenuButton(ed, {
+      name: label, text: label, context: 'any', fetch: (success) => {
+        success([{ type: 'menuitem', text: 'test', context, onSetup, enabled }]);
+      }
+    });
   };
 
   const menuButtonSetup = {
@@ -936,11 +948,11 @@ describe('browser.tinymce.themes.silver.editor.toolbar.ToolbarButtonContextTest'
         assertButtonEnabled('test');
         await pCloseMenu(editor);
 
-        editor.setContent('<img src="https://picsum.photos/200/300"/>');
+        editor.setContent(`<img src="${Assets.getGreenImageDataUrl()}"/>`);
         const image = editor.dom.select('img')[0];
         let imageLoaded = false;
         image.onload = () => imageLoaded = true;
-        await Waiter.pTryUntilPredicate('Wait for iframe to finish loading', () => imageLoaded);
+        await Waiter.pTryUntilPredicate('Wait for image to finish loading', () => imageLoaded);
         editor.selection.select(image);
         await pClickToolbarAndWait(editor, 't10');
         assertButtonDisabled('test');
