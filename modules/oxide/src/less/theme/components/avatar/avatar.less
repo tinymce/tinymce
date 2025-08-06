@@ -1,17 +1,21 @@
-@user-avatar-height: 36px;
-@user-avatar-width: @user-avatar-height;
+// @user-avatar-height: 36px;
+// @user-avatar-width: @user-avatar-height;
 
-.tox {
-  .tox-avatar {
-    align-items: center;
-    display: flex;
-  }
+/* TODO: Check if you can first use the variable and later define it */
 
-  .tox-avatar img {
-    height: @user-avatar-height;
-    width: @user-avatar-width;
-    border-radius: 50%;
-    object-fit: cover;
-    vertical-align: middle;
-  }
+.tox-avatar when (@custom-properties-enabled = true) {
+  --tox-private-avatar-size: 36px;
+}
+
+.tox-avatar {
+  align-items: center;
+  display: flex;
+}
+
+.tox-avatar img {
+  height: var(--tox-private-avatar-size, @user-avatar-height);
+  width: var(--tox-private-avatar-size, @user-avatar-width);
+  border-radius: 50%;
+  object-fit: cover;
+  vertical-align: middle;
 }
