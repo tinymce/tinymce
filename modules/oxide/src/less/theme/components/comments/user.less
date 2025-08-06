@@ -8,6 +8,7 @@
 @user-name-text-transform: none;
 @user-name-text-color: @text-color;
 @user-avatar-color: @text-color-muted;
+// TODO: Maybe I should move it from here
 @user-avatar-height: 36px;
 @user-avatar-width: @user-avatar-height;
 
@@ -15,18 +16,6 @@
   .tox-user {
     align-items: center;
     display: flex;
-  }
-
-  .tox-user__avatar svg {
-    fill: @user-avatar-color;
-  }
-
-  .tox-user__avatar img {
-    border-radius: 50%;
-    height: @user-avatar-height;
-    object-fit: cover;
-    vertical-align: middle;
-    width: @user-avatar-width;
   }
 
   .tox-user__name {
@@ -40,11 +29,11 @@
 }
 
 .tox:not([dir=rtl]) {
-  .tox-user__avatar svg,
-  .tox-user__avatar img {
+  .tox-user__avatar {
     margin-right: @pad-sm;
   }
 
+  // TODO: make sure that it's required
   .tox-user__avatar + .tox-user__name {
     margin-left: @pad-sm;
   }
@@ -52,11 +41,11 @@
 
 // RTL
 .tox[dir=rtl] {
-  .tox-user__avatar svg,
-  .tox-user__avatar img {
+  .tox-user__avatar {
     margin-left: @pad-sm;
   }
 
+  // TODO: make sure that it's required
   .tox-user__avatar + .tox-user__name {
     margin-right: @pad-sm;
   }
