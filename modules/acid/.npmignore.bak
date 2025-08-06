@@ -1,0 +1,15 @@
+/scratch
+/dist
+/config
+/src/test
+/src/demo
+.DS_Store
+*~
+*.iws
+*.sublime-*
+/.vscode
+/gen
+/dependency
+/inconsistent.dependencies
+/*.log
+jenkins-plumbing

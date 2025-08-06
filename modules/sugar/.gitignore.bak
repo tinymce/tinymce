@@ -1,0 +1,17 @@
+.DS_Store
+
+*~
+*.iws
+*.sublime-workspace
+/lib
+/dist
+/scratch
+/dependency
+/config/bolt/bootstrap*.js
+/gen
+/node_modules
+
+ephox-sugar-*.tgz
+package-lock.json
+yarn.lock
+jenkins-plumbing

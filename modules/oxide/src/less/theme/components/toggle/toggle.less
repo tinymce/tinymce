@@ -2,7 +2,10 @@
   .tox-toggle {
     // private variables scoped to tox-toggle class
     --tox-private-slider-background-color: @background-color;
-    --tox-private-slider-border-color: .bg-luma-checker(hsl(from @color-white h s calc(l - 11)), hsla(from @color-white h s l / 15%))[@result]; // to be figured out after the spike with conditionals in CSS
+    // Convert CSS relative color syntax to Less-compatible equivalents
+    // Original: hsl(from @color-white h s calc(l - 11)) → darken(@color-white, 11%)
+    // Original: hsla(from @color-white h s l / 15%) → fade(@color-white, 15%)
+    --tox-private-slider-border-color: .bg-luma-checker(darken(@color-white, 11%), fade(@color-white, 15%))[@result];
     --tox-private-slider-handle-background-color: @text-color;
 
     display: flex;

@@ -199,7 +199,7 @@ module.exports = function (grunt) {
     terser: Object.assign(
       {
         options: {
-          ecma: 2018,
+          ecma: 2022,
           output: {
             ascii_only: true
           },
@@ -497,7 +497,7 @@ module.exports = function (grunt) {
               'modules/*/.stylelintrc',
               'modules/tinymce/tools',
               'bin',
-              '.yarnrc',
+              '.bunfig.toml',
               'LICENSE.md',
               'NOTICES.txt',
               'README.md',
@@ -505,7 +505,7 @@ module.exports = function (grunt) {
               'package.json',
               'tsconfig*.json',
               '.eslint*.json',
-              'yarn.lock'
+              'bun.lock'
             ]
           },
           {
@@ -948,7 +948,7 @@ module.exports = function (grunt) {
     'emoji',
     'html-i18n',
     // TODO: Make webpack use the oxide CSS directly
-    // as well as making development easier, then we can update 'yarn dev' to run 'oxide-build' in parallel with 'tinymce-grunt dev'
+    // as well as making development easier, then we can update 'bun dev' to run 'oxide-build' in parallel with 'tinymce-grunt dev'
     // that will save 2-3 seconds on incremental builds
     'copy:ui-skins',
     'copy:content-skins',

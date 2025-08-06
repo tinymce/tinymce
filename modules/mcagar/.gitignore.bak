@@ -1,0 +1,16 @@
+.DS_Store
+*~
+*.iws
+*.sublime-workspace
+*.log
+*.lock
+/lib
+/dist
+/scratch
+/dependency
+/config/bolt/bootstrap*.js
+/node_modules
+/npm_output
+ephox-mcagar-*.tgz
+
+package-lock.json

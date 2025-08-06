@@ -10,7 +10,7 @@ A webserver to run demos, npm, webpack is required to run and develop alloy
 
 `alloy` is available as an `npm` package. You can install it via the npm package `@ephox/alloy`
 
-`yarn` install the dependencies
+`bun` install the dependencies
 `webpack` compile the src code
 
 # Usage
@@ -28,7 +28,7 @@ There are four kinds of tests that alloy runs:
 
 ### Running Console Tests
 
-`$ yarn run test`
+`$ bun run test`
 
 This will run the console tests in chrome-headless.
 
