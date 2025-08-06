@@ -10,7 +10,7 @@
   .tox-split-button__main {
     border-radius: @toolbar-button-border-radius 0 0 @toolbar-button-border-radius;
     margin-right: 0;
-    width: auto;
+    width: @toolbar-button-width;
 
     &:focus {
       border: @toolbar-button-border;
@@ -30,13 +30,11 @@
   // Split button chevron component (right side)
   .tox-split-button__chevron {
     width: @toolbar-button-chevron-width;
-    border-left: 1px solid @border-color-light;
     border-radius: 0 @toolbar-button-border-radius @toolbar-button-border-radius 0;
     margin-left: 0;
 
     &:focus {
       border: @toolbar-button-border;
-      border-left: 1px solid @border-color-light;
       box-shadow: @toolbar-button-focus-box-shadow;
       background: @toolbar-button-focus-background-color;
       color: @toolbar-button-focus-text-color;
@@ -49,10 +47,6 @@
       }
     }
 
-    // Preserve chevron border on hover (overrides .tox-tbtn:hover border: 0)
-    &:hover {
-      border-left: 1px solid @border-color-light;
-    }
 
     svg {
       @media (forced-colors: active) {
@@ -71,15 +65,6 @@
 
     .tox-split-button__chevron {
       width: @toolbar-button-chevron-width + @toolbar-split-button-chevron-touch-padding;
-      border-left: 1px solid @border-color-light; // Ensure border is preserved on touch
-
-      &:hover {
-        border-left: 1px solid @border-color-light;
-      }
-
-      &:focus {
-        border-left: 1px solid @border-color-light;
-      }
     }
   }
 
@@ -103,17 +88,6 @@
     }
   }
 
-  .tox-split-button__chevron.tox-tbtn--disabled {
-    border-left: 1px solid @border-color-light;
-
-    &:hover {
-      border-left: 1px solid @border-color-light;
-    }
-
-    &:focus {
-      border-left: 1px solid @border-color-light;
-    }
-  }
 
   // Color icon opacity for disabled split buttons
   .tox-split-button__main.tox-tbtn--disabled svg .tox-icon-text-color__color,
