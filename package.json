@@ -35,7 +35,9 @@
     "headless-test-firefox": "grunt headless-auto --bedrock-browser=firefox-headless",
     "headless-test-manual": "grunt headless-manual",
     "bedrock": "bedrock --chunk=5000 --customRoutes modules/tinymce/src/core/test/json/routes.json",
-    "test-one": "bun tsc && bun bedrock-auto -b chrome-headless -f"
+    "test-one": "bun tsc && bun bedrock-auto -b chrome-headless -f",
+    "test-fast": "../../scripts/bedrock-turbo.sh",
+    "bedrock-turbo": "../../scripts/bedrock-turbo.sh"
   },
   "devDependencies": {
     "@ephox/bedrock-client": "^15.0.0",
