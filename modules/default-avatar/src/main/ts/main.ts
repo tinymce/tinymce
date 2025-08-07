@@ -1,6 +1,6 @@
-// eslint-disable-next-line @tinymce/prefer-fun
-const generateDefaultAvatar = (): string => {
-  return 'Noop';
-};
+import { generateAvatar, generateUserAvatar } from './DefaultAvatar';
 
-export { generateDefaultAvatar };
+export {
+  generateAvatar,
+  generateUserAvatar
+};
