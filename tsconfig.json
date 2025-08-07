@@ -11,6 +11,7 @@
     { "path": "modules/boulder" },
     { "path": "modules/bridge" },
     { "path": "modules/darwin" },
+    { "path": "modules/default-avatar" },
     { "path": "modules/dragster" },
     { "path": "modules/jax" },
     { "path": "modules/katamari" },
