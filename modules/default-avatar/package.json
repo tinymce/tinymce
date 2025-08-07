@@ -1,0 +1,30 @@
+{
+  "name": "@tinymce/default-avatar",
+  "version": "1.0.0",
+  "description": "Default avatar generation utility for TinyMCE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tinymce/tinymce.git",
+    "directory": "modules/default-avatar"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo 'TODO: use node test runner'",
+    "lint": "eslint --max-warnings=0 src/**/*.ts"
+  },
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
+  "license": "GPL-2.0-or-later",
+  "sideEffects": false,
+  "files": [
+    "lib/main",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "README.md",
+    "LEGAL.txt",
+    "LICENSE.txt"
+  ],
+  "main": "./lib/main/ts/main.js",
+  "module": "./lib/main/ts/main.js",
+  "types": "./lib/main/ts/main.d.ts"
+}
