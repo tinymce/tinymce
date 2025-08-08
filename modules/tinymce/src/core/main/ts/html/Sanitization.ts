@@ -192,7 +192,7 @@ const getPurifyConfig = (settings: DomParserSettings, mimeType: MimeType): Confi
     // Deliberately ban all tags and attributes by default, and then un-ban them on demand in hooks
     // #comment and #cdata-section are always allowed as they aren't controlled via the schema
     // body is also allowed due to the DOMPurify checking the root node before sanitizing
-    ALLOWED_TAGS: [ '#comment', '#cdata-section', 'body' ],
+    ALLOWED_TAGS: [ '#comment', '#cdata-section', 'body', 'html' ],
     ALLOWED_ATTR: []
   };
   const config = { ...basePurifyConfig };
