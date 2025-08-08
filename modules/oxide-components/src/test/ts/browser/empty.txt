@@ -1,2 +1,0 @@
-Feel free to put any browser tests in this directory.
-Delete this file once first browser test in oxide will be implemented.
