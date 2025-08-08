@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import { Optional, Fun } from '@ephox/katamari';
-import * as DefaultAvatar from 'persona/DefaultAvatar';
 import * as assert from 'node:assert';
 import { describe, it } from 'node:test';
+import * as DefaultAvatar from 'persona/DefaultAvatar';
 
 const extractAttribute = (attribute: string, avatar: string): Optional<string> => {
   const match = avatar.match(new RegExp(`${attribute}="([^"]+)"`));
