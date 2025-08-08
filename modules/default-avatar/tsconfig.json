@@ -4,7 +4,10 @@
     "outDir": "lib",
     "rootDir": "src",
     "baseUrl": ".",
-    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo"
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
+    "paths": {
+      "default-avatar/*": ["src/main/ts/*"],
+    }
   },
   "include": [
     "src/main/ts",
