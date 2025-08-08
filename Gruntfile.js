@@ -85,7 +85,7 @@ const fetchLernaProjects = (grunt, runAllTests) => {
   var exec = require('child_process').execSync;
 
   const parseLernaList = (cmd) => {
-    const output = exec(`yarn -s lerna ${cmd} -a --json --loglevel warn`);
+    const output = exec(`yarn -s lerna ${cmd} -a --json --loglevel warn --ignore @tinymce/persona`);
     grunt.verbose.writeln(`lerna output: ${output}`);
     return JSON.parse(output);
   };
