@@ -1,15 +1,15 @@
 {
-  "name": "@tinymce/default-avatar",
+  "name": "@tinymce/persona",
   "version": "1.0.0",
   "description": "Default avatar generation utility for TinyMCE",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinymce/tinymce.git",
-    "directory": "modules/default-avatar"
+    "directory": "modules/persona"
   },
   "scripts": {
     "build": "tsc",
-    "node-test": "glob -c 'tsx --no-warnings --test --import=./src/testrun/TestSetup.js --test-reporter=dot --test-reporter-destination=stdout --test-reporter=./src/testrun/junit-reporter.js --test-reporter-destination=../../scratch/TEST-default-avatar.xml' 'src/test/ts/**/*Test.ts'",
+    "node-test": "glob -c 'tsx --no-warnings --test --import=./src/testrun/TestSetup.js --test-reporter=dot --test-reporter-destination=stdout --test-reporter=./src/testrun/junit-reporter.js --test-reporter-destination=../../scratch/TEST-persona.xml' 'src/test/ts/**/*Test.ts'",
     "lint": "eslint --max-warnings=0 src/**/*.ts"
   },
   "devDependencies": {

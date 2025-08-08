@@ -1,6 +1,6 @@
 import { StructureSchema, FieldSchema } from '@ephox/boulder';
 import { Arr, Optional, Results, Obj } from '@ephox/katamari';
-import { generateUserAvatar } from '@tinymce/default-avatar';
+import { generateUserAvatar } from '@tinymce/persona';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';

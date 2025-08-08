@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import { Optional, Fun } from '@ephox/katamari';
-import * as DefaultAvatar from 'default-avatar/DefaultAvatar';
+import * as DefaultAvatar from 'persona/DefaultAvatar';
 import * as assert from 'node:assert';
 import { describe, it } from 'node:test';
 
@@ -26,7 +26,7 @@ const extractData = (avatarUrl: string) => {
   };
 };
 
-describe('atomic.default-avatar.DefaultAvatarTest', () => {
+describe('atomic.persona.DefaultAvatarTest', () => {
   describe('generateAvatar', () => {
     it('TINY-12211: should generate avatar with all parameters working correctly', () => {
       const expectedAvatar = '<svg height="48" width="48" xmlns="http://www.w3.org/2000/svg">' +

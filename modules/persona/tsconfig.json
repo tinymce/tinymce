@@ -6,7 +6,7 @@
     "baseUrl": ".",
     "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
-      "default-avatar/*": ["src/main/ts/*"],
+      "persona/*": ["src/main/ts/*"],
     },
     "types": [ "node" ]
   },
