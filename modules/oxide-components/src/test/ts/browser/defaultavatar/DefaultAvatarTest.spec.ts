@@ -1,7 +1,6 @@
 import { Optional, Fun } from '@ephox/katamari';
+import * as DefaultAvatar from 'oxide-components/defaultavatar/DefaultAvatar';
 import { describe, expect, it } from 'vitest';
-
-import * as DefaultAvatar from '../../../../main/ts/defaultavatar/DefaultAvatar.ts';
 
 const extractAttribute = (attribute: string, avatar: string): Optional<string> => {
   const match = avatar.match(new RegExp(`${attribute}="([^"]+)"`));

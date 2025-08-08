@@ -13479,6 +13479,11 @@ vite@^6.3.5:
   optionalDependencies:
     fsevents "~2.3.3"
 
+vitest-browser-react@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/vitest-browser-react/-/vitest-browser-react-1.0.1.tgz#e36f0a9ca46bf622841f0285defe0bebbb37e16d"
+  integrity sha512-LqiGFCdknrbMoSDWXTCTrPsED3SvdIXIgYOOZyYUNj2dkJusW2eF6NENOlBlxwq+FBQqzNK1X59b+b03pXFpAQ==
+
 vitest@^3.1.4:
   version "3.2.4"
   resolved "https://registry.yarnpkg.com/vitest/-/vitest-3.2.4.tgz#0637b903ad79d1539a25bc34c0ed54b5c67702ea"
