@@ -1,6 +1,3 @@
-import { generateAvatar, generateUserAvatar } from './DefaultAvatar';
+import * as DefaultAvatar from './DefaultAvatar';
 
-export {
-  generateAvatar,
-  generateUserAvatar
-};
+export { DefaultAvatar };

@@ -1,6 +1,6 @@
 import { StructureSchema, FieldSchema } from '@ephox/boulder';
 import { Arr, Optional, Results, Obj } from '@ephox/katamari';
-import { generateUserAvatar } from '@tinymce/persona';
+import { DefaultAvatar } from '@tinymce/persona';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
@@ -117,7 +117,7 @@ const validateResponse = (items: unknown): User[] => {
     return {
       id,
       name: name.getOr(id),
-      avatar: avatar.getOr(generateUserAvatar({ id, name: name.getOr(id) })),
+      avatar: avatar.getOr(DefaultAvatar.generateUserAvatar({ id, name: name.getOr(id) })),
       ...objectCat(rest),
     };
   });
@@ -163,7 +163,7 @@ const UserLookup = (editor: Editor): UserLookup => {
         Promise.resolve({
           id: userId,
           name: userId,
-          avatar: generateUserAvatar({ id: userId, name: userId })
+          avatar: DefaultAvatar.generateUserAvatar({ id: userId, name: userId })
         }));
     }
 
@@ -207,7 +207,7 @@ const UserLookup = (editor: Editor): UserLookup => {
         Promise.resolve({
           id: userId,
           name: userId,
-          avatar: generateUserAvatar({ id: userId, name: userId })
+          avatar: DefaultAvatar.generateUserAvatar({ id: userId, name: userId })
         })
       );
       return acc;
