@@ -1,6 +1,6 @@
 # Description
 
-`default-avatar` is a utility library for generating default user avatars as SVG data URLs. It creates colorful circular avatars with the first character of a user's name, using a consistent color scheme based on the user's ID.
+`persona` is a utility library for generating default user avatars as SVG data URLs. It creates colorful circular avatars with the first character of a user's name, using a consistent color scheme based on the user's ID.
 
 # Features
 
