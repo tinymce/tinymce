@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import { Optional, Fun } from '@ephox/katamari';
-import { describe, expect, it } from 'vitest';
-
-import * as DefaultAvatar from '../../../../main/ts/defaultavatar/DefaultAvatar.ts';
+import * as assert from 'node:assert';
+import { describe, it } from 'node:test';
+import * as DefaultAvatar from 'persona/DefaultAvatar';
 
 const extractAttribute = (attribute: string, avatar: string): Optional<string> => {
   const match = avatar.match(new RegExp(`${attribute}="([^"]+)"`));
@@ -25,7 +26,7 @@ const extractData = (avatarUrl: string) => {
   };
 };
 
-describe('browser.defaultavatar.DefaultAvatarTest', () => {
+describe('atomic.persona.DefaultAvatarTest', () => {
   describe('generateAvatar', () => {
     it('TINY-12211: should generate avatar with all parameters working correctly', () => {
       const expectedAvatar = '<svg height="48" width="48" xmlns="http://www.w3.org/2000/svg">' +
@@ -34,7 +35,7 @@ describe('browser.defaultavatar.DefaultAvatarTest', () => {
         'fill="#FFF" font-family="sans-serif" font-size="24">DA</text>' +
         '</svg>';
       const expectedAvatarURL = 'data:image/svg+xml,' + encodeURIComponent(expectedAvatar);
-      expect(DefaultAvatar.generateAvatar('DA', '#FF5722', 48)).toEqual(expectedAvatarURL);
+      assert.strictEqual(DefaultAvatar.generateAvatar('DA', '#FF5722', 48), expectedAvatarURL);
     });
   });
 
@@ -48,7 +49,7 @@ describe('browser.defaultavatar.DefaultAvatarTest', () => {
         '</svg>';
       const expectedAvatarURL = 'data:image/svg+xml,' + encodeURIComponent(expectedAvatar);
 
-      expect(DefaultAvatar.generateUserAvatar(user)).toEqual(expectedAvatarURL);
+      assert.strictEqual(DefaultAvatar.generateUserAvatar(user), expectedAvatarURL);
     });
 
     it('TINY-12211: should generate avatar with default size of 36x36', () => {
@@ -56,8 +57,8 @@ describe('browser.defaultavatar.DefaultAvatarTest', () => {
       const url = DefaultAvatar.generateUserAvatar(user);
       const avatar = extractData(url);
 
-      expect(avatar.width).toBe('36');
-      expect(avatar.height).toBe('36');
+      assert.strictEqual(avatar.width, '36');
+      assert.strictEqual(avatar.height, '36');
     });
 
     it('TINY-12211: should respect size parameter', () => {
@@ -65,8 +66,8 @@ describe('browser.defaultavatar.DefaultAvatarTest', () => {
       const url = DefaultAvatar.generateUserAvatar(user, { size: 50 });
       const avatar = extractData(url);
 
-      expect(avatar.width).toBe('50');
-      expect(avatar.height).toBe('50');
+      assert.strictEqual(avatar.width, '50');
+      assert.strictEqual(avatar.height, '50');
     });
 
     it('TINY-12211: should use first letter of user name as avatar text content', () => {
@@ -74,7 +75,7 @@ describe('browser.defaultavatar.DefaultAvatarTest', () => {
       const url = DefaultAvatar.generateUserAvatar(user);
       const avatar = extractData(url);
 
-      expect(avatar.textContent).toBe('J');
+      assert.strictEqual(avatar.textContent, 'J');
     });
 
     it('TINY-12211: should extract first character using Intl.Segmenter for complex Unicode', () => {
@@ -82,13 +83,13 @@ describe('browser.defaultavatar.DefaultAvatarTest', () => {
       const url = DefaultAvatar.generateUserAvatar(user);
       const avatar = extractData(url);
 
-      expect(avatar.textContent).toBe('👨‍💻');
+      assert.strictEqual(avatar.textContent, '👨‍💻');
     });
 
     it('TINY-12211: Should return the same avatar color twice for the same user', () => {
       const user = { id: 'test-user-1', name: 'Test User' };
-      expect(extractData(DefaultAvatar.generateUserAvatar(user)).color).toBe('#006064');
-      expect(extractData(DefaultAvatar.generateUserAvatar(user)).color).toBe('#006064');
+      assert.strictEqual(extractData(DefaultAvatar.generateUserAvatar(user)).color, '#006064');
+      assert.strictEqual(extractData(DefaultAvatar.generateUserAvatar(user)).color, '#006064');
     });
   });
 });

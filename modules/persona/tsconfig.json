@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "compilerOptions": {
+    "outDir": "lib",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
+    "paths": {
+      "persona/*": ["src/main/ts/*"],
+    },
+    "types": [ "node" ]
+  },
+  "include": [
+    "src/main/ts",
+    "src/test/ts"
+  ]
+}
