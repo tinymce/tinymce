@@ -9,9 +9,11 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "bedrock-auto -b chrome-headless -d src/test/ts",
-    "test-manual": "bedrock -d src/test/ts",
+    "node-test": "glob -c 'tsx --no-warnings --test --import=./src/testrun/TestSetup.js --test-reporter=dot --test-reporter-destination=stdout --test-reporter=./src/testrun/junit-reporter.js --test-reporter-destination=../../scratch/TEST-default-avatar.xml' 'src/test/ts/**/*Test.ts'",
     "lint": "eslint --max-warnings=0 src/**/*.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.3"
   },
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "GPL-2.0-or-later",
