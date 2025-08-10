@@ -112,3 +112,19 @@ div.tox-suggestededits__annotation--removed__highlight > hr {
 div.tox-suggestededits__annotation--added__highlight > hr {
   border-color: darken(@added-background-color, 50%);
 }
+
+.mce-pagebreak {
+  &.tox-suggestededits__annotation--added__selected,
+  &.tox-suggestededits__annotation--removed__selected,
+  &.tox-suggestededits__annotation--modified__selected {
+    // Taken from the content pagebreak styles
+    border: 1px dashed #aaa;
+    box-shadow: none;
+  }
+
+  &.tox-suggestededits__annotation--added__highlight,
+  &.tox-suggestededits__annotation--modified__highlight,
+  &.tox-suggestededits__annotation--removed__highlight {
+    padding: 0;
+  }
+}
