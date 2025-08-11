@@ -63,8 +63,8 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         assert.deepEqual(countNodes(root), { 'body': 1, 'b': 1, '#text': 1 }, 'Element attributes (count)');
       });
 
-      it('TINY-12589: Parse full document, with useDocumentNotBody = true', () => {
-        const parser = DomParser({ ...scenario.settings, useDocumentNotBody: true }, schema);
+      it('TINY-12589: Parse full document, with root_name = "#document"', () => {
+        const parser = DomParser({ ...scenario.settings, root_name: '#document' }, schema);
         const root = parser.parse(fullDocumentParseHtml);
         assert.equal(serializer.serialize(root), '<head><style></style><!--header Some Text 1--></head><body data-test="Test">Some Text 2</body><!--footer Some Text 3-->', 'Document context remains');
         assert.equal(root.firstChild?.type, 1, 'Element type');
@@ -72,7 +72,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         assert.deepEqual(countNodes(root), { 'html': 1, 'head': 1, 'style': 1, 'body': 1, '#text': 1, '#comment': 2 }, 'Element attributes (count)');
       });
 
-      it('TINY-12589: Parse full document, without useDocumentNotBody = false', () => {
+      it('TINY-12589: Parse full document, without root_name = "#document"', () => {
         const parser = DomParser(scenario.settings, schema);
         const root = parser.parse(fullDocumentParseHtml);
         assert.equal(serializer.serialize(root), 'Some Text 2', 'Content should have been stripped of its document context');

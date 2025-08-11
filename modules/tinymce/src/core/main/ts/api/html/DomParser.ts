@@ -44,7 +44,6 @@ export interface ParserArgs {
   format?: string;
   invalid?: boolean;
   no_events?: boolean;
-  useDocumentNotBody?: boolean;
 
   // TODO finish typing the parser args
   [key: string]: any;
@@ -81,7 +80,6 @@ export interface DomParserSettings {
   sandbox_iframes_exclusions?: string[];
   sanitize?: boolean;
   validate?: boolean;
-  useDocumentNotBody?: boolean;
 }
 
 interface DomParser {
@@ -481,10 +479,11 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
    */
   const parse = (html: string, args: ParserArgs = {}): AstNode => {
     const validate = defaultedSettings.validate;
-    const rootName = args.context ?? (defaultedSettings.useDocumentNotBody ? 'html' : defaultedSettings.root_name);
+    const preferFullDocument = defaultedSettings.root_name === '#document';
+    const rootName = args.context ?? (preferFullDocument ? 'html' : defaultedSettings.root_name);
 
     // Parse and sanitize the content
-    const element = parseAndSanitizeWithContext(html, rootName, args.format, defaultedSettings.useDocumentNotBody);
+    const element = parseAndSanitizeWithContext(html, rootName, args.format, preferFullDocument);
 
     TransparentElements.updateChildren(schema, element);
 

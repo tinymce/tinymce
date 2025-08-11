@@ -1,6 +1,6 @@
 project: tinymce
 kind: Added
-body: Added parser option `useDocumentNotBody` to allow parser to include header and other elements outside of the body.
+body: Added option to set `root_body` to `#document` to allow parser to include header and other elements outside of the body element.
 time: 2025-07-04T07:22:38.998267+02:00
 custom:
     Issue: TINY-12589
