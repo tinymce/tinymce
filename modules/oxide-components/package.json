@@ -87,6 +87,10 @@
       "**/vite**"
     ]
   },
+  "overrides": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
   "dependencies": {
     "@ephox/katamari": "^10.0.0",
     "@ephox/sugar": "^10.0.0"
