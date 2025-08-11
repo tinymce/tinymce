@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Optional, Fun } from '@ephox/katamari';
-import * as assert from 'node:assert';
-import { describe, it } from 'node:test';
-import * as DefaultAvatar from 'persona/DefaultAvatar';
+import { assert } from 'chai';
+import * as DefaultAvatar from 'default-avatar/DefaultAvatar';
 
 const extractAttribute = (attribute: string, avatar: string): Optional<string> => {
   const match = avatar.match(new RegExp(`${attribute}="([^"]+)"`));
@@ -26,8 +25,8 @@ const extractData = (avatarUrl: string) => {
   };
 };
 
-describe('atomic.persona.DefaultAvatarTest', () => {
-  describe('generateAvatar', () => {
+describe('atomic.default-avatar.DefaultAvatarTest', () => {
+  context('generateAvatar', () => {
     it('TINY-12211: should generate avatar with all parameters working correctly', () => {
       const expectedAvatar = '<svg height="48" width="48" xmlns="http://www.w3.org/2000/svg">' +
         '<circle cx="24" cy="24" r="24" fill="#FF5722"/>' +
@@ -35,11 +34,11 @@ describe('atomic.persona.DefaultAvatarTest', () => {
         'fill="#FFF" font-family="sans-serif" font-size="24">DA</text>' +
         '</svg>';
       const expectedAvatarURL = 'data:image/svg+xml,' + encodeURIComponent(expectedAvatar);
-      assert.strictEqual(DefaultAvatar.generateAvatar('DA', '#FF5722', 48), expectedAvatarURL);
+      assert.equal(DefaultAvatar.generateAvatar('DA', '#FF5722', 48), expectedAvatarURL);
     });
   });
 
-  describe('generateUserAvatar', () => {
+  context('generateUserAvatar', () => {
     it('TINY-12211: should generate correct user avatar', () => {
       const user = { id: 'john-doe', name: 'John Doe' };
       const expectedAvatar = '<svg height="36" width="36" xmlns="http://www.w3.org/2000/svg">' +
@@ -49,7 +48,7 @@ describe('atomic.persona.DefaultAvatarTest', () => {
         '</svg>';
       const expectedAvatarURL = 'data:image/svg+xml,' + encodeURIComponent(expectedAvatar);
 
-      assert.strictEqual(DefaultAvatar.generateUserAvatar(user), expectedAvatarURL);
+      assert.equal(DefaultAvatar.generateUserAvatar(user), expectedAvatarURL);
     });
 
     it('TINY-12211: should generate avatar with default size of 36x36', () => {
@@ -57,8 +56,8 @@ describe('atomic.persona.DefaultAvatarTest', () => {
       const url = DefaultAvatar.generateUserAvatar(user);
       const avatar = extractData(url);
 
-      assert.strictEqual(avatar.width, '36');
-      assert.strictEqual(avatar.height, '36');
+      assert.equal(avatar.width, '36');
+      assert.equal(avatar.height, '36');
     });
 
     it('TINY-12211: should respect size parameter', () => {
@@ -66,8 +65,8 @@ describe('atomic.persona.DefaultAvatarTest', () => {
       const url = DefaultAvatar.generateUserAvatar(user, { size: 50 });
       const avatar = extractData(url);
 
-      assert.strictEqual(avatar.width, '50');
-      assert.strictEqual(avatar.height, '50');
+      assert.equal(avatar.width, '50');
+      assert.equal(avatar.height, '50');
     });
 
     it('TINY-12211: should use first letter of user name as avatar text content', () => {
@@ -75,7 +74,7 @@ describe('atomic.persona.DefaultAvatarTest', () => {
       const url = DefaultAvatar.generateUserAvatar(user);
       const avatar = extractData(url);
 
-      assert.strictEqual(avatar.textContent, 'J');
+      assert.equal(avatar.textContent, 'J');
     });
 
     it('TINY-12211: should extract first character using Intl.Segmenter for complex Unicode', () => {
@@ -83,13 +82,13 @@ describe('atomic.persona.DefaultAvatarTest', () => {
       const url = DefaultAvatar.generateUserAvatar(user);
       const avatar = extractData(url);
 
-      assert.strictEqual(avatar.textContent, '👨‍💻');
+      assert.equal(avatar.textContent, '👨‍💻');
     });
 
     it('TINY-12211: Should return the same avatar color twice for the same user', () => {
       const user = { id: 'test-user-1', name: 'Test User' };
-      assert.strictEqual(extractData(DefaultAvatar.generateUserAvatar(user)).color, '#006064');
-      assert.strictEqual(extractData(DefaultAvatar.generateUserAvatar(user)).color, '#006064');
+      assert.equal(extractData(DefaultAvatar.generateUserAvatar(user)).color, '#006064');
+      assert.equal(extractData(DefaultAvatar.generateUserAvatar(user)).color, '#006064');
     });
   });
 });
