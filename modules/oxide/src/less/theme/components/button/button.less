@@ -1,7 +1,7 @@
 /*
   Button - base button styles and variables. 
   These affect each button variant - primary, secondary, secondary-outlined and naked. 
-  Variat classes should be added next to the base `tox-button` class.
+  Variant classes should be added next to the base `tox-button` class.
 */
 
 
@@ -31,16 +31,16 @@
     .tox-button when (@custom-properties-enabled = true) {
       --tox-private-button-border-width: 1px;
       --tox-private-button-border-style: solid;
-    
+
       --tox-private-button-padding-x: var(--tox-private-pad-md);
       --tox-private-button-padding-y: var(--tox-private-pad-xs);
-      
+
       --tox-private-button-font-size: var(--tox-private-font-size-sm);
       --tox-private-button-font-style: normal;
       --tox-private-button-font-weight: var(--tox-private-font-weight-bold); 
       --tox-private-button-focus-outline: inset 0 0 0 1px var(--tox-private-color-white), 0 0 0 2px var(--tox-private-color-tint);
     }
-    
+
     .tox-button {  
       border-width: var(--tox-private-button-border-width, @button-border-width);
       border-style: var(--tox-private-button-border-style, @button-border-style);
@@ -65,7 +65,7 @@
       justify-content: center;
       align-items: center;
       gap: 2px;
-    
+
       // The before element is used for visible focus outline. 
       // The same result can be achieved with box-shadow on the button element.
       // Using the button element instead of before would mean removing following variables (currently all equal to box-shadow: none)  
@@ -84,37 +84,37 @@
         right: calc(-1 * var(--tox-private-button-border-width, @button-border-width));
         top: calc(-1 * var(--tox-private-button-border-width, @button-border-width));
       }
-      
+
       &:focus:not(:disabled) {
         background-color: var(--tox-private-button-focus-background-color, @button-focus-background-color);
         background-image: @button-focus-background-image;
         border-color: var(--tox-private-button-focus-border-color, @button-focus-border-color);
         box-shadow: var(--tox-private-button-focus-box-shadow, @button-focus-box-shadow);
         color: var(--tox-private-button-focus-text-color, @button-focus-text-color);
-        
+
         &::before {
           opacity: 1;
         }
       }
-    
+
       &.tox-button--icon, &:has(.tox-icon:only-child) {    
         padding: @button-padding-y; // Use padding-y as horizontal padding to make icon button square-ish
       }
-    
+
       .tox-icon svg {
         display: block;
         fill: currentColor;
       }
-    
+
       .tox-icon.tox-icon--success svg {
         fill: var(--tox-private-color-success, @button-icon-success-color);
       }
-    
+
       .tox-icon.tox-icon--error svg {
         fill: var(--tox-private-color-error, @button-icon-error-color)
       }
     }
-    
+
     .tox-button--stretch {
       width: 100%;
     }
