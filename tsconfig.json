@@ -133,6 +133,7 @@
       "ephox/tinymce/test/*": ["modules/tinymce/src/test/ts/module/ephox/tinymce/test/*"],
       "ephox/tinymce/demo/*": ["modules/tinymce/src/demo/ts/ephox/tinymce/demo/*"],
       "ephox/tinymce/*": ["modules/tinymce/src/main/ts/ephox/tinymce/*"],
+      "persona/*": ["modules/persona/src/main/ts/*"],
     }
   }
 }
