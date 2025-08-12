@@ -16,6 +16,40 @@ import Observable from './util/Observable';
 import Tools from './util/Tools';
 import URI from './util/URI';
 
+interface EditorManager extends Observable<EditorManagerEventMap> {
+  defaultOptions: RawEditorOptions;
+  majorVersion: string;
+  minorVersion: string;
+  releaseDate: string;
+  activeEditor: Editor | null;
+  focusedEditor: Editor | null;
+  baseURI: URI;
+  baseURL: string;
+  documentBaseURL: string;
+  i18n: I18n;
+  suffix: string;
+  pageUid: string;
+
+  add (this: EditorManager, editor: Editor): Editor;
+  addI18n: (code: string, item: Record<string, string>) => void;
+  createEditor (this: EditorManager, id: string, options: RawEditorOptions): Editor;
+  execCommand (this: EditorManager, cmd: string, ui: boolean, value: any): boolean;
+  get (this: EditorManager): Editor[];
+  get (this: EditorManager, id: number | string): Editor | null;
+  init (this: EditorManager, options: RawEditorOptions): Promise<Editor[]>;
+  overrideDefaults (this: EditorManager, defaultOptions: Partial<RawEditorOptions>): void;
+  remove (this: EditorManager): void;
+  // eslint-disable-next-line @typescript-eslint/unified-signatures
+  remove (this: EditorManager, selector: string): void;
+  remove (this: EditorManager, editor: Editor): Editor | null;
+  setActive (this: EditorManager, editor: Editor): void;
+  setup (this: EditorManager): void;
+  translate: (text: Untranslated) => TranslatedString;
+  triggerSave: () => void;
+  _setBaseUrl (this: EditorManager, baseUrl: string): void;
+  _addLicenseKeyManager (this: EditorManager, addOn: LicenseKeyManagerAddon): void;
+}
+
 interface PreInit {
   suffix: string;
   baseURL: string;
@@ -88,40 +122,6 @@ const purgeDestroyedEditor = (editor: Editor | null): void => {
     editor.removed = true;
   }
 };
-
-interface EditorManager extends Observable<EditorManagerEventMap> {
-  defaultOptions: RawEditorOptions;
-  majorVersion: string;
-  minorVersion: string;
-  releaseDate: string;
-  activeEditor: Editor | null;
-  focusedEditor: Editor | null;
-  baseURI: URI;
-  baseURL: string;
-  documentBaseURL: string;
-  i18n: I18n;
-  suffix: string;
-  pageUid: string;
-
-  add (this: EditorManager, editor: Editor): Editor;
-  addI18n: (code: string, item: Record<string, string>) => void;
-  createEditor (this: EditorManager, id: string, options: RawEditorOptions): Editor;
-  execCommand (this: EditorManager, cmd: string, ui: boolean, value: any): boolean;
-  get (this: EditorManager): Editor[];
-  get (this: EditorManager, id: number | string): Editor | null;
-  init (this: EditorManager, options: RawEditorOptions): Promise<Editor[]>;
-  overrideDefaults (this: EditorManager, defaultOptions: Partial<RawEditorOptions>): void;
-  remove (this: EditorManager): void;
-  // eslint-disable-next-line @typescript-eslint/unified-signatures
-  remove (this: EditorManager, selector: string): void;
-  remove (this: EditorManager, editor: Editor): Editor | null;
-  setActive (this: EditorManager, editor: Editor): void;
-  setup (this: EditorManager): void;
-  translate: (text: Untranslated) => TranslatedString;
-  triggerSave: () => void;
-  _setBaseUrl (this: EditorManager, baseUrl: string): void;
-  _addLicenseKeyManager (this: EditorManager, addOn: LicenseKeyManagerAddon): void;
-}
 
 const isQuirksMode = document.compatMode !== 'CSS1Compat';
 

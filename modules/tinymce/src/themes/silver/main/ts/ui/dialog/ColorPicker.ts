@@ -11,6 +11,8 @@ import * as ColourPicker from '../colorpicker/ColourPicker';
 import { formActionEvent } from '../general/FormEvents';
 import * as Icons from '../icons/Icons';
 
+type ColorPickerSpec = Omit<Dialog.ColorPicker, 'type'>;
+
 const english: Record<string, string> = {
   'colorcustom.rgb.red.label': 'R',
   'colorcustom.rgb.red.description': 'Red channel',
@@ -34,8 +36,6 @@ const translate = (providerBackstage: UiFactoryBackstageProviders) => (key: Untr
     return providerBackstage.translate(key);
   }
 };
-
-type ColorPickerSpec = Omit<Dialog.ColorPicker, 'type'>;
 
 export const renderColorPicker = (_spec: ColorPickerSpec, providerBackstage: UiFactoryBackstageProviders, initialData: Optional<string>): SimpleSpec => {
   const getClass = (key: string) => 'tox-' + key;

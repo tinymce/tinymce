@@ -28,28 +28,6 @@ import RangeUtils from './RangeUtils';
 import SelectorChanged from './SelectorChanged';
 import type DomSerializer from './Serializer';
 
-/**
- * This class handles text and control selection it's an crossbrowser utility class.
- * Consult the TinyMCE API Documentation for more details and examples on how to use this class.
- *
- * @class tinymce.dom.Selection
- * @example
- * // Getting the currently selected node for the active editor
- * alert(tinymce.activeEditor.selection.getNode().nodeName);
- */
-
-const isAttachedToDom = (node: Node): boolean => {
-  return !!(node && node.ownerDocument) && Compare.contains(SugarElement.fromDom(node.ownerDocument), SugarElement.fromDom(node));
-};
-
-const isValidRange = (rng: Range | undefined | null): rng is Range => {
-  if (!rng) {
-    return false;
-  } else {
-    return isAttachedToDom(rng.startContainer) && isAttachedToDom(rng.endContainer);
-  }
-};
-
 interface EditorSelection {
   bookmarkManager: BookmarkManager;
   controlSelection: ControlSelection;
@@ -114,6 +92,28 @@ interface EditorSelection {
   destroy: () => void;
   expand: (options?: { type: 'word' }) => void;
 }
+
+/**
+ * This class handles text and control selection it's an crossbrowser utility class.
+ * Consult the TinyMCE API Documentation for more details and examples on how to use this class.
+ *
+ * @class tinymce.dom.Selection
+ * @example
+ * // Getting the currently selected node for the active editor
+ * alert(tinymce.activeEditor.selection.getNode().nodeName);
+ */
+
+const isAttachedToDom = (node: Node): boolean => {
+  return !!(node && node.ownerDocument) && Compare.contains(SugarElement.fromDom(node.ownerDocument), SugarElement.fromDom(node));
+};
+
+const isValidRange = (rng: Range | undefined | null): rng is Range => {
+  if (!rng) {
+    return false;
+  } else {
+    return isAttachedToDom(rng.startContainer) && isAttachedToDom(rng.endContainer);
+  }
+};
 
 /**
  * Constructs a new selection instance.

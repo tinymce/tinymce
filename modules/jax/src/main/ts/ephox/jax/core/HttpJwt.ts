@@ -5,12 +5,12 @@ import type { ResponseBodyDataTypes, ResponseType, ResponseTypeMap } from './Htt
 import { type HttpError, HttpErrorCode } from './HttpError';
 import type { GetDelInit, HttpRequest, JwtToken, JwtTokenFactory, PostPutInit } from './HttpTypes';
 
+type RunMethod<T extends ResponseType> = (token: JwtToken) => FutureResult<ResponseTypeMap[T], HttpError<T>>;
+
 const headers = (headersInput: HttpRequest<ResponseBodyDataTypes>['headers'], token: string) => {
   const authHeader = { Authorization: 'Bearer ' + token };
   return headersInput ? { ...headersInput, ...authHeader } : authHeader;
 };
-
-type RunMethod<T extends ResponseType> = (token: JwtToken) => FutureResult<ResponseTypeMap[T], HttpError<T>>;
 
 const requestFreshToken = <T extends ResponseType>(tokenFactory: JwtTokenFactory<T>): FutureResult<JwtToken, HttpError<T>> => tokenFactory(true);
 const requestCachedToken = <T extends ResponseType>(tokenFactory: JwtTokenFactory<T>): FutureResult<JwtToken, HttpError<T>> => tokenFactory(false);

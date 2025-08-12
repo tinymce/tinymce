@@ -2,8 +2,6 @@ import { Arr, Obj, Type } from '@ephox/katamari';
 
 import Tools from '../api/util/Tools';
 
-const explode = Tools.explode;
-
 export interface Filter<C extends Function> {
   name: string;
   callbacks: C[];
@@ -14,6 +12,8 @@ export interface FilterRegistry<C extends Function> {
   readonly getFilters: () => Filter<C>[];
   readonly removeFilter: (name: string, callback?: C) => void;
 }
+
+const explode = Tools.explode;
 
 export const create = <C extends Function>(): FilterRegistry<C> => {
   const filters: Record<string, Filter<C>> = {};

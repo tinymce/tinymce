@@ -4,6 +4,16 @@ import * as EventUtils from '../../events/EventUtils';
 
 import Tools from './Tools';
 
+interface Binding<T extends {}, K extends string> {
+  func: (event: EditorEvent<MappedEvent<T, K>>) => void | boolean;
+  removed: boolean;
+  once?: true;
+}
+
+type Bindings<T extends {}> = {
+  [K in string]?: Binding<T, K>[];
+};
+
 export type MappedEvent<T extends {}, K extends string> = K extends keyof T ? T[K] : any;
 
 export interface NativeEventMap {
@@ -84,16 +94,6 @@ const nativeEvents = Tools.makeMap(
   'compositionstart compositionend compositionupdate touchstart touchmove touchend touchcancel',
   ' '
 );
-
-interface Binding<T extends {}, K extends string> {
-  func: (event: EditorEvent<MappedEvent<T, K>>) => void | boolean;
-  removed: boolean;
-  once?: true;
-}
-
-type Bindings<T extends {}> = {
-  [K in string]?: Binding<T, K>[];
-};
 
 class EventDispatcher<T extends {}> {
   /**

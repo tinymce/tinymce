@@ -5,6 +5,8 @@ export type { DomSerializerSettings } from '../../dom/DomSerializerImpl';
 
 interface DomSerializer extends DomSerializerImpl { }
 
+export { DomSerializerSettings } from '../../dom/DomSerializerImpl';
+
 /**
  * This class is used to serialize DOM trees into a string. Consult the TinyMCE API Documentation for
  * more details and examples on how to use this class.

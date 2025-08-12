@@ -9,6 +9,12 @@ import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as Events from '../api/Events';
 import * as Options from '../api/Options';
 
+interface ResizeData {
+  readonly totalHeight: number;
+  readonly contentHeight: number;
+  readonly set: boolean;
+}
+
 /**
  * This class contains all core logic for the autoresize plugin.
  *
@@ -28,12 +34,6 @@ const toggleScrolling = (editor: Editor, state: boolean): void => {
     }
   }
 };
-
-interface ResizeData {
-  readonly totalHeight: number;
-  readonly contentHeight: number;
-  readonly set: boolean;
-}
 
 const parseCssValueToInt = (dom: DOMUtils, elm: Element, name: string, computed: boolean): number => {
   const value = parseInt(dom.getStyle(elm, name, computed) ?? '', 10);

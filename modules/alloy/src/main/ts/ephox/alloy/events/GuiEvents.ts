@@ -6,16 +6,16 @@ import * as SystemEvents from '../api/events/SystemEvents';
 
 import * as TapEvent from './TapEvent';
 
+export interface GuiEventSettings {
+  readonly triggerEvent: (eventName: string, event: EventArgs) => boolean;
+  readonly stopBackspace?: boolean;
+}
+
 const isDangerous = (event: EventArgs<KeyboardEvent>): boolean => {
   // Will trigger the Back button in the browser
   const keyEv = event.raw;
   return keyEv.which === Keys.BACKSPACE[0] && !Arr.contains([ 'input', 'textarea' ], SugarNode.name(event.target)) && !SelectorExists.closest(event.target, '[contenteditable="true"]');
 };
-
-export interface GuiEventSettings {
-  readonly triggerEvent: (eventName: string, event: EventArgs) => boolean;
-  readonly stopBackspace?: boolean;
-}
 
 const setup = (container: SugarElement, rawSettings: GuiEventSettings): { unbind: () => void } => {
   const settings: Required<GuiEventSettings> = {

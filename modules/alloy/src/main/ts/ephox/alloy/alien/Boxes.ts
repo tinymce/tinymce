@@ -5,25 +5,12 @@ import * as OuterPosition from '../frame/OuterPosition';
 
 import type { CssPositionAdt } from './CssPosition';
 
-const pointed = (point: CssPositionAdt, width: number, height: number): BoxByPoint => ({
-  point,
-  width,
-  height
-});
-
 export interface Rect {
   readonly x: number;
   readonly y: number;
   readonly width: number;
   readonly height: number;
 }
-
-const rect = (x: number, y: number, width: number, height: number): Rect => ({
-  x,
-  y,
-  width,
-  height
-});
 
 export interface Bounds {
   readonly x: number;
@@ -39,6 +26,19 @@ export interface BoxByPoint {
   readonly width: number;
   readonly height: number;
 }
+
+const pointed = (point: CssPositionAdt, width: number, height: number): BoxByPoint => ({
+  point,
+  width,
+  height
+});
+
+const rect = (x: number, y: number, width: number, height: number): Rect => ({
+  x,
+  y,
+  width,
+  height
+});
 
 const bounds = (x: number, y: number, width: number, height: number): Bounds => ({
   x,

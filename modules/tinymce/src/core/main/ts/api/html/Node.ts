@@ -4,6 +4,14 @@ import { isWhitespaceText } from '../../text/Whitespace';
 
 import type { SchemaMap } from './Schema';
 
+export interface AstNodeConstructor {
+  readonly prototype: AstNode;
+
+  new (name: string, type: number): AstNode;
+
+  create(name: string, attrs?: Record<string, string>): AstNode;
+}
+
 export type Attributes = Array<{ name: string; value: string }> & { map: Record<string, string> };
 
 const typeLookup: Record<string, number> = {
@@ -68,14 +76,6 @@ const isNonEmptyElement = (node: AstNode) => {
   const isNamedAnchor = node.name === 'a' && !node.attr('href') && node.attr('id');
   return (node.attr('name') || (node.attr('id') && !node.firstChild) || node.attr('data-mce-bookmark') || isNamedAnchor);
 };
-
-export interface AstNodeConstructor {
-  readonly prototype: AstNode;
-
-  new (name: string, type: number): AstNode;
-
-  create(name: string, attrs?: Record<string, string>): AstNode;
-}
 
 /**
  * This class is a minimalistic implementation of a DOM like node used by the DomParser class.

@@ -5,6 +5,11 @@ import * as Compare from '../dom/Compare';
 import { SugarElement } from '../node/SugarElement';
 import * as SugarNode from '../node/SugarNode';
 
+export interface ElementAndOffset<E> {
+  readonly element: SugarElement<E>;
+  readonly offset: number;
+}
+
 /**
  * The document associated with the current element
  * NOTE: this will throw if the owner is null.
@@ -109,11 +114,6 @@ const childNodesCount = (element: SugarElement<Node>): number =>
 
 const hasChildNodes = (element: SugarElement<Node>): boolean =>
   element.dom.hasChildNodes();
-
-export interface ElementAndOffset<E> {
-  readonly element: SugarElement<E>;
-  readonly offset: number;
-}
 
 const spot = <E>(element: SugarElement<E>, offset: number): ElementAndOffset<E> => ({
   element,

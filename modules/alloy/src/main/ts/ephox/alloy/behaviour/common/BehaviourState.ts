@@ -1,5 +1,9 @@
 import { Fun } from '@ephox/katamari';
 
+export interface Stateless extends BehaviourState {
+  // Add placeholder here.
+}
+
 export interface BehaviourState {
   /** This is for debug purposes only, and only used by the Alloy Inspector Chrome Plugin */
   readState: () => any;
@@ -14,10 +18,6 @@ const NoState: BehaviourStateInitialiser<any, BehaviourState> = {
     readState: Fun.constant('No State required')
   })
 };
-
-export interface Stateless extends BehaviourState {
-  // Add placeholder here.
-}
 
 const nu = <T extends BehaviourState>(spec: T): T => spec;
 

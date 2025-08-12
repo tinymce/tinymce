@@ -6,6 +6,12 @@ import { getData } from './DataTransferItem';
 import { createDataTransferItemList } from './DataTransferItemList';
 import { isInProtectedMode, isInReadWriteMode, setReadWriteMode } from './Mode';
 
+export interface DragImageData {
+  image: Element;
+  x: number;
+  y: number;
+}
+
 type DropEffect = DataTransfer['dropEffect'];
 type EffectAllowed = DataTransfer['effectAllowed'];
 
@@ -13,12 +19,6 @@ const imageId = Id.generate('image');
 
 const validDropEffects: DropEffect[] = [ 'none', 'copy', 'link', 'move' ];
 const validEffectAlloweds: EffectAllowed[] = [ 'none', 'copy', 'copyLink', 'copyMove', 'link', 'linkMove', 'move', 'all', 'uninitialized' ];
-
-export interface DragImageData {
-  image: Element;
-  x: number;
-  y: number;
-}
 
 const setDragImage = (transfer: DataTransfer, imageData: DragImageData) => {
   const dt: any = transfer;

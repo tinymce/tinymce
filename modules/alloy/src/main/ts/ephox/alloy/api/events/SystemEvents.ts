@@ -7,6 +7,24 @@ import type { AlloyComponent } from '../component/ComponentApi';
 
 import * as NativeEvents from './NativeEvents';
 
+export interface AlloyFocusShiftedEvent extends CustomEvent {
+  readonly prevFocus: Optional<SugarElement<HTMLElement>>;
+  readonly newFocus: Optional<SugarElement<HTMLElement>>;
+}
+
+export interface AlloySlotVisibilityEvent extends CustomEvent {
+  readonly name: string;
+  readonly visible: boolean;
+}
+
+export interface AlloyChangeTabEvent extends CustomEvent {
+  readonly button: AlloyComponent;
+}
+
+export interface AlloyDismissTabEvent extends CustomEvent {
+  readonly button: AlloyComponent;
+}
+
 const prefixName = (name: string) => Fun.constant('alloy.' + name);
 
 const alloy = { tap: prefixName('tap') };
@@ -74,11 +92,6 @@ const detachedFromDom = prefixName('system.detached');
 const dismissRequested = prefixName('system.dismissRequested');
 const repositionRequested = prefixName('system.repositionRequested');
 
-export interface AlloyFocusShiftedEvent extends CustomEvent {
-  readonly prevFocus: Optional<SugarElement<HTMLElement>>;
-  readonly newFocus: Optional<SugarElement<HTMLElement>>;
-}
-
 const focusShifted = prefixName('focusmanager.shifted');
 // Fired when slots are made hidden/shown
 const slotVisibility = prefixName('slotcontainer.visibility');
@@ -86,18 +99,6 @@ const slotVisibility = prefixName('slotcontainer.visibility');
 // Used for containers outside the mothership that scroll. Used by docking.
 const externalElementScroll = prefixName('system.external.element.scroll');
 
-export interface AlloySlotVisibilityEvent extends CustomEvent {
-  readonly name: string;
-  readonly visible: boolean;
-}
-
-export interface AlloyChangeTabEvent extends CustomEvent {
-  readonly button: AlloyComponent;
-}
-
-export interface AlloyDismissTabEvent extends CustomEvent {
-  readonly button: AlloyComponent;
-}
 const changeTab = prefixName('change.tab');
 const dismissTab = prefixName('dismiss.tab');
 

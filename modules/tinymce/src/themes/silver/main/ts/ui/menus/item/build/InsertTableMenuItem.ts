@@ -7,13 +7,13 @@ import { Arr, Id } from '@ephox/katamari';
 
 import type { UiFactoryBackstage } from '../../../../backstage/Backstage';
 
-const cellOverEvent = Id.generate('cell-over');
-const cellExecuteEvent = Id.generate('cell-execute');
-
 interface CellEvent extends CustomEvent {
   readonly col: number;
   readonly row: number;
 }
+
+const cellOverEvent = Id.generate('cell-over');
+const cellExecuteEvent = Id.generate('cell-execute');
 
 const makeAnnouncementText = (backstage: UiFactoryBackstage) => (row: number, col: number): string =>
   backstage.shared.providers.translate([ '{0} columns, {1} rows', col, row ]);

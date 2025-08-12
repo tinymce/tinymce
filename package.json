@@ -46,7 +46,7 @@
     "@rspack/cli": "^1.5.2",
     "@rspack/core": "^1.5.2",
     "@rspack/dev-server": "^1.1.4",
-    "@tinymce/eslint-plugin": "^3.0.0",
+    "@tinymce/eslint-plugin": "^3.0.1-feature.20250811044233833.sha51a45f1",
     "@tinymce/moxiedoc": "^0.3.0",
     "@types/chai": "^5.0.1",
     "@types/chai-as-promised": "^8.0.2",

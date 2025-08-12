@@ -2849,10 +2849,10 @@
   resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-14.6.1.tgz#13e09a32d7a8b7060fe38304788ebf4197cd2149"
   integrity sha512-vq7fv0rnt+QTXgPxr5Hjc210p6YKq2kmdziLgnsZGgLJ9e6VAShx1pACLuRjd/AS/sr7phAR58OIIpf0LlmQNw==
 
-"@tinymce/eslint-plugin@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@tinymce/eslint-plugin/-/eslint-plugin-3.0.0.tgz#740fec3e8eba1c29d891477e624e0950ef92760a"
-  integrity sha512-4nGTGhsBtEyOuLycPGqcTruL9/2xPuXm0lzohojdo/T1k9r6/EavZSP8mXBYeIkxVqU9BB0CWujbcXaMt2eXNA==
+"@tinymce/eslint-plugin@^3.0.1-feature.20250811044233833.sha51a45f1":
+  version "3.0.1-feature.20250811044233833.sha51a45f1"
+  resolved "https://registry.yarnpkg.com/@tinymce/eslint-plugin/-/eslint-plugin-3.0.1-feature.20250811044233833.sha51a45f1.tgz#993aa6df7b343e478c212d0abc0f3b1b6269b781"
+  integrity sha512-11DjFG1irYiSYRGyL6IzcWmZWfiFBB1vJPVaadfebS1a7xn70d3RNW5S03cmngnZWQ+mssLbZNRydxPLdxc3Gw==
   dependencies:
     "@stylistic/eslint-plugin" "^4.2.0"
     "@typescript-eslint/eslint-plugin" "^8.26.1"

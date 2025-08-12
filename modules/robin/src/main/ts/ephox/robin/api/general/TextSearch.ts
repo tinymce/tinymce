@@ -5,6 +5,14 @@ import { Gather, Spot, type SpotPoint } from '@ephox/phoenix';
 import * as TextSearchBase from '../../textdata/TextSearch';
 import { TextSeeker, type TextSeekerOutcome, type TextSeekerPhase, type TextSeekerPhaseConstructor, type TextSeekerPhaseProcessor } from '../../textdata/TextSeeker';
 
+type PreviousCharFn = (text: string, offset: Optional<number>) => Optional<CharPos>;
+
+type NextCharFn = (text: string, offset: Optional<number>) => Optional<CharPos>;
+
+type RepeatLeftFn = <E, D>(universe: Universe<E, D>, item: E, offset: number, process: TextSeekerPhaseProcessor<E, D>) => TextSeekerOutcome<E>;
+
+type RepeatRightFn = <E, D>(universe: Universe<E, D>, item: E, offset: number, process: TextSeekerPhaseProcessor<E, D>) => TextSeekerOutcome<E>;
+
 type CharPos = TextSearchBase.CharPos;
 
 export interface TextSearchSeeker {
@@ -14,10 +22,8 @@ export interface TextSearchSeeker {
 
 const seekerSig = Contracts.exactly([ 'regex', 'attempt' ]);
 
-type PreviousCharFn = (text: string, offset: Optional<number>) => Optional<CharPos>;
 const previousChar: PreviousCharFn = TextSearchBase.previous;
 
-type NextCharFn = (text: string, offset: Optional<number>) => Optional<CharPos>;
 const nextChar: NextCharFn = TextSearchBase.next;
 
 // Returns: a TextSeeker outcome ADT of 'aborted', 'success', or 'edge'.
@@ -25,7 +31,6 @@ const nextChar: NextCharFn = TextSearchBase.next;
 // successfully found using a process function.
 // 'edge' returns the text element where the process stopped due to being adjacent to a
 // block boundary.
-type RepeatLeftFn = <E, D>(universe: Universe<E, D>, item: E, offset: number, process: TextSeekerPhaseProcessor<E, D>) => TextSeekerOutcome<E>;
 const repeatLeft: RepeatLeftFn = TextSeeker.repeatLeft;
 
 // Returns: a TextSeeker outcome ADT of 'aborted', 'success', or 'edge'.
@@ -33,7 +38,6 @@ const repeatLeft: RepeatLeftFn = TextSeeker.repeatLeft;
 // successfully found using a process function.
 // 'edge' returns the text element where the process stopped due to being adjacent to a
 // block boundary.
-type RepeatRightFn = <E, D>(universe: Universe<E, D>, item: E, offset: number, process: TextSeekerPhaseProcessor<E, D>) => TextSeekerOutcome<E>;
 const repeatRight: RepeatRightFn = TextSeeker.repeatRight;
 
 // Returns: a TextSeeker outcome ADT of 'aborted', 'success', or 'edge'.

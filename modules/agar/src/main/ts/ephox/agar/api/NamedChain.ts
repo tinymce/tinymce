@@ -5,12 +5,13 @@ import type { DieFn, NextFn } from '../pipe/Pipe';
 import { Chain } from './Chain';
 import type { TestLogs } from './TestLogs';
 
+export type NamedData = Record<string, any>;
+
+export type NamedChain = Chain<NamedData, NamedData>;
+
 const inputNameId = Id.generate('input-name');
 const outputNameId = Id.generate('output-name');
 const outputUnset = Id.generate('output-unset');
-
-export type NamedData = Record<string, any>;
-export type NamedChain = Chain<NamedData, NamedData>;
 
 const asChain = <T>(chains: NamedChain[]): Chain<T, any> =>
   Chain.fromChains(Arr.flatten([

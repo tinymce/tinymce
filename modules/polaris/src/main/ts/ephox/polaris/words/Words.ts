@@ -4,6 +4,23 @@ import { type CharacterMap, classify } from './StringMapper';
 import * as UnicodeData from './UnicodeData';
 import { isWordBoundary } from './WordBoundary';
 
+export type Word<T> = T[];
+
+interface WordIndex {
+  readonly start: number;
+  readonly end: number;
+}
+
+export interface WordsWithIndices<T> {
+  readonly words: Word<T>[];
+  readonly indices: WordIndex[];
+}
+
+export interface WordOptions {
+  includeWhitespace?: boolean;
+  includePunctuation?: boolean;
+}
+
 const EMPTY_STRING = UnicodeData.EMPTY_STRING;
 const WHITESPACE = UnicodeData.WHITESPACE;
 const PUNCTUATION = UnicodeData.PUNCTUATION;
@@ -25,18 +42,6 @@ const findUrlEnd = (characters: string[], startIndex: number): number => {
   const peakedWord = characters.slice(startIndex + 1, endIndex).join(EMPTY_STRING);
   return peakedWord.substr(0, 3) === '://' ? endIndex : startIndex;
 };
-
-export type Word<T> = T[];
-
-interface WordIndex {
-  readonly start: number;
-  readonly end: number;
-}
-
-export interface WordsWithIndices<T> {
-  readonly words: Word<T>[];
-  readonly indices: WordIndex[];
-}
 
 const findWordsWithIndices = <T>(chars: Word<T>, sChars: string[], characterMap: CharacterMap, options: WordOptions): WordsWithIndices<T> => {
   const words: Word<T>[] = [];
@@ -91,11 +96,6 @@ const findWordsWithIndices = <T>(chars: Word<T>, sChars: string[], characterMap:
 
   return { words, indices };
 };
-
-export interface WordOptions {
-  includeWhitespace?: boolean;
-  includePunctuation?: boolean;
-}
 
 const getDefaultOptions = (): WordOptions => ({
   includeWhitespace: false,

@@ -3,20 +3,6 @@ import Tools from '../util/Tools';
 
 import Entities from './Entities';
 
-/**
- * This class is used to write HTML tags out it can be used with the Serializer.
- *
- * @class tinymce.html.Writer
- * @version 3.4
- * @example
- * const writer = tinymce.html.Writer({ indent: true });
- * writer.start('node', { attr: 'value' });
- * writer.end('node');
- * console.log(writer.getContent());
- */
-
-const makeMap = Tools.makeMap;
-
 export interface WriterSettings {
   element_format?: 'xhtml' | 'html';
   entities?: string;
@@ -39,6 +25,20 @@ interface Writer {
   start: (name: string, attrs?: Attributes | null, empty?: boolean) => void;
   text: (text: string, raw?: boolean) => void;
 }
+
+/**
+ * This class is used to write HTML tags out it can be used with the Serializer.
+ *
+ * @class tinymce.html.Writer
+ * @version 3.4
+ * @example
+ * const writer = tinymce.html.Writer({ indent: true });
+ * writer.start('node', { attr: 'value' });
+ * writer.end('node');
+ * console.log(writer.getContent());
+ */
+
+const makeMap = Tools.makeMap;
 
 const Writer = (settings?: WriterSettings): Writer => {
   const html: string[] = [];

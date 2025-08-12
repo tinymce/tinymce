@@ -1,22 +1,5 @@
 import { PlatformDetection } from '@ephox/sand';
 
-/**
- * This class contains various environment constants like browser versions etc.
- * Normally you don't want to sniff specific browser versions but sometimes you have
- * to when it's impossible to feature detect. So use this with care.
- *
- * @class tinymce.Env
- * @static
- */
-
-const userAgent = window.navigator.userAgent;
-const platform = PlatformDetection.detect();
-const browser = platform.browser;
-const os = platform.os;
-const deviceType = platform.deviceType;
-
-const windowsPhone = userAgent.indexOf('Windows Phone') !== -1;
-
 interface Version {
   major: number;
   minor: number;
@@ -62,6 +45,23 @@ interface Env {
     isDesktop: () => boolean;
   };
 }
+
+/**
+ * This class contains various environment constants like browser versions etc.
+ * Normally you don't want to sniff specific browser versions but sometimes you have
+ * to when it's impossible to feature detect. So use this with care.
+ *
+ * @class tinymce.Env
+ * @static
+ */
+
+const userAgent = window.navigator.userAgent;
+const platform = PlatformDetection.detect();
+const browser = platform.browser;
+const os = platform.os;
+const deviceType = platform.deviceType;
+
+const windowsPhone = userAgent.indexOf('Windows Phone') !== -1;
 
 const Env: Env = {
   /**

@@ -18,24 +18,6 @@ import Tools from '../util/Tools';
 import AstNode from './Node';
 import Schema, { type SchemaMap, type SchemaRegExpMap, getTextRootBlockElements } from './Schema';
 
-/**
- * @summary
- * This class parses HTML code into a DOM like structure of nodes it will remove redundant whitespace and make
- * sure that the node tree is valid according to the specified schema.
- * So for example: `<p>a<p>b</p>c</p>` will become `<p>a</p><p>b</p><p>c</p>`.
- *
- * @example
- * const parser = tinymce.html.DomParser({ validate: true }, schema);
- * const rootNode = parser.parse('<h1>content</h1>');
- *
- * @class tinymce.html.DomParser
- * @version 3.4
- */
-
-const extraBlockLikeElements = [ 'script', 'style', 'template', 'param', 'meta', 'title', 'link' ];
-
-const makeMap = Tools.makeMap, extend = Tools.extend;
-
 export interface ParserArgs {
   getInner?: boolean | number;
   forced_root_block?: boolean | string;
@@ -94,6 +76,24 @@ interface DomParser {
 }
 
 type WalkerCallback = (node: AstNode) => void;
+
+/**
+ * @summary
+ * This class parses HTML code into a DOM like structure of nodes it will remove redundant whitespace and make
+ * sure that the node tree is valid according to the specified schema.
+ * So for example: `<p>a<p>b</p>c</p>` will become `<p>a</p><p>b</p><p>c</p>`.
+ *
+ * @example
+ * const parser = tinymce.html.DomParser({ validate: true }, schema);
+ * const rootNode = parser.parse('<h1>content</h1>');
+ *
+ * @class tinymce.html.DomParser
+ * @version 3.4
+ */
+
+const extraBlockLikeElements = [ 'script', 'style', 'template', 'param' ];
+
+const makeMap = Tools.makeMap, extend = Tools.extend;
 
 const transferChildren = (
   parent: AstNode,

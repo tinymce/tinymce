@@ -9,6 +9,18 @@ import * as Predicate from '../util/Predicate';
 
 import * as CaretCandidate from './CaretCandidate';
 
+export interface CaretPosition {
+  container: () => Node;
+  offset: () => number;
+  toRange: () => Range;
+  getClientRects: () => GeomClientRect[];
+  isVisible: () => boolean;
+  isAtStart: () => boolean;
+  isAtEnd: () => boolean;
+  isEqual: (caretPosition: CaretPosition) => boolean;
+  getNode: (before?: boolean) => Node | undefined;
+}
+
 type GeomClientRect = ClientRect.ClientRect;
 
 /**
@@ -216,18 +228,6 @@ const getCaretPositionClientRects = (caretPosition: CaretPosition): GeomClientRe
 
   return clientRects;
 };
-
-export interface CaretPosition {
-  container: () => Node;
-  offset: () => number;
-  toRange: () => Range;
-  getClientRects: () => GeomClientRect[];
-  isVisible: () => boolean;
-  isAtStart: () => boolean;
-  isAtEnd: () => boolean;
-  isEqual: (caretPosition: CaretPosition) => boolean;
-  getNode: (before?: boolean) => Node | undefined;
-}
 
 /**
  * Represents a location within the document by a container and an offset.

@@ -23,6 +23,11 @@ import * as Reposition from '../sandbox/Reposition';
 import type { CommonDropdownDetail } from '../ui/types/DropdownTypes';
 import type { HighlightOnOpen } from '../ui/types/TieredMenuTypes';
 
+interface SinkDetail {
+  uid: string;
+  lazySink: Optional<LazySink>;
+}
+
 type OnOpenSyncFunc = (sandbox: AlloyComponent) => void;
 type MapFetch = (tdata: Optional<TieredData>) => Optional<TieredData>;
 
@@ -189,11 +194,6 @@ const matchWidth = (hotspot: AlloyComponent, container: AlloyComponent, useMinWi
     Width.set(menu.element, buttonWidth);
   }
 };
-
-interface SinkDetail {
-  uid: string;
-  lazySink: Optional<LazySink>;
-}
 
 const getSink = (
   anyInSystem: AlloyComponent,

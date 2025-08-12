@@ -2,6 +2,13 @@ import { Attribute, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar
 
 import { Step } from 'ephox/agar/api/Step';
 
+// Test
+
+interface TeardownState {
+  container: SugarElement<HTMLElement>;
+  shadowHost?: SugarElement<ShadowRoot>;
+}
+
 const createContainer = () => {
   const container = SugarElement.fromTag('div');
   Attribute.set(container, 'tabindex', '-1');
@@ -40,11 +47,6 @@ const mSetupShadowRoot = Step.stateful((state, next, _die) => {
     shadowHost
   });
 });
-
-interface TeardownState {
-  container: SugarElement<HTMLElement>;
-  shadowHost?: SugarElement<ShadowRoot>;
-}
 
 const mTeardown = Step.stateful<TeardownState, TeardownState>((state, next, _die) => {
   Remove.remove(state.container);

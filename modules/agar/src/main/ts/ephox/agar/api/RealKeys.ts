@@ -5,6 +5,13 @@ import * as SeleniumAction from '../server/SeleniumAction';
 
 import type { Step } from './Step';
 
+interface Modifiers {
+  readonly ctrlKey: Optional<boolean>;
+  readonly metaKey: Optional<boolean>;
+  readonly shiftKey: Optional<boolean>;
+  readonly altKey: Optional<boolean>;
+}
+
 export interface KeyPressAdt {
   fold: <T> (combo: (modifiers: Modifiers, letters: string) => T, text: (s: string) => T, backspace: () => T) => T;
   match: <T>(branches: {
@@ -24,13 +31,6 @@ const adt: {
   { text: [ 's' ] },
   { backspace: [] }
 ]);
-
-interface Modifiers {
-  readonly ctrlKey: Optional<boolean>;
-  readonly metaKey: Optional<boolean>;
-  readonly shiftKey: Optional<boolean>;
-  readonly altKey: Optional<boolean>;
-}
 
 const modifierList = (obj: KeyModifiers): Modifiers => ({
   ctrlKey: Optional.from(obj.ctrlKey),

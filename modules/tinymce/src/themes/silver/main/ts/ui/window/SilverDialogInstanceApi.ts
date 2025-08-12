@@ -9,6 +9,15 @@ import { bodyChannel, dialogChannel, footerChannel, titleChannel } from './Dialo
 import * as SilverDialogCommon from './SilverDialogCommon';
 import type { FooterState } from './SilverDialogFooter';
 
+export interface DialogAccess {
+  getId: () => string;
+  getRoot: () => AlloyComponent;
+  getBody: () => AlloyComponent;
+  getFooter: () => Optional<AlloyComponent>;
+  getFormWrapper: () => AlloyComponent;
+  toggleFullscreen: () => void;
+}
+
 const getCompByName = (access: DialogAccess, name: string): Optional<AlloyComponent> => {
   // TODO: Add API to alloy to find the inner most component of a Composing chain.
   const root = access.getRoot();
@@ -32,15 +41,6 @@ const validateData = <T extends Dialog.DialogData>(access: DialogAccess, data: T
     StructureSchema.asRaw('data', dialogState.dataValidator, data)
   )).getOr(data);
 };
-
-export interface DialogAccess {
-  getId: () => string;
-  getRoot: () => AlloyComponent;
-  getBody: () => AlloyComponent;
-  getFooter: () => Optional<AlloyComponent>;
-  getFormWrapper: () => AlloyComponent;
-  toggleFullscreen: () => void;
-}
 
 const getDialogApi = <T extends Dialog.DialogData>(
   access: DialogAccess,

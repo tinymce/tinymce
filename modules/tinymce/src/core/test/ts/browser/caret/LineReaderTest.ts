@@ -10,8 +10,9 @@ import * as LineReader from 'tinymce/core/caret/LineReader';
 
 import * as ViewBlock from '../../module/test/ViewBlock';
 
-const BreakType = LineReader.BreakType;
 type LineInfo = LineReader.LineInfo;
+
+const BreakType = LineReader.BreakType;
 
 describe('browser.tinymce.core.caret.LineReader', () => {
   const viewBlock = ViewBlock.bddSetup();

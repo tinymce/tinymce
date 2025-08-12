@@ -10,6 +10,8 @@ import 'tinymce';
 import Model from 'tinymce/models/dom/Model';
 import Theme from 'tinymce/themes/silver/Theme';
 
+import * as ConsoleReader from '../../module/test/ConsoleReader';
+
 declare const tinymce: TinyMCE;
 
 interface EditorState {
@@ -18,6 +20,8 @@ interface EditorState {
   readonly consoleErrorMessages: string[];
   readonly notificationMessages: { text: string; type: 'error' | 'warning' }[];
 }
+
+declare const tinymce: TinyMCE;
 
 describe('browser.tinymce.core.init.LicenseKeyTest', () => {
   const consoleReader = ConsoleReader.setup();

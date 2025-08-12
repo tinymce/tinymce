@@ -12,6 +12,20 @@ import * as HtmlSanitizer from '../core/HtmlSanitizer';
 import * as NavigableObject from '../general/NavigableObject';
 import * as DialogChannels from '../window/DialogChannels';
 
+export interface DialogSpec {
+  lazySink: () => Result<AlloyComponent, any>;
+  header: AlloySpec;
+  body: AlloyParts.ConfiguredPart;
+  footer: Optional<AlloyParts.ConfiguredPart>;
+  onEscape: (comp: AlloyComponent) => void;
+  extraClasses: string[];
+  extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[];
+  extraStyles: Record<string, string>;
+  dialogEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[];
+  eventOrder: Record<string, string[]>;
+  firstTabstop?: number;
+}
+
 const isTouch = Env.deviceType.isTouch();
 
 const hiddenHeader = (title: AlloyParts.ConfiguredPart, close: AlloyParts.ConfiguredPart): AlloySpec => ({
@@ -110,20 +124,6 @@ const pFooterGroup = (startButtons: AlloySpec[], endButtons: AlloySpec[]): Sketc
     components: endButtons
   })
 ];
-
-export interface DialogSpec {
-  lazySink: () => Result<AlloyComponent, any>;
-  header: AlloySpec;
-  body: AlloyParts.ConfiguredPart;
-  footer: Optional<AlloyParts.ConfiguredPart>;
-  onEscape: (comp: AlloyComponent) => void;
-  extraClasses: string[];
-  extraBehaviours: Behaviour.NamedConfiguredBehaviour<any, any>[];
-  extraStyles: Record<string, string>;
-  dialogEvents: AlloyEvents.AlloyEventKeyAndHandler<any>[];
-  eventOrder: Record<string, string[]>;
-  firstTabstop?: number;
-}
 
 const renderDialog = (spec: DialogSpec): SketchSpec => {
   const dialogClass = 'tox-dialog';
