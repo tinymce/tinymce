@@ -77,6 +77,7 @@ module.exports = function (grunt) {
             format: 'iife',
             onwarn: swag.onwarn,
             plugins: [
+              swag.noReactImport(),
               FilesAsStrings,
               nodeResolve(),
               alias({
@@ -103,6 +104,7 @@ module.exports = function (grunt) {
               }
             },
             plugins: [
+              swag.noReactImport(),
               FilesAsStrings,
               swag.dts({
                 respectExternal: true,
@@ -125,6 +127,7 @@ module.exports = function (grunt) {
             format: 'iife',
             onwarn: swag.onwarn,
             plugins: [
+              swag.noReactImport(),
               FilesAsStrings,
               nodeResolve(),
               alias({
@@ -144,6 +147,7 @@ module.exports = function (grunt) {
             format: 'iife',
             onwarn: swag.onwarn,
             plugins: [
+              swag.noReactImport(),
               FilesAsStrings,
               nodeResolve(),
               alias({
@@ -169,6 +173,7 @@ module.exports = function (grunt) {
             format: 'iife',
             onwarn: swag.onwarn,
             plugins: [
+              swag.noReactImport(),
               FilesAsStrings,
               nodeResolve(),
               alias({
