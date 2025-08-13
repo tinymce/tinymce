@@ -293,6 +293,8 @@ const getRootBlockName = (settings: DomParserSettings, args: ParserArgs) => {
   }
 };
 
+const xhtmlAttribte = ' xmlns="http://www.w3.org/1999/xhtml"';
+
 const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomParser => {
   const nodeFilterRegistry = FilterRegistry.create<ParserFilterCallback>();
   const attributeFilterRegistry = FilterRegistry.create<ParserFilterCallback>();
@@ -316,17 +318,15 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
     const isSpecialRoot = Obj.has(schema.getSpecialElements(), rootName.toLowerCase());
     const content = isSpecialRoot ? `<${rootName}>${html}</${rootName}>` : html;
     const makeWrap = () => {
-      if (format === 'xhtml') {
-        // If parsing XHTML then the content must contain the xmlns declaration, see https://www.w3.org/TR/xhtml1/normative.html#strict
-        if (useDocumentNotBody) {
-          return `<html xmlns="http://www.w3.org/1999/xhtml">${content}</html>`;
-        } else {
-          return `<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body>${content}</body></html>`;
-        }
-      } else if (/^[\s]*<head/i.test(html) || /^[\s]*<html/i.test(html) || /^[\s]*<!DOCTYPE/i.test(html)) {
-        return `<html>${content}</html>`;
+      const isxhtml = format === 'xhtml';
+      if (/^[\s]*<head/i.test(html) || /^[\s]*<html/i.test(html) || /^[\s]*<!DOCTYPE/i.test(html)) {
+        return `<html${isxhtml ? xhtmlAttribte : ''}>${content}</html>`;
       } else {
-        return `<body>${content}</body>`;
+        if (isxhtml) {
+          return `<html${xhtmlAttribte}><head></head><body>${content}</body></html>`;
+        } else {
+          return `<body>${content}</body>`;
+        }
       }
     };
 
