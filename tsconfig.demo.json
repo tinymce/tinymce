@@ -110,7 +110,7 @@
       "ephox/tinymce/demo/*": ["modules/tinymce/src/demo/ts/ephox/tinymce/demo/*"],
       "ephox/tinymce/*": ["modules/tinymce/src/main/ts/ephox/tinymce/*"],
 
-      "persona/*": ["modules/persona/src/main/ts/*"],
+      "tiny/persona/*": ["modules/persona/src/main/ts/*"]
     }
   }
 }

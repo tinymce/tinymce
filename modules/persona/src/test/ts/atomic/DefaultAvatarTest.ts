@@ -1,7 +1,7 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Optional, Fun } from '@ephox/katamari';
 import { assert } from 'chai';
-import * as DefaultAvatar from 'persona/DefaultAvatar';
+import * as DefaultAvatar from 'tiny/persona/DefaultAvatar';
 
 const extractAttribute = (attribute: string, avatar: string): Optional<string> => {
   const match = avatar.match(new RegExp(`${attribute}="([^"]+)"`));

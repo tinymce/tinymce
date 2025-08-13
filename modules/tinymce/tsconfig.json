@@ -74,11 +74,11 @@
     { "path": "../katamari" },
     { "path": "../katamari-assertions" },
     { "path": "../mcagar" },
+    { "path": "../persona" },
     { "path": "../polaris" },
     { "path": "../robin" },
     { "path": "../sand" },
     { "path": "../snooker" },
-    { "path": "../sugar" },
-    { "path": "../persona" }
+    { "path": "../sugar" }
   ]
 }

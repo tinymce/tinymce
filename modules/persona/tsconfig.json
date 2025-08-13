@@ -6,7 +6,7 @@
     "baseUrl": ".",
     "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
-      "persona/*": ["src/main/ts/*"],
+      "tiny/persona/*": ["src/main/ts/*"],
     }
   },
   "include": [
