@@ -68,9 +68,27 @@ const generateAvatarSvg = (content: string, color: string, size: number): string
   '</svg>';
 };
 
+/**
+ * Generates a data URL for an SVG avatar with the specified content, color, and size.
+ *
+ * @param content The text content to display in the avatar (typically a single character)
+ * @param color The background color of the avatar (hex color string)
+ * @param size The size of the avatar in pixels (width and height)
+ * @returns A data URL string containing the encoded SVG avatar
+ */
 const generateAvatar = (content: string, color: string, size: number): string =>
   'data:image/svg+xml,' + encodeURIComponent(generateAvatarSvg(content, color, size));
 
+/**
+ * Generates a user avatar based on the user's name and ID.
+ *
+ * @param user User object containing id and name properties
+ * @param user.id Unique identifier used to determine the avatar color
+ * @param user.name User's name, first character will be displayed in the avatar
+ * @param config Configuration object for the avatar
+ * @param config.size The size of the avatar in pixels (defaults to 36)
+ * @returns A data URL string containing the encoded SVG avatar
+ */
 const generateUserAvatar = (user: { id: string; name: string }, config = { size: 36 }): string =>
   generateAvatar(getFirstChar(user.name), getColor(user.id), config.size);
 

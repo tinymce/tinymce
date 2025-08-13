@@ -1,6 +1,6 @@
 import { StructureSchema, FieldSchema } from '@ephox/boulder';
 import { Arr, Optional, Results, Obj } from '@ephox/katamari';
-import { DefaultAvatar } from '@tinymce/oxide-components/utils';
+import { DefaultAvatar } from '@tinymce/persona';
 
 import Editor from '../api/Editor';
 import * as Options from '../api/Options';
