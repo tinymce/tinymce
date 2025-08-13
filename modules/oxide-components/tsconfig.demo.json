@@ -30,5 +30,13 @@
   "include": [
     "src/demo/ts",
     "src/**/*.stories.*"
+  ],
+  "references": [
+    {
+      "path": "../katamari/tsconfig.json"
+    },
+    {
+      "path": "../sugar/tsconfig.json"
+    }
   ]
 }

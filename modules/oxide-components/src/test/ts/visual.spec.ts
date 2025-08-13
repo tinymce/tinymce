@@ -6,7 +6,7 @@ import storybook from '../../../storybook-static/index.json' with { type: 'json'
 
 // Only run tests on stories, not other documentation pages.
 const stories = Object.values(storybook.entries).filter(
-  (e) => e.type === 'story'
+  (e) => e.type === 'story' && !e.tags.includes('skip-visual-testing')
 );
 
 for (const story of stories) {

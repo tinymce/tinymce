@@ -39,8 +39,10 @@
     "test-visual-local": "node ./visual-regression-test.mjs",
     "test-visual-local-update": "node ./visual-regression-test.mjs update",
     "test-ci": "vitest --watch=false --reporter=junit --outputFile=scratch/test-results.xml",
-    "test-storybook": "vitest --project storybook",
-    "ci": "yarn lint && yarn build-storybook && yarn build && yarn test"
+    "test-browser-manual": "vitest --watch --project browser --browser.headless false",
+    "test-browser-headless": "vitest run --project browser",
+    "test-storybook": "vitest run --project storybook",
+    "ci": "yarn lint && yarn --cwd ../../ lerna run build --scope @tinymce/oxide-components --include-dependencies && yarn test"
   },
   "peerDependencies": {
     "react": "^18.3.1",
@@ -73,7 +75,8 @@
     "storybook": "^9.0.10",
     "terser": "^5.28.1",
     "vite": "^6.3.5",
-    "vitest": "^3.1.4"
+    "vitest": "^3.1.4",
+    "vitest-browser-react": "^1.0.1"
   },
   "workspaces": {
     "nohoist": [

@@ -27,6 +27,13 @@ const config: StorybookConfig = {
     config.server ??= {}
     config.server.allowedHosts = ['host.docker.internal'];
     return config;
+  },
+  typescript: {
+    reactDocgen: "react-docgen-typescript",
+    reactDocgenTypescriptOptions: {
+      propFilter: (prop) => prop.parent?.fileName.includes("src") ?? false,
+      shouldRemoveUndefinedFromOptional: true,
+    },
   }
 };
 export default config;
