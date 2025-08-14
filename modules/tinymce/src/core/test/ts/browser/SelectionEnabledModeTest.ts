@@ -17,6 +17,8 @@ import ListPlugin from 'tinymce/plugins/lists/Plugin';
 import MediaPlugin from 'tinymce/plugins/media/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 
+import * as Assets from '../module/Assets';
+
 describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
@@ -112,10 +114,10 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       </ul>
       </div>`;
   const mediaElementHtml = `<span class="mce-preview-object mce-object-iframe" contenteditable="false" data-mce-object="iframe" data-mce-p-allowfullscreen="allowfullscreen" data-mce-p-src="https://www.youtube.com/embed/8aGhZQkoFbQ">`
-      + `<iframe src="https://www.youtube.com/embed/8aGhZQkoFbQ" width="560" height="314" frameborder="0" allowfullscreen="allowfullscreen" data-mce-src="https://www.youtube.com/embed/8aGhZQkoFbQ"></iframe><span class="mce-shim"></span></span>`;
+    + `<iframe src="https://www.youtube.com/embed/8aGhZQkoFbQ" width="560" height="314" frameborder="0" allowfullscreen="allowfullscreen" data-mce-src="https://www.youtube.com/embed/8aGhZQkoFbQ"></iframe><span class="mce-shim"></span></span>`;
   const iframeMediaEmbedHtml = `<div style="left: 0px; width: 100%; height: 0px; position: relative; padding-bottom: 56.25%; max-width: 650px;" contenteditable="false" data-ephox-embed-iri="https://www.youtube.com/watch?v=8aGhZQkoFbQ">` +
-  `<iframe style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" src="https://www.youtube.com/embed/8aGhZQkoFbQ?rel=0" scrolling="no" allowfullscreen="allowfullscreen"></iframe>` +
-  `</div>`;
+    `<iframe style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" src="https://www.youtube.com/embed/8aGhZQkoFbQ?rel=0" scrolling="no" allowfullscreen="allowfullscreen"></iframe>` +
+    `</div>`;
 
   const copy = (editor: Editor, spath: number[], soffset: number, fpath: number[], foffset: number) => {
     TinySelections.setSelection(editor, spath, soffset, fpath, foffset);
@@ -202,7 +204,7 @@ describe('browser.tinymce.core.SelectionEnabledModeTest', () => {
       const editor = hook.editor();
 
       setMode(editor, 'design');
-      editor.setContent('<figure class="image"><img src="https://www.google.com/logos/google.jpg"><figcaption>Image caption</figcaption></figure>');
+      editor.setContent(`<figure class="image"><img src="${Assets.getGreenImageDataUrl()}"><figcaption>Image caption</figcaption></figure>`);
       await Waiter.pTryUntil('Waited for image to load', () => assert.isTrue(UiFinder.findIn<HTMLImageElement>(TinyDom.body(editor), 'img').getOrDie().dom.complete));
       TinySelections.select(editor, 'figure', []);
       await pAssertOutlineStyle(UiFinder.findIn(TinyDom.body(editor), 'figure').getOrDie(), imageSelectedOutline);

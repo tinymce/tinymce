@@ -11,5 +11,8 @@
     {
       "path": "./tsconfig.demo.json"
     },
+    {
+      "path": "./tsconfig.test.json"
+    },
   ]
 }
