@@ -1,0 +1,40 @@
+
+.tox-sidebar when (@custom-properties-enabled = true) {
+  --tox-private-sidebar-header-box-shadow: 0 4px 8px 0 hsl( from var(--tox-private-color-black) h s l / 10%);
+  --tox-private-sidebar-border-color: hsl( from var(--tox-private-background-color) h s calc(l - 11));
+}
+
+@sidebar-header-box-shadow: 0 4px 8px 0 fade(@color-black, 10%);
+
+.tox-sidebar-content {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100%;
+  min-width: 300px;
+  max-width: 300px;
+  width: 300px;
+  border-left: 1px solid var(--tox-private-sidebar-border-color, darken(@background-color, 11%));
+}
+
+.tox-sidebar-content__header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: var(--tox-private-sidebar-header-box-shadow, @sidebar-header-box-shadow);
+  padding: var(--tox-private-pad-sm, @pad-sm) 12px;
+  background: var(--tox-private-background-color, @background-color);
+  z-index: 1;
+  .tox-sidebar-content__header-close-button {
+    margin-left: auto;
+  }
+}
+
+.tox-sidebar-content__title {
+  font-size: var(--tox-private-font-size-lg, @font-size-lg);
+  font-weight: var(--tox-private-font-weight-normal, @font-weight-normal);
+  padding: var(--tox-private-pad-sm, @pad-sm) 0 var(--tox-private-pad-sm, @pad-sm) 0;
+  color: var(--tox-private-text-color, @text-color);
+  line-height: 28px;
+}
+

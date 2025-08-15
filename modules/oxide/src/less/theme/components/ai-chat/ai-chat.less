@@ -1,0 +1,51 @@
+.tox-ai when (@custom-properties-enabled = true) {
+  --tox-private-ai-user-prompt-background: hsl( from var(--tox-private-background-color) h s calc(l - 6));
+  --tox-private-ai-footer-border-color: hsl( from var(--tox-private-background-color) h s calc(l - 11));
+}
+
+.tox-ai {
+  .tox-ai__user-prompt {
+    background-color: var(--tox-private-ai-user-prompt-background, darken(@background-color, 6%));
+    padding: var(--tox-private-pad-sm, @pad-sm) 12px;
+    border-radius: var(--tox-private-control-border-radius, @control-border-radius);
+    max-width: 80%;
+    align-self: flex-end;
+    color: var(--tox-private-text-color, @text-color);
+  }
+  
+  .tox-ai__scroll {
+    overflow: auto;
+    background-color: var(--tox-private-background-color, @background-color);
+    display: flex;
+    padding: 12px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    flex: 1 0 0;
+    align-self: stretch;
+  }
+  
+  .tox-ai-response__content {
+    padding: var(--tox-private-pad-sm, @pad-sm) 0;
+    color: var(--tox-private-text-color, @text-color);
+    font-feature-settings: 'liga' off, 'clig' off;
+    font-size: var(--tox-private-font-size-sm, @font-size-sm);
+    font-style: normal;
+    font-weight: var(--tox-private-font-weight-normal, @font-weight-normal);
+    line-height: var(--tox-private-line-height, 18px);
+  }
+  
+  .tox-ai__footer {
+    border-top: 1px solid var(--tox-private-ai-footer-border-color, darken(@background-color, 11%));
+    padding: 12px;
+    gap: var(--tox-private-pad-sm, @pad-sm);
+    background-color: var(--tox-private-background-color, @background-color);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .tox-ai__footer-actions {
+    display: flex;
+    gap: var(--tox-private-pad-sm, @pad-sm);
+  }
+}
