@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Attribute 'aria-errormessage' was incorrectly added to url input fields by default.
+time: 2025-07-30T09:29:53.563317+02:00
+custom:
+    Issue: TINY-12037
