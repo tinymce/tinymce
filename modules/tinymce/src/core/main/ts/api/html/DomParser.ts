@@ -312,13 +312,13 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
   const sanitizer = getSanitizer(defaultedSettings, schema);
 
   const parseAndSanitizeWithContext = (html: string, rootName: string, format: string = 'html', useDocumentNotBody: boolean = false): Element => {
-    const mimeType = format === 'xhtml' ? 'application/xhtml+xml' : 'text/html';
+    const isxhtml = format === 'xhtml';
+    const mimeType = isxhtml ? 'application/xhtml+xml' : 'text/html';
     // Determine the root element to wrap the HTML in when parsing. If we're dealing with a
     // special element then we need to wrap it so the internal content is handled appropriately.
     const isSpecialRoot = Obj.has(schema.getSpecialElements(), rootName.toLowerCase());
     const content = isSpecialRoot ? `<${rootName}>${html}</${rootName}>` : html;
     const makeWrap = () => {
-      const isxhtml = format === 'xhtml';
       if (/^[\s]*<head/i.test(html) || /^[\s]*<html/i.test(html) || /^[\s]*<!DOCTYPE/i.test(html)) {
         return `<html${isxhtml ? xhtmlAttribte : ''}>${content}</html>`;
       } else {
