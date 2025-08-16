@@ -4,8 +4,98 @@
     <title>Tinymce Demo Page</title>
   </head>
   <body>
-  <h2>TinyMCE Demo Page</h2>
-    <div id="ephox-ui"></div>
+  <h2>Ticket:  https://ephocks.atlassian.net/browse/TINY-10562</h2>
+  <h4 data-renderer-start-pos="68">Situation 1:</h4>
+    <ol class="ak-ol" start="1" data-indent-level="1">
+    <li>
+    <p data-renderer-start-pos="84">Merge the "Tobius" and "Linus" cells</p>
+    </li>
+    <li>
+    <p data-renderer-start-pos="124">Press the backspace key to delete the word "Linus" so the cursor appears to be after the word &ldquo;Linus&rdquo;</p>
+    </li>
+    <li>
+    <p data-renderer-start-pos="229">Press the backspace key to delete part of the word "Tobius" and observe nothing happens</p>
+    </li>
+    </ol>
+    <h4 data-renderer-start-pos="320">Situation 2:</h4>
+    <ol class="ak-ol" start="1" data-indent-level="1">
+    <li>
+    <p data-renderer-start-pos="336">Place the cursor in the first use of the word &ldquo;Linus&rdquo; in the editor</p>
+    </li>
+    <li>
+    <p data-renderer-start-pos="407">Continue pressing the left arrow key so the cursor appears next to the word &ldquo;Tobias&rdquo;</p>
+    </li>
+    <li>
+    <p data-renderer-start-pos="495">Press the left arrow key again and observe nothing happens</p>
+    </li>
+    </ol>
+    <h4 data-renderer-start-pos="557">Situation 3:</h4>
+    <ol class="ak-ol" start="1" data-indent-level="1">
+    <li>
+    <p data-renderer-start-pos="573">Place the cursor in the middle of the first use of the word &ldquo;Tobias&rdquo; in the editor</p>
+    </li>
+    <li>
+    <p data-renderer-start-pos="659">Continue pressing the right arrow key so the cursor appears end at the end of word</p>
+    </li>
+    <li>
+    <p data-renderer-start-pos="745">Press the right arrow key again and observe nothing happens</p>
+    </li>
+    </ol>
+    <p data-renderer-start-pos="808">Situation 4:</p>
+    <ol class="ak-ol" start="1" data-indent-level="1">
+    <li>
+    <p data-renderer-start-pos="824">Place the cursor in the first use of the word &ldquo;Linus&rdquo; in the editor</p>
+    </li>
+    <li>
+    <p data-renderer-start-pos="895">Continue pressing the backspace key so the cursor appears next to the word &ldquo;Tobias&rdquo;</p>
+    </li>
+    <li>
+    <p data-renderer-start-pos="982">Press the backspace key again and observe nothing happens</p>
+    </li>
+    </ol>
+    <p data-renderer-start-pos="1043">&nbsp;</p>
+    <h2 data-renderer-start-pos="1045">The issue</h2>
+    <p data-renderer-start-pos="1056">An absolutely positioned CEF element (&ldquo;button&rdquo; text in the fiddle on the far right) that is in the logical flow of cursor navigation is causing issues with a keyboard override or cursor position by the looks.</p>
+
+
+<h2>Ticket: https://ephocks.atlassian.net/browse/TINY-10306</h2>
+
+<p>&nbsp;</p>
+<ol class="ak-ol" start="1" data-indent-level="1">
+<li>
+<p data-renderer-start-pos="23">Move focus to the Tobias cell in the table.</p>
+</li>
+<li>
+<p data-renderer-start-pos="70">Press the RIGHT ARROW key a few times.</p>
+</li>
+</ol>
+<p data-renderer-start-pos="112"><strong data-renderer-mark="true">Expected Behavior</strong></p>
+<p data-renderer-start-pos="131">The cursor should move from the Tobias cell to the Linus cell.</p>
+<p data-renderer-start-pos="195"><strong data-renderer-mark="true">Actual Behavior</strong></p>
+<p data-renderer-start-pos="212">The cursor remains in the Tobias cell, not advancing as expected.</p>
+
+
+    <textarea id="ephox-ui">
+      <table style="width: 500px;">
+      <tbody>
+      <tr>
+      <td>Emil</td>
+      <td style="position: relative;">Tobias<button style="position: absolute; right: 30px;" contenteditable="false"> button </button></td>
+      <td>Linus</td>
+      </tr>
+      <tr>
+      <td>16</td>
+      <td>14</td>
+      <td>10</td>
+      </tr>
+      <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      </tr>
+      </tbody>
+      </table>
+    </textarea>
     <script src="../../../../js/tinymce/tinymce.js"></script>
     <script src="../../../../scratch/demos/core/demo.js"></script>
     <script>demos.TinyMceDemo();</script>
