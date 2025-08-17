@@ -4,6 +4,8 @@
 // For base button styles see button.less
 //
 
+@button-secondary-outline-hover-text-color-mapping: var(--tox-private-button-secondary-outline-hover-text-color, @text-color);
+
 @layer tox-atomic-component {
   .tox {
     .tox-button--secondary--outline when (@custom-properties-enabled = true) {
@@ -59,7 +61,7 @@
       &:hover:not(:disabled) {
         background-color: var(--tox-private-button-secondary-outline-hover-background-color, @button-secondary-background-color);
         border-color: var(--tox-private-button-secondary-outline-hover-border-color, @button-secondary-hover-background-color);
-        color: var(--tox-private-button-secondary-outline-hover-text-color, @text-color);
+        color: @button-secondary-outline-hover-text-color-mapping;
       }
 
       &:active:not(:disabled) {
