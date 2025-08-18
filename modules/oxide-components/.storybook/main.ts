@@ -26,6 +26,12 @@ const config: StorybookConfig = {
   viteFinal: (config) => {
     config.server ??= {}
     config.server.allowedHosts = ['host.docker.internal'];
+    
+    // Fix React 18 test-utils compatibility for bun
+    config.resolve ??= {};
+    config.resolve.alias ??= {};
+    config.resolve.alias['react-dom/test-utils'] = 'react-dom';
+    
     return config;
   },
   typescript: {
