@@ -3,6 +3,10 @@ ARG PLAYWRIGHT_VERSION=1.53.1-noble
 # Test stage
 FROM mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION} AS test
 
+# Install bun for consistent package management
+RUN curl -fsSL https://bun.sh/install | bash && \
+    ln -s ~/.bun/bin/bun /usr/local/bin/bun
+
 WORKDIR /tinymce/modules/oxide-components
 
-ENTRYPOINT [ "yarn", "playwright", "test" ]
+ENTRYPOINT [ "bun", "playwright", "test" ]
