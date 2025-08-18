@@ -1,0 +1,6 @@
+project: tinymce
+kind: Changed
+body: Reverted split button design change
+time: 2025-08-01T11:15:39.028692+10:00
+custom:
+  Issue: TINY-12593

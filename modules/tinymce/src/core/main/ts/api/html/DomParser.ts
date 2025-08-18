@@ -293,6 +293,8 @@ const getRootBlockName = (settings: DomParserSettings, args: ParserArgs) => {
   }
 };
 
+const xhtmlAttribte = ' xmlns="http://www.w3.org/1999/xhtml"';
+
 const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomParser => {
   const nodeFilterRegistry = FilterRegistry.create<ParserFilterCallback>();
   const attributeFilterRegistry = FilterRegistry.create<ParserFilterCallback>();
@@ -309,24 +311,27 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
   const parser = new DOMParser();
   const sanitizer = getSanitizer(defaultedSettings, schema);
 
-  const parseAndSanitizeWithContext = (html: string, rootName: string, format: string = 'html'): Element => {
-    const mimeType = format === 'xhtml' ? 'application/xhtml+xml' : 'text/html';
+  const parseAndSanitizeWithContext = (html: string, rootName: string, format: string = 'html', useDocumentNotBody: boolean = false): Element => {
+    const isxhtml = format === 'xhtml';
+    const mimeType = isxhtml ? 'application/xhtml+xml' : 'text/html';
     // Determine the root element to wrap the HTML in when parsing. If we're dealing with a
     // special element then we need to wrap it so the internal content is handled appropriately.
     const isSpecialRoot = Obj.has(schema.getSpecialElements(), rootName.toLowerCase());
     const content = isSpecialRoot ? `<${rootName}>${html}</${rootName}>` : html;
     const makeWrap = () => {
-      if (format === 'xhtml') {
-        // If parsing XHTML then the content must contain the xmlns declaration, see https://www.w3.org/TR/xhtml1/normative.html#strict
-        return `<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body>${content}</body></html>`;
-      } else if (/^[\s]*<head/i.test(html) || /^[\s]*<html/i.test(html) || /^[\s]*<!DOCTYPE/i.test(html)) {
-        return `<html>${content}</html>`;
+      if (/^[\s]*<head/i.test(html) || /^[\s]*<html/i.test(html) || /^[\s]*<!DOCTYPE/i.test(html)) {
+        return `<html${isxhtml ? xhtmlAttribte : ''}>${content}</html>`;
       } else {
-        return `<body>${content}</body>`;
+        if (isxhtml) {
+          return `<html${xhtmlAttribte}><head></head><body>${content}</body></html>`;
+        } else {
+          return `<body>${content}</body>`;
+        }
       }
     };
 
-    const body = parser.parseFromString(makeWrap(), mimeType).body;
+    const document = parser.parseFromString(makeWrap(), mimeType);
+    const body = useDocumentNotBody ? document.documentElement : document.body;
     sanitizer.sanitizeHtmlElement(body, mimeType);
     return isSpecialRoot ? body.firstChild as Element : body;
   };
@@ -474,10 +479,11 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
    */
   const parse = (html: string, args: ParserArgs = {}): AstNode => {
     const validate = defaultedSettings.validate;
-    const rootName = args.context ?? defaultedSettings.root_name;
+    const preferFullDocument = defaultedSettings.root_name === '#document';
+    const rootName = args.context ?? (preferFullDocument ? 'html' : defaultedSettings.root_name);
 
     // Parse and sanitize the content
-    const element = parseAndSanitizeWithContext(html, rootName, args.format);
+    const element = parseAndSanitizeWithContext(html, rootName, args.format, preferFullDocument);
 
     TransparentElements.updateChildren(schema, element);
 

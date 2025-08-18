@@ -7,6 +7,8 @@ import { assert } from 'chai';
 import Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 
+import * as Assets from '../../module/Assets';
+
 describe('browser.tinymce.core.util.QuirksFirefoxTest', () => {
   before(function () {
     if (!Env.browser.isFirefox()) {
@@ -86,7 +88,7 @@ describe('browser.tinymce.core.util.QuirksFirefoxTest', () => {
         <tbody>
           <tr>
             <td>&nbsp;</td>
-            <td><img src="https://google.com/logos/google.jpg" alt=""></td>
+            <td><img src="${Assets.getGreenImageDataUrl()}" alt=""></td>
           </tr>
         </tbody>
       </table>

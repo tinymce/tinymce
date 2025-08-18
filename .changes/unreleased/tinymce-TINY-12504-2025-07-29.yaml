@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Links inserted with `&amp;` encoding are now decoded to `&` before inserting
+time: 2025-07-29T12:26:22.24935+02:00
+custom:
+    Issue: TINY-12504

@@ -1,6 +1,18 @@
 //
 // Oxide Theme
 //
+
+/* 
+Rules declared inside a layer cascade together. This gives us more control over the cascade. 
+Styles defined in the last layer will override styles declared in the previous layers no matter the specificity.
+Styles that are not defined in any layer always override styles declared in named and anonymous layers.
+  1. `tox-reset` - CSS reset to clear default browser formatting.
+  2. `tox-globals` - global styles and CSS Custom Properties. Overrides styles defined in `tox-reset`.
+  3. `tox-component` - bigger components that can conatin other components like dialog, menu bar etc. Overrides styles defined in `tox-reset` and `tox-globals`.
+  4. `tox-atomic-component` - atomic components like button, input, checkbox etc. Overrides styles defined in `tox-reset`, `tox-globals` and `tox-component`.
+*/
+@layer tox-reset, tox-globals, tox-component, tox-atomic-component;
+
 @import 'globals/feature-flags';
 
 @import 'globals/reset';
@@ -9,6 +21,7 @@
 @import 'globals/global-variables';
 @import 'globals/global-custom-properties';
 @import 'globals/animations';
+@import 'globals/mixins';
 
 @import 'globals/tinymce';
 @import 'components/editor/editor';
@@ -19,12 +32,9 @@
 @import 'components/anchorbar/anchorbar';
 @import 'components/bar/bar';
 @import 'components/button/button';
-@import 'components/button/button-icon-and-text';
+@import 'components/button/button-primary';
 @import 'components/button/button-secondary';
-@import 'components/button/button-icon';
-@import 'components/button/button-link';
 @import 'components/button/button-naked';
-@import 'components/button/button-stretch';
 @import 'components/button/button-secondary-outlined';
 @import 'components/checkbox/checkbox';
 @import 'components/collection/collection';

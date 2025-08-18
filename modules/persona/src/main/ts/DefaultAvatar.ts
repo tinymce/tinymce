@@ -58,19 +58,38 @@ const getColor = (id: string): string => {
   return AvatarColors[colorIdx];
 };
 
-const generate = (name: string, color: string, size: number = 36): string => {
+const generateAvatarSvg = (content: string, color: string, size: number): string => {
   const halfSize = size / 2;
   return `<svg height="${size}" width="${size}" xmlns="http://www.w3.org/2000/svg">` +
     `<circle cx="${halfSize}" cy="${halfSize}" r="${halfSize}" fill="${color}"/>` +
     `<text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" fill="#FFF" font-family="sans-serif" font-size="${halfSize}">` +
-    getFirstChar(name) +
+    content +
     `</text>` +
-    '</svg>';
+  '</svg>';
 };
 
-const derive = (id: string, name: string): string => {
-  const avatarSvg = generate(name, getColor(id));
-  return 'data:image/svg+xml,' + encodeURIComponent(avatarSvg);
-};
+/**
+ * Generates a data URL for an SVG avatar with the specified content, color, and size.
+ *
+ * @param content The text content to display in the avatar (typically a single character)
+ * @param color The background color of the avatar (hex color string)
+ * @param size The size of the avatar in pixels (width and height)
+ * @returns A data URL string containing the encoded SVG avatar
+ */
+const generateAvatar = (content: string, color: string, size: number): string =>
+  'data:image/svg+xml,' + encodeURIComponent(generateAvatarSvg(content, color, size));
 
-export { derive };
+/**
+ * Generates a user avatar based on the user's name and ID.
+ *
+ * @param user User object containing id and name properties
+ * @param user.id Unique identifier used to determine the avatar color
+ * @param user.name User's name, first character will be displayed in the avatar
+ * @param config Configuration object for the avatar
+ * @param config.size The size of the avatar in pixels (defaults to 36)
+ * @returns A data URL string containing the encoded SVG avatar
+ */
+const generateUserAvatar = (user: { id: string; name: string }, config = { size: 36 }): string =>
+  generateAvatar(getFirstChar(user.name), getColor(user.id), config.size);
+
+export { generateAvatar, generateUserAvatar };

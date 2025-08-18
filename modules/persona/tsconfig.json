@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "compilerOptions": {
+    "outDir": "lib",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
+    "paths": {
+      "tiny/persona/*": ["src/main/ts/*"],
+    }
+  },
+  "include": [
+    "src/main/ts",
+    "src/test/ts"
+  ]
+}

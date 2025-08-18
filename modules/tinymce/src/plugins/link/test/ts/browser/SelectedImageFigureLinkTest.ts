@@ -7,6 +7,7 @@ import Plugin from 'tinymce/plugins/link/Plugin';
 import { TestLinkUi } from '../module/TestLinkUi';
 
 describe('browser.tinymce.plugins.link.SelectedImageFigureTest', () => {
+  const placeholderImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFElEQVR42mNk+A+ERADGUYX0VQgAXAYT9xTSUocAAAAASUVORK5CYII=';
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'link image',
     toolbar: 'link',
@@ -24,10 +25,10 @@ describe('browser.tinymce.plugins.link.SelectedImageFigureTest', () => {
   it('TINY-8832: link button should NOT be highlighted when there is no link in a figure element', async () => {
     const editor = hook.editor();
     editor.setContent(`
-      <figure class="image no-link"><img src="https://www.w3schools.com/w3css/img_lights.jpg" alt="" width="600" height="400">
+      <figure class="image no-link"><img src="${placeholderImage}" alt="" width="600" height="400">
         <figcaption>Caption</figcaption>
       </figure>
-      <figure class="image has-link"><img src="https://www.w3schools.com/w3css/img_lights.jpg" alt="" width="600" height="400">
+      <figure class="image has-link"><img src="${placeholderImage}" alt="" width="600" height="400">
         <figcaption><a href="http://tiny.cloud">Caption</a></figcaption>
       </figure>
     `);
