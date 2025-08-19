@@ -19,7 +19,7 @@ const removedOptions = (
 ).split(',');
 
 // const deprecatedOptions: string[] = ('').split(',');
-const deprecatedOptions: string[] = [];
+const deprecatedOptions: string[] = [ 'content_css_cors' ];
 
 const removedPlugins = 'bbcode,colorpicker,contextmenu,fullpage,legacyoutput,spellchecker,template,textcolor,rtc'.split(',');
 
