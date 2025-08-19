@@ -1,0 +1,6 @@
+project: tinymce
+kind: Deprecated
+body: Deprecated 'content_css_cors' config option.
+time: 2025-08-19T15:55:11.97751+02:00
+custom:
+  Issue: TINY-12578
