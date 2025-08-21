@@ -3,7 +3,7 @@ import { Focus, SelectorFind, SugarElement } from '@ephox/sugar';
 import { userEvent } from '@vitest/browser/context';
 import { useFlowKeyNavigation } from 'oxide-components/keynav/KeyboardNavigationHooks';
 import { forwardRef, useRef } from 'react';
-import { beforeEach, describe, expect, test } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-react';
 
 const styles = `.stay:focus {
@@ -77,13 +77,13 @@ const targets = {
   five: { label: 'five', selector: '.five' }
 };
 
-describe('KeynavFowTypeTest', () => {
+describe('KeynavFlowTypeTest', () => {
 
   beforeEach(() => {
     clearStore(store);
   });
 
-  test('FlowKeying with cycles', async () => {
+  it('FlowKeying with cycles', async () => {
 
     const FlowKeyingWithCycles = () => {
       const ref = useRef<HTMLDivElement>(null);
@@ -179,7 +179,7 @@ describe('KeynavFowTypeTest', () => {
 
   });
 
-  test('TINY-9429: Flow with cycles false should stop on the first element when left is pressed and on the last when right is pressed', async () => {
+  it('TINY-9429: Flow with cycles false should stop on the first element when left is pressed and on the last when right is pressed', async () => {
 
     const FlowKeyingWithoutCycles = () => {
       const ref = useRef<HTMLDivElement>(null);
