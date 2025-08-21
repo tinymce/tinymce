@@ -33,7 +33,7 @@ const isBookmark = NodeType.hasAttribute('data-mce-bookmark');
 const isBogus = NodeType.hasAttribute('data-mce-bogus');
 const isBogusAll = NodeType.hasAttributeValue('data-mce-bogus', 'all');
 
-const isEmptyNode = function (targetNode) {
+const isEmptyNode = function (targetNode, skipBogus) {
   let node, brCount = 0;
 
   if (isContent(targetNode, targetNode)) {
@@ -46,14 +46,15 @@ const isEmptyNode = function (targetNode) {
 
     const walker = new TreeWalker(node, targetNode);
     do {
-      if (isBogusAll(node)) {
-        node = walker.next(true);
-        continue;
-      }
-
-      if (isBogus(node)) {
-        node = walker.next();
-        continue;
+      if (skipBogus) {
+        if (isBogusAll(node)) {
+          node = walker.next(true);
+          continue;
+        }
+        if (isBogus(node)) {
+          node = walker.next();
+          continue;
+        }
       }
 
       if (NodeType.isBr(node)) {
@@ -73,7 +74,7 @@ const isEmptyNode = function (targetNode) {
   }
 };
 
-const isEmpty = (elm) => isEmptyNode(elm.dom());
+const isEmpty = (elm, skipBogus = true) => isEmptyNode(elm.dom(), skipBogus);
 
 export default {
   isEmpty

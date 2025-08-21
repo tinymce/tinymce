@@ -6,8 +6,8 @@
  */
 
 import { Element as DomElement, DocumentFragment, KeyboardEvent } from '@ephox/dom-globals';
-import { Arr } from '@ephox/katamari';
-import { PredicateFilter, Element, Node } from '@ephox/sugar';
+import { Arr, Option, Obj } from '@ephox/katamari';
+import { PredicateFilter, Element, Css, Node } from '@ephox/sugar';
 import Settings from '../api/Settings';
 import * as CaretContainer from '../caret/CaretContainer';
 import NodeType from '../dom/NodeType';
@@ -133,11 +133,58 @@ const getEditableRoot = function (dom, node) {
   return parent !== root ? editableRoot : root;
 };
 
+const objAcc = (r) => (x, i) => {
+  r[i] = x;
+};
+
+const internalFilter = function (obj, pred, onTrue, onFalse) {
+  const r = {};
+  Obj.each(obj, function (x, i) {
+    (pred(x, i) ? onTrue : onFalse)(x, i);
+  });
+  return r;
+};
+
+const filter = function (obj, pred) {
+  const t = {};
+  internalFilter(obj, pred, objAcc(t), () => {});
+  return t;
+};
+
+export const lift2 = (oa, ob, f) =>
+  oa.isSome() && ob.isSome() ? Option.some(f(oa.getOrDie(), ob.getOrDie())) : Option.none();
+
+const applyAttributes = (editor: Editor, node: DomElement, forcedRootBlockAttrs: Record<string, string>) => {
+  // Merge and apply style attribute
+  Option.from(forcedRootBlockAttrs.style)
+    .map(editor.dom.parseStyle)
+    .each((attrStyles) => {
+      const currentStyles = Css.getAllRaw(Element.fromDom(node));
+      const newStyles = { ...currentStyles, ...attrStyles };
+      editor.dom.setStyles(node, newStyles);
+    });
+
+  // Merge and apply class attribute
+  const attrClassesOpt = Option.from(forcedRootBlockAttrs.class).map((attrClasses) => attrClasses.split(/\s+/));
+  const currentClassesOpt = Option.from(node.className).map((currentClasses) => Arr.filter(currentClasses.split(/\s+/), (clazz) => clazz !== ''));
+  lift2(attrClassesOpt, currentClassesOpt, (attrClasses, currentClasses) => {
+    const filteredClasses = Arr.filter(currentClasses, (clazz) => !Arr.contains(attrClasses, clazz));
+    const newClasses = [...attrClasses, ...filteredClasses];
+    editor.dom.setAttrib(node, 'class', newClasses.join(' '));
+  });
+
+  // Apply any remaining forced root block attributes
+  const appliedAttrs = ['style', 'class'];
+  const remainingAttrs = filter(forcedRootBlockAttrs, (_, attrs) => !Arr.contains(appliedAttrs, attrs));
+  editor.dom.setAttribs(node, remainingAttrs);
+};
+
 const setForcedBlockAttrs = function (editor: Editor, node) {
   const forcedRootBlockName = Settings.getForcedRootBlock(editor);
 
   if (forcedRootBlockName && forcedRootBlockName.toLowerCase() === node.tagName.toLowerCase()) {
-    editor.dom.setAttribs(node, Settings.getForcedRootBlockAttrs(editor));
+    const forcedRootBlockAttrs = Settings.getForcedRootBlockAttrs(editor);
+    applyAttributes(editor, node, forcedRootBlockAttrs);
   }
 };
 
@@ -231,7 +278,6 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
 
     if (name || parentBlockName === 'TABLE' || parentBlockName === 'HR') {
       block = dom.create(name || newBlockName);
-      setForcedBlockAttrs(editor, block);
     } else {
       block = parentBlock.cloneNode(false);
     }
@@ -263,6 +309,8 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
         }
       } while ((node = node.parentNode) && node !== editableRoot);
     }
+
+    setForcedBlockAttrs(editor, block);
 
     emptyBlock(caretNode);
 
@@ -427,6 +475,7 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
     if (dom.isEmpty(parentBlock)) {
       emptyBlock(parentBlock);
     }
+    setForcedBlockAttrs(editor, newBlock);
     NewLineUtils.moveToCaretPosition(editor, newBlock);
   } else if (isCaretAtStartOrEndOfBlock()) {
     insertNewBlockAfter();
@@ -457,6 +506,7 @@ const insert = function (editor: Editor, evt?: EditorEvent<KeyboardEvent>) {
       dom.remove(newBlock);
       insertNewBlockAfter();
     } else {
+      setForcedBlockAttrs(editor, newBlock);
       NewLineUtils.moveToCaretPosition(editor, newBlock);
     }
   }

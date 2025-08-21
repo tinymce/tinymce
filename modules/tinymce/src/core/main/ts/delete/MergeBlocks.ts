@@ -30,7 +30,7 @@ const extractChildren = (block: Element) => {
 
 const removeEmptyRoot = (rootNode: Element, block: Element) => {
   const parents = Parents.parentsAndSelf(block, rootNode);
-  return Arr.find(parents.reverse(), Empty.isEmpty).each(Remove.remove);
+  return Arr.find(parents.reverse(), (el) => Empty.isEmpty(el)).each(Remove.remove);
 };
 
 const isEmptyBefore = (el: Element) => Arr.filter(Traverse.prevSiblings(el), (el) => !Empty.isEmpty(el)).length === 0;

@@ -5,9 +5,13 @@
  * For commercial licenses see https://www.tiny.cloud/
  */
 
-import { Node } from '@ephox/dom-globals';
+import { Node, HTMLBRElement, Element } from '@ephox/dom-globals';
+import { Obj } from '@ephox/katamari';
+import { PredicateExists } from '@ephox/sugar';
 import Bookmarks from '../bookmark/Bookmarks';
 import NodeType from '../dom/NodeType';
+import Settings from '../api/Settings';
+import Empty from '../dom/Empty';
 import * as CaretFormat from './CaretFormat';
 import ExpandRange from './ExpandRange';
 import FormatUtils from './FormatUtils';
@@ -21,24 +25,56 @@ import Selection from '../api/dom/Selection';
 import { isCaretNode } from './FormatContainer';
 import GetBookmark from '../bookmark/GetBookmark';
 import Editor from '../api/Editor';
+import { ApplyFormat, BlockFormat, FormatVars, InlineFormat, SelectorFormat } from '../api/fmt/Format';
 
 const each = Tools.each;
+
+const hasNonNullableKey = (obj, key) =>
+  Obj.has(obj, key) && obj[key] !== undefined && obj[key] !== null;
+
+// TODO: is this correct? As a "mixed" format has both `selector` and `inline` properties
+const isInlineFormat = (format: ApplyFormat): format is InlineFormat =>
+  hasNonNullableKey(format as any, 'inline');
+
+const fromDom = (node) => {
+  // TODO: Consider removing this check, but left atm for safety
+  if (node === null || node === undefined) { throw new Error('Node cannot be null or undefined'); }
+  return {
+    dom: () => node,
+  };
+};
+
+type ApplyFormatProp = keyof InlineFormat | keyof BlockFormat | keyof SelectorFormat;
+
+const hasFormatProperty = (format: ApplyFormat, prop: ApplyFormatProp): boolean =>
+  hasNonNullableKey(format as any, prop);
 
 const isElementNode = function (node: Node) {
   return node && node.nodeType === 1 && !Bookmarks.isBookmarkNode(node) && !isCaretNode(node) && !NodeType.isBogus(node);
 };
 
-const processChildElements = function (node, filter, process) {
-  each(node.childNodes, function (node) {
-    if (isElementNode(node)) {
-      if (filter(node)) {
-        process(node);
-      }
-      if (node.hasChildNodes()) {
-        processChildElements(node, filter, process);
-      }
-    }
-  });
+const canFormatBR = (editor: Editor, format: ApplyFormat, node: HTMLBRElement, parentName: string) => {
+  // TINY-6483: Can format 'br' if it is contained in a valid empty block and an inline format is being applied
+  if (Settings.canFormatEmptyLines(editor) && isInlineFormat(format)) {
+    // A curated list using the textBlockElements map and parts of the blockElements map from the schema
+    const validBRParentElements: Record<string, {}> = {
+      ...editor.schema.getTextBlockElements(),
+      td: {},
+      th: {},
+      li: {},
+      dt: {},
+      dd: {},
+      figcaption: {},
+      caption: {},
+      details: {},
+      summary: {}
+    };
+    // If a caret node is present, the format should apply to that, not the br (applicable to collapsed selections)
+    const hasCaretNodeSibling = PredicateExists.sibling(fromDom(node), (sibling) => isCaretNode(sibling.dom()));
+    return hasNonNullableKey(validBRParentElements, parentName) && Empty.isEmpty(fromDom(node.parentNode), false) && !hasCaretNodeSibling;
+  } else {
+    return false;
+  }
 };
 
 const applyFormat = function (ed: Editor, name: string, vars?, node?) {
@@ -137,21 +173,19 @@ const applyFormat = function (ed: Editor, name: string, vars?, node?) {
           hasContentEditableState = true; // We don't want to wrap the container only it's children
         }
 
-        // Stop wrapping on br elements
-        if (FormatUtils.isEq(nodeName, 'br')) {
-          currentWrapElm = 0;
-
+        // Stop wrapping on br elements except when valid
+        if (NodeType.isBr(node) && !canFormatBR(ed, format, node, parentName)) {
+          currentWrapElm = null;
           // Remove any br elements when we wrap things
           if (format.block) {
             dom.remove(node);
           }
-
           return;
         }
 
         // If node is wrapper type
         if (format.wrapper && MatchFormat.matchNode(ed, node, name, vars)) {
-          currentWrapElm = 0;
+          currentWrapElm = null;
           return;
         }
 
@@ -159,10 +193,10 @@ const applyFormat = function (ed: Editor, name: string, vars?, node?) {
         // TODO: Break this if up, too complex
         if (contentEditable && !hasContentEditableState && format.block &&
           !format.wrapper && FormatUtils.isTextBlock(ed, nodeName) && FormatUtils.isValid(ed, parentName, wrapName)) {
-          node = dom.rename(node, wrapName);
-          setElementFormat(node);
-          newWrappers.push(node);
-          currentWrapElm = 0;
+          const elm = dom.rename(node as Element, wrapName);
+          setElementFormat(elm);
+          newWrappers.push(elm);
+          currentWrapElm = null;
           return;
         }
 
@@ -171,8 +205,8 @@ const applyFormat = function (ed: Editor, name: string, vars?, node?) {
           const found = applyNodeStyle(formatList, node);
 
           // Continue processing if a selector match wasn't found and a inline element is defined
-          if (!format.inline || found) {
-            currentWrapElm = 0;
+          if (!hasFormatProperty(format, 'inline') || found) {
+            currentWrapElm = null;
             return;
           }
         }
@@ -196,7 +230,7 @@ const applyFormat = function (ed: Editor, name: string, vars?, node?) {
           currentWrapElm.appendChild(node);
         } else {
           // Start a new wrapper for possible children
-          currentWrapElm = 0;
+          currentWrapElm = null;
 
           each(Tools.grep(node.childNodes), process);
 
@@ -205,7 +239,7 @@ const applyFormat = function (ed: Editor, name: string, vars?, node?) {
           }
 
           // End the last wrapper
-          currentWrapElm = 0;
+          currentWrapElm = null;
         }
       };
 
@@ -299,7 +333,7 @@ const applyFormat = function (ed: Editor, name: string, vars?, node?) {
 
   if (dom.getContentEditable(selection.getNode()) === 'false') {
     node = selection.getNode();
-    for (let i = 0, l = formatList.length; i < l; i++) {
+    for (let i = 0, l = formatList.length as number; i < l; i++) {
       if (formatList[i].ceFalseOverride && dom.is(node, formatList[i].selector)) {
         setElementFormat(node, formatList[i]);
         return;

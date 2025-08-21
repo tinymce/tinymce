@@ -173,6 +173,8 @@ const getInlineBoundarySelector = (editor: Editor): string => {
   return editor.getParam('inline_boundaries_selector', 'a[href],code,.mce-annotation', 'string');
 };
 
+const canFormatEmptyLines = (editor: Editor) => editor.getParam('format_empty_lines', false, 'boolean');
+
 export default {
   getIframeAttrs,
   getDocType,
@@ -206,5 +208,6 @@ export default {
   getIndentation,
   getContentCss,
   getDirectionality,
-  getInlineBoundarySelector
+  getInlineBoundarySelector,
+  canFormatEmptyLines,
 };
