@@ -54,6 +54,7 @@ export interface SetAttribEvent {
 }
 
 export interface DOMUtilsSettings {
+  csp_nonce?: string;
   schema: Schema;
   url_converter: URLConverter;
   url_converter_scope: any;
@@ -766,6 +767,10 @@ const DOMUtils = (doc: Document, settings: Partial<DOMUtilsSettings> = {}): DOMU
       styleElm = doc.createElement('style');
       styleElm.id = 'mceDefaultStyles';
       styleElm.type = 'text/css';
+
+      if (settings.csp_nonce) {
+        styleElm.setAttribute('nonce', settings.csp_nonce);
+      }
 
       const head = doc.head;
       if (head.firstChild) {

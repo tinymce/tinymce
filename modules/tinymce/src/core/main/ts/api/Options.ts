@@ -7,7 +7,7 @@ import type * as PatternTypes from '../textpatterns/core/PatternTypes';
 import DOMUtils from './dom/DOMUtils';
 import type Editor from './Editor';
 import { fireDisabledStateChange } from './Events';
-import type { EditorOptions } from './OptionTypes';
+import type { EditorOptions, SpecificCspNonce } from './OptionTypes';
 import I18n from './util/I18n';
 import Tools from './util/Tools';
 
@@ -935,6 +935,42 @@ const register = (editor: Editor): void => {
     }
   });
 
+  registerOption('csp_nonce', {
+    processor: (value) => {
+      if (value === undefined || value === null) {
+        return { valid: true, value: undefined };
+      }
+      if (Type.isString(value)) {
+        if (value.trim() === '') {
+          return { valid: false, message: 'CSP nonce must be a non-empty string.' };
+        }
+        return { valid: true, value };
+      }
+
+      if (Type.isObject(value) && !Array.isArray(value)) {
+        const { style_nonce, script_nonce } = value as Record<string, unknown>;
+        const out: SpecificCspNonce = {};
+
+        if (!Type.isUndefined(style_nonce) && style_nonce !== null) {
+          if (!Type.isString(style_nonce) || Strings.trim(style_nonce as string) === '') {
+            return { valid: false, message: 'CSP nonce\'s style_nonce must be a non-empty string.' };
+          }
+          out.style_nonce = style_nonce as string;
+        }
+
+        if (!Type.isUndefined(script_nonce) && script_nonce !== null) {
+          if (!Type.isString(script_nonce) || Strings.trim(script_nonce as string) === '') {
+            return { valid: false, message: 'CSP nonce\'s script_nonce must be a non-empty string.' };
+          }
+          out.script_nonce = script_nonce as string;
+        }
+
+        return { valid: true, value: out };
+      }
+      return { valid: false, message: 'csp_nonce must be undefined, a non-empty string, or an object with optional non-empty string fields "style_nonce" and/or "script_nonce".' };
+    }
+  });
+
   // These options must be registered later in the init sequence due to their default values
   editor.on('ScriptsLoaded', () => {
     registerOption('directionality', {
@@ -1082,6 +1118,7 @@ const getExtendedMathmlElements = option('extended_mathml_elements');
 const getUserId = option('user_id');
 const getFetchUsers = option('fetch_users');
 const shouldIndentOnTab = option('lists_indent_on_tab');
+const getCspNonce = option('csp_nonce');
 const getListMaxDepth = (editor: Editor): Optional<number> =>
   Optional.from(editor.options.get('list_max_depth'));
 
@@ -1201,5 +1238,6 @@ export {
   shouldIndentOnTab,
   getListMaxDepth,
   getFetchUsers,
-  getUserId
+  getUserId,
+  getCspNonce
 };

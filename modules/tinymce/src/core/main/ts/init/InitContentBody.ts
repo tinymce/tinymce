@@ -54,6 +54,19 @@ const appendStyle = (editor: Editor, text: string) => {
   const style = SugarElement.fromTag('style');
   Attribute.set(style, 'type', 'text/css');
   Insert.append(style, SugarElement.fromText(text));
+
+  const cspNonce = Options.getCspNonce(editor);
+  let nonce: string | undefined;
+  if (typeof cspNonce === 'string') {
+    nonce = cspNonce;
+  } else if ( typeof cspNonce === 'object' && cspNonce !== null && cspNonce.style_nonce) {
+    nonce = cspNonce.style_nonce;
+  }
+
+  if (nonce) {
+    Attribute.set(style, 'nonce', nonce);
+  }
+
   Insert.append(container, style);
 
   editor.on('remove', () => {
@@ -439,12 +452,21 @@ const contentBodyLoaded = (editor: Editor): void => {
     body.contentEditable = 'true';
   }
 
+  const cspNonce = Options.getCspNonce(editor);
+  let nonce: string | undefined;
+  if (typeof cspNonce === 'string') {
+    nonce = cspNonce;
+  } else if (typeof cspNonce === 'object' && cspNonce !== null && cspNonce.style_nonce) {
+    nonce = cspNonce.style_nonce;
+  }
+
   (body as any).disabled = false;
 
   editor.editorUpload = EditorUpload(editor);
 
   editor.schema = Schema(mkSchemaSettings(editor));
   editor.dom = DOMUtils(doc, {
+    csp_nonce: nonce,
     keep_values: true,
     // Note: Don't bind here, as the binding is handled via the `url_converter_scope`
     // eslint-disable-next-line @typescript-eslint/unbound-method

@@ -31,6 +31,7 @@ import DOMUtils from './DOMUtils';
 const DOM = DOMUtils.DOM;
 
 export interface ScriptLoaderSettings {
+  cspNonce?: string;
   referrerPolicy?: ReferrerPolicy;
   crossOrigin?: (url: string) => string | undefined;
 }
@@ -60,6 +61,10 @@ class ScriptLoader {
 
   public constructor(settings: ScriptLoaderSettings = {}) {
     this.settings = settings;
+  }
+
+  public _setCspNonce(nonce: string): void {
+    this.settings.cspNonce = nonce;
   }
 
   public _setReferrerPolicy(referrerPolicy: ReferrerPolicy): void {
@@ -111,6 +116,10 @@ class ScriptLoader {
       elm.id = id;
       elm.type = 'text/javascript';
       elm.src = Tools._addCacheSuffix(url);
+
+      if (this.settings.cspNonce) {
+        dom.setAttrib(elm, 'nonce', this.settings.cspNonce);
+      }
 
       if (this.settings.referrerPolicy) {
         // Note: Don't use elm.referrerPolicy = ... here as it doesn't work on Safari
