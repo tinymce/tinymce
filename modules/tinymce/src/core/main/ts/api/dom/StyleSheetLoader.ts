@@ -16,12 +16,14 @@ interface StyleSheetLoader {
   unload: (url: string) => void;
   unloadRawCss: (key: string) => void;
   unloadAll: (urls: string[]) => void;
+  _setCspNonce: (nonce: string) => void;
   _setReferrerPolicy: (referrerPolicy: ReferrerPolicy) => void;
   _setContentCssCors: (contentCssCors: boolean) => void;
   _setCrossOrigin: (crossOrigin: (url: string) => string | undefined) => void;
 }
 
 export interface StyleSheetLoaderSettings {
+  cspNonce?: string;
   maxLoadTime?: number;
   contentCssCors?: boolean;
   crossOrigin?: (url: string) => string | undefined;
@@ -54,6 +56,10 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
 
   const edos = SugarElement.fromDom(documentOrShadowRoot);
   const doc = Traverse.documentOrOwner(edos);
+
+  const _setCspNonce = (nonce: string) => {
+    settings.cspNonce = nonce;
+  };
 
   const _setReferrerPolicy = (referrerPolicy: ReferrerPolicy) => {
     settings.referrerPolicy = referrerPolicy;
@@ -152,6 +158,10 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
         id: state.id
       });
 
+      if (settings.cspNonce) {
+        Attribute.set(linkElem, 'nonce', settings.cspNonce);
+      }
+
       const crossorigin = getCrossOrigin(url, settings);
       if (crossorigin !== undefined) {
         Attribute.set(linkElem, 'crossOrigin', crossorigin);
@@ -190,6 +200,10 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
       'id': state.id,
       'data-mce-key': key
     });
+
+    if (settings.cspNonce) {
+      Attribute.set(styleElem, 'nonce', settings.cspNonce);
+    }
 
     styleElem.dom.innerHTML = css;
 
@@ -268,6 +282,7 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
     unload,
     unloadRawCss,
     unloadAll,
+    _setCspNonce,
     _setReferrerPolicy,
     _setContentCssCors,
     _setCrossOrigin
