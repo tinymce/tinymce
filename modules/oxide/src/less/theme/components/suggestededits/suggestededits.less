@@ -26,7 +26,7 @@
 
 @suggestededits-card-hover-shadow-color: @suggestededits-dark-transparent-color;
 @suggestededits-card-resolved-background-color: @suggestededits-dark-transparent-color;
-@suggestededits-card-selected-border-color: @suggestededits-color-tint;
+@suggestededits-card-active-border-color: @suggestededits-color-tint;
 
 // this file is imported above `view.less`, but we need a variable from it
 // TODO TINY-12535: replace `.tox-suggestededits__toolbar` with `.tox-view__toolbar`
@@ -39,6 +39,11 @@
 
   .tox-view .tox-suggestededits__pane {
     padding: 0;      /* Override the default padding of tox-view__pane */
+  }
+
+  .tox-view__toolbar .tox-toggle:focus {
+    border-radius: 5px;
+    outline: 2px solid @keyboard-focus-outline-color;
   }
 
   .tox-suggestededits__sink {
@@ -328,12 +333,8 @@
           background-color: @suggestededits-card-resolved-background-color;
         }
 
-        .tox-suggestededits__card.tox-suggestededits__card--selected {
-          outline: 2px solid @suggestededits-card-selected-border-color;
-
-          &:not(.tox-suggestededits__card--resolved) {
-            background-color: @suggestededits-background-color;
-          }
+        .tox-suggestededits__card.tox-suggestededits__card--active:focus {
+          outline: 2px solid @suggestededits-card-active-border-color;
         }
 
         .tox-suggestededits__card:hover {
