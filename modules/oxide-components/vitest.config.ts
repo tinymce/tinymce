@@ -14,6 +14,7 @@ export default defineConfig({
       {
         test: {
           name: 'browser',
+          setupFiles: [ './vitest.setup.js' ],
           alias: [
             {
               find: 'oxide-components',

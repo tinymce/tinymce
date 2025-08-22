@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { IconButton } from './IconButton.component';
+import { IconButton } from './IconButton';
 
 /* eslint-disable max-len */
 const resolvedIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">

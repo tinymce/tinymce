@@ -1,6 +1,6 @@
 import { Icon, type IconProps } from '../../internal/icon/Icon.component';
 import { classes } from '../../utils/Styles';
-import { Button, type ButtonProps } from '../button/Button.component';
+import { Button, type ButtonProps } from '../button/Button';
 
 export interface IconButtonProps extends IconProps, Omit<ButtonProps, 'children' | 'className'> {
   readonly children?: never;
