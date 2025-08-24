@@ -86,18 +86,13 @@
         background-color: @suggestededits-sidebar-background-color;
         display: flex;
         flex-direction: column;
-        justify-content: flex-end;
+        flex: 0 1 auto;
         min-width: 248px;
         width: 316px;
       }
 
       .tox-suggestededits__sidebar-header {
         padding: 4px 12px;
-        position: sticky;
-        top: 0;
-        background-color: @suggestededits-sidebar-background-color;
-        margin: -4px -12px;
-        z-index: 1;
       }
 
       .tox-suggestededits__sidebar-content {
@@ -106,7 +101,7 @@
         flex-direction: column;
         gap: 12px;
         overflow: auto;
-        padding: 0px 12px 12px 12px;
+        padding: 6px 12px 12px 12px;
         position: relative;
 
         .tox-suggestededits__card {
