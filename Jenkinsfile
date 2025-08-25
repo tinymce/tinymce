@@ -1,5 +1,5 @@
 #!groovy
-@Library('waluigi@release/7') _
+@Library('waluigi@feature/TINY-12659') _
 
 standardProperties()
 
@@ -206,10 +206,10 @@ def cacheName = "cache_${BUILD_TAG}"
 
 def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NUMBER}"
 
-timestamps { alertWorseResult(
+timestamps { notifyStatusChange(
   cleanupStep: { devPods.cleanUpPod(build: cacheName) },
-  branches: ['main', 'release/7', 'release/8'],
-  channel: '#tinymce-build-status',
+  branches: ['main', 'release/7', 'release/8', 'feature/TINY-12659'],
+  channel: '#tiny-textboxio-dev',
   name: 'TinyMCE'
   ) {
   devPods.nodeProducer(
@@ -236,6 +236,7 @@ timestamps { alertWorseResult(
     }
 
     stage('Build') {
+      unstable('make it fail')
       // verify no errors in changelog merge
       exec("yarn changie-merge")
       withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
@@ -325,8 +326,8 @@ timestamps { alertWorseResult(
   }
 
   stage('Run tests') {
-      echo "Running tests [runAll=${runAllTests}]"
-      parallel processes
+      echo "Running no tests [runAll=${runAllTests}]"
+      // parallel processes
   }
 
 }}
