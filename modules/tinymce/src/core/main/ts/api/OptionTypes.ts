@@ -49,6 +49,7 @@ export type ToolbarLocation = 'top' | 'bottom' | 'auto';
 export type CrossOrigin = (url: string, resourceType: 'script' | 'stylesheet') => 'anonymous' | 'use-credentials' | undefined;
 
 interface BaseEditorOptions {
+  csp_nonce?: string;
   a11y_advanced_options?: boolean;
   add_form_submit_trigger?: boolean;
   add_unload_trigger?: boolean;
