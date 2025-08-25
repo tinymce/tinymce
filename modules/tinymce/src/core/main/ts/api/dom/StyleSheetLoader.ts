@@ -158,10 +158,6 @@ const StyleSheetLoader = (documentOrShadowRoot: Document | ShadowRoot, settings:
         id: state.id
       });
 
-      if (settings.cspNonce) {
-        Attribute.set(linkElem, 'nonce', settings.cspNonce);
-      }
-
       const crossorigin = getCrossOrigin(url, settings);
       if (crossorigin !== undefined) {
         Attribute.set(linkElem, 'crossOrigin', crossorigin);
