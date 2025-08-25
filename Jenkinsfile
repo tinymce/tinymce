@@ -232,14 +232,16 @@ timestamps { notifyStatusChange(
 
     stage('Deps') {
       // cancel build if primary branch doesn't merge cleanly
-      gitMerge(primaryBranch)
-      yarnInstall()
+      error('make it fail')
+      // gitMerge(primaryBranch)
+      // yarnInstall()
+      echo 'skip'
     }
 
     stage('Build') {
-      error('make it fail')
       // verify no errors in changelog merge
-      exec("yarn changie-merge")
+      echo 'skip'
+      // exec("yarn changie-merge")
       // withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
       //   // type check and build TinyMCE
       //   exec("yarn ci-all-seq")
