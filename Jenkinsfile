@@ -237,7 +237,7 @@ timestamps { notifyStatusChange(
     }
 
     stage('Build') {
-      // error('make it fail')
+      error('make it fail')
       // verify no errors in changelog merge
       exec("yarn changie-merge")
       // withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
