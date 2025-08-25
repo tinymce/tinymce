@@ -1,4 +1,5 @@
 import AstNode from '../api/html/Node';
+import { EntityEncoding } from '../api/OptionTypes';
 
 export type Content = string | AstNode;
 export type ContentFormat = 'raw' | 'text' | 'html' | 'tree';
@@ -10,6 +11,8 @@ export interface GetContentArgs {
   no_events?: boolean;
   save?: boolean;
   source_view?: boolean;
+  indent?: boolean;
+  entity_encoding?: EntityEncoding;
   [key: string]: any;
 }
 
