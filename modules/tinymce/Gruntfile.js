@@ -31,7 +31,8 @@ let oxideUiSkinMap = {
   'dark': 'oxide-dark',
   'default': 'oxide',
   'tinymce-5': 'tinymce-5',
-  'tinymce-5-dark': 'tinymce-5-dark'
+  'tinymce-5-dark': 'tinymce-5-dark',
+  'experimental-css-custom-props-enabled': 'experimental-css-custom-props-enabled'
 };
 
 const stripSourceMaps = function (data) {
