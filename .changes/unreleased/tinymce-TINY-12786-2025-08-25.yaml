@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: '`GetContent` now supports `indent` and `entity_encoding` at runtime via `GetContentArgs`.'
+time: 2025-08-25T20:06:20.112397+08:00
+custom:
+    Issue: TINY-12786
