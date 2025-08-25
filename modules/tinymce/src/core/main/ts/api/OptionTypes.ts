@@ -48,15 +48,8 @@ export type ToolbarLocation = 'top' | 'bottom' | 'auto';
 
 export type CrossOrigin = (url: string, resourceType: 'script' | 'stylesheet') => 'anonymous' | 'use-credentials' | undefined;
 
-export interface SpecificCspNonce {
-  style_nonce?: string;
-  script_nonce?: string;
-}
-
-export type CspNonce = undefined | string | SpecificCspNonce;
-
 interface BaseEditorOptions {
-  csp_nonce?: CspNonce;
+  csp_nonce?: string;
   a11y_advanced_options?: boolean;
   add_form_submit_trigger?: boolean;
   add_unload_trigger?: boolean;

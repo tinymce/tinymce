@@ -317,18 +317,9 @@ class Editor implements EditorObservable {
     this.baseUri = editorManager.baseURI;
 
     const cspNonce = Options.getCspNonce(self);
-    if (typeof cspNonce === 'string') {
-      ScriptLoader.ScriptLoader._setCspNonce(cspNonce);
-      DOMUtils.DOM.styleSheetLoader._setCspNonce(cspNonce);
-      DOMUtils.DOM.settings.csp_nonce = cspNonce;
-    } else if (typeof cspNonce === 'object' && cspNonce !== null) {
-      if (cspNonce.script_nonce) {
-        ScriptLoader.ScriptLoader._setCspNonce(cspNonce.script_nonce);
-      }
-      if (cspNonce.style_nonce) {
-        DOMUtils.DOM.styleSheetLoader._setCspNonce(cspNonce.style_nonce);
-        DOMUtils.DOM.settings.csp_nonce = cspNonce.style_nonce;
-      }
+    if (typeof cspNonce === 'string' && cspNonce.trim() !== '' ) {
+      DOMUtils.DOM.styleSheetLoader._setCspNonce(cspNonce.trim());
+      DOMUtils.DOM.settings.csp_nonce = cspNonce.trim();
     }
 
     const referrerPolicy = Options.getReferrerPolicy(self);

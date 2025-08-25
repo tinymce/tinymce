@@ -56,15 +56,8 @@ const appendStyle = (editor: Editor, text: string) => {
   Insert.append(style, SugarElement.fromText(text));
 
   const cspNonce = Options.getCspNonce(editor);
-  let nonce: string | undefined;
-  if (typeof cspNonce === 'string') {
-    nonce = cspNonce;
-  } else if ( typeof cspNonce === 'object' && cspNonce !== null && cspNonce.style_nonce) {
-    nonce = cspNonce.style_nonce;
-  }
-
-  if (nonce) {
-    Attribute.set(style, 'nonce', nonce);
+  if (typeof cspNonce === 'string' && cspNonce.trim() !== '') {
+    Attribute.set(style, 'nonce', cspNonce.trim());
   }
 
   Insert.append(container, style);
@@ -454,10 +447,8 @@ const contentBodyLoaded = (editor: Editor): void => {
 
   const cspNonce = Options.getCspNonce(editor);
   let nonce: string | undefined;
-  if (typeof cspNonce === 'string') {
-    nonce = cspNonce;
-  } else if (typeof cspNonce === 'object' && cspNonce !== null && cspNonce.style_nonce) {
-    nonce = cspNonce.style_nonce;
+  if (typeof cspNonce === 'string' && cspNonce?.trim() !== '') {
+    nonce = cspNonce.trim();
   }
 
   (body as any).disabled = false;
