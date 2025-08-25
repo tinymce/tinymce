@@ -210,7 +210,8 @@ timestamps { notifyStatusChange(
   cleanupStep: { devPods.cleanUpPod(build: cacheName) },
   branches: ['main', 'release/7', 'release/8', 'feature/TINY-12659'],
   channel: '#tiny-textboxio-dev',
-  name: 'TinyMCE'
+  name: 'TinyMCE',
+  mention: true
   ) {
   devPods.nodeProducer(
     nodeOpts: [
@@ -236,16 +237,16 @@ timestamps { notifyStatusChange(
     }
 
     stage('Build') {
-      unstable('make it fail')
+      error('make it fail')
       // verify no errors in changelog merge
       exec("yarn changie-merge")
-      withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
-        // type check and build TinyMCE
-        exec("yarn ci-all-seq")
+      // withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
+      //   // type check and build TinyMCE
+      //   exec("yarn ci-all-seq")
 
-        // validate documentation generator
-        exec("yarn tinymce-grunt shell:moxiedoc")
-      }
+      //   // validate documentation generator
+      //   exec("yarn tinymce-grunt shell:moxiedoc")
+      // }
     }
   }
 
