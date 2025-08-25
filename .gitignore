@@ -9,8 +9,6 @@ yarn-error.log*
 lerna-debug.log
 scratch
 lib
-
-
 tsconfig.tsbuildinfo
 modules/*/LICENSE.TXT
 
