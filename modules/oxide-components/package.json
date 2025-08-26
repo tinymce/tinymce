@@ -41,7 +41,6 @@
     "test-ci": "vitest --watch=false --reporter=junit --outputFile=scratch/test-results.xml",
     "test-browser-manual": "vitest --watch --project browser --browser.headless false",
     "test-browser-headless": "vitest run --project browser",
-    "test-storybook": "vitest run --project storybook",
     "ci": "yarn lint && yarn --cwd ../../ lerna run build --scope @tinymce/oxide-components --include-dependencies && yarn test"
   },
   "peerDependencies": {
