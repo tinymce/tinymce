@@ -166,7 +166,7 @@ const fetchDownload = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, 
       const process = (result: ReadableStreamReadResult<Uint8Array>) => {
         if (result.done) {
           // TINY-12744: We can potentially remove this once when we upgrade to "target": "es2022"
-          const properChunks = chunks.map(chunk => new Uint8Array(chunk));
+          const properChunks = chunks.map((chunk) => new Uint8Array(chunk));
           resolve(Result.value(new Blob(properChunks, { type: mime.getOr('') })));
         } else {
           chunks.push(result.value);
