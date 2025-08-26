@@ -1,5 +1,5 @@
 import { Arr, type Optional, Strings } from '@ephox/katamari';
-import { Attribute, Compare, ContentEditable, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Attribute, Compare, ContentEditable, SelectorFilter, SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
 
 import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
@@ -80,14 +80,35 @@ const getAnchorHrefOpt = (editor: Editor, elm: SugarElement<Node>): Optional<str
 };
 
 const processDisabledEvents = (editor: Editor, e: Event): void => {
+  if (isClickEvent(e)) {
+    handleSummaryClick(e);
+    handleAnchorClick(e, editor);
+  } else if (isAllowedEventInDisabledMode(e)) {
+    editor.dispatch(e.type, e);
+  }
+};
+
+const handleSummaryClick = (e: MouseEvent) => {
+  /*
+    If an event is a click event on a summary element, then we want to prevent default browser behavior.
+    Accordions shouldn't be toggable in disabled editor.
+  */
+  const elm = SugarElement.fromDom(e.target as Node);
+  const isSummary = SugarNode.isTag('summary');
+  if (isSummary(elm)) {
+    e.preventDefault();
+  }
+};
+
+const handleAnchorClick = (e: MouseEvent, editor: Editor) => {
   /*
     If an event is a click event on or within an anchor, and the CMD/CTRL key is
     not held, then we want to prevent default behaviour and either:
       a) scroll to the relevant bookmark
       b) open the link using default browser behaviour
   */
-  if (isClickEvent(e) && !VK.metaKeyPressed(e)) {
-    const elm = SugarElement.fromDom(e.target as Node);
+  const elm = SugarElement.fromDom(e.target as Node);
+  if (!VK.metaKeyPressed(e)) {
     getAnchorHrefOpt(editor, elm).each((href) => {
       e.preventDefault();
       if (/^#/.test(href)) {
@@ -99,8 +120,6 @@ const processDisabledEvents = (editor: Editor, e: Event): void => {
         window.open(href, '_blank', 'rel=noopener noreferrer,menubar=yes,toolbar=yes,location=yes,status=yes,resizable=yes,scrollbars=yes');
       }
     });
-  } else if (isAllowedEventInDisabledMode(e)) {
-    editor.dispatch(e.type, e);
   }
 };
 
