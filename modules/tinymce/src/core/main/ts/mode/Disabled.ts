@@ -80,36 +80,41 @@ const getAnchorHrefOpt = (editor: Editor, elm: SugarElement<Node>): Optional<str
 };
 
 const processDisabledEvents = (editor: Editor, e: Event): void => {
-  if (isClickEvent(e)) {
-    handleSummaryClick(e);
-    handleAnchorClick(e, editor);
-  } else if (isAllowedEventInDisabledMode(e)) {
+  if (handleSummaryClick(e)) {
+    return;
+  }
+  if (handleAnchorClick(e, editor)) {
+    return;
+  }
+  if (isAllowedEventInDisabledMode(e)) {
     editor.dispatch(e.type, e);
   }
 };
 
-const handleSummaryClick = (e: MouseEvent) => {
+const handleSummaryClick = (e: Event): boolean => {
   /*
     If an event is a click event on a summary element, then we want to prevent default browser behavior.
     Accordions shouldn't be toggable in disabled editor.
   */
   const elm = SugarElement.fromDom(e.target as Node);
   const isSummary = SugarNode.isTag('summary');
-  if (isSummary(elm)) {
+  if (isClickEvent(e) && isSummary(elm)) {
     e.preventDefault();
+    return true;
   }
+  return false;
 };
 
-const handleAnchorClick = (e: MouseEvent, editor: Editor) => {
+const handleAnchorClick = (e: Event, editor: Editor): boolean => {
   /*
     If an event is a click event on or within an anchor, and the CMD/CTRL key is
     not held, then we want to prevent default behaviour and either:
       a) scroll to the relevant bookmark
       b) open the link using default browser behaviour
   */
-  const elm = SugarElement.fromDom(e.target as Node);
-  if (!VK.metaKeyPressed(e)) {
-    getAnchorHrefOpt(editor, elm).each((href) => {
+  if (isClickEvent(e) && !VK.metaKeyPressed(e)) {
+    const elm = SugarElement.fromDom(e.target as Node);
+    return getAnchorHrefOpt(editor, elm).fold(Fun.never, (href) => {
       e.preventDefault();
       if (/^#/.test(href)) {
         const targetEl = editor.dom.select(`${href},[name="${Strings.removeLeading(href, '#')}"]`);
@@ -119,8 +124,10 @@ const handleAnchorClick = (e: MouseEvent, editor: Editor) => {
       } else {
         window.open(href, '_blank', 'rel=noopener noreferrer,menubar=yes,toolbar=yes,location=yes,status=yes,resizable=yes,scrollbars=yes');
       }
+      return true;
     });
   }
+  return false;
 };
 
 const registerDisabledModeEventHandlers = (editor: Editor): void => {
