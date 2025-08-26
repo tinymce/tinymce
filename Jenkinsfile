@@ -336,4 +336,31 @@ timestamps { notifyStatusChange(
       parallel processes
   }
 
+  devPods.nodeProducer(
+    nodeOpts: [
+      resourceRequestCpu: '2',
+      resourceRequestMemory: '4Gi',
+      resourceRequestEphemeralStorage: '16Gi',
+      resourceLimitCpu: '7.5',
+      resourceLimitMemory: '4Gi',
+      resourceLimitEphemeralStorage: '16Gi'
+    ],
+    tag: '20',
+    build: cacheName
+  ) {
+    props = readProperties(file: 'build.properties')
+    String primaryBranch = props.primaryBranch
+    assert primaryBranch != null && primaryBranch != ""
+
+    stage('Deploy Storybook') {
+      if (env.BRANCH_NAME == primaryBranch) {
+        echo "Deploying Storybook"
+        tinyGit.withGitHubSSHCredentials {
+          exec('yarn -s --cwd modules/oxide-components deploy-storybook')
+        }
+      } else {
+        echo "Skipping Storybook deployment as the pipeline is not running on the primary branch"
+      }
+    }
+  }
 }}
