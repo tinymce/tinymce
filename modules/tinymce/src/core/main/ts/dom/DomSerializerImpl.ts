@@ -41,7 +41,7 @@ interface DomSerializerImpl {
   getTempAttrs: () => string[];
 }
 
-interface DomSerializerArgs extends ParserArgs {
+export interface DomSerializerArgs extends ParserArgs {
   indent?: HtmlSerializerSettings['indent'];
   entity_encoding?: HtmlSerializerSettings['entity_encoding'];
 }

@@ -938,7 +938,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
       });
     });
 
-    context('entites option', () => {
+    context('entities option', () => {
       const hook = TinyHooks.bddSetupLight<Editor>({
         base_url: '/project/tinymce/js/tinymce',
         entities: '160,nbsp,34,quot,38,amp,60,lt,62,gt'
