@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: '`editor.getContent()` now includes `indent` and `entity_encoding` properties to control HTML formatting.'
+time: 2025-08-25T20:06:20.112397+08:00
+custom:
+    Issue: TINY-12786
