@@ -81,7 +81,7 @@ describe('browser.katamari.TypeBrowserTest', () => {
       // tslint:disable-next-line: no-string-literal
       const frameEval = (script: string): any => {
         const cw: Window | null = iframe.contentWindow;
-        if (cw == null) {
+        if (Type.isNullable(cw)) {
           throw new Error('contentWindow was null');
         }
         // TypeScript doesn't think that Window.eval exists

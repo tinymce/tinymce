@@ -28,7 +28,7 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       return new Promise((resolve) => {
         setTimeout(() => {
           const validIds = Arr.filter(userIds, (id): id is string =>
-            typeof id === 'string' && id.length > 0
+            Type.isString(id) && id.length > 0
           );
 
           // Only create users for valid test IDs

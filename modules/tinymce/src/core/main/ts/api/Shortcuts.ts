@@ -1,3 +1,5 @@
+import { Type } from '@ephox/katamari';
+
 import type Editor from './Editor';
 import Env from './Env';
 import Tools from './util/Tools';
@@ -203,7 +205,7 @@ class Shortcuts {
     const self = this;
     const cmd = cmdFunc;
 
-    if (typeof cmd === 'string') {
+    if (Type.isString(cmd)) {
       return () => {
         self.editor.execCommand(cmd, false, null);
       };

@@ -1,3 +1,5 @@
+import { Type } from '@ephox/katamari';
+
 /*
  * Javascript Diff Algorithm
  *  By John Resig (http://ejohn.org/)
@@ -12,6 +14,7 @@
  *
  * QUnit.diff( "the quick brown fox jumped over", "the quick fox jumps over" ) == "the  quick <del>brown </del> fox <del>jumped </del><ins>jumps </ins> over"
  */
+
 const htmlDiff: (v1: string, v2: string) => string = (() => {
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const hasOwn = Object.prototype.hasOwnProperty;
@@ -58,7 +61,7 @@ const htmlDiff: (v1: string, v2: string) => string = (() => {
     }
 
     for (i = 0; i < n.length - 1; i++) {
-      if (n[i].text != null && n[i + 1].text == null && n[i].row + 1 < o.length && o[n[i].row + 1].text == null &&
+      if (Type.isNonNullable(n[i].text) && Type.isNullable(n[i + 1].text) && n[i].row + 1 < o.length && Type.isNullable(o[n[i].row + 1].text) &&
         n[i + 1] === o[n[i].row + 1]) {
 
         n[i + 1] = {
@@ -73,7 +76,7 @@ const htmlDiff: (v1: string, v2: string) => string = (() => {
     }
 
     for (i = n.length - 1; i > 0; i--) {
-      if (n[i].text != null && n[i - 1].text == null && n[i].row > 0 && o[n[i].row - 1].text == null &&
+      if (Type.isNonNullable(n[i].text) && Type.isNullable(n[i - 1].text) && n[i].row > 0 && Type.isNullable(o[n[i].row - 1].text) &&
         n[i - 1] === o[n[i].row - 1]) {
 
         n[i - 1] = {
@@ -103,13 +106,13 @@ const htmlDiff: (v1: string, v2: string) => string = (() => {
       nSpace = n.match(/\s+/g);
     const out = diff(o === '' ? [] : o.split(/\s+/), n === '' ? [] : n.split(/\s+/));
 
-    if (oSpace == null) {
+    if (Type.isNullable(oSpace)) {
       oSpace = [ ' ' ];
     } else {
       oSpace.push(' ');
     }
 
-    if (nSpace == null) {
+    if (Type.isNullable(nSpace)) {
       nSpace = [ ' ' ];
     } else {
       nSpace.push(' ');
@@ -120,20 +123,20 @@ const htmlDiff: (v1: string, v2: string) => string = (() => {
         str += '<del>' + out.o[i] + oSpace[i] + '</del>';
       }
     } else {
-      if (out.n[0].text == null) {
-        for (let j = 0; j < out.o.length && out.o[j].text == null; j++) {
+      if (Type.isNullable(out.n[0].text)) {
+        for (let j = 0; j < out.o.length && Type.isNullable(out.o[j].text); j++) {
           str += '<del>' + out.o[j] + oSpace[j] + '</del>';
         }
       }
 
       for (i = 0; i < out.n.length; i++) {
-        if (out.n[i].text == null) {
+        if (Type.isNullable(out.n[i].text)) {
           str += '<ins>' + out.n[i] + nSpace[i] + '</ins>';
         } else {
           // `pre` initialized at top of scope
           pre = '';
 
-          for (let j = out.n[i].row + 1; j < out.o.length && out.o[j].text == null; j++) {
+          for (let j = out.n[i].row + 1; j < out.o.length && Type.isNullable(out.o[j].text); j++) {
             pre += '<del>' + out.o[j] + oSpace[j] + '</del>';
           }
           str += ' ' + out.n[i].text + nSpace[i] + pre;

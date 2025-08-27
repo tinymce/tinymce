@@ -49,10 +49,10 @@ const type = (editor: Editor, chr: string | number | Record<string, number | str
   };
 
   // Numeric keyCode
-  if (typeof chr === 'number') {
+  if (Type.isNumber(chr)) {
     charCode = chr;
     keyCode = charCodeToKeyCode(charCode);
-  } else if (typeof chr === 'string') {
+  } else if (Type.isString(chr)) {
     // String value
     if (chr === '\b') {
       keyCode = 8;
@@ -132,7 +132,7 @@ const type = (editor: Editor, chr: string | number | Record<string, number | str
 
       editor.getDoc().execCommand('Delete');
     }
-  } else if (typeof chr === 'string') {
+  } else if (Type.isString(chr)) {
     const rng = editor.selection.getRng();
 
     if (isText(rng.startContainer) && rng.collapsed) {

@@ -75,7 +75,7 @@ export const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizing
     ref={(el) => {
       textareaRef.current = el;
       if (ref) {
-        if (typeof ref === 'function') {
+        if (Type.isFunction(ref)) {
           ref(el);
         } else if (Type.isNonNullable(ref)) {
           ref.current = el;

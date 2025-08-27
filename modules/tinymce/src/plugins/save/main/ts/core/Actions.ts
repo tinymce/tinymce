@@ -36,7 +36,8 @@ const save = (editor: Editor): void => {
     // TODO: TINY-6105 this is probably broken, as an event should be passed to `onsubmit`
     // so we need to investigate this at some point
     if (!formObj.onsubmit || (formObj as any).onsubmit()) {
-      if (typeof formObj.submit === 'function') {
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      if (Type.isFunction(formObj.submit)) {
         formObj.submit();
       } else {
         displayErrorMessage(editor, 'Error: Form submit field collision.');

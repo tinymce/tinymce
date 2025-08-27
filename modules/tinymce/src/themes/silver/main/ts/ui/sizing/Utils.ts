@@ -19,7 +19,7 @@ const calcCappedSize = (size: number, minSize: Optional<number>, maxSize: Option
 };
 
 const convertValueToPx = (element: SugarElement<Element>, value: number | string): Optional<number> => {
-  if (typeof value === 'number') {
+  if (Type.isNumber(value)) {
     return Optional.from(value);
   }
 
