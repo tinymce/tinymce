@@ -1,13 +1,13 @@
-import { Mouse, TestStore, UiFinder, Waiter } from '@ephox/agar';
-import { AlloyComponent, Behaviour, GuiFactory, ModalDialog, Positioning, TooltippingTypes } from '@ephox/alloy';
+import { Mouse, type TestStore, UiFinder, Waiter } from '@ephox/agar';
+import { type AlloyComponent, Behaviour, GuiFactory, ModalDialog, Positioning, type TooltippingTypes } from '@ephox/alloy';
 import { before, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { ValueType } from '@ephox/boulder';
-import { DialogManager } from '@ephox/bridge';
+import type { DialogManager } from '@ephox/bridge';
 import { Fun, Optional, Result } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 
 import I18n from 'tinymce/core/api/util/I18n';
-import { UiFactoryBackstage, UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
+import type { UiFactoryBackstage, UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderDialog } from 'tinymce/themes/silver/ui/window/SilverDialog';
 
 import * as GuiSetup from '../../module/GuiSetup';

@@ -1,15 +1,15 @@
-import { AlloyComponent, InlineView } from '@ephox/alloy';
+import { type AlloyComponent, InlineView } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
-import { UiFactoryBackstage } from '../../../../backstage/Backstage';
+import type { UiFactoryBackstage } from '../../../../backstage/Backstage';
 import ItemResponse from '../../item/ItemResponse';
 import * as MenuParts from '../../menu/MenuParts';
 import * as NestedMenus from '../../menu/NestedMenus';
-import { SingleMenuItemSpec } from '../../menu/SingleMenuTypes';
-import { AnchorType, getAnchorSpec } from '../Coords';
+import type { SingleMenuItemSpec } from '../../menu/SingleMenuTypes';
+import { type AnchorType, getAnchorSpec } from '../Coords';
 
 export const initAndShow = (
   editor: Editor,

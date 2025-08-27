@@ -5,7 +5,7 @@ import { Css, Scroll, SugarBody } from '@ephox/sugar';
 import { TinyContentActions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 
 import { getGreenImageDataUrl } from '../../../module/Assets';

@@ -1,18 +1,18 @@
 import {
-  AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, AlloyTriggers, Behaviour, DomFactory, GuiFactory, ModalDialog, Receiving, Reflecting,
+  type AlloyComponent, type AlloyEvents, type AlloyParts, type AlloySpec, AlloyTriggers, type Behaviour, DomFactory, GuiFactory, ModalDialog, Receiving, Reflecting,
   SystemEvents
 } from '@ephox/alloy';
-import { Dialog, DialogManager } from '@ephox/bridge';
+import type { Dialog, DialogManager } from '@ephox/bridge';
 import { Arr, Cell, Obj, Optional } from '@ephox/katamari';
 import { Class, Classes, Height, SelectorFind, SugarElement } from '@ephox/sugar';
 
-import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import type { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as RepresentingConfigs from '../alien/RepresentingConfigs';
-import { StoredMenuButton, StoredMenuItem } from '../button/MenuButton';
+import type { StoredMenuButton, StoredMenuItem } from '../button/MenuButton';
 import * as Dialogs from '../dialog/Dialogs';
-import { FormBlockEvent, formCancelEvent } from '../general/FormEvents';
+import { type FormBlockEvent, formCancelEvent } from '../general/FormEvents';
 
-import { ExtraListeners } from './SilverDialogEvents';
+import type { ExtraListeners } from './SilverDialogEvents';
 import { renderModalHeader } from './SilverDialogHeader';
 
 export interface SharedWindowExtra {

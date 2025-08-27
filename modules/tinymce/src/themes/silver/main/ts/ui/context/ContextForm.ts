@@ -1,10 +1,10 @@
-import { AlloyComponent, AlloySpec, AlloyTriggers, Memento, SketchSpec } from '@ephox/alloy';
-import { InlineContent } from '@ephox/bridge';
+import { type AlloyComponent, type AlloySpec, AlloyTriggers, Memento, type SketchSpec } from '@ephox/alloy';
+import type { InlineContent } from '@ephox/bridge';
 import { Arr, Fun, Id, Optional, Singleton } from '@ephox/katamari';
 
-import { ToolbarMode } from '../../api/Options';
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { renderToolbar, ToolbarGroup } from '../toolbar/CommonToolbar';
+import type { ToolbarMode } from '../../api/Options';
+import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import { renderToolbar, type ToolbarGroup } from '../toolbar/CommonToolbar';
 
 import { generate } from './ContextFormButtons';
 import * as ContextFormSizeInput from './ContextFormSizeInput';

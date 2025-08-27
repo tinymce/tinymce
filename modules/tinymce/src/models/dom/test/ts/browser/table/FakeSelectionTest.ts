@@ -5,9 +5,9 @@ import { Attribute, Focus, Html, Insert, Remove, SelectorFilter, SelectorFind, S
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import { TableSelectionChangeEvent } from 'tinymce/models/dom/table/api/Events';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type { TableSelectionChangeEvent } from 'tinymce/models/dom/table/api/Events';
 
 import * as TableTestUtils from '../../module/table/TableTestUtils';
 

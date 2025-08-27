@@ -1,9 +1,9 @@
-import { AnchorSpec, Bounds, Boxes, Bubble, Layout, LayoutInset, MaxHeight, MaxWidth } from '@ephox/alloy';
-import { InlineContent } from '@ephox/bridge';
-import { Optional } from '@ephox/katamari';
+import { type AnchorSpec, type Bounds, Boxes, Bubble, Layout, LayoutInset, MaxHeight, MaxWidth } from '@ephox/alloy';
+import type { InlineContent } from '@ephox/bridge';
+import type { Optional } from '@ephox/katamari';
 import { Compare, Css, Height, Scroll, SugarElement, Traverse } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import { getSelectionBounds, isVerticalOverlap } from './ContextToolbarBounds';
 

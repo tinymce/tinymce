@@ -5,8 +5,8 @@ import { SugarDocument } from '@ephox/sugar';
 import { McEditor, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { RawEditorOptions, ToolbarMode } from 'tinymce/core/api/OptionTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { RawEditorOptions, ToolbarMode } from 'tinymce/core/api/OptionTypes';
 
 import * as UiUtils from '../../../module/UiUtils';
 

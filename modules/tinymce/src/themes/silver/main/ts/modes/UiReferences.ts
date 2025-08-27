@@ -1,5 +1,5 @@
-import { AlloyComponent, Gui } from '@ephox/alloy';
-import { Optional, Singleton } from '@ephox/katamari';
+import type { AlloyComponent, Gui } from '@ephox/alloy';
+import { type Optional, Singleton } from '@ephox/katamari';
 import { Compare } from '@ephox/sugar';
 
 export interface SinkAndMothership {

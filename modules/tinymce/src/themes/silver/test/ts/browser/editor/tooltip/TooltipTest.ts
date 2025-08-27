@@ -1,11 +1,11 @@
 import { Keys, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { SugarElement, TextContent } from '@ephox/sugar';
+import { type SugarElement, TextContent } from '@ephox/sugar';
 import { TinyContentActions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 interface EditorWithTestApis extends Editor {
   testSplitButtonApi?: () => Optional<any>;

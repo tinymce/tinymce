@@ -1,4 +1,4 @@
-import { AlloySpec, Behaviour, ItemWidget, Keying, Memento, Menu, MenuTypes, SimpleOrSketchSpec } from '@ephox/alloy';
+import { type AlloySpec, Behaviour, ItemWidget, Keying, Memento, Menu, type MenuTypes, type SimpleOrSketchSpec } from '@ephox/alloy';
 import { Id, Optional } from '@ephox/katamari';
 
 import { dom as menuDom } from './MenuParts';

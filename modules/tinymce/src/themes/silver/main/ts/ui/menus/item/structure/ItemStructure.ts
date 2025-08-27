@@ -1,10 +1,10 @@
-import { AlloySpec, GuiFactory, RawDomSchema, SimpleSpec } from '@ephox/alloy';
-import { Toolbar } from '@ephox/bridge';
+import { type AlloySpec, GuiFactory, type RawDomSchema, type SimpleSpec } from '@ephox/alloy';
+import type { Toolbar } from '@ephox/bridge';
 import { Fun, Id, Obj, Optional, Type } from '@ephox/katamari';
 
 import I18n from 'tinymce/core/api/util/I18n';
 
-import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
+import type { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import * as Icons from '../../../icons/Icons';
 import * as Images from '../../../image/Images';
 import * as ItemClasses from '../ItemClasses';

@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
-import { Menu } from 'tinymce/core/api/ui/Ui';
+import type { Menu } from 'tinymce/core/api/ui/Ui';
 import * as MenuConversion from 'tinymce/themes/silver/ui/menus/menu/MenuConversion';
 
 describe('atomic.tinymce.themes.silver.menus.MenuConversionTest', () => {

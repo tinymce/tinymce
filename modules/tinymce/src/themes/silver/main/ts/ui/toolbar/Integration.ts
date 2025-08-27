@@ -1,13 +1,13 @@
-import { AlloySpec, VerticalDir } from '@ephox/alloy';
+import { type AlloySpec, VerticalDir } from '@ephox/alloy';
 import { StructureSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
-import { Arr, Obj, Optional, Optionals, Result, Type } from '@ephox/katamari';
+import { Arr, Obj, Optional, Optionals, type Result, Type } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
-import { getToolbarMode, ToolbarGroupOption, ToolbarMode } from '../../api/Options';
-import { UiFactoryBackstage } from '../../backstage/Backstage';
-import { ToolbarConfig } from '../../Render';
+import { getToolbarMode, type ToolbarGroupOption, ToolbarMode } from '../../api/Options';
+import type { UiFactoryBackstage } from '../../backstage/Backstage';
+import type { ToolbarConfig } from '../../Render';
 import { renderMenuButton } from '../button/MenuButton';
 import { createNavigateBackButton } from '../context/NavigateBackBespokeButton';
 import { createAlignButton } from '../core/complex/AlignBespoke';
@@ -18,7 +18,7 @@ import { createStylesButton } from '../core/complex/StylesBespoke';
 
 import { ToolbarButtonClasses } from './button/ButtonClasses';
 import { renderFloatingToolbarButton, renderSplitButton, renderToolbarButton, renderToolbarToggleButton } from './button/ToolbarButtons';
-import { ToolbarGroup } from './CommonToolbar';
+import type { ToolbarGroup } from './CommonToolbar';
 
 export type ToolbarButton = Toolbar.ToolbarButtonSpec | Toolbar.ToolbarMenuButtonSpec | Toolbar.ToolbarToggleButtonSpec | Toolbar.ToolbarSplitButtonSpec;
 

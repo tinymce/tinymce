@@ -3,7 +3,7 @@ import { after, before, describe, it } from '@ephox/bedrock-client';
 import { Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.SilverFixedToolbarContainerTargetNotInlineTest', () => {
   const toolbar: SugarElement<HTMLDivElement> = SugarElement.fromHtml('<div style="margin: 50px 0;"></div>');

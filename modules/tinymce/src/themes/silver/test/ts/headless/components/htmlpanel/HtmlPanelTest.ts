@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions } from '@ephox/agar';
 import { GuiFactory } from '@ephox/alloy';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Singleton } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import { renderHtmlPanel } from 'tinymce/themes/silver/ui/general/HtmlPanel';
