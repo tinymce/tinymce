@@ -1,8 +1,8 @@
-import { Assertions, Chain, Logger, Step, UiFinder } from '@ephox/agar';
+import { Assertions, Chain, Logger, type Step, UiFinder } from '@ephox/agar';
 import { Css, Width } from '@ephox/sugar';
 
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { GuiSystem } from 'ephox/alloy/api/system/Gui';
+import type { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import type { GuiSystem } from 'ephox/alloy/api/system/Gui';
 
 const sSameWidth = <T>(label: string, gui: GuiSystem, dropdown: AlloyComponent, menuSelector: string): Step<T, T> =>
   Logger.t(

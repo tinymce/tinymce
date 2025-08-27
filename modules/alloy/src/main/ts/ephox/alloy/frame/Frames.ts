@@ -1,7 +1,7 @@
 import { Fun, Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
-import { Navigation } from './Navigation';
+import type { Navigation } from './Navigation';
 
 const walkUp = (navigation: Navigation, doc: SugarElement<Document>): SugarElement<Element>[] => {
   const frame = navigation.view(doc);

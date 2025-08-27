@@ -1,8 +1,8 @@
-import { FieldPresence, FieldProcessor, FieldSchema, StructureProcessor, StructureSchema, ValueType } from '@ephox/boulder';
+import { FieldPresence, type FieldProcessor, FieldSchema, type StructureProcessor, StructureSchema, ValueType } from '@ephox/boulder';
 import { Adt, Fun, Id, Optional } from '@ephox/katamari';
 
-import { SimpleOrSketchSpec } from '../api/component/SpecTypes';
-import { CompositeSketchDetail } from '../api/ui/Sketcher';
+import type { SimpleOrSketchSpec } from '../api/component/SpecTypes';
+import type { CompositeSketchDetail } from '../api/ui/Sketcher';
 
 type DeepPartial<T> = {
   [P in keyof T]?: Partial<T[P]>;

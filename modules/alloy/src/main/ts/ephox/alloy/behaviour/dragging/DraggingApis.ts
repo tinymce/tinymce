@@ -1,9 +1,9 @@
 import { Css, Scroll, Traverse } from '@ephox/sugar';
 
 import * as OffsetOrigin from '../../alien/OffsetOrigin';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 import * as DragCoord from '../../api/data/DragCoord';
-import { DraggingConfig, DraggingState, SnapConfig } from '../../dragging/common/DraggingTypes';
+import type { DraggingConfig, DraggingState, SnapConfig } from '../../dragging/common/DraggingTypes';
 import * as Snappables from '../../dragging/snap/Snappables';
 
 const snapTo = <E>(component: AlloyComponent, dragConfig: DraggingConfig<E>, _state: DraggingState, snap: SnapConfig<E>): void => {

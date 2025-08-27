@@ -1,7 +1,7 @@
 import { Assertions, Logger, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
-import { Attribute, EventArgs, Html, Insert, Remove, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Attribute, type EventArgs, Html, Insert, Remove, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import * as Debugging from 'ephox/alloy/debugging/Debugging';
 import * as Triggers from 'ephox/alloy/events/Triggers';

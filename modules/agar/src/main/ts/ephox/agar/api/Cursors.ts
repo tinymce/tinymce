@@ -1,5 +1,5 @@
 import { Result } from '@ephox/katamari';
-import { Hierarchy, SugarElement } from '@ephox/sugar';
+import { Hierarchy, type SugarElement } from '@ephox/sugar';
 
 import { Chain } from './Chain';
 

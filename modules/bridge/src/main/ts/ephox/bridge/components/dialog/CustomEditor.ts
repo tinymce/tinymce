@@ -1,7 +1,7 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
-import { Optional, Result } from '@ephox/katamari';
+import type { Optional, Result } from '@ephox/katamari';
 
-import { FormComponent, formComponentFields, FormComponentSpec } from './FormComponent';
+import { type FormComponent, formComponentFields, type FormComponentSpec } from './FormComponent';
 
 export interface CustomEditorInit {
   setValue: (value: string) => void;

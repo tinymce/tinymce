@@ -3,13 +3,13 @@ import { Optional } from '@ephox/katamari';
 
 import * as EditableFields from '../alien/EditableFields';
 import * as Keys from '../alien/Keys';
-import { AlloyComponent } from '../api/component/ComponentApi';
-import { NoState, Stateless } from '../behaviour/common/BehaviourState';
-import { NativeSimulatedEvent } from '../events/SimulatedEvent';
+import type { AlloyComponent } from '../api/component/ComponentApi';
+import { NoState, type Stateless } from '../behaviour/common/BehaviourState';
+import type { NativeSimulatedEvent } from '../events/SimulatedEvent';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 
-import { ExecutingConfig, KeyRuleHandler } from './KeyingModeTypes';
+import type { ExecutingConfig, KeyRuleHandler } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
 

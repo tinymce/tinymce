@@ -9,7 +9,7 @@ import { Keying } from '../../api/behaviour/Keying';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
-import { ModalDialogDetail } from '../types/ModalDialogTypes';
+import type { ModalDialogDetail } from '../types/ModalDialogTypes';
 
 const schema = Fun.constant([
   FieldSchema.required('lazySink'),

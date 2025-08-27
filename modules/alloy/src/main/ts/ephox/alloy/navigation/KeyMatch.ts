@@ -1,5 +1,5 @@
 import { Arr, Fun } from '@ephox/katamari';
-import { EventArgs } from '@ephox/sugar';
+import type { EventArgs } from '@ephox/sugar';
 
 export type KeyMatcher = (evt: EventArgs<KeyboardEvent>) => boolean;
 

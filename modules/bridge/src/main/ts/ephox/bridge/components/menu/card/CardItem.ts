@@ -1,6 +1,6 @@
-import { CardContainer, CardContainerSpec } from './CardContainer';
-import { CardImage, CardImageSpec } from './CardImage';
-import { CardText, CardTextSpec } from './CardText';
+import type { CardContainer, CardContainerSpec } from './CardContainer';
+import type { CardImage, CardImageSpec } from './CardImage';
+import type { CardText, CardTextSpec } from './CardText';
 
 export type CardItemSpec =
   CardContainerSpec |

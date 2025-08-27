@@ -1,15 +1,15 @@
-import { Optional } from '@ephox/katamari';
-import { EventArgs, SugarElement, SugarPosition } from '@ephox/sugar';
+import type { Optional } from '@ephox/katamari';
+import type { EventArgs, SugarElement, SugarPosition } from '@ephox/sugar';
 
-import { Bounds } from '../../alien/Boxes';
-import * as Behaviour from '../../api/behaviour/Behaviour';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { CoordAdt } from '../../api/data/DragCoord';
-import * as AlloyEvents from '../../api/events/AlloyEvents';
-import { BehaviourState } from '../../behaviour/common/BehaviourState';
-import { MouseDraggingConfigSpec } from '../mouse/MouseDraggingTypes';
-import { MouseOrTouchDraggingConfigSpec } from '../mouseortouch/MouseOrTouchDraggingTypes';
-import { TouchDraggingConfigSpec } from '../touch/TouchDraggingTypes';
+import type { Bounds } from '../../alien/Boxes';
+import type * as Behaviour from '../../api/behaviour/Behaviour';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { CoordAdt } from '../../api/data/DragCoord';
+import type * as AlloyEvents from '../../api/events/AlloyEvents';
+import type { BehaviourState } from '../../behaviour/common/BehaviourState';
+import type { MouseDraggingConfigSpec } from '../mouse/MouseDraggingTypes';
+import type { MouseOrTouchDraggingConfigSpec } from '../mouseortouch/MouseOrTouchDraggingTypes';
+import type { TouchDraggingConfigSpec } from '../touch/TouchDraggingTypes';
 
 export interface DraggingBehaviour<E> extends Behaviour.AlloyBehaviour<DraggingConfigSpec<E>, DraggingConfig<E>, DraggingState> {
   config: (config: DraggingConfigSpec<E>) => Behaviour.NamedConfiguredBehaviour<DraggingConfigSpec<E>, DraggingConfig<E>, DraggingState>;

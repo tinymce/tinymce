@@ -1,4 +1,4 @@
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 
 const top = 'top',
   right = 'right',

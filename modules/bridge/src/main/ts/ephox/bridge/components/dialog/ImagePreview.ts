@@ -1,7 +1,7 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 
-import { FormComponent, formComponentFields, FormComponentSpec } from './FormComponent';
+import { type FormComponent, formComponentFields, type FormComponentSpec } from './FormComponent';
 
 export interface ImagePreviewSpec extends FormComponentSpec {
   type: 'imagepreview';

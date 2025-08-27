@@ -3,16 +3,16 @@ import { Attribute } from '@ephox/sugar';
 
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as FormFieldSchema from '../../ui/schema/FormFieldSchema';
-import { FormFieldApis, FormFieldDetail, FormFieldSketcher, FormFieldSpec } from '../../ui/types/FormFieldTypes';
+import type { FormFieldApis, FormFieldDetail, FormFieldSketcher, FormFieldSpec } from '../../ui/types/FormFieldTypes';
 import { Composing } from '../behaviour/Composing';
 import { Representing } from '../behaviour/Representing';
-import { AlloyComponent } from '../component/ComponentApi';
+import type { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
-import { SketchSpec } from '../component/SpecTypes';
+import type { SketchSpec } from '../component/SpecTypes';
 import * as AlloyEvents from '../events/AlloyEvents';
 
 import * as Sketcher from './Sketcher';
-import { CompositeSketchFactory } from './UiSketcher';
+import type { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<FormFieldDetail, FormFieldSpec> = (detail, components, _spec, _externals): SketchSpec => {
   const behaviours = SketchBehaviours.augment(

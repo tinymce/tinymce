@@ -5,7 +5,7 @@ import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Replacing } from '../../api/behaviour/Replacing';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as PartType from '../../parts/PartType';
-import { ToolbarDetail } from '../types/ToolbarTypes';
+import type { ToolbarDetail } from '../types/ToolbarTypes';
 
 const schema = Fun.constant([
   FieldSchema.required('dom'),

@@ -1,8 +1,8 @@
-import { Obj, Optional } from '@ephox/katamari';
-import { SugarBody, SugarElement } from '@ephox/sugar';
+import { Obj, type Optional } from '@ephox/katamari';
+import { SugarBody, type SugarElement } from '@ephox/sugar';
 
-import { AlloyComponent } from '../api/component/ComponentApi';
-import { ElementAndHandler, EventRegistry, UidAndHandler } from '../events/EventRegistry';
+import type { AlloyComponent } from '../api/component/ComponentApi';
+import { type ElementAndHandler, EventRegistry, type UidAndHandler } from '../events/EventRegistry';
 import * as AlloyLogger from '../log/AlloyLogger';
 
 import * as Tagger from './Tagger';

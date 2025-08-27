@@ -8,14 +8,14 @@ import { Representing } from '../../api/behaviour/Representing';
 import { field as SketchBehaviourField } from '../../api/component/SketchBehaviours';
 import * as FocusManagers from '../../api/focus/FocusManagers';
 import * as Fields from '../../data/Fields';
-import { FlatgridConfigSpec, MatrixConfigSpec, MenuConfigSpec } from '../../keying/KeyingModeTypes';
+import type { FlatgridConfigSpec, MatrixConfigSpec, MenuConfigSpec } from '../../keying/KeyingModeTypes';
 import ItemType from '../../menu/build/ItemType';
 import SeparatorType from '../../menu/build/SeparatorType';
 import WidgetType from '../../menu/build/WidgetType';
 import * as PartType from '../../parts/PartType';
 import * as Tagger from '../../registry/Tagger';
-import { ItemSpec, WidgetItemSpec } from '../types/ItemTypes';
-import { MenuDetail, MenuGridMovement, MenuMatrixMovement, MenuNormalMovement } from '../types/MenuTypes';
+import type { ItemSpec, WidgetItemSpec } from '../types/ItemTypes';
+import type { MenuDetail, MenuGridMovement, MenuMatrixMovement, MenuNormalMovement } from '../types/MenuTypes';
 
 const itemSchema = StructureSchema.choose(
   'type',

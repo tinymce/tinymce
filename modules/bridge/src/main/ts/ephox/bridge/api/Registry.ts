@@ -1,17 +1,17 @@
-import { AutocompleterSpec } from '../components/content/Autocompleter';
-import { ContextFormSpec } from '../components/content/ContextForm';
-import { ContextToolbarSpec } from '../components/content/ContextToolbar';
-import { ContextMenuApi } from '../components/menu/ContextMenu';
-import { MenuItemSpec } from '../components/menu/MenuItem';
-import { NestedMenuItemSpec } from '../components/menu/NestedMenuItem';
-import { ToggleMenuItemSpec } from '../components/menu/ToggleMenuItem';
-import { SidebarSpec } from '../components/sidebar/Sidebar';
-import { GroupToolbarButtonSpec } from '../components/toolbar/GroupToolbarButton';
-import { ToolbarButtonSpec } from '../components/toolbar/ToolbarButton';
-import { ToolbarMenuButtonSpec } from '../components/toolbar/ToolbarMenuButton';
-import { ToolbarSplitButtonSpec } from '../components/toolbar/ToolbarSplitButton';
-import { ToolbarToggleButtonSpec } from '../components/toolbar/ToolbarToggleButton';
-import { ViewSpec } from '../components/view/View';
+import type { AutocompleterSpec } from '../components/content/Autocompleter';
+import type { ContextFormSpec } from '../components/content/ContextForm';
+import type { ContextToolbarSpec } from '../components/content/ContextToolbar';
+import type { ContextMenuApi } from '../components/menu/ContextMenu';
+import type { MenuItemSpec } from '../components/menu/MenuItem';
+import type { NestedMenuItemSpec } from '../components/menu/NestedMenuItem';
+import type { ToggleMenuItemSpec } from '../components/menu/ToggleMenuItem';
+import type { SidebarSpec } from '../components/sidebar/Sidebar';
+import type { GroupToolbarButtonSpec } from '../components/toolbar/GroupToolbarButton';
+import type { ToolbarButtonSpec } from '../components/toolbar/ToolbarButton';
+import type { ToolbarMenuButtonSpec } from '../components/toolbar/ToolbarMenuButton';
+import type { ToolbarSplitButtonSpec } from '../components/toolbar/ToolbarSplitButton';
+import type { ToolbarToggleButtonSpec } from '../components/toolbar/ToolbarToggleButton';
+import type { ViewSpec } from '../components/view/View';
 
 // This would be part of the tinymce api under editor.ui.* so editor.ui.addButton('bold', ...)
 // TODO: This should maybe not be part of this project but rather something built into tinymce core using these public types

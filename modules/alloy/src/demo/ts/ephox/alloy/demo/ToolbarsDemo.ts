@@ -1,8 +1,8 @@
 import { Arr, Fun, Result } from '@ephox/katamari';
 import { Class, SugarElement } from '@ephox/sugar';
 
-import { LazySink } from 'ephox/alloy/api/component/CommonTypes';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import type { LazySink } from 'ephox/alloy/api/component/CommonTypes';
+import type { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Container } from 'ephox/alloy/api/ui/Container';

@@ -1,6 +1,6 @@
-import * as Boxes from '../../alien/Boxes';
-import { DirectionAdt } from '../layout/Direction';
-import { Placement } from '../layout/Placement';
+import type * as Boxes from '../../alien/Boxes';
+import type { DirectionAdt } from '../layout/Direction';
+import type { Placement } from '../layout/Placement';
 
 export interface RepositionDecision {
   readonly rect: Boxes.Rect;

@@ -1,12 +1,12 @@
 import { FieldSchema } from '@ephox/boulder';
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
-import * as Origins from '../layout/Origins';
+import type * as Origins from '../layout/Origins';
 
-import { Anchoring, NodeAnchor } from './Anchoring';
+import type { Anchoring, NodeAnchor } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 import * as ContainerOffsets from './ContainerOffsets';
 import * as ContentAnchorCommon from './ContentAnchorCommon';

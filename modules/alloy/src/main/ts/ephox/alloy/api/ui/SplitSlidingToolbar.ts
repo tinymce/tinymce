@@ -3,7 +3,7 @@ import { Arr } from '@ephox/katamari';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as SplitToolbarUtils from '../../toolbar/SplitToolbarUtils';
 import * as SplitSlidingToolbarSchema from '../../ui/schema/SplitSlidingToolbarSchema';
-import {
+import type {
   SplitSlidingToolbarApis, SplitSlidingToolbarDetail, SplitSlidingToolbarSketcher, SplitSlidingToolbarSpec
 } from '../../ui/types/SplitSlidingToolbarTypes';
 import * as AddEventsBehaviour from '../behaviour/AddEventsBehaviour';
@@ -12,10 +12,10 @@ import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
 import { Sliding } from '../behaviour/Sliding';
 import { Toggling } from '../behaviour/Toggling';
-import { AlloyComponent } from '../component/ComponentApi';
+import type { AlloyComponent } from '../component/ComponentApi';
 import * as GuiFactory from '../component/GuiFactory';
 import * as SketchBehaviours from '../component/SketchBehaviours';
-import { AlloySpec } from '../component/SpecTypes';
+import type { AlloySpec } from '../component/SpecTypes';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as AlloyTriggers from '../events/AlloyTriggers';
 
@@ -23,7 +23,7 @@ import { Button } from './Button';
 import * as Sketcher from './Sketcher';
 import { Toolbar } from './Toolbar';
 import { ToolbarGroup } from './ToolbarGroup';
-import { CompositeSketchFactory } from './UiSketcher';
+import type { CompositeSketchFactory } from './UiSketcher';
 
 const isOpen = (toolbar: AlloyComponent, detail: SplitSlidingToolbarDetail) =>
   AlloyParts.getPart(toolbar, detail, 'overflow').map(Sliding.hasGrown).getOr(false);

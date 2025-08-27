@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
 
-import { CurriedHandler, UncurriedHandler } from './EventRegistry';
+import type { CurriedHandler, UncurriedHandler } from './EventRegistry';
 
 const uncurried = (handler: Function, purpose: string): UncurriedHandler => ({
   handler,

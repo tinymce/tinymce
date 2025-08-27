@@ -8,11 +8,11 @@ import { Highlighting } from '../../api/behaviour/Highlighting';
 import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
-import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
+import type { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
 import * as ButtonBase from '../common/ButtonBase';
-import { FormChooserDetail } from '../types/FormChooserTypes';
+import type { FormChooserDetail } from '../types/FormChooserTypes';
 
 const schema = Fun.constant([
   FieldSchema.required('choices'),

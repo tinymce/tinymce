@@ -1,15 +1,15 @@
 import { Obj } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
 import * as DomState from '../alien/DomState';
 import { Dragging } from '../api/behaviour/Dragging';
 import { Pinching } from '../api/behaviour/Pinching';
 import { Toggling } from '../api/behaviour/Toggling';
 import * as CompBehaviours from '../api/component/CompBehaviours';
-import { DispatchedAlloyConfig } from '../api/system/ForeignGui';
+import type { DispatchedAlloyConfig } from '../api/system/ForeignGui';
 import * as BehaviourBlob from '../behaviour/common/BehaviourBlob';
 import * as ComponentEvents from '../construct/ComponentEvents';
-import { UncurriedHandler } from '../events/EventRegistry';
+import type { UncurriedHandler } from '../events/EventRegistry';
 
 interface Events {
   readonly elem: SugarElement<Node>;
