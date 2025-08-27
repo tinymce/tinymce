@@ -1,6 +1,6 @@
 import { Assertions } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 import { Hierarchy, SelectorFind, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 

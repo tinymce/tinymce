@@ -1,11 +1,11 @@
 import { Assertions, FocusTools, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Arr, Cell, Obj, Strings } from '@ephox/katamari';
-import { Attribute, Css, Hierarchy, SugarDocument, SugarElement } from '@ephox/sugar';
+import { Attribute, Css, Hierarchy, SugarDocument, type SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 
 describe('browser.tinymce.core.dom.ControlSelectionTest', () => {

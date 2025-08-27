@@ -2,7 +2,7 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { McEditor, TinyAssertions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.init.InitContentBodySelectionTest', () => {
   const initAndAssertContent = (label: string, html: string, path: number[], offset = 0, extraSettings = {}) => {

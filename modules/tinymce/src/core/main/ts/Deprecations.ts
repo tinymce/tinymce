@@ -1,6 +1,6 @@
 import { Arr, Obj } from '@ephox/katamari';
 
-import { NormalizedEditorOptions, RawEditorOptions } from './api/OptionTypes';
+import type { NormalizedEditorOptions, RawEditorOptions } from './api/OptionTypes';
 import Tools from './api/util/Tools';
 
 interface DeprecatedPlugin {

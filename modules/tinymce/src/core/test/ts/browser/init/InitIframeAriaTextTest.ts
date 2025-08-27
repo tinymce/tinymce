@@ -4,7 +4,7 @@ import { Attribute, SugarElement } from '@ephox/sugar';
 import { McEditor, TinyDom } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.init.InitIframeAriaTextTest', () => {
   const defaultIframeAriaText = 'Rich Text Area';

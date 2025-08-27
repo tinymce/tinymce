@@ -1,4 +1,4 @@
-import { tinymce, TinyMCE } from './Tinymce';
+import { tinymce, type TinyMCE } from './Tinymce';
 
 declare const module: any;
 declare const window: any;

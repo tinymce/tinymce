@@ -19,9 +19,9 @@
 import { RgbaColour, Transformations } from '@ephox/acid';
 import { Obj, Unicode } from '@ephox/katamari';
 
-import { URLConverter } from '../OptionTypes';
+import type { URLConverter } from '../OptionTypes';
 
-import Schema, { SchemaMap } from './Schema';
+import type { SchemaMap, default as Schema } from './Schema';
 
 export type StyleMap = Record<string, string | number>;
 

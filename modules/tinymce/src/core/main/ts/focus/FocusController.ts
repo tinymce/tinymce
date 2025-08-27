@@ -3,8 +3,8 @@ import { PlatformDetection } from '@ephox/sand';
 import { Class, Focus, SugarElement, SugarShadowDom, WindowVisualViewport } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
-import Editor from '../api/Editor';
-import EditorManager from '../api/EditorManager';
+import type Editor from '../api/Editor';
+import type EditorManager from '../api/EditorManager';
 import FocusManager from '../api/FocusManager';
 import * as Options from '../api/Options';
 import Delay from '../api/util/Delay';

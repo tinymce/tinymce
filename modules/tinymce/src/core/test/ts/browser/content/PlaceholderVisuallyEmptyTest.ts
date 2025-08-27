@@ -3,7 +3,7 @@ import { Unicode } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import { isVisuallyEmpty } from 'tinymce/core/content/Placeholder';
 
 describe('browser.tinymce.core.content.PlaceholderVisuallyEmptyTest', () => {

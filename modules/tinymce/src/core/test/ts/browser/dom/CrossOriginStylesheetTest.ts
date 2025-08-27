@@ -1,16 +1,16 @@
 import { UiFinder } from '@ephox/agar';
 import { after, afterEach, before, context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
-import { Attribute, SugarElement, SugarHead } from '@ephox/sugar';
+import { Attribute, type SugarElement, SugarHead } from '@ephox/sugar';
 import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import StyleSheetLoader from 'tinymce/core/api/dom/StyleSheetLoader';
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import * as OptionTypes from 'tinymce/core/api/OptionTypes';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type * as OptionTypes from 'tinymce/core/api/OptionTypes';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 describe('browser.tinymce.core.dom.CrossOriginStylesheetTest', () => {
   const settings = {

@@ -1,9 +1,9 @@
-import { Cell, Fun } from '@ephox/katamari';
+import { type Cell, Fun } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import Env from '../api/Env';
 import Delay from '../api/util/Delay';
-import { EditorEvent } from '../api/util/EventDispatcher';
+import type { EditorEvent } from '../api/util/EventDispatcher';
 import * as DeleteCommands from '../delete/DeleteCommands';
 
 import * as InternalHtml from './InternalHtml';

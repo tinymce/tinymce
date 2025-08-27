@@ -1,7 +1,7 @@
 import { Type } from '@ephox/katamari';
 
-import DOMUtils from '../../api/dom/DOMUtils';
-import Editor from '../../api/Editor';
+import type DOMUtils from '../../api/dom/DOMUtils';
+import type Editor from '../../api/Editor';
 
 const matchNodeName = <T extends Node = Node>(name: string) =>
   (node: Node | null): node is T => Type.isNonNullable(node) && node.nodeName.toLowerCase() === name;

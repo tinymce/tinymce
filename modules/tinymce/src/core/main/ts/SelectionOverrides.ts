@@ -1,7 +1,7 @@
 import { Arr, Obj, Type, Unicode } from '@ephox/katamari';
 import { Attribute, Compare, Css, Focus, Insert, InsertAll, Remove, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
-import Editor from './api/Editor';
+import type Editor from './api/Editor';
 import VK from './api/util/VK';
 import * as CaretContainer from './caret/CaretContainer';
 import * as CaretUtils from './caret/CaretUtils';

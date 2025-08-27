@@ -1,8 +1,8 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { McEditor, TinyAssertions, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as InsertNewline from 'tinymce/core/newline/InsertNewLine';
 
 // With a few exceptions, it is considered invalid for the cursor to be immediately before a block level element. These tests address

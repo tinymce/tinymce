@@ -1,6 +1,6 @@
-import Editor from '../../api/Editor';
+import type Editor from '../../api/Editor';
 
-import { Entry } from './Entry';
+import type { Entry } from './Entry';
 import { canIncreaseDepthOfList } from './Util';
 
 export const enum Indentation {

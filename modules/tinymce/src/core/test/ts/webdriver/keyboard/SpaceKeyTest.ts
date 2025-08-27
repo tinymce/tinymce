@@ -4,7 +4,7 @@ import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import { applyCaretFormat, removeCaretFormat } from 'tinymce/core/fmt/CaretFormat';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 

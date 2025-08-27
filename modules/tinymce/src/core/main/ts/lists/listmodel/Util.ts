@@ -1,6 +1,6 @@
-import { Compare, SugarElement, Traverse } from '@ephox/sugar';
+import { Compare, type SugarElement, Traverse } from '@ephox/sugar';
 
-import Editor from '../../api/Editor';
+import type Editor from '../../api/Editor';
 import * as Options from '../../api/Options';
 
 export const enum ListType {

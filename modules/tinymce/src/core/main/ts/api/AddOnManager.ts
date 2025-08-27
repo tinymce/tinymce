@@ -1,7 +1,7 @@
 import { Arr, Obj, Type } from '@ephox/katamari';
 
 import ScriptLoader from './dom/ScriptLoader';
-import Editor from './Editor';
+import type Editor from './Editor';
 import I18n from './util/I18n';
 
 /**

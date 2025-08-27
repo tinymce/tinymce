@@ -1,6 +1,6 @@
 import { Arr, Result, Results, Type } from '@ephox/katamari';
 
-import { BlockPattern, DynamicPatternContext, DynamicPatternsLookup, InlineCmdPattern, InlinePattern, Pattern, PatternError, PatternSet, RawDynamicPatternsLookup, RawPattern, BlockPatternTrigger } from './PatternTypes';
+import type { BlockPattern, DynamicPatternContext, DynamicPatternsLookup, InlineCmdPattern, InlinePattern, Pattern, PatternError, PatternSet, RawDynamicPatternsLookup, RawPattern, BlockPatternTrigger } from './PatternTypes';
 
 const isInlinePattern = (pattern: Pattern): pattern is InlinePattern =>
   pattern.type === 'inline-command' || pattern.type === 'inline-format';

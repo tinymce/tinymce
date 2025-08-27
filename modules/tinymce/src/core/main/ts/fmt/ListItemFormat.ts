@@ -1,13 +1,13 @@
 import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 
-import DOMUtils from '../api/dom/DOMUtils';
-import EditorSelection from '../api/dom/Selection';
-import Formatter from '../api/Formatter';
+import type DOMUtils from '../api/dom/DOMUtils';
+import type EditorSelection from '../api/dom/Selection';
+import type Formatter from '../api/Formatter';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as NodeType from '../dom/NodeType';
 
-import { Format, InlineFormat } from './FormatTypes';
+import type { Format, InlineFormat } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 
 export const listItemStyles = [ 'fontWeight', 'fontStyle', 'color', 'fontSize', 'fontFamily' ];

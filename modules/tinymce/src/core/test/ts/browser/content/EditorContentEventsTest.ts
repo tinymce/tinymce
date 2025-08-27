@@ -3,9 +3,9 @@ import { Arr, Singleton } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { SetContentEvent, GetContentEvent } from 'tinymce/core/api/EventTypes';
-import { ContentFormat } from 'tinymce/core/content/ContentTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { SetContentEvent, GetContentEvent } from 'tinymce/core/api/EventTypes';
+import type { ContentFormat } from 'tinymce/core/content/ContentTypes';
 import * as SetSelectionContent from 'tinymce/core/selection/SetSelectionContent';
 
 describe('browser.tinymce.core.content.EditorContentEventsTest', () => {

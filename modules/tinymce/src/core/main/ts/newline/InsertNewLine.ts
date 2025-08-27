@@ -1,8 +1,8 @@
 import { Fun, Type } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
-import { EditorEvent } from '../api/util/EventDispatcher';
+import type { EditorEvent } from '../api/util/EventDispatcher';
 import * as DeleteUtils from '../delete/DeleteUtils';
 import * as InputEvents from '../events/InputEvents';
 

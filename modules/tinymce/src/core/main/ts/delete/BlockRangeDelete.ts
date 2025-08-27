@@ -1,9 +1,9 @@
 import { Fun, Optional, Optionals } from '@ephox/katamari';
 import { Compare, PredicateFind, SugarElement } from '@ephox/sugar';
 
-import EditorSelection from '../api/dom/Selection';
-import Editor from '../api/Editor';
-import Schema from '../api/html/Schema';
+import type EditorSelection from '../api/dom/Selection';
+import type Editor from '../api/Editor';
+import type Schema from '../api/html/Schema';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';

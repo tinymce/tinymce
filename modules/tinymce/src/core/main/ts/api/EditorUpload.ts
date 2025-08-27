@@ -2,14 +2,14 @@ import { Arr, Strings, Type } from '@ephox/katamari';
 import { Attribute, Insert, Remove, SugarElement, SugarElements, SugarNode, Traverse } from '@ephox/sugar';
 
 import * as ErrorReporter from '../ErrorReporter';
-import { BlobInfoImagePair, BlobUriError, ImageScanner } from '../file/ImageScanner';
-import { Uploader } from '../file/Uploader';
+import { type BlobInfoImagePair, type BlobUriError, ImageScanner } from '../file/ImageScanner';
+import type { Uploader } from '../file/Uploader';
 import { UploadStatus } from '../file/UploadStatus';
 import * as Rtc from '../Rtc';
 
-import Editor from './Editor';
+import type Editor from './Editor';
 import Env from './Env';
-import { BlobCache, BlobInfo } from './file/BlobCache';
+import { BlobCache, type BlobInfo } from './file/BlobCache';
 import * as Options from './Options';
 import { createUploader, openNotification } from './util/ImageUploader';
 

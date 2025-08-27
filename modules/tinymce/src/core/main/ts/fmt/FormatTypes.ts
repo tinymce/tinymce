@@ -1,6 +1,6 @@
 import { Type } from '@ephox/katamari';
 
-import { RangeLikeObject } from '../selection/RangeTypes';
+import type { RangeLikeObject } from '../selection/RangeTypes';
 
 export type ApplyFormat = BlockFormat | InlineFormat | SelectorFormat;
 export type RemoveFormat = RemoveBlockFormat | RemoveInlineFormat | RemoveSelectorFormat;

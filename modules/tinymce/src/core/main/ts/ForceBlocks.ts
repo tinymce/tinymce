@@ -1,8 +1,8 @@
 import { Arr, Obj } from '@ephox/katamari';
 import { Insert, SugarElement } from '@ephox/sugar';
 
-import Editor from './api/Editor';
-import Schema, { SchemaMap } from './api/html/Schema';
+import type Editor from './api/Editor';
+import type { SchemaMap, default as Schema } from './api/html/Schema';
 import * as Options from './api/Options';
 import * as Bookmarks from './bookmark/Bookmarks';
 import * as NodeStructureBookmark from './bookmark/NodeStructureBookmark';
