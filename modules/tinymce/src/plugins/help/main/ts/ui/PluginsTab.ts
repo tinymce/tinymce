@@ -91,7 +91,7 @@ const tab = (editor: Editor): Dialog.TabSpec & { name: string } => {
   };
 
   const installedPlugins = (editor: Editor) => {
-    if (editor == null) {
+    if (Type.isNullable(editor)) {
       return '';
     }
     return '<div>' +
