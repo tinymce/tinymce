@@ -206,11 +206,12 @@ def cacheName = "cache_${BUILD_TAG}"
 
 def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NUMBER}"
 
-timestamps { alertWorseResult(
+timestamps { notifyStatusChange(
   cleanupStep: { devPods.cleanUpPod(build: cacheName) },
   branches: ['main', 'release/7', 'release/8'],
   channel: '#tinymce-build-status',
-  name: 'TinyMCE'
+  name: 'TinyMCE',
+  mention: true
   ) {
   devPods.nodeProducer(
     nodeOpts: [
