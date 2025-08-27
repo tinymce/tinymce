@@ -1,7 +1,7 @@
 import { Assertions, Chain, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 
-import { Editor as EditorType } from 'ephox/mcagar/alien/EditorTypes';
+import type { Editor as EditorType } from 'ephox/mcagar/alien/EditorTypes';
 import * as McEditor from 'ephox/mcagar/api/McEditor';
 import { ActionChains } from 'ephox/mcagar/api/pipeline/ActionChains';
 

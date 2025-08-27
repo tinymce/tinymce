@@ -1,7 +1,7 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
-import { DetailExt } from '../api/Structs';
+import type { DetailExt } from '../api/Structs';
 import { Warehouse } from '../api/Warehouse';
 
 type ValidCellFn = (cell: SugarElement<HTMLTableCellElement>) => boolean;

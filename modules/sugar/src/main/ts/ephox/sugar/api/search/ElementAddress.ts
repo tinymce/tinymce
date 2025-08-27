@@ -1,7 +1,7 @@
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Fun, type Optional } from '@ephox/katamari';
 
 import * as Compare from '../dom/Compare';
-import { SugarElement } from '../node/SugarElement';
+import type { SugarElement } from '../node/SugarElement';
 
 import * as PredicateFind from './PredicateFind';
 import * as SelectorFilter from './SelectorFilter';

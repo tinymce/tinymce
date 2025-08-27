@@ -1,9 +1,9 @@
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 
 import * as Chars from '../pattern/Chars';
 import { Custom } from '../pattern/Custom';
 import * as Safe from '../pattern/Safe';
-import { PRegExp } from '../pattern/Types';
+import type { PRegExp } from '../pattern/Types';
 import * as Unsafe from '../pattern/Unsafe';
 
 type SafewordApi = (input: string) => PRegExp;

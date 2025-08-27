@@ -1,8 +1,8 @@
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
-import { Attribute, Css, SugarElement, SugarNode } from '@ephox/sugar';
+import { Attribute, Css, type SugarElement, SugarNode } from '@ephox/sugar';
 
 import { getAttrValue } from '../util/CellUtils';
-import { CellElement, CompElm, RowElement } from '../util/TableTypes';
+import type { CellElement, CompElm, RowElement } from '../util/TableTypes';
 
 export interface RowData {
   readonly element: SugarElement<RowElement>;

@@ -2,7 +2,7 @@ import { Fun, Optional } from '@ephox/katamari';
 
 import * as Chars from './Chars';
 import { Custom } from './Custom';
-import { PRegExp } from './Types';
+import type { PRegExp } from './Types';
 
 /**
  * Tokens have no prefix or suffix

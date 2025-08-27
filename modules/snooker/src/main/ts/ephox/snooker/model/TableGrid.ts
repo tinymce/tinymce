@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
 
-import { ElementNew, RowCells } from '../api/Structs';
-import { CompElm } from '../util/TableTypes';
+import type { ElementNew, RowCells } from '../api/Structs';
+import type { CompElm } from '../util/TableTypes';
 
 import * as GridRow from './GridRow';
 

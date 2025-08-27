@@ -1,8 +1,8 @@
 import { Keyboard, Mouse, Touch, UiFinder } from '@ephox/agar';
 import { Type } from '@ephox/katamari';
-import { SelectorFind, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { SelectorFind, type SugarElement, SugarShadowDom } from '@ephox/sugar';
 
-import { Editor } from '../../alien/EditorTypes';
+import type { Editor } from '../../alien/EditorTypes';
 import { getThemeSelectors } from '../ThemeSelectors';
 import { TinyDom } from '../TinyDom';
 

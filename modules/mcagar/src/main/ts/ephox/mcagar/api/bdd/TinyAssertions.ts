@@ -1,9 +1,9 @@
-import { Assertions, Cursors, StructAssert } from '@ephox/agar';
+import { Assertions, Cursors, type StructAssert } from '@ephox/agar';
 import { Optional } from '@ephox/katamari';
 import { Hierarchy, Html, SugarElement } from '@ephox/sugar';
 
-import { Editor, GetContentArgs } from '../../alien/EditorTypes';
-import { Presence } from '../pipeline/TinyApis';
+import type { Editor, GetContentArgs } from '../../alien/EditorTypes';
+import type { Presence } from '../pipeline/TinyApis';
 import { TinyDom } from '../TinyDom';
 
 const assertPath = (label: string, root: SugarElement<Node>, expPath: number[], expOffset: number, actElement: Node, actOffset: number): void => {

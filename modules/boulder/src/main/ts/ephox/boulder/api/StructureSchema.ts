@@ -1,10 +1,10 @@
-import { Fun, Obj, Result } from '@ephox/katamari';
+import { Fun, Obj, type Result } from '@ephox/katamari';
 
 import { SimpleResult } from '../alien/SimpleResult';
 import { choose as chooseProcessor } from '../core/ChoiceProcessor';
-import { FieldProcessor } from '../core/FieldProcessor';
+import type { FieldProcessor } from '../core/FieldProcessor';
 import {
-  arrOf, arrOfObj, func, objOf, objOfOnly, oneOf, setOf as doSetOf, StructureProcessor, thunk, valueThunk as valueThunkOf
+  arrOf, arrOfObj, func, objOf, objOfOnly, oneOf, setOf as doSetOf, type StructureProcessor, thunk, valueThunk as valueThunkOf
 } from '../core/StructureProcessor';
 import { value, anyValue as _anyValue } from '../core/Utils';
 import { formatErrors, formatObj } from '../format/PrettyPrinter';

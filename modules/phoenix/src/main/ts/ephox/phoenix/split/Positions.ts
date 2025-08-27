@@ -1,5 +1,5 @@
 import { SplitPosition } from '../api/data/SplitPosition';
-import { TextSplit } from '../api/data/TextSplit';
+import type { TextSplit } from '../api/data/TextSplit';
 
 /*
  * Categorise a split of a text node as: none, start, middle, or end

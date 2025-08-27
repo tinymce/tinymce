@@ -1,6 +1,4 @@
-import { render, RenderOptions } from '../operate/Render';
+import { render, type RenderOptions } from '../operate/Render';
 
-export {
-  render,
-  RenderOptions
-};
+export type { RenderOptions };
+export { render };

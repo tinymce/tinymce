@@ -1,5 +1,5 @@
 import type { Meta, ReactRenderer, StoryObj } from '@storybook/react-vite';
-import { type ReactElement } from 'react';
+import type { ReactElement } from 'react';
 import type { PartialStoryFn } from 'storybook/internal/csf';
 
 import { FlowKeyingWithCycles } from './stories/FlowKeyingWithCycles.story';

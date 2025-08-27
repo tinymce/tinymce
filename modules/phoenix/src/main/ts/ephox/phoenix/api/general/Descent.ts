@@ -1,7 +1,7 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 
 import * as Navigation from '../../wrap/Navigation';
-import { SpotPoint } from '../data/Types';
+import type { SpotPoint } from '../data/Types';
 
 type ToLeafApi = <E, D>(universe: Universe<E, D>, element: E, offset: number) => SpotPoint<E>;
 const toLeaf: ToLeafApi = Navigation.toLeaf;

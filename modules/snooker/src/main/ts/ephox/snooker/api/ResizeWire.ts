@@ -1,5 +1,5 @@
 import { Fun } from '@ephox/katamari';
-import { SugarElement, SugarLocation, SugarNode, SugarPosition, Traverse } from '@ephox/sugar';
+import { type SugarElement, SugarLocation, SugarNode, SugarPosition, Traverse } from '@ephox/sugar';
 
 // parent: the container where the resize bars are appended
 //         this gets mouse event handlers only if it is not a child of 'view' (eg, detached/inline mode)

@@ -1,4 +1,4 @@
-import fc, { Arbitrary } from 'fast-check';
+import fc, { type Arbitrary } from 'fast-check';
 
 export const htmlBlockTagName = (): Arbitrary<string> =>
   // note: list is incomplete

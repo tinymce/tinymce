@@ -1,4 +1,4 @@
-import { Editor as EditorType } from '../../alien/EditorTypes';
+import type { Editor as EditorType } from '../../alien/EditorTypes';
 
 const setEditableRoot = <T extends EditorType = EditorType>(editor: T, state: boolean) => {
   if (editor.setEditableRoot) {

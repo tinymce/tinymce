@@ -1,12 +1,12 @@
-import { Arr, Optional, Optionals } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { Arr, type Optional, Optionals } from '@ephox/katamari';
+import type { SugarElement } from '@ephox/sugar';
 
 import * as GridRow from '../model/GridRow';
-import { onCells, TargetSelection, toDetailList } from '../model/RunOperation';
+import { onCells, type TargetSelection, toDetailList } from '../model/RunOperation';
 import * as Transitions from '../model/Transitions';
 import * as Redraw from '../operate/Redraw';
 
-import { Generators } from './Generators';
+import type { Generators } from './Generators';
 import { Warehouse } from './Warehouse';
 
 const copyRows = (table: SugarElement<HTMLTableElement>, target: TargetSelection, generators: Generators): Optional<SugarElement<HTMLTableRowElement | HTMLTableColElement>[]> => {

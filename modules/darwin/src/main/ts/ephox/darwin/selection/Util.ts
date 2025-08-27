@@ -1,4 +1,4 @@
-import { SelectionDirection, SimRange, SimSelection, SugarElement } from '@ephox/sugar';
+import { SelectionDirection, SimRange, type SimSelection, SugarElement } from '@ephox/sugar';
 
 import { Situs } from './Situs';
 
