@@ -1,13 +1,13 @@
-import { Cursors, Mouse, UiFinder, Waiter } from '@ephox/agar';
+import { type Cursors, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { Attribute, SugarBody, SugarElement, Value } from '@ephox/sugar';
+import { Attribute, SugarBody, type SugarElement, Value } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
-import { fillActiveDialog, generalTabLabels, ImageDialogData } from '../module/Helpers';
+import { fillActiveDialog, generalTabLabels, type ImageDialogData } from '../module/Helpers';
 
 describe('browser.tinymce.plugins.image.A11yImageTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

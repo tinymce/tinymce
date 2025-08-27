@@ -2,8 +2,8 @@ import { describe, it } from '@ephox/bedrock-client';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { MediaData, MediaDialogData } from 'tinymce/plugins/media/core/Types';
+import type Editor from 'tinymce/core/api/Editor';
+import type { MediaData, MediaDialogData } from 'tinymce/plugins/media/core/Types';
 import Plugin from 'tinymce/plugins/media/Plugin';
 import * as Dialog from 'tinymce/plugins/media/ui/Dialog';
 

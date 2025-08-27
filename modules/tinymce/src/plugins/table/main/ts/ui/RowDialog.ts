@@ -2,8 +2,8 @@ import { Arr, Fun, Obj } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { SelectorFilter, SugarElement } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Dialog } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import * as Styles from '../actions/Styles';
 import * as Events from '../api/Events';

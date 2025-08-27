@@ -1,12 +1,12 @@
 import { Optional } from '@ephox/katamari';
 
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Editor from 'tinymce/core/api/Editor';
+import type DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Options from '../api/Options';
 import * as Utils from '../core/Utils';
 
-import { LinkDialogInfo } from './DialogTypes';
+import type { LinkDialogInfo } from './DialogTypes';
 import { AnchorListOptions } from './sections/AnchorListOptions';
 import { ClassListOptions } from './sections/ClassListOptions';
 import { LinkListOptions } from './sections/LinkListOptions';

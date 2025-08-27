@@ -1,6 +1,6 @@
 import { Arr, Fun } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as CodeSample from '../core/CodeSample';
 import * as Languages from '../core/Languages';

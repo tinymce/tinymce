@@ -1,4 +1,4 @@
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 export interface Api {
   readonly backspaceDelete: (isForward: boolean) => void;

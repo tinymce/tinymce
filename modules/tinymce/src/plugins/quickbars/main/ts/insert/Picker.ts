@@ -1,6 +1,6 @@
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 const pickFile = (editor: Editor): Promise<File[]> => new Promise((resolve) => {
   let resolved = false;

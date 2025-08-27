@@ -1,7 +1,7 @@
 import { Global } from '@ephox/katamari';
 import Prism from 'prismjs';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Options from '../api/Options';
 

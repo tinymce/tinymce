@@ -1,5 +1,5 @@
-import Editor from 'tinymce/core/api/Editor';
-import { StyleFormat } from 'tinymce/core/api/fmt/StyleFormat';
+import type Editor from 'tinymce/core/api/Editor';
+import type { StyleFormat } from 'tinymce/core/api/fmt/StyleFormat';
 
 import * as ImportCss from '../core/ImportCss';
 

@@ -3,9 +3,9 @@ import { Optional } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/link/Plugin';
-import { UserListItem } from 'tinymce/plugins/link/ui/DialogTypes';
+import type { UserListItem } from 'tinymce/plugins/link/ui/DialogTypes';
 import { AnchorListOptions } from 'tinymce/plugins/link/ui/sections/AnchorListOptions';
 import { ClassListOptions } from 'tinymce/plugins/link/ui/sections/ClassListOptions';
 import { LinkListOptions } from 'tinymce/plugins/link/ui/sections/LinkListOptions';

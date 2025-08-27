@@ -1,6 +1,6 @@
-import { Singleton, Optional, Optionals, Strings } from '@ephox/katamari';
+import { Singleton, type Optional, Optionals, Strings } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import VK from 'tinymce/core/api/util/VK';
 
 import * as Utils from './Utils';
@@ -110,7 +110,5 @@ const setup = (editor: Editor): LinkSelection => {
   };
 };
 
-export {
-  LinkSelection,
-  setup
-};
+export type { LinkSelection };
+export { setup };
