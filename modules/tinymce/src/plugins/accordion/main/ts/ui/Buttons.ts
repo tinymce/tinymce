@@ -18,7 +18,8 @@ const register = (editor: Editor): void => {
   editor.ui.registry.addToggleButton('accordiontoggle', {
     icon: 'accordion-toggle',
     tooltip: 'Toggle accordion',
-    onAction: () => editor.execCommand('ToggleAccordion')
+    onAction: () => editor.execCommand('ToggleAccordion'),
+    context: 'any'
   });
 
   editor.ui.registry.addToggleButton('accordionremove', {
