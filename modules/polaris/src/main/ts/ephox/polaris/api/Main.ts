@@ -12,14 +12,4 @@ import * as Url from './Url';
 import * as Words from './Words';
 
 export type { PRange, PRegExp, WordOptions };
-export {
-  Arrays,
-  Pattern,
-  PositionArray,
-  Regexes,
-  Search,
-  Splitting,
-  Strings,
-  Url,
-  Words
-};
+export { Arrays, Pattern, PositionArray, Regexes, Search, Splitting, Strings, Url, Words };

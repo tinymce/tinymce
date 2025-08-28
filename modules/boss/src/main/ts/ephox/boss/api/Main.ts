@@ -16,14 +16,4 @@ import * as Locator from '../mutant/Locator';
 /* eslint-enable import-x/order */
 
 export type { Universe };
-export {
-  BasicPage,
-  CommentGene,
-  DomUniverse,
-  Gene,
-  SpecialGene,
-  TestUniverse,
-  TextGene,
-  Logger,
-  Locator
-};
+export { BasicPage, CommentGene, DomUniverse, Gene, SpecialGene, TestUniverse, TextGene, Logger, Locator };
