@@ -1,5 +1,5 @@
 import { Arr, Fun } from '@ephox/katamari';
-import { Selectors, SugarElement, Traverse } from '@ephox/sugar';
+import { Selectors, type SugarElement, Traverse } from '@ephox/sugar';
 
 const firstLayer = <T extends Element>(scope: SugarElement<Node>, selector: string): SugarElement<T>[] => {
   return filterFirstLayer(scope, selector, Fun.always);

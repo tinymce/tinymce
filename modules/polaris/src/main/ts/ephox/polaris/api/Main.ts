@@ -1,5 +1,5 @@
-import { PRange, PRegExp } from '../pattern/Types';
-import { WordOptions } from '../words/Words';
+import type { PRange, PRegExp } from '../pattern/Types';
+import type { WordOptions } from '../words/Words';
 
 import * as Arrays from './Arrays';
 import * as Pattern from './Pattern';
@@ -11,17 +11,5 @@ import * as Strings from './Strings';
 import * as Url from './Url';
 import * as Words from './Words';
 
-export {
-  Arrays,
-  Pattern,
-  PositionArray,
-  PRange,
-  PRegExp,
-  Regexes,
-  Search,
-  Splitting,
-  Strings,
-  Url,
-  Words,
-  WordOptions
-};
+export type { PRange, PRegExp, WordOptions };
+export { Arrays, Pattern, PositionArray, Regexes, Search, Splitting, Strings, Url, Words };

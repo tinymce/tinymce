@@ -1,7 +1,7 @@
 import { Arr, Optional } from '@ephox/katamari';
 
 import * as Compare from '../api/dom/Compare';
-import { SugarElement } from '../api/node/SugarElement';
+import type { SugarElement } from '../api/node/SugarElement';
 
 export interface Polling {
   element: SugarElement<Node>;

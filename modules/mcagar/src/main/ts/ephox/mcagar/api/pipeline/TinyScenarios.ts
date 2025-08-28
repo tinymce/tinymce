@@ -1,8 +1,8 @@
-import { Generators, PropertySteps, Step } from '@ephox/agar';
-import { Html, SimRange, SugarElement } from '@ephox/sugar';
-import * as fc from 'fast-check';
+import { Generators, PropertySteps, type Step } from '@ephox/agar';
+import { Html, type SimRange, SugarElement } from '@ephox/sugar';
+import type * as fc from 'fast-check';
 
-import { Editor } from '../../alien/EditorTypes';
+import type { Editor } from '../../alien/EditorTypes';
 
 type ContentGenerator = fc.Arbitrary<SugarElement<HTMLElement>>;
 

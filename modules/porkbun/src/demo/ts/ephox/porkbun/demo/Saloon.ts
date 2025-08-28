@@ -1,10 +1,10 @@
 import { Fun } from '@ephox/katamari';
 
 import * as Binder from 'ephox/porkbun/Binder';
-import { Bindable, Event } from 'ephox/porkbun/Event';
+import { type Bindable, Event } from 'ephox/porkbun/Event';
 import * as Events from 'ephox/porkbun/Events';
 
-import { Outlaw, Saloon, ShootingEvent } from './Types';
+import type { Outlaw, Saloon, ShootingEvent } from './Types';
 
 interface SaloonEvents {
   registry: {

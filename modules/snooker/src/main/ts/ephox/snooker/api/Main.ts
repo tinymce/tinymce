@@ -8,7 +8,7 @@ import * as CellNavigation from './CellNavigation';
 import * as CopyCols from './CopyCols';
 import * as CopyRows from './CopyRows';
 import * as CopySelected from './CopySelected';
-import { Generators, SimpleGenerators } from './Generators';
+import { Generators, type SimpleGenerators } from './Generators';
 import * as OtherCells from './OtherCells';
 import * as ResizeBehaviour from './ResizeBehaviour';
 import { ResizeWire } from './ResizeWire';
@@ -28,6 +28,7 @@ import { TableSection } from './TableSection';
 import { TableSize } from './TableSize';
 import { Warehouse } from './Warehouse';
 
+export type { SimpleGenerators };
 export {
   Adjustments,
   CellLocation,
@@ -39,7 +40,6 @@ export {
   Generators,
   ResizeBehaviour,
   ResizeWire,
-  SimpleGenerators,
   Sizes,
   Structs,
   TableContent,

@@ -1,6 +1,6 @@
 import { Arr, Optional } from '@ephox/katamari';
 
-import { PRange } from '../pattern/Types';
+import type { PRange } from '../pattern/Types';
 
 /**
  * Simple "is position within unit" utility function

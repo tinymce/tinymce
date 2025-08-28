@@ -1,4 +1,4 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 import { Adt, Fun, Optional } from '@ephox/katamari';
 
 type Handler<E, D, U> = (item: E, universe: Universe<E, D>) => U;

@@ -1,7 +1,7 @@
 import { Arr, Obj, Optional } from '@ephox/katamari';
 import { Attribute, Css, DomEvent, Insert, SugarElement, SugarText } from '@ephox/sugar';
 
-import { Wrapter } from 'ephox/phoenix/api/data/Types';
+import type { Wrapter } from 'ephox/phoenix/api/data/Types';
 import * as DomSearch from 'ephox/phoenix/api/dom/DomSearch';
 import * as DomWrapping from 'ephox/phoenix/api/dom/DomWrapping';
 

@@ -1,6 +1,6 @@
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, type Optional } from '@ephox/katamari';
 
-import { Gene } from '../api/Gene';
+import type { Gene } from '../api/Gene';
 
 import * as Comparator from './Comparator';
 import * as Locator from './Locator';

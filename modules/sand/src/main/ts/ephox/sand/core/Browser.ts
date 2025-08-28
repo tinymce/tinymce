@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 
 import { Version } from '../detect/Version';
-import { UaInfo } from '../info/UaInfo';
+import type { UaInfo } from '../info/UaInfo';
 
 const edge = 'Edge';
 const chromium = 'Chromium';

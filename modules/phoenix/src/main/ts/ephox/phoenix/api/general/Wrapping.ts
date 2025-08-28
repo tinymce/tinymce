@@ -1,10 +1,10 @@
-import { Universe } from '@ephox/boss';
-import { Optional } from '@ephox/katamari';
+import type { Universe } from '@ephox/boss';
+import type { Optional } from '@ephox/katamari';
 
 import * as SpanWrap from '../../wrap/SpanWrap';
 import * as Wrapper from '../../wrap/Wrapper';
 import { Wraps } from '../../wrap/Wraps';
-import { SpanWrapRange, SpotPoints, Wrapter } from '../data/Types';
+import type { SpanWrapRange, SpotPoints, Wrapter } from '../data/Types';
 
 type NuApi = <E, D>(universe: Universe<E, D>, item: E) => Wrapter<E>;
 const nu: NuApi = Wraps;

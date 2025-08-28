@@ -1,9 +1,9 @@
 import { Arr, Optional } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
 import { TablePositions } from '@ephox/snooker';
-import { Compare, SelectorFilter, SelectorFind, Selectors, SugarElement } from '@ephox/sugar';
+import { Compare, SelectorFilter, SelectorFind, Selectors, type SugarElement } from '@ephox/sugar';
 
-import { Identified, IdentifiedExt } from './Identified';
+import type { Identified, IdentifiedExt } from './Identified';
 
 interface Edges {
   readonly first: SugarElement<HTMLTableCellElement>;

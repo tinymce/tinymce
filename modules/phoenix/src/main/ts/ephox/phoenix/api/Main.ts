@@ -8,7 +8,7 @@ import { SplitPosition } from './data/SplitPosition';
 import * as Spot from './data/Spot';
 import { TextSplit } from './data/TextSplit';
 import { TypedItem } from './data/TypedItem';
-import {
+import type {
   Direction, SearchResult, SpanWrapRange, SpotDelta, SpotPoint, SpotPoints, SpotRange, SpotText, Successor, Transition, Traverse, Wrapter
 } from './data/Types';
 import * as DomDescent from './dom/DomDescent';
@@ -28,15 +28,7 @@ import * as Search from './general/Search';
 import * as Split from './general/Split';
 import * as Wrapping from './general/Wrapping';
 
-export {
-  Focus,
-  GatherResult,
-  InjectPosition,
-  NamedPattern,
-  SplitPosition,
-  Spot,
-  TextSplit,
-  TypedItem,
+export type {
   SpotPoint,
   SpotDelta,
   SpotRange,
@@ -48,7 +40,17 @@ export {
   Traverse,
   Successor,
   Wrapter,
-  SpanWrapRange,
+  SpanWrapRange
+};
+export {
+  Focus,
+  GatherResult,
+  InjectPosition,
+  NamedPattern,
+  SplitPosition,
+  Spot,
+  TextSplit,
+  TypedItem,
   DomDescent,
   DomExtract,
   DomFamily,

@@ -1,11 +1,11 @@
-import { Arr, Fun, Result } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { Arr, Fun, type Result } from '@ephox/katamari';
+import type { SugarElement } from '@ephox/sugar';
 
-import { SimpleGenerators } from '../api/Generators';
+import type { SimpleGenerators } from '../api/Generators';
 import * as Structs from '../api/Structs';
 import * as MergingOperations from '../operate/MergingOperations';
 import * as LockedColumnUtils from '../util/LockedColumnUtils';
-import { CompElm } from '../util/TableTypes';
+import type { CompElm } from '../util/TableTypes';
 
 import * as Fitment from './Fitment';
 import * as GridRow from './GridRow';

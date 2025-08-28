@@ -2,8 +2,8 @@ import { Arr, Fun, Optional } from '@ephox/katamari';
 import { Arrays } from '@ephox/polaris';
 
 import * as Spot from '../api/data/Spot';
-import { TypedItem } from '../api/data/TypedItem';
-import { SpotRange } from '../api/data/Types';
+import type { TypedItem } from '../api/data/TypedItem';
+import type { SpotRange } from '../api/data/Types';
 
 const count = <E, D>(parray: TypedItem<E, D>[]): number => {
   return Arr.foldr(parray, (b, a) => {

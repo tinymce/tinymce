@@ -1,4 +1,4 @@
-import { Gene, TestUniverse } from '@ephox/boss';
+import type { Gene, TestUniverse } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import * as fc from 'fast-check';
 

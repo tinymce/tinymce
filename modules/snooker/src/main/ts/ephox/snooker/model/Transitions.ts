@@ -1,9 +1,9 @@
 import { Arr, Fun } from '@ephox/katamari';
 
-import { Generators } from '../api/Generators';
+import type { Generators } from '../api/Generators';
 import * as Structs from '../api/Structs';
 import { Warehouse } from '../api/Warehouse';
-import { CompElm, RowCell, RowElement } from '../util/TableTypes';
+import type { CompElm, RowCell, RowElement } from '../util/TableTypes';
 
 import * as TableGrid from './TableGrid';
 

@@ -1,5 +1,5 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
-import { DomUniverse, Universe } from '@ephox/boss';
+import { DomUniverse, type Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 import { Hierarchy, Insert, InsertAll, Remove, Replication, SugarBody, SugarElement } from '@ephox/sugar';
 

@@ -1,4 +1,4 @@
-import { PRange, PRegExp } from '../pattern/Types';
+import type { PRange, PRegExp } from '../pattern/Types';
 import * as Find from '../search/Find';
 import * as Sleuth from '../search/Sleuth';
 

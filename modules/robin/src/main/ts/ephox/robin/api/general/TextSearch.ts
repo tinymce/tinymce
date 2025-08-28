@@ -1,9 +1,9 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 import { Contracts, Fun, Optional } from '@ephox/katamari';
-import { Gather, Spot, SpotPoint } from '@ephox/phoenix';
+import { Gather, Spot, type SpotPoint } from '@ephox/phoenix';
 
 import * as TextSearchBase from '../../textdata/TextSearch';
-import { TextSeeker, TextSeekerOutcome, TextSeekerPhase, TextSeekerPhaseConstructor, TextSeekerPhaseProcessor } from '../../textdata/TextSeeker';
+import { TextSeeker, type TextSeekerOutcome, type TextSeekerPhase, type TextSeekerPhaseConstructor, type TextSeekerPhaseProcessor } from '../../textdata/TextSeeker';
 
 type CharPos = TextSearchBase.CharPos;
 

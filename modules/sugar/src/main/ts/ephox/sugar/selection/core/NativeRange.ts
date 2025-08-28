@@ -1,8 +1,8 @@
 import { Optional } from '@ephox/katamari';
 
 import { SugarElement } from '../../api/node/SugarElement';
-import { RawRect } from '../../api/selection/Rect';
-import { Situ } from '../../api/selection/Situ';
+import type { RawRect } from '../../api/selection/Rect';
+import type { Situ } from '../../api/selection/Situ';
 
 const selectNode = (win: Window, element: SugarElement<Node>): Range => {
   const rng = win.document.createRange();

@@ -1,7 +1,7 @@
-import { Fun, Optional } from '@ephox/katamari';
+import { Fun, type Optional } from '@ephox/katamari';
 
 import * as SugarBody from '../node/SugarBody';
-import { SugarElement } from '../node/SugarElement';
+import type { SugarElement } from '../node/SugarElement';
 import * as SelectorFind from '../search/SelectorFind';
 
 const closest = (target: SugarElement<Node>): Optional<SugarElement<HTMLElement>> =>

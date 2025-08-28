@@ -1,8 +1,8 @@
 import { FutureResult } from '@ephox/katamari';
 
 import { DataType } from './DataType';
-import { ResponseBodyDataTypes, ResponseType, ResponseTypeMap } from './HttpData';
-import { HttpError } from './HttpError';
+import type { ResponseBodyDataTypes, ResponseType, ResponseTypeMap } from './HttpData';
+import type { HttpError } from './HttpError';
 import * as JsonResponse from './JsonResponse';
 
 export const validate = <T extends ResponseType>(responseType: ResponseBodyDataTypes, request: XMLHttpRequest): FutureResult<ResponseTypeMap[T], HttpError<T>> => {

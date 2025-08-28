@@ -1,8 +1,8 @@
 import { Future, LazyValue, Result } from '@ephox/katamari';
 
 import * as DomEvent from '../events/DomEvent';
-import { EventArgs } from '../events/Types';
-import { SugarElement } from '../node/SugarElement';
+import type { EventArgs } from '../events/Types';
+import type { SugarElement } from '../node/SugarElement';
 
 type WorkDone = (res: Result<EventArgs, string>) => void;
 type Worker = (callback: WorkDone) => void;

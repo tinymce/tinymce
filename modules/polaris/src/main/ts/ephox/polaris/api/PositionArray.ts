@@ -1,10 +1,10 @@
-import { Arr, Optional } from '@ephox/katamari';
+import type { Arr, Optional } from '@ephox/katamari';
 
 import * as Generator from '../parray/Generator';
 import * as Query from '../parray/Query';
 import * as Split from '../parray/Split';
 import * as Translate from '../parray/Translate';
-import { PRange } from '../pattern/Types';
+import type { PRange } from '../pattern/Types';
 
 type GenerateApi = <T, R extends { finish: number }>(xs: T[], f: (x: T, offset: number) => Optional<R>, start?: number) => R[];
 const generate: GenerateApi = Generator.make;

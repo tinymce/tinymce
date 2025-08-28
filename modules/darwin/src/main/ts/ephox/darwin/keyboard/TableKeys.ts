@@ -1,13 +1,13 @@
 import { Optional } from '@ephox/katamari';
-import { Spot, SpotPoint } from '@ephox/phoenix';
+import { Spot, type SpotPoint } from '@ephox/phoenix';
 import { PlatformDetection } from '@ephox/sand';
-import { Awareness, Compare, SimRange, SugarElement } from '@ephox/sugar';
+import { Awareness, Compare, type SimRange, type SugarElement } from '@ephox/sugar';
 
-import { WindowBridge } from '../api/WindowBridge';
+import type { WindowBridge } from '../api/WindowBridge';
 import { BeforeAfter } from '../navigation/BeforeAfter';
 import * as BrTags from '../navigation/BrTags';
-import { KeyDirection } from '../navigation/KeyDirection';
-import { Situs } from '../selection/Situs';
+import type { KeyDirection } from '../navigation/KeyDirection';
+import type { Situs } from '../selection/Situs';
 
 import * as Carets from './Carets';
 import * as Rectangles from './Rectangles';

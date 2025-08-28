@@ -2,7 +2,7 @@ import { Chain, Guard, Mouse, NamedChain, UiFinder } from '@ephox/agar';
 import { Fun } from '@ephox/katamari';
 import { SugarBody, SugarElement, Visibility } from '@ephox/sugar';
 
-import { Editor } from '../../alien/EditorTypes';
+import type { Editor } from '../../alien/EditorTypes';
 import { getThemeSelectors } from '../ThemeSelectors';
 
 export interface UiChains {

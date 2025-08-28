@@ -1,9 +1,9 @@
 import { DomUniverse } from '@ephox/boss';
-import { Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { Optional } from '@ephox/katamari';
+import type { SugarElement } from '@ephox/sugar';
 
-import { TypedItem } from '../data/TypedItem';
-import { SpotPoint } from '../data/Types';
+import type { TypedItem } from '../data/TypedItem';
+import type { SpotPoint } from '../data/Types';
 import * as Extract from '../general/Extract';
 
 const universe = DomUniverse();

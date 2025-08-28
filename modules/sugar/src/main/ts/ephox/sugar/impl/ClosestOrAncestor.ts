@@ -1,6 +1,6 @@
 import { Optional, Type } from '@ephox/katamari';
 
-import { SugarElement } from '../api/node/SugarElement';
+import type { SugarElement } from '../api/node/SugarElement';
 
 type TestFn = (e: SugarElement<Node>) => boolean;
 type ScopeTestFn<T, R extends Node> = (scope: SugarElement<Node>, a: T) => scope is SugarElement<R>;

@@ -4,7 +4,7 @@ import { Fun } from '@ephox/katamari';
 
 import * as TextZones from 'ephox/robin/api/general/TextZones';
 import { ZoneViewports } from 'ephox/robin/api/general/ZoneViewports';
-import { ArbIds, arbIds, ArbRangeIds, arbRangeIds } from 'ephox/robin/test/Arbitraries';
+import { type ArbIds, arbIds, type ArbRangeIds, arbRangeIds } from 'ephox/robin/test/Arbitraries';
 import * as PropertyAssertions from 'ephox/robin/test/PropertyAssertions';
 import { assertProps, raw } from 'ephox/robin/test/ZoneObjects';
 

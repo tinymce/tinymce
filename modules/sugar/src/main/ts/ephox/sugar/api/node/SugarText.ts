@@ -1,8 +1,8 @@
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 
 import { NodeValue } from '../../impl/NodeValue';
 
-import { SugarElement } from './SugarElement';
+import type { SugarElement } from './SugarElement';
 import * as SugarNode from './SugarNode';
 
 const api = NodeValue(SugarNode.isText, 'text');

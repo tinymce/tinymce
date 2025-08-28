@@ -1,6 +1,6 @@
 import { Html, SugarElement, SugarNode } from '@ephox/sugar';
 
-import { SimpleGenerators } from 'ephox/snooker/api/Generators';
+import type { SimpleGenerators } from 'ephox/snooker/api/Generators';
 
 export default (): SimpleGenerators => {
   let cellCounter = 0;

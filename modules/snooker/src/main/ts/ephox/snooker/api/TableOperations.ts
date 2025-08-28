@@ -1,5 +1,5 @@
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
-import { ContentEditable, Remove, SugarElement, Width } from '@ephox/sugar';
+import { ContentEditable, Remove, type SugarElement, Width } from '@ephox/sugar';
 
 import * as Blocks from '../lookup/Blocks';
 import { findCommonCellType, findCommonRowType } from '../lookup/Type';
@@ -13,13 +13,13 @@ import * as ModificationOperations from '../operate/ModificationOperations';
 import * as TransformOperations from '../operate/TransformOperations';
 import * as Adjustments from '../resize/Adjustments';
 import * as ColUtils from '../util/ColUtils';
-import { CompElm } from '../util/TableTypes';
+import type { CompElm } from '../util/TableTypes';
 
-import { Generators, GeneratorsMerging, GeneratorsModification, GeneratorsTransform, SimpleGenerators } from './Generators';
+import { Generators, type GeneratorsMerging, type GeneratorsModification, type GeneratorsTransform, type SimpleGenerators } from './Generators';
 import * as Structs from './Structs';
 import * as TableContent from './TableContent';
 import * as TableLookup from './TableLookup';
-import { TableSection } from './TableSection';
+import type { TableSection } from './TableSection';
 import { Warehouse } from './Warehouse';
 
 export interface TableOperationResult {

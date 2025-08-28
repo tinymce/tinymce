@@ -1,6 +1,6 @@
 import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 
-import { SugarElement } from '../node/SugarElement';
+import type { SugarElement } from '../node/SugarElement';
 import * as SugarNode from '../node/SugarNode';
 
 const rawSet = (dom: Element, key: string, value: string | boolean | number): void => {

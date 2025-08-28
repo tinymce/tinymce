@@ -1,10 +1,10 @@
 import { Arr, Fun, Obj, Result } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
-import { SimpleGenerators } from '../api/Generators';
+import type { SimpleGenerators } from '../api/Generators';
 import * as Structs from '../api/Structs';
 import * as LockedColumnUtils from '../util/LockedColumnUtils';
-import { CellElement } from '../util/TableTypes';
+import type { CellElement } from '../util/TableTypes';
 
 import * as GridRow from './GridRow';
 

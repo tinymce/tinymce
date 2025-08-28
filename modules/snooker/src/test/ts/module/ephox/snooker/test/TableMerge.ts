@@ -1,8 +1,8 @@
 import { Assert } from '@ephox/bedrock-client';
-import { Arr, Result } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { Arr, type Result } from '@ephox/katamari';
+import type { SugarElement } from '@ephox/sugar';
 
-import { SimpleGenerators } from 'ephox/snooker/api/Generators';
+import type { SimpleGenerators } from 'ephox/snooker/api/Generators';
 import * as Structs from 'ephox/snooker/api/Structs';
 import * as TableMerge from 'ephox/snooker/model/TableMerge';
 import * as Fitment from 'ephox/snooker/test/Fitment';

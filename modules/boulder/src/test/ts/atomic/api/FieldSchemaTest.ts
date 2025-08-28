@@ -4,7 +4,7 @@ import { KAssert } from '@ephox/katamari-assertions';
 
 import * as FieldSchema from 'ephox/boulder/api/FieldSchema';
 import * as StructureSchema from 'ephox/boulder/api/StructureSchema';
-import { FieldProcessor } from 'ephox/boulder/core/FieldProcessor';
+import type { FieldProcessor } from 'ephox/boulder/core/FieldProcessor';
 import * as ValueType from 'ephox/boulder/core/ValueType';
 
 UnitTest.test('Atomic Test: api.FieldSchemaTest', () => {

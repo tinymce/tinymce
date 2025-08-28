@@ -1,5 +1,5 @@
-import { Universe } from '@ephox/boss';
-import { Arr, Optional } from '@ephox/katamari';
+import type { Universe } from '@ephox/boss';
+import { Arr, type Optional } from '@ephox/katamari';
 
 /**
  * Search the parents of both items for a common element

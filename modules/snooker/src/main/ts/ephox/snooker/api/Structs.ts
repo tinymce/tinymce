@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
-import { CellElement, RowElement, RowCell } from '../util/TableTypes';
+import type { CellElement, RowElement, RowCell } from '../util/TableTypes';
 
 export interface Dimension {
   readonly width: number;

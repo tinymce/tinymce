@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import fc from 'fast-check';
 
 import * as Fun from 'ephox/katamari/api/Fun';
-import { Maybe } from 'ephox/katamari/api/Maybe';
+import type { Maybe } from 'ephox/katamari/api/Maybe';
 import * as Maybes from 'ephox/katamari/api/Maybes';
 
 describe('atomic.katamari.maybe.MonadTest', () => {

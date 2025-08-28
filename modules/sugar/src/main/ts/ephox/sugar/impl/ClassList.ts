@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
 
-import { SugarElement } from '../api/node/SugarElement';
+import type { SugarElement } from '../api/node/SugarElement';
 import * as AttrList from '../api/properties/AttrList';
 
 // IE11 Can return undefined for a classList on elements such as math, so we make sure it's not undefined before attempting to use it.

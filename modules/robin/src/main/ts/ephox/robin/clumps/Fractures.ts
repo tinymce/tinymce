@@ -1,8 +1,8 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 
 import * as Parent from '../api/general/Parent';
-import { breakToLeft, breakToRight, BrokenPath, LeftRight } from '../parent/Breaker';
+import { breakToLeft, breakToRight, type BrokenPath, type LeftRight } from '../parent/Breaker';
 import * as Subset from '../parent/Subset';
 
 // Find the subsection of DIRECT children of parent from [first, last])

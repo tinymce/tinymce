@@ -1,4 +1,4 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 
 export type Looker<E, D> = (universe: Universe<E, D>, elem: E) => Optional<E>;

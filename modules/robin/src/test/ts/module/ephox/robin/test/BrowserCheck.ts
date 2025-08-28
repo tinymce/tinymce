@@ -1,4 +1,4 @@
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 import { Insert, Remove, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 
 const getNode = (container: SugarElement): SugarElement<Node> => {

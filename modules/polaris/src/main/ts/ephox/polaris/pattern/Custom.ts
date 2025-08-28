@@ -1,6 +1,6 @@
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 
-import { PRegExp } from './Types';
+import type { PRegExp } from './Types';
 
 // tslint:disable-next-line:variable-name
 export const Custom = (regex: string, prefix: PRegExp['prefix'], suffix: PRegExp['suffix'], flags: Optional<string>): PRegExp => {

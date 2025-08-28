@@ -16,7 +16,7 @@ import * as MouseEvents from './events/MouseEvents';
 import * as Ready from './events/Ready';
 import * as Resize from './events/Resize';
 import * as ScrollChange from './events/ScrollChange';
-import { EventArgs, EventFilter, EventHandler, EventUnbinder } from './events/Types';
+import type { EventArgs, EventFilter, EventHandler, EventUnbinder } from './events/Types';
 import * as Viewable from './events/Viewable';
 import * as NodeTypes from './node/NodeTypes';
 import * as SugarBody from './node/SugarBody';
@@ -62,7 +62,7 @@ import * as Traverse from './search/Traverse';
 import * as Awareness from './selection/Awareness';
 import * as CursorPosition from './selection/CursorPosition';
 import * as Edge from './selection/Edge';
-import { RawRect, Rect, StructRect } from './selection/Rect';
+import { type RawRect, Rect, type StructRect } from './selection/Rect';
 import { SimRange } from './selection/SimRange';
 import { SimSelection } from './selection/SimSelection';
 import { Situ } from './selection/Situ';
@@ -79,6 +79,14 @@ import * as Visibility from './view/Visibility';
 import * as Width from './view/Width';
 import * as WindowVisualViewport from './view/WindowVisualViewport';
 
+export type {
+  EventArgs,
+  EventFilter,
+  EventHandler,
+  EventUnbinder,
+  StructRect,
+  RawRect
+};
 export {
   Compare,
   DocumentPosition,
@@ -90,10 +98,6 @@ export {
   Link,
   Remove,
   Replication,
-  EventArgs,
-  EventFilter,
-  EventHandler,
-  EventUnbinder,
   DomEvent,
   MouseEvents,
   Ready,
@@ -161,7 +165,5 @@ export {
   WindowVisualViewport,
   Width,
   SelectionDirection,
-  StructRect,
-  RawRect,
   Rect
 };

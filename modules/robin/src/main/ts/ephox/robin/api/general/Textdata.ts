@@ -1,6 +1,6 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 import { Arr, Optional } from '@ephox/katamari';
-import { Spot, SpotRange } from '@ephox/phoenix';
+import { Spot, type SpotRange } from '@ephox/phoenix';
 import { PositionArray } from '@ephox/polaris';
 
 interface TextdataGet<E> {

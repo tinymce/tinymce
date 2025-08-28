@@ -1,10 +1,10 @@
-import { Universe } from '@ephox/boss';
-import { Optional } from '@ephox/katamari';
+import type { Universe } from '@ephox/boss';
+import type { Optional } from '@ephox/katamari';
 
 import * as Seeker from '../../gather/Seeker';
 import { advance, backtrack, go, sidestep } from '../../gather/Walker';
 import { Walkers } from '../../gather/Walkers';
-import { Direction, Successor, Transition, Traverse } from '../data/Types';
+import type { Direction, Successor, Transition, Traverse } from '../data/Types';
 
 const isLeaf = <E, D>(universe: Universe<E, D>) => (element: E) => universe.property().children(element).length === 0;
 

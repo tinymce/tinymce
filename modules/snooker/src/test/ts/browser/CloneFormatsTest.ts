@@ -2,7 +2,7 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
 import { Html, Insert, SugarElement } from '@ephox/sugar';
 
-import { CellData } from 'ephox/snooker/api/Generators';
+import type { CellData } from 'ephox/snooker/api/Generators';
 import * as TableFill from 'ephox/snooker/api/TableFill';
 
 UnitTest.test('CloneFormatsTest', () => {

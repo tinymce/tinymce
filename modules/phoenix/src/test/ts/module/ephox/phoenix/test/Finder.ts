@@ -1,4 +1,4 @@
-import { Gene, TestUniverse } from '@ephox/boss';
+import type { Gene, TestUniverse } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 
 const get = (universe: TestUniverse, id: string): Gene => {

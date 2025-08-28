@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
 
-import { Bindable, EventHandler } from './Event';
+import type { Bindable, EventHandler } from './Event';
 
 export interface Binder {
   readonly bind: <T>(registration: Bindable<T>, handler: EventHandler<T>) => void;

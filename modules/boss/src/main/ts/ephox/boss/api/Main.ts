@@ -5,7 +5,7 @@ import { Gene } from './Gene';
 import { SpecialGene } from './SpecialGene';
 import { TestUniverse } from './TestUniverse';
 import { TextGene } from './TextGene';
-import { Universe } from './Universe';
+import type { Universe } from './Universe';
 
 /* eslint-disable import-x/order */
 // NON API USAGE
@@ -15,15 +15,5 @@ import * as Logger from '../mutant/Logger';
 import * as Locator from '../mutant/Locator';
 /* eslint-enable import-x/order */
 
-export {
-  BasicPage,
-  CommentGene,
-  DomUniverse,
-  Gene,
-  SpecialGene,
-  TestUniverse,
-  TextGene,
-  Logger,
-  Locator,
-  Universe
-};
+export type { Universe };
+export { BasicPage, CommentGene, DomUniverse, Gene, SpecialGene, TestUniverse, TextGene, Logger, Locator };
