@@ -9,4 +9,12 @@ import * as Dragger from './Dragger';
 import MouseDrag from './MouseDrag';
 
 export type { DragImageData };
-export { DataTransfer, DataTransferMode, DataTransferContent, DataTransferEvent, DragApis, Dragger, MouseDrag };
+export {
+  DataTransfer,
+  DataTransferMode,
+  DataTransferContent,
+  DataTransferEvent,
+  DragApis,
+  Dragger,
+  MouseDrag
+};
