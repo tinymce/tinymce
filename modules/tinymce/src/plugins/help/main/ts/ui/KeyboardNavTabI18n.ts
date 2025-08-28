@@ -1,4 +1,4 @@
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Resource from 'tinymce/core/api/Resource';
 import I18n from 'tinymce/core/api/util/I18n';
 

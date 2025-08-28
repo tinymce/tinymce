@@ -2,7 +2,7 @@ import { Arr, Obj, Optional, Type } from '@ephox/katamari';
 
 import Tools from 'tinymce/core/api/util/Tools';
 
-import { ListGroup, ListItem, ListValue, UserListItem } from '../ui/DialogTypes';
+import type { ListGroup, ListItem, ListValue, UserListItem } from '../ui/DialogTypes';
 
 export type ListExtractor = (item: UserListItem) => string;
 

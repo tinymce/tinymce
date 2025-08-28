@@ -3,7 +3,7 @@ import { Css, SelectorFind } from '@ephox/sugar';
 import { TinyHooks, TinyDom } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 
 describe('browser.tinymce.plugins.fullscreen.FullScreenSinkTest', () => {

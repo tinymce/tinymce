@@ -1,6 +1,6 @@
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
-import * as CharMap from '../core/CharMap';
+import type * as CharMap from '../core/CharMap';
 import * as Scan from '../core/Scan';
 
 type CharMap = CharMap.CharMap;

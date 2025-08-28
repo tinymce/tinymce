@@ -1,13 +1,13 @@
 import { Type } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { StyleMap } from 'tinymce/core/api/html/Styles';
+import type Editor from 'tinymce/core/api/Editor';
+import type { StyleMap } from 'tinymce/core/api/html/Styles';
 import URI from 'tinymce/core/api/util/URI';
 
 import * as Options from '../api/Options';
-import { UserListItem } from '../ui/DialogTypes';
+import type { UserListItem } from '../ui/DialogTypes';
 
-import { ImageData } from './ImageData';
+import type { ImageData } from './ImageData';
 
 export interface ImageDimensions {
   readonly width: number;

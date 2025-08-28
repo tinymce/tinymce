@@ -1,8 +1,8 @@
 import { Arr, Type } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
-import Schema from 'tinymce/core/api/html/Schema';
+import type Editor from 'tinymce/core/api/Editor';
+import type { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
+import type Schema from 'tinymce/core/api/html/Schema';
 
 import { getForcedRootBlock } from '../api/Options';
 

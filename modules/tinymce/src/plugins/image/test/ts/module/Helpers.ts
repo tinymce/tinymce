@@ -1,9 +1,9 @@
 import { Assertions, Mouse, UiFinder } from '@ephox/agar';
 import { Fun, Obj, Optional, Type } from '@ephox/katamari';
-import { Attribute, Checked, Class, Focus, SugarBody, SugarElement, Traverse, Value } from '@ephox/sugar';
+import { Attribute, Checked, Class, Focus, SugarBody, type SugarElement, Traverse, Value } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 export interface ImageDialogData {
   src: {

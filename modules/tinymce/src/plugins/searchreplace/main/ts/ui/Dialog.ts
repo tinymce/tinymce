@@ -1,8 +1,8 @@
-import { Arr, Cell, Singleton } from '@ephox/katamari';
+import { Arr, type Cell, Singleton } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import { Dialog } from 'tinymce/core/api/ui/Ui';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Actions from '../core/Actions';

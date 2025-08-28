@@ -1,6 +1,6 @@
 import { Merger, Obj, Optional, Singleton, Strings } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Resource from 'tinymce/core/api/Resource';
 
 import * as Options from '../api/Options';

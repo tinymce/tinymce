@@ -1,19 +1,19 @@
 import { Arr, Merger, Optional, Strings, Type } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
-import { StyleMap } from 'tinymce/core/api/html/Styles';
-import { Dialog as DialogType } from 'tinymce/core/api/ui/Ui';
-import ImageUploader, { UploadResult } from 'tinymce/core/api/util/ImageUploader';
+import type Editor from 'tinymce/core/api/Editor';
+import type { BlobInfo } from 'tinymce/core/api/file/BlobCache';
+import type { StyleMap } from 'tinymce/core/api/html/Styles';
+import type { Dialog as DialogType } from 'tinymce/core/api/ui/Ui';
+import ImageUploader, { type UploadResult } from 'tinymce/core/api/util/ImageUploader';
 
-import { getStyleValue, ImageData } from '../core/ImageData';
+import { getStyleValue, type ImageData } from '../core/ImageData';
 import { normalizeCss as doNormalizeCss } from '../core/ImageSelection';
 import { ListUtils } from '../core/ListUtils';
 import * as Utils from '../core/Utils';
 
 import { AdvTab } from './AdvTab';
 import { collect } from './DialogInfo';
-import { API, ImageDialogData, ImageDialogInfo, ImageMeta, ListValue } from './DialogTypes';
+import type { API, ImageDialogData, ImageDialogInfo, ImageMeta, ListValue } from './DialogTypes';
 import { MainTab } from './MainTab';
 import { UploadTab } from './UploadTab';
 

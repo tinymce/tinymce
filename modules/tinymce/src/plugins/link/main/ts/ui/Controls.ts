@@ -1,8 +1,8 @@
 import { Fun, Optional, Optionals } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
-import { InlineContent, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
+import type { InlineContent, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 
 import * as Options from '../api/Options';
 import * as Actions from '../core/Actions';

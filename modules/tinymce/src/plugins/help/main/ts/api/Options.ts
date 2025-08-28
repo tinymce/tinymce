@@ -1,6 +1,6 @@
-import Editor from 'tinymce/core/api/Editor';
-import { EditorOptions } from 'tinymce/core/api/OptionTypes';
-import { Dialog } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorOptions } from 'tinymce/core/api/OptionTypes';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
 
 export type HelpTabsSetting = (string | Dialog.TabSpec)[];
 

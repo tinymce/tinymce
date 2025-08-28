@@ -1,12 +1,12 @@
 import { Clipboard } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
-import { SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { type SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import { LegacyUnit, TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { TableEventData } from 'tinymce/core/api/EventTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { TableEventData } from 'tinymce/core/api/EventTypes';
 import * as FakeClipboard from 'tinymce/plugins/table/api/Clipboard';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 

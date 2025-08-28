@@ -2,7 +2,7 @@ import { Mouse, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
 import { assertCleanHtml, assertInputValue, generalTabLabels, setInputValue } from '../module/Helpers';

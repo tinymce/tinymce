@@ -1,12 +1,12 @@
 import { Arr, Optional, Obj, Type } from '@ephox/katamari';
 
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Editor from 'tinymce/core/api/Editor';
+import type DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import type Editor from 'tinymce/core/api/Editor';
 import URI from 'tinymce/core/api/util/URI';
 
 import * as Options from '../api/Options';
 import { AssumeExternalTargets } from '../api/Types';
-import { AttachState, LinkDialogOutput } from '../ui/DialogTypes';
+import type { AttachState, LinkDialogOutput } from '../ui/DialogTypes';
 
 import * as Utils from './Utils';
 

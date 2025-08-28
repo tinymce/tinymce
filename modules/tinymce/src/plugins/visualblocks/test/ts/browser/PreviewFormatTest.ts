@@ -4,7 +4,7 @@ import { Class, Css, SugarElement } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/visualblocks/Plugin';
 
 describe('browser.tinymce.plugins.visualblocks.PreviewFormatsTest', () => {

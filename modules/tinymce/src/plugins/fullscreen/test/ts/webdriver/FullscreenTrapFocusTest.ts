@@ -5,7 +5,7 @@ import { Attribute, Insert, Remove, SugarDocument, SugarElement } from '@ephox/s
 import { McEditor, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as NativeFullscreen from 'tinymce/plugins/fullscreen/core/NativeFullscreen';
 
 import FullscreenPlugin from '../../../main/ts/Plugin';

@@ -86,4 +86,22 @@ const point = (type: string, button: number, element: SugarElement<Node>, x: num
 };
 
 export type { Settings, EventType };
-export { event, leftClickButton, middleClickButton, rightClickButton, leftClickButtons, rightClickButtons, middleClickButtons, click, mouseDown, mouseUp, mouseMove, mouseOver, mouseOut, contextMenu, point, trigger, dblclick };
+export {
+  event,
+  leftClickButton,
+  middleClickButton,
+  rightClickButton,
+  leftClickButtons,
+  rightClickButtons,
+  middleClickButtons,
+  click,
+  mouseDown,
+  mouseUp,
+  mouseMove,
+  mouseOver,
+  mouseOut,
+  contextMenu,
+  point,
+  trigger,
+  dblclick
+};

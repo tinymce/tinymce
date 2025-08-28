@@ -5,7 +5,7 @@
  Make sure that if making changes to this file, the other files are updated as well
  */
 
-import { Ephemera as DarwinEphemera } from '@ephox/darwin';
+import type { Ephemera as DarwinEphemera } from '@ephox/darwin';
 
 const strSelected = 'data-mce-selected';
 const strSelectedSelector = 'td[' + strSelected + '],th[' + strSelected + ']';

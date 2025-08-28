@@ -1,10 +1,10 @@
 import { Optional, Type } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Options from '../../api/Options';
 import { ListOptions } from '../../core/ListOptions';
-import { ListItem, UserListItem } from '../DialogTypes';
+import type { ListItem, UserListItem } from '../DialogTypes';
 
 const parseJson = (text: string): Optional<ListItem[]> => {
   // Do some proper modelling.

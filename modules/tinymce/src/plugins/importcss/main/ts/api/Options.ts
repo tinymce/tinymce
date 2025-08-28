@@ -1,10 +1,10 @@
 import { Type } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { StyleFormat } from 'tinymce/core/api/fmt/StyleFormat';
-import { EditorOptions } from 'tinymce/core/api/OptionTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { StyleFormat } from 'tinymce/core/api/fmt/StyleFormat';
+import type { EditorOptions } from 'tinymce/core/api/OptionTypes';
 
-import { UserDefinedGroup } from '../core/ImportCss';
+import type { UserDefinedGroup } from '../core/ImportCss';
 
 type SelectorConvertor = () => StyleFormat | undefined;
 type FileFilter = string | RegExp | ((value: string, imported?: boolean) => boolean) | undefined;

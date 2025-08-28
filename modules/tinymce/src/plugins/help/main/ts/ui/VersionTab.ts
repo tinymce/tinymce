@@ -1,5 +1,5 @@
 import EditorManager from 'tinymce/core/api/EditorManager';
-import { Dialog } from 'tinymce/core/api/ui/Ui';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
 import I18n from 'tinymce/core/api/util/I18n';
 
 const tab = (): Dialog.TabSpec & { name: string } => {
