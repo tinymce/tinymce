@@ -1,4 +1,4 @@
-import { Editor } from './EditorTypes';
+import type { Editor } from './EditorTypes';
 
 /*
   This file exists to avoid depending on the tinymce package, because mcagar supports multiple versions of the editor.

@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 
 import { Version } from '../detect/Version';
-import { UaInfo } from '../info/UaInfo';
+import type { UaInfo } from '../info/UaInfo';
 
 export interface OperatingSystem extends UaInfo {
   readonly isWindows: () => boolean;

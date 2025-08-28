@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 
-import { Browser } from '../core/Browser';
-import { OperatingSystem } from '../core/OperatingSystem';
+import type { Browser } from '../core/Browser';
+import type { OperatingSystem } from '../core/OperatingSystem';
 
 export interface DeviceType {
   readonly isiPad: () => boolean;

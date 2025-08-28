@@ -1,8 +1,8 @@
-import { TestLogs } from '@ephox/agar';
-import { Arr, Fun, FutureResult, Global, Id, Optional, Result, Type } from '@ephox/katamari';
+import type { TestLogs } from '@ephox/agar';
+import { Arr, Fun, FutureResult, Global, Id, type Optional, Result, Type } from '@ephox/katamari';
 import { Attribute, DomEvent, Insert, Remove, SelectorFilter, SugarBody, SugarElement, SugarHead, SugarShadowDom } from '@ephox/sugar';
 
-import { Editor } from '../alien/EditorTypes';
+import type { Editor } from '../alien/EditorTypes';
 
 import { detectTinymceBaseUrl } from './Urls';
 

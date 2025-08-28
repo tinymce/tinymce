@@ -1,6 +1,6 @@
 import { Fun, Optional } from '@ephox/katamari';
 import {
-  Attribute, Compare, Direction, DomEvent, EventArgs, Insert, Replication, SelectorFind, SimSelection, SugarBody, SugarElement, SugarNode, Traverse,
+  Attribute, Compare, Direction, DomEvent, type EventArgs, Insert, Replication, SelectorFind, SimSelection, SugarBody, SugarElement, SugarNode, Traverse,
   WindowSelection
 } from '@ephox/sugar';
 
@@ -8,7 +8,7 @@ import { Ephemera } from 'ephox/darwin/api/Ephemera';
 import * as InputHandlers from 'ephox/darwin/api/InputHandlers';
 import { SelectionAnnotation } from 'ephox/darwin/api/SelectionAnnotation';
 import * as SelectionKeys from 'ephox/darwin/api/SelectionKeys';
-import { Response } from 'ephox/darwin/selection/Response';
+import type { Response } from 'ephox/darwin/selection/Response';
 import * as Util from 'ephox/darwin/selection/Util';
 
 const ephoxUi = SelectorFind.first('#ephox-ui').getOrDie();

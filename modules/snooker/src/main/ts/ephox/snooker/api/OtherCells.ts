@@ -1,12 +1,12 @@
-import { Arr, Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { Arr, type Optional } from '@ephox/katamari';
+import type { SugarElement } from '@ephox/sugar';
 
 import * as GridRow from '../model/GridRow';
-import { onCells, TargetSelection, toDetailList } from '../model/RunOperation';
+import { onCells, type TargetSelection, toDetailList } from '../model/RunOperation';
 import * as Transitions from '../model/Transitions';
 
-import { Generators } from './Generators';
-import { DetailExt, RowCells } from './Structs';
+import type { Generators } from './Generators';
+import type { DetailExt, RowCells } from './Structs';
 import { Warehouse } from './Warehouse';
 
 export interface OtherCells {

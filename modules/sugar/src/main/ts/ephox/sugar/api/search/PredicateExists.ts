@@ -1,4 +1,4 @@
-import { SugarElement } from '../node/SugarElement';
+import type { SugarElement } from '../node/SugarElement';
 
 import * as PredicateFind from './PredicateFind';
 

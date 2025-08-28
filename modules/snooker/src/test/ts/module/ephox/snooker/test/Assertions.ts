@@ -4,8 +4,8 @@ import { Arr, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Css, Hierarchy, Html, Insert, Remove, SelectorFilter, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 
 import * as TableOperations from 'ephox/snooker/api/TableOperations';
-import { TableSection } from 'ephox/snooker/api/TableSection';
-import { OperationCallback, TargetElement, TargetPaste, TargetPasteRows, TargetSelection } from 'ephox/snooker/model/RunOperation';
+import type { TableSection } from 'ephox/snooker/api/TableSection';
+import type { OperationCallback, TargetElement, TargetPaste, TargetPasteRows, TargetSelection } from 'ephox/snooker/model/RunOperation';
 import * as Bridge from 'ephox/snooker/test/Bridge';
 
 interface TargetLocation {

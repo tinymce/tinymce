@@ -3,7 +3,7 @@ import { Fun } from '@ephox/katamari';
 import { SimpleResult } from '../alien/SimpleResult';
 
 import * as SchemaError from './SchemaError';
-import { StructureProcessor, ValueValidator } from './StructureProcessor';
+import type { StructureProcessor, ValueValidator } from './StructureProcessor';
 
 const value = (validator: ValueValidator): StructureProcessor => {
   const extract = (path, val) => {

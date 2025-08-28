@@ -2,7 +2,7 @@
 import { useEffect, useRef } from 'react';
 
 import { useFlowKeyNavigation } from '../../../KeyboardNavigationHooks';
-import { type Story } from '../FlowType.stories';
+import type { Story } from '../FlowType.stories';
 
 import { Container } from './Container';
 

@@ -1,10 +1,10 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 
-import { WordScope } from '../data/WordScope';
+import type { WordScope } from '../data/WordScope';
 import * as Identify from '../words/Identify';
 
-import { ZoneDetails } from './LanguageZones';
+import type { ZoneDetails } from './LanguageZones';
 
 export interface Zone<E> {
   readonly elements: E[];

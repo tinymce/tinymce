@@ -1,6 +1,6 @@
 import { Regex } from '@ephox/katamari';
 
-import { PRegExp } from './Types';
+import type { PRegExp } from './Types';
 import * as Unsafe from './Unsafe';
 
 /** Escapes regex characters in a string */

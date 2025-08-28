@@ -1,14 +1,14 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 import { Optional } from '@ephox/katamari';
 import { Descent } from '@ephox/phoenix';
 
 import { ZoneViewports } from '../api/general/ZoneViewports';
 import * as Clustering from '../words/Clustering';
-import { WordDecision, WordDecisionItem } from '../words/WordDecision';
+import { WordDecision, type WordDecisionItem } from '../words/WordDecision';
 
 import { LanguageZones } from './LanguageZones';
 import * as TextZones from './TextZones';
-import { Zone } from './Zones';
+import type { Zone } from './Zones';
 
 // Since we support these formats both mixed cases and either - and _ we need to normalize the code
 const normalizeCode = (lang: string): string => lang.toLowerCase().replace(/_/g, '-');
