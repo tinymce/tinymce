@@ -1,10 +1,10 @@
 import { Fun, Optional, Optionals } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
-import DOMUtils from '../api/dom/DOMUtils';
-import Editor from '../api/Editor';
+import type DOMUtils from '../api/dom/DOMUtils';
+import type Editor from '../api/Editor';
 import Env from '../api/Env';
-import Schema from '../api/html/Schema';
+import type Schema from '../api/html/Schema';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import { insertNbspAtPosition, insertSpaceAtPosition } from '../caret/InsertText';

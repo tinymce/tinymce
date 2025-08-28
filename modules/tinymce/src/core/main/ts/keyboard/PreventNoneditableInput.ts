@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as EditableRange from '../selection/EditableRange';
 
 const isValidContainer = (root: Element, container: Node) => root === container || root.contains(container);

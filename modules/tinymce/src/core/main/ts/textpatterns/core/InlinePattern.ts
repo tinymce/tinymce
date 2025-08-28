@@ -2,13 +2,13 @@ import { Arr, Id, Optional, Strings } from '@ephox/katamari';
 
 import * as Spot from '../../alien/Spot';
 import * as TextSearch from '../../alien/TextSearch';
-import DOMUtils from '../../api/dom/DOMUtils';
-import Editor from '../../api/Editor';
-import { createMarker, Marker, rangeFromMarker, removeMarker } from '../utils/Marker';
+import type DOMUtils from '../../api/dom/DOMUtils';
+import type Editor from '../../api/Editor';
+import { createMarker, type Marker, rangeFromMarker, removeMarker } from '../utils/Marker';
 import { generatePathRange, generatePathRangeFromRange } from '../utils/PathRange';
 import * as Utils from '../utils/Utils';
 
-import { InlinePattern, InlinePatternMatch, PatternSet } from './PatternTypes';
+import type { InlinePattern, InlinePatternMatch, PatternSet } from './PatternTypes';
 
 interface PatternDetails {
   readonly pattern: InlinePattern;

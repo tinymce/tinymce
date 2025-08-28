@@ -5,11 +5,11 @@
  Make sure that if making changes to this file, the other files are updated as well
  */
 
-import { Assertions, StructAssert } from '@ephox/agar';
+import { Assertions, type StructAssert } from '@ephox/agar';
 import { SelectorFind } from '@ephox/sugar';
 import { TinyDom } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 const assertTableStructure = (editor: Editor, structure: StructAssert): void => {
   const table = SelectorFind.descendant(TinyDom.body(editor), 'table').getOrDie('A table should exist');

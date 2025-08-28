@@ -4,7 +4,7 @@ import { Arr } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Schema from 'tinymce/core/api/html/Schema';
 import Styles from 'tinymce/core/api/html/Styles';
 

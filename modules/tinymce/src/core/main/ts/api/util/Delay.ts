@@ -1,6 +1,6 @@
 import { Type } from '@ephox/katamari';
 
-import Editor from '../Editor';
+import type Editor from '../Editor';
 
 interface Delay {
   setEditorInterval: (editor: Editor, callback: () => void, time?: number) => number;

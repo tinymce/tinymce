@@ -1,9 +1,9 @@
-import { Cursors } from '@ephox/agar';
+import type { Cursors } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
-import { Css, PredicateFilter, SugarElement, SugarNode } from '@ephox/sugar';
+import { Css, PredicateFilter, type SugarElement, SugarNode } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as NormalizeTagOrder from 'tinymce/core/fmt/NormalizeTagOrder';
 
 interface TestCase {

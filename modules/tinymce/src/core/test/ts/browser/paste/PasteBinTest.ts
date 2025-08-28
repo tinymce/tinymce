@@ -3,8 +3,8 @@ import { Arr } from '@ephox/katamari';
 import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 import { PasteBin } from 'tinymce/core/paste/PasteBin';
 
 interface TestCase {

@@ -1,6 +1,6 @@
 import { Optional, Strings, Type } from '@ephox/katamari';
 
-import { BlobCache, BlobInfo } from '../api/file/BlobCache';
+import type { BlobCache, BlobInfo } from '../api/file/BlobCache';
 
 import * as Conversions from './Conversions';
 

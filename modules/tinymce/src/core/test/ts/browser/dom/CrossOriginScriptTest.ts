@@ -5,10 +5,10 @@ import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import * as OptionTypes from 'tinymce/core/api/OptionTypes';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type * as OptionTypes from 'tinymce/core/api/OptionTypes';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 describe('browser.tinymce.core.dom.CrossOriginScriptTest', () => {
   const settings = {

@@ -1,8 +1,8 @@
 import { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
-import AstNode from '../api/html/Node';
+import type Editor from '../api/Editor';
+import type AstNode from '../api/html/Node';
 import HtmlSerializer from '../api/html/Serializer';
 import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';
@@ -13,7 +13,7 @@ import * as EditorFocus from '../focus/EditorFocus';
 import * as FilterNode from '../html/FilterNode';
 import * as Zwsp from '../text/Zwsp';
 
-import { Content, isTreeNode, SetContentArgs, SetContentResult } from './ContentTypes';
+import { type Content, isTreeNode, type SetContentArgs, type SetContentResult } from './ContentTypes';
 
 const moveSelection = (editor: Editor): void => {
   if (EditorFocus.hasFocus(editor)) {

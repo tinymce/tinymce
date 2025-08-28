@@ -1,7 +1,7 @@
 import { Optional } from '@ephox/katamari';
 import { Class, ContentEditable, SugarElement } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as EditorFocus from '../focus/EditorFocus';
 
 const removeFakeSelection = (editor: Editor) => {

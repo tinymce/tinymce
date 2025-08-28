@@ -3,7 +3,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as BlockRangeDelete from 'tinymce/core/delete/BlockRangeDelete';
 
 describe('browser.tinymce.core.delete.BlockRangeDeleteTest', () => {

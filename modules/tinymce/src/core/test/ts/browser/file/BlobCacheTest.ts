@@ -1,7 +1,7 @@
 import { before, describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
-import { BlobCache, BlobInfoData } from 'tinymce/core/api/file/BlobCache';
+import { BlobCache, type BlobInfoData } from 'tinymce/core/api/file/BlobCache';
 
 describe('browser.tinymce.core.file.BlobCacheTest', () => {
   const uriToBlob = (base64: string, type: string) => {

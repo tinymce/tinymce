@@ -1,4 +1,4 @@
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 
 import * as Commands from './lists/Commands';
 import * as Delete from './lists/Delete';

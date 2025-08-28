@@ -3,7 +3,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.init.InitDocumentWriteTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({

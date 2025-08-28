@@ -1,7 +1,7 @@
 import * as Deprecations from '../../Deprecations';
 import * as EventUtils from '../../events/EventUtils';
 
-import EventDispatcher, { EditorEvent, MappedEvent } from './EventDispatcher';
+import EventDispatcher, { type EditorEvent, type MappedEvent } from './EventDispatcher';
 
 interface Observable<T extends {}> {
   fire <K extends string, U extends MappedEvent<T, K>>(name: K, args?: U, bubble?: boolean): EditorEvent<U>;

@@ -2,7 +2,7 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
 import Schema from 'tinymce/core/api/html/Schema';
-import { getSanitizer, MimeType } from 'tinymce/core/html/Sanitization';
+import { getSanitizer, type MimeType } from 'tinymce/core/html/Sanitization';
 
 describe('browser.tinymce.core.html.SanitizationTest', () => {
   context('Sanitize html', () => {

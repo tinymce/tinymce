@@ -2,7 +2,7 @@ import { Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections, TinyContentActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.newline.NewlineInLiTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

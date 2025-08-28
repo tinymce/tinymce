@@ -2,11 +2,11 @@ import { Optional } from '@ephox/katamari';
 import { Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import BookmarkManager from '../api/dom/BookmarkManager';
-import Editor from '../api/Editor';
-import Schema from '../api/html/Schema';
+import type Editor from '../api/Editor';
+import type Schema from '../api/html/Schema';
 import HtmlSerializer from '../api/html/Serializer';
 import CaretPosition from '../caret/CaretPosition';
-import { SetSelectionContentArgs } from '../content/ContentTypes';
+import type { SetSelectionContentArgs } from '../content/ContentTypes';
 import { postProcessSetContent, preProcessSetContent } from '../content/PrePostProcess';
 import * as MergeText from '../delete/MergeText';
 import * as Deprecations from '../Deprecations';

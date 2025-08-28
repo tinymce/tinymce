@@ -3,7 +3,7 @@ import { Arr } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
 // eslint-disable-next-line @tinymce/no-publicapi-module-imports
-import { Editor, PluginManager, TextPatterns } from 'tinymce/core/api/PublicApi';
+import { type Editor, PluginManager, type TextPatterns } from 'tinymce/core/api/PublicApi';
 
 // The purpose of this test is to ensure that we have all the types required
 // for managing TextPatterns exposed through PublicApi

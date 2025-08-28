@@ -2,9 +2,9 @@ import { Arr, Optional, Type, Unicode } from '@ephox/katamari';
 import { Has, SugarElement } from '@ephox/sugar';
 
 import BookmarkManager from '../../api/dom/BookmarkManager';
-import DOMUtils from '../../api/dom/DOMUtils';
+import type DOMUtils from '../../api/dom/DOMUtils';
 import DomTreeWalker from '../../api/dom/TreeWalker';
-import Editor from '../../api/Editor';
+import type Editor from '../../api/Editor';
 import Tools from '../../api/util/Tools';
 import * as NodeStructureBookmark from '../../bookmark/NodeStructureBookmark';
 import { fireListEvent } from '../events/Events';

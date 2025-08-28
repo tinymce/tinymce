@@ -1,6 +1,6 @@
 import { Obj, Type } from '@ephox/katamari';
 
-import Editor from '../../api/Editor';
+import type Editor from '../../api/Editor';
 import * as Selection from '../lists/Selection';
 import * as Util from '../lists/Util';
 

@@ -1,11 +1,11 @@
-import { Cursors } from '@ephox/agar';
+import type { Cursors } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun, Optional, Optionals } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as DetailsDelete from 'tinymce/core/delete/DetailsDelete';
 
 interface TestCase {

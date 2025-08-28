@@ -2,7 +2,7 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as InsertNewLine from 'tinymce/core/newline/InsertNewLine';
 
 describe('browser.tinymce.core.lists.StyleTest', () => {

@@ -1,9 +1,9 @@
 import { Fun } from '@ephox/katamari';
 
 import * as Bookmarks from '../../bookmark/Bookmarks';
-import { Bookmark } from '../../bookmark/BookmarkTypes';
+import type { Bookmark } from '../../bookmark/BookmarkTypes';
 
-import EditorSelection from './Selection';
+import type EditorSelection from './Selection';
 
 /**
  * This class handles selection bookmarks.

@@ -3,9 +3,9 @@ import { Arr } from '@ephox/katamari';
 import { LegacyUnit, TinyApis, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as Levels from 'tinymce/core/undo/Levels';
-import { UndoLevel } from 'tinymce/core/undo/UndoManagerTypes';
+import type { UndoLevel } from 'tinymce/core/undo/UndoManagerTypes';
 
 describe('browser.tinymce.core.undo.LevelsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

@@ -1,10 +1,10 @@
-import { ApproxStructure, Keys, StructAssert } from '@ephox/agar';
+import { ApproxStructure, Keys, type StructAssert } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 
 describe('browser.tinymce.core.keyboard.ArrowKeysAnchorTest', () => {

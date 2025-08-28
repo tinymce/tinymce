@@ -1,7 +1,7 @@
 import { Fun, Optional, Optionals } from '@ephox/katamari';
 import { Compare, PredicateFind, SugarElement } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
 import * as LineReader from '../caret/LineReader';
 import * as NodeType from '../dom/NodeType';

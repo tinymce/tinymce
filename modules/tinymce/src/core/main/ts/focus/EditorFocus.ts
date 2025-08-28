@@ -1,11 +1,11 @@
 import { Optional, Type } from '@ephox/katamari';
 import { Compare, Focus, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
-import EditorSelection from '../api/dom/Selection';
-import Editor from '../api/Editor';
+import type EditorSelection from '../api/dom/Selection';
+import type Editor from '../api/Editor';
 import Env from '../api/Env';
 import * as CaretFinder from '../caret/CaretFinder';
-import { CaretPosition } from '../caret/CaretPosition';
+import type { CaretPosition } from '../caret/CaretPosition';
 import * as ElementType from '../dom/ElementType';
 import * as RangeNodes from '../selection/RangeNodes';
 import * as SelectionBookmark from '../selection/SelectionBookmark';
