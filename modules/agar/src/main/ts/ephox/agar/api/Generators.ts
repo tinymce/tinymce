@@ -1,4 +1,4 @@
-import { Hierarchy, Html, SimRange, SugarElement, Truncate } from '@ephox/sugar';
+import { Hierarchy, Html, type SimRange, type SugarElement, Truncate } from '@ephox/sugar';
 import * as fc from 'fast-check';
 
 import * as GenSelection from '../arbitrary/GenSelection';

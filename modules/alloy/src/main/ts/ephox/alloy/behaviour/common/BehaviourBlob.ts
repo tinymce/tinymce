@@ -1,8 +1,8 @@
-import { FieldProcessor, FieldSchema, StructureSchema } from '@ephox/boulder';
-import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
+import { type FieldProcessor, FieldSchema, StructureSchema } from '@ephox/boulder';
+import { Arr, Fun, Obj, type Optional } from '@ephox/katamari';
 
-import { BehaviourState, BehaviourStateInitialiser, NoState } from './BehaviourState';
-import { AlloyBehaviour, BehaviourConfigDetail, BehaviourConfigSpec, BehaviourRecord } from './BehaviourTypes';
+import { type BehaviourState, type BehaviourStateInitialiser, NoState } from './BehaviourState';
+import type { AlloyBehaviour, BehaviourConfigDetail, BehaviourConfigSpec, BehaviourRecord } from './BehaviourTypes';
 
 export interface BehaviourConfigAndState<C extends BehaviourConfigDetail, S extends BehaviourState> {
   config: C;

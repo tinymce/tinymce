@@ -1,6 +1,6 @@
 import { Cell, Optional } from '@ephox/katamari';
 
-import { ReflectingState } from './ReflectingTypes';
+import type { ReflectingState } from './ReflectingTypes';
 
 const init = <S>(): ReflectingState<S> => {
   const cell = Cell(Optional.none<S>());

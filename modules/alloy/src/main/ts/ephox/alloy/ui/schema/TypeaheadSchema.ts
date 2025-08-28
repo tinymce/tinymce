@@ -9,7 +9,7 @@ import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
 import { Streaming } from '../../api/behaviour/Streaming';
 import { Toggling } from '../../api/behaviour/Toggling';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as Fields from '../../data/Fields';
@@ -18,8 +18,8 @@ import * as PartType from '../../parts/PartType';
 import * as InputBase from '../common/InputBase';
 import * as TypeaheadEvents from '../composite/TypeaheadEvents';
 import { attemptSelectOver, setValueFromItem } from '../typeahead/TypeaheadModel';
-import { TieredMenuSpec } from '../types/TieredMenuTypes';
-import { TypeaheadData, TypeaheadDetail } from '../types/TypeaheadTypes';
+import type { TieredMenuSpec } from '../types/TieredMenuTypes';
+import type { TypeaheadData, TypeaheadDetail } from '../types/TypeaheadTypes';
 
 const schema = Fun.constant([
   FieldSchema.option('lazySink'),

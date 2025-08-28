@@ -11,9 +11,9 @@ import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
 import * as AnchorLayouts from '../../positioning/mode/AnchorLayouts';
-import { ButtonSpec } from '../types/ButtonTypes';
-import { FloatingToolbarButtonDetail } from '../types/FloatingToolbarButtonTypes';
-import { ToolbarSpec } from '../types/ToolbarTypes';
+import type { ButtonSpec } from '../types/ButtonTypes';
+import type { FloatingToolbarButtonDetail } from '../types/FloatingToolbarButtonTypes';
+import type { ToolbarSpec } from '../types/ToolbarTypes';
 
 import * as ToolbarSchema from './ToolbarSchema';
 

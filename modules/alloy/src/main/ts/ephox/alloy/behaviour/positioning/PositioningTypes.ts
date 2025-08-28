@@ -1,12 +1,12 @@
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 
-import { Bounds } from '../../alien/Boxes';
-import * as Behaviour from '../../api/behaviour/Behaviour';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { PlacerResult } from '../../positioning/layout/LayoutTypes';
-import { AnchorDetail, AnchorSpec } from '../../positioning/mode/Anchoring';
-import { TransitionMode } from '../../positioning/view/Transitions';
-import { BehaviourState } from '../common/BehaviourState';
+import type { Bounds } from '../../alien/Boxes';
+import type * as Behaviour from '../../api/behaviour/Behaviour';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { PlacerResult } from '../../positioning/layout/LayoutTypes';
+import type { AnchorDetail, AnchorSpec } from '../../positioning/mode/Anchoring';
+import type { TransitionMode } from '../../positioning/view/Transitions';
+import type { BehaviourState } from '../common/BehaviourState';
 
 interface TransitionSpec {
   readonly classes: string[];

@@ -6,7 +6,7 @@ import { Coupling } from '../../api/behaviour/Coupling';
 import { Focusing } from '../../api/behaviour/Focusing';
 import { Keying } from '../../api/behaviour/Keying';
 import { Toggling } from '../../api/behaviour/Toggling';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import { Button } from '../../api/ui/Button';
@@ -15,9 +15,9 @@ import * as SketcherFields from '../../data/SketcherFields';
 import * as InternalSink from '../../parts/InternalSink';
 import * as PartType from '../../parts/PartType';
 import * as AnchorLayouts from '../../positioning/mode/AnchorLayouts';
-import { ButtonSpec } from '../types/ButtonTypes';
-import { SplitDropdownDetail } from '../types/SplitDropdownTypes';
-import { TieredMenuSpec } from '../types/TieredMenuTypes';
+import type { ButtonSpec } from '../types/ButtonTypes';
+import type { SplitDropdownDetail } from '../types/SplitDropdownTypes';
+import type { TieredMenuSpec } from '../types/TieredMenuTypes';
 
 const schema = Fun.constant([
   FieldSchema.required('toggleClass'),

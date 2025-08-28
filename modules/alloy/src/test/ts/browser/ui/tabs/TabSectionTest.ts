@@ -1,6 +1,6 @@
-import { ApproxStructure, Assertions, GeneralSteps, Logger, Step, StructAssert } from '@ephox/agar';
+import { ApproxStructure, Assertions, GeneralSteps, Logger, Step, type StructAssert } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { SelectorFind, SugarElement } from '@ephox/sugar';
+import { SelectorFind, type SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';

@@ -1,8 +1,8 @@
 import { Optional, Type } from '@ephox/katamari';
-import { Attribute, SugarElement, SugarPosition } from '@ephox/sugar';
+import { Attribute, type SugarElement, SugarPosition } from '@ephox/sugar';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SnapsConfig } from '../common/DraggingTypes';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { SnapsConfig } from '../common/DraggingTypes';
 
 const parseAttrToInt = (element: SugarElement<Element>, name: string): number => {
   const value = Attribute.get(element, name);

@@ -1,9 +1,9 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
-import { Result } from '@ephox/katamari';
+import type { Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
 
-import { BodyComponent, BodyComponentSpec } from './BodyComponent';
+import type { BodyComponent, BodyComponentSpec } from './BodyComponent';
 import { itemSchema } from './Panel';
 
 export interface TabSpec {

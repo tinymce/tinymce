@@ -1,16 +1,16 @@
-import {
+import type {
   AutocompleterContents, AutocompleterInstanceApi, AutocompleterItemSpec, AutocompleterSpec, SeparatorItemSpec
 } from '../components/content/Autocompleter';
-import { ContextPosition, ContextScope } from '../components/content/ContextBar';
-import {
+import type { ContextPosition, ContextScope } from '../components/content/ContextBar';
+import type {
   ContextFormButtonInstanceApi, ContextFormButtonSpec, ContextFormInstanceApi, ContextFormSpec, ContextFormToggleButtonInstanceApi,
   ContextFormToggleButtonSpec
 } from '../components/content/ContextForm';
-import { ContextToolbarSpec } from '../components/content/ContextToolbar';
+import type { ContextToolbarSpec } from '../components/content/ContextToolbar';
 
 // These are the types that are exposed though a public end user api
 
-export {
+export type {
   AutocompleterSpec,
   AutocompleterItemSpec,
   AutocompleterContents,

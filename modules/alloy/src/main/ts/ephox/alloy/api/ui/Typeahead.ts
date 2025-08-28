@@ -1,6 +1,6 @@
 import * as TypeaheadSpec from '../../ui/composite/TypeaheadSpec';
 import * as TypeaheadSchema from '../../ui/schema/TypeaheadSchema';
-import { TypeaheadSketcher } from '../../ui/types/TypeaheadTypes';
+import type { TypeaheadSketcher } from '../../ui/types/TypeaheadTypes';
 
 import * as Sketcher from './Sketcher';
 

@@ -3,13 +3,13 @@ import * as EventRoot from '../alien/EventRoot';
 import * as OffsetOrigin from '../alien/OffsetOrigin';
 import * as AriaDescribe from '../aria/AriaDescribe';
 import * as AriaVoice from '../aria/AriaVoice';
-import { BehaviourState } from '../behaviour/common/BehaviourState';
+import type { BehaviourState } from '../behaviour/common/BehaviourState';
 import * as DockingTypes from '../behaviour/docking/DockingTypes';
 import * as Fields from '../data/Fields';
 import * as Debugging from '../debugging/Debugging';
 import * as FunctionAnnotator from '../debugging/FunctionAnnotator';
 import * as DraggingTypes from '../dragging/common/DraggingTypes';
-import {
+import type {
   CustomEvent, CustomSimulatedEvent, EventFormat, NativeSimulatedEvent, ReceivingEvent, SimulatedEvent
 } from '../events/SimulatedEvent';
 import * as TapEvent from '../events/TapEvent';
@@ -23,7 +23,7 @@ import * as LayoutInset from '../positioning/layout/LayoutInset';
 import * as LayoutTypes from '../positioning/layout/LayoutTypes';
 import * as MaxHeight from '../positioning/layout/MaxHeight';
 import * as MaxWidth from '../positioning/layout/MaxWidth';
-import {
+import type {
   AnchorSpec, HotspotAnchorSpec, Layouts, MakeshiftAnchorSpec, NodeAnchorSpec, SelectionAnchorSpec, SubmenuAnchorSpec
 } from '../positioning/mode/Anchoring';
 import * as VerticalDir from '../positioning/mode/VerticalDir';
@@ -50,7 +50,7 @@ import { DragnDrop } from './behaviour/DragnDrop';
 import { Focusing } from './behaviour/Focusing';
 import { Highlighting } from './behaviour/Highlighting';
 import { Invalidating } from './behaviour/Invalidating';
-import { Keying, KeyingConfigSpec } from './behaviour/Keying';
+import { Keying, type KeyingConfigSpec } from './behaviour/Keying';
 import { Pinching } from './behaviour/Pinching';
 import { Positioning } from './behaviour/Positioning';
 import { Receiving } from './behaviour/Receiving';
@@ -66,17 +66,17 @@ import { Toggling } from './behaviour/Toggling';
 import { Tooltipping } from './behaviour/Tooltipping';
 import { Transitioning } from './behaviour/Transitioning';
 import { Unselecting } from './behaviour/Unselecting';
-import { LazySink } from './component/CommonTypes';
+import type { LazySink } from './component/CommonTypes';
 import * as CompBehaviours from './component/CompBehaviours';
 import * as Component from './component/Component';
-import * as ComponentApi from './component/ComponentApi';
+import type * as ComponentApi from './component/ComponentApi';
 import * as ComponentUtil from './component/ComponentUtil';
 import * as DomFactory from './component/DomFactory';
 import * as GuiFactory from './component/GuiFactory';
 import * as GuiTemplate from './component/GuiTemplate';
 import * as Memento from './component/Memento';
 import * as SketchBehaviours from './component/SketchBehaviours';
-import { AlloySpec, ComponentSpec, PremadeSpec, RawDomSchema, SimpleOrSketchSpec, SimpleSpec, SketchSpec } from './component/SpecTypes';
+import type { AlloySpec, ComponentSpec, PremadeSpec, RawDomSchema, SimpleOrSketchSpec, SimpleSpec, SketchSpec } from './component/SpecTypes';
 import * as Composite from './composite/Parts';
 import * as DragCoord from './data/DragCoord';
 import * as AlloyEvents from './events/AlloyEvents';
@@ -116,7 +116,7 @@ import { Tabbar } from './ui/Tabbar';
 import { TabButton } from './ui/TabButton';
 import { TabSection } from './ui/TabSection';
 import { Tabview } from './ui/Tabview';
-import { TieredData, tieredMenu as TieredMenu } from './ui/TieredMenu';
+import { type TieredData, tieredMenu as TieredMenu } from './ui/TieredMenu';
 import { Toolbar } from './ui/Toolbar';
 import { ToolbarGroup } from './ui/ToolbarGroup';
 import { TouchMenu } from './ui/TouchMenu';
@@ -129,6 +129,35 @@ type Bounds = Boxes.Bounds;
 
 // TODO: naughty non API's being exported
 // Type Def Exports
+export type {
+  KeyingConfigSpec,
+  MementoRecord,
+  TieredData,
+  BehaviourState,
+  Bounds,
+  AlloySpec,
+  AlloyComponent,
+  SimpleOrSketchSpec,
+  RawDomSchema,
+  ComponentSpec,
+  SketchSpec,
+  SimpleSpec,
+  PremadeSpec,
+  CustomEvent,
+  EventFormat,
+  SimulatedEvent,
+  NativeSimulatedEvent,
+  CustomSimulatedEvent,
+  ReceivingEvent,
+  LazySink,
+  AnchorSpec,
+  NodeAnchorSpec,
+  MakeshiftAnchorSpec,
+  SelectionAnchorSpec,
+  HotspotAnchorSpec,
+  SubmenuAnchorSpec,
+  Layouts
+};
 export {
   AriaVoice,
   AriaDescribe,
@@ -146,7 +175,6 @@ export {
   Highlighting,
   Invalidating,
   Keying,
-  KeyingConfigSpec,
   Pinching,
   Positioning,
   Receiving,
@@ -170,8 +198,6 @@ export {
   GuiFactory,
   GuiTemplate,
   Memento,
-  // TODO: Make the memento type "Memento". Will require a lot of changes.
-  MementoRecord,
   SketchBehaviours,
   DragCoord,
   AlloyEvents,
@@ -205,7 +231,6 @@ export {
   Slider,
   SlotContainer,
   SplitDropdown,
-  // Needed for better backwards compatibility
   SplitSlidingToolbar as SplitToolbar,
   SplitFloatingToolbar,
   SplitSlidingToolbar,
@@ -214,7 +239,6 @@ export {
   TabSection,
   Tabview,
   TieredMenu,
-  TieredData,
   Toolbar,
   ToolbarGroup,
   FloatingToolbarButton,
@@ -222,11 +246,8 @@ export {
   Typeahead,
   UiSketcher,
   Fields,
-
   AlloyParts,
-  BehaviourState,
   PartType,
-  Bounds,
   Boxes,
   OffsetOrigin,
   EventRoot,
@@ -234,33 +255,13 @@ export {
   AlloyLogger,
   Debugging,
   FunctionAnnotator,
-
-  AlloySpec,
-  AlloyComponent,
-  SimpleOrSketchSpec,
-  RawDomSchema,
-  ComponentSpec,
-  SketchSpec,
-  SimpleSpec,
-  PremadeSpec,
-  CustomEvent,
-  EventFormat,
-  SimulatedEvent,
-  NativeSimulatedEvent,
-  CustomSimulatedEvent,
-  ReceivingEvent,
-
-  // layout
   Layout,
   LayoutInset,
   LayoutTypes,
   Bubble,
   MaxHeight,
   MaxWidth,
-  LazySink,
   VerticalDir,
-
-  // types
   TieredMenuTypes,
   MenuTypes,
   InlineViewTypes,
@@ -268,15 +269,8 @@ export {
   SliderTypes,
   FormTypes,
   TabbarTypes,
-  AnchorSpec,
-  NodeAnchorSpec,
-  MakeshiftAnchorSpec,
-  SelectionAnchorSpec,
-  HotspotAnchorSpec,
-  SubmenuAnchorSpec,
   DraggingTypes,
   DockingTypes,
-  Layouts,
   TooltippingTypes,
   FocusInsideModes
 };

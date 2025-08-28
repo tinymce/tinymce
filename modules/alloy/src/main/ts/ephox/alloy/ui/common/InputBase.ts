@@ -1,4 +1,4 @@
-import { FieldProcessor, FieldSchema } from '@ephox/boulder';
+import { type FieldProcessor, FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 import { Value } from '@ephox/sugar';
 
@@ -6,9 +6,9 @@ import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
 import { Representing } from '../../api/behaviour/Representing';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
-import { RawDomSchema } from '../../api/component/SpecTypes';
+import type { RawDomSchema } from '../../api/component/SpecTypes';
 import * as Fields from '../../data/Fields';
-import { InputDetail } from '../types/InputTypes';
+import type { InputDetail } from '../types/InputTypes';
 
 const schema: () => FieldProcessor[] = Fun.constant([
   FieldSchema.defaultedString('type', 'text'),

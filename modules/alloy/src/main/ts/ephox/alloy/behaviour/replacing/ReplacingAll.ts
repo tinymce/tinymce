@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloySpec } from '../../api/component/SpecTypes';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloySpec } from '../../api/component/SpecTypes';
 import * as AriaFocus from '../../aria/AriaFocus';
 import { patchSpecChildren } from '../../dom/Patching';
 import * as InternalAttachment from '../../system/InternalAttachment';

@@ -1,19 +1,19 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Fun, Optional } from '@ephox/katamari';
-import { SelectorFind, SugarElement } from '@ephox/sugar';
+import { SelectorFind, type SugarElement } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
-import { AlloyComponent } from '../api/component/ComponentApi';
+import type { AlloyComponent } from '../api/component/ComponentApi';
 import * as KeyingState from '../behaviour/keyboard/KeyingState';
 import * as Fields from '../data/Fields';
-import { NativeSimulatedEvent } from '../events/SimulatedEvent';
+import type { NativeSimulatedEvent } from '../events/SimulatedEvent';
 import * as DomMovement from '../navigation/DomMovement';
 import * as DomPinpoint from '../navigation/DomPinpoint';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import * as WrapArrNavigation from '../navigation/WrapArrNavigation';
 
-import { FlatgridConfig, FlatgridState, KeyRuleHandler } from './KeyingModeTypes';
+import type { FlatgridConfig, FlatgridState, KeyRuleHandler } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
 

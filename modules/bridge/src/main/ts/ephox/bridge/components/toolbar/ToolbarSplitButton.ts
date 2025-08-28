@@ -1,7 +1,7 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
-import { Optional, Result } from '@ephox/katamari';
+import type { Optional, Result } from '@ephox/katamari';
 
-import { ChoiceMenuItemSpec, ImageMenuItemSpec, SeparatorMenuItemSpec } from '../../api/Menu';
+import type { ChoiceMenuItemSpec, ImageMenuItemSpec, SeparatorMenuItemSpec } from '../../api/Menu';
 import * as ComponentSchema from '../../core/ComponentSchema';
 
 // Temporarily disable separators until things are clearer

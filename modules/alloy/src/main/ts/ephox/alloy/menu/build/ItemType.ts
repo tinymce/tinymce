@@ -1,4 +1,4 @@
-import { FieldProcessor, FieldSchema } from '@ephox/boulder';
+import { type FieldProcessor, FieldSchema } from '@ephox/boulder';
 import { Fun, Obj, Type } from '@ephox/katamari';
 
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
@@ -7,14 +7,14 @@ import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
 import { Toggling } from '../../api/behaviour/Toggling';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec } from '../../api/component/SpecTypes';
+import type { AlloySpec } from '../../api/component/SpecTypes';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
-import { TogglingConfigSpec } from '../../behaviour/toggling/TogglingTypes';
+import type { TogglingConfigSpec } from '../../behaviour/toggling/TogglingTypes';
 import * as Fields from '../../data/Fields';
 import * as ButtonBase from '../../ui/common/ButtonBase';
-import { ItemTogglingConfigSpec, NormalItemDetail } from '../../ui/types/ItemTypes';
+import type { ItemTogglingConfigSpec, NormalItemDetail } from '../../ui/types/ItemTypes';
 import * as ItemEvents from '../util/ItemEvents';
 
 type ItemRole = 'menuitem' | 'menuitemcheckbox' | 'menuitemradio';

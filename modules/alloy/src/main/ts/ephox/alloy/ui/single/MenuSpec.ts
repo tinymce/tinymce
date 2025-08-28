@@ -6,14 +6,14 @@ import { Highlighting } from '../../api/behaviour/Highlighting';
 import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
 import { Toggling } from '../../api/behaviour/Toggling';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import type { CompositeSketchFactory } from '../../api/ui/UiSketcher';
 import * as ItemEvents from '../../menu/util/ItemEvents';
 import * as MenuEvents from '../../menu/util/MenuEvents';
-import { MenuDetail, MenuItemHoverEvent, MenuItemToggledEvent, MenuSpec } from '../types/MenuTypes';
+import type { MenuDetail, MenuItemHoverEvent, MenuItemToggledEvent, MenuSpec } from '../types/MenuTypes';
 
 const deselectOtherRadioItems = (menu: AlloyComponent, item: AlloyComponent): void => {
   // TODO: TINY-8812 - This ideally should be done in a way such that a menu can have multiple radio groups.

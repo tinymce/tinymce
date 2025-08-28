@@ -1,7 +1,7 @@
 import { Arr, Obj, Type } from '@ephox/katamari';
 
 import * as BehaviourBlob from '../../behaviour/common/BehaviourBlob';
-import { AlloyBehaviour, AlloyBehaviourRecord } from '../behaviour/Behaviour';
+import type { AlloyBehaviour, AlloyBehaviourRecord } from '../behaviour/Behaviour';
 
 // This goes through the list of behaviours defined for a particular spec (removing anything
 // that has been revoked), and returns the BehaviourType (e.g. Sliding)

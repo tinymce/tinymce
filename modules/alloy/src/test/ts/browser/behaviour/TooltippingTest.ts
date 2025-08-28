@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, StructAssert, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, type StructAssert, UiFinder, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Fun, Result } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
@@ -10,10 +10,10 @@ import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
 import { Receiving } from 'ephox/alloy/api/behaviour/Receiving';
 import { Replacing } from 'ephox/alloy/api/behaviour/Replacing';
 import { Tooltipping } from 'ephox/alloy/api/behaviour/Tooltipping';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import type { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as Memento from 'ephox/alloy/api/component/Memento';
-import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
+import type { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 

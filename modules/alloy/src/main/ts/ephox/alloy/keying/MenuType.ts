@@ -3,14 +3,14 @@ import { Fun, Optional } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
-import { AlloyComponent } from '../api/component/ComponentApi';
-import { NoState, Stateless } from '../behaviour/common/BehaviourState';
+import type { AlloyComponent } from '../api/component/ComponentApi';
+import { NoState, type Stateless } from '../behaviour/common/BehaviourState';
 import * as DomMovement from '../navigation/DomMovement';
 import * as DomNavigation from '../navigation/DomNavigation';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 
-import { KeyRuleHandler, MenuConfig } from './KeyingModeTypes';
+import type { KeyRuleHandler, MenuConfig } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
 

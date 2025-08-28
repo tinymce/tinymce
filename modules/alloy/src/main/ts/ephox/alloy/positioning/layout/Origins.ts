@@ -1,10 +1,10 @@
 import { Adt, Fun, Optional } from '@ephox/katamari';
-import { Height, Scroll, SugarElement, SugarPosition, Width } from '@ephox/sugar';
+import { Height, Scroll, type SugarElement, SugarPosition, Width } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import * as OuterPosition from '../../frame/OuterPosition';
-import { NuPositionCss, PositionCss } from '../view/PositionCss';
-import { RepositionDecision } from '../view/Reposition';
+import { NuPositionCss, type PositionCss } from '../view/PositionCss';
+import type { RepositionDecision } from '../view/Reposition';
 
 import * as Direction from './Direction';
 

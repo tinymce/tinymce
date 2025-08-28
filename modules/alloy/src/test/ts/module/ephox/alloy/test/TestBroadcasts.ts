@@ -1,7 +1,7 @@
 import { GeneralSteps, Logger, Step, UiFinder } from '@ephox/agar';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
-import { GuiSystem } from 'ephox/alloy/api/system/Gui';
+import type { GuiSystem } from 'ephox/alloy/api/system/Gui';
 
 const dismiss = (gui: GuiSystem, element: SugarElement<Element>): void => {
   gui.broadcastOn([

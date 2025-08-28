@@ -1,5 +1,5 @@
 import { Arr, Singleton } from '@ephox/katamari';
-import { DomEvent, EventArgs, SelectorExists, SugarElement, SugarNode } from '@ephox/sugar';
+import { DomEvent, type EventArgs, SelectorExists, type SugarElement, SugarNode } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
 import * as SystemEvents from '../api/events/SystemEvents';

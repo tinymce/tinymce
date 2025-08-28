@@ -1,7 +1,7 @@
-import { BubbleInstance } from '../layout/Bubble';
-import { DirectionAdt } from '../layout/Direction';
-import { BoundsRestriction } from '../layout/LayoutBounds';
-import { Placement } from '../layout/Placement';
+import type { BubbleInstance } from '../layout/Bubble';
+import type { DirectionAdt } from '../layout/Direction';
+import type { BoundsRestriction } from '../layout/LayoutBounds';
+import type { Placement } from '../layout/Placement';
 
 export interface SpotInfo {
   readonly x: number;

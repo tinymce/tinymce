@@ -2,7 +2,7 @@ import * as ActiveTooltipping from '../../behaviour/tooltipping/ActiveTooltippin
 import * as TooltippingApis from '../../behaviour/tooltipping/TooltippingApis';
 import TooltippingSchema from '../../behaviour/tooltipping/TooltippingSchema';
 import * as TooltippingState from '../../behaviour/tooltipping/TooltippingState';
-import { TooltippingBehaviour } from '../../behaviour/tooltipping/TooltippingTypes';
+import type { TooltippingBehaviour } from '../../behaviour/tooltipping/TooltippingTypes';
 
 import * as Behaviour from './Behaviour';
 

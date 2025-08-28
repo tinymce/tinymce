@@ -1,14 +1,14 @@
-import { Arr, Fun, Obj, Optional, Result } from '@ephox/katamari';
+import { Arr, Fun, Obj, type Optional, Result } from '@ephox/katamari';
 
 import * as AlloyLogger from '../../log/AlloyLogger';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
-import { FormApis, FormDetail, FormSketcher, FormSpecBuilder } from '../../ui/types/FormTypes';
+import type { FormApis, FormDetail, FormSketcher, FormSpecBuilder } from '../../ui/types/FormTypes';
 import { Composing } from '../behaviour/Composing';
 import { Representing } from '../behaviour/Representing';
-import { AlloyComponent } from '../component/ComponentApi';
+import type { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
-import { AlloySpec, SimpleOrSketchSpec, SketchSpec } from '../component/SpecTypes';
+import type { AlloySpec, SimpleOrSketchSpec, SketchSpec } from '../component/SpecTypes';
 
 import * as GuiTypes from './GuiTypes';
 import * as UiSketcher from './UiSketcher';

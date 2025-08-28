@@ -1,12 +1,12 @@
-import { Fun, Optional } from '@ephox/katamari';
-import { SimRange, SugarElement } from '@ephox/sugar';
+import { Fun, type Optional } from '@ephox/katamari';
+import type { SimRange, SugarElement } from '@ephox/sugar';
 
-import { Bounds } from '../../alien/Boxes';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { Bubble } from '../layout/Bubble';
-import { AnchorBox, AnchorLayout, PlacerResult } from '../layout/LayoutTypes';
-import { OriginAdt } from '../layout/Origins';
-import { Transition } from '../view/Transitions';
+import type { Bounds } from '../../alien/Boxes';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { Bubble } from '../layout/Bubble';
+import type { AnchorBox, AnchorLayout, PlacerResult } from '../layout/LayoutTypes';
+import type { OriginAdt } from '../layout/Origins';
+import type { Transition } from '../view/Transitions';
 
 // doPlace(component, origin, anchoring, placeeState, posConfig, placee, lastPlacement, transition);
 export type AnchorPlacement = (

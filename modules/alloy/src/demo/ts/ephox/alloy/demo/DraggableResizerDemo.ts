@@ -1,10 +1,10 @@
 import { PlatformDetection } from '@ephox/sand';
-import { Class, Css, SugarElement, SugarPosition, Traverse } from '@ephox/sugar';
+import { Class, Css, SugarElement, type SugarPosition, Traverse } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';
 import { Unselecting } from 'ephox/alloy/api/behaviour/Unselecting';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import type { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Button } from 'ephox/alloy/api/ui/Button';

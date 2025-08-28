@@ -10,9 +10,9 @@ import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
 import * as SplitToolbarBase from '../common/SplitToolbarBase';
-import { ButtonSpec } from '../types/ButtonTypes';
-import { SplitSlidingToolbarDetail } from '../types/SplitSlidingToolbarTypes';
-import { ToolbarSpec } from '../types/ToolbarTypes';
+import type { ButtonSpec } from '../types/ButtonTypes';
+import type { SplitSlidingToolbarDetail } from '../types/SplitSlidingToolbarTypes';
+import type { ToolbarSpec } from '../types/ToolbarTypes';
 
 import * as ToolbarSchema from './ToolbarSchema';
 

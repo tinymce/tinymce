@@ -1,5 +1,5 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
-import { Fun, Result } from '@ephox/katamari';
+import { Fun, type Result } from '@ephox/katamari';
 
 import * as FooterButton from './DialogFooterButton';
 import * as Panel from './Panel';

@@ -3,10 +3,10 @@ import { Attribute, Css } from '@ephox/sugar';
 
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
-import { SlotContainerApis, SlotContainerDetail, SlotContainerSketcher, SlotContainerSpecBuilder } from '../../ui/types/SlotContainerTypes';
-import { AlloyComponent } from '../component/ComponentApi';
+import type { SlotContainerApis, SlotContainerDetail, SlotContainerSketcher, SlotContainerSpecBuilder } from '../../ui/types/SlotContainerTypes';
+import type { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
-import { AlloySpec, SketchSpec } from '../component/SpecTypes';
+import type { AlloySpec, SketchSpec } from '../component/SpecTypes';
 import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as SystemEvents from '../events/SystemEvents';
 

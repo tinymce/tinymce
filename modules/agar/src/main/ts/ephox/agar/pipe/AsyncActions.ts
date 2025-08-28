@@ -1,4 +1,4 @@
-import { DieFn } from './Pipe';
+import type { DieFn } from './Pipe';
 
 const delay = (amount: number) =>
   (next: () => void, _die: DieFn): void => {

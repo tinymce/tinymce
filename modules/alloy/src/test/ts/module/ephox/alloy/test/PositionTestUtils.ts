@@ -3,11 +3,11 @@ import { Optional, Result } from '@ephox/katamari';
 import { Css, Scroll, Traverse } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import { Bounds } from 'ephox/alloy/alien/Boxes';
+import type { Bounds } from 'ephox/alloy/alien/Boxes';
 import { Positioning } from 'ephox/alloy/api/behaviour/Positioning';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import type { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
-import { PlacementSpec } from 'ephox/alloy/behaviour/positioning/PositioningTypes';
+import type { PlacementSpec } from 'ephox/alloy/behaviour/positioning/PositioningTypes';
 import * as ChainUtils from 'ephox/alloy/test/ChainUtils';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 

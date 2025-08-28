@@ -1,6 +1,6 @@
 import { Cleaner, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { DomEvent, EventArgs, SugarElement } from '@ephox/sugar';
+import { DomEvent, type EventArgs, SugarElement } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';

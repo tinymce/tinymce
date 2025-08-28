@@ -1,14 +1,14 @@
-import { FieldProcessor, FieldSchema } from '@ephox/boulder';
+import { type FieldProcessor, FieldSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
-import { EventArgs, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
+import { type EventArgs, SugarBody, type SugarElement, Traverse } from '@ephox/sugar';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as DomModification from '../../dom/DomModification';
 
 import * as DataTransfers from './DataTransfers';
-import { DragStartingConfig } from './DragnDropTypes';
+import type { DragStartingConfig } from './DragnDropTypes';
 import { setImageClone } from './ImageClone';
 
 const dragStart = (component: AlloyComponent, target: SugarElement<Node>, config: DragStartingConfig, transfer: DataTransfer) => {

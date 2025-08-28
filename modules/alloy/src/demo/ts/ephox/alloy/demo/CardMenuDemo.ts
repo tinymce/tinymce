@@ -4,13 +4,13 @@ import { Class, SelectorFind, SugarElement, Width } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Transitioning } from 'ephox/alloy/api/behaviour/Transitioning';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import type { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
 import * as Gui from 'ephox/alloy/api/system/Gui';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
+import type { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 import { HighlightOnOpen } from 'ephox/alloy/ui/types/TieredMenuTypes';
 
 /* eslint-disable no-console */

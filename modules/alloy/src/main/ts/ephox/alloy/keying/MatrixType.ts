@@ -1,17 +1,17 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Focus, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Focus, SelectorFilter, SelectorFind, type SugarElement } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
-import { AlloyComponent } from '../api/component/ComponentApi';
-import { NoState, Stateless } from '../behaviour/common/BehaviourState';
+import type { AlloyComponent } from '../api/component/ComponentApi';
+import { NoState, type Stateless } from '../behaviour/common/BehaviourState';
 import * as DomMovement from '../navigation/DomMovement';
 import * as DomPinpoint from '../navigation/DomPinpoint';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 import * as MatrixNavigation from '../navigation/MatrixNavigation';
 
-import { KeyRuleHandler, MatrixConfig } from './KeyingModeTypes';
+import type { KeyRuleHandler, MatrixConfig } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
 

@@ -1,9 +1,9 @@
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 
-import * as Behaviour from '../../api/behaviour/Behaviour';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { EventFormat, SimulatedEvent } from '../../events/SimulatedEvent';
-import { BehaviourState } from '../common/BehaviourState';
+import type * as Behaviour from '../../api/behaviour/Behaviour';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { EventFormat, SimulatedEvent } from '../../events/SimulatedEvent';
+import type { BehaviourState } from '../common/BehaviourState';
 
 export interface StreamingBehaviour extends Behaviour.AlloyBehaviour<StreamingConfigSpec, StreamingConfig> {
   config: (config: StreamingConfigSpec) => Behaviour.NamedConfiguredBehaviour<StreamingConfigSpec, StreamingConfig>;

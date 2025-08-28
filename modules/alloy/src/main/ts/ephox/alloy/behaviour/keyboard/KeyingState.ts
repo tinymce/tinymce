@@ -1,7 +1,7 @@
 import { Singleton } from '@ephox/katamari';
 
-import { FlatgridState, GeneralKeyingConfig } from '../../keying/KeyingModeTypes';
-import { nuState, Stateless } from '../common/BehaviourState';
+import type { FlatgridState, GeneralKeyingConfig } from '../../keying/KeyingModeTypes';
+import { nuState, type Stateless } from '../common/BehaviourState';
 
 interface RowsCols {
   readonly numRows: number;

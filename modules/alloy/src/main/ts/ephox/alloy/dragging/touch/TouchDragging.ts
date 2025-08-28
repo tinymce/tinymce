@@ -1,20 +1,20 @@
-import { FieldProcessor } from '@ephox/boulder';
+import type { FieldProcessor } from '@ephox/boulder';
 import { Fun, Singleton } from '@ephox/katamari';
-import { EventArgs } from '@ephox/sugar';
+import type { EventArgs } from '@ephox/sugar';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as Fields from '../../data/Fields';
-import { BlockerDragApi } from '../common/BlockerTypes';
+import type { BlockerDragApi } from '../common/BlockerTypes';
 import * as BlockerUtils from '../common/BlockerUtils';
 import * as DraggingSchema from '../common/DraggingSchema';
-import { DraggingState } from '../common/DraggingTypes';
+import type { DraggingState } from '../common/DraggingTypes';
 import * as DragUtils from '../common/DragUtils';
 
 import * as TouchBlockerEvents from './TouchBlockerEvents';
 import * as TouchData from './TouchData';
-import { TouchDraggingConfig } from './TouchDraggingTypes';
+import type { TouchDraggingConfig } from './TouchDraggingTypes';
 
 const events = <E>(dragConfig: TouchDraggingConfig<E>, dragState: DraggingState, updateStartState: (comp: AlloyComponent) => void): Array<AlloyEvents.AlloyEventKeyAndHandler<EventArgs<TouchEvent>>> => {
   const blockerSingleton = Singleton.value<AlloyComponent>();

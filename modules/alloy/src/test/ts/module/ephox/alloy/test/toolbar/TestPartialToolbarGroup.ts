@@ -2,11 +2,11 @@ import { Arr, Fun, Merger } from '@ephox/katamari';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { AlloySpec, SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
+import type { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import type { AlloySpec, SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
 import { Toolbar } from 'ephox/alloy/api/ui/Toolbar';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
-import { ToolbarGroupSpec } from 'ephox/alloy/ui/types/ToolbarGroupTypes';
+import type { ToolbarGroupSpec } from 'ephox/alloy/ui/types/ToolbarGroupTypes';
 
 const mungeItem = (itemSpec: AlloySpec) => Merger.deepMerge(
   itemSpec,

@@ -1,9 +1,9 @@
-import { Arr, Obj, Optional } from '@ephox/katamari';
+import { Arr, Obj, type Optional } from '@ephox/katamari';
 import { Attribute, SugarNode } from '@ephox/sugar';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 
-import { AriaTogglingConfig } from './TogglingTypes';
+import type { AriaTogglingConfig } from './TogglingTypes';
 
 const updatePressed = (component: AlloyComponent, ariaInfo: AriaTogglingConfig, status: boolean): void => {
   Attribute.set(component.element, 'aria-pressed', status);

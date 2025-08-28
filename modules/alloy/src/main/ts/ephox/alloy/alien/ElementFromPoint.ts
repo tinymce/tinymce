@@ -1,7 +1,7 @@
 import { Optional } from '@ephox/katamari';
 import { SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
-import { AlloyComponent } from '../api/component/ComponentApi';
+import type { AlloyComponent } from '../api/component/ComponentApi';
 
 const insideComponent = (component: AlloyComponent, x: number, y: number): Optional<SugarElement<Element>> => {
   const isInside = (node: SugarElement<Element>) => component.element.dom.contains(node.dom);

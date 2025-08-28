@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, StructAssert, TestStore, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, type StructAssert, type TestStore, UiFinder } from '@ephox/agar';
 import { after, afterEach, before, beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Result, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
@@ -9,7 +9,7 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import type { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';

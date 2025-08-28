@@ -1,4 +1,4 @@
-import { Cursors } from '@ephox/agar';
+import type { Cursors } from '@ephox/agar';
 import { Traverse } from '@ephox/sugar';
 
 const toDomRange = (cursorRange: Cursors.CursorRange): Range => {

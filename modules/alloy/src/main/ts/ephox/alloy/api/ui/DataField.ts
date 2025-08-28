@@ -1,15 +1,15 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Optional } from '@ephox/katamari';
 
-import { DataFieldDetail, DataFieldSketcher, DataFieldSpec } from '../../ui/types/DataFieldTypes';
+import type { DataFieldDetail, DataFieldSketcher, DataFieldSpec } from '../../ui/types/DataFieldTypes';
 import { Composing } from '../behaviour/Composing';
 import { Representing } from '../behaviour/Representing';
 import { SketchBehaviours } from '../component/SketchBehaviours';
-import { SketchSpec } from '../component/SpecTypes';
+import type { SketchSpec } from '../component/SpecTypes';
 import * as AlloyEvents from '../events/AlloyEvents';
 
 import * as Sketcher from './Sketcher';
-import { SingleSketchFactory } from './UiSketcher';
+import type { SingleSketchFactory } from './UiSketcher';
 
 const factory: SingleSketchFactory<DataFieldDetail, DataFieldSpec> = (detail): SketchSpec => ({
   uid: detail.uid,

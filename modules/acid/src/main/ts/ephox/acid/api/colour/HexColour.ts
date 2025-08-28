@@ -1,6 +1,6 @@
 import { Strings, Optional } from '@ephox/katamari';
 
-import { Hex, Rgba } from './ColourTypes';
+import type { Hex, Rgba } from './ColourTypes';
 
 const hexColour = (value: string): Hex => ({
   value: normalizeHex(value)

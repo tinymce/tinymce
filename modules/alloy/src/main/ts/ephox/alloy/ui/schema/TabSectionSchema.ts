@@ -6,9 +6,9 @@ import { Tabbar } from '../../api/ui/Tabbar';
 import { Tabview } from '../../api/ui/Tabview';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
-import { TabbarSpec } from '../types/TabbarTypes';
-import { TabSectionDetail } from '../types/TabSectionTypes';
-import { TabviewSpec } from '../types/TabviewTypes';
+import type { TabbarSpec } from '../types/TabbarTypes';
+import type { TabSectionDetail } from '../types/TabSectionTypes';
+import type { TabviewSpec } from '../types/TabviewTypes';
 
 const schema = Fun.constant([
   FieldSchema.defaulted('selectFirst', true),

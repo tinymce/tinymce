@@ -1,29 +1,25 @@
 import {
-  Autocompleter, AutocompleterContents, AutocompleterInstanceApi, AutocompleterItem, AutocompleterItemSpec, AutocompleterSpec, ColumnTypes,
-  createAutocompleter, createAutocompleterItem, createSeparatorItem, SeparatorItem, SeparatorItemSpec
+  type Autocompleter, type AutocompleterContents, type AutocompleterInstanceApi, type AutocompleterItem, type AutocompleterItemSpec, type AutocompleterSpec, type ColumnTypes,
+  createAutocompleter, createAutocompleterItem, createSeparatorItem, type SeparatorItem, type SeparatorItemSpec
 } from '../components/content/Autocompleter';
-import { ContextPosition, ContextScope } from '../components/content/ContextBar';
+import type { ContextPosition, ContextScope } from '../components/content/ContextBar';
 import {
-  BaseContextForm, ContextForm, ContextInputForm, ContextSliderForm, ContextSizeInputForm, ContextFormButton, ContextFormButtonInstanceApi, ContextFormButtonSpec, ContextFormInstanceApi, ContextFormSpec,
-  ContextInputFormSpec, ContextSliderFormSpec, ContextSizeInputFormSpec, ContextFormToggleButton, ContextFormToggleButtonInstanceApi, ContextFormToggleButtonSpec,
-  SizeData, ContextFormCommand, createContextForm
+  type BaseContextForm, type ContextForm, type ContextInputForm, type ContextSliderForm, type ContextSizeInputForm, type ContextFormButton, type ContextFormButtonInstanceApi, type ContextFormButtonSpec, type ContextFormInstanceApi, type ContextFormSpec,
+  type ContextInputFormSpec, type ContextSliderFormSpec, type ContextSizeInputFormSpec, type ContextFormToggleButton, type ContextFormToggleButtonInstanceApi, type ContextFormToggleButtonSpec,
+  type SizeData, type ContextFormCommand, createContextForm
 } from '../components/content/ContextForm';
-import { ContextToolbar, ContextToolbarSpec, createContextToolbar, contextToolbarToSpec, ToolbarGroup } from '../components/content/ContextToolbar';
+import { type ContextToolbar, type ContextToolbarSpec, createContextToolbar, contextToolbarToSpec, type ToolbarGroup } from '../components/content/ContextToolbar';
 
-export {
+export type {
   AutocompleterSpec,
   Autocompleter,
   AutocompleterItemSpec,
   AutocompleterItem,
   AutocompleterContents,
-  createAutocompleter,
-  createAutocompleterItem,
   AutocompleterInstanceApi,
   ColumnTypes,
-
   ContextPosition,
   ContextScope,
-
   ContextFormInstanceApi,
   BaseContextForm,
   ContextForm,
@@ -42,15 +38,10 @@ export {
   ContextFormToggleButtonInstanceApi,
   SizeData,
   ContextFormCommand,
-  createContextForm,
-
   ContextToolbar,
   ContextToolbarSpec,
-  createContextToolbar,
-  contextToolbarToSpec,
   ToolbarGroup,
-
   SeparatorItemSpec,
-  SeparatorItem,
-  createSeparatorItem
+  SeparatorItem
 };
+export { createAutocompleter, createAutocompleterItem, createContextForm, createContextToolbar, contextToolbarToSpec, createSeparatorItem };
