@@ -325,13 +325,15 @@
         }
 
         .tox-suggestededits__card.tox-suggestededits__card--active {
-          &:focus {
+          &:focus,
+          &:focus-visible {
             outline: 2px solid @suggestededits-card-active-border-color;
           }
 
           .tox-suggestededits__card--single {
             border-radius: 6px;
-            &:focus {
+            &:focus,
+            &:focus-visible {
               outline: 2px solid @suggestededits-card-active-border-color;
             }
           }
