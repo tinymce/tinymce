@@ -4,6 +4,7 @@ import * as Commands from './api/Commands';
 import * as FilterContent from './core/content/FilterContent';
 import * as Keyboard from './core/Keyboard';
 import * as Quirks from './core/Quirks';
+import * as Readonly from './core/Readonly';
 import * as Buttons from './ui/Buttons';
 
 export default (): void => {
@@ -13,5 +14,6 @@ export default (): void => {
     Keyboard.setup(editor);
     FilterContent.setup(editor);
     Quirks.setup(editor);
+    Readonly.setup(editor);
   });
 };
