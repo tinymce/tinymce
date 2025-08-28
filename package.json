@@ -35,7 +35,7 @@
     "headless-test-firefox": "grunt headless-auto --bedrock-browser=firefox-headless",
     "headless-test-manual": "grunt headless-manual",
     "bedrock": "bedrock --chunk=5000 --customRoutes modules/tinymce/src/core/test/json/routes.json",
-    "test-one": "bun tsc && bun bedrock-auto -b chrome-headless -f",
+    "test-one": "bun tsc && bun bedrock-auto -b chrome-headless -f"
   },
   "devDependencies": {
     "@ephox/oxide-icons-tools": "^4.0.0",
