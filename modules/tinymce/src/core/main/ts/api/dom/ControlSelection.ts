@@ -4,15 +4,15 @@ import { SelectorFind, Selectors, SugarElement } from '@ephox/sugar';
 import * as NodeType from '../../dom/NodeType';
 import * as RangePoint from '../../dom/RangePoint';
 import * as EditorFocus from '../../focus/EditorFocus';
-import Editor from '../Editor';
+import type Editor from '../Editor';
 import Env from '../Env';
 import * as Events from '../Events';
 import * as Options from '../Options';
-import { EditorEvent } from '../util/EventDispatcher';
+import type { EditorEvent } from '../util/EventDispatcher';
 import VK from '../util/VK';
 
-import DOMUtils from './DOMUtils';
-import EditorSelection from './Selection';
+import type DOMUtils from './DOMUtils';
+import type EditorSelection from './Selection';
 
 interface ControlSelection {
   isResizable: (elm: Element) => boolean;

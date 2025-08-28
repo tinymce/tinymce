@@ -2,12 +2,12 @@ import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import * as Pattern from '../textpatterns/core/Pattern';
-import * as PatternTypes from '../textpatterns/core/PatternTypes';
+import type * as PatternTypes from '../textpatterns/core/PatternTypes';
 
 import DOMUtils from './dom/DOMUtils';
-import Editor from './Editor';
+import type Editor from './Editor';
 import { fireDisabledStateChange } from './Events';
-import { EditorOptions } from './OptionTypes';
+import type { EditorOptions } from './OptionTypes';
 import I18n from './util/I18n';
 import Tools from './util/Tools';
 

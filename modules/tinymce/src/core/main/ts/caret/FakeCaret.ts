@@ -1,7 +1,7 @@
 import { Singleton } from '@ephox/katamari';
 import { ContentEditable, SelectorFilter, SugarElement, Traverse } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import Env from '../api/Env';
 import * as Options from '../api/Options';
 import * as NodeType from '../dom/NodeType';

@@ -4,9 +4,9 @@ import { Insert, Remove, Selectors, SugarBody, SugarElement } from '@ephox/sugar
 import { assert } from 'chai';
 
 import 'tinymce';
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
+import type { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 
 // TODO TINY-10480: Investigate flaky tests
 describe.skip('browser.tinymce.core.EditorAutoFocusTest', () => {

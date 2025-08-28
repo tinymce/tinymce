@@ -1,7 +1,7 @@
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Compare, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import { isAfterTable, isBeforeTable } from '../caret/CaretPositionPredicates';

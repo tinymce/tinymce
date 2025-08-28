@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import { Global } from '@ephox/katamari';
 
-import { Editor, TinyMCE } from 'tinymce/core/api/PublicApi';
-import CaretPosition from 'tinymce/core/caret/CaretPosition';
+import type { Editor, TinyMCE } from 'tinymce/core/api/PublicApi';
+import type CaretPosition from 'tinymce/core/caret/CaretPosition';
 
 declare const tinymce: TinyMCE;
 

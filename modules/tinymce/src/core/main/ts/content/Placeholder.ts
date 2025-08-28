@@ -1,12 +1,12 @@
 import { Arr, Strings } from '@ephox/katamari';
 
-import DOMUtils from '../api/dom/DOMUtils';
-import Editor from '../api/Editor';
+import type DOMUtils from '../api/dom/DOMUtils';
+import type Editor from '../api/Editor';
 import Env from '../api/Env';
 import * as Events from '../api/Events';
 import * as Options from '../api/Options';
 import Delay from '../api/util/Delay';
-import { EditorEvent } from '../api/util/EventDispatcher';
+import type { EditorEvent } from '../api/util/EventDispatcher';
 import VK from '../api/util/VK';
 
 const nonTypingKeycodes = [

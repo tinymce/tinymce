@@ -5,7 +5,7 @@ import { Height, Scroll, WindowVisualViewport } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import { linebreak } from 'tinymce/core/newline/InsertBr';
 
 describe('browser.tinymce.core.newline.InsertBrTest', () => {

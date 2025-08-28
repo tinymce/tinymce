@@ -1,6 +1,6 @@
 import { SugarElements } from '@ephox/sugar';
 
-import Editor from '../../api/Editor';
+import type Editor from '../../api/Editor';
 import { Indentation } from '../listmodel/Indentation';
 import { listIndentation } from '../listmodel/ListsIndendation';
 import { dlIndentation } from '../lists/DlIndentation';

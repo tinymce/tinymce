@@ -1,7 +1,7 @@
 import { Arr, Type } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as ModeUtils from '../util/ModeUtils';
 
 const setContentEditable = (elm: SugarElement<HTMLElement>, state: boolean) => {

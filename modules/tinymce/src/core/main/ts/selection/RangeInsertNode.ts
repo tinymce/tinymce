@@ -1,6 +1,6 @@
 import { Optional } from '@ephox/katamari';
 
-import DOMUtils from '../api/dom/DOMUtils';
+import type DOMUtils from '../api/dom/DOMUtils';
 import * as NodeType from '../dom/NodeType';
 
 const trimEmptyTextNode = (dom: DOMUtils, node: Node | null) => {

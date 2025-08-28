@@ -1,8 +1,8 @@
 import { Arr, Fun, Optional, Type } from '@ephox/katamari';
 import { PredicateExists, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
-import Schema from '../api/html/Schema';
+import type Editor from '../api/Editor';
+import type Schema from '../api/html/Schema';
 import CaretPosition from '../caret/CaretPosition';
 import * as NodeType from '../dom/NodeType';
 import * as Parents from '../dom/Parents';

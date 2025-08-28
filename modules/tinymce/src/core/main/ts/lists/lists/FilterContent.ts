@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
 
-import Editor from '../../api/Editor';
+import type Editor from '../../api/Editor';
 import AstNode from '../../api/html/Node';
 
 const isTextNode = (node: AstNode) => node.type === 3;

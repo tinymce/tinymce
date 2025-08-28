@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 import { Compare, Css, SugarElement, TransformFind } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import { mapRange } from '../selection/RangeMap';
 
 export const lineHeightQuery = (editor: Editor): string => mapRange(editor, (elm) => {

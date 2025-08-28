@@ -4,7 +4,7 @@ import { Attribute, Class, Focus, Insert, Remove, SelectorFind, SugarElement } f
 import { TinyContentActions, TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as DialogUtils from '../../module/test/DialogUtils';
 

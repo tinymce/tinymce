@@ -2,9 +2,9 @@ import { Type } from '@ephox/katamari';
 
 import * as Namespace from '../../html/Namespace';
 
-import AstNode, { Attributes } from './Node';
+import type { Attributes, default as AstNode } from './Node';
 import Schema from './Schema';
-import Writer, { WriterSettings } from './Writer';
+import Writer, { type WriterSettings } from './Writer';
 
 export interface HtmlSerializerSettings extends WriterSettings {
   inner?: boolean;

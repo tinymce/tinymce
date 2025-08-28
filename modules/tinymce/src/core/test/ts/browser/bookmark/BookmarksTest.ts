@@ -5,9 +5,9 @@ import { Hierarchy, Html, Remove, Replication, SelectorFilter, SugarElement, Ins
 import { McEditor, TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import {
-  Bookmark, isIdBookmark, isIndexBookmark, isPathBookmark, isRangeBookmark, isStringPathBookmark
+  type Bookmark, isIdBookmark, isIndexBookmark, isPathBookmark, isRangeBookmark, isStringPathBookmark
 } from 'tinymce/core/bookmark/BookmarkTypes';
 import * as GetBookmark from 'tinymce/core/bookmark/GetBookmark';
 import * as ResolveBookmark from 'tinymce/core/bookmark/ResolveBookmark';

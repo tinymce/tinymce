@@ -1,6 +1,6 @@
-import { Obj, Optional } from '@ephox/katamari';
+import { Obj, type Optional } from '@ephox/katamari';
 
-import { Decorator } from './Wrapping';
+import type { Decorator } from './Wrapping';
 
 export interface AnnotatorSettings {
   decorate: Decorator;

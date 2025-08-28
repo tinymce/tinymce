@@ -4,7 +4,7 @@ import { Fun } from '@ephox/katamari';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as BoundaryLocation from 'tinymce/core/keyboard/BoundaryLocation';
 import * as InlineUtils from 'tinymce/core/keyboard/InlineUtils';

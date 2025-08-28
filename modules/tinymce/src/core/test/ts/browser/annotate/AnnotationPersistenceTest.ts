@@ -3,8 +3,8 @@ import { Arr } from '@ephox/katamari';
 import { McEditor, TinyAssertions, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import { AnnotatorSettings } from 'tinymce/core/api/Annotator';
-import Editor from 'tinymce/core/api/Editor';
+import type { AnnotatorSettings } from 'tinymce/core/api/Annotator';
+import type Editor from 'tinymce/core/api/Editor';
 
 import { annotate, assertMarkings } from '../../module/test/AnnotationAsserts';
 

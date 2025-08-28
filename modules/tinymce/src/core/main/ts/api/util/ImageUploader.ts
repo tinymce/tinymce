@@ -1,8 +1,8 @@
 import * as Uploader from '../../file/Uploader';
 import { UploadStatus } from '../../file/UploadStatus';
-import Editor from '../Editor';
-import { BlobInfo } from '../file/BlobCache';
-import { NotificationApi } from '../NotificationManager';
+import type Editor from '../Editor';
+import type { BlobInfo } from '../file/BlobCache';
+import type { NotificationApi } from '../NotificationManager';
 import * as Options from '../Options';
 
 export type UploadResult = Uploader.UploadResult;

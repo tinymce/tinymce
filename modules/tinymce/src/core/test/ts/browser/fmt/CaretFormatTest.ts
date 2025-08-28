@@ -1,14 +1,14 @@
-import { ApproxStructure, Assertions, Mouse, StructAssert } from '@ephox/agar';
+import { ApproxStructure, Assertions, Mouse, type StructAssert } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as CaretFormat from 'tinymce/core/fmt/CaretFormat';
 import { getParentCaretContainer, isCaretNode } from 'tinymce/core/fmt/FormatContainer';
-import { FormatVars } from 'tinymce/core/fmt/FormatTypes';
+import type { FormatVars } from 'tinymce/core/fmt/FormatTypes';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 
 describe('browser.tinymce.core.fmt.CaretFormatTest', () => {

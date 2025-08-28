@@ -4,8 +4,8 @@ import { Fun } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { ApplyFormat } from 'tinymce/core/fmt/FormatTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { ApplyFormat } from 'tinymce/core/fmt/FormatTypes';
 import * as Preview from 'tinymce/core/fmt/Preview';
 
 describe('browser.tinymce.core.fmt.PreviewTest', () => {

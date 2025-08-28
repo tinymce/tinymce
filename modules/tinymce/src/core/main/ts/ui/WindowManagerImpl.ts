@@ -1,4 +1,4 @@
-import { WindowManagerImpl } from '../api/WindowManager';
+import type { WindowManagerImpl } from '../api/WindowManager';
 
 export default (): WindowManagerImpl => {
   const unimplemented = (): never => {

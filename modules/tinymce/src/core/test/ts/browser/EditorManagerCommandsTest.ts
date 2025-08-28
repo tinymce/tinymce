@@ -3,7 +3,7 @@ import { Arr } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import 'tinymce';
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Model from 'tinymce/models/dom/Model';
 import Theme from 'tinymce/themes/silver/Theme';

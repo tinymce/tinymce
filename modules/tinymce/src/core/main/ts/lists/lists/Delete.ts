@@ -1,4 +1,4 @@
-import Editor from '../../api/Editor';
+import type Editor from '../../api/Editor';
 import VK from '../../api/util/VK';
 import * as Delete from '../actions/Delete';
 

@@ -1,6 +1,6 @@
 import { Transformations } from '@ephox/acid';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import Env from '../api/Env';
 import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';

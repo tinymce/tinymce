@@ -3,7 +3,7 @@ import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Html, InsertAll, Remove, SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Utils from '../../module/test/TextPatternsUtils';
 

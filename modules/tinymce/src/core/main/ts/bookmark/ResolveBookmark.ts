@@ -1,7 +1,7 @@
 import { Fun, Optional, Optionals, Type } from '@ephox/katamari';
 
-import DOMUtils from '../api/dom/DOMUtils';
-import EditorSelection from '../api/dom/Selection';
+import type DOMUtils from '../api/dom/DOMUtils';
+import type EditorSelection from '../api/dom/Selection';
 import Env from '../api/Env';
 import Tools from '../api/util/Tools';
 import * as CaretFinder from '../caret/CaretFinder';
@@ -11,8 +11,8 @@ import { getParentCaretContainer } from '../fmt/FormatContainer';
 import * as Zwsp from '../text/Zwsp';
 
 import {
-  Bookmark, IdBookmark, IndexBookmark, isIdBookmark, isIndexBookmark, isPathBookmark, isRangeBookmark, isStringPathBookmark, PathBookmark,
-  StringPathBookmark
+  type Bookmark, type IdBookmark, type IndexBookmark, isIdBookmark, isIndexBookmark, isPathBookmark, isRangeBookmark, isStringPathBookmark, type PathBookmark,
+  type StringPathBookmark
 } from './BookmarkTypes';
 import * as CaretBookmark from './CaretBookmark';
 

@@ -4,7 +4,7 @@ import { Focus, Hierarchy, Insert, Remove, SugarBody, SugarElement, SugarNode } 
 import { McEditor, TinyAssertions, TinyDom, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as EditorFocus from 'tinymce/core/focus/EditorFocus';
 
 describe('browser.tinymce.core.focus.EditorFocusTest', () => {

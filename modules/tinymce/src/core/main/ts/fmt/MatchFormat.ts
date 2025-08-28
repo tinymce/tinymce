@@ -1,12 +1,12 @@
 import { Arr, Obj, Optional, Strings, Type } from '@ephox/katamari';
 import { Compare, SugarElement, TransformFind } from '@ephox/sugar';
 
-import DOMUtils from '../api/dom/DOMUtils';
-import Editor from '../api/Editor';
+import type DOMUtils from '../api/dom/DOMUtils';
+import type Editor from '../api/Editor';
 import * as NodeType from '../dom/NodeType';
 import * as ArrUtils from '../util/ArrUtils';
 
-import { Format, FormatVars } from './FormatTypes';
+import type { Format, FormatVars } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 
 const isEq = FormatUtils.isEq;

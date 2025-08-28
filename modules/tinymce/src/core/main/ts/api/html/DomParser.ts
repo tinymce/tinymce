@@ -12,11 +12,11 @@ import * as Namespace from '../../html/Namespace';
 import * as ParserFilters from '../../html/ParserFilters';
 import { isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../../html/ParserUtils';
 import { getSanitizer, internalElementAttr } from '../../html/Sanitization';
-import { BlobCache } from '../file/BlobCache';
+import type { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
 
 import AstNode from './Node';
-import Schema, { SchemaMap, SchemaRegExpMap, getTextRootBlockElements } from './Schema';
+import Schema, { type SchemaMap, type SchemaRegExpMap, getTextRootBlockElements } from './Schema';
 
 /**
  * @summary

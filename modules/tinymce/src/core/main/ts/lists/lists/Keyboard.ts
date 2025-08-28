@@ -1,5 +1,5 @@
 
-import Editor from '../../api/Editor';
+import type Editor from '../../api/Editor';
 import * as Options from '../../api/Options';
 import VK from '../../api/util/VK';
 import { indentListSelection, outdentListSelection } from '../actions/Indentation';

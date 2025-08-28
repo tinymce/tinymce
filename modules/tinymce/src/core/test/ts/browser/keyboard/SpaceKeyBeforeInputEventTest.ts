@@ -2,7 +2,7 @@ import { Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import { pressKeyAction, testBeforeInputEvent } from '../../module/test/BeforeInputEventUtils';
 

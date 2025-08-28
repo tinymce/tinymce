@@ -3,10 +3,10 @@ import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { SetContentEvent } from 'tinymce/core/api/EventTypes';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import { SetSelectionContentArgs } from 'tinymce/core/content/ContentTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { SetContentEvent } from 'tinymce/core/api/EventTypes';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type { SetSelectionContentArgs } from 'tinymce/core/content/ContentTypes';
 import * as SetSelectionContent from 'tinymce/core/selection/SetSelectionContent';
 
 describe('browser.tinymce.selection.SetSelectionContentTest', () => {

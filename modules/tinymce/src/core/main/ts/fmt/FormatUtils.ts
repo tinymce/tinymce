@@ -2,11 +2,11 @@ import { Transformations } from '@ephox/acid';
 import { Arr, Obj, Optionals, Strings, Type } from '@ephox/katamari';
 import { Selectors, SugarElement } from '@ephox/sugar';
 
-import DOMUtils from '../api/dom/DOMUtils';
-import EditorSelection from '../api/dom/Selection';
+import type DOMUtils from '../api/dom/DOMUtils';
+import type EditorSelection from '../api/dom/Selection';
 import DomTreeWalker from '../api/dom/TreeWalker';
-import Editor from '../api/Editor';
-import Schema from '../api/html/Schema';
+import type Editor from '../api/Editor';
+import type Schema from '../api/html/Schema';
 import * as Options from '../api/Options';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as TransparentElements from '../content/TransparentElements';
@@ -16,7 +16,7 @@ import * as Whitespace from '../text/Whitespace';
 import { ZWSP } from '../text/Zwsp';
 
 import { isCaretNode } from './FormatContainer';
-import { BlockFormat, Format, FormatAttrOrStyleValue, FormatVars, InlineFormat, MixedFormat, SelectorFormat } from './FormatTypes';
+import type { BlockFormat, Format, FormatAttrOrStyleValue, FormatVars, InlineFormat, MixedFormat, SelectorFormat } from './FormatTypes';
 
 const isNode = (node: any): node is Node =>
   Type.isNumber(node?.nodeType);

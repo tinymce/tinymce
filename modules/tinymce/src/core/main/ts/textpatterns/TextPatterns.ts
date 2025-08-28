@@ -1,4 +1,4 @@
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 
 import * as Keyboard from './keyboard/Keyboard';
 

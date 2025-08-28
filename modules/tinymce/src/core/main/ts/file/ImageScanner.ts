@@ -1,10 +1,10 @@
 import { Arr, Fun, Obj, Strings, Type } from '@ephox/katamari';
 
 import Env from '../api/Env';
-import { BlobCache, BlobInfo } from '../api/file/BlobCache';
+import type { BlobCache, BlobInfo } from '../api/file/BlobCache';
 
 import { imageToBlobInfo } from './BlobCacheUtils';
-import { UploadStatus } from './UploadStatus';
+import type { UploadStatus } from './UploadStatus';
 
 export interface BlobInfoImagePair {
   image: HTMLImageElement;

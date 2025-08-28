@@ -2,7 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
 import * as SchemaElementSets from 'tinymce/core/schema/SchemaElementSets';
-import * as SchemaTypes from 'tinymce/core/schema/SchemaTypes';
+import type * as SchemaTypes from 'tinymce/core/schema/SchemaTypes';
 
 describe('atomic.tinymce.core.schema.SchemaElementSetsTest', () => {
   const assertDirectMutation = (names: readonly string[]) => {

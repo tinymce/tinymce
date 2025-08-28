@@ -1,8 +1,8 @@
 import { DragnDrop } from '@ephox/agar';
 import { TinyDom } from '@ephox/mcagar';
-import { Hierarchy, SugarElement, SugarNode } from '@ephox/sugar';
+import { Hierarchy, type SugarElement, SugarNode } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 export const dragDropHtmlInternallyToElement = (editor: Editor, html: string, target: SugarElement<Element>): void => {
   editor.dispatch('dragstart');

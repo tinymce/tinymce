@@ -1,10 +1,10 @@
 import { Fun } from '@ephox/katamari';
 import {
-  Css, Height, Insert, Remove, Scroll, SugarElement, SugarLocation, SugarNode, SugarPosition, SugarText, Traverse, WindowVisualViewport
+  Css, Height, Insert, Remove, Scroll, SugarElement, SugarLocation, SugarNode, type SugarPosition, SugarText, Traverse, WindowVisualViewport
 } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
-import { ScrollIntoViewEvent } from '../api/EventTypes';
+import type Editor from '../api/Editor';
+import type { ScrollIntoViewEvent } from '../api/EventTypes';
 import * as OuterPosition from '../frames/OuterPosition';
 import * as Zwsp from '../text/Zwsp';
 

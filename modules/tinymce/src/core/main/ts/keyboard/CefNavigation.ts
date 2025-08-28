@@ -1,14 +1,14 @@
 import { Fun, Optional } from '@ephox/katamari';
 import { Insert, SugarElement } from '@ephox/sugar';
 
-import EditorSelection from '../api/dom/Selection';
-import Editor from '../api/Editor';
+import type EditorSelection from '../api/dom/Selection';
+import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import CaretPosition from '../caret/CaretPosition';
 import { isAfterContentEditableFalse, isAfterTable, isBeforeContentEditableFalse, isBeforeTable } from '../caret/CaretPositionPredicates';
 import * as CaretUtils from '../caret/CaretUtils';
 import { CaretWalker, HDirection } from '../caret/CaretWalker';
-import * as LineWalker from '../caret/LineWalker';
+import type * as LineWalker from '../caret/LineWalker';
 import * as NodeType from '../dom/NodeType';
 
 import { getEdgeCefPosition } from './CefUtils';

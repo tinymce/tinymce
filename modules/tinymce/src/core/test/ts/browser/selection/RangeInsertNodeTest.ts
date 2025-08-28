@@ -3,7 +3,7 @@ import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { SugarElements, SugarFragment } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import { rangeInsertNode } from 'tinymce/core/selection/RangeInsertNode';
 
 describe('browser.tinymce.core.selection.RangeInsertNode', () => {

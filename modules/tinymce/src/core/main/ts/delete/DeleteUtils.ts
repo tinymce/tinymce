@@ -1,10 +1,10 @@
 import { Arr, Optional, Optionals } from '@ephox/katamari';
 import { Compare, PredicateFind, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
-import { EditorEvent } from '../api/util/EventDispatcher';
+import type Editor from '../api/Editor';
+import type { EditorEvent } from '../api/util/EventDispatcher';
 import * as CaretFinder from '../caret/CaretFinder';
-import CaretPosition from '../caret/CaretPosition';
+import type CaretPosition from '../caret/CaretPosition';
 import { isListItem, isTextBlock } from '../dom/ElementType';
 import * as Empty from '../dom/Empty';
 import * as PaddingBr from '../dom/PaddingBr';

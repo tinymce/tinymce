@@ -4,11 +4,11 @@ import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Editor from 'tinymce/core/api/Editor';
-import { UploadResult } from 'tinymce/core/api/EditorUpload';
+import type Editor from 'tinymce/core/api/Editor';
+import type { UploadResult } from 'tinymce/core/api/EditorUpload';
 import Env from 'tinymce/core/api/Env';
-import { BlobInfo } from 'tinymce/core/api/file/BlobCache';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type { BlobInfo } from 'tinymce/core/api/file/BlobCache';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as Conversions from 'tinymce/core/file/Conversions';
 
 const assertResult = (editor: Editor, title: string, uploadUri: string, uploadedBlobInfo: BlobInfo, result: UploadResult[], ext: string = '.png') => {

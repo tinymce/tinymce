@@ -4,8 +4,8 @@ import { Arr, Cell, Fun } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import { AnnotationListenerApi } from 'tinymce/core/api/Annotator';
-import Editor from 'tinymce/core/api/Editor';
+import type { AnnotationListenerApi } from 'tinymce/core/api/Annotator';
+import type Editor from 'tinymce/core/api/Editor';
 
 import { annotate, assertHtmlContent, assertMarker } from '../../module/test/AnnotationAsserts';
 

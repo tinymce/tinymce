@@ -2,9 +2,9 @@ import { Arr, Fun, Obj, Optional, Optionals, Unicode } from '@ephox/katamari';
 import { DomDescent } from '@ephox/phoenix';
 import { Css, Insert, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
-import DOMUtils from '../api/dom/DOMUtils';
+import type DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as ElementType from '../dom/ElementType';

@@ -1,7 +1,7 @@
-import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Fun, type Optional, Optionals } from '@ephox/katamari';
 import { InsertAll, Remove, SelectorFilter, SelectorFind, SugarElement, SugarFragment } from '@ephox/sugar';
 
-import Editor from '../../api/Editor';
+import type Editor from '../../api/Editor';
 import * as Options from '../../api/Options';
 import { fireListEvent } from '../events/Events';
 import { ListAction } from '../lists/ListAction';
@@ -9,10 +9,10 @@ import * as Selection from '../lists/Selection';
 import { createTextBlock } from '../lists/TextBlock';
 
 import { composeList } from './ComposeList';
-import { Entry, isEntryComment, isEntryList, isIndented, isSelected } from './Entry';
+import { type Entry, isEntryComment, isEntryList, isIndented, isSelected } from './Entry';
 import { Indentation, indentEntry } from './Indentation';
 import { normalizeEntries } from './NormalizeEntries';
-import { EntrySet, ItemSelection, parseLists } from './ParseLists';
+import { type EntrySet, type ItemSelection, parseLists } from './ParseLists';
 import { hasFirstChildList } from './Util';
 
 const outdentedComposer = (editor: Editor, entries: Entry[]): SugarElement<DocumentFragment>[] => {

@@ -1,13 +1,13 @@
 import { Result } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as Events from '../api/Events';
-import DomParser, { DomParserSettings } from '../api/html/DomParser';
+import DomParser, { type DomParserSettings } from '../api/html/DomParser';
 import HtmlSerializer from '../api/html/Serializer';
 import * as Options from '../api/Options';
-import { EditorEvent } from '../api/util/EventDispatcher';
+import type { EditorEvent } from '../api/util/EventDispatcher';
 
-import { Content, GetContentArgs, isTreeNode, SetContentArgs } from './ContentTypes';
+import { type Content, type GetContentArgs, isTreeNode, type SetContentArgs } from './ContentTypes';
 
 const serializeContent = (content: Content): string =>
   isTreeNode(content) ? HtmlSerializer({ validate: false }).serialize(content) : content;

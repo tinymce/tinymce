@@ -5,8 +5,8 @@ import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as CaretFormat from 'tinymce/core/fmt/CaretFormat';
 import * as InsertNewLine from 'tinymce/core/newline/InsertNewLine';
 import * as SetSelectionContent from 'tinymce/core/selection/SetSelectionContent';

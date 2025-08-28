@@ -2,7 +2,7 @@
 import { Fun, Merger } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
-import { Editor, RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { Editor, RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 

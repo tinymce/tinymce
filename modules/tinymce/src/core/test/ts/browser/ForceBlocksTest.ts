@@ -3,7 +3,7 @@ import { Arr } from '@ephox/katamari';
 import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as TransparentElements from 'tinymce/core/content/TransparentElements';
 
 import * as HtmlUtils from '../module/test/HtmlUtils';

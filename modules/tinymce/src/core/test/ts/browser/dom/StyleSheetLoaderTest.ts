@@ -1,6 +1,6 @@
 import { UiFinder } from '@ephox/agar';
 import { after, before, describe, it } from '@ephox/bedrock-client';
-import { Attribute, SelectorFilter, SugarElement, SugarHead } from '@ephox/sugar';
+import { Attribute, SelectorFilter, type SugarElement, SugarHead } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import StyleSheetLoader from 'tinymce/core/api/dom/StyleSheetLoader';

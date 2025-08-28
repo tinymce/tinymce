@@ -1,12 +1,12 @@
 import { ApproxStructure, Mouse, UiFinder, Clipboard, Waiter, Keys } from '@ephox/agar';
 import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import { Singleton } from '@ephox/katamari';
-import { Attribute, Css, SelectorExists, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
+import { Attribute, Css, SelectorExists, SelectorFind, type SugarElement, Traverse } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import AccordionPlugin from 'tinymce/plugins/accordion/Plugin';
 import AdvancedListPlugin from 'tinymce/plugins/advlist/Plugin';

@@ -1,12 +1,12 @@
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Fun, type Optional } from '@ephox/katamari';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 
-import Schema from '../api/html/Schema';
+import type Schema from '../api/html/Schema';
 import * as ElementType from '../dom/ElementType';
 import * as Parents from '../dom/Parents';
 
 import * as CaretFinder from './CaretFinder';
-import { CaretPosition } from './CaretPosition';
+import type { CaretPosition } from './CaretPosition';
 import { getElementFromPosition, getElementFromPrevPosition } from './CaretUtils';
 
 const isBr = (pos: CaretPosition): boolean =>

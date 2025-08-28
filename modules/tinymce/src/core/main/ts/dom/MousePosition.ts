@@ -1,5 +1,5 @@
-import Editor from '../api/Editor';
-import { EditorEvent } from '../api/util/EventDispatcher';
+import type Editor from '../api/Editor';
+import type { EditorEvent } from '../api/util/EventDispatcher';
 
 /**
  * This module calculates an absolute coordinate inside the editor body for both local and global mouse events.

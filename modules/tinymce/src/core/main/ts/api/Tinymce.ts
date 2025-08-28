@@ -1,21 +1,21 @@
-import { RangeLikeObject } from '../selection/RangeTypes';
-import { UndoManager as UndoManagerType } from '../undo/UndoManagerTypes';
+import type { RangeLikeObject } from '../selection/RangeTypes';
+import type { UndoManager as UndoManagerType } from '../undo/UndoManagerTypes';
 
 import AddOnManager from './AddOnManager';
 import Annotator from './Annotator';
 import BookmarkManager from './dom/BookmarkManager';
 import ControlSelection from './dom/ControlSelection';
-import DOMUtils, { DOMUtilsSettings } from './dom/DOMUtils';
-import EventUtils, { EventUtilsConstructor } from './dom/EventUtils';
+import DOMUtils, { type DOMUtilsSettings } from './dom/DOMUtils';
+import EventUtils, { type EventUtilsConstructor } from './dom/EventUtils';
 import RangeUtils from './dom/RangeUtils';
-import ScriptLoader, { ScriptLoaderConstructor } from './dom/ScriptLoader';
+import ScriptLoader, { type ScriptLoaderConstructor } from './dom/ScriptLoader';
 import EditorSelection from './dom/Selection';
-import DomSerializer, { DomSerializerSettings } from './dom/Serializer';
-import StyleSheetLoader, { StyleSheetLoaderSettings } from './dom/StyleSheetLoader';
+import DomSerializer, { type DomSerializerSettings } from './dom/Serializer';
+import StyleSheetLoader, { type StyleSheetLoaderSettings } from './dom/StyleSheetLoader';
 import TextSeeker from './dom/TextSeeker';
-import DomTreeWalker, { DomTreeWalkerConstructor } from './dom/TreeWalker';
-import Editor, { EditorConstructor } from './Editor';
-import EditorCommands, { EditorCommandsConstructor } from './EditorCommands';
+import DomTreeWalker, { type DomTreeWalkerConstructor } from './dom/TreeWalker';
+import Editor, { type EditorConstructor } from './Editor';
+import EditorCommands, { type EditorCommandsConstructor } from './EditorCommands';
 import EditorManager from './EditorManager';
 import EditorObservable from './EditorObservable';
 import Env from './Env';
@@ -23,29 +23,29 @@ import FakeClipboard from './FakeClipboard';
 import FocusManager from './FocusManager';
 import Formatter from './Formatter';
 import Rect from './geom/Rect';
-import DomParser, { DomParserSettings } from './html/DomParser';
+import DomParser, { type DomParserSettings } from './html/DomParser';
 import Entities from './html/Entities';
-import AstNode, { AstNodeConstructor } from './html/Node';
-import Schema, { SchemaSettings } from './html/Schema';
-import HtmlSerializer, { HtmlSerializerSettings } from './html/Serializer';
-import Styles, { StylesSettings } from './html/Styles';
-import Writer, { WriterSettings } from './html/Writer';
+import AstNode, { type AstNodeConstructor } from './html/Node';
+import Schema, { type SchemaSettings } from './html/Schema';
+import HtmlSerializer, { type HtmlSerializerSettings } from './html/Serializer';
+import Styles, { type StylesSettings } from './html/Styles';
+import Writer, { type WriterSettings } from './html/Writer';
 import IconManager from './IconManager';
 import ModelManager from './ModelManager';
 import NotificationManager from './NotificationManager';
 import PluginManager from './PluginManager';
 import Resource from './Resource';
-import Shortcuts, { ShortcutsConstructor } from './Shortcuts';
+import Shortcuts, { type ShortcutsConstructor } from './Shortcuts';
 import ThemeManager from './ThemeManager';
 import UndoManager from './UndoManager';
 import Delay from './util/Delay';
-import EventDispatcher, { EventDispatcherConstructor } from './util/EventDispatcher';
+import EventDispatcher, { type EventDispatcherConstructor } from './util/EventDispatcher';
 import I18n from './util/I18n';
 import ImageUploader from './util/ImageUploader';
 import LocalStorage from './util/LocalStorage';
 import Observable from './util/Observable';
 import Tools from './util/Tools';
-import URI, { URIConstructor } from './util/URI';
+import URI, { type URIConstructor } from './util/URI';
 import VK from './util/VK';
 import WindowManager from './WindowManager';
 
@@ -263,7 +263,5 @@ const publicApi = {
 
 const tinymce: TinyMCE = Tools.extend(EditorManager, publicApi);
 
-export {
-  TinyMCE,
-  tinymce
-};
+export type { TinyMCE };
+export { tinymce };

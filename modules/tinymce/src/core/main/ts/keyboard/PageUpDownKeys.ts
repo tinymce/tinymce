@@ -1,9 +1,9 @@
 import { Cell } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
-import Editor from '../api/Editor';
-import { NodeChangeEvent } from '../api/EventTypes';
-import { EditorEvent } from '../api/util/EventDispatcher';
+import type Editor from '../api/Editor';
+import type { NodeChangeEvent } from '../api/EventTypes';
+import type { EditorEvent } from '../api/util/EventDispatcher';
 import VK from '../api/util/VK';
 
 import * as BoundarySelection from './BoundarySelection';

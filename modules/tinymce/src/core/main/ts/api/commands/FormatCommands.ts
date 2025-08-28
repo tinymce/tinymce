@@ -2,9 +2,9 @@ import { Type } from '@ephox/katamari';
 
 import * as Font from '../../commands/Font';
 import * as LineHeight from '../../commands/LineHeight';
-import { FormatVars } from '../../fmt/FormatTypes';
-import Editor from '../Editor';
-import { ContentLanguage } from '../OptionTypes';
+import type { FormatVars } from '../../fmt/FormatTypes';
+import type Editor from '../Editor';
+import type { ContentLanguage } from '../OptionTypes';
 
 const registerExecCommands = (editor: Editor): void => {
   const toggleFormat = (name: string, value?: FormatVars) => {

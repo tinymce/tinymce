@@ -3,7 +3,7 @@ import { before, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as InlineFormatDelete from 'tinymce/core/delete/InlineFormatDelete';
 import * as Zwsp from 'tinymce/core/text/Zwsp';
 

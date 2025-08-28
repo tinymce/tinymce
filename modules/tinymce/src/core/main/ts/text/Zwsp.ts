@@ -1,6 +1,6 @@
 import { Unicode } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 
 /**
  * Utility functions for working with zero width space

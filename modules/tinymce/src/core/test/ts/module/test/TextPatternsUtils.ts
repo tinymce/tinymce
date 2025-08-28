@@ -1,11 +1,11 @@
-import { ApproxStructure, Keys, StructAssert } from '@ephox/agar';
+import { ApproxStructure, Keys, type StructAssert } from '@ephox/agar';
 import { Thunk, Unicode } from '@ephox/katamari';
-import { TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyContentActions, type TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as Options from 'tinymce/core/api/Options';
 import * as Pattern from 'tinymce/core/textpatterns/core/Pattern';
-import { PatternSet } from 'tinymce/core/textpatterns/core/PatternTypes';
+import type { PatternSet } from 'tinymce/core/textpatterns/core/PatternTypes';
 
 const setContentAndFireKeystroke = (key: number) => {
   return (editor: Editor, content: string, offset = content.length, elementPath = [ 0, 0 ], wrapInP = true) => {

@@ -1,12 +1,12 @@
 import { Arr, Fun, Obj, Optional, Optionals, Type } from '@ephox/katamari';
 import { Compare, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
-import DOMUtils from '../api/dom/DOMUtils';
-import EditorSelection from '../api/dom/Selection';
+import type DOMUtils from '../api/dom/DOMUtils';
+import type EditorSelection from '../api/dom/Selection';
 import DomTreeWalker from '../api/dom/TreeWalker';
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import Tools from '../api/util/Tools';
-import { IdBookmark, IndexBookmark } from '../bookmark/BookmarkTypes';
+import type { IdBookmark, IndexBookmark } from '../bookmark/BookmarkTypes';
 import * as GetBookmark from '../bookmark/GetBookmark';
 import * as NodeType from '../dom/NodeType';
 

@@ -5,9 +5,9 @@ import { Focus, Insert, Remove, SugarElement, SugarShadowDom } from '@ephox/suga
 import { LegacyUnit, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { BeforeOpenNotificationEvent, OpenNotificationEvent } from 'tinymce/core/api/EventTypes';
-import { NotificationSpec } from 'tinymce/core/api/NotificationManager';
+import type Editor from 'tinymce/core/api/Editor';
+import type { BeforeOpenNotificationEvent, OpenNotificationEvent } from 'tinymce/core/api/EventTypes';
+import type { NotificationSpec } from 'tinymce/core/api/NotificationManager';
 
 describe('browser.tinymce.core.NotificationManagerTest', () => {
   Arr.each([

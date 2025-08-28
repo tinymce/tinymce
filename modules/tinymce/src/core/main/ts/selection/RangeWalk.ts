@@ -1,8 +1,8 @@
-import DOMUtils from '../api/dom/DOMUtils';
+import type DOMUtils from '../api/dom/DOMUtils';
 import * as NodeType from '../dom/NodeType';
 
 import * as RangeNodes from './RangeNodes';
-import { RangeLikeObject } from './RangeTypes';
+import type { RangeLikeObject } from './RangeTypes';
 
 const walk = (dom: DOMUtils, rng: RangeLikeObject, callback: (nodes: Node[]) => void): void => {
   const startOffset = rng.startOffset;

@@ -1,9 +1,9 @@
 import { Arr, Cell, Obj, Optional, Optionals, Singleton, Throttler } from '@ephox/katamari';
 import { Attribute } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 
-import { AnnotationsRegistry } from './AnnotationsRegistry';
+import type { AnnotationsRegistry } from './AnnotationsRegistry';
 import * as Identification from './Identification';
 import * as Markings from './Markings';
 

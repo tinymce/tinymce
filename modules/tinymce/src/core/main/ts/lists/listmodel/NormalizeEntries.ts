@@ -1,6 +1,6 @@
-import { Arr, Obj, Optional } from '@ephox/katamari';
+import { Arr, Obj, type Optional } from '@ephox/katamari';
 
-import { Entry, EntryList, isEntryList } from './Entry';
+import { type Entry, type EntryList, isEntryList } from './Entry';
 
 const cloneListProperties = (target: Entry, source: Entry): void => {
   if (isEntryList(target) && isEntryList(source)) {

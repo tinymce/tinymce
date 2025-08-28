@@ -1,7 +1,7 @@
-import { Arr, Optional } from '@ephox/katamari';
-import { Attribute, Replication, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { Arr, type Optional } from '@ephox/katamari';
+import { Attribute, Replication, type SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
-import { hasLastChildList, ListType } from './Util';
+import { hasLastChildList, type ListType } from './Util';
 
 /*
 General workflow: Parse lists to entries -> Manipulate entries -> Compose entries to lists

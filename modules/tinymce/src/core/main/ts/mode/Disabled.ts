@@ -1,7 +1,7 @@
-import { Arr, Optional, Strings } from '@ephox/katamari';
+import { Arr, type Optional, Strings } from '@ephox/katamari';
 import { Attribute, Compare, ContentEditable, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import VK from '../api/util/VK';
 import * as ModeUtils from '../util/ModeUtils';

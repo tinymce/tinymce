@@ -1,14 +1,14 @@
 import { Assertions, DragnDrop, Keyboard, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { DataTransfer, DataTransferMode, DragImageData } from '@ephox/dragster';
+import { DataTransfer, DataTransferMode, type DragImageData } from '@ephox/dragster';
 import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 import { PlatformDetection } from '@ephox/sand';
-import { Html, SelectorFind, SugarBody, SugarElement, SugarLocation, Traverse } from '@ephox/sugar';
+import { Html, SelectorFind, SugarBody, type SugarElement, SugarLocation, Traverse } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 interface DataTransferSpec {
   readonly data: { type: string; value: string }[];

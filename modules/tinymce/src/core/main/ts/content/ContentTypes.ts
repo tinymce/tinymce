@@ -1,5 +1,5 @@
 import AstNode from '../api/html/Node';
-import { EntityEncoding } from '../api/OptionTypes';
+import type { EntityEncoding } from '../api/OptionTypes';
 
 export type Content = string | AstNode;
 export type ContentFormat = 'raw' | 'text' | 'html' | 'tree';

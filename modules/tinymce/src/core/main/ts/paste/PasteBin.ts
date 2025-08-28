@@ -1,6 +1,6 @@
 import { Arr, Cell, Type } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import Env from '../api/Env';
 
 interface PasteBin {

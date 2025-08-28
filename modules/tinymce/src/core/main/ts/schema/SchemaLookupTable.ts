@@ -2,7 +2,7 @@ import { Arr, Fun } from '@ephox/katamari';
 
 import * as GlobalAttributesSet from './GlobalAttributesSet';
 import * as SchemaElementSets from './SchemaElementSets';
-import { SchemaType } from './SchemaTypes';
+import type { SchemaType } from './SchemaTypes';
 import * as SchemaUtils from './SchemaUtils';
 
 export interface SchemaLookupTable {
