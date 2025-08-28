@@ -140,5 +140,16 @@ const pAssertAutocompleterStructure = async (structure: AutocompleterStructure):
   );
 };
 
-export type { AutocompleterGridStructure, AutocompleterListStructure, AutocompleterStructure };
-export { pAssertAutocompleterStructure, structWithTitleAndIcon, structWithTitleAndIconAndText, structWithTitleAndText, pWaitForAutocompleteToClose, pWaitForAutocompleteToOpen };
+export type {
+  AutocompleterGridStructure,
+  AutocompleterListStructure,
+  AutocompleterStructure
+};
+export {
+  pAssertAutocompleterStructure,
+  structWithTitleAndIcon,
+  structWithTitleAndIconAndText,
+  structWithTitleAndText,
+  pWaitForAutocompleteToClose,
+  pWaitForAutocompleteToOpen
+};

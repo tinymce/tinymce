@@ -78,4 +78,9 @@ const matchRowHeight = (warehouse: Warehouse, heights: number[]): CellHeight<HTM
 };
 
 export type { CellWidthSpan };
-export { recalculateWidthForCells, recalculateWidthForColumns, recalculateHeightForCells, matchRowHeight };
+export {
+  recalculateWidthForCells,
+  recalculateWidthForColumns,
+  recalculateHeightForCells,
+  matchRowHeight
+};
