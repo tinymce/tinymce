@@ -4,7 +4,7 @@ import { Attribute, Html, Insert, Remove, SelectorFind, SugarBody, SugarElement 
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/table/Plugin';
 
 const findAll = (selector: string) => UiFinder.findAllIn(SugarBody.body(), selector);

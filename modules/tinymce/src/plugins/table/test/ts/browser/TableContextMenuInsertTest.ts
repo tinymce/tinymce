@@ -4,7 +4,7 @@ import { Arr } from '@ephox/katamari';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import AutoResizePlugin from 'tinymce/plugins/autoresize/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 

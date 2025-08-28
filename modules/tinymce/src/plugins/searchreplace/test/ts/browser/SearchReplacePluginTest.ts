@@ -3,7 +3,7 @@ import { Unicode } from '@ephox/katamari';
 import { TinyApis, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/searchreplace/Plugin';
 
 describe('browser.tinymce.plugins.searchreplace.SearchReplacePluginTest', () => {

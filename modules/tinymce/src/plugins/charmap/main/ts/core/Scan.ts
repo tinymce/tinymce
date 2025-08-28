@@ -1,6 +1,6 @@
 import { Arr, Strings } from '@ephox/katamari';
 
-import { CharMap, Char } from './CharMap';
+import type { CharMap, Char } from './CharMap';
 
 export interface CharItem {
   readonly value: string;

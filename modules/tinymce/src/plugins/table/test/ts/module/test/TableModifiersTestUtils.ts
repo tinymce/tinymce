@@ -1,9 +1,9 @@
 import { Assertions, Keys, Waiter } from '@ephox/agar';
 import { Arr, Fun } from '@ephox/katamari';
-import { SugarBody, SugarElement } from '@ephox/sugar';
+import { SugarBody, type SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 interface AssertStyleOptions {
   readonly menuTitle: string;

@@ -6,8 +6,8 @@ import { Attribute, Classes, Css, Html, SelectorFind, SugarBody, SugarDocument, 
 import { McEditor, TinyContentActions, TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { NotificationApi } from 'tinymce/core/api/NotificationManager';
+import type Editor from 'tinymce/core/api/Editor';
+import type { NotificationApi } from 'tinymce/core/api/NotificationManager';
 import FullscreenPlugin from 'tinymce/plugins/fullscreen/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 

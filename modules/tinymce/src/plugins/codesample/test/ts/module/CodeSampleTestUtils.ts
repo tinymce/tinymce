@@ -1,9 +1,9 @@
 import { ApproxStructure, Assertions, UiFinder, Waiter } from '@ephox/agar';
-import { SugarBody, SugarElement, TextContent } from '@ephox/sugar';
+import { SugarBody, type SugarElement, TextContent } from '@ephox/sugar';
 import { TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 const dialogSelector = 'div.tox-dialog';
 const toolbarButtonSelector = 'button[aria-label="Insert/edit code sample"]';

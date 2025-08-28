@@ -1,6 +1,6 @@
 import { Optional } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
 export const isSummary = (node?: Node | null): node is HTMLElement =>

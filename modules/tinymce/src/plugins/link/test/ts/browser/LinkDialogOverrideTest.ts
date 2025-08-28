@@ -1,13 +1,13 @@
 import { UiFinder, UiControls } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { Dialog } from '@ephox/bridge';
+import type { Dialog } from '@ephox/bridge';
 import { SugarBody } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 import Plugin from 'tinymce/plugins/link/Plugin';
-import { LinkDialogData } from 'tinymce/plugins/link/ui/DialogTypes';
+import type { LinkDialogData } from 'tinymce/plugins/link/ui/DialogTypes';
 
 describe('browser.tinymce.plugins.link.LinkDialogOverrideTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
