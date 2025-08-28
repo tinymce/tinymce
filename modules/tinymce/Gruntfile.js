@@ -199,7 +199,7 @@ module.exports = function (grunt) {
     terser: Object.assign(
       {
         options: {
-          ecma: 2018,
+          ecma: 2022,
           output: {
             ascii_only: true
           },
