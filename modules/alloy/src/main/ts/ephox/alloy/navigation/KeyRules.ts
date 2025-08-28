@@ -1,7 +1,7 @@
-import { Arr, Optional } from '@ephox/katamari';
-import { EventArgs } from '@ephox/sugar';
+import { Arr, type Optional } from '@ephox/katamari';
+import type { EventArgs } from '@ephox/sugar';
 
-import { KeyRuleHandler } from '../keying/KeyingModeTypes';
+import type { KeyRuleHandler } from '../keying/KeyingModeTypes';
 
 import * as KeyMatch from './KeyMatch';
 

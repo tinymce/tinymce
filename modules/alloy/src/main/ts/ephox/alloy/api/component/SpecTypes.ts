@@ -1,11 +1,11 @@
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 
-import { DomModification } from '../../dom/DomModification';
-import { ConfiguredPart } from '../../parts/AlloyParts';
-import { AlloyBehaviourRecord } from '../behaviour/Behaviour';
-import { AlloyEventRecord } from '../events/AlloyEvents';
+import type { DomModification } from '../../dom/DomModification';
+import type { ConfiguredPart } from '../../parts/AlloyParts';
+import type { AlloyBehaviourRecord } from '../behaviour/Behaviour';
+import type { AlloyEventRecord } from '../events/AlloyEvents';
 
-import { AlloyComponent } from './ComponentApi';
+import type { AlloyComponent } from './ComponentApi';
 
 export type AlloySpec = SimpleOrSketchSpec | PremadeSpec | ConfiguredPart;
 

@@ -1,11 +1,11 @@
-import { Optional } from '@ephox/katamari';
-import { EventArgs, SugarElement } from '@ephox/sugar';
+import type { Optional } from '@ephox/katamari';
+import type { EventArgs, SugarElement } from '@ephox/sugar';
 
-import { AlloyComponent } from '../api/component/ComponentApi';
-import * as AlloyEvents from '../api/events/AlloyEvents';
-import { FocusManager } from '../api/focus/FocusManagers';
-import { BehaviourState, Stateless } from '../behaviour/common/BehaviourState';
-import { NativeSimulatedEvent, SimulatedEvent } from '../events/SimulatedEvent';
+import type { AlloyComponent } from '../api/component/ComponentApi';
+import type * as AlloyEvents from '../api/events/AlloyEvents';
+import type { FocusManager } from '../api/focus/FocusManagers';
+import type { BehaviourState, Stateless } from '../behaviour/common/BehaviourState';
+import type { NativeSimulatedEvent, SimulatedEvent } from '../events/SimulatedEvent';
 
 export type KeyHandlerApi = (comp: AlloyComponent, se: NativeSimulatedEvent<KeyboardEvent>) => Optional<boolean>;
 

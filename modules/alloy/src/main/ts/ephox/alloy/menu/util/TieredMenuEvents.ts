@@ -1,7 +1,7 @@
 import { Id } from '@ephox/katamari';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { CustomEvent } from '../../events/SimulatedEvent';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { CustomEvent } from '../../events/SimulatedEvent';
 
 // The primary purpose of these events is to bubble up to the tiered menu,
 // and allow the tiered menu handlers to have a reference to

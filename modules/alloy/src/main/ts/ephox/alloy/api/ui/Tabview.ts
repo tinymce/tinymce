@@ -1,9 +1,9 @@
-import { TabviewDetail, TabviewSketcher, TabviewSpec } from '../../ui/types/TabviewTypes';
+import type { TabviewDetail, TabviewSketcher, TabviewSpec } from '../../ui/types/TabviewTypes';
 import { Replacing } from '../behaviour/Replacing';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 
 import * as Sketcher from './Sketcher';
-import { SingleSketchFactory } from './UiSketcher';
+import type { SingleSketchFactory } from './UiSketcher';
 
 const factory: SingleSketchFactory<TabviewDetail, TabviewSpec> = (detail, _spec) => ({
   uid: detail.uid,

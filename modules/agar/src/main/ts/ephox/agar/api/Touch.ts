@@ -1,4 +1,4 @@
-import { Focus, SugarElement } from '@ephox/sugar';
+import { Focus, type SugarElement } from '@ephox/sugar';
 
 import * as Touches from '../touch/Touches';
 

@@ -1,22 +1,22 @@
 import { Arr, Fun } from '@ephox/katamari';
-import { EventArgs, Focus, SelectorFind, Selectors } from '@ephox/sugar';
+import { type EventArgs, Focus, SelectorFind, Selectors } from '@ephox/sugar';
 
 import * as Behaviour from '../../api/behaviour/Behaviour';
 // Not ideal coupling here.
 import { Positioning } from '../../api/behaviour/Positioning';
 import { Replacing } from '../../api/behaviour/Replacing';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Channels from '../../api/messages/Channels';
 import * as Attachment from '../../api/system/Attachment';
-import { ReceivingInternalEvent } from '../../events/SimulatedEvent';
+import type { ReceivingInternalEvent } from '../../events/SimulatedEvent';
 
 import * as TooltippingApis from './TooltippingApis';
 import { ExclusivityChannel, HideTooltipEvent, ImmediateHideTooltipEvent, ImmediateShowTooltipEvent, ShowTooltipEvent } from './TooltippingCommunication';
-import { TooltippingConfig, TooltippingState } from './TooltippingTypes';
+import type { TooltippingConfig, TooltippingState } from './TooltippingTypes';
 
 const events = (tooltipConfig: TooltippingConfig, state: TooltippingState): AlloyEvents.AlloyEventRecord => {
   const hide = (comp: AlloyComponent) => {

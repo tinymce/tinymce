@@ -1,14 +1,14 @@
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 
-import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
-import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
-import { LayeredItemTrigger } from '../../menu/layered/LayeredState';
+import type { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { SketchBehaviours } from '../../api/component/SketchBehaviours';
+import type { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
+import type { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
+import type { LayeredItemTrigger } from '../../menu/layered/LayeredState';
 
-import { ItemDataTuple } from './ItemTypes';
-import { MenuSpec } from './MenuTypes';
+import type { ItemDataTuple } from './ItemTypes';
+import type { MenuSpec } from './MenuTypes';
 
 export interface TieredMenuDetail extends SingleSketchDetail {
   uid: string;

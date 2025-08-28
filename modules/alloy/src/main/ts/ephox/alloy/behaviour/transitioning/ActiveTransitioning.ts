@@ -1,11 +1,11 @@
-import { EventArgs } from '@ephox/sugar';
+import type { EventArgs } from '@ephox/sugar';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
-import { Stateless } from '../common/BehaviourState';
+import type { Stateless } from '../common/BehaviourState';
 
 import * as TransitionApis from './TransitionApis';
-import { TransitioningConfig } from './TransitioningTypes';
+import type { TransitioningConfig } from './TransitioningTypes';
 
 const events = (transConfig: TransitioningConfig, transState: Stateless): AlloyEvents.AlloyEventRecord => AlloyEvents.derive([
   AlloyEvents.run<EventArgs<TransitionEvent>>(NativeEvents.transitionend(), (component, simulatedEvent) => {

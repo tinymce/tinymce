@@ -2,7 +2,7 @@ import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
 
-import { formComponentFields, FormComponent, FormComponentSpec } from './FormComponent';
+import { formComponentFields, type FormComponent, type FormComponentSpec } from './FormComponent';
 
 export interface SliderSpec extends FormComponentSpec {
   type: 'slider';

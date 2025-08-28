@@ -2,10 +2,10 @@ import { describe, it } from '@ephox/bedrock-client';
 import { SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import { Bounds, bounds } from 'ephox/alloy/alien/Boxes';
+import { type Bounds, bounds } from 'ephox/alloy/alien/Boxes';
 import * as Bubble from 'ephox/alloy/positioning/layout/Bubble';
 import * as Layout from 'ephox/alloy/positioning/layout/Layout';
-import { AnchorBox, AnchorElement, AnchorLayout } from 'ephox/alloy/positioning/layout/LayoutTypes';
+import type { AnchorBox, AnchorElement, AnchorLayout } from 'ephox/alloy/positioning/layout/LayoutTypes';
 import * as Bounder from 'ephox/alloy/positioning/view/Bounder';
 
 interface TestDecisionSpec {

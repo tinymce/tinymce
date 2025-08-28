@@ -1,9 +1,9 @@
 import { Objects } from '@ephox/boulder';
 
-import { DomDefinitionDetail } from '../../dom/DomDefinition';
+import type { DomDefinitionDetail } from '../../dom/DomDefinition';
 import * as DomModification from '../../dom/DomModification';
 
-import { TabstoppingConfig } from './TabstoppingTypes';
+import type { TabstoppingConfig } from './TabstoppingTypes';
 
 const exhibit = (base: DomDefinitionDetail, tabConfig: TabstoppingConfig): DomModification.DomModification =>
   DomModification.nu({

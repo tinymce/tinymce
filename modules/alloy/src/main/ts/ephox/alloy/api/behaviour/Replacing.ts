@@ -1,7 +1,7 @@
 import { FieldSchema } from '@ephox/boulder';
 
 import * as ReplaceApis from '../../behaviour/replacing/ReplaceApis';
-import { ReplacingBehaviour } from '../../behaviour/replacing/ReplacingTypes';
+import type { ReplacingBehaviour } from '../../behaviour/replacing/ReplacingTypes';
 
 import * as Behaviour from './Behaviour';
 

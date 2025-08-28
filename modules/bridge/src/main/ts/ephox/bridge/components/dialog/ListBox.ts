@@ -1,9 +1,9 @@
-import { FieldProcessor, FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
-import { Result } from '@ephox/katamari';
+import { type FieldProcessor, FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
+import type { Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
 
-import { FormComponentWithLabel, formComponentWithLabelFields, FormComponentWithLabelSpec } from './FormComponent';
+import { type FormComponentWithLabel, formComponentWithLabelFields, type FormComponentWithLabelSpec } from './FormComponent';
 
 export interface ListBoxSingleItemSpec {
   text: string;

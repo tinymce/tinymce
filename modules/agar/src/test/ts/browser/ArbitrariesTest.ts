@@ -1,7 +1,7 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import {
-  Attribute, Compare, Css, Insert, PredicateFilter, Remove, SelectorFilter, SugarBody, SugarElement, SugarNode, SugarText, Traverse, Truncate
+  Attribute, Compare, Css, Insert, PredicateFilter, Remove, SelectorFilter, SugarBody, type SugarElement, SugarNode, SugarText, Traverse, Truncate
 } from '@ephox/sugar';
 import * as fc from 'fast-check';
 

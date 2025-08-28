@@ -1,13 +1,13 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Optional } from '@ephox/katamari';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
 import * as Bubble from '../layout/Bubble';
 import * as LinkedLayout from '../layout/LinkedLayout';
 import * as Origins from '../layout/Origins';
 
-import { Anchoring, nu as NuAnchoring, SubmenuAnchor } from './Anchoring';
+import { type Anchoring, nu as NuAnchoring, type SubmenuAnchor } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 
 const placement = (component: AlloyComponent, submenuInfo: SubmenuAnchor, origin: Origins.OriginAdt): Optional<Anchoring> => {

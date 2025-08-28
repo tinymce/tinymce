@@ -1,4 +1,4 @@
-import { addStackTrace, TestLogs } from '../api/TestLogs';
+import { addStackTrace, type TestLogs } from '../api/TestLogs';
 
 export type NextFn<T> = (value: T, logs: TestLogs) => void;
 export type DieFn = (err: any, logs: TestLogs) => void;

@@ -1,6 +1,6 @@
 import { Chain, Logger, Mouse, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
-import { Classes, EventArgs, SelectorFind } from '@ephox/sugar';
+import { Classes, type EventArgs, SelectorFind } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviour';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';

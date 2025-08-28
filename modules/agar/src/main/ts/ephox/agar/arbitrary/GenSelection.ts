@@ -1,5 +1,5 @@
 import { Fun, Merger } from '@ephox/katamari';
-import { PredicateFilter, SimRange, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
+import { PredicateFilter, type SimRange, type SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 import * as fc from 'fast-check';
 
 export interface SelectionExclusions {

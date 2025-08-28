@@ -1,7 +1,7 @@
-import { TestStore, Waiter } from '@ephox/agar';
+import { type TestStore, Waiter } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Optional, Result } from '@ephox/katamari';
-import { Css, SelectorFind, Selectors, SugarElement, SugarLocation } from '@ephox/sugar';
+import { Css, SelectorFind, Selectors, type SugarElement, SugarLocation } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import * as Boxes from 'ephox/alloy/alien/Boxes';
@@ -9,9 +9,9 @@ import * as AddEventsBehaviour from 'ephox/alloy/api/behaviour/AddEventsBehaviou
 import { AllowBubbling } from 'ephox/alloy/api/behaviour/AllowBubbling';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Docking } from 'ephox/alloy/api/behaviour/Docking';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import type { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
+import type { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';

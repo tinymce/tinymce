@@ -1,13 +1,13 @@
-import { FieldProcessor } from '@ephox/boulder';
+import type { FieldProcessor } from '@ephox/boulder';
 import { Obj } from '@ephox/katamari';
 
 import * as AlloyParts from '../../parts/AlloyParts';
-import { PartTypeAdt } from '../../parts/PartType';
+import type { PartTypeAdt } from '../../parts/PartType';
 import * as Tagger from '../../registry/Tagger';
 import * as SpecSchema from '../../spec/SpecSchema';
-import { AlloySpec, SketchSpec } from '../component/SpecTypes';
+import type { AlloySpec, SketchSpec } from '../component/SpecTypes';
 
-import { CompositeSketchDetail, CompositeSketchSpec, SingleSketchDetail, SingleSketchSpec } from './Sketcher';
+import type { CompositeSketchDetail, CompositeSketchSpec, SingleSketchDetail, SingleSketchSpec } from './Sketcher';
 
 export type SingleSketchFactory<D extends SingleSketchDetail, S extends SingleSketchSpec> = (detail: D, specWithUid: S) => SketchSpec;
 export type CompositeSketchFactory<D extends CompositeSketchDetail, S extends CompositeSketchSpec> = (detail: D, components: AlloySpec[], spec: S, externals: any) => SketchSpec;

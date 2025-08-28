@@ -1,6 +1,6 @@
 import { Objects } from '@ephox/boulder';
 import { Arr, Fun, Merger, Obj, Optional } from '@ephox/katamari';
-import { Attribute, EventArgs, Focus, Value } from '@ephox/sugar';
+import { Attribute, type EventArgs, Focus, Value } from '@ephox/sugar';
 
 import * as AddEventsBehaviour from '../../api/behaviour/AddEventsBehaviour';
 import { Composing } from '../../api/behaviour/Composing';
@@ -12,19 +12,19 @@ import { Representing } from '../../api/behaviour/Representing';
 import { Sandboxing } from '../../api/behaviour/Sandboxing';
 import { Streaming } from '../../api/behaviour/Streaming';
 import { Toggling } from '../../api/behaviour/Toggling';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as SystemEvents from '../../api/events/SystemEvents';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import { DatasetRepresentingState } from '../../behaviour/representing/RepresentingTypes';
+import type { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import type { DatasetRepresentingState } from '../../behaviour/representing/RepresentingTypes';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
-import { CustomEvent, SimulatedEvent } from '../../events/SimulatedEvent';
+import type { CustomEvent, SimulatedEvent } from '../../events/SimulatedEvent';
 import { setCursorAtEnd, setValueFromItem } from '../../ui/typeahead/TypeaheadModel';
-import { NormalItemSpec } from '../../ui/types/ItemTypes';
-import { HighlightOnOpen, TieredData } from '../../ui/types/TieredMenuTypes';
-import { TypeaheadData, TypeaheadDetail, TypeaheadSpec } from '../../ui/types/TypeaheadTypes';
+import type { NormalItemSpec } from '../../ui/types/ItemTypes';
+import { HighlightOnOpen, type TieredData } from '../../ui/types/TieredMenuTypes';
+import type { TypeaheadData, TypeaheadDetail, TypeaheadSpec } from '../../ui/types/TypeaheadTypes';
 import * as InputBase from '../common/InputBase';
 
 import * as TypeaheadEvents from './TypeaheadEvents';

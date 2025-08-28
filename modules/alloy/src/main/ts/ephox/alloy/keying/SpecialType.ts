@@ -1,14 +1,14 @@
 import { FieldSchema } from '@ephox/boulder';
 
 import * as Keys from '../alien/Keys';
-import { AlloyComponent } from '../api/component/ComponentApi';
-import { NoState, Stateless } from '../behaviour/common/BehaviourState';
+import type { AlloyComponent } from '../api/component/ComponentApi';
+import { NoState, type Stateless } from '../behaviour/common/BehaviourState';
 import * as Fields from '../data/Fields';
-import { NativeSimulatedEvent } from '../events/SimulatedEvent';
+import type { NativeSimulatedEvent } from '../events/SimulatedEvent';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 
-import { SpecialConfig } from './KeyingModeTypes';
+import type { SpecialConfig } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 import { stopEventForFirefox } from './KeyingTypes';
 

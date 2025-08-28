@@ -1,4 +1,4 @@
-import { Hsv, Rgba } from './ColourTypes';
+import type { Hsv, Rgba } from './ColourTypes';
 
 const hsvColour = (hue: number, saturation: number, value: number): Hsv => ({
   hue,

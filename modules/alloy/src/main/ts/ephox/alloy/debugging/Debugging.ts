@@ -1,10 +1,10 @@
 import { Objects } from '@ephox/boulder';
 import { Arr, Cell, Fun, Global, Obj, Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
-import { AlloyComponent } from '../api/component/ComponentApi';
+import type { AlloyComponent } from '../api/component/ComponentApi';
 import * as SystemEvents from '../api/events/SystemEvents';
-import { GuiSystem } from '../api/system/Gui';
+import type { GuiSystem } from '../api/system/Gui';
 import * as AlloyLogger from '../log/AlloyLogger';
 
 export interface DebuggerLogger {

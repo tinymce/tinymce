@@ -1,7 +1,7 @@
 import { Arr, Fun, Obj, Type } from '@ephox/katamari';
 
-import { AlloyEventHandler, EventRunHandler } from '../api/events/AlloyEvents';
-import { EventFormat, SimulatedEvent } from '../events/SimulatedEvent';
+import type { AlloyEventHandler, EventRunHandler } from '../api/events/AlloyEvents';
+import type { EventFormat, SimulatedEvent } from '../events/SimulatedEvent';
 
 const defaultEventHandler = {
   can: Fun.always,

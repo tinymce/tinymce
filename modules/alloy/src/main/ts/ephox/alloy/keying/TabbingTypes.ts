@@ -1,17 +1,17 @@
-import { FieldProcessor, FieldSchema } from '@ephox/boulder';
+import { type FieldProcessor, FieldSchema } from '@ephox/boulder';
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Compare, Height, SelectorFilter, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
+import { Compare, Height, SelectorFilter, SelectorFind, type SugarElement, Traverse } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
-import { AlloyComponent } from '../api/component/ComponentApi';
+import type { AlloyComponent } from '../api/component/ComponentApi';
 import * as Channels from '../api/messages/Channels';
-import { NoState, Stateless } from '../behaviour/common/BehaviourState';
-import { NativeSimulatedEvent } from '../events/SimulatedEvent';
+import { NoState, type Stateless } from '../behaviour/common/BehaviourState';
+import type { NativeSimulatedEvent } from '../events/SimulatedEvent';
 import * as ArrNavigation from '../navigation/ArrNavigation';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 
-import { KeyRuleStatelessHandler, TabbingConfig } from './KeyingModeTypes';
+import type { KeyRuleStatelessHandler, TabbingConfig } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 
 const create = (cyclicField: FieldProcessor): KeyingType.KeyingType<TabbingConfig, Stateless> => {

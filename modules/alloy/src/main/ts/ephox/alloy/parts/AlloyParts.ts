@@ -1,9 +1,9 @@
-import { FieldPresence, FieldProcessor, FieldSchema, Objects, StructureSchema, ValueType } from '@ephox/boulder';
-import { Arr, Fun, Obj, Optional, Result } from '@ephox/katamari';
+import { FieldPresence, type FieldProcessor, FieldSchema, Objects, StructureSchema, ValueType } from '@ephox/boulder';
+import { Arr, Fun, Obj, Optional, type Result } from '@ephox/katamari';
 
-import { AlloyComponent } from '../api/component/ComponentApi';
-import { AlloySpec, SimpleOrSketchSpec, SketchSpec } from '../api/component/SpecTypes';
-import { CompositeSketchDetail } from '../api/ui/Sketcher';
+import type { AlloyComponent } from '../api/component/ComponentApi';
+import type { AlloySpec, SimpleOrSketchSpec, SketchSpec } from '../api/component/SpecTypes';
+import type { CompositeSketchDetail } from '../api/ui/Sketcher';
 import * as Fields from '../data/Fields';
 import * as UiSubstitutes from '../spec/UiSubstitutes';
 

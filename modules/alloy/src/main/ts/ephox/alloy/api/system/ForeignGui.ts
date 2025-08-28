@@ -1,15 +1,15 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
-import { Arr, Obj, Optional } from '@ephox/katamari';
-import { DomEvent, EventArgs, Insert, SugarElement } from '@ephox/sugar';
+import { Arr, Obj, type Optional } from '@ephox/katamari';
+import { DomEvent, type EventArgs, Insert, type SugarElement } from '@ephox/sugar';
 
-import { UncurriedHandler } from '../../events/EventRegistry';
+import type { UncurriedHandler } from '../../events/EventRegistry';
 import * as SimulatedEvent from '../../events/SimulatedEvent';
 import ForeignCache from '../../foreign/ForeignCache';
 import * as Tagger from '../../registry/Tagger';
-import { AlloyBehaviourRecord } from '../behaviour/Behaviour';
-import { AlloyComponent } from '../component/ComponentApi';
+import type { AlloyBehaviourRecord } from '../behaviour/Behaviour';
+import type { AlloyComponent } from '../component/ComponentApi';
 import * as GuiFactory from '../component/GuiFactory';
-import { AlloyEventRecord } from '../events/AlloyEvents';
+import type { AlloyEventRecord } from '../events/AlloyEvents';
 
 import * as Gui from './Gui';
 

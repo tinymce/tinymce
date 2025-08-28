@@ -1,8 +1,8 @@
-import { SidebarInstanceApi, SidebarSpec } from '../components/sidebar/Sidebar';
+import type { SidebarInstanceApi, SidebarSpec } from '../components/sidebar/Sidebar';
 
 // These are the types that are exposed though a public end user api
 
-export {
+export type {
   SidebarSpec,
   SidebarInstanceApi
 };

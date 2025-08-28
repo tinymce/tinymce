@@ -1,6 +1,6 @@
 import * as ActivePinching from '../../behaviour/pinching/ActivePinching';
 import PinchingSchema from '../../behaviour/pinching/PinchingSchema';
-import { PinchingBehaviour } from '../../behaviour/pinching/PinchingTypes';
+import type { PinchingBehaviour } from '../../behaviour/pinching/PinchingTypes';
 import * as DragState from '../../dragging/common/DragState';
 
 import * as Behaviour from './Behaviour';

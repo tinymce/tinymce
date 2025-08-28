@@ -1,16 +1,16 @@
-import { Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { Optional } from '@ephox/katamari';
+import type { SugarElement } from '@ephox/sugar';
 
-import { Bounds } from '../../alien/Boxes';
-import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
-import { LazySink } from '../../api/component/CommonTypes';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
-import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
-import { PlacementSpec } from '../../behaviour/positioning/PositioningTypes';
+import type { Bounds } from '../../alien/Boxes';
+import type { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
+import type { LazySink } from '../../api/component/CommonTypes';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { SketchBehaviours } from '../../api/component/SketchBehaviours';
+import type { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
+import type { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
+import type { PlacementSpec } from '../../behaviour/positioning/PositioningTypes';
 
-import { TieredData, TieredMenuSpec } from './TieredMenuTypes';
+import type { TieredData, TieredMenuSpec } from './TieredMenuTypes';
 
 export interface InlineViewDetail extends SingleSketchDetail {
   uid: string;

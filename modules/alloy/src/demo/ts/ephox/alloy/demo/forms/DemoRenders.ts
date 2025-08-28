@@ -1,14 +1,14 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
 
 import * as DomFactory from 'ephox/alloy/api/component/DomFactory';
-import { AlloySpec, RawDomSchema, SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
+import type { AlloySpec, RawDomSchema, SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
-import { ItemDataTuple, ItemSpec, SeparatorItemSpec, WidgetItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
-import { MenuSpec } from 'ephox/alloy/ui/types/MenuTypes';
-import { PartialMenuSpec, TieredMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
-import { ToolbarGroupSpec } from 'ephox/alloy/ui/types/ToolbarGroupTypes';
+import type { ItemDataTuple, ItemSpec, SeparatorItemSpec, WidgetItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
+import type { MenuSpec } from 'ephox/alloy/ui/types/MenuTypes';
+import type { PartialMenuSpec, TieredMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
+import type { ToolbarGroupSpec } from 'ephox/alloy/ui/types/ToolbarGroupTypes';
 
 export interface DemoItem {
   readonly type: 'item';

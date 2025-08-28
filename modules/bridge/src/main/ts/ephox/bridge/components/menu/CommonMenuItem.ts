@@ -1,5 +1,5 @@
-import { FieldProcessor, FieldSchema } from '@ephox/boulder';
-import { Optional } from '@ephox/katamari';
+import { type FieldProcessor, FieldSchema } from '@ephox/boulder';
+import type { Optional } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
 

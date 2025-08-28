@@ -1,9 +1,9 @@
-import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
-import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
-import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
+import type { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
+import type { SketchBehaviours } from '../../api/component/SketchBehaviours';
+import type { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
+import type { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
 
-import { TabButtonSpec } from './TabButtonTypes';
+import type { TabButtonSpec } from './TabButtonTypes';
 
 export interface TabbarDetail extends CompositeSketchDetail {
   uid: string;

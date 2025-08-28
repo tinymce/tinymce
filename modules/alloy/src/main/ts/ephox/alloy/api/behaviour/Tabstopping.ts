@@ -1,5 +1,5 @@
 import * as ActiveTabstopping from '../../behaviour/tabstopping/ActiveTabstopping';
-import { TabstoppingBehaviour } from '../../behaviour/tabstopping/TabstoppingTypes';
+import type { TabstoppingBehaviour } from '../../behaviour/tabstopping/TabstoppingTypes';
 import TabstopSchema from '../../behaviour/tabstopping/TabstopSchema';
 
 import * as Behaviour from './Behaviour';

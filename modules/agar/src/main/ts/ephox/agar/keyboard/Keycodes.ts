@@ -1,4 +1,4 @@
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, type Optional } from '@ephox/katamari';
 
 const keys = [
   { keyCode: 8, code: 'Backspace', key: 'Backspace' },

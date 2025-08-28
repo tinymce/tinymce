@@ -1,5 +1,5 @@
 import { Fun } from '@ephox/katamari';
-import { Focus, SugarElement } from '@ephox/sugar';
+import { Focus, type SugarElement } from '@ephox/sugar';
 
 import * as Clicks from '../mouse/Clicks';
 
