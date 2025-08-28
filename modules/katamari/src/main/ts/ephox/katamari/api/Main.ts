@@ -23,6 +23,7 @@ import * as Optionals from './Optionals';
 import * as Regex from './Regex';
 import * as Resolve from './Resolve';
 import { Result } from './Result';
+import { ResultAsync } from './ResultAsync';
 import * as ResultInstances from './ResultInstances';
 import * as Results from './Results';
 import * as Singleton from './Singleton';
@@ -61,6 +62,7 @@ export {
   Resolve,
   Result,
   Results,
+  ResultAsync,
   ResultInstances,
   Regex,
   Singleton,
