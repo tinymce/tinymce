@@ -1,8 +1,8 @@
-import { SimpleSpec } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
+import type { SimpleSpec } from '@ephox/alloy';
+import type { Dialog } from '@ephox/bridge';
 import { Arr } from '@ephox/katamari';
 
-import { UiFactoryBackstage } from '../../backstage/Backstage';
+import type { UiFactoryBackstage } from '../../backstage/Backstage';
 
 export type PanelSpec = Omit<Dialog.Panel, 'type'>;
 

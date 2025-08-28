@@ -1,4 +1,4 @@
-import { AlloyComponent, AlloyTriggers, Behaviour, Focusing, SketchSpec, Slider } from '@ephox/alloy';
+import { type AlloyComponent, AlloyTriggers, Behaviour, Focusing, type SketchSpec, Slider } from '@ephox/alloy';
 import { Fun } from '@ephox/katamari';
 import { Attribute } from '@ephox/sugar';
 

@@ -4,7 +4,7 @@ import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { SugarDocument } from '@ephox/sugar';
 
-import { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
+import type { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import * as GuiSetup from '../../module/GuiSetup';

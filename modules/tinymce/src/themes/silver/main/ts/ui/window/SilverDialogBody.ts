@@ -1,8 +1,8 @@
-import { AlloyComponent, AlloyParts, Behaviour, Focusing, Keying, ModalDialog, Reflecting, SimpleSpec, Tabstopping } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
+import { type AlloyComponent, type AlloyParts, Behaviour, Focusing, Keying, ModalDialog, Reflecting, type SimpleSpec, Tabstopping } from '@ephox/alloy';
+import type { Dialog } from '@ephox/bridge';
 import { Fun, Optional } from '@ephox/katamari';
 
-import { UiFactoryBackstage } from '../../backstage/Backstage';
+import type { UiFactoryBackstage } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { renderBodyPanel } from '../dialog/BodyPanel';
 import { renderTabPanel } from '../dialog/TabPanel';

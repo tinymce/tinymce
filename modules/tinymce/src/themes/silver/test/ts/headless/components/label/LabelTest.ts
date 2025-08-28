@@ -1,9 +1,9 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
-import { AlloyComponent, GuiFactory, Memento } from '@ephox/alloy';
+import { type AlloyComponent, GuiFactory, Memento } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
 
-import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
+import type { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderLabel } from 'tinymce/themes/silver/ui/dialog/Label';
 
 import * as GuiSetup from '../../../module/GuiSetup';

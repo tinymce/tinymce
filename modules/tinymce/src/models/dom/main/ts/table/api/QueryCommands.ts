@@ -1,9 +1,9 @@
 import { Obj } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
-import { LookupAction, TableActions } from '../actions/TableActions';
+import type { LookupAction, TableActions } from '../actions/TableActions';
 import * as Utils from '../core/TableUtils';
 import * as TableTargets from '../queries/TableTargets';
 import * as TableSelection from '../selection/TableSelection';

@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { SugarElement } from '@ephox/sugar';
 
-import { Editor, TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { Editor, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 // import ButtonSetupDemo from './ButtonSetupDemo';
 declare let tinymce: TinyMCE;

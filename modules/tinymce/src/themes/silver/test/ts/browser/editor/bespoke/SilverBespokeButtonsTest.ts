@@ -5,8 +5,8 @@ import { SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as MenuUtils from '../../../module/MenuUtils';
 

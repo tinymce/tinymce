@@ -1,10 +1,10 @@
-import { Attachment, Channels, Gui, SystemEvents } from '@ephox/alloy';
+import { Attachment, Channels, type Gui, SystemEvents } from '@ephox/alloy';
 import { Arr } from '@ephox/katamari';
-import { Compare, DomEvent, EventArgs, SugarDocument, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { Compare, DomEvent, type EventArgs, SugarDocument, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { AfterProgressStateEvent } from 'tinymce/core/api/EventTypes';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { AfterProgressStateEvent } from 'tinymce/core/api/EventTypes';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as ScrollingContext from './modes/ScrollingContext';
 

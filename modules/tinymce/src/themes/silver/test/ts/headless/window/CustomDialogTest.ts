@@ -1,10 +1,10 @@
 import { FocusTools, Keyboard, Keys, Mouse, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { before, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { Checked, SugarBody, SugarDocument, SugarElement } from '@ephox/sugar';
+import { Checked, SugarBody, SugarDocument, type SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
+import type { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import * as GuiSetup from '../../module/GuiSetup';

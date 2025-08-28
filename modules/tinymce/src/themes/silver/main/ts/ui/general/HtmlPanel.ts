@@ -1,9 +1,9 @@
-import { AlloyComponent, Behaviour, Bubble, Container as AlloyContainer, Focusing, Layout, SketchSpec, Tabstopping, Tooltipping, AddEventsBehaviour, AlloyEvents } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
+import { type AlloyComponent, Behaviour, Bubble, Container as AlloyContainer, Focusing, Layout, type SketchSpec, Tabstopping, Tooltipping, AddEventsBehaviour, AlloyEvents } from '@ephox/alloy';
+import type { Dialog } from '@ephox/bridge';
 import { Fun } from '@ephox/katamari';
 import { Attribute, Focus, SelectorFind } from '@ephox/sugar';
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 
 type HtmlPanelSpec = Omit<Dialog.HtmlPanel, 'type'>;
 

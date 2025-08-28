@@ -1,9 +1,9 @@
 import { Fun, Singleton } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 
-import { FormatterFormatItem } from './complex/BespokeSelect';
+import type { FormatterFormatItem } from './complex/BespokeSelect';
 
 const composeUnbinders = (f: VoidFunction, g: VoidFunction): VoidFunction => () => {
   f();

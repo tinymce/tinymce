@@ -1,6 +1,6 @@
 import { Arr, Obj, Type } from '@ephox/katamari';
 
-import { Menu } from 'tinymce/core/api/ui/Ui';
+import type { Menu } from 'tinymce/core/api/ui/Ui';
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
 
 export interface ColorCache {

@@ -1,9 +1,9 @@
 import { HsvColour } from '@ephox/acid';
 import { UiControls, UiFinder, Waiter } from '@ephox/agar';
-import { AlloyComponent, GuiFactory } from '@ephox/alloy';
+import { type AlloyComponent, GuiFactory } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import { renderColorPicker } from 'tinymce/themes/silver/ui/dialog/ColorPicker';

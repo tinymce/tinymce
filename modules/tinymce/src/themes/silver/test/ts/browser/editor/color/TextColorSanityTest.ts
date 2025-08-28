@@ -4,7 +4,7 @@ import { Arr } from '@ephox/katamari';
 import { SugarBody, SugarShadowDom } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
 import * as ColorCache from 'tinymce/themes/silver/ui/core/color/ColorCache';
 import { getColorCols } from 'tinymce/themes/silver/ui/core/color/Options';

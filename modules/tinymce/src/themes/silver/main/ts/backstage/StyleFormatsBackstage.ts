@@ -1,9 +1,9 @@
 import { Cell, Optional } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { BlockFormat, InlineFormat } from 'tinymce/core/api/fmt/Format';
+import type Editor from 'tinymce/core/api/Editor';
+import type { BlockFormat, InlineFormat } from 'tinymce/core/api/fmt/Format';
 
-import { FormatItem } from '../ui/core/complex/BespokeSelect';
+import type { FormatItem } from '../ui/core/complex/BespokeSelect';
 import { getStyleFormats } from '../ui/core/complex/StyleFormat';
 import * as FormatRegister from '../ui/core/complex/utils/FormatRegister';
 

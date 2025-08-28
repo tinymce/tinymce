@@ -1,11 +1,11 @@
 import { Arr, Obj, Type } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Menu } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Menu } from 'tinymce/core/api/ui/Ui';
 
 import * as Options from '../../../api/Options';
 
-import { MenubarItemSpec } from './SilverMenubar';
+import type { MenubarItemSpec } from './SilverMenubar';
 
 interface MenuSpec {
   readonly title: string;

@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Mouse, Waiter } from '@ephox/agar';
-import { AlloyComponent, GuiFactory } from '@ephox/alloy';
+import { type AlloyComponent, GuiFactory } from '@ephox/alloy';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
-import { Menu, Toolbar } from '@ephox/bridge';
+import type { Menu, Toolbar } from '@ephox/bridge';
 import { Cell, Fun, Optional } from '@ephox/katamari';
 import { Attribute, Class, SelectorFind } from '@ephox/sugar';
 import { assert } from 'chai';

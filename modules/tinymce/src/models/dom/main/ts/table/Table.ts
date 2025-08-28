@@ -1,5 +1,5 @@
-import Editor from 'tinymce/core/api/Editor';
-import { Model } from 'tinymce/core/api/ModelManager';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Model } from 'tinymce/core/api/ModelManager';
 
 import * as Clipboard from './actions/Clipboard';
 import { TableActions } from './actions/TableActions';

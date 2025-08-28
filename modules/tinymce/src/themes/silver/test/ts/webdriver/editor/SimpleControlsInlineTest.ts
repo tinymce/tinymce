@@ -3,7 +3,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
 import { McEditor } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.core.SimpleControlsInlineTest', () => {
 

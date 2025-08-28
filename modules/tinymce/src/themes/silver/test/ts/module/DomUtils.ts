@@ -1,5 +1,5 @@
 import { FocusTools, UiFinder } from '@ephox/agar';
-import { AlloyComponent, AlloyTriggers } from '@ephox/alloy';
+import { type AlloyComponent, AlloyTriggers } from '@ephox/alloy';
 import { Traverse, Value } from '@ephox/sugar';
 import { assert } from 'chai';
 

@@ -1,5 +1,5 @@
-import { KeyingConfigSpec, MenuTypes } from '@ephox/alloy';
-import { Toolbar } from '@ephox/bridge';
+import type { KeyingConfigSpec, MenuTypes } from '@ephox/alloy';
+import type { Toolbar } from '@ephox/bridge';
 import { Optional } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 

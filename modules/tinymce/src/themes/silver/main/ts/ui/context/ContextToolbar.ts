@@ -1,20 +1,20 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, AnchorSpec, Behaviour, GuiFactory, InlineView, Keying, Positioning
+  AddEventsBehaviour, type AlloyComponent, AlloyEvents, type AlloySpec, AlloyTriggers, type AnchorSpec, Behaviour, GuiFactory, InlineView, Keying, Positioning
 } from '@ephox/alloy';
-import { InlineContent, Toolbar } from '@ephox/bridge';
+import { InlineContent, type Toolbar } from '@ephox/bridge';
 import { Arr, Fun, Id, Merger, Obj, Optional, Optionals, Singleton, Throttler, Thunk } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Class, Compare, Css, Focus, SugarElement } from '@ephox/sugar';
+import { Class, Compare, Css, Focus, type SugarElement } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { DisabledStateChangeEvent } from 'tinymce/core/api/EventTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { DisabledStateChangeEvent } from 'tinymce/core/api/EventTypes';
 import Delay from 'tinymce/core/api/util/Delay';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import VK from 'tinymce/core/api/util/VK';
 
 import * as Events from '../../api/Events';
 import { getToolbarMode, ToolbarMode } from '../../api/Options';
-import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import type { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { renderToolbar } from '../toolbar/CommonToolbar';
 import { identifyButtons } from '../toolbar/Integration';
 

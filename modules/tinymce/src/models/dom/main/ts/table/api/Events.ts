@@ -6,9 +6,9 @@
  Make sure that if making changes to this file, the other files are updated as well
  */
 
-import Editor from 'tinymce/core/api/Editor';
-import { NewTableCellEvent, NewTableRowEvent, TableEventData } from 'tinymce/core/api/EventTypes';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { NewTableCellEvent, NewTableRowEvent, TableEventData } from 'tinymce/core/api/EventTypes';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 // Duplicated in modules/tinymce/src/themes/silver/main/ts/ui/selector/TableSelectorHandles.ts
 // NOTE: This is an internal only event so not publicly exposing the interface in EventTypes.ts

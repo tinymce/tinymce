@@ -1,15 +1,15 @@
-import { TieredData, TieredMenu } from '@ephox/alloy';
+import { type TieredData, TieredMenu } from '@ephox/alloy';
 import { Objects } from '@ephox/boulder';
 import { Id, Merger, Obj, Optional } from '@ephox/katamari';
 
-import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+import type { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
-import ItemResponse from '../item/ItemResponse';
+import type ItemResponse from '../item/ItemResponse';
 
 import { expand } from './MenuConversion';
-import { MenuSearchMode } from './searchable/SearchableMenu';
+import type { MenuSearchMode } from './searchable/SearchableMenu';
 import { createPartialMenu } from './SingleMenu';
-import { SingleMenuItemSpec } from './SingleMenuTypes';
+import type { SingleMenuItemSpec } from './SingleMenuTypes';
 
 export interface NestedMenusSettings {
   readonly isHorizontalMenu: boolean;

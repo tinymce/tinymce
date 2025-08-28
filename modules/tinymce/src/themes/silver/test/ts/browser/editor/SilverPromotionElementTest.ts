@@ -4,7 +4,7 @@ import { SugarElement } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.SilverPromotionElementTest', () => {
   context('editor without menubar', () => {

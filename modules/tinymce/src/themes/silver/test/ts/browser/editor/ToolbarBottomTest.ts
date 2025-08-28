@@ -6,8 +6,8 @@ import { SugarBody } from '@ephox/sugar';
 import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 
 interface Scenario {
   readonly options: RawEditorOptions;

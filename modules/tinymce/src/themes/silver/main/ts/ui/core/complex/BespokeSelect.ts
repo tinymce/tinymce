@@ -1,11 +1,11 @@
-import { AlloyComponent, Disabling, SketchSpec, TieredData, Tooltipping } from '@ephox/alloy';
+import { type AlloyComponent, Disabling, type SketchSpec, type TieredData, Tooltipping } from '@ephox/alloy';
 import { Arr, Cell, Fun, Optional } from '@ephox/katamari';
 import { Attribute } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Menu } from 'tinymce/core/api/ui/Ui';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Menu } from 'tinymce/core/api/ui/Ui';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
 import { renderCommonDropdown } from '../../dropdown/CommonDropdown';
 import ItemResponse from '../../menus/item/ItemResponse';
@@ -13,8 +13,8 @@ import * as NestedMenus from '../../menus/menu/NestedMenus';
 import { ToolbarButtonClasses } from '../../toolbar/button/ButtonClasses';
 import { composeUnbinders, onSetupEvent } from '../ControlUtils';
 
-import { SelectDataset } from './SelectDatasets';
-import { NestedStyleFormat } from './StyleFormat';
+import type { SelectDataset } from './SelectDatasets';
+import type { NestedStyleFormat } from './StyleFormat';
 import * as FormatRegister from './utils/FormatRegister';
 import * as Tooltip from './utils/Tooltip';
 
