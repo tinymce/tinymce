@@ -16,6 +16,7 @@
     "noImplicitReturns": true,
     "strict": true,
     "noEmitOnError": true,
-    "types": []
+    "types": [],
+    "verbatimModuleSyntax": true,
   }
 }
