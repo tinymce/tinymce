@@ -82,7 +82,6 @@ const go = (
   // 1. Find our current tabstop
   // 2. Find the index of that tabstop
   // 3. Cycle the tabstop
-  // 4. Fire alloy focus on the resultant tabstop
   const tabstops = SelectorFilter.descendants<HTMLElement>(component, tabbingConfig.selector);
   return findCurrent(component, tabbingConfig).bind((tabstop) => {
     // focused component

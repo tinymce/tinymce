@@ -8,10 +8,11 @@
     "types": [
       "node"
     ],
-    "module": "nodenext",
+    "module": "esnext",
     "skipLibCheck": true,
-    "moduleResolution": "nodenext",
+    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
+    "allowSyntheticDefaultImports": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
     "noEmit": true,
@@ -26,7 +27,6 @@
     "vite.config.ts",
     "vitest.config.ts",
     "playwright.config.ts",
-    "src/test/ts/visual.spec.ts",
-    "src/test/**/*.spec.ts"
+    "src/test/ts/visual.spec.ts"
   ]
 }

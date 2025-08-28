@@ -1,4 +1,4 @@
-import { Button } from 'oxide-components/button/Button.component';
+import { Button } from 'oxide-components/components/button/Button';
 import React, { useState } from 'react';
 
 const App: React.FC = () => {

@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: "The editor `DomParser` API can now parse full documents when the API's `root_name` option is set to `#document`."
+time: 2025-07-04T07:22:38.998267+02:00
+custom:
+    Issue: TINY-12589

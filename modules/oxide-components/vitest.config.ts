@@ -14,7 +14,16 @@ export default defineConfig({
       {
         test: {
           name: 'browser',
-          include: [ 'src/test/ts/browser/**/*.spec.ts' ],
+          setupFiles: [ './vitest.setup.js' ],
+          alias: [
+            {
+              find: 'oxide-components',
+              replacement: fileURLToPath(new URL('./src/main/ts/', import.meta.url))
+            }
+          ],
+          include: [
+            'src/test/ts/browser/**/*.spec.{ts,tsx}'
+          ],
           browser: {
             provider: 'playwright',
             enabled: true,

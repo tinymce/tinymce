@@ -15,6 +15,7 @@ const config: StorybookConfig = {
     getAbsolutePath("@storybook/addon-a11y"),
     getAbsolutePath("@storybook/addon-vitest"),
     getAbsolutePath("@storybook/addon-docs"),
+    getAbsolutePath("storybook-addon-pseudo-states")
   ],
   framework: {
     "name": "@storybook/react-vite",
@@ -27,6 +28,13 @@ const config: StorybookConfig = {
     config.server ??= {}
     config.server.allowedHosts = ['host.docker.internal'];
     return config;
+  },
+  typescript: {
+    reactDocgen: "react-docgen-typescript",
+    reactDocgenTypescriptOptions: {
+      propFilter: (prop) => prop.parent?.fileName.includes("src") ?? false,
+      shouldRemoveUndefinedFromOptional: true,
+    },
   }
 };
 export default config;

@@ -206,11 +206,12 @@ def cacheName = "cache_${BUILD_TAG}"
 
 def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NUMBER}"
 
-timestamps { alertWorseResult(
+timestamps { notifyStatusChange(
   cleanupStep: { devPods.cleanUpPod(build: cacheName) },
   branches: ['main', 'release/7', 'release/8'],
   channel: '#tinymce-build-status',
-  name: 'TinyMCE'
+  name: 'TinyMCE',
+  mention: true
   ) {
   devPods.nodeProducer(
     nodeOpts: [
@@ -319,8 +320,14 @@ timestamps { alertWorseResult(
   processes['playwright'] = runPlaywrightPod(cacheName, 'playwright-tests') {
     exec('yarn -s --cwd modules/oxide-components test-ci')
     junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
-    exec('yarn -s --cwd modules/oxide-components test-visual-ci')
+    def visualTestStatus = exec(script: 'yarn -s --cwd modules/oxide-components test-visual-ci', returnStatus: true)
+    if (visualTestStatus == 4) {
+      unstable("Visual tests failed")
+    } else if (visualTestStatus != 0) {
+      error("Unexpected error running visual tests")
+    }
     junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results-visual.xml'
+    exec('find modules/oxide-components -name "*.png" -type f || echo "No PNG files found"')
     archiveArtifacts artifacts: 'modules/oxide-components/test-results/**/*.png', allowEmptyArchive: true, fingerprint: true
   }
 
