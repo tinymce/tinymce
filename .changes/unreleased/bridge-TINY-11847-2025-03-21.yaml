@@ -1,0 +1,6 @@
+project: bridge
+kind: Added
+body: Menu buttons now have a `setTooltip` API.
+time: 2025-03-21T11:37:15.143112+01:00
+custom:
+    Issue: TINY-11847

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Plugin: help Demo Page</title>
+  </head>
+
+  <body>
+  <h1>Plugin: help Demo Page</h1>
+  <p><strong>Note:</strong> Check that the plugins list renders in the dialog. If you mess with the order in which things happen, that can break. IgnoreForcedPluginsTest should also break if that happens.</p>
+    <div id="ephox-ui">
+      <h2>Standard help dialog</h2>
+      <textarea cols="30" rows="10" class="tinymce"></textarea>
+      <h2>help_tabs Demo</h2>
+      <p>Should have shortcuts, plugins, a custom Version tab that should override the default version tab then an extra tab.</p>
+      <textarea cols="30" rows="10" class="tinymce2"></textarea>
+      <h2>addTab() Demo</h2>
+      <p>Should have shortcuts, plugins, an extra tab then Version. When you click the Add Tab toolbar button, a second extra tab should appear before the Version tab.</p>
+      <textarea cols="30" rows="10" class="tinymce3"></textarea>
+      <h2>help_tab and addTab() Demo</h2>
+      <p>Should have shortcuts, Version, extra3, extra, then extra2. When you click the Add Tab toolbar button, an extra4 tab should appear after the Version tab. There is an 'extra5' tab in the config that should never display - see comments for why.</p>
+      <textarea cols="30" rows="10" class="tinymce4"></textarea>
+    </div>
+    <script src="../../../../../js/tinymce/tinymce.js"></script>
+    <script src="../../../../../scratch/demos/plugins/help/demo.js"></script>
+  </body>
+</html>

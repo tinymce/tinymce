@@ -1,0 +1,42 @@
+//
+// Promotion
+//
+
+@promotion-background-color: #E8F1F8;
+@promotion-background-hover-color: #B4D7FF;
+@promotion-background-active-color: #D9EDF7;
+@promotion-button-height: @menubar-select-font-size * 1.9;
+@promotion-text-color: #086BE6;
+
+.tox {
+  .tox-promotion {
+    background: @menubar-background;
+    background-color: @menubar-background-color;
+    grid-column: 2;
+    grid-row: 1;
+    padding-inline-end: 8px;
+    padding-inline-start: 4px;
+    padding-top: 5px;
+  }
+
+  .tox-promotion-link {
+    align-items: unsafe center;
+    background-color: @promotion-background-color;
+    border-radius: 5px;
+    color: @promotion-text-color;
+    cursor: pointer;
+    display: flex;
+    font-size: @menubar-select-font-size;
+    height: @promotion-button-height;
+    padding: 4px 8px;
+    white-space: nowrap;
+
+    &:hover {
+      background-color: @promotion-background-hover-color;
+    }
+
+    &:focus {
+      background-color: @promotion-background-active-color;
+    }
+  }
+}

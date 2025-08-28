@@ -1,0 +1,310 @@
+//
+// Notification
+//
+
+@notification-border-radius: @panel-border-radius;
+@notification-box-shadow: none;
+@notification-font-size: @font-size-sm;
+@notification-font-weight: @font-weight-normal;
+@notification-padding: @pad-xs;
+@notification-link-text-decoration: underline;
+@notification-link-hover-text-decoration: underline;
+@notification-link-active-text-decoration: underline;
+@notification-link-focus-outline-border-radius: 1px;
+@notification-focus-border-color: @textfield-focus-border-color;
+@notification-focus-box-shadow: @textfield-focus-box-shadow;
+
+@notification-success-background-color: mix(@background-color, @color-success, 80%);
+@notification-success-border-color: mix(@background-color, @color-success, 70%);
+@notification-success-text-color: @text-color;
+@notification-success-link-color: mix(@text-color, @color-success, 45%);
+@notification-success-link-hover-color: darken(@notification-success-link-color, 20%);
+@notification-success-link-active-color: darken(@notification-success-link-color, 30%);
+@notification-success-link-focus-outline-color: @notification-success-link-color;
+
+// Yellow warning color mixes particularly bad with darker colors, hence additional checks
+@notification-warn-background-color: .bg-luma-checker(tint(@_color-warn, 80%), @background-color)[@result];
+@notification-warn-border-color: .bg-luma-checker(tint(@_color-warn, 70%), @tinymce-separator-color)[@result];
+@notification-warn-text-color: .bg-luma-checker(@text-color, mix(@text-color, @_color-warn, 70%))[@result];
+@notification-warn-link-color: .bg-luma-checker(mix(@text-color, @_color-warn, 60%), @_color-warn)[@result];
+@notification-warn-link-hover-color: darken(@notification-warn-link-color, 20%);
+@notification-warn-link-active-color: darken(@notification-warn-link-color, 30%);
+@notification-warn-link-focus-outline-color: @notification-warn-link-color;
+
+@notification-error-background-color: mix(@background-color, @color-error, 80%);
+@notification-error-border-color: mix(@background-color, @color-error, 70%);
+@notification-error-text-color: @text-color;
+@notification-error-link-color: mix(@text-color, @color-error, 50%);
+@notification-error-link-hover-color: darken(@notification-error-link-color, 20%);
+@notification-error-link-active-color: darken(@notification-error-link-color, 30%);
+@notification-error-link-focus-outline-color: @notification-error-link-color;
+
+@notification-info-background-color: mix(@background-color, @_color-info, 80%);
+@notification-info-border-color: mix(@background-color, @_color-info, 70%);
+@notification-info-text-color: @text-color;
+@notification-info-link-color: mix(@text-color, @_color-info, 40%);
+@notification-info-link-hover-color: darken(@notification-info-link-color, 20%);
+@notification-info-link-active-color: darken(@notification-info-link-color, 30%);
+@notification-info-link-focus-outline-color: @notification-info-link-color;
+
+// Private variables
+@_color-warn: #ffcc00;
+@_color-info: #3087eb;
+
+.tox {
+  // Wraps around many notifications
+  .tox-notifications-container {
+    //
+  }
+
+  // An individual notification
+  .tox-notification {
+    border-radius: @notification-border-radius;
+    border-style: solid;
+    border-width: 1px;
+    box-shadow: @notification-box-shadow;
+    box-sizing: border-box;
+    display: grid;
+    font-size: @notification-font-size;
+    font-weight: @notification-font-weight;
+    grid-template-columns: minmax(40px, 1fr) auto minmax(40px, 1fr);
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: @pad-xs;
+    opacity: 0;
+    padding: @notification-padding;
+    transition: transform 100ms ease-in, opacity 150ms ease-in;
+    width: max-content;
+
+    a {
+      cursor: pointer;
+      text-decoration: @notification-link-text-decoration;
+    }
+
+    p {
+      font-size: @notification-font-size;
+      font-weight: @notification-font-weight;
+    }
+
+    &:focus {
+      border-color: @notification-focus-border-color;
+      box-shadow: @notification-focus-box-shadow;
+    }
+  }
+
+  .tox-notification--in {
+    opacity: 1;
+  }
+
+  .tox-notification--success {
+    background-color: @notification-success-background-color;
+    border-color: @notification-success-border-color;
+    color: @notification-success-text-color;
+
+    p {
+      color: @notification-success-text-color;
+    }
+
+    a {
+      color: @notification-success-link-color;
+
+      &:hover,
+      &:focus {
+        color: @notification-success-link-hover-color;
+        text-decoration: @notification-link-hover-text-decoration;
+      }
+
+      &:focus-visible {
+        border-radius: @notification-link-focus-outline-border-radius;
+        outline: 2px solid @notification-success-link-focus-outline-color;
+        outline-offset: 2px;
+      }
+
+      &:active {
+        color: @notification-success-link-active-color;
+        text-decoration: @notification-link-active-text-decoration;
+      }
+    }
+
+    svg {
+      fill: @notification-success-text-color;
+    }
+  }
+
+  .tox-notification--error {
+    background-color: @notification-error-background-color;
+    border-color: @notification-error-border-color;
+    color: @notification-error-text-color;
+
+    p {
+      color: @notification-error-text-color;
+    }
+
+    a {
+      color: @notification-error-link-color;
+
+      &:hover,
+      &:focus {
+        color: @notification-error-link-hover-color;
+        text-decoration: @notification-link-hover-text-decoration;
+      }
+
+      &:focus-visible {
+        border-radius: @notification-link-focus-outline-border-radius;
+        outline: 2px solid @notification-error-link-focus-outline-color;
+        outline-offset: 2px;
+      }
+
+      &:active {
+        color: @notification-error-link-active-color;
+        text-decoration: @notification-link-active-text-decoration;
+      }
+    }
+
+    svg {
+      fill: @notification-error-text-color;
+    }
+  }
+
+  .tox-notification--warn,
+  .tox-notification--warning {
+    background-color: @notification-warn-background-color;
+    border-color: @notification-warn-border-color;
+    color: @notification-warn-text-color;
+
+    p {
+      color: @notification-warn-text-color;
+    }
+
+    a {
+      color: @notification-warn-link-color;
+
+      &:hover,
+      &:focus {
+        color: @notification-warn-link-hover-color;
+        text-decoration: @notification-link-hover-text-decoration;
+      }
+
+      &:focus-visible {
+        border-radius: @notification-link-focus-outline-border-radius;
+        outline: 2px solid @notification-warn-link-focus-outline-color;
+        outline-offset: 2px;
+      }
+
+      &:active {
+        color: @notification-warn-link-active-color;
+        text-decoration: @notification-link-active-text-decoration;
+      }
+    }
+
+    svg {
+      fill: @notification-warn-text-color;
+    }
+  }
+
+  .tox-notification--info {
+    background-color: @notification-info-background-color;
+    border-color: @notification-info-border-color;
+    color: @notification-info-text-color;
+
+    p {
+      color: @notification-info-text-color;
+    }
+
+    a {
+      color: @notification-info-link-color;
+
+      &:hover,
+      &:focus {
+        color: @notification-info-link-hover-color;
+        text-decoration: @notification-link-hover-text-decoration;
+      }
+
+      &:focus-visible {
+        border-radius: @notification-link-focus-outline-border-radius;
+        outline: 2px solid @notification-info-link-focus-outline-color;
+        outline-offset: 2px;
+      }
+
+      &:active {
+        color: @notification-info-link-active-color;
+        text-decoration: @notification-link-active-text-decoration;
+      }
+    }
+
+    svg {
+      fill: @notification-info-text-color;
+    }
+  }
+
+  // Content within the notification
+  .tox-notification__body {
+    align-self: center;
+    color: @text-color;
+    font-size: 14px;
+    grid-column-end: 3;
+    grid-column-start: 2;
+    grid-row-end: 2;
+    grid-row-start: 1;
+    text-align: center;
+    white-space: normal;
+    word-break: break-all;
+    word-break: break-word;
+  }
+
+  .tox-notification__body > * {
+    margin: 0;
+  }
+
+  .tox-notification__body > * + * {
+    margin-top: 1rem;
+  }
+
+  .tox-notification__icon {
+    align-self: center;
+    grid-column-end: 2;
+    grid-column-start: 1;
+    grid-row-end: 2;
+    grid-row-start: 1;
+    justify-self: end;
+  }
+
+  .tox-notification__icon svg {
+    display: block;
+  }
+
+  .tox-notification__dismiss {
+    align-self: start;
+    grid-column-end: 4;
+    grid-column-start: 3;
+    grid-row-end: 2;
+    grid-row-start: 1;
+    justify-self: end;
+  }
+
+  .tox-notification .tox-progress-bar {
+    grid-column-end: 4;
+    grid-column-start: 1;
+    grid-row-end: 3;
+    grid-row-start: 2;
+    justify-self: center;
+  }
+
+  .tox-notification-container-dock-fadeout {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .tox-notification-container-dock-fadein {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .tox-notification-container-dock-transition {
+    transition: visibility 0s linear .3s, opacity .3s ease;
+  }
+
+  .tox-notification-container-dock-transition.tox-notification-container-dock-fadein {
+    transition-delay: 0s;
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "name": "@ephox/sand",
+  "version": "7.0.0",
+  "description": "Platform detection library",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tinymce/tinymce.git",
+    "directory": "modules/sand"
+  },
+  "sideEffects": false,
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "README.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "scripts": {
+    "prepublishOnly": "tsc -b",
+    "build": "tsc",
+    "test": "bedrock-auto -b chrome-headless -d src/test/ts",
+    "test-manual": "bedrock -d src/test/ts",
+    "lint": "eslint --max-warnings=0 src/**/*.ts"
+  },
+  "keywords": [
+    "platform"
+  ],
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
+  "license": "GPL-2.0-or-later",
+  "dependencies": {
+    "@ephox/katamari": "^10.0.0"
+  },
+  "main": "./lib/main/ts/ephox/sand/api/Main.js",
+  "module": "./lib/main/ts/ephox/sand/api/Main.js",
+  "types": "./lib/main/ts/ephox/sand/api/Main.d.ts"
+}

@@ -1,0 +1,18 @@
+//
+// Object
+//
+
+@object-border: 1px dashed #aaa;
+
+// Styles for the `<object>` tag
+.mce-object {
+  & when (@content-ui-darkmode = true) {
+    background: transparent data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/object-light.svg') no-repeat center;
+  }
+
+  & when (@content-ui-darkmode = false) {
+    background: transparent data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/object.svg') no-repeat center;
+  }
+
+  border: @object-border;
+}

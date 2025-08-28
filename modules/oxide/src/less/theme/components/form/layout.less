@@ -1,0 +1,112 @@
+//
+// Form layout
+//
+
+@form-group-vertical-spacing: @pad-xs;
+@form-group-horizontal-spacing: @pad-xs;
+@form-grid-horizontal-gap: @pad-sm;
+@form-group-error-text-color: @color-error;
+
+.tox {
+  .tox-form {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  }
+
+  // Wraps a label and input combo.
+  .tox-form__group {
+    box-sizing: border-box;
+    margin-bottom: @form-group-vertical-spacing;
+  }
+
+  // Make group take up all remaining width.
+  .tox-form-group--maximize {
+    flex: 1;
+  }
+
+  // Modifier for validation error
+  .tox-form__group--error {
+    color: @form-group-error-text-color;
+  }
+
+  .tox-form__group--collection {
+    display: flex;
+  }
+
+  .tox-form__grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  // Escape the calc expression otherwise less incorrectly converts this to 42%
+  // https://github.com/less/less.js/issues/3047 and https://github.com/less/less.js/issues/2837
+  .tox-form__grid--2col > .tox-form__group {
+    width: calc(~"50% - (@{form-grid-horizontal-gap} / 2)");
+  }
+
+  .tox-form__grid--3col > .tox-form__group {
+    width: calc(~"100% / 3 - (@{form-grid-horizontal-gap} / 2)");
+  }
+
+  .tox-form__grid--4col > .tox-form__group {
+    width: calc(~"25% - (@{form-grid-horizontal-gap} / 2)");
+  }
+
+  // Horizontally stack elements.
+  // Should allow both aligning controls, as well as
+  // `.form-groups`.
+  .tox-form__controls-h-stack {
+    align-items: center;
+    display: flex;
+  }
+
+  .tox-form__group--inline {
+    align-items: center;
+    display: flex;
+  }
+
+  // Stretch contents to fit the height and width of parent container
+  .tox-form__group--stretched {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    // Any styles that use `.tox-form__group--stretched` should only contain rules for flex or more generally the layout.
+    // Behavioural styles (such as `white-space`) belong in the specific component styles
+    .tox-textarea {
+      flex: 1;
+    }
+
+    .tox-navobj {
+      display: flex;
+      flex: 1;
+    }
+
+    // the nav object spec is surrounded by tab stop objects, so apply flex to the middle element
+    .tox-navobj :nth-child(2) {
+      flex: 1;
+      // IE 11
+      height: 100%;
+    }
+  }
+}
+
+.tox:not([dir=rtl]) {
+  .tox-form__controls-h-stack {
+    > *:not(:first-child) {
+      margin-left: @form-group-horizontal-spacing;
+    }
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-form__controls-h-stack {
+    > *:not(:first-child) {
+      margin-right: @form-group-horizontal-spacing;
+    }
+  }
+}

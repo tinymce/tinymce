@@ -1,0 +1,41 @@
+{
+  "name": "@ephox/darwin",
+  "description": "This project's purpose is to handle selection and cursor navigation.",
+  "version": "9.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tinymce/tinymce.git",
+    "directory": "modules/darwin"
+  },
+  "sideEffects": false,
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "README.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "dependencies": {
+    "@ephox/katamari": "^10.0.0",
+    "@ephox/phoenix": "^9.0.0",
+    "@ephox/robin": "^11.0.0",
+    "@ephox/sand": "^7.0.0",
+    "@ephox/snooker": "^12.0.0",
+    "@ephox/sugar": "^10.0.0"
+  },
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
+  "license": "GPL-2.0-or-later",
+  "main": "./lib/main/ts/ephox/darwin/api/Main.js",
+  "module": "./lib/main/ts/ephox/darwin/api/Main.js",
+  "types": "./lib/main/ts/ephox/darwin/api/Main.d.ts",
+  "scripts": {
+    "test": "tsc -b",
+    "lint": "eslint --max-warnings=0 src/**/*.ts",
+    "prepublishOnly": "tsc -b",
+    "build": "tsc"
+  }
+}

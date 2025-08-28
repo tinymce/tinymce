@@ -1,0 +1,66 @@
+//
+// Global styling
+//
+
+// To be decided if we want CSS Custom Properties out of these.
+@tinymce-border-color: @border-color;
+@tinymce-border-radius: 10px;
+@tinymce-border-width: 2px;
+@tinymce-box-shadow: none;
+
+@tinymce-separator-color: darken(@border-color, 4.5%); // created global Custom Property as this is used in multiple different components
+
+@editor-header-inline-background-color: @background-color; 
+
+@layer tox-globals {
+  .tox {
+    color: var(--tox-private-color-black, @color-black);
+    font-family: var(--tox-private-font-stack, @font-stack);
+    font-size: var(--tox-private-font-size-base, @font-size-base);
+  }
+
+  .tox-tinymce {
+    border: @tinymce-border-width solid @tinymce-border-color;
+    border-radius: @tinymce-border-radius;
+    box-shadow: @tinymce-box-shadow;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--tox-private-font-stack, @font-stack);
+    overflow: hidden;
+    position: relative;
+    visibility: inherit !important;
+  }
+
+  // Place the border/shadow on the header in inline mode instead of the root component
+  .tox.tox-tinymce-inline {
+    border: none;
+    box-shadow: none;
+    overflow: initial;
+
+    .tox-editor-container {
+      overflow: initial;
+    }
+
+    .tox-editor-header {
+      background-color: @editor-header-inline-background-color;
+      border: @tinymce-border-width solid @tinymce-border-color;
+      border-radius: @tinymce-border-radius;
+      box-shadow: @tinymce-box-shadow;
+      overflow: hidden;
+    }
+  }
+
+  .tox-tinymce-aux {
+    font-family: var(--tox-private-font-stack, @font-stack);
+    z-index: var(--tox-private-z-index-sink, @z-index-sink);
+  }
+
+  // RTL
+  .tox[dir=rtl] {
+    // Rotates configured icons 180 degrees when rendering in RTL
+    .tox-icon--flip svg {
+      transform: rotateY(180deg);
+    }
+  }
+}

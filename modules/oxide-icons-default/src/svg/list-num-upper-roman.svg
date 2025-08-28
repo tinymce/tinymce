@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-list-num-upper-roman</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect fill="#000000" opacity="0.2" x="18" y="12" width="22" height="4"></rect>
+        <rect fill="#000000" opacity="0.2" x="18" y="22" width="22" height="4"></rect>
+        <rect fill="#000000" opacity="0.2" x="18" y="32" width="22" height="4"></rect>
+        <path d="M15.1455078,17 L15.1455078,15.7651367 L16.3803711,15.7651367 L16.3803711,17 L15.1455078,17 Z M15.1455078,27 L15.1455078,25.7651367 L16.3803711,25.7651367 L16.3803711,27 L15.1455078,27 Z M15.1455078,37 L15.1455078,35.7651367 L16.3803711,35.7651367 L16.3803711,37 L15.1455078,37 Z" fill="#000000"></path>
+        <rect fill="#000000" fill-rule="nonzero" x="12" y="20" width="1.5" height="7"></rect>
+        <rect fill="#000000" fill-rule="nonzero" x="12" y="30" width="1.5" height="7"></rect>
+        <rect fill="#000000" fill-rule="nonzero" x="9" y="20" width="1.5" height="7"></rect>
+        <rect fill="#000000" fill-rule="nonzero" x="9" y="30" width="1.5" height="7"></rect>
+        <rect fill="#000000" fill-rule="nonzero" x="6" y="30" width="1.5" height="7"></rect>
+        <rect fill="#000000" fill-rule="nonzero" x="12" y="10" width="1.5" height="7"></rect>
+    </g>
+</svg>

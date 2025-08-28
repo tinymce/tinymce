@@ -1,0 +1,10 @@
+//
+// Utils
+//
+
+// Luma checker
+// Depending on @background-color’s luma returns either of two colors
+// Usage example: @foo-color: .bg-luma-checker(@color-1, @color-2)[@result];
+.bg-luma-checker(@color-light, @color-dark) {
+  @result: if((luma(@background-color) > 50%), @color-light, @color-dark);
+}

@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "compilerOptions": {
+    "outDir": "lib",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
+    "paths": {
+      "ephox/porkbun/test/*": ["src/test/ts/module/ephox/porkbun/test/*"],
+      "ephox/porkbun/demo/*": ["src/demo/ts/ephox/porkbun/demo/*"],
+      "ephox/porkbun/*": ["src/main/ts/ephox/porkbun/*"]
+    }
+  },
+  "include": [
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts"
+  ],
+  "references": [
+    { "path": "../katamari" }
+  ]
+}

@@ -1,0 +1,59 @@
+.tiny-pageembed .mce-shim {
+  background: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.tiny-pageembed[data-mce-selected="2"] .mce-shim {
+  display: none;
+}
+
+.tiny-pageembed {
+  display: inline-block;
+  position: relative;
+}
+
+// The suffixed classes are all to create a responsive iframe for the
+// pageembed plugin, with the suffixes being the ratio of the iframe
+
+.tiny-pageembed--21by9,
+.tiny-pageembed--16by9,
+.tiny-pageembed--4by3,
+.tiny-pageembed--1by1 {
+  display: block;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+  width: 100%;
+}
+
+.tiny-pageembed--21by9 {
+  padding-top: 42.857143%;
+}
+
+.tiny-pageembed--16by9 {
+  padding-top: 56.25%;
+}
+
+.tiny-pageembed--4by3 {
+  padding-top: 75%;
+}
+
+.tiny-pageembed--1by1 {
+  padding-top: 100%;
+}
+
+.tiny-pageembed--21by9 iframe,
+.tiny-pageembed--16by9 iframe,
+.tiny-pageembed--4by3 iframe,
+.tiny-pageembed--1by1 iframe {
+  border: 0;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}

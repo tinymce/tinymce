@@ -1,0 +1,255 @@
+//
+// Toolbar button
+// When making changes here, please review menubar/menubar.less and menubar/menubar-button.less
+//
+
+@toolbar-button-background-color: @background-color;
+@toolbar-button-border-radius: 3px;
+@toolbar-button-border: 0;
+@toolbar-button-box-shadow: none;
+@toolbar-button-chevron-color: fade(@toolbar-button-icon-color, 50%);
+@toolbar-button-chevron-width: @base-value;
+@toolbar-button-font-size: @font-size-sm;
+@toolbar-button-font-style: normal;
+@toolbar-button-font-weight: @font-weight-normal;
+@toolbar-button-height: 28px;
+@toolbar-button-icon-color: contrast(@background-color, @color-white, @color-black);
+@toolbar-button-spacing-x: 1px;
+@toolbar-button-spacing-y: 5px;
+@toolbar-button-text-color: contrast(@background-color, @color-white, @color-black);
+@toolbar-button-text-transform: none;
+@toolbar-button-width: 34px;
+@toolbar-button-margin: (@toolbar-button-spacing-y + 1px) @toolbar-button-spacing-x @toolbar-button-spacing-y 0;
+@toolbar-button-padding: 0;
+
+@toolbar-button-hover-background-color: contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 7%)); // Differentiating against the enabled color
+@toolbar-button-hover-border: @toolbar-button-border;
+@toolbar-button-hover-box-shadow: @toolbar-button-box-shadow;
+@toolbar-button-hover-icon-color: @toolbar-button-icon-color;
+@toolbar-button-hover-text-color: @toolbar-button-text-color;
+
+@toolbar-button-focus-background-color: @toolbar-button-background-color;
+@toolbar-button-focus-border: @toolbar-button-hover-border;
+@toolbar-button-focus-box-shadow: @toolbar-button-box-shadow;
+@toolbar-button-focus-icon-color: @toolbar-button-hover-icon-color;
+@toolbar-button-focus-text-color: @toolbar-button-hover-text-color;
+
+@toolbar-button-active-background-color: @toolbar-button-enabled-background-color;
+@toolbar-button-active-border: @toolbar-button-enabled-border;
+@toolbar-button-active-box-shadow: @toolbar-button-box-shadow; // set to `0 1px 1px 0 rgba(0, 0, 0, .1) inset` for a small push in effect
+@toolbar-button-active-icon-color: @toolbar-button-enabled-icon-color;
+@toolbar-button-active-text-color: @toolbar-button-enabled-text-color;
+@toolbar-button-active-transform: none; // Set to `translateY(1px)` for a small push down effect
+
+@toolbar-button-enabled-background-color: multiply(white, contrast(@background-color, fade(@color-tint, 35), fade(@color-tint, 65)));
+@toolbar-button-enabled-border: @toolbar-button-hover-border;
+@toolbar-button-enabled-box-shadow: @toolbar-button-box-shadow;
+@toolbar-button-enabled-icon-color: @toolbar-button-hover-icon-color;
+@toolbar-button-enabled-text-color: @toolbar-button-hover-text-color;
+@toolbar-button-enabled-transform: none;
+
+@toolbar-button-disabled-background-color: @toolbar-button-background-color;
+@toolbar-button-disabled-border: @toolbar-button-border;
+@toolbar-button-disabled-box-shadow: @toolbar-button-box-shadow;
+@toolbar-button-disabled-icon-color: fade(@toolbar-button-icon-color, 50%);
+@toolbar-button-disabled-text-color: fade(@toolbar-button-text-color, 50%);
+
+.tox {
+  .tox-tbtn {
+    align-items: center;
+    background: @toolbar-button-background-color;
+    border: @toolbar-button-border;
+    border-radius: @toolbar-button-border-radius;
+    box-shadow: @toolbar-button-box-shadow;
+    color: @toolbar-button-text-color;
+    display: flex;
+    flex: 0 0 auto;
+    font-size: @toolbar-button-font-size;
+    font-style: @toolbar-button-font-style;
+    font-weight: @toolbar-button-font-weight;
+    height: @toolbar-button-height;
+    justify-content: center;
+    margin: @toolbar-button-margin;
+    outline: none;
+    padding: @toolbar-button-padding;
+    text-transform: @toolbar-button-text-transform;
+    width: @toolbar-button-width;
+
+    @media (forced-colors: active) {
+      &:hover,
+      &.tox-tbtn:hover {
+        outline: 1px dashed currentColor;
+      }
+
+      &.tox-tbtn--active,
+      &.tox-tbtn--enabled,
+      &.tox-tbtn--enabled:hover,
+      &.tox-tbtn--enabled:focus,
+      &:focus:not(.tox-tbtn--disabled) {
+        outline: 1px solid currentColor;
+        position: relative;
+      }
+    }
+
+    svg {
+      display: block;
+      fill: @toolbar-button-icon-color;
+
+      @media (forced-colors: active) {
+        & {
+          fill: currentColor !important;
+        }
+
+        &.tox-tbtn--enabled,
+        &:focus:not(.tox-tbtn--disabled) {
+          fill: currentColor !important;
+        }
+
+        &.tox-tbtn--disabled,
+        &.tox-tbtn--disabled:hover,
+        .tox-tbtn:disabled,
+        .tox-tbtn:disabled:hover {
+          filter: contrast(0%);
+        }
+      }
+    }
+  }
+
+  // This class doesn't seem to be used anywhere.
+  // The ruleset can probably be removed.
+  .tox-tbtn.tox-tbtn-more {
+    padding-left: 5px;
+    padding-right: 5px;
+    width: inherit;
+  }
+
+  .tox-tbtn:focus {
+    background: @toolbar-button-focus-background-color;
+    border: @toolbar-button-focus-border;
+    box-shadow: @toolbar-button-focus-box-shadow;
+    position: relative;
+    z-index: 1; // Ensure focus outline is on top of other buttons
+
+    &::after {
+      .keyboard-focus-outline-mixin();
+    }
+  }
+
+  .tox-tbtn:hover {
+    background: @toolbar-button-hover-background-color;
+    border: @toolbar-button-hover-border;
+    box-shadow: @toolbar-button-hover-box-shadow;
+    color: @toolbar-button-hover-text-color;
+
+    svg {
+      fill: @toolbar-button-hover-icon-color;
+    }
+  }
+
+  .tox-tbtn:active {
+    background: @toolbar-button-active-background-color;
+    border: @toolbar-button-active-border;
+    box-shadow: @toolbar-button-active-box-shadow;
+    color: @toolbar-button-active-text-color;
+
+    svg {
+      fill: @toolbar-button-active-icon-color;
+    }
+  }
+
+  .tox-tbtn--disabled .tox-tbtn--enabled {
+    svg {
+      fill: @toolbar-button-disabled-icon-color;
+    }
+  }
+
+  .tox-tbtn--disabled,
+  .tox-tbtn--disabled:hover,
+  .tox-tbtn:disabled,
+  .tox-tbtn:disabled:hover {
+    background: @toolbar-button-disabled-background-color;
+    border: @toolbar-button-disabled-border;
+    box-shadow: @toolbar-button-disabled-box-shadow;
+    color: @toolbar-button-disabled-text-color;
+    cursor: not-allowed;
+
+    svg {
+      fill: @toolbar-button-disabled-icon-color;
+    }
+  }
+
+  // An toggle on/off button's on state.
+  .tox-tbtn--active,
+  .tox-tbtn--enabled,
+  .tox-tbtn--enabled:hover,
+  .tox-tbtn--enabled:focus {
+    background: @toolbar-button-enabled-background-color;
+    border: @toolbar-button-enabled-border;
+    box-shadow: @toolbar-button-enabled-box-shadow;
+    color: @toolbar-button-enabled-text-color;
+    position: relative;
+
+    >* {
+      transform: @toolbar-button-enabled-transform;
+    }
+
+    svg {
+      fill: @toolbar-button-enabled-icon-color;
+    }
+
+    &.tox-tbtn--disabled {
+      svg {
+        fill: @toolbar-button-disabled-icon-color;
+      }
+    }
+  }
+
+  .tox-tbtn--enabled:focus::after {
+    .keyboard-focus-outline-mixin();
+  }
+
+  .tox-tbtn:focus:not(.tox-tbtn--disabled) {
+    color: @toolbar-button-focus-text-color;
+
+    svg {
+      fill: @toolbar-button-focus-icon-color;
+    }
+  }
+
+  .tox-tbtn:active>* {
+    transform: @toolbar-button-active-transform;
+  }
+
+  .tox-tbtn--md {
+    height: @toolbar-button-height * 1.5;
+    width: @toolbar-button-width * 1.5;
+  }
+
+  .tox-tbtn--lg {
+    flex-direction: column;
+    height: @toolbar-button-height * 2;
+    width: @toolbar-button-width * 2;
+  }
+
+  .tox-tbtn--return {
+    align-self: stretch;
+    height: unset;
+    width: 16px;
+  }
+
+  // For buttons with text label before or after icon
+  .tox-tbtn--labeled {
+    padding: 0 4px;
+    width: unset;
+  }
+
+  // Vertical label
+  .tox-tbtn__vlabel {
+    display: block;
+    font-size: 10px;
+    font-weight: @font-weight-normal;
+    letter-spacing: -.025em;
+    margin-bottom: @pad-xs;
+    white-space: nowrap;
+  }
+}

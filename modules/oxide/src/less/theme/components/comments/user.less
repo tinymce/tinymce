@@ -1,0 +1,63 @@
+//
+// User
+//
+
+@user-name-font-weight: @font-weight-bold;
+@user-name-font-style: normal;
+@user-name-font-size: @font-size-sm;
+@user-name-text-transform: none;
+@user-name-text-color: @text-color;
+@user-avatar-color: @text-color-muted;
+@user-avatar-height: 36px;
+@user-avatar-width: @user-avatar-height;
+
+.tox {
+  .tox-user {
+    align-items: center;
+    display: flex;
+  }
+
+  .tox-user__avatar svg {
+    fill: @user-avatar-color;
+  }
+
+  .tox-user__avatar img {
+    border-radius: 50%;
+    height: @user-avatar-height;
+    object-fit: cover;
+    vertical-align: middle;
+    width: @user-avatar-width;
+  }
+
+  .tox-user__name {
+    color: @user-name-text-color;
+    font-size: @user-name-font-size;
+    font-style: @user-name-font-style;
+    font-weight: @user-name-font-weight;
+    line-height: @user-avatar-height / 2;
+    text-transform: @user-name-text-transform;
+  }
+}
+
+.tox:not([dir=rtl]) {
+  .tox-user__avatar svg,
+  .tox-user__avatar img {
+    margin-right: @pad-sm;
+  }
+
+  .tox-user__avatar + .tox-user__name {
+    margin-left: @pad-sm;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-user__avatar svg,
+  .tox-user__avatar img {
+    margin-left: @pad-sm;
+  }
+
+  .tox-user__avatar + .tox-user__name {
+    margin-right: @pad-sm;
+  }
+}

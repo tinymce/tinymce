@@ -1,0 +1,29 @@
+//
+// Image panel
+//
+
+.tox {
+  .tox-imagepreview {
+    background-color: #666;
+    height: 380px;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
+
+  .tox-imagepreview.tox-imagepreview__loaded {
+    overflow: auto;
+  }
+
+  // start the container off screen to avoid showing the image at full size before zooming to fit
+  .tox-imagepreview__container {
+    display: flex;
+    left: 100vw;
+    position: absolute;
+    top: 100vw;
+  }
+
+  .tox-imagepreview__image {
+    background: url(data:image/gif;base64,R0lGODdhDAAMAIABAMzMzP///ywAAAAADAAMAAACFoQfqYeabNyDMkBQb81Uat85nxguUAEAOw==);
+  }
+}

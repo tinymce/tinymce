@@ -1,0 +1,231 @@
+//
+// Statusbar
+//
+
+@statusbar-background-color: @background-color;
+@statusbar-focus-background-color: transparent;
+@statusbar-font-size: @font-size-sm;
+@statusbar-font-weight: @font-weight-normal;
+@statusbar-height: 25px;
+@statusbar-text-height: 16px;
+@statusbar-padding-x: @pad-sm;
+@statusbar-separator-color: @tinymce-separator-color;
+@statusbar-text-color: contrast(@statusbar-background-color, @text-color-muted, fade(@color-white, 75));
+@statusbar-focus-text-color: @text-color;
+@statusbar-text-transform: none;
+@statusbar-not-disabled-selector: ~'&:not(:disabled):not([aria-disabled=true])';
+@statusbar-logo-color: fade(@text-color, 80);
+@statusbar-logo-active-color: @text-color;
+@statusbar-resize-handle-color: fade(@text-color, 50);
+@statusbar-resize-handle-radius: @tinymce-border-radius - @tinymce-border-width - 3px; // Minus handle padding
+
+.tox {
+  .tox-statusbar {
+    align-items: center;
+    background-color: @statusbar-background-color;
+    border-top: 1px solid @statusbar-separator-color;
+    color: @statusbar-text-color;
+    display: flex;
+    flex: 0 0 auto;
+    font-size: @statusbar-font-size;
+    font-weight: @statusbar-font-weight;
+    height: @statusbar-height;
+    overflow: hidden;
+    padding: 0 @statusbar-padding-x;
+    position: relative;
+    text-transform: @statusbar-text-transform;
+  }
+
+  .tox-statusbar__path {
+    display: flex;
+    flex: 1 1 auto;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .tox-statusbar__right-container {
+    display: flex;
+    justify-content: flex-end;
+    white-space: nowrap;
+  }
+
+  .tox-statusbar__help-text {
+    text-align: center;
+  }
+
+  .tox-statusbar__text-container {
+    align-items: flex-start;
+    display: flex;
+    flex: 1 1 auto;
+    height: @statusbar-text-height;
+    justify-content: space-between;
+
+    @media @breakpoint-gt-sm {
+      &.tox-statusbar__text-container-3-cols > .tox-statusbar__help-text,
+      &.tox-statusbar__text-container-3-cols > .tox-statusbar__right-container,
+      &.tox-statusbar__text-container-3-cols > .tox-statusbar__path {
+        flex: 0 0 calc(100% / 3);
+      }
+    }
+
+    &.tox-statusbar__text-container--flex-end {
+      justify-content: flex-end;
+    }
+
+    &.tox-statusbar__text-container--flex-start {
+      justify-content: flex-start;
+    }
+
+    &.tox-statusbar__text-container--space-around {
+      justify-content: space-around;
+    }
+  }
+
+  .tox-statusbar__path > * {
+    display: inline;
+    white-space: nowrap;
+  }
+
+  .tox-statusbar__wordcount {
+    flex: 0 0 auto;
+    margin-left: 1ch;
+  }
+
+  @media @breakpoint-sm {
+    .tox-statusbar__text-container {
+      & .tox-statusbar__help-text {
+        display: none;
+      }
+
+      & .tox-statusbar__help-text:only-child {
+        display: block;
+      }
+    }
+  }
+
+  .tox-statusbar a,
+  .tox-statusbar__path-item,
+  .tox-statusbar__wordcount {
+    color: @statusbar-text-color;
+    position: relative;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      @{statusbar-not-disabled-selector} {
+        color: @statusbar-focus-text-color;
+        cursor: pointer;
+      }
+    }
+
+    &:focus-visible::after {
+      .keyboard-focus-outline-mixin();
+    }
+  }
+
+  .tox-statusbar__branding {
+    svg {
+
+      @media (forced-colors: active) {
+        fill: currentColor;
+      }
+
+      fill: @statusbar-logo-color;
+      height: 1em;
+      margin-left: .3em;
+      width: auto;
+    }
+
+    a {
+      align-items: center;
+      display: inline-flex;
+    }
+
+    a:hover,
+    a:focus {
+      @{statusbar-not-disabled-selector} {
+        svg {
+          fill: @statusbar-logo-active-color;
+        }
+      }
+    }
+  }
+
+  .tox-statusbar__resize-cursor-default {
+    cursor: ns-resize;
+  }
+
+  .tox-statusbar__resize-cursor-both {
+    cursor: nwse-resize;
+  }
+
+  .tox-statusbar__resize-handle {
+    align-items: flex-end;
+    align-self: stretch;
+    display: flex;
+    flex: 0 0 auto;
+    justify-content: flex-end;
+    margin-bottom: 3px;
+    margin-left: @pad-xs;
+    margin-right: calc(3px - @statusbar-padding-x);
+    margin-top: 3px;
+    padding-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    position: relative;
+
+    svg {
+      display: block;
+      fill: @statusbar-resize-handle-color;
+    }
+
+    &:hover,
+    &:focus {
+      svg {
+        fill: @statusbar-focus-text-color;
+      }
+    }
+
+    &:focus-visible {
+      background-color: @statusbar-focus-background-color;
+      border-radius: 1px 1px @statusbar-resize-handle-radius 1px;
+      box-shadow: 0 0 0 2px @statusbar-focus-background-color;
+
+      &::after {
+        .keyboard-focus-outline-mixin();
+      }
+    }
+  }
+
+  .tox-statusbar__resize-handle:only-child {
+    margin-left: auto;
+  }
+}
+
+.tox:not([dir=rtl]) {
+  .tox-statusbar__path > * {
+    margin-right: @pad-xs;
+  }
+
+  .tox-statusbar__branding {
+    margin-left: 2ch;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-statusbar {
+    flex-direction: row-reverse;
+  }
+
+  .tox-statusbar__path > * {
+    margin-left: @pad-xs;
+  }
+
+  .tox-statusbar__branding {
+    svg {
+      margin-left: 0;
+      margin-right: .3em;
+    }
+  }
+}

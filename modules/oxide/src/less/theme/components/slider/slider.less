@@ -1,0 +1,162 @@
+//
+// Slider
+//
+
+@slider-handle-background-color: @color-tint;
+@slider-handle-border-radius: @control-border-radius;
+@slider-handle-border: 2px solid darken(@slider-handle-background-color, 10%);
+@slider-handle-box-shadow: none;
+@slider-handle-height: 24px;
+@slider-handle-width: 14px;
+@slider-rail-background-color: transparent;
+@slider-rail-border-radius: @control-border-radius;
+@slider-rail-border: 1px solid @border-color;
+@slider-rail-height: 10px;
+
+// TODO: Remove the duplication of these values with the old sliders
+@slider-width: 130px;
+
+@slider-thumb-background-color: @color-tint;
+@slider-thumb-background-color-disabled: fade(contrast(@slider-thumb-background-color, @color-black, @color-white), 50%);
+@slider-thumb-background-color-hover: darken(@slider-thumb-background-color, 5%);
+@slider-thumb-background-color-active: darken(@slider-thumb-background-color, 10%);
+@slider-thumb-background-color-focus: darken(@slider-thumb-background-color, 5%);
+@slider-thumb-focus-outline: inset 0 0 0 1px @color-white, 0 0 0 2px @color-tint;
+
+@slider-thumb-border-radius: @slider-thumb-width;
+@slider-thumb-width: 16px;
+@slider-thumb-height: 16px;
+@slider-thumb-middle: 4px;
+
+@slider-track-background-color: @border-color;
+@slider-track-border-radius: @slider-thumb-width;
+@slider-track-border: none;
+@slider-track-height: 2px;
+
+.tox {
+  .tox-slider {
+    align-items: center;
+    display: flex;
+    flex: 1;
+    height: @slider-handle-height;
+    justify-content: center;
+    position: relative;
+  }
+
+  .tox-slider__rail {
+    background-color: @slider-rail-background-color;
+    border: @slider-rail-border;
+    border-radius: @slider-rail-border-radius;
+    height: @slider-rail-height;
+    min-width: 120px;
+    width: 100%;
+  }
+
+  .tox-slider__handle {
+    background-color: @slider-handle-background-color;
+    border: @slider-handle-border;
+    border-radius: @slider-handle-border-radius;
+    box-shadow: @slider-handle-box-shadow;
+    height: @slider-handle-height;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    width: @slider-handle-width;
+  }
+
+  // Spacing between multiple sliders in a stack
+  .tox-form__controls-h-stack > .tox-slider:not(:first-of-type) {
+    margin-inline-start: @pad-sm;
+  }
+
+  // Spacing between form group and slider in a stack
+  .tox-form__controls-h-stack > .tox-form__group + .tox-slider {
+    margin-inline-start: @pad-xl;
+  }
+
+  .tox-form__controls-h-stack > .tox-slider + .tox-form__group {
+    margin-inline-start: @pad-xl;
+  }
+
+  // Toolbar specific slider
+  .tox-toolbar-slider {
+    align-items: center;
+    display: inline-flex;
+    height: @slider-thumb-height;
+  }
+
+  .tox-toolbar-slider__input {
+    appearance: none;
+    background: @slider-track-background-color;
+    border-radius: @slider-thumb-height;
+    width: @slider-width;
+    height: @slider-track-height;
+  }
+
+  .tox-toolbar-slider__input::-webkit-slider-runnable-track {
+    background-color: transparent;
+    height: @slider-thumb-height;
+  }
+
+  .tox-toolbar-slider__input::-moz-range-track {
+    background-color: transparent;
+    height: @slider-thumb-height;
+  }
+
+  .tox-toolbar-slider__input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    background-color: @slider-thumb-background-color;
+    border-radius: @slider-thumb-height;
+    border: none;
+    height: @slider-thumb-height;
+    width: @slider-thumb-width;
+  }
+
+  .tox-toolbar-slider__input::-moz-range-thumb {
+    appearance: none;
+    background-color: @slider-thumb-background-color;
+    border-radius: @slider-thumb-height;
+    border: none;
+    height: @slider-thumb-height;
+    width: @slider-thumb-width;
+  }
+
+  .tox-toolbar-slider__input:focus-visible {
+    outline: none;
+  }
+
+  .tox-toolbar-slider__input:focus::-webkit-slider-thumb {
+    background-color: @slider-thumb-background-color-focus;
+    box-shadow: @slider-thumb-focus-outline;
+  }
+
+  .tox-toolbar-slider__input:focus::-moz-range-thumb {
+    background-color: @slider-thumb-background-color-focus;
+    box-shadow: @slider-thumb-focus-outline;
+  }
+
+  .tox-toolbar-slider__input:hover::-webkit-slider-thumb {
+    background-color: @slider-thumb-background-color-hover;
+  }
+
+  .tox-toolbar-slider__input:hover::-moz-range-thumb {
+    background-color: @slider-thumb-background-color-hover;
+  }
+
+  .tox-toolbar-slider__input:active::-webkit-slider-thumb {
+    background-color: @slider-thumb-background-color-active;
+  }
+
+  .tox-toolbar-slider__input:active::-moz-range-thumb {
+    background-color: @slider-thumb-background-color-active;
+  }
+
+  .tox-toolbar-slider__input[disabled]::-webkit-slider-thumb {
+    background-color: @slider-thumb-background-color-disabled;
+  }
+
+  .tox-toolbar-slider__input[disabled]::-moz-range-thumb {
+    background-color: @slider-thumb-background-color-disabled;
+  }
+}

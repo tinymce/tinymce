@@ -1,0 +1,110 @@
+//
+// Form
+//
+
+@textfield-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
+@textfield-border-color: @border-color;
+@textfield-border-radius: @control-border-radius;
+@textfield-border-style: solid;
+@textfield-border-width: 1px;
+@textfield-box-shadow: none;
+@textfield-font-family: @font-stack;
+@textfield-font-size: @font-size-md;
+@textfield-height: 36px;
+@textfield-line-height: 24px;
+@textfield-outline: none;
+@textfield-pad-x: @pad-xs + (@control-border-radius / 4); // Add a border radius modifier for pill shaped controls
+@textfield-pad-y: (@textfield-height - @textfield-line-height - (@textfield-border-width * 2)) / 2;
+@textfield-text-color: @text-color;
+
+@textfield-disabled-background-color: darken(@textfield-background-color, 5%);
+@textfield-disabled-text-color: fade(@textfield-text-color, 85%);
+
+@textfield-focus-background-color: @textfield-background-color;
+@textfield-focus-border-color: @color-tint;
+@textfield-focus-box-shadow: 0 0 0 1px @color-tint;
+@textfield-focus-outline: none;
+
+@toolbar-textfield-height: @toolbar-button-height;
+@toolbar-textfield-margin: @toolbar-button-spacing-y 0 (@toolbar-button-spacing-y + 1px) 0;
+
+.tox {
+  .tox-textfield {
+    appearance: none;
+    background-color: @textfield-background-color;
+    border-color: @textfield-border-color;
+    border-radius: @textfield-border-radius;
+    border-style: @textfield-border-style;
+    border-width: @textfield-border-width;
+    box-shadow: @textfield-box-shadow;
+    box-sizing: border-box;
+    color: @textfield-text-color;
+    font-family: @textfield-font-family;
+    font-size: @textfield-font-size;
+    line-height: @textfield-line-height;
+    margin: 0;
+    min-height: (@textfield-height - (@textfield-border-width * 2));
+    outline: @textfield-outline;
+    padding: @textfield-pad-y @textfield-pad-x;
+    resize: none;
+    width: 100%;
+  }
+
+  .tox-textfield[disabled], .tox-toolbar-textfield[disabled] {
+    background-color: @textfield-disabled-background-color;
+    color: @textfield-disabled-text-color;
+    cursor: not-allowed;
+  }
+
+  .tox-textfield:focus, .tox-toolbar-textfield:focus {
+    background-color: @textfield-focus-background-color;
+    border-color: @textfield-focus-border-color;
+    box-shadow: @textfield-focus-box-shadow;
+    outline: @textfield-focus-outline;
+  }
+
+  .tox-toolbar-textfield:extend(.tox .tox-textfield) {
+    max-width: 250px;
+    min-height: unset;
+    height: @toolbar-textfield-height;
+    margin: @toolbar-textfield-margin;
+  }
+
+  .tox-naked-btn {
+    background-color: transparent;
+    border: 0;
+    border-color: transparent;
+    box-shadow: unset;
+    color: @color-tint;
+    cursor: pointer;
+    display: block;
+    margin: 0;
+    padding: 0;
+
+    svg {
+      display: block;
+      fill: @text-color;
+    }
+  }
+
+  .tox-textfield-size {
+    width: 80px;
+  }
+}
+
+.tox:not([dir=rtl]) {
+  .tox-toolbar-textfield {
+    + * {
+      margin-left: @pad-xs;
+    }
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-toolbar-textfield {
+    + * {
+      margin-right: @pad-xs;
+    }
+  }
+}

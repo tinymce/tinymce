@@ -1,0 +1,113 @@
+//
+// Select
+//
+
+@selectbox-background-color: @textfield-background-color;
+@selectbox-border-color: @textfield-border-color;
+@selectbox-border-radius: @textfield-border-radius;
+@selectbox-border-style: @textfield-border-style;
+@selectbox-border-width: @textfield-border-width;
+@selectbox-box-shadow: @textfield-box-shadow;
+@selectbox-font-family: @textfield-font-family;
+@selectbox-font-size: @textfield-font-size;
+@selectbox-height: @textfield-height;
+@selectbox-line-height: @textfield-line-height;
+@selectbox-outline: @textfield-outline;
+@selectbox-pad-x: @textfield-pad-x;
+@selectbox-pad-y: @textfield-pad-y;
+@selectbox-text-color: @textfield-text-color;
+
+@selectbox-disabled-background-color: darken(@background-color, 5%);
+@selectbox-disabled-text-color: fade(@text-color, 85%);
+
+@selectbox-focus-background-color: @textfield-focus-background-color;
+@selectbox-focus-border-color: @textfield-focus-border-color;
+@selectbox-focus-box-shadow: @textfield-focus-box-shadow;
+@selectbox-focus-outline: @textfield-focus-outline;
+
+.tox {
+  .tox-selectfield {
+    cursor: pointer;
+    position: relative;
+  }
+
+  .tox-selectfield select {
+    appearance: none;
+    background-color: @selectbox-background-color;
+    border-color: @selectbox-border-color;
+    border-radius: @selectbox-border-radius;
+    border-style: @selectbox-border-style;
+    border-width: @selectbox-border-width;
+    box-shadow: @selectbox-box-shadow;
+    box-sizing: border-box;
+    color: @selectbox-text-color;
+    font-family: @selectbox-font-family;
+    font-size: @selectbox-font-size;
+    line-height: @selectbox-line-height;
+    margin: 0;
+    min-height: (@selectbox-height - (@selectbox-border-width * 2));
+    outline: @selectbox-outline;
+    padding: @selectbox-pad-y @selectbox-pad-x;
+    resize: none;
+    width: 100%;
+  }
+
+  .tox-selectfield select[disabled] {
+    background-color: @selectbox-disabled-background-color;
+    color: @selectbox-disabled-text-color;
+    cursor: not-allowed;
+  }
+
+  // Hide OS rendered chevrons
+  .tox-selectfield select::-ms-expand {
+    display: none;
+  }
+
+  .tox-selectfield select:focus {
+    background-color: @selectbox-focus-background-color;
+    border-color: @selectbox-focus-border-color;
+    box-shadow: @selectbox-focus-box-shadow;
+    outline: @selectbox-focus-outline;
+  }
+
+  .tox-selectfield svg {
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .tox-selectfield select option:checked {
+	  background-color: revert;
+	  color: revert;
+  }
+}
+
+.tox:not([dir=rtl]) {
+  // Don't add the padding to select boxes with visible values that, do not have the down-arrow icon
+  .tox-selectfield {
+    select[size="0"],
+    select[size="1"] {
+      padding-right: @pad-lg;
+    }
+
+    svg {
+      right: @pad-sm;
+    }
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  // Don't add the padding to select boxes with visible values that, do not have the down-arrow icon
+  .tox-selectfield {
+    select[size="0"],
+    select[size="1"] {
+      padding-left: @pad-lg;
+    }
+
+    svg {
+      left: @pad-sm;
+    }
+  }
+}

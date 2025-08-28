@@ -1,0 +1,20 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "compilerOptions": {
+    "outDir": "lib",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
+    "paths": {
+      "ephox/acid/test/*": ["src/test/ts/module/ephox/acid/test/*"],
+      "ephox/acid/*": ["src/main/ts/ephox/acid/*"]
+    }
+  },
+  "include": [
+    "src/main/ts",
+    "src/test/ts"
+  ],
+  "references": [
+    { "path": "../katamari" }
+  ]
+}

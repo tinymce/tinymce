@@ -1,0 +1,68 @@
+//
+// Menu
+//
+
+@menu-background-color: contrast(@background-color, @background-color, lighten(@background-color, 5%));
+@menu-border-color: transparent;
+@menu-border-radius: @panel-border-radius;
+@menu-box-shadow: 0 0 2px 0 fade(@color-black, 20%), 0 4px 8px 0 fade(@color-black, 15%);
+
+@menu-item-collection-list-padding: @pad-xs;
+@menu-item-collection-toolbar-padding: @pad-sm;
+@menu-item-collection-grid-padding: @pad-sm;
+
+.tox {
+  .tox-menu {
+    background-color: @menu-background-color;
+    border: 1px solid @menu-border-color;
+    border-radius: @menu-border-radius;
+    box-shadow: @menu-box-shadow;
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    z-index: @z-index-menu;
+  }
+
+  .tox-menu.tox-collection.tox-collection--list {
+    padding: 0 @menu-item-collection-list-padding;
+  }
+
+  .tox-menu.tox-collection.tox-collection--toolbar {
+    padding: @menu-item-collection-toolbar-padding;
+  }
+
+  .tox-menu.tox-collection.tox-collection--grid {
+    padding: @menu-item-collection-grid-padding;
+  }
+
+  @media @breakpoint-gt-sm {
+    // Revert Collection item label’s word-break to avoid
+    // breaking longer menu items on larger screens
+    .tox-menu .tox-collection__item-label {
+      overflow-wrap: break-word;
+      word-break: normal;
+    }
+
+    .tox-dialog__popups .tox-menu .tox-collection__item-label {
+      word-break: break-all;
+    }
+  }
+
+  // Reset all margins for block elements when used in menu labels
+  // such as format and styles menu
+  /* stylelint-disable */
+  .tox-menu__label {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    blockquote,
+    code {
+      margin: 0;
+    }
+  }
+  /* stylelint-enable */
+}

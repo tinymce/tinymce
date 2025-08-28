@@ -1,0 +1,76 @@
+//
+// Resets
+//
+
+@layer tox-reset {
+  .tox {
+    box-shadow: none;
+    box-sizing: content-box;
+    cursor: auto;
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    -webkit-tap-highlight-color: transparent;
+    text-decoration: none;
+    text-shadow: none;
+    text-transform: none;
+    vertical-align: initial;
+    white-space: normal;
+    
+    *:not(svg):not(rect) {
+      // inherit everything in the tox selector, so components have a chance to override it
+      box-sizing: inherit;
+      color: inherit;
+      cursor: inherit;
+      direction: inherit;
+      font-family: inherit;
+      font-size: inherit;
+      font-style: inherit;
+      font-weight: inherit;
+      line-height: inherit;
+      -webkit-tap-highlight-color: inherit;
+      text-align: inherit;
+      text-decoration: inherit;
+      text-shadow: inherit;
+      text-transform: inherit;
+      vertical-align: inherit;
+      white-space: inherit;
+    }
+    
+    *:not(svg):not(rect) { /* stylelint-disable-line no-duplicate-selectors */
+      // remaining specific reset styles for properties that shouldn't be inherited
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      float: none;
+      height: auto;
+      margin: 0;
+      max-width: none;
+      outline: 0;
+      padding: 0;
+      position: static;
+      width: auto;
+    }
+  }
+  
+  .tox:not([dir=rtl]) {
+    direction: ltr;
+    text-align: left;
+  }
+  
+  .tox[dir=rtl] {
+    direction: rtl;
+    text-align: right;
+  }
+  
+  // Reset focus states
+  .tox-tinymce *:focus,
+  .tox-tinymce-aux *:focus {
+    outline: none;
+  }
+  
+  // Reset firefox focus states
+  button::-moz-focus-inner {
+    border: 0;
+  } 
+}

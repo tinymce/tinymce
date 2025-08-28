@@ -1,0 +1,42 @@
+.toggled {
+  background: green;
+}
+
+.splitbtn {
+  display: inline-block;
+}
+
+.selected-menu-item {
+  background: rgb(113, 123, 255);
+}
+
+.menu {
+  border: 2px solid red;
+}
+
+.menu-item-separator {
+  color: lightgray;
+}
+
+.dropdown-open {
+  background: gray;
+}
+
+.menu-background {
+  background: red;
+}
+
+.toolbar {
+  border: 1px solid gray;
+}
+
+.toolbar-group {
+  display: inline-block;
+  margin: 5px;
+  border: 2px solid gray;
+}
+
+.toolbar-group-item {
+  border: 1px solid black;
+  margin: 2px;
+}

@@ -1,0 +1,90 @@
+@layer tox-globals {
+  .tox when (@custom-properties-enabled = true) {
+    --tox-private-color-scheme: light dark;
+    // Root variables
+    // Begin customization by changing these variables as most other variables are derivatives of these.
+    --tox-private-background-color: light-dark(#fff, #222F3E);
+    --tox-private-base-value: 16px;
+    --tox-private-color-black: #222f3e;
+    --tox-private-color-tint: #006ce7;
+    --tox-private-color-white: #fff;
+    --tox-private-color-error: #c00;
+    --tox-private-color-error-element-focus-color: #f00;
+    --tox-private-color-success: #78AB46;
+    --tox-private-color-warning: #FFCC00;
+    --tox-private-color-active: light-dark(#ffcf30, #006ce7);
+
+    --tox-private-font-stack: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+
+    // Content;
+
+    --tox-private-content-ui-darkmode: false; // Change this to true to get white icons in the content such as bookmarks.
+
+    // Colors
+    --tox-private-border-color: hsl( from var(--tox-private-background-color) h s calc(l - 6.5));
+    --tox-private-separator-color: light-dark(
+      hsl( from var(--tox-private-border-color) h s calc(l - 4.5)),
+      hsla(0, 0%, 100%, 0.15);
+    );
+
+    // used only in toolbar-split-button -> should not be a global 
+    // --tox-private-border-color-light: light-dark(
+    //     hsl(from var(--tox-private-background-color) h s calc( l - 11)), 
+    //     hsl(from var(--tox-private-background-color) h s calc( l + 11))
+    //   );
+
+    --tox-private-text-color: light-dark(var(--tox-private-color-black), var(--tox-private-color-white));
+    --tox-private-text-color-muted: light-dark(
+        hsl(from var(--tox-private-color-black) h s l / 70%), 
+        hsl(from var(--tox-private-color-white) h s l / 50%)
+      );
+
+    // Some useful generic variables
+    --tox-private-panel-border-radius: 6px; // Dialogs, menues etc.
+    --tox-private-control-border-radius: 6px; // Buttons, input fields etc.
+    --tox-private-control-height: 36px; // In many places there is fixed value or a referance to @textfield-height. That's why the global var is introduced. For inputs, checkbox etc.
+
+    // Focus outline
+    --tox-private-keyboard-focus-outline-width: 2px;
+    --tox-private-keyboard-focus-outline-color: light-dark(
+        var(--tox-private-color-tint),
+        var(--tox-private-color-white)
+      );
+
+    // Font
+    --tox-private-line-height: 1.3;
+    --tox-private-control-line-height: calc(var(--tox-private-font-size-base) * 1.5); // Use instead of @textfield-line-height. It can't be just 1.5 as it's used in calculations.
+    --tox-private-font-weight-normal: normal;
+    --tox-private-font-weight-bold: bold;
+    --tox-private-font-size-base: var(--tox-private-base-value);
+    --tox-private-font-size-xs: 12px; // Absolute value to not make it too small
+    --tox-private-font-size-sm: calc(var(--tox-private-font-size-base) * .875);
+    --tox-private-font-size-md: var(--tox-private-font-size-base);
+    --tox-private-font-size-lg: calc(var(--tox-private-font-size-base) * 1.25);
+
+    // Spacings
+    --tox-private-pad-xs: calc(var(--tox-private-base-value) / 4);
+    --tox-private-pad-sm: calc(var(--tox-private-base-value) / 2);
+    --tox-private-pad-md: var(--tox-private-base-value);
+    --tox-private-pad-lg: calc(var(--tox-private-base-value) * 1.5);
+    --tox-private-pad-xl: calc(var(--tox-private-base-value) * 2);
+
+    // z-index stack (reserved range 1000-10000)
+    --tox-private-z-index-fullscreen: 1200;
+    --tox-private-z-index-resize-handle: 1298;
+    --tox-private-z-index-throbber: 1299;
+    --tox-private-z-index-sink: 1300;
+
+    // sink z-index stack
+    // Note: these are rendered inside the sink so aren't affected by the other global z-index variables
+    --tox-private-z-index-loading: 1000;
+    --tox-private-z-index-dialogs: 1100;
+    --tox-private-z-index-menu: 1150;
+
+    // Responsive breakpoints -> do we need them as a global variables?
+    --tox-private-breakpoint-sm-value: 767px;
+    --tox-private-breakpoint-md: ~"only screen and (min-width:1000px)";
+    --tox-private-breakpoint-sm: ~"only screen and (max-width: var(--tox-private-breakpoint-sm-value))";
+    --tox-private-breakpoint-gt-sm: ~"only screen and (min-width: calc(var(--tox-private-breakpoint-sm-value) + 1px))";
+  }
+}

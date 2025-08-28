@@ -1,0 +1,45 @@
+//
+// Checklist
+//
+
+.tox-checklist {
+  > li:not(.tox-checklist--hidden) {
+    list-style: none;
+    margin: .25em 0;
+
+    &::before {
+      & when (@content-ui-darkmode = true) {
+        content: data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/checklist-unchecked-light.svg');
+      }
+
+      & when (@content-ui-darkmode = false) {
+        content: data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/checklist-unchecked.svg');
+      }
+
+      cursor: pointer;
+      height: 1em;
+      margin-left: -1.5em;
+      margin-top: .125em;
+      position: absolute;
+      width: 1em;
+    }
+  }
+
+  li:not(.tox-checklist--hidden).tox-checklist--checked::before {
+    & when (@content-ui-darkmode = true) {
+      content: data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/checklist-checked-light.svg');
+    }
+
+    & when (@content-ui-darkmode = false) {
+      content: data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/checklist-checked.svg');
+    }
+  }
+}
+
+// RTL
+[dir=rtl] {
+  .tox-checklist > li:not(.tox-checklist--hidden)::before {
+    margin-left: 0;
+    margin-right: -1.5em;
+  }
+}

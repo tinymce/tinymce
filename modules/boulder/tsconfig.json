@@ -1,0 +1,25 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "compilerOptions": {
+    "strict": false,
+    "outDir": "lib",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
+    "paths": {
+      "ephox/boulder/test/*": ["src/test/ts/module/ephox/boulder/test/*"],
+      "ephox/boulder/demo/*": ["src/demo/ts/ephox/boulder/demo/*"],
+      "ephox/boulder/*": ["src/main/ts/ephox/boulder/*"]
+    }
+  },
+  "include": [
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts"
+  ],
+  "references": [
+    { "path": "../agar" },
+    { "path": "../katamari" },
+    { "path": "../katamari-assertions" }
+  ]
+}

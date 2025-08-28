@@ -1,0 +1,24 @@
+//
+// Advance code
+//
+
+@advcode-codemirror-default-font-size: 13px;
+@advcode-codemirror-inline-margin: 8px;
+
+.tox {
+  .mce-codemirror {
+    background: #fff;
+    bottom: 0;
+    font-size: @advcode-codemirror-default-font-size;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 1;
+
+    &.tox-inline-codemirror {
+      margin: @advcode-codemirror-inline-margin;
+      position: absolute;
+    }
+  }
+}

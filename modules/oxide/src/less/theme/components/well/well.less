@@ -1,0 +1,43 @@
+//
+// Well
+//
+
+@well-border-color: @border-color;
+@well-border-width: 1px;
+@well-padding: @pad-sm;
+@well-border-radius: @panel-border-radius;
+
+.tox {
+  .tox-well {
+    border: @well-border-width solid @well-border-color;
+    border-radius: @well-border-radius;
+    padding: @well-padding;
+    width: 100%;
+
+    > *:first-child {
+      margin-top: 0;
+    }
+
+    > *:last-child {
+      margin-bottom: 0;
+    }
+
+    > *:only-child {
+      margin: 0;
+    }
+  }
+
+  // TODO - Revisit styles & classes for code editor wrapper
+  .tox-custom-editor {
+    border: @well-border-width solid @well-border-color;
+    border-radius: @well-border-radius;
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+
+    &:focus-within {
+      &:extend(.tox .tox-textfield:focus);
+    }
+  }
+}

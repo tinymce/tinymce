@@ -1,0 +1,20 @@
+{
+  "name": "tinymce",
+  "tags": [ "open-source", "editor" ],
+  "targets": {
+    "build": {
+      "inputs": [
+        "tiny-product",
+        "^tiny-library"
+      ],
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "{projectRoot}/dist",
+        "{projectRoot}/js",
+        "{projectRoot}/lib"
+      ]
+    }
+  }
+}

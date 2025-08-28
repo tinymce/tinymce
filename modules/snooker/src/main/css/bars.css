@@ -1,0 +1,20 @@
+.ephox-snooker-resizer-bar {
+  background-color: #500;
+  opacity: 0.0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.ephox-snooker-resizer-cols {
+  cursor: col-resize;
+}
+
+.ephox-snooker-resizer-rows {
+  cursor: row-resize;
+}
+
+.ephox-snooker-resizer-bar.ephox-snooker-resizer-bar-dragging {
+  opacity: 0.2;
+}

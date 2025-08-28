@@ -1,0 +1,23 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "compilerOptions": {
+    "outDir": "lib",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
+    "paths": {
+      "ephox/polaris/test/*": ["src/test/ts/module/ephox/polaris/test/*"],
+      "ephox/polaris/demo/*": ["src/demo/ts/ephox/polaris/demo/*"],
+      "ephox/polaris/*": ["src/main/ts/ephox/polaris/*"]
+    }
+  },
+  "include": [
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts"
+  ],
+  "references": [
+    { "path": "../katamari" },
+    { "path": "../katamari-assertions" }
+  ]
+}

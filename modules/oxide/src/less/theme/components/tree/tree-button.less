@@ -1,0 +1,294 @@
+
+//
+// Tree button
+//
+
+@tree-button-background-color: transparent;
+@tree-button-border-radius: 4px;
+@tree-button-border: 0;
+@tree-button-box-shadow: none;
+@tree-button-chevron-color: fade(@tree-button-icon-color, 50%);
+@tree-button-font-size: @font-size-sm;
+@tree-button-font-style: normal;
+@tree-button-font-weight: @font-weight-normal;
+@tree-button-height: 28px;
+@tree-button-icon-color: contrast(@background-color, @color-white, @color-black);
+@tree-button-menu-icon-color: contrast(@tree-button-hover-background-color, @color-white, @color-black);
+@tree-button-spacing-x: 1px;
+@tree-button-spacing-y: 5px;
+@tree-button-text-color: contrast(@background-color, @color-white, @color-black);
+@tree-button-text-transform: none;
+
+@tree-button-hover-background-color: @toolbar-button-hover-background-color;
+@tree-button-hover-border: @tree-button-border;
+@tree-button-hover-box-shadow: @tree-button-box-shadow;
+@tree-button-hover-icon-color: @tree-button-hover-text-color;
+@tree-button-hover-text-color: @toolbar-button-active-text-color;
+
+@tree-button-focus-background-color: @tree-button-hover-background-color;
+@tree-button-focus-border: @tree-button-hover-border;
+@tree-button-focus-box-shadow: @tree-button-hover-box-shadow;
+@tree-button-focus-icon-color: @tree-button-hover-icon-color;
+@tree-button-focus-text-color: @tree-button-hover-text-color;
+
+@tree-button-active-background-color: @tree-button-enabled-background-color;
+@tree-button-active-border: @tree-button-enabled-border;
+@tree-button-active-box-shadow: @tree-button-box-shadow; // set to `0 1px 1px 0 rgba(0, 0, 0, .1) inset` for a small push in effect
+@tree-button-active-icon-color: @tree-button-enabled-icon-color;
+@tree-button-active-text-color: @tree-button-enabled-text-color;
+@tree-button-active-transform: none; // Set to `translateY(1px)` for a small push down effect
+
+@tree-button-enabled-background-color: multiply(white, contrast(@background-color, fade(@color-tint, 35), fade(@color-tint, 65)));
+@tree-button-enabled-border: @tree-button-hover-border;
+@tree-button-enabled-box-shadow: @tree-button-box-shadow;
+@tree-button-enabled-icon-color: @tree-button-hover-icon-color;
+@tree-button-enabled-text-color: @tree-button-hover-text-color;
+@tree-button-enabled-transform: none;
+
+@tree-button-disabled-background-color:  @tree-button-background-color;
+@tree-button-disabled-border: @tree-button-border;
+@tree-button-disabled-box-shadow: @tree-button-box-shadow;
+@tree-button-disabled-icon-color: fade(@tree-button-icon-color, 50%);
+@tree-button-disabled-text-color: fade(@tree-button-text-color, 50%);
+
+.tox .tox-tree {
+  display: flex;
+  flex-direction: column;
+
+  .tox-trbtn {
+    align-items: center;
+    background: @tree-button-background-color;
+    border: @tree-button-border;
+    border-radius: @tree-button-border-radius;
+    box-shadow: @tree-button-box-shadow;
+    color: @tree-button-text-color;
+    display: flex;
+    flex: 0 0 auto;
+    font-size: @tree-button-font-size;
+    font-style: @tree-button-font-style;
+    font-weight: @tree-button-font-weight;
+    height: @tree-button-height;
+    margin-bottom: 4px;
+    margin-top: 4px;
+    outline: none;
+    overflow: hidden;
+    padding: 0;
+    padding-left: 8px;
+    text-transform: @tree-button-text-transform;
+
+    .tox-tree__label {
+      cursor: default;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    svg {
+      display: block;
+      fill: @tree-button-icon-color;
+    }
+  }
+
+  .tox-trbtn:focus {
+    background: @tree-button-focus-background-color;
+    border: @tree-button-focus-border;
+    box-shadow: @tree-button-focus-box-shadow;
+  }
+
+  .tox-trbtn:hover {
+    background: @tree-button-hover-background-color;
+    border: @tree-button-hover-border;
+    box-shadow: @tree-button-hover-box-shadow;
+    color: @tree-button-hover-text-color;
+
+    svg {
+      fill: @tree-button-hover-icon-color;
+    }
+  }
+
+  .tox-trbtn:active {
+    background: @tree-button-active-background-color;
+    border: @tree-button-active-border;
+    box-shadow: @tree-button-active-box-shadow;
+    color: @tree-button-active-text-color;
+
+    svg {
+      fill: @tree-button-active-icon-color;
+    }
+  }
+
+  .tox-trbtn--disabled,
+  .tox-trbtn--disabled:hover,
+  .tox-trbtn:disabled,
+  .tox-trbtn:disabled:hover {
+    background: @tree-button-disabled-background-color;
+    border: @tree-button-disabled-border;
+    box-shadow: @tree-button-disabled-box-shadow;
+    color: @tree-button-disabled-text-color;
+    cursor: not-allowed;
+
+    svg {
+      fill: @tree-button-disabled-icon-color;
+    }
+  }
+
+  // An toggle on/off button's on state.
+  .tox-trbtn--enabled,
+  .tox-trbtn--enabled:hover {
+    background: @tree-button-enabled-background-color;
+    border: @tree-button-enabled-border;
+    box-shadow: @tree-button-enabled-box-shadow;
+    color: @tree-button-enabled-text-color;
+
+    > * {
+      transform: @tree-button-enabled-transform;
+    }
+
+    svg {
+      fill: @tree-button-enabled-icon-color;
+    }
+  }
+
+  .tox-trbtn:focus:not(.tox-trbtn--disabled) {
+    color: @tree-button-focus-text-color;
+
+    svg {
+      fill: @tree-button-focus-icon-color;
+    }
+  }
+
+  .tox-trbtn:active > * {
+    transform: @tree-button-active-transform;
+  }
+
+  .tox-trbtn--return {
+    align-self: stretch;
+    height: unset;
+    width: 16px;
+  }
+
+  // For buttons with text label before or after icon
+  .tox-trbtn--labeled {
+    padding: 0 4px;
+    width: unset;
+  }
+
+  // Vertical label
+  .tox-trbtn__vlabel {
+    display: block;
+    font-size: 10px;
+    font-weight: @font-weight-normal;
+    letter-spacing: -.025em;
+    margin-bottom: @pad-xs;
+    white-space: nowrap;
+  }
+
+  .tox-tree--directory {
+    display: flex;
+    flex-direction: column;
+
+    .tox-tree--directory__label {
+      font-weight: bold;
+
+      .tox-mbtn {
+        margin-left: auto;
+
+        svg {
+          fill: transparent;
+        }
+
+        &.tox-mbtn--active svg,
+        &:focus svg {
+          fill: @tree-button-menu-icon-color;
+        }
+      }
+
+      &:hover .tox-mbtn,
+      &:focus .tox-mbtn {
+        svg {
+          fill: @tree-button-menu-icon-color;
+        }
+      }
+
+      &:hover:has(.tox-mbtn:hover) {
+        background-color: @tree-button-background-color;
+        color: @tree-button-text-color;
+
+        .tox-chevron svg {
+          fill: @tree-button-icon-color;
+        }
+      }
+
+      .tox-chevron {
+        margin-right: 6px;
+      }
+
+      &:has(+ .tox-tree--directory__children--growing),
+      &:has(+ .tox-tree--directory__children--shrinking) {
+        .tox-chevron {
+          transition: transform .5s ease-in-out;
+        }
+      }
+
+      &:has(+ .tox-tree--directory__children--growing),
+      &:has(+ .tox-tree--directory__children--open) {
+        .tox-chevron {
+          transform: rotate(90deg);
+        }
+      }
+    }
+  }
+
+  .tox-tree--leaf__label {
+    font-weight: normal;
+
+    .tox-mbtn {
+      margin-left: auto;
+
+      svg {
+        fill: transparent;
+      }
+
+      &.tox-mbtn--active svg,
+      &:focus svg {
+        fill: @tree-button-menu-icon-color;
+      }
+    }
+
+    &:hover .tox-mbtn {
+      svg {
+        fill: @tree-button-menu-icon-color;
+      }
+    }
+
+    &:hover:has(.tox-mbtn:hover) {
+      background-color: @tree-button-background-color;
+      color: @tree-button-text-color;
+
+      .tox-chevron svg {
+        fill: @tree-button-icon-color;
+      }
+    }
+  }
+
+  .tox-icon-custom-state {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .tox-tree--directory__children {
+    overflow: hidden;
+    padding-left: 16px;
+
+    &.tox-tree--directory__children--growing,
+    &.tox-tree--directory__children--shrinking {
+      transition: height .5s ease-in-out;
+    }
+  }
+
+  .tox-trbtn.tox-tree--leaf__label {
+    display: flex;
+    justify-content: space-between;
+  }
+}

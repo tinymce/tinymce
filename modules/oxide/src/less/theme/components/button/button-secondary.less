@@ -1,0 +1,239 @@
+//
+// Secondary button - variant of the button
+// Variant class `tox-button--secondary` should be added next to the base `tox-button` class.
+// For base button styles see button.less
+//
+
+@button-secondary-background-color: contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 15%));
+@button-secondary-background-image: none;
+@button-secondary-background-position: @button-background-position;
+@button-secondary-background-repeat: @button-background-repeat;
+@button-secondary-border-color: @button-secondary-background-color;
+@button-secondary-border-radius: @button-border-radius;
+@button-secondary-border-style: @button-border-style;
+@button-secondary-border-width: @button-border-width;
+@button-secondary-box-shadow: @button-box-shadow;
+@button-secondary-font-size: @button-font-size;
+@button-secondary-font-style: @button-font-style;
+@button-secondary-font-weight: @button-font-weight;
+@button-secondary-letter-spacing: @button-letter-spacing;
+@button-secondary-outline: none;
+@button-secondary-text-color: contrast(@button-secondary-background-color, @color-black, @color-white);
+@button-secondary-text-decoration: @button-text-decoration;
+@button-secondary-text-transform: @button-text-transform;
+
+@button-secondary-disabled-background-color: @button-secondary-background-color;
+@button-secondary-disabled-background-image: @button-secondary-background-image;
+@button-secondary-disabled-border-color: @button-secondary-background-color;
+@button-secondary-disabled-box-shadow: @button-secondary-box-shadow;
+@button-secondary-disabled-text-color: fade(@button-secondary-text-color, 50%);
+
+@button-secondary-focus-background-color: @button-secondary-hover-background-color;
+@button-secondary-focus-background-image: @button-secondary-hover-background-image;
+@button-secondary-focus-border-color: @button-secondary-hover-border-color;
+@button-secondary-focus-box-shadow: @button-secondary-hover-box-shadow;
+@button-secondary-focus-text-color: @button-secondary-hover-text-color;
+
+@button-secondary-hover-background-color: darken(@button-secondary-background-color, 5%);
+@button-secondary-hover-background-image: @button-secondary-background-image;
+@button-secondary-hover-border-color: @button-secondary-hover-background-color;
+@button-secondary-hover-box-shadow: @button-secondary-box-shadow;
+@button-secondary-hover-text-color: @button-secondary-text-color;
+
+@button-secondary-active-background-color: darken(@button-secondary-background-color, 10%);
+@button-secondary-active-background-image: @button-secondary-background-image;
+@button-secondary-active-border-color: @button-secondary-active-background-color;
+@button-secondary-active-box-shadow: @button-secondary-box-shadow;
+@button-secondary-active-text-color: @button-secondary-text-color;
+
+// Enabled state
+@button-secondary-enabled-background-color: contrast(@background-color, mix(darken(@background-color, 6%), @color-tint, 70%), mix(lighten(@background-color, 15%), @color-tint, 70%));
+@button-secondary-enabled-background-image: @button-secondary-background-image;
+@button-secondary-enabled-border-color: @button-secondary-enabled-background-color;
+@button-secondary-enabled-box-shadow: @button-secondary-box-shadow;
+@button-secondary-enabled-text-color: @button-secondary-text-color;
+
+@button-secondary-enabled-focus-background-color: @button-secondary-enabled-hover-background-color;
+@button-secondary-enabled-focus-background-image: @button-secondary-hover-background-image;
+@button-secondary-enabled-focus-border-color: @button-secondary-enabled-hover-background-color;
+@button-secondary-enabled-focus-box-shadow: @button-secondary-enabled-box-shadow;
+@button-secondary-enabled-focus-text-color: @button-secondary-enabled-text-color;
+
+@button-secondary-enabled-hover-background-color: darken(@button-secondary-enabled-background-color, 5%);
+@button-secondary-enabled-hover-background-image: @button-secondary-hover-background-image;
+@button-secondary-enabled-hover-border-color: @button-secondary-enabled-hover-background-color;
+@button-secondary-enabled-hover-box-shadow: @button-secondary-enabled-box-shadow;
+@button-secondary-enabled-hover-text-color: @button-secondary-enabled-text-color;
+
+@button-secondary-enabled-active-background-color: darken(@button-secondary-enabled-background-color, 10%);
+@button-secondary-enabled-active-background-image: @button-secondary-background-image;
+@button-secondary-enabled-active-border-color: @button-secondary-enabled-active-background-color;
+@button-secondary-enabled-active-box-shadow: @button-secondary-enabled-box-shadow;
+@button-secondary-enabled-active-text-color: @button-secondary-enabled-text-color;
+
+@layer tox-atomic-component {
+  .tox {
+    .tox-button--secondary when (@custom-properties-enabled = true) {
+      // Base variables
+      --tox-private-button-secondary-background-color: light-dark(
+        hsl(from var(--tox-private-background-color) h s calc(l - 6)), 
+        hsl(from var(--tox-private-background-color) h s calc(l - -15))); // calc(l + 15) is valid css but less compiler perserve new line characters when + is used here. This behavior breaks our minification. 
+
+      --tox-private-button-secondary-text-color: var(--tox-private-text-color);
+      --tox-private-button-secondary-border-color: var(--tox-private-button-secondary-background-color);
+
+      /* 
+        Button state variables - to be decided if we want them. 
+        If we do: 
+          1. They should inherit from button base variables (as they do now).
+          2. While skinning the change of the base variable will result with others being calculated/inherited from it. 
+          3. In this case it is also possible to skin each state separately. 
+        If we don't: 
+          1. They should be removed. 
+          2. Different states of the button should use base button variables and calculate from them if neccessary, but not create new variables. 
+          3. In this case it is NOT possible to skin each state separately. 
+      */
+      /* Disabled state */
+      --tox-private-button-secondary-disabled-background-color: var(--tox-private-button-secondary-background-color);
+      --tox-private-button-secondary-disabled-border-color: var(--tox-private-button-secondary-border-color);
+      --tox-private-button-secondary-disabled-text-color: hsl(from var(--tox-private-button-secondary-text-color) h s l / 50%);
+
+      /* Focus state */
+      --tox-private-button-secondary-focus-background-color: hsl(from var(--tox-private-button-secondary-background-color) h s calc(l - 5));
+      --tox-private-button-secondary-focus-border-color: var(--tox-private-button-secondary-focus-background-color);
+      --tox-private-button-secondary-focus-text-color: var(--tox-private-button-secondary-text-color);
+
+      /* Hover state */
+      --tox-private-button-secondary-hover-background-color:  hsl(from var(--tox-private-button-secondary-background-color) h s calc(l - 5));
+      --tox-private-button-secondary-hover-border-color: var(--tox-private-button-secondary-hover-background-color);
+      --tox-private-button-secondary-hover-text-color: var(--tox-private-button-secondary-text-color);
+
+      /* Active state */
+      --tox-private-button-secondary-active-background-color:  hsl(from var(--tox-private-button-secondary-background-color) h s calc(l - 10));
+      --tox-private-button-secondary-active-border-color: var(--tox-private-button-secondary-active-background-color);
+      --tox-private-button-secondary-active-text-color: var(--tox-private-button-secondary-text-color);
+
+      /* Enabled state 
+        Do we use this button as a toggle that can be enabled? 
+        If not - these variables and enabled state styles should be removed
+      */
+      --tox-private-button-secondary-enabled-background-color: light-dark(
+        mix(darken(@background-color, 6%), @color-tint, 70%),
+        mix(lighten(@background-color, 15%), @color-tint, 70%)
+      );
+
+      --tox-private-button-secondary-enabled-border-color: var(--tox-private-button-secondary-enabled-background-color);
+      --tox-private-button-secondary-enabled-text-color: var(--tox-private-button-secondary-text-color);
+
+      /* Enabled + focus state */
+      --tox-private-button-secondary-enabled-focus-background-color: hsl(from var(--tox-private-button-secondary-enabled-background-color) h s calc(l - 5));
+      --tox-private-button-secondary-enabled-focus-border-color: var(--tox-private-button-secondary-enabled-focus-background-color);
+      --tox-private-button-secondary-enabled-focus-text-color: var(--tox-private-button-secondary-enabled-text-color);
+
+      /* Enabled + hover state */
+      --tox-private-button-secondary-enabled-hover-background-color: hsl(from var(--tox-private-button-secondary-enabled-background-color) h s calc(l - 5));
+      --tox-private-button-secondary-enabled-hover-border-color: var(--tox-private-button-secondary-enabled-hover-background-color);
+      --tox-private-button-secondary-enabled-hover-text-color: var(--tox-private-button-secondary-enabled-text-color);
+
+      /* Enabled + active state */
+      --tox-private-button-secondary-enabled-active-background-color: hsl(from var(--tox-private-button-secondary-enabled-background-color) h s calc(l - 10));
+      --tox-private-button-secondary-enabled-active-border-color: var(--tox-private-button-secondary-enabled-active-background-color);
+      --tox-private-button-secondary-enabled-active-text-color: var(--tox-private-button-secondary-enabled-text-color);
+    } 
+
+    .tox-button--secondary {
+      background-color: var(--tox-private-button-secondary-background-color, @button-secondary-background-color);
+      border-color: var(--tox-private-button-secondary-border-color, @button-secondary-border-color);
+      color: var(--tox-private-button-secondary-text-color, @button-secondary-text-color);
+
+      // TODO: remove this styles as this should be covered by button.less. 
+      // Secondary variant should only change colors (background, text and border)
+      // Currently these variables inherit from base button variables (in button.less)
+      border-style: @button-secondary-border-style;
+      border-width: @button-secondary-border-width;
+      background-image: @button-secondary-background-image;
+      background-position: @button-secondary-background-position;
+      background-repeat: @button-secondary-background-repeat;
+      border-radius: @button-secondary-border-radius;
+      box-shadow: @button-secondary-box-shadow;
+      font-size: @button-secondary-font-size;
+      font-style: @button-secondary-font-style;
+      font-weight: @button-secondary-font-weight;
+      letter-spacing: @button-secondary-letter-spacing;
+      outline: @button-secondary-outline;
+      padding: @button-padding-y @button-padding-x;
+      text-decoration: @button-secondary-text-decoration;
+      text-transform: @button-secondary-text-transform;
+
+      &[disabled] {
+        background-color: var(--tox-private-button-secondary-disabled-background-color, @button-secondary-disabled-background-color);
+        background-image: @button-secondary-disabled-background-image;
+        border-color: var(--tox-private-button-secondary-disabled-border-color, @button-secondary-disabled-border-color);
+        color: var(--tox-private-button-secondary-disabled-text-color, @button-secondary-disabled-text-color);
+        cursor: not-allowed;
+      }
+
+      &:focus:not(:disabled) {
+        background-color: var(--tox-private-button-secondary-focus-background-color, @button-secondary-focus-background-color);
+        border-color: var(--tox-private-button-secondary-focus-border-color, @button-secondary-focus-border-color);
+        color: var(--tox-private-button-secondary-focus-text-color, @button-secondary-focus-text-color);
+        background-image: @button-secondary-focus-background-image;
+        box-shadow: @button-secondary-focus-box-shadow;
+      }
+
+      &:hover:not(:disabled) {
+        background-color: var(--tox-private-button-secondary-hover-background-color, @button-secondary-hover-background-color);
+        border-color: var(--tox-private-button-secondary-hover-border-color, @button-secondary-hover-border-color);
+        color: var(--tox-private-button-secondary-hover-text-color, @button-secondary-hover-text-color);
+        background-image: @button-secondary-hover-background-image;
+        box-shadow: @button-secondary-hover-box-shadow;
+      }
+
+      &:active:not(:disabled) {
+        background-color: var(--tox-private-button-secondary-active-background-color, @button-secondary-active-background-color);
+        border-color: var(--tox-private-button-secondary-active-border-color, @button-secondary-active-border-color);
+        color: var(--tox-private-button-secondary-active-text-color, @button-secondary-active-text-color);
+        background-image: @button-secondary-active-background-image;
+        box-shadow: @button-secondary-active-box-shadow;
+      }
+
+      /* Enabled state */
+      &.tox-button--enabled {
+        background-color: var(--tox-private-button-secondary-enabled-background-color, @button-secondary-enabled-background-color);
+        border-color: var(--tox-private-button-secondary-enabled-border-color, @button-secondary-enabled-border-color);
+        color: var(--tox-private-button-secondary-enabled-text-color, @button-secondary-enabled-text-color);
+        background-image: @button-secondary-enabled-background-image;
+        box-shadow: @button-secondary-enabled-box-shadow;
+
+        &[disabled] {
+          color: var(--tox-private-button-secondary-disabled-text-color, @button-secondary-disabled-text-color);
+          cursor: not-allowed;
+        }
+
+        &:focus:not(:disabled) {
+          background-color: var(--tox-private-button-secondary-enabled-focus-background-color, @button-secondary-enabled-focus-background-color);
+          border-color: var(--tox-private-button-secondary-enabled-focus-border-color, @button-secondary-enabled-focus-border-color);
+          color: var(--tox-private-button-secondary-enabled-focus-text-color, @button-secondary-enabled-focus-text-color);
+          background-image: @button-secondary-enabled-focus-background-image;
+          box-shadow: @button-secondary-enabled-focus-box-shadow;
+        }
+
+        &:hover:not(:disabled) {
+          background-color: var(--tox-private-button-secondary-enabled-hover-background-color, @button-secondary-enabled-hover-background-color);
+          border-color: var(--tox-private-button-secondary-enabled-hover-border-color, @button-secondary-enabled-hover-border-color);
+          color: var(--tox-private-button-secondary-enabled-hover-text-color, @button-secondary-enabled-hover-text-color);
+          background-image: @button-secondary-enabled-hover-background-image;
+          box-shadow: @button-secondary-enabled-hover-box-shadow;
+        }
+
+        &:active:not(:disabled) {
+          background-color: var(--tox-private-button-secondary-enabled-active-background-color, @button-secondary-enabled-active-background-color);
+          border-color: var(--tox-private-button-secondary-enabled-active-border-color, @button-secondary-enabled-active-border-color);
+          color: var(--tox-private-button-secondary-enabled-active-text-color, @button-secondary-enabled-active-text-color);
+          background-image: @button-secondary-enabled-active-background-image;
+          box-shadow: @button-secondary-enabled-active-box-shadow;
+        }
+      }
+    }
+  }
+}

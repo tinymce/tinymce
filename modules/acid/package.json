@@ -1,0 +1,37 @@
+{
+  "name": "@ephox/acid",
+  "description": "Color library",
+  "version": "7.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tinymce/tinymce.git",
+    "directory": "modules/acid"
+  },
+  "dependencies": {
+    "@ephox/katamari": "^10.0.0"
+  },
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
+  "license": "GPL-2.0-or-later",
+  "sideEffects": false,
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "README.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "main": "./lib/main/ts/ephox/acid/api/Main.js",
+  "module": "./lib/main/ts/ephox/acid/api/Main.js",
+  "types": "./lib/main/ts/ephox/acid/api/Main.d.ts",
+  "scripts": {
+    "prepublishOnly": "tsc -b",
+    "build": "tsc",
+    "lint": "eslint --max-warnings=0 src/**/*.ts",
+    "test": "bedrock-auto -b chrome-headless -d src/test/ts",
+    "test-manual": "bedrock -d src/test/ts"
+  }
+}

@@ -1,0 +1,343 @@
+//
+// Tiny Comments
+//
+
+@comment-selected-background-color: .bg-luma-checker(lighten(@color-active, 30%), mix(@color-active, @color-black, 20%))[@result];
+@comment-selected-border-color: @color-active;
+
+@comment-background-color: @background-color;
+@comment-border-color: @comment-background-color;
+@comment-border-radius: @panel-border-radius;
+@comment-border-width: 1px;
+@comment-border: @comment-border-width solid @comment-border-color;
+@comment-box-shadow: @sidebar-header-box-shadow;
+//TODO: Same as menu. Make a common helper variable?
+@comment-font-size: @font-size-md;
+@comment-font-style: normal;
+@comment-font-weight: @font-weight-normal;
+@comment-line-height: @line-height-base;
+@comment-padding: @pad-sm;
+@comment-padding-bottom: @pad-md;
+@comment-text-color: @text-color;
+@comment-text-transform: initial;
+@comment-text-color-muted: @text-color-muted;
+
+@z-index-comment-overlay: 5;
+@z-index-comment-overlay-text: 10;
+@z-index-comment-busy-spinner: 20;
+
+@single-comment-margin-bottom: 12px;
+.tox {
+  .tox-comment {
+    background: @comment-background-color;
+    border: @comment-border;
+    border-radius: @comment-border-radius;
+    padding: @comment-padding;
+    padding-bottom: @comment-padding-bottom;
+    position: relative;
+
+    &:hover {
+      box-shadow: @comment-box-shadow;
+    }
+
+    &.tox-comment--selected {
+      background-color: @comment-selected-background-color;
+      border: @comment-border-width solid @comment-selected-border-color;
+      box-shadow: @comment-box-shadow;
+
+      &:focus {
+        border: 2px solid @keyboard-focus-outline-color;
+        margin: -1px;
+
+        &:not(:first-child) {
+          margin-top: 7px;
+        }
+      }
+
+      .tox-comment__single {
+        margin-bottom: @single-comment-margin-bottom;
+
+        &:focus {
+          position: relative;
+
+          &::after {
+            top: -9px;
+            pointer-events: none;
+            position: absolute;
+            content: "";
+            display: block;
+            bottom: -9px;
+            left: -9px;
+            right: -9px;
+            border-radius: @comment-border-radius;
+            border: 2px solid @keyboard-focus-outline-color;
+          }
+
+          &:last-of-type:has(textarea):after {
+            bottom: calc((@single-comment-margin-bottom + @comment-padding-bottom + @comment-border-width) * -1);
+          }
+        }
+      }
+    }
+  }
+
+  .tox-comment__header {
+    align-items: center;
+    color: @comment-text-color;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .tox-comment__date {
+    color: @user-name-text-color;
+    font-size: @font-size-xs;
+    line-height: @user-avatar-height / 2;
+  }
+
+  .tox-comment__body {
+    color: @comment-text-color;
+    font-size: @comment-font-size;
+    font-style: @comment-font-style;
+    font-weight: @comment-font-weight;
+    line-height: @comment-line-height;
+    margin-top: @pad-sm;
+    position: relative;
+    text-transform: @comment-text-transform;
+    transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+    white-space: pre-wrap;
+
+    &.tox-comment__body--expanded {
+      max-height: 100em;
+      transition: max-height 1.0s ease-in-out;
+    }
+
+    /* We remove the transitions when wanting to measure and jump straight to collapsed or expanded */
+    &.tox-comment__body--pending {
+      transition: max-height 0s;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    textarea {
+      resize: none;
+      white-space: normal;
+      width: 100%;
+      font-size: @comment-font-size;
+    }
+  }
+
+  .tox-comment__loading-text {
+    align-items: center;
+    color: @comment-text-color;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    > div {
+      padding-bottom: @pad-md;
+    }
+  }
+
+  .tox-comment__overlaytext {
+    bottom: 0;
+    flex-direction: column;
+    font-size: @font-size-sm;
+    left: 0;
+    padding: 1em;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: @z-index-comment-overlay-text;
+
+    p {
+      background-color: @comment-background-color;
+      box-shadow: 0 0 8px 8px @comment-background-color;
+      color: @comment-text-color;
+      text-align: center;
+    }
+
+    div:nth-of-type(2) {
+      font-size: .8em;
+    }
+  }
+
+  .tox-comment__expander {
+    padding-top: @pad-sm;
+
+    p {
+      color: @comment-text-color-muted;
+      font-size: @font-size-sm;
+      font-style: normal;
+
+      /* Need a focus highlight on the show more/less button */
+      &:focus {
+        font-weight: bold;
+      }
+    }
+  }
+
+  .tox-comment__buttonspacing {
+    padding-top: @pad-md;
+    text-align: center;
+  }
+
+  .tox-tbtn.tox-comment__mention-btn {
+    display: flex;
+    width: 34px;
+    height: 34px;
+    padding: 5px;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    background-color: transparent;
+  }
+
+  .tox-comment-thread {
+    background: @comment-background-color;
+    position: relative;
+    border-radius: @comment-border-radius;
+    background-color: transparent;
+
+    > *:not(:first-child) {
+      margin-top: @pad-sm;
+    }
+  }
+
+  .tox-comment-thread__overlay::after {
+    background: @comment-background-color;
+    bottom: 0;
+    content: "";
+    display: flex;
+    left: 0;
+    opacity: .9;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: @z-index-comment-overlay;
+  }
+
+  .tox-comment__reply {
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    margin-top: @pad-sm;
+
+    > *:first-child {
+      margin-bottom: @pad-sm;
+      width: 100%;
+    }
+  }
+
+  .tox-comment__edit {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    margin-top: @pad-sm;
+  }
+
+  .tox-comment__gradient::after {
+    background: linear-gradient(fade(@comment-background-color, 0), @comment-background-color);
+    bottom: 0;
+    content: "";
+    display: block;
+    height: 5em;
+    margin-top: -40px;
+    position: absolute;
+    width: 100%;
+  }
+
+  .tox-comment__overlay {
+    background: @comment-background-color;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    left: 0;
+    opacity: .9;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 0;
+    z-index: @z-index-comment-overlay;
+  }
+
+  .tox-comment__busy-spinner {
+    align-items: center;
+    background-color: @comment-background-color;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: @z-index-comment-busy-spinner;
+  }
+
+  .tox-comment__scroll {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 1;
+    overflow: auto;
+    padding: 12px;
+    scroll-behavior: smooth;
+
+    &:has(textarea:focus) {
+      scroll-behavior: auto;
+    }
+  }
+
+  /* Animation for deleting a comment */
+  .tox-comment--disappearing {
+    transition: opacity 0.5s ease;
+  }
+
+  /* A comment fades to 0 when it is being deleted, then is removed */
+  .tox-comment[data-transitioning-destination="deleting"] {
+    opacity: 0.0;
+  }
+
+  .tox-ring-loader {
+    width: 10px;
+    height: 10px;
+    border: 1px solid #FFF;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: tox-rotation 1s linear infinite;
+  }
+}
+//end tox
+
+.tox:not([dir=rtl]) {
+  .tox-comment__edit {
+    margin-left: @pad-sm;
+  }
+
+  .tox-comment__buttonspacing,
+  .tox-comment__edit,
+  .tox-comment__reply {
+    > *:last-child {
+      margin-left: @pad-sm;
+    }
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-comment__edit {
+    margin-right: @pad-sm;
+  }
+
+  .tox-comment__buttonspacing,
+  .tox-comment__edit,
+  .tox-comment__reply {
+    > *:last-child {
+      margin-right: @pad-sm;
+    }
+  }
+}

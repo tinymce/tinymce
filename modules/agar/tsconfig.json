@@ -1,0 +1,27 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "compilerOptions": {
+    "strict": false,
+    "outDir": "lib",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
+    "paths": {
+      "ephox/agar/test/*": ["src/test/ts/module/ephox/agar/test/*"],
+      "ephox/agar/demo/*": ["src/demo/ts/ephox/agar/demo/*"],
+      "ephox/agar/*": ["src/main/ts/ephox/agar/*"]
+    }
+  },
+  "include": [
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts"
+  ],
+  "references": [
+    { "path": "../jax" },
+    { "path": "../katamari" },
+    { "path": "../katamari-assertions" },
+    { "path": "../sand" },
+    { "path": "../sugar" }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "compilerOptions": {
+    "outDir": "lib",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
+    "paths": {
+      "ephox/mcagar/test/*": ["src/test/ts/module/ephox/mcagar/test/*"],
+      "ephox/mcagar/demo/*": ["src/demo/ts/ephox/mcagar/demo/*"],
+      "ephox/mcagar/*": ["src/main/ts/ephox/mcagar/*"]
+    }
+  },
+  "include": [
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts"
+  ],
+  "references": [
+    { "path": "../agar" },
+    { "path": "../katamari" },
+    { "path": "../sand" },
+    { "path": "../sugar" }
+  ]
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-superscript</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M15,9.41 L10.41,14 L15,18.59 L13.59,20 L9,15.41 L4.41,20 L3,18.59 L7.59,14 L3,9.41 L4.41,8 L9,12.59 L13.59,8 L15,9.41 Z M20.85,11 L15.97,11 L15.97,10 L16.86,9.18 C17.62,8.54 18.18,8 18.56,7.55 C18.93,7.11 19.12,6.7 19.13,6.32 C19.14,6.04 19.05,5.8 18.86,5.62 C18.68,5.43 18.39,5.34 18,5.33 C17.69,5.34 17.42,5.4 17.16,5.5 L16.5,5.89 L16.05,4.72 C16.32,4.5 16.64,4.33 17.03,4.19 C17.42,4.05 17.85,4 18.32,4 C19.1,4 19.7,4.2 20.1,4.61 C20.5,5 20.72,5.54 20.72,6.18 C20.71,6.74 20.53,7.26 20.18,7.73 C19.84,8.21 19.42,8.66 18.91,9.09 L18.27,9.61 L18.27,9.63 L20.85,9.63 L20.85,11 Z" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

@@ -1,0 +1,83 @@
+//
+// Global variables
+//
+// Don't change variables here, instead copy the variables
+// you want to override to theme-oxide.less
+//
+
+// Config
+@prefix: tox;
+
+// Root variables
+// Begin customization by changing these variables as most other variables are derivatives of these.
+@background-color: #fff;
+@base-value: 16px;
+@color-black: #222f3e;
+@color-tint: #006ce7;
+@color-white: #fff;
+@color-error: #c00;
+@color-error-element-focus-color: #f00;
+@color-error-element-focus: 0 0 0 1px @color-error-element-focus-color;
+@color-success: #78AB46;
+@color-warning: #FFCC00;
+@color-active: #ffcf30;
+
+@font-stack: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+
+// Content;
+
+@content-ui-darkmode: false; // Change this to true to get white icons in the content such as bookmarks.
+
+// Colors
+@border-color: darken(@background-color, 6.5%);
+@border-color-light: contrast(@background-color, darken(@background-color, 11%), lighten(@background-color, 11%));
+@text-color: contrast(@background-color, @color-black, @color-white);
+@text-color-muted: contrast(@background-color, fade(@color-black, 70%), fade(@color-white, 50%));
+
+// Some useful generic variables
+@panel-border-radius: 6px; // Dialogs, menues etc.
+@control-border-radius: 6px; // Buttons, input fields etc.
+
+// Focus outline
+@keyboard-focus-outline-width: 2px;
+@keyboard-focus-outline-color: @color-tint;
+
+// Font
+@line-height-base: 1.3;
+@font-weight-normal: normal;
+@font-weight-bold: bold;
+@font-size-base: @base-value;
+@font-size-xs: 12px; // Absolute value to not make it too small
+@font-size-sm: @font-size-base * .875;
+@font-size-md: @font-size-base;
+@font-size-lg: @font-size-base * 1.25;
+
+// Spacings
+@pad-xs: @base-value / 4;
+@pad-sm: @base-value / 2;
+@pad-md: @base-value;
+@pad-lg: @base-value * 1.5;
+@pad-xl: @base-value * 2;
+
+// z-index stack (reserved range 1000-10000)
+@z-index-fullscreen: 1200;
+@z-index-resize-handle: 1298;
+@z-index-throbber: 1299;
+@z-index-sink: 1300;
+
+// views and onboarding overlay are rendered inside the editor, not in the sink, so they need to be higher to show above popups e.g. notifications, tooltips and menus
+@z-index-view: 1301;
+@z-index-onboarding-overlay: 1302;
+
+// sink z-index stack
+// Note: these are rendered inside the sink so aren't affected by the other global z-index variables
+@z-index-loading: 1000;
+@z-index-dialogs: 1100;
+@z-index-menu: 1150;
+
+
+// Responsive breakpoints
+@breakpoint-sm-value: 767px;
+@breakpoint-md: ~"only screen and (min-width:1000px)";
+@breakpoint-sm: ~"only screen and (max-width:" @breakpoint-sm-value ~")";
+@breakpoint-gt-sm: ~"only screen and (min-width:" @breakpoint-sm-value + 1px ~")";

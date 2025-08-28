@@ -1,0 +1,174 @@
+//
+// Toolbar
+//
+
+@toolbar-background-color: @background-color;
+@toolbar-padding-y: 1px;
+@toolbar-padding-x: @pad-sm;
+@toolbar-row-separator-color: @tinymce-separator-color;
+@toolbar-row-separator-padding: @toolbar-group-padding-x;
+@toolbar-separator-distance: 0px;
+@toolbar-separator-color: transparent;
+
+// private variables
+@_toolbar-height: @toolbar-button-height + (@toolbar-button-spacing-y * 2) + (@toolbar-group-spacing-y * 2) + 1px;
+@_toolbar-padding-x-no-group-spacing: max(@toolbar-padding-x - @toolbar-group-padding-x, 0px);
+@_toolbar-row-separator-downsize: @_toolbar-height + @toolbar-separator-distance + @toolbar-padding-y * 2;
+@_toolbar-row-separator-image: repeating-linear-gradient(@toolbar-row-separator-color 0 1px, transparent 1px @_toolbar-height);
+@_toolbar-row-separator-image-offset: @_toolbar-height + @toolbar-separator-distance + @toolbar-padding-y;
+@_toolbar-row-separator-image-position: center top @_toolbar-row-separator-image-offset;
+@_toolbar-row-separator-image-size: calc(100% - @toolbar-row-separator-padding * 2) calc(100% - @_toolbar-row-separator-downsize);
+
+.tox {
+  .tox-toolbar-overlord {
+    background-color: @toolbar-background-color;
+  }
+
+  .tox-toolbar,
+  .tox-toolbar__primary,
+  .tox-toolbar__overflow {
+    background-attachment: local;
+    background-color: @toolbar-background-color;
+    background-image: @_toolbar-row-separator-image;
+    background-position: @_toolbar-row-separator-image-position;
+    background-repeat: no-repeat;
+    background-size: @_toolbar-row-separator-image-size;
+    display: flex;
+    flex: 0 0 auto;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    padding: 0 @_toolbar-padding-x-no-group-spacing;
+    transform: perspective(1px); // Fix for Chrome’s BG size rounding errors in some cases
+  }
+
+  .tox-toolbar-overlord > .tox-toolbar,
+  .tox-toolbar-overlord > .tox-toolbar__primary,
+  .tox-toolbar-overlord > .tox-toolbar__overflow {
+    @_toolbar-row-separator-image-offset: 0px;
+    @_toolbar-row-separator-downsize: 0px;
+
+    background-position: @_toolbar-row-separator-image-position;
+    background-size: @_toolbar-row-separator-image-size;
+  }
+
+  .tox-toolbar__overflow.tox-toolbar__overflow--closed {
+    height: 0;
+    opacity: 0;
+    padding-bottom: 0;
+    padding-top: 0;
+    visibility: hidden;
+  }
+
+  .tox-toolbar__overflow--growing {
+    transition: height .3s ease, opacity .2s linear .1s;
+  }
+
+  .tox-toolbar__overflow--shrinking {
+    transition: opacity .3s ease, height .2s linear .1s, visibility 0s linear .3s;
+  }
+
+  .tox-toolbar-overlord,
+  .tox-anchorbar {
+    grid-column: ~"1 / -1";
+  }
+
+  // Add top borders
+  .tox-menubar + .tox-toolbar,
+  .tox-menubar + .tox-toolbar-overlord {
+    border-top: 1px solid @toolbar-separator-color;
+    margin-top: @toolbar-separator-distance - 1px;
+    padding-bottom: @toolbar-padding-y;
+    padding-top: @toolbar-separator-distance + @toolbar-padding-y;
+
+    @media (forced-colors: active) {
+      outline: 1px solid currentColor;
+    }
+  }
+
+  .tox-toolbar--scrolling {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
+  .tox-pop .tox-toolbar {
+    border-width: 0;
+  }
+
+  .tox-toolbar--no-divider {
+    background-image: none;
+  }
+
+  // Wrap for icons within toolbar buttons. Required for loading SVG via Alloy
+  .tox-tbtn__icon-wrap {
+    //
+  }
+
+  .tox-toolbar-overlord .tox-toolbar:not(.tox-toolbar--scrolling):first-child,
+  .tox-toolbar-overlord .tox-toolbar__primary {
+    @_toolbar-row-separator-image-offset: @_toolbar-height;
+
+    background-position: @_toolbar-row-separator-image-position;
+  }
+
+  .tox-editor-header > .tox-toolbar--scrolling,
+  .tox-toolbar-overlord .tox-toolbar--scrolling:first-child {
+    background-image: none;
+  }
+
+  .tox-focusable-wrapper {
+    border: 1px solid transparent;
+    margin-right: 2px;
+    pointer-events: none;
+  
+    .tox-textfield-size {
+      pointer-events: all;
+    }
+  
+    &:focus {
+      background-color: @toolbar-button-bespoke-focus-background-color;
+      border-radius: @control-border-radius;
+      border-style: solid;
+      border-width: 1px;
+      &:extend(.tox .tox-textfield:focus);
+    }
+  }
+}
+
+// Floating more drawer styles. Uses pop toolbar styles
+.tox.tox-tinymce-aux .tox-toolbar__overflow {
+  @_toolbar-row-separator-downsize: @_toolbar-height + @pad-xs + @pad-xs * 2;
+  @_toolbar-row-separator-image-offset: @_toolbar-height + @pad-xs;
+  @toolbar-row-separator-padding: @pad-sm;
+  @toolbar-padding-x: @pad-sm;
+
+  background-color: @pop-background-color;
+  background-position: @_toolbar-row-separator-image-position;
+  background-size: @_toolbar-row-separator-image-size;
+  border: none;
+  border-radius: @pop-border-radius;
+  box-shadow: @pop-box-shadow;
+  overscroll-behavior: none;
+  padding: @pad-xs 0;
+
+  @media (forced-colors: active) {
+    border: solid;
+  }
+}
+
+// Context toolbar
+.tox-pop .tox-pop__dialog {
+  .tox-toolbar {
+    @_toolbar-row-separator-downsize: @_toolbar-height + @pad-xs + @pad-xs * 2;
+    @_toolbar-row-separator-image-offset: @_toolbar-height + @pad-xs;
+
+    background-position: @_toolbar-row-separator-image-position;
+    background-size: @_toolbar-row-separator-image-size;
+    padding: @pad-xs 0;
+  }
+}
+
+// Context form group
+.tox-context-form__group {
+  display: flex;
+  align-items: center;
+}

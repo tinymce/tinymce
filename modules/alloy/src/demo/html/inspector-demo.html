@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Inspector Example Page</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link href="../css/alloy-demo.css" rel="Stylesheet">
+
+    <style type="text/css">
+      #ephox-ui {
+        margin-bottom: 20px;
+      }
+
+
+    </style>
+  </head>
+
+  <body>
+		<h2>Inspector Page</h2>
+
+    <p>This page shows (in the source code) how to hook up the chrome extension inspector. The code is as
+      follows:
+    </p>
+
+    <pre style="font-size: x-large;">
+      // "bob" is what I'm calling this alloy root (name).
+      // name can be anything and has no meaning aside from
+      // allowing more than one to be registered.
+      Debugging.registerInspector('bob', gui);
+    </pre>
+
+    <div id="ephox-ui"></div>
+    <script type="text/javascript" src="../../../demo.js"></script>
+    <script>demos.InspectorDemo();</script>
+  </body>
+</html>

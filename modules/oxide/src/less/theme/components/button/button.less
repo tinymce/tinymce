@@ -1,0 +1,132 @@
+/*
+  Button - base button styles and variables. 
+  These affect each button variant - primary, secondary, secondary-outlined and naked. 
+  Variant classes should be added next to the base `tox-button` class.
+*/
+
+
+@button-border-radius: @control-border-radius;
+@button-border-style: solid;
+@button-border-width: 1px;
+@button-box-shadow: none;
+@button-font-family: @font-stack;
+@button-font-size: @font-size-sm;
+@button-font-style: normal;
+@button-font-weight: @font-weight-bold;
+@button-letter-spacing: normal;
+@button-line-height: @textfield-line-height;
+@button-padding-x: @pad-md;
+@button-padding-y: @pad-xs;
+@button-text-align: center;
+@button-text-decoration: none;
+@button-text-transform: none;
+
+@button-focus-outline: inset 0 0 0 1px @color-white, 0 0 0 2px @color-tint;
+
+@button-icon-success-color: @color-success;
+@button-icon-error-color: @color-error;
+
+@layer tox-atomic-component {
+  .tox {
+    .tox-button when (@custom-properties-enabled = true) {
+      --tox-private-button-border-width: 1px;
+      --tox-private-button-border-style: solid;
+
+      --tox-private-button-padding-x: var(--tox-private-pad-md);
+      --tox-private-button-padding-y: var(--tox-private-pad-xs);
+
+      --tox-private-button-font-size: var(--tox-private-font-size-sm);
+      --tox-private-button-font-style: normal;
+      --tox-private-button-font-weight: var(--tox-private-font-weight-bold); 
+      --tox-private-button-focus-outline: inset 0 0 0 1px var(--tox-private-color-white), 0 0 0 2px var(--tox-private-color-tint);
+    }
+
+    .tox-button {  
+      border-width: var(--tox-private-button-border-width, @button-border-width);
+      border-style: var(--tox-private-button-border-style, @button-border-style);
+      border-radius: var(--tox-private-control-border-radius, @button-border-radius);
+      font-family: var(--tox-private-font-stack, @button-font-family);
+      font-size: var(--tox-private-button-font-size, @button-font-size);
+      font-style: var(--tox-private-button-font-style, @button-font-style);
+      font-weight: var(--tox-private-button-font-weight, @button-font-weight);
+      line-height: var(--tox-private-control-line-height, @button-line-height);
+      padding: var(--tox-private-button-padding-y, @button-padding-y) var(--tox-private-button-padding-x, @button-padding-x);
+      text-align: @button-text-align;
+      text-decoration: @button-text-decoration;
+      text-transform: @button-text-transform;
+      letter-spacing: @button-letter-spacing;
+      box-shadow: @button-box-shadow;
+      box-sizing: border-box;
+      cursor: pointer;
+      outline: none;
+      position: relative;
+      white-space: nowrap;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2px;
+
+      // The before element is used for visible focus outline. 
+      // The same result can be achieved with box-shadow on the button element.
+      // Using the button element instead of before would mean removing following variables (currently all equal to box-shadow: none)  
+      //  1. @button-box-shadow
+      //  2. All of the box-shadow raletad variables for different states (for example: @button-disabled-box-shadow, @button-hover-box-shadow) 
+      // The before element can be removed if we decide to use box-shadow on button element.
+      &::before {
+        border-radius: var(--tox-private-control-border-radius, @button-border-radius);
+        bottom: calc(-1 * var(--tox-private-button-border-width, @button-border-width));
+        box-shadow: var(--tox-private-button-focus-outline, @button-focus-outline);
+        content: '';
+        left: calc(-1 * var(--tox-private-button-border-width, @button-border-width));
+        opacity: 0;
+        pointer-events: none;
+        position: absolute;
+        right: calc(-1 * var(--tox-private-button-border-width, @button-border-width));
+        top: calc(-1 * var(--tox-private-button-border-width, @button-border-width));
+      }
+
+      &:focus:not(:disabled) {
+        background-color: var(--tox-private-button-focus-background-color, @button-focus-background-color);
+        background-image: @button-focus-background-image;
+        border-color: var(--tox-private-button-focus-border-color, @button-focus-border-color);
+        box-shadow: var(--tox-private-button-focus-box-shadow, @button-focus-box-shadow);
+        color: var(--tox-private-button-focus-text-color, @button-focus-text-color);
+
+        &::before {
+          opacity: 1;
+        }
+      }
+
+      &.tox-button--icon, &:has(.tox-icon:only-child) {    
+        padding: @button-padding-y; // Use padding-y as horizontal padding to make icon button square-ish
+      }
+
+      .tox-icon svg {
+        display: block;
+        fill: currentColor;
+      }
+
+      .tox-icon.tox-icon--success svg {
+        fill: var(--tox-private-color-success, @button-icon-success-color);
+      }
+
+      .tox-icon.tox-icon--error svg {
+        fill: var(--tox-private-color-error, @button-icon-error-color);
+      }
+    }
+
+    .tox-button--stretch {
+      width: 100%;
+    }
+  }
+}
+
+// TODO: remove me when the size input for toolbar is a separate component. Toolbar buttons should be styled by a toolbar-button.less but we use dialog size input so the classes don't match
+.tox-context-form__group {
+  .tox-button--icon,
+  .tox-button.tox-button--icon {
+    margin: @toolbar-button-margin;
+    padding: @toolbar-button-padding;
+  }
+}
+ 

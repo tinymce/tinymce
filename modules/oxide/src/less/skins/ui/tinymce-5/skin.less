@@ -1,0 +1,241 @@
+@import '../../../theme/theme';
+
+//
+// Place your variables here
+//
+@border-color: darken(@background-color, 20);
+@collection-item-separator-color: contrast(@background-color, @border-color, lighten(@border-color, 10%));
+@collection-list-item-active-background-color: @toolbar-button-hover-background-color;
+@dialog-border-radius: @panel-border-radius;
+@dialog-border-width: 1px;
+@dialog-footer-separator-border: 1px solid @dialog-border-color;
+@editor-header-box-shadow: none;
+@editor-bottom-header-box-shadow: none;
+@editor-header-sticky-box-shadow: 0 4px 4px -3px rgba(0, 0, 0, .25);
+@menu-border-color: @border-color;
+@menu-box-shadow: 0 4px 8px 0 fade(@color-black, 10%);
+@menu-item-collection-list-padding: 0;
+@menu-item-collection-toolbar-padding: @pad-xs;
+@menu-item-collection-grid-padding: @pad-xs;
+@statusbar-font-size: @font-size-xs;
+@statusbar-height: 18px;
+@statusbar-separator-color: @border-color;
+@statusbar-text-transform: uppercase;
+@toolbar-button-height: 34px;
+@toolbar-button-spacing-x: 0;
+@toolbar-button-spacing-y: 2px;
+@toolbar-button-hover-background-color: multiply(white, contrast(@background-color, fade(@color-black, 15), fade(@color-black, 85)));
+@toolbar-button-enabled-background-color:  multiply(white, contrast(@background-color, fade(@color-black, 25), fade(@color-black, 65)));
+@toolbar-group-separator-color: @border-color;
+@toolbar-background: url("data:image/svg+xml;charset=utf8,%3Csvg height='@{_toolbar-height}' viewBox='0 0 40 @{_toolbar-height}' width='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='@{_toolbar-divider-height}' width='100' height='1' fill='@{_toolbar-row-separator-color}'/%3E%3C/svg%3E") left 0 top @toolbar-padding-y @toolbar-background-color;
+@_toolbar-row-separator-color: escape('@{toolbar-row-separator-color}');
+@_toolbar-divider-height: @_toolbar-height - 1px;
+@toolbar-row-separator-color: @toolbar-group-separator-color;
+@toolbar-separator-color: @border-color;
+@toolbar-padding-y: 0;
+@toolbar-padding-x: 0;
+@keyboard-focus-outline-color: transparent;
+@keyboard-focus-outline-width: 0;
+@toolbar-button-focus-background-color: @toolbar-button-hover-background-color;
+@toolbar-button-bespoke-background-color: transparent;
+@toolbar-button-bespoke-focus-background-color: @toolbar-button-focus-background-color;
+@toolbar-button-bespoke-spacing-x: @toolbar-button-spacing-x;
+@toolbar-separator-distance: 0;
+@color-tint: #207ab7;
+@panel-border-radius: 3px;
+@control-border-radius: 3px;
+@tinymce-border-radius: 0;
+@tinymce-border-width: 1px;
+@tinymce-box-shadow: none;
+@textfield-focus-box-shadow: none;
+@textfield-focus-outline: 2px solid fade(@color-tint, 25%);
+@menubar-padding-x: @toolbar-group-padding-x;
+@menubar-background: url("data:image/svg+xml;charset=utf8,%3Csvg height='@{_menubar-height}' viewBox='0 0 40 @{_menubar-height}' width='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='@{_menubar-divider-height}' width='100' height='1' fill='@{_menubar-row-separator-color}'/%3E%3C/svg%3E") left 0 top 0 @menubar-background-color;
+@menubar-separator-color: @border-color;
+@menubar-row-separator-color: @border-color;
+@menubar-select-focus-background-color: @toolbar-button-hover-background-color;
+@_menubar-row-separator-color: escape('@{menubar-row-separator-color}');
+@_menubar-divider-height: @_menubar-height - 1px;
+@statusbar-padding-x: @pad-sm;
+@statusbar-text-color: contrast(@statusbar-background-color, @text-color-muted, @color-white);
+@statusbar-not-disabled-selector: ~'&:not(:disabled):not([aria-disabled=true])';
+@toolbar-group-padding-x: 4px;
+@button-naked-hover-background-color: @button-secondary-hover-background-color;
+@button-naked-hover-border-color: @button-secondary-hover-border-color;
+@button-naked-hover-box-shadow: @button-secondary-hover-box-shadow;
+@button-naked-hover-icon-color: @button-secondary-hover-text-color;
+@button-naked-disabled-background-color: @button-secondary-disabled-background-color;
+@button-naked-disabled-border-color: @button-secondary-disabled-border-color;
+@button-naked-disabled-box-shadow: @button-secondary-disabled-box-shadow;
+@button-naked-active-background-color: @button-secondary-active-background-color;
+@button-naked-active-border-color: @button-secondary-active-border-color;
+@button-naked-active-box-shadow: @button-secondary-active-box-shadow;
+@button-naked-active-icon-color: @button-secondary-active-text-color;
+@insert-table-picker-selected-background-color: fade(@color-tint, 50%);
+@insert-table-picker-selected-border-color: @insert-table-picker-selected-background-color;
+@edit-area-border-color: transparent; // Hide focus outline around editor container
+@edit-area-border-width: 0; // Hide focus outline around editor container
+
+.tox {
+  &:not(.tox-tinymce-inline) .tox-editor-header {
+    background-color: none;
+    padding: 0;
+  }
+
+  &.tox-tinymce--toolbar-bottom .tox-editor-header,
+  &.tox-tinymce-inline .tox-editor-header {
+    margin-bottom: -1px;
+  }
+
+  &.tox-tinymce-inline .tox-editor-container {
+    overflow: hidden;
+  }
+
+  &:not(.tox-tinymce-inline).tox-tinymce--toolbar-bottom .tox-editor-header {
+    border-top: none;
+    box-shadow: none;
+  }
+
+  // Double .tox selector to increase specificity over `:not(.tox-tinymce-inline)` from new style
+  &.tox.tox-tinymce--toolbar-sticky-on {
+    .tox-editor-header {
+      background-color: @editor-header-sticky-background-color;
+      box-shadow: @editor-header-sticky-box-shadow;
+      padding: 0;
+    }
+
+    &.tox-tinymce--toolbar-bottom {
+      .tox-editor-header {
+        box-shadow: @editor-header-sticky-box-shadow;
+      }
+    }
+  }
+
+  .tox-collection--list .tox-collection__group .tox-insert-table-picker {
+    margin: -@collection-item-separator-margin-y 0;
+  }
+
+  .tox-menu.tox-collection.tox-collection--list {
+    padding: @menu-item-collection-list-padding;
+  }
+
+  .tox-pop {
+    box-shadow: none;
+  }
+
+  .tox-tbtn,
+  .tox-label,
+  .tox-number-input,
+  .tox-tbtn--select,
+  .tox-split-button {
+    margin: @toolbar-button-spacing-y @toolbar-button-spacing-x (@toolbar-button-spacing-y + 1px) 0;
+  }
+
+  .tox-tbtn--bordered, .tox-tbtn--bordered:focus, .tox-tbtn--bordered:hover {
+    border: 1px solid @border-color;
+  }
+
+  .tox-toolbar,
+  .tox-toolbar__primary,
+  .tox-toolbar__overflow {
+    background: @toolbar-background !important;
+  }
+
+  .tox-menubar + .tox-toolbar-overlord {
+    border-top: none;
+  }
+
+  .tox-menubar + .tox-toolbar,
+  .tox-menubar + .tox-toolbar-overlord .tox-toolbar__primary {
+    border-top: 1px solid @toolbar-separator-color;
+    margin-top: -1px; // Fix to hide menubar bottom border below the toolbar
+  }
+
+  &.tox-tinymce-aux .tox-toolbar__overflow {
+    border: 1px solid @pop-border-color;
+    padding: 0;
+  }
+
+  // Context toolbar
+  .tox-pop .tox-pop__dialog .tox-toolbar { padding: 0; }
+
+  // Add a top border when toolbar_location is bottom
+  &:not(.tox-tinymce-inline) .tox-editor-header:not(:first-child) .tox-menubar {
+    border-top: 1px solid @menubar-separator-color;
+  }
+
+  &:not(.tox-tinymce-inline) .tox-editor-header:not(:first-child) .tox-toolbar-overlord:first-child .tox-toolbar__primary,
+  &:not(.tox-tinymce-inline) .tox-editor-header:not(:first-child) .tox-toolbar:first-child {
+    border-top: 1px solid @toolbar-separator-color;
+  }
+
+  .tox-toolbar__group {
+    padding: 0 @toolbar-group-padding-x 0 (@toolbar-group-padding-x + @toolbar-button-spacing-x);
+  }
+
+  .tox-collection__item {
+    border-radius: 0;
+    cursor: pointer;
+  }
+
+  .tox-statusbar a,
+  .tox-statusbar__path-item,
+  .tox-statusbar__wordcount {
+    &:hover,
+    &:focus {
+      @{statusbar-not-disabled-selector} {
+        color: @statusbar-logo-active-color;
+      }
+    }
+  }
+
+  .tox-statusbar__branding {
+    svg {
+
+      @media (forced-colors: active) {
+        fill: currentColor;
+      }
+
+      fill: @statusbar-logo-color;
+      height: 1em;
+      margin-left: .3em;
+      width: auto;
+    }
+
+    a {
+      align-items: center;
+      display: inline-flex;
+    }
+
+    a:hover,
+    a:focus {
+      @{statusbar-not-disabled-selector} {
+        svg {
+          fill: @statusbar-logo-active-color;
+        }
+      }
+    }
+  }
+
+  &:not([dir=rtl]) .tox-statusbar__branding {
+    margin-left: 1ch;
+  }
+
+  &[dir=rtl] {
+    .tox-statusbar__branding {
+      svg {
+        margin-left: 0;
+        margin-right: .3em;
+      }
+    }
+  }
+
+  .tox-statusbar__resize-handle {
+    padding-bottom: 0;
+    padding-right: 0;
+  }
+
+  .tox-button::before {
+    display: none;
+  }
+}

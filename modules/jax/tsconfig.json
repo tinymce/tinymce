@@ -1,0 +1,23 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "compilerOptions": {
+    "strict": true,
+    "outDir": "lib",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
+    "paths": {
+      "ephox/jax/test/*": ["src/test/ts/module/ephox/jax/test/*"],
+      "ephox/jax/demo/*": ["src/demo/ts/ephox/jax/demo/*"],
+      "ephox/jax/*": ["src/main/ts/ephox/jax/*"]
+    }
+  },
+  "include": [
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts"
+  ],
+  "references": [
+    { "path": "../katamari" }
+  ]
+}

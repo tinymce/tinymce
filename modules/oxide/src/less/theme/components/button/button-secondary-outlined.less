@@ -1,0 +1,80 @@
+//
+// Secondary outlined button - variant of the button
+// Variant class `tox-button--secondary--outline` should be added next to the base `tox-button` class.
+// For base button styles see button.less
+//
+
+@button-secondary-outline-hover-text-color: @text-color;
+
+@layer tox-atomic-component {
+  .tox {
+    .tox-button--secondary--outline when (@custom-properties-enabled = true) {
+      // Secondary outlined button variant only styles the text and border color as the background is transparent by design
+      --tox-private-button-secondary-outline-text-color: var(--tox-private-text-color);
+      --tox-private-button-secondary-outline-border-color: light-dark(
+        hsl(from var(--tox-private-background-color) h s calc(l - 6)),
+        hsl(from var(--tox-private-background-color) h s calc(l - -15))); // calc(l + 15) is valid css but less compiler perserve new line characters when + is used here. This behavior breaks our minification.
+
+      /*
+        Button state variables - to be decided if we want them.
+        If we do:
+          1. They should inherit from button base variables (as they do now).
+          2. While skinning the change of the base variable will result with others being calculated/inherited from it.
+          3. In this case it is also possible to skin each state separately.
+        If we don't:
+          1. They should be removed.
+          2. Different states of the button should use base button variables and calculate from them if neccessary, but not create new variables.
+          3. In this case it is NOT possible to skin each state separately.
+      */
+      /* Disabled state */
+      --tox-private-button-secondary-outline-disabled-background-color: transparent;
+      --tox-private-button-secondary-outline-disabled-border-color: var(--tox-private-button-secondary-outline-border-color);
+      --tox-private-button-secondary-outline-disabled-text-color: hsl(from var(--tox-private-button-secondary-outline-text-color) h s l / 50%);
+
+      /* Focus state */
+      --tox-private-button-secondary-outline-focus-background-color: hsl(from var(--tox-private-button-secondary-outline-border-color) h s calc(l - 5));
+      --tox-private-button-secondary-outline-focus-border-color: hsl(from var(--tox-private-button-secondary-outline-border-color) h s calc(l - 5));
+      --tox-private-button-secondary-outline-focus-text-color: var(--tox-private-button-secondary-outline-text-color);
+
+      /* Hover state */
+      --tox-private-button-secondary-outline-hover-background-color: var(--tox-private-button-secondary-outline-border-color);
+      --tox-private-button-secondary-outline-hover-border-color: hsl(from var(--tox-private-button-secondary-outline-border-color) h s calc(l - 5));
+      --tox-private-button-secondary-outline-hover-text-color: var(--tox-private-button-secondary-outline-text-color);
+
+      /* Active state */
+      --tox-private-button-secondary-outline-active-background-color: hsl(from var(--tox-private-button-secondary-outline-border-color) h s calc(l - 5));
+      --tox-private-button-secondary-outline-active-border-color: hsl(from var(--tox-private-button-secondary-outline-border-color) h s calc(l - 5));
+      --tox-private-button-secondary-outline-active-text-color: var(--tox-private-button-secondary-outline-text-color);
+    }
+
+    .tox-button--secondary--outline {
+      background-color: transparent;
+      border-color: var(--tox-private-button-secondary-outline-border-color, @button-secondary-background-color);
+      color: var(--tox-private-button-secondary-outline-text-color, @text-color);
+
+      &:focus:not(:disabled) {
+        background-color: var(--tox-private-button-secondary-outline-focus-background-color, @button-secondary-hover-background-color);
+        border-color: var(--tox-private-button-secondary-outline-focus-border-color, @button-secondary-hover-background-color);
+        color: var(--tox-private-button-secondary-outline-focus-text-color, @text-color);
+      }
+
+      &:hover:not(:disabled) {
+        background-color: var(--tox-private-button-secondary-outline-hover-background-color, @button-secondary-background-color);
+        border-color: var(--tox-private-button-secondary-outline-hover-border-color, @button-secondary-hover-background-color);
+        color: var(--tox-private-button-secondary-outline-hover-text-color, @button-secondary-outline-hover-text-color);
+      }
+
+      &:active:not(:disabled) {
+        background-color: var(--tox-private-button-secondary-outline-active-background-color, @button-secondary-hover-background-color);
+        border-color: var(--tox-private-button-secondary-outline-active-border-color, @button-secondary-hover-background-color);
+        color: var(--tox-private-button-secondary-outline-active-text-color, @text-color);
+      }
+
+      &[disabled] {
+        background-color: var(--tox-private-button-secondary-outline-disabled-background-color, transparent);
+        border-color: var(--tox-private-button-secondary-outline-disabled-border-color, @button-secondary-background-color);
+        color: var(--tox-private-button-secondary-outline-disabled-text-color, @button-secondary-disabled-text-color);
+      }
+    }
+  }
+}

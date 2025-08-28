@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-new-tab</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M15,13 L17,11 L17,19 L5,19 L5,7 L13,7 L11,9 L7,9 L7,17 L15,17 L15,13 Z M19,5 L19,10.5 L16.953125,8.453125 L11.421875,14 L10,14 L10,12.578125 L15.546875,7.046875 L13.5,5 L19,5 Z" fill="#000000"></path>
+    </g>
+</svg>

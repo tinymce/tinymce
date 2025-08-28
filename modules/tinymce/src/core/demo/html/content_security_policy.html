@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>TinyMCE Content Security Policy Demo Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; connect-src 'self' blob:; img-src 'self' data: blob:; style-src 'self'; font-src 'self';" />
+</head>
+
+<body>
+  <main>
+    <h1>TinyMCE Content Security Policy Demo Page</h1>
+    <div id="ephox-ui">
+      <textarea></textarea>
+    </div>
+    <div class="tinymce">Inline demo</div>
+    <script src="../../../../js/tinymce/tinymce.js"></script>
+    <script src="../../../../scratch/demos/core/cspdemo.js"></script>
+  </main>
+</body>
+
+</html>

@@ -1,0 +1,66 @@
+//
+// Comments
+//
+
+@document-comment-color: if(@content-ui-darkmode = true, mix(@color-active, @color-black, 20%), lighten(@color-active, 20%));
+@document-comment-active-color: @color-active;
+@document-comment-background-color: @document-comment-color;
+@document-comment-active-background-color: if(@content-ui-darkmode = true, mix(@color-active, @color-black, 20%), @document-comment-active-color);
+@document-comment-outline-color: @document-comment-color;
+@document-comment-active-outline-color: @document-comment-active-color;
+@document-comment-outline-width: @object-block-selected-outline-width;
+
+.tox-comments-visible {
+  .tox-comment[contenteditable="false"],
+  span.tox-comment img,
+  span.tox-comment > audio,
+  span.tox-comment > video,
+  span.tox-comment span.mce-preview-object {
+    &:not([data-mce-selected]) {
+      outline: @document-comment-outline-width solid @document-comment-outline-color;
+    }
+  }
+
+  .tox-comment[contenteditable="false"][data-mce-annotation-active="true"] {
+    &:not([data-mce-selected]) {
+      outline: @document-comment-outline-width solid @document-comment-active-outline-color;
+    }
+  }
+
+  span.tox-comment:not([data-mce-selected]) {
+    background-color: @document-comment-background-color;
+    outline: none;
+  }
+
+  span.tox-comment[data-mce-annotation-active="true"]:not([data-mce-selected="inline-boundary"]) {
+    background-color: @document-comment-active-background-color;
+  }
+
+  span.tox-comment[data-mce-selected] {
+    background-color: @document-comment-active-background-color;
+    border-radius: 3px;
+    box-shadow: 0 0 0 2px @keyboard-focus-outline-color;
+
+    &:has(img[data-mce-selected],
+        > audio[data-mce-selected],
+        > video[data-mce-selected],
+        span.mce-preview-object[data-mce-selected]) {
+      box-shadow: none;
+    }
+  }
+
+  span.tox-comment[data-mce-selected] img:not([data-mce-selected]),
+  span.tox-comment[data-mce-selected] > audio:not([data-mce-selected]),
+  span.tox-comment[data-mce-selected] > video:not([data-mce-selected]),
+  span.tox-comment[data-mce-selected] span.mce-preview-object:not([data-mce-selected]) {
+    box-shadow: 0 0 0 5px @keyboard-focus-outline-color;
+  }
+
+  span.tox-comment[data-mce-annotation-active="true"] img:not([data-mce-selected]),
+  span.tox-comment[data-mce-annotation-active="true"] > audio:not([data-mce-selected]),
+  span.tox-comment[data-mce-annotation-active="true"] > video:not([data-mce-selected]),
+  span.tox-comment[data-mce-annotation-active="true"] span.mce-preview-object:not([data-mce-selected]) {
+    outline: @document-comment-outline-width solid
+    @document-comment-active-outline-color;
+  }
+}

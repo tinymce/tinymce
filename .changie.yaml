@@ -1,0 +1,96 @@
+changesDir: .changes
+unreleasedDir: unreleased
+headerPath: ./header.tpl.md
+versionExt: md
+versionFormat: '## {{.Version}} - {{.Time.Format "2006-01-02"}}'
+kindFormat: "### {{.Kind}}"
+changeFormat: "- {{.Body}} #{{.Custom.Issue}}"
+fragmentFileFormat: '{{.Project}}-{{.Custom.Issue}}-{{.Time.Format "2006-01-02"}}'
+projects:
+  - label: acid
+    key: acid
+    changelog: modules/acid/CHANGELOG.md
+  - label: agar
+    key: agar
+    changelog: modules/agar/CHANGELOG.md
+  - label: alloy
+    key: alloy
+    changelog: modules/alloy/CHANGELOG.md
+  - label: boss
+    key: boss
+    changelog: modules/boss/CHANGELOG.md
+  - label: boulder
+    key: boulder
+    changelog: modules/boulder/CHANGELOG.md
+  - label: bridge
+    key: bridge
+    changelog: modules/bridge/CHANGELOG.md
+  - label: darwin
+    key: darwin
+    changelog: modules/darwin/CHANGELOG.md
+  - label: dragster
+    key: dragster
+    changelog: modules/dragster/CHANGELOG.md
+  - label: jax
+    key: jax
+    changelog: modules/jax/CHANGELOG.md
+  - label: katamari
+    key: katamari
+    changelog: modules/katamari/CHANGELOG.md
+  - label: katamari-assertions
+    key: katamari-assertions
+    changelog: modules/katamari-assertions/CHANGELOG.md
+  - label: mcagar
+    key: mcagar
+    changelog: modules/mcagar/CHANGELOG.md
+  - label: phoenix
+    key: phoenix
+    changelog: modules/phoenix/CHANGELOG.md
+  - label: polaris
+    key: polaris
+    changelog: modules/polaris/CHANGELOG.md
+  - label: porkbun
+    key: porkbun
+    changelog: modules/porkbun/CHANGELOG.md
+  - label: robin
+    key: robin
+    changelog: modules/robin/CHANGELOG.md
+  - label: sand
+    key: sand
+    changelog: modules/sand/CHANGELOG.md
+  - label: snooker
+    key: snooker
+    changelog: modules/snooker/CHANGELOG.md
+  - label: sugar
+    key: sugar
+    changelog: modules/sugar/CHANGELOG.md
+  - label: tinymce
+    key: tinymce
+    changelog: modules/tinymce/CHANGELOG.md
+kinds:
+  - label: Added
+    auto: minor
+  - label: Improved
+    auto: minor
+  - label: Changed
+    auto: major
+  - label: Deprecated
+    auto: minor
+  - label: Removed
+    auto: major
+  - label: Fixed
+    auto: patch
+  - label: Security
+    auto: patch
+
+newlines:
+  afterChangelogHeader: 1
+  afterChangelogVersion: 1
+  endOfVersion: 1
+  beforeKind: 1
+envPrefix: CHANGIE_
+custom:
+  - key: Issue
+    label: Issue (TINY-XXXX+)
+    type: string
+    minLength: 7

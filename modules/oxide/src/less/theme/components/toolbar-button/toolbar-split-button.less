@@ -1,0 +1,97 @@
+//
+// Toolbar split button
+//
+
+@toolbar-split-button-chevron-touch-padding: 4px;
+@toolbar-split-color-preview-opacity: 0.3;
+
+.tox {
+  // Split button main component (left side)
+  .tox-split-button__main {
+    border-radius: @toolbar-button-border-radius 0 0 @toolbar-button-border-radius;
+    margin-right: 0;
+    width: @toolbar-button-width;
+
+    &:focus {
+      border: @toolbar-button-border;
+      box-shadow: @toolbar-button-focus-box-shadow;
+      background: @toolbar-button-focus-background-color;
+      color: @toolbar-button-focus-text-color;
+      position: relative;
+      z-index: 1;
+
+      &::after {
+        .keyboard-focus-outline-mixin();
+        border-radius: @toolbar-button-border-radius 0 0 @toolbar-button-border-radius;
+      }
+    }
+  }
+
+  // Split button chevron component (right side)
+  .tox-split-button__chevron {
+    width: @toolbar-button-chevron-width;
+    border-radius: 0 @toolbar-button-border-radius @toolbar-button-border-radius 0;
+    margin-left: 0;
+
+    &:focus {
+      border: @toolbar-button-border;
+      box-shadow: @toolbar-button-focus-box-shadow;
+      background: @toolbar-button-focus-background-color;
+      color: @toolbar-button-focus-text-color;
+      position: relative;
+      z-index: 1;
+
+      &::after {
+        .keyboard-focus-outline-mixin();
+        border-radius: 0 @toolbar-button-border-radius @toolbar-button-border-radius 0;
+      }
+    }
+
+
+    svg {
+      @media (forced-colors: active) {
+        fill: currentColor;
+      }
+
+      fill: @toolbar-button-chevron-color;
+    }
+  }
+
+  // Touch device adjustments
+  &.tox-platform-touch {
+    .tox-split-button__main {
+      width: @toolbar-button-width - @toolbar-split-button-chevron-touch-padding;
+    }
+
+    .tox-split-button__chevron {
+      width: @toolbar-button-chevron-width + @toolbar-split-button-chevron-touch-padding;
+    }
+  }
+
+  // Disabled states for split button components
+  .tox-split-button__main.tox-tbtn--disabled,
+  .tox-split-button__chevron.tox-tbtn--disabled {
+    background: @toolbar-button-disabled-background-color;
+    box-shadow: @toolbar-button-disabled-box-shadow;
+    color: @toolbar-button-disabled-text-color;
+
+    &:hover {
+      background: @toolbar-button-disabled-background-color;
+      box-shadow: @toolbar-button-disabled-box-shadow;
+      color: @toolbar-button-disabled-text-color;
+    }
+
+    &:focus {
+      background: @toolbar-button-disabled-background-color;
+      box-shadow: @toolbar-button-disabled-box-shadow;
+      color: @toolbar-button-disabled-text-color;
+    }
+  }
+
+
+  // Color icon opacity for disabled split buttons
+  .tox-split-button__main.tox-tbtn--disabled svg .tox-icon-text-color__color,
+  .tox-split-button__main.tox-tbtn--disabled svg .tox-icon-highlight-bg-color__color {
+    opacity: @toolbar-split-color-preview-opacity;
+  }
+}

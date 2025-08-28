@@ -1,0 +1,76 @@
+//
+// Control wrap
+//
+
+@control-wrap-padding-for-icon: @pad-xl;
+
+@status-invalid-color: @color-error;
+@status-unknown-color: orange;
+@status-valid-color: green; // Valid state is invisible by default
+
+.tox {
+  .tox-control-wrap {
+    flex: 1;
+    position: relative;
+
+    // Hide all statuses by default
+    &:not(.tox-control-wrap--status-invalid) .tox-control-wrap__status-icon-invalid,
+    &:not(.tox-control-wrap--status-unknown) .tox-control-wrap__status-icon-unknown,
+    &:not(.tox-control-wrap--status-valid) .tox-control-wrap__status-icon-valid {
+      display: none;
+    }
+
+    // Make status icons block elements
+    svg {
+      display: block;
+    }
+  }
+
+  // Position status component
+  .tox-control-wrap__status-icon-wrap {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .tox-control-wrap__status-icon-invalid svg {
+    fill: @status-invalid-color;
+  }
+
+  .tox-control-wrap__status-icon-unknown svg {
+    fill: @status-unknown-color;
+  }
+
+  .tox-control-wrap__status-icon-valid svg {
+    fill: @status-valid-color;
+  }
+}
+
+.tox:not([dir=rtl]) {
+  // Add padding to textfield when displaying the icons
+  .tox-control-wrap--status-invalid .tox-textfield,
+  .tox-control-wrap--status-unknown .tox-textfield,
+  .tox-control-wrap--status-valid .tox-textfield, {
+    padding-right: @control-wrap-padding-for-icon;
+  }
+
+  // Position status component
+  .tox-control-wrap__status-icon-wrap {
+    right: @pad-xs;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  // Add padding to textfield when displaying the icons
+  .tox-control-wrap--status-invalid .tox-textfield,
+  .tox-control-wrap--status-unknown .tox-textfield,
+  .tox-control-wrap--status-valid .tox-textfield, {
+    padding-left: @control-wrap-padding-for-icon;
+  }
+
+  // Position status component
+  .tox-control-wrap__status-icon-wrap {
+    left: @pad-xs;
+  }
+}

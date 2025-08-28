@@ -1,0 +1,6 @@
+project: tinymce
+kind: Changed
+body: Tooltips can be hovered over to keep open.
+time: 2025-07-10T09:46:59.793077+02:00
+custom:
+    Issue: TINY-12053

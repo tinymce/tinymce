@@ -1,0 +1,41 @@
+//
+// Content editable false
+//
+
+.mce-content-body {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  .mce-visual-caret {
+    background-color: black;
+    background-color: currentColor;
+    position: absolute;
+  }
+
+  .mce-visual-caret-hidden {
+    display: none;
+  }
+
+  *[data-mce-caret] {
+    left: -1000px;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    right: auto;
+    top: 0;
+  }
+
+  .mce-offscreen-selection {
+    left: -2000000px;
+    max-width: 1000000px;
+    position: absolute;
+  }
+
+  *[contentEditable=false] {
+    cursor: default;
+  }
+
+  *[contentEditable=true] {
+    cursor: text;
+  }
+}

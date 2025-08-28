@@ -1,0 +1,49 @@
+import { Step, GeneralSteps, Logger, Assertions } from '@ephox/agar';
+import { UnitTest } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
+
+import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
+import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
+
+UnitTest.asynctest('ComponentApisTest', (success, failure) => {
+  interface TestApiInterface {
+    doFirstThing: () => void;
+    doSecondThing: () => void;
+    doThirdThing: () => string;
+  }
+  GuiSetup.setup((store, _doc, _body) => GuiFactory.build({
+    dom: {
+      tag: 'div',
+      classes: [ 'component-with-api' ]
+    },
+    apis: {
+      doFirstThing: store.adder('doFirstThing'),
+      doSecondThing: store.adder('doSecondThing'),
+      doThirdThing: Fun.constant('thirdThing')
+    }
+  }), (_doc, _body, _gui, component, store) => [
+    Logger.t('Testing "doFirstThing"', GeneralSteps.sequence([
+      store.sAssertEq('No APIs have been called yet', [ ]),
+      Step.sync(() => {
+        component.getApis<TestApiInterface>().doFirstThing();
+      }),
+      store.sAssertEq('First thing API should have been called', [ 'doFirstThing' ]),
+      store.sClear
+    ])),
+
+    Logger.t('Testing "doSecondThing"', GeneralSteps.sequence([
+      Step.sync(() => {
+        component.getApis<TestApiInterface>().doSecondThing();
+      }),
+      store.sAssertEq('Second thing API should have been called', [ 'doSecondThing' ]),
+      store.sClear
+    ])),
+
+    Logger.t('Testing "doThirdThing"', GeneralSteps.sequence([
+      Step.sync(() => {
+        const value = component.getApis<TestApiInterface>().doThirdThing();
+        Assertions.assertEq('Checking api return value', 'thirdThing', value);
+      })
+    ]))
+  ], success, failure);
+});

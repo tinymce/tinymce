@@ -1,0 +1,42 @@
+{
+  "name": "@ephox/phoenix",
+  "description": "DOM node text gathering library, rose from the ashes of some other projects we can't remember the names of now (edit: seek, sherlock, gift)",
+  "version": "9.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tinymce/tinymce.git",
+    "directory": "modules/phoenix"
+  },
+  "sideEffects": false,
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "README.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "dependencies": {
+    "@ephox/boss": "^7.0.0",
+    "@ephox/katamari": "^10.0.0",
+    "@ephox/polaris": "^7.0.0",
+    "@ephox/sugar": "^10.0.0"
+  },
+  "devDependencies": {
+    "@ephox/katamari-assertions": "^5.0.0"
+  },
+  "scripts": {
+    "test-manual": "bedrock -d src/test",
+    "lint": "eslint --max-warnings=0 src/**/*.ts",
+    "prepublishOnly": "tsc -b",
+    "build": "tsc"
+  },
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
+  "license": "GPL-2.0-or-later",
+  "main": "./lib/main/ts/ephox/phoenix/api/Main.js",
+  "module": "./lib/main/ts/ephox/phoenix/api/Main.js",
+  "types": "./lib/main/ts/ephox/phoenix/api/Main.d.ts"
+}

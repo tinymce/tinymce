@@ -1,0 +1,96 @@
+This seems to be how the process for handling up/down works.
+
+
+So, the approach seems to be:
+
+- pressing up/down without shift
+
+* find the cell that we are in.
+{ findSpot }
+* identify what the context is. Continue if:
+ - we are not on a br from parent or self.
+ - we are on a br, and the adjacent element is either at edge of same cell, or in a different cell (non-x overlapping) ... continue with edge of cell
+{ scan }: 
+* shift the cursor position from our continuing position and repeat until we are finding an element that contains our caret and has a different y position
+* find the element under the new caret (scrolling if necessary)
+* check how it compares with the initial element
+ - in different row and different cell, and x-overlapping --- SUCCESS! Move there.
+ - in different cell (same row or non-overlapping diff row) or edge of cell, repeat SCANNING from edge of cell
+ - otherwise ... do nothing.
+
+
+
+If the user presses up/down without Shift
+
+  VerticalMovement.navigate
+    VerticalMovement.simulate {
+      start <- find the cell that we are in
+      range <- TableKeys.handle
+      finish <- find cell range finishes in
+    } yield (start, finish, range)
+      
+      
+
+  TableKeys.handle {  
+    spot <- findSpot
+    targetRange <- scan(spot)
+    range <- deriveExact(targetRange)
+  } yield (range)
+  
+  
+  TableKeys.findSpot {
+    selection <- getSelection (** fussy **)
+    _ <- tryBr match {
+      NONE: (finish, foffset)
+      SOME(neighbour situs): processBr of BeforeAfter verification of situs
+    }           
+  } yield _
+  
+  
+  BeforeAfter
+   None if 
+     * not both in cells
+     * in the same cell and not now at end of cell
+   Success if
+     * in different cells and different rows and rectangles overlap x-wise
+   Failure if
+     * in different cells and different rows but rectangles do not overlap x-wise (so it's probably jumped to the end of the previous row if we started at the first cell of the row)
+     * in different cells but the same row
+     * in the same cell but now at the end of the cell
+ 
+  
+  tryBr :: (SelectionRange.write situs)
+  
+  * if the element is a br itself
+   - situ.before either sibling or gathered text
+  * if the element is a parent and (element, offset) or (element, offset-1) is br, then do situ.before(text) or situ.on(parent, indexOf(sibling))
+  
+  
+  processBr :: fold(None, None, CellStart, CellFinish)
+  
+  
+  
+  tryCursor :: 
+  
+  
+  
+  scan :: 
+  
+   - try to get a new caret position with a situ range
+   - get the exact range
+   - do the before after analysis
+     None => don't do anything
+     Success => return the successful thing
+     Failure => scan again from the extremity of the cell
+  
+  
+ Retries.retry
+  - get the current position
+  - shift the position by the jump size
+  - adjust (up to 100 times) ... defaulting back to shifted position
+    - get the rectangle of the element at the shifted point
+    - run the adjuster over it:
+        we have the same (relevant) y, retry with a caret that is shifted again
+        we have a rectangle that doesn't include the shifted caret, move the shifted caret into the rectangle and use it
+        use the original otherwise
+  - with the new caret, scroll if necessary and find the range under the (x, y) coordinate

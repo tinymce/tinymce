@@ -1,0 +1,11 @@
+<svg width="36" height="12" viewBox="0 0 36 12" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="6" cy="6" r="3" fill="rgba(0, 0, 0, .2)">
+    <animate attributeName="r" values="3;5;3" calcMode="linear" dur="1s" repeatCount="indefinite" />
+  </circle>
+  <circle cx="18" cy="6" r="3" fill="rgba(0, 0, 0, .2)">
+    <animate attributeName="r" values="3;5;3" calcMode="linear" begin=".33s" dur="1s" repeatCount="indefinite" />
+  </circle>
+  <circle cx="30" cy="6" r="3" fill="rgba(0, 0, 0, .2)">
+    <animate attributeName="r" values="3;5;3" calcMode="linear" begin=".66s" dur="1s" repeatCount="indefinite" />
+  </circle>
+</svg>

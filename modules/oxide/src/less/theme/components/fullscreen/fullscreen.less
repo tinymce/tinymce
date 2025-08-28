@@ -1,0 +1,39 @@
+//
+// Fullscreen mode
+//
+
+@fullscreen-container-background-color: transparent;
+
+.tox-fullscreen {
+  border: 0;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  // Android disable pull to reload in fullscreen
+  overscroll-behavior: none;
+  padding: 0;
+  touch-action: pinch-zoom;
+  width: 100%;
+}
+
+.tox.tox-tinymce.tox-fullscreen .tox-statusbar__resize-handle {
+  display: none;
+}
+
+.tox.tox-tinymce.tox-fullscreen,
+.tox-shadowhost.tox-fullscreen {
+  left: 0;
+  position: fixed;
+  top: 0;
+  z-index: @z-index-fullscreen;
+}
+
+.tox.tox-tinymce.tox-fullscreen {
+  background-color: @fullscreen-container-background-color;
+}
+
+// Body and ShadowDom support
+.tox-fullscreen .tox.tox-tinymce-aux,
+.tox-fullscreen ~ .tox.tox-tinymce-aux {
+  z-index: @z-index-fullscreen + 1;
+}

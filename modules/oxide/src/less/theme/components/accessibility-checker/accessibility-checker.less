@@ -1,0 +1,257 @@
+//
+//
+// Accessibility checker
+@accessibility-overlay-opacity-90: 90%;
+@accessibility-overlay-opacity-60: 60%;
+
+@accessibility-issue-body-text-color: contrast(@dialog-background-color, @color-white, @text-color);
+
+@accessibility-issue-info-heading-text-color: contrast(@dialog-background-color, mix(@color-white, @color-tint, @accessibility-overlay-opacity-60), @color-tint);
+@accessibility-issue-info-background-color: mix(@background-color, @color-tint, @accessibility-overlay-opacity-90);
+
+@accessibility-issue-warn-heading-text-color: contrast(@dialog-background-color, mix(@color-white, @color-warning, @accessibility-overlay-opacity-60), mix(@color-black, @color-warning, @accessibility-overlay-opacity-60));
+@accessibility-issue-warn-background-color: mix(@background-color, @color-warning, @accessibility-overlay-opacity-90);
+@accessibility-issue-warn-icon-background-color: #FFE89D;
+@accessibility-issue-warn-icon-hover-background-color: #F2D574;
+@accessibility-issue-warn-icon-active-background-color: #E8C657;
+
+@accessibility-issue-error-heading-text-color: contrast(@dialog-background-color, mix(@color-white, @color-error, @accessibility-overlay-opacity-60), @color-error);
+@accessibility-issue-error-background-color: mix(@background-color, @color-error, @accessibility-overlay-opacity-90);
+@accessibility-issue-error-icon-background-color: #F2BFBF;
+@accessibility-issue-error-icon-hover-background-color: #E9A4A4;
+@accessibility-issue-error-icon-active-background-color: #EE9494;
+
+@accessibility-issue-success-heading-text-color: contrast(@dialog-background-color, @color-white, darken(@color-success, 15%));
+@accessibility-issue-success-background-color: contrast(@dialog-background-color, fade(@color-success, 10%), fade(@color-success, 50%));
+
+.tox {
+  .accessibility-issue {
+    //
+  }
+
+  .accessibility-issue__header {
+    align-items: center;
+    display: flex;
+    margin-bottom: @pad-xs;
+  }
+
+  #accessibility-issue__subheader {
+    font-size: @font-size-md;
+    color: @accessibility-issue-body-text-color;
+  }
+
+  .accessbility-sr-only {
+    position: absolute;
+    clip: rect(1px, 1px, 1px, 1px);
+    clip-path: inset(0 0 99.9% 99.9%);
+    overflow: hidden;
+    height: 1px;
+    width: 1px;
+    padding: 0;
+    border: 0;
+  }
+
+  .accessibility-issue__description {
+    align-items: stretch;
+    border-radius: @panel-border-radius;
+    justify-content: space-between;
+
+    > div {
+      padding-bottom: @pad-xs;
+
+      > div {
+        align-items: center;
+        display: flex;
+        margin-bottom: @pad-xs;
+
+        .tox-icon svg {
+          display: block;
+        }
+      }
+    }
+  }
+
+  #accessibility-issue__contentID {
+    margin-top: @pad-sm;
+    margin-bottom: @pad-sm;
+
+    span:first-child {
+      font-weight: @font-weight-bold;
+    }
+  }
+
+  #accessibility-issue__document {
+    padding-bottom: @pad-sm;
+  }
+
+  .accessibility-issue__repair {
+    margin-top: @pad-sm;
+
+    .tox-form__group .tox-form__group--error {
+      color: @accessibility-issue-error-heading-text-color;
+    }
+  }
+
+  // Wrap all states with `tox-dialog__body-content` class for css specificity of primarily the H2 colors
+  .tox-dialog__body-content {
+
+    // Info state
+    .accessibility-issue--info {
+      .accessibility-issue__description {
+        background-color: @accessibility-issue-info-background-color;
+        color: @accessibility-issue-body-text-color;
+      }
+
+      .tox-form__group h2 {
+        font-size: @font-size-sm;
+        color: @accessibility-issue-info-heading-text-color;
+      }
+
+      .tox-icon.accessibility-issue__icon svg {
+        fill: @accessibility-issue-info-heading-text-color;
+      }
+
+      a.tox-button--naked.tox-button--icon {
+        background-color: @button-background-color;
+        color: @color-white;
+
+        &:hover,
+        &:focus {
+          background-color: @button-hover-background-color;
+        }
+
+        &:active {
+          background-color: @button-active-background-color;
+        }
+      }
+    }
+
+    // Warn state
+    .accessibility-issue--warn {
+      .accessibility-issue__description {
+        background-color: @accessibility-issue-warn-background-color;
+        color: @accessibility-issue-body-text-color;
+      }
+
+      .tox-form__group h2 {
+        font-size: @font-size-sm;
+        color: @accessibility-issue-warn-heading-text-color;
+      }
+
+      .tox-icon.accessibility-issue__icon svg {
+        fill: @accessibility-issue-warn-heading-text-color;
+      }
+
+      a.tox-button--naked.tox-button--icon {
+        background-color: @accessibility-issue-warn-icon-background-color;
+        color: @color-black;
+
+        &:hover,
+        &:focus {
+          background-color: @accessibility-issue-warn-icon-hover-background-color;
+          color: @color-black;
+        }
+
+        &:active {
+          background-color: @accessibility-issue-warn-icon-active-background-color;
+          color: @color-black;
+        }
+      }
+    }
+
+    // Error state
+    .accessibility-issue--error {
+      .accessibility-issue__description {
+        background-color: @accessibility-issue-error-background-color;
+        color: @accessibility-issue-body-text-color;
+      }
+
+      .tox-form__group h2 {
+        font-size: @font-size-sm;
+        color: @accessibility-issue-error-heading-text-color;
+      }
+
+      .tox-icon.accessibility-issue__icon svg {
+        fill: @accessibility-issue-error-heading-text-color;
+      }
+
+      a.tox-button--naked.tox-button--icon {
+        background-color: @accessibility-issue-error-icon-background-color;
+        color: @color-black;
+
+        &:hover,
+        &:focus {
+          background-color: @accessibility-issue-error-icon-hover-background-color;
+          color: @color-black;
+        }
+
+        &:active {
+          background-color: @accessibility-issue-error-icon-active-background-color;
+          color: @color-black;
+        }
+      }
+    }
+
+    // Success state
+    .accessibility-issue--success {
+      .accessibility-issue__description {
+        background-color: @accessibility-issue-success-background-color;
+        color: @accessibility-issue-body-text-color;
+
+        > *:last-child {
+          display: none;
+        }
+      }
+
+      .tox-form__group h2 {
+        color: @accessibility-issue-success-heading-text-color;
+      }
+
+      .tox-icon.accessibility-issue__icon svg {
+        fill: @accessibility-issue-success-heading-text-color;
+      }
+    }
+  }
+
+  .tox-dialog__body-content .accessibility-issue__header .tox-form__group h1,
+  .tox-dialog__body-content .tox-form__group .accessibility-issue__description h2 {
+    margin-top: 0;
+    // Inherits other styles from dialog body content heading
+  }
+}
+
+.tox:not([dir=rtl]) {
+  .tox-dialog__body-content {
+    .accessibility-issue__header {
+      .tox-button {
+        margin-left: @pad-xs;
+      }
+
+      > *:nth-last-child(2) {
+        margin-left: auto;
+      }
+    }
+
+    .accessibility-issue__description {
+      padding: @pad-sm;
+    }
+  }
+}
+
+.tox[dir=rtl] {
+  .tox-dialog__body-content {
+    .accessibility-issue__header {
+      .tox-button {
+        margin-right: @pad-xs;
+      }
+
+      > *:nth-last-child(2) {
+        margin-right: auto;
+      }
+    }
+
+    .accessibility-issue__description {
+      padding: @pad-xs @pad-sm @pad-xs @pad-xs;
+    }
+  }
+}

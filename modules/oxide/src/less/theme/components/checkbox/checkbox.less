@@ -1,0 +1,138 @@
+//
+// Checkbox
+//
+
+@checkbox-unselected-color: contrast(@background-color, fade(@color-black, 30%), fade(@color-white, 20%));
+@checkbox-selected-color: @color-tint;
+@checkbox-indeterminate-color: @checkbox-selected-color;
+
+@checkbox-disabled-text-color: fade(@text-color, 50%);
+
+@checkbox-focus-box-shadow: inset 0 0 0 1px @button-background-color;
+@checkbox-unfocused-box-shadow: none;
+@checkbox-focus-border-radius: @control-border-radius;
+
+@layer tox-atomic-component {
+  .tox {
+    .tox-checkbox when (@custom-properties-enabled = true) {
+      --tox-private-checkbox-unselected-color: light-dark(
+        hsl(from var(--tox-private-color-black) h s l / 30%),
+        hsl(from var(--tox-private-color-white) h s l / 20%)
+      );
+      --tox-private-checkbox-selected-color: var(--tox-private-color-tint);
+      --tox-private-checkbox-indeterminate-color: var(--tox-private-checkbox-selected-color); 
+
+      --tox-private-checkbox-border-radius: var(--tox-private-control-border-radius);
+      --tox-private-checkbox-focus-box-shadow: inset 0 0 0 1px var(--tox-private-keyboard-focus-outline-color);
+      --tox-private-checkbox-disabled-text-color: var(--tox-private-text-color-muted);
+    } 
+
+    .tox-checkbox {
+      position: relative; 
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      height: var(--tox-private-control-height, 36px);
+      min-width: var(--tox-private-control-height, 36px);
+      border-radius: var(--tox-private-checkbox-border-radius, @control-border-radius);
+    } 
+
+    .tox-checkbox__input {
+      /* Hide from view but visible to screen readers */
+      position: absolute;
+      opacity: 0;
+      width: 1px;
+      height: 1px;
+    } 
+
+    .tox-checkbox__icons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: content-box;
+      padding: var(--tox-private-pad-xs, calc(@button-padding-y - @button-border-width));
+
+      border-radius: var(--tox-private-checkbox-border-radius, @checkbox-focus-border-radius);
+      box-shadow: @checkbox-unfocused-box-shadow;
+
+      height: var(--tox-private-control-line-height, @textfield-line-height);
+      aspect-ratio: 1 / 1;
+    } 
+
+    .tox-checkbox-icon__unchecked svg {
+      display: block;
+      fill: var(--tox-private-checkbox-unselected-color, @checkbox-unselected-color); 
+
+      @media (forced-colors: active) {
+        fill: currentColor !important;
+      }
+    } 
+
+    .tox-checkbox-icon__indeterminate svg {
+      display: none;
+      fill: var(--tox-private-checkbox-indeterminate-color, @checkbox-indeterminate-color);
+    } 
+
+    .tox-checkbox-icon__checked svg {
+      display: none;
+      fill: var(--tox-private-checkbox-selected-color, @checkbox-selected-color);
+    }
+    
+    .tox-checkbox--disabled {
+      color: var(--tox-private-checkbox-disabled-text-color, @checkbox-disabled-text-color);
+      cursor: not-allowed;  
+
+      svg {
+        fill: var(--tox-private-checkbox-disabled-text-color, @checkbox-disabled-text-color);
+      }
+    }
+
+    .tox-checkbox:has(input:checked) {
+      .tox-checkbox-icon__unchecked svg {
+        display: none;
+      } 
+
+      .tox-checkbox-icon__checked svg {
+        display: block;
+      }
+    } 
+
+    .tox-checkbox:has(input:indeterminate) {
+      .tox-checkbox-icon__unchecked svg {
+        display: none;
+      } 
+
+      .tox-checkbox-icon__indeterminate svg {
+        display: block;
+      }
+    } 
+
+    .tox-checkbox__input:focus + .tox-checkbox__icons {
+      box-shadow: var(--tox-private-checkbox-focus-box-shadow, @checkbox-focus-box-shadow);
+    }
+  }
+
+  .tox:not([dir=rtl]) {
+    .tox-checkbox__label {
+      margin-left: var(--tox-private-pad-xs, @pad-xs);
+    }
+    .tox-bar {
+      .tox-checkbox {
+        margin-left: var(--tox-private-pad-xs, @pad-xs);
+      }
+    }
+  }
+
+  // RTL
+  .tox[dir=rtl] {
+    .tox-checkbox__label {
+      margin-right: var(--tox-private-pad-xs, @pad-xs);
+    }
+
+    .tox-bar {
+      .tox-checkbox {
+        margin-right: var(--tox-private-pad-xs, @pad-xs);
+      }
+    }
+  }
+}

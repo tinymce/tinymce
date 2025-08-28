@@ -1,0 +1,19 @@
+@mergetag-hover-background-color: if(@content-ui-darkmode, fade(@color-tint, 30%), fade(@color-tint, 10%));
+@mergetag-affix-text-color: @color-tint;
+@mergetag-affix-background-color: @mergetag-hover-background-color;
+
+.mce-content-body {
+  .mce-mergetag {
+    cursor: default !important;
+    user-select: none;
+  }
+
+  .mce-mergetag:hover {
+    background-color: @mergetag-hover-background-color;
+  }
+
+  .mce-mergetag-affix {
+    background-color: @mergetag-affix-background-color;
+    color: @mergetag-affix-text-color;
+  }
+}

@@ -1,0 +1,48 @@
+//
+// This file contains unknown classes that require documentation
+// or clarifications before we can correctly implement them into
+// the main styles.
+// Consider this document technical debt.
+//
+
+/* stylelint-disable */
+
+@input-button-focus-border-color: @button-background-color;
+@select-focus-border-color: @button-background-color;
+
+.tox {
+
+  // TODO: Please give an exanple where this is used. /FD
+  .tox-dialog-loading::before {
+    background-color: rgba(0, 0, 0, .5);
+    content: "";
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    z-index: @z-index-loading;
+  }
+
+  // TODO: I assume cursor:pointer should be applied to .tox-dialog__body-nav-item in dialog.less
+  // and all .tox-tab instances removed. If correct, please perform the changes and delete
+  // the below declaration and this comment. /FD
+  .tox-tab {
+    cursor: pointer;
+  }
+
+  // TODO: Content JS should never be styled. the *__content-js is supposed
+  // to be a hook for javascript, not for styling. //FD
+  .tox-dialog__content-js {
+    display: flex;
+    flex: 1;
+  }
+
+  // TODO: How is this used? This rule quite drastically changes
+  // a components behavior from the outside and needs rewriting
+  // for maintainability.
+  .tox-dialog__body-content .tox-collection {
+    display: flex;
+    flex: 1;
+  }
+
+  /* stylelint-enable */
+}

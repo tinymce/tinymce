@@ -1,0 +1,28 @@
+{
+  "name": "@tinymce/oxide-icons-default",
+  "version": "3.0.0",
+  "description": "The default icon pack for TinyMCE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tinymce/tinymce.git",
+    "directory": "modules/oxide-icons-default"
+  },
+  "main": "dist/js/icons.js",
+  "scripts": {
+    "build": "grunt",
+    "prepublishOnly": "yarn ci",
+    "ci": "grunt --no-color"
+  },
+  "keywords": [
+    "TinyMCE",
+    "Icons"
+  ],
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE.txt"
+  ],
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
+  "license": "GPL-2.0-or-later"
+}

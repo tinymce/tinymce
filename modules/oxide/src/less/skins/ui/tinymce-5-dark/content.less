@@ -1,0 +1,23 @@
+@import 'src/less/theme/content-ui';
+
+// Enable some UI components like anchor SVGs to invert colors.
+@content-ui-darkmode: true;
+
+// Darken block object's selection outline, in this case by
+// reusing the resize handle color.
+@object-block-selected-color: @resize-handle-color;
+
+// Make table cell selection overlay lighter
+@table-selection-blend-mode: lighten;
+
+// Remove the table cell selection border as the blend mode
+// already give the selected border color enough contrast
+@table-selection-border-color: transparent;
+
+body {
+  font-family: sans-serif;
+}
+
+table {
+  border-collapse: collapse;
+}

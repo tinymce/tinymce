@@ -1,0 +1,42 @@
+{
+  "name": "@ephox/jax",
+  "version": "8.0.0",
+  "description": "AJAX library",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tinymce/tinymce.git",
+    "directory": "modules/jax"
+  },
+  "scripts": {
+    "prepublishOnly": "yarn run lint && yarn run build",
+    "lint": "eslint --max-warnings=0 src/**/*.ts",
+    "build": "tsc -b",
+    "test": "bedrock-auto -b chrome-headless --customRoutes ../tinymce/src/core/test/json/routes.json -d src/test/ts/",
+    "test-manual": "bedrock --customRoutes --customRoutes ../tinymce/src/core/test/json/routes.json -d src/test/ts/",
+    "start": "webpack-dev-server --open-page './src/demo/html'",
+    "build:demo": "webpack"
+  },
+  "keywords": [
+    "ajax"
+  ],
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
+  "license": "GPL-2.0-or-later",
+  "dependencies": {
+    "@ephox/katamari": "^10.0.0"
+  },
+  "sideEffects": false,
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "README.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "main": "./lib/main/ts/ephox/jax/api/Main.js",
+  "module": "./lib/main/ts/ephox/jax/api/Main.js",
+  "types": "./lib/main/ts/ephox/jax/api/Main.d.ts"
+}

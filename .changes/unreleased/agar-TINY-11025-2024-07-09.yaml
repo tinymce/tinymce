@@ -1,0 +1,6 @@
+project: agar
+kind: Added
+body: Added mouse double click functions.
+time: 2024-07-09T15:01:44.005411+02:00
+custom:
+  Issue: TINY-11025

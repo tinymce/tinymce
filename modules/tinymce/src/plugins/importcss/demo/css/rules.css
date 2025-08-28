@@ -1,0 +1,92 @@
+.red {
+  color: red;
+}
+
+h1.blue {
+  color: blue;
+}
+
+.ephox-summary-card {
+  border: 1px solid #AAA;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
+  padding: 10px;
+  overflow: hidden;
+  margin-bottom: 1em;
+}
+
+.ephox-summary-card a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.ephox-summary-card a:visited {
+  color: inherit;
+}
+
+.ephox-summary-card-title {
+  font-size: 1.2em;
+  display: block;
+}
+
+.ephox-summary-card-author {
+  color: #999;
+  display: block;
+  margin-top: 0.5em;
+}
+
+.ephox-summary-card-website {
+  color: #999;
+  display: block;
+  margin-top: 0.5em;
+}
+
+.ephox-summary-card-thumbnail {
+  max-width: 180px;
+  max-height: 180px;
+  margin-left: 2em;
+  float: right;
+}
+
+.ephox-summary-card-description {
+  margin-top: 0.5em;
+  display: block;
+}
+
+.tiny-pageembed--21by9,
+.tiny-pageembed--16by9,
+.tiny-pageembed--4by3,
+.tiny-pageembed--1by1 {
+  display: block;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+  width: 100%;
+}
+
+.tiny-pageembed.tiny-pageembed--21by9 {
+  padding-top: 42.857143%;
+}
+
+.tiny-pageembed.tiny-pageembed--16by9 {
+  padding-top: 56.25%;
+}
+
+.tiny-pageembed.tiny-pageembed--4by3 {
+  padding-top: 75%;
+}
+
+.tiny-pageembed.tiny-pageembed--1by1 {
+  padding-top: 100%;
+}
+
+.tiny-pageembed--21by9 iframe,
+.tiny-pageembed--16by9 iframe,
+.tiny-pageembed--4by3 iframe,
+.tiny-pageembed--1by1 iframe {
+  border: 0;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}

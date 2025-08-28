@@ -1,0 +1,47 @@
+{
+  "name": "@ephox/alloy",
+  "version": "15.0.0",
+  "description": "Ui Framework",
+  "dependencies": {
+    "@ephox/boulder": "^8.0.0",
+    "@ephox/katamari": "^10.0.0",
+    "@ephox/sand": "^7.0.0",
+    "@ephox/sugar": "^10.0.0"
+  },
+  "devDependencies": {
+    "@ephox/agar": "^9.0.0"
+  },
+  "sideEffects": false,
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "README.md",
+    "LEGAL.txt",
+    "CHANGELOG.md",
+    "LICENSE.txt"
+  ],
+  "scripts": {
+    "test": "bedrock-auto -b chrome-headless --testdirs src/test/ts/atomic src/test/ts/browser src/test/ts/webdriver",
+    "test-manual": "bedrock --testdirs src/test/ts/atomic src/test/ts/browser src/test/ts/webdriver",
+    "lint": "eslint --max-warnings=0 src/**/*.ts",
+    "start": "grunt dev",
+    "prepublishOnly": "tsc -b",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tinymce/tinymce.git",
+    "directory": "modules/alloy"
+  },
+  "keywords": [
+    "ui"
+  ],
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
+  "license": "GPL-2.0-or-later",
+  "main": "./lib/main/ts/ephox/alloy/api/Main.js",
+  "module": "./lib/main/ts/ephox/alloy/api/Main.js",
+  "types": "./lib/main/ts/ephox/alloy/api/Main.d.ts"
+}

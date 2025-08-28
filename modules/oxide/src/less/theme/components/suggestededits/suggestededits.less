@@ -1,0 +1,345 @@
+//
+// Suggested Edits
+//
+@suggestededits-added-color: @color-success;
+@suggestededits-modified-color: @color-tint;
+@suggestededits-removed-color: @color-error;
+
+@suggestededits-color-tint: @color-tint;
+@suggestededits-text-color: @text-color;
+
+@suggestededits-dark-transparent-color: mix(@color-black, @background-color, 20%);
+
+@suggestededits-background-color: @background-color;
+@suggestededits-border-color: @border-color;
+@suggestededits-sidebar-background-color: contrast(@suggestededits-background-color, darken(@suggestededits-background-color, 6%), lighten(@suggestededits-background-color, 10%));
+
+@suggestededits-button-background-color: @suggestededits-sidebar-background-color;
+@suggestededits-button-active-background-color: @toolbar-button-active-background-color;
+@suggestededits-button-hover-background-color: contrast(@suggestededits-button-background-color, darken(@suggestededits-button-background-color, 6%), lighten(@suggestededits-button-background-color, 10%));
+@suggestededits-button-color: @suggestededits-text-color;
+
+@suggestededits-button-primary-background-color: @button-background-color;
+@suggestededits-button-primary-hover-background-color: @button-hover-background-color;
+@suggestededits-button-primary-active-background-color: @button-active-background-color;
+@suggestededits-button-primary-color: @button-text-color;
+
+@suggestededits-card-hover-shadow-color: @suggestededits-dark-transparent-color;
+@suggestededits-card-resolved-background-color: @suggestededits-dark-transparent-color;
+@suggestededits-card-selected-border-color: @suggestededits-color-tint;
+
+// this file is imported above `view.less`, but we need a variable from it
+// TODO TINY-12535: replace `.tox-suggestededits__toolbar` with `.tox-view__toolbar`
+@view-header-padding: (@pad-sm + @keyboard-focus-outline-width);
+
+.tox {
+  [data-mce-name="suggestededits"] .tox-icon .tox-icon--badge {
+    fill: @color-tint;
+  }
+
+  .tox-view .tox-suggestededits__pane {
+    padding: 0;      /* Override the default padding of tox-view__pane */
+  }
+
+  .tox-suggestededits__sink {
+    position: relative;
+    z-index: 1000;
+
+    .tox-tiered-menu {
+      .tox-collection--list {
+        position: absolute;
+      }
+    }
+  }
+
+
+  .tox-suggestededits__container {
+    height: 100%; /* TINY-12393: Improve height calculation */
+    display: flex;
+    flex-direction: column;
+
+    .tox-suggestededits {
+      background-color: @suggestededits-background-color;
+      border-top: 1px solid @suggestededits-border-color;
+      display: flex;
+      flex: 1;
+      height: inherit;
+      overflow-x: auto;
+      overflow-y: hidden;
+      position: relative;
+
+      .tox-suggestededits__model {
+        flex: 1;
+      }
+
+      .tox-suggestededits__content {
+        height: 100%;
+        width: 100%;
+        overflow: scroll;
+        background-color: @color-white; // This allows the content CSS to be applied correctly
+      }
+
+      .tox-suggestededits__sidebar {
+        background-color: @suggestededits-sidebar-background-color;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        min-width: 248px;
+        width: 316px;
+      }
+
+      .tox-suggestededits__sidebar-header {
+        padding: 4px 12px;
+        position: sticky;
+        top: 0;
+        background-color: @suggestededits-sidebar-background-color;
+        margin: -4px -12px;
+        z-index: 1;
+      }
+
+      .tox-suggestededits__sidebar-content {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        gap: 12px;
+        overflow: auto;
+        padding: 0px 12px 12px 12px;
+        position: relative;
+
+        .tox-suggestededits__card {
+          background-color: @suggestededits-background-color;
+          border-radius: 6px;
+          padding: 6px;
+
+          .tox-suggestededits__card--divider {
+            background-color: @suggestededits-sidebar-background-color;
+            height: 1px;
+            width: 100%;
+          }
+
+          .tox-suggestededits__card--single {
+            align-items: flex-start;
+            align-self: stretch;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 6px;
+
+            .tox-suggestededits__card--header {
+              display: flex;
+              flex: auto;
+              flex-direction: row;
+              justify-content: space-between;
+              align-items: center;
+              gap: 8px;
+              width: 100%;
+
+              .tox-suggestededits__card--user {
+                display: flex;
+                align-items: center;
+                flex: 1 0 0;
+                gap: 8px;
+
+                .tox-suggestededits__card--avatar {
+                  height: 24px;
+                  width: 24px;
+
+                  .tox-skeleton__circle,
+                  img {
+                    height: 24px;
+                    width: 24px;
+                  }
+                }
+
+                .tox-suggestededits__card--details {
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: center;
+                  align-items: flex-start;
+
+                  .tox-suggestededits__card--name {
+                    color: @suggestededits-text-color;
+                  }
+                }
+              }
+
+              .tox-suggestededits__card--feedback-user {
+                display: flex;
+                align-items: center;
+                flex: 1 0 0;
+                gap: 8px;
+
+                .tox-suggestededits__card--avatar {
+                  height: 36px;
+                  width: 36px;
+                }
+
+                .tox-suggestededits__card--details {
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: center;
+                  align-items: flex-start;
+
+                  .tox-suggestededits__card--name {
+                    color: @suggestededits-text-color;
+                    font-size: 14px;
+                    font-weight: bold;
+                  }
+
+                  .tox-suggestededits__card--timestamp {
+                    color: @suggestededits-text-color;
+                    font-size: 12px;
+                    line-height: 18px;
+                  }
+                }
+              }
+
+              .tox-suggestededits__resolution {
+                align-items: center;
+                border: 0;
+                border-radius: 20px;
+                height: 20px;
+                width: 20px;
+                display: flex;
+                flex: 0 0 auto;
+                justify-content: center;
+                text-align: center;
+              }
+
+              .tox-suggestededits__resolution.tox-suggestededits__resolution--accepted {
+                .tox-icon svg {
+                  fill: @suggestededits-added-color;
+                }
+              }
+
+              .tox-suggestededits__resolution.tox-suggestededits__resolution--rejected {
+                .tox-icon svg {
+                  fill: @suggestededits-removed-color;
+                }
+              }
+            }
+
+            .tox-suggestededits__card--content {
+              display: flex;
+              flex-direction: column;
+              align-self: stretch;
+              flex: auto;
+              gap: 6px;
+              width: 100%;
+
+              .tox-suggestededits__operations {
+                display: flex;
+                gap: 8px;
+                flex-direction: row;
+
+                .tox-suggestededits__operations-bar {
+                  align-items: center;
+                  border-radius: 6px;
+                  display: flex;
+                  flex-direction: column;
+                  font-size: 12px;
+                  justify-content: space-between;
+                  width: 6px;
+                }
+
+                .tox-suggestededits__operations-bar--insert {
+                  background-color: @suggestededits-added-color;
+                  width: 100%;
+                }
+
+                .tox-suggestededits__operations-bar--modify {
+                  background-color: @suggestededits-modified-color;
+                  width: 100%;
+                }
+
+                .tox-suggestededits__operations-bar--remove {
+                  background-color: @suggestededits-removed-color;
+                  width: 100%;
+                }
+
+                .tox-suggestededits__operations-text {
+                  color: @suggestededits-text-color;
+                  font-weight: bold;
+                }
+              }
+
+              .tox-suggestededits__card--feedback {
+                color: @suggestededits-text-color;
+                width: 100%;
+              }
+
+              .tox-suggestededits__card--textarea {
+                border: 2px solid @suggestededits-border-color;
+                border-radius: 6px;
+                color: @suggestededits-text-color;
+                gap: 8px;
+                padding: 5px 6px;
+                resize: none;
+                width: 100%;
+              }
+
+              .tox-suggestededits__card--textarea:focus {
+                border: 2px solid @suggestededits-color-tint;
+              }
+            }
+
+            .tox-suggestededits__card--footer {
+              display: flex;
+              flex-direction: column;
+              gap: 6px;
+              width: 100%;
+
+              .tox-suggestededits__card--timestamp {
+                color: @suggestededits-text-color;
+                font-size: 12px;
+                line-height: 18px;
+
+                .tox-icon svg {
+                  fill: contrast(@suggestededits-background-color, #222F3E80, #FFFFFF80);
+                  // TINY-12392: Adjust the dimensions of `feedback.svg` and then remove these styles.
+                  transform: translate(0px, 8px);
+                  margin-top: -10px;
+                }
+              }
+            }
+
+            .tox-suggestededits__card--buttons {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              width: 100%;
+
+              &.tox-suggestededits__card--review-buttons {
+                justify-content: space-between;
+              }
+
+              &.tox-suggestededits__card--feedback-buttons {
+                justify-content: flex-end;
+              }
+            }
+          }
+        }
+
+        .tox-suggestededits__card.tox-suggestededits__card--hidden {
+          opacity: 0.5;
+        }
+
+        .tox-suggestededits__card.tox-suggestededits__card--resolved {
+          background-color: @suggestededits-card-resolved-background-color;
+        }
+
+        .tox-suggestededits__card.tox-suggestededits__card--selected {
+          outline: 2px solid @suggestededits-card-selected-border-color;
+
+          &:not(.tox-suggestededits__card--resolved) {
+            background-color: @suggestededits-background-color;
+          }
+        }
+
+        .tox-suggestededits__card:hover {
+          box-shadow: 0 4px 8px 0 @suggestededits-card-hover-shadow-color;
+        }
+      }
+    }
+  }
+}

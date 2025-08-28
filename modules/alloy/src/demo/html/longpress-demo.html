@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Longpress Demo</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <style type="text/css">
+      .container span {
+        color: green;
+        display: inline-block;
+        padding: 30px;
+        border: 1px solid blue;
+      }
+
+      .tap-menu {
+        padding: 1em;
+        display: inline-block;
+        border-radius: 50%;
+        color: white;
+        background: black;
+      }
+
+      .tap-menu.selected {
+        background: darkblue;
+      }
+
+      .demo-alloy-orb.demo-alloy-orb-selected > span {
+        background: lightblue;
+      }
+
+
+      * :focus {
+        outline: none;
+      }
+
+      .demo-alloy-orb > span {
+        border-radius: 50%;
+        padding: 0.5em;
+        margin: 0.1em;
+      }
+
+      .demo-alloy-orb {
+        background-color: white;
+        border-radius: 50%;
+        padding: 1.0em;
+        margin: 0.2em;
+        border: 1px solid black;
+      }
+
+      [role=menu] {
+        padding-top: 40px;
+      }
+
+      [data-longpress-state="closed"]:not(.longpress-menu-transitioning) [role="menu"] {
+        transform: translateY(-100%);
+      }
+
+      [data-longpress-state="open"][data-longpress-destination="closed"] [role="menu"] {
+        transform: translateY(-100%);
+      }
+
+      [data-longpress-state="closed"][data-longpress-destination="open"] [role="menu"] {
+        transform: translateY(0%);
+      }
+
+      .longpress-menu-transitioning [role="menu"] {
+        transition: transform 1s ease-in-out;
+      }
+
+/*
+.slide-up > div, .slide-down > div {
+  transform: translateY(-100%);
+  transition: .4s ease-in-out;
+}
+.slide-down > div {
+  transform: translateY(0);
+}
+*/
+
+
+      :focus {
+        outline: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2>Longpress Demo</h2>
+
+    <div id="ephox-ui"></div>
+    <script type="text/javascript" src="../../../demo.js"></script>
+    <script>demos.LongpressDemo();</script>
+  </body>
+</html>

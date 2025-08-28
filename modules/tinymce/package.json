@@ -1,0 +1,45 @@
+{
+  "name": "tinymce",
+  "version": "8.1.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tinymce/tinymce"
+  },
+  "description": "TinyMCE rich text editor",
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
+  "bugs": {
+    "url": "https://github.com/tinymce/tinymce/issues"
+  },
+  "license": "GPL-2.0-or-later",
+  "engines": {
+    "node": ">=0.10.26"
+  },
+  "main": "js/tinymce/tinymce.js",
+  "types": "src/core/main/ts/api/PublicApi.ts",
+  "scripts": {
+    "build": "grunt buildOnly",
+    "test": "grunt test",
+    "test-manual": "grunt test-manual",
+    "lint": "eslint --max-warnings=0 src/**/*.ts",
+    "silver-test": "grunt bedrock-auto:silver",
+    "silver-test-manual": "grunt bedrock-manual:silver"
+  },
+  "dependencies": {
+    "@ephox/acid": "^7.0.0",
+    "@ephox/agar": "^9.0.0",
+    "@ephox/alloy": "^15.0.0",
+    "@ephox/bridge": "^5.0.0",
+    "@ephox/darwin": "^9.0.0",
+    "@tinymce/oxide": "^3.0.0",
+    "@tinymce/oxide-icons-default": "^3.0.0",
+    "@tinymce/persona": "^1.0.0",
+    "@types/prismjs": "^1.16.6",
+    "dompurify": "3.2.6",
+    "prismjs": "^1.27.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-alias": "^5.1.1",
+    "@rollup/plugin-node-resolve": "^16.0.1"
+  }
+}

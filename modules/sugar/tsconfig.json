@@ -1,0 +1,24 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "compilerOptions": {
+    "outDir": "lib",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
+    "paths": {
+      "ephox/sugar/test/*": ["src/test/ts/module/ephox/sugar/test/*"],
+      "ephox/sugar/demo/*": ["src/demo/ts/ephox/sugar/demo/*"],
+      "ephox/sugar/*": ["src/main/ts/ephox/sugar/*"]
+    }
+  },
+  "include": [
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts"
+  ],
+  "references": [
+    { "path": "../katamari" },
+    { "path": "../katamari-assertions" },
+    { "path": "../sand" }
+  ]
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-format-painter</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M18,5 L18,4 C18,3.45 17.55,3 17,3 L5,3 C4.45,3 4,3.45 4,4 L4,8 C4,8.55 4.45,9 5,9 L17,9 C17.55,9 18,8.55 18,8 L18,7 L19,7 L19,11 L9,11 L9,20 C9,20.55 9.45,21 10,21 L12,21 C12.55,21 13,20.55 13,20 L13,13 L21,13 L21,5 L18,5 Z" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

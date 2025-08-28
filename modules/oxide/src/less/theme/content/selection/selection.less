@@ -1,0 +1,115 @@
+//
+// Selection
+//
+
+@document-selection-color: initial;
+@table-selection-color: fade(#b4d7ff, 70%);
+@table-selection-border-color: @table-selection-color;
+@table-selection-blend-mode: multiply;
+@object-block-selected-color: #b4d7ff;
+@object-block-selected-outline-width: 3px;
+
+.mce-content-body {
+  // Define general selection color inside document
+  *::selection {
+    // Should be set in content/content.css. Selection does not work on Windows using high contrast mode with Firefox.
+  }
+
+  // Selection outline on certain editable objects
+  img[data-mce-selected],
+  video[data-mce-selected],
+  audio[data-mce-selected],
+  object[data-mce-selected],
+  embed[data-mce-selected],
+  table[data-mce-selected],
+  details[data-mce-selected] {
+    outline: @object-block-selected-outline-width solid @object-block-selected-color;
+  }
+
+  hr[data-mce-selected] {
+    outline: @object-block-selected-outline-width solid @object-block-selected-color;
+    outline-offset: 1px;
+  }
+
+  // Selection outline on non editable elements
+  *[contentEditable=false] *[contentEditable=true]:focus {
+    outline: @object-block-selected-outline-width solid @object-block-selected-color;
+  }
+
+  *[contentEditable=false] *[contentEditable=true]:hover {
+    outline: @object-block-selected-outline-width solid @object-block-selected-color;
+  }
+
+  *[contentEditable=false][data-mce-selected] {
+    cursor: not-allowed;
+    outline: @object-block-selected-outline-width solid @object-block-selected-color;
+  }
+
+  // Styles for certain selected inline elements objects, like links.
+  *[data-mce-selected="inline-boundary"] {
+    background-color: @object-block-selected-color;
+  }
+
+  // Styles for a selected inline editable block
+  .mce-edit-focus {
+    outline: @object-block-selected-outline-width solid @object-block-selected-color;
+  }
+
+  // Selection of whole table cells
+  td[data-mce-selected],
+  th[data-mce-selected] {
+    position: relative;
+
+    &::selection {
+      //Prevent selection to be visible
+      background: none;
+    }
+
+    * {
+      //Prevent selection of text to be visible inside cells
+      outline: none;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+  }
+
+  // Apply cell selection as a semi-transparent overlay instead of manipulating the cell background itself
+  td[data-mce-selected]::after,
+  th[data-mce-selected]::after {
+    background-color: @table-selection-color;
+    border: 1px solid @table-selection-border-color;
+    bottom: -1px;
+    content: '';
+    left: -1px;
+    mix-blend-mode: @table-selection-blend-mode;
+    position: absolute;
+    right: -1px;
+    top: -1px;
+  }
+
+  img[data-mce-selected]::selection {
+    background: none;
+  }
+}
+
+// Table border resizing handles
+.ephox-snooker-resizer-bar {
+  background-color: @object-block-selected-color;
+  opacity: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.ephox-snooker-resizer-cols {
+  cursor: col-resize;
+}
+
+.ephox-snooker-resizer-rows {
+  cursor: row-resize;
+}
+
+.ephox-snooker-resizer-bar.ephox-snooker-resizer-bar-dragging {
+  opacity: 1;
+}

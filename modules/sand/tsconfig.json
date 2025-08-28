@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "compilerOptions": {
+    "outDir": "lib",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
+    "paths": {
+      "ephox/sand/test/*": ["src/test/ts/module/ephox/sand/test/*"],
+      "ephox/sand/demo/*": ["src/demo/ts/ephox/sand/demo/*"],
+      "ephox/sand/*": ["src/main/ts/ephox/sand/*"]
+    }
+  },
+  "include": [
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts"
+  ],
+  "references": [
+    { "path": "../katamari" }
+  ]
+}

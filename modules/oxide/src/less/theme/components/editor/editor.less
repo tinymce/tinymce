@@ -1,0 +1,97 @@
+//
+// Editor
+//
+
+@editor-header-border: none;
+@editor-header-box-shadow: 0 2px 2px -2px fade(@color-black, 10%), 0 8px 8px -4px fade(@color-black, 7%);
+@editor-header-sticky-box-shadow: 0 2px 2px -2px fade(@color-black, 20%), 0 8px 8px -4px fade(@color-black, 15%);
+@editor-bottom-header-box-shadow: none;
+@editor-bottom-header-sticky-box-shadow: @editor-header-sticky-box-shadow;
+@editor-header-sticky-background-color: if((alpha(@toolbar-background-color) > 0), transparent, @background-color); // If @toolbar-background-color is set to transparent, then set the sticky toolbar background color to be another color to not be transparent over content.
+
+// private variables
+@_editor-bottom-header-separator-color: if(alpha(@menubar-separator-color) > 0, @menubar-separator-color, @tinymce-separator-color); // Use @menubar-separator-color if it is set, otherwise use default separator color
+
+.tox {
+  // styles for making statusbar appear above toolbars when making the editor height very small
+  .tox-editor-container {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .tox-editor-header {
+    display: grid;
+    grid-template-columns: 1fr min-content;
+    // Escape the highlight of content area when the toolbar is sticky
+    z-index: 2;
+  }
+
+  &:not(.tox-tinymce-inline) .tox-editor-header {
+    background-color: @background-color;
+    border-bottom: @editor-header-border;
+    box-shadow: @editor-header-box-shadow;
+    padding: @pad-xs 0;
+
+    &:not(.tox-editor-dock-transition) {
+      transition: box-shadow .5s;
+    }
+  }
+
+  &:not(.tox-tinymce-inline).tox-tinymce--toolbar-bottom .tox-editor-header {
+    border-top: 1px solid @_editor-bottom-header-separator-color;
+    box-shadow: @editor-bottom-header-box-shadow;
+  }
+}
+
+.tox.tox-tinymce--toolbar-sticky-off {
+  //
+}
+
+.tox:not(.tox-tinymce-inline).tox-tinymce--toolbar-sticky-on {
+  .tox-editor-header {
+    background-color: @background-color;
+    box-shadow: @editor-header-sticky-box-shadow;
+    padding: @pad-xs 0;
+  }
+
+  &.tox-tinymce--toolbar-bottom {
+    .tox-editor-header {
+      box-shadow: @editor-bottom-header-sticky-box-shadow;
+    }
+  }
+}
+
+// Remove styling if there is no Menubar and Toolbars in the header
+// Two `.tox` classes are used to make it more specific than sticky header styles without using `!important`
+.tox.tox:not(.tox-tinymce-inline) .tox-editor-header.tox-editor-header--empty {
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+// Docking styles for the editor container and sink
+.tox-editor-dock-fadeout {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.tox-editor-dock-fadein {
+  opacity: 1;
+  visibility: visible;
+}
+
+.tox-editor-dock-transition {
+  transition: visibility 0s linear .25s, opacity .25s ease;
+
+  // Set all transition delays to 0s, overriding visibility to apply immediately
+  // and thus allowing the opacity to fade in
+  //
+  // transition-delay: 0s;
+}
+
+.tox-editor-dock-transition.tox-editor-dock-fadein {
+  transition-delay: 0s;
+}

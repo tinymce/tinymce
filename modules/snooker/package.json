@@ -1,0 +1,44 @@
+{
+  "name": "@ephox/snooker",
+  "description": "This project implements the table model.",
+  "version": "12.0.0",
+  "sideEffects": false,
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "README.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tinymce/tinymce.git",
+    "directory": "modules/snooker"
+  },
+  "dependencies": {
+    "@ephox/dragster": "^8.0.0",
+    "@ephox/katamari": "^10.0.0",
+    "@ephox/porkbun": "^8.0.0",
+    "@ephox/robin": "^11.0.0",
+    "@ephox/sugar": "^10.0.0"
+  },
+  "devDependencies": {
+    "@ephox/agar": "^9.0.0"
+  },
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
+  "license": "GPL-2.0-or-later",
+  "main": "./lib/main/ts/ephox/snooker/api/Main.js",
+  "module": "./lib/main/ts/ephox/snooker/api/Main.js",
+  "types": "./lib/main/ts/ephox/snooker/api/Main.d.ts",
+  "scripts": {
+    "prepublishOnly": "tsc -b",
+    "build": "tsc",
+    "test": "bedrock-auto -b chrome-headless -d src/test/ts",
+    "test-manual": "bedrock -d src/test/ts",
+    "lint": "eslint --max-warnings=0 src/**/*.ts"
+  }
+}

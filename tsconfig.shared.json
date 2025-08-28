@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "target": "es2018",
+    "module": "es2015",
+    "lib": ["es2022", "dom"],
+    "importHelpers": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "composite": true,
+    "outDir": "lib",
+    "rootDir": ".",
+    "baseUrl": ".",
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "strict": true,
+    "noEmitOnError": true,
+    "types": []
+  }
+}

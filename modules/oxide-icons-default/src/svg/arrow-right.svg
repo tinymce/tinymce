@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>arrow-right</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="arrow-right" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M12.9121479,5.55300546 L18.9298686,17.5884469 C19.1768579,18.0824254 18.9766335,18.6830984 18.482655,18.9300877 C18.3437996,18.9995154 18.1906865,19.0356605 18.0354414,19.0356605 L6,19.0356605 C5.44771525,19.0356605 5,18.5879453 5,18.0356605 C5,17.8804154 5.03614509,17.7273023 5.10557281,17.5884469 L11.1232935,5.55300546 C11.3702828,5.05902696 11.9709558,4.85880262 12.4649343,5.10579187 C12.6584617,5.20255557 12.8153842,5.35947806 12.9121479,5.55300546 Z" id="Triangle" fill="#000000" transform="translate(12.017830, 12.017830) rotate(90.000000) translate(-12.017830, -12.017830) "></path>
+    </g>
+</svg>

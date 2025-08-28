@@ -1,0 +1,9 @@
+{
+  "extends": "stylelint-config-recommended-less",
+  "plugins": [
+    "stylelint-order"
+  ],
+  "rules": {
+    "no-descending-specificity": null
+  }
+}

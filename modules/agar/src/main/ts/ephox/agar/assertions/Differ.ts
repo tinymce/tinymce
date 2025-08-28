@@ -1,0 +1,150 @@
+/*
+ * Javascript Diff Algorithm
+ *  By John Resig (http://ejohn.org/)
+ *  Modified by Chu Alan "sprite"
+ *
+ * Released under the MIT license.
+ *
+ * More Info:
+ *  http://ejohn.org/projects/javascript-diff-algorithm/
+ *
+ * Usage: QUnit.diff(expected, actual)
+ *
+ * QUnit.diff( "the quick brown fox jumped over", "the quick fox jumps over" ) == "the  quick <del>brown </del> fox <del>jumped </del><ins>jumps </ins> over"
+ */
+const htmlDiff: (v1: string, v2: string) => string = (() => {
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  const hasOwn = Object.prototype.hasOwnProperty;
+
+  /* jshint eqeqeq:false, eqnull:true */
+  const diff = (o, n) => {
+    let i;
+    const ns = {};
+    const os = {};
+
+    for (i = 0; i < n.length; i++) {
+      if (!hasOwn.call(ns, n[i])) {
+        ns[n[i]] = {
+          rows: [],
+          o: null
+        };
+      }
+      ns[n[i]].rows.push(i);
+    }
+
+    for (i = 0; i < o.length; i++) {
+      if (!hasOwn.call(os, o[i])) {
+        os[o[i]] = {
+          rows: [],
+          n: null
+        };
+      }
+      os[o[i]].rows.push(i);
+    }
+
+    for (i in ns) {
+      if (hasOwn.call(ns, i)) {
+        if (ns[i].rows.length === 1 && hasOwn.call(os, i) && os[i].rows.length === 1) {
+          n[ns[i].rows[0]] = {
+            text: n[ns[i].rows[0]],
+            row: os[i].rows[0]
+          };
+          o[os[i].rows[0]] = {
+            text: o[os[i].rows[0]],
+            row: ns[i].rows[0]
+          };
+        }
+      }
+    }
+
+    for (i = 0; i < n.length - 1; i++) {
+      if (n[i].text != null && n[i + 1].text == null && n[i].row + 1 < o.length && o[n[i].row + 1].text == null &&
+        n[i + 1] === o[n[i].row + 1]) {
+
+        n[i + 1] = {
+          text: n[i + 1],
+          row: n[i].row + 1
+        };
+        o[n[i].row + 1] = {
+          text: o[n[i].row + 1],
+          row: i + 1
+        };
+      }
+    }
+
+    for (i = n.length - 1; i > 0; i--) {
+      if (n[i].text != null && n[i - 1].text == null && n[i].row > 0 && o[n[i].row - 1].text == null &&
+        n[i - 1] === o[n[i].row - 1]) {
+
+        n[i - 1] = {
+          text: n[i - 1],
+          row: n[i].row - 1
+        };
+        o[n[i].row - 1] = {
+          text: o[n[i].row - 1],
+          row: i - 1
+        };
+      }
+    }
+
+    return {
+      o,
+      n
+    };
+  };
+
+  return (o, n) => {
+    o = o.replace(/\s+$/, '');
+    n = n.replace(/\s+$/, '');
+
+    let i, pre,
+      str = '',
+      oSpace = o.match(/\s+/g),
+      nSpace = n.match(/\s+/g);
+    const out = diff(o === '' ? [] : o.split(/\s+/), n === '' ? [] : n.split(/\s+/));
+
+    if (oSpace == null) {
+      oSpace = [ ' ' ];
+    } else {
+      oSpace.push(' ');
+    }
+
+    if (nSpace == null) {
+      nSpace = [ ' ' ];
+    } else {
+      nSpace.push(' ');
+    }
+
+    if (out.n.length === 0) {
+      for (i = 0; i < out.o.length; i++) {
+        str += '<del>' + out.o[i] + oSpace[i] + '</del>';
+      }
+    } else {
+      if (out.n[0].text == null) {
+        for (let j = 0; j < out.o.length && out.o[j].text == null; j++) {
+          str += '<del>' + out.o[j] + oSpace[j] + '</del>';
+        }
+      }
+
+      for (i = 0; i < out.n.length; i++) {
+        if (out.n[i].text == null) {
+          str += '<ins>' + out.n[i] + nSpace[i] + '</ins>';
+        } else {
+          // `pre` initialized at top of scope
+          pre = '';
+
+          for (let j = out.n[i].row + 1; j < out.o.length && out.o[j].text == null; j++) {
+            pre += '<del>' + out.o[j] + oSpace[j] + '</del>';
+          }
+          str += ' ' + out.n[i].text + nSpace[i] + pre;
+        }
+      }
+    }
+
+    return str;
+  };
+})();
+
+export {
+  htmlDiff
+};

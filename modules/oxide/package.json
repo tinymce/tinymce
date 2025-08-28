@@ -1,0 +1,60 @@
+{
+  "name": "@tinymce/oxide",
+  "version": "3.0.0",
+  "description": "TinyMCE Oxide skins",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tinymce/tinymce.git",
+    "directory": "modules/oxide"
+  },
+  "scripts": {
+    "test": "echo 'No tests'",
+    "build": "grunt build",
+    "start": "grunt start",
+    "prepublishOnly": "yarn ci",
+    "ci": "grunt build"
+  },
+  "keywords": [
+    "TinyMCE"
+  ],
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
+  "license": "GPL-2.0-or-later",
+  "sideEffects": false,
+  "exports": {
+    "./skins/ui/default/skin.ts": "./build/skins/ui/default/skin.ts",
+    "./skins/ui/default/skin.css": "./build/skins/ui/default/skin.css",
+    "./build/*": "./build/*",
+    "./src/less/*": "./src/less/*"
+  },
+  "typesVersions": {
+    "*": {
+      "./skins/ui/default/skin.ts": ["./build/skins/ui/default/skin.ts"],
+      "./skins/ui/default/skin.css": ["./build/skins/ui/default/skin.css"]
+    }
+  },
+  "files": [
+    "build/skins/content/**/*.css",
+    "build/skins/content/**/*.d.css.ts",
+    "build/skins/content/**/*.css.map",
+    "build/skins/ui/**/*.css",
+    "build/skins/ui/**/*.d.css.ts",
+    "build/skins/ui/**/*.css.map",
+    "build/skins/ui/**/*.woff",
+    "src/less/**/*",
+    "src/svg/**/*",
+    "src/fonts/**/*",
+    "src/text/**/*",
+    "README.md",
+    "LICENSE.txt"
+  ],
+  "dependencies": {
+    "prism-themes": "^1.9.0",
+    "prismjs": "^1.27.0"
+  },
+  "devDependencies": {
+    "connect": "^3.7.0",
+    "connect-livereload": "^0.6.1",
+    "stylelint-config-recommended-less": "^3.0.1",
+    "typed-css-modules": "^0.9.1"
+  }
+}

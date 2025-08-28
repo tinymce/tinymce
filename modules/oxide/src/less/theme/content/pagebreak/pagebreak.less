@@ -1,0 +1,19 @@
+//
+// Page break
+//
+
+.mce-pagebreak {
+  border: 1px dashed #aaa;
+  cursor: default;
+  display: block;
+  height: 5px;
+  margin-top: 15px;
+  page-break-before: always;
+  width: 100%;
+}
+
+@media print {
+  .mce-pagebreak {
+    border: 0;
+  }
+}

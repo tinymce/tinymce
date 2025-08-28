@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-list-num-lower-roman</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect fill="#000000" opacity="0.2" x="18" y="12" width="22" height="4"></rect>
+        <rect fill="#000000" opacity="0.2" x="18" y="22" width="22" height="4"></rect>
+        <rect fill="#000000" opacity="0.2" x="18" y="32" width="22" height="4"></rect>
+        <path d="M15.1455078,16 L15.1455078,14.7651367 L16.3803711,14.7651367 L16.3803711,16 L15.1455078,16 Z M15.1455078,26 L15.1455078,24.7651367 L16.3803711,24.7651367 L16.3803711,26 L15.1455078,26 Z M15.1455078,36 L15.1455078,34.7651367 L16.3803711,34.7651367 L16.3803711,36 L15.1455078,36 Z" fill="#000000"></path>
+        <rect fill="#000000" fill-rule="nonzero" x="12" y="21" width="1.5" height="5"></rect>
+        <rect fill="#000000" fill-rule="nonzero" x="12" y="31" width="1.5" height="5"></rect>
+        <rect fill="#000000" fill-rule="nonzero" x="9" y="21" width="1.5" height="5"></rect>
+        <rect fill="#000000" fill-rule="nonzero" x="9" y="31" width="1.5" height="5"></rect>
+        <rect fill="#000000" fill-rule="nonzero" x="6" y="31" width="1.5" height="5"></rect>
+        <rect fill="#000000" fill-rule="nonzero" x="12" y="11" width="1.5" height="5"></rect>
+        <rect fill="#000000" fill-rule="nonzero" x="12" y="19" width="1.5" height="1"></rect>
+        <rect fill="#000000" fill-rule="nonzero" x="12" y="29" width="1.5" height="1"></rect>
+        <rect fill="#000000" fill-rule="nonzero" x="9" y="19" width="1.5" height="1"></rect>
+        <rect fill="#000000" fill-rule="nonzero" x="9" y="29" width="1.5" height="1"></rect>
+        <rect fill="#000000" fill-rule="nonzero" x="6" y="29" width="1.5" height="1"></rect>
+        <rect fill="#000000" fill-rule="nonzero" x="12" y="9" width="1.5" height="1"></rect>
+    </g>
+</svg>

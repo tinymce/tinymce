@@ -1,0 +1,17 @@
+* eol=lf
+*.jar binary
+*.gif binary
+*.png binary
+*.jpg binary
+*.swf binary
+*.xap binary
+*.zip binary
+*.eot binary
+*.woff binary
+*.ttf binary
+*.mov binary
+*.avi binary
+*.flv binary
+*.rm binary
+*.dcr binary
+*.sketch binary

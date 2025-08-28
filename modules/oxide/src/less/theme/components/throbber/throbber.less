@@ -1,0 +1,23 @@
+//
+// Throbber
+//
+
+@throbber-busy-background-color: fade(@background-color, 60);
+
+.tox {
+  .tox-throbber {
+    z-index: @z-index-throbber;
+  }
+
+  .tox-throbber__busy-spinner {
+    align-items: center;
+    background-color: @throbber-busy-background-color;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+}

@@ -1,0 +1,166 @@
+.html-display {
+  font-family: monospace;
+  margin: 5px;
+  padding: 5px;
+  font-size: 80%;
+  white-space: pre-wrap;
+}
+
+.demo-alloy-menu {
+  margin: 0px;
+  background: white;
+  list-style-type: none;
+  border: 1px solid black;
+}
+
+
+
+.demo-alloy-item, .demo-alloy-choice {
+  padding: 10px;
+  background: white;
+  cursor: pointer;
+}
+
+.demo-alloy-item-selected, .demo-alloy-choice-selected {
+  color: white;
+  background: #777;
+}
+
+
+.demo-alloy-toolbar-group {
+  background: gray;
+  display: flex;
+  border: 2px solid green;
+}
+
+.demo-alloy-toolbar-item {
+  padding: 1em;
+  border: 1px solid white;
+  cursor: pointer;
+}
+
+
+.demo-selected-tab {
+  color: white;
+  background: black;
+}
+
+button {
+  margin: 3px;
+}
+
+.alloy-selected-item {
+  background: #cadbee;
+}
+
+.ephox-pastry-independent-button:before {
+  content: '+';
+}
+
+.outside-slide-form {
+  width: 150px;
+}
+
+.outside-slide-form input {
+  width: 100%;
+}
+
+input.invalid-input {
+  border-color: red;
+  outline: 2px solid red;
+}
+
+
+.dot {
+  border-radius: 50%;
+  border: 7px solid #333;
+  width: 0px;
+  height: 0px;
+  padding: 0px;
+  margin: 5px;
+  display: inline-block;
+}
+
+.dot.selected-dot {
+  border-color: blue;
+}
+
+.dot:focus {
+  background: green;
+}
+
+.dot-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+/*
+ * Hiding and showing the more drawer
+ *
+ * Due to the dynamic nature of the sliding toolbar (height can change, even when open) the values must be set via JS.
+ *
+ * It works a little bit like this: http://jsfiddle.net/adambiggs/MAbD3/
+ */
+.demo-sliding-closed {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.demo-sliding-open {
+  visibility: visible;
+  opacity: 1;
+}
+
+.demo-sliding-height-growing {
+  /*
+   * Transition the height for 0.3s
+   * After 0.1s, transition opacity for 0.2s
+   * No visibility transition, it needs to show immediately
+   */
+  transition: height 0.3s ease, opacity 0.2s linear 0.1s;
+}
+
+.demo-sliding-height-shrinking {
+  /*
+   * Transition the opacity for 0.3s
+   * After 0.1s, transition height for 0.2s
+   * After 0.3s, transition visibility for 0s
+   */
+  transition: opacity 0.3s ease, height 0.2s linear 0.1s, visibility 0s linear 0.3s;
+}
+
+.demo-sliding-width-growing {
+  transition: width 0.3s ease, opacity 0.3s
+}
+
+.demo-sliding-width-shrinking {
+  transition: opacity 0.3s ease, width 0.3s, visibility 0s linear 0.3s;
+}
+
+
+
+.demo-alloy-dock-fade-out {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.demo-alloy-dock-fade-in {
+  visibility: visible;
+  opacity: 1;
+}
+
+.demo-alloy-dock-transition {
+  transition: visibility 0s linear 0.3s, opacity 0.3s ease;
+  /*
+   * Set all transition delays to 0s, overriding visibility to apply immediately
+   * and thus allowing the opacity to fade in
+   */
+  /*transition-delay: 0s;*/
+}
+
+.demo-alloy-dock-transition.demo-alloy-dock-fade-in {
+  transition-delay: 0s;
+}

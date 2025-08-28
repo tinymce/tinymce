@@ -1,0 +1,28 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "compilerOptions": {
+    "outDir": "lib",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
+    "paths": {
+      "ephox/robin/test/*": ["src/test/ts/module/ephox/robin/test/*"],
+      "ephox/robin/demo/*": ["src/demo/ts/ephox/robin/demo/*"],
+      "ephox/robin/*": ["src/main/ts/ephox/robin/*"]
+    }
+  },
+  "include": [
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts"
+  ],
+  "references": [
+    { "path": "../agar" },
+    { "path": "../boss" },
+    { "path": "../katamari" },
+    { "path": "../katamari-assertions" },
+    { "path": "../phoenix" },
+    { "path": "../polaris" },
+    { "path": "../sugar" }
+  ]
+}

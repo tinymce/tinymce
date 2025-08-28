@@ -1,0 +1,41 @@
+//
+// Toolbar group
+//
+
+@toolbar-group-padding-x: 11px;
+@toolbar-group-spacing-y: 0;
+@toolbar-group-separator-color: transparent;
+
+.tox {
+  .tox-toolbar__group {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    margin: @toolbar-group-spacing-y 0;
+    padding: 0 @toolbar-group-padding-x 0 (@toolbar-group-padding-x + @toolbar-button-spacing-x);
+  }
+
+  // Align toolbar group to the right
+  .tox-toolbar__group--pull-right {
+    margin-left: auto;
+  }
+
+  // Prevent wrapping to multiple rows if using a sliding toolbar
+  .tox-toolbar--scrolling .tox-toolbar__group {
+    flex-shrink: 0;
+    flex-wrap: nowrap;
+  }
+}
+
+.tox:not([dir=rtl]) {
+  .tox-toolbar__group:not(:last-of-type) {
+    border-right: 1px solid @toolbar-group-separator-color;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-toolbar__group:not(:last-of-type) {
+    border-left: 1px solid @toolbar-group-separator-color;
+  }
+}

@@ -1,0 +1,199 @@
+//
+// Revision history
+//
+@revisionhistory-gap: 12px;
+@revisionhistory-border-radius: 6px;
+@revisionhistory-dark-mode: boolean(luma(@background-color) < 3);
+@revisionhistory-secondary-color: contrast(@background-color, darken(@background-color, 6%), lighten(@background-color, 15%));
+@revisionhistory-sidebar-background-color: if(@revisionhistory-dark-mode, #2b3b4e, @revisionhistory-secondary-color);   // Trial and error
+@revisionhistory-border-color: if(@revisionhistory-dark-mode, rgba(255, 255, 255, .15), @revisionhistory-secondary-color);
+@revisionhistory-text-color: @text-color;
+@revisionhistory-card-active-background-color: if(@revisionhistory-dark-mode, #1b3b60, #fff5cc);
+@revisionhistory-border: 1px solid @revisionhistory-border-color;
+@revisionhistory-border-color--selected: if(@revisionhistory-dark-mode, #cea215, #e3b82a);
+@revisionhistory-border-color--focused: if(@revisionhistory-dark-mode, #285ec7, #006ce7);
+@revisionhistory-box-shadow: 0 4px 8px 0 rgba(34, 47, 62, .1);
+@revisionhistory-sidebar-minwidth: 248px;
+@revisionhistory-text-lineheight: 24px;
+@revisionhistory-avatar-height: 36px;
+
+.overflow-text() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+};
+
+.revisionhistory-focus-outline-mixin(@border-color: ~'') {
+  .keyboard-focus-outline-mixin(@border-color);
+
+  border-radius: @revisionhistory-border-radius;
+  box-shadow: 0 0 0 2px @border-color;
+}
+
+.tox {
+  .tox-view .tox-revisionhistory__pane {
+    padding: 0;      /* Override the default padding of tox-view__pane */
+  }
+
+  .tox-revisionhistory__container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .tox-revisionhistory {
+    background-color: @background-color;
+    border-top: @revisionhistory-border;
+    display: flex;
+    flex: 1;
+    height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    position: relative;
+    width: 100%;
+  }
+
+  .tox-revisionhistory__iframe {
+    flex: 1;
+  }
+
+  .tox-revisionhistory__sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: @revisionhistory-sidebar-minwidth;
+    width: 316px;
+
+    .tox-revisionhistory__sidebar-title {
+      background-color: @background-color;
+      box-shadow: @revisionhistory-box-shadow;
+      color: @revisionhistory-text-color;
+      font-size: @font-size-lg;
+      font-weight: 400;
+      line-height: 28px;
+      padding: @revisionhistory-gap;
+      z-index: 1; // To get a shadow effect
+    }
+
+    .tox-revisionhistory__revisions {
+      background-color: @revisionhistory-sidebar-background-color;
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: @revisionhistory-gap;
+      overflow-y: auto;
+      padding: 10px @revisionhistory-gap;
+
+      &:focus {
+        height: 100%;
+        position: relative;   // Override static which prevents z-index to have any effect
+        z-index: 1; // Ensure focus outline is on top of other buttons
+
+        &::after {
+          .keyboard-focus-outline-mixin();
+
+          border-radius: @control-border-radius;
+          bottom: 1px;
+          left: 1px;
+          right: 1px;
+          top: 1px;
+        }
+      }
+
+      .tox-revisionhistory__card {
+        background-color: @background-color;
+        border: @revisionhistory-border;
+        border-radius: @revisionhistory-border-radius;
+        color: @revisionhistory-text-color;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        font-size: @font-size-sm;
+        padding: @revisionhistory-gap;
+        width: 100%;
+
+        &:hover {
+          box-shadow: @revisionhistory-box-shadow;
+        }
+
+        &:focus {
+          position: relative;   // Override static which prevents z-index to have any effect
+          z-index: 1; // Ensure focus outline is on the top of other buttons
+
+          &::after {
+            .revisionhistory-focus-outline-mixin(@revisionhistory-border-color--focused);
+
+            box-shadow: 0 0 0 2px @revisionhistory-border-color--focused !important; // Override box-shadow set by tox-revisionhistory__card-selected when card is both selected and focused
+          }
+        }
+
+        &.tox-revisionhistory__card--selected {
+          background-color: @revisionhistory-card-active-background-color;
+          box-shadow: @revisionhistory-box-shadow;
+          position: relative;
+
+          &::after {
+            .revisionhistory-focus-outline-mixin(@revisionhistory-border-color--selected);
+          }
+        }
+      }
+
+      .tox-revisionhistory__card-label {
+        display: block;
+        width: min-content;
+        padding: @pad-xs @pad-sm;
+        margin-bottom: @pad-sm;
+        font-size: @font-size-xs;
+        font-weight: @font-weight-bold;
+        border-radius: @pad-xs;
+        background: if(@revisionhistory-dark-mode, mix(@color-black, @color-white, 80%), mix(@color-white, @color-black, 80%));
+      }
+
+      .tox-revisionhistory__card-content {
+        display: flex;
+        flex-direction: row;
+        gap: @pad-sm;
+        align-items: center;
+      }
+
+      .tox-revisionhistory__card-info {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+      }
+
+      .tox-revisionhistory__card-date-label {
+        font-size: @font-size-sm;
+        font-weight: @font-weight-bold;
+        line-height: 18px;
+      }
+
+      .tox-revisionhistory__card-author-name {
+        .overflow-text();
+
+        font-size: @font-size-xs;
+        font-weight: @font-weight-normal;
+      }
+
+      .tox-revisionhistory__avatar {
+        border-radius: 50%;
+        height: @revisionhistory-avatar-height;
+        object-fit: cover;
+        vertical-align: middle;
+        width: @revisionhistory-avatar-height;
+      }
+
+      .tox-revisionhistory__norevision {
+        color: @text-color-muted;
+        font-size: @font-size-md;
+        line-height: @revisionhistory-text-lineheight;
+        padding: 5px 5.5px;
+      }
+
+      .tox-revisionhistory__card-check-icon {
+        color: @revisionhistory-text-color;
+        height: @revisionhistory-text-lineheight;
+      }
+    }
+  }
+}

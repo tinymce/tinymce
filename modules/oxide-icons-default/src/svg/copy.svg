@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-copy</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M16,3 L6,3 C4.9,3 4,3.85343369 4,5 L4,16 L6,16 L6,5 L16,5 L16,3 Z M17,7 C18.1,7 19,7.84807692 19,9 L19,19 C19,20.1519231 18.1,21 17,21 L10,21 C8.9,21 8,20.1519231 8,19 L8,9 C8,7.84807692 8.9,7 10,7 L17,7 Z M17,19 L17,9 L10,9 L10,19 L17,19 Z" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

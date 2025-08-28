@@ -1,0 +1,34 @@
+.ephox-dragster-dialog, .ephox-dragster-titlebar, .ephox-dragster-content {
+  z-index: 1;
+}
+
+
+.ephox-dragster-dialog {
+  background-color: white;
+  padding: 5px 0px 5px 0px;
+  border: 1px solid red;
+}
+
+.ephox-dragster-titlebar {
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid blue;
+  /* 
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  */
+}
+
+.ephox-dragster-content {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.ephox-dragster-blocker {
+  z-index: 10000;
+}

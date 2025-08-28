@@ -1,0 +1,192 @@
+//
+// Color picker
+//
+
+//
+// Place your variables here
+//
+
+@color-picker-warning-frame-background-color: mix(@background-color, @color-error, 80%);
+@color-picker-warning-frame-text-color: mix(@text-color, @color-error, 50%);
+@color-picker-warning-frame-border-color: mix(@background-color, @color-error, 70%);
+@color-picker-warning-frame-border: 1px solid @color-picker-warning-frame-border-color;
+
+.tox {
+  .tox-hue-slider,
+  .tox-rgb-form .tox-rgba-preview {
+
+    @media (forced-colors: active) {
+      background-color: currentColor !important;
+      border: 1px solid highlight !important;
+      forced-color-adjust: none;
+    }
+  }
+
+  .tox-color-picker-container {
+    display: flex;
+    flex-direction: row;
+    height: 225px;
+    margin: 0;
+  }
+
+  .tox-sv-palette {
+    box-sizing: border-box;
+    display: flex;
+    height: 100%;
+  }
+
+  .tox-sv-palette-spectrum {
+    height: 100%;
+  }
+
+  .tox-sv-palette,
+  .tox-sv-palette-spectrum {
+    width: 225px;
+  }
+
+  .tox-sv-palette-thumb {
+    background: none;
+    border: 1px solid black;
+    border-radius: 50%;
+    box-sizing: content-box;
+    height: 12px;
+    position: absolute;
+    width: 12px;
+  }
+
+  .tox-sv-palette-inner-thumb {
+    border: 1px solid white;
+    border-radius: 50%;
+    height: 10px;
+    position: absolute;
+    width: 10px;
+  }
+
+  .tox-hue-slider {
+    box-sizing: border-box;
+    height: 100%;
+    width: 25px;
+  }
+
+  .tox-hue-slider-spectrum {
+    background: -ms-linear-gradient(bottom, #f00, #ff0080, #f0f, #8000ff, #00f, #0080ff, #0ff, #00ff80, #0f0, #80ff00, #ff0, #ff8000, #f00);
+    background: linear-gradient(to bottom, #f00, #ff0080, #f0f, #8000ff, #00f, #0080ff, #0ff, #00ff80, #0f0, #80ff00, #ff0, #ff8000, #f00);
+    height: 100%;
+    width: 100%;
+  }
+
+  .tox-hue-slider,
+  .tox-hue-slider-spectrum {
+    width: 20px;
+  }
+
+  .tox-hue-slider-spectrum:focus,
+  .tox-sv-palette-spectrum:focus {
+    outline: #08f solid;
+  }
+
+  .tox-hue-slider-thumb {
+    background: white;
+    border: 1px solid black;
+    box-sizing: content-box;
+    height: 4px;
+    width: 100%;
+  }
+
+  .tox-rgb-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .tox-rgb-form div {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    width: inherit;
+  }
+
+  .tox-rgb-form input {
+    min-width: 6em;
+  }
+
+  .tox-rgb-form input.tox-invalid {
+    /* Need !important to override Chrome's focus styling unfortunately */
+    border: 1px solid @color-error-element-focus-color !important;
+    box-shadow: @color-error-element-focus;
+  }
+
+  .tox-rgb-container {
+    position: relative;
+  }
+
+  .tox-rgb-form .tox-invalid-icon {
+    align-content: center;
+    align-items: center;
+    display: none;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    .tox-control-wrap__status-icon-invalid {
+      margin: 0;
+    }
+  }
+
+  .tox-rgb-warning-note {
+    background-color: @color-picker-warning-frame-background-color;
+    border: @color-picker-warning-frame-border;
+    border-radius: 3px;
+    color: @color-picker-warning-frame-text-color;
+    padding: 3px;
+  }
+
+  input.tox-invalid + .tox-invalid-icon {
+    display: flex;
+  }
+
+  .tox-rgb-form .tox-rgba-preview {
+    border: 1px solid black;
+    flex-grow: 2;
+    margin-bottom: 0;
+  }
+}
+
+.tox:not([dir=rtl]) {
+  .tox-sv-palette {
+    margin-right: 15px;
+  }
+
+  .tox-hue-slider {
+    margin-right: 15px;
+  }
+
+  .tox-hue-slider-thumb {
+    margin-left: -1px;
+  }
+
+  .tox-rgb-form label {
+    margin-right: .5em;
+  }
+}
+
+// RTL
+.tox[dir=rtl] {
+  .tox-sv-palette {
+    margin-left: 15px;
+  }
+
+  .tox-hue-slider {
+    margin-left: 15px;
+  }
+
+  .tox-hue-slider-thumb {
+    margin-right: -1px;
+  }
+
+  .tox-rgb-form label {
+    margin-left: .5em;
+  }
+}

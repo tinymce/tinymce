@@ -1,0 +1,42 @@
+{
+  "name": "@ephox/katamari-assertions",
+  "version": "5.0.0",
+  "description": "Bedrock test assertions for Katamari",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tinymce/tinymce.git",
+    "directory": "modules/katamari-assertions"
+  },
+  "scripts": {
+    "prepublishOnly": "tsc -b",
+    "build": "tsc",
+    "test": "bedrock-auto -b chrome-headless -d src/test/ts",
+    "test-manual": "bedrock -d src/test/ts",
+    "lint": "eslint --max-warnings=0 src/**/*.ts"
+  },
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
+  "license": "GPL-2.0-or-later",
+  "dependencies": {
+    "@ephox/bedrock-client": ">=11",
+    "@ephox/dispute": "^1.0.16",
+    "@ephox/katamari": "^10.0.0"
+  },
+  "sideEffects": false,
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "README.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "main": "./lib/main/ts/ephox/katamari-assertions/api/Main.js",
+  "module": "./lib/main/ts/ephox/katamari-assertions/api/Main.js",
+  "types": "./lib/main/ts/ephox/katamari-assertions/api/Main.d.ts",
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,41 @@
+//
+// Anchor
+//
+
+.mce-content-body {
+  // Anchor object
+  .mce-item-anchor {
+    & when (@content-ui-darkmode = true) {
+      background: transparent data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/anchor-light.svg') no-repeat center;
+    }
+
+    & when (@content-ui-darkmode = false) {
+      background: transparent data-uri('image/svg+xml;charset=UTF-8', '../../../../svg/anchor.svg') no-repeat center;
+    }
+
+    // empty named anchor (allow_html_in_named_anchor: false)
+    &:empty {
+      cursor: default;
+      display: inline-block;
+      height: 12px !important;
+      padding: 0 2px;
+      -webkit-user-modify: read-only;
+      -moz-user-modify: read-only;
+      -webkit-user-select: all;
+      -moz-user-select: all;
+      user-select: all;
+      width: 8px !important;
+    }
+
+    // named anchor with content (allow_html_in_named_anchor: true)
+    &:not(:empty) {
+      background-position-x: 2px;
+      display: inline-block;
+      padding-left: 12px;
+    }
+  }
+
+  .mce-item-anchor[data-mce-selected] {
+    outline-offset: 1px;
+  }
+}

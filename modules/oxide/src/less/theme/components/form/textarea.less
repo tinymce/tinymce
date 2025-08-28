@@ -1,0 +1,51 @@
+//
+// Textarea
+//
+
+.tox {
+  .tox-textarea-wrap {
+    border-color: @textfield-border-color;
+    border-radius: @textfield-border-radius;
+    border-style: @textfield-border-style;
+    border-width: @textfield-border-width;
+    display: flex;
+    flex: 1;
+
+    // This is needed to clip the scrollbars by the border-radius see #TINY-9331
+    overflow: hidden;
+
+    &:focus-within {
+      &:extend(.tox .tox-textfield:focus);
+    }
+  }
+
+  .tox-textarea {
+    &:extend(.tox .tox-textfield);
+
+    // restore appearance for scrollbars
+    appearance: textarea;
+
+    // This is required to allow white-spaces and new lines within textareas in Firefox
+    white-space: pre-wrap;
+
+    &:focus {
+      &:extend(.tox .tox-textfield:focus);
+    }
+  }
+
+  .tox-textarea[disabled] {
+    &:extend(.tox .tox-textfield[disabled]);
+  }
+
+  // Remove border and focus styling when textarea is wrapped since that is applied to the wrapper
+  // Comments uses unwrapped textareas see: TINY-9610
+  .tox-textarea-wrap .tox-textarea {
+    border: none;
+
+    &:focus {
+      &:extend(.tox .tox-textfield);
+
+      border: none;
+    }
+  }
+}

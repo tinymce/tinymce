@@ -1,0 +1,102 @@
+//
+// Oxide Theme
+//
+
+/* 
+Rules declared inside a layer cascade together. This gives us more control over the cascade. 
+Styles defined in the last layer will override styles declared in the previous layers no matter the specificity.
+Styles that are not defined in any layer always override styles declared in named and anonymous layers.
+  1. `tox-reset` - CSS reset to clear default browser formatting.
+  2. `tox-globals` - global styles and CSS Custom Properties. Overrides styles defined in `tox-reset`.
+  3. `tox-component` - bigger components that can conatin other components like dialog, menu bar etc. Overrides styles defined in `tox-reset` and `tox-globals`.
+  4. `tox-atomic-component` - atomic components like button, input, checkbox etc. Overrides styles defined in `tox-reset`, `tox-globals` and `tox-component`.
+*/
+@layer tox-reset, tox-globals, tox-component, tox-atomic-component;
+
+@import 'globals/feature-flags';
+
+@import 'globals/reset';
+
+@import 'globals/utils';
+@import 'globals/global-variables';
+@import 'globals/global-custom-properties';
+@import 'globals/animations';
+@import 'globals/mixins';
+
+@import 'globals/tinymce';
+@import 'components/editor/editor';
+
+@import 'components/accessibility-checker/accessibility-checker';
+@import 'components/advcode/advcode.less';
+@import 'components/advtemplate/advtemplate.less';
+@import 'components/anchorbar/anchorbar';
+@import 'components/bar/bar';
+@import 'components/button/button';
+@import 'components/button/button-primary';
+@import 'components/button/button-secondary';
+@import 'components/button/button-naked';
+@import 'components/button/button-secondary-outlined';
+@import 'components/checkbox/checkbox';
+@import 'components/collection/collection';
+@import 'components/color-picker/color-picker';
+@import 'components/color-swatch/color-swatch';
+@import 'components/comments/comment';
+@import 'components/comments/user';
+@import 'components/dialog/dialog';
+@import 'components/dialog/blocker';
+@import 'components/dropzone/dropzone';
+@import 'components/edit-area/edit-area';
+@import 'components/edit-area/inline-edit-area';
+@import 'components/form/control-wrap';
+@import 'components/form/custom-preview';
+@import 'components/form/autocomplete';
+@import 'components/form/color';
+@import 'components/form/label';
+@import 'components/form/layout';
+@import 'components/form/lock';
+@import 'components/form/textfield';
+// listbox, select and textarea must be after textfield, otherwise it can't override any of the textfield settings it inherits
+@import 'components/form/listbox';
+@import 'components/form/select';
+@import 'components/form/textarea';
+@import 'components/fullscreen/fullscreen';
+@import 'components/help/help';
+@import 'components/image-preview/image-preview';
+@import 'components/image-tools/image-tools';
+@import 'components/image-selector/image-selector';
+@import 'components/insert-table-picker/insert-table-picker';
+@import 'components/mentions/mentions';
+@import 'components/menu/menu';
+@import 'components/menubar/menubar';
+@import 'components/menubar/promotion';
+@import 'components/menubar/menubar-button';
+@import 'components/notification/notification';
+@import 'components/onboarding/onboarding';
+@import 'components/pop/pop';
+@import 'components/sidebar/sidebar-container';
+@import 'components/sidebar/sidebar-content';
+@import 'components/ai-chat/ai-chat';
+@import 'components/selector/selector';
+@import 'components/skeleton/skeleton.less';
+@import 'components/slider/slider';
+@import 'components/source-code/source-code';
+@import 'components/spinner/spinner';
+@import 'components/statusbar/statusbar';
+@import 'components/throbber/throbber';
+@import 'components/toggle/toggle';
+@import 'components/toolbar-button/toolbar-button';
+@import 'components/toolbar-button/toolbar-label';
+@import 'components/toolbar-button/toolbar-number-input';
+@import 'components/toolbar-button/toolbar-select-button';
+@import 'components/toolbar-button/toolbar-split-button';
+@import 'components/toolbar/toolbar';
+@import 'components/toolbar/toolbar-group';
+@import 'components/tooltip/tooltip';
+@import 'components/tree/tree-button';
+@import 'components/revisionhistory/revisionhistory';
+@import 'components/suggestededits/suggestededits';
+@import 'components/uploadcare/uploadcare';
+@import 'components/view/view';
+@import 'components/well/well';
+
+@import 'alien/unknowns';

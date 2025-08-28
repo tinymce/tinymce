@@ -1,0 +1,6 @@
+project: polaris
+kind: Fixed
+body: Acronyms were not managed correctly.
+time: 2024-05-22T16:02:02.052181985+02:00
+custom:
+  Issue: TINY-10904

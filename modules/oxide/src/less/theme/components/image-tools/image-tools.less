@@ -1,0 +1,79 @@
+//
+// Image tools
+//
+
+.tox {
+  .tox-image-tools {
+    .tox-spacer {
+      flex: 1;
+    }
+
+    .tox-bar {
+      align-items: center;
+      display: flex;
+      height: 60px;
+      justify-content: center;
+    }
+
+    // Apply spacing between toolbars and image
+    .tox-imagepreview,
+    .tox-imagepreview + .tox-bar {
+      margin-top: @pad-sm;
+    }
+
+    .tox-croprect-block {
+      background: black;
+      filter: alpha(opacity=50);
+      opacity: .5;
+      position: absolute;
+      zoom: 1;
+    }
+
+    .tox-croprect-handle {
+      border: 2px solid white;
+      height: 20px;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 20px;
+    }
+
+    .tox-croprect-handle-move {
+      border: 0;
+      cursor: move;
+      position: absolute;
+    }
+
+    .tox-croprect-handle-nw {
+      border-width: 2px 0 0 2px;
+      cursor: nw-resize;
+      left: 100px;
+      margin: -2px 0 0 -2px;
+      top: 100px;
+    }
+
+    .tox-croprect-handle-ne {
+      border-width: 2px 2px 0 0;
+      cursor: ne-resize;
+      left: 200px;
+      margin: -2px 0 0 -20px;
+      top: 100px;
+    }
+
+    .tox-croprect-handle-sw {
+      border-width: 0 0 2px 2px;
+      cursor: sw-resize;
+      left: 100px;
+      margin: -20px 2px 0 -2px;
+      top: 200px;
+    }
+
+    .tox-croprect-handle-se {
+      border-width: 0 2px 2px 0;
+      cursor: se-resize;
+      left: 200px;
+      margin: -20px 0 0 -20px;
+      top: 200px;
+    }
+  }
+}

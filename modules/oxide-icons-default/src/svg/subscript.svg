@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-subscript</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M10.41,10 L15,14.59 L13.59,16 L9,11.41 L4.41,16 L3,14.59 L7.59,10 L3,5.41 L4.41,4 L9,8.59 L13.59,4 L15,5.41 L10.41,10 Z M20.85,19.03 L15.97,19.03 L15.97,18.03 L16.86,17.23 C17.62,16.58 18.18,16.04 18.56,15.6 C18.93,15.16 19.12,14.75 19.13,14.36 C19.14,14.08 19.05,13.85 18.86,13.66 C18.68,13.5 18.39,13.38 18,13.38 C17.69,13.38 17.42,13.44 17.16,13.56 L16.5,13.94 L16.05,12.77 C16.32,12.56 16.64,12.38 17.03,12.24 C17.42,12.1 17.85,12 18.32,12 C19.1,12.04 19.7,12.25 20.1,12.66 C20.5,13.07 20.72,13.59 20.72,14.23 C20.71,14.79 20.53,15.31 20.18,15.78 C19.84,16.25 19.42,16.7 18.91,17.14 L18.27,17.66 L20.85,17.68 L20.85,19.03 Z" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

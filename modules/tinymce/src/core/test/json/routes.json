@@ -1,0 +1,244 @@
+[
+  {
+    "request": {
+      "method": "post",
+      "path": "/custom/tinymce/imageUpload"
+    },
+
+    "response": {
+      "status" : 200,
+      "json": {
+        "location": "uploaded_image.jpg"
+      }
+
+    }
+  },
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/jax/sample/get/1",
+      "headers": { },
+      "query": {
+        "word": "alpha"
+      }
+    },
+
+    "response": {
+      "json": {
+        "results": {
+          "good": [ "alpha" ]
+        }
+      }
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/jax/sample/get/1",
+      "headers": { },
+      "query": {
+        "alpha": "1",
+        "beta": "2"
+      }
+    },
+
+    "response": {
+      "json": { "good": [ "alpha", "beta" ] }
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/jax/sample/get/2",
+      "headers": { },
+      "query": {
+        "alpha": "1",
+        "beta": "2",
+        "gamma": "3"
+      }
+    },
+
+    "response": {
+      "json": { "good": [ "alpha", "beta", "gamma" ] }
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/jax/sample/get/1",
+      "headers": {
+        "X-custom-header": "X-custom-header-value"
+      },
+      "query": {
+        "word": "beta"
+      }
+    },
+
+    "response": {
+      "json": {
+        "results": {
+          "bad": "custom-header"
+        }
+      }
+    }
+  },
+
+  {
+    "request": {
+      "method": "post",
+      "path": "/custom/jax/sample/post/1",
+      "headers": { },
+      "json": {
+        "send-data": "10"
+      }
+    },
+    "response": {
+      "json": {
+        "post-output": [ "Australia", "US" ]
+      }
+    }
+  },
+
+  {
+    "request": {
+      "method": "put",
+      "path": "/custom/jax/sample/put/1",
+      "headers": { },
+      "json": {
+        "send-data": "15"
+      }
+    },
+    "response": {
+      "json": {
+        "put-output": [ "Australia", "US" ]
+      }
+    }
+  },
+
+  {
+    "request": {
+      "method": "delete",
+      "path": "/custom/jax/sample/del/1",
+      "headers": { },
+      "query": {
+        "word": "alpha"
+      }
+    },
+
+    "response": {
+      "json": {
+        "results": {
+          "del-good": [ "alpha" ]
+        }
+      }
+    }
+  },
+
+  {
+    "request": {
+      "method": "delete",
+      "path": "/custom/jax/sample/del/1",
+      "headers": {
+        "X-custom-header": "X-del-custom-header-value"
+      },
+      "query": {
+        "word": "beta"
+      }
+    },
+
+    "response": {
+      "json": {
+        "results": {
+          "del-bad": "custom-header"
+        }
+      }
+    }
+  },
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/jax/sample/token/invalid"
+    },
+
+    "response": {
+      "status": 401,
+      "json": {}
+    }
+  },
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/jax/sample/token/valid"
+    },
+
+    "response": {
+      "status": 200,
+      "json": {}
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/jax/blob",
+      "headers": {
+        "x-custom-header": "custom"
+      }
+    },
+
+    "response": {
+      "status": 200,
+      "json": {
+        "results": {
+          "data": "123"
+        }
+      }
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/video.mp4"
+    },
+
+    "response": {
+      "headers": {
+        "content-type": "video/mp4"
+      },
+      "binary_file": "../assets/media/video.mp4"
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/audio.mp3"
+    },
+
+    "response": {
+      "headers": {
+        "content-type": "audio/mpeg"
+      },
+      "binary_file": "../assets/media/audio.mp3"
+    }
+  },
+
+  {
+    "request": {
+      "method": "get",
+      "path": "/custom/tinymce/file.pdf"
+    },
+
+    "response": {
+      "headers": {
+        "content-type": "application/pdf"
+      },
+      "status": 404,
+      "json": {}
+    }
+  }
+]
