@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Select Dataset content should be trimmed and filtered before parsing
+time: 2024-04-30T11:26:37.663244+08:00
+custom:
+  Issue: GH-9599
