@@ -39,7 +39,6 @@ const makeMap = Tools.makeMap, extend = Tools.extend;
 export interface ParserArgs {
   getInner?: boolean | number;
   forced_root_block?: boolean | string;
-  root_name?: string;
   context?: string;
   isRootContent?: boolean;
   format?: string;
@@ -480,7 +479,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
    */
   const parse = (html: string, args: ParserArgs = {}): AstNode => {
     const validate = defaultedSettings.validate;
-    const preferFullDocument = (args.root_name ?? defaultedSettings.root_name) === '#document';
+    const preferFullDocument = (args.context ?? defaultedSettings.root_name) === '#document';
     const rootName = args.context ?? (preferFullDocument ? 'html' : defaultedSettings.root_name);
 
     // Parse and sanitize the content
