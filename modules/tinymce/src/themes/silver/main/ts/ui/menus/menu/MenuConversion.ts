@@ -1,7 +1,7 @@
-import { Menu } from '@ephox/bridge';
+import type { Menu } from '@ephox/bridge';
 import { Arr, Id, Merger, Obj, Type } from '@ephox/katamari';
 
-import { SingleMenuItemSpec } from './SingleMenuTypes';
+import type { SingleMenuItemSpec } from './SingleMenuTypes';
 
 interface ExpandedMenu {
   readonly menus: Record<string, SingleMenuItemSpec[]>;

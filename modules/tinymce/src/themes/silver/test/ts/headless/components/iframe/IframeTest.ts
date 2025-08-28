@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Waiter } from '@ephox/agar';
-import { AlloyComponent, Composing, Container, GuiFactory, Representing } from '@ephox/alloy';
+import { type AlloyComponent, Composing, Container, GuiFactory, Representing } from '@ephox/alloy';
 import { describe, context, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 import { assert } from 'chai';

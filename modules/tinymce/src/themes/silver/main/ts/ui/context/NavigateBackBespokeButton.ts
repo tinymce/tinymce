@@ -1,11 +1,11 @@
-import { AlloyEvents, AlloyTriggers, SketchSpec } from '@ephox/alloy';
+import { AlloyEvents, AlloyTriggers, type SketchSpec } from '@ephox/alloy';
 import { StructureSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { Fun } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
-import { UiFactoryBackstage } from '../../backstage/Backstage';
+import type { UiFactoryBackstage } from '../../backstage/Backstage';
 import * as ButtonEvents from '../toolbar/button/ButtonEvents';
 import * as ToolbarButtons from '../toolbar/button/ToolbarButtons';
 

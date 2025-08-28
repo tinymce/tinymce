@@ -1,7 +1,7 @@
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
-import { Menu } from 'tinymce/core/api/ui/Ui';
+import type { Menu } from 'tinymce/core/api/ui/Ui';
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
 import * as ColorCache from 'tinymce/themes/silver/ui/core/color/ColorCache';
 

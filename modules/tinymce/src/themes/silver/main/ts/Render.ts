@@ -1,13 +1,13 @@
 import {
-  AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Boxes, Disabling, Gui, GuiFactory, Keying, Memento, Positioning, SimpleSpec, SystemEvents, VerticalDir
+  type AlloyComponent, AlloyEvents, type AlloyParts, type AlloySpec, Behaviour, type Boxes, Disabling, Gui, GuiFactory, Keying, Memento, Positioning, type SimpleSpec, SystemEvents, VerticalDir
 } from '@ephox/alloy';
 import { Arr, Merger, Obj, Optional, Result, Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Compare, Css, SugarBody, SugarElement } from '@ephox/sugar';
+import { Compare, Css, SugarBody, type SugarElement } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { ExecCommandArgs } from 'tinymce/core/api/EditorCommands';
-import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { ExecCommandArgs } from 'tinymce/core/api/EditorCommands';
+import type { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 import I18n from 'tinymce/core/api/util/I18n';
 
 import * as Events from './api/Events';
@@ -17,22 +17,22 @@ import * as Deprecations from './Deprecations';
 import * as DomEvents from './Events';
 import * as Iframe from './modes/Iframe';
 import * as Inline from './modes/Inline';
-import { LazyUiReferences, ReadyUiReferences, SinkAndMothership } from './modes/UiReferences';
+import { LazyUiReferences, type ReadyUiReferences, type SinkAndMothership } from './modes/UiReferences';
 import * as ContextToolbar from './ui/context/ContextToolbar';
 import * as FormatControls from './ui/core/FormatControls';
 import OuterContainer from './ui/general/OuterContainer';
 import * as StaticHeader from './ui/header/StaticHeader';
 import * as StickyHeader from './ui/header/StickyHeader';
 import * as SilverContextMenu from './ui/menus/contextmenu/SilverContextMenu';
-import { MenuRegistry } from './ui/menus/menubar/Integration';
+import type { MenuRegistry } from './ui/menus/menubar/Integration';
 import * as TableSelectorHandles from './ui/selector/TableSelectorHandles';
 import * as Sidebar from './ui/sidebar/Sidebar';
 import * as EditorSize from './ui/sizing/EditorSize';
 import * as Utils from './ui/sizing/Utils';
 import { renderStatusbar } from './ui/statusbar/Statusbar';
 import * as Throbber from './ui/throbber/Throbber';
-import { RenderToolbarConfig } from './ui/toolbar/Integration';
-import { ViewConfig } from './ui/view/ViewTypes';
+import type { RenderToolbarConfig } from './ui/toolbar/Integration';
+import type { ViewConfig } from './ui/view/ViewTypes';
 import * as UiState from './UiState';
 
 export interface ModeRenderInfo {

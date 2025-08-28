@@ -5,7 +5,7 @@ import { Class, Insert, Remove, SelectorFind, Selectors, SugarBody, SugarElement
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.SilverUiModeTest', () => {
   const sharedSettings = {

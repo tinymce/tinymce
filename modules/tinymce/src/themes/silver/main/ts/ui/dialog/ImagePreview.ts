@@ -1,7 +1,7 @@
-import { AlloyComponent, Behaviour, Memento, SimpleSpec } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
+import { type AlloyComponent, Behaviour, Memento, type SimpleSpec } from '@ephox/alloy';
+import type { Dialog } from '@ephox/bridge';
 import { Cell, Optional, Type } from '@ephox/katamari';
-import { Attribute, Class, Css, Height, Ready, SugarElement, Width } from '@ephox/sugar';
+import { Attribute, Class, Css, Height, Ready, type SugarElement, Width } from '@ephox/sugar';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import * as RepresentingConfigs from '../alien/RepresentingConfigs';

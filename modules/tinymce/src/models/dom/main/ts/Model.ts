@@ -1,5 +1,5 @@
-import Editor from 'tinymce/core/api/Editor';
-import ModelManager, { Model } from 'tinymce/core/api/ModelManager';
+import type Editor from 'tinymce/core/api/Editor';
+import ModelManager, { type Model } from 'tinymce/core/api/ModelManager';
 
 import * as Table from './table/Table';
 

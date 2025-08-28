@@ -1,5 +1,5 @@
-import Editor from 'tinymce/core/api/Editor';
-import { Menu } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Menu } from 'tinymce/core/api/ui/Ui';
 
 import { onActionExecCommand, onSetupEvent } from './ControlUtils';
 

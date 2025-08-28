@@ -1,8 +1,8 @@
 import { Arr } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
-import { UiFactoryBackstageForStyleFormats } from '../../../backstage/StyleFormatsBackstage';
+import type { UiFactoryBackstageForStyleFormats } from '../../../backstage/StyleFormatsBackstage';
 
 export interface BasicSelectItem {
   readonly title: string;

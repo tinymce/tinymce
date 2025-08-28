@@ -1,26 +1,26 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents,
+  AddEventsBehaviour, type AlloyComponent, AlloyEvents,
   FormCoupledInputs as AlloyFormCoupledInputs,
   FormField as AlloyFormField,
   Input as AlloyInput,
-  AlloySpec, AlloyTriggers, Behaviour, CustomEvent, Disabling,
+  type AlloySpec, AlloyTriggers, Behaviour, type CustomEvent, Disabling,
   Focusing,
   FocusInsideModes,
   GuiFactory,
   Keying,
-  NativeEvents, Representing, SketchSpec, Tabstopping, Tooltipping
+  NativeEvents, Representing, type SketchSpec, Tabstopping, Tooltipping
 } from '@ephox/alloy';
-import { InlineContent } from '@ephox/bridge';
-import { Cell, Fun, Id, Optional, Singleton } from '@ephox/katamari';
-import { Focus, SelectorFind, SugarElement } from '@ephox/sugar';
+import type { InlineContent } from '@ephox/bridge';
+import { Cell, Fun, Id, Optional, type Singleton } from '@ephox/katamari';
+import { Focus, SelectorFind, type SugarElement } from '@ephox/sugar';
 
 import { formInputEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as UiState from '../../UiState';
 import { onContextFormControlDetached, onControlAttached } from '../controls/Controls';
 import * as Icons from '../icons/Icons';
-import { formatSize, makeRatioConverter, noSizeConversion, parseSize, SizeConversion } from '../sizeinput/SizeInputModel';
+import { formatSize, makeRatioConverter, noSizeConversion, parseSize, type SizeConversion } from '../sizeinput/SizeInputModel';
 
 import * as ContextFormApi from './ContextFormApi';
 interface RatioEvent extends CustomEvent {

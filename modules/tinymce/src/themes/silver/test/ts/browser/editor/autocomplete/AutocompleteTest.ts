@@ -4,11 +4,11 @@ import { Arr, Throttler, Type } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import { getGreenImageDataUrl } from '../../../module/Assets';
 import {
-  AutocompleterStructure, pAssertAutocompleterStructure, pWaitForAutocompleteToClose, pWaitForAutocompleteToOpen
+  type AutocompleterStructure, pAssertAutocompleterStructure, pWaitForAutocompleteToClose, pWaitForAutocompleteToOpen
 } from '../../../module/AutocompleterUtils';
 
 interface TriggerDetails {

@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 const register = (editor: Editor): void => {
   editor.ui.registry.addContext('editable', () => {

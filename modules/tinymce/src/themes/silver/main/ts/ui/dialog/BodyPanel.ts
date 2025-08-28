@@ -1,8 +1,8 @@
-import { AddEventsBehaviour, AlloyEvents, Behaviour, Form as AlloyForm, Keying, Memento, NativeEvents, SimpleSpec, AlloyComponent } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
+import { AddEventsBehaviour, AlloyEvents, Behaviour, Form as AlloyForm, Keying, Memento, NativeEvents, type SimpleSpec, type AlloyComponent } from '@ephox/alloy';
+import type { Dialog } from '@ephox/bridge';
 import { Arr, Fun, Optional } from '@ephox/katamari';
 
-import { UiFactoryBackstage } from '../../backstage/Backstage';
+import type { UiFactoryBackstage } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 import * as FormValues from '../general/FormValues';

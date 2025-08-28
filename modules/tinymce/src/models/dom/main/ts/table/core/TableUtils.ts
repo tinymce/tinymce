@@ -9,7 +9,7 @@ import { Arr, Optional, Strings } from '@ephox/katamari';
 import { TableLookup } from '@ephox/snooker';
 import { Attribute, Compare, ContentEditable, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 const getBody = (editor: Editor): SugarElement<HTMLElement> =>
   SugarElement.fromDom(editor.getBody());

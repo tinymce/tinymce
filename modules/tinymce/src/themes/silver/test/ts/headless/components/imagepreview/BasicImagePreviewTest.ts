@@ -1,11 +1,11 @@
 import { ApproxStructure, Assertions, UiFinder } from '@ephox/agar';
-import { AlloyComponent, GuiFactory, Memento, Representing } from '@ephox/alloy';
+import { type AlloyComponent, GuiFactory, Memento, Representing } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { Ready } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import { ImagePreviewDataSpec, renderImagePreview } from 'tinymce/themes/silver/ui/dialog/ImagePreview';
+import { type ImagePreviewDataSpec, renderImagePreview } from 'tinymce/themes/silver/ui/dialog/ImagePreview';
 
 import * as GuiSetup from '../../../module/GuiSetup';
 

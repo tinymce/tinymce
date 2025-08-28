@@ -1,12 +1,12 @@
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Dragging, Focusing, Keying, SimpleSpec, SystemEvents, Tabstopping, Tooltipping } from '@ephox/alloy';
+import { AddEventsBehaviour, type AlloyComponent, AlloyEvents, Dragging, Focusing, Keying, type SimpleSpec, SystemEvents, Tabstopping, Tooltipping } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { Attribute, SugarPosition } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 
 import * as Options from '../../api/Options';
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as Icons from '../icons/Icons';
 import * as Resize from '../sizing/Resize';
 

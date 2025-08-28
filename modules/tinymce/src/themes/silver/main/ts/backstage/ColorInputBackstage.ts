@@ -1,6 +1,6 @@
-import { Menu } from '@ephox/bridge';
+import type { Menu } from '@ephox/bridge';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as ColorSwatch from '../ui/core/color/ColorSwatch';
 import * as Options from '../ui/core/color/Options';

@@ -4,7 +4,7 @@ import { Arr, Fun } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Assets from '../../../module/Assets';
 import * as AutocompleterUtils from '../../../module/AutocompleterUtils';

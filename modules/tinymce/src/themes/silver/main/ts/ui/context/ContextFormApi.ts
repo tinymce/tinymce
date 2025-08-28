@@ -1,13 +1,13 @@
 import {
-  AlloyComponent,
+  type AlloyComponent,
   AlloyTriggers,
   Disabling,
   Representing,
   SystemEvents
 } from '@ephox/alloy';
-import { InlineContent } from '@ephox/bridge';
-import { Singleton } from '@ephox/katamari';
-import { Focus, SugarElement, Traverse } from '@ephox/sugar';
+import type { InlineContent } from '@ephox/bridge';
+import type { Singleton } from '@ephox/katamari';
+import { Focus, type SugarElement, Traverse } from '@ephox/sugar';
 
 import { backSlideEvent } from './ContextUi';
 

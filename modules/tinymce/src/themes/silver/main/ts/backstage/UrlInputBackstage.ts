@@ -1,11 +1,11 @@
 import { Fun, Future, Obj, Optional, Type } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { FilePickerCallback, FilePickerValidationCallback } from 'tinymce/core/api/OptionTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { FilePickerCallback, FilePickerValidationCallback } from 'tinymce/core/api/OptionTypes';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Options from '../api/Options';
-import { LinkTarget, LinkTargets } from '../ui/core/LinkTargets';
+import { type LinkTarget, LinkTargets } from '../ui/core/LinkTargets';
 
 import { addToHistory, getHistory } from './UrlInputHistory';
 

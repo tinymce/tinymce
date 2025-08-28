@@ -3,7 +3,7 @@ import { Css, SugarBody } from '@ephox/sugar';
 import { TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 const pOpenContextMenu = async (editor: Editor, selector: string): Promise<void> => {
   await TinyUiActions.pTriggerContextMenu(editor, selector, '.tox-silver-sink .tox-menu.tox-collection [role="menuitem"]');

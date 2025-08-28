@@ -3,7 +3,7 @@ import { Optional } from '@ephox/katamari';
 import { SugarPosition } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import { getDimensions, ResizeTypes } from 'tinymce/themes/silver/ui/sizing/Resize';
 import * as Utils from 'tinymce/themes/silver/ui/sizing/Utils';
 

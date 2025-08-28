@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { Fun } from '@ephox/katamari';
 
-import { Editor, TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { Editor, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 import * as MockDemo from './MockDemo';
 

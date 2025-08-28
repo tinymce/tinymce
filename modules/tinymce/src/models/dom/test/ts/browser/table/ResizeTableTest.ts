@@ -7,9 +7,9 @@ import { Class, Css, Height, Html, Insert, InsertAll, Remove, SelectorExists, Se
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { ObjectResizeEvent, TableModifiedEvent } from 'tinymce/core/api/EventTypes';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { ObjectResizeEvent, TableModifiedEvent } from 'tinymce/core/api/EventTypes';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as TableTestUtils from '../../module/table/TableTestUtils';
 

@@ -1,12 +1,12 @@
-import { ItemTypes, MenuTypes } from '@ephox/alloy';
+import type { ItemTypes, MenuTypes } from '@ephox/alloy';
 import { StructureSchema } from '@ephox/boulder';
-import { InlineContent, Menu, Toolbar } from '@ephox/bridge';
+import type { InlineContent, Menu, Toolbar } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 
 import { components as menuComponents, dom as menuDom } from './MenuParts';
-import { forCollection, forCollectionWithSearchField, forCollectionWithSearchResults, forHorizontalCollection, forImageSelector, forSwatch, forToolbar, StructureSpec } from './MenuStructures';
-import { SearchMenuWithFieldMode, SearchMenuWithResultsMode } from './searchable/SearchableMenu';
-import { SingleMenuItemSpec } from './SingleMenuTypes';
+import { forCollection, forCollectionWithSearchField, forCollectionWithSearchResults, forHorizontalCollection, forImageSelector, forSwatch, forToolbar, type StructureSpec } from './MenuStructures';
+import type { SearchMenuWithFieldMode, SearchMenuWithResultsMode } from './searchable/SearchableMenu';
+import type { SingleMenuItemSpec } from './SingleMenuTypes';
 
 export interface PartialMenuSpec {
   readonly value: string;

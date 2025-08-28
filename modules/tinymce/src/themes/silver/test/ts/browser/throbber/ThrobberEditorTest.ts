@@ -5,7 +5,7 @@ import { SugarBody } from '@ephox/sugar';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.throbber.ThrobberEditorTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

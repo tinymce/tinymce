@@ -5,9 +5,9 @@ import { SugarBody, SugarDocument, Css } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Dialog } from 'tinymce/core/api/ui/Ui';
-import { WindowParams } from 'tinymce/core/api/WindowManager';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
+import type { WindowParams } from 'tinymce/core/api/WindowManager';
 
 import * as DialogUtils from '../../module/DialogUtils';
 import * as GuiSetup from '../../module/GuiSetup';

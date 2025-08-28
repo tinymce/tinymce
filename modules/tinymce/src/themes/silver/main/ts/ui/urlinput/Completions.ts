@@ -1,9 +1,9 @@
-import { Menu as BridgeMenu } from '@ephox/bridge';
+import type { Menu as BridgeMenu } from '@ephox/bridge';
 import { Arr, Fun, Optional, Strings } from '@ephox/katamari';
 
-import { LinkInformation } from '../../backstage/UrlInputBackstage';
-import { LinkTarget, LinkTargetType } from '../core/LinkTargets';
-import { SingleMenuItemSpec } from '../menus/menu/SingleMenuTypes';
+import type { LinkInformation } from '../../backstage/UrlInputBackstage';
+import type { LinkTarget, LinkTargetType } from '../core/LinkTargets';
+import type { SingleMenuItemSpec } from '../menus/menu/SingleMenuTypes';
 
 const separator: BridgeMenu.SeparatorMenuItemSpec = {
   type: 'separator'

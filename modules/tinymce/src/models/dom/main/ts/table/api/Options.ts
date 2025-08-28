@@ -1,8 +1,8 @@
 import { Arr, Optional, Type } from '@ephox/katamari';
 import { SelectorFind, SugarBody, SugarElement, Width } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorOptions } from 'tinymce/core/api/OptionTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorOptions } from 'tinymce/core/api/OptionTypes';
 
 export type TableSizingMode = 'fixed' | 'relative' | 'responsive' | 'auto';
 export type TableColumnResizing = 'preservetable' | 'resizetable';

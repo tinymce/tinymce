@@ -1,10 +1,10 @@
-import { ApproxStructure, StructAssert } from '@ephox/agar';
+import { ApproxStructure, type StructAssert } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Type } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.models.dom.table.TableSizingModeTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

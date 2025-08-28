@@ -1,13 +1,13 @@
-import { AlloyComponent, Boxes, Channels, Docking, OffsetOrigin, VerticalDir } from '@ephox/alloy';
-import { Arr, Cell, Fun, Optional, Optionals, Singleton } from '@ephox/katamari';
-import { Attribute, Compare, Css, Height, Scroll, SugarBody, SugarElement, SugarLocation, SugarPosition, Traverse, Width, WindowVisualViewport } from '@ephox/sugar';
+import { type AlloyComponent, Boxes, Channels, Docking, OffsetOrigin, VerticalDir } from '@ephox/alloy';
+import { Arr, Cell, Fun, Optional, Optionals, type Singleton } from '@ephox/katamari';
+import { Attribute, Compare, Css, Height, Scroll, SugarBody, type SugarElement, SugarLocation, type SugarPosition, Traverse, Width, WindowVisualViewport } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Options from '../../api/Options';
-import { UiFactoryBackstage } from '../../backstage/Backstage';
-import { ReadyUiReferences } from '../../modes/UiReferences';
+import type { UiFactoryBackstage } from '../../backstage/Backstage';
+import type { ReadyUiReferences } from '../../modes/UiReferences';
 import OuterContainer from '../general/OuterContainer';
 import * as EditorSize from '../sizing/EditorSize';
 

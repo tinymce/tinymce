@@ -1,12 +1,12 @@
-import { ApproxStructure, Assertions, Keyboard, Keys, Mouse, TestStore, UiControls, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, Keyboard, Keys, Mouse, type TestStore, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { Container, Disabling, Focusing, GuiFactory, Representing } from '@ephox/alloy';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { Future, Optional } from '@ephox/katamari';
 import { Attribute, SelectorFind, SugarDocument, Value } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import { ApiUrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
-import { LinkTargetType } from 'tinymce/themes/silver/ui/core/LinkTargets';
+import type { ApiUrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
+import type { LinkTargetType } from 'tinymce/themes/silver/ui/core/LinkTargets';
 import { renderUrlInput } from 'tinymce/themes/silver/ui/dialog/UrlInput';
 
 import * as GuiSetup from '../../../module/GuiSetup';

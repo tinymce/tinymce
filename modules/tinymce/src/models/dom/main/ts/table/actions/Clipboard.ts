@@ -1,8 +1,8 @@
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, type Optional } from '@ephox/katamari';
 import { CopySelected, TableFill, TableLookup } from '@ephox/snooker';
 import { Attribute, Css, Insert, InsertAll, Remove, SugarElement, SugarElements, SugarNode, SugarShadowDom } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Options from '../api/Options';
 import * as Utils from '../core/TableUtils';
@@ -10,7 +10,7 @@ import * as TableTargets from '../queries/TableTargets';
 import * as Ephemera from '../selection/Ephemera';
 import * as TableSelection from '../selection/TableSelection';
 
-import { TableActions } from './TableActions';
+import type { TableActions } from './TableActions';
 
 const extractSelected = (cells: SugarElement<HTMLTableCellElement>[]): Optional<SugarElement<HTMLTableElement>[]> => {
   // Assume for now that we only have one table (also handles the case where we multi select outside a table)

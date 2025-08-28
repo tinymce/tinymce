@@ -2,7 +2,7 @@ import { Mouse, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.models.dom.table.DragSelectionTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

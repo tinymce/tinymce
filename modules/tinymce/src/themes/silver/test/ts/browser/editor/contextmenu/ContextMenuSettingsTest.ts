@@ -3,7 +3,7 @@ import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
+import type { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 import * as Options from 'tinymce/themes/silver/ui/menus/contextmenu/Options';
 
 describe('browser.tinymce.themes.silver.editor.contextmenu.ContextMenuSettingsTest', () => {

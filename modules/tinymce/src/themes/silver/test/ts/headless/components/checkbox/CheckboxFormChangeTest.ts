@@ -1,10 +1,10 @@
-import { FocusTools, Keyboard, Keys, TestStore } from '@ephox/agar';
+import { FocusTools, Keyboard, Keys, type TestStore } from '@ephox/agar';
 import { AddEventsBehaviour, AlloyEvents, Behaviour, GuiFactory } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 
 import { renderCheckbox } from 'tinymce/themes/silver/ui/general/Checkbox';
-import { FormChangeEvent, formChangeEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
+import { type FormChangeEvent, formChangeEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
 import * as GuiSetup from '../../../module/GuiSetup';
 import TestProviders from '../../../module/TestProviders';

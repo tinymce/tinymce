@@ -1,7 +1,7 @@
 import { Obj, Type } from '@ephox/katamari';
-import { Css, Height, SugarElement, SugarPosition, Width } from '@ephox/sugar';
+import { Css, Height, SugarElement, type SugarPosition, Width } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Events from '../../api/Events';
 import * as Options from '../../api/Options';

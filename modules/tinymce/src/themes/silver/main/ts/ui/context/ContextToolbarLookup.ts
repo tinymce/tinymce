@@ -1,11 +1,11 @@
-import { InlineContent } from '@ephox/bridge';
+import type { InlineContent } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 import { Compare, SugarElement, SugarNode, TransformFind } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
-import { ContextType } from './ContextToolbar';
-import { ScopedToolbars } from './ContextToolbarScopes';
+import type { ContextType } from './ContextToolbar';
+import type { ScopedToolbars } from './ContextToolbarScopes';
 
 export interface LookupResult {
   readonly toolbars: ContextType[];

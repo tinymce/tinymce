@@ -4,7 +4,7 @@ import { Fun } from '@ephox/katamari';
 import { Focus, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 import { McEditor, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 // TODO TINY-10480: Investigate flaky tests
 describe.skip('browser.tinymce.themes.silver.editor.contexttoolbar.RemoveContextToolbarOnFocusoutTest', () => {

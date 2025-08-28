@@ -1,12 +1,12 @@
-import { Bounds, Boxes } from '@ephox/alloy';
-import { InlineContent } from '@ephox/bridge';
+import { type Bounds, Boxes } from '@ephox/alloy';
+import type { InlineContent } from '@ephox/bridge';
 import { Optional } from '@ephox/katamari';
 import { Scroll, SelectorFind, SugarBody, SugarElement, SugarNode, Traverse, WindowVisualViewport } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Options from '../../api/Options';
-import { UiFactoryBackstageShared } from '../../backstage/Backstage';
+import type { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 // The "threshold" here is the amount of overlap. To make the overlap check
 // be more permissive (return true for 'almost' an overlap), use a negative

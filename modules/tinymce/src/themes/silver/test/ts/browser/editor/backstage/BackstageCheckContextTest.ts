@@ -5,7 +5,7 @@ import { Classes, SugarBody } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as Backstage from 'tinymce/themes/silver/backstage/Backstage';
 
 describe('browser.tinymce.themes.silver.editor.backstage.BackstageSinkTest', () => {

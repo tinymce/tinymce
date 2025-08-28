@@ -1,18 +1,18 @@
-import { AlloyComponent, AlloyTriggers, SketchSpec } from '@ephox/alloy';
+import { type AlloyComponent, AlloyTriggers, type SketchSpec } from '@ephox/alloy';
 import { Arr, Fun, Optional, Strings } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { BlockFormat, InlineFormat } from 'tinymce/core/api/fmt/Format';
+import type Editor from 'tinymce/core/api/Editor';
+import type { BlockFormat, InlineFormat } from 'tinymce/core/api/fmt/Format';
 
 import * as Events from '../../../api/Events';
 import * as Options from '../../../api/Options';
-import { UiFactoryBackstage } from '../../../backstage/Backstage';
+import type { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { onActionToggleFormat, onSetupEditableToggle } from '../ControlUtils';
 
-import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
-import { AdvancedSelectDataset, BasicSelectItem, SelectDataset } from './SelectDatasets';
-import { getStyleFormats, isFormatReference, isNestedFormat, StyleFormatType } from './StyleFormat';
+import { createMenuItems, createSelectButton, type SelectSpec } from './BespokeSelect';
+import type { AdvancedSelectDataset, BasicSelectItem, SelectDataset } from './SelectDatasets';
+import { getStyleFormats, isFormatReference, isNestedFormat, type StyleFormatType } from './StyleFormat';
 import { findNearest } from './utils/FormatDetection';
 import * as Tooltip from './utils/Tooltip';
 

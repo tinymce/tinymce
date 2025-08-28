@@ -7,8 +7,8 @@
 
 import { CellOpSelection } from '@ephox/darwin';
 import { Optional } from '@ephox/katamari';
-import { RunOperation, SimpleGenerators } from '@ephox/snooker';
-import { SugarElement } from '@ephox/sugar';
+import type { RunOperation, SimpleGenerators } from '@ephox/snooker';
+import type { SugarElement } from '@ephox/sugar';
 
 import { ephemera } from '../selection/Ephemera';
 

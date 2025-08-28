@@ -1,10 +1,10 @@
-import { Arr, Fun, Id, Obj, Optional, Type } from '@ephox/katamari';
+import { Arr, Fun, Id, Obj, type Optional, Type } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { FormatReference, Separator, StyleFormat } from 'tinymce/core/api/fmt/StyleFormat';
+import type Editor from 'tinymce/core/api/Editor';
+import type { FormatReference, Separator, StyleFormat } from 'tinymce/core/api/fmt/StyleFormat';
 
-import { FormatItem, FormatterFormatItem, PreviewSpec, SelectedFormat, SubMenuFormatItem } from '../BespokeSelect';
-import { isFormatReference, isNestedFormat, NestedStyleFormat, StyleFormatType } from '../StyleFormat';
+import type { FormatItem, FormatterFormatItem, PreviewSpec, SelectedFormat, SubMenuFormatItem } from '../BespokeSelect';
+import { isFormatReference, isNestedFormat, type NestedStyleFormat, type StyleFormatType } from '../StyleFormat';
 
 export type IsSelectedForType = (format: string) => (currentValue: Optional<SelectedFormat>) => boolean;
 export type GetPreviewForType = (format: string) => () => Optional<PreviewSpec>;

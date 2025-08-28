@@ -1,11 +1,11 @@
-import { Behaviour, Focusing, GuiFactory, SimpleSpec } from '@ephox/alloy';
+import { Behaviour, Focusing, GuiFactory, type SimpleSpec } from '@ephox/alloy';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import { Logo } from 'tinymce/themes/silver/resources/StatusbarLogo';
 
 import * as Options from '../../api/Options';
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as ConvertShortcut from '../alien/ConvertShortcut';
 
 import * as ElementPath from './ElementPath';

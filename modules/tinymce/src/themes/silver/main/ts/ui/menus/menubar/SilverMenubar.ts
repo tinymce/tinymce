@@ -1,15 +1,15 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Dropdown, Focusing, Keying, NativeEvents, RawDomSchema, Replacing, Sketcher,
-  SystemEvents, Tabstopping, UiSketcher
+  AddEventsBehaviour, type AlloyComponent, AlloyEvents, Behaviour, Dropdown, Focusing, Keying, NativeEvents, type RawDomSchema, Replacing, Sketcher,
+  SystemEvents, Tabstopping, type UiSketcher
 } from '@ephox/alloy';
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Toolbar } from '@ephox/bridge';
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Compare, EventArgs, SelectorFind } from '@ephox/sugar';
+import { Compare, type EventArgs, SelectorFind } from '@ephox/sugar';
 
-import { Menu } from 'tinymce/core/api/ui/Ui';
-import { TranslatedString } from 'tinymce/core/api/util/I18n';
-import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+import type { Menu } from 'tinymce/core/api/ui/Ui';
+import type { TranslatedString } from 'tinymce/core/api/util/I18n';
+import type { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
 import { renderMenuButton } from '../../button/MenuButton';
 import { MenuButtonClasses } from '../../toolbar/button/ButtonClasses';

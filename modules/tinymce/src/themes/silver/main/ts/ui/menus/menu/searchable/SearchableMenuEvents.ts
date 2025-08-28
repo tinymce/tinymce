@@ -1,4 +1,4 @@
-import { CustomEvent, EventFormat } from '@ephox/alloy';
+import type { CustomEvent, EventFormat } from '@ephox/alloy';
 import { Id } from '@ephox/katamari';
 
 // We also could have put the SearcherState in here, but that makes refetch

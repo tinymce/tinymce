@@ -1,11 +1,11 @@
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Input, Keying, NativeEvents, NativeSimulatedEvent, Representing } from '@ephox/alloy';
+import { AddEventsBehaviour, type AlloyComponent, AlloyEvents, type AlloySpec, AlloyTriggers, Behaviour, Input, Keying, NativeEvents, type NativeSimulatedEvent, Representing } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
-import { Attribute, EventArgs, SelectorFind } from '@ephox/sugar';
+import { Attribute, type EventArgs, SelectorFind } from '@ephox/sugar';
 
-import { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
+import type { UiFactoryBackstageProviders } from '../../../../backstage/Backstage';
 import { selectableClass as usualItemClass } from '../../item/ItemClasses';
 
-import { redirectMenuItemInteractionEvent, RedirectMenuItemInteractionEventData, refetchTriggerEvent } from './SearchableMenuEvents';
+import { redirectMenuItemInteractionEvent, type RedirectMenuItemInteractionEventData, refetchTriggerEvent } from './SearchableMenuEvents';
 
 export interface MenuSearcherSpec {
   readonly placeholder: Optional<string>;

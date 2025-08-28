@@ -3,7 +3,7 @@ import { Fun } from '@ephox/katamari';
 import { Insert, Remove, SugarElement } from '@ephox/sugar';
 import { TinyDom } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 const createScrollDiv = (height: number) =>
   SugarElement.fromHtml<HTMLElement>(`<div style="height: ${height}px;" tabindex="0" class="scroll-div"></div>`);

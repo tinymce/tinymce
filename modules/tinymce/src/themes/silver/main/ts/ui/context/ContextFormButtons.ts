@@ -1,14 +1,14 @@
 import {
-  AlloyComponent, AlloyEvents,
-  Disabling, Memento, MementoRecord,
-  SimpleOrSketchSpec
+  type AlloyComponent, AlloyEvents,
+  Disabling, Memento, type MementoRecord,
+  type SimpleOrSketchSpec
 } from '@ephox/alloy';
 import { StructureSchema } from '@ephox/boulder';
-import { InlineContent, Toolbar } from '@ephox/bridge';
-import { Arr, Fun, Optional, Singleton } from '@ephox/katamari';
+import { type InlineContent, Toolbar } from '@ephox/bridge';
+import { Arr, Fun, Optional, type Singleton } from '@ephox/katamari';
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { internalToolbarButtonExecute, InternalToolbarButtonExecuteEvent } from '../toolbar/button/ButtonEvents';
+import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import { internalToolbarButtonExecute, type InternalToolbarButtonExecuteEvent } from '../toolbar/button/ButtonEvents';
 import { renderToolbarButtonWith, renderToolbarToggleButtonWith } from '../toolbar/button/ToolbarButtons';
 
 import { getFormApi } from './ContextFormApi';

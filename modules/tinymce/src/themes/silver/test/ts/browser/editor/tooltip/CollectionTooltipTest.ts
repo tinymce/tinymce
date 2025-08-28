@@ -3,7 +3,7 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import CharmapPlugin from 'tinymce/plugins/charmap/Plugin';
 import EmoticonsPlugin from 'tinymce/plugins/emoticons/Plugin';
 

@@ -1,13 +1,13 @@
 import {
-  AlloyComponent, AlloySpec, Behaviour, Button, DomFactory, Focusing, GuiFactory, Keying, Memento, Replacing, Sketcher,
+  type AlloyComponent, type AlloySpec, Behaviour, Button, DomFactory, Focusing, GuiFactory, Keying, Memento, Replacing, Sketcher,
   Tabstopping,
   Tooltipping,
-  UiSketcher
+  type UiSketcher
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Id, Optional } from '@ephox/katamari';
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as HtmlSanitizer from '../core/HtmlSanitizer';
 import * as Icons from '../icons/Icons';
 

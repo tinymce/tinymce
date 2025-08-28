@@ -1,11 +1,11 @@
-import { AlloyComponent, Disabling, ItemTypes, Toggling } from '@ephox/alloy';
-import { Menu } from '@ephox/bridge';
+import { type AlloyComponent, Disabling, type ItemTypes, Toggling } from '@ephox/alloy';
+import type { Menu } from '@ephox/bridge';
 import { Merger, Optional } from '@ephox/katamari';
 
-import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
+import type { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 
 import * as ItemClasses from '../ItemClasses';
-import ItemResponse from '../ItemResponse';
+import type ItemResponse from '../ItemResponse';
 import { renderCheckmark } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
 

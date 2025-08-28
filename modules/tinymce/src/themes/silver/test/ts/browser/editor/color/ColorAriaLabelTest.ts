@@ -4,7 +4,7 @@ import { Arr, Fun, Strings } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
 

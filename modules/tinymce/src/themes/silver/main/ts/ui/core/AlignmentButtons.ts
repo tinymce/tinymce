@@ -1,6 +1,6 @@
 import { Arr } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import { onActionExecCommand, onSetupEditableToggle, onSetupStateToggle } from './ControlUtils';
 

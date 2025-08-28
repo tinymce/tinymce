@@ -1,9 +1,9 @@
 import { FocusTools, Mouse, UiFinder, Waiter } from '@ephox/agar';
-import { SelectorFilter, SugarBody, SugarElement, TextContent } from '@ephox/sugar';
+import { SelectorFilter, SugarBody, type SugarElement, TextContent } from '@ephox/sugar';
 import { TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 const tooltipSelector = '.tox-silver-sink .tox-tooltip__body';
 

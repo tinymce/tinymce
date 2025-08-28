@@ -1,7 +1,7 @@
 // This is just a set of basic menu structures for quickly creating ApproxStructures.
 
-import { ApproxStructure, StructAssert } from '@ephox/agar';
-import { Optional } from '@ephox/katamari';
+import { ApproxStructure, type StructAssert } from '@ephox/agar';
+import type { Optional } from '@ephox/katamari';
 
 const structMenuWith = (state: { selected: boolean }, children: StructAssert[]): StructAssert => ApproxStructure.build(
   (s, str, arr) => s.element('div', {

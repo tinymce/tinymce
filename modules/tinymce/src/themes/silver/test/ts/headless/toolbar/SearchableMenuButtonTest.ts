@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, UiFinde
 import { AlloyTriggers, GuiFactory, NativeEvents } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
-import { Attribute, SugarDocument, SugarElement } from '@ephox/sugar';
+import { Attribute, SugarDocument, type SugarElement } from '@ephox/sugar';
 
 import { renderMenuButton } from 'tinymce/themes/silver/ui/button/MenuButton';
 

@@ -1,10 +1,10 @@
 import {
-  AlloyComponent, AlloyParts, Behaviour, Container, DomFactory, Memento, MementoRecord, ModalDialog, Reflecting, SimpleSpec, SketchSpec
+  type AlloyComponent, type AlloyParts, Behaviour, Container, DomFactory, Memento, type MementoRecord, ModalDialog, Reflecting, type SimpleSpec, type SketchSpec
 } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
+import type { Dialog } from '@ephox/bridge';
 import { Arr, Optional } from '@ephox/katamari';
 
-import { UiFactoryBackstage } from '../../backstage/Backstage';
+import type { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderFooterButton } from '../general/Button';
 
 import { footerChannel } from './DialogChannels';

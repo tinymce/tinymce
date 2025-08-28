@@ -1,4 +1,4 @@
-import { Toolbar } from '@ephox/bridge';
+import type { Toolbar } from '@ephox/bridge';
 import { Obj } from '@ephox/katamari';
 
 const navClass = 'tox-menu-nav__js';

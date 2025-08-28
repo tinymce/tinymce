@@ -1,10 +1,10 @@
 import { Cursors, Waiter } from '@ephox/agar';
 import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { Scroll, SugarLocation, SugarPosition } from '@ephox/sugar';
+import { Scroll, SugarLocation, type SugarPosition } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as ScrollIntoView from 'tinymce/core/dom/ScrollIntoView';
 
 // TODO TINY-10480: Investigate flaky tests

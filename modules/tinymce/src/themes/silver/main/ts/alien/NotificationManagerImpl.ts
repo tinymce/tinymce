@@ -1,13 +1,13 @@
-import { AlloyComponent, Behaviour, Boxes, Docking, Gui, GuiFactory, InlineView, Keying, MaxHeight, Replacing } from '@ephox/alloy';
-import { Arr, Optional, Singleton, Type } from '@ephox/katamari';
+import { type AlloyComponent, Behaviour, Boxes, Docking, type Gui, GuiFactory, InlineView, Keying, MaxHeight, Replacing } from '@ephox/alloy';
+import { Arr, Optional, type Singleton, Type } from '@ephox/katamari';
 import { Css, SugarElement, SugarLocation, Traverse, Width } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { NotificationApi, NotificationManagerImpl, NotificationSpec } from 'tinymce/core/api/NotificationManager';
+import type Editor from 'tinymce/core/api/Editor';
+import type { NotificationApi, NotificationManagerImpl, NotificationSpec } from 'tinymce/core/api/NotificationManager';
 import Delay from 'tinymce/core/api/util/Delay';
 
 import * as Options from '../api/Options';
-import { UiFactoryBackstage } from '../backstage/Backstage';
+import type { UiFactoryBackstage } from '../backstage/Backstage';
 import * as ScrollingContext from '../modes/ScrollingContext';
 import { Notification } from '../ui/general/Notification';
 

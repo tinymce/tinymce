@@ -1,13 +1,13 @@
-import { AlloyComponent, AlloyEvents, AlloyTriggers, CustomEvent, Keying, NativeEvents, Reflecting, Representing } from '@ephox/alloy';
-import { Dialog, DialogManager } from '@ephox/bridge';
-import { Result } from '@ephox/katamari';
-import { Attribute, Compare, Focus, SugarElement, SugarShadowDom } from '@ephox/sugar';
+import { type AlloyComponent, AlloyEvents, AlloyTriggers, type CustomEvent, Keying, NativeEvents, Reflecting, Representing } from '@ephox/alloy';
+import type { Dialog, DialogManager } from '@ephox/bridge';
+import type { Result } from '@ephox/katamari';
+import { Attribute, Compare, Focus, type SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import {
-  formActionEvent, FormActionEvent, formBlockEvent, FormBlockEvent, FormCancelEvent, formCancelEvent, FormChangeEvent, formChangeEvent,
-  FormCloseEvent,
+  formActionEvent, type FormActionEvent, formBlockEvent, type FormBlockEvent, type FormCancelEvent, formCancelEvent, type FormChangeEvent, formChangeEvent,
+  type FormCloseEvent,
   formCloseEvent,
-  FormSubmitEvent, formSubmitEvent, formTabChangeEvent, FormTabChangeEvent, formUnblockEvent, FormUnblockEvent
+  type FormSubmitEvent, formSubmitEvent, formTabChangeEvent, type FormTabChangeEvent, formUnblockEvent, type FormUnblockEvent
 } from '../general/FormEvents';
 import * as NavigableObject from '../general/NavigableObject';
 

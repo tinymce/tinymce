@@ -1,17 +1,17 @@
 import {
-  AlloyComponent, AlloyEvents, Behaviour, Composing,
-  Replacing, Sketcher, SlotContainer, SlotContainerTypes, UiSketcher
+  type AlloyComponent, AlloyEvents, Behaviour, Composing,
+  Replacing, Sketcher, SlotContainer, type SlotContainerTypes, type UiSketcher
 } from '@ephox/alloy';
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { View as BridgeView } from '@ephox/bridge';
-import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
+import { Arr, Fun, Obj, type Optional } from '@ephox/katamari';
 import { Attribute, Css } from '@ephox/sugar';
 
-import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import type { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { SimpleBehaviours } from '../alien/SimpleBehaviours';
 
 import View from './View';
-import { ViewConfig } from './ViewTypes';
+import type { ViewConfig } from './ViewTypes';
 
 interface SilverViewWrapperSpec extends Sketcher.SingleSketchSpec {
   readonly backstage: UiFactoryBackstage;

@@ -1,12 +1,12 @@
-import { AlloyComponent, Behaviour, Boxes, Channels, Docking, DockingTypes, Focusing, Receiving } from '@ephox/alloy';
-import { Arr, Optional, Result, Singleton } from '@ephox/katamari';
+import { type AlloyComponent, type Behaviour, Boxes, Channels, Docking, type DockingTypes, Focusing, Receiving } from '@ephox/alloy';
+import { Arr, Optional, type Result, Singleton } from '@ephox/katamari';
 import { Class, Classes, Compare, Css, Focus, Height, Scroll, SugarElement, SugarLocation, Traverse, Visibility, Width } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { ScrollIntoViewEvent } from 'tinymce/core/api/EventTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { ScrollIntoViewEvent } from 'tinymce/core/api/EventTypes';
 
 import * as Options from '../../api/Options';
-import { UiFactoryBackstageShared } from '../../backstage/Backstage';
+import type { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import * as EditorChannels from '../../Channels';
 import * as ScrollingContext from '../../modes/ScrollingContext';
 

@@ -1,11 +1,11 @@
 import { Keys, UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Attribute, SelectorFilter, SugarBody, SugarElement } from '@ephox/sugar';
+import { Attribute, SelectorFilter, SugarBody, type SugarElement } from '@ephox/sugar';
 import { TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Assets from '../../../module/Assets';
 import * as AutocompleterUtils from '../../../module/AutocompleterUtils';

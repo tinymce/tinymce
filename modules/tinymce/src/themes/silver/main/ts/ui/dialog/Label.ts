@@ -1,9 +1,9 @@
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, GuiFactory, Keying, Memento, Replacing, SimpleSpec } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
+import { AddEventsBehaviour, type AlloyComponent, AlloyEvents, Behaviour, GuiFactory, Keying, Memento, Replacing, type SimpleSpec } from '@ephox/alloy';
+import type { Dialog } from '@ephox/bridge';
 import { Arr, Id, Optional } from '@ephox/katamari';
 import { Attribute } from '@ephox/sugar';
 
-import { UiFactoryBackstageShared } from '../../backstage/Backstage';
+import type { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 

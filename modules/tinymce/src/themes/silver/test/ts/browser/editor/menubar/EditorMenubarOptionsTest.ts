@@ -1,11 +1,11 @@
 import { ApproxStructure, Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { SugarBody, SugarElement } from '@ephox/sugar';
+import { SugarBody, type SugarElement } from '@ephox/sugar';
 import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import { countNumber, extractOnlyOne } from '../../../module/UiUtils';
 

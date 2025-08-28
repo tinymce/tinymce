@@ -5,8 +5,8 @@ import { Css, Focus, Height, Remove, Scroll, SugarBody, SugarDocument, SugarElem
 import { TinyContentActions, TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { NotificationApi } from 'tinymce/core/api/NotificationManager';
+import type Editor from 'tinymce/core/api/Editor';
+import type { NotificationApi } from 'tinymce/core/api/NotificationManager';
 
 import * as PageScroll from '../../module/PageScroll';
 import { resizeToPos } from '../../module/UiUtils';
