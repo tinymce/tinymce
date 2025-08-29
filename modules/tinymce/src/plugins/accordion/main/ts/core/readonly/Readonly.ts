@@ -1,4 +1,5 @@
 import { Arr } from '@ephox/katamari';
+import { SugarElement } from '@ephox/sugar';
 
 import Editor from 'tinymce/core/api/Editor';
 import { ExecCommandEvent } from 'tinymce/core/api/EventTypes';
@@ -9,6 +10,7 @@ import * as Utils from './Utils';
 const setup = (editor: Editor): void => {
   // Prevent adding an undo level on ToggleAccordion in readonly mode
   editor.on('BeforeAddUndo', (event) => {
+    // TODO: Fix the types so I wouldn't have to use any
     const isExecCommand = (event: any): event is EditorEvent<ExecCommandEvent> => {
       return event?.type === 'execcommand';
     };
@@ -21,10 +23,11 @@ const setup = (editor: Editor): void => {
 
   // Save snapshot of accordion state on entering readonly
   editor.on('SwitchMode', (event) => {
+    const editorBofy = SugarElement.fromDom(editor.getBody());
     if (event.mode === 'readonly') {
-      onEnterReadonly(editor);
+      addTemporaryAttributes(editorBofy);
     } else {
-      onPossibleExitReadonly(editor);
+      restoreNormalState(editorBofy);
     }
   });
 
@@ -41,37 +44,34 @@ const setup = (editor: Editor): void => {
     TODO: Should we ignore SetContent events when format is raw?
   */
   editor.on('SetContent', () => {
+    const editorBody = SugarElement.fromDom(editor.getBody());
     if (editor.readonly) {
-      setupMceOpenAttributes(editor);
+      addTemporaryAttributes(editorBody);
     }
   });
 
-  /* TODO: A lot of places overriding this event excludes partial selection, should I do this as well? */
-  editor.on('GetContent', () => {
-    // Unfortunatelly we have to work at the string level... This is a nightmare
+  /*
+    TODO: A lot of places overriding this event excludes partial selection, should I do this as well?
+    TODO: Should we Ignore GetContent override even when format is raw?
+  */
+  editor.on('GetContent', (event) => {
+    // TODO: I know this can't be done that way. Unfurtunately I can't parse the content here. So I will need to work on a string level...
     if (editor.readonly) {
+      const currentContent = event.content;
+      const parsedContent = new DOMParser().parseFromString(currentContent, 'text/html');
+      restoreNormalState(SugarElement.fromDom(parsedContent));
+      event.content = parsedContent.body.innerHTML;
     }
   });
 };
 
-const onEnterReadonly = (editor: Editor) => {
-  setupMceOpenAttributes(editor);
-};
-
-const onPossibleExitReadonly = (editor: Editor) => {
-  updateOpenAttributes(editor);
-  removeMceOpenAttributes(editor);
-};
-
-const setupMceOpenAttributes = (editor: Editor) =>
-  Arr.each(Utils.getDetailsElements(editor), (details) => Utils.setMceOpenAttribute(details, Utils.hasOpenAttribute(details)));
-
-const updateOpenAttributes = (editor: Editor) => {
+const restoreNormalState = (scope: SugarElement<Node>) => {
   Arr.each(
     // At this point every <details> should have data-mce-open attribute. But I will ignore those that don't - just in case.
-    Arr.filter(Utils.getDetailsElements(editor), Utils.hasMceOpenAttribute),
+    Arr.filter(Utils.getDetailsElements(scope), Utils.hasMceOpenAttribute),
     (details) => {
       const mceOpen = Utils.getMceOpenAttribute(details);
+      Utils.removeMceOpenAttribute(details);
       if (mceOpen) {
         Utils.setOpenAttribute(details);
       } else {
@@ -81,8 +81,11 @@ const updateOpenAttributes = (editor: Editor) => {
   );
 };
 
-const removeMceOpenAttributes = (editor: Editor) =>
-  Arr.each(Utils.getDetailsElements(editor), Utils.removeMceOpenAttribute);
+const addTemporaryAttributes = (scope: SugarElement<Node>) =>
+  Arr.each(
+    Utils.getDetailsElements(scope),
+    (details) => Utils.setMceOpenAttribute(details, Utils.hasOpenAttribute(details))
+  );
 
 export {
   setup
