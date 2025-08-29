@@ -25,6 +25,9 @@
     "LEGAL.txt",
     "LICENSE.txt"
   ],
+  "dependencies": {
+    "@ephox/katamari": "^10.0.0"
+  },
   "main": "./lib/main/ts/main.js",
   "module": "./lib/main/ts/main.js",
   "types": "./lib/main/ts/main.d.ts"
