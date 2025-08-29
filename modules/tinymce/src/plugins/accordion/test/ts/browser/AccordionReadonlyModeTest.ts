@@ -1,7 +1,7 @@
 import { UiFinder } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
-import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import Editor from 'tinymce/core/api/Editor';
@@ -90,10 +90,9 @@ describe('browser.tinymce.plugins.accordion.AccordionReadonlyModeTest', () => {
     editor.mode.set('readonly');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
 
-    const initialContent = editor.getContent();
+    const initialContent = [ '<details>', '<summary>Toggle accordion</summary>', '<p>Hidden info</p>', '</details>' ].join('\n');
+    assert.equal(editor.getContent(), initialContent, 'Initial content should match expected HTML structure');
     editor.execCommand('ToggleAccordion');
-    const contentAfterToggle = editor.getContent();
-
-    assert.equal(contentAfterToggle, initialContent, 'Content should remain unchanged after toggling accordion in readonly mode');
+    assert.equal(editor.getContent(), initialContent, 'Content should remain unchanged after ToggleAccordion command in readonly mode');
   });
 });
