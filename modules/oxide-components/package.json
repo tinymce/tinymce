@@ -91,8 +91,7 @@
   },
   "resolutions": {
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-dom/test-utils": "^18.3.1"
+    "react-dom": "^18.3.1"
   },
   "dependencies": {
     "@ephox/katamari": "^10.0.0",
