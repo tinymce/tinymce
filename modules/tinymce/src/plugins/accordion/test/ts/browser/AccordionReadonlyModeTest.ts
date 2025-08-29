@@ -83,7 +83,7 @@ describe('browser.tinymce.plugins.accordion.AccordionReadonlyModeTest', () => {
     assert.isTrue(editor.undoManager.hasUndo(), 'Should add undo level when toggling accordion in design mode');
   });
 
-  it.skip('TINY-12315: Toggling the accordion in readonly-mode should have no impact on getContent', () => {
+  it.only('TINY-12315: Toggling the accordion in readonly-mode should have no impact on getContent', () => {
     const editor = hook.editor();
     editor.focus();
     editor.setContent('<details><summary>Toggle accordion</summary><p>Hidden info</p></details>');
