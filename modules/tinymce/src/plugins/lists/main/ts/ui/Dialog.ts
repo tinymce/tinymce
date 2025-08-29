@@ -1,6 +1,6 @@
 import { Optional } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import { parseDetail, parseStartValue } from './ListNumbering';
 import { getParentList, isOlNode, isWithinNonEditableList } from './Util';

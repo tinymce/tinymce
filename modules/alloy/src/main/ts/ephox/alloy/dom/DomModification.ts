@@ -1,6 +1,6 @@
 import { Fun, Type } from '@ephox/katamari';
 
-import { DomDefinitionDetail } from './DomDefinition';
+import type { DomDefinitionDetail } from './DomDefinition';
 
 export interface DomModification {
   classes: string[];

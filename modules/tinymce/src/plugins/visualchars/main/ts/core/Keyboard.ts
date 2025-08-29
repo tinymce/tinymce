@@ -1,6 +1,6 @@
-import { Cell, Throttler } from '@ephox/katamari';
+import { type Cell, Throttler } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as VisualChars from './VisualChars';
 

@@ -6,15 +6,15 @@ import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Focusing } from '../../api/behaviour/Focusing';
 import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 import { SketchBehaviours } from '../../api/component/SketchBehaviours';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import * as Fields from '../../data/Fields';
-import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import type { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import * as AlloyParts from '../../parts/AlloyParts';
-import { WidgetItemDetail } from '../../ui/types/ItemTypes';
+import type { WidgetItemDetail } from '../../ui/types/ItemTypes';
 import * as ItemEvents from '../util/ItemEvents';
 
 import * as WidgetParts from './WidgetParts';

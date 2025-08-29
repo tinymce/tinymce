@@ -4,7 +4,7 @@ import { Arr, Unicode } from '@ephox/katamari';
 import * as Pattern from 'ephox/polaris/api/Pattern';
 import * as Search from 'ephox/polaris/api/Search';
 import * as Safe from 'ephox/polaris/pattern/Safe';
-import { PRegExp } from 'ephox/polaris/pattern/Types';
+import type { PRegExp } from 'ephox/polaris/pattern/Types';
 
 describe('atomic.polaris.api.SearchFindTest', () => {
   const checkAll = (expected: [number, number][], input: string, pattern: PRegExp) => {

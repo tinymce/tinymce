@@ -3,7 +3,7 @@ import { Arr, Obj, Type } from '@ephox/katamari';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import Schema, { AttributePattern, SchemaElement } from 'tinymce/core/api/html/Schema';
+import Schema, { type AttributePattern, type SchemaElement } from 'tinymce/core/api/html/Schema';
 
 describe('browser.tinymce.core.html.SchemaTest', () => {
   const getElementRule = (schema: Schema, name: string) =>

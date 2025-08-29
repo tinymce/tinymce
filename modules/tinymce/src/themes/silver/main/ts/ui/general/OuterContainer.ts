@@ -1,21 +1,21 @@
 import {
-  AlloyComponent, AlloySpec, Behaviour, Composite, CustomList, Keying, RawDomSchema, Sketcher, SketchSpec, Toolbar, UiSketcher
+  type AlloyComponent, type AlloySpec, Behaviour, Composite, CustomList, Keying, type RawDomSchema, Sketcher, type SketchSpec, Toolbar, type UiSketcher
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
-import { Arr, Id, Optional, Optionals, Result } from '@ephox/katamari';
-import { Attribute, Css, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Arr, Id, Optional, Optionals, type Result } from '@ephox/katamari';
+import { Attribute, Css, SelectorFind, type SugarElement } from '@ephox/sugar';
 
 import { ToolbarMode } from '../../api/Options';
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
-import { HeaderSpec, renderHeader } from '../header/CommonHeader';
-import SilverMenubar, { MenubarItemSpec, SilverMenubarSpec } from '../menus/menubar/SilverMenubar';
-import { PromotionSpec, renderPromotion } from '../promotion/Promotion';
+import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import { type HeaderSpec, renderHeader } from '../header/CommonHeader';
+import SilverMenubar, { type MenubarItemSpec, type SilverMenubarSpec } from '../menus/menubar/SilverMenubar';
+import { type PromotionSpec, renderPromotion } from '../promotion/Promotion';
 import * as Sidebar from '../sidebar/Sidebar';
 import * as Throbber from '../throbber/Throbber';
 import {
-  MoreDrawerData, MoreDrawerToolbarSpec, renderFloatingMoreToolbar, renderSlidingMoreToolbar, renderToolbar, renderToolbarGroup, ToolbarGroup
+  type MoreDrawerData, type MoreDrawerToolbarSpec, renderFloatingMoreToolbar, renderSlidingMoreToolbar, renderToolbar, renderToolbarGroup, type ToolbarGroup
 } from '../toolbar/CommonToolbar';
-import * as ViewTypes from '../view/ViewTypes';
+import type * as ViewTypes from '../view/ViewTypes';
 import ViewWrapper from '../view/ViewWrapper';
 
 export interface OuterContainerSketchSpec extends Sketcher.CompositeSketchSpec {

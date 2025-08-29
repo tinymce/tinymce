@@ -4,7 +4,7 @@ import { Arr, Fun, Type } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Assets from '../../../module/Assets';
 

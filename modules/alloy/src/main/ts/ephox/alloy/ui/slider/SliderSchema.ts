@@ -1,4 +1,4 @@
-import { FieldProcessor, FieldSchema, StructureSchema } from '@ephox/boulder';
+import { type FieldProcessor, FieldSchema, StructureSchema } from '@ephox/boulder';
 import { Cell, Fun } from '@ephox/katamari';
 
 import { Keying } from '../../api/behaviour/Keying';

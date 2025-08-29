@@ -5,7 +5,7 @@ import { PlatformDetection } from '@ephox/sand';
 import { Attribute, SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 
 import * as TooltipUtils from '../../module/TooltipUtils';

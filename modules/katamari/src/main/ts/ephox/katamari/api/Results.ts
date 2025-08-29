@@ -1,7 +1,7 @@
 import { Adt } from './Adt';
 import * as Arr from './Arr';
 import * as Fun from './Fun';
-import { Result } from './Result';
+import type { Result } from './Result';
 
 interface ComparisonAdt<A, B> {
   readonly fold: <T> (

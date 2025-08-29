@@ -1,10 +1,10 @@
 import { Arr, Singleton, Strings, Type } from '@ephox/katamari';
-import { Adjustments, ResizeBehaviour, ResizeWire, Sizes, TableConversions, TableGridSize, TableLookup, TableResize, Warehouse } from '@ephox/snooker';
+import { Adjustments, ResizeBehaviour, type ResizeWire, Sizes, TableConversions, TableGridSize, TableLookup, TableResize, Warehouse } from '@ephox/snooker';
 import { Attribute, Css, SugarElement } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { DisabledStateChangeEvent } from 'tinymce/core/api/EventTypes';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { DisabledStateChangeEvent } from 'tinymce/core/api/EventTypes';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Utils from '../core/TableUtils';
 import * as TableWire from '../core/TableWire';

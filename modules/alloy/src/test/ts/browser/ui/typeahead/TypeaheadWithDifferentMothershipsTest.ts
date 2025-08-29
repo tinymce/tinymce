@@ -1,14 +1,14 @@
 
-import { ApproxStructure, Assertions, Keyboard, Keys, Mouse, TestStore, UiControls, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, Keyboard, Keys, Mouse, type TestStore, UiControls, UiFinder } from '@ephox/agar';
 import { after, before, context, describe, it } from '@ephox/bedrock-client';
 import { Objects } from '@ephox/boulder';
 import { Arr, Future, Optional, Result } from '@ephox/katamari';
 import { SugarDocument, Value } from '@ephox/sugar';
 
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import type { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
+import type { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
 import * as Attachment from 'ephox/alloy/api/system/Attachment';
@@ -17,7 +17,7 @@ import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import * as MenuEvents from 'ephox/alloy/menu/util/MenuEvents';
 import * as TestDropdownMenu from 'ephox/alloy/test/dropdown/TestDropdownMenu';
-import { TestItem } from 'ephox/alloy/test/dropdown/TestDropdownMenu';
+import type { TestItem } from 'ephox/alloy/test/dropdown/TestDropdownMenu';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 import * as Sinks from 'ephox/alloy/test/Sinks';
 

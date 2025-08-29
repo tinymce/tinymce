@@ -2,14 +2,14 @@ import { FieldSchema } from '@ephox/boulder';
 import { Obj } from '@ephox/katamari';
 
 import * as ButtonBase from '../../ui/common/ButtonBase';
-import { ButtonDetail, ButtonSketcher, ButtonSpec } from '../../ui/types/ButtonTypes';
+import type { ButtonDetail, ButtonSketcher, ButtonSpec } from '../../ui/types/ButtonTypes';
 import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
 import { SketchBehaviours } from '../component/SketchBehaviours';
-import { SketchSpec } from '../component/SpecTypes';
+import type { SketchSpec } from '../component/SpecTypes';
 
 import * as Sketcher from './Sketcher';
-import { SingleSketchFactory } from './UiSketcher';
+import type { SingleSketchFactory } from './UiSketcher';
 
 const factory: SingleSketchFactory<ButtonDetail, ButtonSpec> = (detail): SketchSpec => {
   const events = ButtonBase.events(detail.action);

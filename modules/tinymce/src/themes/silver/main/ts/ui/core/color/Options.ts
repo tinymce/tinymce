@@ -1,9 +1,9 @@
 import { Transformations } from '@ephox/acid';
 import { Type } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorOptions } from 'tinymce/core/api/OptionTypes';
-import { Menu } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorOptions } from 'tinymce/core/api/OptionTypes';
+import type { Menu } from 'tinymce/core/api/ui/Ui';
 
 const foregroundId = 'forecolor';
 const backgroundId = 'hilitecolor';

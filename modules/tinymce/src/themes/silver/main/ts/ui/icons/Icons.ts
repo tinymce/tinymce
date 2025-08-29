@@ -1,4 +1,4 @@
-import { AddEventsBehaviour, AlloyEvents, Behaviour, SimpleSpec } from '@ephox/alloy';
+import { AddEventsBehaviour, AlloyEvents, Behaviour, type SimpleSpec } from '@ephox/alloy';
 import { Arr, Obj, Optional, Strings } from '@ephox/katamari';
 import { Attribute, SelectorFind } from '@ephox/sugar';
 

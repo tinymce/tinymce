@@ -1,8 +1,8 @@
 import { Optional, Type, Unicode } from '@ephox/katamari';
 
-import { DomParserSettings, ParserArgs } from '../api/html/DomParser';
+import type { DomParserSettings, ParserArgs } from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
-import Schema, { SchemaMap } from '../api/html/Schema';
+import type { SchemaMap, default as Schema } from '../api/html/Schema';
 
 const paddEmptyNode = (settings: DomParserSettings, args: ParserArgs, isBlock: (node: AstNode) => boolean, node: AstNode): void => {
   const brPreferred = settings.pad_empty_with_br || args.insert;

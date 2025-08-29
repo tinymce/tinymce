@@ -1,16 +1,16 @@
 import { Objects } from '@ephox/boulder';
-import { Arr, Obj, Optional, Result } from '@ephox/katamari';
+import { Arr, Obj, type Optional, Result } from '@ephox/katamari';
 
 import * as ObjIndex from '../alien/ObjIndex';
 import * as PrioritySort from '../alien/PrioritySort';
-import { AlloyBehaviour } from '../api/behaviour/Behaviour';
-import { AlloyComponent } from '../api/component/ComponentApi';
-import { AlloyEventHandler, AlloyEventRecord } from '../api/events/AlloyEvents';
-import * as BehaviourBlob from '../behaviour/common/BehaviourBlob';
-import { BehaviourState } from '../behaviour/common/BehaviourState';
+import type { AlloyBehaviour } from '../api/behaviour/Behaviour';
+import type { AlloyComponent } from '../api/component/ComponentApi';
+import type { AlloyEventHandler, AlloyEventRecord } from '../api/events/AlloyEvents';
+import type * as BehaviourBlob from '../behaviour/common/BehaviourBlob';
+import type { BehaviourState } from '../behaviour/common/BehaviourState';
 import * as DescribedHandler from '../events/DescribedHandler';
-import { UncurriedHandler } from '../events/EventRegistry';
-import { EventFormat, SimulatedEvent } from '../events/SimulatedEvent';
+import type { UncurriedHandler } from '../events/EventRegistry';
+import type { EventFormat, SimulatedEvent } from '../events/SimulatedEvent';
 
 import * as EventHandler from './EventHandler';
 

@@ -1,7 +1,7 @@
 import { Type } from '@ephox/katamari';
 
-import AddOnManager, { AddOnConstructor } from '../api/AddOnManager';
-import Editor from '../api/Editor';
+import AddOnManager, { type AddOnConstructor } from '../api/AddOnManager';
+import type Editor from '../api/Editor';
 import * as ErrorReporter from '../ErrorReporter';
 import * as ForceDisable from '../ForceDisable';
 

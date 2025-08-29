@@ -1,10 +1,10 @@
 import { Arr, Future, Result } from '@ephox/katamari';
-import { Attribute, Class, Html, SugarElement, SugarNode } from '@ephox/sugar';
+import { Attribute, Class, Html, type SugarElement, SugarNode } from '@ephox/sugar';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { Stateless } from '../common/BehaviourState';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { Stateless } from '../common/BehaviourState';
 
-import { InvalidatingConfig } from './InvalidateTypes';
+import type { InvalidatingConfig } from './InvalidateTypes';
 
 const ariaElements = [
   'input',

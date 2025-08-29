@@ -2,8 +2,8 @@ import { Optional } from '@ephox/katamari';
 import { Attribute, Value } from '@ephox/sugar';
 
 import { Representing } from '../../api/behaviour/Representing';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { TypeaheadModelDetail } from '../types/TypeaheadTypes';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { TypeaheadModelDetail } from '../types/TypeaheadTypes';
 
 // When showing a value in an input field, which part of the item do we use?
 const setValueFromItem = (model: TypeaheadModelDetail, input: AlloyComponent, item: AlloyComponent): void => {

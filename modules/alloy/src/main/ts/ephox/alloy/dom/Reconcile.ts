@@ -1,7 +1,7 @@
 import { Arr, Obj } from '@ephox/katamari';
-import { Attribute, Classes, Css, Html, SugarElement, Value } from '@ephox/sugar';
+import { Attribute, Classes, Css, Html, type SugarElement, Value } from '@ephox/sugar';
 
-import { DomDefinitionDetail } from './DomDefinition';
+import type { DomDefinitionDetail } from './DomDefinition';
 import { patchDomChildren } from './Patching';
 
 interface KeyValueDiff {

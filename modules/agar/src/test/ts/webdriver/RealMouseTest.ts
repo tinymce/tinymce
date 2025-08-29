@@ -1,7 +1,7 @@
 import { after, Assert, before, describe, it, UnitTest } from '@ephox/bedrock-client';
 import { Cell } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Attribute, Class, Css, DomEvent, EventUnbinder, Html, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
+import { Attribute, Class, Css, DomEvent, type EventUnbinder, Html, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 
 import * as Assertions from 'ephox/agar/api/Assertions';
 import { Chain } from 'ephox/agar/api/Chain';

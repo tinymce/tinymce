@@ -6,13 +6,13 @@ import { Attribute, Class, SugarBody } from '@ephox/sugar';
 import { McEditor, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
-import { BeforeSetContentEvent, SaveContentEvent, SetContentEvent } from 'tinymce/core/api/EventTypes';
+import type { BeforeSetContentEvent, SaveContentEvent, SetContentEvent } from 'tinymce/core/api/EventTypes';
 import PluginManager from 'tinymce/core/api/PluginManager';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import URI from 'tinymce/core/api/util/URI';
-import { UndoLevel } from 'tinymce/core/undo/UndoManagerTypes';
+import type { UndoLevel } from 'tinymce/core/undo/UndoManagerTypes';
 
 import * as HtmlUtils from '../module/test/HtmlUtils';
 import * as UuidUtils from '../module/test/UuidUtils';

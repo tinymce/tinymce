@@ -1,13 +1,13 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Composing, CustomEvent, Disabling, Focusing, FormField, Input,
-  Invalidating, Layout, Memento, Representing, SimpleSpec, Tabstopping
+  AddEventsBehaviour, type AlloyComponent, AlloyEvents, type AlloySpec, AlloyTriggers, Behaviour, Composing, type CustomEvent, Disabling, Focusing, FormField, Input,
+  Invalidating, Layout, Memento, Representing, type SimpleSpec, Tabstopping
 } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
-import { Fun, Future, Id, Optional, Result } from '@ephox/katamari';
+import type { Dialog } from '@ephox/bridge';
+import { Fun, Future, Id, type Optional, Result } from '@ephox/katamari';
 import { Css, SugarElement, Traverse } from '@ephox/sugar';
 
-import { UiFactoryBackstageShared } from '../../backstage/Backstage';
-import { UiFactoryBackstageForColorInput } from '../../backstage/ColorInputBackstage';
+import type { UiFactoryBackstageShared } from '../../backstage/Backstage';
+import type { UiFactoryBackstageForColorInput } from '../../backstage/ColorInputBackstage';
 import * as UiState from '../../UiState';
 import { renderLabel } from '../alien/FieldLabeller';
 import * as ColorCache from '../core/color/ColorCache';

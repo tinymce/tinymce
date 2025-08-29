@@ -1,8 +1,8 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
-import { Fun, Optional, Result } from '@ephox/katamari';
+import { Fun, type Optional, type Result } from '@ephox/katamari';
 
 import { dialogButtonFields } from './Dialog';
-import { DialogFooterNormalButton, DialogFooterNormalButtonSpec } from './DialogFooterButton';
+import type { DialogFooterNormalButton, DialogFooterNormalButtonSpec } from './DialogFooterButton';
 
 export interface UrlDialogInstanceApi {
   block: (msg: string) => void;

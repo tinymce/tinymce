@@ -1,9 +1,9 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
-import { Optional, Result } from '@ephox/katamari';
+import type { Optional, Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
-import { CardMenuItemSpec } from '../menu/CardMenuItem';
-import { SeparatorMenuItem, separatorMenuItemSchema, SeparatorMenuItemSpec } from '../menu/SeparatorMenuItem';
+import type { CardMenuItemSpec } from '../menu/CardMenuItem';
+import { type SeparatorMenuItem, separatorMenuItemSchema, type SeparatorMenuItemSpec } from '../menu/SeparatorMenuItem';
 
 export type ColumnTypes = number | 'auto';
 export type SeparatorItemSpec = SeparatorMenuItemSpec;

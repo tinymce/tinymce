@@ -1,9 +1,9 @@
 import { Fun } from '@ephox/katamari';
 
 import * as AlloyLogger from '../../log/AlloyLogger';
-import { AlloyComponent } from '../component/ComponentApi';
+import type { AlloyComponent } from '../component/ComponentApi';
 
-import { AlloySystemApi } from './SystemApi';
+import type { AlloySystemApi } from './SystemApi';
 
 const NoContextApi = (getComp?: () => AlloyComponent): AlloySystemApi => {
   const getMessage = (event: string) => `The component must be in a context to execute: ${event}` +

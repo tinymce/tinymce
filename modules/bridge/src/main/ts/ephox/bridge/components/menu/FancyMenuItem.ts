@@ -1,10 +1,10 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
-import { Optional, Result } from '@ephox/katamari';
+import type { Optional, Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
 
-import { ChoiceMenuItemSpec } from './ChoiceMenuItem';
-import { ImageMenuItemSpec, ResetImageItemSpec } from './ImageMenuItem';
+import type { ChoiceMenuItemSpec } from './ChoiceMenuItem';
+import type { ImageMenuItemSpec, ResetImageItemSpec } from './ImageMenuItem';
 
 export interface FancyActionArgsMap {
   inserttable: { numRows: number; numColumns: number };

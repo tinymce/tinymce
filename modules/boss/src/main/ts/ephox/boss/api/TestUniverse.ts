@@ -14,8 +14,8 @@ import * as Styling from '../mutant/Styling';
 import * as Tracks from '../mutant/Tracks';
 import * as Up from '../mutant/Up';
 
-import { Gene } from './Gene';
-import { Universe } from './Universe';
+import type { Gene } from './Gene';
+import type { Universe } from './Universe';
 
 export interface TestUniverseUp extends ReturnType<Universe<Gene, undefined>['up']> {
   top: (element: Gene) => Gene;

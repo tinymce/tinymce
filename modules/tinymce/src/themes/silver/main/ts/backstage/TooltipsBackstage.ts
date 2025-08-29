@@ -1,5 +1,5 @@
-import { AlloyComponent, GuiFactory, SimpleSpec, TooltippingTypes } from '@ephox/alloy';
-import { Fun, Result } from '@ephox/katamari';
+import { type AlloyComponent, GuiFactory, type SimpleSpec, type TooltippingTypes } from '@ephox/alloy';
+import { Fun, type Result } from '@ephox/katamari';
 
 interface TooltipConfigSpec {
   readonly tooltipText: string;

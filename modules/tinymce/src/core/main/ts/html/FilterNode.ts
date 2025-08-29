@@ -1,7 +1,7 @@
 import { Arr, Obj, Type } from '@ephox/katamari';
 
-import { ParserArgs, ParserFilter } from '../api/html/DomParser';
-import AstNode from '../api/html/Node';
+import type { ParserArgs, ParserFilter } from '../api/html/DomParser';
+import type AstNode from '../api/html/Node';
 
 interface FilterMatch {
   readonly filter: ParserFilter;

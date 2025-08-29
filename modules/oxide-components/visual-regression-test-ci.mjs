@@ -24,13 +24,30 @@ const waitForServer = async () => {
 
 const runTests = async () => {
   try {
-    devServer = exec('yarn start --ci' );
+    devServer = exec('yarn start --ci');
     await waitForServer();
-    execSync('yarn playwright test', {
-      stdio: 'inherit'
-    });
+
+    try {
+      execSync('yarn playwright test', {
+        stdio: 'inherit'
+      });
+    } catch (testError) {
+      // Check the exit code to differentiate between test failures and actual errors
+      const testExitCode = testError.status;
+
+      // Exit code 1 typically means test failures (not script errors)
+      // Set exitCode = 4 for test failures - let CI continue
+      if (testExitCode === 1) {
+        exitCode = 4;
+      } else {
+        // Other exit codes indicate actual errors (missing config, setup issues, etc.)
+        console.error('Playwright encountered an error:', testError);
+        exitCode = 1;
+      }
+    }
   } catch (error) {
-    console.error('Running tests failed:', error);
+    // This catches server startup errors or other script-level issues
+    console.error('Script error (server startup, etc.):', error);
     exitCode = 1;
   } finally {
     cleanUp();

@@ -3,9 +3,9 @@ import { Obj } from '@ephox/katamari';
 import * as Disabled from '../mode/Disabled';
 
 import DOMUtils from './dom/DOMUtils';
-import { EventUtilsCallback } from './dom/EventUtils';
-import Editor from './Editor';
-import { EditorEventMap } from './EventTypes';
+import type { EventUtilsCallback } from './dom/EventUtils';
+import type Editor from './Editor';
+import type { EditorEventMap } from './EventTypes';
 import * as Options from './Options';
 import Observable from './util/Observable';
 import Tools from './util/Tools';

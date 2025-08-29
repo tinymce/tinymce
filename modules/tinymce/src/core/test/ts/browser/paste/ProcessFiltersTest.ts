@@ -3,9 +3,9 @@ import { Fun } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { PastePostProcessEvent, PastePreProcessEvent } from 'tinymce/core/api/EventTypes';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { PastePostProcessEvent, PastePreProcessEvent } from 'tinymce/core/api/EventTypes';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as ProcessFilters from 'tinymce/core/paste/ProcessFilters';
 
 type PreProcessHandler = (e: EditorEvent<PastePreProcessEvent>) => void;

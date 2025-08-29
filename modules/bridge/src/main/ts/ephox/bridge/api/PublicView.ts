@@ -1,6 +1,6 @@
-import { ViewSpec, ViewInstanceApi } from '../components/view/View';
+import type { ViewSpec, ViewInstanceApi } from '../components/view/View';
 
-export {
+export type {
   ViewSpec,
   ViewInstanceApi
 };

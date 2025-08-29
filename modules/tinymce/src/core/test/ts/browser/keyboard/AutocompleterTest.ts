@@ -1,13 +1,13 @@
 import { Keys, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { InlineContent } from '@ephox/bridge';
+import type { InlineContent } from '@ephox/bridge';
 import { Arr, Throttler } from '@ephox/katamari';
 import { TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import { AutocompleterEventArgs, AutocompleteLookupData } from 'tinymce/core/autocomplete/AutocompleteTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type { AutocompleterEventArgs, AutocompleteLookupData } from 'tinymce/core/autocomplete/AutocompleteTypes';
 
 describe('browser.tinymce.core.keyboard.AutocompleterTest', () => {
   const plusTriggerChar = '+';

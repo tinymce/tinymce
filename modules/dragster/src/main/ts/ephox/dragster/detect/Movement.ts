@@ -1,8 +1,8 @@
-import { EventArgs } from '@ephox/sugar';
+import type { EventArgs } from '@ephox/sugar';
 
-import { DragMode } from '../api/DragApis';
+import type { DragMode } from '../api/DragApis';
 
-import { DragEvents, DragState } from './DragTypes';
+import type { DragEvents, DragState } from './DragTypes';
 import { InDrag } from './InDrag';
 import { NoDrag } from './NoDrag';
 

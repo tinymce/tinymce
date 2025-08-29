@@ -1,16 +1,16 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button, Disabling,
-  FormField as AlloyFormField, GuiFactory, Memento, NativeEvents, Representing, SimpleSpec, SimulatedEvent,
+  AddEventsBehaviour, type AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Button, Disabling,
+  FormField as AlloyFormField, GuiFactory, Memento, NativeEvents, Representing, type SimpleSpec, type SimulatedEvent,
   SystemEvents, Tabstopping, Toggling,
-  CustomEvent
+  type CustomEvent
 } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
-import { Arr, Id, Optional, Strings } from '@ephox/katamari';
-import { EventArgs } from '@ephox/sugar';
+import type { Dialog } from '@ephox/bridge';
+import { Arr, Id, type Optional, Strings } from '@ephox/katamari';
+import type { EventArgs } from '@ephox/sugar';
 
 import Tools from 'tinymce/core/api/util/Tools';
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as UiState from '../../UiState';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { DisablingConfigs } from '../alien/DisablingConfigs';

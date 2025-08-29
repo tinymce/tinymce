@@ -1,8 +1,8 @@
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import Tools from '../api/util/Tools';
 import * as Rtc from '../Rtc';
 
-import { InsertContentDetails } from './ContentTypes';
+import type { InsertContentDetails } from './ContentTypes';
 import { trimOrPadLeftRight } from './NbspTrim';
 import { postProcessSetContent, preProcessSetContent } from './PrePostProcess';
 

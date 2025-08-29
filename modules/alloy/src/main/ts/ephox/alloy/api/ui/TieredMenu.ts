@@ -3,8 +3,10 @@ import { Id } from '@ephox/katamari';
 
 import * as Fields from '../../data/Fields';
 import * as TieredMenuSpec from '../../ui/single/TieredMenuSpec';
-import { ItemDataTuple } from '../../ui/types/ItemTypes';
-import { HighlightOnOpen, PartialMenuSpec, TieredData, TieredMenuApis, TieredMenuDetail, TieredMenuExtras, TieredMenuRecord, TieredMenuSketcher, TieredMenuSpec as TieredMenuSpecType } from '../../ui/types/TieredMenuTypes';
+import type { ItemDataTuple } from '../../ui/types/ItemTypes';
+import {
+  HighlightOnOpen, type PartialMenuSpec, type TieredData, type TieredMenuApis, type TieredMenuDetail, type TieredMenuExtras, type TieredMenuRecord, type TieredMenuSketcher, type TieredMenuSpec as TieredMenuSpecType
+} from '../../ui/types/TieredMenuTypes';
 import { Composing } from '../behaviour/Composing';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Keying } from '../behaviour/Keying';
@@ -93,7 +95,5 @@ const tieredMenu: TieredMenuSketcher = single<TieredMenuSpecType, TieredMenuDeta
   }
 });
 
-export {
-  tieredMenu,
-  TieredData
-};
+export type { TieredData };
+export { tieredMenu };

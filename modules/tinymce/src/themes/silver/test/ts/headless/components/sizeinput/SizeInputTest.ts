@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, FocusTools, Mouse, UiFinder } from '@ephox/agar';
-import { AlloyComponent, GuiFactory, NativeEvents, Representing } from '@ephox/alloy';
+import { type AlloyComponent, GuiFactory, NativeEvents, Representing } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 

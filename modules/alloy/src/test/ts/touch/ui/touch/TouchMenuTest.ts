@@ -1,7 +1,7 @@
-import { ApproxStructure, Assertions, Chain, Logger, Step, StructAssert, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, Chain, Logger, Step, type StructAssert, UiFinder, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr, Future, Optional } from '@ephox/katamari';
-import { Class, SugarElement } from '@ephox/sugar';
+import { Class, type SugarElement } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
@@ -10,7 +10,7 @@ import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
 import { TouchMenu } from 'ephox/alloy/api/ui/TouchMenu';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
+import type { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
 
 interface TestItemSpec {
   type: string;

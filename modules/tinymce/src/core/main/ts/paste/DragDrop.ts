@@ -1,9 +1,9 @@
-import { Arr, Cell, Obj, Type } from '@ephox/katamari';
+import { Arr, type Cell, Obj, Type } from '@ephox/katamari';
 
-import DOMUtils from '../api/dom/DOMUtils';
+import type DOMUtils from '../api/dom/DOMUtils';
 import RangeUtils from '../api/dom/RangeUtils';
-import Editor from '../api/Editor';
-import Schema from '../api/html/Schema';
+import type Editor from '../api/Editor';
+import type Schema from '../api/html/Schema';
 import * as Options from '../api/Options';
 import Delay from '../api/util/Delay';
 import * as TransparentElements from '../content/TransparentElements';

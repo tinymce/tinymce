@@ -1,4 +1,4 @@
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as Events from '../api/Events';
 
 import * as Disabled from './Disabled';

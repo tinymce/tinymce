@@ -1,20 +1,20 @@
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, type Optional } from '@ephox/katamari';
 import { Attribute } from '@ephox/sugar';
 
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as TabSectionSchema from '../../ui/schema/TabSectionSchema';
-import { TabSectionApis, TabSectionDetail, TabSectionSketcher, TabSectionSpec } from '../../ui/types/TabSectionTypes';
+import type { TabSectionApis, TabSectionDetail, TabSectionSketcher, TabSectionSpec } from '../../ui/types/TabSectionTypes';
 import { Highlighting } from '../behaviour/Highlighting';
 import { Replacing } from '../behaviour/Replacing';
 import { Representing } from '../behaviour/Representing';
-import { AlloyComponent } from '../component/ComponentApi';
+import type { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as SystemEvents from '../events/SystemEvents';
 
 import * as Sketcher from './Sketcher';
-import { CompositeSketchFactory } from './UiSketcher';
+import type { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<TabSectionDetail, TabSectionSpec> = (detail, components, _spec, _externals) => {
   const changeTab = (button: AlloyComponent) => {

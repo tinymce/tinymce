@@ -5,11 +5,11 @@ import * as CaretRangeFromPoint from '../../selection/CaretRangeFromPoint';
 import * as NormalizeRange from '../../selection/NormalizeRange';
 import * as RangeCompare from '../../selection/RangeCompare';
 import * as RangeNodes from '../../selection/RangeNodes';
-import { RangeLikeObject } from '../../selection/RangeTypes';
+import type { RangeLikeObject } from '../../selection/RangeTypes';
 import * as RangeWalk from '../../selection/RangeWalk';
 import * as SplitRange from '../../selection/SplitRange';
 
-import DOMUtils from './DOMUtils';
+import type DOMUtils from './DOMUtils';
 
 interface RangeUtils {
   walk: (rng: Range, callback: (nodes: Node[]) => void) => void;

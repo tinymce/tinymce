@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { DomUniverse, Universe } from '@ephox/boss';
+import { DomUniverse, type Universe } from '@ephox/boss';
 import { Arr, Fun } from '@ephox/katamari';
 import { SugarElement, Traverse } from '@ephox/sugar';
 import { assert } from 'chai';

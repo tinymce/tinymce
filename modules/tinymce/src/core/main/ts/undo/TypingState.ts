@@ -1,5 +1,5 @@
 import { isUnlocked } from './Locks';
-import { Locks, UndoManager } from './UndoManagerTypes';
+import type { Locks, UndoManager } from './UndoManagerTypes';
 
 export const setTyping = (undoManager: UndoManager, typing: boolean, locks: Locks): void => {
   if (isUnlocked(locks)) {

@@ -1,29 +1,29 @@
 import {
   AddEventsBehaviour,
   Button as AlloyButton,
-  AlloyComponent,
+  type AlloyComponent,
   AlloyEvents,
   AlloyTriggers,
   Behaviour,
-  CustomEvent,
-  EventFormat,
+  type CustomEvent,
+  type EventFormat,
   Focusing,
   GuiFactory,
   Keying,
   NativeEvents,
   Receiving,
   Replacing,
-  SimpleSpec,
+  type SimpleSpec,
   Sliding,
   Tabstopping,
   Toggling,
   Tooltipping
 } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
+import type { Dialog } from '@ephox/bridge';
 import { Cell, Fun, Id, Optional } from '@ephox/katamari';
-import { EventArgs, SelectorFind } from '@ephox/sugar';
+import { type EventArgs, SelectorFind } from '@ephox/sugar';
 
-import { UiFactoryBackstage } from '../../backstage/Backstage';
+import type { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderMenuButton } from '../button/MenuButton';
 import * as Icons from '../icons/Icons';
 

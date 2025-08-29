@@ -5,7 +5,7 @@ import { PredicateFilter, SugarElement, SugarNode, TextContent } from '@ephox/su
 import { assert } from 'chai';
 import * as fc from 'fast-check';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import { composeList } from 'tinymce/core/lists/listmodel/ComposeList';
 import { parseLists } from 'tinymce/core/lists/listmodel/ParseLists';
 

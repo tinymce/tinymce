@@ -1,14 +1,14 @@
 import { Arr, Cell, Obj, Optional, Type } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Dialog } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import * as Options from '../api/Options';
 import { dataToHtml } from '../core/DataToHtml';
 import * as HtmlToData from '../core/HtmlToData';
 import { isMediaElement } from '../core/Selection';
 import * as Service from '../core/Service';
-import { DialogSubData, MediaData, MediaDataType, MediaDialogData } from '../core/Types';
+import type { DialogSubData, MediaData, MediaDataType, MediaDialogData } from '../core/Types';
 import * as UpdateHtml from '../core/UpdateHtml';
 import * as UrlPatterns from '../core/UrlPatterns';
 

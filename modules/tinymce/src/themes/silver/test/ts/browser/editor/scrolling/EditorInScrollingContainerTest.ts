@@ -5,7 +5,7 @@ import { Class, Css, Html, Insert, InsertAll, Remove, SelectorFind, SugarBody, S
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 interface TestUi {
   readonly className: string;

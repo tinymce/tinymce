@@ -1,8 +1,8 @@
-import { TooltippingTypes } from '@ephox/alloy';
+import type { TooltippingTypes } from '@ephox/alloy';
 import { Fun } from '@ephox/katamari';
 
 import I18n from 'tinymce/core/api/util/I18n';
-import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
+import type { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 
 const defaultOptions: Record<string, any> = {
   images_file_types: 'jpeg,jpg,jpe,jfi,jif,jfif,png,gif,bmp,webp'

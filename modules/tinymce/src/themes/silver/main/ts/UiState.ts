@@ -1,12 +1,12 @@
-import { Behaviour, Channels, Disabling, Receiving } from '@ephox/alloy';
+import { type Behaviour, Channels, Disabling, Receiving } from '@ephox/alloy';
 import { Arr } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { DisabledStateChangeEvent, NodeChangeEvent, SwitchModeEvent } from 'tinymce/core/api/EventTypes';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { DisabledStateChangeEvent, NodeChangeEvent, SwitchModeEvent } from 'tinymce/core/api/EventTypes';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Options from './api/Options';
-import { ReadyUiReferences } from './modes/UiReferences';
+import type { ReadyUiReferences } from './modes/UiReferences';
 
 export const UiStateChannel = 'silver.uistate';
 

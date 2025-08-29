@@ -1,5 +1,5 @@
 import { Fun, Obj } from '@ephox/katamari';
-import { SugarElement, SugarLocation, SugarNode, SugarPosition, Traverse } from '@ephox/sugar';
+import { type SugarElement, SugarLocation, SugarNode, SugarPosition, Traverse } from '@ephox/sugar';
 
 // The 'button' field of the mouse event - which button was pressed to create the event. Pick only one value. Not defined for mouseenter,
 // mouseleave, mouseover, mouseout or mousemove.
@@ -85,10 +85,9 @@ const point = (type: string, button: number, element: SugarElement<Node>, x: num
   element.dom.dispatchEvent(ev);
 };
 
+export type { Settings, EventType };
 export {
   event,
-  Settings,
-  EventType,
   leftClickButton,
   middleClickButton,
   rightClickButton,
@@ -102,7 +101,6 @@ export {
   mouseOver,
   mouseOut,
   contextMenu,
-  // deprecate these
   point,
   trigger,
   dblclick

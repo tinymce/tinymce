@@ -1,10 +1,10 @@
 import { Arr, Optional, Optionals, Type } from '@ephox/katamari';
 import { Compare, ContentEditable, PredicateFind, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 
-import DOMUtils from '../../api/dom/DOMUtils';
+import type DOMUtils from '../../api/dom/DOMUtils';
 import RangeUtils from '../../api/dom/RangeUtils';
 import DomTreeWalker from '../../api/dom/TreeWalker';
-import Editor from '../../api/Editor';
+import type Editor from '../../api/Editor';
 import * as NodeStructureBookmark from '../../bookmark/NodeStructureBookmark';
 import * as NodeType from '../lists/NodeType';
 import * as NormalizeLists from '../lists/NormalizeLists';

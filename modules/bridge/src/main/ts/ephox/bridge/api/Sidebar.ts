@@ -1,8 +1,4 @@
-import { createSidebar, Sidebar, SidebarInstanceApi, SidebarSpec } from '../components/sidebar/Sidebar';
+import { createSidebar, type Sidebar, type SidebarInstanceApi, type SidebarSpec } from '../components/sidebar/Sidebar';
 
-export {
-  createSidebar,
-  Sidebar,
-  SidebarSpec,
-  SidebarInstanceApi
-};
+export type { Sidebar, SidebarSpec, SidebarInstanceApi };
+export { createSidebar };

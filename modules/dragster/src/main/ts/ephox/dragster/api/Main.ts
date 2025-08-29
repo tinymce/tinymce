@@ -1,4 +1,4 @@
-import { DragImageData } from '../datatransfer/DragImage';
+import type { DragImageData } from '../datatransfer/DragImage';
 
 import * as DataTransfer from './DataTransfer';
 import * as DataTransferContent from './DataTransferContent';
@@ -8,6 +8,7 @@ import * as DragApis from './DragApis';
 import * as Dragger from './Dragger';
 import MouseDrag from './MouseDrag';
 
+export type { DragImageData };
 export {
   DataTransfer,
   DataTransferMode,
@@ -15,6 +16,5 @@ export {
   DataTransferEvent,
   DragApis,
   Dragger,
-  MouseDrag,
-  DragImageData
+  MouseDrag
 };

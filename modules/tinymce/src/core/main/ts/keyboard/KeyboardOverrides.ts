@@ -1,6 +1,6 @@
 import { Cell } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as CaretContainerInput from '../caret/CaretContainerInput';
 import * as Rtc from '../Rtc';
 

@@ -1,23 +1,23 @@
 import {
   AddEventsBehaviour,
   Button as AlloyButton,
-  AlloyComponent, AlloyEvents,
+  type AlloyComponent, AlloyEvents,
   FormField as AlloyFormField,
-  AlloySpec, AlloyTriggers, Behaviour,
+  type AlloySpec, AlloyTriggers, Behaviour,
   GuiFactory, Memento,
-  RawDomSchema, Replacing, SimpleOrSketchSpec, SketchSpec, Tabstopping, Tooltipping
+  type RawDomSchema, Replacing, type SimpleOrSketchSpec, type SketchSpec, Tabstopping, Tooltipping
 } from '@ephox/alloy';
-import { Dialog, Toolbar } from '@ephox/bridge';
+import type { Dialog, Toolbar } from '@ephox/bridge';
 import { Fun, Merger, Optional, Type } from '@ephox/katamari';
 
-import { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import type { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as UiState from '../../UiState';
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import { renderFormField } from '../alien/FieldLabeller';
 import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 import { renderIconFromPack, renderReplaceableIconFromPack } from '../button/ButtonSlices';
-import { getFetch, renderMenuButton, StoredMenuButton } from '../button/MenuButton';
+import { getFetch, renderMenuButton, type StoredMenuButton } from '../button/MenuButton';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import { ToolbarButtonClasses, ViewButtonClasses } from '../toolbar/button/ButtonClasses';
 

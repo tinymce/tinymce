@@ -1,6 +1,6 @@
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
-import { Grid } from './Structs';
+import type { Grid } from './Structs';
 import { Warehouse } from './Warehouse';
 
 const getGridSize = (table: SugarElement<HTMLTableElement>): Grid => {

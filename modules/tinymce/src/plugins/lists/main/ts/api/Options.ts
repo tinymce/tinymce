@@ -1,4 +1,4 @@
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 const option = (name: string) => (editor: Editor) =>
   editor.options.get(name);

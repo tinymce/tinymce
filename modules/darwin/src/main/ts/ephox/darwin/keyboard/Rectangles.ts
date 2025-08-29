@@ -1,9 +1,9 @@
 import { Optional } from '@ephox/katamari';
-import { Awareness, RawRect, SugarElement, SugarNode } from '@ephox/sugar';
+import { Awareness, type RawRect, type SugarElement, SugarNode } from '@ephox/sugar';
 
-import { WindowBridge } from '../api/WindowBridge';
+import type { WindowBridge } from '../api/WindowBridge';
 
-import * as Carets from './Carets';
+import type * as Carets from './Carets';
 
 type Carets = Carets.Carets;
 

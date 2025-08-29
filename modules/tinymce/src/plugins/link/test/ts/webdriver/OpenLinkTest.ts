@@ -1,9 +1,9 @@
 import { RealMouse, UiFinder, TestStore } from '@ephox/agar';
 import { after, afterEach, before, describe, it } from '@ephox/bedrock-client';
-import { DomEvent, EventUnbinder, SugarBody } from '@ephox/sugar';
+import { DomEvent, type EventUnbinder, SugarBody } from '@ephox/sugar';
 import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
 describe('webdriver.tinymce.plugins.link.OpenLinkTest', () => {

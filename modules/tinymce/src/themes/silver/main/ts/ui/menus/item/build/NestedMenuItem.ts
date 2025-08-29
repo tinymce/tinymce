@@ -1,11 +1,11 @@
-import { AlloyComponent, Disabling, ItemTypes } from '@ephox/alloy';
-import { Menu } from '@ephox/bridge';
+import { type AlloyComponent, Disabling, type ItemTypes } from '@ephox/alloy';
+import type { Menu } from '@ephox/bridge';
 import { Fun, Optional } from '@ephox/katamari';
 import { Attribute, SelectorFind } from '@ephox/sugar';
 
-import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
+import type { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 
-import ItemResponse from '../ItemResponse';
+import type ItemResponse from '../ItemResponse';
 import { renderDownwardsCaret, renderSubmenuCaret } from '../structure/ItemSlices';
 import { renderItemStructure } from '../structure/ItemStructure';
 

@@ -1,9 +1,9 @@
 import { Optional, Type } from '@ephox/katamari';
 
-import { Dialog } from 'tinymce/core/api/ui/Ui';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
 import Tools from 'tinymce/core/api/util/Tools';
 
-import { ListItem, UserListItem } from '../ui/DialogTypes';
+import type { ListItem, UserListItem } from '../ui/DialogTypes';
 
 type ListExtractor = (item: UserListItem) => string;
 

@@ -1,7 +1,7 @@
 import { Optional, Thunk } from '@ephox/katamari';
 
 import * as SchemaElementSets from './SchemaElementSets';
-import * as SchemaTypes from './SchemaTypes';
+import type * as SchemaTypes from './SchemaTypes';
 
 export type PresetName = 'blocks' | 'phrasing' | 'flow';
 

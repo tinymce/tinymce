@@ -1,12 +1,12 @@
 import { Objects } from '@ephox/boulder';
 import { Cell, Obj, Optional, Singleton } from '@ephox/katamari';
-import { Compare, EventArgs, SugarElement } from '@ephox/sugar';
+import { Compare, type EventArgs, type SugarElement } from '@ephox/sugar';
 
 import { DelayedFunction } from '../alien/DelayedFunction';
 import * as NativeEvents from '../api/events/NativeEvents';
 import * as SystemEvents from '../api/events/SystemEvents';
 
-import { GuiEventSettings } from './GuiEvents';
+import type { GuiEventSettings } from './GuiEvents';
 
 type EventHandler = (event: EventArgs<Event>) => Optional<boolean>;
 

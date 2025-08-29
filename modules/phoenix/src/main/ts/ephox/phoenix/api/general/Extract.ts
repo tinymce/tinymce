@@ -1,11 +1,11 @@
-import { Universe } from '@ephox/boss';
-import { Optional } from '@ephox/katamari';
+import type { Universe } from '@ephox/boss';
+import type { Optional } from '@ephox/katamari';
 
 import * as Extract from '../../extract/Extract';
 import * as ExtractText from '../../extract/ExtractText';
 import * as Find from '../../extract/Find';
-import { TypedItem } from '../data/TypedItem';
-import { SpotPoint } from '../data/Types';
+import type { TypedItem } from '../data/TypedItem';
+import type { SpotPoint } from '../data/Types';
 
 type FromApi = <E, D>(universe: Universe<E, D>, item: E, optimise?: (e: E) => boolean) => TypedItem<E, D>[];
 const from: FromApi = Extract.typed;

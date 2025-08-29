@@ -1,8 +1,8 @@
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, type Optional } from '@ephox/katamari';
 import { Compare, Insert, Remove, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
-import { AlloyComponent } from '../api/component/ComponentApi';
-import { AlloySpec } from '../api/component/SpecTypes';
+import type { AlloyComponent } from '../api/component/ComponentApi';
+import type { AlloySpec } from '../api/component/SpecTypes';
 
 type SpecBuilder = (spec: AlloySpec, optObs: Optional<SugarElement<Node>>) => AlloyComponent;
 

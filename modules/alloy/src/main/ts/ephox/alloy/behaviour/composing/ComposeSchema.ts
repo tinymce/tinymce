@@ -1,4 +1,4 @@
-import { FieldProcessor, FieldSchema } from '@ephox/boulder';
+import { type FieldProcessor, FieldSchema } from '@ephox/boulder';
 
 const ComposeSchema: FieldProcessor[] = [
   FieldSchema.required('find')

@@ -1,13 +1,13 @@
 import { Arr } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
-import { ResizeBehaviour } from '../api/ResizeBehaviour';
-import { Detail, RowDetail } from '../api/Structs';
-import { TableSize } from '../api/TableSize';
+import type { ResizeBehaviour } from '../api/ResizeBehaviour';
+import type { Detail, RowDetail } from '../api/Structs';
+import type { TableSize } from '../api/TableSize';
 import { Warehouse } from '../api/Warehouse';
 import * as Deltas from '../calc/Deltas';
 import * as CellUtils from '../util/CellUtils';
-import { CellElement } from '../util/TableTypes';
+import type { CellElement } from '../util/TableTypes';
 
 import * as ColumnSizes from './ColumnSizes';
 import * as Recalculations from './Recalculations';

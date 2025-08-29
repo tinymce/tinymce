@@ -1,9 +1,9 @@
 import { Adt, Arr, Optional, Type } from '@ephox/katamari';
 import { SugarElement, Traverse, SugarNode, ContentEditable } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
-import { EditorEvent } from '../api/util/EventDispatcher';
+import type { EditorEvent } from '../api/util/EventDispatcher';
 import * as LazyEvaluator from '../util/LazyEvaluator';
 
 import * as ContextSelectors from './ContextSelectors';

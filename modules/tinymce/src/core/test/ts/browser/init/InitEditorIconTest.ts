@@ -5,7 +5,7 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 import { getAll as getDefaultIcons } from '@tinymce/oxide-icons-default';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import IconManager from 'tinymce/core/api/IconManager';
 
 describe('browser.tinymce.core.init.InitEditorIconTest', () => {

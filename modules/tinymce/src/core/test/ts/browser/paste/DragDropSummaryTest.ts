@@ -2,7 +2,7 @@ import { Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as DragDropUtils from '../../module/test/DragDropUtils';
 import * as InputEventUtils from '../../module/test/InputEventUtils';

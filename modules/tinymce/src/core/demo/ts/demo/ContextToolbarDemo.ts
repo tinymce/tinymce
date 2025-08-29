@@ -1,7 +1,7 @@
 
 import { Merger } from '@ephox/katamari';
 
-import { RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 

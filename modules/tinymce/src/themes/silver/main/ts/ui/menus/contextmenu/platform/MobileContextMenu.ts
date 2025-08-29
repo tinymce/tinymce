@@ -1,19 +1,19 @@
-import { AlloyComponent, Bubble, InlineView, Layout, LayoutInset, MaxHeight, MaxWidth, TieredMenuTypes } from '@ephox/alloy';
+import { type AlloyComponent, Bubble, InlineView, Layout, LayoutInset, MaxHeight, MaxWidth, TieredMenuTypes } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { SimSelection, WindowSelection } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Delay from 'tinymce/core/api/util/Delay';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
-import { UiFactoryBackstage } from '../../../../backstage/Backstage';
+import type { UiFactoryBackstage } from '../../../../backstage/Backstage';
 import { hideContextToolbarEvent } from '../../../context/ContextEditorEvents';
 import { getContextToolbarBounds } from '../../../context/ContextToolbarBounds';
 import ItemResponse from '../../item/ItemResponse';
 import * as MenuParts from '../../menu/MenuParts';
 import * as NestedMenus from '../../menu/NestedMenus';
-import { SingleMenuItemSpec } from '../../menu/SingleMenuTypes';
+import type { SingleMenuItemSpec } from '../../menu/SingleMenuTypes';
 import * as Coords from '../Coords';
 
 type MenuItems = string | Array<string | SingleMenuItemSpec>;

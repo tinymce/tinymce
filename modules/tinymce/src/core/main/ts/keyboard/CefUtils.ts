@@ -1,6 +1,6 @@
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import { firstPositionIn, lastPositionIn } from '../caret/CaretFinder';
 import { CaretPosition } from '../caret/CaretPosition';
 import { isAfterContentEditableFalse, isBeforeContentEditableFalse } from '../caret/CaretPositionPredicates';

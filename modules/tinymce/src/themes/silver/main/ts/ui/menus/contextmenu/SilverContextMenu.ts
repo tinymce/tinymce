@@ -1,14 +1,14 @@
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, GuiFactory, InlineView, Sandboxing, SystemEvents } from '@ephox/alloy';
-import { Menu } from '@ephox/bridge';
-import { Arr, Fun, Obj, Result, Strings, Type } from '@ephox/katamari';
+import { AddEventsBehaviour, type AlloyComponent, AlloyEvents, Behaviour, GuiFactory, InlineView, Sandboxing, SystemEvents } from '@ephox/alloy';
+import type { Menu } from '@ephox/bridge';
+import { Arr, Fun, Obj, type Result, Strings, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { SelectorExists, SugarElement } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type { UiFactoryBackstage } from 'tinymce/themes/silver/backstage/Backstage';
 
-import { AnchorType } from './Coords';
+import type { AnchorType } from './Coords';
 import * as Options from './Options';
 import * as DesktopContextMenu from './platform/DesktopContextMenu';
 import * as MobileContextMenu from './platform/MobileContextMenu';

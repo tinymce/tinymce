@@ -1,9 +1,9 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
-import { Result } from '@ephox/katamari';
+import type { Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
 
-import { BaseToolbarButton, baseToolbarButtonFields, BaseToolbarButtonInstanceApi, BaseToolbarButtonSpec } from './ToolbarButton';
+import { type BaseToolbarButton, baseToolbarButtonFields, type BaseToolbarButtonInstanceApi, type BaseToolbarButtonSpec } from './ToolbarButton';
 
 interface ToolbarGroupSetting {
   name: string;

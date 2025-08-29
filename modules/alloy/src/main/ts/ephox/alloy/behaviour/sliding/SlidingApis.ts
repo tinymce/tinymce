@@ -1,9 +1,9 @@
 import { Optional } from '@ephox/katamari';
-import { Class, Classes, Css, SugarElement } from '@ephox/sugar';
+import { Class, Classes, Css, type SugarElement } from '@ephox/sugar';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 
-import { SlidingConfig, SlidingState } from './SlidingTypes';
+import type { SlidingConfig, SlidingState } from './SlidingTypes';
 import { getAnimationRoot } from './SlidingUtils';
 
 const getDimensionProperty = (slideConfig: SlidingConfig): string =>

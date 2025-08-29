@@ -1,7 +1,7 @@
-import { ColourTypes, HsvColour, RgbaColour, Transformations } from '@ephox/acid';
+import { type ColourTypes, HsvColour, RgbaColour, Transformations } from '@ephox/acid';
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Composing, Keying, Memento, RawDomSchema,
-  SimulatedEvent, Sketcher, Slider
+  AddEventsBehaviour, type AlloyComponent, AlloyEvents, Behaviour, Composing, Keying, Memento, type RawDomSchema,
+  type SimulatedEvent, Sketcher, Slider
 } from '@ephox/alloy';
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Cell, Fun } from '@ephox/katamari';
@@ -10,7 +10,7 @@ import * as ColourEvents from './ColourEvents';
 import * as HueSlider from './components/HueSlider';
 import * as RgbForm from './components/RgbForm';
 import * as SaturationBrightnessPalette from './components/SaturationBrightnessPalette';
-import { Untranslated } from './I18n';
+import type { Untranslated } from './I18n';
 
 export interface ColourPickerDetail extends Sketcher.SingleSketchDetail {
   readonly dom: RawDomSchema;

@@ -1,11 +1,11 @@
 import { Type } from '@ephox/katamari';
 
-import DOMUtils from '../api/dom/DOMUtils';
-import Editor from '../api/Editor';
+import type DOMUtils from '../api/dom/DOMUtils';
+import type Editor from '../api/Editor';
 import Tools from '../api/util/Tools';
-import { RangeLikeObject } from '../selection/RangeTypes';
+import type { RangeLikeObject } from '../selection/RangeTypes';
 
-import { ApplyFormat, FormatVars } from './FormatTypes';
+import type { ApplyFormat, FormatVars } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 
 export const applyStyles = (dom: DOMUtils, elm: Element, format: ApplyFormat, vars: FormatVars | undefined): void => {

@@ -9,7 +9,7 @@ import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';
 import { Typeahead } from 'ephox/alloy/api/ui/Typeahead';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { TypeaheadData } from 'ephox/alloy/ui/types/TypeaheadTypes';
+import type { TypeaheadData } from 'ephox/alloy/ui/types/TypeaheadTypes';
 
 import * as DemoRenders from './forms/DemoRenders';
 

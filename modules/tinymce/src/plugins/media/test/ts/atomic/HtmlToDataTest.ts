@@ -2,7 +2,7 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
 import * as HtmlToData from 'tinymce/plugins/media/core/HtmlToData';
-import { MediaData } from 'tinymce/plugins/media/core/Types';
+import type { MediaData } from 'tinymce/plugins/media/core/Types';
 
 describe('atomic.tinymce.plugins.media.core.HtmlToDataTest', () => {
   const testHtmlToData = (html: string, expected: MediaData) => {

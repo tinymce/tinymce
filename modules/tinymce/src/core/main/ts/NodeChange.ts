@@ -1,10 +1,10 @@
 import { Arr, Fun } from '@ephox/katamari';
 
-import Editor from './api/Editor';
+import type Editor from './api/Editor';
 import * as Options from './api/Options';
 import Delay from './api/util/Delay';
 import * as RangeCompare from './selection/RangeCompare';
-import { RangeLikeObject } from './selection/RangeTypes';
+import type { RangeLikeObject } from './selection/RangeTypes';
 import * as SelectionBookmark from './selection/SelectionBookmark';
 import { hasAnyRanges } from './selection/SelectionUtils';
 

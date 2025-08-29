@@ -1,6 +1,6 @@
 import { Arr, Strings, Type } from '@ephox/katamari';
 
-import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import type { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 
 const setData = (transfer: DataTransfer, types: string[], data: string): void => {
   transfer.items.clear();

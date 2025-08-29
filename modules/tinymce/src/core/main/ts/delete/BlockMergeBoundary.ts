@@ -1,7 +1,7 @@
 import { Optional, Optionals } from '@ephox/katamari';
 import { Compare, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
-import Schema from '../api/html/Schema';
+import type Schema from '../api/html/Schema';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import * as TransparentElements from '../content/TransparentElements';

@@ -1,7 +1,7 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 
-import { WordDecisionItem } from '../words/WordDecision';
+import type { WordDecisionItem } from '../words/WordDecision';
 
 export interface ZoneDetails<E> {
   readonly lang: string;

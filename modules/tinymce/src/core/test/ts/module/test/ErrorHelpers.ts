@@ -1,7 +1,7 @@
 import { Waiter } from '@ephox/agar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 export interface ErrorHelper {
   readonly pAssertErrorLogged: (label: string, message: string) => Promise<void>;

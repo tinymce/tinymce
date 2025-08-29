@@ -1,5 +1,5 @@
 import { Id, Obj } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
 const attrName = Id.generate('dom-data');
 // This module stores information on the DOM node directly. This is so that it is automatically

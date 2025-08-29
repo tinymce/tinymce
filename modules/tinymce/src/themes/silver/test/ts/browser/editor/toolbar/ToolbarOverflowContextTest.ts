@@ -4,8 +4,8 @@ import { Arr, Fun } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { ToolbarMode } from 'tinymce/core/api/OptionTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { ToolbarMode } from 'tinymce/core/api/OptionTypes';
 
 import * as Assets from '../../../module/Assets';
 

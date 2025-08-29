@@ -1,5 +1,5 @@
 import { Cursors } from '@ephox/agar';
-import { Boxes } from '@ephox/alloy';
+import type { Boxes } from '@ephox/alloy';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { Css, Insert, InsertAll, Remove, SugarBody, SugarElement } from '@ephox/sugar';

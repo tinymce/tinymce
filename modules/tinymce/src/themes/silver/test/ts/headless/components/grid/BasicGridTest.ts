@@ -3,7 +3,7 @@ import { GuiFactory } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 
-import { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
+import type { UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 import { renderGrid } from 'tinymce/themes/silver/ui/dialog/Grid';
 
 import * as GuiSetup from '../../../module/GuiSetup';

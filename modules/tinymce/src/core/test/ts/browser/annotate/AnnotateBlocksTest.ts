@@ -1,11 +1,11 @@
-import { Cursors, Waiter } from '@ephox/agar';
+import { type Cursors, Waiter } from '@ephox/agar';
 import { after, before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Obj } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import { annotate, assertMarkings, assertHtmlContent } from '../../module/test/AnnotationAsserts';
 

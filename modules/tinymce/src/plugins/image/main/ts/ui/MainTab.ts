@@ -1,8 +1,8 @@
 import { Arr } from '@ephox/katamari';
 
-import { Dialog } from 'tinymce/core/api/ui/Ui';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
 
-import { ImageDialogInfo, ListItem } from './DialogTypes';
+import type { ImageDialogInfo, ListItem } from './DialogTypes';
 
 const makeItems = (info: ImageDialogInfo): Dialog.BodyComponentSpec[] => {
   const imageUrl = {
