@@ -1,12 +1,10 @@
 import { Attribute, SelectorFilter, SugarElement } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-
 const MCE_OPEN = 'data-mce-open';
 const OPEN = 'open';
 
-const getDetailsElements = (editor: Editor): Array<SugarElement<HTMLDetailsElement>> =>
-  SelectorFilter.descendants<HTMLDetailsElement>(SugarElement.fromDom(editor.getBody()), 'details');
+const getDetailsElements = (scope: SugarElement<Node>): Array<SugarElement<HTMLDetailsElement>> =>
+  SelectorFilter.descendants<HTMLDetailsElement>(scope, 'details');
 
 const hasOpenAttribute = (element: SugarElement<HTMLDetailsElement>): boolean =>
   Attribute.has(element, OPEN);
