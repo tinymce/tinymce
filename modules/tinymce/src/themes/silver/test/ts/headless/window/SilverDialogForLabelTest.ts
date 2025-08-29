@@ -3,7 +3,7 @@ import { before, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 
-import { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
+import type { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import * as TestExtras from '../../module/TestExtras';

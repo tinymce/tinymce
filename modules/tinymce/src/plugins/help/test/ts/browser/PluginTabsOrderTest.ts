@@ -5,7 +5,7 @@ import { SelectorFilter, TextContent } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import HelpPlugin from 'tinymce/plugins/help/Plugin';
 
 import { selectors } from '../module/Selectors';

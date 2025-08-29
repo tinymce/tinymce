@@ -1,9 +1,9 @@
 import { StructureSchema } from '@ephox/boulder';
-import { Optional, Result } from '@ephox/katamari';
+import type { Optional, Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
 
-import { CommonMenuItem, CommonMenuItemSpec, commonMenuItemFields, CommonMenuItemInstanceApi } from './CommonMenuItem';
+import { type CommonMenuItem, type CommonMenuItemSpec, commonMenuItemFields, type CommonMenuItemInstanceApi } from './CommonMenuItem';
 
 export interface ToggleMenuItemSpec extends CommonMenuItemSpec {
   type?: 'togglemenuitem';

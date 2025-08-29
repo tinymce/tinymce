@@ -6,8 +6,8 @@ import * as NodeType from '../dom/NodeType';
 
 import * as CaretCandidate from './CaretCandidate';
 import * as CaretContainer from './CaretContainer';
+import { isBackwards, isForwards } from './CaretDirection';
 import { CaretPosition } from './CaretPosition';
-import { HDirection } from './CaretWalker';
 import { isFakeCaretTarget } from './FakeCaret';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;
@@ -19,8 +19,6 @@ const isCaretContainerBlock = CaretContainer.isCaretContainerBlock;
 const isElement = NodeType.isElement;
 const isText = NodeType.isText;
 const isCaretCandidate = CaretCandidate.isCaretCandidate;
-const isForwards = (direction: HDirection): boolean => direction === HDirection.Forwards;
-const isBackwards = (direction: HDirection): boolean => direction === HDirection.Backwards;
 
 const skipCaretContainers = (walk: (shallow?: boolean) => Node | null | undefined, shallow?: boolean): Node | null => {
   let node: Node | null | undefined;

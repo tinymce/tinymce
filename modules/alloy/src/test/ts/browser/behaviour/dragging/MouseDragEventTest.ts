@@ -1,7 +1,7 @@
-import { Assertions, Chain, Mouse, NamedChain, TestStore, UiFinder } from '@ephox/agar';
+import { Assertions, Chain, Mouse, NamedChain, type TestStore, UiFinder } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Result } from '@ephox/katamari';
-import { Css, SugarElement } from '@ephox/sugar';
+import { Css, type SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';

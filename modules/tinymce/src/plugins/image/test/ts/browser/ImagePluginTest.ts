@@ -1,11 +1,11 @@
-import { Cursors } from '@ephox/agar';
+import type { Cursors } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
-import { advancedTabLabels, assertInputValue, fillActiveDialog, ImageDialogData } from '../module/Helpers';
+import { advancedTabLabels, assertInputValue, fillActiveDialog, type ImageDialogData } from '../module/Helpers';
 
 describe('browser.tinymce.plugins.image.ImagePluginTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

@@ -1,7 +1,7 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Fun, Optional, Type } from '@ephox/katamari';
 
-import { NestedMenuItemContents } from '../components/menu/NestedMenuItem';
+import type { NestedMenuItemContents } from '../components/menu/NestedMenuItem';
 
 export type MenuButtonItemTypes = NestedMenuItemContents;
 export type SuccessCallback = (menu: string | MenuButtonItemTypes[]) => void;

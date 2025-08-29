@@ -1,9 +1,9 @@
-import { Optional, Result } from '@ephox/katamari';
-import { EventArgs, SugarElement } from '@ephox/sugar';
+import type { Optional, Result } from '@ephox/katamari';
+import type { EventArgs, SugarElement } from '@ephox/sugar';
 
-import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
-import { AlloyComponent } from '../component/ComponentApi';
-import { AlloySpec } from '../component/SpecTypes';
+import type { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import type { AlloyComponent } from '../component/ComponentApi';
+import type { AlloySpec } from '../component/SpecTypes';
 
 export interface AlloySystemApi {
   addToGui: (comp: AlloyComponent) => void;

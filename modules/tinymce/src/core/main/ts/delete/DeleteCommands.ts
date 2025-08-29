@@ -1,6 +1,6 @@
-import { Arr, Cell, Fun } from '@ephox/katamari';
+import { Arr, type Cell, Fun } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as Delete from '../lists/actions/Delete';
 import * as NormalizeLists from '../lists/lists/NormalizeLists';
 

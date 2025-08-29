@@ -1,5 +1,5 @@
 import { Fun, Id, Optional } from '@ephox/katamari';
-import { SugarElement, SugarNode } from '@ephox/sugar';
+import { type SugarElement, SugarNode } from '@ephox/sugar';
 
 import * as AlloyTags from '../ephemera/AlloyTags';
 import * as AlloyLogger from '../log/AlloyLogger';

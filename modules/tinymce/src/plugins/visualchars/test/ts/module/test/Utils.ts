@@ -1,8 +1,8 @@
-import { ApproxStructure, StructAssert } from '@ephox/agar';
+import { ApproxStructure, type StructAssert } from '@ephox/agar';
 import { Unicode } from '@ephox/katamari';
 import { TinyAssertions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 const assertStruct = (editor: Editor, paraStruct: StructAssert[]): void =>
   TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, _str) => s.element('body', {

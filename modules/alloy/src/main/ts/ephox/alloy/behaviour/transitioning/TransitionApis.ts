@@ -1,10 +1,10 @@
-import { Obj, Optional } from '@ephox/katamari';
+import { Obj, type Optional } from '@ephox/katamari';
 import { Attribute, Class } from '@ephox/sugar';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { Stateless } from '../common/BehaviourState';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { Stateless } from '../common/BehaviourState';
 
-import { TransitioningConfig, TransitionProperties } from './TransitioningTypes';
+import type { TransitioningConfig, TransitionProperties } from './TransitioningTypes';
 
 export interface TransitionRoute {
   readonly destination: string;

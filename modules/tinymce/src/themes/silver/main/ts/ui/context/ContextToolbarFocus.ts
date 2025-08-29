@@ -1,5 +1,5 @@
 import {
-  AlloyComponent,
+  type AlloyComponent,
   InlineView,
   Keying
 } from '@ephox/alloy';

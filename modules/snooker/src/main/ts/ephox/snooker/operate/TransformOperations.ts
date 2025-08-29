@@ -1,12 +1,12 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Attribute, SugarElement, SugarNode } from '@ephox/sugar';
+import { Attribute, type SugarElement, SugarNode } from '@ephox/sugar';
 
 import * as Structs from '../api/Structs';
-import { TableSection } from '../api/TableSection';
+import type { TableSection } from '../api/TableSection';
 import { isHeaderCell, isHeaderCells } from '../lookup/Type';
 import * as GridRow from '../model/GridRow';
 import * as CellUtils from '../util/CellUtils';
-import { CompElm, Subst } from '../util/TableTypes';
+import type { CompElm, Subst } from '../util/TableTypes';
 
 type CellReplacer = (cell: Structs.ElementNew<HTMLTableCellElement>, comparator: CompElm, substitute: Subst) => Structs.ElementNew<HTMLTableCellElement>;
 type ScopeGenerator = (cell: Structs.ElementNew<HTMLTableCellElement>, rowIndex: number, colIndex: number) => Optional<null | string>;

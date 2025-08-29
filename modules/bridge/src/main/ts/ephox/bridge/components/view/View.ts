@@ -1,7 +1,7 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
-import { Result } from '@ephox/katamari';
+import type { Result } from '@ephox/katamari';
 
-import { ViewButton, viewButtonSchema, ViewButtonSpec } from './ViewButton';
+import { type ViewButton, viewButtonSchema, type ViewButtonSpec } from './ViewButton';
 
 export interface ViewInstanceApi {
   getContainer: () => HTMLElement;

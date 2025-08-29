@@ -1,7 +1,7 @@
 import { Type } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
 
 import { isFigure, isImage } from '../core/ImageData';
 import * as ImageSelection from '../core/ImageSelection';

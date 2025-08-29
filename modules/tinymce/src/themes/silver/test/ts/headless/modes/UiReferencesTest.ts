@@ -4,7 +4,7 @@ import { Arr } from '@ephox/katamari';
 import { Class, Classes } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import { LazyUiReferences, SinkAndMothership } from 'tinymce/themes/silver/modes/UiReferences';
+import { LazyUiReferences, type SinkAndMothership } from 'tinymce/themes/silver/modes/UiReferences';
 
 describe('headless.modes.UiReferencesTest', () => {
   context('getUiMotherships', () => {

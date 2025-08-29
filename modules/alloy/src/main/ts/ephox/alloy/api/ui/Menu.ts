@@ -1,6 +1,6 @@
 import * as MenuSchema from '../../ui/schema/MenuSchema';
 import { make as makeMenuSpec } from '../../ui/single/MenuSpec';
-import { MenuSketcher } from '../../ui/types/MenuTypes';
+import type { MenuSketcher } from '../../ui/types/MenuTypes';
 
 import * as Sketcher from './Sketcher';
 

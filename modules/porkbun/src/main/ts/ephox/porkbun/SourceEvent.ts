@@ -1,6 +1,6 @@
 import { Arr, Fun } from '@ephox/katamari';
 
-import { Bindable, Event, EventHandler } from './Event';
+import { type Bindable, Event, type EventHandler } from './Event';
 
 export default (fields: string[], source: Bindable<any>): Event => {
   const mine = Event(fields);

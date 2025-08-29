@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { Fun, Merger } from '@ephox/katamari';
 
-import { Editor, RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { Editor, RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 

@@ -1,4 +1,4 @@
-import { SchemaType } from './SchemaTypes';
+import type { SchemaType } from './SchemaTypes';
 
 export const getGlobalAttributeSet = (type: SchemaType): readonly string[] => {
   return Object.freeze([

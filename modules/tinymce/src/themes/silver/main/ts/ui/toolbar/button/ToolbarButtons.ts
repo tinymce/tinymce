@@ -1,8 +1,8 @@
 import {
   AddEventsBehaviour,
-  AlloyComponent,
+  type AlloyComponent,
   AlloyEvents,
-  AlloySpec,
+  type AlloySpec,
   AlloyTriggers,
   Behaviour,
   Button as AlloyButton,
@@ -15,20 +15,20 @@ import {
   Memento,
   NativeEvents,
   Replacing,
-  SketchSpec,
+  type SketchSpec,
   SystemEvents,
-  TieredData,
-  TieredMenuTypes,
+  type TieredData,
+  type TieredMenuTypes,
   Toggling,
   Tooltipping,
   Unselecting
 } from '@ephox/alloy';
-import { Toolbar } from '@ephox/bridge';
+import type { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional, Type } from '@ephox/katamari';
-import { Attribute, Class, EventArgs, SelectorFind, Traverse } from '@ephox/sugar';
+import { Attribute, Class, type EventArgs, SelectorFind, Traverse } from '@ephox/sugar';
 
-import { ToolbarGroupOption } from '../../../api/Options';
-import { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
+import type { ToolbarGroupOption } from '../../../api/Options';
+import type { UiFactoryBackstage, UiFactoryBackstageProviders, UiFactoryBackstageShared } from '../../../backstage/Backstage';
 import * as ConvertShortcut from '../../../ui/alien/ConvertShortcut';
 import * as UiState from '../../../UiState';
 import { DisablingConfigs } from '../../alien/DisablingConfigs';
@@ -36,8 +36,8 @@ import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
 import * as UiUtils from '../../alien/UiUtils';
 import { renderLabel, renderReplaceableIconFromPack } from '../../button/ButtonSlices';
-import { onControlAttached, onControlDetached, OnDestroy } from '../../controls/Controls';
-import { updateMenuIcon, UpdateMenuIconEvent, updateMenuText, UpdateMenuTextEvent } from '../../dropdown/CommonDropdown';
+import { onControlAttached, onControlDetached, type OnDestroy } from '../../controls/Controls';
+import { updateMenuIcon, type UpdateMenuIconEvent, updateMenuText, type UpdateMenuTextEvent } from '../../dropdown/CommonDropdown';
 import * as Icons from '../../icons/Icons';
 import { componentRenderPipeline } from '../../menus/item/build/CommonMenuItem';
 import { classForPreset } from '../../menus/item/ItemClasses';
@@ -46,8 +46,8 @@ import { createPartialChoiceMenu } from '../../menus/menu/MenuChoice';
 import { deriveMenuMovement } from '../../menus/menu/MenuMovement';
 import * as MenuParts from '../../menus/menu/MenuParts';
 import { createTieredDataFrom } from '../../menus/menu/SingleMenu';
-import { SingleMenuItemSpec } from '../../menus/menu/SingleMenuTypes';
-import { renderToolbarGroup, ToolbarGroup } from '../CommonToolbar';
+import type { SingleMenuItemSpec } from '../../menus/menu/SingleMenuTypes';
+import { renderToolbarGroup, type ToolbarGroup } from '../CommonToolbar';
 
 import { ToolbarButtonClasses } from './ButtonClasses';
 import { commonButtonDisplayEvent, onToolbarButtonExecute, toolbarButtonEventOrder } from './ButtonEvents';

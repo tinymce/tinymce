@@ -1,4 +1,4 @@
-import Editor from '../Editor';
+import type Editor from '../Editor';
 import Env from '../Env';
 
 export const registerCommands = (editor: Editor): void => {

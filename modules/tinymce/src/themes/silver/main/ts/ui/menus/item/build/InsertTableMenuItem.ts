@@ -1,11 +1,11 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, CustomEvent, Focusing, GuiFactory, ItemTypes, ItemWidget,
-  Keying, Memento, NativeEvents, NativeSimulatedEvent, PremadeSpec, Replacing, SystemEvents, Toggling
+  AddEventsBehaviour, type AlloyComponent, AlloyEvents, type AlloySpec, AlloyTriggers, Behaviour, type CustomEvent, Focusing, GuiFactory, type ItemTypes, ItemWidget,
+  Keying, Memento, NativeEvents, type NativeSimulatedEvent, type PremadeSpec, Replacing, SystemEvents, Toggling
 } from '@ephox/alloy';
-import { Menu } from '@ephox/bridge';
+import type { Menu } from '@ephox/bridge';
 import { Arr, Id } from '@ephox/katamari';
 
-import { UiFactoryBackstage } from '../../../../backstage/Backstage';
+import type { UiFactoryBackstage } from '../../../../backstage/Backstage';
 
 const cellOverEvent = Id.generate('cell-over');
 const cellExecuteEvent = Id.generate('cell-execute');

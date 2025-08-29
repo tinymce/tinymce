@@ -1,10 +1,10 @@
-import { Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { Optional } from '@ephox/katamari';
+import type { SugarElement } from '@ephox/sugar';
 
-import { BehaviourConfigAndState } from '../../behaviour/common/BehaviourBlob';
-import { UncurriedHandler } from '../../events/EventRegistry';
-import { AlloyBehaviour } from '../behaviour/Behaviour';
-import { AlloySystemApi } from '../system/SystemApi';
+import type { BehaviourConfigAndState } from '../../behaviour/common/BehaviourBlob';
+import type { UncurriedHandler } from '../../events/EventRegistry';
+import type { AlloyBehaviour } from '../behaviour/Behaviour';
+import type { AlloySystemApi } from '../system/SystemApi';
 
 type ReadonlyRecord<K extends keyof any, T> = {
   readonly [P in K]: T;

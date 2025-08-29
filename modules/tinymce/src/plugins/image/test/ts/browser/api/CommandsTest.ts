@@ -2,8 +2,8 @@ import { ApproxStructure } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { ImageData } from 'tinymce/plugins/image/core/ImageData';
+import type Editor from 'tinymce/core/api/Editor';
+import type { ImageData } from 'tinymce/plugins/image/core/ImageData';
 import Plugin from 'tinymce/plugins/image/Plugin';
 
 describe('browser.tinymce.plugins.image.api.CommandsTest', () => {

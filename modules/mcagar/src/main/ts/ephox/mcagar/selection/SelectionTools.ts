@@ -1,5 +1,5 @@
 import { Chain, Cursors } from '@ephox/agar';
-import { SimRange, SugarElement, Traverse } from '@ephox/sugar';
+import { type SimRange, type SugarElement, Traverse } from '@ephox/sugar';
 
 const toDomRange = (range: SimRange): Range => {
   const doc = Traverse.owner(range.start);

@@ -1,7 +1,7 @@
-import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
-import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { RawDomSchema } from '../../api/component/SpecTypes';
-import { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
+import type { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
+import type { SketchBehaviours } from '../../api/component/SketchBehaviours';
+import type { RawDomSchema } from '../../api/component/SpecTypes';
+import type { SingleSketch, SingleSketchDetail, SingleSketchSpec } from '../../api/ui/Sketcher';
 
 export interface TabviewDetail extends SingleSketchDetail {
   uid: string;

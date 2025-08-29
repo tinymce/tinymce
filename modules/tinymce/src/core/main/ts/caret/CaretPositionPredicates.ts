@@ -6,7 +6,7 @@ import * as NodeType from '../dom/NodeType';
 import { isWhiteSpace } from '../text/CharType';
 import * as Zwsp from '../text/Zwsp';
 
-import CaretPosition from './CaretPosition';
+import type CaretPosition from './CaretPosition';
 import { getChildNodeAtRelativeOffset } from './CaretUtils';
 
 const isChar = (forward: boolean, predicate: (chr: string) => boolean, pos: CaretPosition): boolean =>

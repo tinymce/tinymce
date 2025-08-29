@@ -1,5 +1,5 @@
-import { Optional } from '@ephox/katamari';
-import { RawRect, Scroll, SimRange, SimSelection, Situ, SugarElement, WindowSelection } from '@ephox/sugar';
+import type { Optional } from '@ephox/katamari';
+import { type RawRect, Scroll, type SimRange, SimSelection, type Situ, SugarElement, WindowSelection } from '@ephox/sugar';
 
 import { Situs } from '../selection/Situs';
 import * as Util from '../selection/Util';

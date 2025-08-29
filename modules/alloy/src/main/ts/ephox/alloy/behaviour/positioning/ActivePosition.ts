@@ -1,7 +1,7 @@
-import { DomDefinitionDetail } from '../../dom/DomDefinition';
+import type { DomDefinitionDetail } from '../../dom/DomDefinition';
 import * as DomModification from '../../dom/DomModification';
 
-import { PositioningConfig } from './PositioningTypes';
+import type { PositioningConfig } from './PositioningTypes';
 
 const exhibit = (base: DomDefinitionDetail, posConfig: PositioningConfig): DomModification.DomModification =>
   DomModification.nu({

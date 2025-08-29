@@ -1,7 +1,7 @@
 import { Optional, Type } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import { isAfterMedia, isBeforeMedia } from '../caret/CaretPositionPredicates';
 import * as CaretUtils from '../caret/CaretUtils';
 import { HDirection } from '../caret/CaretWalker';

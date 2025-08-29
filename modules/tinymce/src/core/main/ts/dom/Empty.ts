@@ -2,7 +2,7 @@ import { Fun, Obj, Type } from '@ephox/katamari';
 import { Compare, ContentEditable, SugarNode, SugarElement, Traverse, PredicateExists } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
-import Schema from '../api/html/Schema';
+import type Schema from '../api/html/Schema';
 import { isWhitespaceText, isZwsp } from '../text/Whitespace';
 
 import * as NodeType from './NodeType';
@@ -115,9 +115,5 @@ const isContent = (schema: Schema, node: Node, options?: IsContentOptions): bool
   return isContentNode(schema, node, node, { includeZwsp: defaultOptionValues.includeZwsp, ...options });
 };
 
-export {
-  IsEmptyOptions,
-  isEmpty,
-  isEmptyNode,
-  isContent
-};
+export type { IsEmptyOptions };
+export { isEmpty, isEmptyNode, isContent };

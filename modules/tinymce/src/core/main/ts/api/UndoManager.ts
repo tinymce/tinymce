@@ -1,20 +1,20 @@
 import { Arr, Cell, Singleton } from '@ephox/katamari';
 
-import { Bookmark } from '../bookmark/BookmarkTypes';
+import type { Bookmark } from '../bookmark/BookmarkTypes';
 import * as GetBookmark from '../bookmark/GetBookmark';
 import * as Rtc from '../Rtc';
 import * as Levels from '../undo/Levels';
 import { addKeyboardShortcuts, registerEvents } from '../undo/Setup';
-import { Index, Locks, UndoLevel, UndoManager } from '../undo/UndoManagerTypes';
+import type { Index, Locks, UndoLevel, UndoManager as UndoManagerType } from '../undo/UndoManagerTypes';
 
-import Editor from './Editor';
+import type Editor from './Editor';
 
 /**
  * This class handles the undo/redo history levels for the editor. Since the built-in undo/redo has major drawbacks a custom one was needed.
  *
  * @class tinymce.UndoManager
  */
-const UndoManager = (editor: Editor): UndoManager => {
+const UndoManager = (editor: Editor): UndoManagerType => {
   const beforeBookmark = Singleton.value<Bookmark>();
   const locks: Locks = Cell(0);
   const index: Index = Cell(0);

@@ -1,13 +1,13 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyParts, AlloySpec, Behaviour, Blocking, Button, Container, DomFactory, Focusing, Keying, ModalDialog,
-  NativeEvents, SketchSpec, SystemEvents, Tabstopping
+  AddEventsBehaviour, type AlloyComponent, AlloyEvents, type AlloyParts, type AlloySpec, Behaviour, Blocking, Button, Container, DomFactory, Focusing, Keying, ModalDialog,
+  NativeEvents, type SketchSpec, SystemEvents, Tabstopping
 } from '@ephox/alloy';
-import { Fun, Optional, Result } from '@ephox/katamari';
+import { Fun, Optional, type Result } from '@ephox/katamari';
 import { Class, SugarBody } from '@ephox/sugar';
 
 import Env from 'tinymce/core/api/Env';
 
-import * as Backstage from '../../backstage/Backstage';
+import type * as Backstage from '../../backstage/Backstage';
 import * as HtmlSanitizer from '../core/HtmlSanitizer';
 import * as NavigableObject from '../general/NavigableObject';
 import * as DialogChannels from '../window/DialogChannels';

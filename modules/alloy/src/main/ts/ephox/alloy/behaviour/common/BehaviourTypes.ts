@@ -1,13 +1,13 @@
-import { FieldProcessor } from '@ephox/boulder';
-import { Optional } from '@ephox/katamari';
+import type { FieldProcessor } from '@ephox/boulder';
+import type { Optional } from '@ephox/katamari';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloyEventRecord } from '../../api/events/AlloyEvents';
-import { DomDefinitionDetail } from '../../dom/DomDefinition';
-import { DomModification } from '../../dom/DomModification';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyEventRecord } from '../../api/events/AlloyEvents';
+import type { DomDefinitionDetail } from '../../dom/DomDefinition';
+import type { DomModification } from '../../dom/DomModification';
 
-import { BehaviourConfigAndState } from './BehaviourBlob';
-import { BehaviourState, BehaviourStateInitialiser } from './BehaviourState';
+import type { BehaviourConfigAndState } from './BehaviourBlob';
+import type { BehaviourState, BehaviourStateInitialiser } from './BehaviourState';
 
 export type BehaviourApiFunc<D extends BehaviourConfigDetail, S extends BehaviourState> = (component: AlloyComponent, bConfig: D, bState: S, ...rest: any[]) => any;
 

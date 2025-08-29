@@ -1,5 +1,5 @@
-import Editor from '../api/Editor';
-import { EditorEvent } from '../api/util/EventDispatcher';
+import type Editor from '../api/Editor';
+import type { EditorEvent } from '../api/util/EventDispatcher';
 import VK from '../api/util/VK';
 import * as InputEvents from '../events/InputEvents';
 

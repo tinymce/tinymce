@@ -1,7 +1,7 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { McEditor, TinyAssertions } from '@ephox/mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.init.InitUnsanitizedContentTest', () => {
   const initAndAssertContent = (label: string, xss_sanitization: boolean, initial: string, expected: string) => {

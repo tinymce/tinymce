@@ -1,9 +1,9 @@
-import { Optional } from '@ephox/katamari';
-import { Direction, SugarElement } from '@ephox/sugar';
+import type { Optional } from '@ephox/katamari';
+import { Direction, type SugarElement } from '@ephox/sugar';
 
-import { AlloyComponent } from '../api/component/ComponentApi';
-import { NativeSimulatedEvent } from '../events/SimulatedEvent';
-import { GeneralKeyingConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
+import type { AlloyComponent } from '../api/component/ComponentApi';
+import type { NativeSimulatedEvent } from '../events/SimulatedEvent';
+import type { GeneralKeyingConfig, KeyRuleHandler } from '../keying/KeyingModeTypes';
 
 export type ElementMover <C, S> = (elem: SugarElement<HTMLElement>, focused: SugarElement<HTMLElement>, config: C, state: S) => Optional<SugarElement<HTMLElement>>;
 

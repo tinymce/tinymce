@@ -4,7 +4,7 @@ import { Arr, Fun } from '@ephox/katamari';
 import { Html, SelectorFilter, SelectorFind } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import { annotate, assertHtmlContent } from '../../module/test/AnnotationAsserts';
 

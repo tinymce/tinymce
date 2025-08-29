@@ -1,7 +1,7 @@
 import { DataTransfer, DataTransferEvent, DataTransferMode } from '@ephox/dragster';
 import { Fun, Type } from '@ephox/katamari';
 
-import { EditorEvent } from '../api/util/EventDispatcher';
+import type { EditorEvent } from '../api/util/EventDispatcher';
 
 export type DragEventType = 'dragstart' | 'drop' | 'dragend';
 

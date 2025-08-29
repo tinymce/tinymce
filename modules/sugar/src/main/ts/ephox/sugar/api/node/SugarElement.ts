@@ -1,6 +1,6 @@
 import { Optional } from '@ephox/katamari';
 
-import { HTMLElementFullTagNameMap } from '../../alien/DomTypes';
+import type { HTMLElementFullTagNameMap } from '../../alien/DomTypes';
 
 interface SugarElement<T = any> {
   readonly dom: T;

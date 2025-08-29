@@ -1,13 +1,13 @@
-import { Cell, Optional } from '@ephox/katamari';
+import type { Cell, Optional } from '@ephox/katamari';
 
-import { Bounds } from '../../alien/Boxes';
-import { LazySink } from '../../api/component/CommonTypes';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
+import type { Bounds } from '../../alien/Boxes';
+import type { LazySink } from '../../api/component/CommonTypes';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 
-import { SplitToolbarBaseApis, SplitToolbarBaseDetail, SplitToolbarBaseSketcher, SplitToolbarBaseSpec } from './SplitToolbarBaseTypes';
-import { ToolbarGroupSpec } from './ToolbarGroupTypes';
-import { ToolbarSpec } from './ToolbarTypes';
+import type { SplitToolbarBaseApis, SplitToolbarBaseDetail, SplitToolbarBaseSketcher, SplitToolbarBaseSpec } from './SplitToolbarBaseTypes';
+import type { ToolbarGroupSpec } from './ToolbarGroupTypes';
+import type { ToolbarSpec } from './ToolbarTypes';
 
 export interface SplitFloatingToolbarDetail extends SplitToolbarBaseDetail {
   lazySink: LazySink;

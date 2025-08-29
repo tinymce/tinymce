@@ -1,26 +1,26 @@
-import { Fun, Future, Obj, Optional } from '@ephox/katamari';
-import { EventArgs } from '@ephox/sugar';
+import { Fun, type Future, Obj, Optional } from '@ephox/katamari';
+import type { EventArgs } from '@ephox/sugar';
 
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
-import { SimulatedEvent } from '../../events/SimulatedEvent';
+import type { SimulatedEvent } from '../../events/SimulatedEvent';
 import * as ButtonBase from '../../ui/common/ButtonBase';
 import * as DropdownSchema from '../../ui/schema/DropdownSchema';
-import { DropdownApis, DropdownDetail, DropdownSketcher, DropdownSpec } from '../../ui/types/DropdownTypes';
+import type { DropdownApis, DropdownDetail, DropdownSketcher, DropdownSpec } from '../../ui/types/DropdownTypes';
 import { HighlightOnOpen } from '../../ui/types/TieredMenuTypes';
 import { Coupling } from '../behaviour/Coupling';
 import { Focusing } from '../behaviour/Focusing';
 import { Keying } from '../behaviour/Keying';
 import { Sandboxing } from '../behaviour/Sandboxing';
 import { Toggling } from '../behaviour/Toggling';
-import { AlloyComponent } from '../component/ComponentApi';
+import type { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
-import { AlloySpec, SketchSpec } from '../component/SpecTypes';
+import type { AlloySpec, SketchSpec } from '../component/SpecTypes';
 import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as SystemEvents from '../events/SystemEvents';
 
 import * as Sketcher from './Sketcher';
 import * as TieredMenu from './TieredMenu';
-import { CompositeSketchFactory } from './UiSketcher';
+import type { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<DropdownDetail, DropdownSpec> = (detail, components: AlloySpec[], _spec: DropdownSpec, externals): SketchSpec => {
   const lookupAttr = (attr: string) => Obj.get(detail.dom, 'attributes').bind((attrs) => Obj.get(attrs, attr));

@@ -1,4 +1,4 @@
-import { SpotDelta, SpotPoint, SpotPoints, SpotRange, SpotText } from './Types';
+import type { SpotDelta, SpotPoint, SpotPoints, SpotRange, SpotText } from './Types';
 
 const point = <E>(element: E, offset: number): SpotPoint<E> => ({
   element,

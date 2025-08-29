@@ -1,11 +1,11 @@
-import { Cell, Fun, Optional } from '@ephox/katamari';
-import { EventArgs, Focus, SugarShadowDom } from '@ephox/sugar';
+import { Cell, Fun, type Optional } from '@ephox/katamari';
+import { type EventArgs, Focus, SugarShadowDom } from '@ephox/sugar';
 
 import * as ElementFromPoint from '../../alien/ElementFromPoint';
-import { TransitionPropertiesSpec } from '../../behaviour/transitioning/TransitioningTypes';
+import type { TransitionPropertiesSpec } from '../../behaviour/transitioning/TransitioningTypes';
 import * as DropdownUtils from '../../dropdown/DropdownUtils';
 import * as TouchMenuSchema from '../../ui/schema/TouchMenuSchema';
-import { TouchMenuDetail, TouchMenuSketcher, TouchMenuSpec } from '../../ui/types/TouchMenuTypes';
+import type { TouchMenuDetail, TouchMenuSketcher, TouchMenuSpec } from '../../ui/types/TouchMenuTypes';
 import * as AddEventsBehaviour from '../behaviour/AddEventsBehaviour';
 import * as Behaviour from '../behaviour/Behaviour';
 import { Coupling } from '../behaviour/Coupling';
@@ -15,7 +15,7 @@ import { Sandboxing } from '../behaviour/Sandboxing';
 import { Toggling } from '../behaviour/Toggling';
 import { Transitioning } from '../behaviour/Transitioning';
 import { Unselecting } from '../behaviour/Unselecting';
-import { AlloyComponent } from '../component/ComponentApi';
+import type { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
 import * as AlloyEvents from '../events/AlloyEvents';
 import * as AlloyTriggers from '../events/AlloyTriggers';
@@ -25,7 +25,7 @@ import * as SystemEvents from '../events/SystemEvents';
 import { InlineView } from './InlineView';
 import { Menu } from './Menu';
 import * as Sketcher from './Sketcher';
-import { CompositeSketchFactory } from './UiSketcher';
+import type { CompositeSketchFactory } from './UiSketcher';
 
 type TouchHoverState = (comp: AlloyComponent) => void;
 

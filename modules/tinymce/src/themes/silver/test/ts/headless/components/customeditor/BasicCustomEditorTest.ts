@@ -5,7 +5,7 @@ import { Cell, Fun, Global, Optional } from '@ephox/katamari';
 import { Class, SugarElement } from '@ephox/sugar';
 
 import Resource from 'tinymce/core/api/Resource';
-import { TinyMCE } from 'tinymce/core/api/Tinymce';
+import type { TinyMCE } from 'tinymce/core/api/Tinymce';
 import { renderCustomEditor } from 'tinymce/themes/silver/ui/dialog/CustomEditor';
 
 import * as GuiSetup from '../../../module/GuiSetup';

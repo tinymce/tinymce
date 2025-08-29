@@ -4,7 +4,7 @@ import { Unicode } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.selection.QuirksSelectionTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({

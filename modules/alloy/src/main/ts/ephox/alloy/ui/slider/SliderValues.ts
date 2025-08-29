@@ -1,6 +1,6 @@
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 
-import {
+import type {
   HorizontalSliderDetail, SliderDetail, SliderValueX, SliderValueXY, SliderValueY, TwoDSliderDetail, VerticalSliderDetail
 } from '../types/SliderTypes';
 

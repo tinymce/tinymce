@@ -2,9 +2,9 @@ import { HexColour, RgbaColour } from '@ephox/acid';
 import { Arr, Cell, Fun, Optional, Optionals, Strings } from '@ephox/katamari';
 import { Css, SugarElement, SugarNode, TransformFind } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Dialog, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Dialog, Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Events from '../../../api/Events';
 import { composeUnbinders, onSetupEditableToggle } from '../ControlUtils';

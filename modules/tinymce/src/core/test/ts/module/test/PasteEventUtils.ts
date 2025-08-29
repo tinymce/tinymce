@@ -1,11 +1,11 @@
 import { Waiter } from '@ephox/agar';
 import { DataTransferMode } from '@ephox/dragster';
-import { Arr, Cell, Singleton, Type } from '@ephox/katamari';
+import { Arr, Cell, type Singleton, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { assert } from 'chai';
 
-import { PastePostProcessEvent, PastePreProcessEvent } from 'tinymce/core/api/EventTypes';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type { PastePostProcessEvent, PastePreProcessEvent } from 'tinymce/core/api/EventTypes';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as SingletonUtils from './SingletonUtils';
 

@@ -1,4 +1,4 @@
-import { Fun, Optional } from '@ephox/katamari';
+import { Fun, type Optional } from '@ephox/katamari';
 
 import { SugarElement } from './SugarElement';
 

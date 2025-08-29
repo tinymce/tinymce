@@ -1,5 +1,5 @@
 import DragnDropBranches from '../../behaviour/dragndrop/DragnDropBranches';
-import { DragnDropBehaviour } from '../../dragging/dragndrop/DragnDropTypes';
+import type { DragnDropBehaviour } from '../../dragging/dragndrop/DragnDropTypes';
 
 import * as Behaviour from './Behaviour';
 

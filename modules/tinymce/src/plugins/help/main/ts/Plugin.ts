@@ -1,7 +1,7 @@
 import { Cell } from '@ephox/katamari';
 
 import PluginManager from 'tinymce/core/api/PluginManager';
-import { Dialog as DialogType } from 'tinymce/core/api/ui/Ui';
+import type { Dialog as DialogType } from 'tinymce/core/api/ui/Ui';
 
 import * as Api from './api/Api';
 import * as Commands from './api/Commands';

@@ -1,7 +1,7 @@
 import { after, before, context, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.api.commands.NewlineCommandTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

@@ -1,4 +1,4 @@
-import { SugarElement } from '../node/SugarElement';
+import type { SugarElement } from '../node/SugarElement';
 
 const get = (element: SugarElement<Node>): string | null =>
   element.dom.textContent;

@@ -1,17 +1,17 @@
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
-import { Attribute, Compare, SugarElement } from '@ephox/sugar';
+import { Attribute, Compare, type SugarElement } from '@ephox/sugar';
 
-import { Generators, GeneratorsWrapper, SimpleGenerators } from '../api/Generators';
+import type { Generators, GeneratorsWrapper, SimpleGenerators } from '../api/Generators';
 import * as ResizeBehaviour from '../api/ResizeBehaviour';
-import * as Structs from '../api/Structs';
+import type * as Structs from '../api/Structs';
 import * as TableLookup from '../api/TableLookup';
-import { TableOperationResult } from '../api/TableOperations';
+import type { TableOperationResult } from '../api/TableOperations';
 import { TableSection } from '../api/TableSection';
 import { TableSize } from '../api/TableSize';
 import { Warehouse } from '../api/Warehouse';
 import * as Redraw from '../operate/Redraw';
 import * as LockedColumnUtils from '../util/LockedColumnUtils';
-import { CompElm, RowCell, RowElement } from '../util/TableTypes';
+import type { CompElm, RowCell, RowElement } from '../util/TableTypes';
 
 import * as Transitions from './Transitions';
 

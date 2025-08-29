@@ -1,5 +1,5 @@
-import { Optional } from '@ephox/katamari';
-import { Direction, Gather } from '@ephox/phoenix';
+import type { Optional } from '@ephox/katamari';
+import { type Direction, Gather } from '@ephox/phoenix';
 
 import * as WordUtil from '../util/WordUtil';
 

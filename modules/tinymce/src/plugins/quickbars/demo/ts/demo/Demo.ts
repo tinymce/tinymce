@@ -1,4 +1,4 @@
-import { RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 

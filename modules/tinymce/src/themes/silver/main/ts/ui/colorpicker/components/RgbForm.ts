@@ -1,8 +1,8 @@
-import { ColourTypes, HexColour, RgbaColour } from '@ephox/acid';
+import { type ColourTypes, HexColour, RgbaColour } from '@ephox/acid';
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, EventFormat, Focusing, Form, FormField, FormTypes, GuiFactory, Input, Invalidating,
-  Memento, Representing, SimpleSpec, SimulatedEvent, Sketcher, SketchSpec,
-  Tabstopping, Tooltipping, TooltippingTypes, UiSketcher
+  AddEventsBehaviour, type AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, type EventFormat, Focusing, Form, FormField, type FormTypes, GuiFactory, Input, Invalidating,
+  Memento, Representing, type SimpleSpec, type SimulatedEvent, Sketcher, type SketchSpec,
+  Tabstopping, Tooltipping, type TooltippingTypes, type UiSketcher
 } from '@ephox/alloy';
 import { Cell, Fun, Future, Id, Merger, Optional, Result } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';

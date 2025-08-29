@@ -1,6 +1,6 @@
 import { Optional } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import CaretPosition from '../caret/CaretPosition';
 import * as LineReader from '../caret/LineReader';
 

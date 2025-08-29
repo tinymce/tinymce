@@ -2,7 +2,7 @@ import { Arr, Fun } from '@ephox/katamari';
 
 import * as GlobalAttributesSet from './GlobalAttributesSet';
 import * as SchemaElementSets from './SchemaElementSets';
-import { SchemaType } from './SchemaTypes';
+import type { SchemaType } from './SchemaTypes';
 import * as SchemaUtils from './SchemaUtils';
 
 export interface SchemaLookupTable {
@@ -126,6 +126,7 @@ export const makeSchema = (type: SchemaType): SchemaLookupTable => {
     add('canvas', 'width height', flowContent);
     add('data', 'value', phrasingContent);
     add('video', 'src crossorigin poster preload autoplay mediagroup loop ' +
+      'controlslist disablepictureinpicture disableremoteplayback playsinline ' +
       'muted controls width height buffered', [ flowContent, 'track source' ].join(' '));
     add('audio', 'src crossorigin preload autoplay mediagroup loop muted controls ' +
       'buffered volume', [ flowContent, 'track source' ].join(' '));

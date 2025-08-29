@@ -3,7 +3,7 @@ import { assert } from 'chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import DomParser from 'tinymce/core/api/html/DomParser';
-import AstNode from 'tinymce/core/api/html/Node';
+import type AstNode from 'tinymce/core/api/html/Node';
 import Schema from 'tinymce/core/api/html/Schema';
 import * as InsertList from 'tinymce/core/content/InsertList';
 

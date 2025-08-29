@@ -1,15 +1,15 @@
-import { AlloyComponent, Attachment, Boxes, Disabling, Docking } from '@ephox/alloy';
+import { type AlloyComponent, Attachment, Boxes, Disabling, Docking } from '@ephox/alloy';
 import { Cell, Singleton, Throttler } from '@ephox/katamari';
 import { DomEvent, Scroll, SugarElement } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
-import { EditorUiApi } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
+import type { EditorUiApi } from 'tinymce/core/api/ui/Ui';
 
 import * as Events from '../api/Events';
 import * as Options from '../api/Options';
-import { UiFactoryBackstage } from '../backstage/Backstage';
-import { ModeRenderInfo, RenderArgs, RenderUiConfig } from '../Render';
+import type { UiFactoryBackstage } from '../backstage/Backstage';
+import type { ModeRenderInfo, RenderArgs, RenderUiConfig } from '../Render';
 import OuterContainer from '../ui/general/OuterContainer';
 import { InlineHeader } from '../ui/header/InlineHeader';
 import { identifyMenus } from '../ui/menus/menubar/Integration';
@@ -17,7 +17,7 @@ import { inline as loadInlineSkin } from '../ui/skin/Loader';
 import * as UiState from '../UiState';
 
 import { setToolbar } from './Toolbars';
-import { ReadyUiReferences } from './UiReferences';
+import type { ReadyUiReferences } from './UiReferences';
 
 const getTargetPosAndBounds = (targetElm: SugarElement, isToolbarTop: boolean) => {
   const bounds = Boxes.box(targetElm);

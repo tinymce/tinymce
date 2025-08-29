@@ -1,27 +1,27 @@
 import {
-  AddEventsBehaviour, AlloyComponent,
+  AddEventsBehaviour, type AlloyComponent,
   Dropdown as AlloyDropdown,
-  AlloyEvents, AlloyTriggers, Behaviour, CustomEvent,
+  AlloyEvents, AlloyTriggers, Behaviour, type CustomEvent,
   Focusing, GuiFactory, Highlighting,
-  Keying, MaxHeight, Memento, NativeEvents, Replacing, Representing, SimulatedEvent, SketchSpec, SystemEvents, TieredData, Tooltipping, Unselecting
+  Keying, MaxHeight, Memento, NativeEvents, Replacing, Representing, type SimulatedEvent, type SketchSpec, SystemEvents, type TieredData, Tooltipping, Unselecting
 } from '@ephox/alloy';
-import { Toolbar } from '@ephox/bridge';
+import type { Toolbar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Future, Id, Merger, Optional, Optionals, Type } from '@ephox/katamari';
-import { Attribute, EventArgs, SugarElement } from '@ephox/sugar';
+import { Attribute, type EventArgs, type SugarElement } from '@ephox/sugar';
 
 import { toolbarButtonEventOrder } from 'tinymce/themes/silver/ui/toolbar/button/ButtonEvents';
 
-import { UiFactoryBackstageShared } from '../../backstage/Backstage';
+import type { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import * as UiState from '../../UiState';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import * as UiUtils from '../alien/UiUtils';
 import { renderLabel, renderReplaceableIconFromPack } from '../button/ButtonSlices';
-import { onControlAttached, onControlDetached, OnDestroy } from '../controls/Controls';
+import { onControlAttached, onControlDetached, type OnDestroy } from '../controls/Controls';
 import * as Icons from '../icons/Icons';
 import { componentRenderPipeline } from '../menus/item/build/CommonMenuItem';
 import * as MenuParts from '../menus/menu/MenuParts';
 import { focusSearchField, handleRedirectToMenuItem, handleRefetchTrigger, updateAriaOnDehighlight, updateAriaOnHighlight } from '../menus/menu/searchable/SearchableMenu';
-import { RedirectMenuItemInteractionEvent, redirectMenuItemInteractionEvent, RefetchTriggerEvent, refetchTriggerEvent } from '../menus/menu/searchable/SearchableMenuEvents';
+import { type RedirectMenuItemInteractionEvent, redirectMenuItemInteractionEvent, type RefetchTriggerEvent, refetchTriggerEvent } from '../menus/menu/searchable/SearchableMenuEvents';
 
 export const updateMenuText = Id.generate('update-menu-text');
 export const updateMenuIcon = Id.generate('update-menu-icon');

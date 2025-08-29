@@ -2,9 +2,9 @@ import { Assert, UnitTest } from '@ephox/bedrock-client';
 import { Arr, FutureResult, Result } from '@ephox/katamari';
 
 import { DataType } from 'ephox/jax/core/DataType';
-import { HttpError } from 'ephox/jax/core/HttpError';
+import type { HttpError } from 'ephox/jax/core/HttpError';
 import * as HttpJwt from 'ephox/jax/core/HttpJwt';
-import { JwtTokenFactory } from 'ephox/jax/core/HttpTypes';
+import type { JwtTokenFactory } from 'ephox/jax/core/HttpTypes';
 
 /* eslint-disable no-console */
 

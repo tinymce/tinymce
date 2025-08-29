@@ -4,8 +4,8 @@ import { Insert, Remove, SelectorFilter, SugarBody, SugarElement, SugarHead, Sug
 import { McEditor, TinyDom } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { TinyMCE } from 'tinymce/core/api/Tinymce';
+import type Editor from 'tinymce/core/api/Editor';
+import type { TinyMCE } from 'tinymce/core/api/Tinymce';
 
 declare const tinymce: TinyMCE;
 

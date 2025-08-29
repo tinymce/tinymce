@@ -2,7 +2,7 @@ import { Singleton } from '@ephox/katamari';
 
 import { Chain } from '../api/Chain';
 import * as GeneralSteps from '../api/GeneralSteps';
-import { Step } from '../api/Step';
+import type { Step } from '../api/Step';
 
 import { createFileList } from './FileList';
 

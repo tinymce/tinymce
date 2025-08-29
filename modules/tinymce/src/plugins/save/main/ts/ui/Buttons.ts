@@ -1,5 +1,5 @@
-import Editor from 'tinymce/core/api/Editor';
-import { Toolbar } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Toolbar } from 'tinymce/core/api/ui/Ui';
 
 import * as Options from '../api/Options';
 

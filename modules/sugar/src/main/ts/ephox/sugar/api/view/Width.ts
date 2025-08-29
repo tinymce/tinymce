@@ -1,7 +1,7 @@
 import { Dimension } from '../../impl/Dimension';
 import * as RuntimeSize from '../../impl/RuntimeSize';
 import * as SugarBody from '../node/SugarBody';
-import { SugarElement } from '../node/SugarElement';
+import type { SugarElement } from '../node/SugarElement';
 import * as Css from '../properties/Css';
 
 const api = Dimension('width', (element: SugarElement<HTMLElement>) => {

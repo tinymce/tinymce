@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, FocusTools, Keys, Mouse, UiFinder } from '@ephox/agar';
-import { AlloyComponent, AlloyTriggers, GuiFactory, NativeEvents } from '@ephox/alloy';
+import { type AlloyComponent, AlloyTriggers, GuiFactory, NativeEvents } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { StructureSchema } from '@ephox/boulder';
 import { Dialog } from '@ephox/bridge';

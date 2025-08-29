@@ -1,13 +1,13 @@
 import { Arr, Type } from '@ephox/katamari';
 import { Compare, SugarElement } from '@ephox/sugar';
 
-import { Bookmark } from '../../bookmark/BookmarkTypes';
+import type { Bookmark } from '../../bookmark/BookmarkTypes';
 import CaretPosition from '../../caret/CaretPosition';
-import { GetSelectionContentArgs, SetSelectionContentArgs } from '../../content/ContentTypes';
+import type { GetSelectionContentArgs, SetSelectionContentArgs } from '../../content/ContentTypes';
 import * as NodeType from '../../dom/NodeType';
 import * as ScrollIntoView from '../../dom/ScrollIntoView';
 import * as EditorFocus from '../../focus/EditorFocus';
-import { ClientRect } from '../../geom/ClientRect';
+import type { ClientRect } from '../../geom/ClientRect';
 import * as CaretRangeFromPoint from '../../selection/CaretRangeFromPoint';
 import * as EditableRange from '../../selection/EditableRange';
 import * as ElementSelection from '../../selection/ElementSelection';
@@ -18,15 +18,15 @@ import * as NormalizeRange from '../../selection/NormalizeRange';
 import * as SelectionBookmark from '../../selection/SelectionBookmark';
 import { hasAnyRanges, moveEndPoint } from '../../selection/SelectionUtils';
 import * as SetSelectionContent from '../../selection/SetSelectionContent';
-import Editor from '../Editor';
-import AstNode from '../html/Node';
+import type Editor from '../Editor';
+import type AstNode from '../html/Node';
 
 import BookmarkManager from './BookmarkManager';
 import ControlSelection from './ControlSelection';
-import DOMUtils from './DOMUtils';
+import type DOMUtils from './DOMUtils';
 import RangeUtils from './RangeUtils';
 import SelectorChanged from './SelectorChanged';
-import DomSerializer from './Serializer';
+import type DomSerializer from './Serializer';
 
 /**
  * This class handles text and control selection it's an crossbrowser utility class.

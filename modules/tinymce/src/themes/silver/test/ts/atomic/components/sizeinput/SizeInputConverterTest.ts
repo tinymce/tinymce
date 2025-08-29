@@ -5,7 +5,7 @@ import { assert } from 'chai';
 import * as fc from 'fast-check';
 
 import {
-  makeRatioConverter, noSizeConversion, nuSize, ratioSizeConversion, Size, SizeConversion, SizeUnit
+  makeRatioConverter, noSizeConversion, nuSize, ratioSizeConversion, type Size, type SizeConversion, type SizeUnit
 } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';
 
 import { largeSensible, units } from './SizeInputShared';

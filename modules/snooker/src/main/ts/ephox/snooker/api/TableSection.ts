@@ -1,8 +1,8 @@
 import { Fun } from '@ephox/katamari';
-import { Replication, SugarElement, SugarNode } from '@ephox/sugar';
+import { Replication, type SugarElement, SugarNode } from '@ephox/sugar';
 
-import { findTableRowHeaderType, RowHeaderType } from '../lookup/Type';
-import { CompElm, Subst } from '../util/TableTypes';
+import { findTableRowHeaderType, type RowHeaderType } from '../lookup/Type';
+import type { CompElm, Subst } from '../util/TableTypes';
 
 import * as Structs from './Structs';
 import { Warehouse } from './Warehouse';

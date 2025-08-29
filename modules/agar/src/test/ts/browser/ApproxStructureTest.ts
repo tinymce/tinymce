@@ -3,7 +3,7 @@ import { InsertAll, SugarElement } from '@ephox/sugar';
 
 import * as ApproxStructure from 'ephox/agar/api/ApproxStructure';
 import * as Assertions from 'ephox/agar/api/Assertions';
-import { StructAssert } from 'ephox/agar/assertions/ApproxStructures';
+import type { StructAssert } from 'ephox/agar/assertions/ApproxStructures';
 
 describe('browser.agar.ApproxStructureTest', () => {
   const html = '<div data-key="test-1" selected="double" class="test1 root" style="display: block;">' +

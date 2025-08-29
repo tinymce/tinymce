@@ -6,7 +6,7 @@ import { SelectorExists } from '@ephox/sugar';
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
+import type { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { FloatingToolbarButton } from 'ephox/alloy/api/ui/FloatingToolbarButton';
 import * as Layout from 'ephox/alloy/positioning/layout/Layout';

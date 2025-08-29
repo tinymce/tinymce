@@ -1,11 +1,11 @@
-import { Cell, Optional, Singleton, Throttler, Thunk, Type } from '@ephox/katamari';
+import { Cell, type Optional, Singleton, Throttler, Thunk, Type } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as Events from '../api/Events';
-import { AutocompleteContext, getContext } from '../autocomplete/AutocompleteContext';
-import { AutocompleteLookupInfo, lookup, lookupWithContext } from '../autocomplete/AutocompleteLookup';
+import { type AutocompleteContext, getContext } from '../autocomplete/AutocompleteContext';
+import { type AutocompleteLookupInfo, lookup, lookupWithContext } from '../autocomplete/AutocompleteLookup';
 import * as Autocompleters from '../autocomplete/Autocompleters';
-import { AutocompleterReloadArgs } from '../autocomplete/AutocompleteTypes';
+import type { AutocompleterReloadArgs } from '../autocomplete/AutocompleteTypes';
 
 interface ActiveAutocompleter {
   readonly trigger: string;

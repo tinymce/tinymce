@@ -2,17 +2,17 @@ import { Obj, Optional } from '@ephox/katamari';
 
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as FormCoupledInputsSchema from '../../ui/schema/FormCoupledInputsSchema';
-import {
+import type {
   FormCoupledInputsApis, FormCoupledInputsDetail, FormCoupledInputsSketcher, FormCoupledInputsSpec
 } from '../../ui/types/FormCoupledInputsTypes';
 import { Composing } from '../behaviour/Composing';
 import { Representing } from '../behaviour/Representing';
-import { AlloyComponent } from '../component/ComponentApi';
+import type { AlloyComponent } from '../component/ComponentApi';
 import { SketchBehaviours } from '../component/SketchBehaviours';
-import { SketchSpec } from '../component/SpecTypes';
+import type { SketchSpec } from '../component/SpecTypes';
 
 import * as Sketcher from './Sketcher';
-import { CompositeSketchFactory } from './UiSketcher';
+import type { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<FormCoupledInputsDetail, FormCoupledInputsSpec> = (detail, components, _spec, _externals): SketchSpec => ({
   uid: detail.uid,

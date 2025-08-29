@@ -16,7 +16,7 @@ import { Input } from 'ephox/alloy/api/ui/Input';
 import DemoDataset from 'ephox/alloy/demo/DemoDataset';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
+import type { FormParts } from 'ephox/alloy/ui/types/FormTypes';
 
 import * as DemoFields from './forms/DemoFields';
 

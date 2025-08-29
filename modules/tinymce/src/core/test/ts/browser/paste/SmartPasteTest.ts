@@ -3,7 +3,7 @@ import { Arr } from '@ephox/katamari';
 import { LegacyUnit, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as SmartPaste from 'tinymce/core/paste/SmartPaste';
 
 // Test cases for TINY-4523 - image url/anchor link paste smartpaste/pasteAsText interactions

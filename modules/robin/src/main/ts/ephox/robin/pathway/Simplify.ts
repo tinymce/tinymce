@@ -1,4 +1,4 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 import { Arr, Fun } from '@ephox/katamari';
 
 const eq = <E, D>(universe: Universe<E, D>, e1: E): (e2: E) => boolean => {

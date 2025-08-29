@@ -1,7 +1,7 @@
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 
 import * as ApplyFormat from './ApplyFormat';
-import { FormatVars } from './FormatTypes';
+import type { FormatVars } from './FormatTypes';
 import * as MatchFormat from './MatchFormat';
 import * as RemoveFormat from './RemoveFormat';
 

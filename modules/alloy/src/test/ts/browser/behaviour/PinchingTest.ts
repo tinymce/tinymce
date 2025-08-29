@@ -1,4 +1,4 @@
-import { Step, TestStore } from '@ephox/agar';
+import { Step, type TestStore } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';

@@ -5,7 +5,7 @@ import { assert } from 'chai';
 
 import { ZoneViewports } from 'ephox/robin/api/general/ZoneViewports';
 import { WordDecision } from 'ephox/robin/words/WordDecision';
-import { ZoneDetails } from 'ephox/robin/zone/LanguageZones';
+import type { ZoneDetails } from 'ephox/robin/zone/LanguageZones';
 import * as ZoneWalker from 'ephox/robin/zone/ZoneWalker';
 
 describe('atomic.robin.zone.AvoidSpecialTest', () => {

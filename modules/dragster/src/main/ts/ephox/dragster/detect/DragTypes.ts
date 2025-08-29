@@ -1,7 +1,7 @@
-import { Bindable } from '@ephox/porkbun';
-import { EventArgs, SugarPosition } from '@ephox/sugar';
+import type { Bindable } from '@ephox/porkbun';
+import type { EventArgs, SugarPosition } from '@ephox/sugar';
 
-import { DragMode } from '../api/DragApis';
+import type { DragMode } from '../api/DragApis';
 
 export interface DragEvent {
   readonly info: SugarPosition;

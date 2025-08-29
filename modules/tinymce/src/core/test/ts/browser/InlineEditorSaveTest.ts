@@ -4,7 +4,7 @@ import { Fun } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.InlineEditorSaveTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

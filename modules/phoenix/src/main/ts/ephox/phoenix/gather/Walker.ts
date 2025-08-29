@@ -1,7 +1,7 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 import { Arr, Optional } from '@ephox/katamari';
 
-import { Direction, Successor, Transition, Traverse } from '../api/data/Types';
+import type { Direction, Successor, Transition, Traverse } from '../api/data/Types';
 
 const traverse = <E>(item: E, mode: Transition): Traverse<E> => ({
   item,

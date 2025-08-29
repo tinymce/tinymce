@@ -1,11 +1,11 @@
 import { Arr, Optional } from '@ephox/katamari';
-import { Focus, SugarBody, SugarElement } from '@ephox/sugar';
+import { Focus, SugarBody, type SugarElement } from '@ephox/sugar';
 
 import * as SelectionBookmark from '../selection/SelectionBookmark';
 import WindowManagerImpl from '../ui/WindowManagerImpl';
 
-import Editor from './Editor';
-import { Dialog } from './ui/Ui';
+import type Editor from './Editor';
+import type { Dialog } from './ui/Ui';
 
 /**
  * This class handles the creation of native windows and dialogs. This class can be extended to provide for example inline dialogs.

@@ -1,10 +1,10 @@
 import { Arr } from '@ephox/katamari';
 import { DomEvent } from '@ephox/sugar';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 
-import { AllowBubblingConfig, AllowBubblingState } from './AllowBubblingTypes';
+import type { AllowBubblingConfig, AllowBubblingState } from './AllowBubblingTypes';
 
 const unbind = (bubblingState: AllowBubblingState) => {
   Arr.each(bubblingState.get(), (unbinder) => {

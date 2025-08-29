@@ -1,5 +1,5 @@
-import { AlloyComponent, AlloyEvents, EventFormat, Representing } from '@ephox/alloy';
-import { Cell, Singleton, Type } from '@ephox/katamari';
+import { type AlloyComponent, AlloyEvents, type EventFormat, Representing } from '@ephox/alloy';
+import { type Cell, type Singleton, Type } from '@ephox/katamari';
 
 export interface GetApiType<T> {
   readonly getApi: (comp: AlloyComponent) => T;

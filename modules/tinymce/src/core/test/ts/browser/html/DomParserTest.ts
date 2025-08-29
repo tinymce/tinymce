@@ -3,10 +3,10 @@ import { Arr, Fun, Obj } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import Env from 'tinymce/core/api/Env';
-import { BlobCache, BlobInfo } from 'tinymce/core/api/file/BlobCache';
-import DomParser, { DomParserSettings, ParserArgs, ParserFilterCallback } from 'tinymce/core/api/html/DomParser';
-import AstNode, { Attributes } from 'tinymce/core/api/html/Node';
-import Schema, { SchemaElement, SchemaSettings } from 'tinymce/core/api/html/Schema';
+import { BlobCache, type BlobInfo } from 'tinymce/core/api/file/BlobCache';
+import DomParser, { type DomParserSettings, type ParserArgs, type ParserFilterCallback } from 'tinymce/core/api/html/DomParser';
+import type { Attributes, default as AstNode } from 'tinymce/core/api/html/Node';
+import Schema, { type SchemaElement, type SchemaSettings } from 'tinymce/core/api/html/Schema';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 
 interface ParseTestResult {

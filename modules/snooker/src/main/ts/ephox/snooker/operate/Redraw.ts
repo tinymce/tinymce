@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
 import { Attribute, Insert, InsertAll, Remove, Replication, SelectorFilter, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 
-import { Detail, DetailNew, RowDetailNew, Section } from '../api/Structs';
+import type { Detail, DetailNew, RowDetailNew, Section } from '../api/Structs';
 
 interface NewRowsAndCells {
   readonly newRows: SugarElement<HTMLTableRowElement>[];

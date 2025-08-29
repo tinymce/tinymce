@@ -1,4 +1,4 @@
-import Editor from '../../api/Editor';
+import type Editor from '../../api/Editor';
 import * as Options from '../../api/Options';
 import Delay from '../../api/util/Delay';
 import VK from '../../api/util/VK';

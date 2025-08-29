@@ -2,7 +2,7 @@ import { after, afterEach, before, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { assert } from 'chai';
 
-import EventUtils, { EventUtilsEvent } from 'tinymce/core/api/dom/EventUtils';
+import EventUtils, { type EventUtilsEvent } from 'tinymce/core/api/dom/EventUtils';
 
 describe('browser.tinymce.core.dom.EventUtilsTest', () => {
   const eventUtils = EventUtils.Event;

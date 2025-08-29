@@ -2,8 +2,8 @@ import { Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyApis, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
-import AstNode from 'tinymce/core/api/html/Node';
+import type Editor from 'tinymce/core/api/Editor';
+import type AstNode from 'tinymce/core/api/html/Node';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 
 describe('browser.tinymce.core.content.EditorGetContentTreeTest', () => {

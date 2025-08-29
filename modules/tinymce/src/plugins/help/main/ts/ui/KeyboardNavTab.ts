@@ -1,4 +1,4 @@
-import { Dialog } from 'tinymce/core/api/ui/Ui';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import * as KeyboardNavTabI18n from './KeyboardNavTabI18n';
 

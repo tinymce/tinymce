@@ -6,12 +6,12 @@ import * as DefaultEvents from '../../events/DefaultEvents';
 import * as Tagger from '../../registry/Tagger';
 import * as CustomSpec from '../../spec/CustomSpec';
 import { NoContextApi } from '../system/NoContextApi';
-import { AlloySystemApi } from '../system/SystemApi';
+import type { AlloySystemApi } from '../system/SystemApi';
 import * as GuiTypes from '../ui/GuiTypes';
 
 import * as Component from './Component';
-import { AlloyComponent } from './ComponentApi';
-import { AlloySpec, PremadeSpec, SimpleOrSketchSpec, SketchSpec } from './SpecTypes';
+import type { AlloyComponent } from './ComponentApi';
+import type { AlloySpec, PremadeSpec, SimpleOrSketchSpec, SketchSpec } from './SpecTypes';
 
 export interface ExternalElement {
   readonly uid?: string;

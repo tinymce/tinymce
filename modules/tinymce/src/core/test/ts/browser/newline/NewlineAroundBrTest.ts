@@ -1,8 +1,8 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as InsertNewLine from 'tinymce/core/newline/InsertNewLine';
 
 describe('browser.tinymce.core.newline.NewlineAroundBrTest', () => {

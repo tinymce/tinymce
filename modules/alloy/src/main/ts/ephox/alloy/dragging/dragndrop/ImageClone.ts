@@ -1,4 +1,4 @@
-import { Css, Insert, Remove, Replication, SugarElement } from '@ephox/sugar';
+import { Css, Insert, Remove, Replication, type SugarElement } from '@ephox/sugar';
 
 import * as DataTransfers from './DataTransfers';
 

@@ -1,7 +1,7 @@
 import { Type, Unicode } from '@ephox/katamari';
 
 import DomParser from '../api/html/DomParser';
-import AstNode from '../api/html/Node';
+import type AstNode from '../api/html/Node';
 import Schema from '../api/html/Schema';
 import Tools from '../api/util/Tools';
 

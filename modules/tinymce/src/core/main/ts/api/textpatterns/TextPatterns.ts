@@ -1,6 +1,6 @@
-import { RawPattern, RawDynamicPatternsLookup, DynamicPatternContext, DynamicPatternsLookup, Pattern, BlockCmdPattern, BlockFormatPattern, InlineCmdPattern, InlinePattern, InlineFormatPattern, BlockPattern } from '../../textpatterns/core/PatternTypes';
+import type { RawPattern, RawDynamicPatternsLookup, DynamicPatternContext, DynamicPatternsLookup, Pattern, BlockCmdPattern, BlockFormatPattern, InlineCmdPattern, InlinePattern, InlineFormatPattern, BlockPattern } from '../../textpatterns/core/PatternTypes';
 
-export {
+export type {
   Pattern,
   RawPattern,
   DynamicPatternsLookup,

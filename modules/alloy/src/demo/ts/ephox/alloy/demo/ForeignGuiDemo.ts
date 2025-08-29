@@ -1,6 +1,6 @@
-import { Optional, Optionals } from '@ephox/katamari';
+import { type Optional, Optionals } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Css, DomEvent, EventArgs, Height, Insert, InsertAll, SelectorFind, SugarElement, SugarElements, SugarNode, Width } from '@ephox/sugar';
+import { Css, DomEvent, type EventArgs, Height, Insert, InsertAll, SelectorFind, SugarElement, SugarElements, SugarNode, Width } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Dragging } from 'ephox/alloy/api/behaviour/Dragging';

@@ -1,11 +1,11 @@
 import { Arr } from '@ephox/katamari';
 import { SugarElement, Width } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
-import { EditorOptions } from 'tinymce/core/api/OptionTypes';
+import type { EditorOptions } from 'tinymce/core/api/OptionTypes';
 
-import { UserListItem, UserListValue } from '../ui/UiUtils';
+import type { UserListItem, UserListValue } from '../ui/UiUtils';
 
 const defaultTableToolbar = 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol';
 

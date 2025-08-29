@@ -1,8 +1,8 @@
 import { Waiter } from '@ephox/agar';
-import { SugarElement, Value } from '@ephox/sugar';
+import { type SugarElement, Value } from '@ephox/sugar';
 import { TinyAssertions, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 const pAddAnchor = async (editor: Editor, id: string, useCommand: boolean = false): Promise<void> => {
   useCommand ? editor.execCommand('mceAnchor') : TinyUiActions.clickOnToolbar(editor, 'button[aria-label="Anchor"]');

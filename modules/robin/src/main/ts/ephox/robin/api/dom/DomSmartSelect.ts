@@ -1,8 +1,8 @@
 import { DomUniverse } from '@ephox/boss';
-import { Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { Optional } from '@ephox/katamari';
+import type { SugarElement } from '@ephox/sugar';
 
-import { WordRange } from '../../data/WordRange';
+import type { WordRange } from '../../data/WordRange';
 import * as SmartSelect from '../general/SmartSelect';
 
 const universe = DomUniverse();

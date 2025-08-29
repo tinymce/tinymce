@@ -1,8 +1,8 @@
 import { Id } from '@ephox/katamari';
 
-import { Dialog } from 'tinymce/core/api/ui/Ui';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
 
-import { CustomTabSpecs } from '../Plugin';
+import type { CustomTabSpecs } from '../Plugin';
 
 export interface Api {
   readonly addTab: (spec: Dialog.TabSpec) => void;

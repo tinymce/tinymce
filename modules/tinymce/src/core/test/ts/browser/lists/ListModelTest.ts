@@ -1,11 +1,11 @@
 import { Arbitraries } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 import * as fc from 'fast-check';
 
 import { composeList } from 'tinymce/core/lists/listmodel/ComposeList';
-import { Entry, isEntryList } from 'tinymce/core/lists/listmodel/Entry';
+import { type Entry, isEntryList } from 'tinymce/core/lists/listmodel/Entry';
 import { normalizeEntries } from 'tinymce/core/lists/listmodel/NormalizeEntries';
 import { parseLists } from 'tinymce/core/lists/listmodel/ParseLists';
 import { ListType } from 'tinymce/core/lists/listmodel/Util';

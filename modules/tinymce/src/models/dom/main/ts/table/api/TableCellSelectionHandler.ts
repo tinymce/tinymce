@@ -1,11 +1,11 @@
-import { InputHandlers, Response, SelectionAnnotation, SelectionKeys, Selections, SelectionTypes } from '@ephox/darwin';
+import { InputHandlers, type Response, SelectionAnnotation, SelectionKeys, Selections, SelectionTypes } from '@ephox/darwin';
 import { Arr, Cell, Fun, Obj } from '@ephox/katamari';
 import { DomParent } from '@ephox/robin';
 import { OtherCells, TableFill, TableLookup } from '@ephox/snooker';
-import { Class, Compare, DomEvent, EventArgs, SelectionDirection, SimSelection, SugarElement, SugarNode, Direction } from '@ephox/sugar';
+import { Class, Compare, DomEvent, type EventArgs, SelectionDirection, SimSelection, SugarElement, SugarNode, Direction } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Utils from '../core/TableUtils';
 import { ephemera } from '../selection/Ephemera';
@@ -14,7 +14,7 @@ import * as TableSelection from '../selection/TableSelection';
 
 import * as Events from './Events';
 import * as Options from './Options';
-import { TableResizeHandler } from './TableResizeHandler';
+import type { TableResizeHandler } from './TableResizeHandler';
 
 export interface TableCellSelectionHandler {
   readonly getSelectedCells: () => HTMLTableCellElement[];

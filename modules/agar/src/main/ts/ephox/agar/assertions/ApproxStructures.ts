@@ -1,6 +1,6 @@
-import { Assert, TestLabel } from '@ephox/bedrock-client';
+import { Assert, type TestLabel } from '@ephox/bedrock-client';
 import { Arr, Fun, Obj, Optional } from '@ephox/katamari';
-import { Attribute, Classes, Css, Html, SugarElement, SugarNode, SugarText, Traverse, Truncate, Value } from '@ephox/sugar';
+import { Attribute, Classes, Css, Html, type SugarElement, SugarNode, SugarText, Traverse, Truncate, Value } from '@ephox/sugar';
 
 import * as ApproxComparisons from './ApproxComparisons';
 

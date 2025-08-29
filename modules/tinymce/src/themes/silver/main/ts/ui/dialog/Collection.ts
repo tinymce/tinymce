@@ -1,17 +1,17 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Bubble, Disabling, EventFormat, FormField as AlloyFormField, Keying,
+  AddEventsBehaviour, type AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Bubble, Disabling, type EventFormat, FormField as AlloyFormField, Keying,
   Layout,
-  NativeEvents, Replacing, Representing, SimulatedEvent, SketchSpec, SystemEvents, Tabstopping, Tooltipping
+  NativeEvents, Replacing, Representing, type SimulatedEvent, type SketchSpec, SystemEvents, Tabstopping, Tooltipping
 } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
-import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Attribute, Class, EventArgs, Focus, Html, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+import type { Dialog } from '@ephox/bridge';
+import { Arr, Fun, type Optional } from '@ephox/katamari';
+import { Attribute, Class, type EventArgs, Focus, Html, SelectorFilter, SelectorFind, type SugarElement } from '@ephox/sugar';
 
 import Entities from 'tinymce/core/api/html/Entities';
 import I18n from 'tinymce/core/api/util/I18n';
 import { renderFormFieldWith, renderLabel } from 'tinymce/themes/silver/ui/alien/FieldLabeller';
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as UiState from '../../UiState';
 import { detectSize } from '../alien/FlatgridAutodetect';
 import { formActionEvent, formResizeEvent } from '../general/FormEvents';

@@ -1,4 +1,4 @@
-import { NotificationManagerImpl } from '../api/NotificationManager';
+import type { NotificationManagerImpl } from '../api/NotificationManager';
 
 export default (): NotificationManagerImpl => {
   const unimplemented = (): never => {

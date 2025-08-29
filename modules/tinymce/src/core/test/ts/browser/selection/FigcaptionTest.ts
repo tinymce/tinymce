@@ -3,7 +3,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { Focus } from '@ephox/sugar';
 import { TinyHooks, TinyAssertions, TinySelections, TinyDom, TinyContentActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.selection.FigcaptionTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

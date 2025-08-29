@@ -1,10 +1,10 @@
 import { Fun, Id } from '@ephox/katamari';
-import { Attribute, SugarElement } from '@ephox/sugar';
+import { Attribute, type SugarElement } from '@ephox/sugar';
 
 import * as SeleniumAction from '../server/SeleniumAction';
 
 import { Chain } from './Chain';
-import { Step } from './Step';
+import type { Step } from './Step';
 
 const BedrockIdAttribute = 'data-bedrockid';
 

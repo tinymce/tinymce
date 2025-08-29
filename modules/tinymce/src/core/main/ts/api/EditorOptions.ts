@@ -1,7 +1,7 @@
 import { Fun, Obj, Strings, Type } from '@ephox/katamari';
 
-import Editor from './Editor';
-import { EditorOptions, NormalizedEditorOptions } from './OptionTypes';
+import type Editor from './Editor';
+import type { EditorOptions, NormalizedEditorOptions } from './OptionTypes';
 
 interface ProcessorSuccess<T> {
   valid: true;

@@ -3,7 +3,7 @@ import { Arr, Result } from '@ephox/katamari';
 import { assert } from 'chai';
 import * as fc from 'fast-check';
 
-import { nuSize, parseSize, Size, SizeUnit } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';
+import { nuSize, parseSize, type Size, type SizeUnit } from 'tinymce/themes/silver/ui/sizeinput/SizeInputModel';
 
 import { largeSensible, units } from './SizeInputShared';
 

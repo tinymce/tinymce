@@ -1,15 +1,15 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Composing, CustomEvent, Focusing, Replacing, SketchSpec,
+  AddEventsBehaviour, type AlloyComponent, AlloyEvents, type AlloySpec, AlloyTriggers, Behaviour, Composing, type CustomEvent, Focusing, Replacing, type SketchSpec,
   Sliding,
   SlotContainer,
-  SlotContainerTypes, SystemEvents, Tabstopping
+  type SlotContainerTypes, SystemEvents, Tabstopping
 } from '@ephox/alloy';
 import { StructureSchema } from '@ephox/boulder';
 import { Sidebar as BridgeSidebar } from '@ephox/bridge';
 import { Arr, Cell, Fun, Id, Obj, Optional, Optionals, Type } from '@ephox/katamari';
-import { Attribute, Css, SugarElement, Width } from '@ephox/sugar';
+import { Attribute, Css, type SugarElement, Width } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/controls/Controls';
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';

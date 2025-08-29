@@ -2,7 +2,7 @@ import { ApproxStructure, Assertions } from '@ephox/agar';
 import { Assert, context, describe, it } from '@ephox/bedrock-client';
 
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import type { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { HtmlSelect } from 'ephox/alloy/api/ui/HtmlSelect';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';

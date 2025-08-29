@@ -2,18 +2,18 @@ import { StructureSchema } from '@ephox/boulder';
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import { Css, SugarLocation } from '@ephox/sugar';
 
-import * as Boxes from '../../alien/Boxes';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type * as Boxes from '../../alien/Boxes';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AriaFocus from '../../aria/AriaFocus';
 import * as Anchor from '../../positioning/layout/Anchor';
-import { PlacerResult } from '../../positioning/layout/LayoutTypes';
+import type { PlacerResult } from '../../positioning/layout/LayoutTypes';
 import * as Origins from '../../positioning/layout/Origins';
 import * as Placement from '../../positioning/layout/Placement';
 import * as SimpleLayout from '../../positioning/layout/SimpleLayout';
-import { Anchoring } from '../../positioning/mode/Anchoring';
-import { Transition } from '../../positioning/view/Transitions';
+import type { Anchoring } from '../../positioning/mode/Anchoring';
+import type { Transition } from '../../positioning/view/Transitions';
 
-import { PlacementDetail, PlacementSpec, PositioningConfig, PositioningState } from './PositioningTypes';
+import type { PlacementDetail, PlacementSpec, PositioningConfig, PositioningState } from './PositioningTypes';
 import { PlacementSchema } from './PositionSchema';
 
 const getFixedOrigin = (): Origins.OriginAdt => {

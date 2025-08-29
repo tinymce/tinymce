@@ -4,7 +4,7 @@ import { Obj, Optional } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as FakeClipboard from 'tinymce/plugins/table/api/Clipboard';
 import Plugin from 'tinymce/plugins/table/Plugin';
 

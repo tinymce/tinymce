@@ -1,6 +1,6 @@
 import * as ActiveReceiving from '../../behaviour/receiving/ActiveReceiving';
 import ReceivingSchema from '../../behaviour/receiving/ReceivingSchema';
-import { ReceivingBehaviour } from '../../behaviour/receiving/ReceivingTypes';
+import type { ReceivingBehaviour } from '../../behaviour/receiving/ReceivingTypes';
 
 import * as Behaviour from './Behaviour';
 

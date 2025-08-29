@@ -1,14 +1,14 @@
-import { Future, Optional } from '@ephox/katamari';
+import type { Future, Optional } from '@ephox/katamari';
 
-import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
-import { LazySink } from '../../api/component/CommonTypes';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
-import { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
-import { AnchorOverrides, AnchorSpec, HasLayoutAnchor, HasLayoutAnchorSpec } from '../../positioning/mode/Anchoring';
+import type { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
+import type { LazySink } from '../../api/component/CommonTypes';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { SketchBehaviours } from '../../api/component/SketchBehaviours';
+import type { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
+import type { CompositeSketch, CompositeSketchDetail, CompositeSketchSpec } from '../../api/ui/Sketcher';
+import type { AnchorOverrides, AnchorSpec, HasLayoutAnchor, HasLayoutAnchorSpec } from '../../positioning/mode/Anchoring';
 
-import { TieredData, TieredMenuSpec } from './TieredMenuTypes';
+import type { TieredData, TieredMenuSpec } from './TieredMenuTypes';
 
 // F is the fetched data
 export interface CommonDropdownDetail<F> extends CompositeSketchDetail, HasLayoutAnchor {

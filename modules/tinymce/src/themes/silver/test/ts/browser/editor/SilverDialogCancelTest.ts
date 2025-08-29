@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.SilverDialogCancelTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

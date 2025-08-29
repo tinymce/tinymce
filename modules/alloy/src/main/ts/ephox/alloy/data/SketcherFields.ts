@@ -1,4 +1,4 @@
-import { FieldSchema, FieldProcessor } from '@ephox/boulder';
+import { FieldSchema, type FieldProcessor } from '@ephox/boulder';
 
 import { Composing } from '../api/behaviour/Composing';
 import { Receiving } from '../api/behaviour/Receiving';

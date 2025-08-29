@@ -1,4 +1,4 @@
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 const setContent = (editor: Editor, html: string): void => {
   // We get a lovely "Wrong document" error in IE 11 if we

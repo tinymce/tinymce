@@ -1,4 +1,4 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 import { Fun } from '@ephox/katamari';
 
 import { InjectPosition } from '../api/data/InjectPosition';

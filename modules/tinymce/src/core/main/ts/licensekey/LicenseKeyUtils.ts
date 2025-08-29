@@ -1,6 +1,6 @@
 import { Type } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
 
 export type OnlineStatus = 'online' | 'offline';

@@ -1,5 +1,5 @@
 import * as HighlightApis from '../../behaviour/highlighting/HighlightApis';
-import { HighlightingBehaviour } from '../../behaviour/highlighting/HighlightingTypes';
+import type { HighlightingBehaviour } from '../../behaviour/highlighting/HighlightingTypes';
 import HighlightSchema from '../../behaviour/highlighting/HighlightSchema';
 
 import * as Behaviour from './Behaviour';

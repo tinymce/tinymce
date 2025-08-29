@@ -306,13 +306,5 @@ const write = (normalizeCss: CssNormalizer, newData: ImageData, image: HTMLEleme
   updateAlt(image, oldData, newData);
 };
 
-export {
-  ImageData,
-  getStyleValue,
-  defaultData,
-  isFigure,
-  isImage,
-  create,
-  read,
-  write
-};
+export type { ImageData };
+export { getStyleValue, defaultData, isFigure, isImage, create, read, write };

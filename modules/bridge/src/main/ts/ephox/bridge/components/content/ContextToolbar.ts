@@ -1,10 +1,10 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
-import { Arr, Optional, Result, Type } from '@ephox/katamari';
+import { Arr, type Optional, type Result, Type } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
-import { baseToolbarButtonFields, BaseToolbarButtonInstanceApi, BaseToolbarButtonSpec } from '../toolbar/ToolbarButton';
+import { baseToolbarButtonFields, type BaseToolbarButtonInstanceApi, type BaseToolbarButtonSpec } from '../toolbar/ToolbarButton';
 
-import { ContextBar, contextBarFields, ContextBarSpec } from './ContextBar';
+import { type ContextBar, contextBarFields, type ContextBarSpec } from './ContextBar';
 
 export interface ToolbarGroupSpec {
   name?: string;

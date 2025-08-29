@@ -4,7 +4,7 @@ import { Fun } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 
 import * as Boxes from 'ephox/alloy/alien/Boxes';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import type { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { Button } from 'ephox/alloy/api/ui/Button';
 import { Container } from 'ephox/alloy/api/ui/Container';

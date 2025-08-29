@@ -1,7 +1,7 @@
 import { Adt, Fun, Optional, Optionals } from '@ephox/katamari';
 
 import * as CaretFinder from '../caret/CaretFinder';
-import CaretPosition from '../caret/CaretPosition';
+import type CaretPosition from '../caret/CaretPosition';
 import * as CaretUtils from '../caret/CaretUtils';
 import { getParentCaretContainer } from '../fmt/FormatContainer';
 import * as LazyEvaluator from '../util/LazyEvaluator';

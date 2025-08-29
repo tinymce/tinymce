@@ -1,7 +1,7 @@
 import { Fun, Optional } from '@ephox/katamari';
 import { SugarPosition } from '@ephox/sugar';
 
-import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import type { NativeSimulatedEvent } from '../../events/SimulatedEvent';
 
 const _sliderChangeEvent = 'slider.change.value';
 const sliderChangeEvent = Fun.constant(_sliderChangeEvent);

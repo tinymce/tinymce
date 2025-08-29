@@ -4,8 +4,8 @@ import { Fun } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Dialog } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
 
 describe('browser.tinymce.themes.silver.editor.SilverDialogButtonContextTest', () => {
   const assertButtonEnabled = (menuItemLabel: string) => UiFinder.notExists(SugarBody.body(), `[aria-label="${menuItemLabel}"][aria-disabled="true"]`);

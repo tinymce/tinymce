@@ -1,7 +1,7 @@
 import { Assert, UnitTest } from '@ephox/bedrock-client';
 
 import * as Redistribution from 'ephox/snooker/resize/Redistribution';
-import { Size } from 'ephox/snooker/resize/Size';
+import type { Size } from 'ephox/snooker/resize/Size';
 
 UnitTest.test('RedistributeTest', () => {
   const toStr = (f: Size) => {

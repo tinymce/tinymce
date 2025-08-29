@@ -1,6 +1,6 @@
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
-import { WordCountApi } from './Api';
+import type { WordCountApi } from './Api';
 
 const fireWordCountUpdate = (editor: Editor, api: WordCountApi): void => {
   editor.dispatch('wordCountUpdate', {

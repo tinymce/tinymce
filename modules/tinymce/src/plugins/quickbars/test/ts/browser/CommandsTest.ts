@@ -2,7 +2,7 @@ import { TestStore } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import PluginManager from 'tinymce/core/api/PluginManager';
 import QuickbarsPlugin from 'tinymce/plugins/quickbars/Plugin';
 

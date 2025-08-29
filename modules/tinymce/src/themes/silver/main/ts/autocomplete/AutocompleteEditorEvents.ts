@@ -1,8 +1,8 @@
-import { AlloyComponent, AlloyTriggers, Highlighting, NativeEvents } from '@ephox/alloy';
-import { Optional } from '@ephox/katamari';
+import { type AlloyComponent, AlloyTriggers, Highlighting, NativeEvents } from '@ephox/alloy';
+import type { Optional } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 export interface AutocompleterUiApi {
   readonly getMenu: () => Optional<AlloyComponent>;

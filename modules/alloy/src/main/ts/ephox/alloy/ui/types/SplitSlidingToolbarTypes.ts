@@ -1,8 +1,8 @@
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { SimpleOrSketchSpec } from '../../api/component/SpecTypes';
 
-import { SplitToolbarBaseApis, SplitToolbarBaseDetail, SplitToolbarBaseSketcher, SplitToolbarBaseSpec } from './SplitToolbarBaseTypes';
-import { ToolbarGroupSpec } from './ToolbarGroupTypes';
+import type { SplitToolbarBaseApis, SplitToolbarBaseDetail, SplitToolbarBaseSketcher, SplitToolbarBaseSpec } from './SplitToolbarBaseTypes';
+import type { ToolbarGroupSpec } from './ToolbarGroupTypes';
 
 export interface SplitSlidingToolbarDetail extends SplitToolbarBaseDetail {
   markers: {

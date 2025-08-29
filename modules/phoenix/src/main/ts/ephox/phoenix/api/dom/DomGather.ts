@@ -1,8 +1,8 @@
 import { DomUniverse } from '@ephox/boss';
-import { Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { Optional } from '@ephox/katamari';
+import type { SugarElement } from '@ephox/sugar';
 
-import { Direction, Successor, Transition, Traverse } from '../data/Types';
+import type { Direction, Successor, Transition, Traverse } from '../data/Types';
 import * as Gather from '../general/Gather';
 
 const universe = DomUniverse();

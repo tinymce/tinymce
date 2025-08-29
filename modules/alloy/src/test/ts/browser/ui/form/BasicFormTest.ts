@@ -9,7 +9,7 @@ import { HtmlSelect } from 'ephox/alloy/api/ui/HtmlSelect';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import * as TestForm from 'ephox/alloy/test/form/TestForm';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
-import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
+import type { FormParts } from 'ephox/alloy/ui/types/FormTypes';
 
 UnitTest.asynctest('Basic Form', (success, failure) => {
 

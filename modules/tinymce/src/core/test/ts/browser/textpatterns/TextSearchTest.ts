@@ -1,13 +1,13 @@
 import { Assertions } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import { SpotPoint } from 'tinymce/core/alien/Spot';
+import type { SpotPoint } from 'tinymce/core/alien/Spot';
 import * as TextSearch from 'tinymce/core/alien/TextSearch';
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.textpatterns.TextSearchTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

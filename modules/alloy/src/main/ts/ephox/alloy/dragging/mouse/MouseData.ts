@@ -1,5 +1,5 @@
 import { Optional } from '@ephox/katamari';
-import { EventArgs, SugarPosition } from '@ephox/sugar';
+import { type EventArgs, SugarPosition } from '@ephox/sugar';
 
 const getData = (event: EventArgs<MouseEvent>): Optional<SugarPosition> => Optional.from(SugarPosition(event.x, event.y));
 

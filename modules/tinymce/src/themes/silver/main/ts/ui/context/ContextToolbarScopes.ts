@@ -1,8 +1,8 @@
 import { StructureSchema } from '@ephox/boulder';
-import { InlineContent, Toolbar } from '@ephox/bridge';
+import { InlineContent, type Toolbar } from '@ephox/bridge';
 import { Arr, Obj } from '@ephox/katamari';
 
-import { ContextSpecType, ContextType } from './ContextToolbar';
+import type { ContextSpecType, ContextType } from './ContextToolbar';
 
 // Divide the defined toolbars into forms, node scopes, and editor scopes
 export interface ScopedToolbars {

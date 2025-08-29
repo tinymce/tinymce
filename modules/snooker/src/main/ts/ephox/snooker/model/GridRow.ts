@@ -1,8 +1,8 @@
 import { Arr } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
 import * as Structs from '../api/Structs';
-import { CellElement, RowCell, RowElement } from '../util/TableTypes';
+import type { CellElement, RowCell, RowElement } from '../util/TableTypes';
 
 type RowMorphism<T extends RowElement> = (element: SugarElement<T>) => SugarElement<T>;
 type CellMorphism<T extends CellElement> = (element: Structs.ElementNew<T>, index: number) => Structs.ElementNew<T>;

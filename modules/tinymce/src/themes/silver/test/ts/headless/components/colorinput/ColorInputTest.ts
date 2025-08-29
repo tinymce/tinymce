@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, FocusTools, Keyboard, Keys, Mouse, UiFinder, Waiter } from '@ephox/agar';
-import { AlloyComponent, AlloyTriggers, Container, GuiFactory, Invalidating, NativeEvents, Representing } from '@ephox/alloy';
+import { type AlloyComponent, AlloyTriggers, Container, GuiFactory, Invalidating, NativeEvents, Representing } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
 import { SelectorFind, SugarDocument, Traverse } from '@ephox/sugar';

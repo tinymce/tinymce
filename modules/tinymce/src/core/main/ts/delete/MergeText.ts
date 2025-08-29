@@ -1,7 +1,7 @@
 import { Strings } from '@ephox/katamari';
 import { PredicateFind, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 
-import Schema from '../api/html/Schema';
+import type Schema from '../api/html/Schema';
 import CaretPosition from '../caret/CaretPosition';
 import * as Nbsps from '../keyboard/Nbsps';
 import * as Whitespace from '../text/Whitespace';

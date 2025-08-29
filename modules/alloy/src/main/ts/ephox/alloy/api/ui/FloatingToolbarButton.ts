@@ -3,11 +3,11 @@ import { Fun, Optional, Singleton } from '@ephox/katamari';
 import * as ComponentStructure from '../../alien/ComponentStructure';
 import * as AriaControls from '../../aria/AriaControls';
 import * as MaxWidth from '../../positioning/layout/MaxWidth';
-import { Layouts } from '../../positioning/mode/Anchoring';
+import type { Layouts } from '../../positioning/mode/Anchoring';
 import * as Dismissal from '../../sandbox/Dismissal';
 import * as Reposition from '../../sandbox/Reposition';
 import * as FloatingToolbarButtonSchema from '../../ui/schema/FloatingToolbarButtonSchema';
-import {
+import type {
   FloatingToolbarButtonApis, FloatingToolbarButtonDetail, FloatingToolbarButtonSketcher, FloatingToolbarButtonSpec
 } from '../../ui/types/FloatingToolbarButtonTypes';
 import * as Behaviour from '../behaviour/Behaviour';
@@ -18,14 +18,14 @@ import { Positioning } from '../behaviour/Positioning';
 import { Receiving } from '../behaviour/Receiving';
 import { Sandboxing } from '../behaviour/Sandboxing';
 import { Toggling } from '../behaviour/Toggling';
-import { AlloyComponent } from '../component/ComponentApi';
+import type { AlloyComponent } from '../component/ComponentApi';
 import { SketchBehaviours } from '../component/SketchBehaviours';
-import { AlloySpec, SketchSpec } from '../component/SpecTypes';
+import type { AlloySpec, SketchSpec } from '../component/SpecTypes';
 
 import { Button } from './Button';
 import * as Sketcher from './Sketcher';
 import { Toolbar } from './Toolbar';
-import { CompositeSketchFactory } from './UiSketcher';
+import type { CompositeSketchFactory } from './UiSketcher';
 
 const shouldSkipFocus = Singleton.value<boolean>();
 

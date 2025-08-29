@@ -2,7 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import { getText } from 'tinymce/plugins/wordcount/core/GetText';
 import Plugin from 'tinymce/plugins/wordcount/Plugin';
 

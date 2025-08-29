@@ -1,6 +1,6 @@
 import { Arr, Strings } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';
 

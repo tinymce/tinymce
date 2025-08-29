@@ -1,7 +1,7 @@
 import { blockbreak } from '../../newline/InsertBlock';
 import { linebreak } from '../../newline/InsertBr';
 import * as InsertNewLine from '../../newline/InsertNewLine';
-import Editor from '../Editor';
+import type Editor from '../Editor';
 
 export const registerCommands = (editor: Editor): void => {
   editor.editorCommands.addCommands({

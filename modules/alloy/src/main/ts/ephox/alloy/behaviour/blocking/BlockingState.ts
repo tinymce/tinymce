@@ -2,7 +2,7 @@ import { Singleton } from '@ephox/katamari';
 
 import { nuState } from '../common/BehaviourState';
 
-import { BlockingState } from './BlockingTypes';
+import type { BlockingState } from './BlockingTypes';
 
 export const init = (): BlockingState => {
   const blocker = Singleton.destroyable();

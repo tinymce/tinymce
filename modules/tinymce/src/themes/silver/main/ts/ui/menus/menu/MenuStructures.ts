@@ -1,9 +1,9 @@
-import { Menu as AlloyMenu, AlloySpec, ItemTypes, RawDomSchema, SimpleSpec } from '@ephox/alloy';
+import { Menu as AlloyMenu, type AlloySpec, type ItemTypes, type RawDomSchema, type SimpleSpec } from '@ephox/alloy';
 import { Arr, Fun, Id, Obj } from '@ephox/katamari';
 
 import I18n from 'tinymce/core/api/util/I18n';
 
-import { SearchMenuWithFieldMode } from './searchable/SearchableMenu';
+import type { SearchMenuWithFieldMode } from './searchable/SearchableMenu';
 import { renderMenuSearcher } from './searchable/SearchableMenuField';
 import { augmentWithAria, searchResultsClass } from './searchable/SearchableMenus';
 

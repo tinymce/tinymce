@@ -1,7 +1,7 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
-import AstNode, { Attributes } from 'tinymce/core/api/html/Node';
+import AstNode, { type Attributes } from 'tinymce/core/api/html/Node';
 
 describe('browser.tinymce.core.html.NodeTest', () => {
   const emptyAttributes = [] as unknown as Attributes;

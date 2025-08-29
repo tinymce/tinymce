@@ -1,10 +1,10 @@
-import { Universe } from '@ephox/boss';
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import type { Universe } from '@ephox/boss';
+import { Arr, Fun, type Optional } from '@ephox/katamari';
 
 import { LanguageZones } from '../zone/LanguageZones';
 
 import * as ClusterSearch from './ClusterSearch';
-import { WordDecision, WordDecisionItem } from './WordDecision';
+import { WordDecision, type WordDecisionItem } from './WordDecision';
 
 interface Edges<E> {
   readonly left: WordDecisionItem<E>;

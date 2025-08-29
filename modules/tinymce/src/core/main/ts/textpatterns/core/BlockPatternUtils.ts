@@ -1,15 +1,15 @@
-import { Arr, Obj, Optional, Type, Unicode } from '@ephox/katamari';
+import { Arr, Obj, type Optional, Type, Unicode } from '@ephox/katamari';
 
 import * as TextSearch from '../../alien/TextSearch';
-import DOMUtils from '../../api/dom/DOMUtils';
-import Editor from '../../api/Editor';
-import Formatter from '../../api/Formatter';
+import type DOMUtils from '../../api/dom/DOMUtils';
+import type Editor from '../../api/Editor';
+import type Formatter from '../../api/Formatter';
 import * as Options from '../../api/Options';
 import Tools from '../../api/util/Tools';
 import { generatePathRange, resolvePathRange } from '../utils/PathRange';
 import * as Utils from '../utils/Utils';
 
-import { BlockPattern, BlockPatternMatch, Pattern, PatternSet } from './PatternTypes';
+import type { BlockPattern, BlockPatternMatch, Pattern, PatternSet } from './PatternTypes';
 
 type StripPattern = (dom: DOMUtils, block: Node, pattern: BlockPattern) => void;
 type FindPattern = <P extends Pattern>(patterns: P[], text: string) => Optional<P>;

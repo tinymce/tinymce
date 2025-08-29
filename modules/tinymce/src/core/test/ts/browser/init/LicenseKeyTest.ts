@@ -4,8 +4,8 @@ import { Arr } from '@ephox/katamari';
 import { McEditor } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { TinyMCE } from 'tinymce/core/api/Tinymce';
+import type Editor from 'tinymce/core/api/Editor';
+import type { TinyMCE } from 'tinymce/core/api/Tinymce';
 import 'tinymce';
 import Model from 'tinymce/models/dom/Model';
 import Theme from 'tinymce/themes/silver/Theme';

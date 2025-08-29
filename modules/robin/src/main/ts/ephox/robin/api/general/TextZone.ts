@@ -1,9 +1,9 @@
-import { Universe } from '@ephox/boss';
-import { Optional } from '@ephox/katamari';
+import type { Universe } from '@ephox/boss';
+import type { Optional } from '@ephox/katamari';
 import { Descent } from '@ephox/phoenix';
 
 import * as TextZone from '../../zone/TextZone';
-import { Zone } from '../../zone/Zones';
+import type { Zone } from '../../zone/Zones';
 
 /*
  * TextZone returns an Optional zone if that zone is the right language (onlyLang)
@@ -28,8 +28,5 @@ const range = <E, D>(universe: Universe<E, D>, start: E, soffset: number, finish
   return TextZone.fromRange(universe, startPt.element, finishPt.element, envLang, onlyLang);
 };
 
-export {
-  Zone,
-  single,
-  range
-};
+export type { Zone };
+export { single, range };

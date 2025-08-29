@@ -1,14 +1,14 @@
 // DUPE with SilverDialog. Cleaning up.
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Blocking, Composing, Focusing, GuiFactory, Keying, Memento, NativeEvents,
+  AddEventsBehaviour, type AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Blocking, Composing, Focusing, GuiFactory, Keying, Memento, NativeEvents,
   Receiving, Reflecting, Replacing, SystemEvents
 } from '@ephox/alloy';
-import { Dialog, DialogManager } from '@ephox/bridge';
+import type { Dialog, DialogManager } from '@ephox/bridge';
 import { Cell, Fun, Id, Optional, Optionals } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Height, SugarNode } from '@ephox/sugar';
 
-import * as Backstage from '../../backstage/Backstage';
+import type * as Backstage from '../../backstage/Backstage';
 import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 import * as FormEvents from '../general/FormEvents';
 import * as NavigableObject from '../general/NavigableObject';

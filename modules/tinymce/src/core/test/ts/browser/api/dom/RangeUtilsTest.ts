@@ -2,9 +2,9 @@ import { describe, it } from '@ephox/bedrock-client';
 import { TinyHooks } from '@ephox/mcagar';
 import { assert } from 'chai';
 
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import type DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import RangeUtils from 'tinymce/core/api/dom/RangeUtils';
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.api.dom.RangeUtilsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

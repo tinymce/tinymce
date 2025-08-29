@@ -1,19 +1,19 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec,
+  AddEventsBehaviour, type AlloyComponent, AlloyEvents, type AlloySpec,
   SplitFloatingToolbar as AlloySplitFloatingToolbar,
   SplitSlidingToolbar as AlloySplitSlidingToolbar,
   Toolbar as AlloyToolbar, ToolbarGroup as AlloyToolbarGroup,
   Behaviour, Boxes,
   Focusing,
   GuiFactory,
-  Keying, SketchSpec,
+  Keying, type SketchSpec,
   Tabstopping
 } from '@ephox/alloy';
-import { Arr, Optional, Result } from '@ephox/katamari';
+import { Arr, Optional, type Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 
 import { ToolbarMode } from '../../api/Options';
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as Channels from '../../Channels';
 import * as UiState from '../../UiState';
 import { DisablingConfigs } from '../alien/DisablingConfigs';

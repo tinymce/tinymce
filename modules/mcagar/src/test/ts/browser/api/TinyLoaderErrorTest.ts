@@ -1,7 +1,7 @@
 import { UnitTest } from '@ephox/bedrock-client';
 import { Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar';
 
-import { Editor } from 'ephox/mcagar/alien/EditorTypes';
+import type { Editor } from 'ephox/mcagar/alien/EditorTypes';
 import * as TinyLoader from 'ephox/mcagar/api/pipeline/TinyLoader';
 
 UnitTest.asynctest('TinyLoader should fail (instead of timeout) when exception is thrown in callback function', (success, failure) => {

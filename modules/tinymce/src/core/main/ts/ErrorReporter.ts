@@ -1,4 +1,4 @@
-import Editor from './api/Editor';
+import type Editor from './api/Editor';
 import { fireError } from './api/Events';
 import I18n from './api/util/I18n';
 

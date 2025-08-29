@@ -1,11 +1,11 @@
 import { DomUniverse } from '@ephox/boss';
-import { Optional } from '@ephox/katamari';
-import { SpotPoint } from '@ephox/phoenix';
-import { SugarElement } from '@ephox/sugar';
+import type { Optional } from '@ephox/katamari';
+import type { SpotPoint } from '@ephox/phoenix';
+import type { SugarElement } from '@ephox/sugar';
 
-import { CharPos } from '../../textdata/TextSearch';
-import { TextSeekerOutcome, TextSeekerPhaseProcessor } from '../../textdata/TextSeeker';
-import { TextSearch, TextSearchSeeker } from '../general/TextSearch';
+import type { CharPos } from '../../textdata/TextSearch';
+import type { TextSeekerOutcome, TextSeekerPhaseProcessor } from '../../textdata/TextSeeker';
+import { TextSearch, type TextSearchSeeker } from '../general/TextSearch';
 
 const universe = DomUniverse();
 

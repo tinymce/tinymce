@@ -1,8 +1,8 @@
 import { Assertions, Step } from '@ephox/agar';
-import { Obj, Optional } from '@ephox/katamari';
+import { Obj, type Optional } from '@ephox/katamari';
 
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import type { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 
 interface TestForm {
   readonly sAssertRep: <T>(expected: Record<string, string>) => Step<T, T>;

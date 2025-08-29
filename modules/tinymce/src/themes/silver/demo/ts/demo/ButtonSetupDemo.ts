@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
-import { Toolbar } from '@ephox/bridge';
+import type { Toolbar } from '@ephox/bridge';
 import { Arr, Fun } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 export default {
   setup: (ed: Editor): void => {

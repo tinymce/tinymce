@@ -2,7 +2,7 @@ import { Id, Arr } from '@ephox/katamari';
 import { DomDescent } from '@ephox/phoenix';
 import { Attribute, SelectorFind, SugarElement } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Events from '../api/Events';
 

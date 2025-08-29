@@ -1,10 +1,10 @@
-import { Cursors } from '@ephox/agar';
+import type { Cursors } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Type } from '@ephox/katamari';
 import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { FormatVars } from 'tinymce/core/fmt/FormatTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { FormatVars } from 'tinymce/core/fmt/FormatTypes';
 
 interface ListItemFormatCase {
   readonly format: string;

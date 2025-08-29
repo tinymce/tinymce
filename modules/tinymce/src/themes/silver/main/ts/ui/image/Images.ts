@@ -1,5 +1,5 @@
-import { AddEventsBehaviour, AlloyEvents, AlloySpec, Behaviour, SimpleSpec } from '@ephox/alloy';
-import { Optional } from '@ephox/katamari';
+import { AddEventsBehaviour, AlloyEvents, type AlloySpec, Behaviour, type SimpleSpec } from '@ephox/alloy';
+import type { Optional } from '@ephox/katamari';
 import { Class, Insert, Ready, Remove, SelectorFind, SugarElement } from '@ephox/sugar';
 
 export type ImageProvider = () => Record<string, string>;

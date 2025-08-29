@@ -1,15 +1,15 @@
 import { Adt, Arr, Fun, Num } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
-import { Bubble } from '../layout/Bubble';
+import type { Bubble } from '../layout/Bubble';
 import * as Direction from '../layout/Direction';
 import * as LayoutBounds from '../layout/LayoutBounds';
-import { AnchorBox, AnchorElement, AnchorLayout } from '../layout/LayoutTypes';
+import type { AnchorBox, AnchorElement, AnchorLayout } from '../layout/LayoutTypes';
 import { Placement } from '../layout/Placement';
 
-import { RepositionDecision } from './Reposition';
-import { SpotInfo } from './SpotInfo';
+import type { RepositionDecision } from './Reposition';
+import type { SpotInfo } from './SpotInfo';
 
 export interface BounderAttemptAdt {
   fold: <T>(

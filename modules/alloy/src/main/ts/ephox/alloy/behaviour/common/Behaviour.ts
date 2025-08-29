@@ -1,16 +1,16 @@
-import { StructureProcessor, FieldSchema, StructureSchema, FieldProcessor } from '@ephox/boulder';
+import { type StructureProcessor, FieldSchema, StructureSchema, type FieldProcessor } from '@ephox/boulder';
 import { Fun, Obj, Optional, Optionals, Thunk } from '@ephox/katamari';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as FunctionAnnotator from '../../debugging/FunctionAnnotator';
-import { DomDefinitionDetail } from '../../dom/DomDefinition';
+import type { DomDefinitionDetail } from '../../dom/DomDefinition';
 import * as DomModification from '../../dom/DomModification';
-import { CustomEvent } from '../../events/SimulatedEvent';
+import type { CustomEvent } from '../../events/SimulatedEvent';
 
-import { BehaviourConfigAndState } from './BehaviourBlob';
-import { BehaviourState, BehaviourStateInitialiser } from './BehaviourState';
-import {
+import type { BehaviourConfigAndState } from './BehaviourBlob';
+import type { BehaviourState, BehaviourStateInitialiser } from './BehaviourState';
+import type {
   AlloyBehaviour, BehaviourActiveSpec, BehaviourApiFunc, BehaviourApisRecord, BehaviourConfigDetail, BehaviourConfigSpec, BehaviourExtraRecord,
   BehaviourInfo, NamedConfiguredBehaviour
 } from './BehaviourTypes';

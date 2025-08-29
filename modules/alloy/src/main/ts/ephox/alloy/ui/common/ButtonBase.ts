@@ -1,13 +1,13 @@
-import { Arr, Optional } from '@ephox/katamari';
-import { EventArgs } from '@ephox/sugar';
+import { Arr, type Optional } from '@ephox/katamari';
+import type { EventArgs } from '@ephox/sugar';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
-import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
-import { ButtonAction } from '../types/ButtonTypes';
+import type { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import type { ButtonAction } from '../types/ButtonTypes';
 
 const pointerEvents = (): Array<AlloyEvents.AlloyEventKeyAndHandler<EventArgs>> => {
   const onClick = (component: AlloyComponent, simulatedEvent: NativeSimulatedEvent) => {

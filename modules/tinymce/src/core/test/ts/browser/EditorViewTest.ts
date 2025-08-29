@@ -4,7 +4,7 @@ import { Css, Scroll, SelectorFind } from '@ephox/sugar';
 import { TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as EditorView from 'tinymce/core/EditorView';
 
 describe('browser.tinymce.core.EditorViewTest', () => {

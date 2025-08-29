@@ -5,7 +5,7 @@ import { Css, Scroll, SugarBody, SugarLocation } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 interface Scenario {
   readonly content: string;

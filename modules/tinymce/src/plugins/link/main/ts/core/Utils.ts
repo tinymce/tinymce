@@ -1,8 +1,8 @@
 import { Obj, Optional, Type } from '@ephox/katamari';
 
-import EditorSelection from 'tinymce/core/api/dom/Selection';
+import type EditorSelection from 'tinymce/core/api/dom/Selection';
 import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
 const isAnchor = (elm: Node | null | undefined): elm is HTMLAnchorElement =>

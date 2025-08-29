@@ -1,7 +1,7 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 import { Optional } from '@ephox/katamari';
 
-import { Direction } from '../api/data/Types';
+import type { Direction } from '../api/data/Types';
 
 const left = (): Direction => {
   const sibling = <E, D>(universe: Universe<E, D>, item: E) => {

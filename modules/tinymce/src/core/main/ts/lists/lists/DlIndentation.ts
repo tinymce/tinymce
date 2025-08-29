@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
-import { Replication, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { Replication, type SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
-import Editor from '../../api/Editor';
+import type Editor from '../../api/Editor';
 import { Indentation } from '../listmodel/Indentation';
 
 import * as SplitList from './SplitList';

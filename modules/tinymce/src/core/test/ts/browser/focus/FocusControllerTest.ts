@@ -5,7 +5,7 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import FocusManager from 'tinymce/core/api/FocusManager';
 import * as FocusController from 'tinymce/core/focus/FocusController';
 

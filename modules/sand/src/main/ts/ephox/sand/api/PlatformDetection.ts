@@ -1,9 +1,9 @@
 import { Fun, Optional, Thunk } from '@ephox/katamari';
 
-import { Browser as BrowserCore } from '../core/Browser';
-import { OperatingSystem as OperatingSystemCore } from '../core/OperatingSystem';
+import type { Browser as BrowserCore } from '../core/Browser';
+import type { OperatingSystem as OperatingSystemCore } from '../core/OperatingSystem';
 import { PlatformDetection } from '../core/PlatformDetection';
-import { DeviceType as DeviceTypeCore } from '../detect/DeviceType';
+import type { DeviceType as DeviceTypeCore } from '../detect/DeviceType';
 
 export type Browser = BrowserCore;
 export type OperatingSystem = OperatingSystemCore;

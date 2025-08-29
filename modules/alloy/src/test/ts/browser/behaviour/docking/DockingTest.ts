@@ -1,12 +1,12 @@
 import { ApproxStructure, Assertions, Waiter } from '@ephox/agar';
 import { after, before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
-import { DomEvent, EventUnbinder, SugarElement } from '@ephox/sugar';
+import { DomEvent, type EventUnbinder, SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Docking } from 'ephox/alloy/api/behaviour/Docking';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import type { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
+import type { AlloySpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as SystemEvents from 'ephox/alloy/api/events/SystemEvents';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';
 

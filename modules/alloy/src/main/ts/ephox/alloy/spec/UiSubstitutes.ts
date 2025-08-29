@@ -1,8 +1,8 @@
-import { Adt, Arr, Fun, Obj, Optional } from '@ephox/katamari';
+import { Adt, Arr, Fun, Obj, type Optional } from '@ephox/katamari';
 
-import { AlloySpec } from '../api/component/SpecTypes';
-import { CompositeSketchDetail } from '../api/ui/Sketcher';
-import { ConfiguredPart } from '../parts/AlloyParts';
+import type { AlloySpec } from '../api/component/SpecTypes';
+import type { CompositeSketchDetail } from '../api/ui/Sketcher';
+import type { ConfiguredPart } from '../parts/AlloyParts';
 
 interface Replacement {
   readonly name: () => string;

@@ -1,18 +1,18 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Fun, Optional } from '@ephox/katamari';
-import { SelectorFind, SugarElement } from '@ephox/sugar';
+import { SelectorFind, type SugarElement } from '@ephox/sugar';
 
 import * as Keys from '../alien/Keys';
-import { AlloyComponent } from '../api/component/ComponentApi';
-import { NoState, Stateless } from '../behaviour/common/BehaviourState';
+import type { AlloyComponent } from '../api/component/ComponentApi';
+import { NoState, type Stateless } from '../behaviour/common/BehaviourState';
 import * as Fields from '../data/Fields';
-import { NativeSimulatedEvent } from '../events/SimulatedEvent';
+import type { NativeSimulatedEvent } from '../events/SimulatedEvent';
 import * as DomMovement from '../navigation/DomMovement';
 import * as DomNavigation from '../navigation/DomNavigation';
 import * as KeyMatch from '../navigation/KeyMatch';
 import * as KeyRules from '../navigation/KeyRules';
 
-import { FlowConfig, KeyRuleHandler } from './KeyingModeTypes';
+import type { FlowConfig, KeyRuleHandler } from './KeyingModeTypes';
 import * as KeyingType from './KeyingType';
 import * as KeyingTypes from './KeyingTypes';
 

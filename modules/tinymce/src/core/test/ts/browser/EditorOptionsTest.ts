@@ -3,7 +3,7 @@ import { Fun, Type } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as EditorOptions from 'tinymce/core/api/EditorOptions';
 
 describe('browser.tinymce.core.EditorOptionsTest', () => {

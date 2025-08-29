@@ -1,9 +1,9 @@
 import { Transformations } from '@ephox/acid';
 import { Arr, Obj, Optional, Singleton, Strings } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Dialog, Menu } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Dialog, Menu } from 'tinymce/core/api/ui/Ui';
 
 import * as TableSelection from '../selection/TableSelection';
 

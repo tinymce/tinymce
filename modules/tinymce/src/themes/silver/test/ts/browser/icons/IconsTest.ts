@@ -1,11 +1,11 @@
-import { SimpleOrSketchSpec } from '@ephox/alloy';
+import type { SimpleOrSketchSpec } from '@ephox/alloy';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { getAll as getAllOxide } from '@tinymce/oxide-icons-default';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 import * as Icons from 'tinymce/themes/silver/ui/icons/Icons';
 

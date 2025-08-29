@@ -1,15 +1,15 @@
 import { Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
 import * as EditableFields from '../alien/EditableFields';
 import * as Keys from '../alien/Keys';
-import { AlloyComponent } from '../api/component/ComponentApi';
+import type { AlloyComponent } from '../api/component/ComponentApi';
 import * as AlloyTriggers from '../api/events/AlloyTriggers';
 import * as SystemEvents from '../api/events/SystemEvents';
-import { NativeSimulatedEvent } from '../events/SimulatedEvent';
+import type { NativeSimulatedEvent } from '../events/SimulatedEvent';
 import * as KeyMatch from '../navigation/KeyMatch';
 
-import { GeneralKeyingConfig, KeyRuleHandler } from './KeyingModeTypes';
+import type { GeneralKeyingConfig, KeyRuleHandler } from './KeyingModeTypes';
 
 const doDefaultExecute = (
   component: AlloyComponent,

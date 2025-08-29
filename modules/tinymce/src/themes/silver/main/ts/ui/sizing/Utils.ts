@@ -1,5 +1,5 @@
 import { Optional, Type } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
 const parseToInt = (val: string | number): Optional<number> => {
   // if size is a number or '_px', will return the number

@@ -4,7 +4,7 @@ import { TinyHooks, TinyUiActions } from '@ephox/mcagar';
 import { Attribute, SugarDocument } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.toolbar.SplitFloatingToolbarKeyboardNavigationTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

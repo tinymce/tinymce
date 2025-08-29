@@ -1,6 +1,6 @@
-import { Bookmark } from '../bookmark/BookmarkTypes';
+import type { Bookmark } from '../bookmark/BookmarkTypes';
 import type { User, ExpectedUser } from '../lookup/UserLookup';
-import { UndoManager } from '../undo/UndoManagerTypes';
+import type { UndoManager } from '../undo/UndoManagerTypes';
 
 import AddOnManager from './AddOnManager';
 import Annotator from './Annotator';
@@ -11,7 +11,7 @@ import EventUtils from './dom/EventUtils';
 import RangeUtils from './dom/RangeUtils';
 import ScriptLoader from './dom/ScriptLoader';
 import EditorSelection from './dom/Selection';
-import DomSerializer, { DomSerializerSettings } from './dom/Serializer';
+import DomSerializer, { type DomSerializerSettings } from './dom/Serializer';
 import StyleSheetLoader from './dom/StyleSheetLoader';
 import TextSeeker from './dom/TextSeeker';
 import DomTreeWalker from './dom/TreeWalker';
@@ -25,28 +25,28 @@ import FakeClipboard from './FakeClipboard';
 import * as Formats from './fmt/Format';
 import FocusManager from './FocusManager';
 import Formatter from './Formatter';
-import Rect, { GeomRect } from './geom/Rect';
-import DomParser, { DomParserSettings } from './html/DomParser';
+import Rect, { type GeomRect } from './geom/Rect';
+import DomParser, { type DomParserSettings } from './html/DomParser';
 import Entities from './html/Entities';
 import AstNode from './html/Node';
-import Schema, { SchemaSettings } from './html/Schema';
-import HtmlSerializer, { HtmlSerializerSettings } from './html/Serializer';
+import Schema, { type SchemaSettings } from './html/Schema';
+import HtmlSerializer, { type HtmlSerializerSettings } from './html/Serializer';
 import Styles from './html/Styles';
-import Writer, { WriterSettings } from './html/Writer';
+import Writer, { type WriterSettings } from './html/Writer';
 import IconManager from './IconManager';
-import { EditorModeApi } from './Mode';
-import ModelManager, { Model } from './ModelManager';
-import NotificationManager, { NotificationApi, NotificationSpec } from './NotificationManager';
-import { EditorOptions, RawEditorOptions } from './OptionTypes';
-import PluginManager, { Plugin } from './PluginManager';
+import type { EditorModeApi } from './Mode';
+import ModelManager, { type Model } from './ModelManager';
+import NotificationManager, { type NotificationApi, type NotificationSpec } from './NotificationManager';
+import type { EditorOptions, RawEditorOptions } from './OptionTypes';
+import PluginManager, { type Plugin } from './PluginManager';
 import Resource from './Resource';
 import Shortcuts from './Shortcuts';
 import * as TextPatterns from './textpatterns/TextPatterns';
-import ThemeManager, { Theme } from './ThemeManager';
-import { tinymce, TinyMCE } from './Tinymce';
+import ThemeManager, { type Theme } from './ThemeManager';
+import { tinymce, type TinyMCE } from './Tinymce';
 import * as Ui from './ui/Ui';
 import Delay from './util/Delay';
-import EventDispatcher, { EditorEvent } from './util/EventDispatcher';
+import EventDispatcher, { type EditorEvent } from './util/EventDispatcher';
 import I18n from './util/I18n';
 import Observable from './util/Observable';
 import Tools from './util/Tools';
@@ -55,14 +55,30 @@ import VK from './util/VK';
 import WindowManager from './WindowManager';
 
 export default tinymce;
-export {
+export type {
   TinyMCE,
-
-  // geom
-  Rect,
   GeomRect,
-
-  // dom
+  UndoManager,
+  RawEditorOptions,
+  EditorOptions,
+  EditorEvent,
+  EditorModeApi,
+  Bookmark,
+  NotificationApi,
+  NotificationSpec,
+  DomParserSettings,
+  DomSerializerSettings,
+  HtmlSerializerSettings,
+  Plugin,
+  SchemaSettings,
+  Theme,
+  Model,
+  WriterSettings,
+  User,
+  ExpectedUser
+};
+export {
+  Rect,
   DomTreeWalker,
   TextSeeker,
   DOMUtils,
@@ -74,8 +90,6 @@ export {
   EditorSelection,
   StyleSheetLoader,
   EventUtils,
-
-  // html
   Styles,
   Entities,
   AstNode,
@@ -83,8 +97,6 @@ export {
   DomParser,
   Writer,
   HtmlSerializer,
-
-  // utils
   Delay,
   EventDispatcher,
   I18n,
@@ -92,11 +104,7 @@ export {
   Tools,
   URI,
   VK,
-
-  // ui
   Ui,
-
-  // Global
   AddOnManager,
   Annotator,
   Env,
@@ -113,29 +121,9 @@ export {
   PluginManager,
   ThemeManager,
   ModelManager,
-  UndoManager,
   WindowManager,
   FakeClipboard,
-
-  // other useful types
-  RawEditorOptions,
-  EditorOptions,
-  EditorEvent,
-  EditorModeApi,
-  Bookmark,
   Events,
   Formats,
-  NotificationApi,
-  NotificationSpec,
-  DomParserSettings,
-  DomSerializerSettings,
-  HtmlSerializerSettings,
-  Plugin,
-  SchemaSettings,
-  TextPatterns,
-  Theme,
-  Model,
-  WriterSettings,
-  User,
-  ExpectedUser
+  TextPatterns
 };

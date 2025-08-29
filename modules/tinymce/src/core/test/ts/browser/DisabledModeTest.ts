@@ -5,7 +5,7 @@ import { Class, Css, Scroll, SelectorFind, SugarBody, SugarElement, Traverse } f
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as Disabled from 'tinymce/core/mode/Disabled';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 

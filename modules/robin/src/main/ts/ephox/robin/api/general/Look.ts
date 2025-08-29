@@ -1,5 +1,5 @@
-import { Universe } from '@ephox/boss';
-import { Fun, Optional } from '@ephox/katamari';
+import type { Universe } from '@ephox/boss';
+import { Fun, type Optional } from '@ephox/katamari';
 
 import * as Look from '../../look/Look';
 

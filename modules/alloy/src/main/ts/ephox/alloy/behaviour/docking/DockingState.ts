@@ -2,7 +2,7 @@ import { Cell, Singleton } from '@ephox/katamari';
 
 import { nuState } from '../common/BehaviourState';
 
-import { DockingConfig, DockingMode, DockingState, InitialDockingPosition } from './DockingTypes';
+import type { DockingConfig, DockingMode, DockingState, InitialDockingPosition } from './DockingTypes';
 
 const init = (spec: DockingConfig): DockingState => {
   const docked = Cell(false);

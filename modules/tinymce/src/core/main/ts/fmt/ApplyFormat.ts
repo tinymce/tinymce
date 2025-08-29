@@ -1,8 +1,8 @@
 import { Arr, Fun, Obj, Type } from '@ephox/katamari';
 import { PredicateExists, SugarElement, SugarElements } from '@ephox/sugar';
 
-import DOMUtils from '../api/dom/DOMUtils';
-import Editor from '../api/Editor';
+import type DOMUtils from '../api/dom/DOMUtils';
+import type Editor from '../api/Editor';
 import * as Events from '../api/Events';
 import { getTextRootBlockElements } from '../api/html/Schema';
 import * as Options from '../api/Options';
@@ -11,7 +11,7 @@ import * as Bookmarks from '../bookmark/Bookmarks';
 import * as Empty from '../dom/Empty';
 import * as NodeType from '../dom/NodeType';
 import * as RangeNormalizer from '../selection/RangeNormalizer';
-import { RangeLikeObject } from '../selection/RangeTypes';
+import type { RangeLikeObject } from '../selection/RangeTypes';
 import * as RangeWalk from '../selection/RangeWalk';
 import * as SelectionUtils from '../selection/SelectionUtils';
 import * as TableCellSelection from '../selection/TableCellSelection';
@@ -21,7 +21,7 @@ import * as ApplyElementFormat from './ApplyElementFormat';
 import * as CaretFormat from './CaretFormat';
 import * as ExpandRange from './ExpandRange';
 import { isCaretNode } from './FormatContainer';
-import { ApplyFormat, BlockFormat, FormatVars, InlineFormat } from './FormatTypes';
+import type { ApplyFormat, BlockFormat, FormatVars, InlineFormat } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 import * as Hooks from './Hooks';
 import * as ListItemFormat from './ListItemFormat';

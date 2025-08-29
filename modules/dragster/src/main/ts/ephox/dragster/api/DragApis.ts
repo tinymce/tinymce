@@ -1,7 +1,7 @@
-import { Contracts, Optional } from '@ephox/katamari';
-import { EventArgs, SugarElement, SugarPosition } from '@ephox/sugar';
+import { Contracts, type Optional } from '@ephox/katamari';
+import type { EventArgs, SugarElement, SugarPosition } from '@ephox/sugar';
 
-import { BlockerOptions } from '../detect/Blocker';
+import type { BlockerOptions } from '../detect/Blocker';
 
 export interface DragMutation {
   mutate: (x: number, y: number) => void;

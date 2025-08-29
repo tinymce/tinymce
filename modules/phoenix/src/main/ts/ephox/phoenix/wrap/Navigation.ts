@@ -1,8 +1,8 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 import { Optional } from '@ephox/katamari';
 
 import * as Spot from '../api/data/Spot';
-import { SpotPoint } from '../api/data/Types';
+import type { SpotPoint } from '../api/data/Types';
 
 /**
  * Return the last available cursor position in the node.

@@ -1,21 +1,21 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents,
+  AddEventsBehaviour, type AlloyComponent, AlloyEvents,
   FormCoupledInputs as AlloyFormCoupledInputs,
   FormField as AlloyFormField,
   Input as AlloyInput,
-  AlloySpec, AlloyTriggers, Behaviour, CustomEvent, Disabling,
+  type AlloySpec, AlloyTriggers, Behaviour, type CustomEvent, Disabling,
   GuiFactory,
-  NativeEvents, Representing, SketchSpec, Tabstopping, Tooltipping
+  NativeEvents, Representing, type SketchSpec, Tabstopping, Tooltipping
 } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
+import type { Dialog } from '@ephox/bridge';
 import { Id, Unicode } from '@ephox/katamari';
 
 import { formChangeEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as UiState from '../../UiState';
 import * as Icons from '../icons/Icons';
-import { formatSize, makeRatioConverter, noSizeConversion, parseSize, SizeConversion } from '../sizeinput/SizeInputModel';
+import { formatSize, makeRatioConverter, noSizeConversion, parseSize, type SizeConversion } from '../sizeinput/SizeInputModel';
 
 interface RatioEvent extends CustomEvent {
   readonly isField1: boolean;

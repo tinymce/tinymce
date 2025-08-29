@@ -2,7 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
 import * as SchemaLookupTable from 'tinymce/core/schema/SchemaLookupTable';
-import { SchemaType } from 'tinymce/core/schema/SchemaTypes';
+import type { SchemaType } from 'tinymce/core/schema/SchemaTypes';
 
 describe('atomic.tinymce.core.schema.SchemaLookupTableTest', () => {
   const testSchemaInputElementAttributes = (type: SchemaType, expected: string[]) => {

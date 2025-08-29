@@ -1,13 +1,13 @@
-import { AddEventsBehaviour, AlloyEvents, Behaviour, GuiFactory, Highlighting, InlineView, ItemTypes, SystemEvents } from '@ephox/alloy';
-import { InlineContent } from '@ephox/bridge';
+import { AddEventsBehaviour, AlloyEvents, Behaviour, GuiFactory, Highlighting, InlineView, type ItemTypes, SystemEvents } from '@ephox/alloy';
+import type { InlineContent } from '@ephox/bridge';
 import { Arr, Cell, Id, Optional, Singleton } from '@ephox/katamari';
 import { Attribute, Css, Replication, SelectorFind, SimRange, SugarElement } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { AutocompleteLookupData } from 'tinymce/core/autocomplete/AutocompleteTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { AutocompleteLookupData } from 'tinymce/core/autocomplete/AutocompleteTypes';
 
-import { AutocompleterEditorEvents, AutocompleterUiApi } from './autocomplete/AutocompleteEditorEvents';
-import { UiFactoryBackstageShared } from './backstage/Backstage';
+import { AutocompleterEditorEvents, type AutocompleterUiApi } from './autocomplete/AutocompleteEditorEvents';
+import type { UiFactoryBackstageShared } from './backstage/Backstage';
 import ItemResponse from './ui/menus/item/ItemResponse';
 import { createPartialMenuWithAlloyItems } from './ui/menus/menu/MenuUtils';
 import { createAutocompleteItems, createInlineMenuFrom, FocusMode } from './ui/menus/menu/SingleMenu';

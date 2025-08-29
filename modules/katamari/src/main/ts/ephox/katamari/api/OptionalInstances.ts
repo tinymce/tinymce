@@ -1,6 +1,6 @@
 import { Eq, Pnode, Pprint, Testable } from '@ephox/dispute';
 
-import { Optional } from './Optional';
+import type { Optional } from './Optional';
 import * as Optionals from './Optionals';
 
 type PprintType<A> = Pprint.Pprint<A>;

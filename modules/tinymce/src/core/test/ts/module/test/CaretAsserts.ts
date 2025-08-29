@@ -3,7 +3,7 @@ import { Type } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import CaretPosition from 'tinymce/core/caret/CaretPosition';
+import type CaretPosition from 'tinymce/core/caret/CaretPosition';
 
 const assertCaretPosition = (actual: CaretPosition | null, expected: CaretPosition | null, message?: string): void => {
   if (expected === null) {

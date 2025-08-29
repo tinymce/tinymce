@@ -1,6 +1,6 @@
 import { Arr, Fun } from '@ephox/katamari';
 
-import { SugarElement } from '../node/SugarElement';
+import type { SugarElement } from '../node/SugarElement';
 import * as Selectors from '../search/Selectors';
 
 const eq = (e1: SugarElement<unknown>, e2: SugarElement<unknown>): boolean =>

@@ -1,6 +1,6 @@
 import { Optional } from '@ephox/katamari';
 
-import { Gene } from '../api/Gene';
+import type { Gene } from '../api/Gene';
 
 const set = (item: Gene, property: string, value: string): void => {
   item.css = {

@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
-import { Attribute, Class, OnNode, SelectorFilter, SugarElement } from '@ephox/sugar';
+import { Attribute, Class, OnNode, SelectorFilter, type SugarElement } from '@ephox/sugar';
 
-import { Ephemera } from './Ephemera';
+import type { Ephemera } from './Ephemera';
 
 export interface SelectionAnnotation {
   clearBeforeUpdate: (container: SugarElement<Node>) => void;

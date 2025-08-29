@@ -3,7 +3,7 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyHooks, TinyAssertions, TinyDom, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 const createAccordion = (
   { open = true, summary = 'Accordion summary…', body = '<p>Accordion body…</p>' }:

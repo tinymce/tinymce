@@ -1,11 +1,11 @@
 import { Optional, Optionals } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Options from '../../api/Options';
 import { ListOptions } from '../../core/ListOptions';
 import * as Utils from '../../core/Utils';
-import { ListItem, UserListItem } from '../DialogTypes';
+import type { ListItem, UserListItem } from '../DialogTypes';
 
 const getRels = (editor: Editor, initialTarget: Optional<string>): Optional<ListItem[]> => {
   const list = Options.getRelList(editor);

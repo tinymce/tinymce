@@ -1,17 +1,17 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Boxes, Channels, Docking, GuiFactory, HotspotAnchorSpec, InlineView, Keying,
-  MakeshiftAnchorSpec, ModalDialog, NodeAnchorSpec, SelectionAnchorSpec, SystemEvents
+  AddEventsBehaviour, type AlloyComponent, AlloyEvents, AlloyTriggers, Behaviour, Boxes, Channels, Docking, GuiFactory, type HotspotAnchorSpec, InlineView, Keying,
+  type MakeshiftAnchorSpec, ModalDialog, type NodeAnchorSpec, type SelectionAnchorSpec, SystemEvents
 } from '@ephox/alloy';
-import { StructureProcessor, StructureSchema } from '@ephox/boulder';
-import { Dialog, DialogManager } from '@ephox/bridge';
+import { type StructureProcessor, StructureSchema } from '@ephox/boulder';
+import { type Dialog, DialogManager } from '@ephox/bridge';
 import { Optional, Singleton, Type } from '@ephox/katamari';
 import { SelectorExists, SugarBody, SugarElement, SugarLocation } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { WindowManagerImpl, WindowParams } from 'tinymce/core/api/WindowManager';
+import type Editor from 'tinymce/core/api/Editor';
+import type { WindowManagerImpl, WindowParams } from 'tinymce/core/api/WindowManager';
 
 import * as Options from '../../api/Options';
-import { UiFactoryBackstagePair } from '../../backstage/Backstage';
+import type { UiFactoryBackstagePair } from '../../backstage/Backstage';
 import * as ScrollingContext from '../../modes/ScrollingContext';
 import { formCancelEvent } from '../general/FormEvents';
 import { renderDialog } from '../window/SilverDialog';

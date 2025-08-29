@@ -4,7 +4,7 @@ import { assert } from 'chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 // TODO Find a way to test the referrerpolicy with ScriptLoader, as it removes the dom reference as soon as it's finished loading so we can't check
 // via dom elements. For now we're just loading a script to make sure it doesn't completely die when loading.

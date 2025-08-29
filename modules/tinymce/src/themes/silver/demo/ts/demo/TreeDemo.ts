@@ -1,6 +1,6 @@
-import { Dialog } from '@ephox/bridge';
+import type { Dialog } from '@ephox/bridge';
 
-import { TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 

@@ -2,8 +2,8 @@ import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import FakeClipboard, { FakeClipboardItem } from 'tinymce/core/api/FakeClipboard';
+import type Editor from 'tinymce/core/api/Editor';
+import FakeClipboard, { type FakeClipboardItem } from 'tinymce/core/api/FakeClipboard';
 
 describe('browser.tinymce.core.FakeClipboardTest', () => {
   TinyHooks.bddSetupLight<Editor>({

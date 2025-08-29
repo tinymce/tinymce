@@ -1,8 +1,8 @@
-import { Bounds, Boxes } from '@ephox/alloy';
+import { type Bounds, Boxes } from '@ephox/alloy';
 import { Arr, Optional, Strings } from '@ephox/katamari';
-import { Css, PredicateFilter, SugarElement, SugarNode, SugarShadowDom } from '@ephox/sugar';
+import { Css, PredicateFilter, type SugarElement, SugarNode, SugarShadowDom } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Options from '../api/Options';
 

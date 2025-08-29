@@ -1,9 +1,9 @@
-import { SugarElement } from '../node/SugarElement';
+import type { SugarElement } from '../node/SugarElement';
 import * as Scroll from '../view/Scroll';
-import { SugarPosition } from '../view/SugarPosition';
+import type { SugarPosition } from '../view/SugarPosition';
 
 import * as DomEvent from './DomEvent';
-import { EventUnbinder } from './Types';
+import type { EventUnbinder } from './Types';
 
 /* Some browsers (Firefox) fire a scroll event even if the values for scroll don't
  * change. This acts as an intermediary between the scroll event, and the value for scroll

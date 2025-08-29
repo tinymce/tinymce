@@ -1,6 +1,6 @@
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 
-import { Situs } from './Situs';
+import type { Situs } from './Situs';
 
 export interface Response {
   readonly selection: Optional<Situs>;

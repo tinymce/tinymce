@@ -3,10 +3,10 @@ import { PlatformDetection } from '@ephox/sand';
 import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { GetContentEvent, SetContentEvent } from 'tinymce/core/api/EventTypes';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import { Bookmark } from 'tinymce/core/bookmark/BookmarkTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { GetContentEvent, SetContentEvent } from 'tinymce/core/api/EventTypes';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type { Bookmark } from 'tinymce/core/bookmark/BookmarkTypes';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import * as SetSelectionContent from 'tinymce/core/selection/SetSelectionContent';
 import * as Zwsp from 'tinymce/core/text/Zwsp';

@@ -1,8 +1,8 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
-import { PositionArray, PRange } from '@ephox/polaris';
+import { PositionArray, type PRange } from '@ephox/polaris';
 
-import { SearchResult, SpotRange } from '../api/data/Types';
+import type { SearchResult, SpotRange } from '../api/data/Types';
 
 import * as Splitter from './Splitter';
 

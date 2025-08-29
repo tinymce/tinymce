@@ -1,11 +1,11 @@
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Options from '../api/Options';
 
 import * as HtmlToData from './HtmlToData';
 import * as Mime from './Mime';
-import { MediaData } from './Types';
+import type { MediaData } from './Types';
 import * as UpdateHtml from './UpdateHtml';
 import * as UrlPatterns from './UrlPatterns';
 

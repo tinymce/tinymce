@@ -1,6 +1,6 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as CaretContainer from '../caret/CaretContainer';
 import CaretPosition from '../caret/CaretPosition';
 import * as CaretUtils from '../caret/CaretUtils';
@@ -9,7 +9,7 @@ import * as FakeCaretUtils from '../caret/FakeCaretUtils';
 import { getPositionsUntilNextLine, getPositionsUntilPreviousLine } from '../caret/LineReader';
 import * as LineReader from '../caret/LineReader';
 import * as LineUtils from '../caret/LineUtils';
-import { LinePosClientRect } from '../caret/LineWalker';
+import type { LinePosClientRect } from '../caret/LineWalker';
 import * as LineWalker from '../caret/LineWalker';
 import * as ScrollIntoView from '../dom/ScrollIntoView';
 import * as RangeNodes from '../selection/RangeNodes';

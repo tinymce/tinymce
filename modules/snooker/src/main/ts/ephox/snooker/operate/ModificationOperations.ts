@@ -2,7 +2,7 @@ import { Arr } from '@ephox/katamari';
 
 import * as Structs from '../api/Structs';
 import * as GridRow from '../model/GridRow';
-import { CompElm, Subst } from '../util/TableTypes';
+import type { CompElm, Subst } from '../util/TableTypes';
 
 type CloneCell = (elem: Structs.ElementNew<HTMLTableCellElement>, index: number) => Structs.ElementNew<HTMLTableCellElement>;
 

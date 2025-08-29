@@ -1,4 +1,4 @@
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import { onActionExecCommand, onSetupEditableToggle, onSetupStateToggle } from './ControlUtils';

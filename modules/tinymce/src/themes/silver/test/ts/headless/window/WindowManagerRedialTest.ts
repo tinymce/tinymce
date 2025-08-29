@@ -3,8 +3,8 @@ import { before, describe, it } from '@ephox/bedrock-client';
 import { SugarBody, Value } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import { Dialog } from 'tinymce/core/api/ui/Ui';
-import { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
+import type { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import * as TestExtras from '../../module/TestExtras';

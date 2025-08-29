@@ -1,8 +1,8 @@
-import { AlloySpec, Behaviour, SimpleSpec } from '@ephox/alloy';
+import { type AlloySpec, Behaviour, type SimpleSpec } from '@ephox/alloy';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
-import { UiFactoryBackstageShared } from '../../backstage/Backstage';
+import type { UiFactoryBackstageShared } from '../../backstage/Backstage';
 
 import * as StaticHeader from './StaticHeader';
 import * as StickyHeader from './StickyHeader';

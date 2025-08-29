@@ -1,7 +1,7 @@
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/directionality/Plugin';
 
 describe('browser.tinymce.plugins.directionality.CommandsTest', () => {

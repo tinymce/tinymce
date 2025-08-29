@@ -1,4 +1,4 @@
-import { AlloyComponent, Composing, MementoRecord } from '@ephox/alloy';
+import { type AlloyComponent, Composing, type MementoRecord } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 

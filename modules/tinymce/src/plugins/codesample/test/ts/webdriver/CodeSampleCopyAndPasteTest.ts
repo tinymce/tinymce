@@ -1,9 +1,9 @@
-import { ApproxStructure, Keys, RealClipboard, RealMouse, StructAssert } from '@ephox/agar';
+import { ApproxStructure, Keys, RealClipboard, RealMouse, type StructAssert } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/codesample/Plugin';
 
 import * as TestUtils from '../module/CodeSampleTestUtils';

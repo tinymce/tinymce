@@ -1,8 +1,8 @@
-import { Arr, Optional, Type } from '@ephox/katamari';
+import { Arr, type Optional, Type } from '@ephox/katamari';
 import { SugarElement, Traverse } from '@ephox/sugar';
 
-import Editor from '../../api/Editor';
-import Schema from '../../api/html/Schema';
+import type Editor from '../../api/Editor';
+import type Schema from '../../api/html/Schema';
 import * as Options from '../../api/Options';
 import Tools from '../../api/util/Tools';
 

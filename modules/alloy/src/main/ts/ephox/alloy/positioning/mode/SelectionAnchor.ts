@@ -1,13 +1,13 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Obj, Optional, Unicode } from '@ephox/katamari';
-import { Insert, Remove, SimRange, SimSelection, SugarElement, SugarNode, Traverse, WindowSelection } from '@ephox/sugar';
+import { Insert, Remove, type SimRange, SimSelection, SugarElement, SugarNode, Traverse, WindowSelection } from '@ephox/sugar';
 
 import * as Descend from '../../alien/Descend';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
-import * as Origins from '../layout/Origins';
+import type * as Origins from '../layout/Origins';
 
-import { Anchoring, SelectionAnchor, SelectionTableCellRange } from './Anchoring';
+import type { Anchoring, SelectionAnchor, SelectionTableCellRange } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 import * as ContainerOffsets from './ContainerOffsets';
 import * as ContentAnchorCommon from './ContentAnchorCommon';

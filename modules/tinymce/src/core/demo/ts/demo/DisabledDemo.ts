@@ -1,6 +1,6 @@
 import { DomEvent, Html, Insert, SelectorFind, SugarBody, SugarElement, TextContent } from '@ephox/sugar';
 
-import { TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 

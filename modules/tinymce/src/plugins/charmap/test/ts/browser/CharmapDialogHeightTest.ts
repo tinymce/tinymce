@@ -1,11 +1,11 @@
 import { FocusTools, Keys, UiControls, UiFinder } from '@ephox/agar';
 import { before, context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { Attribute, Css, SugarElement, SugarShadowDom, Traverse, Value } from '@ephox/sugar';
+import { Attribute, Css, type SugarElement, SugarShadowDom, Traverse, Value } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/charmap/Plugin';
 
 describe('browser.tinymce.plugins.charmap.DialogHeightTest', () => {

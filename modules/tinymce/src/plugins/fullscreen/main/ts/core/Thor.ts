@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
-import { Attribute, Css, SelectorFilter, SugarElement } from '@ephox/sugar';
+import { Attribute, Css, SelectorFilter, type SugarElement } from '@ephox/sugar';
 
-import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
+import type DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import Env from 'tinymce/core/api/Env';
 
 const attr = 'data-ephox-mobile-fullscreen-style';

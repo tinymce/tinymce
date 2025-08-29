@@ -1,8 +1,8 @@
 import { Type } from '@ephox/katamari';
 
-import DOMUtils from '../api/dom/DOMUtils';
+import type DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
-import Schema from '../api/html/Schema';
+import type Schema from '../api/html/Schema';
 
 import * as Empty from './Empty';
 import * as NodeType from './NodeType';

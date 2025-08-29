@@ -1,8 +1,8 @@
 import { DomUniverse } from '@ephox/boss';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
 import * as TextZones from '../general/TextZones';
-import { ZoneViewports } from '../general/ZoneViewports';
+import type { ZoneViewports } from '../general/ZoneViewports';
 
 const universe = DomUniverse();
 

@@ -1,4 +1,4 @@
-import { ApproxStructure, Assertions, Step, StructAssert, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, Step, type StructAssert, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';

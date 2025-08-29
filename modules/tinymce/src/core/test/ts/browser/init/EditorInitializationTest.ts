@@ -5,7 +5,7 @@ import { Attribute, SelectorFilter, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 import 'tinymce';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 
 import * as ViewBlock from '../../module/test/ViewBlock';

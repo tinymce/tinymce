@@ -2,7 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { SugarDocument, SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import StyleSheetLoader from 'tinymce/core/api/dom/StyleSheetLoader';
+import type StyleSheetLoader from 'tinymce/core/api/dom/StyleSheetLoader';
 import * as StyleSheetLoaderRegistry from 'tinymce/core/dom/StyleSheetLoaderRegistry';
 
 describe('browser.tinymce.core.dom.StyleSheetLoaderRegistry', () => {

@@ -2,7 +2,7 @@ import { Assertions } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as Options from 'tinymce/themes/silver/api/Options';
 
 describe('browser.tinymce.themes.silver.editor.ShadowDomInlineTest', () => {

@@ -1,4 +1,4 @@
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 const applyListFormat = (editor: Editor, listName: string, styleValue: false | string): void => {
   const cmd = listName === 'UL' ? 'InsertUnorderedList' : 'InsertOrderedList';

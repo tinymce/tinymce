@@ -1,11 +1,11 @@
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 
-import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
-import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
-import { CompositeSketchDetail } from '../../api/ui/Sketcher';
-import { TogglingConfigSpec } from '../../behaviour/toggling/TogglingTypes';
-import { DomModification, DomModificationSpec } from '../../dom/DomModification';
+import type { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
+import type { SketchBehaviours } from '../../api/component/SketchBehaviours';
+import type { AlloySpec, RawDomSchema } from '../../api/component/SpecTypes';
+import type { CompositeSketchDetail } from '../../api/ui/Sketcher';
+import type { TogglingConfigSpec } from '../../behaviour/toggling/TogglingTypes';
+import type { DomModification, DomModificationSpec } from '../../dom/DomModification';
 
 export interface ItemDataTuple {
   value: string;

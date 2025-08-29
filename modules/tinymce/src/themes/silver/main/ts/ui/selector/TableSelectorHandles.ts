@@ -1,12 +1,12 @@
 import {
-  AlloyComponent, Attachment, Behaviour, Boxes, Button, DragCoord, Dragging, DraggingTypes, GuiFactory, Memento, Unselecting
+  type AlloyComponent, Attachment, Behaviour, Boxes, Button, DragCoord, Dragging, type DraggingTypes, GuiFactory, Memento, Unselecting
 } from '@ephox/alloy';
 import { Arr, Cell, Optional, Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Compare, Css, SugarElement, SugarPosition, Traverse } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 interface SnapExtra {
   readonly td: SugarElement<HTMLTableCellElement>;

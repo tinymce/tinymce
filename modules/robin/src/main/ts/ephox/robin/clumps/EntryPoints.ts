@@ -1,4 +1,4 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 import { Adt, Fun } from '@ephox/katamari';
 import { Gather, Split } from '@ephox/phoenix';
 

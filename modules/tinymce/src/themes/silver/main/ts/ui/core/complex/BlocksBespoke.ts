@@ -1,15 +1,15 @@
-import { AlloyComponent, AlloyTriggers, SketchSpec } from '@ephox/alloy';
+import { type AlloyComponent, AlloyTriggers, type SketchSpec } from '@ephox/alloy';
 import { Fun, Optional } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { BlockFormat, InlineFormat } from 'tinymce/core/api/fmt/Format';
+import type Editor from 'tinymce/core/api/Editor';
+import type { BlockFormat, InlineFormat } from 'tinymce/core/api/fmt/Format';
 
 import * as Events from '../../../api/Events';
-import { UiFactoryBackstage } from '../../../backstage/Backstage';
+import type { UiFactoryBackstage } from '../../../backstage/Backstage';
 import { updateMenuText } from '../../dropdown/CommonDropdown';
 import { onActionToggleFormat, onSetupEditableToggle } from '../ControlUtils';
 
-import { createMenuItems, createSelectButton, SelectSpec } from './BespokeSelect';
+import { createMenuItems, createSelectButton, type SelectSpec } from './BespokeSelect';
 import { buildBasicSettingsDataset, Delimiter } from './SelectDatasets';
 import { findNearest } from './utils/FormatDetection';
 import * as Tooltip from './utils/Tooltip';

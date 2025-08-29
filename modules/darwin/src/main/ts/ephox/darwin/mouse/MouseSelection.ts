@@ -1,8 +1,8 @@
-import { Optional, Optionals, Singleton } from '@ephox/katamari';
-import { Compare, ContentEditable, EventArgs, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
+import { type Optional, Optionals, Singleton } from '@ephox/katamari';
+import { Compare, ContentEditable, type EventArgs, SelectorFind, type SugarElement, Traverse } from '@ephox/sugar';
 
-import { SelectionAnnotation } from '../api/SelectionAnnotation';
-import { WindowBridge } from '../api/WindowBridge';
+import type { SelectionAnnotation } from '../api/SelectionAnnotation';
+import type { WindowBridge } from '../api/WindowBridge';
 import * as CellSelection from '../selection/CellSelection';
 
 export interface MouseSelection {

@@ -1,22 +1,22 @@
-import { AlloyComponent, AlloySpec } from '@ephox/alloy';
-import { Dialog, Menu } from '@ephox/bridge';
-import { Cell, Obj, Optional, Result } from '@ephox/katamari';
+import type { AlloyComponent, AlloySpec } from '@ephox/alloy';
+import type { Dialog, Menu } from '@ephox/bridge';
+import { Cell, Obj, Optional, type Result } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import I18n, { TranslatedString, Untranslated } from 'tinymce/core/api/util/I18n';
+import type Editor from 'tinymce/core/api/Editor';
+import I18n, { type TranslatedString, type Untranslated } from 'tinymce/core/api/util/I18n';
 import * as UiFactory from 'tinymce/themes/silver/ui/general/UiFactory';
 
 import * as Options from '../api/Options';
-import { IconProvider } from '../ui/icons/Icons';
+import type { IconProvider } from '../ui/icons/Icons';
 
-import { UiFactoryBackstageAnchors } from './Anchors';
+import type { UiFactoryBackstageAnchors } from './Anchors';
 import * as Anchors from './Anchors';
-import { ColorInputBackstage, UiFactoryBackstageForColorInput } from './ColorInputBackstage';
-import { DialogBackstage, UiFactoryBackstageForDialog } from './DialogBackstage';
-import { HeaderBackstage, UiFactoryBackstageForHeader } from './HeaderBackstage';
-import { init as initStyleFormatBackstage, UiFactoryBackstageForStyleFormats } from './StyleFormatsBackstage';
-import { TooltipsBackstage, TooltipsProvider } from './TooltipsBackstage';
-import { UiFactoryBackstageForUrlInput, UrlInputBackstage } from './UrlInputBackstage';
+import { ColorInputBackstage, type UiFactoryBackstageForColorInput } from './ColorInputBackstage';
+import { DialogBackstage, type UiFactoryBackstageForDialog } from './DialogBackstage';
+import { HeaderBackstage, type UiFactoryBackstageForHeader } from './HeaderBackstage';
+import { init as initStyleFormatBackstage, type UiFactoryBackstageForStyleFormats } from './StyleFormatsBackstage';
+import { TooltipsBackstage, type TooltipsProvider } from './TooltipsBackstage';
+import { type UiFactoryBackstageForUrlInput, UrlInputBackstage } from './UrlInputBackstage';
 
 export interface UiFactoryBackstageProviders {
   readonly icons: IconProvider;

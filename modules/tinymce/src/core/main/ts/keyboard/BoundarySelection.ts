@@ -1,8 +1,8 @@
 import { Arr, Cell, Fun } from '@ephox/katamari';
 import { SelectorFilter, SugarElement } from '@ephox/sugar';
 
-import DOMUtils from '../api/dom/DOMUtils';
-import Editor from '../api/Editor';
+import type DOMUtils from '../api/dom/DOMUtils';
+import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import * as CaretContainerRemove from '../caret/CaretContainerRemove';
 import * as CaretFinder from '../caret/CaretFinder';

@@ -7,7 +7,7 @@ import { Html, SelectorFilter, SelectorFind, SimSelection, SugarBody, SugarEleme
 import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/quickbars/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 

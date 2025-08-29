@@ -1,40 +1,40 @@
-import { AlertBannerSpec } from '../components/dialog/AlertBanner';
-import { BarSpec } from '../components/dialog/Bar';
-import { BodyComponentSpec } from '../components/dialog/BodyComponent';
-import { ButtonSpec } from '../components/dialog/Button';
-import { CheckboxSpec } from '../components/dialog/Checkbox';
-import { CollectionItem, CollectionSpec } from '../components/dialog/Collection';
-import { ColorInputSpec } from '../components/dialog/ColorInput';
-import { ColorPickerSpec } from '../components/dialog/ColorPicker';
-import { CustomEditorInit, CustomEditorInitFn, CustomEditorSpec } from '../components/dialog/CustomEditor';
-import {
+import type { AlertBannerSpec } from '../components/dialog/AlertBanner';
+import type { BarSpec } from '../components/dialog/Bar';
+import type { BodyComponentSpec } from '../components/dialog/BodyComponent';
+import type { ButtonSpec } from '../components/dialog/Button';
+import type { CheckboxSpec } from '../components/dialog/Checkbox';
+import type { CollectionItem, CollectionSpec } from '../components/dialog/Collection';
+import type { ColorInputSpec } from '../components/dialog/ColorInput';
+import type { ColorPickerSpec } from '../components/dialog/ColorPicker';
+import type { CustomEditorInit, CustomEditorInitFn, CustomEditorSpec } from '../components/dialog/CustomEditor';
+import type {
   DialogActionDetails, DialogChangeDetails, DialogData, DialogInstanceApi, DialogSize, DialogSpec, DialogTabChangeDetails
 } from '../components/dialog/Dialog';
-import { DialogFooterButtonSpec } from '../components/dialog/DialogFooterButton';
-import { DropZoneSpec } from '../components/dialog/Dropzone';
-import { GridSpec } from '../components/dialog/Grid';
-import { HtmlPanelSpec } from '../components/dialog/HtmlPanel';
-import { IframeSpec } from '../components/dialog/Iframe';
-import { ImagePreviewSpec } from '../components/dialog/ImagePreview';
-import { InputSpec } from '../components/dialog/Input';
-import { LabelSpec } from '../components/dialog/Label';
-import { ListBoxItemSpec, ListBoxSpec, ListBoxSingleItemSpec, ListBoxNestedItemSpec } from '../components/dialog/ListBox';
-import { PanelSpec } from '../components/dialog/Panel';
-import { SelectBoxItemSpec, SelectBoxSpec } from '../components/dialog/SelectBox';
-import { SizeInputSpec } from '../components/dialog/SizeInput';
-import { SliderSpec } from '../components/dialog/Slider';
-import { TableSpec } from '../components/dialog/Table';
-import { TabPanelSpec, TabSpec } from '../components/dialog/TabPanel';
-import { TextAreaSpec } from '../components/dialog/Textarea';
-import { TreeSpec, TreeItemSpec, DirectorySpec as TreeDirectorySpec, LeafSpec as TreeLeafSpec } from '../components/dialog/Tree';
-import {
+import type { DialogFooterButtonSpec } from '../components/dialog/DialogFooterButton';
+import type { DropZoneSpec } from '../components/dialog/Dropzone';
+import type { GridSpec } from '../components/dialog/Grid';
+import type { HtmlPanelSpec } from '../components/dialog/HtmlPanel';
+import type { IframeSpec } from '../components/dialog/Iframe';
+import type { ImagePreviewSpec } from '../components/dialog/ImagePreview';
+import type { InputSpec } from '../components/dialog/Input';
+import type { LabelSpec } from '../components/dialog/Label';
+import type { ListBoxItemSpec, ListBoxSpec, ListBoxSingleItemSpec, ListBoxNestedItemSpec } from '../components/dialog/ListBox';
+import type { PanelSpec } from '../components/dialog/Panel';
+import type { SelectBoxItemSpec, SelectBoxSpec } from '../components/dialog/SelectBox';
+import type { SizeInputSpec } from '../components/dialog/SizeInput';
+import type { SliderSpec } from '../components/dialog/Slider';
+import type { TableSpec } from '../components/dialog/Table';
+import type { TabPanelSpec, TabSpec } from '../components/dialog/TabPanel';
+import type { TextAreaSpec } from '../components/dialog/Textarea';
+import type { TreeSpec, TreeItemSpec, DirectorySpec as TreeDirectorySpec, LeafSpec as TreeLeafSpec } from '../components/dialog/Tree';
+import type {
   UrlDialogActionDetails, UrlDialogFooterButtonSpec, UrlDialogInstanceApi, UrlDialogMessage, UrlDialogSpec
 } from '../components/dialog/UrlDialog';
-import { UrlInputData, UrlInputSpec } from '../components/dialog/UrlInput';
+import type { UrlInputData, UrlInputSpec } from '../components/dialog/UrlInput';
 
 // These are the types that are exposed though a public end user api
 
-export {
+export type {
   AlertBannerSpec,
 
   BarSpec,

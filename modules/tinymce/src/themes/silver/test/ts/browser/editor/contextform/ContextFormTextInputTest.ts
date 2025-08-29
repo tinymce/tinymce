@@ -4,7 +4,7 @@ import { Fun } from '@ephox/katamari';
 import { SugarBody } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.themes.silver.editor.ContextFormTextInputTest', () => {
   const store = TestStore();

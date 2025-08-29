@@ -2,8 +2,8 @@ import { FieldSchema, Objects, StructureSchema } from '@ephox/boulder';
 import { Fun } from '@ephox/katamari';
 
 import * as CommonBehaviour from '../../behaviour/common/Behaviour';
-import { BehaviourState, NoState } from '../../behaviour/common/BehaviourState';
-import * as BehaviourTypes from '../../behaviour/common/BehaviourTypes';
+import { type BehaviourState, NoState } from '../../behaviour/common/BehaviourState';
+import type * as BehaviourTypes from '../../behaviour/common/BehaviourTypes';
 
 export type ConfiguredBehaviour<C extends BehaviourConfigSpec, D extends BehaviourConfigDetail, S extends BehaviourState = BehaviourState> = BehaviourTypes.ConfiguredBehaviour<C, D, S>;
 export type AlloyBehaviourRecord = BehaviourTypes.BehaviourRecord;

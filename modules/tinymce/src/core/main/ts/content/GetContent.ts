@@ -1,9 +1,9 @@
 import { Fun } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as Rtc from '../Rtc';
 
-import { Content, GetContentArgs, ContentFormat } from './ContentTypes';
+import type { Content, GetContentArgs, ContentFormat } from './ContentTypes';
 import { postProcessGetContent, preProcessGetContent } from './PrePostProcess';
 
 const defaultFormat = 'html';

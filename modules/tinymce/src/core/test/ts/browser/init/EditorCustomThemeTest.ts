@@ -2,9 +2,9 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Theme } from 'tinymce/core/api/ThemeManager';
-import { TinyMCE } from 'tinymce/core/api/Tinymce';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Theme } from 'tinymce/core/api/ThemeManager';
+import type { TinyMCE } from 'tinymce/core/api/Tinymce';
 
 declare const tinymce: TinyMCE;
 

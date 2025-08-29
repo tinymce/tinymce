@@ -2,8 +2,8 @@ import { TestStore } from '@ephox/agar';
 import { beforeEach, describe, it } from '@ephox/bedrock-client';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { DynamicPatternContext } from 'tinymce/core/textpatterns/core/PatternTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { DynamicPatternContext } from 'tinymce/core/textpatterns/core/PatternTypes';
 
 import * as Utils from '../../module/test/TextPatternsUtils';
 

@@ -1,7 +1,7 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
-import { Optional, Result } from '@ephox/katamari';
+import type { Optional, Result } from '@ephox/katamari';
 
-import { ToolbarMenuButton, ToolbarMenuButtonSpec } from '../../api/Toolbar';
+import type { ToolbarMenuButton, ToolbarMenuButtonSpec } from '../../api/Toolbar';
 import * as ComponentSchema from '../../core/ComponentSchema';
 import { MenuButtonSchema } from '../toolbar/ToolbarMenuButton';
 

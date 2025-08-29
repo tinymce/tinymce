@@ -1,7 +1,7 @@
-import { Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { Optional } from '@ephox/katamari';
+import type { SugarElement } from '@ephox/sugar';
 
-import { AlloyComponent } from './ComponentApi';
+import type { AlloyComponent } from './ComponentApi';
 
 const toElem = (component: AlloyComponent): SugarElement<any> => component.element;
 

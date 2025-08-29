@@ -3,7 +3,7 @@ import { Obj } from '@ephox/katamari';
 
 import * as ActiveTransitioning from '../../behaviour/transitioning/ActiveTransitioning';
 import * as TransitionApis from '../../behaviour/transitioning/TransitionApis';
-import { TransitioningBehaviour, TransitionPropertiesSpec, TransitioningConfigSpec } from '../../behaviour/transitioning/TransitioningTypes';
+import type { TransitioningBehaviour, TransitionPropertiesSpec, TransitioningConfigSpec } from '../../behaviour/transitioning/TransitioningTypes';
 import TransitionSchema from '../../behaviour/transitioning/TransitionSchema';
 
 import * as Behaviour from './Behaviour';

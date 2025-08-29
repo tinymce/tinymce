@@ -1,8 +1,8 @@
 import { Arr, Strings } from '@ephox/katamari';
 import { Css, PredicateFind, SugarElement, SugarElements, Traverse } from '@ephox/sugar';
 
-import DOMUtils from '../api/dom/DOMUtils';
-import Editor from '../api/Editor';
+import type DOMUtils from '../api/dom/DOMUtils';
+import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import { isList, isListItem, isTable } from '../dom/ElementType';
 import * as NodeType from '../dom/NodeType';

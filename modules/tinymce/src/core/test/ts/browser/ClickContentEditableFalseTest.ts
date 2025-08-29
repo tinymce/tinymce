@@ -2,7 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { Hierarchy } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinySelections, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 const clickMiddleOf = (editor: Editor, elementPath: number[], dx: number = 0, dy: number = 0) => {
   const element = Hierarchy.follow(TinyDom.body(editor), elementPath).getOrDie().dom as HTMLElement;

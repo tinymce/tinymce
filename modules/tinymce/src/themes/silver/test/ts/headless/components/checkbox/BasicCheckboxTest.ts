@@ -1,5 +1,5 @@
 import { ApproxStructure, Assertions, Keyboard, Keys, UiFinder } from '@ephox/agar';
-import { AlloyComponent, Disabling, Form, GuiFactory, Representing } from '@ephox/alloy';
+import { type AlloyComponent, Disabling, Form, GuiFactory, Representing } from '@ephox/alloy';
 import { describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { assert } from 'chai';

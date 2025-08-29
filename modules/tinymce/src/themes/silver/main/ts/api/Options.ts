@@ -2,10 +2,10 @@ import { Arr, Fun, Obj, Optional, Optionals, Type } from '@ephox/katamari';
 import { SelectorFind, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import EditorManager from 'tinymce/core/api/EditorManager';
 import Env from 'tinymce/core/api/Env';
-import { EditorOptions, ToolbarGroup } from 'tinymce/core/api/OptionTypes';
+import type { EditorOptions, ToolbarGroup } from 'tinymce/core/api/OptionTypes';
 
 export type ToolbarGroupOption = ToolbarGroup;
 

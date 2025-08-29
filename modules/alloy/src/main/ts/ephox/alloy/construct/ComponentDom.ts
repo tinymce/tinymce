@@ -1,11 +1,11 @@
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, type Optional } from '@ephox/katamari';
 
 import * as ObjIndex from '../alien/ObjIndex';
-import { AlloyBehaviour } from '../api/behaviour/Behaviour';
-import { BehaviourConfigAndState } from '../behaviour/common/BehaviourBlob';
-import { BehaviourState } from '../behaviour/common/BehaviourState';
-import { DomDefinitionDetail } from '../dom/DomDefinition';
-import { DomModification, nu as NuModification } from '../dom/DomModification';
+import type { AlloyBehaviour } from '../api/behaviour/Behaviour';
+import type { BehaviourConfigAndState } from '../behaviour/common/BehaviourBlob';
+import type { BehaviourState } from '../behaviour/common/BehaviourState';
+import type { DomDefinitionDetail } from '../dom/DomDefinition';
+import { type DomModification, nu as NuModification } from '../dom/DomModification';
 
 interface Modification<T> {
   name: string;

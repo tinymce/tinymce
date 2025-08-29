@@ -2,7 +2,7 @@ import { Chain } from '@ephox/agar';
 import { Global, Id, Type } from '@ephox/katamari';
 import { Attribute, Insert, Remove, Selectors, SugarBody, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
-import { Editor as EditorType } from '../alien/EditorTypes';
+import type { Editor as EditorType } from '../alien/EditorTypes';
 import { loadScript } from '../loader/Loader';
 import { detectTinymceBaseUrl, setupTinymceBaseUrl } from '../loader/Urls';
 

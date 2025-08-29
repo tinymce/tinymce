@@ -1,28 +1,28 @@
 import { FieldSchema } from '@ephox/boulder';
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
-import * as Boxes from '../../alien/Boxes';
+import type * as Boxes from '../../alien/Boxes';
 import * as ComponentStructure from '../../alien/ComponentStructure';
-import { PlacementSpec } from '../../behaviour/positioning/PositioningTypes';
+import type { PlacementSpec } from '../../behaviour/positioning/PositioningTypes';
 import * as Fields from '../../data/Fields';
 import * as Layout from '../../positioning/layout/Layout';
 import * as Dismissal from '../../sandbox/Dismissal';
 import * as Reposition from '../../sandbox/Reposition';
-import { InlineMenuSpec, InlineViewApis, InlineViewDetail, InlineViewSketcher, InlineViewSpec } from '../../ui/types/InlineViewTypes';
+import type { InlineMenuSpec, InlineViewApis, InlineViewDetail, InlineViewSketcher, InlineViewSpec } from '../../ui/types/InlineViewTypes';
 import { Positioning } from '../behaviour/Positioning';
 import { Receiving } from '../behaviour/Receiving';
 import { Representing } from '../behaviour/Representing';
 import { Sandboxing } from '../behaviour/Sandboxing';
-import { LazySink } from '../component/CommonTypes';
-import { AlloyComponent } from '../component/ComponentApi';
+import type { LazySink } from '../component/CommonTypes';
+import type { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
-import { AlloySpec, SketchSpec } from '../component/SpecTypes';
+import type { AlloySpec, SketchSpec } from '../component/SpecTypes';
 import * as SystemEvents from '../events/SystemEvents';
 
 import * as Sketcher from './Sketcher';
 import { tieredMenu as TieredMenu } from './TieredMenu';
-import { SingleSketchFactory } from './UiSketcher';
+import type { SingleSketchFactory } from './UiSketcher';
 
 interface InlineViewPositionState {
   mode: 'position';

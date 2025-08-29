@@ -1,8 +1,8 @@
 import { Arr, Type } from '@ephox/katamari';
 
-import { DieFn, NextFn } from '../pipe/Pipe';
+import type { DieFn, NextFn } from '../pipe/Pipe';
 
-import { Step } from './Step';
+import type { Step } from './Step';
 import { TestLogs } from './TestLogs';
 
 const assertSteps = (steps: Step<any, any>[]) => {

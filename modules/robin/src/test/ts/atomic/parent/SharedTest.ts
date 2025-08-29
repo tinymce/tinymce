@@ -1,5 +1,5 @@
 import { UnitTest } from '@ephox/bedrock-client';
-import { Gene, TestUniverse, Universe } from '@ephox/boss';
+import { Gene, TestUniverse, type Universe } from '@ephox/boss';
 import { Arr, Optional } from '@ephox/katamari';
 import { KAssert } from '@ephox/katamari-assertions';
 
