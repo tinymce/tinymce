@@ -356,7 +356,8 @@ timestamps { notifyStatusChange(
       if (env.BRANCH_NAME == primaryBranch) {
         echo "Deploying Storybook"
         tinyGit.withGitHubSSHCredentials {
-          exec('yarn -s --cwd modules/oxide-components deploy-storybook')
+           echo "Deploying Storybook skipped until the Jenkinsfile is fixed"
+          // exec('yarn -s --cwd modules/oxide-components deploy-storybook')
         }
       } else {
         echo "Skipping Storybook deployment as the pipeline is not running on the primary branch"
