@@ -90,7 +90,7 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
           resourceLimitMemory: '6Gi',
           resourceLimitEphemeralStorage: '16Gi'
         ],
-        tag: '20',
+        // tag: '20',
         build: cacheName,
         useContainers: ['node', 'aws-cli']
       ) {
@@ -222,7 +222,7 @@ timestamps { notifyStatusChange(
       resourceLimitMemory: '4Gi',
       resourceLimitEphemeralStorage: '16Gi'
     ],
-    tag: '20',
+    // tag: '20',
     build: cacheName
   ) {
     props = readProperties(file: 'build.properties')
@@ -345,7 +345,7 @@ timestamps { notifyStatusChange(
       resourceLimitMemory: '4Gi',
       resourceLimitEphemeralStorage: '16Gi'
     ],
-    tag: '20',
+    // tag: '20',
     build: cacheName
   ) {
     props = readProperties(file: 'build.properties')
