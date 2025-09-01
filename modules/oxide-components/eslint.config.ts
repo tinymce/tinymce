@@ -31,6 +31,14 @@ export default defineConfig(
         ],
       },
     },
+    // TINY-12801: Temporary workaround until issue with @stylistic/indent rule introduced in TypeScript 5.9.2 is resolved.
+    // See https://github.com/microsoft/TypeScript/issues/62188
+    {
+      files: ["**/*.tsx"],
+      rules: {
+        "@stylistic/indent": "off"
+      }
+    },
     { ignores: [ 'lib' ] },
     storybookConfig
   ]
