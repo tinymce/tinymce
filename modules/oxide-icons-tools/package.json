@@ -16,7 +16,6 @@
   },
   "author": "Tiny Technologies",
   "license": "Apache-2.0",
-  "type": "module",
   "files": [
     "lib",
     "oxide-svgo"
