@@ -11,7 +11,7 @@
       "push": false
     },
     "exec": {
-      "ignore": ["*/oxide*"]
+      "ignore": ["*/oxide-icons-default", "*/oxide-components", "*/oxide"]
     }
   }
 }

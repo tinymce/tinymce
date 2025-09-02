@@ -79,6 +79,7 @@
     { "path": "../robin" },
     { "path": "../sand" },
     { "path": "../snooker" },
-    { "path": "../sugar" }
+    { "path": "../sugar" },
+    { "path": "../oxide-icons-default" }
   ]
 }

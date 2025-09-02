@@ -1,24 +1,20 @@
 {
+  "extends": "../../tsconfig.shared.json",
   "compilerOptions": {
-    "moduleResolution": "node16",
-    "strict": true,
-    "noUnusedLocals": true,
-    "target": "es2018",
-    "module": "node16",
-    "lib": ["es2018"],
-    "declaration": true,
-    "sourceMap": true,
     "outDir": "lib",
-    "types": [
-      "node",
-      "mocha",
-      "chai"
-    ],
-    "esModuleInterop": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true
+    "rootDir": "src",
+    "baseUrl": ".",
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
+    "module": "es2020",
+    "moduleResolution": "node",
+    "types": ["node"],
+    "paths": {
+      "ephox/oxide-icons-tools/*": ["src/main/ts/ephox/oxide-icons-tools/*"]
+    }
   },
   "include": [
-    "src/"
+    "src/demo/ts",
+    "src/main/ts",
+    "src/test/ts"
   ]
 }

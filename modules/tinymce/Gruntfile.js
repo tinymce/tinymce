@@ -203,9 +203,8 @@ module.exports = function (grunt) {
           output: {
             ascii_only: true
           },
-          compress: {
-            passes: 2
-          }
+          mangle: false,
+          compress: false
         },
         core: {
           files: [
