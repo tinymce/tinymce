@@ -23,13 +23,13 @@ def runBedrockTest(String name, String command, Boolean runAll, int retry = 0, i
 }
 
 def runHeadlessTests(Boolean runAll) {
-  def bedrockCmd = "yarn grunt headless-auto --useSelenium=true"
+  def bedrockCmd = "bun grunt headless-auto --useSelenium=true"
   runBedrockTest('headless', bedrockCmd, runAll)
 }
 
 def runSeleniumTests(String name, String browser, String bucket, String buckets, Boolean runAll, int retry = 0, int timeout = 0) {
   def bedrockCommand =
-    "yarn browser-test" +
+    "bun browser-test" +
     " --chunk=2000" +
     " --bedrock-browser=" + browser +
     " --bucket=" + bucket +
@@ -44,7 +44,7 @@ def runRemoteTests(String name, String browser, String provider, String platform
   def platformName = platform != null ? " --platformName='${platform}'" : ""
   def browserVersion = version != null ? " --browserVersion=${version}" : ""
   def bedrockCommand =
-  "yarn browser-test" +
+  "bun browser-test" +
     " --chunk=2000" +
     " --bedrock-browser=" + browser +
     " --remote=" + provider +
@@ -60,7 +60,7 @@ def runRemoteTests(String name, String browser, String provider, String platform
 
 def runBrowserTests(String name, String browser, String platform, String bucket, String buckets, Boolean runAll) {
   def bedrockCommand =
-    "yarn grunt browser-auto" +
+    "bun grunt browser-auto" +
       " --chunk=2000" +
       " --bedrock-os=" + platform +
       " --bedrock-browser=" + browser +
@@ -233,18 +233,18 @@ timestamps { notifyStatusChange(
     stage('Deps') {
       // cancel build if primary branch doesn't merge cleanly
       gitMerge(primaryBranch)
-      yarnInstall()
+      exec("bun install")
     }
 
     stage('Build') {
       // verify no errors in changelog merge
-      exec("yarn changie-merge")
+      exec("bun changie-merge")
       withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
         // type check and build TinyMCE
-        exec("yarn ci-all-seq")
+        exec("bun ci-all-seq")
 
         // validate documentation generator
-        exec("yarn tinymce-grunt shell:moxiedoc")
+        exec("bun tinymce-grunt shell:moxiedoc")
       }
     }
   }
@@ -318,9 +318,9 @@ timestamps { notifyStatusChange(
   }
 
   processes['playwright'] = runPlaywrightPod(cacheName, 'playwright-tests') {
-    exec('yarn -s --cwd modules/oxide-components test-ci')
+    exec('bun run -F @tinymce/oxide-components test-ci')
     junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
-    def visualTestStatus = exec(script: 'yarn -s --cwd modules/oxide-components test-visual-ci', returnStatus: true)
+    def visualTestStatus = exec(script: 'bun run -F @tinymce/oxide-components test-visual-ci', returnStatus: true)
     if (visualTestStatus == 4) {
       unstable("Visual tests failed")
     } else if (visualTestStatus != 0) {
@@ -361,7 +361,7 @@ timestamps { notifyStatusChange(
       if (env.BRANCH_NAME == primaryBranch) {
         echo "Deploying Storybook"
         tinyGit.withGitHubSSHCredentials {
-          exec('yarn -s --cwd modules/oxide-components deploy-storybook')
+          exec('bun run -F @tinymce/oxide-components deploy-storybook')
         }
       } else {
         echo "Skipping Storybook deployment as the pipeline is not running on the primary branch"

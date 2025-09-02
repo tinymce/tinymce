@@ -16,7 +16,7 @@ dist
 *.bak
 *.log
 *.swp
-yarn.lock
+bun.lock
 package-lock.json
 .DS_Store
 coverage

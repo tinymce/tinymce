@@ -14,5 +14,5 @@
 /inconsistent.dependencies
 /*.log
 Jenkinsfile
-yarn.lock
+bun.lock
 .editorconfig

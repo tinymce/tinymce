@@ -5,4 +5,4 @@ FROM mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION} AS test
 
 WORKDIR /tinymce/modules/oxide-components
 
-ENTRYPOINT [ "yarn", "playwright", "test" ]
+ENTRYPOINT [ "bun", "playwright", "test" ]
