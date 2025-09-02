@@ -1,7 +1,7 @@
 import type { Svg } from '../core/Core.js';
 
 export const populateIconsHtml = (svgs: Svg[]): string => {
-  const icons = svgs.map(svg => `  <div class="icon">\n    <div class="icon-name">${svg.name}</div>\n    ${svg.data}\n  </div>`).join('\n');
+  const icons = svgs.map((svg) => `  <div class="icon">\n    <div class="icon-name">${svg.name}</div>\n    ${svg.data}\n  </div>`).join('\n');
   return `<!DOCTYPE html>
 <html>
 <head>

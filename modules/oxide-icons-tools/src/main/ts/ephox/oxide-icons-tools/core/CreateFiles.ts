@@ -1,6 +1,7 @@
 import { populateGetter, populateGetterDeclarations } from '../templates/IconGetter.js';
 import { populateIconProvider } from '../templates/IconProvider.js';
 import { populateIconsHtml } from '../templates/IconsHtml.js';
+
 import type { Svg } from './Core.js';
 
 export interface Template {

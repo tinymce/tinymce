@@ -1,7 +1,7 @@
 import type { Svg } from '../core/Core.js';
 
 export const populateGetter = (svgs: Svg[]): string => {
-  const icons = svgs.map(svg => `  '${svg.name}': '${svg.data}'`).join(',\n');
+  const icons = svgs.map((svg) => `  '${svg.name}': '${svg.data}'`).join(',\n');
   return `export const getAll = () => ({
 ${icons}
 });`;
