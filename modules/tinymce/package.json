@@ -18,12 +18,12 @@
   "main": "js/tinymce/tinymce.js",
   "types": "src/core/main/ts/api/PublicApi.ts",
   "scripts": {
-    "build": "grunt buildOnly",
-    "test": "grunt test",
-    "test-manual": "grunt test-manual",
-    "lint": "eslint --max-warnings=0 src/**/*.ts",
-    "silver-test": "grunt bedrock-auto:silver",
-    "silver-test-manual": "grunt bedrock-manual:silver"
+    "build": "bun x grunt buildOnly",
+    "test": "bun x grunt test",
+    "test-manual": "bun x grunt test-manual",
+    "lint": "bun x eslint --max-warnings=0 src/**/*.ts",
+    "silver-test": "bun x grunt bedrock-auto:silver",
+    "silver-test-manual": "bun x grunt bedrock-manual:silver"
   },
   "dependencies": {
     "@ephox/acid": "^7.0.0",
