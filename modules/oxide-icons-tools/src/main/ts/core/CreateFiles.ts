@@ -17,11 +17,11 @@ export interface Template {
 
 const populateTemplates = (svgs: Svg[], name: string) => [
   {
-    path: 'js/icons.js',
+    path: 'icons/default/icons.js',
     contents: populateGetter(svgs)
   },
   {
-    path: 'js/icons.d.ts',
+    path: 'icons/default/icons.d.ts',
     contents: populateGetterDeclarations(svgs)
   },
   {
