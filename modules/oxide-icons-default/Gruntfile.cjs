@@ -1,4 +1,4 @@
-const iconPackager = require('@ephox/oxide-icons-tools').iconPackager;
+const { iconPackager } = require('@tinymce/oxide-icons-tools');
 
 module.exports = function (grunt) {
     grunt.initConfig({
