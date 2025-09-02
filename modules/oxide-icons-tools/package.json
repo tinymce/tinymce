@@ -1,0 +1,42 @@
+{
+  "name": "@tinymce/oxide-icons-tools",
+  "version": "1.0.0",
+  "main": "lib/main/ts/api/Main.cjs",
+  "module": "lib/main/ts/api/Main.js",
+  "types": "lib/main/ts/api/Main.d.ts",
+  "scripts": {
+    "prepublishOnly": "tsc",
+    "build": "yarn run clean && tsc",
+    "clean": "git clean -fdx lib scratch",
+    "pretest": "tsc",
+    "test": "mocha --require ts-node/register --loader=ts-node/esm 'src/test/ts/**/*Test.ts'",
+    "lint": "eslint --max-warnings=0 'src/**/*.ts'"
+  },
+  "author": "Tiny Technologies",
+  "license": "Apache-2.0",
+  "type": "module",
+  "devDependencies": {
+    "@types/chai": "^5.2.2",
+    "@types/fancy-log": "^2.0.0",
+    "@types/mocha": "^10.0.10",
+    "@types/svgo": "^2.6.2",
+    "@types/vinyl": "^2.0.7",
+    "chai": "^6.0.1",
+    "mocha": "^11.7.2",
+    "ts-node": "^10.9.2"
+  },
+  "dependencies": {
+    "@xmldom/xmldom": "^0.8.10",
+    "chalk": "^4.1.0",
+    "fancy-log": "^2.0.0",
+    "plugin-error": "^2.0.1",
+    "svgo": "^2.4.0",
+    "vinyl": "^3.0.0"
+  },
+  "files": [
+    "lib",
+    "oxide-svgo",
+    "oxide-verify-composition",
+    "oxide-verify-set"
+  ]
+}

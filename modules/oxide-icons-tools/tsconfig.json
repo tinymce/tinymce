@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node16",
+    "strict": true,
+    "noUnusedLocals": true,
+    "target": "es2018",
+    "module": "node16",
+    "lib": ["es2018"],
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "lib",
+    "types": [
+      "node",
+      "mocha",
+      "chai"
+    ],
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true
+  },
+  "include": [
+    "src/"
+  ]
+}
