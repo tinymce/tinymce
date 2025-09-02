@@ -5,7 +5,7 @@
     "rootDir": "src",
     "baseUrl": ".",
     "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
-    "module": "es2020",
+    "module": "commonjs",
     "moduleResolution": "node",
     "types": ["node"],
     "paths": {
