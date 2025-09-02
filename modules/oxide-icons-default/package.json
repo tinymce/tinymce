@@ -27,7 +27,7 @@
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
   "license": "GPL-2.0-or-later",
   "dependencies": {
-    "@tinymce/oxide-icons-tools": "^4.0.0"
+    "@tinymce/oxide-icons-tools": "4.0.0"
   },
   "typesVersions": {
     "*": {
