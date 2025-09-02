@@ -6,6 +6,27 @@ standardProperties()
 String ciAccountId = "103651136441"
 String ciRegistry = "${ciAccountId}.dkr.ecr.us-east-2.amazonaws.com"
 
+Map podResources = [
+  resourceRequestCpu: '2',
+  resourceLimitCpu: '7.5',
+  resourceRequestEphemeralStorage: '16Gi',
+  resourceLimitEphemeralStorage: '16Gi'
+]
+
+Map buildResources = podResources + [
+  resourceRequestMemory: '4Gi',
+  resourceLimitMemory: '4Gi'
+]
+
+def nodeLts = [ name: 'node-lts', image: "${ciRegistry}/build-containers/node-lts:lts", runAsGroup: '1000', runAsUser: '1000' ]
+def nodeLtsResources = devPods.getContainerDefaultArgs(nodeLts + buildResources)
+
+def checkoutAndMergeStep = {
+  tinyGit.addGitHubToKnownHosts()
+  checkout localBranch(scm)
+  tinyGit.addAuthorConfig()
+}
+
 def runBedrockTest(String name, String command, Boolean runAll, int retry = 0, int timeout = 0) {
   def bedrockCmd = command + (runAll ? " --ignore-lerna-changed=true" : "")
   echo "Running Bedrock cmd: ${bedrockCmd}"
@@ -217,38 +238,29 @@ timestamps { notifyStatusChange(
   name: 'TinyMCE',
   mention: true
   ) {
-  devPods.nodeProducer(
-    nodeOpts: [
-      resourceRequestCpu: '2',
-      resourceRequestMemory: '4Gi',
-      resourceRequestEphemeralStorage: '16Gi',
-      resourceLimitCpu: '7.5',
-      resourceLimitMemory: '4Gi',
-      resourceLimitEphemeralStorage: '16Gi'
-    ],
-    useContainers: ['node-lts'],
-    build: cacheName
-  ) {
-    props = readProperties(file: 'build.properties')
-    String primaryBranch = props.primaryBranch
-    assert primaryBranch != null && primaryBranch != ""
+  devPods.custom(containers: [ nodeLtsResources ], checkoutStep: checkoutAndMergeStep) {
+    container('node-lts') {
+      props = readProperties(file: 'build.properties')
+      String primaryBranch = props.primaryBranch
+      assert primaryBranch != null && primaryBranch != ""
 
 
-    stage('Deps') {
-      // cancel build if primary branch doesn't merge cleanly
-      gitMerge(primaryBranch)
-      exec("bun install")
-    }
+      stage('Deps') {
+        // cancel build if primary branch doesn't merge cleanly
+        gitMerge(primaryBranch)
+        exec("bun install")
+      }
 
-    stage('Build') {
-      // verify no errors in changelog merge
-      exec("bun changie-merge")
-      withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
-        // type check and build TinyMCE
-        exec("bun ci-all-seq")
+      stage('Build') {
+        // verify no errors in changelog merge
+        exec("bun changie-merge")
+        withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
+          // type check and build TinyMCE
+          exec("bun ci-all-seq")
 
-        // validate documentation generator
-        exec("bun tinymce-grunt shell:moxiedoc")
+          // validate documentation generator
+          exec("bun tinymce-grunt shell:moxiedoc")
+        }
       }
     }
   }
@@ -340,30 +352,21 @@ timestamps { notifyStatusChange(
       parallel processes
   }
 
-  devPods.nodeConsumer(
-    nodeOpts: [
-      resourceRequestCpu: '2',
-      resourceRequestMemory: '4Gi',
-      resourceRequestEphemeralStorage: '16Gi',
-      resourceLimitCpu: '7.5',
-      resourceLimitMemory: '4Gi',
-      resourceLimitEphemeralStorage: '16Gi'
-    ],
-    useContainers: ['node-lts'],
-    build: cacheName
-  ) {
-    props = readProperties(file: 'build.properties')
-    String primaryBranch = props.primaryBranch
-    assert primaryBranch != null && primaryBranch != ""
+  devPods.custom(containers: [ nodeLtsResources ], checkoutStep: checkoutAndMergeStep) {
+    container('node-lts') {
+      props = readProperties(file: 'build.properties')
+      String primaryBranch = props.primaryBranch
+      assert primaryBranch != null && primaryBranch != ""
 
-    stage('Deploy Storybook') {
-      if (env.BRANCH_NAME == primaryBranch) {
-        echo "Deploying Storybook"
-        tinyGit.withGitHubSSHCredentials {
-          exec('bun run -F @tinymce/oxide-components deploy-storybook')
+      stage('Deploy Storybook') {
+        if (env.BRANCH_NAME == primaryBranch) {
+          echo "Deploying Storybook"
+          tinyGit.withGitHubSSHCredentials {
+            exec('bun run -F @tinymce/oxide-components deploy-storybook')
+          }
+        } else {
+          echo "Skipping Storybook deployment as the pipeline is not running on the primary branch"
         }
-      } else {
-        echo "Skipping Storybook deployment as the pipeline is not running on the primary branch"
       }
     }
   }
