@@ -190,8 +190,10 @@ def runSeleniumPod(String cacheName, String name, String browser, String version
 
 def gitMerge(String primaryBranch) {
   if (env.BRANCH_NAME != primaryBranch) {
-    echo "Merging ${primaryBranch} into this branch to run tests"
-    exec("git merge --no-commit --no-ff origin/${primaryBranch}")
+    // echo "Merging ${primaryBranch} into this branch to run tests"
+    // exec("git merge --no-commit --no-ff origin/${primaryBranch}")
+    echo "SKIPPING MERGE: Merging ${targetBranch} into this branch to run tests (temporarily disabled for spike testing)"
+
   }
 }
 
