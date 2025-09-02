@@ -12,7 +12,7 @@ interface IconModule {
  */
 export const loadModule = async (filePath: string): Promise<IconModule> => {
   // Import the module using dynamic import
-  const module = require(filePath);
+  const module = await import(filePath);
   return module;
 };
 
@@ -27,7 +27,7 @@ export const loadModuleFromString = async (code: string): Promise<IconModule> =>
     // Write content to a temporary file
     writeFileSync(tempFile, code);
     // Import the module using dynamic import
-    const module = require(tempFile);
+    const module = await import(tempFile);
     return module;
   } finally {
     // Clean up temporary file

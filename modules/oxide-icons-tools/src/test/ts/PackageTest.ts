@@ -1,8 +1,8 @@
-import { describe, it } from 'mocha';
 import { assert } from 'chai';
+import { describe, it } from 'mocha';
 
+import { iconPackager } from 'ephox/oxide-icons-tools/api/IconPackager';
 import { validateModuleStructure } from 'ephox/oxide-icons-tools/core/ModuleValidator';
-import { iconPackager } from 'ephox/oxide-icons-tools/api/Main';
 
 describe('oxide-icons-tools.api.Package', () => {
   const svgs = [
@@ -65,7 +65,7 @@ describe('oxide-icons-tools.api.Package', () => {
     const mockFs = {};
     const options = {
       name: 'test-icons',
-      filePaths: ['test-icon.svg'],
+      filePaths: [ 'test-icon.svg' ],
       outputDir: 'dist',
       mockFs
     };

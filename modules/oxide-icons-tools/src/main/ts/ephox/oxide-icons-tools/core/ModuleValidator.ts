@@ -29,19 +29,17 @@ export const validateModuleStructure = (sourceCode: string): ValidationResult =>
     if (ts.isExportDeclaration(node)) {
       // Handle named exports like: export { getAll }
       if (node.exportClause && ts.isNamedExports(node.exportClause)) {
-        node.exportClause.elements.forEach(element => {
+        node.exportClause.elements.forEach((element) => {
           if (element.name.text === 'getAll') {
             hasGetAllExport = true;
           }
         });
       }
-    }
-    // Check for direct exports like: export const getAll = ...
-    else if (ts.isVariableStatement(node) && node.modifiers?.some(m => m.kind === ts.SyntaxKind.ExportKeyword)) {
-      node.declarationList.declarations.forEach(declaration => {
+    } else if (ts.isVariableStatement(node) && node.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword)) {
+      node.declarationList.declarations.forEach((declaration) => {
         if (ts.isIdentifier(declaration.name) && declaration.name.text === 'getAll') {
           hasGetAllExport = true;
-          
+
           // Check that getAll is a function that returns a Record<string, string>
           if (declaration.initializer) {
             if (ts.isArrowFunction(declaration.initializer) || ts.isFunctionExpression(declaration.initializer)) {
@@ -91,11 +89,10 @@ export const validateModuleStructure = (sourceCode: string): ValidationResult =>
  */
 export const validateModule = (moduleCode: string): boolean => {
   const result = validateModuleStructure(moduleCode);
-  
+
   if (!result.isValid) {
-    console.error('Module validation failed:');
-    result.errors.forEach(error => console.error(`- ${error}`));
+    throw new Error(`Module validation failed:\n${result.errors.map((error) => `- ${error}`).join('\n')}`);
   }
-  
+
   return result.isValid;
 };

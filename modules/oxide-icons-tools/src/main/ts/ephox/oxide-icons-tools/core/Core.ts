@@ -1,10 +1,9 @@
-import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
 import * as path from 'path';
-import { optimize } from 'svgo';
-import type { Config } from 'svgo';
+import { optimize, type Config } from 'svgo';
 
 import type { PluginOptions } from '../Configuration.js';
+
 import { populateTemplates } from './CreateFiles.js';
 import { verifyClasses } from './VerifyClasses.js';
 import { verifySet } from './VerifySet.js';
@@ -52,7 +51,7 @@ const writeFiles = async (filesToWrite: Array<{ path: string; contents: string }
 
 export const iconPackager = async (options: PluginOptions & { filePaths: string[] }, mockFs?: Record<string, { contents: Buffer }>): Promise<void> => {
   const svgs = await Promise.all(options.filePaths.map(readSvg));
-  const optimizedSvgs = svgs.map(svg => optimizeSvg(svg, options.svgo ?? {}));
+  const optimizedSvgs = svgs.map((svg) => optimizeSvg(svg, options.svgo ?? {}));
 
   verifyClasses(optimizedSvgs);
   await verifySet(optimizedSvgs, options.diffIgnore ?? []);

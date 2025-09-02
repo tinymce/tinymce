@@ -1,13 +1,12 @@
 import { DOMParser } from '@xmldom/xmldom';
 
-import Settings from '../Configuration.js';
 import type { Svg } from './Core.js';
 
 export const verifyClasses = (svgs: Svg[]): void => {
   const parser = new DOMParser();
   const missing: string[] = [];
 
-  svgs.forEach(svg => {
+  svgs.forEach((svg) => {
     const doc = parser.parseFromString(svg.data, 'text/xml');
     const svgElement = doc.documentElement;
 

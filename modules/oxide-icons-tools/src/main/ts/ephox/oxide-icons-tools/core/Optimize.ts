@@ -1,5 +1,4 @@
-import { optimize } from 'svgo';
-import type { Config } from 'svgo';
+import { optimize, type Config } from 'svgo';
 
 import type { Svg } from './Core.js';
 
