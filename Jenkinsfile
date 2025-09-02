@@ -3,6 +3,9 @@
 
 standardProperties()
 
+String ciAccountId = "103651136441"
+String ciRegistry = "${ciAccountId}.dkr.ecr.us-east-2.amazonaws.com"
+
 def runBedrockTest(String name, String command, Boolean runAll, int retry = 0, int timeout = 0) {
   def bedrockCmd = command + (runAll ? " --ignore-lerna-changed=true" : "")
   echo "Running Bedrock cmd: ${bedrockCmd}"
@@ -90,9 +93,8 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
           resourceLimitMemory: '6Gi',
           resourceLimitEphemeralStorage: '16Gi'
         ],
-        tag: '20',
         build: cacheName,
-        useContainers: ['node', 'aws-cli']
+        useContainers: ['node-lts', 'aws-cli']
       ) {
         grunt('list-changed-browser')
         bedrockRemoteTools.tinyWorkSishTunnel()
@@ -108,7 +110,7 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
 def runPlaywrightPod(String cacheName, String name, Closure body) {
 
   def containers = [
-    devPods.getContainerDefaultArgs([ name: 'node', image: "public.ecr.aws/docker/library/node:20", runAsGroup: '1000', runAsUser: '1000' ]) + devPods.hiRes(),
+    devPods.getContainerDefaultArgs([ name: 'node', image: "${ciRegistry}/build-containers/node-lts:lts", runAsGroup: '1000', runAsUser: '1000' ]) + devPods.hiRes(),
     devPods.getContainerDefaultArgs([ name: 'aws-cli', image: 'public.ecr.aws/aws-cli/aws-cli:latest', runAsGroup: '1000', runAsUser: '1000' ]) + devPods.lowRes(),
     devPods.getContainerDefaultArgs([ name: 'playwright', image: 'mcr.microsoft.com/playwright:v1.53.1-noble']) + devPods.hiRes()
   ]
@@ -131,7 +133,7 @@ def runPlaywrightPod(String cacheName, String name, Closure body) {
 def runSeleniumPod(String cacheName, String name, String browser, String version, Closure body) {
   Map node = [
           name: 'node',
-          image: "public.ecr.aws/docker/library/node:20",
+          image: "${ciRegistry}/build-containers/node-lts:lts",
           command: 'sleep',
           args: 'infinity',
           resourceRequestCpu: '4',
@@ -224,7 +226,7 @@ timestamps { notifyStatusChange(
       resourceLimitMemory: '4Gi',
       resourceLimitEphemeralStorage: '16Gi'
     ],
-    tag: '20',
+    useContainers: ['node-lts'],
     build: cacheName
   ) {
     props = readProperties(file: 'build.properties')
@@ -235,22 +237,18 @@ timestamps { notifyStatusChange(
     stage('Deps') {
       // cancel build if primary branch doesn't merge cleanly
       gitMerge(primaryBranch)
-      bunInstall()
+      exec("bun install")
     }
 
     stage('Build') {
       // verify no errors in changelog merge
-      withBunPath {
-        exec("bun changie-merge")
-      }
+      exec("bun changie-merge")
       withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
-        withBunPath {
-          // type check and build TinyMCE
-          exec("bun ci-all-seq")
+        // type check and build TinyMCE
+        exec("bun ci-all-seq")
 
-          // validate documentation generator
-          exec("bun tinymce-grunt shell:moxiedoc")
-        }
+        // validate documentation generator
+        exec("bun tinymce-grunt shell:moxiedoc")
       }
     }
   }
@@ -324,19 +322,17 @@ timestamps { notifyStatusChange(
   }
 
   processes['playwright'] = runPlaywrightPod(cacheName, 'playwright-tests') {
-    withBunPath {
-      exec('bun run -F @tinymce/oxide-components test-ci')
-      junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
-      def visualTestStatus = exec(script: 'bun run -F @tinymce/oxide-components test-visual-ci', returnStatus: true)
-      if (visualTestStatus == 4) {
-        unstable("Visual tests failed")
-      } else if (visualTestStatus != 0) {
-        error("Unexpected error running visual tests")
-      }
-      junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results-visual.xml'
-      exec('find modules/oxide-components -name "*.png" -type f || echo "No PNG files found"')
-      archiveArtifacts artifacts: 'modules/oxide-components/test-results/**/*.png', allowEmptyArchive: true, fingerprint: true
+    exec('bun run -F @tinymce/oxide-components test-ci')
+    junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
+    def visualTestStatus = exec(script: 'bun run -F @tinymce/oxide-components test-visual-ci', returnStatus: true)
+    if (visualTestStatus == 4) {
+      unstable("Visual tests failed")
+    } else if (visualTestStatus != 0) {
+      error("Unexpected error running visual tests")
     }
+    junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results-visual.xml'
+    exec('find modules/oxide-components -name "*.png" -type f || echo "No PNG files found"')
+    archiveArtifacts artifacts: 'modules/oxide-components/test-results/**/*.png', allowEmptyArchive: true, fingerprint: true
   }
 
   stage('Run tests') {
@@ -353,13 +349,8 @@ timestamps { notifyStatusChange(
       resourceLimitMemory: '4Gi',
       resourceLimitEphemeralStorage: '16Gi'
     ],
-    tag: '20',
-    build: cacheName,
-    environment: {
-      tinyGit.addAuthorConfig()
-      tinyGit.addGitHubToKnownHosts()
-      sh "tar -zxf ./file.tar.gz"
-    }
+    useContainers: ['node-lts'],
+    build: cacheName
   ) {
     props = readProperties(file: 'build.properties')
     String primaryBranch = props.primaryBranch
@@ -369,9 +360,7 @@ timestamps { notifyStatusChange(
       if (env.BRANCH_NAME == primaryBranch) {
         echo "Deploying Storybook"
         tinyGit.withGitHubSSHCredentials {
-          withBunPath {
-            exec('bun run -F @tinymce/oxide-components deploy-storybook')
-          }
+          exec('bun run -F @tinymce/oxide-components deploy-storybook')
         }
       } else {
         echo "Skipping Storybook deployment as the pipeline is not running on the primary branch"
