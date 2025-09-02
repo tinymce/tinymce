@@ -1,0 +1,11 @@
+# Bun configuration file
+# Replaces .yarnrc settings
+
+[install]
+# Equivalent to --install.frozen-lockfile true
+frozen-lockfile = true
+
+# Registry configuration - bun uses npm registry by default
+[install.scopes]
+"@ephox" = "https://registry.yarnpkg.com"
+"@tinymce" = "https://registry.yarnpkg.com"

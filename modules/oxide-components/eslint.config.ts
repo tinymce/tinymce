@@ -17,7 +17,9 @@ export default defineConfig(
       files: [ '**/*.{ts,tsx}' ],
       languageOptions: {
         ecmaVersion: 2020,
-        globals: globals.browser,
+        globals: {
+          ...globals.browser,
+        },
       },
       plugins: {
         'react-hooks': reactHooks,

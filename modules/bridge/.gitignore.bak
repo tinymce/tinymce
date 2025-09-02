@@ -1,0 +1,15 @@
+.DS_Store
+*~
+*.iws
+*.sublime-workspace
+*.cache
+/lib
+/dist
+/scratch
+/gen
+/dependency
+/config/bolt/bootstrap*.js
+/inconsistent.dependencies
+node_modules
+package-lock.json
+/jenkins-plumbing
