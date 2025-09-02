@@ -1,0 +1,1 @@
+export declare function getAll(): Record<string, string>;

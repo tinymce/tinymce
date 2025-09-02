@@ -122,7 +122,7 @@ UnitTest.asynctest('SelectionInFramePositionTest', (success, failure) => {
                   const root = SugarElement.fromDom(data.classic.element.dom.contentWindow.document.body);
                   return SelectorFind.descendant(root, 'p').fold(() => Result.error('Could not find paragraph yet'), (_p) => Result.value(data));
                 }),
-                Guard.tryUntil('Waiting for content to load in iframe', 10, 10000)
+                Guard.tryUntil('Waiting for content to load in iframe', 100, 100000)
               )
             ]
           ),

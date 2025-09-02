@@ -7,7 +7,8 @@
     "url": "https://github.com/tinymce/tinymce.git",
     "directory": "modules/oxide-icons-default"
   },
-  "main": "dist/js/icons.js",
+  "main": "dist/icons/default/icons.js",
+  "types": "dist/icons/default/icons.d.ts",
   "scripts": {
     "build": "grunt --gruntfile Gruntfile.cjs",
     "prepublishOnly": "yarn ci",
@@ -24,5 +25,10 @@
     "LICENSE.txt"
   ],
   "author": "Ephox Corporation DBA Tiny Technologies, Inc",
-  "license": "GPL-2.0-or-later"
+  "license": "GPL-2.0-or-later",
+  "typesVersions": {
+    "*": {
+      "*": ["dist/icons/default/icons.d.ts"]
+    }
+  }
 }

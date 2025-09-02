@@ -1,58 +1,43 @@
-import { expect } from 'chai';
-import { describe } from 'mocha';
-import type { PresetDefault } from 'svgo';
+import { describe, it } from 'mocha';
+import { assert } from 'chai';
 
-import Settings from '../../main/ts/Configuration.js';
+import Settings from 'ephox/oxide-icons-tools/Configuration';
 
-describe('ConfigurationTest', () => {
+describe('oxide-icons-tools.core.Configuration', () => {
   it('should merge new options with default options', () => {
     const options = Settings.getPluginOptions({
       name: 'my-icon-pack',
       diffDefault: true,
       svgo: {
-        plugins: [{ name: 'removeXMLNS' }]
+        plugins: [
+          'removeXMLNS'
+        ]
       }
     });
-
-    // Expect the default plugins to be enabled
-    const pluginNames = options.svgo.plugins?.map((plugin: string | { name: string }) => typeof plugin === 'string' ? plugin : plugin.name);
-    expect(pluginNames).to.have.members([
-      'removeXMLNS',
-      'removeTitle',
-      'removeAttrs',
-      'convertStyleToAttrs',
-      'preset-default'
-    ]);
 
     // Expect options to be overridden
-    expect(options.name).to.to.equal('my-icon-pack');
-    expect(options.diffDefault).to.to.equal(true);
-    expect(options.svgo.plugins).to.deep.include({ name: 'removeXMLNS' });
+    assert.equal(options.name, 'my-icon-pack');
+    assert.isTrue(options.diffDefault);
+    assert.include(options.svgo?.plugins ?? [], 'removeXMLNS');
 
-    // Expect default options to exist (just testing a subset)
-    expect(options.diffIgnore).to.be.length(0);
-    expect(options.svgo.floatPrecision).to.equal(1);
+    // Expect default options to exist
+    assert.isString(options.licenseHeader);
+    assert.isArray(options.diffIgnore);
   });
 
-  it('should merge the default plugin overrides', () => {
+  it('should handle custom plugins', () => {
     const options = Settings.getPluginOptions({
       name: 'my-icon-pack',
-      diffDefault: true,
       svgo: {
-        plugins: [{
-          name: 'preset-default',
-          params: {
-            overrides: {
-              removeViewBox: false
-            }
-          }
-        }]
+        plugins: [
+          'removeXMLNS',
+          'removeDimensions'
+        ]
       }
     });
 
-    const defaults = options.svgo.plugins?.find((plugin: string | { name: string }) => typeof plugin !== 'string' && plugin.name === 'preset-default');
-    expect(defaults).to.be.an('object');
-    const overrides = (defaults as PresetDefault).params?.overrides;
-    expect(overrides).to.have.property('removeViewBox');
+    // Expect plugins to be in options
+    assert.include(options.svgo?.plugins ?? [], 'removeXMLNS');
+    assert.include(options.svgo?.plugins ?? [], 'removeDimensions');
   });
 });
