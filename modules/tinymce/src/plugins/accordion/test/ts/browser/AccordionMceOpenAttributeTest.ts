@@ -113,6 +113,4 @@ describe('browser.tinymce.plugins.accordion.AccordionMceOpenAttributeTest', () =
       '<details data-mce-selected="1" open="open"><summary>Toggle accordion</summary><p>Expanded info</p></details>'
     );
   });
-  /* TODO: getContent in readonly mode should replace open with data-mce-open and remove data-mce-open */
-  /* TODO: getContent in design mode should replace data-mce-open */
 });
