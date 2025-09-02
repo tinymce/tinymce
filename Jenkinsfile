@@ -253,7 +253,7 @@ timestamps { notifyStatusChange(
 
       stage('Build') {
         // verify no errors in changelog merge
-        exec("bun changie-merge")
+        // exec("bun changie-merge") // TODO: changie not available in node-lts container
         withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
           // type check and build TinyMCE
           exec("bun ci-all-seq")
