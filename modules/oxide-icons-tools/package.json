@@ -1,8 +1,7 @@
 {
   "name": "@tinymce/oxide-icons-tools",
   "version": "1.0.0",
-  "main": "lib/main/ts/api/Main.cjs",
-  "module": "lib/main/ts/api/Main.js",
+  "main": "lib/main/ts/api/Main.js",
   "types": "lib/main/ts/api/Main.d.ts",
   "scripts": {
     "prepublishOnly": "tsc",

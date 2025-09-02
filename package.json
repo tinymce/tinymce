@@ -39,7 +39,7 @@
   "devDependencies": {
     "@ephox/bedrock-client": "^15.0.0",
     "@ephox/bedrock-server": "^15.0.2",
-    "@tinymce/oxide-icons-tools": "link:./modules/oxide-icons-tools",
+    "@tinymce/oxide-icons-tools": "^1.0.0",
     "@ephox/swag": "^4.6.0",
     "@tinymce/eslint-plugin": "^3.0.0",
     "@tinymce/moxiedoc": "^0.3.0",
