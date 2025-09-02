@@ -1,8 +1,8 @@
 {
   "private": true,
-  "workspaces": [
-    "modules/*"
-  ],
+  "workspaces": {
+    "packages": ["modules/*"]
+  },
   "scripts": {
     "tinymce-grunt": "grunt --gruntfile modules/tinymce/Gruntfile.js",
     "tinymce-rollup": "run-s \"tinymce-grunt dev rollup\"",
@@ -43,7 +43,6 @@
     "@ephox/swag": "^4.6.0",
     "@tinymce/eslint-plugin": "^3.0.0",
     "@tinymce/moxiedoc": "^0.3.0",
-    "@tinymce/oxide-icons-default": "^3.0.0",
     "@types/chai": "^4.3.11",
     "@types/chai-as-promised": "^8.0.2",
     "chai": "^4.4.1",

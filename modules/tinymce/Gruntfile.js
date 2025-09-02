@@ -198,13 +198,21 @@ module.exports = function (grunt) {
 
     terser: Object.assign(
       {
-        options: {
+              options: {
+        ecma: 2018,
+        module: true,
+        mangle: false,
+        compress: false,
+        format: {
           ecma: 2018,
-          output: {
-            ascii_only: true
-          },
-          mangle: false,
-          compress: false
+          beautify: true,
+          comments: true,
+          ascii_only: true,
+          indent_level: 2,
+          keep_quoted_props: true,
+          max_line_len: false,
+          semicolons: true
+        }
         },
         core: {
           files: [
@@ -217,7 +225,7 @@ module.exports = function (grunt) {
           options: {
             mangle: false,
             compress: false,
-            output: {
+            format: {
               indent_level: 2
             }
           },
