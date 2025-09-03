@@ -77,9 +77,10 @@ class ScriptLoader {
    * @param {String} url Absolute URL to script to add.
    * @return {Promise} A promise that will resolve when the script loaded successfully or reject if it failed to load.
    */
-  public loadScript(url: string): Promise<void> {
+  public loadScript(url: string, editorDoc?: Document): Promise<void> {
     return new Promise((resolve, reject) => {
       const dom = DOM;
+      const doc = editorDoc ?? document;
       let elm: HTMLScriptElement | null;
 
       const cleanup = () => {
@@ -106,7 +107,7 @@ class ScriptLoader {
       const id = dom.uniqueId();
 
       // Create new script element
-      elm = document.createElement('script');
+      elm = doc.createElement('script');
       elm.id = id;
       elm.type = 'text/javascript';
       elm.src = Tools._addCacheSuffix(url);
@@ -130,7 +131,7 @@ class ScriptLoader {
       elm.onerror = error;
 
       // Add script to document
-      (document.getElementsByTagName('head')[0] || document.body).appendChild(elm);
+      (doc.head || doc.body).appendChild(elm);
     });
   }
 
@@ -201,10 +202,10 @@ class ScriptLoader {
    * @method loadQueue
    * @return {Promise} A promise that is resolved when all queued items are loaded or rejected with the script urls that failed to load.
    */
-  public loadQueue(): Promise<void> {
+  public loadQueue(editorDoc?: Document): Promise<void> {
     const queue = this.queue;
     this.queue = [];
-    return this.loadScripts(queue);
+    return this.loadScripts(queue, editorDoc);
   }
 
   /**
@@ -215,7 +216,7 @@ class ScriptLoader {
    * @param {Array} scripts Array of queue items to load.
    * @return {Promise} A promise that is resolved when all scripts are loaded or rejected with the script urls that failed to load.
    */
-  public loadScripts(scripts: string[]): Promise<void> {
+  public loadScripts(scripts: string[], editorDoc?: Document): Promise<void> {
     const self = this;
 
     const execCallbacks = (name: 'resolve' | 'reject', url: string) => {
@@ -248,7 +249,7 @@ class ScriptLoader {
         // Script is not already loaded, so load it
         self.states[url] = LOADING;
 
-        return self.loadScript(url).then(() => {
+        return self.loadScript(url, editorDoc).then(() => {
           self.states[url] = LOADED;
           execCallbacks('resolve', url);
 
