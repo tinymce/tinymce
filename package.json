@@ -1,4 +1,5 @@
 {
+  "name": "tinymce",
   "private": true,
   "workspaces": [
     "modules/*"

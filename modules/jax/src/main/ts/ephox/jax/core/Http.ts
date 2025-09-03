@@ -165,7 +165,7 @@ const fetchDownload = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, 
       const reader = body.getReader();
       const process = (result: ReadableStreamReadResult<Uint8Array>) => {
         if (result.done) {
-          resolve(Result.value(new Blob(chunks, { type: mime.getOr('') })));
+          resolve(Result.value(new Blob(chunks as BlobPart[], { type: mime.getOr('') })));
         } else {
           chunks.push(result.value);
           loaded += result.value.length;
