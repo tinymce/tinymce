@@ -1,5 +1,5 @@
 {
-  "name": "tinymce",
+  "name": "tinymce-core",
   "private": true,
   "workspaces": [
     "modules/*"
