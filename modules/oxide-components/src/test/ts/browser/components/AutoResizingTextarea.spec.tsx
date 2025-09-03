@@ -7,6 +7,42 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-react';
 
 describe('browser.AutoResizingTextareaTest', () => {
+  it('Sanity check', async () => {
+    const placeHolder = 'Placeholder for disabled textarea';
+    const { getByTestId } = render(
+      <AutoResizingTextarea value='' placeholder={placeHolder} disabled={true} data-testid="textarea" />,
+      {
+
+        wrapper: ({ children }) => {
+          return (
+            <div className={classes([ 'tox' ])}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '10px'
+              }}>
+                <div style={{
+                  width: '120px'
+                }}>
+                  {children}
+                </div>
+              </div>
+            </div>
+          );
+        },
+      });
+
+    const textareaLocator = getByTestId('textarea');
+    await expect.element(textareaLocator, {
+      message: 'Textarea should have a placeholder'
+    }).toHaveAttribute('placeholder', placeHolder);
+    await expect.element(textareaLocator, {
+      message: 'Textarea should be disabled'
+    }).toBeDisabled();
+
+  });
+
   it('Should grow and shrink as needed', async () => {
 
     const maxHeight: Height = {
