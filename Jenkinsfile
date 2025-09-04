@@ -336,7 +336,7 @@ timestamps { notifyStatusChange(
       parallel processes
   }
 
-  devPods.nodeProducer(
+  devPods.nodeConsumer(
     nodeOpts: [
       resourceRequestCpu: '2',
       resourceRequestMemory: '4Gi',
@@ -346,7 +346,12 @@ timestamps { notifyStatusChange(
       resourceLimitEphemeralStorage: '16Gi'
     ],
     tag: '20',
-    build: cacheName
+    build: cacheName,
+    environment: {
+      tinyGit.addAuthorConfig()
+      tinyGit.addGitHubToKnownHosts()
+      sh "tar -zxf ./file.tar.gz"
+    }
   ) {
     props = readProperties(file: 'build.properties')
     String primaryBranch = props.primaryBranch
@@ -356,8 +361,7 @@ timestamps { notifyStatusChange(
       if (env.BRANCH_NAME == primaryBranch) {
         echo "Deploying Storybook"
         tinyGit.withGitHubSSHCredentials {
-           echo "Deploying Storybook skipped until the Jenkinsfile is fixed"
-          // exec('yarn -s --cwd modules/oxide-components deploy-storybook')
+          exec('yarn -s --cwd modules/oxide-components deploy-storybook')
         }
       } else {
         echo "Skipping Storybook deployment as the pipeline is not running on the primary branch"
