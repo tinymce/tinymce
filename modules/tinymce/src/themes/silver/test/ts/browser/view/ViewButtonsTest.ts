@@ -5,7 +5,7 @@ import { Class, SugarDocument } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import { ViewButtonClasses } from 'tinymce/themes/silver/ui/toolbar/button/ButtonClasses';
 
 describe('browser.tinymce.themes.silver.view.ViewButtonsTest', () => {

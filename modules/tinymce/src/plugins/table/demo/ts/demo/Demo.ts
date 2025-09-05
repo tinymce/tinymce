@@ -1,9 +1,10 @@
-import { TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
 tinymce.init({
   selector: 'div.tinymce',
+  license_key: 'gpl',
   plugins: 'table',
   toolbar: 'table tableprops tablecellprops tablerowprops | tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol | tablecutrow tablecopyrow tablepasterowbefore tablepasterowafter |' +
   ' tableclass tablecellclass | tablecellvalign | tablecellborderwidth tablecellborderstyle | tablecaption | tablecellbackgroundcolor tablecellbordercolor | tablerowheader tablecolheader',

@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { Type } from '@ephox/katamari';
 
-import Editor from './api/Editor';
+import type Editor from './api/Editor';
 
 type ConsoleMessageType = 'error' | 'warn' | 'log' | 'info';
 interface ConsoleMessage {

@@ -1,6 +1,6 @@
 import { Arr, Fun, Global, Obj } from '@ephox/katamari';
 
-import { Editor } from '../alien/EditorTypes';
+import type { Editor } from '../alien/EditorTypes';
 import { get as getOption } from '../alien/Options';
 
 const isSilver = (): boolean => {

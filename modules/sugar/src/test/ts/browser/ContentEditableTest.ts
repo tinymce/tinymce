@@ -4,7 +4,7 @@ import { assert } from 'chai';
 import * as Insert from 'ephox/sugar/api/dom/Insert';
 import * as Remove from 'ephox/sugar/api/dom/Remove';
 import * as SugarBody from 'ephox/sugar/api/node/SugarBody';
-import { SugarElement } from 'ephox/sugar/api/node/SugarElement';
+import type { SugarElement } from 'ephox/sugar/api/node/SugarElement';
 import * as Attribute from 'ephox/sugar/api/properties/Attribute';
 import * as ContentEditable from 'ephox/sugar/api/properties/ContentEditable';
 import Div from 'ephox/sugar/test/Div';

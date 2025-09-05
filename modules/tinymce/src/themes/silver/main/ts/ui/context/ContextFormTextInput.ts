@@ -1,9 +1,9 @@
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Disabling, FormField, GuiFactory, Input, Keying, NativeEvents, SketchSpec } from '@ephox/alloy';
-import { InlineContent } from '@ephox/bridge';
-import { Cell, Fun, Optional, Singleton } from '@ephox/katamari';
+import { AddEventsBehaviour, type AlloyComponent, AlloyEvents, Behaviour, Disabling, FormField, GuiFactory, Input, Keying, NativeEvents, type SketchSpec } from '@ephox/alloy';
+import type { InlineContent } from '@ephox/bridge';
+import { Cell, Fun, Optional, type Singleton } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as UiState from '../../UiState';
 import { onContextFormControlDetached, onControlAttached } from '../controls/Controls';
 

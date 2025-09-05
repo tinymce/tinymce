@@ -1,9 +1,10 @@
-import { TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
 tinymce.init({
   selector: 'div.tinymce',
+  license_key: 'gpl',
   setup: (ed) => {
     ed.on('init', () => {
       const runtimeModel = ed.model;

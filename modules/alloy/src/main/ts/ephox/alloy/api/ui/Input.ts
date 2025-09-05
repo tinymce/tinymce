@@ -1,9 +1,9 @@
 import * as InputBase from '../../ui/common/InputBase';
-import { InputDetail, InputSketcher, InputSpec } from '../../ui/types/InputTypes';
-import { SketchSpec } from '../component/SpecTypes';
+import type { InputDetail, InputSketcher, InputSpec } from '../../ui/types/InputTypes';
+import type { SketchSpec } from '../component/SpecTypes';
 
 import * as Sketcher from './Sketcher';
-import { SingleSketchFactory } from './UiSketcher';
+import type { SingleSketchFactory } from './UiSketcher';
 
 const factory: SingleSketchFactory<InputDetail, InputSpec> = (detail, _spec): SketchSpec => ({
   uid: detail.uid,

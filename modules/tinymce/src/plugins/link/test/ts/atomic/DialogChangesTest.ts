@@ -2,8 +2,8 @@ import { Assert, describe, context, it } from '@ephox/bedrock-client';
 import { Fun, Optional, OptionalInstances } from '@ephox/katamari';
 import fc from 'fast-check';
 
-import { DialogChanges, DialogDelta } from 'tinymce/plugins/link/ui/DialogChanges';
-import { LinkDialogCatalog, LinkDialogData, ListItem } from 'tinymce/plugins/link/ui/DialogTypes';
+import { DialogChanges, type DialogDelta } from 'tinymce/plugins/link/ui/DialogChanges';
+import type { LinkDialogCatalog, LinkDialogData, ListItem } from 'tinymce/plugins/link/ui/DialogTypes';
 
 const tOptional = OptionalInstances.tOptional;
 

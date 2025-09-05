@@ -1,9 +1,9 @@
 import { TinyAssertions, TinyContentActions, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
-import { NormalizedEvent } from 'tinymce/core/events/EventUtils';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type { NormalizedEvent } from 'tinymce/core/events/EventUtils';
 import * as InsertNewLine from 'tinymce/core/newline/InsertNewLine';
 
 export const testBeforeInputEvent = (performEditAction: (editor: Editor) => void, eventType: string) =>

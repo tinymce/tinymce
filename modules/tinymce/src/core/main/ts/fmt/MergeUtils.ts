@@ -1,14 +1,14 @@
 import { Strings } from '@ephox/katamari';
 
-import DOMUtils from '../api/dom/DOMUtils';
-import Editor from '../api/Editor';
+import type DOMUtils from '../api/dom/DOMUtils';
+import type Editor from '../api/Editor';
 import Tools from '../api/util/Tools';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import ElementUtils from '../dom/ElementUtils';
 import * as NodeType from '../dom/NodeType';
 
 import { isCaretNode } from './FormatContainer';
-import { ApplyFormat, FormatVars } from './FormatTypes';
+import type { ApplyFormat, FormatVars } from './FormatTypes';
 import * as FormatUtils from './FormatUtils';
 
 const each = Tools.each;

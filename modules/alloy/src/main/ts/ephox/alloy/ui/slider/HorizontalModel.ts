@@ -1,10 +1,10 @@
 import { Fun, Optional } from '@ephox/katamari';
 import { Css, Width } from '@ephox/sugar';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
-import { NativeSimulatedEvent } from '../../events/SimulatedEvent';
-import { HorizontalSliderDetail, SliderValueX } from '../types/SliderTypes';
+import type { NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import type { HorizontalSliderDetail, SliderValueX } from '../types/SliderTypes';
 
 import * as EdgeActions from './EdgeActions';
 import * as ModelCommon from './ModelCommon';

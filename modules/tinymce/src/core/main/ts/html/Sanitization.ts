@@ -1,9 +1,9 @@
 import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
 import { Attribute, NodeTypes, Remove, Replication, SugarElement } from '@ephox/sugar';
-import createDompurify, { Config, DOMPurify, UponSanitizeAttributeHookEvent, UponSanitizeElementHookEvent } from 'dompurify';
+import createDompurify, { type Config, type DOMPurify, type UponSanitizeAttributeHookEvent, type UponSanitizeElementHookEvent } from 'dompurify';
 
-import { DomParserSettings } from '../api/html/DomParser';
-import Schema from '../api/html/Schema';
+import type { DomParserSettings } from '../api/html/DomParser';
+import type Schema from '../api/html/Schema';
 import Tools from '../api/util/Tools';
 import * as URI from '../api/util/URI';
 import * as NodeType from '../dom/NodeType';
@@ -192,7 +192,7 @@ const getPurifyConfig = (settings: DomParserSettings, mimeType: MimeType): Confi
     // Deliberately ban all tags and attributes by default, and then un-ban them on demand in hooks
     // #comment and #cdata-section are always allowed as they aren't controlled via the schema
     // body is also allowed due to the DOMPurify checking the root node before sanitizing
-    ALLOWED_TAGS: [ '#comment', '#cdata-section', 'body' ],
+    ALLOWED_TAGS: [ '#comment', '#cdata-section', 'body', 'html' ],
     ALLOWED_ATTR: []
   };
   const config = { ...basePurifyConfig };

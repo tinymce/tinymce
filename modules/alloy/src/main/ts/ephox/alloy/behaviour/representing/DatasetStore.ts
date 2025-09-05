@@ -1,9 +1,9 @@
 import { FieldSchema } from '@ephox/boulder';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 import * as Fields from '../../data/Fields';
 
-import { DatasetRepresentingState, DatasetStoreConfig, RepresentingConfig } from './RepresentingTypes';
+import type { DatasetRepresentingState, DatasetStoreConfig, RepresentingConfig } from './RepresentingTypes';
 import { dataset as datasetState } from './RepresentState';
 
 interface DatasetRepresentingConfig extends RepresentingConfig {

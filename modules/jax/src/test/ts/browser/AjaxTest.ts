@@ -4,7 +4,7 @@ import { Arr, FutureResult, Result } from '@ephox/katamari';
 import { readBlobAsText } from 'ephox/jax/core/BlobReader';
 import { DataType } from 'ephox/jax/core/DataType';
 import * as Http from 'ephox/jax/core/Http';
-import { HttpError } from 'ephox/jax/core/HttpError';
+import type { HttpError } from 'ephox/jax/core/HttpError';
 
 /* eslint-disable no-console */
 

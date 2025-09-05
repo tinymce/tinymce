@@ -1,6 +1,6 @@
 import { Type } from '@ephox/katamari';
 
-import Editor from '../../api/Editor';
+import type Editor from '../../api/Editor';
 import { backspaceDelete } from '../actions/Delete';
 import { flattenListSelection } from '../actions/Indentation';
 import * as ToggleList from '../actions/ToggleList';

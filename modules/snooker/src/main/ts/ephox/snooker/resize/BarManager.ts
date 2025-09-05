@@ -1,9 +1,9 @@
 import { Dragger } from '@ephox/dragster';
 import { Fun, Optional } from '@ephox/katamari';
-import { Bindable, Event, Events } from '@ephox/porkbun';
-import { Attribute, Class, Compare, ContentEditable, Css, DomEvent, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
+import { type Bindable, Event, Events } from '@ephox/porkbun';
+import { Attribute, Class, Compare, ContentEditable, Css, DomEvent, SelectorFind, SugarBody, type SugarElement } from '@ephox/sugar';
 
-import { ResizeWire } from '../api/ResizeWire';
+import type { ResizeWire } from '../api/ResizeWire';
 import * as Styles from '../style/Styles';
 import * as CellUtils from '../util/CellUtils';
 

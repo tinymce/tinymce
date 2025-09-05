@@ -1,5 +1,5 @@
 import * as EditorFocus from '../../focus/EditorFocus';
-import Editor from '../Editor';
+import type Editor from '../Editor';
 
 import * as AlignCommands from './AlignCommands';
 import * as ClipboardCommands from './ClipboardCommands';

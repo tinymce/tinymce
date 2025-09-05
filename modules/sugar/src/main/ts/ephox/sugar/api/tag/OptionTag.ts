@@ -1,4 +1,4 @@
-import { SugarElement } from '../node/SugarElement';
+import type { SugarElement } from '../node/SugarElement';
 
 const setValue = (option: SugarElement<HTMLOptionElement>, value: string, text: string): void => {
   const optionDom = option.dom;

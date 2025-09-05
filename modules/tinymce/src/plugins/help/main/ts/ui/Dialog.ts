@@ -1,10 +1,10 @@
 import { Arr, Id, Obj, Optional, Optionals, Type } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Dialog } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import * as Options from '../api/Options';
-import { CustomTabSpecs, TabSpecs } from '../Plugin';
+import type { CustomTabSpecs, TabSpecs } from '../Plugin';
 
 import * as KeyboardNavTab from './KeyboardNavTab';
 import * as KeyboardShortcutsTab from './KeyboardShortcutsTab';

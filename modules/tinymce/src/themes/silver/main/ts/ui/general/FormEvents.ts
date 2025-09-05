@@ -1,4 +1,4 @@
-import { CustomEvent } from '@ephox/alloy';
+import type { CustomEvent } from '@ephox/alloy';
 import { Id } from '@ephox/katamari';
 
 export interface FormChangeEvent<T> extends CustomEvent {

@@ -1,8 +1,8 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
-import { Gather, Transition } from '@ephox/phoenix';
+import { Gather, type Transition } from '@ephox/phoenix';
 
-import { WordDecision, WordDecisionItem } from './WordDecision';
+import { WordDecision, type WordDecisionItem } from './WordDecision';
 import { WordWalking } from './WordWalking';
 
 /*

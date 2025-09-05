@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
-import { Selectors, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
+import { Selectors, type SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import { isCaretNode } from '../fmt/FormatContainer';
 import * as FormatUtils from '../fmt/FormatUtils';
 import { ZWSP } from '../text/Zwsp';

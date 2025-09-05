@@ -1,7 +1,7 @@
 import { Arr, Obj, Type, Unicode } from '@ephox/katamari';
 import { Attribute, Compare, Css, Focus, Insert, InsertAll, Remove, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
-import Editor from './api/Editor';
+import type Editor from './api/Editor';
 import VK from './api/util/VK';
 import * as CaretContainer from './caret/CaretContainer';
 import * as CaretUtils from './caret/CaretUtils';
@@ -162,7 +162,11 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
 
     editor.on('focusin', (e) => {
       // for medias the selection is already managed in `MediaFocus.ts`
-      if (editor.selection.isCollapsed() && !NodeType.isMedia(e.target) && editor.getBody().contains(e.target) && e.target !== editor.getBody() && !editor.dom.isEditable(e.target.parentNode)) {
+      if (NodeType.isMedia(e.target)) {
+        return;
+      }
+
+      if (editor.getBody().contains(e.target) && e.target !== editor.getBody() && !editor.dom.isEditable(e.target.parentNode)) {
         if (fakeCaret.isShowing()) {
           fakeCaret.hide();
         }

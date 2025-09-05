@@ -7,16 +7,16 @@ import * as NodeType from '../../dom/NodeType';
 import * as Position from '../../dom/Position';
 import * as StyleSheetLoaderRegistry from '../../dom/StyleSheetLoaderRegistry';
 import * as TrimNode from '../../dom/TrimNode';
-import { GeomRect } from '../geom/Rect';
+import type { GeomRect } from '../geom/Rect';
 import Entities from '../html/Entities';
 import Schema from '../html/Schema';
-import Styles, { StyleMap } from '../html/Styles';
-import { URLConverter } from '../OptionTypes';
-import { MappedEvent } from '../util/EventDispatcher';
+import Styles, { type StyleMap } from '../html/Styles';
+import type { URLConverter } from '../OptionTypes';
+import type { MappedEvent } from '../util/EventDispatcher';
 import Tools from '../util/Tools';
 
-import EventUtils, { EventUtilsCallback } from './EventUtils';
-import StyleSheetLoader from './StyleSheetLoader';
+import EventUtils, { type EventUtilsCallback } from './EventUtils';
+import type StyleSheetLoader from './StyleSheetLoader';
 
 /**
  * Utility class for various DOM manipulation and retrieval functions.

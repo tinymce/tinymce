@@ -10,7 +10,7 @@ import { Container } from 'ephox/alloy/api/ui/Container';
 import * as DemoSink from 'ephox/alloy/demo/DemoSink';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
 import * as LayoutInset from 'ephox/alloy/positioning/layout/LayoutInset';
-import { Layouts } from 'ephox/alloy/positioning/mode/Anchoring';
+import type { Layouts } from 'ephox/alloy/positioning/mode/Anchoring';
 
 export default (): void => {
   const gui = Gui.create();

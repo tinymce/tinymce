@@ -1,7 +1,7 @@
 import { Arr, Optional, Type } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
 
 const isCustomList = (list: HTMLElement): boolean =>
   /\btox\-/.test(list.className);

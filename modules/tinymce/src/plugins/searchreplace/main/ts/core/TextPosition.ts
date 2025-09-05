@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
-import { SugarElement, SugarText } from '@ephox/sugar';
+import { type SugarElement, SugarText } from '@ephox/sugar';
 
-import { Pattern, Position, TextMatch } from './Types';
+import type { Pattern, Position, TextMatch } from './Types';
 
 interface IndexedTextMatch extends TextMatch {
   readonly matchId: number;

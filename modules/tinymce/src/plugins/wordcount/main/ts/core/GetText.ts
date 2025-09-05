@@ -1,7 +1,7 @@
 import { Unicode } from '@ephox/katamari';
 
 import DomTreeWalker from 'tinymce/core/api/dom/TreeWalker';
-import Schema, { SchemaMap } from 'tinymce/core/api/html/Schema';
+import type { SchemaMap, default as Schema } from 'tinymce/core/api/html/Schema';
 
 const getText = (node: Node, schema: Schema): string[] => {
   const blockElements: SchemaMap = schema.getBlockElements();

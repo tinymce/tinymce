@@ -4,7 +4,7 @@ import { registerEventsAndFilters } from '../mode/Disabled';
 import { registerMode, setMode } from '../mode/Mode';
 import { isReadOnly, registerReadOnlyInputBlockers } from '../mode/Readonly';
 
-import Editor from './Editor';
+import type Editor from './Editor';
 
 /**
  * TinyMCE Editor Mode API.

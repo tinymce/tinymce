@@ -3,7 +3,7 @@ import { McEditor, TinyDom } from '@ephox/mcagar';
 import { Css } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import { tinymce } from 'tinymce/core/api/Tinymce';
 
 describe('browser.tinymce.themes.silver.editor.ResourceLoadingCssTest', () => {

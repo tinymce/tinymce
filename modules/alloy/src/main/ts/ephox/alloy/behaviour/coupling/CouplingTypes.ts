@@ -1,9 +1,9 @@
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 
-import * as Behaviour from '../../api/behaviour/Behaviour';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloySpec } from '../../api/component/SpecTypes';
-import { BehaviourState } from '../common/BehaviourState';
+import type * as Behaviour from '../../api/behaviour/Behaviour';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloySpec } from '../../api/component/SpecTypes';
+import type { BehaviourState } from '../common/BehaviourState';
 
 export interface CouplingBehaviour extends Behaviour.AlloyBehaviour<CouplingConfigSpec, CouplingConfig> {
   config: (config: CouplingConfigSpec) => Behaviour.NamedConfiguredBehaviour<CouplingConfigSpec, CouplingConfig>;

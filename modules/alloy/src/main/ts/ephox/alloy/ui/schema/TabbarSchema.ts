@@ -3,15 +3,15 @@ import { Fun } from '@ephox/katamari';
 
 import { Highlighting } from '../../api/behaviour/Highlighting';
 import { Keying } from '../../api/behaviour/Keying';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import * as AlloyTriggers from '../../api/events/AlloyTriggers';
 import * as SystemEvents from '../../api/events/SystemEvents';
 import { TabButton } from '../../api/ui/TabButton';
 import * as Fields from '../../data/Fields';
 import * as PartType from '../../parts/PartType';
-import { TabbarDetail } from '../types/TabbarTypes';
-import { TabButtonSpec } from '../types/TabButtonTypes';
+import type { TabbarDetail } from '../types/TabbarTypes';
+import type { TabButtonSpec } from '../types/TabButtonTypes';
 
 const schema = Fun.constant([
   FieldSchema.required('tabs'),

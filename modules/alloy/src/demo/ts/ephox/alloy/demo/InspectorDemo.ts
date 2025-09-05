@@ -8,7 +8,7 @@ import { Form } from 'ephox/alloy/api/ui/Form';
 import { Input } from 'ephox/alloy/api/ui/Input';
 import * as Debugging from 'ephox/alloy/debugging/Debugging';
 import * as HtmlDisplay from 'ephox/alloy/demo/HtmlDisplay';
-import { FormParts } from 'ephox/alloy/ui/types/FormTypes';
+import type { FormParts } from 'ephox/alloy/ui/types/FormTypes';
 
 /* eslint-disable no-console */
 

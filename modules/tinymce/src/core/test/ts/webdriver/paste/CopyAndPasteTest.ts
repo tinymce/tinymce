@@ -1,12 +1,12 @@
-import { Cursors, RealClipboard, RealKeys } from '@ephox/agar';
+import { type Cursors, RealClipboard, RealKeys } from '@ephox/agar';
 import { before, context, describe, it } from '@ephox/bedrock-client';
 import { Singleton } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as InsertNewLine from 'tinymce/core/newline/InsertNewLine';
 import CodePlugin from 'tinymce/plugins/code/Plugin';
 

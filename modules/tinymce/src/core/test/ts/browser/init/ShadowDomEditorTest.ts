@@ -5,7 +5,7 @@ import { Insert, Remove, SelectorFilter, SugarBody, SugarElement } from '@ephox/
 import { McEditor, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.init.ShadowDomEditorTest', () => {
   const isSkin = (ss: StyleSheet) => ss.href !== null && Strings.contains(ss.href, 'skin.css');

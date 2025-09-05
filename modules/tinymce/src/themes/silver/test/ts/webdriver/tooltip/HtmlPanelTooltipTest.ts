@@ -3,7 +3,7 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as TooltipUtils from '../../module/TooltipUtils';
 
@@ -60,6 +60,7 @@ describe('browser.tinymce.themes.silver.editor.HtmlPanelTooltipTest', () => {
       const editor = hook.editor();
       await pOpenDialogAndWaitForLoad(editor, 'button[data-mce-name="custom-dialog"]');
       await TooltipUtils.pAssertTooltip(editor, async () => {
+        await RealKeys.pSendKeysOn('button[data-mce-name="test"]', [ RealKeys.combo({}, 'escape') ]);
         await RealMouse.pMoveToOn('[data-mce-tooltip="test-button"]');
         await TinyUiActions.pWaitForUi(editor, '.tox-silver-sink .tox-tooltip__body:contains("test-button")');
         return Promise.resolve();
@@ -71,6 +72,7 @@ describe('browser.tinymce.themes.silver.editor.HtmlPanelTooltipTest', () => {
       const editor = hook.editor();
       await pOpenDialogAndWaitForLoad(editor, 'button[data-mce-name="custom-dialog"]');
       await TooltipUtils.pAssertTooltip(editor, async () => {
+        await RealKeys.pSendKeysOn('button[data-mce-name="test"]', [ RealKeys.combo({}, 'escape') ]);
         await RealMouse.pMoveToOn('[data-mce-tooltip="test-button"]');
         await TinyUiActions.pWaitForUi(editor, '.tox-silver-sink .tox-tooltip__body:contains("test-button")');
         await RealKeys.pSendKeysOn('[data-mce-tooltip="test-button"]', [ RealKeys.combo({}, 'tab') ]);

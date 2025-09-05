@@ -1,4 +1,4 @@
-import { CharacterMap } from './StringMapper';
+import type { CharacterMap } from './StringMapper';
 import { characterIndices as ci } from './UnicodeData';
 
 const isWordBoundary = (map: CharacterMap, index: number): boolean => {

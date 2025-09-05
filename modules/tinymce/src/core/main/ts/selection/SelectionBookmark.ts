@@ -1,7 +1,7 @@
 import { Optional } from '@ephox/katamari';
-import { Compare, SimRange, SimSelection, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
+import { Compare, type SimRange, SimSelection, SugarElement, SugarNode, SugarText, Traverse } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import Env from '../api/Env';
 import * as NodeType from '../dom/NodeType';
 

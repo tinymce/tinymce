@@ -1,6 +1,6 @@
 import { Cell } from '@ephox/katamari';
 
-import { BehaviourState, BehaviourStateInitialiser } from './BehaviourState';
+import type { BehaviourState, BehaviourStateInitialiser } from './BehaviourState';
 
 export interface BehaviourCellState<T> extends BehaviourState {
   readonly get: () => T;

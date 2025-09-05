@@ -1,6 +1,6 @@
 import { TestLogs } from '@ephox/agar';
 import { Arr, FutureResult, Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
 import * as Loader from '../../loader/Loader';
 import { setTinymceBaseUrl } from '../../loader/Urls';

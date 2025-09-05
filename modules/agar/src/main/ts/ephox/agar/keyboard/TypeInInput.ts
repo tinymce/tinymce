@@ -1,5 +1,5 @@
 import { Type } from '@ephox/katamari';
-import { SugarElement, Value } from '@ephox/sugar';
+import { type SugarElement, Value } from '@ephox/sugar';
 
 import * as Waiter from '../api/Waiter';
 

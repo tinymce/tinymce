@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.shared.json",
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.demo.json"
+    },
+    {
+      "path": "./tsconfig.test.json"
+    },
+  ]
+}

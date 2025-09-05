@@ -2,7 +2,7 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { Fun } from '@ephox/katamari';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import { isTriggeredByKeyboard } from 'tinymce/themes/silver/ui/menus/contextmenu/SilverContextMenu';
 
 describe('atomic.tinymce.themes.silver.context.ContextMenuTriggerTest', () => {

@@ -1,7 +1,7 @@
 import { Arr, Obj, Type } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import {
+import type Editor from 'tinymce/core/api/Editor';
+import type {
   AllowedFormat, BlockStyleFormat, FormatReference, InlineStyleFormat, NestedFormatting, SelectorStyleFormat, Separator, StyleFormat
 } from 'tinymce/core/api/fmt/StyleFormat';
 

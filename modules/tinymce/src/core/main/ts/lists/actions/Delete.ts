@@ -1,11 +1,11 @@
 import { Arr, Optional, Optionals, Type } from '@ephox/katamari';
 import { Compare, ContentEditable, PredicateFind, Remove, SugarElement, SugarNode } from '@ephox/sugar';
 
-import DOMUtils from '../../api/dom/DOMUtils';
+import type DOMUtils from '../../api/dom/DOMUtils';
 import RangeUtils from '../../api/dom/RangeUtils';
 import DomTreeWalker from '../../api/dom/TreeWalker';
-import Editor from '../../api/Editor';
-import * as Bookmark from '../lists/Bookmark';
+import type Editor from '../../api/Editor';
+import * as NodeStructureBookmark from '../../bookmark/NodeStructureBookmark';
 import * as NodeType from '../lists/NodeType';
 import * as NormalizeLists from '../lists/NormalizeLists';
 import * as ListRangeUtils from '../lists/RangeUtils';
@@ -143,16 +143,16 @@ const mergeForward = (editor: Editor, rng: Range, fromLi: HTMLLIElement, toLi: H
   if (dom.isEmpty(toLi)) {
     mergeIntoEmptyLi(editor, fromLi, toLi);
   } else {
-    const bookmark = Bookmark.createBookmark(rng);
+    const bookmark = NodeStructureBookmark.createBookmark(rng);
     mergeLiElements(dom, fromLi, toLi);
-    editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
+    editor.selection.setRng(NodeStructureBookmark.resolveBookmark(bookmark));
   }
 };
 
 const mergeBackward = (editor: Editor, rng: Range, fromLi: HTMLLIElement, toLi: HTMLLIElement): void => {
-  const bookmark = Bookmark.createBookmark(rng);
+  const bookmark = NodeStructureBookmark.createBookmark(rng);
   mergeLiElements(editor.dom, fromLi, toLi);
-  const resolvedBookmark = Bookmark.resolveBookmark(bookmark);
+  const resolvedBookmark = NodeStructureBookmark.resolveBookmark(bookmark);
   editor.selection.setRng(resolvedBookmark);
 };
 
@@ -193,10 +193,10 @@ const backspaceDeleteFromListToListCaret = (editor: Editor, isForward: boolean):
       }
 
       editor.undoManager.transact(() => {
-        const bookmark = Bookmark.createBookmark(rng);
+        const bookmark = NodeStructureBookmark.createBookmark(rng);
         moveChildren(dom, commonAncestorParent, otherLi);
         commonAncestorParent.remove();
-        const resolvedBookmark = Bookmark.resolveBookmark(bookmark);
+        const resolvedBookmark = NodeStructureBookmark.resolveBookmark(bookmark);
         editor.selection.setRng(resolvedBookmark);
       });
 

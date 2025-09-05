@@ -1,7 +1,7 @@
 import { Arr } from '@ephox/katamari';
 import { Html, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
-import { AlloySpec, RawDomSchema, SimpleSpec, SketchSpec } from './SpecTypes';
+import type { AlloySpec, RawDomSchema, SimpleSpec, SketchSpec } from './SpecTypes';
 
 const getAttrs = (elem: SugarElement<Element>): Record<string, string> => {
   const attributes = elem.dom.attributes !== undefined ? elem.dom.attributes : [ ];

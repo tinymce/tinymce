@@ -5,7 +5,7 @@ import * as DomModification from '../../dom/DomModification';
 import * as Behaviour from '../common/Behaviour';
 
 import * as ToggleApis from './ToggleApis';
-import { TogglingConfig, TogglingState } from './TogglingTypes';
+import type { TogglingConfig, TogglingState } from './TogglingTypes';
 
 const exhibit = (): DomModification.DomModification =>
   DomModification.nu({ });

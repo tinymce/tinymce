@@ -1,4 +1,4 @@
-import { ShortcutActionPairType } from '../ui/KeyboardShortcutsTab';
+import type { ShortcutActionPairType } from '../ui/KeyboardShortcutsTab';
 
 const shortcuts: ShortcutActionPairType[] = [
   { shortcuts: [ 'Meta + B' ], action: 'Bold' },

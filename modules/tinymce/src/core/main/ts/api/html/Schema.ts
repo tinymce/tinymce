@@ -4,13 +4,13 @@ import * as CustomElementsRuleParser from '../../schema/CustomElementsRuleParser
 import * as GlobalAttributesSet from '../../schema/GlobalAttributesSet';
 import * as Presets from '../../schema/Presets';
 import * as SchemaLookupTable from '../../schema/SchemaLookupTable';
-import { CustomElementSpec, ElementSettings, SchemaElement, SchemaMap, SchemaRegExpMap, SchemaSettings, SchemaType } from '../../schema/SchemaTypes';
+import type { CustomElementSpec, ElementSettings, SchemaElement, SchemaMap, SchemaRegExpMap, SchemaSettings, SchemaType } from '../../schema/SchemaTypes';
 import * as SchemaUtils from '../../schema/SchemaUtils';
 import * as ValidChildrenRuleParser from '../../schema/ValidChildrenRuleParser';
 import * as ValidElementsRuleParser from '../../schema/ValidElementsRuleParser';
 import Tools from '../util/Tools';
 
-export * from '../../schema/SchemaTypes';
+export type * from '../../schema/SchemaTypes';
 
 interface Schema {
   type: SchemaType;

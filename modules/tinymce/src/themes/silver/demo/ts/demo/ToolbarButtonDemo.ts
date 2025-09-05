@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { Fun } from '@ephox/katamari';
 
-import { Editor, TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { Editor, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 import * as MockDemo from './MockDemo';
 
@@ -32,6 +32,7 @@ export default (): void => {
 
   tinymce.init({
     selector: 'textarea.tiny-text',
+    license_key: 'gpl',
     theme: 'silver',
     toolbar: [ 'disabled-button', 'icon-button', 'icon-button-toggle' ].concat(generatedNames).join(' '),
     plugins: [

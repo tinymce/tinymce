@@ -1,6 +1,6 @@
 import { Class, Insert, SelectorFind, SugarBody, SugarElement, Value } from '@ephox/sugar';
 
-import { TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare const tinymce: TinyMCE;
 
@@ -15,6 +15,7 @@ export default (): void => {
 
   tinymce.init({
     selector: 'textarea',
+    license_key: 'gpl',
     theme: (editor, target) => {
       const dom = tinymce.DOM;
 

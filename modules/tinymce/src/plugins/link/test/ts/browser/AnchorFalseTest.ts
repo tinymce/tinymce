@@ -3,7 +3,7 @@ import { describe, it, before, after } from '@ephox/bedrock-client';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import LocalStorage from 'tinymce/core/api/util/LocalStorage';
 import Plugin from 'tinymce/plugins/link/Plugin';
 

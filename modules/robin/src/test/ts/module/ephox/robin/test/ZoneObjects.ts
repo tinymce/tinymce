@@ -1,10 +1,10 @@
 import { Logger } from '@ephox/agar';
 import { Assert } from '@ephox/bedrock-client';
-import { Gene, TestUniverse } from '@ephox/boss';
+import type { Gene, TestUniverse } from '@ephox/boss';
 import { Arr } from '@ephox/katamari';
 
 import { LanguageZones } from 'ephox/robin/zone/LanguageZones';
-import { Zone } from 'ephox/robin/zone/Zones';
+import type { Zone } from 'ephox/robin/zone/Zones';
 
 export interface RawZone {
   lang: string;

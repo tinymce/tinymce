@@ -1,8 +1,8 @@
-import { TestLogs } from '@ephox/agar';
-import { Arr, Fun, FutureResult, Global, Id, Optional, Result } from '@ephox/katamari';
+import type { TestLogs } from '@ephox/agar';
+import { Arr, Fun, FutureResult, Global, Id, type Optional, Result, Type } from '@ephox/katamari';
 import { Attribute, DomEvent, Insert, Remove, SelectorFilter, SugarBody, SugarElement, SugarHead, SugarShadowDom } from '@ephox/sugar';
 
-import { Editor } from '../alien/EditorTypes';
+import type { Editor } from '../alien/EditorTypes';
 
 import { detectTinymceBaseUrl } from './Urls';
 
@@ -74,7 +74,8 @@ const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: 
   };
 
   // Agar v. ??? supports logging
-  const onFailure = (err: Error | string, logs?: TestLogs) => {
+  const onFailure = (errU: unknown, logs?: TestLogs) => {
+    const err = Type.isString(errU) || errU instanceof Error ? errU : String(errU);
     // eslint-disable-next-line no-console
     console.log('Tiny Loader error: ', err);
     // Do no teardown so that the failed test still shows the editor. Important for selection
@@ -88,31 +89,34 @@ const setup = (callbacks: Callbacks, settings: Record<string, any>, elementOpt: 
     callbacks.preInit(tinymce, settings);
 
     const targetSettings = SugarShadowDom.isInShadowRoot(target) ? ({ target: target.dom }) : ({ selector: '#' + randomId });
+    try {
+      Promise.resolve(tinymce.init({
+        promotion: false,
+        license_key: 'gpl',
+        ...settings,
+        ...targetSettings,
+        setup: (editor: Editor) => {
+          // Execute the setup called by the test.
+          settingsSetup(editor);
 
-    tinymce.init({
-      promotion: false,
-      license_key: 'gpl',
-      ...settings,
-      ...targetSettings,
-      setup: (editor: Editor) => {
-        // Execute the setup called by the test.
-        settingsSetup(editor);
+          editor.once('SkinLoaded', () => {
+            setTimeout(() => {
+              try {
+                callbacks.run(editor, onSuccess, onFailure);
+              } catch (e: any) {
+                onFailure(e);
+              }
+            }, 100);
+          });
 
-        editor.once('SkinLoaded', () => {
-          setTimeout(() => {
-            try {
-              callbacks.run(editor, onSuccess, onFailure);
-            } catch (e: any) {
-              onFailure(e);
-            }
-          }, 100);
-        });
-
-        editor.once('SkinLoadError', (e) => {
-          callbacks.failure(e.message);
-        });
-      }
-    });
+          editor.once('SkinLoadError', (e) => {
+            callbacks.failure(e.message);
+          });
+        }
+      })).catch(onFailure);
+    } catch (err: unknown) {
+      onFailure(err);
+    }
   };
 
   if (!Global.tinymce) {

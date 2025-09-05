@@ -1,4 +1,4 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 
 import { WordScope } from '../../data/WordScope';
 import * as WordUtil from '../../util/WordUtil';

@@ -1,11 +1,11 @@
-import { Fun, Optional, Optionals } from '@ephox/katamari';
+import { Fun, Optional, Optionals, Type } from '@ephox/katamari';
 import { SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import Env from '../api/Env';
 import * as Options from '../api/Options';
 import Delay from '../api/util/Delay';
-import { EditorEvent } from '../api/util/EventDispatcher';
+import type { EditorEvent } from '../api/util/EventDispatcher';
 import Tools from '../api/util/Tools';
 import VK from '../api/util/VK';
 import * as CaretContainer from '../caret/CaretContainer';
@@ -148,7 +148,11 @@ const Quirks = (editor: Editor): Quirks => {
 
         if (e.target === editor.getDoc().documentElement) {
           rng = selection.getRng();
-          editor.getBody().focus();
+          // TINY-12245: this is needed to avoid the scroll back to the top when the content is scrolled, there is no selection and the user is clicking on a non selectable editor element
+          // example content scrolled by browser search and user click on the horizontal scroll bar
+          if (editor.getDoc().getSelection()?.anchorNode !== null) {
+            editor.getBody().focus();
+          }
 
           if (e.type === 'mousedown') {
             if (CaretContainer.isCaretContainer(rng.startContainer)) {
@@ -260,9 +264,9 @@ const Quirks = (editor: Editor): Quirks => {
     editor.on('mousedown', (e) => {
       Optionals.lift2(Optional.from(e.clientX), Optional.from(e.clientY), (clientX, clientY) => {
         const caretPos = editor.getDoc().caretPositionFromPoint(clientX, clientY);
-        const img = caretPos?.offsetNode.childNodes[caretPos.offset - (caretPos.offset > 0 ? 1 : 0)] || caretPos?.offsetNode;
+        const img = caretPos?.offsetNode?.childNodes[caretPos.offset - (caretPos.offset > 0 ? 1 : 0)] || caretPos?.offsetNode;
 
-        if (img && isEditableImage(img)) {
+        if (Type.isNonNullable(img) && isEditableImage(img)) {
           const rect = img.getBoundingClientRect();
           e.preventDefault();
 

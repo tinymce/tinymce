@@ -105,6 +105,29 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
   }
 }
 
+def runPlaywrightPod(String cacheName, String name, Closure body) {
+
+  def containers = [
+    devPods.getContainerDefaultArgs([ name: 'node', image: "public.ecr.aws/docker/library/node:20", runAsGroup: '1000', runAsUser: '1000' ]) + devPods.hiRes(),
+    devPods.getContainerDefaultArgs([ name: 'aws-cli', image: 'public.ecr.aws/aws-cli/aws-cli:latest', runAsGroup: '1000', runAsUser: '1000' ]) + devPods.lowRes(),
+    devPods.getContainerDefaultArgs([ name: 'playwright', image: 'mcr.microsoft.com/playwright:v1.53.1-noble']) + devPods.hiRes()
+  ]
+
+  return {
+    stage("${name}") {
+      devPods.customConsumer(
+        containers: containers,
+        base: 'node',
+        build: cacheName
+      ) {
+        container('playwright') {
+          body()
+        }
+      }
+    }
+  }
+}
+
 def runSeleniumPod(String cacheName, String name, String browser, String version, Closure body) {
   Map node = [
           name: 'node',
@@ -183,11 +206,12 @@ def cacheName = "cache_${BUILD_TAG}"
 
 def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NUMBER}"
 
-timestamps { alertWorseResult(
+timestamps { notifyStatusChange(
   cleanupStep: { devPods.cleanUpPod(build: cacheName) },
   branches: ['main', 'release/7', 'release/8'],
   channel: '#tinymce-build-status',
-  name: 'TinyMCE'
+  name: 'TinyMCE',
+  mention: true
   ) {
   devPods.nodeProducer(
     nodeOpts: [
@@ -293,8 +317,55 @@ timestamps { alertWorseResult(
     runHeadlessTests(runAllTests)
   }
 
+  processes['playwright'] = runPlaywrightPod(cacheName, 'playwright-tests') {
+    exec('yarn -s --cwd modules/oxide-components test-ci')
+    junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
+    def visualTestStatus = exec(script: 'yarn -s --cwd modules/oxide-components test-visual-ci', returnStatus: true)
+    if (visualTestStatus == 4) {
+      unstable("Visual tests failed")
+    } else if (visualTestStatus != 0) {
+      error("Unexpected error running visual tests")
+    }
+    junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results-visual.xml'
+    exec('find modules/oxide-components -name "*.png" -type f || echo "No PNG files found"')
+    archiveArtifacts artifacts: 'modules/oxide-components/test-results/**/*.png', allowEmptyArchive: true, fingerprint: true
+  }
+
   stage('Run tests') {
       echo "Running tests [runAll=${runAllTests}]"
       parallel processes
+  }
+
+  devPods.nodeConsumer(
+    nodeOpts: [
+      resourceRequestCpu: '2',
+      resourceRequestMemory: '4Gi',
+      resourceRequestEphemeralStorage: '16Gi',
+      resourceLimitCpu: '7.5',
+      resourceLimitMemory: '4Gi',
+      resourceLimitEphemeralStorage: '16Gi'
+    ],
+    tag: '20',
+    build: cacheName,
+    environment: {
+      tinyGit.addAuthorConfig()
+      tinyGit.addGitHubToKnownHosts()
+      sh "tar -zxf ./file.tar.gz"
+    }
+  ) {
+    props = readProperties(file: 'build.properties')
+    String primaryBranch = props.primaryBranch
+    assert primaryBranch != null && primaryBranch != ""
+
+    stage('Deploy Storybook') {
+      if (env.BRANCH_NAME == primaryBranch) {
+        echo "Deploying Storybook"
+        tinyGit.withGitHubSSHCredentials {
+          exec('yarn -s --cwd modules/oxide-components deploy-storybook')
+        }
+      } else {
+        echo "Skipping Storybook deployment as the pipeline is not running on the primary branch"
+      }
+    }
   }
 }}

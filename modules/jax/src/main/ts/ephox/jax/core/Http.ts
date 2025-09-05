@@ -1,8 +1,8 @@
 import { FutureResult, Global, Obj, Optional, Result, Strings, Type } from '@ephox/katamari';
 
 import { DataType } from './DataType';
-import { RequestBody, ResponseBodyDataTypes, ResponseType, ResponseTypeMap, textData } from './HttpData';
-import { HttpError, HttpErrorCode } from './HttpError';
+import { type RequestBody, type ResponseBodyDataTypes, type ResponseType, type ResponseTypeMap, textData } from './HttpData';
+import { type HttpError, HttpErrorCode } from './HttpError';
 import * as HttpTypes from './HttpTypes';
 import * as ResponseError from './ResponseError';
 import * as ResponseSuccess from './ResponseSuccess';

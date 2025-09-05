@@ -5,7 +5,7 @@ import { Future, Optional } from '@ephox/katamari';
 import { SelectorFind, SugarDocument, Value } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import { ApiUrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
+import type { ApiUrlData } from 'tinymce/themes/silver/backstage/UrlInputBackstage';
 import { renderUrlInput } from 'tinymce/themes/silver/ui/dialog/UrlInput';
 
 import * as GuiSetup from '../../../module/GuiSetup';

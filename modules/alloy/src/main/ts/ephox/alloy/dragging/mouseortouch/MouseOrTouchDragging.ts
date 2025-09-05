@@ -1,16 +1,16 @@
-import { FieldProcessor } from '@ephox/boulder';
-import { EventArgs } from '@ephox/sugar';
+import type { FieldProcessor } from '@ephox/boulder';
+import type { EventArgs } from '@ephox/sugar';
 
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloyEventKeyAndHandler } from '../../api/events/AlloyEvents';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyEventKeyAndHandler } from '../../api/events/AlloyEvents';
 import * as Fields from '../../data/Fields';
 import * as DraggingSchema from '../common/DraggingSchema';
-import { DraggingState } from '../common/DraggingTypes';
+import type { DraggingState } from '../common/DraggingTypes';
 import * as DragUtils from '../common/DragUtils';
 import * as MouseDragging from '../mouse/MouseDragging';
 import * as TouchDragging from '../touch/TouchDragging';
 
-import { MouseOrTouchDraggingConfig } from './MouseOrTouchDraggingTypes';
+import type { MouseOrTouchDraggingConfig } from './MouseOrTouchDraggingTypes';
 
 const events = <E>(dragConfig: MouseOrTouchDraggingConfig<E>, dragState: DraggingState, updateStartState: (comp: AlloyComponent) => void) => [
   ...MouseDragging.events(dragConfig, dragState, updateStartState),

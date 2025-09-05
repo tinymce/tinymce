@@ -16,6 +16,7 @@
     { "path": "modules/katamari" },
     { "path": "modules/katamari-assertions" },
     { "path": "modules/mcagar" },
+    { "path": "modules/persona" },
     { "path": "modules/phoenix" },
     { "path": "modules/polaris" },
     { "path": "modules/porkbun" },
@@ -132,6 +133,7 @@
       "ephox/tinymce/test/*": ["modules/tinymce/src/test/ts/module/ephox/tinymce/test/*"],
       "ephox/tinymce/demo/*": ["modules/tinymce/src/demo/ts/ephox/tinymce/demo/*"],
       "ephox/tinymce/*": ["modules/tinymce/src/main/ts/ephox/tinymce/*"],
+      "tiny/persona/*": ["modules/persona/src/main/ts/*"],
     }
   }
 }

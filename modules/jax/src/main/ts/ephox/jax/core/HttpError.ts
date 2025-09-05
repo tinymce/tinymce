@@ -1,6 +1,6 @@
 import { Result } from '@ephox/katamari';
 
-import { ResponseType, ResponseTypeMap } from './HttpData';
+import type { ResponseType, ResponseTypeMap } from './HttpData';
 
 export const enum HttpErrorCode {
   Created = 201,

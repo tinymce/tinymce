@@ -1,12 +1,10 @@
 import tinyPlugin from '@tinymce/eslint-plugin';
-import securityNode from 'eslint-plugin-security-node';
 import onlyWarn from 'eslint-plugin-only-warn';
 import { defineConfig } from "eslint/config";
 
 export default defineConfig(
   [
     tinyPlugin.configs.editor,
-    //securityNode.configs.recommended,
     {
       languageOptions: {
         parserOptions: {
@@ -16,9 +14,12 @@ export default defineConfig(
       },
       plugins: {
         onlyWarn,
-        securityNode
       },
       rules: {
+        "@typescript-eslint/no-import-type-side-effects": "error",
+        "@typescript-eslint/consistent-type-exports": "error",
+        "@typescript-eslint/consistent-type-imports": ["error", { fixStyle: 'inline-type-imports' }],
+
         "@typescript-eslint/camelcase": "off", // leave off
         "@typescript-eslint/member-ordering": "off",
         "@typescript-eslint/no-empty-function": "off",
@@ -37,9 +38,6 @@ export default defineConfig(
           "warn",
           260
         ],
-        //"security-node/non-literal-reg-expr": "off",
-        //"security-node/detect-crlf": "off",
-        //"security-node/detect-possible-timing-attacks": "off"
       },
     },
     {

@@ -1,7 +1,7 @@
 import { Arr, Type } from '@ephox/katamari';
 
-import { FormatVars } from '../../fmt/FormatTypes';
-import Editor from '../Editor';
+import type { FormatVars } from '../../fmt/FormatTypes';
+import type Editor from '../Editor';
 
 const registerExecCommands = (editor: Editor): void => {
   const toggleFormat = (name: string, value?: FormatVars) => {

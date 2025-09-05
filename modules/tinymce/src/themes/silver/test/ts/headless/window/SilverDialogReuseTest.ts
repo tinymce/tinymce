@@ -1,12 +1,12 @@
-import { ApproxStructure, Assertions, FocusTools, StructAssert, TestStore, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, FocusTools, type StructAssert, TestStore, UiFinder } from '@ephox/agar';
 import { afterEach, before, describe, it } from '@ephox/bedrock-client';
-import { Dialog as BridgeSpec } from '@ephox/bridge';
+import type { Dialog as BridgeSpec } from '@ephox/bridge';
 import { Optional } from '@ephox/katamari';
 import { SugarBody, SugarDocument } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import { Dialog } from 'tinymce/core/api/ui/Ui';
-import { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
+import type { WindowManagerImpl } from 'tinymce/core/api/WindowManager';
 import * as WindowManager from 'tinymce/themes/silver/ui/dialog/WindowManager';
 
 import * as TestExtras from '../../module/TestExtras';

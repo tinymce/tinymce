@@ -6,14 +6,14 @@ import * as Behaviour from '../../api/behaviour/Behaviour';
 import { Keying } from '../../api/behaviour/Keying';
 import { Representing } from '../../api/behaviour/Representing';
 import { Sliding } from '../../api/behaviour/Sliding';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
 import { Button } from '../../api/ui/Button';
 import * as Fields from '../../data/Fields';
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as PartType from '../../parts/PartType';
-import { ButtonSpec } from '../types/ButtonTypes';
-import { ExpandableFormDetail } from '../types/ExpandableFormTypes';
+import type { ButtonSpec } from '../types/ButtonTypes';
+import type { ExpandableFormDetail } from '../types/ExpandableFormTypes';
 
 const schema = Fun.constant([
   Fields.markers([

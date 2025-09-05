@@ -2,7 +2,7 @@
 import { Merger } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
-import { Editor, RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { Editor, RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
@@ -69,6 +69,7 @@ export default (): void => {
     ],
     images_upload_url: 'd',
     selector: 'textarea',
+    license_key: 'gpl',
     // rtl_ui: true,
     link_list: [
       { title: 'My page 1', value: 'http://www.tinymce.com' },
@@ -109,7 +110,6 @@ export default (): void => {
     },
     image_caption: true,
     theme: 'silver',
-    license_key: 'gpl',
     setup: (ed) => {
       makeSidebar(ed, 'sidebar1', 'green', 200);
       makeSidebar(ed, 'sidebar2', 'green', 200);

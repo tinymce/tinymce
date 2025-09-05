@@ -1,7 +1,7 @@
 import * as FilteredEvent from '../../impl/FilteredEvent';
-import { SugarElement } from '../node/SugarElement';
+import type { SugarElement } from '../node/SugarElement';
 
-import { EventFilter, EventHandler } from './Types';
+import type { EventFilter, EventHandler } from './Types';
 
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
 const isLeftClick = (raw: MouseEvent) => raw.button === 0;

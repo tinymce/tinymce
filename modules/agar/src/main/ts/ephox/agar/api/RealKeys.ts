@@ -1,9 +1,9 @@
 import { Adt, Arr, Optional } from '@ephox/katamari';
 
-import { KeyModifiers, MixedKeyModifiers, newModifiers } from '../keyboard/FakeKeys';
+import { type KeyModifiers, type MixedKeyModifiers, newModifiers } from '../keyboard/FakeKeys';
 import * as SeleniumAction from '../server/SeleniumAction';
 
-import { Step } from './Step';
+import type { Step } from './Step';
 
 export interface KeyPressAdt {
   fold: <T> (combo: (modifiers: Modifiers, letters: string) => T, text: (s: string) => T, backspace: () => T) => T;

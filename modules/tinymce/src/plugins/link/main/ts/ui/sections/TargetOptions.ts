@@ -1,10 +1,10 @@
 import { Optional, Type } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Options from '../../api/Options';
 import { ListOptions } from '../../core/ListOptions';
-import { ListItem } from '../DialogTypes';
+import type { ListItem } from '../DialogTypes';
 
 // In current tinymce, targets can be nested menus.
 // Do we really want to support that?

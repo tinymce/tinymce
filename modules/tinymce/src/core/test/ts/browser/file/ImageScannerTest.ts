@@ -5,7 +5,7 @@ import { assert } from 'chai';
 import Env from 'tinymce/core/api/Env';
 import { BlobCache } from 'tinymce/core/api/file/BlobCache';
 import * as Conversions from 'tinymce/core/file/Conversions';
-import { BlobInfoImagePair, ImageScanner } from 'tinymce/core/file/ImageScanner';
+import { type BlobInfoImagePair, ImageScanner } from 'tinymce/core/file/ImageScanner';
 import { UploadStatus } from 'tinymce/core/file/UploadStatus';
 
 import * as ViewBlock from '../../module/test/ViewBlock';

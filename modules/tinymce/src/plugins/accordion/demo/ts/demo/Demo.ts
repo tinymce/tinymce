@@ -1,9 +1,10 @@
-import { TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
 tinymce.init({
   selector: 'textarea.tinymce',
+  license_key: 'gpl',
   plugins: 'table lists image accordion code',
   toolbar: 'table | numlist bullist | image | accordion | code',
   menu: { insert: { title: 'Insert', items: 'table | image | accordion' }},

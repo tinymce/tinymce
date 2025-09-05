@@ -3,10 +3,10 @@ import { Arr, Fun, Obj } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import Env from 'tinymce/core/api/Env';
-import { BlobCache, BlobInfo } from 'tinymce/core/api/file/BlobCache';
-import DomParser, { DomParserSettings, ParserArgs, ParserFilterCallback } from 'tinymce/core/api/html/DomParser';
-import AstNode, { Attributes } from 'tinymce/core/api/html/Node';
-import Schema, { SchemaElement, SchemaSettings } from 'tinymce/core/api/html/Schema';
+import { BlobCache, type BlobInfo } from 'tinymce/core/api/file/BlobCache';
+import DomParser, { type DomParserSettings, type ParserArgs, type ParserFilterCallback } from 'tinymce/core/api/html/DomParser';
+import type { Attributes, default as AstNode } from 'tinymce/core/api/html/Node';
+import Schema, { type SchemaElement, type SchemaSettings } from 'tinymce/core/api/html/Schema';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 
 interface ParseTestResult {
@@ -18,6 +18,7 @@ interface ParseTestResult {
 describe('browser.tinymce.core.html.DomParserTest', () => {
   const schema = Schema({ valid_elements: '*[class|title]' });
   const serializer = HtmlSerializer({}, schema);
+  const fullDocumentParseHtml = '<html><head><style></style><!--header Some Text 1--></head><body data-test="Test">Some Text 2</body><!--footer Some Text 3--></html>';
 
   const countNodes = (node: AstNode, counter: Record<string, number> = {}) => {
     if (node.name in counter) {
@@ -60,6 +61,24 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
           'Element attributes'
         );
         assert.deepEqual(countNodes(root), { 'body': 1, 'b': 1, '#text': 1 }, 'Element attributes (count)');
+      });
+
+      it('TINY-12589: Parse full document, with root_name = "#document"', () => {
+        const parser = DomParser({ ...scenario.settings, root_name: '#document' }, schema);
+        const root = parser.parse(fullDocumentParseHtml);
+        assert.equal(serializer.serialize(root), '<head><style></style><!--header Some Text 1--></head><body data-test="Test">Some Text 2</body><!--footer Some Text 3-->', 'Document context remains');
+        assert.equal(root.firstChild?.type, 1, 'Element type');
+        assert.equal(root.firstChild?.name, 'head', 'Element name');
+        assert.deepEqual(countNodes(root), { 'html': 1, 'head': 1, 'style': 1, 'body': 1, '#text': 1, '#comment': 2 }, 'Element attributes (count)');
+      });
+
+      it('TINY-12589: Parse full document, without root_name = "#document"', () => {
+        const parser = DomParser(scenario.settings, schema);
+        const root = parser.parse(fullDocumentParseHtml);
+        assert.equal(serializer.serialize(root), 'Some Text 2', 'Content should have been stripped of its document context');
+        assert.equal(root.firstChild?.type, 3, 'Element type, without');
+        assert.equal(root.firstChild?.name, '#text', 'Element name, without');
+        assert.deepEqual(countNodes(root), { 'body': 1, '#text': 1 }, 'Element attributes (count), without');
       });
 
       it('Retains code inside a script', () => {

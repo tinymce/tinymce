@@ -2,7 +2,7 @@
 import { Merger } from '@ephox/katamari';
 import { Css, SugarElement } from '@ephox/sugar';
 
-import { Editor, RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { Editor, RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
@@ -36,6 +36,7 @@ const settings: RawEditorOptions = {
   content_css: '../../../../js/tinymce/skins/content/default/content.css',
   images_upload_url: 'd',
   selector: 'textarea',
+  license_key: 'gpl',
   // rtl_ui: true,
   link_list: [
     { title: 'My page 1', value: 'http://www.tinymce.com' },

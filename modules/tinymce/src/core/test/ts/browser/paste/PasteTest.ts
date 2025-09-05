@@ -4,9 +4,9 @@ import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { PastePostProcessEvent, PastePreProcessEvent } from 'tinymce/core/api/EventTypes';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { PastePostProcessEvent, PastePreProcessEvent } from 'tinymce/core/api/EventTypes';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as PasteUtils from 'tinymce/core/paste/PasteUtils';
 
 import * as PasteEventUtils from '../../module/test/PasteEventUtils';

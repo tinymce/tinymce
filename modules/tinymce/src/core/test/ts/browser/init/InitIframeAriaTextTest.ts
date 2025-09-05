@@ -4,10 +4,9 @@ import { Attribute, SugarElement } from '@ephox/sugar';
 import { McEditor, TinyDom } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.init.InitIframeAriaTextTest', () => {
-  const defaultIframeTitle = 'Rich Text Area';
   const defaultIframeAriaText = 'Rich Text Area';
   const defaultIframeAriaTextWithHelpPlugin = defaultIframeAriaText.concat('. Press ALT-0 for help.');
   const customIframeAriaText = 'Cupidatat magna aliquip.';
@@ -19,8 +18,8 @@ describe('browser.tinymce.core.init.InitIframeAriaTextTest', () => {
     });
     const iframe = SugarElement.fromDom(editor.iframeElement as HTMLIFrameElement);
     const iframeBody = TinyDom.body(editor);
-    assert.equal(Attribute.get(iframe, 'title'), defaultIframeTitle);
-    assert.equal(Attribute.get(iframeBody, 'aria-label'), defaultIframeAriaText);
+    assert.equal(Attribute.get(iframe, 'title'), isFirefox ? defaultIframeAriaText : undefined);
+    assert.equal(Attribute.get(iframeBody, 'aria-label'), isFirefox ? undefined : defaultIframeAriaText);
     McEditor.remove(editor);
   });
 
@@ -31,8 +30,8 @@ describe('browser.tinymce.core.init.InitIframeAriaTextTest', () => {
     });
     const iframe = SugarElement.fromDom(editor.iframeElement as HTMLIFrameElement);
     const iframeBody = TinyDom.body(editor);
-    assert.equal(Attribute.get(iframe, 'title'), isFirefox ? defaultIframeAriaTextWithHelpPlugin : defaultIframeTitle);
-    assert.equal(Attribute.get(iframeBody, 'aria-label'), defaultIframeAriaTextWithHelpPlugin);
+    assert.equal(Attribute.get(iframe, 'title'), isFirefox ? defaultIframeAriaTextWithHelpPlugin : undefined);
+    assert.equal(Attribute.get(iframeBody, 'aria-label'), isFirefox ? undefined : defaultIframeAriaTextWithHelpPlugin);
     McEditor.remove(editor);
   });
 
@@ -43,8 +42,8 @@ describe('browser.tinymce.core.init.InitIframeAriaTextTest', () => {
     });
     const iframe = SugarElement.fromDom(editor.iframeElement as HTMLIFrameElement);
     const iframeBody = TinyDom.body(editor);
-    assert.equal(Attribute.get(iframe, 'title'), isFirefox ? customIframeAriaText : defaultIframeTitle);
-    assert.equal(Attribute.get(iframeBody, 'aria-label'), customIframeAriaText);
+    assert.equal(Attribute.get(iframe, 'title'), isFirefox ? customIframeAriaText : undefined);
+    assert.equal(Attribute.get(iframeBody, 'aria-label'), isFirefox ? undefined : customIframeAriaText);
     McEditor.remove(editor);
   });
 });

@@ -3,7 +3,7 @@ import { SugarElement, SelectorFind, Class } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as Empty from 'tinymce/core/dom/Empty';
 
 describe('browser.tinymce.core.dom.EmptyTest', () => {

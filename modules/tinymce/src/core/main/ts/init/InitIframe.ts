@@ -1,11 +1,11 @@
-import { Optional, Strings } from '@ephox/katamari';
+import { type Optional, Strings } from '@ephox/katamari';
 import { Attribute, Class, DomEvent, SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import Env from '../api/Env';
 import * as Options from '../api/Options';
-import { TranslatedString } from '../api/util/I18n';
+import type { TranslatedString } from '../api/util/I18n';
 
 import * as InitContentBody from './InitContentBody';
 
@@ -28,7 +28,7 @@ const createIframeElement = (id: string, title: TranslatedString, customAttrs: {
     id: id + '_ifr',
     frameBorder: '0',
     allowTransparency: 'true',
-    title
+    ...Env.browser.isFirefox() ? { title } : {}
   });
 
   Class.add(iframe, 'tox-edit-area__iframe');
@@ -50,13 +50,14 @@ const getIframeHtml = (editor: Editor) => {
   const bodyId = Options.getBodyId(editor);
   const bodyClass = Options.getBodyClass(editor);
   const translatedAriaText = editor.translate(Options.getIframeAriaText(editor));
+  const iframeBodyAriaLabel = Env.browser.isFirefox() ? '' : `aria-label="${translatedAriaText}"`;
 
   if (Options.getContentSecurityPolicy(editor)) {
     iframeHTML += '<meta http-equiv="Content-Security-Policy" content="' + Options.getContentSecurityPolicy(editor) + '" />';
   }
 
   iframeHTML += '</head>' +
-    `<body id="${bodyId}" class="mce-content-body ${bodyClass}" data-id="${editor.id}" aria-label="${translatedAriaText}">` +
+    `<body id="${bodyId}" class="mce-content-body ${bodyClass}" data-id="${editor.id}" ${iframeBodyAriaLabel}>` +
     '<br>' +
     '</body></html>';
 
@@ -64,7 +65,7 @@ const getIframeHtml = (editor: Editor) => {
 };
 
 const createIframe = (editor: Editor, boxInfo: BoxInfo) => {
-  const iframeTitle = Env.browser.isFirefox() ? Options.getIframeAriaText(editor) : 'Rich Text Area';
+  const iframeTitle = Options.getIframeAriaText(editor);
   const translatedTitle = editor.translate(iframeTitle);
   const tabindex = Attribute.getOpt(SugarElement.fromDom(editor.getElement()), 'tabindex').bind(Strings.toInt);
   const ifr = createIframeElement(editor.id, translatedTitle, Options.getIframeAttrs(editor), tabindex).dom;

@@ -1,11 +1,11 @@
 import {
-  AddEventsBehaviour, AlloyEvents, FormField as AlloyFormField, Input as AlloyInput, AlloyTriggers, Behaviour, Disabling, Invalidating, Keying, NativeEvents, Representing, SketchSpec, SystemEvents, Tabstopping
+  AddEventsBehaviour, AlloyEvents, FormField as AlloyFormField, Input as AlloyInput, AlloyTriggers, Behaviour, Disabling, Invalidating, Keying, NativeEvents, Representing, type SketchSpec, SystemEvents, Tabstopping
 } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
+import type { Dialog } from '@ephox/bridge';
 import { Arr, Fun, Future, Optional, Result } from '@ephox/katamari';
 import { Traverse } from '@ephox/sugar';
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as UiState from '../../UiState';
 import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
 import { formChangeEvent, formSubmitEvent } from '../general/FormEvents';

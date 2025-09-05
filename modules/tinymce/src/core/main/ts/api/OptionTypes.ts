@@ -1,13 +1,13 @@
-import { UploadHandler } from '../file/Uploader';
-import { ExpectedUser } from '../lookup/UserLookup';
-import { DynamicPatternsLookup, Pattern, RawDynamicPatternsLookup, RawPattern } from '../textpatterns/core/PatternTypes';
+import type { UploadHandler } from '../file/Uploader';
+import type { ExpectedUser } from '../lookup/UserLookup';
+import type { DynamicPatternsLookup, Pattern, RawDynamicPatternsLookup, RawPattern } from '../textpatterns/core/PatternTypes';
 
-import Editor from './Editor';
-import { PastePostProcessEvent, PastePreProcessEvent } from './EventTypes';
-import { Formats } from './fmt/Format';
-import { AllowedFormat } from './fmt/StyleFormat';
-import { CustomElementSpec, SchemaType } from './html/Schema';
-import { EditorUiApi, Toolbar } from './ui/Ui';
+import type Editor from './Editor';
+import type { PastePostProcessEvent, PastePreProcessEvent } from './EventTypes';
+import type { Formats } from './fmt/Format';
+import type { AllowedFormat } from './fmt/StyleFormat';
+import type { CustomElementSpec, SchemaType } from './html/Schema';
+import type { EditorUiApi, Toolbar } from './ui/Ui';
 
 export type EntityEncoding = 'named' | 'numeric' | 'raw' | 'named,numeric' | 'named+numeric' | 'numeric,named' | 'numeric+named';
 

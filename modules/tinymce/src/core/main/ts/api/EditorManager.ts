@@ -2,16 +2,16 @@ import { Arr, Obj, Type, Id } from '@ephox/katamari';
 
 import * as ErrorReporter from '../ErrorReporter';
 import * as FocusController from '../focus/FocusController';
-import LicenseKeyManagerLoader, { LicenseKeyManagerAddon } from '../licensekey/LicenseKeyManager';
+import LicenseKeyManagerLoader, { type LicenseKeyManagerAddon } from '../licensekey/LicenseKeyManager';
 
 import AddOnManager from './AddOnManager';
 import DOMUtils from './dom/DOMUtils';
-import { EventUtilsEvent } from './dom/EventUtils';
+import type { EventUtilsEvent } from './dom/EventUtils';
 import Editor from './Editor';
 import Env from './Env';
-import { EditorManagerEventMap } from './EventTypes';
-import { RawEditorOptions } from './OptionTypes';
-import I18n, { TranslatedString, Untranslated } from './util/I18n';
+import type { EditorManagerEventMap } from './EventTypes';
+import type { RawEditorOptions } from './OptionTypes';
+import I18n, { type TranslatedString, type Untranslated } from './util/I18n';
 import Observable from './util/Observable';
 import Tools from './util/Tools';
 import URI from './util/URI';

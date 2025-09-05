@@ -4,7 +4,7 @@ import { SugarElement } from '../../api/node/SugarElement';
 import * as Node from '../../api/node/SugarNode';
 import * as SelectorFilter from '../../api/search/SelectorFilter';
 import * as Selectors from '../../api/search/Selectors';
-import { SimSelection } from '../../api/selection/SimSelection';
+import type { SimSelection } from '../../api/selection/SimSelection';
 import * as NativeRange from '../core/NativeRange';
 import * as SelectionDirection from '../core/SelectionDirection';
 

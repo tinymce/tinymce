@@ -1,13 +1,13 @@
 import { Objects } from '@ephox/boulder';
-import { Css, EventArgs } from '@ephox/sugar';
+import { Css, type EventArgs } from '@ephox/sugar';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
-import { DomDefinitionDetail } from '../../dom/DomDefinition';
+import type { DomDefinitionDetail } from '../../dom/DomDefinition';
 import * as DomModification from '../../dom/DomModification';
 
 import * as SlidingApis from './SlidingApis';
-import { SlidingConfig, SlidingState } from './SlidingTypes';
+import type { SlidingConfig, SlidingState } from './SlidingTypes';
 
 const exhibit = (base: DomDefinitionDetail, slideConfig: SlidingConfig, _slideState: SlidingState): DomModification.DomModification => {
   const expanded = slideConfig.expanded;

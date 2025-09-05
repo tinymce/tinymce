@@ -2,15 +2,15 @@ import { Arr, Optional } from '@ephox/katamari';
 
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as CustomListSchema from '../../ui/schema/CustomListSchema';
-import { CustomListApis, CustomListDetail, CustomListSketcher, CustomListSpec } from '../../ui/types/CustomListTypes';
-import { NamedConfiguredBehaviour } from '../behaviour/Behaviour';
+import type { CustomListApis, CustomListDetail, CustomListSketcher, CustomListSpec } from '../../ui/types/CustomListTypes';
+import type { NamedConfiguredBehaviour } from '../behaviour/Behaviour';
 import { Replacing } from '../behaviour/Replacing';
-import { AlloyComponent } from '../component/ComponentApi';
+import type { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
-import { AlloySpec } from '../component/SpecTypes';
+import type { AlloySpec } from '../component/SpecTypes';
 
 import * as Sketcher from './Sketcher';
-import { CompositeSketchFactory } from './UiSketcher';
+import type { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<CustomListDetail, CustomListSpec> = (detail, components, _spec, _external) => {
 

@@ -2,11 +2,11 @@ import { Type } from '@ephox/katamari';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 import AstNode from 'tinymce/core/api/html/Node';
-import Schema from 'tinymce/core/api/html/Schema';
+import type Schema from 'tinymce/core/api/html/Schema';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 
 import { Parser } from './Parser';
-import { MediaData } from './Types';
+import type { MediaData } from './Types';
 
 const DOM = DOMUtils.DOM;
 

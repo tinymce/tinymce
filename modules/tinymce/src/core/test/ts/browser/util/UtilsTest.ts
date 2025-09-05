@@ -2,7 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { SelectorFind } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Utils from '../../../../main/ts/textpatterns/utils/Utils';
 

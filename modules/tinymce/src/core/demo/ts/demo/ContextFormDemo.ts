@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { Fun, Merger } from '@ephox/katamari';
 
-import { Editor, RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { Editor, RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
@@ -137,6 +137,7 @@ export default (): void => {
     ],
     images_upload_url: 'd',
     selector: 'textarea',
+    license_key: 'gpl',
     // rtl_ui: true,
     link_list: [
       { title: 'My page 1', value: 'http://www.tinymce.com' },

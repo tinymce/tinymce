@@ -3,7 +3,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { Insert, SelectorFind, SugarBody, SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.init.InitEditorThemeFunctionIframeTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({

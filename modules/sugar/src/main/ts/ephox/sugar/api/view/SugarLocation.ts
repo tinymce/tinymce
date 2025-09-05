@@ -1,5 +1,5 @@
 import { inBody } from '../node/SugarBody';
-import { SugarElement } from '../node/SugarElement';
+import type { SugarElement } from '../node/SugarElement';
 
 import { SugarPosition } from './SugarPosition';
 

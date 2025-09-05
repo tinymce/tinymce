@@ -1,14 +1,14 @@
-import { AutocompleterEventArgs, AutocompleterUpdateActiveRange } from '../autocomplete/AutocompleteTypes';
-import { FormatVars } from '../fmt/FormatTypes';
-import { RangeLikeObject } from '../selection/RangeTypes';
+import type { AutocompleterEventArgs, AutocompleterUpdateActiveRange } from '../autocomplete/AutocompleteTypes';
+import type { FormatVars } from '../fmt/FormatTypes';
+import type { RangeLikeObject } from '../selection/RangeTypes';
 
-import Editor from './Editor';
-import {
+import type Editor from './Editor';
+import type {
   BeforeSetContentEvent, SetContentEvent, PastePlainTextToggleEvent, PastePostProcessEvent, PastePreProcessEvent, GetContentEvent, BeforeGetContentEvent,
   PreProcessEvent, PostProcessEvent, EditableRootStateChangeEvent, DisabledStateChangeEvent
 } from './EventTypes';
-import { ParserArgs } from './html/DomParser';
-import { EditorEvent } from './util/EventDispatcher';
+import type { ParserArgs } from './html/DomParser';
+import type { EditorEvent } from './util/EventDispatcher';
 
 const firePreProcess = (editor: Editor, args: ParserArgs & { node: Element }): EditorEvent<PreProcessEvent> =>
   editor.dispatch('PreProcess', args);

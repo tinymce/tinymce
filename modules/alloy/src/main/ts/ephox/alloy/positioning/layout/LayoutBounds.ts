@@ -1,9 +1,9 @@
-import { Arr, Num, Obj, Optional } from '@ephox/katamari';
-import { SugarPosition } from '@ephox/sugar';
+import { Arr, Num, Obj, type Optional } from '@ephox/katamari';
+import type { SugarPosition } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 
-import { AnchorBox } from './LayoutTypes';
+import type { AnchorBox } from './LayoutTypes';
 
 export interface BoundsRestriction {
   readonly left: Optional<number>;

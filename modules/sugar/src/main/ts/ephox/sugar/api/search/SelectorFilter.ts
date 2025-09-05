@@ -1,4 +1,4 @@
-import { SugarElement } from '../node/SugarElement';
+import type { SugarElement } from '../node/SugarElement';
 
 import * as PredicateFilter from './PredicateFilter';
 import * as Selectors from './Selectors';

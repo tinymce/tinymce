@@ -1,17 +1,17 @@
 import { Arr, Fun, Obj, Optional, Type } from '@ephox/katamari';
 
-import { AddOnConstructor } from '../api/AddOnManager';
+import type { AddOnConstructor } from '../api/AddOnManager';
 import DOMUtils from '../api/dom/DOMUtils';
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as Events from '../api/Events';
 import IconManager from '../api/IconManager';
-import ModelManager, { Model } from '../api/ModelManager';
+import ModelManager, { type Model } from '../api/ModelManager';
 import * as Options from '../api/Options';
-import { ThemeInitFunc } from '../api/OptionTypes';
+import type { ThemeInitFunc } from '../api/OptionTypes';
 import PluginManager from '../api/PluginManager';
-import ThemeManager, { Theme } from '../api/ThemeManager';
-import { EditorUiApi } from '../api/ui/Ui';
-import { EditorEvent } from '../api/util/EventDispatcher';
+import ThemeManager, { type Theme } from '../api/ThemeManager';
+import type { EditorUiApi } from '../api/ui/Ui';
+import type { EditorEvent } from '../api/util/EventDispatcher';
 import Tools from '../api/util/Tools';
 import VK from '../api/util/VK';
 import * as ErrorReporter from '../ErrorReporter';

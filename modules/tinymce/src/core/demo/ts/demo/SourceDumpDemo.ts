@@ -1,12 +1,13 @@
 import { Checked, SelectorFind, SugarBody, Value } from '@ephox/sugar';
 
-import { Editor, TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { Editor, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
 export default (): void => {
   tinymce.init({
     selector: 'textarea#editor',
+    license_key: 'gpl',
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     content_css: '../../../../js/tinymce/skins/content/default/content.css',
     image_caption: true,

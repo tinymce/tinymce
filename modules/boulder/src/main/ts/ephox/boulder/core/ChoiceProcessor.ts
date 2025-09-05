@@ -1,7 +1,7 @@
 import { Obj } from '@ephox/katamari';
 
 import { missingBranch, missingKey } from './SchemaError';
-import { StructureProcessor } from './StructureProcessor';
+import type { StructureProcessor } from './StructureProcessor';
 
 const chooseFrom = (path: string[], input: Record<string, any>, branches: Record<string, StructureProcessor>, ch: string) => {
   const fields = Obj.get(branches, ch);

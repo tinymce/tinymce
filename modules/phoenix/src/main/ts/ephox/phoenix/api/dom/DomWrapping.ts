@@ -1,8 +1,8 @@
 import { DomUniverse } from '@ephox/boss';
-import { Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { Optional } from '@ephox/katamari';
+import type { SugarElement } from '@ephox/sugar';
 
-import { SpanWrapRange, SpotPoints, Wrapter } from '../data/Types';
+import type { SpanWrapRange, SpotPoints, Wrapter } from '../data/Types';
 import * as Wrapping from '../general/Wrapping';
 
 const universe = DomUniverse();

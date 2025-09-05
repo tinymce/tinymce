@@ -1,8 +1,8 @@
-import { DieFn, NextFn } from '../pipe/Pipe';
+import type { DieFn, NextFn } from '../pipe/Pipe';
 
 import { Pipeline } from './Pipeline';
 import { Step } from './Step';
-import { TestLogs } from './TestLogs';
+import type { TestLogs } from './TestLogs';
 
 // This module needs tests
 const sequence = (steps: Step<any, any>[]): Step<any, any> =>

@@ -3,16 +3,16 @@ import { Optional } from '@ephox/katamari';
 import { Keying } from '../../api/behaviour/Keying';
 import { Receiving } from '../../api/behaviour/Receiving';
 import { Representing } from '../../api/behaviour/Representing';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 import * as SketchBehaviours from '../../api/component/SketchBehaviours';
-import { AlloySpec } from '../../api/component/SpecTypes';
+import type { AlloySpec } from '../../api/component/SpecTypes';
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as NativeEvents from '../../api/events/NativeEvents';
 import * as Channels from '../../api/messages/Channels';
-import { CompositeSketchFactory } from '../../api/ui/UiSketcher';
-import { EventFormat, NativeSimulatedEvent } from '../../events/SimulatedEvent';
+import type { CompositeSketchFactory } from '../../api/ui/UiSketcher';
+import type { EventFormat, NativeSimulatedEvent } from '../../events/SimulatedEvent';
 import * as AlloyParts from '../../parts/AlloyParts';
-import { SliderDetail, SliderSpec, SliderUpdateEvent, SliderValue } from '../types/SliderTypes';
+import type { SliderDetail, SliderSpec, SliderUpdateEvent, SliderValue } from '../types/SliderTypes';
 
 import * as ModelCommon from './ModelCommon';
 

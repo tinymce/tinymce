@@ -1,4 +1,4 @@
-import { SugarElement } from '../node/SugarElement';
+import type { SugarElement } from '../node/SugarElement';
 import * as Traverse from '../search/Traverse';
 
 const before = (marker: SugarElement<Node>, element: SugarElement<Node>): void => {

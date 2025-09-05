@@ -11,7 +11,7 @@ import * as Id from './Id';
 import * as Jam from './Jam';
 import { LazyValue } from './LazyValue';
 import * as LazyValues from './LazyValues';
-import { Maybe } from './Maybe';
+import type { Maybe } from './Maybe';
 import * as Maybes from './Maybes';
 import * as Merger from './Merger';
 import * as Namespace from './Namespace';
@@ -35,6 +35,7 @@ import * as Unicode from './Unicode';
 import * as Unique from './Unique';
 import * as Zip from './Zip';
 
+export type { Maybe };
 export {
   Adt,
   Arr,
@@ -50,7 +51,6 @@ export {
   Jam,
   LazyValue,
   LazyValues,
-  Maybe,
   Maybes,
   Merger,
   Namespace,

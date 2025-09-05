@@ -2,9 +2,9 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as BlockPattern from 'tinymce/core/textpatterns/core/BlockPattern';
-import { DynamicPatternContext, PatternSet } from 'tinymce/core/textpatterns/core/PatternTypes';
+import type { DynamicPatternContext, PatternSet } from 'tinymce/core/textpatterns/core/PatternTypes';
 import { getParentBlock, resolveFromDynamicPatterns } from 'tinymce/core/textpatterns/utils/Utils';
 
 import { getPatternSetFor } from '../../module/test/TextPatternsUtils';

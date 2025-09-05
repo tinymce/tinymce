@@ -1,15 +1,15 @@
-import { Cell, Future, Optional, Result } from '@ephox/katamari';
+import type { Cell, Future, Optional, Result } from '@ephox/katamari';
 
-import { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { SketchBehaviours } from '../../api/component/SketchBehaviours';
-import { AlloySpec } from '../../api/component/SpecTypes';
-import { CompositeSketch, CompositeSketchSpec } from '../../api/ui/Sketcher';
+import type { AlloyBehaviourRecord } from '../../api/behaviour/Behaviour';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { SketchBehaviours } from '../../api/component/SketchBehaviours';
+import type { AlloySpec } from '../../api/component/SpecTypes';
+import type { CompositeSketch, CompositeSketchSpec } from '../../api/ui/Sketcher';
 
-import { CommonDropdownDetail } from './DropdownTypes';
-import { InputDetail, InputSpec } from './InputTypes';
-import { ItemDataTuple } from './ItemTypes';
-import { TieredData, TieredMenuSpec } from './TieredMenuTypes';
+import type { CommonDropdownDetail } from './DropdownTypes';
+import type { InputDetail, InputSpec } from './InputTypes';
+import type { ItemDataTuple } from './ItemTypes';
+import type { TieredData, TieredMenuSpec } from './TieredMenuTypes';
 
 /*
  * Typeahead Model types

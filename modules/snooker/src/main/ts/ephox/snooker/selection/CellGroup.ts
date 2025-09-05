@@ -1,5 +1,5 @@
-import { Optional } from '@ephox/katamari';
-import { Compare, SugarElement } from '@ephox/sugar';
+import type { Optional } from '@ephox/katamari';
+import { Compare, type SugarElement } from '@ephox/sugar';
 
 import * as Structs from '../api/Structs';
 import { Warehouse } from '../api/Warehouse';

@@ -1,15 +1,15 @@
-import { ItemTypes } from '@ephox/alloy';
-import { Menu as BridgeMenu, Toolbar } from '@ephox/bridge';
+import type { ItemTypes } from '@ephox/alloy';
+import { Menu as BridgeMenu, type Toolbar } from '@ephox/bridge';
 import { Arr, Optional, Optionals } from '@ephox/katamari';
 
-import { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
+import type { UiFactoryBackstageProviders } from 'tinymce/themes/silver/backstage/Backstage';
 
 import { renderChoiceItem } from '../item/build/ChoiceItem';
 import { renderImgItem } from '../item/build/ImageItem';
-import ItemResponse from '../item/ItemResponse';
+import type ItemResponse from '../item/ItemResponse';
 
 import * as MenuUtils from './MenuUtils';
-import { SingleMenuItemSpec } from './SingleMenuTypes';
+import type { SingleMenuItemSpec } from './SingleMenuTypes';
 
 type PartialMenuSpec = MenuUtils.PartialMenuSpec;
 

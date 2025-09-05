@@ -1,6 +1,6 @@
-import DOMUtils from '../../api/dom/DOMUtils';
+import type DOMUtils from '../../api/dom/DOMUtils';
 
-import { PathRange, resolvePathRange } from './PathRange';
+import { type PathRange, resolvePathRange } from './PathRange';
 import * as Utils from './Utils';
 
 export interface Marker {

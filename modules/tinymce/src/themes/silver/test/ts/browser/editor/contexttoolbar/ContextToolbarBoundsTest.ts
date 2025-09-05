@@ -1,12 +1,12 @@
-import { Bounds, Boxes } from '@ephox/alloy';
+import { type Bounds, Boxes } from '@ephox/alloy';
 import { after, before, context, describe, it } from '@ephox/bedrock-client';
-import { InlineContent } from '@ephox/bridge';
+import type { InlineContent } from '@ephox/bridge';
 import { Css, Scroll, SelectorFind, SugarBody } from '@ephox/sugar';
 import { McEditor, TinyDom } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 import { getContextToolbarBounds, isVerticalOverlap } from 'tinymce/themes/silver/ui/context/ContextToolbarBounds';
 
 import TestBackstage from '../../../module/TestBackstage';

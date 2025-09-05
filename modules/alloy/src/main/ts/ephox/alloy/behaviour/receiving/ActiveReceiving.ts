@@ -3,10 +3,10 @@ import { Arr, Obj } from '@ephox/katamari';
 
 import * as AlloyEvents from '../../api/events/AlloyEvents';
 import * as SystemEvents from '../../api/events/SystemEvents';
-import { ReceivingEvent, ReceivingInternalEvent } from '../../events/SimulatedEvent';
+import type { ReceivingEvent, ReceivingInternalEvent } from '../../events/SimulatedEvent';
 import * as AlloyLogger from '../../log/AlloyLogger';
 
-import { ReceivingConfig } from './ReceivingTypes';
+import type { ReceivingConfig } from './ReceivingTypes';
 
 const chooseChannels = (channels: string[], message: ReceivingInternalEvent): string[] =>
   message.universal ? channels : Arr.filter(channels, (ch) => Arr.contains(message.channels, ch));

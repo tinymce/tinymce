@@ -1,8 +1,8 @@
 import { Arr, Fun } from '@ephox/katamari';
 import { Compare, Insert, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
-import Schema from '../api/html/Schema';
+import type Editor from '../api/Editor';
+import type Schema from '../api/html/Schema';
 import CaretPosition from '../caret/CaretPosition';
 import { isAtFirstLine, isAtLastLine } from '../caret/LineReader';
 import * as ForceBlocks from '../ForceBlocks';

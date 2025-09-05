@@ -1,7 +1,7 @@
-import { AlloySpec, Behaviour, Disabling, FormField, SketchSpec } from '@ephox/alloy';
-import { Optional } from '@ephox/katamari';
+import { type AlloySpec, Behaviour, Disabling, FormField, type SketchSpec } from '@ephox/alloy';
+import type { Optional } from '@ephox/katamari';
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 
 import * as ContextToolbarFocus from './ContextToolbarFocus';
 

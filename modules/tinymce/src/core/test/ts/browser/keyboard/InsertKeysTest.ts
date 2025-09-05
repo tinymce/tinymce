@@ -3,7 +3,7 @@ import { Arr, Fun } from '@ephox/katamari';
 import { Hierarchy, Insert, SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.keyboard.InsertKeysTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

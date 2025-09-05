@@ -1,4 +1,4 @@
-import { TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
@@ -7,6 +7,7 @@ elm.value = 'The format menu should show "red"';
 
 tinymce.init({
   selector: 'textarea.tinymce',
+  license_key: 'gpl',
   plugins: 'importcss code',
   toolbar: 'styles code',
   height: 600,

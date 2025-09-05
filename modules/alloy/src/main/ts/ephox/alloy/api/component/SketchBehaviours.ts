@@ -1,7 +1,7 @@
-import { FieldProcessor, FieldSchema } from '@ephox/boulder';
+import { type FieldProcessor, FieldSchema } from '@ephox/boulder';
 import { Arr, Fun } from '@ephox/katamari';
 
-import { AlloyBehaviourRecord, derive, NamedConfiguredBehaviour } from '../behaviour/Behaviour';
+import { type AlloyBehaviourRecord, derive, type NamedConfiguredBehaviour } from '../behaviour/Behaviour';
 
 export interface SketchBehaviours {
   dump: AlloyBehaviourRecord;

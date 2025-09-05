@@ -1,13 +1,13 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloySpec, AlloyTriggers, Behaviour, Composing, CustomEvent, Disabling, FormField as AlloyFormField,
-  Invalidating, Memento, NativeEvents, Representing, SketchSpec, SimpleSpec, SystemEvents, Tabstopping, Typeahead as AlloyTypeahead
+  AddEventsBehaviour, type AlloyComponent, AlloyEvents, type AlloySpec, AlloyTriggers, Behaviour, Composing, type CustomEvent, Disabling, FormField as AlloyFormField,
+  Invalidating, Memento, NativeEvents, Representing, type SketchSpec, type SimpleSpec, SystemEvents, Tabstopping, Typeahead as AlloyTypeahead
 } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
+import type { Dialog } from '@ephox/bridge';
 import { Arr, Fun, Future, FutureResult, Id, Optional, Result } from '@ephox/katamari';
 import { Attribute, Traverse, Value } from '@ephox/sugar';
 
-import { UiFactoryBackstage } from '../../backstage/Backstage';
-import { UiFactoryBackstageForUrlInput } from '../../backstage/UrlInputBackstage';
+import type { UiFactoryBackstage } from '../../backstage/Backstage';
+import type { UiFactoryBackstageForUrlInput } from '../../backstage/UrlInputBackstage';
 import * as UiState from '../../UiState';
 import { renderFormFieldDom, renderLabel } from '../alien/FieldLabeller';
 import { renderButton } from '../general/Button';
@@ -66,8 +66,7 @@ export const renderUrlInput = (
     inputClasses: [ 'tox-textfield' ],
     sandboxClasses: [ 'tox-dialog__popups' ],
     inputAttributes: {
-      'aria-errormessage': errorId,
-      'type': 'url'
+      type: 'url'
     },
     minChars: 0,
     responseTime: 0,
@@ -110,9 +109,11 @@ export const renderUrlInput = (
               return FutureResult.nu((completer) => {
                 handler({ type: spec.filetype, url: urlEntry.value }, (validation) => {
                   if (validation.status === 'invalid') {
+                    Attribute.set(input.element, 'aria-errormessage', errorId);
                     const err = Result.error(validation.message);
                     completer(err);
                   } else {
+                    Attribute.remove(input.element, 'aria-errormessage');
                     const val = Result.value(validation.message);
                     completer(val);
                   }

@@ -1,7 +1,7 @@
-import { ApproxStructure, Assertions, TestStore } from '@ephox/agar';
+import { ApproxStructure, Assertions, type TestStore } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { Fun, Optional } from '@ephox/katamari';
-import { Focus, SugarElement } from '@ephox/sugar';
+import { Focus, type SugarElement } from '@ephox/sugar';
 
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { tieredMenu as TieredMenu } from 'ephox/alloy/api/ui/TieredMenu';

@@ -3,7 +3,7 @@ import { Arr, Num } from '@ephox/katamari';
 import { TinyApis, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/autosave/Plugin';
 
 describe('browser.tinymce.plugins.autosave.AutoSavePluginTest', () => {

@@ -1,5 +1,5 @@
 import { Optional } from '@ephox/katamari';
-import { SugarElement, SugarPosition } from '@ephox/sugar';
+import { type SugarElement, SugarPosition } from '@ephox/sugar';
 
 import * as Boxes from '../../alien/Boxes';
 import * as CssPosition from '../../alien/CssPosition';
@@ -7,7 +7,7 @@ import * as Bubble from '../layout/Bubble';
 import * as Layout from '../layout/Layout';
 import * as Origins from '../layout/Origins';
 
-import { Anchoring, NodeAnchor, nu as NuAnchor, SelectionAnchor } from './Anchoring';
+import { type Anchoring, type NodeAnchor, nu as NuAnchor, type SelectionAnchor } from './Anchoring';
 import * as AnchorLayouts from './AnchorLayouts';
 
 const getBox = (left: number, top: number, width: number, height: number): Optional<Boxes.BoxByPoint> => {

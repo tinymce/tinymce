@@ -1,10 +1,10 @@
 import {
-  AlloyComponent, AlloySpec, Behaviour, Dropdown as AlloyDropdown, Layouts, RawDomSchema, SketchSpec, Tabstopping, Unselecting
+  type AlloyComponent, type AlloySpec, Behaviour, Dropdown as AlloyDropdown, type Layouts, type RawDomSchema, type SketchSpec, Tabstopping, Unselecting
 } from '@ephox/alloy';
-import { Menu, Toolbar } from '@ephox/bridge';
+import type { Menu, Toolbar } from '@ephox/bridge';
 import { Fun, Future, Id, Merger, Optional } from '@ephox/katamari';
 
-import { UiFactoryBackstageShared } from '../../backstage/Backstage';
+import type { UiFactoryBackstageShared } from '../../backstage/Backstage';
 import * as UiState from '../../UiState';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 import ItemResponse from '../menus/item/ItemResponse';

@@ -4,7 +4,7 @@ import { Attribute, SugarBody, SugarDocument, SugarElement } from '@ephox/sugar'
 import { TinyAssertions, TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Resource from 'tinymce/core/api/Resource';
 import Plugin from 'tinymce/plugins/emoticons/Plugin';
 

@@ -1,6 +1,6 @@
 import { Optional } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import { isAfterImageBlock, isBeforeImageBlock } from '../caret/CaretPositionPredicates';

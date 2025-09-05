@@ -1,4 +1,4 @@
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
 export type RowElement = HTMLTableRowElement | HTMLTableColElement;
 export type CellElement = HTMLTableCellElement | HTMLTableColElement;

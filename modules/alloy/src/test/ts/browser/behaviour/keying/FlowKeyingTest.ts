@@ -1,14 +1,14 @@
 
-import { FocusTools, Keyboard, Keys, TestStore } from '@ephox/agar';
+import { FocusTools, Keyboard, Keys, type TestStore } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
-import { SugarDocument, SugarElement } from '@ephox/sugar';
+import { SugarDocument, type SugarElement } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
-import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
+import type { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as AlloyEvents from 'ephox/alloy/api/events/AlloyEvents';
 import { Container } from 'ephox/alloy/api/ui/Container';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';

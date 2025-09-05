@@ -1,6 +1,6 @@
-import { ApproxStructure, Assertions, StructAssert, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, type StructAssert, UiFinder, Waiter } from '@ephox/agar';
 import { Arr, Type } from '@ephox/katamari';
-import { SugarBody, SugarElement } from '@ephox/sugar';
+import { SugarBody, type SugarElement } from '@ephox/sugar';
 
 interface TitleWithTextItem {
   readonly title: string;
@@ -140,10 +140,12 @@ const pAssertAutocompleterStructure = async (structure: AutocompleterStructure):
   );
 };
 
-export {
+export type {
   AutocompleterGridStructure,
   AutocompleterListStructure,
-  AutocompleterStructure,
+  AutocompleterStructure
+};
+export {
   pAssertAutocompleterStructure,
   structWithTitleAndIcon,
   structWithTitleAndIconAndText,

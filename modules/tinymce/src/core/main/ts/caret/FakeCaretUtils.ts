@@ -1,6 +1,6 @@
 import { Optional } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as CefUtils from '../dom/CefUtils';
 
 import CaretPosition from './CaretPosition';

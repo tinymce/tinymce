@@ -1,13 +1,14 @@
 /* eslint-disable no-console */
 import { Merger } from '@ephox/katamari';
 
-import { RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { RawEditorOptions, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
 export default (): void => {
   const settings: RawEditorOptions = {
     selector: 'textarea',
+    license_key: 'gpl',
     setup: (ed) => {
       let isToggled = false;
       let isToggled2 = false;

@@ -1,13 +1,13 @@
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 import { DomGather } from '@ephox/phoenix';
-import { Situ, SugarElement, Traverse } from '@ephox/sugar';
+import { Situ, type SugarElement, Traverse } from '@ephox/sugar';
 
-import { WindowBridge } from '../api/WindowBridge';
-import { Carets } from '../keyboard/Carets';
+import type { WindowBridge } from '../api/WindowBridge';
+import type { Carets } from '../keyboard/Carets';
 import { Retries } from '../keyboard/Retries';
-import { Situs } from '../selection/Situs';
+import type { Situs } from '../selection/Situs';
 
-import { BeforeAfter, BeforeAfterFailureConstructor } from './BeforeAfter';
+import { BeforeAfter, type BeforeAfterFailureConstructor } from './BeforeAfter';
 
 export interface KeyDirection {
   traverse: (element: SugarElement<Node>) => Optional<SugarElement<Node & ChildNode>>;

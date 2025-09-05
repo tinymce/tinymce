@@ -4,7 +4,7 @@ import { assert } from 'chai';
 
 import * as Presets from 'tinymce/core/schema/Presets';
 import * as SchemaElementSets from 'tinymce/core/schema/SchemaElementSets';
-import * as SchemaTypes from 'tinymce/core/schema/SchemaTypes';
+import type * as SchemaTypes from 'tinymce/core/schema/SchemaTypes';
 
 describe('atomic.tinymce.core.schema.PresetsTest', () => {
   const testPreset = (testCase: { type: SchemaTypes.SchemaType; preset: string; expectedSet: keyof SchemaElementSets.ElementSets<readonly string[]> }) => {

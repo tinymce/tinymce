@@ -1,0 +1,94 @@
+{
+  "name": "@tinymce/oxide-components",
+  "private": true,
+  "version": "0.0.2",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tinymce/tinymce.git",
+    "directory": "modules/oxide-components"
+  },
+  "description": "React component library for TinyMCE rich text editor",
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
+  "bugs": {
+    "url": "https://github.com/tinymce/tinymce/issues"
+  },
+  "license": "GPL-2.0-or-later",
+  "sideEffects": false,
+  "files": [
+    "lib",
+    "src",
+    "tsconfig.json",
+    "README.md",
+    "LEGAL.txt",
+    "CHANGELOG.txt",
+    "LICENSE.txt"
+  ],
+  "main": "lib/main.js",
+  "module": "lib/main.js",
+  "types": "lib/src/main/ts/main.d.ts",
+  "scripts": {
+    "dev": "vite",
+    "build": "yarn build-storybook && tsc -b && vite build",
+    "lint": "eslint --max-warnings=0 src/**/*.ts?",
+    "start": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "deploy-storybook": "gh-pages -d ./storybook-static --nojekyll --dest modules/oxide-components",
+    "test-watch": "vitest",
+    "test": "echo 'No tests'",
+    "test-visual-ci": "node ./visual-regression-test-ci.mjs",
+    "test-visual-local": "node ./visual-regression-test.mjs",
+    "test-visual-local-update": "node ./visual-regression-test.mjs update",
+    "test-ci": "vitest --watch=false --reporter=junit --outputFile=scratch/test-results.xml",
+    "test-browser-manual": "vitest --watch --project browser --browser.headless false",
+    "test-browser-headless": "vitest run --project browser",
+    "ci": "yarn lint && yarn --cwd ../../ lerna run build --scope @tinymce/oxide-components --include-dependencies && yarn test"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@chromatic-com/storybook": "^4.0.0",
+    "@eslint/js": "^9.25.0",
+    "@playwright/test": "1.53.1",
+    "@storybook/addon-a11y": "9.0.17",
+    "@storybook/addon-docs": "9.0.17",
+    "@storybook/addon-onboarding": "9.0.17",
+    "@storybook/addon-vitest": "9.0.17",
+    "@storybook/react-vite": "9.0.17",
+    "@tinymce/oxide": "^3.0.0",
+    "@types/node": "^22.15.19",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.5.0",
+    "@vitest/browser": "^3.1.4",
+    "@vitest/coverage-v8": "^3.1.4",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "eslint-plugin-storybook": "9.0.17",
+    "gh-pages": "^6.3.0",
+    "globals": "^16.0.0",
+    "playwright": "1.53.1",
+    "postcss": "^8.4.39",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "storybook": "9.0.17",
+    "storybook-addon-pseudo-states": "9.0.17",
+    "terser": "^5.28.1",
+    "vite": "^6.3.5",
+    "vitest": "^3.1.4",
+    "vitest-browser-react": "^1.0.1"
+  },
+  "workspaces": {
+    "nohoist": [
+      "**/storybook",
+      "**/@storybook/**",
+      "**/vite**"
+    ]
+  },
+  "dependencies": {
+    "@ephox/katamari": "^10.0.0",
+    "@ephox/sugar": "^10.0.0"
+  }
+}

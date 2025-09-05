@@ -1,9 +1,9 @@
 import { FocusTools, Mouse, UiFinder, Waiter } from '@ephox/agar';
-import { SelectorFilter, SugarBody, SugarElement, TextContent } from '@ephox/sugar';
+import { SelectorFilter, SugarBody, type SugarElement, TextContent } from '@ephox/sugar';
 import { TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 const tooltipSelector = '.tox-silver-sink .tox-tooltip__body';
 
@@ -45,6 +45,20 @@ const pCloseTooltip = async (editor: Editor, selector: string): Promise<void> =>
     () => UiFinder.notExists(SugarBody.body(), tooltipSelector));
 };
 
+const pHoverOverTooltipBeforeClosing = async (editor: Editor, selector: string, timeout: number): Promise<void> => {
+  const button = await UiFinder.pWaitForVisible('Waiting for button to appear', TinyUiActions.getUiRoot(editor), selector);
+  const tooltip = await UiFinder.pWaitForVisible('Waiting for tooltip to appear', TinyUiActions.getUiRoot(editor), tooltipSelector);
+  Mouse.mouseOut(button);
+  Mouse.mouseOver(tooltip);
+  await Waiter.pWait(timeout);
+  UiFinder.exists(SugarBody.body(), tooltipSelector);
+  Mouse.mouseOut(tooltip);
+  editor.focus();
+  await Waiter.pTryUntil(
+    'Waiting for tooltip to NO LONGER be in DOM',
+    () => UiFinder.notExists(SugarBody.body(), tooltipSelector));
+};
+
 const pCloseMenu = (selector: string): Promise<void> => {
   Mouse.clickOn(SugarBody.body(), selector);
   return Waiter.pTryUntil('Waiting for menu', () =>
@@ -58,12 +72,13 @@ const pOpenMenu = (editor: Editor, buttonSelector: string): Promise<SugarElement
 };
 
 export {
-  pAssertTooltip,
   pAssertNoTooltip,
   pAssertNoTooltipShown,
-  pTriggerTooltipWithMouse,
-  pTriggerTooltipWithKeyboard,
-  pCloseTooltip,
+  pAssertTooltip,
   pCloseMenu,
-  pOpenMenu
+  pCloseTooltip,
+  pHoverOverTooltipBeforeClosing,
+  pOpenMenu,
+  pTriggerTooltipWithKeyboard,
+  pTriggerTooltipWithMouse
 };

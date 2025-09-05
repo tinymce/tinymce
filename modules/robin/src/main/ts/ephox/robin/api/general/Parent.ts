@@ -1,8 +1,8 @@
-import { Universe } from '@ephox/boss';
-import { Optional } from '@ephox/katamari';
+import type { Universe } from '@ephox/boss';
+import type { Optional } from '@ephox/katamari';
 
-import { breakPath as xBreakPath, breakToLeft as xBreakToLeft, breakToRight as xBreakToRight, BrokenPath, LeftRight } from '../../parent/Breaker';
-import { Looker, oneAll } from '../../parent/Shared';
+import { breakPath as xBreakPath, breakToLeft as xBreakToLeft, breakToRight as xBreakToRight, type BrokenPath, type LeftRight } from '../../parent/Breaker';
+import { type Looker, oneAll } from '../../parent/Shared';
 import * as SubsetFn from '../../parent/Subset';
 
 export interface AncestorsFnResult<E> {

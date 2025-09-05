@@ -1,7 +1,7 @@
-import { Cell, Singleton } from '@ephox/katamari';
+import type { Cell, Singleton } from '@ephox/katamari';
 
-import { EditorEvent } from '../api/util/EventDispatcher';
-import { Bookmark } from '../bookmark/BookmarkTypes';
+import type { EditorEvent } from '../api/util/EventDispatcher';
+import type { Bookmark } from '../bookmark/BookmarkTypes';
 
 export type UndoLevelType = 'fragmented' | 'complete';
 

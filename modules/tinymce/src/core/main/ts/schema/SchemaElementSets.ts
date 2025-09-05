@@ -1,4 +1,4 @@
-import { SchemaType } from './SchemaTypes';
+import type { SchemaType } from './SchemaTypes';
 
 export interface ElementSets<T> {
   blockContent: T;

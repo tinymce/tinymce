@@ -1,7 +1,7 @@
 import { Assertions, Pipeline, Step, TestLogs, TestStore } from '@ephox/agar';
-import { AlloyComponent, Attachment, Gui } from '@ephox/alloy';
+import { type AlloyComponent, Attachment, Gui } from '@ephox/alloy';
 import { Fun, Global, Merger, Obj, Optional, Type } from '@ephox/katamari';
-import { DomEvent, EventUnbinder, Html, Insert, Remove, SugarBody, SugarDocument, SugarElement, SugarShadowDom, Traverse } from '@ephox/sugar';
+import { DomEvent, type EventUnbinder, Html, Insert, Remove, SugarBody, SugarDocument, SugarElement, SugarShadowDom, Traverse } from '@ephox/sugar';
 
 type RootNode = SugarShadowDom.RootNode;
 type ContentContainer<T extends RootNode> = T extends ShadowRoot ? ShadowRoot : HTMLElement;

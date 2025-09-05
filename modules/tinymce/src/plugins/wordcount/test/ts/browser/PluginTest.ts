@@ -5,7 +5,7 @@ import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections,
 import { assert } from 'chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/wordcount/Plugin';
 
 describe('browser.tinymce.plugins.wordcount.PluginTest', () => {

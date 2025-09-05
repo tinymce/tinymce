@@ -1,10 +1,10 @@
-import { Optional } from '@ephox/katamari';
+import type { Optional } from '@ephox/katamari';
 
-import * as Behaviour from '../../api/behaviour/Behaviour';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { AlloySpec } from '../../api/component/SpecTypes';
-import { WrappedApiFunc } from '../common/Behaviour';
-import { BehaviourState } from '../common/BehaviourState';
+import type * as Behaviour from '../../api/behaviour/Behaviour';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import type { AlloySpec } from '../../api/component/SpecTypes';
+import type { WrappedApiFunc } from '../common/Behaviour';
+import type { BehaviourState } from '../common/BehaviourState';
 
 export type BlockFn = (
   component: AlloyComponent,

@@ -1,4 +1,4 @@
-import { FieldProcessor, FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
+import { type FieldProcessor, FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
 import { Result } from '@ephox/katamari';
 
 export default [

@@ -1,9 +1,9 @@
 import { DomUniverse } from '@ephox/boss';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
-import { SplitPosition } from '../data/SplitPosition';
-import { TextSplit } from '../data/TextSplit';
-import { SpotRange } from '../data/Types';
+import type { SplitPosition } from '../data/SplitPosition';
+import type { TextSplit } from '../data/TextSplit';
+import type { SpotRange } from '../data/Types';
 import * as Split from '../general/Split';
 
 const universe = DomUniverse();

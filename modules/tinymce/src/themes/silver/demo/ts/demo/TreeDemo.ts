@@ -1,6 +1,6 @@
-import { Dialog } from '@ephox/bridge';
+import type { Dialog } from '@ephox/bridge';
 
-import { TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 
@@ -11,6 +11,7 @@ interface Data {
 export default (): void => {
   tinymce.init({
     selector: 'textarea.tinymce',
+    license_key: 'gpl',
     toolbar: 'tree',
     height: 600,
     setup: (ed) => {
