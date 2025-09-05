@@ -22,6 +22,8 @@ export interface AutoResizingTextareaProps {
   readonly className?: string;
   readonly value: string;
   readonly onChange?: (value: string) => void;
+  readonly disabled?: boolean;
+  readonly placeholder?: string;
 }
 
 export const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizingTextareaProps>(({
