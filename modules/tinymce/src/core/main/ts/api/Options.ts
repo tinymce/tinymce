@@ -935,6 +935,11 @@ const register = (editor: Editor): void => {
     }
   });
 
+  registerOption('csp_nonce', {
+    processor: 'string',
+    default: '',
+  });
+
   // These options must be registered later in the init sequence due to their default values
   editor.on('ScriptsLoaded', () => {
     registerOption('directionality', {
@@ -1082,6 +1087,7 @@ const getExtendedMathmlElements = option('extended_mathml_elements');
 const getUserId = option('user_id');
 const getFetchUsers = option('fetch_users');
 const shouldIndentOnTab = option('lists_indent_on_tab');
+const getCspNonce = option('csp_nonce');
 const getListMaxDepth = (editor: Editor): Optional<number> =>
   Optional.from(editor.options.get('list_max_depth'));
 
@@ -1201,5 +1207,6 @@ export {
   shouldIndentOnTab,
   getListMaxDepth,
   getFetchUsers,
-  getUserId
+  getUserId,
+  getCspNonce
 };
