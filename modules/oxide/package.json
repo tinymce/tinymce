@@ -9,10 +9,10 @@
   },
   "scripts": {
     "test": "echo 'No tests'",
-    "build": "bun x grunt build",
-    "start": "bun x grunt start",
+    "build": "bun grunt build",
+    "start": "bun grunt start",
     "prepublishOnly": "bun ci",
-    "ci": "bun x grunt build"
+    "ci": "bun grunt build"
   },
   "keywords": [
     "TinyMCE"
