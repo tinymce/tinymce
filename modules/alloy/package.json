@@ -26,8 +26,8 @@
   "scripts": {
     "test": "bedrock-auto -b chrome-headless --testdirs src/test/ts/atomic src/test/ts/browser src/test/ts/webdriver",
     "test-manual": "bedrock --testdirs src/test/ts/atomic src/test/ts/browser src/test/ts/webdriver",
-    "lint": "node ../../node_modules/eslint/bin/eslint.js --max-warnings=0 src/**/*.ts",
-    "start": "node ../../node_modules/grunt/bin/grunt dev",
+    "lint": "eslint --max-warnings=0 src/**/*.ts",
+    "start": "grunt dev",
     "prepublishOnly": "tsc -b",
     "build": "tsc"
   },

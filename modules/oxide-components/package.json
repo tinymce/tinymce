@@ -30,7 +30,7 @@
   "scripts": {
     "dev": "vite",
     "build": "bun build-storybook && tsc -b && vite build",
-    "lint": "node ../../node_modules/eslint/bin/eslint.js --max-warnings=0 'src/**/*.ts' 'src/**/*.tsx'",
+    "lint": "eslint --max-warnings=0 'src/**/*.ts' 'src/**/*.tsx'",
     "start": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "deploy-storybook": "gh-pages -d ./storybook-static --nojekyll --dest modules/oxide-components",
@@ -42,7 +42,7 @@
     "test-ci": "vitest --watch=false --reporter=junit --outputFile=scratch/test-results.xml",
     "test-browser-manual": "vitest --watch --project browser --browser.headless false",
     "test-browser-headless": "vitest run --project browser",
-    "ci": "bun lint; node ../../node_modules/lerna/dist/cli.js run build --scope @tinymce/oxide-components --include-dependencies; bun run test"
+    "ci": "bun lint; lerna run build --scope @tinymce/oxide-components --include-dependencies; bun run test"
   },
   "peerDependencies": {
     "react": "^18.3.1",
