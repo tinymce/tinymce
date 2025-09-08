@@ -5,7 +5,7 @@
     "modules/*"
   ],
   "scripts": {
-    "tinymce-grunt": "grunt --gruntfile modules/tinymce/Gruntfile.js",
+    "tinymce-grunt": "bun x grunt --gruntfile modules/tinymce/Gruntfile.js",
     "tinymce-rollup": "run-s \"tinymce-grunt dev rollup\"",
     "oxide-icons-build": "bun run -F @tinymce/oxide-icons-default build",
     "oxide-icons-ci": "bun run -F @tinymce/oxide-icons-default ci",
@@ -29,11 +29,11 @@
     "test": "bun x run-s headless-test browser-test",
     "build": "bun x npm-run-all -p oxide-icons-ci oxide-ci oxide-components-ci -s tinymce-grunt",
     "prepublishOnly": "bun x run-s oxide-icons-ci",
-    "browser-test": "grunt browser-auto",
-    "browser-test-manual": "grunt browser-manual",
-    "headless-test": "grunt headless-auto",
-    "headless-test-firefox": "grunt headless-auto --bedrock-browser=firefox-headless",
-    "headless-test-manual": "grunt headless-manual",
+    "browser-test": "bun x grunt browser-auto",
+    "browser-test-manual": "bun x grunt browser-manual",
+    "headless-test": "bun x grunt headless-auto",
+    "headless-test-firefox": "bun x grunt headless-auto --bedrock-browser=firefox-headless",
+    "headless-test-manual": "bun x grunt headless-manual",
     "bedrock": "bedrock --chunk=5000 --customRoutes modules/tinymce/src/core/test/json/routes.json",
     "test-one": "tsc && bedrock-auto -b chrome-headless -f"
   },
