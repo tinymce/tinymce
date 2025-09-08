@@ -287,6 +287,8 @@ timestamps { notifyStatusChange(
           '''
         }
       }
+    }
+  }
 
   // [ browser: 'chrome', provider: 'aws', buckets: 2 ],
   // [ browser: 'edge', provider: 'aws', buckets: 2 ],
@@ -392,8 +394,6 @@ timestamps { notifyStatusChange(
           echo "Skipping Storybook deployment as the pipeline is not running on the primary branch"
         }
       }
-    }
-  }
     }
   }
 }}
