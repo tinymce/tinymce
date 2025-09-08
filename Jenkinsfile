@@ -32,7 +32,7 @@ def checkoutAndMergeStep = {
 }
 
 def runBedrockTest(String name, String command, Boolean runAll, int retry = 0, int timeout = 0) {
-  def bedrockCmd = command + (runAll ? " --ignore-lerna-changed=true" : "")
+  def bedrockCmd = 'export PATH="$PWD/node_modules/.bin:$PATH"; ' + command + (runAll ? " --ignore-lerna-changed=true" : "")
   echo "Running Bedrock cmd: ${bedrockCmd}"
   def testStatus = sh(script: bedrockCmd, returnStatus: true)
   junit allowEmptyResults: true, testResults: 'scratch/TEST-*.xml'
@@ -260,7 +260,7 @@ timestamps { notifyStatusChange(
       stage('Build') {
         // verify no errors in changelog merge
         // exec("bun changie-merge") // TODO: changie not available in node-lts container
-        withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
+        withEnv(["NODE_OPTIONS=--max-old-space-size=1936", "PATH=${env.WORKSPACE}/node_modules/.bin:${env.PATH}"]) {
           // type check and build TinyMCE
           exec("bun run ci-all-seq")
 
