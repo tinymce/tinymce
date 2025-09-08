@@ -5058,9 +5058,9 @@ chalk@^5.1.2:
   integrity sha512-zgVZuo2WcZgfUEmsn6eO3kINexW8RAE4maiQ8QNs8CtpPCSyMiYsULR3HQYkm3w8FIA3SberyMJMSldGsW+U3w==
 
 changie@^1.14.0:
-  version "1.21.0"
-  resolved "https://registry.yarnpkg.com/changie/-/changie-1.21.0.tgz#a64074ba6ea316fcd1344c33ff5e5a994d5b071e"
-  integrity sha512-fLK0oRtjImao22BDjaaXLq9w/hMh7mGdzpRrJ5ADzT0SOSIghT0SrVOhSs9tUCoyPa2fjG05ueVZSLcSXGBeVg==
+  version "1.22.1"
+  resolved "https://registry.yarnpkg.com/changie/-/changie-1.22.1.tgz#72ab4f3ba6724838f07f4986a5287114e2981dee"
+  integrity sha512-afrk+nCoEYxkk9eEArHGJ1sIRwfpQRAzpXwUlzXuSqV9+9vg792RyxLKYBk7QGrkOhyyuguLjYe6EgDXsF/8Jw==
 
 chardet@^0.7.0:
   version "0.7.0"
