@@ -261,9 +261,17 @@ timestamps { notifyStatusChange(
         // verify no errors in changelog merge
         // exec("bun changie-merge") // TODO: changie not available in node-lts container
         withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
-          // Use single sh() session to maintain PATH across commands
+          // Debug and fix PATH issues
           sh '''
             export PATH="$PWD/node_modules/.bin:$PATH"
+            echo "=== Debug: PWD ==="
+            pwd
+            echo "=== Debug: node_modules/.bin contents ==="
+            ls -la node_modules/.bin/ | grep -E "(lerna|eslint|grunt|run-)" || echo "Binaries not found"
+            echo "=== Debug: PATH ==="
+            echo $PATH
+            echo "=== Debug: Test direct binary ==="
+            ./node_modules/.bin/lerna --version || echo "Direct lerna call failed"
             bun ci-all-seq
             bun tinymce-grunt shell:moxiedoc
           '''
