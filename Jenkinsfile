@@ -249,6 +249,8 @@ timestamps { notifyStatusChange(
         // cancel build if primary branch doesn't merge cleanly
         gitMerge(primaryBranch)
         exec("bun install")
+        // Set up PATH to include node_modules/.bin (replaces yarnInstall() behavior)
+        env.PATH = "./node_modules/.bin:${env.PATH}"
       }
 
       stage('Build') {
