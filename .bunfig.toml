@@ -2,8 +2,11 @@
 # Replaces .yarnrc settings
 
 [install]
-# Equivalent to --install.frozen-lockfile true
 frozen-lockfile = true
+linker = "isolated"
+linkWorkspacePackages = true
+cache = true
+auto = true
 
 # Registry configuration - bun uses npm registry by default
 [install.scopes]
