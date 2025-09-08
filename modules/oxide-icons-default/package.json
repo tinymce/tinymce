@@ -9,9 +9,9 @@
   },
   "main": "dist/js/icons.js",
   "scripts": {
-    "build": "bun x grunt",
+    "build": "bun grunt",
     "prepublishOnly": "bun ci",
-    "ci": "bun x grunt --no-color"
+    "ci": "bun grunt --no-color"
   },
   "keywords": [
     "TinyMCE",
