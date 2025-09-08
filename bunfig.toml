@@ -3,8 +3,6 @@
 
 [install]
 frozen-lockfile = true
-linker = "isolated"
-linkWorkspacePackages = true
 cache = true
 auto = true
 

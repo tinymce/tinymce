@@ -293,13 +293,11 @@ timestamps { notifyStatusChange(
         withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
           // Use Premium's direct binary path approach (no PATH dependency)
           sh '''
-            echo "=== Using direct binary paths like Premium ==="
-            NODE_BIN="./node_modules/.bin"
-            echo "Testing direct binary access:"
-            ls -la $NODE_BIN/npm-run-all* || echo "npm-run-all missing"
-            $NODE_BIN/npm-run-all --version || echo "npm-run-all execution failed"
-            echo "Running build with direct paths:"
-            $NODE_BIN/npm-run-all -p eslint ci-seq -s tinymce-rollup
+            echo "=== Using direct node execution to bypass symlink issues ==="
+            echo "Testing direct node execution:"
+            node node_modules/npm-run-all2/bin/npm-run-all/index.js --version || echo "npm-run-all direct execution failed"
+            echo "Running build with direct node calls:"
+            node node_modules/npm-run-all2/bin/npm-run-all/index.js -p eslint ci-seq -s tinymce-rollup
             bun tinymce-grunt shell:moxiedoc
           '''
         }
