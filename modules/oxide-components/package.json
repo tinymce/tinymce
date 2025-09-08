@@ -30,7 +30,7 @@
   "scripts": {
     "dev": "vite",
     "build": "bun build-storybook && tsc -b && vite build",
-    "lint": "eslint --max-warnings=0 'src/**/*.ts' 'src/**/*.tsx'",
+    "lint": "node ../../node_modules/eslint/bin/eslint.js --max-warnings=0 'src/**/*.ts' 'src/**/*.tsx'",
     "start": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "deploy-storybook": "gh-pages -d ./storybook-static --nojekyll --dest modules/oxide-components",

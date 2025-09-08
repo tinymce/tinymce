@@ -21,7 +21,7 @@
     "build": "node ../../node_modules/grunt/bin/grunt buildOnly",
     "test": "node ../../node_modules/grunt/bin/grunt test",
     "test-manual": "node ../../node_modules/grunt/bin/grunt test-manual",
-    "lint": "eslint --max-warnings=0 src/**/*.ts",
+    "lint": "node ../../node_modules/eslint/bin/eslint.js --max-warnings=0 src/**/*.ts",
     "silver-test": "node ../../node_modules/grunt/bin/grunt bedrock-auto:silver",
     "silver-test-manual": "node ../../node_modules/grunt/bin/grunt bedrock-manual:silver"
   },

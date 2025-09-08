@@ -14,13 +14,13 @@
     "oxide-build": "bun run -F @tinymce/oxide build",
     "oxide-start": "bun run -F @tinymce/oxide start",
     "oxide-ci": "bun run -F @tinymce/oxide ci",
-    "tsc": "tsc -b",
-    "watch": "tsc -b -w",
+    "tsc": "node node_modules/typescript/bin/tsc -b",
+    "watch": "node node_modules/typescript/bin/tsc -b -w",
     "eslint": "node node_modules/lerna/dist/cli.js exec --stream --no-bail -- node ../../node_modules/eslint/bin/eslint.js --max-warnings=0 src/**/*.ts",
     "start": "bun run tinymce-grunt start",
     "dev": "node node_modules/npm-run-all2/bin/npm-run-all/index.js oxide-icons-build oxide-build -p tsc \"tinymce-grunt dev\"",
-    "changie-merge": "changie merge -u '## Unreleased'",
-    "changie-batch": "changie batch auto --project",
+    "changie-merge": "node node_modules/changie/bin/changie merge -u '## Unreleased'",
+    "changie-batch": "node node_modules/changie/bin/changie batch auto --project",
     "ci": "node node_modules/npm-run-all2/bin/npm-run-all/index.js -p oxide-ci oxide-icons-ci oxide-components-ci -p tsc \"tinymce-grunt dev\"",
     "ci-seq": "node node_modules/npm-run-all2/bin/run-s/index.js oxide-ci oxide-icons-ci oxide-components-ci tsc \"tinymce-grunt dev\"",
     "ci-all": "node node_modules/npm-run-all2/bin/npm-run-all/index.js -p changie-merge eslint ci -s tinymce-rollup",
@@ -34,8 +34,8 @@
     "headless-test": "node node_modules/grunt/bin/grunt headless-auto",
     "headless-test-firefox": "node node_modules/grunt/bin/grunt headless-auto --bedrock-browser=firefox-headless",
     "headless-test-manual": "node node_modules/grunt/bin/grunt headless-manual",
-    "bedrock": "bedrock --chunk=5000 --customRoutes modules/tinymce/src/core/test/json/routes.json",
-    "test-one": "tsc && bedrock-auto -b chrome-headless -f"
+    "bedrock": "node node_modules/@ephox/bedrock-server/bin/bedrock.js --chunk=5000 --customRoutes modules/tinymce/src/core/test/json/routes.json",
+    "test-one": "node node_modules/typescript/bin/tsc && node node_modules/@ephox/bedrock-server/bin/bedrock-auto.js -b chrome-headless -f"
   },
   "devDependencies": {
     "@ephox/bedrock-client": "^15.0.0",
