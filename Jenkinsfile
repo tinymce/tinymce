@@ -291,18 +291,15 @@ timestamps { notifyStatusChange(
         // verify no errors in changelog merge
         // exec("bun changie-merge") // TODO: changie not available in node-lts container
         withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
-          // Debug and fix PATH issues
+          // Use Premium's direct binary path approach (no PATH dependency)
           sh '''
-            export PATH="$PWD/node_modules/.bin:$PATH"
-            echo "=== Debug: PWD ==="
-            pwd
-            echo "=== Debug: node_modules/.bin contents ==="
-            ls -la node_modules/.bin/ | grep -E "(lerna|eslint|grunt|run-)" || echo "Binaries not found"
-            echo "=== Debug: PATH ==="
-            echo $PATH
-            echo "=== Debug: Test direct binary ==="
-            ./node_modules/.bin/lerna --version || echo "Direct lerna call failed"
-            bun ci-all-seq
+            echo "=== Using direct binary paths like Premium ==="
+            NODE_BIN="./node_modules/.bin"
+            echo "Testing direct binary access:"
+            ls -la $NODE_BIN/npm-run-all* || echo "npm-run-all missing"
+            $NODE_BIN/npm-run-all --version || echo "npm-run-all execution failed"
+            echo "Running build with direct paths:"
+            $NODE_BIN/npm-run-all -p eslint ci-seq -s tinymce-rollup
             bun tinymce-grunt shell:moxiedoc
           '''
         }
