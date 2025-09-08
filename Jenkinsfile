@@ -249,14 +249,15 @@ timestamps { notifyStatusChange(
         // cancel build if primary branch doesn't merge cleanly
         gitMerge(primaryBranch)
         exec("bun install")
-        // Set up PATH to include node_modules/.bin (replaces yarnInstall() behavior)
-        env.PATH = "./node_modules/.bin:${env.PATH}"
       }
 
       stage('Build') {
         // verify no errors in changelog merge
         // exec("bun changie-merge") // TODO: changie not available in node-lts container
-        withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
+        withEnv([
+          "NODE_OPTIONS=--max-old-space-size=1936",
+          "PATH=./node_modules/.bin:$PATH"
+        ]) {
           // type check and build TinyMCE
           exec("bun ci-all-seq")
 
