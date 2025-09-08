@@ -260,12 +260,12 @@ timestamps { notifyStatusChange(
       stage('Build') {
         // verify no errors in changelog merge
         // exec("bun changie-merge") // TODO: changie not available in node-lts container
-        withEnv(["NODE_OPTIONS=--max-old-space-size=1936", "PATH=${env.WORKSPACE}/node_modules/.bin:${env.PATH}"]) {
-          // type check and build TinyMCE
-          exec("bun run ci-all-seq")
+        withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
+          // Ensure local binaries are resolvable for nested tools (lerna, eslint, etc.)
+          exec('export PATH="$PWD/node_modules/.bin:$PATH"; bun run ci-all-seq')
 
           // validate documentation generator
-          exec("bun run tinymce-grunt shell:moxiedoc")
+          exec('export PATH="$PWD/node_modules/.bin:$PATH"; bun run tinymce-grunt shell:moxiedoc')
         }
       }
     }
