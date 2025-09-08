@@ -261,11 +261,12 @@ timestamps { notifyStatusChange(
         // verify no errors in changelog merge
         // exec("bun changie-merge") // TODO: changie not available in node-lts container
         withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
-          // Ensure local binaries are resolvable for nested tools (lerna, eslint, etc.)
-          exec('export PATH="$PWD/node_modules/.bin:$PATH"; bun run ci-all-seq')
-
-          // validate documentation generator
-          exec('export PATH="$PWD/node_modules/.bin:$PATH"; bun run tinymce-grunt shell:moxiedoc')
+          // Use single sh() session to maintain PATH across commands
+          sh '''
+            export PATH="$PWD/node_modules/.bin:$PATH"
+            bun ci-all-seq
+            bun tinymce-grunt shell:moxiedoc
+          '''
         }
       }
     }
