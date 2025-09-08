@@ -9,10 +9,10 @@
   },
   "scripts": {
     "test": "echo 'No tests'",
-    "build": "node ../../node_modules/grunt/bin/grunt build",
-    "start": "node ../../node_modules/grunt/bin/grunt start",
+    "build": "grunt build",
+    "start": "grunt start",
     "prepublishOnly": "bun ci",
-    "ci": "node ../../node_modules/grunt/bin/grunt build"
+    "ci": "grunt build"
   },
   "keywords": [
     "TinyMCE"

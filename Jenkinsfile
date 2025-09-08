@@ -22,36 +22,19 @@ def nodeLts = [ name: 'node-lts', image: "${ciRegistry}/build-containers/node-lt
 def nodeLtsResources = devPods.getContainerDefaultArgs(nodeLts + buildResources)
 
 def bunInstall() {
-  exec('''
-    echo "=== PRE-INSTALL DEBUG ==="
-    echo "User/permissions:"
-    id
-    echo "Bun version:"
-    bun --version
-    echo "Bunfig.toml contents:"
-    cat bunfig.toml || echo "No bunfig.toml"
-    echo "Lockfile info:"
-    ls -la bun.lock* || echo "No lockfiles found"
-    echo "Node_modules before install:"
-    ls -la node_modules/.bin/ || echo "No node_modules/.bin yet"
-  ''')
   exec('bun install')
+  // Manually create missing symlinks that bun failed to create in CI
   exec('''
-    echo "=== POST-INSTALL DEBUG ==="
-    echo "Total packages installed in node_modules:"
-    ls node_modules/ | wc -l
-    echo "Checking for critical packages in node_modules:"
-    ls -la node_modules/ | grep -E "^d.*lerna|^d.*eslint|^d.*grunt" || echo "Main package directories missing"
-    echo "Total binaries in .bin:"
-    ls node_modules/.bin/ | wc -l
-    echo "All .bin contents:"
-    ls -la node_modules/.bin/
-    echo "Checking binary permissions and targets:"
-    ls -la node_modules/.bin/npm-run-all* || echo "npm-run-all binaries missing"
-    echo "Testing binary execution:"
-    node_modules/.bin/npm-run-all --version || echo "npm-run-all execution failed"
-    echo "Bun info:"
-    bun pm ls | head -10 || echo "Bun pm ls failed"
+    echo "=== Creating missing binary symlinks ==="
+    cd node_modules/.bin
+    ln -sf ../lerna/dist/cli.js lerna
+    ln -sf ../eslint/bin/eslint.js eslint  
+    ln -sf ../grunt/bin/grunt grunt
+    ln -sf ../@tinymce/moxiedoc/dist/lib/cli.js moxiedoc
+    ln -sf ../typescript/bin/tsc tsc
+    ln -sf ../changie/bin/changie changie
+    echo "Verifying symlinks created:"
+    ls -la lerna eslint grunt moxiedoc tsc changie
   ''')
 }
 

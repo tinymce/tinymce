@@ -18,12 +18,12 @@
   "main": "js/tinymce/tinymce.js",
   "types": "src/core/main/ts/api/PublicApi.ts",
   "scripts": {
-    "build": "node ../../node_modules/grunt/bin/grunt buildOnly",
-    "test": "node ../../node_modules/grunt/bin/grunt test",
-    "test-manual": "node ../../node_modules/grunt/bin/grunt test-manual",
-    "lint": "node ../../node_modules/eslint/bin/eslint.js --max-warnings=0 src/**/*.ts",
-    "silver-test": "node ../../node_modules/grunt/bin/grunt bedrock-auto:silver",
-    "silver-test-manual": "node ../../node_modules/grunt/bin/grunt bedrock-manual:silver"
+    "build": "grunt buildOnly",
+    "test": "grunt test",
+    "test-manual": "grunt test-manual",
+    "lint": "eslint --max-warnings=0 src/**/*.ts",
+    "silver-test": "grunt bedrock-auto:silver",
+    "silver-test-manual": "grunt bedrock-manual:silver"
   },
   "dependencies": {
     "@ephox/acid": "^7.0.0",
