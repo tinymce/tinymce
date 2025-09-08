@@ -10,6 +10,6 @@ frozen-lockfile = true
 "@ephox" = "https://registry.yarnpkg.com"
 "@tinymce" = "https://registry.yarnpkg.com"
 
-# Runtime configuration - disable bun interception of npx
+# Runtime configuration - make bun handle PATH like yarn
 [run]
-bun = false
+shell = "system"

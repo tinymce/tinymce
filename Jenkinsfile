@@ -256,7 +256,7 @@ timestamps { notifyStatusChange(
         // exec("bun changie-merge") // TODO: changie not available in node-lts container
         withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
           // type check and build TinyMCE
-          exec("export PATH=\"./node_modules/.bin:$PATH\" && npm-run-all -p eslint ci-seq -s tinymce-rollup")
+          exec("bun ci-all-seq")
 
           // validate documentation generator
           exec("bun tinymce-grunt shell:moxiedoc")
