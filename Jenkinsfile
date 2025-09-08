@@ -33,7 +33,9 @@ def bunInstall() {
     ln -sf ../@tinymce/moxiedoc/dist/lib/cli.js moxiedoc
     ln -sf ../typescript/bin/tsc tsc
     ln -sf ../changie/bin/changie changie
-    echo "Verifying symlinks created:"
+    echo "Setting execute permissions on symlinks:"
+    chmod +x lerna eslint grunt moxiedoc tsc changie
+    echo "Verifying symlinks and permissions:"
     ls -la lerna eslint grunt moxiedoc tsc changie
   ''')
 }
