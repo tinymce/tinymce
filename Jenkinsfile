@@ -22,9 +22,7 @@ def nodeLts = [ name: 'node-lts', image: "${ciRegistry}/build-containers/node-lt
 def nodeLtsResources = devPods.getContainerDefaultArgs(nodeLts + buildResources)
 
 def bunInstall() {
-  withNpmrc {
-    exec('bun install --frozen-lockfile')
-  }
+  exec('bun install --frozen-lockfile')
 }
 
 def checkoutAndMergeStep = {
