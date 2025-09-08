@@ -9,3 +9,7 @@ frozen-lockfile = true
 [install.scopes]
 "@ephox" = "https://registry.yarnpkg.com"
 "@tinymce" = "https://registry.yarnpkg.com"
+
+# Runtime configuration - disable bun interception of npx
+[run]
+bun = false
