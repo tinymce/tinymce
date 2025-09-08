@@ -248,21 +248,20 @@ timestamps { notifyStatusChange(
       stage('Deps') {
         // cancel build if primary branch doesn't merge cleanly
         gitMerge(primaryBranch)
-        exec("bun install")
+        bunInstall()
       }
 
       stage('Build') {
         // verify no errors in changelog merge
         // exec("bun changie-merge") // TODO: changie not available in node-lts container
-        withEnv([
-          "NODE_OPTIONS=--max-old-space-size=1936",
-          "PATH=./node_modules/.bin:$PATH"
-        ]) {
-          // type check and build TinyMCE
-          exec("bun ci-all-seq")
+        withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
+          withBunPath {
+            // type check and build TinyMCE
+            exec("bun ci-all-seq")
 
-          // validate documentation generator
-          exec("bun tinymce-grunt shell:moxiedoc")
+            // validate documentation generator
+            exec("bun tinymce-grunt shell:moxiedoc")
+          }
         }
       }
     }
