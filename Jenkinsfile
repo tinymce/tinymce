@@ -3,6 +3,9 @@
 
 standardProperties()
 
+String ciAccountId = "103651136441"
+String ciRegistry = "${ciAccountId}.dkr.ecr.us-east-2.amazonaws.com"
+
 Map podResources = [
   resourceRequestCpu: '2',
   resourceLimitCpu: '7.5',
@@ -15,6 +18,8 @@ Map buildResources = podResources + [
   resourceLimitMemory: '4Gi'
 ]
 
+def nodeLts = [ name: 'node-lts', image: "${ciRegistry}/build-containers/node-lts:lts", runAsGroup: '1000', runAsUser: '1000' ]
+def nodeLtsResources = devPods.getContainerDefaultArgs(nodeLts + buildResources)
 
 def bunInstall() {
   exec('bun install')
@@ -253,12 +258,6 @@ timestamps { notifyStatusChange(
   name: 'TinyMCE',
   mention: true
   ) {
-  String ciAccountId = "103651136441"
-  String ciRegistry = "${ciAccountId}.dkr.ecr.us-east-2.amazonaws.com"
-
-  def nodeLts = [ name: 'node-lts', image: "${ciRegistry}/build-containers/node-lts:lts", runAsGroup: '1000', runAsUser: '1000' ]
-  def nodeLtsResources = devPods.getContainerDefaultArgs(nodeLts + buildResources)
-
   devPods.custom(containers: [ nodeLtsResources ], checkoutStep: checkoutAndMergeStep) {
     container('node-lts') {
       props = readProperties(file: 'build.properties')
