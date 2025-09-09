@@ -1,7 +1,7 @@
 import ScriptLoader from './dom/ScriptLoader';
 
 interface Resource {
-  load: <T = any>(id: string, url: string, editorDoc?: Document) => Promise<T>;
+  load: <T = any>(id: string, url: string) => Promise<T>;
   add: (id: string, data: any) => void;
   has: (id: string) => boolean;
   get: (id: string) => any;
@@ -40,7 +40,7 @@ const create = (): Resource => {
   const resultFns: Record<string, (data: any) => void> = {};
   const resources: Record<string, any> = {};
 
-  const load = <T>(id: string, url: string, editorDoc?: Document): Promise<T> => {
+  const load = <T>(id: string, url: string): Promise<T> => {
     const loadErrMsg = `Script at URL "${url}" failed to load`;
     const runErrMsg = `Script at URL "${url}" did not call \`tinymce.Resource.add('${id}', data)\` within 1 second`;
     if (tasks[id] !== undefined) {
@@ -49,7 +49,7 @@ const create = (): Resource => {
       const task = new Promise<any>((resolve, reject) => {
         const waiter = awaiter(resolve, reject);
         resultFns[id] = waiter.resolve;
-        ScriptLoader.ScriptLoader.loadScript(url, editorDoc).then(() => waiter.start(runErrMsg), () => waiter.reject(loadErrMsg));
+        ScriptLoader.ScriptLoader.loadScript(url).then(() => waiter.start(runErrMsg), () => waiter.reject(loadErrMsg));
       });
       tasks[id] = task;
       return task;
