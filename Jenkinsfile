@@ -122,19 +122,16 @@ def runBrowserTests(String name, String browser, String platform, String bucket,
 }
 
 def runTestPod(String cacheName, String name, String testname, String browser, String provider, String platform, String version, String bucket, String buckets, Boolean runAll) {
+  def containers = [
+    devPods.getContainerDefaultArgs([ name: 'node', image: "${ciRegistry}/build-containers/node-lts:lts", runAsGroup: '1000', runAsUser: '1000' ]) + devPods.hiRes(),
+    devPods.getContainerDefaultArgs([ name: 'aws-cli', image: 'public.ecr.aws/aws-cli/aws-cli:latest', runAsGroup: '1000', runAsUser: '1000' ]) + devPods.lowRes(),
+  ]
   return {
     stage("${name}") {
-      devPods.nodeConsumer(
-        nodeOpts: [
-          resourceRequestCpu: '2',
-          resourceRequestMemory: '6Gi',
-          resourceRequestEphemeralStorage: '16Gi',
-          resourceLimitCpu: '7',
-          resourceLimitMemory: '6Gi',
-          resourceLimitEphemeralStorage: '16Gi'
-        ],
+      devPods.customConsumer(
         build: cacheName,
-        useContainers: ['node-lts', 'aws-cli']
+        containers: containers,
+        base: 'node'
       ) {
         grunt('list-changed-browser')
         bedrockRemoteTools.tinyWorkSishTunnel()
