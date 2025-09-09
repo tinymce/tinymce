@@ -130,4 +130,12 @@ describe('browser.tinymce.core.newline.NewlineInLiTest', () => {
     TinyAssertions.assertContent(editor, expectedContent);
     TinyAssertions.assertCursor(editor, [ 0, 2, 0, 0, 0, 0 ], 0);
   });
+
+  it('TINY-12830: splitting li into two using enter should not throw an error', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul><li>This is a paragraph</li></ul>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 'Th'.length);
+    TinyContentActions.keydown(editor, Keys.enter());
+    TinyAssertions.assertContent(editor, [ '<ul>', '<li>Th</li>', '<li>is is a paragraph</li>', '</ul>' ].join('\n'));
+  });
 });
