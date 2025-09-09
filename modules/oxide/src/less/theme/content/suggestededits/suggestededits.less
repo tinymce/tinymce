@@ -8,6 +8,7 @@
 
 @selected-outline-color: @color-tint;
 @selected-box-shadow: 0 -2px 0 0 @selected-outline-color inset, 0 -2px 0 0 @selected-outline-color;
+@focused-box-shadow: 2px @selected-outline-color inset, -2px @selected-outline-color;
 
 .tox-suggestededits__annotation--added,
 .tox-suggestededits__annotation--modified,
@@ -46,6 +47,12 @@
 	background-color: @removed-background-color;
 	box-shadow: @selected-box-shadow;
 	text-decoration: line-through;
+}
+
+.tox-suggestededits__annotation--added__selected:focus,
+.tox-suggestededits__annotation--modified__selected:focus,
+.tox-suggestededits__annotation--removed__selected:focus {
+  box-shadow: @focused-box-shadow;
 }
 
 .tox-suggestededits__annotation--added.tox-suggestededits__annotation--added__hidden,
