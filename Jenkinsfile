@@ -254,6 +254,7 @@ timestamps {
 
   def nodeLts = [ name: 'node-lts', image: "${ciRegistry}/build-containers/node-lts:lts", runAsGroup: '1000', runAsUser: '1000' ]
   def nodeLtsResources = devPods.getContainerDefaultArgs(nodeLts + buildResources)
+  def aws = devPods.getContainerDefaultArgs(devPods.awsImage() + devPods.lowRes())
 
   notifyStatusChange(
   cleanupStep: { devPods.cleanUpPod(build: cacheName) },
@@ -262,7 +263,7 @@ timestamps {
   name: 'TinyMCE',
   mention: true
   ) {
-  devPods.custom(containers: [ nodeLtsResources ], checkoutStep: checkoutAndMergeStep) {
+  devPods.custom(containers: [ nodeLtsResources, aws ], checkoutStep: checkoutAndMergeStep) {
     container('node-lts') {
       props = readProperties(file: 'build.properties')
       String primaryBranch = props.primaryBranch
@@ -290,6 +291,14 @@ timestamps {
             bun tinymce-grunt shell:moxiedoc
           '''
         }
+      }
+
+      sh "mkdir -p /tmp && tar -zcf /tmp/file.tar.gz ./* && cp /tmp/file.tar.gz ./file.tar.gz"
+    }
+
+    container('aws-cli') {
+      tinyAws.withAWSEngineeringCICredentials('tinymce_pipeline_cache') {
+        sh "aws s3 cp ./file.tar.gz s3://tiny-freerange-testing/remote-builds/${cacheName}.tar.gz"
       }
     }
   }
