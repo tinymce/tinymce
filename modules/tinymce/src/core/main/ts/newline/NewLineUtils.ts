@@ -38,12 +38,13 @@ const moveToCaretPosition = (editor: Editor, root: Node): void => {
     const isList = (e: SugarElement) => /^(ul|ol|dl)$/.test(SugarNode.name(e));
     const findFirstList = (e: SugarElement) => isList(e) ? Optional.from(e) : PredicateFind.descendant(e, isList);
     const isEmpty = (e: SugarElement) => dom.isEmpty(e.dom);
+
     firstNonWhiteSpaceNodeSibling(root.firstChild).each((firstChild) => {
       findFirstList(firstChild).fold(
         () => {
           if (isEmpty(firstChild)) {
             const element = DomDescent.toLeaf(firstChild, 0).element;
-            if (!ElementType.isBr(element)) {
+            if (SugarNode.isElement(element) && !ElementType.isBr(element)) {
               Insert.append(element, SugarElement.fromText(Unicode.nbsp));
             }
           }
