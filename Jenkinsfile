@@ -15,7 +15,10 @@ Map buildResources = podResources + [
   resourceLimitMemory: '4Gi'
 ]
 
-String ciRegistry = "${ciAccountId}.dkr.ecr.us-east-2.amazonaws.com"
+// Ensure variables are accessible in scopes
+import groovy.transform.Field
+@Field String ciAccountId = "103651136441"
+@Field String ciRegistry = "${ciAccountId}.dkr.ecr.us-east-2.amazonaws.com"
 
 def bunInstall() {
   exec('bun install')
@@ -248,9 +251,6 @@ def cacheName = "cache_${BUILD_TAG}"
 def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NUMBER}"
 
 timestamps {
-  // Ensure variables are accessible in this scope
-  String ciAccountId = "103651136441"
-  String ciRegistry = "${ciAccountId}.dkr.ecr.us-east-2.amazonaws.com"
 
   def nodeLts = [ name: 'node-lts', image: "${ciRegistry}/build-containers/node-lts:lts", runAsGroup: '1000', runAsUser: '1000' ]
   def nodeLtsResources = devPods.getContainerDefaultArgs(nodeLts + buildResources)
