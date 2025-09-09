@@ -15,6 +15,8 @@ Map buildResources = podResources + [
   resourceLimitMemory: '4Gi'
 ]
 
+String ciRegistry = "${ciAccountId}.dkr.ecr.us-east-2.amazonaws.com"
+
 def bunInstall() {
   exec('bun install')
   // Manually create missing symlinks that bun failed to create in CI
