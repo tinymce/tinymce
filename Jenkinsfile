@@ -131,13 +131,14 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
       devPods.customConsumer(
         build: cacheName,
         containers: containers,
-        base: 'node'
       ) {
-        grunt('list-changed-browser')
-        bedrockRemoteTools.tinyWorkSishTunnel()
-        bedrockRemoteTools.withRemoteCreds(provider) {
-          int retry = 0
-          runRemoteTests(testname, browser, provider, platform, version, bucket, buckets, runAll, retry, 180)
+        container('node') {
+          grunt('list-changed-browser')
+          bedrockRemoteTools.tinyWorkSishTunnel()
+          bedrockRemoteTools.withRemoteCreds(provider) {
+            int retry = 0
+            runRemoteTests(testname, browser, provider, platform, version, bucket, buckets, runAll, retry, 180)
+          }
         }
       }
     }
@@ -156,7 +157,6 @@ def runPlaywrightPod(String cacheName, String name, Closure body) {
     stage("${name}") {
       devPods.customConsumer(
         containers: containers,
-        base: 'node',
         build: cacheName
       ) {
         container('playwright') {
