@@ -31,5 +31,9 @@ describe('browser.tinymce.plugins.accordion.NormalizeOpenAttributeTest', () => {
     TinyAssertions.assertContent(editor, [ '<details open="open">', '<summary>Test summary</summary>', '<p>Test body</p>', '</details>' ].join('\n'));
   });
 
-  // TODO: check if dialogs are unaffected
+  it('TINY-12862: should not normalize different tags than details', () => {
+    const editor = hook.editor();
+    editor.setContent('<div><dialog open="foo"><p>content</p></dialog></div>');
+    TinyAssertions.assertContent(editor, [ '<div><dialog open="foo">', '<p>content</p>', '</dialog></div>' ].join('\n'));
+  });
 });
