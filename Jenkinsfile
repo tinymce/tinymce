@@ -178,7 +178,7 @@ def runSeleniumPod(String cacheName, String name, String browser, String version
           resourceRequestEphemeralStorage: '8Gi',
           resourceLimitCpu: '7',
           resourceLimitMemory: '4Gi',
-          resourceLimitEphemeralStorage: '8Gi',
+          resourceLimitEphemeralStorage: '12Gi',
           runAsGroup: '1000', runAsUser: '1000'
         ]
   Map selenium = [
@@ -192,12 +192,12 @@ def runSeleniumPod(String cacheName, String name, String browser, String version
             failureThreshold: 6
           ],
           alwaysPullImage: true,
-          resourceRequestCpu: '1',
-          resourceRequestMemory: '500Mi',
-          resourceLimitCpu: '1',
-          resourceLimitMemory: '500Mi',
+          resourceRequestCpu: '2',
+          resourceRequestMemory: '2Gi',
+          resourceLimitCpu: '4',
+          resourceLimitMemory: '3Gi',
           resourceRequestEphemeralStorage: '4Gi',
-          resourceLimitEphemeralStorage: '4Gi'
+          resourceLimitEphemeralStorage: '6Gi'
         ]
   Map aws = [
           name: 'aws-cli',
