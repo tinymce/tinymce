@@ -121,12 +121,15 @@ describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
     }, []);
 
     it('TINY-12817: Loading a script specifying the document should load the script in that document', async () => {
+      const oldTestFun = (document as any).testFun;
+      (document as any).testFun = undefined;
       const editor = hook.editor();
       await pLoadScript(fakelibScript);
       assert.isDefined((document as any).testFun, 'test fun should be loaded on the main document');
       assert.isUndefined((editor.getDoc() as any).testFun, 'test fun should not be loaded on the editor document');
       await pLoadScript(fakelibScript, editor.getDoc());
       assert.isDefined((editor.getDoc() as any).testFun, 'test fun should be loaded on the editor document');
+      (document as any).testFun = oldTestFun;
     });
   });
 });
