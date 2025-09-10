@@ -79,6 +79,7 @@ const setup = (editor: Editor): void => {
       // Using a traditional for loop here as we may have to iterate over many nodes and it is the most performant way of doing so
       for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i];
+        // TODO: normalize open attribute
         if (isAccordionDetailsNode(node)) {
           const accordionNode = node;
           const { summaryNode, wrapperNode, otherNodes } = getAccordionChildren(accordionNode);
