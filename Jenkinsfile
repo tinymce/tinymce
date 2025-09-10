@@ -195,7 +195,7 @@ def runSeleniumPod(String cacheName, String name, String browser, String version
           resourceRequestCpu: '2',
           resourceRequestMemory: '2Gi',
           resourceLimitCpu: '4',
-          resourceLimitMemory: '3Gi',
+          resourceLimitMemory: '4Gi',
           resourceRequestEphemeralStorage: '4Gi',
           resourceLimitEphemeralStorage: '6Gi'
         ]
