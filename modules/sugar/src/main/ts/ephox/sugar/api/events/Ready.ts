@@ -51,7 +51,7 @@ const image = (image: SugarElement<HTMLImageElement>): Promise<SugarElement<HTML
   }
 });
 
-const video = (videoEl: SugarElement<HTMLVideoElement>): Promise<SugarElement<HTMLVideoElement>> => new Promise((resolve, reject) => {
+const video = (videoEl: SugarElement<HTMLVideoElement>): Promise<SugarElement<HTMLVideoElement>> => new Promise((resolve) => {
   const loaded = () => {
     destroy();
     resolve(videoEl);
@@ -60,7 +60,7 @@ const video = (videoEl: SugarElement<HTMLVideoElement>): Promise<SugarElement<HT
     DomEvent.bind(videoEl, 'loadeddata', loaded),
     DomEvent.bind(videoEl, 'error', () => {
       destroy();
-      reject('Unable to load data from video: ' + videoEl.dom.src);
+      throw (new Error('Unable to load data from video: ' + videoEl.dom.src));
     }),
   ];
 
