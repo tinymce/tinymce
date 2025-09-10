@@ -21,6 +21,14 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
     }
   });
 
+  htmlParser.addNodeFilter('div', (nodes) => {
+    Arr.each(nodes, (node) => {
+      if (node.attributes && Arr.find(node.attributes, (attribute) => attribute.name === 'class' && attribute.value.includes('ephox-dragster-')).isSome()) {
+        node.remove();
+      }
+    });
+  });
+
   // Convert move data-mce-src, data-mce-href and data-mce-style into nodes or process them if needed
   htmlParser.addAttributeFilter('src,href,style', (nodes, name) => {
     const internalName = 'data-mce-' + name;

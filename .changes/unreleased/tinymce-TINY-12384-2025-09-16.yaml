@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Filtering out Dragster elements in serializer ( elements with classes starting with `ephox-dragster-` )
+time: 2025-09-16T07:19:26.916854+02:00
+custom:
+    Issue: TINY-12384
