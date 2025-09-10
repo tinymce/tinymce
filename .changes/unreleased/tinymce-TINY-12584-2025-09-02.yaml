@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: UI elements like focus outlines and placeholders would be visible after printing.
+time: 2025-09-02T14:40:37.026118+02:00
+custom:
+  Issue: TINY-12584
