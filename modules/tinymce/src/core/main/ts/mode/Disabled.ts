@@ -1,5 +1,5 @@
 import { Arr, Fun, type Optional, Strings } from '@ephox/katamari';
-import { Attribute, Compare, ContentEditable, SelectorExists, SelectorFilter, SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
+import { Attribute, Compare, ContentEditable, SelectorExists, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
