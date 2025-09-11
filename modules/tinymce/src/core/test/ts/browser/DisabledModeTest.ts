@@ -386,7 +386,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       const doc = TinyDom.document(editor);
       const yPos = Scroll.get(doc).top;
       const anchor = UiFinder.findIn(body, 'a[href="#someBookmark"]').getOrDie();
-      const accordion = UiFinder.findIn(body, 'summary').getOrDie();
+      const accordion = UiFinder.findIn(body, 'details').getOrDie();
       Mouse.click(anchor);
       const newPos = Scroll.get(doc).top;
       assert.notEqual(newPos, yPos, 'assert yPos has changed i.e. has scrolled');
