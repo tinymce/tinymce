@@ -1,5 +1,5 @@
 import { Arr, Fun, type Optional, Strings } from '@ephox/katamari';
-import { Attribute, Compare, ContentEditable, SelectorFilter, SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
+import { Attribute, Compare, ContentEditable, SelectorExists, SelectorFilter, SelectorFind, SugarElement, SugarNode } from '@ephox/sugar';
 
 import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
@@ -80,10 +80,10 @@ const getAnchorHrefOpt = (editor: Editor, elm: SugarElement<Node>): Optional<str
 };
 
 const processDisabledEvents = (editor: Editor, e: Event): void => {
-  if (handleSummaryClick(e)) {
+  if (handleAnchorClick(e, editor)) {
     return;
   }
-  if (handleAnchorClick(e, editor)) {
+  if (handleSummaryClick(e, editor)) {
     return;
   }
   if (isAllowedEventInDisabledMode(e)) {
@@ -91,18 +91,23 @@ const processDisabledEvents = (editor: Editor, e: Event): void => {
   }
 };
 
-const handleSummaryClick = (e: Event): boolean => {
+const handleSummaryClick = (e: Event, editor: Editor): boolean => {
   /*
     If an event is a click event on a summary element, then we want to prevent default browser behavior.
     Accordions shouldn't be toggable in disabled editor.
   */
-  const elm = SugarElement.fromDom(e.target as Node);
-  const isSummary = SugarNode.isTag('summary');
-  if (isClickEvent(e) && isSummary(elm)) {
+  const element = SugarElement.fromDom(e.target as Node);
+  const body = SugarElement.fromDom(editor.getBody());
+  if (isClickEvent(e) && hasClosestSummary(element, body)) {
     e.preventDefault();
     return true;
   }
   return false;
+};
+
+const hasClosestSummary = (element: SugarElement<Node>, rootElement: SugarElement<Node>): boolean => {
+  const isRoot = (elm: SugarElement<Node>) => Compare.eq(elm, rootElement);
+  return SelectorExists.closest(element, 'summary', isRoot);
 };
 
 const handleAnchorClick = (e: Event, editor: Editor): boolean => {
