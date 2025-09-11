@@ -290,7 +290,40 @@ timestamps {
         }
       }
 
-      sh "mkdir -p /tmp && tar -zcf /tmp/file.tar.gz ./* && cp /tmp/file.tar.gz ./file.tar.gz"
+      sh '''
+        echo "=== Preparing pruned CI artifact (safe excludes) ==="
+        EXCLUDE_FILE="/tmp/ci-tar-excludes.txt"
+        : > "$EXCLUDE_FILE"
+        # Exclude non-linux esbuild platform binaries to shrink artifact size safely
+        ESBUILD_DIR="node_modules/@esbuild"
+        if [ -d "$ESBUILD_DIR" ]; then
+          for d in "$ESBUILD_DIR"/*; do
+            name=$(basename "$d")
+            if [ "$name" != "linux-x64" ]; then
+              echo "./node_modules/@esbuild/$name" >> "$EXCLUDE_FILE"
+            fi
+          done
+        fi
+        # Exclude Nx which is not used by grunt/bedrock runtime
+        echo "./node_modules/@nx" >> "$EXCLUDE_FILE"
+
+        # Optional: enable extra pruning of dev-only stacks for smaller artifact
+        if [ "${TINYMCE_CI_EXTRA_PRUNE:-false}" = "true" ]; then
+          echo "Enabling extra prune excludes (Storybook/Vite/Vitest and module-local deps)"
+          echo "./node_modules/storybook" >> "$EXCLUDE_FILE"
+          echo "./node_modules/@storybook" >> "$EXCLUDE_FILE"
+          echo "./node_modules/vitest" >> "$EXCLUDE_FILE"
+          echo "./node_modules/@vitest" >> "$EXCLUDE_FILE"
+          echo "./node_modules/vite" >> "$EXCLUDE_FILE"
+          echo "./node_modules/vite-node" >> "$EXCLUDE_FILE"
+          echo "./node_modules/@vitejs" >> "$EXCLUDE_FILE"
+          echo "./modules/oxide-components/node_modules" >> "$EXCLUDE_FILE"
+        fi
+
+        mkdir -p /tmp
+        tar -zcf /tmp/file.tar.gz --exclude-from="$EXCLUDE_FILE" ./*
+        cp /tmp/file.tar.gz ./file.tar.gz
+      '''
     }
 
     container('aws-cli') {
