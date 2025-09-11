@@ -205,9 +205,13 @@ def runSeleniumPod(String cacheName, String name, String browser, String version
           command: 'sleep',
           args: 'infinity',
           alwaysPullImage: true,
+          resourceRequestCpu: '2',
+          resourceRequestMemory: '2Gi',
+          resourceLimitCpu: '4',
+          resourceLimitMemory: '6Gi',
           resourceRequestEphemeralStorage: '1Gi',
           resourceLimitEphemeralStorage: '1Gi'
-        ] + devPods.lowRes()
+        ]
   return {
     stage("${name}") {
       devPods.customConsumer(
