@@ -132,6 +132,20 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
         build: cacheName,
         containers: containers,
       ) {
+        container('aws-cli') {
+          sh '''
+            set -e
+            if [ ! -d node_modules ]; then
+              echo "Falling back to explicit S3 fetch of build cache"
+              export AWS_RETRY_MODE=standard AWS_MAX_ATTEMPTS=10
+              for i in 1 2 3 4 5; do
+                aws s3 cp s3://tiny-freerange-testing/remote-builds/${cacheName}.tar.gz ./file.tar.gz --no-progress && break || true
+                echo "Retry $i failed; sleeping..."; sleep $((i*10))
+              done
+              tar -zxf ./file.tar.gz
+            fi
+          '''
+        }
         container('node') {
           grunt('list-changed-browser')
           bedrockRemoteTools.tinyWorkSishTunnel()
