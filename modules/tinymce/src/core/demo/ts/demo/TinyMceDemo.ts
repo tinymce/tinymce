@@ -12,6 +12,7 @@ export default (): void => {
   // Insert.append(container, textarea);
 
   tinymce.init({
+    license_key: 'gpl',
     plugins: [
         "advlist", "anchor", "autolink", "charmap", "code", "fullscreen",
         "help", "image", "insertdatetime", "link", "lists", "media",

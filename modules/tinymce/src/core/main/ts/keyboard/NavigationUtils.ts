@@ -30,6 +30,7 @@ const renderRangeCaretOpt = (editor: Editor, range: Range, scrollIntoView: boole
   Optional.some(FakeCaretUtils.renderRangeCaret(editor, range, scrollIntoView));
 
 const isFloating = (el: Element) => Css.get(SugarElement.fromDom(el), 'position') === 'absolute';
+
 const getAdjacentFloating = (pos: CaretPosition, direction: HDirection) => {
   const node = pos.getNode(direction === HDirection.Backwards);
   return isElement(node) && isFloating(node) ? Optional.some(node) : Optional.none();
@@ -40,6 +41,9 @@ const elementToRange = (node: Node) => {
   rng.selectNode(node);
   return rng;
 };
+// Failed case:
+// Left arrow from button -> text       text [button]
+// Right arrow from button -> text       [button] text
 
 const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, isBefore: (caretPosition: CaretPosition) => boolean,
                           isAfter: (caretPosition: CaretPosition) => boolean, isElement: (node: Node | null) => node is HTMLElement): Optional<Range> => {
@@ -51,6 +55,7 @@ const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, i
   if (!range.collapsed) {
     const node = RangeNodes.getSelectedNode(range);
     if (isElement(node)) {
+
       if (isFloating(node)) {
         const caretPosition = CaretUtils.getNormalizedRangeEndPoint(direction, editor.getBody(), range);
         return Optional.from(getNextPosFn(caretPosition)).map((next) => next.toRange());
