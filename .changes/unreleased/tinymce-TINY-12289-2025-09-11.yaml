@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Tooltips on toolbar buttons sometimes remained visible if the button icon was updated while hovered.
+time: 2025-09-11T21:55:28.82473+08:00
+custom:
+    Issue: TINY-12289

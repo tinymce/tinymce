@@ -75,6 +75,10 @@
     text-transform: @toolbar-button-text-transform;
     width: @toolbar-button-width;
 
+    .tox-tbtn__icon-wrap {
+      pointer-events: none;
+    }
+
     @media (forced-colors: active) {
       &:hover,
       &.tox-tbtn:hover {
