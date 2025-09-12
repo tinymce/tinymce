@@ -1,5 +1,5 @@
-import { Arr, type Optional, Strings } from '@ephox/katamari';
-import { Attribute, Compare, ContentEditable, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Arr, Fun, type Optional, Strings } from '@ephox/katamari';
+import { Attribute, Compare, ContentEditable, SelectorExists, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
@@ -80,6 +80,37 @@ const getAnchorHrefOpt = (editor: Editor, elm: SugarElement<Node>): Optional<str
 };
 
 const processDisabledEvents = (editor: Editor, e: Event): void => {
+  if (handleAnchorClick(e, editor)) {
+    return;
+  }
+  if (handleSummaryClick(e, editor)) {
+    return;
+  }
+  if (isAllowedEventInDisabledMode(e)) {
+    editor.dispatch(e.type, e);
+  }
+};
+
+const handleSummaryClick = (e: Event, editor: Editor): boolean => {
+  /*
+    If an event is a click event on a summary element, then we want to prevent default browser behavior.
+    Accordions shouldn't be toggable in disabled editor.
+  */
+  const element = SugarElement.fromDom(e.target as Node);
+  const body = SugarElement.fromDom(editor.getBody());
+  if (isClickEvent(e) && hasClosestSummary(element, body)) {
+    e.preventDefault();
+    return true;
+  }
+  return false;
+};
+
+const hasClosestSummary = (element: SugarElement<Node>, rootElement: SugarElement<Node>): boolean => {
+  const isRoot = (elm: SugarElement<Node>) => Compare.eq(elm, rootElement);
+  return SelectorExists.closest(element, 'summary', isRoot);
+};
+
+const handleAnchorClick = (e: Event, editor: Editor): boolean => {
   /*
     If an event is a click event on or within an anchor, and the CMD/CTRL key is
     not held, then we want to prevent default behaviour and either:
@@ -88,7 +119,7 @@ const processDisabledEvents = (editor: Editor, e: Event): void => {
   */
   if (isClickEvent(e) && !VK.metaKeyPressed(e)) {
     const elm = SugarElement.fromDom(e.target as Node);
-    getAnchorHrefOpt(editor, elm).each((href) => {
+    return getAnchorHrefOpt(editor, elm).fold(Fun.never, (href) => {
       e.preventDefault();
       if (/^#/.test(href)) {
         const targetEl = editor.dom.select(`${href},[name="${Strings.removeLeading(href, '#')}"]`);
@@ -98,10 +129,10 @@ const processDisabledEvents = (editor: Editor, e: Event): void => {
       } else {
         window.open(href, '_blank', 'rel=noopener noreferrer,menubar=yes,toolbar=yes,location=yes,status=yes,resizable=yes,scrollbars=yes');
       }
+      return true;
     });
-  } else if (isAllowedEventInDisabledMode(e)) {
-    editor.dispatch(e.type, e);
   }
+  return false;
 };
 
 const registerDisabledModeEventHandlers = (editor: Editor): void => {

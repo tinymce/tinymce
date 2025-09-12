@@ -1,7 +1,7 @@
 import { ApproxStructure, Mouse, UiFinder, Clipboard, TestStore, Waiter } from '@ephox/agar';
 import { afterEach, Assert, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional, OptionalInstances } from '@ephox/katamari';
-import { Class, Css, Scroll, SelectorFind, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
+import { Attribute, Class, Css, Scroll, SelectorFind, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -318,6 +318,80 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
 
       editor.options.set('disabled', true);
       await Waiter.pTryUntil('Wait for editor to be disabled', () => assertBodyClass(editor, 'mce-content-readonly', true));
+    });
+
+    it('TINY-12315: Accordions shouldn\'t be toggable when editor is disabled', async () => {
+      const editor = hook.editor();
+      const body = TinyDom.body(editor);
+      editor.setContent(
+        '<details open="open">' +
+          '<summary>Opened Summary</summary>' +
+          '<p>Opened Content</p>' +
+        '</details>' +
+        '<details>' +
+          '<summary>Closed Summary</summary>' +
+          '<p>Closed Content</p>' +
+        '</details>'
+      );
+      editor.options.set('disabled', true);
+
+      const [ openedDetails, closedDetails ] = UiFinder.findAllIn(body, 'details');
+      const [ openedSummary, closedSummary ] = UiFinder.findAllIn(body, 'summary');
+
+      Mouse.click(openedSummary);
+      assert.isTrue(Attribute.has(openedDetails, 'open'), 'Opened details element remains opened after click');
+
+      Mouse.click(closedSummary);
+      assert.isFalse(Attribute.has(closedDetails, 'open'), 'Closed details element remains closed after click');
+    });
+
+    it('TINY-12315: should prevent accordion expansion/collapse when clicking strong element inside summary in disabled mode', () => {
+      const editor = hook.editor();
+      const body = TinyDom.body(editor);
+      editor.setContent(
+        '<details open="open">' +
+          '<summary>Opened summary <strong>click</strong></summary>' +
+          '<p>Opened Content</p>' +
+        '</details>' +
+        '<details>' +
+          '<summary>Closed Summary <strong>click</strong></summary>' +
+          '<p>Closed Content</p>' +
+        '</details>'
+      );
+      editor.options.set('disabled', true);
+
+      const [ openedDetails, closedDetails ] = UiFinder.findAllIn(body, 'details');
+      const [ openSummaryHandle, closedSummaryHandle ] = UiFinder.findAllIn(body, 'summary > strong');
+
+      Mouse.click(openSummaryHandle);
+      assert.isTrue(Attribute.has(openedDetails, 'open'), 'Opened details element remains opened after click');
+
+      Mouse.click(closedSummaryHandle);
+      assert.isFalse(Attribute.has(closedDetails, 'open'), 'Closed details element remains closed after click');
+    });
+
+    it('TINY-12315: should allow bookmark navigation but prevent accordion toggle when clicking links inside summary in disabled mode', () => {
+      const editor = hook.editor();
+      editor.resetContent();
+      editor.options.set('disabled', true);
+      editor.setContent(
+        '<details>'
+        + '<summary>This is my summary <a href="#someBookmark">internal bookmark</a></summary>'
+        + '</details>'
+        + '<div style="padding-top: 2000px;"></div>'
+        + '<p><a id="someBookmark"></a></p>'
+      );
+
+      const body = TinyDom.body(editor);
+      const doc = TinyDom.document(editor);
+      const yPos = Scroll.get(doc).top;
+      const anchor = UiFinder.findIn(body, 'a[href="#someBookmark"]').getOrDie();
+      const accordion = UiFinder.findIn(body, 'details').getOrDie();
+      Mouse.click(anchor);
+      const newPos = Scroll.get(doc).top;
+      assert.notEqual(newPos, yPos, 'assert yPos has changed i.e. has scrolled');
+      assert.isFalse(Attribute.has(accordion, 'open'), 'Closed accordion remains closed after click');
+      editor.options.set('disabled', false);
     });
   });
 
