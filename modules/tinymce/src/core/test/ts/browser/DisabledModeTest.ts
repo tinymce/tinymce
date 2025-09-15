@@ -1,6 +1,7 @@
 import { ApproxStructure, Mouse, UiFinder, Clipboard, TestStore, Waiter } from '@ephox/agar';
 import { after, afterEach, Assert, before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional, OptionalInstances } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Class, Css, Scroll, SelectorFind, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -398,6 +399,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
     context('Anchors in summary', () => {
       let latestEvent: Event | null = null;
       let clickListener: (event: Event) => void;
+      const os = PlatformDetection.detect().os;
 
       before(() => {
         const editor = hook.editor();
@@ -428,7 +430,7 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
         editor.setContent('<details><summary>This is my summary <a href="https://google.com">Some link</a></summary></details>');
         const body = TinyDom.body(editor);
         const anchor = UiFinder.findIn(body, 'a[href="https://google.com"]').getOrDie();
-        Mouse.click(anchor, { metaKey: true });
+        Mouse.click(anchor, os.isMacOS() || os.isiOS() ? { metaKey: true } : { ctrlKey: true });
 
         assert.equal(latestEvent?.type, 'click');
         assert.equal(latestEvent?.target, anchor.dom);
