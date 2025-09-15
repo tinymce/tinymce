@@ -123,8 +123,10 @@ def runBrowserTests(String name, String browser, String platform, String bucket,
 
 def runTestPod(String cacheName, String name, String testname, String browser, String provider, String platform, String version, String bucket, String buckets, Boolean runAll) {
   def containers = [
-    devPods.getContainerDefaultArgs([ name: 'node', image: "${ciRegistry}/build-containers/node-lts:lts", runAsGroup: '1000', runAsUser: '1000' ]) + devPods.hiRes(),
-    devPods.getContainerDefaultArgs([ name: 'aws-cli', image: 'public.ecr.aws/aws-cli/aws-cli:latest', runAsGroup: '1000', runAsUser: '1000', resourceRequestCpu: '2',
+    devPods.getContainerDefaultArgs([ name: 'node', image: "${ciRegistry}/build-containers/node-lts:lts", runAsGroup: '1000', runAsUser: '1000',
+          resourceRequestEphemeralStorage: '1Gi',
+          resourceLimitEphemeralStorage: '1Gi' ]) + devPods.hiRes(),
+    devPods.getContainerDefaultArgs([ name: 'aws-cli', image: 'public.ecr.aws/aws-cli/aws-cli:latest', runAsGroup: '1000', runAsUser: '1000',
           resourceRequestEphemeralStorage: '1Gi',
           resourceLimitEphemeralStorage: '1Gi' ]) + devPods.stdRes()
   ]
