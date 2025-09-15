@@ -1,10 +1,10 @@
 import { UiFinder } from '@ephox/agar';
 import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
-import { TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/accordion/Plugin';
 
 const assertToolbarButtonEnabled = (name: string) => {
@@ -42,7 +42,7 @@ describe('browser.tinymce.plugins.accordion.AccordionReadonlyModeTest', () => {
   });
 
   [ 'readonly', 'design' ].forEach((mode) => {
-    it(`TINY-12315: Toggle accordion button should be enabled in ${mode} mode`, async () => {
+    it(`TINY-12316: Toggle accordion button should be enabled in ${mode} mode`, async () => {
       const editor = hook.editor();
       editor.focus();
       editor.setContent('<details><summary>Toggle accordion</summary><p>Hidden info</p></details>');
@@ -54,7 +54,7 @@ describe('browser.tinymce.plugins.accordion.AccordionReadonlyModeTest', () => {
     });
   });
 
-  it(`TINY-12315: Toggle accordion toolbar button should be disabled in disabled editor`, async () => {
+  it(`TINY-12316: Toggle accordion toolbar button should be disabled in disabled editor`, async () => {
     const editor = hook.editor();
     editor.options.set('disabled', true);
     await UiFinder.pWaitFor('Wait for editor to enter disabled state', SugarBody.body(), '.tox-tinymce.tox-tinymce--disabled');
@@ -62,7 +62,7 @@ describe('browser.tinymce.plugins.accordion.AccordionReadonlyModeTest', () => {
     assertToolbarButtonDisabled('accordiontoggle');
   });
 
-  it('TINY-12315: Toggling the accordion in readonly mode should not add undo level', () => {
+  it('TINY-12316: Toggling the accordion in readonly mode should not add undo level', () => {
     const editor = hook.editor();
     editor.resetContent('<details><summary>Toggle accordion</summary><p>Hidden info</p></details>');
     editor.mode.set('readonly');
@@ -70,10 +70,11 @@ describe('browser.tinymce.plugins.accordion.AccordionReadonlyModeTest', () => {
 
     assert.isFalse(editor.undoManager.hasUndo(), 'Should not have undo levels initially');
     editor.execCommand('ToggleAccordion');
+    TinyAssertions.assertRawContent(editor, '<details data-mce-selected="1" data-mce-open="false" open="open"><summary>Toggle accordion</summary><p>Hidden info</p></details>');
     assert.isFalse(editor.undoManager.hasUndo(), 'Should not add undo level when toggling accordion in readonly mode');
   });
 
-  it('TINY-12315: Toggling the accordion in design mode should add undo level', () => {
+  it('TINY-12316: Toggling the accordion in design mode should add undo level', () => {
     const editor = hook.editor();
     editor.resetContent('<details><summary>Toggle accordion</summary><p>Hidden info</p></details>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
@@ -83,7 +84,7 @@ describe('browser.tinymce.plugins.accordion.AccordionReadonlyModeTest', () => {
     assert.isTrue(editor.undoManager.hasUndo(), 'Should add undo level when toggling accordion in design mode');
   });
 
-  it('TINY-12315: Toggling the accordion in readonly-mode should have no impact on getContent', () => {
+  it('TINY-12316: Toggling the accordion in readonly-mode should have no impact on getContent', () => {
     const editor = hook.editor();
     editor.focus();
     editor.setContent('<details><summary>Toggle accordion</summary><p>Hidden info</p></details>');
@@ -93,6 +94,7 @@ describe('browser.tinymce.plugins.accordion.AccordionReadonlyModeTest', () => {
     const initialContent = [ '<details>', '<summary>Toggle accordion</summary>', '<p>Hidden info</p>', '</details>' ].join('\n');
     assert.equal(editor.getContent(), initialContent, 'Initial content should match expected HTML structure');
     editor.execCommand('ToggleAccordion');
+    TinyAssertions.assertRawContent(editor, '<details data-mce-open="false" data-mce-selected="1" open="open"><summary>Toggle accordion</summary><p>Hidden info</p></details>');
     assert.equal(editor.getContent(), initialContent, 'Content should remain unchanged after ToggleAccordion command in readonly mode');
   });
 });
