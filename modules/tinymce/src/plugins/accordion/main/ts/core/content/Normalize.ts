@@ -1,16 +1,17 @@
-import { Arr } from '@ephox/katamari';
 
 import type AstNode from 'tinymce/core/api/html/Node';
 
-import { openAttribute } from '../Identifiers';
-
 const normalizeOpenAttribute = (node: AstNode): void => {
-  if (hasAttribute(node, openAttribute)) {
-    node.attr(openAttribute, 'open');
+  if (hasAttribute(node, 'open')) {
+    setAttribute(node, 'open', 'open');
   }
 };
 
 const hasAttribute = (node: AstNode, attribute: string): boolean =>
-  Arr.exists(node.attributes ?? [], ({ name }) => name === attribute);
+  node.attr(attribute) !== undefined;
+
+const setAttribute = (node: AstNode, attribute: string, value: string): void => {
+  node.attr(attribute, value);
+};
 
 export { normalizeOpenAttribute };
