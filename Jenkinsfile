@@ -126,7 +126,7 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
     devPods.getContainerDefaultArgs([ name: 'node', image: "${ciRegistry}/build-containers/node-lts:lts", runAsGroup: '1000', runAsUser: '1000' ]) + devPods.hiRes(),
     devPods.getContainerDefaultArgs([ name: 'aws-cli', image: 'public.ecr.aws/aws-cli/aws-cli:latest', runAsGroup: '1000', runAsUser: '1000', resourceRequestCpu: '2',
           resourceRequestEphemeralStorage: '1Gi',
-          resourceLimitEphemeralStorage: '1Gi' ]) + devPods.lowRes()
+          resourceLimitEphemeralStorage: '1Gi' ]) + devPods.stdRes()
   ]
   return {
     stage("${name}") {
