@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Class, Focus, SugarElement, SugarShadowDom, WindowVisualViewport } from '@ephox/sugar';
+import { Class, Focus, Height, SugarElement, SugarShadowDom, WindowVisualViewport } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import type Editor from '../api/Editor';
@@ -77,7 +77,7 @@ const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => 
     const element = SugarElement.fromDom(editor.iframeElement);
     const op = OuterPosition.find(element);
     const viewportBounds = WindowVisualViewport.getBounds(window);
-    if (op.top < viewportBounds.y || op.top > (viewportBounds.bottom - minimumVisibility)) {
+    if ((op.top + Height.get(element) - minimumVisibility) < viewportBounds.y || op.top > (viewportBounds.bottom - minimumVisibility)) {
       element.dom.scrollIntoView({ block: 'center' });
     }
   };
