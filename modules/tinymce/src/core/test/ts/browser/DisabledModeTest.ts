@@ -1,5 +1,5 @@
 import { ApproxStructure, Mouse, UiFinder, Clipboard, TestStore, Waiter } from '@ephox/agar';
-import { afterEach, Assert, context, describe, it } from '@ephox/bedrock-client';
+import { after, afterEach, Assert, before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional, OptionalInstances } from '@ephox/katamari';
 import { Attribute, Class, Css, Scroll, SelectorFind, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
@@ -87,7 +87,8 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
 
     const assertHrefOpt = (editor: Editor, selector: string, expectedHref: Optional<string>) => {
       const elm = SugarElement.fromDom(editor.dom.select(selector)[0]);
-      const hrefOpt = Disabled.getAnchorHrefOpt(editor, elm);
+      const body = TinyDom.body(editor);
+      const hrefOpt = Disabled.getAnchorHrefOpt(elm, body);
       Assert.eq('href options match', expectedHref, hrefOpt, tOptional());
     };
 
@@ -392,6 +393,47 @@ describe('browser.tinymce.core.DisabledModeTest', () => {
       assert.notEqual(newPos, yPos, 'assert yPos has changed i.e. has scrolled');
       assert.isFalse(Attribute.has(accordion, 'open'), 'Closed accordion remains closed after click');
       editor.options.set('disabled', false);
+    });
+
+    context('Anchors in summary', () => {
+      let latestEvent: Event | null = null;
+      let clickListener: (event: Event) => void;
+
+      before(() => {
+        const editor = hook.editor();
+        const documentElement = TinyDom.documentElement(editor);
+        clickListener = (e) => latestEvent = e;
+        documentElement.dom.addEventListener('click', clickListener);
+      });
+
+      beforeEach(() => {
+        latestEvent = null;
+      });
+
+      after(() => {
+        const editor = hook.editor();
+        const documentElement = TinyDom.documentElement(editor);
+        documentElement.dom.removeEventListener('click', clickListener);
+      });
+
+      afterEach(() => {
+        const editor = hook.editor();
+        editor.options.set('disabled', false);
+      });
+
+      it('TINY-12315: click on link inside summary with meta tag pressed should open a link in new tab', () => {
+        const editor = hook.editor();
+        editor.resetContent();
+        editor.options.set('disabled', true);
+        editor.setContent('<details><summary>This is my summary <a href="https://google.com">Some link</a></summary></details>');
+        const body = TinyDom.body(editor);
+        const anchor = UiFinder.findIn(body, 'a[href="https://google.com"]').getOrDie();
+        Mouse.click(anchor, { metaKey: true });
+
+        assert.equal(latestEvent?.type, 'click');
+        assert.equal(latestEvent?.target, anchor.dom);
+        assert.equal(latestEvent?.defaultPrevented, false, 'Anchor click with meta key should not be default prevented');
+      });
     });
   });
 

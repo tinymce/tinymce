@@ -1,5 +1,5 @@
 import { Arr, Fun, type Optional, Strings } from '@ephox/katamari';
-import { Attribute, Compare, ContentEditable, SelectorExists, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Attribute, Compare, ContentEditable, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
@@ -74,9 +74,9 @@ const allowedEvents: ReadonlyArray<string> = [ 'copy' ];
 
 const isAllowedEventInDisabledMode = (e: Event) => Arr.contains(allowedEvents, e.type);
 
-const getAnchorHrefOpt = (editor: Editor, elm: SugarElement<Node>): Optional<string> => {
-  const isRoot = (elm: SugarElement<Node>) => Compare.eq(elm, SugarElement.fromDom(editor.getBody()));
-  return SelectorFind.closest<HTMLAnchorElement>(elm, 'a', isRoot).bind((a) => Attribute.getOpt(a, 'href'));
+const getAnchorHrefOpt = (element: SugarElement<Node>, rootElement: SugarElement<Node>): Optional<string> => {
+  const isRoot = (elm: SugarElement<Node>) => Compare.eq(elm, rootElement);
+  return SelectorFind.closest<HTMLAnchorElement>(element, 'a', isRoot).bind((a) => Attribute.getOpt(a, 'href'));
 };
 
 const processDisabledEvents = (editor: Editor, e: Event): void => {
@@ -98,16 +98,27 @@ const handleSummaryClick = (e: Event, editor: Editor): boolean => {
   */
   const element = SugarElement.fromDom(e.target as Node);
   const body = SugarElement.fromDom(editor.getBody());
-  if (isClickEvent(e) && hasClosestSummary(element, body)) {
-    e.preventDefault();
-    return true;
+  if (isClickEvent(e)) {
+    return getClosestSummary(element, body).fold(Fun.never, (closestSummary) => {
+      /*
+        Clicks on anchors should be handled by the `handleAnchorClick` method.
+        However clicks on anchor with metaKey are ignored by `handleAnchorClick`.
+        In this case: <summary><a href="link">link</a></summary>
+        click with metaKey should open link in the new tab so we can't prevent default for anchors.
+      */
+      if (getAnchorHrefOpt(element, closestSummary).isNone()) {
+        e.preventDefault();
+        return true;
+      }
+      return false;
+    });
   }
   return false;
 };
 
-const hasClosestSummary = (element: SugarElement<Node>, rootElement: SugarElement<Node>): boolean => {
+const getClosestSummary = (element: SugarElement<Node>, rootElement: SugarElement<Node>): Optional<SugarElement<HTMLElement>> => {
   const isRoot = (elm: SugarElement<Node>) => Compare.eq(elm, rootElement);
-  return SelectorExists.closest(element, 'summary', isRoot);
+  return SelectorFind.closest(element, 'summary', isRoot);
 };
 
 const handleAnchorClick = (e: Event, editor: Editor): boolean => {
@@ -119,7 +130,8 @@ const handleAnchorClick = (e: Event, editor: Editor): boolean => {
   */
   if (isClickEvent(e) && !VK.metaKeyPressed(e)) {
     const elm = SugarElement.fromDom(e.target as Node);
-    return getAnchorHrefOpt(editor, elm).fold(Fun.never, (href) => {
+    const body = SugarElement.fromDom(editor.getBody());
+    return getAnchorHrefOpt(elm, body).fold(Fun.never, (href) => {
       e.preventDefault();
       if (/^#/.test(href)) {
         const targetEl = editor.dom.select(`${href},[name="${Strings.removeLeading(href, '#')}"]`);
