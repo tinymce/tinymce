@@ -3,7 +3,9 @@ import { Arr, Type } from '@ephox/katamari';
 import type Editor from 'tinymce/core/api/Editor';
 import AstNode from 'tinymce/core/api/html/Node';
 
-import * as Identifiers from './Identifiers';
+import * as Identifiers from '../Identifiers';
+
+import * as Normalize from './Normalize';
 
 interface AccordionChildren {
   summaryNode: AstNode | undefined;
@@ -75,10 +77,12 @@ const setup = (editor: Editor): void => {
     // Purpose:
     // - add mce-accordion-summary class to summary node
     // - wrap details body in div and add mce-accordion-body class (TINY-9959 assists with Chrome selection issue)
+    // - Normalize accordion 'open' attribute value to open="open"
     parser.addNodeFilter(Identifiers.accordionTag, (nodes) => {
       // Using a traditional for loop here as we may have to iterate over many nodes and it is the most performant way of doing so
       for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i];
+        Normalize.normalizeOpenAttribute(node);
         if (isAccordionDetailsNode(node)) {
           const accordionNode = node;
           const { summaryNode, wrapperNode, otherNodes } = getAccordionChildren(accordionNode);
