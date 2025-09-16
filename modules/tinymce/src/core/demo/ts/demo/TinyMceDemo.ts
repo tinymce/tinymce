@@ -33,6 +33,9 @@ export default (): void => {
           ed.insertContent('Hello world!');
         }
       });
+      ed.on('SelectionChange', () => {
+        console.log('selection.node', ed.selection.getNode());
+      });
     },
 
     selector: 'textarea',
