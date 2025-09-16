@@ -90,7 +90,7 @@ describe('browser.tinymce.plugins.accordion.AccordionMceOpenAttributeTest', () =
     });
   });
 
-  it(`TINY-12316: Update the value of 'open' attribute, to reflect the value in 'data-mce-open' attribute when entering design mode`, () => { 
+  it(`TINY-12316: Update the value of 'open' attribute, to reflect the value in 'data-mce-open' attribute when entering design mode`, () => {
     const editor = hook.editor();
     editor.setContent(
       '<details><summary>Toggle accordion</summary><p>Hidden info</p></details>' +
