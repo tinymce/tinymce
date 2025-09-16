@@ -4,6 +4,7 @@ import type Editor from 'tinymce/core/api/Editor';
 import AstNode from 'tinymce/core/api/html/Node';
 
 import * as Identifiers from '../Identifiers';
+import * as Readonly from '../readonly/Readonly';
 
 import * as Normalize from './Normalize';
 
@@ -78,11 +79,13 @@ const setup = (editor: Editor): void => {
     // - add mce-accordion-summary class to summary node
     // - wrap details body in div and add mce-accordion-body class (TINY-9959 assists with Chrome selection issue)
     // - Normalize accordion 'open' attribute value to open="open"
+    // - add 'data-mce-open' attribute to <details> elements if the editor is in readonly mode
     parser.addNodeFilter(Identifiers.accordionTag, (nodes) => {
       // Using a traditional for loop here as we may have to iterate over many nodes and it is the most performant way of doing so
       for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i];
         Normalize.normalizeOpenAttribute(node);
+        Readonly.parseDetailsInReadonly(editor, node);
         if (isAccordionDetailsNode(node)) {
           const accordionNode = node;
           const { summaryNode, wrapperNode, otherNodes } = getAccordionChildren(accordionNode);
@@ -130,11 +133,14 @@ const setup = (editor: Editor): void => {
     // Purpose:
     // - remove div wrapping details content as it is only required during editor (see TINY-9959 for details)
     // - remove mce-accordion-summary class on the summary node
+    // - in readonly mode: update <details> `open` attribute according to `data-mce-open` attribute value
+    // - in readonly mode: remove `data-mce-open` attribute
     serializer.addNodeFilter(Identifiers.accordionTag, (nodes) => {
       const summaryClassRemoveSet = new Set([ Identifiers.accordionSummaryClass ]);
       // Using a traditional for loop here as we may have to iterate over many nodes and it is the most performant way of doing so
       for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i];
+        Readonly.serializeDetailsInReadonly(editor, node);
         if (isAccordionDetailsNode(node)) {
           const accordionNode = node;
           const { summaryNode, wrapperNode } = getAccordionChildren(accordionNode);
