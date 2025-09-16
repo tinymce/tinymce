@@ -124,8 +124,7 @@ const processAttr = (ele: Element, settings: DomParserSettings, schema: Schema, 
 
   if (evt.keepAttr) {
     evt.allowedAttributes[attrName] = true;
-
-    if (isBooleanAttribute(attrName, schema)) {
+    if (isBooleanAttributeOfNonCustomElement(attrName, schema, ele.nodeName)) {
       evt.attrValue = attrName;
     }
 
@@ -152,8 +151,8 @@ const shouldKeepAttribute = (settings: DomParserSettings, schema: Schema, scope:
 const isRequiredAttributeOfInternalElement = (ele: Element, attrName: string): boolean =>
   ele.hasAttribute(internalElementAttr) && (attrName === 'id' || attrName === 'class' || attrName === 'style');
 
-const isBooleanAttribute = (attrName: string, schema: Schema): boolean =>
-  attrName in schema.getBoolAttrs();
+const isBooleanAttributeOfNonCustomElement = (attrName: string, schema: Schema, nodeName: string): boolean =>
+  attrName in schema.getBoolAttrs() && !Obj.has(schema.getCustomElements(), nodeName.toLowerCase());
 
 const filterAttributes = (ele: Element, settings: DomParserSettings, schema: Schema, scope: Namespace.NamespaceType): void => {
   const { attributes } = ele;
@@ -163,7 +162,7 @@ const filterAttributes = (ele: Element, settings: DomParserSettings, schema: Sch
     const attrValue = attr.value;
     if (!shouldKeepAttribute(settings, schema, scope, ele.tagName.toLowerCase(), attrName, attrValue) && !isRequiredAttributeOfInternalElement(ele, attrName)) {
       ele.removeAttribute(attrName);
-    } else if (isBooleanAttribute(attrName, schema)) {
+    } else if (isBooleanAttributeOfNonCustomElement(attrName, schema, ele.nodeName)) {
       ele.setAttribute(attrName, attrName);
     }
   }
