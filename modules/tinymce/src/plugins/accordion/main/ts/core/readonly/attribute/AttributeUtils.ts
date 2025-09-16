@@ -1,5 +1,3 @@
-import { Arr } from '@ephox/katamari';
-
 import { accordionTemporaryOpenAttribute } from '../../Identifiers';
 
 export interface AttributeOperationAdapter<T> {
@@ -9,29 +7,24 @@ export interface AttributeOperationAdapter<T> {
   removeAttribute: (element: T, name: string) => void;
 };
 
-const addTemporaryAttributes = <T>(adapter: Pick<AttributeOperationAdapter<T>, 'setAttribute' | 'hasAttribute'>, detailsElements: Array<T>): void => {
+const addTemporaryAttributes = <T>(adapter: Pick<AttributeOperationAdapter<T>, 'setAttribute' | 'hasAttribute'>, detailsElement: T): void => {
   const { setAttribute, hasAttribute } = adapter;
-  Arr.each(
-    detailsElements,
-    (details) => setAttribute(details, accordionTemporaryOpenAttribute, hasAttribute(details, 'open') + '')
-  );
+  setAttribute(detailsElement, accordionTemporaryOpenAttribute, hasAttribute(detailsElement, 'open') + '');
 };
 
-const restoreNormalState = <T>(adapter: AttributeOperationAdapter<T>, detailsElements: Array<T>): void => {
+const restoreNormalState = <T>(adapter: AttributeOperationAdapter<T>, detailsElement: T): void => {
   const { setAttribute, hasAttribute, getAttribute, removeAttribute } = adapter;
-  Arr.each(
-    // At this point every <details> should have data-mce-open attribute. But I will ignore those that don't - just in case.
-    Arr.filter(detailsElements, (e) => hasAttribute(e, accordionTemporaryOpenAttribute)),
-    (details) => {
-      const mceOpen = getAttribute(details, accordionTemporaryOpenAttribute)?.toLowerCase() === 'true';
-      removeAttribute(details, accordionTemporaryOpenAttribute);
-      if (mceOpen) {
-        setAttribute(details, 'open', 'open');
-      } else {
-        removeAttribute(details, 'open');
-      }
-    }
-  );
+  // At this point every <details> should have data-mce-open attribute. But I will ignore those that don't - just in case.
+  if (!hasAttribute(detailsElement, accordionTemporaryOpenAttribute)) {
+    return;
+  }
+  const mceOpen = getAttribute(detailsElement, accordionTemporaryOpenAttribute)?.toLowerCase() === 'true';
+  removeAttribute(detailsElement, accordionTemporaryOpenAttribute);
+  if (mceOpen) {
+    setAttribute(detailsElement, 'open', 'open');
+  } else {
+    removeAttribute(detailsElement, 'open');
+  }
 };
 
 export {

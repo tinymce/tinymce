@@ -1,3 +1,4 @@
+import { Arr } from '@ephox/katamari';
 import { SelectorFilter, SugarElement } from '@ephox/sugar';
 
 import type Editor from 'tinymce/core/api/Editor';
@@ -26,22 +27,22 @@ const setup = (editor: Editor): void => {
     const editorBody = SugarElement.fromDom(editor.getBody());
     const details = SelectorFilter.descendants<HTMLDetailsElement>(editorBody, 'details');
     if (event.mode === 'readonly') {
-      SugarAttributeUtils.addTemporaryAttributes(details);
+      Arr.each(details, SugarAttributeUtils.addTemporaryAttributes);
     } else {
-      SugarAttributeUtils.restoreNormalState(details);
+      Arr.each(details, SugarAttributeUtils.restoreNormalState);
     }
   });
 };
 
 const parseDetailsInReadonly = (editor: Editor, detailsNode: AstNode): void => {
   if (editor.readonly) {
-    AstNodeAttributeUtils.addTemporaryAttributes([ detailsNode ]);
+    AstNodeAttributeUtils.addTemporaryAttributes(detailsNode);
   }
 };
 
 const serializeDetailsInReadonly = (editor: Editor, detailsNode: AstNode): void => {
   if (editor.readonly) {
-    AstNodeAttributeUtils.restoreNormalState([ detailsNode ]);
+    AstNodeAttributeUtils.restoreNormalState(detailsNode);
   }
 };
 
