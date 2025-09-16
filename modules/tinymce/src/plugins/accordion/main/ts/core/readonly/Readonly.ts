@@ -12,12 +12,7 @@ import * as SugarAttributeUtils from './attribute/SugarAttributeUtils';
 const setup = (editor: Editor): void => {
   // Prevent adding an undo level on ToggleAccordion in readonly mode
   editor.on('BeforeAddUndo', (event) => {
-    // TODO: Fix the types so I wouldn't have to use any
-    const isExecCommand = (event: any): event is EditorEvent<ExecCommandEvent> => {
-      return event?.type === 'execcommand';
-    };
-
-    const originalEvent = event.originalEvent;
+    const originalEvent = event.originalEvent as unknown as EditorEvent<unknown> | undefined;
     if (editor.readonly && isExecCommand(originalEvent) && originalEvent.command === 'ToggleAccordion') {
       event.preventDefault();
     }
@@ -33,6 +28,9 @@ const setup = (editor: Editor): void => {
     }
   });
 };
+
+const isExecCommand = (event?: EditorEvent<unknown>): event is EditorEvent<ExecCommandEvent> =>
+  event?.type === 'execcommand';
 
 const parseDetailsInReadonly = (editor: Editor, detailsNode: AstNode): void => {
   if (editor.readonly) {
