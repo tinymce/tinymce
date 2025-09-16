@@ -9,7 +9,7 @@ export interface AttributeOperationAdapter<T> {
 
 const addTemporaryAttributes = <T>(adapter: Pick<AttributeOperationAdapter<T>, 'setAttribute' | 'hasAttribute'>, detailsElement: T): void => {
   const { setAttribute, hasAttribute } = adapter;
-  setAttribute(detailsElement, accordionTemporaryOpenAttribute, hasAttribute(detailsElement, 'open') + '');
+  setAttribute(detailsElement, accordionTemporaryOpenAttribute, hasAttribute(detailsElement, 'open') ? 'true' : 'false');
 };
 
 const restoreNormalState = <T>(adapter: AttributeOperationAdapter<T>, detailsElement: T): void => {
