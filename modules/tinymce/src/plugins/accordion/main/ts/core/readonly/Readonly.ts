@@ -1,12 +1,12 @@
-import { Arr } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import { SelectorFilter, SugarElement } from '@ephox/sugar';
 
 import type Editor from 'tinymce/core/api/Editor';
 import type { ExecCommandEvent } from 'tinymce/core/api/EventTypes';
 import type AstNode from 'tinymce/core/api/html/Node';
 import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
-import * as Utils from './Utils';
+import * as AstNodeAttributeUtils from './attribute/AstNodeAttributeUtils';
+import * as SugarAttributeUtils from './attribute/SugarAttributeUtils';
 
 const setup = (editor: Editor): void => {
   // Prevent adding an undo level on ToggleAccordion in readonly mode
@@ -24,47 +24,25 @@ const setup = (editor: Editor): void => {
 
   editor.on('SwitchMode', (event) => {
     const editorBody = SugarElement.fromDom(editor.getBody());
-    const details = Utils.getDetailsElements(editorBody);
+    const details = SelectorFilter.descendants<HTMLDetailsElement>(editorBody, 'details');
     if (event.mode === 'readonly') {
-      addTemporaryAttributes(details);
+      SugarAttributeUtils.addTemporaryAttributes(details);
     } else {
-      restoreNormalState(details);
+      SugarAttributeUtils.restoreNormalState(details);
     }
   });
 };
 
 const parseDetailsInReadonly = (editor: Editor, detailsNode: AstNode): void => {
   if (editor.readonly) {
-    addTemporaryAttributes([ detailsNode ]);
+    AstNodeAttributeUtils.addTemporaryAttributes([ detailsNode ]);
   }
 };
 
 const serializeDetailsInReadonly = (editor: Editor, detailsNode: AstNode): void => {
   if (editor.readonly) {
-    restoreNormalState([ detailsNode ]);
+    AstNodeAttributeUtils.restoreNormalState([ detailsNode ]);
   }
-};
-
-const addTemporaryAttributes = (detailsElements: Array<SugarElement<HTMLDetailsElement> | AstNode>) =>
-  Arr.each(
-    detailsElements,
-    (details) => Utils.setMceOpenAttribute(details, Utils.hasOpenAttribute(details))
-  );
-
-const restoreNormalState = (detailsElements: Array<SugarElement<HTMLDetailsElement> | AstNode>) => {
-  Arr.each(
-    // At this point every <details> should have data-mce-open attribute. But I will ignore those that don't - just in case.
-    Arr.filter(detailsElements, Utils.hasMceOpenAttribute),
-    (details) => {
-      const mceOpen = Utils.getMceOpenAttribute(details);
-      Utils.removeMceOpenAttribute(details);
-      if (mceOpen) {
-        Utils.setOpenAttribute(details);
-      } else {
-        Utils.removeOpenAttribute(details);
-      }
-    }
-  );
 };
 
 export {
