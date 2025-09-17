@@ -66,15 +66,20 @@
       overflow-y: hidden;
       position: relative;
 
-      .tox-suggestededits__model {
+      .tox-suggestededits__content {
         flex: 1;
       }
 
-      .tox-suggestededits__content {
+      .tox-suggestededits__model {
         height: 100%;
-        width: 100%;
-        overflow: scroll;
-        background-color: @color-white; // This allows the content CSS to be applied correctly
+        position: relative;
+
+        .tox-suggestededits__iframe {
+          height: 100%;
+          width: 100%;
+          overflow: scroll;
+          background-color: @color-white; // This allows the content CSS to be applied correctly
+        }
       }
 
       .tox-suggestededits__sidebar {
