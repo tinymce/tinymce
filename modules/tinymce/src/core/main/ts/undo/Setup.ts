@@ -57,6 +57,7 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
     undoManager.beforeChange();
   });
 
+  // What is triggering blur event dispatch? Where's the listener
   editor.on('SaveContent ObjectResized blur', addNonTypingUndoLevel);
   editor.on('dragend', addNonTypingUndoLevel);
 
