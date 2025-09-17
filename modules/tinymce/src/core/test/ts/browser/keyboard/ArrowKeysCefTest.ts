@@ -201,4 +201,77 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
     TinyContentActions.keystroke(editor, Keys.right());
     TinyAssertions.assertCursor(editor, [ 0, 1 ], 0);
   });
+
+  it('TINY-10562: should navigate around position:absolute CEF', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      `<p>Left text<span style="position: absolute; right: 30px;" contenteditable="false"> button </span><br>Linus</p>`
+    );
+
+    // Move the cursor to 'Left text|'
+    TinySelections.setCursor(editor, [ 0, 0 ], 'Left text'.length);
+    TinyContentActions.keydown(editor, Keys.right());
+
+    // Move back to the absolute CEF button
+    assertNode(editor, (node) => Attribute.has(SugarElement.fromDom(node), 'data-mce-selected'));
+    // Move the cursor to '|Linus'
+    TinyContentActions.keydown(editor, Keys.right());
+    TinyAssertions.assertCursor(editor, [ 0, 3 ], 0);
+
+    // Move back to the absolute CEF button
+    TinyContentActions.keydown(editor, Keys.left());
+    assertNode(editor, (node) => Attribute.has(SugarElement.fromDom(node), 'data-mce-selected'));
+
+    // Move the cursor to 'Left text|'
+    TinyContentActions.keydown(editor, Keys.left());
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 'Left text'.length);
+  });
+
+  it('TINY-10306: should navigate around position:absolute CEF in a table', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      `<table style="width:500px">
+                <tr>
+                  <td>Emil</td>
+                  <td style="position:relative">
+                    Tobias
+                    <button
+                    contenteditable="false"
+                    style="
+                      position:absolute;
+                      right:30px;
+                    "
+                    >
+                    button
+                  </button>
+                  Linus
+                  </td>
+                </tr>
+                <tr>
+                  <td>16</td>
+                  <td>14</td>
+                  <td>10</td>
+                </tr>
+              </table>`
+    );
+
+    // Move the cursor to the button
+    TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0 ], 'Tobias'.length);
+    TinyContentActions.keystroke(editor, Keys.right());
+    TinyContentActions.keystroke(editor, Keys.right());
+    assertNode(editor, (node) => Attribute.has(SugarElement.fromDom(node), 'data-mce-selected') && NodeType.matchNodeNames( [ 'BUTTON' ])(node));
+
+    // Move to '|Linus'
+    TinyContentActions.keystroke(editor, Keys.right());
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 2 ], 0);
+
+    // Reverse to the button
+    TinyContentActions.keystroke(editor, Keys.left());
+    assertNode(editor, (node) => Attribute.has(SugarElement.fromDom(node), 'data-mce-selected') && NodeType.matchNodeNames( [ 'BUTTON' ])(node));
+
+    // Back to 'Tobias|'
+    TinyContentActions.keystroke(editor, Keys.left());
+    // TODO: The cursor is actually moved to `Tobias |` instead. Will look into improvement for going from and to a position absolute element
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 0 ], 7);
+  });
 });
