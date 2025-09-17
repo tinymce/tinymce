@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Splitting list items by pressing enter did not move the cursor due to an error in the browser console.
-time: 2025-09-09T13:47:44.83911+02:00
-custom:
-  Issue: TINY-12830
