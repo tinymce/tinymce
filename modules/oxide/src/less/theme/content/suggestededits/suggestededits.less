@@ -100,3 +100,15 @@ iframe {
     padding: 0em;
   }
 }
+
+div.tox-suggestededits__annotation:has(> hr) {
+  padding: 0.25em;
+}
+
+div.tox-suggestededits__annotation--removed__highlight > hr {
+  border-color: darken(@removed-background-color, 50%);
+}
+
+div.tox-suggestededits__annotation--added__highlight > hr {
+  border-color: darken(@added-background-color, 50%);
+}
