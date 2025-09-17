@@ -1,4 +1,4 @@
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, Optional, Strings } from '@ephox/katamari';
 
 import type DOMUtils from '../api/dom/DOMUtils';
 import type DomParser from '../api/html/DomParser';
@@ -23,7 +23,7 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
 
   htmlParser.addNodeFilter('div', (nodes) => {
     Arr.each(nodes, (node) => {
-      if (node.attributes && Arr.find(node.attributes, (attribute) => attribute.name === 'class' && attribute.value.includes('ephox-dragster-')).isSome()) {
+      if (node.attributes && Strings.contains(node.attr('class') || '', 'ephox-dragster')) {
         node.remove();
       }
     });
