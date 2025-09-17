@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Reset rules for CSS were not applying correctly.
+time: 2025-09-17T15:06:56.197258+02:00
+custom:
+    Issue: TINY-12929
