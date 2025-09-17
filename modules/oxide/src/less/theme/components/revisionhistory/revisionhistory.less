@@ -8,7 +8,7 @@
 @revisionhistory-sidebar-background-color: if(@revisionhistory-dark-mode, #2b3b4e, @revisionhistory-secondary-color);   // Trial and error
 @revisionhistory-border-color: if(@revisionhistory-dark-mode, rgba(255, 255, 255, .15), @revisionhistory-secondary-color);
 @revisionhistory-text-color: @text-color;
-@revisionhistory-card-active-background-color: if(@revisionhistory-dark-mode, #1b3b60, #fff5cc);
+@revisionhistory-card-active-background-color: if(@revisionhistory-dark-mode, #62430b, #fff5cc);
 @revisionhistory-border: 1px solid @revisionhistory-border-color;
 @revisionhistory-border-color--selected: if(@revisionhistory-dark-mode, #cea215, #e3b82a);
 @revisionhistory-border-color--focused: if(@revisionhistory-dark-mode, #285ec7, #006ce7);
@@ -51,6 +51,10 @@
     overflow-y: hidden;
     position: relative;
     width: 100%;
+  }
+
+  .tox-revisionhistory--align-right {
+    margin-left: auto;
   }
 
   .tox-revisionhistory__iframe {
@@ -109,6 +113,7 @@
         display: flex;
         flex-direction: column;
         font-size: @font-size-sm;
+        gap: @revisionhistory-gap;
         padding: @revisionhistory-gap;
         width: 100%;
 
@@ -138,41 +143,38 @@
         }
       }
 
-      .tox-revisionhistory__card-label {
-        display: block;
-        width: min-content;
-        padding: @pad-xs @pad-sm;
-        margin-bottom: @pad-sm;
-        font-size: @font-size-xs;
-        font-weight: @font-weight-bold;
-        border-radius: @pad-xs;
-        background: if(@revisionhistory-dark-mode, mix(@color-black, @color-white, 80%), mix(@color-white, @color-black, 80%));
-      }
-
-      .tox-revisionhistory__card-content {
+      .tox-revisionhistory__card-date {
         display: flex;
-        flex-direction: row;
-        gap: @pad-sm;
-        align-items: center;
-      }
-
-      .tox-revisionhistory__card-info {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
+        gap: @revisionhistory-gap;
+        justify-content: space-between;
       }
 
       .tox-revisionhistory__card-date-label {
-        font-size: @font-size-sm;
-        font-weight: @font-weight-bold;
-        line-height: 18px;
+        font-size: 16px;
+        line-height: @revisionhistory-text-lineheight;
+      }
+
+      .tox-revisionhistory__card-label {
+        font-size: 12px;
+        font-weight: 600;
+        line-height: @revisionhistory-text-lineheight;
+        padding: 0;
+      }
+
+      .tox-revisionhistory__card-author {
+        align-items: center;
+        display: flex;
+        flex: 1 0 0;
+        gap: 8px;
+        height: @revisionhistory-avatar-height;
       }
 
       .tox-revisionhistory__card-author-name {
         .overflow-text();
 
-        font-size: @font-size-xs;
-        font-weight: @font-weight-normal;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: @revisionhistory-avatar-height / 2;
       }
 
       .tox-revisionhistory__avatar {
@@ -185,14 +187,14 @@
 
       .tox-revisionhistory__norevision {
         color: @text-color-muted;
-        font-size: @font-size-md;
+        font-size: 16px;
         line-height: @revisionhistory-text-lineheight;
         padding: 5px 5.5px;
       }
 
       .tox-revisionhistory__card-check-icon {
         color: @revisionhistory-text-color;
-        height: @revisionhistory-text-lineheight;
+        height: 24px;
       }
     }
   }
