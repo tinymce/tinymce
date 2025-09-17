@@ -1,0 +1,27 @@
+@button-icon-success-color: @color-success;
+@button-icon-error-color: @color-error;
+
+.tox {
+  .tox-button--icon-and-text,
+  .tox-button.tox-button--icon-and-text,
+  .tox-button.tox-button--secondary.tox-button--icon-and-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+    padding: @button-padding-y * 1.25 @button-padding-y; // Slightly more than regular icon button, but less than regular button
+
+    .tox-icon svg {
+      display: block;
+      fill: currentColor;
+    }
+
+    .tox-icon.tox-icon--success svg {
+      fill: @button-icon-success-color;
+    }
+
+    .tox-icon.tox-icon--error svg {
+      fill: @button-icon-error-color
+    }
+  }
+}
