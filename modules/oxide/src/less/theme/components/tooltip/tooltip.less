@@ -20,14 +20,6 @@
     display: inline-block;
     max-width: @tooltip-max-width;
     padding: @tooltip-arrow-size 0 0 0;
-
-    /*
-     * The pointer-events: none is designed to make mouse events bleed through the tooltip
-     * to the underlying items. For example, a mouse hovering over a tooltip that hovers over
-     * another item should trigger the hover of the item obscured by the tooltip, even though
-     * the tooltip is on top
-     */
-    pointer-events: none;
     position: relative;
     width: max-content;
     z-index: @z-index-menu;
