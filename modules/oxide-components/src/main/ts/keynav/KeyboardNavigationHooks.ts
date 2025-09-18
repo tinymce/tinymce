@@ -3,7 +3,7 @@ import { SugarElement } from '@ephox/sugar';
 import { useEffect, type RefObject } from 'react';
 
 import * as FlowType from './keyboard/flowtype/FlowType';
-import * as KeyingType from './keyboard/KeyingType';
+import type * as KeyingType from './keyboard/KeyingType';
 import * as SpecialType from './keyboard/SpecialType';
 import * as TabbingType from './keyboard/TabbingType';
 

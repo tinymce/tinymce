@@ -6,6 +6,6 @@ Visit the [TinyMCE 8 documentation](https://www.tiny.cloud/docs/tinymce/8/creati
 ## Building the skins
 The build process uses [Node](http://nodejs.org/) and [Gulp](http://gulpjs.com/). Make sure you have both installed before you continue.
 
-1. Install dependencies with `yarn`.
-2. Build the skins with `yarn build`.
-3. To view the skins, run `yarn start` in this repository and go to `http://localhost:4000`.
+1. Install dependencies with `bun`.
+2. Build the skins with `bun build`.
+3. To view the skins, run `bun start` in this repository and go to `http://localhost:4000`.
