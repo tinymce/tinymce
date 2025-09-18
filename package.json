@@ -1,4 +1,5 @@
 {
+  "name": "tinymce-monorepo",
   "private": true,
   "workspaces": [
     "modules/*"
@@ -6,17 +7,17 @@
   "scripts": {
     "tinymce-grunt": "grunt --gruntfile modules/tinymce/Gruntfile.js",
     "tinymce-rollup": "run-s \"tinymce-grunt dev rollup\"",
-    "oxide-icons-build": "yarn -s --cwd modules/oxide-icons-default build",
-    "oxide-icons-ci": "yarn -s --cwd modules/oxide-icons-default ci",
-    "oxide-components-ci": "yarn -s --cwd modules/oxide-components ci",
-    "oxide-components-build": "yarn -s lerna run build --scope @tinymce/oxide-components --include-dependencies",
-    "oxide-build": "yarn -s --cwd modules/oxide build",
-    "oxide-start": "yarn -s --cwd modules/oxide start",
-    "oxide-ci": "yarn -s --cwd modules/oxide ci",
-    "tsc": "tsc -b",
-    "watch": "tsc -b -w",
+    "oxide-icons-build": "bun run -F @tinymce/oxide-icons-default build",
+    "oxide-icons-ci": "bun run -F @tinymce/oxide-icons-default ci",
+    "oxide-components-ci": "bun run -F @tinymce/oxide-components ci",
+    "oxide-components-build": "bun lerna run build --scope @tinymce/oxide-components --include-dependencies",
+    "oxide-build": "bun run -F @tinymce/oxide build",
+    "oxide-start": "bun run -F @tinymce/oxide start",
+    "oxide-ci": "bun run -F @tinymce/oxide ci",
+    "tsc": "bun x tsc -b",
+    "watch": "bun x tsc -b -w",
     "eslint": "lerna exec --stream --no-bail -- eslint --max-warnings=0 src/**/*.ts",
-    "start": "yarn -s tinymce-grunt start",
+    "start": "bun run tinymce-grunt start",
     "dev": "npm-run-all oxide-icons-build oxide-build -p tsc \"tinymce-grunt dev\"",
     "changie-merge": "changie merge -u '## Unreleased'",
     "changie-batch": "changie batch auto --project",
@@ -33,8 +34,8 @@
     "headless-test": "grunt headless-auto",
     "headless-test-firefox": "grunt headless-auto --bedrock-browser=firefox-headless",
     "headless-test-manual": "grunt headless-manual",
-    "bedrock": "bedrock --chunk=5000 --customRoutes modules/tinymce/src/core/test/json/routes.json",
-    "test-one": "yarn tsc && yarn bedrock-auto -b chrome-headless -f"
+    "bedrock": "npx bedrock --chunk=5000 --customRoutes modules/tinymce/src/core/test/json/routes.json",
+    "test-one": "bun x tsc && npx bedrock-auto -b chrome-headless -f"
   },
   "devDependencies": {
     "@ephox/bedrock-client": "^15.0.0",
@@ -73,7 +74,7 @@
     "less-plugin-preset-env": "^2.0.2",
     "load-grunt-tasks": "^5.1.0",
     "moxie-zip": "0.0.4",
-    "npm-run-all": "^4.1.5",
+    "npm-run-all2": "^7.0.2",
     "postcss": "^8.4.39",
     "postcss-preset-env": "^10.1.3",
     "resolve": "^1.18.1",

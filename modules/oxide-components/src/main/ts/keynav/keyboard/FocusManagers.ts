@@ -1,5 +1,5 @@
-import { Optional } from '@ephox/katamari';
-import { Focus, SugarElement } from '@ephox/sugar';
+import type { Optional } from '@ephox/katamari';
+import { Focus, type SugarElement } from '@ephox/sugar';
 
 export interface FocusManager {
   get: (component: SugarElement<HTMLElement>) => Optional<SugarElement<HTMLElement>>;

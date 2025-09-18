@@ -1,5 +1,5 @@
-import { Optional } from '@ephox/katamari';
-import { Direction, SugarElement } from '@ephox/sugar';
+import type { Optional } from '@ephox/katamari';
+import { Direction, type SugarElement } from '@ephox/sugar';
 
 import type { GeneralKeyingConfig, KeyRuleHandler } from '../keyboard/KeyingModeTypes';
 
