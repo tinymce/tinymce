@@ -23,7 +23,6 @@ import groovy.transform.Field
 def bunInstall() {
   exec('rm -rf node_modules yarn.lock bun.lock')
   exec('bun install')
-  // Note: Symlinks are now created automatically by bun after npm registry migration
 }
 
 def checkoutAndMergeStep = {
@@ -52,7 +51,6 @@ def runBedrockTest(String name, String command, Boolean runAll, int retry = 0, i
 }
 
 def runHeadlessTests(Boolean runAll) {
-  // Use package script to ensure local bin resolution
   def bedrockCmd = "bun run headless-test -- --useSelenium=true"
   runBedrockTest('headless', bedrockCmd, runAll)
 }
@@ -125,16 +123,8 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
       ) {
         container('aws-cli') {
           sh '''
-            set -e
-            if [ ! -d node_modules ]; then
-              echo "Falling back to explicit S3 fetch of build cache"
-              export AWS_RETRY_MODE=standard AWS_MAX_ATTEMPTS=10
-              for i in 1 2 3 4 5; do
-                aws s3 cp s3://tiny-freerange-testing/remote-builds/${cacheName}.tar.gz ./file.tar.gz --no-progress && break || true
-                echo "Retry $i failed; sleeping..."; sleep $((i*10))
-              done
-              tar -zxf ./file.tar.gz
-            fi
+            aws s3 cp s3://tiny-freerange-testing/remote-builds/${cacheName}.tar.gz ./file.tar.gz --no-progress
+            tar -zxf ./file.tar.gz
           '''
         }
         container('node') {
@@ -282,14 +272,9 @@ timestamps {
 
       stage('Build') {
         // verify no errors in changelog merge
-        // exec("bun changie-merge") // TODO: changie not available in node-lts container
+        exec("bun changie-merge")
         withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
-          // Use Premium's direct binary path approach (no PATH dependency)
           sh '''
-            echo "=== Using direct node execution to bypass symlink issues ==="
-            echo "Testing direct node execution:"
-            node node_modules/npm-run-all2/bin/npm-run-all/index.js --version || echo "npm-run-all direct execution failed"
-            echo "Running build with direct node calls:"
             node node_modules/npm-run-all2/bin/npm-run-all/index.js -p eslint ci-seq -s tinymce-rollup
             bun tinymce-grunt shell:moxiedoc
           '''
@@ -297,7 +282,6 @@ timestamps {
       }
 
       sh '''
-        echo "=== Creating CI artifact (exclude only non-dependency content) ==="
         mkdir -p /tmp
         tar -zcf /tmp/file.tar.gz \
           --exclude='./.git' \
