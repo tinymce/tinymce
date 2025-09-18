@@ -22,21 +22,7 @@ import groovy.transform.Field
 
 def bunInstall() {
   exec('bun install')
-  // Manually create missing symlinks that bun failed to create in CI
-  exec('''
-    echo "=== Creating missing binary symlinks ==="
-    cd node_modules/.bin
-    ln -sf ../lerna/dist/cli.js lerna
-    ln -sf ../eslint/bin/eslint.js eslint
-    ln -sf ../grunt/bin/grunt grunt
-    ln -sf ../@tinymce/moxiedoc/dist/lib/cli.js moxiedoc
-    ln -sf ../typescript/bin/tsc tsc
-    ln -sf ../changie/npm/changie.js changie
-    echo "Setting execute permissions on symlinks:"
-    chmod +x lerna eslint grunt moxiedoc tsc changie
-    echo "Verifying symlinks and permissions:"
-    ls -la lerna eslint grunt moxiedoc tsc changie
-  ''')
+  // Note: Symlinks are now created automatically by bun after npm registry migration
 }
 
 def checkoutAndMergeStep = {

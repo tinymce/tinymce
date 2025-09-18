@@ -6,10 +6,6 @@ frozen-lockfile = true
 cache = true
 auto = true
 
-# Registry configuration - bun uses npm registry by default
-[install.scopes]
-"@ephox" = "https://registry.yarnpkg.com"
-"@tinymce" = "https://registry.yarnpkg.com"
 
 # Runtime configuration - make bun handle PATH like yarn
 [run]
