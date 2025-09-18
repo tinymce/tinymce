@@ -29,15 +29,16 @@ const moveToRange = (editor: Editor, rng: Range): void => {
 const renderRangeCaretOpt = (editor: Editor, range: Range, scrollIntoView: boolean): Optional<Range> =>
   Optional.some(FakeCaretUtils.renderRangeCaret(editor, range, scrollIntoView));
 
-const isFloating = (el: Element) => Css.get(SugarElement.fromDom(el), 'position') === 'absolute';
+const isAbsolutelyPositioned = (el: Element) => Css.get(SugarElement.fromDom(el), 'position') === 'absolute';
 
 const getAdjacentFloating = (pos: CaretPosition, direction: HDirection) => {
   const node = pos.getNode(direction === HDirection.Backwards);
-  return isElement(node) && isFloating(node) ? Optional.some(node) : Optional.none();
+  return isElement(node) && isAbsolutelyPositioned(node) ? Optional.some(node) : Optional.none();
 };
 
-const elementToRange = (node: Node) => {
-  const rng = new window.Range();
+const elementToRange = (editor: Editor, node: Node) => {
+  const win = editor.selection.win;
+  const rng = win.document.createRange();
   rng.selectNode(node);
   return rng;
 };
@@ -53,7 +54,7 @@ const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, i
     const node = RangeNodes.getSelectedNode(range);
     if (isElement(node)) {
 
-      if (isFloating(node)) {
+      if (isAbsolutelyPositioned(node)) {
         const caretPosition = CaretUtils.getNormalizedRangeEndPoint(direction, editor.getBody(), range);
         return Optional.from(getNextPosFn(caretPosition)).map((next) => next.toRange());
       } else {
@@ -82,7 +83,7 @@ const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, i
   if (isBeforeFn(nextCaretPosition)) {
     return getAdjacentFloating(nextCaretPosition, direction).fold(
       () => FakeCaretUtils.showCaret(direction, editor, nextCaretPosition?.getNode(!forwards) as HTMLElement, forwards, false),
-      (el) => Optional.some(elementToRange(el))
+      (el) => Optional.some(elementToRange(editor, el))
     );
   }
 
@@ -92,7 +93,7 @@ const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, i
     if (CaretUtils.isMoveInsideSameBlock(nextCaretPosition, peekCaretPosition)) {
       return getAdjacentFloating(nextCaretPosition, direction).fold(
         () => FakeCaretUtils.showCaret(direction, editor, peekCaretPosition.getNode(!forwards) as HTMLElement, forwards, false),
-        (el) => Optional.some(elementToRange(el))
+        (el) => Optional.some(elementToRange(editor, el))
       );
     }
   }

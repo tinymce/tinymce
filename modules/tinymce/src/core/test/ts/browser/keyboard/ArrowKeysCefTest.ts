@@ -258,20 +258,20 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
 
     // Move the cursor to the button
     TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0 ], 'Tobias'.length);
-    TinyContentActions.keystroke(editor, Keys.right());
-    TinyContentActions.keystroke(editor, Keys.right());
+    TinyContentActions.keydown(editor, Keys.right());
+    TinyContentActions.keydown(editor, Keys.right());
     assertNode(editor, (node) => Attribute.has(SugarElement.fromDom(node), 'data-mce-selected') && NodeType.matchNodeNames( [ 'BUTTON' ])(node));
 
     // Move to '|Linus'
-    TinyContentActions.keystroke(editor, Keys.right());
+    TinyContentActions.keydown(editor, Keys.right());
     TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 2 ], 0);
 
     // Reverse to the button
-    TinyContentActions.keystroke(editor, Keys.left());
+    TinyContentActions.keydown(editor, Keys.left());
     assertNode(editor, (node) => Attribute.has(SugarElement.fromDom(node), 'data-mce-selected') && NodeType.matchNodeNames( [ 'BUTTON' ])(node));
 
     // Back to 'Tobias|'
-    TinyContentActions.keystroke(editor, Keys.left());
+    TinyContentActions.keydown(editor, Keys.left());
     // TINY-12922: Improve keyboard navigation from and to the floated element. In this case, the cursor is actually moved to `Tobias |` when navigating backward.
     TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 0 ], 7);
   });
