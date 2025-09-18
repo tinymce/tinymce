@@ -41,9 +41,6 @@ const elementToRange = (node: Node) => {
   rng.selectNode(node);
   return rng;
 };
-// Failed case:
-// Left arrow from button -> text       text [button]
-// Right arrow from button -> text       [button] text
 
 const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, isBefore: (caretPosition: CaretPosition) => boolean,
                           isAfter: (caretPosition: CaretPosition) => boolean, isElement: (node: Node | null) => node is HTMLElement): Optional<Range> => {
