@@ -21,7 +21,6 @@ import groovy.transform.Field
 @Field String ciRegistry = "${ciAccountId}.dkr.ecr.us-east-2.amazonaws.com"
 
 def bunInstall() {
-  exec('rm -rf node_modules yarn.lock bun.lock')
   exec('bun install')
 }
 
@@ -123,8 +122,11 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
       ) {
         container('aws-cli') {
           sh '''
-            aws s3 cp s3://tiny-freerange-testing/remote-builds/${cacheName}.tar.gz ./file.tar.gz --no-progress
-            tar -zxf ./file.tar.gz
+            set -e
+            if [ ! -d node_modules ]; then
+              aws s3 cp s3://tiny-freerange-testing/remote-builds/${cacheName}.tar.gz ./file.tar.gz --no-progress
+              tar -zxf ./file.tar.gz
+            fi
           '''
         }
         container('node') {
@@ -275,7 +277,7 @@ timestamps {
         exec("bun changie-merge")
         withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
           sh '''
-            node node_modules/npm-run-all2/bin/npm-run-all/index.js -p eslint ci-seq -s tinymce-rollup
+            bun run ci-all-seq
             bun tinymce-grunt shell:moxiedoc
           '''
         }
