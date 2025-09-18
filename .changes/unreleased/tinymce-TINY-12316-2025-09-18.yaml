@@ -1,6 +1,6 @@
 project: tinymce
 kind: Improved
-body: Accordions are now toggable in readonly mode.
+body: Accordions are now toggable in readonly mode when the accordion plugin is enabled.
 time: 2025-09-18T11:02:23.928924+02:00
 custom:
   Issue: TINY-12316
