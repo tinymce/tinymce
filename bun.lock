@@ -254,6 +254,9 @@
       "dependencies": {
         "@ephox/katamari": "^10.0.0",
       },
+      "devDependencies": {
+        "@ephox/katamari": "^10.0.0",
+      },
     },
     "modules/phoenix": {
       "name": "@ephox/phoenix",
@@ -334,7 +337,7 @@
     },
     "modules/tinymce": {
       "name": "tinymce",
-      "version": "8.1.0",
+      "version": "8.2.0",
       "dependencies": {
         "@ephox/acid": "^7.0.0",
         "@ephox/agar": "^9.0.0",

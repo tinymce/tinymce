@@ -5,6 +5,7 @@
     "modules/*"
   ],
   "scripts": {
+    "postinstall": "cd node_modules/.bin && ln -sf ../eslint/bin/eslint.js eslint && ln -sf ../grunt/bin/grunt grunt && ln -sf ../lerna/dist/cli.js lerna && ln -sf ../typescript/bin/tsc tsc && ln -sf ../changie/npm/changie.js changie && ln -sf ../@tinymce/moxiedoc/dist/lib/cli.js moxiedoc && chmod +x eslint grunt lerna tsc changie moxiedoc",
     "tinymce-grunt": "grunt --gruntfile modules/tinymce/Gruntfile.js",
     "tinymce-rollup": "run-s \"tinymce-grunt dev rollup\"",
     "oxide-icons-build": "bun run -F @tinymce/oxide-icons-default build",
