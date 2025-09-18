@@ -21,6 +21,7 @@ import groovy.transform.Field
 @Field String ciRegistry = "${ciAccountId}.dkr.ecr.us-east-2.amazonaws.com"
 
 def bunInstall() {
+  exec('rm -rf node_modules yarn.lock bun.lock')
   exec('bun install')
   // Note: Symlinks are now created automatically by bun after npm registry migration
 }
