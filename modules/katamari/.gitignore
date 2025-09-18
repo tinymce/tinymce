@@ -17,5 +17,5 @@ ephox-katamari-*.tgz
 
 package-lock.json
 
-yarn.lock
+bun.lock
 yarn-error.log

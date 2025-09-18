@@ -30,5 +30,8 @@
   },
   "main": "./lib/main/ts/main.js",
   "module": "./lib/main/ts/main.js",
-  "types": "./lib/main/ts/main.d.ts"
+  "types": "./lib/main/ts/main.d.ts",
+  "dependencies": {
+    "@ephox/katamari": "^10.0.0"
+  }
 }
