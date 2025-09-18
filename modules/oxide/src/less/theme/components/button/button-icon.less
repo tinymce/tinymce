@@ -1,0 +1,34 @@
+//
+// Icon button
+// Extends button.less
+//
+
+.tox {
+  .tox-button--icon,
+  .tox-button.tox-button--icon,
+  .tox-button.tox-button--secondary.tox-button--icon {
+    padding: @button-padding-y; // Use padding-y as horizontal padding to make icon button square-ish
+
+    .tox-icon svg {
+      display: block;
+      fill: currentColor;
+    }
+
+    .tox-icon.tox-icon--success svg {
+      fill: @button-icon-success-color;
+    }
+
+    .tox-icon.tox-icon--error svg {
+      fill: @button-icon-error-color
+    }
+  }
+}
+
+// TODO: remove me when the size input for toolbar is a separate component. Toolbar buttons should be styled by a toolbar-button.less but we use dialog size input so the classes don't match
+.tox-context-form__group {
+  .tox-button--icon,
+  .tox-button.tox-button--icon {
+    margin: @toolbar-button-margin;
+    padding: @toolbar-button-padding;
+  }
+}
