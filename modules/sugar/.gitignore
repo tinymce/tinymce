@@ -13,5 +13,5 @@
 
 ephox-sugar-*.tgz
 package-lock.json
-yarn.lock
+bun.lock
 jenkins-plumbing

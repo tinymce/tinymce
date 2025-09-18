@@ -18,5 +18,5 @@ ephox-katamari-*.tgz
 package-lock.json
 
 jenkins-plumbing
-yarn.lock
+bun.lock
 yarn-error.log

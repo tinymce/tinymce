@@ -432,17 +432,15 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       const promise2b = promises2b[userId2];
 
       await Promise.all([
-        // Verify correct data first
+        // Verify correct data first (these return promises that need to be awaited)
         expect(promise1a).to.eventually.have.property('id').that.equals(userId1),
-        expect(promise2a).to.eventually.have.property('id').that.equals(userId2),
-
-        // Verify cache hits (same promise instances)
-        expect(promise1a).to.equal(promise1b),
-        expect(promise2a).to.equal(promise2b),
-
-        // Verify different caches (different promise instances)
-        expect(promise1a).to.not.equal(promise2a)
+        expect(promise2a).to.eventually.have.property('id').that.equals(userId2)
       ]);
+      // Verify cache hits (same promise instances)
+      expect(promise1a).to.equal(promise1b);
+      expect(promise2a).to.equal(promise2b);
+      // Verify different caches (different promise instances)
+      expect(promise1a).to.not.equal(promise2a);
 
       // Verify fetch count
       store.assertEq('Should fetch exactly twice - once for each unique ID', [ userId1, userId2 ]);

@@ -29,25 +29,25 @@ $ git clone https://github.com/tinymce/tinymce.git
 
 ### Install dependencies
 
-* `yarn`
+* `bun`
 
 ### Build TinyMCE
 
-* `yarn build`
+* `bun build`
 
 This will produce an editor build in `modules/tinymce/js`, with distribution zips in `modules/tinymce/dist/tinymce_[number].zip`.
 
 ## Developing TinyMCE
 
-* `yarn dev`
+* `bun dev`
 
 This performs compilation steps which webpack requires but are usually once-off. It also runs `tsc` to make later commands faster (`tsc -b` enforces incremental compilation).
 
 ### Builds
 
-To build the editor in development, use `yarn tinymce-grunt`. This will output to the `modules/tinymce/js` folder (`build` is effectively `dev` followed by `tinymce-grunt`).
+To build the editor in development, use `bun tinymce-grunt`. This will output to the `modules/tinymce/js` folder (`build` is effectively `dev` followed by `tinymce-grunt`).
 
-Task names can be included, for example `yarn tinymce-grunt bundle` will execute the bundle task. More information on TinyMCE grunt tasks is available in the [TinyMCE readme](modules/tinymce/README.md).
+Task names can be included, for example `bun tinymce-grunt bundle` will execute the bundle task. More information on TinyMCE grunt tasks is available in the [TinyMCE readme](modules/tinymce/README.md).
 
 ## Development scripts
 
@@ -55,60 +55,59 @@ There are many top-level helper scripts for TinyMCE and Oxide (the default skin)
 
 ### TinyMCE
 
-`yarn start`
+`bun start`
 This boots the TinyMCE webpack dev server at http://localhost:3000. With this running changes to _any_ `.ts` source file in the monorepo (excluding tests) should be reflected in WebPack within a few seconds.
 
-`yarn watch`
+`bun watch`
 runs `tsc -b -w` for those times when you don't need to iterate in the browser.
 
-`yarn tsc`
+`bun tsc`
 an alias to `tsc -b` just in case you forget
 
-`yarn eslint`
-runs `eslint` across the entire repository with the rule set that is required to pass in CI. Use `yarn eslint --fix` to automatically fix minor problems. The [ESLint vscode plugin](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) can be used to apply lint fixes on save.
+`bun eslint`
+runs `eslint` across the entire repository with the rule set that is required to pass in CI. Use `bun eslint --fix` to automatically fix minor problems. The [ESLint vscode plugin](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) can be used to apply lint fixes on save.
 
-`yarn tinymce-grunt`
+`bun tinymce-grunt`
 easy access to the TinyMCE grunt commands from the root folder.
 
 ### Oxide
 
 ```
-yarn oxide-build
-yarn oxide-icons-build
+bun oxide-build
+bun oxide-icons-build
 ```
 
 These commands build the skin and icons but should not normally be required outside of other development scripts.
 
-`yarn oxide-start` will set up a watch and rebuild process for creating custom skins.
+`bun oxide-start` will set up a watch and rebuild process for creating custom skins.
 
 ### Focussed development
 
-If you are working in a single module and don't want to deal with the overheads of whole-monorepo compilation, you can run `yarn --focus` from that module's folder to install the latest published versions of monorepo projects in a local `node_modules`. For more information see this yarn blog post:
-https://yarnpkg.com/blog/2018/05/18/focused-workspaces/
+If you are working in a single module and don't want to deal with the overheads of whole-monorepo compilation, you can run `bun install` from that module's folder to install the latest published versions of monorepo projects in a local `node_modules`.
 
 ## Testing
 
-Testing relies on `yarn lerna changed` to determine which modules need testing, and a grunt script then separates them into two groups depending on whether they need GUI browser testing or can be tested with chrome-headless.
+Testing relies on `bun lerna changed` to determine which modules need testing, and a grunt script then separates them into two groups depending on whether they need GUI browser testing or can be tested with chrome-headless.
 
 ### CI test scripts
 ```
-yarn browser-test
-yarn headless-test
+bun browser-test
+bun headless-test
 ```
 
 ### Dev test scripts
 ```
-yarn browser-test-manual
-yarn headless-test-manual
+bun browser-test-manual
+bun headless-test-manual
 ```
 
 Development testing will be adjusted in future so that there's only one manual entry point for ease of development. They are still separate for now because there are two projects that use bedrock route configurations; a route config combination process is required to run them at the same time.
 
 ### Running a subset of tests
 
-To run a single test: `yarn bedrock -f file`
+To run a single test: `bun bedrock -f file`
 
-To run a whole folder of tests: `yarn bedrock -d folder`
+To run a whole folder of tests: `bun bedrock -d folder`
 
 ## CI builds
 
@@ -121,17 +120,17 @@ It is important that you never hand-edit a `package.json` file, particularly the
 ### dev dependencies
 
 All dev dependencies are in the project root, so to add or upgrade a specific dependency:
-`yarn add -D -W <package>`
+`bun add -D -W <package>`
 
 ### normal dependencies
 
 To add a dependency inside a monorepo package:
-`yarn workspace <fullname> add <othername>`
+`bun --filter <fullname> add <othername>`
 
 This works whether adding an external dependency or a dependency on another monorepo package.
 
 Note that both names must be the entire scoped `name` of the package, not the folder, for example
-`yarn workspace @tinymce/oxide add @tinymce/oxide-icons-default`
+`bun --filter @tinymce/oxide add @tinymce/oxide-icons-default`
 
 ## Publishing process
 
@@ -141,7 +140,7 @@ We have a CI process set up to publish all changed libraries as patch releases t
 
 > In the future these will likely be automated via the lerna-supported [conventional commit](https://conventionalcommits.org) specification, for now this is done manually.
 
-In theory minor bumps can be done in the package.json by hand but for consistency we recommend using the lerna tooling for both. `yarn lerna version` is the only way to do this without breaking links between packages.
+In theory minor bumps can be done in the package.json by hand but for consistency we recommend using the lerna tooling for both. `bun lerna version` is the only way to do this without breaking links between packages.
 
 For each changed package choose major, minor or patch as appropriate depending on the flow-on effects of this version change. Afterwards, you _must_ run the git commands below to push the version and related tags correctly.
 
@@ -149,11 +148,11 @@ Changes to minor and major versions are such a rare occurence that this manual p
 
 ### CI publish process
 
-`yarn lerna publish patch`
+`bun lerna publish patch`
 
 This is configured via `lerna.json` to exclude TinyMCE. We will not be using lerna to publish TinyMCE itself as it places far greater importance on the version number than library projects.
 
-`yarn lerna publish from-package`
+`bun lerna publish from-package`
 
 This is run after `publish patch` to catch cases where `lerna version` was run manually for a non-patch bump. It compares the source version to the NPM registry and publishes anything that doesn't match.
 

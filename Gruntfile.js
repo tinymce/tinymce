@@ -85,7 +85,7 @@ const fetchLernaProjects = (grunt, runAllTests) => {
   var exec = require('child_process').execSync;
 
   const parseLernaList = (cmd) => {
-    const output = exec(`yarn -s lerna ${cmd} -a --json --loglevel warn`);
+    const output = exec(`bun lerna ${cmd} -a --json --loglevel warn`);
     grunt.verbose.writeln(`lerna output: ${output}`);
     return JSON.parse(output);
   };
@@ -130,10 +130,10 @@ module.exports = function (grunt) {
   const opts = bedrockOpts(grunt, [...remoteTestingOpts, ...generalBedrockOpts]);
   const gruntConfig = {
     shell: {
-      tsc: { command: 'yarn -s tsc' },
-      legacy: { command: 'yarn build' },
-      yarn: { command: 'yarn' },
-      'yarn-dev': { command: 'yarn -s dev' }
+      tsc: { command: 'bun tsc' },
+      legacy: { command: 'bun build' },
+      bun: { command: 'bun install' },
+      'bun-dev': { command: 'bun dev' }
     },
     'bedrock-auto': {
       ...bedrockHeadless(headlessTests, headlessBrowser, true, opts),
@@ -185,7 +185,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('legacy-warn', () => grunt.log.warn(`
 *******
-Top-level grunt has been replaced by 'yarn build', and the output has moved from project root to modules/tinymce
+Top-level grunt has been replaced by 'bun build', and the output has moved from project root to modules/tinymce
 *******
 `));
 

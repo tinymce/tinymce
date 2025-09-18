@@ -4,7 +4,7 @@
 *.sublime-workspace
 
 package-lock.json
-yarn-error.log*
+bun-error.log*
 lerna-debug.log
 scratch
 lib
