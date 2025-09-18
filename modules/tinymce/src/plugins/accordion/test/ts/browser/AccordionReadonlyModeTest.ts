@@ -22,7 +22,7 @@ const assertToolbarButtonDisabled = (name: string) => {
 const assertContextToolbarButtonEnabled = async (name: string) => {
   const pop = await UiFinder.pWaitFor('Waiting for popup to appear', SugarBody.body(), '.tox-silver-sink .tox-pop');
   UiFinder.exists(pop, `button.tox-tbtn[data-mce-name="${name}"]`);
-  UiFinder.notExists(pop, `button.tox-tbtn--disable[data-mce-name="${name}"]`);
+  UiFinder.notExists(pop, `button.tox-tbtn--disabled[data-mce-name="${name}"]`);
 };
 
 describe('browser.tinymce.plugins.accordion.AccordionReadonlyModeTest', () => {
