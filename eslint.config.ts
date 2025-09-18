@@ -9,7 +9,7 @@ export default defineConfig(
       languageOptions: {
         parserOptions: {
           projectService: true,
-          // tsconfigRootDir tells the parser the absolute path of your project's root directory
+          // tsconfigRootDir tells the parser the absolute path of the project's root directory
           // When using relative paths, they resolve relative to the working directory of the process
           // running the CLI, not the config file location. Using import.meta.dirname ensures
           // paths resolve correctly regardless of where ESLint is executed from.
