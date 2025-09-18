@@ -431,18 +431,19 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       const promises2b = editor.userLookup.fetchUsers([ userId2 ]);
       const promise2b = promises2b[userId2];
 
+      // First verify the asynchronous data expectations
       await Promise.all([
-        // Verify correct data first
+        // Verify correct data first (these return promises that need to be awaited)
         expect(promise1a).to.eventually.have.property('id').that.equals(userId1),
-        expect(promise2a).to.eventually.have.property('id').that.equals(userId2),
-
-        // Verify cache hits (same promise instances)
-        expect(promise1a).to.equal(promise1b),
-        expect(promise2a).to.equal(promise2b),
-
-        // Verify different caches (different promise instances)
-        expect(promise1a).to.not.equal(promise2a)
+        expect(promise2a).to.eventually.have.property('id').that.equals(userId2)
       ]);
+
+      // Then verify synchronous expectations (these are not promises, so don't use Promise.all)
+      // Fixed: @typescript-eslint/await-thenable warned that these are not promises
+      // These expect() calls return assertion objects immediately, not promises
+      expect(promise1a).to.equal(promise1b); // Verify cache hits (same promise instances)
+      expect(promise2a).to.equal(promise2b);
+      expect(promise1a).to.not.equal(promise2a); // Verify different caches (different promise instances)
 
       // Verify fetch count
       store.assertEq('Should fetch exactly twice - once for each unique ID', [ userId1, userId2 ]);
