@@ -154,30 +154,30 @@ Components integrate with TinyMCE's Oxide design system:
 
 1. Install dependencies:
    ```bash
-   yarn install
+   bun install
    ```
 
 2. Start development server:
    ```bash
-   yarn dev
+   bun dev
    ```
 
 3. Start Storybook:
    ```bash
-   yarn start
+   bun start
    ```
 
 ### Available Scripts
 
-- `yarn dev` - Start Vite development server
-- `yarn build` - Build library and Storybook
-- `yarn start` - Start Storybook development server
-- `yarn lint` - Run ESLint
-- `yarn test-watch` - Run all tests in watch mode
-- `yarn test-browser-headless` - Run browser tests in headless mode
-- `yarn test-browser-manual` - Run browser tests in a browser
-- `yarn test-visual-local` - Run visual regression tests
-- `yarn test-visual-local-update` - Updates screenshots for visual regression tests
+- `bun dev` - Start Vite development server
+- `bun build` - Build library and Storybook
+- `bun start` - Start Storybook development server
+- `bun lint` - Run ESLint
+- `bun test-watch` - Run all tests in watch mode
+- `bun test-browser-headless` - Run browser tests in headless mode
+- `bun test-browser-manual` - Run browser tests in a browser
+- `bun test-visual-local` - Run visual regression tests
+- `bun test-visual-local-update` - Updates screenshots for visual regression tests
 
 ### Creating New Components
 

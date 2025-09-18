@@ -5,7 +5,8 @@
 node_modules
 
 package-lock.json
-yarn-error.log*
+bun.lock
+bun-error.log*
 lerna-debug.log
 scratch
 lib

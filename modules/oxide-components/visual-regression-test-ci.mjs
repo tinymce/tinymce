@@ -24,11 +24,11 @@ const waitForServer = async () => {
 
 const runTests = async () => {
   try {
-    devServer = exec('yarn start --ci');
+    devServer = exec('bun start --ci');
     await waitForServer();
 
     try {
-      execSync('yarn playwright test', {
+      execSync('bun playwright test', {
         stdio: 'inherit'
       });
     } catch (testError) {

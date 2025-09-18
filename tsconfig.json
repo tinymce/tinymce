@@ -29,6 +29,7 @@
   ],
 
   "compilerOptions": {
+    "baseUrl": ".",
     "paths": {
       // duplicate paths, copied from each individual tsconfig.json
       // once there is a webpack path plugin that supports project references this can be deleted
