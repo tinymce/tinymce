@@ -112,7 +112,7 @@ export const FakeCaret = (editor: Editor, root: HTMLElement, isBlock: (node: Nod
       return null;
     }
 
-    if (isBlock(element) || (NodeType.isHTMLElement(element) && element.tagName === 'BUTTON')) {
+    if (isBlock(element)) {
       const caretContainer = CaretContainer.insertBlock(caretBlock, element, before);
       const clientRect = getAbsoluteClientRect(root, element, before);
       dom.setStyle(caretContainer, 'top', clientRect.top);

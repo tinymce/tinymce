@@ -1,5 +1,6 @@
 import { Keys, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
+import { Attribute, SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -271,7 +272,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
 
     // Back to 'Tobias|'
     TinyContentActions.keystroke(editor, Keys.left());
-    // TODO: The cursor is actually moved to `Tobias |` instead. Will look into improvement for going from and to a position absolute element
+    // TINY-12922: Improve keyboard navigation from and to the floated element. In this case, the cursor is actually moved to `Tobias |` when navigating backward.
     TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 0 ], 7);
   });
 });
