@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: The cursor could get stuck around an absolute CEF element when navigating using arrow keys.
+time: 2025-09-18T13:15:42.118274+09:30
+custom:
+    Issue: TINY-10526
