@@ -8,7 +8,6 @@ import * as CaretUtils from '../caret/CaretUtils';
 import { CaretWalker, HDirection } from '../caret/CaretWalker';
 import * as FakeCaretUtils from '../caret/FakeCaretUtils';
 import * as LineReader from '../caret/LineReader';
-import { getPositionsUntilNextLine, getPositionsUntilPreviousLine } from '../caret/LineReader';
 import * as LineUtils from '../caret/LineUtils';
 import type { LinePosClientRect } from '../caret/LineWalker';
 import * as LineWalker from '../caret/LineWalker';
@@ -173,10 +172,10 @@ const getLineEndPoint = (editor: Editor, forward: boolean): Optional<CaretPositi
   const host = CaretUtils.getEditingHost(from.container(), editor.getBody());
 
   if (forward) {
-    const lineInfo = getPositionsUntilNextLine(host, from);
+    const lineInfo = LineReader.getPositionsUntilNextLine(host, from);
     return Arr.last(lineInfo.positions);
   } else {
-    const lineInfo = getPositionsUntilPreviousLine(host, from);
+    const lineInfo = LineReader.getPositionsUntilPreviousLine(host, from);
     return Arr.head(lineInfo.positions);
   }
 };
