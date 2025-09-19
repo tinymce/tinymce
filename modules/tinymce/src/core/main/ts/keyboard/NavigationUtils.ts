@@ -12,7 +12,7 @@ import { getPositionsUntilNextLine, getPositionsUntilPreviousLine } from '../car
 import * as LineUtils from '../caret/LineUtils';
 import type { LinePosClientRect } from '../caret/LineWalker';
 import * as LineWalker from '../caret/LineWalker';
-import { isElement } from '../dom/NodeType';
+import * as NodeType from '../dom/NodeType';
 import * as ScrollIntoView from '../dom/ScrollIntoView';
 import * as RangeNodes from '../selection/RangeNodes';
 import * as ArrUtils from '../util/ArrUtils';
@@ -31,14 +31,13 @@ const renderRangeCaretOpt = (editor: Editor, range: Range, scrollIntoView: boole
 
 const isAbsolutelyPositioned = (el: Element) => Css.get(SugarElement.fromDom(el), 'position') === 'absolute';
 
-const getAdjacentFloating = (pos: CaretPosition, direction: HDirection) => {
+const getAbsPositionElement = (pos: CaretPosition, direction: HDirection) => {
   const node = pos.getNode(direction === HDirection.Backwards);
-  return isElement(node) && isAbsolutelyPositioned(node) ? Optional.some(node) : Optional.none();
+  return NodeType.isElement(node) && isAbsolutelyPositioned(node) ? Optional.some(node) : Optional.none();
 };
 
 const elementToRange = (editor: Editor, node: Node) => {
-  const win = editor.selection.win;
-  const rng = win.document.createRange();
+  const rng = editor.dom.createRng();
   rng.selectNode(node);
   return rng;
 };
@@ -81,7 +80,7 @@ const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, i
   }
 
   if (isBeforeFn(nextCaretPosition)) {
-    return getAdjacentFloating(nextCaretPosition, direction).fold(
+    return getAbsPositionElement(nextCaretPosition, direction).fold(
       () => FakeCaretUtils.showCaret(direction, editor, nextCaretPosition?.getNode(!forwards) as HTMLElement, forwards, false),
       (el) => Optional.some(elementToRange(editor, el))
     );
@@ -91,7 +90,7 @@ const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, i
   const peekCaretPosition = getNextPosFn(nextCaretPosition);
   if (peekCaretPosition && isBeforeFn(peekCaretPosition)) {
     if (CaretUtils.isMoveInsideSameBlock(nextCaretPosition, peekCaretPosition)) {
-      return getAdjacentFloating(nextCaretPosition, direction).fold(
+      return getAbsPositionElement(nextCaretPosition, direction).fold(
         () => FakeCaretUtils.showCaret(direction, editor, peekCaretPosition.getNode(!forwards) as HTMLElement, forwards, false),
         (el) => Optional.some(elementToRange(editor, el))
       );
