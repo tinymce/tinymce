@@ -3,7 +3,10 @@
   "tags": [ "open-source", "ui", "skin" ],
   "targets": {
     "build": {
-      "inputs": [],
+      "inputs": [
+        "tiny-product",
+        "^tiny-product"
+      ],
       "outputs": [
         "{projectRoot}/build"
       ],
