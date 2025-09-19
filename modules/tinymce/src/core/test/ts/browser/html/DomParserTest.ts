@@ -1944,5 +1944,21 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         expected: `<div><${elementName}><em>test</em></${elementName}></div>`
       }));
     });
+
+    it('TINY-12857: Serializer newlines properly', () => {
+      // eslint-disable-next-line max-len
+      const originalText = '<html><head><meta http-equiv="x-ua-compatible" content="ie=edge"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link rel="canonical" href="https://www.tiny.cloud/docs/tinymce/latest/"><link rel="sitemap" type="application/xml" href="/gatsby_sitemap.xml"><meta property="og:title" content="My Website"><meta property="og:description" content="Check out my awesome site!"></head><body></body></html>';
+
+      const output = HtmlSerializer({
+        validate: false,
+        indent: true,
+        indent_before: 'head,html,body,meta,title,script,link,style',
+        indent_after: 'head,html,body,meta,title,script,link,style'
+      }, schema).serialize( DomParser({ root_name: '#document', sanitize: false }, schema).parse(originalText));
+
+      // eslint-disable-next-line max-len
+      const expected = '<head>\n<meta http-equiv="x-ua-compatible" content="ie=edge">\n<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">\n<link rel="canonical" href="https://www.tiny.cloud/docs/tinymce/latest/">\n<link rel="sitemap" type="application/xml" href="/gatsby_sitemap.xml">\n<meta content="My Website">\n<meta content="Check out my awesome site!">\n</head>\n<body></body>';
+      assert.equal(output, expected);
+    });
   });
 });

@@ -32,7 +32,7 @@ import Schema, { type SchemaMap, type SchemaRegExpMap, getTextRootBlockElements 
  * @version 3.4
  */
 
-const extraBlockLikeElements = [ 'script', 'style', 'template', 'param' ];
+const extraBlockLikeElements = [ 'script', 'style', 'template', 'param', 'meta', 'title', 'link' ];
 
 const makeMap = Tools.makeMap, extend = Tools.extend;
 
