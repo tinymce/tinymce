@@ -275,4 +275,103 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
     // TINY-12922: Improve keyboard navigation from and to the floated element. In this case, the cursor is actually moved to `Tobias |` when navigating backward.
     TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 0 ], 7);
   });
+
+  // Test framework: @ephox/bedrock-client (Mocha-style) with Chai. Helpers: @ephox/agar, @ephox/wrap-mcagar.
+  it('TINY-12922: should navigate around float:right CEF', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      `<p>Left text<span style="float:right" contenteditable="false"> button </span>Right text</p>`
+    );
+
+    // Move the cursor to 'Left text|'
+    TinySelections.setCursor(editor, [ 0, 0 ], 'Left text'.length);
+
+    // Move to the floated CEF
+    TinyContentActions.keydown(editor, Keys.right());
+    assertNode(editor, (node) => Attribute.has(SugarElement.fromDom(node), 'data-mce-selected'));
+
+    // Move to '|Right text'
+    TinyContentActions.keydown(editor, Keys.right());
+    TinyAssertions.assertCursor(editor, [ 0, 2 ], 0);
+
+    // Back to the floated CEF
+    TinyContentActions.keydown(editor, Keys.left());
+    assertNode(editor, (node) => Attribute.has(SugarElement.fromDom(node), 'data-mce-selected'));
+
+    // Back to 'Left text|'
+    TinyContentActions.keydown(editor, Keys.left());
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 'Left text'.length);
+  });
+
+  it('TINY-12922: should navigate around float:left CEF', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      `<p>Left text<span style="float:left" contenteditable="false"> button </span>Right text</p>`
+    );
+
+    // Move the cursor to 'Right text|'
+    TinySelections.setCursor(editor, [ 0, 2 ], 'Right text'.length);
+
+    // Move to the floated CEF
+    TinyContentActions.keydown(editor, Keys.left());
+    assertNode(editor, (node) => Attribute.has(SugarElement.fromDom(node), 'data-mce-selected'));
+
+    // Back to 'Left text|'
+    TinyContentActions.keydown(editor, Keys.left());
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 'Left text'.length);
+
+    // Forward to the floated CEF
+    TinyContentActions.keydown(editor, Keys.right());
+    assertNode(editor, (node) => Attribute.has(SugarElement.fromDom(node), 'data-mce-selected'));
+
+    // Forward to '|Right text'
+    TinyContentActions.keydown(editor, Keys.right());
+    TinyAssertions.assertCursor(editor, [ 0, 2 ], 0);
+  });
+
+  it('TINY-12922: should navigate around float:right CEF in a table', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      `<table style="width:500px">
+        <tr>
+          <td>Emil</td>
+          <td>
+            Tobias
+            <button contenteditable="false" style="float:right">button</button>
+            Linus
+          </td>
+        </tr>
+        <tr>
+          <td>16</td>
+          <td>14</td>
+          <td>10</td>
+        </tr>
+      </table>`
+    );
+
+    // Move the cursor to the button
+    TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0 ], 'Tobias'.length);
+    TinyContentActions.keydown(editor, Keys.right());
+    TinyContentActions.keydown(editor, Keys.right());
+    assertNode(editor, (node) =>
+      Attribute.has(SugarElement.fromDom(node), 'data-mce-selected') &&
+      NodeType.matchNodeNames([ 'BUTTON' ])(node)
+    );
+
+    // Move to '|Linus'
+    TinyContentActions.keydown(editor, Keys.right());
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 2 ], 0);
+
+    // Reverse to the button
+    TinyContentActions.keydown(editor, Keys.left());
+    assertNode(editor, (node) =>
+      Attribute.has(SugarElement.fromDom(node), 'data-mce-selected') &&
+      NodeType.matchNodeNames([ 'BUTTON' ])(node)
+    );
+
+    // Back to 'Tobias|'
+    TinyContentActions.keydown(editor, Keys.left());
+    // TINY-12922: Keyboard navigation should land after the word Tobias when navigating backward.
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 0 ], 'Tobias'.length);
+  });
 });
