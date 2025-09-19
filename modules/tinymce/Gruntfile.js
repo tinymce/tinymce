@@ -199,7 +199,7 @@ module.exports = function (grunt) {
     terser: Object.assign(
       {
         options: {
-          ecma: 2018,
+          ecma: 2022,
           output: {
             ascii_only: true
           },
@@ -880,16 +880,6 @@ module.exports = function (grunt) {
         retries: 3,
         customRoutes: 'src/core/test/json/routes.json',
         name: grunt.option('bedrock-browser') !== undefined ? grunt.option('bedrock-browser') : 'chrome-headless'
-      },
-      silver: {
-        browser: 'phantomjs',
-        config: 'tsconfig.json',
-        testfiles: ['src/themes/silver/test/ts/phantom/**/*Test.ts', 'src/themes/silver/test/ts/browser/**/*Test.ts', 'src/themes/silver/test/ts/webdriver/*/*Test.ts'],
-        stopOnFailure: true,
-        overallTimeout: 600000,
-        singleTimeout: 300000,
-        customRoutes: 'src/core/test/json/routes.json',
-        name: 'silver-tests'
       }
     }
   });
