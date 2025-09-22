@@ -1,26 +1,18 @@
 import { Fun } from '@ephox/katamari';
-import React, { createContext, useCallback, useContext, useRef, useState, type PropsWithChildren } from 'react';
+import React, { createContext, useCallback, useContext, useMemo, useRef, useState, type PropsWithChildren } from 'react';
 
 interface Position {
   x: number; y: number;
 };
 
 interface DraggableState {
-  position: Position;
-  isDragging: boolean;
   setPosition: React.Dispatch<React.SetStateAction<Position>>;
-  setIsDragging: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 interface DraggableProps extends PropsWithChildren {
 }
 
-const initialState: DraggableState = {
-  position: { x: 0, y: 0 },
-  isDragging: false,
-  setPosition: Fun.noop,
-  setIsDragging: Fun.noop
-};
+const initialState: DraggableState = { setPosition: Fun.noop };
 
 const DraggableContext = createContext<DraggableState>(initialState);
 
@@ -34,18 +26,13 @@ const useDraggable = () => {
 
 const Draggable: React.FC<DraggableProps> = ({ children }) => {
   const [ position, setPosition ] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  const [ isDragging, setIsDragging ] = useState(false);
-  const contextValue = { position, isDragging, setPosition, setIsDragging };
+  const contextValue = useMemo(() => ({ setPosition }), []);
 
   return (
     <DraggableContext.Provider value={contextValue}>
-      <div
-        style={{
-          position: 'absolute',
-          top: position.y,
-          left: position.x
-        }}
-      >
+      <div style={{
+        transform: `translate3d(${position.x}px, ${position.y}px, 0)`
+      }}>
         {children}
       </div>
     </DraggableContext.Provider>
@@ -55,30 +42,26 @@ const Draggable: React.FC<DraggableProps> = ({ children }) => {
 interface DraggableHandleProps extends PropsWithChildren {}
 
 const DraggableHandle: React.FC<DraggableHandleProps> = ({ children }) => {
-  const { setPosition, position } = useDraggable();
+  const { setPosition } = useDraggable();
   const [ isDragging, setIsDragging ] = useState(false);
   const handleRef = useRef<HTMLDivElement | null>(null);
   const startMousePos = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  const startDraggablePosition = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
   const onPointerDown = useCallback((event: React.PointerEvent) => {
     setIsDragging(true);
     handleRef.current?.setPointerCapture(event.pointerId);
-    // TODO: I don't need that
-    // startDraggablePosition.current = { x: position.x, y: position.y };
-
     startMousePos.current = { x: event.clientX, y: event.clientY };
   }, [ ]);
 
-  const onDragging = useCallback((event: React.PointerEvent) => {
-    event.stopPropagation();
-
-    const deltaX = (event.clientX - startMousePos.current.x);
-    const deltaY = (event.clientY - startMousePos.current.y);
-    startMousePos.current = { x: event.clientX, y: event.clientY };
-    // setPosition({ x: startDraggablePosition.current.x + deltaX, y: startDraggablePosition.current.y + deltaY });
-    setPosition((prev) => ({ x: prev.x + deltaX, y: prev.y + deltaY }));
-  }, [ setPosition ]);
+  const onPointerMove = useCallback((event: React.PointerEvent) => {
+    if (isDragging) {
+      event.stopPropagation();
+      const deltaX = (event.clientX - startMousePos.current.x);
+      const deltaY = (event.clientY - startMousePos.current.y);
+      startMousePos.current = { x: event.clientX, y: event.clientY };
+      setPosition((prev) => ({ x: prev.x + deltaX, y: prev.y + deltaY }));
+    }
+  }, [ setPosition, isDragging ]);
 
   const onPointerUp = useCallback((event: React.PointerEvent) => {
     setIsDragging(false);
@@ -89,14 +72,12 @@ const DraggableHandle: React.FC<DraggableHandleProps> = ({ children }) => {
     <div
       onPointerDown={onPointerDown}
       onPointerUp={onPointerUp}
-      onPointerMove={isDragging ? onDragging : undefined}
+      onPointerMove={onPointerMove}
       style={{
         cursor: isDragging ? 'grabbing' : 'grab'
       }}
       ref={handleRef}
-    >
-      <>{children}</>
-    </div>
+    >{ children }</div>
   );
 };
 
