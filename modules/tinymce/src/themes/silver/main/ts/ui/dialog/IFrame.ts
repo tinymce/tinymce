@@ -133,7 +133,7 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: Backstage.UiFactoryB
   const attributes = {
     ...spec.label.map<{ title?: string }>((title) => ({ title })).getOr({}),
     ...initialData.map((html) => ({ srcdoc: html })).getOr({}),
-    ...spec.sandboxed ? { sandbox: 'allow-scripts allow-same-origin' } : { }
+    ...spec.sandboxed ? { sandbox: 'allow-scripts' } : {}
   };
 
   const sourcing = getDynamicSource(initialData, spec.streamContent);
