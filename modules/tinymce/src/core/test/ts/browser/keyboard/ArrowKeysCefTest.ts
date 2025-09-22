@@ -275,4 +275,108 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
     // TINY-12922: Improve keyboard navigation from and to the floated element. In this case, the cursor is actually moved to `Tobias |` when navigating backward.
     TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 0 ], 7);
   });
+  /*
+    Note: Test framework and helpers used here:
+      - @ephox/bedrock-client (BDD style describe/it)
+      - @ephox/agar utilities (Keys, Waiter)
+      - @ephox/wrap-mcagar (Tiny* helpers)
+      - chai for assertions
+    These tests extend ArrowKeysCefTest to cover additional edge cases around inline and absolute CEF navigation.
+  */
+
+  it('TINY-12922: LTR navigation through consecutive inline CEFs between text', () => {
+    const editor = hook.editor();
+    editor.setContent('<p>ab<span id="cef1" contenteditable="false">X</span><span id="cef2" contenteditable="false">Y</span>cd</p>');
+
+    // Place cursor after 'ab'
+    TinySelections.setCursor(editor, [ 0, 0 ], 2);
+
+    // Move into first CEF
+    TinyContentActions.keydown(editor, Keys.right());
+    assertNode(editor, (node) => NodeType.isContentEditableFalse(node) && Attribute.get(SugarElement.fromDom(node), 'id') === 'cef1');
+
+    // Move into second CEF
+    TinyContentActions.keydown(editor, Keys.right());
+    assertNode(editor, (node) => NodeType.isContentEditableFalse(node) && Attribute.get(SugarElement.fromDom(node), 'id') === 'cef2');
+
+    // Move after both CEFs to text node 'cd'
+    TinyContentActions.keydown(editor, Keys.right());
+    TinyAssertions.assertCursor(editor, [ 0, 2 ], 0);
+
+    // Move back to the second CEF
+    TinyContentActions.keydown(editor, Keys.left());
+    assertNode(editor, (node) => NodeType.isContentEditableFalse(node) && Attribute.get(SugarElement.fromDom(node), 'id') === 'cef2');
+
+    // Move back to the first CEF
+    TinyContentActions.keydown(editor, Keys.left());
+    assertNode(editor, (node) => NodeType.isContentEditableFalse(node) && Attribute.get(SugarElement.fromDom(node), 'id') === 'cef1');
+
+    // Move back to text 'ab'
+    TinyContentActions.keydown(editor, Keys.left());
+    TinyAssertions.assertCursor(editor, [ 0, 0 ], 'ab'.length);
+  });
+
+  it('TBA: should not scroll when navigating across a small inline CEF within the viewport', async () => {
+    const editor = hook.editor();
+    editor.setContent('<p>Line 1</p><p>Some text <span id="btn" contenteditable="false">button</span> more text</p><p>Line 3</p>');
+
+    await Waiter.pWaitBetweenUserActions();
+    scrollTo(editor, 0, 0);
+
+    // Cursor at start of trailing text after the CEF
+    TinySelections.setCursor(editor, [ 1, 2 ], 0);
+
+    resetScrollCount();
+
+    // Move left to select the CEF
+    TinyContentActions.keydown(editor, Keys.left());
+    assertNode(editor, (node) => NodeType.isContentEditableFalse(node) && Attribute.get(SugarElement.fromDom(node), 'id') === 'btn');
+
+    // Move left to before the CEF
+    TinyContentActions.keydown(editor, Keys.left());
+    TinyAssertions.assertCursor(editor, [ 1, 0 ], 'Some text '.length);
+
+    // Move right to select the CEF again
+    TinyContentActions.keydown(editor, Keys.right());
+    assertNode(editor, (node) => NodeType.isContentEditableFalse(node) && Attribute.get(SugarElement.fromDom(node), 'id') === 'btn');
+
+    // Move right to the text after the CEF
+    TinyContentActions.keydown(editor, Keys.right());
+    TinyAssertions.assertCursor(editor, [ 1, 2 ], 0);
+
+    // No scrolling should have been required for these movements
+    assertScrollCount(0);
+  });
+
+  it('TBA: should not exit pre block when cursor is not at edges', () => {
+    const editor = hook.editor();
+    editor.setContent('<pre>abcd</pre>');
+
+    // Place cursor in the middle: 'ab|cd'
+    TinySelections.setCursor(editor, [ 0, 0 ], 2);
+
+    // Attempt to move left and right should keep cursor within the PRE block
+    TinyContentActions.keydown(editor, Keys.left());
+    TinyAssertions.assertContent(editor, '<pre>abcd</pre>');
+    assertNode(editor, (node) => node.nodeName === 'PRE');
+
+    TinyContentActions.keydown(editor, Keys.right());
+    TinyAssertions.assertContent(editor, '<pre>abcd</pre>');
+    assertNode(editor, (node) => node.nodeName === 'PRE');
+  });
+
+  it('TINY-6471: Should not throw when moving to the line above with bogus CEF above', () => {
+    const editor = hook.editor();
+    editor.setContent('<div contenteditable="false" data-mce-bogus="1" style="user-select: none;"><div contenteditable="false" data-mce-bogus="1"></div></div><p><br data-mce-bogus="1"></p>', { format: 'raw' });
+
+    // Place cursor in the paragraph (second block)
+    TinySelections.setCursor(editor, [ 1, 0 ], 0);
+
+    resetKeydownCount();
+    TinyContentActions.keystroke(editor, Keys.up());
+    TinyContentActions.keystroke(editor, Keys.up());
+
+    // If the handlers completed without error, both keydown events should have fired
+    assertKeydownCount(2);
+  });
 });
