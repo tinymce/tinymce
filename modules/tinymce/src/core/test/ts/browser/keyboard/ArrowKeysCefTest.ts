@@ -203,7 +203,7 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
     TinyAssertions.assertCursor(editor, [ 0, 1 ], 0);
   });
 
-  it('TINY-10526: should navigate around position:absolute CEF', () => {
+  it('TINY-10562: should navigate around position:absolute CEF', () => {
     const editor = hook.editor();
     editor.setContent(
       `<p>Left text<span style="position: absolute; right: 30px;" contenteditable="false"> button </span><br>Linus</p>`
