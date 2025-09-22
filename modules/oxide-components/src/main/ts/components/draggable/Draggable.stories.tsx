@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { Draggable, DraggableHandle } from './Draggable';
+import { Draggable } from './Draggable';
 
 const meta = {
   title: 'components/Draggable',
@@ -24,9 +24,9 @@ export const Example: Story = {
       <Draggable>
         <div
           style={{ width: '200px', height: '200px', backgroundColor: 'lightgray' }}>
-          <DraggableHandle>
+          <Draggable.Handle>
             <div style={{ width: '50px', height: '50px', backgroundColor: 'black' }}></div>
-          </DraggableHandle>
+          </Draggable.Handle>
         </div>
       </Draggable>
     );

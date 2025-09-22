@@ -9,8 +9,8 @@ interface DraggableState {
   setPosition: React.Dispatch<React.SetStateAction<Position>>;
 };
 
-interface DraggableProps extends PropsWithChildren {
-}
+interface DraggableProps extends PropsWithChildren { }
+interface DraggableHandleProps extends PropsWithChildren { }
 
 const initialState: DraggableState = { setPosition: Fun.noop };
 
@@ -24,7 +24,7 @@ const useDraggable = () => {
   return context;
 };
 
-const Draggable: React.FC<DraggableProps> = ({ children }) => {
+const Draggable: React.FC<DraggableProps> & { Handle: React.FC<PropsWithChildren> } = ({ children }) => {
   const [ position, setPosition ] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const contextValue = useMemo(() => ({ setPosition }), []);
 
@@ -38,8 +38,6 @@ const Draggable: React.FC<DraggableProps> = ({ children }) => {
     </DraggableContext.Provider>
   );
 };
-
-interface DraggableHandleProps extends PropsWithChildren {}
 
 const DraggableHandle: React.FC<DraggableHandleProps> = ({ children }) => {
   const { setPosition } = useDraggable();
@@ -81,5 +79,6 @@ const DraggableHandle: React.FC<DraggableHandleProps> = ({ children }) => {
   );
 };
 
-// TODO: Draggable.Handle
-export { Draggable, DraggableHandle };
+Draggable.Handle = DraggableHandle;
+
+export { Draggable };

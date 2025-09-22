@@ -1,5 +1,6 @@
 import { AutoResizingTextarea } from './components/autoresizingtextarea/AutoResizingTextarea';
 import { Button } from './components/button/Button';
+import { Draggable } from './components/draggable/Draggable';
 import { FloatingSidebar } from './components/floatingsidebar/FloatingSidebar';
 import { IconButton } from './components/iconbutton/IconButton';
 import * as KeyboardNavigationTypes from './keynav/keyboard/NavigationTypes';
@@ -13,5 +14,6 @@ export {
   IconButton,
   KeyboardNavigationHooks,
   KeyboardNavigationTypes,
-  FloatingSidebar
+  FloatingSidebar,
+  Draggable
 };
