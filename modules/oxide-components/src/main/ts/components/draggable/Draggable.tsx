@@ -66,11 +66,16 @@ const DraggableHandle: React.FC<DraggableHandleProps> = ({ children }) => {
     handleRef.current?.releasePointerCapture(event.pointerId);
   }, []);
 
+  const onLostPointerCapture = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
   return (
     <div
       onPointerDown={onPointerDown}
       onPointerUp={onPointerUp}
       onPointerMove={onPointerMove}
+      onLostPointerCapture={onLostPointerCapture}
       style={{
         cursor: isDragging ? 'grabbing' : 'grab'
       }}
