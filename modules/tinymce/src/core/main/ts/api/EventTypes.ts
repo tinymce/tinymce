@@ -95,7 +95,6 @@ export interface ChangeEvent {
 }
 
 export interface AddUndoEvent extends ChangeEvent {
-  // TODO: Can i do that? Wouldn't it be circular dep?
   originalEvent: EditorEvent<unknown> | undefined;
 }
 
