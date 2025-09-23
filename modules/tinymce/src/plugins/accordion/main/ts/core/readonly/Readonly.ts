@@ -12,12 +12,12 @@ import * as SugarAttributeUtils from './attribute/SugarAttributeUtils';
 const setup = (editor: Editor): void => {
   // Prevent adding an undo level on ToggleAccordion in readonly mode
   editor.on('BeforeAddUndo', (event) => {
-    if (editor.readonly) {
-      const originalEvent = event.originalEvent as unknown as EditorEvent<unknown> | undefined;
-      const shouldStopEvent = isBlur(originalEvent) || (isExecCommand(originalEvent) && originalEvent.command === 'ToggleAccordion');
-      if (shouldStopEvent) {
-        event.preventDefault();
-      }
+    if (
+      editor.readonly
+      && event.originalEvent
+      && (isBlurEvent(event.originalEvent) || isToggleAccordionEvent(event.originalEvent))
+    ) {
+      event.preventDefault();
     }
   });
 
@@ -32,11 +32,14 @@ const setup = (editor: Editor): void => {
   });
 };
 
-const isExecCommand = (event?: EditorEvent<unknown>): event is EditorEvent<ExecCommandEvent> =>
-  event?.type === 'execcommand';
+const isBlurEvent = (event: EditorEvent<unknown>): boolean =>
+  event.type === 'blur';
 
-const isBlur = (event?: EditorEvent<unknown>): boolean =>
-  event?.type === 'blur';
+const isToggleAccordionEvent = (event: EditorEvent<unknown>): boolean =>
+  isExecCommand(event) && event.command === 'ToggleAccordion';
+
+const isExecCommand = (event: EditorEvent<unknown>): event is EditorEvent<ExecCommandEvent> =>
+  event.type === 'execcommand';
 
 const parseDetailsInReadonly = (editor: Editor, detailsNode: AstNode): void => {
   if (editor.readonly) {
