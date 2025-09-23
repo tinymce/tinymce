@@ -70,7 +70,7 @@ export const makeSchema = (type: SchemaType): SchemaLookupTable => {
   add('title hr noscript br');
   add('base', 'href target');
   add('link', 'href rel media hreflang type sizes hreflang');
-  add('meta', 'name http-equiv content charset');
+  add('meta', 'name http-equiv content charset property'); // Property is an RDFa spec attribute.
   add('style', 'media type scoped');
   add('script', 'src async defer type charset');
   add('body', 'onafterprint onbeforeprint onbeforeunload onblur onerror onfocus ' +

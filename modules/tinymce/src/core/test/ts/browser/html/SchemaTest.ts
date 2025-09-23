@@ -3,7 +3,9 @@ import { Arr, Obj, Type } from '@ephox/katamari';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 import { assert } from 'chai';
 
+import DomParser from 'tinymce/core/api/html/DomParser';
 import Schema, { type AttributePattern, type SchemaElement } from 'tinymce/core/api/html/Schema';
+import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 
 describe('browser.tinymce.core.html.SchemaTest', () => {
   const getElementRule = (schema: Schema, name: string) =>
@@ -882,6 +884,13 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
 
       assert.isTrue(schema.isValidChild('foo', 'span'));
       assert.isFalse(schema.isValidChild('foo', 'strong'));
+    });
+
+    it('TINY-12858: Meta property is kept', () => {
+      const schema = Schema();
+
+      const html = '<head><meta property="myProperty"></head><body></body>';
+      assert.equal(HtmlSerializer({}, schema).serialize(DomParser({ root_name: '#document' }, schema).parse(html)), html);
     });
   });
 });
