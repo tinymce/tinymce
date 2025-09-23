@@ -1,4 +1,4 @@
-import { Arr, Fun, type Optional, Strings } from '@ephox/katamari';
+import { Arr, type Optional, Strings } from '@ephox/katamari';
 import { Attribute, Compare, ContentEditable, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import type Editor from '../api/Editor';
