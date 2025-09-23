@@ -99,7 +99,7 @@ const handleSummaryClick = (e: Event, editor: Editor): boolean => {
   const element = SugarElement.fromDom(e.target as Node);
   const body = SugarElement.fromDom(editor.getBody());
   if (isClickEvent(e)) {
-    return getClosestSummary(element, body).fold(Fun.never, (closestSummary) => {
+    return getClosestSummary(element, body).exists((closestSummary) => {
       /*
         Clicks on anchors should be handled by the `handleAnchorClick` method.
         However clicks on anchor with metaKey are ignored by `handleAnchorClick`.
@@ -131,7 +131,7 @@ const handleAnchorClick = (e: Event, editor: Editor): boolean => {
   if (isClickEvent(e) && !VK.metaKeyPressed(e)) {
     const elm = SugarElement.fromDom(e.target as Node);
     const body = SugarElement.fromDom(editor.getBody());
-    return getAnchorHrefOpt(elm, body).fold(Fun.never, (href) => {
+    return getAnchorHrefOpt(elm, body).exists((href) => {
       e.preventDefault();
       if (/^#/.test(href)) {
         const targetEl = editor.dom.select(`${href},[name="${Strings.removeLeading(href, '#')}"]`);
