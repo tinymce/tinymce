@@ -1,6 +1,6 @@
 project: tinymce
 kind: Changed
-body: Change types in 'undoManager.add' method. 'event' parameter is now of type EditorEvent.
+body: Corrected type of `undoManager.add` method. The `event` parameter is type `EditorEvent` not `any`.
 time: 2025-09-23T16:16:16.101474+02:00
 custom:
   Issue: TINY-12936
