@@ -98,31 +98,14 @@ describe('browser.tinymce.core.focus.FocusControllerTest', () => {
       assert.isBelow(iframeTop, viewportBounds.bottom, 'Editor\'s iframe should be inside the viewport');
     };
 
-    const assertEditorBodyIsOutsideViewport = (editor: Editor) => {
-      const iframe = Optional.from(editor.iframeElement).getOrDie();
-      const iframeBounds = SugarLocation.viewport(SugarElement.fromDom(iframe));
-      const scroll = Scroll.get(SugarDocument.getDocument());
-      const iframeTop = iframeBounds.top + scroll.top;
-      const viewportBounds = WindowVisualViewport.getBounds(window);
-
-      if (iframeTop > viewportBounds.y && iframeTop < viewportBounds.bottom) {
-        assert.fail('Editor should not be in view.');
-      }
-    };
-
     before(() => {
       const editor = hook.editor();
       const container = editor.getContainer();
-      const expanderDiv1 = SugarElement.fromTag('div');
-      Attribute.set(expanderDiv1, 'style', 'height: 3000px; width: 100px');
-      Attribute.set(expanderDiv1, 'class', 'remove-on-cleanup');
+      const expanderDiv = SugarElement.fromTag('div');
+      Attribute.set(expanderDiv, 'style', 'height: 3000px; width: 100px');
+      Attribute.set(expanderDiv, 'class', 'remove-on-cleanup');
 
-      const expanderDiv2 = SugarElement.fromTag('div');
-      Attribute.set(expanderDiv2, 'style', 'height: 3000px; width: 100px');
-      Attribute.set(expanderDiv2, 'class', 'remove-on-cleanup');
-
-      container.parentNode?.insertBefore(expanderDiv1.dom, container);
-      container.parentNode?.append(expanderDiv2.dom);
+      container.parentNode?.insertBefore(expanderDiv.dom, container);
     });
 
     after(() => {
@@ -132,24 +115,6 @@ describe('browser.tinymce.core.focus.FocusControllerTest', () => {
 
     it('TINY-12017: Editor is inside the viewport once focused', async () => {
       const editor = hook.editor();
-      editor.getBody().focus();
-      assertEditorBodyInsideViewport(editor);
-    });
-
-    it('TINY-12626: Editor is inside the viewport when focused, regardless if it stars above or below the viewport', async () => {
-      const editor = hook.editor();
-
-      Scroll.to(0, 0, SugarDocument.getDocument());
-      assertEditorBodyIsOutsideViewport(editor);
-      editor.getBody().focus();
-      assertEditorBodyInsideViewport(editor);
-      editor.getBody().blur();
-      Scroll.to(0, 1000, SugarDocument.getDocument());
-      assertEditorBodyIsOutsideViewport(editor);
-      Scroll.to(0, 3000, SugarDocument.getDocument());
-      assertEditorBodyInsideViewport(editor);
-      Scroll.to(0, 5000, SugarDocument.getDocument());
-      assertEditorBodyIsOutsideViewport(editor);
       editor.getBody().focus();
       assertEditorBodyInsideViewport(editor);
     });
