@@ -1,4 +1,4 @@
-import { Arr, Optional, Strings } from '@ephox/katamari';
+import { Arr, Optional } from '@ephox/katamari';
 
 import type DOMUtils from '../api/dom/DOMUtils';
 import type DomParser from '../api/html/DomParser';
@@ -19,14 +19,6 @@ const register = (htmlParser: DomParser, settings: DomSerializerSettings, dom: D
       node.attr('tabindex', node.attr('data-mce-tabindex'));
       node.attr(name, null);
     }
-  });
-
-  htmlParser.addNodeFilter('div', (nodes) => {
-    Arr.each(nodes, (node) => {
-      if (node.attributes && Strings.contains(node.attr('class') || '', 'ephox-dragster')) {
-        node.remove();
-      }
-    });
   });
 
   // Convert move data-mce-src, data-mce-href and data-mce-style into nodes or process them if needed
