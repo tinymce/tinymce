@@ -893,7 +893,25 @@ module.exports = function (grunt) {
         retries: 3,
         customRoutes: 'src/core/test/json/routes.json',
         name: grunt.option('bedrock-browser') !== undefined ? grunt.option('bedrock-browser') : 'chrome-headless',
-        moduleFormat: 'commonjs'
+        moduleFormat: 'commonjs',
+        webpackConfig: {
+          target: ['web', 'es2018'],
+          module: {
+            rules: [
+              {
+                test: /\.js$/,
+                resolve: {
+                  fullySpecified: false
+                }
+              }
+            ]
+          },
+          resolve: {
+            fallback: {
+              module: false
+            }
+          }
+        }
       },
       silver: {
         browser: 'phantomjs',
