@@ -2,6 +2,7 @@ import { UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
+// eslint-disable-next-line @typescript-eslint/no-require-imports, import-x/order
 const getDefaultIcons = require('@tinymce/oxide-icons-default').getAll;
 import { assert } from 'chai';
 
