@@ -8,7 +8,7 @@
 
 # Installation for development
 
-You need to use `yarn` to install the mcagar devDependencies since `npm` doesn't support package aliasing and that is used in the `package.json`.
+You need to use `bun` to install the mcagar devDependencies since `npm` doesn't support package aliasing and that is used in the `package.json`.
 
 ## Install from npm
 
@@ -24,8 +24,8 @@ Pipeline modules are an in-house testing framework that relies on Agar Step and 
 
 # Running tests
 
-The tests can be run using `bedrock` via `yarn test`. Note, this will only run the tests on Chrome and will require `chromedriver`. You can use `bedrock` directly to test on other browsers. See [`bedrock`](https://www.npmjs.com/package/@ephox/bedrock) for more details.
+The tests can be run using `bedrock` via `bun test`. Note, this will only run the tests on Chrome and will require `chromedriver`. You can use `bedrock` directly to test on other browsers. See [`bedrock`](https://www.npmjs.com/package/@ephox/bedrock) for more details.
 
 To run the tests on Chrome:
 
-`$ yarn test`
+`$ bun test`
