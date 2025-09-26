@@ -14,8 +14,9 @@ describe('browser.tinymce.themes.silver.editor.menubar.EditorMenubarRenderTest',
         const orgLoad = editor.ui.styleSheetLoader.load;
         editor.ui.styleSheetLoader.load = (url) => {
           return new Promise((resolve) => {
-            setTimeout(() => {
-              return orgLoad(url).then(resolve);
+            setTimeout(async () => {
+              await orgLoad(url);
+              resolve();
             }, 100);
           });
         };
