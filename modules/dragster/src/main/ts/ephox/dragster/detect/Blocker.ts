@@ -20,7 +20,7 @@ export const Blocker = (options: Partial<BlockerOptions>): Blocker => {
 
   const div = SugarElement.fromTag('div');
   Attribute.set(div, 'role', 'presentation');
-  Attribute.set(div, 'data-mce-bougs', 'all');
+  Attribute.set(div, 'data-mce-bogus', 'all');
   Css.setAll(div, {
     position: 'fixed',
     left: '0px',
