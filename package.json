@@ -1,8 +1,8 @@
 {
   "private": true,
-  "workspaces": {
-    "packages": ["modules/*"]
-  },
+  "workspaces": [
+    "modules/*"
+  ],
   "scripts": {
     "tinymce-grunt": "grunt --gruntfile modules/tinymce/Gruntfile.js",
     "tinymce-rollup": "run-s \"tinymce-grunt dev rollup\"",
