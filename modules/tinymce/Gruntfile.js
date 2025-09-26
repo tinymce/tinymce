@@ -226,10 +226,19 @@ module.exports = function (grunt) {
         // very similar to the emoticons plugin, except mangle is off
         'emoticons-raw': {
           options: {
+            ecma: 2018,
+            module: true,
             mangle: false,
             compress: false,
             format: {
-              indent_level: 2
+              ecma: 2018,
+              beautify: true,
+              comments: true,
+              ascii_only: true,
+              indent_level: 2,
+              keep_quoted_props: true,
+              max_line_len: false,
+              semicolons: true
             }
           },
           files: [
@@ -377,10 +386,12 @@ module.exports = function (grunt) {
       'default-icons': {
         files: [
           {
-            expand: true,
-            cwd: '../oxide-icons-default/dist/icons/default',
-            src: '**',
-            dest: 'js/tinymce/icons/default'
+            src: '../oxide-icons-default/dist/icons/default/icons.js',
+            dest: 'js/tinymce/icons/default/icons.js'
+          },
+          {
+            src: '../oxide-icons-default/dist/icons/default/icons.tinymce.js',
+            dest: 'js/tinymce/icons/default/icons.tinymce.js'
           }
         ]
       },

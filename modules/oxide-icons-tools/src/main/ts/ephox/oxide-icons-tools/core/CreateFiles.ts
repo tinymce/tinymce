@@ -23,7 +23,7 @@ export const populateTemplates = (svgs: Svg[], name: string): Template[] => [
     contents: populateIconsHtml(svgs)
   },
   {
-    path: `dist/icons/${name}/icons.js`,
+    path: `dist/icons/${name}/icons.tinymce.js`,
     contents: populateIconProvider(svgs, name)
   }
 ];
