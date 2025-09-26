@@ -203,7 +203,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     width = width < 5 ? 5 : width;
     height = height < 5 ? 5 : height;
 
-    if ((isImage(selectedElm) || isMedia(selectedElm)) && Options.getResizeImgProportional(editor) !== false) {
+    if ((isImage(selectedElm) || isMedia(selectedElm) || isUcVideo(selectedElm)) && Options.getResizeImgProportional(editor) !== false) {
       proportional = !VK.modifierPressed(e);
     } else {
       proportional = VK.modifierPressed(e);
