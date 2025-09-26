@@ -1,5 +1,6 @@
 import { UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
+import { Fun } from '@ephox/katamari';
 import { Css } from '@ephox/sugar';
 import { TinyHooks, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -14,10 +15,9 @@ describe('browser.tinymce.themes.silver.editor.menubar.EditorMenubarRenderTest',
         const orgLoad = editor.ui.styleSheetLoader.load;
         editor.ui.styleSheetLoader.load = (url) => {
           return new Promise((resolve) => {
-            setTimeout(async () => {
-              await orgLoad(url);
-              resolve();
-            }, 100);
+            Promise.resolve().then(() => new Promise((timeoutResolve) => {
+              setTimeout(timeoutResolve, 100);
+            })).then(() => orgLoad(url)).then(resolve).catch(Fun.noop);
           });
         };
       });
