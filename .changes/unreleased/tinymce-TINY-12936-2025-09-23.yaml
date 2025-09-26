@@ -1,0 +1,6 @@
+project: tinymce
+kind: Changed
+body: Corrected type of `undoManager.add` method. The `event` parameter is type `EditorEvent` not `Event`.
+time: 2025-09-23T16:16:16.101474+02:00
+custom:
+  Issue: TINY-12936

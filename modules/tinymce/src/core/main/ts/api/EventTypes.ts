@@ -9,7 +9,7 @@ import type Editor from './Editor';
 import type { ParserArgs } from './html/DomParser';
 import type { NotificationApi, NotificationSpec } from './NotificationManager';
 import type { Dialog } from './ui/Ui';
-import type { NativeEventMap } from './util/EventDispatcher';
+import type { EditorEvent, NativeEventMap } from './util/EventDispatcher';
 import type { InstanceApi } from './WindowManager';
 
 export interface ExecCommandEvent {
@@ -95,7 +95,7 @@ export interface ChangeEvent {
 }
 
 export interface AddUndoEvent extends ChangeEvent {
-  originalEvent: Event | undefined;
+  originalEvent: EditorEvent<unknown> | undefined;
 }
 
 export interface UndoRedoEvent {

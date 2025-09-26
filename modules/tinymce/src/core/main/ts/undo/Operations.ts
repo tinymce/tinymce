@@ -1,5 +1,6 @@
 import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
+import type { EditorEvent } from '../api/util/EventDispatcher';
 import Tools from '../api/util/Tools';
 import * as GetBookmark from '../bookmark/GetBookmark';
 
@@ -21,7 +22,7 @@ export const addUndoLevel = (
   locks: Locks,
   beforeBookmark: UndoBookmark,
   level?: Partial<UndoLevel>,
-  event?: Event
+  event?: EditorEvent<unknown>
 ): UndoLevel | null => {
   const currentLevel = Levels.createFromEditor(editor);
 

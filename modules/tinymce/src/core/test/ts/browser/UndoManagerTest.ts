@@ -368,7 +368,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     });
 
     editor.setContent('<p>c</p>');
-    editor.undoManager.add(undefined, { data: 1 });
+    editor.undoManager.add(undefined, { data: 1 } as any);
 
     assert.equal(HtmlUtils.cleanHtml(lastEvt?.lastLevel?.content ?? ''), '<p>b</p>');
     assert.equal(HtmlUtils.cleanHtml(lastEvt?.level?.content ?? ''), '<p>c</p>');

@@ -2,6 +2,7 @@ import { type Cell, Fun, Obj, Optional, Type } from '@ephox/katamari';
 
 import type Editor from './api/Editor';
 import type Formatter from './api/Formatter';
+import type { EditorEvent } from './api/util/EventDispatcher';
 import type { Content, ContentFormat, GetContentArgs, GetSelectionContentArgs, SetContentArgs, SetContentResult, InsertContentDetails } from './content/ContentTypes';
 import { getContentInternal } from './content/GetContentImpl';
 import { insertHtmlAtCaret } from './content/InsertContentImpl';
@@ -81,7 +82,7 @@ interface RtcAdaptor {
       locks: Locks,
       beforeBookmark: UndoBookmark,
       level?: Partial<UndoLevel>,
-      event?: Event
+      event?: EditorEvent<unknown>
     ) => UndoLevel | null;
     undo: (undoManager: UndoManager, locks: Locks, index: Index) => UndoLevel | undefined;
     redo: (index: Index, data: UndoLevel[]) => UndoLevel | undefined;
@@ -341,7 +342,7 @@ export const addUndoLevel = (
   locks: Locks,
   beforeBookmark: UndoBookmark,
   level?: Partial<UndoLevel>,
-  event?: Event
+  event?: EditorEvent<unknown>
 ): UndoLevel | null =>
   getRtcInstanceWithError(editor).undoManager.add(undoManager, index, locks, beforeBookmark, level, event);
 
