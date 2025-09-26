@@ -2,6 +2,7 @@ import type { SimpleOrSketchSpec } from '@ephox/alloy';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
+
 // eslint-disable-next-line @typescript-eslint/no-require-imports, import-x/order
 const { getAll: getAllOxide } = require('@tinymce/oxide-icons-default');
 import { assert } from 'chai';
