@@ -10,5 +10,5 @@ ${icons}
 };
 
 export const populateGetterDeclarations = (_svgs: Svg[]): string => {
-  return 'declare function getAll(): Record<string, string>;\nexport = { getAll };';
+  return 'declare function getAll(): Record<string, string>;\nexport = getAll;';
 };
