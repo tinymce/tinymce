@@ -199,23 +199,19 @@ module.exports = function (grunt) {
     terser: Object.assign(
       {
         options: {
-          ecma: 2022,
-          output: {
-            ascii_only: true
-          },
-        module: true,
-        mangle: false,
-        compress: false,
-        format: {
-          ecma: 2022,
-          beautify: true,
-          comments: true,
-          ascii_only: true,
-          indent_level: 2,
-          keep_quoted_props: true,
-          max_line_len: false,
-          semicolons: true
-        }
+          module: true,
+          mangle: false,
+          compress: false,
+          format: {
+            ecma: 2022,
+            beautify: true,
+            comments: true,
+            ascii_only: true,
+            indent_level: 2,
+            keep_quoted_props: true,
+            max_line_len: false,
+            semicolons: true
+          }
         },
         core: {
           files: [
@@ -226,7 +222,6 @@ module.exports = function (grunt) {
         // very similar to the emoticons plugin, except mangle is off
         'emoticons-raw': {
           options: {
-            ecma: 2018,
             module: true,
             mangle: false,
             compress: false,
@@ -235,10 +230,7 @@ module.exports = function (grunt) {
               beautify: true,
               comments: true,
               ascii_only: true,
-              indent_level: 2,
-              keep_quoted_props: true,
-              max_line_len: false,
-              semicolons: true
+              indent_level: 2
             }
           },
           files: [
