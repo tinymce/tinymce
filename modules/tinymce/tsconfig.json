@@ -6,6 +6,7 @@
     "baseUrl": ".",
     "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "allowSyntheticDefaultImports": true,
+    "types": ["node"],
     "paths": {
       "tinymce": ["src/core/main/ts/api/Main"],
       "tinymce/core/*": ["src/core/main/ts/*"],

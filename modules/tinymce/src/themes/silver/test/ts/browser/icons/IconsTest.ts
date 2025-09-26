@@ -2,7 +2,7 @@ import type { SimpleOrSketchSpec } from '@ephox/alloy';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
 import { TinyHooks } from '@ephox/wrap-mcagar';
-import { getAll as getAllOxide } from '@tinymce/oxide-icons-default';
+const { getAll: getAllOxide } = require('@tinymce/oxide-icons-default');
 import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';

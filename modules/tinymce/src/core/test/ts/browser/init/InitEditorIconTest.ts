@@ -2,7 +2,7 @@ import { UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { SugarBody } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
-import { getAll as getDefaultIcons } from '@tinymce/oxide-icons-default';
+const getDefaultIcons = require('@tinymce/oxide-icons-default').getAll;
 import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
