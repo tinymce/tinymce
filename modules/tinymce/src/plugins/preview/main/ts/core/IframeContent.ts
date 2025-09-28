@@ -1,5 +1,3 @@
-import { Link } from '@ephox/sugar';
-
 import type Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
@@ -36,7 +34,6 @@ const getPreviewHtml = (editor: Editor): string => {
     '</head>' +
     '<body id="' + encode(bodyId) + '" class="mce-content-body ' + encode(bodyClass) + '"' + dirAttr + '>' +
     editor.getContent() +
-    Link.getPreventClicksOnLinksScript() +
     '</body>' +
     '</html>'
   );

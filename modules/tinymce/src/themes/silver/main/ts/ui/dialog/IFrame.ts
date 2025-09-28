@@ -2,7 +2,7 @@ import { type AlloyComponent, Behaviour, Focusing, FormField, Receiving, type Sk
 import type { Dialog } from '@ephox/bridge';
 import { Cell, Fun, Optional, Optionals, Throttler, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Attribute, Class, Compare, type SugarElement, Traverse } from '@ephox/sugar';
+import { Attribute, Class, Compare, Link, SugarElement, Traverse } from '@ephox/sugar';
 
 import type * as Backstage from '../../backstage/Backstage';
 import * as FieldLabeller from '../alien/FieldLabeller';
@@ -50,6 +50,14 @@ const getScrollingElement = (doc: Document, html: string): Optional<HTMLElement>
     ? body : doc.documentElement);
 };
 
+const attachLinkBlocker = (iframe: HTMLIFrameElement): void => {
+  Optional.from(iframe.contentDocument).each((doc) => Link.preventClicksOnLinks(SugarElement.fromDom(doc)));
+};
+
+const attachLinkBlockerOnLoad = (iframe: HTMLIFrameElement): void => {
+  iframe.addEventListener('load', () => attachLinkBlocker(iframe), { once: true });
+};
+
 const writeValue = (iframeElement: SugarElement<HTMLIFrameElement>, html: string, fallbackFn: () => void): void => {
   const iframe = iframeElement.dom;
   Optional.from(iframe.contentDocument).fold(
@@ -86,6 +94,8 @@ const writeValue = (iframeElement: SugarElement<HTMLIFrameElement>, html: string
       doc.write(html);
       doc.close();
 
+      attachLinkBlocker(iframe);
+
       if (!isSafari) {
         scrollAfterWrite();
       }
@@ -103,14 +113,20 @@ const writeValueThrottler = throttleInterval.map((interval) => Throttler.adaptab
 
 const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFrameSourcing => {
   const cachedValue = Cell(initialData.getOr(''));
+  let needsFirstWrite = true;
   return {
     getValue: (_frameComponent: AlloyComponent): string =>
       // Ideally we should fetch data from the iframe...innerHtml, this triggers Cors errors
       cachedValue.get(),
     setValue: (frameComponent: AlloyComponent, html: string) => {
-      if (cachedValue.get() !== html) {
+      if (needsFirstWrite || cachedValue.get() !== html) {
         const iframeElement = frameComponent.element as SugarElement<HTMLIFrameElement>;
-        const setSrcdocValue = () => Attribute.set(iframeElement, 'srcdoc', html);
+        const iframe = iframeElement.dom;
+        const setSrcdocValue = () => {
+          attachLinkBlockerOnLoad(iframe);
+          Attribute.set(iframeElement, 'srcdoc', html);
+          attachLinkBlocker(iframe);
+        };
 
         if (stream) {
           writeValueThrottler.fold(Fun.constant(writeValue), (throttler) => throttler.throttle)(iframeElement, html, setSrcdocValue);
@@ -121,6 +137,7 @@ const getDynamicSource = (initialData: Optional<string>, stream: boolean): IFram
         }
       }
       cachedValue.set(html);
+      needsFirstWrite = false;
     }
   };
 };
@@ -133,7 +150,7 @@ const renderIFrame = (spec: IframeSpec, providersBackstage: Backstage.UiFactoryB
   const attributes = {
     ...spec.label.map<{ title?: string }>((title) => ({ title })).getOr({}),
     ...initialData.map((html) => ({ srcdoc: html })).getOr({}),
-    ...spec.sandboxed ? { sandbox: 'allow-scripts' } : {}
+    ...spec.sandboxed ? { sandbox: 'allow-same-origin' } : { }
   };
 
   const sourcing = getDynamicSource(initialData, spec.streamContent);
