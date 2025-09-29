@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: 'Addressed iframe sandbox security warning by implementing external link blocking instead of inline scripts.'
+time: 2025-09-29T10:38:54.2541+10:00
+custom:
+  Issue: TINY-12867
