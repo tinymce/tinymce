@@ -82,7 +82,8 @@ const DraggableHandle: React.FC<DraggableHandleProps> = ({ children }) => {
     });
     handleRef.current.setPointerCapture(event.pointerId);
     startMousePos.current = { x: event.clientX, y: event.clientY };
-  }, [ draggableRef, shift ]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ draggableRef, isDragging ]);
 
   const onPointerMove = useCallback((event: React.PointerEvent) => {
     if (isDragging) {
