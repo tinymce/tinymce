@@ -1,4 +1,4 @@
-import { Arr, type Optional } from '@ephox/katamari';
+import { Arr, Type, type Optional } from '@ephox/katamari';
 
 interface KeyInfo {
   readonly keyCode: number;
@@ -21,6 +21,7 @@ const keys: KeyInfo[] = [
   { keyCode: 20, code: 'CapsLock', key: 'CapsLock' },
   { keyCode: 27, code: 'Escape', key: 'Escape' },
   { keyCode: 32, code: 'Space', key: ' ', data: ' ' },
+  { keyCode: 32, code: 'Space', key: ' ', data: '\u00a0' }, // Special handling for non-breaking space when we go from data to event
   { keyCode: 33, code: 'PageUp', key: 'PageUp' },
   { keyCode: 34, code: 'PageDown', key: 'PageDown' },
   { keyCode: 35, code: 'End', key: 'End' },
@@ -137,6 +138,7 @@ const keys: KeyInfo[] = [
   { keyCode: 144, code: 'NumLock', key: 'NumLock' },
   { keyCode: 145, code: 'ScrollLock', key: 'ScrollLock' },
   { keyCode: 186, code: 'Semicolon', key: ';', data: ';' },
+  { keyCode: 186, code: 'Semicolon', key: ':', data: ':', shiftKey: true },
   { keyCode: 187, code: 'Equal', key: '=', data: '=' },
   { keyCode: 188, code: 'Comma', key: ',', data: ',' },
   { keyCode: 189, code: 'Minus', key: '-', data: '-' },
@@ -167,7 +169,13 @@ const createKeyboardEvent = (
   key: KeyInfo
 ) => {
   if (event === 'keypress') {
-    const charCode = key.data.charCodeAt(0);
+    const data = key.data;
+
+    if (Type.isUndefined(data)) {
+      throw new Error('Unable to create keypress event from key without data: ' + JSON.stringify(key));
+    }
+
+    const charCode = data.charCodeAt(0);
 
     return new view.KeyboardEvent(event, {
       key: key.key,
