@@ -1,12 +1,16 @@
 import { Arr } from '@ephox/katamari';
-import { Focus, type SugarElement, Traverse } from '@ephox/sugar';
+import { Focus, type SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import { keyevent, type MixedKeyModifiers } from '../keyboard/FakeKeys';
+import * as TypeInEditable from '../keyboard/TypeInEditable';
 import * as TypeInInput from '../keyboard/TypeInInput';
 
 import { Step } from './Step';
 
 export type KeyModifiers = MixedKeyModifiers;
+
+const isInput = SugarNode.isTag('input');
+const isTextArea = SugarNode.isTag('textarea');
 
 /*
   doc - document scope
@@ -53,6 +57,14 @@ const sKeystroke = sFakeKey(keystrokeTypes);
 
 const pTypeTextInInput = TypeInInput.pTypeTextInInput;
 
+const pTypeTextInElement = (el: SugarElement<HTMLElement>, text: string, speed: number = 0): Promise<void> => {
+  if (isInput(el) || isTextArea(el)) {
+    return TypeInInput.pTypeTextInInput(el, text, speed);
+  } else {
+    return TypeInEditable.pTypeInEditable(el, text, speed);
+  }
+};
+
 export {
   keydown,
   keyup,
@@ -68,5 +80,6 @@ export {
   sKeyup,
   sKeypress,
   sKeystroke,
-  pTypeTextInInput
+  pTypeTextInInput,
+  pTypeTextInElement
 };

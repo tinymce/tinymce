@@ -21,7 +21,6 @@ describe('browser.agar.keyboard.KeyboardTest', () => {
       metaKey?: boolean;
       ctrlKey?: boolean;
       altKey?: boolean;
-
     };
   }) => {
     const event = await pDispatchEvent(testCase.type, testCase.value, testCase.modifiers);
