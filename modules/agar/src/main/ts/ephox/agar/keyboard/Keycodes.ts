@@ -1,6 +1,14 @@
 import { Arr, type Optional } from '@ephox/katamari';
 
-const keys = [
+interface KeyInfo {
+  readonly keyCode: number;
+  readonly code: string;
+  readonly key: string;
+  readonly data?: string;
+  readonly shiftKey?: boolean;
+}
+
+const keys: KeyInfo[] = [
   { keyCode: 8, code: 'Backspace', key: 'Backspace' },
   { keyCode: 9, code: 'Tab', key: 'Tab' },
   { keyCode: 13, code: 'Enter', key: 'Enter' },
@@ -149,30 +157,65 @@ const keys = [
   { keyCode: 222, code: 'Quote', key: '"', data: '"', shiftKey: true }
 ];
 
-export const getKeyEventFromData = (view: typeof globalThis, event: 'keypress' | 'keydown' | 'keyup', data: string): Optional<KeyboardEvent> =>
-  Arr.find(keys, (key) => key.data === data).map((key) => {
-    if (event === 'keypress') {
-      const charCode = data.charCodeAt(0);
+const createKeyboardEvent = (
+  view: typeof globalThis,
+  event: string,
+  ctrlKey: boolean,
+  altKey: boolean,
+  shiftKey: boolean,
+  metaKey: boolean,
+  key: KeyInfo
+) => {
+  if (event === 'keypress') {
+    const charCode = key.data.charCodeAt(0);
 
-      return new view.KeyboardEvent(event, {
-        key: key.key,
-        code: key.code,
-        keyCode: charCode,
-        which: charCode,
-        charCode,
-        shiftKey: key.shiftKey === true,
-        cancelable: true,
-        bubbles: true
-      });
-    } else {
-      return new view.KeyboardEvent(event, {
-        key: key.key,
-        code: key.code,
-        keyCode: key.keyCode,
-        which: key.keyCode,
-        shiftKey: key.shiftKey === true,
-        cancelable: true,
-        bubbles: true
-      });
-    }
-  });
+    return new view.KeyboardEvent(event, {
+      key: key.key,
+      code: key.code,
+      keyCode: charCode,
+      which: charCode,
+      charCode,
+      shiftKey: key.shiftKey === true || shiftKey,
+      cancelable: true,
+      bubbles: true,
+      ctrlKey,
+      altKey,
+      metaKey
+    });
+  } else {
+    return new view.KeyboardEvent(event, {
+      key: key.key,
+      code: key.code,
+      keyCode: key.keyCode,
+      which: key.keyCode,
+      shiftKey: key.shiftKey === true || shiftKey,
+      cancelable: true,
+      bubbles: true,
+      ctrlKey,
+      altKey,
+      metaKey
+    });
+  }
+};
+
+export const getKeyEventFromKeyCode = (
+  view: typeof globalThis,
+  event: string,
+  ctrlKey: boolean,
+  altKey: boolean,
+  shiftKey: boolean,
+  metaKey: boolean,
+  keyCode: number
+): Optional<KeyboardEvent> => {
+  if (shiftKey) {
+    return Arr.find(keys, (key) => key.keyCode === keyCode && key.shiftKey === true).orThunk(() =>
+      Arr.find(keys, (key) => key.keyCode === keyCode)
+    ).map((key) => createKeyboardEvent(view, event, ctrlKey, altKey, shiftKey, metaKey, key));
+  } else {
+    return Arr.find(keys, (key) => key.keyCode === keyCode)
+      .map((key) => createKeyboardEvent(view, event, ctrlKey, altKey, shiftKey, metaKey, key));
+  }
+};
+
+export const getKeyEventFromData = (view: typeof globalThis, event: string, data: string): Optional<KeyboardEvent> =>
+  Arr.find(keys, (key) => key.data === data).map((key) => createKeyboardEvent(view, event, false, false, false, false, key));
