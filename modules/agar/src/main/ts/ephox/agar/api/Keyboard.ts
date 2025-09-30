@@ -55,8 +55,6 @@ const sKeyup = sFakeKey(keyupTypes);
 const sKeypress = sFakeKey(keypressTypes);
 const sKeystroke = sFakeKey(keystrokeTypes);
 
-const pTypeTextInInput = TypeInInput.pTypeTextInInput;
-
 const pTypeTextInElement = (el: SugarElement<HTMLElement>, text: string, speed: number = 0): Promise<void> => {
   if (isInput(el) || isTextArea(el)) {
     return TypeInInput.pTypeTextInInput(el, text, speed);
@@ -80,6 +78,5 @@ export {
   sKeyup,
   sKeypress,
   sKeystroke,
-  pTypeTextInInput,
   pTypeTextInElement
 };
