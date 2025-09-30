@@ -141,6 +141,7 @@ const keys: KeyInfo[] = [
   { keyCode: 186, code: 'Semicolon', key: ':', data: ':', shiftKey: true },
   { keyCode: 187, code: 'Equal', key: '=', data: '=' },
   { keyCode: 188, code: 'Comma', key: ',', data: ',' },
+  { keyCode: 188, code: 'Comma', key: '<', data: '<', shiftKey: true },
   { keyCode: 189, code: 'Minus', key: '-', data: '-' },
   { keyCode: 189, code: 'Minus', key: '_', data: '_', shiftKey: true },
   { keyCode: 190, code: 'Period', key: '.', data: '.' },
