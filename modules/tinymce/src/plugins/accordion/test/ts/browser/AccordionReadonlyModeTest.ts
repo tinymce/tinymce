@@ -103,6 +103,20 @@ describe('browser.tinymce.plugins.accordion.AccordionReadonlyModeTest', () => {
     assert.isFalse(editor.undoManager.hasUndo(), 'Should not add undo level when toggling accordion in readonly mode');
   });
 
+  it('TINY-12316: leaving readonly mode with accordions change should not add undo level', () => {
+    const editor = hook.editor();
+    editor.resetContent('<details><summary>Toggle accordion</summary><p>Hidden info</p></details>');
+    editor.mode.set('readonly');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+
+    assert.isFalse(editor.undoManager.hasUndo(), 'Should not have undo levels initially');
+    editor.execCommand('ToggleAccordion');
+    TinyAssertions.assertRawContent(editor, '<details data-mce-selected="1" data-mce-open="false" open="open"><summary>Toggle accordion</summary><p>Hidden info</p></details>');
+    editor.mode.set('design');
+    TinyAssertions.assertRawContent(editor, '<details data-mce-selected="1"><summary>Toggle accordion</summary><p>Hidden info</p></details>');
+    assert.isFalse(editor.undoManager.hasUndo(), 'Leaving readonly mode should not add undo level');
+  });
+
   it('TINY-12316: Toggling the accordion in design mode should add undo level', () => {
     const editor = hook.editor();
     editor.resetContent('<details><summary>Toggle accordion</summary><p>Hidden info</p></details>');

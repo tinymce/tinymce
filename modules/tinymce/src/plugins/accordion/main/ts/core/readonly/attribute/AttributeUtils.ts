@@ -14,7 +14,7 @@ const addTemporaryAttributes = <T>(adapter: Pick<AttributeOperationAdapter<T>, '
 
 const restoreNormalState = <T>(adapter: AttributeOperationAdapter<T>, detailsElement: T): void => {
   const { setAttribute, hasAttribute, getAttribute, removeAttribute } = adapter;
-  // At this point every <details> should have data-mce-open attribute. But I will ignore those that don't - just in case.
+  // At this point every <details> should have data-mce-open attribute. But we should ignore those that don't - just in case.
   if (!hasAttribute(detailsElement, accordionTemporaryOpenAttribute)) {
     return;
   }

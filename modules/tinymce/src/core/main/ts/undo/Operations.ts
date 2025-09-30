@@ -28,7 +28,7 @@ export const addUndoLevel = (
 
   const newLevel = Tools.extend(level || {}, currentLevel) as UndoLevel;
 
-  if (!isUnlocked(locks) || editor.removed) {
+  if (!isUnlocked(locks) || editor.removed || editor.mode.isReadOnly()) {
     return null;
   }
 
