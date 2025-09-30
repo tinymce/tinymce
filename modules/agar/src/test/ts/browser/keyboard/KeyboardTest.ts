@@ -1,9 +1,10 @@
 import { context, describe, it } from '@ephox/bedrock-client';
-import { DomEvent, Focus, Insert, Remove, SugarBody, SugarDocument, SugarElement } from '@ephox/sugar';
+import { ContentEditable, DomEvent, Focus, Html, Insert, Remove, SelectorFind, SugarBody, SugarDocument, SugarElement, Traverse } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import * as Keyboard from 'ephox/agar/api/Keyboard';
 import { Keys } from 'ephox/agar/api/Keys';
+import { TestStore } from 'ephox/agar/api/TestStore';
 import type { MixedKeyModifiers } from 'ephox/agar/keyboard/FakeKeys';
 
 describe('browser.agar.keyboard.KeyboardTest', () => {
@@ -334,6 +335,54 @@ describe('browser.agar.keyboard.KeyboardTest', () => {
           shiftKey: true
         }
       }));
+    });
+  });
+
+  context('pType', () => {
+    it('TINY-8724: Types the text into specified element at selection', async () => {
+      const container = SugarElement.fromHtml<HTMLElement>('<div contenteditable="true">abc</div>');
+      const store = TestStore<{ type: string; data: string }>();
+
+      Insert.append(SugarBody.body(), container);
+      Focus.focus(container);
+      const textNode = Traverse.firstChild(container).getOrDie('Failed to get container');
+
+      const range = document.createRange();
+      range.setStart(textNode.dom, 3);
+      range.setEnd(textNode.dom, 3);
+
+      const sel = window.getSelection();
+      sel?.removeAllRanges();
+      sel?.addRange(range);
+
+      DomEvent.bind(container, 'keydown', (e) => store.add({ type: 'keydown', data: e.raw.key }));
+      DomEvent.bind(container, 'keypress', (e) => store.add({ type: 'keypress', data: e.raw.key }));
+      DomEvent.bind(container, 'keyup', (e) => store.add({ type: 'keyup', data: e.raw.key }));
+      DomEvent.bind(container, 'beforeinput', (e) => store.add({ type: 'beforeinput', data: e.raw.data }));
+      DomEvent.bind(container, 'input', () => store.add({ type: 'input', data: '' }));
+
+      await Keyboard.pTypeTextInElement(container, 'def');
+
+      assert.equal(Html.get(container), 'abcdef');
+      store.assertEq('Should have fired the events in the correct order', [
+        { type: 'keydown', data: 'd' },
+        { type: 'keypress', data: 'd' },
+        { type: 'beforeinput', data: 'd' },
+        { type: 'input', data: '' },
+        { type: 'keyup', data: 'd' },
+        { type: 'keydown', data: 'e' },
+        { type: 'keypress', data: 'e' },
+        { type: 'beforeinput', data: 'e' },
+        { type: 'input', data: '' },
+        { type: 'keyup', data: 'e' },
+        { type: 'keydown', data: 'f' },
+        { type: 'keypress', data: 'f' },
+        { type: 'beforeinput', data: 'f' },
+        { type: 'input', data: '' },
+        { type: 'keyup', data: 'f' }
+      ]);
+
+      Remove.remove(container);
     });
   });
 });
