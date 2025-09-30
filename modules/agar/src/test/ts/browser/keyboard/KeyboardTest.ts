@@ -1,5 +1,5 @@
 import { context, describe, it } from '@ephox/bedrock-client';
-import { ContentEditable, DomEvent, Focus, Html, Insert, Remove, SelectorFind, SugarBody, SugarDocument, SugarElement, Traverse } from '@ephox/sugar';
+import { DomEvent, Focus, Html, Insert, Remove, SugarBody, SugarDocument, SugarElement, Traverse } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import * as Keyboard from 'ephox/agar/api/Keyboard';
