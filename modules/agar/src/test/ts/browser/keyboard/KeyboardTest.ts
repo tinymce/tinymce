@@ -40,6 +40,9 @@ describe('browser.agar.keyboard.KeyboardTest', () => {
     assert.equal(event.keyCode, defaultedExpectedKeyInfo.keyCode, 'Expected keyCode to match');
     assert.equal(event.charCode, defaultedExpectedKeyInfo.charCode, 'Expected charCode to match');
     assert.equal(event.shiftKey, defaultedExpectedKeyInfo.shiftKey, 'Expected shiftKey to match');
+    assert.equal(event.metaKey, defaultedExpectedKeyInfo.metaKey, 'Expected metaKey to match');
+    assert.equal(event.ctrlKey, defaultedExpectedKeyInfo.ctrlKey, 'Expected ctrlKey to match');
+    assert.equal(event.altKey, defaultedExpectedKeyInfo.altKey, 'Expected altKey to match');
   };
 
   context('Keyup, keydown, keypress on specified element', () => {
