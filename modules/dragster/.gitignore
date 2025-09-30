@@ -10,5 +10,5 @@
 /node_modules
 package-lock.json
 jenkins-plumbing
-yarn.lock
+bun.lock
 yarn-error.log
