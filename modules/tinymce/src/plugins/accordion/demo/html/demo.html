@@ -13,13 +13,34 @@
           <summary class="mce-accordion-summary">Expanded accordion</summary>
           <p>Accordion body...</p>
         </details>
-        <details class="mce-accordion">
+
+        <!-- <details class="mce-accordion">
           <summary class="mce-accordion-summary">Closed accordion</summary>
           <p>Accordion body...</p>
-        </details>
+        </details> -->
       </textarea>
     </div>
 
+    <button onclick="enter()">Enter</button>
+    <button onclick="leave()">Leave</button>
+    <button onclick="changeContent()">Change content</button>
+
+    <script>
+      function enter() {
+        const editor = tinymce.activeEditor;
+        editor.mode.set('readonly');
+      }
+
+      function leave() {
+        const editor = tinymce.activeEditor;
+        editor.mode.set('design');
+      }
+
+      function changeContent() {
+        const editor = tinymce.activeEditor; 
+        editor.setContent('<h1>Hello World</h1>');
+      }
+    </script>
     <script src="../../../../../js/tinymce/tinymce.js"></script>
     <script src="../../../../../scratch/demos/plugins/accordion/demo.js"></script>
   </body>

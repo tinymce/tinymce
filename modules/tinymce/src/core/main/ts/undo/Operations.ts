@@ -32,6 +32,14 @@ export const addUndoLevel = (
     return null;
   }
 
+  // TINY-12992: We want to skip adding undo level in readonly mode. Primarly to provide
+  // expandable accordions in readonly-mode (see TINY-12316).
+  // As an exception we want to allow that when history is empty
+  // to support initial entry, when readonly editor is being bootstrapped.
+  if (editor.mode.isReadOnly() && undoManager.data.length > 0) {
+    return null;
+  }
+
   const lastLevel = undoManager.data[index.get()];
   if (editor.dispatch('BeforeAddUndo', { level: newLevel, lastLevel, originalEvent: event }).isDefaultPrevented()) {
     return null;
