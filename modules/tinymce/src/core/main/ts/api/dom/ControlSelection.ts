@@ -173,7 +173,14 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
           dom.setStyle(target, name, value);
         } else {
           if (isUcVideo(target)) {
+            // this is needed because otherwise the ghost for `uc-video` is not correctly rendered
             target[name] = value;
+            const minimumWidth = 400;
+            if (target.width > minimumWidth && !(name === 'width' && value < minimumWidth)) {
+              target[name] = value;
+            } else {
+              target[name] = name === 'height' ? minimumWidth * ratio : minimumWidth;
+            }
           } else {
             dom.setAttrib(target, name, '' + value);
           }
