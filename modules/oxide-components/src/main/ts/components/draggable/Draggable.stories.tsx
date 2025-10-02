@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { Draggable, type DraggableProps } from './Draggable';
+import { Draggable } from './Draggable';
+import type { DraggableProps } from './internals/types';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
