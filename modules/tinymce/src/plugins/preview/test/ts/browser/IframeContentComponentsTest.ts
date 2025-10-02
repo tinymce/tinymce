@@ -9,7 +9,8 @@ import * as IframeContent from 'tinymce/plugins/preview/core/IframeContent';
 import Plugin from 'tinymce/plugins/preview/Plugin';
 
 describe('browser.tinymce.plugins.preview.core.IframeContentTest', () => {
-  const fakeComponent = `console.log("test-component loaded");`;
+  const fakeComponentUrl1 = 'data:,' + encodeURIComponent(`console.log("test-component1 loaded");`);
+  const fakeComponentUrl2 = 'data:,' + encodeURIComponent(`console.log("test-component2 loaded");`);
 
   const hook = TinyHooks.bddSetupLight<Editor>({
     plugins: 'preview',
@@ -18,10 +19,8 @@ describe('browser.tinymce.plugins.preview.core.IframeContentTest', () => {
     setup: (editor: Editor) => {
       editor.on('PreInit', () => {
         editor.schema.addCustomElements({
-          'test-component': {
-            extends: 'span',
-            componentUrl: 'data:,' + encodeURIComponent(fakeComponent),
-          }
+          'test-component1': { extends: 'span', componentUrl: fakeComponentUrl1 },
+          'test-component2': { extends: 'span', componentUrl: fakeComponentUrl2 }
         });
       });
     }
@@ -32,10 +31,15 @@ describe('browser.tinymce.plugins.preview.core.IframeContentTest', () => {
 
     assert.include(
       IframeContent.getPreviewHtml(editor),
-      '<script src="data:,console.log(%22test-component%20loaded%22)%3B"></script>',
-      'Should include the component script'
+      `<script src="${fakeComponentUrl1}"></script>`,
+      'Should include the component script with the url from fakeComponentUrl1'
     );
 
+    assert.include(
+      IframeContent.getPreviewHtml(editor),
+      `<script src="${fakeComponentUrl2}"></script>`,
+      'Should include the component script with the url from fakeComponentUrl2'
+    );
   });
 
   it('TINY-13006: Should include the component script with crossorigin attribute', () => {
@@ -45,8 +49,14 @@ describe('browser.tinymce.plugins.preview.core.IframeContentTest', () => {
 
     assert.include(
       IframeContent.getPreviewHtml(editor),
-      '<script src="data:,console.log(%22test-component%20loaded%22)%3B" crossorigin="anonymous"></script>',
-      'Should include the component script with crossorigin attribute'
+      `<script src="${fakeComponentUrl1}" crossorigin="anonymous"></script>`,
+      'Should include the component script with crossorigin attribute and the url from fakeComponentUrl1'
+    );
+
+    assert.include(
+      IframeContent.getPreviewHtml(editor),
+      `<script src="${fakeComponentUrl2}" crossorigin="anonymous"></script>`,
+      'Should include the component script with crossorigin attribute and the url from fakeComponentUrl2'
     );
 
     ScriptLoader.ScriptLoader._setCrossOrigin(Fun.constant(undefined));
@@ -59,8 +69,14 @@ describe('browser.tinymce.plugins.preview.core.IframeContentTest', () => {
 
     assert.include(
       IframeContent.getPreviewHtml(editor),
-      '<script src="data:,console.log(%22test-component%20loaded%22)%3B" referrerpolicy="no-referrer"></script>',
-      'Should include the component script with referrerpolicy attribute'
+      `<script src="${fakeComponentUrl1}" referrerpolicy="no-referrer"></script>`,
+      'Should include the component script with referrerpolicy attribute and the url from fakeComponentUrl1'
+    );
+
+    assert.include(
+      IframeContent.getPreviewHtml(editor),
+      `<script src="${fakeComponentUrl2}" referrerpolicy="no-referrer"></script>`,
+      'Should include the component script with referrerpolicy attribute and the url from fakeComponentUrl2'
     );
 
     ScriptLoader.ScriptLoader._setReferrerPolicy('');

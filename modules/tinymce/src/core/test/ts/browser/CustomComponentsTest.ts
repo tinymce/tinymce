@@ -5,9 +5,10 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import type Editor from 'tinymce/core/api/Editor';
 
-describe('browser.tinymce.core.CustomComponentsTest', () => {
-  const componentUrl1 = 'data:,' + encodeURIComponent('top.customComponentsTest(1)');
-  const componentUrl2 = 'data:,' + encodeURIComponent('top.customComponentsTest(2)');
+describe.only('browser.tinymce.core.CustomComponentsTest', () => {
+  const fakeComponentUrl1 = 'data:,' + encodeURIComponent('top.customComponentsTest(1)');
+  const fakeComponentUrl2 = 'data:,' + encodeURIComponent('top.customComponentsTest(2)');
+  const fakeComponentUrl3 = 'data:,' + encodeURIComponent('top.customComponentsTest(3)');
 
   context('Iframe editor', () => {
     const store = TestStore<number>();
@@ -27,16 +28,19 @@ describe('browser.tinymce.core.CustomComponentsTest', () => {
       base_url: '/project/tinymce/js/tinymce',
       setup: (editor: Editor) => {
         editor.on('PreInit', () => {
+          editor.getWin().customElements.define('test-component3', class extends HTMLElement { });
+
           editor.schema.addCustomElements({
-            'test-component1': { extends: 'span', componentUrl: componentUrl1 },
-            'test-component2': { extends: 'span', componentUrl: componentUrl2 }
+            'test-component1': { extends: 'span', componentUrl: fakeComponentUrl1 },
+            'test-component2': { extends: 'span', componentUrl: fakeComponentUrl2 },
+            'test-component3': { extends: 'span', componentUrl: fakeComponentUrl3 } // Is loaded even if defined
           });
         });
       }
     }, [ ]);
 
     it('TINY-13006: Should have loaded both component scripts', () => {
-      store.assertEq('Should have called custom component once', [ 1, 2 ]);
+      store.assertEq('Should have called custom component once', [ 1, 2, 3 ]);
     });
   });
 
@@ -59,14 +63,20 @@ describe('browser.tinymce.core.CustomComponentsTest', () => {
       inline: true,
       setup: (editor: Editor) => {
         editor.on('PreInit', () => {
+          editor.getWin().customElements.define('test-component3', class extends HTMLElement { });
+
           editor.schema.addCustomElements({
             'test-component1': {
               extends: 'span',
-              componentUrl: componentUrl1,
+              componentUrl: fakeComponentUrl1,
             },
             'test-component2': {
               extends: 'span',
-              componentUrl: componentUrl1, // Note: using the same URL as component 1
+              componentUrl: fakeComponentUrl1, // Note: using the same URL as component 1
+            },
+            'test-component3': {
+              extends: 'span',
+              componentUrl: fakeComponentUrl3 // Should not be loaded since it's already defined
             }
           });
         });
