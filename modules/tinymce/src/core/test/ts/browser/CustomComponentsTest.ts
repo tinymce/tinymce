@@ -5,7 +5,7 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import type Editor from 'tinymce/core/api/Editor';
 
-describe.only('browser.tinymce.core.CustomComponentsTest', () => {
+describe('browser.tinymce.core.CustomComponentsTest', () => {
   const fakeComponentUrl1 = 'data:,' + encodeURIComponent('top.customComponentsTest(1)');
   const fakeComponentUrl2 = 'data:,' + encodeURIComponent('top.customComponentsTest(2)');
   const fakeComponentUrl3 = 'data:,' + encodeURIComponent('top.customComponentsTest(3)');
