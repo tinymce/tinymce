@@ -81,6 +81,4 @@ describe('browser.tinymce.plugins.preview.core.IframeContentTest', () => {
 
     ScriptLoader.ScriptLoader._setReferrerPolicy('');
   });
-
 });
-
