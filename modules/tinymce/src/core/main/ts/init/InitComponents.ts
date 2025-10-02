@@ -14,7 +14,7 @@ class ComponentLoadError extends Error {
   }
 }
 
-const hostWindowComponents: Record<string, Promise<string>> = {};
+const hostWindowComponentScripts: Record<string, Promise<string>> = {};
 
 const loadScript = (url: string, doc: SugarElement<Document>, extraAtts: Record<string, string>): Promise<void> => {
   return new Promise<void>((resolve, reject) => {
@@ -52,12 +52,12 @@ const loadComponent = async (url: string, doc: SugarElement<Document>): Promise<
 
 const loadComponentsForInlineEditor = (componentUrls: Record<string, string>): Array<Promise<string>> => {
   return Obj.mapToArray(componentUrls, (url, elementName) => {
-    return Obj.get(hostWindowComponents, url).getOrThunk(() => {
+    return Obj.get(hostWindowComponentScripts, url).getOrThunk(() => {
       // Only load the component if it hasn't already been loaded in inline mode the page might have already loaded it
       if (Type.isNullable(window.customElements.get(elementName))) {
         const loadPromise = loadComponent(url, SugarDocument.getDocument());
 
-        hostWindowComponents[url] = loadPromise;
+        hostWindowComponentScripts[url] = loadPromise;
         return loadPromise;
       } else {
         return Promise.resolve(url);
