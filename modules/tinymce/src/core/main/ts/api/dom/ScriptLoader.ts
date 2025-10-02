@@ -295,6 +295,13 @@ class ScriptLoader {
     }
   }
 
+  /**
+   * Returns the attributes that should be added to a script tag when loading the specified URL.
+   *
+   * @method getScriptAttributes
+   * @param {String} url Url to get attributes for.
+   * @return {Object} Object with attributs to add to the script tag.
+   */
   public getScriptAttributes(url: string): Record<string, string> {
     const attrs: Record<string, string> = {};
 
