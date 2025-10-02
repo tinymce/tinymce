@@ -8,11 +8,13 @@ const draggableTestId = 'draggable';
 const draggableHandleTestId = 'draggable-handle';
 
 const TestElement = (
-  <div data-testid={draggableTestId} style={{ width: 250, height: 500, backgroundColor: 'gray' }}>
-    <Draggable.Handle>
-      <div data-testid={draggableHandleTestId} style={{ width: '100%', height: 50, backgroundColor: 'black' }}></div>
-    </Draggable.Handle>
-  </div>
+  <Draggable>
+    <div data-testid={draggableTestId} style={{ width: 250, height: 500, backgroundColor: 'gray' }}>
+      <Draggable.Handle>
+        <div data-testid={draggableHandleTestId} style={{ width: '100%', height: 50, backgroundColor: 'black' }}></div>
+      </Draggable.Handle>
+    </div>
+  </Draggable>
 );
 
 const Wrapper = ({ children }: { children: ReactNode }) => {
@@ -71,27 +73,69 @@ const mouse = (element: HTMLElement) => {
   return { down, move, up };
 };
 
-describe('browser.draggable.Draggable', () => {
-  it('TINY-12875: Sanity check', async () => {
-    const { getByTestId } = render(TestElement, { wrapper: Wrapper });
-    await expect.element(getByTestId(draggableTestId)).toBeDefined();
-    await expect.element(getByTestId(draggableHandleTestId)).toBeDefined();
-  });
+const renderDraggable = async () => {
+  const { getByTestId } = render(TestElement, { wrapper: Wrapper });
+  const handle = getByTestId(draggableHandleTestId).element() as HTMLElement;
+  const draggable = getByTestId(draggableTestId).element() as HTMLElement;
+  await expect.element(handle).toBeDefined();
+  await expect.element(draggable).toBeDefined();
+  const draggableWrapper = draggable.parentElement;
+  await expect.element(draggableWrapper).toBeDefined();
 
+  return { handle, draggable, draggableWrapper: draggableWrapper as HTMLElement };
+};
+
+/*
+  I would prefer to use React's 'act' function.
+  But I couldn't find a way to use 'act' with 'vitest-browser-react' library,
+  without having error message on the console.
+*/
+const tick = () => new Promise<void>((res) => setTimeout(() => res()));
+
+const assertTransform = (element: HTMLElement, shift: { x: number; y: number }) => {
+  const transform = element.style.transform;
+  expect(transform).toBe(`translate3d(${shift.x}px, ${shift.y}px, 0px)`);
+};
+
+describe('browser.draggable.Draggable', () => {
   it('TINY-12875: Should be draggable by handle', async () => {
-    const { getByTestId } = render(TestElement, { wrapper: Wrapper });
-    const draggable = getByTestId(draggableTestId).element() as HTMLElement;
-    const handle = getByTestId(draggableHandleTestId).element() as HTMLElement;
-    const initialPosition = draggable.getBoundingClientRect();
+    const { handle, draggableWrapper } = await renderDraggable();
     const [ shiftX, shiftY ] = [ 50, 50 ];
 
     const { down, move, up } = mouse(handle);
     down();
+    await tick();
     move([ shiftX, shiftY ]);
+    await tick();
     up();
 
-    const currentPosition = draggable.getBoundingClientRect();
-    expect(currentPosition.x).toBe(initialPosition.x);
-    expect(currentPosition.y).toBe(initialPosition.y);
+    assertTransform(draggableWrapper, { x: shiftX, y: shiftY });
+  });
+
+  it('TINY-12875: Should only be draggable by handle', async () => {
+    const { draggable, draggableWrapper } = await renderDraggable();
+
+    const { down, move, up } = mouse(draggable);
+    down();
+    await tick();
+    move([ 50, 50 ]);
+    await tick();
+    up();
+
+    assertTransform(draggableWrapper, { x: 0, y: 0 });
+  });
+
+  it('TINY-12875: Shift should be rounded to integer', async () => {
+    const { handle, draggableWrapper } = await renderDraggable();
+    const [ shiftX, shiftY ] = [ 2.33, 50.33 ];
+
+    const { down, move, up } = mouse(handle);
+    down();
+    await tick();
+    move([ shiftX, shiftY ]);
+    await tick();
+    up();
+
+    assertTransform(draggableWrapper, { x: 2, y: 50 });
   });
 });
