@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Chromium browsers would in certain situations scroll the editor unexpectedly when dragging content over the editor.
+time: 2025-10-02T15:42:09.368737+02:00
+custom:
+    Issue: INT-3373
