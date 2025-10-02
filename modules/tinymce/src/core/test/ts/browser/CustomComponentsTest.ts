@@ -5,6 +5,8 @@ import { TinyHooks } from '@ephox/wrap-mcagar';
 
 import type Editor from 'tinymce/core/api/Editor';
 
+class CustomComponent extends HTMLElement { }
+
 describe('browser.tinymce.core.CustomComponentsTest', () => {
   const fakeComponentUrl1 = 'data:,' + encodeURIComponent('top.customComponentsTest(1)');
   const fakeComponentUrl2 = 'data:,' + encodeURIComponent('top.customComponentsTest(2)');
@@ -28,7 +30,7 @@ describe('browser.tinymce.core.CustomComponentsTest', () => {
       base_url: '/project/tinymce/js/tinymce',
       setup: (editor: Editor) => {
         editor.on('PreInit', () => {
-          editor.getWin().customElements.define('test-component3', class extends HTMLElement { });
+          editor.getWin().customElements.define('test-component3', CustomComponent);
 
           editor.schema.addCustomElements({
             'test-component1': { extends: 'span', componentUrl: fakeComponentUrl1 },
@@ -63,7 +65,7 @@ describe('browser.tinymce.core.CustomComponentsTest', () => {
       inline: true,
       setup: (editor: Editor) => {
         editor.on('PreInit', () => {
-          editor.getWin().customElements.define('test-component3', class extends HTMLElement { });
+          editor.getWin().customElements.define('test-component3', CustomComponent);
 
           editor.schema.addCustomElements({
             'test-component1': {
