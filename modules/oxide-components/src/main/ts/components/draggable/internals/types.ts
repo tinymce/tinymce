@@ -15,3 +15,13 @@ export interface Position {
 export interface DraggableState {
   setShift: React.Dispatch<React.SetStateAction<Shift>>;
 };
+
+export interface Boundries {
+  shiftX: { min: number; max: number };
+  shiftY: { min: number; max: number };
+};
+
+export interface Size {
+  width: number;
+  height: number;
+}
