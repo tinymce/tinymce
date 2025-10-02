@@ -49,7 +49,7 @@ const mouse = (element: HTMLElement) => {
     }));
   };
 
-  const move = (vector: [number, number]) => {
+  const move = (vector: readonly [number, number]) => {
     position.x = position.x + vector[0];
     position.y = position.y + vector[1];
 
@@ -137,5 +137,42 @@ describe('browser.draggable.Draggable', () => {
     up();
 
     assertTransform(draggableWrapper, { x: 2, y: 50 });
+  });
+
+  it('TINY-12875: Should not exceed border - left top', async () => {
+    const { handle, draggableWrapper } = await renderDraggable();
+    const rect = draggableWrapper.getBoundingClientRect();
+
+    // Try to move far beyond the window boundaries
+    const largeShift = [ -1 * window.innerWidth * 2, -1 * window.innerHeight * 2 ] as const;
+
+    const { down, move, up } = mouse(handle);
+    down();
+    await tick();
+    move(largeShift);
+    await tick();
+    up();
+
+    assertTransform(draggableWrapper, { x: Math.ceil(-rect.x), y: Math.ceil(-rect.y) });
+  });
+
+  it('TINY-12875: Should not exceed border - right bottom', async () => {
+    const { handle, draggableWrapper } = await renderDraggable();
+    const rect = draggableWrapper.getBoundingClientRect();
+
+    // Try to move far beyond the window boundaries
+    const largeShift = [ window.innerWidth * 2, window.innerHeight * 2 ] as const;
+
+    const { down, move, up } = mouse(handle);
+    down();
+    await tick();
+    move(largeShift);
+    await tick();
+    up();
+
+    assertTransform(draggableWrapper, {
+      x: Math.floor(window.innerWidth - (rect.x + rect.width)),
+      y: Math.floor(window.innerHeight - (rect.y + rect.height))
+    });
   });
 });
