@@ -112,7 +112,7 @@ describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
     assert.isTrue(ScriptLoader.ScriptLoader.isDone(nestedScript), 'nested.js should have been loaded');
   });
 
-  it('TINY-13006: Should be able to get attrbutes for url when setting crossorigin and referrerpolicy', () => {
+  it('TINY-13006: Should be able to get attributes for some url when crossorigin and referrerpolicy is set', () => {
     const scriptLoader = new ScriptLoader();
 
     scriptLoader._setCrossOrigin(Fun.constant('anonymous'));

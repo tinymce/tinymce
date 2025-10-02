@@ -41,8 +41,8 @@ describe('browser.tinymce.core.CustomComponentsTest', () => {
       }
     }, [ ]);
 
-    it('TINY-13006: Should have loaded both component scripts', () => {
-      store.assertEq('Should have called custom component once', [ 1, 2, 3 ]);
+    it('TINY-13006: Should have loaded all three component scripts', () => {
+      store.assertEq('Should have called the callback three times', [ 1, 2, 3 ]);
     });
   });
 
@@ -85,8 +85,8 @@ describe('browser.tinymce.core.CustomComponentsTest', () => {
       }
     }, [ ]);
 
-    it('TINY-13006: Should only load the script one since the url is the same for both 1 and 2', () => {
-      store.assertEq('Should have called custom component once', [ 1 ]);
+    it('TINY-13006: Should only load the script one since the url is the same for both 1 and 2 and 3 is already defined', () => {
+      store.assertEq('Should have called the callback once', [ 1 ]);
     });
   });
 });
