@@ -13,7 +13,9 @@ export interface Position {
 };
 
 export interface DraggableState {
+  shift: Shift;
   setShift: React.Dispatch<React.SetStateAction<Shift>>;
+  draggableRef: React.RefObject<HTMLDivElement | null>;
 };
 
 export interface Boundries {

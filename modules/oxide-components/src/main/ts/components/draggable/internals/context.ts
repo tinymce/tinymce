@@ -3,7 +3,7 @@ import { createContext, useContext } from 'react';
 
 import type { DraggableState } from './types';
 
-const initialState: DraggableState = { setShift: Fun.noop };
+const initialState: DraggableState = { shift: { x: 0, y: 0 }, setShift: Fun.noop, draggableRef: { current: null }};
 const DraggableContext = createContext<DraggableState>(initialState);
 
 const useDraggable = (): DraggableState => {

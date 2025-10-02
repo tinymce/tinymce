@@ -1,4 +1,4 @@
-import { delta, round, clamp, boundries } from 'oxide-components/components/draggable/internals/calculations';
+import { delta, clamp, boundries, undoShift } from 'oxide-components/components/draggable/internals/calculations';
 import { describe, expect, it } from 'vitest';
 
 describe('browser.draggable.calculations', () => {
@@ -19,24 +19,6 @@ describe('browser.draggable.calculations', () => {
 
       expect(result.deltaX).toBe(-20);
       expect(result.deltaY).toBe(-40);
-    });
-  });
-
-  describe('round', () => {
-    it('rounds shift values to nearest integers', () => {
-      const shift = { x: 10.7, y: 20.3 };
-      const result = round(shift);
-
-      expect(result.x).toBe(11);
-      expect(result.y).toBe(20);
-    });
-
-    it('handles negative decimal values', () => {
-      const shift = { x: -5.6, y: -3.2 };
-      const result = round(shift);
-
-      expect(result.x).toBe(-6);
-      expect(result.y).toBe(-3);
     });
   });
 
@@ -82,6 +64,64 @@ describe('browser.draggable.calculations', () => {
           min: -100,
           max: 850
         }
+      });
+    });
+
+    it('should round boundries correctly', () => {
+      const upperLeftCorner = { x: 0, y: 0 };
+      const bottomRightCorner = { x: 1500, y: 1500 };
+      const calculatedBoundries = boundries({ x: 749.5, y: 285.5, width: 250, height: 500 }, upperLeftCorner, bottomRightCorner);
+
+      expect(calculatedBoundries).toMatchObject({
+        shiftX: {
+          min: -749,
+          max: 500
+        },
+        shiftY: {
+          min: -285,
+          max: 714
+        }
+      });
+    });
+  });
+
+  describe('undoShift', () => {
+    it('should reverse positive shift values', () => {
+      const element = { x: 100, y: 200, width: 50, height: 75 };
+      const shift = { x: 20, y: 30 };
+      const result = undoShift(element, shift);
+
+      expect(result).toEqual({
+        x: 80,
+        y: 170,
+        width: 50,
+        height: 75
+      });
+    });
+
+    it('should reverse negative shift values', () => {
+      const element = { x: 50, y: 60, width: 100, height: 150 };
+      const shift = { x: -25, y: -40 };
+      const result = undoShift(element, shift);
+
+      expect(result).toEqual({
+        x: 75,
+        y: 100,
+        width: 100,
+        height: 150
+      });
+    });
+
+    it('should handle zero shift values', () => {
+      const element = { x: 300, y: 400, width: 200, height: 250 };
+      const shift = { x: 0, y: 0 };
+      const result = undoShift(element, shift);
+
+      expect(result).toEqual({
+        x: 300,
+        y: 400,
+        width: 200,
+        height: 250
       });
     });
   });
