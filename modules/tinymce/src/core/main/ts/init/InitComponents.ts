@@ -62,6 +62,11 @@ const loadComponentsForInlineEditor = (componentUrls: Record<string, string>): A
       } else {
         return Promise.resolve(url);
       }
+    }).catch((err) => {
+      // Remove from cache if the component failed to load so we can try again later
+      delete hostWindowComponentScripts[url];
+
+      return Promise.reject(err);
     });
   });
 };
