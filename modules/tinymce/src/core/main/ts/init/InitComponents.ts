@@ -46,7 +46,7 @@ const loadScript = (url: string, doc: SugarElement<Document>, extraAtts: Record<
 
 const loadComponent = async (url: string, doc: SugarElement<Document>): Promise<string> => {
   const extraAtts: Record<string, string> = ScriptLoader.ScriptLoader.getScriptAttributes(url);
-  await loadScript(url, doc, extraAtts).catch(() => new ComponentLoadError(`Failed to load component url: ${url}`, url));
+  await loadScript(url, doc, extraAtts).catch(() => Promise.reject(new ComponentLoadError(`Failed to load component url: ${url}`, url)));
   return url;
 };
 
