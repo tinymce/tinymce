@@ -1,5 +1,6 @@
 import { Arr, Obj } from '@ephox/katamari';
 import { Link } from '@ephox/sugar';
+
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
 import type Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
