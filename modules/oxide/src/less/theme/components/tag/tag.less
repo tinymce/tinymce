@@ -1,0 +1,30 @@
+.tox {
+  .tox-tag {
+    width: fit-content;
+    display: flex;
+    padding: 4px 6px;
+    align-items: center;
+    gap: 4px;
+    border-radius: 3px;
+    background: linear-gradient(0deg,color-mix(in srgb, var(--tox-private-color-white, @color-white) 90%, transparent) 0%, color-mix(in srgb, var(--tox-private-color-white, @color-white) 90%, transparent) 100%),  var(--tox-private-color-tint, @color-tint);
+    line-height: var(--tox-private-base-value, @base-value);
+    font-size: var(--tox-private-font-size-xs, @font-size-xs);
+
+    .tox-tag__icon {
+      height: var(--tox-private-base-value, @base-value);
+    }
+
+    .tox-tag__close {
+      height: var(--tox-private-base-value, @base-value);
+
+      .tox-button.tox-button--icon {
+        border: 0;
+        padding: 0;
+
+        &::before {
+          box-shadow: none;
+        }
+      }
+    }
+  }
+}
