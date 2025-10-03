@@ -1,16 +1,13 @@
-import { after, afterEach, before, context, describe, it } from '@ephox/bedrock-client';
-import { Arr, Global } from '@ephox/katamari';
-import { TinyHooks } from '@ephox/wrap-mcagar';
+import { after, afterEach, before, describe, it } from '@ephox/bedrock-client';
+import { Arr, Fun, Global } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
-import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
   const testScript = '/project/tinymce/src/core/test/assets/js/test.js';
   const nestedScript = '/project/tinymce/src/core/test/assets/js/nested.js';
   const invalidScript = '/project/tinymce/src/core/test/assets/js/invalid.js';
-  const fakelibScript = '/project/tinymce/src/core/test/assets/js/fakelib.js';
   let loadedCount = 0;
 
   before(() => {
@@ -26,8 +23,8 @@ describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
     loadedCount = 0;
   });
 
-  const pLoadScript = (url: string, editorDoc?: Document): Promise<void> => {
-    return ScriptLoader.ScriptLoader.loadScript(url, editorDoc).then(() => {
+  const pLoadScript = (url: string): Promise<void> => {
+    return ScriptLoader.ScriptLoader.loadScript(url).then(() => {
       loadedCount++;
     });
   };
@@ -115,21 +112,15 @@ describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
     assert.isTrue(ScriptLoader.ScriptLoader.isDone(nestedScript), 'nested.js should have been loaded');
   });
 
-  context('TINY-12817: load with a different document', () => {
-    const hook = TinyHooks.bddSetupLight<Editor>({
-      base_url: '/project/tinymce/js/tinymce'
-    }, []);
+  it('TINY-13006: Should be able to get attributes for some url when crossorigin and referrerpolicy is set', () => {
+    const scriptLoader = new ScriptLoader();
 
-    it('TINY-12817: Loading a script specifying the document should load the script in that document', async () => {
-      const oldTestFun = (document as any).testFun;
-      (document as any).testFun = undefined;
-      const editor = hook.editor();
-      await pLoadScript(fakelibScript);
-      assert.isDefined((document as any).testFun, 'test fun should be loaded on the main document');
-      assert.isUndefined((editor.getDoc() as any).testFun, 'test fun should not be loaded on the editor document');
-      await pLoadScript(fakelibScript, editor.getDoc());
-      assert.isDefined((editor.getDoc() as any).testFun, 'test fun should be loaded on the editor document');
-      (document as any).testFun = oldTestFun;
+    scriptLoader._setCrossOrigin(Fun.constant('anonymous'));
+    scriptLoader._setReferrerPolicy('no-referrer');
+
+    assert.deepEqual(scriptLoader.getScriptAttributes('foo'), {
+      crossorigin: 'anonymous',
+      referrerpolicy: 'no-referrer'
     });
   });
 });

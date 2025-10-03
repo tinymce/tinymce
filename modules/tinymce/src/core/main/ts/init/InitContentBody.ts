@@ -40,6 +40,7 @@ import * as TextPattern from '../textpatterns/TextPatterns';
 import Quirks from '../util/Quirks';
 
 import * as ContentCss from './ContentCss';
+import * as InitComponents from './InitComponents';
 
 declare const escape: any;
 declare let tinymce: TinyMCE;
@@ -489,6 +490,8 @@ const contentBodyLoaded = (editor: Editor): void => {
   const setupRtcThunk = Rtc.setup(editor);
 
   preInit(editor);
+
+  InitComponents.loadComponents(editor);
 
   setupRtcThunk.fold(() => {
     const cancelProgress = startProgress(editor);

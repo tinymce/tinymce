@@ -77,10 +77,10 @@ class ScriptLoader {
    * @param {String} url Absolute URL to script to add.
    * @return {Promise} A promise that will resolve when the script loaded successfully or reject if it failed to load.
    */
-  public loadScript(url: string, editorDoc?: Document): Promise<void> {
+  public loadScript(url: string): Promise<void> {
     return new Promise((resolve, reject) => {
       const dom = DOM;
-      const doc = editorDoc ?? document;
+      const doc = document;
       let elm: HTMLScriptElement | null;
 
       const cleanup = () => {
@@ -202,10 +202,10 @@ class ScriptLoader {
    * @method loadQueue
    * @return {Promise} A promise that is resolved when all queued items are loaded or rejected with the script urls that failed to load.
    */
-  public loadQueue(editorDoc?: Document): Promise<void> {
+  public loadQueue(): Promise<void> {
     const queue = this.queue;
     this.queue = [];
-    return this.loadScripts(queue, editorDoc);
+    return this.loadScripts(queue);
   }
 
   /**
@@ -216,7 +216,7 @@ class ScriptLoader {
    * @param {Array} scripts Array of queue items to load.
    * @return {Promise} A promise that is resolved when all scripts are loaded or rejected with the script urls that failed to load.
    */
-  public loadScripts(scripts: string[], editorDoc?: Document): Promise<void> {
+  public loadScripts(scripts: string[]): Promise<void> {
     const self = this;
 
     const execCallbacks = (name: 'resolve' | 'reject', url: string) => {
@@ -249,7 +249,7 @@ class ScriptLoader {
         // Script is not already loaded, so load it
         self.states[url] = LOADING;
 
-        return self.loadScript(url, editorDoc).then(() => {
+        return self.loadScript(url).then(() => {
           self.states[url] = LOADED;
           execCallbacks('resolve', url);
 
@@ -293,6 +293,32 @@ class ScriptLoader {
     } else {
       return processQueue(uniqueScripts);
     }
+  }
+
+  /**
+   * Returns the attributes that should be added to a script tag when loading the specified URL.
+   *
+   * @method getScriptAttributes
+   * @param {String} url Url to get attributes for.
+   * @return {Object} Object with attributes to add to the script tag.
+   */
+  public getScriptAttributes(url: string): Record<string, string> {
+    const attrs: Record<string, string> = {};
+
+    if (this.settings.referrerPolicy) {
+      attrs.referrerpolicy = this.settings.referrerPolicy;
+    }
+
+    const crossOrigin = this.settings.crossOrigin;
+    if (Type.isFunction(crossOrigin)) {
+      const resultCrossOrigin = crossOrigin(url);
+
+      if (Type.isString(resultCrossOrigin)) {
+        attrs.crossorigin = resultCrossOrigin;
+      }
+    }
+
+    return attrs;
   }
 }
 

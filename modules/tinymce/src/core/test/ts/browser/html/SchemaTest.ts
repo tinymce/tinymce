@@ -848,6 +848,20 @@ describe('browser.tinymce.core.html.SchemaTest', () => {
       assert.isTrue(schema.isValid('foo.-bar'));
       assert.isTrue(schema.isValidChild('foo.-bar', 'bar.-baz'));
     });
+
+    it('TINY-13006: Add custom elements with component urls', () => {
+      const schema = Schema({});
+
+      schema.addCustomElements({
+        'custom-element1': { componentUrl: 'https://example.com/component.js' },
+        'custom-element2': { componentUrl: 'https://example.com/component.js' }
+      });
+
+      assert.deepEqual(schema.getComponentUrls(), {
+        'custom-element1': 'https://example.com/component.js',
+        'custom-element2': 'https://example.com/component.js'
+      });
+    });
   });
 
   context('custom_elements with spec record', () => {
