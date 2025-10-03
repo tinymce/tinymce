@@ -1,6 +1,5 @@
 import { Arr, Obj } from '@ephox/katamari';
 import { Link } from '@ephox/sugar';
-
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
 import type Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
@@ -12,7 +11,7 @@ const getComponentScriptsHtml = (editor: Editor) => {
 
   return Arr.map(urls, (url) => {
     const attrs = Obj.mapToArray(ScriptLoader.ScriptLoader.getScriptAttributes(url), (v, k) => ` ${editor.dom.encode(k)}="${editor.dom.encode(v)}"`);
-    return `<script src="${url}"${attrs.join('')}></script>`;
+    return `<script src="${editor.dom.encode(url)}"${attrs.join('')}></script>`;
   }).join('');
 };
 
