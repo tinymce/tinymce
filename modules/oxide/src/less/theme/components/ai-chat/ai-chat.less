@@ -5,6 +5,17 @@
 
 .tox-ai {
   .tox-ai__user-prompt {
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    gap: inherit;
+  }
+
+  .tox-ai__user-prompt__context {
+    margin-left: auto;
+  }
+
+  .tox-ai__user-prompt__text {
     background-color: var(--tox-private-ai-user-prompt-background, darken(@background-color, 6%));
     padding: var(--tox-private-pad-sm, @pad-sm) 12px;
     border-radius: var(--tox-private-control-border-radius, @control-border-radius);
@@ -25,7 +36,7 @@
     align-self: stretch;
   }
 
-  .tox-ai-response__content {
+  .tox-ai__response-content {
     padding: var(--tox-private-pad-sm, @pad-sm) 0;
     color: var(--tox-private-text-color, @text-color);
     font-feature-settings: 'liga' off, 'clig' off;
@@ -44,10 +55,10 @@
   }
 
   .tox-ai__error-message {
-    border-radius: var(--lg, 6px);
+    border-radius: var(--tox-private-panel-border-radius, @panel-border-radius);
     border: 1px solid var(--tox-private-color-error, @color-error);
     background: linear-gradient(0deg, color-mix(in srgb, var(--tox-private-color-white, @color-white) 90%, transparent) 0%, color-mix(in srgb, var(--tox-private-color-white, @color-white) 90%, transparent) 100%),  var(--tox-private-color-error, @color-error);
-    padding: var(--lg, 8px);
+    padding: var(--tox-private-pad-sm, @pad-sm);
     width: 100%;
   }
 
@@ -65,4 +76,3 @@
     gap: var(--tox-private-pad-sm, @pad-sm);
   }
 }
-
