@@ -24,10 +24,10 @@ const isPlainTextFileUrl = (content: Clipboard.ClipboardContents): boolean => {
 };
 
 const setFocusedRange = (editor: Editor, rng: Range | undefined): void => {
-  editor.focus();
   if (rng) {
     editor.selection.setRng(rng);
   }
+  editor.focus();
 };
 
 const hasImage = (dataTransfer: DataTransfer): boolean =>
