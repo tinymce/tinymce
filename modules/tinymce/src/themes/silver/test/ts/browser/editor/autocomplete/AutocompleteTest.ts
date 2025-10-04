@@ -770,7 +770,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
   it('TINY-11273: Autocomplete should be triggered for content with font size formatting applied', async () => {
     const editor = hook.editor();
     editor.execCommand('FontSize', false, '36px');
-    TinyContentActions.type(editor, '+');
+    await TinyContentActions.pType(editor, '+');
     editor.dispatch('input');
     await pWaitForAutocompleteToOpen();
   });
@@ -778,7 +778,7 @@ describe('browser.tinymce.themes.silver.editor.autocomplete.AutocompleteTest', (
   it('TINY-11273: Autocomplete should be triggered for content with bold formatting applied', async () => {
     const editor = hook.editor();
     editor.execCommand('Bold');
-    TinyContentActions.type(editor, '+');
+    await TinyContentActions.pType(editor, '+');
     editor.dispatch('input');
     await pWaitForAutocompleteToOpen();
   });

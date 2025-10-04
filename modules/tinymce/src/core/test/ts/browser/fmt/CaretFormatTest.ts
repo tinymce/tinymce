@@ -61,12 +61,12 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     });
   };
 
-  it('Apply bold to caret and type bold text after the unformatted text', () => {
+  it('Apply bold to caret and type bold text after the unformatted text', async () => {
     const editor = hook.editor();
     editor.setContent('<p>a</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
     applyCaretFormat(editor, 'bold', {});
-    TinyContentActions.type(editor, 'x');
+    await TinyContentActions.pType(editor, 'x');
     TinyAssertions.assertContent(editor, '<p>a<strong>x</strong></p>');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
       return s.element('body', {
@@ -113,12 +113,12 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 1, [ 0, 0, 0 ], 1);
   });
 
-  it('Remove bold from caret and type after the bold text', () => {
+  it('Remove bold from caret and type after the bold text', async () => {
     const editor = hook.editor();
     editor.setContent('<p><strong>a</strong></p>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
     removeCaretFormat(editor, 'bold', {});
-    TinyContentActions.type(editor, 'x');
+    await TinyContentActions.pType(editor, 'x');
     TinyAssertions.assertContent(editor, '<p><strong>a</strong>x</p>');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
       return s.element('body', {
@@ -165,13 +165,13 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 0 ], 1, [ 0, 0 ], 1);
   });
 
-  it('Toggle bold format on and off and type after unformatted text', () => {
+  it('Toggle bold format on and off and type after unformatted text', async () => {
     const editor = hook.editor();
     editor.setContent('<p>a</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
     applyCaretFormat(editor, 'bold', {});
     removeCaretFormat(editor, 'bold', {});
-    TinyContentActions.type(editor, 'x');
+    await TinyContentActions.pType(editor, 'x');
     TinyAssertions.assertContent(editor, '<p>ax</p>');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
       return s.element('body', {
@@ -192,13 +192,13 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 2, [ 0, 1, 0 ], 2);
   });
 
-  it('Toggle bold format off and on and type after bold text', () => {
+  it('Toggle bold format off and on and type after bold text', async () => {
     const editor = hook.editor();
     editor.setContent('<p><strong>a</strong></p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
     removeCaretFormat(editor, 'bold', {});
     applyCaretFormat(editor, 'bold', {});
-    TinyContentActions.type(editor, 'x');
+    await TinyContentActions.pType(editor, 'x');
     TinyAssertions.assertContent(editor, '<p><strong>a</strong><strong>x</strong></p>');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
       return s.element('body', {
@@ -227,12 +227,12 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 1, 0, 0 ], 2, [ 0, 1, 0, 0 ], 2);
   });
 
-  it('Apply bold format to the end of text and with trailing br', () => {
+  it('Apply bold format to the end of text and with trailing br', async () => {
     const editor = hook.editor();
     editor.setContent('<p>a<br></p>', { format: 'raw' });
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
     applyCaretFormat(editor, 'bold', {});
-    TinyContentActions.type(editor, 'x');
+    await TinyContentActions.pType(editor, 'x');
     TinyAssertions.assertContent(editor, '<p>a<strong>x</strong></p>');
     assertNormalizedContentStructure(editor, ApproxStructure.build((s, str) => {
       return s.element('body', {
@@ -262,12 +262,12 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 1, 0, 0 ], 2, [ 0, 1, 0, 0 ], 2);
   });
 
-  it('Remove bold format from word with trailing br', () => {
+  it('Remove bold format from word with trailing br', async () => {
     const editor = hook.editor();
     editor.setContent('<p><strong>a<br></strong></p>', { format: 'raw' });
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
     removeCaretFormat(editor, 'bold', {});
-    TinyContentActions.type(editor, 'x');
+    await TinyContentActions.pType(editor, 'x');
     TinyAssertions.assertContent(editor, '<p><strong>a</strong>x</p>');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
       return s.element('body', {
@@ -290,7 +290,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 2, [ 0, 1, 0 ], 2);
   });
 
-  it('Remove bold format from empty paragraph and move selection', () => {
+  it('Remove bold format from empty paragraph and move selection', async () => {
     const editor = hook.editor();
     editor.setContent('<p>a</p><p><strong><br></strong></p>', { format: 'raw' });
     TinySelections.setCursor(editor, [ 1, 0, 0 ], 0);
@@ -319,7 +319,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
       });
     }));
     TinySelections.setCursor(editor, [ 0, 0 ], 1);
-    TinyContentActions.type(editor, 'x');
+    await TinyContentActions.pType(editor, 'x');
     TinyAssertions.assertContent(editor, '<p>ax</p>\n<p>&nbsp;</p>');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
       return s.element('body', {
@@ -337,16 +337,16 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     }));
   });
 
-  it('Apply bold to caret, type bold text, unbold and type text, then apply a ranged selection', () => {
+  it('Apply bold to caret, type bold text, unbold and type text, then apply a ranged selection', async () => {
     const editor = hook.editor();
     editor.setContent('<p></p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     applyCaretFormat(editor, 'bold', {});
-    TinyContentActions.type(editor, 'Hello');
+    await TinyContentActions.pType(editor, 'Hello');
     TinyAssertions.assertContent(editor, '<p><strong>Hello</strong></p>');
     TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0 ], 6, [ 0, 0, 0, 0 ], 6);
     removeCaretFormat(editor, 'bold', {});
-    TinyContentActions.type(editor, 'world');
+    await TinyContentActions.pType(editor, 'world');
     TinyAssertions.assertContent(editor, '<p><strong>Hello</strong>world</p>');
     TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 6, [ 0, 1, 0 ], 6);
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) =>
@@ -492,12 +492,12 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     assert.isFalse(CaretFormat.isFormatElement(editor, SugarElement.fromHtml('<span id="_mce_caret"></span>')), 'Should not be format element');
   });
 
-  it('Remove single format on multiple format span (End of line) (TINY-1170)', () => {
+  it('Remove single format on multiple format span (End of line) (TINY-1170)', async () => {
     const editor = hook.editor();
     editor.setContent('<p><span style="text-decoration: underline; font-size: 18px;">a</span></p>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 1);
     removeCaretFormat(editor, 'underline', {});
-    TinyContentActions.type(editor, 'x');
+    await TinyContentActions.pType(editor, 'x');
     TinyAssertions.assertContent(editor, '<p><span style="text-decoration: underline; font-size: 18px;">a</span><span style="font-size: 18px;">x</span></p>');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => s.element('body', {
       children: [
@@ -523,12 +523,12 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 1, 0, 0 ], 2, [ 0, 1, 0, 0 ], 2);
   });
 
-  it('Remove single format on multiple format span (Empty line) (TINY-1170)', () => {
+  it('Remove single format on multiple format span (Empty line) (TINY-1170)', async () => {
     const editor = hook.editor();
     editor.setContent('<p><span style="text-decoration: underline; font-size: 18px;"><br></span></p>');
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
     removeCaretFormat(editor, 'underline', {});
-    TinyContentActions.type(editor, 'x');
+    await TinyContentActions.pType(editor, 'x');
     TinyAssertions.assertContent(editor, '<p><span style="font-size: 18px;">x</span></p>');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => s.element('body', {
       children: [
@@ -553,12 +553,12 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0 ], 2, [ 0, 0, 0, 0 ], 2);
   });
 
-  it('Remove text decoration format on text color, text decoration span (Empty line) (TINY-1170)', () => {
+  it('Remove text decoration format on text color, text decoration span (Empty line) (TINY-1170)', async () => {
     const editor = hook.editor();
     editor.setContent('<p><span style="text-decoration: underline;"><span style="color: red; text-decoration: underline;"><br></span></span></p>');
     TinySelections.setCursor(editor, [ 0, 0, 0, 0 ], 0);
     removeCaretFormat(editor, 'underline', {});
-    TinyContentActions.type(editor, 'x');
+    await TinyContentActions.pType(editor, 'x');
     TinyAssertions.assertContent(editor, '<p><span style="color: red;">x</span></p>');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => s.element('body', {
       children: [
@@ -583,7 +583,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     TinyAssertions.assertSelection(editor, [ 0, 0, 0, 0 ], 2, [ 0, 0, 0, 0 ], 2);
   });
 
-  it('TINY-10132: Apply and remove multiple format to caret at the beginning of a paragraph', () => {
+  it('TINY-10132: Apply and remove multiple format to caret at the beginning of a paragraph', async () => {
     const formatActions: Action[] = [
       { type: 'apply', format: 'bold', options: {}},
       { type: 'apply', format: 'italic', options: {}},
@@ -594,7 +594,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     editor.setContent('<p>abc</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 0);
     handleCaretFormat(editor, formatActions);
-    TinyContentActions.type(editor, 'x');
+    await TinyContentActions.pType(editor, 'x');
     TinyAssertions.assertContent(editor, '<p><span style="text-decoration: underline;"><em>x</em></span>abc</p>');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) =>
       s.element('body', {
@@ -624,7 +624,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     TinyAssertions.assertCursor(editor, [ 0, 0, 0, 0, 0 ], 2);
   });
 
-  it('TINY-10132: Apply and remove multiple format to caret in an empty editor', () => {
+  it('TINY-10132: Apply and remove multiple format to caret in an empty editor', async () => {
     const formatActions: Action[] = [
       { type: 'apply', format: 'bold', options: {}},
       { type: 'apply', format: 'italic', options: {}},
@@ -636,7 +636,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     editor.setContent('');
     TinySelections.setCursor(editor, [ 0 ], 0);
     handleCaretFormat(editor, formatActions);
-    TinyContentActions.type(editor, 'x');
+    await TinyContentActions.pType(editor, 'x');
     TinyAssertions.assertContent(editor, '<p><em>x</em></p>');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
       return s.element('body', {
@@ -666,12 +666,12 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
   });
 
   // This test may or maynot be valid in the future, depending on how we want to handle the caret.
-  it('TINY-10132: Apply and remove multiple format to caret after formatted text', () => {
+  it('TINY-10132: Apply and remove multiple format to caret after formatted text', async () => {
     const editor = hook.editor();
     editor.setContent('<p><s><span style="text-decoration: underline;"><em><strong>abc</strong></em></span></s></p>');
     TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0, 0 ], 3);
     removeCaretFormat(editor, 'bold', {});
-    TinyContentActions.type(editor, 'x');
+    await TinyContentActions.pType(editor, 'x');
     TinyAssertions.assertContent(editor, '<p><s><span style="text-decoration: underline;"><em><strong>abc</strong>x</em></span></s></p>');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) =>
       s.element('body', {
@@ -711,7 +711,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
       })));
   });
 
-  it('TINY-10132: Remove and reapply format to caret after formatted text', () => {
+  it('TINY-10132: Remove and reapply format to caret after formatted text', async () => {
     const formatActions: Action[] = [
       { type: 'remove', format: 'bold', options: {}},
       { type: 'remove', format: 'underline', options: {}},
@@ -728,7 +728,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     editor.setContent('<p><s><span style="text-decoration: underline;"><em><strong>abc</strong></em></span></s></p>');
     TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0, 0 ], 3);
     handleCaretFormat(editor, formatActions);
-    TinyContentActions.type(editor, 'x');
+    await TinyContentActions.pType(editor, 'x');
     TinyAssertions.assertContent(editor, '<p><s><span style="text-decoration: underline;"><em><strong>abc</strong></em></span></s><s><em><span style="text-decoration: underline;">x</span></em></s></p>');
     TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
       return s.element('body', {
@@ -830,7 +830,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     }));
   });
 
-  it('TINY-10132: apply format to caret after text, before space, insert text then remove format', () => {
+  it('TINY-10132: apply format to caret after text, before space, insert text then remove format', async () => {
     const applyAction: Action[] = [
       { type: 'apply', format: 'bold', options: {}},
       { type: 'apply', format: 'underline', options: {}},
@@ -846,7 +846,7 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
     editor.setContent('<p>abc aaa</p>');
     TinySelections.setCursor(editor, [ 0, 0 ], 3);
     handleCaretFormat(editor, applyAction);
-    TinyContentActions.type(editor, 'x');
+    await TinyContentActions.pType(editor, 'x');
     TinyAssertions.assertContent(editor, '<p>abc<s><span style="text-decoration: underline;"><strong>x</strong></span></s> aaa</p>');
     handleCaretFormat(editor, removeAction);
     TinyAssertions.assertContent(editor, '<p>abc<s><span style="text-decoration: underline;"><strong>x</strong></span></s> aaa</p>');
@@ -893,24 +893,24 @@ describe('browser.tinymce.core.fmt.CaretFormatTest', () => {
   });
 
   context('Tag order normalization', () => {
-    it('TINY-12004: Re-order formats for strikethrough after font size', () => {
+    it('TINY-12004: Re-order formats for strikethrough after font size', async () => {
       const editor = hook.editor();
 
       editor.setContent('');
       editor.formatter.apply('fontsize', { value: '36pt' });
       editor.formatter.apply('strikethrough');
-      TinyContentActions.type(editor, 'x');
+      await TinyContentActions.pType(editor, 'x');
 
       TinyAssertions.assertContent(editor, '<p><span style="font-size: 36pt;"><s>x</s></span></p>');
     });
 
-    it('TINY-12004: Retain order formats for font size after strikethrough', () => {
+    it('TINY-12004: Retain order formats for font size after strikethrough', async () => {
       const editor = hook.editor();
 
       editor.setContent('');
       editor.formatter.apply('strikethrough');
       editor.formatter.apply('fontsize', { value: '36pt' });
-      TinyContentActions.type(editor, 'x');
+      await TinyContentActions.pType(editor, 'x');
 
       TinyAssertions.assertContent(editor, '<p><span style="font-size: 36pt;"><s>x</s></span></p>');
     });
