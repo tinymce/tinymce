@@ -5,11 +5,13 @@ export interface DraggableProps extends PropsWithChildren { }
 export interface DraggableHandleProps extends PropsWithChildren { }
 
 export interface Shift {
-  x: number; y: number;
+  x: number;
+  y: number;
 };
 
 export interface Position {
-  x: number; y: number;
+  x: number;
+  y: number;
 };
 
 export interface DraggableState {

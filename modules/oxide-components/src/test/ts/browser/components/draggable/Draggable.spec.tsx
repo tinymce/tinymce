@@ -144,7 +144,7 @@ describe('browser.draggable.Draggable', () => {
     const rect = draggableWrapper.getBoundingClientRect();
 
     // Try to move far beyond the window boundaries
-    const largeShift = [ -1 * window.innerWidth * 2, -1 * window.innerHeight * 2 ] as const;
+    const largeShift = [ window.innerWidth * -2, window.innerHeight * -2 ] as const;
 
     const { down, move, up } = mouse(handle);
     down();
