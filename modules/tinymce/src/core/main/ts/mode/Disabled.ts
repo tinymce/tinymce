@@ -74,54 +74,12 @@ const allowedEvents: ReadonlyArray<string> = [ 'copy' ];
 
 const isAllowedEventInDisabledMode = (e: Event) => Arr.contains(allowedEvents, e.type);
 
-const getAnchorHrefOpt = (element: SugarElement<Node>, rootElement: SugarElement<Node>): Optional<string> => {
-  const isRoot = (elm: SugarElement<Node>) => Compare.eq(elm, rootElement);
-  return SelectorFind.closest<HTMLAnchorElement>(element, 'a', isRoot).bind((a) => Attribute.getOpt(a, 'href'));
+const getAnchorHrefOpt = (editor: Editor, elm: SugarElement<Node>): Optional<string> => {
+  const isRoot = (elm: SugarElement<Node>) => Compare.eq(elm, SugarElement.fromDom(editor.getBody()));
+  return SelectorFind.closest<HTMLAnchorElement>(elm, 'a', isRoot).bind((a) => Attribute.getOpt(a, 'href'));
 };
 
 const processDisabledEvents = (editor: Editor, e: Event): void => {
-  if (handleAnchorClick(e, editor)) {
-    return;
-  }
-  if (handleSummaryClick(e, editor)) {
-    return;
-  }
-  if (isAllowedEventInDisabledMode(e)) {
-    editor.dispatch(e.type, e);
-  }
-};
-
-const handleSummaryClick = (e: Event, editor: Editor): boolean => {
-  /*
-    If an event is a click event on a summary element, then we want to prevent default browser behavior.
-    Accordions shouldn't be toggable in disabled editor.
-  */
-  const element = SugarElement.fromDom(e.target as Node);
-  const body = SugarElement.fromDom(editor.getBody());
-  if (isClickEvent(e)) {
-    return getClosestSummary(element, body).exists((closestSummary) => {
-      /*
-        Clicks on anchors should be handled by the `handleAnchorClick` method.
-        However clicks on anchor with metaKey are ignored by `handleAnchorClick`.
-        In this case: <summary><a href="link">link</a></summary>
-        click with metaKey should open link in the new tab so we can't prevent default for anchors.
-      */
-      if (getAnchorHrefOpt(element, closestSummary).isNone()) {
-        e.preventDefault();
-        return true;
-      }
-      return false;
-    });
-  }
-  return false;
-};
-
-const getClosestSummary = (element: SugarElement<Node>, rootElement: SugarElement<Node>): Optional<SugarElement<HTMLElement>> => {
-  const isRoot = (elm: SugarElement<Node>) => Compare.eq(elm, rootElement);
-  return SelectorFind.closest(element, 'summary', isRoot);
-};
-
-const handleAnchorClick = (e: Event, editor: Editor): boolean => {
   /*
     If an event is a click event on or within an anchor, and the CMD/CTRL key is
     not held, then we want to prevent default behaviour and either:
@@ -130,8 +88,7 @@ const handleAnchorClick = (e: Event, editor: Editor): boolean => {
   */
   if (isClickEvent(e) && !VK.metaKeyPressed(e)) {
     const elm = SugarElement.fromDom(e.target as Node);
-    const body = SugarElement.fromDom(editor.getBody());
-    return getAnchorHrefOpt(elm, body).exists((href) => {
+    getAnchorHrefOpt(editor, elm).each((href) => {
       e.preventDefault();
       if (/^#/.test(href)) {
         const targetEl = editor.dom.select(`${href},[name="${Strings.removeLeading(href, '#')}"]`);
@@ -141,10 +98,10 @@ const handleAnchorClick = (e: Event, editor: Editor): boolean => {
       } else {
         window.open(href, '_blank', 'rel=noopener noreferrer,menubar=yes,toolbar=yes,location=yes,status=yes,resizable=yes,scrollbars=yes');
       }
-      return true;
     });
+  } else if (isAllowedEventInDisabledMode(e)) {
+    editor.dispatch(e.type, e);
   }
-  return false;
 };
 
 const registerDisabledModeEventHandlers = (editor: Editor): void => {
