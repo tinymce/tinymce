@@ -175,4 +175,15 @@ describe('browser.draggable.Draggable', () => {
       y: Math.floor(window.innerHeight - (rect.y + rect.height))
     });
   });
+
+  it('TINY-12875: Should throw an error when Draggable.Handle redered outside of Draggable', async () => {
+    expect(() => {
+      render(
+        <Draggable.Handle>
+          <div data-testid={draggableHandleTestId} style={{ width: '100%', height: 50, backgroundColor: 'black' }}></div>
+        </Draggable.Handle>
+        , { wrapper: Wrapper }
+      );
+    }).toThrow('Draggable compound components must be rendered within the Draggable component');
+  });
 });
