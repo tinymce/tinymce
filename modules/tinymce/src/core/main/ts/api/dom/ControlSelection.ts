@@ -178,8 +178,11 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
             const minimumWidth = 400;
             if (target.width > minimumWidth && !(name === 'width' && value < minimumWidth)) {
               target[name] = value;
+              dom.setAttrib(target, name, '' + value);
             } else {
-              target[name] = name === 'height' ? minimumWidth * ratio : minimumWidth;
+              const value = name === 'height' ? minimumWidth * ratio : minimumWidth;
+              target[name] = value;
+              dom.setAttrib(target, name, '' + value);
             }
           } else {
             dom.setAttrib(target, name, '' + value);
