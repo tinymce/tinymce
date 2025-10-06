@@ -1,30 +1,23 @@
-import type { Boundries, Position, Shift, Size } from './types';
+import type { Boundries, Position, Size } from './types';
 
 const delta = (start: Position, end: Position): { deltaX: number; deltaY: number } => ({ deltaX: end.x - start.x, deltaY: end.y - start.y });
 
 const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
 
-const undoShift = (element: Position & Size, shift: Shift): Position & Size => ({
-  width: element.width,
-  height: element.height,
-  x: element.x - shift.x,
-  y: element.y - shift.y
-});
-
-const boundries = (element: Position & Size, upperLeftCorner: Position, bottomRightCorner: Position): Boundries => {
+const boundries = (element: Position & Size, startMousePosition: Position, upperLeftCorner: Position, bottomRightCorner: Position): Boundries => {
   const elementRight = element.x + element.width;
   const elementBottom = element.y + element.height;
 
   return {
-    shiftX: {
-      min: Math.ceil(-(element.x - upperLeftCorner.x)),
-      max: Math.floor(bottomRightCorner.x - elementRight)
+    x: {
+      min: Math.ceil(upperLeftCorner.x + (startMousePosition.x - element.x)),
+      max: Math.floor(bottomRightCorner.x - (elementRight - startMousePosition.x))
     },
-    shiftY: {
-      min: Math.ceil(-(element.y - upperLeftCorner.y)),
-      max: Math.floor(bottomRightCorner.y - elementBottom)
+    y: {
+      min: Math.ceil(upperLeftCorner.y + (startMousePosition.y - element.y)),
+      max: Math.floor(bottomRightCorner.y - (elementBottom - startMousePosition.y))
     }
   };
 };
 
-export { delta, clamp, boundries, undoShift };
+export { delta, clamp, boundries };
