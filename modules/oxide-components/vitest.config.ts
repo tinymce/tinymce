@@ -13,6 +13,21 @@ export default defineConfig({
     projects: [
       {
         test: {
+          name: 'atomic',
+          environment: 'node',
+          alias: [
+            {
+              find: 'oxide-components',
+              replacement: fileURLToPath(new URL('./src/main/ts/', import.meta.url))
+            }
+          ],
+          include: [
+            'src/test/ts/atomic/**/*.spec.ts'
+          ]
+        }
+      },
+      {
+        test: {
           name: 'browser',
           setupFiles: [ './vitest.setup.js' ],
           alias: [
