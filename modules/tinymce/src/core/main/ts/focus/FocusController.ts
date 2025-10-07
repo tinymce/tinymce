@@ -144,6 +144,8 @@ const setup = (editorManager: EditorManager): void => {
 };
 
 export {
-  isEditorContentAreaElement, isEditorUIElement, isUIElement, setup
+  setup,
+  isEditorUIElement,
+  isEditorContentAreaElement,
+  isUIElement
 };
-

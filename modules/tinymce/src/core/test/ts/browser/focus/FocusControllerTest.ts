@@ -115,7 +115,7 @@ describe('browser.tinymce.core.focus.FocusControllerTest', () => {
     });
 
     it('TINY-12017: Editor is inside the viewport once focused', async () => {
-      if (PlatformDetection.detect().browser.isSafari()) {
+      if (PlatformDetection.detect().browser.isSafari()) { // To be removed in TINY-13025
         return;
       }
 
