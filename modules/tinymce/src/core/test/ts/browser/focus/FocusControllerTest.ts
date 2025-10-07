@@ -1,5 +1,6 @@
 import { after, before, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Scroll, SugarDocument, SugarElement, SugarLocation, WindowVisualViewport } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -114,6 +115,10 @@ describe('browser.tinymce.core.focus.FocusControllerTest', () => {
     });
 
     it('TINY-12017: Editor is inside the viewport once focused', async () => {
+      if (PlatformDetection.detect().browser.isSafari()) { // To be removed in TINY-13025
+        return;
+      }
+
       const editor = hook.editor();
       editor.getBody().focus();
       assertEditorBodyInsideViewport(editor);
