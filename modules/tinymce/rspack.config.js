@@ -1,3 +1,5 @@
+// NOTE: This configuration is tested in test/config/rspack.config.test.js
+
 const path = require("path");
 const fs = require("fs");
 const fg = require("fast-glob");
@@ -26,14 +28,19 @@ const generateDemoIndex = (app) => {
     return acc;
   }, {});
 
-  const lists = Object.keys(sortedDemos).map(
-    type => `
+  const lists = Object.keys(sortedDemos).map(type => {
+    const items = sortedDemos[type]
+      .map(link => '<li>' + 
+        (type !== 'core' ? '<strong>' + escapeHtml(link.split('/')[2]) + '</strong> - ' : '') +
+        '<a href="' + escapeHtml(link) + '">' + escapeHtml(path.basename(link)) + '</a></li>')
+      .join('');
+    return `
     <h2>${type}</h2>
     <ul>
-      ${sortedDemos[type].map(link => `<li>${type !== 'core' ? `<strong>${escapeHtml(link.split('/')[2])}</strong> - ` : ''}<a href="${escapeHtml(link)}">${escapeHtml(path.basename(link))}</a></li>`).join('')
-      }
-    </ul>`
-  ).join('');
+      ${items}
+    </ul>`;
+  }).join('');
+
   const html = `
   <!DOCTYPE html>
   <html lang="en">
@@ -49,7 +56,7 @@ const generateDemoIndex = (app) => {
   </html>
   `;
 
-  app.get('/', (_, res) => res.send(html))
+  app.get('/', (_, res) => res.send(html));
 };
 
 const modulesDir = path.resolve(__dirname, "../");
@@ -58,14 +65,16 @@ const modulesDir = path.resolve(__dirname, "../");
 const alias = Object.fromEntries(
   fs.readdirSync(modulesDir).map((name) => {
     if (name === 'persona') {
-      return [`@tinymce/${name}`, path.join(modulesDir, name, "src/main/ts/main.ts")]
+      return [`@tinymce/${name}`, path.join(modulesDir, name, "src/main/ts/main.ts")];
     }
-    return [`@ephox/${name}`, path.join(modulesDir, name, "src/main/ts/ephox", name, "api/Main.ts")]
+    return [`@ephox/${name}`, path.join(modulesDir, name, "src/main/ts/ephox", name, "api/Main.ts")];
   })
 );
 
 function create(entries, tsConfig, outDir = ".") {
-  const resolvedEntries = Object.fromEntries(Object.entries(entries).map(([k, v]) => [k, path.resolve(__dirname, v)]));
+  const resolvedEntries = Object.fromEntries(
+    Object.entries(entries).map(([k, v]) => [k, path.resolve(__dirname, v)])
+  );
   return {
     context: __dirname,
     entry: resolvedEntries,

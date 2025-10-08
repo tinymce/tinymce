@@ -1,0 +1,13 @@
+{
+  "name": "tinymce-config-tests",
+  "version": "1.0.0",
+  "description": "Unit tests for TinyMCE rspack configuration",
+  "private": true,
+  "scripts": {
+    "test": "mocha rspack.config.test.js",
+    "test:watch": "mocha rspack.config.test.js --watch",
+    "test:verbose": "mocha rspack.config.test.js --reporter spec"
+  },
+  "keywords": ["tinymce", "rspack", "config", "tests"],
+  "author": "TinyMCE Team"
+}
