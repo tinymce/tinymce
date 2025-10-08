@@ -124,6 +124,10 @@ function create(entries, tsConfig, outDir = ".") {
             {
               loader: "builtin:swc-loader",
               options: {
+                jsc: {
+                  parser: { syntax: "typescript" },
+                  target: 'es2022',
+                },
                 sourceMaps: true
               },
             },
