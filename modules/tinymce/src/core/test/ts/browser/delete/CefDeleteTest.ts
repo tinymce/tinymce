@@ -366,7 +366,7 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
       // Move the cursor to after the button
       TinySelections.setCursor(editor, [ 0, 0, 0, 1, 2 ], 0);
       TinyContentActions.keystroke(editor, Keys.backspace());
-      TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0 ], 7);
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 0 ], 7);
       TinyAssertions.assertContent(editor, [
         '<table style="width: 500px;">',
         '<tbody>',
