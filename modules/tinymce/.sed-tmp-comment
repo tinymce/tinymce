@@ -1,0 +1,7 @@
+
+// The jsc (JavaScript Compiler) configuration is a core part of SWC that controls
+// how TypeScript/JavaScript code is parsed and transformed. The parser.syntax option
+// tells SWC to treat input files as TypeScript, enabling TypeScript-specific features
+// like type annotations, interfaces, and generics. The target option specifies the
+// ECMAScript version to compile down to - es2022 provides modern JavaScript features
+// while maintaining broad compatibility.

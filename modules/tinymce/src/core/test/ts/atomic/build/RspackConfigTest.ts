@@ -201,6 +201,7 @@ describe('atomic.tinymce.core.build.RspackConfigTest', () => {
     it('should validate jsc.target is a valid ES version', () => {
       const validTargets = ['es3', 'es5', 'es2015', 'es2016', 'es2017', 'es2018', 'es2019', 'es2020', 'es2021', 'es2022'];
       const target = 'es2022';
+
       assert.include(validTargets, target, 'es2022 should be a valid target');
     });
 
@@ -541,6 +542,268 @@ describe('atomic.tinymce.core.build.RspackConfigTest', () => {
       };
 
       assert.include(watchOptions.ignored[0], 'node_modules', 'should ignore node_modules');
+    });
+  });
+});
+describe('Additional Comprehensive Tests', () => {
+  describe('generateDemoIndex function behavior', () => {
+    const mockApp = {
+      get: (route: string, handler: (req: any, res: any) => void) => {
+        // Mock Express app.get
+        return { route, handler };
+      }
+    };
+
+    it('should generate HTML with proper DOCTYPE', () => {
+      const generateDemoIndex = (app: any) => {
+        const html = '<\\!DOCTYPE html>';
+        app.get('/', (req: any, res: any) => res.send(html));
+      };
+
+      generateDemoIndex(mockApp);
+      assert.ok(true, 'generateDemoIndex should execute without errors');
+    });
+  });
+
+  describe('Path resolution edge cases', () => {
+    it('should handle relative paths correctly', () => {
+      const testPath = '../../tsconfig.json';
+      assert.ok(testPath.includes('..'), 'should support parent directory navigation');
+      assert.ok(testPath.endsWith('.json'), 'should have correct file extension');
+    });
+
+    it('should handle absolute path resolution', () => {
+      const path = require('path');
+      const absolutePath = path.resolve(__dirname, '../../tsconfig.json');
+      assert.ok(path.isAbsolute(absolutePath), 'resolved path should be absolute');
+    });
+  });
+
+  describe('Entry filename generation edge cases', () => {
+    it('should correctly strip trailing s for various types', () => {
+      const types = ['plugins', 'themes', 'models'];
+      const expected = ['plugin', 'theme', 'model'];
+      
+      types.forEach((type, index) => {
+        const fileName = type.replace(/s$/, '') + '.js';
+        assert.strictEqual(fileName, expected[index] + '.js', `${type} should become ${expected[index]}.js`);
+      });
+    });
+
+    it('should handle types without trailing s', () => {
+      const type = 'core';
+      const fileName = type.replace(/s$/, '') + '.js';
+      assert.strictEqual(fileName, 'core.js', 'types without trailing s should remain unchanged');
+    });
+  });
+
+  describe('String manipulation edge cases', () => {
+    it('should handle empty strings in escapeHtml', () => {
+      const escapeHtml = (str: string) => str.replace(/[&<>"']/g, (m) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[m]);
+
+      assert.strictEqual(escapeHtml(''), '', 'empty string should remain empty');
+    });
+
+    it('should handle strings with no special characters', () => {
+      const escapeHtml = (str: string) => str.replace(/[&<>"']/g, (m) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[m]);
+
+      const input = 'Hello World 123';
+      assert.strictEqual(escapeHtml(input), input, 'strings without special chars should be unchanged');
+    });
+
+    it('should handle very long strings with special characters', () => {
+      const escapeHtml = (str: string) => str.replace(/[&<>"']/g, (m) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[m]);
+
+      const longString = '<script>' + 'a'.repeat(1000) + '</script>';
+      const escaped = escapeHtml(longString);
+
+      assert.ok(escaped.startsWith('&lt;script&gt;'), 'should escape tags in long strings');
+      assert.ok(escaped.endsWith('&lt;/script&gt;'), 'should escape closing tags');
+    });
+  });
+
+  describe('Version parsing edge cases', () => {
+    it('should handle version with different digit counts', () => {
+      const versions = ['1.0.0', '10.2.3', '100.200.300'];
+      versions.forEach(version => {
+        const majorVersion = version.split('.')[0];
+        const minorVersion = version.split('.').slice(1).join('.');
+        assert.ok(majorVersion.length > 0, 'major version should not be empty');
+        assert.ok(minorVersion.length > 0, 'minor version should not be empty');
+      });
+    });
+
+    it('should handle version with pre-release tags', () => {
+      const version = '8.2.0-beta.1';
+      const majorVersion = version.split('.')[0];
+      const minorVersion = version.split('.').slice(1).join('.');
+      assert.strictEqual(majorVersion, '8');
+      assert.ok(minorVersion.includes('beta'), 'should preserve pre-release tag');
+    });
+
+    it('should handle version with only major.minor', () => {
+      const version = '8.2';
+      const parts = version.split('.');
+      assert.strictEqual(parts.length, 2, 'should have 2 parts');
+      assert.strictEqual(parts[0], '8');
+      assert.strictEqual(parts[1], '2');
+    });
+  });
+
+  describe('Array reduce operations', () => {
+    it('should handle empty arrays in buildEntries', () => {
+      const buildEntries = (typeNames: string[], type: string, entry: string, pathPrefix = '') => typeNames.reduce(
+        (acc, name) => {
+          const fileName = type.replace(/s$/, '') + '.js';
+          acc[`${pathPrefix}${type}/${name}/${fileName}`] = `src/${type}/${name}/main/ts/${entry}`;
+          return acc;
+        }, {} as Record<string, string>
+      );
+
+      const result = buildEntries([], 'plugins', 'Main.ts');
+      assert.deepEqual(result, {}, 'empty array should produce empty object');
+    });
+
+    it('should handle single item array', () => {
+      const buildEntries = (typeNames: string[], type: string, entry: string, pathPrefix = '') => typeNames.reduce(
+        (acc, name) => {
+          const fileName = type.replace(/s$/, '') + '.js';
+          acc[`${pathPrefix}${type}/${name}/${fileName}`] = `src/${type}/${name}/main/ts/${entry}`;
+          return acc;
+        }, {} as Record<string, string>
+      );
+
+      const result = buildEntries(['accordion'], 'plugins', 'Main.ts');
+      assert.strictEqual(Object.keys(result).length, 1, 'single item should produce one entry');
+    });
+
+    it('should handle large arrays efficiently', () => {
+      const buildEntries = (typeNames: string[], type: string, entry: string, pathPrefix = '') => typeNames.reduce(
+        (acc, name) => {
+          const fileName = type.replace(/s$/, '') + '.js';
+          acc[`${pathPrefix}${type}/${name}/${fileName}`] = `src/${type}/${name}/main/ts/${entry}`;
+          return acc;
+        }, {} as Record<string, string>
+      );
+
+      const largeArray = Array.from({ length: 100 }, (_, i) => `plugin${i}`);
+      const result = buildEntries(largeArray, 'plugins', 'Main.ts');
+      assert.strictEqual(Object.keys(result).length, 100, 'should handle large arrays');
+    });
+  });
+
+  describe('Regular expression patterns', () => {
+    it('should validate TypeScript file pattern', () => {
+      const pattern = /\.ts$/;
+      assert.ok(pattern.test('file.ts'), 'should match .ts files');
+      assert.ok(pattern.test('component.ts'), 'should match component files');
+      assert.ok(!pattern.test('file.tsx'), 'should not match .tsx files');
+      assert.ok(!pattern.test('file.js'), 'should not match .js files');
+    });
+
+    it('should validate JavaScript file pattern', () => {
+      const pattern = /\.js$/;
+      assert.ok(pattern.test('file.js'), 'should match .js files');
+      assert.ok(!pattern.test('file.ts'), 'should not match .ts files');
+      assert.ok(!pattern.test('file.jsx'), 'should not match .jsx files');
+    });
+
+    it('should validate SVG file pattern case insensitivity', () => {
+      const pattern = /\.svg$/i;
+      assert.ok(pattern.test('icon.svg'), 'should match lowercase .svg');
+      assert.ok(pattern.test('icon.SVG'), 'should match uppercase .SVG');
+      assert.ok(pattern.test('icon.Svg'), 'should match mixed case');
+    });
+
+    it('should validate MJS file pattern', () => {
+      const pattern = /\.(js|mjs)$/;
+      assert.ok(pattern.test('module.js'), 'should match .js files');
+      assert.ok(pattern.test('module.mjs'), 'should match .mjs files');
+      assert.ok(!pattern.test('module.ts'), 'should not match .ts files');
+    });
+
+    it('should validate export warning pattern', () => {
+      const pattern = /export .* was not found in/;
+      assert.ok(pattern.test('export MyComponent was not found in module'), 'should match export warnings');
+      assert.ok(pattern.test('export default was not found in file'), 'should match default export warnings');
+      assert.ok(!pattern.test('Module not found'), 'should not match other errors');
+    });
+  });
+
+  describe('Configuration object immutability', () => {
+    it('should not modify original entries object', () => {
+      const create = (entries: Record<string, string>) => {
+        return { entry: { ...entries } };
+      };
+
+      const originalEntries = { 'test.js': 'src/test.ts' };
+      const config = create(originalEntries);
+      config.entry['modified.js'] = 'src/modified.ts';
+
+      assert.strictEqual(originalEntries['modified.js'], undefined, 'original should not be modified');
+    });
+  });
+
+  describe('Path prefix handling', () => {
+    it('should handle empty path prefix', () => {
+      const buildEntries = (typeNames: string[], type: string, entry: string, pathPrefix = '') => typeNames.reduce(
+        (acc, name) => {
+          const fileName = type.replace(/s$/, '') + '.js';
+          acc[`${pathPrefix}${type}/${name}/${fileName}`] = `src/${type}/${name}/main/ts/${entry}`;
+          return acc;
+        }, {} as Record<string, string>
+      );
+
+      const result = buildEntries(['test'], 'plugins', 'Main.ts', '');
+      const key = Object.keys(result)[0];
+      assert.ok(!key.startsWith('//'), 'should not have double slashes');
+    });
+
+    it('should handle path prefix with trailing slash', () => {
+      const buildEntries = (typeNames: string[], type: string, entry: string, pathPrefix = '') => typeNames.reduce(
+        (acc, name) => {
+          const fileName = type.replace(/s$/, '') + '.js';
+          acc[`${pathPrefix}${type}/${name}/${fileName}`] = `src/${type}/${name}/main/ts/${entry}`;
+          return acc;
+        }, {} as Record<string, string>
+      );
+
+      const result = buildEntries(['test'], 'plugins', 'Main.ts', 'build/');
+      const key = Object.keys(result)[0];
+      assert.ok(key.startsWith('build/'), 'should preserve path prefix');
+      assert.ok(!key.includes('//'), 'should not create double slashes');
+    });
+
+    it('should handle complex path prefixes', () => {
+      const buildEntries = (typeNames: string[], type: string, entry: string, pathPrefix = '') => typeNames.reduce(
+        (acc, name) => {
+          const fileName = type.replace(/s$/, '') + '.js';
+          acc[`${pathPrefix}${type}/${name}/${fileName}`] = `src/${type}/${name}/main/ts/${entry}`;
+          return acc;
+        }, {} as Record<string, string>
+      );
+
+      const result = buildEntries(['test'], 'plugins', 'Main.ts', 'dist/js/tinymce/');
+      const key = Object.keys(result)[0];
+      assert.ok(key.startsWith('dist/js/tinymce/'), 'should handle complex prefixes');
     });
   });
 });

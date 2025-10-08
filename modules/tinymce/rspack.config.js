@@ -124,6 +124,7 @@ function create(entries, tsConfig, outDir = ".") {
             {
               loader: "builtin:swc-loader",
               options: {
+                // SWC JSC configuration for TypeScript compilation
                 jsc: {
                   parser: { syntax: "typescript" },
                   target: 'es2022',
