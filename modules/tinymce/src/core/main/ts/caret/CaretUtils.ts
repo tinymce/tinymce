@@ -78,9 +78,9 @@ const getEditingHost = (node: Node, rootNode: HTMLElement): HTMLElement => {
     .getOr(rootNode);
 };
 
-const isAbsolutelyPositioned = (el: Element): boolean => Css.get(SugarElement.fromDom(el), 'position') === 'absolute';
+const isAbsPositionedElement = (node: Node): boolean => NodeType.isElement(node) && Css.get(SugarElement.fromDom(node), 'position') === 'absolute';
 
-const isAbsolutelyPositionedCEFElement = (node: Node) => isContentEditableFalse(node) && isAbsolutelyPositioned(node);
+const isAbsolutelyPositionedCEFElement = (node: Node) => isContentEditableFalse(node) && isAbsPositionedElement(node);
 
 const getParentBlock = (node: Node | null, rootNode?: Node): Node | null => {
   while (node && node !== rootNode) {
@@ -325,5 +325,5 @@ export {
   getElementFromPrevPosition,
   getVisualCaretPosition,
   getChildNodeAtRelativeOffset,
-  isAbsolutelyPositioned
+  isAbsPositionedElement
 };
