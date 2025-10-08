@@ -1,5 +1,4 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { Css, SugarElement } from '@ephox/sugar';
 
 import type Editor from '../api/Editor';
 import * as CaretContainer from '../caret/CaretContainer';
@@ -28,11 +27,9 @@ const moveToRange = (editor: Editor, rng: Range): void => {
 const renderRangeCaretOpt = (editor: Editor, range: Range, scrollIntoView: boolean): Optional<Range> =>
   Optional.some(FakeCaretUtils.renderRangeCaret(editor, range, scrollIntoView));
 
-const isAbsolutelyPositioned = (el: Element) => Css.get(SugarElement.fromDom(el), 'position') === 'absolute';
-
 const getAbsPositionElement = (pos: CaretPosition, direction: HDirection) => {
   const node = pos.getNode(direction === HDirection.Backwards);
-  return NodeType.isElement(node) && isAbsolutelyPositioned(node) ? Optional.some(node) : Optional.none();
+  return NodeType.isElement(node) && CaretUtils.isAbsolutelyPositioned(node) ? Optional.some(node) : Optional.none();
 };
 
 const elementToRange = (editor: Editor, node: Node) => {
@@ -52,7 +49,7 @@ const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, i
     const node = RangeNodes.getSelectedNode(range);
     if (isElement(node)) {
 
-      if (isAbsolutelyPositioned(node)) {
+      if (CaretUtils.isAbsolutelyPositioned(node)) {
         const caretPosition = CaretUtils.getNormalizedRangeEndPoint(direction, editor.getBody(), range);
         return Optional.from(getNextPosFn(caretPosition)).map((next) => next.toRange());
       } else {
