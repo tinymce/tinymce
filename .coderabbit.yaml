@@ -39,6 +39,8 @@ reviews:
   finishing_touches:
     docstrings:
       enabled: false
+    unit_tests:
+      enabled: false
   tools:
     shellcheck:
       enabled: true
