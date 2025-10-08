@@ -28,7 +28,7 @@ const renderRangeCaretOpt = (editor: Editor, range: Range, scrollIntoView: boole
 
 const getAbsPositionElement = (pos: CaretPosition, direction: HDirection) => {
   const node = pos.getNode(direction === HDirection.Backwards);
-  return !Type.isUndefined(node) && CaretUtils.isAbsPositionedElement(node) ? Optional.some(node) : Optional.none();
+  return Type.isNonNullable(node) && CaretUtils.isAbsPositionedElement(node) ? Optional.some(node) : Optional.none();
 };
 
 const elementToRange = (editor: Editor, node: Node) => {
