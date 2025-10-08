@@ -15,3 +15,4 @@
 *.rm binary
 *.dcr binary
 *.sketch binary
+modules/oxide-components/src/test/ts/visual.spec.ts-snapshots/*.png filter=lfs diff=lfs merge=lfs -text
