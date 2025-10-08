@@ -1,0 +1,24 @@
+{
+  "outputFormatters": [
+    [
+      "markdownlint-cli2-formatter-json"
+    ]
+  ],
+  "config": {
+    "default": true,
+    "line-length": false,
+    "no-duplicate-heading": {
+      "siblings_only": true
+    },
+    "no-trailing-punctuation": {
+      "punctuation": ".,;:"
+    },
+    "ol-prefix": false,
+    "list-marker-space": false,
+    "no-inline-html": false,
+    "first-line-h1": false,
+    "no-trailing-spaces": false,
+    "single-h1": false,
+    "blank_lines": false
+  }
+}

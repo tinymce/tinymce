@@ -1,0 +1,73 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.1.2/schema.json",
+  "formatter": {
+    "enabled": false
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "a11y": {
+        "recommended": false
+      },
+      "correctness": {
+        "useExhaustiveDependencies": "off",
+        "noInnerDeclarations": "off"
+      },
+      "style": {
+        "recommended": false,
+        "noUselessElse": "warn",
+        "useAsConstAssertion": "off",
+        "useBlockStatements": "off",
+        "useConsistentArrayType": "off",
+        "useDefaultParameterLast": "warn",
+        "useEnumInitializers": "off",
+        "useExponentiationOperator": "warn",
+        "useExportType": "off",
+        "useFragmentSyntax": "off",
+        "useImportType": "off",
+        "useLiteralEnumMembers": "warn",
+        "noUnusedTemplateLiteral": "off",
+        "useConst": "warn",
+        "useShorthandAssign": "warn",
+        "useTemplate": "warn"
+      },
+      "complexity": {
+        "noForEach": "off",
+        "noExcessiveCognitiveComplexity": {
+          "level": "off",
+          "options": {
+            "maxAllowedComplexity": 25
+          }
+        },
+        "useLiteralKeys": "off",
+        "useArrowFunction": "off",
+        "useFlatMap": "off"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "off",
+        "noExplicitAny": "off",
+        "noImplicitAnyLet": "off",
+        "noDoubleEquals": "off",
+        "noGlobalIsNan": "off",
+        "noAssignInExpressions": "off"
+      },
+      "nursery": {
+        "recommended": false
+      }
+    }
+  },
+  "css": {
+    "linter": {
+      "enabled": true
+    },
+    "parser": {
+      "cssModules": true
+    }
+  },
+  "javascript": {
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
+    }
+  }
+}
