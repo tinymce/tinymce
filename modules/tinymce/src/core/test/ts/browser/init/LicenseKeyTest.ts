@@ -1,4 +1,4 @@
-import { Waiter } from '@ephox/agar';
+import { ConsoleReader, Waiter } from '@ephox/agar';
 import { afterEach, before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { McEditor } from '@ephox/wrap-mcagar';
@@ -9,8 +9,6 @@ import type { TinyMCE } from 'tinymce/core/api/Tinymce';
 import 'tinymce';
 import Model from 'tinymce/models/dom/Model';
 import Theme from 'tinymce/themes/silver/Theme';
-
-import * as ConsoleReader from '../../module/test/ConsoleReader';
 
 declare const tinymce: TinyMCE;
 
@@ -389,7 +387,7 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
           ].join(' '),
         ],
         notificationMessages: [
-          { text: 'Premium plugins have been disabled for the provided TinyMCE license key.', type: 'warning' }
+          { text: 'One or more premium plugins are disabled due to license key restrictions.', type: 'warning' }
         ],
       });
       McEditor.remove(editor);

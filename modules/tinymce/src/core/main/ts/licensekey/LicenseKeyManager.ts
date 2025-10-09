@@ -1,4 +1,4 @@
-import { Cell, Type } from '@ephox/katamari';
+import { Type } from '@ephox/katamari';
 
 import AddOnManager, { type AddOnConstructor } from '../api/AddOnManager';
 import type Editor from '../api/Editor';
@@ -25,8 +25,8 @@ export interface LicenseKeyManager {
   readonly validate: (data: ValidateData) => Promise<boolean>;
 }
 
-const NoLicenseKeyManager = (editor: Editor): LicenseKeyManager => {
-  const hasShownPluginNotification = Cell(false);
+const createFallbackLicenseKeyManager = (canValidate: boolean) => (editor: Editor): LicenseKeyManager => {
+  let hasShownPluginNotification = false;
   return {
     validate: (data) => {
       const { plugin } = data;
@@ -34,28 +34,15 @@ const NoLicenseKeyManager = (editor: Editor): LicenseKeyManager => {
       // Premium plugins are not allowed
       if (hasPlugin) {
         LicenseKeyReporting.reportInvalidPlugin(editor, plugin, hasShownPluginNotification);
-        hasShownPluginNotification.set(true);
+        hasShownPluginNotification = true;
       }
-      return Promise.resolve(false);
+      return Promise.resolve(canValidate && !hasPlugin);
     },
   };
 };
 
-const GplLicenseKeyManager = (editor: Editor): LicenseKeyManager => {
-  const hasShownPluginNotification = Cell(false);
-  return {
-    validate: (data) => {
-      const { plugin } = data;
-      const hasPlugin = Type.isString(plugin);
-      // Premium plugins are not allowed if 'gpl' is given as the license_key
-      if (hasPlugin) {
-        LicenseKeyReporting.reportInvalidPlugin(editor, plugin, hasShownPluginNotification);
-        hasShownPluginNotification.set(true);
-      }
-      return Promise.resolve(!hasPlugin);
-    },
-  };
-};
+const NoLicenseKeyManager = createFallbackLicenseKeyManager(false);
+const GplLicenseKeyManager = createFallbackLicenseKeyManager(true);
 
 const ADDON_KEY = 'manager';
 const PLUGIN_CODE = LicenseKeyUtils.PLUGIN_CODE;

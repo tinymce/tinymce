@@ -1,5 +1,3 @@
-import type { Cell } from '@ephox/katamari';
-
 import type Editor from '../api/Editor';
 import * as MessageReporter from '../MessageReporter';
 
@@ -47,7 +45,7 @@ const reportLoadError = (editor: Editor, onlineStatus: OnlineStatus): void => {
   });
 };
 
-const reportInvalidPlugin = (editor: Editor, pluginCode: string, hasShownPluginNotification: Cell<boolean>): void => {
+const reportInvalidPlugin = (editor: Editor, pluginCode: string, hasShownPluginNotification: boolean): void => {
   const baseMessage = `The "${pluginCode}" plugin requires a valid TinyMCE license key.`;
   MessageReporter.reportMessage(editor, {
     console: {
@@ -57,10 +55,10 @@ const reportInvalidPlugin = (editor: Editor, pluginCode: string, hasShownPluginN
         DOCS_URL_MESSAGE
       ].join(' ')
     },
-    ...hasShownPluginNotification.get() ? {} : {
+    ...hasShownPluginNotification ? {} : {
       editor: {
         type: 'warning',
-        message: `Premium plugins have been disabled for the provided TinyMCE license key.`
+        message: `One or more premium plugins are disabled due to license key restrictions.`
       }
     }
   });
