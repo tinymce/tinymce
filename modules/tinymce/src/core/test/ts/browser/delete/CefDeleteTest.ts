@@ -333,7 +333,7 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
       TinyAssertions.assertContent(editor, `<p>Left textLinus</p>`);
     });
 
-    it(`TINY-10562: should delete absolute element in table when backspace is pressed`, () => {
+    it('TINY-10562: should delete absolute element in table when backspace is pressed', () => {
       const editor = hook.editor();
       editor.setContent(`
         <table style="width: 500px;">
@@ -384,6 +384,24 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
         '</tbody>',
         '</table>' ].join(''));
     });
-  });
 
+    it('TINY-10562: should delete absolute element that is adjacent to <br> when backspace is pressed', () => {
+      const editor = hook.editor();
+      editor.setContent(
+        `<p>Left text<span style="position: absolute; right: 30px;" contenteditable="false"> button </span><br>Linus</p>`
+      );
+
+      // Move the cursor to after <br>ie: '<br>L|inus'
+      TinySelections.setCursor(editor, [ 0, 3 ], 1);
+
+      // Remove <br>L
+      TinyContentActions.keystroke(editor, Keys.backspace());
+      TinyAssertions.assertContent(editor, '<p>Left text<span style="position: absolute; right: 30px;" contenteditable="false"> button </span>inus</p>');
+      TinyAssertions.assertCursor(editor, [ 0, 2 ], 1);
+      // Remove absolute CEF
+      TinyContentActions.keystroke(editor, Keys.backspace());
+      TinyAssertions.assertContent(editor, '<p>Left textinus</p>');
+      TinyAssertions.assertCursor(editor, [ 0, 0 ], 9);
+    });
+  });
 });
