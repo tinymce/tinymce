@@ -210,12 +210,17 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
     );
 
     // Move the cursor to 'Left text|'
-    TinySelections.setCursor(editor, [ 0, 0 ], 'Left text'.length);
+    TinySelections.setCursor(editor, [ 0, 0 ], 'Left text'.length - 1);
     TinyContentActions.keydown(editor, Keys.right());
 
-    // Move back to the absolute CEF button
+    // Fake caret is inserted
+    TinyAssertions.assertCursor(editor, [ 0, 1 ], 0);
+
+    // Move to the absolute CEF button
+    TinyContentActions.keydown(editor, Keys.right());
     assertNode(editor, (node) => Attribute.has(SugarElement.fromDom(node), 'data-mce-selected'));
-    // Move the cursor to '|Linus'
+
+    // Move the cursor to after the button
     TinyContentActions.keydown(editor, Keys.right());
     TinyAssertions.assertCursor(editor, [ 0, 3 ], 0);
 
@@ -223,9 +228,6 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
     TinyContentActions.keydown(editor, Keys.left());
     assertNode(editor, (node) => Attribute.has(SugarElement.fromDom(node), 'data-mce-selected'));
 
-    // Move the cursor to 'Left text|'
-    TinyContentActions.keydown(editor, Keys.left());
-    TinyAssertions.assertCursor(editor, [ 0, 0 ], 'Left text'.length);
   });
 
   it('TINY-10306: should navigate around position:absolute CEF in a table', () => {
@@ -259,20 +261,22 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
     // Move the cursor to the button
     TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0 ], 'Tobias'.length);
     TinyContentActions.keydown(editor, Keys.right());
+    // Fake caret is inserted
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 1 ], 0);
+
     TinyContentActions.keydown(editor, Keys.right());
     assertNode(editor, (node) => Attribute.has(SugarElement.fromDom(node), 'data-mce-selected') && NodeType.matchNodeNames( [ 'BUTTON' ])(node));
 
-    // Move to '|Linus'
+    // Cursor moved to between button and Linus
     TinyContentActions.keydown(editor, Keys.right());
-    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 2 ], 0);
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 2 ], 1);
 
     // Reverse to the button
     TinyContentActions.keydown(editor, Keys.left());
     assertNode(editor, (node) => Attribute.has(SugarElement.fromDom(node), 'data-mce-selected') && NodeType.matchNodeNames( [ 'BUTTON' ])(node));
 
-    // Back to 'Tobias|'
+    // Fake caret is inserted before button
     TinyContentActions.keydown(editor, Keys.left());
-    // TINY-12922: Improve keyboard navigation from and to the floated element. In this case, the cursor is actually moved to `Tobias |` when navigating backward.
-    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 0 ], 7);
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 1 ], 0);
   });
 });

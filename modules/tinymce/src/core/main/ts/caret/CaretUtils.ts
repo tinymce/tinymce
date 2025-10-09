@@ -1,5 +1,5 @@
 import { Fun, Optional } from '@ephox/katamari';
-import { PredicateFind, SugarElement } from '@ephox/sugar';
+import { Css, PredicateFind, SugarElement } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import * as NodeType from '../dom/NodeType';
@@ -78,9 +78,15 @@ const getEditingHost = (node: Node, rootNode: HTMLElement): HTMLElement => {
     .getOr(rootNode);
 };
 
+const isAbsPositionedElement = (node: Node): boolean => NodeType.isElement(node) && Css.get(SugarElement.fromDom(node), 'position') === 'absolute';
+const isInlineBlock = (node: Node, rootNode?: Node | null) => node.parentNode !== rootNode;
+const isInlineAbsPositionedCEF = (node: Node, rootNode?: Node) => isContentEditableFalse(node) && isAbsPositionedElement(node) && isInlineBlock(node, rootNode);
+
 const getParentBlock = (node: Node | null, rootNode?: Node): Node | null => {
   while (node && node !== rootNode) {
-    if (isBlockLike(node)) {
+    // Exclude inline absolutely positioned CEF elements since they have 'display: block'
+    // Created TINY-12922 to improve handling non CEF elements
+    if (isBlockLike(node) && !isInlineAbsPositionedCEF(node, rootNode)) {
       return node;
     }
 
@@ -318,5 +324,6 @@ export {
   getElementFromPosition,
   getElementFromPrevPosition,
   getVisualCaretPosition,
-  getChildNodeAtRelativeOffset
+  getChildNodeAtRelativeOffset,
+  isAbsPositionedElement
 };

@@ -318,4 +318,90 @@ describe('browser.tinymce.core.delete.CefDeleteTest', () => {
       });
     });
   });
+
+  context('delete absolutely positioned cef', () => {
+    it(`TINY-10562: should delete absolute element when backspace is pressed`, () => {
+      const editor = hook.editor();
+      editor.setContent(
+        `<p>Left text<span style="position: absolute; right: 30px;" contenteditable="false"> button </span>Linus</p>`
+      );
+
+      // Move the cursor to before Linus ie: '|Linus'
+      TinySelections.setCursor(editor, [ 0, 2 ], 0);
+      TinyContentActions.keystroke(editor, Keys.backspace());
+      TinyAssertions.assertCursor(editor, [ 0, 0 ], 9);
+      TinyAssertions.assertContent(editor, `<p>Left textLinus</p>`);
+    });
+
+    it('TINY-10562: should delete absolute element in table when backspace is pressed', () => {
+      const editor = hook.editor();
+      editor.setContent(`
+        <table style="width: 500px;">
+          <tbody>
+          <tr>
+            <td>Emil</td>
+            <td style="position: relative;">
+              Tobias
+              <button
+              contenteditable="false"
+              style="
+                position:absolute;
+                right:30px;
+              "
+              >
+              button
+            </button>
+            Linus
+            </td>
+          </tr>
+          <tr>
+            <td>16</td>
+            <td>14</td>
+            <td>10</td>
+          </tr>
+          </tbody>
+        </table>`
+      );
+
+      // Move the cursor to after the button
+      TinySelections.setCursor(editor, [ 0, 0, 0, 1, 2 ], 0);
+      TinyContentActions.keystroke(editor, Keys.backspace());
+      TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 0 ], 7);
+      TinyAssertions.assertContent(editor, [
+        '<table style="width: 500px;">',
+        '<tbody>',
+        '<tr>',
+        '<td>Emil</td>',
+        '<td style="position: relative;">',
+        'Tobias Linus',
+        '</td>',
+        '</tr>',
+        '<tr>',
+        '<td>16</td>',
+        '<td>14</td>',
+        '<td>10</td>',
+        '</tr>',
+        '</tbody>',
+        '</table>' ].join(''));
+    });
+
+    it('TINY-10562: should delete absolute element that is adjacent to <br> when backspace is pressed', () => {
+      const editor = hook.editor();
+      editor.setContent(
+        `<p>Left text<span style="position: absolute; right: 30px;" contenteditable="false"> button </span><br>Linus</p>`
+      );
+
+      // Move the cursor to after <br>ie: '<br>L|inus'
+      TinySelections.setCursor(editor, [ 0, 3 ], 1);
+
+      // Remove <br>L
+      TinyContentActions.keystroke(editor, Keys.backspace());
+      TinyAssertions.assertContent(editor, '<p>Left text<span style="position: absolute; right: 30px;" contenteditable="false"> button </span>inus</p>');
+      TinyAssertions.assertCursor(editor, [ 0, 2 ], 1);
+      // Remove absolute CEF
+      TinyContentActions.keystroke(editor, Keys.backspace());
+      TinyAssertions.assertContent(editor, '<p>Left textinus</p>');
+      TinyAssertions.assertCursor(editor, [ 0, 0 ], 9);
+    });
+  });
 });
