@@ -86,7 +86,7 @@ const getParentBlock = (node: Node | null, rootNode?: Node): Node | null => {
   while (node && node !== rootNode) {
     // Exclude inline absolutely positioned CEF elements since they have 'display: block'
     // Created TINY-12922 to improve handling non CEF elements
-    if (isBlockLike(node) && !isInlineAbsPositionedCEF(node)) {
+    if (isBlockLike(node) && !isInlineAbsPositionedCEF(node, rootNode)) {
       return node;
     }
 
