@@ -45,7 +45,7 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
   it('Test keystroke and assert word count', async () => {
     const editor = hook.editor();
     await pWaitForWordcount(0);
-    TinyContentActions.type(editor, 'a b c');
+    await TinyContentActions.pType(editor, 'a b c');
     await pWaitForWordcount(3);
   });
 
@@ -205,7 +205,7 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
     await pWaitForWordcount(1);
     editor.execCommand('Bold');
     await pWaitForWordcount(1);
-    TinyContentActions.type(editor, 'b');
+    await TinyContentActions.pType(editor, 'b');
     await pWaitForWordcount(1);
   });
 

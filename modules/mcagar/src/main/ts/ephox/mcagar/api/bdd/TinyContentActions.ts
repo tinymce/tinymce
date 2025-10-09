@@ -1,7 +1,6 @@
 import { Keyboard, Mouse } from '@ephox/agar';
 
 import type { Editor } from '../../alien/EditorTypes';
-import * as TypeText from '../../keyboard/TypeText';
 import { TinyDom } from '../TinyDom';
 
 const keydown = (editor: Editor, keyvalue: number, modifiers: Keyboard.KeyModifiers = {}): void =>
@@ -16,8 +15,8 @@ const keypress = (editor: Editor, keyvalue: number, modifiers: Keyboard.KeyModif
 const keystroke = (editor: Editor, keyvalue: number, modifiers: Keyboard.KeyModifiers = {}): void =>
   Keyboard.activeKeystroke(TinyDom.document(editor), keyvalue, modifiers);
 
-const type = (editor: Editor, content: string): void =>
-  TypeText.typeContentAtSelection(TinyDom.document(editor), content);
+const pType = (editor: Editor, content: string, rate: number = 0): Promise<void> =>
+  Keyboard.pTypeTextInElement(TinyDom.body(editor), content, rate);
 
 const trueClick = (editor: Editor): void =>
   Mouse.trueClick(TinyDom.body(editor));
@@ -57,7 +56,7 @@ export {
   keypress,
   keystroke,
   keyup,
-  type,
+  pType,
   trueClick,
   trueClickOn,
   pWaitForEventToStopFiring

@@ -10,7 +10,7 @@ describe('browser.tinymce.selection.FigcaptionTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, []);
 
-  it('TINY-12458: should place cursor at start of figcaption when focused', () => {
+  it('TINY-12458: should place cursor at start of figcaption when focused', async () => {
     const editor = hook.editor();
     editor.setContent(
       '<figure contenteditable="false">' +
@@ -21,7 +21,7 @@ describe('browser.tinymce.selection.FigcaptionTest', () => {
     TinySelections.setSelection(editor, [], 0, [], 1);
     const figcaption = UiFinder.findIn<HTMLElement>(TinyDom.body(editor), 'figcaption').getOrDie();
     Focus.focus(figcaption);
-    TinyContentActions.type(editor, 'prefix-');
+    await TinyContentActions.pType(editor, 'prefix-');
 
     TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 'prefix-'.length);
     TinyAssertions.assertContent(editor, [

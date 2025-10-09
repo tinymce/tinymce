@@ -11,9 +11,9 @@ describe('browser.tinymce.core.textpatterns.TrailingPunctuationTest', () => {
 
   const pTypeAndTriggerTest = (patternText: string, trigger: string, tag: string, rawText: string) => async () => {
     const editor = hook.editor();
-    editor.setContent('<p>' + patternText + trigger + '</p>');
-    TinySelections.setCursor(editor, [ 0, 0 ], patternText.length + 1);
-    TinyContentActions.keypress(editor, trigger.charCodeAt(0));
+    editor.setContent('<p>' + patternText + '</p>');
+    TinySelections.setCursor(editor, [ 0, 0 ], patternText.length);
+    await TinyContentActions.pType(editor, trigger);
     await Waiter.pTryUntil(
       'did not get expected format',
       () => TinyAssertions.assertContentStructure(editor, ApproxStructure.build((s, str) => {
