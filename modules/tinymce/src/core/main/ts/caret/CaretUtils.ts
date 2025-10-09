@@ -79,14 +79,14 @@ const getEditingHost = (node: Node, rootNode: HTMLElement): HTMLElement => {
 };
 
 const isAbsPositionedElement = (node: Node): boolean => NodeType.isElement(node) && Css.get(SugarElement.fromDom(node), 'position') === 'absolute';
-
-const isAbsolutelyPositionedCEFElement = (node: Node) => isContentEditableFalse(node) && isAbsPositionedElement(node);
+const isInlineBlock = (node: Node, rootNode?: Node | null) => node.parentNode !== rootNode;
+const isInlineAbsPositionedCEF = (node: Node, rootNode?: Node) => isContentEditableFalse(node) && isAbsPositionedElement(node) && isInlineBlock(node, rootNode);
 
 const getParentBlock = (node: Node | null, rootNode?: Node): Node | null => {
   while (node && node !== rootNode) {
     // Exclude inline absolutely positioned CEF elements since they have 'display: block'
     // Created TINY-12922 to improve handling non CEF elements
-    if (isBlockLike(node) && !isAbsolutelyPositionedCEFElement(node)) {
+    if (isBlockLike(node) && !isInlineAbsPositionedCEF(node)) {
       return node;
     }
 
