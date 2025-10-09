@@ -16,6 +16,7 @@ declare const tinymce: TinyMCE;
 
 interface EditorState {
   readonly isEditorDisabled: boolean;
+  readonly consoleWarnMessages: string[];
   readonly consoleErrorMessages: string[];
   readonly notificationMessages: { text: string; type: 'error' | 'warning' }[];
 }
@@ -49,6 +50,7 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
   ) => {
     const {
       isEditorDisabled,
+      consoleWarnMessages,
       consoleErrorMessages,
       notificationMessages,
     } = expected ?? {};
@@ -73,6 +75,11 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
     // Check UI state
     assert.strictEqual(editor.ui.isEnabled(), !isEditorDisabled);
 
+    assert.deepEqual(
+      consoleReader.warnMessages,
+      consoleWarnMessages,
+      'console warning messages'
+    );
     assert.deepEqual(
       consoleReader.errorMessages,
       consoleErrorMessages,
@@ -103,6 +110,7 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
       await pAssertApi(editor, false);
       await pAssertEditorStatus(editor, {
         isEditorDisabled: false,
+        consoleWarnMessages: [],
         consoleErrorMessages: [],
         notificationMessages: [],
       });
@@ -117,6 +125,7 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
       await pAssertApi(editor, false);
       await pAssertEditorStatus(editor, {
         isEditorDisabled: false,
+        consoleWarnMessages: [],
         consoleErrorMessages: [],
         notificationMessages: [],
       });
@@ -131,6 +140,7 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
       await pAssertApi(editor, false);
       await pAssertEditorStatus(editor, {
         isEditorDisabled: false,
+        consoleWarnMessages: [],
         consoleErrorMessages: [],
         notificationMessages: [],
       });
@@ -146,6 +156,7 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
       await pAssertApi(editor, false);
       await pAssertEditorStatus(editor, {
         isEditorDisabled: false,
+        consoleWarnMessages: [],
         consoleErrorMessages: [],
         notificationMessages: [],
       });
@@ -160,6 +171,7 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
       await pAssertApi(editor1, false);
       await pAssertEditorStatus(editor1, {
         isEditorDisabled: false,
+        consoleWarnMessages: [],
         consoleErrorMessages: [],
         notificationMessages: [],
       });
@@ -171,6 +183,7 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
       await pAssertApi(editor2, false);
       await pAssertEditorStatus(editor2, {
         isEditorDisabled: false,
+        consoleWarnMessages: [],
         consoleErrorMessages: [],
         notificationMessages: [],
       });
@@ -182,6 +195,7 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
       await pAssertApi(editor3, false);
       await pAssertEditorStatus(editor3, {
         isEditorDisabled: false,
+        consoleWarnMessages: [],
         consoleErrorMessages: [],
         notificationMessages: [],
       });
@@ -206,6 +220,7 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
       await pAssertApi(editor, false);
       await pAssertEditorStatus(editor, {
         isEditorDisabled: true,
+        consoleWarnMessages: [],
         consoleErrorMessages: [
           `The editor is disabled because a TinyMCE license key has not been provided. ` +
             `Make sure to provide a valid license key or add license_key: 'gpl' to the init config to agree to the open source license terms. ` +
@@ -229,6 +244,7 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
       await pAssertApi(editor, false);
       await pAssertEditorStatus(editor, {
         isEditorDisabled: true,
+        consoleWarnMessages: [],
         consoleErrorMessages: [
           `The editor is disabled because the TinyMCE license key could not be validated. ` +
             `The TinyMCE Commercial License Key Manager plugin is required for the provided license key to be validated but could not be loaded. ` +
@@ -252,6 +268,7 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
       await pAssertApi(editor, true);
       await pAssertEditorStatus(editor, {
         isEditorDisabled: false,
+        consoleWarnMessages: [],
         consoleErrorMessages: [],
         notificationMessages: [],
       });
@@ -267,6 +284,7 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
       await pAssertApi(editor, false);
       await pAssertEditorStatus(editor, {
         isEditorDisabled: true,
+        consoleWarnMessages: [],
         consoleErrorMessages: [
           `The editor is disabled because the TinyMCE API key could not be validated. ` +
             `The TinyMCE Commercial License Key Manager plugin is required for the provided API key to be validated but could not be loaded. ` +
@@ -290,6 +308,7 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
       await pAssertApi(editor1, true);
       await pAssertEditorStatus(editor1, {
         isEditorDisabled: false,
+        consoleWarnMessages: [],
         consoleErrorMessages: [],
         notificationMessages: [],
       });
@@ -302,6 +321,7 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
       await pAssertApi(editor2, false);
       await pAssertEditorStatus(editor2, {
         isEditorDisabled: true,
+        consoleWarnMessages: [],
         consoleErrorMessages: [
           `The editor is disabled because the TinyMCE license key could not be validated. ` +
             `The TinyMCE Commercial License Key Manager plugin is required for the provided license key to be validated but could not be loaded. ` +
@@ -323,6 +343,7 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
       await pAssertApi(editor3, false);
       await pAssertEditorStatus(editor3, {
         isEditorDisabled: true,
+        consoleWarnMessages: [],
         consoleErrorMessages: [
           `The editor is disabled because a TinyMCE license key has not been provided. ` +
             `Make sure to provide a valid license key or add license_key: 'gpl' to the init config to agree to the open source license terms. ` +
@@ -339,6 +360,39 @@ describe('browser.tinymce.core.init.LicenseKeyTest', () => {
       McEditor.remove(editor1);
       McEditor.remove(editor2);
       McEditor.remove(editor3);
+    });
+
+    it('TINY-12937: should have correct messaging for invalid plugin', async () => {
+      const editor = await McEditor.pFromSettings<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        license_key: 'gpl',
+      });
+      const firstResult = await editor.licenseKeyManager.validate({
+        plugin: 'foo',
+      });
+      assert.isFalse(firstResult);
+      const secondResult = await editor.licenseKeyManager.validate({
+        plugin: 'bar',
+      });
+      assert.isFalse(secondResult);
+      await pAssertEditorStatus(editor, {
+        isEditorDisabled: false,
+        consoleWarnMessages: [],
+        consoleErrorMessages: [
+          [
+            `The "foo" plugin requires a valid TinyMCE license key.`,
+            `Read more: https://www.tiny.cloud/docs/tinymce/latest/license-key/`,
+          ].join(' '),
+          [
+            `The "bar" plugin requires a valid TinyMCE license key.`,
+            `Read more: https://www.tiny.cloud/docs/tinymce/latest/license-key/`,
+          ].join(' '),
+        ],
+        notificationMessages: [
+          { text: 'Premium plugins have been disabled for the provided TinyMCE license key.', type: 'warning' }
+        ],
+      });
+      McEditor.remove(editor);
     });
   });
 });
