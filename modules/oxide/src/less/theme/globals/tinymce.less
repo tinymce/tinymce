@@ -56,21 +56,6 @@
   z-index: var(--tox-private-z-index-sink, @z-index-sink);
 }
 
-.keyboard-focus-outline-mixin(@_inset: ~'') {
-  border-radius: @toolbar-button-border-radius;
-  bottom: 0;
-  box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color @_inset;
-  content: '';
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-
-  @media (forced-colors: active) {
-    border: 2px solid highlight;
-  }
-}
-
 // RTL
 .tox[dir=rtl] {
   // Rotates configured icons 180 degrees when rendering in RTL
