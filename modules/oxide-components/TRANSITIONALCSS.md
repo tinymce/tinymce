@@ -7,13 +7,13 @@ This guide outlines the steps required to migrate a **Legacy** Oxide component (
 
 Before converting individual components, several global configurations must be in place:
 
-1. The `@custom-properties-enabled`  feature flag was introduced [here](https://github.com/tinymce/tinymce/blob/main/modules/oxide/src/less/theme/globals/feature-flags.less).
-2. A set of global CSS Custom Properties was created.  You can view them [here](https://github.com/tinymce/tinymce/blob/main/modules/oxide/src/less/theme/globals/global-custom-properties.less).
+1. The `@custom-properties-enabled`  feature flag was introduced in [feature-flags.less](https://github.com/tinymce/tinymce/blob/main/modules/oxide/src/less/theme/globals/feature-flags.less).
+2. A set of global CSS Custom Properties was created in [global-custom-properties.less](https://github.com/tinymce/tinymce/blob/main/modules/oxide/src/less/theme/globals/global-custom-properties.less).
 
 
 ## Step-by-Step: Converting to the Transitional Stage
 
-Here are the steps you need to take to convert legacy component to transitional one:
+Here are the steps you need to take to convert a legacy component to a transitional one:
 
     
 1. **Guard CSS Custom Properties with the Feature Flag**\
@@ -37,9 +37,9 @@ Always provide a fallback to the existing LESS variable for backward compatibili
     
     ```less
     .tox-button {
-      padding: var(--tox-private-btn-padding, @btn-padding); //fallback to a component LESS variable
-      border-radius: var(--tox-private-btn-border-radius, @control-border-radius); //fallback to a global LESS variable
-      height: var(--tox-private-control-height, 36px); //fallback to a fixed value
+      padding: var(--tox-private-btn-padding, @btn-padding); // fallback to a component LESS variable
+      border-radius: var(--tox-private-btn-border-radius, @control-border-radius); // fallback to a global LESS variable
+      height: var(--tox-private-control-height, 36px); // fallback to a fixed value
     }
     ```
     
@@ -53,7 +53,7 @@ You can reference a global variable directly, but remember to also include a fal
     ```
     
 5. **Promote Shared Variables to Global Scope**\
-If a LESS variable is reused across multiple components, its corresponding CSS Custom Property should be made global. Component varaibles should not be cross-referenced in other components. 
+If a LESS variable is reused across multiple components, its corresponding CSS Custom Property should be made global. Component variables should not be cross-referenced in other components. 
     
 6. **CSS Color Calculations (Relative Colors)**\
     Here’s how to translate LESS color adjustments into modern CSS:
@@ -89,6 +89,7 @@ When creating CSS Custom Properties avoid using LESS functions like `contrast()`
     .tox-button when (@custom-properties-enabled = true) {
       // simple light-dark function usage:
       --tox-private-btn-bg: light-dark(#fff, #000);
+
       // using relative colors syntax inside light dark function:
       --tox-private-btn-bg: light-dark(
         hsl(from var(--tox-private-bg) h s calc(l + 14)),
@@ -121,7 +122,7 @@ When creating CSS Custom Properties avoid using LESS functions like `contrast()`
         <td>
           <ul>
             <li>Forces the editor to use dark mode colors only.</li>
-            <li>This is equivalent to the current default mode.</li>
+            <li>This is equivalent to the current dark mode.</li>
           </ul>
         </td>
         </tr>
