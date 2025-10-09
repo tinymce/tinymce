@@ -1,4 +1,4 @@
-import { Cell, Type } from '@ephox/katamari';
+import { Type } from '@ephox/katamari';
 
 import AddOnManager, { type AddOnConstructor } from '../api/AddOnManager';
 import type Editor from '../api/Editor';
@@ -26,7 +26,7 @@ export interface LicenseKeyManager {
 }
 
 const NoLicenseKeyManager = (editor: Editor): LicenseKeyManager => {
-  const hasShownPluginNotification = Cell(false);
+  let hasShownPluginNotification = false;
   return {
     validate: (data) => {
       const { plugin } = data;
@@ -34,7 +34,7 @@ const NoLicenseKeyManager = (editor: Editor): LicenseKeyManager => {
       // Premium plugins are not allowed
       if (hasPlugin) {
         LicenseKeyReporting.reportInvalidPlugin(editor, plugin, hasShownPluginNotification);
-        hasShownPluginNotification.set(true);
+        hasShownPluginNotification = true;
       }
       return Promise.resolve(false);
     },
@@ -42,7 +42,7 @@ const NoLicenseKeyManager = (editor: Editor): LicenseKeyManager => {
 };
 
 const GplLicenseKeyManager = (editor: Editor): LicenseKeyManager => {
-  const hasShownPluginNotification = Cell(false);
+  let hasShownPluginNotification = false;
   return {
     validate: (data) => {
       const { plugin } = data;
@@ -50,7 +50,7 @@ const GplLicenseKeyManager = (editor: Editor): LicenseKeyManager => {
       // Premium plugins are not allowed if 'gpl' is given as the license_key
       if (hasPlugin) {
         LicenseKeyReporting.reportInvalidPlugin(editor, plugin, hasShownPluginNotification);
-        hasShownPluginNotification.set(true);
+        hasShownPluginNotification = true;
       }
       return Promise.resolve(!hasPlugin);
     },

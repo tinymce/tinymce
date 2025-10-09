@@ -1,4 +1,4 @@
-import { Waiter } from '@ephox/agar';
+import { ConsoleReader, Waiter } from '@ephox/agar';
 import { afterEach, before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { McEditor } from '@ephox/wrap-mcagar';
@@ -9,8 +9,6 @@ import type { TinyMCE } from 'tinymce/core/api/Tinymce';
 import 'tinymce';
 import Model from 'tinymce/models/dom/Model';
 import Theme from 'tinymce/themes/silver/Theme';
-
-import * as ConsoleReader from '../../module/test/ConsoleReader';
 
 declare const tinymce: TinyMCE;
 
