@@ -109,7 +109,8 @@ const keys: KeyInfo[] = [
   { keyCode: 89, code: 'KeyY', key: 'Y', data: 'Y', shiftKey: true },
   { keyCode: 90, code: 'KeyZ', key: 'z', data: 'z' },
   { keyCode: 90, code: 'KeyZ', key: 'Z', data: 'Z', shiftKey: true },
-  { keyCode: 91, code: 'MetaLeft', key: 'Meta' },
+  // Firefox Mac returns 224 for the keycode for meta
+  { keyCode: isFirefox && isMac ? 224 : 91, code: 'MetaLeft', key: 'Meta' },
   { keyCode: 92, code: 'MetaRight', key: 'Meta' },
   { keyCode: 93, code: 'ContextMenu', key: 'ContextMenu' },
   { keyCode: 96, code: 'Numpad0', key: '0', data: '0' },
@@ -161,11 +162,7 @@ const keys: KeyInfo[] = [
   { keyCode: 221, code: 'BracketRight', key: ']', data: ']' },
   { keyCode: 221, code: 'BracketRight', key: '}', data: '}', shiftKey: true },
   { keyCode: 222, code: 'Quote', key: '\'', data: '\'' },
-  { keyCode: 222, code: 'Quote', key: '"', data: '"', shiftKey: true },
-  // Firefox Mac returns 224 for the keycode for meta
-  { keyCode: isFirefox && isMac ? 224 : 91, code: 'MetaLeft', key: 'Meta' },
-  { keyCode: 17, code: 'ControlLeft', key: 'Control' },
-  { keyCode: 18, code: 'AltLeft', key: 'Alt' }
+  { keyCode: 222, code: 'Quote', key: '"', data: '"', shiftKey: true }
 ];
 
 const createKeyboardEvent = (
