@@ -1,4 +1,4 @@
-import { Draggable } from 'oxide-components/components/draggable/Draggable';
+import * as Draggable from 'oxide-components/components/draggable/Draggable';
 import { classes } from 'oxide-components/utils/Styles';
 import type { ReactNode } from 'react';
 import { describe, expect, it } from 'vitest';
@@ -8,13 +8,13 @@ const draggableTestId = 'draggable';
 const draggableHandleTestId = 'draggable-handle';
 
 const TestElement = (
-  <Draggable>
+  <Draggable.Root>
     <div data-testid={draggableTestId} style={{ width: 250, height: 500, backgroundColor: 'gray' }}>
       <Draggable.Handle>
         <div data-testid={draggableHandleTestId} style={{ width: '100%', height: 50, backgroundColor: 'black' }}></div>
       </Draggable.Handle>
     </div>
-  </Draggable>
+  </Draggable.Root>
 );
 
 const Wrapper = ({ children }: { children: ReactNode }) => {
