@@ -1,5 +1,5 @@
 import { after, afterEach, before, describe, it } from '@ephox/bedrock-client';
-import { Arr, Global } from '@ephox/katamari';
+import { Arr, Fun, Global } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
@@ -110,5 +110,17 @@ describe('browser.tinymce.core.dom.ScriptLoaderTest', () => {
     assertQueueLoadedCount(1);
     assert.isTrue(ScriptLoader.ScriptLoader.isDone(testScript), 'test.js should have been loaded');
     assert.isTrue(ScriptLoader.ScriptLoader.isDone(nestedScript), 'nested.js should have been loaded');
+  });
+
+  it('TINY-13006: Should be able to get attributes for some url when crossorigin and referrerpolicy is set', () => {
+    const scriptLoader = new ScriptLoader();
+
+    scriptLoader._setCrossOrigin(Fun.constant('anonymous'));
+    scriptLoader._setReferrerPolicy('no-referrer');
+
+    assert.deepEqual(scriptLoader.getScriptAttributes('foo'), {
+      crossorigin: 'anonymous',
+      referrerpolicy: 'no-referrer'
+    });
   });
 });

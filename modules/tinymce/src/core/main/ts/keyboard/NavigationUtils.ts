@@ -1,4 +1,4 @@
-import { Arr, Fun, Optional } from '@ephox/katamari';
+import { Arr, Fun, Optional, Type } from '@ephox/katamari';
 
 import type Editor from '../api/Editor';
 import * as CaretContainer from '../caret/CaretContainer';
@@ -6,7 +6,6 @@ import CaretPosition from '../caret/CaretPosition';
 import * as CaretUtils from '../caret/CaretUtils';
 import { CaretWalker, HDirection } from '../caret/CaretWalker';
 import * as FakeCaretUtils from '../caret/FakeCaretUtils';
-import { getPositionsUntilNextLine, getPositionsUntilPreviousLine } from '../caret/LineReader';
 import * as LineReader from '../caret/LineReader';
 import * as LineUtils from '../caret/LineUtils';
 import type { LinePosClientRect } from '../caret/LineWalker';
@@ -27,6 +26,17 @@ const moveToRange = (editor: Editor, rng: Range): void => {
 const renderRangeCaretOpt = (editor: Editor, range: Range, scrollIntoView: boolean): Optional<Range> =>
   Optional.some(FakeCaretUtils.renderRangeCaret(editor, range, scrollIntoView));
 
+const getAbsPositionElement = (pos: CaretPosition, direction: HDirection) => {
+  const node = pos.getNode(direction === HDirection.Backwards);
+  return Type.isNonNullable(node) && CaretUtils.isAbsPositionedElement(node) ? Optional.some(node) : Optional.none();
+};
+
+const elementToRange = (editor: Editor, node: Node) => {
+  const rng = editor.dom.createRng();
+  rng.selectNode(node);
+  return rng;
+};
+
 const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, isBefore: (caretPosition: CaretPosition) => boolean,
                           isAfter: (caretPosition: CaretPosition) => boolean, isElement: (node: Node | null) => node is HTMLElement): Optional<Range> => {
   const forwards = direction === HDirection.Forwards;
@@ -37,7 +47,13 @@ const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, i
   if (!range.collapsed) {
     const node = RangeNodes.getSelectedNode(range);
     if (isElement(node)) {
-      return FakeCaretUtils.showCaret(direction, editor, node, direction === HDirection.Backwards, false);
+
+      if (CaretUtils.isAbsPositionedElement(node)) {
+        const caretPosition = CaretUtils.getNormalizedRangeEndPoint(direction, editor.getBody(), range);
+        return Optional.from(getNextPosFn(caretPosition)).map((next) => next.toRange());
+      } else {
+        return FakeCaretUtils.showCaret(direction, editor, node, direction === HDirection.Backwards, false);
+      }
     } else if (isCefAtEdgeSelected(editor)) {
       const newRange = range.cloneRange();
       newRange.collapse(direction === HDirection.Backwards);
@@ -59,14 +75,20 @@ const moveHorizontally = (editor: Editor, direction: HDirection, range: Range, i
   }
 
   if (isBeforeFn(nextCaretPosition)) {
-    return FakeCaretUtils.showCaret(direction, editor, nextCaretPosition.getNode(!forwards) as HTMLElement, forwards, false);
+    return getAbsPositionElement(nextCaretPosition, direction).fold(
+      () => FakeCaretUtils.showCaret(direction, editor, nextCaretPosition?.getNode(!forwards) as HTMLElement, forwards, false),
+      (el) => Optional.some(elementToRange(editor, el))
+    );
   }
 
   // Peek ahead for handling of ab|c<span cE=false> -> abc|<span cE=false>
   const peekCaretPosition = getNextPosFn(nextCaretPosition);
   if (peekCaretPosition && isBeforeFn(peekCaretPosition)) {
     if (CaretUtils.isMoveInsideSameBlock(nextCaretPosition, peekCaretPosition)) {
-      return FakeCaretUtils.showCaret(direction, editor, peekCaretPosition.getNode(!forwards) as HTMLElement, forwards, false);
+      return getAbsPositionElement(nextCaretPosition, direction).fold(
+        () => FakeCaretUtils.showCaret(direction, editor, peekCaretPosition.getNode(!forwards) as HTMLElement, forwards, false),
+        (el) => Optional.some(elementToRange(editor, el))
+      );
     }
   }
 
@@ -146,10 +168,10 @@ const getLineEndPoint = (editor: Editor, forward: boolean): Optional<CaretPositi
   const host = CaretUtils.getEditingHost(from.container(), editor.getBody());
 
   if (forward) {
-    const lineInfo = getPositionsUntilNextLine(host, from);
+    const lineInfo = LineReader.getPositionsUntilNextLine(host, from);
     return Arr.last(lineInfo.positions);
   } else {
-    const lineInfo = getPositionsUntilPreviousLine(host, from);
+    const lineInfo = LineReader.getPositionsUntilPreviousLine(host, from);
     return Arr.head(lineInfo.positions);
   }
 };
@@ -167,3 +189,4 @@ export {
   moveToLineEndPoint,
   moveToRange
 };
+

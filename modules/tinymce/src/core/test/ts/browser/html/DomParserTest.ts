@@ -5,7 +5,7 @@ import { assert } from 'chai';
 import Env from 'tinymce/core/api/Env';
 import { BlobCache, type BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import DomParser, { type DomParserSettings, type ParserArgs, type ParserFilterCallback } from 'tinymce/core/api/html/DomParser';
-import type { Attributes, default as AstNode } from 'tinymce/core/api/html/Node';
+import type { default as AstNode, Attributes } from 'tinymce/core/api/html/Node';
 import Schema, { type SchemaElement, type SchemaSettings } from 'tinymce/core/api/html/Schema';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 
@@ -1943,6 +1943,29 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         input: `<div><${elementName}><em>test</em></${elementName}></div>`,
         expected: `<div><${elementName}><em>test</em></${elementName}></div>`
       }));
+    });
+
+    it('TINY-12857: Serializer newlines properly', () => {
+      const originalText = [
+        '<head>',
+        '<meta http-equiv="x-ua-compatible" content="ie=edge">',
+        '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">',
+        '<link rel="canonical" href="https://www.tiny.cloud/docs/tinymce/latest/">',
+        '<link rel="sitemap" type="application/xml" href="/gatsby_sitemap.xml">',
+        '<meta content="My Website">',
+        '<meta content="Check out my awesome site!">',
+        '</head>',
+        '<body></body>'
+      ];
+
+      const output = HtmlSerializer({
+        validate: false,
+        indent: true,
+        indent_before: 'head,html,body,meta,title,script,link,style',
+        indent_after: 'head,html,body,meta,title,script,link,style'
+      }, schema).serialize( DomParser({ root_name: '#document', sanitize: false }, schema).parse('<html>' + originalText.join('') + '</html>'));
+
+      assert.equal(output, originalText.join('\n'));
     });
   });
 });

@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Some elements would be given an extra newline by the serializer when indented.
+time: 2025-09-19T08:34:40.606198+02:00
+custom:
+    Issue: TINY-12857

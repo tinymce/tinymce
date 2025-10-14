@@ -31,6 +31,7 @@ interface Schema {
   getWhitespaceElements: () => SchemaMap;
   getTransparentElements: () => SchemaMap;
   getSpecialElements: () => SchemaRegExpMap;
+  getComponentUrls: () => Record<string, string>;
   isValidChild: (name: string, child: string) => boolean;
   isValid: (name: string, attr?: string) => boolean;
   isBlock: (name: string) => boolean;
@@ -104,6 +105,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
   let patternElements: Array<SchemaElement & { pattern: RegExp }> = [];
   const customElementsMap: SchemaMap = {};
   const specialElements: SchemaRegExpMap = {};
+  const componentUrls: Record<string, string> = {};
 
   // Creates an lookup table map object for the specified option or the default value
   const createLookupTable = (option: keyof ElementSettings, defaultValue: string, extendWith?: SchemaMap): SchemaMap => {
@@ -319,9 +321,20 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     });
   };
 
+  const addComponentUrl = (elementName: string, componentUrl: string) => {
+    componentUrls[elementName] = componentUrl;
+  };
+
   const addCustomElements = (customElements: string | Record<string, CustomElementSpec> | undefined) => {
     if (Type.isObject(customElements)) {
-      Obj.each(customElements as Record<string, CustomElementSpec>, (spec, name) => addCustomElement(name, spec));
+      Obj.each(customElements as Record<string, CustomElementSpec>, (spec, name) => {
+        const componentUrl = spec.componentUrl;
+        if (Type.isString(componentUrl)) {
+          addComponentUrl(name, componentUrl);
+        }
+
+        addCustomElement(name, spec);
+      });
     } else if (Type.isString(customElements)) {
       addCustomElementsFromString(customElements);
     }
@@ -728,6 +741,14 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
    * @param {String} valid_children Valid children elements string to parse
    */
 
+  /**
+   * Returns an object of all custom elements that have component URLs.
+   *
+   * @method getComponentUrls
+   * @return {Object} Object with where key is the component and the value is the url for that component.
+   */
+  const getComponentUrls = Fun.constant(componentUrls);
+
   setup();
 
   return {
@@ -749,6 +770,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     getWhitespaceElements,
     getTransparentElements,
     getSpecialElements,
+    getComponentUrls,
     isValidChild,
     isValid,
     isBlock,
@@ -758,7 +780,7 @@ const Schema = (settings: SchemaSettings = {}): Schema => {
     addValidElements,
     setValidElements,
     addCustomElements,
-    addValidChildren
+    addValidChildren,
   };
 };
 

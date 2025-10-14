@@ -1,5 +1,5 @@
 import type { Classes } from '@tinymce/oxide/skins/ui/default/skin.ts';
-import type { ButtonHTMLAttributes } from 'react';
+import { forwardRef, type ButtonHTMLAttributes } from 'react';
 
 import { classes } from '../../utils/Styles';
 
@@ -23,20 +23,21 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 /** Primary UI component for user interaction */
-export const Button: React.FC<ButtonProps> = ({
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
   children,
   type = 'button',
   variant = 'primary',
   className,
   ...props
-}) => {
+}, ref) => {
   return (
     <button
       type={type}
       className={`${classes(calculateClassFromVariant(variant))} ${className ?? ''}`}
+      ref={ref}
       {...props}
     >
       {children}
     </button>
   );
-};
+});
