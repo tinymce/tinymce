@@ -78,7 +78,8 @@ const Handle: FC<DraggableHandleProps> = ({ children }) => {
       onPointerMove={onPointerMove}
       onLostPointerCapture={onLostPointerCapture}
       style={{
-        cursor: isDragging ? 'grabbing' : 'grab'
+        cursor: isDragging ? 'grabbing' : 'grab',
+        userSelect: 'none'
       }}>
       {children}
     </div>

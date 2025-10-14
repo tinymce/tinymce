@@ -5,6 +5,7 @@ import { classes } from '../../utils/Styles';
 
 export interface FloatingSidebarProps extends PropsWithChildren {
   isOpen?: boolean;
+  height?: number;
 }
 interface HeaderProps extends PropsWithChildren {};
 
@@ -24,7 +25,7 @@ const createSlots = (children: ReactNode): Slots => {
   return { header, children: otherChildren };
 };
 
-const Root: FC<FloatingSidebarProps> = ({ isOpen = true, ...props }) => {
+const Root: FC<FloatingSidebarProps> = ({ isOpen = true, height = 600, ...props }) => {
   const { header, children } = createSlots(props.children);
   const elementRef = useRef<HTMLDivElement | null>(null);
 
@@ -36,7 +37,12 @@ const Root: FC<FloatingSidebarProps> = ({ isOpen = true, ...props }) => {
   }, [ isOpen ]);
 
   return (
-    <Draggable.Root ref={elementRef} className={classes([ 'tox-floating-sidebar' ])} popover="manual">
+    <Draggable.Root
+      ref={elementRef}
+      popover="manual"
+      className={classes([ 'tox-floating-sidebar' ])}
+      style={{ '--tox-private-floating-sidebar-requested-height': `${height}px` }}
+    >
       <aside className={classes([ 'tox-floating-sidebar__content-wrapper' ])}>
         <Draggable.Handle>{ header }</Draggable.Handle>
         { children }
@@ -47,7 +53,7 @@ const Root: FC<FloatingSidebarProps> = ({ isOpen = true, ...props }) => {
 
 const Header: FC<HeaderProps> = ({ children }) => {
   return (
-    <header className={classes([ 'tox-sidebar-content__header', 'tox-floating-sidebar__header' ])}>{ children }</header>
+    <header className={classes([ 'tox-sidebar-content__header' ])}>{ children }</header>
   );
 };
 
