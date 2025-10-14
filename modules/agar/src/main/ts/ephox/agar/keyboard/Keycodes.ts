@@ -1,4 +1,8 @@
 import { Arr, Type, type Optional } from '@ephox/katamari';
+import { PlatformDetection } from '@ephox/sand';
+
+const isMac = PlatformDetection.detect().os.isMacOS();
+const isFirefox = PlatformDetection.detect().browser.isFirefox();
 
 interface KeyInfo {
   readonly keyCode: number;
@@ -157,7 +161,11 @@ const keys: KeyInfo[] = [
   { keyCode: 221, code: 'BracketRight', key: ']', data: ']' },
   { keyCode: 221, code: 'BracketRight', key: '}', data: '}', shiftKey: true },
   { keyCode: 222, code: 'Quote', key: '\'', data: '\'' },
-  { keyCode: 222, code: 'Quote', key: '"', data: '"', shiftKey: true }
+  { keyCode: 222, code: 'Quote', key: '"', data: '"', shiftKey: true },
+  // Firefox Mac returns 224 for the keycode for meta
+  { keyCode: isFirefox && isMac ? 224 : 91, code: 'MetaLeft', key: 'Meta' },
+  { keyCode: 17, code: 'ControlLeft', key: 'Control' },
+  { keyCode: 18, code: 'AltLeft', key: 'Alt' }
 ];
 
 const createKeyboardEvent = (
