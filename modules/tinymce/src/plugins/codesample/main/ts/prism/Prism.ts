@@ -1,14 +1,18 @@
 import { Global } from '@ephox/katamari';
-import Prism from 'prismjs';
+import * as PrismLib from 'prismjs';
 
 import type Editor from 'tinymce/core/api/Editor';
 
 import * as Options from '../api/Options';
 
-type Prism = typeof Prism;
+type PrismType = typeof PrismLib & {
+  highlightElement: (element: Element) => void;
+};
 
-const get = (editor: Editor): Prism =>
-  Global.Prism && Options.useGlobalPrismJS(editor) ? Global.Prism : Prism;
+const get = (editor: Editor): PrismType => {
+  const prismCandidate = (Global.Prism && Options.useGlobalPrismJS(editor)) ? Global.Prism : PrismLib;
+  return prismCandidate as unknown as PrismType;
+};
 
 export {
   get
