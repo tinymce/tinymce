@@ -5,7 +5,6 @@
 node_modules
 
 package-lock.json
-bun.lock
 bun-error.log*
 lerna-debug.log
 scratch
