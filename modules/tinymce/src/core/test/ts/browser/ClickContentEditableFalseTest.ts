@@ -55,13 +55,13 @@ describe('browser.tinymce.core.ClickContentEditableFalseTest', () => {
     TinyAssertions.assertSelection(editor, [ 0 ], 0, [ 0 ], 1);
   });
 
-  it('Click on content editable false inside content editable true and then on content editable true and type', () => {
+  it('Click on content editable false inside content editable true and then on content editable true and type', async () => {
     const editor = hook.editor();
     editor.setContent('<div contenteditable="true"><p contenteditable="false">a</p><p>b</p></div>');
     clickMiddleOf(editor, [ 0, 1 ]);
     clickMiddleOf(editor, [ 0, 1 ]);
     TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 1, [ 0, 1, 0 ], 1);
-    TinyContentActions.type(editor, 'c');
+    await TinyContentActions.pType(editor, 'c');
     TinyAssertions.assertContent(editor, '<div contenteditable="true"><p contenteditable="false">a</p><p>bc</p></div>');
     TinyAssertions.assertSelection(editor, [ 0, 1, 0 ], 2, [ 0, 1, 0 ], 2);
   });

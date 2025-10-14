@@ -10,33 +10,33 @@ describe('browser.tinymce.core.keyboard.TypeTextAtCef', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [], true);
 
-  it('Type text before cef inline element', () => {
+  it('Type text before cef inline element', async () => {
     const editor = hook.editor();
     editor.setContent('<p><span contenteditable="false">a</span></p>');
     TinySelections.select(editor, 'p', [ 1 ]);
     TinyContentActions.keystroke(editor, Keys.left());
-    TinyContentActions.type(editor, 'bc');
+    await TinyContentActions.pType(editor, 'bc');
     TinyAssertions.assertCursor(editor, [ 0, 0 ], 2);
     TinyAssertions.assertContent(editor, '<p>bc<span contenteditable="false">a</span></p>');
   });
 
-  it('Type after cef inline element', () => {
+  it('Type after cef inline element', async () => {
     const editor = hook.editor();
     editor.setContent('<p><span contenteditable="false">a</span></p>');
     TinySelections.select(editor, 'p', [ 1 ]);
     TinyContentActions.keystroke(editor, Keys.right());
-    TinyContentActions.type(editor, 'bc');
+    await TinyContentActions.pType(editor, 'bc');
     TinyAssertions.assertCursor(editor, [ 0, 1 ], 3);
     TinyAssertions.assertContent(editor, '<p><span contenteditable="false">a</span>bc</p>');
   });
 
-  it('Type between cef inline elements', () => {
+  it('Type between cef inline elements', async () => {
     const editor = hook.editor();
     editor.setContent('<p><span contenteditable="false">a</span>&nbsp;<span contenteditable="false">b</span></p>');
     TinySelections.select(editor, 'p', [ 3 ]);
     TinyContentActions.keystroke(editor, Keys.left());
     TinyContentActions.keystroke(editor, Keys.left());
-    TinyContentActions.type(editor, 'bc');
+    await TinyContentActions.pType(editor, 'bc');
     TinyAssertions.assertSelection(editor, [ 0, 1 ], 3, [ 0, 1 ], 3);
     TinyAssertions.assertContent(editor, '<p><span contenteditable="false">a</span>bc&nbsp;<span contenteditable="false">b</span></p>');
   });
