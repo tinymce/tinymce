@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: Reverted toolbar button width to `auto`.
+time: 2025-10-15T12:43:11.60353+10:00
+custom:
+    Issue: TINY-13097
