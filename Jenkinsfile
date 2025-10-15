@@ -363,9 +363,9 @@ timestamps { notifyStatusChange(
     tag: '22.20.0',
     build: cacheName,
     environment: {
+      sh "tar -zxf ./file.tar.gz"
       tinyGit.addAuthorConfig()
       tinyGit.addGitHubToKnownHosts()
-      sh "tar -zxf ./file.tar.gz"
     }
   ) {
     props = readProperties(file: 'build.properties')
