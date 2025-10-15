@@ -28,6 +28,7 @@
     "@ephox/bedrock-client": ">=11",
     "@ephox/bedrock-common": ">=11",
     "@ephox/jax": "^8.0.0",
+    "@ephox/polaris": "^7.0.0",
     "@ephox/sand": "^7.0.0",
     "@ephox/sugar": "^10.0.0",
     "fast-check": "^2.0.0"
