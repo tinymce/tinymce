@@ -1,7 +1,6 @@
 @media print {
   .mce-content-body {
     .mce-placeholder,
-    [data-mce-placeholder],
     [data-mce-bogus=all],
     [data-mce-bogus] {
       display: none !important;
@@ -15,6 +14,10 @@
     *:focus,
     .mce-edit-focus {
       outline: none !important;
+    }
+
+    tiny-uploadcare-placeholder {
+      display: none !important; 
     }
   }
 }
