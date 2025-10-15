@@ -53,7 +53,7 @@ const Root: FC<FloatingSidebarProps> = ({ isOpen = true, height = 600, ...props 
 
 const Header: FC<HeaderProps> = ({ children }) => {
   return (
-    <header className={classes([ 'tox-sidebar-content__header' ])}>{ children }</header>
+    <header className={classes([ 'tox-sidebar-content__header', 'tox-floating-sidebar__header' ])}>{ children }</header>
   );
 };
 
