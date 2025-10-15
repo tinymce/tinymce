@@ -108,8 +108,22 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
 def runPlaywrightPod(String cacheName, String name, Closure body) {
 
   def containers = [
-    devPods.getContainerDefaultArgs([ name: 'node', image: "public.ecr.aws/docker/library/node:22.20.0", runAsGroup: '1000', runAsUser: '1000' ]) + devPods.hiRes(),
-    devPods.getContainerDefaultArgs([ name: 'aws-cli', image: 'public.ecr.aws/aws-cli/aws-cli:latest', runAsGroup: '1000', runAsUser: '1000' ]) + devPods.lowRes(),
+    devPods.getContainerDefaultArgs([
+      name: 'node',
+      image: "public.ecr.aws/docker/library/node:22.20.0",
+      runAsGroup: '1000',
+      runAsUser: '1000',
+      resourceRequestEphemeralStorage: '16Gi',
+      resourceLimitEphemeralStorage: '16Gi'
+      ]) + devPods.hiRes(),
+    devPods.getContainerDefaultArgs([
+      name: 'aws-cli',
+      image: 'public.ecr.aws/aws-cli/aws-cli:latest',
+      runAsGroup: '1000',
+      runAsUser: '1000',
+      resourceRequestEphemeralStorage: '2Gi',
+      resourceLimitEphemeralStorage: '4Gi'
+      ]) + devPods.lowRes(),
     devPods.getContainerDefaultArgs([ name: 'playwright', image: 'mcr.microsoft.com/playwright:v1.53.1-noble']) + devPods.hiRes()
   ]
 
@@ -140,7 +154,8 @@ def runSeleniumPod(String cacheName, String name, String browser, String version
           resourceLimitCpu: '7',
           resourceLimitMemory: '4Gi',
           resourceLimitEphemeralStorage: '8Gi',
-          runAsGroup: '1000', runAsUser: '1000'
+          runAsGroup: '1000',
+          runAsUser: '1000'
         ]
   Map selenium = [
           name: "selenium",
@@ -166,8 +181,8 @@ def runSeleniumPod(String cacheName, String name, String browser, String version
           command: 'sleep',
           args: 'infinity',
           alwaysPullImage: true,
-          resourceRequestEphemeralStorage: '1Gi',
-          resourceLimitEphemeralStorage: '1Gi'
+          resourceRequestEphemeralStorage: '2Gi',
+          resourceLimitEphemeralStorage: '4Gi'
         ] + devPods.lowRes()
   return {
     stage("${name}") {
@@ -348,9 +363,9 @@ timestamps { notifyStatusChange(
     tag: '22.20.0',
     build: cacheName,
     environment: {
+      sh "tar -zxf ./file.tar.gz"
       tinyGit.addAuthorConfig()
       tinyGit.addGitHubToKnownHosts()
-      sh "tar -zxf ./file.tar.gz"
     }
   ) {
     props = readProperties(file: 'build.properties')
