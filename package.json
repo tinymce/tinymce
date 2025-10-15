@@ -5,7 +5,9 @@
     "modules/*"
   ],
   "resolutions": {
-    "@typescript-eslint/*": "8.31.0"
+    "@typescript-eslint/*": "8.31.0",
+    "eslint": "9.25.1",
+    "prismjs": "1.29.0"
   },
   "overrides": {
     "@typescript-eslint/eslint-plugin": "8.31.0",
@@ -15,7 +17,9 @@
     "@typescript-eslint/typescript-estree": "8.31.0",
     "@typescript-eslint/visitor-keys": "8.31.0",
     "@typescript-eslint/scope-manager": "8.31.0",
-    "typescript-eslint": "8.31.0"
+    "typescript-eslint": "8.31.0",
+    "eslint": "9.25.1",
+    "prismjs": "1.29.0"
   },
   "scripts": {
     "tinymce-grunt": "grunt --gruntfile modules/tinymce/Gruntfile.js",
