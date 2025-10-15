@@ -67,7 +67,7 @@ const messageHandler = (event: MessageEvent) => {
 
       infoLog(`[${data.method}] ${data.url} -> ${response.status} ${response.statusText}`);
 
-      if (body.byteLength > 0 && Type.isNonNullable(response.headers.get('Content-Length'))) {
+      if (body.byteLength > 0 && Type.isNullable(response.headers.get('Content-Length'))) {
         response.headers.set('Content-Length', String(body.byteLength));
       }
 
