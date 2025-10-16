@@ -1,10 +1,9 @@
-import { Type } from '@ephox/katamari';
-
-import type { RawRequestHandler } from './RequestHandler';
+import * as HttpHandler from './HttpHandler';
 import * as Shared from './Shared';
+import * as StreamUtils from './StreamUtils';
 
 export interface MockingConfig {
-  readonly handler: RawRequestHandler;
+  readonly handler: HttpHandler.RawRequestHandler;
   readonly serviceWorkerUrl?: string;
   readonly name?: string;
   readonly logLevel?: Shared.LogLevel;
@@ -13,12 +12,10 @@ export interface MockingConfig {
 let mockingEnabled = false;
 const inflightRequests = new Map<string, Promise<void>>();
 
-const defaultHandler: RawRequestHandler = async (_req) => new window.Response(null, { status: 501, statusText: 'Handler not implemented' });
-
 const defaultConfig: Required<MockingConfig> = {
   name: '',
   serviceWorkerUrl: '/agar-sw.js',
-  handler: defaultHandler,
+  handler: HttpHandler.defaultHandler,
   logLevel: 'info'
 };
 
@@ -63,13 +60,7 @@ const messageHandler = (event: MessageEvent) => {
     });
 
     const requestPromise = handler(request).then(async (response) => {
-      const body = await response.arrayBuffer();
-
       infoLog(`[${data.method}] ${data.url} -> ${response.status} ${response.statusText}`);
-
-      if (body.byteLength > 0 && Type.isNullable(response.headers.get('Content-Length'))) {
-        response.headers.set('Content-Length', String(body.byteLength));
-      }
 
       const headMessage: Shared.MockedResponseHeadMessage = {
         type: 'AGAR_MOCKED_RESPONSE_HEAD',
@@ -82,18 +73,26 @@ const messageHandler = (event: MessageEvent) => {
       port.postMessage(headMessage);
 
       if (response.body) {
-        const bodyChunkMessage: Shared.MockedResponseBodyChunkMessage = {
-          type: 'AGAR_MOCKED_RESPONSE_BODY_CHUNK',
-          data: body,
-          final: true
+        await StreamUtils.forEachChunk(response.body, (chunk) => {
+          const bodyChunkMessage: Shared.MockedResponseBodyChunkMessage = {
+            type: 'AGAR_MOCKED_RESPONSE_BODY_CHUNK',
+            buffer: chunk.buffer
+          };
+
+          debugLog('Responding with mocked response body chunk to SW:', bodyChunkMessage);
+          port.postMessage(bodyChunkMessage);
+        });
+
+        const bodyDoneMessage: Shared.MockedResponseBodyDoneMessage = {
+          type: 'AGAR_MOCKED_RESPONSE_BODY_DONE'
         };
 
-        debugLog('Responding with mocked response body chunk to SW:', bodyChunkMessage);
-        port.postMessage(bodyChunkMessage);
+        debugLog('Responding with mocked response body chunk to SW:', bodyDoneMessage);
+        port.postMessage(bodyDoneMessage);
+
       } else {
-        const bodyChunkMessage: Shared.MockedResponseBodyChunkMessage = {
-          type: 'AGAR_MOCKED_RESPONSE_BODY_CHUNK',
-          final: true
+        const bodyChunkMessage: Shared.MockedResponseBodyDoneMessage = {
+          type: 'AGAR_MOCKED_RESPONSE_BODY_DONE'
         };
 
         debugLog('Responding with mocked response body chunk to SW:', bodyChunkMessage);

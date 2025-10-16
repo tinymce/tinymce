@@ -46,4 +46,17 @@ describe('browser.agar.keyboard.ResponseHelpersTest', () => {
     Assert.eq('Should have the expected content type', 'text/plain', response.headers.get('Content-Type'));
     Assert.eq('Should have the expected status', 200, response.status);
   });
+
+  it('TINY-13084: chunkedResponse', async () => {
+    const response = ResponseHelpers.chunkedResponse((async function* () {
+      yield 'hello';
+      yield ' ';
+      yield 'world';
+    })());
+
+    Assert.eq('Should have the expected content type', 'hello world', await response.text());
+    Assert.eq('Should have the expected content type', 'text/plain', response.headers.get('Content-Type'));
+    Assert.eq('Should have the expected content type', 'chunked', response.headers.get('Transfer-Encoding'));
+    Assert.eq('Should have the expected status', 200, response.status);
+  });
 });
