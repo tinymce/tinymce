@@ -239,7 +239,7 @@ timestamps { notifyStatusChange(
     ],
     tag: '22.20.0',
     build: cacheName,
-    useLFS: true,
+    useLfs: true,
   ) {
     props = readProperties(file: 'build.properties')
     String primaryBranch = props.primaryBranch
