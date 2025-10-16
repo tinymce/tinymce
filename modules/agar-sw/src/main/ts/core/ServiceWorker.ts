@@ -1,9 +1,7 @@
-// Needs to be a deep import to a module that doesn't touch the DOM or we get WebWorker/DOM conflicts
-// and we also want to ensure that we use the same message contract
-import * as Shared from '@ephox/agar/lib/main/ts/ephox/agar/http/Shared';
 import { Arr, Optional, Type } from '@ephox/katamari';
 
 import * as Logger from './Logger';
+import * as Shared from './Shared';
 
 declare const self: ServiceWorkerGlobalScope;
 

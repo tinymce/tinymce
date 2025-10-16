@@ -6,7 +6,6 @@ export default defineConfig([
   {
     rules: {
       "@tinymce/no-implicit-dom-globals": "off",
-      "@tinymce/no-direct-imports": "off",
       "consistent-this": "off"
     }
   }

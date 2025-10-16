@@ -1,3 +1,3 @@
-import * as ServiceWorker from './ServiceWorker';
+import * as ServiceWorker from './core/ServiceWorker';
 
 ServiceWorker.setup();
