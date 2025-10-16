@@ -1,4 +1,4 @@
-import type { LogLevel } from '@ephox/agar/src/main/ts/ephox/agar/http/Shared';
+import type { LogLevel } from './Shared';
 
 let logLevel: LogLevel = 'debug';
 const logPrefix = '[AGAR-SW]:';

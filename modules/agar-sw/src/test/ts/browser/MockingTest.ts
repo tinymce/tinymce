@@ -1,5 +1,5 @@
 // Needs to be a deep import to a module that doesn't touch the DOM or we get WebWorker/DOM conflicts
-import * as Http from '@ephox/agar/lib/main/ts/ephox/agar/api/Http';
+import { Http } from '@ephox/agar';
 import { describe, it, Assert } from '@ephox/bedrock-client';
 import { Type } from '@ephox/katamari';
 
