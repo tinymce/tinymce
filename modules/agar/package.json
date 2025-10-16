@@ -34,6 +34,7 @@
     "fast-check": "^2.0.0"
   },
   "devDependencies": {
+    "@ephox/agar-sw": "^1.0.0",
     "@ephox/katamari-assertions": "^5.0.0"
   },
   "sideEffects": false,
