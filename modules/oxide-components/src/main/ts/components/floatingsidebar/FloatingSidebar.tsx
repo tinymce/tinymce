@@ -1,4 +1,4 @@
-import { isValidElement, useEffect, useRef, type FC, type PropsWithChildren, type ReactNode } from 'react';
+import { isValidElement, useEffect, useMemo, useRef, type FC, type PropsWithChildren, type ReactNode } from 'react';
 
 import { classes } from '../../utils/Styles';
 import * as Draggable from '../draggable/Draggable';
@@ -7,6 +7,11 @@ import '../../module/css';
 export interface FloatingSidebarProps extends PropsWithChildren {
   isOpen?: boolean;
   height?: number;
+  initialPosition?: {
+    x: number;
+    y: number;
+    origin: 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
+  };
 }
 interface HeaderProps extends PropsWithChildren {};
 
@@ -30,9 +35,14 @@ const createSlots = (children: ReactNode): Slots => {
   return { header: header[0], children: otherChildren };
 };
 
-const Root: FC<FloatingSidebarProps> = ({ isOpen = true, height = 600, ...props }) => {
+const Root: FC<FloatingSidebarProps> = ({ isOpen = true, height = 600, initialPosition, ...props }) => {
   const { header, children } = createSlots(props.children);
   const elementRef = useRef<HTMLDivElement | null>(null);
+
+  const positionStyles = useMemo(() => {
+    // TODO: calculate correct position values
+    return { top: initialPosition?.y ?? 0, left: initialPosition?.x ?? 0 };
+  }, [ initialPosition ]);
 
   useEffect(() => {
     const element = elementRef.current;
@@ -46,7 +56,7 @@ const Root: FC<FloatingSidebarProps> = ({ isOpen = true, height = 600, ...props 
       ref={elementRef}
       popover="manual"
       className={classes([ 'tox-floating-sidebar' ])}
-      style={{ '--tox-private-floating-sidebar-requested-height': `${height}px` }}
+      style={{ '--tox-private-floating-sidebar-requested-height': `${height}px`, ...positionStyles }}
     >
       <aside className={classes([ 'tox-floating-sidebar__content-wrapper' ])}>
         <Draggable.Handle>{ header }</Draggable.Handle>
