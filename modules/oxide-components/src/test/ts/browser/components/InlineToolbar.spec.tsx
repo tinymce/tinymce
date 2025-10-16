@@ -1,7 +1,7 @@
 import { userEvent } from '@vitest/browser/context';
 import { InlineToolbar } from 'oxide-components/components/inlinetoolbar/InlineToolbar';
 import { classes } from 'oxide-components/utils/Styles';
-import { createRef, type ReactNode } from 'react';
+import { createRef, Fragment, type ReactNode } from 'react';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-react';
 
@@ -29,7 +29,7 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
   it('TINY-13071: Should render trigger and toolbar', async () => {
     const sinkRef = createRef<HTMLDivElement>();
     const { getByTestId } = render(
-      <>
+      <Fragment>
         <div ref={sinkRef} className="tox" style={{ position: 'relative' }} />
         <InlineToolbar sinkRef={sinkRef}>
           <InlineToolbar.Trigger>
@@ -39,7 +39,7 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
             <div data-testid={toolbarTestId}>Toolbar Content</div>
           </InlineToolbar.Toolbar>
         </InlineToolbar>
-      </>,
+      </Fragment>,
       { wrapper: Wrapper }
     );
 
@@ -67,7 +67,7 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
   it('TINY-13071: Should close toolbar on click outside when persistent=false', async () => {
     const sinkRef = createRef<HTMLDivElement>();
     const { getByTestId } = render(
-      <>
+      <Fragment>
         <div ref={sinkRef} className="tox" style={{ position: 'relative' }}>
           <InlineToolbar sinkRef={sinkRef} persistent={false}>
             <InlineToolbar.Trigger>
@@ -78,7 +78,7 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
             </InlineToolbar.Toolbar>
           </InlineToolbar>
         </div>
-      </>,
+      </Fragment>,
       { wrapper: Wrapper }
     );
 
@@ -102,7 +102,7 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
   it('TINY-13071: Should close toolbar on Escape key', async () => {
     const sinkRef = createRef<HTMLDivElement>();
     const { getByTestId } = render(
-      <>
+      <Fragment>
         <div ref={sinkRef} className="tox" style={{ position: 'relative' }}>
           <InlineToolbar sinkRef={sinkRef}>
             <InlineToolbar.Trigger>
@@ -113,7 +113,7 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
             </InlineToolbar.Toolbar>
           </InlineToolbar>
         </div>
-      </>,
+      </Fragment>,
       { wrapper: Wrapper }
     );
 
