@@ -44,7 +44,11 @@ const sendRequestToClient = async (client: Client, request: Request): Promise<Re
           }
         });
 
-        resolve(new Response(reader, { status: headData.status, headers: headData.headers }));
+        resolve(new Response(reader, {
+          status: headData.status,
+          statusText: headData.statusText,
+          headers: headData.headers
+        }));
       } else {
         reject(new Error('Unexpected message from client expected response head.'));
       }
