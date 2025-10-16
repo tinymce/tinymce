@@ -1,10 +1,7 @@
-// Needs to be a deep import to a module that doesn't touch the DOM or we get WebWorker/DOM conflicts
-import { Http } from '@ephox/agar';
 import { describe, it, Assert } from '@ephox/bedrock-client';
 import { Type } from '@ephox/katamari';
 
-// We need this type hack since TS doesn't allow the same project to be both a DOM and a WebWorker
-declare const fetch: ServiceWorkerGlobalScope['fetch'];
+import * as Http from 'ephox/agar/api/Http';
 
 interface State {
   readonly count: number;
@@ -12,7 +9,7 @@ interface State {
 
 const pWait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-describe('browser.agar.api.HttpTest', () => {
+describe('browser.agar.http.HttpMockingTest', () => {
   const httpHook = Http.mockHttpHook<State>((state) => [
     Http.get('/custom/test', async () => {
       return Http.makeResponse(
@@ -122,7 +119,7 @@ describe('browser.agar.api.HttpTest', () => {
   ], { logLevel: 'info', name: 'test' });
 
   it('TINY-13084: Should mock simple GET request', async () => {
-    const response = await fetch('/custom/test');
+    const response = await window.fetch('/custom/test');
     const json = await response.json();
 
     Assert.eq('Should be expected JSON response', { message: 'Get response' }, json);
@@ -131,7 +128,7 @@ describe('browser.agar.api.HttpTest', () => {
   });
 
   it('TINY-13084: Should mock simple POST request', async () => {
-    const response = await fetch('/custom/test', {
+    const response = await window.fetch('/custom/test', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -148,7 +145,7 @@ describe('browser.agar.api.HttpTest', () => {
   });
 
   it('TINY-13084: Should mock simple PUT request', async () => {
-    const response = await fetch('/custom/test', {
+    const response = await window.fetch('/custom/test', {
       method: 'PUT',
     });
     const json = await response.json();
@@ -159,7 +156,7 @@ describe('browser.agar.api.HttpTest', () => {
   });
 
   it('TINY-13084: Should mock simple DELETE request', async () => {
-    const response = await fetch('/custom/test', {
+    const response = await window.fetch('/custom/test', {
       method: 'DELETE',
     });
     const json = await response.json();
@@ -170,7 +167,7 @@ describe('browser.agar.api.HttpTest', () => {
   });
 
   it('TINY-13084: Should mock simple PATCH request', async () => {
-    const response = await fetch('/custom/test', {
+    const response = await window.fetch('/custom/test', {
       method: 'PATCH',
     });
     const json = await response.json();
@@ -181,32 +178,32 @@ describe('browser.agar.api.HttpTest', () => {
   });
 
   it('TINY-13084: Should return custom http status 403', async () => {
-    const { status } = await fetch('/custom/test/status/404');
+    const { status } = await window.fetch('/custom/test/status/404');
     Assert.eq('Should be expected status', 404, status);
   });
 
   it('TINY-13084: Should return custom http status 404', async () => {
-    const { status } = await fetch('/custom/test/status/404');
+    const { status } = await window.fetch('/custom/test/status/404');
     Assert.eq('Should be expected status', 404, status);
   });
 
   it('TINY-13084: Should return splat path', async () => {
-    const json = await fetch('/custom/test/splat/a/b/c').then((res) => res.json());
+    const json = await window.fetch('/custom/test/splat/a/b/c').then((res) => res.json());
     Assert.eq('Should be expected status', { message: 'a/b/c' }, json);
   });
 
   it('TINY-13084: Should update state', async () => {
     httpHook.state.clear();
 
-    const json1 = await fetch('/custom/test/state').then((res) => res.json());
+    const json1 = await window.fetch('/custom/test/state').then((res) => res.json());
     Assert.eq('Should be expected state', { count: 1 }, json1);
 
-    const json2 = await fetch('/custom/test/state').then((res) => res.json());
+    const json2 = await window.fetch('/custom/test/state').then((res) => res.json());
     Assert.eq('Should be expected state', { count: 2 }, json2);
   });
 
   it('TINY-13084: Should handle streaming response', async () => {
-    const response = await fetch('/custom/streaming');
+    const response = await window.fetch('/custom/streaming');
     const body = response.body;
 
     if (Type.isNull(body)) {
@@ -217,7 +214,7 @@ describe('browser.agar.api.HttpTest', () => {
     Assert.eq('Should be expected content-type', 'text/plain', response.headers.get('Content-Type'));
     Assert.eq('Should be expected transfer-encoding', 'chunked', response.headers.get('Transfer-Encoding'));
 
-    const reader = body.pipeThrough<string>(new TextDecoderStream()).getReader();
+    const reader = body.pipeThrough<string>(new window.TextDecoderStream()).getReader();
     const chunks: string[] = [];
 
     while (true) {
@@ -239,7 +236,7 @@ describe('browser.agar.api.HttpTest', () => {
     formData.append('field', 'value');
     formData.append('file', new Blob([ 'file contents' ], { type: 'text/plain' }), 'test.txt');
 
-    const response = await fetch('/custom/upload', {
+    const response = await window.fetch('/custom/upload', {
       method: 'POST',
       body: formData
     });
