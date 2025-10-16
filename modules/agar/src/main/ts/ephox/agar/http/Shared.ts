@@ -38,8 +38,11 @@ export interface MockedResponseHeadMessage {
 
 export interface MockedResponseBodyChunkMessage {
   readonly type: 'AGAR_MOCKED_RESPONSE_BODY_CHUNK';
-  readonly data?: ArrayBuffer;
-  readonly final: boolean;
+  readonly buffer: ArrayBuffer;
+}
+
+export interface MockedResponseBodyDoneMessage {
+  readonly type: 'AGAR_MOCKED_RESPONSE_BODY_DONE';
 }
 
 export const mockPrefix = '/custom/';
@@ -54,6 +57,7 @@ export const isMockingStoppedMessage = isMessageOfType<MockingStoppedMessage>('A
 export const isMockRequestMessage = isMessageOfType<MockRequestMessage>('AGAR_MOCKED_REQUEST');
 export const isMockedResponseHeadMessage = isMessageOfType<MockedResponseHeadMessage>('AGAR_MOCKED_RESPONSE_HEAD');
 export const isMockedResponseBodyChunkMessage = isMessageOfType<MockedResponseBodyChunkMessage>('AGAR_MOCKED_RESPONSE_BODY_CHUNK');
+export const isMockedResponseBodyDoneMessage = isMessageOfType<MockedResponseBodyDoneMessage>('AGAR_MOCKED_RESPONSE_BODY_DONE');
 
 export const getHeaders = (headers: Headers): Record<string, string> => {
   const result: Record<string, string> = {};

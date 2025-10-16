@@ -1,8 +1,8 @@
 import { after, before } from '@ephox/bedrock-client';
 import { Singleton } from '@ephox/katamari';
 
+import * as HttpHandler from './HttpHandler';
 import * as MockClient from './MockClient';
-import * as RequestHandler from './RequestHandler';
 
 export interface MockHttpHook<T> {
   readonly state: Singleton.Value<T>;
@@ -14,7 +14,7 @@ export interface MockHttpHookConfig {
 }
 
 export const mockHttpHook = <T>(
-  handlers: (state: Singleton.Value<T>) => RequestHandler.RequestMatcher[],
+  handlers: (state: Singleton.Value<T>) => HttpHandler.HttpHandler[],
   config?: MockHttpHookConfig
 ): MockHttpHook<T> => {
   const state = Singleton.value<T>();
@@ -28,10 +28,7 @@ export const mockHttpHook = <T>(
 
     await MockClient.startMocking({
       ...config,
-      handler: async (request) => {
-        return RequestHandler.findRequestHandler(requestHandlers, request)
-          .getOrThunk(() => Promise.reject(new Error(`No handler found for ${request.method} ${request.url}`)));
-      }
+      handler: (request) => HttpHandler.resolveRequest(requestHandlers, request)
     });
   });
 

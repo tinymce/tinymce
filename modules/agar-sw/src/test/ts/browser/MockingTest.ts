@@ -94,27 +94,16 @@ describe('browser.agar.api.HttpTest', () => {
       );
     }),
     Http.get('/custom/streaming', async () => {
-      const encoder = new TextEncoder();
-      const items = [ 'one', 'two', 'three' ];
+      const getChunks = async function* () {
+        const items = [ 'one', 'two', 'three' ];
 
-      const stream = new ReadableStream({
-        start: async (controller) => {
-          for (const item of items) {
-            controller.enqueue(encoder.encode(item));
-            await pWait(1);
-          }
-
-          controller.close();
+        for (const item of items) {
+          yield item;
+          await pWait(1);
         }
-      });
+      };
 
-      return new Response(stream, {
-        status: 200,
-        headers: {
-          'Content-Type': 'text/plain',
-          'Transfer-Encoding': 'chunked'
-        }
-      });
+      return Http.chunkedResponse(getChunks());
     }),
     Http.post('/custom/upload', async ({ request }) => {
       const formData = await request.formData();
@@ -139,7 +128,6 @@ describe('browser.agar.api.HttpTest', () => {
     Assert.eq('Should be expected JSON response', { message: 'Get response' }, json);
     Assert.eq('Should be expected status', 200, response.status);
     Assert.eq('Should be expected content-type', 'application/json', response.headers.get('Content-Type'));
-    Assert.eq('Should be expected content-length', '26', response.headers.get('Content-Length'));
   });
 
   it('TINY-13084: Should mock simple POST request', async () => {
@@ -217,7 +205,7 @@ describe('browser.agar.api.HttpTest', () => {
     Assert.eq('Should be expected state', { count: 2 }, json2);
   });
 
-  it.skip('TINY-13084: Should handle streaming response', async () => {
+  it('TINY-13084: Should handle streaming response', async () => {
     const response = await fetch('/custom/streaming');
     const body = response.body;
 
@@ -234,6 +222,7 @@ describe('browser.agar.api.HttpTest', () => {
 
     while (true) {
       const { done, value: chunk } = await reader.read();
+
       if (done) {
         break;
       }

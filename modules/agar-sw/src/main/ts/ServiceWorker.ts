@@ -3,26 +3,18 @@
 import * as Shared from '@ephox/agar/lib/main/ts/ephox/agar/http/Shared';
 import { Arr, Optional, Type } from '@ephox/katamari';
 
+import * as Logger from './Logger';
+
 declare const self: ServiceWorkerGlobalScope;
 
 const activeClientIds = new Set<string>();
-
-let logLevel = 'debug';
-const logPrefix = '[AGAR-SW]:';
-
-const debugLog = (...args: any[]) => {
-  if (logLevel === 'debug') {
-    // eslint-disable-next-line no-console
-    console.log(logPrefix, ...args);
-  }
-};
 
 const sendMessageToPort = (
   clientId: string,
   port: MessagePort,
   message: Shared.MockingStartedMessage | Shared.MockingStoppedMessage
 ) => {
-  debugLog(`sendMessageToPort: [${message.type}]`, { clientId, message });
+  Logger.debug(`sendMessageToPort: [${message.type}]`, { clientId, message });
   port.postMessage(message);
 };
 
@@ -30,27 +22,31 @@ const sendRequestToClient = async (client: Client, request: Request): Promise<Re
   const body = await request.arrayBuffer();
   const requestId = crypto.randomUUID();
 
-  debugLog('sendRequestToClient:', { clientId: client.id, requestId, request });
+  Logger.debug('sendRequestToClient:', { clientId: client.id, requestId, request });
 
   return new Promise((resolve, reject) => {
     const messageChannel = new MessageChannel();
     const incomingPort = messageChannel.port1;
 
-    incomingPort.onmessage = ({ data: startData }) => {
-      if (Shared.isMockedResponseHeadMessage(startData)) {
-        incomingPort.onmessage = (event) => {
-          const bodyData = event.data;
-          if (Shared.isMockedResponseBodyChunkMessage(bodyData)) {
-            debugLog('Returning mocked response', { clientId: client.id, requestId, url: request.url });
-            resolve(new Response(bodyData.data, {
-              status: startData.status,
-              statusText: startData.statusText,
-              headers: startData.headers
-            }));
-          } else {
-            reject(new Error('Unexpected message from client expected response body chunk or done.'));
+    incomingPort.onmessage = ({ data: headData }) => {
+      if (Shared.isMockedResponseHeadMessage(headData)) {
+        const reader = new ReadableStream({
+          start: (controller) => {
+            incomingPort.onmessage = ({ data: bodyData }) => {
+              if (Shared.isMockedResponseBodyChunkMessage(bodyData)) {
+                Logger.debug('Returning mocked response body chunk', { clientId: client.id, requestId, url: request.url });
+                controller.enqueue(new Uint8Array(bodyData.buffer));
+              } else if (Shared.isMockedResponseBodyDoneMessage(bodyData)) {
+                Logger.debug('Returning mocked response body done', { clientId: client.id, requestId, url: request.url });
+                controller.close();
+              } else {
+                reject(new Error('Unexpected message from client expected response body chunk or done.'));
+              }
+            };
           }
-        };
+        });
+
+        resolve(new Response(reader, { status: headData.status, headers: headData.headers }));
       } else {
         reject(new Error('Unexpected message from client expected response head.'));
       }
@@ -114,8 +110,7 @@ export const setup = (): void => {
   // Activate the service worker as soon as it's finished installing
   self.addEventListener('install', () => {
     self.skipWaiting().catch((error) => {
-      // eslint-disable-next-line no-console
-      console.error(logPrefix, error);
+      Logger.error('Failed to skip waiting during install.', error);
     });
   });
 
@@ -143,7 +138,7 @@ export const setup = (): void => {
       const data = event.data;
 
       if (Shared.isMockingStartMessage(data)) {
-        logLevel = data.logLevel ?? logLevel;
+        Logger.setLevel(data.logLevel);
         activeClientIds.add(clientId);
         sendMessageToPort(clientId, port, { type: 'AGAR_MOCKING_STARTED' });
       } else if (Shared.isMockingStopMessage(data)) {
