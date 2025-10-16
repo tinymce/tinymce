@@ -9,3 +9,7 @@
 ## Install from npm
 
 `npm install @tinymce/oxide-components`.
+
+# Documentation link
+
+The documentation for `oxide-components` is published [here](https://tinymce.github.io/tinymce/modules/oxide-components/?path=/docs/contributing-guide--documentation)

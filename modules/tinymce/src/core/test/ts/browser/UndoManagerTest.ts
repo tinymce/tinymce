@@ -547,7 +547,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     });
   });
 
-  it('TINY-6920: Do not fire change event at first typed character', () => {
+  it('TINY-6920: Do not fire change event at first typed character', async () => {
     const editor = hook.editor();
     let changeEventCounter = 0;
 
@@ -558,7 +558,7 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     editor.resetContent('');
 
     editor.on('change', onChange);
-    TinyContentActions.type(editor, 'A');
+    await TinyContentActions.pType(editor, 'A');
     editor.off('change', onChange);
 
     assert.equal(changeEventCounter, 0, 'No events should be detected');
@@ -628,13 +628,13 @@ describe('browser.tinymce.core.UndoManagerTest', () => {
     });
   });
 
-  it('TINY-9222: Scroll to the cursor after undo and redo', () => {
+  it('TINY-9222: Scroll to the cursor after undo and redo', async () => {
     const editor = hook.editor();
 
     const height = 5000;
     editor.resetContent(`<p class="first">top paragraph</p><p style="height: ${height}px"></p><p class="last">last paragraph</p>`);
     TinySelections.select(editor, 'p.last', [ 0 ]);
-    TinyContentActions.type(editor, 'updated ');
+    await TinyContentActions.pType(editor, 'updated ');
 
     const doc = TinyDom.document(editor);
     const editorHeight = editor.getWin().innerHeight;

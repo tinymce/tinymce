@@ -1,6 +1,5 @@
 import { Fun } from '@ephox/katamari';
-import { PlatformDetection } from '@ephox/sand';
-import { Class, Focus, SugarElement, SugarShadowDom, WindowVisualViewport } from '@ephox/sugar';
+import { Class, Focus, SugarElement, SugarShadowDom } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
 import type Editor from '../api/Editor';
@@ -9,7 +8,6 @@ import FocusManager from '../api/FocusManager';
 import * as Options from '../api/Options';
 import Delay from '../api/util/Delay';
 import * as NodeType from '../dom/NodeType';
-import * as OuterPosition from '../frames/OuterPosition';
 import * as SelectionRestore from '../selection/SelectionRestore';
 
 let documentFocusInHandler: ((e: FocusEvent) => void) | null;
@@ -69,19 +67,6 @@ const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => 
     }
   };
 
-  const bringEditorIntoView = (editor: Editor) => {
-    const minimumVisibility = 25;
-    if (!editor.iframeElement) {
-      return;
-    }
-    const element = SugarElement.fromDom(editor.iframeElement);
-    const op = OuterPosition.find(element);
-    const viewportBounds = WindowVisualViewport.getBounds(window);
-    if (op.top < viewportBounds.y || op.top > (viewportBounds.bottom - minimumVisibility)) {
-      element.dom.scrollIntoView({ block: 'center' });
-    }
-  };
-
   editor.on('focusin', () => {
     const focusedEditor = editorManager.focusedEditor;
 
@@ -98,10 +83,6 @@ const registerEvents = (editorManager: EditorManager, e: { editor: Editor }) => 
       editorManager.focusedEditor = editor;
       editor.dispatch('focus', { blurredEditor: focusedEditor });
       editor.focus(true);
-      const browser = PlatformDetection.detect().browser;
-      if (editor.inline !== true && (browser.isSafari() || browser.isChromium())) {
-        bringEditorIntoView(editor);
-      }
     }
   });
 
