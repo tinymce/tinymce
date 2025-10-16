@@ -6,15 +6,15 @@
     "outDir": "lib",
     "rootDir": "src",
     "baseUrl": ".",
-    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo"
+    "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
+    "paths": {
+      "ephox/agar-aw/*": ["src/main/ts/*"]
+    }
   },
   "include": [
-    "src/demo/ts",
-    "src/main/ts",
-    "src/test/ts"
+    "src/main/ts"
   ],
   "references": [
-    { "path": "../katamari" },
-    { "path": "../agar" }
+    { "path": "../katamari" }
   ]
 }
