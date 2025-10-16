@@ -16,6 +16,7 @@ describe('browser.agar.http.HttpMockingTest', () => {
         JSON.stringify({ message: 'Get response' }),
         {
           status: 200,
+          statusText: 'OK',
           headers: { 'Content-Type': 'application/json' }
         }
       );
@@ -124,6 +125,7 @@ describe('browser.agar.http.HttpMockingTest', () => {
 
     Assert.eq('Should be expected JSON response', { message: 'Get response' }, json);
     Assert.eq('Should be expected status', 200, response.status);
+    Assert.eq('Should be expected statusText', 'OK', response.statusText);
     Assert.eq('Should be expected content-type', 'application/json', response.headers.get('Content-Type'));
   });
 
