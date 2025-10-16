@@ -1,4 +1,4 @@
-// Keep this file in sync between the agar and agar-sw cross importing provded to painfull
+// Keep this file in sync between the `agar` and `agar-sw` cross importing provded too painful
 
 export type LogLevel = 'info' | 'debug';
 
