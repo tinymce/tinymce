@@ -21,6 +21,7 @@
     { "path": "../jax" },
     { "path": "../katamari" },
     { "path": "../katamari-assertions" },
+    { "path": "../polaris" },
     { "path": "../sand" },
     { "path": "../sugar" }
   ]
