@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, type CSSProperties, type FC, type PropsWithChildren, type ReactElement, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, type FC, type PropsWithChildren, type ReactElement, type ReactNode } from 'react';
 
 import { Draggable } from '../../main';
 import { classes } from '../../utils/Styles';
