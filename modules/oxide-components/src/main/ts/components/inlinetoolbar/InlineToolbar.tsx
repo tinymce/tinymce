@@ -5,6 +5,7 @@ import {
   useContext,
   useRef,
   useState,
+  useMemo,
   useEffect,
   type FC,
   useCallback
@@ -43,7 +44,7 @@ const Root: FC<InlineToolbarProps> = ({
   const open = useCallback(() => setIsOpen(true), []);
   const close = useCallback(() => setIsOpen(false), []);
 
-  const context: InlineToolbarContextValue = {
+  const context = useMemo<InlineToolbarContextValue>(() => ({
     isOpen,
     open,
     close,
@@ -51,7 +52,7 @@ const Root: FC<InlineToolbarProps> = ({
     toolbarRef,
     sinkRef,
     persistent
-  };
+  }), [ isOpen, open, close, persistent ]);
 
   return (
     <InlineToolbarContext.Provider value={context}>
