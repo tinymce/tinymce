@@ -22,11 +22,11 @@ const defaultConfig: Required<MockingConfig> = {
 let currentMockingConfig = { ...defaultConfig };
 
 const log = (...args: any[]) => {
-  const { name: label } = currentMockingConfig;
+  const { name } = currentMockingConfig;
 
-  if (label !== '') {
+  if (name !== '') {
     // eslint-disable-next-line no-console
-    console.log(`[AGAR-CLIENT][${label}]`, ...args);
+    console.log(`[AGAR-CLIENT][${name}]`, ...args);
   } else {
     // eslint-disable-next-line no-console
     console.log('[AGAR-CLIENT]', ...args);
@@ -91,12 +91,12 @@ const messageHandler = (event: MessageEvent) => {
         port.postMessage(bodyDoneMessage);
 
       } else {
-        const bodyChunkMessage: Shared.MockedResponseBodyDoneMessage = {
+        const bodyDoneMessage: Shared.MockedResponseBodyDoneMessage = {
           type: 'AGAR_MOCKED_RESPONSE_BODY_DONE'
         };
 
-        debugLog('Responding with mocked response body chunk to SW:', bodyChunkMessage);
-        port.postMessage(bodyChunkMessage);
+        debugLog('Responding with mocked response body chunk to SW:', bodyDoneMessage);
+        port.postMessage(bodyDoneMessage);
       }
     }).finally(() => {
       inflightRequests.delete(data.requestId);

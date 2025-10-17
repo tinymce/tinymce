@@ -3,13 +3,14 @@ import { Singleton } from '@ephox/katamari';
 
 import * as HttpHandler from './HttpHandler';
 import * as MockClient from './MockClient';
+import type * as Shared from './Shared';
 
 export interface MockHttpHook<T> {
   readonly state: Singleton.Value<T>;
 }
 
 export interface MockHttpHookConfig {
-  readonly logLevel?: 'debug' | 'info';
+  readonly logLevel?: Shared.LogLevel;
   readonly name?: string;
 }
 
