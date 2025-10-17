@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { Type } from '@ephox/katamari';
 import {
   createContext,
@@ -29,10 +30,7 @@ const useInlineToolbarContext = () => {
   return context;
 };
 
-const InlineToolbar: FC<InlineToolbarProps> & {
-  Trigger: FC<TriggerProps>;
-  Toolbar: FC<ToolbarProps>;
-} = ({
+const Root: FC<InlineToolbarProps> = ({
   children,
   sinkRef,
   persistent = false
@@ -174,6 +172,8 @@ const Toolbar: FC<ToolbarProps> = ({
   );
 };
 
-InlineToolbar.Trigger = Trigger;
-InlineToolbar.Toolbar = Toolbar;
-export { InlineToolbar };
+export const InlineToolbar = {
+  Root,
+  Trigger,
+  Toolbar
+};

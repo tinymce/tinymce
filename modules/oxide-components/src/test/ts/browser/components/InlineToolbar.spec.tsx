@@ -1,4 +1,5 @@
 import { userEvent } from '@vitest/browser/context';
+// import { InlineToolbar } from 'oxide-components/components/inlinetoolbar/InlineToolbar';
 import { InlineToolbar } from 'oxide-components/components/inlinetoolbar/InlineToolbar';
 import { classes } from 'oxide-components/utils/Styles';
 import { createRef, Fragment, type ReactNode } from 'react';
@@ -31,14 +32,14 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
     const { getByTestId } = render(
       <Fragment>
         <div ref={sinkRef} className="tox" style={{ position: 'relative' }} />
-        <InlineToolbar sinkRef={sinkRef}>
+        <InlineToolbar.Root sinkRef={sinkRef}>
           <InlineToolbar.Trigger>
             <div data-testid={triggerTestId}>Click Me</div>
           </InlineToolbar.Trigger>
           <InlineToolbar.Toolbar>
             <div data-testid={toolbarTestId}>Toolbar Content</div>
           </InlineToolbar.Toolbar>
-        </InlineToolbar>
+        </InlineToolbar.Root>
       </Fragment>,
       { wrapper: Wrapper }
     );
@@ -69,14 +70,14 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
     const { getByTestId } = render(
       <Fragment>
         <div ref={sinkRef} className="tox" style={{ position: 'relative' }}>
-          <InlineToolbar sinkRef={sinkRef} persistent={false}>
+          <InlineToolbar.Root sinkRef={sinkRef} persistent={false}>
             <InlineToolbar.Trigger>
               <div data-testid={triggerTestId}>Click Me</div>
             </InlineToolbar.Trigger>
             <InlineToolbar.Toolbar>
               <div data-testid={toolbarTestId}>Toolbar Content</div>
             </InlineToolbar.Toolbar>
-          </InlineToolbar>
+          </InlineToolbar.Root>
         </div>
       </Fragment>,
       { wrapper: Wrapper }
@@ -104,14 +105,14 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
     const { getByTestId } = render(
       <Fragment>
         <div ref={sinkRef} className="tox" style={{ position: 'relative' }}>
-          <InlineToolbar sinkRef={sinkRef}>
+          <InlineToolbar.Root sinkRef={sinkRef}>
             <InlineToolbar.Trigger>
               <div data-testid={triggerTestId}>Click Me</div>
             </InlineToolbar.Trigger>
             <InlineToolbar.Toolbar>
               <div data-testid={toolbarTestId}>Toolbar Content</div>
             </InlineToolbar.Toolbar>
-          </InlineToolbar>
+          </InlineToolbar.Root>
         </div>
       </Fragment>,
       { wrapper: Wrapper }
