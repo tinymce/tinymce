@@ -109,24 +109,24 @@ const Toolbar: FC<ToolbarProps> = ({
     const handleClickOutside = (event: MouseEvent) => {
       if (
         isOpen &&
-                Type.isNonNullable(toolbarRef.current) &&
-                Type.isNonNullable(triggerRef.current)
+          Type.isNonNullable(toolbarRef.current) &&
+          Type.isNonNullable(triggerRef.current)
       ) {
         const toolbarRect = toolbarRef.current.getBoundingClientRect();
         const triggerRect = triggerRef.current.getBoundingClientRect();
         const { clientX, clientY } = event;
 
         const clickedToolbar =
-                    clientX >= toolbarRect.left &&
-                    clientX <= toolbarRect.right &&
-                    clientY >= toolbarRect.top &&
-                    clientY <= toolbarRect.bottom;
+          clientX >= toolbarRect.left &&
+          clientX <= toolbarRect.right &&
+          clientY >= toolbarRect.top &&
+          clientY <= toolbarRect.bottom;
 
         const clickedTrigger =
-                    clientX >= triggerRect.left &&
-                    clientX <= triggerRect.right &&
-                    clientY >= triggerRect.top &&
-                    clientY <= triggerRect.bottom;
+          clientX >= triggerRect.left &&
+          clientX <= triggerRect.right &&
+          clientY >= triggerRect.top &&
+          clientY <= triggerRect.bottom;
 
         if (!clickedToolbar && !clickedTrigger) {
           close();
