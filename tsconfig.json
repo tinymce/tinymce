@@ -6,6 +6,7 @@
   "references": [
     { "path": "modules/acid" },
     { "path": "modules/agar" },
+    { "path": "modules/agar-sw" },
     { "path": "modules/alloy" },
     { "path": "modules/boss" },
     { "path": "modules/boulder" },

@@ -1,0 +1,40 @@
+{
+  "name": "@ephox/agar-sw",
+  "version": "1.0.0",
+  "description": "HTTP mocking service worker",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tinymce/tinymce.git",
+    "directory": "modules/agar-sw"
+  },
+  "scripts": {
+    "prepublishOnly": "grunt",
+    "build": "grunt",
+    "test": "bedrock-auto -b chrome-headless -d src/test/ts",
+    "test-manual": "bedrock --testdirs src/test/ts/browser",
+    "lint": "eslint --max-warnings=0 src/**/*.ts"
+  },
+  "author": "Ephox Corporation DBA Tiny Technologies, Inc",
+  "license": "GPL-2.0-or-later",
+  "dependencies": {
+    "@ephox/katamari": "^10.0.0"
+  },
+  "sideEffects": false,
+  "files": [
+    "lib/main",
+    "lib/demo",
+    "lib/test",
+    "src",
+    "tsconfig.json",
+    "README.md",
+    "LEGAL.txt",
+    "CHANGELOG.md",
+    "LICENSE.txt"
+  ],
+  "main": "./lib/main/ts/Main.js",
+  "module": "./lib/main/ts/Main.js",
+  "types": "./lib/main/ts/Main.d.ts",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.1"
+  }
+}
