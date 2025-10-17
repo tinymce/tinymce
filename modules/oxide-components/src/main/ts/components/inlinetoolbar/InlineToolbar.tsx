@@ -1,4 +1,4 @@
-/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable react-refresh/only-export-components -- Compound component pattern requires exporting components as an object. Fast Refresh works fine with this pattern despite the warning. */
 import { Type } from '@ephox/katamari';
 import {
   createContext,
@@ -12,8 +12,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 
-import * as KeyMatch from '../../keynav/keyboard/KeyMatch';
-import * as Keys from '../../keynav/keyboard/Keys';
+import { useSpecialKeyNavigation } from '../../keynav/KeyboardNavigationHooks';
 
 import type {
   InlineToolbarContextValue,
@@ -52,6 +51,7 @@ const Root: FC<InlineToolbarProps> = ({
     toolbarRef,
     sinkRef,
     persistent
+    /* eslint-disable-next-line react-hooks/exhaustive-deps -- sinkRef/triggerRef/toolbarRef are stable ref objects and don't need to be in deps list. */
   }), [ isOpen, open, close, persistent ]);
 
   return (
@@ -86,17 +86,21 @@ const Toolbar: FC<ToolbarProps> = ({
     persistent
   } = useInlineToolbarContext();
 
+  // Focus toolbar when it opens to enable keyboard navigation
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (KeyMatch.inSet(Keys.ESCAPE)(event) && isOpen) {
-        close();
-      }
-    };
+    if (isOpen && toolbarRef.current) {
+      toolbarRef.current.focus();
+    }
+  /* eslint-disable-next-line react-hooks/exhaustive-deps -- toolbarRef is a stable ref object and doesn't need to be in deps list. */
+  }, [ isOpen ]);
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [ isOpen, close ]);
+  // Handle Escape key via keyboard navigation hook
+  useSpecialKeyNavigation({
+    containerRef: toolbarRef,
+    onEscape: close,
+  });
 
+  // Handle click outside to close toolbar (unless persistent)
   useEffect(() => {
     if (persistent) {
       return;
@@ -154,6 +158,7 @@ const Toolbar: FC<ToolbarProps> = ({
       ? createPortal(
         <div
           ref={toolbarRef}
+          tabIndex={-1}
           style={{
             ...getPosition(sinkRef.current, triggerRef.current),
             position: 'absolute',
