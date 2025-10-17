@@ -1,6 +1,5 @@
 import { userEvent } from '@vitest/browser/context';
-// import { InlineToolbar } from 'oxide-components/components/inlinetoolbar/InlineToolbar';
-import { InlineToolbar } from 'oxide-components/components/inlinetoolbar/InlineToolbar';
+import * as InlineToolbar from 'oxide-components/components/inlinetoolbar/InlineToolbar';
 import { classes } from 'oxide-components/utils/Styles';
 import { createRef, Fragment, type ReactNode } from 'react';
 import { describe, expect, it } from 'vitest';

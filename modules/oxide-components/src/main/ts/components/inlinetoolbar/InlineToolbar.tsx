@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components -- Compound component pattern requires exporting components as an object. Fast Refresh works fine with this pattern despite the warning. */
 import { Type } from '@ephox/katamari';
 import {
   createContext,
@@ -179,7 +178,7 @@ const Toolbar: FC<ToolbarProps> = ({
   );
 };
 
-export const InlineToolbar = {
+export {
   Root,
   Trigger,
   Toolbar

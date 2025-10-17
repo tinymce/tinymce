@@ -4,7 +4,7 @@ import { fn } from 'storybook/test';
 
 import { Button } from '../button/Button';
 
-import { InlineToolbar } from './InlineToolbar';
+import * as InlineToolbar from './InlineToolbar';
 
 const meta = {
   title: 'components/InlineToolbar',
