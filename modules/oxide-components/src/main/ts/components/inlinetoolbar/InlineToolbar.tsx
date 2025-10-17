@@ -6,7 +6,8 @@ import {
   useRef,
   useState,
   useEffect,
-  type FC
+  type FC,
+  useCallback
 } from 'react';
 import { createPortal } from 'react-dom';
 
@@ -39,8 +40,8 @@ const Root: FC<InlineToolbarProps> = ({
   const triggerRef = useRef<HTMLDivElement>(null);
   const toolbarRef = useRef<HTMLDivElement>(null);
 
-  const open = () => setIsOpen(true);
-  const close = () => setIsOpen(false);
+  const open = useCallback(() => setIsOpen(true), []);
+  const close = useCallback(() => setIsOpen(false), []);
 
   const context: InlineToolbarContextValue = {
     isOpen,
