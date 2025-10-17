@@ -24,7 +24,7 @@ const InlineToolbarContext = createContext<InlineToolbarContextValue | null>(nul
 
 const useInlineToolbarContext = () => {
   const context = useContext(InlineToolbarContext);
-  if (!context) {
+  if (!Type.isNonNullable(context)) {
     throw new Error('useInlineToolbarContext must be used within an InlineToolbarProvider');
   }
   return context;
@@ -108,25 +108,12 @@ const Toolbar: FC<ToolbarProps> = ({
     const handleClickOutside = (event: MouseEvent) => {
       if (
         isOpen &&
-          Type.isNonNullable(toolbarRef.current) &&
-          Type.isNonNullable(triggerRef.current)
+        Type.isNonNullable(toolbarRef.current) &&
+        Type.isNonNullable(triggerRef.current) &&
+        event.target instanceof Node
       ) {
-        const toolbarRect = toolbarRef.current.getBoundingClientRect();
-        const triggerRect = triggerRef.current.getBoundingClientRect();
-        const { clientX, clientY } = event;
-
-        const clickedToolbar =
-          clientX >= toolbarRect.left &&
-          clientX <= toolbarRect.right &&
-          clientY >= toolbarRect.top &&
-          clientY <= toolbarRect.bottom;
-
-        const clickedTrigger =
-          clientX >= triggerRect.left &&
-          clientX <= triggerRect.right &&
-          clientY >= triggerRect.top &&
-          clientY <= triggerRect.bottom;
-
+        const clickedToolbar = toolbarRef.current.contains(event.target);
+        const clickedTrigger = triggerRef.current.contains(event.target);
         if (!clickedToolbar && !clickedTrigger) {
           close();
         }
@@ -134,7 +121,8 @@ const Toolbar: FC<ToolbarProps> = ({
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [ isOpen, close, toolbarRef, triggerRef, persistent ]);
+    /* eslint-disable-next-line react-hooks/exhaustive-deps -- toolbarRef/triggerRef are stable ref objects and don't need to be in deps list. */
+  }, [ isOpen, close, persistent ]);
 
   const getPosition = (sink: HTMLDivElement, trigger: HTMLDivElement) => {
     const sinkRect = sink.getBoundingClientRect();
