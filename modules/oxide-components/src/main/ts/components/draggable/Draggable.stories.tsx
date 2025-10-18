@@ -1,24 +1,24 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-import { Draggable } from './Draggable';
+import * as Draggable from './Draggable';
 import type { DraggableProps } from './internals/types';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
   title: 'components/Draggable',
-  component: Draggable,
+  component: Draggable.Root,
   parameters: {
     layout: 'centered',
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: [ 'autodocs', 'skip-visual-testing' ],
-} satisfies Meta<typeof Draggable>;
+} satisfies Meta<typeof Draggable.Root>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 const render = (args: DraggableProps): JSX.Element => (
-  <Draggable {...args} />
+  <Draggable.Root {...args} />
 );
 
 export const Example: Story = {
