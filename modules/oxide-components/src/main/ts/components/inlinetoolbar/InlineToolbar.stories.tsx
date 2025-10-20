@@ -18,6 +18,82 @@ const meta = {
   title: 'components/InlineToolbar',
   parameters: {
     layout: 'centered',
+    docs: {
+      description: {
+        component: `A compound component for creating inline toolbars that anchor to trigger elements.
+
+## Usage
+
+\`\`\`tsx
+import * as InlineToolbar from 'oxide-components/InlineToolbar';
+
+const MyComponent = () => {
+  const sinkRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <div ref={sinkRef} className="tox" style={{ position: 'relative' }}>
+      <InlineToolbar.Root sinkRef={sinkRef} persistent={false}>
+        <InlineToolbar.Trigger>
+          <div style={{ backgroundColor: 'red', padding: '10px' }}>
+            Click me!
+          </div>
+        </InlineToolbar.Trigger>
+        <InlineToolbar.Toolbar>
+          <Button>Accept</Button>
+          <Button>Reject</Button>
+        </InlineToolbar.Toolbar>
+      </InlineToolbar.Root>
+    </div>
+  );
+};
+\`\`\`
+
+## Components
+
+### Root
+The provider component that manages toolbar state.
+
+**Props:**
+- \`sinkRef\`: RefObject to the container where the toolbar renders (must have \`position: relative\`).
+- \`persistent\`: (optional, default: \`false\`). If true, the toolbar stays open when clicking outside of it.
+
+### Trigger
+Wraps the element that opens the toolbar when clicked.
+
+### Toolbar
+Contains the toolbar content (buttons, text, etc.). Renders as a portal into the sink element.
+
+## Behaviour
+- Click trigger to open the toolbar
+- Press Escape to close the toolbar
+- Click outside to close the toolbar (unless \`persistent=true\`)
+- Toolbar automatically receives focus when opened
+
+## Accessibility
+- **Keyboard Navigation**: Press \`Escape\` to close the toolbar.
+- **Focus Management**: Toolbar automatically receives focus when opened for immediate keyboard access
+- **Click Outside**: Click outside the toolbar to dismiss it (unless \`persistent=true\`)
+- **Persistent Mode**: Use \`persistent=true\` for toolbars that require explicit dismissal (e.g. forms, critical actions)
+- **ARIA**: The toolbar container is focusable (\`tabIndex={-1}\`) to support keyboard navigation
+`
+      }
+    }
+  },
+  argTypes: {
+    sinkRef: {
+      description: 'RefObject to the container element where the toolbar will render. This element must have `position: relative` or `position: absolute` set.',
+      table: {
+        type: { summary: 'RefObject<HTMLDivElement>' },
+      }
+    },
+    persistent: {
+      description: 'When true, the toolbar will not close when clicking outside of it. Useful for toolbars that should stay open until explicitly closed.',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+      control: 'boolean'
+    }
   },
   tags: [ 'autodocs', 'skip-visual-testing' ],
 } satisfies Meta;
