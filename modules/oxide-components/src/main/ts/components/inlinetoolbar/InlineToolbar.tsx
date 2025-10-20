@@ -146,15 +146,12 @@ const Toolbar: FC<ToolbarProps> = ({
         <div
           ref={toolbarRef}
           tabIndex={-1}
+          className='tox-pop__dialog'
           style={{
             ...getPosition(sinkRef.current, triggerRef.current),
             position: 'absolute',
             display: 'flex',
             gap: '4px',
-            backgroundColor: '#FFFFFF',
-            border: '1px solid #E0E0E0',
-            borderRadius: '9px',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
             padding: '4px'
           }}
           onMouseDown={(event) => event.preventDefault()}
