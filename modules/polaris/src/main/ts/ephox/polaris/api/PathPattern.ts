@@ -37,8 +37,7 @@ const compilePathPattern = (pattern: string) => {
     }
   });
 
-  // join back with slashes. Anchored from start to end.
-  const regexSource = `^${segments.join('/')}$$`;
+  const regexSource = `^${segments.join('/')}$`;
   const regex = new RegExp(regexSource);
 
   return { regex, paramNames };
