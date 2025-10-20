@@ -1,5 +1,7 @@
 // Keep this file in sync between the `agar` and `agar-sw` cross importing provded too painful
 
+import { Type } from '@ephox/katamari';
+
 export type LogLevel = 'info' | 'debug';
 
 export type UUID = `${string}-${string}-${string}-${string}-${string}`;
@@ -50,7 +52,7 @@ export interface MockedResponseBodyDoneMessage {
 export const mockPrefix = '/custom/';
 
 const isMessageOfType = <T extends { type: string }>(type: T['type']) => (data: unknown): data is T =>
-  typeof data === 'object' && data !== null && (data as any).type === type;
+  Type.isObject(data) && (data as any).type === type;
 
 export const isMockingStartMessage = isMessageOfType<MockingStartMessage>('AGAR_MOCKING_START');
 export const isMockingStartedMessage = isMessageOfType<MockingStartedMessage>('AGAR_MOCKING_STARTED');
