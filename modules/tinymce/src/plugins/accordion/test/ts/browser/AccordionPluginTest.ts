@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks, TinySelections, TinyAssertions } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
@@ -36,7 +36,8 @@ const testEvent = <T>(editor: Editor, eventName: string, cmd: string, callback: 
   editor.off(eventName, fn);
 };
 
-describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
+// eslint-disable-next-line mocha/no-exclusive-tests
+describe.only('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
   const hook = TinyHooks.bddSetup<Editor>(
     {
       plugins: 'accordion',
