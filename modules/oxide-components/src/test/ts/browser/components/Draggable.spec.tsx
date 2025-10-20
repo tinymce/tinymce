@@ -1,3 +1,4 @@
+import { userEvent } from '@vitest/browser/context';
 import * as Draggable from 'oxide-components/components/draggable/Draggable';
 import { classes } from 'oxide-components/utils/Styles';
 import type { ReactNode } from 'react';
@@ -196,5 +197,32 @@ describe('browser.draggable.Draggable', () => {
         , { wrapper: Wrapper }
       );
     }).toThrow('Draggable compound components must be rendered within the Draggable component');
+  });
+
+  it('TINY-13102: Should allow button inside Draggable.Handle to be clicked', async () => {
+    let clickCount = 0;
+    const handleClick = () => {
+      clickCount++;
+    };
+
+    const TestElementWithButton = (
+      <Draggable.Root>
+        <div data-testid={draggableTestId} style={{ width: 250, height: 500, backgroundColor: 'gray' }}>
+          <Draggable.Handle>
+            <div data-testid={draggableHandleTestId} style={{ width: '100%', height: 50, backgroundColor: 'black' }}>
+              <button data-testid="button-in-handle" onClick={handleClick}>Click me</button>
+            </div>
+          </Draggable.Handle>
+        </div>
+      </Draggable.Root>
+    );
+
+    const { getByTestId } = render(TestElementWithButton, { wrapper: Wrapper });
+    const button = getByTestId('button-in-handle').element() as HTMLButtonElement;
+    await expect.element(button).toBeDefined();
+
+    await userEvent.click(button);
+
+    expect(clickCount).toBe(1);
   });
 });
