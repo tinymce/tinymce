@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { fn } from 'storybook/test';
 
 import { Button } from '../button/Button';
@@ -20,7 +20,8 @@ const meta = {
     layout: 'centered',
     docs: {
       description: {
-        component: `A compound component for creating inline toolbars that anchor to trigger elements.
+        component: `
+A compound component for creating inline toolbars that anchor to trigger elements.
 
 ## Usage
 
@@ -75,9 +76,39 @@ Contains the toolbar content (buttons, text, etc.). Renders as a portal into the
 - **Click Outside**: Click outside the toolbar to dismiss it (unless \`persistent=true\`)
 - **Persistent Mode**: Use \`persistent=true\` for toolbars that require explicit dismissal (e.g. forms, critical actions)
 - **ARIA**: The toolbar container is focusable (\`tabIndex={-1}\`) to support keyboard navigation
-`
-      }
-    }
+
+## Positioning Anchoring Support
+
+- ✅ **Chrome 125+**
+- ✅ **Edge 125+**
+- ✅ **Safari 26+**
+- ❌ **Firefox** (not yet supported)
+
+## Default Behavior
+
+By default, the InlineToolbar anchor itself to the **bottom left** of the trigger element (left alignment). It automatically detects whether to position above or below, and left/center/right based on the trigger's position in the viewport.
+
+## Key Features
+
+- **Native CSS positioning** using \`anchor()\` function
+- **Auto-detection** of anchor placement (top/bottom, left/center/right)
+- **Automatic viewport overflow handling** with \`position-try-fallbacks\`
+- **Dynamic gap** controlled by CSS variable \`--inline-toolbar-gap\`
+- **Unique anchor names** per instance using \`Id.generate()\`
+
+## How It Works
+
+1. Generates unique anchor name for each toolbar instance
+2. Sets \`anchor-name\` CSS property on trigger element
+3. Links toolbar to anchor via \`position-anchor\` property
+4. Calculates position using \`anchor()\` and \`anchor-size()\` CSS functions
+5. Applies transform for center/bottom alignment
+6. Enables automatic flipping when toolbar would overflow viewport
+
+See the **Corners** story for a live demonstration of auto-flip behavior.
+        `,
+      },
+    },
   },
   argTypes: {
     sinkRef: {
@@ -101,9 +132,14 @@ Contains the toolbar content (buttons, text, etc.). Renders as a portal into the
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// TODO: Add more stories (TINY-13065)
-
 export const Basic: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'Basic inline toolbar using **CSS anchor positioning**. Click the trigger to open the toolbar. The toolbar will close when clicking outside (unless `persistent={true}`).',
+      },
+    },
+  },
   render: () => {
     const sinkRef = useRef<HTMLDivElement>(null);
     return (
@@ -125,6 +161,13 @@ export const Basic: Story = {
 };
 
 export const Persistent: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'Toolbar with `persistent={true}` - does not close when clicking outside. Useful for toolbars that should remain open until explicitly closed.',
+      },
+    },
+  },
   render: () => {
     const sinkRef = useRef<HTMLDivElement>(null);
     return (
@@ -217,6 +260,65 @@ export const MixedContent: Story = {
             <Button variant='secondary' onClick={fn()}>Reject</Button>
           </InlineToolbar.Toolbar>
         </InlineToolbar.Root>
+      </div>
+    );
+  }
+};
+
+export const Corners: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `Demonstrates CSS anchor positioning with 9 trigger buttons placed at different positions.`,
+      },
+    },
+  },
+  render: () => {
+    const sinkRef = useRef<HTMLDivElement>(null);
+
+    const triggerPositions = useMemo(() => ([
+      // Top row
+      { id: 'top-left', label: 'Top Left', style: { top: '20px', left: '20px' }},
+      { id: 'top-center', label: 'Top Center', style: { top: '20px', left: '50%', marginLeft: 'calc(-1 * (6ch + 24px) / 2)' }},
+      { id: 'top-right', label: 'Top Right', style: { top: '20px', right: '20px' }},
+      // Middle row
+      { id: 'middle-left', label: 'Middle Left', style: { top: '50%', left: '20px', marginTop: 'calc(-1em / 2)' }},
+      { id: 'center', label: 'Center', style: { top: '50%', left: '50%', marginTop: 'calc(-1em / 2)', marginLeft: 'calc(-1 * (4ch + 24px) / 2)' }},
+      { id: 'middle-right', label: 'Middle Right', style: { top: '50%', right: '20px', marginTop: 'calc(-1em / 2)' }},
+      // Bottom row
+      { id: 'bottom-left', label: 'Bottom Left', style: { bottom: '20px', left: '20px' }},
+      { id: 'bottom-center', label: 'Bottom Center', style: { bottom: '20px', left: '50%', marginLeft: 'calc(-1 * (9ch + 24px) / 2)' }},
+      { id: 'bottom-right', label: 'Bottom Right', style: { bottom: '20px', right: '20px' }}
+    ] as const), []);
+
+    return (
+      <div className="tox inline-toolbar-anchors" style={{ width: '520px' }}>
+        <div
+          ref={sinkRef}
+          className="tox"
+          style={{
+            position: 'relative',
+            height: '360px',
+            border: '1px solid #c6cdd6',
+            borderRadius: '16px',
+            background: '#ffffff',
+            overflow: 'hidden'
+          }}
+        >
+          {triggerPositions.map((pos) => (
+            <InlineToolbar.Root key={pos.id} sinkRef={sinkRef} persistent={false}>
+              <InlineToolbar.Trigger>
+                <div style={{ position: 'absolute' as const, display: 'inline-flex', ...pos.style }}>
+                  <Button>{pos.label}</Button>
+                </div>
+              </InlineToolbar.Trigger>
+              <InlineToolbar.Toolbar>
+                <Button onClick={fn()}>Accept</Button>
+                <Button onClick={fn()}>Reject</Button>
+              </InlineToolbar.Toolbar>
+            </InlineToolbar.Root>
+          ))}
+        </div>
       </div>
     );
   }

@@ -1,4 +1,4 @@
-import { Type } from '@ephox/katamari';
+import { Id, Type } from '@ephox/katamari';
 import {
   createContext,
   useContext,
@@ -7,7 +7,8 @@ import {
   useMemo,
   useEffect,
   type FC,
-  useCallback
+  useCallback,
+  type MouseEventHandler
 } from 'react';
 import { createPortal } from 'react-dom';
 
@@ -28,6 +29,24 @@ const useInlineToolbarContext = () => {
     throw new Error('useInlineToolbarContext must be used within an InlineToolbarProvider');
   }
   return context;
+};
+
+const detectAnchorPosition = (element: HTMLElement) => ({
+  isBottom: element.style.bottom !== '',
+  isCenter: element.style.left === '50%'
+});
+
+const getTransformValue = (isCenter: boolean, isBottom: boolean): string | undefined => {
+  if (isCenter && isBottom) {
+    return 'translate(-50%, -100%)';
+  }
+  if (isCenter) {
+    return 'translateX(-50%)';
+  }
+  if (isBottom) {
+    return 'translateY(-100%)';
+  }
+  return undefined;
 };
 
 const Root: FC<InlineToolbarProps> = ({
@@ -60,13 +79,27 @@ const Root: FC<InlineToolbarProps> = ({
   );
 };
 
-const Trigger: FC<TriggerProps> = ({ children }) => {
+const Trigger: FC<TriggerProps> = ({
+  children,
+  onClick,
+  onMouseDown,
+  ...rest
+}) => {
   const { open, triggerRef } = useInlineToolbarContext();
+  const handleClick = useCallback<MouseEventHandler<HTMLDivElement>>((event) => {
+    open();
+    onClick?.(event);
+  }, [ open, onClick ]);
+  const handleMouseDown = useCallback<MouseEventHandler<HTMLDivElement>>((event) => {
+    event.preventDefault();
+    onMouseDown?.(event);
+  }, [ onMouseDown ]);
   return (
     <div
       ref={triggerRef}
-      onClick={open}
-      onMouseDown={(e) => e.preventDefault()}
+      onClick={handleClick}
+      onMouseDown={handleMouseDown}
+      {...rest}
     >
       {children}
     </div>
@@ -74,7 +107,11 @@ const Trigger: FC<TriggerProps> = ({ children }) => {
 };
 
 const Toolbar: FC<ToolbarProps> = ({
-  children
+  children,
+  style,
+  className,
+  onMouseDown,
+  ...rest
 }) => {
   const {
     isOpen,
@@ -85,7 +122,6 @@ const Toolbar: FC<ToolbarProps> = ({
     persistent
   } = useInlineToolbarContext();
 
-  // Focus toolbar when it opens to enable keyboard navigation
   useEffect(() => {
     if (isOpen && toolbarRef.current) {
       toolbarRef.current.focus();
@@ -93,50 +129,91 @@ const Toolbar: FC<ToolbarProps> = ({
   /* eslint-disable-next-line react-hooks/exhaustive-deps -- toolbarRef is a stable ref object and doesn't need to be in deps list. */
   }, [ isOpen ]);
 
-  // Handle Escape key via keyboard navigation hook
   useSpecialKeyNavigation({
     containerRef: toolbarRef,
     onEscape: close,
   });
 
-  // Handle click outside to close toolbar (unless persistent)
+  const handleClickOutside = useCallback((event: MouseEvent) => {
+    if (
+      isOpen &&
+      Type.isNonNullable(toolbarRef.current) &&
+      Type.isNonNullable(triggerRef.current) &&
+      event.target instanceof Node
+    ) {
+      const clickedToolbar = toolbarRef.current.contains(event.target);
+      const clickedTrigger = triggerRef.current.contains(event.target);
+      if (!clickedToolbar && !clickedTrigger) {
+        close();
+      }
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps -- toolbarRef/triggerRef are stable ref objects */
+  }, [ isOpen, close ]);
+
   useEffect(() => {
     if (persistent) {
       return;
     }
-
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        isOpen &&
-        Type.isNonNullable(toolbarRef.current) &&
-        Type.isNonNullable(triggerRef.current) &&
-        event.target instanceof Node
-      ) {
-        const clickedToolbar = toolbarRef.current.contains(event.target);
-        const clickedTrigger = triggerRef.current.contains(event.target);
-        if (!clickedToolbar && !clickedTrigger) {
-          close();
-        }
-      }
-    };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-    /* eslint-disable-next-line react-hooks/exhaustive-deps -- toolbarRef/triggerRef are stable ref objects and don't need to be in deps list. */
-  }, [ isOpen, close, persistent ]);
+  }, [ persistent, handleClickOutside ]);
 
-  const getPosition = (sink: HTMLDivElement, trigger: HTMLDivElement) => {
-    const sinkRect = sink.getBoundingClientRect();
-    const triggerRect = trigger.getBoundingClientRect();
+  const anchorName = useMemo(() => `--${Id.generate('inline-toolbar')}`, []);
 
-    // Calculate trigger's position relative to the sink
-    const top = triggerRect.bottom - sinkRect.top;
-    const left = triggerRect.left - sinkRect.left;
+  useEffect(() => {
+    if (!isOpen || !triggerRef.current || !toolbarRef.current) {
+      return;
+    }
 
-    return {
-      top: `${top}px`,
-      left: `${left}px`
+    const trigger = triggerRef.current;
+    const toolbar = toolbarRef.current;
+    const anchorElement = (trigger.firstElementChild as HTMLElement) ?? trigger;
+
+    anchorElement.style.setProperty('anchor-name', anchorName);
+    toolbar.style.setProperty('position-anchor', anchorName);
+
+    const gap = toolbar.ownerDocument?.defaultView
+      ? toolbar.ownerDocument.defaultView.getComputedStyle(toolbar).getPropertyValue('--inline-toolbar-gap') || '6px'
+      : '6px';
+
+    const { isBottom, isCenter } = detectAnchorPosition(anchorElement);
+
+    const topValue = isBottom
+      ? `calc(anchor(${anchorName} top) - ${gap})`
+      : `calc(anchor(${anchorName} bottom) + ${gap})`;
+    const leftValue = isCenter
+      ? `calc(anchor(${anchorName} left) + anchor-size(${anchorName} width) / 2)`
+      : `anchor(${anchorName} left)`;
+
+    toolbar.style.setProperty('top', topValue);
+    toolbar.style.setProperty('left', leftValue);
+
+    const transform = getTransformValue(isCenter, isBottom);
+    if (transform) {
+      toolbar.style.setProperty('transform', transform);
+    }
+
+    toolbar.style.setProperty('position-try-fallbacks', 'flip-block, flip-inline, flip-block flip-inline');
+
+    return () => {
+      anchorElement.style.removeProperty('anchor-name');
+      toolbar.style.removeProperty('position-anchor');
+      toolbar.style.removeProperty('top');
+      toolbar.style.removeProperty('left');
+      toolbar.style.removeProperty('transform');
+      toolbar.style.removeProperty('position-try-fallbacks');
     };
-  };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps -- triggerRef/toolbarRef are stable ref objects */
+  }, [ anchorName, isOpen ]);
+
+  const handleMouseDown = useCallback<MouseEventHandler<HTMLDivElement>>((event) => {
+    event.preventDefault();
+    onMouseDown?.(event);
+  }, [ onMouseDown ]);
+
+  const toolbarClasses = [ 'tox-inline-toolbar', className ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     isOpen &&
@@ -146,15 +223,10 @@ const Toolbar: FC<ToolbarProps> = ({
         <div
           ref={toolbarRef}
           tabIndex={-1}
-          className='tox-pop__dialog'
-          style={{
-            ...getPosition(sinkRef.current, triggerRef.current),
-            position: 'absolute',
-            display: 'flex',
-            gap: '4px',
-            padding: '4px'
-          }}
-          onMouseDown={(event) => event.preventDefault()}
+          className={toolbarClasses}
+          style={style}
+          onMouseDown={handleMouseDown}
+          {...rest}
         >
           {children}
         </div>,

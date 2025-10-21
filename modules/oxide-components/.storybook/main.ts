@@ -1,5 +1,6 @@
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import type { StorybookConfig } from '@storybook/react-vite';
 
 const require = createRequire(import.meta.url);
@@ -25,8 +26,13 @@ const config: StorybookConfig = {
     defaultName: "Documentation"
   },
   viteFinal: (config) => {
-    config.server ??= {}
+    config.server ??= {};
     config.server.allowedHosts = ['host.docker.internal'];
+    config.server.fs ??= {};
+    config.server.fs.allow = [
+      // Allow the modules directory (parent of oxide-components)
+      join(dirname(fileURLToPath(import.meta.url)), '../../')
+    ];
     return config;
   },
   typescript: {
