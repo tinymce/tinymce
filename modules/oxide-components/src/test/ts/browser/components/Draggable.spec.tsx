@@ -143,7 +143,7 @@ describe('browser.draggable.Draggable', () => {
     });
   });
 
-  it('TINY-12875: Should clamp mouse position outside of viewport in x axis', async () => {
+  it('TINY-12875: Should clamp Dragging.mouse position outside of viewport in x axis', async () => {
     const { handle, draggableWrapper } = await renderDraggable();
 
     const { down, move, up } = Dragging.mouse(handle);
@@ -165,7 +165,7 @@ describe('browser.draggable.Draggable', () => {
     assertTransform(draggableWrapper, { x: -5, y: 0 }); // Element should only be moved a little to the left now
   });
 
-  it('TINY-12875: Should clamp mouse position outside of viewport in y axis', async () => {
+  it('TINY-12875: Should clamp Dragging.mouse position outside of viewport in y axis', async () => {
     const { handle, draggableWrapper } = await renderDraggable();
 
     const { down, move, up } = Dragging.mouse(handle);
