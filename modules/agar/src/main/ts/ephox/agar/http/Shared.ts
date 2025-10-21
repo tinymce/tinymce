@@ -1,4 +1,4 @@
-// Keep this file in sync between the `agar` and `agar-sw` cross importing provded too painful
+// Keep this file in sync between `agar` and `agar-sw`. Cross‑importing proved too painful.
 
 import { Type } from '@ephox/katamari';
 

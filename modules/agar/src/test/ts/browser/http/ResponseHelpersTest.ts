@@ -2,7 +2,7 @@ import { Assert, describe, it } from '@ephox/bedrock-client';
 
 import * as ResponseHelpers from 'ephox/agar/http/ResponseHelpers';
 
-describe('browser.agar.keyboard.ResponseHelpersTest', () => {
+describe('browser.agar.http.ResponseHelpersTest', () => {
   it('TINY-13084: blobResponse', async () => {
     const response = ResponseHelpers.blobResponse(new Blob([ 'hello' ], { type: 'text/plain' }));
 
@@ -17,16 +17,16 @@ describe('browser.agar.keyboard.ResponseHelpersTest', () => {
       headers: { 'X-Custom': 'CustomValue' }
     });
 
-    Assert.eq('Should have the expected content type', 'hello', await response.text());
+    Assert.eq('Should have the expected content', 'hello', await response.text());
     Assert.eq('Should have the expected content type', 'text/plain', response.headers.get('Content-Type'));
-    Assert.eq('Should have the expected content type', 'CustomValue', response.headers.get('X-Custom'));
+    Assert.eq('Should have the expected custom header', 'CustomValue', response.headers.get('X-Custom'));
     Assert.eq('Should have the expected status', 201, response.status);
   });
 
   it('TINY-13084: jsonResponse', async () => {
     const response = ResponseHelpers.jsonResponse({ data: 123 });
 
-    Assert.eq('Should have the expected content type', { data: 123 }, await response.json());
+    Assert.eq('Should have the expected content', { data: 123 }, await response.json());
     Assert.eq('Should have the expected content type', 'application/json', response.headers.get('Content-Type'));
     Assert.eq('Should have the expected status', 200, response.status);
   });
@@ -34,7 +34,7 @@ describe('browser.agar.keyboard.ResponseHelpersTest', () => {
   it('TINY-13084: textResponse', async () => {
     const response = ResponseHelpers.textResponse('hello world');
 
-    Assert.eq('Should have the expected content type', 'hello world', await response.text());
+    Assert.eq('Should have the expected content', 'hello world', await response.text());
     Assert.eq('Should have the expected content type', 'text/plain', response.headers.get('Content-Type'));
     Assert.eq('Should have the expected status', 200, response.status);
   });
@@ -42,7 +42,7 @@ describe('browser.agar.keyboard.ResponseHelpersTest', () => {
   it('TINY-13084: makeResponse', async () => {
     const response = ResponseHelpers.makeResponse('hello world', { headers: { 'Content-Type': 'text/plain' }});
 
-    Assert.eq('Should have the expected content type', 'hello world', await response.text());
+    Assert.eq('Should have the expected content', 'hello world', await response.text());
     Assert.eq('Should have the expected content type', 'text/plain', response.headers.get('Content-Type'));
     Assert.eq('Should have the expected status', 200, response.status);
   });
@@ -54,9 +54,9 @@ describe('browser.agar.keyboard.ResponseHelpersTest', () => {
       yield 'world';
     })());
 
-    Assert.eq('Should have the expected content type', 'hello world', await response.text());
+    Assert.eq('Should have the expected content', 'hello world', await response.text());
     Assert.eq('Should have the expected content type', 'text/plain', response.headers.get('Content-Type'));
-    Assert.eq('Should have the expected content type', 'chunked', response.headers.get('Transfer-Encoding'));
+    Assert.eq('Should have the expected transfer encoding', 'chunked', response.headers.get('Transfer-Encoding'));
     Assert.eq('Should have the expected status', 200, response.status);
   });
 });

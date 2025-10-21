@@ -8,7 +8,7 @@
     "baseUrl": ".",
     "tsBuildInfoFile": "lib/tsconfig.tsbuildinfo",
     "paths": {
-      "ephox/agar-aw/*": ["src/main/ts/*"]
+      "ephox/agar-sw/*": ["src/main/ts/*"]
     }
   },
   "include": [

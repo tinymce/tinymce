@@ -30,7 +30,7 @@ export const blobResponse = (data: Blob, init: ResponseInit = {}): Response =>
 export const chunkedResponse = (data: AsyncIterable<string>, init: ResponseInit = {}): Response => {
   const encoder = new window.TextEncoder();
   const stream = new window.ReadableStream({
-    pull: async (controller) => {
+    start: async (controller) => {
       for await (const chunk of data) {
         controller.enqueue(encoder.encode(chunk));
       }
