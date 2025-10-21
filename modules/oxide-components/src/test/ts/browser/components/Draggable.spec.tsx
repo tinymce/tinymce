@@ -4,6 +4,8 @@ import type { ReactNode } from 'react';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-react';
 
+import * as Dragging from './utils/Dragging';
+
 const draggableTestId = 'draggable';
 const draggableHandleTestId = 'draggable-handle';
 
@@ -36,43 +38,6 @@ const Wrapper = ({ children }: { children: ReactNode }) => {
   );
 };
 
-const mouse = (element: HTMLElement) => {
-  const rect = element.getBoundingClientRect();
-  const position = { x: rect.x, y: rect.y };
-
-  const down = () => {
-    element.dispatchEvent(new window.PointerEvent('pointerdown', {
-      clientX: position.x,
-      clientY: position.y,
-      pointerId: 1,
-      bubbles: true
-    }));
-  };
-
-  const move = (vector: readonly [number, number]) => {
-    position.x = position.x + vector[0];
-    position.y = position.y + vector[1];
-
-    element.dispatchEvent(new window.PointerEvent('pointermove', {
-      clientX: position.x,
-      clientY: position.y,
-      pointerId: 1,
-      bubbles: true
-    }));
-  };
-
-  const up = () => {
-    element.dispatchEvent(new window.PointerEvent('pointerup', {
-      clientX: position.x,
-      clientY: position.y,
-      pointerId: 1,
-      bubbles: true
-    }));
-  };
-
-  return { down, move, up };
-};
-
 const renderDraggable = async () => {
   const { getByTestId } = render(TestElement, { wrapper: Wrapper });
   const handle = getByTestId(draggableHandleTestId).element() as HTMLElement;
@@ -84,13 +49,6 @@ const renderDraggable = async () => {
 
   return { handle, draggable, draggableWrapper: draggableWrapper as HTMLElement };
 };
-
-/*
-  I would prefer to use React's 'act' function.
-  But I couldn't find a way to use 'act' with 'vitest-browser-react' library,
-  without having error message on the console.
-*/
-const tick = () => new Promise<void>((res) => setTimeout(() => res()));
 
 const assertTransform = (element: HTMLElement, shift: { x: number; y: number }) => {
   const transform = element.style.transform;
@@ -111,11 +69,11 @@ describe('browser.draggable.Draggable', () => {
     const { handle, draggableWrapper } = await renderDraggable();
     const [ shiftX, shiftY ] = [ 50, 50 ];
 
-    const { down, move, up } = mouse(handle);
+    const { down, move, up } = Dragging.mouse(handle);
     down();
-    await tick();
+    await Dragging.tick();
     move([ shiftX, shiftY ]);
-    await tick();
+    await Dragging.tick();
     up();
 
     assertTransform(draggableWrapper, { x: shiftX, y: shiftY });
@@ -124,11 +82,11 @@ describe('browser.draggable.Draggable', () => {
   it('TINY-12875: Should only be draggable by handle', async () => {
     const { draggable, draggableWrapper } = await renderDraggable();
 
-    const { down, move, up } = mouse(draggable);
+    const { down, move, up } = Dragging.mouse(draggable);
     down();
-    await tick();
+    await Dragging.tick();
     move([ 50, 50 ]);
-    await tick();
+    await Dragging.tick();
     up();
 
     assertTransform(draggableWrapper, { x: 0, y: 0 });
@@ -138,11 +96,11 @@ describe('browser.draggable.Draggable', () => {
     const { handle, draggableWrapper } = await renderDraggable();
     const [ shiftX, shiftY ] = [ 2.33, 50.33 ];
 
-    const { down, move, up } = mouse(handle);
+    const { down, move, up } = Dragging.mouse(handle);
     down();
-    await tick();
+    await Dragging.tick();
     move([ shiftX, shiftY ]);
-    await tick();
+    await Dragging.tick();
     up();
 
     assertTransform(draggableWrapper, { x: 2, y: 50 });
@@ -155,11 +113,11 @@ describe('browser.draggable.Draggable', () => {
     // Try to move far beyond the window boundaries
     const largeShift = [ window.innerWidth * -2, window.innerHeight * -2 ] as const;
 
-    const { down, move, up } = mouse(handle);
+    const { down, move, up } = Dragging.mouse(handle);
     down();
-    await tick();
+    await Dragging.tick();
     move(largeShift);
-    await tick();
+    await Dragging.tick();
     up();
 
     assertTransform(draggableWrapper, { x: Math.ceil(-rect.x), y: Math.ceil(-rect.y) });
@@ -172,11 +130,11 @@ describe('browser.draggable.Draggable', () => {
     // Try to move far beyond the window boundaries
     const largeShift = [ window.innerWidth * 2, window.innerHeight * 2 ] as const;
 
-    const { down, move, up } = mouse(handle);
+    const { down, move, up } = Dragging.mouse(handle);
     down();
-    await tick();
+    await Dragging.tick();
     move(largeShift);
-    await tick();
+    await Dragging.tick();
     up();
 
     assertTransform(draggableWrapper, {
@@ -185,46 +143,46 @@ describe('browser.draggable.Draggable', () => {
     });
   });
 
-  it('TINY-12875: Should clamp mouse position outside of viewport in x axis', async () => {
+  it('TINY-12875: Should clamp Dragging.mouse position outside of viewport in x axis', async () => {
     const { handle, draggableWrapper } = await renderDraggable();
 
-    const { down, move, up } = mouse(handle);
+    const { down, move, up } = Dragging.mouse(handle);
     move([ 10, 10 ]); // Set the pointer inside handle, but 10px from top of the handle and 10px from left
-    await tick();
+    await Dragging.tick();
     down();
-    await tick();
+    await Dragging.tick();
     move([ window.innerWidth * 2, 0 ]); // Move the pointer outside of the viewport in x axis
-    await tick();
+    await Dragging.tick();
     const currentShift = getShift(draggableWrapper); // current shift is a maximum shift in x axis
     move([ -5, 0 ]); // Move 5px to the left - this action should be ignored
-    await tick();
+    await Dragging.tick();
     assertTransform(draggableWrapper, currentShift); // Assert that previous action was ignored
     move([ -1 * (window.innerWidth * 2), 0 ]); // Revert the big shift from the beginning
-    await tick();
+    await Dragging.tick();
     up();
-    await tick();
+    await Dragging.tick();
 
     assertTransform(draggableWrapper, { x: -5, y: 0 }); // Element should only be moved a little to the left now
   });
 
-  it('TINY-12875: Should clamp mouse position outside of viewport in y axis', async () => {
+  it('TINY-12875: Should clamp Dragging.mouse position outside of viewport in y axis', async () => {
     const { handle, draggableWrapper } = await renderDraggable();
 
-    const { down, move, up } = mouse(handle);
+    const { down, move, up } = Dragging.mouse(handle);
     move([ 10, 10 ]); // Set the pointer inside handle, but 10px from top of the handle and 10px from left
-    await tick();
+    await Dragging.tick();
     down();
-    await tick();
+    await Dragging.tick();
     move([ 0, window.innerHeight * 2 ]); // Move the pointer outside of the viewport in y axis
-    await tick();
+    await Dragging.tick();
     const currentShift = getShift(draggableWrapper); // current shift is a maximum shift in y axis
     move([ 0, -5 ]); // Move 5px above - this action should be ignored
-    await tick();
+    await Dragging.tick();
     assertTransform(draggableWrapper, currentShift); // Assert that previous action was ignored
     move([ 0, -1 * (window.innerHeight * 2) ]); // Revert the big shift from the beginning
-    await tick();
+    await Dragging.tick();
     up();
-    await tick();
+    await Dragging.tick();
 
     assertTransform(draggableWrapper, { x: 0, y: -5 }); // Element should only be moved a little to the top now
   });
