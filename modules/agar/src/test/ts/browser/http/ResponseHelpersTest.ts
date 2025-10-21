@@ -6,7 +6,7 @@ describe('browser.agar.http.ResponseHelpersTest', () => {
   it('TINY-13084: blobResponse', async () => {
     const response = ResponseHelpers.blobResponse(new Blob([ 'hello' ], { type: 'text/plain' }));
 
-    Assert.eq('Should have the expected content type', 'hello', await response.text());
+    Assert.eq('Should have the expected content', 'hello', await response.text());
     Assert.eq('Should have the expected content type', 'text/plain', response.headers.get('Content-Type'));
     Assert.eq('Should have the expected status', 200, response.status);
   });
