@@ -196,7 +196,11 @@ const Toolbar: FC<ToolbarProps> = ({
     toolbar.style.setProperty('position-try-fallbacks', 'flip-block, flip-inline, flip-block flip-inline');
 
     return () => {
-      anchorElement.style.removeProperty('anchor-name');
+  anchorElement.style.removeProperty('anchor-name');
+  
+  Arr.each(['position-anchor', 'top', 'left', 'transform', 'position-try-fallbacks'], (property) => {
+    toolbar.style.removeProperty(property);
+  });
       toolbar.style.removeProperty('position-anchor');
       toolbar.style.removeProperty('top');
       toolbar.style.removeProperty('left');
