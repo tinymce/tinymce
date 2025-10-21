@@ -145,7 +145,7 @@ When creating CSS Custom Properties avoid using LESS functions like `contrast()`
 
 | Step | Description |
 | --- | --- |
-| Global Setup | Feature flag, cascade layers, and global variables must be in place |
+| Global Setup | Feature flag and global variables must be in place |
 | Feature Flag | Use `@custom-properties-enabled` for safe feature rollout |
 | CSS Variables | Use `tox-private` prefixed variables with LESS fallbacks |
 | Global Variables | Prefer using a global CSS Custom Properties and promote shared variables to global scope |
