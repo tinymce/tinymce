@@ -1,3 +1,6 @@
+const postcssPresetEnv = require('postcss-preset-env');
+const cssnano = require('cssnano');
+
 module.exports = function (grunt) {
   grunt.loadTasks('./tasks');
 
@@ -21,15 +24,15 @@ module.exports = function (grunt) {
     postcss: {
       options: {
         processors: [
-          require('autoprefixer')({
-            overrideBrowserslist: [
+          postcssPresetEnv({
+            browsers: [
               'last 2 Safari versions',
               'last 2 iOS major versions',
               'last 2 Chrome versions',
               'Firefox ESR'
             ]
           }),
-          require('cssnano')()
+          cssnano()
         ]
       },
       target: {
