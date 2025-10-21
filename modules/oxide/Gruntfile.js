@@ -18,6 +18,31 @@ module.exports = function (grunt) {
         src: ['./src/less/**/*.less']
       }
     },
+    postcss: {
+      options: {
+        processors: [
+          require('autoprefixer')({
+            overrideBrowserslist: [
+              'last 2 Safari versions',
+              'last 2 iOS major versions',
+              'last 2 Chrome versions',
+              'Firefox ESR'
+            ]
+          }),
+          require('cssnano')()
+        ]
+      },
+      target: {
+        files: [{
+          expand: true,
+          cwd: './build/skins',
+          src: ['**/*.css', '!**/*.min.css'],
+          dest: './build/skins',
+          ext: '.min.css',
+          extDot: 'last'
+        }]
+      }
+    },
     // Minify CSS files
     cssmin: {
       options: {
@@ -92,7 +117,7 @@ module.exports = function (grunt) {
     'clean',
     'stylelint',
     'compileLess',
-    'cssmin',
+    'postcss',
     'generateJsSkins',
     'addLicenseHeaders',
     'generateTsDefinitions'
