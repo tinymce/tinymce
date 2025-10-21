@@ -5270,13 +5270,6 @@ ci-info@^4.0.0:
   resolved "https://registry.yarnpkg.com/ci-info/-/ci-info-4.1.0.tgz#92319d2fa29d2620180ea5afed31f589bc98cf83"
   integrity sha512-HutrvTNsF48wnxkzERIXOe5/mlcfFcbfCmwcg6CJnizbSue78AbDt+1cgl26zwn61WFxhcPykPfZrbqjGmBb4A==
 
-clean-css@^5.3.2:
-  version "5.3.3"
-  resolved "https://registry.yarnpkg.com/clean-css/-/clean-css-5.3.3.tgz#b330653cd3bd6b75009cc25c714cae7b93351ccd"
-  integrity sha512-D5J+kHaVb/wKSFcyyV75uCn8fiY4sV38XJoe4CUyGQ+mOU/fMVYUdH1hJC+CJQ5uY3EnW27SbJYS4X8BiLrAFg==
-  dependencies:
-    source-map "~0.6.0"
-
 clean-stack@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/clean-stack/-/clean-stack-2.2.0.tgz#ee8472dbb129e727b31e8a10a427dee9dfe4008b"
@@ -8067,15 +8060,6 @@ grunt-contrib-copy@^1.0.0:
   dependencies:
     chalk "^1.1.1"
     file-sync-cmp "^0.1.0"
-
-grunt-contrib-cssmin@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/grunt-contrib-cssmin/-/grunt-contrib-cssmin-5.0.0.tgz#c572bc20e8d085fcd66fc1c53dcd20d2c6e9b547"
-  integrity sha512-SNp4H4+85mm2xaHYi83FBHuOXylpi5vcwgtNoYCZBbkgeXQXoeTAKa59VODRb0woTDBvxouP91Ff5PzCkikg6g==
-  dependencies:
-    chalk "^4.1.2"
-    clean-css "^5.3.2"
-    maxmin "^3.0.0"
 
 grunt-contrib-symlink@^1.0.0:
   version "1.0.0"
