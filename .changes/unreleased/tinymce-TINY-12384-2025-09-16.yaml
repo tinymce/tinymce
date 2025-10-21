@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Some UI elements related to dragging elements were not properly filtered out when fetching content.
-time: 2025-09-16T07:19:26.916854+02:00
-custom:
-    Issue: TINY-12384

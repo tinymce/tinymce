@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: The editor would upon gaining focus scroll to the center of the editor on some browsers if the top of the editor was out of frame.
-time: 2025-09-15T13:11:59.121048+02:00
-custom:
-    Issue: TINY-12626
