@@ -74,9 +74,10 @@ const messageHandler = (event: MessageEvent) => {
 
       if (response.body) {
         await StreamUtils.forEachChunk(response.body, (chunk) => {
+          const buffer = chunk.buffer.slice(chunk.byteOffset, chunk.byteOffset + chunk.byteLength);
           const bodyChunkMessage: Shared.MockedResponseBodyChunkMessage = {
             type: 'AGAR_MOCKED_RESPONSE_BODY_CHUNK',
-            buffer: chunk.buffer
+            buffer
           };
 
           debugLog('Responding with mocked response body chunk to SW:', bodyChunkMessage);
