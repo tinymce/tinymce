@@ -1,5 +1,5 @@
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyHooks, TinySelections, TinyAssertions } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
@@ -143,9 +143,27 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
     editor.execCommand('ToggleAccordion');
     TinyAssertions.assertContentPresence(editor, { 'details:not([open="open"])': 1 });
+    TinyAssertions.assertContentPresence(editor, { 'details[data-mce-accordion-open="closed"]': 1 });
     TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
     editor.execCommand('ToggleAccordion');
     TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 1 });
+    TinyAssertions.assertContentPresence(editor, { 'details[data-mce-accordion-open="open"]': 1 });
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
+  });
+
+  it('TINY-12316: Toggle an accordion element under the cursor while read only', () => {
+    const editor = hook.editor();
+    editor.setContent(`${AccordionUtils.createAccordion({ open: true })}<p>tiny</p>`);
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    editor.mode.set('readonly');
+    editor.execCommand('ToggleAccordion');
+    TinyAssertions.assertContentPresence(editor, { 'details:not([open="open"])': 1 });
+    TinyAssertions.assertContentPresence(editor, { 'details[data-mce-accordion-open="open"]': 1 });
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
+    editor.execCommand('ToggleAccordion');
+    TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 1 });
+    TinyAssertions.assertContentPresence(editor, { 'details[data-mce-accordion-open="open"]': 1 });
+    editor.mode.set('design');
     TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
   });
 
