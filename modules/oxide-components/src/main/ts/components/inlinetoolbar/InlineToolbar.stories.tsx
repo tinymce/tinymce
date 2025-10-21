@@ -86,7 +86,7 @@ Contains the toolbar content (buttons, text, etc.). Renders as a portal into the
 
 ## Default Behavior
 
-By default, the InlineToolbar anchor itself to the **bottom left** of the trigger element (left alignment). It automatically detects whether to position above or below, and left/center/right based on the trigger's position in the viewport.
+By default, the InlineToolbar anchors to the bottom left of the trigger element. It can position above/below or left/center/right based on the trigger element's inline positioning styles. The position-try-fallbacks CSS property automatically flips the toolbar when it would overflow the viewport.
 
 ## Key Features
 
