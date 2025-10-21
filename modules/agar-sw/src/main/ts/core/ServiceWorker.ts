@@ -16,6 +16,11 @@ const sendMessageToPort = (
   port.postMessage(message);
 };
 
+const closePort = (port: MessagePort) => {
+  port.onmessage = null;
+  port.close();
+};
+
 const sendRequestToClient = async (client: Client, request: Request): Promise<Response> => {
   const body = await request.arrayBuffer();
   const requestId = crypto.randomUUID();
@@ -36,12 +41,10 @@ const sendRequestToClient = async (client: Client, request: Request): Promise<Re
                 controller.enqueue(new Uint8Array(bodyData.buffer));
               } else if (Shared.isMockedResponseBodyDoneMessage(bodyData)) {
                 Logger.debug('Returning mocked response body done', { clientId: client.id, requestId, url: request.url });
-                incomingPort.onmessage = null;
-                incomingPort.close();
+                closePort(incomingPort);
                 controller.close();
               } else {
-                incomingPort.onmessage = null;
-                incomingPort.close();
+                closePort(incomingPort);
                 controller.close();
                 reject(new Error('Unexpected message from client expected response body chunk or done.'));
               }
@@ -55,6 +58,7 @@ const sendRequestToClient = async (client: Client, request: Request): Promise<Re
           headers: headData.headers
         }));
       } else {
+        closePort(incomingPort);
         reject(new Error('Unexpected message from client expected response head.'));
       }
     };
