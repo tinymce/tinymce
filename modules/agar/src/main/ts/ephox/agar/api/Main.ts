@@ -16,6 +16,7 @@ import * as GeneralSteps from './GeneralSteps';
 import * as Generators from './Generators';
 import { GroupStore } from './GroupStore';
 import * as Guard from './Guard';
+import * as Http from './Http';
 import * as Keyboard from './Keyboard';
 import { Keys } from './Keys';
 import * as Log from './Log';
@@ -60,6 +61,7 @@ export {
   Generators,
   GroupStore,
   Guard,
+  Http,
   Keyboard,
   Keys,
   Log,
