@@ -1,7 +1,7 @@
-import type { ReactNode, RefObject } from 'react';
+import type { CSSProperties, HTMLAttributes, MouseEventHandler, ReactNode, RefObject } from 'react';
 
 export interface InlineToolbarProps {
-  readonly children: ReactNode;
+  readonly children: HTMLAttributes<HTMLDivElement>['children'];
   readonly sinkRef: RefObject<HTMLDivElement>;
   readonly persistent?: boolean;
 }
@@ -18,8 +18,15 @@ export interface InlineToolbarContextValue {
 
 export interface ToolbarProps {
   readonly children: ReactNode;
+  readonly className?: string;
+  readonly style?: CSSProperties;
+  readonly onMouseDown?: MouseEventHandler<HTMLDivElement>;
 }
 
 export interface TriggerProps {
   readonly children: ReactNode;
+  readonly onClick?: MouseEventHandler<HTMLDivElement>;
+  readonly onMouseDown?: MouseEventHandler<HTMLDivElement>;
+  readonly className?: string;
+  readonly style?: CSSProperties;
 }
