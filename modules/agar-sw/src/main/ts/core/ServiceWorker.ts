@@ -55,8 +55,9 @@ const sendRequestToClient = async (client: Client, request: Request): Promise<Re
             };
           },
           cancel: () => {
-            Logger.debug('Request aborted', { clientId: client.id, requestId, url: request.url });
             aborted = true;
+            closePort(incomingPort);
+            Logger.debug('Request aborted', { clientId: client.id, requestId, url: request.url });
           }
         });
 
