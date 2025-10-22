@@ -123,7 +123,7 @@ def runPlaywrightPod(String cacheName, String name, Closure body) {
       runAsUser: '1000',
       resourceRequestEphemeralStorage: '2Gi',
       resourceLimitEphemeralStorage: '4Gi'
-      ]) + devPods.lowRes(),
+      ]) + devPods.stdRes(),
     devPods.getContainerDefaultArgs([ name: 'playwright', image: 'mcr.microsoft.com/playwright:v1.53.1-noble']) + devPods.hiRes()
   ]
 
@@ -183,7 +183,7 @@ def runSeleniumPod(String cacheName, String name, String browser, String version
           alwaysPullImage: true,
           resourceRequestEphemeralStorage: '2Gi',
           resourceLimitEphemeralStorage: '4Gi'
-        ] + devPods.lowRes()
+        ] + devPods.stdRes()
   return {
     stage("${name}") {
       devPods.customConsumer(
