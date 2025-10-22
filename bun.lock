@@ -5,7 +5,7 @@
       "name": "tinymce-monorepo",
       "devDependencies": {
         "@ephox/bedrock-client": "^15.0.0",
-        "@ephox/bedrock-server": "^15.0.2",
+        "@ephox/bedrock-server": "^15.0.4",
         "@ephox/oxide-icons-tools": "^4.0.0",
         "@ephox/swag": "^4.6.0",
         "@tinymce/eslint-plugin": "^3.0.0",
@@ -77,12 +77,24 @@
         "@ephox/bedrock-client": ">=11",
         "@ephox/bedrock-common": ">=11",
         "@ephox/jax": "^8.0.0",
+        "@ephox/polaris": "^7.0.0",
         "@ephox/sand": "^7.0.0",
         "@ephox/sugar": "^10.0.0",
         "fast-check": "^2.0.0",
       },
       "devDependencies": {
+        "@ephox/agar-sw": "^1.0.0",
         "@ephox/katamari-assertions": "^5.0.0",
+      },
+    },
+    "modules/agar-sw": {
+      "name": "@ephox/agar-sw",
+      "version": "1.0.0",
+      "dependencies": {
+        "@ephox/katamari": "^10.0.0",
+      },
+      "devDependencies": {
+        "@rollup/plugin-node-resolve": "^16.0.1",
       },
     },
     "modules/alloy": {
@@ -586,6 +598,8 @@
 
     "@ephox/agar": ["@ephox/agar@workspace:modules/agar"],
 
+    "@ephox/agar-sw": ["@ephox/agar-sw@workspace:modules/agar-sw"],
+
     "@ephox/alloy": ["@ephox/alloy@workspace:modules/alloy"],
 
     "@ephox/bedrock-client": ["@ephox/bedrock-client@15.0.0", "", { "dependencies": { "@ephox/bedrock-common": "^15.0.0", "@ephox/dispute": "^1.0.3" } }, "sha512-jO1REPlAokzLScK4m9Wcykw6SC5+Bv9pBk3LAjEvNgfxydSlgl2ReYTSsL0ZvQRJguzzpE1T7XD3kOfvtRX0FQ=="],
@@ -594,7 +608,7 @@
 
     "@ephox/bedrock-runner": ["@ephox/bedrock-runner@15.0.2", "", { "dependencies": { "@ephox/bedrock-common": "^15.0.0", "jquery": "^3.4.1", "querystringify": "^2.1.1" } }, "sha512-a5rZy4WXkTWHBGn8CBqmZACCrdmNskQzriuu+u8GWtmmJqdrdr6pnHlNqiojzlo1VDM3ptPnUxADGwivsaRxJw=="],
 
-    "@ephox/bedrock-server": ["@ephox/bedrock-server@15.0.2", "", { "dependencies": { "@aws-sdk/client-device-farm": "^3.354.0", "@ephox/bedrock-client": "^15.0.0", "@ephox/bedrock-common": "^15.0.0", "@ephox/bedrock-runner": "^15.0.2", "@jsdevtools/coverage-istanbul-loader": "^3.0.5", "@lambdatest/node-tunnel": "^4.0.4", "@wdio/globals": "^8.14.1", "async": "^3.0.0", "chalk": "^4.1.1", "cli-highlight": "^2.1.11", "command-line-args": "^5.0.0", "command-line-usage": "^6.0.0", "core-js": "^3.6.4", "core-js-bundle": "^3.6.4", "cross-spawn": "^7.0.0", "deepmerge": "^4.3.1", "etag": "^1.8.1", "finalhandler": "^1.1.2", "fork-ts-checker-webpack-plugin": "^8.0.0", "fresh": "^0.5.2", "glob": "^7.1.6", "grunt": "^1.0.4", "jquery": "^3.4.1", "mime-types": "^2.1.34", "mkdirp": "^1.0.0", "portfinder": "^1.0.25", "recursive-readdir-sync": "^1.0.6", "rollup": "^2.0.0", "rollup-plugin-typescript2": "^0.24.0", "serve-static": "^1.10.2", "source-map-loader": "^3.0.0", "split2": "^4.2.0", "ts-loader": "^9.0.0", "tsconfig-paths-webpack-plugin": "^3.2.0", "webdriverio": "^8.0.0", "webpack": "^5.97.1", "webpack-dev-server": "^5.2.0", "which": "^2.0.0", "xml-writer": "^1.6.0" }, "peerDependencies": { "typescript": ">=3.8.0" }, "bin": { "bedrock": "bin/bedrock.js", "bedrock-auto": "bin/bedrock-auto.js" } }, "sha512-a0iu8h/dsGJwHmg8wntAaKJ+K6EV5YKTBvlu9ezxvZM7YAyfZCvSRd89a3hmXqVI6H+XzRekDxOVazZXsUeBSQ=="],
+    "@ephox/bedrock-server": ["@ephox/bedrock-server@15.0.4", "", { "dependencies": { "@aws-sdk/client-device-farm": "^3.354.0", "@ephox/bedrock-client": "^15.0.0", "@ephox/bedrock-common": "^15.0.0", "@ephox/bedrock-runner": "^15.0.2", "@jsdevtools/coverage-istanbul-loader": "^3.0.5", "@lambdatest/node-tunnel": "^4.0.4", "@wdio/globals": "^8.14.1", "async": "^3.0.0", "chalk": "^4.1.1", "cli-highlight": "^2.1.11", "command-line-args": "^5.0.0", "command-line-usage": "^6.0.0", "core-js": "^3.6.4", "core-js-bundle": "^3.6.4", "cross-spawn": "^7.0.0", "deepmerge": "^4.3.1", "etag": "^1.8.1", "finalhandler": "^1.1.2", "fork-ts-checker-webpack-plugin": "^8.0.0", "fresh": "^0.5.2", "glob": "^7.1.6", "grunt": "^1.0.4", "jquery": "^3.4.1", "mime-types": "^2.1.34", "mkdirp": "^1.0.0", "portfinder": "^1.0.25", "recursive-readdir-sync": "^1.0.6", "rollup": "^2.0.0", "rollup-plugin-typescript2": "^0.24.0", "serve-static": "^1.10.2", "source-map-loader": "^3.0.0", "split2": "^4.2.0", "ts-loader": "^9.0.0", "tsconfig-paths-webpack-plugin": "^3.2.0", "webdriverio": "^8.0.0", "webpack": "^5.97.1", "webpack-dev-server": "^5.2.0", "which": "^2.0.0", "xml-writer": "^1.6.0" }, "peerDependencies": { "typescript": ">=3.8.0" }, "bin": { "bedrock-auto": "bin/bedrock-auto.js", "bedrock": "bin/bedrock.js" } }, "sha512-5YixIxwYX3H7AIVYuxwK6b0eQOdEtnmYjCwGO7x/1YlHYrbbfsC2uTXgvldzkj1G4fV+EYWZRxkkeZwvBK2pug=="],
 
     "@ephox/boss": ["@ephox/boss@workspace:modules/boss"],
 
