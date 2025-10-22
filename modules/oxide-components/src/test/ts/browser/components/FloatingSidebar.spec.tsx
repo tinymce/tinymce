@@ -123,4 +123,52 @@ describe('browser.floatingsidebar.FloatingSidebar', () => {
 
     expect(Css.getRaw(containerElement, 'transform').getOrDie()).toBe(`translate3d(${shiftX}px, ${shiftY}px, 0px)`);
   });
+
+  describe('TINY-13044: Initial position', () => {
+    const renderWithPosition = (initialPosition: { x: number; y: number; origin: 'topleft' | 'topright' | 'bottomleft' | 'bottomright' }): { containerElement: HTMLElement } => {
+      const { getByTestId } = render(
+        <FloatingSidebar.Root initialPosition={initialPosition} height={100}>
+          <FloatingSidebar.Header>
+            <div data-testid={floatingSidebarHeaderTestId}>Header</div>
+          </FloatingSidebar.Header>
+          <div data-testid={floatingSidebarContentTestId}>Content</div>
+        </FloatingSidebar.Root>, { wrapper: Wrapper });
+
+      const floatingSidebarContent = SugarElement.fromDom(getByTestId(floatingSidebarContentTestId).element());
+      const containerElement = SelectorFind.closest<HTMLElement>(floatingSidebarContent, '.tox-floating-sidebar').getOrDie();
+      return { containerElement: containerElement.dom };
+    };
+
+    it('TINY-13044: Should have correct initial position origin topleft', async () => {
+      const initialPosition = { x: 50, y: 50, origin: 'topleft' as const };
+      const { containerElement } = renderWithPosition(initialPosition);
+      const rect = containerElement.getBoundingClientRect();
+      expect(rect.left).toBe(initialPosition.x);
+      expect(rect.top).toBe(initialPosition.y);
+    });
+
+    it('TINY-13044: Should have correct initial position origin topright', async () => {
+      const initialPosition = { x: 50, y: 50, origin: 'topright' as const };
+      const { containerElement } = renderWithPosition(initialPosition);
+      const rect = containerElement.getBoundingClientRect();
+      expect(rect.right).toBe(initialPosition.x);
+      expect(rect.top).toBe(initialPosition.y);
+    });
+
+    it('TINY-13044: Should have correct initial position origin bottomleft', async () => {
+      const initialPosition = { x: 50, y: 50, origin: 'bottomleft' as const };
+      const { containerElement } = renderWithPosition(initialPosition);
+      const rect = containerElement.getBoundingClientRect();
+      expect(rect.left).toBe(50);
+      expect(rect.bottom).toBe(50);
+    });
+
+    it('TINY-13044: Should have correct initial position origin bottomright', async () => {
+      const initialPosition = { x: 50, y: 50, origin: 'bottomright' as const };
+      const { containerElement } = renderWithPosition(initialPosition);
+      const rect = containerElement.getBoundingClientRect();
+      expect(rect.right).toBe(50);
+      expect(rect.bottom).toBe(50);
+    });
+  });
 });
