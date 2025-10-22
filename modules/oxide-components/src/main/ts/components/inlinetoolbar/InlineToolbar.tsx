@@ -184,9 +184,7 @@ const Toolbar: FC<ToolbarProps> = ({
     onMouseDown?.(event);
   }, [ onMouseDown ]);
 
-  const toolbarClasses = [ 'tox-inline-toolbar', className ]
-    .filter(Boolean)
-    .join(' ');
+  const toolbarClasses = `tox-inline-toolbar${Type.isNonNullable(className) ? ` ${className}` : ''}`;
 
   return (
     isOpen &&
