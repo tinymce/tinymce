@@ -316,6 +316,12 @@ class Editor implements EditorObservable {
     }
     this.baseUri = editorManager.baseURI;
 
+    const cspNonce = Options.getCspNonce(self);
+    if (typeof cspNonce === 'string' && cspNonce.trim() !== '' ) {
+      DOMUtils.DOM.styleSheetLoader._setCspNonce(cspNonce.trim());
+      DOMUtils.DOM.settings.csp_nonce = cspNonce.trim();
+    }
+
     const referrerPolicy = Options.getReferrerPolicy(self);
     if (referrerPolicy) {
       ScriptLoader.ScriptLoader._setReferrerPolicy(referrerPolicy);
