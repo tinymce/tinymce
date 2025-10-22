@@ -40,7 +40,8 @@ const debugLog = (...args: any[]) => {
 };
 
 const infoLog = (...args: any[]) => {
-  if (currentMockingConfig.logLevel === 'info') {
+  const { logLevel } = currentMockingConfig;
+  if (logLevel === 'info' || logLevel === 'debug') {
     log(...args);
   }
 };
