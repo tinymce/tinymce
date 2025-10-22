@@ -20,6 +20,7 @@ const meta = {
     layout: 'centered',
     docs: {
       description: {
+        /* eslint-disable max-len */
         component: `
 A compound component for creating inline toolbars that anchor to trigger elements.
 

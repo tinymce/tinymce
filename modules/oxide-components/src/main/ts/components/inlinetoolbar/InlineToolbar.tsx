@@ -1,4 +1,4 @@
-import { Id, Type } from '@ephox/katamari';
+import { Arr, Id, Type } from '@ephox/katamari';
 import {
   createContext,
   useContext,
@@ -196,16 +196,10 @@ const Toolbar: FC<ToolbarProps> = ({
     toolbar.style.setProperty('position-try-fallbacks', 'flip-block, flip-inline, flip-block flip-inline');
 
     return () => {
-  anchorElement.style.removeProperty('anchor-name');
-  
-  Arr.each(['position-anchor', 'top', 'left', 'transform', 'position-try-fallbacks'], (property) => {
-    toolbar.style.removeProperty(property);
-  });
-      toolbar.style.removeProperty('position-anchor');
-      toolbar.style.removeProperty('top');
-      toolbar.style.removeProperty('left');
-      toolbar.style.removeProperty('transform');
-      toolbar.style.removeProperty('position-try-fallbacks');
+      anchorElement.style.removeProperty('anchor-name');
+      Arr.each([ 'position-anchor', 'top', 'left', 'transform', 'position-try-fallbacks' ], (property) => {
+        toolbar.style.removeProperty(property);
+      });
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps -- triggerRef/toolbarRef are stable ref objects */
   }, [ anchorName, isOpen ]);
