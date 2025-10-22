@@ -258,7 +258,7 @@ timestamps {
   name: 'TinyMCE',
   mention: true
   ) {
-  devPods.custom(containers: [ nodeLtsResources, aws ], checkoutStep: checkoutAndMergeStep) {
+  devPods.custom(build: cacheName, containers: [ nodeLtsResources, aws ], checkoutStep: checkoutAndMergeStep) {
     container('node-lts') {
       props = readProperties(file: 'build.properties')
       String primaryBranch = props.primaryBranch
