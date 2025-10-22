@@ -1,6 +1,6 @@
 project: tinymce
 kind: Fixed
-body: Addressed split button main buttons rendering narrower than in TinyMCE 7, ensuring consistent button sizing across toolbar.
+body: Addressed split buttons rendering narrower than in TinyMCE 7, ensuring consistent sizing across the toolbar.
 time: 2025-10-22T11:25:37.119459+10:00
 custom:
     Issue: TINY-13111
