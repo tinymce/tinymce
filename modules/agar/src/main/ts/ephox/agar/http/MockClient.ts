@@ -1,3 +1,5 @@
+import { Type } from '@ephox/katamari';
+
 import * as HttpHandler from './HttpHandler';
 import * as Shared from './Shared';
 import * as StreamUtils from './StreamUtils';
@@ -116,7 +118,7 @@ const registerServiceWorker = async (swUrl: string): Promise<void> => {
   const registration = await navigator.serviceWorker.register(swUrl, { scope: '/' });
   debugLog('Service worker registered:', registration);
 
-  if (!navigator.serviceWorker.controller) {
+  if (Type.isNullable(navigator.serviceWorker.controller)) {
     await waitForControllerChange();
   }
 
