@@ -37,7 +37,7 @@ export const Tag: FunctionComponent<TagProps> = (props) => {
         <span className="tox-tag__close">
           {/* The svg is temporary until the oxide-icons include the icons with the correct size for this project */}
           {/* Once that is done, we will revert back to using the IconButton component */}
-          <Button variant='naked' onClick={props.onClose} className={'tox-button--icon'}>
+          <Button variant='naked' onClick={props.onClose} className={'tox-button--icon'} aria-label="Remove tag">
             <TagCloseIcon />
           </Button>
         </span>
