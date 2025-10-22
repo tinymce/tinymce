@@ -32,24 +32,6 @@ const useInlineToolbarContext = () => {
   return context;
 };
 
-const detectAnchorPosition = (element: HTMLElement) => ({
-  isBottom: element.style.bottom !== '',
-  isCenter: element.style.left === '50%'
-});
-
-const getTransformValue = (isCenter: boolean, isBottom: boolean): string | undefined => {
-  if (isCenter && isBottom) {
-    return 'translate(-50%, -100%)';
-  }
-  if (isCenter) {
-    return 'translateX(-50%)';
-  }
-  if (isBottom) {
-    return 'translateY(-100%)';
-  }
-  return undefined;
-};
-
 const Root: FC<InlineToolbarProps> = ({
   children,
   sinkRef,
@@ -180,28 +162,17 @@ const Toolbar: FC<ToolbarProps> = ({
       ? Css.get(sugarToolbar, '--inline-toolbar-gap') || '6px'
       : '6px';
 
-    const { isBottom, isCenter } = detectAnchorPosition(anchorElement);
-
-    const topValue = isBottom
-      ? `calc(anchor(${anchorName} top) - ${gap})`
-      : `calc(anchor(${anchorName} bottom) + ${gap})`;
-    const leftValue = isCenter
-      ? `calc(anchor(${anchorName} left) + anchor-size(${anchorName} width) / 2)`
-      : `anchor(${anchorName} left)`;
+    const topValue = `calc(anchor(${anchorName} bottom) + ${gap})`;
+    const leftValue = `anchor(${anchorName} left)`;
 
     Css.set(sugarToolbar, 'top', topValue);
     Css.set(sugarToolbar, 'left', leftValue);
-
-    const transform = getTransformValue(isCenter, isBottom);
-    if (Type.isNonNullable(transform)) {
-      Css.set(sugarToolbar, 'transform', transform);
-    }
 
     Css.set(sugarToolbar, 'position-try-fallbacks', 'flip-block, flip-inline, flip-block flip-inline');
 
     return () => {
       Css.remove(sugarAnchor, 'anchor-name');
-      Arr.each([ 'position-anchor', 'top', 'left', 'transform', 'position-try-fallbacks' ], (property) => {
+      Arr.each([ 'position-anchor', 'top', 'left', 'position-try-fallbacks' ], (property) => {
         Css.remove(sugarToolbar, property);
       });
     };
