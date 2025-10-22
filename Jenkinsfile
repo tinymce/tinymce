@@ -26,7 +26,7 @@ def bunInstall() {
 
 def checkoutAndMergeStep = {
   tinyGit.addGitHubToKnownHosts()
-  checkout localBranch(scm)
+  checkout localBranch(scm, [lfs()])
   tinyGit.addAuthorConfig()
 }
 
@@ -258,7 +258,7 @@ timestamps {
   name: 'TinyMCE',
   mention: true
   ) {
-  devPods.custom(build: cacheName, containers: [ nodeLtsResources, aws ], checkoutStep: checkoutAndMergeStep) {
+  devPods.custom(containers: [ nodeLtsResources, aws ], checkoutStep: checkoutAndMergeStep) {
     container('node-lts') {
       props = readProperties(file: 'build.properties')
       String primaryBranch = props.primaryBranch
