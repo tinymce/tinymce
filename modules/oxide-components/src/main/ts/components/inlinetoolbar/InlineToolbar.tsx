@@ -1,4 +1,5 @@
 import { Arr, Id, Type } from '@ephox/katamari';
+import { Css, SugarElement } from '@ephox/sugar';
 import {
   createContext,
   useContext,
@@ -123,7 +124,7 @@ const Toolbar: FC<ToolbarProps> = ({
   } = useInlineToolbarContext();
 
   useEffect(() => {
-    if (isOpen && toolbarRef.current) {
+    if (isOpen && Type.isNonNullable(toolbarRef.current)) {
       toolbarRef.current.focus();
     }
   /* eslint-disable-next-line react-hooks/exhaustive-deps -- toolbarRef is a stable ref object and doesn't need to be in deps list. */
@@ -161,7 +162,7 @@ const Toolbar: FC<ToolbarProps> = ({
   const anchorName = useMemo(() => `--${Id.generate('inline-toolbar')}`, []);
 
   useEffect(() => {
-    if (!isOpen || !triggerRef.current || !toolbarRef.current) {
+    if (!isOpen || !Type.isNonNullable(triggerRef.current) || !Type.isNonNullable(toolbarRef.current)) {
       return;
     }
 
@@ -169,11 +170,14 @@ const Toolbar: FC<ToolbarProps> = ({
     const toolbar = toolbarRef.current;
     const anchorElement = (trigger.firstElementChild as HTMLElement) ?? trigger;
 
-    anchorElement.style.setProperty('anchor-name', anchorName);
-    toolbar.style.setProperty('position-anchor', anchorName);
+    const sugarAnchor = SugarElement.fromDom(anchorElement);
+    const sugarToolbar = SugarElement.fromDom(toolbar);
 
-    const gap = toolbar.ownerDocument?.defaultView
-      ? toolbar.ownerDocument.defaultView.getComputedStyle(toolbar).getPropertyValue('--inline-toolbar-gap') || '6px'
+    Css.set(sugarAnchor, 'anchor-name', anchorName);
+    Css.set(sugarToolbar, 'position-anchor', anchorName);
+
+    const gap = Type.isNonNullable(toolbar.ownerDocument?.defaultView)
+      ? Css.get(sugarToolbar, '--inline-toolbar-gap') || '6px'
       : '6px';
 
     const { isBottom, isCenter } = detectAnchorPosition(anchorElement);
@@ -185,20 +189,20 @@ const Toolbar: FC<ToolbarProps> = ({
       ? `calc(anchor(${anchorName} left) + anchor-size(${anchorName} width) / 2)`
       : `anchor(${anchorName} left)`;
 
-    toolbar.style.setProperty('top', topValue);
-    toolbar.style.setProperty('left', leftValue);
+    Css.set(sugarToolbar, 'top', topValue);
+    Css.set(sugarToolbar, 'left', leftValue);
 
     const transform = getTransformValue(isCenter, isBottom);
-    if (transform) {
-      toolbar.style.setProperty('transform', transform);
+    if (Type.isNonNullable(transform)) {
+      Css.set(sugarToolbar, 'transform', transform);
     }
 
-    toolbar.style.setProperty('position-try-fallbacks', 'flip-block, flip-inline, flip-block flip-inline');
+    Css.set(sugarToolbar, 'position-try-fallbacks', 'flip-block, flip-inline, flip-block flip-inline');
 
     return () => {
-      anchorElement.style.removeProperty('anchor-name');
+      Css.remove(sugarAnchor, 'anchor-name');
       Arr.each([ 'position-anchor', 'top', 'left', 'transform', 'position-try-fallbacks' ], (property) => {
-        toolbar.style.removeProperty(property);
+        Css.remove(sugarToolbar, property);
       });
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps -- triggerRef/toolbarRef are stable ref objects */
