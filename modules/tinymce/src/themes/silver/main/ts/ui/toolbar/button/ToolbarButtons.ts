@@ -475,54 +475,50 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
     }
   });
 
-  const mainButton = AlloyButton.sketch({
-    ...renderCommonStructure(
-      spec.icon,
-      spec.text,
-      Optional.none(),
-      Optional.some([
-        Toggling.config({
-          toggleClass: ToolbarButtonClasses.Ticked,
-          aria: spec.presets === 'color' ? { mode: 'none' } : { mode: 'pressed' },
-          toggleOnExecute: false
-        }),
-        DisablingConfigs.toolbarButton(() => sharedBackstage.providers.checkUiComponentContext(spec.context).shouldDisable),
-        UiState.toggleOnReceive(() => sharedBackstage.providers.checkUiComponentContext(spec.context)),
-        AddEventsBehaviour.config('split-main-aria-events', []),
-        ...(spec.tooltip.isSome() ? [
-          Tooltipping.config(sharedBackstage.providers.tooltips.getConfig({
-            tooltipText: sharedBackstage.providers.translate(spec.tooltip.getOr('')),
-            onShow: (comp) => {
-              if (tooltipString.get() !== spec.tooltip.getOr('')) {
-                const translated = sharedBackstage.providers.translate(tooltipString.get());
-                Tooltipping.setComponents(comp,
-                  sharedBackstage.providers.tooltips.getComponents({ tooltipText: translated })
-                );
-              }
+  const structure = renderCommonStructure(
+    spec.icon,
+    spec.text,
+    Optional.none(),
+    Optional.some([
+      Toggling.config({
+        toggleClass: ToolbarButtonClasses.Ticked,
+        aria: spec.presets === 'color' ? { mode: 'none' } : { mode: 'pressed' },
+        toggleOnExecute: false
+      }),
+      ...(spec.tooltip.isSome() ? [
+        Tooltipping.config(sharedBackstage.providers.tooltips.getConfig({
+          tooltipText: sharedBackstage.providers.translate(spec.tooltip.getOr('')),
+          onShow: (comp) => {
+            if (tooltipString.get() !== spec.tooltip.getOr('')) {
+              const translated = sharedBackstage.providers.translate(tooltipString.get());
+              Tooltipping.setComponents(comp,
+                sharedBackstage.providers.tooltips.getComponents({ tooltipText: translated })
+              );
             }
-          }))
-        ] : [])
-      ]),
-      sharedBackstage.providers,
-      spec.context,
-      btnName
-    ),
+          }
+        }))
+      ] : [])
+    ]),
+    sharedBackstage.providers,
+    spec.context,
+    btnName
+  );
+
+  const mainButton = AlloyButton.sketch({
     dom: {
-      ...renderCommonStructure(
-        spec.icon,
-        spec.text,
-        Optional.none(),
-        Optional.none(),
-        sharedBackstage.providers,
-        spec.context,
-        btnName
-      ).dom,
-      classes: [ ToolbarButtonClasses.Button, 'tox-split-button__main' ],
+      ...structure.dom,
+      classes: [
+        ToolbarButtonClasses.Button,
+        'tox-split-button__main'
+      ].concat(spec.text.isSome() ? [ ToolbarButtonClasses.MatchWidth ] : []),
       attributes: {
         'aria-label': getMainButtonAriaLabel(),
         ...(Type.isNonNullable(btnName) ? { 'data-mce-name': btnName } : {})
       }
     },
+    components: structure.components,
+    eventOrder: structure.eventOrder,
+    buttonBehaviours: structure.buttonBehaviours,
     action: (button) => {
       if (spec.onAction) {
         const api = getApi(button);
