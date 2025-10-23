@@ -1,9 +1,9 @@
 import type { FunctionComponent } from 'react';
 
-import * as TinyAiUiAttributes from '../TinyAiUiAttributes';
+import { classes } from '../../../utils/Styles';
 
 export const Spinner: FunctionComponent = () =>
-  <div className={TinyAiUiAttributes.classes.aiSpinner}>
+  <div className={classes(["tox-ai__spinner"])}>
     <svg
       style={{
         animation: 'tox-rotation 1s linear infinite'

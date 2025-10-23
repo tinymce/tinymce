@@ -1,3 +1,4 @@
+import { Spinner } from './bespoke/tinyai/spinner/Spinner';
 import { AutoResizingTextarea } from './components/autoresizingtextarea/AutoResizingTextarea';
 import { Button } from './components/button/Button';
 import { Draggable } from './components/draggable/Draggable';
@@ -8,10 +9,10 @@ import * as FocusHelpers from './utils/FocusHelpers';
 
 export {
   AutoResizingTextarea,
-  Button,
-  Draggable,
+  Button, Draggable,
   FocusHelpers,
   IconButton,
   KeyboardNavigationHooks,
-  KeyboardNavigationTypes
+  KeyboardNavigationTypes,
+  Spinner
 };
