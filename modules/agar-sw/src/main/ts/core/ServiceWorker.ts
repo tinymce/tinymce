@@ -32,11 +32,15 @@ const sendRequestToClient = async (client: Client, request: Request): Promise<Re
     const incomingPort = messageChannel.port1;
 
     incomingPort.onmessage = ({ data: headData }) => {
+      let aborted = false;
+
       if (Shared.isMockedResponseHeadMessage(headData)) {
         const reader = new ReadableStream({
           start: (controller) => {
             incomingPort.onmessage = ({ data: bodyData }) => {
-              if (Shared.isMockedResponseBodyChunkMessage(bodyData)) {
+              if (aborted) {
+                return;
+              } else if (Shared.isMockedResponseBodyChunkMessage(bodyData)) {
                 Logger.debug('Returning mocked response body chunk', { clientId: client.id, requestId, url: request.url });
                 controller.enqueue(new Uint8Array(bodyData.buffer));
               } else if (Shared.isMockedResponseBodyDoneMessage(bodyData)) {
@@ -49,6 +53,11 @@ const sendRequestToClient = async (client: Client, request: Request): Promise<Re
                 reject(new Error('Unexpected message from client expected response body chunk or done.'));
               }
             };
+          },
+          cancel: () => {
+            aborted = true;
+            closePort(incomingPort);
+            Logger.debug('Request aborted', { clientId: client.id, requestId, url: request.url });
           }
         });
 

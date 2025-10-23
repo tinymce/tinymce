@@ -232,6 +232,46 @@ describe('browser.agar.http.HttpMockingTest', () => {
     Assert.eq('Should be expected chunks', [ 'one', 'two', 'three' ], chunks);
   });
 
+  it('TINY-13084: Should handle aborting streaming response', async () => {
+    const abortController = new window.AbortController();
+    const chunks: string[] = [];
+
+    try {
+      const response = await window.fetch('/custom/streaming', { signal: abortController.signal });
+      const body = response.body;
+
+      if (Type.isNull(body)) {
+        Assert.fail('Response body should not be null');
+        return;
+      }
+
+      Assert.eq('Should be expected content-type', 'text/plain', response.headers.get('Content-Type'));
+      Assert.eq('Should be expected transfer-encoding', 'chunked', response.headers.get('Transfer-Encoding'));
+
+      const reader = body.pipeThrough<string>(new window.TextDecoderStream()).getReader();
+
+      while (true) {
+        const { done, value: chunk } = await reader.read();
+
+        if (done) {
+          break;
+        }
+
+        chunks.push(chunk);
+        if (chunk === 'two') {
+          abortController.abort();
+        }
+      }
+    } catch (e) {
+      const isAbortError = (err: unknown): err is Error => err instanceof Error && err.name === 'AbortError';
+      if (!isAbortError(e)) {
+        Assert.fail('Should be abort error');
+      }
+    }
+
+    Assert.eq('Should be only one and two since we aborted before three', [ 'one', 'two' ], chunks);
+  });
+
   it('TINY-13084: Should handle file uploads', async () => {
     const formData = new FormData();
 
