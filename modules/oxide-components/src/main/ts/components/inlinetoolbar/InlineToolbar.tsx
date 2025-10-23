@@ -105,16 +105,14 @@ const Toolbar: FC<ToolbarProps> = ({
     if (isOpen && Type.isNonNullable(toolbarRef.current)) {
       toolbarRef.current.focus();
     }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps -- toolbarRef is a stable ref object and doesn't need to be in deps list. */
-  }, [ isOpen ]);
+  }, [ isOpen, toolbarRef ]);
 
   useEffect(() => {
     const element = toolbarRef.current;
     if (Type.isNonNullable(element)) {
       isOpen ? element.showPopover() : element.hidePopover();
     };
-    /* eslint-disable-next-line react-hooks/exhaustive-deps -- toolbarRef is a stable ref object and doesn't need to be in deps list. */
-  }, [ isOpen ]);
+  }, [ isOpen, toolbarRef ]);
 
   useSpecialKeyNavigation({
     containerRef: toolbarRef,
@@ -134,8 +132,7 @@ const Toolbar: FC<ToolbarProps> = ({
         close();
       }
     }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps -- toolbarRef/triggerRef are stable ref objects */
-  }, [ isOpen, close ]);
+  }, [ isOpen, close, toolbarRef, triggerRef ]);
 
   useEffect(() => {
     if (persistent) {
@@ -180,8 +177,7 @@ const Toolbar: FC<ToolbarProps> = ({
         Css.remove(sugarToolbar, property);
       });
     };
-    /* eslint-disable-next-line react-hooks/exhaustive-deps -- triggerRef/toolbarRef are stable ref objects */
-  }, [ anchorName, isOpen ]);
+  }, [ anchorName, isOpen, triggerRef, toolbarRef ]);
 
   const handleMouseDown = useCallback<MouseEventHandler<HTMLDivElement>>((event) => {
     event.preventDefault();
