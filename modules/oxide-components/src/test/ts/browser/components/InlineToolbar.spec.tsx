@@ -1,4 +1,4 @@
-import { userEvent } from '@vitest/browser/context';
+import { page, userEvent } from '@vitest/browser/context';
 import * as InlineToolbar from 'oxide-components/components/inlinetoolbar/InlineToolbar';
 import { classes } from 'oxide-components/utils/Styles';
 import { Fragment, type ReactNode } from 'react';
@@ -88,11 +88,7 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
     await expect.element(toolbar).toBeVisible();
 
     // Click outside
-    document.body.dispatchEvent(new MouseEvent('mousedown', {
-      bubbles: true,
-      clientX: 0,
-      clientY: 0
-    }));
+    await page.elementLocator(document.body).click({ position: { x: 0, y: 0 }});
 
     await expect.element(toolbar).not.toBeVisible();
   });
