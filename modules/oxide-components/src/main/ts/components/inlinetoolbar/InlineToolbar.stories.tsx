@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 import { fn } from 'storybook/test';
 
 import { Button } from '../button/Button';
@@ -30,11 +30,9 @@ A compound component for creating inline toolbars that anchor to trigger element
 import * as InlineToolbar from 'oxide-components/InlineToolbar';
 
 const MyComponent = () => {
-  const sinkRef = useRef<HTMLDivElement>(null);
-
   return (
-    <div ref={sinkRef} className="tox" style={{ position: 'relative' }}>
-      <InlineToolbar.Root sinkRef={sinkRef} persistent={false}>
+    <div className="tox" style={{ position: 'relative' }}>
+      <InlineToolbar.Root persistent={false}>
         <InlineToolbar.Trigger>
           <div style={{ backgroundColor: 'red', padding: '10px' }}>
             Click me!
@@ -56,7 +54,6 @@ const MyComponent = () => {
 The provider component that manages toolbar state.
 
 **Props:**
-- \`sinkRef\`: RefObject to the container where the toolbar renders (must have \`position: relative\`).
 - \`persistent\`: (optional, default: \`false\`). If true, the toolbar stays open when clicking outside of it.
 
 ### Trigger
@@ -112,12 +109,6 @@ See the **Corners** story for a live demonstration of auto-flip behavior.
     },
   },
   argTypes: {
-    sinkRef: {
-      description: 'RefObject to the container element where the toolbar will render. This element must have `position: relative` or `position: absolute` set.',
-      table: {
-        type: { summary: 'RefObject<HTMLDivElement>' },
-      }
-    },
     persistent: {
       description: 'When true, the toolbar will not close when clicking outside of it. Useful for toolbars that should stay open until explicitly closed.',
       table: {
@@ -144,10 +135,9 @@ export const Basic: Story = {
     },
   },
   render: () => {
-    const sinkRef = useRef<HTMLDivElement>(null);
     return (
-      <div ref={sinkRef} className="tox" style={{ position: 'relative' }}>
-        <InlineToolbar.Root sinkRef={sinkRef} persistent={false}>
+      <div className="tox" style={{ position: 'relative' }}>
+        <InlineToolbar.Root persistent={false}>
           <InlineToolbar.Trigger>
             <div style={{ backgroundColor: 'red', padding: '10px' }}>
               Click me!
@@ -172,10 +162,9 @@ export const Persistent: Story = {
     },
   },
   render: () => {
-    const sinkRef = useRef<HTMLDivElement>(null);
     return (
-      <div ref={sinkRef} className="tox" style={{ position: 'relative' }}>
-        <InlineToolbar.Root sinkRef={sinkRef} persistent={true}>
+      <div className="tox" style={{ position: 'relative' }}>
+        <InlineToolbar.Root persistent={true}>
           <InlineToolbar.Trigger>
             <div style={{ backgroundColor: 'blue', padding: '10px' }}>
               Click me (Persistent)!
@@ -193,10 +182,9 @@ export const Persistent: Story = {
 
 export const WithIconButtons: Story = {
   render: () => {
-    const sinkRef = useRef<HTMLDivElement>(null);
     return (
-      <div ref={sinkRef} className="tox" style={{ position: 'relative' }}>
-        <InlineToolbar.Root sinkRef={sinkRef} persistent={false}>
+      <div className="tox" style={{ position: 'relative' }}>
+        <InlineToolbar.Root persistent={false}>
           <InlineToolbar.Trigger>
             <div style={{ backgroundColor: 'lightblue', padding: '10px' }}>
               Click me!
@@ -214,10 +202,9 @@ export const WithIconButtons: Story = {
 
 export const ManyButtons: Story = {
   render: () => {
-    const sinkRef = useRef<HTMLDivElement>(null);
     return (
-      <div ref={sinkRef} className="tox" style={{ position: 'relative' }}>
-        <InlineToolbar.Root sinkRef={sinkRef} persistent={false}>
+      <div className="tox" style={{ position: 'relative' }}>
+        <InlineToolbar.Root persistent={false}>
           <InlineToolbar.Trigger>
             <div style={{ backgroundColor: 'lightgreen', padding: '10px' }}>
               Click me!
@@ -239,10 +226,9 @@ export const ManyButtons: Story = {
 
 export const MixedContent: Story = {
   render: () => {
-    const sinkRef = useRef<HTMLDivElement>(null);
     return (
-      <div ref={sinkRef} className="tox" style={{ position: 'relative' }}>
-        <InlineToolbar.Root sinkRef={sinkRef} persistent={false}>
+      <div className="tox" style={{ position: 'relative' }}>
+        <InlineToolbar.Root persistent={false}>
           <InlineToolbar.Trigger>
             <div style={{ backgroundColor: 'lightyellow', padding: '10px' }}>
               Click me!
@@ -277,8 +263,6 @@ export const Corners: Story = {
     },
   },
   render: () => {
-    const sinkRef = useRef<HTMLDivElement>(null);
-
     const triggerPositions = useMemo(() => ([
       // Top row
       { id: 'top-left', label: 'Top Left', style: { top: '20px', left: '20px' }},
@@ -297,7 +281,6 @@ export const Corners: Story = {
     return (
       <div className="tox inline-toolbar-anchors" style={{ width: '520px' }}>
         <div
-          ref={sinkRef}
           className="tox"
           style={{
             position: 'relative',
@@ -309,7 +292,7 @@ export const Corners: Story = {
           }}
         >
           {triggerPositions.map((pos) => (
-            <InlineToolbar.Root key={pos.id} sinkRef={sinkRef} persistent={false}>
+            <InlineToolbar.Root key={pos.id} persistent={false}>
               <InlineToolbar.Trigger>
                 <div style={{ position: 'absolute' as const, display: 'inline-flex', ...pos.style }}>
                   <Button>{pos.label}</Button>

@@ -1,7 +1,7 @@
 import { userEvent } from '@vitest/browser/context';
 import * as InlineToolbar from 'oxide-components/components/inlinetoolbar/InlineToolbar';
 import { classes } from 'oxide-components/utils/Styles';
-import { createRef, Fragment, type ReactNode } from 'react';
+import { Fragment, type ReactNode } from 'react';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-react';
 
@@ -27,11 +27,10 @@ const Wrapper = ({ children }: { children: ReactNode }) => {
 
 describe('browser.inlinetoolbar.InlineToolbar', () => {
   it('TINY-13071: Should render trigger and toolbar', async () => {
-    const sinkRef = createRef<HTMLDivElement>();
     const { getByTestId } = render(
       <Fragment>
-        <div ref={sinkRef} className="tox" style={{ position: 'relative' }} />
-        <InlineToolbar.Root sinkRef={sinkRef}>
+        <div className="tox" style={{ position: 'relative' }} />
+        <InlineToolbar.Root>
           <InlineToolbar.Trigger>
             <div data-testid={triggerTestId}>Click Me</div>
           </InlineToolbar.Trigger>
@@ -65,11 +64,10 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
   });
 
   it('TINY-13071: Should close toolbar on click outside when persistent=false', async () => {
-    const sinkRef = createRef<HTMLDivElement>();
     const { getByTestId } = render(
       <Fragment>
-        <div ref={sinkRef} className="tox" style={{ position: 'relative' }}>
-          <InlineToolbar.Root sinkRef={sinkRef} persistent={false}>
+        <div className="tox" style={{ position: 'relative' }}>
+          <InlineToolbar.Root persistent={false}>
             <InlineToolbar.Trigger>
               <div data-testid={triggerTestId}>Click Me</div>
             </InlineToolbar.Trigger>
@@ -96,15 +94,14 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
       clientY: 0
     }));
 
-    await expect.element(toolbar).not.toBeInTheDocument();
+    await expect.element(toolbar).not.toBeVisible();
   });
 
   it('TINY-13071: Should close toolbar on Escape key', async () => {
-    const sinkRef = createRef<HTMLDivElement>();
     const { getByTestId } = render(
       <Fragment>
-        <div ref={sinkRef} className="tox" style={{ position: 'relative' }}>
-          <InlineToolbar.Root sinkRef={sinkRef}>
+        <div className="tox" style={{ position: 'relative' }}>
+          <InlineToolbar.Root>
             <InlineToolbar.Trigger>
               <div data-testid={triggerTestId}>Click Me</div>
             </InlineToolbar.Trigger>
@@ -126,6 +123,6 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
 
     await userEvent.keyboard('{Escape}');
 
-    await expect.element(toolbar).not.toBeInTheDocument();
+    await expect.element(toolbar).not.toBeVisible();
   });
 });
