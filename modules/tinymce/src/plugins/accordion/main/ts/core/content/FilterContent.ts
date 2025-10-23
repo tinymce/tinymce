@@ -85,11 +85,7 @@ const setup = (editor: Editor): void => {
         Normalize.normalizeOpenAttribute(node);
         if (isAccordionDetailsNode(node)) {
           const accordionNode = node;
-          if (accordionNode.attr('open') === 'open') {
-            accordionNode.attr(Identifiers.accordionReadonlyCompensationAttribute, 'open');
-          } else {
-            accordionNode.attr(Identifiers.accordionReadonlyCompensationAttribute, 'closed');
-          }
+          accordionNode.attr(Identifiers.accordionReadonlyCompensationAttribute, accordionNode.attr('open') === 'open' ? 'open' : 'closed');
           const { summaryNode, wrapperNode, otherNodes } = getAccordionChildren(accordionNode);
 
           const hasSummaryNode = Type.isNonNullable(summaryNode);
@@ -142,11 +138,7 @@ const setup = (editor: Editor): void => {
         const node = nodes[i];
         if (isAccordionDetailsNode(node)) {
           const accordionNode = node;
-          if (accordionNode.attr(Identifiers.accordionReadonlyCompensationAttribute) === 'open') {
-            accordionNode.attr('open', 'open');
-          } else {
-            accordionNode.attr('open', null);
-          }
+          accordionNode.attr('open', accordionNode.attr(Identifiers.accordionReadonlyCompensationAttribute) === 'open' ? 'open' : null);
           accordionNode.attr(Identifiers.accordionReadonlyCompensationAttribute, null);
           const { summaryNode, wrapperNode } = getAccordionChildren(accordionNode);
 

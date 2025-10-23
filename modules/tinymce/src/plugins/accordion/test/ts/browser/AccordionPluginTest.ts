@@ -167,6 +167,34 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
   });
 
+  it('TINY-12316: Accordion undo levels are properly created', () => {
+    const editor = hook.editor();
+    editor.setContent(`${AccordionUtils.createAccordion({ open: true })}<p>tiny</p>`);
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    editor.undoManager.add();
+    const undoLevelDepth1 = editor.undoManager.data.length;
+    editor.execCommand('ToggleAccordion');
+    editor.undoManager.add();
+    assert.equal(undoLevelDepth1 + 1, editor.undoManager.data.length, 'Should have increased');
+    editor.undoManager.add();
+    assert.equal(undoLevelDepth1 + 1, editor.undoManager.data.length, 'Shold remain the same');
+    editor.execCommand('ToggleAccordion');
+    editor.undoManager.add();
+    assert.equal(undoLevelDepth1 + 2, editor.undoManager.data.length, 'Should have increased');
+
+    editor.mode.set('readonly');
+    editor.undoManager.add();
+    const undoLevelDepth2 = editor.undoManager.data.length;
+    editor.execCommand('ToggleAccordion');
+    assert.equal(undoLevelDepth2, editor.undoManager.data.length, 'Shold remain the same');
+    editor.undoManager.add();
+    assert.equal(undoLevelDepth2, editor.undoManager.data.length, 'Shold remain the same');
+    editor.execCommand('ToggleAccordion');
+    editor.undoManager.add();
+    assert.equal(undoLevelDepth2, editor.undoManager.data.length, 'Shold remain the same');
+    editor.mode.set('design');
+  });
+
   it('TINY-9731: Toggle an accordion element under the cursor with an argument', () => {
     const editor = hook.editor();
     editor.setContent(`${AccordionUtils.createAccordion({ open: true })}<p>tiny</p>`);

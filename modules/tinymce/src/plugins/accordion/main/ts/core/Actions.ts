@@ -48,11 +48,7 @@ const toggleDetailsElement = (isReadonly: boolean, details: HTMLDetailsElement, 
   const shouldOpen = state ?? !Utils.isOpen(details);
 
   if (!isReadonly) {
-    if (shouldOpen) {
-      details.setAttribute(Identifiers.accordionReadonlyCompensationAttribute, 'open');
-    } else {
-      details.setAttribute(Identifiers.accordionReadonlyCompensationAttribute, 'closed');
-    }
+    details.setAttribute(Identifiers.accordionReadonlyCompensationAttribute, shouldOpen ? 'open' : 'closed');
   }
 
   if (shouldOpen) {
