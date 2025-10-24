@@ -14,15 +14,19 @@ interface Slots {
   children: ReactNode;
 }
 
+// TODO(TINY-13136): Use generic `createSlots` instead
 const createSlots = (children: ReactNode): Slots => {
-  const header = (Array.isArray(children) ? children : [ children ]).find((child: ReactNode) => (child as ReactElement)?.type === Header);
+  const header = (Array.isArray(children) ? children : [ children ]).filter((child: ReactNode) => (child as ReactElement)?.type === Header);
   const otherChildren = (Array.isArray(children) ? children : [ children ]).filter((child: ReactNode) => (child as ReactElement)?.type !== Header);
 
-  if (header === undefined) {
+  if (header.length === 0) {
     throw new Error('FloatingSidebar requires a header');
   }
+  if (header.length > 1) {
+    throw new Error('FloatingSidebar accepts only one header');
+  }
 
-  return { header, children: otherChildren };
+  return { header: header[0], children: otherChildren };
 };
 
 const Root: FC<FloatingSidebarProps> = ({ isOpen = true, height = 600, ...props }) => {
