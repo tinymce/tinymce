@@ -109,7 +109,7 @@ const Toolbar: FC<ToolbarProps> = ({
     if (Type.isNonNullable(element)) {
       if (isOpen) {
         element.showPopover();
-        // Defer focus to next event loop tick to ensure 
+        // Defer focus to next event loop tick to ensure
         // it runs after Popover API's focus management
         setTimeout(() => {
           element.focus();
