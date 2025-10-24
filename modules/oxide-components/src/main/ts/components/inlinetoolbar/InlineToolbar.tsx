@@ -239,7 +239,7 @@ const Toolbar: FC<ToolbarProps> = ({
       onMouseDown={handleMouseDown}
       {...rest}
     >
-      <div role="group" className="tox-toolbar">
+      <div role='group' className='tox-toolbar'>
         {children}
       </div>
     </div>
