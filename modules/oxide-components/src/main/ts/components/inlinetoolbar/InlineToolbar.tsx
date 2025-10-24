@@ -11,7 +11,6 @@ import {
   useCallback,
   type MouseEventHandler
 } from 'react';
-import { createPortal } from 'react-dom';
 
 import { useSpecialKeyNavigation } from '../../keynav/KeyboardNavigationHooks';
 
@@ -34,7 +33,6 @@ const useInlineToolbarContext = () => {
 
 const Root: FC<InlineToolbarProps> = ({
   children,
-  sinkRef,
   persistent = false
 }) => {
   const [ isOpen, setIsOpen ] = useState(false);
@@ -50,9 +48,8 @@ const Root: FC<InlineToolbarProps> = ({
     close,
     triggerRef,
     toolbarRef,
-    sinkRef,
     persistent
-    /* eslint-disable-next-line react-hooks/exhaustive-deps -- sinkRef/triggerRef/toolbarRef are stable ref objects and don't need to be in deps list. */
+
   }), [ isOpen, open, close, persistent ]);
 
   return (
@@ -99,7 +96,6 @@ const Toolbar: FC<ToolbarProps> = ({
   const {
     isOpen,
     toolbarRef,
-    sinkRef,
     triggerRef,
     close,
     persistent
@@ -109,8 +105,14 @@ const Toolbar: FC<ToolbarProps> = ({
     if (isOpen && Type.isNonNullable(toolbarRef.current)) {
       toolbarRef.current.focus();
     }
-  /* eslint-disable-next-line react-hooks/exhaustive-deps -- toolbarRef is a stable ref object and doesn't need to be in deps list. */
-  }, [ isOpen ]);
+  }, [ isOpen, toolbarRef ]);
+
+  useEffect(() => {
+    const element = toolbarRef.current;
+    if (Type.isNonNullable(element)) {
+      isOpen ? element.showPopover() : element.hidePopover();
+    };
+  }, [ isOpen, toolbarRef ]);
 
   useSpecialKeyNavigation({
     containerRef: toolbarRef,
@@ -130,8 +132,7 @@ const Toolbar: FC<ToolbarProps> = ({
         close();
       }
     }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps -- toolbarRef/triggerRef are stable ref objects */
-  }, [ isOpen, close ]);
+  }, [ isOpen, close, toolbarRef, triggerRef ]);
 
   useEffect(() => {
     if (persistent) {
@@ -176,8 +177,7 @@ const Toolbar: FC<ToolbarProps> = ({
         Css.remove(sugarToolbar, property);
       });
     };
-    /* eslint-disable-next-line react-hooks/exhaustive-deps -- triggerRef/toolbarRef are stable ref objects */
-  }, [ anchorName, isOpen ]);
+  }, [ anchorName, isOpen, triggerRef, toolbarRef ]);
 
   const handleMouseDown = useCallback<MouseEventHandler<HTMLDivElement>>((event) => {
     event.preventDefault();
@@ -187,22 +187,20 @@ const Toolbar: FC<ToolbarProps> = ({
   const toolbarClasses = `tox-inline-toolbar${Type.isNonNullable(className) ? ` ${className}` : ''}`;
 
   return (
-    isOpen &&
-    Type.isNonNullable(sinkRef.current) &&
-    Type.isNonNullable(triggerRef.current)
-      ? createPortal(
-        <div
-          ref={toolbarRef}
-          tabIndex={-1}
-          className={toolbarClasses}
-          style={style}
-          onMouseDown={handleMouseDown}
-          {...rest}
-        >
-          {children}
-        </div>,
-        sinkRef.current
-      ) : null
+    <div
+      ref={toolbarRef}
+      popover='manual'
+      tabIndex={-1}
+      className={toolbarClasses}
+      style={{
+        ...style,
+        visibility: isOpen ? undefined : 'hidden',
+      }}
+      onMouseDown={handleMouseDown}
+      {...rest}
+    >
+      {children}
+    </div>
   );
 };
 

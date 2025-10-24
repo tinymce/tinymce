@@ -2,7 +2,6 @@ import type { CSSProperties, HTMLAttributes, MouseEventHandler, ReactNode, RefOb
 
 export interface InlineToolbarProps {
   readonly children: HTMLAttributes<HTMLDivElement>['children'];
-  readonly sinkRef: RefObject<HTMLDivElement>;
   readonly persistent?: boolean;
 }
 
@@ -12,7 +11,6 @@ export interface InlineToolbarContextValue {
   readonly close: () => void;
   readonly triggerRef: RefObject<HTMLDivElement>;
   readonly toolbarRef: RefObject<HTMLDivElement>;
-  readonly sinkRef: RefObject<HTMLDivElement>;
   readonly persistent: boolean;
 }
 
@@ -21,6 +19,8 @@ export interface ToolbarProps {
   readonly className?: string;
   readonly style?: CSSProperties;
   readonly onMouseDown?: MouseEventHandler<HTMLDivElement>;
+  // TODO: Remove this prop once we've upgraded to React 19+ (TINY-13129)
+  readonly popover?: 'hint' | 'manual' | 'auto';
 }
 
 export interface TriggerProps {
