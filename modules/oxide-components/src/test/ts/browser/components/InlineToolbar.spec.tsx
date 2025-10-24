@@ -29,7 +29,7 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
   it('TINY-13071: Should render trigger and toolbar', async () => {
     const { getByTestId } = render(
       <Fragment>
-        <div className="tox" style={{ position: 'relative' }} />
+        <div className='tox' style={{ position: 'relative' }} />
         <InlineToolbar.Root>
           <InlineToolbar.Trigger>
             <div data-testid={triggerTestId}>Click Me</div>
@@ -68,7 +68,7 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
   it('TINY-13071: Should close toolbar on click outside when persistent={false}', async () => {
     const { getByTestId } = render(
       <Fragment>
-        <div className="tox" style={{ position: 'relative' }}>
+        <div className='tox' style={{ position: 'relative' }}>
           <InlineToolbar.Root persistent={false}>
             <InlineToolbar.Trigger>
               <div data-testid={triggerTestId}>Click Me</div>
@@ -100,7 +100,7 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
   it('TINY-13071: Should close toolbar on Escape key', async () => {
     const { getByTestId } = render(
       <Fragment>
-        <div className="tox" style={{ position: 'relative' }}>
+        <div className='tox' style={{ position: 'relative' }}>
           <InlineToolbar.Root>
             <InlineToolbar.Trigger>
               <div data-testid={triggerTestId}>Click Me</div>
@@ -130,7 +130,7 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
   it('TINY-13066: Should not close toolbar on Escape key when persistent={true}', async () => {
     const { getByTestId } = render(
       <Fragment>
-        <div className="tox" style={{ position: 'relative' }}>
+        <div className='tox' style={{ position: 'relative' }}>
           <InlineToolbar.Root persistent={true}>
             <InlineToolbar.Trigger>
               <div data-testid={triggerTestId}>Click Me</div>
@@ -160,19 +160,19 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
   it('TINY-13066: Should navigate between groups with Tab key', async () => {
     const { getByTestId } = render(
       <Fragment>
-        <div className="tox" style={{ position: 'relative' }}>
+        <div className='tox' style={{ position: 'relative' }}>
           <InlineToolbar.Root>
             <InlineToolbar.Trigger>
               <div data-testid={triggerTestId}>Click Me</div>
             </InlineToolbar.Trigger>
             <InlineToolbar.Toolbar>
               <InlineToolbar.Group>
-                <button data-testid="button1">Button 1</button>
-                <button data-testid="button2">Button 2</button>
+                <button data-testid='button1'>Button 1</button>
+                <button data-testid='button2'>Button 2</button>
               </InlineToolbar.Group>
               <InlineToolbar.Group>
-                <button data-testid="button3">Button 3</button>
-                <button data-testid="button4">Button 4</button>
+                <button data-testid='button3'>Button 3</button>
+                <button data-testid='button4'>Button 4</button>
               </InlineToolbar.Group>
             </InlineToolbar.Toolbar>
           </InlineToolbar.Root>
@@ -199,16 +199,16 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
   it('TINY-13066: Should navigate within group with arrow keys', async () => {
     const { getByTestId } = render(
       <Fragment>
-        <div className="tox" style={{ position: 'relative' }}>
+        <div className='tox' style={{ position: 'relative' }}>
           <InlineToolbar.Root>
             <InlineToolbar.Trigger>
               <div data-testid={triggerTestId}>Click Me</div>
             </InlineToolbar.Trigger>
             <InlineToolbar.Toolbar>
               <InlineToolbar.Group>
-                <button data-testid="button1">Button 1</button>
-                <button data-testid="button2">Button 2</button>
-                <button data-testid="button3">Button 3</button>
+                <button data-testid='button1'>Button 1</button>
+                <button data-testid='button2'>Button 2</button>
+                <button data-testid='button3'>Button 3</button>
               </InlineToolbar.Group>
             </InlineToolbar.Toolbar>
           </InlineToolbar.Root>
@@ -241,14 +241,14 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
     const onClick = vi.fn();
     const { getByTestId } = render(
       <Fragment>
-        <div className="tox" style={{ position: 'relative' }}>
+        <div className='tox' style={{ position: 'relative' }}>
           <InlineToolbar.Root>
             <InlineToolbar.Trigger>
               <div data-testid={triggerTestId}>Click Me</div>
             </InlineToolbar.Trigger>
             <InlineToolbar.Toolbar>
               <InlineToolbar.Group>
-                <button data-testid="button1" onClick={onClick}>Button 1</button>
+                <button data-testid='button1' onClick={onClick}>Button 1</button>
               </InlineToolbar.Group>
             </InlineToolbar.Toolbar>
           </InlineToolbar.Root>
