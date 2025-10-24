@@ -31,7 +31,7 @@ import * as InlineToolbar from 'oxide-components/InlineToolbar';
 
 const MyComponent = () => {
   return (
-    <div className="tox" style={{ position: 'relative' }}>
+    <div className='tox' style={{ position: 'relative' }}>
       <InlineToolbar.Root persistent={false}>
         <InlineToolbar.Trigger>
           <div style={{ backgroundColor: 'red', padding: '10px' }}>
@@ -151,7 +151,7 @@ export const Basic: Story = {
   },
   render: () => {
     return (
-      <div className="tox" style={{ position: 'relative' }}>
+      <div className='tox' style={{ position: 'relative' }}>
         <InlineToolbar.Root persistent={false}>
           <InlineToolbar.Trigger>
             <div style={{ backgroundColor: 'red', padding: '10px' }}>
@@ -180,7 +180,7 @@ export const Persistent: Story = {
   },
   render: () => {
     return (
-      <div className="tox" style={{ position: 'relative' }}>
+      <div className='tox' style={{ position: 'relative' as const }}>
         <InlineToolbar.Root persistent={true}>
           <InlineToolbar.Trigger>
             <div style={{ backgroundColor: 'blue', padding: '10px' }}>
@@ -200,7 +200,7 @@ export const Persistent: Story = {
 export const WithIconButtons: Story = {
   render: () => {
     return (
-      <div className="tox" style={{ position: 'relative' }}>
+      <div className='tox' style={{ position: 'relative' }}>
         <InlineToolbar.Root persistent={false}>
           <InlineToolbar.Trigger>
             <div style={{ backgroundColor: 'lightblue', padding: '10px' }}>
@@ -209,8 +209,8 @@ export const WithIconButtons: Story = {
           </InlineToolbar.Trigger>
           <InlineToolbar.Toolbar>
             <InlineToolbar.Group>
-              <IconButton variant='primary' icon="checkmark" onClick={fn()} resolver={Fun.constant(resolvedIcon)} />
-              <IconButton variant='secondary' icon="cross" onClick={fn()} resolver={Fun.constant(resolvedIcon)} />
+              <IconButton variant='primary' icon='checkmark' onClick={fn()} resolver={Fun.constant(resolvedIcon)} />
+              <IconButton variant='secondary' icon='cross' onClick={fn()} resolver={Fun.constant(resolvedIcon)} />
             </InlineToolbar.Group>
           </InlineToolbar.Toolbar>
         </InlineToolbar.Root>
@@ -222,7 +222,7 @@ export const WithIconButtons: Story = {
 export const ManyButtons: Story = {
   render: () => {
     return (
-      <div className="tox" style={{ position: 'relative' }}>
+      <div className='tox' style={{ position: 'relative' }}>
         <InlineToolbar.Root persistent={false}>
           <InlineToolbar.Trigger>
             <div style={{ backgroundColor: 'lightgreen', padding: '10px' }}>
@@ -252,7 +252,7 @@ export const ManyButtons: Story = {
 export const MixedContent: Story = {
   render: () => {
     return (
-      <div className="tox" style={{ position: 'relative' }}>
+      <div className='tox' style={{ position: 'relative' }}>
         <InlineToolbar.Root persistent={false}>
           <InlineToolbar.Trigger>
             <div style={{ backgroundColor: 'lightyellow', padding: '10px' }}>
@@ -308,9 +308,9 @@ export const Corners: Story = {
     ] as const), []);
 
     return (
-      <div className="tox inline-toolbar-anchors" style={{ width: '520px' }}>
+      <div className='tox inline-toolbar-anchors' style={{ width: '520px' }}>
         <div
-          className="tox"
+          className='tox'
           style={{
             position: 'relative',
             height: '360px',
@@ -318,6 +318,7 @@ export const Corners: Story = {
             borderRadius: '16px',
             background: '#ffffff',
             overflow: 'hidden'
+
           }}
         >
           {triggerPositions.map((pos) => (
