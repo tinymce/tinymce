@@ -177,7 +177,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     editor.undoManager.add();
     assert.equal(undoLevelDepth1 + 1, editor.undoManager.data.length, 'Should have increased');
     editor.undoManager.add();
-    assert.equal(undoLevelDepth1 + 1, editor.undoManager.data.length, 'Shold remain the same');
+    assert.equal(undoLevelDepth1 + 1, editor.undoManager.data.length, 'Should remain the same');
     editor.execCommand('ToggleAccordion');
     editor.undoManager.add();
     assert.equal(undoLevelDepth1 + 2, editor.undoManager.data.length, 'Should have increased');
@@ -186,12 +186,12 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     editor.undoManager.add();
     const undoLevelDepth2 = editor.undoManager.data.length;
     editor.execCommand('ToggleAccordion');
-    assert.equal(undoLevelDepth2, editor.undoManager.data.length, 'Shold remain the same');
+    assert.equal(undoLevelDepth2, editor.undoManager.data.length, 'Should remain the same');
     editor.undoManager.add();
-    assert.equal(undoLevelDepth2, editor.undoManager.data.length, 'Shold remain the same');
+    assert.equal(undoLevelDepth2, editor.undoManager.data.length, 'Should remain the same');
     editor.execCommand('ToggleAccordion');
     editor.undoManager.add();
-    assert.equal(undoLevelDepth2, editor.undoManager.data.length, 'Shold remain the same');
+    assert.equal(undoLevelDepth2, editor.undoManager.data.length, 'Should remain the same');
     editor.mode.set('design');
   });
 
