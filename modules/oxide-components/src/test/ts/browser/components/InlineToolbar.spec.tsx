@@ -127,7 +127,7 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
     await expect.element(toolbar).not.toBeVisible();
   });
 
-  it('TINY-13071: Should not close toolbar on Escape key when persistent={true}', async () => {
+  it('TINY-13066: Should not close toolbar on Escape key when persistent={true}', async () => {
     const { getByTestId } = render(
       <Fragment>
         <div className="tox" style={{ position: 'relative' }}>
@@ -157,7 +157,7 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
     await expect.element(toolbar).toBeVisible();
   });
 
-  it('TINY-13071: Should navigate between groups with Tab key', async () => {
+  it('TINY-13066: Should navigate between groups with Tab key', async () => {
     const { getByTestId } = render(
       <Fragment>
         <div className="tox" style={{ position: 'relative' }}>
@@ -196,7 +196,7 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
     await expect.element(button1).toHaveFocus();
   });
 
-  it('TINY-13071: Should navigate within group with arrow keys', async () => {
+  it('TINY-13066: Should navigate within group with arrow keys', async () => {
     const { getByTestId } = render(
       <Fragment>
         <div className="tox" style={{ position: 'relative' }}>
@@ -237,7 +237,7 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
     await expect.element(button2).toHaveFocus();
   });
 
-  it('TINY-13071: Should execute button on Enter key', async () => {
+  it('TINY-13066: Should execute button on Enter key', async () => {
     const onClick = vi.fn();
     const { getByTestId } = render(
       <Fragment>
