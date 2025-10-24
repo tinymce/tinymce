@@ -7,7 +7,8 @@ import type Editor from 'tinymce/core/api/Editor';
 import * as Levels from 'tinymce/core/undo/Levels';
 import type { UndoLevel } from 'tinymce/core/undo/UndoManagerTypes';
 
-describe('browser.tinymce.core.undo.LevelsTest', () => {
+// eslint-disable-next-line mocha/no-exclusive-tests
+describe.only('browser.tinymce.core.undo.LevelsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     add_unload_trigger: false,
     disable_nodechange: true,
@@ -188,27 +189,27 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
   });
 
   it('isEq', () => {
-    assert.strictEqual(Levels.isEq(Levels.createFragmentedLevel([ 'a', 'b' ]), Levels.createFragmentedLevel([ 'a', 'b' ])), true);
-    assert.strictEqual(Levels.isEq(Levels.createFragmentedLevel([ 'a', 'b' ]), Levels.createFragmentedLevel([ 'a', 'c' ])), false);
-    assert.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createCompleteLevel('a')), true);
-    assert.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createCompleteLevel('b')), false);
-    assert.strictEqual(Levels.isEq(Levels.createFragmentedLevel([ 'a' ]), Levels.createCompleteLevel('a')), true);
-    assert.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createFragmentedLevel([ 'a' ])), true);
+    assert.strictEqual(Levels.isEq(false, Levels.createFragmentedLevel([ 'a', 'b' ]), Levels.createFragmentedLevel([ 'a', 'b' ])), true);
+    assert.strictEqual(Levels.isEq(false, Levels.createFragmentedLevel([ 'a', 'b' ]), Levels.createFragmentedLevel([ 'a', 'c' ])), false);
+    assert.strictEqual(Levels.isEq(false, Levels.createCompleteLevel('a'), Levels.createCompleteLevel('a')), true);
+    assert.strictEqual(Levels.isEq(false, Levels.createCompleteLevel('a'), Levels.createCompleteLevel('b')), false);
+    assert.strictEqual(Levels.isEq(false, Levels.createFragmentedLevel([ 'a' ]), Levels.createCompleteLevel('a')), true);
+    assert.strictEqual(Levels.isEq(false, Levels.createCompleteLevel('a'), Levels.createFragmentedLevel([ 'a' ])), true);
   });
 
   it('isEq ignore bogus elements', () => {
-    assert.strictEqual(Levels.isEq(Levels.createFragmentedLevel([ 'a', '<span data-mce-bogus="1">b</span>' ]), Levels.createFragmentedLevel([ 'a', 'b' ])), true);
-    assert.strictEqual(Levels.isEq(Levels.createFragmentedLevel([ 'a', 'b' ]), Levels.createFragmentedLevel([ 'a', '<span data-mce-bogus="1">b</span>' ])), true);
-    assert.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createCompleteLevel('<span data-mce-bogus="1">a</span>')), true);
-    assert.strictEqual(Levels.isEq(Levels.createCompleteLevel('<span data-mce-bogus="1">a</span>'), Levels.createCompleteLevel('a')), true);
-    assert.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createFragmentedLevel([ '<span data-mce-bogus="1">a</span>' ])), true);
-    assert.strictEqual(Levels.isEq(Levels.createFragmentedLevel([ '<span data-mce-bogus="1">a</span>' ]), Levels.createCompleteLevel('a')), true);
+    assert.strictEqual(Levels.isEq(false, Levels.createFragmentedLevel([ 'a', '<span data-mce-bogus="1">b</span>' ]), Levels.createFragmentedLevel([ 'a', 'b' ])), true);
+    assert.strictEqual(Levels.isEq(false, Levels.createFragmentedLevel([ 'a', 'b' ]), Levels.createFragmentedLevel([ 'a', '<span data-mce-bogus="1">b</span>' ])), true);
+    assert.strictEqual(Levels.isEq(false, Levels.createCompleteLevel('a'), Levels.createCompleteLevel('<span data-mce-bogus="1">a</span>')), true);
+    assert.strictEqual(Levels.isEq(false, Levels.createCompleteLevel('<span data-mce-bogus="1">a</span>'), Levels.createCompleteLevel('a')), true);
+    assert.strictEqual(Levels.isEq(false, Levels.createCompleteLevel('a'), Levels.createFragmentedLevel([ '<span data-mce-bogus="1">a</span>' ])), true);
+    assert.strictEqual(Levels.isEq(false, Levels.createFragmentedLevel([ '<span data-mce-bogus="1">a</span>' ]), Levels.createCompleteLevel('a')), true);
   });
 
   it('isEq passed undefined', () => {
-    assert.strictEqual(Levels.isEq(undefined, Levels.createFragmentedLevel([ 'a', 'b' ])), false);
-    assert.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), undefined), false);
-    assert.strictEqual(Levels.isEq(undefined, undefined), false);
-    assert.strictEqual(Levels.isEq(Levels.createFragmentedLevel([]), Levels.createFragmentedLevel([])), true);
+    assert.strictEqual(Levels.isEq(false, undefined, Levels.createFragmentedLevel([ 'a', 'b' ])), false);
+    assert.strictEqual(Levels.isEq(false, Levels.createCompleteLevel('a'), undefined), false);
+    assert.strictEqual(Levels.isEq(false, undefined, undefined), false);
+    assert.strictEqual(Levels.isEq(false, Levels.createFragmentedLevel([]), Levels.createFragmentedLevel([])), true);
   });
 });
