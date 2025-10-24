@@ -62,7 +62,7 @@ The provider component that manages toolbar state.
 Wraps the element that opens the toolbar when clicked.
 
 ### Toolbar
-Contains the toolbar content and groups. Renders as a portal into the sink element.
+Contains the toolbar content and groups. Uses the Popover API for automatic layering and positioning.
 
 ### Group
 Groups related buttons together for keyboard navigation. Buttons within a group are navigated with arrow keys, while Tab moves between groups.
