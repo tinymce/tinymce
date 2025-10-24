@@ -30,18 +30,19 @@ const Root = forwardRef<HTMLDivElement, DraggableProps>(({ children, style, ...p
 
 const Handle: FC<DraggableHandleProps> = ({ children }) => {
   const [ isDragging, setIsDragging ] = useState(false);
-  const handleRef = useRef<HTMLDivElement | null>(null);
+  const dragStartElementRef = useRef<Element | null>(null);
   const lastMousePositionRef = useRef<Position>({ x: 0, y: 0 });
   const boundriesRef = useRef<Boundries>({ x: { min: 0, max: 0 }, y: { min: 0, max: 0 }});
   const { setShift, draggableRef } = useDraggable();
 
   const onPointerDown = useCallback((event: React.PointerEvent) => {
-    if (handleRef.current === null || draggableRef.current === null) {
-      // If handleRef or draggableRef is not present then abort dragging
+    if (draggableRef.current === null) {
+      // If draggableRef is not present then abort dragging
       return;
     }
     setIsDragging(true);
-    handleRef.current.setPointerCapture(event.pointerId);
+    dragStartElementRef.current = event.target as Element;
+    dragStartElementRef.current.setPointerCapture(event.pointerId);
     const mousePosition = { x: Math.round(event.clientX), y: Math.round(event.clientY) };
     lastMousePositionRef.current = mousePosition;
     const draggableRect = draggableRef.current.getBoundingClientRect();
@@ -61,7 +62,7 @@ const Handle: FC<DraggableHandleProps> = ({ children }) => {
   }, [ isDragging, setShift ]);
 
   const onPointerUp = useCallback((event: React.PointerEvent) => {
-    handleRef.current?.releasePointerCapture(event.pointerId);
+    dragStartElementRef.current?.releasePointerCapture(event.pointerId);
     setIsDragging(false);
   }, []);
 
@@ -72,7 +73,6 @@ const Handle: FC<DraggableHandleProps> = ({ children }) => {
 
   return (
     <div
-      ref={handleRef}
       onPointerDown={onPointerDown}
       onPointerUp={onPointerUp}
       onPointerMove={onPointerMove}
