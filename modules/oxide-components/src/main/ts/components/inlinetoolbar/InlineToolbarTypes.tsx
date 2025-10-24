@@ -19,8 +19,6 @@ export interface ToolbarProps {
   readonly className?: string;
   readonly style?: CSSProperties;
   readonly onMouseDown?: MouseEventHandler<HTMLDivElement>;
-  // TODO: Remove this prop once we've upgraded to React 19+ (TINY-13129)
-  readonly popover?: 'hint' | 'manual' | 'auto';
 }
 
 export interface TriggerProps {
@@ -29,4 +27,8 @@ export interface TriggerProps {
   readonly onMouseDown?: MouseEventHandler<HTMLDivElement>;
   readonly className?: string;
   readonly style?: CSSProperties;
+}
+
+export interface GroupProps {
+  readonly children: ReactNode;
 }

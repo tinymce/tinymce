@@ -14,9 +14,6 @@
     position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
     z-index: @z-index-menu;
 
-    display: flex;
-    gap: 4px;
-
     background-color: #ffffff;
     border: 1px solid #e0e0e0;
     border-radius: 9px;
@@ -26,6 +23,20 @@
     &[popover] {
       inset: auto;
       margin: 0;
+    }
+
+    .tox-toolbar {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 8px;
+    }
+
+    .tox-toolbar__group {
+      display: flex;
+      flex-wrap: nowrap;
+      flex-shrink: 0;
+      gap: 4px;
+      align-items: center;
     }
   }
 }
