@@ -1,5 +1,5 @@
-import { Arr, Id, Type } from '@ephox/katamari';
-import { Css, SugarElement } from '@ephox/sugar';
+import { Arr, Id, Optional, Type } from '@ephox/katamari';
+import { Class, Css, SelectorFilter, SugarElement, Traverse } from '@ephox/sugar';
 import {
   createContext,
   useContext,
@@ -12,13 +12,14 @@ import {
   type MouseEventHandler
 } from 'react';
 
-import { useSpecialKeyNavigation } from '../../keynav/KeyboardNavigationHooks';
+import * as KeyboardNavigationHooks from '../../keynav/KeyboardNavigationHooks';
 
 import type {
   InlineToolbarContextValue,
   InlineToolbarProps,
   TriggerProps,
-  ToolbarProps
+  ToolbarProps,
+  GroupProps
 } from './InlineToolbarTypes';
 
 const InlineToolbarContext = createContext<InlineToolbarContextValue | null>(null);
@@ -101,22 +102,60 @@ const Toolbar: FC<ToolbarProps> = ({
     persistent
   } = useInlineToolbarContext();
 
-  useEffect(() => {
-    if (isOpen && Type.isNonNullable(toolbarRef.current)) {
-      toolbarRef.current.focus();
-    }
-  }, [ isOpen, toolbarRef ]);
+  const popoverMode = persistent ? 'manual' : 'auto';
 
   useEffect(() => {
     const element = toolbarRef.current;
     if (Type.isNonNullable(element)) {
-      isOpen ? element.showPopover() : element.hidePopover();
+      if (isOpen) {
+        element.showPopover();
+        // Defer focus to next event loop tick to ensure
+        // it runs after Popover API's focus management
+        setTimeout(() => {
+          element.focus();
+        }, 0);
+      } else {
+        element.hidePopover();
+      }
     };
   }, [ isOpen, toolbarRef ]);
 
-  useSpecialKeyNavigation({
+  // Listen for popover auto-dismiss (e.g. when user presses Escape)
+  // and sync our state
+  useEffect(() => {
+    const element = toolbarRef.current;
+    if (Type.isNonNullable(element)) {
+      const handleToggle = (event: Event) => {
+        const toggleEvent = event as ToggleEvent;
+        if (toggleEvent.newState === 'closed' && isOpen) {
+          close();
+        }
+      };
+      element.addEventListener('toggle', handleToggle);
+      return () => element.removeEventListener('toggle', handleToggle);
+    }
+  }, [ isOpen, close, toolbarRef ]);
+
+  // Only allow Escape to close if not `persistent={true}`
+  KeyboardNavigationHooks.useSpecialKeyNavigation({
     containerRef: toolbarRef,
-    onEscape: close,
+    onEscape: persistent ? undefined : close,
+  });
+
+  KeyboardNavigationHooks.useTabKeyNavigation({
+    containerRef: toolbarRef,
+    selector: 'button, .tox-button',
+    useTabstopAt: (elem) => {
+      // Only stop at the first button in each group
+      return Traverse.parent(elem)
+        .filter((parent) => Class.has(parent, 'tox-toolbar__group'))
+        .map((parent) => {
+          const buttons = SelectorFilter.descendants(parent, 'button, .tox-button');
+          return buttons.length > 0 && buttons[0].dom === elem.dom;
+        })
+        .getOr(true);
+    },
+    cyclic: true
   });
 
   const handleClickOutside = useCallback((event: MouseEvent) => {
@@ -189,7 +228,8 @@ const Toolbar: FC<ToolbarProps> = ({
   return (
     <div
       ref={toolbarRef}
-      popover='manual'
+      // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+ (TINY-13129)
+      popover={popoverMode}
       tabIndex={-1}
       className={toolbarClasses}
       style={{
@@ -199,6 +239,31 @@ const Toolbar: FC<ToolbarProps> = ({
       onMouseDown={handleMouseDown}
       {...rest}
     >
+      <div role='group' className='tox-toolbar'>
+        {children}
+      </div>
+    </div>
+  );
+};
+
+const Group: FC<GroupProps> = ({ children }) => {
+  const groupRef = useRef<HTMLDivElement>(null);
+
+  KeyboardNavigationHooks.useFlowKeyNavigation({
+    containerRef: groupRef,
+    selector: 'button, .tox-button',
+    execute: (focused) => {
+      focused.dom.click();
+      return Optional.some(true);
+    }
+  });
+
+  return (
+    <div
+      ref={groupRef}
+      role='toolbar'
+      className='tox-toolbar__group'
+    >
       {children}
     </div>
   );
@@ -207,5 +272,6 @@ const Toolbar: FC<ToolbarProps> = ({
 export {
   Root,
   Trigger,
-  Toolbar
+  Toolbar,
+  Group
 };
