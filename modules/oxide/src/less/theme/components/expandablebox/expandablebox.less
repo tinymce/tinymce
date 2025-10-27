@@ -1,0 +1,49 @@
+//
+// ExpandableBox
+//
+
+.tox {
+  .tox-expandable-box {
+    border-radius: 6px;
+    border: 1px solid @border-color;
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+  }
+
+  .tox-expandable-box__content {
+    max-height: 80px;
+    overflow: auto;
+
+    p {
+      margin: 8px;
+    }
+  }
+
+  .tox-expandable-box__content--overflowing {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tox-expandable-box__content--overflowing::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+    pointer-events: none;
+  }
+
+  .tox-expandable-box__content--expanded {
+    max-height: fit-content;
+  }
+
+  .tox-expandable-box__toggle-button {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+  }
+}
