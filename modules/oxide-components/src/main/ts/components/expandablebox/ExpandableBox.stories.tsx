@@ -79,7 +79,7 @@ export const OverflowingHorizontallyOnly: Story = {
   args: {
     iconResolver,
     collapseText: 'Collapse',
-    expandText: 'Expande',
+    expandText: 'Expand',
     children: <p>Hello world<WideThing /></p>
   },
   render
@@ -88,8 +88,8 @@ export const OverflowingHorizontallyOnly: Story = {
 export const Underflowing: Story = {
   args: {
     iconResolver,
-    collapseText: 'Collapsed',
-    expandText: 'Expanded',
+    collapseText: 'Collapse',
+    expandText: 'Expand',
     children: <p>Hello world</p>
   },
   render
