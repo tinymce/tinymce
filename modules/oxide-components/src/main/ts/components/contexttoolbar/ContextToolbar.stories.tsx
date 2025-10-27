@@ -62,7 +62,7 @@ The provider component that manages toolbar state.
 Wraps the element that opens the toolbar when clicked.
 
 ### Toolbar
-Contains the toolbar content and groups. Uses the Popover API for automatic layering and positioning.
+Contains the toolbar content and groups. Uses the Popover API (popover='manual') for layering and positioning, with manual control over dismissal behavior.
 
 ### Group
 Groups related buttons together for keyboard navigation. Buttons within a group are navigated with arrow keys, while Tab moves between groups.
@@ -85,8 +85,8 @@ Groups related buttons together for keyboard navigation. Buttons within a group 
   - \`Enter\`: Execute focused button
   - \`Escape\`: Close the toolbar (unless \`persistent=true\`)
 - **Focus Management**: Toolbar automatically receives focus when opened, with the first button in the first group focused
-- **Click Outside**: Click outside the toolbar to dismiss it (unless \`persistent=true\`)
-- **Persistent Mode**: Use \`persistent=true\` for toolbars that require explicit dismissal (e.g. forms, critical actions)
+- **Click Outside**: Click outside the toolbar to dismiss it (unless \`persistent=true\`). The component handles click-outside detection.
+- **Persistent Mode**: Use \`persistent=true\` for toolbars that require explicit dismissal (e.g. forms, critical actions). Disables both Escape key and click-outside dismissal.
 - **ARIA**: Toolbar uses \`role="toolbar"\` and groups use \`role="group"\` for proper accessibility semantics
 - **Toolbar Groups**: Matches TinyMCE core context toolbar behavior for consistency
 

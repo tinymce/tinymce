@@ -157,6 +157,37 @@ describe('browser.ContextToolbar.ContextToolbar', () => {
     await expect.element(toolbar).toBeVisible();
   });
 
+  it('TINY-13066: Should not close toolbar on click outside when persistent={true}', async () => {
+    const { getByTestId } = render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root persistent={true}>
+            <ContextToolbar.Trigger>
+              <div data-testid={triggerTestId}>Click Me</div>
+            </ContextToolbar.Trigger>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <div data-testid={toolbarTestId}>Toolbar Content</div>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    const trigger = getByTestId(triggerTestId);
+    await trigger.click();
+
+    const toolbar = getByTestId(toolbarTestId);
+    await expect.element(toolbar).toBeVisible();
+
+    // Click outside
+    await page.elementLocator(document.body).click({ position: { x: 0, y: 0 }});
+
+    await expect.element(toolbar).toBeVisible();
+  });
+
   it('TINY-13066: Should navigate between groups with Tab key', async () => {
     const { getByTestId } = render(
       <Fragment>

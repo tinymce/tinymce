@@ -93,8 +93,6 @@ const Toolbar: FC<ToolbarProps> = ({
     persistent
   } = useContextToolbarContext();
 
-  const popoverMode = persistent ? 'manual' : 'auto';
-
   useEffect(() => {
     const element = toolbarRef.current;
     if (Type.isNonNullable(element)) {
@@ -120,23 +118,7 @@ const Toolbar: FC<ToolbarProps> = ({
     };
   }, [ isOpen, toolbarRef ]);
 
-  // Listen for popover auto-dismiss (e.g. when user presses Escape)
-  // and sync our state
-  useEffect(() => {
-    const element = toolbarRef.current;
-    if (Type.isNonNullable(element)) {
-      const handleToggle = (event: Event) => {
-        const toggleEvent = event as ToggleEvent;
-        if (toggleEvent.newState === 'closed' && isOpen) {
-          close();
-        }
-      };
-      element.addEventListener('toggle', handleToggle);
-      return () => element.removeEventListener('toggle', handleToggle);
-    }
-  }, [ isOpen, close, toolbarRef ]);
-
-  // Only allow Escape to close if not `persistent={true}`
+  // Handle Escape key to close (unless persistent={true})
   KeyboardNavigationHooks.useSpecialKeyNavigation({
     containerRef: toolbarRef,
     onEscape: persistent ? undefined : close,
@@ -224,7 +206,7 @@ const Toolbar: FC<ToolbarProps> = ({
     <div
       ref={toolbarRef}
       // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+ (TINY-13129)
-      popover={popoverMode}
+      popover='manual'
       tabIndex={-1}
       className='tox-context-toolbar'
       style={{
