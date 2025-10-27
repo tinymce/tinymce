@@ -180,7 +180,7 @@ export const Persistent: Story = {
   },
   render: () => {
     return (
-      <div className='tox' style={{ position: 'relative' as const }}>
+      <div className='tox' style={{ position: 'relative' }}>
         <InlineToolbar.Root persistent={true}>
           <InlineToolbar.Trigger>
             <div style={{ backgroundColor: 'blue', padding: '10px' }}>
@@ -324,7 +324,7 @@ export const Corners: Story = {
           {triggerPositions.map((pos) => (
             <InlineToolbar.Root key={pos.id} persistent={false}>
               <InlineToolbar.Trigger>
-                <div style={{ position: 'absolute' as const, display: 'inline-flex', ...pos.style }}>
+                <div style={{ position: 'absolute', display: 'inline-flex', ...pos.style }}>
                   <Button>{pos.label}</Button>
                 </div>
               </InlineToolbar.Trigger>
