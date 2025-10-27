@@ -102,7 +102,7 @@ const Toolbar: FC<ToolbarProps> = ({
         element.showPopover();
         // Defer focus using queueMicrotask to ensure it runs after
         // the Popover API's internal focus management is complete
-        queueMicrotask(() => {
+        window.queueMicrotask(() => {
           const sugarElement = SugarElement.fromDom(element);
           const firstGroup = SelectorFind.descendant(sugarElement, '.tox-toolbar__group');
           const firstButton = firstGroup.bind((group) =>
