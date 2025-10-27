@@ -240,9 +240,8 @@ const Toolbar: FC<ToolbarProps> = ({
         visibility: isOpen ? undefined : 'hidden',
       }}
       onMouseDown={handleMouseDown}
-      {...rest}
     >
-      <div role='group' className='tox-toolbar'>
+      <div role='toolbar' className='tox-toolbar' {...rest}>
         {children}
       </div>
     </div>
@@ -264,7 +263,7 @@ const Group: FC<GroupProps> = ({ children }) => {
   return (
     <div
       ref={groupRef}
-      role='toolbar'
+      role='group'
       className='tox-toolbar__group'
     >
       {children}

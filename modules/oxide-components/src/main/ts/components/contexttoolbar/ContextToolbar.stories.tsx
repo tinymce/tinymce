@@ -87,7 +87,7 @@ Groups related buttons together for keyboard navigation. Buttons within a group 
 - **Focus Management**: Toolbar automatically receives focus when opened, with the first button in the first group focused
 - **Click Outside**: Click outside the toolbar to dismiss it (unless \`persistent=true\`)
 - **Persistent Mode**: Use \`persistent=true\` for toolbars that require explicit dismissal (e.g. forms, critical actions)
-- **ARIA**: Groups use \`role="toolbar"\` for proper accessibility semantics
+- **ARIA**: Toolbar uses \`role="toolbar"\` and groups use \`role="group"\` for proper accessibility semantics
 - **Toolbar Groups**: Matches TinyMCE core context toolbar behavior for consistency
 
 ## Positioning Anchoring Support
