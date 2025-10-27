@@ -94,7 +94,7 @@ Groups related buttons together for keyboard navigation. Buttons within a group 
 
 - ✅ **Chrome 125+**
 - ✅ **Edge 125+**
-- ✅ **Safari 26+**
+- ✅ **Safari 18+**
 - ❌ **Firefox** (not yet supported)
 
 ## Default Behavior
