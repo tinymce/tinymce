@@ -31,7 +31,7 @@ import * as InlineToolbar from 'oxide-components/InlineToolbar';
 
 const MyComponent = () => {
   return (
-    <div className="tox" style={{ position: 'relative' }}>
+    <div className='tox' style={{ position: 'relative' }}>
       <InlineToolbar.Root persistent={false}>
         <InlineToolbar.Trigger>
           <div style={{ backgroundColor: 'red', padding: '10px' }}>
@@ -39,8 +39,10 @@ const MyComponent = () => {
           </div>
         </InlineToolbar.Trigger>
         <InlineToolbar.Toolbar>
-          <Button>Accept</Button>
-          <Button>Reject</Button>
+          <InlineToolbar.Group>
+            <Button>Accept</Button>
+            <Button>Reject</Button>
+          </InlineToolbar.Group>
         </InlineToolbar.Toolbar>
       </InlineToolbar.Root>
     </div>
@@ -60,20 +62,33 @@ The provider component that manages toolbar state.
 Wraps the element that opens the toolbar when clicked.
 
 ### Toolbar
-Contains the toolbar content (buttons, text, etc.). Renders as a portal into the sink element.
+Contains the toolbar content and groups. Uses the Popover API for automatic layering and positioning.
+
+### Group
+Groups related buttons together for keyboard navigation. Buttons within a group are navigated with arrow keys, while Tab moves between groups.
 
 ## Behaviour
 - Click trigger to open the toolbar
-- Press Escape to close the toolbar
+- Press **Escape** to close the toolbar (unless \`persistent=true\`)
+- Press **Tab** to navigate to the first button in the next group
+- Press **Shift+Tab** to navigate to the first button in the previous group
+- Press **Arrow keys** to navigate between buttons within the current group
+- Press **Enter** to execute the focused button
 - Click outside to close the toolbar (unless \`persistent=true\`)
 - Toolbar automatically receives focus when opened
 
 ## Accessibility
-- **Keyboard Navigation**: Press \`Escape\` to close the toolbar.
-- **Focus Management**: Toolbar automatically receives focus when opened for immediate keyboard access
+- **Keyboard Navigation**: 
+  - \`Tab\` / \`Shift+Tab\`: Navigate between toolbar groups (cyclic)
+  - \`Arrow Left\` / \`Arrow Up\`: Navigate to previous button in group
+  - \`Arrow Right\` / \`Arrow Down\`: Navigate to next button in group
+  - \`Enter\`: Execute focused button
+  - \`Escape\`: Close the toolbar (unless \`persistent=true\`)
+- **Focus Management**: Toolbar automatically receives focus when opened, with the first button in the first group focused
 - **Click Outside**: Click outside the toolbar to dismiss it (unless \`persistent=true\`)
 - **Persistent Mode**: Use \`persistent=true\` for toolbars that require explicit dismissal (e.g. forms, critical actions)
-- **ARIA**: The toolbar container is focusable (\`tabIndex={-1}\`) to support keyboard navigation
+- **ARIA**: Groups use \`role="toolbar"\` for proper accessibility semantics
+- **Toolbar Groups**: Matches TinyMCE core context toolbar behavior for consistency
 
 ## Positioning Anchoring Support
 
@@ -136,7 +151,7 @@ export const Basic: Story = {
   },
   render: () => {
     return (
-      <div className="tox" style={{ position: 'relative' }}>
+      <div className='tox' style={{ position: 'relative' }}>
         <InlineToolbar.Root persistent={false}>
           <InlineToolbar.Trigger>
             <div style={{ backgroundColor: 'red', padding: '10px' }}>
@@ -144,8 +159,10 @@ export const Basic: Story = {
             </div>
           </InlineToolbar.Trigger>
           <InlineToolbar.Toolbar>
-            <Button onClick={fn()}>Accept</Button>
-            <Button onClick={fn()}>Reject</Button>
+            <InlineToolbar.Group>
+              <Button onClick={fn()}>Accept</Button>
+              <Button onClick={fn()}>Reject</Button>
+            </InlineToolbar.Group>
           </InlineToolbar.Toolbar>
         </InlineToolbar.Root>
       </div>
@@ -163,7 +180,7 @@ export const Persistent: Story = {
   },
   render: () => {
     return (
-      <div className="tox" style={{ position: 'relative' }}>
+      <div className='tox' style={{ position: 'relative' }}>
         <InlineToolbar.Root persistent={true}>
           <InlineToolbar.Trigger>
             <div style={{ backgroundColor: 'blue', padding: '10px' }}>
@@ -183,7 +200,7 @@ export const Persistent: Story = {
 export const WithIconButtons: Story = {
   render: () => {
     return (
-      <div className="tox" style={{ position: 'relative' }}>
+      <div className='tox' style={{ position: 'relative' }}>
         <InlineToolbar.Root persistent={false}>
           <InlineToolbar.Trigger>
             <div style={{ backgroundColor: 'lightblue', padding: '10px' }}>
@@ -191,8 +208,10 @@ export const WithIconButtons: Story = {
             </div>
           </InlineToolbar.Trigger>
           <InlineToolbar.Toolbar>
-            <IconButton variant='primary' icon="checkmark" onClick={fn()} resolver={Fun.constant(resolvedIcon)} />
-            <IconButton variant='secondary' icon="cross" onClick={fn()} resolver={Fun.constant(resolvedIcon)} />
+            <InlineToolbar.Group>
+              <IconButton variant='primary' icon='checkmark' onClick={fn()} resolver={Fun.constant(resolvedIcon)} />
+              <IconButton variant='secondary' icon='cross' onClick={fn()} resolver={Fun.constant(resolvedIcon)} />
+            </InlineToolbar.Group>
           </InlineToolbar.Toolbar>
         </InlineToolbar.Root>
       </div>
@@ -203,7 +222,7 @@ export const WithIconButtons: Story = {
 export const ManyButtons: Story = {
   render: () => {
     return (
-      <div className="tox" style={{ position: 'relative' }}>
+      <div className='tox' style={{ position: 'relative' }}>
         <InlineToolbar.Root persistent={false}>
           <InlineToolbar.Trigger>
             <div style={{ backgroundColor: 'lightgreen', padding: '10px' }}>
@@ -211,12 +230,18 @@ export const ManyButtons: Story = {
             </div>
           </InlineToolbar.Trigger>
           <InlineToolbar.Toolbar>
-            <Button variant='primary' onClick={fn()}>Accept</Button>
-            <Button variant='secondary' onClick={fn()}>Reject</Button>
-            <Button variant='outlined' onClick={fn()}>Edit</Button>
-            <Button variant='naked' onClick={fn()}>Comment</Button>
-            <Button variant='primary' onClick={fn()}>Share</Button>
-            <Button variant='secondary' onClick={fn()}>More</Button>
+            <InlineToolbar.Group>
+              <Button variant='primary' onClick={fn()}>Accept</Button>
+              <Button variant='secondary' onClick={fn()}>Reject</Button>
+            </InlineToolbar.Group>
+            <InlineToolbar.Group>
+              <Button variant='outlined' onClick={fn()}>Edit</Button>
+              <Button variant='naked' onClick={fn()}>Comment</Button>
+            </InlineToolbar.Group>
+            <InlineToolbar.Group>
+              <Button variant='primary' onClick={fn()}>Share</Button>
+              <Button variant='secondary' onClick={fn()}>More</Button>
+            </InlineToolbar.Group>
           </InlineToolbar.Toolbar>
         </InlineToolbar.Root>
       </div>
@@ -227,7 +252,7 @@ export const ManyButtons: Story = {
 export const MixedContent: Story = {
   render: () => {
     return (
-      <div className="tox" style={{ position: 'relative' }}>
+      <div className='tox' style={{ position: 'relative' }}>
         <InlineToolbar.Root persistent={false}>
           <InlineToolbar.Trigger>
             <div style={{ backgroundColor: 'lightyellow', padding: '10px' }}>
@@ -235,18 +260,22 @@ export const MixedContent: Story = {
             </div>
           </InlineToolbar.Trigger>
           <InlineToolbar.Toolbar>
-            <IconButton icon='arrow-up' onClick={fn()} resolver={Fun.constant(resolvedIcon)} />
-            <span style={{
-              padding: '8px',
-              fontSize: '12px',
-              flexShrink: 0,
-              whiteSpace: 'nowrap'
-            }}>
-              1/3
-            </span>
-            <IconButton icon='arrow-down' onClick={fn()} resolver={Fun.constant(resolvedIcon)} />
-            <Button variant='primary' onClick={fn()}>Accept</Button>
-            <Button variant='secondary' onClick={fn()}>Reject</Button>
+            <InlineToolbar.Group>
+              <IconButton icon='arrow-up' onClick={fn()} resolver={Fun.constant(resolvedIcon)} />
+              <span style={{
+                padding: '8px',
+                fontSize: '12px',
+                flexShrink: 0,
+                whiteSpace: 'nowrap'
+              }}>
+                1/3
+              </span>
+              <IconButton icon='arrow-down' onClick={fn()} resolver={Fun.constant(resolvedIcon)} />
+            </InlineToolbar.Group>
+            <InlineToolbar.Group>
+              <Button variant='primary' onClick={fn()}>Accept</Button>
+              <Button variant='secondary' onClick={fn()}>Reject</Button>
+            </InlineToolbar.Group>
           </InlineToolbar.Toolbar>
         </InlineToolbar.Root>
       </div>
@@ -279,9 +308,9 @@ export const Corners: Story = {
     ] as const), []);
 
     return (
-      <div className="tox inline-toolbar-anchors" style={{ width: '520px' }}>
+      <div className='tox inline-toolbar-anchors' style={{ width: '520px' }}>
         <div
-          className="tox"
+          className='tox'
           style={{
             position: 'relative',
             height: '360px',
@@ -289,18 +318,21 @@ export const Corners: Story = {
             borderRadius: '16px',
             background: '#ffffff',
             overflow: 'hidden'
+
           }}
         >
           {triggerPositions.map((pos) => (
             <InlineToolbar.Root key={pos.id} persistent={false}>
               <InlineToolbar.Trigger>
-                <div style={{ position: 'absolute' as const, display: 'inline-flex', ...pos.style }}>
+                <div style={{ position: 'absolute', display: 'inline-flex', ...pos.style }}>
                   <Button>{pos.label}</Button>
                 </div>
               </InlineToolbar.Trigger>
               <InlineToolbar.Toolbar>
-                <Button onClick={fn()}>Accept</Button>
-                <Button onClick={fn()}>Reject</Button>
+                <InlineToolbar.Group>
+                  <Button onClick={fn()}>Accept</Button>
+                  <Button onClick={fn()}>Reject</Button>
+                </InlineToolbar.Group>
               </InlineToolbar.Toolbar>
             </InlineToolbar.Root>
           ))}
