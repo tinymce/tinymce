@@ -1,5 +1,5 @@
 import { Arr, Id, Optional, Type } from '@ephox/katamari';
-import { Class, Css, SelectorFilter, SugarElement, Traverse } from '@ephox/sugar';
+import { Class, Css, Focus, SelectorFilter, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
 import {
   createContext,
   useContext,
@@ -106,7 +106,16 @@ const Toolbar: FC<ToolbarProps> = ({
         // Defer focus to next event loop tick to ensure
         // it runs after Popover API's focus management
         setTimeout(() => {
-          element.focus();
+          const sugarElement = SugarElement.fromDom(element);
+          const firstGroup = SelectorFind.descendant(sugarElement, '.tox-toolbar__group');
+          const firstButton = firstGroup.bind((group) =>
+            SelectorFind.descendant(group, 'button, [role="button"]')
+          );
+
+          firstButton.fold(
+            () => element.focus(), // Falls back to container if no button found
+            (button) => Focus.focus(button as SugarElement<HTMLElement>) // Focus first button
+          );
         }, 0);
       } else {
         element.hidePopover();

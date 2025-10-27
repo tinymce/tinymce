@@ -184,7 +184,6 @@ describe('browser.ContextToolbar.ContextToolbar', () => {
     const trigger = getByTestId(triggerTestId);
     await trigger.click();
 
-    await userEvent.keyboard('{Tab}');
     const button1 = getByTestId('button1');
     await expect.element(button1).toHaveFocus();
 
