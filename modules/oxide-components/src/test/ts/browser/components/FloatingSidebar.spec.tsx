@@ -1,4 +1,4 @@
-import { SelectorFind, SugarElement } from '@ephox/sugar';
+import { Css, SelectorFind, SugarElement } from '@ephox/sugar';
 import { userEvent } from '@vitest/browser/context';
 import * as FloatingSidebar from 'oxide-components/components/floatingsidebar/FloatingSidebar';
 import { classes } from 'oxide-components/utils/Styles';
@@ -121,6 +121,6 @@ describe('browser.floatingsidebar.FloatingSidebar', () => {
     await Dragging.tick();
     up();
 
-    expect(containerElement.dom.style.transform).toBe(`translate3d(${shiftX}px, ${shiftY}px, 0px)`);
+    expect(Css.getRaw(containerElement, 'transform').getOrDie()).toBe(`translate3d(${shiftX}px, ${shiftY}px, 0px)`);
   });
 });
