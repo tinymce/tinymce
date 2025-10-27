@@ -228,7 +228,6 @@ const Toolbar: FC<ToolbarProps> = ({
   }, [ anchorName, isOpen, triggerRef, toolbarRef ]);
 
   const handleMouseDown = useCallback<MouseEventHandler<HTMLDivElement>>((event) => {
-    event.preventDefault();
     onMouseDown?.(event);
   }, [ onMouseDown ]);
 
