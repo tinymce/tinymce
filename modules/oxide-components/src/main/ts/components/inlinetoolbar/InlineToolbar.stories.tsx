@@ -186,8 +186,10 @@ export const Persistent: Story = {
             </div>
           </InlineToolbar.Trigger>
           <InlineToolbar.Toolbar>
-            <Button onClick={fn()}>Accept</Button>
-            <Button onClick={fn()}>Reject</Button>
+            <InlineToolbar.Group>
+              <Button onClick={fn()}>Accept</Button>
+              <Button onClick={fn()}>Reject</Button>
+            </InlineToolbar.Group>
           </InlineToolbar.Toolbar>
         </InlineToolbar.Root>
       </div>
