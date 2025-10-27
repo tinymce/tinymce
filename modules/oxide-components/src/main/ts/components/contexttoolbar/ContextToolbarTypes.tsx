@@ -1,4 +1,4 @@
-import type { CSSProperties, HTMLAttributes, MouseEventHandler, ReactNode, RefObject } from 'react';
+import type { HTMLAttributes, MouseEventHandler, ReactNode, RefObject } from 'react';
 
 export interface ContextToolbarProps {
   readonly children: HTMLAttributes<HTMLDivElement>['children'];
@@ -16,8 +16,6 @@ export interface ContextToolbarContextValue {
 
 export interface ToolbarProps {
   readonly children: ReactNode;
-  readonly className?: string;
-  readonly style?: CSSProperties;
   readonly onMouseDown?: MouseEventHandler<HTMLDivElement>;
 }
 
@@ -25,8 +23,6 @@ export interface TriggerProps {
   readonly children: ReactNode;
   readonly onClick?: MouseEventHandler<HTMLDivElement>;
   readonly onMouseDown?: MouseEventHandler<HTMLDivElement>;
-  readonly className?: string;
-  readonly style?: CSSProperties;
 }
 
 export interface GroupProps {

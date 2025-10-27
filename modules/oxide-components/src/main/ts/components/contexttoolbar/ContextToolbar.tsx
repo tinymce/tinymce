@@ -59,8 +59,7 @@ const Root: FC<ContextToolbarProps> = ({
 const Trigger: FC<TriggerProps> = ({
   children,
   onClick,
-  onMouseDown,
-  ...rest
+  onMouseDown
 }) => {
   const { open, triggerRef } = useContextToolbarContext();
   const handleClick = useCallback<MouseEventHandler<HTMLDivElement>>((event) => {
@@ -76,7 +75,6 @@ const Trigger: FC<TriggerProps> = ({
       ref={triggerRef}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
-      {...rest}
     >
       {children}
     </div>
@@ -85,10 +83,7 @@ const Trigger: FC<TriggerProps> = ({
 
 const Toolbar: FC<ToolbarProps> = ({
   children,
-  style,
-  className,
-  onMouseDown,
-  ...rest
+  onMouseDown
 }) => {
   const {
     isOpen,
@@ -225,22 +220,19 @@ const Toolbar: FC<ToolbarProps> = ({
     onMouseDown?.(event);
   }, [ onMouseDown ]);
 
-  const toolbarClasses = `tox-context-toolbar${Type.isNonNullable(className) ? ` ${className}` : ''}`;
-
   return (
     <div
       ref={toolbarRef}
       // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+ (TINY-13129)
       popover={popoverMode}
       tabIndex={-1}
-      className={toolbarClasses}
+      className='tox-context-toolbar'
       style={{
-        ...style,
         visibility: isOpen ? undefined : 'hidden',
       }}
       onMouseDown={handleMouseDown}
     >
-      <div role='toolbar' className='tox-toolbar' {...rest}>
+      <div role='toolbar' className='tox-toolbar'>
         {children}
       </div>
     </div>
