@@ -267,4 +267,36 @@ describe('browser.ContextToolbar.ContextToolbar', () => {
 
     expect(onClick).toHaveBeenCalledOnce();
   });
+
+  it('TINY-13066: Should execute button on Space key', async () => {
+    const onClick = vi.fn();
+    const { getByTestId } = render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root>
+            <ContextToolbar.Trigger>
+              <div data-testid={triggerTestId}>Click Me</div>
+            </ContextToolbar.Trigger>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <button data-testid='button1' onClick={onClick}>Button 1</button>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    const trigger = getByTestId(triggerTestId);
+    await trigger.click();
+
+    await userEvent.keyboard('{Tab}');
+    const button1 = getByTestId('button1');
+    await expect.element(button1).toHaveFocus();
+
+    await userEvent.keyboard(' ');
+
+    expect(onClick).toHaveBeenCalledOnce();
+  });
 });
