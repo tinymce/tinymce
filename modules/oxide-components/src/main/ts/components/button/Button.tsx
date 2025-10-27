@@ -11,7 +11,7 @@ const calculateClassFromVariant = (variant: 'primary' | 'secondary' | 'outlined'
     case 'outlined':
       return Bem.block('tox-button', { ...modifiers, 'secondary--outline': true });
     case 'naked':
-      return Bem.block('tox-button', { ...modifiers, naked: true } );
+      return Bem.block('tox-button', { ...modifiers, naked: true });
     default:
       return Bem.block('tox-button');
   }
