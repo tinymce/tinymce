@@ -26,12 +26,7 @@ const useContextToolbarContext = () => {
   return context;
 };
 
-const getToolbarGap = (toolbarElement: HTMLElement): string => {
-  const defaultToolbarGap = '6px';
-  const sugarToolbar = SugarElement.fromDom(toolbarElement);
-  const gapValue = Css.get(sugarToolbar, '--context-toolbar-gap');
-  return Type.isNonNullable(gapValue) && gapValue !== '' ? gapValue : defaultToolbarGap;
-};
+const defaultToolbarGap = '6px';
 
 const Root: FC<ContextToolbarProps> = ({
   children,
@@ -210,8 +205,7 @@ const Toolbar: FC<ToolbarProps> = ({
     Css.set(sugarAnchor, 'anchor-name', anchorName);
     Css.set(sugarToolbar, 'position-anchor', anchorName);
 
-    const gap = getToolbarGap(toolbar);
-    const topValue = `calc(anchor(${anchorName} bottom) + ${gap})`;
+    const topValue = `calc(anchor(${anchorName} bottom) + ${defaultToolbarGap})`;
     const leftValue = `anchor(${anchorName} left)`;
 
     Css.set(sugarToolbar, 'top', topValue);
