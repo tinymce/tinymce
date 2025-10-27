@@ -139,8 +139,6 @@ See the **Corners** story for a live demonstration of auto-flip behavior.
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// TODO: Add more stories (TINY-13065)
-
 export const Basic: Story = {
   parameters: {
     docs: {
