@@ -14,25 +14,19 @@ import {
 
 import * as KeyboardNavigationHooks from '../../keynav/KeyboardNavigationHooks';
 
-import type {
-  InlineToolbarContextValue,
-  InlineToolbarProps,
-  TriggerProps,
-  ToolbarProps,
-  GroupProps
-} from './InlineToolbarTypes';
+import type { ContextToolbarContextValue, ContextToolbarProps, GroupProps, ToolbarProps, TriggerProps } from './ContextToolbarTypes';
 
-const InlineToolbarContext = createContext<InlineToolbarContextValue | null>(null);
+const ContextToolbarContext = createContext<ContextToolbarContextValue | null>(null);
 
-const useInlineToolbarContext = () => {
-  const context = useContext(InlineToolbarContext);
+const useContextToolbarContext = () => {
+  const context = useContext(ContextToolbarContext);
   if (!Type.isNonNullable(context)) {
-    throw new Error('useInlineToolbarContext must be used within an InlineToolbarProvider');
+    throw new Error('useContextToolbarContext must be used within an ContextToolbarProvider');
   }
   return context;
 };
 
-const Root: FC<InlineToolbarProps> = ({
+const Root: FC<ContextToolbarProps> = ({
   children,
   persistent = false
 }) => {
@@ -43,7 +37,7 @@ const Root: FC<InlineToolbarProps> = ({
   const open = useCallback(() => setIsOpen(true), []);
   const close = useCallback(() => setIsOpen(false), []);
 
-  const context = useMemo<InlineToolbarContextValue>(() => ({
+  const context = useMemo<ContextToolbarContextValue>(() => ({
     isOpen,
     open,
     close,
@@ -54,9 +48,9 @@ const Root: FC<InlineToolbarProps> = ({
   }), [ isOpen, open, close, persistent ]);
 
   return (
-    <InlineToolbarContext.Provider value={context}>
+    <ContextToolbarContext.Provider value={context}>
       {children}
-    </InlineToolbarContext.Provider>
+    </ContextToolbarContext.Provider>
   );
 };
 
@@ -66,7 +60,7 @@ const Trigger: FC<TriggerProps> = ({
   onMouseDown,
   ...rest
 }) => {
-  const { open, triggerRef } = useInlineToolbarContext();
+  const { open, triggerRef } = useContextToolbarContext();
   const handleClick = useCallback<MouseEventHandler<HTMLDivElement>>((event) => {
     open();
     onClick?.(event);
@@ -100,7 +94,7 @@ const Toolbar: FC<ToolbarProps> = ({
     triggerRef,
     close,
     persistent
-  } = useInlineToolbarContext();
+  } = useContextToolbarContext();
 
   const popoverMode = persistent ? 'manual' : 'auto';
 
@@ -181,7 +175,7 @@ const Toolbar: FC<ToolbarProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [ persistent, handleClickOutside ]);
 
-  const anchorName = useMemo(() => `--${Id.generate('inline-toolbar')}`, []);
+  const anchorName = useMemo(() => `--${Id.generate('context-toolbar')}`, []);
 
   useEffect(() => {
     if (!isOpen || !Type.isNonNullable(triggerRef.current) || !Type.isNonNullable(toolbarRef.current)) {
@@ -199,7 +193,7 @@ const Toolbar: FC<ToolbarProps> = ({
     Css.set(sugarToolbar, 'position-anchor', anchorName);
 
     const gap = Type.isNonNullable(toolbar.ownerDocument?.defaultView)
-      ? Css.get(sugarToolbar, '--inline-toolbar-gap') || '6px'
+      ? Css.get(sugarToolbar, '--context-toolbar-gap') || '6px'
       : '6px';
 
     const topValue = `calc(anchor(${anchorName} bottom) + ${gap})`;
@@ -223,7 +217,7 @@ const Toolbar: FC<ToolbarProps> = ({
     onMouseDown?.(event);
   }, [ onMouseDown ]);
 
-  const toolbarClasses = `tox-inline-toolbar${Type.isNonNullable(className) ? ` ${className}` : ''}`;
+  const toolbarClasses = `tox-context-toolbar${Type.isNonNullable(className) ? ` ${className}` : ''}`;
 
   return (
     <div

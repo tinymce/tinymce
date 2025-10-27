@@ -1,12 +1,12 @@
 import { page, userEvent } from '@vitest/browser/context';
-import * as InlineToolbar from 'oxide-components/components/inlinetoolbar/InlineToolbar';
+import * as ContextToolbar from 'oxide-components/components/contexttoolbar/ContextToolbar';
 import { classes } from 'oxide-components/utils/Styles';
 import { Fragment, type ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 
-const triggerTestId = 'inline-toolbar-trigger';
-const toolbarTestId = 'inline-toolbar-toolbar';
+const triggerTestId = 'context-toolbar-trigger';
+const toolbarTestId = 'context-toolbar-toolbar';
 
 const Wrapper = ({ children }: { children: ReactNode }) => {
   return (
@@ -25,21 +25,21 @@ const Wrapper = ({ children }: { children: ReactNode }) => {
   );
 };
 
-describe('browser.inlinetoolbar.InlineToolbar', () => {
+describe('browser.ContextToolbar.ContextToolbar', () => {
   it('TINY-13071: Should render trigger and toolbar', async () => {
     const { getByTestId } = render(
       <Fragment>
         <div className='tox' style={{ position: 'relative' }} />
-        <InlineToolbar.Root>
-          <InlineToolbar.Trigger>
+        <ContextToolbar.Root>
+          <ContextToolbar.Trigger>
             <div data-testid={triggerTestId}>Click Me</div>
-          </InlineToolbar.Trigger>
-          <InlineToolbar.Toolbar>
-            <InlineToolbar.Group>
+          </ContextToolbar.Trigger>
+          <ContextToolbar.Toolbar>
+            <ContextToolbar.Group>
               <div data-testid={toolbarTestId}>Toolbar Content</div>
-            </InlineToolbar.Group>
-          </InlineToolbar.Toolbar>
-        </InlineToolbar.Root>
+            </ContextToolbar.Group>
+          </ContextToolbar.Toolbar>
+        </ContextToolbar.Root>
       </Fragment>,
       { wrapper: Wrapper }
     );
@@ -54,31 +54,31 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
     await expect.element(toolbar).toBeVisible();
   });
 
-  it('TINY-13071: Should throw error when Trigger used outside of InlineToolbar', () => {
+  it('TINY-13071: Should throw error when Trigger used outside of ContextToolbar', () => {
     expect(() => {
       render(
-        <InlineToolbar.Trigger>
+        <ContextToolbar.Trigger>
           <div data-testid={triggerTestId}>Click Me</div>
-        </InlineToolbar.Trigger>,
+        </ContextToolbar.Trigger>,
         { wrapper: Wrapper }
       );
-    }).toThrow('useInlineToolbarContext must be used within an InlineToolbarProvider');
+    }).toThrow('useContextToolbarContext must be used within an ContextToolbarProvider');
   });
 
   it('TINY-13071: Should close toolbar on click outside when persistent={false}', async () => {
     const { getByTestId } = render(
       <Fragment>
         <div className='tox' style={{ position: 'relative' }}>
-          <InlineToolbar.Root persistent={false}>
-            <InlineToolbar.Trigger>
+          <ContextToolbar.Root persistent={false}>
+            <ContextToolbar.Trigger>
               <div data-testid={triggerTestId}>Click Me</div>
-            </InlineToolbar.Trigger>
-            <InlineToolbar.Toolbar>
-              <InlineToolbar.Group>
+            </ContextToolbar.Trigger>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
                 <div data-testid={toolbarTestId}>Toolbar Content</div>
-              </InlineToolbar.Group>
-            </InlineToolbar.Toolbar>
-          </InlineToolbar.Root>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
         </div>
       </Fragment>,
       { wrapper: Wrapper }
@@ -101,16 +101,16 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
     const { getByTestId } = render(
       <Fragment>
         <div className='tox' style={{ position: 'relative' }}>
-          <InlineToolbar.Root>
-            <InlineToolbar.Trigger>
+          <ContextToolbar.Root>
+            <ContextToolbar.Trigger>
               <div data-testid={triggerTestId}>Click Me</div>
-            </InlineToolbar.Trigger>
-            <InlineToolbar.Toolbar>
-              <InlineToolbar.Group>
+            </ContextToolbar.Trigger>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
                 <div data-testid={toolbarTestId}>Toolbar Content</div>
-              </InlineToolbar.Group>
-            </InlineToolbar.Toolbar>
-          </InlineToolbar.Root>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
         </div>
       </Fragment>,
       { wrapper: Wrapper }
@@ -131,16 +131,16 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
     const { getByTestId } = render(
       <Fragment>
         <div className='tox' style={{ position: 'relative' }}>
-          <InlineToolbar.Root persistent={true}>
-            <InlineToolbar.Trigger>
+          <ContextToolbar.Root persistent={true}>
+            <ContextToolbar.Trigger>
               <div data-testid={triggerTestId}>Click Me</div>
-            </InlineToolbar.Trigger>
-            <InlineToolbar.Toolbar>
-              <InlineToolbar.Group>
+            </ContextToolbar.Trigger>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
                 <div data-testid={toolbarTestId}>Toolbar Content</div>
-              </InlineToolbar.Group>
-            </InlineToolbar.Toolbar>
-          </InlineToolbar.Root>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
         </div>
       </Fragment>,
       { wrapper: Wrapper }
@@ -161,21 +161,21 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
     const { getByTestId } = render(
       <Fragment>
         <div className='tox' style={{ position: 'relative' }}>
-          <InlineToolbar.Root>
-            <InlineToolbar.Trigger>
+          <ContextToolbar.Root>
+            <ContextToolbar.Trigger>
               <div data-testid={triggerTestId}>Click Me</div>
-            </InlineToolbar.Trigger>
-            <InlineToolbar.Toolbar>
-              <InlineToolbar.Group>
+            </ContextToolbar.Trigger>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
                 <button data-testid='button1'>Button 1</button>
                 <button data-testid='button2'>Button 2</button>
-              </InlineToolbar.Group>
-              <InlineToolbar.Group>
+              </ContextToolbar.Group>
+              <ContextToolbar.Group>
                 <button data-testid='button3'>Button 3</button>
                 <button data-testid='button4'>Button 4</button>
-              </InlineToolbar.Group>
-            </InlineToolbar.Toolbar>
-          </InlineToolbar.Root>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
         </div>
       </Fragment>,
       { wrapper: Wrapper }
@@ -200,18 +200,18 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
     const { getByTestId } = render(
       <Fragment>
         <div className='tox' style={{ position: 'relative' }}>
-          <InlineToolbar.Root>
-            <InlineToolbar.Trigger>
+          <ContextToolbar.Root>
+            <ContextToolbar.Trigger>
               <div data-testid={triggerTestId}>Click Me</div>
-            </InlineToolbar.Trigger>
-            <InlineToolbar.Toolbar>
-              <InlineToolbar.Group>
+            </ContextToolbar.Trigger>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
                 <button data-testid='button1'>Button 1</button>
                 <button data-testid='button2'>Button 2</button>
                 <button data-testid='button3'>Button 3</button>
-              </InlineToolbar.Group>
-            </InlineToolbar.Toolbar>
-          </InlineToolbar.Root>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
         </div>
       </Fragment>,
       { wrapper: Wrapper }
@@ -242,16 +242,16 @@ describe('browser.inlinetoolbar.InlineToolbar', () => {
     const { getByTestId } = render(
       <Fragment>
         <div className='tox' style={{ position: 'relative' }}>
-          <InlineToolbar.Root>
-            <InlineToolbar.Trigger>
+          <ContextToolbar.Root>
+            <ContextToolbar.Trigger>
               <div data-testid={triggerTestId}>Click Me</div>
-            </InlineToolbar.Trigger>
-            <InlineToolbar.Toolbar>
-              <InlineToolbar.Group>
+            </ContextToolbar.Trigger>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
                 <button data-testid='button1' onClick={onClick}>Button 1</button>
-              </InlineToolbar.Group>
-            </InlineToolbar.Toolbar>
-          </InlineToolbar.Root>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
         </div>
       </Fragment>,
       { wrapper: Wrapper }
