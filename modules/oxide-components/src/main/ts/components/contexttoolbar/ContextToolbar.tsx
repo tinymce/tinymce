@@ -193,7 +193,9 @@ const Toolbar: FC<ToolbarProps> = ({
 
     const trigger = triggerRef.current;
     const toolbar = toolbarRef.current;
-    const anchorElement = (trigger.firstElementChild as HTMLElement) ?? trigger;
+    const anchorElement = trigger.firstElementChild instanceof window.HTMLElement
+      ? trigger.firstElementChild
+      : trigger;
 
     const sugarAnchor = SugarElement.fromDom(anchorElement);
     const sugarToolbar = SugarElement.fromDom(toolbar);
