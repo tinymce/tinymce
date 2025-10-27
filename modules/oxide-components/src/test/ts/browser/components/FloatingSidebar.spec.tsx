@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import { Css, SelectorFind, SugarElement } from '@ephox/sugar';
-=======
-import { SelectorFind, SugarElement } from '@ephox/sugar';
->>>>>>> c3b581a75f (TINY-13052: add browser tests)
 import { userEvent } from '@vitest/browser/context';
 import * as FloatingSidebar from 'oxide-components/components/floatingsidebar/FloatingSidebar';
 import { classes } from 'oxide-components/utils/Styles';
