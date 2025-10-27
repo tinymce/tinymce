@@ -21,7 +21,7 @@ const ContextToolbarContext = createContext<ContextToolbarContextValue | null>(n
 const useContextToolbarContext = () => {
   const context = useContext(ContextToolbarContext);
   if (!Type.isNonNullable(context)) {
-    throw new Error('useContextToolbarContext must be used within an ContextToolbarProvider');
+    throw new Error('useContextToolbarContext must be used within a ContextToolbarProvider');
   }
   return context;
 };
