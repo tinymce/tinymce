@@ -1,4 +1,3 @@
-import './module/css';
 import { AutoResizingTextarea } from './components/autoresizingtextarea/AutoResizingTextarea';
 import { Button } from './components/button/Button';
 import * as Draggable from './components/draggable/Draggable';

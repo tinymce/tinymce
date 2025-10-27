@@ -2,6 +2,7 @@ import { isValidElement, useEffect, useRef, type FC, type PropsWithChildren, typ
 
 import { classes } from '../../utils/Styles';
 import * as Draggable from '../draggable/Draggable';
+import '../../module/css';
 
 export interface FloatingSidebarProps extends PropsWithChildren {
   isOpen?: boolean;
