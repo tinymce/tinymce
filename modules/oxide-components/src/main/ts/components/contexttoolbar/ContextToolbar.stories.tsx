@@ -6,7 +6,7 @@ import { fn } from 'storybook/test';
 import { Button } from '../button/Button';
 import { IconButton } from '../iconbutton/IconButton';
 
-import * as InlineToolbar from './InlineToolbar';
+import * as ContextToolbar from './ContextToolbar';
 
 /* eslint-disable max-len */
 const resolvedIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -15,36 +15,36 @@ const resolvedIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height=
 /* eslint-enable max-len */
 
 const meta = {
-  title: 'components/InlineToolbar',
+  title: 'components/ContextToolbar',
   parameters: {
     layout: 'centered',
     docs: {
       description: {
         /* eslint-disable max-len */
         component: `
-A compound component for creating inline toolbars that anchor to trigger elements.
+A compound component for creating context toolbars that anchor to trigger elements.
 
 ## Usage
 
 \`\`\`tsx
-import * as InlineToolbar from 'oxide-components/InlineToolbar';
+import * as ContextToolbar from 'oxide-components/ContextToolbar';
 
 const MyComponent = () => {
   return (
     <div className='tox' style={{ position: 'relative' }}>
-      <InlineToolbar.Root persistent={false}>
-        <InlineToolbar.Trigger>
+      <ContextToolbar.Root persistent={false}>
+        <ContextToolbar.Trigger>
           <div style={{ backgroundColor: 'red', padding: '10px' }}>
             Click me!
           </div>
-        </InlineToolbar.Trigger>
-        <InlineToolbar.Toolbar>
-          <InlineToolbar.Group>
+        </ContextToolbar.Trigger>
+        <ContextToolbar.Toolbar>
+          <ContextToolbar.Group>
             <Button>Accept</Button>
             <Button>Reject</Button>
-          </InlineToolbar.Group>
-        </InlineToolbar.Toolbar>
-      </InlineToolbar.Root>
+          </ContextToolbar.Group>
+        </ContextToolbar.Toolbar>
+      </ContextToolbar.Root>
     </div>
   );
 };
@@ -99,14 +99,14 @@ Groups related buttons together for keyboard navigation. Buttons within a group 
 
 ## Default Behavior
 
-By default, the InlineToolbar anchors to the bottom left of the trigger element. It can position above/below or left/center/right based on the trigger element's inline positioning styles. The position-try-fallbacks CSS property automatically flips the toolbar when it would overflow the viewport.
+By default, the ContextToolbar anchors to the bottom left of the trigger element. It can position above/below or left/center/right based on the trigger element's inline positioning styles. The position-try-fallbacks CSS property automatically flips the toolbar when it would overflow the viewport.
 
 ## Key Features
 
 - **Native CSS positioning** using \`anchor()\` function
 - **Auto-detection** of anchor placement (top/bottom, left/center/right)
 - **Automatic viewport overflow handling** with \`position-try-fallbacks\`
-- **Dynamic gap** controlled by CSS variable \`--inline-toolbar-gap\`
+- **Dynamic gap** controlled by CSS variable \`--context-toolbar-gap\`
 - **Unique anchor names** per instance using \`Id.generate()\`
 
 ## How It Works
@@ -143,26 +143,26 @@ export const Basic: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Basic inline toolbar using **CSS anchor positioning**. Click the trigger to open the toolbar. The toolbar will close when clicking outside (unless `persistent={true}`).',
+        story: 'Basic context toolbar using **CSS anchor positioning**. Click the trigger to open the toolbar. The toolbar will close when clicking outside (unless `persistent={true}`).',
       },
     },
   },
   render: () => {
     return (
       <div className='tox' style={{ position: 'relative' }}>
-        <InlineToolbar.Root persistent={false}>
-          <InlineToolbar.Trigger>
+        <ContextToolbar.Root persistent={false}>
+          <ContextToolbar.Trigger>
             <div style={{ backgroundColor: 'red', padding: '10px' }}>
               Click me!
             </div>
-          </InlineToolbar.Trigger>
-          <InlineToolbar.Toolbar>
-            <InlineToolbar.Group>
+          </ContextToolbar.Trigger>
+          <ContextToolbar.Toolbar>
+            <ContextToolbar.Group>
               <Button onClick={fn()}>Accept</Button>
               <Button onClick={fn()}>Reject</Button>
-            </InlineToolbar.Group>
-          </InlineToolbar.Toolbar>
-        </InlineToolbar.Root>
+            </ContextToolbar.Group>
+          </ContextToolbar.Toolbar>
+        </ContextToolbar.Root>
       </div>
     );
   }
@@ -179,19 +179,19 @@ export const Persistent: Story = {
   render: () => {
     return (
       <div className='tox' style={{ position: 'relative' }}>
-        <InlineToolbar.Root persistent={true}>
-          <InlineToolbar.Trigger>
+        <ContextToolbar.Root persistent={true}>
+          <ContextToolbar.Trigger>
             <div style={{ backgroundColor: 'blue', padding: '10px' }}>
               Click me (Persistent)!
             </div>
-          </InlineToolbar.Trigger>
-          <InlineToolbar.Toolbar>
-            <InlineToolbar.Group>
+          </ContextToolbar.Trigger>
+          <ContextToolbar.Toolbar>
+            <ContextToolbar.Group>
               <Button onClick={fn()}>Accept</Button>
               <Button onClick={fn()}>Reject</Button>
-            </InlineToolbar.Group>
-          </InlineToolbar.Toolbar>
-        </InlineToolbar.Root>
+            </ContextToolbar.Group>
+          </ContextToolbar.Toolbar>
+        </ContextToolbar.Root>
       </div>
     );
   }
@@ -201,19 +201,19 @@ export const WithIconButtons: Story = {
   render: () => {
     return (
       <div className='tox' style={{ position: 'relative' }}>
-        <InlineToolbar.Root persistent={false}>
-          <InlineToolbar.Trigger>
+        <ContextToolbar.Root persistent={false}>
+          <ContextToolbar.Trigger>
             <div style={{ backgroundColor: 'lightblue', padding: '10px' }}>
               Click me!
             </div>
-          </InlineToolbar.Trigger>
-          <InlineToolbar.Toolbar>
-            <InlineToolbar.Group>
+          </ContextToolbar.Trigger>
+          <ContextToolbar.Toolbar>
+            <ContextToolbar.Group>
               <IconButton variant='primary' icon='checkmark' onClick={fn()} resolver={Fun.constant(resolvedIcon)} />
               <IconButton variant='secondary' icon='cross' onClick={fn()} resolver={Fun.constant(resolvedIcon)} />
-            </InlineToolbar.Group>
-          </InlineToolbar.Toolbar>
-        </InlineToolbar.Root>
+            </ContextToolbar.Group>
+          </ContextToolbar.Toolbar>
+        </ContextToolbar.Root>
       </div>
     );
   }
@@ -223,27 +223,27 @@ export const ManyButtons: Story = {
   render: () => {
     return (
       <div className='tox' style={{ position: 'relative' }}>
-        <InlineToolbar.Root persistent={false}>
-          <InlineToolbar.Trigger>
+        <ContextToolbar.Root persistent={false}>
+          <ContextToolbar.Trigger>
             <div style={{ backgroundColor: 'lightgreen', padding: '10px' }}>
               Click me!
             </div>
-          </InlineToolbar.Trigger>
-          <InlineToolbar.Toolbar>
-            <InlineToolbar.Group>
+          </ContextToolbar.Trigger>
+          <ContextToolbar.Toolbar>
+            <ContextToolbar.Group>
               <Button variant='primary' onClick={fn()}>Accept</Button>
               <Button variant='secondary' onClick={fn()}>Reject</Button>
-            </InlineToolbar.Group>
-            <InlineToolbar.Group>
+            </ContextToolbar.Group>
+            <ContextToolbar.Group>
               <Button variant='outlined' onClick={fn()}>Edit</Button>
               <Button variant='naked' onClick={fn()}>Comment</Button>
-            </InlineToolbar.Group>
-            <InlineToolbar.Group>
+            </ContextToolbar.Group>
+            <ContextToolbar.Group>
               <Button variant='primary' onClick={fn()}>Share</Button>
               <Button variant='secondary' onClick={fn()}>More</Button>
-            </InlineToolbar.Group>
-          </InlineToolbar.Toolbar>
-        </InlineToolbar.Root>
+            </ContextToolbar.Group>
+          </ContextToolbar.Toolbar>
+        </ContextToolbar.Root>
       </div>
     );
   }
@@ -253,14 +253,14 @@ export const MixedContent: Story = {
   render: () => {
     return (
       <div className='tox' style={{ position: 'relative' }}>
-        <InlineToolbar.Root persistent={false}>
-          <InlineToolbar.Trigger>
+        <ContextToolbar.Root persistent={false}>
+          <ContextToolbar.Trigger>
             <div style={{ backgroundColor: 'lightyellow', padding: '10px' }}>
               Click me!
             </div>
-          </InlineToolbar.Trigger>
-          <InlineToolbar.Toolbar>
-            <InlineToolbar.Group>
+          </ContextToolbar.Trigger>
+          <ContextToolbar.Toolbar>
+            <ContextToolbar.Group>
               <IconButton icon='arrow-up' onClick={fn()} resolver={Fun.constant(resolvedIcon)} />
               <span style={{
                 padding: '8px',
@@ -271,13 +271,13 @@ export const MixedContent: Story = {
                 1/3
               </span>
               <IconButton icon='arrow-down' onClick={fn()} resolver={Fun.constant(resolvedIcon)} />
-            </InlineToolbar.Group>
-            <InlineToolbar.Group>
+            </ContextToolbar.Group>
+            <ContextToolbar.Group>
               <Button variant='primary' onClick={fn()}>Accept</Button>
               <Button variant='secondary' onClick={fn()}>Reject</Button>
-            </InlineToolbar.Group>
-          </InlineToolbar.Toolbar>
-        </InlineToolbar.Root>
+            </ContextToolbar.Group>
+          </ContextToolbar.Toolbar>
+        </ContextToolbar.Root>
       </div>
     );
   }
@@ -308,7 +308,7 @@ export const Corners: Story = {
     ] as const), []);
 
     return (
-      <div className='tox inline-toolbar-anchors' style={{ width: '520px' }}>
+      <div className='tox context-toolbar-anchors' style={{ width: '520px' }}>
         <div
           className='tox'
           style={{
@@ -322,19 +322,19 @@ export const Corners: Story = {
           }}
         >
           {triggerPositions.map((pos) => (
-            <InlineToolbar.Root key={pos.id} persistent={false}>
-              <InlineToolbar.Trigger>
+            <ContextToolbar.Root key={pos.id} persistent={false}>
+              <ContextToolbar.Trigger>
                 <div style={{ position: 'absolute', display: 'inline-flex', ...pos.style }}>
                   <Button>{pos.label}</Button>
                 </div>
-              </InlineToolbar.Trigger>
-              <InlineToolbar.Toolbar>
-                <InlineToolbar.Group>
+              </ContextToolbar.Trigger>
+              <ContextToolbar.Toolbar>
+                <ContextToolbar.Group>
                   <Button onClick={fn()}>Accept</Button>
                   <Button onClick={fn()}>Reject</Button>
-                </InlineToolbar.Group>
-              </InlineToolbar.Toolbar>
-            </InlineToolbar.Root>
+                </ContextToolbar.Group>
+              </ContextToolbar.Toolbar>
+            </ContextToolbar.Root>
           ))}
         </div>
       </div>

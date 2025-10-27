@@ -1,11 +1,11 @@
 import type { CSSProperties, HTMLAttributes, MouseEventHandler, ReactNode, RefObject } from 'react';
 
-export interface InlineToolbarProps {
+export interface ContextToolbarProps {
   readonly children: HTMLAttributes<HTMLDivElement>['children'];
   readonly persistent?: boolean;
 }
 
-export interface InlineToolbarContextValue {
+export interface ContextToolbarContextValue {
   readonly isOpen: boolean;
   readonly open: () => void;
   readonly close: () => void;

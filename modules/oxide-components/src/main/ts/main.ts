@@ -2,7 +2,7 @@ import { AutoResizingTextarea } from './components/autoresizingtextarea/AutoResi
 import { Button } from './components/button/Button';
 import { Draggable } from './components/draggable/Draggable';
 import { IconButton } from './components/iconbutton/IconButton';
-import * as InlineToolbar from './components/inlinetoolbar/InlineToolbar';
+import * as ContextToolbar from './components/contexttoolbar/ContextToolbar';
 import * as KeyboardNavigationTypes from './keynav/keyboard/NavigationTypes';
 import * as KeyboardNavigationHooks from './keynav/KeyboardNavigationHooks';
 import * as FocusHelpers from './utils/FocusHelpers';
@@ -13,7 +13,7 @@ export {
   Draggable,
   FocusHelpers,
   IconButton,
-  InlineToolbar,
+  ContextToolbar,
   KeyboardNavigationHooks,
   KeyboardNavigationTypes
 };
