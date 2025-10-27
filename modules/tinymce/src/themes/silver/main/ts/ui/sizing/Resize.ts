@@ -13,6 +13,11 @@ export interface EditorDimensions {
   readonly width: number;
 }
 
+export interface ResizeEditorDimensions {
+  readonly height: number;
+  width?: number;
+}
+
 export enum ResizeTypes {
   None, Both, Vertical
 }
@@ -27,27 +32,29 @@ export const getOriginalDimensions = (editor: Editor): EditorDimensions => {
   };
 };
 
-export const getDimensions = (editor: Editor, deltas: SugarPosition, resizeType: ResizeTypes, originalDimentions: EditorDimensions): EditorDimensions => {
-  const dimensions = {
+export const getDimensions = (editor: Editor, deltas: SugarPosition, resizeType: ResizeTypes, originalDimentions: EditorDimensions): ResizeEditorDimensions => {
+  const dimensions: ResizeEditorDimensions = {
     height: Utils.calcCappedSize(
       originalDimentions.height + deltas.top,
       Options.getMinHeightOption(editor),
       Options.getMaxHeightOption(editor)
-    ),
-    width:
-      resizeType === ResizeTypes.Both
-        ? Utils.calcCappedSize(
-          originalDimentions.width + deltas.left,
-          Options.getMinWidthOption(editor),
-          Options.getMaxWidthOption(editor)
-        )
-        : originalDimentions.width,
+    )
+  };
+
+  if (resizeType === ResizeTypes.Both) {
+    dimensions.width =
+      Utils.calcCappedSize(
+        originalDimentions.width + deltas.left,
+        Options.getMinWidthOption(editor),
+        Options.getMaxWidthOption(editor)
+      );
+
   };
 
   return dimensions;
 };
 
-export const resize = (editor: Editor, deltas: SugarPosition, resizeType: ResizeTypes): EditorDimensions => {
+export const resize = (editor: Editor, deltas: SugarPosition, resizeType: ResizeTypes): ResizeEditorDimensions => {
   const container = SugarElement.fromDom(editor.getContainer());
 
   const originalDimentions = getOriginalDimensions(editor);

@@ -21,13 +21,13 @@ const getResizeType = (editor: Editor): Resize.ResizeTypes => {
   }
 };
 
-const getAriaValuetext = (dimensions: Resize.EditorDimensions, resizeType: Resize.ResizeTypes): string => {
+const getAriaValuetext = (dimensions: Resize.ResizeEditorDimensions, resizeType: Resize.ResizeTypes): string => {
   return resizeType === Resize.ResizeTypes.Both
     ? I18n.translate([ `Editor's height: {0} pixels, Editor's width: {1} pixels`, dimensions.height, dimensions.width ])
     : I18n.translate([ `Editor's height: {0} pixels`, dimensions.height ]);
 };
 
-const setAriaValuetext = (comp: AlloyComponent, dimensions: Resize.EditorDimensions, resizeType: Resize.ResizeTypes) => {
+const setAriaValuetext = (comp: AlloyComponent, dimensions: Resize.ResizeEditorDimensions, resizeType: Resize.ResizeTypes) => {
   Attribute.set(comp.element, 'aria-valuetext', getAriaValuetext(dimensions, resizeType));
 };
 
