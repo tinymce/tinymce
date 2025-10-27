@@ -1,7 +1,7 @@
-import { useEffect, useRef, type FC, type PropsWithChildren, type ReactElement, type ReactNode } from 'react';
+import { isValidElement, useEffect, useRef, type FC, type PropsWithChildren, type ReactNode } from 'react';
 
-import { Draggable } from '../../main';
 import { classes } from '../../utils/Styles';
+import * as Draggable from '../draggable/Draggable';
 
 export interface FloatingSidebarProps extends PropsWithChildren {
   isOpen?: boolean;
@@ -16,8 +16,8 @@ interface Slots {
 
 // TODO(TINY-13136): Use generic `createSlots` instead
 const createSlots = (children: ReactNode): Slots => {
-  const header = (Array.isArray(children) ? children : [ children ]).filter((child: ReactNode) => (child as ReactElement)?.type === Header);
-  const otherChildren = (Array.isArray(children) ? children : [ children ]).filter((child: ReactNode) => (child as ReactElement)?.type !== Header);
+  const header = (Array.isArray(children) ? children : [ children ]).filter((child: ReactNode) => isValidElement(child) && child.type === Header);
+  const otherChildren = (Array.isArray(children) ? children : [ children ]).filter((child: ReactNode) => !isValidElement(child) || child.type !== Header);
 
   if (header.length === 0) {
     throw new Error('FloatingSidebar requires a header');

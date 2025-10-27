@@ -7,10 +7,10 @@ import type { DraggableProps, DraggableHandleProps, Shift, Position, Boundries }
 const Root = forwardRef<HTMLDivElement, DraggableProps>(({ children, style, ...props }, ref) => {
   const [ shift, setShift ] = useState<Shift>({ x: 0, y: 0 });
   const draggableRef = useRef<HTMLDivElement | null>(null);
-  const transform = `translate3d(${shift.x}px, ${shift.y}px, 0)`;
+  const transform = `translate3d(${shift.x}px, ${shift.y}px, 0px)`;
   const contextValue = useMemo(() => ({ setShift, draggableRef }), []);
 
-  const setRef = useCallback((element: HTMLDivElement) => {
+  const setRef = useCallback((element: HTMLDivElement | null) => {
     if (typeof ref === 'function') {
       ref(element);
     } else if (ref) {
@@ -21,7 +21,7 @@ const Root = forwardRef<HTMLDivElement, DraggableProps>(({ children, style, ...p
 
   return (
     <DraggableContext.Provider value={contextValue}>
-      <div ref={setRef} style={{ transform, ...style }} { ...props }>
+      <div ref={setRef} style={{ ...style, transform }} { ...props }>
         {children}
       </div>
     </DraggableContext.Provider>
