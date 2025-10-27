@@ -62,7 +62,7 @@ describe('browser.ContextToolbar.ContextToolbar', () => {
         </ContextToolbar.Trigger>,
         { wrapper: Wrapper }
       );
-    }).toThrow('useContextToolbarContext must be used within an ContextToolbarProvider');
+    }).toThrow('useContextToolbarContext must be used within a ContextToolbarProvider');
   });
 
   it('TINY-13071: Should close toolbar on click outside when persistent={false}', async () => {
