@@ -100,9 +100,9 @@ const Toolbar: FC<ToolbarProps> = ({
     if (Type.isNonNullable(element)) {
       if (isOpen) {
         element.showPopover();
-        // Defer focus to next event loop tick to ensure
-        // it runs after Popover API's focus management
-        setTimeout(() => {
+        // Defer focus using queueMicrotask to ensure it runs after
+        // the Popover API's internal focus management is complete
+        queueMicrotask(() => {
           const sugarElement = SugarElement.fromDom(element);
           const firstGroup = SelectorFind.descendant(sugarElement, '.tox-toolbar__group');
           const firstButton = firstGroup.bind((group) =>
@@ -113,7 +113,7 @@ const Toolbar: FC<ToolbarProps> = ({
             () => element.focus(), // Falls back to container if no button found
             (button) => Focus.focus(button as SugarElement<HTMLElement>) // Focus first button
           );
-        }, 0);
+        });
       } else {
         element.hidePopover();
       }
