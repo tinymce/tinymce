@@ -218,7 +218,7 @@ describe('browser.draggable.Draggable', () => {
     );
 
     const { getByTestId } = render(TestElementWithButton, { wrapper: Wrapper });
-    const button = getByTestId('button-in-handle').element() as HTMLButtonElement;
+    const button = getByTestId('button-in-handle').element();
     await expect.element(button).toBeDefined();
 
     await userEvent.click(button);
