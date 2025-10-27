@@ -3,7 +3,7 @@ import type { FunctionComponent } from 'react';
 import { classes } from '../../../utils/Styles';
 
 export const Spinner: FunctionComponent = () =>
-  <div className={classes(["tox-ai__spinner"])}>
+  <div className={classes([ 'tox-ai__spinner' ])}>
     <svg
       style={{
         animation: 'tox-rotation 1s linear infinite'
