@@ -2,7 +2,8 @@ import {
   AddEventsBehaviour, type AlloyComponent, AlloyEvents, type AlloySpec, AlloyTriggers, Behaviour, Composing, type CustomEvent, Focusing, Replacing, type SketchSpec,
   Sliding,
   SlotContainer,
-  type SlotContainerTypes, SystemEvents, Tabstopping
+  type SlotContainerTypes, SystemEvents, Tabstopping,
+  type SimpleSpec
 } from '@ephox/alloy';
 import { StructureSchema } from '@ephox/boulder';
 import { Sidebar as BridgeSidebar } from '@ephox/bridge';
@@ -14,6 +15,8 @@ import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/c
 
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { SimpleBehaviours } from '../alien/SimpleBehaviours';
+
+import { makeSidebarResizeHandler } from './SidebarResizeHandle';
 
 export type SidebarConfig = Record<string, BridgeSidebar.SidebarSpec>;
 
@@ -92,22 +95,29 @@ const makePanels = (parts: SlotContainerTypes.SlotContainerParts, panelConfigs: 
   });
 };
 
-const makeSidebar = (panelConfigs: SidebarConfig) => SlotContainer.sketch((parts) => ({
-  dom: {
-    tag: 'div',
-    classes: [ 'tox-sidebar__pane-container' ]
-  },
-  components: makePanels(parts, panelConfigs),
-  slotBehaviours: SimpleBehaviours.unnamedEvents([
-    AlloyEvents.runOnAttached((slotContainer) => SlotContainer.hideAllSlots(slotContainer))
-  ])
-}));
+const makeSidebar = (panelConfigs: SidebarConfig, sidebar: AlloyComponent): SimpleSpec => {
+  const resizeHandle = makeSidebarResizeHandler(Optional.from(sidebar)).getOrUndefined();
+
+  return SlotContainer.sketch((parts) => ({
+    dom: {
+      tag: 'div',
+      classes: [ 'tox-sidebar__pane-container' ]
+    },
+    components: resizeHandle ? [
+      ...makePanels(parts, panelConfigs),
+      resizeHandle,
+    ] : [ ...makePanels(parts, panelConfigs) ],
+    slotBehaviours: SimpleBehaviours.unnamedEvents([
+      AlloyEvents.runOnAttached((slotContainer) => SlotContainer.hideAllSlots(slotContainer))
+    ])
+  }));
+};
 
 const setSidebar = (sidebar: AlloyComponent, panelConfigs: SidebarConfig, showSidebar: string | undefined): void => {
   const optSlider = Composing.getCurrent(sidebar);
 
   optSlider.each((slider) => {
-    Replacing.set(slider, [ makeSidebar(panelConfigs) ]);
+    Replacing.set(slider, [ makeSidebar(panelConfigs, sidebar) ]);
 
     // Show the default sidebar
     const configKey = showSidebar?.toLowerCase();
