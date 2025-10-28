@@ -156,6 +156,25 @@ class EditorCommands {
   }
 
   /**
+   * Removes a command from the command collection.
+   *
+   * @method removeCommand
+   * @param {String} command Command name to remove.
+   * @param {String} type Optional type to remove, defaults to removing all types. Can be 'exec', 'state', 'value', or omitted for all.
+   */
+  public removeCommand(command: string, type?: 'exec' | 'state' | 'value'): void {
+    const lowerCaseCommand = command.toLowerCase();
+
+    if (type) {
+      delete this.commands[type][lowerCaseCommand];
+    } else {
+      delete this.commands.exec[lowerCaseCommand];
+      delete this.commands.state[lowerCaseCommand];
+      delete this.commands.value[lowerCaseCommand];
+    }
+  }
+
+  /**
    * Returns true/false if the command is supported or not.
    *
    * @method queryCommandSupported
