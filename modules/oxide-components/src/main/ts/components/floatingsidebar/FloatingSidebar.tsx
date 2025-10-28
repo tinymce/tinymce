@@ -39,13 +39,19 @@ const Root: FC<FloatingSidebarProps> = ({ isOpen = true, height = 600, initialPo
   const { header, children } = createSlots(props.children);
   const elementRef = useRef<HTMLDivElement | null>(null);
 
-  const { positionStyles, positionClass } = useMemo(() => ({
-    positionStyles: {
-      '--tox-private-floating-sidebar-requested-top': `${initialPosition.y}px`,
-      '--tox-private-floating-sidebar-requested-left': `${initialPosition.x}px`
-    },
-    positionClass: `origin-${initialPosition.origin}`
-  } as const), [ initialPosition ]);
+  // TODO: move to separate funtion
+  const absolutePosition = useMemo(() => {
+    switch (initialPosition.origin) {
+      case 'topleft':
+        return { top: `${initialPosition.y}px`, left: `${initialPosition.x}px` } as const;
+      case 'topright':
+        return { top: `${initialPosition.y}px`, left: `calc(${initialPosition.x}px - var(--tox-private-floating-sidebar-width))` } as const;
+      case 'bottomleft':
+        return { top: `calc(${initialPosition.y}px - var(--tox-private-floating-sidebar-height))`, left: `${initialPosition.x}px` } as const;
+      case 'bottomright':
+        return { top: `calc(${initialPosition.y}px - var(--tox-private-floating-sidebar-height))`, left: `calc(${initialPosition.x}px - var(--tox-private-floating-sidebar-width))` } as const;
+    }
+  }, [ initialPosition ]);
 
   useEffect(() => {
     const element = elementRef.current;
@@ -58,8 +64,10 @@ const Root: FC<FloatingSidebarProps> = ({ isOpen = true, height = 600, initialPo
     <Draggable.Root
       ref={elementRef}
       popover="manual"
-      className={classes([ 'tox-floating-sidebar', positionClass ])}
-      style={{ '--tox-private-floating-sidebar-requested-height': `${height}px`, ...positionStyles }}
+      className={classes([ 'tox-floating-sidebar' ])}
+      style={{ '--tox-private-floating-sidebar-requested-height': `${height}px` }}
+      initialPosition={absolutePosition}
+      declaredSize={{ width: 'var(--tox-private-floating-sidebar-width)', height: 'var(--tox-private-floating-sidebar-height)' }}
     >
       <aside className={classes([ 'tox-floating-sidebar__content-wrapper' ])}>
         <Draggable.Handle>{ header }</Draggable.Handle>
