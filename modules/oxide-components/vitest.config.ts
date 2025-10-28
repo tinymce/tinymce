@@ -40,7 +40,8 @@ export default defineConfig({
             screenshotFailures: false,
             instances: [
               { browser: 'chromium' }
-            ]
+            ],
+            commands: { mousedownCommand, mouseupCommand, mousemoveCommand }
           }
         },
       },
