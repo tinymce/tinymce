@@ -22,8 +22,9 @@
     // overflow: auto.
     min-height: 0;
   }
-
+  
   .tox-sidebar {
+    --tox-private-sidebar-width: 300px;
     background-color: var(--tox-private-sidebar-background-color, @sidebar-background-color);
     display: flex;
     flex-direction: row;
@@ -37,10 +38,20 @@
 
   .tox-sidebar__pane-container {
     display: flex;
+    flex-direction: row-reverse;
+    width: var(--tox-private-sidebar-width);
+
+    .tox-sidebar__resize-handle {
+      cursor: ew-resize;
+      width: 5px;
+      height: 100%;
+      background-color: #e3e3e3;
+    }
   }
 
   .tox-sidebar__pane {
     display: flex;
+    width: 100%;
   }
 
   .tox-sidebar--sliding-closed {
