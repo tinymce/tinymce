@@ -1,4 +1,4 @@
-import { ApproxStructure, Mouse, UiFinder, Clipboard } from '@ephox/agar';
+import { ApproxStructure, Clipboard, Mouse, UiFinder } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
 import { Attribute, Class, Css, Scroll, SelectorFind, SugarBody, Traverse } from '@ephox/sugar';
@@ -10,7 +10,8 @@ import AnchorPlugin from 'tinymce/plugins/anchor/Plugin';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 
-describe('browser.tinymce.core.ReadOnlyModeTest', () => {
+// eslint-disable-next-line mocha/no-exclusive-tests
+describe.only('browser.tinymce.core.ReadOnlyModeTest', () => {
   const hook = TinyHooks.bddSetup<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     toolbar: 'bold',
@@ -402,6 +403,7 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
 
     // Set up initial state with some undo history
     setInitialContentWithReadOnly(editor);
+    assert.isFalse(editor.readonly);
     editor.undoManager.add();
     editor.setContent('<p>Modified content</p>');
     editor.undoManager.add();

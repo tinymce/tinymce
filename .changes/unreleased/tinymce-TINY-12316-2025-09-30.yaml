@@ -1,0 +1,6 @@
+project: tinymce
+kind: Changed
+body: Undo levels are no longer created while in readonly mode.
+time: 2025-09-30T12:32:56.274611+02:00
+custom:
+  Issue: TINY-12316
