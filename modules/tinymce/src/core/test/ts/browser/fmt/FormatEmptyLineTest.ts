@@ -368,7 +368,7 @@ describe('browser.tinymce.core.fmt.FormatEmptyLineTest', () => {
       TinyAssertions.assertRawContent(editor, '<p><strong>a</strong></p><p><strong>&nbsp;</strong></p>');
       TinySelections.setCursor(editor, [ 1, 0, 0 ], 0);
       await pAssertToolbarButtonState(editor, 'Bold', true);
-      TinyContentActions.type(editor, 'abc');
+      await TinyContentActions.pType(editor, 'abc');
       TinyAssertions.assertRawContent(editor, '<p><strong>a</strong></p><p><strong>abc&nbsp;</strong></p>');
     });
 
