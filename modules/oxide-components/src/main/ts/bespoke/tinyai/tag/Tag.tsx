@@ -27,6 +27,7 @@ interface ClosableTagProps extends BaseTagProps {
 
 export type TagProps = NonClosableTagProps | ClosableTagProps;
 
+// Tag is here in reference to a tagging/labeling context, not a HTML tag.
 export const Tag: FunctionComponent<TagProps> = (props) => {
   const { label, icon, closeable } = props;
   return (
