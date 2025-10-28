@@ -6,19 +6,20 @@ import * as Bem from '../../utils/Bem';
 
 export interface ExpandableBoxProps extends PropsWithChildren {
   /** Icon resolver */
-  iconResolver: (icon: string) => string;
+  readonly iconResolver: (icon: string) => string;
   /** Max height the content can be before it becomes expandable */
-  maxHeight?: number;
+  readonly maxHeight?: number;
   /** Expanded state */
-  expanded?: boolean;
+  readonly expanded?: boolean;
   /** Callback for toggle button */
-  onToggle?: (curExpand: boolean) => void;
+  readonly onToggle?: (curExpand: boolean) => void;
   /** Text to render when the button is to expand the content */
-  expandText?: string;
+  readonly expandText?: string;
   /** Text to render when the button is to collapse the content */
-  collapseText?: string;
+  readonly collapseText?: string;
 }
 
+/** Expandable container box */
 export const ExpandableBox: FC<ExpandableBoxProps> = ({
   iconResolver,
   maxHeight = 80,
