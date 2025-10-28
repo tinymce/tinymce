@@ -7,11 +7,11 @@ const calculateClassFromVariant = (variant: 'primary' | 'secondary' | 'outlined'
     case 'primary':
       return Bem.block('tox-button', modifiers);
     case 'secondary':
-      return Bem.block('tox-button', { ...modifiers, secondary: true });
+      return Bem.block('tox-button', { secondary: true, ...modifiers });
     case 'outlined':
-      return Bem.block('tox-button', { ...modifiers, 'secondary--outline': true }); // TODO: Update to use correct BEM modifier when available #TINY-13169
+      return Bem.block('tox-button', { 'secondary--outline': true, ...modifiers }); // TODO: Update to use correct BEM modifier when available #TINY-13169
     case 'naked':
-      return Bem.block('tox-button', { ...modifiers, naked: true });
+      return Bem.block('tox-button', { naked: true, ...modifiers });
     default:
       return Bem.block('tox-button', modifiers);
   }

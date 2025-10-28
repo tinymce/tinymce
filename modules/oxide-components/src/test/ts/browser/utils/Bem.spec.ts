@@ -12,6 +12,10 @@ describe('browser.utils.BemTest', () => {
       expect(Bem.block('tox-toolbar', { 'scrolling': true, 'no-divider': true })).toBe('tox-toolbar tox-toolbar--scrolling tox-toolbar--no-divider');
       expect(Bem.block('tox-toolbar', { 'scrolling': false, 'no-divider': true })).toBe('tox-toolbar tox-toolbar--no-divider');
     });
+
+    it('block with modifiers in reversed order', () => {
+      expect(Bem.block('tox-toolbar', { 'no-divider': true, 'scrolling': true })).toBe('tox-toolbar tox-toolbar--no-divider tox-toolbar--scrolling');
+    });
   });
 
   describe('element', () => {
@@ -22,6 +26,10 @@ describe('browser.utils.BemTest', () => {
     it('element with modifiers', () => {
       expect(Bem.element('tox-form', 'group', { error: true, inline: true })).toBe('tox-form__group tox-form__group--error tox-form__group--inline');
       expect(Bem.element('tox-form', 'group', { error: false, inline: true })).toBe('tox-form__group tox-form__group--inline');
+    });
+
+    it('element with modifiers in reversed order', () => {
+      expect(Bem.element('tox-form', 'group', { inline: true, error: true })).toBe('tox-form__group tox-form__group--inline tox-form__group--error');
     });
   });
 });
