@@ -12,12 +12,11 @@
   }
 
   .tox-expandable-box__content {
-    max-height: 80px;
     overflow: auto;
 
     // TODO: Remove this when we have styles for content elements see #TINY-13117
     p {
-      margin: 8px;
+      margin: 8px 12px;
     }
   }
 
@@ -27,7 +26,7 @@
   }
 
   .tox-expandable-box__content--overflowing::after {
-    content: "";
+    content: '';
     position: absolute;
     inset: 0;
     background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);

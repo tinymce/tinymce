@@ -1,5 +1,6 @@
 import { Obj } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { useState } from 'react';
 import { useArgs } from 'storybook/preview-api';
 
 import { ExpandableBox, type ExpandableBoxProps } from './ExpandableBox';
@@ -17,7 +18,7 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
-  tags: [ 'autodocs', 'skip-visual-testing' ],
+  tags: [ 'autodocs' ],
   args: { },
 } satisfies Meta<typeof ExpandableBox>;
 
@@ -55,11 +56,17 @@ const WideThing = () => (
   </span>
 );
 
+const defaultsProps: ExpandableBoxProps = {
+  iconResolver,
+  maxHeight: 80,
+  collapseText: 'Collapse',
+  expandText: 'Expand',
+  children: <p>{longText}</p>
+};
+
 export const Overflowing: Story = {
   args: {
-    iconResolver,
-    collapseText: 'Collapse',
-    expandText: 'Expand',
+    ...defaultsProps,
     children: <><p>{longText}</p><p>{longText}</p></>
   },
   render
@@ -67,9 +74,7 @@ export const Overflowing: Story = {
 
 export const OverflowingWithScroll: Story = {
   args: {
-    iconResolver,
-    collapseText: 'Collapse',
-    expandText: 'Expand',
+    ...defaultsProps,
     children: <><p>{longText}<WideThing /></p><p>{longText}<WideThing /></p></>
   },
   render
@@ -77,9 +82,7 @@ export const OverflowingWithScroll: Story = {
 
 export const OverflowingHorizontallyOnly: Story = {
   args: {
-    iconResolver,
-    collapseText: 'Collapse',
-    expandText: 'Expand',
+    ...defaultsProps,
     children: <p>Hello world<WideThing /></p>
   },
   render
@@ -87,10 +90,36 @@ export const OverflowingHorizontallyOnly: Story = {
 
 export const Underflowing: Story = {
   args: {
-    iconResolver,
-    collapseText: 'Collapse',
-    expandText: 'Expand',
+    ...defaultsProps,
     children: <p>Hello world</p>
   },
   render
+};
+
+export const DynamicContent: Story = {
+  args: {
+    ...defaultsProps,
+  },
+  render: (args) => {
+    const [ expanded, setExpanded ] = useState(false);
+
+    const [ paragraphs, setParagraphs ] = useState(1);
+
+    return <div style={{
+      display: 'flex',
+      alignItems: 'stretch',
+      boxSizing: 'border-box',
+      flexDirection: 'column',
+      gap: '8px',
+      width: '400px'
+    }}>
+      <ExpandableBox {...args} expanded={expanded} onToggle={() => setExpanded(!expanded)}>
+        {Array.from({ length: paragraphs }).map((_, i) => <p key={i}>Paragraph {i + 1}</p>)}
+      </ExpandableBox>
+      <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+        <button type="button" className="tox-button" onClick={() => setParagraphs(paragraphs + 1)}>Add</button>
+        <button type="button" className="tox-button" onClick={() => setParagraphs(Math.max(1, paragraphs - 1))}>Remove</button>
+      </div>
+    </div>;
+  }
 };

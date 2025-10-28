@@ -7,6 +7,8 @@ import * as Bem from '../../utils/Bem';
 export interface ExpandableBoxProps extends PropsWithChildren {
   /** Icon resolver */
   iconResolver: (icon: string) => string;
+  /** Max height the content can be before it becomes expandable */
+  maxHeight?: number;
   /** Expanded state */
   expanded?: boolean;
   /** Callback for toggle button */
@@ -19,6 +21,7 @@ export interface ExpandableBoxProps extends PropsWithChildren {
 
 export const ExpandableBox: FC<ExpandableBoxProps> = ({
   iconResolver,
+  maxHeight = 80,
   expanded = false,
   onToggle,
   expandText = 'Expand',
@@ -27,17 +30,18 @@ export const ExpandableBox: FC<ExpandableBoxProps> = ({
 }) => {
   const contentRef = useRef<HTMLDivElement | null>(null);
   const [ overflowing, setOverflowing ] = useState(false);
+  const contentClass = Bem.element('tox-expandable-box', 'content', { expanded, overflowing: overflowing && !expanded });
 
   useLayoutEffect(() => {
     const contentEl = contentRef.current;
     if (Type.isNonNullable(contentEl)) {
-      setOverflowing(contentEl.scrollHeight > contentEl.clientHeight);
+      setOverflowing(contentEl.scrollHeight > maxHeight);
     }
   }, [ children ]);
 
   return (
     <div className={Bem.block('tox-expandable-box')}>
-      <div ref={contentRef} className={Bem.element('tox-expandable-box', 'content', { expanded, overflowing: overflowing && !expanded })}>
+      <div ref={contentRef} className={contentClass} style={{ maxHeight: expanded ? 'none' : `${maxHeight}px` }}>
         {children}
       </div>
       {

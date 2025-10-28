@@ -1,0 +1,194 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`browser.ExpandableBoxTest > Should be able to expand and collapse content that overflows > 1. Before expand click 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-expandable-box"
+    >
+      <div
+        class="tox-expandable-box__content tox-expandable-box__content--overflowing"
+        style="max-height: 80px;"
+      >
+        <div
+          style="height: 200px;"
+        >
+          Hello world
+        </div>
+      </div>
+      <button
+        class="tox-expandable-box__toggle-button"
+        type="button"
+      >
+        <span
+          class="tox-icon"
+        >
+          Icon: chevron-down
+        </span>
+        Expand
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.ExpandableBoxTest > Should be able to expand and collapse content that overflows > 2. After expand click 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-expandable-box"
+    >
+      <div
+        class="tox-expandable-box__content tox-expandable-box__content--expanded"
+        style="max-height: none;"
+      >
+        <div
+          style="height: 200px;"
+        >
+          Hello world
+        </div>
+      </div>
+      <button
+        class="tox-expandable-box__toggle-button"
+        type="button"
+      >
+        <span
+          class="tox-icon"
+        >
+          Icon: chevron-up
+        </span>
+        Collapse
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.ExpandableBoxTest > Should be able to expand and collapse content that overflows > 3. After collapse click 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-expandable-box"
+    >
+      <div
+        class="tox-expandable-box__content tox-expandable-box__content--overflowing"
+        style="max-height: 80px;"
+      >
+        <div
+          style="height: 200px;"
+        >
+          Hello world
+        </div>
+      </div>
+      <button
+        class="tox-expandable-box__toggle-button"
+        type="button"
+      >
+        <span
+          class="tox-icon"
+        >
+          Icon: chevron-down
+        </span>
+        Expand
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.ExpandableBoxTest > Should be able to set maxHeight, collapseText and expandText > 1. Content fits within maxHeight 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-expandable-box"
+    >
+      <div
+        class="tox-expandable-box__content tox-expandable-box__content--overflowing"
+        style="max-height: 100px;"
+      >
+        <div
+          style="height: 150px;"
+        >
+          Hello world
+        </div>
+      </div>
+      <button
+        class="tox-expandable-box__toggle-button"
+        type="button"
+      >
+        <span
+          class="tox-icon"
+        >
+          Icon: chevron-down
+        </span>
+        Show more
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.ExpandableBoxTest > Should be able to set maxHeight, collapseText and expandText > 2. After show mode click 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-expandable-box"
+    >
+      <div
+        class="tox-expandable-box__content tox-expandable-box__content--expanded"
+        style="max-height: none;"
+      >
+        <div
+          style="height: 150px;"
+        >
+          Hello world
+        </div>
+      </div>
+      <button
+        class="tox-expandable-box__toggle-button"
+        type="button"
+      >
+        <span
+          class="tox-icon"
+        >
+          Icon: chevron-up
+        </span>
+        Show less
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.ExpandableBoxTest > Should not render expand if the content fits within maxHeight > Content fits within maxHeight 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-expandable-box"
+    >
+      <div
+        class="tox-expandable-box__content"
+        style="max-height: 80px;"
+      >
+        <div
+          style="height: 50px;"
+        >
+          Hello world
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
