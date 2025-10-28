@@ -25,7 +25,7 @@ const config: StorybookConfig = {
     defaultName: "Documentation"
   },
   viteFinal: (config) => {
-    config.server ??= {}
+    config.server ??= {};
     config.server.allowedHosts = ['host.docker.internal'];
     return config;
   },
