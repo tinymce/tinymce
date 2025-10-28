@@ -171,12 +171,12 @@ describe('browser.tinymce.plugins.autoresize.AutoresizePluginTest', () => {
       assertScrollPositionGreaterThan(window, 3500);
     });
 
-    it('TINY-7291: Editor does not scroll to the top on undo/redo (SetContent & NodeChange trigger)', () => {
+    it('TINY-7291: Editor does not scroll to the top on undo/redo (SetContent & NodeChange trigger)', async () => {
       const editor = hook.editor();
       editor.resetContent('<div style="height: 5000px;">a</div><p>Some content</p>');
       window.scrollTo(0, 5000);
       TinySelections.setCursor(editor, [ 1, 0 ], 12);
-      TinyContentActions.type(editor, '. More content...');
+      await TinyContentActions.pType(editor, '. More content...');
       editor.undoManager.add();
       assertScrollPositionGreaterThan(window, 3500);
       editor.execCommand('Undo');

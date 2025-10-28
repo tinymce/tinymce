@@ -1,25 +1,34 @@
-import { type FC, useState, useMemo, useRef, useCallback } from 'react';
+import { type FC, useState, useMemo, useRef, useCallback, forwardRef } from 'react';
 
 import { boundries, clamp, delta } from './internals/calculations';
 import { useDraggable, DraggableContext } from './internals/context';
 import type { DraggableProps, DraggableHandleProps, Shift, Position, Boundries } from './internals/types';
 
-const Draggable: FC<DraggableProps> & { Handle: FC<DraggableHandleProps> } = ({ children }) => {
+const Root = forwardRef<HTMLDivElement, DraggableProps>(({ children, style, ...props }, ref) => {
   const [ shift, setShift ] = useState<Shift>({ x: 0, y: 0 });
   const draggableRef = useRef<HTMLDivElement | null>(null);
-  const transform = `translate3d(${shift.x}px, ${shift.y}px, 0)`;
+  const transform = `translate3d(${shift.x}px, ${shift.y}px, 0px)`;
   const contextValue = useMemo(() => ({ setShift, draggableRef }), []);
+
+  const setRef = useCallback((element: HTMLDivElement | null) => {
+    if (typeof ref === 'function') {
+      ref(element);
+    } else if (ref) {
+      ref.current = element;
+    }
+    draggableRef.current = element;
+  }, [ ref ]);
 
   return (
     <DraggableContext.Provider value={contextValue}>
-      <div ref={draggableRef} style={{ transform }}>
+      <div ref={setRef} style={{ ...style, transform }} { ...props }>
         {children}
       </div>
     </DraggableContext.Provider>
   );
-};
+});
 
-const DraggableHandle: FC<DraggableHandleProps> = ({ children }) => {
+const Handle: FC<DraggableHandleProps> = ({ children }) => {
   const [ isDragging, setIsDragging ] = useState(false);
   const handleRef = useRef<HTMLDivElement | null>(null);
   const lastMousePositionRef = useRef<Position>({ x: 0, y: 0 });
@@ -69,13 +78,12 @@ const DraggableHandle: FC<DraggableHandleProps> = ({ children }) => {
       onPointerMove={onPointerMove}
       onLostPointerCapture={onLostPointerCapture}
       style={{
-        cursor: isDragging ? 'grabbing' : 'grab'
+        cursor: isDragging ? 'grabbing' : 'grab',
+        userSelect: 'none'
       }}>
       {children}
     </div>
   );
 };
 
-Draggable.Handle = DraggableHandle;
-
-export { Draggable };
+export { Root, Handle };

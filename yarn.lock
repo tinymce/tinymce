@@ -1140,10 +1140,10 @@
     jquery "^3.4.1"
     querystringify "^2.1.1"
 
-"@ephox/bedrock-server@^15.0.2":
-  version "15.0.2"
-  resolved "https://registry.yarnpkg.com/@ephox/bedrock-server/-/bedrock-server-15.0.2.tgz#3ae3fab478049aff74717de8c4418611f3a41bcb"
-  integrity sha512-a0iu8h/dsGJwHmg8wntAaKJ+K6EV5YKTBvlu9ezxvZM7YAyfZCvSRd89a3hmXqVI6H+XzRekDxOVazZXsUeBSQ==
+"@ephox/bedrock-server@^15.0.4":
+  version "15.0.4"
+  resolved "https://registry.yarnpkg.com/@ephox/bedrock-server/-/bedrock-server-15.0.4.tgz#a06aabc89293991e9b16365e1be40911f77bf84a"
+  integrity sha512-5YixIxwYX3H7AIVYuxwK6b0eQOdEtnmYjCwGO7x/1YlHYrbbfsC2uTXgvldzkj1G4fV+EYWZRxkkeZwvBK2pug==
   dependencies:
     "@aws-sdk/client-device-farm" "^3.354.0"
     "@ephox/bedrock-client" "^15.0.0"
@@ -2573,7 +2573,7 @@
     webpack-dev-server "5.2.2"
     ws "^8.18.0"
 
-"@rspack/lite-tapable@1.0.1":
+"@rspack/lite-tapable@1.0.1", "@rspack/lite-tapable@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@rspack/lite-tapable/-/lite-tapable-1.0.1.tgz#d4540a5d28bd6177164bc0ba0bee4bdec0458591"
   integrity sha512-VynGOEsVw2s8TAlLf/uESfrgfrq2+rcXB1muPJYBWbsm1Oa6r5qVQhjA5ggM6z/coYPrsVMgovl3Ff7Q7OCp1w==
