@@ -38,7 +38,7 @@ export const ExpandableBox: FC<ExpandableBoxProps> = ({
     if (Type.isNonNullable(contentEl)) {
       setOverflowing(contentEl.scrollHeight > maxHeight);
     }
-  }, [ children ]);
+  }, [ children, maxHeight ]);
 
   return (
     <div className={Bem.block('tox-expandable-box')}>

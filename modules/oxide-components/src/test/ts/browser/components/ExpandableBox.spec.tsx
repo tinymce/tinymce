@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-react';
 
-describe.only('browser.ExpandableBoxTest', () => {
+describe('browser.ExpandableBoxTest', () => {
   const wrapper = ({ children }: { children: React.ReactNode }) => {
     return (
       <div className={Bem.block('tox')}>
