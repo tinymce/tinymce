@@ -3,6 +3,8 @@ import type { HTMLAttributes, MouseEventHandler, ReactNode, RefObject } from 're
 export interface ContextToolbarProps {
   readonly children: HTMLAttributes<HTMLDivElement>['children'];
   readonly persistent?: boolean;
+  readonly anchorRef?: RefObject<HTMLDivElement>;
+  readonly open?: boolean;
 }
 
 export interface ContextToolbarContextValue {
@@ -11,6 +13,7 @@ export interface ContextToolbarContextValue {
   readonly close: () => void;
   readonly triggerRef: RefObject<HTMLDivElement>;
   readonly toolbarRef: RefObject<HTMLDivElement>;
+  readonly anchorRef?: RefObject<HTMLDivElement>;
   readonly persistent: boolean;
 }
 

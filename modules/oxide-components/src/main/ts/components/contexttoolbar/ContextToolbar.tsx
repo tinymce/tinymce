@@ -30,14 +30,18 @@ const defaultToolbarGap = '6px';
 
 const Root: FC<ContextToolbarProps> = ({
   children,
-  persistent = false
+  persistent = false,
+  anchorRef,
+  open: controlledOpen
 }) => {
-  const [ isOpen, setIsOpen ] = useState(false);
+  const [ internalOpen, setInternalOpen ] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
   const toolbarRef = useRef<HTMLDivElement>(null);
 
-  const open = useCallback(() => setIsOpen(true), []);
-  const close = useCallback(() => setIsOpen(false), []);
+  const isOpen = controlledOpen ?? internalOpen;
+
+  const open = useCallback(() => setInternalOpen(true), []);
+  const close = useCallback(() => setInternalOpen(false), []);
 
   const context = useMemo<ContextToolbarContextValue>(() => ({
     isOpen,
@@ -45,9 +49,10 @@ const Root: FC<ContextToolbarProps> = ({
     close,
     triggerRef,
     toolbarRef,
+    anchorRef,
     persistent
 
-  }), [ isOpen, open, close, persistent ]);
+  }), [ isOpen, open, close, persistent, anchorRef ]);
 
   return (
     <ContextToolbarContext.Provider value={context}>
@@ -89,6 +94,7 @@ const Toolbar: FC<ToolbarProps> = ({
     isOpen,
     toolbarRef,
     triggerRef,
+    anchorRef,
     close,
     persistent
   } = useContextToolbarContext();
@@ -144,16 +150,16 @@ const Toolbar: FC<ToolbarProps> = ({
     if (
       isOpen &&
       Type.isNonNullable(toolbarRef.current) &&
-      Type.isNonNullable(triggerRef.current) &&
       event.target instanceof Node
     ) {
       const clickedToolbar = toolbarRef.current.contains(event.target);
-      const clickedTrigger = triggerRef.current.contains(event.target);
-      if (!clickedToolbar && !clickedTrigger) {
+      const clickedTrigger = triggerRef.current?.contains(event.target) ?? false;
+      const clickedAnchor = anchorRef?.current?.contains(event.target) ?? false;
+      if (!clickedToolbar && !clickedTrigger && !clickedAnchor) {
         close();
       }
     }
-  }, [ isOpen, close, toolbarRef, triggerRef ]);
+  }, [ isOpen, close, toolbarRef, triggerRef, anchorRef ]);
 
   useEffect(() => {
     if (persistent) {
@@ -166,15 +172,19 @@ const Toolbar: FC<ToolbarProps> = ({
   const anchorName = useMemo(() => `--${Id.generate('context-toolbar')}`, []);
 
   useEffect(() => {
-    if (!isOpen || !Type.isNonNullable(triggerRef.current) || !Type.isNonNullable(toolbarRef.current)) {
+    const trigger = anchorRef?.current ?? triggerRef.current;
+    const toolbar = toolbarRef.current;
+    if (!isOpen || !Type.isNonNullable(trigger) || !Type.isNonNullable(toolbar)) {
       return;
     }
 
-    const trigger = triggerRef.current;
-    const toolbar = toolbarRef.current;
-    const anchorElement = trigger.firstElementChild instanceof window.HTMLElement
-      ? trigger.firstElementChild
-      : trigger;
+    const anchorElement = Optional.from(anchorRef?.current)
+      .orThunk(() =>
+        Optional.from(trigger.firstElementChild)
+          .filter((child) => child instanceof window.HTMLElement)
+          .map((child) => child as HTMLElement)
+      )
+      .getOr(trigger);
 
     const sugarAnchor = SugarElement.fromDom(anchorElement);
     const sugarToolbar = SugarElement.fromDom(toolbar);
@@ -196,7 +206,7 @@ const Toolbar: FC<ToolbarProps> = ({
         Css.remove(sugarToolbar, property);
       });
     };
-  }, [ anchorName, isOpen, triggerRef, toolbarRef ]);
+  }, [ anchorName, isOpen, triggerRef, toolbarRef, anchorRef ]);
 
   const handleMouseDown = useCallback<MouseEventHandler<HTMLDivElement>>((event) => {
     onMouseDown?.(event);
