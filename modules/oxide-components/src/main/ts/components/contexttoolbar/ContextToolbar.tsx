@@ -193,6 +193,7 @@ const Toolbar: FC<ToolbarProps> = ({
     Css.set(sugarAnchor, 'display', 'inline-block');
     Css.set(sugarToolbar, 'position', 'absolute');
     Css.set(sugarToolbar, 'margin', '0');
+    Css.set(sugarToolbar, 'inset', 'unset');
     Css.set(sugarToolbar, 'position-anchor', anchorName);
 
     const topValue = `calc(anchor(${anchorName} bottom) + ${defaultToolbarGap})`;
@@ -206,7 +207,7 @@ const Toolbar: FC<ToolbarProps> = ({
     return () => {
       Css.remove(sugarAnchor, 'anchor-name');
       Css.remove(sugarAnchor, 'display');
-      Arr.each([ 'position', 'margin', 'position-anchor', 'top', 'left', 'position-try-fallbacks' ], (property) => {
+      Arr.each([ 'position', 'margin', 'inset', 'position-anchor', 'top', 'left', 'position-try-fallbacks' ], (property) => {
         Css.remove(sugarToolbar, property);
       });
     };
