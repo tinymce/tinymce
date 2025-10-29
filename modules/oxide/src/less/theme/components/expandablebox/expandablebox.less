@@ -13,11 +13,6 @@
 
   .tox-expandable-box__content {
     overflow: auto;
-
-    // TODO: Remove this when we have styles for content elements see #TINY-13117
-    p {
-      margin: 8px 12px;
-    }
   }
 
   .tox-expandable-box__content--overflowing {
@@ -28,9 +23,12 @@
   .tox-expandable-box__content--overflowing::after {
     content: '';
     position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: min(100px, 100%);
     pointer-events: none;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), white);
   }
 
   .tox-expandable-box__content--expanded {

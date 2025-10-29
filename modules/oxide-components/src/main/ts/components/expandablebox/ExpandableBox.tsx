@@ -42,7 +42,7 @@ export const ExpandableBox: FC<ExpandableBoxProps> = ({
 
   return (
     <div className={Bem.block('tox-expandable-box')}>
-      <div ref={contentRef} className={contentClass} style={{ maxHeight: expanded ? 'none' : `${maxHeight}px` }}>
+      <div ref={contentRef} className={contentClass} style={{ maxHeight: expanded ? undefined : `${maxHeight}px` }}>
         {children}
       </div>
       {
