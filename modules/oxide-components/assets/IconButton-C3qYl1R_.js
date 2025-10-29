@@ -1,4 +1,4 @@
-import{j as t,c as a}from"./iframe-6DqPFkYb.js";import{B as s}from"./Button-DfSnC5uo.js";const r=({icon:e,resolver:n})=>t.jsx("span",{className:a(["tox-icon"]),dangerouslySetInnerHTML:{__html:n(e)}});try{r.displayName="Icon",r.__docgenInfo={description:"",displayName:"Icon",props:{icon:{defaultValue:null,description:"The name of the icon",name:"icon",required:!0,type:{name:"string"}},resolver:{defaultValue:null,description:`The function to resolve the icon name to an html string.
+import{j as t,c as a}from"./iframe-BtciqYUs.js";import{B as s}from"./Button-Wxh4Vp0d.js";const r=({icon:e,resolver:n})=>t.jsx("span",{className:a(["tox-icon"]),dangerouslySetInnerHTML:{__html:n(e)}});try{r.displayName="Icon",r.__docgenInfo={description:"",displayName:"Icon",props:{icon:{defaultValue:null,description:"The name of the icon",name:"icon",required:!0,type:{name:"string"}},resolver:{defaultValue:null,description:`The function to resolve the icon name to an html string.
 This would eventually default to retrieving the icon from the editor's registry.
 (name: string) => editor.ui.registry.getAll().icons[name] ?? 'temporary-placeholder'
 @param icon - The name of the icon

@@ -1,1 +1,0 @@
-const o=()=>{},c=(n,t)=>s=>n(t(s)),a=n=>()=>n,e=(n,t)=>n===t;function u(n,...t){return(...s)=>{const r=t.concat(s);return n.apply(null,r)}}const l=a(!1),p=a(!0);export{c as a,p as b,a as c,u as d,o as e,l as n,e as t};
