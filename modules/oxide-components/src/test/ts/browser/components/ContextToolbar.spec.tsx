@@ -330,4 +330,41 @@ describe('browser.ContextToolbar.ContextToolbar', () => {
 
     expect(onClick).toHaveBeenCalledOnce();
   });
+
+  it('TINY-13077: Should position toolbar using anchorRef instead of Trigger', async () => {
+    const anchorRef = { current: null as HTMLDivElement | null };
+
+    const { getByTestId } = render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          {/* Standalone anchor element, not wrapped in Trigger */}
+          <div
+            ref={(el) => {
+              anchorRef.current = el;
+            }}
+            data-testid="anchor"
+            style={{ padding: '10px', background: 'lightgray' }}
+          >
+            Anchor Element
+          </div>
+
+          <ContextToolbar.Root anchorRef={anchorRef} open={true} persistent={true}>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <button data-testid="test-button">Test Button</button>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    const button = getByTestId('test-button');
+    const anchor = getByTestId('anchor');
+
+    await expect.element(anchor).toBeVisible();
+    await expect.element(button).toBeVisible();
+    await expect.element(button).toHaveFocus();
+  });
 });
