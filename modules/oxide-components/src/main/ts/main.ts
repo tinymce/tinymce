@@ -1,4 +1,5 @@
 import { Spinner } from './bespoke/tinyai/spinner/Spinner';
+import { Tag } from './bespoke/tinyai/tag/Tag';
 import { AutoResizingTextarea } from './components/autoresizingtextarea/AutoResizingTextarea';
 import { Button } from './components/button/Button';
 import * as ContextToolbar from './components/contexttoolbar/ContextToolbar';
@@ -19,5 +20,6 @@ export {
   ContextToolbar,
   KeyboardNavigationHooks,
   KeyboardNavigationTypes,
+  Tag,
   Spinner
 };
