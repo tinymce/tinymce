@@ -20,6 +20,7 @@ const calculateClassFromVariant = (variant: 'primary' | 'secondary' | 'outlined'
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   readonly variant?: 'primary' | 'secondary' | 'outlined' | 'naked';
+  readonly active?: boolean;
 }
 
 /** Primary UI component for user interaction */
@@ -27,13 +28,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
   children,
   type = 'button',
   variant = 'primary',
+  active = false,
   className,
   ...props
 }, ref) => {
   return (
     <button
       type={type}
-      className={`${classes(calculateClassFromVariant(variant))} ${className ?? ''}`}
+      className={`${classes(calculateClassFromVariant(variant))} ${active ? classes([ 'tox-button--enabled' ]) : ''} ${className ?? ''}`}
       ref={ref}
       {...props}
     >

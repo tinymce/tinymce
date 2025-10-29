@@ -29,8 +29,9 @@ const render = (args: ButtonProps): JSX.Element => (
     gap: '8px'
   }}>
     <Button {...args} />
+    <Button {...args} active={true}>Active prop true</Button>
     <Button {...args} id='hover'>Hover</Button>
-    <Button {...args} id='active'>Active</Button>
+    <Button {...args} id='active'>Css active state</Button>
     <Button {...args} id='focus'>Focused</Button>
     <Button {...args} disabled>Disabled</Button>
   </div>
