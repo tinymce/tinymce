@@ -190,7 +190,6 @@ const Toolbar: FC<ToolbarProps> = ({
     const sugarToolbar = SugarElement.fromDom(toolbar);
 
     Css.set(sugarAnchor, 'anchor-name', anchorName);
-    Css.set(sugarAnchor, 'display', 'inline-block');
     Css.set(sugarToolbar, 'position', 'absolute');
     Css.set(sugarToolbar, 'margin', '0');
     Css.set(sugarToolbar, 'inset', 'unset');
@@ -206,7 +205,6 @@ const Toolbar: FC<ToolbarProps> = ({
 
     return () => {
       Css.remove(sugarAnchor, 'anchor-name');
-      Css.remove(sugarAnchor, 'display');
       Arr.each([ 'position', 'margin', 'inset', 'position-anchor', 'top', 'left', 'position-try-fallbacks' ], (property) => {
         Css.remove(sugarToolbar, property);
       });
