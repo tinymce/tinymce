@@ -1,6 +1,7 @@
 import { Arr, Obj, Type, Unicode } from '@ephox/katamari';
 import { Attribute, Compare, Css, Focus, Insert, InsertAll, Remove, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
+import { isUcVideo } from './api/dom/ControlSelection';
 import type Editor from './api/Editor';
 import VK from './api/util/VK';
 import * as CaretContainer from './caret/CaretContainer';
@@ -288,8 +289,23 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
     return newRange;
   };
 
+  const getUcVideoClone = (ucVideo: HTMLElement) => {
+    const newElm = editor.getDoc().createElement('div');
+    newElm.style.width = ucVideo.style.width;
+    newElm.style.height = ucVideo.style.height;
+    const ucVideoWidth = ucVideo.getAttribute('width');
+    if (ucVideoWidth) {
+      newElm.setAttribute('width', ucVideoWidth);
+    }
+    const ucVideoHeight = ucVideo.getAttribute('height');
+    if (ucVideoHeight) {
+      newElm.setAttribute('height', ucVideoHeight);
+    }
+    return newElm;
+  };
+
   const selectElement = (elm: HTMLElement) => {
-    const targetClone = elm.cloneNode(true);
+    const targetClone = isUcVideo(elm) ? getUcVideoClone(elm) : elm.cloneNode(true);
     const e = editor.dispatch('ObjectSelected', { target: elm, targetClone });
     if (e.isDefaultPrevented()) {
       return null;

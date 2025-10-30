@@ -50,7 +50,7 @@ interface UcVideo extends HTMLElement {
   height: number;
 }
 
-const isUcVideo = (el: Element): el is UcVideo => el.nodeName.toLowerCase() === ucVideoNodeName;
+export const isUcVideo = (el: Element): el is UcVideo => el.nodeName.toLowerCase() === ucVideoNodeName;
 const elementSelectionAttr = 'data-mce-selected';
 const controlElmSelector = `table,img,figure.image,hr,video,span.mce-preview-object,details,${ucVideoNodeName}`;
 const abs = Math.abs;
