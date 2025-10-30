@@ -12,11 +12,11 @@ export interface ExpandableBoxProps extends PropsWithChildren {
   /** Expanded state */
   readonly expanded?: boolean;
   /** Callback for toggle button */
-  readonly onToggle?: (curExpand: boolean) => void;
+  readonly onToggle?: () => void;
   /** Text to render when the button is to expand the content */
-  readonly expandText?: string;
+  readonly expandLabel?: string;
   /** Text to render when the button is to collapse the content */
-  readonly collapseText?: string;
+  readonly collapseLabel?: string;
 }
 
 /** Expandable container box */
@@ -25,8 +25,8 @@ export const ExpandableBox: FC<ExpandableBoxProps> = ({
   maxHeight = 80,
   expanded = false,
   onToggle,
-  expandText = 'Expand',
-  collapseText = 'Collapse',
+  expandLabel = 'Expand',
+  collapseLabel = 'Collapse',
   children
 }) => {
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -46,9 +46,9 @@ export const ExpandableBox: FC<ExpandableBoxProps> = ({
         {children}
       </div>
       {
-        overflowing && <button type="button" className={Bem.element('tox-expandable-box', 'toggle-button')} onClick={() => onToggle?.(expanded)}>
+        overflowing && <button type="button" className={Bem.element('tox-expandable-box', 'toggle-button')} onClick={() => onToggle?.()}>
           <Icon resolver={iconResolver} icon={expanded ? 'chevron-up' : 'chevron-down'} />
-          {expanded ? collapseText : expandText}
+          {expanded ? collapseLabel : expandLabel}
         </button>
       }
     </div>

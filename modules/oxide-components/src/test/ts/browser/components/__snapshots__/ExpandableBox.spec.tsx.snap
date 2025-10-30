@@ -44,7 +44,7 @@ exports[`browser.ExpandableBoxTest > Should be able to expand and collapse conte
     >
       <div
         class="tox-expandable-box__content tox-expandable-box__content--expanded"
-        style="max-height: none;"
+        style=""
       >
         <div
           style="height: 200px;"
@@ -146,7 +146,7 @@ exports[`browser.ExpandableBoxTest > Should be able to set maxHeight, collapseTe
     >
       <div
         class="tox-expandable-box__content tox-expandable-box__content--expanded"
-        style="max-height: none;"
+        style=""
       >
         <div
           style="height: 150px;"

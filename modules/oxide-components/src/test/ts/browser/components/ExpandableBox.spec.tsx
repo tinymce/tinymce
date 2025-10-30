@@ -87,8 +87,8 @@ describe('browser.ExpandableBoxTest', () => {
       <TestComponentToggle
         {...defaultProps}
         maxHeight={100}
-        expandText="Show more"
-        collapseText="Show less"
+        expandLabel="Show more"
+        collapseLabel="Show less"
       >
         <div style={{ height: '150px' }}>Hello world</div>
       </TestComponentToggle>,
