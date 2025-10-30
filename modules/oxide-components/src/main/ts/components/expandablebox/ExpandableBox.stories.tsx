@@ -40,7 +40,7 @@ const render = (args: ExpandableBoxProps): JSX.Element => {
     gap: '8px',
     width: '400px'
   }}>
-    <ExpandableBox {...args} expanded={expanded} onToggle={(state) => setExpanded(!state)}/>
+    <ExpandableBox {...args} expanded={expanded} onToggle={() => setExpanded(!expanded)}/>
   </div>;
 };
 
@@ -59,8 +59,8 @@ const WideThing = () => (
 const defaultsProps: ExpandableBoxProps = {
   iconResolver,
   maxHeight: 80,
-  collapseText: 'Collapse',
-  expandText: 'Expand',
+  collapseLabel: 'Collapse',
+  expandLabel: 'Expand',
   children: <p>{longText}</p>
 };
 
