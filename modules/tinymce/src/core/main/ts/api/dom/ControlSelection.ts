@@ -42,17 +42,8 @@ interface SelectedResizeHandle extends ResizeHandle {
   };
 }
 
-const ucVideoNodeName = 'uc-video' as const;
-
-interface UcVideo extends HTMLElement {
-  nodeName: typeof ucVideoNodeName;
-  width: number;
-  height: number;
-}
-
-export const isUcVideo = (el: Element): el is UcVideo => el.nodeName.toLowerCase() === ucVideoNodeName;
 const elementSelectionAttr = 'data-mce-selected';
-const controlElmSelector = `table,img,figure.image,hr,video,span.mce-preview-object,details,${ucVideoNodeName}`;
+const controlElmSelector = `table,img,figure.image,hr,video,span.mce-preview-object,details,${NodeType.ucVideoNodeName}`;
 const abs = Math.abs;
 const round = Math.round;
 
@@ -172,7 +163,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
         if (target.style[name] || !editor.schema.isValid(target.nodeName.toLowerCase(), name)) {
           dom.setStyle(target, name, value);
         } else {
-          if (isUcVideo(target)) {
+          if (NodeType.isUcVideo(target)) {
             // this is needed because otherwise the ghost for `uc-video` is not correctly rendered
             target[name] = value;
             const minimumWidth = 400;
@@ -213,7 +204,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     width = width < 5 ? 5 : width;
     height = height < 5 ? 5 : height;
 
-    if ((isImage(selectedElm) || isMedia(selectedElm) || isUcVideo(selectedElm)) && Options.getResizeImgProportional(editor) !== false) {
+    if ((isImage(selectedElm) || isMedia(selectedElm) || NodeType.isUcVideo(selectedElm)) && Options.getResizeImgProportional(editor) !== false) {
       proportional = !VK.modifierPressed(e);
     } else {
       proportional = VK.modifierPressed(e);
