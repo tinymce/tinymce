@@ -1,4 +1,4 @@
-import { isValidElement, useEffect, useRef, type FC, type PropsWithChildren, type ReactNode } from 'react';
+import { useEffect, useRef, type FC, type PropsWithChildren } from 'react';
 
 import { classes } from '../../utils/Styles';
 import * as Draggable from '../draggable/Draggable';
@@ -17,26 +17,6 @@ export interface FloatingSidebarProps extends PropsWithChildren {
 }
 interface HeaderProps extends PropsWithChildren {};
 
-interface Slots {
-  header: ReactNode;
-  children: ReactNode;
-}
-
-// TODO(TINY-13136): Use generic `createSlots` instead
-const createSlots = (children: ReactNode): Slots => {
-  const header = (Array.isArray(children) ? children : [ children ]).filter((child: ReactNode) => isValidElement(child) && child.type === Header);
-  const otherChildren = (Array.isArray(children) ? children : [ children ]).filter((child: ReactNode) => !isValidElement(child) || child.type !== Header);
-
-  if (header.length === 0) {
-    throw new Error('FloatingSidebar requires a header');
-  }
-  if (header.length > 1) {
-    throw new Error('FloatingSidebar accepts only one header');
-  }
-
-  return { header: header[0], children: otherChildren };
-};
-
 const transformToCss = (position: InitialPosition): CssPosition => {
   switch (position.origin) {
     case 'topleft':
@@ -50,8 +30,7 @@ const transformToCss = (position: InitialPosition): CssPosition => {
   }
 };
 
-const Root: FC<FloatingSidebarProps> = ({ isOpen = true, height = 600, ...props }) => {
-  const { header, children } = createSlots(props.children);
+const Root: FC<FloatingSidebarProps> = ({ isOpen = true, height = 600, children, ...props }) => {
   const elementRef = useRef<HTMLDivElement | null>(null);
   const initialPosition = transformToCss(props.initialPosition ?? { x: 0, y: 0, origin: 'topleft' });
 
@@ -72,7 +51,6 @@ const Root: FC<FloatingSidebarProps> = ({ isOpen = true, height = 600, ...props 
       declaredSize={{ width: 'var(--tox-private-floating-sidebar-width)', height: 'var(--tox-private-floating-sidebar-height)' }}
     >
       <aside className={classes([ 'tox-floating-sidebar__content-wrapper' ])}>
-        <Draggable.Handle>{ header }</Draggable.Handle>
         { children }
       </aside>
     </Draggable.Root>
@@ -81,7 +59,9 @@ const Root: FC<FloatingSidebarProps> = ({ isOpen = true, height = 600, ...props 
 
 const Header: FC<HeaderProps> = ({ children }) => {
   return (
-    <header className={classes([ 'tox-sidebar-content__header', 'tox-floating-sidebar__header' ])}>{ children }</header>
+    <Draggable.Handle>
+      <header className={classes([ 'tox-sidebar-content__header', 'tox-floating-sidebar__header' ])}>{ children }</header>
+    </Draggable.Handle>
   );
 };
 
