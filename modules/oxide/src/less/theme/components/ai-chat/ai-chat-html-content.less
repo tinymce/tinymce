@@ -1,0 +1,170 @@
+.tox .tox-ai-html-content {
+  font-size: 16px;
+  line-height: 1.55;
+
+  /* Headings — smaller margins for tight layout */
+  h1 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 0.6em 0 0.35em;
+    line-height: 1.25;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 0.55em 0 0.3em;
+    line-height: 1.3;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0.5em 0 0.3em;
+    line-height: 1.32;
+  }
+
+  h4, h5, h6 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0.45em 0 0.25em;
+    line-height: 1.35;
+  }
+
+  /* Paragraphs */
+  p {
+    margin: 0.4em 0;
+    line-height: 1.5;
+  }
+
+  /* Lists */
+  ul, ol {
+    padding-left: 1.3em;
+    line-height: 1em;
+  }
+
+  li {
+  }
+
+  /* Links */
+  a {
+    color: #0366d6;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* Blockquote */
+  blockquote {
+    border-left: 3px solid #ccc;
+    padding-left: 0.6em;
+    color: #555;
+    margin: 0.4em 0;
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  /* Inline code */
+  code {
+    font-family: ui-monospace, monospace;
+    background: #f6f8fa;
+    padding: 0.1em 0.3em;
+    font-size: 0.95em;
+    border-radius: 4px;
+    line-height: 1.4;
+  }
+
+  /* Code block */
+  pre code {
+    display: block;
+    padding: 0.6em;
+    background: #f6f8fa;
+    border-radius: 5px;
+    overflow-x: auto;
+    line-height: 1.4;
+    margin: 0.5em 0;
+  }
+
+  /* Horizontal rule */
+  hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 0.7em 0;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.5em 0;
+    font-size: 0.95em;
+    line-height: 1.45;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 0.3em 0.5em;
+  }
+
+  th {
+    background: #f6f8fa;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  /* --- Inline Markdown Elements --- */
+
+  /* Bold */
+  strong, b { font-weight: 600; }
+
+  /* Italic */
+  em, i { font-style: italic; }
+
+  /* Strikethrough */
+  del { text-decoration: line-through; }
+
+  /* Subscript / Superscript */
+  sup, sub {
+    font-size: 0.75em;
+    line-height: 0;
+    vertical-align: baseline;
+  }
+  sup { vertical-align: super; }
+  sub { vertical-align: sub; }
+
+  /* Highlight text */
+  mark {
+    background: #ffecb2;
+    padding: 0.05em 0.2em;
+    border-radius: 2px;
+  }
+
+  /* Small text */
+  small { font-size: 0.85em; }
+
+  /* Keyboard input */
+  kbd {
+    font-family: ui-monospace, monospace;
+    font-size: 0.85em;
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background: #fafafa;
+    box-shadow: inset 0 -1px 0 #ccc;
+  }
+
+  /* Images */
+  img {
+    max-width: 100%;
+    height: auto;
+    vertical-align: middle;
+    border-radius: 4px;
+  }
+}
+
+/* Adding margin to .tox-ai-html-content inside the expandble content */
+.tox .tox-expandable-box__content .tox-ai-html-content {
+  margin: 8px 12px;
+}
