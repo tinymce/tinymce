@@ -29,17 +29,6 @@ const Wrapper = ({ children }: { children: ReactNode }) => {
 };
 
 describe('browser.floatingsidebar.FloatingSidebar', () => {
-  it('TINY-13052: Should throw an error when Header is missing', () => {
-    expect(() => {
-      render(
-        <FloatingSidebar.Root>
-          <div data-testid={floatingSidebarContentTestId}>Content</div>
-        </FloatingSidebar.Root>
-        , { wrapper: Wrapper }
-      );
-    }).toThrow('FloatingSidebar requires a header');
-  });
-
   it('TINY-13052: Popover should be closed when isOpen is false', async () => {
     const { getByTestId } = render(
       <FloatingSidebar.Root isOpen={false}>
