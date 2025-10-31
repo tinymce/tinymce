@@ -196,7 +196,7 @@ const Toolbar: FC<ToolbarProps> = ({
     Css.set(sugarToolbar, 'position-anchor', anchorName);
 
     const topValue = `calc(anchor(${anchorName} bottom) + ${defaultToolbarGap})`;
-    const leftValue = `anchor(${anchorName} left)`;
+    const leftValue = `anchor(${anchorName} center)`;
 
     Css.set(sugarToolbar, 'top', topValue);
     Css.set(sugarToolbar, 'left', leftValue);
