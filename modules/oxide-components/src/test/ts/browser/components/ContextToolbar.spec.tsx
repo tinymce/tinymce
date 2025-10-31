@@ -395,4 +395,58 @@ describe('browser.ContextToolbar.ContextToolbar', () => {
       expect(toolbarAfterClickStyles.getPropertyValue('visibility')).not.toBe('hidden');
     }
   });
+
+  it('TINY-13077: Should control toolbar visibility with open prop', async () => {
+    const { getByTestId, rerender } = render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root open={false}>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <div data-testid={toolbarTestId}>Toolbar Content</div>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    const toolbar = getByTestId(toolbarTestId);
+    await expect.element(toolbar).not.toBeVisible();
+
+    // Re-render with open={true}
+    rerender(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root open={true}>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <div data-testid={toolbarTestId}>Toolbar Content</div>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>
+    );
+
+    await expect.element(toolbar).toBeVisible();
+
+    // Re-render with open={false} again
+    rerender(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root open={false}>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <div data-testid={toolbarTestId}>Toolbar Content</div>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>
+    );
+
+    await expect.element(toolbar).not.toBeVisible();
+  });
 });
