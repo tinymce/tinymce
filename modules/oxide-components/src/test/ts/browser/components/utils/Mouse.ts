@@ -1,12 +1,12 @@
-import { commands, userEvent } from '@vitest/browser/context';
 import type { Mouse } from 'playwright';
+import { commands, userEvent } from 'vitest/browser';
 
 // This is a Util file containing functions that are currently unavailable in userEvent API.
 // See: https://github.com/vitest-dev/vitest/issues/8190
 // See: https://github.com/vitest-dev/vitest/issues/7836
 // Hopefully in the future we can remove this file and use userEvent API directly.
 
-declare module '@vitest/browser/context' {
+declare module 'vitest/browser' {
   interface BrowserCommands {
     mousedownCommand: (...args: Parameters<Mouse['down']>) => Promise<void>;
     mouseupCommand: (...args: Parameters<Mouse['up']>) => Promise<void>;
