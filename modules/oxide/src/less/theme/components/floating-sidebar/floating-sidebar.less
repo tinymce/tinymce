@@ -6,8 +6,6 @@
   .tox-floating-sidebar {
     // This is our internal variable, it's not meant to be a part of an external skinning API. It's value is being set by javascript. It is not behind a feature flag on purpose.
     --tox-private-floating-sidebar-requested-height: 600px;
-    --tox-private-floating-sidebar-requested-top: 0;
-    --tox-private-floating-sidebar-requested-left: 0;
     --tox-private-floating-sidebar-width: min(380px, 90vw);
     --tox-private-floating-sidebar-height: ~"min(var(--tox-private-floating-sidebar-requested-height), 80vh)";
 
@@ -17,26 +15,6 @@
     background-color: var(--tox-private-background-color, @background-color);
     border-radius: 12px;
     overflow: hidden;
-
-    &.origin-topleft {
-      top: var(--tox-private-floating-sidebar-requested-top);
-      left: var(--tox-private-floating-sidebar-requested-left);
-    }
-
-    &.origin-topright {
-      top: var(--tox-private-floating-sidebar-requested-top);
-      left: calc(var(--tox-private-floating-sidebar-requested-left) - var(--tox-private-floating-sidebar-width));
-    }
-
-    &.origin-bottomleft {
-      top: calc(var(--tox-private-floating-sidebar-requested-top) - var(--tox-private-floating-sidebar-height));
-      left: var(--tox-private-floating-sidebar-requested-left);
-    }
-
-    &.origin-bottomright {
-      top: calc(var(--tox-private-floating-sidebar-requested-top) - var(--tox-private-floating-sidebar-height));
-      left: calc(var(--tox-private-floating-sidebar-requested-left) - var(--tox-private-floating-sidebar-width)); 
-    }
   }
 
   .tox-floating-sidebar__content-wrapper {

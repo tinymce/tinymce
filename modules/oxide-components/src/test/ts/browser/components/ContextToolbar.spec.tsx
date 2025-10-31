@@ -1,8 +1,8 @@
-import { page, userEvent } from '@vitest/browser/context';
 import * as ContextToolbar from 'oxide-components/components/contexttoolbar/ContextToolbar';
 import { classes } from 'oxide-components/utils/Styles';
 import { Fragment, type ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
+import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
 const triggerTestId = 'context-toolbar-trigger';

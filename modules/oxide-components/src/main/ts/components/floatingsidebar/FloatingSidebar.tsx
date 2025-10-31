@@ -1,17 +1,19 @@
-import { isValidElement, useEffect, useMemo, useRef, type FC, type PropsWithChildren, type ReactNode } from 'react';
+import { isValidElement, useEffect, useRef, type FC, type PropsWithChildren, type ReactNode } from 'react';
 
 import { classes } from '../../utils/Styles';
 import * as Draggable from '../draggable/Draggable';
 import '../../module/css';
+import type { CssPosition } from '../draggable/internals/types';
 
+interface InitialPosition {
+  x: number;
+  y: number;
+  origin: 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
+}
 export interface FloatingSidebarProps extends PropsWithChildren {
   isOpen?: boolean;
   height?: number;
-  initialPosition?: {
-    x: number;
-    y: number;
-    origin: 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
-  };
+  initialPosition?: InitialPosition;
 }
 interface HeaderProps extends PropsWithChildren {};
 
@@ -35,17 +37,23 @@ const createSlots = (children: ReactNode): Slots => {
   return { header: header[0], children: otherChildren };
 };
 
-const Root: FC<FloatingSidebarProps> = ({ isOpen = true, height = 600, initialPosition = { x: 0, y: 0, origin: 'topleft' }, ...props }) => {
+const transformToCss = (position: InitialPosition): CssPosition => {
+  switch (position.origin) {
+    case 'topleft':
+      return { top: `${position.y}px`, left: `${position.x}px` } as const;
+    case 'topright':
+      return { top: `${position.y}px`, left: `calc(${position.x}px - var(--tox-private-floating-sidebar-width))` } as const;
+    case 'bottomleft':
+      return { top: `calc(${position.y}px - var(--tox-private-floating-sidebar-height))`, left: `${position.x}px` } as const;
+    case 'bottomright':
+      return { top: `calc(${position.y}px - var(--tox-private-floating-sidebar-height))`, left: `calc(${position.x}px - var(--tox-private-floating-sidebar-width))` } as const;
+  }
+};
+
+const Root: FC<FloatingSidebarProps> = ({ isOpen = true, height = 600, ...props }) => {
   const { header, children } = createSlots(props.children);
   const elementRef = useRef<HTMLDivElement | null>(null);
-
-  const { positionStyles, positionClass } = useMemo(() => ({
-    positionStyles: {
-      '--tox-private-floating-sidebar-requested-top': `${initialPosition.y}px`,
-      '--tox-private-floating-sidebar-requested-left': `${initialPosition.x}px`
-    },
-    positionClass: `origin-${initialPosition.origin}`
-  } as const), [ initialPosition ]);
+  const initialPosition = transformToCss(props.initialPosition ?? { x: 0, y: 0, origin: 'topleft' });
 
   useEffect(() => {
     const element = elementRef.current;
@@ -58,8 +66,10 @@ const Root: FC<FloatingSidebarProps> = ({ isOpen = true, height = 600, initialPo
     <Draggable.Root
       ref={elementRef}
       popover="manual"
-      className={classes([ 'tox-floating-sidebar', positionClass ])}
-      style={{ '--tox-private-floating-sidebar-requested-height': `${height}px`, ...positionStyles }}
+      className={classes([ 'tox-floating-sidebar' ])}
+      style={{ '--tox-private-floating-sidebar-requested-height': `${height}px` }}
+      initialPosition={initialPosition}
+      declaredSize={{ width: 'var(--tox-private-floating-sidebar-width)', height: 'var(--tox-private-floating-sidebar-height)' }}
     >
       <aside className={classes([ 'tox-floating-sidebar__content-wrapper' ])}>
         <Draggable.Handle>{ header }</Draggable.Handle>
