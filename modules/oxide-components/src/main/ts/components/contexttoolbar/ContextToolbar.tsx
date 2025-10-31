@@ -173,9 +173,7 @@ const Toolbar: FC<ToolbarProps> = ({
 
   useEffect(() => {
     const trigger = anchorRef?.current ?? triggerRef.current;
-    console.log('trigger:', trigger);
     const toolbar = toolbarRef.current;
-    console.log('toolbar:', toolbar);
     if (!isOpen || !Type.isNonNullable(trigger) || !Type.isNonNullable(toolbar)) {
       return;
     }
@@ -187,7 +185,6 @@ const Toolbar: FC<ToolbarProps> = ({
           .map((child) => child as HTMLElement)
       )
       .getOr(trigger);
-    console.log('anchorElement:', anchorElement);
 
     const sugarAnchor = SugarElement.fromDom(anchorElement);
     const sugarToolbar = SugarElement.fromDom(toolbar);
@@ -212,14 +209,6 @@ const Toolbar: FC<ToolbarProps> = ({
     };
   }, [ anchorName, isOpen, triggerRef, toolbarRef, anchorRef ]);
 
-  useEffect(() => {
-    console.log('persistent:', persistent); // Add this
-    if (persistent) {
-      return;
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [ persistent, handleClickOutside ]);
 
   const handleMouseDown = useCallback<MouseEventHandler<HTMLDivElement>>((event) => {
     onMouseDown?.(event);
