@@ -260,7 +260,7 @@ describe('browser.draggable.Draggable', () => {
     };
 
     const TestElementWithButton = (
-      <Draggable.Root>
+      <Draggable.Root style={{ position: 'absolute' }}>
         <div data-testid={draggableTestId} style={{ width: 250, height: 500, backgroundColor: 'gray' }}>
           <Draggable.Handle>
             <div data-testid={draggableHandleTestId} style={{ width: '100%', height: 50, backgroundColor: 'black' }}>
@@ -278,5 +278,53 @@ describe('browser.draggable.Draggable', () => {
     await userEvent.click(button);
 
     expect(clickCount).toBe(1);
+  });
+
+  it('TINY-13045: Should include scroll width in draggable boundries calculation', async () => {
+    const viewportWidth = 1000;
+    const viewportHeight = 1000;
+    const elementWidth = 200;
+    const elementHeight = 200;
+
+    const TestElement = (
+      <>
+        <Draggable.Root style={{ position: 'absolute' }}>
+          <div data-testid={draggableTestId} style={{ width: elementWidth, height: elementHeight, backgroundColor: 'gray' }}>
+            <Draggable.Handle>
+              <div data-testid={draggableHandleTestId} style={{ width: '100%', height: 50, backgroundColor: 'black' }}></div>
+            </Draggable.Handle>
+          </div>
+        </Draggable.Root>
+        {/* Render large content to enable scrolling */}
+        <div style={{ width: '3000px', height: '3000px' }}></div>
+      </>
+    );
+
+    const { getByTestId } = render(TestElement, { wrapper: Wrapper });
+    const handle = getByTestId(draggableHandleTestId).element();
+    const draggable = getByTestId(draggableTestId).element();
+    const draggableWrapper = draggable.parentElement;
+
+    await page.viewport(viewportWidth, viewportHeight);
+
+    // Start dragging
+    await userEvent.hover(handle, { position: { x: 10, y: 10 }});
+    await Mouse.down();
+
+    // Move max to the right
+    await Mouse.move(viewportWidth + 100, 0);
+    let rect = draggableWrapper?.getBoundingClientRect();
+    // I don't know the width of the browser's vertical scrollbar
+    // So I'm just checking that the element is not at the rightmost edge of the viewport
+    // As that would indicate that scrollbar width is not considered in the calculations
+    expect(rect?.right).toBeLessThan(viewportWidth);
+
+    // Move max to the bottom
+    await Mouse.move(0, viewportHeight + 100);
+    rect = draggableWrapper?.getBoundingClientRect();
+    // I don't know the height of the browser's horizontal scrollbar
+    // So I'm just checking that the element is not at the very bottom of the viewport
+    // As that would indicate that scrollbar height is not considered in the calculations
+    expect(rect?.bottom).toBeLessThan(viewportHeight);
   });
 });
