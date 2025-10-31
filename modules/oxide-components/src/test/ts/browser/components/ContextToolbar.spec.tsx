@@ -332,7 +332,7 @@ describe('browser.ContextToolbar.ContextToolbar', () => {
   });
 
   it('TINY-13077: Should position toolbar using anchorRef instead of Trigger', async () => {
-    const anchorRef = { current: null as HTMLDivElement | null };
+    const anchorRef = { current: null as HTMLElement | null };
 
     const { getByTestId, container } = render(
       <Fragment>
