@@ -58,7 +58,7 @@ const Handle: FC<DraggableHandleProps> = ({ children }) => {
     const mousePosition = { x: Math.round(event.clientX), y: Math.round(event.clientY) };
     lastMousePositionRef.current = mousePosition;
     const draggableRect = draggableRef.current.getBoundingClientRect();
-    boundriesRef.current = boundries(draggableRect, mousePosition, { x: 0, y: 0 }, { x: window.innerWidth, y: window.innerHeight });
+    boundriesRef.current = boundries(draggableRect, mousePosition, { x: 0, y: 0 }, { x: document.documentElement.clientWidth, y: document.documentElement.clientHeight });
   }, [ draggableRef, setIsDragging ]);
 
   const onPointerMove = useCallback((event: React.PointerEvent) => {
