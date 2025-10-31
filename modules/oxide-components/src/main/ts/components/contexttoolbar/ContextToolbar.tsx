@@ -203,7 +203,7 @@ const Toolbar: FC<ToolbarProps> = ({
 
     return () => {
       Css.remove(sugarAnchor, 'anchor-name');
-      Arr.each([ 'position', 'margin', 'inset', 'position-anchor', 'top', 'left', 'position-try-fallbacks' ], (property) => {
+      Arr.each([ 'position', 'margin', 'inset', 'position-anchor', 'top', 'left', 'justify-self', 'position-try-fallbacks' ], (property) => {
         Css.remove(sugarToolbar, property);
       });
     };
