@@ -180,9 +180,9 @@ const Toolbar: FC<ToolbarProps> = ({
 
     const anchorElement = Optional.from(anchorRef?.current)
       .orThunk(() =>
-        Optional.from(trigger.firstElementChild)
+        Optional
+          .from(trigger.firstElementChild)
           .filter((child) => child instanceof window.HTMLElement)
-          .map((child) => child as HTMLElement)
       )
       .getOr(trigger);
 
