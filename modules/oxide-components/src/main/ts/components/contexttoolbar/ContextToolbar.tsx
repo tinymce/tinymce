@@ -38,7 +38,7 @@ const Root: FC<ContextToolbarProps> = ({
   const triggerRef = useRef<HTMLDivElement>(null);
   const toolbarRef = useRef<HTMLDivElement>(null);
 
-  const isOpen = controlledOpen ?? internalOpen;
+  const isOpen = Type.isNonNullable(controlledOpen) ? controlledOpen : internalOpen;
 
   const open = useCallback(() => setInternalOpen(true), []);
   const close = useCallback(() => setInternalOpen(false), []);
