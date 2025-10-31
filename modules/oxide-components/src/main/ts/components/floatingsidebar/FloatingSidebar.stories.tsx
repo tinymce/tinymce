@@ -14,21 +14,18 @@ const meta = {
     layout: 'centered',
     docs: {
       description: {
-        component: [
-          'A draggable floating sidebar component that uses the Popover API and can be positioned anywhere on the screen.',
-          '',
-          '## How it works',
-          '',
-          'The FloatingSidebar is built on top of the Draggable component and uses the browser\'s Popover API for overlay management.',
-          'It consists of two parts:',
-          '',
-          '- **`FloatingSidebar.Root`** - The container that manages the sidebar\'s position, visibility, and popover behavior.',
-          '- **`FloatingSidebar.Header`** - A required header element that acts as the drag handle for moving the sidebar.',
-          '',
-          'The sidebar can be opened or closed programmatically using the `isOpen` prop.',
-          'When dragged, the sidebar remains within viewport bounds and maintains its position across window resizes.',
-          '```'
-        ].join('\n')
+        component: `A draggable floating sidebar component that uses the Popover API and can be positioned anywhere on the screen.
+
+## How it works
+
+The FloatingSidebar is built on top of the Draggable component and uses the browser's Popover API for overlay management.
+It consists of two parts:
+
+- **\`FloatingSidebar.Root\`** - The container that manages the sidebar's position, visibility, and popover behavior.
+- **\`FloatingSidebar.Header\`** - A required header element that acts as the drag handle for moving the sidebar.
+
+The sidebar can be opened or closed programmatically using the \`isOpen\` prop.
+When dragged, the sidebar remains within viewport bounds and maintains its position across window resizes.`
       }
     }
   },
@@ -50,14 +47,12 @@ const meta = {
       }
     },
     initialPosition: {
-      description: [
-        'The initial position of the sidebar with x and y coordinates, and an origin point.',
-        'The origin determines which corner of the sidebar is anchored to the coordinates:',
-        '- `topleft`: x and y represent the top-left corner',
-        '- `topright`: x and y represent the top-right corner',
-        '- `bottomleft`: x and y represent the bottom-left corner',
-        '- `bottomright`: x and y represent the bottom-right corner'
-      ].join('\n\n'),
+      description: `The initial position of the sidebar with x and y coordinates, and an origin point.
+The origin determines which corner of the sidebar is anchored to the coordinates:
+- \`topleft\`: x and y represent the top-left corner
+- \`topright\`: x and y represent the top-right corner
+- \`bottomleft\`: x and y represent the bottom-left corner
+- \`bottomright\`: x and y represent the bottom-right corner`,
       table: {
         type: { summary: '{ x: number, y: number, origin: "topleft" | "topright" | "bottomleft" | "bottomright" }' },
         defaultValue: { summary: '{ x: 0, y: 0, origin: "topleft" }' }
