@@ -334,7 +334,7 @@ describe('browser.ContextToolbar.ContextToolbar', () => {
   it('TINY-13077: Should position toolbar using anchorRef instead of Trigger', async () => {
     const anchorRef = { current: null as HTMLDivElement | null };
 
-    const { getByTestId } = render(
+    const { getByTestId, container } = render(
       <Fragment>
         <div className='tox' style={{ position: 'relative' }}>
           {/* Standalone anchor element, not wrapped in Trigger */}
@@ -362,9 +362,37 @@ describe('browser.ContextToolbar.ContextToolbar', () => {
 
     const button = getByTestId('test-button');
     const anchor = getByTestId('anchor');
+    const toolbar = container.querySelector('.tox-context-toolbar');
 
     await expect.element(anchor).toBeVisible();
     await expect.element(button).toBeVisible();
     await expect.element(button).toHaveFocus();
+
+    expect(toolbar).toBeTruthy();
+    if (toolbar instanceof window.Element) {
+      const toolbarStyles = window.getComputedStyle(toolbar);
+      expect(toolbarStyles.getPropertyValue('position-anchor')).toBeTruthy();
+      expect(toolbarStyles.getPropertyValue('position')).toBe('absolute');
+    }
+
+    // Verify anchor-name is set on anchor element using the ref
+    expect(anchorRef.current).toBeTruthy();
+    if (anchorRef.current instanceof window.Element) {
+      const anchorStyles = window.getComputedStyle(anchorRef.current);
+      const anchorName = anchorStyles.getPropertyValue('anchor-name');
+      expect(anchorName).toBeTruthy();
+    }
+
+    // Verify clicking anchor doesn't close toolbar
+    await anchor.click();
+    await expect.element(button).toBeVisible();
+
+    // Verify toolbar is still visible after clicking anchor
+    const toolbarAfterClick = container.querySelector('.tox-context-toolbar');
+    expect(toolbarAfterClick).toBeTruthy();
+    if (toolbarAfterClick instanceof window.Element) {
+      const toolbarAfterClickStyles = window.getComputedStyle(toolbarAfterClick);
+      expect(toolbarAfterClickStyles.getPropertyValue('visibility')).not.toBe('hidden');
+    }
   });
 });
