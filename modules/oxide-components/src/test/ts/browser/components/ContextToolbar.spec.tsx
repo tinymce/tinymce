@@ -1,3 +1,4 @@
+import { Fun } from '@ephox/katamari';
 import { page, userEvent } from '@vitest/browser/context';
 import * as ContextToolbar from 'oxide-components/components/contexttoolbar/ContextToolbar';
 import { classes } from 'oxide-components/utils/Styles';
@@ -329,5 +330,183 @@ describe('browser.ContextToolbar.ContextToolbar', () => {
     await userEvent.keyboard(' ');
 
     expect(onClick).toHaveBeenCalledOnce();
+  });
+
+  it('TINY-13077: Should position toolbar using anchorRef instead of Trigger', async () => {
+    const anchorRef = { current: null as HTMLElement | null };
+    const supportsAnchorPositioning = CSS.supports('anchor-name', '--test');
+
+    const { getByTestId, container } = render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          {/* Standalone anchor element, not wrapped in Trigger */}
+          <div
+            ref={(el) => {
+              anchorRef.current = el;
+            }}
+            data-testid="anchor"
+            style={{ padding: '10px', background: 'lightgray' }}
+          >
+            Anchor Element
+          </div>
+
+          <ContextToolbar.Root anchorRef={anchorRef} open={true} persistent={true} onOpenChange={Fun.noop}>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <button data-testid="test-button">Test Button</button>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    const button = getByTestId('test-button');
+    const anchor = getByTestId('anchor');
+    const toolbar = container.querySelector('.tox-context-toolbar');
+
+    await expect.element(anchor).toBeVisible();
+    await expect.element(button).toBeVisible();
+    await expect.element(button).toHaveFocus();
+
+    // Verify CSS Anchor Positioning properties (only in supported browsers)
+    if (supportsAnchorPositioning) {
+      expect(toolbar).toBeTruthy();
+      if (toolbar instanceof window.Element) {
+        const toolbarStyles = window.getComputedStyle(toolbar);
+        expect(toolbarStyles.getPropertyValue('position-anchor')).toBeTruthy();
+        expect(toolbarStyles.getPropertyValue('position')).toBe('absolute');
+      }
+
+      // Verify anchor-name is set on anchor element using the ref
+      expect(anchorRef.current).toBeTruthy();
+      if (anchorRef.current instanceof window.Element) {
+        const anchorStyles = window.getComputedStyle(anchorRef.current);
+        const anchorName = anchorStyles.getPropertyValue('anchor-name');
+        expect(anchorName).toBeTruthy();
+      }
+    }
+
+    // Verify clicking anchor doesn't close toolbar (works regardless of Anchor API support)
+    await anchor.click();
+    await expect.element(button).toBeVisible();
+
+    // Verify toolbar is still visible after clicking anchor
+    const toolbarAfterClick = container.querySelector('.tox-context-toolbar');
+    expect(toolbarAfterClick).toBeTruthy();
+    if (toolbarAfterClick instanceof window.Element) {
+      const toolbarAfterClickStyles = window.getComputedStyle(toolbarAfterClick);
+      expect(toolbarAfterClickStyles.getPropertyValue('visibility')).not.toBe('hidden');
+    }
+  });
+
+  it('TINY-13077: Should control toolbar visibility with open prop', async () => {
+    const { getByTestId, rerender } = render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root open={false} onOpenChange={Fun.noop}>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <div data-testid={toolbarTestId}>Toolbar Content</div>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    const toolbar = getByTestId(toolbarTestId);
+    await expect.element(toolbar).not.toBeVisible();
+
+    // Re-render with open={true}
+    rerender(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root open={true} onOpenChange={Fun.noop}>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <div data-testid={toolbarTestId}>Toolbar Content</div>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>
+    );
+
+    await expect.element(toolbar).toBeVisible();
+
+    // Re-render with open={false} again
+    rerender(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root open={false} onOpenChange={Fun.noop}>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <div data-testid={toolbarTestId}>Toolbar Content</div>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>
+    );
+
+    await expect.element(toolbar).not.toBeVisible();
+  });
+
+  it('TINY-13077: Should call onOpenChange when closing controlled toolbar', async () => {
+    const onOpenChange = vi.fn();
+    const { getByTestId } = render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root open={true} onOpenChange={onOpenChange}>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <div data-testid={toolbarTestId}>Toolbar Content</div>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    const toolbar = getByTestId(toolbarTestId);
+    await expect.element(toolbar).toBeVisible();
+
+    await userEvent.keyboard('{Escape}');
+
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
+  it('TINY-13077: Should stay open with open={true}, persistent={true}, and onOpenChange={Fun.noop}', async () => {
+    const { getByTestId } = render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root
+            open={true}
+            persistent={true}
+            onOpenChange={Fun.noop}
+          >
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <div data-testid={toolbarTestId}>Toolbar Content</div>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    const toolbar = getByTestId(toolbarTestId);
+    await expect.element(toolbar).toBeVisible();
+
+    // Press Escape - should not close because persistent={true}
+    await userEvent.keyboard('{Escape}');
+
+    // Verify toolbar remains open
+    await expect.element(toolbar).toBeVisible();
   });
 });
