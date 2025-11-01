@@ -334,6 +334,7 @@ describe('browser.ContextToolbar.ContextToolbar', () => {
 
   it('TINY-13077: Should position toolbar using anchorRef instead of Trigger', async () => {
     const anchorRef = { current: null as HTMLElement | null };
+    const supportsAnchorPositioning = CSS.supports('anchor-name', '--test');
 
     const { getByTestId, container } = render(
       <Fragment>
@@ -369,22 +370,25 @@ describe('browser.ContextToolbar.ContextToolbar', () => {
     await expect.element(button).toBeVisible();
     await expect.element(button).toHaveFocus();
 
-    expect(toolbar).toBeTruthy();
-    if (toolbar instanceof window.Element) {
-      const toolbarStyles = window.getComputedStyle(toolbar);
-      expect(toolbarStyles.getPropertyValue('position-anchor')).toBeTruthy();
-      expect(toolbarStyles.getPropertyValue('position')).toBe('absolute');
+    // Verify CSS Anchor Positioning properties (only in supported browsers)
+    if (supportsAnchorPositioning) {
+      expect(toolbar).toBeTruthy();
+      if (toolbar instanceof window.Element) {
+        const toolbarStyles = window.getComputedStyle(toolbar);
+        expect(toolbarStyles.getPropertyValue('position-anchor')).toBeTruthy();
+        expect(toolbarStyles.getPropertyValue('position')).toBe('absolute');
+      }
+
+      // Verify anchor-name is set on anchor element using the ref
+      expect(anchorRef.current).toBeTruthy();
+      if (anchorRef.current instanceof window.Element) {
+        const anchorStyles = window.getComputedStyle(anchorRef.current);
+        const anchorName = anchorStyles.getPropertyValue('anchor-name');
+        expect(anchorName).toBeTruthy();
+      }
     }
 
-    // Verify anchor-name is set on anchor element using the ref
-    expect(anchorRef.current).toBeTruthy();
-    if (anchorRef.current instanceof window.Element) {
-      const anchorStyles = window.getComputedStyle(anchorRef.current);
-      const anchorName = anchorStyles.getPropertyValue('anchor-name');
-      expect(anchorName).toBeTruthy();
-    }
-
-    // Verify clicking anchor doesn't close toolbar
+    // Verify clicking anchor doesn't close toolbar (works regardless of Anchor API support)
     await anchor.click();
     await expect.element(button).toBeVisible();
 
