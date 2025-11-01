@@ -58,6 +58,7 @@ The provider component that manages toolbar state.
 **Props:**
 - \`persistent\`: (optional, default: \`false\`). If true, the toolbar stays open when clicking outside of it.
 - \`open\`: (optional). When provided, controls the toolbar visibility in controlled mode. If not provided, the toolbar manages its own state (uncontrolled mode).
+- \`onOpenChange\`: (optional). Callback function called when toolbar open state changes. Required when using controlled mode (\`open\` prop) to handle state updates from Escape key and click-outside handlers.
 - \`anchorRef\`: (optional). A ref to an external element to anchor the toolbar to. When provided, the toolbar positions relative to this element instead of the Trigger component.
 
 **Important:** \`open\` and \`anchorRef\` are mutually exclusive with using the \`Trigger\` component. Use either:
@@ -375,7 +376,12 @@ export const ControlledWithAnchorRef: Story = {
           Click me (external anchor)
         </div>
 
-        <ContextToolbar.Root anchorRef={anchorRef} open={isOpen} persistent={true}>
+        <ContextToolbar.Root
+          anchorRef={anchorRef}
+          open={isOpen}
+          persistent={true}
+          onOpenChange={setIsOpen}
+        >
           <ContextToolbar.Toolbar>
             <ContextToolbar.Group>
               <Button onClick={() => {

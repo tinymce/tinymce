@@ -32,7 +32,8 @@ const Root: FC<ContextToolbarProps> = ({
   children,
   persistent = false,
   anchorRef,
-  open: controlledOpen
+  open: controlledOpen,
+  onOpenChange
 }) => {
   const [ internalOpen, setInternalOpen ] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -40,8 +41,21 @@ const Root: FC<ContextToolbarProps> = ({
 
   const isOpen = Type.isNonNullable(controlledOpen) ? controlledOpen : internalOpen;
 
-  const open = useCallback(() => setInternalOpen(true), []);
-  const close = useCallback(() => setInternalOpen(false), []);
+  const open = useCallback(() => {
+    if (Type.isNonNullable(controlledOpen)) {
+      onOpenChange?.(true);
+    } else {
+      setInternalOpen(true);
+    }
+  }, [ controlledOpen, onOpenChange ]);
+
+  const close = useCallback(() => {
+    if (Type.isNonNullable(controlledOpen)) {
+      onOpenChange?.(false);
+    } else {
+      setInternalOpen(false);
+    }
+  }, [ controlledOpen, onOpenChange ]);
 
   const context = useMemo<ContextToolbarContextValue>(() => ({
     isOpen,

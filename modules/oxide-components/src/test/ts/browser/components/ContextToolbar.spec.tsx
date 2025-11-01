@@ -1,8 +1,9 @@
+import { Fun } from '@ephox/katamari';
+import { page, userEvent } from '@vitest/browser/context';
 import * as ContextToolbar from 'oxide-components/components/contexttoolbar/ContextToolbar';
 import { classes } from 'oxide-components/utils/Styles';
 import { Fragment, type ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
 const triggerTestId = 'context-toolbar-trigger';
@@ -348,7 +349,7 @@ describe('browser.ContextToolbar.ContextToolbar', () => {
             Anchor Element
           </div>
 
-          <ContextToolbar.Root anchorRef={anchorRef} open={true} persistent={true}>
+          <ContextToolbar.Root anchorRef={anchorRef} open={true} persistent={true} onOpenChange={Fun.noop}>
             <ContextToolbar.Toolbar>
               <ContextToolbar.Group>
                 <button data-testid="test-button">Test Button</button>
@@ -400,7 +401,7 @@ describe('browser.ContextToolbar.ContextToolbar', () => {
     const { getByTestId, rerender } = render(
       <Fragment>
         <div className='tox' style={{ position: 'relative' }}>
-          <ContextToolbar.Root open={false}>
+          <ContextToolbar.Root open={false} onOpenChange={Fun.noop}>
             <ContextToolbar.Toolbar>
               <ContextToolbar.Group>
                 <div data-testid={toolbarTestId}>Toolbar Content</div>
@@ -419,7 +420,7 @@ describe('browser.ContextToolbar.ContextToolbar', () => {
     rerender(
       <Fragment>
         <div className='tox' style={{ position: 'relative' }}>
-          <ContextToolbar.Root open={true}>
+          <ContextToolbar.Root open={true} onOpenChange={Fun.noop}>
             <ContextToolbar.Toolbar>
               <ContextToolbar.Group>
                 <div data-testid={toolbarTestId}>Toolbar Content</div>
@@ -436,7 +437,7 @@ describe('browser.ContextToolbar.ContextToolbar', () => {
     rerender(
       <Fragment>
         <div className='tox' style={{ position: 'relative' }}>
-          <ContextToolbar.Root open={false}>
+          <ContextToolbar.Root open={false} onOpenChange={Fun.noop}>
             <ContextToolbar.Toolbar>
               <ContextToolbar.Group>
                 <div data-testid={toolbarTestId}>Toolbar Content</div>
@@ -448,5 +449,60 @@ describe('browser.ContextToolbar.ContextToolbar', () => {
     );
 
     await expect.element(toolbar).not.toBeVisible();
+  });
+
+  it('TINY-13077: Should call onOpenChange when closing controlled toolbar', async () => {
+    const onOpenChange = vi.fn();
+    const { getByTestId } = render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root open={true} onOpenChange={onOpenChange}>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <div data-testid={toolbarTestId}>Toolbar Content</div>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    const toolbar = getByTestId(toolbarTestId);
+    await expect.element(toolbar).toBeVisible();
+
+    await userEvent.keyboard('{Escape}');
+
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
+  it('TINY-13077: Should stay open with open={true}, persistent={true}, and onOpenChange={Fun.noop}', async () => {
+    const { getByTestId } = render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root
+            open={true}
+            persistent={true}
+            onOpenChange={Fun.noop}
+          >
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <div data-testid={toolbarTestId}>Toolbar Content</div>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    const toolbar = getByTestId(toolbarTestId);
+    await expect.element(toolbar).toBeVisible();
+
+    // Press Escape - should not close because persistent={true}
+    await userEvent.keyboard('{Escape}');
+
+    // Verify toolbar remains open
+    await expect.element(toolbar).toBeVisible();
   });
 });
