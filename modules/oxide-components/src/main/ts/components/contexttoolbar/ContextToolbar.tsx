@@ -172,19 +172,19 @@ const Toolbar: FC<ToolbarProps> = ({
   const anchorName = useMemo(() => `--${Id.generate('context-toolbar')}`, []);
 
   useEffect(() => {
-    const trigger = anchorRef?.current ?? triggerRef.current;
+    const triggerOrAnchor = anchorRef?.current ?? triggerRef.current;
     const toolbar = toolbarRef.current;
-    if (!isOpen || !Type.isNonNullable(trigger) || !Type.isNonNullable(toolbar)) {
+    if (!isOpen || !Type.isNonNullable(triggerOrAnchor) || !Type.isNonNullable(toolbar)) {
       return;
     }
 
     const anchorElement = Optional.from(anchorRef?.current)
       .orThunk(() =>
         Optional
-          .from(trigger.firstElementChild)
+          .from(triggerOrAnchor.firstElementChild)
           .filter((child) => child instanceof window.HTMLElement)
       )
-      .getOr(trigger);
+      .getOr(triggerOrAnchor);
 
     const sugarAnchor = SugarElement.fromDom(anchorElement);
     const sugarToolbar = SugarElement.fromDom(toolbar);
@@ -203,7 +203,7 @@ const Toolbar: FC<ToolbarProps> = ({
 
     return () => {
       Css.remove(sugarAnchor, 'anchor-name');
-      Arr.each([ 'position', 'margin', 'inset', 'position-anchor', 'top', 'left', 'justify-self', 'position-try-fallbacks' ], (property) => {
+      Arr.each([ 'position', 'margin', 'inset', 'position-anchor', 'top', 'justify-self', 'position-try-fallbacks' ], (property) => {
         Css.remove(sugarToolbar, property);
       });
     };
