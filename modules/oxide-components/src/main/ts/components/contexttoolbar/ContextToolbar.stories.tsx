@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useMemo } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { fn } from 'storybook/test';
 
 import { Button } from '../button/Button';
@@ -57,6 +57,12 @@ The provider component that manages toolbar state.
 
 **Props:**
 - \`persistent\`: (optional, default: \`false\`). If true, the toolbar stays open when clicking outside of it.
+- \`open\`: (optional). When provided, controls the toolbar visibility in controlled mode. If not provided, the toolbar manages its own state (uncontrolled mode).
+- \`anchorRef\`: (optional). A ref to an external element to anchor the toolbar to. When provided, the toolbar positions relative to this element instead of the Trigger component.
+
+**Important:** \`open\` and \`anchorRef\` are mutually exclusive with using the \`Trigger\` component. Use either:
+- **Uncontrolled mode**: Use \`Trigger\` component (no \`open\` prop)
+- **Controlled mode**: Use \`open\` prop and optionally \`anchorRef\` (no \`Trigger\` component)
 
 ### Trigger
 Wraps the element that opens the toolbar when clicked.
@@ -337,6 +343,50 @@ export const Corners: Story = {
             </ContextToolbar.Root>
           ))}
         </div>
+      </div>
+    );
+  }
+};
+
+export const ControlledWithAnchorRef: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstrates controlled mode using `open` prop and `anchorRef` to position toolbar relative to an external element. This pattern is useful when the trigger is outside the React component tree (e.g. in an iframe).',
+      },
+    },
+  },
+  render: () => {
+    const anchorRef = useRef<HTMLDivElement>(null);
+    const [ isOpen, setIsOpen ] = useState(false);
+
+    return (
+      <div className='tox' style={{ position: 'relative' }}>
+        <div
+          ref={anchorRef}
+          style={{
+            backgroundColor: 'lightcoral',
+            padding: '10px',
+            cursor: 'pointer',
+            display: 'inline-block'
+          }}
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          Click me (external anchor)
+        </div>
+
+        <ContextToolbar.Root anchorRef={anchorRef} open={isOpen} persistent={true}>
+          <ContextToolbar.Toolbar>
+            <ContextToolbar.Group>
+              <Button onClick={() => {
+                setIsOpen(false); fn()();
+              }}>Accept</Button>
+              <Button onClick={() => {
+                setIsOpen(false); fn()();
+              }}>Reject</Button>
+            </ContextToolbar.Group>
+          </ContextToolbar.Toolbar>
+        </ContextToolbar.Root>
       </div>
     );
   }
