@@ -387,10 +387,10 @@ export const ControlledWithAnchorRef: Story = {
           <ContextToolbar.Toolbar>
             <ContextToolbar.Group>
               <Button onClick={() => {
-                setIsOpen(false); fn()();
+                setIsOpen(false);
               }}>Accept</Button>
               <Button onClick={() => {
-                setIsOpen(false); fn()();
+                setIsOpen(false);
               }}>Reject</Button>
             </ContextToolbar.Group>
           </ContextToolbar.Toolbar>
