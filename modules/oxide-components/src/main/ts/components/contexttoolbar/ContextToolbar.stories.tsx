@@ -61,9 +61,11 @@ The provider component that manages toolbar state.
 - \`onOpenChange\`: (optional). Callback function called when toolbar open state changes. Required when using controlled mode (\`open\` prop) to handle state updates from Escape key and click-outside handlers.
 - \`anchorRef\`: (optional). A ref to an external element to anchor the toolbar to. When provided, the toolbar positions relative to this element instead of the Trigger component.
 
-**Important:** \`open\` and \`anchorRef\` are mutually exclusive with using the \`Trigger\` component. Use either:
-- **Uncontrolled mode**: Use \`Trigger\` component (no \`open\` prop)
-- **Controlled mode**: Use \`open\` prop and optionally \`anchorRef\` (no \`Trigger\` component)
+**Important:** 
+- \`open\` and \`anchorRef\` are mutually exclusive with using the \`Trigger\` component. Use either:
+  - **Uncontrolled mode**: Use \`Trigger\` component (no \`open\` prop)
+  - **Controlled mode**: Use \`open\` prop and optionally \`anchorRef\` (no \`Trigger\` component)
+- **Mode consistency**: Once initialized, the component cannot switch between controlled and uncontrolled modes. The mode is determined on first render and must remain consistent for the component's lifetime. Attempting to switch modes will result in a warning and error.
 
 ### Trigger
 Wraps the element that opens the toolbar when clicked.
