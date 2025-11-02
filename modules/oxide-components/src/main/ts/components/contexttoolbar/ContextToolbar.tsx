@@ -38,24 +38,43 @@ const Root: FC<ContextToolbarProps> = ({
   const [ internalOpen, setInternalOpen ] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
   const toolbarRef = useRef<HTMLDivElement>(null);
+  const isControlledRef = useRef<boolean>(Type.isNonNullable(controlledOpen));
 
-  const isOpen = Type.isNonNullable(controlledOpen) ? controlledOpen : internalOpen;
+  // Handles attempts to switch between controlled and uncontrolled mode.
+  useEffect(() => {
+    const isControlled = Type.isNonNullable(controlledOpen);
+    if (isControlledRef.current !== isControlled) {
+      const message = 'ContextToolbar: Cannot switch between controlled and uncontrolled mode. Mode must remain consistent for the component lifetime.';
+      /* eslint-disable-next-line no-console */
+      console.warn(message, {
+        previousMode: isControlledRef.current ? 'controlled' : 'uncontrolled',
+        attemptedMode: isControlled ? 'controlled' : 'uncontrolled'
+      });
+      throw new Error(message);
+    }
+  }, [ controlledOpen ]);
+
+  const isOpen =
+    isControlledRef.current &&
+    Type.isNonNullable(controlledOpen)
+      ? controlledOpen
+      : internalOpen;
 
   const open = useCallback(() => {
-    if (Type.isNonNullable(controlledOpen)) {
-      onOpenChange?.(true);
+    if (isControlledRef.current && Type.isNonNullable(onOpenChange)) {
+      onOpenChange(true);
     } else {
       setInternalOpen(true);
     }
-  }, [ controlledOpen, onOpenChange ]);
+  }, [ onOpenChange ]);
 
   const close = useCallback(() => {
-    if (Type.isNonNullable(controlledOpen)) {
-      onOpenChange?.(false);
+    if (isControlledRef.current && Type.isNonNullable(onOpenChange)) {
+      onOpenChange(false);
     } else {
       setInternalOpen(false);
     }
-  }, [ controlledOpen, onOpenChange ]);
+  }, [ onOpenChange ]);
 
   const context = useMemo<ContextToolbarContextValue>(() => ({
     isOpen,
@@ -65,7 +84,6 @@ const Root: FC<ContextToolbarProps> = ({
     toolbarRef,
     anchorRef,
     persistent
-
   }), [ isOpen, open, close, persistent, anchorRef ]);
 
   return (

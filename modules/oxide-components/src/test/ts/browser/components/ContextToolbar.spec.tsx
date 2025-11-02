@@ -509,4 +509,134 @@ describe('browser.ContextToolbar.ContextToolbar', () => {
     // Verify toolbar remains open
     await expect.element(toolbar).toBeVisible();
   });
+
+  it('TINY-13077: Should warn and throw error when switching from uncontrolled to controlled mode', () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(Fun.noop);
+
+    const { rerender } = render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <div data-testid={toolbarTestId}>Toolbar Content</div>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    // Try to switch to controlled mode
+    expect(() => {
+      rerender(
+        <Fragment>
+          <div className='tox' style={{ position: 'relative' }}>
+            <ContextToolbar.Root open={true} onOpenChange={Fun.noop}>
+              <ContextToolbar.Toolbar>
+                <ContextToolbar.Group>
+                  <div data-testid={toolbarTestId}>Toolbar Content</div>
+                </ContextToolbar.Group>
+              </ContextToolbar.Toolbar>
+            </ContextToolbar.Root>
+          </div>
+        </Fragment>
+      );
+    }).toThrow('ContextToolbar: Cannot switch between controlled and uncontrolled mode.');
+
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('ContextToolbar: Cannot switch between controlled and uncontrolled mode'),
+      expect.objectContaining({
+        previousMode: 'uncontrolled',
+        attemptedMode: 'controlled'
+      })
+    );
+
+    warnSpy.mockRestore();
+  });
+
+  it('TINY-13077: Should warn and throw error when switching from controlled to uncontrolled mode', () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(Fun.noop);
+
+    const { rerender } = render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root open={true} onOpenChange={Fun.noop}>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <div data-testid={toolbarTestId}>Toolbar Content</div>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    // Try to switch to uncontrolled mode
+    expect(() => {
+      rerender(
+        <Fragment>
+          <div className='tox' style={{ position: 'relative' }}>
+            <ContextToolbar.Root>
+              <ContextToolbar.Toolbar>
+                <ContextToolbar.Group>
+                  <div data-testid={toolbarTestId}>Toolbar Content</div>
+                </ContextToolbar.Group>
+              </ContextToolbar.Toolbar>
+            </ContextToolbar.Root>
+          </div>
+        </Fragment>
+      );
+    }).toThrow('ContextToolbar: Cannot switch between controlled and uncontrolled mode.');
+
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('ContextToolbar: Cannot switch between controlled and uncontrolled mode'),
+      expect.objectContaining({
+        previousMode: 'controlled',
+        attemptedMode: 'uncontrolled'
+      })
+    );
+
+    warnSpy.mockRestore();
+  });
+
+  it('TINY-13077: Should allow changing open value while staying in controlled mode', async () => {
+    const onOpenChange = vi.fn();
+    const { getByTestId, rerender } = render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root open={false} onOpenChange={onOpenChange}>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <div data-testid={toolbarTestId}>Toolbar Content</div>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    const toolbar = getByTestId(toolbarTestId);
+    await expect.element(toolbar).not.toBeVisible();
+
+    // Change open value while staying controlled - should work fine
+    rerender(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          <ContextToolbar.Root open={true} onOpenChange={onOpenChange}>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <div data-testid={toolbarTestId}>Toolbar Content</div>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>
+    );
+
+    await expect.element(toolbar).toBeVisible();
+  });
 });
