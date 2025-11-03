@@ -23,6 +23,9 @@ export default defineConfig({
         }
       },
       {
+        optimizeDeps: {
+          include: [ 'react/jsx-dev-runtime' ],
+        },
         test: {
           name: 'browser',
           setupFiles: [ './vitest.setup.js' ],
