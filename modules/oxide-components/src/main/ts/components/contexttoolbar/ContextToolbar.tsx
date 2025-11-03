@@ -33,16 +33,16 @@ const Root: FC<ContextToolbarProps> = ({
   persistent = false,
   anchorRef
 }) => {
-  const [ open, setOpen ] = useState(false);
+  const [ isOpen, setIsOpen ] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
   const toolbarRef = useRef<HTMLDivElement>(null);
 
   const openToolbar = useCallback(() => {
-    setOpen(true);
+    setIsOpen(true);
   }, []);
 
   const closeToolbar = useCallback(() => {
-    setOpen(false);
+    setIsOpen(false);
   }, []);
 
   const getAnchorElement = useCallback((): HTMLElement | null => {
@@ -66,7 +66,7 @@ const Root: FC<ContextToolbarProps> = ({
       // Use requestAnimationFrame to ensure anchorRef is ready and allow Trigger to mount first
       const rafId = window.requestAnimationFrame(() => {
         if (!Type.isNonNullable(triggerRef.current)) {
-          setOpen(true);
+          setIsOpen(true);
         }
       });
 
@@ -89,7 +89,7 @@ const Root: FC<ContextToolbarProps> = ({
   }, [ anchorRef, openToolbar ]);
 
   const context = useMemo<ContextToolbarContextValue>(() => ({
-    isOpen: open,
+    isOpen,
     open: openToolbar,
     close: closeToolbar,
     triggerRef,
@@ -97,7 +97,7 @@ const Root: FC<ContextToolbarProps> = ({
     anchorRef,
     getAnchorElement,
     persistent
-  }), [ open, openToolbar, closeToolbar, persistent, anchorRef, getAnchorElement ]);
+  }), [ isOpen, openToolbar, closeToolbar, persistent, anchorRef, getAnchorElement ]);
 
   return (
     <ContextToolbarContext.Provider value={context}>
