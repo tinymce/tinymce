@@ -13,6 +13,7 @@ export interface ContextToolbarContextValue {
   readonly triggerRef: RefObject<HTMLDivElement>;
   readonly toolbarRef: RefObject<HTMLDivElement>;
   readonly anchorRef?: RefObject<HTMLElement>;
+  readonly anchorElement: HTMLElement | null;
   readonly getAnchorElement: () => HTMLElement | null;
   readonly persistent: boolean;
 }
