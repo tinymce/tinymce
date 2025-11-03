@@ -76,6 +76,21 @@ const Root: FC<ContextToolbarProps> = ({
     }
   }, [ onOpenChange ]);
 
+  const getAnchorElement = useCallback((): HTMLElement | null => {
+    if (Type.isNonNullable(anchorRef?.current)) {
+      return anchorRef.current;
+    }
+
+    if (Type.isNonNullable(triggerRef.current)) {
+      const firstChild = triggerRef.current.firstElementChild;
+      if (firstChild instanceof window.HTMLElement) {
+        return firstChild;
+      }
+      return triggerRef.current;
+    }
+    return null;
+  }, [ anchorRef, triggerRef ]);
+
   const context = useMemo<ContextToolbarContextValue>(() => ({
     isOpen,
     open,
@@ -83,8 +98,9 @@ const Root: FC<ContextToolbarProps> = ({
     triggerRef,
     toolbarRef,
     anchorRef,
+    getAnchorElement,
     persistent
-  }), [ isOpen, open, close, persistent, anchorRef ]);
+  }), [ isOpen, open, close, persistent, anchorRef, getAnchorElement ]);
 
   return (
     <ContextToolbarContext.Provider value={context}>
@@ -127,6 +143,7 @@ const Toolbar: FC<ToolbarProps> = ({
     toolbarRef,
     triggerRef,
     anchorRef,
+    getAnchorElement,
     close,
     persistent
   } = useContextToolbarContext();
@@ -204,19 +221,11 @@ const Toolbar: FC<ToolbarProps> = ({
   const anchorName = useMemo(() => `--${Id.generate('context-toolbar')}`, []);
 
   useEffect(() => {
-    const triggerOrAnchor = anchorRef?.current ?? triggerRef.current;
+    const anchorElement = getAnchorElement();
     const toolbar = toolbarRef.current;
-    if (!isOpen || !Type.isNonNullable(triggerOrAnchor) || !Type.isNonNullable(toolbar)) {
+    if (!isOpen || !Type.isNonNullable(anchorElement) || !Type.isNonNullable(toolbar)) {
       return;
     }
-
-    const anchorElement = Optional.from(anchorRef?.current)
-      .orThunk(() =>
-        Optional
-          .from(triggerOrAnchor.firstElementChild)
-          .filter((child) => child instanceof window.HTMLElement)
-      )
-      .getOr(triggerOrAnchor);
 
     const sugarAnchor = SugarElement.fromDom(anchorElement);
     const sugarToolbar = SugarElement.fromDom(toolbar);
@@ -239,7 +248,7 @@ const Toolbar: FC<ToolbarProps> = ({
         Css.remove(sugarToolbar, property);
       });
     };
-  }, [ anchorName, isOpen, triggerRef, toolbarRef, anchorRef ]);
+  }, [ anchorName, isOpen, toolbarRef, getAnchorElement ]);
 
   const handleMouseDown = useCallback<MouseEventHandler<HTMLDivElement>>((event) => {
     onMouseDown?.(event);
