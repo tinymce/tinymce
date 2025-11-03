@@ -1,5 +1,5 @@
 import { Arr, Id, Optional, Type } from '@ephox/katamari';
-import { Class, Css, Focus, SelectorFilter, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
+import { Class, Css, Focus, SelectorFilter, SelectorFind, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import {
   createContext,
   useContext,
@@ -52,8 +52,11 @@ const Root: FC<ContextToolbarProps> = ({
 
     if (Type.isNonNullable(triggerRef.current)) {
       const firstChild = triggerRef.current.firstElementChild;
-      if (firstChild instanceof window.HTMLElement) {
-        return firstChild;
+      if (Type.isNonNullable(firstChild)) {
+        const sugarFirstChild = SugarElement.fromDom(firstChild);
+        if (SugarNode.isHTMLElement(sugarFirstChild)) {
+          return sugarFirstChild.dom;
+        }
       }
       return triggerRef.current;
     }
