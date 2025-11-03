@@ -1,130 +1,17 @@
-//
-// Suggested Edits
-//
+@import '../diff/diff.less';
 
-@added-background-color: fade(@color-success, 20%);
-@modified-background-color: fade(@color-tint, 20%);
-@removed-background-color: fade(@color-error, 20%);
+@suggestededits-added-background-color: @added-background-color;
+@suggestededits-modified-background-color: @modified-background-color;
+@suggestededits-removed-background-color: @removed-background-color;
 
-@selected-outline-color: @color-tint;
-@selected-box-shadow: 0 -2px 0 0 @selected-outline-color inset, 0 -2px 0 0 @selected-outline-color;
+@suggestededits-selected-outline-color: @selected-outline-color;
+@suggestededits-selected-box-shadow: 0 -2px 0 0 @suggestededits-selected-outline-color inset, 0 -2px 0 0 @suggestededits-selected-outline-color;
 
-.tox-suggestededits__annotation--added,
-.tox-suggestededits__annotation--modified,
-.tox-suggestededits__annotation--removed {
-  text-decoration: none;
-}
-
-.tox-suggestededits__annotation--added__highlight {
-	background-color: @added-background-color;
-  text-decoration: underline;
-}
-
-.tox-suggestededits__annotation--added__selected {
-	background-color: @added-background-color;
-	box-shadow: @selected-box-shadow;
-  text-decoration: none;
-}
-
-.tox-suggestededits__annotation--modified__highlight {
-	background-color: @modified-background-color;
-	text-decoration: underline;
-}
-
-.tox-suggestededits__annotation--modified__selected {
-	background-color: @modified-background-color;
-  box-shadow: @selected-box-shadow;
-  text-decoration: none;
-}
-
-.tox-suggestededits__annotation--removed__highlight {
-	background-color: @removed-background-color;
-	text-decoration: line-through;
-}
-
-.tox-suggestededits__annotation--removed__selected {
-	background-color: @removed-background-color;
-	box-shadow: @selected-box-shadow;
-	text-decoration: line-through;
-}
-
-.tox-suggestededits__annotation--added.tox-suggestededits__annotation--added__hidden,
-.tox-suggestededits__annotation--modified.tox-suggestededits__annotation--modified__hidden,
-.tox-suggestededits__annotation--removed.tox-suggestededits__annotation--removed__hidden {
-  display: none;
-  text-decoration: none;
-}
-
-*:has(> div > iframe) {
-  &.tox-suggestededits__annotation--added,
-  &.tox-suggestededits__annotation--modified,
-  &.tox-suggestededits__annotation--removed {
-    padding: 7px;
-    margin: 5px;
-  }
-}
-
-img,
-video,
-iframe {
-  &.tox-suggestededits__annotation--added__highlight {
-    outline: 0.25em solid @added-background-color;
-    padding: 0.25em;
-  }
-
-  &.tox-suggestededits__annotation--added__selected {
-    border: 0.25em solid @added-background-color;
-    outline: 0.125em solid @selected-outline-color;
-    padding: 0em;
-  }
-
-  &.tox-suggestededits__annotation--modified__highlight {
-    outline: 0.25em solid @modified-background-color;
-    padding: 0.25em;
-  }
-
-  &.tox-suggestededits__annotation--modified__selected {
-    border: 0.25em solid @modified-background-color;
-    outline: 0.125em solid @selected-outline-color;
-    padding: 0em;
-  }
-
-  &.tox-suggestededits__annotation--removed__highlight {
-    outline: 0.25em solid @removed-background-color;
-    padding: 0.25em;
-  }
-
-  &.tox-suggestededits__annotation--removed__selected {
-    border: 0.25em solid @removed-background-color;
-    outline: 0.125em solid @selected-outline-color;
-    padding: 0em;
-  }
-}
-
-div.tox-suggestededits__annotation:has(> hr) {
-  padding: 0.25em;
-}
-
-div.tox-suggestededits__annotation--removed__highlight > hr {
-  border-color: darken(@removed-background-color, 50%);
-}
-
-div.tox-suggestededits__annotation--added__highlight > hr {
-  border-color: darken(@added-background-color, 50%);
-}
-
-.mce-pagebreak {
-  &.tox-suggestededits__annotation--added__selected,
-  &.tox-suggestededits__annotation--removed__selected,
-  &.tox-suggestededits__annotation--modified__selected {
-    // Taken from the content pagebreak styles
-    border: 1px dashed #aaa;
-    box-shadow: none;
-  }
-
-  &.tox-suggestededits__annotation--added__highlight,
-  &.tox-suggestededits__annotation--modified__highlight,
-  &.tox-suggestededits__annotation--removed__highlight {
-    padding: 0;
-  }
-}
+.diff-content(
+  suggestededits,
+  @suggestededits-added-background-color,
+  @suggestededits-modified-background-color,
+  @suggestededits-removed-background-color,
+  @suggestededits-selected-outline-color,
+  @suggestededits-selected-box-shadow
+);
