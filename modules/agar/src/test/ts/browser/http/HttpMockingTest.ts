@@ -204,7 +204,8 @@ describe('browser.agar.http.HttpMockingTest', () => {
     Assert.eq('Should be expected state', { count: 2 }, json2);
   });
 
-  it('TINY-13084: Should handle streaming response', async () => {
+  // TINY-13184: Skipped since it's flaking on lambdatest Firefox
+  it.skip('TINY-13084: Should handle streaming response', async () => {
     const response = await window.fetch('/custom/streaming');
     const body = response.body;
 

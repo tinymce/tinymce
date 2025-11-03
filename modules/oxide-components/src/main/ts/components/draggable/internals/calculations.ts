@@ -1,10 +1,10 @@
-import type { Boundries, Position, Size } from './types';
+import type { Boundaries, Position, Size } from './types';
 
 const delta = (start: Position, end: Position): { deltaX: number; deltaY: number } => ({ deltaX: end.x - start.x, deltaY: end.y - start.y });
 
 const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
 
-const boundries = (element: Position & Size, startMousePosition: Position, upperLeftCorner: Position, bottomRightCorner: Position): Boundries => {
+const boundaries = (element: Position & Size, startMousePosition: Position, upperLeftCorner: Position, bottomRightCorner: Position): Boundaries => {
   const elementRight = element.x + element.width;
   const elementBottom = element.y + element.height;
 
@@ -20,4 +20,4 @@ const boundries = (element: Position & Size, startMousePosition: Position, upper
   };
 };
 
-export { delta, clamp, boundries };
+export { delta, clamp, boundaries };
