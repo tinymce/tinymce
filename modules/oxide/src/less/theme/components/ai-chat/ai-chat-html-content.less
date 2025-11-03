@@ -1,97 +1,91 @@
 .tox .tox-ai-html-content {
-  font-size: 16px;
-  line-height: 1.55;
+  font-size: var(--tox-private-font-size-md, @font-size-md);
+  font-family: var(--tox-private-font-stack, @font-stack);
+  background-color: var(--tox-private-background-color, @background-color);
+  color: var(--tox-private-text-color, @text-color);
+  line-height: var(--tox-private-line-height-base, @line-height-base);
+  margin: 1em;
 
-  /* Headings — smaller margins for tight layout */
+  /* Headings */
   h1 {
-    font-size: 1.6rem;
-    font-weight: 600;
-    margin: 0.6em 0 0.35em;
-    line-height: 1.25;
+    font-size: 1.6em;
+    font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
+    margin: 0.67em 0;
   }
 
   h2 {
-    font-size: 1.4rem;
-    font-weight: 600;
-    margin: 0.55em 0 0.3em;
-    line-height: 1.3;
+    font-size: 1.4em;
+    font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
+    margin: 0.83em 0;
   }
 
   h3 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin: 0.5em 0 0.3em;
-    line-height: 1.32;
+    font-size: 1.2em;
+    font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
+    margin: 1em 0;
   }
 
   h4, h5, h6 {
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 0.45em 0 0.25em;
-    line-height: 1.35;
+    font-size: 1em;
+    font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
+    margin: 0.33em 0;
   }
 
   /* Paragraphs */
   p {
-    margin: 0.4em 0;
-    line-height: 1.5;
+    margin: 1em 0;
   }
 
   /* Lists */
   ul, ol {
-    padding-left: 1.3em;
-    line-height: 1em;
+    padding-left: 2em;
+    margin: 1em 0;
   }
 
-  li {
+  li:has(input:first-child) {
+    list-style-type: none;
   }
 
   /* Links */
   a {
-    color: #0366d6;
-    text-decoration: none;
+    color: var(--tox-private-color-tint, @color-tint);
+    text-decoration: underline;
     cursor: pointer;
   }
-  a:hover {
-    text-decoration: underline;
+  a:link:active, a:visited:active {
+    color: #8864ad;
   }
 
   /* Blockquote */
   blockquote {
-    border-left: 3px solid #ccc;
-    padding-left: 0.6em;
-    color: #555;
-    margin: 0.4em 0;
+    border-left: 2px solid #ccc;
+    margin-left: 1.5rem;
+    padding-left: 1rem;
     font-style: italic;
-    line-height: 1.5;
   }
 
   /* Inline code */
   code {
     font-family: ui-monospace, monospace;
-    background: #f6f8fa;
-    padding: 0.1em 0.3em;
-    font-size: 0.95em;
+    background: #e8e8e8;
+    padding: 0.1em 0.2em;
     border-radius: 4px;
-    line-height: 1.4;
   }
 
   /* Code block */
   pre code {
     display: block;
-    padding: 0.6em;
-    background: #f6f8fa;
-    border-radius: 5px;
-    overflow-x: auto;
-    line-height: 1.4;
-    margin: 0.5em 0;
+    font-family: ui-monospace, monospace;
+    background: #e8e8e8;
+    border-radius: 4px;
+    white-space: pre;
+    margin: 1em 0;
   }
 
   /* Horizontal rule */
   hr {
     border: none;
-    border-top: 1px solid #ddd;
-    margin: 0.7em 0;
+    border-top: 1px solid #ccc;
   }
 
   /* Tables */
@@ -103,21 +97,26 @@
     line-height: 1.45;
   }
 
+  table:not([cellpadding]) th,
+  table:not([cellpadding]) td {
+    padding: .4rem;
+  }
   th, td {
-    border: 1px solid #ddd;
-    padding: 0.3em 0.5em;
+    border: 1px solid #ccc;
   }
 
   th {
     background: #f6f8fa;
-    font-weight: 600;
+    font-weight:  var(--tox-private-font-weight-bold, @font-weight-bold);;
     text-align: left;
   }
 
   /* --- Inline Markdown Elements --- */
 
   /* Bold */
-  strong, b { font-weight: 600; }
+  strong, b { 
+    font-weight:  var(--tox-private-font-weight-bold, @font-weight-bold);
+  }
 
   /* Italic */
   em, i { font-style: italic; }
@@ -136,7 +135,7 @@
 
   /* Highlight text */
   mark {
-    background: #ffecb2;
+    background: hsl(from var(--tox-private-color-active, @color-active) h s l / 30%);
     padding: 0.05em 0.2em;
     border-radius: 2px;
   }
@@ -166,5 +165,5 @@
 
 /* Adding margin to .tox-ai-html-content inside the expandble content */
 .tox .tox-expandable-box__content .tox-ai-html-content {
-  margin: 8px 12px;
+  margin: var(--tox-private-pad-sm, @pad-sm) var(--tox-private-pad-md, @pad-md);
 }
