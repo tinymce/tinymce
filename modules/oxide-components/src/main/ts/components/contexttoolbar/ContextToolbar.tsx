@@ -31,50 +31,19 @@ const defaultToolbarGap = '6px';
 const Root: FC<ContextToolbarProps> = ({
   children,
   persistent = false,
-  anchorRef,
-  open: controlledOpen,
-  onOpenChange
+  anchorRef
 }) => {
-  const [ internalOpen, setInternalOpen ] = useState(false);
+  const [ open, setOpen ] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
   const toolbarRef = useRef<HTMLDivElement>(null);
-  const isControlledRef = useRef<boolean>(Type.isNonNullable(controlledOpen));
 
-  // Handles attempts to switch between controlled and uncontrolled mode.
-  useEffect(() => {
-    const isControlled = Type.isNonNullable(controlledOpen);
-    if (isControlledRef.current !== isControlled) {
-      const message = 'ContextToolbar: Cannot switch between controlled and uncontrolled mode. Mode must remain consistent for the component lifetime.';
-      /* eslint-disable-next-line no-console */
-      console.warn(message, {
-        previousMode: isControlledRef.current ? 'controlled' : 'uncontrolled',
-        attemptedMode: isControlled ? 'controlled' : 'uncontrolled'
-      });
-      throw new Error(message);
-    }
-  }, [ controlledOpen ]);
+  const openToolbar = useCallback(() => {
+    setOpen(true);
+  }, []);
 
-  const isOpen =
-    isControlledRef.current &&
-    Type.isNonNullable(controlledOpen)
-      ? controlledOpen
-      : internalOpen;
-
-  const open = useCallback(() => {
-    if (isControlledRef.current && Type.isNonNullable(onOpenChange)) {
-      onOpenChange(true);
-    } else {
-      setInternalOpen(true);
-    }
-  }, [ onOpenChange ]);
-
-  const close = useCallback(() => {
-    if (isControlledRef.current && Type.isNonNullable(onOpenChange)) {
-      onOpenChange(false);
-    } else {
-      setInternalOpen(false);
-    }
-  }, [ onOpenChange ]);
+  const closeToolbar = useCallback(() => {
+    setOpen(false);
+  }, []);
 
   const getAnchorElement = useCallback((): HTMLElement | null => {
     if (Type.isNonNullable(anchorRef?.current)) {
@@ -91,16 +60,44 @@ const Root: FC<ContextToolbarProps> = ({
     return null;
   }, [ anchorRef, triggerRef ]);
 
+  // Auto-open when mounting with anchorRef (no Trigger)
+  useEffect(() => {
+    if (Type.isNonNullable(anchorRef?.current)) {
+      // Use requestAnimationFrame to ensure anchorRef is ready and allow Trigger to mount first
+      const rafId = window.requestAnimationFrame(() => {
+        if (!Type.isNonNullable(triggerRef.current)) {
+          setOpen(true);
+        }
+      });
+
+      return () => window.cancelAnimationFrame(rafId);
+    }
+  }, [ anchorRef, triggerRef ]);
+
+  useEffect(() => {
+    if (Type.isNonNullable(anchorRef?.current)) {
+      const anchor = anchorRef.current;
+      const handleAnchorClick = () => {
+        openToolbar();
+      };
+
+      anchor.addEventListener('click', handleAnchorClick);
+      return () => {
+        anchor.removeEventListener('click', handleAnchorClick);
+      };
+    }
+  }, [ anchorRef, openToolbar ]);
+
   const context = useMemo<ContextToolbarContextValue>(() => ({
-    isOpen,
-    open,
-    close,
+    isOpen: open,
+    open: openToolbar,
+    close: closeToolbar,
     triggerRef,
     toolbarRef,
     anchorRef,
     getAnchorElement,
     persistent
-  }), [ isOpen, open, close, persistent, anchorRef, getAnchorElement ]);
+  }), [ open, openToolbar, closeToolbar, persistent, anchorRef, getAnchorElement ]);
 
   return (
     <ContextToolbarContext.Provider value={context}>

@@ -57,15 +57,12 @@ The provider component that manages toolbar state.
 
 **Props:**
 - \`persistent\`: (optional, default: \`false\`). If true, the toolbar stays open when clicking outside of it.
-- \`open\`: (optional). When provided, controls the toolbar visibility in controlled mode. If not provided, the toolbar manages its own state (uncontrolled mode).
-- \`onOpenChange\`: (optional). Callback function called when toolbar open state changes. Required when using controlled mode (\`open\` prop) to handle state updates from Escape key and click-outside handlers.
-- \`anchorRef\`: (optional). A ref to an external element to anchor the toolbar to. When provided, the toolbar positions relative to this element instead of the Trigger component.
+- \`anchorRef\`: (optional). A ref to an external element to anchor the toolbar to. When provided, the toolbar positions relative to this element instead of the Trigger component. The toolbar auto-opens on mount if no Trigger component is present.
 
 **Important:** 
-- \`open\` and \`anchorRef\` are mutually exclusive with using the \`Trigger\` component. Use either:
-  - **Uncontrolled mode**: Use \`Trigger\` component (no \`open\` prop)
-  - **Controlled mode**: Use \`open\` prop and optionally \`anchorRef\` (no \`Trigger\` component)
-- **Mode consistency**: Once initialized, the component cannot switch between controlled and uncontrolled modes. The mode is determined on first render and must remain consistent for the component's lifetime. Attempting to switch modes will result in a warning and error.
+- Use either \`Trigger\` component OR \`anchorRef\` (not both). 
+- With \`anchorRef\` and no Trigger, the toolbar auto-opens on mount.
+- Visibility is controlled by conditional rendering - mount/unmount the component based on your state (e.g., when an annotation is selected).
 
 ### Trigger
 Wraps the element that opens the toolbar when clicked.
@@ -351,17 +348,17 @@ export const Corners: Story = {
   }
 };
 
-export const ControlledWithAnchorRef: Story = {
+export const WithAnchorRef: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Demonstrates controlled mode using `open` prop and `anchorRef` to position toolbar relative to an external element. This pattern is useful when the trigger is outside the React component tree (e.g. in an iframe).',
+        story: 'Demonstrates using `anchorRef` without a Trigger component. The toolbar auto-opens on mount. Visibility is controlled externally via conditional rendering. This pattern is useful when conditionally rendering the toolbar based on state (e.g., when an annotation is selected).',
       },
     },
   },
   render: () => {
     const anchorRef = useRef<HTMLDivElement>(null);
-    const [ isOpen, setIsOpen ] = useState(false);
+    const [ showToolbar, setShowToolbar ] = useState(true);
 
     return (
       <div className='tox' style={{ position: 'relative' }}>
@@ -373,29 +370,29 @@ export const ControlledWithAnchorRef: Story = {
             cursor: 'pointer',
             display: 'inline-block'
           }}
-          onClick={() => setIsOpen(!isOpen)}
         >
-          Click me (external anchor)
+          Anchor element
         </div>
 
-        <ContextToolbar.Root
-          anchorRef={anchorRef}
-          open={isOpen}
-          persistent={true}
-          onOpenChange={setIsOpen}
-        >
-          <ContextToolbar.Toolbar>
-            <ContextToolbar.Group>
-              <Button onClick={() => {
-                setIsOpen(false);
-              }}>Accept</Button>
-              <Button onClick={() => {
-                setIsOpen(false);
-              }}>Reject</Button>
-            </ContextToolbar.Group>
-          </ContextToolbar.Toolbar>
-        </ContextToolbar.Root>
+        <button onClick={() => setShowToolbar(!showToolbar)} style={{ marginLeft: '10px' }}>
+          {showToolbar ? 'Hide' : 'Show'} Toolbar
+        </button>
+
+        {showToolbar && (
+          <ContextToolbar.Root
+            anchorRef={anchorRef}
+            persistent={true}
+          >
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <Button>Accept</Button>
+                <Button>Reject</Button>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        )}
       </div>
     );
   }
 };
+

@@ -1,19 +1,10 @@
 import type { HTMLAttributes, MouseEventHandler, ReactNode, RefObject } from 'react';
 
-export type ContextToolbarProps = {
+export interface ContextToolbarProps {
   readonly children: HTMLAttributes<HTMLDivElement>['children'];
   readonly persistent?: boolean;
   readonly anchorRef?: RefObject<HTMLElement>;
-} & (
-  | {
-    readonly open: boolean;
-    readonly onOpenChange: (open: boolean) => void;
-  }
-  | {
-    readonly open?: never;
-    readonly onOpenChange?: never;
-  }
-);
+}
 
 export interface ContextToolbarContextValue {
   readonly isOpen: boolean;
