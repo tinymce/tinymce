@@ -1,4 +1,4 @@
-import { delta, clamp, boundries } from 'oxide-components/components/draggable/internals/calculations';
+import { delta, clamp, boundaries } from 'oxide-components/components/draggable/internals/calculations';
 import { describe, expect, it } from 'vitest';
 
 describe('browser.draggable.calculations', () => {
@@ -32,16 +32,16 @@ describe('browser.draggable.calculations', () => {
     });
   });
 
-  describe('boundries', () => {
+  describe('boundaries', () => {
     it('should calculate max and min pointer position when left top is in 0, 0', () => {
       const upperLeftCorner = { x: 0, y: 0 };
       const bottomRightCorner = { x: 1500, y: 1500 };
       const element = { x: 50, y: 50, width: 300, height: 300 };
       const mousePosition = { x: 100, y: 100 };
 
-      const calculatedBoundries = boundries(element, mousePosition, upperLeftCorner, bottomRightCorner);
+      const calculatedBoundaries = boundaries(element, mousePosition, upperLeftCorner, bottomRightCorner);
 
-      expect(calculatedBoundries).toMatchObject({
+      expect(calculatedBoundaries).toMatchObject({
         x: {
           min: 50,
           max: 1250
@@ -58,9 +58,9 @@ describe('browser.draggable.calculations', () => {
       const bottomRightCorner = { x: 1500, y: 1500 };
       const element = { x: 700, y: 600, width: 50, height: 50 };
       const mousePosition = { x: 710, y: 620 };
-      const calculatedBoundries = boundries(element, mousePosition, upperLeftCorner, bottomRightCorner);
+      const calculatedBoundaries = boundaries(element, mousePosition, upperLeftCorner, bottomRightCorner);
 
-      expect(calculatedBoundries).toMatchObject({
+      expect(calculatedBoundaries).toMatchObject({
         x: {
           min: 510,
           max: 1460
@@ -72,14 +72,14 @@ describe('browser.draggable.calculations', () => {
       });
     });
 
-    it('should round boundries correctly', () => {
+    it('should round boundaries correctly', () => {
       const upperLeftCorner = { x: 0, y: 0 };
       const bottomRightCorner = { x: 1500, y: 1500 };
       const element = { x: 750, y: 285, width: 250, height: 500 };
       const mousePosition = { x: 751.5, y: 286.5 };
-      const calculatedBoundries = boundries(element, mousePosition, upperLeftCorner, bottomRightCorner);
+      const calculatedBoundaries = boundaries(element, mousePosition, upperLeftCorner, bottomRightCorner);
 
-      expect(calculatedBoundries).toMatchObject({
+      expect(calculatedBoundaries).toMatchObject({
         x: {
           min: 2, // 1.5 rounded up
           max: 1251 // 1251.5 rounded down

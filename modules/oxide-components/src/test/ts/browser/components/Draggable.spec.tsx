@@ -95,7 +95,7 @@ describe('browser.draggable.Draggable', () => {
     assertPosition(draggableWrapper, { top: 0, left: 0 });
   });
 
-  it('TINY-12875: Should not exceed boundries', async () => {
+  it('TINY-12875: Should not exceed boundaries', async () => {
     const viewportWidth = 1500;
     const viewportHeight = 1300;
     const elementWidth = 300;
@@ -260,7 +260,7 @@ describe('browser.draggable.Draggable', () => {
     };
 
     const TestElementWithButton = (
-      <Draggable.Root>
+      <Draggable.Root style={{ position: 'absolute' }}>
         <div data-testid={draggableTestId} style={{ width: 250, height: 500, backgroundColor: 'gray' }}>
           <Draggable.Handle>
             <div data-testid={draggableHandleTestId} style={{ width: '100%', height: 50, backgroundColor: 'black' }}>

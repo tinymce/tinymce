@@ -37,7 +37,7 @@ export interface DraggableState {
   setPosition: React.Dispatch<React.SetStateAction<CssPosition | Position>>;
 };
 
-export interface Boundries {
+export interface Boundaries {
   x: { min: number; max: number };
   y: { min: number; max: number };
 };
