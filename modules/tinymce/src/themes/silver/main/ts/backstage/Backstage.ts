@@ -1,6 +1,6 @@
 import type { AlloyComponent, AlloySpec } from '@ephox/alloy';
 import type { Dialog, Menu } from '@ephox/bridge';
-import { Cell, Obj, Optional, type Result } from '@ephox/katamari';
+import { Arr, Cell, Obj, Optional, type Result } from '@ephox/katamari';
 
 import type Editor from 'tinymce/core/api/Editor';
 import I18n, { type TranslatedString, type Untranslated } from 'tinymce/core/api/util/I18n';
@@ -55,6 +55,19 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
   const contextMenuState = Cell(false);
   const toolbar = HeaderBackstage(editor);
 
+  const enabledInContextFn = (specContext: string, contexts: Record<string, (args: string) => boolean>) => {
+    const [ key, value = '' ] = specContext.split(':');
+    return {
+      key,
+      result: Obj.get(contexts, key)
+        .fold(
+          // Fallback to 'mode:design' if key is not found
+          () => Obj.get(contexts, 'mode').map((pred) => pred('design')).getOr(false),
+          (pred) => value.charAt(0) === '!' ? !pred(value.slice(1)) : pred(value)
+        )
+    };
+  };
+
   const providers: UiFactoryBackstageProviders = {
     icons: () => editor.ui.registry.getAll().icons,
     menuItems: () => editor.ui.registry.getAll().menuItems,
@@ -69,17 +82,13 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
           shouldDisable: true
         };
       }
-      const [ key, value = '' ] = specContext.split(':');
       const contexts = editor.ui.registry.getAll().contexts;
-      const enabledInContext = Obj.get(contexts, key)
-        .fold(
-          // Fallback to 'mode:design' if key is not found
-          () => Obj.get(contexts, 'mode').map((pred) => pred('design')).getOr(false),
-          (pred) => value.charAt(0) === '!' ? !pred(value.slice(1)) : pred(value)
-        );
+      const contextResults = Arr.map(specContext.split(','), (spec) => enabledInContextFn(spec, contexts));
+      const isAllEnabled = Arr.forall(contextResults, (spec) => spec.result === true);
+
       return {
-        contextType: key,
-        shouldDisable: !enabledInContext
+        contextType: Arr.map(contextResults, (al) => al.key).join(','),
+        shouldDisable: !isAllEnabled
       };
     }
   };

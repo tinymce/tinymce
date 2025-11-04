@@ -91,6 +91,20 @@ describe('browser.tinymce.themes.silver.editor.backstage.BackstageSinkTest', () 
           assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:!random'), { contextType: 'mode', shouldDisable: false });
           assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:!testmode'), { contextType: 'mode', shouldDisable: true });
         });
+
+        it('TINY-13143: Handle multiple context entries', async () => {
+          const editor = hook.editor();
+          editor.ui.registry.addContext('context_1', (value) => value === 'test');
+          editor.ui.registry.addContext( 'context_2', (value) => value === 'test');
+
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1:test,context_2:test'), { contextType: 'context_1,context_2', shouldDisable: false });
+
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1:test,context_2:test2'), { contextType: 'context_1,context_2', shouldDisable: true });
+
+          // context_3 is not registered so it is reasonable to expect shouldDisabled:false
+          // However, because of the current logic, any unfound context is assumed as mode:design
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1:test,context_2:test,context_3:test'), { contextType: 'context_1,context_2,context_3', shouldDisable: false });
+        });
       });
     });
   });
