@@ -48,10 +48,18 @@
   }
 
   .tox-ai__response.tox-ai__response-streaming {
-    background: linear-gradient(180deg, var(--tox-private-color-black, @color-black) 0%, transparent 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    position: relative;
+  }
+
+  .tox-ai__response.tox-ai__response-streaming::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: min(100px, 100%);
+    pointer-events: none;
+    background: linear-gradient(to bottom, transparent, var(--tox-private-background-color, @background-color));
   }
 
   .tox-ai__error-message {
