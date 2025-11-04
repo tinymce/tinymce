@@ -1,5 +1,5 @@
 import { Arr, Id, Optional, Type } from '@ephox/katamari';
-import { Class, Css, Focus, SelectorFilter, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
+import { Class, Css, Focus, SelectorFilter, SelectorFind, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 import {
   createContext,
   useContext,
@@ -30,24 +30,77 @@ const defaultToolbarGap = '6px';
 
 const Root: FC<ContextToolbarProps> = ({
   children,
-  persistent = false
+  persistent = false,
+  anchorRef
 }) => {
   const [ isOpen, setIsOpen ] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
   const toolbarRef = useRef<HTMLDivElement>(null);
 
-  const open = useCallback(() => setIsOpen(true), []);
-  const close = useCallback(() => setIsOpen(false), []);
+  const openToolbar = useCallback(() => {
+    setIsOpen(true);
+  }, []);
+
+  const closeToolbar = useCallback(() => {
+    setIsOpen(false);
+  }, []);
+
+  const getAnchorElement = useCallback((): HTMLElement | null => {
+    // Prefer anchorRef.current if provided
+    return Optional.from(anchorRef?.current)
+      .orThunk(() => {
+        // Otherwise, try to get first child of trigger, or fall back to trigger itself
+        return Optional.from(triggerRef.current)
+          .map(SugarElement.fromDom)
+          .bind(Traverse.firstChild)
+          .filter(SugarNode.isHTMLElement)
+          .map((child) => child.dom)
+          .orThunk(() => Optional.from(triggerRef.current));
+      })
+      .getOrNull();
+  }, [ anchorRef, triggerRef ]);
+
+  // Auto-open when mounting with anchorRef (no Trigger)
+  // Since component remounts when anchorRef changes, we can read it directly
+  useEffect(() => {
+    const anchor = getAnchorElement();
+    if (Type.isNonNullable(anchor) && !Type.isNonNullable(triggerRef.current)) {
+      // Use requestAnimationFrame to ensure anchor is ready and allow Trigger to mount first
+      const rafId = window.requestAnimationFrame(() => {
+        if (!Type.isNonNullable(triggerRef.current)) {
+          setIsOpen(true);
+        }
+      });
+
+      return () => window.cancelAnimationFrame(rafId);
+    }
+  }, [ getAnchorElement, triggerRef ]);
+
+  useEffect(() => {
+    const anchor = getAnchorElement();
+    if (Type.isNonNullable(anchor)) {
+      const handleAnchorClick = () => {
+        openToolbar();
+      };
+
+      anchor.addEventListener('click', handleAnchorClick);
+      return () => {
+        anchor.removeEventListener('click', handleAnchorClick);
+      };
+    }
+  }, [ getAnchorElement, openToolbar ]);
 
   const context = useMemo<ContextToolbarContextValue>(() => ({
     isOpen,
-    open,
-    close,
+    open: openToolbar,
+    close: closeToolbar,
     triggerRef,
     toolbarRef,
+    anchorRef,
+    anchorElement: getAnchorElement(),
+    getAnchorElement,
     persistent
-
-  }), [ isOpen, open, close, persistent ]);
+  }), [ isOpen, openToolbar, closeToolbar, persistent, anchorRef, getAnchorElement ]);
 
   return (
     <ContextToolbarContext.Provider value={context}>
@@ -89,6 +142,7 @@ const Toolbar: FC<ToolbarProps> = ({
     isOpen,
     toolbarRef,
     triggerRef,
+    getAnchorElement,
     close,
     persistent
   } = useContextToolbarContext();
@@ -144,16 +198,17 @@ const Toolbar: FC<ToolbarProps> = ({
     if (
       isOpen &&
       Type.isNonNullable(toolbarRef.current) &&
-      Type.isNonNullable(triggerRef.current) &&
       event.target instanceof Node
     ) {
       const clickedToolbar = toolbarRef.current.contains(event.target);
-      const clickedTrigger = triggerRef.current.contains(event.target);
-      if (!clickedToolbar && !clickedTrigger) {
+      const clickedTrigger = triggerRef.current?.contains(event.target) ?? false;
+      const anchor = getAnchorElement();
+      const clickedAnchor = anchor?.contains(event.target) ?? false;
+      if (!clickedToolbar && !clickedTrigger && !clickedAnchor) {
         close();
       }
     }
-  }, [ isOpen, close, toolbarRef, triggerRef ]);
+  }, [ isOpen, close, toolbarRef, triggerRef, getAnchorElement ]);
 
   useEffect(() => {
     if (persistent) {
@@ -166,37 +221,34 @@ const Toolbar: FC<ToolbarProps> = ({
   const anchorName = useMemo(() => `--${Id.generate('context-toolbar')}`, []);
 
   useEffect(() => {
-    if (!isOpen || !Type.isNonNullable(triggerRef.current) || !Type.isNonNullable(toolbarRef.current)) {
+    const anchorElement = getAnchorElement();
+    const toolbar = toolbarRef.current;
+    if (!isOpen || !Type.isNonNullable(anchorElement) || !Type.isNonNullable(toolbar)) {
       return;
     }
-
-    const trigger = triggerRef.current;
-    const toolbar = toolbarRef.current;
-    const anchorElement = trigger.firstElementChild instanceof window.HTMLElement
-      ? trigger.firstElementChild
-      : trigger;
 
     const sugarAnchor = SugarElement.fromDom(anchorElement);
     const sugarToolbar = SugarElement.fromDom(toolbar);
 
     Css.set(sugarAnchor, 'anchor-name', anchorName);
+    Css.set(sugarToolbar, 'position', 'absolute');
+    Css.set(sugarToolbar, 'margin', '0');
+    Css.set(sugarToolbar, 'inset', 'unset');
     Css.set(sugarToolbar, 'position-anchor', anchorName);
 
     const topValue = `calc(anchor(${anchorName} bottom) + ${defaultToolbarGap})`;
-    const leftValue = `anchor(${anchorName} left)`;
 
     Css.set(sugarToolbar, 'top', topValue);
-    Css.set(sugarToolbar, 'left', leftValue);
-
+    Css.set(sugarToolbar, 'justify-self', 'anchor-center');
     Css.set(sugarToolbar, 'position-try-fallbacks', 'flip-block, flip-inline, flip-block flip-inline');
 
     return () => {
       Css.remove(sugarAnchor, 'anchor-name');
-      Arr.each([ 'position-anchor', 'top', 'left', 'position-try-fallbacks' ], (property) => {
+      Arr.each([ 'position', 'margin', 'inset', 'position-anchor', 'top', 'justify-self', 'position-try-fallbacks' ], (property) => {
         Css.remove(sugarToolbar, property);
       });
     };
-  }, [ anchorName, isOpen, triggerRef, toolbarRef ]);
+  }, [ anchorName, isOpen, toolbarRef, getAnchorElement ]);
 
   const handleMouseDown = useCallback<MouseEventHandler<HTMLDivElement>>((event) => {
     onMouseDown?.(event);

@@ -1,6 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useMemo } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { fn } from 'storybook/test';
 
 import { Button } from '../button/Button';
@@ -57,6 +57,12 @@ The provider component that manages toolbar state.
 
 **Props:**
 - \`persistent\`: (optional, default: \`false\`). If true, the toolbar stays open when clicking outside of it.
+- \`anchorRef\`: (optional). A ref to an external element to anchor the toolbar to. When provided, the toolbar positions relative to this element instead of the Trigger component. The toolbar auto-opens on mount if no Trigger component is present.
+
+**Important:** 
+- Use either \`Trigger\` component OR \`anchorRef\` (not both). 
+- With \`anchorRef\` and no Trigger, the toolbar auto-opens on mount.
+- Visibility is controlled by conditional rendering - mount/unmount the component based on your state (e.g., when an annotation is selected).
 
 ### Trigger
 Wraps the element that opens the toolbar when clicked.
@@ -341,3 +347,52 @@ export const Corners: Story = {
     );
   }
 };
+
+export const WithAnchorRef: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'Demonstrates using `anchorRef` without a Trigger component. The toolbar auto-opens on mount. Visibility is controlled externally via conditional rendering. This pattern is useful when conditionally rendering the toolbar based on state (e.g., when an annotation is selected).',
+      },
+    },
+  },
+  render: () => {
+    const anchorRef = useRef<HTMLDivElement>(null);
+    const [ showToolbar, setShowToolbar ] = useState(true);
+
+    return (
+      <div className='tox' style={{ position: 'relative' }}>
+        <div
+          ref={anchorRef}
+          style={{
+            backgroundColor: 'lightcoral',
+            padding: '10px',
+            cursor: 'pointer',
+            display: 'inline-block'
+          }}
+        >
+          Anchor element
+        </div>
+
+        <button onClick={() => setShowToolbar(!showToolbar)} style={{ marginLeft: '10px' }}>
+          {showToolbar ? 'Hide' : 'Show'} Toolbar
+        </button>
+
+        {showToolbar && (
+          <ContextToolbar.Root
+            anchorRef={anchorRef}
+            persistent={true}
+          >
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <Button>Accept</Button>
+                <Button>Reject</Button>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        )}
+      </div>
+    );
+  }
+};
+
