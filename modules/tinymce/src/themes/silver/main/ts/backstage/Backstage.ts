@@ -83,7 +83,11 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
         };
       }
       const contexts = editor.ui.registry.getAll().contexts;
-      const contextResults = Arr.map(specContext.split(','), (spec) => enabledInContextFn(spec.trim(), contexts));
+      const contextResults = Arr.map(
+        Arr.filter(specContext.split(','), (spec) => spec.trim() !== ''),
+        (spec) => enabledInContextFn(spec.trim(), contexts)
+      );
+
       const isAllEnabled = Arr.forall(contextResults, (spec) => spec.result === true);
 
       return {
