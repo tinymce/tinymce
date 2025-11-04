@@ -25,7 +25,8 @@
   }
 
   .tox-ai__scroll {
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     background-color: var(--tox-private-background-color, @background-color);
     display: flex;
     padding: 12px;
@@ -34,6 +35,10 @@
     gap: 12px;
     flex: 1 0 0;
     align-self: stretch;
+  }
+
+  .tox-ai__response {
+    max-width: 100%;
   }
 
   .tox-ai__response-content {
