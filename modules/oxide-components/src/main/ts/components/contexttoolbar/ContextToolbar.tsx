@@ -47,27 +47,24 @@ const Root: FC<ContextToolbarProps> = ({
 
   const getAnchorElement = useCallback((): HTMLElement | null => {
     // Prefer anchorRef.current if provided
-    if (Type.isNonNullable(anchorRef?.current)) {
-      return anchorRef.current;
-    }
-
-    if (Type.isNonNullable(triggerRef.current)) {
-      const firstChild = triggerRef.current.firstElementChild;
-      if (Type.isNonNullable(firstChild)) {
-        const sugarFirstChild = SugarElement.fromDom(firstChild);
-        if (SugarNode.isHTMLElement(sugarFirstChild)) {
-          return sugarFirstChild.dom;
-        }
-      }
-      return triggerRef.current;
-    }
-    return null;
+    return Optional.from(anchorRef?.current)
+      .orThunk(() => {
+        // Otherwise, try to get first child of trigger, or fall back to trigger itself
+        return Optional.from(triggerRef.current)
+          .map(SugarElement.fromDom)
+          .bind(Traverse.firstChild)
+          .filter(SugarNode.isHTMLElement)
+          .map((child) => child.dom)
+          .orThunk(() => Optional.from(triggerRef.current));
+      })
+      .getOrNull();
   }, [ anchorRef, triggerRef ]);
 
   // Auto-open when mounting with anchorRef (no Trigger)
+  // Since component remounts when anchorRef changes, we can read it directly
   useEffect(() => {
     const anchor = getAnchorElement();
-    if (Type.isNonNullable(anchor)) {
+    if (Type.isNonNullable(anchor) && !Type.isNonNullable(triggerRef.current)) {
       // Use requestAnimationFrame to ensure anchor is ready and allow Trigger to mount first
       const rafId = window.requestAnimationFrame(() => {
         if (!Type.isNonNullable(triggerRef.current)) {
