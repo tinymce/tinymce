@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: The `context` property in a UI component now accepts multiple entries, separated by commas.
+time: 2025-11-05T08:40:08.074509+10:30
+custom:
+    Issue: TINY-13143
