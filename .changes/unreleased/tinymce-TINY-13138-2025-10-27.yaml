@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Resizing the editor's height would add a fixed width value.
-time: 2025-10-27T16:19:11.664089+01:00
-custom:
-    Issue: TINY-13138
