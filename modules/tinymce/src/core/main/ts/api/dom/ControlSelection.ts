@@ -160,7 +160,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
       // Resize by using style or attribute
       const targets = getResizeTargets(element);
       Arr.each(targets, (target) => {
-        if (target.style[name] || !editor.schema.isValid(target.nodeName.toLowerCase(), name)) {
+        if ((target.style[name] || !editor.schema.isValid(target.nodeName.toLowerCase(), name)) && !isUcVideo(target)) {
           dom.setStyle(target, name, value);
         } else {
           if (NodeType.isUcVideo(target)) {
@@ -170,10 +170,12 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
             if (target.width > minimumWidth && !(name === 'width' && value < minimumWidth)) {
               target[name] = value;
               dom.setAttrib(target, name, '' + value);
+              dom.setStyle(target, name, value + 'px');
             } else {
               const value = name === 'height' ? minimumWidth * ratio : minimumWidth;
               target[name] = value;
               dom.setAttrib(target, name, '' + value);
+              dom.setStyle(target, name, value + 'px');
             }
           } else {
             dom.setAttrib(target, name, '' + value);
