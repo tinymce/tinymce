@@ -7,7 +7,6 @@ import {
   useState,
   useMemo,
   useEffect,
-  useLayoutEffect,
   type FC,
   useCallback,
   type MouseEventHandler
@@ -37,9 +36,6 @@ const Root: FC<ContextToolbarProps> = ({
   const [ isOpen, setIsOpen ] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
   const toolbarRef = useRef<HTMLDivElement>(null);
-  const [ anchorElement, setAnchorElement ] = useState<HTMLElement | null>(
-    () => anchorRef?.current ?? null
-  );
 
   const openToolbar = useCallback(() => {
     setIsOpen(true);
@@ -50,9 +46,9 @@ const Root: FC<ContextToolbarProps> = ({
   }, []);
 
   const getAnchorElement = useCallback((): HTMLElement | null => {
-    // Prefer anchorElement state (synced from anchorRef.current) for consistency
-    if (Type.isNonNullable(anchorElement)) {
-      return anchorElement;
+    // Prefer anchorRef.current if provided
+    if (Type.isNonNullable(anchorRef?.current)) {
+      return anchorRef.current;
     }
 
     if (Type.isNonNullable(triggerRef.current)) {
@@ -66,22 +62,13 @@ const Root: FC<ContextToolbarProps> = ({
       return triggerRef.current;
     }
     return null;
-  }, [ anchorElement, triggerRef ]);
-
-  // Sync anchorRef.current to state after every render to catch ref changes
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useLayoutEffect(() => {
-    const current = anchorRef?.current ?? null;
-    setAnchorElement((prev) => {
-      // Only update if value actually changed to avoid unnecessary re-renders
-      return prev !== current ? current : prev;
-    });
-  });
+  }, [ anchorRef, triggerRef ]);
 
   // Auto-open when mounting with anchorRef (no Trigger)
   useEffect(() => {
-    if (Type.isNonNullable(anchorElement)) {
-      // Use requestAnimationFrame to ensure anchorElement is ready and allow Trigger to mount first
+    const anchor = getAnchorElement();
+    if (Type.isNonNullable(anchor)) {
+      // Use requestAnimationFrame to ensure anchor is ready and allow Trigger to mount first
       const rafId = window.requestAnimationFrame(() => {
         if (!Type.isNonNullable(triggerRef.current)) {
           setIsOpen(true);
@@ -90,20 +77,21 @@ const Root: FC<ContextToolbarProps> = ({
 
       return () => window.cancelAnimationFrame(rafId);
     }
-  }, [ anchorElement, triggerRef ]);
+  }, [ getAnchorElement, triggerRef ]);
 
   useEffect(() => {
-    if (Type.isNonNullable(anchorElement)) {
+    const anchor = getAnchorElement();
+    if (Type.isNonNullable(anchor)) {
       const handleAnchorClick = () => {
         openToolbar();
       };
 
-      anchorElement.addEventListener('click', handleAnchorClick);
+      anchor.addEventListener('click', handleAnchorClick);
       return () => {
-        anchorElement.removeEventListener('click', handleAnchorClick);
+        anchor.removeEventListener('click', handleAnchorClick);
       };
     }
-  }, [ anchorElement, openToolbar ]);
+  }, [ getAnchorElement, openToolbar ]);
 
   const context = useMemo<ContextToolbarContextValue>(() => ({
     isOpen,
@@ -112,10 +100,10 @@ const Root: FC<ContextToolbarProps> = ({
     triggerRef,
     toolbarRef,
     anchorRef,
-    anchorElement,
+    anchorElement: getAnchorElement(),
     getAnchorElement,
     persistent
-  }), [ isOpen, openToolbar, closeToolbar, persistent, anchorRef, anchorElement, getAnchorElement ]);
+  }), [ isOpen, openToolbar, closeToolbar, persistent, anchorRef, getAnchorElement ]);
 
   return (
     <ContextToolbarContext.Provider value={context}>
@@ -157,7 +145,6 @@ const Toolbar: FC<ToolbarProps> = ({
     isOpen,
     toolbarRef,
     triggerRef,
-    anchorElement,
     getAnchorElement,
     close,
     persistent
@@ -218,12 +205,13 @@ const Toolbar: FC<ToolbarProps> = ({
     ) {
       const clickedToolbar = toolbarRef.current.contains(event.target);
       const clickedTrigger = triggerRef.current?.contains(event.target) ?? false;
-      const clickedAnchor = anchorElement?.contains(event.target) ?? false;
+      const anchor = getAnchorElement();
+      const clickedAnchor = anchor?.contains(event.target) ?? false;
       if (!clickedToolbar && !clickedTrigger && !clickedAnchor) {
         close();
       }
     }
-  }, [ isOpen, close, toolbarRef, triggerRef, anchorElement ]);
+  }, [ isOpen, close, toolbarRef, triggerRef, getAnchorElement ]);
 
   useEffect(() => {
     if (persistent) {
