@@ -1,3 +1,5 @@
+import { forwardRef } from 'react';
+
 import { Icon, type IconProps } from '../../internal/icon/Icon.component';
 import { classes } from '../../utils/Styles';
 import { Button, type ButtonProps } from '../button/Button';
@@ -7,10 +9,12 @@ export interface IconButtonProps extends IconProps, Omit<ButtonProps, 'children'
   readonly className?: never;
 }
 
-export const IconButton: React.FC<IconButtonProps> = ({ icon, resolver, ...props }) => {
+export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>((props, ref) => {
+  const { icon, resolver, ...rest } = props;
+
   return (
-    <Button {...props} className={classes([ 'tox-button--icon' ])} >
+    <Button ref={ref} {...rest} className={classes([ 'tox-button--icon' ])} >
       <Icon icon={icon} resolver={resolver} />
     </Button>
   );
-};
+});
