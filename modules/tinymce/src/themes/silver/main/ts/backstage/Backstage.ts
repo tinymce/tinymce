@@ -1,9 +1,10 @@
 import type { AlloyComponent, AlloySpec } from '@ephox/alloy';
 import type { Dialog, Menu } from '@ephox/bridge';
-import { Arr, Cell, Obj, Optional, type Result } from '@ephox/katamari';
+import { Arr, Cell, Fun, Obj, Optional, Strings, Type, type Result } from '@ephox/katamari';
 
 import type Editor from 'tinymce/core/api/Editor';
 import I18n, { type TranslatedString, type Untranslated } from 'tinymce/core/api/util/I18n';
+import Tools from 'tinymce/core/api/util/Tools';
 import * as UiFactory from 'tinymce/themes/silver/ui/general/UiFactory';
 
 import * as Options from '../api/Options';
@@ -61,8 +62,8 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
       key,
       result: Obj.get(contexts, key)
         .fold(
+          Fun.constant(null),
           // Fallback to 'mode:design' if key is not found
-          () => Obj.get(contexts, 'mode').map((pred) => pred('design')).getOr(false),
           (pred) => value.charAt(0) === '!' ? !pred(value.slice(1)) : pred(value)
         )
     };
@@ -82,13 +83,16 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
           shouldDisable: true
         };
       }
+
       const contexts = editor.ui.registry.getAll().contexts;
       const contextResults = Arr.map(
-        Arr.filter(specContext.split(','), (spec) => spec.trim() !== ''),
-        (spec) => enabledInContextFn(spec.trim(), contexts)
+        Arr.filter(Tools.explode(specContext), Strings.isNotEmpty),
+        (spec) => enabledInContextFn(spec, contexts)
       );
-
-      const isAllEnabled = Arr.forall(contextResults, (spec) => spec.result === true);
+      const matchedContextResults = Arr.filter(contextResults, (c) => Type.isNonNullable(c.result));
+      const isAllEnabled = matchedContextResults.length === 0
+        ? Obj.get(contexts, 'mode').map((pred) => pred('design')).getOr(false)
+        : Arr.forall(matchedContextResults, (spec) => spec.result === true);
 
       return {
         contextType: Arr.map(contextResults, (al) => al.key).join(','),

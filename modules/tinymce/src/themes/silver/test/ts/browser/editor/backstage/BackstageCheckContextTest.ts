@@ -1,5 +1,5 @@
 import { Attachment, Behaviour, Gui, GuiFactory, Positioning } from '@ephox/alloy';
-import { after, before, context, describe, it } from '@ephox/bedrock-client';
+import { after, afterEach, before, context, describe, it } from '@ephox/bedrock-client';
 import { Fun, Result } from '@ephox/katamari';
 import { Classes, SugarBody } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
@@ -60,6 +60,10 @@ describe('browser.tinymce.themes.silver.editor.backstage.BackstageSinkTest', () 
       });
 
       context('backstage - popup', () => {
+        afterEach(() => {
+          hook.editor().mode.set('design');
+        });
+
         it('TINY-11211: Backstage test', async () => {
           const editor = hook.editor();
           editor.mode.register('testmode', {
@@ -102,11 +106,16 @@ describe('browser.tinymce.themes.silver.editor.backstage.BackstageSinkTest', () 
           assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1:test,context_2:test2'), { contextType: 'context_1,context_2', shouldDisable: true });
 
           // Ignore empty entry
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1:test,,context_2:test2,'), { contextType: 'context_1,context_2', shouldDisable: true });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1:test,,context_2:test,'), { contextType: 'context_1,context_2', shouldDisable: false });
 
-          // context_3 is not registered so it is reasonable to expect shouldDisabled:true
-          // However, because of the current logic, any unfound context is assumed as mode:design
+          // Unmatched context is ignored
           assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1:test,context_2:test,context_3:test'), { contextType: 'context_1,context_2,context_3', shouldDisable: false });
+
+          // One matched context fails the predicate
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1:test,context_2:fail,context_3:test'), { contextType: 'context_1,context_2,context_3', shouldDisable: true });
+
+          // Default to mode:design when there is no matched context
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1a:test,context_2a:test,context_3a:test'), { contextType: 'context_1a,context_2a,context_3a', shouldDisable: false });
         });
       });
     });
