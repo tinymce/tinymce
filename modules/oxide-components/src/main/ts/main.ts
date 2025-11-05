@@ -1,4 +1,5 @@
 import ErrorMessage from './bespoke/tinyai/error/ErrorMessage';
+import { StreamingAiResponse } from './bespoke/tinyai/responses/StreamingAiResponse';
 import { Spinner } from './bespoke/tinyai/spinner/Spinner';
 import { Tag } from './bespoke/tinyai/tag/Tag';
 import { AutoResizingTextarea } from './components/autoresizingtextarea/AutoResizingTextarea';
@@ -25,5 +26,6 @@ export {
   KeyboardNavigationHooks,
   KeyboardNavigationTypes,
   Spinner,
+  StreamingAiResponse,
   Tag
 };
