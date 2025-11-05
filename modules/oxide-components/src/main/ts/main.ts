@@ -1,4 +1,5 @@
 import ErrorMessage from './bespoke/tinyai/error/ErrorMessage';
+import { AiResponse } from './bespoke/tinyai/responses/AiResponse';
 import { Spinner } from './bespoke/tinyai/spinner/Spinner';
 import { Tag } from './bespoke/tinyai/tag/Tag';
 import { AutoResizingTextarea } from './components/autoresizingtextarea/AutoResizingTextarea';
@@ -13,6 +14,7 @@ import * as Bem from './utils/Bem';
 import * as FocusHelpers from './utils/FocusHelpers';
 
 export {
+  AiResponse,
   AutoResizingTextarea,
   Bem,
   Button,
