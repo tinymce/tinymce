@@ -20,7 +20,6 @@
     background-color: var(--tox-private-background-color, @background-color);
     color: var(--tox-private-text-color, @text-color);
     line-height: var(--tox-private-line-height-base, @line-height-base);
-    margin: 1em;
     overflow-x: auto;
 
     /* Headings */
@@ -205,8 +204,9 @@
   /* separator between sections */
   .tox-ai-html-content + .tox-ai-html-content::before,
   .tox-ai-removed-content + .tox-ai-html-content::before,
-  .tox-ai-html-content + .tox-ai-removed-content::before {
+  .tox-ai-html-content:has(+ .tox-ai-removed-content)::after {
     content: "〰〰";
+    color: var(--tox-private-text-color-muted, @text-color-muted);
     text-align: center;
     width: 100%;
     display: block;
