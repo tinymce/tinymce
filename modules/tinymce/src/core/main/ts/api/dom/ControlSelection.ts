@@ -168,9 +168,9 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
             target[name] = value;
             dom.setStyle(target, name, value);
           } else {
-            const value = name === 'height' ? minimumWidth * ratio : minimumWidth;
-            target[name] = value;
-            dom.setStyle(target, name, value);
+            const valueConsideringMinWidth = name === 'height' ? minimumWidth * ratio : minimumWidth;
+            target[name] = valueConsideringMinWidth;
+            dom.setStyle(target, name, valueConsideringMinWidth);
           }
         } else {
           if (target.style[name] || !editor.schema.isValid(target.nodeName.toLowerCase(), name)) {
