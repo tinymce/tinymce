@@ -1,12 +1,8 @@
-/// <reference types="@vitest/browser/providers/playwright" />
-
-import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
-import path from 'node:path';
+import { playwright } from '@vitest/browser-playwright';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 
-const dirname =
-  typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
+import { mousedownCommand, mousemoveCommand, mouseupCommand } from './vitest-custom-commands';
 
 export default defineConfig({
   test: {
@@ -27,6 +23,9 @@ export default defineConfig({
         }
       },
       {
+        optimizeDeps: {
+          include: [ 'react/jsx-dev-runtime' ],
+        },
         test: {
           name: 'browser',
           setupFiles: [ './vitest.setup.js' ],
@@ -40,42 +39,15 @@ export default defineConfig({
             'src/test/ts/browser/**/*.spec.{ts,tsx}'
           ],
           browser: {
-            provider: 'playwright',
+            provider: playwright(),
             enabled: true,
             headless: true,
             screenshotFailures: false,
             instances: [
               { browser: 'chromium' }
-            ]
-          }
-        },
-      },
-      {
-        extends: 'vite.config.ts',
-        plugins: [
-          // The plugin will run tests for the stories defined in your Storybook config
-          // See options at: https://storybook.js.org/docs/writing-tests/test-addon#storybooktest
-          storybookTest({ configDir: path.join(dirname, '.storybook') }),
-        ],
-        test: {
-          name: 'storybook',
-          browser: {
-            enabled: true,
-            headless: true,
-            provider: 'playwright',
-            instances: [
-              {
-                browser: 'chromium',
-              },
-              {
-                browser: 'firefox',
-              },
-              {
-                browser: 'webkit',
-              },
             ],
-          },
-          setupFiles: [ '.storybook/vitest.setup.ts' ],
+            commands: { mousedownCommand, mouseupCommand, mousemoveCommand }
+          }
         },
       },
     ]

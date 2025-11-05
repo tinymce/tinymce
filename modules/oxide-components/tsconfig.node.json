@@ -26,6 +26,7 @@
   "include": [
     "vite.config.ts",
     "vitest.config.ts",
+    "vitest-custom-commands.ts",
     "playwright.config.ts",
     "src/test/ts/visual.spec.ts"
   ]

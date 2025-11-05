@@ -1,9 +1,9 @@
 import { Optional } from '@ephox/katamari';
 import { Focus, SelectorFind, SugarElement } from '@ephox/sugar';
-import { userEvent } from '@vitest/browser/context';
 import { useTabKeyNavigation } from 'oxide-components/keynav/KeyboardNavigationHooks';
 import React, { forwardRef, useRef } from 'react';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
 const styles = `.stay:focus {
@@ -64,7 +64,7 @@ const Container = forwardRef<HTMLDivElement, { store: string[]; testId: string }
 const sequence = async (doc: Document, keyCombo: string, identifiers: Array<{ label: string; selector: string }>) => {
   for (let i = 0; i < identifiers.length; i++) {
     await userEvent.keyboard(keyCombo);
-    const element = doc.querySelector(identifiers[i].selector);
+    const element = doc.querySelector(identifiers[i].selector) as HTMLElement;
     await expect.element(element, {
       message: 'Focus should move from ' + (i > 0 ? identifiers[i - 1].label : '(start)') + ' to ' + identifiers[i].label
     }).toHaveFocus();
