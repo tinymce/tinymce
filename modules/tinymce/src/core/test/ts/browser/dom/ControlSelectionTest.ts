@@ -98,6 +98,21 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     });
   };
 
+  const testEditorWidthUcVideo = async (editor: Editor, test: () => Promise<void>) => {
+    const oldObjectResizing = editor.options.get('object_resizing');
+    editor.options.set('object_resizing', oldObjectResizing + ',uc-video');
+    editor.options.set('resize_img_proportional', false);
+    editor.schema.addCustomElements({
+      ['uc-video']: {
+        extends: 'div',
+        attributes: [ 'class', 'style', 'contenteditable' ]
+      }
+    });
+    await test();
+    editor.options.set('resize_img_proportional', true);
+    editor.options.set('object_resizing', oldObjectResizing);
+  };
+
   beforeEach(() => resetEventCounter());
 
   it('TBA: Select image by context menu clicking on it', () => {
@@ -126,39 +141,57 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     await pResizeAndAssertEventCount(editor, '#mceResizeHandlese', 20, 2);
   });
 
-  it('TINY-4161: Resize ghost element dimensions match target element when using fixed width', () => {
+  it('TINY-4161: Resize ghost element dimensions match target element when using fixed width', async () => {
     const editor = hook.editor();
     editor.setContent('<p><table style="width: 600px; height: 100px"><tbody><tr><td>Cell</td><td>Cell</td></tr></tbody></table></p>');
     TinySelections.select(editor, 'td', [ 0 ]);
-    return pResizeAndAssertDimensions(editor, 'table', '#mceResizeHandlesw', 10, 10, 600, 100);
+    await pResizeAndAssertDimensions(editor, 'table', '#mceResizeHandlesw', 10, 10, 600, 100);
   });
 
-  it('TINY-4161: Resize ghost element dimensions match target element when using relative width', () => {
+  it('TINY-13166: Resize ghost element dimensions match target element when using fixed width (uc-video)', async () => {
+    const editor = hook.editor();
+    await testEditorWidthUcVideo(editor, async () => {
+      editor.resetContent('<p><uc-video contenteditable="false" class="tox-uc-video" style="width: 600px; height: 100px"></uc-video></p>');
+      TinySelections.select(editor, 'uc-video', [ 0 ]);
+      await pResizeAndAssertDimensions(editor, 'uc-video', '#mceResizeHandlenw', 10, 10, 600, 100);
+    });
+  });
+
+  it('TINY-4161: Resize ghost element dimensions match target element when using relative width', async () => {
     const editor = hook.editor();
     editor.setContent('<p><table style="width: 100%; height: 50px"><tbody><tr><td>Cell</td><td>Cell</td></tr></tbody></table></p>');
     TinySelections.select(editor, 'td', [ 0 ]);
-    return pResizeAndAssertDimensions(editor, 'table', '#mceResizeHandlese', -10, -10, 798, 50);
+    await pResizeAndAssertDimensions(editor, 'table', '#mceResizeHandlese', -10, -10, 798, 50);
   });
 
-  it('TINY-6229: Resize video element', () => {
+  it('TINY-13166: Resize ghost element dimensions match target element when using relative width (uc-video)', async () => {
+    const editor = hook.editor();
+    await testEditorWidthUcVideo(editor, async () => {
+      editor.resetContent('<p><uc-video contenteditable="false" class="tox-uc-video" style="width: 100%; height: 50px"></uc-video></p>');
+      TinySelections.select(editor, 'uc-video', []);
+      await pResizeAndAssertDimensions(editor, 'uc-video', '#mceResizeHandlenw', -10, -10, 798, 50);
+    });
+  });
+
+  it('TINY-6229: Resize video element', async () => {
     const editor = hook.editor();
     editor.setContent('<p><video controls width="300" height="150"></video></p>');
     TinySelections.select(editor, 'video', []);
-    return pResizeAndAssertDimensions(editor, 'video', '#mceResizeHandlese', 300, 150, 300, 150);
+    await pResizeAndAssertDimensions(editor, 'video', '#mceResizeHandlese', 300, 150, 300, 150);
   });
 
-  it('TINY-6229: Resize video media element', () => {
+  it('TINY-6229: Resize video media element', async () => {
     const editor = hook.editor();
     editor.setContent('<p><span contenteditable="false" class="mce-preview-object mce-object-video"><video controls width="300" height="150"></video></span></p>');
     TinySelections.select(editor, 'span', []);
-    return pResizeAndAssertDimensions(editor, 'video', '#mceResizeHandlese', -150, -75, 300, 150);
+    await pResizeAndAssertDimensions(editor, 'video', '#mceResizeHandlese', -150, -75, 300, 150);
   });
 
-  it('TINY-6229: Resize iframe media element', () => {
+  it('TINY-6229: Resize iframe media element', async () => {
     const editor = hook.editor();
     editor.setContent('<p><span contenteditable="false" class="mce-preview-object mce-object-iframe"><iframe style="border: 1px solid black" width="400" height="200" src="' + Env.transparentSrc + '" allowfullscreen></iframe></span></p>');
     TinySelections.select(editor, 'span', []);
-    return pResizeAndAssertDimensions(editor, 'iframe', '#mceResizeHandlese', 100, 50, 402, 202);
+    await pResizeAndAssertDimensions(editor, 'iframe', '#mceResizeHandlese', 100, 50, 402, 202);
   });
 
   it('TINY-6229: data-mce-selected attribute value retained when selecting the same element', async () => {
@@ -258,7 +291,7 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
   Arr.each([ 'nw', 'ne', 'se', 'sw' ], (origin) => {
     it(`TINY-10589 & TINY-10707: Resize ghost table element does not have heights on correct row to allow proper resizing (origin: ${origin})`, async () => {
       const editor = hook.editor();
-      editor.setContent(
+      editor.resetContent(
         '<table style="width: 100px; height: 50px"><tbody>' +
         '<tr style="height: 25px;"><td style="height: 11px;">Cell1</td><td style="height: 12px;">Cell2</td></tr>' +
         '<tr style="height: 25px;"><td style="height: 10px;">Cell3</td><td style="height: 10px;">Cell4</td></tr>' +
