@@ -22,6 +22,14 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
         const counter = eventCounter.get();
         counter[e.type] = (counter[e.type] || 0) + 1;
       });
+      editor.on('init', () => {
+        editor.schema.addCustomElements({
+          ['uc-video']: {
+            extends: 'div',
+            attributes: [ 'class', 'style', 'contenteditable' ]
+          }
+        });
+      });
     }
   }, [], true);
 
@@ -102,12 +110,6 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     const oldObjectResizing = editor.options.get('object_resizing');
     editor.options.set('object_resizing', oldObjectResizing + ',uc-video');
     editor.options.set('resize_img_proportional', false);
-    editor.schema.addCustomElements({
-      ['uc-video']: {
-        extends: 'div',
-        attributes: [ 'class', 'style', 'contenteditable' ]
-      }
-    });
     await test();
     editor.options.set('resize_img_proportional', true);
     editor.options.set('object_resizing', oldObjectResizing);
