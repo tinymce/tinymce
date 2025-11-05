@@ -1,3 +1,4 @@
+import ErrorMessage from './bespoke/tinyai/error/ErrorMessage';
 import { Spinner } from './bespoke/tinyai/spinner/Spinner';
 import { Tag } from './bespoke/tinyai/tag/Tag';
 import { AutoResizingTextarea } from './components/autoresizingtextarea/AutoResizingTextarea';
@@ -19,11 +20,12 @@ export {
   ContextToolbar,
   Draggable,
   ExpandableBox,
+  ErrorMessage,
   FloatingSidebar,
   FocusHelpers,
   IconButton,
   KeyboardNavigationHooks,
   KeyboardNavigationTypes,
-  Tag,
-  Spinner
+  Spinner,
+  Tag
 };
