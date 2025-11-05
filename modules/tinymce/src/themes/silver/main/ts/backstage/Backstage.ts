@@ -26,7 +26,7 @@ export interface UiFactoryBackstageProviders {
   readonly isDisabled: () => boolean;
   readonly getOption: Editor['options']['get'];
   readonly tooltips: TooltipsProvider;
-  readonly checkUiComponentContext: (specContext: string) => { contextType: string; shouldDisable: boolean };
+  readonly checkUiComponentContext: (specContext: string) => { contextType: string[]; shouldDisable: boolean };
 }
 
 export interface UiFactoryBackstageShared {
@@ -79,7 +79,7 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
     checkUiComponentContext: (specContext: string) => {
       if (Options.isDisabled(editor)) {
         return {
-          contextType: 'disabled',
+          contextType: [ 'disabled' ],
           shouldDisable: true
         };
       }
@@ -95,7 +95,7 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
         : Arr.forall(matchedContextResults, (spec) => spec.result === true);
 
       return {
-        contextType: Arr.map(contextResults, (al) => al.key).join(','),
+        contextType: Arr.map(contextResults, (al) => al.key),
         shouldDisable: !isAllEnabled
       };
     }

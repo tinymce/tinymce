@@ -72,28 +72,28 @@ describe('browser.tinymce.themes.silver.editor.backstage.BackstageSinkTest', () 
             editorReadOnly: true
           });
 
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:design'), { contextType: 'mode', shouldDisable: false });
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:readonly'), { contextType: 'mode', shouldDisable: true });
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('any'), { contextType: 'any', shouldDisable: false });
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:!design'), { contextType: 'mode', shouldDisable: true });
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:!readonly'), { contextType: 'mode', shouldDisable: false });
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:!random'), { contextType: 'mode', shouldDisable: false });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:design'), { contextType: [ 'mode' ], shouldDisable: false });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:readonly'), { contextType: [ 'mode' ], shouldDisable: true });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('any'), { contextType: [ 'any' ], shouldDisable: false });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:!design'), { contextType: [ 'mode' ], shouldDisable: true });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:!readonly'), { contextType: [ 'mode' ], shouldDisable: false });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:!random'), { contextType: [ 'mode' ], shouldDisable: false });
 
           editor.mode.set('readonly');
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:design'), { contextType: 'mode', shouldDisable: true });
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:readonly'), { contextType: 'mode', shouldDisable: false });
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:!design'), { contextType: 'mode', shouldDisable: false });
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:!readonly'), { contextType: 'mode', shouldDisable: true });
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:!random'), { contextType: 'mode', shouldDisable: false });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:design'), { contextType: [ 'mode' ], shouldDisable: true });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:readonly'), { contextType: [ 'mode' ], shouldDisable: false });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:!design'), { contextType: [ 'mode' ], shouldDisable: false });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:!readonly'), { contextType: [ 'mode' ], shouldDisable: true });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:!random'), { contextType: [ 'mode' ], shouldDisable: false });
 
           editor.mode.set('testmode');
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:design'), { contextType: 'mode', shouldDisable: true });
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:readonly'), { contextType: 'mode', shouldDisable: true });
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('any'), { contextType: 'any', shouldDisable: false });
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:!design'), { contextType: 'mode', shouldDisable: false });
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:!readonly'), { contextType: 'mode', shouldDisable: false });
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:!random'), { contextType: 'mode', shouldDisable: false });
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:!testmode'), { contextType: 'mode', shouldDisable: true });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:design'), { contextType: [ 'mode' ], shouldDisable: true });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:readonly'), { contextType: [ 'mode' ], shouldDisable: true });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('any'), { contextType: [ 'any' ], shouldDisable: false });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:!design'), { contextType: [ 'mode' ], shouldDisable: false });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:!readonly'), { contextType: [ 'mode' ], shouldDisable: false });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:!random'), { contextType: [ 'mode' ], shouldDisable: false });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('mode:!testmode'), { contextType: [ 'mode' ], shouldDisable: true });
         });
 
         it('TINY-13143: Handle multiple context entries', async () => {
@@ -101,21 +101,21 @@ describe('browser.tinymce.themes.silver.editor.backstage.BackstageSinkTest', () 
           editor.ui.registry.addContext('context_1', (value) => value === 'test');
           editor.ui.registry.addContext( 'context_2', (value) => value === 'test');
 
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1:test,context_2:test'), { contextType: 'context_1,context_2', shouldDisable: false });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1:test,context_2:test'), { contextType: [ 'context_1', 'context_2' ], shouldDisable: false });
 
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1:test,context_2:test2'), { contextType: 'context_1,context_2', shouldDisable: true });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1:test,context_2:test2'), { contextType: [ 'context_1', 'context_2' ], shouldDisable: true });
 
           // Ignore empty entry
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1:test,,context_2:test,'), { contextType: 'context_1,context_2', shouldDisable: false });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1:test,,context_2:test,'), { contextType: [ 'context_1', 'context_2' ], shouldDisable: false });
 
           // Unmatched context is ignored
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1:test,context_2:test,context_3:test'), { contextType: 'context_1,context_2,context_3', shouldDisable: false });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1:test,context_2:test,context_3:test'), { contextType: [ 'context_1', 'context_2', 'context_3' ], shouldDisable: false });
 
           // One matched context fails the predicate
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1:test,context_2:fail,context_3:test'), { contextType: 'context_1,context_2,context_3', shouldDisable: true });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1:test,context_2:fail,context_3:test'), { contextType: [ 'context_1', 'context_2', 'context_3' ], shouldDisable: true });
 
           // Default to mode:design when there is no matched context
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1a:test,context_2a:test,context_3a:test'), { contextType: 'context_1a,context_2a,context_3a', shouldDisable: false });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1a:test,context_2a:test,context_3a:test'), { contextType: [ 'context_1a', 'context_2a', 'context_3a' ], shouldDisable: false });
         });
       });
     });

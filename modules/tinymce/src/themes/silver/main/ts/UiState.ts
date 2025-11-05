@@ -61,7 +61,7 @@ const setupEventsForUi = (editor: Editor, uiRefs: ReadyUiReferences): void => {
   }
 };
 
-const toggleOnReceive = (getContext: () => { contextType: string; shouldDisable: boolean }): Behaviour.NamedConfiguredBehaviour<any, any> => Receiving.config({
+const toggleOnReceive = (getContext: () => { contextType: string[]; shouldDisable: boolean }): Behaviour.NamedConfiguredBehaviour<any, any> => Receiving.config({
   channels: {
     [UiStateChannel]: {
       onReceive: (comp, messageType: string) => {
@@ -71,7 +71,7 @@ const toggleOnReceive = (getContext: () => { contextType: string; shouldDisable:
         }
 
         const { contextType, shouldDisable } = getContext();
-        if (contextType === 'mode' && !Arr.contains(modeContextMessages, messageType)) {
+        if (Arr.contains(contextType, 'mode') && !Arr.contains(modeContextMessages, messageType)) {
           return;
         }
 
