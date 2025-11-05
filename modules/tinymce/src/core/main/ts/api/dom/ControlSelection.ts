@@ -160,23 +160,21 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
       // Resize by using style or attribute
       const targets = getResizeTargets(element);
       Arr.each(targets, (target) => {
-        if ((target.style[name] || !editor.schema.isValid(target.nodeName.toLowerCase(), name)) && !isUcVideo(target)) {
-          dom.setStyle(target, name, value);
-        } else {
-          if (NodeType.isUcVideo(target)) {
-            // this is needed because otherwise the ghost for `uc-video` is not correctly rendered
+        if (NodeType.isUcVideo(target)) {
+          // this is needed because otherwise the ghost for `uc-video` is not correctly rendered
+          target[name] = value;
+          const minimumWidth = 400;
+          if (target.width > minimumWidth && !(name === 'width' && value < minimumWidth)) {
             target[name] = value;
-            const minimumWidth = 400;
-            if (target.width > minimumWidth && !(name === 'width' && value < minimumWidth)) {
-              target[name] = value;
-              dom.setAttrib(target, name, '' + value);
-              dom.setStyle(target, name, value + 'px');
-            } else {
-              const value = name === 'height' ? minimumWidth * ratio : minimumWidth;
-              target[name] = value;
-              dom.setAttrib(target, name, '' + value);
-              dom.setStyle(target, name, value + 'px');
-            }
+            dom.setStyle(target, name, value);
+          } else {
+            const value = name === 'height' ? minimumWidth * ratio : minimumWidth;
+            target[name] = value;
+            dom.setStyle(target, name, value);
+          }
+        } else {
+          if (target.style[name] || !editor.schema.isValid(target.nodeName.toLowerCase(), name)) {
+            dom.setStyle(target, name, value);
           } else {
             dom.setAttrib(target, name, '' + value);
           }
