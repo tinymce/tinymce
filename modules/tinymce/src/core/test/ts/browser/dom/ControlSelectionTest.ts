@@ -170,7 +170,7 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
     const editor = hook.editor();
     await testEditorWidthUcVideo(editor, async () => {
       editor.resetContent('<p><uc-video contenteditable="false" class="tox-uc-video" style="width: 100%; height: 50px"></uc-video></p>');
-      TinySelections.select(editor, 'uc-video', []);
+      TinySelections.select(editor, 'uc-video', [ 0 ]);
       await pResizeAndAssertDimensions(editor, 'uc-video', '#mceResizeHandlenw', -10, -10, 798, 50);
     });
   });
