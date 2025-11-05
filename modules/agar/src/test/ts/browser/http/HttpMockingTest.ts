@@ -2,14 +2,15 @@ import { describe, it, Assert } from '@ephox/bedrock-client';
 import { Type } from '@ephox/katamari';
 
 import * as Http from 'ephox/agar/api/Http';
+import { TestStore } from 'ephox/agar/api/TestStore';
+import * as Waiter from 'ephox/agar/api/Waiter';
 
 interface State {
   readonly count: number;
 }
 
-const pWait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 describe('browser.agar.http.HttpMockingTest', () => {
+  const store = TestStore();
   const httpHook = Http.mockHttpHook<State>((state) => [
     Http.get('/custom/test', async () => {
       return Http.makeResponse(
@@ -97,7 +98,8 @@ describe('browser.agar.http.HttpMockingTest', () => {
 
         for (const item of items) {
           yield item;
-          await pWait(1);
+          store.add(item);
+          await Waiter.pWait(100);
         }
       };
 
@@ -204,8 +206,7 @@ describe('browser.agar.http.HttpMockingTest', () => {
     Assert.eq('Should be expected state', { count: 2 }, json2);
   });
 
-  // TINY-13184: Skipped since it's flaking on lambdatest Firefox
-  it.skip('TINY-13084: Should handle streaming response', async () => {
+  it('TINY-13084: Should handle streaming response', async () => {
     const response = await window.fetch('/custom/streaming');
     const body = response.body;
 
@@ -236,6 +237,8 @@ describe('browser.agar.http.HttpMockingTest', () => {
   it('TINY-13084: Should handle aborting streaming response', async () => {
     const abortController = new window.AbortController();
     const chunks: string[] = [];
+
+    store.clear();
 
     try {
       const response = await window.fetch('/custom/streaming', { signal: abortController.signal });
@@ -270,7 +273,11 @@ describe('browser.agar.http.HttpMockingTest', () => {
       }
     }
 
-    Assert.eq('Should be only one and two since we aborted before three', [ 'one', 'two' ], chunks);
+    Assert.eq('Should be only one and two from request since we aborted before three', [ 'one', 'two' ], chunks);
+
+    await Waiter.pWait(100); // Wait a while to ensure that no more chunks are processed
+
+    store.assertEq('Should be only one and two in store since we aborted before three', [ 'one', 'two' ]);
   });
 
   it('TINY-13084: Should handle file uploads', async () => {

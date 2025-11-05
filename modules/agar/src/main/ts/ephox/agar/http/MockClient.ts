@@ -2,7 +2,6 @@ import { Type } from '@ephox/katamari';
 
 import * as HttpHandler from './HttpHandler';
 import * as Shared from './Shared';
-import * as StreamUtils from './StreamUtils';
 
 export interface MockingConfig {
   readonly handler: HttpHandler.RawRequestHandler;
@@ -23,16 +22,14 @@ const defaultConfig: Required<MockingConfig> = {
 
 let currentMockingConfig = { ...defaultConfig };
 
-const log = (...args: any[]) => {
+const getPrefix = () => {
   const { name } = currentMockingConfig;
+  return name !== '' ? `[AGAR-CLIENT][${name}]` : '[AGAR-CLIENT]';
+};
 
-  if (name !== '') {
-    // eslint-disable-next-line no-console
-    console.log(`[AGAR-CLIENT][${name}]`, ...args);
-  } else {
-    // eslint-disable-next-line no-console
-    console.log('[AGAR-CLIENT]', ...args);
-  }
+const log = (...args: any[]) => {
+  // eslint-disable-next-line no-console
+  console.log(getPrefix(), ...args);
 };
 
 const debugLog = (...args: any[]) => {
@@ -46,6 +43,20 @@ const infoLog = (...args: any[]) => {
   if (logLevel === 'info' || logLevel === 'debug') {
     log(...args);
   }
+};
+
+const errorLog = (...args: any[]) => {
+  // eslint-disable-next-line no-console
+  console.error(getPrefix(), ...args);
+};
+
+const sendResponseDone = (port: MessagePort) => {
+  const bodyDoneMessage: Shared.MockedResponseBodyDoneMessage = {
+    type: 'AGAR_MOCKED_RESPONSE_BODY_DONE'
+  };
+
+  debugLog('Responding with mocked response body chunk to SW:', bodyDoneMessage);
+  port.postMessage(bodyDoneMessage);
 };
 
 const messageHandler = (event: MessageEvent) => {
@@ -76,31 +87,50 @@ const messageHandler = (event: MessageEvent) => {
       port.postMessage(headMessage);
 
       if (response.body) {
-        await StreamUtils.forEachChunk(response.body, (chunk) => {
-          const buffer = chunk.buffer.slice(chunk.byteOffset, chunk.byteOffset + chunk.byteLength);
-          const bodyChunkMessage: Shared.MockedResponseBodyChunkMessage = {
-            type: 'AGAR_MOCKED_RESPONSE_BODY_CHUNK',
-            buffer
-          };
+        const reader = response.body.getReader();
 
-          debugLog('Responding with mocked response body chunk to SW:', bodyChunkMessage);
-          port.postMessage(bodyChunkMessage);
-        });
+        port.onmessage = (event) => {
+          const message = event.data;
 
-        const bodyDoneMessage: Shared.MockedResponseBodyDoneMessage = {
-          type: 'AGAR_MOCKED_RESPONSE_BODY_DONE'
+          if (Shared.isMockedRequestResponseChunkMessage(message)) {
+            debugLog('Responding with mocked response body chunk to SW: request chunk received', message);
+
+            reader.read().then(({ value: chunk, done }) => {
+              if (!done) {
+                const buffer = chunk.slice(chunk.byteOffset, chunk.byteOffset + chunk.byteLength);
+                const bodyChunkMessage: Shared.MockedResponseBodyChunkMessage = {
+                  type: 'AGAR_MOCKED_RESPONSE_BODY_CHUNK',
+                  buffer
+                };
+
+                debugLog('Responding with mocked response body chunk to SW:', bodyChunkMessage);
+                port.postMessage(bodyChunkMessage);
+              } else {
+                reader.releaseLock();
+                sendResponseDone(port);
+              }
+            }, (err) => {
+              reader.releaseLock();
+              errorLog('Error reading response body chunk for request:', message, err);
+            });
+          } else if (Shared.isMockedRequestAbortedMessage(message)) {
+            debugLog('Request aborted by SW:', message);
+
+            reader.cancel().then(() => {
+              debugLog('Reader cancelled for aborted request:', message);
+            }, (err) => {
+              errorLog('Error cancelling reader for aborted request:', message, err);
+            });
+          }
         };
-
-        debugLog('Responding with mocked response body chunk to SW:', bodyDoneMessage);
-        port.postMessage(bodyDoneMessage);
-
       } else {
-        const bodyDoneMessage: Shared.MockedResponseBodyDoneMessage = {
-          type: 'AGAR_MOCKED_RESPONSE_BODY_DONE'
-        };
+        port.onmessage = (event) => {
+          const message = event.data;
 
-        debugLog('Responding with mocked response body chunk to SW:', bodyDoneMessage);
-        port.postMessage(bodyDoneMessage);
+          if (Shared.isMockedRequestResponseChunkMessage(message)) {
+            sendResponseDone(port);
+          }
+        };
       }
     }).finally(() => {
       inflightRequests.delete(data.requestId);
