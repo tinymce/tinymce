@@ -168,7 +168,7 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
             target[name] = value;
             dom.setStyle(target, name, value);
           } else {
-            const valueConsideringMinWidth = name === 'height' && ratio ? minimumWidth * ratio : minimumWidth;
+            const valueConsideringMinWidth = name === 'height' ? minimumWidth * (ratio ?? 1) : minimumWidth;
             target[name] = valueConsideringMinWidth;
             dom.setStyle(target, name, valueConsideringMinWidth);
           }
