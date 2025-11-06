@@ -27,15 +27,15 @@ type ModifiersForBlock<B extends BEMBlocks> = Extract<ValidBlockModifiers, [B, a
 type ModifiersForBlockElement<B extends BEMBlocks, E extends ElementForBlock<B>> = Extract<ValidBlockElementModifiers, [B, E, any]>[2];
 type ModifierRecord<M extends string> = [M] extends [never] ? never : Partial<Record<M, boolean>>; // To avoid 'Record<never, boolean>' which is an empty object
 
-const applyModifiers = <M extends string>(base: string, modifiers: ModifierRecord<M>): string => {
+const applyModifiers = <M extends string>(joiner: string, base: string, modifiers: ModifierRecord<M>): string => {
   const modifierClasses = Arr.filter(Obj.mapToArray(modifiers, (v, k) => v ? `${base}--${k}` : ''), Strings.isNotEmpty);
-  return [ base, ...modifierClasses ].join(' ');
+  return [ base, ...modifierClasses ].join(joiner);
 };
 
 export const block = <B extends BEMBlocks, M extends ModifiersForBlock<B> = never>(
   block: B,
   modifiers?: ModifierRecord<M>
-): string => Type.isUndefined(modifiers) ? block : applyModifiers(block, modifiers);
+): string => Type.isUndefined(modifiers) ? block : applyModifiers(' ', block, modifiers);
 
 export const element = <B extends BEMBlocks, E extends ElementForBlock<B>, M extends ModifiersForBlockElement<B, E> = never>(
   block: B,
@@ -43,5 +43,22 @@ export const element = <B extends BEMBlocks, E extends ElementForBlock<B>, M ext
   modifiers?: ModifierRecord<M>
 ): string => {
   const base = `${block}__${element}`;
-  return Type.isUndefined(modifiers) ? base : applyModifiers(base, modifiers);
+  return Type.isUndefined(modifiers) ? base : applyModifiers(' ', base, modifiers);
+};
+
+export const blockSelector = <B extends BEMBlocks, M extends ModifiersForBlock<B> = never>(
+  block: B,
+  modifiers?: ModifierRecord<M>
+): string => {
+  const base = `.${block}`;
+  return Type.isUndefined(modifiers) ? base : applyModifiers('', base, modifiers);
+};
+
+export const elementSelector = <B extends BEMBlocks, E extends ElementForBlock<B>, M extends ModifiersForBlockElement<B, E> = never>(
+  block: B,
+  element: E,
+  modifiers?: ModifierRecord<M>
+): string => {
+  const base = `.${block}__${element}`;
+  return Type.isUndefined(modifiers) ? base : applyModifiers('', base, modifiers);
 };
