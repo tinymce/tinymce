@@ -138,6 +138,10 @@ const handleNonBodyResponse = async (port: MessagePort) => {
         sendResponseDone(port);
         closePort(port);
         resolve();
+      } else if (Shared.isMockedRequestAbortedMessage(message)) {
+        debugLog('Request without body aborted by SW:', message);
+        closePort(port);
+        resolve();
       } else {
         closePort(port);
         reject(new Error('Unexpected message received on port for non-body response handling'));
