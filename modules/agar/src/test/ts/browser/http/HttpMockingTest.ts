@@ -99,7 +99,7 @@ describe('browser.agar.http.HttpMockingTest', () => {
         for (const item of items) {
           yield item;
           store.add(item);
-          await Waiter.pWait(100);
+          await Waiter.pWait(1);
         }
       };
 
