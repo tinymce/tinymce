@@ -16,6 +16,10 @@ export default defineConfig(
         onlyWarn,
       },
       rules: {
+        "@typescript-eslint/no-import-type-side-effects": "error",
+        "@typescript-eslint/consistent-type-exports": "error",
+        "@typescript-eslint/consistent-type-imports": ["error", { fixStyle: 'inline-type-imports' }],
+
         "@typescript-eslint/camelcase": "off", // leave off
         "@typescript-eslint/member-ordering": "off",
         "@typescript-eslint/no-empty-function": "off",

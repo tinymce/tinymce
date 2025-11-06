@@ -4,11 +4,11 @@ import { Arr, Type } from '@ephox/katamari';
 import { TinyApis, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { BeforeGetContentEvent, BeforeSetContentEvent, GetContentEvent, SetContentEvent } from 'tinymce/core/api/EventTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { BeforeGetContentEvent, BeforeSetContentEvent, GetContentEvent, SetContentEvent } from 'tinymce/core/api/EventTypes';
 import AstNode from 'tinymce/core/api/html/Node';
 import HtmlSerializer from 'tinymce/core/api/html/Serializer';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 const defaultExpectedEvents = [
   'beforesetcontent',
@@ -887,6 +887,69 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
           editor.setContent('<p><!-- <b>foo</b> -->foo</p>');
           TinyAssertions.assertContent(editor, '<p>foo</p>');
         });
+      });
+    });
+  });
+
+  context('GetContent with Writer args', () => {
+    context('default', () => {
+      const hook = TinyHooks.bddSetupLight<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+      }, []);
+
+      it('TINY-12786: Should disable indentation when indent=false', () => {
+        const editor = hook.editor();
+        const input = '<p>foo</p><p>bar</p>';
+        editor.setContent(input);
+        const content = editor.getContent({ indent: false });
+        assert.equal(content, input, 'Should return the same HTML without indentation when indent=false');
+      });
+
+      it('TINY-12786: Should serialize entities as named when entity_encoding="named"', () => {
+        const editor = hook.editor();
+        const input = '<p>&lt;&gt;&amp;&quot;&nbsp;&aring;&auml;&ouml;</p>';
+        editor.setContent(input);
+        const content = editor.getContent({ indent: false, entity_encoding: 'named' });
+        assert.equal(content, '<p>&lt;&gt;&amp;"&nbsp;&aring;&auml;&ouml;</p>', 'Should serialize using named entities for core and extended characters');
+      });
+
+      it('TINY-12786: Should serialize entities as numeric when entity_encoding="numeric"', () => {
+        const editor = hook.editor();
+        const input = '<p>&lt;&gt;&amp;&quot;&nbsp;&aring;&auml;&ouml;</p>';
+        editor.setContent(input);
+        const content = editor.getContent({ indent: false, entity_encoding: 'numeric' });
+        assert.equal(content, '<p>&lt;&gt;&amp;"&#160;&#229;&#228;&#246;</p>', 'Should serialize all non-core entities as numeric');
+      });
+
+      it('TINY-12786: Should serialize core entities as named and others as numeric when entity_encoding="named+numeric"', () => {
+        const editor = hook.editor();
+        const input = '<p>&lt;&gt;&amp;&quot;&nbsp;&aring;&auml;&ouml;</p>';
+        editor.setContent(input);
+        const content = editor.getContent({ indent: false, entity_encoding: 'named+numeric' });
+        assert.equal(content, '<p>&lt;&gt;&amp;"&nbsp;&aring;&auml;&ouml;</p>', 'Should serialize core entities as named, others as named if in map, with entity_encoding="named+numeric"');
+      });
+
+      it('TINY-12786: Should output raw characters when entity_encoding="raw"', () => {
+        const editor = hook.editor();
+        const input = '<p>&lt;&gt;&amp;&quot;&nbsp;&aring;&auml;&ouml;</p>';
+        editor.setContent(input);
+        const content = editor.getContent({ indent: false, entity_encoding: 'raw' });
+        assert.equal(content, '<p>&lt;&gt;&amp;"\u00a0\u00e5\u00e4\u00f6</p>', 'Should output raw characters with entity_encoding="raw');
+      });
+    });
+
+    context('entities option', () => {
+      const hook = TinyHooks.bddSetupLight<Editor>({
+        base_url: '/project/tinymce/js/tinymce',
+        entities: '160,nbsp,34,quot,38,amp,60,lt,62,gt'
+      }, []);
+
+      it('TINY-12786: Should honor custom entities map with entity_encoding="named+numeric"', () => {
+        const editor = hook.editor();
+        const input = '<p>&lt;&gt;&amp;&quot;&nbsp;&aring;&auml;&ouml;</p>';
+        editor.setContent(input);
+        const content = editor.getContent({ indent: false, entity_encoding: 'named+numeric' });
+        assert.equal(content, '<p>&lt;&gt;&amp;"&nbsp;&#229;&#228;&#246;</p>', 'Should respect custom entities map and output numeric for å, ä, ö');
       });
     });
   });

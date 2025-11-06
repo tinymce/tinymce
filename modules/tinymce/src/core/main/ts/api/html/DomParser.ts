@@ -12,11 +12,11 @@ import * as Namespace from '../../html/Namespace';
 import * as ParserFilters from '../../html/ParserFilters';
 import { isEmpty, isLineBreakNode, isPaddedWithNbsp, paddEmptyNode } from '../../html/ParserUtils';
 import { getSanitizer, internalElementAttr } from '../../html/Sanitization';
-import { BlobCache } from '../file/BlobCache';
+import type { BlobCache } from '../file/BlobCache';
 import Tools from '../util/Tools';
 
 import AstNode from './Node';
-import Schema, { SchemaMap, SchemaRegExpMap, getTextRootBlockElements } from './Schema';
+import Schema, { type SchemaMap, type SchemaRegExpMap, getTextRootBlockElements } from './Schema';
 
 /**
  * @summary
@@ -32,7 +32,7 @@ import Schema, { SchemaMap, SchemaRegExpMap, getTextRootBlockElements } from './
  * @version 3.4
  */
 
-const extraBlockLikeElements = [ 'script', 'style', 'template', 'param' ];
+const extraBlockLikeElements = [ 'script', 'style', 'template', 'param', 'meta', 'title', 'link' ];
 
 const makeMap = Tools.makeMap, extend = Tools.extend;
 
@@ -479,7 +479,7 @@ const DomParser = (settings: DomParserSettings = {}, schema = Schema()): DomPars
    */
   const parse = (html: string, args: ParserArgs = {}): AstNode => {
     const validate = defaultedSettings.validate;
-    const preferFullDocument = defaultedSettings.root_name === '#document';
+    const preferFullDocument = (args.context ?? defaultedSettings.root_name) === '#document';
     const rootName = args.context ?? (preferFullDocument ? 'html' : defaultedSettings.root_name);
 
     // Parse and sanitize the content

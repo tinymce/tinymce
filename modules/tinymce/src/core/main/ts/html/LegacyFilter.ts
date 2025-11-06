@@ -1,8 +1,8 @@
 import { Arr, Strings } from '@ephox/katamari';
 
-import DomParser, { DomParserSettings } from '../api/html/DomParser';
-import AstNode from '../api/html/Node';
-import Schema from '../api/html/Schema';
+import type { DomParserSettings, default as DomParser } from '../api/html/DomParser';
+import type AstNode from '../api/html/Node';
+import type Schema from '../api/html/Schema';
 import Styles from '../api/html/Styles';
 import Tools from '../api/util/Tools';
 

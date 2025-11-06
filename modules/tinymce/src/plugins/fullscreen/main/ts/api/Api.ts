@@ -1,6 +1,6 @@
-import { Cell } from '@ephox/katamari';
+import type { Cell } from '@ephox/katamari';
 
-import { FullScreenInfo } from '../core/Actions';
+import type { FullScreenInfo } from '../core/Actions';
 
 export interface Api {
   readonly isFullscreen: () => boolean;

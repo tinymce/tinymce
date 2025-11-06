@@ -7,7 +7,7 @@ import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Focusing } from 'ephox/alloy/api/behaviour/Focusing';
 import { Keying } from 'ephox/alloy/api/behaviour/Keying';
 import { Tabstopping } from 'ephox/alloy/api/behaviour/Tabstopping';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import type { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as GuiFactory from 'ephox/alloy/api/component/GuiFactory';
 import { ToolbarGroup } from 'ephox/alloy/api/ui/ToolbarGroup';
 import * as GuiSetup from 'ephox/alloy/test/GuiSetup';

@@ -1,6 +1,6 @@
 import { Checked, SelectorFind, SugarBody, Value } from '@ephox/sugar';
 
-import { Editor, TinyMCE } from 'tinymce/core/api/PublicApi';
+import type { Editor, TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
 

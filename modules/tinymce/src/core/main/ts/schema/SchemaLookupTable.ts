@@ -2,7 +2,7 @@ import { Arr, Fun } from '@ephox/katamari';
 
 import * as GlobalAttributesSet from './GlobalAttributesSet';
 import * as SchemaElementSets from './SchemaElementSets';
-import { SchemaType } from './SchemaTypes';
+import type { SchemaType } from './SchemaTypes';
 import * as SchemaUtils from './SchemaUtils';
 
 export interface SchemaLookupTable {
@@ -70,7 +70,7 @@ export const makeSchema = (type: SchemaType): SchemaLookupTable => {
   add('title hr noscript br');
   add('base', 'href target');
   add('link', 'href rel media hreflang type sizes hreflang');
-  add('meta', 'name http-equiv content charset');
+  add('meta', 'name http-equiv content charset property'); // Property is an RDFa spec attribute.
   add('style', 'media type scoped');
   add('script', 'src async defer type charset');
   add('body', 'onafterprint onbeforeprint onbeforeunload onblur onerror onfocus ' +
@@ -126,6 +126,7 @@ export const makeSchema = (type: SchemaType): SchemaLookupTable => {
     add('canvas', 'width height', flowContent);
     add('data', 'value', phrasingContent);
     add('video', 'src crossorigin poster preload autoplay mediagroup loop ' +
+      'controlslist disablepictureinpicture disableremoteplayback playsinline ' +
       'muted controls width height buffered', [ flowContent, 'track source' ].join(' '));
     add('audio', 'src crossorigin preload autoplay mediagroup loop muted controls ' +
       'buffered volume', [ flowContent, 'track source' ].join(' '));

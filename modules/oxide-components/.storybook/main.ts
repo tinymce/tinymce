@@ -13,8 +13,8 @@ const config: StorybookConfig = {
     getAbsolutePath("@storybook/addon-onboarding"),
     getAbsolutePath("@chromatic-com/storybook"),
     getAbsolutePath("@storybook/addon-a11y"),
-    getAbsolutePath("@storybook/addon-vitest"),
     getAbsolutePath("@storybook/addon-docs"),
+    getAbsolutePath("storybook-addon-pseudo-states")
   ],
   framework: {
     "name": "@storybook/react-vite",
@@ -24,7 +24,7 @@ const config: StorybookConfig = {
     defaultName: "Documentation"
   },
   viteFinal: (config) => {
-    config.server ??= {}
+    config.server ??= {};
     config.server.allowedHosts = ['host.docker.internal'];
     return config;
   },

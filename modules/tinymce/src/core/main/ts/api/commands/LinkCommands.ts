@@ -1,6 +1,6 @@
 import { Type } from '@ephox/katamari';
 
-import Editor from '../Editor';
+import type Editor from '../Editor';
 
 export const registerCommands = (editor: Editor): void => {
   const applyLinkToSelection = (_command: string, _ui: boolean, value: string | { href: string }): void => {

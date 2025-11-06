@@ -1,12 +1,12 @@
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, Dragging, Focusing, Keying, SimpleSpec, SystemEvents, Tabstopping, Tooltipping } from '@ephox/alloy';
+import { AddEventsBehaviour, type AlloyComponent, AlloyEvents, Dragging, Focusing, Keying, type SimpleSpec, SystemEvents, Tabstopping, Tooltipping } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { Attribute, SugarPosition } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import I18n from 'tinymce/core/api/util/I18n';
 
 import * as Options from '../../api/Options';
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as Icons from '../icons/Icons';
 import * as Resize from '../sizing/Resize';
 
@@ -21,13 +21,13 @@ const getResizeType = (editor: Editor): Resize.ResizeTypes => {
   }
 };
 
-const getAriaValuetext = (dimensions: Resize.EditorDimensions, resizeType: Resize.ResizeTypes): string => {
+const getAriaValuetext = (dimensions: Resize.ResizeEditorDimensions, resizeType: Resize.ResizeTypes): string => {
   return resizeType === Resize.ResizeTypes.Both
     ? I18n.translate([ `Editor's height: {0} pixels, Editor's width: {1} pixels`, dimensions.height, dimensions.width ])
     : I18n.translate([ `Editor's height: {0} pixels`, dimensions.height ]);
 };
 
-const setAriaValuetext = (comp: AlloyComponent, dimensions: Resize.EditorDimensions, resizeType: Resize.ResizeTypes) => {
+const setAriaValuetext = (comp: AlloyComponent, dimensions: Resize.ResizeEditorDimensions, resizeType: Resize.ResizeTypes) => {
   Attribute.set(comp.element, 'aria-valuetext', getAriaValuetext(dimensions, resizeType));
 };
 

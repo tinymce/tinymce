@@ -1,8 +1,8 @@
 import { Arr, Fun, Type } from '@ephox/katamari';
 import { TableRender, TableConversions } from '@ephox/snooker';
-import { Attribute, Html, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Attribute, Html, SelectorFilter, SelectorFind, type SugarElement } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Events from '../api/Events';
 import * as Options from '../api/Options';

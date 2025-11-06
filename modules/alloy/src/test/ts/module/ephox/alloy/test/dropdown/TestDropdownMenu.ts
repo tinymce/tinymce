@@ -1,18 +1,18 @@
-import { ApproxStructure, Assertions, Step, StructAssert, TestStore, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, Step, type StructAssert, type TestStore, Waiter } from '@ephox/agar';
 import { Arr, Fun, Merger, Obj } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Disabling } from 'ephox/alloy/api/behaviour/Disabling';
 import { Representing } from 'ephox/alloy/api/behaviour/Representing';
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
-import { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
+import type { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import type { SketchSpec } from 'ephox/alloy/api/component/SpecTypes';
 import * as ItemWidget from 'ephox/alloy/api/ui/ItemWidget';
 import { Menu } from 'ephox/alloy/api/ui/Menu';
-import { TogglingConfigSpec } from 'ephox/alloy/behaviour/toggling/TogglingTypes';
+import type { TogglingConfigSpec } from 'ephox/alloy/behaviour/toggling/TogglingTypes';
 import * as Tagger from 'ephox/alloy/registry/Tagger';
-import { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
-import { PartialMenuSpec, TieredData, TieredMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
+import type { ItemSpec } from 'ephox/alloy/ui/types/ItemTypes';
+import type { PartialMenuSpec, TieredData, TieredMenuSpec } from 'ephox/alloy/ui/types/TieredMenuTypes';
 
 interface MenuState {
   readonly menuUid: string;

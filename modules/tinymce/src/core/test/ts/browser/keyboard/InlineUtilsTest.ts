@@ -4,9 +4,9 @@ import { Fun } from '@ephox/katamari';
 import { Hierarchy, SugarElement, SugarNode } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Schema from 'tinymce/core/api/html/Schema';
-import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
+import type { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 import CaretPosition from 'tinymce/core/caret/CaretPosition';
 import * as InlineUtils from 'tinymce/core/keyboard/InlineUtils';
 import { ZWSP } from 'tinymce/core/text/Zwsp';

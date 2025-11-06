@@ -1,9 +1,20 @@
+import { Arr, Obj } from '@ephox/katamari';
 import { Link } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import ScriptLoader from 'tinymce/core/api/dom/ScriptLoader';
+import type Editor from 'tinymce/core/api/Editor';
 import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Options from '../api/Options';
+
+const getComponentScriptsHtml = (editor: Editor) => {
+  const urls = Arr.unique(Obj.values(editor.schema.getComponentUrls()));
+
+  return Arr.map(urls, (url) => {
+    const attrs = Obj.mapToArray(ScriptLoader.ScriptLoader.getScriptAttributes(url), (v, k) => ` ${editor.dom.encode(k)}="${editor.dom.encode(v)}"`);
+    return `<script src="${editor.dom.encode(url)}"${attrs.join('')}></script>`;
+  }).join('');
+};
 
 const getPreviewHtml = (editor: Editor): string => {
   let headHtml = '';
@@ -20,6 +31,8 @@ const getPreviewHtml = (editor: Editor): string => {
   if (contentStyle) {
     headHtml += '<style type="text/css">' + contentStyle + '</style>';
   }
+
+  headHtml += getComponentScriptsHtml(editor);
 
   const bodyId = Options.getBodyId(editor);
 

@@ -1,11 +1,11 @@
 import { Obj } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as Options from '../api/Options';
 
 import * as DataToHtml from './DataToHtml';
-import { MediaData } from './Types';
+import type { MediaData } from './Types';
 
 export interface EmbedResult {
   readonly url: string;

@@ -2,15 +2,15 @@ import { Fun, Optional } from '@ephox/katamari';
 
 import * as AlloyParts from '../../parts/AlloyParts';
 import * as ToolbarSchema from '../../ui/schema/ToolbarSchema';
-import { ToolbarApis, ToolbarDetail, ToolbarSketcher, ToolbarSpec } from '../../ui/types/ToolbarTypes';
-import { NamedConfiguredBehaviour } from '../behaviour/Behaviour';
+import type { ToolbarApis, ToolbarDetail, ToolbarSketcher, ToolbarSpec } from '../../ui/types/ToolbarTypes';
+import type { NamedConfiguredBehaviour } from '../behaviour/Behaviour';
 import { Replacing } from '../behaviour/Replacing';
-import { AlloyComponent } from '../component/ComponentApi';
+import type { AlloyComponent } from '../component/ComponentApi';
 import * as SketchBehaviours from '../component/SketchBehaviours';
-import { AlloySpec } from '../component/SpecTypes';
+import type { AlloySpec } from '../component/SpecTypes';
 
 import { composite } from './Sketcher';
-import { CompositeSketchFactory } from './UiSketcher';
+import type { CompositeSketchFactory } from './UiSketcher';
 
 const factory: CompositeSketchFactory<ToolbarDetail, ToolbarSpec> = (detail, components, _spec, _externals) => {
   const setGroups = (toolbar: AlloyComponent, groups: AlloySpec[]) => {

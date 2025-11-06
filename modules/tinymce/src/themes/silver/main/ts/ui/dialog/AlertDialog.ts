@@ -1,9 +1,9 @@
 import { AlloyEvents, Focusing, GuiFactory, Memento, ModalDialog } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 
-import { UiFactoryBackstage } from '../../backstage/Backstage';
+import type { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderFooterButton } from '../general/Button';
-import { formCancelEvent, FormCancelEvent } from '../general/FormEvents';
+import { formCancelEvent, type FormCancelEvent } from '../general/FormEvents';
 
 import * as Dialogs from './Dialogs';
 

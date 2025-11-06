@@ -1,11 +1,11 @@
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { LegacyUnit, TinyApis, TinyAssertions, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as Levels from 'tinymce/core/undo/Levels';
-import { UndoLevel } from 'tinymce/core/undo/UndoManagerTypes';
+import type { UndoLevel } from 'tinymce/core/undo/UndoManagerTypes';
 
 describe('browser.tinymce.core.undo.LevelsTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -187,28 +187,42 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
     assert.deepEqual(getBookmark(editor), { start: [ 1, 0, 0 ], forward: true });
   });
 
-  it('isEq', () => {
-    assert.strictEqual(Levels.isEq(Levels.createFragmentedLevel([ 'a', 'b' ]), Levels.createFragmentedLevel([ 'a', 'b' ])), true);
-    assert.strictEqual(Levels.isEq(Levels.createFragmentedLevel([ 'a', 'b' ]), Levels.createFragmentedLevel([ 'a', 'c' ])), false);
-    assert.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createCompleteLevel('a')), true);
-    assert.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createCompleteLevel('b')), false);
-    assert.strictEqual(Levels.isEq(Levels.createFragmentedLevel([ 'a' ]), Levels.createCompleteLevel('a')), true);
-    assert.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createFragmentedLevel([ 'a' ])), true);
-  });
+  context('isEq', () => {
+    context('readonly-agnostic', () => {
+      Arr.each([
+        true,
+        false
+      ], (isReadonly) => {
+        it('isEq', () => {
+          assert.strictEqual(Levels.isEq(isReadonly, Levels.createFragmentedLevel([ 'a', 'b' ]), Levels.createFragmentedLevel([ 'a', 'b' ])), true);
+          assert.strictEqual(Levels.isEq(isReadonly, Levels.createFragmentedLevel([ 'a', 'b' ]), Levels.createFragmentedLevel([ 'a', 'c' ])), false);
+          assert.strictEqual(Levels.isEq(isReadonly, Levels.createCompleteLevel('a'), Levels.createCompleteLevel('a')), true);
+          assert.strictEqual(Levels.isEq(isReadonly, Levels.createCompleteLevel('a'), Levels.createCompleteLevel('b')), false);
+          assert.strictEqual(Levels.isEq(isReadonly, Levels.createFragmentedLevel([ 'a' ]), Levels.createCompleteLevel('a')), true);
+          assert.strictEqual(Levels.isEq(isReadonly, Levels.createCompleteLevel('a'), Levels.createFragmentedLevel([ 'a' ])), true);
+        });
 
-  it('isEq ignore bogus elements', () => {
-    assert.strictEqual(Levels.isEq(Levels.createFragmentedLevel([ 'a', '<span data-mce-bogus="1">b</span>' ]), Levels.createFragmentedLevel([ 'a', 'b' ])), true);
-    assert.strictEqual(Levels.isEq(Levels.createFragmentedLevel([ 'a', 'b' ]), Levels.createFragmentedLevel([ 'a', '<span data-mce-bogus="1">b</span>' ])), true);
-    assert.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createCompleteLevel('<span data-mce-bogus="1">a</span>')), true);
-    assert.strictEqual(Levels.isEq(Levels.createCompleteLevel('<span data-mce-bogus="1">a</span>'), Levels.createCompleteLevel('a')), true);
-    assert.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), Levels.createFragmentedLevel([ '<span data-mce-bogus="1">a</span>' ])), true);
-    assert.strictEqual(Levels.isEq(Levels.createFragmentedLevel([ '<span data-mce-bogus="1">a</span>' ]), Levels.createCompleteLevel('a')), true);
-  });
+        it('isEq ignore bogus elements', () => {
+          assert.strictEqual(Levels.isEq(isReadonly, Levels.createFragmentedLevel([ 'a', '<span data-mce-bogus="1">b</span>' ]), Levels.createFragmentedLevel([ 'a', 'b' ])), true);
+          assert.strictEqual(Levels.isEq(isReadonly, Levels.createFragmentedLevel([ 'a', 'b' ]), Levels.createFragmentedLevel([ 'a', '<span data-mce-bogus="1">b</span>' ])), true);
+          assert.strictEqual(Levels.isEq(isReadonly, Levels.createCompleteLevel('a'), Levels.createCompleteLevel('<span data-mce-bogus="1">a</span>')), true);
+          assert.strictEqual(Levels.isEq(isReadonly, Levels.createCompleteLevel('<span data-mce-bogus="1">a</span>'), Levels.createCompleteLevel('a')), true);
+          assert.strictEqual(Levels.isEq(isReadonly, Levels.createCompleteLevel('a'), Levels.createFragmentedLevel([ '<span data-mce-bogus="1">a</span>' ])), true);
+          assert.strictEqual(Levels.isEq(isReadonly, Levels.createFragmentedLevel([ '<span data-mce-bogus="1">a</span>' ]), Levels.createCompleteLevel('a')), true);
+        });
 
-  it('isEq passed undefined', () => {
-    assert.strictEqual(Levels.isEq(undefined, Levels.createFragmentedLevel([ 'a', 'b' ])), false);
-    assert.strictEqual(Levels.isEq(Levels.createCompleteLevel('a'), undefined), false);
-    assert.strictEqual(Levels.isEq(undefined, undefined), false);
-    assert.strictEqual(Levels.isEq(Levels.createFragmentedLevel([]), Levels.createFragmentedLevel([])), true);
+        it('isEq passed undefined', () => {
+          assert.strictEqual(Levels.isEq(isReadonly, undefined, Levels.createFragmentedLevel([ 'a', 'b' ])), false);
+          assert.strictEqual(Levels.isEq(isReadonly, Levels.createCompleteLevel('a'), undefined), false);
+          assert.strictEqual(Levels.isEq(isReadonly, undefined, undefined), false);
+          assert.strictEqual(Levels.isEq(isReadonly, Levels.createFragmentedLevel([]), Levels.createFragmentedLevel([])), true);
+        });
+      });
+    });
+
+    it('TINY-12316: isEq ignores the open attribute only when readonly bogus elements', () => {
+      assert.isFalse(Levels.isEq(false, Levels.createFragmentedLevel([ 'a', '<details open="open">b</details>' ]), Levels.createFragmentedLevel([ 'a', '<details>b</details>' ])), 'If readonly is false we should consider them different');
+      assert.isTrue(Levels.isEq(true, Levels.createFragmentedLevel([ 'a', '<details open="open">b</details>' ]), Levels.createFragmentedLevel([ 'a', '<details>b</details>' ])), 'If readonly is true then we should ignore the attribute');
+    });
   });
 });

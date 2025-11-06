@@ -1,11 +1,11 @@
 import { Arr, Obj, Type } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Menu } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Menu } from 'tinymce/core/api/ui/Ui';
 
 import * as Options from '../../../api/Options';
 
-import { MenubarItemSpec } from './SilverMenubar';
+import type { MenubarItemSpec } from './SilverMenubar';
 
 interface MenuSpec {
   readonly title: string;
@@ -24,7 +24,7 @@ const defaultMenus: Record<string, MenuSpec> = {
   file: { title: 'File', items: 'newdocument restoredraft | preview | importword exportpdf exportword | export print | deleteallconversations' },
   edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall | searchreplace' },
   view: { title: 'View', items: 'code suggestededits revisionhistory | visualaid visualchars visualblocks | spellchecker | preview fullscreen | showcomments' },
-  insert: { title: 'Insert', items: 'image link media addcomment pageembed inserttemplate codesample inserttable accordion math | charmap emoticons hr | pagebreak nonbreaking anchor tableofcontents footnotes | mergetags | insertdatetime' },
+  insert: { title: 'Insert', items: 'image video link media addcomment pageembed inserttemplate codesample inserttable accordion math | charmap emoticons hr | pagebreak nonbreaking anchor tableofcontents footnotes | mergetags | insertdatetime' },
   format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript codeformat | styles blocks fontfamily fontsize align lineheight | forecolor backcolor | language | removeformat' },
   tools: { title: 'Tools', items: 'aidialog aishortcuts | spellchecker spellcheckerlanguage | autocorrect capitalization | a11ycheck code typography wordcount addtemplate' },
   table: { title: 'Table', items: 'inserttable | cell row column | advtablesort | tableprops deletetable' },

@@ -1,8 +1,8 @@
-import { Arr, Cell, Optional } from '@ephox/katamari';
-import { Compare, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { Arr, Cell, type Optional } from '@ephox/katamari';
+import { Compare, type SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
-import { createEntry, Entry, EntryFragment } from './Entry';
-import { isList, isListItem, ListType } from './Util';
+import { createEntry, type Entry, type EntryFragment } from './Entry';
+import { isList, isListItem, type ListType } from './Util';
 
 type Parser = (depth: number, itemSelection: Optional<ItemSelection>, selectionState: Cell<boolean>, element: SugarElement) => Entry[];
 

@@ -1,5 +1,5 @@
 import { DomUniverse } from '@ephox/boss';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
 import * as Injection from '../general/Injection';
 

@@ -1,8 +1,8 @@
-import { EventUnbinder } from '@ephox/sugar';
+import type { EventUnbinder } from '@ephox/sugar';
 
 import * as ActiveAllowBubbling from '../../behaviour/allowbubbling/ActiveAllowBubbling';
 import AllowBubblingSchema from '../../behaviour/allowbubbling/AllowBubblingSchema';
-import { AllowBubblingBehavior } from '../../behaviour/allowbubbling/AllowBubblingTypes';
+import type { AllowBubblingBehavior } from '../../behaviour/allowbubbling/AllowBubblingTypes';
 import { SetupBehaviourCellState } from '../../behaviour/common/BehaviourCellState';
 
 import * as Behaviour from './Behaviour';

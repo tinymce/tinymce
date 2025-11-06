@@ -1,9 +1,9 @@
 import { FutureResult } from '@ephox/katamari';
 
 import * as Http from './Http';
-import { ResponseBodyDataTypes, ResponseType, ResponseTypeMap } from './HttpData';
-import { HttpError, HttpErrorCode } from './HttpError';
-import { GetDelInit, HttpRequest, JwtToken, JwtTokenFactory, PostPutInit } from './HttpTypes';
+import type { ResponseBodyDataTypes, ResponseType, ResponseTypeMap } from './HttpData';
+import { type HttpError, HttpErrorCode } from './HttpError';
+import type { GetDelInit, HttpRequest, JwtToken, JwtTokenFactory, PostPutInit } from './HttpTypes';
 
 const headers = (headersInput: HttpRequest<ResponseBodyDataTypes>['headers'], token: string) => {
   const authHeader = { Authorization: 'Bearer ' + token };

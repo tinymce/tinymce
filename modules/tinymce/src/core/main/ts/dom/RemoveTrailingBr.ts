@@ -1,13 +1,13 @@
 import { Unicode } from '@ephox/katamari';
 
-import DomParser from '../api/html/DomParser';
+import type DomParser from '../api/html/DomParser';
 import AstNode from '../api/html/Node';
-import Schema from '../api/html/Schema';
+import type Schema from '../api/html/Schema';
 import Tools from '../api/util/Tools';
 import * as TransparentElements from '../content/TransparentElements';
 import { isEmpty, paddEmptyNode } from '../html/ParserUtils';
 
-import { DomSerializerSettings } from './DomSerializerImpl';
+import type { DomSerializerSettings } from './DomSerializerImpl';
 
 export const addNodeFilter = (settings: DomSerializerSettings, htmlParser: DomParser, schema: Schema): void => {
   htmlParser.addNodeFilter('br', (nodes, _, args) => {

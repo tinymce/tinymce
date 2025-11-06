@@ -1,12 +1,12 @@
 import { Cell } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import Env from '../api/Env';
-import { EditorEvent } from '../api/util/EventDispatcher';
+import type { EditorEvent } from '../api/util/EventDispatcher';
 
 import * as Levels from './Levels';
 import { endTyping, setTyping } from './TypingState';
-import { Locks, UndoLevel, UndoManager } from './UndoManagerTypes';
+import type { Locks, UndoLevel, UndoManager } from './UndoManagerTypes';
 
 // Avoid adding non-typing undo levels for commands that could cause duplicate undo levels to be created
 // or do not alter the editor content or selection in any way
@@ -81,7 +81,7 @@ export const registerEvents = (editor: Editor, undoManager: UndoManager, locks: 
     }
 
     // Fire a TypingUndo event on the first character entered
-    if (isFirstTypedCharacter.get() && undoManager.typing && !Levels.isEq(Levels.createFromEditor(editor), undoManager.data[0])) {
+    if (isFirstTypedCharacter.get() && undoManager.typing && !Levels.isEq(editor.readonly, Levels.createFromEditor(editor), undoManager.data[0])) {
       if (!editor.isDirty()) {
         editor.setDirty(true);
       }

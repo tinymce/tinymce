@@ -1,8 +1,8 @@
-import { Future, Optional, Result } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { Future, Optional, Result } from '@ephox/katamari';
+import type { SugarElement } from '@ephox/sugar';
 
-import * as Behaviour from '../../api/behaviour/Behaviour';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type * as Behaviour from '../../api/behaviour/Behaviour';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 
 export interface InvalidatingBehaviour extends Behaviour.AlloyBehaviour<InvalidatingConfigSpec, InvalidatingConfig> {
   config: (config: InvalidatingConfigSpec) => Behaviour.NamedConfiguredBehaviour<InvalidatingConfigSpec, InvalidatingConfig>;

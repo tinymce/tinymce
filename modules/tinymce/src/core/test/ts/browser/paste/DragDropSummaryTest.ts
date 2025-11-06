@@ -1,8 +1,9 @@
 import { Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 import * as DragDropUtils from '../../module/test/DragDropUtils';
 import * as InputEventUtils from '../../module/test/InputEventUtils';
@@ -55,6 +56,27 @@ describe('browser.tinymce.core.paste.DragDropSummaryTest', () => {
     editor.dispatch('input', InputEventUtils.makeInputEvent('input', { inputType: 'deleteByDrag' }));
     TinyAssertions.assertContentPresence(editor, { 'summary': 1, 'details > br': 0, 'summary > br': 1 });
     TinyAssertions.assertContent(editor, '<details><summary>&nbsp;</summary><div>body</div></details>');
+  });
+
+  it('INT-3373: The editor should not scroll away when gaining dragover focus.', async () => {
+    const editor = hook.editor();
+
+    editor.setContent('<p>Text</p>'.repeat(1000));
+    const div = document.createElement('div');
+    div.setAttribute('contentEditable', 'true');
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    editor.getContainer().parentElement!.append(div);
+
+    const scrollAmount = 5000;
+    editor.getWin().scrollTo(0, scrollAmount);
+    await Waiter.pTryUntil('Scroll to point', () => assert.equal(editor.getWin().scrollY, scrollAmount));
+
+    assert.equal(scrollAmount, editor.getWin().scrollY);
+    div.focus();
+    editor.dispatch('dragover');
+    assert.equal(scrollAmount, editor.getWin().scrollY);
+
+    div.remove();
   });
 });
 

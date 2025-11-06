@@ -1,15 +1,15 @@
-import { Fun } from '@ephox/katamari';
+import { Fun, Type } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 
 import DOMUtils from '../api/dom/DOMUtils';
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as Events from '../api/Events';
-import DomParser, { DomParserSettings, ParserArgs, ParserFilter, ParserFilterCallback } from '../api/html/DomParser';
-import AstNode from '../api/html/Node';
-import Schema, { SchemaSettings } from '../api/html/Schema';
-import HtmlSerializer, { HtmlSerializerSettings } from '../api/html/Serializer';
-import { WriterSettings } from '../api/html/Writer';
-import { URLConverter } from '../api/OptionTypes';
+import DomParser, { type DomParserSettings, type ParserArgs, type ParserFilter, type ParserFilterCallback } from '../api/html/DomParser';
+import type AstNode from '../api/html/Node';
+import Schema, { type SchemaSettings } from '../api/html/Schema';
+import HtmlSerializer, { type HtmlSerializerSettings } from '../api/html/Serializer';
+import type { WriterSettings } from '../api/html/Writer';
+import type { URLConverter } from '../api/OptionTypes';
 import Tools from '../api/util/Tools';
 import * as Zwsp from '../text/Zwsp';
 
@@ -33,12 +33,17 @@ interface DomSerializerImpl {
   removeAttributeFilter: (name: string, callback?: ParserFilterCallback) => void;
   serialize: {
     (node: Element, parserArgs: { format: 'tree' } & ParserArgs): AstNode;
-    (node: Element, parserArgs?: ParserArgs): string;
+    (node: Element, domSerializerArgs?: DomSerializerArgs): string;
   };
   addRules: (rules: string) => void;
   setRules: (rules: string) => void;
   addTempAttr: (name: string) => void;
   getTempAttrs: () => string[];
+}
+
+export interface DomSerializerArgs extends ParserArgs {
+  indent?: HtmlSerializerSettings['indent'];
+  entity_encoding?: HtmlSerializerSettings['entity_encoding'];
 }
 
 const addTempAttr = (htmlParser: DomParser, tempAttrs: string[], name: string): void => {
@@ -103,12 +108,24 @@ const DomSerializerImpl = (settings: DomSerializerSettings, editor?: Editor): Do
   const htmlParser = DomParser(defaultedSettings, schema);
   DomSerializerFilters.register(htmlParser, defaultedSettings, dom);
 
-  const serialize = (node: Element, parserArgs: ParserArgs = {}): string | AstNode => {
-    const args = { format: 'html', ...parserArgs };
-    const targetNode = DomSerializerPreProcess.process(editor, node, args);
-    const html = getHtmlFromNode(dom, targetNode, args);
-    const rootNode = parseHtml(htmlParser, html, args);
-    return args.format === 'tree' ? rootNode : toHtml(editor, defaultedSettings, schema, rootNode, args);
+  const serialize = (node: Element, domSerializerArgs: DomSerializerArgs = {}): string | AstNode => {
+    const { indent, entity_encoding, ...rest } = domSerializerArgs;
+
+    const parserArgs = { format: 'html', ...rest };
+    const targetNode = DomSerializerPreProcess.process(editor, node, parserArgs);
+    const html = getHtmlFromNode(dom, targetNode, parserArgs);
+    const rootNode = parseHtml(htmlParser, html, parserArgs);
+
+    if (parserArgs.format === 'tree') {
+      return rootNode;
+    }
+
+    const serializerSettings = {
+      ...defaultedSettings,
+      ...(Type.isNonNullable(indent) ? { indent } : {}),
+      ...(Type.isNonNullable(entity_encoding) ? { entity_encoding } : {}),
+    };
+    return toHtml(editor, serializerSettings, schema, rootNode, parserArgs);
   };
 
   return {
@@ -127,7 +144,5 @@ const DomSerializerImpl = (settings: DomSerializerSettings, editor?: Editor): Do
   };
 };
 
-export {
-  DomSerializerImpl,
-  DomSerializerSettings
-};
+export type { DomSerializerSettings };
+export { DomSerializerImpl };

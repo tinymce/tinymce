@@ -1,13 +1,13 @@
 import { Fun, Optional } from '@ephox/katamari';
-import { PredicateFind, SugarElement } from '@ephox/sugar';
+import { Css, PredicateFind, SugarElement } from '@ephox/sugar';
 
 import DomTreeWalker from '../api/dom/TreeWalker';
 import * as NodeType from '../dom/NodeType';
 
 import * as CaretCandidate from './CaretCandidate';
 import * as CaretContainer from './CaretContainer';
+import { isBackwards, isForwards } from './CaretDirection';
 import { CaretPosition } from './CaretPosition';
-import { HDirection } from './CaretWalker';
 import { isFakeCaretTarget } from './FakeCaret';
 
 const isContentEditableTrue = NodeType.isContentEditableTrue;
@@ -19,8 +19,6 @@ const isCaretContainerBlock = CaretContainer.isCaretContainerBlock;
 const isElement = NodeType.isElement;
 const isText = NodeType.isText;
 const isCaretCandidate = CaretCandidate.isCaretCandidate;
-const isForwards = (direction: HDirection): boolean => direction === HDirection.Forwards;
-const isBackwards = (direction: HDirection): boolean => direction === HDirection.Backwards;
 
 const skipCaretContainers = (walk: (shallow?: boolean) => Node | null | undefined, shallow?: boolean): Node | null => {
   let node: Node | null | undefined;
@@ -80,9 +78,15 @@ const getEditingHost = (node: Node, rootNode: HTMLElement): HTMLElement => {
     .getOr(rootNode);
 };
 
+const isAbsPositionedElement = (node: Node): boolean => NodeType.isElement(node) && Css.get(SugarElement.fromDom(node), 'position') === 'absolute';
+const isInlineBlock = (node: Node, rootNode?: Node | null) => node.parentNode !== rootNode;
+const isInlineAbsPositionedCEF = (node: Node, rootNode?: Node) => isContentEditableFalse(node) && isAbsPositionedElement(node) && isInlineBlock(node, rootNode);
+
 const getParentBlock = (node: Node | null, rootNode?: Node): Node | null => {
   while (node && node !== rootNode) {
-    if (isBlockLike(node)) {
+    // Exclude inline absolutely positioned CEF elements since they have 'display: block'
+    // Created TINY-12922 to improve handling non CEF elements
+    if (isBlockLike(node) && !isInlineAbsPositionedCEF(node, rootNode)) {
       return node;
     }
 
@@ -320,5 +324,6 @@ export {
   getElementFromPosition,
   getElementFromPrevPosition,
   getVisualCaretPosition,
-  getChildNodeAtRelativeOffset
+  getChildNodeAtRelativeOffset,
+  isAbsPositionedElement
 };

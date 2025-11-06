@@ -1,9 +1,9 @@
-import { ApproxStructure, Assertions, StructAssert, UiFinder } from '@ephox/agar';
+import { ApproxStructure, Assertions, type StructAssert, UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun, Obj, Type } from '@ephox/katamari';
 import { McEditor, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/media/Plugin';
 
 describe('browser.tinymce.plugins.media.core.LiveEmbedNodeTest', () => {

@@ -1,8 +1,9 @@
 import { Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections, TinyContentActions } from '@ephox/wrap-mcagar';
+import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.newline.NewlineInLiTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
@@ -129,5 +130,23 @@ describe('browser.tinymce.core.newline.NewlineInLiTest', () => {
       '</ul>' ].join('\n');
     TinyAssertions.assertContent(editor, expectedContent);
     TinyAssertions.assertCursor(editor, [ 0, 2, 0, 0, 0, 0 ], 0);
+  });
+
+  it('TINY-12830: should split list item at cursor position when pressing enter', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul><li>This is a paragraph</li></ul>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 'Th'.length);
+    TinyContentActions.keydown(editor, Keys.enter());
+    TinyAssertions.assertContent(editor, [ '<ul>', '<li>Th</li>', '<li>is is a paragraph</li>', '</ul>' ].join('\n'));
+    TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 0);
+  });
+
+  it('TINY-12830: should split list item using mceInsertNewline command without throwing error', () => {
+    const editor = hook.editor();
+    editor.setContent('<ul><li>This is a paragraph</li></ul>');
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 'Th'.length);
+    assert.doesNotThrow(() => editor.execCommand('mceInsertNewline'));
+    TinyAssertions.assertContent(editor, [ '<ul>', '<li>Th</li>', '<li>is is a paragraph</li>', '</ul>' ].join('\n'));
+    TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 0);
   });
 });

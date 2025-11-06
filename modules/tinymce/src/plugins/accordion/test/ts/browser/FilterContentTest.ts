@@ -1,10 +1,10 @@
-import { ApproxStructure, StructAssert, Waiter } from '@ephox/agar';
+import { ApproxStructure, type StructAssert, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Type, Unicode } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/accordion/Plugin';
 
 import * as AccordionUtils from '../module/AccordionUtils';
@@ -33,10 +33,12 @@ describe('browser.tinymce.plugins.accordion.FilterContentTest', () => {
 
   const buildAccordionStructure = (details: AccordionDetails): ApproxStructure.Builder<StructAssert> => (s, str, _arr) => {
     const { open, summary, body, isSelected } = details;
+    const asOpen = Type.isNullable(open) || open === true;
     return s.element('details', {
       exactClasses: [ 'mce-accordion' ],
       exactAttrs: {
-        ...Type.isNullable(open) || open === true ? { open: str.is('open') } : {},
+        ...asOpen ? { open: str.is('open') } : {},
+        'data-mce-accordion-open': str.is(asOpen ? 'open' : 'closed'),
         ...Type.isNullable(isSelected) || isSelected === true ? { 'data-mce-selected': str.is('1') } : {}
       },
       children: [

@@ -1,11 +1,11 @@
 import { Fun, Optional, Optionals, Type } from '@ephox/katamari';
 import { SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import Env from '../api/Env';
 import * as Options from '../api/Options';
 import Delay from '../api/util/Delay';
-import { EditorEvent } from '../api/util/EventDispatcher';
+import type { EditorEvent } from '../api/util/EventDispatcher';
 import Tools from '../api/util/Tools';
 import VK from '../api/util/VK';
 import * as CaretContainer from '../caret/CaretContainer';

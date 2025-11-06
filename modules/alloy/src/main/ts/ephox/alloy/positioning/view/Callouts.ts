@@ -1,14 +1,14 @@
-import { Classes, Css, Height, SugarElement, Width } from '@ephox/sugar';
+import { Classes, Css, Height, type SugarElement, Width } from '@ephox/sugar';
 
-import { Bubble } from '../layout/Bubble';
-import { AnchorBox, AnchorElement } from '../layout/LayoutTypes';
+import type { Bubble } from '../layout/Bubble';
+import type { AnchorBox, AnchorElement } from '../layout/LayoutTypes';
 import * as Origins from '../layout/Origins';
 import * as Placement from '../layout/Placement';
-import { ReparteeOptions } from '../layout/SimpleLayout';
+import type { ReparteeOptions } from '../layout/SimpleLayout';
 
 import * as Bounder from './Bounder';
 import { applyPositionCss } from './PositionCss';
-import { RepositionDecision } from './Reposition';
+import type { RepositionDecision } from './Reposition';
 import { applyTransitionCss } from './Transitions';
 
 /*

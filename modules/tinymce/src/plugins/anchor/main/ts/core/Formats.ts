@@ -1,5 +1,5 @@
-import Editor from 'tinymce/core/api/Editor';
-import { Format } from 'tinymce/core/fmt/FormatTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Format } from 'tinymce/core/fmt/FormatTypes';
 
 import * as Utils from './Utils';
 

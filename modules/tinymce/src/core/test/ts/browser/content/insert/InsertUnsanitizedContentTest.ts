@@ -1,7 +1,7 @@
 import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.content.insert.InsertUnsanitizedContentTest', () => {
   const unsanitizedHtml = '<p id="action">XSS</p>';

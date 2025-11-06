@@ -2,12 +2,12 @@ import { Transformations } from '@ephox/acid';
 import { Arr, Type } from '@ephox/katamari';
 
 import DOMUtils from '../api/dom/DOMUtils';
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import Schema from '../api/html/Schema';
 import * as Options from '../api/Options';
 import Tools from '../api/util/Tools';
 
-import { ApplyFormat, BlockFormat, FormatAttrOrStyleValue, InlineFormat, SelectorFormat } from './FormatTypes';
+import type { ApplyFormat, BlockFormat, FormatAttrOrStyleValue, InlineFormat, SelectorFormat } from './FormatTypes';
 
 /**
  * Internal class for generating previews styles for formats.

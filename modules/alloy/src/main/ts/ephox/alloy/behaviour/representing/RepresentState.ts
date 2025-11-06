@@ -1,9 +1,9 @@
-import { Arr, Cell, Fun, Obj, Optional } from '@ephox/katamari';
+import { Arr, Cell, Fun, Obj, type Optional } from '@ephox/katamari';
 
-import { ItemDataTuple } from '../../ui/types/ItemTypes';
+import type { ItemDataTuple } from '../../ui/types/ItemTypes';
 import { nuState } from '../common/BehaviourState';
 
-import {
+import type {
   DatasetRepresentingState, ManualRepresentingState, MemoryRepresentingState, RepresentingConfig, RepresentingState
 } from './RepresentingTypes';
 

@@ -5,7 +5,7 @@ import * as EditorView from '../EditorView';
 import * as EditorFocus from '../focus/EditorFocus';
 import NotificationManagerImpl from '../ui/NotificationManagerImpl';
 
-import Editor from './Editor';
+import type Editor from './Editor';
 import * as Options from './Options';
 
 export interface NotificationManagerImpl {

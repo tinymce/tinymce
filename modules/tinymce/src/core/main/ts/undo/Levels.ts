@@ -1,13 +1,13 @@
 import { Arr, Thunk, Type } from '@ephox/katamari';
-import { Html, Remove, SelectorFilter, SugarElement } from '@ephox/sugar';
+import { Attribute, Html, Remove, SelectorFilter, SugarElement } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import { isPathBookmark } from '../bookmark/BookmarkTypes';
 import * as TrimBody from '../dom/TrimBody';
 import * as Zwsp from '../text/Zwsp';
 
 import * as Fragments from './Fragments';
-import { CompleteUndoLevel, FragmentedUndoLevel, NewUndoLevel, UndoLevel } from './UndoManagerTypes';
+import type { CompleteUndoLevel, FragmentedUndoLevel, NewUndoLevel, UndoLevel } from './UndoManagerTypes';
 
 // We need to create a temporary document instead of using the global document since
 // innerHTML on a detached element will still make http requests to the images
@@ -67,27 +67,32 @@ const getLevelContent = (level: NewUndoLevel): string => {
   return level.type === 'fragmented' ? level.fragments.join('') : level.content;
 };
 
-const getCleanLevelContent = (level: NewUndoLevel): string => {
+const getCleanLevelContent = (isReadonly: boolean, level: NewUndoLevel): string => {
   const elm = SugarElement.fromTag('body', lazyTempDocument());
   Html.set(elm, getLevelContent(level));
   Arr.each(SelectorFilter.descendants(elm, '*[data-mce-bogus]'), Remove.unwrap);
+
+  if (isReadonly) {
+    Arr.each(SelectorFilter.descendants(elm, 'details[open]'), (element) => Attribute.remove(element, 'open'));
+  }
+
   return Html.get(elm);
 };
 
 const hasEqualContent = (level1: NewUndoLevel, level2: NewUndoLevel): boolean =>
   getLevelContent(level1) === getLevelContent(level2);
 
-const hasEqualCleanedContent = (level1: NewUndoLevel, level2: NewUndoLevel): boolean =>
-  getCleanLevelContent(level1) === getCleanLevelContent(level2);
+const hasEqualCleanedContent = (isReadonly: boolean, level1: NewUndoLevel, level2: NewUndoLevel): boolean =>
+  getCleanLevelContent(isReadonly, level1) === getCleanLevelContent(isReadonly, level2);
 
 // Most of the time the contents is equal so it's faster to first check that using strings then fallback to a cleaned dom comparison
-const isEq = (level1: NewUndoLevel | undefined, level2: NewUndoLevel | undefined): boolean => {
+const isEq = (isReadonly: boolean, level1: NewUndoLevel | undefined, level2: NewUndoLevel | undefined): boolean => {
   if (!level1 || !level2) {
     return false;
   } else if (hasEqualContent(level1, level2)) {
     return true;
   } else {
-    return hasEqualCleanedContent(level1, level2);
+    return hasEqualCleanedContent(isReadonly, level1, level2);
   }
 };
 

@@ -1,14 +1,14 @@
 import { Arr, Id, Obj, Singleton, Unicode } from '@ephox/katamari';
 import { Attribute, Class, Classes, Html, Insert, Replication, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as ExpandRange from '../fmt/ExpandRange';
 import * as RangeWalk from '../selection/RangeWalk';
 import * as SelectionUtils from '../selection/SelectionUtils';
 import * as TableCellSelection from '../selection/TableCellSelection';
 
 import { ChildContext, context } from './AnnotationContext';
-import { AnnotatorSettings } from './AnnotationsRegistry';
+import type { AnnotatorSettings } from './AnnotationsRegistry';
 import * as Markings from './Markings';
 
 export type DecoratorData = Record<string, any>;

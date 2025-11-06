@@ -1,8 +1,8 @@
 import { Arr, Optional, Optionals } from '@ephox/katamari';
 import { Attribute, Css, Insert, InsertAll, Replication, SugarElement, SugarNode } from '@ephox/sugar';
 
-import { Entry, EntryFragment, EntryList, isEntryComment, isEntryFragment, isEntryList } from './Entry';
-import { ListType } from './Util';
+import { type Entry, type EntryFragment, type EntryList, isEntryComment, isEntryFragment, isEntryList } from './Entry';
+import type { ListType } from './Util';
 
 interface Segment {
   list: SugarElement<HTMLElement>;

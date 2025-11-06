@@ -2,7 +2,7 @@ import { beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { LegacyUnit, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.core.lists.IndentTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

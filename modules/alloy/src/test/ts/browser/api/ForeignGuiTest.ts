@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, Logger, Mouse, Pipeline, Step } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 import { Optional } from '@ephox/katamari';
-import { EventArgs, Html, Insert, Remove, SugarBody, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
+import { type EventArgs, Html, Insert, Remove, SugarBody, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 
 import * as Behaviour from 'ephox/alloy/api/behaviour/Behaviour';
 import { Toggling } from 'ephox/alloy/api/behaviour/Toggling';

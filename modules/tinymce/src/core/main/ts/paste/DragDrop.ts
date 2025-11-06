@@ -1,9 +1,9 @@
-import { Arr, Cell, Obj, Type } from '@ephox/katamari';
+import { Arr, type Cell, Obj, Type } from '@ephox/katamari';
 
-import DOMUtils from '../api/dom/DOMUtils';
+import type DOMUtils from '../api/dom/DOMUtils';
 import RangeUtils from '../api/dom/RangeUtils';
-import Editor from '../api/Editor';
-import Schema from '../api/html/Schema';
+import type Editor from '../api/Editor';
+import type Schema from '../api/html/Schema';
 import * as Options from '../api/Options';
 import Delay from '../api/util/Delay';
 import * as TransparentElements from '../content/TransparentElements';
@@ -24,10 +24,10 @@ const isPlainTextFileUrl = (content: Clipboard.ClipboardContents): boolean => {
 };
 
 const setFocusedRange = (editor: Editor, rng: Range | undefined): void => {
-  editor.focus();
   if (rng) {
     editor.selection.setRng(rng);
   }
+  editor.focus();
 };
 
 const hasImage = (dataTransfer: DataTransfer): boolean =>

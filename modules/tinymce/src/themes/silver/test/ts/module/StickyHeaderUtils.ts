@@ -1,6 +1,6 @@
-import { ApproxStructure, Assertions, Keyboard, Keys, StructAssert, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, Keyboard, Keys, type StructAssert, UiFinder, Waiter } from '@ephox/agar';
 import { Arr, Fun } from '@ephox/katamari';
-import { Css, Focus, Scroll, SugarBody, SugarDocument, SugarElement } from '@ephox/sugar';
+import { Css, Focus, Scroll, SugarBody, SugarDocument, type SugarElement } from '@ephox/sugar';
 import { assert } from 'chai';
 
 import { ToolbarLocation } from 'tinymce/themes/silver/api/Options';

@@ -1,9 +1,9 @@
 import { Cell } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
-import { PastePlainTextToggleEvent } from 'tinymce/core/api/EventTypes';
-import { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { PastePlainTextToggleEvent } from 'tinymce/core/api/EventTypes';
+import type { Menu, Toolbar } from 'tinymce/core/api/ui/Ui';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 import * as Options from '../../api/Options';
 

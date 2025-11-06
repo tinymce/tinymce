@@ -1,10 +1,10 @@
 import { Fun, Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
-import Editor from '../api/Editor';
-import { EditorEvent } from '../api/util/EventDispatcher';
+import type Editor from '../api/Editor';
+import type { EditorEvent } from '../api/util/EventDispatcher';
 import VK from '../api/util/VK';
-import { Bookmark } from '../bookmark/BookmarkTypes';
+import type { Bookmark } from '../bookmark/BookmarkTypes';
 import * as NodeType from '../dom/NodeType';
 import * as InsertNewLine from '../newline/InsertNewLine';
 import { endTypingLevelIgnoreLocks } from '../undo/TypingState';

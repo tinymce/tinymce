@@ -1,23 +1,23 @@
 import { StructureSchema } from '@ephox/boulder';
-import { Arr, Cell, Optional, Type } from '@ephox/katamari';
-import { SugarElement, Traverse } from '@ephox/sugar';
+import { Arr, Cell, type Optional, Type } from '@ephox/katamari';
+import { type SugarElement, Traverse } from '@ephox/sugar';
 
 import * as BehaviourBlob from '../../behaviour/common/BehaviourBlob';
-import { BehaviourState } from '../../behaviour/common/BehaviourState';
+import type { BehaviourState } from '../../behaviour/common/BehaviourState';
 import * as ComponentDom from '../../construct/ComponentDom';
 import * as ComponentEvents from '../../construct/ComponentEvents';
 import * as CustomDefinition from '../../construct/CustomDefinition';
-import { DomDefinitionDetail } from '../../dom/DomDefinition';
+import type { DomDefinitionDetail } from '../../dom/DomDefinition';
 import * as DomModification from '../../dom/DomModification';
 import * as DomRender from '../../dom/DomRender';
-import { UncurriedHandler } from '../../events/EventRegistry';
-import { AlloyBehaviour } from '../behaviour/Behaviour';
+import type { UncurriedHandler } from '../../events/EventRegistry';
+import type { AlloyBehaviour } from '../behaviour/Behaviour';
 import { NoContextApi, singleton } from '../system/NoContextApi';
-import { AlloySystemApi } from '../system/SystemApi';
+import type { AlloySystemApi } from '../system/SystemApi';
 
 import * as CompBehaviours from './CompBehaviours';
-import { AlloyComponent } from './ComponentApi';
-import { ComponentDetail } from './SpecTypes';
+import type { AlloyComponent } from './ComponentApi';
+import type { ComponentDetail } from './SpecTypes';
 
 // This is probably far too complicated. I think DomModification is probably
 // questionable as a concept. Maybe it should be deprecated.

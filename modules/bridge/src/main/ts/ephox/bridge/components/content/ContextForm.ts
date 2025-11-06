@@ -1,13 +1,13 @@
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
-import { Fun, Optional, Result } from '@ephox/katamari';
+import { Fun, type Optional, type Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
-import { BaseToolbarButton, baseToolbarButtonFields, BaseToolbarButtonInstanceApi, BaseToolbarButtonSpec } from '../toolbar/ToolbarButton';
+import { type BaseToolbarButton, baseToolbarButtonFields, type BaseToolbarButtonInstanceApi, type BaseToolbarButtonSpec } from '../toolbar/ToolbarButton';
 import {
-  BaseToolbarToggleButton, baseToolbarToggleButtonFields, BaseToolbarToggleButtonInstanceApi, BaseToolbarToggleButtonSpec
+  type BaseToolbarToggleButton, baseToolbarToggleButtonFields, type BaseToolbarToggleButtonInstanceApi, type BaseToolbarToggleButtonSpec
 } from '../toolbar/ToolbarToggleButton';
 
-import { ContextBar, contextBarFields, ContextBarSpec } from './ContextBar';
+import { type ContextBar, contextBarFields, type ContextBarSpec } from './ContextBar';
 
 export interface ContextFormLaunchButtonApi extends BaseToolbarButtonSpec<BaseToolbarButtonInstanceApi> {
   type: 'contextformbutton';

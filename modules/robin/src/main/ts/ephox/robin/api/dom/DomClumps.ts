@@ -1,6 +1,6 @@
 import { DomUniverse } from '@ephox/boss';
-import { Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { Optional } from '@ephox/katamari';
+import type { SugarElement } from '@ephox/sugar';
 
 import * as Clumps from '../general/Clumps';
 

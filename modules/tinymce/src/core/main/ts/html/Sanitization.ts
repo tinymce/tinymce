@@ -1,9 +1,9 @@
 import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
 import { Attribute, NodeTypes, Remove, Replication, SugarElement } from '@ephox/sugar';
-import createDompurify, { Config, DOMPurify, UponSanitizeAttributeHookEvent, UponSanitizeElementHookEvent } from 'dompurify';
+import createDompurify, { type Config, type DOMPurify, type UponSanitizeAttributeHookEvent, type UponSanitizeElementHookEvent } from 'dompurify';
 
-import { DomParserSettings } from '../api/html/DomParser';
-import Schema from '../api/html/Schema';
+import type { DomParserSettings } from '../api/html/DomParser';
+import type Schema from '../api/html/Schema';
 import Tools from '../api/util/Tools';
 import * as URI from '../api/util/URI';
 import * as NodeType from '../dom/NodeType';
@@ -124,8 +124,7 @@ const processAttr = (ele: Element, settings: DomParserSettings, schema: Schema, 
 
   if (evt.keepAttr) {
     evt.allowedAttributes[attrName] = true;
-
-    if (isBooleanAttribute(attrName, schema)) {
+    if (isBooleanAttributeOfNonCustomElement(attrName, schema, ele.nodeName)) {
       evt.attrValue = attrName;
     }
 
@@ -152,8 +151,8 @@ const shouldKeepAttribute = (settings: DomParserSettings, schema: Schema, scope:
 const isRequiredAttributeOfInternalElement = (ele: Element, attrName: string): boolean =>
   ele.hasAttribute(internalElementAttr) && (attrName === 'id' || attrName === 'class' || attrName === 'style');
 
-const isBooleanAttribute = (attrName: string, schema: Schema): boolean =>
-  attrName in schema.getBoolAttrs();
+const isBooleanAttributeOfNonCustomElement = (attrName: string, schema: Schema, nodeName: string): boolean =>
+  attrName in schema.getBoolAttrs() && !Obj.has(schema.getCustomElements(), nodeName.toLowerCase());
 
 const filterAttributes = (ele: Element, settings: DomParserSettings, schema: Schema, scope: Namespace.NamespaceType): void => {
   const { attributes } = ele;
@@ -163,7 +162,7 @@ const filterAttributes = (ele: Element, settings: DomParserSettings, schema: Sch
     const attrValue = attr.value;
     if (!shouldKeepAttribute(settings, schema, scope, ele.tagName.toLowerCase(), attrName, attrValue) && !isRequiredAttributeOfInternalElement(ele, attrName)) {
       ele.removeAttribute(attrName);
-    } else if (isBooleanAttribute(attrName, schema)) {
+    } else if (isBooleanAttributeOfNonCustomElement(attrName, schema, ele.nodeName)) {
       ele.setAttribute(attrName, attrName);
     }
   }

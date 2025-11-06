@@ -1,10 +1,10 @@
 import {
-  AlloySpec, AlloyTriggers, Behaviour, Button, Channels, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting, SketchSpec, Tabstopping, Tooltipping
+  type AlloySpec, AlloyTriggers, Behaviour, Button, Channels, Container, DomFactory, Dragging, GuiFactory, ModalDialog, Reflecting, type SketchSpec, Tabstopping, Tooltipping
 } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
 import { SelectorFind } from '@ephox/sugar';
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import { formCancelEvent } from '../general/FormEvents';
 import * as Icons from '../icons/Icons';
 

@@ -10,7 +10,7 @@ export default defineConfig({
   reporter: process.env.CI ? [[ 'junit', { outputFile: 'scratch/test-results-visual.xml' }], [ 'html', { open: 'never' }]] : 'list',
   // ...
   // Exclude browser tests from being run by playwright
-  testIgnore: '**/ts/browser/**',
+  testIgnore: [ '**/ts/browser/**', '**/ts/atomic/**' ],
   use: {
     baseURL: BASE_URL,
     // ...

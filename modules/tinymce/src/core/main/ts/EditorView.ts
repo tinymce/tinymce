@@ -1,7 +1,7 @@
 import { Fun, Optional } from '@ephox/katamari';
 import { Css, SugarBody, SugarElement, Traverse } from '@ephox/sugar';
 
-import Editor from './api/Editor';
+import type Editor from './api/Editor';
 
 const getProp = <K extends keyof Element>(propName: K, elm: SugarElement<Element>): Element[K] => {
   const rawElm = elm.dom;

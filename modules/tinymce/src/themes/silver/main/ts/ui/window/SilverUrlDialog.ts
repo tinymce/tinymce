@@ -1,12 +1,12 @@
-import { AddEventsBehaviour, AlloyComponent, AlloyEvents, AlloyParts, Receiving, Reflecting } from '@ephox/alloy';
-import { Dialog } from '@ephox/bridge';
+import { AddEventsBehaviour, type AlloyComponent, AlloyEvents, type AlloyParts, Receiving, Reflecting } from '@ephox/alloy';
+import type { Dialog } from '@ephox/bridge';
 import { Id, Obj, Optional, Singleton, Type } from '@ephox/katamari';
-import { DomEvent, EventUnbinder, SelectorFind, SugarElement } from '@ephox/sugar';
+import { DomEvent, type EventUnbinder, SelectorFind, SugarElement } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import URI from 'tinymce/core/api/util/URI';
 
-import { UiFactoryBackstage } from '../../backstage/Backstage';
+import type { UiFactoryBackstage } from '../../backstage/Backstage';
 
 import { bodySendMessageChannel, dialogChannel } from './DialogChannels';
 import { renderIframeBody } from './SilverDialogBody';

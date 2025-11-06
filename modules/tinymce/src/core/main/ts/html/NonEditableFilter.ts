@@ -1,10 +1,10 @@
 import { Arr } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
-import { SetContentEvent } from '../api/EventTypes';
-import AstNode from '../api/html/Node';
+import type Editor from '../api/Editor';
+import type { SetContentEvent } from '../api/EventTypes';
+import type AstNode from '../api/html/Node';
 import * as Options from '../api/Options';
-import { EditorEvent } from '../api/util/EventDispatcher';
+import type { EditorEvent } from '../api/util/EventDispatcher';
 import Tools from '../api/util/Tools';
 
 const hasClass = (checkClassName: string) => (node: AstNode): boolean =>

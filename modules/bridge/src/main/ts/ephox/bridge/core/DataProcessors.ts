@@ -1,4 +1,4 @@
-import { StructureProcessor } from '@ephox/boulder';
+import type { StructureProcessor } from '@ephox/boulder';
 import { Arr, Optional, Type } from '@ephox/katamari';
 
 import { checkboxDataProcessor } from '../components/dialog/Checkbox';

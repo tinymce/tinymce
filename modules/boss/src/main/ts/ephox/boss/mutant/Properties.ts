@@ -1,6 +1,6 @@
 import { Arr, Obj, Optional } from '@ephox/katamari';
 
-import { Gene } from '../api/Gene';
+import type { Gene } from '../api/Gene';
 import TagBoundaries from '../common/TagBoundaries';
 
 // Warning: not exhaustive

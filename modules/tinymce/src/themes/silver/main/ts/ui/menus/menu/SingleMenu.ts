@@ -1,20 +1,20 @@
-import { AlloyEvents, InlineViewTypes, ItemTypes, Keying, TieredMenu, TieredMenuTypes } from '@ephox/alloy';
-import { InlineContent, Menu as BridgeMenu, Toolbar } from '@ephox/bridge';
+import { AlloyEvents, type InlineViewTypes, type ItemTypes, Keying, TieredMenu, type TieredMenuTypes } from '@ephox/alloy';
+import { InlineContent, Menu as BridgeMenu, type Toolbar } from '@ephox/bridge';
 import { Arr, Obj, Optional, Optionals } from '@ephox/katamari';
 
-import { UiFactoryBackstage, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
+import type { UiFactoryBackstage, UiFactoryBackstageShared } from 'tinymce/themes/silver/backstage/Backstage';
 
 import { detectSize } from '../../alien/FlatgridAutodetect';
 import { SimpleBehaviours } from '../../alien/SimpleBehaviours';
 import { tooltipBehaviour } from '../item/build/AutocompleteMenuItem';
-import ItemResponse from '../item/ItemResponse';
+import type ItemResponse from '../item/ItemResponse';
 import * as MenuItems from '../item/MenuItems';
 
 import { deriveMenuMovement } from './MenuMovement';
 import { markers as getMenuMarkers } from './MenuParts';
 import * as MenuUtils from './MenuUtils';
-import { identifyMenuLayout, MenuSearchMode } from './searchable/SearchableMenu';
-import { SingleMenuItemSpec } from './SingleMenuTypes';
+import { identifyMenuLayout, type MenuSearchMode } from './searchable/SearchableMenu';
+import type { SingleMenuItemSpec } from './SingleMenuTypes';
 
 type PartialMenuSpec = MenuUtils.PartialMenuSpec;
 

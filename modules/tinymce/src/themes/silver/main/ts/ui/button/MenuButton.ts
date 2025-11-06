@@ -1,11 +1,11 @@
-import { AlloyComponent, AlloyTriggers, Disabling, MementoRecord, SketchSpec, Tabstopping } from '@ephox/alloy';
-import { Dialog, Menu, Toolbar } from '@ephox/bridge';
-import { Arr, Cell, Optional } from '@ephox/katamari';
+import { type AlloyComponent, AlloyTriggers, Disabling, type MementoRecord, type SketchSpec, Tabstopping } from '@ephox/alloy';
+import type { Dialog, Menu, Toolbar } from '@ephox/bridge';
+import { Arr, type Cell, type Optional } from '@ephox/katamari';
 import { Attribute, Class, Focus } from '@ephox/sugar';
 
 import { formActionEvent } from 'tinymce/themes/silver/ui/general/FormEvents';
 
-import { UiFactoryBackstage } from '../../backstage/Backstage';
+import type { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderCommonDropdown, updateMenuIcon, updateMenuText, updateTooltiptext } from '../dropdown/CommonDropdown';
 import ItemResponse from '../menus/item/ItemResponse';
 import * as NestedMenus from '../menus/menu/NestedMenus';
@@ -144,9 +144,5 @@ const getFetch = (items: StoredMenuItem[], getButton: () => MementoRecord, backs
   };
 };
 
-export {
-  renderMenuButton,
-  getFetch,
-  StoredMenuItem,
-  StoredMenuButton
-};
+export type { StoredMenuItem, StoredMenuButton };
+export { renderMenuButton, getFetch };

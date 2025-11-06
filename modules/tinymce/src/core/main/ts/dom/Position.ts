@@ -1,4 +1,4 @@
-import { Arr, Optional } from '@ephox/katamari';
+import { Arr, type Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 import { Css, SugarElement, SugarNode, Traverse } from '@ephox/sugar';
 

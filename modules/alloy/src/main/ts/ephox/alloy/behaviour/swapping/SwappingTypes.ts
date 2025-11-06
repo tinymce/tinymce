@@ -1,5 +1,5 @@
-import * as Behaviour from '../../api/behaviour/Behaviour';
-import { AlloyComponent } from '../../api/component/ComponentApi';
+import type * as Behaviour from '../../api/behaviour/Behaviour';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
 
 export interface SwappingBehaviour extends Behaviour.AlloyBehaviour<SwappingConfigSpec, SwappingConfig> {
   config: (config: SwappingConfigSpec) => Behaviour.NamedConfiguredBehaviour<SwappingConfigSpec, SwappingConfig>;

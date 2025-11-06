@@ -5,13 +5,13 @@
  Make sure that if making changes to this file, the other files are updated as well
  */
 
-import { ApproxStructure, Assertions, Cursors, Mouse, StructAssert, UiFinder, Waiter } from '@ephox/agar';
+import { ApproxStructure, Assertions, Cursors, Mouse, type StructAssert, UiFinder, Waiter } from '@ephox/agar';
 import { Arr, Obj } from '@ephox/katamari';
 import { Attribute, Checked, Class, Insert, SelectorFind, SugarBody, SugarElement, TextContent, Value } from '@ephox/sugar';
 import { TinyDom, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 export interface WidthData {
   readonly raw: number | null;

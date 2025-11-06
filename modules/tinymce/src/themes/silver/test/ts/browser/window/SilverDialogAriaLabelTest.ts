@@ -2,12 +2,12 @@ import { UiFinder } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
-import { Attribute, SugarBody, SugarDocument, SugarElement, TextContent } from '@ephox/sugar';
+import { Attribute, SugarBody, SugarDocument, type SugarElement, TextContent } from '@ephox/sugar';
 import { TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Dialog } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
 
 import * as DialogUtils from '../../module/DialogUtils';
 import * as GuiSetup from '../../module/GuiSetup';

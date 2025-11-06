@@ -1,12 +1,12 @@
 import { Arr, Fun, Type } from '@ephox/katamari';
 import { SugarNode } from '@ephox/sugar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Menu } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Menu } from 'tinymce/core/api/ui/Ui';
 
 import * as FakeClipboard from '../api/Clipboard';
 import * as Options from '../api/Options';
-import { SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
+import { type SelectionTargets, LockedDisable } from '../selection/SelectionTargets';
 
 import { verticalAlignValues } from './CellAlignValues';
 import { applyTableCellStyle, changeColumnHeader, changeRowHeader, filterNoneItem, buildColorMenu, buildMenuItems } from './UiUtils';

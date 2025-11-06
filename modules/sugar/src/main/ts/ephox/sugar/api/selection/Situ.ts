@@ -1,6 +1,6 @@
 import { Adt, Fun } from '@ephox/katamari';
 
-import { SugarElement } from '../node/SugarElement';
+import type { SugarElement } from '../node/SugarElement';
 
 export interface Situ {
   fold: <U> (

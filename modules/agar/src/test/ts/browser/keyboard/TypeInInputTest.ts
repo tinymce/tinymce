@@ -3,6 +3,7 @@ import { DomEvent, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar'
 
 import * as TestStore from 'ephox/agar/api/TestStore';
 import * as UiControls from 'ephox/agar/api/UiControls';
+import { pTypeTextInInput } from 'ephox/agar/keyboard/TypeInInput';
 
 interface InputStoreDataItem {
   readonly type: 'beforeinput' | 'input';
@@ -79,7 +80,7 @@ describe('browser.agar.keyboard.TypeInInputTest', () => {
       });
     });
 
-    await UiControls.pType(input, 'aBcdef');
+    await pTypeTextInInput(input, 'aBcdef');
     Assert.eq('Should be expected input value d, e, f is prevented', 'aBc', UiControls.getValue(input));
 
     store.assertEq('Should have correct events', [
@@ -113,7 +114,7 @@ describe('browser.agar.keyboard.TypeInInputTest', () => {
     const input = SugarElement.fromHtml<HTMLInputElement | HTMLTextAreaElement>(tagHtml);
 
     try {
-      await UiControls.pType(input, 'abcde');
+      await pTypeTextInInput(input, 'abcde');
       Assert.fail('Should fail on input');
     } catch (e) {
       Assert.eq('Should be expected error', 'Element does not have text selection properties', e.message);

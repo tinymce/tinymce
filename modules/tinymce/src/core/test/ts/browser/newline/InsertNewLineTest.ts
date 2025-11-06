@@ -5,8 +5,8 @@ import { PlatformDetection } from '@ephox/sand';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as CaretFormat from 'tinymce/core/fmt/CaretFormat';
 import * as InsertNewLine from 'tinymce/core/newline/InsertNewLine';
 import * as SetSelectionContent from 'tinymce/core/selection/SetSelectionContent';
@@ -1671,13 +1671,13 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       extended_valid_elements: 'span[*]'
     }, [], true);
 
-    it('TINY-12073: Press enter in nested span, should flatten spans and preserve one font-size', () => {
+    it('TINY-12073: Press enter in nested span, should flatten spans and preserve one font-size', async () => {
       const editor = hook.editor();
       editor.setContent('<p><span style="font-size: 24pt;">Lorem <span style="font-size: 10pt;">Ipsum</span></span></p>');
       TinySelections.setCursor(editor, [ 0, 0, 1, 0 ], 'Ipsum'.length);
 
       insertNewline(editor, {});
-      TinyContentActions.type(editor, 'A');
+      await TinyContentActions.pType(editor, 'A');
 
       const expectedContent = '<p>'
           + '<span style="font-size: 24pt;">Lorem '
@@ -1691,13 +1691,13 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       TinyAssertions.assertCursor(editor, [ 1, 0, 0 ], 'A'.length);
     });
 
-    it('TINY-12073: Press enter in nested span with styles, should flatten font-size and preserve original structure ', () => {
+    it('TINY-12073: Press enter in nested span with styles, should flatten font-size and preserve original structure ', async () => {
       const editor = hook.editor();
       editor.setContent('<p><span style="font-size: 24pt; background: red;">Lorem <span style="font-size: 10pt;">Ipsum</span></span></p>');
       TinySelections.setCursor(editor, [ 0, 0, 1, 0 ], 'Ipsum'.length);
 
       insertNewline(editor, {});
-      TinyContentActions.type(editor, 'A');
+      await TinyContentActions.pType(editor, 'A');
 
       const expectedContent = '<p>'
           + '<span style="font-size: 24pt; background: red;">Lorem '
@@ -1713,13 +1713,13 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       TinyAssertions.assertCursor(editor, [ 1, 0, 0, 0 ], 'A'.length);
     });
 
-    it('TINY-12073: Press enter in span nested in strong, should flatten font-size and preserve original structure', () => {
+    it('TINY-12073: Press enter in span nested in strong, should flatten font-size and preserve original structure', async () => {
       const editor = hook.editor();
       editor.setContent('<p><strong style="font-size: 24pt;">Lorem <span style="font-size: 10pt;">Ipsum</span></strong></p>');
       TinySelections.setCursor(editor, [ 0, 0, 1, 0 ], 'Ipsum'.length);
 
       insertNewline(editor, {});
-      TinyContentActions.type(editor, 'A');
+      await TinyContentActions.pType(editor, 'A');
 
       const expectedContent = '<p>'
             + '<strong style="font-size: 24pt;">Lorem '
@@ -1735,13 +1735,13 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       TinyAssertions.assertCursor(editor, [ 1, 0, 0, 0 ], 'A'.length);
     });
 
-    it('TINY-12073: Press enter in span deep nested in strong, should flatten font-size', () => {
+    it('TINY-12073: Press enter in span deep nested in strong, should flatten font-size', async () => {
       const editor = hook.editor();
       editor.setContent('<p><span style="font-size: 24pt; background: grey;">Lorem <strong><span style="font-size: 10pt;">Ipsum</span></strong></span></p>');
       TinySelections.setCursor(editor, [ 0, 0, 1, 0, 0 ], 'Ipsum'.length);
 
       insertNewline(editor, {});
-      TinyContentActions.type(editor, 'A');
+      await TinyContentActions.pType(editor, 'A');
 
       const expectedContent = '<p>'
             + '<span style="font-size: 24pt; background: grey;">Lorem '
@@ -1761,13 +1761,13 @@ describe('browser.tinymce.core.newline.InsertNewLineTest', () => {
       TinyAssertions.assertCursor(editor, [ 1, 0, 0, 0, 0 ], 'A'.length);
     });
 
-    it('TINY-12073: Should remove empty spans after font-size has been flattened', () => {
+    it('TINY-12073: Should remove empty spans after font-size has been flattened', async () => {
       const editor = hook.editor();
       editor.setContent('<p><span style="font-size: 10pt;"><em><span style="font-size: 20pt;"><strong><span style="font-size: 30pt;">Lorem</span></strong></span></em></span></p>');
       TinySelections.setCursor(editor, [ 0, 0, 0, 0, 0, 0, 0 ], 'Lorem'.length);
 
       insertNewline(editor, {});
-      TinyContentActions.type(editor, 'A');
+      await TinyContentActions.pType(editor, 'A');
 
       const expectedContent = '<p>'
               + '<span style="font-size: 10pt;">'

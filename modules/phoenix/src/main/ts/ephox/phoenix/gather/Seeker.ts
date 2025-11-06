@@ -1,7 +1,7 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 import { Optional } from '@ephox/katamari';
 
-import { Direction, Transition } from '../api/data/Types';
+import type { Direction, Transition } from '../api/data/Types';
 
 import * as Walker from './Walker';
 import { Walkers } from './Walkers';

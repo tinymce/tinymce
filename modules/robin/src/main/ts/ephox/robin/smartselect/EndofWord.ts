@@ -1,9 +1,9 @@
-import { Universe } from '@ephox/boss';
+import type { Universe } from '@ephox/boss';
 import { Arr, Optional, Unicode } from '@ephox/katamari';
 
 import { WordRange } from '../data/WordRange';
 import * as Clustering from '../words/Clustering';
-import { WordDecisionItem } from '../words/WordDecision';
+import type { WordDecisionItem } from '../words/WordDecision';
 
 interface ScanResult<E> {
   readonly all: WordDecisionItem<E>[];

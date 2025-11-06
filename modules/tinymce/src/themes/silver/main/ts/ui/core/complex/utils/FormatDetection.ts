@@ -1,8 +1,8 @@
 import { Arr, Optional } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
-import { BasicSelectItem } from '../SelectDatasets';
+import type { BasicSelectItem } from '../SelectDatasets';
 
 export const findNearest = (editor: Editor, getStyles: () => BasicSelectItem[]): Optional<BasicSelectItem> => {
   const styles = getStyles();

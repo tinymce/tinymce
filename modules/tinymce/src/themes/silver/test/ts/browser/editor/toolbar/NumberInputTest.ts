@@ -1,12 +1,12 @@
 import { FocusTools, Keys, Mouse, UiControls, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Optional, Strings } from '@ephox/katamari';
-import { SugarBody, SugarElement, SugarShadowDom, Value } from '@ephox/sugar';
+import { SugarBody, type SugarElement, SugarShadowDom, Value } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
 describe('browser.tinymce.themes.silver.throbber.NumberInputTest', () => {
   const setInputSelection = (toolbarInput: Optional<HTMLInputElement>, index: number) => toolbarInput.each((input) => {

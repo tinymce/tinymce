@@ -1,9 +1,9 @@
 import { StructureSchema } from '@ephox/boulder';
-import { Optional, Result } from '@ephox/katamari';
+import type { Optional, Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
 
-import { CommonMenuItem, commonMenuItemFields, CommonMenuItemInstanceApi, CommonMenuItemSpec } from './CommonMenuItem';
+import { type CommonMenuItem, commonMenuItemFields, type CommonMenuItemInstanceApi, type CommonMenuItemSpec } from './CommonMenuItem';
 
 export interface ResetImageItemSpec extends CommonMenuItemSpec {
   icon: string;

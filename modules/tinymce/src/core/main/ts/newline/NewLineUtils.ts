@@ -2,9 +2,9 @@ import { Arr, Fun, Obj, Optional, Optionals, Unicode } from '@ephox/katamari';
 import { DomDescent } from '@ephox/phoenix';
 import { Css, Insert, PredicateFind, SugarElement, SugarNode } from '@ephox/sugar';
 
-import DOMUtils from '../api/dom/DOMUtils';
+import type DOMUtils from '../api/dom/DOMUtils';
 import DomTreeWalker from '../api/dom/TreeWalker';
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
 import * as Bookmarks from '../bookmark/Bookmarks';
 import * as ElementType from '../dom/ElementType';
@@ -38,12 +38,13 @@ const moveToCaretPosition = (editor: Editor, root: Node): void => {
     const isList = (e: SugarElement) => /^(ul|ol|dl)$/.test(SugarNode.name(e));
     const findFirstList = (e: SugarElement) => isList(e) ? Optional.from(e) : PredicateFind.descendant(e, isList);
     const isEmpty = (e: SugarElement) => dom.isEmpty(e.dom);
+
     firstNonWhiteSpaceNodeSibling(root.firstChild).each((firstChild) => {
       findFirstList(firstChild).fold(
         () => {
           if (isEmpty(firstChild)) {
             const element = DomDescent.toLeaf(firstChild, 0).element;
-            if (!ElementType.isBr(element)) {
+            if (SugarNode.isElement(element) && !ElementType.isBr(element)) {
               Insert.append(element, SugarElement.fromText(Unicode.nbsp));
             }
           }

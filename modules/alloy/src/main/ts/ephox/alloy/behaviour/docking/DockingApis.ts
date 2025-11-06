@@ -1,12 +1,12 @@
 import { Arr } from '@ephox/katamari';
 import { Classes, Css } from '@ephox/sugar';
 
-import * as Boxes from '../../alien/Boxes';
-import { AlloyComponent } from '../../api/component/ComponentApi';
-import { applyPositionCss, PositionCss } from '../../positioning/view/PositionCss';
+import type * as Boxes from '../../alien/Boxes';
+import type { AlloyComponent } from '../../api/component/ComponentApi';
+import { applyPositionCss, type PositionCss } from '../../positioning/view/PositionCss';
 
 import * as Dockables from './Dockables';
-import { DockingConfig, DockingDecision, DockingMode, DockingState, DockingViewport } from './DockingTypes';
+import type { DockingConfig, DockingDecision, DockingMode, DockingState, DockingViewport } from './DockingTypes';
 
 const morphToStatic = (component: AlloyComponent, config: DockingConfig, state: DockingState): void => {
   state.setDocked(false);

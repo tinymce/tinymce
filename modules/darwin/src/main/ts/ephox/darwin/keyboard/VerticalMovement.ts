@@ -1,9 +1,9 @@
 import { Optional } from '@ephox/katamari';
 import { DomGather } from '@ephox/phoenix';
-import { Awareness, Compare, CursorPosition, PredicateExists, SelectorFilter, SelectorFind, SimRange, SugarElement, Traverse } from '@ephox/sugar';
+import { Awareness, Compare, CursorPosition, PredicateExists, SelectorFilter, SelectorFind, type SimRange, type SugarElement, Traverse } from '@ephox/sugar';
 
-import { WindowBridge } from '../api/WindowBridge';
-import { KeyDirection } from '../navigation/KeyDirection';
+import type { WindowBridge } from '../api/WindowBridge';
+import type { KeyDirection } from '../navigation/KeyDirection';
 import { Response } from '../selection/Response';
 import * as Util from '../selection/Util';
 

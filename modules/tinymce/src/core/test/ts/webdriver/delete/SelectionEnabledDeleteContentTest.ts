@@ -1,10 +1,10 @@
 import { ApproxStructure, UiFinder, Waiter, Keys, RealKeys } from '@ephox/agar';
 import { afterEach, context, describe, it } from '@ephox/bedrock-client';
-import { Css, SugarElement } from '@ephox/sugar';
+import { Css, type SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import CodeSamplePlugin from 'tinymce/plugins/codesample/Plugin';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';

@@ -3,8 +3,8 @@ import { describe, it } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
 import { McEditor, TinyAssertions, TinyDom } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { RawEditorOptions } from 'tinymce/core/api/OptionTypes';
 
 describe('browser.tinymce.core.paste.PlainTextPaste', () => {
   const srcText = 'one\r\ntwo\r\n\r\nthree\r\n\r\n\r\nfour\r\n\r\n\r\n\r\n.';

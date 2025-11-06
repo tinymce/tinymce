@@ -1,12 +1,13 @@
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
+import type { EditorEvent } from '../api/util/EventDispatcher';
 import Tools from '../api/util/Tools';
 import * as GetBookmark from '../bookmark/GetBookmark';
 
 import * as Levels from './Levels';
 import { isUnlocked } from './Locks';
 import { endTyping, setTyping } from './TypingState';
-import { Index, Locks, UndoBookmark, UndoLevel, UndoManager } from './UndoManagerTypes';
+import type { Index, Locks, UndoBookmark, UndoLevel, UndoManager } from './UndoManagerTypes';
 
 export const beforeChange = (editor: Editor, locks: Locks, beforeBookmark: UndoBookmark): void => {
   if (isUnlocked(locks)) {
@@ -21,7 +22,7 @@ export const addUndoLevel = (
   locks: Locks,
   beforeBookmark: UndoBookmark,
   level?: Partial<UndoLevel>,
-  event?: Event
+  event?: EditorEvent<unknown>
 ): UndoLevel | null => {
   const currentLevel = Levels.createFromEditor(editor);
 
@@ -37,7 +38,7 @@ export const addUndoLevel = (
   }
 
   // Add undo level if needed
-  if (lastLevel && Levels.isEq(lastLevel, newLevel)) {
+  if (lastLevel && Levels.isEq(editor.readonly, lastLevel, newLevel)) {
     return null;
   }
 
@@ -146,7 +147,7 @@ export const reset = (undoManager: UndoManager): void => {
 
 export const hasUndo = (editor: Editor, undoManager: UndoManager, index: Index): boolean =>
   // Has undo levels or typing and content isn't the same as the initial level
-  index.get() > 0 || (undoManager.typing && undoManager.data[0] && !Levels.isEq(Levels.createFromEditor(editor), undoManager.data[0]));
+  index.get() > 0 || (undoManager.typing && undoManager.data[0] && !Levels.isEq(editor.readonly, Levels.createFromEditor(editor), undoManager.data[0]));
 
 export const hasRedo = (undoManager: UndoManager, index: Index): boolean =>
   index.get() < undoManager.data.length - 1 && !undoManager.typing;

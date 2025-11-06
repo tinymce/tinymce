@@ -1,8 +1,8 @@
 import AddOnManager from './AddOnManager';
-import Editor from './Editor';
-import { NotificationManagerImpl } from './NotificationManager';
-import { EditorUiApi } from './ui/Ui';
-import { WindowManagerImpl } from './WindowManager';
+import type Editor from './Editor';
+import type { NotificationManagerImpl } from './NotificationManager';
+import type { EditorUiApi } from './ui/Ui';
+import type { WindowManagerImpl } from './WindowManager';
 
 export interface RenderResult {
   iframeContainer?: HTMLElement;

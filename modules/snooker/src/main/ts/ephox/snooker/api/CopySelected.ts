@@ -6,7 +6,7 @@ import * as ColumnSizes from '../resize/ColumnSizes';
 import * as LayerSelector from '../util/LayerSelector';
 import { LOCKED_COL_ATTR } from '../util/LockedColumnUtils';
 
-import { Detail, DetailExt, RowDetail } from './Structs';
+import type { Detail, DetailExt, RowDetail } from './Structs';
 import { TableSize } from './TableSize';
 import { Warehouse } from './Warehouse';
 

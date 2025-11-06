@@ -1,4 +1,4 @@
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as Events from '../api/Events';
 import DomParser from '../api/html/DomParser';
 import HtmlSerializer from '../api/html/Serializer';

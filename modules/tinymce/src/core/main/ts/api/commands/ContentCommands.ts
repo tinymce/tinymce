@@ -1,5 +1,5 @@
 import * as InsertContent from '../../content/InsertContent';
-import Editor from '../Editor';
+import type Editor from '../Editor';
 import * as Options from '../Options';
 
 export const registerCommands = (editor: Editor): void => {

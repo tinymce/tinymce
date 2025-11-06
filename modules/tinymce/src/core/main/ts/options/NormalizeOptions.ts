@@ -1,7 +1,7 @@
 import { Arr, Fun, Merger, Obj, Strings, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
-import { NormalizedEditorOptions, RawEditorOptions } from '../api/OptionTypes';
+import type { NormalizedEditorOptions, RawEditorOptions } from '../api/OptionTypes';
 import Tools from '../api/util/Tools';
 
 interface SectionResult {

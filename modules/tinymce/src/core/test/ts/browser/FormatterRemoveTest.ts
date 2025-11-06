@@ -3,7 +3,7 @@ import { PlatformDetection } from '@ephox/sand';
 import { LegacyUnit, TinyApis, TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import { ZWSP } from 'tinymce/core/text/Zwsp';
 
 import * as KeyUtils from '../module/test/KeyUtils';

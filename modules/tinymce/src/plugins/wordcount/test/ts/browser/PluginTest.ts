@@ -5,7 +5,7 @@ import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections,
 import { assert } from 'chai';
 
 import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/wordcount/Plugin';
 
 describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
@@ -45,7 +45,7 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
   it('Test keystroke and assert word count', async () => {
     const editor = hook.editor();
     await pWaitForWordcount(0);
-    TinyContentActions.type(editor, 'a b c');
+    await TinyContentActions.pType(editor, 'a b c');
     await pWaitForWordcount(3);
   });
 
@@ -205,7 +205,7 @@ describe('browser.tinymce.plugins.wordcount.PluginTest', () => {
     await pWaitForWordcount(1);
     editor.execCommand('Bold');
     await pWaitForWordcount(1);
-    TinyContentActions.type(editor, 'b');
+    await TinyContentActions.pType(editor, 'b');
     await pWaitForWordcount(1);
   });
 

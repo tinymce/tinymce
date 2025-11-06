@@ -13,6 +13,7 @@ interface SpecialKeyHandlers {
   readonly onEnter?: () => void;
   readonly onTab?: () => void;
   readonly onShiftTab?: () => void;
+  readonly onShiftEnter?: () => void;
   readonly onLeft?: () => void;
   readonly onRight?: () => void;
   readonly onUp?: () => void;
@@ -25,6 +26,7 @@ interface SpecialKeyRuleHandlers {
   readonly onEnter: () => Optional<boolean>;
   readonly onTab: () => Optional<boolean>;
   readonly onShiftTab: () => Optional<boolean>;
+  readonly onShiftEnter: () => Optional<boolean>;
   readonly onLeft: () => Optional<boolean>;
   readonly onRight: () => Optional<boolean>;
   readonly onUp: () => Optional<boolean>;
@@ -33,11 +35,9 @@ interface SpecialKeyRuleHandlers {
 }
 
 export interface SpecialConfig extends SpecialKeyHandlers {
-  readonly selector: string;
 }
 
 interface FullSpecialKeyRuleHandler extends SpecialKeyRuleHandlers {
-  readonly selector: string;
 }
 
 interface FullSpecialConfig extends FullSpecialKeyRuleHandler, GeneralKeyingConfig {}
@@ -46,7 +46,7 @@ export const create = (source: SugarElement<HTMLElement>, props: SpecialConfig):
 
   const getKeydownRules = (_component: SugarElement<HTMLElement>, _simulatedEvent: KeyboardEvent, config: FullSpecialConfig): Array<KeyRules.KeyRule<FullSpecialConfig>> => [
     KeyRules.rule(
-      KeyMatch.inSet(Keys.ENTER), config.onEnter
+      KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.ENTER) ]), config.onShiftEnter
     ),
     KeyRules.rule(
       KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.ENTER) ]), config.onEnter
@@ -79,9 +79,9 @@ export const create = (source: SugarElement<HTMLElement>, props: SpecialConfig):
   };
 
   const partialConfig: FullSpecialKeyRuleHandler = {
-    selector: props.selector,
     onSpace: toKeyHandler(props.onSpace),
     onEnter: toKeyHandler(props.onEnter),
+    onShiftEnter: toKeyHandler(props.onShiftEnter),
     onTab: toKeyHandler(props.onTab),
     onShiftTab: toKeyHandler(props.onShiftTab),
     onLeft: toKeyHandler(props.onLeft),
@@ -101,7 +101,7 @@ export const create = (source: SugarElement<HTMLElement>, props: SpecialConfig):
 };
 
 export const toBeHandled = (key: KeyboardEvent): boolean => Arr.exists([
-  KeyMatch.inSet(Keys.ENTER),
+  KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.ENTER) ]),
   KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.ENTER) ]),
   KeyMatch.and([ KeyMatch.isShift, KeyMatch.inSet(Keys.TAB) ]),
   KeyMatch.and([ KeyMatch.isNotShift, KeyMatch.inSet(Keys.TAB) ]),

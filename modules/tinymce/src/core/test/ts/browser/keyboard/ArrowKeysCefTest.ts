@@ -1,9 +1,10 @@
 import { Keys, Waiter } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
+import { Attribute, SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 import * as NodeType from 'tinymce/core/dom/NodeType';
 
@@ -200,5 +201,82 @@ describe('browser.tinymce.core.keyboard.ArrowKeysCefTest', () => {
     TinyAssertions.assertSelection(editor, [ 0 ], 1, [ 0 ], 2);
     TinyContentActions.keystroke(editor, Keys.right());
     TinyAssertions.assertCursor(editor, [ 0, 1 ], 0);
+  });
+
+  it('TINY-10562: should navigate around position:absolute CEF', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      `<p>Left text<span style="position: absolute; right: 30px;" contenteditable="false"> button </span><br>Linus</p>`
+    );
+
+    // Move the cursor to 'Left text|'
+    TinySelections.setCursor(editor, [ 0, 0 ], 'Left text'.length - 1);
+    TinyContentActions.keydown(editor, Keys.right());
+
+    // Fake caret is inserted
+    TinyAssertions.assertCursor(editor, [ 0, 1 ], 0);
+
+    // Move to the absolute CEF button
+    TinyContentActions.keydown(editor, Keys.right());
+    assertNode(editor, (node) => Attribute.has(SugarElement.fromDom(node), 'data-mce-selected'));
+
+    // Move the cursor to after the button
+    TinyContentActions.keydown(editor, Keys.right());
+    TinyAssertions.assertCursor(editor, [ 0, 3 ], 0);
+
+    // Move back to the absolute CEF button
+    TinyContentActions.keydown(editor, Keys.left());
+    assertNode(editor, (node) => Attribute.has(SugarElement.fromDom(node), 'data-mce-selected'));
+
+  });
+
+  it('TINY-10306: should navigate around position:absolute CEF in a table', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      `<table style="width:500px">
+                <tr>
+                  <td>Emil</td>
+                  <td style="position:relative">
+                    Tobias
+                    <button
+                    contenteditable="false"
+                    style="
+                      position:absolute;
+                      right:30px;
+                    "
+                    >
+                    button
+                  </button>
+                  Linus
+                  </td>
+                </tr>
+                <tr>
+                  <td>16</td>
+                  <td>14</td>
+                  <td>10</td>
+                </tr>
+              </table>`
+    );
+
+    // Move the cursor to the button
+    TinySelections.setCursor(editor, [ 0, 0, 0, 1, 0 ], 'Tobias'.length);
+    TinyContentActions.keydown(editor, Keys.right());
+    // Fake caret is inserted
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 1 ], 0);
+
+    TinyContentActions.keydown(editor, Keys.right());
+    assertNode(editor, (node) => Attribute.has(SugarElement.fromDom(node), 'data-mce-selected') && NodeType.matchNodeNames( [ 'BUTTON' ])(node));
+
+    // Cursor moved to between button and Linus
+    TinyContentActions.keydown(editor, Keys.right());
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 2 ], 1);
+
+    // Reverse to the button
+    TinyContentActions.keydown(editor, Keys.left());
+    assertNode(editor, (node) => Attribute.has(SugarElement.fromDom(node), 'data-mce-selected') && NodeType.matchNodeNames( [ 'BUTTON' ])(node));
+
+    // Fake caret is inserted before button
+    TinyContentActions.keydown(editor, Keys.left());
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0, 1, 1 ], 0);
   });
 });

@@ -4,8 +4,9 @@ import * as NodeType from '../dom/NodeType';
 import * as ArrUtils from '../util/ArrUtils';
 
 import * as CaretCandidate from './CaretCandidate';
+import { HDirection, isBackwards, isForwards } from './CaretDirection';
 import CaretPosition from './CaretPosition';
-import { findNode, isBackwards, isForwards } from './CaretUtils';
+import { findNode } from './CaretUtils';
 
 export interface CaretWalker {
   next: (caretPosition: CaretPosition | null) => CaretPosition | null;
@@ -27,12 +28,10 @@ export interface CaretWalker {
  * const nextLogicalCaretPosition = caretWalker.next(CaretPosition.fromRangeEnd(range));
  */
 
-export const enum HDirection {
-  Backwards = -1,
-  Forwards = 1
-}
-
 const isContentEditableFalse = NodeType.isContentEditableFalse;
+
+// Re-export for backward compatibility
+export { HDirection };
 const isText = NodeType.isText;
 const isElement = NodeType.isElement;
 const isBr = NodeType.isBr;

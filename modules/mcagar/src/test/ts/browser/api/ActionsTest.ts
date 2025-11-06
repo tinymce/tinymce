@@ -1,7 +1,7 @@
 import { Assertions, Chain, Pipeline, Step, Waiter } from '@ephox/agar';
 import { UnitTest } from '@ephox/bedrock-client';
 
-import { Editor as EditorType } from 'ephox/mcagar/alien/EditorTypes';
+import type { Editor as EditorType } from 'ephox/mcagar/alien/EditorTypes';
 import * as McEditor from 'ephox/mcagar/api/McEditor';
 import { ActionChains } from 'ephox/mcagar/api/pipeline/ActionChains';
 
@@ -37,12 +37,12 @@ UnitTest.asynctest('ActionTest', (success, failure) => {
     McEditor.cFromSettings({ base_url: '/project/tinymce/js/tinymce' }),
     cAssertContentKeyboardEvent(ActionChains.cContentKeypress, {
       type: 'keypress',
-      code: 88,
+      code: 65,
       modifiers: {
-        ctrl: true,
-        shift: false,
+        ctrl: false,
+        shift: true,
         alt: false,
-        meta: true
+        meta: false
       }
     }),
     cAssertContentKeyboardEvent(ActionChains.cContentKeydown, {

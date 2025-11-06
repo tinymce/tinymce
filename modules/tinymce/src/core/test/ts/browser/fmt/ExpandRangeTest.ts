@@ -4,10 +4,10 @@ import { Hierarchy, SugarElement } from '@ephox/sugar';
 import { TinyApis, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as ExpandRange from 'tinymce/core/fmt/ExpandRange';
-import { Format } from 'tinymce/core/fmt/FormatTypes';
-import { RangeLikeObject } from 'tinymce/core/selection/RangeTypes';
+import type { Format } from 'tinymce/core/fmt/FormatTypes';
+import type { RangeLikeObject } from 'tinymce/core/selection/RangeTypes';
 import { ZWSP } from 'tinymce/core/text/Zwsp';
 
 describe('browser.tinymce.core.fmt.ExpandRangeTest', () => {

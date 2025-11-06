@@ -20,7 +20,11 @@ for (const story of stories) {
     });
 
     await page.goto(`/iframe.html?${params.toString()}`);
-    await page.waitForSelector('#storybook-root');
+    await page.waitForSelector('#storybook-root', { state: 'attached' });
+
+    // Wait for final body classes state to avoid a flake where the screenshot would be made while a spinner is shown see #TINY-13132
+    await page.waitForSelector('body[class="sb-main-centered sb-show-main"]');
+
     await page.waitForLoadState('networkidle');
 
     await expect(page).toHaveScreenshot(

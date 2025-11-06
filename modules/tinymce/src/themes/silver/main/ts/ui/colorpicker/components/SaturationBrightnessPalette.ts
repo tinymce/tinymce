@@ -1,10 +1,10 @@
-import { ColourTypes, HsvColour, RgbaColour } from '@ephox/acid';
-import { AlloyComponent, AlloyTriggers, Behaviour, Composing, Focusing, Sketcher, SketchSpec, Slider, SliderTypes, UiSketcher } from '@ephox/alloy';
+import { type ColourTypes, HsvColour, RgbaColour } from '@ephox/acid';
+import { type AlloyComponent, AlloyTriggers, Behaviour, Composing, Focusing, Sketcher, type SketchSpec, Slider, type SliderTypes, type UiSketcher } from '@ephox/alloy';
 import { Fun, Optional, Type } from '@ephox/katamari';
 import { Attribute } from '@ephox/sugar';
 
 import * as ColourEvents from '../ColourEvents';
-import { Untranslated } from '../I18n';
+import type { Untranslated } from '../I18n';
 
 // tslint:disable:no-empty-interface
 export interface SaturationBrightnessPaletteDetail extends Sketcher.SingleSketchDetail {

@@ -1,6 +1,6 @@
 import { Optional } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as NodeStructureBookmark from '../bookmark/NodeStructureBookmark';
 
 import { execNativeDeleteCommand, execNativeForwardDeleteCommand } from './DeleteUtils';

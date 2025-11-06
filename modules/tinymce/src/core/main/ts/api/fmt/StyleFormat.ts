@@ -1,4 +1,4 @@
-import { BlockFormat, InlineFormat, SelectorFormat } from './Format';
+import type { BlockFormat, InlineFormat, SelectorFormat } from './Format';
 
 // somewhat documented at https://www.tiny.cloud/docs/tinymce/8/content-formatting/#formats
 export type StyleFormat = BlockStyleFormat | InlineStyleFormat | SelectorStyleFormat;

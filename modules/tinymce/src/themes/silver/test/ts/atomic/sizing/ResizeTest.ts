@@ -3,7 +3,7 @@ import { Optional } from '@ephox/katamari';
 import { SugarPosition } from '@ephox/sugar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import { getDimensions, ResizeTypes } from 'tinymce/themes/silver/ui/sizing/Resize';
 import * as Utils from 'tinymce/themes/silver/ui/sizing/Utils';
 
@@ -52,8 +52,8 @@ describe('atomic.tinymce.themes.silver.sizing.ResizeTest', () => {
   it('TBA: Check the correct dimensions are returned', () => {
     assertDimensions('No change', 0, 0, ResizeTypes.Both, 500, { height: 500, width: 500 });
     assertDimensions('Within bounds', 50, 50, ResizeTypes.Both, 500, { height: 550, width: 550 });
-    assertDimensions('Height less than minimum, only vertical resize', -500, 0, ResizeTypes.Vertical, 500, { height: 400, width: 500 });
-    assertDimensions('Height greater than maximum, only vertical resize', 500, 0, ResizeTypes.Vertical, 500, { height: 600, width: 500 });
+    assertDimensions('Height less than minimum, only vertical resize', -500, 0, ResizeTypes.Vertical, 500, { height: 400 });
+    assertDimensions('Height greater than maximum, only vertical resize', 500, 0, ResizeTypes.Vertical, 500, { height: 600 });
     assertDimensions('Height less than minimum, both resize, OK width change', -500, 50, ResizeTypes.Both, 500, { height: 400, width: 550 });
     assertDimensions('Height greater than maximum, both resize, OK width change', 500, 50, ResizeTypes.Both, 500, { height: 600, width: 550 });
     assertDimensions('Width less than minimum, no height change', 0, -500, ResizeTypes.Both, 500, { height: 500, width: 400 });

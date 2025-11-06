@@ -1,15 +1,15 @@
 import { Arr, Fun, Optional } from '@ephox/katamari';
-import { CellLocation, CellNavigation, TableLookup } from '@ephox/snooker';
+import { type CellLocation, CellNavigation, TableLookup } from '@ephox/snooker';
 import { Compare, ContentEditable, CursorPosition, Insert, PredicateExists, PredicateFind, SimSelection, SugarElement, SugarNode, Traverse, WindowSelection } from '@ephox/sugar';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as CaretFinder from '../caret/CaretFinder';
 import CaretPosition from '../caret/CaretPosition';
 import { isFakeCaretTableBrowser } from '../caret/FakeCaret';
 import * as FakeCaretUtils from '../caret/FakeCaretUtils';
 import {
   BreakType, findClosestHorizontalPositionFromPoint, getPositionsAbove, getPositionsBelow, getPositionsUntilNextLine, getPositionsUntilPreviousLine,
-  LineInfo
+  type LineInfo
 } from '../caret/LineReader';
 import { findClosestPositionInAboveCell, findClosestPositionInBelowCell } from '../caret/TableCells';
 import * as NodeType from '../dom/NodeType';

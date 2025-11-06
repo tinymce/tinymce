@@ -1,10 +1,10 @@
 import { Assertions, Chain, FocusTools, Logger, Step, UiFinder, Waiter } from '@ephox/agar';
-import { Attribute, SugarElement, Value } from '@ephox/sugar';
+import { Attribute, type SugarElement, Value } from '@ephox/sugar';
 
-import { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
+import type { AlloyComponent } from 'ephox/alloy/api/component/ComponentApi';
 import * as AlloyTriggers from 'ephox/alloy/api/events/AlloyTriggers';
 import * as NativeEvents from 'ephox/alloy/api/events/NativeEvents';
-import { GuiSystem } from 'ephox/alloy/api/system/Gui';
+import type { GuiSystem } from 'ephox/alloy/api/system/Gui';
 
 interface TestTypeaheadSteps {
   readonly sWaitForMenu: <T>(label: string) => Step<T, T>;

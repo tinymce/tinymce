@@ -5,7 +5,7 @@ import { Hierarchy } from '@ephox/sugar';
 import { LegacyUnit, TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import * as SetSelectionContent from 'tinymce/core/selection/SetSelectionContent';
 
 import * as KeyUtils from '../module/test/KeyUtils';

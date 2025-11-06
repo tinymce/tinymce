@@ -1,10 +1,10 @@
 import { Keys, TestStore } from '@ephox/agar';
 import { after, afterEach, before, describe, it } from '@ephox/bedrock-client';
 import { PlatformDetection } from '@ephox/sand';
-import { DomEvent, EventUnbinder, SugarBody } from '@ephox/sugar';
+import { DomEvent, type EventUnbinder, SugarBody } from '@ephox/sugar';
 import { TinyContentActions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import LinkPlugin from 'tinymce/plugins/link/Plugin';
 
 import { pAssertFocusOnItem } from '../module/Utils';

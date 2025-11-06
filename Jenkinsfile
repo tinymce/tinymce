@@ -90,7 +90,7 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
           resourceLimitMemory: '6Gi',
           resourceLimitEphemeralStorage: '16Gi'
         ],
-        tag: '20',
+        tag: '22.20.0',
         build: cacheName,
         useContainers: ['node', 'aws-cli']
       ) {
@@ -108,8 +108,22 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
 def runPlaywrightPod(String cacheName, String name, Closure body) {
 
   def containers = [
-    devPods.getContainerDefaultArgs([ name: 'node', image: "public.ecr.aws/docker/library/node:20", runAsGroup: '1000', runAsUser: '1000' ]) + devPods.hiRes(),
-    devPods.getContainerDefaultArgs([ name: 'aws-cli', image: 'public.ecr.aws/aws-cli/aws-cli:latest', runAsGroup: '1000', runAsUser: '1000' ]) + devPods.lowRes(),
+    devPods.getContainerDefaultArgs([
+      name: 'node',
+      image: "public.ecr.aws/docker/library/node:22.20.0",
+      runAsGroup: '1000',
+      runAsUser: '1000',
+      resourceRequestEphemeralStorage: '16Gi',
+      resourceLimitEphemeralStorage: '16Gi'
+      ]) + devPods.hiRes(),
+    devPods.getContainerDefaultArgs([
+      name: 'aws-cli',
+      image: 'public.ecr.aws/aws-cli/aws-cli:latest',
+      runAsGroup: '1000',
+      runAsUser: '1000',
+      resourceRequestEphemeralStorage: '2Gi',
+      resourceLimitEphemeralStorage: '4Gi'
+      ]) + devPods.stdRes(),
     devPods.getContainerDefaultArgs([ name: 'playwright', image: 'mcr.microsoft.com/playwright:v1.53.1-noble']) + devPods.hiRes()
   ]
 
@@ -131,7 +145,7 @@ def runPlaywrightPod(String cacheName, String name, Closure body) {
 def runSeleniumPod(String cacheName, String name, String browser, String version, Closure body) {
   Map node = [
           name: 'node',
-          image: "public.ecr.aws/docker/library/node:20",
+          image: "public.ecr.aws/docker/library/node:22.20.0",
           command: 'sleep',
           args: 'infinity',
           resourceRequestCpu: '4',
@@ -140,7 +154,8 @@ def runSeleniumPod(String cacheName, String name, String browser, String version
           resourceLimitCpu: '7',
           resourceLimitMemory: '4Gi',
           resourceLimitEphemeralStorage: '8Gi',
-          runAsGroup: '1000', runAsUser: '1000'
+          runAsGroup: '1000',
+          runAsUser: '1000'
         ]
   Map selenium = [
           name: "selenium",
@@ -166,9 +181,9 @@ def runSeleniumPod(String cacheName, String name, String browser, String version
           command: 'sleep',
           args: 'infinity',
           alwaysPullImage: true,
-          resourceRequestEphemeralStorage: '1Gi',
-          resourceLimitEphemeralStorage: '1Gi'
-        ] + devPods.lowRes()
+          resourceRequestEphemeralStorage: '2Gi',
+          resourceLimitEphemeralStorage: '4Gi'
+        ] + devPods.stdRes()
   return {
     stage("${name}") {
       devPods.customConsumer(
@@ -206,11 +221,12 @@ def cacheName = "cache_${BUILD_TAG}"
 
 def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NUMBER}"
 
-timestamps { alertWorseResult(
+timestamps { notifyStatusChange(
   cleanupStep: { devPods.cleanUpPod(build: cacheName) },
   branches: ['main', 'release/7', 'release/8'],
   channel: '#tinymce-build-status',
-  name: 'TinyMCE'
+  name: 'TinyMCE',
+  mention: true
   ) {
   devPods.nodeProducer(
     nodeOpts: [
@@ -221,8 +237,9 @@ timestamps { alertWorseResult(
       resourceLimitMemory: '4Gi',
       resourceLimitEphemeralStorage: '16Gi'
     ],
-    tag: '20',
-    build: cacheName
+    tag: '22.20.0',
+    build: cacheName,
+    useLfs: true,
   ) {
     props = readProperties(file: 'build.properties')
     String primaryBranch = props.primaryBranch
@@ -319,8 +336,14 @@ timestamps { alertWorseResult(
   processes['playwright'] = runPlaywrightPod(cacheName, 'playwright-tests') {
     exec('yarn -s --cwd modules/oxide-components test-ci')
     junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
-    exec('yarn -s --cwd modules/oxide-components test-visual-ci')
+    def visualTestStatus = exec(script: 'yarn -s --cwd modules/oxide-components test-visual-ci', returnStatus: true)
+    if (visualTestStatus == 4) {
+      unstable("Visual tests failed")
+    } else if (visualTestStatus != 0) {
+      error("Unexpected error running visual tests")
+    }
     junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results-visual.xml'
+    exec('find modules/oxide-components -name "*.png" -type f || echo "No PNG files found"')
     archiveArtifacts artifacts: 'modules/oxide-components/test-results/**/*.png', allowEmptyArchive: true, fingerprint: true
   }
 
@@ -329,4 +352,36 @@ timestamps { alertWorseResult(
       parallel processes
   }
 
+  devPods.nodeConsumer(
+    nodeOpts: [
+      resourceRequestCpu: '2',
+      resourceRequestMemory: '4Gi',
+      resourceRequestEphemeralStorage: '16Gi',
+      resourceLimitCpu: '7.5',
+      resourceLimitMemory: '4Gi',
+      resourceLimitEphemeralStorage: '16Gi'
+    ],
+    tag: '22.20.0',
+    build: cacheName,
+    environment: {
+      sh "tar -zxf ./file.tar.gz"
+      tinyGit.addAuthorConfig()
+      tinyGit.addGitHubToKnownHosts()
+    }
+  ) {
+    props = readProperties(file: 'build.properties')
+    String primaryBranch = props.primaryBranch
+    assert primaryBranch != null && primaryBranch != ""
+
+    stage('Deploy Storybook') {
+      if (env.BRANCH_NAME == primaryBranch) {
+        echo "Deploying Storybook"
+        tinyGit.withGitHubSSHCredentials {
+          exec('yarn -s --cwd modules/oxide-components deploy-storybook')
+        }
+      } else {
+        echo "Skipping Storybook deployment as the pipeline is not running on the primary branch"
+      }
+    }
+  }
 }}

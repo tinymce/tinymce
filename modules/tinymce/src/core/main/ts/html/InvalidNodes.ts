@@ -1,7 +1,7 @@
 import { Fun } from '@ephox/katamari';
 
 import AstNode from '../api/html/Node';
-import Schema from '../api/html/Schema';
+import type Schema from '../api/html/Schema';
 import Tools from '../api/util/Tools';
 
 import * as AstNodeType from './AstNodeType';

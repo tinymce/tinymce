@@ -1,7 +1,7 @@
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 import * as MessageReporter from '../MessageReporter';
 
-import { OnlineStatus } from './LicenseKeyUtils';
+import type { OnlineStatus } from './LicenseKeyUtils';
 
 const DOCS_URL = 'https://www.tiny.cloud/docs/tinymce/latest/license-key/';
 const DOCS_URL_MESSAGE = `Read more: ${DOCS_URL}`;

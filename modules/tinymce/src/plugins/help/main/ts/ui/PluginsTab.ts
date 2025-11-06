@@ -1,8 +1,8 @@
 import { Arr, Obj, Type } from '@ephox/katamari';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import type { TinyMCE } from 'tinymce/core/api/Tinymce';
-import { Dialog } from 'tinymce/core/api/ui/Ui';
+import type { Dialog } from 'tinymce/core/api/ui/Ui';
 import I18n from 'tinymce/core/api/util/I18n';
 
 import * as Options from '../api/Options';

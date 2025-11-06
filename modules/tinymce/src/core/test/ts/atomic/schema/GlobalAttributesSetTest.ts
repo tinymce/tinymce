@@ -2,7 +2,7 @@ import { describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
 import * as GlobalAttributesSet from 'tinymce/core/schema/GlobalAttributesSet';
-import * as SchemaTypes from 'tinymce/core/schema/SchemaTypes';
+import type * as SchemaTypes from 'tinymce/core/schema/SchemaTypes';
 
 describe('atomic.tinymce.core.schema.GlobalAttributesSetTest', () => {
   const testGlobalAttributesSet = (testCase: { type: SchemaTypes.SchemaType; expected: readonly string[] }) => {

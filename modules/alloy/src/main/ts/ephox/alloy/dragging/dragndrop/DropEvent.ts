@@ -1,9 +1,9 @@
-import { EventArgs } from '@ephox/sugar';
+import type { EventArgs } from '@ephox/sugar';
 
-import { SimulatedEvent } from '../../events/SimulatedEvent';
+import type { SimulatedEvent } from '../../events/SimulatedEvent';
 
 import * as DataTransfers from './DataTransfers';
-import { DroppingConfig } from './DragnDropTypes';
+import type { DroppingConfig } from './DragnDropTypes';
 
 export interface DropEvent extends SimulatedEvent<EventArgs<DragEvent>> {
   data: string;

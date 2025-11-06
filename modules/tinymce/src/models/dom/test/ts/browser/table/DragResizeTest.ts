@@ -1,11 +1,11 @@
 import { Mouse, UiFinder, Waiter } from '@ephox/agar';
 import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Cell } from '@ephox/katamari';
-import { Attribute, Css, Height, Hierarchy, SelectorFind, SugarBody, SugarElement, Width } from '@ephox/sugar';
+import { Attribute, Css, Height, Hierarchy, SelectorFind, SugarBody, type SugarElement, Width } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 describe('browser.tinymce.models.dom.table.DragResizeTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({

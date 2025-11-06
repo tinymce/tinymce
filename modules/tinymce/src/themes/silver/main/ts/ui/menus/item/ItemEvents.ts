@@ -1,6 +1,6 @@
-import { AlloyEvents, AlloyTriggers, EventFormat, SystemEvents } from '@ephox/alloy';
+import { AlloyEvents, AlloyTriggers, type EventFormat, SystemEvents } from '@ephox/alloy';
 
-import { GetApiType, runWithApi } from '../../controls/Controls';
+import { type GetApiType, runWithApi } from '../../controls/Controls';
 
 import ItemResponse from './ItemResponse';
 

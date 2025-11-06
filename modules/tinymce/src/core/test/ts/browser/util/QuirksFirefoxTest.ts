@@ -4,7 +4,7 @@ import { SelectorFind } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import Env from 'tinymce/core/api/Env';
 
 import * as Assets from '../../module/Assets';

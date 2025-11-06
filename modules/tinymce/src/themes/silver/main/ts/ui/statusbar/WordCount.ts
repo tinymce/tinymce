@@ -1,10 +1,10 @@
 import {
-  AddEventsBehaviour, AlloyComponent, AlloyEvents, Behaviour, Button, GuiFactory, Replacing, Representing, SimpleSpec, SystemEvents, Tabstopping
+  AddEventsBehaviour, type AlloyComponent, AlloyEvents, Behaviour, Button, GuiFactory, Replacing, Representing, type SimpleSpec, SystemEvents, Tabstopping
 } from '@ephox/alloy';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
-import { UiFactoryBackstageProviders } from '../../backstage/Backstage';
+import type { UiFactoryBackstageProviders } from '../../backstage/Backstage';
 import * as UiState from '../../UiState';
 import { DisablingConfigs } from '../alien/DisablingConfigs';
 

@@ -1,8 +1,8 @@
 import { DomUniverse } from '@ephox/boss';
-import { Optional } from '@ephox/katamari';
-import { SugarElement } from '@ephox/sugar';
+import type { Optional } from '@ephox/katamari';
+import type { SugarElement } from '@ephox/sugar';
 
-import { BrokenPath, LeftRight } from '../../parent/Breaker';
+import type { BrokenPath, LeftRight } from '../../parent/Breaker';
 import * as Parent from '../general/Parent';
 
 const universe = DomUniverse();

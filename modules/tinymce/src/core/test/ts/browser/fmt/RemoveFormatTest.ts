@@ -2,8 +2,8 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { Hierarchy } from '@ephox/sugar';
 import { TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyState } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { Format } from 'tinymce/core/fmt/FormatTypes';
+import type Editor from 'tinymce/core/api/Editor';
+import type { Format } from 'tinymce/core/fmt/FormatTypes';
 import * as RemoveFormat from 'tinymce/core/fmt/RemoveFormat';
 
 describe('browser.tinymce.core.fmt.RemoveFormatTest', () => {

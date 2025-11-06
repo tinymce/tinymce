@@ -80,6 +80,7 @@ const urls = Arr.map<PartialPluginUrl, PluginUrl>([
   { key: 'suggestededits', name: 'Suggested Edits', type: PluginType.Premium },
   { key: 'autocorrect', name: 'Spelling Autocorrect', type: PluginType.Premium },
   { key: 'tableofcontents', name: 'Table of Contents', type: PluginType.Premium },
+  { key: 'fullpagehtml', name: 'Fullpage HTML', type: PluginType.Premium },
   { key: 'advtemplate', name: 'Templates', type: PluginType.Premium, slug: 'advanced-templates' },
   { key: 'tinycomments', name: 'Tiny Comments', type: PluginType.Premium, slug: 'introduction-to-tiny-comments' },
   { key: 'tinydrive', name: 'Tiny Drive', type: PluginType.Premium, slug: 'tinydrive-introduction' },

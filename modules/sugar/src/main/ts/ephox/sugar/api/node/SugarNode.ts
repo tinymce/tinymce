@@ -1,9 +1,9 @@
 import { SandHTMLElement } from '@ephox/sand';
 
-import { HTMLElementFullTagNameMap } from '../../alien/DomTypes';
+import type { HTMLElementFullTagNameMap } from '../../alien/DomTypes';
 
 import * as NodeTypes from './NodeTypes';
-import { SugarElement } from './SugarElement';
+import type { SugarElement } from './SugarElement';
 
 const name = (element: SugarElement<Node>): string => {
   const r = element.dom.nodeName;

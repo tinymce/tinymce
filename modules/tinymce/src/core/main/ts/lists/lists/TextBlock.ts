@@ -1,5 +1,5 @@
 
-import Editor from '../../api/Editor';
+import type Editor from '../../api/Editor';
 import * as Options from '../../api/Options';
 
 import * as NodeType from './NodeType';

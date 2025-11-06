@@ -1,7 +1,7 @@
 import { SugarElement } from '@ephox/sugar';
 
-import DOMUtils from '../api/dom/DOMUtils';
-import Schema from '../api/html/Schema';
+import type DOMUtils from '../api/dom/DOMUtils';
+import type Schema from '../api/html/Schema';
 import CaretPosition from '../caret/CaretPosition';
 import { needsToBeNbspLeft, needsToBeNbspRight } from '../keyboard/Nbsps';
 

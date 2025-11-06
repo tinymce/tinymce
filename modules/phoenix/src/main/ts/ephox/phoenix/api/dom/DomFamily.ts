@@ -1,7 +1,7 @@
 import { DomUniverse } from '@ephox/boss';
-import { SugarElement } from '@ephox/sugar';
+import type { SugarElement } from '@ephox/sugar';
 
-import { TypedItem } from '../data/TypedItem';
+import type { TypedItem } from '../data/TypedItem';
 import * as Family from '../general/Family';
 
 const universe = DomUniverse();

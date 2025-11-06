@@ -1,11 +1,11 @@
 import { UiFinder, Waiter } from '@ephox/agar';
 import { before, beforeEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { Class, Compare, Css, SelectorFilter, SugarElement, SugarNode } from '@ephox/sugar';
+import { Class, Compare, Css, SelectorFilter, type SugarElement, SugarNode } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 
 interface Outline {
   readonly color: string;

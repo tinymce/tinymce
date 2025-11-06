@@ -1,6 +1,6 @@
 import { Cell, Optional, Singleton, Throttler } from '@ephox/katamari';
 
-import Editor from '../api/Editor';
+import type Editor from '../api/Editor';
 
 // This is based heavily on Alloy's TapEvent.ts, just modified to use TinyMCE's event system.
 

@@ -2,8 +2,8 @@ import { describe, it } from '@ephox/bedrock-client';
 import { Arr, Obj } from '@ephox/katamari';
 import { TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
-import { InlineContent } from 'tinymce/core/api/ui/Ui';
+import type Editor from 'tinymce/core/api/Editor';
+import type { InlineContent } from 'tinymce/core/api/ui/Ui';
 
 import { pAssertAutocompleterStructure, pWaitForAutocompleteToOpen } from '../../../module/AutocompleterUtils';
 

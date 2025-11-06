@@ -2,12 +2,13 @@ import { context, describe, it } from '@ephox/bedrock-client';
 import { assert } from 'chai';
 
 import Schema from 'tinymce/core/api/html/Schema';
-import { getSanitizer, MimeType } from 'tinymce/core/html/Sanitization';
+import { getSanitizer, type MimeType } from 'tinymce/core/html/Sanitization';
 
 describe('browser.tinymce.core.html.SanitizationTest', () => {
   context('Sanitize html', () => {
-    const testHtmlSanitizer = (testCase: { input: string; expected: string; mimeType: MimeType; sanitize?: boolean }) => {
-      const sanitizer = getSanitizer({ sanitize: testCase.sanitize ?? true }, Schema());
+    const testHtmlSanitizer = (testCase: { input: string; expected: string; mimeType: MimeType; sanitize?: boolean; customElements?: string[] }) => {
+      const customElements = testCase.customElements ?? [];
+      const sanitizer = getSanitizer({ sanitize: testCase.sanitize ?? true }, Schema({ custom_elements: customElements.join(',') }));
 
       const body = document.createElement('body');
       body.innerHTML = testCase.input;
@@ -26,6 +27,21 @@ describe('browser.tinymce.core.html.SanitizationTest', () => {
       input: '<iframe src="x"><script>alert(1)</script></iframe><iframe src="javascript:alert(1)"></iframe>',
       expected: '<iframe src="x"><script>alert(1)</script></iframe><iframe></iframe>',
       mimeType: 'text/html',
+      sanitize: false
+    }));
+
+    it('TINY-12183: boolean attribute should not be changed for custom elements', () => testHtmlSanitizer({
+      input: '<custom-video controls="true"></custom-video>',
+      expected: '<custom-video controls="true"></custom-video>',
+      mimeType: 'text/html',
+      customElements: [ 'custom-video' ]
+    }));
+
+    it('TINY-12183: boolean attribute should not be changed for custom elements (sanitize: false)', () => testHtmlSanitizer({
+      input: '<custom-video controls="true"></custom-video>',
+      expected: '<custom-video controls="true"></custom-video>',
+      mimeType: 'text/html',
+      customElements: [ 'custom-video' ],
       sanitize: false
     }));
   });

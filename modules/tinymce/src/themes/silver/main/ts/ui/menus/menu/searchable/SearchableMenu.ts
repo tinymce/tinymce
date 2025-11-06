@@ -1,10 +1,10 @@
-import { AlloyComponent, AlloyTriggers, Coupling, Dropdown, Focusing, Highlighting, Representing, Sandboxing, SimulatedEvent } from '@ephox/alloy';
+import { type AlloyComponent, AlloyTriggers, Coupling, Dropdown, Focusing, Highlighting, Representing, Sandboxing, type SimulatedEvent } from '@ephox/alloy';
 import { Optional } from '@ephox/katamari';
-import { Attribute, Class, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Attribute, Class, SelectorFind, type SugarElement } from '@ephox/sugar';
 
-import { MenuLayoutType } from '../MenuUtils';
+import type { MenuLayoutType } from '../MenuUtils';
 
-import { RedirectMenuItemInteractionEvent } from './SearchableMenuEvents';
+import type { RedirectMenuItemInteractionEvent } from './SearchableMenuEvents';
 import { findWithinMenu, findWithinSandbox, restoreState, saveState, setActiveDescendant } from './SearchableMenuField';
 import { searchResultsClass } from './SearchableMenus';
 

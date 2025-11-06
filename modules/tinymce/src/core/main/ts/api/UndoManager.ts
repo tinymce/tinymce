@@ -1,20 +1,21 @@
 import { Arr, Cell, Singleton } from '@ephox/katamari';
 
-import { Bookmark } from '../bookmark/BookmarkTypes';
+import type { Bookmark } from '../bookmark/BookmarkTypes';
 import * as GetBookmark from '../bookmark/GetBookmark';
 import * as Rtc from '../Rtc';
 import * as Levels from '../undo/Levels';
 import { addKeyboardShortcuts, registerEvents } from '../undo/Setup';
-import { Index, Locks, UndoLevel, UndoManager } from '../undo/UndoManagerTypes';
+import type { Index, Locks, UndoLevel, UndoManager as UndoManagerType } from '../undo/UndoManagerTypes';
 
-import Editor from './Editor';
+import type Editor from './Editor';
+import type { EditorEvent } from './util/EventDispatcher';
 
 /**
  * This class handles the undo/redo history levels for the editor. Since the built-in undo/redo has major drawbacks a custom one was needed.
  *
  * @class tinymce.UndoManager
  */
-const UndoManager = (editor: Editor): UndoManager => {
+const UndoManager = (editor: Editor): UndoManagerType => {
   const beforeBookmark = Singleton.value<Bookmark>();
   const locks: Locks = Cell(0);
   const index: Index = Cell(0);
@@ -46,10 +47,10 @@ const UndoManager = (editor: Editor): UndoManager => {
      *
      * @method add
      * @param {Object} level Optional undo level object to add.
-     * @param {DOMEvent} event Optional event responsible for the creation of the undo level.
+     * @param {EditorEvent} event Optional event responsible for the creation of the undo level.
      * @return {Object} Undo level that got added or null if a level wasn't needed.
      */
-    add: (level?: Partial<UndoLevel>, event?: Event): UndoLevel | null => {
+    add: (level?: Partial<UndoLevel>, event?: EditorEvent<unknown>): UndoLevel | null => {
       return Rtc.addUndoLevel(editor, undoManager, index, locks, beforeBookmark, level, event);
     },
 

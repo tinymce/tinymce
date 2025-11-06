@@ -1,8 +1,8 @@
-import {
+import type {
   ApplyFormat, BlockFormat, Format, Formats, InlineFormat, RemoveBlockFormat, RemoveFormat, RemoveInlineFormat, RemoveSelectorFormat, SelectorFormat
 } from '../../fmt/FormatTypes';
 
-export {
+export type {
   Formats,
   Format,
   ApplyFormat,

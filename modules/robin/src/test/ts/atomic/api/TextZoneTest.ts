@@ -3,10 +3,10 @@ import { Gene, TestUniverse, TextGene } from '@ephox/boss';
 import { Fun, Optional } from '@ephox/katamari';
 
 import * as TextZone from 'ephox/robin/api/general/TextZone';
-import { ArbIds, arbIds, ArbRangeIds, arbRangeIds } from 'ephox/robin/test/Arbitraries';
+import { type ArbIds, arbIds, type ArbRangeIds, arbRangeIds } from 'ephox/robin/test/Arbitraries';
 import * as PropertyAssertions from 'ephox/robin/test/PropertyAssertions';
-import { assertProps, rawOne, RawZone } from 'ephox/robin/test/ZoneObjects';
-import { Zone } from 'ephox/robin/zone/Zones';
+import { assertProps, rawOne, type RawZone } from 'ephox/robin/test/ZoneObjects';
+import type { Zone } from 'ephox/robin/zone/Zones';
 
 describe('atomic.robin.zone.TextZoneTest', () => {
   const doc1 = TestUniverse(Gene('root', 'root', [
