@@ -130,15 +130,18 @@ const handleBodyResponse = async (body: ReadableStream<Uint8Array>, port: Messag
 };
 
 const handleNonBodyResponse = async (port: MessagePort) => {
-  return new Promise<void>((resolve) => {
+  return new Promise<void>((resolve, reject) => {
     port.onmessage = (event) => {
       const message = event.data;
 
       if (Shared.isMockedRequestResponseChunkMessage(message)) {
         sendResponseDone(port);
+        closePort(port);
+        resolve();
+      } else {
+        closePort(port);
+        reject(new Error('Unexpected message received on port for non-body response handling'));
       }
-
-      resolve();
     };
   });
 };
