@@ -22,7 +22,7 @@ describe('browser.tinymce.core.dom.ControlSelectionTest', () => {
         const counter = eventCounter.get();
         counter[e.type] = (counter[e.type] || 0) + 1;
       });
-      editor.on('init', () => {
+      editor.on('PreInit', () => {
         editor.schema.addCustomElements({
           ['uc-video']: {
             extends: 'div',

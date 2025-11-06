@@ -155,23 +155,27 @@ const ControlSelection = (selection: EditorSelection, editor: Editor): ControlSe
     }
   };
 
+  const setUcVideoSizeProp = (element: NodeType.UcVideo, name: 'width' | 'height', value: number) => {
+    // this is needed because otherwise the ghost for `uc-video` is not correctly rendered
+    element[name] = value;
+    const minimumWidth = 400;
+    if (element.width > minimumWidth && !(name === 'width' && value < minimumWidth)) {
+      element[name] = value;
+      dom.setStyle(element, name, value);
+    } else {
+      const valueConsideringMinWidth = name === 'height' ? minimumWidth * (ratio ?? 1) : minimumWidth;
+      element[name] = valueConsideringMinWidth;
+      dom.setStyle(element, name, valueConsideringMinWidth);
+    }
+  };
+
   const setSizeProp = (element: HTMLElement, name: 'width' | 'height', value: number | undefined) => {
     if (Type.isNonNullable(value)) {
       // Resize by using style or attribute
       const targets = getResizeTargets(element);
       Arr.each(targets, (target) => {
         if (NodeType.isUcVideo(target)) {
-          // this is needed because otherwise the ghost for `uc-video` is not correctly rendered
-          target[name] = value;
-          const minimumWidth = 400;
-          if (target.width > minimumWidth && !(name === 'width' && value < minimumWidth)) {
-            target[name] = value;
-            dom.setStyle(target, name, value);
-          } else {
-            const valueConsideringMinWidth = name === 'height' ? minimumWidth * (ratio ?? 1) : minimumWidth;
-            target[name] = valueConsideringMinWidth;
-            dom.setStyle(target, name, valueConsideringMinWidth);
-          }
+          setUcVideoSizeProp(target, name, value);
         } else {
           if (target.style[name] || !editor.schema.isValid(target.nodeName.toLowerCase(), name)) {
             dom.setStyle(target, name, value);
