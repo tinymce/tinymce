@@ -59,9 +59,27 @@ const sendResponseDone = (port: MessagePort) => {
   port.postMessage(bodyDoneMessage);
 };
 
+const closePort = (port: MessagePort) => {
+  port.onmessage = null;
+  port.close();
+};
+
 const handleBodyResponse = async (body: ReadableStream<Uint8Array>, port: MessagePort) => {
   return new Promise<void>((resolve, reject) => {
     const reader = body.getReader();
+    let aborted = false;
+
+    const closeResolve = () => {
+      reader.releaseLock();
+      closePort(port);
+      resolve();
+    };
+
+    const closeReject = (err: unknown) => {
+      reader.releaseLock();
+      closePort(port);
+      reject(err);
+    };
 
     port.onmessage = (event) => {
       const message = event.data;
@@ -70,6 +88,10 @@ const handleBodyResponse = async (body: ReadableStream<Uint8Array>, port: Messag
         debugLog('Responding with mocked response body chunk to SW: request chunk received', message);
 
         reader.read().then(({ value: chunk, done }) => {
+          if (aborted) {
+            return;
+          }
+
           if (!done) {
             const buffer = chunk.buffer.slice(chunk.byteOffset, chunk.byteOffset + chunk.byteLength);
             const bodyChunkMessage: Shared.MockedResponseBodyChunkMessage = {
@@ -80,25 +102,27 @@ const handleBodyResponse = async (body: ReadableStream<Uint8Array>, port: Messag
             debugLog('Responding with mocked response body chunk to SW:', bodyChunkMessage);
             port.postMessage(bodyChunkMessage);
           } else {
-            reader.releaseLock();
             sendResponseDone(port);
-            resolve();
+            closeResolve();
           }
         }, (err) => {
-          reader.releaseLock();
           errorLog('Error reading response body chunk for request:', message, err);
-          reject(err);
+          closeReject(err);
         });
       } else if (Shared.isMockedRequestAbortedMessage(message)) {
+        aborted = true;
         debugLog('Request aborted by SW:', message);
 
         reader.cancel().then(() => {
           debugLog('Reader cancelled for aborted request:', message);
-          resolve();
+          closeResolve();
         }, (err) => {
           errorLog('Error cancelling reader for aborted request:', message, err);
-          reject(err);
+          closeReject(err);
         });
+      } else {
+        errorLog('Unexpected message received on port for body response handling:', message);
+        closeReject(new Error('Unexpected message received on port for body response handling'));
       }
     };
   });

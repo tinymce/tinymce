@@ -37,28 +37,12 @@ const sendRequestToClient = async (client: Client, request: Request): Promise<Re
       if (Shared.isMockedResponseHeadMessage(headData)) {
         const reader = new ReadableStream({
           start: (controller) => {
-            const requestNextChunk = () => {
-              if (aborted) {
-                return;
-              }
-
-              Logger.debug('Requesting next response body chunk', { clientId: client.id, requestId, url: request.url });
-
-              const chunkRequestMessage: Shared.MockedRequestResponseChunkMessage = {
-                type: 'AGAR_MOCKED_REQUEST_RESPONSE_CHUNK',
-                requestId
-              };
-
-              messageChannel.port1.postMessage(chunkRequestMessage);
-            };
-
             incomingPort.onmessage = ({ data: bodyData }) => {
               if (aborted) {
                 return;
               } else if (Shared.isMockedResponseBodyChunkMessage(bodyData)) {
                 Logger.debug('Returning mocked response body chunk', { clientId: client.id, requestId, url: request.url });
                 controller.enqueue(new Uint8Array(bodyData.buffer));
-                requestNextChunk();
               } else if (Shared.isMockedResponseBodyDoneMessage(bodyData)) {
                 Logger.debug('Returning mocked response body done', { clientId: client.id, requestId, url: request.url });
                 closePort(incomingPort);
@@ -69,8 +53,20 @@ const sendRequestToClient = async (client: Client, request: Request): Promise<Re
                 reject(new Error('Unexpected message from client expected response body chunk or done.'));
               }
             };
+          },
+          pull: () => {
+            if (aborted) {
+              return;
+            }
 
-            requestNextChunk();
+            Logger.debug('Requesting next response body chunk', { clientId: client.id, requestId, url: request.url });
+
+            const chunkRequestMessage: Shared.MockedRequestResponseChunkMessage = {
+              type: 'AGAR_MOCKED_REQUEST_RESPONSE_CHUNK',
+              requestId
+            };
+
+            messageChannel.port1.postMessage(chunkRequestMessage);
           },
           cancel: () => {
             const abortMessage: Shared.MockedRequestAbortedMessage = {
