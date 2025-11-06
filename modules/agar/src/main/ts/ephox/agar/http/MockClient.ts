@@ -121,6 +121,7 @@ const handleBodyResponse = async (body: ReadableStream<Uint8Array>, port: Messag
           closeReject(err);
         });
       } else {
+        aborted = true;
         errorLog('Unexpected message received on port for body response handling:', message);
         closeReject(new Error('Unexpected message received on port for body response handling'));
       }
