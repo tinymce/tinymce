@@ -1,4 +1,4 @@
-import{j as n,b as s,c as i}from"./iframe-DMZaCEEz.js";import{useMDXComponents as r}from"./index-Cwgu9c4T.js";const a=`# Contributing to Oxide Components
+import{j as n,b as s,f as i}from"./iframe-V952qUM2.js";import{useMDXComponents as r}from"./index-BTbim6gC.js";const a=`# Contributing to Oxide Components
 
 \`oxide-components\` is a React component library for the TinyMCE rich text editor. This guide will help you understand the project structure, architecture, and development workflow.
 

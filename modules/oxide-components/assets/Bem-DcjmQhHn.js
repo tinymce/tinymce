@@ -1,1 +1,0 @@
-import{i}from"./Optional-Bk48EtMP.js";import{f as p,i as a}from"./Strings-ChBvWd27.js";const f=Object.keys,l=(s,t)=>{const o=f(s);for(let n=0,r=o.length;n<r;n++){const e=o[n],c=s[e];t(c,e)}},m=(s,t)=>{const o=[];return l(s,(n,r)=>{o.push(t(n,r))}),o},y=(s,t)=>{const o=p(m(t,(n,r)=>n?`${s}--${r}`:""),a);return[s,...o].join(" ")},k=(s,t)=>i(t)?s:y(s,t);export{k as b};
