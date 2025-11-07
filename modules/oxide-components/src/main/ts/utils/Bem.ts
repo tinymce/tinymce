@@ -32,11 +32,28 @@ const applyModifiers = <M extends string>(joiner: string, base: string, modifier
   return [ base, ...modifierClasses ].join(joiner);
 };
 
+/**
+ * Creates a BEM block class name string.
+ *
+ * @example Bem.block('tox-button', { 'active': true, 'naked': false });
+ * @param block The BEM block name
+ * @param modifiers Optional modifiers for the block
+ * @returns The BEM block class name string
+ */
 export const block = <B extends BEMBlocks, M extends ModifiersForBlock<B> = never>(
   block: B,
   modifiers?: ModifierRecord<M>
 ): string => Type.isUndefined(modifiers) ? block : applyModifiers(' ', block, modifiers);
 
+/**
+ * Creates a BEM element class name string.
+ *
+ * @example Bem.element('tox-form', 'group', { error: true, inline: false });
+ * @param block The BEM block name
+ * @param element The BEM element name
+ * @param modifiers Optional modifiers for the element
+ * @returns The BEM element class name string
+ */
 export const element = <B extends BEMBlocks, E extends ElementForBlock<B>, M extends ModifiersForBlockElement<B, E> = never>(
   block: B,
   element: E,
@@ -46,6 +63,14 @@ export const element = <B extends BEMBlocks, E extends ElementForBlock<B>, M ext
   return Type.isUndefined(modifiers) ? base : applyModifiers(' ', base, modifiers);
 };
 
+/**
+  * Creates a BEM block selector string.
+  *
+  * @example Bem.blockSelector('tox-button', { 'active': true, 'disabled': false });
+  * @param block The BEM block name
+  * @param modifiers Optional modifiers for the block
+  * @returns The BEM block selector string
+  */
 export const blockSelector = <B extends BEMBlocks, M extends ModifiersForBlock<B> = never>(
   block: B,
   modifiers?: ModifierRecord<M>
@@ -54,6 +79,15 @@ export const blockSelector = <B extends BEMBlocks, M extends ModifiersForBlock<B
   return Type.isUndefined(modifiers) ? base : applyModifiers('', base, modifiers);
 };
 
+/**
+ * Creates a BEM element selector string.
+ *
+ * @example Bem.elementSelector('tox-form', 'group', { error: true, inline: false });
+ * @param block The BEM block name
+ * @param element The BEM element name
+ * @param modifiers Optional modifiers for the element
+ * @returns The BEM element selector string
+ */
 export const elementSelector = <B extends BEMBlocks, E extends ElementForBlock<B>, M extends ModifiersForBlockElement<B, E> = never>(
   block: B,
   element: E,
