@@ -188,6 +188,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     Mouse.clickOn(TinyDom.body(editor), 'details:not([open])');
     TinyAssertions.assertContentPresence(editor, { 'details:not([open])': 1 });
     TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
+    editor.options.unset('disabled');
   });
 
   it('TINY-12316: Accordion undo levels are properly created', () => {
