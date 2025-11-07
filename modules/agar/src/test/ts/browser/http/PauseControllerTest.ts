@@ -19,4 +19,18 @@ describe('browser.agar.http.PauseControllerTest', () => {
     await waitPromise;
     Assert.eq('Should have resumed', true, resumed);
   });
+
+  it('TINY-13219: wait timeout', async () => {
+    const pauseController = PauseController.createPauseController();
+    let didTimeout = false;
+
+    try {
+      await pauseController.wait(10);
+    } catch (e) {
+      didTimeout = true;
+      Assert.eq('Should have the expected error message', 'PauseController wait timed out after 10ms', (e as Error).message);
+    }
+
+    Assert.eq('Should have timed out', true, didTimeout);
+  });
 });
