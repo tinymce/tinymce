@@ -1,8 +1,7 @@
-import { describe, it, Assert } from '@ephox/bedrock-client';
-import { Type } from '@ephox/katamari';
+import { Assert, describe, it } from '@ephox/bedrock-client';
+import { Singleton, Type } from '@ephox/katamari';
 
 import * as Http from 'ephox/agar/api/Http';
-import { TestStore } from 'ephox/agar/api/TestStore';
 import * as Waiter from 'ephox/agar/api/Waiter';
 
 interface State {
@@ -10,8 +9,8 @@ interface State {
 }
 
 describe('browser.agar.http.HttpMockingTest', () => {
-  const store = TestStore();
-  const pauseController = Http.createPauseController();
+  let streamChunkCount = 0;
+  const pauseControllerState = Singleton.value<Http.PauseController>();
   const httpHook = Http.mockHttpHook<State>((state) => [
     Http.get('/custom/test', async () => {
       return Http.makeResponse(
@@ -95,12 +94,17 @@ describe('browser.agar.http.HttpMockingTest', () => {
     }),
     Http.get('/custom/streaming', async () => {
       const getChunks = async function* () {
-        const items = [ 'one', 'two', 'three' ];
+        const items = [ 'one', 'two', 'three', 'four' ];
 
         for (const item of items) {
           yield item;
-          store.add(item);
-          await pauseController.wait();
+
+          streamChunkCount++;
+
+          const pauseController = pauseControllerState.get().getOrNull();
+          if (Type.isNonNullable(pauseController)) {
+            await pauseController.wait();
+          }
         }
       };
 
@@ -208,6 +212,8 @@ describe('browser.agar.http.HttpMockingTest', () => {
   });
 
   it('TINY-13084: Should handle streaming response', async () => {
+    pauseControllerState.set(Http.createPauseController());
+
     const response = await window.fetch('/custom/streaming');
     const body = response.body;
 
@@ -230,19 +236,20 @@ describe('browser.agar.http.HttpMockingTest', () => {
       }
 
       chunks.push(chunk);
-      pauseController.resume();
+      pauseControllerState.get().each((pauseController) => pauseController.resume());
     }
 
-    Assert.eq('Should be expected chunks', [ 'one', 'two', 'three' ], chunks);
+    Assert.eq('Should be expected chunks', [ 'one', 'two', 'three', 'four' ], chunks);
   });
 
   it('TINY-13084: Should handle aborting streaming response', async () => {
     const abortController = new window.AbortController();
     const chunks: string[] = [];
 
-    store.clear();
-
     try {
+      streamChunkCount = 0;
+      pauseControllerState.set(Http.createPauseController());
+
       const response = await window.fetch('/custom/streaming', { signal: abortController.signal });
       const body = response.body;
 
@@ -266,9 +273,10 @@ describe('browser.agar.http.HttpMockingTest', () => {
         chunks.push(chunk);
         if (chunk === 'two') {
           abortController.abort();
+          pauseControllerState.clear();
+        } else {
+          pauseControllerState.get().each((pauseController) => pauseController.resume());
         }
-
-        pauseController.resume();
       }
     } catch (e) {
       const isAbortError = (err: unknown): err is Error => err instanceof Error && err.name === 'AbortError';
@@ -281,7 +289,9 @@ describe('browser.agar.http.HttpMockingTest', () => {
 
     await Waiter.pWait(100); // Wait a while to ensure that no more chunks are processed
 
-    store.assertEq('Should be only one and two in store since we aborted before three', [ 'one', 'two' ]);
+    // We need to wait for less than four since the abort may have happened before or after three requested processed
+    // but it should never be in the response output since we discard messages after abort is intercepted in the service worker
+    Assert.eq('Should only have served one, two, and/or three', true, streamChunkCount < 4);
   });
 
   it('TINY-13084: Should handle file uploads', async () => {
