@@ -1,5 +1,5 @@
 import { Arr, type Optional, Strings } from '@ephox/katamari';
-import { Attribute, Compare, ContentEditable, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
+import { Attribute, Compare, ContentEditable, SelectorExists, SelectorFilter, SelectorFind, SugarElement } from '@ephox/sugar';
 
 import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
@@ -79,6 +79,11 @@ const getAnchorHrefOpt = (editor: Editor, elm: SugarElement<Node>): Optional<str
   return SelectorFind.closest<HTMLAnchorElement>(elm, 'a', isRoot).bind((a) => Attribute.getOpt(a, 'href'));
 };
 
+const hasAccordion = (editor: Editor, elm: SugarElement<Node>): boolean => {
+  const isRoot = (elm: SugarElement<Node>) => Compare.eq(elm, SugarElement.fromDom(editor.getBody()));
+  return SelectorExists.closest(elm, 'details', isRoot);
+};
+
 const processDisabledEvents = (editor: Editor, e: Event): void => {
   /*
     If an event is a click event on or within an anchor, and the CMD/CTRL key is
@@ -99,6 +104,10 @@ const processDisabledEvents = (editor: Editor, e: Event): void => {
         window.open(href, '_blank', 'rel=noopener noreferrer,menubar=yes,toolbar=yes,location=yes,status=yes,resizable=yes,scrollbars=yes');
       }
     });
+
+    if (editor.hasPlugin('accordion') && hasAccordion(editor, elm)) {
+      e.preventDefault();
+    }
   } else if (isAllowedEventInDisabledMode(e)) {
     editor.dispatch(e.type, e);
   }
