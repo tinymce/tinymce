@@ -101,9 +101,11 @@ describe('browser.agar.http.HttpMockingTest', () => {
 
           streamChunkCount++;
 
-          const pauseController = pauseControllerState.get().getOrNull();
-          if (Type.isNonNullable(pauseController)) {
-            await pauseController.wait();
+          if (items[items.length - 1] !== item) {
+            const pauseController = pauseControllerState.get().getOrNull();
+            if (Type.isNonNullable(pauseController)) {
+              await pauseController.wait();
+            }
           }
         }
       };
@@ -273,10 +275,10 @@ describe('browser.agar.http.HttpMockingTest', () => {
         chunks.push(chunk);
         if (chunk === 'two') {
           abortController.abort();
-          pauseControllerState.clear();
-        } else {
-          pauseControllerState.get().each((pauseController) => pauseController.resume());
+          await Waiter.pWait(50); // Give some time for the abort to propagate
         }
+
+        pauseControllerState.get().each((pauseController) => pauseController.resume());
       }
     } catch (e) {
       const isAbortError = (err: unknown): err is Error => err instanceof Error && err.name === 'AbortError';
@@ -284,6 +286,8 @@ describe('browser.agar.http.HttpMockingTest', () => {
         Assert.fail('Should be abort error');
       }
     }
+
+    pauseControllerState.clear();
 
     Assert.eq('Should be only one and two from request since we aborted before three', [ 'one', 'two' ], chunks);
 
