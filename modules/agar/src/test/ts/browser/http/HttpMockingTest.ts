@@ -266,9 +266,9 @@ describe('browser.agar.http.HttpMockingTest', () => {
         chunks.push(chunk);
         if (chunk === 'two') {
           abortController.abort();
-        } else {
-          pauseController.resume();
         }
+
+        pauseController.resume();
       }
     } catch (e) {
       const isAbortError = (err: unknown): err is Error => err instanceof Error && err.name === 'AbortError';
