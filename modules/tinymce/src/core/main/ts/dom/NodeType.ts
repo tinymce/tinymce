@@ -156,5 +156,6 @@ export {
   isDetails,
   isSummary,
   ucVideoNodeName,
+  type UcVideo,
   isUcVideo
 };
