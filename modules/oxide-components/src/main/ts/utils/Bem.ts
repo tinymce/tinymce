@@ -64,13 +64,13 @@ export const element = <B extends BEMBlocks, E extends ElementForBlock<B>, M ext
 };
 
 /**
-  * Creates a BEM block selector string.
-  *
-  * @example Bem.blockSelector('tox-button', { 'active': true, 'disabled': false });
-  * @param block The BEM block name
-  * @param modifiers Optional modifiers for the block
-  * @returns The BEM block selector string
-  */
+ * Creates a BEM block selector string.
+ *
+ * @example Bem.blockSelector('tox-button', { 'active': true, 'disabled': false });
+ * @param block The BEM block name
+ * @param modifiers Optional modifiers for the block
+ * @returns The BEM block selector string
+ */
 export const blockSelector = <B extends BEMBlocks, M extends ModifiersForBlock<B> = never>(
   block: B,
   modifiers?: ModifierRecord<M>
