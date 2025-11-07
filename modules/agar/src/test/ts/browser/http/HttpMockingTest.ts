@@ -11,6 +11,7 @@ interface State {
 
 describe('browser.agar.http.HttpMockingTest', () => {
   const store = TestStore();
+  const pauseController = Http.createPauseController();
   const httpHook = Http.mockHttpHook<State>((state) => [
     Http.get('/custom/test', async () => {
       return Http.makeResponse(
@@ -99,7 +100,7 @@ describe('browser.agar.http.HttpMockingTest', () => {
         for (const item of items) {
           yield item;
           store.add(item);
-          await Waiter.pWait(1);
+          await pauseController.wait();
         }
       };
 
@@ -229,6 +230,7 @@ describe('browser.agar.http.HttpMockingTest', () => {
       }
 
       chunks.push(chunk);
+      pauseController.resume();
     }
 
     Assert.eq('Should be expected chunks', [ 'one', 'two', 'three' ], chunks);
@@ -264,6 +266,8 @@ describe('browser.agar.http.HttpMockingTest', () => {
         chunks.push(chunk);
         if (chunk === 'two') {
           abortController.abort();
+        } else {
+          pauseController.resume();
         }
       }
     } catch (e) {
