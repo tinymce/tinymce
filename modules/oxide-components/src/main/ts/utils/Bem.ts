@@ -35,7 +35,9 @@ const applyModifiers = <M extends string>(joiner: string, base: string, modifier
 /**
  * Creates a BEM block class name string.
  *
- * @example Bem.block('tox-button', { 'active': true, 'naked': false });
+ * @example
+ * Bem.block('tox-button', { 'active': true, 'naked': false });
+ * // Returns: 'tox-button tox-button--active'
  * @param block The BEM block name
  * @param modifiers Optional modifiers for the block
  * @returns The BEM block class name string
@@ -48,7 +50,9 @@ export const block = <B extends BEMBlocks, M extends ModifiersForBlock<B> = neve
 /**
  * Creates a BEM element class name string.
  *
- * @example Bem.element('tox-form', 'group', { error: true, inline: false });
+ * @example
+ * Bem.element('tox-form', 'group', { error: true, inline: false });
+ * // Returns: 'tox-form__group tox-form__group--error'
  * @param block The BEM block name
  * @param element The BEM element name
  * @param modifiers Optional modifiers for the element
@@ -66,7 +70,9 @@ export const element = <B extends BEMBlocks, E extends ElementForBlock<B>, M ext
 /**
  * Creates a BEM block selector string.
  *
- * @example Bem.blockSelector('tox-button', { 'active': true, 'disabled': false });
+ * @example
+ * Bem.blockSelector('tox-button', { 'active': true, 'disabled': false });
+ * // Returns: '.tox-button.tox-button--active'
  * @param block The BEM block name
  * @param modifiers Optional modifiers for the block
  * @returns The BEM block selector string
@@ -82,7 +88,9 @@ export const blockSelector = <B extends BEMBlocks, M extends ModifiersForBlock<B
 /**
  * Creates a BEM element selector string.
  *
- * @example Bem.elementSelector('tox-form', 'group', { error: true, inline: false });
+ * @example
+ * Bem.elementSelector('tox-form', 'group', { error: true, inline: false });
+ * // Returns: '.tox-form__group.tox-form__group--error'
  * @param block The BEM block name
  * @param element The BEM element name
  * @param modifiers Optional modifiers for the element
