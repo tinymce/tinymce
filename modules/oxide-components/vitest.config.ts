@@ -2,6 +2,8 @@ import { playwright } from '@vitest/browser-playwright';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 
+import { mousedownCommand, mousemoveCommand, mouseupCommand } from './vitest-custom-commands';
+
 export default defineConfig({
   test: {
     projects: [
@@ -21,6 +23,9 @@ export default defineConfig({
         }
       },
       {
+        optimizeDeps: {
+          include: [ 'react/jsx-dev-runtime' ],
+        },
         test: {
           name: 'browser',
           setupFiles: [ './vitest.setup.js' ],
@@ -40,7 +45,8 @@ export default defineConfig({
             screenshotFailures: false,
             instances: [
               { browser: 'chromium' }
-            ]
+            ],
+            commands: { mousedownCommand, mouseupCommand, mousemoveCommand }
           }
         },
       },

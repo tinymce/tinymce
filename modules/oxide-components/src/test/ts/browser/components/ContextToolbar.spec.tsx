@@ -330,4 +330,67 @@ describe('browser.ContextToolbar.ContextToolbar', () => {
 
     expect(onClick).toHaveBeenCalledOnce();
   });
+
+  it('TINY-13077: Should position toolbar using anchorRef and auto-open on mount', async () => {
+    const anchorRef = { current: null as HTMLElement | null };
+    const supportsAnchorPositioning = CSS.supports('anchor-name', '--test');
+
+    const { getByTestId, container } = render(
+      <Fragment>
+        <div className='tox' style={{ position: 'relative' }}>
+          {/* Standalone anchor element, not wrapped in Trigger */}
+          <div
+            ref={(el) => {
+              anchorRef.current = el;
+            }}
+            data-testid="anchor"
+            style={{ padding: '10px', background: 'lightgray' }}
+          >
+            Anchor Element
+          </div>
+
+          <ContextToolbar.Root anchorRef={anchorRef} persistent={true}>
+            <ContextToolbar.Toolbar>
+              <ContextToolbar.Group>
+                <button data-testid="test-button">Test Button</button>
+              </ContextToolbar.Group>
+            </ContextToolbar.Toolbar>
+          </ContextToolbar.Root>
+        </div>
+      </Fragment>,
+      { wrapper: Wrapper }
+    );
+
+    const button = getByTestId('test-button');
+    const anchor = getByTestId('anchor');
+    const toolbar = container.querySelector('.tox-context-toolbar');
+
+    await expect.element(anchor).toBeVisible();
+
+    // Verify toolbar auto-opens on mount when using anchorRef
+    await expect.element(button).toBeVisible();
+    await expect.element(button).toHaveFocus();
+
+    // Verify CSS Anchor Positioning properties (only in supported browsers)
+    if (supportsAnchorPositioning) {
+      expect(toolbar).toBeTruthy();
+      if (toolbar instanceof window.Element) {
+        const toolbarStyles = window.getComputedStyle(toolbar);
+        expect(toolbarStyles.getPropertyValue('position-anchor')).toBeTruthy();
+        expect(toolbarStyles.getPropertyValue('position')).toBe('absolute');
+      }
+
+      // Verify anchor-name is set on anchor element using the ref
+      expect(anchorRef.current).toBeTruthy();
+      if (anchorRef.current instanceof window.Element) {
+        const anchorStyles = window.getComputedStyle(anchorRef.current);
+        const anchorName = anchorStyles.getPropertyValue('anchor-name');
+        expect(anchorName).toBeTruthy();
+      }
+    }
+
+    // Verify clicking anchor doesn't close toolbar (visibility controlled externally via conditional rendering)
+    await anchor.click();
+    await expect.element(button).toBeVisible();
+  });
 });
