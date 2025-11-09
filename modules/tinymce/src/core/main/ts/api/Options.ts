@@ -1031,6 +1031,7 @@ const hasEditableRoot = option('editable_root');
 const hasContentCssCors = option('content_css_cors');
 const getPlugins = option('plugins');
 const getExternalPlugins = option('external_plugins');
+const getForcedPlugins = option('forced_plugins');
 const shouldBlockUnsupportedDrop = option('block_unsupported_drop');
 const isVisualAidsEnabled = option('visual');
 const getVisualAidsTableClass = option('visual_table_class');
@@ -1154,6 +1155,7 @@ export {
   hasContentCssCors,
   getPlugins,
   getExternalPlugins,
+  getForcedPlugins,
   shouldBlockUnsupportedDrop,
   isVisualAidsEnabled,
   getVisualAidsTableClass,

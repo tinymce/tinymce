@@ -1,4 +1,4 @@
-import { Type } from '@ephox/katamari';
+import { Obj, Type } from '@ephox/katamari';
 
 import type Editor from '../api/Editor';
 import * as Options from '../api/Options';
@@ -46,7 +46,11 @@ const getLicenseKeyType = (editor: Editor): LicenseKeyType => {
 const determineStrategy = (editor: Editor): UseKeyManager => {
   const onlineStatus = getOnlineStatus(editor);
   const licenseKeyType = getLicenseKeyType(editor);
-  const forcePlugin = (new Set(Options.getPlugins(editor))).has(PLUGIN_CODE);
+  const forcePlugin = new Set([
+    ...Options.getPlugins(editor),
+    ...Obj.keys(Options.getExternalPlugins(editor)),
+    ...Options.getForcedPlugins(editor),
+  ]).has(PLUGIN_CODE);
 
   if (licenseKeyType !== 'gpl' || onlineStatus === 'online' || forcePlugin) {
     return {
