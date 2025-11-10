@@ -64,13 +64,12 @@ const closePort = (port: MessagePort) => {
   port.close();
 };
 
-const handleBodyResponse = async (body: ReadableStream<Uint8Array>, port: MessagePort) => {
+const handleBodyResponse = async (body: ReadableStream<Uint8Array>, port: MessagePort, abortController: AbortController) => {
   return new Promise<void>((resolve, reject) => {
     const reader = body.getReader();
     let aborted = false;
 
     const closeResolve = () => {
-      reader.releaseLock();
       closePort(port);
       resolve();
     };
@@ -119,6 +118,8 @@ const handleBodyResponse = async (body: ReadableStream<Uint8Array>, port: Messag
         }, (err) => {
           errorLog('Error cancelling reader for aborted request:', message, err);
           closeReject(err);
+        }).finally(() => {
+          abortController.abort();
         });
       } else {
         aborted = true;
@@ -129,7 +130,7 @@ const handleBodyResponse = async (body: ReadableStream<Uint8Array>, port: Messag
   });
 };
 
-const handleNonBodyResponse = async (port: MessagePort) => {
+const handleNonBodyResponse = async (port: MessagePort, abortController: AbortController) => {
   return new Promise<void>((resolve, reject) => {
     port.onmessage = (event) => {
       const message = event.data;
@@ -139,6 +140,7 @@ const handleNonBodyResponse = async (port: MessagePort) => {
         closePort(port);
         resolve();
       } else if (Shared.isMockedRequestAbortedMessage(message)) {
+        abortController.abort();
         debugLog('Request without body aborted by SW:', message);
         closePort(port);
         resolve();
@@ -156,6 +158,7 @@ const messageHandler = (event: MessageEvent) => {
 
   if (Shared.isMockRequestMessage(data)) {
     const handler = currentMockingConfig.handler;
+    const abortController = new window.AbortController();
 
     const url = new URL(data.url);
     const request = new window.Request(url, {
@@ -164,7 +167,7 @@ const messageHandler = (event: MessageEvent) => {
       body: data.body.byteLength > 0 ? data.body : undefined,
     });
 
-    const requestPromise = handler(request).then(async (response) => {
+    const requestPromise = handler(request, abortController.signal).then(async (response) => {
       infoLog(`[${data.method}] ${data.url} -> ${response.status} ${response.statusText}`);
 
       const headMessage: Shared.MockedResponseHeadMessage = {
@@ -178,9 +181,9 @@ const messageHandler = (event: MessageEvent) => {
       port.postMessage(headMessage);
 
       if (Type.isNonNullable(response.body)) {
-        await handleBodyResponse(response.body, port);
+        await handleBodyResponse(response.body, port, abortController);
       } else {
-        await handleNonBodyResponse(port);
+        await handleNonBodyResponse(port, abortController);
       }
     }).finally(() => {
       inflightRequests.delete(data.requestId);

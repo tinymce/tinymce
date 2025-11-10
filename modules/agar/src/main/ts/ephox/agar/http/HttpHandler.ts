@@ -6,11 +6,12 @@ import * as Shared from './Shared';
 export interface RequestHandlerDetails {
   readonly params: Record<string, string>;
   readonly request: Request;
+  readonly abortSignal: AbortSignal;
 }
 
-export type HttpHandler = (request: Request) => Optional<Promise<Response>>;
+export type HttpHandler = (request: Request, abortSignal: AbortSignal) => Optional<Promise<Response>>;
 
-export type RawRequestHandler = (requestDetails: Request) => Promise<Response>;
+export type RawRequestHandler = (request: Request, abortSignal: AbortSignal) => Promise<Response>;
 
 export type RequestHandler = (requestDetails: RequestHandlerDetails) => Promise<Response>;
 
@@ -26,10 +27,10 @@ const makeMethodHttpHandler = (method: string) => (pathPattern: string, handler:
     throw new Error(`Path pattern "${pathPattern}" must start with "${Shared.mockPrefix}"`);
   }
 
-  return (request: Request): Optional<Promise<Response>> => {
+  return (request: Request, abortSignal: AbortSignal): Optional<Promise<Response>> => {
     if (matchMethod(request, method)) {
       const url = new URL(request.url);
-      return pathMatcher(url.pathname).map((params) => handler({ params, request }));
+      return pathMatcher(url.pathname).map((params) => handler({ params, request, abortSignal }));
     } else {
       return Optional.none();
     }
@@ -42,7 +43,7 @@ export const put = makeMethodHttpHandler('PUT');
 export const del = makeMethodHttpHandler('DELETE');
 export const patch = makeMethodHttpHandler('PATCH');
 
-export const defaultHandler: RawRequestHandler = async (_req) => new window.Response(null, { status: 501, statusText: 'Handler not implemented' });
+export const defaultHandler: RawRequestHandler = async (_req, _signal) => new window.Response(null, { status: 501, statusText: 'Handler not implemented' });
 
-export const resolveRequest = (handlers: HttpHandler[], request: Request): Promise<Response> =>
-  Arr.findMap(handlers, (handler) => handler(request)).getOrThunk(() => defaultHandler(request));
+export const resolveRequest = (handlers: HttpHandler[], request: Request, abortSignal: AbortSignal): Promise<Response> =>
+  Arr.findMap(handlers, (handler) => handler(request, abortSignal)).getOrThunk(() => defaultHandler(request, abortSignal));
