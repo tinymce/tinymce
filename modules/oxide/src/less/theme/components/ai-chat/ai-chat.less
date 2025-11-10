@@ -25,7 +25,8 @@
   }
 
   .tox-ai__scroll {
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     background-color: var(--tox-private-background-color, @background-color);
     display: flex;
     padding: 12px;
@@ -36,6 +37,12 @@
     align-self: stretch;
   }
 
+  .tox-ai__response {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+  }
+
   .tox-ai__response-content {
     padding: var(--tox-private-pad-sm, @pad-sm) 0;
     color: var(--tox-private-text-color, @text-color);
@@ -44,7 +51,6 @@
     font-style: normal;
     font-weight: var(--tox-private-font-weight-normal, @font-weight-normal);
     line-height: var(--tox-private-line-height, 18px);
-    white-space: pre-wrap;
   }
 
   .tox-ai__response.tox-ai__response-streaming {
