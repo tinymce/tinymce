@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Ability to load licensekeymanager in different hosting scenarios.
+time: 2025-11-10T09:09:20.638451+10:00
+custom:
+    Issue: TINY-13203
