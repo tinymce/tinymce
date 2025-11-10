@@ -92,9 +92,11 @@ const processDisabledEvents = (editor: Editor, e: Event): void => {
       b) open the link using default browser behaviour
   */
   if (isClickEvent(e) && !VK.metaKeyPressed(e)) {
+    let isHandled = false;
     const elm = SugarElement.fromDom(e.target as Node);
     getAnchorHrefOpt(editor, elm).each((href) => {
       e.preventDefault();
+      isHandled = true;
       if (/^#/.test(href)) {
         const targetEl = editor.dom.select(`${href},[name="${Strings.removeLeading(href, '#')}"]`);
         if (targetEl.length) {
@@ -105,7 +107,7 @@ const processDisabledEvents = (editor: Editor, e: Event): void => {
       }
     });
 
-    if (editor.hasPlugin('accordion') && hasAccordion(editor, elm)) {
+    if (!isHandled && editor.hasPlugin('accordion') && hasAccordion(editor, elm)) {
       e.preventDefault();
     }
   } else if (isAllowedEventInDisabledMode(e)) {
