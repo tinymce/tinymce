@@ -301,7 +301,7 @@ describe('browser.agar.http.HttpMockingTest', () => {
 
     await Waiter.pWait(100); // Wait a while to ensure that no more chunks are processed
 
-    store.assertEq('Should only have served one, two', [ 'one', 'two' ]);
+    store.assertEq('Should be only one and two in store since we aborted before three', [ 'one', 'two' ]);
   });
 
   it('TINY-13084: Should handle file uploads', async () => {
