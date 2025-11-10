@@ -43,7 +43,7 @@ export const put = makeMethodHttpHandler('PUT');
 export const del = makeMethodHttpHandler('DELETE');
 export const patch = makeMethodHttpHandler('PATCH');
 
-export const defaultHandler: RawRequestHandler = async (_req) => new window.Response(null, { status: 501, statusText: 'Handler not implemented' });
+export const defaultHandler: RawRequestHandler = async (_req, _signal) => new window.Response(null, { status: 501, statusText: 'Handler not implemented' });
 
 export const resolveRequest = (handlers: HttpHandler[], request: Request, abortSignal: AbortSignal): Promise<Response> =>
   Arr.findMap(handlers, (handler) => handler(request, abortSignal)).getOrThunk(() => defaultHandler(request, abortSignal));
