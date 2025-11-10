@@ -49,7 +49,6 @@ const determineStrategy = (editor: Editor): UseKeyManager => {
   const forcePlugin = new Set([
     ...Options.getPlugins(editor),
     ...Obj.keys(Options.getExternalPlugins(editor)),
-    ...Options.getForcedPlugins(editor),
   ]).has(PLUGIN_CODE);
 
   if (licenseKeyType !== 'gpl' || onlineStatus === 'online' || forcePlugin) {
