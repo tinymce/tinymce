@@ -112,10 +112,10 @@ describe('browser.tinymce.themes.silver.editor.backstage.BackstageSinkTest', () 
           assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1:test,context_2:test,context_3:test'), { contextType: [ 'context_1', 'context_2' ], shouldDisable: false });
 
           // One matched context fails the predicate
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1:test,context_2:fail,context_3:test'), { contextType: [ 'context_1', 'context_2'], shouldDisable: true });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1:test,context_2:fail,context_3:test'), { contextType: [ 'context_1', 'context_2' ], shouldDisable: true });
 
           // Default to mode:design when there is no matched context
-          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1a:test,context_2a:test,context_3a:test'), { contextType: [ ], shouldDisable: false });
+          assert.deepEqual(lazyBackstages().popup.shared.providers.checkUiComponentContext('context_1a:test,context_2a:test,context_3a:test'), { contextType: [], shouldDisable: false });
         });
       });
     });
