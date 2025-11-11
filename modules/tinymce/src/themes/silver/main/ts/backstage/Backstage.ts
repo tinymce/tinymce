@@ -1,6 +1,6 @@
 import type { AlloyComponent, AlloySpec } from '@ephox/alloy';
 import type { Dialog, Menu } from '@ephox/bridge';
-import { Arr, Cell, Fun, Obj, Optional, Strings, Type, type Result } from '@ephox/katamari';
+import { Arr, Cell, Obj, Optional, Optionals, Strings, type Result } from '@ephox/katamari';
 
 import type Editor from 'tinymce/core/api/Editor';
 import I18n, { type TranslatedString, type Untranslated } from 'tinymce/core/api/util/I18n';
@@ -58,15 +58,10 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
 
   const enabledInContextFn = (specContext: string, contexts: Record<string, (args: string) => boolean>) => {
     const [ key, value = '' ] = specContext.split(':');
-    return {
+    return Obj.get(contexts, key).map((pred) => ({
       key,
-      result: Obj.get(contexts, key)
-        .fold(
-          Fun.constant(null),
-          // Fallback to 'mode:design' if key is not found
-          (pred) => value.charAt(0) === '!' ? !pred(value.slice(1)) : pred(value)
-        )
-    };
+      value: value.charAt(0) === '!' ? !pred(value.slice(1)) : pred(value)
+    }));
   };
 
   const providers: UiFactoryBackstageProviders = {
@@ -85,14 +80,17 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
       }
 
       const contexts = editor.ui.registry.getAll().contexts;
-      const contextResults = Arr.map(
-        Arr.filter(Tools.explode(specContext), Strings.isNotEmpty),
-        (spec) => enabledInContextFn(spec, contexts)
+      const contextResults = Optionals.cat(
+        Arr.map(
+          Arr.filter(Tools.explode(specContext), Strings.isNotEmpty),
+          (spec) => enabledInContextFn(spec, contexts)
+        )
       );
-      const matchedContextResults = Arr.filter(contextResults, (c) => Type.isNonNullable(c.result));
-      const isAllEnabled = matchedContextResults.length === 0
+
+      const isAllEnabled = contextResults.length === 0
+        // Fallback to `mode:design` if no context is found
         ? Obj.get(contexts, 'mode').map((pred) => pred('design')).getOr(false)
-        : Arr.forall(matchedContextResults, (spec) => spec.result === true);
+        : Arr.forall(contextResults, (spec) => spec.value === true);
 
       return {
         contextType: Arr.map(contextResults, (al) => al.key),
