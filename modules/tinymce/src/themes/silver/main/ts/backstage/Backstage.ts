@@ -56,7 +56,7 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
   const contextMenuState = Cell(false);
   const toolbar = HeaderBackstage(editor);
 
-  const enabledInContextFn = (specContext: string, contexts: Record<string, (args: string) => boolean>) => {
+  const enabledInContextFn = (specContext: string, contexts: Record<string, (args: string) => boolean>): Optional<{ key: string; value: boolean }> => {
     const [ key, value = '' ] = specContext.split(':');
     return Obj.get(contexts, key).map((pred) => ({
       key,
