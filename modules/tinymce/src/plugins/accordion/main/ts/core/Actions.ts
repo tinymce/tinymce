@@ -5,6 +5,7 @@ import { Attribute, SelectorFind, SugarElement } from '@ephox/sugar';
 import type Editor from 'tinymce/core/api/Editor';
 
 import * as Events from '../api/Events';
+import * as Options from '../api/Options';
 
 import * as Identifiers from './Identifiers';
 import * as Utils from './Utils';
@@ -60,6 +61,10 @@ const toggleDetailsElement = (isReadonly: boolean, details: HTMLDetailsElement, 
 };
 
 const toggleAccordion = (editor: Editor, state?: boolean): void => {
+  if (Options.isDisabled(editor)) {
+    return;
+  }
+
   Utils.getSelectedDetails(editor).each((details) => {
     Events.fireToggleAccordionEvent(editor, details, toggleDetailsElement(editor.readonly, details, state));
   });
