@@ -3,12 +3,13 @@
   --tox-private-ai-footer-border-color: hsl( from var(--tox-private-background-color) h s calc(l - 11));
 }
 
-.tox-ai {
+.tox .tox-ai {
   .tox-ai__user-prompt {
     display: flex;
     flex-direction: column;
     margin-left: auto;
     gap: inherit;
+    width: 100%;
   }
 
   .tox-ai__user-prompt__context {
@@ -150,5 +151,10 @@
 
   .tox-ai__models-menu__item__description__ability {
     font-weight: var(--tox-private-font-weight-bold, @font-weight-bold);
+  }
+
+  .tox-tooltip {
+    display: none;
+    padding: var(--tox-private-pad-xs, @pad-xs) 0 0;
   }
 }
