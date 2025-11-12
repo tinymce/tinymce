@@ -1,4 +1,3 @@
-
 import type Editor from 'tinymce/core/api/Editor';
 import type { EditorOptions } from 'tinymce/core/api/OptionTypes';
 

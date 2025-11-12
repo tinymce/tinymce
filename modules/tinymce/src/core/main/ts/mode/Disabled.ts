@@ -107,7 +107,7 @@ const processDisabledEvents = (editor: Editor, e: Event): void => {
       }
     });
 
-    if (!isHandled && editor.hasPlugin('accordion') && hasAccordion(editor, elm)) {
+    if (!isHandled && hasAccordion(editor, elm)) {
       e.preventDefault();
     }
   } else if (isAllowedEventInDisabledMode(e)) {

@@ -170,6 +170,10 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
 
   it('TINY-12316: Toggle an accordion element not possible when disabled', () => {
     const editor = hook.editor();
+    const onClick = (event: Event) => {
+      assert.isTrue(event.defaultPrevented);
+    };
+    editor.on('click', onClick);
     editor.setContent(`${AccordionUtils.createAccordion({ open: true })}<p>tiny</p>`);
     TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
     editor.options.set('disabled', true);
@@ -189,6 +193,7 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     TinyAssertions.assertContentPresence(editor, { 'details:not([open])': 1 });
     TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
     editor.options.unset('disabled');
+    editor.off('click', onClick);
   });
 
   it('TINY-12316: Accordion undo levels are properly created', () => {
