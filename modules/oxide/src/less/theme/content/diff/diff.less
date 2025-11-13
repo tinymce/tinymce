@@ -21,34 +21,34 @@
   }
 
   .tox-@{pluginName}__annotation--added__highlight {
-    background-color: @added-background-color;
+    background-color: @added-bg;
     text-decoration: underline;
   }
 
   .tox-@{pluginName}__annotation--added__selected {
-    background-color: @added-background-color;
+    background-color: @added-bg;
     box-shadow: @selected-box-shadow;
     text-decoration: none;
   }
 
   .tox-@{pluginName}__annotation--modified__highlight {
-    background-color: @modified-background-color;
+    background-color: @modified-bg;
     text-decoration: underline;
   }
 
   .tox-@{pluginName}__annotation--modified__selected {
-    background-color: @modified-background-color;
+    background-color: @modified-bg;
     box-shadow: @selected-box-shadow;
     text-decoration: none;
   }
 
   .tox-@{pluginName}__annotation--removed__highlight {
-    background-color: @removed-background-color;
+    background-color: @removed-bg;
     text-decoration: line-through;
   }
 
   .tox-@{pluginName}__annotation--removed__selected {
-    background-color: @removed-background-color;
+    background-color: @removed-bg;
     box-shadow: @selected-box-shadow;
     text-decoration: line-through;
   }
@@ -73,34 +73,34 @@
   video,
   iframe {
     &.tox-@{pluginName}__annotation--added__highlight {
-      outline: 0.25em solid @added-background-color;
+      outline: 0.25em solid @added-bg;
       padding: 0.25em;
     }
 
     &.tox-@{pluginName}__annotation--added__selected {
-      border: 0.25em solid @added-background-color;
+      border: 0.25em solid @added-bg;
       outline: 0.125em solid @selected-outline-color;
       padding: 0em;
     }
 
     &.tox-@{pluginName}__annotation--modified__highlight {
-      outline: 0.25em solid @modified-background-color;
+      outline: 0.25em solid @modified-bg;
       padding: 0.25em;
     }
 
     &.tox-@{pluginName}__annotation--modified__selected {
-      border: 0.25em solid @modified-background-color;
+      border: 0.25em solid @modified-bg;
       outline: 0.125em solid @selected-outline-color;
       padding: 0em;
     }
 
     &.tox-@{pluginName}__annotation--removed__highlight {
-      outline: 0.25em solid @removed-background-color;
+      outline: 0.25em solid @removed-bg;
       padding: 0.25em;
     }
 
     &.tox-@{pluginName}__annotation--removed__selected {
-      border: 0.25em solid @removed-background-color;
+      border: 0.25em solid @removed-bg;
       outline: 0.125em solid @selected-outline-color;
       padding: 0em;
     }
@@ -111,11 +111,11 @@
   }
 
   div.tox-@{pluginName}__annotation--removed__highlight > hr {
-    border-color: darken(@removed-background-color, 50%);
+    border-color: darken(@removed-bg, 50%);
   }
 
   div.tox-@{pluginName}__annotation--added__highlight > hr {
-    border-color: darken(@added-background-color, 50%);
+    border-color: darken(@added-bg, 50%);
   }
 
   .mce-pagebreak {
