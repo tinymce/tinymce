@@ -2,6 +2,7 @@ import { Type } from '@ephox/katamari';
 
 import type Editor from 'tinymce/core/api/Editor';
 import type { EditorOptions } from 'tinymce/core/api/OptionTypes';
+import type { UploadHandler } from 'tinymce/core/file/Uploader';
 
 import type { UserListItem } from '../ui/DialogTypes';
 
@@ -87,6 +88,10 @@ const register = (editor: Editor): void => {
   registerOption('link_attributes_postprocess', {
     processor: 'function',
   });
+
+  registerOption('files_upload_handler', {
+    processor: 'function'
+  });
 };
 
 const assumeExternalTargets = option<AssumeExternalTargets>('link_assume_external_targets');
@@ -101,6 +106,10 @@ const shouldShowLinkTitle = option<boolean>('link_title');
 const allowUnsafeLinkTarget = option<boolean>('allow_unsafe_link_target');
 const useQuickLink = option<boolean>('link_quicklink');
 const attributesPostProcess = option<(attributes: Record<string, string | null | undefined>) => void>('link_attributes_postprocess');
+const getFilesUploadHandler = option<UploadHandler>('files_upload_handler');
+
+const hasFilesUploadHandler = (editor: Editor): boolean =>
+  Type.isNonNullable(editor.options.get('files_upload_handler'));
 
 export {
   register,
@@ -111,6 +120,8 @@ export {
   getTargetList,
   getRelList,
   getLinkClassList,
+  hasFilesUploadHandler,
+  getFilesUploadHandler,
   shouldShowLinkTitle,
   allowUnsafeLinkTarget,
   useQuickLink,
