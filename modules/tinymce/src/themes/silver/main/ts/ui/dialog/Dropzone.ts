@@ -68,7 +68,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
         tag: 'input',
         attributes: {
           type: 'file',
-          accept: 'image/*'
+          accept: spec.allowedFiles.getOr('image/*')
         },
         styles: {
           display: 'none'
@@ -95,7 +95,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
         classes: [ 'tox-button', 'tox-button--secondary' ]
       },
       components: [
-        GuiFactory.text(providersBackstage.translate('Browse for an image')),
+        GuiFactory.text(providersBackstage.translate(spec.buttonLabel.getOr('Browse for an image'))),
         memInput.asSpec()
       ],
       action: (comp: AlloyComponent) => {
@@ -147,7 +147,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
               tag: 'p'
             },
             components: [
-              GuiFactory.text(providersBackstage.translate('Drop an image here'))
+              GuiFactory.text(providersBackstage.translate(spec.dropAreaLabel.getOr('Drop an image here')))
             ]
           },
           pField

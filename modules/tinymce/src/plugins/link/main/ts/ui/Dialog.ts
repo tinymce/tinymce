@@ -1,7 +1,9 @@
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 
 import type Editor from 'tinymce/core/api/Editor';
+import type { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import type { Dialog } from 'tinymce/core/api/ui/Ui';
+import type { UploadHandler } from 'tinymce/core/file/Uploader';
 
 import * as Options from '../api/Options';
 import * as Actions from '../core/Actions';
@@ -11,7 +13,15 @@ import * as Utils from '../core/Utils';
 import { DialogChanges } from './DialogChanges';
 import { DialogConfirms } from './DialogConfirms';
 import { DialogInfo } from './DialogInfo';
-import type { LinkDialogData, LinkDialogInfo, LinkDialogKey } from './DialogTypes';
+import type { API, LinkDialogCatalog, LinkDialogData, LinkDialogInfo, LinkDialogKey } from './DialogTypes';
+import { UploadTab } from './UploadTab';
+
+interface Helpers {
+  readonly addToBlobCache: (blobInfo: BlobInfo) => void;
+  readonly createBlobCache: (file: File, blobUri: string, dataUrl: string) => BlobInfo;
+  readonly alertErr: (message: string, callback: () => void) => void;
+  readonly uploadImage: UploadHandler;
+}
 
 const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Dialog.DialogInstanceApi<LinkDialogData>): void => {
   const data: LinkDialogData = api.getData();
@@ -49,6 +59,64 @@ const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Dialog.Dial
   api.close();
 };
 
+const uploadImage = (editor: Editor): UploadHandler => (blobInfo: BlobInfo, progress: (percent: number) => void): Promise<string> => {
+  const fileUploadHandler = Options.getFilesUploadHandler(editor);
+  return fileUploadHandler(blobInfo, progress);
+};
+
+const changeFileInput = (helpers: Helpers, api: API): void => {
+  const data = api.getData();
+  api.block('Uploading file');
+  Arr.head(data.fileinput)
+    .fold(() => {
+      api.unblock();
+    }, (file) => {
+      const blobUri: string = URL.createObjectURL(file);
+
+      const updateSrcAndSwitchTab = (url: string) => {
+        api.setData({ text: url, title: url, url: { value: url, meta: {}}});
+        api.showTab('general');
+        api.focus('src');
+      };
+
+      const finalize = () => {
+        api.unblock();
+        URL.revokeObjectURL(blobUri);
+      };
+
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      Utils.blobToDataUri(file).then((dataUrl) => {
+        const blobInfo = helpers.createBlobCache(file, blobUri, dataUrl);
+        helpers.uploadImage(blobInfo, Fun.identity).then((result) => {
+          updateSrcAndSwitchTab(result);
+          finalize();
+        }).catch((err) => {
+          finalize();
+          helpers.alertErr(err, () => {
+            api.focus('fileinput');
+          });
+        });
+      });
+    });
+};
+
+const createBlobCache = (editor: Editor) => (file: File, blobUri: string, dataUrl: string): BlobInfo =>
+  editor.editorUpload.blobCache.create({
+    blob: file,
+    blobUri,
+    name: file.name?.replace(/\.[^\.]+$/, ''),
+    filename: file.name,
+    base64: dataUrl.split(',')[1]
+  });
+
+const addToBlobCache = (editor: Editor) => (blobInfo: BlobInfo): void => {
+  editor.editorUpload.blobCache.add(blobInfo);
+};
+
+const alertErr = (editor: Editor) => (message: string, callback: () => void): void => {
+  editor.windowManager.alert(message, callback);
+};
+
 const collectData = (editor: Editor): Promise<LinkDialogInfo> => {
   const anchorNode = Utils.getAnchorElement(editor);
   return DialogInfo.collect(editor, anchorNode);
@@ -73,8 +141,51 @@ const getInitialData = (info: LinkDialogInfo, defaultTarget: Optional<string>): 
     link: url,
     rel: anchor.rel.getOr(''),
     target: anchor.target.or(defaultTarget).getOr(''),
-    linkClass: anchor.linkClass.getOr('')
+    linkClass: anchor.linkClass.getOr(''),
+    fileinput: []
   };
+};
+
+const makeDialogBody = (
+  urlInput: Dialog.UrlInputSpec[],
+  displayText: Dialog.InputSpec[],
+  titleText: Dialog.InputSpec[],
+  catalogs: LinkDialogCatalog,
+  hasFilesUploadHandler: boolean
+): Dialog.PanelSpec | Dialog.TabPanelSpec => {
+
+  const generalPanelItems = Arr.flatten<Dialog.BodyComponentSpec>([
+    urlInput,
+    displayText,
+    titleText,
+    Optionals.cat([
+      catalogs.anchor.map(ListOptions.createUi('anchor', 'Anchors')),
+      catalogs.rels.map(ListOptions.createUi('rel', 'Rel')),
+      catalogs.targets.map(ListOptions.createUi('target', 'Open link in...')),
+      catalogs.link.map(ListOptions.createUi('link', 'Link list')),
+      catalogs.classes.map(ListOptions.createUi('linkClass', 'Class'))
+    ])
+  ]);
+
+  if (hasFilesUploadHandler) {
+    const tabPanel: Dialog.TabPanelSpec = {
+      type: 'tabpanel',
+      tabs: Arr.flatten([
+        [{
+          title: 'General',
+          name: 'general',
+          items: generalPanelItems
+        }],
+        [ UploadTab.makeTab({} as any) ]
+      ])
+    };
+    return tabPanel;
+  } else {
+    return {
+      type: 'panel',
+      items: generalPanelItems
+    };
+  }
 };
 
 const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInstanceApi<LinkDialogData>) => void, editor: Editor): Dialog.DialogSpec<LinkDialogData> => {
@@ -111,20 +222,12 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInsta
   const catalogs = settings.catalogs;
   const dialogDelta = DialogChanges.init(initialData, catalogs);
 
-  const body: Dialog.PanelSpec = {
-    type: 'panel',
-    items: Arr.flatten<Dialog.BodyComponentSpec>([
-      urlInput,
-      displayText,
-      titleText,
-      Optionals.cat([
-        catalogs.anchor.map(ListOptions.createUi('anchor', 'Anchors')),
-        catalogs.rels.map(ListOptions.createUi('rel', 'Rel')),
-        catalogs.targets.map(ListOptions.createUi('target', 'Open link in...')),
-        catalogs.link.map(ListOptions.createUi('link', 'Link list')),
-        catalogs.classes.map(ListOptions.createUi('linkClass', 'Class'))
-      ])
-    ])
+  const body = makeDialogBody(urlInput, displayText, titleText, catalogs, settings.hasFilesUploadHandler);
+  const helpers: Helpers = {
+    addToBlobCache: addToBlobCache(editor),
+    createBlobCache: createBlobCache(editor),
+    alertErr: alertErr(editor),
+    uploadImage: uploadImage(editor)
   };
   return {
     title: 'Insert/Edit Link',
@@ -145,9 +248,13 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInsta
     ],
     initialData,
     onChange: (api: Dialog.DialogInstanceApi<LinkDialogData>, { name }) => {
-      dialogDelta.onChange(api.getData, { name }).each((newData) => {
-        api.setData(newData);
-      });
+      if (name === 'fileinput') {
+        changeFileInput(helpers, api);
+      } else {
+        dialogDelta.onChange(api.getData, { name }).each((newData) => {
+          api.setData(newData);
+        });
+      }
     },
     onSubmit
   };
