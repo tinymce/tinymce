@@ -17,4 +17,4 @@
 # Tests
 `polaris` uses [`bedrock`](https://www.npmjs.com/package/@ephox/bedrock) to run atomic tests.
 ## Running Tests
-`$ yarn test`
+`$ bun test`
