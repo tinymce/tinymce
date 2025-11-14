@@ -15,9 +15,10 @@ describe('headless.tinymce.themes.silver.components.dropzone.DropzoneTest', () =
       context: 'any',
       name: 'drop1',
       label: Optional.some('Dropzone Label'),
-      buttonLabel: Optional.none(), // TODO: write tests for thsi
-      dropAreaLabel: Optional.none(), // TODO: write tests for thsi
-      allowedFiles: Optional.none(), // TODO: write tests for thsi
+      buttonLabel: Optional.none(), // TODO: write tests for this
+      dropAreaLabel: Optional.none(), // TODO: write tests for this
+      allowedFileTypes: Optional.none(), // TODO: write tests for this
+      allowedFileExtensions: Optional.none(), // TODO: write tests for this
     }, TestProviders, Optional.none())
   ));
 

@@ -20,9 +20,13 @@ import { formChangeEvent } from '../general/FormEvents';
 
 const browseFilesEvent = Id.generate('browse.files.event');
 
-const filterByExtension = (files: FileList, providersBackstage: UiFactoryBackstageProviders) => {
+const filterByExtension = (files: FileList, providersBackstage: UiFactoryBackstageProviders, allowedFileExtensions: Optional<string[]>) => {
   const allowedImageFileTypes = Tools.explode(providersBackstage.getOption('images_file_types'));
-  const isFileInAllowedTypes = (file: File) => Arr.exists(allowedImageFileTypes, (type) => Strings.endsWith(file.name.toLowerCase(), `.${type.toLowerCase()}`));
+
+  const isFileInAllowedTypes = (file: File) => allowedFileExtensions.fold(
+    () => Arr.exists(allowedImageFileTypes, (type) => Strings.endsWith(file.name.toLowerCase(), `.${type.toLowerCase()}`)),
+    (exts) => Arr.exists(exts, (type) => Strings.endsWith(file.name.toLowerCase(), `.${type.toLowerCase()}`))
+  );
 
   return Arr.filter(Arr.from(files), isFileInAllowedTypes);
 };
@@ -57,7 +61,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
 
   const handleFiles = (component: AlloyComponent, files: FileList | null | undefined) => {
     if (files) {
-      Representing.setValue(component, filterByExtension(files, providersBackstage));
+      Representing.setValue(component, filterByExtension(files, providersBackstage, spec.allowedFileExtensions));
       AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name });
     }
   };
@@ -68,7 +72,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
         tag: 'input',
         attributes: {
           type: 'file',
-          accept: spec.allowedFiles.getOr('image/*')
+          accept: spec.allowedFileTypes.getOr('image/*')
         },
         styles: {
           display: 'none'
