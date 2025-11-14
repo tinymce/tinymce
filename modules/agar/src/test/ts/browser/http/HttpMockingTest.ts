@@ -1,5 +1,5 @@
-import { describe, it, Assert } from '@ephox/bedrock-client';
-import { Type } from '@ephox/katamari';
+import { Assert, beforeEach, describe, it } from '@ephox/bedrock-client';
+import { Singleton, Type } from '@ephox/katamari';
 
 import * as Http from 'ephox/agar/api/Http';
 import { TestStore } from 'ephox/agar/api/TestStore';
@@ -10,7 +10,9 @@ interface State {
 }
 
 describe('browser.agar.http.HttpMockingTest', () => {
-  const store = TestStore();
+  const store = TestStore<string>();
+  const pauseControllerState = Singleton.value<Http.PauseController>();
+  const abortSignalState = Singleton.value<AbortSignal>();
   const httpHook = Http.mockHttpHook<State>((state) => [
     Http.get('/custom/test', async () => {
       return Http.makeResponse(
@@ -92,14 +94,22 @@ describe('browser.agar.http.HttpMockingTest', () => {
         }
       );
     }),
-    Http.get('/custom/streaming', async () => {
+    Http.get('/custom/streaming', async ({ abortSignal }) => {
+      abortSignalState.set(abortSignal);
+
       const getChunks = async function* () {
-        const items = [ 'one', 'two', 'three' ];
+        const items = [ 'one', 'two', 'three', 'four' ];
 
         for (const item of items) {
           yield item;
           store.add(item);
-          await Waiter.pWait(1);
+
+          if (items[items.length - 1] !== item) {
+            const pauseController = pauseControllerState.get().getOrNull();
+            if (Type.isNonNullable(pauseController)) {
+              await pauseController.wait();
+            }
+          }
         }
       };
 
@@ -120,6 +130,12 @@ describe('browser.agar.http.HttpMockingTest', () => {
       });
     })
   ], { logLevel: 'info', name: 'test' });
+
+  beforeEach(() => {
+    abortSignalState.clear();
+    pauseControllerState.clear();
+    store.clear();
+  });
 
   it('TINY-13084: Should mock simple GET request', async () => {
     const response = await window.fetch('/custom/test');
@@ -207,6 +223,8 @@ describe('browser.agar.http.HttpMockingTest', () => {
   });
 
   it('TINY-13084: Should handle streaming response', async () => {
+    pauseControllerState.set(Http.createPauseController());
+
     const response = await window.fetch('/custom/streaming');
     const body = response.body;
 
@@ -229,18 +247,19 @@ describe('browser.agar.http.HttpMockingTest', () => {
       }
 
       chunks.push(chunk);
+      pauseControllerState.get().each((pauseController) => pauseController.resume());
     }
 
-    Assert.eq('Should be expected chunks', [ 'one', 'two', 'three' ], chunks);
+    Assert.eq('Should be expected chunks', [ 'one', 'two', 'three', 'four' ], chunks);
   });
 
   it('TINY-13084: Should handle aborting streaming response', async () => {
     const abortController = new window.AbortController();
     const chunks: string[] = [];
 
-    store.clear();
-
     try {
+      pauseControllerState.set(Http.createPauseController());
+
       const response = await window.fetch('/custom/streaming', { signal: abortController.signal });
       const body = response.body;
 
@@ -264,7 +283,10 @@ describe('browser.agar.http.HttpMockingTest', () => {
         chunks.push(chunk);
         if (chunk === 'two') {
           abortController.abort();
+          await Waiter.pTryUntilPredicate('Waited for abort signal to be set', () => abortSignalState.get().map((s) => s.aborted).getOr(false));
         }
+
+        pauseControllerState.get().each((pauseController) => pauseController.resume());
       }
     } catch (e) {
       const isAbortError = (err: unknown): err is Error => err instanceof Error && err.name === 'AbortError';
@@ -272,6 +294,8 @@ describe('browser.agar.http.HttpMockingTest', () => {
         Assert.fail('Should be abort error');
       }
     }
+
+    pauseControllerState.clear();
 
     Assert.eq('Should be only one and two from request since we aborted before three', [ 'one', 'two' ], chunks);
 
