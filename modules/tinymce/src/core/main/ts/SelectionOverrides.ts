@@ -288,8 +288,23 @@ const SelectionOverrides = (editor: Editor): SelectionOverrides => {
     return newRange;
   };
 
+  const getUcVideoClone = (ucVideo: HTMLElement) => {
+    const newElm = editor.getDoc().createElement('div');
+    newElm.style.width = ucVideo.style.width;
+    newElm.style.height = ucVideo.style.height;
+    const ucVideoWidth = ucVideo.getAttribute('width');
+    if (ucVideoWidth) {
+      newElm.setAttribute('width', ucVideoWidth);
+    }
+    const ucVideoHeight = ucVideo.getAttribute('height');
+    if (ucVideoHeight) {
+      newElm.setAttribute('height', ucVideoHeight);
+    }
+    return newElm;
+  };
+
   const selectElement = (elm: HTMLElement) => {
-    const targetClone = elm.cloneNode(true);
+    const targetClone = NodeType.isUcVideo(elm) ? getUcVideoClone(elm) : elm.cloneNode(true);
     const e = editor.dispatch('ObjectSelected', { target: elm, targetClone });
     if (e.isDefaultPrevented()) {
       return null;
