@@ -21,7 +21,11 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "oxide-components/*": ["src/main/ts/*"]
+    }
   },
   "include": [
     "vite.config.ts",

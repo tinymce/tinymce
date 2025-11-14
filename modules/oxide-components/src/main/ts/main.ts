@@ -1,3 +1,4 @@
+import { UserPromptBubble } from './bespoke/tinyai/bubbles/UserPromptBubble';
 import ErrorMessage from './bespoke/tinyai/error/ErrorMessage';
 import { Spinner } from './bespoke/tinyai/spinner/Spinner';
 import { Tag } from './bespoke/tinyai/tag/Tag';
@@ -25,5 +26,6 @@ export {
   KeyboardNavigationHooks,
   KeyboardNavigationTypes,
   Spinner,
-  Tag
+  Tag,
+  UserPromptBubble
 };
