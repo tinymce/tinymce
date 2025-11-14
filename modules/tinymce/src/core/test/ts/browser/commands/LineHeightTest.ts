@@ -92,4 +92,12 @@ describe('browser.tinymce.core.commands.LineHeightTest', () => {
     assert.deepEqual(events, [ 'beforeexeccommand', 'execcommand', 'change' ]);
     editor.off('BeforeExecCommand change ExecCommand', logEvents);
   });
+
+  it('TINY-13053: Editor command can toggle line-height on multiple lines', () => {
+    const editor = hook.editor();
+    editor.setContent('<p style="line-height: 1;">Line 1</p><p style="line-height: 2;">Line 2</p>');
+    TinySelections.setSelection(editor, [ 0, 0 ], 1, [ 1, 0 ], 1);
+    editor.execCommand('LineHeight', false, '1');
+    TinyAssertions.assertContent(editor, '<p>Line 1</p>\n<p>Line 2</p>');
+  });
 });
