@@ -10,7 +10,8 @@ const makeTab = (_info: LinkDialogInfo): Dialog.TabSpec => {
       name: 'fileinput',
       buttonLabel: 'Browse for a file',
       dropAreaLabel: 'Drop an file here',
-      allowedFiles: '*'
+      allowedFileTypes: '*',
+      allowedFileExtensions: [ 'txt', 'doc' ] // this is just a placeholder
     }
   ];
   return {
