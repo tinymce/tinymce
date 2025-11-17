@@ -32,7 +32,11 @@ export interface UploadFailure {
 }
 
 type ProgressFn = (percent: number) => void;
-export type UploadHandler = (blobInfo: BlobInfo, progress: ProgressFn) => Promise<string>;
+
+export interface UploadFileData {
+  url: string; fileName: string;
+};
+export type UploadHandler<T extends UploadFileData | string = string> = (blobInfo: BlobInfo, progress: ProgressFn) => Promise<T>;
 
 type ResolveFn<T> = (result: T | Promise<T>) => void;
 
@@ -47,7 +51,7 @@ export interface UploaderSettings {
   url: string;
   basePath: string;
   credentials: boolean;
-  handler?: UploadHandler;
+  handler?: UploadHandler<UploadFileData | string>;
 }
 
 export interface Uploader {
@@ -65,7 +69,7 @@ export const Uploader = (uploadStatus: UploadStatus, settings: UploaderSettings)
     return path2;
   };
 
-  const defaultHandler: UploadHandler = (blobInfo, progress) =>
+  const defaultHandler: UploadHandler<UploadFileData | string> = (blobInfo, progress) =>
     new Promise((success, failure) => {
       const xhr = new XMLHttpRequest();
       xhr.open('POST', settings.url);
@@ -129,7 +133,7 @@ export const Uploader = (uploadStatus: UploadStatus, settings: UploaderSettings)
     delete pendingPromises[blobUri];
   };
 
-  const uploadBlobInfo = (blobInfo: BlobInfo, handler: UploadHandler, openNotification?: () => NotificationApi): Promise<UploadResult> => {
+  const uploadBlobInfo = (blobInfo: BlobInfo, handler: UploadHandler<UploadFileData | string>, openNotification?: () => NotificationApi): Promise<UploadResult> => {
     uploadStatus.markPending(blobInfo.blobUri());
 
     return new Promise((resolve) => {
@@ -144,8 +148,9 @@ export const Uploader = (uploadStatus: UploadStatus, settings: UploaderSettings)
           }
         };
 
-        const success = (url: string) => {
+        const success = (data: UploadFileData | string) => {
           closeNotification();
+          const url = Type.isString(data) ? data : data.url;
           uploadStatus.markUploaded(blobInfo.blobUri(), url);
           resolvePending(blobInfo.blobUri(), handlerSuccess(blobInfo, url));
           resolve(handlerSuccess(blobInfo, url));
@@ -180,7 +185,7 @@ export const Uploader = (uploadStatus: UploadStatus, settings: UploaderSettings)
     });
   };
 
-  const isDefaultHandler = (handler: UploadHandler) =>
+  const isDefaultHandler = (handler: UploadHandler<UploadFileData | string>) =>
     handler === defaultHandler;
 
   const pendingUploadBlobInfo = (blobInfo: BlobInfo): Promise<UploadResult> => {

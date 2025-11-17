@@ -3,7 +3,7 @@ import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 import type Editor from 'tinymce/core/api/Editor';
 import type { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import type { Dialog } from 'tinymce/core/api/ui/Ui';
-import type { UploadHandler } from 'tinymce/core/file/Uploader';
+import type { UploadFileData, UploadHandler } from 'tinymce/core/file/Uploader';
 
 import * as Options from '../api/Options';
 import * as Actions from '../core/Actions';
@@ -20,7 +20,7 @@ interface Helpers {
   readonly addToBlobCache: (blobInfo: BlobInfo) => void;
   readonly createBlobCache: (file: File, blobUri: string, dataUrl: string) => BlobInfo;
   readonly alertErr: (message: string, callback: () => void) => void;
-  readonly uploadFile: UploadHandler;
+  readonly uploadFile: UploadHandler<UploadFileData>;
 }
 
 const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Dialog.DialogInstanceApi<LinkDialogData>): void => {
@@ -59,7 +59,7 @@ const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Dialog.Dial
   api.close();
 };
 
-const uploadFile = (editor: Editor): UploadHandler => (blobInfo: BlobInfo, progress: (percent: number) => void): Promise<string> => {
+const uploadFile = (editor: Editor): UploadHandler<UploadFileData> => (blobInfo: BlobInfo, progress: (percent: number) => void): Promise<UploadFileData> => {
   const fileUploadHandler = Options.getFilesUploadHandler(editor);
   return fileUploadHandler(blobInfo, progress);
 };
@@ -73,8 +73,8 @@ const changeFileInput = (helpers: Helpers, api: API): void => {
     }, (file) => {
       const blobUri: string = URL.createObjectURL(file);
 
-      const updateUrlAndSwitchTab = (url: string) => {
-        api.setData({ text: url, title: url, url: { value: url, meta: {}}});
+      const updateUrlAndSwitchTab = ({ url, fileName }: UploadFileData) => {
+        api.setData({ text: fileName, title: fileName, url: { value: url, meta: {}}});
         api.showTab('general');
         api.focus('url');
       };
