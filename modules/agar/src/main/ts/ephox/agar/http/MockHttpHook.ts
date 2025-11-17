@@ -29,7 +29,7 @@ export const mockHttpHook = <T>(
 
     await MockClient.startMocking({
       ...config,
-      handler: (request) => HttpHandler.resolveRequest(requestHandlers, request)
+      handler: (request, abortSignal) => HttpHandler.resolveRequest(requestHandlers, request, abortSignal)
     });
   });
 

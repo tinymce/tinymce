@@ -54,7 +54,28 @@ const sendRequestToClient = async (client: Client, request: Request): Promise<Re
               }
             };
           },
+          pull: () => {
+            if (aborted) {
+              return;
+            }
+
+            Logger.debug('Requesting next response body chunk', { clientId: client.id, requestId, url: request.url });
+
+            const chunkRequestMessage: Shared.MockedRequestResponseChunkMessage = {
+              type: 'AGAR_MOCKED_REQUEST_RESPONSE_CHUNK',
+              requestId
+            };
+
+            messageChannel.port1.postMessage(chunkRequestMessage);
+          },
           cancel: () => {
+            const abortMessage: Shared.MockedRequestAbortedMessage = {
+              type: 'AGAR_MOCKED_REQUEST_ABORTED',
+              requestId
+            };
+
+            messageChannel.port1.postMessage(abortMessage);
+
             aborted = true;
             closePort(incomingPort);
             Logger.debug('Request aborted', { clientId: client.id, requestId, url: request.url });
