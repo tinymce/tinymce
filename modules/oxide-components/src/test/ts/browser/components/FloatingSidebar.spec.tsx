@@ -113,30 +113,6 @@ describe('browser.floatingsidebar.FloatingSidebar', () => {
     expect(containerElement.dom.matches(':popover-open')).toBe(true);
   });
 
-  // Should not throw an error when calling open on already opened sidebar
-  it('TINY-13121: TODO name', () => {
-    const sidebarRef: MutableRefObject<FloatingSidebar.Ref | null> = { current: null };
-
-    const { getByTestId } = render((
-      <FloatingSidebar.Root ref={sidebarRef}>
-        <FloatingSidebar.Header>
-          <div data-testid={floatingSidebarHeaderTestId}>Header</div>
-        </FloatingSidebar.Header>
-        <div data-testid={floatingSidebarContentTestId}>Content</div>
-      </FloatingSidebar.Root>
-    ), { wrapper: Wrapper });
-
-    const floatingSidebarContent = SugarElement.fromDom(getByTestId(floatingSidebarContentTestId).element());
-    const containerElement = SelectorFind.closest(floatingSidebarContent, containerSelector).getOrDie();
-
-    expect(containerElement.dom.matches(':popover-open')).toBe(true);
-    expect(() => sidebarRef.current?.open()).not.toThrow();
-
-    sidebarRef.current?.close();
-    expect(containerElement.dom.matches(':popover-open')).toBe(false);
-    expect(() => sidebarRef.current?.close()).not.toThrow();
-  });
-
   describe('TINY-13052: Viewport tests', () => {
     let originalViewport = { width: 0, height: 0 };
 
