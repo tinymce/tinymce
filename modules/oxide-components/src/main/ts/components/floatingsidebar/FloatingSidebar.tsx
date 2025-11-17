@@ -1,4 +1,4 @@
-import { useEffect, useRef, type FC, type PropsWithChildren } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef, type FC, type PropsWithChildren } from 'react';
 
 import { classes } from '../../utils/Styles';
 import * as Draggable from '../draggable/Draggable';
@@ -16,6 +16,10 @@ export interface FloatingSidebarProps extends PropsWithChildren {
   initialPosition?: InitialPosition;
 }
 interface HeaderProps extends PropsWithChildren {};
+export interface Ref {
+  open: () => void;
+  close: () => void;
+};
 
 const transformToCss = (position: InitialPosition): CssPosition => {
   switch (position.origin) {
@@ -30,14 +34,25 @@ const transformToCss = (position: InitialPosition): CssPosition => {
   }
 };
 
-const Root: FC<FloatingSidebarProps> = ({ isOpen = true, height = 600, children, ...props }) => {
+const Root = forwardRef<Ref, FloatingSidebarProps>(({ isOpen = true, height = 600, children, ...props }, ref) => {
   const elementRef = useRef<HTMLDivElement | null>(null);
   const initialPosition = transformToCss(props.initialPosition ?? { x: 0, y: 0, origin: 'topleft' });
+
+  useImperativeHandle(ref, () => {
+    return {
+      open: () => {
+        elementRef.current?.togglePopover(true);
+      },
+      close: () => {
+        elementRef.current?.togglePopover(false);
+      }
+    };
+  });
 
   useEffect(() => {
     const element = elementRef.current;
     if (element) {
-      isOpen ? element.showPopover() : element.hidePopover();
+      isOpen ? element.togglePopover(true) : element.togglePopover(false);
     }
   }, [ isOpen ]);
 
@@ -55,7 +70,7 @@ const Root: FC<FloatingSidebarProps> = ({ isOpen = true, height = 600, children,
       </aside>
     </Draggable.Root>
   );
-};
+});
 
 const Header: FC<HeaderProps> = ({ children }) => {
   return (

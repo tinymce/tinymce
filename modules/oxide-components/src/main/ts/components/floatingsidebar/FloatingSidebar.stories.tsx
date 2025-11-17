@@ -24,7 +24,7 @@ It consists of two parts:
 - **\`FloatingSidebar.Root\`** - The container that manages the sidebar's position, visibility, and popover behavior.
 - **\`FloatingSidebar.Header\`** - A required header element that acts as the drag handle for moving the sidebar.
 
-The sidebar can be opened or closed programmatically using the \`isOpen\` prop.
+The sidebar can be opened or closed programmatically using the \`isOpen\` prop, or imperatively by using \`ref\` to call the \`open\` and \`close\` methods.
 When dragged, the sidebar remains within viewport bounds and maintains its position across window resizes.`
       }
     }
