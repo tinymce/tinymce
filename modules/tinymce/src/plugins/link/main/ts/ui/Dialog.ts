@@ -20,7 +20,7 @@ interface Helpers {
   readonly addToBlobCache: (blobInfo: BlobInfo) => void;
   readonly createBlobCache: (file: File, blobUri: string, dataUrl: string) => BlobInfo;
   readonly alertErr: (message: string, callback: () => void) => void;
-  readonly uploadImage: UploadHandler;
+  readonly uploadFile: UploadHandler;
 }
 
 const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Dialog.DialogInstanceApi<LinkDialogData>): void => {
@@ -59,7 +59,7 @@ const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Dialog.Dial
   api.close();
 };
 
-const uploadImage = (editor: Editor): UploadHandler => (blobInfo: BlobInfo, progress: (percent: number) => void): Promise<string> => {
+const uploadFile = (editor: Editor): UploadHandler => (blobInfo: BlobInfo, progress: (percent: number) => void): Promise<string> => {
   const fileUploadHandler = Options.getFilesUploadHandler(editor);
   return fileUploadHandler(blobInfo, progress);
 };
@@ -73,10 +73,10 @@ const changeFileInput = (helpers: Helpers, api: API): void => {
     }, (file) => {
       const blobUri: string = URL.createObjectURL(file);
 
-      const updateSrcAndSwitchTab = (url: string) => {
+      const updateUrlAndSwitchTab = (url: string) => {
         api.setData({ text: url, title: url, url: { value: url, meta: {}}});
         api.showTab('general');
-        api.focus('src');
+        api.focus('url');
       };
 
       const finalize = () => {
@@ -87,8 +87,8 @@ const changeFileInput = (helpers: Helpers, api: API): void => {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       Utils.blobToDataUri(file).then((dataUrl) => {
         const blobInfo = helpers.createBlobCache(file, blobUri, dataUrl);
-        helpers.uploadImage(blobInfo, Fun.identity).then((result) => {
-          updateSrcAndSwitchTab(result);
+        helpers.uploadFile(blobInfo, Fun.identity).then((result) => {
+          updateUrlAndSwitchTab(result);
           finalize();
         }).catch((err) => {
           finalize();
@@ -227,7 +227,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInsta
     addToBlobCache: addToBlobCache(editor),
     createBlobCache: createBlobCache(editor),
     alertErr: alertErr(editor),
-    uploadImage: uploadImage(editor)
+    uploadFile: uploadFile(editor)
   };
   return {
     title: 'Insert/Edit Link',
