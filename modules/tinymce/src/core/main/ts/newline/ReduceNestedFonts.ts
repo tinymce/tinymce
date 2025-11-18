@@ -9,12 +9,10 @@ const reduceFontStyleNesting = (block: Element, node: Element): void => {
   const hasFontSize = (element: SugarElement<Node>): element is SugarElement<Element> =>
     SugarNode.isElement(element) && Css.getRaw(element, 'font-size').isSome();
 
-  const elementsWithFontSize = [
-    ...(hasFontSize(nodeSugar) ? [ nodeSugar ] : []),
-    ...PredicateFilter.ancestors<Element>(nodeSugar, hasFontSize, isEndBlock)
-  ];
+  const ancestorsWithFontSize = PredicateFilter.ancestors<Element>(nodeSugar, hasFontSize, isEndBlock);
+
   Arr.each(
-    elementsWithFontSize.slice(1),
+    ancestorsWithFontSize,
     (element) => {
       Css.remove(element, 'font-size');
       Attribute.remove(element, 'data-mce-style');
