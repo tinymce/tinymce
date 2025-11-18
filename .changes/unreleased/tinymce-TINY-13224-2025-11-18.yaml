@@ -1,0 +1,6 @@
+project: tinymce
+kind: Fixed
+body: '`font-size` was not applied to a new list item created when pressing Enter key.'
+time: 2025-11-18T11:45:16.117483+10:30
+custom:
+    Issue: TINY-13224
