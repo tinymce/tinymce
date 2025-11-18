@@ -1,4 +1,5 @@
-import { Arr, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
+import { FieldSchema, StructureSchema } from '@ephox/boulder';
+import { Arr, Result, Fun, Obj, Optional, Strings, Type } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
 import * as Pattern from '../textpatterns/core/Pattern';
@@ -7,7 +8,7 @@ import type * as PatternTypes from '../textpatterns/core/PatternTypes';
 import DOMUtils from './dom/DOMUtils';
 import type Editor from './Editor';
 import { fireDisabledStateChange } from './Events';
-import type { EditorOptions } from './OptionTypes';
+import type { DocumentsFileTypes, DocumentsFileTypesProcessorReturnType, EditorOptions } from './OptionTypes';
 import I18n from './util/I18n';
 import Tools from './util/Tools';
 
@@ -935,6 +936,28 @@ const register = (editor: Editor): void => {
     }
   });
 
+  const documentsFileTipesOptionsSchema = StructureSchema.arrOfObj([
+    FieldSchema.requiredString('mimeType'),
+    FieldSchema.requiredArrayOf('extensions', StructureSchema.valueOf((ext) => {
+      if (Type.isString(ext)) {
+        return Result.value(ext);
+      } else {
+        return Result.error('Extensions must be an array of strings');
+      }
+    })),
+  ]);
+
+  registerOption('documents_file_types', {
+    processor: (value: unknown) => StructureSchema.asRaw<DocumentsFileTypes[]>('documents_file_types', documentsFileTipesOptionsSchema, value).fold<DocumentsFileTypesProcessorReturnType>(
+      (_err) => ({
+        valid: false,
+        message: 'Must be a non-empty array of objects matching the configuration schema: https://www.tiny.cloud/docs/tinymce/latest/content-filtering/#documents_file_types' // TODO: this is a placeholder
+      }),
+      (val) => ({ valid: true, value: val })
+    ),
+    default: []
+  });
+
   // These options must be registered later in the init sequence due to their default values
   editor.on('ScriptsLoaded', () => {
     registerOption('directionality', {
@@ -1084,6 +1107,7 @@ const getFetchUsers = option('fetch_users');
 const shouldIndentOnTab = option('lists_indent_on_tab');
 const getListMaxDepth = (editor: Editor): Optional<number> =>
   Optional.from(editor.options.get('list_max_depth'));
+const getDocumentsFileTypes = option('documents_file_types');
 
 export {
   register,
@@ -1200,6 +1224,7 @@ export {
   isDisabled,
   shouldIndentOnTab,
   getListMaxDepth,
+  getDocumentsFileTypes,
   getFetchUsers,
   getUserId
 };

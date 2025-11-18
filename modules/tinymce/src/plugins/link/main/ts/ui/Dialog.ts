@@ -2,6 +2,7 @@ import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 
 import type Editor from 'tinymce/core/api/Editor';
 import type { BlobInfo } from 'tinymce/core/api/file/BlobCache';
+import type { DocumentsFileTypes } from 'tinymce/core/api/OptionTypes';
 import type { Dialog } from 'tinymce/core/api/ui/Ui';
 import type { UploadFileData, UploadHandler } from 'tinymce/core/file/Uploader';
 
@@ -151,7 +152,8 @@ const makeDialogBody = (
   displayText: Dialog.InputSpec[],
   titleText: Dialog.InputSpec[],
   catalogs: LinkDialogCatalog,
-  hasFilesUploadHandler: boolean
+  hasFilesUploadHandler: boolean,
+  fileTypes: DocumentsFileTypes[]
 ): Dialog.PanelSpec | Dialog.TabPanelSpec => {
 
   const generalPanelItems = Arr.flatten<Dialog.BodyComponentSpec>([
@@ -176,7 +178,7 @@ const makeDialogBody = (
           name: 'general',
           items: generalPanelItems
         }],
-        [ UploadTab.makeTab({} as any) ]
+        [ UploadTab.makeTab(fileTypes) ]
       ])
     };
     return tabPanel;
@@ -222,7 +224,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInsta
   const catalogs = settings.catalogs;
   const dialogDelta = DialogChanges.init(initialData, catalogs);
 
-  const body = makeDialogBody(urlInput, displayText, titleText, catalogs, settings.hasFilesUploadHandler);
+  const body = makeDialogBody(urlInput, displayText, titleText, catalogs, settings.hasFilesUploadHandler, Options.getDocumentsFileTypes(editor));
   const helpers: Helpers = {
     addToBlobCache: addToBlobCache(editor),
     createBlobCache: createBlobCache(editor),

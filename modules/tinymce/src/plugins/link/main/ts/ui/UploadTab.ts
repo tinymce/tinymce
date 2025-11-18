@@ -1,17 +1,17 @@
+import { Arr } from '@ephox/katamari';
 
+import type { DocumentsFileTypes } from 'tinymce/core/api/OptionTypes';
 import type { Dialog } from 'tinymce/core/api/ui/Ui';
 
-import type { LinkDialogInfo } from './DialogTypes';
-
-const makeTab = (_info: LinkDialogInfo): Dialog.TabSpec => {
+const makeTab = (fileTypes: DocumentsFileTypes[]): Dialog.TabSpec => {
   const items: Dialog.BodyComponentSpec[] = [
     {
       type: 'dropzone',
       name: 'fileinput',
       buttonLabel: 'Browse for a file',
       dropAreaLabel: 'Drop an file here',
-      allowedFileTypes: '*',
-      allowedFileExtensions: [ 'txt', 'doc' ] // this is just a placeholder
+      allowedFileTypes: fileTypes.map((e) => e.mimeType).join(','),
+      allowedFileExtensions: Arr.flatten(fileTypes.map((e) => e.extensions)),
     }
   ];
   return {
