@@ -5,6 +5,7 @@ import { AutoResizingTextarea } from './components/autoresizingtextarea/AutoResi
 import { Button } from './components/button/Button';
 import * as ContextToolbar from './components/contexttoolbar/ContextToolbar';
 import * as Draggable from './components/draggable/Draggable';
+import * as Dropdown from './components/dropdown/Dropdown';
 import { ExpandableBox } from './components/expandablebox/ExpandableBox';
 import * as FloatingSidebar from './components/floatingsidebar/FloatingSidebar';
 import { IconButton } from './components/iconbutton/IconButton';
@@ -19,6 +20,7 @@ export {
   Button,
   ContextToolbar,
   Draggable,
+  Dropdown,
   ExpandableBox,
   ErrorMessage,
   FloatingSidebar,
