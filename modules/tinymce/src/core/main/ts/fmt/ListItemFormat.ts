@@ -38,13 +38,24 @@ const getFullySelectedBlocks = (selection: EditorSelection) => {
 
   if (selection.isCollapsed()) {
     return [];
-  } if (blocks.length === 1) {
+  }
+
+  // When the content of a list item is wrapped inside a block element, the selection doesn't include the list item element <li>. In this case, find and replace the block element with the LI so the format can also be applied to the LI element.
+  if (blocks.length > 0 && isRngStartAtStartOfElement(rng, blocks[0]) && !NodeType.isListItem(blocks[0])) {
+    const listItemEl = selection.dom.getParent(blocks[0], NodeType.isListItem);
+
+    if (Type.isNonNullable(listItemEl)) {
+      blocks[0] = listItemEl;
+    }
+  }
+
+  if (blocks.length === 1) {
     return isRngStartAtStartOfElement(rng, blocks[0]) && isRngEndAtEndOfElement(rng, blocks[0]) ? blocks : [];
   } else {
     const first = Arr.head(blocks).filter((elm) => isRngStartAtStartOfElement(rng, elm)).toArray();
     const last = Arr.last(blocks).filter((elm) => isRngEndAtEndOfElement(rng, elm)).toArray();
     const middle = blocks.slice(1, -1);
-
+    //
     return first.concat(middle).concat(last);
   }
 };

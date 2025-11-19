@@ -226,6 +226,66 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
         });
       });
     });
+
+    context('TINY-13197: Apply inline formats to list items that contain block elements', () => {
+      it('TINY-13197: LI has a single block element', () => {
+        testApplyInlineListFormat({
+          format: 'forecolor',
+          value: 'red',
+          rawInput: [
+            '<ul>',
+            '<li><p>b</p></li>',
+            '</ul>'
+          ].join(''),
+          selection: { startPath: [ 0, 0 ], soffset: 0, finishPath: [ 0, 0 ], foffset: 1 },
+          expected: [
+            '<ul>',
+            '<li style="color: red;"><p><span style="color: red;">b</span></p></li>',
+            '</ul>'
+          ].join('')
+        });
+      });
+
+      it('TINY-13197: Select multiple list items', () => {
+        testApplyInlineListFormat({
+          format: 'forecolor',
+          value: 'red',
+          rawInput: [
+            '<ul>',
+            '<li><p>b</p></li>',
+            '<li><p>c</p></li>',
+            '</ul>'
+          ].join(''),
+          selection: { startPath: [ 0, 0 ], soffset: 0, finishPath: [ 0, 1 ], foffset: 1 },
+          expected: [
+            '<ul>',
+            '<li style="color: red;"><p><span style="color: red;">b</span></p></li>',
+            '<li style="color: red;"><p><span style="color: red;">c</span></p></li>',
+            '</ul>'
+          ].join('')
+        });
+      });
+
+      it('TINY-13197: Should not affect the first item if it is only partially selected', () => {
+        testApplyInlineListFormat({
+          format: 'forecolor',
+          value: 'red',
+          rawInput: [
+            '<ul>',
+            '<li><p>bird</p></li>',
+            '<li><p>corn</p></li>',
+            '</ul>'
+          ].join(''),
+          selection: { startPath: [ 0, 0, 0, 0 ], soffset: 'bi'.length, finishPath: [ 0, 1, 0, 0 ], foffset: 'corn'.length },
+          expected: [
+            '<ul>',
+            '<li><p>bi<span style="color: red;">rd</span></p></li>',
+            '<li style="color: red;"><p><span style="color: red;">corn</span></p></li>',
+            '</ul>'
+          ].join('')
+        });
+      });
+    });
   });
 
   context('Remove inline formats from LIs', () => {
