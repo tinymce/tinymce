@@ -9,7 +9,7 @@ const makeTab = (fileTypes: DocumentsFileTypes[]): Dialog.TabSpec => {
       type: 'dropzone',
       name: 'fileinput',
       buttonLabel: 'Browse for a file',
-      dropAreaLabel: 'Drop an file here',
+      dropAreaLabel: 'Drop a file here',
       allowedFileTypes: fileTypes.map((e) => e.mimeType).join(','),
       allowedFileExtensions: Arr.flatten(fileTypes.map((e) => e.extensions)),
     }
