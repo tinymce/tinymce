@@ -152,7 +152,7 @@ const makeDialogBody = (
   displayText: Dialog.InputSpec[],
   titleText: Dialog.InputSpec[],
   catalogs: LinkDialogCatalog,
-  hasFilesUploadHandler: boolean,
+  hasUploadPanel: boolean,
   fileTypes: DocumentsFileTypes[]
 ): Dialog.PanelSpec | Dialog.TabPanelSpec => {
 
@@ -169,7 +169,7 @@ const makeDialogBody = (
     ])
   ]);
 
-  if (hasFilesUploadHandler) {
+  if (hasUploadPanel) {
     const tabPanel: Dialog.TabPanelSpec = {
       type: 'tabpanel',
       tabs: Arr.flatten([
@@ -224,7 +224,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInsta
   const catalogs = settings.catalogs;
   const dialogDelta = DialogChanges.init(initialData, catalogs);
 
-  const body = makeDialogBody(urlInput, displayText, titleText, catalogs, settings.hasFilesUploadHandler, Options.getDocumentsFileTypes(editor));
+  const body = makeDialogBody(urlInput, displayText, titleText, catalogs, settings.hasUploadPanel, Options.getDocumentsFileTypes(editor));
   const helpers: Helpers = {
     addToBlobCache: addToBlobCache(editor),
     createBlobCache: createBlobCache(editor),

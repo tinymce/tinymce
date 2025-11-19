@@ -32,7 +32,7 @@ export interface LinkDialogInfo {
     readonly title: Optional<string>;
   };
   readonly catalogs: LinkDialogCatalog;
-  readonly hasFilesUploadHandler: boolean;
+  readonly hasUploadPanel: boolean;
   readonly flags: {
     readonly titleEnabled: boolean;
   };
