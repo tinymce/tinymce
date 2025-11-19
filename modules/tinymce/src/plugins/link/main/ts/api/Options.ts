@@ -112,6 +112,9 @@ const getDocumentsFileTypes = option('documents_file_types');
 const hasFilesUploadHandler = (editor: Editor): boolean =>
   Type.isNonNullable(editor.options.get('files_upload_handler'));
 
+const hasDocumentsFileTypes = (editor: Editor): boolean =>
+  Type.isNonNullable(editor.options.get('documents_file_types'));
+
 export {
   register,
   assumeExternalTargets,
@@ -122,6 +125,7 @@ export {
   getRelList,
   getLinkClassList,
   hasFilesUploadHandler,
+  hasDocumentsFileTypes,
   getFilesUploadHandler,
   shouldShowLinkTitle,
   allowUnsafeLinkTarget,
