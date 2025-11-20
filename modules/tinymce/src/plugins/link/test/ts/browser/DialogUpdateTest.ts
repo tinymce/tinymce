@@ -89,7 +89,7 @@ describe('browser.tinymce.plugins.link.DialogUpdateTest', () => {
     const newFileName = 'test2.txt';
     await pTriggerUpload(editor, newFileName);
     // this is needed to wait that the modal is updated
-    await UiFinder.pWaitFor<HTMLInputElement>('lavel with text URL should be loaded', SugarBody.body(), 'label:contains("URL")');
+    await UiFinder.pWaitFor<HTMLInputElement>('label with text URL should be loaded', SugarBody.body(), 'label:contains("URL")');
     assertInputValue('URL', `url:${newFileName}`);
     assertInputValue('Text to display', `filename:${newFileName}`);
     assertInputValue('Title', `filename:${newFileName}`);
