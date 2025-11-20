@@ -5,10 +5,12 @@
 .tox {
   .tox-expandable-box {
     border-radius: 6px;
-    border: 1px solid @border-color;
+    border: 1px solid var(--tox-private-border-color, @border-color);
     display: flex;
     flex-direction: column;
     justify-content: stretch;
+    gap: var(--tox-private-pad-sm, @pad-sm);
+    padding: var(--tox-private-pad-sm, @pad-sm) var(--tox-private-pad-md, @pad-md);
   }
 
   .tox-expandable-box__content {
@@ -33,15 +35,5 @@
 
   .tox-expandable-box__content--expanded {
     max-height: fit-content;
-  }
-
-  .tox-expandable-box__toggle-button {
-    display: flex;
-    justify-content: center;
-    gap: 4px;
-    padding: 8px 12px;
-    font-size: 14px;
-    font-weight: bold;
-    text-align: center;
   }
 }
