@@ -15,10 +15,10 @@ describe('headless.tinymce.themes.silver.components.dropzone.DropzoneTest', () =
       context: 'any',
       name: 'drop1',
       label: Optional.some('Dropzone Label'),
-      buttonLabel: Optional.none(), // TODO: write tests for this
-      dropAreaLabel: Optional.none(), // TODO: write tests for this
-      allowedFileTypes: Optional.none(), // TODO: write tests for this
-      allowedFileExtensions: Optional.none(), // TODO: write tests for this
+      buttonLabel: Optional.some('Button Label'),
+      dropAreaLabel: Optional.some('Drop Area Label'),
+      allowedFileTypes: Optional.none(),
+      allowedFileExtensions: Optional.none(),
     }, TestProviders, Optional.none())
   ));
 
@@ -31,7 +31,20 @@ describe('headless.tinymce.themes.silver.components.dropzone.DropzoneTest', () =
             classes: [ arr.has('tox-label') ],
             html: str.is('Dropzone Label')
           }),
-          s.element('div', {})
+          s.element('div', {
+            children: [
+              s.element('div', {
+                children: [
+                  s.element('p', {
+                    html: str.is('Drop Area Label')
+                  }),
+                  s.element('button', {
+                    html: str.is('Button Label<input type="file" accept="image/*" style="display: none;">')
+                  }),
+                ]
+              })
+            ]
+          })
         ]
       })),
       hook.component().element
