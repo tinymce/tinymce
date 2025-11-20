@@ -954,8 +954,7 @@ const register = (editor: Editor): void => {
         message: 'Must be a non-empty array of objects matching the configuration schema: https://www.tiny.cloud/docs/tinymce/latest/content-filtering/#documents_file_types' // TODO: this is a placeholder
       }),
       (val) => ({ valid: true, value: val })
-    ),
-    default: []
+    )
   });
 
   // These options must be registered later in the init sequence due to their default values
