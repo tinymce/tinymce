@@ -1,5 +1,6 @@
 import { FileInput, Mouse, UiFinder } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { context, describe, it } from '@ephox/bedrock-client';
+import { Arr } from '@ephox/katamari';
 import { SugarBody, Value } from '@ephox/sugar';
 import { TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
@@ -93,5 +94,35 @@ describe('browser.tinymce.plugins.link.DialogUpdateTest', () => {
     assertInputValue('Text to display', `filename:${newFileName}`);
     assertInputValue('Title', `filename:${newFileName}`);
     TinyUiActions.cancelDialog(editor);
+  });
+
+  context('TINY-13278: no `documents_file_types` or no `files_upload_handler`', () => {
+    const cases = [
+      { files_upload_handler: false, documents_file_types: true },
+      { files_upload_handler: true, documents_file_types: false },
+      { files_upload_handler: false, documents_file_types: false },
+    ];
+    Arr.each(cases, (c) => {
+      const hook = TinyHooks.bddSetupLight<Editor>({
+        plugins: 'link',
+        toolbar: 'link',
+        base_url: '/project/tinymce/js/tinymce',
+        ...(c.files_upload_handler ? { files_upload_handler: (blobInfo: BlobInfo, _progress: (p: number) => void) => new Promise((success) => {
+          success({ url: `url:${blobInfo.filename()}`, fileName: `filename:${blobInfo.filename()}` });
+        }) } : {}),
+        ...(c.documents_file_types ? { documents_file_types: [
+          { mimeType: 'application/msword', extensions: [ 'doc' ] },
+          { mimeType: 'text/plain', extensions: [ 'txt' ] }
+        ] } : {}),
+      }, [ Plugin ]);
+
+      it(`TINY-13278: if files_upload_handler or documents_file_types are not defined the dialog should not have an upload tab (${JSON.stringify(c)})`, async () => {
+        const editor = hook.editor();
+        editor.execCommand('mceLink');
+        await TinyUiActions.pWaitForDialog(editor);
+        UiFinder.notExists(SugarBody.body(), 'div[role="tab"]:contains("Upload")');
+        TinyUiActions.closeDialog(editor);
+      });
+    });
   });
 });
