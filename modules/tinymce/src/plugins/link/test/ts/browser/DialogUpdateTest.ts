@@ -55,7 +55,7 @@ describe('browser.tinymce.plugins.link.DialogUpdateTest', () => {
     const fileName = 'test.txt';
     await pTriggerUpload(editor, fileName);
     // this is needed to wait that the modal is updated
-    await UiFinder.pWaitFor<HTMLInputElement>('lavel with text URL should be loaded', SugarBody.body(), 'label:contains("URL")');
+    await UiFinder.pWaitFor<HTMLInputElement>('label with text URL should be loaded', SugarBody.body(), 'label:contains("URL")');
     assertInputValue('URL', `url:${fileName}`);
     assertInputValue('Text to display', `filename:${fileName}`);
     assertInputValue('Title', `filename:${fileName}`);
@@ -72,7 +72,7 @@ describe('browser.tinymce.plugins.link.DialogUpdateTest', () => {
     const fileName = 'test.txt';
     await pTriggerUpload(editor, fileName);
     // this is needed to wait that the modal is updated
-    await UiFinder.pWaitFor<HTMLInputElement>('lavel with text URL should be loaded', SugarBody.body(), 'label:contains("URL")');
+    await UiFinder.pWaitFor<HTMLInputElement>('label with text URL should be loaded', SugarBody.body(), 'label:contains("URL")');
     assertInputValue('URL', `url:${fileName}`);
     assertInputValue('Text to display', `filename:${fileName}`);
     assertInputValue('Title', `filename:${fileName}`);
