@@ -936,7 +936,7 @@ const register = (editor: Editor): void => {
     }
   });
 
-  const documentsFileTipesOptionsSchema = StructureSchema.arrOfObj([
+  const documentsFileTypesOptionsSchema = StructureSchema.arrOfObj([
     FieldSchema.requiredString('mimeType'),
     FieldSchema.requiredArrayOf('extensions', StructureSchema.valueOf((ext) => {
       if (Type.isString(ext)) {
@@ -948,7 +948,7 @@ const register = (editor: Editor): void => {
   ]);
 
   registerOption('documents_file_types', {
-    processor: (value: unknown) => StructureSchema.asRaw<DocumentsFileTypes[]>('documents_file_types', documentsFileTipesOptionsSchema, value).fold<DocumentsFileTypesProcessorReturnType>(
+    processor: (value: unknown) => StructureSchema.asRaw<DocumentsFileTypes[]>('documents_file_types', documentsFileTypesOptionsSchema, value).fold<DocumentsFileTypesProcessorReturnType>(
       (_err) => ({
         valid: false,
         message: 'Must be a non-empty array of objects matching the configuration schema: https://www.tiny.cloud/docs/tinymce/latest/content-filtering/#documents_file_types' // TODO: this is a placeholder
