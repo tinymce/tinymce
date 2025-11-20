@@ -19,7 +19,7 @@ exports[`browser.ExpandableBoxTest > Should be able to expand and collapse conte
         </div>
       </div>
       <button
-        class="tox-expandable-box__toggle-button"
+        class="tox-button tox-button--naked "
         type="button"
       >
         <span
@@ -53,7 +53,7 @@ exports[`browser.ExpandableBoxTest > Should be able to expand and collapse conte
         </div>
       </div>
       <button
-        class="tox-expandable-box__toggle-button"
+        class="tox-button tox-button--naked "
         type="button"
       >
         <span
@@ -87,7 +87,7 @@ exports[`browser.ExpandableBoxTest > Should be able to expand and collapse conte
         </div>
       </div>
       <button
-        class="tox-expandable-box__toggle-button"
+        class="tox-button tox-button--naked "
         type="button"
       >
         <span
@@ -121,7 +121,7 @@ exports[`browser.ExpandableBoxTest > Should be able to set maxHeight, collapseTe
         </div>
       </div>
       <button
-        class="tox-expandable-box__toggle-button"
+        class="tox-button tox-button--naked "
         type="button"
       >
         <span
@@ -155,7 +155,7 @@ exports[`browser.ExpandableBoxTest > Should be able to set maxHeight, collapseTe
         </div>
       </div>
       <button
-        class="tox-expandable-box__toggle-button"
+        class="tox-button tox-button--naked "
         type="button"
       >
         <span

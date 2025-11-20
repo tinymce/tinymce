@@ -3,6 +3,7 @@ import { useLayoutEffect, useRef, useState, type FC, type PropsWithChildren } fr
 
 import { Icon } from '../../internal/icon/Icon.component';
 import * as Bem from '../../utils/Bem';
+import { Button } from '../button/Button';
 
 export interface ExpandableBoxProps extends PropsWithChildren {
   /** Icon resolver */
@@ -46,10 +47,10 @@ export const ExpandableBox: FC<ExpandableBoxProps> = ({
         {children}
       </div>
       {
-        overflowing && <button type="button" className={Bem.element('tox-expandable-box', 'toggle-button')} onClick={() => onToggle?.()}>
+        overflowing && <Button variant="naked" type="button" onClick={() => onToggle?.()}>
           <Icon resolver={iconResolver} icon={expanded ? 'chevron-up' : 'chevron-down'} />
           {expanded ? collapseLabel : expandLabel}
-        </button>
+        </Button>
       }
     </div>
   );
