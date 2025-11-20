@@ -1,4 +1,4 @@
-import{j as e,b as i,f as r}from"./iframe-D9INKKzB.js";import{useMDXComponents as s}from"./index-9FAvbE7-.js";const a=`# Styling Oxide Components
+import{j as e,b as i,f as r}from"./iframe--mA906eP.js";import{useMDXComponents as s}from"./index-QxIJl2WI.js";const a=`# Styling Oxide Components
 
 To ensure backward compatibility with existing skins, all oxide-components should be styled inside **Oxide** library. 
 

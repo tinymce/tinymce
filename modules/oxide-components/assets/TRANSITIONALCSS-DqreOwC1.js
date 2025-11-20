@@ -1,4 +1,4 @@
-import{j as e,b as a,f as r}from"./iframe-D9INKKzB.js";import{useMDXComponents as i}from"./index-9FAvbE7-.js";const s=`# Converting a Legacy Component to the Transitional Stage
+import{j as e,b as a,f as r}from"./iframe--mA906eP.js";import{useMDXComponents as i}from"./index-QxIJl2WI.js";const s=`# Converting a Legacy Component to the Transitional Stage
 
 This guide outlines the steps required to migrate a **Legacy** Oxide component (styled entirely with LESS) into the **Transitional** stage, where modern CSS features are introduced alongside existing LESS code under a feature flag. This incremental migration ensures backward compatibility while laying the foundation for future **Modern CSS** components.
 
