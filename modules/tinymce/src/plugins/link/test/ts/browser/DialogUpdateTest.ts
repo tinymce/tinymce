@@ -63,7 +63,7 @@ describe('browser.tinymce.plugins.link.DialogUpdateTest', () => {
     TinyUiActions.cancelDialog(editor);
   });
 
-  it('TINY-13278: it should be possible to upload new file ovewriting the current fields', async () => {
+  it('TINY-13278: it should be possible to upload new file overwriting the current fields', async () => {
     const editor = hook.editor();
     editor.resetContent('');
     editor.execCommand('mceLink');
