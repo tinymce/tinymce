@@ -34,8 +34,10 @@ export interface UploadFailure {
 type ProgressFn = (percent: number) => void;
 
 export interface UploadFileData {
-  url: string; fileName: string;
+  url: string;
+  fileName: string;
 };
+
 export type UploadHandler<T extends UploadFileData | string = string> = (blobInfo: BlobInfo, progress: ProgressFn) => Promise<T>;
 
 type ResolveFn<T> = (result: T | Promise<T>) => void;
