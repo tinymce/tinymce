@@ -44,6 +44,41 @@
     max-width: 100%;
   }
 
+  .tox-ai__response-sources {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .tox-ai__response-sources-list {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    align-self: stretch;
+
+    .tox-tag {
+      border: 1px solid var(--tox-private-border-color, @border-color);
+      background-color: transparent;
+      max-width: 132px;
+      max-height: 24px;
+
+      svg, img {
+        width: 16px;
+        height: 16px;
+        min-width: 16px;
+        min-height: 16px;
+        max-width: 16px;
+        max-height: 16px;
+      }
+
+      .tox-tag__label {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+    }
+  }
+
   .tox-ai__response-content {
     padding: var(--tox-private-pad-sm, @pad-sm) 0;
     color: var(--tox-private-text-color, @text-color);
