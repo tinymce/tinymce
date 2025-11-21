@@ -89,7 +89,8 @@ const changeFileInput = (helpers: Helpers, api: API): void => {
       };
 
       Utils.blobToDataUri(file).then((dataUrl) => {
-        const blobInfo = helpers.getExistingBlobInfo(dataUrlToBase64(dataUrl), file.type) ?? helpers.createBlobCache(file, blobUri, dataUrl);
+        const existingBlobInfo = helpers.getExistingBlobInfo(dataUrlToBase64(dataUrl), file.type);
+        const blobInfo = existingBlobInfo && existingBlobInfo.filename() === file.name ? existingBlobInfo : helpers.createBlobCache(file, blobUri, dataUrl);
         helpers.addToBlobCache(blobInfo);
         return helpers.uploadFile(blobInfo, Fun.identity);
       }).then((result) => {
