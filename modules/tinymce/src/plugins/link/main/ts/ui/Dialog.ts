@@ -4,7 +4,6 @@ import type Editor from 'tinymce/core/api/Editor';
 import type { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import type { DocumentsFileTypes } from 'tinymce/core/api/OptionTypes';
 import type { Dialog } from 'tinymce/core/api/ui/Ui';
-import * as Conversions from 'tinymce/core/file/Conversions';
 import type { UploadFileData, UploadHandler } from 'tinymce/core/file/Uploader';
 
 import * as Options from '../api/Options';
@@ -87,7 +86,7 @@ const changeFileInput = (helpers: Helpers, api: API): void => {
       };
 
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      Conversions.blobToDataUri(file).then((dataUrl) => {
+      Utils.blobToDataUri(file).then((dataUrl) => {
         const blobInfo = helpers.createBlobCache(file, blobUri, dataUrl);
         helpers.uploadFile(blobInfo, Fun.identity).then((result) => {
           updateUrlAndSwitchTab(result);
