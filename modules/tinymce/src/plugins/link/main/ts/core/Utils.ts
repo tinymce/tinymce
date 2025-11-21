@@ -122,7 +122,7 @@ const blobToDataUri = (blob: Blob): Promise<string> => new Promise((resolve, rej
     resolve(reader.result as string);
   };
   reader.onerror = () => {
-    reject(reader.error?.message);
+    reject(new Error(reader.error?.message ?? 'Failed to convert blob in a data url'));
   };
   reader.readAsDataURL(blob);
 });
