@@ -85,17 +85,16 @@ const changeFileInput = (helpers: Helpers, api: API): void => {
         URL.revokeObjectURL(blobUri);
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       Utils.blobToDataUri(file).then((dataUrl) => {
         const blobInfo = helpers.createBlobCache(file, blobUri, dataUrl);
-        helpers.uploadFile(blobInfo, Fun.identity).then((result) => {
-          updateUrlAndSwitchTab(result);
-          finalize();
-        }).catch((err) => {
-          finalize();
-          helpers.alertErr(err, () => {
-            api.focus('fileinput');
-          });
+        return helpers.uploadFile(blobInfo, Fun.identity);
+      }).then((result) => {
+        updateUrlAndSwitchTab(result);
+        finalize();
+      }).catch((err) => {
+        finalize();
+        helpers.alertErr(err, () => {
+          api.focus('fileinput');
         });
       });
     });
