@@ -52,7 +52,7 @@ const Root = forwardRef<Ref, FloatingSidebarProps>(({ isOpen = true, height = 60
   useEffect(() => {
     const element = elementRef.current;
     if (element) {
-      isOpen ? element.togglePopover(true) : element.togglePopover(false);
+      element.togglePopover(isOpen)
     }
   }, [ isOpen ]);
 
