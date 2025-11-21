@@ -35,13 +35,13 @@ const visualTest = async (story: (typeof stories)[number], page: Page, workerInf
   );
 };
 
-// for (const story of stories) {
-//   test(`${story.title} ${story.name} should not have visual regressions`, async ({
-//     page,
-//   }, workerInfo) => {
-//     await visualTest(story, page, workerInfo);
-//   });
-// }
+for (const story of stories) {
+  test(`${story.title} ${story.name} should not have visual regressions`, async ({
+    page,
+  }, workerInfo) => {
+    await visualTest(story, page, workerInfo);
+  });
+}
 
 // This component has custom visual tests as the trigger button needs to be clicked before the screenshot
 const dropdownStories = Object.values(storybook.entries).filter(
