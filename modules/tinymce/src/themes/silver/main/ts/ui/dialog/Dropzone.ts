@@ -20,9 +20,13 @@ import { formChangeEvent } from '../general/FormEvents';
 
 const browseFilesEvent = Id.generate('browse.files.event');
 
-const filterByExtension = (files: FileList, providersBackstage: UiFactoryBackstageProviders) => {
+const filterByExtension = (files: FileList, providersBackstage: UiFactoryBackstageProviders, allowedFileExtensions: Optional<string[]>) => {
   const allowedImageFileTypes = Tools.explode(providersBackstage.getOption('images_file_types'));
-  const isFileInAllowedTypes = (file: File) => Arr.exists(allowedImageFileTypes, (type) => Strings.endsWith(file.name.toLowerCase(), `.${type.toLowerCase()}`));
+
+  const isFileInAllowedTypes = (file: File) => allowedFileExtensions.fold(
+    () => Arr.exists(allowedImageFileTypes, (type) => Strings.endsWith(file.name.toLowerCase(), `.${type.toLowerCase()}`)),
+    (exts) => Arr.exists(exts, (type) => Strings.endsWith(file.name.toLowerCase(), `.${type.toLowerCase()}`))
+  );
 
   return Arr.filter(Arr.from(files), isFileInAllowedTypes);
 };
@@ -57,7 +61,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
 
   const handleFiles = (component: AlloyComponent, files: FileList | null | undefined) => {
     if (files) {
-      Representing.setValue(component, filterByExtension(files, providersBackstage));
+      Representing.setValue(component, filterByExtension(files, providersBackstage, spec.allowedFileExtensions));
       AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name });
     }
   };
@@ -68,7 +72,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
         tag: 'input',
         attributes: {
           type: 'file',
-          accept: 'image/*'
+          accept: spec.allowedFileTypes.getOr('image/*')
         },
         styles: {
           display: 'none'
@@ -95,7 +99,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
         classes: [ 'tox-button', 'tox-button--secondary' ]
       },
       components: [
-        GuiFactory.text(providersBackstage.translate('Browse for an image')),
+        GuiFactory.text(providersBackstage.translate(spec.buttonLabel.getOr('Browse for an image'))),
         memInput.asSpec()
       ],
       action: (comp: AlloyComponent) => {
@@ -147,7 +151,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
               tag: 'p'
             },
             components: [
-              GuiFactory.text(providersBackstage.translate('Drop an image here'))
+              GuiFactory.text(providersBackstage.translate(spec.dropAreaLabel.getOr('Drop an image here')))
             ]
           },
           pField

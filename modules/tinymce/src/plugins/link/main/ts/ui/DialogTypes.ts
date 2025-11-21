@@ -32,6 +32,7 @@ export interface LinkDialogInfo {
     readonly title: Optional<string>;
   };
   readonly catalogs: LinkDialogCatalog;
+  readonly hasUploadPanel: boolean;
   readonly flags: {
     readonly titleEnabled: boolean;
   };
@@ -55,6 +56,7 @@ export interface LinkDialogData {
   readonly rel: string;
   readonly target: string;
   readonly linkClass: string;
+  readonly fileinput: File[];
 }
 
 export interface LinkDialogOutput {
@@ -79,3 +81,5 @@ export interface AttachState {
   readonly href: string;
   readonly attach: () => void;
 }
+
+export type API = Dialog.DialogInstanceApi<LinkDialogData>;
