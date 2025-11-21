@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useId, useRef, useState, type FC, type PropsWithChildren } from 'react';
 
-import { Button } from '../button/Button';
+import { Bem } from '../../main';
+import { Button, type ButtonProps } from '../button/Button';
 
-import { DropdownContext, useDropdown } from './internals/context';
-import { getPositionStyles } from './internals/positioningUtils';
+import { DropdownContext, useDropdown } from './internals/Context';
+import * as PositioningUtils from './internals/PositioningUtils';
 
 export interface DropdownProps extends PropsWithChildren {
   side?: 'top' | 'bottom' | 'left' | 'right';
@@ -21,13 +22,14 @@ const Content: FC<PropsWithChildren> = ({ children, ...props }) => {
 
   // this can be later replaced with CSS anchor positioning
   const updatePosition = useCallback((event: Event) => {
+    // TODO: remove type casting after updating TypeScript. In the newest version addEventListener correctly produces ToggleEvent
     if ((event as ToggleEvent).newState === 'open' && triggerRef.current && contentRef.current) {
       const documentRect = document.documentElement.getBoundingClientRect();
       const anchorRect = triggerRef.current.getBoundingClientRect();
       const contentRect = contentRef.current.getBoundingClientRect();
 
       // using document rect as a boundry, but maybe it should be the Editor area?
-      setPositioningStyles(getPositionStyles(anchorRect, contentRect, side, align, GAP, documentRect));
+      setPositioningStyles(PositioningUtils.getPositionStyles(anchorRect, contentRect, side, align, GAP, documentRect));
     }
   }, [ contentRef, triggerRef, align, side ]);
 
@@ -44,23 +46,16 @@ const Content: FC<PropsWithChildren> = ({ children, ...props }) => {
   }, [ contentRef, updatePosition ]);
 
   // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
-  return <div popover='auto' id={popoverId} ref={contentRef} { ...props } style={{
-    position: 'fixed',
-    overflow: 'auto',
-    display: '',
-    height: 'fit-content',
-    width: 'fit-content',
-    ...positioningStyles
-  }}>
+  return <div className={Bem.block('tox-dropdown-content')} popover='auto' id={popoverId} ref={contentRef} { ...props } style={{ ...positioningStyles }}>
     {children}
   </div>;
 };
 
-const TriggerButton: FC<PropsWithChildren> = ({ children }) => {
+const TriggerButton: FC<ButtonProps> = ({ children, ...args }) => {
   const { popoverId, triggerRef } = useDropdown();
 
   // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
-  return <Button variant='secondary' popovertarget={popoverId} popovertargetaction={'toggle'} ref={triggerRef} >{children}</Button>;
+  return <Button popovertarget={popoverId} popovertargetaction={'toggle'} ref={triggerRef} {...args}>{children}</Button>;
 };
 
 const Root: FC<DropdownProps> = ({ children, side = 'top', align = 'start' }) => {
