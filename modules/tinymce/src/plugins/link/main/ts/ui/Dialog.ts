@@ -22,6 +22,7 @@ interface Helpers {
   readonly createBlobCache: (file: File, blobUri: string, dataUrl: string) => BlobInfo;
   readonly alertErr: (message: string, callback: () => void) => void;
   readonly uploadFile: UploadHandler<UploadFileData>;
+  readonly getExistingBlobInfo: (base64: string, type: string) => BlobInfo | undefined;
 }
 
 const handleSubmit = (editor: Editor, info: LinkDialogInfo) => (api: Dialog.DialogInstanceApi<LinkDialogData>): void => {
@@ -65,6 +66,8 @@ const uploadFile = (editor: Editor): UploadHandler<UploadFileData> => (blobInfo:
   return fileUploadHandler(blobInfo, progress);
 };
 
+const dataUrlToBase64 = (dataUrl: string) => Optional.from(dataUrl.split(',')[1]).getOr('');
+
 const changeFileInput = (helpers: Helpers, api: API): void => {
   const data = api.getData();
   api.block('Uploading file');
@@ -86,7 +89,8 @@ const changeFileInput = (helpers: Helpers, api: API): void => {
       };
 
       Utils.blobToDataUri(file).then((dataUrl) => {
-        const blobInfo = helpers.createBlobCache(file, blobUri, dataUrl);
+        const blobInfo = helpers.getExistingBlobInfo(dataUrlToBase64(dataUrl), file.type) ?? helpers.createBlobCache(file, blobUri, dataUrl);
+        helpers.addToBlobCache(blobInfo);
         return helpers.uploadFile(blobInfo, Fun.identity);
       }).then((result) => {
         updateUrlAndSwitchTab(result);
@@ -111,6 +115,10 @@ const createBlobCache = (editor: Editor) => (file: File, blobUri: string, dataUr
 
 const addToBlobCache = (editor: Editor) => (blobInfo: BlobInfo): void => {
   editor.editorUpload.blobCache.add(blobInfo);
+};
+
+const getExistingBlobInfo = (editor: Editor) => (base64: string, type: string): BlobInfo | undefined => {
+  return editor.editorUpload.blobCache.getByData(base64, type);
 };
 
 const alertErr = (editor: Editor) => (message: string, callback: () => void): void => {
@@ -228,7 +236,8 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInsta
     addToBlobCache: addToBlobCache(editor),
     createBlobCache: createBlobCache(editor),
     alertErr: alertErr(editor),
-    uploadFile: uploadFile(editor)
+    uploadFile: uploadFile(editor),
+    getExistingBlobInfo: getExistingBlobInfo(editor)
   };
   return {
     title: 'Insert/Edit Link',
