@@ -1,7 +1,7 @@
 import { SelectorFind, SugarElement } from '@ephox/sugar';
 import * as FloatingSidebar from 'oxide-components/components/floatingsidebar/FloatingSidebar';
 import { classes } from 'oxide-components/utils/Styles';
-import { useState, type ReactNode } from 'react';
+import { useState, type MutableRefObject, type ReactNode } from 'react';
 import { describe, expect, it, beforeAll, afterEach, afterAll, beforeEach } from 'vitest';
 import { userEvent, page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
@@ -89,6 +89,28 @@ describe('browser.floatingsidebar.FloatingSidebar', () => {
     expect(containerElement.dom.matches(':popover-open')).toBe(true);
     await userEvent.click(closeSidebarButton);
     expect(containerElement.dom.matches(':popover-open')).toBe(false);
+  });
+
+  it('TINY-13121: Should control sidebar visibility using ref API', () => {
+    const sidebarRef: MutableRefObject<FloatingSidebar.Ref | null> = { current: null };
+
+    const { getByTestId } = render((
+      <FloatingSidebar.Root ref={sidebarRef}>
+        <FloatingSidebar.Header>
+          <div data-testid={floatingSidebarHeaderTestId}>Header</div>
+        </FloatingSidebar.Header>
+        <div data-testid={floatingSidebarContentTestId}>Content</div>
+      </FloatingSidebar.Root>
+    ), { wrapper: Wrapper });
+
+    const floatingSidebarContent = SugarElement.fromDom(getByTestId(floatingSidebarContentTestId).element());
+    const containerElement = SelectorFind.closest(floatingSidebarContent, containerSelector).getOrDie();
+
+    expect(containerElement.dom.matches(':popover-open')).toBe(true);
+    sidebarRef.current?.close();
+    expect(containerElement.dom.matches(':popover-open')).toBe(false);
+    sidebarRef.current?.open();
+    expect(containerElement.dom.matches(':popover-open')).toBe(true);
   });
 
   describe('TINY-13052: Viewport tests', () => {
