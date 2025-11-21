@@ -116,17 +116,6 @@ const isOnlyTextSelected = (editor: Editor): boolean => {
 const isImageFigure = (elm: Element | null): elm is HTMLElement =>
   Type.isNonNullable(elm) && elm.nodeName === 'FIGURE' && /\bimage\b/i.test(elm.className);
 
-const blobToDataUri = (blob: Blob): Promise<string> => new Promise((resolve, reject) => {
-  const reader = new FileReader();
-  reader.onload = () => {
-    resolve(reader.result as string);
-  };
-  reader.onerror = () => {
-    reject(reader.error?.message);
-  };
-  reader.readAsDataURL(blob);
-});
-
 export {
   isImageFigure,
   isLink,
@@ -140,6 +129,5 @@ export {
   isInAnchor,
   getAnchorText,
   applyRelTargetRules,
-  hasProtocol,
-  blobToDataUri
+  hasProtocol
 };
