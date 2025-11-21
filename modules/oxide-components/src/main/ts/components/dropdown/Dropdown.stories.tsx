@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import * as Dropdown from './Dropdown';
 
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
   title: 'components/Dropdown',
   component: Dropdown.Root,
@@ -19,15 +18,15 @@ const meta = {
     },
   },
   parameters: {
-    layout: 'fullscreen',
+    layout: 'centered',
     docs: {
       description: {
         component: `A dropdown component. Contains a button and an anchored container that can be used for creating menus.`
       }
     }
   },
-  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
-  tags: [ 'autodocs', 'skip-visual-testing' ],
+  // This component has custom visual tests as the trigger button needs to be clicked before the screenshot
+  tags: [ 'autodocs', 'skip-visual-testing', 'dropdown-visual-testing' ],
 } satisfies Meta<typeof Dropdown.Root>;
 
 export default meta;
@@ -37,7 +36,7 @@ const render = (args: Dropdown.DropdownProps): JSX.Element => {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <Dropdown.Root side={args.side} align={args.align}>
-        <Dropdown.TriggerButton>Click me to toggle dropdown</Dropdown.TriggerButton>
+        <Dropdown.TriggerButton variant='secondary'>Click me to toggle dropdown</Dropdown.TriggerButton>
         <Dropdown.Content>
           <div style={{ width: '400px', height: '300px', border: '2px solid lightgrey', borderRadius: '8px' }}></div>
         </Dropdown.Content>
