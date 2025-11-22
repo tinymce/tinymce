@@ -10,7 +10,7 @@
   "main": "dist/js/icons.js",
   "scripts": {
     "build": "grunt",
-    "prepublishOnly": "yarn ci",
+    "prepublishOnly": "bun ci",
     "ci": "grunt --no-color"
   },
   "keywords": [
