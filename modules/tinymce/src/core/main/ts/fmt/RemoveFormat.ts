@@ -223,13 +223,13 @@ const removeStyles = (dom: DOMUtils, elm: Element, format: Format, vars: FormatV
 
 const removeListStyleFormats = (editor: Editor, name: string, vars: FormatVars | undefined) => {
   if (name === 'removeformat') {
-    Arr.each(ListItemFormat.getPartiallySelectedListItems(editor.selection), (li) => {
+    Arr.each(ListItemFormat.getPartiallySelectedListItems(editor.selection, true), (li) => {
       Arr.each(ListItemFormat.listItemStyles, (name) => editor.dom.setStyle(li, name, ''));
       removeEmptyStyleAttributeIfNeeded(editor.dom, li);
     });
   } else {
     ListItemFormat.getExpandedListItemFormat(editor.formatter, name).each((liFmt) => {
-      Arr.each(ListItemFormat.getPartiallySelectedListItems(editor.selection), (li) => removeStyles(editor.dom, li, liFmt, vars, null));
+      Arr.each(ListItemFormat.getPartiallySelectedListItems(editor.selection, true), (li) => removeStyles(editor.dom, li, liFmt, vars, null));
     });
   }
 };

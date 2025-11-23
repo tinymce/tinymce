@@ -227,8 +227,8 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
       });
     });
 
-    context('TINY-13197: Apply inline formats to list items that contain block elements', () => {
-      it('TINY-13197: LI has a single block element', () => {
+    context('Applying inline formats to LIs with content being wrapped inside block elements', () => {
+      it('TINY-13197: Should apply fore color to a single fully selected LI', () => {
         testApplyInlineListFormat({
           format: 'forecolor',
           value: 'red',
@@ -246,7 +246,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
         });
       });
 
-      it('TINY-13197: Select multiple list items', () => {
+      it('TINY-13197: Should apply fore color to multiple fully selected LIs', () => {
         testApplyInlineListFormat({
           format: 'forecolor',
           value: 'red',
@@ -266,7 +266,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
         });
       });
 
-      it('TINY-13197: Should not affect the first item if it is only partially selected', () => {
+      it('TINY-13197: Should apply color to both fully and partially selected LIs', () => {
         testApplyInlineListFormat({
           format: 'forecolor',
           value: 'red',
@@ -379,6 +379,50 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
       );
     });
 
+    context('Removing inline formats from LIs with content being wrapped inside block elements', () => {
+      it('TINY-13197: Should remove bold from fully selected LIs', () =>
+        testRemoveInlineListFormat({
+          format: 'bold',
+          rawInput: [
+            '<ul>',
+            '<li style="font-weight: bold;"><p><strong>bird</strong></p></li>',
+            '<li style="font-weight: bold;"><p><strong>cat</strong></p></li>',
+            '<li style="font-weight: bold;"><p><strong>dog</strong></p></li>',
+            '</ul>'
+          ].join(''),
+          selection: { startPath: [ 0, 1, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 2, 0, 0, 0 ], foffset: 3 },
+          expected: [
+            '<ul>',
+            '<li style="font-weight: bold;"><p><strong>bird</strong></p></li>',
+            '<li><p>cat</p></li>',
+            '<li><p>dog</p></li>',
+            '</ul>'
+          ].join(''),
+        })
+      );
+
+      it('TINY-13197: Should remove bold from both fully selected LI and partially selected end LI', () =>
+        testRemoveInlineListFormat({
+          format: 'bold',
+          rawInput: [
+            '<ul>',
+            '<li style="font-weight: bold;"><p><strong>bird</strong></p></li>',
+            '<li style="font-weight: bold;"><p><strong>cat</strong></p></li>',
+            '<li style="font-weight: bold;"><p><strong>dog</strong></p></li>',
+            '</ul>'
+          ].join(''),
+          selection: { startPath: [ 0, 1, 0, 0, 0 ], soffset: 1, finishPath: [ 0, 2, 0, 0, 0 ], foffset: 3 },
+          expected: [
+            '<ul>',
+            '<li style="font-weight: bold;"><p><strong>bird</strong></p></li>',
+            '<li><p><strong>c</strong>at</p></li>',
+            '<li><p>dog</p></li>',
+            '</ul>'
+          ].join(''),
+        })
+      );
+    });
+
     context('Removing inline formats at caret', () => {
       it('TINY-8961: removing bold at caret in middle of word should remove bold from parent LI', () =>
         testRemoveInlineListFormat({
@@ -432,6 +476,8 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
           expected: '<ul><li style="text-decoration: underline;">abc</li></ul>',
         })
       );
+
+      // it('TINY-13197: Remove all format')
     });
   });
 });

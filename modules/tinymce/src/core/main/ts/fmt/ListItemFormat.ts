@@ -32,6 +32,8 @@ const isRngEndAtEndOfElement = (rng: Range, elm: Element) => {
 
 const isEditableListItem = (dom: DOMUtils) => (elm: Element) => NodeType.isListItem(elm) && dom.isEditable(elm);
 
+const findParentListItem = (selection: EditorSelection, el: Element) => selection.dom.getParent(el, NodeType.isListItem);
+
 const getFullySelectedBlocks = (selection: EditorSelection) => {
   const blocks = selection.getSelectedBlocks();
   const rng = selection.getRng();
@@ -42,7 +44,7 @@ const getFullySelectedBlocks = (selection: EditorSelection) => {
 
   // When the content of a list item is wrapped inside a block element, the selection doesn't include the list item element <li>. In this case, find and replace the block element with the LI so the format can also be applied to the LI element.
   if (blocks.length > 0 && isRngStartAtStartOfElement(rng, blocks[0]) && !NodeType.isListItem(blocks[0])) {
-    const listItemEl = selection.dom.getParent(blocks[0], NodeType.isListItem);
+    const listItemEl = findParentListItem(selection, blocks[0]);
 
     if (Type.isNonNullable(listItemEl)) {
       blocks[0] = listItemEl;
@@ -55,7 +57,6 @@ const getFullySelectedBlocks = (selection: EditorSelection) => {
     const first = Arr.head(blocks).filter((elm) => isRngStartAtStartOfElement(rng, elm)).toArray();
     const last = Arr.last(blocks).filter((elm) => isRngEndAtEndOfElement(rng, elm)).toArray();
     const middle = blocks.slice(1, -1);
-    //
     return first.concat(middle).concat(last);
   }
 };
@@ -63,5 +64,19 @@ const getFullySelectedBlocks = (selection: EditorSelection) => {
 export const getFullySelectedListItems = (selection: EditorSelection): Element[] =>
   Arr.filter(getFullySelectedBlocks(selection), isEditableListItem(selection.dom));
 
-export const getPartiallySelectedListItems = (selection: EditorSelection): Element[] =>
-  Arr.filter(selection.getSelectedBlocks(), isEditableListItem(selection.dom));
+export const getPartiallySelectedListItems = (selection: EditorSelection, includeRootLIEl: boolean = false): Element[] => {
+  const blocks = selection.getSelectedBlocks();
+  // When the content of a list item is wrapped inside a block element, the selection doesn't include the list item element <li>. In this case, find and replace the block element with the LI so the format can also be applied to the LI element.
+  if (blocks.length > 0 && !NodeType.isListItem(blocks[0])) {
+    const listItemEl = findParentListItem(selection, blocks[0]);
+
+    if (Type.isNonNullable(listItemEl)) {
+      blocks.unshift(listItemEl);
+    }
+  }
+
+  // When the whole content is selected: Apply and remove should include <li>
+  // When the content is partially selected
+  // Apply and remove should only apply to the selected portion
+  return Arr.filter(blocks, isEditableListItem(selection.dom));
+};
