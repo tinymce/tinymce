@@ -1,6 +1,6 @@
 import type { AlloyComponent, AlloySpec } from '@ephox/alloy';
 import type { Dialog, Menu } from '@ephox/bridge';
-import { Cell, Obj, Optional, type Result } from '@ephox/katamari';
+import { Cell, Obj, Optional, Type, type Result } from '@ephox/katamari';
 
 import type Editor from 'tinymce/core/api/Editor';
 import I18n, { type TranslatedString, type Untranslated } from 'tinymce/core/api/util/I18n';
@@ -25,7 +25,7 @@ export interface UiFactoryBackstageProviders {
   readonly isDisabled: () => boolean;
   readonly getOption: Editor['options']['get'];
   readonly tooltips: TooltipsProvider;
-  readonly checkUiComponentContext: (specContext: string) => { contextType: string; shouldDisable: boolean };
+  readonly checkUiComponentContext: (specContext: string | ContextCheckerCb) => { contextType: string; shouldDisable: boolean };
 }
 
 export interface UiFactoryBackstageShared {
@@ -51,6 +51,10 @@ export interface UiFactoryBackstagePair {
   readonly dialog: UiFactoryBackstage;
 }
 
+export type ContextCheckerCb = Optional<(context: {
+  check: (specContext: string) => boolean;
+}) => boolean>;
+
 const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: () => Result<AlloyComponent, string> }, editor: Editor, lazyAnchorbar: () => AlloyComponent, lazyBottomAnchorBar: () => AlloyComponent): UiFactoryBackstagePair => {
   const contextMenuState = Cell(false);
   const toolbar = HeaderBackstage(editor);
@@ -62,25 +66,44 @@ const init = (lazySinks: { popup: () => Result<AlloyComponent, string>; dialog: 
     isDisabled: () => !editor.ui.isEnabled(),
     getOption: editor.options.get,
     tooltips: TooltipsBackstage(lazySinks.dialog),
-    checkUiComponentContext: (specContext: string) => {
+    checkUiComponentContext: (specContext: string | ContextCheckerCb) => {
       if (Options.isDisabled(editor)) {
         return {
           contextType: 'disabled',
           shouldDisable: true
         };
       }
-      const [ key, value = '' ] = specContext.split(':');
       const contexts = editor.ui.registry.getAll().contexts;
-      const enabledInContext = Obj.get(contexts, key)
-        .fold(
-          // Fallback to 'mode:design' if key is not found
-          () => Obj.get(contexts, 'mode').map((pred) => pred('design')).getOr(false),
-          (pred) => value.charAt(0) === '!' ? !pred(value.slice(1)) : pred(value)
-        );
-      return {
-        contextType: key,
-        shouldDisable: !enabledInContext
+
+      const contextCheck = (context: string) => {
+        const [ key, value = '' ] = context.split(':');
+        const enabledInContext = Obj.get(contexts, key)
+          .fold(
+            // Fallback to 'mode:design' if key is not found
+            () => Obj.get(contexts, 'mode').map((pred) => pred('design')).getOr(false),
+            (pred) => value.charAt(0) === '!' ? !pred(value.slice(1)) : pred(value)
+          );
+        return enabledInContext;
       };
+
+      if (Type.isString(specContext)) {
+        const [ key ] = specContext.split(':');
+        return {
+          contextType: key,
+          shouldDisable: !contextCheck(specContext)
+        };
+      } else {
+        return specContext.fold(
+          () => ({
+            contextType: 'key',
+            shouldDisable: true
+          }),
+          (checkCb) => ({
+            contextType: 'function',
+            shouldDisable: !checkCb({ check: contextCheck })
+          })
+        );
+      }
     }
   };
 

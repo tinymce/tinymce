@@ -3,13 +3,17 @@ import type { Optional, Result } from '@ephox/katamari';
 
 import * as ComponentSchema from '../../core/ComponentSchema';
 
+export type ContextCheckerCb = (context: {
+  check: (specContext: string) => boolean;
+}) => boolean;
+
 export interface BaseToolbarButtonSpec<I extends BaseToolbarButtonInstanceApi> {
   enabled?: boolean;
   tooltip?: string;
   icon?: string;
   text?: string;
   onSetup?: (api: I) => (api: I) => void;
-  context?: string;
+  context?: string | ContextCheckerCb;
 }
 
 export interface BaseToolbarButtonInstanceApi {
@@ -36,7 +40,7 @@ export interface BaseToolbarButton<I extends BaseToolbarButtonInstanceApi> {
   icon: Optional<string>;
   text: Optional<string>;
   onSetup: (api: I) => (api: I) => void;
-  context: string;
+  context: string | ContextCheckerCb;
 }
 
 export interface ToolbarButton extends BaseToolbarButton<ToolbarButtonInstanceApi> {
@@ -51,7 +55,7 @@ export const baseToolbarButtonFields = [
   ComponentSchema.optionalIcon,
   ComponentSchema.optionalText,
   ComponentSchema.onSetup,
-  FieldSchema.defaultedString('context', 'mode:design')
+  FieldSchema.optionFunction('context'),
 ];
 
 export const toolbarButtonSchema = StructureSchema.objOf([

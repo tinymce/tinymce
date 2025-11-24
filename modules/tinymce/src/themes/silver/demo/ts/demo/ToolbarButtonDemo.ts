@@ -34,14 +34,12 @@ export default (): void => {
     selector: 'textarea.tiny-text',
     license_key: 'gpl',
     theme: 'silver',
-    toolbar: [ 'disabled-button', 'icon-button', 'icon-button-toggle' ].concat(generatedNames).join(' '),
+    toolbar: [ 'disabled-button', 'icon-button', 'icon-button-toggle' ],
     plugins: [
-      'lists', // Required for list functionality (commands),
-      'autolink', // Required for turning pasted text into hyperlinks
-      'autosave' // Required to prevent users losing content when they press back
     ],
 
     setup: (ed) => {
+      ed.ui.registry.addContext('enabledDemo', Fun.never);
       ed.on('skinLoaded', () => {
         // Notification fields for equality: type, text, progressBar, timeout
         ed.notificationManager.open({
@@ -52,47 +50,18 @@ export default (): void => {
 
       // Spockes api spike http://stash/users/spocke/repos/bridge/pull-requests/1/diff
 
-      ed.ui.registry.addButton('disabled-button', {
-        type: 'button',
-        icon: 'bold',
-        // ariaLabel: 'aria says icon button',
-        enabled: false,
-        onAction: (_api) => {
-          console.log('basic-button-2 click, basic-icon');
-        }
-      });
-
       ed.ui.registry.addButton('icon-button', {
         type: 'button',
         icon: 'checkmark',
         // ariaLabel: 'aria says icon button',
         onAction: (_api) => {
           console.log('basic-button-2 click, basic-icon');
-        }
-      });
-
-      ed.ui.registry.addToggleButton('icon-button-toggle', {
-        type: 'togglebutton',
-        icon: 'italic',
-        // ariaLabel: 'aria speaks icon button toggle',
-        onSetup: (api) => {
-          // debugger;
-          // TODO: TS narrowing, when config toggling = true
-          // then the comp interface should include comp.toggleOn otherwise it should complain
-          const state = DemoState2.get();
-          console.log(state);
-          api.setActive(state);
-          return Fun.noop;
         },
-        onAction: (api) => {
-          DemoState2.toggle();
-          api.setActive(DemoState2.get());
-          console.log('button with Toggle click - current state is: ' + DemoState2.get());
+        context: (state) => {
+          console.log('context checker', state.check('enabledDemo'));
+          return state.check('enableddemo');
         }
       });
-
-      generateButton(ed, 'button', 'generated', 5);
-
     }
   });
 };

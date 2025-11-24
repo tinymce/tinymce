@@ -68,7 +68,7 @@ interface GeneralToolbarButton<T> {
   readonly shortcut: Optional<string>;
   readonly onAction: (api: T) => void;
   readonly enabled: boolean;
-  readonly context: string;
+  readonly context: any;
 }
 
 interface ChoiceFetcher {
@@ -207,7 +207,7 @@ const renderFloatingToolbarButton = (spec: Toolbar.GroupToolbarButton, backstage
       toggledClass: ToolbarButtonClasses.Ticked
     },
     parts: {
-      button: renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.some(behaviours), sharedBackstage.providers, spec.context, btnName),
+      button: renderCommonStructure(spec.icon, spec.text, spec.tooltip, Optional.some(behaviours), sharedBackstage.providers, spec.context as string, btnName),
       toolbar: {
         dom: {
           tag: 'div',

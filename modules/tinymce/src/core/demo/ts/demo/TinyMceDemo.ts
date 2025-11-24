@@ -21,10 +21,18 @@ export default (): void => {
     // images_upload_credentials: true,
     skin_url: '../../../../js/tinymce/skins/ui/oxide',
     setup: (ed) => {
+      ed.ui.registry.addContext('enabledDemo', () => {
+        return true;
+      });
+
       ed.ui.registry.addButton('demoButton', {
         text: 'Demo',
         onAction: () => {
           ed.insertContent('Hello world!');
+        },
+        context: (contextChecker) => {
+          console.log(contextChecker.check('enabledDemo'));
+          return true;
         }
       });
     },

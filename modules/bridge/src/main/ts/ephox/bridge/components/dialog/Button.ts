@@ -40,7 +40,7 @@ const buttonFields = [
   FieldSchema.optionStringEnum('buttonType', [ 'primary', 'secondary', 'toolbar' ]),
   // this should be removed, but must live here because FieldSchema doesn't have a way to manage deprecated fields
   ComponentSchema.primary,
-  FieldSchema.defaultedString('context', 'mode:design')
+  FieldSchema.optionFunction('context')
 ];
 
 export const buttonSchema = StructureSchema.objOf(buttonFields);
