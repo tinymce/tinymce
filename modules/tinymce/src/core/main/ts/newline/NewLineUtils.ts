@@ -233,7 +233,10 @@ const createNewBlock = (
       }
     } while ((node = node.parentNode) && node !== editableRoot);
 
-    ReduceNestedFonts.reduceFontStyleNesting(block, caretNode);
+    // Not omitting font sizes of list items otherwise their font size doesn't match its content
+    if (block.nodeName !== 'LI') {
+      ReduceNestedFonts.reduceFontStyleNesting(block, caretNode);
+    }
   }
 
   setForcedBlockAttrs(editor, block);

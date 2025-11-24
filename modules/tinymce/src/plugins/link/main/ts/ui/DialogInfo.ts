@@ -40,6 +40,7 @@ const extractFromAnchor = (editor: Editor, anchor: Optional<HTMLAnchorElement>):
 
 const collect = (editor: Editor, linkNode: Optional<HTMLAnchorElement>): Promise<LinkDialogInfo> =>
   LinkListOptions.getLinks(editor).then((links) => {
+    const hasUploadPanel = Options.hasFilesUploadHandler(editor) && Options.hasDocumentsFileTypes(editor) && Options.hasLinkUploadtab(editor);
     const anchor = extractFromAnchor(editor, linkNode);
     return {
       anchor,
@@ -51,6 +52,7 @@ const collect = (editor: Editor, linkNode: Optional<HTMLAnchorElement>): Promise
         anchor: AnchorListOptions.getAnchors(editor),
         link: links
       },
+      hasUploadPanel,
       optNode: linkNode,
       flags: {
         titleEnabled: Options.shouldShowLinkTitle(editor)
