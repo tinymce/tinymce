@@ -39,7 +39,7 @@ export default (): void => {
     ],
 
     setup: (ed) => {
-      ed.ui.registry.addContext('enabledDemo', Fun.never);
+      ed.ui.registry.addContext('enabledDemo', Fun.always);
       ed.on('skinLoaded', () => {
         // Notification fields for equality: type, text, progressBar, timeout
         ed.notificationManager.open({
@@ -59,7 +59,7 @@ export default (): void => {
         },
         context: (state) => {
           console.log('context checker', state.check('enabledDemo'));
-          return state.check('enableddemo');
+          return state.check('enableddemo') && state.check('mode:wow');
         }
       });
     }
