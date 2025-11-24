@@ -236,4 +236,50 @@ describe('browser.AutoResizingTextareaTest', () => {
       message: 'Textarea rows should be initially resolved to 1'
     }).toHaveAttribute('rows', `${1}`);
   });
+
+  it('Should calculate size correctly inside popver', async () => {
+    const lineOfText = 'Hello World! ';
+    const minHeight: Height = {
+      unit: 'rows',
+      value: 1
+    };
+
+    const TestComponent = () => {
+      const [ value, setValue ] = useState('');
+      return (
+        <div
+          data-testid="popover"
+          {...{ popover: 'manual' } as React.HTMLAttributes<HTMLDivElement>}
+          style={{ width: '120px' }}
+        >
+          <AutoResizingTextarea value={value} onChange={setValue} minHeight={minHeight} data-testid="textarea" />
+        </div>
+      );
+    };
+
+    const { getByTestId } = render(
+      <TestComponent />,
+      {
+        wrapper: ({ children }) => {
+          return (
+            <div className={classes([ 'tox' ])}>{ children }</div>
+          );
+        },
+      });
+
+    const textareaLocator = getByTestId('textarea');
+    const popover = getByTestId('popover').element() as HTMLElement;
+
+    popover.togglePopover();
+    await expect.element(textareaLocator, { message: 'Textarea rows should be initially resolved to 1' })
+      .toHaveAttribute('rows', `${1}`);
+
+    await userEvent.type(textareaLocator, lineOfText + lineOfText);
+    await expect.element(textareaLocator, { message: 'Textarea rows should be 2 after typing' })
+      .toHaveAttribute('rows', `${2}`);
+
+    await userEvent.clear(textareaLocator);
+    await expect.element(textareaLocator, { message: 'Textarea rows should shrink to minHeight after clearing' })
+      .toHaveAttribute('rows', `${1}`);
+  });
 });

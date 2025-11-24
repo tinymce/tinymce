@@ -1,5 +1,5 @@
 import { Type } from '@ephox/katamari';
-import { forwardRef, useLayoutEffect, useMemo, useRef, useState, type MutableRefObject } from 'react';
+import { forwardRef, useEffect, useLayoutEffect, useMemo, useRef, useState, type MutableRefObject } from 'react';
 
 import * as Bem from '../../utils/Bem';
 
@@ -45,6 +45,23 @@ export const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizing
     if (textareaRef.current) {
       setSingleRowHeight(computeSingleRowHeight(textareaRef.current));
     }
+  }, []);
+
+  // Sometimes this component is rendered hidden (e.g. inside a closed popover), then scrollHeight is 0
+  // and size calculations are wrong. So we use ResizeObserver to detect when the textarea becomes visible
+  useEffect(() => {
+    const observer = new window.ResizeObserver(() => {
+      if (Type.isNonNullable(textareaRef.current) && textareaRef.current.scrollHeight > 0) {
+        setSingleRowHeight(computeSingleRowHeight(textareaRef.current));
+        observer.disconnect();
+      }
+    });
+    if (Type.isNonNullable(textareaRef.current) && textareaRef.current.scrollHeight === 0) {
+      observer.observe(textareaRef.current);
+    }
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
   // The minRows and maxRows only need to be computed once per component instance, so they are in the useMemo hook
