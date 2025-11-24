@@ -7,8 +7,8 @@ import { DropdownContext, useDropdown } from './internals/Context';
 import * as PositioningUtils from './internals/PositioningUtils';
 
 export interface DropdownProps extends PropsWithChildren {
-  side?: 'top' | 'bottom' | 'left' | 'right';
-  align?: 'start' | 'center' | 'end';
+  readonly side?: 'top' | 'bottom' | 'left' | 'right';
+  readonly align?: 'start' | 'center' | 'end';
 }
 
 // margin/gap between the trigger button and anchored container
@@ -26,10 +26,10 @@ const Content: FC<PropsWithChildren> = ({ children, ...props }) => {
     if ((event as ToggleEvent).newState === 'open' && triggerRef.current && contentRef.current) {
       const documentRect = document.documentElement.getBoundingClientRect();
       const anchorRect = triggerRef.current.getBoundingClientRect();
-      const contentRect = contentRef.current.getBoundingClientRect();
+      const anchoredContainerRect = contentRef.current.getBoundingClientRect();
 
       // using document rect as a boundry, but maybe it should be the Editor area?
-      setPositioningStyles(PositioningUtils.getPositionStyles(anchorRect, contentRect, side, align, GAP, documentRect));
+      setPositioningStyles(PositioningUtils.getPositionStyles({ anchorRect, anchoredContainerRect, side, align, gap: GAP, boundaryRect: documentRect }));
     }
   }, [ contentRef, triggerRef, align, side ]);
 

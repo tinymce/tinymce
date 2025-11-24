@@ -16,14 +16,23 @@ const getMaxWidth = (side: 'left' | 'right', anchorRect: DOMRect, boundaryRect: 
   }
 };
 
-const getPositionStyles = (
-  anchorRect: DOMRect,
-  anchoredContainerRect: DOMRect,
-  side: 'top' | 'bottom' | 'left' | 'right',
-  align: 'start' | 'center' | 'end',
-  gap: number,
-  boundaryRect: DOMRect = document.documentElement.getBoundingClientRect(),
-): CSSProperties => {
+interface GetPositionStylesProps {
+  readonly anchorRect: DOMRect;
+  readonly anchoredContainerRect: DOMRect;
+  readonly side: 'top' | 'bottom' | 'left' | 'right';
+  readonly align: 'start' | 'center' | 'end';
+  readonly gap: number;
+  readonly boundaryRect?: DOMRect;
+}
+
+const getPositionStyles = ( {
+  anchorRect,
+  anchoredContainerRect,
+  side,
+  align,
+  gap,
+  boundaryRect = document.documentElement.getBoundingClientRect()
+}: GetPositionStylesProps): CSSProperties => {
 
   if (side === 'top' || side === 'bottom') {
     const maxHeight = getMaxHeight(side, anchorRect, boundaryRect);

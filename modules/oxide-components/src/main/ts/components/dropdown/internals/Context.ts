@@ -3,8 +3,8 @@ import { createContext, useContext } from 'react';
 export interface DropdownState {
   readonly popoverId: string;
   readonly triggerRef: React.RefObject<HTMLButtonElement>;
-  side: 'top' | 'bottom' | 'left' | 'right';
-  align: 'start' | 'center' | 'end';
+  readonly side: 'top' | 'bottom' | 'left' | 'right';
+  readonly align: 'start' | 'center' | 'end';
 }
 
 const DropdownContext = createContext<DropdownState | null>(null);
