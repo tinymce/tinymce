@@ -237,7 +237,7 @@ describe('browser.AutoResizingTextareaTest', () => {
     }).toHaveAttribute('rows', `${1}`);
   });
 
-  it('Should calculate size correctly inside popver', async () => {
+  it('TINY-13107: Should calculate size correctly inside popver', async () => {
     const lineOfText = 'Hello World! ';
     const minHeight: Height = {
       unit: 'rows',
