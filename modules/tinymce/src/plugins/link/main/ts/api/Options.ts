@@ -92,6 +92,11 @@ const register = (editor: Editor): void => {
   registerOption('files_upload_handler', {
     processor: 'function'
   });
+
+  registerOption('link_uploadtab', {
+    processor: 'boolean',
+    default: true
+  });
 };
 
 const assumeExternalTargets = option<AssumeExternalTargets>('link_assume_external_targets');
@@ -107,6 +112,7 @@ const allowUnsafeLinkTarget = option<boolean>('allow_unsafe_link_target');
 const useQuickLink = option<boolean>('link_quicklink');
 const attributesPostProcess = option<(attributes: Record<string, string | null | undefined>) => void>('link_attributes_postprocess');
 const getFilesUploadHandler = option<UploadHandler<UploadFileData>>('files_upload_handler');
+const hasLinkUploadtab = option<boolean>('link_uploadtab');
 const getDocumentsFileTypes = option('documents_file_types');
 
 const hasFilesUploadHandler = (editor: Editor): boolean =>
@@ -127,6 +133,7 @@ export {
   hasFilesUploadHandler,
   hasDocumentsFileTypes,
   getFilesUploadHandler,
+  hasLinkUploadtab,
   shouldShowLinkTitle,
   allowUnsafeLinkTarget,
   useQuickLink,

@@ -96,11 +96,12 @@ describe('browser.tinymce.plugins.link.DialogUpdateTest', () => {
     TinyUiActions.cancelDialog(editor);
   });
 
-  context('TINY-13278: no `documents_file_types` or no `files_upload_handler`', () => {
+  context('TINY-13278: no `documents_file_types` or no `files_upload_handler` or `link_uploadtab: false`', () => {
     const cases = [
       { files_upload_handler: false, documents_file_types: true },
       { files_upload_handler: true, documents_file_types: false },
       { files_upload_handler: false, documents_file_types: false },
+      { files_upload_handler: true, documents_file_types: true, link_uploadtab: false }
     ];
     Arr.each(cases, (c) => {
       const hook = TinyHooks.bddSetupLight<Editor>({
@@ -114,6 +115,7 @@ describe('browser.tinymce.plugins.link.DialogUpdateTest', () => {
           { mimeType: 'application/msword', extensions: [ 'doc' ] },
           { mimeType: 'text/plain', extensions: [ 'txt' ] }
         ] } : {}),
+        link_uploadtab: c.link_uploadtab
       }, [ Plugin ]);
 
       it(`TINY-13278: if files_upload_handler or documents_file_types are not defined the dialog should not have an upload tab (${JSON.stringify(c)})`, async () => {
