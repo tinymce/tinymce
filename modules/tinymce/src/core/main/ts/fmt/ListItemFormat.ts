@@ -64,7 +64,7 @@ const getFullySelectedBlocks = (selection: EditorSelection) => {
 export const getFullySelectedListItems = (selection: EditorSelection): Element[] =>
   Arr.filter(getFullySelectedBlocks(selection), isEditableListItem(selection.dom));
 
-export const getPartiallySelectedListItems = (selection: EditorSelection, includeRootLIEl: boolean = false): Element[] => {
+export const getPartiallySelectedListItems = (selection: EditorSelection): Element[] => {
   const blocks = selection.getSelectedBlocks();
   // When the content of a list item is wrapped inside a block element, the selection doesn't include the list item element <li>. In this case, find and replace the block element with the LI so the format can also be applied to the LI element.
   if (blocks.length > 0 && !NodeType.isListItem(blocks[0])) {
