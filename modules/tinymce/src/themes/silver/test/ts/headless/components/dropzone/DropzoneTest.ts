@@ -101,7 +101,7 @@ describe('headless.tinymce.themes.silver.components.dropzone.DropzoneTest', () =
         label: Optional.some('Dropzone Label'),
         buttonLabel: Optional.some('Button Label'),
         dropAreaLabel: Optional.some('Drop Area Label'),
-        allowedFileTypes: Optional.some('plain/text'),
+        allowedFileTypes: Optional.some('text/plain'),
         allowedFileExtensions: Optional.some([ 'txt' ]),
       }, TestProviders, Optional.none())
     ));
@@ -123,7 +123,7 @@ describe('headless.tinymce.themes.silver.components.dropzone.DropzoneTest', () =
                       html: str.is('Drop Area Label')
                     }),
                     s.element('button', {
-                      html: str.is('Button Label<input type="file" accept="plain/text" style="display: none;">')
+                      html: str.is('Button Label<input type="file" accept="text/plain" style="display: none;">')
                     }),
                   ]
                 })
