@@ -9,6 +9,7 @@ import * as Draggable from './components/draggable/Draggable';
 import { ExpandableBox } from './components/expandablebox/ExpandableBox';
 import * as FloatingSidebar from './components/floatingsidebar/FloatingSidebar';
 import { IconButton } from './components/iconbutton/IconButton';
+import { ToggleSwitch } from './components/toggleswitch/ToggleSwitch';
 import * as KeyboardNavigationTypes from './keynav/keyboard/NavigationTypes';
 import * as KeyboardNavigationHooks from './keynav/KeyboardNavigationHooks';
 import * as Bem from './utils/Bem';
@@ -29,5 +30,6 @@ export {
   KeyboardNavigationTypes,
   Spinner,
   Tag,
+  ToggleSwitch,
   UserPromptBubble
 };
