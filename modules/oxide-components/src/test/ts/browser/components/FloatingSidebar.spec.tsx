@@ -1,7 +1,7 @@
 import { SelectorFind, SugarElement } from '@ephox/sugar';
 import * as FloatingSidebar from 'oxide-components/components/floatingsidebar/FloatingSidebar';
 import { classes } from 'oxide-components/utils/Styles';
-import { useState, type MutableRefObject, type ReactNode } from 'react';
+import { useRef, useState, type MutableRefObject, type ReactNode } from 'react';
 import { describe, expect, it, beforeAll, afterEach, afterAll, beforeEach } from 'vitest';
 import { userEvent, page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
@@ -30,7 +30,7 @@ const Wrapper = ({ children }: { children: ReactNode }) => {
 
 describe('browser.floatingsidebar.FloatingSidebar', () => {
   it('TINY-13052: Popover should be closed when isOpen is false', async () => {
-    const { getByTestId } = render(
+    const { container } = render(
       <FloatingSidebar.Root isOpen={false}>
         <FloatingSidebar.Header>
           <div data-testid={floatingSidebarHeaderTestId}>Header</div>
@@ -38,9 +38,7 @@ describe('browser.floatingsidebar.FloatingSidebar', () => {
         <div data-testid={floatingSidebarContentTestId}>Content</div>
       </FloatingSidebar.Root>, { wrapper: Wrapper });
 
-    const floatingSidebarContent = SugarElement.fromDom(getByTestId(floatingSidebarContentTestId).element());
-    const containerElement = SelectorFind.closest(floatingSidebarContent, containerSelector).getOrDie();
-
+    const containerElement = SelectorFind.descendant(SugarElement.fromDom(container), containerSelector).getOrDie();
     expect(containerElement.dom.matches(':popover-open')).toBe(false);
   });
 
@@ -78,11 +76,10 @@ describe('browser.floatingsidebar.FloatingSidebar', () => {
         </>
       );
     };
-    const { getByTestId } = render(<ToggleSidebar />, { wrapper: Wrapper });
+    const { getByTestId, container } = render(<ToggleSidebar />, { wrapper: Wrapper });
     const openSidebarButton = getByTestId(openButtonTestId);
     const closeSidebarButton = getByTestId(closeButtonTestId);
-    const floatingSidebarContent = SugarElement.fromDom(getByTestId(floatingSidebarContentTestId).element());
-    const containerElement = SelectorFind.closest(floatingSidebarContent, containerSelector).getOrDie();
+    const containerElement = SelectorFind.descendant(SugarElement.fromDom(container), containerSelector).getOrDie();
 
     expect(containerElement.dom.matches(':popover-open')).toBe(false);
     await userEvent.click(openSidebarButton);
@@ -111,6 +108,35 @@ describe('browser.floatingsidebar.FloatingSidebar', () => {
     expect(containerElement.dom.matches(':popover-open')).toBe(false);
     sidebarRef.current?.open();
     expect(containerElement.dom.matches(':popover-open')).toBe(true);
+  });
+
+  it('TINY-13107: Should lazy render children only when opened', async () => {
+    const openButtonTestId = 'open-button';
+    let renderCount = 0;
+
+    const ChildComponent = () => {
+      renderCount++;
+      return <div>Child Component</div>;
+    };
+
+    const TestComponent = () => {
+      const sidebarRef = useRef<FloatingSidebar.Ref | null>(null);
+
+      return (<>
+        <button data-testid={openButtonTestId} onClick={() => sidebarRef.current?.open()}>Open Sidebar</button>
+        <FloatingSidebar.Root isOpen={false} ref={sidebarRef}>
+          <FloatingSidebar.Header>Header</FloatingSidebar.Header>
+          <ChildComponent />
+        </FloatingSidebar.Root>
+      </>);
+    };
+
+    const { getByTestId } = render(<TestComponent />, { wrapper: Wrapper });
+    const openSidebarButton = getByTestId(openButtonTestId);
+    expect(renderCount, 'ChildComponent should not render when sidebar is closed').toBe(0);
+
+    await userEvent.click(openSidebarButton);
+    expect(renderCount, 'ChildComponent should render when sidebar is opened').toBe(1);
   });
 
   describe('TINY-13052: Viewport tests', () => {

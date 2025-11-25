@@ -1,7 +1,7 @@
-import { AutoResizingTextarea, type Ref as AutoResizingTextareaRef } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextarea';
+import { AutoResizingTextarea } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextarea';
 import type { Height } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextareaTypes';
 import { classes } from 'oxide-components/utils/Styles';
-import { useState, type MutableRefObject } from 'react';
+import { useState } from 'react';
 import { describe, expect, it } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
@@ -235,54 +235,5 @@ describe('browser.AutoResizingTextareaTest', () => {
     await expect.element(textareaLocator, {
       message: 'Textarea rows should be initially resolved to 1'
     }).toHaveAttribute('rows', `${1}`);
-  });
-
-  it('TINY-13107: Should calculate size correctly inside popver', async () => {
-    const lineOfText = 'Hello World! ';
-    const minHeight: Height = {
-      unit: 'rows',
-      value: 1
-    };
-    const textareaRef: MutableRefObject<AutoResizingTextareaRef | null> = { current: null };
-
-    const TestComponent = () => {
-      const [ value, setValue ] = useState('');
-      return (
-        <div
-          data-testid="popover"
-          {...{ popover: 'manual' } as React.HTMLAttributes<HTMLDivElement>}
-          style={{ width: '120px' }}
-        >
-          <AutoResizingTextarea ref={textareaRef} value={value} onChange={setValue} minHeight={minHeight} data-testid="textarea" />
-        </div>
-      );
-    };
-
-    const { getByTestId } = render(
-      <TestComponent />,
-      {
-        wrapper: ({ children }) => {
-          return (
-            <div className={classes([ 'tox' ])}>{ children }</div>
-          );
-        },
-      });
-
-    const textareaLocator = getByTestId('textarea');
-    const popover = getByTestId('popover').element() as HTMLElement;
-
-    popover.togglePopover();
-    textareaRef.current?.recalculate();
-
-    await expect.element(textareaLocator, { message: 'Textarea rows should be initially resolved to 1' })
-      .toHaveAttribute('rows', `${1}`);
-
-    await userEvent.type(textareaLocator, lineOfText + lineOfText);
-    await expect.element(textareaLocator, { message: 'Textarea rows should be 2 after typing' })
-      .toHaveAttribute('rows', `${2}`);
-
-    await userEvent.clear(textareaLocator);
-    await expect.element(textareaLocator, { message: 'Textarea rows should shrink to minHeight after clearing' })
-      .toHaveAttribute('rows', `${1}`);
   });
 });

@@ -1,5 +1,5 @@
 import { Type } from '@ephox/katamari';
-import { forwardRef, useCallback, useLayoutEffect, useMemo, useRef, useState, type MutableRefObject } from 'react';
+import { forwardRef, useLayoutEffect, useMemo, useRef, useState, type MutableRefObject } from 'react';
 
 import * as Bem from '../../utils/Bem';
 
@@ -16,10 +16,6 @@ const defaultMaxHeight: Height = {
   value: 4
 };
 
-export interface Ref extends HTMLTextAreaElement {
-  recalculate: () => void;
-}
-
 export interface AutoResizingTextareaProps {
   readonly maxHeight?: Height;
   readonly minHeight?: Height;
@@ -30,7 +26,7 @@ export interface AutoResizingTextareaProps {
   readonly placeholder?: string;
 }
 
-export const AutoResizingTextarea = forwardRef<Ref, AutoResizingTextareaProps>(({
+export const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizingTextareaProps>(({
   maxHeight = defaultMaxHeight,
   minHeight = defaultMinHeight,
   className,
@@ -56,12 +52,6 @@ export const AutoResizingTextarea = forwardRef<Ref, AutoResizingTextareaProps>((
 
   const maxRows = useMemo(() => computeMaxRows({ maxHeight, singleRowHeight }), [ maxHeight, singleRowHeight ]);
 
-  const recalculate = useCallback(() => {
-    if (Type.isNonNullable(textareaRef.current)) {
-      setSingleRowHeight(computeSingleRowHeight(textareaRef.current));
-    }
-  }, []);
-
   useLayoutEffect(() => {
     if (textareaRef.current) {
       resizeTextarea({
@@ -85,11 +75,10 @@ export const AutoResizingTextarea = forwardRef<Ref, AutoResizingTextareaProps>((
     ref={(el) => {
       textareaRef.current = el;
       if (ref) {
-        const elementWithRecalculate = !Type.isNull(el) ? Object.assign(el, { recalculate }) : null;
         if (typeof ref === 'function') {
-          ref(elementWithRecalculate);
+          ref(el);
         } else if (Type.isNonNullable(ref)) {
-          ref.current = elementWithRecalculate;
+          ref.current = el;
         }
       }
     }}
