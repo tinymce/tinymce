@@ -32,22 +32,28 @@ const isRngEndAtEndOfElement = (rng: Range, elm: Element) => {
 
 const isEditableListItem = (dom: DOMUtils) => (elm: Element) => NodeType.isListItem(elm) && dom.isEditable(elm);
 
-const findParentListItem = (selection: EditorSelection, el: Element) => Optional.from(selection.dom.getParent(el, NodeType.isListItem));
+// TINY-13197: If the content is wrapped inside a block element, the first block returned by getSelectedBlocks() is not LI, even when the content is fully selected.
+// However, the second and subsequent do return LI as the selected block so only the first block needs to be adjusted
+const normalizeFirstBlockIf = (selection: EditorSelection, blocks: Element[], pred: (block: Element) => boolean) =>
+  Arr.map(blocks, (block, i) => {
+    if (i === 0 && pred(block)) {
+      return Optional.from(selection.dom.getParent(block, NodeType.isListItem)).getOr(block);
+    } else {
+      return block;
+    }
+  });
 
 const getFullySelectedBlocks = (selection: EditorSelection) => {
-  const blocks = selection.getSelectedBlocks();
-  const rng = selection.getRng();
-
   if (selection.isCollapsed()) {
     return [];
   }
 
-  // TINY-13197: The first block element returned by getSelectedBlocks() is not LI if the content is wrapped inside a block element, even when the content is fully selected. The following logic finds and replaces the first block with its parent LI
-  if (blocks.length > 0 && isRngStartAtStartOfElement(rng, blocks[0]) && !NodeType.isListItem(blocks[0])) {
-    findParentListItem(selection, blocks[0]).each((listItem) => {
-      blocks[0] = listItem;
-    });
-  }
+  const rng = selection.getRng();
+  const blocks = normalizeFirstBlockIf(
+    selection,
+    selection.getSelectedBlocks(),
+    (el) => isRngStartAtStartOfElement(rng, el) && !NodeType.isListItem(el)
+  );
 
   if (blocks.length === 1) {
     return isRngStartAtStartOfElement(rng, blocks[0]) && isRngEndAtEndOfElement(rng, blocks[0]) ? blocks : [];
@@ -63,13 +69,7 @@ export const getFullySelectedListItems = (selection: EditorSelection): Element[]
   Arr.filter(getFullySelectedBlocks(selection), isEditableListItem(selection.dom));
 
 export const getPartiallySelectedListItems = (selection: EditorSelection): Element[] => {
-  const blocks = selection.getSelectedBlocks();
-  // TINY-13197 The first block element returned by getSelectedBlocks() is not LI if the content is wrapped inside a block element, even when the content is fully selected. The following logic finds and replaces the first block with its parent LI
-  if (blocks.length > 0 && !NodeType.isListItem(blocks[0])) {
-    findParentListItem(selection, blocks[0]).each((listItem) => {
-      blocks[0] = listItem;
-    });
-  }
+  const blocks = normalizeFirstBlockIf(selection, selection.getSelectedBlocks(), (el) => !NodeType.isListItem(el));
 
   return Arr.filter(blocks, isEditableListItem(selection.dom));
 };

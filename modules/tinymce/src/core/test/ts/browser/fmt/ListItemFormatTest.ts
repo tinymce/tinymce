@@ -227,7 +227,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
       });
     });
 
-    context('Applying inline formats to LIs with content being wrapped inside block elements', () => {
+    context('Applying inline formats to LIs with content being wrapped inside block element', () => {
       it('TINY-13197: Should apply fore color to a single fully selected LI', () => {
         testApplyInlineListFormat({
           format: 'forecolor',
@@ -285,6 +285,32 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
           ].join('')
         });
       });
+
+      it('TINY-13197: Should only apply color to the selected blocks and not update the first LI as it is not fully selected', () =>
+        testApplyInlineListFormat({
+          format: 'forecolor',
+          value: 'red',
+          rawInput: [
+            '<ul>',
+            '<li>',
+            '<p>bird sings</p>',
+            '<p>lion roars</p>',
+            '</li>',
+            '<li><p>cat runs</p></li>',
+            '</ul>'
+          ].join(''),
+          selection: { startPath: [ 0, 0, 1 ], soffset: 0, finishPath: [ 0, 1, 0, 0 ], foffset: 8 },
+          expected: [
+            '<ul>',
+            '<li>',
+            '<p>bird sings</p>',
+            '<p><span style="color: red;">lion roars</span></p>',
+            '</li>',
+            '<li style="color: red;"><p><span style="color: red;">cat runs</span></p></li>',
+            '</ul>'
+          ].join('')
+        })
+      );
     });
   });
 
@@ -477,7 +503,24 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
         })
       );
 
-      // it('TINY-13197: Remove all format')
+      it('TINY-13197: should only remove the LI specific styles on a partially selected LI even their content is wrapped inside block element', () =>
+        testRemoveInlineListFormat({
+          format: 'removeformat',
+          rawInput: [
+            '<ul>',
+            '<li style="color: red; font-size: 16pt;"><p><span style="color: red; font-size: 16pt;">bird sings</span></p></li>',
+            '<li style="color: red; font-size: 16pt;"><p><span style="color: red; font-size: 16pt;">cat runs</span></p></li>',
+            '</ul>'
+          ].join(''),
+          selection: { startPath: [ 0, 0, 0, 0, 0 ], soffset: 4, finishPath: [ 0, 1, 0, 0, 0 ], foffset: 8 },
+          expected: [
+            '<ul>',
+            '<li><p><span style="color: red; font-size: 16pt;">bird</span> sings</p></li>',
+            '<li><p>cat runs</p></li>',
+            '</ul>'
+          ].join('')
+        })
+      );
     });
   });
 });
