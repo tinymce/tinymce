@@ -1,7 +1,7 @@
-import { AutoResizingTextarea } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextarea';
+import { AutoResizingTextarea, type Ref as AutoResizingTextareaRef } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextarea';
 import type { Height } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextareaTypes';
 import { classes } from 'oxide-components/utils/Styles';
-import { useState } from 'react';
+import { useState, type MutableRefObject } from 'react';
 import { describe, expect, it } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
@@ -243,6 +243,7 @@ describe('browser.AutoResizingTextareaTest', () => {
       unit: 'rows',
       value: 1
     };
+    const textareaRef: MutableRefObject<AutoResizingTextareaRef | null> = { current: null };
 
     const TestComponent = () => {
       const [ value, setValue ] = useState('');
@@ -252,7 +253,7 @@ describe('browser.AutoResizingTextareaTest', () => {
           {...{ popover: 'manual' } as React.HTMLAttributes<HTMLDivElement>}
           style={{ width: '120px' }}
         >
-          <AutoResizingTextarea value={value} onChange={setValue} minHeight={minHeight} data-testid="textarea" />
+          <AutoResizingTextarea ref={textareaRef} value={value} onChange={setValue} minHeight={minHeight} data-testid="textarea" />
         </div>
       );
     };
@@ -271,6 +272,8 @@ describe('browser.AutoResizingTextareaTest', () => {
     const popover = getByTestId('popover').element() as HTMLElement;
 
     popover.togglePopover();
+    textareaRef.current?.recalculate();
+
     await expect.element(textareaLocator, { message: 'Textarea rows should be initially resolved to 1' })
       .toHaveAttribute('rows', `${1}`);
 

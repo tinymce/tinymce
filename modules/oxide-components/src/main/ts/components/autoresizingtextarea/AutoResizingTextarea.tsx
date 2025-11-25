@@ -1,5 +1,5 @@
 import { Type } from '@ephox/katamari';
-import { forwardRef, useEffect, useLayoutEffect, useMemo, useRef, useState, type MutableRefObject } from 'react';
+import { forwardRef, useCallback, useLayoutEffect, useMemo, useRef, useState, type MutableRefObject } from 'react';
 
 import * as Bem from '../../utils/Bem';
 
@@ -16,6 +16,10 @@ const defaultMaxHeight: Height = {
   value: 4
 };
 
+export interface Ref extends HTMLTextAreaElement {
+  recalculate: () => void;
+}
+
 export interface AutoResizingTextareaProps {
   readonly maxHeight?: Height;
   readonly minHeight?: Height;
@@ -26,7 +30,7 @@ export interface AutoResizingTextareaProps {
   readonly placeholder?: string;
 }
 
-export const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizingTextareaProps>(({
+export const AutoResizingTextarea = forwardRef<Ref, AutoResizingTextareaProps>(({
   maxHeight = defaultMaxHeight,
   minHeight = defaultMinHeight,
   className,
@@ -47,27 +51,16 @@ export const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizing
     }
   }, []);
 
-  // Sometimes this component is rendered hidden (e.g. inside a closed popover), then scrollHeight is 0
-  // and size calculations are wrong. So we use ResizeObserver to detect when the textarea becomes visible
-  useEffect(() => {
-    const observer = new window.ResizeObserver(() => {
-      if (Type.isNonNullable(textareaRef.current) && textareaRef.current.scrollHeight > 0) {
-        setSingleRowHeight(computeSingleRowHeight(textareaRef.current));
-        observer.disconnect();
-      }
-    });
-    if (Type.isNonNullable(textareaRef.current) && textareaRef.current.scrollHeight === 0) {
-      observer.observe(textareaRef.current);
-    }
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
   // The minRows and maxRows only need to be computed once per component instance, so they are in the useMemo hook
   const minRows = useMemo(() => computeMinRows({ minHeight, singleRowHeight }), [ minHeight, singleRowHeight ]);
 
   const maxRows = useMemo(() => computeMaxRows({ maxHeight, singleRowHeight }), [ maxHeight, singleRowHeight ]);
+
+  const recalculate = useCallback(() => {
+    if (Type.isNonNullable(textareaRef.current)) {
+      setSingleRowHeight(computeSingleRowHeight(textareaRef.current));
+    }
+  }, []);
 
   useLayoutEffect(() => {
     if (textareaRef.current) {
@@ -92,10 +85,11 @@ export const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizing
     ref={(el) => {
       textareaRef.current = el;
       if (ref) {
+        const elementWithRecalculate = !Type.isNull(el) ? Object.assign(el, { recalculate }) : null;
         if (typeof ref === 'function') {
-          ref(el);
+          ref(elementWithRecalculate);
         } else if (Type.isNonNullable(ref)) {
-          ref.current = el;
+          ref.current = elementWithRecalculate;
         }
       }
     }}
