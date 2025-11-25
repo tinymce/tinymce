@@ -503,7 +503,7 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
         })
       );
 
-      it('TINY-13197: should only remove the LI specific styles on a partially selected LI even their content is wrapped inside block element', () =>
+      it('TINY-13197: should only remove the LI specific styles on a partially selected LI even when its content is wrapped inside block element', () =>
         testRemoveInlineListFormat({
           format: 'removeformat',
           rawInput: [
