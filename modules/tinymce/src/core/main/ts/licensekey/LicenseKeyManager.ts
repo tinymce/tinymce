@@ -1,7 +1,8 @@
-import { Type } from '@ephox/katamari';
+import { Obj, Strings, Type } from '@ephox/katamari';
 
 import AddOnManager, { type AddOnConstructor } from '../api/AddOnManager';
 import type Editor from '../api/Editor';
+import * as Options from '../api/Options';
 import * as ErrorReporter from '../ErrorReporter';
 import * as ForceDisable from '../ForceDisable';
 
@@ -57,7 +58,8 @@ const setup = (): LicenseKeyManagerLoader => {
   const load = (editor: Editor, suffix: string): void => {
     const strategy = LicenseKeyUtils.determineStrategy(editor);
     if (strategy.type === 'use_plugin') {
-      const url = `plugins/${PLUGIN_CODE}/plugin${suffix}.js`;
+      const externalUrl = Obj.get(Options.getExternalPlugins(editor), PLUGIN_CODE).map(Strings.trim).filter(Strings.isNotEmpty);
+      const url = externalUrl.getOr(`plugins/${PLUGIN_CODE}/plugin${suffix}.js`);
       addOnManager.load(ADDON_KEY, url).catch(() => {
         ErrorReporter.licenseKeyManagerLoadError(editor, url);
       });

@@ -1,3 +1,4 @@
+import type { BlobInfo } from 'tinymce/core/api/file/BlobCache';
 import type { TinyMCE } from 'tinymce/core/api/PublicApi';
 
 declare let tinymce: TinyMCE;
@@ -36,7 +37,18 @@ tinymce.init({
         <p>Lorem <a href="https://www.google.com">ipsum</a> dolor <a href="https://www.tiny.cloud">sit</a> amet</p>
       `);
     });
-  }
+  },
+  files_upload_handler: (blobInfo: BlobInfo, _progress: (p: number) => void) => new Promise((success) => {
+    // eslint-disable-next-line no-console
+    console.log('files_upload_handler blobInfo: ', blobInfo);
+    setTimeout(() => {
+      success({ url: 'https://www.google.com/logos/google.jpg', fileName: 'test-in-demo' });
+    }, 5000);
+  }),
+  documents_file_types: [
+    { mimeType: 'application/msword', extensions: [ 'doc' ] },
+    { mimeType: 'text/plain', extensions: [ 'txt' ] }
+  ]
 });
 
 export {};
