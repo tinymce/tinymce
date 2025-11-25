@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Now `uc-video` has proper customizable margins.
+time: 2025-11-25T16:11:27.516335794+01:00
+custom:
+  Issue: TINY-13199
