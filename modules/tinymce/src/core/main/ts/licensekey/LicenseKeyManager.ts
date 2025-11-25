@@ -26,29 +26,24 @@ export interface LicenseKeyManager {
   readonly validate: (data: ValidateData) => Promise<boolean>;
 }
 
-const NoLicenseKeyManager = (editor: Editor): LicenseKeyManager => ({
-  validate: (data) => {
-    const { plugin } = data;
-    const hasPlugin = Type.isString(plugin);
-    // Premium plugins are not allowed
-    if (hasPlugin) {
-      LicenseKeyReporting.reportInvalidPlugin(editor, plugin);
-    }
-    return Promise.resolve(false);
-  },
-});
+const createFallbackLicenseKeyManager = (canValidate: boolean) => (editor: Editor): LicenseKeyManager => {
+  let hasShownPluginNotification = false;
+  return {
+    validate: (data) => {
+      const { plugin } = data;
+      const hasPlugin = Type.isString(plugin);
+      // Premium plugins are not allowed
+      if (hasPlugin) {
+        LicenseKeyReporting.reportInvalidPlugin(editor, plugin, hasShownPluginNotification);
+        hasShownPluginNotification = true;
+      }
+      return Promise.resolve(canValidate && !hasPlugin);
+    },
+  };
+};
 
-const GplLicenseKeyManager = (editor: Editor): LicenseKeyManager => ({
-  validate: (data) => {
-    const { plugin } = data;
-    const hasPlugin = Type.isString(plugin);
-    // Premium plugins are not allowed if 'gpl' is given as the license_key
-    if (hasPlugin) {
-      LicenseKeyReporting.reportInvalidPlugin(editor, plugin);
-    }
-    return Promise.resolve(!hasPlugin);
-  },
-});
+const NoLicenseKeyManager = createFallbackLicenseKeyManager(false);
+const GplLicenseKeyManager = createFallbackLicenseKeyManager(true);
 
 const ADDON_KEY = 'manager';
 const PLUGIN_CODE = LicenseKeyUtils.PLUGIN_CODE;
@@ -72,6 +67,7 @@ const setup = (): LicenseKeyManagerLoader => {
   };
 
   const init = (editor: Editor): void => {
+
     const setLicenseKeyManager = (licenseKeyManager: LicenseKeyManager) => {
       Object.defineProperty(editor, 'licenseKeyManager', {
         value: licenseKeyManager,
