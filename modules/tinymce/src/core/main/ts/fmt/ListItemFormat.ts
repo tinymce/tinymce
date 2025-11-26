@@ -34,10 +34,10 @@ const isEditableListItem = (dom: DOMUtils) => (elm: Element) => NodeType.isListI
 
 // TINY-13197: If the content is wrapped inside a block element, the first block returned by getSelectedBlocks() is not LI, even when the content is fully selected.
 // However, the second and subsequent do return LI as the selected block so only the first block needs to be adjusted
-const normalizeFirstBlockIf = (selection: EditorSelection, blocks: Element[], pred: (block: Element) => boolean) =>
-  Arr.map(blocks, (block, i) => {
+const getAndOnlyNormalizeFirstBlockIf = (selection: EditorSelection, pred: (block: Element) => boolean) =>
+  Arr.map(selection.getSelectedBlocks(), (block, i) => {
     if (i === 0 && pred(block)) {
-      return Optional.from(selection.dom.getParent(block, NodeType.isListItem)).getOr(block);
+      return selection.dom.getParent(block, NodeType.isListItem) ?? block;
     } else {
       return block;
     }
@@ -49,9 +49,8 @@ const getFullySelectedBlocks = (selection: EditorSelection) => {
   }
 
   const rng = selection.getRng();
-  const blocks = normalizeFirstBlockIf(
+  const blocks = getAndOnlyNormalizeFirstBlockIf(
     selection,
-    selection.getSelectedBlocks(),
     (el) => isRngStartAtStartOfElement(rng, el) && !NodeType.isListItem(el)
   );
 
@@ -68,8 +67,7 @@ const getFullySelectedBlocks = (selection: EditorSelection) => {
 export const getFullySelectedListItems = (selection: EditorSelection): Element[] =>
   Arr.filter(getFullySelectedBlocks(selection), isEditableListItem(selection.dom));
 
-export const getPartiallySelectedListItems = (selection: EditorSelection): Element[] => {
-  const blocks = normalizeFirstBlockIf(selection, selection.getSelectedBlocks(), (el) => !NodeType.isListItem(el));
-
-  return Arr.filter(blocks, isEditableListItem(selection.dom));
-};
+export const getPartiallySelectedListItems = (selection: EditorSelection): Element[] => Arr.filter(
+  getAndOnlyNormalizeFirstBlockIf(selection, (el) => !NodeType.isListItem(el)),
+  isEditableListItem(selection.dom)
+);
