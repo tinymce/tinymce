@@ -8,7 +8,7 @@
     "directory": "modules/jax"
   },
   "scripts": {
-    "prepublishOnly": "yarn run lint && yarn run build",
+    "prepublishOnly": "bun run lint && bun run build",
     "lint": "eslint --max-warnings=0 src/**/*.ts",
     "build": "tsc -b",
     "test": "bedrock-auto -b chrome-headless --customRoutes ../tinymce/src/core/test/json/routes.json -d src/test/ts/",
