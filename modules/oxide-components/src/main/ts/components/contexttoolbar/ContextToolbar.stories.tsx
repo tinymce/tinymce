@@ -57,7 +57,7 @@ The provider component that manages toolbar state.
 
 **Props:**
 - \`persistent\`: (optional, default: \`false\`). If true, the toolbar stays open when clicking outside of it.
-- \`popover\`: (optional, default: \`false\`). Enables Native Popover API mode. When \`true\`, toolbar uses \`showPopover()\` and \`hidePopover()\` to appear in the top layer. When \`false\`, the toolbar behaves as a regular absolutely-positioned element, typically used when anchoring inside an iframe overlay where Popover cannot work.
+- \`usePopover\`: (optional, default: \`false\`). Enables Native Popover API mode. When \`true\`, toolbar uses \`showPopover()\` and \`hidePopover()\` to appear in the top layer. When \`false\`, the toolbar behaves as a regular absolutely-positioned element, typically used when anchoring inside an iframe overlay where Popover cannot work.
 - \`anchorRef\`: (optional). A ref to an external element to anchor the toolbar to. When provided, the toolbar positions relative to this element instead of the Trigger component. The toolbar auto-opens on mount if no Trigger component is present.
 
 **Important:**
