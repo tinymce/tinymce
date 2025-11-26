@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef, type FC, type PropsWithChildren } from 'react';
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState, type FC, type PropsWithChildren } from 'react';
 
 import { classes } from '../../utils/Styles';
 import * as Draggable from '../draggable/Draggable';
@@ -37,24 +37,30 @@ const transformToCss = (position: InitialPosition): CssPosition => {
 const Root = forwardRef<Ref, FloatingSidebarProps>(({ isOpen = true, height = 600, children, ...props }, ref) => {
   const elementRef = useRef<HTMLDivElement | null>(null);
   const initialPosition = transformToCss(props.initialPosition ?? { x: 0, y: 0, origin: 'topleft' });
+  // The idea is to render the children after the sidebar has opened.
+  // All the children should render once the sidebar is opened.
+  const [ shouldRenderChildren, setShouldRenderChildren ] = useState(false);
+
+  const openSidebar = useCallback(() => {
+    elementRef.current?.togglePopover(true);
+    setShouldRenderChildren(true);
+  }, []);
+
+  const closeSidebar = useCallback(() => elementRef.current?.togglePopover(false), []);
 
   useImperativeHandle(ref, () => {
     return {
-      open: () => {
-        elementRef.current?.togglePopover(true);
-      },
-      close: () => {
-        elementRef.current?.togglePopover(false);
-      }
+      open: openSidebar,
+      close: closeSidebar
     };
   });
 
   useEffect(() => {
     const element = elementRef.current;
     if (element) {
-      element.togglePopover(isOpen);
+      isOpen ? openSidebar() : closeSidebar();
     }
-  }, [ isOpen ]);
+  }, [ isOpen, openSidebar, closeSidebar ]);
 
   return (
     <Draggable.Root
@@ -66,7 +72,7 @@ const Root = forwardRef<Ref, FloatingSidebarProps>(({ isOpen = true, height = 60
       declaredSize={{ width: 'var(--tox-private-floating-sidebar-width)', height: 'var(--tox-private-floating-sidebar-height)' }}
     >
       <aside className={classes([ 'tox-floating-sidebar__content-wrapper' ])}>
-        { children }
+        { shouldRenderChildren && children }
       </aside>
     </Draggable.Root>
   );
