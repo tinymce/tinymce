@@ -226,6 +226,92 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
         });
       });
     });
+
+    context('Applying inline formats to LIs with content being wrapped inside block element', () => {
+      it('TINY-13197: Should apply fore color to a single fully selected LI', () => {
+        testApplyInlineListFormat({
+          format: 'forecolor',
+          value: 'red',
+          rawInput: [
+            '<ul>',
+            '<li><p>b</p></li>',
+            '</ul>'
+          ].join(''),
+          selection: { startPath: [ 0, 0 ], soffset: 0, finishPath: [ 0, 0 ], foffset: 1 },
+          expected: [
+            '<ul>',
+            '<li style="color: red;"><p><span style="color: red;">b</span></p></li>',
+            '</ul>'
+          ].join('')
+        });
+      });
+
+      it('TINY-13197: Should apply fore color to multiple fully selected LIs', () => {
+        testApplyInlineListFormat({
+          format: 'forecolor',
+          value: 'red',
+          rawInput: [
+            '<ul>',
+            '<li><p>b</p></li>',
+            '<li><p>c</p></li>',
+            '</ul>'
+          ].join(''),
+          selection: { startPath: [ 0, 0 ], soffset: 0, finishPath: [ 0, 1 ], foffset: 1 },
+          expected: [
+            '<ul>',
+            '<li style="color: red;"><p><span style="color: red;">b</span></p></li>',
+            '<li style="color: red;"><p><span style="color: red;">c</span></p></li>',
+            '</ul>'
+          ].join('')
+        });
+      });
+
+      it('TINY-13197: Should apply color to both fully and partially selected LIs', () => {
+        testApplyInlineListFormat({
+          format: 'forecolor',
+          value: 'red',
+          rawInput: [
+            '<ul>',
+            '<li><p>bird</p></li>',
+            '<li><p>corn</p></li>',
+            '</ul>'
+          ].join(''),
+          selection: { startPath: [ 0, 0, 0, 0 ], soffset: 'bi'.length, finishPath: [ 0, 1, 0, 0 ], foffset: 'corn'.length },
+          expected: [
+            '<ul>',
+            '<li><p>bi<span style="color: red;">rd</span></p></li>',
+            '<li style="color: red;"><p><span style="color: red;">corn</span></p></li>',
+            '</ul>'
+          ].join('')
+        });
+      });
+
+      it('TINY-13197: Should only apply color to the selected blocks and not update the first LI as it is not fully selected', () =>
+        testApplyInlineListFormat({
+          format: 'forecolor',
+          value: 'red',
+          rawInput: [
+            '<ul>',
+            '<li>',
+            '<p>bird sings</p>',
+            '<p>lion roars</p>',
+            '</li>',
+            '<li><p>cat runs</p></li>',
+            '</ul>'
+          ].join(''),
+          selection: { startPath: [ 0, 0, 1 ], soffset: 0, finishPath: [ 0, 1, 0, 0 ], foffset: 8 },
+          expected: [
+            '<ul>',
+            '<li>',
+            '<p>bird sings</p>',
+            '<p><span style="color: red;">lion roars</span></p>',
+            '</li>',
+            '<li style="color: red;"><p><span style="color: red;">cat runs</span></p></li>',
+            '</ul>'
+          ].join('')
+        })
+      );
+    });
   });
 
   context('Remove inline formats from LIs', () => {
@@ -319,6 +405,50 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
       );
     });
 
+    context('Removing inline formats from LIs with content being wrapped inside block elements', () => {
+      it('TINY-13197: Should remove bold from fully selected LIs', () =>
+        testRemoveInlineListFormat({
+          format: 'bold',
+          rawInput: [
+            '<ul>',
+            '<li style="font-weight: bold;"><p><strong>bird</strong></p></li>',
+            '<li style="font-weight: bold;"><p><strong>cat</strong></p></li>',
+            '<li style="font-weight: bold;"><p><strong>dog</strong></p></li>',
+            '</ul>'
+          ].join(''),
+          selection: { startPath: [ 0, 1, 0, 0, 0 ], soffset: 0, finishPath: [ 0, 2, 0, 0, 0 ], foffset: 3 },
+          expected: [
+            '<ul>',
+            '<li style="font-weight: bold;"><p><strong>bird</strong></p></li>',
+            '<li><p>cat</p></li>',
+            '<li><p>dog</p></li>',
+            '</ul>'
+          ].join(''),
+        })
+      );
+
+      it('TINY-13197: Should remove bold from both fully selected LI and partially selected end LI', () =>
+        testRemoveInlineListFormat({
+          format: 'bold',
+          rawInput: [
+            '<ul>',
+            '<li style="font-weight: bold;"><p><strong>bird</strong></p></li>',
+            '<li style="font-weight: bold;"><p><strong>cat</strong></p></li>',
+            '<li style="font-weight: bold;"><p><strong>dog</strong></p></li>',
+            '</ul>'
+          ].join(''),
+          selection: { startPath: [ 0, 1, 0, 0, 0 ], soffset: 1, finishPath: [ 0, 2, 0, 0, 0 ], foffset: 3 },
+          expected: [
+            '<ul>',
+            '<li style="font-weight: bold;"><p><strong>bird</strong></p></li>',
+            '<li><p><strong>c</strong>at</p></li>',
+            '<li><p>dog</p></li>',
+            '</ul>'
+          ].join(''),
+        })
+      );
+    });
+
     context('Removing inline formats at caret', () => {
       it('TINY-8961: removing bold at caret in middle of word should remove bold from parent LI', () =>
         testRemoveInlineListFormat({
@@ -370,6 +500,25 @@ describe('browser.tinymce.core.fmt.ListItemFormatTest', () => {
           rawInput: '<ul><li style="font-size: 30px; font-weight: bold; color: red; font-style: italic; text-decoration: underline;">abc</li></ul>',
           selection: { startPath: [ 0, 0, 0 ], soffset: 1, finishPath: [ 0, 0, 0 ], foffset: 2 },
           expected: '<ul><li style="text-decoration: underline;">abc</li></ul>',
+        })
+      );
+
+      it('TINY-13197: should only remove the LI specific styles on a partially selected LI even when its content is wrapped inside block element', () =>
+        testRemoveInlineListFormat({
+          format: 'removeformat',
+          rawInput: [
+            '<ul>',
+            '<li style="color: red; font-size: 16pt;"><p><span style="color: red; font-size: 16pt;">bird sings</span></p></li>',
+            '<li style="color: red; font-size: 16pt;"><p><span style="color: red; font-size: 16pt;">cat runs</span></p></li>',
+            '</ul>'
+          ].join(''),
+          selection: { startPath: [ 0, 0, 0, 0, 0 ], soffset: 4, finishPath: [ 0, 1, 0, 0, 0 ], foffset: 8 },
+          expected: [
+            '<ul>',
+            '<li><p><span style="color: red; font-size: 16pt;">bird</span> sings</p></li>',
+            '<li><p>cat runs</p></li>',
+            '</ul>'
+          ].join('')
         })
       );
     });

@@ -1,7 +1,8 @@
-import { Type } from '@ephox/katamari';
+import { Obj, Strings, Type } from '@ephox/katamari';
 
 import AddOnManager, { type AddOnConstructor } from '../api/AddOnManager';
 import type Editor from '../api/Editor';
+import * as Options from '../api/Options';
 import * as ErrorReporter from '../ErrorReporter';
 import * as ForceDisable from '../ForceDisable';
 
@@ -25,29 +26,24 @@ export interface LicenseKeyManager {
   readonly validate: (data: ValidateData) => Promise<boolean>;
 }
 
-const NoLicenseKeyManager = (editor: Editor): LicenseKeyManager => ({
-  validate: (data) => {
-    const { plugin } = data;
-    const hasPlugin = Type.isString(plugin);
-    // Premium plugins are not allowed
-    if (hasPlugin) {
-      LicenseKeyReporting.reportInvalidPlugin(editor, plugin);
-    }
-    return Promise.resolve(false);
-  },
-});
+const createFallbackLicenseKeyManager = (canValidate: boolean) => (editor: Editor): LicenseKeyManager => {
+  let hasShownPluginNotification = false;
+  return {
+    validate: (data) => {
+      const { plugin } = data;
+      const hasPlugin = Type.isString(plugin);
+      // Premium plugins are not allowed
+      if (hasPlugin) {
+        LicenseKeyReporting.reportInvalidPlugin(editor, plugin, hasShownPluginNotification);
+        hasShownPluginNotification = true;
+      }
+      return Promise.resolve(canValidate && !hasPlugin);
+    },
+  };
+};
 
-const GplLicenseKeyManager = (editor: Editor): LicenseKeyManager => ({
-  validate: (data) => {
-    const { plugin } = data;
-    const hasPlugin = Type.isString(plugin);
-    // Premium plugins are not allowed if 'gpl' is given as the license_key
-    if (hasPlugin) {
-      LicenseKeyReporting.reportInvalidPlugin(editor, plugin);
-    }
-    return Promise.resolve(!hasPlugin);
-  },
-});
+const NoLicenseKeyManager = createFallbackLicenseKeyManager(false);
+const GplLicenseKeyManager = createFallbackLicenseKeyManager(true);
 
 const ADDON_KEY = 'manager';
 const PLUGIN_CODE = LicenseKeyUtils.PLUGIN_CODE;
@@ -62,7 +58,8 @@ const setup = (): LicenseKeyManagerLoader => {
   const load = (editor: Editor, suffix: string): void => {
     const strategy = LicenseKeyUtils.determineStrategy(editor);
     if (strategy.type === 'use_plugin') {
-      const url = `plugins/${PLUGIN_CODE}/plugin${suffix}.js`;
+      const externalUrl = Obj.get(Options.getExternalPlugins(editor), PLUGIN_CODE).map(Strings.trim).filter(Strings.isNotEmpty);
+      const url = externalUrl.getOr(`plugins/${PLUGIN_CODE}/plugin${suffix}.js`);
       addOnManager.load(ADDON_KEY, url).catch(() => {
         ErrorReporter.licenseKeyManagerLoadError(editor, url);
       });
@@ -70,6 +67,7 @@ const setup = (): LicenseKeyManagerLoader => {
   };
 
   const init = (editor: Editor): void => {
+
     const setLicenseKeyManager = (licenseKeyManager: LicenseKeyManager) => {
       Object.defineProperty(editor, 'licenseKeyManager', {
         value: licenseKeyManager,

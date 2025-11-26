@@ -6,6 +6,42 @@
 
 This library provides reusable React components that integrate with TinyMCE's Oxide design system. Components are built with TypeScript, documented with Storybook, and thoroughly tested with both unit and visual regression tests.
 
+## System Requirements
+
+Before contributing, ensure you have the following installed:
+
+- [Docker](https://docs.docker.com/engine/install/) on Linux and [Colima](https://github.com/abiosoft/colima?tab=readme-ov-file#installation) on macOS.
+- Docker CLI on macOS (`brew install docker`).
+- [Git LFS](https://github.com/git-lfs/git-lfs?tab=readme-ov-file#installing).
+
+Please note that we recommend using [Colima](https://github.com/abiosoft/colima?tab=readme-ov-file#installation) on macOS rather than Docker Desktop,
+because Docker Desktop is [not free for companies above a certain size](https://docs.docker.com/desktop/setup/install/mac-install/).
+
+## Project Setup
+
+Once you have the system requirements installed, follow these steps to set up the project:
+
+
+1. Install dependencies:
+   ```sh
+   yarn
+   ```
+
+2. Start the Colima server:
+   ```sh
+   colima start
+   ```
+
+3. Pull the visual test snapshots from git-lfs:
+   ```sh
+   git lfs fetch && git lfs pull
+   ```
+
+4. Start the development server:
+   ```sh
+   yarn dev
+   ```
+
 ## Folder Structure
 
 ### Root Directory
