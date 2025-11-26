@@ -57,10 +57,11 @@ The provider component that manages toolbar state.
 
 **Props:**
 - \`persistent\`: (optional, default: \`false\`). If true, the toolbar stays open when clicking outside of it.
+- \`usePopover\`: (optional, default: \`false\`). Enables Native Popover API mode. When \`true\`, toolbar uses \`showPopover()\` and \`hidePopover()\` to appear in the top layer. When \`false\`, the toolbar behaves as a regular absolutely-positioned element, typically used when anchoring inside an iframe overlay where Popover cannot work.
 - \`anchorRef\`: (optional). A ref to an external element to anchor the toolbar to. When provided, the toolbar positions relative to this element instead of the Trigger component. The toolbar auto-opens on mount if no Trigger component is present.
 
-**Important:** 
-- Use either \`Trigger\` component OR \`anchorRef\` (not both). 
+**Important:**
+- Use either \`Trigger\` component OR \`anchorRef\` (not both).
 - With \`anchorRef\` and no Trigger, the toolbar auto-opens on mount.
 - Visibility is controlled by conditional rendering - mount/unmount the component based on your state (e.g., when an annotation is selected).
 
@@ -68,7 +69,7 @@ The provider component that manages toolbar state.
 Wraps the element that opens the toolbar when clicked.
 
 ### Toolbar
-Contains the toolbar content and groups. Uses the Popover API (popover='manual') for layering and positioning, with manual control over dismissal behavior.
+Contains the toolbar content and groups. When \`popover\` is \`true\`, it uses the Popover API (\`popover="manual"\`) for top-layer layering, while the component still controls when it opens and closes. When \`popover\` is \`false\`, it renders as a regular absolutely positioned element anchored to the trigger or \`anchorRef\`.
 
 ### Group
 Groups related buttons together for keyboard navigation. Buttons within a group are navigated with arrow keys, while Tab moves between groups.
@@ -84,7 +85,7 @@ Groups related buttons together for keyboard navigation. Buttons within a group 
 - Toolbar automatically receives focus when opened
 
 ## Accessibility
-- **Keyboard Navigation**: 
+- **Keyboard Navigation**:
   - \`Tab\` / \`Shift+Tab\`: Navigate between toolbar groups (cyclic)
   - \`Arrow Left\` / \`Arrow Up\`: Navigate to previous button in group
   - \`Arrow Right\` / \`Arrow Down\`: Navigate to next button in group
@@ -396,3 +397,65 @@ export const WithAnchorRef: Story = {
   }
 };
 
+export const ScrollAnchored: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Demonstrates anchored toolbar positioning without the Popover API. The toolbar stays inside the scroll container and tracks its anchor element as the page scrolls. This mode mirrors iframe-overlay behavior (popover={false}).',
+      },
+    },
+  },
+  render: () => {
+    const anchorRef = useRef<HTMLDivElement>(null);
+    const [ showToolbar, setShowToolbar ] = useState(true);
+
+    return (
+      <div
+        className="tox"
+        style={{
+          height: '300px',
+          overflow: 'auto',
+          border: '1px solid #ccc',
+          position: 'relative',
+        }}
+      >
+        <div style={{ height: '1000px', padding: '20px' }}>
+          <p>Scroll down to find the anchor ↓</p>
+
+          <div style={{ marginTop: '300px' }}>
+            <div
+              ref={anchorRef}
+              style={{
+                backgroundColor: 'lightgreen',
+                padding: '12px',
+                cursor: 'pointer',
+                display: 'inline-block',
+              }}
+            >
+              Scroll-anchored element
+            </div>
+
+            <button
+              onClick={() => setShowToolbar(!showToolbar)}
+              style={{ marginLeft: '10px' }}
+            >
+              {showToolbar ? 'Hide' : 'Show'} Toolbar
+            </button>
+
+            {showToolbar && (
+              <ContextToolbar.Root anchorRef={anchorRef} persistent={true} usePopover={false}>
+                <ContextToolbar.Toolbar>
+                  <ContextToolbar.Group>
+                    <Button>Accept</Button>
+                    <Button>Reject</Button>
+                  </ContextToolbar.Group>
+                </ContextToolbar.Toolbar>
+              </ContextToolbar.Root>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  },
+};
