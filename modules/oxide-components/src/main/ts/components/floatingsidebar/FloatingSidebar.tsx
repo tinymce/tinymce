@@ -37,7 +37,7 @@ const transformToCss = (position: InitialPosition): CssPosition => {
 const Root = forwardRef<Ref, FloatingSidebarProps>(({ isOpen = true, height = 600, children, ...props }, ref) => {
   const elementRef = useRef<HTMLDivElement | null>(null);
   const initialPosition = transformToCss(props.initialPosition ?? { x: 0, y: 0, origin: 'topleft' });
-  // The idea is to postpone the rendering of children until the sidebar is opened.
+  // The idea is to render the children after the sidebar has opened.
   // All the children should render once the sidebar is opened.
   const [ shouldRenderChildren, setShouldRenderChildren ] = useState(false);
 
