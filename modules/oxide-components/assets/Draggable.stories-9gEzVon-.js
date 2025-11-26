@@ -1,4 +1,4 @@
-import{j as e}from"./iframe-DvbYzFv_.js";import{R as a,H as r}from"./Draggable-XWzpDpWt.js";import"./Optional-Bk48EtMP.js";const c={title:"components/Draggable",component:a,parameters:{layout:"fullscreen",docs:{description:{component:`A draggable container component that allows users to reposition elements by dragging them around the viewport.
+import{j as e}from"./iframe-C8xbZ5Ql.js";import{R as a,H as r}from"./Draggable-D3jSTk1W.js";import"./Optional-BsJ-k4_8.js";import"./Fun--VEwoXIw.js";const g={title:"components/Draggable",component:a,parameters:{layout:"fullscreen",docs:{description:{component:`A draggable container component that allows users to reposition elements by dragging them around the viewport.
 
 ## How it works
 
@@ -42,4 +42,4 @@ If you do care about it, but don't know the exact size of the element you'll hav
     }
   },
   render
-}`,...(n=(i=t.parameters)==null?void 0:i.docs)==null?void 0:n.source}}};const g=["Example"];export{t as Example,g as __namedExportsOrder,c as default};
+}`,...(n=(i=t.parameters)==null?void 0:i.docs)==null?void 0:n.source}}};const m=["Example"];export{t as Example,m as __namedExportsOrder,g as default};
