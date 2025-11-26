@@ -1,10 +1,46 @@
-import{j as n,b as s,f as i}from"./iframe-C_I4C2iJ.js";import{useMDXComponents as r}from"./index-k5C_h5d0.js";const a=`# Contributing to Oxide Components
+import{j as n,b as s,c as i}from"./iframe-DvbYzFv_.js";import{useMDXComponents as a}from"./index-K7wABPau.js";const r=`# Contributing to Oxide Components
 
 \`oxide-components\` is a React component library for the TinyMCE rich text editor. This guide will help you understand the project structure, architecture, and development workflow.
 
 ## Project Overview
 
 This library provides reusable React components that integrate with TinyMCE's Oxide design system. Components are built with TypeScript, documented with Storybook, and thoroughly tested with both unit and visual regression tests.
+
+## System Requirements
+
+Before contributing, ensure you have the following installed:
+
+- [Docker](https://docs.docker.com/engine/install/) on Linux and [Colima](https://github.com/abiosoft/colima?tab=readme-ov-file#installation) on macOS.
+- Docker CLI on macOS (\`brew install docker\`).
+- [Git LFS](https://github.com/git-lfs/git-lfs?tab=readme-ov-file#installing).
+
+Please note that we recommend using [Colima](https://github.com/abiosoft/colima?tab=readme-ov-file#installation) on macOS rather than Docker Desktop,
+because Docker Desktop is [not free for companies above a certain size](https://docs.docker.com/desktop/setup/install/mac-install/).
+
+## Project Setup
+
+Once you have the system requirements installed, follow these steps to set up the project:
+
+
+1. Install dependencies:
+   \`\`\`sh
+   yarn
+   \`\`\`
+
+2. Start the Colima server:
+   \`\`\`sh
+   colima start
+   \`\`\`
+
+3. Pull the visual test snapshots from git-lfs:
+   \`\`\`sh
+   git lfs fetch && git lfs pull
+   \`\`\`
+
+4. Start the development server:
+   \`\`\`sh
+   yarn dev
+   \`\`\`
 
 ## Folder Structure
 
@@ -195,4 +231,4 @@ Components integrate with TinyMCE's Oxide design system:
 - Look at similar components for patterns
 - Review test files for usage examples
 `;function o(e){return n.jsxs(n.Fragment,{children:[n.jsx(s,{title:"Contributing guide"}),`
-`,n.jsx(i,{children:a})]})}function d(e={}){const{wrapper:t}={...r(),...e.components};return t?n.jsx(t,{...e,children:n.jsx(o,{...e})}):o()}export{d as default};
+`,n.jsx(i,{children:r})]})}function d(e={}){const{wrapper:t}={...a(),...e.components};return t?n.jsx(t,{...e,children:n.jsx(o,{...e})}):o()}export{d as default};
