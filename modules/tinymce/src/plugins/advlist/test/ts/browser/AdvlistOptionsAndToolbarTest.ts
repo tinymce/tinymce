@@ -58,7 +58,7 @@ describe('browser.tinymce.plugins.advlist.AdvlistOptionsAndToolbarTest', () => {
               classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ],
               attrs: {
                 'data-mce-name': str.is('numlist-chevron'),
-                'aria-label': str.is('Numbered list menu')
+                'aria-label': str.is('Numbered list')
               }
             })
           ] : [
@@ -82,7 +82,7 @@ describe('browser.tinymce.plugins.advlist.AdvlistOptionsAndToolbarTest', () => {
               classes: [ arr.has('tox-tbtn'), arr.has('tox-split-button__chevron') ],
               attrs: {
                 'data-mce-name': str.is('bullist-chevron'),
-                'aria-label': str.is('Bullet list menu')
+                'aria-label': str.is('Bullet list')
               }
             })
           ] : [
