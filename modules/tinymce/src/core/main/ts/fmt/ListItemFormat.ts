@@ -32,19 +32,34 @@ const isRngEndAtEndOfElement = (rng: Range, elm: Element) => {
 
 const isEditableListItem = (dom: DOMUtils) => (elm: Element) => NodeType.isListItem(elm) && dom.isEditable(elm);
 
-const getFullySelectedBlocks = (selection: EditorSelection) => {
-  const blocks = selection.getSelectedBlocks();
-  const rng = selection.getRng();
+// TINY-13197: If the content is wrapped inside a block element, the first block returned by getSelectedBlocks() is not LI, even when the content is fully selected.
+// However, the second and subsequent do return LI as the selected block so only the first block needs to be adjusted
+const getAndOnlyNormalizeFirstBlockIf = (selection: EditorSelection, pred: (block: Element) => boolean) =>
+  Arr.map(selection.getSelectedBlocks(), (block, i) => {
+    if (i === 0 && pred(block)) {
+      return selection.dom.getParent(block, NodeType.isListItem) ?? block;
+    } else {
+      return block;
+    }
+  });
 
+const getFullySelectedBlocks = (selection: EditorSelection) => {
   if (selection.isCollapsed()) {
     return [];
-  } if (blocks.length === 1) {
+  }
+
+  const rng = selection.getRng();
+  const blocks = getAndOnlyNormalizeFirstBlockIf(
+    selection,
+    (el) => isRngStartAtStartOfElement(rng, el) && !NodeType.isListItem(el)
+  );
+
+  if (blocks.length === 1) {
     return isRngStartAtStartOfElement(rng, blocks[0]) && isRngEndAtEndOfElement(rng, blocks[0]) ? blocks : [];
   } else {
     const first = Arr.head(blocks).filter((elm) => isRngStartAtStartOfElement(rng, elm)).toArray();
     const last = Arr.last(blocks).filter((elm) => isRngEndAtEndOfElement(rng, elm)).toArray();
     const middle = blocks.slice(1, -1);
-
     return first.concat(middle).concat(last);
   }
 };
@@ -52,5 +67,7 @@ const getFullySelectedBlocks = (selection: EditorSelection) => {
 export const getFullySelectedListItems = (selection: EditorSelection): Element[] =>
   Arr.filter(getFullySelectedBlocks(selection), isEditableListItem(selection.dom));
 
-export const getPartiallySelectedListItems = (selection: EditorSelection): Element[] =>
-  Arr.filter(selection.getSelectedBlocks(), isEditableListItem(selection.dom));
+export const getPartiallySelectedListItems = (selection: EditorSelection): Element[] => Arr.filter(
+  getAndOnlyNormalizeFirstBlockIf(selection, (el) => !NodeType.isListItem(el)),
+  isEditableListItem(selection.dom)
+);

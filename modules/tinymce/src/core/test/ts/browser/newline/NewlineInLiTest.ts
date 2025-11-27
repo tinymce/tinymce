@@ -149,4 +149,32 @@ describe('browser.tinymce.core.newline.NewlineInLiTest', () => {
     TinyAssertions.assertContent(editor, [ '<ul>', '<li>Th</li>', '<li>is is a paragraph</li>', '</ul>' ].join('\n'));
     TinyAssertions.assertCursor(editor, [ 0, 1, 0 ], 0);
   });
+
+  it('TINY-13224: font-size should be applied to a new list item in a unordered list when pressing Enter key', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      `<ul>
+        <li style="font-size: 24pt;">This is a paragraph</li>
+      </ul>`
+    );
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 'This is a paragraph'.length);
+    TinyContentActions.keydown(editor, Keys.enter());
+
+    TinyAssertions.assertContent(editor, [ '<ul>', '<li style="font-size: 24pt;">This is a paragraph</li>', '<li style="font-size: 24pt;">&nbsp;</li>', '</ul>' ].join('\n'));
+    TinyAssertions.assertCursor(editor, [ 0, 1 ], 0);
+  });
+
+  it('TINY-13224: font-size should be applied to a new list item in an ordered list when pressing Enter key', () => {
+    const editor = hook.editor();
+    editor.setContent(
+      `<ol>
+        <li style="font-size: 20pt;">This is a paragraph</li>
+      </ol>`
+    );
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 'This is a paragraph'.length);
+    TinyContentActions.keydown(editor, Keys.enter());
+
+    TinyAssertions.assertContent(editor, [ '<ol>', '<li style="font-size: 20pt;">This is a paragraph</li>', '<li style="font-size: 20pt;">&nbsp;</li>', '</ol>' ].join('\n'));
+    TinyAssertions.assertCursor(editor, [ 0, 1 ], 0);
+  });
 });

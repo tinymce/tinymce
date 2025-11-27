@@ -8,7 +8,7 @@ import ListsPlugin from 'tinymce/plugins/lists/Plugin';
 
 describe('browser.tinymce.plugins.advlist.ListStyleAliasTest', () => {
   const pClickOnSplitListBtnFor = async (editor: Editor, label: string) => {
-    TinyUiActions.clickOnToolbar(editor, `button[aria-label="${label} menu"]`);
+    TinyUiActions.clickOnToolbar(editor, `button.tox-split-button__chevron[aria-label="${label}"]`);
     return TinyUiActions.pWaitForUi(editor, '.tox-menu.tox-selected-menu');
   };
 

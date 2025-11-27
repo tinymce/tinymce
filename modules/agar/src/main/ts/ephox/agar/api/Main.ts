@@ -7,6 +7,7 @@ import { Chain } from './Chain';
 import * as ChainSequence from './ChainSequence';
 import { Cleaner } from './Cleaner';
 import * as Clipboard from './Clipboard';
+import * as ConsoleReader from './ConsoleReader';
 import * as Cursors from './Cursors';
 import * as DragnDrop from './DragnDrop';
 import * as FileInput from './FileInput';
@@ -55,6 +56,7 @@ export {
   Cleaner,
   Clipboard,
   Cursors,
+  ConsoleReader,
   FocusTools,
   GeneralSteps,
   StepSequence,

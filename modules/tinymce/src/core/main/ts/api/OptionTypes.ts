@@ -25,6 +25,13 @@ export type ThemeInitFunc = (editor: Editor, elm: HTMLElement) => {
   api?: EditorUiApi;
 };
 
+export type DocumentsFileTypesProcessorReturnType = { valid: false; message: string } | { valid: true; value: DocumentsFileTypes[] };
+
+export interface DocumentsFileTypes {
+  readonly mimeType: string;
+  readonly extensions: Array<string>;
+};
+
 export type SetupCallback = (editor: Editor) => void;
 
 export type FilePickerCallback = (callback: (value: string, meta?: Record<string, any>) => void, value: string, meta: Record<string, any>) => void;
@@ -368,4 +375,5 @@ export interface EditorOptions extends NormalizedEditorOptions {
   width: number | string;
   xss_sanitization: boolean;
   disabled: boolean;
+  documents_file_types: DocumentsFileTypes[];
 }
