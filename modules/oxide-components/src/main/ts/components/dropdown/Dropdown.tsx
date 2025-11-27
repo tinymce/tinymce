@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useId, useRef, useState, type FC, type PropsWithChildren } from 'react';
+import { Throttler } from '@ephox/katamari';
+import { useCallback, useEffect, useId, useMemo, useRef, useState, type FC, type MouseEvent, type PropsWithChildren } from 'react';
 
 import { Bem } from '../../main';
 import { Button, type ButtonProps } from '../button/Button';
@@ -6,17 +7,13 @@ import { Button, type ButtonProps } from '../button/Button';
 import { DropdownContext, useDropdown } from './internals/Context';
 import * as PositioningUtils from './internals/PositioningUtils';
 
-export interface DropdownProps extends PropsWithChildren {
-  readonly side?: 'top' | 'bottom' | 'left' | 'right';
-  readonly align?: 'start' | 'center' | 'end';
-}
+const isInDropdownContent = (contentRef: React.RefObject<HTMLDivElement>, node: Node): boolean => {
+  return contentRef.current?.contains(node) || false;
+};
 
-// margin/gap between the trigger button and anchored container
-const GAP = 8;
-
+// TODO: invastigate lazy loading content children (look at the FloatingSidebar component). Could be tricky - to correctly calculate the position we need children to be rendered
 const Content: FC<PropsWithChildren> = ({ children, ...props }) => {
-  const { popoverId, triggerRef, side, align } = useDropdown();
-  const contentRef = useRef<HTMLDivElement>(null);
+  const { popoverId, triggerRef, side, align, gap, contentRef, triggersOnHover, debouncedHideHoverablePopover } = useDropdown();
 
   const [ positioningStyles, setPositioningStyles ] = useState({});
 
@@ -29,9 +26,9 @@ const Content: FC<PropsWithChildren> = ({ children, ...props }) => {
       const anchoredContainerRect = contentRef.current.getBoundingClientRect();
 
       // using document rect as a boundry, but maybe it should be the Editor area?
-      setPositioningStyles(PositioningUtils.getPositionStyles({ anchorRect, anchoredContainerRect, side, align, gap: GAP, boundaryRect: documentRect }));
+      setPositioningStyles(PositioningUtils.getPositionStyles({ anchorRect, anchoredContainerRect, side, align, gap, boundaryRect: documentRect }));
     }
-  }, [ contentRef, triggerRef, align, side ]);
+  }, [ contentRef, triggerRef, align, side, gap ]);
 
   useEffect(() => {
     const element = contentRef.current;
@@ -45,24 +42,70 @@ const Content: FC<PropsWithChildren> = ({ children, ...props }) => {
     };
   }, [ contentRef, updatePosition ]);
 
-  // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
-  return <div className={Bem.block('tox-dropdown-content')} popover='auto' id={popoverId} ref={contentRef} { ...props } style={{ ...positioningStyles }}>
+  return <div
+    // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
+    popover='auto'
+    className={Bem.block('tox-dropdown-content')}
+    id={popoverId}
+    ref={contentRef}
+    style={{ ...positioningStyles }}
+    { ...triggersOnHover && {
+      onMouseLeave: debouncedHideHoverablePopover.throttle,
+      onMouseEnter: () => debouncedHideHoverablePopover.cancel()
+    }}
+    { ...props }
+  >
     {children}
   </div>;
 };
 
 const TriggerButton: FC<ButtonProps> = ({ children, ...args }) => {
-  const { popoverId, triggerRef } = useDropdown();
+  const { popoverId, triggerRef, contentRef, triggersOnHover, debouncedHideHoverablePopover } = useDropdown();
 
-  // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
-  return <Button popovertarget={popoverId} popovertargetaction={'toggle'} ref={triggerRef} {...args}>{children}</Button>;
+  const onHoverTriggerProps = {
+    onMouseEnter: () => {
+      contentRef.current?.showPopover();
+      debouncedHideHoverablePopover.cancel();
+    },
+    onMouseLeave: (e: MouseEvent) => {
+      debouncedHideHoverablePopover.throttle(e);
+    }
+  };
+
+  const props = {
+    popovertarget: popoverId,
+    popovertargetaction: 'toggle',
+    ref: triggerRef,
+    children,
+    ...triggersOnHover && onHoverTriggerProps,
+    ...args
+  };
+
+  return (<>{ args.variant ? <Button { ...props } variant={args.variant} /> : <button { ...props }/> }</>);
 };
 
-const Root: FC<DropdownProps> = ({ children, side = 'top', align = 'start' }) => {
+export interface DropdownProps extends PropsWithChildren {
+  readonly side?: 'top' | 'bottom' | 'left' | 'right';
+  readonly align?: 'start' | 'center' | 'end';
+  // margin/gap between the trigger button and anchored container
+  readonly gap?: number;
+  readonly triggersOnHover?: boolean;
+}
+
+const Root: FC<DropdownProps> = ({ children, side = 'top', align = 'start', gap = 8, triggersOnHover = false }) => {
   const popoverId = useId();
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
-  return <DropdownContext.Provider value={{ triggerRef, popoverId, side, align }}>{children}</DropdownContext.Provider>;
+  // debounced hide popover function on mouse leave (used when triggersOnHover is enabled)
+  const debouncedHideHoverablePopover = useMemo(() => Throttler.last((e: MouseEvent) => {
+    // in the hover mode, the dropdown should close when the cursor is moved outside of the dropdown content, works for nested dropdowns
+    if (!(e.relatedTarget instanceof Node) || !isInDropdownContent(contentRef, e.relatedTarget)) {
+      contentRef.current?.hidePopover();
+    }
+  }, 300), []);
+
+  return <DropdownContext.Provider value={{ triggerRef, contentRef, popoverId, side, align, gap, triggersOnHover, debouncedHideHoverablePopover }}>{children}</DropdownContext.Provider>;
 };
 
 export {
