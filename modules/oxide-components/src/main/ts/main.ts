@@ -11,6 +11,7 @@ import { ExpandableBox } from './components/expandablebox/ExpandableBox';
 import * as FloatingSidebar from './components/floatingsidebar/FloatingSidebar';
 import { Icon } from './components/icon/Icon';
 import { IconButton } from './components/iconbutton/IconButton';
+import { Menu } from './components/menu/Menu';
 import { ToggleSwitch } from './components/toggleswitch/ToggleSwitch';
 import * as KeyboardNavigationTypes from './keynav/keyboard/NavigationTypes';
 import * as KeyboardNavigationHooks from './keynav/KeyboardNavigationHooks';
@@ -34,6 +35,7 @@ export {
   KeyboardNavigationTypes,
   Spinner,
   Tag,
+  Menu,
   ToggleSwitch,
   UserPromptBubble
 };
