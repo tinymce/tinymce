@@ -1,0 +1,20 @@
+import { createContext, useContext } from 'react';
+
+export interface DropdownState {
+  readonly popoverId: string;
+  readonly triggerRef: React.RefObject<HTMLButtonElement>;
+  readonly side: 'top' | 'bottom' | 'left' | 'right';
+  readonly align: 'start' | 'center' | 'end';
+}
+
+const DropdownContext = createContext<DropdownState | null>(null);
+
+const useDropdown = (): DropdownState => {
+  const context = useContext(DropdownContext);
+  if (context === null) {
+    throw new Error('Dropdown compound components must be rendered within the Dropdown component');
+  }
+  return context;
+};
+
+export { useDropdown, DropdownContext };
