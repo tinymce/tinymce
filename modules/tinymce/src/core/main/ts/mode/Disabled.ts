@@ -92,24 +92,25 @@ const processDisabledEvents = (editor: Editor, e: Event): void => {
       b) open the link using default browser behaviour
   */
   if (isClickEvent(e) && !VK.metaKeyPressed(e)) {
-    let isHandled = false;
     const elm = SugarElement.fromDom(e.target as Node);
-    getAnchorHrefOpt(editor, elm).each((href) => {
-      e.preventDefault();
-      isHandled = true;
-      if (/^#/.test(href)) {
-        const targetEl = editor.dom.select(`${href},[name="${Strings.removeLeading(href, '#')}"]`);
-        if (targetEl.length) {
-          editor.selection.scrollIntoView(targetEl[0], true);
+    getAnchorHrefOpt(editor, elm).fold(
+      () => {
+        if (hasAccordion(editor, elm)) {
+          e.preventDefault();
         }
-      } else {
-        window.open(href, '_blank', 'rel=noopener noreferrer,menubar=yes,toolbar=yes,location=yes,status=yes,resizable=yes,scrollbars=yes');
-      }
-    });
+      },
+      (href) => {
+        e.preventDefault();
+        if (/^#/.test(href)) {
+          const targetEl = editor.dom.select(`${href},[name="${Strings.removeLeading(href, '#')}"]`);
+          if (targetEl.length) {
+            editor.selection.scrollIntoView(targetEl[0], true);
+          }
+        } else {
+          window.open(href, '_blank', 'rel=noopener noreferrer,menubar=yes,toolbar=yes,location=yes,status=yes,resizable=yes,scrollbars=yes');
+        }
+      });
 
-    if (!isHandled && hasAccordion(editor, elm)) {
-      e.preventDefault();
-    }
   } else if (isAllowedEventInDisabledMode(e)) {
     editor.dispatch(e.type, e);
   }
@@ -136,9 +137,9 @@ const registerEventsAndFilters = (editor: Editor): void => {
 };
 
 export {
+  getAnchorHrefOpt,
   isDisabled,
   processDisabledEvents,
-  getAnchorHrefOpt,
-  toggleDisabled,
-  registerEventsAndFilters
+  registerEventsAndFilters,
+  toggleDisabled
 };
