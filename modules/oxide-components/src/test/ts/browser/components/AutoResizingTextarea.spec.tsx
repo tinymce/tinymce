@@ -1,9 +1,9 @@
-import { userEvent } from '@vitest/browser/context';
 import { AutoResizingTextarea } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextarea';
 import type { Height } from 'oxide-components/components/autoresizingtextarea/AutoResizingTextareaTypes';
 import { classes } from 'oxide-components/utils/Styles';
 import { useState } from 'react';
 import { describe, expect, it } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
 describe('browser.AutoResizingTextareaTest', () => {

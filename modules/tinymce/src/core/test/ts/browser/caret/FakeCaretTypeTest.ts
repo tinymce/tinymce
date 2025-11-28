@@ -9,7 +9,7 @@ describe('browser.tinymce.core.FakeCaretTypeTest', () => {
     indent: false
   }, [ ]);
 
-  it('typing after a noneditable block should remove the fake caret', () => {
+  it('typing after a noneditable block should remove the fake caret', async () => {
     const editor = hook.editor();
     editor.setContent('<div contenteditable="false">a</div>');
     TinySelections.setCursor(editor, [], 1);
@@ -18,7 +18,7 @@ describe('browser.tinymce.core.FakeCaretTypeTest', () => {
       'div.mce-visual-caret': 1
     });
 
-    TinyContentActions.type(editor, 'b');
+    await TinyContentActions.pType(editor, 'b');
 
     TinyAssertions.assertContent(editor, '<div contenteditable="false">a</div><p>b</p>');
     TinyAssertions.assertContentPresence(editor, {

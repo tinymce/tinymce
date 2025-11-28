@@ -1,7 +1,7 @@
 import { Type } from '@ephox/katamari';
 import { forwardRef, useLayoutEffect, useMemo, useRef, useState, type MutableRefObject } from 'react';
 
-import { classes } from '../../utils/Styles';
+import * as Bem from '../../utils/Bem';
 
 import type { Height } from './AutoResizingTextareaTypes';
 import { computeMaxRows, computeMinRows, computeSingleRowHeight, resizeTextarea } from './AutoResizingTextareaUtils';
@@ -65,7 +65,7 @@ export const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizing
 
   return <textarea
     {...rest}
-    className={`${classes([ 'tox-textarea' ])} ${className ?? ''}`}
+    className={`${Bem.block('tox-textarea')} ${className ?? ''}`}
     value={value}
     onChange={(event) => {
       if (onChange) {

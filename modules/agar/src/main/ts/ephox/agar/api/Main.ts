@@ -7,6 +7,7 @@ import { Chain } from './Chain';
 import * as ChainSequence from './ChainSequence';
 import { Cleaner } from './Cleaner';
 import * as Clipboard from './Clipboard';
+import * as ConsoleReader from './ConsoleReader';
 import * as Cursors from './Cursors';
 import * as DragnDrop from './DragnDrop';
 import * as FileInput from './FileInput';
@@ -16,6 +17,7 @@ import * as GeneralSteps from './GeneralSteps';
 import * as Generators from './Generators';
 import { GroupStore } from './GroupStore';
 import * as Guard from './Guard';
+import * as Http from './Http';
 import * as Keyboard from './Keyboard';
 import { Keys } from './Keys';
 import * as Log from './Log';
@@ -54,12 +56,14 @@ export {
   Cleaner,
   Clipboard,
   Cursors,
+  ConsoleReader,
   FocusTools,
   GeneralSteps,
   StepSequence,
   Generators,
   GroupStore,
   Guard,
+  Http,
   Keyboard,
   Keys,
   Log,

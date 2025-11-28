@@ -5,6 +5,7 @@ import { Attribute, SelectorFind, SugarElement } from '@ephox/sugar';
 import type Editor from 'tinymce/core/api/Editor';
 
 import * as Events from '../api/Events';
+import * as Options from '../api/Options';
 
 import * as Identifiers from './Identifiers';
 import * as Utils from './Utils';
@@ -44,8 +45,13 @@ const insertAccordion = (editor: Editor): void => {
   });
 };
 
-const toggleDetailsElement = (details: HTMLDetailsElement, state?: boolean): boolean => {
+const toggleDetailsElement = (isReadonly: boolean, details: HTMLDetailsElement, state?: boolean): boolean => {
   const shouldOpen = state ?? !Utils.isOpen(details);
+
+  if (!isReadonly) {
+    details.setAttribute(Identifiers.accordionReadonlyCompensationAttribute, shouldOpen ? 'open' : 'closed');
+  }
+
   if (shouldOpen) {
     details.setAttribute('open', 'open');
   } else {
@@ -55,8 +61,12 @@ const toggleDetailsElement = (details: HTMLDetailsElement, state?: boolean): boo
 };
 
 const toggleAccordion = (editor: Editor, state?: boolean): void => {
+  if (Options.isDisabled(editor)) {
+    return;
+  }
+
   Utils.getSelectedDetails(editor).each((details) => {
-    Events.fireToggleAccordionEvent(editor, details, toggleDetailsElement(details, state));
+    Events.fireToggleAccordionEvent(editor, details, toggleDetailsElement(editor.readonly, details, state));
   });
 };
 
@@ -82,7 +92,7 @@ const toggleAllAccordions = (editor: Editor, state?: boolean): void => {
   if (accordions.length === 0) {
     return;
   }
-  Arr.each(accordions, (accordion) => toggleDetailsElement(accordion, state ?? !Utils.isOpen(accordion)));
+  Arr.each(accordions, (accordion) => toggleDetailsElement(editor.readonly, accordion, state ?? !Utils.isOpen(accordion)));
   Events.fireToggleAllAccordionsEvent(editor, accordions, state);
 };
 

@@ -1,20 +1,26 @@
-import { Draggable } from 'oxide-components/components/draggable/Draggable';
+import * as Draggable from 'oxide-components/components/draggable/Draggable';
+import type { DraggableProps } from 'oxide-components/components/draggable/internals/types';
 import { classes } from 'oxide-components/utils/Styles';
 import type { ReactNode } from 'react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, afterEach, beforeAll } from 'vitest';
+import { userEvent, page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
+
+import * as Mouse from './utils/Mouse';
 
 const draggableTestId = 'draggable';
 const draggableHandleTestId = 'draggable-handle';
+const draggableContentTestId = 'draggable-content';
 
-const TestElement = (
-  <Draggable>
-    <div data-testid={draggableTestId} style={{ width: 250, height: 500, backgroundColor: 'gray' }}>
+const createTestElement = (size: { width: number; height: number }, props: DraggableProps = {}) => (
+  <Draggable.Root style={{ position: 'absolute' }} {...props}>
+    <div data-testid={draggableTestId} style={{ ...size }}>
       <Draggable.Handle>
-        <div data-testid={draggableHandleTestId} style={{ width: '100%', height: 50, backgroundColor: 'black' }}></div>
+        <div data-testid={draggableHandleTestId} style={{ width: '100%', height: 50, backgroundColor: '#e8d96f' }}></div>
       </Draggable.Handle>
+      <div data-testid={draggableContentTestId} style={{ backgroundColor: '#fef68a', height: size.height - 50 }}></div>
     </div>
-  </Draggable>
+  </Draggable.Root>
 );
 
 const Wrapper = ({ children }: { children: ReactNode }) => {
@@ -26,9 +32,7 @@ const Wrapper = ({ children }: { children: ReactNode }) => {
         justifyContent: 'center',
         padding: '10px'
       }}>
-        <div style={{
-          width: '120px'
-        }}>
+        <div>
           {children}
         </div>
       </div>
@@ -36,197 +40,206 @@ const Wrapper = ({ children }: { children: ReactNode }) => {
   );
 };
 
-const mouse = (element: HTMLElement) => {
-  const rect = element.getBoundingClientRect();
-  const position = { x: rect.x, y: rect.y };
-
-  const down = () => {
-    element.dispatchEvent(new window.PointerEvent('pointerdown', {
-      clientX: position.x,
-      clientY: position.y,
-      pointerId: 1,
-      bubbles: true
-    }));
-  };
-
-  const move = (vector: readonly [number, number]) => {
-    position.x = position.x + vector[0];
-    position.y = position.y + vector[1];
-
-    element.dispatchEvent(new window.PointerEvent('pointermove', {
-      clientX: position.x,
-      clientY: position.y,
-      pointerId: 1,
-      bubbles: true
-    }));
-  };
-
-  const up = () => {
-    element.dispatchEvent(new window.PointerEvent('pointerup', {
-      clientX: position.x,
-      clientY: position.y,
-      pointerId: 1,
-      bubbles: true
-    }));
-  };
-
-  return { down, move, up };
-};
-
-const renderDraggable = async () => {
-  const { getByTestId } = render(TestElement, { wrapper: Wrapper });
+const renderDraggable = async (size: { width: number; height: number } = { width: 250, height: 300 }, props?: DraggableProps) => {
+  const { getByTestId } = render(createTestElement(size, props), { wrapper: Wrapper });
   const handle = getByTestId(draggableHandleTestId).element() as HTMLElement;
+  const content = getByTestId(draggableContentTestId).element() as HTMLElement;
   const draggable = getByTestId(draggableTestId).element() as HTMLElement;
+
   await expect.element(handle).toBeDefined();
+  await expect.element(content).toBeDefined();
   await expect.element(draggable).toBeDefined();
+
   const draggableWrapper = draggable.parentElement;
   await expect.element(draggableWrapper).toBeDefined();
 
-  return { handle, draggable, draggableWrapper: draggableWrapper as HTMLElement };
+  return { handle, content, draggable, draggableWrapper: draggableWrapper as HTMLElement };
 };
 
-/*
-  I would prefer to use React's 'act' function.
-  But I couldn't find a way to use 'act' with 'vitest-browser-react' library,
-  without having error message on the console.
-*/
-const tick = () => new Promise<void>((res) => setTimeout(() => res()));
-
-const assertTransform = (element: HTMLElement, shift: { x: number; y: number }) => {
-  const transform = element.style.transform;
-  expect(transform).toBe(`translate3d(${shift.x}px, ${shift.y}px, 0px)`);
+const dragTo = async (element: HTMLElement, position: { top: number; left: number }) => {
+  // I assume that element is at least 11x11 for this to work correctly
+  await userEvent.hover(element, { position: { x: 10, y: 10 }});
+  await Mouse.down();
+  await Mouse.move(position.left + 10, position.top + 10);
+  await Mouse.up();
 };
 
-const getShift = (element: HTMLElement): { x: number; y: number } => {
-  const transform = element.style.transform;
-  const match = transform.match(/translate3d\((.+)px, (.+)px, (.+)px\)/);
-  if (match) {
-    return { x: parseFloat(match[1]), y: parseFloat(match[2]) };
-  }
-  return { x: 0, y: 0 };
+const assertPosition = (element: HTMLElement, position: { top: number; left: number }) => {
+  const rect = element.getBoundingClientRect();
+  expect(rect.top).toBe(position.top);
+  expect(rect.left).toBe(position.left);
 };
 
 describe('browser.draggable.Draggable', () => {
+  let originalViewport = { width: 0, height: 0 };
+
+  beforeAll(async () => {
+    originalViewport = { width: window.innerWidth, height: window.innerHeight };
+  });
+
+  afterEach(async () => {
+    await page.viewport(originalViewport.width, originalViewport.height);
+  });
+
   it('TINY-12875: Should be draggable by handle', async () => {
+    await page.viewport(1500, 1500);
     const { handle, draggableWrapper } = await renderDraggable();
-    const [ shiftX, shiftY ] = [ 50, 50 ];
-
-    const { down, move, up } = mouse(handle);
-    down();
-    await tick();
-    move([ shiftX, shiftY ]);
-    await tick();
-    up();
-
-    assertTransform(draggableWrapper, { x: shiftX, y: shiftY });
+    await dragTo(handle, { top: 50, left: 50 });
+    assertPosition(draggableWrapper, { top: 50, left: 50 });
   });
 
   it('TINY-12875: Should only be draggable by handle', async () => {
-    const { draggable, draggableWrapper } = await renderDraggable();
-
-    const { down, move, up } = mouse(draggable);
-    down();
-    await tick();
-    move([ 50, 50 ]);
-    await tick();
-    up();
-
-    assertTransform(draggableWrapper, { x: 0, y: 0 });
+    await page.viewport(1500, 1500);
+    const { content, draggableWrapper } = await renderDraggable();
+    await dragTo(content, { top: 50, left: 50 });
+    assertPosition(draggableWrapper, { top: 0, left: 0 });
   });
 
-  it('TINY-12875: Shift should be rounded to integer', async () => {
-    const { handle, draggableWrapper } = await renderDraggable();
-    const [ shiftX, shiftY ] = [ 2.33, 50.33 ];
+  it('TINY-12875: Should not exceed boundaries', async () => {
+    const viewportWidth = 1500;
+    const viewportHeight = 1300;
+    const elementWidth = 300;
+    const elementHeight = 250;
 
-    const { down, move, up } = mouse(handle);
-    down();
-    await tick();
-    move([ shiftX, shiftY ]);
-    await tick();
-    up();
+    await page.viewport(viewportWidth, viewportHeight);
+    const { handle, draggableWrapper } = await renderDraggable({ width: elementWidth, height: elementHeight });
 
-    assertTransform(draggableWrapper, { x: 2, y: 50 });
+    // Left boundary
+    await dragTo(handle, { top: 0, left: -100 });
+    assertPosition(draggableWrapper, { top: 0, left: 0 });
+
+    // Right boundary
+    await dragTo(handle, { top: 0, left: viewportWidth + 100 });
+    assertPosition(draggableWrapper, { top: 0, left: viewportWidth - elementWidth });
+
+    // Top boundary
+    await dragTo(handle, { top: -100, left: 0 });
+    assertPosition(draggableWrapper, { top: 0, left: 0 });
+
+    // Bottom boundary
+    await dragTo(handle, { top: viewportHeight + 100, left: 0 });
+    assertPosition(draggableWrapper, { top: viewportHeight - elementHeight, left: 0 });
   });
 
-  it('TINY-12875: Should not exceed border - left top', async () => {
-    const { handle, draggableWrapper } = await renderDraggable();
-    const rect = draggableWrapper.getBoundingClientRect();
+  it('TINY-12875: Should not exceed boundaries while dragging', async () => {
+    const viewportWidth = 1500;
+    const viewportHeight = 1300;
+    const elementWidth = 300;
+    const elementHeight = 250;
 
-    // Try to move far beyond the window boundaries
-    const largeShift = [ window.innerWidth * -2, window.innerHeight * -2 ] as const;
+    await page.viewport(viewportWidth, viewportHeight);
+    const { handle, draggableWrapper } = await renderDraggable({ width: elementWidth, height: elementHeight });
 
-    const { down, move, up } = mouse(handle);
-    down();
-    await tick();
-    move(largeShift);
-    await tick();
-    up();
+    // Start dragging
+    await userEvent.hover(handle, { position: { x: 10, y: 10 }});
+    await Mouse.down();
 
-    assertTransform(draggableWrapper, { x: Math.ceil(-rect.x), y: Math.ceil(-rect.y) });
+    // Left boundary
+    await Mouse.move(-100, 0);
+    assertPosition(draggableWrapper, { top: 0, left: 0 });
+
+    // Right boundary
+    await Mouse.move(viewportWidth + 100, 0);
+    assertPosition(draggableWrapper, { top: 0, left: viewportWidth - elementWidth });
+
+    // Top boundary
+    await Mouse.move(0, -100);
+    assertPosition(draggableWrapper, { top: 0, left: 0 });
+
+    // Bottom boundary
+    await Mouse.move(0, viewportHeight + 100);
+    assertPosition(draggableWrapper, { top: viewportHeight - elementHeight, left: 0 });
   });
 
-  it('TINY-12875: Should not exceed border - right bottom', async () => {
-    const { handle, draggableWrapper } = await renderDraggable();
-    const rect = draggableWrapper.getBoundingClientRect();
+  it('TINY-13109: Should stay within the viewport on window resize', async () => {
+    const elementWidth = 200;
+    const elementHeight = 200;
 
-    // Try to move far beyond the window boundaries
-    const largeShift = [ window.innerWidth * 2, window.innerHeight * 2 ] as const;
+    await page.viewport(1500, 1500);
+    const componentProps = { declaredSize: { width: `${elementWidth}px`, height: `${elementHeight}px` }};
+    const { handle, draggableWrapper } = await renderDraggable({ width: elementWidth, height: elementHeight }, componentProps);
+    await dragTo(handle, { top: 1300, left: 1300 });
+    assertPosition(draggableWrapper, { top: 1300, left: 1300 });
 
-    const { down, move, up } = mouse(handle);
-    down();
-    await tick();
-    move(largeShift);
-    await tick();
-    up();
+    await page.viewport(1000, 1000);
+    assertPosition(draggableWrapper, { top: 800, left: 800 });
 
-    assertTransform(draggableWrapper, {
-      x: Math.floor(window.innerWidth - (rect.x + rect.width)),
-      y: Math.floor(window.innerHeight - (rect.y + rect.height))
-    });
+    // Should remember it's initial position (before first resize)
+    await page.viewport(2000, 2000);
+    assertPosition(draggableWrapper, { top: 1300, left: 1300 });
+  });
+
+  it('TINY-13109: Should forget its initial position once dragged after resize', async () => {
+    const elementWidth = 200;
+    const elementHeight = 200;
+
+    await page.viewport(1500, 1500);
+    const componentProps = { declaredSize: { width: `${elementWidth}px`, height: `${elementHeight}px` }};
+    const { handle, draggableWrapper } = await renderDraggable({ width: elementWidth, height: elementHeight }, componentProps);
+    await dragTo(handle, { top: 1300, left: 1300 });
+    assertPosition(draggableWrapper, { top: 1300, left: 1300 });
+
+    await page.viewport(1000, 1000);
+    assertPosition(draggableWrapper, { top: 800, left: 800 });
+
+    // Drag again after resize
+    await dragTo(handle, { top: 500, left: 500 });
+    assertPosition(draggableWrapper, { top: 500, left: 500 });
+
+    await page.viewport(2000, 2000);
+    assertPosition(draggableWrapper, { top: 500, left: 500 });
   });
 
   it('TINY-12875: Should clamp mouse position outside of viewport in x axis', async () => {
-    const { handle, draggableWrapper } = await renderDraggable();
+    const viewportWidth = 1500;
+    const viewportHeight = 1300;
+    const elementWidth = 300;
+    const elementHeight = 250;
 
-    const { down, move, up } = mouse(handle);
-    move([ 10, 10 ]); // Set the pointer inside handle, but 10px from top of the handle and 10px from left
-    await tick();
-    down();
-    await tick();
-    move([ window.innerWidth * 2, 0 ]); // Move the pointer outside of the viewport in x axis
-    await tick();
-    const currentShift = getShift(draggableWrapper); // current shift is a maximum shift in x axis
-    move([ -5, 0 ]); // Move 5px to the left - this action should be ignored
-    await tick();
-    assertTransform(draggableWrapper, currentShift); // Assert that previous action was ignored
-    move([ -1 * (window.innerWidth * 2), 0 ]); // Revert the big shift from the beginning
-    await tick();
-    up();
-    await tick();
+    await page.viewport(viewportWidth, viewportHeight);
+    const { handle, draggableWrapper } = await renderDraggable({ width: elementWidth, height: elementHeight });
 
-    assertTransform(draggableWrapper, { x: -5, y: 0 }); // Element should only be moved a little to the left now
+    // Start dragging
+    await userEvent.hover(handle, { position: { x: 30, y: 30 }});
+    await Mouse.down();
+    await Mouse.move(-50, -50);
+
+    // We should be on the top left boundary now
+    assertPosition(draggableWrapper, { top: 0, left: 0 });
+
+    // Move to the starting point in x axis
+    await Mouse.move(30, -50);
+    assertPosition(draggableWrapper, { top: 0, left: 0 }); // Still on the left boundary
+
+    // Move further than the start dragging point
+    await Mouse.move(100, -50);
+    assertPosition(draggableWrapper, { top: 0, left: 70 }); // We should move 70px to the right now
   });
 
   it('TINY-12875: Should clamp mouse position outside of viewport in y axis', async () => {
-    const { handle, draggableWrapper } = await renderDraggable();
+    const viewportWidth = 1500;
+    const viewportHeight = 1300;
+    const elementWidth = 300;
+    const elementHeight = 250;
 
-    const { down, move, up } = mouse(handle);
-    move([ 10, 10 ]); // Set the pointer inside handle, but 10px from top of the handle and 10px from left
-    await tick();
-    down();
-    await tick();
-    move([ 0, window.innerHeight * 2 ]); // Move the pointer outside of the viewport in y axis
-    await tick();
-    const currentShift = getShift(draggableWrapper); // current shift is a maximum shift in y axis
-    move([ 0, -5 ]); // Move 5px above - this action should be ignored
-    await tick();
-    assertTransform(draggableWrapper, currentShift); // Assert that previous action was ignored
-    move([ 0, -1 * (window.innerHeight * 2) ]); // Revert the big shift from the beginning
-    await tick();
-    up();
-    await tick();
+    await page.viewport(viewportWidth, viewportHeight);
+    const { handle, draggableWrapper } = await renderDraggable({ width: elementWidth, height: elementHeight });
 
-    assertTransform(draggableWrapper, { x: 0, y: -5 }); // Element should only be moved a little to the top now
+    // Start dragging
+    await userEvent.hover(handle, { position: { x: 30, y: 30 }});
+    await Mouse.down();
+    await Mouse.move(-50, -50);
+
+    // We should be on the top left boundary now
+    assertPosition(draggableWrapper, { top: 0, left: 0 });
+
+    // Move to the starting point in y axis
+    await Mouse.move(-50, 30);
+    assertPosition(draggableWrapper, { top: 0, left: 0 }); // Still on the top left boundary
+
+    // Move further than the start dragging point
+    await Mouse.move(-50, 100);
+    assertPosition(draggableWrapper, { top: 70, left: 0 }); // We should move 70px down now
   });
 
   it('TINY-12875: Should throw an error when Draggable.Handle rendered outside of Draggable', async () => {
@@ -238,5 +251,32 @@ describe('browser.draggable.Draggable', () => {
         , { wrapper: Wrapper }
       );
     }).toThrow('Draggable compound components must be rendered within the Draggable component');
+  });
+
+  it('TINY-13102: Should allow button inside Draggable.Handle to be clicked', async () => {
+    let clickCount = 0;
+    const handleClick = () => {
+      clickCount++;
+    };
+
+    const TestElementWithButton = (
+      <Draggable.Root style={{ position: 'absolute' }}>
+        <div data-testid={draggableTestId} style={{ width: 250, height: 500, backgroundColor: 'gray' }}>
+          <Draggable.Handle>
+            <div data-testid={draggableHandleTestId} style={{ width: '100%', height: 50, backgroundColor: 'black' }}>
+              <button data-testid="button-in-handle" onClick={handleClick}>Click me</button>
+            </div>
+          </Draggable.Handle>
+        </div>
+      </Draggable.Root>
+    );
+
+    const { getByTestId } = render(TestElementWithButton, { wrapper: Wrapper });
+    const button = getByTestId('button-in-handle').element();
+    await expect.element(button).toBeDefined();
+
+    await userEvent.click(button);
+
+    expect(clickCount).toBe(1);
   });
 });

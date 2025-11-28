@@ -16,6 +16,9 @@
 @uploadcare-placeholder-icon-fill: @text-color-muted;
 @uploadcare-placeholder-icon-min-width: 24px;
 
+// UPLOADCARE UC-VIDEO COMPONENT
+@uploadcare-uc-video-margin: 16px 0 16px 0;
+
 // UPLOADCARE LOADER
 .tox-uc-loading-background {
   width: 100%;
@@ -42,8 +45,9 @@
 }
 
 .tox-uc-video {
-  display: inline-block;
+  display: block;
   position: relative;
+  margin: @uploadcare-uc-video-margin;
   &:not([data-mce-selected]):after {
     content: "";
     position: absolute;
@@ -100,6 +104,6 @@
 
 @media print {
   tiny-uploadcare-placeholder {
-    display: none !important; 
+    display: none !important;
   }
 }

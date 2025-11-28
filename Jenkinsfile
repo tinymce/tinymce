@@ -238,7 +238,8 @@ timestamps { notifyStatusChange(
       resourceLimitEphemeralStorage: '16Gi'
     ],
     tag: '22.20.0',
-    build: cacheName
+    build: cacheName,
+    useLfs: true,
   ) {
     props = readProperties(file: 'build.properties')
     String primaryBranch = props.primaryBranch

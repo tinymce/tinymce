@@ -90,13 +90,13 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     assert.equal(Attribute.get(elm, 'aria-disabled'), expectedState.toString(), 'Toolbar should have expected disabled state');
   };
 
-  const simulateIMEInput = (editor: Editor, events: Array<{ type: string; data?: string; key?: string; code?: string; keyCode?: number }>) => {
+  const pSimulateIMEInput = async (editor: Editor, events: Array<{ type: string; data?: string; key?: string; code?: string; keyCode?: number }>) => {
     const body = editor.getBody();
-    events.forEach((event) => {
+    for (const event of events) {
       if (event.type === ('compositionupdate')) {
         // Make a direct DOM change that will trigger mutation observer, by typing the text
         TinySelections.setCursor(editor, [], 0);
-        TinyContentActions.type(editor, 'test');
+        await TinyContentActions.pType(editor, 'test');
       } else if (event.type.startsWith('composition')) {
         const e = new window.CompositionEvent(event.type);
         body.dispatchEvent(e);
@@ -104,7 +104,7 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
         const e = new KeyboardEvent(event.type, { key: event.key, code: event.code, keyCode: event.keyCode });
         body.dispatchEvent(e);
       }
-    });
+    };
   };
 
   it('TBA: Switching to readonly mode while having cef selection should remove fake selection', () => {
@@ -309,11 +309,11 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     editor.off('copy', copyHandler);
   });
 
-  it('TINY-11363: IME composition events should be blocked in readonly mode', () => {
+  it('TINY-11363: IME composition events should be blocked in readonly mode', async () => {
     const editor = hook.editor();
     setInitialContentWithReadOnly(editor);
 
-    simulateIMEInput(editor, [
+    await pSimulateIMEInput(editor, [
       { type: 'compositionstart' },
       { type: 'compositionupdate' },
       { type: 'compositionend' }
@@ -341,11 +341,11 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
   //   TinyAssertions.assertContent(editor, '<p>Initial content</p>');
   // });
 
-  it('TINY-11363: IME input with space key should be blocked in readonly mode', () => {
+  it('TINY-11363: IME input with space key should be blocked in readonly mode', async () => {
     const editor = hook.editor();
     setInitialContentWithReadOnly(editor);
 
-    simulateIMEInput(editor, [
+    await pSimulateIMEInput(editor, [
       { type: 'keydown', key: ' ', code: 'Space', keyCode: 32 },
       { type: 'compositionstart' },
       { type: 'compositionupdate' },
@@ -356,11 +356,11 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     TinyAssertions.assertContent(editor, '<p>Initial content</p>');
   });
 
-  it('TINY-11363: IME input with enter key should be blocked in readonly mode', () => {
+  it('TINY-11363: IME input with enter key should be blocked in readonly mode', async () => {
     const editor = hook.editor();
     setInitialContentWithReadOnly(editor);
 
-    simulateIMEInput(editor, [
+    await pSimulateIMEInput(editor, [
       { type: 'keydown', key: 'Enter', code: 'Enter', keyCode: 13 },
       { type: 'compositionstart' },
       { type: 'compositionupdate' },
@@ -376,7 +376,7 @@ describe('browser.tinymce.core.ReadOnlyModeTest', () => {
     setMode(editor, 'readonly');
 
     const body = editor.getBody();
-    const inputEvent = new InputEvent('input', { data: 'new content' });
+    const inputEvent = new window.InputEvent('input', { data: 'new content' });
     body.dispatchEvent(inputEvent);
 
     TinyAssertions.assertContent(editor, '<p>Initial content</p>');

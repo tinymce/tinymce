@@ -1,13 +1,13 @@
 import {
   AddEventsBehaviour,
+  Button as AlloyButton,
   type AlloyComponent,
+  Dropdown as AlloyDropdown,
   AlloyEvents,
   type AlloySpec,
   AlloyTriggers,
   Behaviour,
-  Button as AlloyButton,
   Disabling,
-  Dropdown as AlloyDropdown,
   FloatingToolbarButton,
   GuiFactory,
   Highlighting,
@@ -377,7 +377,7 @@ const makeSplitButtonApi = (tooltipString: Cell<string>, sharedBackstage: UiFact
       // For chevron, use the explicit chevronTooltip if provided, otherwise fall back to default behavior
       const chevronTooltipText = spec.chevronTooltip
         .map((chevronTooltip) => sharedBackstage.providers.translate(chevronTooltip))
-        .getOr(sharedBackstage.providers.translate(`${tooltip} menu`));
+        .getOr(sharedBackstage.providers.translate(tooltip));
       chevronOpt.each((c) => Attribute.set(c.element, 'aria-label', chevronTooltipText));
     }
   };
@@ -535,9 +535,9 @@ const renderSplitButton = (spec: Toolbar.ToolbarSplitButton, sharedBackstage: Ui
 export {
   renderCommonStructure,
   renderFloatingToolbarButton,
+  renderSplitButton,
   renderToolbarButton,
   renderToolbarButtonWith,
   renderToolbarToggleButton,
-  renderToolbarToggleButtonWith,
-  renderSplitButton
+  renderToolbarToggleButtonWith
 };

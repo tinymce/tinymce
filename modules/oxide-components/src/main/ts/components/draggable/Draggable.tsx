@@ -1,49 +1,71 @@
-import { type FC, useState, useMemo, useRef, useCallback } from 'react';
+import { Optional } from '@ephox/katamari';
+import { type FC, useState, useMemo, useRef, useCallback, forwardRef } from 'react';
 
-import { boundries, clamp, delta } from './internals/calculations';
+import { boundaries, clamp, delta } from './internals/calculations';
 import { useDraggable, DraggableContext } from './internals/context';
-import type { DraggableProps, DraggableHandleProps, Shift, Position, Boundries } from './internals/types';
+import { getPositioningStyles } from './internals/styles';
+import type { DraggableProps, DraggableHandleProps, Shift, Position, Boundaries, CssPosition } from './internals/types';
 
-const Draggable: FC<DraggableProps> & { Handle: FC<DraggableHandleProps> } = ({ children }) => {
+const Root = forwardRef<HTMLDivElement, DraggableProps>(({ children, style, initialPosition = { top: 0, left: 0 }, declaredSize, ...props }, ref) => {
   const [ shift, setShift ] = useState<Shift>({ x: 0, y: 0 });
+  const [ position, setPosition ] = useState<CssPosition | Position>(initialPosition);
+  const [ isDragging, setIsDragging ] = useState(false);
   const draggableRef = useRef<HTMLDivElement | null>(null);
-  const transform = `translate3d(${shift.x}px, ${shift.y}px, 0)`;
-  const contextValue = useMemo(() => ({ setShift, draggableRef }), []);
+  const positioningStyles = getPositioningStyles(shift, position, isDragging, Optional.from(declaredSize));
+  const contextValue = useMemo(() => ({ setShift, draggableRef, isDragging, setIsDragging, setPosition }), [ isDragging ]);
+
+  const setRef = useCallback((element: HTMLDivElement | null) => {
+    if (typeof ref === 'function') {
+      ref(element);
+    } else if (ref) {
+      ref.current = element;
+    }
+    draggableRef.current = element;
+  }, [ ref ]);
 
   return (
     <DraggableContext.Provider value={contextValue}>
-      <div ref={draggableRef} style={{ transform }}>
+      <div ref={setRef} style={{ ...style, ...positioningStyles }} { ...props }>
         {children}
       </div>
     </DraggableContext.Provider>
   );
-};
+});
 
-const DraggableHandle: FC<DraggableHandleProps> = ({ children }) => {
-  const [ isDragging, setIsDragging ] = useState(false);
-  const handleRef = useRef<HTMLDivElement | null>(null);
+const Handle: FC<DraggableHandleProps> = ({ children }) => {
+  const dragStartElementRef = useRef<Element | null>(null);
   const lastMousePositionRef = useRef<Position>({ x: 0, y: 0 });
-  const boundriesRef = useRef<Boundries>({ x: { min: 0, max: 0 }, y: { min: 0, max: 0 }});
-  const { setShift, draggableRef } = useDraggable();
+  const boundariesRef = useRef<Boundaries>({ x: { min: 0, max: 0 }, y: { min: 0, max: 0 }});
+  const { setShift, draggableRef, isDragging, setIsDragging, setPosition } = useDraggable();
+
+  const stopDragging = useCallback(() => {
+    setIsDragging(false);
+    setShift({ x: 0, y: 0 });
+    if (draggableRef.current !== null) {
+      const rect = draggableRef.current.getBoundingClientRect();
+      setPosition({ x: Math.round(rect.left), y: Math.round(rect.top) });
+    }
+  }, [ setIsDragging, setShift, draggableRef, setPosition ]);
 
   const onPointerDown = useCallback((event: React.PointerEvent) => {
-    if (handleRef.current === null || draggableRef.current === null) {
-      // If handleRef or draggableRef is not present then abort dragging
+    if (draggableRef.current === null) {
+      // If draggableRef is not present then abort dragging
       return;
     }
     setIsDragging(true);
-    handleRef.current.setPointerCapture(event.pointerId);
+    dragStartElementRef.current = event.target as Element;
+    dragStartElementRef.current.setPointerCapture(event.pointerId);
     const mousePosition = { x: Math.round(event.clientX), y: Math.round(event.clientY) };
     lastMousePositionRef.current = mousePosition;
     const draggableRect = draggableRef.current.getBoundingClientRect();
-    boundriesRef.current = boundries(draggableRect, mousePosition, { x: 0, y: 0 }, { x: window.innerWidth, y: window.innerHeight });
-  }, [ draggableRef ]);
+    boundariesRef.current = boundaries(draggableRect, mousePosition, { x: 0, y: 0 }, { x: document.documentElement.clientWidth, y: document.documentElement.clientHeight });
+  }, [ draggableRef, setIsDragging ]);
 
   const onPointerMove = useCallback((event: React.PointerEvent) => {
     if (isDragging) {
       const currentPointerPosition = {
-        x: clamp(Math.round(event.clientX), boundriesRef.current.x.min, boundriesRef.current.x.max),
-        y: clamp(Math.round(event.clientY), boundriesRef.current.y.min, boundriesRef.current.y.max)
+        x: clamp(Math.round(event.clientX), boundariesRef.current.x.min, boundariesRef.current.x.max),
+        y: clamp(Math.round(event.clientY), boundariesRef.current.y.min, boundariesRef.current.y.max)
       };
       const { deltaX, deltaY } = delta(lastMousePositionRef.current, currentPointerPosition);
       lastMousePositionRef.current = currentPointerPosition;
@@ -52,30 +74,30 @@ const DraggableHandle: FC<DraggableHandleProps> = ({ children }) => {
   }, [ isDragging, setShift ]);
 
   const onPointerUp = useCallback((event: React.PointerEvent) => {
-    handleRef.current?.releasePointerCapture(event.pointerId);
-    setIsDragging(false);
-  }, []);
+    dragStartElementRef.current?.releasePointerCapture(event.pointerId);
+    stopDragging();
+  }, [ stopDragging ]);
 
   /* This is a workaround for chromium bug where lostPointerCapture event is called, without pointerUp */
   const onLostPointerCapture = useCallback(() => {
-    setIsDragging(false);
-  }, []);
+    if (isDragging) {
+      stopDragging();
+    }
+  }, [ stopDragging, isDragging ]);
 
   return (
     <div
-      ref={handleRef}
       onPointerDown={onPointerDown}
       onPointerUp={onPointerUp}
       onPointerMove={onPointerMove}
       onLostPointerCapture={onLostPointerCapture}
       style={{
-        cursor: isDragging ? 'grabbing' : 'grab'
+        cursor: isDragging ? 'grabbing' : 'grab',
+        userSelect: 'none'
       }}>
       {children}
     </div>
   );
 };
 
-Draggable.Handle = DraggableHandle;
-
-export { Draggable };
+export { Root, Handle };

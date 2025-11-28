@@ -321,6 +321,163 @@ describe('browser.tinymce.core.api.EditorCommandsTest', () => {
     });
   });
 
+  context('removeCommand', () => {
+    it('TINY-13144: removeCommand should remove exec command by default', () => {
+      const editor = hook.editor();
+      const state = Singleton.value<CommandTestState<string, Editor>>();
+
+      editor.editorCommands.addCommand('TestRemoveCommand1', (ui, value) => state.set({ ui, value }));
+
+      assert.isTrue(editor.editorCommands.queryCommandSupported('TestRemoveCommand1'), 'Command should be supported before removal');
+      assert.isTrue(editor.editorCommands.execCommand('TestRemoveCommand1', true, 'test'), 'Command should execute successfully before removal');
+      assert.deepEqual(state.get().getOrDie('Should exist a state'), { ui: true, value: 'test' });
+
+      state.clear();
+      editor.editorCommands.removeCommand('TestRemoveCommand1');
+
+      assert.isFalse(editor.editorCommands.queryCommandSupported('TestRemoveCommand1'), 'Command should not be supported after removal');
+      assert.isFalse(editor.editorCommands.execCommand('TestRemoveCommand1', true, 'test'), 'Command should not execute after removal');
+      assert.isFalse(state.isSet(), 'should be no command state');
+    });
+
+    it('TINY-13144: removeCommand should remove specific exec command type', () => {
+      const editor = hook.editor();
+      const state = Singleton.value<CommandTestState<string, Editor>>();
+
+      editor.editorCommands.addCommand('TestRemoveCommand2', (ui, value) => state.set({ ui, value }));
+
+      assert.isTrue(editor.editorCommands.queryCommandSupported('TestRemoveCommand2'), 'Command should be supported before removal');
+
+      state.clear();
+      editor.editorCommands.removeCommand('TestRemoveCommand2', 'exec');
+
+      assert.isFalse(editor.editorCommands.queryCommandSupported('TestRemoveCommand2'), 'Command should not be supported after exec removal');
+      assert.isFalse(editor.editorCommands.execCommand('TestRemoveCommand2', true, 'test'), 'Command should not execute after exec removal');
+      assert.isFalse(state.isSet(), 'should be no command state');
+    });
+
+    it('TINY-13144: removeCommand should remove specific state command type', () => {
+      const editor = hook.editor();
+
+      editor.editorCommands.addCommands({
+        TestRemoveCommand3: Fun.noop
+      });
+      editor.editorCommands.addCommands({
+        TestRemoveCommand3: Fun.always
+      }, 'state');
+
+      assert.isTrue(editor.editorCommands.queryCommandSupported('TestRemoveCommand3'), 'Command should be supported when exec exists');
+      assert.isTrue(editor.editorCommands.queryCommandState('TestRemoveCommand3'), 'Command state should be true when state handler exists');
+
+      editor.editorCommands.removeCommand('TestRemoveCommand3', 'state');
+
+      assert.isTrue(editor.editorCommands.queryCommandSupported('TestRemoveCommand3'), 'Command should still be supported after only state removal');
+      assert.isFalse(editor.editorCommands.queryCommandState('TestRemoveCommand3'), 'Command state should return false after state removal');
+    });
+
+    it('TINY-13144: removeCommand should remove specific value command type', () => {
+      const editor = hook.editor();
+
+      editor.editorCommands.addCommands({
+        TestRemoveCommand4: Fun.noop
+      });
+      editor.editorCommands.addCommands({
+        TestRemoveCommand4: Fun.constant('test-value')
+      }, 'value');
+
+      assert.isTrue(editor.editorCommands.queryCommandSupported('TestRemoveCommand4'), 'Command should be supported when exec exists');
+      assert.equal(editor.editorCommands.queryCommandValue('TestRemoveCommand4'), 'test-value');
+
+      editor.editorCommands.removeCommand('TestRemoveCommand4', 'value');
+
+      assert.isTrue(editor.editorCommands.queryCommandSupported('TestRemoveCommand4'), 'Command should still be supported after only value removal');
+      assert.equal(editor.editorCommands.queryCommandValue('TestRemoveCommand4'), '');
+    });
+
+    it('TINY-13144: removeCommand should remove all command types when no type specified', () => {
+      const editor = hook.editor();
+
+      editor.editorCommands.addCommands({
+        TestRemoveCommand5: Fun.noop
+      });
+      editor.editorCommands.addCommands({
+        TestRemoveCommand5: Fun.always
+      }, 'state');
+      editor.editorCommands.addCommands({
+        TestRemoveCommand5: Fun.constant('test-value')
+      }, 'value');
+
+      assert.isTrue(editor.editorCommands.queryCommandSupported('TestRemoveCommand5'), 'Command should be supported when exec exists');
+      assert.isTrue(editor.editorCommands.queryCommandState('TestRemoveCommand5'), 'Command state should be true when state handler exists');
+      assert.equal(editor.editorCommands.queryCommandValue('TestRemoveCommand5'), 'test-value');
+
+      editor.editorCommands.removeCommand('TestRemoveCommand5');
+
+      assert.isFalse(editor.editorCommands.queryCommandSupported('TestRemoveCommand5'), 'Command should not be supported after complete removal');
+      assert.isFalse(editor.editorCommands.queryCommandState('TestRemoveCommand5'), 'Command state should return false after complete removal');
+      assert.equal(editor.editorCommands.queryCommandValue('TestRemoveCommand5'), '');
+    });
+
+    it('TINY-13144: removeCommand should be case insensitive', () => {
+      const editor = hook.editor();
+
+      editor.editorCommands.addCommand('TestRemoveCommandCase', Fun.noop);
+
+      assert.isTrue(editor.editorCommands.queryCommandSupported('TestRemoveCommandCase'), 'Command should be supported before removal');
+
+      editor.editorCommands.removeCommand('testremovecommandcase');
+
+      assert.isFalse(editor.editorCommands.queryCommandSupported('TestRemoveCommandCase'), 'Command should not be supported after case-insensitive removal');
+      assert.isFalse(editor.editorCommands.queryCommandSupported('testremovecommandcase'), 'Command should not be supported after case-insensitive removal (lowercase check)');
+    });
+
+    it('TINY-13144: removeCommand should handle non-existent commands gracefully', () => {
+      const editor = hook.editor();
+
+      assert.doesNotThrow(() => {
+        editor.editorCommands.removeCommand('NonExistentCommand');
+      });
+
+      assert.doesNotThrow(() => {
+        editor.editorCommands.removeCommand('NonExistentCommand', 'exec');
+      });
+
+      assert.doesNotThrow(() => {
+        editor.editorCommands.removeCommand('NonExistentCommand', 'state');
+      });
+
+      assert.doesNotThrow(() => {
+        editor.editorCommands.removeCommand('NonExistentCommand', 'value');
+      });
+    });
+
+    it('TINY-13144: removeCommand should not affect other commands', () => {
+      const editor = hook.editor();
+      const state1 = Singleton.value<CommandTestState<string, Editor>>();
+      const state2 = Singleton.value<CommandTestState<string, Editor>>();
+
+      editor.editorCommands.addCommand('KeepCommand1', (ui, value) => state1.set({ ui, value }));
+      editor.editorCommands.addCommand('RemoveCommand1', (ui, value) => state2.set({ ui, value }));
+
+      assert.isTrue(editor.editorCommands.queryCommandSupported('KeepCommand1'), 'First command should be supported before removal');
+      assert.isTrue(editor.editorCommands.queryCommandSupported('RemoveCommand1'), 'Second command should be supported before removal');
+      assert.isTrue(editor.editorCommands.execCommand('KeepCommand1', true, 'keep'), 'First command should execute successfully before removal');
+      assert.isTrue(editor.editorCommands.execCommand('RemoveCommand1', false, 'remove'), 'Second command should execute successfully before removal');
+      assert.deepEqual(state1.get().getOrDie('Should exist a state'), { ui: true, value: 'keep' });
+      assert.deepEqual(state2.get().getOrDie('Should exist a state'), { ui: false, value: 'remove' });
+
+      state1.clear();
+      state2.clear();
+      editor.editorCommands.removeCommand('RemoveCommand1');
+
+      assert.isTrue(editor.editorCommands.queryCommandSupported('KeepCommand1'), 'Kept command should still be supported after other command removal');
+      assert.isFalse(editor.editorCommands.queryCommandSupported('RemoveCommand1'), 'Removed command should not be supported after removal');
+      assert.isTrue(editor.editorCommands.execCommand('KeepCommand1', false, 'still-works'), 'Kept command should still execute after other command removal');
+      assert.deepEqual(state1.get().getOrDie('Should exist a state'), { ui: false, value: 'still-works' });
+      assert.isFalse(state2.isSet());
+    });
+  });
+
   context('removed editor', () => {
     const hook = TinyHooks.bddSetupLight<Editor>({
       indent: false,
