@@ -1,4 +1,4 @@
-import type { FunctionComponent } from 'react';
+import { forwardRef, type FunctionComponent } from 'react';
 
 import { Button } from '../../../components/button/Button';
 
@@ -14,6 +14,10 @@ const TagCloseIcon: FunctionComponent = () => {
 interface BaseTagProps {
   readonly label: string;
   readonly icon?: JSX.Element;
+  readonly onMouseEnter?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  readonly onMouseLeave?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  readonly onFocus?: (event: React.FocusEvent<HTMLDivElement>) => void;
+  readonly onBlur?: (event: React.FocusEvent<HTMLDivElement>) => void;
 }
 
 interface NonClosableTagProps extends BaseTagProps {
@@ -28,10 +32,10 @@ interface ClosableTagProps extends BaseTagProps {
 export type TagProps = NonClosableTagProps | ClosableTagProps;
 
 // Tag is here in reference to a tagging/labeling context, not a HTML tag.
-export const Tag: FunctionComponent<TagProps> = (props) => {
-  const { label, icon, closeable } = props;
+export const Tag = forwardRef<HTMLDivElement, TagProps>((props, ref) => {
+  const { label, icon, closeable, ...rest } = props;
   return (
-    <div className="tox-tag">
+    <div className="tox-tag" ref={ref} {...rest}>
       {icon}
       <span className="tox-tag__label">{label}</span>
       {closeable && (
@@ -45,4 +49,4 @@ export const Tag: FunctionComponent<TagProps> = (props) => {
       )}
     </div>
   );
-};
+});
