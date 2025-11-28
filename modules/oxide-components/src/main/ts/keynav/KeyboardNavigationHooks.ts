@@ -2,8 +2,9 @@ import { Fun } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { useEffect, type RefObject } from 'react';
 
+import * as EscapingType from './keyboard/EscapingType';
 import * as FlowType from './keyboard/flowtype/FlowType';
-import * as KeyingType from './keyboard/KeyingType';
+import type * as KeyingType from './keyboard/KeyingType';
 import * as SpecialType from './keyboard/SpecialType';
 import * as TabbingType from './keyboard/TabbingType';
 
@@ -70,4 +71,20 @@ export const useSpecialKeyNavigation = (props: SpecialKeyingProps): void => {
     }
   }
   , [ props ]);
+};
+
+export interface EscapeKeyProps extends BaseProps, EscapingType.EscapingConfig { }
+
+export const useEscapeKeyNavigation = (props: EscapeKeyProps): void => {
+  useEffect(() => {
+    const { containerRef } = props;
+
+    if (containerRef.current) {
+      const handlers = EscapingType.create(SugarElement.fromDom(containerRef.current), props);
+      return bindEvents(containerRef.current, handlers);
+    } else {
+      return Fun.noop;
+    }
+  },
+  [ props ]);
 };
