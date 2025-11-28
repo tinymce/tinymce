@@ -1,23 +1,6 @@
 import { forwardRef } from 'react';
 
-interface ItemProps {
-  classes: string[];
-}
-
-const Item = ({ classes }: ItemProps) =>
-  (
-    <span
-      className={classes.join(' ')}
-      style={{
-        display: 'inline-block',
-        width: '20px',
-        height: '20px',
-        margin: '2px',
-        border: '1px solid ' + (classes.includes('stay') ? 'blue' : 'yellow')
-      }}
-      tabIndex={-1}
-    />
-  );
+import { Item } from './Item';
 
 export const Container = forwardRef<HTMLDivElement, { testId: string }>(({ testId }, ref) => (
   <div
