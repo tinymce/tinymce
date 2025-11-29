@@ -1,4 +1,4 @@
-import{j as e}from"./iframe-CMJbKXeb.js";import{R as a,H as r}from"./Draggable-C5ZoId9K.js";import"./Optional-BsJ-k4_8.js";import"./Fun--VEwoXIw.js";const g={title:"components/Draggable",component:a,parameters:{layout:"fullscreen",docs:{description:{component:`A draggable container component that allows users to reposition elements by dragging them around the viewport.
+import{j as e}from"./iframe-CwgZDLo_.js";import{R as a,H as r}from"./Draggable-CWJD96Je.js";import"./Optional-BsJ-k4_8.js";import"./Fun--VEwoXIw.js";const g={title:"components/Draggable",component:a,parameters:{layout:"fullscreen",docs:{description:{component:`A draggable container component that allows users to reposition elements by dragging them around the viewport.
 
 ## How it works
 
