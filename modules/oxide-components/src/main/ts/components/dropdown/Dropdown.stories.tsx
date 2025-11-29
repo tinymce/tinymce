@@ -16,6 +16,16 @@ const meta = {
       value: 'start',
       options: [ 'start', 'center', 'end' ]
     },
+    gap: {
+      description: 'Gap between trigger button and dropdown',
+      value: 8,
+      control: 'number',
+    },
+    triggersOnHover: {
+      description: 'Set to true to add a hoverable behavior. Trigger button opens a dropdown on hover and closes on mouse leave.',
+      value: false,
+      control: 'boolean'
+    }
   },
   parameters: {
     layout: 'centered',
@@ -38,7 +48,7 @@ const render = (args: Dropdown.DropdownProps): JSX.Element => {
       <Dropdown.Root side={args.side} align={args.align}>
         <Dropdown.TriggerButton variant='secondary'>Click me to toggle dropdown</Dropdown.TriggerButton>
         <Dropdown.Content>
-          <div style={{ width: '400px', height: '300px', border: '2px solid lightgrey', borderRadius: '8px' }}></div>
+          <div style={{ width: '400px', height: '300px', borderRadius: '8px' }}></div>
         </Dropdown.Content>
       </Dropdown.Root>
     </div>
