@@ -1,9 +1,9 @@
 import { Type } from '@ephox/katamari';
 import { useLayoutEffect, useRef, useState, type FC, type PropsWithChildren } from 'react';
 
-import { Icon } from '../../internal/icon/Icon.component';
 import * as Bem from '../../utils/Bem';
 import { Button } from '../button/Button';
+import { Icon } from '../icon/Icon';
 
 export interface ExpandableBoxProps extends PropsWithChildren {
   /** Icon resolver */
