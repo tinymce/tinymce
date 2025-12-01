@@ -93,7 +93,7 @@ const handleBodyResponse = async (body: ReadableStream<Uint8Array>, port: Messag
 
           if (!done) {
             const sliced = chunk.buffer.slice(chunk.byteOffset, chunk.byteOffset + chunk.byteLength);
-            const buffer = sliced instanceof SharedArrayBuffer
+            const buffer = (typeof SharedArrayBuffer !== 'undefined' && sliced instanceof SharedArrayBuffer)
               ? new ArrayBuffer(sliced.byteLength).constructor.prototype.slice.call(sliced, 0)
               : sliced;
 
