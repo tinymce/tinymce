@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import ErrorMessage from './ErrorMessage';
 
 const meta = {
-  title: 'bespoke/tinyai/ErrorMessage',
+  title: 'bespoke/tinymceai/ErrorMessage',
   component: ErrorMessage,
   parameters: {
     layout: 'centered',

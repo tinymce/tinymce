@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Spinner } from './Spinner';
 
 const meta = {
-  title: 'bespoke/tinyai/Spinner',
+  title: 'bespoke/tinymceai/Spinner',
   component: Spinner,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout

@@ -8,7 +8,7 @@ const meta = {
   decorators: [
     (Story: PartialStoryFn<ReactRenderer>): JSX.Element => <div className={classes([ 'tox-ai' ])}><Story /></div>
   ],
-  title: 'bespoke/tinyai/UserPromptBubble',
+  title: 'bespoke/tinymceai/UserPromptBubble',
   component: UserPromptBubble,
   parameters: {
     layout: 'centered',
