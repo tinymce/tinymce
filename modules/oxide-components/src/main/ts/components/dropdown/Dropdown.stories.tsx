@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Button } from 'oxide-components/main';
 
 import * as Dropdown from './Dropdown';
 
@@ -21,10 +22,10 @@ const meta = {
       value: 8,
       control: 'number',
     },
-    triggersOnHover: {
-      description: 'Set to true to add a hoverable behavior. Trigger button opens a dropdown on hover and closes on mouse leave.',
-      value: false,
-      control: 'boolean'
+    triggerEvent: {
+      description: 'Defines trigger element behavior. On default opens a dropdown on click but can be changed to open on hover and close on mouse leave.',
+      value: 'click',
+      options: [ 'click', 'hover' ]
     }
   },
   parameters: {
@@ -46,7 +47,11 @@ const render = (args: Dropdown.DropdownProps): JSX.Element => {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <Dropdown.Root side={args.side} align={args.align}>
-        <Dropdown.TriggerButton variant='secondary'>Click me to toggle dropdown</Dropdown.TriggerButton>
+        <Dropdown.Trigger>
+          <Button variant='secondary'>
+            Click me to toggle dropdown
+          </Button>
+        </Dropdown.Trigger>
         <Dropdown.Content>
           <div style={{ width: '400px', height: '300px', borderRadius: '8px' }}></div>
         </Dropdown.Content>

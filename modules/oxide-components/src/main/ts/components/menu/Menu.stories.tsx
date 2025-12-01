@@ -1,7 +1,6 @@
 /* eslint-disable max-len */
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Icon } from 'oxide-components/internal/icon/Icon.component';
-import { Dropdown } from 'oxide-components/main';
+import { Dropdown, IconButton } from 'oxide-components/main';
 
 import * as Dropdowns from '../../utils/Dropdowns';
 
@@ -180,11 +179,11 @@ export const MenuInADropdown: Story = {
   render: (args: MenuProps): JSX.Element => {
     return (<>
       <Dropdown.Root>
-        <Dropdown.TriggerButton variant={'secondary'}>
-          <Icon resolver={iconResolver} icon={'item'}></Icon>
-        </Dropdown.TriggerButton>
+        <Dropdown.Trigger>
+          <IconButton variant={'secondary'} resolver={iconResolver} icon={'item'}></IconButton>
+        </Dropdown.Trigger>
         <Dropdown.Content>
-          <Menu items={args.items} iconResolver={args.iconResolver}></Menu>
+          <Menu items={args.items} iconResolver={args.iconResolver} autoFocus={true}></Menu>
         </Dropdown.Content>
       </Dropdown.Root>
     </>);
