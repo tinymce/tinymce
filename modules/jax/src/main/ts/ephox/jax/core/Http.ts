@@ -165,6 +165,8 @@ const fetchDownload = (init: HttpTypes.DownloadHttpRequest): FutureResult<Blob, 
       const reader = body.getReader();
       const process = (result: ReadableStreamReadResult<Uint8Array>) => {
         if (result.done) {
+          // The Blob constructor does not accept ArrayBufferLike objects and so to keep
+          // TypeScript happy we need to convert the chunks to Uint8Array to be sure.
           const properChunks = Arr.map(chunks, (chunk) => new Uint8Array(chunk));
           resolve(Result.value(new Blob(properChunks, { type: mime.getOr('') })));
         } else {
