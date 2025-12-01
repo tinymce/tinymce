@@ -1,26 +1,29 @@
 import { Throttler } from '@ephox/katamari';
-import { useCallback, useEffect, useId, useMemo, useRef, useState, type FC, type MouseEvent, type PropsWithChildren } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type FC, type HTMLAttributes, type MouseEvent, type PropsWithChildren } from 'react';
 
 import { Bem } from '../../main';
-import { Button, type ButtonProps } from '../button/Button';
 
 import { DropdownContext, useDropdown } from './internals/Context';
 import * as PositioningUtils from './internals/PositioningUtils';
 
 const isInDropdownContent = (contentRef: React.RefObject<HTMLDivElement>, node: Node): boolean => {
-  return contentRef.current?.contains(node) || false;
+  return contentRef.current?.contains(node) ?? false;
 };
 
 // TODO: invastigate lazy loading content children (look at the FloatingSidebar component). Could be tricky - to correctly calculate the position we need children to be rendered
-const Content: FC<PropsWithChildren> = ({ children, ...props }) => {
-  const { popoverId, triggerRef, side, align, gap, contentRef, triggersOnHover, debouncedHideHoverablePopover } = useDropdown();
+const Content: FC<PropsWithChildren<HTMLAttributes<HTMLDivElement>>> = ({ children, ...props }) => {
+  const { triggerRef, side, align, gap, contentRef, triggerEvent, debouncedHideHoverablePopover, setIsOpen } = useDropdown();
 
   const [ positioningStyles, setPositioningStyles ] = useState({});
 
+  const updateToggleState = useCallback((event: ToggleEvent) => {
+    setIsOpen(event.newState === 'open');
+  }, [ setIsOpen ]);
+
   // this can be later replaced with CSS anchor positioning
-  const updatePosition = useCallback((event: Event) => {
+  const updatePosition = useCallback((event: ToggleEvent) => {
     // TODO: remove type casting after updating TypeScript. In the newest version addEventListener correctly produces ToggleEvent
-    if ((event as ToggleEvent).newState === 'open' && triggerRef.current && contentRef.current) {
+    if (event.newState === 'open' && triggerRef.current && contentRef.current) {
       const documentRect = document.documentElement.getBoundingClientRect();
       const anchorRect = triggerRef.current.getBoundingClientRect();
       const anchoredContainerRect = contentRef.current.getBoundingClientRect();
@@ -35,21 +38,25 @@ const Content: FC<PropsWithChildren> = ({ children, ...props }) => {
     if (element === null) {
       return;
     }
-    element.addEventListener('toggle', updatePosition);
+    const onToggle = (e: Event) => {
+      updateToggleState(e as ToggleEvent);
+      updatePosition(e as ToggleEvent);
+    };
+
+    element.addEventListener('toggle', onToggle);
 
     return () => {
-      element.removeEventListener('toggle', updatePosition);
+      element.removeEventListener('toggle', onToggle);
     };
-  }, [ contentRef, updatePosition ]);
+  }, [ contentRef, updatePosition, updateToggleState ]);
 
   return <div
     // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
     popover='auto'
     className={Bem.block('tox-dropdown-content')}
-    id={popoverId}
     ref={contentRef}
     style={{ ...positioningStyles }}
-    { ...triggersOnHover && {
+    { ...triggerEvent === 'hover' && {
       onMouseLeave: debouncedHideHoverablePopover.throttle,
       onMouseEnter: () => debouncedHideHoverablePopover.cancel()
     }}
@@ -59,8 +66,8 @@ const Content: FC<PropsWithChildren> = ({ children, ...props }) => {
   </div>;
 };
 
-const TriggerButton: FC<ButtonProps> = ({ children, ...args }) => {
-  const { popoverId, triggerRef, contentRef, triggersOnHover, debouncedHideHoverablePopover } = useDropdown();
+const Trigger: FC<PropsWithChildren<HTMLAttributes<HTMLDivElement>>> = ({ children, ...args }) => {
+  const { triggerRef, contentRef, triggerEvent, debouncedHideHoverablePopover, isOpen } = useDropdown();
 
   const onHoverTriggerProps = {
     onMouseEnter: () => {
@@ -72,16 +79,26 @@ const TriggerButton: FC<ButtonProps> = ({ children, ...args }) => {
     }
   };
 
+  const onClickTriggerProps = {
+    onClick: () => {
+      if (isOpen) {
+        contentRef.current?.hidePopover();
+      } else {
+        contentRef.current?.showPopover();
+      }
+    }
+  };
+
   const props = {
-    popovertarget: popoverId,
-    popovertargetaction: 'toggle',
-    ref: triggerRef,
     children,
-    ...triggersOnHover && onHoverTriggerProps,
+    ref: triggerRef,
+    ...triggerEvent === 'click' && onClickTriggerProps,
+    ...triggerEvent === 'hover' && onHoverTriggerProps,
+    ...triggerEvent === 'both' && { ...onClickTriggerProps, ...onHoverTriggerProps },
     ...args
   };
 
-  return (<>{ args.variant ? <Button { ...props } variant={args.variant} /> : <button { ...props }/> }</>);
+  return <div { ...props }/>;
 };
 
 export interface DropdownProps extends PropsWithChildren {
@@ -89,13 +106,13 @@ export interface DropdownProps extends PropsWithChildren {
   readonly align?: 'start' | 'center' | 'end';
   // margin/gap between the trigger button and anchored container
   readonly gap?: number;
-  readonly triggersOnHover?: boolean;
+  readonly triggerEvent?: 'click' | 'hover' | 'both';
 }
 
-const Root: FC<DropdownProps> = ({ children, side = 'top', align = 'start', gap = 8, triggersOnHover = false }) => {
-  const popoverId = useId();
-  const triggerRef = useRef<HTMLButtonElement>(null);
+const Root: FC<DropdownProps> = ({ children, side = 'top', align = 'start', gap = 8, triggerEvent = 'click' }) => {
+  const triggerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const [ isOpen, setIsOpen ] = useState(false);
 
   // debounced hide popover function on mouse leave (used when triggersOnHover is enabled)
   const debouncedHideHoverablePopover = useMemo(() => Throttler.last((e: MouseEvent) => {
@@ -105,11 +122,15 @@ const Root: FC<DropdownProps> = ({ children, side = 'top', align = 'start', gap 
     }
   }, 300), []);
 
-  return <DropdownContext.Provider value={{ triggerRef, contentRef, popoverId, side, align, gap, triggersOnHover, debouncedHideHoverablePopover }}>{children}</DropdownContext.Provider>;
+  const contextValue = useMemo(() => {
+    return { triggerRef, contentRef, side, align, gap, triggerEvent, debouncedHideHoverablePopover, isOpen, setIsOpen };
+  }, [ triggerRef, contentRef, side, align, gap, triggerEvent, debouncedHideHoverablePopover, isOpen ]);
+
+  return <DropdownContext.Provider value={contextValue}>{children}</DropdownContext.Provider>;
 };
 
 export {
   Root,
   Content,
-  TriggerButton
+  Trigger
 };

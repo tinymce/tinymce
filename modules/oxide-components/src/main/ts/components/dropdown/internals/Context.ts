@@ -2,15 +2,16 @@ import type { Throttler } from '@ephox/katamari';
 import { createContext, useContext, type MouseEvent } from 'react';
 
 export interface DropdownState {
-  readonly popoverId: string;
-  readonly triggerRef: React.RefObject<HTMLButtonElement>;
+  readonly triggerRef: React.RefObject<HTMLDivElement>;
   readonly contentRef: React.RefObject<HTMLDivElement>;
   readonly side: 'top' | 'bottom' | 'left' | 'right';
   readonly align: 'start' | 'center' | 'end';
   // margin/gap between the trigger button and anchored container
   readonly gap: number;
-  readonly triggersOnHover: boolean;
+  readonly triggerEvent: 'click' | 'hover' | 'both';
   readonly debouncedHideHoverablePopover: Throttler.Throttler<[e: MouseEvent]>;
+  readonly isOpen: boolean;
+  readonly setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const DropdownContext = createContext<DropdownState | null>(null);
