@@ -1,48 +1,48 @@
 //
-// TinyAI
+// TinyMCEAI
 //
 
-@tinyai-added-background-color: @added-background-color;
-@tinyai-modified-background-color: @modified-background-color;
-@tinyai-removed-background-color: @removed-background-color;
+@tinymceai-added-background-color: @added-background-color;
+@tinymceai-modified-background-color: @modified-background-color;
+@tinymceai-removed-background-color: @removed-background-color;
 
-@tinyai-selected-outline-color: @selected-outline-color;
-@tinyai-selected-box-shadow: 0 -2px 0 0 @tinyai-selected-outline-color inset, 0 -2px 0 0 @tinyai-selected-outline-color;
+@tinymceai-selected-outline-color: @selected-outline-color;
+@tinymceai-selected-box-shadow: 0 -2px 0 0 @tinymceai-selected-outline-color inset, 0 -2px 0 0 @tinymceai-selected-outline-color;
 
-@tinyai-dim-overlay-color: #222f3e80;
+@tinymceai-dim-overlay-color: #222f3e80;
 
 .diff-content(
-  tinyai,
-  @tinyai-added-background-color,
-  @tinyai-modified-background-color,
-  @tinyai-removed-background-color,
-  @tinyai-selected-outline-color,
-  @tinyai-selected-box-shadow
+  tinymceai,
+  @tinymceai-added-background-color,
+  @tinymceai-modified-background-color,
+  @tinymceai-removed-background-color,
+  @tinymceai-selected-outline-color,
+  @tinymceai-selected-box-shadow
 );
 
-div[tinyai-data-pending-diff="true"], span[tinyai-data-pending-diff="true"] {
+div[tinymceai-data-pending-diff="true"], span[tinymceai-data-pending-diff="true"] {
   position: relative;
   z-index: 1;
   background: @color-white;
 }
 
-.tox-tinyai__dim-overlay {
+.tox-tinymceai__dim-overlay {
   position: fixed;
   inset: 0;
-  background: @tinyai-dim-overlay-color;
+  background: @tinymceai-dim-overlay-color;
   pointer-events: none;
 }
 
-.tox-tinyai__preview-body {
+.tox-tinymceai__preview-body {
   position: relative;
   min-height: 100%;
 
-  &.tox-tinyai__preview-body--with-suggestion {
+  &.tox-tinymceai__preview-body--with-suggestion {
     padding-bottom: 56px;
   }
 }
 
-.tox-tinyai__bottom-bar {
+.tox-tinymceai__bottom-bar {
   position: fixed;
   left: 0;
   right: 0;

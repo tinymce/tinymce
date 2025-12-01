@@ -1,7 +1,7 @@
-import { UserPromptBubble } from './bespoke/tinyai/bubbles/UserPromptBubble';
-import ErrorMessage from './bespoke/tinyai/error/ErrorMessage';
-import { Spinner } from './bespoke/tinyai/spinner/Spinner';
-import { Tag } from './bespoke/tinyai/tag/Tag';
+import { UserPromptBubble } from './bespoke/tinymceai/bubbles/UserPromptBubble';
+import ErrorMessage from './bespoke/tinymceai/error/ErrorMessage';
+import { Spinner } from './bespoke/tinymceai/spinner/Spinner';
+import { Tag } from './bespoke/tinymceai/tag/Tag';
 import { AutoResizingTextarea } from './components/autoresizingtextarea/AutoResizingTextarea';
 import { Button } from './components/button/Button';
 import * as ContextToolbar from './components/contexttoolbar/ContextToolbar';
