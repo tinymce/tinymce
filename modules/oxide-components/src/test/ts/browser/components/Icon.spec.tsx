@@ -8,7 +8,7 @@ const chevronDownTestIconId = 'chevron-down-icon';
 const chevronUpTestIconId = 'chevron-up-icon';
 const customTestIconId = 'custom-icon-icon';
 
-describe('browser.Icon', () => {
+describe('browser.components.Icon', () => {
   it('TINY-13316: should render icons using resolver', async () => {
     const resolver = vi.fn((icon: string) => `<svg id="${icon}"></svg>`);
     const { getByTestId } = render(

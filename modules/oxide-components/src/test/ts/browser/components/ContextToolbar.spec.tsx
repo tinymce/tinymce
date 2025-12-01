@@ -25,7 +25,7 @@ const Wrapper = ({ children }: { children: ReactNode }) => {
   );
 };
 
-describe('browser.ContextToolbar.ContextToolbar', () => {
+describe('browser.components.ContextToolbar', () => {
   it('TINY-13071: Should render trigger and toolbar', async () => {
     const { getByTestId } = render(
       <Fragment>
