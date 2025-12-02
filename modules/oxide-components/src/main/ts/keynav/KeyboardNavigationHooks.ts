@@ -2,7 +2,7 @@ import { Fun } from '@ephox/katamari';
 import { SugarElement } from '@ephox/sugar';
 import { useEffect, type RefObject } from 'react';
 
-import * as EscapingType from './keyboard/EscapingType';
+import * as EscapingType from './keyboard/escaping/EscapingType';
 import * as FlowType from './keyboard/flowtype/FlowType';
 import type * as KeyingType from './keyboard/KeyingType';
 import * as SpecialType from './keyboard/SpecialType';
@@ -54,7 +54,7 @@ export const useFlowKeyNavigation = (props: FlowKeyingProps): void => {
       return Fun.noop;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ ]);
+  }, []);
 };
 
 export interface SpecialKeyingProps extends BaseProps, SpecialType.SpecialConfig { }
@@ -69,8 +69,7 @@ export const useSpecialKeyNavigation = (props: SpecialKeyingProps): void => {
     } else {
       return Fun.noop;
     }
-  }
-  , [ props ]);
+  }, [ props ]);
 };
 
 export interface EscapeKeyProps extends BaseProps, EscapingType.EscapingConfig { }
@@ -85,6 +84,5 @@ export const useEscapeKeyNavigation = (props: EscapeKeyProps): void => {
     } else {
       return Fun.noop;
     }
-  },
-  [ props ]);
+  }, [ props ]);
 };

@@ -1,19 +1,19 @@
 import { Fun, Optional } from '@ephox/katamari';
 import type { SugarElement } from '@ephox/sugar';
 
-import type { GeneralKeyingConfig, KeyRuleHandler } from './KeyingModeTypes';
-import * as KeyingType from './KeyingType';
-import * as KeyMatch from './KeyMatch';
-import * as KeyRules from './KeyRules';
-import * as Keys from './Keys';
+import type { GeneralKeyingConfig, KeyRuleHandler } from '../KeyingModeTypes';
+import * as KeyingType from '../KeyingType';
+import * as KeyMatch from '../KeyMatch';
+import * as KeyRules from '../KeyRules';
+import * as Keys from '../Keys';
 
 export type KeyHandlerApi = (comp: SugarElement<HTMLElement>, se: Event) => Optional<boolean>;
 
 export interface EscapingConfig {
-  onEscape: KeyHandlerApi;
+  readonly onEscape: KeyHandlerApi;
 }
 
-interface FullSpecialConfig extends EscapingConfig, GeneralKeyingConfig {}
+interface FullSpecialConfig extends EscapingConfig, GeneralKeyingConfig { }
 
 const create = (source: SugarElement<HTMLElement>, config: EscapingConfig): KeyingType.Handlers => {
   const partialConfig: Required<EscapingConfig> = {
