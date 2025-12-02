@@ -1,4 +1,4 @@
-import { Optional, Type } from '@ephox/katamari';
+import { Type } from '@ephox/katamari';
 
 import * as HttpHandler from './HttpHandler';
 import * as Shared from './Shared';
@@ -93,15 +93,13 @@ const handleBodyResponse = async (body: ReadableStream<Uint8Array>, port: Messag
 
           if (!done) {
             const sliced = chunk.buffer.slice(chunk.byteOffset, chunk.byteOffset + chunk.byteLength);
-            const buffer = Optional
-              .from(typeof SharedArrayBuffer !== 'undefined' ? SharedArrayBuffer : null)
-              .filter(() => sliced instanceof SharedArrayBuffer)
-              .map(() => {
-                const newBuffer = new ArrayBuffer(sliced.byteLength);
-                new Uint8Array(newBuffer).set(new Uint8Array(sliced));
-                return newBuffer;
-              })
-              .getOr(sliced as ArrayBuffer);
+
+            let buffer: ArrayBuffer;
+            if (typeof SharedArrayBuffer !== 'undefined' && sliced instanceof SharedArrayBuffer) {
+              buffer = new Uint8Array(sliced).slice().buffer;
+            } else {
+              buffer = sliced as ArrayBuffer;
+            }
 
             const bodyChunkMessage: Shared.MockedResponseBodyChunkMessage = {
               type: 'AGAR_MOCKED_RESPONSE_BODY_CHUNK',
