@@ -13,9 +13,9 @@ describe('browser.components.Icon', () => {
     const resolver = vi.fn((icon: string) => `<svg id="${icon}"></svg>`);
     const { getByTestId } = render(
       <Fragment>
-        <Icon icon="chevron-down" resolver={resolver} dataTestId={chevronDownTestIconId} />
-        <Icon icon="chevron-up" resolver={resolver} dataTestId={chevronUpTestIconId} />
-        <Icon icon="custom-icon" resolver={resolver} dataTestId={customTestIconId} />
+        <Icon icon="chevron-down" resolver={resolver} data-testid={chevronDownTestIconId} />
+        <Icon icon="chevron-up" resolver={resolver} data-testid={chevronUpTestIconId} />
+        <Icon icon="custom-icon" resolver={resolver} data-testid={customTestIconId} />
       </Fragment>
     );
 

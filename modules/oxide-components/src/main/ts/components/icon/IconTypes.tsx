@@ -9,6 +9,4 @@ export interface IconProps {
    * Returns the html string representation of the icon.
    */
   readonly resolver: (icon: string) => string;
-  /** Optional data-testid attribute for testing purposes */
-  readonly dataTestId?: string;
 }

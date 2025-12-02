@@ -28,13 +28,13 @@ const iconResolver = (icon: string): string => {
   // Your icon resolution logic here
 };
 
-<Icon icon="chevron-down" resolver={iconResolver} dataTestId="chevron-down-icon" />
+<Icon icon="chevron-down" resolver={iconResolver} />
 \`\`\`
 
 ## Example
 
 \`\`\`tsx
-<Icon icon="chevron-down" resolver={iconResolver} dataTestId="chevron-down-icon" />
+<Icon icon="chevron-down" resolver={iconResolver} />
 \`\`\`
 
 ## How it works
