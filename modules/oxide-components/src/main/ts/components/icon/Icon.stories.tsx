@@ -31,12 +31,6 @@ const iconResolver = (icon: string): string => {
 <Icon icon="chevron-down" resolver={iconResolver} dataTestId="chevron-down-icon" />
 \`\`\`
 
-## Props
-
-- \`icon\` (string): The name of the icon to render.
-- \`resolver\` (function): A function that takes an icon name and returns the corresponding SVG string.
-- \`dataTestId\` (string, optional): An optional \`data-testid\` attribute for testing purposes.
-
 ## Example
 
 \`\`\`tsx
