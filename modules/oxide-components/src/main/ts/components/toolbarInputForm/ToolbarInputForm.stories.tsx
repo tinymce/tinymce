@@ -51,7 +51,7 @@ const iconResolver = (icon: string): string => {
 };
 
 const render = (args: ToolbarInputFormProps): JSX.Element => {
-  return <ToolbarInputForm onSubmit={args.onSubmit} iconResolver={args.iconResolver} placeholder={args.placeholder} label={args.label}></ToolbarInputForm>
+  return <ToolbarInputForm onSubmit={args.onSubmit} iconResolver={args.iconResolver} placeholder={args.placeholder} label={args.label}></ToolbarInputForm>;
 };
 
 export const Example: Story = {
