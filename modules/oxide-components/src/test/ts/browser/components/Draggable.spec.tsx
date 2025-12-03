@@ -1,9 +1,9 @@
-import { userEvent, page } from '@vitest/browser/context';
 import * as Draggable from 'oxide-components/components/draggable/Draggable';
 import type { DraggableProps } from 'oxide-components/components/draggable/internals/types';
 import { classes } from 'oxide-components/utils/Styles';
 import type { ReactNode } from 'react';
 import { describe, expect, it, afterEach, beforeAll } from 'vitest';
+import { userEvent, page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
 import * as Mouse from './utils/Mouse';

@@ -1,9 +1,9 @@
 import { SelectorFind, SugarElement } from '@ephox/sugar';
-import { userEvent, page } from '@vitest/browser/context';
 import * as FloatingSidebar from 'oxide-components/components/floatingsidebar/FloatingSidebar';
 import { classes } from 'oxide-components/utils/Styles';
 import { useRef, useState, type MutableRefObject, type ReactNode } from 'react';
 import { describe, expect, it, beforeAll, afterEach, afterAll, beforeEach } from 'vitest';
+import { userEvent, page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
 import * as Mouse from './utils/Mouse';
