@@ -1,8 +1,8 @@
 import { Optional } from '@ephox/katamari';
-import { userEvent } from 'vitest/browser';
 import { useSpecialKeyNavigation } from 'oxide-components/keynav/KeyboardNavigationHooks';
 import { useRef } from 'react';
 import { describe, expect, it } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
 const store: string[] = [];
