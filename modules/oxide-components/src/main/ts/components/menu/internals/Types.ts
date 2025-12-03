@@ -1,3 +1,5 @@
+import type { PropsWithChildren } from 'react';
+
 // Menu items APIs
 export interface CommonMenuItemInstanceApi {
   isEnabled: () => boolean;
@@ -40,33 +42,19 @@ interface Submenu extends CommmonMenuItem {
 export type MenuItem = ToggleMenuItem | SimpleMenuItem | Submenu;
 
 // Components Props
-export interface ToggleMenuItemProps extends ToggleMenuItem {
-  id: string;
+export interface ToggleMenuItemProps extends Omit<ToggleMenuItem, 'type'> {
   iconResolver: (icon: string) => string;
+  autoFocus?: boolean;
 }
 
-export interface SimpleMenuItemProps extends SimpleMenuItem {
-  id: string;
+export interface SimpleMenuItemProps extends Omit<SimpleMenuItem, 'type'> {
   iconResolver: (icon: string) => string;
+  autoFocus?: boolean;
 }
 
-export interface SubmenuProps extends Submenu {
-  id: string;
+export interface SubmenuProps extends Omit<Submenu, 'items' | 'type'>, PropsWithChildren {
   iconResolver: (icon: string) => string;
   readonly submenusSide?: 'left' | 'right';
+  autoFocus?: boolean;
 }
 
-export interface MenuProps {
-  readonly items: MenuItem[];
-  /*
-   * The function to resolve the icon name to an html string.
-   * This would eventually default to retrieving the icon from the editor's registry.
-   * (name: string) => editor.ui.registry.getAll().icons[name] ?? 'temporary-placeholder'
-   *
-   * @param icon - The name of the icon
-   * @returns The html string representation of the icon
-   */
-  readonly iconResolver: (icon: string) => string;
-  readonly submenusSide?: 'left' | 'right';
-  readonly autoFocus?: boolean;
-}

@@ -1,33 +1,18 @@
 /* eslint-disable max-len */
+import { Fun, Id } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Dropdown, IconButton } from 'oxide-components/main';
 
-import * as Dropdowns from '../../utils/Dropdowns';
-
-import type { MenuItem, MenuProps, ToggleMenuItemInstanceApi } from './internals/Types';
+import { SimpleMenuItem } from './components/SimpleMenuItem';
+import { SubmenuItem } from './components/SubmenuItem';
+import { ToggleMenuItem } from './components/ToggleMenuItem';
+import type { ToggleMenuItemInstanceApi } from './internals/Types';
 import { Menu } from './Menu';
 
 const meta = {
   title: 'components/Menu',
   component: Menu,
-  argTypes: {
-    items: {
-      description: 'Menu items array. Items must be of type `ToggleMenuItem`, `SimpleMenuItem` or `Submenu`.',
-    },
-    iconResolver: {
-      description: 'The function to resolve the icon name to an html string.'
-    },
-    submenusSide: {
-      description: 'On which side of the menu should the submenu open.',
-      value: 'right',
-      options: [ 'left', 'right' ]
-    },
-    autoFocus: {
-      description: 'Set to true sets focus to the first menu item on render.',
-      value: false,
-      control: 'boolean'
-    }
-  },
+  argTypes: {},
   parameters: {
     layout: 'centered',
     docs: {
@@ -78,80 +63,89 @@ const iconResolver = (icon: string): string => {
   return icons.get(icon) || '';
 };
 
-const exampleItems: MenuItem[] = [
-  {
-    type: 'menuitem',
-    text: 'Menu item 1',
-    icon: 'item',
-    // eslint-disable-next-line no-console
-    onAction: () => console.log('Clicked Menu item 1')
-  },
-  {
-    type: 'submenu',
-    text: 'Menu item 2',
-    icon: 'item',
-    items: [
-      {
-        type: 'togglemenuitem',
-        text: 'Toggle submenu item',
-        icon: 'item',
-        onAction: (api: ToggleMenuItemInstanceApi): void => {
-          api.setActive(!api.isActive());
-          // eslint-disable-next-line no-console
-          console.log('You toggled a menuitem');
-        }
-      },
-      {
-        type: 'menuitem',
-        text: 'Sub menu item 2',
-        icon: 'item',
-        // eslint-disable-next-line no-console
-        onAction: () => console.log('You clicked Sub menu item 2!</em>')
-      },
-      {
-        type: 'submenu',
-        text: 'Menu item 3',
-        icon: 'item',
-        items: [
-          {
-            type: 'menuitem',
-            text: 'Nested submenu',
-            icon: 'item',
-            // eslint-disable-next-line no-console
-            onAction: () => console.log('You clicked nested submenu item 1!')
-          },
-          {
-            type: 'menuitem',
-            text: 'Close all',
-            icon: 'item',
 
-            onAction: (): void => {
-              Dropdowns.hideAll();
-              // eslint-disable-next-line no-console
-              console.log('You clicked close all in nested submenu</em>');
-            }
-          }
-        ]
-      },
-    ]
-  },
-  {
-    type: 'togglemenuitem',
-    text: 'Toggle menu item',
-    icon: 'item',
-    onAction: (api: ToggleMenuItemInstanceApi): void => {
+const menu: JSX.Element = (<Menu>
+  <SimpleMenuItem
+    key={Id.generate('menu-item')}
+    iconResolver={iconResolver}
+    text={'Menu item 1'}
+    icon={'item'}
+    autoFocus={true}
+    // eslint-disable-next-line no-console
+    onAction= {() => console.log('Clicked Menu item 1')}
+  />
+  <ToggleMenuItem
+    key={Id.generate('menu-item')}
+    iconResolver={iconResolver}
+    text={'Menu item 2'}
+    icon={'item'}
+    onAction= {(api: ToggleMenuItemInstanceApi): void => {
       api.setActive(!api.isActive());
       // eslint-disable-next-line no-console
       console.log('You toggled a menuitem');
-    }
-  }
-];
+    }}
+  />
+  <SubmenuItem
+    key={Id.generate('menu-item')}
+    iconResolver={iconResolver}
+    text={'Submenu'}
+    icon={'item'}>
+    <Menu>
+      <SimpleMenuItem
+        autoFocus={true}
+        key={Id.generate('menu-item')}
+        iconResolver={iconResolver}
+        text={'Nested menu item 1'}
+        icon={'item'}
+        // eslint-disable-next-line no-console
+        onAction= {() => console.log('Clicked nested menu item 1')}
+      />
+      <ToggleMenuItem
+        enabled={false}
+        key={Id.generate('menu-item')}
+        iconResolver={iconResolver}
+        text={'Nested menu item 2'}
+        icon={'item'}
+        onAction= {(api: ToggleMenuItemInstanceApi): void => {
+          api.setActive(!api.isActive());
+          // eslint-disable-next-line no-console
+          console.log('You toggled a nested menu item 2');
+        }}
+      />
+      <SubmenuItem
+        key={Id.generate('menu-item')}
+        iconResolver={iconResolver}
+        text={'Submenu'}
+        icon={'item'}>
+        <Menu>
+          <SimpleMenuItem
+            autoFocus={true}
+            key={Id.generate('menu-item')}
+            iconResolver={iconResolver}
+            text={'Nested menu item 1'}
+            icon={'item'}
+            // eslint-disable-next-line no-console
+            onAction= {() => console.log('Clicked nested menu item 1')}
+          />
+          <ToggleMenuItem
+            key={Id.generate('menu-item')}
+            iconResolver={iconResolver}
+            text={'Nested menu item 2'}
+            icon={'item'}
+            onAction= {(api: ToggleMenuItemInstanceApi): void => {
+              api.setActive(!api.isActive());
+              // eslint-disable-next-line no-console
+              console.log('You toggled a nested menu item 2');
+            }}
+          />
+        </Menu>
+      </SubmenuItem>
+    </Menu>
+  </SubmenuItem>
+</Menu>);
 
 export const Example: Story = {
-  args: {
-    iconResolver,
-    items: exampleItems
-  },
+  args: {},
   parameters: {
     docs: {
       story: {
@@ -160,14 +154,11 @@ export const Example: Story = {
       }
     }
   },
-  render: (args: MenuProps): JSX.Element => (<Menu items={args.items} iconResolver={args.iconResolver}></Menu>)
+  render: Fun.constant(menu)
 };
 
 export const MenuInADropdown: Story = {
-  args: {
-    iconResolver,
-    items: exampleItems
-  },
+  args: {},
   parameters: {
     docs: {
       story: {
@@ -176,14 +167,14 @@ export const MenuInADropdown: Story = {
       }
     }
   },
-  render: (args: MenuProps): JSX.Element => {
+  render: (): JSX.Element => {
     return (<>
       <Dropdown.Root>
         <Dropdown.Trigger>
           <IconButton variant={'secondary'} resolver={iconResolver} icon={'item'}></IconButton>
         </Dropdown.Trigger>
         <Dropdown.Content>
-          <Menu items={args.items} iconResolver={args.iconResolver} autoFocus={true}></Menu>
+          {menu}
         </Dropdown.Content>
       </Dropdown.Root>
     </>);

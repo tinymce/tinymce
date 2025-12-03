@@ -1,5 +1,5 @@
-import { Throttler } from '@ephox/katamari';
-import { useCallback, useEffect, useMemo, useRef, useState, type FC, type HTMLAttributes, type MouseEvent, type PropsWithChildren } from 'react';
+import { Throttler, Type } from '@ephox/katamari';
+import { Children, cloneElement, isValidElement, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type FC, type HTMLAttributes, type MouseEvent, type PropsWithChildren, type ReactElement } from 'react';
 
 import { Bem } from '../../main';
 
@@ -10,26 +10,28 @@ const isInDropdownContent = (contentRef: React.RefObject<HTMLDivElement>, node: 
   return contentRef.current?.contains(node) ?? false;
 };
 
-// TODO: invastigate lazy loading content children (look at the FloatingSidebar component). Could be tricky - to correctly calculate the position we need children to be rendered
 const Content: FC<PropsWithChildren<HTMLAttributes<HTMLDivElement>>> = ({ children, ...props }) => {
-  const { triggerRef, side, align, gap, contentRef, triggerEvent, debouncedHideHoverablePopover, setIsOpen } = useDropdown();
+  const { triggerRef, side, align, gap, contentRef, triggerEvent, debouncedHideHoverablePopover, isOpen, setIsOpen } = useDropdown();
 
-  const [ positioningStyles, setPositioningStyles ] = useState({});
+  const [ positioningStyles, setPositioningStyles ] = useState<CSSProperties>({ opacity: '0' });
 
   const updateToggleState = useCallback((event: ToggleEvent) => {
     setIsOpen(event.newState === 'open');
   }, [ setIsOpen ]);
 
   // this can be later replaced with CSS anchor positioning
-  const updatePosition = useCallback((event: ToggleEvent) => {
+  const updatePosition = useCallback(() => {
     // TODO: remove type casting after updating TypeScript. In the newest version addEventListener correctly produces ToggleEvent
-    if (event.newState === 'open' && triggerRef.current && contentRef.current) {
+    if (Type.isNonNullable(triggerRef.current) && Type.isNonNullable(contentRef.current)) {
       const documentRect = document.documentElement.getBoundingClientRect();
       const anchorRect = triggerRef.current.getBoundingClientRect();
       const anchoredContainerRect = contentRef.current.getBoundingClientRect();
 
       // using document rect as a boundry, but maybe it should be the Editor area?
-      setPositioningStyles(PositioningUtils.getPositionStyles({ anchorRect, anchoredContainerRect, side, align, gap, boundaryRect: documentRect }));
+      setPositioningStyles({
+        opacity: '1',
+        ...PositioningUtils.getPositionStyles({ anchorRect, anchoredContainerRect, side, align, gap, boundaryRect: documentRect })
+      });
     }
   }, [ contentRef, triggerRef, align, side, gap ]);
 
@@ -40,7 +42,9 @@ const Content: FC<PropsWithChildren<HTMLAttributes<HTMLDivElement>>> = ({ childr
     }
     const onToggle = (e: Event) => {
       updateToggleState(e as ToggleEvent);
-      updatePosition(e as ToggleEvent);
+      if ((e as ToggleEvent).newState === 'closed') {
+        triggerRef.current?.focus();
+      }
     };
 
     element.addEventListener('toggle', onToggle);
@@ -48,7 +52,16 @@ const Content: FC<PropsWithChildren<HTMLAttributes<HTMLDivElement>>> = ({ childr
     return () => {
       element.removeEventListener('toggle', onToggle);
     };
-  }, [ contentRef, updatePosition, updateToggleState ]);
+  }, [ contentRef, triggerRef, updatePosition, updateToggleState ]);
+
+  useEffect(() => {
+    if (isOpen) {
+      updatePosition();
+    } else {
+      // reset styles on close
+      setPositioningStyles({ opacity: '0' });
+    }
+  }, [ isOpen, updatePosition ]);
 
   return <div
     // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
@@ -56,31 +69,40 @@ const Content: FC<PropsWithChildren<HTMLAttributes<HTMLDivElement>>> = ({ childr
     className={Bem.block('tox-dropdown-content')}
     ref={contentRef}
     style={{ ...positioningStyles }}
-    { ...triggerEvent === 'hover' && {
+    { ...(triggerEvent === 'hover' || triggerEvent === 'both') && {
       onMouseLeave: debouncedHideHoverablePopover.throttle,
       onMouseEnter: () => debouncedHideHoverablePopover.cancel()
     }}
     { ...props }
   >
-    {children}
+    {isOpen && children}
   </div>;
 };
 
-const Trigger: FC<PropsWithChildren<HTMLAttributes<HTMLDivElement>>> = ({ children, ...args }) => {
+const Trigger: FC<PropsWithChildren> = ({ children }) => {
   const { triggerRef, contentRef, triggerEvent, debouncedHideHoverablePopover, isOpen } = useDropdown();
 
+  let child = Children.toArray(children)[0];
+  if (!isValidElement(child)) {
+    return null;
+  }
+  child = child as ReactElement;
+
   const onHoverTriggerProps = {
-    onMouseEnter: () => {
-      contentRef.current?.showPopover();
+    onMouseEnter: (e: MouseEvent) => {
+      child.props.onMouseEnter?.(e);
       debouncedHideHoverablePopover.cancel();
+      contentRef.current?.showPopover();
     },
     onMouseLeave: (e: MouseEvent) => {
+      child.props.onMouseLeave?.(e);
       debouncedHideHoverablePopover.throttle(e);
     }
   };
 
   const onClickTriggerProps = {
-    onClick: () => {
+    onClick: (e: MouseEvent) => {
+      child.props.onClick?.(e);
       if (isOpen) {
         contentRef.current?.hidePopover();
       } else {
@@ -89,16 +111,19 @@ const Trigger: FC<PropsWithChildren<HTMLAttributes<HTMLDivElement>>> = ({ childr
     }
   };
 
-  const props = {
-    children,
-    ref: triggerRef,
+  return cloneElement(child, {
+    ref: (el: HTMLDivElement) => {
+      triggerRef.current = el;
+      if (Type.isFunction(child.props.ref )) {
+        child.props.ref(el);
+      } else if (Type.isNonNullable(child.props.ref)) {
+        child.props.ref.current = el;
+      }
+    },
     ...triggerEvent === 'click' && onClickTriggerProps,
     ...triggerEvent === 'hover' && onHoverTriggerProps,
     ...triggerEvent === 'both' && { ...onClickTriggerProps, ...onHoverTriggerProps },
-    ...args
-  };
-
-  return <div { ...props }/>;
+  });
 };
 
 export interface DropdownProps extends PropsWithChildren {
@@ -110,7 +135,7 @@ export interface DropdownProps extends PropsWithChildren {
 }
 
 const Root: FC<DropdownProps> = ({ children, side = 'top', align = 'start', gap = 8, triggerEvent = 'click' }) => {
-  const triggerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLElement | undefined>();
   const contentRef = useRef<HTMLDivElement>(null);
   const [ isOpen, setIsOpen ] = useState(false);
 
