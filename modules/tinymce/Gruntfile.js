@@ -39,6 +39,7 @@ const stripSourceMaps = function (data) {
   return sourcemap > -1 ? data.slice(0, sourcemap) : data;
 };
 
+/** @param {import('grunt')} grunt */
 module.exports = function (grunt) {
   const packageData = grunt.file.readJSON('package.json');
 
@@ -330,11 +331,22 @@ module.exports = function (grunt) {
     copy: {
       core: {
         options: {
-          process: function (content) {
-            return content.
+          process: function (content, src) {
+            let processed = content.
               replace('@@majorVersion@@', packageData.version.split('.')[0]).
               replace('@@minorVersion@@', packageData.version.split('.').slice(1).join('.')).
               replace('@@releaseDate@@', packageData.date);
+
+            // TINY-13411: The repo README.md mentions GPL 2.0 in the license section
+            // but for dist/NPM packages we want to just point to a license.md file
+            if (src === '../../README.md') {
+              processed = processed.replace(
+                /^##\s*License\s*\n[\s\S]*?(?=\n##\s|\n*$)/m,
+                '## License\n\nLicense terms can be found in the license.md file.'
+              );
+            }
+
+            return processed;
           }
         },
         files: [
@@ -351,7 +363,7 @@ module.exports = function (grunt) {
             dest: 'js/tinymce/langs/README.md'
           },
           {
-            src: '../../LICENSE.md',
+            src: 'src/core/text/license-dist.md',
             dest: 'js/tinymce/license.md'
           },
           {
@@ -624,7 +636,7 @@ module.exports = function (grunt) {
             zip.addData('bower.json', jsonToBuffer({
               'name': 'tinymce',
               'description': 'Web based JavaScript HTML WYSIWYG editor control.',
-              'license': 'GPL-2.0-or-later',
+              'license': 'SEE LICENSE IN license.md',
               'keywords': keywords,
               'homepage': 'https://www.tiny.cloud/',
               'ignore': ['README.md', 'composer.json', 'package.json', '.npmignore', 'CHANGELOG.md']
@@ -642,7 +654,7 @@ module.exports = function (grunt) {
               'author': 'Ephox Corporation DBA Tiny Technologies, Inc',
               'main': 'tinymce.js',
               'types': 'tinymce.d.ts',
-              'license': 'GPL-2.0-or-later',
+              'license': 'SEE LICENSE IN license.md',
               'keywords': keywords,
               'homepage': 'https://www.tiny.cloud/',
               'bugs': { 'url': 'https://github.com/tinymce/tinymce/issues' }
@@ -652,7 +664,7 @@ module.exports = function (grunt) {
               'name': 'tinymce/tinymce',
               'version': packageData.version,
               'description': 'Web based JavaScript HTML WYSIWYG editor control.',
-              'license': ['GPL-2.0-or-later'],
+              'license': ['SEE LICENSE IN license.md'],
               'keywords': keywords,
               'homepage': 'https://www.tiny.cloud/',
               'type': 'component',
