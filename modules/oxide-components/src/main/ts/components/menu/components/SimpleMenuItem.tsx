@@ -1,10 +1,10 @@
-import { forwardRef, useEffect, useMemo, useState } from 'react';
+import { forwardRef, useEffect, useId, useMemo, useState } from 'react';
 
 import { Icon } from '../../../internal/icon/Icon.component';
 import * as Bem from '../../../utils/Bem';
 import type { CommonMenuItemInstanceApi, SimpleMenuItemProps } from '../internals/Types';
 
-export const SimpleMenuItem = forwardRef<HTMLDivElement, SimpleMenuItemProps>(({ id, enabled = true, onSetup, text, icon, iconResolver, shortcut, onAction }, ref) => {
+export const SimpleMenuItem = forwardRef<HTMLButtonElement, SimpleMenuItemProps>(({ autoFocus = false, enabled = true, onSetup, text, icon, iconResolver, shortcut, onAction }, ref) => {
   const [ state, setState ] = useState({
     enabled,
     focused: false,
@@ -30,8 +30,8 @@ export const SimpleMenuItem = forwardRef<HTMLDivElement, SimpleMenuItemProps>(({
   }, [ onSetup, api ]);
 
   return (
-    <div
-      id={id}
+    <button
+      id={useId()}
       tabIndex={-1}
       role='menuitem'
       aria-label={text}
@@ -47,12 +47,14 @@ export const SimpleMenuItem = forwardRef<HTMLDivElement, SimpleMenuItemProps>(({
         'state-disabled': !state.enabled,
       })}
       ref={ref}
+      autoFocus={autoFocus}
+      aria-keyshortcuts={shortcut}
     >
       <div className={Bem.element('tox-collection', 'item-icon')}>
         {icon && iconResolver && <Icon icon={icon} resolver={iconResolver} />}
       </div>
       <div className={Bem.element('tox-collection', 'item-label')}>{text}</div>
       {shortcut && <div className={Bem.element('tox-collection', 'item-accessory')}>{shortcut}</div>}
-    </div>
+    </button>
   );
 });

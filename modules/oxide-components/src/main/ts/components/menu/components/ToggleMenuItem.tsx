@@ -1,11 +1,11 @@
 import { Fun } from '@ephox/katamari';
-import { forwardRef, useEffect, useMemo, useState } from 'react';
+import { forwardRef, useEffect, useId, useMemo, useState } from 'react';
 
 import { Icon } from '../../../internal/icon/Icon.component';
 import * as Bem from '../../../utils/Bem';
 import type { ToggleMenuItemInstanceApi, ToggleMenuItemProps } from '../internals/Types';
 
-export const ToggleMenuItem = forwardRef<HTMLDivElement, ToggleMenuItemProps>(({ id, enabled = true, onSetup, text, icon, iconResolver, active = false, shortcut, onAction }, ref) => {
+export const ToggleMenuItem = forwardRef<HTMLButtonElement, ToggleMenuItemProps>(({ autoFocus = false, enabled = true, onSetup, text, icon, iconResolver, active = false, shortcut, onAction }, ref) => {
   const [ state, setState ] = useState({
     enabled,
     active,
@@ -37,8 +37,8 @@ export const ToggleMenuItem = forwardRef<HTMLDivElement, ToggleMenuItemProps>(({
   }, [ onSetup, api ]);
 
   return (
-    <div
-      id={id}
+    <button
+      id={useId()}
       tabIndex={-1}
       role='menuitemcheckbox'
       aria-label={text}
@@ -56,6 +56,8 @@ export const ToggleMenuItem = forwardRef<HTMLDivElement, ToggleMenuItemProps>(({
         'state-disabled': !state.enabled,
       })}
       ref={ref}
+      autoFocus={autoFocus}
+      aria-keyshortcuts={shortcut}
     >
       <div className={Bem.element('tox-collection', 'item-icon')}>
         {icon && iconResolver && <Icon icon={icon} resolver={iconResolver} />}
@@ -65,6 +67,6 @@ export const ToggleMenuItem = forwardRef<HTMLDivElement, ToggleMenuItemProps>(({
       <div className={Bem.element('tox-collection', 'item-checkmark')} >
         {iconResolver && <Icon icon={'checkmark'} resolver={iconResolver} />}
       </div>
-    </div>
+    </button>
   );
 });

@@ -2,7 +2,7 @@ import type { Throttler } from '@ephox/katamari';
 import { createContext, useContext, type MouseEvent } from 'react';
 
 export interface DropdownState {
-  readonly triggerRef: React.RefObject<HTMLDivElement>;
+  readonly triggerRef: React.MutableRefObject<HTMLElement | undefined>;
   readonly contentRef: React.RefObject<HTMLDivElement>;
   readonly side: 'top' | 'bottom' | 'left' | 'right';
   readonly align: 'start' | 'center' | 'end';
