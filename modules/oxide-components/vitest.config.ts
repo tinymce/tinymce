@@ -24,7 +24,7 @@ export default defineConfig({
       },
       {
         optimizeDeps: {
-          include: [ 'react/jsx-dev-runtime', 'react/jsx-runtime' ],
+          include: [ 'react/jsx-dev-runtime' ],
         },
         test: {
           name: 'browser',
