@@ -1,9 +1,9 @@
 import { Optional } from '@ephox/katamari';
 import { Focus, SelectorFind, SugarElement } from '@ephox/sugar';
+import { userEvent } from '@vitest/browser/context';
 import { useFlowKeyNavigation } from 'oxide-components/keynav/KeyboardNavigationHooks';
 import { forwardRef, useRef } from 'react';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
 const styles = `.stay:focus {
