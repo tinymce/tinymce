@@ -1,13 +1,12 @@
 import { Arr, Id } from '@ephox/katamari';
 
-import { SimpleMenuItem } from '../components/SimpleMenuItem';
-import { SubmenuItem } from '../components/SubmenuItem';
-import { ToggleMenuItem } from '../components/ToggleMenuItem';
-import { Menu } from '../Menu';
+import { SimpleMenuItem } from './components/SimpleMenuItem';
+import { SubmenuItem } from './components/SubmenuItem';
+import { ToggleMenuItem } from './components/ToggleMenuItem';
+import type { MenuItem } from './internals/Types';
+import { Menu } from './Menu';
 
-import type { MenuItem } from './Types';
-
-export interface MenuRendererProps {
+interface MenuRendererProps {
   readonly items: MenuItem[];
   /*
    * The function to resolve the icon name to an html string.
@@ -21,8 +20,14 @@ export interface MenuRendererProps {
   readonly submenusSide?: 'left' | 'right';
 }
 
-export const render = ({ items, iconResolver, submenusSide }: MenuRendererProps): JSX.Element => {
-  const itemsWithId = Arr.map(items, (itemProps) => ({ ...itemProps, id: Id.generate('menu-item') }));
+export const render = ({ items, iconResolver, submenusSide = 'right' }: MenuRendererProps): JSX.Element => {
+  const itemsWithId = Arr.map(items, (itemProps, i) => {
+    return {
+      id: Id.generate('menu-item'),
+      ...(i === 0 && { autoFocus: true }),
+      ...itemProps
+    };
+  });
 
   return (<Menu>
     {
