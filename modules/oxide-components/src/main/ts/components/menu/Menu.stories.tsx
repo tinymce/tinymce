@@ -63,86 +63,86 @@ const iconResolver = (icon: string): string => {
   return icons.get(icon) || '';
 };
 
-
-const menu: JSX.Element = (<Menu>
-  <SimpleMenuItem
-    key={Id.generate('menu-item')}
-    iconResolver={iconResolver}
-    text={'Menu item 1'}
-    icon={'item'}
-    autoFocus={true}
-    // eslint-disable-next-line no-console
-    onAction= {() => console.log('Clicked Menu item 1')}
-  />
-  <ToggleMenuItem
-    key={Id.generate('menu-item')}
-    iconResolver={iconResolver}
-    text={'Menu item 2'}
-    icon={'item'}
-    onAction= {(api: ToggleMenuItemInstanceApi): void => {
-      api.setActive(!api.isActive());
+const menu: JSX.Element = (
+  <Menu>
+    <SimpleMenuItem
+      key={Id.generate('menu-item')}
+      iconResolver={iconResolver}
+      text={'Menu item 1'}
+      icon={'item'}
+      autoFocus={true}
       // eslint-disable-next-line no-console
-      console.log('You toggled a menuitem');
-    }}
-  />
-  <SubmenuItem
-    key={Id.generate('menu-item')}
-    iconResolver={iconResolver}
-    text={'Submenu'}
-    icon={'item'}>
-    <Menu>
-      <SimpleMenuItem
-        autoFocus={true}
-        key={Id.generate('menu-item')}
-        iconResolver={iconResolver}
-        text={'Nested menu item 1'}
-        icon={'item'}
+      onAction= {() => console.log('Clicked Menu item 1')}
+    />
+    <ToggleMenuItem
+      key={Id.generate('menu-item')}
+      iconResolver={iconResolver}
+      text={'Menu item 2'}
+      icon={'item'}
+      onAction= {(api: ToggleMenuItemInstanceApi): void => {
+        api.setActive(!api.isActive());
         // eslint-disable-next-line no-console
-        onAction= {() => console.log('Clicked nested menu item 1')}
-      />
-      <ToggleMenuItem
-        enabled={false}
-        key={Id.generate('menu-item')}
-        iconResolver={iconResolver}
-        text={'Nested menu item 2'}
-        icon={'item'}
-        onAction= {(api: ToggleMenuItemInstanceApi): void => {
-          api.setActive(!api.isActive());
+        console.log('You toggled a menuitem');
+      }}
+    />
+    <SubmenuItem
+      key={Id.generate('menu-item')}
+      iconResolver={iconResolver}
+      text={'Submenu'}
+      icon={'item'}>
+      <Menu>
+        <SimpleMenuItem
+          autoFocus={true}
+          key={Id.generate('menu-item')}
+          iconResolver={iconResolver}
+          text={'Nested menu item 1'}
+          icon={'item'}
           // eslint-disable-next-line no-console
-          console.log('You toggled a nested menu item 2');
-        }}
-      />
-      <SubmenuItem
-        key={Id.generate('menu-item')}
-        iconResolver={iconResolver}
-        text={'Submenu'}
-        icon={'item'}>
-        <Menu>
-          <SimpleMenuItem
-            autoFocus={true}
-            key={Id.generate('menu-item')}
-            iconResolver={iconResolver}
-            text={'Nested menu item 1'}
-            icon={'item'}
+          onAction= {() => console.log('Clicked nested menu item 1')}
+        />
+        <ToggleMenuItem
+          enabled={false}
+          key={Id.generate('menu-item')}
+          iconResolver={iconResolver}
+          text={'Nested menu item 2'}
+          icon={'item'}
+          onAction= {(api: ToggleMenuItemInstanceApi): void => {
+            api.setActive(!api.isActive());
             // eslint-disable-next-line no-console
-            onAction= {() => console.log('Clicked nested menu item 1')}
-          />
-          <ToggleMenuItem
-            key={Id.generate('menu-item')}
-            iconResolver={iconResolver}
-            text={'Nested menu item 2'}
-            icon={'item'}
-            onAction= {(api: ToggleMenuItemInstanceApi): void => {
-              api.setActive(!api.isActive());
+            console.log('You toggled a nested menu item 2');
+          }}
+        />
+        <SubmenuItem
+          key={Id.generate('menu-item')}
+          iconResolver={iconResolver}
+          text={'Submenu'}
+          icon={'item'}>
+          <Menu>
+            <SimpleMenuItem
+              autoFocus={true}
+              key={Id.generate('menu-item')}
+              iconResolver={iconResolver}
+              text={'Nested menu item 1'}
+              icon={'item'}
               // eslint-disable-next-line no-console
-              console.log('You toggled a nested menu item 2');
-            }}
-          />
-        </Menu>
-      </SubmenuItem>
-    </Menu>
-  </SubmenuItem>
-</Menu>);
+              onAction= {() => console.log('Clicked nested menu item 1')}
+            />
+            <ToggleMenuItem
+              key={Id.generate('menu-item')}
+              iconResolver={iconResolver}
+              text={'Nested menu item 2'}
+              icon={'item'}
+              onAction= {(api: ToggleMenuItemInstanceApi): void => {
+                api.setActive(!api.isActive());
+                // eslint-disable-next-line no-console
+                console.log('You toggled a nested menu item 2');
+              }}
+            />
+          </Menu>
+        </SubmenuItem>
+      </Menu>
+    </SubmenuItem>
+  </Menu>);
 
 export const Example: Story = {
   args: {},
