@@ -331,22 +331,11 @@ module.exports = function (grunt) {
     copy: {
       core: {
         options: {
-          process: function (content, src) {
-            let processed = content.
+          process: function (content) {
+            return content.
               replace('@@majorVersion@@', packageData.version.split('.')[0]).
               replace('@@minorVersion@@', packageData.version.split('.').slice(1).join('.')).
               replace('@@releaseDate@@', packageData.date);
-
-            // TINY-13411: The repo README.md mentions GPL 2.0 in the license section
-            // but for dist/NPM packages we want to just point to a license.md file
-            if (src === '../../README.md') {
-              processed = processed.replace(
-                /^##\s*License\s*\n[\s\S]*?(?=\n##\s|\n*$)/m,
-                '## License\n\nLicense terms can be found in the license.md file.'
-              );
-            }
-
-            return processed;
           }
         },
         files: [
@@ -363,7 +352,7 @@ module.exports = function (grunt) {
             dest: 'js/tinymce/langs/README.md'
           },
           {
-            src: 'src/core/text/license-dist.md',
+            src: '../../LICENSE.md',
             dest: 'js/tinymce/license.md'
           },
           {
@@ -719,6 +708,23 @@ module.exports = function (grunt) {
           dataFilter: (args) => {
             if (args.filePath.endsWith('.min.css')) {
               args.data = stripSourceMaps(args.data);
+            }
+
+            // TINY-13411: The component zip which is used for NPM needs to have dual license as noted in the license-npm.md file
+            if (args.filePath.endsWith('license.md')) {
+              const npmlicensedata = grunt.file.read('src/core/text/license-npm.md', { encoding: null });
+              args.data = Buffer.from(npmlicensedata);
+            }
+
+            // TINY-13411: The core repo README.md mentions GPL 2.0 in the license section
+            // but for dist/NPM packages we want to just point to a license.md file
+            if (args.filePath.endsWith('README.md')) {
+              let processed = args.data.toString();
+              processed = processed.replace(
+                /^##\s*License\s*\n[\s\S]*?(?=\n##\s|\n*$)/m,
+                '## License\n\nLicense terms can be found in the license.md file.'
+              );
+              args.data = Buffer.from(processed);
             }
           }
         },
