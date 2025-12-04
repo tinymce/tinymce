@@ -9,6 +9,7 @@ import * as Draggable from './components/draggable/Draggable';
 import * as Dropdown from './components/dropdown/Dropdown';
 import { ExpandableBox } from './components/expandablebox/ExpandableBox';
 import * as FloatingSidebar from './components/floatingsidebar/FloatingSidebar';
+import { Icon } from './components/icon/Icon';
 import { IconButton } from './components/iconbutton/IconButton';
 import { ToggleSwitch } from './components/toggleswitch/ToggleSwitch';
 import * as KeyboardNavigationTypes from './keynav/keyboard/NavigationTypes';
@@ -27,6 +28,7 @@ export {
   ExpandableBox,
   FloatingSidebar,
   FocusHelpers,
+  Icon,
   IconButton,
   KeyboardNavigationHooks,
   KeyboardNavigationTypes,

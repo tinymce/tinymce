@@ -1,12 +1,12 @@
 import { Fun } from '@ephox/katamari';
-import { userEvent, type Locator } from '@vitest/browser/context';
 import { ExpandableBox, type ExpandableBoxProps } from 'oxide-components/components/expandablebox/ExpandableBox';
 import * as Bem from 'oxide-components/utils/Bem';
 import { useState } from 'react';
 import { describe, expect, it } from 'vitest';
+import { userEvent, type Locator } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
-describe('browser.ExpandableBoxTest', () => {
+describe('browser.components.ExpandableBoxTest', () => {
   const wrapper = ({ children }: { children: React.ReactNode }) => {
     return (
       <div className={Bem.block('tox')}>

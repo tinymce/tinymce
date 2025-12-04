@@ -39,7 +39,7 @@
     "test-visual-ci": "node ./visual-regression-test-ci.mjs",
     "test-visual-local": "node ./visual-regression-test.mjs",
     "test-visual-local-update": "node ./visual-regression-test.mjs update",
-    "test-ci": "vitest --watch=false --reporter=junit --outputFile=scratch/test-results.xml",
+    "test-ci": "vitest --watch=false --reporter=default --reporter=junit --outputFile=scratch/test-results.xml",
     "test-browser-manual": "vitest --watch --project browser --browser.headless false",
     "test-browser-headless": "vitest run --project browser",
     "ci": "yarn lint && yarn --cwd ../../ lerna run build --scope @tinymce/oxide-components --include-dependencies && yarn test"
