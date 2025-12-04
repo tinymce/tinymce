@@ -70,7 +70,7 @@ const assertPosition = (element: HTMLElement, position: { top: number; left: num
   expect(rect.left).toBe(position.left);
 };
 
-describe('browser.draggable.Draggable', () => {
+describe('browser.components.Draggable', () => {
   let originalViewport = { width: 0, height: 0 };
 
   beforeAll(async () => {

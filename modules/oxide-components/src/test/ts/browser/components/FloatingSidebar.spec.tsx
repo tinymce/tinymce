@@ -28,7 +28,7 @@ const Wrapper = ({ children }: { children: ReactNode }) => {
   );
 };
 
-describe('browser.floatingsidebar.FloatingSidebar', () => {
+describe('browser.components.FloatingSidebar', () => {
   it('TINY-13052: Popover should be closed when isOpen is false', async () => {
     const { container } = render(
       <FloatingSidebar.Root isOpen={false}>

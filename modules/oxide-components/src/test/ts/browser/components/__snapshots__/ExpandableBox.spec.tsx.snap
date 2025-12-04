@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`browser.ExpandableBoxTest > Should be able to expand and collapse content that overflows > 1. Before expand click 1`] = `
+exports[`browser.components.ExpandableBoxTest > Should be able to expand and collapse content that overflows > 1. Before expand click 1`] = `
 <DocumentFragment>
   <div
     class="tox"
@@ -34,7 +34,7 @@ exports[`browser.ExpandableBoxTest > Should be able to expand and collapse conte
 </DocumentFragment>
 `;
 
-exports[`browser.ExpandableBoxTest > Should be able to expand and collapse content that overflows > 2. After expand click 1`] = `
+exports[`browser.components.ExpandableBoxTest > Should be able to expand and collapse content that overflows > 2. After expand click 1`] = `
 <DocumentFragment>
   <div
     class="tox"
@@ -68,7 +68,7 @@ exports[`browser.ExpandableBoxTest > Should be able to expand and collapse conte
 </DocumentFragment>
 `;
 
-exports[`browser.ExpandableBoxTest > Should be able to expand and collapse content that overflows > 3. After collapse click 1`] = `
+exports[`browser.components.ExpandableBoxTest > Should be able to expand and collapse content that overflows > 3. After collapse click 1`] = `
 <DocumentFragment>
   <div
     class="tox"
@@ -102,7 +102,7 @@ exports[`browser.ExpandableBoxTest > Should be able to expand and collapse conte
 </DocumentFragment>
 `;
 
-exports[`browser.ExpandableBoxTest > Should be able to set maxHeight, collapseText and expandText > 1. Content fits within maxHeight 1`] = `
+exports[`browser.components.ExpandableBoxTest > Should be able to set maxHeight, collapseText and expandText > 1. Content fits within maxHeight 1`] = `
 <DocumentFragment>
   <div
     class="tox"
@@ -136,7 +136,7 @@ exports[`browser.ExpandableBoxTest > Should be able to set maxHeight, collapseTe
 </DocumentFragment>
 `;
 
-exports[`browser.ExpandableBoxTest > Should be able to set maxHeight, collapseText and expandText > 2. After show mode click 1`] = `
+exports[`browser.components.ExpandableBoxTest > Should be able to set maxHeight, collapseText and expandText > 2. After show mode click 1`] = `
 <DocumentFragment>
   <div
     class="tox"
@@ -170,7 +170,7 @@ exports[`browser.ExpandableBoxTest > Should be able to set maxHeight, collapseTe
 </DocumentFragment>
 `;
 
-exports[`browser.ExpandableBoxTest > Should not render expand if the content fits within maxHeight > Content fits within maxHeight 1`] = `
+exports[`browser.components.ExpandableBoxTest > Should not render expand if the content fits within maxHeight > Content fits within maxHeight 1`] = `
 <DocumentFragment>
   <div
     class="tox"
