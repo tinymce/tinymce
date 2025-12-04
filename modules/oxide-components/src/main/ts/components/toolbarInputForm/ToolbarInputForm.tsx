@@ -1,7 +1,7 @@
 import { useId, useState, type FC } from 'react';
 
-import { Icon } from '../../internal/icon/Icon.component';
 import * as Bem from '../../utils/Bem';
+import { Icon } from '../icon/Icon';
 
 export interface ToolbarInputFormProps {
   readonly onSubmit: (inputValue: string) => void;
