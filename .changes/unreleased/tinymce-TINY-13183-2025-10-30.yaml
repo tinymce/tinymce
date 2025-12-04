@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Help Plugin did not contain an entry for the Fullpage HTML plugin.
-time: 2025-10-30T08:53:53.19519+01:00
-custom:
-    Issue: TINY-13183

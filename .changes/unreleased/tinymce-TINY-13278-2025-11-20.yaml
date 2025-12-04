@@ -1,6 +1,0 @@
-project: tinymce
-kind: Added
-body: A new upload tab to the link dialog.
-time: 2025-11-20T13:53:28.409826286+01:00
-custom:
-  Issue: TINY-13278

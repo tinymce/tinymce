@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Accordions could be toggled when the editor was disabled.
-time: 2025-11-07T08:56:39.36589+01:00
-custom:
-    Issue: TINY-12315

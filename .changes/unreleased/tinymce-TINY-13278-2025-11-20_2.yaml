@@ -1,7 +1,0 @@
-project: tinymce
-kind: Added
-body: 'New options for `dropzone` dialog components: dropAreaLabel, buttonLabel, allowedFileTypes and
-  allowedFileExtensions.'
-time: 2025-11-20T14:07:24.874141551+01:00
-custom:
-  Issue: TINY-13278

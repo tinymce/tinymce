@@ -1,6 +1,0 @@
-project: tinymce
-kind: Improved
-body: Show editor notification when a premium plugin is not allowed for a given license key.
-time: 2025-10-22T10:12:37.485447+10:00
-custom:
-    Issue: TINY-12937

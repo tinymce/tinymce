@@ -1,6 +1,0 @@
-project: tinymce
-kind: Added
-body: New options `files_upload_handler` and `documents_file_types` and `link_uploadtab`.
-time: 2025-11-19T16:24:04.935781483+01:00
-custom:
-  Issue: TINY-13278

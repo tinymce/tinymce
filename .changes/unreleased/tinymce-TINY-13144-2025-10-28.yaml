@@ -1,6 +1,0 @@
-project: tinymce
-kind: Added
-body: Can now remove a command using the `editorCommands` API.
-time: 2025-10-28T09:48:19.11646+10:00
-custom:
-    Issue: TINY-13144
