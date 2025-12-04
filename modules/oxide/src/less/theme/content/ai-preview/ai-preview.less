@@ -10,7 +10,6 @@
 @tinymceai-selected-box-shadow: 0 -2px 0 0 @tinymceai-selected-outline-color inset, 0 -2px 0 0 @tinymceai-selected-outline-color;
 
 @tinymceai-dim-overlay-color: #222f3e80;
-@tinymceai-bottom-bar-border-color: #E3E3E3;
 
 .diff-content(
   tinymceai,
@@ -54,5 +53,5 @@ div[tinymceai-data-pending-diff="true"], span[tinymceai-data-pending-diff="true"
   padding: 12px @pad-md;
   background: @color-white;
   z-index: 2;
-  border-top: 1px solid @tinymceai-bottom-bar-border-color;
+  border-top: 1px solid hsl(from var(--tox-color-white, @color-white) h s calc(l - 11));
 }
