@@ -11,7 +11,7 @@ const isInDropdownContent = (contentRef: React.RefObject<HTMLDivElement>, node: 
 };
 
 const Content: FC<PropsWithChildren<HTMLAttributes<HTMLDivElement>>> = ({ children, ...props }) => {
-  const { triggerRef, side, align, gap, contentRef, triggerEvent, debouncedHideHoverablePopover, isOpen, setIsOpen } = useDropdown();
+  const { triggerRef, side, align, gap, contentRef, triggerEvents, debouncedHideHoverablePopover, isOpen, setIsOpen } = useDropdown();
 
   const [ positioningStyles, setPositioningStyles ] = useState<CSSProperties>({ opacity: '0' });
 
@@ -52,7 +52,7 @@ const Content: FC<PropsWithChildren<HTMLAttributes<HTMLDivElement>>> = ({ childr
     return () => {
       element.removeEventListener('toggle', onToggle);
     };
-  }, [ contentRef, triggerRef, updatePosition, updateToggleState ]);
+  }, [ contentRef, triggerRef, updateToggleState ]);
 
   useEffect(() => {
     if (isOpen) {
@@ -69,7 +69,7 @@ const Content: FC<PropsWithChildren<HTMLAttributes<HTMLDivElement>>> = ({ childr
     className={Bem.block('tox-dropdown-content')}
     ref={contentRef}
     style={{ ...positioningStyles }}
-    { ...(triggerEvent === 'hover' || triggerEvent === 'both') && {
+    { ...(triggerEvents.includes('hover')) && {
       onMouseLeave: debouncedHideHoverablePopover.throttle,
       onMouseEnter: () => debouncedHideHoverablePopover.cancel()
     }}
@@ -80,7 +80,7 @@ const Content: FC<PropsWithChildren<HTMLAttributes<HTMLDivElement>>> = ({ childr
 };
 
 const Trigger: FC<PropsWithChildren> = ({ children }) => {
-  const { triggerRef, contentRef, triggerEvent, debouncedHideHoverablePopover, isOpen } = useDropdown();
+  const { triggerRef, contentRef, triggerEvents, debouncedHideHoverablePopover, isOpen } = useDropdown();
 
   let child = Children.toArray(children)[0];
   if (!isValidElement(child)) {
@@ -120,9 +120,8 @@ const Trigger: FC<PropsWithChildren> = ({ children }) => {
         child.props.ref.current = el;
       }
     },
-    ...triggerEvent === 'click' && onClickTriggerProps,
-    ...triggerEvent === 'hover' && onHoverTriggerProps,
-    ...triggerEvent === 'both' && { ...onClickTriggerProps, ...onHoverTriggerProps },
+    ...triggerEvents.includes('click') && onClickTriggerProps,
+    ...triggerEvents.includes('hover') && onHoverTriggerProps,
   });
 };
 
@@ -131,15 +130,15 @@ export interface DropdownProps extends PropsWithChildren {
   readonly align?: 'start' | 'center' | 'end';
   // margin/gap between the trigger button and anchored container
   readonly gap?: number;
-  readonly triggerEvent?: 'click' | 'hover' | 'both';
+  readonly triggerEvents?: Array<'click' | 'hover'>;
 }
 
-const Root: FC<DropdownProps> = ({ children, side = 'top', align = 'start', gap = 8, triggerEvent = 'click' }) => {
+const Root: FC<DropdownProps> = ({ children, side = 'top', align = 'start', gap = 8, triggerEvents = [ 'click' ] }) => {
   const triggerRef = useRef<HTMLElement | undefined>();
   const contentRef = useRef<HTMLDivElement>(null);
   const [ isOpen, setIsOpen ] = useState(false);
 
-  // debounced hide popover function on mouse leave (used when triggersOnHover is enabled)
+  // debounced hide popover function on mouse leave (used when trigger events include hover)
   const debouncedHideHoverablePopover = useMemo(() => Throttler.last((e: MouseEvent) => {
     // in the hover mode, the dropdown should close when the cursor is moved outside of the dropdown content, works for nested dropdowns
     if (!(e.relatedTarget instanceof Node) || !isInDropdownContent(contentRef, e.relatedTarget)) {
@@ -148,8 +147,8 @@ const Root: FC<DropdownProps> = ({ children, side = 'top', align = 'start', gap 
   }, 300), []);
 
   const contextValue = useMemo(() => {
-    return { triggerRef, contentRef, side, align, gap, triggerEvent, debouncedHideHoverablePopover, isOpen, setIsOpen };
-  }, [ triggerRef, contentRef, side, align, gap, triggerEvent, debouncedHideHoverablePopover, isOpen ]);
+    return { triggerRef, contentRef, side, align, gap, triggerEvents, debouncedHideHoverablePopover, isOpen, setIsOpen };
+  }, [ triggerRef, contentRef, side, align, gap, triggerEvents, debouncedHideHoverablePopover, isOpen ]);
 
   return <DropdownContext.Provider value={contextValue}>{children}</DropdownContext.Provider>;
 };

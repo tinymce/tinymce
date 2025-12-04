@@ -11,10 +11,7 @@ import { ExpandableBox } from './components/expandablebox/ExpandableBox';
 import * as FloatingSidebar from './components/floatingsidebar/FloatingSidebar';
 import { Icon } from './components/icon/Icon';
 import { IconButton } from './components/iconbutton/IconButton';
-import { SimpleMenuItem } from './components/menu/components/SimpleMenuItem';
-import { SubmenuItem } from './components/menu/components/SubmenuItem';
-import { ToggleMenuItem } from './components/menu/components/ToggleMenuItem';
-import { Menu } from './components/menu/Menu';
+import * as Menu from './components/menu/Menu';
 import * as MenuRenderer from './components/menu/MenuRenderer';
 import { ToggleSwitch } from './components/toggleswitch/ToggleSwitch';
 import * as KeyboardNavigationTypes from './keynav/keyboard/NavigationTypes';
@@ -39,9 +36,6 @@ export {
   KeyboardNavigationTypes,
   Spinner,
   Tag,
-  SimpleMenuItem,
-  SubmenuItem,
-  ToggleMenuItem,
   Menu,
   MenuRenderer,
   ToggleSwitch,
