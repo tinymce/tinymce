@@ -3,15 +3,12 @@ import { Fun, Id } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Dropdown, IconButton } from 'oxide-components/main';
 
-import { SimpleMenuItem } from './components/SimpleMenuItem';
-import { SubmenuItem } from './components/SubmenuItem';
-import { ToggleMenuItem } from './components/ToggleMenuItem';
 import type { ToggleMenuItemInstanceApi } from './internals/Types';
-import { Menu } from './Menu';
+import * as Menu from './Menu';
 
 const meta = {
   title: 'components/Menu',
-  component: Menu,
+  component: Menu.Root,
   argTypes: {},
   parameters: {
     layout: 'centered',
@@ -22,7 +19,7 @@ const meta = {
     }
   },
   tags: [ 'autodocs', 'skip-visual-testing' ],
-} satisfies Meta<typeof Menu>;
+} satisfies Meta<typeof Menu.Root>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -64,8 +61,8 @@ const iconResolver = (icon: string): string => {
 };
 
 const menu: JSX.Element = (
-  <Menu>
-    <SimpleMenuItem
+  <Menu.Root>
+    <Menu.Item
       key={Id.generate('menu-item')}
       iconResolver={iconResolver}
       text={'Menu item 1'}
@@ -74,7 +71,7 @@ const menu: JSX.Element = (
       // eslint-disable-next-line no-console
       onAction= {() => console.log('Clicked Menu item 1')}
     />
-    <ToggleMenuItem
+    <Menu.ToggleItem
       key={Id.generate('menu-item')}
       iconResolver={iconResolver}
       text={'Menu item 2'}
@@ -85,13 +82,13 @@ const menu: JSX.Element = (
         console.log('You toggled a menuitem');
       }}
     />
-    <SubmenuItem
+    <Menu.SubmenuItem
       key={Id.generate('menu-item')}
       iconResolver={iconResolver}
       text={'Submenu'}
       icon={'item'}>
-      <Menu>
-        <SimpleMenuItem
+      <Menu.Root>
+        <Menu.Item
           autoFocus={true}
           key={Id.generate('menu-item')}
           iconResolver={iconResolver}
@@ -100,7 +97,7 @@ const menu: JSX.Element = (
           // eslint-disable-next-line no-console
           onAction= {() => console.log('Clicked nested menu item 1')}
         />
-        <ToggleMenuItem
+        <Menu.ToggleItem
           enabled={false}
           key={Id.generate('menu-item')}
           iconResolver={iconResolver}
@@ -112,13 +109,13 @@ const menu: JSX.Element = (
             console.log('You toggled a nested menu item 2');
           }}
         />
-        <SubmenuItem
+        <Menu.SubmenuItem
           key={Id.generate('menu-item')}
           iconResolver={iconResolver}
           text={'Submenu'}
           icon={'item'}>
-          <Menu>
-            <SimpleMenuItem
+          <Menu.Root>
+            <Menu.Item
               autoFocus={true}
               key={Id.generate('menu-item')}
               iconResolver={iconResolver}
@@ -127,7 +124,7 @@ const menu: JSX.Element = (
               // eslint-disable-next-line no-console
               onAction= {() => console.log('Clicked nested menu item 1')}
             />
-            <ToggleMenuItem
+            <Menu.ToggleItem
               key={Id.generate('menu-item')}
               iconResolver={iconResolver}
               text={'Nested menu item 2'}
@@ -138,11 +135,11 @@ const menu: JSX.Element = (
                 console.log('You toggled a nested menu item 2');
               }}
             />
-          </Menu>
-        </SubmenuItem>
-      </Menu>
-    </SubmenuItem>
-  </Menu>);
+          </Menu.Root>
+        </Menu.SubmenuItem>
+      </Menu.Root>
+    </Menu.SubmenuItem>
+  </Menu.Root>);
 
 export const Example: Story = {
   args: {},

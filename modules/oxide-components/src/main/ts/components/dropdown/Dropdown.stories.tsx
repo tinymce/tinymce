@@ -22,10 +22,10 @@ const meta = {
       value: 8,
       control: 'number',
     },
-    triggerEvent: {
+    triggerEvents: {
       description: 'Defines trigger element behavior. On default opens a dropdown on click but can be changed to open on hover and close on mouse leave.',
-      value: 'click',
-      options: [ 'click', 'hover' ]
+      value: [ 'click' ],
+      options: [[ 'click' ], [ 'hover' ], [ 'click', 'hover' ]]
     }
   },
   parameters: {

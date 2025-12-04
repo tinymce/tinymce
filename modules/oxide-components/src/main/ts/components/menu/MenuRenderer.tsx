@@ -1,13 +1,10 @@
 import { Arr, Id } from '@ephox/katamari';
 
-import { SimpleMenuItem } from './components/SimpleMenuItem';
-import { SubmenuItem } from './components/SubmenuItem';
-import { ToggleMenuItem } from './components/ToggleMenuItem';
-import type { MenuItem } from './internals/Types';
-import { Menu } from './Menu';
+import type { MenuPart } from './internals/Types';
+import * as Menu from './Menu';
 
 interface MenuRendererProps {
-  readonly items: MenuItem[];
+  readonly items: MenuPart[];
   /*
    * The function to resolve the icon name to an html string.
    * This would eventually default to retrieving the icon from the editor's registry.
@@ -29,34 +26,35 @@ export const render = ({ items, iconResolver, submenusSide = 'right' }: MenuRend
     };
   });
 
-  return (<Menu>
+  return (<Menu.Root>
     {
       Arr.map(itemsWithId, (itemProps) => {
         if (itemProps.type === 'togglemenuitem') {
-          return (<ToggleMenuItem
+          return (<Menu.ToggleItem
             iconResolver={iconResolver}
             key={itemProps.id}
             {...itemProps}
           />);
         }
         if (itemProps.type === 'menuitem') {
-          return (<SimpleMenuItem
+          return (<Menu.Item
             iconResolver={iconResolver}
             key={itemProps.id}
             {...itemProps}
           />);
         }
         if (itemProps.type === 'submenu') {
-          return (<SubmenuItem
+          const { id, items, ...props } = itemProps;
+          return (<Menu.SubmenuItem
             submenusSide={submenusSide}
             iconResolver={iconResolver}
             key={itemProps.id}
-            {...itemProps}
+            {...props}
           >
             {render({ items: itemProps.items, iconResolver, submenusSide })}
-          </SubmenuItem>);
+          </Menu.SubmenuItem>);
         }
       })
     }
-  </Menu>);
+  </Menu.Root>);
 };

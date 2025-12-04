@@ -8,7 +8,7 @@ export interface DropdownState {
   readonly align: 'start' | 'center' | 'end';
   // margin/gap between the trigger button and anchored container
   readonly gap: number;
-  readonly triggerEvent: 'click' | 'hover' | 'both';
+  readonly triggerEvents: Array<'click' | 'hover'>;
   readonly debouncedHideHoverablePopover: Throttler.Throttler<[e: MouseEvent]>;
   readonly isOpen: boolean;
   readonly setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;

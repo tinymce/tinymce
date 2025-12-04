@@ -3,7 +3,11 @@ import { useRef, type FC, type PropsWithChildren } from 'react';
 import * as KeyboardNavigationHooks from '../../keynav/KeyboardNavigationHooks';
 import * as Bem from '../../utils/Bem';
 
-export const Menu: FC<PropsWithChildren> = ({ children }) => {
+import { Item } from './components/Item';
+import { SubmenuItem } from './components/SubmenuItem';
+import { ToggleItem } from './components/ToggleItem';
+
+const Root: FC<PropsWithChildren> = ({ children }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   KeyboardNavigationHooks.useFlowKeyNavigation({
@@ -20,6 +24,13 @@ export const Menu: FC<PropsWithChildren> = ({ children }) => {
       </div>
     </div>
   );
+};
+
+export {
+  Root,
+  Item,
+  SubmenuItem,
+  ToggleItem
 };
 
 // TODO: improve managing active state #TINY-13425

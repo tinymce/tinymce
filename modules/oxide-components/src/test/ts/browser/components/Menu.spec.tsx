@@ -1,10 +1,7 @@
 /* eslint-disable max-len */
 import { userEvent, type Locator } from '@vitest/browser/context';
-import { SimpleMenuItem } from 'oxide-components/components/menu/components/SimpleMenuItem';
-import { SubmenuItem } from 'oxide-components/components/menu/components/SubmenuItem';
-import { ToggleMenuItem } from 'oxide-components/components/menu/components/ToggleMenuItem';
 import type { ToggleMenuItemInstanceApi } from 'oxide-components/components/menu/internals/Types';
-import { Menu } from 'oxide-components/components/menu/Menu';
+import * as Menu from 'oxide-components/components/menu/Menu';
 import * as MenuRenderer from 'oxide-components/components/menu/MenuRenderer';
 import * as Bem from 'oxide-components/utils/Bem';
 import { describe, expect, it } from 'vitest';
@@ -52,15 +49,15 @@ describe('browser.MenuTest', () => {
   it('Should be able to open submenus', async () => {
     const TestComponent = () => {
       return (
-        <Menu>
-          <SimpleMenuItem
+        <Menu.Root>
+          <Menu.Item
             iconResolver={iconResolver}
             text={'Menu item 1'}
             autoFocus={true}
             // eslint-disable-next-line no-console
             onAction= {() => console.log('Clicked Menu item 1')}
           />
-          <ToggleMenuItem
+          <Menu.ToggleItem
             iconResolver={iconResolver}
             text={'Menu item 2'}
             onAction= {(api: ToggleMenuItemInstanceApi): void => {
@@ -69,19 +66,19 @@ describe('browser.MenuTest', () => {
               console.log('You toggled a menuitem');
             }}
           />
-          <SubmenuItem
+          <Menu.SubmenuItem
             iconResolver={iconResolver}
             text={'Submenu'}
             icon={'item'}>
-            <Menu>
-              <SimpleMenuItem
+            <Menu.Root>
+              <Menu.Item
                 autoFocus={true}
                 iconResolver={iconResolver}
                 text={'Nested menu item 1'}
                 // eslint-disable-next-line no-console
                 onAction= {() => console.log('Clicked nested menu item 1')}
               />
-              <ToggleMenuItem
+              <Menu.ToggleItem
                 enabled={false}
                 iconResolver={iconResolver}
                 text={'Nested menu item 2'}
@@ -91,9 +88,9 @@ describe('browser.MenuTest', () => {
                   console.log('You toggled a nested menu item 2');
                 }}
               />
-            </Menu>
-          </SubmenuItem>
-        </Menu>
+            </Menu.Root>
+          </Menu.SubmenuItem>
+        </Menu.Root>
       );
     };
 

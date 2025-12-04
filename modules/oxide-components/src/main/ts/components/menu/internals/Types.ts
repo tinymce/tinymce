@@ -26,7 +26,7 @@ interface ToggleMenuItem extends CommmonMenuItem {
   readonly onSetup?: (api: ToggleMenuItemInstanceApi) => (api: ToggleMenuItemInstanceApi) => void;
 }
 
-interface SimpleMenuItem extends CommmonMenuItem {
+interface MenuItem extends CommmonMenuItem {
   readonly type: 'menuitem';
   readonly shortcut?: string;
   readonly onAction: (api: CommonMenuItemInstanceApi) => void;
@@ -35,11 +35,11 @@ interface SimpleMenuItem extends CommmonMenuItem {
 
 interface Submenu extends CommmonMenuItem {
   readonly type: 'submenu';
-  readonly items: MenuItem[];
+  readonly items: MenuPart[];
   readonly onSetup?: (api: CommonMenuItemInstanceApi) => (api: CommonMenuItemInstanceApi) => void;
 }
 
-export type MenuItem = ToggleMenuItem | SimpleMenuItem | Submenu;
+export type MenuPart = ToggleMenuItem | MenuItem | Submenu;
 
 // Components Props
 export interface ToggleMenuItemProps extends Omit<ToggleMenuItem, 'type'> {
@@ -47,7 +47,7 @@ export interface ToggleMenuItemProps extends Omit<ToggleMenuItem, 'type'> {
   autoFocus?: boolean;
 }
 
-export interface SimpleMenuItemProps extends Omit<SimpleMenuItem, 'type'> {
+export interface MenuItemProps extends Omit<MenuItem, 'type'> {
   iconResolver: (icon: string) => string;
   autoFocus?: boolean;
 }

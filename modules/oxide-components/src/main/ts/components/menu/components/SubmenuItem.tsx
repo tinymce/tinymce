@@ -1,9 +1,9 @@
 import { Fun } from '@ephox/katamari';
 import { forwardRef, useEffect, useId, useMemo, useState } from 'react';
 
-import { Icon } from '../../../internal/icon/Icon.component';
 import * as Bem from '../../../utils/Bem';
 import * as Dropdown from '../../dropdown/Dropdown';
+import { Icon } from '../../icon/Icon';
 import type { CommonMenuItemInstanceApi, SubmenuProps } from '../internals/Types';
 
 export const SubmenuItem = forwardRef<HTMLButtonElement, SubmenuProps>(({ autoFocus = false, enabled = true, text, icon, iconResolver, onSetup, children, submenusSide = 'right' }, ref) => {
@@ -12,6 +12,7 @@ export const SubmenuItem = forwardRef<HTMLButtonElement, SubmenuProps>(({ autoFo
     focused: false,
     hovered: false,
   });
+  const id = useId();
 
   useEffect(() => {
     setState((prevState) => ({ ...prevState, enabled }));
@@ -33,10 +34,10 @@ export const SubmenuItem = forwardRef<HTMLButtonElement, SubmenuProps>(({ autoFo
   }, [ onSetup, api ]);
 
   return (
-    <Dropdown.Root side={submenusSide} align={'start'} triggerEvent={'both'}>
+    <Dropdown.Root side={submenusSide} align={'start'} triggerEvents={[ 'click', 'hover' ]}>
       <Dropdown.Trigger>
         <button
-          id={useId()}
+          id={id}
           ref={ref}
           style={{ boxSizing: 'border-box', width: '100%' }}
           tabIndex={-1}
