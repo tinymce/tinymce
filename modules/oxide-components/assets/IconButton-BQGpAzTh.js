@@ -1,0 +1,6 @@
+import{r as s,j as t,c as l}from"./iframe-DyWTEy9f.js";import{B as c}from"./Button-Bu4WKpBR.js";import{I as u}from"./Icon-Bkxk_H6V.js";const n=s.forwardRef((e,r)=>{const{icon:a,resolver:o,...i}=e;return t.jsx(c,{ref:r,...i,className:l(["tox-button--icon"]),children:t.jsx(u,{icon:a,resolver:o})})});try{n.displayName="IconButton",n.__docgenInfo={description:"",displayName:"IconButton",props:{className:{defaultValue:null,description:"",name:"className",required:!1,type:{name:"undefined"}},icon:{defaultValue:null,description:"The name of the icon",name:"icon",required:!0,type:{name:"string"}},resolver:{defaultValue:null,description:`The function to resolve the icon name to an html string.
+
+This would eventually default to retrieving the icon from the editor's registry.
+(name: string) => editor.ui.registry.getAll().icons[name] ?? 'temporary-placeholder'
+
+Returns the html string representation of the icon.`,name:"resolver",required:!0,type:{name:"(icon: string) => string"}},variant:{defaultValue:null,description:"",name:"variant",required:!1,type:{name:'"primary" | "secondary" | "outlined" | "naked"'}},active:{defaultValue:null,description:"",name:"active",required:!1,type:{name:"boolean"}}}}}catch{}export{n as I};
