@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, FocusTools, Keys, type StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { Attribute, Css, Html, Scroll, SugarBody, SugarElement, SugarShadowDom, Traverse } from '@ephox/sugar';
+import { Attribute, Css, Html, Scroll, SugarBody, SugarShadowDom } from '@ephox/sugar';
 import { TinyApis, TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -371,7 +371,7 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
     });
   });
 
-  context.only('Initialize view with command', () => {
+  context('Initialize view with command', () => {
     const store = TestStore();
     const hook = TinyHooks.bddSetupLight<Editor>({
       base_url: '/project/tinymce/js/tinymce',
