@@ -1,16 +1,19 @@
+import { Type } from '@ephox/katamari';
 import { forwardRef, useEffect, useId, useMemo, useState } from 'react';
 
 import * as Bem from '../../../utils/Bem';
 import { Icon } from '../../icon/Icon';
 import type { CommonMenuItemInstanceApi, MenuItemProps } from '../internals/Types';
 
-export const Item = forwardRef<HTMLButtonElement, MenuItemProps>(({ autoFocus = false, enabled = true, onSetup, text, icon, iconResolver, shortcut, onAction }, ref) => {
+export const Item = forwardRef<HTMLButtonElement, MenuItemProps>(({ autoFocus = false, enabled = true, onSetup, icon, iconResolver, shortcut, onAction, children }, ref) => {
   const [ state, setState ] = useState({
     enabled,
     focused: false,
     hovered: false,
   });
   const id = useId();
+
+  const [ itemIcon, setItemIcon ] = useState<JSX.Element>();
 
   useEffect(() => {
     setState((prevState) => ({ ...prevState, enabled }));
@@ -30,12 +33,21 @@ export const Item = forwardRef<HTMLButtonElement, MenuItemProps>(({ autoFocus = 
     }
   }, [ onSetup, api ]);
 
+  useEffect(() => {
+    if (Type.isNonNullable(icon)) {
+      if (Type.isString(icon)) {
+        setItemIcon(<Icon icon={icon} resolver={iconResolver}/>);
+      } else {
+        setItemIcon(icon);
+      }
+    }
+  }, [ icon, iconResolver ]);
+
   return (
     <button
       id={id}
       tabIndex={-1}
       role='menuitem'
-      aria-label={text}
       aria-haspopup={false}
       aria-disabled={!state.enabled}
       onFocus={() => setState({ ...state, focused: true })}
@@ -52,9 +64,9 @@ export const Item = forwardRef<HTMLButtonElement, MenuItemProps>(({ autoFocus = 
       aria-keyshortcuts={shortcut}
     >
       <div className={Bem.element('tox-collection', 'item-icon')}>
-        {icon && iconResolver && <Icon icon={icon} resolver={iconResolver} />}
+        {itemIcon}
       </div>
-      <div className={Bem.element('tox-collection', 'item-label')}>{text}</div>
+      <div className={Bem.element('tox-collection', 'item-label')}>{children}</div>
       {shortcut && <div className={Bem.element('tox-collection', 'item-accessory')}>{shortcut}</div>}
     </button>
   );

@@ -1,11 +1,11 @@
-import { Fun } from '@ephox/katamari';
+import { Fun, Type } from '@ephox/katamari';
 import { forwardRef, useEffect, useId, useMemo, useState } from 'react';
 
 import * as Bem from '../../../utils/Bem';
 import { Icon } from '../../icon/Icon';
 import type { ToggleMenuItemInstanceApi, ToggleMenuItemProps } from '../internals/Types';
 
-export const ToggleItem = forwardRef<HTMLButtonElement, ToggleMenuItemProps>(({ autoFocus = false, enabled = true, onSetup, text, icon, iconResolver, active = false, shortcut, onAction }, ref) => {
+export const ToggleItem = forwardRef<HTMLButtonElement, ToggleMenuItemProps>(({ autoFocus = false, enabled = true, onSetup, icon, iconResolver, active = false, shortcut, onAction, children }, ref) => {
   const [ state, setState ] = useState({
     enabled,
     active,
@@ -13,6 +13,8 @@ export const ToggleItem = forwardRef<HTMLButtonElement, ToggleMenuItemProps>(({ 
     hovered: false,
   });
   const id = useId();
+
+  const [ itemIcon, setItemIcon ] = useState<JSX.Element>();
 
   useEffect(() => {
     setState((prevState) => ({ ...prevState, enabled, active }));
@@ -37,12 +39,21 @@ export const ToggleItem = forwardRef<HTMLButtonElement, ToggleMenuItemProps>(({ 
     return Fun.noop;
   }, [ onSetup, api ]);
 
+  useEffect(() => {
+    if (Type.isNonNullable(icon)) {
+      if (Type.isString(icon)) {
+        setItemIcon(<Icon icon={icon} resolver={iconResolver}/>);
+      } else {
+        setItemIcon(icon);
+      }
+    }
+  }, [ icon, iconResolver ]);
+
   return (
     <button
       id={id}
       tabIndex={-1}
       role='menuitemcheckbox'
-      aria-label={text}
       aria-haspopup={false}
       aria-disabled={!state.enabled}
       aria-selected={state.active}
@@ -61,9 +72,9 @@ export const ToggleItem = forwardRef<HTMLButtonElement, ToggleMenuItemProps>(({ 
       aria-keyshortcuts={shortcut}
     >
       <div className={Bem.element('tox-collection', 'item-icon')}>
-        {icon && iconResolver && <Icon icon={icon} resolver={iconResolver} />}
+        {itemIcon}
       </div>
-      <div className={Bem.element('tox-collection', 'item-label')}>{text}</div>
+      <div className={Bem.element('tox-collection', 'item-label')}>{children}</div>
       {shortcut && <div className={Bem.element('tox-collection', 'item-accessory')}>{shortcut}</div>}
       <div className={Bem.element('tox-collection', 'item-checkmark')} >
         {iconResolver && <Icon icon={'checkmark'} resolver={iconResolver} />}
