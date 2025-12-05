@@ -78,7 +78,7 @@ export default (): void => {
                 type: 'button',
                 text: 'Cancel',
                 tooltip: 'Cancel',
-                onAction: () => console.log('Cancel'),
+                onAction: () => ed.execCommand('ToggleView', false, 'myview1'),
                 buttonType: 'secondary'
               },
               {
@@ -105,9 +105,7 @@ export default (): void => {
         }
       });
     },
-    init_instance_callback: (ed) => {
-      ed.execCommand('ToggleView', false, 'myview1');
-    },
+    view_show: 'myview1',
     plugins: [],
     toolbar: 'undo redo customview',
     contextmenu: 'link linkchecker image table lists configurepermanentpen'
