@@ -15,7 +15,6 @@ exports[`browser.MenuTest > Should be able to open submenus > 1. Before open sub
         <button
           aria-disabled="false"
           aria-haspopup="false"
-          aria-label="Menu item 1"
           class="tox-collection__item tox-collection__item--active"
           id=":r0:"
           role="menuitem"
@@ -33,7 +32,6 @@ exports[`browser.MenuTest > Should be able to open submenus > 1. Before open sub
         <button
           aria-disabled="false"
           aria-haspopup="false"
-          aria-label="Menu item 2"
           aria-selected="false"
           class="tox-collection__item"
           id=":r1:"
@@ -108,7 +106,6 @@ exports[`browser.MenuTest > Should be able to open submenus > 1. Before open sub
         <button
           aria-disabled="false"
           aria-haspopup="true"
-          aria-label="Submenu"
           class="tox-collection__item"
           id=":r2:"
           role="menuitem"
@@ -210,7 +207,6 @@ exports[`browser.MenuTest > Should be able to open submenus > 2. After opening s
         <button
           aria-disabled="false"
           aria-haspopup="false"
-          aria-label="Menu item 1"
           class="tox-collection__item"
           id=":r0:"
           role="menuitem"
@@ -228,7 +224,6 @@ exports[`browser.MenuTest > Should be able to open submenus > 2. After opening s
         <button
           aria-disabled="false"
           aria-haspopup="false"
-          aria-label="Menu item 2"
           aria-selected="false"
           class="tox-collection__item"
           id=":r1:"
@@ -303,7 +298,6 @@ exports[`browser.MenuTest > Should be able to open submenus > 2. After opening s
         <button
           aria-disabled="false"
           aria-haspopup="true"
-          aria-label="Submenu"
           class="tox-collection__item tox-collection__item--active"
           id=":r2:"
           role="menuitem"
@@ -382,7 +376,7 @@ exports[`browser.MenuTest > Should be able to open submenus > 2. After opening s
         <div
           class="tox-dropdown-content"
           popover="auto"
-          style="opacity: 1; max-width: 249.125px; top: 69px; left: 172.875px;"
+          style="opacity: 1;"
         >
           <div
             class="tox-menu tox-collection tox-collection--list"
@@ -394,7 +388,6 @@ exports[`browser.MenuTest > Should be able to open submenus > 2. After opening s
               <button
                 aria-disabled="false"
                 aria-haspopup="false"
-                aria-label="Nested menu item 1"
                 class="tox-collection__item tox-collection__item--active"
                 id=":r3:"
                 role="menuitem"
@@ -412,7 +405,6 @@ exports[`browser.MenuTest > Should be able to open submenus > 2. After opening s
               <button
                 aria-disabled="true"
                 aria-haspopup="false"
-                aria-label="Nested menu item 2"
                 aria-selected="false"
                 class="tox-collection__item tox-collection__item--state-disabled"
                 id=":r4:"
@@ -508,7 +500,6 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 1. Bef
         <button
           aria-disabled="false"
           aria-haspopup="false"
-          aria-label="Menu item 1"
           class="tox-collection__item tox-collection__item--active"
           id=":r5:"
           role="menuitem"
@@ -526,7 +517,6 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 1. Bef
         <button
           aria-disabled="false"
           aria-haspopup="false"
-          aria-label="Menu item 2"
           aria-selected="false"
           class="tox-collection__item"
           id=":r6:"
@@ -601,7 +591,6 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 1. Bef
         <button
           aria-disabled="false"
           aria-haspopup="true"
-          aria-label="Submenu"
           class="tox-collection__item"
           id=":r7:"
           role="menuitem"
@@ -699,7 +688,6 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. Aft
         <button
           aria-disabled="false"
           aria-haspopup="false"
-          aria-label="Menu item 1"
           class="tox-collection__item"
           id=":r5:"
           role="menuitem"
@@ -717,7 +705,6 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. Aft
         <button
           aria-disabled="false"
           aria-haspopup="false"
-          aria-label="Menu item 2"
           aria-selected="false"
           class="tox-collection__item"
           id=":r6:"
@@ -792,7 +779,6 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. Aft
         <button
           aria-disabled="false"
           aria-haspopup="true"
-          aria-label="Submenu"
           class="tox-collection__item tox-collection__item--active"
           id=":r7:"
           role="menuitem"
@@ -867,7 +853,7 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. Aft
         <div
           class="tox-dropdown-content"
           popover="auto"
-          style="opacity: 1; max-width: 249.125px; top: 69px; left: 172.875px;"
+          style="opacity: 1;"
         >
           <div
             class="tox-menu tox-collection tox-collection--list"
@@ -879,7 +865,6 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. Aft
               <button
                 aria-disabled="false"
                 aria-haspopup="false"
-                aria-label="Nested menu item 1"
                 class="tox-collection__item tox-collection__item--active"
                 id=":r8:"
                 role="menuitem"
@@ -897,7 +882,6 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. Aft
               <button
                 aria-disabled="false"
                 aria-haspopup="false"
-                aria-label="Nested menu item 2"
                 aria-selected="false"
                 class="tox-collection__item"
                 id=":r9:"

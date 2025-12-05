@@ -11,50 +11,35 @@ export interface ToggleMenuItemInstanceApi extends CommonMenuItemInstanceApi {
   setActive: (state: boolean) => void;
 }
 
-// Menu items
-interface CommmonMenuItem {
-  readonly icon?: string;
-  readonly text?: string;
+// Item components Props
+export interface ToggleMenuItemProps extends PropsWithChildren {
+  iconResolver: (icon: string) => string;
+  autoFocus?: boolean;
+  readonly icon?: string | JSX.Element;
   readonly enabled?: boolean;
-}
-
-interface ToggleMenuItem extends CommmonMenuItem {
-  readonly type: 'togglemenuitem';
   readonly active?: boolean;
   readonly shortcut?: string;
   readonly onAction: (api: ToggleMenuItemInstanceApi) => void;
   readonly onSetup?: (api: ToggleMenuItemInstanceApi) => (api: ToggleMenuItemInstanceApi) => void;
 }
 
-interface MenuItem extends CommmonMenuItem {
-  readonly type: 'menuitem';
+export interface MenuItemProps extends PropsWithChildren {
+  iconResolver: (icon: string) => string;
+  autoFocus?: boolean;
+  readonly icon?: string | JSX.Element;
+  readonly enabled?: boolean;
   readonly shortcut?: string;
   readonly onAction: (api: CommonMenuItemInstanceApi) => void;
   readonly onSetup?: (api: CommonMenuItemInstanceApi) => (api: CommonMenuItemInstanceApi) => void;
 }
 
-interface Submenu extends CommmonMenuItem {
-  readonly type: 'submenu';
-  readonly items: MenuPart[];
-  readonly onSetup?: (api: CommonMenuItemInstanceApi) => (api: CommonMenuItemInstanceApi) => void;
-}
-
-export type MenuPart = ToggleMenuItem | MenuItem | Submenu;
-
-// Components Props
-export interface ToggleMenuItemProps extends Omit<ToggleMenuItem, 'type'> {
+export interface SubmenuProps extends PropsWithChildren {
   iconResolver: (icon: string) => string;
   autoFocus?: boolean;
-}
-
-export interface MenuItemProps extends Omit<MenuItem, 'type'> {
-  iconResolver: (icon: string) => string;
-  autoFocus?: boolean;
-}
-
-export interface SubmenuProps extends Omit<Submenu, 'items' | 'type'>, PropsWithChildren {
-  iconResolver: (icon: string) => string;
   readonly submenusSide?: 'left' | 'right';
-  autoFocus?: boolean;
+  readonly icon?: string | JSX.Element;
+  readonly enabled?: boolean;
+  readonly submenuContent: JSX.Element;
+  readonly onSetup?: (api: CommonMenuItemInstanceApi) => (api: CommonMenuItemInstanceApi) => void;
 }
 

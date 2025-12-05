@@ -1,7 +1,36 @@
 import { Arr, Id } from '@ephox/katamari';
 
-import type { MenuPart } from './internals/Types';
+import type { CommonMenuItemInstanceApi, ToggleMenuItemInstanceApi } from './internals/Types';
 import * as Menu from './Menu';
+
+interface CommmonMenuItem {
+  readonly icon?: string;
+  readonly text?: string;
+  readonly enabled?: boolean;
+}
+
+interface ToggleMenuItem extends CommmonMenuItem {
+  readonly type: 'togglemenuitem';
+  readonly active?: boolean;
+  readonly shortcut?: string;
+  readonly onAction: (api: ToggleMenuItemInstanceApi) => void;
+  readonly onSetup?: (api: ToggleMenuItemInstanceApi) => (api: ToggleMenuItemInstanceApi) => void;
+}
+
+interface MenuItem extends CommmonMenuItem {
+  readonly type: 'menuitem';
+  readonly shortcut?: string;
+  readonly onAction: (api: CommonMenuItemInstanceApi) => void;
+  readonly onSetup?: (api: CommonMenuItemInstanceApi) => (api: CommonMenuItemInstanceApi) => void;
+}
+
+interface Submenu extends CommmonMenuItem {
+  readonly type: 'submenu';
+  readonly items: MenuPart[];
+  readonly onSetup?: (api: CommonMenuItemInstanceApi) => (api: CommonMenuItemInstanceApi) => void;
+}
+
+type MenuPart = ToggleMenuItem | MenuItem | Submenu;
 
 interface MenuRendererProps {
   readonly items: MenuPart[];
@@ -30,28 +59,35 @@ export const render = ({ items, iconResolver, submenusSide = 'right' }: MenuRend
     {
       Arr.map(itemsWithId, (itemProps) => {
         if (itemProps.type === 'togglemenuitem') {
+          const { id, type, text, ...props } = itemProps;
           return (<Menu.ToggleItem
             iconResolver={iconResolver}
             key={itemProps.id}
-            {...itemProps}
-          />);
+            {...props}
+          >
+            {text}
+          </Menu.ToggleItem>);
         }
         if (itemProps.type === 'menuitem') {
+          const { id, type, text, ...props } = itemProps;
           return (<Menu.Item
             iconResolver={iconResolver}
             key={itemProps.id}
-            {...itemProps}
-          />);
+            {...props}
+          >
+            {text}
+          </Menu.Item>);
         }
         if (itemProps.type === 'submenu') {
-          const { id, items, ...props } = itemProps;
+          const { id, items, type, text, ...props } = itemProps;
           return (<Menu.SubmenuItem
             submenusSide={submenusSide}
             iconResolver={iconResolver}
             key={itemProps.id}
             {...props}
+            submenuContent={render({ items: itemProps.items, iconResolver, submenusSide })}
           >
-            {render({ items: itemProps.items, iconResolver, submenusSide })}
+            {text}
           </Menu.SubmenuItem>);
         }
       })

@@ -1,4 +1,4 @@
-import { Fun } from '@ephox/katamari';
+import { Fun, Type } from '@ephox/katamari';
 import { forwardRef, useEffect, useId, useMemo, useState } from 'react';
 
 import * as Bem from '../../../utils/Bem';
@@ -6,13 +6,15 @@ import * as Dropdown from '../../dropdown/Dropdown';
 import { Icon } from '../../icon/Icon';
 import type { CommonMenuItemInstanceApi, SubmenuProps } from '../internals/Types';
 
-export const SubmenuItem = forwardRef<HTMLButtonElement, SubmenuProps>(({ autoFocus = false, enabled = true, text, icon, iconResolver, onSetup, children, submenusSide = 'right' }, ref) => {
+export const SubmenuItem = forwardRef<HTMLButtonElement, SubmenuProps>(({ autoFocus = false, enabled = true, icon, iconResolver, onSetup, children, submenusSide = 'right', submenuContent }, ref) => {
   const [ state, setState ] = useState({
     enabled,
     focused: false,
     hovered: false,
   });
   const id = useId();
+
+  const [ itemIcon, setItemIcon ] = useState<JSX.Element>();
 
   useEffect(() => {
     setState((prevState) => ({ ...prevState, enabled }));
@@ -33,6 +35,16 @@ export const SubmenuItem = forwardRef<HTMLButtonElement, SubmenuProps>(({ autoFo
     return Fun.noop;
   }, [ onSetup, api ]);
 
+  useEffect(() => {
+    if (Type.isNonNullable(icon)) {
+      if (Type.isString(icon)) {
+        setItemIcon(<Icon icon={icon} resolver={iconResolver}/>);
+      } else {
+        setItemIcon(icon);
+      }
+    }
+  }, [ icon, iconResolver ]);
+
   return (
     <Dropdown.Root side={submenusSide} align={'start'} triggerEvents={[ 'click', 'hover' ]}>
       <Dropdown.Trigger>
@@ -42,7 +54,6 @@ export const SubmenuItem = forwardRef<HTMLButtonElement, SubmenuProps>(({ autoFo
           style={{ boxSizing: 'border-box', width: '100%' }}
           tabIndex={-1}
           role='menuitem'
-          aria-label={text}
           aria-haspopup={'true'}
           aria-disabled={!state.enabled}
           onFocus={() => setState({ ...state, focused: true })}
@@ -56,16 +67,16 @@ export const SubmenuItem = forwardRef<HTMLButtonElement, SubmenuProps>(({ autoFo
           autoFocus={autoFocus}
         >
           <div className={Bem.element('tox-collection', 'item-icon')}>
-            {icon && iconResolver && <Icon icon={icon} resolver={iconResolver} />}
+            {itemIcon}
           </div>
-          <div className={Bem.element('tox-collection', 'item-label')}>{text}</div>
+          <div className={Bem.element('tox-collection', 'item-label')}>{children}</div>
           <div className={Bem.element('tox-collection', 'item-caret')}>
             {iconResolver && <Icon resolver={iconResolver} icon={'chevron-right'}></Icon>}
           </div>
         </button>
       </Dropdown.Trigger>
       <Dropdown.Content>
-        {children}
+        {submenuContent}
       </Dropdown.Content>
     </Dropdown.Root>
   );

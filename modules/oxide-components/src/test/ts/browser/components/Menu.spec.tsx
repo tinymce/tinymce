@@ -34,7 +34,19 @@ const iconResolver = (icon: string): string => {
 };
 
 const waitForElementText = async (getByText: (text: string) => Locator, text: string) => {
-  await expect.poll(() => getByText(text).element()).toBeTruthy();
+  await expect.poll(() => getByText(text).element()).toBeVisible();
+};
+
+// Reset positioning styles before matching the snapshot.
+// Postioning styles are calculated to a different value depending on the enviroment.
+// They are deterministic for one eviroment but differ between local machine and CI
+const resetPostioningStyles = (fragment: DocumentFragment): DocumentFragment => {
+  fragment.querySelectorAll('.tox-dropdown-content').forEach((dropdownContent) => {
+    (dropdownContent as HTMLElement).style.maxWidth = '';
+    (dropdownContent as HTMLElement).style.top = '';
+    (dropdownContent as HTMLElement).style.left = '';
+  });
+  return fragment;
 };
 
 describe('browser.MenuTest', () => {
@@ -52,43 +64,44 @@ describe('browser.MenuTest', () => {
         <Menu.Root>
           <Menu.Item
             iconResolver={iconResolver}
-            text={'Menu item 1'}
             autoFocus={true}
             // eslint-disable-next-line no-console
             onAction= {() => console.log('Clicked Menu item 1')}
-          />
+          >{'Menu item 1'}</Menu.Item>
           <Menu.ToggleItem
             iconResolver={iconResolver}
-            text={'Menu item 2'}
             onAction= {(api: ToggleMenuItemInstanceApi): void => {
               api.setActive(!api.isActive());
               // eslint-disable-next-line no-console
               console.log('You toggled a menuitem');
             }}
-          />
+          >{'Menu item 2'}</Menu.ToggleItem>
           <Menu.SubmenuItem
             iconResolver={iconResolver}
-            text={'Submenu'}
-            icon={'item'}>
-            <Menu.Root>
+            icon={'item'}
+            submenuContent={<Menu.Root>
               <Menu.Item
                 autoFocus={true}
                 iconResolver={iconResolver}
-                text={'Nested menu item 1'}
                 // eslint-disable-next-line no-console
                 onAction= {() => console.log('Clicked nested menu item 1')}
-              />
+              >
+                {'Nested menu item 1'}
+              </Menu.Item>
               <Menu.ToggleItem
                 enabled={false}
                 iconResolver={iconResolver}
-                text={'Nested menu item 2'}
                 onAction= {(api: ToggleMenuItemInstanceApi): void => {
                   api.setActive(!api.isActive());
                   // eslint-disable-next-line no-console
                   console.log('You toggled a nested menu item 2');
                 }}
-              />
-            </Menu.Root>
+              >
+                {'Nested menu item 2'}
+              </Menu.ToggleItem>
+            </Menu.Root>}
+          >
+            {'Submenu'}
           </Menu.SubmenuItem>
         </Menu.Root>
       );
@@ -101,7 +114,8 @@ describe('browser.MenuTest', () => {
 
     await userEvent.hover(getByText('Submenu'));
     await waitForElementText(getByText, 'Nested menu item 1');
-    expect(asFragment()).toMatchSnapshot('2. After opening submenu');
+    const fragment = resetPostioningStyles(asFragment());
+    expect(fragment).toMatchSnapshot('2. After opening submenu');
   });
 
   it('Should be able to render using MenuRenderer', async () => {
@@ -153,6 +167,7 @@ describe('browser.MenuTest', () => {
 
     await userEvent.hover(getByText('Submenu'));
     await waitForElementText(getByText, 'Nested menu item 1');
-    expect(asFragment()).toMatchSnapshot('2. After opening submenu');
+    const fragment = resetPostioningStyles(asFragment());
+    expect(fragment).toMatchSnapshot('2. After opening submenu');
   });
 });
