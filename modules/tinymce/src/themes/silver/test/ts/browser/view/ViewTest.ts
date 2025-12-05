@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, FocusTools, Keys, type StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { Attribute, Css, Html, Scroll, SugarBody, SugarShadowDom } from '@ephox/sugar';
+import { Attribute, Css, Html, Scroll, SugarBody, SugarElement, SugarShadowDom, Traverse } from '@ephox/sugar';
 import { TinyApis, TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -368,6 +368,35 @@ describe('browser.tinymce.themes.silver.view.ViewTest', () => {
       await FocusTools.pTryOnSelector('After the third shift+tab pane should be selected', root, '.tox-view__pane');
 
       toggleView('myview1');
+    });
+  });
+
+  context.only('Initialize view with command', () => {
+    const store = TestStore();
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      base_url: '/project/tinymce/js/tinymce',
+      toolbar: 'myview',
+      setup: (editor: Editor) => {
+        editor.ui.registry.addView('myview1', {
+          onShow: store.adder('myview1:show'),
+          onHide: store.adder('myview1:hide')
+        });
+        editor.on('init', () => {
+          editor.execCommand('ToggleView', false, 'myview1');
+        });
+      }
+    });
+
+    it('TINY-13463: Toggle view command on init event test', async () => {
+      const editor = hook.editor();
+      await Waiter.pTryUntil('Checking view callbacks on init', () => store.assertEq('Asserting view callbacks', [
+        'myview1:show',
+      ]));
+      editor.execCommand('ToggleView', false, 'myview1');
+      await Waiter.pTryUntil('Checking view callbacks after closing view', () => store.assertEq('Asserting view callbacks', [
+        'myview1:show',
+        'myview1:hide',
+      ]));
     });
   });
 
