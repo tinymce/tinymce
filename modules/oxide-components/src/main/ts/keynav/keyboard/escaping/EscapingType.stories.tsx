@@ -68,13 +68,6 @@ const meta = {
       },
     }
   },
-  play: ({ canvasElement, context }) => {
-    const container = canvasElement.ownerDocument.querySelector('.container');
-    if (container) {
-      const firstFocusableItem = container.querySelector(context.args.selector);
-      firstFocusableItem?.focus();
-    }
-  },
 } satisfies Meta;
 
 export default meta;
