@@ -1,9 +1,19 @@
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState, type FC, type PropsWithChildren } from 'react';
+import { forwardRef, useRef, type FC, type PropsWithChildren } from 'react';
 
 import { classes } from '../../utils/Styles';
 import * as Draggable from '../draggable/Draggable';
 import '../../module/css';
 import type { CssPosition } from '../draggable/internals/types';
+
+/*
+
+1. [x] Remove lazy loading - we'll not need it anymore
+2. [x] Remove imperative handle
+3. [x] Implement show/hide using css display: none;
+5. In Draggable remove % to vh
+6. Update docs
+7. Update tests
+*/
 
 interface InitialPosition {
   x: number;
@@ -34,45 +44,21 @@ const transformToCss = (position: InitialPosition): CssPosition => {
   }
 };
 
-const Root = forwardRef<Ref, FloatingSidebarProps>(({ isOpen = true, height = 600, children, ...props }, ref) => {
+// TODO: remove ref
+const Root = forwardRef<Ref, FloatingSidebarProps>(({ isOpen = true, height = 600, children, ...props }, _ref) => {
   const elementRef = useRef<HTMLDivElement | null>(null);
   const initialPosition = transformToCss(props.initialPosition ?? { x: 0, y: 0, origin: 'topleft' });
-  // The idea is to render the children after the sidebar has opened.
-  // All the children should render once the sidebar is opened.
-  const [ shouldRenderChildren, setShouldRenderChildren ] = useState(false);
-
-  const openSidebar = useCallback(() => {
-    elementRef.current?.togglePopover(true);
-    setShouldRenderChildren(true);
-  }, []);
-
-  const closeSidebar = useCallback(() => elementRef.current?.togglePopover(false), []);
-
-  useImperativeHandle(ref, () => {
-    return {
-      open: openSidebar,
-      close: closeSidebar
-    };
-  });
-
-  useEffect(() => {
-    const element = elementRef.current;
-    if (element) {
-      isOpen ? openSidebar() : closeSidebar();
-    }
-  }, [ isOpen, openSidebar, closeSidebar ]);
 
   return (
     <Draggable.Root
       ref={elementRef}
-      popover="manual"
-      className={classes([ 'tox-floating-sidebar' ])}
+      className={classes([ 'tox-floating-sidebar', ...(isOpen ? [ 'tox-floating-sidebar__open' as const ] : []) ])}
       style={{ '--tox-private-floating-sidebar-requested-height': `${height}px` }}
       initialPosition={initialPosition}
       declaredSize={{ width: 'var(--tox-private-floating-sidebar-width)', height: 'var(--tox-private-floating-sidebar-height)' }}
     >
       <aside className={classes([ 'tox-floating-sidebar__content-wrapper' ])}>
-        { shouldRenderChildren && children }
+        { children }
       </aside>
     </Draggable.Root>
   );
