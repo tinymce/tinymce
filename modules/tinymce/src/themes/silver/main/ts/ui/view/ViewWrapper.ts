@@ -4,7 +4,7 @@ import {
 } from '@ephox/alloy';
 import { FieldSchema, StructureSchema } from '@ephox/boulder';
 import { View as BridgeView } from '@ephox/bridge';
-import { Arr, Fun, Obj, type Optional } from '@ephox/katamari';
+import { Arr, Fun, Obj, Type, type Optional } from '@ephox/katamari';
 import { Attribute, Css } from '@ephox/sugar';
 
 import type { UiFactoryBackstage, UiFactoryBackstageProviders } from '../../backstage/Backstage';
@@ -23,7 +23,7 @@ interface SilverViewWrapperDetail extends Sketcher.SingleSketchDetail {
 }
 
 interface SilverViewWrapperApis {
-  readonly setViews: (comp: AlloyComponent, viewConfigs: ViewConfig) => void;
+  readonly setViews: (comp: AlloyComponent, viewConfigs: ViewConfig, hideMainView: () => void, showView?: string) => void;
   readonly whichView: (comp: AlloyComponent) => Optional<string>;
   readonly toggleView: (comp: AlloyComponent, showMainView: () => void, hideMainView: () => void, name: string) => boolean;
 }
@@ -97,8 +97,21 @@ const runOnShow = (slotContainer: AlloyComponent, name: string) => runOnPaneWith
 const runOnHide = (slotContainer: AlloyComponent, name: string) => runOnPaneWithInstanceApi(slotContainer, name, View.getOnHide);
 
 const factory: UiSketcher.SingleSketchFactory<SilverViewWrapperDetail, SilverViewWrapperSpec> = (detail, spec) => {
-  const setViews = (comp: AlloyComponent, viewConfigs: ViewConfig) => {
+  const setViews = (comp: AlloyComponent, viewConfigs: ViewConfig, hideMainView: () => void, showView?: string) => {
     Replacing.set(comp, [ makeSlotContainer(viewConfigs, spec.backstage.shared.providers) ]);
+
+    // Show the default view
+    const configKey = showView?.toLowerCase();
+    if (Type.isString(configKey) && Obj.has(viewConfigs, configKey)) {
+      Composing.getCurrent(comp)
+        .filter((slotContainer) => SlotContainer.getSlot(slotContainer, configKey).isSome())
+        .each((slotContainer) => {
+          hideMainView();
+          showContainer(comp);
+          SlotContainer.showSlot(slotContainer, configKey);
+          runOnShow(slotContainer, configKey);
+        });
+    }
   };
 
   const whichView = (comp: AlloyComponent): Optional<string> => {
@@ -168,7 +181,7 @@ export default Sketcher.single<SilverViewWrapperSpec, SilverViewWrapperDetail, S
     FieldSchema.required('backstage')
   ],
   apis: {
-    setViews: (apis, comp, views) => apis.setViews(comp, views),
+    setViews: (apis, comp, views, editorCont, showView) => apis.setViews(comp, views, editorCont, showView),
     toggleView: (apis, comp, outerContainer, editorCont, name) => apis.toggleView(comp, outerContainer, editorCont, name),
     whichView: (apis, comp) => apis.whichView(comp)
   }
