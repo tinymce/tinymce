@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, FocusTools, Keys, type StructAssert, TestStore, UiFinder, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
-import { Attribute, Css, Html, Scroll, SugarBody, SugarShadowDom } from '@ephox/sugar';
+import { Attribute, Css, Html, Scroll, SugarBody, SugarElement, SugarShadowDom, Traverse } from '@ephox/sugar';
 import { TinyApis, TinyAssertions, TinyDom, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
