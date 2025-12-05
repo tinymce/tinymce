@@ -19,13 +19,18 @@ const isShift = (event: KeyboardEvent): boolean => {
   return event.shiftKey === true;
 };
 
+const isControl = (event: KeyboardEvent): boolean => {
+  return event.ctrlKey === true;
+};
+
 const isNotShift = (event: KeyboardEvent): boolean =>
   !isShift(event);
 
 export {
-  inSet,
   and,
+  inSet,
   is,
-  isShift,
-  isNotShift
+  isControl,
+  isNotShift,
+  isShift
 };
