@@ -14,6 +14,7 @@ import { IconButton } from './components/iconbutton/IconButton';
 import * as Menu from './components/menu/Menu';
 import * as MenuRenderer from './components/menu/MenuRenderer';
 import { ToggleSwitch } from './components/toggleswitch/ToggleSwitch';
+import { ToolbarInputForm } from './components/toolbarInputForm/ToolbarInputForm';
 import * as KeyboardNavigationTypes from './keynav/keyboard/NavigationTypes';
 import * as KeyboardNavigationHooks from './keynav/KeyboardNavigationHooks';
 import * as Bem from './utils/Bem';
@@ -39,5 +40,6 @@ export {
   Menu,
   MenuRenderer,
   ToggleSwitch,
-  UserPromptBubble
+  UserPromptBubble,
+  ToolbarInputForm
 };
