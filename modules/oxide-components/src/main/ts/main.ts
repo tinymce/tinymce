@@ -12,6 +12,9 @@ import * as FloatingSidebar from './components/floatingsidebar/FloatingSidebar';
 import { Icon } from './components/icon/Icon';
 import { IconButton } from './components/iconbutton/IconButton';
 import { ToggleSwitch } from './components/toggleswitch/ToggleSwitch';
+import { useUniverse } from './contexts/UniverseContext/Universe';
+import { UniverseProvider } from './contexts/UniverseContext/UniverseProvider';
+import type { UniverseResources } from './contexts/UniverseContext/UniverseTypes';
 import * as KeyboardNavigationTypes from './keynav/keyboard/NavigationTypes';
 import * as KeyboardNavigationHooks from './keynav/KeyboardNavigationHooks';
 import * as Bem from './utils/Bem';
@@ -35,5 +38,9 @@ export {
   Spinner,
   Tag,
   ToggleSwitch,
+  UniverseProvider,
+  useUniverse,
   UserPromptBubble
 };
+
+export type { UniverseResources };
