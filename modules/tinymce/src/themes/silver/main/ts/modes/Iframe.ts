@@ -109,7 +109,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   Attachment.attachSystemAfter(eTargetNode, mainUi.mothership);
   attachUiMotherships(editor, uiRoot, uiRefs);
 
-  editor.on('PostRender', () => {
+  editor.on('init', () => {
     OuterContainer.setSidebar(
       outerContainer,
       rawUiConfig.sidebar,
@@ -121,7 +121,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
       rawUiConfig.views,
       Options.getViewShow(editor)
     );
-  });
+  }, true);
 
   // TINY-10343: Using `SkinLoaded` instead of `PostRender` because if the skin loading takes too long you run in to rendering problems since things are measured before the CSS is being applied
   editor.on('SkinLoaded', () => {
