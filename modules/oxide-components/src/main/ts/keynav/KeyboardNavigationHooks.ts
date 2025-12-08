@@ -3,6 +3,7 @@ import { SugarElement } from '@ephox/sugar';
 import { useEffect, type RefObject } from 'react';
 
 import * as EscapingType from './keyboard/escaping/EscapingType';
+import * as ExecutingType from './keyboard/execution/ExecutionType';
 import * as FlowType from './keyboard/flowtype/FlowType';
 import type * as KeyingType from './keyboard/KeyingType';
 import * as SpecialType from './keyboard/SpecialType';
@@ -70,6 +71,22 @@ export const useSpecialKeyNavigation = (props: SpecialKeyingProps): void => {
       return Fun.noop;
     }
   }, [ props ]);
+};
+
+export interface ExecutingConfig extends BaseProps, ExecutingType.ExecutingConfig { }
+
+export const useExecutionType = (props: ExecutingConfig): void => {
+  useEffect(() => {
+    const { containerRef } = props;
+
+    if (containerRef.current) {
+      const handlers = ExecutingType.create(SugarElement.fromDom(containerRef.current), props);
+      return bindEvents(containerRef.current, handlers);
+    } else {
+      return Fun.noop;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 };
 
 export interface EscapeKeyProps extends BaseProps, EscapingType.EscapingConfig { }

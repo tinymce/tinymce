@@ -92,7 +92,15 @@ const handleBodyResponse = async (body: ReadableStream<Uint8Array>, port: Messag
           }
 
           if (!done) {
-            const buffer = chunk.buffer.slice(chunk.byteOffset, chunk.byteOffset + chunk.byteLength);
+            const sliced = chunk.buffer.slice(chunk.byteOffset, chunk.byteOffset + chunk.byteLength);
+
+            let buffer: ArrayBuffer;
+            if (typeof SharedArrayBuffer !== 'undefined' && sliced instanceof SharedArrayBuffer) {
+              buffer = new Uint8Array(sliced).slice().buffer;
+            } else {
+              buffer = sliced as ArrayBuffer;
+            }
+
             const bodyChunkMessage: Shared.MockedResponseBodyChunkMessage = {
               type: 'AGAR_MOCKED_RESPONSE_BODY_CHUNK',
               buffer

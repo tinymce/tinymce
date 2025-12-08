@@ -1,5 +1,6 @@
+import { Mouse } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { TinyAssertions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
+import { TinyAssertions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
@@ -165,6 +166,45 @@ describe('browser.tinymce.plugins.accordion.AccordionPluginTest', () => {
     TinyAssertions.assertContentPresence(editor, { 'details[data-mce-accordion-open="open"]': 1 });
     editor.mode.set('design');
     TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
+  });
+
+  it('TINY-12316: Toggle an accordion element not possible when disabled', () => {
+    // Setup
+    const editor = hook.editor();
+    const onClick = (event: Event) => {
+      assert.isTrue(event.defaultPrevented);
+    };
+    editor.on('click', onClick);
+
+    // Test that nothing happens when the accordion is disabled and already open ( setup )
+    editor.setContent(`${AccordionUtils.createAccordion({ open: true })}<p>tiny</p>`);
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    editor.options.set('disabled', true);
+
+    // Test that nothing happens when the accordion is disabled and already open
+    TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 1 });
+    editor.execCommand('ToggleAccordion'); // By command
+    TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 1 });
+    Mouse.clickOn(TinyDom.body(editor), 'details[open="open"]'); // By click
+    TinyAssertions.assertContentPresence(editor, { 'details[open="open"]': 1 });
+    editor.options.unset('disabled');
+
+    // Test that nothing happens when the accordion is disabled and already closed ( setup )
+    editor.setContent(`${AccordionUtils.createAccordion({ open: false })}<p>tiny</p>`);
+    TinySelections.setCursor(editor, [ 0, 0, 0 ], 0);
+    editor.options.set('disabled', true);
+
+    // Test that nothing happens when the accordion is disabled and already closed
+    TinyAssertions.assertContentPresence(editor, { 'details:not([open])': 1 });
+    editor.execCommand('ToggleAccordion'); // By command
+    TinyAssertions.assertContentPresence(editor, { 'details:not([open])': 1 });
+    Mouse.clickOn(TinyDom.body(editor), 'details:not([open])'); // By click
+    TinyAssertions.assertContentPresence(editor, { 'details:not([open])': 1 });
+    TinyAssertions.assertCursor(editor, [ 0, 0, 0 ], 0);
+
+    // Cleanup
+    editor.options.unset('disabled');
+    editor.off('click', onClick);
   });
 
   it('TINY-12316: Accordion undo levels are properly created', () => {
