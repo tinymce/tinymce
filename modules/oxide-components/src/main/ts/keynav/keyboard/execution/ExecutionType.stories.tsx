@@ -68,7 +68,7 @@ const meta = {
       description: 'RefObject<HTMLElement> - Reference to the container element that will handle keyboard navigation',
       table: {
         type: { summary: 'RefObject<HTMLElement>' },
-        defaultValue: { summary: 'useRef<HTMLDivElement>(null)' },
+        defaultValue: { summary: 'useRef<HTMLElement>(null)' },
       },
     },
     useSpace: {
@@ -109,7 +109,7 @@ const meta = {
         required: true,
         name: 'boolean',
       },
-      description: 'Boolean - determines whether using the enter button to trigger execution is acceptable, but also requiring control to be pressed.'
+      description: 'Boolean - determines whether using the enter button to trigger execution is acceptable, but also requiring control to be pressed. '
         + 'Can be used together or separate from "useEnter", but if used together will add no change in behavior to only using "useEnter".',
       table: {
         type: {

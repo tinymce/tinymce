@@ -19,9 +19,12 @@ export interface ExecutingConfig {
 
 interface FullExecutionConfig extends ExecutingConfig, GeneralKeyingConfig { }
 
-const inside = (target: SugarElement<Node>): boolean => (
-  (SugarNode.isTag('input')(target) && Attribute.get(target, 'type') !== 'radio') ||
-  SugarNode.isTag('textarea')(target)
+const isInput = SugarNode.isTag('input');
+const isNotRadioInput = (target: SugarElement<HTMLElement>) => Attribute.get(target, 'type') !== 'radio';
+const isTextarea = SugarNode.isTag('textarea');
+
+const inside = (target: SugarElement<HTMLElement>): boolean => (
+  isInput(target) && isNotRadioInput(target) || isTextarea(target)
 );
 
 // On Firefox, pressing space fires a click event if the element maintains focus and fires a keyup. This
