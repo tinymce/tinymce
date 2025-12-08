@@ -951,7 +951,7 @@ const register = (editor: Editor): void => {
     processor: (value: unknown) => StructureSchema.asRaw<DocumentsFileTypes[]>('documents_file_types', documentsFileTypesOptionsSchema, value).fold<DocumentsFileTypesProcessorReturnType>(
       (_err) => ({
         valid: false,
-        message: 'Must be a non-empty array of objects matching the configuration schema: https://www.tiny.cloud/docs/tinymce/latest/uploadcare/#documents-file-types'
+        message: 'Must be a non-empty array of objects matching the configuration schema: https://www.tiny.cloud/docs/tinymce/latest/uploadcare-documents/#documents-file-types'
       }),
       (val) => ({ valid: true, value: val })
     )
