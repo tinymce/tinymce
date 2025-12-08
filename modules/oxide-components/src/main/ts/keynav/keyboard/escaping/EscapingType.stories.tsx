@@ -64,7 +64,7 @@ const meta = {
       description: 'RefObject<HTMLElement> - Reference to the container element that will handle keyboard navigation',
       table: {
         type: { summary: 'RefObject<HTMLElement>' },
-        defaultValue: { summary: 'useRef<HTMLDivElement>(null)' },
+        defaultValue: { summary: 'useRef<HTMLElement>(null)' },
       },
     }
   },
