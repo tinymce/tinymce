@@ -14,8 +14,6 @@ export const ToggleItem = forwardRef<HTMLButtonElement, ToggleMenuItemProps>(({ 
   });
   const id = useId();
 
-  const [ itemIcon, setItemIcon ] = useState<JSX.Element>();
-
   useEffect(() => {
     setState((prevState) => ({ ...prevState, enabled, active }));
   }, [ enabled, active ]);
@@ -39,15 +37,9 @@ export const ToggleItem = forwardRef<HTMLButtonElement, ToggleMenuItemProps>(({ 
     return Fun.noop;
   }, [ onSetup, api ]);
 
-  useEffect(() => {
-    if (Type.isNonNullable(icon)) {
-      if (Type.isString(icon)) {
-        setItemIcon(<Icon icon={icon} resolver={iconResolver}/>);
-      } else {
-        setItemIcon(icon);
-      }
-    }
-  }, [ icon, iconResolver ]);
+  const itemIcon = Type.isString(icon)
+    ? <Icon icon={icon} resolver={iconResolver} />
+    : icon;
 
   return (
     <button
@@ -71,9 +63,7 @@ export const ToggleItem = forwardRef<HTMLButtonElement, ToggleMenuItemProps>(({ 
       autoFocus={autoFocus}
       aria-keyshortcuts={shortcut}
     >
-      <div className={Bem.element('tox-collection', 'item-icon')}>
-        {itemIcon}
-      </div>
+      {itemIcon && <div className={Bem.element('tox-collection', 'item-icon')}>{itemIcon}</div>}
       <div className={Bem.element('tox-collection', 'item-label')}>{children}</div>
       {shortcut && <div className={Bem.element('tox-collection', 'item-accessory')}>{shortcut}</div>}
       <div className={Bem.element('tox-collection', 'item-checkmark')} >

@@ -14,8 +14,6 @@ export const SubmenuItem = forwardRef<HTMLButtonElement, SubmenuProps>(({ autoFo
   });
   const id = useId();
 
-  const [ itemIcon, setItemIcon ] = useState<JSX.Element>();
-
   useEffect(() => {
     setState((prevState) => ({ ...prevState, enabled }));
   }, [ enabled ]);
@@ -35,15 +33,9 @@ export const SubmenuItem = forwardRef<HTMLButtonElement, SubmenuProps>(({ autoFo
     return Fun.noop;
   }, [ onSetup, api ]);
 
-  useEffect(() => {
-    if (Type.isNonNullable(icon)) {
-      if (Type.isString(icon)) {
-        setItemIcon(<Icon icon={icon} resolver={iconResolver}/>);
-      } else {
-        setItemIcon(icon);
-      }
-    }
-  }, [ icon, iconResolver ]);
+  const itemIcon = Type.isString(icon)
+    ? <Icon icon={icon} resolver={iconResolver} />
+    : icon;
 
   return (
     <Dropdown.Root side={submenusSide} align={'start'} triggerEvents={[ 'click', 'hover' ]}>
@@ -66,9 +58,7 @@ export const SubmenuItem = forwardRef<HTMLButtonElement, SubmenuProps>(({ autoFo
           })}
           autoFocus={autoFocus}
         >
-          <div className={Bem.element('tox-collection', 'item-icon')}>
-            {itemIcon}
-          </div>
+          {itemIcon && <div className={Bem.element('tox-collection', 'item-icon')}>{itemIcon}</div>}
           <div className={Bem.element('tox-collection', 'item-label')}>{children}</div>
           <div className={Bem.element('tox-collection', 'item-caret')}>
             {iconResolver && <Icon resolver={iconResolver} icon={'chevron-right'}></Icon>}

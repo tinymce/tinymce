@@ -21,9 +21,6 @@ exports[`browser.MenuTest > Should be able to open submenus > 1. Before open sub
           tabindex="-1"
         >
           <div
-            class="tox-collection__item-icon"
-          />
-          <div
             class="tox-collection__item-label"
           >
             Menu item 1
@@ -38,9 +35,6 @@ exports[`browser.MenuTest > Should be able to open submenus > 1. Before open sub
           role="menuitemcheckbox"
           tabindex="-1"
         >
-          <div
-            class="tox-collection__item-icon"
-          />
           <div
             class="tox-collection__item-label"
           >
@@ -213,9 +207,6 @@ exports[`browser.MenuTest > Should be able to open submenus > 2. After opening s
           tabindex="-1"
         >
           <div
-            class="tox-collection__item-icon"
-          />
-          <div
             class="tox-collection__item-label"
           >
             Menu item 1
@@ -230,9 +221,6 @@ exports[`browser.MenuTest > Should be able to open submenus > 2. After opening s
           role="menuitemcheckbox"
           tabindex="-1"
         >
-          <div
-            class="tox-collection__item-icon"
-          />
           <div
             class="tox-collection__item-label"
           >
@@ -394,9 +382,6 @@ exports[`browser.MenuTest > Should be able to open submenus > 2. After opening s
                 tabindex="-1"
               >
                 <div
-                  class="tox-collection__item-icon"
-                />
-                <div
                   class="tox-collection__item-label"
                 >
                   Nested menu item 1
@@ -411,9 +396,6 @@ exports[`browser.MenuTest > Should be able to open submenus > 2. After opening s
                 role="menuitemcheckbox"
                 tabindex="-1"
               >
-                <div
-                  class="tox-collection__item-icon"
-                />
                 <div
                   class="tox-collection__item-label"
                 >
@@ -506,9 +488,6 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 1. Bef
           tabindex="-1"
         >
           <div
-            class="tox-collection__item-icon"
-          />
-          <div
             class="tox-collection__item-label"
           >
             Menu item 1
@@ -523,9 +502,6 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 1. Bef
           role="menuitemcheckbox"
           tabindex="-1"
         >
-          <div
-            class="tox-collection__item-icon"
-          />
           <div
             class="tox-collection__item-label"
           >
@@ -597,9 +573,6 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 1. Bef
           style="box-sizing: border-box; width: 100%;"
           tabindex="-1"
         >
-          <div
-            class="tox-collection__item-icon"
-          />
           <div
             class="tox-collection__item-label"
           >
@@ -694,9 +667,6 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. Aft
           tabindex="-1"
         >
           <div
-            class="tox-collection__item-icon"
-          />
-          <div
             class="tox-collection__item-label"
           >
             Menu item 1
@@ -711,9 +681,6 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. Aft
           role="menuitemcheckbox"
           tabindex="-1"
         >
-          <div
-            class="tox-collection__item-icon"
-          />
           <div
             class="tox-collection__item-label"
           >
@@ -785,9 +752,6 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. Aft
           style="box-sizing: border-box; width: 100%;"
           tabindex="-1"
         >
-          <div
-            class="tox-collection__item-icon"
-          />
           <div
             class="tox-collection__item-label"
           >
@@ -871,9 +835,6 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. Aft
                 tabindex="-1"
               >
                 <div
-                  class="tox-collection__item-icon"
-                />
-                <div
                   class="tox-collection__item-label"
                 >
                   Nested menu item 1
@@ -888,9 +849,6 @@ exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. Aft
                 role="menuitemcheckbox"
                 tabindex="-1"
               >
-                <div
-                  class="tox-collection__item-icon"
-                />
                 <div
                   class="tox-collection__item-label"
                 >
