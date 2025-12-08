@@ -1,19 +1,9 @@
-import { forwardRef, useRef, type FC, type PropsWithChildren } from 'react';
+import { useRef, type FC, type PropsWithChildren } from 'react';
 
 import { classes } from '../../utils/Styles';
 import * as Draggable from '../draggable/Draggable';
 import '../../module/css';
 import type { CssPosition } from '../draggable/internals/types';
-
-/*
-
-1. [x] Remove lazy loading - we'll not need it anymore
-2. [x] Remove imperative handle
-3. [x] Implement show/hide using css display: none;
-5. In Draggable remove % to vh
-6. Update docs
-7. Update tests
-*/
 
 interface InitialPosition {
   x: number;
@@ -26,10 +16,6 @@ export interface FloatingSidebarProps extends PropsWithChildren {
   initialPosition?: InitialPosition;
 }
 interface HeaderProps extends PropsWithChildren {};
-export interface Ref {
-  open: () => void;
-  close: () => void;
-};
 
 const transformToCss = (position: InitialPosition): CssPosition => {
   switch (position.origin) {
@@ -44,8 +30,7 @@ const transformToCss = (position: InitialPosition): CssPosition => {
   }
 };
 
-// TODO: remove ref
-const Root = forwardRef<Ref, FloatingSidebarProps>(({ isOpen = true, height = 600, children, ...props }, _ref) => {
+const Root: FC<FloatingSidebarProps> = ({ isOpen = true, height = 600, children, ...props }) => {
   const elementRef = useRef<HTMLDivElement | null>(null);
   const initialPosition = transformToCss(props.initialPosition ?? { x: 0, y: 0, origin: 'topleft' });
 
@@ -62,7 +47,7 @@ const Root = forwardRef<Ref, FloatingSidebarProps>(({ isOpen = true, height = 60
       </aside>
     </Draggable.Root>
   );
-});
+};
 
 const Header: FC<HeaderProps> = ({ children }) => {
   return (

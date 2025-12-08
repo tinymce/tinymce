@@ -1,7 +1,7 @@
-import { SelectorFind, SugarElement } from '@ephox/sugar';
+import { Css, SelectorFind, SugarElement } from '@ephox/sugar';
 import * as FloatingSidebar from 'oxide-components/components/floatingsidebar/FloatingSidebar';
 import { classes } from 'oxide-components/utils/Styles';
-import { useRef, useState, type MutableRefObject, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { describe, expect, it, beforeAll, afterEach, afterAll, beforeEach } from 'vitest';
 import { userEvent, page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
@@ -28,8 +28,14 @@ const Wrapper = ({ children }: { children: ReactNode }) => {
   );
 };
 
+const expectToBeVisible = (element: SugarElement<HTMLElement>) =>
+  expect(Css.get(element, 'display')).toBe('block');
+
+const expectToBeHidden = (element: SugarElement<HTMLElement>) =>
+  expect(Css.get(element, 'display')).toBe('none');
+
 describe('browser.components.FloatingSidebar', () => {
-  it('TINY-13052: Popover should be closed when isOpen is false', async () => {
+  it('TINY-13052: should be closed when isOpen is false', async () => {
     const { container } = render(
       <FloatingSidebar.Root isOpen={false}>
         <FloatingSidebar.Header>
@@ -38,11 +44,11 @@ describe('browser.components.FloatingSidebar', () => {
         <div data-testid={floatingSidebarContentTestId}>Content</div>
       </FloatingSidebar.Root>, { wrapper: Wrapper });
 
-    const containerElement = SelectorFind.descendant(SugarElement.fromDom(container), containerSelector).getOrDie();
-    expect(containerElement.dom.matches(':popover-open')).toBe(false);
+    const containerElement = SelectorFind.descendant<HTMLElement>(SugarElement.fromDom(container), containerSelector).getOrDie();
+    expectToBeHidden(containerElement);
   });
 
-  it('TINY-13052: Popover should be opened when isOpen is true', async () => {
+  it('TINY-13052: should be opened when isOpen is true', async () => {
     const { getByTestId } = render(
       <FloatingSidebar.Root isOpen={true}>
         <FloatingSidebar.Header>
@@ -52,12 +58,12 @@ describe('browser.components.FloatingSidebar', () => {
       </FloatingSidebar.Root>, { wrapper: Wrapper });
 
     const floatingSidebarContent = SugarElement.fromDom(getByTestId(floatingSidebarContentTestId).element());
-    const containerElement = SelectorFind.closest(floatingSidebarContent, containerSelector).getOrDie();
+    const containerElement = SelectorFind.closest<HTMLElement>(floatingSidebarContent, containerSelector).getOrDie();
 
-    expect(containerElement.dom.matches(':popover-open')).toBe(true);
+    expectToBeVisible(containerElement);
   });
 
-  it('TINY-13052: Popover should toggle correctly when isOpen changes', async () => {
+  it('TINY-13052: should toggle correctly when isOpen changes', async () => {
     const openButtonTestId = 'open-button';
     const closeButtonTestId = 'close-button';
     const ToggleSidebar = () => {
@@ -79,64 +85,13 @@ describe('browser.components.FloatingSidebar', () => {
     const { getByTestId, container } = render(<ToggleSidebar />, { wrapper: Wrapper });
     const openSidebarButton = getByTestId(openButtonTestId);
     const closeSidebarButton = getByTestId(closeButtonTestId);
-    const containerElement = SelectorFind.descendant(SugarElement.fromDom(container), containerSelector).getOrDie();
+    const containerElement = SelectorFind.descendant<HTMLElement>(SugarElement.fromDom(container), containerSelector).getOrDie();
 
-    expect(containerElement.dom.matches(':popover-open')).toBe(false);
+    expectToBeHidden(containerElement);
     await userEvent.click(openSidebarButton);
-    expect(containerElement.dom.matches(':popover-open')).toBe(true);
+    expectToBeVisible(containerElement);
     await userEvent.click(closeSidebarButton);
-    expect(containerElement.dom.matches(':popover-open')).toBe(false);
-  });
-
-  it('TINY-13121: Should control sidebar visibility using ref API', () => {
-    const sidebarRef: MutableRefObject<FloatingSidebar.Ref | null> = { current: null };
-
-    const { getByTestId } = render((
-      <FloatingSidebar.Root ref={sidebarRef}>
-        <FloatingSidebar.Header>
-          <div data-testid={floatingSidebarHeaderTestId}>Header</div>
-        </FloatingSidebar.Header>
-        <div data-testid={floatingSidebarContentTestId}>Content</div>
-      </FloatingSidebar.Root>
-    ), { wrapper: Wrapper });
-
-    const floatingSidebarContent = SugarElement.fromDom(getByTestId(floatingSidebarContentTestId).element());
-    const containerElement = SelectorFind.closest(floatingSidebarContent, containerSelector).getOrDie();
-
-    expect(containerElement.dom.matches(':popover-open')).toBe(true);
-    sidebarRef.current?.close();
-    expect(containerElement.dom.matches(':popover-open')).toBe(false);
-    sidebarRef.current?.open();
-    expect(containerElement.dom.matches(':popover-open')).toBe(true);
-  });
-
-  it('TINY-13107: Should lazy render children only when opened', async () => {
-    const openButtonTestId = 'open-button';
-    let renderCount = 0;
-
-    const ChildComponent = () => {
-      renderCount++;
-      return <div>Child Component</div>;
-    };
-
-    const TestComponent = () => {
-      const sidebarRef = useRef<FloatingSidebar.Ref | null>(null);
-
-      return (<>
-        <button data-testid={openButtonTestId} onClick={() => sidebarRef.current?.open()}>Open Sidebar</button>
-        <FloatingSidebar.Root isOpen={false} ref={sidebarRef}>
-          <FloatingSidebar.Header>Header</FloatingSidebar.Header>
-          <ChildComponent />
-        </FloatingSidebar.Root>
-      </>);
-    };
-
-    const { getByTestId } = render(<TestComponent />, { wrapper: Wrapper });
-    const openSidebarButton = getByTestId(openButtonTestId);
-    expect(renderCount, 'ChildComponent should not render when sidebar is closed').toBe(0);
-
-    await userEvent.click(openSidebarButton);
-    expect(renderCount, 'ChildComponent should render when sidebar is opened').toBe(1);
+    expectToBeHidden(containerElement);
   });
 
   describe('TINY-13052: Viewport tests', () => {
