@@ -25,7 +25,9 @@ exports[`browser.components.ExpandableBoxTest > Should be able to expand and col
         <span
           class="tox-icon"
         >
-          Icon: chevron-down
+          <svg
+            id="chevron-down"
+          />
         </span>
         Expand
       </button>
@@ -59,7 +61,9 @@ exports[`browser.components.ExpandableBoxTest > Should be able to expand and col
         <span
           class="tox-icon"
         >
-          Icon: chevron-up
+          <svg
+            id="chevron-up"
+          />
         </span>
         Collapse
       </button>
@@ -93,7 +97,9 @@ exports[`browser.components.ExpandableBoxTest > Should be able to expand and col
         <span
           class="tox-icon"
         >
-          Icon: chevron-down
+          <svg
+            id="chevron-down"
+          />
         </span>
         Expand
       </button>
@@ -127,7 +133,9 @@ exports[`browser.components.ExpandableBoxTest > Should be able to set maxHeight,
         <span
           class="tox-icon"
         >
-          Icon: chevron-down
+          <svg
+            id="chevron-down"
+          />
         </span>
         Show more
       </button>
@@ -161,7 +169,9 @@ exports[`browser.components.ExpandableBoxTest > Should be able to set maxHeight,
         <span
           class="tox-icon"
         >
-          Icon: chevron-up
+          <svg
+            id="chevron-up"
+          />
         </span>
         Show less
       </button>

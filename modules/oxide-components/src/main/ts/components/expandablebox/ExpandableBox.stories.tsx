@@ -1,5 +1,5 @@
-import { Obj } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { UniverseProvider } from 'oxide-components/main';
 import { useState } from 'react';
 import { useArgs } from 'storybook/preview-api';
 
@@ -10,11 +10,22 @@ const icons: Record<string, string> = {
   'chevron-up': '<svg width="10" height="10"><path d="M8.7 7.8 5 4 1.3 7.8c-.3.3-.8.3-1 0a.8.8 0 0 1 0-1.2l4.1-4.4c.3-.3.9-.3 1.2 0l4.2 4.4c.3.3.3.9 0 1.2-.3.3-.8.3-1.1 0Z" fill-rule="nonzero"/></svg>'
 };
 
-const iconResolver = (icon: string): string => Obj.get(icons, icon).getOrDie('Failed to get icon');
+const mockUniverse = {
+  getIcon: (name: string) => {
+    return icons[name] ?? `<svg><text>${name}</text></svg>`;
+  }
+};
 
 const meta = {
   title: 'components/ExpandableBox',
   component: ExpandableBox,
+  decorators: [
+    (Story) => (
+      <UniverseProvider resources={mockUniverse}>
+        <Story />
+      </UniverseProvider>
+    )
+  ],
   parameters: {
     layout: 'centered',
   },
@@ -57,7 +68,6 @@ const WideThing = () => (
 );
 
 const defaultsProps: ExpandableBoxProps = {
-  iconResolver,
   maxHeight: 80,
   collapseLabel: 'Collapse',
   expandLabel: 'Expand',
