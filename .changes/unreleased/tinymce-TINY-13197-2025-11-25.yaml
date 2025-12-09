@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Inline formats were not applied to the marker of a list item when its content was a single block element.
-time: 2025-11-25T11:50:27.304549+10:30
-custom:
-    Issue: TINY-13197
