@@ -24,7 +24,7 @@ export const ToolbarInputForm: FC<ToolbarInputFormProps> = ({ onSubmit, iconReso
 
   return (
     <form
-      className={Bem.block('toolbar-input-form')}
+      className={Bem.block('tox-toolbar-input-form')}
       noValidate
       onSubmit={(e) => {
         e.preventDefault();
