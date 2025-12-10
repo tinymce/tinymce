@@ -1,4 +1,4 @@
-import { Arr, Merger, Optional, Strings, Type } from '@ephox/katamari';
+import { Arr, Fun, Merger, Optional, Strings, Type } from '@ephox/katamari';
 
 import type Editor from 'tinymce/core/api/Editor';
 import type { BlobInfo } from 'tinymce/core/api/file/BlobCache';
@@ -279,14 +279,14 @@ const closeHandler = (state: ImageDialogState) => (): void => {
   state.open = false;
 };
 
-const makeDialogBody = (info: ImageDialogInfo): DialogType.TabPanelSpec | DialogType.PanelSpec => {
+const makeDialogBody = (info: ImageDialogInfo, errorHandler: (error: string) => void): DialogType.TabPanelSpec | DialogType.PanelSpec => {
   if (info.hasAdvTab || info.hasUploadUrl || info.hasUploadHandler) {
     const tabPanel: DialogType.TabPanelSpec = {
       type: 'tabpanel',
       tabs: Arr.flatten([
         [ MainTab.makeTab(info) ],
         info.hasAdvTab ? [ AdvTab.makeTab(info) ] : [],
-        info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [ UploadTab.makeTab(info) ] : []
+        info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [ UploadTab.makeTab(info, errorHandler) ] : []
       ])
     };
     return tabPanel;
@@ -384,7 +384,7 @@ export const Dialog = (editor: Editor): { open: () => void } => {
         return {
           title: 'Insert/Edit Image',
           size: 'normal',
-          body: makeDialogBody(info),
+          body: makeDialogBody(info, (error) => helpers.alertErr(error, Fun.noop)),
           buttons: [
             {
               type: 'cancel',
