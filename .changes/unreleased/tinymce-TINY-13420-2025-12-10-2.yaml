@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: '`link` dialog gives feedback for unsupported files error.'
+time: 2025-12-10T15:11:36.976908974+01:00
+custom:
+  Issue: TINY-13420
