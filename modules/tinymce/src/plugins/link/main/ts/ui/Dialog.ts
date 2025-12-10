@@ -161,7 +161,8 @@ const makeDialogBody = (
   titleText: Dialog.InputSpec[],
   catalogs: LinkDialogCatalog,
   hasUploadPanel: boolean,
-  fileTypes: DocumentsFileTypes[]
+  fileTypes: DocumentsFileTypes[],
+  errorHandler: (error: string) => void
 ): Dialog.PanelSpec | Dialog.TabPanelSpec => {
 
   const generalPanelItems = Arr.flatten<Dialog.BodyComponentSpec>([
@@ -186,7 +187,7 @@ const makeDialogBody = (
           name: 'general',
           items: generalPanelItems
         }],
-        [ UploadTab.makeTab(fileTypes) ]
+        [ UploadTab.makeTab(fileTypes, errorHandler) ]
       ])
     };
     return tabPanel;
@@ -232,7 +233,6 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInsta
   const catalogs = settings.catalogs;
   const dialogDelta = DialogChanges.init(initialData, catalogs);
 
-  const body = makeDialogBody(urlInput, displayText, titleText, catalogs, settings.hasUploadPanel, Options.getDocumentsFileTypes(editor));
   const helpers: Helpers = {
     addToBlobCache: addToBlobCache(editor),
     createBlobCache: createBlobCache(editor),
@@ -240,6 +240,15 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInsta
     uploadFile: uploadFile(editor),
     getExistingBlobInfo: getExistingBlobInfo(editor)
   };
+  const body = makeDialogBody(
+    urlInput,
+    displayText,
+    titleText,
+    catalogs,
+    settings.hasUploadPanel,
+    Options.getDocumentsFileTypes(editor),
+    (error) => helpers.alertErr(error, Fun.noop)
+  );
   return {
     title: 'Insert/Edit Link',
     size: 'normal',
