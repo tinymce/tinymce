@@ -1,6 +1,7 @@
 import { forwardRef, type FunctionComponent } from 'react';
 
 import { Button } from '../../../components/button/Button';
+import * as Bem from '../../../utils/Bem';
 
 const TagCloseIcon: FunctionComponent = () => {
   return (
@@ -18,6 +19,7 @@ interface BaseTagProps {
   readonly onMouseLeave?: (event: React.MouseEvent<HTMLDivElement>) => void;
   readonly onFocus?: (event: React.FocusEvent<HTMLDivElement>) => void;
   readonly onBlur?: (event: React.FocusEvent<HTMLDivElement>) => void;
+  readonly ariaLabel?: string;
 }
 
 interface NonClosableTagProps extends BaseTagProps {
@@ -27,22 +29,25 @@ interface NonClosableTagProps extends BaseTagProps {
 interface ClosableTagProps extends BaseTagProps {
   readonly closeable: true;
   readonly onClose: () => void;
+  readonly disabled?: boolean;
 }
 
 export type TagProps = NonClosableTagProps | ClosableTagProps;
 
 // Tag is here in reference to a tagging/labeling context, not a HTML tag.
 export const Tag = forwardRef<HTMLDivElement, TagProps>((props, ref) => {
-  const { label, icon, closeable, ...rest } = props;
+  const { label, icon, closeable, ariaLabel, ...rest } = props;
+  const disabled = closeable && props.disabled === true;
+
   return (
-    <div className="tox-tag" ref={ref} {...rest}>
+    <div className={Bem.block('tox-tag')} ref={ref} {...rest}>
       {icon}
-      <span className="tox-tag__label">{label}</span>
+      <span className={Bem.element('tox-tag', 'label')}>{label}</span>
       {closeable && (
-        <span className="tox-tag__close">
+        <span className={Bem.element('tox-tag', 'close')}>
           {/* The svg is temporary until the oxide-icons include the icons with the correct size for this project */}
           {/* Once that is done, we will revert back to using the IconButton component */}
-          <Button variant='naked' onClick={props.onClose} className={'tox-button--icon'} aria-label="Remove tag">
+          <Button variant='naked' disabled={disabled} onClick={props.onClose} className={Bem.block('tox-button', { icon: true })} aria-label={ariaLabel}>
             <TagCloseIcon />
           </Button>
         </span>
