@@ -1,6 +1,0 @@
-project: tinymce
-kind: Improved
-body: Accordions can now be opened and closed when the editor is readonly.
-time: 2025-10-21T16:27:55.278066+02:00
-custom:
-    Issue: TINY-12316

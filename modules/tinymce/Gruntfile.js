@@ -39,6 +39,7 @@ const stripSourceMaps = function (data) {
   return sourcemap > -1 ? data.slice(0, sourcemap) : data;
 };
 
+/** @param {import('grunt')} grunt */
 module.exports = function (grunt) {
   const packageData = grunt.file.readJSON('package.json');
 
@@ -624,7 +625,7 @@ module.exports = function (grunt) {
             zip.addData('bower.json', jsonToBuffer({
               'name': 'tinymce',
               'description': 'Web based JavaScript HTML WYSIWYG editor control.',
-              'license': 'GPL-2.0-or-later',
+              'license': 'SEE LICENSE IN license.md',
               'keywords': keywords,
               'homepage': 'https://www.tiny.cloud/',
               'ignore': ['README.md', 'composer.json', 'package.json', '.npmignore', 'CHANGELOG.md']
@@ -642,7 +643,7 @@ module.exports = function (grunt) {
               'author': 'Ephox Corporation DBA Tiny Technologies, Inc',
               'main': 'tinymce.js',
               'types': 'tinymce.d.ts',
-              'license': 'GPL-2.0-or-later',
+              'license': 'SEE LICENSE IN license.md',
               'keywords': keywords,
               'homepage': 'https://www.tiny.cloud/',
               'bugs': { 'url': 'https://github.com/tinymce/tinymce/issues' }
@@ -652,7 +653,7 @@ module.exports = function (grunt) {
               'name': 'tinymce/tinymce',
               'version': packageData.version,
               'description': 'Web based JavaScript HTML WYSIWYG editor control.',
-              'license': ['GPL-2.0-or-later'],
+              'license': ['SEE LICENSE IN license.md'],
               'keywords': keywords,
               'homepage': 'https://www.tiny.cloud/',
               'type': 'component',
@@ -707,6 +708,23 @@ module.exports = function (grunt) {
           dataFilter: (args) => {
             if (args.filePath.endsWith('.min.css')) {
               args.data = stripSourceMaps(args.data);
+            }
+
+            // TINY-13411: The component zip which is used for NPM needs to have dual license as noted in the license-npm.md file
+            if (args.filePath.endsWith('license.md')) {
+              const npmlicensedata = grunt.file.read('src/core/text/license-npm.md', { encoding: null });
+              args.data = Buffer.from(npmlicensedata);
+            }
+
+            // TINY-13411: The core repo README.md mentions GPL 2.0 in the license section
+            // but for dist/NPM packages we want to just point to a license.md file
+            if (args.filePath.endsWith('README.md')) {
+              let processed = args.data.toString();
+              processed = processed.replace(
+                /^##\s*License\s*\n[\s\S]*?(?=\n##\s|\n*$)/m,
+                '## License\n\nLicense terms can be found in the license.md file.'
+              );
+              args.data = Buffer.from(processed);
             }
           }
         },
