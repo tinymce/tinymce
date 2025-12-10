@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { Fun, Id } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Dropdown, Icon, IconButton } from 'oxide-components/main';
+import { Dropdown, Icon, IconButton, UniverseProvider } from 'oxide-components/main';
 
 import type { ToggleMenuItemInstanceApi } from './internals/Types';
 import * as Menu from './Menu';
@@ -9,6 +9,13 @@ import * as Menu from './Menu';
 const meta = {
   title: 'components/Menu',
   component: Menu.Root,
+  decorators: [
+    (Story) => (
+      <UniverseProvider resources={mockUniverse}>
+        <Story />
+      </UniverseProvider>
+    )
+  ],
   argTypes: {},
   parameters: {
     layout: 'centered',
@@ -60,12 +67,15 @@ const iconResolver = (icon: string): string => {
   return icons.get(icon) || '';
 };
 
+const mockUniverse = {
+  getIcon: iconResolver,
+};
+
 const menu: JSX.Element = (
   <Menu.Root>
     <Menu.Item
       key={Id.generate('menu-item')}
-      iconResolver={iconResolver}
-      icon={<Icon resolver={iconResolver} icon='item'></Icon>}
+      icon={<Icon icon='item'></Icon>}
       autoFocus={true}
       // eslint-disable-next-line no-console
       onAction= {() => console.log('Clicked Menu item 1')}
@@ -74,7 +84,6 @@ const menu: JSX.Element = (
     </Menu.Item>
     <Menu.ToggleItem
       key={Id.generate('menu-item')}
-      iconResolver={iconResolver}
       icon={'item'}
       onAction= {(api: ToggleMenuItemInstanceApi): void => {
         api.setActive(!api.isActive());
@@ -86,14 +95,12 @@ const menu: JSX.Element = (
     </Menu.ToggleItem>
     <Menu.SubmenuItem
       key={Id.generate('menu-item')}
-      iconResolver={iconResolver}
       icon={'item'}
       submenuContent={
         <Menu.Root>
           <Menu.Item
             autoFocus={true}
             key={Id.generate('menu-item')}
-            iconResolver={iconResolver}
             icon={'item'}
             // eslint-disable-next-line no-console
             onAction= {() => console.log('Clicked nested menu item 1')}
@@ -103,7 +110,6 @@ const menu: JSX.Element = (
           <Menu.ToggleItem
             enabled={false}
             key={Id.generate('menu-item')}
-            iconResolver={iconResolver}
             icon={'item'}
             onAction= {(api: ToggleMenuItemInstanceApi): void => {
               api.setActive(!api.isActive());
@@ -115,14 +121,12 @@ const menu: JSX.Element = (
           </Menu.ToggleItem>
           <Menu.SubmenuItem
             key={Id.generate('menu-item')}
-            iconResolver={iconResolver}
             icon={'item'}
             submenuContent={
               <Menu.Root>
                 <Menu.Item
                   autoFocus={true}
                   key={Id.generate('menu-item')}
-                  iconResolver={iconResolver}
                   icon={'item'}
                   // eslint-disable-next-line no-console
                   onAction= {() => console.log('Clicked nested menu item 1')}
@@ -131,7 +135,6 @@ const menu: JSX.Element = (
                 </Menu.Item>
                 <Menu.ToggleItem
                   key={Id.generate('menu-item')}
-                  iconResolver={iconResolver}
                   icon={'item'}
                   onAction= {(api: ToggleMenuItemInstanceApi): void => {
                     api.setActive(!api.isActive());
@@ -166,6 +169,13 @@ export const Example: Story = {
 
 export const MenuInADropdown: Story = {
   args: {},
+  decorators: [
+    (Story: React.ComponentType): JSX.Element => (
+      <UniverseProvider resources={mockUniverse}>
+        <Story />
+      </UniverseProvider>
+    )
+  ],
   parameters: {
     docs: {
       story: {
@@ -178,7 +188,7 @@ export const MenuInADropdown: Story = {
     return (<>
       <Dropdown.Root>
         <Dropdown.Trigger>
-          <IconButton variant={'secondary'} resolver={iconResolver} icon={'item'}></IconButton>
+          <IconButton variant={'secondary'} icon={'item'}></IconButton>
         </Dropdown.Trigger>
         <Dropdown.Content>
           {menu}

@@ -5,7 +5,7 @@ import * as Bem from '../../../utils/Bem';
 import { Icon } from '../../icon/Icon';
 import type { ToggleMenuItemInstanceApi, ToggleMenuItemProps } from '../internals/Types';
 
-export const ToggleItem = forwardRef<HTMLButtonElement, ToggleMenuItemProps>(({ autoFocus = false, enabled = true, onSetup, icon, iconResolver, active = false, shortcut, onAction, children }, ref) => {
+export const ToggleItem = forwardRef<HTMLButtonElement, ToggleMenuItemProps>(({ autoFocus = false, enabled = true, onSetup, icon, active = false, shortcut, onAction, children }, ref) => {
   const [ state, setState ] = useState({
     enabled,
     active,
@@ -38,7 +38,7 @@ export const ToggleItem = forwardRef<HTMLButtonElement, ToggleMenuItemProps>(({ 
   }, [ onSetup, api ]);
 
   const itemIcon = Type.isString(icon)
-    ? <Icon icon={icon} resolver={iconResolver} />
+    ? <Icon icon={icon} />
     : icon;
 
   return (
@@ -67,7 +67,7 @@ export const ToggleItem = forwardRef<HTMLButtonElement, ToggleMenuItemProps>(({ 
       <div className={Bem.element('tox-collection', 'item-label')}>{children}</div>
       {shortcut && <div className={Bem.element('tox-collection', 'item-accessory')}>{shortcut}</div>}
       <div className={Bem.element('tox-collection', 'item-checkmark')} >
-        {iconResolver && <Icon icon={'checkmark'} resolver={iconResolver} />}
+        {<Icon icon={'checkmark'} />}
       </div>
     </button>
   );

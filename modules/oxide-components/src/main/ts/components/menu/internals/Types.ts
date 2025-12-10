@@ -13,7 +13,6 @@ export interface ToggleMenuItemInstanceApi extends CommonMenuItemInstanceApi {
 
 // Item components Props
 export interface ToggleMenuItemProps extends PropsWithChildren {
-  iconResolver: (icon: string) => string;
   autoFocus?: boolean;
   readonly icon?: string | JSX.Element;
   readonly enabled?: boolean;
@@ -24,7 +23,6 @@ export interface ToggleMenuItemProps extends PropsWithChildren {
 }
 
 export interface MenuItemProps extends PropsWithChildren {
-  iconResolver: (icon: string) => string;
   autoFocus?: boolean;
   readonly icon?: string | JSX.Element;
   readonly enabled?: boolean;
@@ -34,7 +32,6 @@ export interface MenuItemProps extends PropsWithChildren {
 }
 
 export interface SubmenuProps extends PropsWithChildren {
-  iconResolver: (icon: string) => string;
   autoFocus?: boolean;
   readonly submenusSide?: 'left' | 'right';
   readonly icon?: string | JSX.Element;

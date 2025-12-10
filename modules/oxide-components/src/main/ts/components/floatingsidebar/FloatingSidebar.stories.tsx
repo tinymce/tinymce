@@ -1,5 +1,6 @@
 import { Fun } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
 
 import { IconButton } from '../iconbutton/IconButton';
 
@@ -29,6 +30,13 @@ When dragged, the sidebar remains within viewport bounds and maintains its posit
       }
     }
   },
+  decorators: [
+    (Story) => (
+      <UniverseProvider resources={mockUniverse}>
+        <Story />
+      </UniverseProvider>
+    )
+  ],
   argTypes: {
     isOpen: {
       description: 'Controls the visibility of the floating sidebar. When `true`, the sidebar is shown; when `false`, it is hidden.',
@@ -98,6 +106,10 @@ const resolvedIcon = `<svg width="24" height="24">
   </svg>
 `;
 
+const mockUniverse = {
+  getIcon: Fun.constant(resolvedIcon),
+};
+
 export const ButtonInHeader: Story = {
   name: 'Button in header',
   args: {
@@ -109,7 +121,7 @@ export const ButtonInHeader: Story = {
       <FloatingSidebar.Header>
         <div className='tox-sidebar-content__title'>Floating Header</div>
         <div className='tox-sidebar-content__header-close-button'>
-          <IconButton variant='naked' icon="close" resolver={Fun.constant(resolvedIcon)} onClick={() => window.alert('Close the sidebar!')} />
+          <IconButton variant='naked' icon="close" onClick={() => window.alert('Close the sidebar!')} />
         </div>
       </FloatingSidebar.Header>
       <div style={{ padding: '12px' }}>
