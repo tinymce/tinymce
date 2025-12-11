@@ -1,0 +1,6 @@
+project: tinymce
+kind: Changed
+body: border-styles with multiple rgb-colors would be compressed which resulted in invalid css
+time: 2025-12-11T09:50:23.942202+01:00
+custom:
+    Issue: TINY-13393
