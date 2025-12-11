@@ -109,7 +109,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
   Attachment.attachSystemAfter(eTargetNode, mainUi.mothership);
   attachUiMotherships(editor, uiRoot, uiRefs);
 
-  editor.on('init', () => {
+  editor.on('PostRender', () => {
     OuterContainer.setSidebar(
       outerContainer,
       rawUiConfig.sidebar,
