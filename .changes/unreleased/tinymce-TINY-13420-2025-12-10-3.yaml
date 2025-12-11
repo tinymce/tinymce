@@ -1,6 +1,0 @@
-project: tinymce
-kind: Improved
-body: '`image` dialog gives feedback for unsupported files error.'
-time: 2025-12-10T15:12:35.689691096+01:00
-custom:
-  Issue: TINY-13420
