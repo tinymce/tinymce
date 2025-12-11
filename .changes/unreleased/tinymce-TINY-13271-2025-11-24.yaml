@@ -1,6 +1,0 @@
-project: tinymce
-kind: Changed
-body: Toolbar split button chevron tooltip is now the same as the main button tooltip unless explicitly set otherwise.
-time: 2025-11-24T16:28:26.635335+01:00
-custom:
-    Issue: TINY-13271
