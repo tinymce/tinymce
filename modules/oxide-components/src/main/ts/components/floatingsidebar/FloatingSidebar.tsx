@@ -1,5 +1,6 @@
 import { useRef, type FC, type PropsWithChildren } from 'react';
 
+import * as Bem from '../../utils/Bem';
 import { classes } from '../../utils/Styles';
 import * as Draggable from '../draggable/Draggable';
 import '../../module/css';
@@ -37,7 +38,7 @@ const Root: FC<FloatingSidebarProps> = ({ isOpen = true, height = 600, children,
   return (
     <Draggable.Root
       ref={elementRef}
-      className={classes([ 'tox-floating-sidebar', ...(isOpen ? [ 'tox-floating-sidebar__open' as const ] : []) ])}
+      className={Bem.block('tox-floating-sidebar', { open: isOpen })}
       style={{ '--tox-private-floating-sidebar-requested-height': `${height}px` }}
       initialPosition={initialPosition}
       declaredSize={{ width: 'var(--tox-private-floating-sidebar-width)', height: 'var(--tox-private-floating-sidebar-height)' }}
