@@ -40,7 +40,6 @@ import { Icon } from 'oxide-components';
 ## How it works
 
 The \`Icon\` component uses the underlying UniverseContext state to fetch the SVG markup for the specified \`icon\`. This means that the Icon component always needs to be nested within a UniverseProvider.
-It then dangerously sets the inner HTML of a \`span\` element to render the SVG.
         `
       }
     }

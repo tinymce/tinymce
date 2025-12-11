@@ -67,7 +67,7 @@ export const ToggleItem = forwardRef<HTMLButtonElement, ToggleMenuItemProps>(({ 
       <div className={Bem.element('tox-collection', 'item-label')}>{children}</div>
       {shortcut && <div className={Bem.element('tox-collection', 'item-accessory')}>{shortcut}</div>}
       <div className={Bem.element('tox-collection', 'item-checkmark')} >
-        {<Icon icon={'checkmark'} />}
+        <Icon icon={'checkmark'} />
       </div>
     </button>
   );

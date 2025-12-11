@@ -61,7 +61,7 @@ export const SubmenuItem = forwardRef<HTMLButtonElement, SubmenuProps>(({ autoFo
           {itemIcon && <div className={Bem.element('tox-collection', 'item-icon')}>{itemIcon}</div>}
           <div className={Bem.element('tox-collection', 'item-label')}>{children}</div>
           <div className={Bem.element('tox-collection', 'item-caret')}>
-            {<Icon icon={'chevron-right'}></Icon>}
+            <Icon icon={'chevron-right'} />
           </div>
         </button>
       </Dropdown.Trigger>
