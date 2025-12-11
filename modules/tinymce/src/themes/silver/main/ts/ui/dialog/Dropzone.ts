@@ -62,13 +62,12 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
   const handleFiles = (component: AlloyComponent, files: FileList | null | undefined) => {
     if (files) {
       const filteredFiles = filterByExtension(files, providersBackstage, spec.allowedFileExtensions);
+      Representing.setValue(component, filteredFiles);
+      AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name });
       if (filteredFiles.length === 0) {
         spec.errorHandler?.each((errorHandler) => {
           errorHandler('All inserted files have unallowed extensions');
         });
-      } else {
-        Representing.setValue(component, filteredFiles);
-        AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name });
       }
     }
   };
