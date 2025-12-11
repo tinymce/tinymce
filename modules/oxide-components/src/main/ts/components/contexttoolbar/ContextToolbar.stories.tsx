@@ -140,7 +140,7 @@ See the **Corners** story for a live demonstration of auto-flip behavior.
       control: 'boolean'
     }
   },
-  tags: [ 'autodocs', 'skip-visual-testing' ],
+  tags: [ 'autodocs' ],
 } satisfies Meta;
 
 export default meta;
