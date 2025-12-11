@@ -89,11 +89,15 @@ export default (): void => {
       ).map((promotion) => promotion.dom).getOrNull();
     };
 
+    const getSinkElement = (type: 'dialog' | 'popup'): HTMLElement =>
+      type === 'dialog' ? dialogs.getMothership().element.dom : popups.getMothership().element.dom;
+
     return {
       renderUI,
       getWindowManagerImpl: Fun.constant(windowMgr),
       getNotificationManagerImpl,
-      getPromotionElement
+      getPromotionElement,
+      getSinkElement
     };
   });
 };
