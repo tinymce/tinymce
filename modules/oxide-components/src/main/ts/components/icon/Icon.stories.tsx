@@ -1,3 +1,4 @@
+import { Obj } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { UniverseProvider } from 'oxide-components/main';
 
@@ -10,9 +11,8 @@ const icons: Record<string, string> = {
 };
 
 const mockUniverse = {
-  getIcon: (name: string) => {
-    return icons[name] ?? `<svg><text>${name}</text></svg>`;
-  }
+  getIcon: (name: string) =>
+    Obj.get(icons, name).getOrDie('Failed to get icon')
 };
 
 const meta = {
