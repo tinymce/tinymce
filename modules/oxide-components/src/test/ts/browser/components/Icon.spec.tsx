@@ -8,7 +8,7 @@ const chevronDownTestIconId = 'chevron-down-icon';
 const chevronUpTestIconId = 'chevron-up-icon';
 
 describe('browser.components.Icon', () => {
-  it('TINY-13316: should render icons using resolver', async () => {
+  it('TINY-13316: should render icons using universe context', async () => {
     const getIcon = vi.fn((icon: string) => `<svg id="${icon}"></svg>`);
     const mockUniverse = {
       getIcon,
