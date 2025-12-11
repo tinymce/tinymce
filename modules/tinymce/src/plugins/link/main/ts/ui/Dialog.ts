@@ -162,7 +162,7 @@ const makeDialogBody = (
   catalogs: LinkDialogCatalog,
   hasUploadPanel: boolean,
   fileTypes: DocumentsFileTypes[],
-  errorHandler: (error: string) => void
+  onInvalidFiles: () => void
 ): Dialog.PanelSpec | Dialog.TabPanelSpec => {
 
   const generalPanelItems = Arr.flatten<Dialog.BodyComponentSpec>([
@@ -187,7 +187,7 @@ const makeDialogBody = (
           name: 'general',
           items: generalPanelItems
         }],
-        [ UploadTab.makeTab(fileTypes, errorHandler) ]
+        [ UploadTab.makeTab(fileTypes, onInvalidFiles) ]
       ])
     };
     return tabPanel;
@@ -247,7 +247,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInsta
     catalogs,
     settings.hasUploadPanel,
     Options.getDocumentsFileTypes(editor),
-    (error) => helpers.alertErr(error, Fun.noop)
+    () => helpers.alertErr('All inserted files have unallowed extensions', Fun.noop)
   );
   return {
     title: 'Insert/Edit Link',

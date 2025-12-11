@@ -10,7 +10,7 @@ export interface DropZoneSpec extends FormComponentWithLabelSpec {
   buttonLabel?: string;
   allowedFileTypes?: string;
   allowedFileExtensions?: string[];
-  errorHandler?: (error: string) => void;
+  onInvalidFiles?: () => void;
 }
 
 export interface DropZone extends FormComponentWithLabel {
@@ -20,7 +20,7 @@ export interface DropZone extends FormComponentWithLabel {
   buttonLabel: Optional<string>;
   allowedFileTypes: Optional<string>;
   allowedFileExtensions: Optional<string[]>;
-  errorHandler: Optional<(error: string) => void>;
+  onInvalidFiles: Optional<() => void>;
 }
 
 const dropZoneFields = formComponentWithLabelFields.concat([
@@ -29,7 +29,7 @@ const dropZoneFields = formComponentWithLabelFields.concat([
   FieldSchema.optionString('buttonLabel'),
   FieldSchema.optionString('allowedFileTypes'),
   FieldSchema.optionArrayOf('allowedFileExtensions', ValueType.string),
-  FieldSchema.optionFunction('errorHandler')
+  FieldSchema.optionFunction('onInvalidFiles')
 ]);
 
 export const dropZoneSchema = StructureSchema.objOf(dropZoneFields);

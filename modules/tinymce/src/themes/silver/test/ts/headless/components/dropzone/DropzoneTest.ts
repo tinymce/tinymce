@@ -19,7 +19,7 @@ describe('headless.tinymce.themes.silver.components.dropzone.DropzoneTest', () =
       dropAreaLabel: Optional.none(),
       allowedFileTypes: Optional.none(),
       allowedFileExtensions: Optional.none(),
-      errorHandler: Optional.none()
+      onInvalidFiles: Optional.none()
     }, TestProviders, Optional.none())
   ));
 
@@ -105,7 +105,7 @@ describe('headless.tinymce.themes.silver.components.dropzone.DropzoneTest', () =
         dropAreaLabel: Optional.some('Drop Area Label'),
         allowedFileTypes: Optional.some('text/plain'),
         allowedFileExtensions: Optional.some([ 'txt' ]),
-        errorHandler: Optional.some(store.add),
+        onInvalidFiles: Optional.some(() => store.add('error')),
       }, TestProviders, Optional.none())
     ));
 
@@ -172,7 +172,7 @@ describe('headless.tinymce.themes.silver.components.dropzone.DropzoneTest', () =
       dropFiles(zone, [{ name: 'text0.fake' }, { name: 'text1.txt' }, { name: 'text2.fake' }]);
       store.assertEq('with at least 1 valid file that should not be an error', []);
       dropFiles(zone, [{ name: 'text0.fake' }]);
-      store.assertEq('without any valid file that should be an error', [ 'All inserted files have unallowed extensions' ]);
+      store.assertEq('without any valid file that should be an error', [ 'error' ]);
     });
   });
 });
