@@ -89,14 +89,10 @@ const changeFileInput = (helpers: Helpers, api: API): void => {
       };
 
       Utils.blobToDataUri(file).then((dataUrl) => {
-        if (file.size > 0) {
-          const existingBlobInfo = helpers.getExistingBlobInfo(dataUrlToBase64(dataUrl), file.type);
-          const blobInfo = existingBlobInfo && existingBlobInfo.filename() === file.name ? existingBlobInfo : helpers.createBlobCache(file, blobUri, dataUrl);
-          helpers.addToBlobCache(blobInfo);
-          return helpers.uploadFile(blobInfo, Fun.identity);
-        } else {
-          return Promise.reject('empty files are not supported');
-        }
+        const existingBlobInfo = helpers.getExistingBlobInfo(dataUrlToBase64(dataUrl), file.type);
+        const blobInfo = existingBlobInfo && existingBlobInfo.filename() === file.name ? existingBlobInfo : helpers.createBlobCache(file, blobUri, dataUrl);
+        helpers.addToBlobCache(blobInfo);
+        return helpers.uploadFile(blobInfo, Fun.identity);
       }).then((result) => {
         updateUrlAndSwitchTab(result);
         finalize();
@@ -115,7 +111,8 @@ const createBlobCache = (editor: Editor) => (file: File, blobUri: string, dataUr
     blobUri,
     name: file.name?.replace(/\.[^\.]+$/, ''),
     filename: file.name,
-    base64: dataUrl.split(',')[1]
+    base64: dataUrl.split(',')[1],
+    allowEmptyFile: true
   });
 
 const addToBlobCache = (editor: Editor) => (blobInfo: BlobInfo): void => {
