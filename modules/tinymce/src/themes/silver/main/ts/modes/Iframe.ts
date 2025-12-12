@@ -187,7 +187,7 @@ const render = (editor: Editor, uiRefs: ReadyUiReferences, rawUiConfig: RenderUi
     OuterContainer.refreshToolbar(uiRefs.mainUi.outerContainer);
   };
 
-  if (toolbarMode === Options.ToolbarMode.sliding || toolbarMode === Options.ToolbarMode.floating) {
+  if (toolbarMode as Options.ToolbarMode === Options.ToolbarMode.sliding || toolbarMode as Options.ToolbarMode === Options.ToolbarMode.floating) {
     editor.on('ResizeWindow ResizeEditor ResizeContent', () => {
       // Check if the width has changed, if so then refresh the toolbar drawer. We don't care if height changes.
       const width = editor.getWin().innerWidth;

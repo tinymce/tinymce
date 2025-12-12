@@ -94,7 +94,7 @@ const types: Record<string, BridgeRenderFn<any>> = {
         [VerticalDir.Attribute]: backstage.shared.header.isPositionedAtTop() ? VerticalDir.AttributeValue.TopToBottom : VerticalDir.AttributeValue.BottomToTop
       };
 
-      switch (getToolbarMode(editor)) {
+      switch (getToolbarMode(editor) as ToolbarMode) {
         case ToolbarMode.floating:
           return renderFloatingToolbarButton(s, backstage, identify, attributes, btnName);
         default:
