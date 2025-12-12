@@ -1,4 +1,4 @@
-import { Throttler, Type } from '@ephox/katamari';
+import { Throttler, Type, Obj } from '@ephox/katamari';
 import { Children, cloneElement, forwardRef, isValidElement, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type FC, type HTMLAttributes, type MouseEvent, type PropsWithChildren, type ReactElement } from 'react';
 
 import { Bem } from '../../main';
@@ -39,7 +39,8 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
 
       setPositioningStyles((currentPositioningStyles) => {
         // avoid react rerendering when the styles are the same as before
-        if (JSON.stringify(currentPositioningStyles) !== JSON.stringify(newPositioningStyles)) {
+        // casting to emty object to satisfy typescript
+        if ( Obj.equal(newPositioningStyles, currentPositioningStyles as {})) {
           return newPositioningStyles;
         } else {
           return currentPositioningStyles;
@@ -50,7 +51,7 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
 
   useEffect(() => {
     const element = contentRef.current;
-    if (!Type.isNonNullable(element)) {
+    if (Type.isNullable(element)) {
       return;
     }
     const onToggle = (e: Event) => {
@@ -75,28 +76,16 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
       // reset styles on close
       setPositioningStyles({ opacity: '0' });
     }
-  }, [ isOpen, updatePosition ]);
+  }, [ isOpen, updatePosition, children ]);
 
   useEffect(() => {
-    const triggerSizeObserver = new window.ResizeObserver(updatePosition);
-    if (Type.isNonNullable(triggerRef.current)) {
-      triggerSizeObserver.observe(triggerRef.current);
-    }
-
-    const contentSizeObserver = new window.ResizeObserver(updatePosition);
-    if (Type.isNonNullable(contentRef.current)) {
-      contentSizeObserver.observe(contentRef.current);
-    }
-
     const onScrollAndResize = () => {
       contentRef.current?.hidePopover();
     };
     window.addEventListener('scroll', onScrollAndResize, true);
-    window.addEventListener('resize', onScrollAndResize); // Handle window both scrolla and resize affecting layout
+    window.addEventListener('resize', onScrollAndResize);
 
     return () => {
-      triggerSizeObserver.disconnect();
-      contentSizeObserver.disconnect();
       window.removeEventListener('scroll', onScrollAndResize, true);
       window.removeEventListener('resize', onScrollAndResize);
     };
@@ -108,7 +97,7 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
     className={Bem.block('tox-dropdown-content')}
     ref={(el: HTMLDivElement) => {
       contentRef.current = el;
-      if (Type.isFunction(ref )) {
+      if (Type.isFunction(ref)) {
         ref(el);
       } else if (Type.isNonNullable(ref)) {
         ref.current = el;
