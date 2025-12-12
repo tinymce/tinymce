@@ -2,14 +2,10 @@
   "namedInputs": {
     "tiny-product": [
       "{projectRoot}/**/*",
-      "!{projectRoot}/**/*.spec.ts",
-      "!{projectRoot}/**/*.test.ts",
       "!{projectRoot}/node_modules/**/*"
     ],
     "tiny-library": [
       "{projectRoot}/**/*",
-      "!{projectRoot}/**/*.spec.ts",
-      "!{projectRoot}/**/*.test.ts",
       "!{projectRoot}/node_modules/**/*"
     ]
   }
