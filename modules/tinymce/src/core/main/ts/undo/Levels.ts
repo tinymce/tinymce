@@ -14,7 +14,7 @@ import type { CompleteUndoLevel, FragmentedUndoLevel, NewUndoLevel, UndoLevel } 
 // innerHTML on a detached element will still make http requests to the images
 const lazyTempDocument = Thunk.cached(() => document.implementation.createHTMLDocument('undo'));
 
-const shouldBeFragmented = (body: HTMLElement) => body.querySelector('iframe') !== null || body.querySelector(NodeType.ucVideoNodeName) !== null;
+const shouldBeFragmented = (body: HTMLElement) => body.querySelector(`iframe, ${NodeType.ucVideoNodeName}`) !== null;
 
 const createFragmentedLevel = (fragments: string[]): FragmentedUndoLevel => {
   return {
