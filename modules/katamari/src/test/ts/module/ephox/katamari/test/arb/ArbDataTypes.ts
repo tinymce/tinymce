@@ -21,7 +21,7 @@ export const arbOptionalSome = <T> (at: Arbitrary<T>): Arbitrary<Optional<T>> =>
 
 export const arbOptional = <T> (at: Arbitrary<T>): Arbitrary<Optional<T>> => fc.oneof(arbOptionalNone<T>(), arbOptionalSome(at));
 
-export const arbNegativeInteger = (): Arbitrary<number> => fc.integer(Number.MIN_SAFE_INTEGER, -1);
+export const arbNegativeInteger = (): Arbitrary<number> => fc.integer({ min: Number.MIN_SAFE_INTEGER, max: -1 });
 
 export const arbFutureNow = <A> (arbA: Arbitrary<A>): Arbitrary<Future<A>> =>
   arbA.map(Future.pure);

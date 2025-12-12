@@ -16,3 +16,4 @@ modules/*/LICENSE.TXT
 /js
 /tmp
 /.idea
+/.nx

@@ -21,7 +21,7 @@ describe('atomic.katamari.api.arr.ArrMapToObjectTest', () => {
     checkToObject({ a: '3a', b: '3b' }, [ 'a', 'b' ], (x) => 3 + x);
     checkToObject({ 1: 4, 2: 5 }, [ 1, 2 ], (x) => 3 + x);
 
-    fc.assert(fc.property(fc.array(fc.asciiString()), (keys) => {
+    fc.assert(fc.property(fc.array(fc.string({ unit: 'binary-ascii' })), (keys) => {
       const f = (x: string) => x + '_cat';
       const inputKeys = Arr.sort(Unique.stringArray(keys));
       const output = Arr.mapToObject(inputKeys, f);

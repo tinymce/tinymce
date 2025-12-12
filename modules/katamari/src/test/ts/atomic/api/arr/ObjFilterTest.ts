@@ -7,7 +7,7 @@ import * as Obj from 'ephox/katamari/api/Obj';
 
 describe('atomic.katamari.api.arr.ObjFilterTest', () => {
   it('filter const true is identity', () => {
-    fc.assert(fc.property(fc.dictionary(fc.asciiString(), fc.integer()), (obj) => {
+    fc.assert(fc.property(fc.dictionary(fc.string({ unit: 'binary-ascii' }), fc.integer()), (obj) => {
       assert.deepEqual(Obj.filter(obj, Fun.always), obj);
     }));
   });

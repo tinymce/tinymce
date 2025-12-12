@@ -106,7 +106,7 @@ describe('atomic.katamari.api.async.LazyValueTest', () => {
     });
   }));
 
-  it('parallel spec', () => fc.assert(fc.asyncProperty(fc.array(fc.integer(), 0, 20), (vals) => new Promise((resolve, reject) => {
+  it('parallel spec', () => fc.assert(fc.asyncProperty(fc.array(fc.integer(), { minLength: 0, maxLength: 20 }), (vals) => new Promise((resolve, reject) => {
     const lazyVals = Arr.map(vals, LazyValue.pure);
     LazyValues.par(lazyVals).get((actual) => {
       eqAsync('pars', vals, actual, reject);

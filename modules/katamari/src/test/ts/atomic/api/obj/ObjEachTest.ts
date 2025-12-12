@@ -25,7 +25,7 @@ describe('atomic.katamari.api.obj.ObjEachTest', () => {
 
   it('Each + set should equal the same object', () => {
     fc.assert(fc.property(
-      fc.dictionary(fc.asciiString(), fc.json()),
+      fc.dictionary(fc.string({ unit: 'binary-ascii' }), fc.json()),
       (obj) => {
         const values: Record<string, string> = {};
         const output = Obj.each(obj, (x, i) => {

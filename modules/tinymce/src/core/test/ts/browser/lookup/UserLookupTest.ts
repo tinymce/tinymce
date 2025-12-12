@@ -431,17 +431,17 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       const promises2b = editor.userLookup.fetchUsers([ userId2 ]);
       const promise2b = promises2b[userId2];
 
+      // Verify cache hits (same promise instances)
+      expect(promise1a).to.equal(promise1b),
+      expect(promise2a).to.equal(promise2b),
+
+      // Verify different caches (different promise instances)
+      expect(promise1a).to.not.equal(promise2a)
+
       await Promise.all([
         // Verify correct data first
         expect(promise1a).to.eventually.have.property('id').that.equals(userId1),
-        expect(promise2a).to.eventually.have.property('id').that.equals(userId2),
-
-        // Verify cache hits (same promise instances)
-        expect(promise1a).to.equal(promise1b),
-        expect(promise2a).to.equal(promise2b),
-
-        // Verify different caches (different promise instances)
-        expect(promise1a).to.not.equal(promise2a)
+        expect(promise2a).to.eventually.have.property('id').that.equals(userId2)
       ]);
 
       // Verify fetch count

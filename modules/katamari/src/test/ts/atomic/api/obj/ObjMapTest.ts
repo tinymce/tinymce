@@ -45,14 +45,14 @@ describe('atomic.katamari.api.obj.ObjMapTest', () => {
   });
 
   it('map id obj = obj', () => {
-    fc.assert(fc.property(fc.dictionary(fc.asciiString(), fc.integer()), (obj) => {
+    fc.assert(fc.property(fc.dictionary(fc.string({ unit: 'binary-ascii' }), fc.integer()), (obj) => {
       const actual = Obj.map(obj, Fun.identity);
       assert.deepEqual(actual, obj);
     }));
   });
 
   it('map constant obj means that values(obj) are all the constant', () => {
-    fc.assert(fc.property(fc.dictionary(fc.asciiString(), fc.integer()), fc.integer(), (obj, x) => {
+    fc.assert(fc.property(fc.dictionary(fc.string({ unit: 'binary-ascii' }), fc.integer()), fc.integer(), (obj, x) => {
       const output = Obj.map(obj, Fun.constant(x));
       const values = Obj.values(output);
       return Arr.forall(values, (v) => v === x);
@@ -60,14 +60,14 @@ describe('atomic.katamari.api.obj.ObjMapTest', () => {
   });
 
   it('tupleMap obj (x, i) -> { k: i, v: x }', () => {
-    fc.assert(fc.property(fc.dictionary(fc.asciiString(), fc.integer()), (obj) => {
+    fc.assert(fc.property(fc.dictionary(fc.string({ unit: 'binary-ascii' }), fc.integer()), (obj) => {
       const output = Obj.tupleMap(obj, (x, i) => ({ k: i, v: x }));
       assert.deepEqual(output, obj);
     }));
   });
 
   it('mapToArray is symmetric with tupleMap', () => {
-    fc.assert(fc.property(fc.dictionary(fc.asciiString(), fc.integer()), (obj) => {
+    fc.assert(fc.property(fc.dictionary(fc.string({ unit: 'binary-ascii' }), fc.integer()), (obj) => {
       const array = Obj.mapToArray(obj, (x, i) => ({ k: i, v: x }));
 
       const aKeys = Arr.map(array, (x) => x.k);
