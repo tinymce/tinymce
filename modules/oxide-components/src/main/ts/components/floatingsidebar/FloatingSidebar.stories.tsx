@@ -47,11 +47,11 @@ When dragged, the sidebar remains within viewport bounds and maintains its posit
       }
     },
     height: {
-      description: 'The requested height of the sidebar in pixels. The actual height may be constrained by viewport size.',
-      control: 'number',
+      description: 'The requested height of the sidebar. The actual height may be constrained by viewport size.',
+      control: 'text',
       table: {
-        type: { summary: 'number' },
-        defaultValue: { summary: '600' }
+        type: { summary: 'text' },
+        defaultValue: { summary: '600px' }
       }
     },
     initialPosition: {
@@ -141,7 +141,7 @@ export const InitialPosition: StoryObj<InitialPositionStoryArgs & FloatingSideba
   name: 'Initial position',
   args: {
     origin: 'bottomright',
-    height: 250,
+    height: '250px',
   },
   argTypes: {
     origin: {
