@@ -432,11 +432,11 @@ describe('browser.tinymce.core.UserLookupTest', () => {
       const promise2b = promises2b[userId2];
 
       // Verify cache hits (same promise instances)
-      expect(promise1a).to.equal(promise1b),
-      expect(promise2a).to.equal(promise2b),
+      expect(promise1a).to.equal(promise1b);
+      expect(promise2a).to.equal(promise2b);
 
       // Verify different caches (different promise instances)
-      expect(promise1a).to.not.equal(promise2a)
+      expect(promise1a).to.not.equal(promise2a);
 
       await Promise.all([
         // Verify correct data first
