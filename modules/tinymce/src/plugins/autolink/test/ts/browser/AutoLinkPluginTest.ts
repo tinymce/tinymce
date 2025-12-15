@@ -20,6 +20,10 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
     allow_unsafe_link_target: true
   }, [ Plugin ], true);
 
+  // https://fast-check.dev/docs/migration-guide/from-3.x-to-4.x/#hexa-or-hexastring
+  const items = '0123456789abcdef';
+  const hexa = () => fc.integer({ min: 0, max: 15 }).map((n) => items[n]);
+
   const typeUrl = (editor: Editor, url: string): string => {
     editor.setContent('<p>' + url + '</p>');
     LegacyUnit.setSelection(editor, 'p', url.length);
@@ -84,14 +88,18 @@ describe('browser.tinymce.plugins.autolink.AutoLinkPluginTest', () => {
 
   it('TINY-4773: multiple @ characters', () => {
     const editor = hook.editor();
-    fc.assert(fc.property(fc.hexaString(0, 30), fc.hexaString(0, 30), fc.hexaString(0, 30), (s1, s2, s3) => {
-      assertNoLink(editor, `${s1}@@${s2}@.@${s3}`, `${s1}@@${s2}@.@${s3}`);
-    }));
+    fc.assert(fc.property(
+      fc.string({ unit: hexa(), minLength: 0, maxLength: 30 }),
+      fc.string({ unit: hexa(), minLength: 0, maxLength: 30 }),
+      fc.string({ unit: hexa(), minLength: 0, maxLength: 30 }),
+      (s1, s2, s3) => {
+        assertNoLink(editor, `${s1}@@${s2}@.@${s3}`, `${s1}@@${s2}@.@${s3}`);
+      }));
   });
 
   it('TINY-4773: ending in @ character', () => {
     const editor = hook.editor();
-    fc.assert(fc.property(fc.hexaString(0, 100), (s1) => {
+    fc.assert(fc.property(fc.string({ unit: hexa(), minLength: 0, maxLength: 100 }), (s1) => {
       assertNoLink(editor, `${s1}@`, `${s1}@`);
     }));
   });

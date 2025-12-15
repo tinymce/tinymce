@@ -24,7 +24,7 @@ describe('TableSizeTest', () => {
     });
 
     it('tables with widths should be detected as percent or pixel', () => {
-      fc.assert(fc.property(fc.integer(100, 1000), fc.float(1, 100), (pixel, percent) => {
+      fc.assert(fc.property(fc.integer({ min: 100, max: 1000 }), fc.float({ min: 1, max: 100 }), (pixel, percent) => {
         const pixelTable = SugarElement.fromHtml<HTMLTableElement>(pixelTableHtml.replace('400px', pixel + 'px'));
         const percentageTable = SugarElement.fromHtml<HTMLTableElement>(percentTableHtml.replace('80%', percent + '%'));
 
@@ -51,7 +51,7 @@ describe('TableSizeTest', () => {
       assert.deepEqual(sizing.getWidths(warehouse, sizing), [ 198, 198 ], 'Cell widths should be 198px each');
       assert.isAtLeast(sizing.minCellWidth(), 10, 'Cell min width should be at least 10px');
 
-      fc.assert(fc.property(fc.integer(-390, 390), fc.integer(400, 1000), (delta, colWidth) => {
+      fc.assert(fc.property(fc.integer({ min: -390, max: 390 }), fc.integer({ min: 400, max: 1000 }), (delta, colWidth) => {
         assert.equal(sizing.getCellDelta(delta), delta, 'Cell delta should be identity');
         assert.deepEqual(sizing.singleColumnWidth(colWidth, delta), [ delta ], 'Single column delta width should be the delta');
       }));
@@ -82,7 +82,7 @@ describe('TableSizeTest', () => {
       assert.deepEqual(sizing.getWidths(warehouse, sizing), [ 200, 200 ], 'Cell widths should be 200px each');
       assert.isAtLeast(sizing.minCellWidth(), 10, 'Cell min width should be at least 10px');
 
-      fc.assert(fc.property(fc.integer(-390, 390), fc.integer(400, 1000), (delta, colWidth) => {
+      fc.assert(fc.property(fc.integer({ min: -390, max: 390 }), fc.integer({ min: 400, max: 1000 }), (delta, colWidth) => {
         assert.equal(sizing.getCellDelta(delta), delta, 'Cell delta should be identity');
         assert.deepEqual(sizing.singleColumnWidth(colWidth, delta), [ delta ], 'Single column delta width should be the delta');
       }));
@@ -133,7 +133,7 @@ describe('TableSizeTest', () => {
       assert.deepEqual(sizing.getWidths(warehouse, sizing), [ 50, 50 ], 'Cell widths should be 50% each');
       assert.equal(sizing.minCellWidth() >= 2.5, true, 'Cell min width should be at least 10px in percentage (2.5%)');
 
-      fc.assert(fc.property(fc.integer(-390, 390), fc.nat(100), (delta, colWidth) => {
+      fc.assert(fc.property(fc.integer({ min: -390, max: 390 }), fc.nat(100), (delta, colWidth) => {
         const deltaPercent = delta / 400 * 100;
         assert.equal(sizing.getCellDelta(delta), deltaPercent, 'Cell delta should be the same, but in percentage');
         assert.deepEqual(sizing.singleColumnWidth(colWidth, delta), [ 100 - colWidth ], 'Single column delta width should be 100% - percentage width');
@@ -188,7 +188,7 @@ describe('TableSizeTest', () => {
       assert.deepEqual(sizing.getWidths(warehouse, sizing), [ cellWidth, cellWidth ], 'Cell widths should be the computed size of the cell');
       assert.equal(sizing.minCellWidth(), 0, 'Cell min width should be 0px');
 
-      fc.assert(fc.property(fc.integer(-390, 390), fc.integer(400, 1000), (delta, colWidth) => {
+      fc.assert(fc.property(fc.integer({ min: -390, max: 390 }), fc.integer({ min: 400, max: 1000 }), (delta, colWidth) => {
         assert.equal(sizing.getCellDelta(delta), 0, 'Cell delta should be 0');
         assert.deepEqual(sizing.singleColumnWidth(colWidth, delta), [ 0 ], 'Single column delta width should be 0');
       }));
