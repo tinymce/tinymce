@@ -40,7 +40,7 @@ const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, on
       setPositioningStyles((currentPositioningStyles) => {
         // avoid react rerendering when the styles are the same as before
         // casting to emty object to satisfy typescript
-        if ( Obj.equal(newPositioningStyles, currentPositioningStyles as {})) {
+        if ( !Obj.equal(newPositioningStyles, currentPositioningStyles as {})) {
           return newPositioningStyles;
         } else {
           return currentPositioningStyles;
