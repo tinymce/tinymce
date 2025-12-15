@@ -38,7 +38,7 @@
   "types": "./lib/main/ts/ephox/katamari-assertions/api/Main.d.ts",
   "exports": {
     ".": {
-      "tiny:internal": "./src/main/ts/ephox/katamari-assertions/api/Main.ts",
+      "tiny:source": "./src/main/ts/ephox/katamari-assertions/api/Main.ts",
       "types": "./lib/main/ts/ephox/katamari-assertions/api/Main.d.ts",
       "default": "./lib/main/ts/ephox/katamari-assertions/api/Main.js"
     }

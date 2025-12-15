@@ -37,7 +37,7 @@
   "types": "./lib/main/ts/ephox/robin/api/Main.d.ts",
   "exports": {
     ".": {
-      "tiny:internal": "./src/main/ts/ephox/robin/api/Main.ts",
+      "tiny:source": "./src/main/ts/ephox/robin/api/Main.ts",
       "types": "./lib/main/ts/ephox/robin/api/Main.d.ts",
       "default": "./lib/main/ts/ephox/robin/api/Main.js"
     }

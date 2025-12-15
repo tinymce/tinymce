@@ -79,7 +79,7 @@ function create(entries, tsConfig, outDir = ".") {
     ignoreWarnings: [/export .* was not found in/],
 
     resolve: {
-      conditionNames: [ 'tiny:internal', '...' ],
+      conditionNames: [ 'tiny:source', '...' ],
       extensions: [".ts", ".js"],
       tsConfig: {
         configFile: path.resolve(tsConfig),

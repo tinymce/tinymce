@@ -36,7 +36,7 @@
   "types": "./lib/main/ts/ephox/snooker/api/Main.d.ts",
   "exports": {
     ".": {
-      "tiny:internal": "./src/main/ts/ephox/snooker/api/Main.ts",
+      "tiny:source": "./src/main/ts/ephox/snooker/api/Main.ts",
       "types": "./lib/main/ts/ephox/snooker/api/Main.d.ts",
       "default": "./lib/main/ts/ephox/snooker/api/Main.js"
     }

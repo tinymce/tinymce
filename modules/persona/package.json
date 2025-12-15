@@ -33,7 +33,7 @@
   "types": "./lib/main/ts/main.d.ts",
   "exports": {
     ".": {
-      "tiny:internal": "./src/main/ts/main.ts",
+      "tiny:source": "./src/main/ts/main.ts",
       "types": "./lib/main/ts/main.d.ts",
       "default": "./lib/main/ts/main.js"
     }

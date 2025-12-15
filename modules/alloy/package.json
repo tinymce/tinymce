@@ -46,7 +46,7 @@
   "types": "./lib/main/ts/ephox/alloy/api/Main.d.ts",
   "exports": {
     ".": {
-      "tiny:internal": "./src/main/ts/ephox/alloy/api/Main.ts",
+      "tiny:source": "./src/main/ts/ephox/alloy/api/Main.ts",
       "types": "./lib/main/ts/ephox/alloy/api/Main.d.ts",
       "default": "./lib/main/ts/ephox/alloy/api/Main.js"
     }

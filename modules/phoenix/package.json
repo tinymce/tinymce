@@ -41,7 +41,7 @@
   "types": "./lib/main/ts/ephox/phoenix/api/Main.d.ts",
   "exports": {
     ".": {
-      "tiny:internal": "./src/main/ts/ephox/phoenix/api/Main.ts",
+      "tiny:source": "./src/main/ts/ephox/phoenix/api/Main.ts",
       "types": "./lib/main/ts/ephox/phoenix/api/Main.d.ts",
       "default": "./lib/main/ts/ephox/phoenix/api/Main.js"
     }
