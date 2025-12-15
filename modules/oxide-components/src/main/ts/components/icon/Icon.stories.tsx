@@ -1,5 +1,6 @@
 import { Obj } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { UniverseProvider } from 'oxide-components/main';
 
 import { Icon } from './Icon';
 import type { IconProps } from './IconTypes';
@@ -9,7 +10,10 @@ const icons: Record<string, string> = {
   'chevron-up': '<svg width="10" height="10"><path d="M8.7 7.8 5 4 1.3 7.8c-.3.3-.8.3-1 0a.8.8 0 0 1 0-1.2l4.1-4.4c.3-.3.9-.3 1.2 0l4.2 4.4c.3.3.3.9 0 1.2-.3.3-.8.3-1.1 0Z" fill-rule="nonzero"/></svg>'
 };
 
-const iconResolver = (icon: string): string => Obj.get(icons, icon).getOrDie('Failed to get icon');
+const mockUniverse = {
+  getIcon: (name: string) =>
+    Obj.get(icons, name).getOrDie('Failed to get icon')
+};
 
 const meta = {
   title: 'components/Icon',
@@ -24,31 +28,31 @@ An icon component that renders an SVG icon based on the provided icon name and r
 \`\`\`tsx
 import { Icon } from 'oxide-components';
 
-const iconResolver = (icon: string): string => {
-  // Your icon resolution logic here
-};
-
-<Icon icon="chevron-down" resolver={iconResolver} />
+<Icon icon="chevron-down" />
 \`\`\`
 
 ## Example
 
 \`\`\`tsx
-<Icon icon="chevron-down" resolver={iconResolver} />
+<Icon icon="chevron-down" />
 \`\`\`
 
 ## How it works
 
-The \`Icon\` component uses the provided \`resolver\` function to fetch the SVG markup for the specified \`icon\`. It then dangerously sets the inner HTML of a \`span\` element to render the SVG.
+The \`Icon\` component uses the underlying UniverseContext state to fetch the SVG markup for the specified \`icon\`. This means that the Icon component always needs to be nested within a UniverseProvider.
         `
       }
     }
   },
   component: Icon,
+  decorators: [
+    (Story) => (
+      <UniverseProvider resources={mockUniverse}>
+        <Story />
+      </UniverseProvider>
+    )
+  ],
   tags: [ 'autodocs', 'skip-visual-testing' ],
-  args: {
-    resolver: iconResolver
-  },
 } satisfies Meta<typeof Icon>;
 
 export default meta;
@@ -64,7 +68,6 @@ const render = (args: IconProps): JSX.Element => {
 
 const defaultProps: IconProps = {
   icon: 'chevron-down',
-  resolver: iconResolver
 };
 
 export const Default: Story = {

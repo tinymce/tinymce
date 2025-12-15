@@ -11,11 +11,11 @@ export interface IconButtonProps extends IconProps, Omit<ButtonProps, 'children'
 }
 
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>((props, ref) => {
-  const { icon, resolver, ...rest } = props;
+  const { icon, ...rest } = props;
 
   return (
     <Button ref={ref} {...rest} className={classes([ 'tox-button--icon' ])} >
-      <Icon icon={icon} resolver={resolver} />
+      <Icon icon={icon} />
     </Button>
   );
 });

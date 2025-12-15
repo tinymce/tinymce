@@ -14,6 +14,9 @@ import { IconButton } from './components/iconbutton/IconButton';
 import * as Menu from './components/menu/Menu';
 import * as MenuRenderer from './components/menu/MenuRenderer';
 import { ToggleSwitch } from './components/toggleswitch/ToggleSwitch';
+import { useUniverse } from './contexts/UniverseContext/Universe';
+import { UniverseProvider } from './contexts/UniverseContext/UniverseProvider';
+import type { UniverseResources } from './contexts/UniverseContext/UniverseTypes';
 import * as KeyboardNavigationTypes from './keynav/keyboard/NavigationTypes';
 import * as KeyboardNavigationHooks from './keynav/KeyboardNavigationHooks';
 import * as Bem from './utils/Bem';
@@ -39,5 +42,9 @@ export {
   Menu,
   MenuRenderer,
   ToggleSwitch,
+  UniverseProvider,
+  useUniverse,
   UserPromptBubble
 };
+
+export type { UniverseResources };

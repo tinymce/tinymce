@@ -3,6 +3,7 @@ import { userEvent, type Locator } from '@vitest/browser/context';
 import type { ToggleMenuItemInstanceApi } from 'oxide-components/components/menu/internals/Types';
 import * as Menu from 'oxide-components/components/menu/Menu';
 import * as MenuRenderer from 'oxide-components/components/menu/MenuRenderer';
+import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
 import * as Bem from 'oxide-components/utils/Bem';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-react';
@@ -33,6 +34,10 @@ const iconResolver = (icon: string): string => {
   return icons.get(icon) || '';
 };
 
+const mockUniverse = {
+  getIcon: iconResolver,
+};
+
 const waitForElementText = async (getByText: (text: string) => Locator, text: string) => {
   await expect.poll(() => getByText(text).element()).toBeVisible();
 };
@@ -61,49 +66,46 @@ describe('browser.MenuTest', () => {
   it('Should be able to open submenus', async () => {
     const TestComponent = () => {
       return (
-        <Menu.Root>
-          <Menu.Item
-            iconResolver={iconResolver}
-            autoFocus={true}
-            // eslint-disable-next-line no-console
-            onAction= {() => console.log('Clicked Menu item 1')}
-          >{'Menu item 1'}</Menu.Item>
-          <Menu.ToggleItem
-            iconResolver={iconResolver}
-            onAction= {(api: ToggleMenuItemInstanceApi): void => {
-              api.setActive(!api.isActive());
+        <UniverseProvider resources={mockUniverse}>
+          <Menu.Root>
+            <Menu.Item
+              autoFocus={true}
               // eslint-disable-next-line no-console
-              console.log('You toggled a menuitem');
-            }}
-          >{'Menu item 2'}</Menu.ToggleItem>
-          <Menu.SubmenuItem
-            iconResolver={iconResolver}
-            icon={'item'}
-            submenuContent={<Menu.Root>
-              <Menu.Item
-                autoFocus={true}
-                iconResolver={iconResolver}
+              onAction= {() => console.log('Clicked Menu item 1')}
+            >{'Menu item 1'}</Menu.Item>
+            <Menu.ToggleItem
+              onAction= {(api: ToggleMenuItemInstanceApi): void => {
+                api.setActive(!api.isActive());
                 // eslint-disable-next-line no-console
-                onAction= {() => console.log('Clicked nested menu item 1')}
-              >
-                {'Nested menu item 1'}
-              </Menu.Item>
-              <Menu.ToggleItem
-                enabled={false}
-                iconResolver={iconResolver}
-                onAction= {(api: ToggleMenuItemInstanceApi): void => {
-                  api.setActive(!api.isActive());
+                console.log('You toggled a menuitem');
+              }}
+            >{'Menu item 2'}</Menu.ToggleItem>
+            <Menu.SubmenuItem
+              icon={'item'}
+              submenuContent={<Menu.Root>
+                <Menu.Item
+                  autoFocus={true}
                   // eslint-disable-next-line no-console
-                  console.log('You toggled a nested menu item 2');
-                }}
-              >
-                {'Nested menu item 2'}
-              </Menu.ToggleItem>
-            </Menu.Root>}
-          >
-            {'Submenu'}
-          </Menu.SubmenuItem>
-        </Menu.Root>
+                  onAction= {() => console.log('Clicked nested menu item 1')}
+                >
+                  {'Nested menu item 1'}
+                </Menu.Item>
+                <Menu.ToggleItem
+                  enabled={false}
+                  onAction= {(api: ToggleMenuItemInstanceApi): void => {
+                    api.setActive(!api.isActive());
+                    // eslint-disable-next-line no-console
+                    console.log('You toggled a nested menu item 2');
+                  }}
+                >
+                  {'Nested menu item 2'}
+                </Menu.ToggleItem>
+              </Menu.Root>}
+            >
+              {'Submenu'}
+            </Menu.SubmenuItem>
+          </Menu.Root>
+        </UniverseProvider>
       );
     };
 
@@ -119,45 +121,50 @@ describe('browser.MenuTest', () => {
   });
 
   it('Should be able to render using MenuRenderer', async () => {
-    const TestComponent = () => {
-      return MenuRenderer.render({ iconResolver, items: [
-        {
-          type: 'menuitem',
-          text: 'Menu item 1',
+    const menuItems = [
+      {
+        type: 'menuitem' as const,
+        text: 'Menu item 1',
+        // eslint-disable-next-line no-console
+        onAction: () => console.log('Clicked Menu item 1')
+      },
+      {
+        type: 'togglemenuitem' as const,
+        text: 'Menu item 2',
+        onAction: (api: ToggleMenuItemInstanceApi): void => {
+          api.setActive(!api.isActive());
           // eslint-disable-next-line no-console
-          onAction: () => console.log('Clicked Menu item 1')
-        },
-        {
-          type: 'togglemenuitem',
-          text: 'Menu item 2',
-          onAction: (api: ToggleMenuItemInstanceApi): void => {
-            api.setActive(!api.isActive());
-            // eslint-disable-next-line no-console
-            console.log('You toggled a menuitem');
-          }
-        },
-        {
-          type: 'submenu',
-          text: 'Submenu',
-          items: [
-            {
-              type: 'menuitem',
-              text: 'Nested menu item 1',
-              // eslint-disable-next-line no-console
-              onAction: () => console.log('Clicked nested menu item 1')
-            },
-            {
-              type: 'togglemenuitem',
-              text: 'Nested menu item 2',
-              onAction: (api: ToggleMenuItemInstanceApi): void => {
-                api.setActive(!api.isActive());
-                // eslint-disable-next-line no-console
-                console.log('You toggled a nested menu item 2');
-              }
-            },
-          ]
+          console.log('You toggled a menuitem');
         }
-      ] });
+      },
+      {
+        type: 'submenu' as const,
+        text: 'Submenu',
+        items: [
+          {
+            type: 'menuitem' as const,
+            text: 'Nested menu item 1',
+            // eslint-disable-next-line no-console
+            onAction: () => console.log('Clicked nested menu item 1')
+          },
+          {
+            type: 'togglemenuitem' as const,
+            text: 'Nested menu item 2',
+            onAction: (api: ToggleMenuItemInstanceApi): void => {
+              api.setActive(!api.isActive());
+              // eslint-disable-next-line no-console
+              console.log('You toggled a nested menu item 2');
+            }
+          },
+        ]
+      }
+    ];
+    const TestComponent = () => {
+      return (
+        <UniverseProvider resources={mockUniverse}>
+          {MenuRenderer.render({ items: menuItems })}
+        </UniverseProvider>
+      );
     };
 
     const { asFragment, getByText } = render(<TestComponent />, { wrapper });

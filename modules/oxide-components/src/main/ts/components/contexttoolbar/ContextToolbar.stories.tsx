@@ -1,6 +1,7 @@
 import { Fun } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useMemo, useRef, useState } from 'react';
+import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
+import React, { useMemo, useRef, useState } from 'react';
 import { fn } from 'storybook/test';
 
 import { Button } from '../button/Button';
@@ -13,6 +14,10 @@ const resolvedIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height=
   <path fill-rule="evenodd" clip-rule="evenodd" d="M15.7071 4.29289C15.3166 3.90237 14.6834 3.90237 14.2929 4.29289L6.58579 12L14.2929 19.7071C14.6834 20.0976 15.3166 20.0976 15.7071 19.7071C16.0976 19.3166 16.0976 18.6834 15.7071 18.2929L9.41421 12L15.7071 5.70711C16.0976 5.31658 16.0976 4.68342 15.7071 4.29289Z"/>
 </svg>`;
 /* eslint-enable max-len */
+
+const mockUniverse = {
+  getIcon: Fun.constant(resolvedIcon),
+};
 
 const meta = {
   title: 'components/ContextToolbar',
@@ -54,11 +59,6 @@ const MyComponent = () => {
 
 ### Root
 The provider component that manages toolbar state.
-
-**Props:**
-- \`persistent\`: (optional, default: \`false\`). If true, the toolbar stays open when clicking outside of it.
-- \`usePopover\`: (optional, default: \`false\`). Enables Native Popover API mode. When \`true\`, toolbar uses \`showPopover()\` and \`hidePopover()\` to appear in the top layer. When \`false\`, the toolbar behaves as a regular absolutely-positioned element, typically used when anchoring inside an iframe overlay where Popover cannot work.
-- \`anchorRef\`: (optional). A ref to an external element to anchor the toolbar to. When provided, the toolbar positions relative to this element instead of the Trigger component. The toolbar auto-opens on mount if no Trigger component is present.
 
 **Important:**
 - Use either \`Trigger\` component OR \`anchorRef\` (not both).
@@ -140,7 +140,7 @@ See the **Corners** story for a live demonstration of auto-flip behavior.
       control: 'boolean'
     }
   },
-  tags: [ 'autodocs', 'skip-visual-testing' ],
+  tags: [ 'autodocs' ],
 } satisfies Meta;
 
 export default meta;
@@ -205,6 +205,13 @@ export const Persistent: Story = {
 };
 
 export const WithIconButtons: Story = {
+  decorators: [
+    (Story: React.ComponentType): JSX.Element => (
+      <UniverseProvider resources={mockUniverse}>
+        <Story />
+      </UniverseProvider>
+    )
+  ],
   render: () => {
     return (
       <div className='tox' style={{ position: 'relative' }}>
@@ -216,8 +223,8 @@ export const WithIconButtons: Story = {
           </ContextToolbar.Trigger>
           <ContextToolbar.Toolbar>
             <ContextToolbar.Group>
-              <IconButton variant='primary' icon='checkmark' onClick={fn()} resolver={Fun.constant(resolvedIcon)} />
-              <IconButton variant='secondary' icon='cross' onClick={fn()} resolver={Fun.constant(resolvedIcon)} />
+              <IconButton variant='primary' icon='checkmark' onClick={fn()} />
+              <IconButton variant='secondary' icon='cross' onClick={fn()} />
             </ContextToolbar.Group>
           </ContextToolbar.Toolbar>
         </ContextToolbar.Root>
@@ -267,18 +274,21 @@ export const MixedContent: Story = {
             </div>
           </ContextToolbar.Trigger>
           <ContextToolbar.Toolbar>
-            <ContextToolbar.Group>
-              <IconButton icon='arrow-up' onClick={fn()} resolver={Fun.constant(resolvedIcon)} />
-              <span style={{
-                padding: '8px',
-                fontSize: '12px',
-                flexShrink: 0,
-                whiteSpace: 'nowrap'
-              }}>
-                1/3
-              </span>
-              <IconButton icon='arrow-down' onClick={fn()} resolver={Fun.constant(resolvedIcon)} />
-            </ContextToolbar.Group>
+            <UniverseProvider resources={mockUniverse}>
+              <ContextToolbar.Group>
+                <IconButton icon='arrow-up' onClick={fn()} />
+
+                <span style={{
+                  padding: '8px',
+                  fontSize: '12px',
+                  flexShrink: 0,
+                  whiteSpace: 'nowrap'
+                }}>
+                  1/3
+                </span>
+                <IconButton icon='arrow-down' onClick={fn()} />
+              </ContextToolbar.Group>
+            </UniverseProvider>
             <ContextToolbar.Group>
               <Button variant='primary' onClick={fn()}>Accept</Button>
               <Button variant='secondary' onClick={fn()}>Reject</Button>

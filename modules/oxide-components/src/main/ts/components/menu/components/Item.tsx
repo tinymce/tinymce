@@ -5,7 +5,7 @@ import * as Bem from '../../../utils/Bem';
 import { Icon } from '../../icon/Icon';
 import type { CommonMenuItemInstanceApi, MenuItemProps } from '../internals/Types';
 
-export const Item = forwardRef<HTMLButtonElement, MenuItemProps>(({ autoFocus = false, enabled = true, onSetup, icon, iconResolver, shortcut, onAction, children }, ref) => {
+export const Item = forwardRef<HTMLButtonElement, MenuItemProps>(({ autoFocus = false, enabled = true, onSetup, icon, shortcut, onAction, children }, ref) => {
   const [ state, setState ] = useState({
     enabled,
     focused: false,
@@ -32,7 +32,7 @@ export const Item = forwardRef<HTMLButtonElement, MenuItemProps>(({ autoFocus = 
   }, [ onSetup, api ]);
 
   const itemIcon = Type.isString(icon)
-    ? <Icon icon={icon} resolver={iconResolver} />
+    ? <Icon icon={icon} />
     : icon;
 
   return (

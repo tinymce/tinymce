@@ -6,7 +6,7 @@ import * as Dropdown from '../../dropdown/Dropdown';
 import { Icon } from '../../icon/Icon';
 import type { CommonMenuItemInstanceApi, SubmenuProps } from '../internals/Types';
 
-export const SubmenuItem = forwardRef<HTMLButtonElement, SubmenuProps>(({ autoFocus = false, enabled = true, icon, iconResolver, onSetup, children, submenusSide = 'right', submenuContent }, ref) => {
+export const SubmenuItem = forwardRef<HTMLButtonElement, SubmenuProps>(({ autoFocus = false, enabled = true, icon, onSetup, children, submenusSide = 'right', submenuContent }, ref) => {
   const [ state, setState ] = useState({
     enabled,
     focused: false,
@@ -34,7 +34,7 @@ export const SubmenuItem = forwardRef<HTMLButtonElement, SubmenuProps>(({ autoFo
   }, [ onSetup, api ]);
 
   const itemIcon = Type.isString(icon)
-    ? <Icon icon={icon} resolver={iconResolver} />
+    ? <Icon icon={icon} />
     : icon;
 
   return (
@@ -61,7 +61,7 @@ export const SubmenuItem = forwardRef<HTMLButtonElement, SubmenuProps>(({ autoFo
           {itemIcon && <div className={Bem.element('tox-collection', 'item-icon')}>{itemIcon}</div>}
           <div className={Bem.element('tox-collection', 'item-label')}>{children}</div>
           <div className={Bem.element('tox-collection', 'item-caret')}>
-            {iconResolver && <Icon resolver={iconResolver} icon={'chevron-right'}></Icon>}
+            <Icon icon={'chevron-right'} />
           </div>
         </button>
       </Dropdown.Trigger>
