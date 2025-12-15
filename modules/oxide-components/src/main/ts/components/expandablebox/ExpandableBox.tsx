@@ -6,8 +6,6 @@ import { Button } from '../button/Button';
 import { Icon } from '../icon/Icon';
 
 export interface ExpandableBoxProps extends PropsWithChildren {
-  /** Icon resolver */
-  readonly iconResolver: (icon: string) => string;
   /** Max height the content can be before it becomes expandable */
   readonly maxHeight?: number;
   /** Expanded state */
@@ -22,7 +20,6 @@ export interface ExpandableBoxProps extends PropsWithChildren {
 
 /** Expandable container box */
 export const ExpandableBox: FC<ExpandableBoxProps> = ({
-  iconResolver,
   maxHeight = 80,
   expanded = false,
   onToggle,
@@ -48,7 +45,7 @@ export const ExpandableBox: FC<ExpandableBoxProps> = ({
       </div>
       {
         overflowing && <Button variant="naked" type="button" onClick={() => onToggle?.()}>
-          <Icon resolver={iconResolver} icon={expanded ? 'chevron-up' : 'chevron-down'} />
+          <Icon icon={expanded ? 'chevron-up' : 'chevron-down'} />
           {expanded ? collapseLabel : expandLabel}
         </Button>
       }

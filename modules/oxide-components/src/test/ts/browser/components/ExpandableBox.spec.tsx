@@ -1,12 +1,18 @@
 import { Fun } from '@ephox/katamari';
 import { ExpandableBox, type ExpandableBoxProps } from 'oxide-components/components/expandablebox/ExpandableBox';
+import { UniverseProvider } from 'oxide-components/main';
 import * as Bem from 'oxide-components/utils/Bem';
 import { useState } from 'react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { userEvent, type Locator } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
 describe('browser.components.ExpandableBoxTest', () => {
+  const getIcon = vi.fn((icon: string) => `<svg id="${icon}"></svg>`);
+  const mockUniverse = {
+    getIcon,
+  };
+
   const wrapper = ({ children }: { children: React.ReactNode }) => {
     return (
       <div className={Bem.block('tox')}>
@@ -19,7 +25,6 @@ describe('browser.components.ExpandableBoxTest', () => {
     expanded: false,
     onToggle: Fun.noop,
     maxHeight: 80,
-    iconResolver: (icon: string) => `Icon: ${icon}`
   };
 
   const TestComponentToggle = (props: ExpandableBoxProps) => {
@@ -45,13 +50,15 @@ describe('browser.components.ExpandableBoxTest', () => {
       const [ expanded, setExpanded ] = useState(false);
 
       return (
-        <ExpandableBox
-          {...defaultProps}
-          expanded={expanded}
-          onToggle={() => setExpanded(!expanded)}
-        >
-          <div style={{ height: '200px' }}>Hello world</div>
-        </ExpandableBox>
+        <UniverseProvider resources={mockUniverse}>
+          <ExpandableBox
+            {...defaultProps}
+            expanded={expanded}
+            onToggle={() => setExpanded(!expanded)}
+          >
+            <div style={{ height: '200px' }}>Hello world</div>
+          </ExpandableBox>
+        </UniverseProvider>
       );
     };
 
@@ -71,11 +78,13 @@ describe('browser.components.ExpandableBoxTest', () => {
 
   it('Should not render expand if the content fits within maxHeight', async () => {
     const { asFragment } = render(
-      <ExpandableBox
-        {...defaultProps}
-      >
-        <div style={{ height: '50px' }}>Hello world</div>
-      </ExpandableBox>,
+      <UniverseProvider resources={mockUniverse}>
+        <ExpandableBox
+          {...defaultProps}
+        >
+          <div style={{ height: '50px' }}>Hello world</div>
+        </ExpandableBox>
+      </UniverseProvider>,
       { wrapper }
     );
 
@@ -84,14 +93,16 @@ describe('browser.components.ExpandableBoxTest', () => {
 
   it('Should be able to set maxHeight, collapseText and expandText', async () => {
     const { asFragment, getByText } = render(
-      <TestComponentToggle
-        {...defaultProps}
-        maxHeight={100}
-        expandLabel="Show more"
-        collapseLabel="Show less"
-      >
-        <div style={{ height: '150px' }}>Hello world</div>
-      </TestComponentToggle>,
+      <UniverseProvider resources={mockUniverse}>
+        <TestComponentToggle
+          {...defaultProps}
+          maxHeight={100}
+          expandLabel="Show more"
+          collapseLabel="Show less"
+        >
+          <div style={{ height: '150px' }}>Hello world</div>
+        </TestComponentToggle>
+      </UniverseProvider>,
       { wrapper }
     );
 
