@@ -242,8 +242,8 @@ timestamps { notifyStatusChange(
   mention: true
   ) {
   def checkoutStep = {
-    checkout localBranch(scm)
     tinyGit.addGitHubToKnownHosts()
+    checkout localBranch(scm)
     tinyGit.addAuthorConfig()
   }
 
@@ -367,10 +367,10 @@ timestamps { notifyStatusChange(
   }
 
   def deployCheckoutStep = {
+    tinyGit.addGitHubToKnownHosts()
     checkout localBranch(scm)
     sh "tar -zxf ./file.tar.gz"
     tinyGit.addAuthorConfig()
-    tinyGit.addGitHubToKnownHosts()
   }
 
   devPods.custom(
