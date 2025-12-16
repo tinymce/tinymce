@@ -31,7 +31,7 @@
     "oxide-build": "bun run -F @tinymce/oxide build",
     "oxide-start": "bun run -F @tinymce/oxide start",
     "oxide-ci": "bun run -F @tinymce/oxide ci",
-    "agar-sw-build": "bun run -F @tinymce/agar-sw build",
+    "agar-sw-build": "bun run -F @ephox/agar-sw build",
     "tsc": "bun x tsc -b",
     "watch": "bun x tsc -b -w",
     "eslint": "lerna exec --stream --no-bail -- eslint --max-warnings=0 src/**/*.ts",

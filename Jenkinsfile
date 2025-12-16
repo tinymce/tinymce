@@ -154,6 +154,7 @@ def runPlaywrightPod(String cacheName, String name, Closure body) {
     stage("${name}") {
       devPods.customConsumer(
         containers: containers,
+        base: 'node',
         build: cacheName
       ) {
         container('playwright') {
@@ -395,7 +396,21 @@ timestamps {
       parallel processes
   }
 
-  devPods.custom(containers: [ nodeLtsResources ], checkoutStep: checkoutAndMergeStep) {
+  def storybookContainers = [
+    nodeLtsResources,
+    devPods.getContainerDefaultArgs(devPods.awsImage() + devPods.lowRes())
+  ]
+
+  devPods.custom(containers: storybookContainers, checkoutStep: checkoutAndMergeStep) {
+    container('aws-cli') {
+      sh """
+        set -e
+        if [ ! -d node_modules ]; then
+          aws s3 cp s3://tiny-freerange-testing/remote-builds/${cacheName}.tar.gz ./file.tar.gz --no-progress
+          tar -zxf ./file.tar.gz
+        fi
+      """
+    }
     container('node-lts') {
       props = readProperties(file: 'build.properties')
       String primaryBranch = props.primaryBranch
