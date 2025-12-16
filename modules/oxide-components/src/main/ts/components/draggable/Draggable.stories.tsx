@@ -60,7 +60,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const render = (args: DraggableProps): JSX.Element => (
-  <Draggable.Root {...args} style={{ position: 'absolute' }}>
+  <Draggable.Root {...args} style={{ position: 'fixed' }}>
     <div style={{ width: 250, height: 250, backgroundColor: '#fef68a' }}>
       <Draggable.Handle>
         <div style={{ width: '100%', height: 50, backgroundColor: '#e8d96f', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Drag me</div>
@@ -72,7 +72,7 @@ const render = (args: DraggableProps): JSX.Element => (
 export const Example: Story = {
   args: {
     initialPosition: { top: '50px', left: '50px' },
-    declaredSize: { width: '250px', height: '250px' }
+    // declaredSize: { width: '250px', height: '250px' }
   },
   parameters: {
     docs: {
