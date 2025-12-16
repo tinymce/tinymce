@@ -108,27 +108,21 @@ def runBrowserTests(String name, String browser, String platform, String bucket,
 def runTestPod(String cacheName, String name, String testname, String browser, String provider, String platform, String version, String bucket, String buckets, Boolean runAll) {
   def containers = [
     devPods.getContainerDefaultArgs([ name: 'node', image: "${ciRegistry}/build-containers/node-lts:lts", runAsGroup: '1000', runAsUser: '1000',
-          resourceRequestEphemeralStorage: '1Gi',
-          resourceLimitEphemeralStorage: '1Gi' ]) + devPods.hiRes(),
-    devPods.getContainerDefaultArgs([ name: 'aws-cli', image: 'public.ecr.aws/aws-cli/aws-cli:latest', runAsGroup: '1000', runAsUser: '1000',
-          resourceRequestEphemeralStorage: '1Gi',
-          resourceLimitEphemeralStorage: '1Gi' ]) + devPods.stdRes()
+          resourceRequestCpu: '2',
+          resourceRequestMemory: '6Gi',
+          resourceRequestEphemeralStorage: '16Gi',
+          resourceLimitCpu: '7',
+          resourceLimitMemory: '6Gi',
+          resourceLimitEphemeralStorage: '16Gi' ]),
+    devPods.getContainerDefaultArgs([ name: 'aws-cli', image: 'public.ecr.aws/aws-cli/aws-cli:latest', runAsGroup: '1000', runAsUser: '1000' ]) + devPods.stdRes()
   ]
   return {
     stage("${name}") {
       devPods.customConsumer(
         build: cacheName,
         containers: containers,
+        checkoutStep: checkoutAndMergeStep
       ) {
-        container('aws-cli') {
-          sh '''
-            set -e
-            if [ ! -d node_modules ]; then
-              aws s3 cp s3://tiny-freerange-testing/remote-builds/${cacheName}.tar.gz ./file.tar.gz --no-progress
-              tar -zxf ./file.tar.gz
-            fi
-          '''
-        }
         container('node') {
           grunt('list-changed-browser')
           bedrockRemoteTools.tinyWorkSishTunnel()
@@ -155,7 +149,8 @@ def runPlaywrightPod(String cacheName, String name, Closure body) {
       devPods.customConsumer(
         containers: containers,
         base: 'node',
-        build: cacheName
+        build: cacheName,
+        checkoutStep: checkoutAndMergeStep
       ) {
         container('playwright') {
           body()
@@ -216,7 +211,8 @@ def runSeleniumPod(String cacheName, String name, String browser, String version
           aws
         ],
         base: 'node',
-        build: cacheName
+        build: cacheName,
+        checkoutStep: checkoutAndMergeStep
       ) {
         container('node') {
           body()
@@ -396,21 +392,16 @@ timestamps {
       parallel processes
   }
 
-  def storybookContainers = [
-    nodeLtsResources,
-    devPods.getContainerDefaultArgs(devPods.awsImage() + devPods.lowRes())
-  ]
-
-  devPods.custom(containers: storybookContainers, checkoutStep: checkoutAndMergeStep) {
-    container('aws-cli') {
-      sh """
-        set -e
-        if [ ! -d node_modules ]; then
-          aws s3 cp s3://tiny-freerange-testing/remote-builds/${cacheName}.tar.gz ./file.tar.gz --no-progress
-          tar -zxf ./file.tar.gz
-        fi
-      """
+  devPods.customConsumer(
+    containers: [ nodeLtsResources ],
+    build: cacheName,
+    checkoutStep: checkoutAndMergeStep,
+    environment: {
+      sh "tar -zxf ./file.tar.gz"
+      tinyGit.addAuthorConfig()
+      tinyGit.addGitHubToKnownHosts()
     }
+  ) {
     container('node-lts') {
       props = readProperties(file: 'build.properties')
       String primaryBranch = props.primaryBranch
