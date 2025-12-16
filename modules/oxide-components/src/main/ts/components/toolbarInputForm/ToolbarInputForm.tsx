@@ -25,7 +25,6 @@ export const ToolbarInputForm: FC<ToolbarInputFormProps> = ({ onSubmit, label, p
         <span>{label}</span>
       </label>
       <input
-        autoFocus={true}
         placeholder={placeholder}
         id={inputID}
         type={'text'}
