@@ -1,6 +1,0 @@
-project: tinymce
-kind: Fixed
-body: Views could not be opened during the `init` event.
-time: 2025-12-05T14:25:40.054601+10:00
-custom:
-    Issue: TINY-13463
