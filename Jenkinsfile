@@ -1,5 +1,6 @@
 #!groovy
 @Library('waluigi@release/7') _
+
 import groovy.transform.Field
 @Field String ciAccountId = "103651136441"
 @Field String ciRegistry = "${ciAccountId}.dkr.ecr.us-east-2.amazonaws.com"
@@ -26,13 +27,13 @@ def runBedrockTest(String name, String command, Boolean runAll, int retry = 0, i
 }
 
 def runHeadlessTests(Boolean runAll) {
-  def bedrockCmd = "bun run grunt headless-auto --useSelenium=true"
+  def bedrockCmd = "bun grunt headless-auto --useSelenium=true"
   runBedrockTest('headless', bedrockCmd, runAll)
 }
 
 def runSeleniumTests(String name, String browser, String bucket, String buckets, Boolean runAll, int retry = 0, int timeout = 0) {
   def bedrockCommand =
-    "bun run browser-test" +
+    "bun browser-test" +
     " --chunk=2000" +
     " --bedrock-browser=" + browser +
     " --bucket=" + bucket +
@@ -47,7 +48,7 @@ def runRemoteTests(String name, String browser, String provider, String platform
   def platformName = platform != null ? " --platformName='${platform}'" : ""
   def browserVersion = version != null ? " --browserVersion=${version}" : ""
   def bedrockCommand =
-  "bun run browser-test" +
+  "bun browser-test" +
     " --chunk=2000" +
     " --bedrock-browser=" + browser +
     " --remote=" + provider +
@@ -63,7 +64,7 @@ def runRemoteTests(String name, String browser, String provider, String platform
 
 def runBrowserTests(String name, String browser, String platform, String bucket, String buckets, Boolean runAll) {
   def bedrockCommand =
-    "bun run grunt browser-auto" +
+    "bun grunt browser-auto" +
       " --chunk=2000" +
       " --bedrock-os=" + platform +
       " --bedrock-browser=" + browser +
@@ -84,18 +85,10 @@ def runBrowserTests(String name, String browser, String platform, String bucket,
 def runTestPod(String cacheName, String name, String testname, String browser, String provider, String platform, String version, String bucket, String buckets, Boolean runAll) {
   return {
     stage("${name}") {
-      devPods.nodeConsumer(
-        nodeOpts: [
-          resourceRequestCpu: '2',
-          resourceRequestMemory: '6Gi',
-          resourceRequestEphemeralStorage: '16Gi',
-          resourceLimitCpu: '7',
-          resourceLimitMemory: '6Gi',
-          resourceLimitEphemeralStorage: '16Gi'
-        ],
-        image: "${ciRegistry}/build-containers/node-lts:lts",
-        build: cacheName,
-        useContainers: ['node', 'aws-cli']
+      devPods.customConsumer(
+        containers: [nodeLtsTest, awsCliContainer],
+        base: 'node',
+        build: cacheName
       ) {
         grunt('list-changed-browser')
         bedrockRemoteTools.tinyWorkSishTunnel()
@@ -110,13 +103,14 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
 
 def runPlaywrightPod(String cacheName, String name, Closure body) {
 
+  def nodeLtsPlaywright = devPods.getContainerDefaultArgs(nodeLts + [
+    resourceRequestEphemeralStorage: '16Gi',
+    resourceLimitEphemeralStorage: '16Gi'
+  ]) + devPods.hiRes()
+
   def containers = [
-    devPods.getContainerDefaultArgs([ name: 'node', image: "${ciRegistry}/build-containers/node-lts:lts", runAsGroup: '1000', runAsUser: '1000',
-          resourceRequestEphemeralStorage: '1Gi',
-          resourceLimitEphemeralStorage: '1Gi' ]) + devPods.hiRes(),
-    devPods.getContainerDefaultArgs([ name: 'aws-cli', image: 'public.ecr.aws/aws-cli/aws-cli:latest', runAsGroup: '1000', runAsUser: '1000',
-          resourceRequestEphemeralStorage: '1Gi',
-          resourceLimitEphemeralStorage: '1Gi' ]) + devPods.stdRes(),
+    nodeLtsPlaywright,
+    awsCliContainer,
     devPods.getContainerDefaultArgs([ name: 'playwright', image: 'mcr.microsoft.com/playwright:v1.53.1-noble']) + devPods.hiRes()
   ]
 
@@ -136,20 +130,6 @@ def runPlaywrightPod(String cacheName, String name, Closure body) {
 }
 
 def runSeleniumPod(String cacheName, String name, String browser, String version, Closure body) {
-  Map node = [
-          name: 'node',
-          image: "${ciRegistry}/build-containers/node-lts:lts",
-          command: 'sleep',
-          args: 'infinity',
-          resourceRequestCpu: '4',
-          resourceRequestMemory: '4Gi',
-          resourceRequestEphemeralStorage: '8Gi',
-          resourceLimitCpu: '7',
-          resourceLimitMemory: '4Gi',
-          resourceLimitEphemeralStorage: '8Gi',
-          runAsGroup: '1000',
-          runAsUser: '1000'
-        ]
   Map selenium = [
           name: "selenium",
           image: tinyAws.getPullThroughCacheImage("selenium/standalone-${browser}", version),
@@ -168,22 +148,13 @@ def runSeleniumPod(String cacheName, String name, String browser, String version
           resourceRequestEphemeralStorage: '4Gi',
           resourceLimitEphemeralStorage: '4Gi'
         ]
-  Map aws = [
-          name: 'aws-cli',
-          image: 'public.ecr.aws/aws-cli/aws-cli:latest',
-          command: 'sleep',
-          args: 'infinity',
-          alwaysPullImage: true,
-          resourceRequestEphemeralStorage: '2Gi',
-          resourceLimitEphemeralStorage: '4Gi'
-        ] + devPods.stdRes()
   return {
     stage("${name}") {
       devPods.customConsumer(
         containers: [
-          node,
+          nodeLtsSelenium,
           selenium,
-          aws
+          awsCliContainer
         ],
         base: 'node',
         build: cacheName
@@ -214,6 +185,55 @@ def cacheName = "cache_${BUILD_TAG}"
 
 def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NUMBER}"
 
+// Resource allocation patterns
+Map podResources = [
+  resourceRequestCpu: '2',
+  resourceLimitCpu: '7.5',
+  resourceRequestEphemeralStorage: '16Gi',
+  resourceLimitEphemeralStorage: '16Gi'
+]
+
+Map testResources = podResources + [
+  resourceRequestMemory: '6Gi',
+  resourceLimitMemory: '6Gi'
+]
+
+Map buildResources = podResources + [
+  resourceRequestMemory: '4Gi',
+  resourceLimitMemory: '4Gi'
+]
+
+Map seleniumNodeResources = [
+  resourceRequestCpu: '4',
+  resourceLimitCpu: '7',
+  resourceRequestMemory: '4Gi',
+  resourceLimitMemory: '4Gi',
+  resourceRequestEphemeralStorage: '8Gi',
+  resourceLimitEphemeralStorage: '8Gi'
+]
+
+// Container definitions
+def nodeLts = [
+  name: 'node',
+  image: "${ciRegistry}/build-containers/node-lts:lts",
+  runAsGroup: '1000',
+  runAsUser: '1000'
+]
+
+def nodeLtsBuild = devPods.getContainerDefaultArgs(nodeLts + buildResources)
+def nodeLtsTest = devPods.getContainerDefaultArgs(nodeLts + testResources)
+def nodeLtsSelenium = devPods.getContainerDefaultArgs(nodeLts + seleniumNodeResources + [command: 'sleep', args: 'infinity'])
+
+def awsCli = [
+  name: 'aws-cli',
+  image: 'public.ecr.aws/aws-cli/aws-cli:latest',
+  runAsGroup: '1000',
+  runAsUser: '1000',
+  resourceRequestEphemeralStorage: '2Gi',
+  resourceLimitEphemeralStorage: '4Gi'
+]
+def awsCliContainer = devPods.getContainerDefaultArgs(awsCli) + devPods.stdRes()
+
 timestamps { notifyStatusChange(
   cleanupStep: { devPods.cleanUpPod(build: cacheName) },
   branches: ['main', 'release/7', 'release/8'],
@@ -221,39 +241,40 @@ timestamps { notifyStatusChange(
   name: 'TinyMCE',
   mention: true
   ) {
-  devPods.nodeProducer(
-    nodeOpts: [
-      resourceRequestCpu: '2',
-      resourceRequestMemory: '4Gi',
-      resourceRequestEphemeralStorage: '16Gi',
-      resourceLimitCpu: '7.5',
-      resourceLimitMemory: '4Gi',
-      resourceLimitEphemeralStorage: '16Gi'
-    ],
-    image: "${ciRegistry}/build-containers/node-lts:lts",
-    build: cacheName,
+  def checkoutStep = {
+    checkout localBranch(scm)
+    tinyGit.addGitHubToKnownHosts()
+    tinyGit.addAuthorConfig()
+  }
+
+  devPods.custom(
+    containers: [nodeLtsBuild],
     useLfs: true,
+    build: cacheName,
+    checkoutStep: checkoutStep
   ) {
-    props = readProperties(file: 'build.properties')
-    String primaryBranch = props.primaryBranch
-    assert primaryBranch != null && primaryBranch != ""
+    container('node') {
+      props = readProperties(file: 'build.properties')
+      String primaryBranch = props.primaryBranch
+      assert primaryBranch != null && primaryBranch != ""
 
 
-    stage('Deps') {
-      // cancel build if primary branch doesn't merge cleanly
-      gitMerge(primaryBranch)
-      sh "bun install"
-    }
+      stage('Deps') {
+        // cancel build if primary branch doesn't merge cleanly
+        gitMerge(primaryBranch)
+        sh 'bun install'
+      }
 
-    stage('Build') {
-      // verify no errors in changelog merge
-      exec("bun run changie-merge")
-      withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
-        // type check and build TinyMCE
-        exec("bun run ci-all-seq")
+      stage('Build') {
+        // verify no errors in changelog merge
+        exec("bun changie-merge")
+        withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
+          // type check and build TinyMCE
+          exec("bun ci-all-seq")
 
-        // validate documentation generator
-        exec("bun run tinymce-grunt shell:moxiedoc")
+          // validate documentation generator
+          exec("bun tinymce-grunt shell:moxiedoc")
+        }
       }
     }
   }
@@ -327,9 +348,9 @@ timestamps { notifyStatusChange(
   }
 
   processes['playwright'] = runPlaywrightPod(cacheName, 'playwright-tests') {
-    exec('bun --cwd modules/oxide-components run test-ci')
+    exec('bun -s --cwd modules/oxide-components test-ci')
     junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
-    def visualTestStatus = exec(script: 'bun --cwd modules/oxide-components run test-visual-ci', returnStatus: true)
+    def visualTestStatus = exec(script: 'bun -s --cwd modules/oxide-components test-visual-ci', returnStatus: true)
     if (visualTestStatus == 4) {
       unstable("Visual tests failed")
     } else if (visualTestStatus != 0) {
@@ -345,35 +366,32 @@ timestamps { notifyStatusChange(
       parallel processes
   }
 
-  devPods.nodeConsumer(
-    nodeOpts: [
-      resourceRequestCpu: '2',
-      resourceRequestMemory: '4Gi',
-      resourceRequestEphemeralStorage: '16Gi',
-      resourceLimitCpu: '7.5',
-      resourceLimitMemory: '4Gi',
-      resourceLimitEphemeralStorage: '16Gi'
-    ],
-    image: "${ciRegistry}/build-containers/node-lts:lts",
-    build: cacheName,
-    environment: {
-      sh "tar -zxf ./file.tar.gz"
-      tinyGit.addAuthorConfig()
-      tinyGit.addGitHubToKnownHosts()
-    }
-  ) {
-    props = readProperties(file: 'build.properties')
-    String primaryBranch = props.primaryBranch
-    assert primaryBranch != null && primaryBranch != ""
+  def deployCheckoutStep = {
+    checkout localBranch(scm)
+    sh "tar -zxf ./file.tar.gz"
+    tinyGit.addAuthorConfig()
+    tinyGit.addGitHubToKnownHosts()
+  }
 
-    stage('Deploy Storybook') {
-      if (env.BRANCH_NAME == primaryBranch) {
-        echo "Deploying Storybook"
-        tinyGit.withGitHubSSHCredentials {
-          exec('bun --cwd modules/oxide-components run deploy-storybook')
+  devPods.custom(
+    containers: [nodeLtsBuild],
+    build: cacheName,
+    checkoutStep: deployCheckoutStep
+  ) {
+    container('node') {
+      props = readProperties(file: 'build.properties')
+      String primaryBranch = props.primaryBranch
+      assert primaryBranch != null && primaryBranch != ""
+
+      stage('Deploy Storybook') {
+        if (env.BRANCH_NAME == primaryBranch) {
+          echo "Deploying Storybook"
+          tinyGit.withGitHubSSHCredentials {
+            exec('bun -s --cwd modules/oxide-components deploy-storybook')
+          }
+        } else {
+          echo "Skipping Storybook deployment as the pipeline is not running on the primary branch"
         }
-      } else {
-        echo "Skipping Storybook deployment as the pipeline is not running on the primary branch"
       }
     }
   }
