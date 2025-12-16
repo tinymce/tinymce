@@ -1,5 +1,7 @@
 export const makeResponse = (body: BodyInit | null, init: ResponseInit): Response => new window.Response(body, init);
 
+export const emptyResponse = (init: ResponseInit = {}): Response => makeResponse(null, init);
+
 export const jsonResponse = (data: any, init: ResponseInit = {}): Response =>
   makeResponse(JSON.stringify(data), {
     ...init,
