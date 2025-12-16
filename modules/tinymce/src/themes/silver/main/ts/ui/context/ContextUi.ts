@@ -32,11 +32,8 @@ export interface ContextToolbarRenderResult {
 }
 
 const forwardSlideEvent = Id.generate('forward-slide');
-
 const backSlideEvent = Id.generate('backward-slide');
-
 const changeSlideEvent = Id.generate('change-slide-event');
-
 const resizingClass = 'tox-pop--resizing';
 
 const renderContextToolbar = (spec: ContextToolbarSpec): ContextToolbarRenderResult => {

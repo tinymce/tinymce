@@ -1,6 +1,7 @@
 import { Fun, Obj } from '@ephox/katamari';
 import { type SugarElement, SugarLocation, SugarNode, SugarPosition, Traverse } from '@ephox/sugar';
 
+// Settings for mouse events
 interface Settings {
   // used to tweak the location before firing the event
   dx?: number;
@@ -17,6 +18,7 @@ interface Settings {
   detail?: number;
 }
 
+// Types of events
 type EventType = 'click' | 'mousedown' | 'mouseup' | 'mousemove' | 'mouseover' | 'mouseout' | 'contextmenu' | 'dblclick';
 
 // The 'button' field of the mouse event - which button was pressed to create the event. Pick only one value. Not defined for mouseenter,
@@ -29,10 +31,6 @@ const rightClickButton = 2;
 const leftClickButtons = 1;
 const rightClickButtons = 2;
 const middleClickButtons = 4;
-
-// Settings for mouse events
-
-// Types of events
 
 // Fire an event
 const event = (type: EventType, { dx, dy, ...settings }: Settings) => (element: SugarElement<Node>): void => {

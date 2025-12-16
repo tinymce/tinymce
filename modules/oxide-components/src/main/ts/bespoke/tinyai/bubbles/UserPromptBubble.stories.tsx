@@ -4,6 +4,8 @@ import type { PartialStoryFn } from 'storybook/internal/csf';
 
 import { UserPromptBubble } from './UserPromptBubble';
 
+type Story = StoryObj<typeof meta>;
+
 const meta = {
   decorators: [
     (Story: PartialStoryFn<ReactRenderer>): JSX.Element => <div className={classes([ 'tox-ai' ])}><Story /></div>
@@ -17,7 +19,6 @@ const meta = {
 } satisfies Meta<typeof UserPromptBubble>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
 export const SimpleUserPromptBubble: Story = {
   args: {

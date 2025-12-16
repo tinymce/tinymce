@@ -2,8 +2,6 @@ import { Attribute, Insert, Remove, SugarBody, SugarElement } from '@ephox/sugar
 
 import { Step } from 'ephox/agar/api/Step';
 
-// Test
-
 interface TeardownState {
   container: SugarElement<HTMLElement>;
   shadowHost?: SugarElement<ShadowRoot>;

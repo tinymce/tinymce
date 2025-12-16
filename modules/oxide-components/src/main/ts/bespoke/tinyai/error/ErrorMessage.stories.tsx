@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import ErrorMessage from './ErrorMessage';
 
+type Story = StoryObj<typeof meta>;
+
 const meta = {
   title: 'bespoke/tinyai/ErrorMessage',
   component: ErrorMessage,
@@ -12,7 +14,6 @@ const meta = {
 } satisfies Meta<typeof ErrorMessage>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
 export const StandardErrorMessage: Story = {
   args: {

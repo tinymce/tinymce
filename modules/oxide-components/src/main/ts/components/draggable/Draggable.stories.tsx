@@ -3,6 +3,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import * as Draggable from './Draggable';
 import type { DraggableProps } from './internals/types';
 
+type Story = StoryObj<typeof meta>;
+
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
   title: 'components/Draggable',
@@ -57,7 +59,6 @@ If you do care about it, but don't know the exact size of the element you'll hav
 } satisfies Meta<typeof Draggable.Root>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
 const render = (args: DraggableProps): JSX.Element => (
   <Draggable.Root {...args} style={{ position: 'absolute' }}>

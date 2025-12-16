@@ -10,10 +10,6 @@ import 'tinymce';
 import Model from 'tinymce/models/dom/Model';
 import Theme from 'tinymce/themes/silver/Theme';
 
-import * as ConsoleReader from '../../module/test/ConsoleReader';
-
-declare const tinymce: TinyMCE;
-
 interface EditorState {
   readonly isEditorDisabled: boolean;
   readonly consoleWarnMessages: string[];

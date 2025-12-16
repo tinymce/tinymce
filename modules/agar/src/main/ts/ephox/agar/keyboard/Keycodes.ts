@@ -1,9 +1,6 @@
 import { Arr, Type, type Optional } from '@ephox/katamari';
 import { PlatformDetection } from '@ephox/sand';
 
-const isMac = PlatformDetection.detect().os.isMacOS();
-const isFirefox = PlatformDetection.detect().browser.isFirefox();
-
 interface KeyInfo {
   readonly keyCode: number;
   readonly code: string;
@@ -11,6 +8,9 @@ interface KeyInfo {
   readonly data?: string;
   readonly shiftKey?: boolean;
 }
+
+const isMac = PlatformDetection.detect().os.isMacOS();
+const isFirefox = PlatformDetection.detect().browser.isFirefox();
 
 const keys: KeyInfo[] = [
   { keyCode: 8, code: 'Backspace', key: 'Backspace' },

@@ -6,6 +6,8 @@ import { FlowKeyingWithCycles } from './stories/FlowKeyingWithCycles.story';
 import { FlowKeyingWithoutCycles } from './stories/FlowKeyingWithoutCycles.story';
 import { FlowTypeDemo } from './stories/FlowTypeDemo';
 
+export type Story = StoryObj<typeof meta>;
+
 const styles = `.stay:focus {
     background-color: #cadbee;
   }
@@ -66,7 +68,6 @@ const meta = {
 } satisfies Meta;
 
 export default meta;
-export type Story = StoryObj<typeof meta>;
 
 export const Basic: Story = {};
 
