@@ -1,37 +1,13 @@
 #!groovy
 @Library('waluigi@release/7') _
-
-standardProperties()
-
-Map podResources = [
-  resourceRequestCpu: '2',
-  resourceLimitCpu: '7.5',
-  resourceRequestEphemeralStorage: '16Gi',
-  resourceLimitEphemeralStorage: '16Gi'
-]
-
-Map buildResources = podResources + [
-  resourceRequestMemory: '4Gi',
-  resourceLimitMemory: '4Gi'
-]
-
-// Ensure variables are accessible in scopes
 import groovy.transform.Field
 @Field String ciAccountId = "103651136441"
 @Field String ciRegistry = "${ciAccountId}.dkr.ecr.us-east-2.amazonaws.com"
 
-def bunInstall() {
-  exec('bun install')
-}
-
-def checkoutAndMergeStep = {
-  tinyGit.addGitHubToKnownHosts()
-  checkout localBranch(scm, [lfs()])
-  tinyGit.addAuthorConfig()
-}
+standardProperties()
 
 def runBedrockTest(String name, String command, Boolean runAll, int retry = 0, int timeout = 0) {
-  def bedrockCmd = 'export PATH="$PWD/node_modules/.bin:$PATH"; ' + command + (runAll ? " --ignore-lerna-changed=true" : "")
+  def bedrockCmd = command + (runAll ? " --ignore-lerna-changed=true" : "")
   echo "Running Bedrock cmd: ${bedrockCmd}"
   def testStatus = sh(script: bedrockCmd, returnStatus: true)
   junit allowEmptyResults: true, testResults: 'scratch/TEST-*.xml'
@@ -50,13 +26,13 @@ def runBedrockTest(String name, String command, Boolean runAll, int retry = 0, i
 }
 
 def runHeadlessTests(Boolean runAll) {
-  def bedrockCmd = "bun run headless-test -- --useSelenium=true"
+  def bedrockCmd = "bun run grunt headless-auto --useSelenium=true"
   runBedrockTest('headless', bedrockCmd, runAll)
 }
 
 def runSeleniumTests(String name, String browser, String bucket, String buckets, Boolean runAll, int retry = 0, int timeout = 0) {
   def bedrockCommand =
-    "bun run browser-test --" +
+    "bun run browser-test" +
     " --chunk=2000" +
     " --bedrock-browser=" + browser +
     " --bucket=" + bucket +
@@ -71,7 +47,7 @@ def runRemoteTests(String name, String browser, String provider, String platform
   def platformName = platform != null ? " --platformName='${platform}'" : ""
   def browserVersion = version != null ? " --browserVersion=${version}" : ""
   def bedrockCommand =
-  "bun run browser-test --" +
+  "bun run browser-test" +
     " --chunk=2000" +
     " --bedrock-browser=" + browser +
     " --remote=" + provider +
@@ -87,7 +63,7 @@ def runRemoteTests(String name, String browser, String provider, String platform
 
 def runBrowserTests(String name, String browser, String platform, String bucket, String buckets, Boolean runAll) {
   def bedrockCommand =
-    "bun run browser-test --" +
+    "bun run grunt browser-auto" +
       " --chunk=2000" +
       " --bedrock-os=" + platform +
       " --bedrock-browser=" + browser +
@@ -106,30 +82,26 @@ def runBrowserTests(String name, String browser, String platform, String bucket,
 }
 
 def runTestPod(String cacheName, String name, String testname, String browser, String provider, String platform, String version, String bucket, String buckets, Boolean runAll) {
-  def containers = [
-    devPods.getContainerDefaultArgs([ name: 'node', image: "${ciRegistry}/build-containers/node-lts:lts", runAsGroup: '1000', runAsUser: '1000',
+  return {
+    stage("${name}") {
+      devPods.nodeConsumer(
+        nodeOpts: [
           resourceRequestCpu: '2',
           resourceRequestMemory: '6Gi',
           resourceRequestEphemeralStorage: '16Gi',
           resourceLimitCpu: '7',
           resourceLimitMemory: '6Gi',
-          resourceLimitEphemeralStorage: '16Gi' ]),
-    devPods.getContainerDefaultArgs([ name: 'aws-cli', image: 'public.ecr.aws/aws-cli/aws-cli:latest', runAsGroup: '1000', runAsUser: '1000' ]) + devPods.stdRes()
-  ]
-  return {
-    stage("${name}") {
-      devPods.customConsumer(
+          resourceLimitEphemeralStorage: '16Gi'
+        ],
+        image: "${ciRegistry}/build-containers/node-lts:lts",
         build: cacheName,
-        containers: containers,
-        checkoutStep: checkoutAndMergeStep
+        useContainers: ['node', 'aws-cli']
       ) {
-        container('node') {
-          grunt('list-changed-browser')
-          bedrockRemoteTools.tinyWorkSishTunnel()
-          bedrockRemoteTools.withRemoteCreds(provider) {
-            int retry = 0
-            runRemoteTests(testname, browser, provider, platform, version, bucket, buckets, runAll, retry, 180)
-          }
+        grunt('list-changed-browser')
+        bedrockRemoteTools.tinyWorkSishTunnel()
+        bedrockRemoteTools.withRemoteCreds(provider) {
+          int retry = 0
+          runRemoteTests(testname, browser, provider, platform, version, bucket, buckets, runAll, retry, 180)
         }
       }
     }
@@ -139,8 +111,12 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
 def runPlaywrightPod(String cacheName, String name, Closure body) {
 
   def containers = [
-    devPods.getContainerDefaultArgs([ name: 'node', image: "${ciRegistry}/build-containers/node-lts:lts", runAsGroup: '1000', runAsUser: '1000' ]) + devPods.hiRes(),
-    devPods.getContainerDefaultArgs([ name: 'aws-cli', image: 'public.ecr.aws/aws-cli/aws-cli:latest', runAsGroup: '1000', runAsUser: '1000' ]) + devPods.lowRes(),
+    devPods.getContainerDefaultArgs([ name: 'node', image: "${ciRegistry}/build-containers/node-lts:lts", runAsGroup: '1000', runAsUser: '1000',
+          resourceRequestEphemeralStorage: '1Gi',
+          resourceLimitEphemeralStorage: '1Gi' ]) + devPods.hiRes(),
+    devPods.getContainerDefaultArgs([ name: 'aws-cli', image: 'public.ecr.aws/aws-cli/aws-cli:latest', runAsGroup: '1000', runAsUser: '1000',
+          resourceRequestEphemeralStorage: '1Gi',
+          resourceLimitEphemeralStorage: '1Gi' ]) + devPods.stdRes(),
     devPods.getContainerDefaultArgs([ name: 'playwright', image: 'mcr.microsoft.com/playwright:v1.53.1-noble']) + devPods.hiRes()
   ]
 
@@ -149,8 +125,7 @@ def runPlaywrightPod(String cacheName, String name, Closure body) {
       devPods.customConsumer(
         containers: containers,
         base: 'node',
-        build: cacheName,
-        checkoutStep: checkoutAndMergeStep
+        build: cacheName
       ) {
         container('playwright') {
           body()
@@ -186,12 +161,12 @@ def runSeleniumPod(String cacheName, String name, String browser, String version
             failureThreshold: 6
           ],
           alwaysPullImage: true,
-          resourceRequestCpu: '2',
-          resourceRequestMemory: '2Gi',
-          resourceLimitCpu: '4',
-          resourceLimitMemory: '6Gi',
+          resourceRequestCpu: '1',
+          resourceRequestMemory: '500Mi',
+          resourceLimitCpu: '1',
+          resourceLimitMemory: '500Mi',
           resourceRequestEphemeralStorage: '4Gi',
-          resourceLimitEphemeralStorage: '6Gi'
+          resourceLimitEphemeralStorage: '4Gi'
         ]
   Map aws = [
           name: 'aws-cli',
@@ -211,8 +186,7 @@ def runSeleniumPod(String cacheName, String name, String browser, String version
           aws
         ],
         base: 'node',
-        build: cacheName,
-        checkoutStep: checkoutAndMergeStep
+        build: cacheName
       ) {
         container('node') {
           body()
@@ -224,10 +198,8 @@ def runSeleniumPod(String cacheName, String name, String browser, String version
 
 def gitMerge(String primaryBranch) {
   if (env.BRANCH_NAME != primaryBranch) {
-    // echo "Merging ${primaryBranch} into this branch to run tests"
-    // exec("git merge --no-commit --no-ff origin/${primaryBranch}")
-    echo "SKIPPING MERGE: Merging ${primaryBranch} into this branch to run tests (temporarily disabled for spike testing)"
-
+    echo "Merging ${primaryBranch} into this branch to run tests"
+    exec("git merge --no-commit --no-ff origin/${primaryBranch}")
   }
 }
 
@@ -242,64 +214,46 @@ def cacheName = "cache_${BUILD_TAG}"
 
 def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NUMBER}"
 
-timestamps {
-
-  def nodeLts = [ name: 'node-lts', image: "${ciRegistry}/build-containers/node-lts:lts", runAsGroup: '1000', runAsUser: '1000' ]
-  def nodeLtsResources = devPods.getContainerDefaultArgs(nodeLts + buildResources)
-  def aws = devPods.getContainerDefaultArgs(devPods.awsImage() + devPods.lowRes())
-
-  notifyStatusChange(
+timestamps { notifyStatusChange(
   cleanupStep: { devPods.cleanUpPod(build: cacheName) },
   branches: ['main', 'release/7', 'release/8'],
   channel: '#tinymce-build-status',
   name: 'TinyMCE',
   mention: true
   ) {
-  devPods.custom(containers: [ nodeLtsResources, aws ], checkoutStep: checkoutAndMergeStep) {
-    container('node-lts') {
-      props = readProperties(file: 'build.properties')
-      String primaryBranch = props.primaryBranch
-      assert primaryBranch != null && primaryBranch != ""
+  devPods.nodeProducer(
+    nodeOpts: [
+      resourceRequestCpu: '2',
+      resourceRequestMemory: '4Gi',
+      resourceRequestEphemeralStorage: '16Gi',
+      resourceLimitCpu: '7.5',
+      resourceLimitMemory: '4Gi',
+      resourceLimitEphemeralStorage: '16Gi'
+    ],
+    image: "${ciRegistry}/build-containers/node-lts:lts",
+    build: cacheName,
+    useLfs: true,
+  ) {
+    props = readProperties(file: 'build.properties')
+    String primaryBranch = props.primaryBranch
+    assert primaryBranch != null && primaryBranch != ""
 
 
-      stage('Deps') {
-        // cancel build if primary branch doesn't merge cleanly
-        gitMerge(primaryBranch)
-        // Install dependencies using Bun
-        bunInstall()
-      }
-
-      stage('Build') {
-        // verify no errors in changelog merge
-        exec("bun changie-merge")
-        withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
-          sh '''
-            bun run ci-all-seq
-            bun tinymce-grunt shell:moxiedoc
-          '''
-        }
-      }
-
-      sh '''
-        mkdir -p /tmp
-        tar -zcf /tmp/file.tar.gz \
-          --exclude='./.git' \
-          --exclude='./.github' \
-          --exclude='./scratch' \
-          --exclude='./dist' \
-          --exclude='./js' \
-          --exclude='./**/*.log' \
-          --exclude='./**/.cache' \
-          --exclude='./**/coverage' \
-          --exclude='./modules/**/storybook-static' \
-          ./*
-        cp /tmp/file.tar.gz ./file.tar.gz
-      '''
+    stage('Deps') {
+      // cancel build if primary branch doesn't merge cleanly
+      gitMerge(primaryBranch)
+      sh "bun install"
     }
 
-    container('aws-cli') {
-      tinyAws.withAWSEngineeringCICredentials('tinymce_pipeline_cache') {
-        sh "aws s3 cp ./file.tar.gz s3://tiny-freerange-testing/remote-builds/${cacheName}.tar.gz"
+    stage('Build') {
+      // verify no errors in changelog merge
+      exec("bun run changie-merge")
+      withEnv(["NODE_OPTIONS=--max-old-space-size=1936"]) {
+        // type check and build TinyMCE
+        exec("bun run ci-all-seq")
+
+        // validate documentation generator
+        exec("bun run tinymce-grunt shell:moxiedoc")
       }
     }
   }
@@ -372,50 +326,54 @@ timestamps {
     runHeadlessTests(runAllTests)
   }
 
-  // Temporarily skip Playwright while stabilizing CI
-  // processes['playwright'] = runPlaywrightPod(cacheName, 'playwright-tests') {
-  //   exec('bun run -F @tinymce/oxide-components test-ci')
-  //   junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
-  //   def visualTestStatus = exec(script: 'bun run -F @tinymce/oxide-components test-visual-ci', returnStatus: true)
-  //   if (visualTestStatus == 4) {
-  //     unstable("Visual tests failed")
-  //   } else if (visualTestStatus != 0) {
-  //     error("Unexpected error running visual tests")
-  //   }
-  //   junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results-visual.xml'
-  //   exec('find modules/oxide-components -name "*.png" -type f || echo "No PNG files found")
-  //   archiveArtifacts artifacts: 'modules/oxide-components/test-results/**/*.png', allowEmptyArchive: true, fingerprint: true
-  // }
+  processes['playwright'] = runPlaywrightPod(cacheName, 'playwright-tests') {
+    exec('bun --cwd modules/oxide-components run test-ci')
+    junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
+    def visualTestStatus = exec(script: 'bun --cwd modules/oxide-components run test-visual-ci', returnStatus: true)
+    if (visualTestStatus == 4) {
+      unstable("Visual tests failed")
+    } else if (visualTestStatus != 0) {
+      error("Unexpected error running visual tests")
+    }
+    junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results-visual.xml'
+    exec('find modules/oxide-components -name "*.png" -type f || echo "No PNG files found"')
+    archiveArtifacts artifacts: 'modules/oxide-components/test-results/**/*.png', allowEmptyArchive: true, fingerprint: true
+  }
 
   stage('Run tests') {
       echo "Running tests [runAll=${runAllTests}]"
       parallel processes
   }
 
-  devPods.customConsumer(
-    containers: [ nodeLtsResources ],
+  devPods.nodeConsumer(
+    nodeOpts: [
+      resourceRequestCpu: '2',
+      resourceRequestMemory: '4Gi',
+      resourceRequestEphemeralStorage: '16Gi',
+      resourceLimitCpu: '7.5',
+      resourceLimitMemory: '4Gi',
+      resourceLimitEphemeralStorage: '16Gi'
+    ],
+    image: "${ciRegistry}/build-containers/node-lts:lts",
     build: cacheName,
-    checkoutStep: checkoutAndMergeStep,
     environment: {
       sh "tar -zxf ./file.tar.gz"
       tinyGit.addAuthorConfig()
       tinyGit.addGitHubToKnownHosts()
     }
   ) {
-    container('node-lts') {
-      props = readProperties(file: 'build.properties')
-      String primaryBranch = props.primaryBranch
-      assert primaryBranch != null && primaryBranch != ""
+    props = readProperties(file: 'build.properties')
+    String primaryBranch = props.primaryBranch
+    assert primaryBranch != null && primaryBranch != ""
 
-      stage('Deploy Storybook') {
-        if (env.BRANCH_NAME == primaryBranch) {
-          echo "Deploying Storybook"
-          tinyGit.withGitHubSSHCredentials {
-            exec('bun run -F @tinymce/oxide-components deploy-storybook')
-          }
-        } else {
-          echo "Skipping Storybook deployment as the pipeline is not running on the primary branch"
+    stage('Deploy Storybook') {
+      if (env.BRANCH_NAME == primaryBranch) {
+        echo "Deploying Storybook"
+        tinyGit.withGitHubSSHCredentials {
+          exec('bun --cwd modules/oxide-components run deploy-storybook')
         }
+      } else {
+        echo "Skipping Storybook deployment as the pipeline is not running on the primary branch"
       }
     }
   }
