@@ -9,12 +9,22 @@
     --tox-private-floating-sidebar-width: min(380px, 90vw);
     --tox-private-floating-sidebar-height: ~"min(var(--tox-private-floating-sidebar-requested-height), 80vh)";
 
+    position: fixed;
+    z-index: var(--tox-private-z-index-floatingsidebar, @z-index-floatingsidebar);
     box-shadow: var(--tox-private-floating-sidebar-box-shadow, 0 0 40px 1px fade(@color-black, 15%), 0 16px 16px -10px fade(@color-black, 15%));
     width: var(--tox-private-floating-sidebar-width);
     height: var(--tox-private-floating-sidebar-height);
     background-color: var(--tox-private-background-color, @background-color);
     border-radius: 12px;
     overflow: hidden;
+
+    &:not(&--open) {
+      display: none;
+    }
+
+    &--open {
+      display: block;
+    }
   }
 
   .tox-floating-sidebar__content-wrapper {

@@ -15,17 +15,17 @@ const meta = {
     layout: 'centered',
     docs: {
       description: {
-        component: `A draggable floating sidebar component that uses the Popover API and can be positioned anywhere on the screen.
+        component: `A draggable floating sidebar component, can be positioned anywhere on the screen.
 
 ## How it works
 
-The FloatingSidebar is built on top of the Draggable component and uses the browser's Popover API for overlay management.
+The FloatingSidebar is built on top of the Draggable component.
 It consists of two parts:
 
-- **\`FloatingSidebar.Root\`** - The container that manages the sidebar's position, visibility, and popover behavior.
+- **\`FloatingSidebar.Root\`** - The container that manages the sidebar's position and visibility.
 - **\`FloatingSidebar.Header\`** - A required header element that acts as the drag handle for moving the sidebar.
 
-The sidebar can be opened or closed programmatically using the \`isOpen\` prop, or imperatively by using \`ref\` to call the \`open\` and \`close\` methods.
+The sidebar can be opened or closed programmatically using the \`isOpen\` prop.
 When dragged, the sidebar remains within viewport bounds and maintains its position across window resizes.`
       }
     }
