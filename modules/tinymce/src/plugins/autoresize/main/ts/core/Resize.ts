@@ -177,4 +177,3 @@ const setup = (editor: Editor, oldSize: Cell<ResizeData>): void => {
 
 export type { ResizeData };
 export { resize, setup };
-

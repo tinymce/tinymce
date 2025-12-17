@@ -91,7 +91,7 @@ type WalkerCallback = (node: AstNode) => void;
  * @version 3.4
  */
 
-const extraBlockLikeElements = [ 'script', 'style', 'template', 'param' ];
+const extraBlockLikeElements = [ 'script', 'style', 'template', 'param', 'meta', 'title', 'link' ];
 
 const makeMap = Tools.makeMap, extend = Tools.extend;
 
