@@ -46,14 +46,6 @@ When dragged, the sidebar remains within viewport bounds and maintains its posit
         defaultValue: { summary: 'true' }
       }
     },
-    height: {
-      description: 'The requested height of the sidebar. The actual height may be constrained by viewport size.',
-      control: 'text',
-      table: {
-        type: { summary: 'text' },
-        defaultValue: { summary: '600px' }
-      }
-    },
     initialPosition: {
       description: `The initial position of the sidebar with x and y coordinates, and an origin point.
 The origin determines which corner of the sidebar is anchored to the coordinates:
@@ -141,7 +133,6 @@ export const InitialPosition: StoryObj<InitialPositionStoryArgs & FloatingSideba
   name: 'Initial position',
   args: {
     origin: 'bottomright',
-    height: '250px',
   },
   argTypes: {
     origin: {
@@ -157,8 +148,8 @@ export const InitialPosition: StoryObj<InitialPositionStoryArgs & FloatingSideba
       <div style={{ position: 'absolute', top: 300, left: 400, height: '15px', width: '15px', backgroundColor: 'red' }}></div>
       <FloatingSidebar.Root
         key={args.origin}
+        style={{ '--tox-private-floating-sidebar-height': '250px' }}
         isOpen={true}
-        height={args.height}
         initialPosition={{ x: 400, y: 300, origin: args.origin }}
       >
         <FloatingSidebar.Header>

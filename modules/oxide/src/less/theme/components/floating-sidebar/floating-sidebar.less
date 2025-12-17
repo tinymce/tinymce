@@ -4,10 +4,9 @@
 
 .tox {
   .tox-floating-sidebar {
-    // This is our internal variable, it's not meant to be a part of an external skinning API. It's value is being set by javascript. It is not behind a feature flag on purpose.
-    --tox-private-floating-sidebar-requested-height: 600px;
+    // This is our internal variable, it's not meant to be a part of an external skinning API. It is not behind a feature flag on purpose.
     --tox-private-floating-sidebar-width: min(380px, 90vw);
-    --tox-private-floating-sidebar-height: ~"min(var(--tox-private-floating-sidebar-requested-height), 80vh)";
+    --tox-private-floating-sidebar-height: 80vh;
 
     position: fixed;
     z-index: var(--tox-private-z-index-floatingsidebar, @z-index-floatingsidebar);
