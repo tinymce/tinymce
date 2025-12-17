@@ -1,5 +1,5 @@
 import { FieldSchema, StructureSchema, ValueType } from '@ephox/boulder';
-import type { Optional, Result } from '@ephox/katamari';
+import { Fun, type Optional, type Result } from '@ephox/katamari';
 
 import { type FormComponentWithLabel, type FormComponentWithLabelSpec, formComponentWithLabelFields } from './FormComponent';
 
@@ -20,7 +20,7 @@ export interface DropZone extends FormComponentWithLabel {
   buttonLabel: Optional<string>;
   allowedFileTypes: Optional<string>;
   allowedFileExtensions: Optional<string[]>;
-  onInvalidFiles: Optional<() => void>;
+  onInvalidFiles: () => void;
 }
 
 const dropZoneFields = formComponentWithLabelFields.concat([
@@ -29,7 +29,7 @@ const dropZoneFields = formComponentWithLabelFields.concat([
   FieldSchema.optionString('buttonLabel'),
   FieldSchema.optionString('allowedFileTypes'),
   FieldSchema.optionArrayOf('allowedFileExtensions', ValueType.string),
-  FieldSchema.optionFunction('onInvalidFiles')
+  FieldSchema.defaultedFunction('onInvalidFiles', Fun.noop)
 ]);
 
 export const dropZoneSchema = StructureSchema.objOf(dropZoneFields);

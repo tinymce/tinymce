@@ -5,7 +5,7 @@ import {
   type CustomEvent
 } from '@ephox/alloy';
 import type { Dialog } from '@ephox/bridge';
-import { Arr, Fun, Id, type Optional, Strings } from '@ephox/katamari';
+import { Arr, Id, type Optional, Strings } from '@ephox/katamari';
 import type { EventArgs } from '@ephox/sugar';
 
 import Tools from 'tinymce/core/api/util/Tools';
@@ -65,7 +65,7 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
       Representing.setValue(component, filteredFiles);
       AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name });
       if (filteredFiles.length === 0) {
-        spec.onInvalidFiles.getOr(Fun.noop)();
+        spec.onInvalidFiles();
       }
     }
   };
