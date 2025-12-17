@@ -1,0 +1,5 @@
+import{j as t,c as m}from"./iframe-D1cXgUO5.js";import{e as c}from"./Bem-CMgfceZl.js";import"./Optional-CHj922Ci.js";import"./Strings-D6HyETGk.js";import"./Fun--VEwoXIw.js";import"./Obj-BAtCA5NI.js";const o=({prompt:e})=>t.jsx("div",{tabIndex:-1,className:c("tox-ai","user-prompt__text"),children:e});try{o.displayName="UserPromptBubble",o.__docgenInfo={description:"",displayName:"UserPromptBubble",props:{prompt:{defaultValue:null,description:"",name:"prompt",required:!0,type:{name:"string"}}}}}catch{}const _={decorators:[e=>t.jsx("div",{className:m(["tox-ai"]),children:t.jsx(e,{})})],title:"bespoke/tinymceai/UserPromptBubble",component:o,parameters:{layout:"centered"},tags:["autodocs"]},r={args:{prompt:"Value"}};var s,a,p;r.parameters={...r.parameters,docs:{...(s=r.parameters)==null?void 0:s.docs,source:{originalSource:`{
+  args: {
+    prompt: 'Value'
+  }
+}`,...(p=(a=r.parameters)==null?void 0:a.docs)==null?void 0:p.source}}};const x=["SimpleUserPromptBubble"];export{r as SimpleUserPromptBubble,x as __namedExportsOrder,_ as default};
