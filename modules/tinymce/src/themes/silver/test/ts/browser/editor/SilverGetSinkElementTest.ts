@@ -40,7 +40,7 @@ describe('browser.tinymce.themes.silver.editor.SilverGetSinkElementTest', () => 
       assert.equal(sink.parentElement, SugarBody.body().dom, 'Sink should be a child of body');
     });
 
-    it('TINY-13503: dialog sink and popoup sink should be the same element', () => {
+    it('TINY-13503: dialog sink and popup sink should be the same element', () => {
       const editor = hook.editor();
       const dialogSink = editor.theme.getSinkElement?.('dialog') ?? null;
       const popupSink = editor.theme.getSinkElement?.('popup') ?? null;
@@ -86,7 +86,7 @@ describe('browser.tinymce.themes.silver.editor.SilverGetSinkElementTest', () => 
       assert.equal(sink.previousSibling, editor.getContainer(), 'Sink should be a sibling of the editor container');
     });
 
-    it('TINY-13503: dialog sink and popoup sink should be two different elements', () => {
+    it('TINY-13503: dialog sink and popup sink should be two different elements', () => {
       const editor = hook.editor();
       const dialogSink = editor.theme.getSinkElement?.('dialog') ?? null;
       const popupSink = editor.theme.getSinkElement?.('popup') ?? null;
