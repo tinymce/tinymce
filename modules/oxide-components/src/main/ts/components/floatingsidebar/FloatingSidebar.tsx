@@ -1,5 +1,6 @@
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState, type FC, type PropsWithChildren } from 'react';
+import { useRef, type FC, type PropsWithChildren } from 'react';
 
+import * as Bem from '../../utils/Bem';
 import { classes } from '../../utils/Styles';
 import * as Draggable from '../draggable/Draggable';
 import '../../module/css';
@@ -16,10 +17,6 @@ export interface FloatingSidebarProps extends PropsWithChildren {
   initialPosition?: InitialPosition;
 }
 interface HeaderProps extends PropsWithChildren {};
-export interface Ref {
-  open: () => void;
-  close: () => void;
-};
 
 const transformToCss = (position: InitialPosition): CssPosition => {
   switch (position.origin) {
@@ -34,49 +31,24 @@ const transformToCss = (position: InitialPosition): CssPosition => {
   }
 };
 
-const Root = forwardRef<Ref, FloatingSidebarProps>(({ isOpen = true, height = 600, children, ...props }, ref) => {
+const Root: FC<FloatingSidebarProps> = ({ isOpen = true, height = 600, children, ...props }) => {
   const elementRef = useRef<HTMLDivElement | null>(null);
   const initialPosition = transformToCss(props.initialPosition ?? { x: 0, y: 0, origin: 'topleft' });
-  // The idea is to render the children after the sidebar has opened.
-  // All the children should render once the sidebar is opened.
-  const [ shouldRenderChildren, setShouldRenderChildren ] = useState(false);
-
-  const openSidebar = useCallback(() => {
-    elementRef.current?.togglePopover(true);
-    setShouldRenderChildren(true);
-  }, []);
-
-  const closeSidebar = useCallback(() => elementRef.current?.togglePopover(false), []);
-
-  useImperativeHandle(ref, () => {
-    return {
-      open: openSidebar,
-      close: closeSidebar
-    };
-  });
-
-  useEffect(() => {
-    const element = elementRef.current;
-    if (element) {
-      isOpen ? openSidebar() : closeSidebar();
-    }
-  }, [ isOpen, openSidebar, closeSidebar ]);
 
   return (
     <Draggable.Root
       ref={elementRef}
-      popover="manual"
-      className={classes([ 'tox-floating-sidebar' ])}
+      className={Bem.block('tox-floating-sidebar', { open: isOpen })}
       style={{ '--tox-private-floating-sidebar-requested-height': `${height}px` }}
       initialPosition={initialPosition}
       declaredSize={{ width: 'var(--tox-private-floating-sidebar-width)', height: 'var(--tox-private-floating-sidebar-height)' }}
     >
       <aside className={classes([ 'tox-floating-sidebar__content-wrapper' ])}>
-        { shouldRenderChildren && children }
+        { children }
       </aside>
     </Draggable.Root>
   );
-});
+};
 
 const Header: FC<HeaderProps> = ({ children }) => {
   return (
