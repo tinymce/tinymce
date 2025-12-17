@@ -1,0 +1,1 @@
+import{O as e}from"./Optional-CHj922Ci.js";const p=Object.keys,h=Object.hasOwnProperty,l=(t,s)=>{const n=p(t);for(let o=0,r=n.length;o<r;o++){const c=n[o],a=t[c];s(a,c)}},y=(t,s)=>{const n=[];return l(t,(o,r)=>{n.push(s(o,r))}),n},f=(t,s)=>O(t,s)?e.from(t[s]):e.none(),O=(t,s)=>h.call(t,s);export{f as g,y as m};
