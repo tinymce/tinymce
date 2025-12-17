@@ -8,7 +8,7 @@ import * as Attribute from 'ephox/sugar/api/properties/Attribute';
 import * as TextContent from 'ephox/sugar/api/properties/TextContent';
 import * as Traverse from 'ephox/sugar/api/search/Traverse';
 
-describe('SugarFragment.fromHtml', () => {
+describe('browser.sugar.node.SugarFragmentTest', () => {
   it('TINY-13526: should return fragment', () => {
     const html = '<div>content</div>';
     const fragment = SugarFragment.fromHtml(html);
