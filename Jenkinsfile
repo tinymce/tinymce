@@ -90,11 +90,13 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
         base: 'node',
         build: cacheName
       ) {
-        grunt('list-changed-browser')
-        bedrockRemoteTools.tinyWorkSishTunnel()
-        bedrockRemoteTools.withRemoteCreds(provider) {
-          int retry = 0
-          runRemoteTests(testname, browser, provider, platform, version, bucket, buckets, runAll, retry, 180)
+        container('node') {
+          grunt('list-changed-browser')
+          bedrockRemoteTools.tinyWorkSishTunnel()
+          bedrockRemoteTools.withRemoteCreds(provider) {
+            int retry = 0
+            runRemoteTests(testname, browser, provider, platform, version, bucket, buckets, runAll, retry, 180)
+          }
         }
       }
     }
@@ -102,7 +104,6 @@ def runTestPod(String cacheName, String name, String testname, String browser, S
 }
 
 def runPlaywrightPod(String cacheName, String name, Closure body) {
-
   def nodeLtsPlaywright = devPods.getContainerDefaultArgs(nodeLts + [
     resourceRequestEphemeralStorage: '16Gi',
     resourceLimitEphemeralStorage: '16Gi'
@@ -181,7 +182,8 @@ def cleanBuildName(String name) {
 
 def props
 
-def cacheName = "cache_${BUILD_TAG}"
+// def cacheName = "cache_${BUILD_TAG}"
+def cacheName = "${env.JOB_NAME.split('/').last()}_${env.BUILD_NUMBER}"
 
 def testPrefix = "tinymce_${cleanBuildName(env.BRANCH_NAME)}-build${env.BUILD_NUMBER}"
 
@@ -213,7 +215,8 @@ Map seleniumNodeResources = [
 ]
 
 // Container definitions
-def nodeLts = [
+@Field def nodeLts
+nodeLts = [
   name: 'node',
   image: "${ciRegistry}/build-containers/node-lts:lts",
   runAsGroup: '1000',
@@ -221,8 +224,10 @@ def nodeLts = [
 ]
 
 def nodeLtsBuild = devPods.getContainerDefaultArgs(nodeLts + buildResources)
-def nodeLtsTest = devPods.getContainerDefaultArgs(nodeLts + testResources)
-def nodeLtsSelenium = devPods.getContainerDefaultArgs(nodeLts + seleniumNodeResources + [command: 'sleep', args: 'infinity'])
+@Field def nodeLtsTest
+nodeLtsTest = devPods.getContainerDefaultArgs(nodeLts + testResources)
+@Field def nodeLtsSelenium
+nodeLtsSelenium = devPods.getContainerDefaultArgs(nodeLts + seleniumNodeResources + [command: 'sleep', args: 'infinity'])
 
 def awsCli = [
   name: 'aws-cli',
@@ -232,7 +237,8 @@ def awsCli = [
   resourceRequestEphemeralStorage: '2Gi',
   resourceLimitEphemeralStorage: '4Gi'
 ]
-def awsCliContainer = devPods.getContainerDefaultArgs(awsCli) + devPods.stdRes()
+@Field def awsCliContainer
+awsCliContainer = devPods.getContainerDefaultArgs(awsCli) + devPods.stdRes()
 
 timestamps { notifyStatusChange(
   cleanupStep: { devPods.cleanUpPod(build: cacheName) },
@@ -243,13 +249,12 @@ timestamps { notifyStatusChange(
   ) {
   def checkoutStep = {
     tinyGit.addGitHubToKnownHosts()
-    checkout localBranch(scm)
+    checkout localBranch(scm, [ lfs() ])
     tinyGit.addAuthorConfig()
   }
 
   devPods.custom(
-    containers: [nodeLtsBuild],
-    useLfs: true,
+    containers: [nodeLtsBuild, awsCliContainer],
     build: cacheName,
     checkoutStep: checkoutStep
   ) {
@@ -275,6 +280,17 @@ timestamps { notifyStatusChange(
           // validate documentation generator
           exec("bun tinymce-grunt shell:moxiedoc")
         }
+      }
+      // Prep cache
+      sh "mkdir -p /tmp && tar -zcf /tmp/file.tar.gz . && cp /tmp/file.tar.gz ./file.tar.gz"
+    }
+
+    container('aws-cli') {
+      tinyAws.withAWSEngineeringCICredentials('tinymce_pipeline_cache') {
+        String tar = './file.tar.gz'
+        String cache = 's3://tiny-freerange-testing/remote-builds'
+        String buildName = cacheName
+        sh "aws s3 cp ${tar} ${cache}/${buildName}.tar.gz --only-show-errors"
       }
     }
   }
