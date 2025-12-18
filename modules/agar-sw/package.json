@@ -34,6 +34,14 @@
   "main": "./lib/main/ts/Main.js",
   "module": "./lib/main/ts/Main.js",
   "types": "./lib/main/ts/Main.d.ts",
+  "exports": {
+    ".": {
+      "tiny:source": "./src/main/ts/Main.ts",
+      "types": "./lib/main/ts/Main.d.ts",
+      "default": "./lib/main/ts/Main.js"
+    },
+    "./package.json": "./package.json"
+  },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^16.0.1"
   }

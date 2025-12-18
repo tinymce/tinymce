@@ -30,5 +30,12 @@
   },
   "main": "./lib/main/ts/main.js",
   "module": "./lib/main/ts/main.js",
-  "types": "./lib/main/ts/main.d.ts"
+  "types": "./lib/main/ts/main.d.ts",
+  "exports": {
+    ".": {
+      "tiny:source": "./src/main/ts/main.ts",
+      "types": "./lib/main/ts/main.d.ts",
+      "default": "./lib/main/ts/main.js"
+    }
+  }
 }
