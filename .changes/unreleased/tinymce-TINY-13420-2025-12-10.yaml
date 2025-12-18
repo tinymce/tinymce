@@ -1,0 +1,6 @@
+project: tinymce
+kind: Added
+body: 'New `errorHandler` option for `dropzone` dialog components.'
+time: 2025-12-10T15:03:17.948184405+01:00
+custom:
+  Issue: TINY-13420
