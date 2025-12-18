@@ -1,4 +1,4 @@
-import { useRef, type FC, type PropsWithChildren } from 'react';
+import { useRef, type CSSProperties, type FC, type PropsWithChildren } from 'react';
 
 import * as Bem from '../../utils/Bem';
 import { classes } from '../../utils/Styles';
@@ -13,8 +13,8 @@ interface InitialPosition {
 }
 export interface FloatingSidebarProps extends PropsWithChildren {
   isOpen?: boolean;
-  height?: number;
   initialPosition?: InitialPosition;
+  style?: CSSProperties;
 }
 interface HeaderProps extends PropsWithChildren {};
 
@@ -31,7 +31,7 @@ const transformToCss = (position: InitialPosition): CssPosition => {
   }
 };
 
-const Root: FC<FloatingSidebarProps> = ({ isOpen = true, height = 600, children, ...props }) => {
+const Root: FC<FloatingSidebarProps> = ({ isOpen = true, children, style, ...props }) => {
   const elementRef = useRef<HTMLDivElement | null>(null);
   const initialPosition = transformToCss(props.initialPosition ?? { x: 0, y: 0, origin: 'topleft' });
 
@@ -39,9 +39,9 @@ const Root: FC<FloatingSidebarProps> = ({ isOpen = true, height = 600, children,
     <Draggable.Root
       ref={elementRef}
       className={Bem.block('tox-floating-sidebar', { open: isOpen })}
-      style={{ '--tox-private-floating-sidebar-requested-height': `${height}px` }}
       initialPosition={initialPosition}
       declaredSize={{ width: 'var(--tox-private-floating-sidebar-width)', height: 'var(--tox-private-floating-sidebar-height)' }}
+      style={style}
     >
       <aside className={classes([ 'tox-floating-sidebar__content-wrapper' ])}>
         { children }

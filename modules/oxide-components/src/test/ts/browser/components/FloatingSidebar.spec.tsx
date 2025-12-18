@@ -201,7 +201,7 @@ describe('browser.components.FloatingSidebar', () => {
 
     const renderWithPosition = (initialPosition: { x: number; y: number; origin: 'topleft' | 'topright' | 'bottomleft' | 'bottomright' }): { containerElement: HTMLElement } => {
       const { getByTestId } = render(
-        <FloatingSidebar.Root initialPosition={initialPosition} height={100}>
+        <FloatingSidebar.Root initialPosition={initialPosition} style={{ '--tox-private-floating-sidebar-height': '100px' }}>
           <FloatingSidebar.Header>
             <div data-testid={floatingSidebarHeaderTestId}>Header</div>
           </FloatingSidebar.Header>
