@@ -66,23 +66,32 @@ describe('atomic.katamari.api.obj.ResolveTest', () => {
     check(parseInt, 'parseInt', null);
   });
 
-  Arr.range(500, (i) =>
-    it(i + 'Checking that creating a namespace (forge) from an obj will enable that value to be retrieved by resolving (path)', () => {
-      fc.assert(fc.property(
-        // NOTE: This value is being modified, so it cannot be shrunk.
-        arbAsciiDict(
-          // We want to make sure every path in the object is an object
-          // also, because that is a limitation of forge.
-          arbAsciiDict(arbAsciiDict(fc.constant({})))),
-        fc.array(arbAsciiString({ minLength: 1, maxLength: 30 }), { minLength: 1, maxLength: 40 }),
-        arbAsciiString({ minLength: 1, maxLength: 30 }),
-        arbAsciiString({ minLength: 1, maxLength: 30 }),
-        (dict, parts, field, newValue) => {
-          const created = Resolve.forge(parts, dict);
-          created[field] = newValue;
-          const resolved = Resolve.path(parts.concat([ field ]), dict);
+  it('Checking that creating a namespace (forge) from an obj will enable that value to be retrieved by resolving (path)', () => {
+    fc.assert(fc.property(
+      // NOTE: This value is being modified, so it cannot be shrunk.
+      arbAsciiDict(
+        // We want to make sure every path in the object is an object
+        // also, because that is a limitation of forge.
+        arbAsciiDict(arbAsciiDict(fc.constant({})))),
+      fc.array(arbAsciiString({ minLength: 1, maxLength: 30 }), { minLength: 1, maxLength: 40 }),
+      arbAsciiString({ minLength: 1, maxLength: 30 }),
+      arbAsciiString({ minLength: 1, maxLength: 30 }),
+      (dict, parts, field, newValue) => {
+        const created = Resolve.forge(parts, dict);
+        created[field] = newValue;
+        const resolved = Resolve.path(parts.concat([ field ]), dict);
+        try {
           assert.deepEqual(resolved, newValue);
+        } catch (ex) {
+          console.log('dict:', dict);
+          console.log('parts:', parts);
+          console.log('created:', created);
+          console.log('field:', field);
+          console.log('newValue:', newValue);
+          console.log('resolved:', resolved);
+          throw ex;
         }
-      ), { endOnFailure: true });
-    }));
+      }
+    ), { endOnFailure: true });
+  });
 });
