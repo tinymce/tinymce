@@ -121,6 +121,8 @@ describe('browser.components.Draggable', () => {
     assertPosition(draggableWrapper, { top: viewportHeight - elementHeight, left: 0 });
   });
 
+  // TODO: Should exceed boundaries by allowed overflow amount
+
   it('TINY-12875: Should not exceed boundaries while dragging', async () => {
     const viewportWidth = 1500;
     const viewportHeight = 1300;
@@ -151,6 +153,8 @@ describe('browser.components.Draggable', () => {
     assertPosition(draggableWrapper, { top: viewportHeight - elementHeight, left: 0 });
   });
 
+  // Should exceed boundaries by allowed overflow amount while dragging
+
   it('TINY-13109: Should stay within the viewport on window resize', async () => {
     const elementWidth = 200;
     const elementHeight = 200;
@@ -168,6 +172,8 @@ describe('browser.components.Draggable', () => {
     await page.viewport(2000, 2000);
     assertPosition(draggableWrapper, { top: 1300, left: 1300 });
   });
+
+  // Should stay within the viewport on window resize with allowed overflow
 
   it('TINY-13109: Should forget its initial position once dragged after resize', async () => {
     const elementWidth = 200;

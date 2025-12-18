@@ -6,15 +6,14 @@ import { useDraggable, DraggableContext } from './internals/context';
 import { getPositioningStyles } from './internals/styles';
 import type { DraggableProps, DraggableHandleProps, Shift, Position, Boundaries, CssPosition } from './internals/types';
 
-// TODO: add tests checking weather these boundaries are respected
 const Root = forwardRef<HTMLDivElement, DraggableProps>(({ children, style, initialPosition = { top: 0, left: 0 }, declaredSize, ...props }, ref) => {
   const [ shift, setShift ] = useState<Shift>({ x: 0, y: 0 });
   const [ position, setPosition ] = useState<CssPosition | Position>(initialPosition);
   const [ isDragging, setIsDragging ] = useState(false);
   const draggableRef = useRef<HTMLDivElement | null>(null);
-  const visibleArea = useMemo(() => ({ width: props.visibleArea?.width ?? 1, height: props.visibleArea?.height ?? 1 }), [ props.visibleArea ]);
-  const positioningStyles = getPositioningStyles(shift, position, visibleArea, isDragging, Optional.from(declaredSize));
-  const contextValue = useMemo(() => ({ setShift, draggableRef, isDragging, setIsDragging, setPosition, visibleArea }), [ isDragging, visibleArea ]);
+  const allowedOverflow = useMemo(() => ({ horizontal: props.allowedOverflow?.horizontal ?? 0, vertical: props.allowedOverflow?.vertical ?? 0 }), [ props.allowedOverflow ]);
+  const positioningStyles = getPositioningStyles(shift, position, allowedOverflow, isDragging, Optional.from(declaredSize));
+  const contextValue = useMemo(() => ({ setShift, draggableRef, isDragging, setIsDragging, setPosition, allowedOverflow }), [ isDragging, allowedOverflow ]);
 
   const setRef = useCallback((element: HTMLDivElement | null) => {
     if (typeof ref === 'function') {
@@ -38,7 +37,7 @@ const Handle: FC<DraggableHandleProps> = ({ children }) => {
   const dragStartElementRef = useRef<Element | null>(null);
   const lastMousePositionRef = useRef<Position>({ x: 0, y: 0 });
   const boundariesRef = useRef<Boundaries>({ x: { min: 0, max: 0 }, y: { min: 0, max: 0 }});
-  const { setShift, draggableRef, isDragging, setIsDragging, setPosition, visibleArea } = useDraggable();
+  const { setShift, draggableRef, isDragging, setIsDragging, setPosition, allowedOverflow } = useDraggable();
 
   const stopDragging = useCallback(() => {
     setIsDragging(false);
@@ -60,18 +59,16 @@ const Handle: FC<DraggableHandleProps> = ({ children }) => {
     const mousePosition = { x: Math.round(event.clientX), y: Math.round(event.clientY) };
     lastMousePositionRef.current = mousePosition;
     const draggableRect = draggableRef.current.getBoundingClientRect();
-    // TODO: that's not the prertties, fix it
-    // TODO: also add rounding
-    const allowedOverflow = {
-      x: draggableRect.width * (1 - visibleArea.width),
-      y: draggableRect.height * (1 - visibleArea.height)
+    const allowedOverflowPixels = {
+      horizontal: Math.round(draggableRect.width * allowedOverflow.horizontal),
+      vertical: Math.round(draggableRect.height * allowedOverflow.vertical)
     };
     const constraints = {
       upperLeftCorner: { x: 0, y: 0 },
       bottomRightCorner: { x: document.documentElement.clientWidth, y: document.documentElement.clientHeight }
     };
-    boundariesRef.current = boundaries(draggableRect, mousePosition, constraints, allowedOverflow);
-  }, [ draggableRef, setIsDragging, visibleArea ]);
+    boundariesRef.current = boundaries(draggableRect, mousePosition, constraints, allowedOverflowPixels);
+  }, [ draggableRef, setIsDragging, allowedOverflow ]);
 
   const onPointerMove = useCallback((event: React.PointerEvent) => {
     if (isDragging) {

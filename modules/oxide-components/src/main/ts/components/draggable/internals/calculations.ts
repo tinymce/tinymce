@@ -13,7 +13,7 @@ const clamp = (value: number, min: number, max: number): number => Math.min(max,
  * @param constraints - Positioning boundaries for the element
  * @param constraints.upperLeftCorner - Top-left boundary for element positioning
  * @param constraints.bottomRightCorner - Bottom-right boundary for element positioning
- * @param allowedOverflow - Optional overflow amount in pixels for x and y axes (default: {x: 0, y: 0}). This allows part of the element to go outside the boundaries.
+ * @param allowedOverflow - Optional overflow amount in pixels for horizontal and vertical axes (default: {horizontal: 0, vertical: 0}). This allows part of the element to go outside the boundaries.
  * @returns Boundaries object with min/max coordinates for the mouse cursor during drag
  *
  */
@@ -21,7 +21,7 @@ const boundaries = (
   element: Position & Size,
   startMousePosition: Position,
   constraints: { upperLeftCorner: Position; bottomRightCorner: Position },
-  allowedOverflow: { x: number; y: number } = { x: 0, y: 0 }
+  allowedOverflow: { horizontal: number; vertical: number }
 ): Boundaries => {
   const { upperLeftCorner, bottomRightCorner } = constraints;
   const elementRight = element.x + element.width;
@@ -29,15 +29,14 @@ const boundaries = (
 
   return {
     x: {
-      min: Math.ceil(upperLeftCorner.x + (startMousePosition.x - element.x) - allowedOverflow.x),
-      max: Math.floor(bottomRightCorner.x - (elementRight - startMousePosition.x) + allowedOverflow.x)
+      min: Math.ceil(upperLeftCorner.x + (startMousePosition.x - element.x)) - allowedOverflow.horizontal,
+      max: Math.floor(bottomRightCorner.x - (elementRight - startMousePosition.x)) + allowedOverflow.horizontal
     },
     y: {
-      min: Math.ceil(upperLeftCorner.y + (startMousePosition.y - element.y) - allowedOverflow.y),
-      max: Math.floor(bottomRightCorner.y - (elementBottom - startMousePosition.y) + allowedOverflow.y)
+      min: Math.ceil(upperLeftCorner.y + (startMousePosition.y - element.y)) - allowedOverflow.vertical,
+      max: Math.floor(bottomRightCorner.y - (elementBottom - startMousePosition.y)) + allowedOverflow.vertical
     }
   };
 };
-// TODO: write tests for that
 
 export { delta, clamp, boundaries };
