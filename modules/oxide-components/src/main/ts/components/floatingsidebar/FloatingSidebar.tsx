@@ -1,4 +1,4 @@
-import { useRef, type CSSProperties, type FC, type PropsWithChildren } from 'react';
+import type { CSSProperties, FC, PropsWithChildren } from 'react';
 
 import * as Bem from '../../utils/Bem';
 import { classes } from '../../utils/Styles';
@@ -32,14 +32,13 @@ const transformToCss = (position: InitialPosition): CssPosition => {
 };
 
 const Root: FC<FloatingSidebarProps> = ({ isOpen = true, children, style, ...props }) => {
-  const elementRef = useRef<HTMLDivElement | null>(null);
   const initialPosition = transformToCss(props.initialPosition ?? { x: 0, y: 0, origin: 'topleft' });
 
   return (
     <Draggable.Root
-      ref={elementRef}
       className={Bem.block('tox-floating-sidebar', { open: isOpen })}
       initialPosition={initialPosition}
+      allowedOverflow={{ horizontal: 0.8 }}
       declaredSize={{ width: 'var(--tox-private-floating-sidebar-width)', height: 'var(--tox-private-floating-sidebar-height)' }}
       style={style}
     >

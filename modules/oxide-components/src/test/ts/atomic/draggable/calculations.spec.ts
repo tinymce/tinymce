@@ -36,10 +36,11 @@ describe('browser.draggable.calculations', () => {
     it('should calculate max and min pointer position when left top is in 0, 0', () => {
       const upperLeftCorner = { x: 0, y: 0 };
       const bottomRightCorner = { x: 1500, y: 1500 };
+      const allowedOverflow = { horizontal: 0, vertical: 0 };
       const element = { x: 50, y: 50, width: 300, height: 300 };
       const mousePosition = { x: 100, y: 100 };
 
-      const calculatedBoundaries = boundaries(element, mousePosition, upperLeftCorner, bottomRightCorner);
+      const calculatedBoundaries = boundaries(element, mousePosition, { upperLeftCorner, bottomRightCorner }, allowedOverflow);
 
       expect(calculatedBoundaries).toMatchObject({
         x: {
@@ -57,8 +58,9 @@ describe('browser.draggable.calculations', () => {
       const upperLeftCorner = { x: 500, y: 500 };
       const bottomRightCorner = { x: 1500, y: 1500 };
       const element = { x: 700, y: 600, width: 50, height: 50 };
+      const allowedOverflow = { horizontal: 0, vertical: 0 };
       const mousePosition = { x: 710, y: 620 };
-      const calculatedBoundaries = boundaries(element, mousePosition, upperLeftCorner, bottomRightCorner);
+      const calculatedBoundaries = boundaries(element, mousePosition, { upperLeftCorner, bottomRightCorner }, allowedOverflow);
 
       expect(calculatedBoundaries).toMatchObject({
         x: {
@@ -76,8 +78,9 @@ describe('browser.draggable.calculations', () => {
       const upperLeftCorner = { x: 0, y: 0 };
       const bottomRightCorner = { x: 1500, y: 1500 };
       const element = { x: 750, y: 285, width: 250, height: 500 };
+      const allowedOverflow = { horizontal: 0, vertical: 0 };
       const mousePosition = { x: 751.5, y: 286.5 };
-      const calculatedBoundaries = boundaries(element, mousePosition, upperLeftCorner, bottomRightCorner);
+      const calculatedBoundaries = boundaries(element, mousePosition, { upperLeftCorner, bottomRightCorner }, allowedOverflow);
 
       expect(calculatedBoundaries).toMatchObject({
         x: {
@@ -87,6 +90,48 @@ describe('browser.draggable.calculations', () => {
         y: {
           min: 2, // 1.5 rounded up
           max: 1001 // 1001.5 rounded down
+        }
+      });
+    });
+
+    it('should calculate max and min pointer position including allowed horizontal overflow', () => {
+      const upperLeftCorner = { x: 0, y: 0 };
+      const bottomRightCorner = { x: 1500, y: 1500 };
+      const allowedOverflow = { horizontal: 100, vertical: 0 };
+      const element = { x: 50, y: 50, width: 300, height: 300 };
+      const mousePosition = { x: 100, y: 100 };
+
+      const calculatedBoundaries = boundaries(element, mousePosition, { upperLeftCorner, bottomRightCorner }, allowedOverflow);
+
+      expect(calculatedBoundaries).toMatchObject({
+        x: {
+          min: -50,
+          max: 1350
+        },
+        y: {
+          min: 50,
+          max: 1250
+        }
+      });
+    });
+
+    it('should calculate max and min pointer position including allowed vertical overflow', () => {
+      const upperLeftCorner = { x: 0, y: 0 };
+      const bottomRightCorner = { x: 1500, y: 1500 };
+      const allowedOverflow = { horizontal: 0, vertical: 100 };
+      const element = { x: 50, y: 50, width: 300, height: 300 };
+      const mousePosition = { x: 100, y: 100 };
+
+      const calculatedBoundaries = boundaries(element, mousePosition, { upperLeftCorner, bottomRightCorner }, allowedOverflow);
+
+      expect(calculatedBoundaries).toMatchObject({
+        x: {
+          min: 50,
+          max: 1250
+        },
+        y: {
+          min: -50,
+          max: 1350
         }
       });
     });
