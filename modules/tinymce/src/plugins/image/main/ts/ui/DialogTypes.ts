@@ -17,6 +17,7 @@ export interface UserListItem {
 }
 
 export interface ImageDialogInfo {
+  readonly alertErr: (message: string, callback: () => void) => void;
   readonly image: ImageData;
   readonly imageList: Optional<ListItem[]>;
   readonly classList: Optional<ListItem[]>;

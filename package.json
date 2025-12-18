@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@ephox/bedrock-client": "^15.0.0",
-    "@ephox/bedrock-server": "^15.0.4",
+    "@ephox/bedrock-server": "^15.1.0",
     "@ephox/oxide-icons-tools": "^4.0.0",
     "@ephox/swag": "^4.6.0",
     "@rspack/cli": "^1.5.2",

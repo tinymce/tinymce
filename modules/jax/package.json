@@ -38,5 +38,12 @@
   ],
   "main": "./lib/main/ts/ephox/jax/api/Main.js",
   "module": "./lib/main/ts/ephox/jax/api/Main.js",
-  "types": "./lib/main/ts/ephox/jax/api/Main.d.ts"
+  "types": "./lib/main/ts/ephox/jax/api/Main.d.ts",
+  "exports": {
+    ".": {
+      "tiny:source": "./src/main/ts/ephox/jax/api/Main.ts",
+      "types": "./lib/main/ts/ephox/jax/api/Main.d.ts",
+      "default": "./lib/main/ts/ephox/jax/api/Main.js"
+    }
+  }
 }
