@@ -2,7 +2,7 @@ import { Waiter, Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import AutoLinkPlugin from 'tinymce/plugins/autolink/Plugin';
 
 describe('browser.tinymce.plugins.autolink.ReadOnlyModeAutoLinkTest', () => {
