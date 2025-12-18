@@ -3,6 +3,8 @@ import { assert } from 'chai';
 import fc from 'fast-check';
 
 import * as Resolve from 'ephox/katamari/api/Resolve';
+import { arbAsciiDict, arbAsciiString } from 'ephox/katamari/test/arb/ArbDataTypes';
+import { Arr } from 'ephox/katamari/api/Main';
 
 describe('atomic.katamari.api.obj.ResolveTest', () => {
   it('namespace', () => {
@@ -64,25 +66,23 @@ describe('atomic.katamari.api.obj.ResolveTest', () => {
     check(parseInt, 'parseInt', null);
   });
 
-  it('Checking that creating a namespace (forge) from an obj will enable that value to be retrieved by resolving (path)', () => {
-    fc.assert(fc.property(
-      // NOTE: This value is being modified, so it cannot be shrunk.
-      fc.dictionary(fc.string({ unit: 'binary-ascii' }),
-        // We want to make sure every path in the object is an object
-        // also, because that is a limitation of forge.
-        fc.dictionary(fc.string({ unit: 'binary-ascii' }),
-          fc.dictionary(fc.string({ unit: 'binary-ascii' }), fc.constant({}))
-        )
-      ),
-      fc.array(fc.string({ unit: 'binary-ascii', minLength: 1, maxLength: 30 }), { minLength: 1, maxLength: 40 }),
-      fc.string({ unit: 'binary-ascii', minLength: 1, maxLength: 30 }),
-      fc.string({ unit: 'binary-ascii', minLength: 1, maxLength: 30 }),
-      (dict, parts, field, newValue) => {
-        const created = Resolve.forge(parts, dict);
-        created[field] = newValue;
-        const resolved = Resolve.path(parts.concat([ field ]), dict);
-        assert.deepEqual(resolved, newValue);
-      }
-    ), { endOnFailure: true });
-  });
+  Arr.range(500, (i) =>
+    it(i + 'Checking that creating a namespace (forge) from an obj will enable that value to be retrieved by resolving (path)', () => {
+      fc.assert(fc.property(
+        // NOTE: This value is being modified, so it cannot be shrunk.
+        arbAsciiDict(
+          // We want to make sure every path in the object is an object
+          // also, because that is a limitation of forge.
+          arbAsciiDict(arbAsciiDict(fc.constant({})))),
+        fc.array(arbAsciiString({ minLength: 1, maxLength: 30 }), { minLength: 1, maxLength: 40 }),
+        arbAsciiString({ minLength: 1, maxLength: 30 }),
+        arbAsciiString({ minLength: 1, maxLength: 30 }),
+        (dict, parts, field, newValue) => {
+          const created = Resolve.forge(parts, dict);
+          created[field] = newValue;
+          const resolved = Resolve.path(parts.concat([ field ]), dict);
+          assert.deepEqual(resolved, newValue);
+        }
+      ), { endOnFailure: true });
+    }));
 });

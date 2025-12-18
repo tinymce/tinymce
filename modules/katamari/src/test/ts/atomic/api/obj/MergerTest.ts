@@ -5,6 +5,7 @@ import fc from 'fast-check';
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Merger from 'ephox/katamari/api/Merger';
 import * as Obj from 'ephox/katamari/api/Obj';
+import { arbAsciiDict } from 'ephox/katamari/test/arb/ArbDataTypes';
 
 describe('atomic.katamari.api.obj.MergerTest', () => {
   it('Merger', () => {
@@ -75,25 +76,25 @@ describe('atomic.katamari.api.obj.MergerTest', () => {
   });
 
   it('Merged with identity on left', () => {
-    fc.assert(fc.property(fc.dictionary(fc.string({ unit: 'binary-ascii' }), fc.json()), (obj) => {
+    fc.assert(fc.property(arbAsciiDict(fc.json()), (obj) => {
       assert.deepEqual(Merger.merge({}, obj), obj);
     }));
   });
 
   it('Merged with identity on right', () => {
-    fc.assert(fc.property(fc.dictionary(fc.string({ unit: 'binary-ascii' }), fc.json()), (obj) => {
+    fc.assert(fc.property(arbAsciiDict(fc.json()), (obj) => {
       assert.deepEqual(Merger.merge(obj, {}), obj);
     }));
   });
 
   it('Merged with itself is itself', () => {
-    fc.assert(fc.property(fc.dictionary(fc.string({ unit: 'binary-ascii' }), fc.json()), (obj) => {
+    fc.assert(fc.property(arbAsciiDict(fc.json()), (obj) => {
       assert.deepEqual(Merger.merge(obj, obj), obj);
     }));
   });
 
   it('Merge(a, Merge(b, c)) === Merge(Merge(a, b), c)', () => {
-    fc.assert(fc.property(fc.dictionary(fc.string({ unit: 'binary-ascii' }), fc.json()), fc.dictionary(fc.string({ unit: 'binary-ascii' }), fc.json()), fc.dictionary(fc.string({ unit: 'binary-ascii' }), fc.json()), (a, b, c) => {
+    fc.assert(fc.property(arbAsciiDict(fc.json()), arbAsciiDict(fc.json()), arbAsciiDict(fc.json()), (a, b, c) => {
       const one = Merger.merge(a, Merger.merge(b, c));
       const other = Merger.merge(Merger.merge(a, b), c);
       assert.deepEqual(other, one);
@@ -101,7 +102,7 @@ describe('atomic.katamari.api.obj.MergerTest', () => {
   });
 
   it('Merge(a, b) contains all the keys of b', () => {
-    fc.assert(fc.property(fc.dictionary(fc.string({ unit: 'binary-ascii' }), fc.json()), fc.dictionary(fc.string({ unit: 'binary-ascii' }), fc.json()), (a, b) => {
+    fc.assert(fc.property(arbAsciiDict(fc.json()), arbAsciiDict(fc.json()), (a, b) => {
       const output = Merger.merge(a, b);
       const keys = Obj.keys(b);
       const oKeys = Obj.keys(output);
@@ -112,25 +113,25 @@ describe('atomic.katamari.api.obj.MergerTest', () => {
   });
 
   it('Deep-merged with identity on left', () => {
-    fc.assert(fc.property(fc.dictionary(fc.string({ unit: 'binary-ascii' }), fc.json()), (obj) => {
-      assert.deepEqual(Merger.deepMerge({}, obj), obj);
+    fc.assert(fc.property(arbAsciiDict(fc.json()), (obj) => {
+      assert.deepEqual(Merger.merge({}, obj), obj);
     }));
   });
 
   it('Deep-merged with identity on right', () => {
-    fc.assert(fc.property(fc.dictionary(fc.string({ unit: 'binary-ascii' }), fc.json()), (obj) => {
+    fc.assert(fc.property(arbAsciiDict(fc.json()), (obj) => {
       assert.deepEqual(Merger.deepMerge(obj, {}), obj);
     }));
   });
 
   it('Deep-merged with itself is itself', () => {
-    fc.assert(fc.property(fc.dictionary(fc.string({ unit: 'binary-ascii' }), fc.json()), (obj) => {
+    fc.assert(fc.property(arbAsciiDict(fc.json()), (obj) => {
       assert.deepEqual(Merger.deepMerge(obj, obj), obj);
     }));
   });
 
   it('Deep-merge(a, Deep-merge(b, c)) === Deep-merge(Deep-merge(a, b), c)', () => {
-    fc.assert(fc.property(fc.dictionary(fc.string({ unit: 'binary-ascii' }), fc.json()), fc.dictionary(fc.string({ unit: 'binary-ascii' }), fc.json()), fc.dictionary(fc.string({ unit: 'binary-ascii' }), fc.json()), (a, b, c) => {
+    fc.assert(fc.property(arbAsciiDict(fc.json()), arbAsciiDict(fc.json()), arbAsciiDict(fc.json()), (a, b, c) => {
       const one = Merger.merge(a, Merger.merge(b, c));
       const other = Merger.merge(Merger.merge(a, b), c);
       assert.deepEqual(other, one);
@@ -138,7 +139,7 @@ describe('atomic.katamari.api.obj.MergerTest', () => {
   });
 
   it('Deep-merge(a, b) contains all the keys of b', () => {
-    fc.assert(fc.property(fc.dictionary(fc.string({ unit: 'binary-ascii' }), fc.json()), fc.dictionary(fc.string({ unit: 'binary-ascii' }), fc.json()), (a, b) => {
+    fc.assert(fc.property(arbAsciiDict(fc.json()), arbAsciiDict(fc.json()), (a, b) => {
       const output = Merger.deepMerge(a, b);
       const keys = Obj.keys(b);
       const oKeys = Obj.keys(output);

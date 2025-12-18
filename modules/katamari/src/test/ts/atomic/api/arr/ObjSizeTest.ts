@@ -3,6 +3,7 @@ import { assert } from 'chai';
 import fc from 'fast-check';
 
 import * as Obj from 'ephox/katamari/api/Obj';
+import { arbAsciiDict } from 'ephox/katamari/test/arb/ArbDataTypes';
 
 describe('atomic.katamari.api.arr.ObjSizeTest', () => {
   it('unit tests', () => {
@@ -17,7 +18,7 @@ describe('atomic.katamari.api.arr.ObjSizeTest', () => {
 
   it('inductive case', () => {
     fc.assert(fc.property(
-      fc.dictionary(fc.string({ unit: 'binary-ascii', minLength: 1, maxLength: 30 }), fc.integer()),
+      arbAsciiDict(fc.integer(), { minLength: 1, maxLength: 30 }),
       fc.string({ unit: 'binary-ascii', minLength: 1, maxLength: 30 }),
       fc.integer(),
       (obj, k, v) => {

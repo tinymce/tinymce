@@ -38,3 +38,12 @@ export const arbFutureNever = <A> (): Arbitrary<Future<A>> =>
 
 export const arbFutureNowOrSoon = <A> (arbA: Arbitrary<A>): Arbitrary<Future<A>> =>
   fc.oneof(arbFutureNow(arbA), arbFutureSoon(arbA));
+
+export const arbAsciiString = (stringConstraints?: fc.StringConstraints): Arbitrary<string> =>
+  fc.string({ unit: 'binary-ascii', ...stringConstraints }).filter((s) => s !== '__proto__'); // Avoid testing prototype pollution
+
+export const arbAsciiDict = <T>(valArb: Arbitrary<T>, stringConstraints?: fc.StringConstraints): Arbitrary<Record<string, T>> => fc.dictionary(
+    arbAsciiString(stringConstraints),
+    valArb,
+    { noNullPrototype: true }
+  );
