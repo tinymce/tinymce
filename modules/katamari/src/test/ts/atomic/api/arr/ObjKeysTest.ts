@@ -4,6 +4,7 @@ import fc from 'fast-check';
 
 import * as Arr from 'ephox/katamari/api/Arr';
 import * as Obj from 'ephox/katamari/api/Obj';
+import { arbAsciiDict } from 'ephox/katamari/test/arb/ArbDataTypes';
 
 describe('atomic.katamari.api.arr.ObjKeysTest', () => {
   it('unit tests', () => {
@@ -22,12 +23,7 @@ describe('atomic.katamari.api.arr.ObjKeysTest', () => {
   });
 
   it('only returns elements that are in the input', () => {
-    fc.assert(fc.property(fc.dictionary(
-      fc.string({ unit: 'binary-ascii' }).filter((s) => s !== '__proto__'), // Avoid testing prototype pollution
-      fc.integer(),
-      { noNullPrototype: true }
-    ),
-    (obj) => {
+    fc.assert(fc.property(arbAsciiDict(fc.integer()), (obj) => {
       const keys = Obj.keys(obj);
       return Arr.forall(keys, (k) => obj.hasOwnProperty(k));
     }));
