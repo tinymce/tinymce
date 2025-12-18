@@ -1,4 +1,4 @@
-import { Assertions, Keys, Waiter } from '@ephox/agar';
+import { Assertions, Keys } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 

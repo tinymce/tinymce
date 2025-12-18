@@ -12,7 +12,6 @@ import { Step } from 'ephox/agar/api/Step';
 import * as DomContainers from 'ephox/agar/test/DomContainers';
 
 UnitTest.asynctest('FocusToolsTest', (success, failure) => {
-
   const sTestFocusTools = (doc: SugarElement<Document>, docNode: SugarElement<HTMLElement>) =>
     GeneralSteps.sequence([
       FocusTools.sSetFocus('Focusing div', docNode, 'div[test-id]'),
@@ -114,4 +113,6 @@ UnitTest.asynctest('FocusToolsTest', (success, failure) => {
   ], (_, _logs) => {
     success();
   }, failure);
+
+  throw new Error('Tests' + (window as any).__tests.slice(7500, 8500).map((x) => x.file).join(' '));
 });
