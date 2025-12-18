@@ -1,4 +1,4 @@
-import { Assertions, Keys } from '@ephox/agar';
+import { Assertions, Keys, Waiter } from '@ephox/agar';
 import { context, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyHooks, TinySelections, TinyUiActions } from '@ephox/wrap-mcagar';
 
@@ -25,6 +25,8 @@ describe('browser.tinymce.plugins.advlist.ListStyleAliasTest', () => {
       'div.tox-collection__item[aria-checked="true"]': 1,
       [`div.tox-collection__item[aria-checked="true"][aria-label="${styleTypeLabel}"]`]: 1,
     }, menu);
+
+    TinyUiActions.keystroke(editor, Keys.escape());
   };
 
   const pTestCheckedListStyleType = async (editor: Editor, styleTypeLabel: string, styleType: string) => {
@@ -38,7 +40,7 @@ describe('browser.tinymce.plugins.advlist.ListStyleAliasTest', () => {
 
     await pClickAndAssertCheckedListStyleType(editor, styleTypeLabel);
 
-    TinyUiActions.keyup(editor, Keys.escape());
+    TinyUiActions.keystroke(editor, Keys.escape());
   };
 
   context('default numbered list split button', () => {
