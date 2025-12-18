@@ -1,4 +1,4 @@
-import { type CSSProperties, type FC, type PropsWithChildren } from 'react';
+import type { CSSProperties, FC, PropsWithChildren } from 'react';
 
 import * as Bem from '../../utils/Bem';
 import { classes } from '../../utils/Styles';
@@ -38,8 +38,8 @@ const Root: FC<FloatingSidebarProps> = ({ isOpen = true, children, style, ...pro
     <Draggable.Root
       className={Bem.block('tox-floating-sidebar', { open: isOpen })}
       initialPosition={initialPosition}
-      // TODO: rename this property, it should not be called `declaredSize` but rather ...
-      declaredSize={{ width: '70px', height: 'var(--tox-private-floating-sidebar-height)' }}
+      allowedOverflow={{ horizontal: 0.8 }}
+      declaredSize={{ width: 'var(--tox-private-floating-sidebar-width)', height: 'var(--tox-private-floating-sidebar-height)' }}
       style={style}
     >
       <aside className={classes([ 'tox-floating-sidebar__content-wrapper' ])}>
