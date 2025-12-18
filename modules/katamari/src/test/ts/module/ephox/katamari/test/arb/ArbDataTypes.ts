@@ -51,7 +51,7 @@ export const arbAsciiString = (stringConstraints?: fc.StringConstraints): Arbitr
   fc.string({ unit: 'binary-ascii', ...stringConstraints }).filter((s) => !bannedProperties.includes(s));
 
 export const arbAsciiDict = <T>(valArb: Arbitrary<T>, stringConstraints?: fc.StringConstraints): Arbitrary<Record<string, T>> => fc.dictionary(
-    arbAsciiString(stringConstraints),
-    valArb,
-    { noNullPrototype: true }
-  );
+  arbAsciiString(stringConstraints),
+  valArb,
+  { noNullPrototype: true }
+);

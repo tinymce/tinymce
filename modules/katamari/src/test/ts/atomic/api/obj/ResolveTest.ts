@@ -4,7 +4,6 @@ import fc from 'fast-check';
 
 import * as Resolve from 'ephox/katamari/api/Resolve';
 import { arbAsciiDict, arbAsciiString } from 'ephox/katamari/test/arb/ArbDataTypes';
-import { Arr } from 'ephox/katamari/api/Main';
 
 describe('atomic.katamari.api.obj.ResolveTest', () => {
   it('namespace', () => {
@@ -80,17 +79,7 @@ describe('atomic.katamari.api.obj.ResolveTest', () => {
         const created = Resolve.forge(parts, dict);
         created[field] = newValue;
         const resolved = Resolve.path(parts.concat([ field ]), dict);
-        try {
-          assert.deepEqual(resolved, newValue);
-        } catch (ex) {
-          console.log('dict:', dict);
-          console.log('parts:', parts);
-          console.log('created:', created);
-          console.log('field:', field);
-          console.log('newValue:', newValue);
-          console.log('resolved:', resolved);
-          throw ex;
-        }
+        assert.deepEqual(resolved, newValue);
       }
     ), { endOnFailure: true });
   });

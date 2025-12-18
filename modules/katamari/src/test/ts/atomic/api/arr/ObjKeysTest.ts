@@ -25,8 +25,9 @@ describe('atomic.katamari.api.arr.ObjKeysTest', () => {
     fc.assert(fc.property(fc.dictionary(
       fc.string({ unit: 'binary-ascii' }).filter((s) => s !== '__proto__'), // Avoid testing prototype pollution
       fc.integer(),
-    { noNullPrototype: true }
-  ), (obj) => {
+      { noNullPrototype: true }
+    ),
+    (obj) => {
       const keys = Obj.keys(obj);
       return Arr.forall(keys, (k) => obj.hasOwnProperty(k));
     }));
