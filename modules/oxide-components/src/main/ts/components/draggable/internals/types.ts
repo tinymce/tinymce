@@ -1,11 +1,17 @@
 import type { Property } from 'csstype';
 import type { PropsWithChildren, HTMLAttributes } from 'react';
 
+export interface AllowedOverflow {
+  horizontal: number;
+  vertical: number;
+}
+
 export interface DraggableProps extends HTMLAttributes<HTMLDivElement> {
   // The popover attribute is missing from HTMLAttributes, it's released in React v19. We can remove this property once we upgrade to React v19.
   popover?: 'hint' | 'manual' | 'auto';
   initialPosition?: CssPosition;
   declaredSize?: CssSize;
+  allowedOverflow?: Partial<AllowedOverflow>;
 }
 
 export interface DraggableHandleProps extends PropsWithChildren { }
@@ -35,6 +41,7 @@ export interface DraggableState {
   isDragging: boolean;
   setIsDragging: React.Dispatch<React.SetStateAction<boolean>>;
   setPosition: React.Dispatch<React.SetStateAction<CssPosition | Position>>;
+  allowedOverflow: AllowedOverflow;
 };
 
 export interface Boundaries {

@@ -29,6 +29,10 @@ The component does not apply any \`position\` style by default, giving you the f
 You must manually set the position using \`style={{ position: "absolute" }}\`, \`style={{ position: "fixed" }}\`, or use the Popover API.
 The component will work with any positioning strategy as long as \`top\` and \`left\` CSS properties are supported.
 
+### Viewport boundaries
+
+By default, the entire draggable element must stay within the viewport (fully visible). You can customize this behavior using the \`allowedOverflow\` prop to allow portions of the element to move outside the viewport while maintaining minimum visibility.
+
 ### Window resize handling
 
 To ensure the draggable element stays within the viewport after window resize, you must provide the \`declaredSize\` prop with the element's width and height.
@@ -46,11 +50,25 @@ If you don't provide \`declaredSize\`, the element may move outside the viewport
     initialPosition: {
       description: 'The initial position of the draggable element. `top` and `left` can be provided as any valid CSS.',
     },
+    allowedOverflow: {
+      description: `Controls how much of the draggable element is allowed to overflow outside the viewport. Values are decimals between 0 and 1.
+
+**Default behavior:** When not provided, the entire element must stay within the viewport (equivalent to \`{ horizontal: 0, vertical: 0 }\` - no overflow allowed).
+
+**Properties:**
+- \`horizontal\` (optional): Fraction of element width that can overflow outside viewport (0-1). Defaults to 0 (no overflow) if omitted.
+- \`vertical\` (optional): Fraction of element height that can overflow outside viewport (0-1). Defaults to 0 (no overflow) if omitted.
+
+**Examples:**
+- \`{ horizontal: 0.9, vertical: 0.9 }\` - Up to 90% of each dimension can overflow (10% must remain visible)
+- \`{ horizontal: 0.8 }\` - Up to 80% of width can overflow (20% must be visible), full height must stay on screen (default)
+- \`{ vertical: 0.5 }\` - Up to 50% of height can overflow, full width must stay on screen (default)`
+    },
     declaredSize: {
       description: `Optional declared size of the draggable element. This is used to ensure the Draggable element will not end up out of window on window resize.
 You can omit setting this property if you don't care about window resize.
 If you do care about it, but don't know the exact size of the element you'll have to calculate it using javascript.`
-    }
+    },
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: [ 'autodocs', 'skip-visual-testing' ],
@@ -60,7 +78,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const render = (args: DraggableProps): JSX.Element => (
-  <Draggable.Root {...args} style={{ position: 'absolute' }}>
+  <Draggable.Root {...args} style={{ position: 'fixed' }}>
     <div style={{ width: 250, height: 250, backgroundColor: '#fef68a' }}>
       <Draggable.Handle>
         <div style={{ width: '100%', height: 50, backgroundColor: '#e8d96f', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Drag me</div>
@@ -72,6 +90,7 @@ const render = (args: DraggableProps): JSX.Element => (
 export const Example: Story = {
   args: {
     initialPosition: { top: '50px', left: '50px' },
+    allowedOverflow: { horizontal: 0.6, vertical: 0 },
     declaredSize: { width: '250px', height: '250px' }
   },
   parameters: {
