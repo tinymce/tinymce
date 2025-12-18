@@ -6,6 +6,14 @@ import { LanguageZones } from '../zone/LanguageZones';
 import * as ClusterSearch from './ClusterSearch';
 import { WordDecision, type WordDecisionItem } from './WordDecision';
 
+interface Grouping<E> {
+  readonly all: WordDecisionItem<E>[];
+  readonly middle: WordDecisionItem<E>[];
+  readonly left: WordDecisionItem<E>[];
+  readonly right: WordDecisionItem<E>[];
+  readonly lang: Optional<string>;
+}
+
 interface Edges<E> {
   readonly left: WordDecisionItem<E>;
   readonly isEmpty: boolean;
@@ -49,14 +57,6 @@ const getEdges = <E, D>(universe: Universe<E, D>, start: E, finish: E, isCustomB
     isEmpty
   };
 };
-
-interface Grouping<E> {
-  readonly all: WordDecisionItem<E>[];
-  readonly middle: WordDecisionItem<E>[];
-  readonly left: WordDecisionItem<E>[];
-  readonly right: WordDecisionItem<E>[];
-  readonly lang: Optional<string>;
-}
 
 // Return a grouping of: left, middle, right, lang, and all. It will use
 // language boundaries in addition to the normal block boundaries. Use this

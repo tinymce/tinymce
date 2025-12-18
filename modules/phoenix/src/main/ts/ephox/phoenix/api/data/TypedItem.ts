@@ -1,6 +1,8 @@
 import type { Universe } from '@ephox/boss';
 import { Adt, Fun, Optional } from '@ephox/katamari';
 
+type TypedItemConstructor = <E, D>(item: E, universe: Universe<E, D>) => TypedItem<E, D>;
+
 type Handler<E, D, U> = (item: E, universe: Universe<E, D>) => U;
 
 interface TypedItemAdt<E, D> {
@@ -52,8 +54,6 @@ const ext = <E, D>(ti: TypedItemAdt<E, D>): TypedItem<E, D> => ({
   is: (other) => ti.fold(no, no, (i, u) => u.eq(i, other), no),
   len: () => ti.fold(zero, one, (i, u) => u.property().getText(i).length, one)
 });
-
-type TypedItemConstructor = <E, D>(item: E, universe: Universe<E, D>) => TypedItem<E, D>;
 
 // currently Fun.compose does not create the correct output type for functions with generic types
 const text = Fun.compose(ext as any, adt.text as any) as TypedItemConstructor;

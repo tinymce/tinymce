@@ -7,6 +7,14 @@ import * as SystemEvents from '../api/events/SystemEvents';
 import type { GuiSystem } from '../api/system/Gui';
 import * as AlloyLogger from '../log/AlloyLogger';
 
+enum EventConfiguration {
+  STOP,
+  NORMAL,
+  LOGGING
+}
+
+export type EventProcessor = (logger: DebuggerLogger) => boolean;
+
 export interface DebuggerLogger {
   logEventCut: (eventName: string, target: SugarElement<Node>, purpose: string) => void;
   logEventStopped: (eventName: string, target: SugarElement<Node>, purpose: string) => void;
@@ -55,15 +63,7 @@ const debugging: any = true;
 
 const CHROME_INSPECTOR_GLOBAL = '__CHROME_INSPECTOR_CONNECTION_TO_ALLOY__';
 
-enum EventConfiguration {
-  STOP,
-  NORMAL,
-  LOGGING
-}
-
 const eventConfig = Cell<Record<string, EventConfiguration>>({ });
-
-export type EventProcessor = (logger: DebuggerLogger) => boolean;
 
 const makeEventLogger = (eventName: string, initialTarget: SugarElement<Node>): DebuggerLogger => {
   const sequence: Array<{ outcome: string; target: SugarElement<Node>; purpose?: string }> = [ ];

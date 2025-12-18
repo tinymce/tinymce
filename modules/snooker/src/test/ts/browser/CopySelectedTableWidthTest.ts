@@ -5,13 +5,13 @@ import { Css, SugarElement } from '@ephox/sugar';
 import * as CopySelected from 'ephox/snooker/api/CopySelected';
 import { reducePrecision } from 'ephox/snooker/test/SizeUtils';
 
-const SEL_CLASS = 'copy-selected';
-
 interface TestCase {
   readonly label: string;
   readonly expectedWidth: string;
   readonly table: string;
 }
+
+const SEL_CLASS = 'copy-selected';
 
 const matchWithReducedPrecision = (label: string, expected: string, tableWidth: string) => {
   const roundedWidth = reducePrecision(tableWidth, 0);

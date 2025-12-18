@@ -7,6 +7,11 @@ import type { SnapConfig, SnapOutput, SnapPin, SnapsConfig } from '../common/Dra
 
 import * as Presnaps from './Presnaps';
 
+interface SnapCandidate<E> {
+  deltas: Optional<SugarPosition>;
+  snap: Optional<SnapConfig<E>>;
+}
+
 // Types of coordinates
 // SugarLocation: This is the position on the screen including scroll.
 // Absolute: This is the css setting that would be applied. Therefore, it subtracts
@@ -81,11 +86,6 @@ const findMatchingSnap = <E>(snaps: Array<SnapConfig<E>>, newCoord: DragCoord.Co
     }
   ) : Optional.none();
 });
-
-interface SnapCandidate<E> {
-  deltas: Optional<SugarPosition>;
-  snap: Optional<SnapConfig<E>>;
-}
 
 const findClosestSnap = <E>(component: AlloyComponent, snapInfo: SnapsConfig<E>, newCoord: DragCoord.CoordAdt, scroll: SugarPosition, origin: SugarPosition): Optional<SnapOutput<E>> => {
   // You need to pass in the absX and absY so that they can be used for things which only care about snapping one axis and keeping the other one.

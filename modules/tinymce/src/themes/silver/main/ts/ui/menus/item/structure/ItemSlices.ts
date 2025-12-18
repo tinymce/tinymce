@@ -8,6 +8,11 @@ import * as ConvertShortcut from '../../../alien/ConvertShortcut';
 import * as Icons from '../../../icons/Icons';
 import * as ItemClasses from '../ItemClasses';
 
+interface StyleProps {
+  tag: string;
+  styles: Record<string, string>;
+}
+
 const renderIcon = (name: string, icons: Icons.IconProvider, classes: string[] = [ ItemClasses.iconClass ]): SimpleSpec =>
   Icons.render(name, { tag: 'div', classes }, icons);
 
@@ -26,11 +31,6 @@ const renderHtml = (html: string, classes: string[]): SimpleSpec => ({
     innerHtml: html
   }
 });
-
-interface StyleProps {
-  tag: string;
-  styles: Record<string, string>;
-}
 
 const renderStyledText = (style: StyleProps, text: string): SimpleSpec => ({
   dom: {

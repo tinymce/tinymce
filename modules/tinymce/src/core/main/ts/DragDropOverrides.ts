@@ -19,19 +19,6 @@ import * as DragEvents from './events/DragEvents';
 import { isUIElement } from './focus/FocusController';
 import * as Predicate from './util/Predicate';
 
-/**
- * This module contains logic overriding the drag/drop logic of the editor.
- *
- * @private
- * @class tinymce.DragDropOverrides
- */
-
-// Arbitrary values needed when scrolling CEF elements
-const scrollPixelsPerInterval = 32;
-const scrollIntervalValue = 100;
-const mouseRangeToTriggerScrollInsideEditor = 8;
-const mouseRangeToTriggerScrollOutsideEditor = 16;
-
 interface State {
   element: HTMLElement;
   dataTransfer: DataTransfer;
@@ -47,6 +34,19 @@ interface State {
   ghost: HTMLElement;
   intervalId: Singleton.Repeatable;
 }
+
+/**
+ * This module contains logic overriding the drag/drop logic of the editor.
+ *
+ * @private
+ * @class tinymce.DragDropOverrides
+ */
+
+// Arbitrary values needed when scrolling CEF elements
+const scrollPixelsPerInterval = 32;
+const scrollIntervalValue = 100;
+const mouseRangeToTriggerScrollInsideEditor = 8;
+const mouseRangeToTriggerScrollOutsideEditor = 16;
 
 const isContentEditableFalse = NodeType.isContentEditableFalse;
 const isContentEditable = Predicate.or(isContentEditableFalse, NodeType.isContentEditableTrue) as (node: Node) => node is HTMLElement;

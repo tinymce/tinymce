@@ -18,25 +18,6 @@ import Tools from '../util/Tools';
 import EventUtils, { type EventUtilsCallback } from './EventUtils';
 import type StyleSheetLoader from './StyleSheetLoader';
 
-/**
- * Utility class for various DOM manipulation and retrieval functions.
- *
- * @class tinymce.dom.DOMUtils
- * @example
- * // Add a class to an element by id in the page
- * tinymce.DOM.addClass('someid', 'someclass');
- *
- * // Add a class to an element by id inside the editor
- * tinymce.activeEditor.dom.addClass('someid', 'someclass');
- */
-
-// Shorten names
-const each = Tools.each;
-const grep = Tools.grep;
-
-const internalStyleName = 'data-mce-style';
-const numericalCssMap = Tools.makeMap('fill-opacity font-weight line-height opacity orphans widows z-index zoom', ' ');
-
 interface AttrHook {
   set (elm: Element, value: string | boolean | number | null, name: string): void;
   get (elm: Element, name: string): string | undefined;
@@ -69,9 +50,13 @@ export interface DOMUtilsSettings {
 }
 
 export type Target = Node | Window;
+
 export type RunArguments<T extends Node = Node> = string | T | Array<string | T> | null;
+
 export type BoundEvent = [ Target, string, EventUtilsCallback<any>, any ];
+
 type Callback<K extends string> = EventUtilsCallback<MappedEvent<HTMLElementEventMap, K>>;
+
 type RunResult<T, R> = T extends Array<any> ? R[] : false | R;
 
 interface DOMUtils {
@@ -206,6 +191,25 @@ interface DOMUtils {
   isChildOf: (node: Node, parent: Node) => boolean;
   dumpRng: (r: Range) => string;
 }
+
+/**
+ * Utility class for various DOM manipulation and retrieval functions.
+ *
+ * @class tinymce.dom.DOMUtils
+ * @example
+ * // Add a class to an element by id in the page
+ * tinymce.DOM.addClass('someid', 'someclass');
+ *
+ * // Add a class to an element by id inside the editor
+ * tinymce.activeEditor.dom.addClass('someid', 'someclass');
+ */
+
+// Shorten names
+const each = Tools.each;
+const grep = Tools.grep;
+
+const internalStyleName = 'data-mce-style';
+const numericalCssMap = Tools.makeMap('fill-opacity font-weight line-height opacity orphans widows z-index zoom', ' ');
 
 const legacySetAttribute = (elm: SugarElement<Element>, name: string, value: string | number | boolean | null) => {
   if (Type.isNullable(value) || value === '') {

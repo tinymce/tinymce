@@ -6,6 +6,12 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
+interface ItemProps {
+  classes: string[];
+  name: string;
+  store: string[];
+}
+
 const styles = `.stay:focus {
     background-color: #cadbee;
   }
@@ -19,12 +25,6 @@ const store: string[] = [];
 const clearStore = (store: string[]) => {
   store.splice(0, store.length);
 };
-
-interface ItemProps {
-  classes: string[];
-  name: string;
-  store: string[];
-}
 
 const Item = ({ classes, name, store }: ItemProps) =>
   (

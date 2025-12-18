@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-wrapper-object-types */
-const getPrototypeOf = Object.getPrototypeOf;
 
-interface Constructor<T extends Object> {
+interface Constructor<T extends object> {
   readonly prototype: T;
   readonly name: string;
 }
+
+const getPrototypeOf = Object.getPrototypeOf;
 
 const hasProto = <T extends Object>(v: Object, constructor: Constructor<T>, predicate: (v: Object, prototype: T) => boolean): boolean => {
   if (predicate(v, constructor.prototype)) {

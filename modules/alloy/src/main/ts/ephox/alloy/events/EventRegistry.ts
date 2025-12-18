@@ -5,6 +5,10 @@ import * as Tagger from '../registry/Tagger';
 
 import * as DescribedHandler from './DescribedHandler';
 
+export type EventName = string;
+
+export type Uid = string;
+
 export interface ElementAndHandler {
   readonly element: SugarElement<Node>;
   readonly descHandler: CurriedHandler;
@@ -41,9 +45,6 @@ const broadcastHandler = (id: string, handler: CurriedHandler): UidAndHandler =>
   id,
   descHandler: handler
 });
-
-export type EventName = string;
-export type Uid = string;
 
 export const EventRegistry = (): EventRegistry => {
   const registry: Record<EventName, Record<Uid, CurriedHandler>> = { };

@@ -1,5 +1,7 @@
 import * as Type from './Type';
 
+type Fun<X, Y> = (x: X) => Y;
+
 const noop: (...args: any[]) => void
 = () => { };
 
@@ -72,7 +74,6 @@ const always: (...args: any[]) => true = constant<true>(true);
 /* Used to weaken types */
 const weaken = <A, B extends A>(b: B): A => b;
 
-type Fun<X, Y> = (x: X) => Y;
 const pipe: {
   <A, B>(a: A, ab: Fun<A, B>): B;
   <A, B, C>(a: A, ab: Fun<A, B>, bc: Fun<B, C>): C;

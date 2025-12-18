@@ -2,6 +2,8 @@ import { Arr } from '@ephox/katamari';
 
 import * as UnicodeData from './UnicodeData';
 
+export type CharacterMap = number[];
+
 const SETS = UnicodeData.SETS;
 const OTHER = UnicodeData.characterIndices.OTHER;
 
@@ -32,8 +34,6 @@ const memoize = <R> (func: (char: string) => R) => {
     }
   };
 };
-
-export type CharacterMap = number[];
 
 const classify = (characters: string[]): CharacterMap => {
   const memoized = memoize(getType);

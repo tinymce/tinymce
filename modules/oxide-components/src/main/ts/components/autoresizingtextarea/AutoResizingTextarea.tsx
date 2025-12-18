@@ -6,16 +6,6 @@ import * as Bem from '../../utils/Bem';
 import type { Height } from './AutoResizingTextareaTypes';
 import { computeMaxRows, computeMinRows, computeSingleRowHeight, resizeTextarea } from './AutoResizingTextareaUtils';
 
-const defaultMinHeight: Height = {
-  unit: 'rows',
-  value: 1
-};
-
-const defaultMaxHeight: Height = {
-  unit: 'rows',
-  value: 4
-};
-
 export interface AutoResizingTextareaProps {
   readonly maxHeight?: Height;
   readonly minHeight?: Height;
@@ -25,6 +15,16 @@ export interface AutoResizingTextareaProps {
   readonly disabled?: boolean;
   readonly placeholder?: string;
 }
+
+const defaultMinHeight: Height = {
+  unit: 'rows',
+  value: 1
+};
+
+const defaultMaxHeight: Height = {
+  unit: 'rows',
+  value: 4
+};
 
 export const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizingTextareaProps>(({
   maxHeight = defaultMaxHeight,

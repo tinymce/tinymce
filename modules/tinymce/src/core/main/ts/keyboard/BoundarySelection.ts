@@ -14,14 +14,14 @@ import * as BoundaryLocation from './BoundaryLocation';
 import * as InlineUtils from './InlineUtils';
 import * as NavigationUtils from './NavigationUtils';
 
+type NodePredicate = (node: Node) => node is Element;
+
 const setCaretPosition = (editor: Editor, pos: CaretPosition): void => {
   const rng = editor.dom.createRng();
   rng.setStart(pos.container(), pos.offset());
   rng.setEnd(pos.container(), pos.offset());
   editor.selection.setRng(rng);
 };
-
-type NodePredicate = (node: Node) => node is Element;
 
 const setSelected = (state: boolean, elm: Element) => {
   if (state) {

@@ -22,6 +22,8 @@ import * as TableLookup from './TableLookup';
 import type { TableSection } from './TableSection';
 import { Warehouse } from './Warehouse';
 
+type TableOp<T> = (table: SugarElement<HTMLTableElement>, target: T, generators: Generators, behaviours?: RunOperation.OperationBehaviours) => Optional<RunOperation.RunOperationOutput>;
+
 export interface TableOperationResult {
   readonly grid: Structs.RowCells[];
   readonly cursor: Optional<SugarElement<HTMLTableCellElement>>;
@@ -419,8 +421,6 @@ const pasteColumnsExtractor = (before: boolean) => (warehouse: Warehouse, target
 
 const headerCellGenerator = Generators.transform('th');
 const bodyCellGenerator = Generators.transform('td');
-
-type TableOp<T> = (table: SugarElement<HTMLTableElement>, target: T, generators: Generators, behaviours?: RunOperation.OperationBehaviours) => Optional<RunOperation.RunOperationOutput>;
 
 export const insertRowBefore: TableOp<RunOperation.TargetElement> = (table, target, generators, behaviours?) =>
   RunOperation.run(opInsertRowBefore, RunOperation.onCell, Fun.noop, Fun.noop, Generators.modification, table, target, generators, behaviours);

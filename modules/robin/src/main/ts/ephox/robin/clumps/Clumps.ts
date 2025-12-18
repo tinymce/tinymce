@@ -4,6 +4,11 @@ import { Descent, Gather, Spot, type SpotPoint, type Transition } from '@ephox/p
 
 import * as Structure from '../api/general/Structure';
 
+interface ClumpRange<E> {
+  start: E;
+  finish: E;
+}
+
 export interface Clump<E> {
   readonly start: E;
   readonly soffset: number;
@@ -38,11 +43,6 @@ const adt: {
   { split: [ 'boundary', 'last', 'mode' ] },
   { finished: [ 'element', 'mode' ] }
 ]);
-
-interface ClumpRange<E> {
-  start: E;
-  finish: E;
-}
 
 const clump = <E>(start: E, soffset: number, finish: E, foffset: number): Clump<E> => ({
   start,

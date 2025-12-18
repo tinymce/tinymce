@@ -6,6 +6,8 @@ import type { Zones, Zone } from '../../zone/Zones';
 
 import type { ZoneViewports } from './ZoneViewports';
 
+type EmptyFn = <E>() => Zones<E>;
+
 /*
  * TextZones return an array of zones based on an area being scanned. It will use the viewport
  * to work out when it can skip/abort scanning the rest of the element.
@@ -40,7 +42,6 @@ const range = <E, D>(
   return TextZones.fromRange(universe, startPt.element, finishPt.element, envLang, viewport);
 };
 
-type EmptyFn = <E>() => Zones<E>;
 const empty: EmptyFn = TextZones.empty;
 
 export type { Zone, Zones };

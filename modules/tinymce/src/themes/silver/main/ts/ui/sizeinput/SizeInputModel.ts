@@ -1,5 +1,7 @@
 import { Obj, Optional, Optionals, Result } from '@ephox/katamari';
 
+export type SizeConversion = (input: Size) => Optional<Size>;
+
 export type SizeUnit = '' | 'cm' | 'mm' | 'in' | 'px' | 'pt' | 'pc' | 'em' | 'ex' | 'ch' | 'rem' | 'vw' | 'vh' | 'vmin' | 'vmax' | '%';
 
 export interface Size {
@@ -70,8 +72,6 @@ export const convertUnit = (size: Size, unit: SizeUnit): Optional<number> => {
     return Optional.none();
   }
 };
-
-export type SizeConversion = (input: Size) => Optional<Size>;
 
 export const noSizeConversion: SizeConversion = (_input: Size) => Optional.none();
 

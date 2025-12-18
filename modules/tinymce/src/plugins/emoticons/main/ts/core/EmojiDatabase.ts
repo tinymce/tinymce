@@ -5,8 +5,6 @@ import Resource from 'tinymce/core/api/Resource';
 
 import * as Options from '../api/Options';
 
-const ALL_CATEGORY = 'All';
-
 interface RawEmojiEntry {
   readonly keywords: string[];
   readonly char: string;
@@ -24,6 +22,8 @@ export interface EmojiDatabase {
   readonly listAll: () => EmojiEntry[];
   readonly listCategories: () => string[];
 }
+
+const ALL_CATEGORY = 'All';
 
 const categoryNameMap = {
   symbols: 'Symbols',

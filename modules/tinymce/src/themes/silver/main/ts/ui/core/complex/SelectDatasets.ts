@@ -4,6 +4,11 @@ import type Editor from 'tinymce/core/api/Editor';
 
 import type { UiFactoryBackstageForStyleFormats } from '../../../backstage/StyleFormatsBackstage';
 
+export enum Delimiter {
+  SemiColon,
+  Space
+}
+
 export interface BasicSelectItem {
   readonly title: string;
   readonly format: string;
@@ -37,11 +42,6 @@ const buildBasicStaticDataset = (data: Array<BasicSelectItem>): BasicSelectDatas
   type: 'basic',
   data
 });
-
-export enum Delimiter {
-  SemiColon,
-  Space
-}
 
 const split = (rawFormats: string, delimiter: Delimiter): string[] => {
   if (delimiter === Delimiter.SemiColon) {

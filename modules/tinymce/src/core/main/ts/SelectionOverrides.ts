@@ -17,14 +17,14 @@ import * as EditorFocus from './focus/EditorFocus';
 import * as MediaFocus from './focus/MediaFocus';
 import * as Rtc from './Rtc';
 
-const isContentEditableFalse = NodeType.isContentEditableFalse;
-
 interface SelectionOverrides {
   showCaret: (direction: number, node: HTMLElement, before: boolean, scrollIntoView?: boolean) => Range | null;
   showBlockCaretContainer: (blockCaretContainer: HTMLElement) => void;
   hideFakeCaret: () => void;
   destroy: () => void;
 }
+
+const isContentEditableFalse = NodeType.isContentEditableFalse;
 
 const getContentEditableRoot = (editor: Editor, node: Node) => CefUtils.getContentEditableRoot(editor.getBody(), node);
 

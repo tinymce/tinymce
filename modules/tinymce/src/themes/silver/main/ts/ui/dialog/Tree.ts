@@ -27,6 +27,10 @@ import type { UiFactoryBackstage } from '../../backstage/Backstage';
 import { renderMenuButton } from '../button/MenuButton';
 import * as Icons from '../icons/Icons';
 
+interface UpdateTreeSelectedItemEvent extends CustomEvent {
+  readonly value: string;
+}
+
 type TreeSpec = Omit<Dialog.Tree, 'type'>;
 type OnLeafAction = (id: string) => void;
 
@@ -377,10 +381,6 @@ const renderDirectory = ({
     ])
   });
 };
-
-interface UpdateTreeSelectedItemEvent extends CustomEvent {
-  readonly value: string;
-}
 
 const treeEventsId = Id.generate('tree-event-id');
 

@@ -5,8 +5,6 @@ import DOMUtils from 'tinymce/core/api/dom/DOMUtils';
 
 import * as Utils from './Utils';
 
-const DOM = DOMUtils.DOM;
-
 interface ImageData {
   readonly src: string;
   readonly alt: string | null;
@@ -24,7 +22,10 @@ interface ImageData {
 }
 
 type CssNormalizer = (css: string | undefined) => string;
+
 type UpdateImageProp = <T extends string>(image: HTMLElement, name: T, value: string) => void;
+
+const DOM = DOMUtils.DOM;
 
 const getHspace = (image: HTMLElement): string => {
   if (image.style.marginLeft && image.style.marginRight && image.style.marginLeft === image.style.marginRight) {

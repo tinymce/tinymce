@@ -3,50 +3,6 @@ import type { SugarElement } from '@ephox/sugar';
 
 import type { CellElement, RowElement, RowCell } from '../util/TableTypes';
 
-export interface Dimension {
-  readonly width: number;
-  readonly height: number;
-}
-
-export interface Dimensions {
-  readonly width: number[];
-  readonly height: number[];
-}
-
-export interface Grid {
-  readonly rows: number;
-  readonly columns: number;
-}
-
-export interface Address {
-  readonly row: number;
-  readonly column: number;
-}
-
-export interface Coords {
-  readonly x: number;
-  readonly y: number;
-}
-
-export interface Detail<T extends CellElement = CellElement> {
-  readonly element: SugarElement<T>;
-  readonly rowspan: number;
-  readonly colspan: number;
-}
-
-export interface DetailNew<T extends CellElement = CellElement> extends Detail<T> {
-  readonly isNew: boolean;
-}
-
-export interface DetailExt extends Detail<HTMLTableCellElement> {
-  readonly row: number;
-  readonly column: number;
-  readonly isLocked: boolean;
-}
-
-export type Section = 'tfoot' | 'thead' | 'tbody' | 'colgroup';
-const validSectionList: Section[] = [ 'tfoot', 'thead', 'tbody', 'colgroup' ];
-
 export interface RowDetail<T extends Detail<RowCell<R>>, R extends RowElement = RowElement> {
   readonly element: SugarElement<R>;
   readonly cells: T[];
@@ -90,6 +46,50 @@ export interface Bounds {
   readonly finishRow: number;
   readonly finishCol: number;
 }
+
+export interface Dimension {
+  readonly width: number;
+  readonly height: number;
+}
+
+export interface Dimensions {
+  readonly width: number[];
+  readonly height: number[];
+}
+
+export interface Grid {
+  readonly rows: number;
+  readonly columns: number;
+}
+
+export interface Address {
+  readonly row: number;
+  readonly column: number;
+}
+
+export interface Coords {
+  readonly x: number;
+  readonly y: number;
+}
+
+export interface Detail<T extends CellElement = CellElement> {
+  readonly element: SugarElement<T>;
+  readonly rowspan: number;
+  readonly colspan: number;
+}
+
+export interface DetailNew<T extends CellElement = CellElement> extends Detail<T> {
+  readonly isNew: boolean;
+}
+
+export interface DetailExt extends Detail<HTMLTableCellElement> {
+  readonly row: number;
+  readonly column: number;
+  readonly isLocked: boolean;
+}
+
+export type Section = 'tfoot' | 'thead' | 'tbody' | 'colgroup';
+const validSectionList: Section[] = [ 'tfoot', 'thead', 'tbody', 'colgroup' ];
 
 const isValidSection = (parentName: string): parentName is Section =>
   Arr.contains(validSectionList, parentName);

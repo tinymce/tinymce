@@ -2,6 +2,31 @@ import type Editor from './Editor';
 import Env from './Env';
 import Tools from './util/Tools';
 
+type ModifierMap = Record<'alt' | 'ctrl' | 'shift' | 'meta' | 'access', {}>;
+
+interface Shortcut {
+  id: string;
+  access: boolean;
+  ctrl: boolean;
+  shift: boolean;
+  meta: boolean;
+  alt: boolean;
+  keyCode: number;
+  charCode: number;
+  subpatterns: Shortcut[];
+  desc: string;
+  func: () => void;
+  scope: any;
+}
+
+export interface ShortcutsConstructor {
+  readonly prototype: Shortcuts;
+
+  new (editor: Editor): Shortcuts;
+}
+
+type CommandFunc = string | [string, boolean, any] | (() => void);
+
 /**
  * Contains logic for handling keyboard shortcuts.
  *
@@ -40,32 +65,7 @@ const keyCodeLookup: Record<string, number> = {
   f12: 123
 };
 
-type ModifierMap = Record<'alt' | 'ctrl' | 'shift' | 'meta' | 'access', {}>;
-
 const modifierNames = Tools.makeMap('alt,ctrl,shift,meta,access') as ModifierMap;
-
-interface Shortcut {
-  id: string;
-  access: boolean;
-  ctrl: boolean;
-  shift: boolean;
-  meta: boolean;
-  alt: boolean;
-  keyCode: number;
-  charCode: number;
-  subpatterns: Shortcut[];
-  desc: string;
-  func: () => void;
-  scope: any;
-}
-
-export interface ShortcutsConstructor {
-  readonly prototype: Shortcuts;
-
-  new (editor: Editor): Shortcuts;
-}
-
-type CommandFunc = string | [string, boolean, any] | (() => void);
 
 const isModifier = (key: string): key is keyof ModifierMap =>
   key in modifierNames;

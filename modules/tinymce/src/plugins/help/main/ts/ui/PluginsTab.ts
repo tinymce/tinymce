@@ -8,13 +8,13 @@ import I18n from 'tinymce/core/api/util/I18n';
 import * as Options from '../api/Options';
 import * as PluginUrls from '../data/PluginUrls';
 
-declare let tinymce: TinyMCE;
-
 interface PluginData {
   // The name is just used for sorting alphabetically.
   readonly name: string;
   readonly html: string;
 }
+
+declare let tinymce: TinyMCE;
 
 const tab = (editor: Editor): Dialog.TabSpec & { name: string } => {
   const availablePlugins = () => {

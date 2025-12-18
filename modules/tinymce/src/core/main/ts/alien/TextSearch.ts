@@ -6,9 +6,9 @@ import * as NodeType from '../dom/NodeType';
 
 import * as Spot from './Spot';
 
-const DOM = DOMUtils.DOM;
-
 export type ProcessCallback = (element: Text, offset: number, text: string) => number;
+
+const DOM = DOMUtils.DOM;
 
 const alwaysNext = (startNode: Node) => (node: Node): number =>
   startNode === node ? -1 : 0;

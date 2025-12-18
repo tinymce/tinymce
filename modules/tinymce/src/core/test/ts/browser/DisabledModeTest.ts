@@ -9,12 +9,12 @@ import type Editor from 'tinymce/core/api/Editor';
 import * as Disabled from 'tinymce/core/mode/Disabled';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 
-const tOptional = OptionalInstances.tOptional;
-
 interface TestButtonDisabledState {
   name: string;
   disabledAttribute: 'aria-disabled' | 'disabled';
 }
+
+const tOptional = OptionalInstances.tOptional;
 
 describe('browser.tinymce.core.DisabledModeTest', () => {
   const settings = {

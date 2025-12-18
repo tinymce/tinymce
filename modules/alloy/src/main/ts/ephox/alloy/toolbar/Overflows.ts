@@ -2,12 +2,6 @@ import { Arr, Optional } from '@ephox/katamari';
 
 import * as PositionArray from '../alien/PositionArray';
 
-const output = <T>(within: T[], extra: T[], withinWidth: number): Widths<T> => ({
-  within,
-  extra,
-  withinWidth
-});
-
 interface Pos<T> {
   readonly element: T;
   readonly start: number;
@@ -22,6 +16,12 @@ interface Widths<T> {
 }
 
 type GetLengthFunc<T> = (comp: T) => number;
+
+const output = <T>(within: T[], extra: T[], withinWidth: number): Widths<T> => ({
+  within,
+  extra,
+  withinWidth
+});
 
 const apportion = <T>(units: T[], total: number, len: GetLengthFunc<T>): Widths<Pos<T>> => {
   const parray: Pos<T>[] = PositionArray.generate(units, (unit, current) => {

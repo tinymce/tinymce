@@ -3,6 +3,14 @@ import { Obj, Type } from '@ephox/katamari';
 import * as NodeType from '../../dom/NodeType';
 import * as Utils from '../../events/EventUtils';
 
+export interface EventUtilsConstructor {
+  readonly prototype: EventUtils;
+
+  new (): EventUtils;
+
+  Event: EventUtils;
+}
+
 export type EventUtilsCallback<T> = (event: EventUtilsEvent<T>) => void | boolean;
 export type EventUtilsEvent<T> = Utils.NormalizedEvent<T> & {
   metaKey: boolean;
@@ -119,14 +127,6 @@ const bindOnReady = (win: Window, callback: (event: ReadyEvent) => void, eventUt
     addEvent(win, 'load', readyHandler);
   }
 };
-
-export interface EventUtilsConstructor {
-  readonly prototype: EventUtils;
-
-  new (): EventUtils;
-
-  Event: EventUtils;
-}
 
 /**
  * This class enables you to bind/unbind native events to elements and normalize it's behavior across browsers.

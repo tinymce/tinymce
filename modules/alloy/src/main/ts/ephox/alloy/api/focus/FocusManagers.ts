@@ -6,6 +6,11 @@ import type { AlloyComponent } from '../component/ComponentApi';
 import * as AlloyTriggers from '../events/AlloyTriggers';
 import * as SystemEvents from '../events/SystemEvents';
 
+export interface FocusManager {
+  get: (component: AlloyComponent) => Optional<SugarElement<HTMLElement>>;
+  set: (component: AlloyComponent, focusee: SugarElement<HTMLElement>) => void;
+}
+
 const reportFocusShifting = (component: AlloyComponent, prevFocus: Optional<SugarElement<HTMLElement>>, newFocus: Optional<SugarElement<HTMLElement>>) => {
   const noChange = prevFocus.exists((p) => newFocus.exists((n) => Compare.eq(n, p)));
   if (!noChange) {
@@ -15,11 +20,6 @@ const reportFocusShifting = (component: AlloyComponent, prevFocus: Optional<Suga
     });
   }
 };
-
-export interface FocusManager {
-  get: (component: AlloyComponent) => Optional<SugarElement<HTMLElement>>;
-  set: (component: AlloyComponent, focusee: SugarElement<HTMLElement>) => void;
-}
 
 const dom = (): FocusManager => {
   const get = (component: AlloyComponent) => Focus.search(component.element);

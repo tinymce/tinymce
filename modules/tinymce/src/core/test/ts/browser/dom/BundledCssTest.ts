@@ -7,10 +7,11 @@ import { assert } from 'chai';
 import type Editor from 'tinymce/core/api/Editor';
 import type { TinyMCE } from 'tinymce/core/api/Tinymce';
 
-declare const tinymce: TinyMCE;
-
 type ContentSkin = 'default' | 'dark' | 'writer' | 'document' | 'tinymce-5' | 'tinymce-5-dark';
+
 type UiSkin = 'oxide' | 'oxide-dark' | 'tinymce-5' | 'tinymce-5-dark';
+
+declare const tinymce: TinyMCE;
 
 describe('browser.tinymce.core.dom.BundledCssTest', () => {
   const baseUrl = '/project/tinymce/js/tinymce/';

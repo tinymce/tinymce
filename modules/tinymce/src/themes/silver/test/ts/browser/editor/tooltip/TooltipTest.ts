@@ -14,6 +14,11 @@ interface EditorWithTestApis extends Editor {
 
 import * as TooltipUtils from '../../../module/TooltipUtils';
 
+interface TestScenario {
+  readonly label: string;
+  readonly pTriggerTooltip: (editor: Editor, selector: string) => Promise<void>;
+}
+
 const getSplitButtonApi = (editor: EditorWithTestApis) => {
   const apiFunction = editor.testSplitButtonApi;
   if (!apiFunction) {
@@ -29,11 +34,6 @@ const getSplitButtonNoChevronApi = (editor: EditorWithTestApis) => {
   }
   return apiFunction().getOrDie('Split button no-chevron API not available');
 };
-
-interface TestScenario {
-  readonly label: string;
-  readonly pTriggerTooltip: (editor: Editor, selector: string) => Promise<void>;
-}
 
 describe('browser.tinymce.themes.silver.editor.TooltipTest', () => {
   Arr.each([

@@ -15,10 +15,6 @@ import * as ColorSwatch from '../core/color/ColorSwatch';
 import { formChangeEvent } from '../general/FormEvents';
 import { renderPanelButton } from '../general/PanelButton';
 
-const colorInputChangeEvent = Id.generate('color-input-change');
-const colorSwatchChangeEvent = Id.generate('color-swatch-change');
-const colorPickerCancelEvent = Id.generate('color-picker-cancel');
-
 interface ColorInputChangeEvent extends CustomEvent {
   readonly color: string;
 }
@@ -32,6 +28,10 @@ interface ColorPickerCancelEvent extends CustomEvent {
 }
 
 type ColorInputSpec = Omit<Dialog.ColorInput, 'type'>;
+
+const colorInputChangeEvent = Id.generate('color-input-change');
+const colorSwatchChangeEvent = Id.generate('color-swatch-change');
+const colorPickerCancelEvent = Id.generate('color-picker-cancel');
 
 export const renderColorInput = (
   spec: ColorInputSpec,

@@ -1,5 +1,14 @@
 import { Arr, Optional } from '@ephox/katamari';
 
+type Units = {
+  [K in keyof typeof units]: typeof units[K][number];
+};
+
+export interface Dimension<U extends keyof Units> {
+  readonly value: number;
+  readonly unit: Units[U];
+}
+
 const units = {
   // we don't really support all of these different ways to express a length
   unsupportedLength: [
@@ -30,15 +39,6 @@ const units = {
   relative: [ '%' as '%' ],
   empty: [ '' as '' ]
 };
-
-type Units = {
-  [K in keyof typeof units]: typeof units[K][number];
-};
-
-export interface Dimension<U extends keyof Units> {
-  readonly value: number;
-  readonly unit: Units[U];
-}
 
 // Built from https://tc39.es/ecma262/#prod-StrDecimalLiteral
 // Matches a float followed by a trailing set of characters

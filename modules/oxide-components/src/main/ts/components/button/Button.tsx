@@ -2,6 +2,11 @@ import { forwardRef, type ButtonHTMLAttributes } from 'react';
 
 import * as Bem from '../../utils/Bem';
 
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  readonly variant?: 'primary' | 'secondary' | 'outlined' | 'naked';
+  readonly active?: boolean;
+}
+
 const calculateClassFromVariant = (variant: 'primary' | 'secondary' | 'outlined' | 'naked', modifiers: { enabled: boolean }): string => {
   switch (variant) {
     case 'primary':
@@ -16,11 +21,6 @@ const calculateClassFromVariant = (variant: 'primary' | 'secondary' | 'outlined'
       return Bem.block('tox-button', modifiers);
   }
 };
-
-export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  readonly variant?: 'primary' | 'secondary' | 'outlined' | 'naked';
-  readonly active?: boolean;
-}
 
 /** Primary UI component for user interaction */
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(({

@@ -1,5 +1,15 @@
 import { Arr, Cell, Obj, Type, Unicode } from '@ephox/katamari';
 
+interface I18n {
+  getData: () => Record<string, Record<string, string>>;
+  setCode: (newCode: string) => void;
+  getCode: () => string;
+  add: (code: string, items: Record<string, string>) => void;
+  translate: (text: Untranslated) => TranslatedString;
+  isRtl: () => boolean;
+  hasCode: (code: string) => boolean;
+}
+
 /**
  * I18n class that handles translation of TinyMCE UI.
  * Uses po style with csharp style parameters.
@@ -164,16 +174,6 @@ const isRtl = (): boolean => getLanguageData()
  * @return {Boolean} True if the current language pack for the specified code exists.
  */
 const hasCode = (code: string): boolean => Obj.has(data, code);
-
-interface I18n {
-  getData: () => Record<string, Record<string, string>>;
-  setCode: (newCode: string) => void;
-  getCode: () => string;
-  add: (code: string, items: Record<string, string>) => void;
-  translate: (text: Untranslated) => TranslatedString;
-  isRtl: () => boolean;
-  hasCode: (code: string) => boolean;
-}
 
 const I18n: I18n = {
   getData,

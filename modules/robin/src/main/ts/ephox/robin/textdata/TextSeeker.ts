@@ -4,6 +4,10 @@ import { Descent, type Direction, Gather, Seeker, Spot, type SpotPoint, type Tra
 
 import * as Structure from '../api/general/Structure';
 
+export type TextSeekerPhaseConstructor = typeof phase;
+
+export type TextSeekerPhaseProcessor<E, D> = (universe: Universe<E, D>, phase: TextSeekerPhaseConstructor, item: E, text: string, offsetOption: Optional<number>) => TextSeekerPhase<E>;
+
 export interface TextSeekerPhase<E> {
   fold: <T> (
     abort: () => T,
@@ -44,9 +48,6 @@ const phase: {
   { kontinue: [ ] },
   { finish: [ 'info' ] }
 ]);
-
-export type TextSeekerPhaseConstructor = typeof phase;
-export type TextSeekerPhaseProcessor<E, D> = (universe: Universe<E, D>, phase: TextSeekerPhaseConstructor, item: E, text: string, offsetOption: Optional<number>) => TextSeekerPhase<E>;
 
 const outcome: {
   aborted: <E>() => TextSeekerOutcome<E>;

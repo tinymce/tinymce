@@ -3,6 +3,16 @@ import { Hierarchy, type SugarElement } from '@ephox/sugar';
 
 import { Chain } from './Chain';
 
+export interface CursorSpec {
+  readonly element: number[];
+  readonly offset: number;
+}
+
+export interface RangeSpec {
+  readonly start: CursorSpec;
+  readonly finish?: CursorSpec;
+}
+
 export interface CursorRange {
   readonly start: SugarElement<Node>;
   readonly soffset: number;
@@ -31,11 +41,6 @@ const path = (obj: { startPath: number[]; soffset: number; finishPath: number[];
   foffset: obj.foffset
 });
 
-export interface CursorSpec {
-  readonly element: number[];
-  readonly offset: number;
-}
-
 const pathFromCollapsed = (spec: CursorSpec): CursorPath =>
   path({
     startPath: spec.element,
@@ -43,11 +48,6 @@ const pathFromCollapsed = (spec: CursorSpec): CursorPath =>
     finishPath: spec.element,
     foffset: spec.offset
   });
-
-export interface RangeSpec {
-  readonly start: CursorSpec;
-  readonly finish?: CursorSpec;
-}
 
 const pathFromRange = (spec: RangeSpec): CursorPath => {
   const finish = spec.finish !== undefined ? spec.finish : spec.start;

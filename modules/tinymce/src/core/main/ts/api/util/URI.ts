@@ -4,23 +4,6 @@ import Entities from '../html/Entities';
 
 import Tools from './Tools';
 
-/**
- * This class handles parsing, modification and serialization of URI/URL strings.
- * @class tinymce.util.URI
- */
-
-const each = Tools.each, trim = Tools.trim;
-const queryParts = [
-  'source', 'protocol', 'authority', 'userInfo', 'user', 'password', 'host',
-  'port', 'relative', 'path', 'directory', 'file', 'query', 'anchor'
-] as const;
-const DEFAULT_PORTS: Record<string, number> = {
-  ftp: 21,
-  http: 80,
-  https: 443,
-  mailto: 25
-};
-
 export interface URISettings {
   base_uri?: URI;
 }
@@ -39,6 +22,23 @@ interface SafeUriOptions {
   readonly allow_script_urls?: boolean;
   readonly allow_svg_data_urls?: boolean;
 }
+
+/**
+ * This class handles parsing, modification and serialization of URI/URL strings.
+ * @class tinymce.util.URI
+ */
+
+const each = Tools.each, trim = Tools.trim;
+const queryParts = [
+  'source', 'protocol', 'authority', 'userInfo', 'user', 'password', 'host',
+  'port', 'relative', 'path', 'directory', 'file', 'query', 'anchor'
+] as const;
+const DEFAULT_PORTS: Record<string, number> = {
+  ftp: 21,
+  http: 80,
+  https: 443,
+  mailto: 25
+};
 
 const safeSvgDataUrlElements = [ 'img', 'video' ];
 

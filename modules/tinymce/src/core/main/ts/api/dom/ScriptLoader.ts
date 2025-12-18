@@ -4,6 +4,19 @@ import Tools from '../util/Tools';
 
 import DOMUtils from './DOMUtils';
 
+export interface ScriptLoaderSettings {
+  referrerPolicy?: ReferrerPolicy;
+  crossOrigin?: (url: string) => string | undefined;
+}
+
+export interface ScriptLoaderConstructor {
+  readonly prototype: ScriptLoader;
+
+  new(): ScriptLoader;
+
+  ScriptLoader: ScriptLoader;
+}
+
 /**
  * This class handles asynchronous/synchronous loading of JavaScript files it will execute callbacks
  * when various items gets loaded. This class is useful to load external JavaScript files.
@@ -29,19 +42,6 @@ import DOMUtils from './DOMUtils';
  */
 
 const DOM = DOMUtils.DOM;
-
-export interface ScriptLoaderSettings {
-  referrerPolicy?: ReferrerPolicy;
-  crossOrigin?: (url: string) => string | undefined;
-}
-
-export interface ScriptLoaderConstructor {
-  readonly prototype: ScriptLoader;
-
-  new(): ScriptLoader;
-
-  ScriptLoader: ScriptLoader;
-}
 
 const QUEUED = 0;
 const LOADING = 1;

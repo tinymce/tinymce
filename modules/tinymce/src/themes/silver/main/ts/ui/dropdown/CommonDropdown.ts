@@ -23,10 +23,6 @@ import * as MenuParts from '../menus/menu/MenuParts';
 import { focusSearchField, handleRedirectToMenuItem, handleRefetchTrigger, updateAriaOnDehighlight, updateAriaOnHighlight } from '../menus/menu/searchable/SearchableMenu';
 import { type RedirectMenuItemInteractionEvent, redirectMenuItemInteractionEvent, type RefetchTriggerEvent, refetchTriggerEvent } from '../menus/menu/searchable/SearchableMenuEvents';
 
-export const updateMenuText = Id.generate('update-menu-text');
-export const updateMenuIcon = Id.generate('update-menu-icon');
-export const updateTooltiptext = Id.generate('update-tooltip-text');
-
 export interface UpdateMenuTextEvent extends CustomEvent {
   readonly text: string;
 }
@@ -58,6 +54,10 @@ export interface CommonDropdownSpec<T> {
   readonly ariaLabel: Optional<string>;
   readonly context: string;
 }
+
+export const updateMenuText = Id.generate('update-menu-text');
+export const updateMenuIcon = Id.generate('update-menu-icon');
+export const updateTooltiptext = Id.generate('update-tooltip-text');
 
 // TODO: Use renderCommonStructure here.
 const renderCommonDropdown = <T>(

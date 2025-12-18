@@ -2,11 +2,11 @@ import type { Dialog } from '@ephox/bridge';
 
 import type { TinyMCE } from 'tinymce/core/api/PublicApi';
 
-declare let tinymce: TinyMCE;
-
 interface Data {
   search: string;
 }
+
+declare let tinymce: TinyMCE;
 
 export default (): void => {
   tinymce.init({
