@@ -117,12 +117,24 @@
     background: linear-gradient(to bottom, transparent, var(--tox-private-background-color, @background-color));
   }
 
-  .tox-ai__error-message {
+  .tox-ai-error {
     border-radius: var(--tox-private-panel-border-radius, @panel-border-radius);
     border: 1px solid var(--tox-private-color-error, @color-error);
-    background: linear-gradient(0deg, color-mix(in srgb, var(--tox-private-color-white, @color-white) 90%, transparent) 0%, color-mix(in srgb, var(--tox-private-color-white, @color-white) 90%, transparent) 100%),  var(--tox-private-color-error, @color-error);
+    background: linear-gradient(0deg, rgba(from var(--tox-private-color-white, @color-white) r g b / 0.9) 0%,  rgba(from var(--tox-private-color-white, @color-white) r g b / 0.9) 100%), var(--tox-private-color-error, @color-error);
     padding: var(--tox-private-pad-sm, @pad-sm);
     width: 100%;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .tox-ai-error__message {
+    flex: 1 0 0;
+  }
+
+  .tox-ai-error__icon {
+    flex: 0 0 auto;
+    align-self: flex-start;
   }
 
   .tox-ai__footer {
@@ -227,11 +239,12 @@
     // TODO: Replace with a proper global variable once we have it setup
     padding: 12px;
     gap: 8px;
-    &:hover {
+    &:hover, &:focus {
       // TODO: Replace with a proper global variable once we have it setup
       background-color: #f0f0f0;
     }
     border-radius: var(--tox-private-control-border-radius, @control-border-radius);
+    cursor: pointer;
   }
 
   .tox-ai-chat-history-list__item-content {
