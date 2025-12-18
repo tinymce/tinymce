@@ -21,8 +21,8 @@ describe('atomic.katamari.api.str.RemoveLeadingTest', () => {
 
   it('removeLeading removes prefix', () => {
     fc.assert(fc.property(
-      fc.asciiString(),
-      fc.asciiString(),
+      fc.string({ unit: 'binary-ascii' }),
+      fc.string({ unit: 'binary-ascii' }),
       (prefix, suffix) => {
         assert.equal(Strings.removeLeading(prefix + suffix, prefix), suffix);
       }

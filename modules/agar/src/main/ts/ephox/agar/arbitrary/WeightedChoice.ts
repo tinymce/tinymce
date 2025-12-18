@@ -37,9 +37,9 @@ const choose = <T extends WeightedItem>(candidates: T[]): WeightedList<T> => {
 };
 
 const gChoose = <T extends WeightedItem>(weighted: WeightedList<T>): fc.Arbitrary<Optional<T & AccWeightItem>> =>
-  fc.float({ min: 0, max: weighted.total }).map((w): Optional<T & AccWeightItem> => {
+  fc.float({ min: 0, max: Math.fround(weighted.total), noDefaultInfinity: true, noNaN: true }).map((w): Optional<T & AccWeightItem> => {
     const raw = Arr.find(weighted.list, (d) =>
-      w <= d.accWeight
+      w <= Math.fround(d.accWeight)
     );
 
     const keys = raw.map(Obj.keys).getOr([]);

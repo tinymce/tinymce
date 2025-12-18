@@ -117,7 +117,7 @@ export const create = (construct: ArbChildrenSchema.Construct<SugarElement<Node>
     return combine(detail, childGenerator);
   };
 
-  const leaf = (detail: LeafDetail) => (_: number | undefined) => combine(detail, ArbChildrenSchema.none);
+  const leaf = (detail: LeafDetail) => (_: number | undefined) => combine(detail, ArbChildrenSchema.none());
 
   const structure = (detail: StructureDetail) => (rawDepth: number | undefined) => {
     const childGenerator = ArbChildrenSchema.structure(rawDepth, detail, construct);

@@ -9,7 +9,7 @@ UnitTest.test('All valid floats are valid', () => {
     // small to medium floats
     fc.float(),
     // big floats
-    fc.tuple(fc.float(), fc.integer(-20, 20)).map(([ mantissa, exponent ]) => mantissa * Math.pow(10, exponent))
+    fc.tuple(fc.float(), fc.integer({ min: -20, max: 20 })).map(([ mantissa, exponent ]) => mantissa * Math.pow(10, exponent))
   ), (num) => {
     const parsed = Dimension.parse(num.toString(), [ 'empty' ]).getOrDie();
     Assert.eq('Number is unchanged by stringifying and parsing', num, parsed.value);

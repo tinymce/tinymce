@@ -388,7 +388,7 @@ const isMultipleToolbars = (editor: Editor): boolean => getMultipleToolbarsOptio
 );
 
 const isToolbarLocationBottom = (editor: Editor): boolean =>
-  getToolbarLocation(editor) === ToolbarLocation.bottom;
+  getToolbarLocation(editor) === ToolbarLocation.bottom.toString();
 
 const fixedContainerTarget = (editor: Editor): Optional<SugarElement> => {
   if (!editor.inline) {

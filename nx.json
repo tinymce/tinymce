@@ -1,0 +1,12 @@
+{
+  "namedInputs": {
+    "tiny-product": [
+      "{projectRoot}/**/*",
+      "!{projectRoot}/node_modules/**/*"
+    ],
+    "tiny-library": [
+      "{projectRoot}/**/*",
+      "!{projectRoot}/node_modules/**/*"
+    ]
+  }
+}

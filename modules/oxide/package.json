@@ -28,8 +28,12 @@
   },
   "typesVersions": {
     "*": {
-      "./skins/ui/default/skin.ts": ["./build/skins/ui/default/skin.ts"],
-      "./skins/ui/default/skin.css": ["./build/skins/ui/default/skin.css"]
+      "./skins/ui/default/skin.ts": [
+        "./build/skins/ui/default/skin.ts"
+      ],
+      "./skins/ui/default/skin.css": [
+        "./build/skins/ui/default/skin.css"
+      ]
     }
   },
   "files": [

@@ -15,7 +15,7 @@ describe('atomic.katamari.api.str.ToFloatTest', () => {
     check('456.123', 456.123);
     check('0.0314E+2', 3.14);
 
-    fc.assert(fc.property(fc.float(), (num) => {
+    fc.assert(fc.property(fc.float({ noNaN: true, noDefaultInfinity: true }), (num) => {
       check('' + num, num);
     }));
   });

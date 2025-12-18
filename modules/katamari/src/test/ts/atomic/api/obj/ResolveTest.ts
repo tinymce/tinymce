@@ -3,6 +3,7 @@ import { assert } from 'chai';
 import fc from 'fast-check';
 
 import * as Resolve from 'ephox/katamari/api/Resolve';
+import { arbAsciiDict, arbAsciiString } from 'ephox/katamari/test/arb/ArbDataTypes';
 
 describe('atomic.katamari.api.obj.ResolveTest', () => {
   it('namespace', () => {
@@ -67,16 +68,13 @@ describe('atomic.katamari.api.obj.ResolveTest', () => {
   it('Checking that creating a namespace (forge) from an obj will enable that value to be retrieved by resolving (path)', () => {
     fc.assert(fc.property(
       // NOTE: This value is being modified, so it cannot be shrunk.
-      fc.dictionary(fc.asciiString(),
+      arbAsciiDict(
         // We want to make sure every path in the object is an object
         // also, because that is a limitation of forge.
-        fc.dictionary(fc.asciiString(),
-          fc.dictionary(fc.asciiString(), fc.constant({}))
-        )
-      ),
-      fc.array(fc.asciiString(1, 30), 1, 40),
-      fc.asciiString(1, 30),
-      fc.asciiString(1, 30),
+        arbAsciiDict(arbAsciiDict(fc.constant({})))),
+      fc.array(arbAsciiString({ minLength: 1, maxLength: 30 }), { minLength: 1, maxLength: 40 }),
+      arbAsciiString({ minLength: 1, maxLength: 30 }),
+      arbAsciiString({ minLength: 1, maxLength: 30 }),
       (dict, parts, field, newValue) => {
         const created = Resolve.forge(parts, dict);
         created[field] = newValue;

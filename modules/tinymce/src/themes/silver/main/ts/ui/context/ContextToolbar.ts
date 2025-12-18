@@ -178,7 +178,7 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
 
     // For context toolbars we don't want to use floating or sliding, so just restrict this
     // to scrolling or wrapping (default)
-    const toolbarType = getToolbarMode(editor) === ToolbarMode.scrolling ? ToolbarMode.scrolling : ToolbarMode.default;
+    const toolbarType = getToolbarMode(editor) === ToolbarMode.scrolling.toString() ? ToolbarMode.scrolling : ToolbarMode.default;
 
     const initGroups = Arr.flatten(Arr.map(toolbars, (ctx) =>
       ctx.type === 'contexttoolbar' ? buildContextToolbarGroups(allButtons, InlineContent.contextToolbarToSpec(ctx)) : buildContextFormGroups(ctx, sharedBackstage.providers)
@@ -361,4 +361,3 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
 };
 
 export { register };
-

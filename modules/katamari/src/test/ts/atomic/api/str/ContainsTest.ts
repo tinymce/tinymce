@@ -27,7 +27,7 @@ describe('atomic.katamari.api.str.ContainsTest', () => {
   it('A string added to a string (at the end) must be contained within it', () => {
     fc.assert(fc.property(
       fc.string(),
-      fc.string(1, 40),
+      fc.string({ minLength: 1, maxLength: 40 }),
       (str, contents) => {
         const r = str + contents;
         assert.isTrue(Strings.contains(r, contents));
@@ -38,7 +38,7 @@ describe('atomic.katamari.api.str.ContainsTest', () => {
   it('A string added to a string (at the start) must be contained within it', () => {
     fc.assert(fc.property(
       fc.string(),
-      fc.string(1, 40),
+      fc.string({ minLength: 1, maxLength: 40 }),
       (str, contents) => {
         const r = contents = str;
         assert.isTrue(Strings.contains(r, contents));
@@ -48,7 +48,7 @@ describe('atomic.katamari.api.str.ContainsTest', () => {
 
   it('An empty string should contain nothing', () => {
     fc.assert(fc.property(
-      fc.string(1, 40),
+      fc.string({ minLength: 1, maxLength: 40 }),
       (value) => !Strings.contains('', value)
     ));
   });

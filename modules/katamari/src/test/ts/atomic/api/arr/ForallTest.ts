@@ -26,7 +26,7 @@ describe('atomic.katamari.api.arr.ForallTest', () => {
 
   it('forall of a non-empty array with a predicate that always returns false is false', () => {
     fc.assert(fc.property(
-      fc.array(fc.integer(), 1, 30),
+      fc.array(fc.integer(), { minLength: 1, maxLength: 30 }),
       (xs) => {
         assert.isFalse(Arr.forall(xs, Fun.never));
       }
@@ -35,7 +35,7 @@ describe('atomic.katamari.api.arr.ForallTest', () => {
 
   it('forall of a non-empty array with a predicate that always returns true is true', () => {
     fc.assert(fc.property(
-      fc.array(fc.integer(), 1, 30),
+      fc.array(fc.integer(), { minLength: 1, maxLength: 30 }),
       (xs) => {
         assert.isTrue(Arr.forall(xs, Fun.always));
       }

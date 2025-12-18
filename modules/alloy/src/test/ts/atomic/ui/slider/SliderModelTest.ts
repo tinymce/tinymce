@@ -26,7 +26,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
 
   const arbRanged = fc.nat().chain((min) => arb1Up.chain((width) => {
     const max = min + width;
-    return fc.float({ min: min - 1, max: max + 1 }).map((value) => {
+    return fc.float({ min: Math.fround(min - 1), max: Math.fround(max + 1) }).map((value) => {
       const v = Math.round(value);
 
       return {
