@@ -5,8 +5,8 @@ import { Attribute } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
-import { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
+import type Editor from 'tinymce/core/api/Editor';
+import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 import * as CaretContainer from 'tinymce/core/caret/CaretContainer';
 
 describe('browser.tinymce.core.ReadOnlyModeContentTest', () => {

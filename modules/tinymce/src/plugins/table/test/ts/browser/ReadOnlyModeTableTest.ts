@@ -4,7 +4,7 @@ import { Css, SelectorExists, SelectorFind, Traverse } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 
 describe('browser.tinymce.core.ReadOnlyModeTableTest', () => {

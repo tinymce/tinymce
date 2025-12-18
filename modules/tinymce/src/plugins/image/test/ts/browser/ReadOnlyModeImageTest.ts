@@ -1,10 +1,10 @@
 
 import { UiFinder, Waiter, Keys } from '@ephox/agar';
 import { describe, it } from '@ephox/bedrock-client';
-import { Css, SelectorExists, SugarElement } from '@ephox/sugar';
+import { Css, SelectorExists, type SugarElement } from '@ephox/sugar';
 import { TinyAssertions, TinyContentActions, TinyDom, TinyHooks, TinySelections } from '@ephox/wrap-mcagar'; import { assert } from 'chai';
 
-import Editor from 'tinymce/core/api/Editor';
+import type Editor from 'tinymce/core/api/Editor';
 import ImagePlugin from 'tinymce/plugins/image/Plugin';
 
 import * as Helpers from '../module/Helpers';

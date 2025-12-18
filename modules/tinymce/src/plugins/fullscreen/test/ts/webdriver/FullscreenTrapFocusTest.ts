@@ -47,63 +47,42 @@ describe('webdriver.tinymce.plugins.fullscreen.FullscreenTrapFocusTest', () => {
   };
 
   Arr.each([
-    { label: 'Iframe Editor', setup: TinyHooks.bddSetup },
-    { label: 'Shadow Dom Editor', setup: TinyHooks.bddSetupInShadowRoot }
-  ], (tester) => {
-    Arr.each([
-      'non-native', 'native'
-    ], (mode) => {
-      context(`${tester.label} - ${mode} - Trap focus`, () => {
-        const hook = TinyHooks.bddSetup<Editor>({
-          toolbar: 'fullscreen',
-          plugins: 'fullscreen',
-          base_url: '/project/tinymce/js/tinymce',
-          fullscreen_native: mode === 'native'
-        }, [ FullscreenPlugin ], true);
+    { label: 'Iframe Editor', setup: TinyHooks.bddSetup, native: true },
+    { label: 'Shadow Dom Editor', setup: TinyHooks.bddSetupInShadowRoot, native: true },
+    { label: 'Iframe Editor', setup: TinyHooks.bddSetup, native: false },
+    { label: 'Shadow Dom Editor', setup: TinyHooks.bddSetupInShadowRoot, native: false },
+  ], (scenario) => {
+    context(`${scenario.label} - native: ${scenario.native} - Trap focus`, () => {
+      const hook = TinyHooks.bddSetup<Editor>({
+        toolbar: 'fullscreen',
+        plugins: 'fullscreen',
+        base_url: '/project/tinymce/js/tinymce',
+        fullscreen_native: scenario.native
+      }, [ FullscreenPlugin ], true);
 
-        it('TINY-10597: Focus should not go out of the editor on fullscreen mode, when shift tabbing ', async () => {
-          const editor = hook.editor();
-          const beforeInput = setupInputBefore(editor);
-          const afterInput = setupInputAfter(editor);
+      it('TINY-10597: Focus should not go out of the editor on fullscreen mode, when tabbing/shift tabbing', async () => {
+        const editor = hook.editor();
+        const beforeInput = setupInputBefore(editor);
+        const afterInput = setupInputAfter(editor);
 
-          await pToggleFullscreen(mode === 'native', true);
+        await pToggleFullscreen(scenario.native, true);
 
-          await pDoShiftTab();
-          await FocusTools.pTryOnSelector('Focus should still be in the iframe when focus is going out', SugarDocument.getDocument(), '.tox-edit-area__iframe');
+        await pDoShiftTab();
+        await FocusTools.pTryOnSelector('Focus should still be in the iframe when focus is going out - shift tabbing', SugarDocument.getDocument(), '.tox-edit-area__iframe');
 
-          await pDoShiftTab();
-          await FocusTools.pTryOnSelector('Focus should still be in the iframe when focus is going out 2', SugarDocument.getDocument(), '.tox-edit-area__iframe');
+        await pDoShiftTab();
+        await FocusTools.pTryOnSelector('Focus should still be in the iframe when focus is going out 2 - shift tabbing', SugarDocument.getDocument(), '.tox-edit-area__iframe');
 
-          await pDoShiftTab();
-          await FocusTools.pTryOnSelector('Focus should still be in the iframe when focus is going out 3', SugarDocument.getDocument(), '.tox-edit-area__iframe');
+        await pDoTab();
+        await FocusTools.pTryOnSelector('Focus should still be in the iframe when focus is going out - tabbing', SugarDocument.getDocument(), '.tox-edit-area__iframe');
 
-          await pToggleFullscreen(mode === 'native', false);
+        await pDoTab();
+        await FocusTools.pTryOnSelector('Focus should still be in the iframe when focus is going out 2 - tabbing', SugarDocument.getDocument(), '.tox-edit-area__iframe');
 
-          Remove.remove(beforeInput);
-          Remove.remove(afterInput);
-        });
+        await pToggleFullscreen(scenario.native, false);
 
-        it('TINY-10597: Focus should not go out of the editor on fullscreen mode, when tabbing', async () => {
-          const editor = hook.editor();
-          const beforeInput = setupInputBefore(editor);
-          const afterInput = setupInputAfter(editor);
-
-          await pToggleFullscreen(mode === 'native', true);
-
-          await pDoTab();
-          await FocusTools.pTryOnSelector('Focus should still be in the iframe when focus is going out', SugarDocument.getDocument(), '.tox-edit-area__iframe');
-
-          await pDoTab();
-          await FocusTools.pTryOnSelector('Focus should still be in the iframe when focus is going out 2', SugarDocument.getDocument(), '.tox-edit-area__iframe');
-
-          await pDoTab();
-          await FocusTools.pTryOnSelector('Focus should still be in the iframe when focus is going out 3', SugarDocument.getDocument(), '.tox-edit-area__iframe');
-
-          await pToggleFullscreen(mode === 'native', false);
-
-          Remove.remove(beforeInput);
-          Remove.remove(afterInput);
-        });
+        Remove.remove(beforeInput);
+        Remove.remove(afterInput);
       });
     });
   });
