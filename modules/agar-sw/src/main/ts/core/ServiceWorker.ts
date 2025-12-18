@@ -85,19 +85,14 @@ const sendRequestToClient = async (client: Client, request: Request): Promise<Re
           }
         });
 
-        if (canHaveBody(headData.status, request.method)) {
-          resolve(new Response(reader, {
+        resolve(new Response(
+          canHaveBody(headData.status, request.method) ? reader : null,
+          {
             status: headData.status,
             statusText: headData.statusText,
             headers: headData.headers
-          }));
-        } else {
-          resolve(new Response(null, {
-            status: headData.status,
-            statusText: headData.statusText,
-            headers: headData.headers
-          }));
-        }
+          }
+        ));
       } else {
         closePort(incomingPort);
         reject(new Error('Unexpected message from client expected response head.'));
