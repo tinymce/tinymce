@@ -90,5 +90,8 @@ describe('browser.draggable.calculations', () => {
         }
       });
     });
+
+    // TODO: should calcualte allowed overflow y
+    // TODO: should calculate allowed overflow x
   });
 });

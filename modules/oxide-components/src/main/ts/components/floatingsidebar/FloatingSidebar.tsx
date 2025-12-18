@@ -1,4 +1,4 @@
-import { useRef, useCallback, type CSSProperties, type FC, type PropsWithChildren } from 'react';
+import { type CSSProperties, type FC, type PropsWithChildren } from 'react';
 
 import * as Bem from '../../utils/Bem';
 import { classes } from '../../utils/Styles';
@@ -32,29 +32,12 @@ const transformToCss = (position: InitialPosition): CssPosition => {
 };
 
 const Root: FC<FloatingSidebarProps> = ({ isOpen = true, children, style, ...props }) => {
-  const elementRef = useRef<HTMLDivElement | null>(null);
-  const minimumVisiblityInPx = 70;
-  const provideBoundaries = useCallback(() => {
-    const draggableRect = elementRef.current?.getBoundingClientRect();
-    if (!draggableRect) {
-      return {
-        upperLeftCorner: { x: 0, y: 0 },
-        bottomRightCorner: { x: document.documentElement.clientWidth, y: document.documentElement.clientHeight }
-      };
-    }
-    return {
-      upperLeftCorner: { x: minimumVisiblityInPx - draggableRect.width, y: 0 },
-      bottomRightCorner: { x: document.documentElement.clientWidth + draggableRect.width - minimumVisiblityInPx, y: document.documentElement.clientHeight }
-    };
-  }, []);
   const initialPosition = transformToCss(props.initialPosition ?? { x: 0, y: 0, origin: 'topleft' });
 
   return (
     <Draggable.Root
-      ref={elementRef}
       className={Bem.block('tox-floating-sidebar', { open: isOpen })}
       initialPosition={initialPosition}
-      provideBoundaries={provideBoundaries}
       // TODO: rename this property, it should not be called `declaredSize` but rather ...
       declaredSize={{ width: '70px', height: 'var(--tox-private-floating-sidebar-height)' }}
       style={style}

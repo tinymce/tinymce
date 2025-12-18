@@ -7,18 +7,19 @@ const getTransform = (shift: Shift): string => `translate3d(${shift.x}px, ${shif
 const normalizePosition = (position: CssPosition | Position): CssPosition =>
   'x' in position ? { top: `${position.y}px`, left: `${position.x}px` } : position;
 
-const getPosition = (position: CssPosition, size: Optional<CssSize>) =>
+const getPosition = (position: CssPosition, visibleArea: { width: number; height: number }, size: Optional<CssSize>) =>
   size.fold(
     Fun.constant(position),
     ({ width, height }) => ({
-      top: `min(${position.top}, calc(100% - ${height}))`,
-      left: `min(${position.left}, calc(100% - ${width}))`,
+      top: `min(${position.top}, calc(100% - (${height}) * ${visibleArea.height}))`,
+      left: `min(${position.left}, calc(100% - (${width}) * ${visibleArea.width}))`,
     })
   );
 
-const getPositioningStyles = (shift: Shift, position: CssPosition | Position, isDragging: boolean, declaredSize: Optional<CssSize>): React.CSSProperties =>
+// TODO: add interface for the visible area
+const getPositioningStyles = (shift: Shift, position: CssPosition | Position, visibleArea: { width: number; height: number }, isDragging: boolean, declaredSize: Optional<CssSize>): React.CSSProperties =>
   isDragging ?
-    { transform: getTransform(shift), ...getPosition(normalizePosition(position), declaredSize) }
-    : getPosition(normalizePosition(position), declaredSize);
+    { transform: getTransform(shift), ...getPosition(normalizePosition(position), visibleArea, declaredSize) }
+    : getPosition(normalizePosition(position), visibleArea, declaredSize);
 
 export { getPositioningStyles };
