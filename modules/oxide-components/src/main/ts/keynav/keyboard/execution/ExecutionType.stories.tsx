@@ -6,8 +6,6 @@ import { useRef } from 'react';
 
 import type { ExecutingConfig } from './ExecutionType';
 
-export type Story = StoryObj<typeof meta>;
-
 const meta = {
   title: 'KeyboardNavigationHooks/ExecutionType',
   component: (props: Omit<ExecutingConfig, 'doExecute'>) => {
@@ -142,6 +140,7 @@ const meta = {
 } satisfies Meta;
 
 export default meta;
+export type Story = StoryObj<typeof meta>;
 
 export const None: Story = {
   args: {

@@ -6,12 +6,6 @@ import { IconButton } from '../iconbutton/IconButton';
 import * as FloatingSidebar from './FloatingSidebar';
 import type { FloatingSidebarProps } from './FloatingSidebar';
 
-type Story = StoryObj<typeof meta>;
-
-interface InitialPositionStoryArgs {
-  origin: 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
-}
-
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
   title: 'components/FloatingSidebar',
@@ -70,6 +64,7 @@ The origin determines which corner of the sidebar is anchored to the coordinates
 } satisfies Meta<typeof FloatingSidebar.Root>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Example: Story = {
   args: {
@@ -125,6 +120,10 @@ export const ButtonInHeader: Story = {
     </FloatingSidebar.Root>
   )
 };
+
+interface InitialPositionStoryArgs {
+  origin: 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
+}
 
 export const InitialPosition: StoryObj<InitialPositionStoryArgs & FloatingSidebarProps> = {
   name: 'Initial position',

@@ -3,8 +3,6 @@ import { fn } from 'storybook/test';
 
 import { Button, type ButtonProps } from './Button';
 
-type Story = StoryObj<typeof meta>;
-
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
   title: 'components/Button',
@@ -20,6 +18,7 @@ const meta = {
 } satisfies Meta<typeof Button>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
 const render = (args: ButtonProps): JSX.Element => (
   <div style={{
