@@ -2,7 +2,6 @@ language: en-US
 tone_instructions: ''
 early_access: false
 enable_free_tier: true
-auto_resolve_threads: true
 reviews:
   profile: chill
   request_changes_workflow: false

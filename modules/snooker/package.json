@@ -34,6 +34,13 @@
   "main": "./lib/main/ts/ephox/snooker/api/Main.js",
   "module": "./lib/main/ts/ephox/snooker/api/Main.js",
   "types": "./lib/main/ts/ephox/snooker/api/Main.d.ts",
+  "exports": {
+    ".": {
+      "tiny:source": "./src/main/ts/ephox/snooker/api/Main.ts",
+      "types": "./lib/main/ts/ephox/snooker/api/Main.d.ts",
+      "default": "./lib/main/ts/ephox/snooker/api/Main.js"
+    }
+  },
   "scripts": {
     "prepublishOnly": "tsc -b",
     "build": "tsc",
