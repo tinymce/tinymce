@@ -4,6 +4,7 @@ import { LegacyUnit, TinyApis, TinyAssertions, TinyHooks } from '@ephox/wrap-mca
 import { assert } from 'chai';
 
 import type Editor from 'tinymce/core/api/Editor';
+import * as NodeType from 'tinymce/core/dom/NodeType';
 import * as Levels from 'tinymce/core/undo/Levels';
 import type { UndoLevel } from 'tinymce/core/undo/UndoManagerTypes';
 
@@ -131,6 +132,24 @@ describe('browser.tinymce.core.undo.LevelsTest', () => {
       bookmark: null,
       content: '',
       fragments: [ '<p>a</p>', ' ', '<iframe></iframe>', ' ', '<p>d</p>', ' ', '<iframe>e</iframe>' ],
+      type: 'fragmented'
+    });
+  });
+
+  it('TINY-12884: createFromEditor with an `uc-video` element', () => {
+    const editor = hook.editor();
+    editor.schema.addCustomElements({
+      [NodeType.ucVideoNodeName]: {
+        extends: 'video'
+      }
+    });
+    TinyApis(editor).setRawContent(`<p>a</p> <${NodeType.ucVideoNodeName}></${NodeType.ucVideoNodeName}> <p>d</p>`);
+
+    assert.deepEqual(Levels.createFromEditor(editor), {
+      beforeBookmark: null,
+      bookmark: null,
+      content: '',
+      fragments: [ '<p>a</p>', ' ', `<${NodeType.ucVideoNodeName}></${NodeType.ucVideoNodeName}>`, ' ', '<p>d</p>' ],
       type: 'fragmented'
     });
   });

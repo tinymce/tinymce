@@ -3,6 +3,7 @@ import { Attribute, Html, Remove, SelectorFilter, SugarElement } from '@ephox/su
 
 import type Editor from '../api/Editor';
 import { isPathBookmark } from '../bookmark/BookmarkTypes';
+import * as NodeType from '../dom/NodeType';
 import * as TrimBody from '../dom/TrimBody';
 import * as Zwsp from '../text/Zwsp';
 
@@ -13,7 +14,7 @@ import type { CompleteUndoLevel, FragmentedUndoLevel, NewUndoLevel, UndoLevel } 
 // innerHTML on a detached element will still make http requests to the images
 const lazyTempDocument = Thunk.cached(() => document.implementation.createHTMLDocument('undo'));
 
-const hasIframes = (body: HTMLElement) => body.querySelector('iframe') !== null;
+const shouldBeFragmented = (body: HTMLElement) => body.querySelector(`iframe, ${NodeType.ucVideoNodeName}`) !== null;
 
 const createFragmentedLevel = (fragments: string[]): FragmentedUndoLevel => {
   return {
@@ -38,7 +39,7 @@ const createCompleteLevel = (content: string): CompleteUndoLevel => {
 const createFromEditor = (editor: Editor): NewUndoLevel => {
   const tempAttrs = editor.serializer.getTempAttrs();
   const body = TrimBody.trim(editor.getBody(), tempAttrs);
-  return hasIframes(body) ? createFragmentedLevel(Fragments.read(body, true)) : createCompleteLevel(Zwsp.trim(body.innerHTML));
+  return shouldBeFragmented(body) ? createFragmentedLevel(Fragments.read(body, true)) : createCompleteLevel(Zwsp.trim(body.innerHTML));
 };
 
 const applyToEditor = (editor: Editor, level: UndoLevel, before: boolean): void => {

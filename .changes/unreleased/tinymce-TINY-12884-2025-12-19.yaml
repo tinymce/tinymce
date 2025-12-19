@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Now `uc-video` element don't be refreshed on undo/redo.
+time: 2025-12-19T09:35:14.617176011+01:00
+custom:
+  Issue: TINY-12884
