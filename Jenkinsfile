@@ -123,23 +123,7 @@ def runPlaywrightPod(String cacheName, String name, Closure body) {
         build: cacheName
       ) {
         container('playwright') {
-          // Install bun at runtime
-          sh '''
-            if ! command -v bun &> /dev/null; then
-              echo "Installing dependencies for bun..."
-              apt-get update -qq && apt-get install -y -qq unzip > /dev/null 2>&1
-              echo "Installing bun..."
-              curl -fsSL https://bun.sh/install | bash
-              echo "Bun installed successfully"
-            else
-              echo "Bun already available"
-            fi
-          '''
-
-          // Run tests with bun in PATH
-          withEnv(["PATH+BUN=$HOME/.bun/bin"]) {
-            body()
-          }
+          body()
         }
       }
     }
@@ -381,9 +365,9 @@ timestamps { notifyStatusChange(
   }
 
   processes['playwright'] = runPlaywrightPod(cacheName, 'playwright-tests') {
-    exec('bun --silent --cwd modules/oxide-components test-ci')
+    exec('yarn -s --cwd modules/oxide-components test-ci')
     junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
-    def visualTestStatus = exec(script: 'bun --silent --cwd modules/oxide-components test-visual-ci', returnStatus: true)
+    def visualTestStatus = exec(script: 'yarn -s --cwd modules/oxide-components test-visual-ci', returnStatus: true)
     if (visualTestStatus == 4) {
       unstable("Visual tests failed")
     } else if (visualTestStatus != 0) {
@@ -420,7 +404,7 @@ timestamps { notifyStatusChange(
         if (env.BRANCH_NAME == primaryBranch) {
           echo "Deploying Storybook"
           tinyGit.withGitHubSSHCredentials {
-            exec('bun --silent --cwd modules/oxide-components deploy-storybook')
+            exec('yarn -s --cwd modules/oxide-components deploy-storybook')
           }
         } else {
           echo "Skipping Storybook deployment as the pipeline is not running on the primary branch"
