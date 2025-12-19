@@ -46,18 +46,17 @@ When dragged, the sidebar remains within viewport bounds and maintains its posit
         defaultValue: { summary: 'true' }
       }
     },
+    anchor: {
+      description: `Determines which CSS coordinate system is used to position the sidebar. 
+For example, \`top-left\` uses the \`top\` and \`left\` CSS properties, while \`bottom-right\` uses \`bottom\` and \`right\`.
+The \`x\` and \`y\` values in \`initialPosition\` correspond to these CSS properties.`,
+    },
     initialPosition: {
-      description: `The initial position of the sidebar with x and y coordinates, and an origin point.
-The origin determines which corner of the sidebar is anchored to the coordinates:
-- \`topleft\`: x and y represent the top-left corner
-- \`topright\`: x and y represent the top-right corner
-- \`bottomleft\`: x and y represent the bottom-left corner
-- \`bottomright\`: x and y represent the bottom-right corner`,
-      table: {
-        type: { summary: '{ x: number, y: number, origin: "topleft" | "topright" | "bottomleft" | "bottomright" }' },
-        defaultValue: { summary: '{ x: 0, y: 0, origin: "topleft" }' }
-      }
-    }
+      description: `Sets the initial position of the sidebar as an object with \`x\` and \`y\` coordinates.
+These values can be specified in any CSS length unit (pixels, percentages, etc.).
+The \`x\` and \`y\` values map to the CSS positioning properties determined 
+by the \`anchor\` prop (e.g., with \`anchor="top-left"\`, \`x\` maps to \`left\` and \`y\` maps to \`top\`)`,
+    },
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: [ 'autodocs' ],
@@ -69,7 +68,8 @@ type Story = StoryObj<typeof meta>;
 export const Example: Story = {
   args: {
     isOpen: true,
-    initialPosition: { x: 30, y: 30, origin: 'topleft' }
+    initialPosition: { x: '30px', y: '30px' },
+    anchor: 'top-right'
   },
   parameters: {
     docs: {
@@ -106,7 +106,8 @@ export const ButtonInHeader: Story = {
   name: 'Button in header',
   args: {
     isOpen: true,
-    initialPosition: { x: 30, y: 30, origin: 'topleft' }
+    initialPosition: { x: '30px', y: '30px' },
+    anchor: 'top-right'
   },
   render: (args: FloatingSidebarProps): JSX.Element => (
     <FloatingSidebar.Root {...args}>
@@ -122,41 +123,5 @@ export const ButtonInHeader: Story = {
         laborum velit soluta ipsam blanditiis ipsa itaque aut architecto incidunt qui voluptatum ea?
       </div>
     </FloatingSidebar.Root>
-  )
-};
-
-interface InitialPositionStoryArgs {
-  origin: 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
-}
-
-export const InitialPosition: StoryObj<InitialPositionStoryArgs & FloatingSidebarProps> = {
-  name: 'Initial position',
-  args: {
-    origin: 'bottomright',
-  },
-  argTypes: {
-    origin: {
-      control: 'radio',
-      options: [ 'topleft', 'topright', 'bottomleft', 'bottomright' ],
-      description: 'The origin point that determines which corner of the sidebar is anchored to the coordinates'
-    },
-    isOpen: { table: { disable: true }},
-    initialPosition: { table: { disable: true }}
-  },
-  render: (args): JSX.Element => (
-    <>
-      <div style={{ position: 'absolute', top: 300, left: 400, height: '15px', width: '15px', backgroundColor: 'red' }}></div>
-      <FloatingSidebar.Root
-        key={args.origin}
-        style={{ '--tox-private-floating-sidebar-height': '250px' }}
-        isOpen={true}
-        initialPosition={{ x: 400, y: 300, origin: args.origin }}
-      >
-        <FloatingSidebar.Header>
-          <div className='tox-sidebar-content__title'>Floating Header</div>
-        </FloatingSidebar.Header>
-        <div style={{ padding: '12px' }}>Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
-      </FloatingSidebar.Root>
-    </>
   )
 };
