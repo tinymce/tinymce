@@ -219,7 +219,7 @@ const getRootSearchStart = (editor: Editor, range: Range): Node => {
 const applyList = (editor: Editor, listName: string, detail: ListDetail): void => {
   const rng = editor.selection.getRng();
   let listItemName = 'LI';
-  const root = Selection.getClosestListHost(editor, getRootSearchStart(editor, rng));
+  const root = Selection.getClosestListHost(editor, getRootSearchStart(editor, rng), rng.collapsed);
   const dom = editor.dom;
 
   if (dom.getContentEditable(editor.selection.getNode()) === 'false') {
