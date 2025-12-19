@@ -27,7 +27,7 @@ When dragging stops, the position is converted to absolute CSS positioning.
 
 The component does not apply any \`position\` style by default, giving you the flexibility to choose the positioning strategy that fits your use case.
 You must manually set the position using \`style={{ position: "absolute" }}\`, \`style={{ position: "fixed" }}\`, or use the Popover API.
-The component will work with any positioning strategy as long as \`top\` and \`left\` CSS properties are supported.
+The component will work with any positioning strategy as long as \`top\`, \`bottom\`, \`left\`, \`right\` CSS properties are supported.
 
 ### Viewport boundaries
 
