@@ -6,12 +6,9 @@ import { useDraggable, DraggableContext } from './internals/context';
 import { getPositioningStyles } from './internals/styles';
 import type { DraggableProps, DraggableHandleProps, Shift, Position, Boundaries, CssPosition } from './internals/types';
 
-const Root = forwardRef<HTMLDivElement, DraggableProps>(({ children, style, anchor = 'top-left', initialPosition = { top: 0, left: 0 }, declaredSize, ...props }, ref) => {
+const Root = forwardRef<HTMLDivElement, DraggableProps>(({ children, style, anchor = 'top-left', initialPosition = { x: 0, y: 0 }, declaredSize, ...props }, ref) => {
   const [ shift, setShift ] = useState<Shift>({ x: 0, y: 0 });
-  const [ position, setPosition ] = useState<CssPosition | Position>(() => ({
-    x: 'left' in initialPosition ? initialPosition.left : initialPosition.right,
-    y: 'top' in initialPosition ? initialPosition.top : initialPosition.bottom
-  }));
+  const [ position, setPosition ] = useState<CssPosition | Position>(initialPosition);
   const [ isDragging, setIsDragging ] = useState(false);
   const draggableRef = useRef<HTMLDivElement | null>(null);
   const allowedOverflow = useMemo(() => ({ horizontal: props.allowedOverflow?.horizontal ?? 0, vertical: props.allowedOverflow?.vertical ?? 0 }), [ props.allowedOverflow ]);
