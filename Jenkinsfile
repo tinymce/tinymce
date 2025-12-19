@@ -398,6 +398,7 @@ timestamps { notifyStatusChange(
   processes['playwright'] = runPlaywrightPod(cacheName, 'playwright-tests') {
     sh 'export PATH="$HOME/.bun/bin:$PATH" && bun --silent --cwd modules/oxide-components test-ci'
     junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
+    sh 'export PATH="$HOME/.bun/bin:$PATH" && bun --silent --cwd modules/oxide-components build-storybook'
     def visualTestStatus = sh(script: 'export PATH="$HOME/.bun/bin:$PATH" && bun --silent --cwd modules/oxide-components test-visual-ci', returnStatus: true)
     if (visualTestStatus == 4) {
       unstable("Visual tests failed")
