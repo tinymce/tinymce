@@ -1,11 +1,11 @@
 /* eslint-disable max-len */
-import { userEvent, type Locator } from '@vitest/browser/context';
 import type { ToggleMenuItemInstanceApi } from 'oxide-components/components/menu/internals/Types';
 import * as Menu from 'oxide-components/components/menu/Menu';
 import * as MenuRenderer from 'oxide-components/components/menu/MenuRenderer';
 import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
 import * as Bem from 'oxide-components/utils/Bem';
 import { describe, expect, it } from 'vitest';
+import { userEvent, type Locator } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
 const iconResolver = (icon: string): string => {
