@@ -149,10 +149,6 @@ def runPlaywrightPod(String cacheName, String name, Closure body) {
               export PATH="$HOME/.bun/bin:$PATH"
               bun --version || { echo "ERROR: Bun installation failed"; exit 1; }
               echo "Bun installed successfully: $(bun --version)"
-
-              # Create symlink to make bun available system-wide
-              sudo ln -sf $HOME/.bun/bin/bun /usr/local/bin/bun
-              sudo ln -sf $HOME/.bun/bin/bunx /usr/local/bin/bunx
             else
               echo "Bun already available: $(bun --version)"
             fi
