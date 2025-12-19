@@ -4,23 +4,6 @@
   "workspaces": [
     "modules/*"
   ],
-  "resolutions": {
-    "@typescript-eslint/*": "8.31.0",
-    "eslint": "9.25.1",
-    "prismjs": "1.29.0"
-  },
-  "overrides": {
-    "@typescript-eslint/eslint-plugin": "8.31.0",
-    "@typescript-eslint/parser": "8.31.0",
-    "@typescript-eslint/utils": "8.31.0",
-    "@typescript-eslint/type-utils": "8.31.0",
-    "@typescript-eslint/typescript-estree": "8.31.0",
-    "@typescript-eslint/visitor-keys": "8.31.0",
-    "@typescript-eslint/scope-manager": "8.31.0",
-    "typescript-eslint": "8.31.0",
-    "eslint": "9.25.1",
-    "prismjs": "1.29.0"
-  },
   "scripts": {
     "tinymce-grunt": "grunt --gruntfile modules/tinymce/Gruntfile.js",
     "tinymce-rollup": "run-s \"tinymce-grunt dev rollup\"",
@@ -91,7 +74,7 @@
     "grunt-webpack": "^7.0.0",
     "jiti": "^2.4.2",
     "lerna": "^8.1.2",
-    "less": "4.3.0",
+    "less": "^4.2.0",
     "less-plugin-autoprefix": "^2.0.0",
     "less-plugin-preset-env": "^2.0.2",
     "load-grunt-tasks": "^5.1.0",
