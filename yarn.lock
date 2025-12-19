@@ -979,10 +979,10 @@
     jquery "^3.4.1"
     querystringify "^2.1.1"
 
-"@ephox/bedrock-server@^15.1.0":
-  version "15.1.0"
-  resolved "https://registry.yarnpkg.com/@ephox/bedrock-server/-/bedrock-server-15.1.0.tgz#e4b511e91494297b9cf3744207fed48714c63a48"
-  integrity sha512-TFCUm73k8Wh2fY8RjGYnjXy2NfaIgaJtQou0FCjoLdytBVWouttjBLiqqgdKIbUngU0TjvaLCGSik2JEf6pnQA==
+"@ephox/bedrock-server@^15.1.1":
+  version "15.1.1"
+  resolved "https://registry.yarnpkg.com/@ephox/bedrock-server/-/bedrock-server-15.1.1.tgz#730412a8dc3ae2f0bf2743414dfde14c1f9e1473"
+  integrity sha512-bWEfwcF6YMZLK2LGboDk/q9Qv7xtMtZiqusIwcL2w7NggXNDVNSFcB+PBPOYxmg0Mi683qg+At4hOyk/xeoJrg==
   dependencies:
     "@aws-sdk/client-device-farm" "^3.354.0"
     "@ephox/bedrock-client" "^15.0.0"
