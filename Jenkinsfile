@@ -417,7 +417,7 @@ timestamps { notifyStatusChange(
 
   def deployCheckoutStep = {
     tinyGit.addGitHubToKnownHosts()
-    checkout localBranch(scm)
+    checkout localBranch(scm, [ lfs() ])
     sh "tar -zxf ./file.tar.gz"
     tinyGit.addAuthorConfig()
   }
