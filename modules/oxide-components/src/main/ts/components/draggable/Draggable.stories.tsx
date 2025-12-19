@@ -3,7 +3,6 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import * as Draggable from './Draggable';
 import type { DraggableProps } from './internals/types';
 
-// TODO: document the new properties
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
   title: 'components/Draggable',
@@ -48,8 +47,25 @@ If you don't provide \`declaredSize\`, the element may move outside the viewport
         disable: true
       }
     },
+    anchor: {
+      description: `Determines which corner of the viewport the draggable element is positioned relative to, and which CSS positioning properties are used.
+
+**Default:** \`'top-left'\`
+
+**Options:**
+- \`'top-left'\` - Uses \`top\` and \`left\` CSS properties, positioning relative to the top-left corner
+- \`'top-right'\` - Uses \`top\` and \`right\` CSS properties, positioning relative to the top-right corner
+- \`'bottom-left'\` - Uses \`bottom\` and \`left\` CSS properties, positioning relative to the bottom-left corner
+- \`'bottom-right'\` - Uses \`bottom\` and \`right\` CSS properties, positioning relative to the bottom-right corner
+
+The anchor affects how the position is calculated and which edges of the viewport are used as reference points. For example, with \`anchor: 'top-right'\`, the element's position is measured from the top and right edges of the viewport.`,
+      control: {
+        type: 'radio'
+      },
+      options: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
+    },
     initialPosition: {
-      description: 'The initial position of the draggable element. `top` and `left` can be provided as any valid CSS.',
+      description: 'The initial position of the draggable element using `x` and `y` coordinates. Both properties accept any valid CSS value. The `x` and `y` values map to CSS positioning properties based on the `anchor` setting.',
     },
     allowedOverflow: {
       description: `Controls how much of the draggable element is allowed to overflow outside the viewport. Values are decimals between 0 and 1.
@@ -90,8 +106,8 @@ const render = (args: DraggableProps): JSX.Element => (
 
 export const Example: Story = {
   args: {
-    anchor: 'top-right',
-    initialPosition: { top: '50px', right: '50px' },
+    anchor: 'top-left',
+    initialPosition: { x: '50px', y: '50px' },
     allowedOverflow: { horizontal: 0.6, vertical: 0 },
     declaredSize: { width: '250px', height: '250px' }
   },
