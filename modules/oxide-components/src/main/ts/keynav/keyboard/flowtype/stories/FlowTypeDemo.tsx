@@ -1,7 +1,7 @@
 
 import { Fun, Optional } from '@ephox/katamari';
 import type { SugarElement } from '@ephox/sugar';
-import { useRef } from 'react';
+import { useRef, type FC, type RefObject } from 'react';
 
 import { useFlowKeyNavigation, type FlowKeyingProps } from '../../../KeyboardNavigationHooks';
 
@@ -32,7 +32,7 @@ const defaultExecute = (
 
 };
 
-export const FlowTypeDemo: React.FC<Omit<FlowKeyingProps, 'containerRef'>> = ({
+export const FlowTypeDemo: FC<Omit<FlowKeyingProps, 'containerRef'>> = ({
   selector,
   execute = defaultExecute,
   escape = Fun.constant(Optional.none()),
@@ -56,7 +56,7 @@ export const FlowTypeDemo: React.FC<Omit<FlowKeyingProps, 'containerRef'>> = ({
     focusIn
   });
   return (
-    <div ref={containerRef as React.RefObject<HTMLDivElement>}
+    <div ref={containerRef as RefObject<HTMLDivElement>}
       className='container'
       style={{
         background: 'white',

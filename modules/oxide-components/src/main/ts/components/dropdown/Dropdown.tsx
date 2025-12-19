@@ -1,12 +1,12 @@
 import { Throttler, Type } from '@ephox/katamari';
-import { Children, cloneElement, isValidElement, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type FC, type HTMLAttributes, type MouseEvent, type PropsWithChildren, type ReactElement } from 'react';
+import { Children, cloneElement, isValidElement, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type FC, type HTMLAttributes, type MouseEvent, type PropsWithChildren, type ReactElement, type RefObject } from 'react';
 
 import { Bem } from '../../main';
 
 import { DropdownContext, useDropdown } from './internals/Context';
 import * as PositioningUtils from './internals/PositioningUtils';
 
-const isInDropdownContent = (contentRef: React.RefObject<HTMLDivElement>, node: Node): boolean => {
+const isInDropdownContent = (contentRef: RefObject<HTMLDivElement>, node: Node): boolean => {
   return contentRef.current?.contains(node) ?? false;
 };
 
