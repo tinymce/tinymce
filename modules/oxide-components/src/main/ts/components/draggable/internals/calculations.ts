@@ -4,7 +4,6 @@ const delta = (start: Position, end: Position): { deltaX: number; deltaY: number
 
 const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
 
-// TODO: add unit tests
 /**
  * Calculates element position relative to viewport based on anchor point.
  * Returns distance from left/right edge horizontally and top/bottom edge vertically.

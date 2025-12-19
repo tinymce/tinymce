@@ -1,4 +1,4 @@
-import { delta, clamp, boundaries } from 'oxide-components/components/draggable/internals/calculations';
+import { delta, clamp, boundaries, position } from 'oxide-components/components/draggable/internals/calculations';
 import { describe, expect, it } from 'vitest';
 
 describe('browser.draggable.calculations', () => {
@@ -134,6 +134,61 @@ describe('browser.draggable.calculations', () => {
           max: 1350
         }
       });
+    });
+  });
+
+  describe('position', () => {
+    it.each([
+      {
+        anchor: 'top-left' as const,
+        element: { x: 100, y: 200, width: 50, height: 50 },
+        viewport: { width: 1000, height: 1000 },
+        expected: { x: 100, y: 200 }
+      },
+      {
+        anchor: 'top-right' as const,
+        element: { x: 100, y: 200, width: 50, height: 50 },
+        viewport: { width: 1000, height: 1000 },
+        expected: { x: 850, y: 200 }
+      },
+      {
+        anchor: 'bottom-left' as const,
+        element: { x: 100, y: 200, width: 50, height: 50 },
+        viewport: { width: 1000, height: 1000 },
+        expected: { x: 100, y: 750 }
+      },
+      {
+        anchor: 'bottom-right' as const,
+        element: { x: 100, y: 200, width: 50, height: 50 },
+        viewport: { width: 1000, height: 1000 },
+        expected: { x: 850, y: 750 }
+      }
+    ])('should calculate position for $anchor anchor', ({ anchor, element, viewport, expected }) => {
+      const result = position(element, viewport, anchor);
+      expect(result).toEqual(expected);
+    });
+
+    it.each([
+      {
+        scenario: 'round down fractional positions',
+        element: { x: 100.4, y: 200.3, width: 50, height: 50 },
+        expected: { x: 100, y: 200 }
+      },
+      {
+        scenario: 'round up fractional positions',
+        element: { x: 100.6, y: 200.7, width: 50, height: 50 },
+        expected: { x: 101, y: 201 }
+      },
+      {
+        scenario: 'round .5 values up',
+        element: { x: 100.5, y: 200.5, width: 50, height: 50 },
+        expected: { x: 101, y: 201 }
+      }
+    ])('should $scenario', ({ element, expected }) => {
+      const viewport = { width: 1000, height: 1000 };
+      const result = position(element, viewport, 'top-left');
+
+      expect(result).toEqual(expected);
     });
   });
 });
