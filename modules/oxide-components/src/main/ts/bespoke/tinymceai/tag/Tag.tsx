@@ -1,4 +1,4 @@
-import { forwardRef, type FunctionComponent } from 'react';
+import { forwardRef, type FunctionComponent, type MouseEvent, type FocusEvent } from 'react';
 
 import { Button } from '../../../components/button/Button';
 import * as Bem from '../../../utils/Bem';

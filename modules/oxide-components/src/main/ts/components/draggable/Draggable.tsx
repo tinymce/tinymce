@@ -1,5 +1,5 @@
 import { Optional } from '@ephox/katamari';
-import { type FC, useState, useMemo, useRef, useCallback, forwardRef } from 'react';
+import { type FC, useState, useMemo, useRef, useCallback, forwardRef, type PointerEvent } from 'react';
 
 import { boundaries, clamp, delta, position } from './internals/calculations';
 import { useDraggable, DraggableContext } from './internals/context';
@@ -50,7 +50,7 @@ const Handle: FC<DraggableHandleProps> = ({ children }) => {
     }
   }, [ setIsDragging, setShift, draggableRef, setPosition, origin, onDragEnd ]);
 
-  const onPointerDown = useCallback((event: React.PointerEvent) => {
+  const onPointerDown = useCallback((event: PointerEvent) => {
     if (draggableRef.current === null) {
       // If draggableRef is not present then abort dragging
       return;
@@ -73,7 +73,7 @@ const Handle: FC<DraggableHandleProps> = ({ children }) => {
     boundariesRef.current = boundaries(draggableRect, mousePosition, constraints, allowedOverflowPixels);
   }, [ draggableRef, setIsDragging, allowedOverflow, onDragStart ]);
 
-  const onPointerMove = useCallback((event: React.PointerEvent) => {
+  const onPointerMove = useCallback((event: PointerEvent) => {
     if (isDragging) {
       event.preventDefault(); // Prevents text selection while dragging on Safari
       const currentPointerPosition = {
@@ -86,7 +86,7 @@ const Handle: FC<DraggableHandleProps> = ({ children }) => {
     }
   }, [ isDragging, setShift ]);
 
-  const onPointerUp = useCallback((event: React.PointerEvent) => {
+  const onPointerUp = useCallback((event: PointerEvent) => {
     dragStartElementRef.current?.releasePointerCapture(event.pointerId);
     stopDragging();
   }, [ stopDragging ]);

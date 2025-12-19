@@ -41,8 +41,8 @@ export interface CssSize {
   height: Property.Height;
 }
 export interface DraggableState {
-  setShift: React.Dispatch<React.SetStateAction<Shift>>;
-  draggableRef: React.RefObject<HTMLDivElement | null>;
+  setShift: Dispatch<SetStateAction<Shift>>;
+  draggableRef: RefObject<HTMLDivElement | null>;
   isDragging: boolean;
   setIsDragging: React.Dispatch<React.SetStateAction<boolean>>;
   setPosition: React.Dispatch<React.SetStateAction<CssPosition | Position>>;
