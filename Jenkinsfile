@@ -415,17 +415,9 @@ timestamps { notifyStatusChange(
       parallel processes
   }
 
-  def deployCheckoutStep = {
-    tinyGit.addGitHubToKnownHosts()
-    checkout localBranch(scm, [ lfs() ])
-    sh "tar -zxf ./file.tar.gz"
-    tinyGit.addAuthorConfig()
-  }
-
-  devPods.custom(
+  devPods.customConsumer(
     containers: [nodeLtsBuild],
-    build: cacheName,
-    checkoutStep: deployCheckoutStep
+    build: cacheName
   ) {
     container('node') {
       props = readProperties(file: 'build.properties')
