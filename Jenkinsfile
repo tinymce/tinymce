@@ -123,7 +123,41 @@ def runPlaywrightPod(String cacheName, String name, Closure body) {
         build: cacheName
       ) {
         container('playwright') {
-          body()
+          // Install bun if not present (improved with retry logic)
+          sh '''
+            set -e
+            if ! command -v bun &> /dev/null; then
+              echo "Installing bun..."
+
+              # Install dependencies with retry logic
+              for i in 1 2 3; do
+                (apt-get update -qq && apt-get install -y -qq unzip curl) && break || {
+                  echo "Apt install attempt $i failed, retrying in 5s...";
+                  sleep 5;
+                }
+              done
+
+              # Install bun with retry logic
+              for i in 1 2 3; do
+                curl -fsSL https://bun.sh/install | bash && break || {
+                  echo "Bun install attempt $i failed, retrying in 5s...";
+                  sleep 5;
+                }
+              done
+
+              # Verify installation
+              export PATH="$HOME/.bun/bin:$PATH"
+              bun --version || { echo "ERROR: Bun installation failed"; exit 1; }
+              echo "Bun installed successfully: $(bun --version)"
+            else
+              echo "Bun already available: $(bun --version)"
+            fi
+          '''
+
+          // Run tests with bun in PATH
+          withEnv(["PATH+BUN=$HOME/.bun/bin"]) {
+            body()
+          }
         }
       }
     }
@@ -365,9 +399,9 @@ timestamps { notifyStatusChange(
   }
 
   processes['playwright'] = runPlaywrightPod(cacheName, 'playwright-tests') {
-    exec('yarn -s --cwd modules/oxide-components test-ci')
+    exec('bun --silent --cwd modules/oxide-components test-ci')
     junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
-    def visualTestStatus = exec(script: 'yarn -s --cwd modules/oxide-components test-visual-ci', returnStatus: true)
+    def visualTestStatus = exec(script: 'bun --silent --cwd modules/oxide-components test-visual-ci', returnStatus: true)
     if (visualTestStatus == 4) {
       unstable("Visual tests failed")
     } else if (visualTestStatus != 0) {
@@ -404,7 +438,7 @@ timestamps { notifyStatusChange(
         if (env.BRANCH_NAME == primaryBranch) {
           echo "Deploying Storybook"
           tinyGit.withGitHubSSHCredentials {
-            exec('yarn -s --cwd modules/oxide-components deploy-storybook')
+            exec('bun --silent --cwd modules/oxide-components deploy-storybook')
           }
         } else {
           echo "Skipping Storybook deployment as the pipeline is not running on the primary branch"
