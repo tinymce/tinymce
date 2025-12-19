@@ -149,15 +149,16 @@ def runPlaywrightPod(String cacheName, String name, Closure body) {
               export PATH="$HOME/.bun/bin:$PATH"
               bun --version || { echo "ERROR: Bun installation failed"; exit 1; }
               echo "Bun installed successfully: $(bun --version)"
+
+              # Create symlink to make bun available system-wide
+              sudo ln -sf $HOME/.bun/bin/bun /usr/local/bin/bun
+              sudo ln -sf $HOME/.bun/bin/bunx /usr/local/bin/bunx
             else
               echo "Bun already available: $(bun --version)"
             fi
           '''
 
-          // Run tests with bun in PATH
-          withEnv(["PATH+BUN=$HOME/.bun/bin"]) {
-            body()
-          }
+          body()
         }
       }
     }
@@ -399,9 +400,9 @@ timestamps { notifyStatusChange(
   }
 
   processes['playwright'] = runPlaywrightPod(cacheName, 'playwright-tests') {
-    exec('bun --silent --cwd modules/oxide-components test-ci')
+    sh 'export PATH="$HOME/.bun/bin:$PATH" && bun --silent --cwd modules/oxide-components test-ci'
     junit allowEmptyResults: true, testResults: 'modules/oxide-components/scratch/test-results.xml'
-    def visualTestStatus = exec(script: 'bun --silent --cwd modules/oxide-components test-visual-ci', returnStatus: true)
+    def visualTestStatus = sh(script: 'export PATH="$HOME/.bun/bin:$PATH" && bun --silent --cwd modules/oxide-components test-visual-ci', returnStatus: true)
     if (visualTestStatus == 4) {
       unstable("Visual tests failed")
     } else if (visualTestStatus != 0) {
