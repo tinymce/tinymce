@@ -1,8 +1,22 @@
-import type { Boundaries, Position, Size } from './types';
+import type { Anchor, Boundaries, Position, Size } from './types';
 
 const delta = (start: Position, end: Position): { deltaX: number; deltaY: number } => ({ deltaX: end.x - start.x, deltaY: end.y - start.y });
 
 const clamp = (value: number, min: number, max: number): number => Math.min(max, Math.max(min, value));
+
+// TODO: add unit tests
+/**
+ * Calculates element position relative to viewport based on anchor point.
+ * Returns distance from left/right edge horizontally and top/bottom edge vertically.
+ */
+const position = (element: Position & Size, viewport: Size, anchor: Anchor): Position => {
+  const elementRight = element.x + element.width;
+  const elementBottom = element.y + element.height;
+  return {
+    x: Math.round(anchor === 'top-left' || anchor === 'bottom-left' ? element.x : viewport.width - elementRight),
+    y: Math.round(anchor === 'top-left' || anchor === 'top-right' ? element.y : viewport.height - elementBottom)
+  };
+};
 
 /**
  * This function calculates the min/max coordinates the mouse cursor can move to during a drag,
@@ -39,4 +53,4 @@ const boundaries = (
   };
 };
 
-export { delta, clamp, boundaries };
+export { delta, clamp, boundaries, position };
