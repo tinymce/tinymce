@@ -6,6 +6,8 @@ export interface AllowedOverflow {
   vertical: number;
 }
 
+export type Anchor = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+
 export type DraggableProps = {
   // The popover attribute is missing from HTMLAttributes, it's released in React v19. We can remove this property once we upgrade to React v19.
   popover?: 'hint' | 'manual' | 'auto';
@@ -33,8 +35,8 @@ export interface Position {
 };
 
 export interface CssPosition {
-  top: Property.Top;
-  left: Property.Left;
+  x: Property.Top;
+  y: Property.Left;
 }
 
 export interface CssSize {
@@ -48,6 +50,7 @@ export interface DraggableState {
   setIsDragging: React.Dispatch<React.SetStateAction<boolean>>;
   setPosition: React.Dispatch<React.SetStateAction<CssPosition | Position>>;
   allowedOverflow: AllowedOverflow;
+  anchor: Anchor;
 };
 
 export interface Boundaries {

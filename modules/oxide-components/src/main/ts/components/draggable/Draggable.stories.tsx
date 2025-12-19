@@ -90,7 +90,8 @@ const render = (args: DraggableProps): JSX.Element => (
 
 export const Example: Story = {
   args: {
-    initialPosition: { top: '50px', left: '50px' },
+    anchor: 'top-right',
+    initialPosition: { top: '50px', right: '50px' },
     allowedOverflow: { horizontal: 0.6, vertical: 0 },
     declaredSize: { width: '250px', height: '250px' }
   },
