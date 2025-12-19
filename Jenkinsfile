@@ -126,6 +126,8 @@ def runPlaywrightPod(String cacheName, String name, Closure body) {
           // Install bun at runtime
           sh '''
             if ! command -v bun &> /dev/null; then
+              echo "Installing dependencies for bun..."
+              apt-get update -qq && apt-get install -y -qq unzip > /dev/null 2>&1
               echo "Installing bun..."
               curl -fsSL https://bun.sh/install | bash
               echo "Bun installed successfully"
