@@ -1,6 +1,6 @@
 project: tinymce
-kind: Improved
-body: Certain deletion-events in lists could not be properly prevented.
+kind: Fixed
+body: Certain deletion keyboard events in lists could not be prevented.
 time: 2025-12-17T07:40:21.57565+01:00
 custom:
     Issue: TINY-13276
