@@ -62,7 +62,7 @@ The origin affects how the position is calculated and which edges of the viewpor
       control: {
         type: 'radio'
       },
-      options: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
+      options: [ 'top-left', 'top-right', 'bottom-left', 'bottom-right' ],
     },
     initialPosition: {
       description: `The initial position of the draggable element using \`x\` and \`y\` coordinates. Both properties accept any valid CSS value. The \`x\` and \`y\` values map to CSS positioning properties based on the \`origin\` setting.

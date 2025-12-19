@@ -7,17 +7,17 @@ import * as Draggable from '../draggable/Draggable';
 import '../../module/css';
 export interface FloatingSidebarProps extends PropsWithChildren {
   isOpen?: boolean;
-  anchor?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+  origin?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
   initialPosition?: { x: Property.Top; y: Property.Left };
   style?: CSSProperties;
 }
 interface HeaderProps extends PropsWithChildren {};
 
-const Root: FC<FloatingSidebarProps> = ({ isOpen = true, children, style, anchor = 'top-left', initialPosition = { x: 0, y: 0 }}) => {
+const Root: FC<FloatingSidebarProps> = ({ isOpen = true, children, style, origin = 'top-left', initialPosition = { x: 0, y: 0 }}) => {
   return (
     <Draggable.Root
       className={Bem.block('tox-floating-sidebar', { open: isOpen })}
-      anchor={anchor}
+      origin={origin}
       initialPosition={initialPosition}
       allowedOverflow={{ horizontal: 0.8 }}
       declaredSize={{ width: 'var(--tox-private-floating-sidebar-width)', height: 'var(--tox-private-floating-sidebar-height)' }}

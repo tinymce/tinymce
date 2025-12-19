@@ -26,7 +26,7 @@ It consists of two parts:
 - **\`FloatingSidebar.Header\`** - A required header element that acts as the drag handle for moving the sidebar.
 
 The sidebar can be opened or closed programmatically using the \`isOpen\` prop.
-When dragged, the sidebar remains within viewport bounds and maintains its position across window resizes.`
+When dragged, the sidebar can be moved freely and may partially extend beyond the viewport edge while maintaining its position across window resizes.`
       }
     }
   },
@@ -46,16 +46,20 @@ When dragged, the sidebar remains within viewport bounds and maintains its posit
         defaultValue: { summary: 'true' }
       }
     },
-    anchor: {
+    origin: {
       description: `Determines which CSS coordinate system is used to position the sidebar. 
 For example, \`top-left\` uses the \`top\` and \`left\` CSS properties, while \`bottom-right\` uses \`bottom\` and \`right\`.
 The \`x\` and \`y\` values in \`initialPosition\` correspond to these CSS properties.`,
+      control: {
+        type: 'radio'
+      },
+      options: [ 'top-left', 'top-right', 'bottom-left', 'bottom-right' ],
     },
     initialPosition: {
       description: `Sets the initial position of the sidebar as an object with \`x\` and \`y\` coordinates.
 These values can be specified in any CSS length unit (pixels, percentages, etc.).
 The \`x\` and \`y\` values map to the CSS positioning properties determined 
-by the \`anchor\` prop (e.g., with \`anchor="top-left"\`, \`x\` maps to \`left\` and \`y\` maps to \`top\`)`,
+by the \`origin\` prop (e.g., with \`origin="top-left"\`, \`x\` maps to \`left\` and \`y\` maps to \`top\`)`,
     },
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
@@ -69,7 +73,7 @@ export const Example: Story = {
   args: {
     isOpen: true,
     initialPosition: { x: '30px', y: '30px' },
-    anchor: 'top-right'
+    origin: 'top-right'
   },
   parameters: {
     docs: {
@@ -107,7 +111,7 @@ export const ButtonInHeader: Story = {
   args: {
     isOpen: true,
     initialPosition: { x: '30px', y: '30px' },
-    anchor: 'top-right'
+    origin: 'top-right'
   },
   render: (args: FloatingSidebarProps): JSX.Element => (
     <FloatingSidebar.Root {...args}>
