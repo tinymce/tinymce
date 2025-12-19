@@ -6,40 +6,40 @@ import type Editor from 'tinymce/core/api/Editor';
 import Plugin from 'tinymce/plugins/lists/Plugin';
 
 describe('webdriver.tinymce.plugins.lists.DeleteTest', () => {
-  const hook = TinyHooks.bddSetupLight<Editor>({
-    plugins: 'lists',
-    toolbar: 'numlist bullist',
-    indent: false,
-    base_url: '/project/tinymce/js/tinymce'
-  }, [ Plugin ], true);
+  context('Main Editor', () => {
+    const hook = TinyHooks.bddSetupLight<Editor>({
+      plugins: 'lists',
+      toolbar: 'numlist bullist',
+      indent: false,
+      base_url: '/project/tinymce/js/tinymce'
+    }, [ Plugin ], true);
 
-  context('backspace and delete', () => {
     it('TINY-10289: backspace from a `p` after an `ol` or delete from the last `li` inside the `ol` should merge the `p` inside the `li`', async () => {
       const editor = hook.editor();
 
       const initialContent = '<ol>' +
-          '<li>' +
-            'List 1' +
-          '</li>' +
-          '<li>' +
-            '<h2>Header</h2>' +
-            '<ol>' +
-              '<li>List 1-1</li>' +
-            '</ol>' +
-            '<p>Place custor at the start of this line and hit backspace.</p>' +
-          '</li>' +
+        '<li>' +
+        'List 1' +
+        '</li>' +
+        '<li>' +
+        '<h2>Header</h2>' +
+        '<ol>' +
+        '<li>List 1-1</li>' +
+        '</ol>' +
+        '<p>Place custor at the start of this line and hit backspace.</p>' +
+        '</li>' +
         '</ol>';
 
       const expectedContent = '<ol>' +
-          '<li>' +
-            'List 1' +
-          '</li>' +
-          '<li>' +
-            '<h2>Header</h2>' +
-            '<ol>' +
-              '<li>List 1-1Place custor at the start of this line and hit backspace.</li>' +
-            '</ol>' +
-          '</li>' +
+        '<li>' +
+        'List 1' +
+        '</li>' +
+        '<li>' +
+        '<h2>Header</h2>' +
+        '<ol>' +
+        '<li>List 1-1Place custor at the start of this line and hit backspace.</li>' +
+        '</ol>' +
+        '</li>' +
         '</ol>';
 
       editor.setContent(initialContent);
@@ -59,6 +59,45 @@ describe('webdriver.tinymce.plugins.lists.DeleteTest', () => {
       TinyAssertions.assertContent(editor, expectedContent);
       editor.execCommand('undo');
       TinyAssertions.assertContent(editor, initialContent);
+    });
+  });
+
+  context('Prevention', () => {
+    const preventionHook = TinyHooks.bddSetupLight<Editor>({
+      plugins: 'lists',
+      toolbar: 'numlist bullist',
+      indent: false,
+      setup: (editor: Editor) => {
+        editor.on('init', () => {
+          editor.on('keydown', (event) => {
+            event.preventDefault();
+          });
+        });
+      },
+      base_url: '/project/tinymce/js/tinymce'
+    }, [ Plugin ], true);
+
+    it('TINY-13276: Backspace in selection is preventable', async () => {
+      const editor = preventionHook.editor();
+
+      const initialContent = '<ol>' +
+        '<li>' +
+        'List 1' +
+        '</li>' +
+        '</ol>';
+
+      const expectedContent = '<ol>' +
+        '<li>' +
+        'List 1' +
+        '</li>' +
+        '</ol>';
+
+      editor.setContent(initialContent);
+      editor.undoManager.add();
+      TinySelections.setSelection(editor, [ 0, 0, 0 ], 2, [ 0, 0, 0 ], 5);
+      await RealKeys.pSendKeysOn('iframe => body', [ RealKeys.backspace() ]);
+      TinyAssertions.assertSelection(editor, [ 0, 0, 0 ], 2, [ 0, 0, 0 ], 5);
+      TinyAssertions.assertContent(editor, expectedContent);
     });
   });
 });
