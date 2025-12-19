@@ -47,7 +47,7 @@ If you don't provide \`declaredSize\`, the element may move outside the viewport
         disable: true
       }
     },
-    anchor: {
+    origin: {
       description: `Determines which corner of the viewport the draggable element is positioned relative to, and which CSS positioning properties are used.
 
 **Default:** \`'top-left'\`
@@ -58,18 +58,18 @@ If you don't provide \`declaredSize\`, the element may move outside the viewport
 - \`'bottom-left'\` - Uses \`bottom\` and \`left\` CSS properties, positioning relative to the bottom-left corner
 - \`'bottom-right'\` - Uses \`bottom\` and \`right\` CSS properties, positioning relative to the bottom-right corner
 
-The anchor affects how the position is calculated and which edges of the viewport are used as reference points. For example, with \`anchor: 'top-right'\`, the element's position is measured from the top and right edges of the viewport.`,
+The origin affects how the position is calculated and which edges of the viewport are used as reference points. For example, with \`origin: 'top-right'\`, the element's position is measured from the top and right edges of the viewport.`,
       control: {
         type: 'radio'
       },
       options: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
     },
     initialPosition: {
-      description: `The initial position of the draggable element using \`x\` and \`y\` coordinates. Both properties accept any valid CSS value. The \`x\` and \`y\` values map to CSS positioning properties based on the \`anchor\` setting.
+      description: `The initial position of the draggable element using \`x\` and \`y\` coordinates. Both properties accept any valid CSS value. The \`x\` and \`y\` values map to CSS positioning properties based on the \`origin\` setting.
 
 **Examples:**
-- \`anchor: 'top-left'\` with \`initialPosition: { x: '50px', y: '100px' }\` → sets \`left: 50px\` and \`top: 100px\`
-- \`anchor: 'bottom-right'\` with \`initialPosition: { x: '50px', y: '100px' }\` → sets \`right: 50px\` and \`bottom: 100px\``,
+- \`origin: 'top-left'\` with \`initialPosition: { x: '50px', y: '100px' }\` → sets \`left: 50px\` and \`top: 100px\`
+- \`origin: 'bottom-right'\` with \`initialPosition: { x: '50px', y: '100px' }\` → sets \`right: 50px\` and \`bottom: 100px\``,
     },
     allowedOverflow: {
       description: `Controls how much of the draggable element is allowed to overflow outside the viewport. Values are decimals between 0 and 1.
@@ -110,7 +110,7 @@ const render = (args: DraggableProps): JSX.Element => (
 
 export const Example: Story = {
   args: {
-    anchor: 'top-left',
+    origin: 'top-left',
     initialPosition: { x: '50px', y: '50px' },
     allowedOverflow: { horizontal: 0.6, vertical: 0 },
     declaredSize: { width: '250px', height: '250px' }

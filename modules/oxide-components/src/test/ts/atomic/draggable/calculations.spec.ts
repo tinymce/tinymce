@@ -140,31 +140,31 @@ describe('browser.draggable.calculations', () => {
   describe('position', () => {
     it.each([
       {
-        anchor: 'top-left' as const,
+        origin: 'top-left' as const,
         element: { x: 100, y: 200, width: 50, height: 50 },
         viewport: { width: 1000, height: 1000 },
         expected: { x: 100, y: 200 }
       },
       {
-        anchor: 'top-right' as const,
+        origin: 'top-right' as const,
         element: { x: 100, y: 200, width: 50, height: 50 },
         viewport: { width: 1000, height: 1000 },
         expected: { x: 850, y: 200 }
       },
       {
-        anchor: 'bottom-left' as const,
+        origin: 'bottom-left' as const,
         element: { x: 100, y: 200, width: 50, height: 50 },
         viewport: { width: 1000, height: 1000 },
         expected: { x: 100, y: 750 }
       },
       {
-        anchor: 'bottom-right' as const,
+        origin: 'bottom-right' as const,
         element: { x: 100, y: 200, width: 50, height: 50 },
         viewport: { width: 1000, height: 1000 },
         expected: { x: 850, y: 750 }
       }
-    ])('should calculate position for $anchor anchor', ({ anchor, element, viewport, expected }) => {
-      const result = position(element, viewport, anchor);
+    ])('should calculate position for $origin origin', ({ origin, element, viewport, expected }) => {
+      const result = position(element, viewport, origin);
       expect(result).toEqual(expected);
     });
 

@@ -1,6 +1,6 @@
 import { Fun, type Optional } from '@ephox/katamari';
 
-import type { AllowedOverflow, Anchor, CssPosition, CssSize, Position, Shift } from './types';
+import type { AllowedOverflow, Origin, CssPosition, CssSize, Position, Shift } from './types';
 
 const getTransform = (shift: Shift): string => `translate3d(${shift.x}px, ${shift.y}px, 0px)`;
 
@@ -9,7 +9,7 @@ const normalizePosition = (position: CssPosition | Position): CssPosition => ({
   y: typeof position.y === 'number' ? `${position.y}px` : position.y
 });
 
-const getPosition = (position: CssPosition, allowedOverflow: AllowedOverflow, anchor: Anchor, size: Optional<CssSize>) => {
+const getPosition = (position: CssPosition, allowedOverflow: AllowedOverflow, origin: Origin, size: Optional<CssSize>) => {
   const { x, y } = size.fold(
     Fun.constant(position),
     ({ width, height }) => ({
@@ -18,21 +18,21 @@ const getPosition = (position: CssPosition, allowedOverflow: AllowedOverflow, an
     })
   );
 
-  if (anchor === 'top-left') {
+  if (origin === 'top-left') {
     return { top: y, left: x };
   }
-  if (anchor === 'top-right') {
+  if (origin === 'top-right') {
     return { top: y, right: x };
   }
-  if (anchor === 'bottom-left') {
+  if (origin === 'bottom-left') {
     return { bottom: y, left: x };
   }
   return { bottom: y, right: x };
 };
 
-const getPositioningStyles = (shift: Shift, position: CssPosition | Position, anchor: Anchor, allowedOverflow: AllowedOverflow, isDragging: boolean, declaredSize: Optional<CssSize>): React.CSSProperties =>
+const getPositioningStyles = (shift: Shift, position: CssPosition | Position, origin: Origin, allowedOverflow: AllowedOverflow, isDragging: boolean, declaredSize: Optional<CssSize>): React.CSSProperties =>
   isDragging ?
-    { transform: getTransform(shift), ...getPosition(normalizePosition(position), allowedOverflow, anchor, declaredSize) }
-    : getPosition(normalizePosition(position), allowedOverflow, anchor, declaredSize);
+    { transform: getTransform(shift), ...getPosition(normalizePosition(position), allowedOverflow, origin, declaredSize) }
+    : getPosition(normalizePosition(position), allowedOverflow, origin, declaredSize);
 
 export { getPositioningStyles };
