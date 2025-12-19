@@ -2,7 +2,7 @@ import { exec, execSync } from 'child_process';
 
 // This script is used to run visual regression tests in a Docker container.
 
-const devServer = exec('bun start --ci');
+const devServer = exec('yarn start --ci');
 
 execSync(`docker build -t oxide-components-test-visual . -f Dockerfile.playwright-test`, {
   stdio: 'inherit'
