@@ -65,7 +65,11 @@ The anchor affects how the position is calculated and which edges of the viewpor
       options: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
     },
     initialPosition: {
-      description: 'The initial position of the draggable element using `x` and `y` coordinates. Both properties accept any valid CSS value. The `x` and `y` values map to CSS positioning properties based on the `anchor` setting.',
+      description: `The initial position of the draggable element using \`x\` and \`y\` coordinates. Both properties accept any valid CSS value. The \`x\` and \`y\` values map to CSS positioning properties based on the \`anchor\` setting.
+
+**Examples:**
+- \`anchor: 'top-left'\` with \`initialPosition: { x: '50px', y: '100px' }\` → sets \`left: 50px\` and \`top: 100px\`
+- \`anchor: 'bottom-right'\` with \`initialPosition: { x: '50px', y: '100px' }\` → sets \`right: 50px\` and \`bottom: 100px\``,
     },
     allowedOverflow: {
       description: `Controls how much of the draggable element is allowed to overflow outside the viewport. Values are decimals between 0 and 1.
