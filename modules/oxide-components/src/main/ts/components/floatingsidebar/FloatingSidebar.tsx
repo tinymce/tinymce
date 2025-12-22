@@ -38,7 +38,7 @@ const Root: FC<FloatingSidebarProps> = ({ isOpen = true, children, style, ...pro
     <Draggable.Root
       className={Bem.block('tox-floating-sidebar', { open: isOpen })}
       initialPosition={initialPosition}
-      allowedOverflow={{ horizontal: 0 }}
+      allowedOverflow={{ horizontal: 0.8 }}
       declaredSize={{ width: 'var(--tox-private-floating-sidebar-width)', height: 'var(--tox-private-floating-sidebar-height)' }}
       style={style}
     >
