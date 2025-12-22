@@ -21,7 +21,7 @@ const Root: FC<FloatingSidebarProps> = ({ isOpen = true, children, style, origin
       className={Bem.block('tox-floating-sidebar', { open: isOpen })}
       origin={origin}
       initialPosition={initialPosition}
-      allowedOverflow={{ horizontal: 0.8 }}
+      allowedOverflow={{ horizontal: 0 }}
       declaredSize={{ width: 'var(--tox-private-floating-sidebar-width)', height: 'var(--tox-private-floating-sidebar-height)' }}
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
