@@ -40,5 +40,5 @@ export default defineConfig({
       },
     },
   },
-  plugins: [ react() ]
+  plugins: [ react() as any ]
 });

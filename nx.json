@@ -1,0 +1,18 @@
+{
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*"],
+    "tiny-product": [
+      "{projectRoot}/**/*",
+      "!{projectRoot}/**/*.spec.ts",
+      "!{projectRoot}/**/test/**/*",
+      "!{projectRoot}/tsconfig.spec.json"
+    ],
+    "tiny-library": [
+      "{projectRoot}/**/*",
+      "!{projectRoot}/**/*.spec.ts",
+      "!{projectRoot}/**/test/**/*",
+      "!{projectRoot}/tsconfig.spec.json"
+    ]
+  }
+}
+

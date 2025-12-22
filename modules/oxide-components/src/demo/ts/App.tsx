@@ -1,7 +1,7 @@
 import { Button } from 'oxide-components/components/button/Button';
-import React, { useState } from 'react';
+import { type FC, useState } from 'react';
 
-const App: React.FC = () => {
+const App: FC = () => {
   const [ count, setCount ] = useState(0);
 
   return (

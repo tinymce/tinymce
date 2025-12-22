@@ -1,4 +1,4 @@
-import { forwardRef, type FunctionComponent } from 'react';
+import { forwardRef, type FunctionComponent, type MouseEvent, type FocusEvent } from 'react';
 
 import { Button } from '../../../components/button/Button';
 import * as Bem from '../../../utils/Bem';
@@ -15,10 +15,10 @@ const TagCloseIcon: FunctionComponent = () => {
 interface BaseTagProps {
   readonly label: string;
   readonly icon?: JSX.Element;
-  readonly onMouseEnter?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  readonly onMouseLeave?: (event: React.MouseEvent<HTMLDivElement>) => void;
-  readonly onFocus?: (event: React.FocusEvent<HTMLDivElement>) => void;
-  readonly onBlur?: (event: React.FocusEvent<HTMLDivElement>) => void;
+  readonly onMouseEnter?: (event: MouseEvent<HTMLDivElement>) => void;
+  readonly onMouseLeave?: (event: MouseEvent<HTMLDivElement>) => void;
+  readonly onFocus?: (event: FocusEvent<HTMLDivElement>) => void;
+  readonly onBlur?: (event: FocusEvent<HTMLDivElement>) => void;
   readonly ariaLabel?: string;
 }
 

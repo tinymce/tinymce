@@ -1,4 +1,5 @@
 import { Fun, type Optional } from '@ephox/katamari';
+import type React from 'react';
 
 import type { AllowedOverflow, CssPosition, CssSize, Position, Shift } from './types';
 

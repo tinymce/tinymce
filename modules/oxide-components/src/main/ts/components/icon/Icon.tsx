@@ -1,5 +1,4 @@
-import { useUniverse } from 'oxide-components/main';
-
+import { useUniverse } from '../../contexts/UniverseContext/Universe';
 import { classes } from '../../utils/Styles';
 
 import type { IconProps } from './IconTypes';

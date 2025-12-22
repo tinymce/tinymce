@@ -1,5 +1,5 @@
 import { Optional } from '@ephox/katamari';
-import { type FC, useState, useMemo, useRef, useCallback, forwardRef } from 'react';
+import { type FC, useState, useMemo, useRef, useCallback, forwardRef, type PointerEvent } from 'react';
 
 import { boundaries, clamp, delta } from './internals/calculations';
 import { useDraggable, DraggableContext } from './internals/context';
@@ -48,7 +48,7 @@ const Handle: FC<DraggableHandleProps> = ({ children }) => {
     }
   }, [ setIsDragging, setShift, draggableRef, setPosition ]);
 
-  const onPointerDown = useCallback((event: React.PointerEvent) => {
+  const onPointerDown = useCallback((event: PointerEvent) => {
     if (draggableRef.current === null) {
       // If draggableRef is not present then abort dragging
       return;
@@ -70,7 +70,7 @@ const Handle: FC<DraggableHandleProps> = ({ children }) => {
     boundariesRef.current = boundaries(draggableRect, mousePosition, constraints, allowedOverflowPixels);
   }, [ draggableRef, setIsDragging, allowedOverflow ]);
 
-  const onPointerMove = useCallback((event: React.PointerEvent) => {
+  const onPointerMove = useCallback((event: PointerEvent) => {
     if (isDragging) {
       const currentPointerPosition = {
         x: clamp(Math.round(event.clientX), boundariesRef.current.x.min, boundariesRef.current.x.max),
@@ -82,7 +82,7 @@ const Handle: FC<DraggableHandleProps> = ({ children }) => {
     }
   }, [ isDragging, setShift ]);
 
-  const onPointerUp = useCallback((event: React.PointerEvent) => {
+  const onPointerUp = useCallback((event: PointerEvent) => {
     dragStartElementRef.current?.releasePointerCapture(event.pointerId);
     stopDragging();
   }, [ stopDragging ]);
