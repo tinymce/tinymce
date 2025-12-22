@@ -112,7 +112,7 @@ export const Example: Story = {
   args: {
     origin: 'top-left',
     initialPosition: { x: '50px', y: '50px' },
-    allowedOverflow: { horizontal: 0.6, vertical: 0 },
+    allowedOverflow: { horizontal: 0, vertical: 0 }, // todo revert
     declaredSize: { width: '250px', height: '250px' }
   },
   parameters: {

@@ -13,7 +13,7 @@ export interface FloatingSidebarProps extends PropsWithChildren {
 }
 interface HeaderProps extends PropsWithChildren {};
 
-const Root: FC<FloatingSidebarProps> = ({ isOpen = true, children, style, origin = 'top-left', initialPosition = { x: 0, y: 0 }}) => {
+const Root: FC<FloatingSidebarProps> = ({ isOpen = true, children, style, origin = 'top-right', initialPosition = { x: 0, y: 0 }}) => {
   return (
     <Draggable.Root
       className={Bem.block('tox-floating-sidebar', { open: isOpen })}
