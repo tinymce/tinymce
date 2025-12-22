@@ -114,7 +114,9 @@
     right: 0;
     height: min(100px, 100%);
     pointer-events: none;
-    background: linear-gradient(to bottom, transparent, var(--tox-private-background-color, @background-color));
+
+    // 60px of transparent background and then a gradient from transparent to background color. This ensures the loader and first line of streamed response don't have gradient style #TINY-13486
+    background: linear-gradient(to bottom, transparent 60px, transparent 60px, var(--tox-private-background-color, @background-color));
   }
 
   .tox-ai-error {
