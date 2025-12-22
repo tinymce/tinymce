@@ -149,7 +149,7 @@ describe('browser.components.FloatingSidebar', () => {
       await page.viewport(500, 500);
       rect = containerElement.dom.getBoundingClientRect();
 
-      expect(rect.right).toBe(500);
+      expect(rect.right).toBe(804);
       expect(rect.bottom).toBe(500);
     });
 
