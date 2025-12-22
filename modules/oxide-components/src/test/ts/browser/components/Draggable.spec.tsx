@@ -80,9 +80,14 @@ describe('browser.components.Draggable', () => {
     await page.viewport(originalViewport.width, originalViewport.height);
   });
 
-  it('TINY-12875: Should be draggable by handle', async () => {
+  it.each([
+    { origin: 'top-left' as const },
+    { origin: 'top-right' as const },
+    { origin: 'bottom-left' as const },
+    { origin: 'bottom-right' as const },
+  ])('TINY-12875: Should be draggable by handle, origin $origin', async ({ origin }) => {
     await page.viewport(1500, 1500);
-    const { handle, draggableWrapper } = await renderDraggable();
+    const { handle, draggableWrapper } = await renderDraggable({ width: 250, height: 300 }, { origin });
     await dragTo(handle, { top: 50, left: 50 });
     assertPosition(draggableWrapper, { top: 50, left: 50 });
   });
@@ -214,40 +219,89 @@ describe('browser.components.Draggable', () => {
     assertPosition(draggableWrapper, { top: 1100, left: 0 });
   });
 
-  it('TINY-13109: Should stay within the viewport on window resize', async () => {
+  it.each([
+    {
+      origin: 'top-left' as const,
+      startPosition: { top: 1300, left: 1300 },
+      afterShrinkPosition: { top: 800, left: 800 },
+      afterExpandPosition: { top: 1300, left: 1300 }
+    },
+    {
+      origin: 'top-right' as const,
+      startPosition: { top: 1300, left: 0 },
+      afterShrinkPosition: { top: 800, left: 0 },
+      afterExpandPosition: { top: 1300, left: 500 },
+    },
+    {
+      origin: 'bottom-left' as const,
+      startPosition: { top: 0, left: 1300 },
+      afterShrinkPosition: { top: 0, left: 800 },
+      afterExpandPosition: { top: 500, left: 1300 },
+    },
+    {
+      origin: 'bottom-right' as const,
+      startPosition: { top: 0, left: 0 },
+      afterShrinkPosition: { top: 0, left: 0 },
+      afterExpandPosition: { top: 500, left: 500 },
+    },
+  ])('TINY-13109: Should stay within the viewport on window resize, origin $origin', async ({ origin, startPosition, afterShrinkPosition, afterExpandPosition }) => {
     const elementWidth = 200;
     const elementHeight = 200;
 
     await page.viewport(1500, 1500);
-    const componentProps = { declaredSize: { width: `${elementWidth}px`, height: `${elementHeight}px` }};
+    const componentProps = { origin, declaredSize: { width: `${elementWidth}px`, height: `${elementHeight}px` }};
     const { handle, draggableWrapper } = await renderDraggable({ width: elementWidth, height: elementHeight }, componentProps);
-    await dragTo(handle, { top: 1300, left: 1300 });
-    assertPosition(draggableWrapper, { top: 1300, left: 1300 });
+    await dragTo(handle, startPosition);
+    assertPosition(draggableWrapper, startPosition);
 
     await page.viewport(1000, 1000);
-    assertPosition(draggableWrapper, { top: 800, left: 800 });
+    assertPosition(draggableWrapper, afterShrinkPosition);
 
     // Should remember it's initial position (before first resize)
     await page.viewport(2000, 2000);
-    assertPosition(draggableWrapper, { top: 1300, left: 1300 });
+    assertPosition(draggableWrapper, afterExpandPosition);
   });
 
-  it('TINY-13520: Should stay within the viewport on window resize with allowed overflow', async () => {
+  it.each([
+    {
+      origin: 'top-left' as const,
+      startPosition: { top: 1250, left: 1200 },
+      afterShrinkPosition: { top: 800, left: 775 },
+      afterExpandPosition: { top: 1250, left: 1200 }
+    },
+    {
+      origin: 'top-right' as const,
+      startPosition: { top: 1250, left: 0 },
+      afterShrinkPosition: { top: 800, left: -75 },
+      afterExpandPosition: { top: 1250, left: 500 }
+    },
+    {
+      origin: 'bottom-left' as const,
+      startPosition: { top: 0, left: 1200 },
+      afterShrinkPosition: { top: -50, left: 775 },
+      afterExpandPosition: { top: 500, left: 1200 }
+    },
+    {
+      origin: 'bottom-right' as const,
+      startPosition: { top: 0, left: 0 },
+      afterShrinkPosition: { top: -50, left: -75 },
+      afterExpandPosition: { top: 500, left: 500 }
+    },
+  ])('TINY-13520: Should stay within the viewport on window resize with allowed overflow, origin $origin', async ({ origin, startPosition, afterShrinkPosition, afterExpandPosition }) => {
     const elementWidth = 300;
     const elementHeight = 250;
 
     await page.viewport(1500, 1500);
-    const componentProps = { declaredSize: { width: `${elementWidth}px`, height: `${elementHeight}px` }, allowedOverflow: { horizontal: 0.25, vertical: 0.2 }};
+    const componentProps = { origin, declaredSize: { width: `${elementWidth}px`, height: `${elementHeight}px` }, allowedOverflow: { horizontal: 0.25, vertical: 0.2 }};
     const { handle, draggableWrapper } = await renderDraggable({ width: elementWidth, height: elementHeight }, componentProps);
-    await dragTo(handle, { top: 1250, left: 1200 });
-    assertPosition(draggableWrapper, { top: 1250, left: 1200 });
+    await dragTo(handle, startPosition);
+    assertPosition(draggableWrapper, startPosition);
 
     await page.viewport(1000, 1000);
-    assertPosition(draggableWrapper, { top: 800, left: 775 });
-
+    assertPosition(draggableWrapper, afterShrinkPosition);
     // Should remember it's initial position (before first resize)
     await page.viewport(2000, 2000);
-    assertPosition(draggableWrapper, { top: 1250, left: 1200 });
+    assertPosition(draggableWrapper, afterExpandPosition);
   });
 
   it('TINY-13109: Should forget its initial position once dragged after resize', async () => {
@@ -359,5 +413,16 @@ describe('browser.components.Draggable', () => {
     await userEvent.click(button);
 
     expect(clickCount).toBe(1);
+  });
+
+  it.each([
+    { origin: 'top-left' as const, expectedPosition: { top: 50, left: 50 }},
+    { origin: 'top-right' as const, expectedPosition: { top: 50, left: 1500 - 50 - 250 }},
+    { origin: 'bottom-left' as const, expectedPosition: { top: 1500 - 50 - 300, left: 50 }},
+    { origin: 'bottom-right' as const, expectedPosition: { top: 1500 - 50 - 300, left: 1500 - 50 - 250 }},
+  ])('TINY-13548: Should have correct initial position, origin $origin', async ({ origin, expectedPosition }) => {
+    await page.viewport(1500, 1500);
+    const { draggableWrapper } = await renderDraggable({ width: 250, height: 300 }, { origin, initialPosition: { x: '50px', y: '50px' }});
+    assertPosition(draggableWrapper, expectedPosition);
   });
 });
