@@ -2,7 +2,7 @@ import { Css, SelectorFind, SugarElement } from '@ephox/sugar';
 import * as FloatingSidebar from 'oxide-components/components/floatingsidebar/FloatingSidebar';
 import { classes } from 'oxide-components/utils/Styles';
 import { useState, type ReactNode } from 'react';
-import { describe, expect, it, beforeAll, afterEach, afterAll, beforeEach } from 'vitest';
+import { describe, expect, it, beforeAll, afterEach } from 'vitest';
 import { userEvent, page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
@@ -128,28 +128,31 @@ describe('browser.components.FloatingSidebar', () => {
 
     it('TINY-13109: Should stay within viewport on window resize', async () => {
       await page.viewport(1500, 1500);
-      // Render sidebar in bottom right corner
       const { getByTestId } = render(
-        <FloatingSidebar.Root isOpen={true} initialPosition={{ x: 1500, y: 1500, origin: 'bottomright' }}>
+        <FloatingSidebar.Root isOpen={true}>
           <FloatingSidebar.Header>
             <div data-testid={floatingSidebarHeaderTestId}>Header</div>
           </FloatingSidebar.Header>
           <div data-testid={floatingSidebarContentTestId}>Content</div>
         </FloatingSidebar.Root>, { wrapper: Wrapper });
 
-      const floatingSidebarContent = SugarElement.fromDom(getByTestId(floatingSidebarContentTestId).element());
-      const containerElement = SelectorFind.closest<HTMLElement>(floatingSidebarContent, containerSelector).getOrDie();
-      let rect = containerElement.dom.getBoundingClientRect();
+      const handle = SugarElement.fromDom(getByTestId(floatingSidebarHeaderTestId).element() as HTMLElement);
+      const headerElement = SelectorFind.closest<HTMLElement>(handle, headerSelector).getOrDie();
+      const containerElement = SelectorFind.closest<HTMLElement>(handle, containerSelector).getOrDie();
 
-      // Validate, that initially it's in the bottom right corner
-      expect(rect.right).toBe(1500);
+      // Move sidebar to bottom left corner
+      await Mouse.dragTo(headerElement.dom, { top: 1500 * 0.2 + 10, left: 10 }, { startPosition: { x: 10, y: 10 }});
+
+      // Validate, that initially it's in the bottom left corner
+      let rect = containerElement.dom.getBoundingClientRect();
+      expect(rect.left).toBe(0);
       expect(rect.bottom).toBe(1500);
 
       // Shrink the viewport
       await page.viewport(500, 500);
       rect = containerElement.dom.getBoundingClientRect();
 
-      expect(rect.right).toBe(804);
+      expect(rect.left).toBe(-304);
       expect(rect.bottom).toBe(500);
     });
 
@@ -181,68 +184,6 @@ describe('browser.components.FloatingSidebar', () => {
       const rect = containerElement.dom.getBoundingClientRect();
 
       expect(rect.height).toBe(80);
-    });
-  });
-
-  describe('TINY-13044: Initial position', () => {
-    let originalViewport = { width: 0, height: 0 };
-
-    beforeAll(async () => {
-      originalViewport = { width: window.innerWidth, height: window.innerHeight };
-    });
-
-    afterAll(async () => {
-      await page.viewport(originalViewport.width, originalViewport.height);
-    });
-
-    beforeEach(async () => {
-      await page.viewport(1500, 1500);
-    });
-
-    const renderWithPosition = (initialPosition: { x: number; y: number; origin: 'topleft' | 'topright' | 'bottomleft' | 'bottomright' }): { containerElement: HTMLElement } => {
-      const { getByTestId } = render(
-        <FloatingSidebar.Root initialPosition={initialPosition} style={{ '--tox-private-floating-sidebar-height': '100px' }}>
-          <FloatingSidebar.Header>
-            <div data-testid={floatingSidebarHeaderTestId}>Header</div>
-          </FloatingSidebar.Header>
-          <div data-testid={floatingSidebarContentTestId}>Content</div>
-        </FloatingSidebar.Root>, { wrapper: Wrapper });
-
-      const floatingSidebarContent = SugarElement.fromDom(getByTestId(floatingSidebarContentTestId).element());
-      const containerElement = SelectorFind.closest<HTMLElement>(floatingSidebarContent, containerSelector).getOrDie();
-      return { containerElement: containerElement.dom };
-    };
-
-    it('TINY-13044: Should have correct initial position origin topleft', async () => {
-      const initialPosition = { x: 500, y: 500, origin: 'topleft' as const };
-      const { containerElement } = renderWithPosition(initialPosition);
-      const rect = containerElement.getBoundingClientRect();
-      expect(rect.left).toBe(500);
-      expect(rect.top).toBe(500);
-    });
-
-    it('TINY-13044: Should have correct initial position origin topright', async () => {
-      const initialPosition = { x: 500, y: 500, origin: 'topright' as const };
-      const { containerElement } = renderWithPosition(initialPosition);
-      const rect = containerElement.getBoundingClientRect();
-      expect(rect.right).toBe(500);
-      expect(rect.top).toBe(500);
-    });
-
-    it('TINY-13044: Should have correct initial position origin bottomleft', async () => {
-      const initialPosition = { x: 500, y: 500, origin: 'bottomleft' as const };
-      const { containerElement } = renderWithPosition(initialPosition);
-      const rect = containerElement.getBoundingClientRect();
-      expect(rect.left).toBe(500);
-      expect(rect.bottom).toBe(500);
-    });
-
-    it('TINY-13044: Should have correct initial position origin bottomright', async () => {
-      const initialPosition = { x: 500, y: 500, origin: 'bottomright' as const };
-      const { containerElement } = renderWithPosition(initialPosition);
-      const rect = containerElement.getBoundingClientRect();
-      expect(rect.right).toBe(500);
-      expect(rect.bottom).toBe(500);
     });
   });
 });
