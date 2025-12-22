@@ -38,8 +38,7 @@ export const useTabKeyNavigation = (props: TabKeyingProps): void => {
     } else {
       return Fun.noop;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [ props ]);
 };
 
 export interface FlowKeyingProps extends BaseProps, FlowType.FlowConfig { }
@@ -54,8 +53,7 @@ export const useFlowKeyNavigation = (props: FlowKeyingProps): void => {
     } else {
       return Fun.noop;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [ props ]);
 };
 
 export interface SpecialKeyingProps extends BaseProps, SpecialType.SpecialConfig { }
