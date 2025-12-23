@@ -6,7 +6,7 @@ import { describe, expect, it, afterEach, beforeAll } from 'vitest';
 import { userEvent, page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
-import * as Mouse from './utils/Mouse';
+import * as Mouse from '../utils/Mouse';
 
 const draggableTestId = 'draggable';
 const draggableHandleTestId = 'draggable-handle';
