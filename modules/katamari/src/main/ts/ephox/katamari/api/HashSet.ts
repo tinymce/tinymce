@@ -185,6 +185,16 @@ export const toggle = <T>(set: Set<T>, value: T): Set<T> => {
  */
 export const contains = <T>(set: ReadonlySet<T>, value: T): boolean => set.has(value);
 
+/**
+ * Checks if a value exists in the set.
+ * This is an alias for `contains` to match the naming convention of JavaScript's Set.has().
+ *
+ * @param set - The set to search
+ * @param value - The value to look for
+ * @returns true if the value is in the set, false otherwise
+ */
+export const has = <T>(set: ReadonlySet<T>, value: T): boolean => contains(set, value);
+
 // ============================================================================
 // Getters & Properties
 // ============================================================================

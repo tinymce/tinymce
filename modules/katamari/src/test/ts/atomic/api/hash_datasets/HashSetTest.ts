@@ -264,7 +264,7 @@ describe('atomic.katamari.api.hash_datasets.HashSetTest', () => {
     it('TINY-13479: bind maps and flattens', () => {
       const set = HashSet.make(1, 2, 3);
       const result = HashSet.bind(set, (x) => HashSet.make(x, x * 10));
-      assert.deepEqual(HashSet.toArray(result).sort(), [ 1, 2, 3, 10, 20, 30 ]);
+      assert.deepEqual(HashSet.toArray(result).sort((a, b) => a - b), [ 1, 2, 3, 10, 20, 30 ]);
     });
 
     it('TINY-13479: flatMap is alias for bind', () => {
