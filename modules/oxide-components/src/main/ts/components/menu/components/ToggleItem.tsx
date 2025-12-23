@@ -48,6 +48,7 @@ export const ToggleItem = forwardRef<HTMLButtonElement, ToggleMenuItemProps>(({ 
       role='menuitemcheckbox'
       aria-haspopup={false}
       aria-disabled={!state.enabled}
+      disabled={!state.enabled}
       aria-selected={state.active}
       onFocus={() => setState({ ...state, focused: true })}
       onPointerEnter={() => setState({ ...state, hovered: true })}

@@ -53,7 +53,7 @@ const render = (args: Dropdown.DropdownProps): JSX.Element => {
           </Button>
         </Dropdown.Trigger>
         <Dropdown.Content>
-          <div style={{ width: '400px', height: '300px', borderRadius: '8px' }}></div>
+          <div style={{ width: '400px', height: '300px' }}></div>
         </Dropdown.Content>
       </Dropdown.Root>
     </div>

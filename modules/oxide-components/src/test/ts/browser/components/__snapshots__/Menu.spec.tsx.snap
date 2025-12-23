@@ -392,6 +392,7 @@ exports[`browser.MenuTest > Should be able to open submenus > 2. After opening s
                 aria-haspopup="false"
                 aria-selected="false"
                 class="tox-collection__item tox-collection__item--state-disabled"
+                disabled=""
                 id=":r4:"
                 role="menuitemcheckbox"
                 tabindex="-1"

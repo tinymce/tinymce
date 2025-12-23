@@ -3,7 +3,7 @@ import { createContext, useContext, type MouseEvent } from 'react';
 
 export interface DropdownState {
   readonly triggerRef: React.MutableRefObject<HTMLElement | undefined>;
-  readonly contentRef: React.RefObject<HTMLDivElement>;
+  readonly contentRef: React.MutableRefObject<HTMLDivElement | undefined>;
   readonly side: 'top' | 'bottom' | 'left' | 'right';
   readonly align: 'start' | 'center' | 'end';
   // margin/gap between the trigger button and anchored container
