@@ -3,7 +3,7 @@ import { getPositioningStyles } from 'oxide-components/components/draggable/inte
 import { describe, expect, it } from 'vitest';
 
 // This test should be atomic test but I ran on some issues with module resolution in node environment.
-// To be investiagated later.
+// To be investiagated later TINY-13555
 
 describe('browser.draggable.styles', () => {
   describe('getPositioningStyles', () => {
