@@ -24,7 +24,7 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
     };
 
     context(tester.label, () => {
-      context('focus is placed inside the editor', () => {
+      context('when the editor is active and focused', () => {
         afterEach(() => {
           resetNotifications(hook.editor());
         });
@@ -222,7 +222,7 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
         });
       });
 
-      context('focus is placed outside of the editor', () => {
+      context('when focus is outside the editor', () => {
         const hook = tester.setup<Editor>({
           service_message: 'service notification text',
           add_unload_trigger: false,

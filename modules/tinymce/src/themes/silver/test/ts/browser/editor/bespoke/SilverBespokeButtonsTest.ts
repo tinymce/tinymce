@@ -400,7 +400,7 @@ describe('browser.tinymce.themes.silver.editor.bespoke.SilverBespokeButtonsTest'
       it('TINY-9669: Disable styles on noneditable content', testDisableOnNoneditable('Format'));
     });
 
-    context('Readonly modes', () => {
+    context('Readonly mode', () => {
       const testDisableInReadonly = (title: string) => () => {
         const editor = hook.editor();
         UiFinder.exists(SugarBody.body(), `[aria-label^="${title}"]:not(:disabled)`);

@@ -345,7 +345,7 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
   context('Element path tooltips', () => {
     const pMouseOverPathItem = async (name: string, first: boolean) => {
       const elm = UiFinder.findIn(SugarDocument.getDocument(), `.tox-statusbar__path-item:contains(${name})`).getOrDie();
-      // Yield a tick so event wiring/state is ready before synthetic mouseover
+      // Wait for a tick so event wiring/state is ready before synthetic mouseover
       await Waiter.pWait(0);
       Mouse.mouseOver(elm);
       // Wait past initial tooltip show delay
@@ -356,14 +356,14 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
     const pFocusElementPath = async (editor: Editor, doc: SugarElement<Document>) => {
       TinyContentActions.keystroke(editor, 122, { alt: true });
       await FocusTools.pTryOnSelector( 'Assert element path is focused', doc, 'div[role=navigation] .tox-statusbar__path-item');
-      // Yield so focus/tooltip handlers run after key action
+      // Wait so focus/tooltip handlers run after key action
       await Waiter.pWait(0);
     };
 
     const pArrowFromFocused = async (doc: SugarElement<Document>, dir: 'left' | 'right', expectFocusedContains?: string) => {
       const activeElm = FocusTools.getFocused(doc).getOrDie();
       Keyboard.keydown(dir === 'right' ? Keys.right() : Keys.left(), {}, activeElm);
-      // Yield so arrow key handler can update focus/tooltip
+      // Wait so arrow key handler can update focus/tooltip
       await Waiter.pWait(0);
       if (Type.isString(expectFocusedContains)) {
         await FocusTools.pTryOnSelector( 'Assert element path is focused', doc, `.tox-statusbar__path-item:contains(${expectFocusedContains})`);
