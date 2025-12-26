@@ -26,7 +26,7 @@ describe('browser.tinymce.plugins.advlist.ListStyleAliasTest', () => {
       [`div.tox-collection__item[aria-checked="true"][aria-label="${styleTypeLabel}"]`]: 1,
     }, menu);
 
-    TinyUiActions.keystroke(editor, Keys.escape());
+    TinyUiActions.keyup(editor, Keys.escape());
   };
 
   const pTestCheckedListStyleType = async (editor: Editor, styleTypeLabel: string, styleType: string) => {
@@ -40,7 +40,7 @@ describe('browser.tinymce.plugins.advlist.ListStyleAliasTest', () => {
 
     await pClickAndAssertCheckedListStyleType(editor, styleTypeLabel);
 
-    TinyUiActions.keystroke(editor, Keys.escape());
+    TinyUiActions.keyup(editor, Keys.escape());
   };
 
   context('default numbered list split button', () => {

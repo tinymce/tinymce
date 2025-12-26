@@ -113,6 +113,4 @@ UnitTest.asynctest('FocusToolsTest', (success, failure) => {
   ], (_, _logs) => {
     success();
   }, failure);
-
-  throw new Error('Tests' + (window as any).__tests.slice(7500, 8500).map((x) => x.file).join(' '));
 });
