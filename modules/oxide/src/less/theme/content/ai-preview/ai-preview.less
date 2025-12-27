@@ -26,6 +26,10 @@ div[tinymceai-data-pending-diff="true"], span[tinymceai-data-pending-diff="true"
   background: @color-white;
 }
 
+span[tinymceai-data-pending-diff="true"]:has(li, p, div, h1, h2, h3, h4, h5, h6, ul, ol, blockquote, pre, table) {
+  display: block;
+}
+
 .tox-tinymceai__dim-overlay {
   position: fixed;
   inset: 0;
