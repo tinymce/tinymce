@@ -494,4 +494,52 @@ describe('browser.components.Draggable', () => {
       expectedPosition: { top: 1500 - 50 - 300, left: 1500 - 50 - 250 }
     });
   });
+
+  describe('Drag state callbacks', () => {
+    it('TINY-13553: onDragStart callback is called when dragging begins', async () => {
+      let dragStartCount = 0;
+      const onDragStart = () => dragStartCount++;
+      const { handle } = await renderDraggable({ width: 250, height: 300 }, { onDragStart });
+
+      await userEvent.hover(handle, { position: { x: 10, y: 10 }});
+      await Mouse.down();
+
+      expect(dragStartCount).toBe(1);
+    });
+
+    it('TINY-13553: onDragEnd callback is called when dragging ends via pointer up', async () => {
+      let dragEndCount = 0;
+      const onDragEnd = () => dragEndCount++;
+
+      const { handle } = await renderDraggable({ width: 250, height: 300 }, { onDragEnd });
+
+      await userEvent.hover(handle, { position: { x: 10, y: 10 }});
+      await Mouse.down();
+      await Mouse.move(50, 50);
+      await Mouse.up();
+
+      expect(dragEndCount).toBe(1);
+    });
+
+    it('TINY-13553: Both callbacks are called in a complete drag sequence', async () => {
+      let dragStartCount = 0;
+      let dragEndCount = 0;
+      const onDragStart = () => dragStartCount++;
+      const onDragEnd = () => dragEndCount++;
+
+      const { handle } = await renderDraggable({ width: 250, height: 300 }, { onDragStart, onDragEnd });
+
+      await userEvent.hover(handle, { position: { x: 10, y: 10 }});
+      await Mouse.down();
+
+      expect(dragStartCount).toBe(1);
+      expect(dragEndCount).toBe(0);
+
+      await Mouse.move(50, 50);
+      await Mouse.up();
+
+      expect(dragStartCount).toBe(1);
+      expect(dragEndCount).toBe(1);
+    });
+  });
 });
