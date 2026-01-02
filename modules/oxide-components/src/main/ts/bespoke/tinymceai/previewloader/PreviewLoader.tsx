@@ -4,7 +4,7 @@ import * as Bem from '../../../utils/Bem';
 import { Spinner } from '../spinner/Spinner';
 
 interface PreviewLoaderProps extends PropsWithChildren {
-  text: ReactNode;
+  text?: ReactNode;
 }
 
 export const PreviewLoader: FunctionComponent<PreviewLoaderProps> = ({ text, children }) =>
