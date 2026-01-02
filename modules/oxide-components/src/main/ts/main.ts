@@ -1,5 +1,6 @@
 import { UserPromptBubble } from './bespoke/tinymceai/bubbles/UserPromptBubble';
 import ErrorMessage from './bespoke/tinymceai/error/ErrorMessage';
+import { PreviewLoader } from './bespoke/tinymceai/previewloader/PreviewLoader';
 import { Spinner } from './bespoke/tinymceai/spinner/Spinner';
 import { Tag } from './bespoke/tinymceai/tag/Tag';
 import { AutoResizingTextarea } from './components/autoresizingtextarea/AutoResizingTextarea';
@@ -42,6 +43,7 @@ export {
   Tag,
   Menu,
   MenuRenderer,
+  PreviewLoader,
   ToggleSwitch,
   UniverseProvider,
   useUniverse,
