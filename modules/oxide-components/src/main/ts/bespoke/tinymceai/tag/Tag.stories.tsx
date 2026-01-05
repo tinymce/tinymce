@@ -18,6 +18,7 @@ type Story = StoryObj<typeof meta>;
 export const ClosableTag: Story = {
   args: {
     closeable: true,
+    link: false,
     label: 'Value',
     onClose: Fun.noop
   },
