@@ -392,7 +392,7 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
           Keyboard.keydown(Keys.escape(), {}, activeElm);
         });
 
-        it(`TINY-10891: Should show only single tooltip when navigating between elememt path with keyboard`, async () => {
+        it(`TINY-10891: Should show only single tooltip when navigating between element path with keyboard`, async () => {
           const editor = hook.editor();
           editor.focus();
           editor.setContent(`
@@ -488,7 +488,7 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
           Keyboard.keydown(Keys.escape(), {}, activeElm);
         });
 
-        it(`TINY-10891: Should show only single tooltip when navigating between elememt path with mouse`, async () => {
+        it(`TINY-10891: Should show only single tooltip when navigating between element path with mouse`, async () => {
           const editor = hook.editor();
           editor.focus();
           editor.setContent(`

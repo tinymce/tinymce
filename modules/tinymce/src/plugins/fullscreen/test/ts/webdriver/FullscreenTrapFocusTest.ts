@@ -53,7 +53,7 @@ describe('webdriver.tinymce.plugins.fullscreen.FullscreenTrapFocusTest', () => {
     { label: 'Shadow Dom Editor', setup: TinyHooks.bddSetupInShadowRoot, native: false },
   ], (scenario) => {
     context(`${scenario.label} - native: ${scenario.native} - Trap focus`, () => {
-      const hook = TinyHooks.bddSetup<Editor>({
+      const hook = scenario.setup<Editor>({
         toolbar: 'fullscreen',
         plugins: 'fullscreen',
         base_url: '/project/tinymce/js/tinymce',

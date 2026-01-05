@@ -7,7 +7,7 @@ import { assert } from 'chai';
 import type Editor from 'tinymce/core/api/Editor';
 import TablePlugin from 'tinymce/plugins/table/Plugin';
 
-describe('browser.tinymce.core.ReadOnlyModeTableTest', () => {
+describe('browser.tinymce.plugins.table.ReadOnlyModeTableTest', () => {
   const hook = TinyHooks.bddSetupLight<Editor>({
     base_url: '/project/tinymce/js/tinymce',
     plugins: 'table',
@@ -33,11 +33,11 @@ describe('browser.tinymce.core.ReadOnlyModeTableTest', () => {
     </table>`;
 
   const pAssertResizeHandle = async (editor: Editor) => {
-    await Waiter.pTryUntil('Wait for resizehandle to show', () => assert.isTrue(SelectorExists.descendant(TinyDom.body(editor), '.mce-resizehandle'), 'Should not give the handles at init'));
+    await Waiter.pTryUntil('Wait for resizehandle to show', () => assert.isTrue(SelectorExists.descendant(TinyDom.body(editor), '.mce-resizehandle'), 'Resize handle should be visible'));
   };
 
   const pAssertNoResizeHandle = async (editor: Editor) => {
-    await Waiter.pTryUntil('Wait for resizehandle to not show', () => assert.isFalse(SelectorExists.descendant(TinyDom.body(editor), '.mce-resizehandle'), 'Should not give the handles at init'));
+    await Waiter.pTryUntil('Wait for resizehandle to not show', () => assert.isFalse(SelectorExists.descendant(TinyDom.body(editor), '.mce-resizehandle'), 'Resize handle should not be visible'));
   };
 
   const assertResizeBars = (editor: Editor, expectedState: boolean) => {

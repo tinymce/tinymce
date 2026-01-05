@@ -48,11 +48,11 @@ describe('browser.tinymce.plugins.image.ReadOnlyModeImageTest', () => {
   };
 
   const pAssertResizeHandle = async (editor: Editor) => {
-    await Waiter.pTryUntil('Wait for resizehandle to show', () => assert.isTrue(SelectorExists.descendant(TinyDom.body(editor), '.mce-resizehandle'), 'Should not give the handles at init'));
+    await Waiter.pTryUntil('Wait for resizehandle to show', () => assert.isTrue(SelectorExists.descendant(TinyDom.body(editor), '.mce-resizehandle'), 'Resize handle should be visible'));
   };
 
   const pAssertNoResizeHandle = async (editor: Editor) => {
-    await Waiter.pTryUntil('Wait for resizehandle to not show', () => assert.isFalse(SelectorExists.descendant(TinyDom.body(editor), '.mce-resizehandle'), 'Should not give the handles at init'));
+    await Waiter.pTryUntil('Wait for resizehandle to not show', () => assert.isFalse(SelectorExists.descendant(TinyDom.body(editor), '.mce-resizehandle'), 'Resize handle should not be visible'));
   };
 
   const fakeImage = Helpers.getGreenImageDataUrl();

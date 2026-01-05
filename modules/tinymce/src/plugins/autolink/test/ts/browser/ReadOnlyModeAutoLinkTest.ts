@@ -25,7 +25,8 @@ describe('browser.tinymce.plugins.autolink.ReadOnlyModeAutoLinkTest', () => {
     setMode(editor, 'readonly');
     TinySelections.setCursor(editor, [ 0, 0 ], 'https://google.com'.length);
     TinyContentActions.keystroke(editor, Keys.enter());
-    await Waiter.pTryUntil('Wait for content to change', () => TinyAssertions.assertContent(editor, '<p>https://google.com</p>'));
+    await Waiter.pWait(100);
+    TinyAssertions.assertContent(editor, '<p>https://google.com</p>');
 
     setMode(editor, 'design');
     TinySelections.setCursor(editor, [ 0, 0 ], 'https://google.com'.length);
