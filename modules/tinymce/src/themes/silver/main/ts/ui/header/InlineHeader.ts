@@ -42,7 +42,7 @@ export const InlineHeader = (
   const minimumToolbarWidth = 150; // Value is arbitrary.
 
   const toolbarMode = Options.getToolbarMode(editor);
-  const isSplitToolbar = toolbarMode === ToolbarMode.sliding.toString() || toolbarMode === ToolbarMode.floating.toString();
+  const isSplitToolbar = toolbarMode === ToolbarMode.sliding || toolbarMode === ToolbarMode.floating;
 
   const visible = Cell(false);
 
@@ -57,7 +57,7 @@ export const InlineHeader = (
 
   const calcMode = (container: AlloyComponent): 'top' | 'bottom' => {
     switch (Options.getToolbarLocation(editor)) {
-      case ToolbarLocation.auto.toString():
+      case ToolbarLocation.auto:
         const toolbar = OuterContainer.getToolbar(mainUi.outerContainer);
         const offset = calcToolbarOffset(toolbar);
         const toolbarHeight = Height.get(container.element) - offset;
@@ -84,9 +84,9 @@ export const InlineHeader = (
             return isRoomAtBottomViewport ? 'bottom' : 'top';
           }
         }
-      case ToolbarLocation.bottom.toString():
+      case ToolbarLocation.bottom:
         return 'bottom';
-      case ToolbarLocation.top.toString():
+      case ToolbarLocation.top:
       default:
         return 'top';
     }

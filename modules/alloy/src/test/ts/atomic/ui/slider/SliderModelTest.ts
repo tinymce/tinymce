@@ -22,19 +22,16 @@ interface TestBounds {
 }
 
 UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
-  const arb1Up = fc.nat().map((num) => num + 1);
-
-  const arbRanged = fc.nat().chain((min) => arb1Up.chain((width) => {
+  const maxNat = 10000000; // Math.fround only precise up to 7 digits
+  const arb1Up = fc.nat({ max: maxNat }).map((n) => n + 1);
+  const arbRanged = fc.nat({ max: maxNat }).chain((min) => arb1Up.chain((width) => {
     const max = min + width;
-    return fc.float({ min: Math.fround(min - 1), max: Math.fround(max + 1) }).map((value) => {
-      const v = Math.round(value);
 
-      return {
-        min,
-        max,
-        value: v
-      };
-    });
+    return fc.float({ min: Math.fround(min - 1), max: Math.fround(max + 1), noNaN: true, noDefaultInfinity: true }).map(Math.fround).map((value) => ({
+      min,
+      max,
+      value
+    }));
   }));
 
   const arbData = fc.tuple(arbRanged, arb1Up, fc.boolean(), fc.boolean(), fc.boolean()).map(
@@ -50,7 +47,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
     })
   );
 
-  const arbBounds = fc.nat().chain((min) => arb1Up.map((width): TestBounds => ({
+  const arbBounds = fc.nat({ max: maxNat }).chain((min) => arb1Up.map((width): TestBounds => ({
     left: min,
     width,
     right: min + width
@@ -59,8 +56,10 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
   // Reducing never goes beyond min-1
   fc.assert(fc.property(arbData, (data) => {
     const newValue = SliderModel.reduceBy(data.value, data.min, data.max, data.stepSize);
+    const assertion = newValue <= data.value && newValue >= data.min - 1;
+    if (!assertion) debugger;
     Assert.eq('Checking value', true, newValue <= data.value && newValue >= data.min - 1);
-  }));
+  }), { verbose: true });
 
   // Increasing never goes beyond max+1
   fc.assert(fc.property(arbData, (data) => {
@@ -69,7 +68,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
   }));
 
   // Finding value of snapped always results in a factorable value
-  fc.assert(fc.property(arbData, arbBounds, fc.nat(), (data, bounds, xValue) => {
+  fc.assert(fc.property(arbData, arbBounds, fc.nat({ max: maxNat }), (data, bounds, xValue) => {
     const args = {
       min: data.min,
       max: data.max,
@@ -92,7 +91,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
   }));
 
   // Finding value of snapped always results in a factorable value with a snap start
-  fc.assert(fc.property(arbData, arbBounds, fc.nat(), fc.nat(), (data, bounds, xValue, snapOffset) => {
+  fc.assert(fc.property(arbData, arbBounds, fc.nat({ max: maxNat }), fc.nat({ max: maxNat }), (data, bounds, xValue, snapOffset) => {
     const args = {
       min: data.min,
       max: data.max,
@@ -116,7 +115,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
   }));
 
   // Finding value of any value always fits in the [min - 1, max + 1] range
-  fc.assert(fc.property(arbData, arbBounds, fc.nat(), (data, bounds, xValue) => {
+  fc.assert(fc.property(arbData, arbBounds, fc.nat({ max: maxNat }), (data, bounds, xValue) => {
     const args = {
       min: data.min,
       max: data.max,
@@ -140,7 +139,7 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
   }));
 
   // Finding value of any value always fits in the [min - 1, max + 1] range with a snap start
-  fc.assert(fc.property(arbData, arbBounds, fc.nat(), fc.nat(), (data, bounds, xValue, snapOffset) => {
+  fc.assert(fc.property(arbData, arbBounds, fc.nat({ max: maxNat }), fc.nat({ max: maxNat }), (data, bounds, xValue, snapOffset) => {
     const args = {
       min: data.min,
       max: data.max,

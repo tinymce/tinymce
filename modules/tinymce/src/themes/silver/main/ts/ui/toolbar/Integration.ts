@@ -95,7 +95,7 @@ const types: Record<string, BridgeRenderFn<any>> = {
       };
 
       switch (getToolbarMode(editor)) {
-        case ToolbarMode.floating.toString():
+        case ToolbarMode.floating:
           return renderFloatingToolbarButton(s, backstage, identify, attributes, btnName);
         default:
           // TODO change this message and add a case when sliding is available

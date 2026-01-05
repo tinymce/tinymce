@@ -40,7 +40,7 @@ describe('atomic.katamari.api.str.ContainsTest', () => {
       fc.string(),
       fc.string({ minLength: 1, maxLength: 40 }),
       (str, contents) => {
-        const r = contents = str;
+        const r = contents + str;
         assert.isTrue(Strings.contains(r, contents));
       }
     ));

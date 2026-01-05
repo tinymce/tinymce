@@ -491,7 +491,7 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
     editor.addQueryStateHandler('ToggleToolbarDrawer', () => OuterContainer.isToolbarDrawerToggled(outerContainer));
 
     editor.on('blur', () => {
-      if (Options.getToolbarMode(editor) === Options.ToolbarMode.floating.toString() && OuterContainer.isToolbarDrawerToggled(outerContainer)) {
+      if (Options.getToolbarMode(editor) === Options.ToolbarMode.floating && OuterContainer.isToolbarDrawerToggled(outerContainer)) {
         OuterContainer.toggleToolbarDrawerWithoutFocusing(outerContainer);
       }
     });
@@ -511,7 +511,7 @@ const setup = (editor: Editor, setupForTheme: ThemeRenderSetup): RenderInfo => {
       menus: Options.getMenus(editor),
       menubar: Options.getMenubar(editor),
       toolbar: toolbarOpt.getOrThunk(() => Options.getToolbar(editor)),
-      allowToolbarGroups: toolbarMode === Options.ToolbarMode.floating.toString(),
+      allowToolbarGroups: toolbarMode === Options.ToolbarMode.floating,
       buttons,
       sidebar: sidebars,
       views
