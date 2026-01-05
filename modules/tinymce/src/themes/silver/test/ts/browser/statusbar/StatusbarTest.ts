@@ -413,32 +413,26 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
           await TooltipUtils.pAssertTooltip(editor, async () => {
             await pFocusElementPath(editor, doc);
             await pArrowFromFocused(doc, 'right', 'tbody');
-            return Promise.resolve();
           }, scenario.expectedString('tbody'));
 
           await TooltipUtils.pAssertTooltip(editor, async () => {
             await pArrowFromFocused(doc, 'right', 'tr');
-            return Promise.resolve();
           }, scenario.expectedString('tr'));
 
           await TooltipUtils.pAssertTooltip(editor, async () => {
             await pArrowFromFocused(doc, 'right', 'td');
-            return Promise.resolve();
           }, scenario.expectedString('td'));
 
           await TooltipUtils.pAssertTooltip(editor, async () => {
             await pArrowFromFocused(doc, 'left', 'tr');
-            return Promise.resolve();
           }, scenario.expectedString('tr'));
 
           await TooltipUtils.pAssertTooltip(editor, async () => {
             await pArrowFromFocused(doc, 'left', 'tbody');
-            return Promise.resolve();
           }, scenario.expectedString('tbody'));
 
           await TooltipUtils.pAssertTooltip(editor, async () => {
             await pArrowFromFocused(doc, 'left', 'table');
-            return Promise.resolve();
           }, scenario.expectedString('table'));
 
           await TooltipUtils.pCloseTooltip(editor, buttonSelector);
@@ -464,7 +458,6 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
           await TooltipUtils.pAssertTooltip(editor, async () => {
             await pFocusElementPath(editor, doc);
             await pArrowFromFocused(doc, 'right', 'tbody');
-            return Promise.resolve();
           }, scenario.expectedString('tbody'));
 
           const tooltip = UiFinder.findIn<HTMLElement>(SugarDocument.getDocument(), '.tox-silver-sink .tox-tooltip').getOrDie();
@@ -474,7 +467,6 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
 
           await TooltipUtils.pAssertTooltip(editor, async () => {
             await pArrowFromFocused(doc, 'right', 'tr');
-            return Promise.resolve();
           }, scenario.expectedString('tr'));
 
           const tooltip2 = UiFinder.findIn<HTMLElement>(SugarDocument.getDocument(), '.tox-silver-sink .tox-tooltip').getOrDie();
@@ -508,25 +500,21 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
           await TooltipUtils.pAssertTooltip(editor, async () => {
             await pMouseOverPathItem('tbody', true);
             await UiFinder.pWaitFor('Waiting for label to be changed', SugarBody.body(), `.tox-silver-sink .tox-tooltip__body:contains(${scenario.expectedString('tbody')})`);
-            return Promise.resolve();
           }, scenario.expectedString('tbody'));
 
           await TooltipUtils.pAssertTooltip(editor, async () => {
             await pMouseOverPathItem('table', false);
             await UiFinder.pWaitFor('Waiting for label to be changed', SugarBody.body(), `.tox-silver-sink .tox-tooltip__body:contains(${scenario.expectedString('table')})`);
-            return Promise.resolve();
           }, scenario.expectedString('table'));
 
           await TooltipUtils.pAssertTooltip(editor, async () => {
             await pMouseOverPathItem('tr', false);
             await UiFinder.pWaitFor('Waiting for label to be changed', SugarBody.body(), `.tox-silver-sink .tox-tooltip__body:contains(${scenario.expectedString('tr')})`);
-            return Promise.resolve();
           }, scenario.expectedString('tr'));
 
           await TooltipUtils.pAssertTooltip(editor, async () => {
             await pMouseOverPathItem('td', false);
             await UiFinder.pWaitFor('Waiting for label to be changed', SugarBody.body(), `.tox-silver-sink .tox-tooltip__body:contains(${scenario.expectedString('td')})`);
-            return Promise.resolve();
           }, scenario.expectedString('td'));
         });
 
@@ -552,7 +540,6 @@ describe('browser.tinymce.themes.silver.statusbar.StatusbarTest', () => {
             await TooltipUtils.pAssertTooltip(editor, async () => {
               await pFocusElementPath(editor, doc);
               await pArrowFromFocused(doc, 'right', tagScenario.expectedTag);
-              return Promise.resolve();
             }, scenario.expectedString(tagScenario.expectedTag));
           });
         });
