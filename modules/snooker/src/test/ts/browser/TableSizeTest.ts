@@ -24,7 +24,7 @@ describe('TableSizeTest', () => {
     });
 
     it('tables with widths should be detected as percent or pixel', () => {
-      fc.assert(fc.property(fc.integer({ min: 100, max: 1000 }), fc.float({ min: 1, max: 100 }), (pixel, percent) => {
+      fc.assert(fc.property(fc.integer({ min: 100, max: 1000 }), fc.float({ min: 1, max: 100, noNaN: true, noDefaultInfinity: true }), (pixel, percent) => {
         const pixelTable = SugarElement.fromHtml<HTMLTableElement>(pixelTableHtml.replace('400px', pixel + 'px'));
         const percentageTable = SugarElement.fromHtml<HTMLTableElement>(percentTableHtml.replace('80%', percent + '%'));
 
