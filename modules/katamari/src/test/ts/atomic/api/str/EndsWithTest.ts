@@ -23,8 +23,8 @@ describe('atomic.katamari.api.str.EndsWithTest', () => {
 
   it('A string added to a string (at the end) must have endsWith as true', () => {
     fc.assert(fc.property(
-      fc.asciiString(),
-      fc.asciiString(),
+      fc.string({ unit: 'binary-ascii' }),
+      fc.string({ unit: 'binary-ascii' }),
       (str, contents) => Strings.endsWith(str + contents, contents)
     ));
   });
