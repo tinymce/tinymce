@@ -47,10 +47,10 @@ describe('webdriver.tinymce.plugins.fullscreen.FullscreenTrapFocusTest', () => {
   };
 
   Arr.each([
-    { label: 'Iframe Editor', setup: TinyHooks.bddSetup, native: true },
-    { label: 'Iframe Editor', setup: TinyHooks.bddSetup, native: false },
+    { label: 'Iframe Editor (native fullscreen)', setup: TinyHooks.bddSetup, native: true },
+    { label: 'Iframe Editor (non-native fullscreen)', setup: TinyHooks.bddSetup, native: false },
   ], (scenario) => {
-    context(`${scenario.label} - native: ${scenario.native} - Trap focus`, () => {
+    context(`${scenario.label} - Trap focus`, () => {
       const hook = scenario.setup<Editor>({
         toolbar: 'fullscreen',
         plugins: 'fullscreen',

@@ -1,5 +1,5 @@
 import { Keys } from '@ephox/agar';
-import { describe, it } from '@ephox/bedrock-client';
+import { afterEach, describe, it } from '@ephox/bedrock-client';
 import { TinyAssertions, TinyContentActions, TinyHooks, TinySelections } from '@ephox/wrap-mcagar';
 import { assert } from 'chai';
 
@@ -14,6 +14,11 @@ describe('browser.tinymce.plugins.codesample.ReadOnlyModeCodeSampleTest', () => 
     plugins: 'codesample',
     statusbar: false,
   }, [ CodeSamplePlugin ], true);
+
+  afterEach(() => {
+    const editor = hook.editor();
+    setMode(editor, 'design');
+  });
 
   const setMode = (editor: Editor, mode: string) => {
     editor.mode.set(mode);
@@ -78,6 +83,5 @@ describe('browser.tinymce.plugins.codesample.ReadOnlyModeCodeSampleTest', () => 
 
     TinyContentActions.keystroke(editor, Keys.right());
     assertRangeInCaretContainerBlock(editor);
-    setMode(editor, 'design');
   });
 });

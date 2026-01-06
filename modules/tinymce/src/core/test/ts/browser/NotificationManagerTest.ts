@@ -235,6 +235,7 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
             editor.on('OpenNotification', (event) => openEvents.push(event));
           }
         }, []);
+
         const input = SugarElement.fromHtml<HTMLInputElement>('<input class="test-input" />');
 
         beforeEach(() => {
@@ -244,6 +245,7 @@ describe('browser.tinymce.core.NotificationManagerTest', () => {
 
         afterEach(() => {
           Remove.remove(input);
+          resetNotifications(hook.editor());
         });
 
         it('TINY-10282: Should not move focus around if the focus is not in the editor', () => {
