@@ -56,8 +56,6 @@ UnitTest.test('Atomic Test: ui.slider.SliderModelTest', () => {
   // Reducing never goes beyond min-1
   fc.assert(fc.property(arbData, (data) => {
     const newValue = SliderModel.reduceBy(data.value, data.min, data.max, data.stepSize);
-    const assertion = newValue <= data.value && newValue >= data.min - 1;
-    if (!assertion) debugger;
     Assert.eq('Checking value', true, newValue <= data.value && newValue >= data.min - 1);
   }), { verbose: true });
 
