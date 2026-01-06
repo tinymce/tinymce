@@ -15,6 +15,18 @@ import type { CompElm, RowCell, RowElement } from '../util/TableTypes';
 
 import * as Transitions from './Transitions';
 
+export type Operation<INFO, GW extends GeneratorsWrapper> = (model: Structs.RowCells[], info: INFO, eq: CompElm, w: GW, headers: TableSection) => TableOperationResult;
+
+export type Extract<RAW, INFO> = (warehouse: Warehouse, target: RAW) => Optional<INFO>;
+
+export type Adjustment<INFO> = <T extends Structs.DetailNew>(table: SugarElement<HTMLTableElement>, grid: Structs.RowDetailNew<T>[], info: INFO, behaviours: Required<OperationBehaviours>) => void;
+
+export type PostAction = (e: SugarElement<HTMLTableElement>) => void;
+
+export type GenWrap<GW extends GeneratorsWrapper> = (g: Generators) => GW;
+
+export type OperationCallback<T> = (table: SugarElement<HTMLTableElement>, target: T, generators: Generators, behaviours?: OperationBehaviours) => Optional<RunOperationOutput>;
+
 export interface OperationBehaviours {
   readonly sizing?: TableSize;
   readonly resize?: ResizeBehaviour.ResizeBehaviour;
@@ -93,14 +105,6 @@ const extractCells = (warehouse: Warehouse, target: TargetSelection, predicate: 
   const cells = Optionals.cat(details);
   return Optionals.someIf(cells.length > 0, cells);
 };
-
-export type Operation<INFO, GW extends GeneratorsWrapper> = (model: Structs.RowCells[], info: INFO, eq: CompElm, w: GW, headers: TableSection) => TableOperationResult;
-export type Extract<RAW, INFO> = (warehouse: Warehouse, target: RAW) => Optional<INFO>;
-export type Adjustment<INFO> = <T extends Structs.DetailNew>(table: SugarElement<HTMLTableElement>, grid: Structs.RowDetailNew<T>[], info: INFO, behaviours: Required<OperationBehaviours>) => void;
-export type PostAction = (e: SugarElement<HTMLTableElement>) => void;
-export type GenWrap<GW extends GeneratorsWrapper> = (g: Generators) => GW;
-
-export type OperationCallback<T> = (table: SugarElement<HTMLTableElement>, target: T, generators: Generators, behaviours?: OperationBehaviours) => Optional<RunOperationOutput>;
 
 const run = <RAW, INFO, GW extends GeneratorsWrapper> (
   operation: Operation<INFO, GW>,
@@ -212,4 +216,3 @@ export {
   run,
   toDetailList
 };
-

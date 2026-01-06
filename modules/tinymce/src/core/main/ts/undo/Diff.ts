@@ -1,11 +1,3 @@
-/**
- * JS Implementation of the O(ND) Difference Algorithm by Eugene W. Myers.
- *
- * @class tinymce.undo.Diff
- * @private
- */
-
-const KEEP = 0, INSERT = 1, DELETE = 2;
 
 interface Snake {
   readonly start: number;
@@ -14,6 +6,14 @@ interface Snake {
 }
 
 export type Diff<T> = [ 0 | 1 | 2, T ];
+/**
+ * JS Implementation of the O(ND) Difference Algorithm by Eugene W. Myers.
+ *
+ * @class tinymce.undo.Diff
+ * @private
+ */
+
+const KEEP = 0, INSERT = 1, DELETE = 2;
 
 const diff = <T>(left: T[], right: T[]): Diff<T>[] => {
   const size = left.length + right.length + 2;

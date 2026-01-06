@@ -18,6 +18,8 @@ import { renderFormFieldWith, renderLabel } from '../alien/FieldLabeller';
 import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 import { formChangeEvent } from '../general/FormEvents';
 
+type DropZoneSpec = Omit<Dialog.DropZone, 'type'>;
+
 const browseFilesEvent = Id.generate('browse.files.event');
 
 const filterByExtension = (files: FileList, providersBackstage: UiFactoryBackstageProviders, allowedFileExtensions: Optional<string[]>) => {
@@ -30,8 +32,6 @@ const filterByExtension = (files: FileList, providersBackstage: UiFactoryBacksta
 
   return Arr.filter(Arr.from(files), isFileInAllowedTypes);
 };
-
-type DropZoneSpec = Omit<Dialog.DropZone, 'type'>;
 
 export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactoryBackstageProviders, initialData: Optional<string[]>): SimpleSpec => {
 

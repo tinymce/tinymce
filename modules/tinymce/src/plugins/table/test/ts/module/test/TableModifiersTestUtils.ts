@@ -5,6 +5,10 @@ import { TinyAssertions, TinySelections, TinyUiActions } from '@ephox/wrap-mcaga
 
 import type Editor from 'tinymce/core/api/Editor';
 
+interface AssertStyleOptionsWithCheckmarks extends AssertStyleOptions {
+  readonly checkMarkEntries: number;
+}
+
 interface AssertStyleOptions {
   readonly menuTitle: string;
   readonly subMenuTitle: string;
@@ -23,10 +27,6 @@ const menuTitleToToolbarBarMap: Record<string, string> = {
   'Table styles': 'tableclass',
   'Cell styles': 'tablecellclass',
 };
-
-interface AssertStyleOptionsWithCheckmarks extends AssertStyleOptions {
-  readonly checkMarkEntries: number;
-}
 
 const setEditorContentTableAndSelection = (editor: Editor, rows: number, columns: number): void => {
   const getSelectionStartEnd = (row: number, column: number) => {

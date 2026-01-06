@@ -3,6 +3,15 @@ import { Arr, Fun, Global, Obj } from '@ephox/katamari';
 import type { Editor } from '../alien/EditorTypes';
 import { get as getOption } from '../alien/Options';
 
+export interface ThemeSelectors {
+  toolBarSelector: (editor: Editor) => string;
+  menuBarSelector: string;
+  dialogSelector: string;
+  dialogCancelSelector: string;
+  dialogCloseSelector: string;
+  dialogSubmitSelector: string;
+}
+
 const isSilver = (): boolean => {
   const tinymce = Global.tinymce;
   if (!tinymce) {
@@ -12,15 +21,6 @@ const isSilver = (): boolean => {
 };
 
 const isModern = (): boolean => !isSilver();
-
-export interface ThemeSelectors {
-  toolBarSelector: (editor: Editor) => string;
-  menuBarSelector: string;
-  dialogSelector: string;
-  dialogCancelSelector: string;
-  dialogCloseSelector: string;
-  dialogSubmitSelector: string;
-}
 
 const ModernThemeSelectors: ThemeSelectors = {
   toolBarSelector: Fun.constant('.mce-toolbar-grp'),

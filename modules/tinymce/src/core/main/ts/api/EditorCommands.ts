@@ -4,6 +4,12 @@ import * as SelectionBookmark from '../selection/SelectionBookmark';
 
 import type Editor from './Editor';
 
+export interface EditorCommandsConstructor {
+  readonly prototype: EditorCommands;
+
+  new (editor: Editor): EditorCommands;
+}
+
 /**
  * This class enables you to add custom editor commands and it contains
  * overrides for native browser commands to address various bugs and issues.
@@ -29,12 +35,6 @@ export interface ExecCommandArgs {
 const selectionSafeCommands = [ 'toggleview' ];
 
 const isSelectionSafeCommand = (command: string) => Arr.contains(selectionSafeCommands, command.toLowerCase());
-
-export interface EditorCommandsConstructor {
-  readonly prototype: EditorCommands;
-
-  new (editor: Editor): EditorCommands;
-}
 
 class EditorCommands {
   private readonly editor: Editor;

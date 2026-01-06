@@ -2,16 +2,16 @@ import { Cell, Optional, Singleton, Throttler } from '@ephox/katamari';
 
 import type Editor from '../api/Editor';
 
-// This is based heavily on Alloy's TapEvent.ts, just modified to use TinyMCE's event system.
-
-const SIGNIFICANT_MOVE = 5;
-const LONGPRESS_DELAY = 400;
-
 export interface TouchHistoryData {
   readonly x: number;
   readonly y: number;
   readonly target: Node;
 }
+
+// This is based heavily on Alloy's TapEvent.ts, just modified to use TinyMCE's event system.
+
+const SIGNIFICANT_MOVE = 5;
+const LONGPRESS_DELAY = 400;
 
 const getTouch = (event: TouchEvent): Optional<Touch> => {
   if (event.touches === undefined || event.touches.length !== 1) {

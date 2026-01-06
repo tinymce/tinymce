@@ -15,6 +15,10 @@ import { onControlAttached, onControlDetached } from 'tinymce/themes/silver/ui/c
 import { ComposingConfigs } from '../alien/ComposingConfigs';
 import { SimpleBehaviours } from '../alien/SimpleBehaviours';
 
+interface FixSizeEvent extends CustomEvent {
+  readonly width: string;
+}
+
 export type SidebarConfig = Record<string, BridgeSidebar.SidebarSpec>;
 
 const enum SidebarStateRoleAttr {
@@ -170,9 +174,6 @@ const whichSidebar = (sidebar: AlloyComponent): Optional<string> => {
   });
 };
 
-interface FixSizeEvent extends CustomEvent {
-  readonly width: string;
-}
 const fixSize = Id.generate('FixSizeEvent');
 const autoSize = Id.generate('AutoSizeEvent');
 

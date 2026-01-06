@@ -2,10 +2,11 @@ import { Assert, type TestLabel } from '@ephox/bedrock-client';
 import { Testable } from '@ephox/dispute';
 import { Optional, OptionalInstances, Result, ResultInstances } from '@ephox/katamari';
 
+type Testable<A> = Testable.Testable<A>;
+
 const { tOptional } = OptionalInstances;
 const { tResult } = ResultInstances;
 const { tAny } = Testable;
-type Testable<A> = Testable.Testable<A>;
 
 // NOTE: Don't use this within Agar - use tOptional directly
 

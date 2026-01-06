@@ -1,17 +1,6 @@
 import { Fun, Obj } from '@ephox/katamari';
 import { type SugarElement, SugarLocation, SugarNode, SugarPosition, Traverse } from '@ephox/sugar';
 
-// The 'button' field of the mouse event - which button was pressed to create the event. Pick only one value. Not defined for mouseenter,
-// mouseleave, mouseover, mouseout or mousemove.
-const leftClickButton = 0;
-const middleClickButton = 1;
-const rightClickButton = 2;
-
-// The 'buttons' field of the mouse event - which buttons *were already pressed* at the time the event fired. Forms a bitfield.
-const leftClickButtons = 1;
-const rightClickButtons = 2;
-const middleClickButtons = 4;
-
 // Settings for mouse events
 interface Settings {
   // used to tweak the location before firing the event
@@ -31,6 +20,17 @@ interface Settings {
 
 // Types of events
 type EventType = 'click' | 'mousedown' | 'mouseup' | 'mousemove' | 'mouseover' | 'mouseout' | 'contextmenu' | 'dblclick';
+
+// The 'button' field of the mouse event - which button was pressed to create the event. Pick only one value. Not defined for mouseenter,
+// mouseleave, mouseover, mouseout or mousemove.
+const leftClickButton = 0;
+const middleClickButton = 1;
+const rightClickButton = 2;
+
+// The 'buttons' field of the mouse event - which buttons *were already pressed* at the time the event fired. Forms a bitfield.
+const leftClickButtons = 1;
+const rightClickButtons = 2;
+const middleClickButtons = 4;
 
 // Fire an event
 const event = (type: EventType, { dx, dy, ...settings }: Settings) => (element: SugarElement<Node>): void => {

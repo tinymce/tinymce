@@ -5,14 +5,14 @@ import * as NodeType from '../dom/NodeType';
 
 import * as NormalizeBookmarkPoint from './NormalizeBookmarkPoint';
 
-const DOM = DOMUtils.DOM;
-
 export interface Bookmark {
   readonly startContainer: Node;
   readonly startOffset: number;
   readonly endContainer?: Node;
   readonly endOffset?: number;
 }
+
+const DOM = DOMUtils.DOM;
 
 const defaultMarker = () => DOM.create('span', { 'data-mce-type': 'bookmark' });
 

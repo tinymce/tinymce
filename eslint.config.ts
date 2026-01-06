@@ -52,6 +52,14 @@ export default defineConfig(
       rules: {
         "@typescript-eslint/no-floating-promises": "off",
       }
+    },
+    {
+      files: [
+        "**/*.stories.{ts,tsx}"
+      ],
+      rules: {
+        "@tinymce/types-at-top": "off",
+      }
     }
   ]
 )

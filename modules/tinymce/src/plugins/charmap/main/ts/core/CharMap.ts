@@ -5,16 +5,16 @@ import Tools from 'tinymce/core/api/util/Tools';
 
 import * as Options from '../api/Options';
 
-const isArray = Tools.isArray;
-
-export const UserDefined = 'User Defined';
-
 export type Char = [ number, string ];
 
 export interface CharMap {
   readonly name: string;
   characters: Char[];
 }
+
+const isArray = Tools.isArray;
+
+export const UserDefined = 'User Defined';
 
 const getDefaultCharMap = (): CharMap[] => {
   return [

@@ -3,13 +3,6 @@ import { Fun } from '@ephox/katamari';
 import { Version } from '../detect/Version';
 import type { UaInfo } from '../info/UaInfo';
 
-const edge = 'Edge';
-const chromium = 'Chromium';
-const ie = 'IE';
-const opera = 'Opera';
-const firefox = 'Firefox';
-const safari = 'Safari';
-
 export interface Browser extends UaInfo {
   readonly isEdge: () => boolean;
   readonly isChromium: () => boolean;
@@ -18,6 +11,13 @@ export interface Browser extends UaInfo {
   readonly isFirefox: () => boolean;
   readonly isSafari: () => boolean;
 }
+
+const edge = 'Edge';
+const chromium = 'Chromium';
+const ie = 'IE';
+const opera = 'Opera';
+const firefox = 'Firefox';
+const safari = 'Safari';
 
 const unknown = (): Browser => {
   return nu({

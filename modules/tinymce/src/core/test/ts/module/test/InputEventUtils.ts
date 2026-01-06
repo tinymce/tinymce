@@ -1,14 +1,14 @@
 import { Type } from '@ephox/katamari';
 
+type Mutable<T> = {
+  -readonly [K in keyof T]: T[K];
+};
+
 const deprecated = new Set([
   'keyLocation', 'layerX', 'layerY', 'returnValue',
   'webkitMovementX', 'webkitMovementY',
   'keyIdentifier', 'mozPressure'
 ]);
-
-type Mutable<T> = {
-  -readonly [K in keyof T]: T[K];
-};
 
 const cloneEvent = <T extends Event>(originalEvent: T): T => {
   const event: Mutable<T> = {} as Mutable<T>;

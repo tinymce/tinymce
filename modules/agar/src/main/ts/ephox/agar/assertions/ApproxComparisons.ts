@@ -3,6 +3,8 @@ import { Arr, Fun, Id, Strings } from '@ephox/katamari';
 
 import type { ArrayAssert, StringAssert } from './ApproxStructures';
 
+export type CombinedAssert = StringAssert & ArrayAssert;
+
 const missingValuePlaceholder: string = Id.generate('missing');
 
 const dieWith = (message: string): () => never => Fun.die(message);
@@ -15,8 +17,6 @@ const assertOnBool = (c: boolean, label: TestLabel, value: any): void => {
     c
   );
 };
-
-export type CombinedAssert = StringAssert & ArrayAssert;
 
 const is = (target: string): CombinedAssert => {
   const compare = (actual: string) => target === actual;

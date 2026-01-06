@@ -10,6 +10,12 @@ import * as Options from './Options';
 import Observable from './util/Observable';
 import Tools from './util/Tools';
 
+interface EditorObservable extends Observable<EditorEventMap> {
+  bindPendingEventDelegates (this: Editor): void;
+  toggleNativeEvent (this: Editor, name: string, state: boolean): void;
+  unbindAllNativeEvents (this: Editor): void;
+}
+
 /**
  * This mixin contains the event logic for the tinymce.Editor class.
  *
@@ -129,12 +135,6 @@ const bindEventDelegate = (editor: Editor, eventName: string) => {
     editor.delegates[eventName] = delegate;
   }
 };
-
-interface EditorObservable extends Observable<EditorEventMap> {
-  bindPendingEventDelegates (this: Editor): void;
-  toggleNativeEvent (this: Editor, name: string, state: boolean): void;
-  unbindAllNativeEvents (this: Editor): void;
-}
 
 const EditorObservable: EditorObservable = {
   ...Observable,

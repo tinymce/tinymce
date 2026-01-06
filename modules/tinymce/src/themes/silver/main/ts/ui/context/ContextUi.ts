@@ -7,21 +7,16 @@ import { Class, Compare, Css, type EventArgs, Focus, type SugarElement, SugarSha
 
 import * as ContextToolbarFocus from './ContextToolbarFocus';
 
-const forwardSlideEvent = Id.generate('forward-slide');
 export interface ForwardSlideEvent extends CustomEvent {
   readonly forwardContents: AlloySpec;
 }
 
-const backSlideEvent = Id.generate('backward-slide');
 export interface BackwardSlideEvent extends CustomEvent { }
 
-const changeSlideEvent = Id.generate('change-slide-event');
 export interface ChangeSlideEvent extends CustomEvent {
   readonly contents: AlloySpec;
   readonly focus: Optional<SugarElement>;
 }
-
-const resizingClass = 'tox-pop--resizing';
 
 interface ContextToolbarSpec {
   readonly onEscape: () => Optional<boolean>;
@@ -35,6 +30,11 @@ export interface ContextToolbarRenderResult {
   readonly sketch: SketchSpec;
   readonly inSubtoolbar: () => boolean;
 }
+
+const forwardSlideEvent = Id.generate('forward-slide');
+const backSlideEvent = Id.generate('backward-slide');
+const changeSlideEvent = Id.generate('change-slide-event');
+const resizingClass = 'tox-pop--resizing';
 
 const renderContextToolbar = (spec: ContextToolbarSpec): ContextToolbarRenderResult => {
   const stack = Cell<Array<{ bar: AlloyComponent; focus: Optional<SugarElement<HTMLElement>> }>>([ ]);

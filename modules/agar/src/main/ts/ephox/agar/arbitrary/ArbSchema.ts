@@ -5,6 +5,8 @@ import * as fc from 'fast-check';
 import * as ArbNodes from './ArbNodes';
 import type { ArbitraryDetail, CompositeDetail, StructureDetail } from './ArbSchemaTypes';
 
+export type ArbSchema = typeof ArbSchema;
+
 const formatting: CompositeDetail = {
   type: 'composite',
   tags: {
@@ -209,5 +211,3 @@ export const ArbSchema = {
   zerowidth,
   zerowidths
 };
-
-export type ArbSchema = typeof ArbSchema;

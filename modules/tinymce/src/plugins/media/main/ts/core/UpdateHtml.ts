@@ -8,6 +8,10 @@ import HtmlSerializer from 'tinymce/core/api/html/Serializer';
 import { Parser } from './Parser';
 import type { MediaData } from './Types';
 
+type Source = typeof sources[number];
+
+type SourceMime = `${Source}mime`;
+
 const DOM = DOMUtils.DOM;
 
 const addPx = (value: string): string =>
@@ -26,9 +30,6 @@ const updateEphoxEmbed = (data: Partial<MediaData>, node: AstNode) => {
 };
 
 const sources = [ 'source', 'altsource' ] as const;
-
-type Source = typeof sources[number];
-type SourceMime = `${Source}mime`;
 
 const updateHtml = (html: string, data: Partial<MediaData>, updateAll?: boolean, schema?: Schema): string => {
   let numSources = 0;

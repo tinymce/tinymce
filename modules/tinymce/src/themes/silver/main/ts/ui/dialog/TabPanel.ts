@@ -15,12 +15,12 @@ import * as RepresentingConfigs from '../alien/RepresentingConfigs';
 import { formTabChangeEvent } from '../general/FormEvents';
 import * as NavigableObject from '../general/NavigableObject';
 
-const SendDataToSectionChannel = 'send-data-to-section';
-const SendDataToViewChannel = 'send-data-to-view';
-
 export type TabData = Record<string, any>;
 
 type TabPanelSpec = Omit<Dialog.TabPanel, 'type'>;
+
+const SendDataToSectionChannel = 'send-data-to-section';
+const SendDataToViewChannel = 'send-data-to-view';
 
 export const renderTabPanel = (spec: TabPanelSpec, dialogData: Dialog.DialogData, backstage: UiFactoryBackstage, getCompByName: (name: string) => Optional<AlloyComponent>): SketchSpec => {
   const storedValue = Cell<TabData>({ });

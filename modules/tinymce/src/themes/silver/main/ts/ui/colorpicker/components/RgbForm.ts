@@ -9,10 +9,6 @@ import { Css } from '@ephox/sugar';
 
 import * as ColourEvents from '../ColourEvents';
 
-const validInput = Id.generate('valid-input');
-const invalidInput = Id.generate('invalid-input');
-const validatingInput = Id.generate('validating-input');
-
 interface HexInputEvent extends EventFormat {
   readonly type: 'hex';
   readonly value: string;
@@ -25,8 +21,6 @@ interface ColorInputEvent extends EventFormat {
 
 type InputEvent = HexInputEvent | ColorInputEvent;
 
-const translatePrefix = 'colorcustom.rgb.';
-
 interface RGBTooltipSpec {
   tooltipText: string;
   onShow?: (comp: AlloyComponent, tooltip: AlloyComponent) => void;
@@ -35,13 +29,11 @@ interface RGBTooltipSpec {
 
 export type RGBTooltipGetConfig = (spec: RGBTooltipSpec) => TooltippingTypes.TooltippingConfigSpec;
 
-// tslint:disable:no-empty-interface
 export interface RgbFormDetail extends Sketcher.SingleSketchDetail {
 }
 
 export interface RgbFormSpec extends Sketcher.SingleSketchSpec {
 }
-// tslint:enable:no-empty-interface
 
 export interface RgbFormSketcher extends Sketcher.SingleSketch<RgbFormSpec> {
   updateHex: (slider: AlloyComponent, colour: ColourTypes.Hex) => void;
@@ -55,6 +47,16 @@ interface TooltipInteractionApi {
   immediatelyHide: () => void;
   isEnabled: () => boolean;
 }
+
+const validInput = Id.generate('valid-input');
+const invalidInput = Id.generate('invalid-input');
+const validatingInput = Id.generate('validating-input');
+
+const translatePrefix = 'colorcustom.rgb.';
+
+// tslint:disable:no-empty-interface
+
+// tslint:enable:no-empty-interface
 
 const uninitiatedTooltipApi: TooltipInteractionApi = {
   isEnabled: Fun.always,

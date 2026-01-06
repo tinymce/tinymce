@@ -6,6 +6,11 @@ import * as Bookmarks from '../bookmark/Bookmarks';
 
 import * as NodeType from './NodeType';
 
+export interface ElementUtils {
+  readonly compare: (node1: Node, node2: Node) => boolean;
+  readonly isAttributeInternal: (attribute: string) => boolean;
+}
+
 const internalAttributesPrefixes = [
   'data-ephox-',
   'data-mce-',
@@ -22,11 +27,6 @@ const internalAttributesPrefixes = [
  */
 
 const each = Tools.each;
-
-export interface ElementUtils {
-  readonly compare: (node1: Node, node2: Node) => boolean;
-  readonly isAttributeInternal: (attribute: string) => boolean;
-}
 
 const ElementUtils = (editor: Editor): ElementUtils => {
   const dom = editor.dom;

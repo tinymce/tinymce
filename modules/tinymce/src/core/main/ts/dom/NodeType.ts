@@ -1,6 +1,12 @@
 import { Arr, Type } from '@ephox/katamari';
 import { SugarElement, SugarNode } from '@ephox/sugar';
 
+interface UcVideo extends HTMLElement {
+  nodeName: typeof ucVideoNodeName;
+  width: number;
+  height: number;
+}
+
 type NullableNode = Node | null | undefined;
 
 const isNodeType = <T extends Node>(type: number) => {
@@ -114,12 +120,6 @@ const isDetails = matchNodeName<HTMLDetailsElement>('details');
 const isSummary = matchNodeName<HTMLElement>('summary');
 
 const ucVideoNodeName = 'uc-video' as const;
-
-interface UcVideo extends HTMLElement {
-  nodeName: typeof ucVideoNodeName;
-  width: number;
-  height: number;
-}
 
 const isUcVideo = (el: Element): el is UcVideo => el.nodeName.toLowerCase() === ucVideoNodeName;
 
