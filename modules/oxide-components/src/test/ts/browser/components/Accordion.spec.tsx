@@ -1,14 +1,21 @@
-import { Css, SelectorFind, SugarElement } from '@ephox/sugar';
+import { SelectorFind, SugarElement } from '@ephox/sugar';
+import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
+import { userEvent } from '@vitest/browser/context';
 import * as Accordion from 'oxide-components/components/accordion/Accordion';
 import { UniverseProvider } from 'oxide-components/main';
 import * as Bem from 'oxide-components/utils/Bem';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { userEvent } from '@vitest/browser/context';
 import { render } from 'vitest-browser-react';
 
+const allIcons = getAllIcons();
+const icons: Record<string, string> = {
+  'chevron-down': allIcons['chevron-down'],
+  'chevron-up': allIcons['chevron-up']
+};
+
 describe('browser.components.AccordionTest', () => {
-  const getIcon = vi.fn((icon: string) => `<svg id="${icon}"></svg>`);
+  const getIcon = vi.fn((icon: string) => icons[icon] || `<svg id="${icon}"></svg>`);
   const mockUniverse = {
     getIcon,
   };
