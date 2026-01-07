@@ -1,4 +1,4 @@
-import { Arr, Merger, Optional, Strings, Type } from '@ephox/katamari';
+import { Arr, Fun, Merger, Optional, Strings, Type } from '@ephox/katamari';
 
 import type Editor from 'tinymce/core/api/Editor';
 import type { BlobInfo } from 'tinymce/core/api/file/BlobCache';
@@ -30,7 +30,6 @@ interface Helpers {
   readonly imageSize: (url: string) => Promise<Size>;
   readonly addToBlobCache: (blobInfo: BlobInfo) => void;
   readonly createBlobCache: (file: File, blobUri: string, dataUrl: string) => BlobInfo;
-  readonly alertErr: (message: string, callback: () => void) => void;
   readonly normalizeCss: (cssText: string | undefined) => string;
   readonly parseStyle: (cssText: string) => StyleMap;
   readonly serializeStyle: (stylesArg: StyleMap, name?: string) => string;
@@ -248,7 +247,7 @@ const changeFileInput = (helpers: Helpers, info: ImageDialogInfo, state: ImageDi
             finalize();
           }).catch((err) => {
             finalize();
-            helpers.alertErr(err, () => {
+            info.alertErr(err, () => {
               api.focus('fileinput');
             });
           });
@@ -286,7 +285,7 @@ const makeDialogBody = (info: ImageDialogInfo): DialogType.TabPanelSpec | Dialog
       tabs: Arr.flatten([
         [ MainTab.makeTab(info) ],
         info.hasAdvTab ? [ AdvTab.makeTab(info) ] : [],
-        info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [ UploadTab.makeTab(info) ] : []
+        info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [ UploadTab.makeTab(info, () => info.alertErr('All inserted files have unallowed extensions', Fun.noop)) ] : []
       ])
     };
     return tabPanel;
@@ -341,10 +340,6 @@ const addToBlobCache = (editor: Editor) => (blobInfo: BlobInfo): void => {
   editor.editorUpload.blobCache.add(blobInfo);
 };
 
-const alertErr = (editor: Editor) => (message: string, callback: () => void): void => {
-  editor.windowManager.alert(message, callback);
-};
-
 const normalizeCss = (editor: Editor) => (cssText: string | undefined): string =>
   doNormalizeCss(editor, cssText);
 
@@ -370,7 +365,6 @@ export const Dialog = (editor: Editor): { open: () => void } => {
     imageSize: imageSize(editor),
     addToBlobCache: addToBlobCache(editor),
     createBlobCache: createBlobCache(editor),
-    alertErr: alertErr(editor),
     normalizeCss: normalizeCss(editor),
     parseStyle: parseStyle(editor),
     serializeStyle: serializeStyle(editor),

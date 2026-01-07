@@ -1,7 +1,7 @@
-import { ApproxStructure, Assertions, UiFinder } from '@ephox/agar';
-import { AlloyTriggers, Composing, GuiFactory, NativeEvents, Representing } from '@ephox/alloy';
-import { context, describe, it } from '@ephox/bedrock-client';
-import { Optional } from '@ephox/katamari';
+import { ApproxStructure, Assertions, TestStore, UiFinder } from '@ephox/agar';
+import { type AlloyComponent, AlloyTriggers, Composing, GuiFactory, NativeEvents, Representing } from '@ephox/alloy';
+import { after, context, describe, it } from '@ephox/bedrock-client';
+import { Fun, Optional } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import { renderDropZone } from 'tinymce/themes/silver/ui/dialog/Dropzone';
@@ -19,6 +19,7 @@ describe('headless.tinymce.themes.silver.components.dropzone.DropzoneTest', () =
       dropAreaLabel: Optional.none(),
       allowedFileTypes: Optional.none(),
       allowedFileExtensions: Optional.none(),
+      onInvalidFiles: Fun.noop
     }, TestProviders, Optional.none())
   ));
 
@@ -94,6 +95,7 @@ describe('headless.tinymce.themes.silver.components.dropzone.DropzoneTest', () =
   });
 
   context('TINY-13278: buttonLabel, dropAreaLabel, allowedFileTypes and allowedFileExtensions', () => {
+    const store = TestStore();
     const hook = GuiSetup.bddSetup((_store, _doc, _body) => GuiFactory.build(
       renderDropZone({
         context: 'any',
@@ -103,8 +105,23 @@ describe('headless.tinymce.themes.silver.components.dropzone.DropzoneTest', () =
         dropAreaLabel: Optional.some('Drop Area Label'),
         allowedFileTypes: Optional.some('text/plain'),
         allowedFileExtensions: Optional.some([ 'txt' ]),
+        onInvalidFiles: () => store.add('error'),
       }, TestProviders, Optional.none())
     ));
+
+    const dropFiles = (zone: AlloyComponent, files: Array<{ name: string }>) => {
+      AlloyTriggers.emitWith(zone, NativeEvents.drop(), {
+        raw: {
+          dataTransfer: {
+            files
+          }
+        }
+      });
+    };
+
+    after(() => {
+      store.clear();
+    });
 
     it('TINY-13278: Check basic structure', () => {
       Assertions.assertStructure(
@@ -139,22 +156,23 @@ describe('headless.tinymce.themes.silver.components.dropzone.DropzoneTest', () =
       const component = hook.component();
       const dropzone = UiFinder.findIn(component.element, '.tox-dropzone').getOrDie();
       const zone = component.getSystem().getByDom(dropzone).getOrDie();
-      AlloyTriggers.emitWith(zone, NativeEvents.drop(), {
-        raw: {
-          dataTransfer: {
-            files: [
-              { name: 'text1.txt' },
-              { name: 'text2.doc' }
-            ]
-          }
-        }
-      });
+      dropFiles(zone, [{ name: 'text1.txt' }, { name: 'text2.doc' }]);
 
       const comp = Composing.getCurrent(component).getOrDie('Failed trying to get the zone from the container');
       const filesValue = Representing.getValue(comp);
       assert.deepEqual(filesValue, [
         { name: 'text1.txt' }
       ], 'Checking value of dropzone');
+    });
+
+    it('TINY-13420: dropping only unsupported files should trigger the error handler', () => {
+      const component = hook.component();
+      const dropzone = UiFinder.findIn(component.element, '.tox-dropzone').getOrDie();
+      const zone = component.getSystem().getByDom(dropzone).getOrDie();
+      dropFiles(zone, [{ name: 'text0.fake' }, { name: 'text1.txt' }, { name: 'text2.fake' }]);
+      store.assertEq('with at least 1 valid file that should not be an error', []);
+      dropFiles(zone, [{ name: 'text0.fake' }]);
+      store.assertEq('without any valid file that should be an error', [ 'error' ]);
     });
   });
 });

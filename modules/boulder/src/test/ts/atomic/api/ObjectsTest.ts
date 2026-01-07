@@ -5,6 +5,11 @@ import * as fc from 'fast-check';
 
 import * as Objects from 'ephox/boulder/api/Objects';
 
+interface Gen {
+  readonly obj: Record<string, string>;
+  readonly fields: string[];
+}
+
 UnitTest.test('ObjectsTest', () => {
   const smallSet = fc.string({ minLength: 1 });
 
@@ -13,7 +18,7 @@ UnitTest.test('ObjectsTest', () => {
   };
 
   const testNarrow = () => {
-    const narrowGen = fc.dictionary(smallSet, smallSet).chain((obj) => {
+    const narrowGen = fc.dictionary(smallSet, smallSet).chain<Gen>((obj) => {
       const keys = Obj.keys(obj);
       return keys.length === 0 ? fc.constant({
         obj,
@@ -40,7 +45,7 @@ UnitTest.test('ObjectsTest', () => {
   };
 
   const testExclude = () => {
-    const excludeGen = fc.dictionary(smallSet, smallSet).chain((obj) => {
+    const excludeGen = fc.dictionary(smallSet, smallSet).chain<Gen>((obj) => {
       const keys = Obj.keys(obj);
       return keys.length === 0 ? fc.constant({
         obj,

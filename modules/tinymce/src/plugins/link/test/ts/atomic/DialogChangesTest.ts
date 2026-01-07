@@ -73,7 +73,7 @@ describe('browser.tinymce.plugins.link.DialogChangesTest', () => {
     it('no initial data', () => {
       const dialogChange = DialogChanges.init({ title: '', text: '' } as LinkDialogData, { } as LinkDialogCatalog);
 
-      fc.assert(fc.property(fc.webUrl(), fc.asciiString(), fc.asciiString(), (url, title, text) => {
+      fc.assert(fc.property(fc.webUrl(), fc.string({ unit: 'binary-ascii' }), fc.string({ unit: 'binary-ascii' }), (url, title, text) => {
         const data = Fun.constant({ url: {
           value: url,
           meta: { title, text }
@@ -102,7 +102,7 @@ describe('browser.tinymce.plugins.link.DialogChangesTest', () => {
       const dialogChangeNoTitle = DialogChanges.init({ title: '', text: 'orig text' } as LinkDialogData, { } as LinkDialogCatalog);
       const dialogChangeNoText = DialogChanges.init({ title: 'orig title', text: '' } as LinkDialogData, { } as LinkDialogCatalog);
 
-      fc.assert(fc.property(fc.webUrl(), fc.asciiString(), fc.asciiString(), (url, title, text) => {
+      fc.assert(fc.property(fc.webUrl(), fc.string({ unit: 'binary-ascii' }), fc.string({ unit: 'binary-ascii' }), (url, title, text) => {
         const data = Fun.constant({ url: {
           value: url,
           meta: { title, text }
@@ -129,4 +129,3 @@ describe('browser.tinymce.plugins.link.DialogChangesTest', () => {
     });
   });
 });
-

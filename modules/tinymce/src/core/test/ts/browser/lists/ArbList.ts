@@ -43,7 +43,10 @@ const isArbListElement = (arb: ArbListItemChildNode): arb is ArbListElement => a
 const isArbTextNode = (arb: ArbListItemChildNode): arb is ArbTextNode => arb.type === '#text';
 const isArbCommentNode = (arb: ArbListItemChildNode): arb is ArbCommentNode => arb.type === '#comment';
 
-const textGenerator = fc.hexaString({ minLength: 1, maxLength: 5 });
+// https://fast-check.dev/docs/migration-guide/from-3.x-to-4.x/#hexa-or-hexastring
+const items = '0123456789abcdef';
+const hexa = () => fc.integer({ min: 0, max: 15 }).map((n) => items[n]);
+const textGenerator = fc.string({ unit: hexa(), minLength: 1, maxLength: 5 });
 
 const textNodeGenerator: fc.Arbitrary<ArbTextNode> = fc.record({
   type: fc.constant('#text'),

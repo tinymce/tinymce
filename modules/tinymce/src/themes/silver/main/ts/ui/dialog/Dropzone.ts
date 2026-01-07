@@ -61,8 +61,12 @@ export const renderDropZone = (spec: DropZoneSpec, providersBackstage: UiFactory
 
   const handleFiles = (component: AlloyComponent, files: FileList | null | undefined) => {
     if (files) {
-      Representing.setValue(component, filterByExtension(files, providersBackstage, spec.allowedFileExtensions));
+      const filteredFiles = filterByExtension(files, providersBackstage, spec.allowedFileExtensions);
+      Representing.setValue(component, filteredFiles);
       AlloyTriggers.emitWith(component, formChangeEvent, { name: spec.name });
+      if (filteredFiles.length === 0) {
+        spec.onInvalidFiles(component.element);
+      }
     }
   };
 
