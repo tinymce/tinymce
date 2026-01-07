@@ -1,4 +1,4 @@
-import { Arr, Fun, Merger, Obj } from '@ephox/katamari';
+import { Arr, Merger, Obj } from '@ephox/katamari';
 import * as fc from 'fast-check';
 
 import * as WeightedChoice from './WeightedChoice';
@@ -33,13 +33,13 @@ const toComponents = <T>(detail: Detail<T>): Component<T>[] =>
     k !== skipChild ? Merger.deepMerge(v, { component: k }) : v
   );
 
-const none = fc.constant([]);
+const none = <T>(): fc.Arbitrary<T[]> => fc.constant([]);
 
 const composite = <T>(rawDepth: number | undefined, detail: CompositeDetail, construct: Construct<T>): fc.Arbitrary<T[]> => {
   const components = toComponents(detail);
   const depth = rawDepth ?? detail.recursionDepth;
   if (depth === 0) {
-    return none;
+    return none();
   } else {
     const genComponent = (choice: Component<WeightedItem>, depth: number | undefined) => {
       const newDepth = choice.useDepth === true ? depth - 1 : depth;
@@ -48,12 +48,14 @@ const composite = <T>(rawDepth: number | undefined, detail: CompositeDetail, con
 
     const repeat = WeightedChoice.generator(components).chain((choice) =>
       choice.fold(
-        Fun.constant(none),
+        none,
         (c) => genComponent(c, depth)
       )
     );
 
-    return fc.array(repeat, { minLength: 1, maxLength: 5 }).map(Arr.flatten);
+    const flatten = (xs: T[][]): T[] => Arr.flatten(xs);
+
+    return fc.array(repeat, { minLength: 1, maxLength: 5 }).map(flatten);
   }
 };
 

@@ -47,7 +47,7 @@ describe('atomic.tinymce.themes.silver.components.sizeinput.SizeInputConverterTe
 
   it('noSizeConversion always returns none', () => {
     fc.assert(fc.property(
-      fc.integer(0, largeSensible), fc.constantFrom(...units),
+      fc.integer({ min: 0, max: largeSensible }), fc.constantFrom(...units),
       (value: number, unit: SizeUnit) => {
         assert.isTrue(noSizeConversion({ value, unit }).isNone());
       }

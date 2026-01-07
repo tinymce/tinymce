@@ -25,6 +25,8 @@ describe('browser.tinymce.plugins.advlist.ListStyleAliasTest', () => {
       'div.tox-collection__item[aria-checked="true"]': 1,
       [`div.tox-collection__item[aria-checked="true"][aria-label="${styleTypeLabel}"]`]: 1,
     }, menu);
+
+    TinyUiActions.keyup(editor, Keys.escape());
   };
 
   const pTestCheckedListStyleType = async (editor: Editor, styleTypeLabel: string, styleType: string) => {

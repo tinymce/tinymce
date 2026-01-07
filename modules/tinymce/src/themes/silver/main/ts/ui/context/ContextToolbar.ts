@@ -361,4 +361,3 @@ const register = (editor: Editor, registryContextToolbars: Record<string, Contex
 };
 
 export { register };
-

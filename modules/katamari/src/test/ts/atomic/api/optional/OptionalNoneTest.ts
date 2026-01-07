@@ -71,7 +71,7 @@ describe('atomic.katamari.api.optional.OptionalNoneTest', () => {
 
   it('Checking none.getOrDie() always throws', () => {
   // Require non empty string of msg falsiness gets in the way.
-    fc.assert(fc.property(fc.string(1, 40), (s) => {
+    fc.assert(fc.property(fc.string({ minLength: 1, maxLength: 40 }), (s) => {
       assert.throws(() => {
         Optional.none().getOrDie(s);
       });

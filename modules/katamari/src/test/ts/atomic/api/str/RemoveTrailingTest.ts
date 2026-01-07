@@ -20,8 +20,8 @@ describe('atomic.katamari.api.str.RemoveTrailingTest', () => {
 
   it('removeTrailing property', () => {
     fc.assert(fc.property(
-      fc.asciiString(),
-      fc.asciiString(),
+      fc.string({ unit: 'binary-ascii' }),
+      fc.string({ unit: 'binary-ascii' }),
       (prefix, suffix) => {
         assert.equal(Strings.removeTrailing(prefix + suffix, suffix), prefix);
       }

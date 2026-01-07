@@ -4,12 +4,12 @@ import * as fc from 'fast-check';
 import * as Boxes from 'ephox/alloy/alien/Boxes';
 
 const boundsArb = (minBounds = 0, maxBounds = 2000): fc.Arbitrary<Boxes.Bounds> => {
-  const zeroableArb = fc.integer(minBounds, maxBounds);
+  const zeroableArb = fc.integer({ min: minBounds, max: maxBounds });
 
   return zeroableArb.chain((boundsX) =>
     zeroableArb.chain((boundsY) =>
-      fc.integer(boundsX, maxBounds).chain((boundsRight) =>
-        fc.integer(boundsY, maxBounds).map((boundsBottom) =>
+      fc.integer({ min: boundsX, max: maxBounds }).chain((boundsRight) =>
+        fc.integer({ min: boundsY, max: maxBounds }).map((boundsBottom) =>
           Boxes.bounds(boundsX, boundsY, boundsRight - boundsX, boundsBottom - boundsY)
         )
       )
