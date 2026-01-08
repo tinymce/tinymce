@@ -80,16 +80,27 @@ describe('browser.components.Draggable', () => {
     await page.viewport(originalViewport.width, originalViewport.height);
   });
 
-  it.each([
-    { origin: 'top-left' as const },
-    { origin: 'top-right' as const },
-    { origin: 'bottom-left' as const },
-    { origin: 'bottom-right' as const },
-  ])('TINY-12875: Should be draggable by handle, origin $origin', async ({ origin }) => {
+  const testDraggableByHandle = async (origin: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right') => {
     await page.viewport(1500, 1500);
     const { handle, draggableWrapper } = await renderDraggable({ width: 250, height: 300 }, { origin });
     await dragTo(handle, { top: 50, left: 50 });
     assertPosition(draggableWrapper, { top: 50, left: 50 });
+  };
+
+  it('TINY-12875: Should be draggable by handle, origin top-left', async () => {
+    await testDraggableByHandle('top-left');
+  });
+
+  it('TINY-12875: Should be draggable by handle, origin top-right', async () => {
+    await testDraggableByHandle('top-right');
+  });
+
+  it('TINY-12875: Should be draggable by handle, origin bottom-left', async () => {
+    await testDraggableByHandle('bottom-left');
+  });
+
+  it('TINY-12875: Should be draggable by handle, origin bottom-right', async () => {
+    await testDraggableByHandle('bottom-right');
   });
 
   it('TINY-12875: Should only be draggable by handle', async () => {
@@ -219,89 +230,121 @@ describe('browser.components.Draggable', () => {
     assertPosition(draggableWrapper, { top: 1100, left: 0 });
   });
 
-  it.each([
-    {
-      origin: 'top-left' as const,
-      startPosition: { top: 1300, left: 1300 },
-      afterShrinkPosition: { top: 800, left: 800 },
-      afterExpandPosition: { top: 1300, left: 1300 }
-    },
-    {
-      origin: 'top-right' as const,
-      startPosition: { top: 1300, left: 0 },
-      afterShrinkPosition: { top: 800, left: 0 },
-      afterExpandPosition: { top: 1300, left: 500 },
-    },
-    {
-      origin: 'bottom-left' as const,
-      startPosition: { top: 0, left: 1300 },
-      afterShrinkPosition: { top: 0, left: 800 },
-      afterExpandPosition: { top: 500, left: 1300 },
-    },
-    {
-      origin: 'bottom-right' as const,
-      startPosition: { top: 0, left: 0 },
-      afterShrinkPosition: { top: 0, left: 0 },
-      afterExpandPosition: { top: 500, left: 500 },
-    },
-  ])('TINY-13109: Should stay within the viewport on window resize, origin $origin', async ({ origin, startPosition, afterShrinkPosition, afterExpandPosition }) => {
+  const testViewportResize = async (params: {
+    origin: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+    startPosition: { top: number; left: number };
+    afterShrinkPosition: { top: number; left: number };
+    afterExpandPosition: { top: number; left: number };
+  }) => {
     const elementWidth = 200;
     const elementHeight = 200;
 
     await page.viewport(1500, 1500);
-    const componentProps = { origin, declaredSize: { width: `${elementWidth}px`, height: `${elementHeight}px` }};
+    const componentProps = { origin: params.origin, declaredSize: { width: `${elementWidth}px`, height: `${elementHeight}px` }};
     const { handle, draggableWrapper } = await renderDraggable({ width: elementWidth, height: elementHeight }, componentProps);
-    await dragTo(handle, startPosition);
-    assertPosition(draggableWrapper, startPosition);
+    await dragTo(handle, params.startPosition);
+    assertPosition(draggableWrapper, params.startPosition);
 
     await page.viewport(1000, 1000);
-    assertPosition(draggableWrapper, afterShrinkPosition);
+    assertPosition(draggableWrapper, params.afterShrinkPosition);
 
     // Should remember it's initial position (before first resize)
     await page.viewport(2000, 2000);
-    assertPosition(draggableWrapper, afterExpandPosition);
+    assertPosition(draggableWrapper, params.afterExpandPosition);
+  };
+
+  it('TINY-13109: Should stay within the viewport on window resize, origin top-left', async () => {
+    await testViewportResize({
+      origin: 'top-left',
+      startPosition: { top: 1300, left: 1300 },
+      afterShrinkPosition: { top: 800, left: 800 },
+      afterExpandPosition: { top: 1300, left: 1300 }
+    });
   });
 
-  it.each([
-    {
-      origin: 'top-left' as const,
-      startPosition: { top: 1250, left: 1200 },
-      afterShrinkPosition: { top: 800, left: 775 },
-      afterExpandPosition: { top: 1250, left: 1200 }
-    },
-    {
-      origin: 'top-right' as const,
-      startPosition: { top: 1250, left: 0 },
-      afterShrinkPosition: { top: 800, left: -75 },
-      afterExpandPosition: { top: 1250, left: 500 }
-    },
-    {
-      origin: 'bottom-left' as const,
-      startPosition: { top: 0, left: 1200 },
-      afterShrinkPosition: { top: -50, left: 775 },
-      afterExpandPosition: { top: 500, left: 1200 }
-    },
-    {
-      origin: 'bottom-right' as const,
+  it('TINY-13109: Should stay within the viewport on window resize, origin top-right', async () => {
+    await testViewportResize({
+      origin: 'top-right',
+      startPosition: { top: 1300, left: 0 },
+      afterShrinkPosition: { top: 800, left: 0 },
+      afterExpandPosition: { top: 1300, left: 500 }
+    });
+  });
+
+  it('TINY-13109: Should stay within the viewport on window resize, origin bottom-left', async () => {
+    await testViewportResize({
+      origin: 'bottom-left',
+      startPosition: { top: 0, left: 1300 },
+      afterShrinkPosition: { top: 0, left: 800 },
+      afterExpandPosition: { top: 500, left: 1300 }
+    });
+  });
+
+  it('TINY-13109: Should stay within the viewport on window resize, origin bottom-right', async () => {
+    await testViewportResize({
+      origin: 'bottom-right',
       startPosition: { top: 0, left: 0 },
-      afterShrinkPosition: { top: -50, left: -75 },
+      afterShrinkPosition: { top: 0, left: 0 },
       afterExpandPosition: { top: 500, left: 500 }
-    },
-  ])('TINY-13520: Should stay within the viewport on window resize with allowed overflow, origin $origin', async ({ origin, startPosition, afterShrinkPosition, afterExpandPosition }) => {
+    });
+  });
+
+  const testViewportResizeWithOverflow = async (params: {
+    origin: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+    startPosition: { top: number; left: number };
+    afterShrinkPosition: { top: number; left: number };
+    afterExpandPosition: { top: number; left: number };
+  }) => {
     const elementWidth = 300;
     const elementHeight = 250;
 
     await page.viewport(1500, 1500);
-    const componentProps = { origin, declaredSize: { width: `${elementWidth}px`, height: `${elementHeight}px` }, allowedOverflow: { horizontal: 0.25, vertical: 0.2 }};
+    const componentProps = { origin: params.origin, declaredSize: { width: `${elementWidth}px`, height: `${elementHeight}px` }, allowedOverflow: { horizontal: 0.25, vertical: 0.2 }};
     const { handle, draggableWrapper } = await renderDraggable({ width: elementWidth, height: elementHeight }, componentProps);
-    await dragTo(handle, startPosition);
-    assertPosition(draggableWrapper, startPosition);
+    await dragTo(handle, params.startPosition);
+    assertPosition(draggableWrapper, params.startPosition);
 
     await page.viewport(1000, 1000);
-    assertPosition(draggableWrapper, afterShrinkPosition);
+    assertPosition(draggableWrapper, params.afterShrinkPosition);
     // Should remember it's initial position (before first resize)
     await page.viewport(2000, 2000);
-    assertPosition(draggableWrapper, afterExpandPosition);
+    assertPosition(draggableWrapper, params.afterExpandPosition);
+  };
+
+  it('TINY-13520: Should stay within the viewport on window resize with allowed overflow, origin top-left', async () => {
+    await testViewportResizeWithOverflow({
+      origin: 'top-left',
+      startPosition: { top: 1250, left: 1200 },
+      afterShrinkPosition: { top: 800, left: 775 },
+      afterExpandPosition: { top: 1250, left: 1200 }
+    });
+  });
+
+  it('TINY-13520: Should stay within the viewport on window resize with allowed overflow, origin top-right', async () => {
+    await testViewportResizeWithOverflow({
+      origin: 'top-right',
+      startPosition: { top: 1250, left: 0 },
+      afterShrinkPosition: { top: 800, left: -75 },
+      afterExpandPosition: { top: 1250, left: 500 }
+    });
+  });
+
+  it('TINY-13520: Should stay within the viewport on window resize with allowed overflow, origin bottom-left', async () => {
+    await testViewportResizeWithOverflow({
+      origin: 'bottom-left',
+      startPosition: { top: 0, left: 1200 },
+      afterShrinkPosition: { top: -50, left: 775 },
+      afterExpandPosition: { top: 500, left: 1200 }
+    });
+  });
+
+  it('TINY-13520: Should stay within the viewport on window resize with allowed overflow, origin bottom-right', async () => {
+    await testViewportResizeWithOverflow({
+      origin: 'bottom-right',
+      startPosition: { top: 0, left: 0 },
+      afterShrinkPosition: { top: -50, left: -75 },
+      afterExpandPosition: { top: 500, left: 500 }
+    });
   });
 
   it('TINY-13109: Should forget its initial position once dragged after resize', async () => {
@@ -415,14 +458,40 @@ describe('browser.components.Draggable', () => {
     expect(clickCount).toBe(1);
   });
 
-  it.each([
-    { origin: 'top-left' as const, expectedPosition: { top: 50, left: 50 }},
-    { origin: 'top-right' as const, expectedPosition: { top: 50, left: 1500 - 50 - 250 }},
-    { origin: 'bottom-left' as const, expectedPosition: { top: 1500 - 50 - 300, left: 50 }},
-    { origin: 'bottom-right' as const, expectedPosition: { top: 1500 - 50 - 300, left: 1500 - 50 - 250 }},
-  ])('TINY-13548: Should have correct initial position, origin $origin', async ({ origin, expectedPosition }) => {
+  const testInitialPosition = async (params: {
+    origin: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+    expectedPosition: { top: number; left: number };
+  }) => {
     await page.viewport(1500, 1500);
-    const { draggableWrapper } = await renderDraggable({ width: 250, height: 300 }, { origin, initialPosition: { x: '50px', y: '50px' }});
-    assertPosition(draggableWrapper, expectedPosition);
+    const { draggableWrapper } = await renderDraggable({ width: 250, height: 300 }, { origin: params.origin, initialPosition: { x: '50px', y: '50px' }});
+    assertPosition(draggableWrapper, params.expectedPosition);
+  };
+
+  it('TINY-13548: Should have correct initial position, origin top-left', async () => {
+    await testInitialPosition({
+      origin: 'top-left',
+      expectedPosition: { top: 50, left: 50 }
+    });
+  });
+
+  it('TINY-13548: Should have correct initial position, origin top-right', async () => {
+    await testInitialPosition({
+      origin: 'top-right',
+      expectedPosition: { top: 50, left: 1500 - 50 - 250 }
+    });
+  });
+
+  it('TINY-13548: Should have correct initial position, origin bottom-left', async () => {
+    await testInitialPosition({
+      origin: 'bottom-left',
+      expectedPosition: { top: 1500 - 50 - 300, left: 50 }
+    });
+  });
+
+  it('TINY-13548: Should have correct initial position, origin bottom-right', async () => {
+    await testInitialPosition({
+      origin: 'bottom-right',
+      expectedPosition: { top: 1500 - 50 - 300, left: 1500 - 50 - 250 }
+    });
   });
 });

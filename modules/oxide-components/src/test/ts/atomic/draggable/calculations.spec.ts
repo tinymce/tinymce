@@ -138,57 +138,80 @@ describe('browser.draggable.calculations', () => {
   });
 
   describe('position', () => {
-    it.each([
-      {
-        origin: 'top-left' as const,
+    const testOriginPosition = (params: {
+      origin: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+      element: { x: number; y: number; width: number; height: number };
+      viewport: { width: number; height: number };
+      expected: { x: number; y: number };
+    }) => {
+      const result = position(params.element, params.viewport, params.origin);
+      expect(result).toEqual(params.expected);
+    };
+
+    it('should calculate position for top-left origin', () => {
+      testOriginPosition({
+        origin: 'top-left',
         element: { x: 100, y: 200, width: 50, height: 50 },
         viewport: { width: 1000, height: 1000 },
         expected: { x: 100, y: 200 }
-      },
-      {
-        origin: 'top-right' as const,
+      });
+    });
+
+    it('should calculate position for top-right origin', () => {
+      testOriginPosition({
+        origin: 'top-right',
         element: { x: 100, y: 200, width: 50, height: 50 },
         viewport: { width: 1000, height: 1000 },
         expected: { x: 850, y: 200 }
-      },
-      {
-        origin: 'bottom-left' as const,
+      });
+    });
+
+    it('should calculate position for bottom-left origin', () => {
+      testOriginPosition({
+        origin: 'bottom-left',
         element: { x: 100, y: 200, width: 50, height: 50 },
         viewport: { width: 1000, height: 1000 },
         expected: { x: 100, y: 750 }
-      },
-      {
-        origin: 'bottom-right' as const,
+      });
+    });
+
+    it('should calculate position for bottom-right origin', () => {
+      testOriginPosition({
+        origin: 'bottom-right',
         element: { x: 100, y: 200, width: 50, height: 50 },
         viewport: { width: 1000, height: 1000 },
         expected: { x: 850, y: 750 }
-      }
-    ])('should calculate position for $origin origin', ({ origin, element, viewport, expected }) => {
-      const result = position(element, viewport, origin);
-      expect(result).toEqual(expected);
+      });
     });
 
-    it.each([
-      {
-        scenario: 'round down fractional positions',
+    const testRounding = (params: {
+      element: { x: number; y: number; width: number; height: number };
+      expected: { x: number; y: number };
+    }) => {
+      const viewport = { width: 1000, height: 1000 };
+      const result = position(params.element, viewport, 'top-left');
+      expect(result).toEqual(params.expected);
+    };
+
+    it('should round down fractional positions', () => {
+      testRounding({
         element: { x: 100.4, y: 200.3, width: 50, height: 50 },
         expected: { x: 100, y: 200 }
-      },
-      {
-        scenario: 'round up fractional positions',
+      });
+    });
+
+    it('should round up fractional positions', () => {
+      testRounding({
         element: { x: 100.6, y: 200.7, width: 50, height: 50 },
         expected: { x: 101, y: 201 }
-      },
-      {
-        scenario: 'round .5 values up',
+      });
+    });
+
+    it('should round .5 values up', () => {
+      testRounding({
         element: { x: 100.5, y: 200.5, width: 50, height: 50 },
         expected: { x: 101, y: 201 }
-      }
-    ])('should $scenario', ({ element, expected }) => {
-      const viewport = { width: 1000, height: 1000 };
-      const result = position(element, viewport, 'top-left');
-
-      expect(result).toEqual(expected);
+      });
     });
   });
 });

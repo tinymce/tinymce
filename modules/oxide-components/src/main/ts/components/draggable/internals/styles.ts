@@ -1,12 +1,13 @@
-import { Fun, type Optional } from '@ephox/katamari';
+import { Fun, Type, type Optional } from '@ephox/katamari';
 
+import * as OriginPredicates from './origin-predicates';
 import type { AllowedOverflow, Origin, CssPosition, CssSize, Position, Shift } from './types';
 
 const getTransform = (shift: Shift): string => `translate3d(${shift.x}px, ${shift.y}px, 0px)`;
 
 const normalizePosition = (position: CssPosition | Position): CssPosition => ({
-  x: typeof position.x === 'number' ? `${position.x}px` : position.x,
-  y: typeof position.y === 'number' ? `${position.y}px` : position.y
+  x: Type.isNumber(position.x) ? `${position.x}px` : position.x,
+  y: Type.isNumber(position.y) ? `${position.y}px` : position.y
 });
 
 const getPosition = (position: CssPosition, allowedOverflow: AllowedOverflow, origin: Origin, size: Optional<CssSize>) => {
@@ -18,13 +19,13 @@ const getPosition = (position: CssPosition, allowedOverflow: AllowedOverflow, or
     })
   );
 
-  if (origin === 'top-left') {
+  if (OriginPredicates.isTopLeft(origin)) {
     return { top: y, left: x };
   }
-  if (origin === 'top-right') {
+  if (OriginPredicates.isTopRight(origin)) {
     return { top: y, right: x };
   }
-  if (origin === 'bottom-left') {
+  if (OriginPredicates.isBottomLeft(origin)) {
     return { bottom: y, left: x };
   }
   return { bottom: y, right: x };

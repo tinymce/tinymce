@@ -1,3 +1,4 @@
+import * as OriginPredicates from './origin-predicates';
 import type { Origin, Boundaries, Position, Size } from './types';
 
 const delta = (start: Position, end: Position): { deltaX: number; deltaY: number } => ({ deltaX: end.x - start.x, deltaY: end.y - start.y });
@@ -12,8 +13,8 @@ const position = (element: Position & Size, viewport: Size, origin: Origin): Pos
   const elementRight = element.x + element.width;
   const elementBottom = element.y + element.height;
   return {
-    x: Math.round(origin === 'top-left' || origin === 'bottom-left' ? element.x : viewport.width - elementRight),
-    y: Math.round(origin === 'top-left' || origin === 'top-right' ? element.y : viewport.height - elementBottom)
+    x: Math.round(OriginPredicates.isLeftPositioned(origin) ? element.x : viewport.width - elementRight),
+    y: Math.round(OriginPredicates.isTopPositioned(origin) ? element.y : viewport.height - elementBottom)
   };
 };
 
