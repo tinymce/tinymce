@@ -17,67 +17,90 @@ describe('browser.draggable.styles', () => {
       expect(result).toEqual(expected);
     });
 
-    it.each([
-      { origin: 'top-left' as const, expected: { left: '50px', top: '100px' }},
-      { origin: 'top-right' as const, expected: { right: '50px', top: '100px' }},
-      { origin: 'bottom-left' as const, expected: { left: '50px', bottom: '100px' }},
-      { origin: 'bottom-right' as const, expected: { right: '50px', bottom: '100px' }}
-    ])('should use correct css properties, origin $origin', ({ origin, expected }) => {
-      const shift = { x: 200, y: 300 };
-      const position = { x: 50, y: 100 };
+    describe('should use correct css properties', () => {
+      const testOriginCssProperties = (params: {
+        origin: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+        expected: Record<string, string>;
+      }) => {
+        const shift = { x: 200, y: 300 };
+        const position = { x: 50, y: 100 };
 
-      const result = getPositioningStyles(shift, position, origin, { horizontal: 0, vertical: 0 }, false, Optional.none() );
+        const result = getPositioningStyles(shift, position, params.origin, { horizontal: 0, vertical: 0 }, false, Optional.none() );
 
-      expect(result).toEqual(expected);
+        expect(result).toEqual(params.expected);
+      };
+
+      it('should use correct css properties, origin top-left', () => testOriginCssProperties({
+        origin: 'top-left',
+        expected: { left: '50px', top: '100px' }
+      }));
+
+      it('should use correct css properties, origin top-right', () => testOriginCssProperties({
+        origin: 'top-right',
+        expected: { right: '50px', top: '100px' }
+      }));
+
+      it('should use correct css properties, origin bottom-left', () => testOriginCssProperties({
+        origin: 'bottom-left',
+        expected: { left: '50px', bottom: '100px' }
+      }));
+
+      it('should use correct css properties, origin bottom-right', () => testOriginCssProperties({
+        origin: 'bottom-right',
+        expected: { right: '50px', bottom: '100px' }
+      }));
     });
 
     describe('should use correct css formula', () => {
-      it.each([
-        {
-          scenario: 'should restrict top/left when declaredSize available',
-          position: { x: 50, y: 100 },
-          allowedOverflow: { horizontal: 0, vertical: 0 },
-          declaredSize: Optional.some({ width: 'var(--width)', height: 'var(--height)' }),
-          expected: {
-            left: 'min( 50px, calc( 100% - var(--width) ) )',
-            top: 'min( 100px, calc( 100% - var(--height) ) )'
-          }
-        },
-        {
-          scenario: 'should include allowed overflow in calculation',
-          position: { x: 50, y: 100 },
-          allowedOverflow: { horizontal: 0.25, vertical: 0.3 },
-          declaredSize: Optional.some({ width: 'var(--width)', height: 'var(--height)' }),
-          expected: {
-            left: 'min( 50px, calc( 100% - var(--width) * 0.75 ) )',
-            top: 'min( 100px, calc( 100% - var(--height) * 0.70 ) )'
-          }
-        },
-        {
-          scenario: 'not include allowed overflow in left calculation, when allowed overflow is 100%',
-          position: { x: 50, y: 100 },
-          allowedOverflow: { horizontal: 1, vertical: 0.3 },
-          declaredSize: Optional.some({ width: 'var(--width)', height: 'var(--height)' }),
-          expected: {
-            left: '50px',
-            top: 'min( 100px, calc( 100% - var(--height) * 0.70 ) )'
-          }
-        },
-        {
-          scenario: 'not include allowed overflow in top calculation, when allowed overflow is 100%',
-          position: { x: 50, y: 100 },
-          allowedOverflow: { horizontal: 0.25, vertical: 1 },
-          declaredSize: Optional.some({ width: 'var(--width)', height: 'var(--height)' }),
-          expected: {
-            left: 'min( 50px, calc( 100% - var(--width) * 0.75 ) )',
-            top: '100px'
-          }
+      const testCssFormula = (params: {
+        position: { x: number; y: number };
+        allowedOverflow: { horizontal: number; vertical: number };
+        declaredSize: Optional<{ width: string; height: string }>;
+        expected: Record<string, string>;
+      }) => {
+        const result = getPositioningStyles({ x: 0, y: 0 }, params.position, 'top-left', params.allowedOverflow, false, params.declaredSize );
+        expect(result).toEqual(params.expected);
+      };
+
+      it('should restrict top/left when declaredSize available', () => testCssFormula({
+        position: { x: 50, y: 100 },
+        allowedOverflow: { horizontal: 0, vertical: 0 },
+        declaredSize: Optional.some({ width: 'var(--width)', height: 'var(--height)' }),
+        expected: {
+          left: 'min( 50px, calc( 100% - var(--width) ) )',
+          top: 'min( 100px, calc( 100% - var(--height) ) )'
         }
-      ])('should $scenario', ({ position, allowedOverflow, declaredSize, expected }) => {
-        const result = getPositioningStyles({ x: 0, y: 0 }, position, 'top-left', allowedOverflow, false, declaredSize );
-        expect(result).toEqual(expected);
-      });
+      }));
+
+      it('should include allowed overflow in calculation', () => testCssFormula({
+        position: { x: 50, y: 100 },
+        allowedOverflow: { horizontal: 0.25, vertical: 0.3 },
+        declaredSize: Optional.some({ width: 'var(--width)', height: 'var(--height)' }),
+        expected: {
+          left: 'min( 50px, calc( 100% - var(--width) * 0.75 ) )',
+          top: 'min( 100px, calc( 100% - var(--height) * 0.70 ) )'
+        }
+      }));
+
+      it('should not include allowed overflow in left calculation, when allowed overflow is 100%', () => testCssFormula({
+        position: { x: 50, y: 100 },
+        allowedOverflow: { horizontal: 1, vertical: 0.3 },
+        declaredSize: Optional.some({ width: 'var(--width)', height: 'var(--height)' }),
+        expected: {
+          left: '50px',
+          top: 'min( 100px, calc( 100% - var(--height) * 0.70 ) )'
+        }
+      }));
+
+      it('should not include allowed overflow in top calculation, when allowed overflow is 100%', () => testCssFormula({
+        position: { x: 50, y: 100 },
+        allowedOverflow: { horizontal: 0.25, vertical: 1 },
+        declaredSize: Optional.some({ width: 'var(--width)', height: 'var(--height)' }),
+        expected: {
+          left: 'min( 50px, calc( 100% - var(--width) * 0.75 ) )',
+          top: '100px'
+        }
+      }));
     });
   });
-
 });
