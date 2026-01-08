@@ -16,16 +16,29 @@ const getPosition = (position: CssPosition, allowedOverflow: AllowedOverflow, or
     ({ width, height }) => {
       let x = position.x;
       let y = position.y;
+
       if (allowedOverflow.horizontal < 1) {
-        const elementVisibleWidth = allowedOverflow.horizontal > 0
-          ? `${width} * ${(1 - allowedOverflow.horizontal).toFixed(2)}` : width;
-        x = `min( ${position.x}, calc( 100% - ${elementVisibleWidth} ) )`;
+        let visibleWidth: string | 0;
+        if (allowedOverflow.horizontal > 0) {
+          const multiplier = (1 - allowedOverflow.horizontal).toFixed(2);
+          visibleWidth = `${width} * ${multiplier}`;
+        } else {
+          visibleWidth = width;
+        }
+        x = `min( ${position.x}, calc( 100% - ${visibleWidth} ) )`;
       }
+
       if (allowedOverflow.vertical < 1) {
-        const elementVisibleHeight = allowedOverflow.vertical > 0
-          ? `${height} * ${(1 - allowedOverflow.vertical).toFixed(2)}` : height;
-        y = `min( ${position.y}, calc( 100% - ${elementVisibleHeight} ) )`;
+        let visibleHeight: string | 0;
+        if (allowedOverflow.vertical > 0) {
+          const multiplier = (1 - allowedOverflow.vertical).toFixed(2);
+          visibleHeight = `${height} * ${multiplier}`;
+        } else {
+          visibleHeight = height;
+        }
+        y = `min( ${position.y}, calc( 100% - ${visibleHeight} ) )`;
       }
+
       return { x, y };
     }
   );
