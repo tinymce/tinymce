@@ -1,4 +1,4 @@
-import * as OriginPredicates from './origin-predicates';
+import * as OriginPredicates from './OriginPredicates';
 import type { Origin, Boundaries, Position, Size } from './types';
 
 const delta = (start: Position, end: Position): { deltaX: number; deltaY: number } => ({ deltaX: end.x - start.x, deltaY: end.y - start.y });
