@@ -18,23 +18,23 @@ const getPosition = (position: CssPosition, allowedOverflow: AllowedOverflow, or
       let y = position.y;
 
       if (allowedOverflow.horizontal < 1) {
-        let visibleWidth: string | 0;
+        let visibleWidth: string;
         if (allowedOverflow.horizontal > 0) {
           const multiplier = (1 - allowedOverflow.horizontal).toFixed(2);
           visibleWidth = `${width} * ${multiplier}`;
         } else {
-          visibleWidth = width;
+          visibleWidth = `${width}`;
         }
         x = `min( ${position.x}, calc( 100% - ${visibleWidth} ) )`;
       }
 
       if (allowedOverflow.vertical < 1) {
-        let visibleHeight: string | 0;
+        let visibleHeight: string;
         if (allowedOverflow.vertical > 0) {
           const multiplier = (1 - allowedOverflow.vertical).toFixed(2);
           visibleHeight = `${height} * ${multiplier}`;
         } else {
-          visibleHeight = height;
+          visibleHeight = `${height}`;
         }
         y = `min( ${position.y}, calc( 100% - ${visibleHeight} ) )`;
       }
