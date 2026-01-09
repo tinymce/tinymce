@@ -1,6 +1,7 @@
 import { Fun } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
+import { fn } from 'storybook/test';
 
 import { IconButton } from '../iconbutton/IconButton';
 
@@ -58,12 +59,20 @@ The \`x\` and \`y\` values in \`initialPosition\` correspond to these CSS proper
     initialPosition: {
       description: `Sets the initial position of the sidebar as an object with \`x\` and \`y\` coordinates.
 These values can be specified in any CSS length unit (pixels, percentages, etc.).
-The \`x\` and \`y\` values map to the CSS positioning properties determined 
+The \`x\` and \`y\` values map to the CSS positioning properties determined
 by the \`origin\` prop (e.g., with \`origin="top-left"\`, \`x\` maps to \`left\` and \`y\` maps to \`top\`)`,
+    },
+    onDragStart: {
+      description: 'Optional callback function that is called when dragging begins.'
+    },
+    onDragEnd: {
+      description: 'Optional callback function that is called when dragging ends.'
     },
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: [ 'autodocs' ],
+  // Use `fn` to spy on the callback args, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
+  args: { onDragStart: fn(), onDragEnd: fn() },
 } satisfies Meta<typeof FloatingSidebar.Root>;
 
 export default meta;
