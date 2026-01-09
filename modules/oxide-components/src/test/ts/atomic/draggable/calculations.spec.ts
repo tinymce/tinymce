@@ -1,4 +1,4 @@
-import { delta, clamp, boundaries } from 'oxide-components/components/draggable/internals/calculations';
+import { delta, clamp, boundaries, position } from 'oxide-components/components/draggable/internals/calculations';
 import { describe, expect, it } from 'vitest';
 
 describe('browser.draggable.calculations', () => {
@@ -133,6 +133,84 @@ describe('browser.draggable.calculations', () => {
           min: -50,
           max: 1350
         }
+      });
+    });
+  });
+
+  describe('position', () => {
+    const testOriginPosition = (params: {
+      origin: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+      element: { x: number; y: number; width: number; height: number };
+      viewport: { width: number; height: number };
+      expected: { x: number; y: number };
+    }) => {
+      const result = position(params.element, params.viewport, params.origin);
+      expect(result).toEqual(params.expected);
+    };
+
+    it('should calculate position for top-left origin', () => {
+      testOriginPosition({
+        origin: 'top-left',
+        element: { x: 100, y: 200, width: 50, height: 50 },
+        viewport: { width: 1000, height: 1000 },
+        expected: { x: 100, y: 200 }
+      });
+    });
+
+    it('should calculate position for top-right origin', () => {
+      testOriginPosition({
+        origin: 'top-right',
+        element: { x: 100, y: 200, width: 50, height: 50 },
+        viewport: { width: 1000, height: 1000 },
+        expected: { x: 850, y: 200 }
+      });
+    });
+
+    it('should calculate position for bottom-left origin', () => {
+      testOriginPosition({
+        origin: 'bottom-left',
+        element: { x: 100, y: 200, width: 50, height: 50 },
+        viewport: { width: 1000, height: 1000 },
+        expected: { x: 100, y: 750 }
+      });
+    });
+
+    it('should calculate position for bottom-right origin', () => {
+      testOriginPosition({
+        origin: 'bottom-right',
+        element: { x: 100, y: 200, width: 50, height: 50 },
+        viewport: { width: 1000, height: 1000 },
+        expected: { x: 850, y: 750 }
+      });
+    });
+
+    const testRounding = (params: {
+      element: { x: number; y: number; width: number; height: number };
+      expected: { x: number; y: number };
+    }) => {
+      const viewport = { width: 1000, height: 1000 };
+      const result = position(params.element, viewport, 'top-left');
+      expect(result).toEqual(params.expected);
+    };
+
+    it('should round down fractional positions', () => {
+      testRounding({
+        element: { x: 100.4, y: 200.3, width: 50, height: 50 },
+        expected: { x: 100, y: 200 }
+      });
+    });
+
+    it('should round up fractional positions', () => {
+      testRounding({
+        element: { x: 100.6, y: 200.7, width: 50, height: 50 },
+        expected: { x: 101, y: 201 }
+      });
+    });
+
+    it('should round .5 values up', () => {
+      testRounding({
+        element: { x: 100.5, y: 200.5, width: 50, height: 50 },
+        expected: { x: 101, y: 201 }
       });
     });
   });

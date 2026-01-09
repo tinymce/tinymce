@@ -1,19 +1,19 @@
 import { Optional } from '@ephox/katamari';
 import { type FC, useState, useMemo, useRef, useCallback, forwardRef } from 'react';
 
-import { boundaries, clamp, delta } from './internals/calculations';
+import { boundaries, clamp, delta, position } from './internals/calculations';
 import { useDraggable, DraggableContext } from './internals/context';
 import { getPositioningStyles } from './internals/styles';
 import type { DraggableProps, DraggableHandleProps, Shift, Position, Boundaries, CssPosition } from './internals/types';
 
-const Root = forwardRef<HTMLDivElement, DraggableProps>(({ children, style, initialPosition = { top: 0, left: 0 }, declaredSize, ...props }, ref) => {
+const Root = forwardRef<HTMLDivElement, DraggableProps>(({ children, style, origin = 'top-left', initialPosition = { x: 0, y: 0 }, declaredSize, ...props }, ref) => {
   const [ shift, setShift ] = useState<Shift>({ x: 0, y: 0 });
   const [ position, setPosition ] = useState<CssPosition | Position>(initialPosition);
   const [ isDragging, setIsDragging ] = useState(false);
   const draggableRef = useRef<HTMLDivElement | null>(null);
   const allowedOverflow = useMemo(() => ({ horizontal: props.allowedOverflow?.horizontal ?? 0, vertical: props.allowedOverflow?.vertical ?? 0 }), [ props.allowedOverflow ]);
-  const positioningStyles = getPositioningStyles(shift, position, allowedOverflow, isDragging, Optional.from(declaredSize));
-  const contextValue = useMemo(() => ({ setShift, draggableRef, isDragging, setIsDragging, setPosition, allowedOverflow }), [ isDragging, allowedOverflow ]);
+  const positioningStyles = getPositioningStyles(shift, position, origin, allowedOverflow, isDragging, Optional.from(declaredSize));
+  const contextValue = useMemo(() => ({ setShift, draggableRef, isDragging, setIsDragging, setPosition, allowedOverflow, origin }), [ isDragging, allowedOverflow, origin ]);
 
   const setRef = useCallback((element: HTMLDivElement | null) => {
     if (typeof ref === 'function') {
@@ -37,16 +37,17 @@ const Handle: FC<DraggableHandleProps> = ({ children }) => {
   const dragStartElementRef = useRef<Element | null>(null);
   const lastMousePositionRef = useRef<Position>({ x: 0, y: 0 });
   const boundariesRef = useRef<Boundaries>({ x: { min: 0, max: 0 }, y: { min: 0, max: 0 }});
-  const { setShift, draggableRef, isDragging, setIsDragging, setPosition, allowedOverflow } = useDraggable();
+  const { setShift, draggableRef, isDragging, setIsDragging, setPosition, allowedOverflow, origin } = useDraggable();
 
   const stopDragging = useCallback(() => {
     setIsDragging(false);
     setShift({ x: 0, y: 0 });
     if (draggableRef.current !== null) {
       const rect = draggableRef.current.getBoundingClientRect();
-      setPosition({ x: Math.round(rect.left), y: Math.round(rect.top) });
+      const viewport = { width: document.documentElement.clientWidth, height: document.documentElement.clientHeight };
+      setPosition(position(rect, viewport, origin));
     }
-  }, [ setIsDragging, setShift, draggableRef, setPosition ]);
+  }, [ setIsDragging, setShift, draggableRef, setPosition, origin ]);
 
   const onPointerDown = useCallback((event: React.PointerEvent) => {
     if (draggableRef.current === null) {
