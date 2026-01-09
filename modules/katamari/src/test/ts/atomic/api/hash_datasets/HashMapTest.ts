@@ -171,23 +171,11 @@ describe('atomic.katamari.api.hash_datasets.HashMapTest', () => {
       assert.isTrue(HashMap.exists(map, (_v, k) => k === 'b'));
     });
 
-    it('TINY-13479: some is alias for exists', () => {
-      const map = HashMap.make<string, number>([ 'a', 1 ], [ 'b', 2 ]);
-      assert.isTrue(HashMap.some(map, (v) => v === 2));
-      assert.isFalse(HashMap.some(map, (v) => v === 10));
-    });
-
     it('TINY-13479: forall checks if all values satisfy predicate', () => {
       const map = HashMap.make<string, number>([ 'a', 2 ], [ 'b', 4 ], [ 'c', 6 ]);
       assert.isTrue(HashMap.forall(map, (v) => v % 2 === 0));
       assert.isFalse(HashMap.forall(map, (v) => v > 5));
       assert.isTrue(HashMap.forall(HashMap.empty(), Fun.never));
-    });
-
-    it('TINY-13479: every is alias for forall', () => {
-      const map = HashMap.make<string, number>([ 'a', 1 ], [ 'b', 2 ]);
-      assert.isTrue(HashMap.every(map, (v) => v > 0));
-      assert.isFalse(HashMap.every(map, (v) => v > 1));
     });
 
     it('TINY-13479: equal checks if two maps are equal', () => {
@@ -288,14 +276,6 @@ describe('atomic.katamari.api.hash_datasets.HashMapTest', () => {
       HashMap.get(result, 'b1').each((val) => assert.equal(val, 2));
       HashMap.get(result, 'b2').each((val) => assert.equal(val, 20));
     });
-
-    it('TINY-13479: flatMap is alias for bind', () => {
-      const map = HashMap.make<string, number>([ 'a', 1 ]);
-      const f = (v: number, k: string) => HashMap.make<string, number>([ k + '_1', v ], [ k + '_2', v * 2 ]);
-      const result1 = HashMap.bind(map, f);
-      const result2 = HashMap.flatMap(map, f);
-      assert.isTrue(HashMap.equal(result1, result2));
-    });
   });
 
   describe('Iteration & Traversal', () => {
@@ -319,14 +299,6 @@ describe('atomic.katamari.api.hash_datasets.HashMapTest', () => {
       const map = HashMap.make<string, number>([ 'a', 1 ], [ 'b', 2 ]);
       const result = HashMap.foldl(map, (acc, v, k) => acc + k + v, '');
       assert.isTrue(result === 'a1b2' || result === 'b2a1'); // Order not guaranteed
-    });
-
-    it('TINY-13479: reduce is alias for foldl', () => {
-      const map = HashMap.make<string, number>([ 'a', 1 ], [ 'b', 2 ]);
-      const f = (acc: number, v: number, _k: string) => acc + v;
-      const result1 = HashMap.foldl(map, f, 0);
-      const result2 = HashMap.reduce(map, f, 0);
-      assert.equal(result1, result2);
     });
   });
 

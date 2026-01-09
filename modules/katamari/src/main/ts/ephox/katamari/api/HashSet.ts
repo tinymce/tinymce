@@ -185,16 +185,6 @@ export const toggle = <T>(set: Set<T>, value: T): Set<T> => {
  */
 export const contains = <T>(set: ReadonlySet<T>, value: T): boolean => set.has(value);
 
-/**
- * Checks if a value exists in the set.
- * This is an alias for `contains` to match the naming convention of JavaScript's Set.has().
- *
- * @param set - The set to search
- * @param value - The value to look for
- * @returns true if the value is in the set, false otherwise
- */
-export const has = <T>(set: ReadonlySet<T>, value: T): boolean => contains(set, value);
-
 // ============================================================================
 // Getters & Properties
 // ============================================================================
@@ -231,15 +221,6 @@ export const values = <T>(set: Set<T>): IterableIterator<T> => set.values();
  */
 export const toArray = <T>(set: Set<T>): T[] => Array.from(set);
 
-/**
- * Converts a Set to an array of values.
- * This is an alias for `toArray` for consistency with other APIs.
- *
- * @param set - The set to convert
- * @returns An array containing all elements from the set
- */
-export const toValues = <T>(set: Set<T>): T[] => toArray(set);
-
 // ============================================================================
 // Predicates & Testing
 // ============================================================================
@@ -262,17 +243,6 @@ export const exists = <T>(set: ReadonlySet<T>, pred: SetPredicate<T>): boolean =
 };
 
 /**
- * Alias for `exists`. Checks if at least one element in the set satisfies the predicate.
- * This is an alias for `exists` to match common naming conventions.
- * Returns false for empty sets (no elements exist that satisfy the predicate).
- *
- * @param set - The set to test
- * @param pred - The predicate function to test each element
- * @returns true if any element satisfies the predicate, false otherwise (including empty sets)
- */
-export const some = <T>(set: ReadonlySet<T>, pred: SetPredicate<T>): boolean => exists(set, pred);
-
-/**
  * Tests whether all elements in the set satisfy the predicate.
  * Returns true for empty sets (vacuous truth - all zero elements satisfy the predicate).
  *
@@ -288,17 +258,6 @@ export const forall = <T>(set: ReadonlySet<T>, pred: SetPredicate<T>): boolean =
   }
   return true;
 };
-
-/**
- * Alias for `forall`. Checks if every element in the set satisfies a predicate.
- * This is an alias for `forall` to match common naming conventions.
- * Returns true for empty sets (vacuous truth - all zero elements satisfy the predicate).
- *
- * @param set - The set to test
- * @param pred - The predicate function to test each element
- * @returns true if all elements satisfy the predicate, false otherwise (true for empty sets)
- */
-export const every = <T>(set: ReadonlySet<T>, pred: SetPredicate<T>): boolean => forall(set, pred);
 
 /**
  * Tests whether two Sets are equal based on a custom equality function.
@@ -498,23 +457,6 @@ export const partition = <T>(set: ReadonlySet<T>, pred: SetPredicate<T>): { pass
 };
 
 /**
- * Flattens a Set of Sets into a single Set containing all elements.
- * Duplicate elements are automatically removed due to Set semantics.
- *
- * @param set - A Set containing other Sets
- * @returns A new Set containing all elements from all inner Sets
- */
-export const flatten = <T>(set: ReadonlySet<ReadonlySet<T>>): Set<T> => {
-  const result = new Set<T>();
-  for (const innerSet of set) {
-    for (const x of innerSet) {
-      result.add(x);
-    }
-  }
-  return result;
-};
-
-/**
  * Maps a function over the set and flattens the result.
  * Similar to flatMap in other functional libraries.
  *
@@ -522,18 +464,17 @@ export const flatten = <T>(set: ReadonlySet<ReadonlySet<T>>): Set<T> => {
  * @param f - A function that transforms each element into a Set
  * @returns A new Set containing all elements from all resulting Sets
  */
-export const bind = <T, U>(set: ReadonlySet<T>, f: SetMorphism<T, ReadonlySet<U>>): Set<U> =>
-  flatten(map(set, f));
-
-/**
- * Maps a function over the set and flattens the result.
- * This is an alias for `bind` to match common naming conventions.
- *
- * @param set - The set to transform
- * @param f - A function that transforms each element into a Set
- * @returns A new Set containing all elements from all resulting Sets
- */
-export const flatMap = <T, U>(set: ReadonlySet<T>, f: SetMorphism<T, ReadonlySet<U>>): Set<U> => bind(set, f);
+export const bind = <T, U>(set: ReadonlySet<T>, f: SetMorphism<T, ReadonlySet<U>>): Set<U> => {
+  const result = new Set<U>();
+  for (const x of set) {
+    const inner = f(x);
+    for (const y of inner) {
+      result.add(y);
+    }
+  }
+  return result;
+};
+// flatten(map(set, f));
 
 // ============================================================================
 // Iteration & Traversal
@@ -567,17 +508,6 @@ export const foldl = <T, U>(set: ReadonlySet<T>, f: (acc: U, x: T) => U, acc: U)
   });
   return acc;
 };
-
-/**
- * Reduces a set to a single value by applying a function to each element and an accumulator.
- * This is an alias for `foldl` to match common naming conventions.
- *
- * @param set - The set to reduce
- * @param f - The reducer function that takes the accumulator and current element
- * @param acc - The initial accumulator value
- * @returns The final accumulated value
- */
-export const reduce = <T, U>(set: ReadonlySet<T>, f: (acc: U, x: T) => U, acc: U): U => foldl(set, f, acc);
 
 // ============================================================================
 // Searching

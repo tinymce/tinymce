@@ -202,7 +202,7 @@ export const remove = <K, V>(map: Map<K, V>, key: K): Map<K, V> => {
  */
 export const get = <K, V>(map: Map<K, V>, key: K): Optional<V> => {
   const value = map.get(key);
-  return value !== undefined || map.has(key) ? Optional.some(value as V) : Optional.none();
+  return Optional.from(value);
 };
 
 /**
@@ -304,17 +304,6 @@ export const exists = <K, V>(map: ReadonlyMap<K, V>, pred: MapPredicate<K, V>): 
 };
 
 /**
- * Alias for `exists`. Checks if at least one value in the map satisfies the predicate.
- * This is an alias for `exists` to match common naming conventions.
- * Returns false for empty maps (no entries exist that satisfy the predicate).
- *
- * @param map - The map to test
- * @param pred - The predicate function to test each value and key
- * @returns true if any value satisfies the predicate, false otherwise (including empty maps)
- */
-export const some = <K, V>(map: ReadonlyMap<K, V>, pred: MapPredicate<K, V>): boolean => exists(map, pred);
-
-/**
  * Tests whether all values in the map satisfy the predicate.
  * Returns true for empty maps (vacuous truth - all zero entries satisfy the predicate).
  *
@@ -330,17 +319,6 @@ export const forall = <K, V>(map: ReadonlyMap<K, V>, pred: MapPredicate<K, V>): 
   }
   return true;
 };
-
-/**
- * Alias for `forall`. Checks if every value in the map satisfies a predicate.
- * This is an alias for `forall` to match common naming conventions.
- * Returns true for empty maps (vacuous truth - all zero entries satisfy the predicate).
- *
- * @param map - The map to test
- * @param pred - The predicate function to test each value and key
- * @returns true if all values satisfy the predicate, false otherwise (true for empty maps)
- */
-export const every = <K, V>(map: ReadonlyMap<K, V>, pred: MapPredicate<K, V>): boolean => forall(map, pred);
 
 /**
  * Tests whether two Maps are equal based on custom equality functions for keys and values.
@@ -546,16 +524,6 @@ export const bind = <K, V, K2, V2>(map: ReadonlyMap<K, V>, f: (value: V, key: K)
   return result;
 };
 
-/**
- * Maps a function over the map and flattens the result.
- * This is an alias for `bind` to match common naming conventions.
- *
- * @param map - The map to transform
- * @param f - A function that transforms each entry into a Map
- * @returns A new Map containing all entries from all resulting Maps
- */
-export const flatMap = <K, V, K2, V2>(map: ReadonlyMap<K, V>, f: (value: V, key: K) => ReadonlyMap<K2, V2>): Map<K2, V2> => bind(map, f);
-
 // ============================================================================
 // Iteration & Traversal
 // ============================================================================
@@ -588,17 +556,6 @@ export const foldl = <K, V, U>(map: ReadonlyMap<K, V>, f: (acc: U, value: V, key
   });
   return acc;
 };
-
-/**
- * Reduces a map to a single value by applying a function to each entry and an accumulator.
- * This is an alias for `foldl` to match common naming conventions.
- *
- * @param map - The map to reduce
- * @param f - The reducer function that takes the accumulator, value, and key
- * @param acc - The initial accumulator value
- * @returns The final accumulated value
- */
-export const reduce = <K, V, U>(map: ReadonlyMap<K, V>, f: (acc: U, value: V, key: K) => U, acc: U): U => foldl(map, f, acc);
 
 // ============================================================================
 // Searching

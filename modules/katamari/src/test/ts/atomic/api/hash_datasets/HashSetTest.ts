@@ -119,12 +119,6 @@ describe('atomic.katamari.api.hash_datasets.HashSetTest', () => {
       const arr = HashSet.toArray(set).sort();
       assert.deepEqual(arr, [ 1, 2, 3 ]);
     });
-
-    it('TINY-13479: toValues converts set to array of values', () => {
-      const set = HashSet.make(3, 1, 2);
-      const vals = HashSet.toValues(set).sort();
-      assert.deepEqual(vals, [ 1, 2, 3 ]);
-    });
   });
 
   describe('Predicates & Testing', () => {
@@ -135,23 +129,11 @@ describe('atomic.katamari.api.hash_datasets.HashSetTest', () => {
       assert.isFalse(HashSet.exists(HashSet.empty(), Fun.always));
     });
 
-    it('TINY-13479: some is alias for exists', () => {
-      const set = HashSet.make(1, 2, 3);
-      assert.isTrue(HashSet.some(set, (x) => x === 2));
-      assert.isFalse(HashSet.some(set, (x) => x === 10));
-    });
-
     it('TINY-13479: forall checks if all elements satisfy predicate', () => {
       const set = HashSet.make(2, 4, 6, 8);
       assert.isTrue(HashSet.forall(set, (x) => x % 2 === 0));
       assert.isFalse(HashSet.forall(set, (x) => x > 5));
       assert.isTrue(HashSet.forall(HashSet.empty(), Fun.never));
-    });
-
-    it('TINY-13479: every is alias for forall', () => {
-      const set = HashSet.make(1, 2, 3);
-      assert.isTrue(HashSet.every(set, (x) => x > 0));
-      assert.isFalse(HashSet.every(set, (x) => x > 2));
     });
 
     it('TINY-13479: equal checks if two sets are equal', () => {
@@ -251,28 +233,10 @@ describe('atomic.katamari.api.hash_datasets.HashSetTest', () => {
       assert.deepEqual(HashSet.toArray(fail).sort(), [ 1, 3, 5 ]);
     });
 
-    it('TINY-13479: flatten flattens a set of sets', () => {
-      const set = HashSet.make(
-        HashSet.make(1, 2),
-        HashSet.make(3, 4),
-        HashSet.make(4, 5)
-      );
-      const result = HashSet.flatten(set);
-      assert.deepEqual(HashSet.toArray(result).sort(), [ 1, 2, 3, 4, 5 ]);
-    });
-
     it('TINY-13479: bind maps and flattens', () => {
       const set = HashSet.make(1, 2, 3);
       const result = HashSet.bind(set, (x) => HashSet.make(x, x * 10));
       assert.deepEqual(HashSet.toArray(result).sort((a, b) => a - b), [ 1, 2, 3, 10, 20, 30 ]);
-    });
-
-    it('TINY-13479: flatMap is alias for bind', () => {
-      const set = HashSet.make(1, 2);
-      const f = (x: number) => HashSet.make(x, x + 10);
-      const result1 = HashSet.bind(set, f);
-      const result2 = HashSet.flatMap(set, f);
-      assert.isTrue(HashSet.equal(result1, result2));
     });
   });
 
@@ -288,13 +252,6 @@ describe('atomic.katamari.api.hash_datasets.HashSetTest', () => {
       const set = HashSet.make(1, 2, 3, 4);
       const result = HashSet.foldl(set, (acc, x) => acc + x, 0);
       assert.equal(result, 10);
-    });
-
-    it('TINY-13479: reduce is alias for foldl', () => {
-      const set = HashSet.make(1, 2, 3);
-      const result1 = HashSet.foldl(set, (acc, x) => acc + x, 0);
-      const result2 = HashSet.reduce(set, (acc, x) => acc + x, 0);
-      assert.equal(result1, result2);
     });
   });
 
