@@ -27,7 +27,7 @@ When dragging stops, the position is converted to absolute CSS positioning.
 
 The component does not apply any \`position\` style by default, giving you the flexibility to choose the positioning strategy that fits your use case.
 You must manually set the position using \`style={{ position: "absolute" }}\`, \`style={{ position: "fixed" }}\`, or use the Popover API.
-The component will work with any positioning strategy as long as \`top\` and \`left\` CSS properties are supported.
+The component will work with any positioning strategy as long as \`top\`, \`bottom\`, \`left\`, \`right\` CSS properties are supported.
 
 ### Viewport boundaries
 
@@ -47,8 +47,29 @@ If you don't provide \`declaredSize\`, the element may move outside the viewport
         disable: true
       }
     },
+    origin: {
+      description: `Determines which corner of the viewport the draggable element is positioned relative to, and which CSS positioning properties are used.
+
+**Default:** \`'top-left'\`
+
+**Options:**
+- \`'top-left'\` - Uses \`top\` and \`left\` CSS properties, positioning relative to the top-left corner
+- \`'top-right'\` - Uses \`top\` and \`right\` CSS properties, positioning relative to the top-right corner
+- \`'bottom-left'\` - Uses \`bottom\` and \`left\` CSS properties, positioning relative to the bottom-left corner
+- \`'bottom-right'\` - Uses \`bottom\` and \`right\` CSS properties, positioning relative to the bottom-right corner
+
+The origin affects how the position is calculated and which edges of the viewport are used as reference points. For example, with \`origin: 'top-right'\`, the element's position is measured from the top and right edges of the viewport.`,
+      control: {
+        type: 'radio'
+      },
+      options: [ 'top-left', 'top-right', 'bottom-left', 'bottom-right' ],
+    },
     initialPosition: {
-      description: 'The initial position of the draggable element. `top` and `left` can be provided as any valid CSS.',
+      description: `The initial position of the draggable element using \`x\` and \`y\` coordinates. Both properties accept any valid CSS value. The \`x\` and \`y\` values map to CSS positioning properties based on the \`origin\` setting.
+
+**Examples:**
+- \`origin: 'top-left'\` with \`initialPosition: { x: '50px', y: '100px' }\` → sets \`left: 50px\` and \`top: 100px\`
+- \`origin: 'bottom-right'\` with \`initialPosition: { x: '50px', y: '100px' }\` → sets \`right: 50px\` and \`bottom: 100px\``,
     },
     allowedOverflow: {
       description: `Controls how much of the draggable element is allowed to overflow outside the viewport. Values are decimals between 0 and 1.
@@ -89,7 +110,8 @@ const render = (args: DraggableProps): JSX.Element => (
 
 export const Example: Story = {
   args: {
-    initialPosition: { top: '50px', left: '50px' },
+    origin: 'top-left',
+    initialPosition: { x: '50px', y: '50px' },
     allowedOverflow: { horizontal: 0.6, vertical: 0 },
     declaredSize: { width: '250px', height: '250px' }
   },

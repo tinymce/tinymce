@@ -1,42 +1,23 @@
+import type { Property } from 'csstype';
 import type { CSSProperties, FC, PropsWithChildren } from 'react';
 
 import * as Bem from '../../utils/Bem';
 import { classes } from '../../utils/Styles';
 import * as Draggable from '../draggable/Draggable';
 import '../../module/css';
-import type { CssPosition } from '../draggable/internals/types';
-
-interface InitialPosition {
-  x: number;
-  y: number;
-  origin: 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
-}
 export interface FloatingSidebarProps extends PropsWithChildren {
   isOpen?: boolean;
-  initialPosition?: InitialPosition;
+  origin?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+  initialPosition?: { x: Property.Top; y: Property.Left };
   style?: CSSProperties;
 }
 interface HeaderProps extends PropsWithChildren {};
 
-const transformToCss = (position: InitialPosition): CssPosition => {
-  switch (position.origin) {
-    case 'topleft':
-      return { top: `${position.y}px`, left: `${position.x}px` } as const;
-    case 'topright':
-      return { top: `${position.y}px`, left: `calc(${position.x}px - var(--tox-private-floating-sidebar-width))` } as const;
-    case 'bottomleft':
-      return { top: `calc(${position.y}px - var(--tox-private-floating-sidebar-height))`, left: `${position.x}px` } as const;
-    case 'bottomright':
-      return { top: `calc(${position.y}px - var(--tox-private-floating-sidebar-height))`, left: `calc(${position.x}px - var(--tox-private-floating-sidebar-width))` } as const;
-  }
-};
-
-const Root: FC<FloatingSidebarProps> = ({ isOpen = true, children, style, ...props }) => {
-  const initialPosition = transformToCss(props.initialPosition ?? { x: 0, y: 0, origin: 'topleft' });
-
+const Root: FC<FloatingSidebarProps> = ({ isOpen = true, children, style, origin = 'top-right', initialPosition = { x: 0, y: 0 }}) => {
   return (
     <Draggable.Root
       className={Bem.block('tox-floating-sidebar', { open: isOpen })}
+      origin={origin}
       initialPosition={initialPosition}
       allowedOverflow={{ horizontal: 0.8 }}
       declaredSize={{ width: 'var(--tox-private-floating-sidebar-width)', height: 'var(--tox-private-floating-sidebar-height)' }}
