@@ -73,6 +73,7 @@ const Handle: FC<DraggableHandleProps> = ({ children }) => {
 
   const onPointerMove = useCallback((event: React.PointerEvent) => {
     if (isDragging) {
+      event.preventDefault(); // Prevents text selection while dragging on Safari
       const currentPointerPosition = {
         x: clamp(Math.round(event.clientX), boundariesRef.current.x.min, boundariesRef.current.x.max),
         y: clamp(Math.round(event.clientY), boundariesRef.current.y.min, boundariesRef.current.y.max)
@@ -95,16 +96,17 @@ const Handle: FC<DraggableHandleProps> = ({ children }) => {
     }
   }, [ stopDragging, isDragging ]);
 
+  const style = isDragging ?
+    { cursor: 'grabbing', userSelect: 'none', WebkitUserSelect: 'none' } as const :
+    { cursor: 'grab' } as const;
+
   return (
     <div
       onPointerDown={onPointerDown}
       onPointerUp={onPointerUp}
       onPointerMove={onPointerMove}
       onLostPointerCapture={onLostPointerCapture}
-      style={{
-        cursor: isDragging ? 'grabbing' : 'grab',
-        userSelect: 'none'
-      }}>
+      style={style}>
       {children}
     </div>
   );
