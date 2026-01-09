@@ -1,5 +1,5 @@
 .tox-ai when (@custom-properties-enabled = true) {
-  --tox-private-ai-user-prompt-background: hsl( from var(--tox-private-background-color) h s calc(l - 6));
+  --tox-private-background-secondary: hsl( from var(--tox-private-background-color) h s calc(l - 6));
   --tox-private-ai-footer-border-color: hsl( from var(--tox-private-background-color) h s calc(l - 11));
 }
 
@@ -30,7 +30,7 @@
   }
 
   .tox-ai__user-prompt__text {
-    background-color: var(--tox-private-ai-user-prompt-background, darken(@background-color, 6%));
+    background-color: var(--tox-private-background-secondary, darken(@background-color, 6%));
     padding: var(--tox-private-pad-sm, @pad-sm) 12px;
     border-radius: var(--tox-private-control-border-radius, @control-border-radius);
     max-width: 80%;
@@ -49,6 +49,10 @@
     gap: 12px;
     flex: 1 0 0;
     align-self: stretch;
+  }
+
+  .tox-ai__spinner svg {
+    fill: var(--tox-private-color-tint, @color-tint);
   }
 
   .tox-ai__response {
@@ -239,13 +243,29 @@
     // TODO: Replace with a proper global variable once we have it setup
     padding: 12px;
     gap: 8px;
-    &:hover, &:focus {
-      // TODO: Replace with a proper global variable once we have it setup
-      background-color: #f0f0f0;
-    }
     border-radius: var(--tox-private-control-border-radius, @control-border-radius);
     cursor: pointer;
+
+    &:hover, &:focus {
+      background-color: var(--tox-private-background-secondary, darken(@background-color, 6%));
+    }
+    &.tox-ai-chat-history-list__item-edit-title {
+      background-color: var(--tox-private-background-secondary, darken(@background-color, 6%));
+      flex-direction: column;
+    }
   }
+
+  .tox-ai-chat-history-list__item-edit-actions {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    gap: 8px;
+
+    .tox-ai__spinner svg {
+      fill: rgba(from var(--tox-private-color-white, @color-white) r g b / 0.5);
+    }
+  }
+
 
   .tox-ai-chat-history-list__item-content {
     display: flex;

@@ -1,5 +1,5 @@
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
-import { Compare, Height, SelectorFilter, SelectorFind, SugarElement, Traverse } from '@ephox/sugar';
+import { Compare, Height, SelectorFilter, SelectorFind, type SugarElement, Traverse } from '@ephox/sugar';
 
 import * as ArrNavigation from '../navigation/ArrNavigation';
 
