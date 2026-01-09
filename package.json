@@ -73,7 +73,7 @@
     "grunt-webpack": "^7.0.1",
     "jiti": "^2.6.1",
     "lerna": "^9.0.3",
-    "less": "^4.4.2",
+    "less": "4.2.2",
     "less-plugin-autoprefix": "^2.0.0",
     "less-plugin-preset-env": "^2.0.2",
     "load-grunt-tasks": "^5.1.0",
