@@ -10,10 +10,12 @@ export interface FloatingSidebarProps extends PropsWithChildren {
   origin?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
   initialPosition?: { x: Property.Top; y: Property.Left };
   style?: CSSProperties;
+  onDragStart?: () => void;
+  onDragEnd?: () => void;
 }
 interface HeaderProps extends PropsWithChildren {};
 
-const Root: FC<FloatingSidebarProps> = ({ isOpen = true, children, style, origin = 'top-right', initialPosition = { x: 0, y: 0 }}) => {
+const Root: FC<FloatingSidebarProps> = ({ isOpen = true, children, style, origin = 'top-right', initialPosition = { x: 0, y: 0 }, onDragStart, onDragEnd }) => {
   return (
     <Draggable.Root
       className={Bem.block('tox-floating-sidebar', { open: isOpen })}
@@ -21,6 +23,8 @@ const Root: FC<FloatingSidebarProps> = ({ isOpen = true, children, style, origin
       initialPosition={initialPosition}
       allowedOverflow={{ horizontal: 0.8 }}
       declaredSize={{ width: 'var(--tox-private-floating-sidebar-width)', height: 'var(--tox-private-floating-sidebar-height)' }}
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
       style={style}
     >
       <aside className={classes([ 'tox-floating-sidebar__content-wrapper' ])}>

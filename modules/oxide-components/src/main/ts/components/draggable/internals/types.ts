@@ -15,6 +15,8 @@ export interface DraggableProps extends HTMLAttributes<HTMLDivElement> {
   initialPosition?: CssPosition;
   declaredSize?: CssSize;
   allowedOverflow?: Partial<AllowedOverflow>;
+  onDragStart?: () => void;
+  onDragEnd?: () => void;
 }
 
 export interface DraggableHandleProps extends PropsWithChildren { }
@@ -46,6 +48,8 @@ export interface DraggableState {
   setPosition: React.Dispatch<React.SetStateAction<CssPosition | Position>>;
   allowedOverflow: AllowedOverflow;
   origin: Origin;
+  onDragStart?: () => void;
+  onDragEnd?: () => void;
 };
 
 export interface Boundaries {

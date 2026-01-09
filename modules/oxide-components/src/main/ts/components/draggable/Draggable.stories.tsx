@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { fn } from 'storybook/test';
 
 import * as Draggable from './Draggable';
 import type { DraggableProps } from './internals/types';
@@ -90,9 +91,17 @@ The origin affects how the position is calculated and which edges of the viewpor
 You can omit setting this property if you don't care about window resize.
 If you do care about it, but don't know the exact size of the element you'll have to calculate it using javascript.`
     },
+    onDragStart: {
+      description: 'Optional callback function that is called when dragging begins.'
+    },
+    onDragEnd: {
+      description: 'Optional callback function that is called when dragging ends.'
+    },
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: [ 'autodocs', 'skip-visual-testing' ],
+  // Use `fn` to spy on the callback args, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
+  args: { onDragStart: fn(), onDragEnd: fn() },
 } satisfies Meta<typeof Draggable.Root>;
 
 export default meta;
