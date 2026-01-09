@@ -13,10 +13,34 @@ const normalizePosition = (position: CssPosition | Position): CssPosition => ({
 const getPosition = (position: CssPosition, allowedOverflow: AllowedOverflow, origin: Origin, size: Optional<CssSize>) => {
   const { x, y } = size.fold(
     Fun.constant(position),
-    ({ width, height }) => ({
-      x: `min(${position.x}, calc(100% - (${width} * ${1 - allowedOverflow.horizontal}))`,
-      y: `min(${position.y}, calc(100% - (${height} * ${1 - allowedOverflow.vertical}))`
-    })
+    ({ width, height }) => {
+      let x = position.x;
+      let y = position.y;
+
+      if (allowedOverflow.horizontal < 1) {
+        let visibleWidth: string;
+        if (allowedOverflow.horizontal > 0) {
+          const multiplier = (1 - allowedOverflow.horizontal).toFixed(2);
+          visibleWidth = `${width} * ${multiplier}`;
+        } else {
+          visibleWidth = `${width}`;
+        }
+        x = `min( ${position.x}, calc( 100% - ${visibleWidth} ) )`;
+      }
+
+      if (allowedOverflow.vertical < 1) {
+        let visibleHeight: string;
+        if (allowedOverflow.vertical > 0) {
+          const multiplier = (1 - allowedOverflow.vertical).toFixed(2);
+          visibleHeight = `${height} * ${multiplier}`;
+        } else {
+          visibleHeight = `${height}`;
+        }
+        y = `min( ${position.y}, calc( 100% - ${visibleHeight} ) )`;
+      }
+
+      return { x, y };
+    }
   );
 
   if (OriginPredicates.isTopLeft(origin)) {
