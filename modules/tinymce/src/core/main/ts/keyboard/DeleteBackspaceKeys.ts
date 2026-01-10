@@ -116,22 +116,24 @@ const setup = (editor: Editor, caret: Cell<Text | null>): void => {
   let isBackspaceKeydown = false;
   let formatNodes: Node[] = [];
 
-  editor.on('keydown', (evt: EditorEvent<KeyboardEvent>) => {
-    isBackspaceKeydown = evt.keyCode === VK.BACKSPACE;
-    formatNodes = InlineFormatDelete.getFormatNodesAtStart(editor);
+  editor.on('init', () => {
+    editor.on('keydown', (evt: EditorEvent<KeyboardEvent>) => {
+      isBackspaceKeydown = evt.keyCode === VK.BACKSPACE;
+      formatNodes = InlineFormatDelete.getFormatNodesAtStart(editor);
 
-    if (!evt.isDefaultPrevented()) {
-      executeKeydownOverride(editor, caret, evt);
-    }
-  });
+      if (!evt.isDefaultPrevented()) {
+        executeKeydownOverride(editor, caret, evt);
+      }
+    });
 
-  editor.on('keyup', (evt: EditorEvent<KeyboardEvent>) => {
-    if (!evt.isDefaultPrevented()) {
-      executeKeyupOverride(editor, evt, isBackspaceKeydown, formatNodes);
-      formatNodes.length = 0;
-    }
+    editor.on('keyup', (evt: EditorEvent<KeyboardEvent>) => {
+      if (!evt.isDefaultPrevented()) {
+        executeKeyupOverride(editor, evt, isBackspaceKeydown, formatNodes);
+        formatNodes.length = 0;
+      }
 
-    isBackspaceKeydown = false;
+      isBackspaceKeydown = false;
+    });
   });
 };
 
