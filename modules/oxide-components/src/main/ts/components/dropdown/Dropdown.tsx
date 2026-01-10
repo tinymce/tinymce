@@ -1,16 +1,20 @@
-import { Throttler, Type } from '@ephox/katamari';
-import { Children, cloneElement, isValidElement, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type FC, type HTMLAttributes, type MouseEvent, type PropsWithChildren, type ReactElement } from 'react';
+import { Throttler, Type, Obj } from '@ephox/katamari';
+import { Children, cloneElement, forwardRef, isValidElement, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type FC, type HTMLAttributes, type MouseEvent, type PropsWithChildren, type ReactElement } from 'react';
 
 import { Bem } from '../../main';
 
 import { DropdownContext, useDropdown } from './internals/Context';
 import * as PositioningUtils from './internals/PositioningUtils';
 
-const isInDropdownContent = (contentRef: React.RefObject<HTMLDivElement>, node: Node): boolean => {
+const isInDropdownContent = (contentRef: React.MutableRefObject<HTMLDivElement | undefined>, node: Node): boolean => {
   return contentRef.current?.contains(node) ?? false;
 };
 
-const Content: FC<PropsWithChildren<HTMLAttributes<HTMLDivElement>>> = ({ children, ...props }) => {
+interface DropdownContentProps extends PropsWithChildren<HTMLAttributes<HTMLDivElement>> {
+  onClose?: () => void;
+}
+
+const Content = forwardRef<HTMLDivElement, DropdownContentProps>(({ children, onClose, ...props }, ref) => {
   const { triggerRef, side, align, gap, contentRef, triggerEvents, debouncedHideHoverablePopover, isOpen, setIsOpen } = useDropdown();
 
   const [ positioningStyles, setPositioningStyles ] = useState<CSSProperties>({ opacity: '0' });
@@ -28,22 +32,33 @@ const Content: FC<PropsWithChildren<HTMLAttributes<HTMLDivElement>>> = ({ childr
       const anchoredContainerRect = contentRef.current.getBoundingClientRect();
 
       // using document rect as a boundry, but maybe it should be the Editor area?
-      setPositioningStyles({
+      const newPositioningStyles = {
         opacity: '1',
         ...PositioningUtils.getPositionStyles({ anchorRect, anchoredContainerRect, side, align, gap, boundaryRect: documentRect })
+      };
+
+      setPositioningStyles((currentPositioningStyles) => {
+        // avoid react rerendering when the styles are the same as before
+        // casting to emty object to satisfy typescript
+        if ( !Obj.equal(newPositioningStyles, currentPositioningStyles as {})) {
+          return newPositioningStyles;
+        } else {
+          return currentPositioningStyles;
+        }
       });
     }
   }, [ contentRef, triggerRef, align, side, gap ]);
 
   useEffect(() => {
     const element = contentRef.current;
-    if (element === null) {
+    if (Type.isNullable(element)) {
       return;
     }
     const onToggle = (e: Event) => {
       updateToggleState(e as ToggleEvent);
       if ((e as ToggleEvent).newState === 'closed') {
         triggerRef.current?.focus();
+        onClose?.();
       }
     };
 
@@ -52,7 +67,7 @@ const Content: FC<PropsWithChildren<HTMLAttributes<HTMLDivElement>>> = ({ childr
     return () => {
       element.removeEventListener('toggle', onToggle);
     };
-  }, [ contentRef, triggerRef, updateToggleState ]);
+  }, [ contentRef, triggerRef, updateToggleState, onClose ]);
 
   useEffect(() => {
     if (isOpen) {
@@ -61,13 +76,33 @@ const Content: FC<PropsWithChildren<HTMLAttributes<HTMLDivElement>>> = ({ childr
       // reset styles on close
       setPositioningStyles({ opacity: '0' });
     }
-  }, [ isOpen, updatePosition ]);
+  }, [ isOpen, updatePosition, children ]);
+
+  useEffect(() => {
+    const onScrollAndResize = () => {
+      contentRef.current?.hidePopover();
+    };
+    window.addEventListener('scroll', onScrollAndResize, true);
+    window.addEventListener('resize', onScrollAndResize);
+
+    return () => {
+      window.removeEventListener('scroll', onScrollAndResize, true);
+      window.removeEventListener('resize', onScrollAndResize);
+    };
+  }, [ updatePosition, triggerRef, contentRef ]);
 
   return <div
     // @ts-expect-error - TODO: Remove this expect error once we've upgraded to React 19+
     popover='auto'
     className={Bem.block('tox-dropdown-content')}
-    ref={contentRef}
+    ref={(el: HTMLDivElement) => {
+      contentRef.current = el;
+      if (Type.isFunction(ref)) {
+        ref(el);
+      } else if (Type.isNonNullable(ref)) {
+        ref.current = el;
+      }
+    }}
     style={{ ...positioningStyles }}
     { ...(triggerEvents.includes('hover')) && {
       onMouseLeave: debouncedHideHoverablePopover.throttle,
@@ -77,7 +112,7 @@ const Content: FC<PropsWithChildren<HTMLAttributes<HTMLDivElement>>> = ({ childr
   >
     {isOpen && children}
   </div>;
-};
+});
 
 const Trigger: FC<PropsWithChildren> = ({ children }) => {
   const { triggerRef, contentRef, triggerEvents, debouncedHideHoverablePopover, isOpen } = useDropdown();
@@ -112,7 +147,7 @@ const Trigger: FC<PropsWithChildren> = ({ children }) => {
   };
 
   return cloneElement(child, {
-    ref: (el: HTMLDivElement) => {
+    ref: (el: HTMLElement) => {
       triggerRef.current = el;
       if (Type.isFunction(child.props.ref )) {
         child.props.ref(el);
@@ -135,7 +170,7 @@ export interface DropdownProps extends PropsWithChildren {
 
 const Root: FC<DropdownProps> = ({ children, side = 'top', align = 'start', gap = 8, triggerEvents = [ 'click' ] }) => {
   const triggerRef = useRef<HTMLElement | undefined>();
-  const contentRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement | undefined>();
   const [ isOpen, setIsOpen ] = useState(false);
 
   // debounced hide popover function on mouse leave (used when trigger events include hover)
