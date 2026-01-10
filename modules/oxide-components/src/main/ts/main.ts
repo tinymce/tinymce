@@ -2,6 +2,7 @@ import { UserPromptBubble } from './bespoke/tinymceai/bubbles/UserPromptBubble';
 import ErrorMessage from './bespoke/tinymceai/error/ErrorMessage';
 import { Spinner } from './bespoke/tinymceai/spinner/Spinner';
 import { Tag } from './bespoke/tinymceai/tag/Tag';
+import * as Accordion from './components/accordion/Accordion';
 import { AutoResizingTextarea } from './components/autoresizingtextarea/AutoResizingTextarea';
 import { Button } from './components/button/Button';
 import * as ContextToolbar from './components/contexttoolbar/ContextToolbar';
@@ -24,6 +25,7 @@ import * as Bem from './utils/Bem';
 import * as FocusHelpers from './utils/FocusHelpers';
 
 export {
+  Accordion,
   AutoResizingTextarea,
   Bem,
   Button,
