@@ -228,6 +228,7 @@ interface BaseEditorOptions {
   submit_patch?: boolean;
   suffix?: string;
   user_id?: string;
+  content_id?: string;
   table_tab_navigation?: boolean;
   target?: HTMLElement;
   text_patterns?: RawPattern[] | false;
