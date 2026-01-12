@@ -189,7 +189,8 @@ const Item: FC<AccordionItemProps> = ({
     'icon-end': iconPosition === 'end'
   });
   const contentClassName = Bem.element('tox-accordion', 'content', {
-    expanded: isExpanded
+    expanded: isExpanded,
+    collapsed: !isExpanded
   });
 
   const iconElement = (
