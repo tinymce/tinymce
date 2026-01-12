@@ -182,7 +182,7 @@ interface BaseEditorOptions {
   newdocument_content?: string;
   newline_behavior?: 'block' | 'linebreak' | 'invert' | 'default';
   no_newline_selector?: string;
-  disable_noneditable?: boolean;
+  allow_noneditable?: boolean;
   noneditable_class?: string;
   noneditable_regexp?: RegExp | RegExp[];
   nowrap?: boolean;

@@ -85,7 +85,7 @@ const setup = (editor: Editor): void => {
 
       if (hasEditClass(node)) {
         node.attr(contentEditableAttrName, 'true');
-      } else if (hasNonEditClass(node) && !Options.shouldDisableNonEditable(editor)) {
+      } else if (hasNonEditClass(node) && Options.shouldAllowNonEditable(editor)) {
         node.attr(contentEditableAttrName, 'false');
       }
     }
