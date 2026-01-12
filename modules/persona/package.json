@@ -1,6 +1,7 @@
 {
   "name": "@tinymce/persona",
   "version": "1.0.0",
+  "private": true,
   "description": "Default avatar generation utility for TinyMCE",
   "repository": {
     "type": "git",
