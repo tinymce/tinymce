@@ -826,6 +826,11 @@ const register = (editor: Editor): void => {
     default: (_ctx: PatternTypes.DynamicPatternContext): PatternTypes.Pattern[] => [ ]
   });
 
+  registerOption('disable_noneditable', {
+    processor: 'boolean',
+    default: false
+  });
+
   registerOption('noneditable_class', {
     processor: 'string',
     default: 'mceNonEditable'
@@ -1078,6 +1083,7 @@ const getPasteTabSpaces = option('paste_tab_spaces');
 const shouldAllowHtmlDataUrls = option('allow_html_data_urls');
 const getTextPatterns = option('text_patterns');
 const getTextPatternsLookup = option('text_patterns_lookup');
+const shouldDisableNonEditable = option('disable_noneditable');
 const getNonEditableClass = option('noneditable_class');
 const getEditableClass = option('editable_class');
 const getNonEditableRegExps = option('noneditable_regexp');
@@ -1205,6 +1211,7 @@ export {
   getTextPatterns,
   getTextPatternsLookup,
   hasTextPatternsLookup,
+  shouldDisableNonEditable,
   getNonEditableClass,
   getNonEditableRegExps,
   getEditableClass,
