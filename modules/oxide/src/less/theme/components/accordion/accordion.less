@@ -25,7 +25,7 @@
 @accordion-icon-color: @text-color;
 @accordion-icon-margin: @pad-sm;
 
-@accordion-content-padding-x: @pad-sm;
+@accordion-content-padding-x: @pad-sm + @pad-xs;
 @accordion-content-padding-y: @pad-sm;
 @accordion-content-background-color: transparent;
 
@@ -168,6 +168,76 @@
     .tox-form__group {
       &:last-child {
         margin-bottom: 0;
+      }
+
+      > *:not(:first-child) {
+        margin-top: @pad-sm + @pad-xs;
+      }
+
+      > .tox-dropdown-content {
+        margin-top: 0;
+      }
+    }
+
+    .tox-button-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .tox-accordion__model-button {
+      align-items: center;
+      appearance: none;
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+      display: flex;
+      font-family: inherit;
+      font-size: inherit;
+      gap: 4px;
+      margin: 0;
+      outline: none;
+      padding: 6px 12px;
+    }
+  }
+
+  .tox-accordion .tox-selectfield {
+    align-items: center;
+    background-color: #ffffff;
+    border: 1px solid #e3e3e3;
+    border-radius: @accordion-border-radius;
+    box-sizing: border-box;
+    display: flex;
+    height: 34px;
+    padding: 0 6px;
+    position: relative;
+    width: 100%;
+
+    button {
+      appearance: none;
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+      flex: 1;
+      font-family: inherit;
+      font-size: inherit;
+      line-height: inherit;
+      margin: 0;
+      outline: none;
+      padding: 5px 0;
+      text-align: left;
+    }
+
+    .tox-icon {
+      display: flex;
+      flex-shrink: 0;
+      padding: 9px 0;
+      pointer-events: none;
+
+      svg {
+        height: 16px;
+        width: 16px;
       }
     }
   }
