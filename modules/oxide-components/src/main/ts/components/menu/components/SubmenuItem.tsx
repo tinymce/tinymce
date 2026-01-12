@@ -48,6 +48,7 @@ export const SubmenuItem = forwardRef<HTMLButtonElement, SubmenuProps>(({ autoFo
           role='menuitem'
           aria-haspopup={'true'}
           aria-disabled={!state.enabled}
+          disabled={!state.enabled}
           onFocus={() => setState({ ...state, focused: true })}
           onPointerEnter={() => setState({ ...state, hovered: true })}
           onPointerLeave={() => setState({ ...state, hovered: false })}
