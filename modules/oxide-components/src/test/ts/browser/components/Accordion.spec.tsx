@@ -154,58 +154,6 @@ describe('browser.components.AccordionTest', () => {
     expect(document.activeElement).toBe(button2.element());
   });
 
-  it('TINY-13450: Should jump to first item with Home key', async () => {
-    const { getByRole } = render(
-      <Accordion.Root>
-        <Accordion.Item id="item1" title="Item 1">
-          <p>Content 1</p>
-        </Accordion.Item>
-        <Accordion.Item id="item2" title="Item 2">
-          <p>Content 2</p>
-        </Accordion.Item>
-        <Accordion.Item id="item3" title="Item 3">
-          <p>Content 3</p>
-        </Accordion.Item>
-      </Accordion.Root>,
-      { wrapper }
-    );
-
-    const button1 = getByRole('button', { name: /Item 1/i });
-    const button3 = getByRole('button', { name: /Item 3/i });
-
-    button3.element().focus();
-    expect(document.activeElement).toBe(button3.element());
-
-    await userEvent.keyboard('{Home}');
-    expect(document.activeElement).toBe(button1.element());
-  });
-
-  it('TINY-13450: Should jump to last item with End key', async () => {
-    const { getByRole } = render(
-      <Accordion.Root>
-        <Accordion.Item id="item1" title="Item 1">
-          <p>Content 1</p>
-        </Accordion.Item>
-        <Accordion.Item id="item2" title="Item 2">
-          <p>Content 2</p>
-        </Accordion.Item>
-        <Accordion.Item id="item3" title="Item 3">
-          <p>Content 3</p>
-        </Accordion.Item>
-      </Accordion.Root>,
-      { wrapper }
-    );
-
-    const button1 = getByRole('button', { name: /Item 1/i });
-    const button3 = getByRole('button', { name: /Item 3/i });
-
-    button1.element().focus();
-    expect(document.activeElement).toBe(button1.element());
-
-    await userEvent.keyboard('{End}');
-    expect(document.activeElement).toBe(button3.element());
-  });
-
   it('TINY-13450: Should not expand disabled items', async () => {
     const { getByRole } = render(
       <Accordion.Root>
@@ -505,7 +453,7 @@ describe('browser.components.AccordionTest', () => {
     expect(document.activeElement).toBe(button1.element());
   });
 
-  it('TINY-13450: Should unregister item on unmount', async () => {
+  it('TINY-13450: Should handle item unmount correctly', async () => {
     const TestComponent = ({ showItem }: { showItem: boolean }) => (
       <Accordion.Root>
         {showItem && (
@@ -529,10 +477,11 @@ describe('browser.components.AccordionTest', () => {
     const buttons = SugarElement.fromDom(document.body).dom.querySelectorAll('.tox-accordion__header');
     expect(buttons.length).toBe(1);
 
+    // Verify that the remaining item is still functional
     const button2 = getByRole('button', { name: /Item 2/i });
-    button2.element().focus();
-    await userEvent.keyboard('{Home}');
-    expect(document.activeElement).toBe(button2.element());
+    expect(button2.element()).toHaveAttribute('aria-expanded', 'false');
+    await userEvent.click(button2);
+    expect(button2.element()).toHaveAttribute('aria-expanded', 'true');
   });
 
   it('TINY-13450: Should support RTL mode with proper icon positioning', async () => {

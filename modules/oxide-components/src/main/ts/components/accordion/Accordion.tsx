@@ -1,15 +1,14 @@
-import { Arr, Fun, Type } from '@ephox/katamari';
-import { createContext, useCallback, useContext, useEffect, useId, useMemo, useState, type FC, type PropsWithChildren } from 'react';
+import { Arr, Optional, Type } from '@ephox/katamari';
+import { createContext, useCallback, useContext, useId, useMemo, useRef, useState, type FC, type PropsWithChildren } from 'react';
 
+import * as KeyboardNavigationHooks from '../../keynav/KeyboardNavigationHooks';
+import * as Bem from '../../utils/Bem';
 import { Icon } from '../icon/Icon';
 
 interface AccordionContextValue {
   readonly expandedItems: string[];
   readonly toggleItem: (id: string) => void;
   readonly allowMultiple: boolean;
-  readonly registerItem: (id: string, ref: HTMLButtonElement | null) => void;
-  readonly unregisterItem: (id: string) => void;
-  readonly getItemRefs: () => Map<string, HTMLButtonElement>;
 }
 
 const AccordionContext = createContext<AccordionContextValue | null>(null);
@@ -78,7 +77,7 @@ const Root: FC<AccordionRootProps> = ({
   onExpandedChange
 }) => {
   const [ uncontrolledExpanded, setUncontrolledExpanded ] = useState<string[]>(defaultExpanded);
-  const itemRefsMap = useMemo(() => new Map<string, HTMLButtonElement>(), []);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const isControlled = Type.isNonNullable(controlledExpanded);
   const expandedItems = isControlled ? controlledExpanded : uncontrolledExpanded;
@@ -100,30 +99,27 @@ const Root: FC<AccordionRootProps> = ({
     }
   }, [ expandedItems, allowMultiple, isControlled, onExpandedChange ]);
 
-  const registerItem = useCallback((id: string, ref: HTMLButtonElement | null) => {
-    if (Type.isNonNullable(ref)) {
-      itemRefsMap.set(id, ref);
-    }
-  }, [ itemRefsMap ]);
-
-  const unregisterItem = useCallback((id: string) => {
-    itemRefsMap.delete(id);
-  }, [ itemRefsMap ]);
-
-  const getItemRefs = Fun.constant(itemRefsMap);
-
   const contextValue = useMemo<AccordionContextValue>(() => ({
     expandedItems,
     toggleItem,
-    allowMultiple,
-    registerItem,
-    unregisterItem,
-    getItemRefs
-  }), [ expandedItems, toggleItem, allowMultiple, registerItem, unregisterItem, getItemRefs ]);
+    allowMultiple
+  }), [ expandedItems, toggleItem, allowMultiple ]);
+
+  KeyboardNavigationHooks.useFlowKeyNavigation({
+    containerRef,
+    selector: '.tox-accordion__header:not([aria-disabled="true"])',
+    allowVertical: true,
+    allowHorizontal: false,
+    cycles: false,
+    execute: (focused) => {
+      focused.dom.click();
+      return Optional.some(true);
+    }
+  });
 
   return (
     <AccordionContext.Provider value={contextValue}>
-      <div className="tox-accordion">
+      <div ref={containerRef} className="tox-accordion">
         {children}
       </div>
     </AccordionContext.Provider>
@@ -174,18 +170,12 @@ const Item: FC<AccordionItemProps> = ({
   iconPosition = 'start',
   children
 }) => {
-  const { expandedItems, toggleItem, registerItem, unregisterItem, getItemRefs } = useAccordion();
+  const { expandedItems, toggleItem } = useAccordion();
   const contentId = useId();
   const headerId = useId();
 
   const isExpanded = Arr.contains(expandedItems, id);
   const HeadingTag = headingLevel;
-
-  useEffect(() => {
-    return () => {
-      unregisterItem(id);
-    };
-  }, [ id, unregisterItem ]);
 
   const handleClick = useCallback(() => {
     if (!disabled) {
@@ -193,63 +183,14 @@ const Item: FC<AccordionItemProps> = ({
     }
   }, [ disabled, toggleItem, id ]);
 
-  const handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (disabled) {
-      return;
-    }
-
-    const itemRefs = Array.from(getItemRefs().entries());
-    const currentIndex = Arr.findIndex(itemRefs, ([ itemId ]) => itemId === id);
-
-    if (currentIndex.isNone()) {
-      return;
-    }
-
-    const index = currentIndex.getOrDie();
-
-    switch (event.key) {
-      case 'Enter':
-      case ' ':
-        event.preventDefault();
-        toggleItem(id);
-        break;
-
-      case 'ArrowDown':
-        event.preventDefault();
-        if (index < itemRefs.length - 1) {
-          const nextRef = itemRefs[index + 1][1];
-          nextRef?.focus();
-        }
-        break;
-
-      case 'ArrowUp':
-        event.preventDefault();
-        if (index > 0) {
-          const prevRef = itemRefs[index - 1][1];
-          prevRef?.focus();
-        }
-        break;
-
-      case 'Home':
-        event.preventDefault();
-        if (itemRefs.length > 0) {
-          const firstRef = itemRefs[0][1];
-          firstRef?.focus();
-        }
-        break;
-
-      case 'End':
-        event.preventDefault();
-        if (itemRefs.length > 0) {
-          const lastRef = itemRefs[itemRefs.length - 1][1];
-          lastRef?.focus();
-        }
-        break;
-    }
-  }, [ disabled, toggleItem, id, getItemRefs ]);
-
-  const headerClassName = `tox-accordion__header${isExpanded ? ' tox-accordion__header--expanded' : ''}${disabled ? ' tox-accordion__header--disabled' : ''}${iconPosition === 'end' ? ' tox-accordion__header--icon-end' : ''}`;
-  const contentClassName = `tox-accordion__content${isExpanded ? ' tox-accordion__content--expanded' : ' tox-accordion__content--collapsed'}`;
+  const headerClassName = Bem.element('tox-accordion', 'header', {
+    'expanded': isExpanded,
+    disabled,
+    'icon-end': iconPosition === 'end'
+  });
+  const contentClassName = Bem.element('tox-accordion', 'content', {
+    expanded: isExpanded
+  });
 
   const iconElement = (
     <span className="tox-accordion__header-icon">
@@ -268,14 +209,12 @@ const Item: FC<AccordionItemProps> = ({
       <HeadingTag className="tox-accordion__heading">
         <button
           id={headerId}
-          ref={(ref) => registerItem(id, ref)}
           type="button"
           className={headerClassName}
           aria-expanded={isExpanded}
           aria-controls={contentId}
           aria-disabled={disabled}
           onClick={handleClick}
-          onKeyDown={handleKeyDown}
           disabled={disabled}
         >
           {iconPosition === 'start' ? (
