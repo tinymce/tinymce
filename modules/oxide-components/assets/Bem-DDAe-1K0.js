@@ -1,1 +1,0 @@
-import{i as e}from"./Optional-DSwtTfFR.js";import{f as m,i as p}from"./Strings-DLAoeKw-.js";import{m as f}from"./Obj-CCYZ-IyV.js";const n=(s,o,t)=>{const r=m(f(t,(a,i)=>a?`${o}--${i}`:""),p);return[o,...r].join(s)},y=(s,o)=>e(o)?s:n(" ",s,o),d=(s,o,t)=>{const r=`${s}__${o}`;return e(t)?r:n(" ",r,t)};export{y as b,d as e};
