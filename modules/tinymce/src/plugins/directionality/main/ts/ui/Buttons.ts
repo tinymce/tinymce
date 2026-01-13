@@ -1,5 +1,4 @@
 import { Optional, Strings } from '@ephox/katamari';
-import { PredicateExists, SugarElement, Traverse } from '@ephox/sugar';
 
 import type Editor from 'tinymce/core/api/Editor';
 import type { NodeChangeEvent } from 'tinymce/core/api/EventTypes';

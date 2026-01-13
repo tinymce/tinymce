@@ -47,7 +47,7 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
     TinyAssertions.assertContent(editor, '<p>a</p>');
   });
 
-  it('TBA: Set and select content, click on the Left to right toolbar button and assert direction is left to right', () => {
+  it('TBA: Set and select content with Right to left, click on the Left to right toolbar button and assert direction is left to right', () => {
     const editor = hook.editor();
     editor.setContent('<p dir="rtl">a</p>');
     TinyAssertions.assertContent(editor, '<p dir="rtl">a</p>');
@@ -121,14 +121,14 @@ describe('browser.tinymce.plugins.directionality.DirectionalitySanityTest', () =
   it('TINY-13337: applying the same dir toggles it off', () => {
     const editor = hook.editor();
     editor.setContent(
-    '<ul dir="rtl">' +
-      '<li>ini' +
-        '<ul dir="ltr">' +
-          '<li>foo</li>' +
-          '<li>bar</li>' +
-        '</ul>' +
-      '</li>' +
-    '</ul>');
+      '<ul dir="rtl">' +
+        '<li>ini' +
+          '<ul dir="ltr">' +
+            '<li>foo</li>' +
+            '<li>bar</li>' +
+          '</ul>' +
+        '</li>' +
+      '</ul>');
     TinySelections.setSelection(editor, [ 0, 0, 1, 0 ], 0, [ 0, 0, 1, 0 ], 1); // foo
     TinyUiActions.clickOnToolbar(editor, 'button[data-mce-name="ltr"]');
     TinyAssertions.assertContent(editor,
