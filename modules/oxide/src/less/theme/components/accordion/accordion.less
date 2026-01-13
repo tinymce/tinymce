@@ -111,6 +111,15 @@
     }
   }
 
+  .tox-accordion__item:has(.tox-accordion__content--expanded) .tox-accordion__header {
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+
+  .tox-accordion__content--expanded .tox-accordion__content-inner {
+    padding-top: calc(@accordion-content-padding-y + 1px);
+  }
+
   .tox-accordion__header-icon {
     align-items: center;
     color: var(--tox-private-accordion-icon-color, @accordion-icon-color);
@@ -203,8 +212,8 @@
 
   .tox-accordion .tox-selectfield {
     align-items: center;
-    background-color: #ffffff;
-    border: 1px solid #e3e3e3;
+    background-color: @accordion-background-color;
+    border: 1px solid @accordion-border-color;
     border-radius: @accordion-border-radius;
     box-sizing: border-box;
     display: flex;
