@@ -1,0 +1,6 @@
+project: tinymce
+kind: Improved
+body: Always apply directionality to blocks.
+time: 2026-01-13T13:12:06.721743+10:00
+custom:
+    Issue: TINY-13337
