@@ -289,7 +289,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
           const content = '<div data-some-attribute="title=<br/>">abc</div>';
           const editor = hook.editor();
           editor.setContent(content);
-          TinyAssertions.assertContent(editor, content, { format: 'raw' });
+          TinyAssertions.assertContent(editor, '<div data-some-attribute="title=&lt;br/&gt;">abc</div>', { format: 'raw' });
         });
 
         const initialContent = '<p>initial</p>';
@@ -607,6 +607,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         ...options
       }, []);
 
+      // NOTE: This test fails with dompurify 3.2.6 and SAFE_FOR_XML: false
       it('TINY-10305: setContent html should sanitize content that can cause mXSS via ZWNBSP trimming', () => {
         const editor = hook.editor();
         editor.setContent('<p>test</p><!--\ufeff><iframe onload=alert(document.domain)>-></body>-->');
@@ -829,6 +830,49 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         ].join('');
 
         TinyAssertions.assertContent(editor, expected);
+      });
+    });
+
+    context('allow_html_in_comments', () => {
+      context('allow_html_in_comments: true', () => {
+        const hook = TinyHooks.bddSetupLight<Editor>({
+          base_url: '/project/tinymce/js/tinymce',
+          allow_html_in_comments: true
+        }, []);
+
+        it('TINY-12220: Should retain HTML like data in comments', () => {
+          const editor = hook.editor();
+
+          editor.setContent('<p><!-- <b>foo</b> -->foo</p>');
+          TinyAssertions.assertContent(editor, '<p><!-- <b>foo</b> -->foo</p>');
+        });
+      });
+
+      context('allow_html_in_comments: false', () => {
+        const hook = TinyHooks.bddSetupLight<Editor>({
+          base_url: '/project/tinymce/js/tinymce',
+          allow_html_in_comments: false
+        }, []);
+
+        it('TINY-12220: Should NOT retain HTML like data in comments', () => {
+          const editor = hook.editor();
+
+          editor.setContent('<p><!-- <b>foo</b> -->foo</p>');
+          TinyAssertions.assertContent(editor, '<p>foo</p>');
+        });
+      });
+
+      context('allow_html_in_comments default', () => {
+        const hook = TinyHooks.bddSetupLight<Editor>({
+          base_url: '/project/tinymce/js/tinymce'
+        }, []);
+
+        it('TINY-12220: Should retain HTML like data in comments', () => {
+          const editor = hook.editor();
+
+          editor.setContent('<p><!-- <b>foo</b> -->foo</p>');
+          TinyAssertions.assertContent(editor, '<p><!-- <b>foo</b> -->foo</p>');
+        });
       });
     });
   });

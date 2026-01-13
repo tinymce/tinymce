@@ -7,6 +7,7 @@ import Schema from '../api/html/Schema';
 import Tools from '../api/util/Tools';
 import * as URI from '../api/util/URI';
 import * as NodeType from '../dom/NodeType';
+import * as KeepHtmlComments from './KeepHtmlComments';
 import * as Namespace from './Namespace';
 
 export type MimeType = 'text/html' | 'application/xhtml+xml';
@@ -25,9 +26,15 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
   const validate = settings.validate;
   const specialElements = schema.getSpecialElements();
 
-  // Pad conditional comments if they aren't allowed
-  if (node.nodeType === NodeTypes.COMMENT && !settings.allow_conditional_comments && /^\[if/i.test(node.nodeValue ?? '')) {
-    node.nodeValue = ' ' + node.nodeValue;
+  if (node.nodeType === NodeTypes.COMMENT) {
+    // Pad conditional comments if they aren't allowed
+    if (!settings.allow_conditional_comments && /^\[if/i.test(node.nodeValue ?? '')) {
+      node.nodeValue = ' ' + node.nodeValue;
+    }
+
+    if (settings.sanitize && settings.allow_html_in_comments && Type.isString(node.nodeValue)) {
+      node.nodeValue = KeepHtmlComments.encodeData(node.nodeValue);
+    }
   }
 
   const lcTagName = evt?.tagName ?? node.nodeName.toLowerCase();
@@ -179,7 +186,7 @@ const setupPurify = (settings: DomParserSettings, schema: Schema, namespaceTrack
 
 const getPurifyConfig = (settings: DomParserSettings, mimeType: MimeType): Config => {
   // Current dompurify types only cover up to 3.0.5 which does not include this new setting
-  const basePurifyConfig: Config & { SAFE_FOR_XML: boolean } = {
+  const basePurifyConfig: Config = {
     IN_PLACE: true,
     ALLOW_UNKNOWN_PROTOCOLS: true,
     // Deliberately ban all tags and attributes by default, and then un-ban them on demand in hooks
@@ -187,8 +194,6 @@ const getPurifyConfig = (settings: DomParserSettings, mimeType: MimeType): Confi
     // body is also allowed due to the DOMPurify checking the root node before sanitizing
     ALLOWED_TAGS: [ '#comment', '#cdata-section', 'body' ],
     ALLOWED_ATTR: [],
-    // TINY-11332: New settings for dompurify 3.1.7
-    SAFE_FOR_XML: false
   };
   const config = { ...basePurifyConfig };
 
