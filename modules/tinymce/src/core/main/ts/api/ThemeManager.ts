@@ -20,6 +20,7 @@ export interface Theme {
   getNotificationManagerImpl?: () => NotificationManagerImpl;
   getWindowManagerImpl?: () => WindowManagerImpl;
   getPromotionElement?: () => HTMLElement | null;
+  getSinkElement?: (type: 'dialog' | 'popup') => HTMLElement;
 }
 
 type ThemeManager = AddOnManager<void | Theme>;

@@ -1,5 +1,7 @@
 import { Fun } from '@ephox/katamari';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { UniverseProvider } from 'oxide-components/contexts/UniverseContext/UniverseProvider';
+import { fn } from 'storybook/test';
 
 import { IconButton } from '../iconbutton/IconButton';
 
@@ -14,21 +16,28 @@ const meta = {
     layout: 'centered',
     docs: {
       description: {
-        component: `A draggable floating sidebar component that uses the Popover API and can be positioned anywhere on the screen.
+        component: `A draggable floating sidebar component, can be positioned anywhere on the screen.
 
 ## How it works
 
-The FloatingSidebar is built on top of the Draggable component and uses the browser's Popover API for overlay management.
+The FloatingSidebar is built on top of the Draggable component.
 It consists of two parts:
 
-- **\`FloatingSidebar.Root\`** - The container that manages the sidebar's position, visibility, and popover behavior.
+- **\`FloatingSidebar.Root\`** - The container that manages the sidebar's position and visibility.
 - **\`FloatingSidebar.Header\`** - A required header element that acts as the drag handle for moving the sidebar.
 
 The sidebar can be opened or closed programmatically using the \`isOpen\` prop.
-When dragged, the sidebar remains within viewport bounds and maintains its position across window resizes.`
+When dragged, the sidebar can be moved freely and may partially extend beyond the viewport edge while maintaining its position across window resizes.`
       }
     }
   },
+  decorators: [
+    (Story) => (
+      <UniverseProvider resources={mockUniverse}>
+        <Story />
+      </UniverseProvider>
+    )
+  ],
   argTypes: {
     isOpen: {
       description: 'Controls the visibility of the floating sidebar. When `true`, the sidebar is shown; when `false`, it is hidden.',
@@ -38,29 +47,32 @@ When dragged, the sidebar remains within viewport bounds and maintains its posit
         defaultValue: { summary: 'true' }
       }
     },
-    height: {
-      description: 'The requested height of the sidebar in pixels. The actual height may be constrained by viewport size.',
-      control: 'number',
-      table: {
-        type: { summary: 'number' },
-        defaultValue: { summary: '600' }
-      }
+    origin: {
+      description: `Determines which CSS coordinate system is used to position the sidebar. 
+For example, \`top-left\` uses the \`top\` and \`left\` CSS properties, while \`bottom-right\` uses \`bottom\` and \`right\`.
+The \`x\` and \`y\` values in \`initialPosition\` correspond to these CSS properties.`,
+      control: {
+        type: 'radio'
+      },
+      options: [ 'top-left', 'top-right', 'bottom-left', 'bottom-right' ],
     },
     initialPosition: {
-      description: `The initial position of the sidebar with x and y coordinates, and an origin point.
-The origin determines which corner of the sidebar is anchored to the coordinates:
-- \`topleft\`: x and y represent the top-left corner
-- \`topright\`: x and y represent the top-right corner
-- \`bottomleft\`: x and y represent the bottom-left corner
-- \`bottomright\`: x and y represent the bottom-right corner`,
-      table: {
-        type: { summary: '{ x: number, y: number, origin: "topleft" | "topright" | "bottomleft" | "bottomright" }' },
-        defaultValue: { summary: '{ x: 0, y: 0, origin: "topleft" }' }
-      }
-    }
+      description: `Sets the initial position of the sidebar as an object with \`x\` and \`y\` coordinates.
+These values can be specified in any CSS length unit (pixels, percentages, etc.).
+The \`x\` and \`y\` values map to the CSS positioning properties determined
+by the \`origin\` prop (e.g., with \`origin="top-left"\`, \`x\` maps to \`left\` and \`y\` maps to \`top\`)`,
+    },
+    onDragStart: {
+      description: 'Optional callback function that is called when dragging begins.'
+    },
+    onDragEnd: {
+      description: 'Optional callback function that is called when dragging ends.'
+    },
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: [ 'autodocs' ],
+  // Use `fn` to spy on the callback args, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
+  args: { onDragStart: fn(), onDragEnd: fn() },
 } satisfies Meta<typeof FloatingSidebar.Root>;
 
 export default meta;
@@ -69,7 +81,8 @@ type Story = StoryObj<typeof meta>;
 export const Example: Story = {
   args: {
     isOpen: true,
-    initialPosition: { x: 30, y: 30, origin: 'topleft' }
+    initialPosition: { x: '30px', y: '30px' },
+    origin: 'top-right'
   },
   parameters: {
     docs: {
@@ -98,18 +111,23 @@ const resolvedIcon = `<svg width="24" height="24">
   </svg>
 `;
 
+const mockUniverse = {
+  getIcon: Fun.constant(resolvedIcon),
+};
+
 export const ButtonInHeader: Story = {
   name: 'Button in header',
   args: {
     isOpen: true,
-    initialPosition: { x: 30, y: 30, origin: 'topleft' }
+    initialPosition: { x: '30px', y: '30px' },
+    origin: 'top-right'
   },
   render: (args: FloatingSidebarProps): JSX.Element => (
     <FloatingSidebar.Root {...args}>
       <FloatingSidebar.Header>
         <div className='tox-sidebar-content__title'>Floating Header</div>
         <div className='tox-sidebar-content__header-close-button'>
-          <IconButton variant='naked' icon="close" resolver={Fun.constant(resolvedIcon)} onClick={() => window.alert('Close the sidebar!')} />
+          <IconButton variant='naked' icon="close" onClick={() => window.alert('Close the sidebar!')} />
         </div>
       </FloatingSidebar.Header>
       <div style={{ padding: '12px' }}>
@@ -118,42 +136,5 @@ export const ButtonInHeader: Story = {
         laborum velit soluta ipsam blanditiis ipsa itaque aut architecto incidunt qui voluptatum ea?
       </div>
     </FloatingSidebar.Root>
-  )
-};
-
-interface InitialPositionStoryArgs {
-  origin: 'topleft' | 'topright' | 'bottomleft' | 'bottomright';
-}
-
-export const InitialPosition: StoryObj<InitialPositionStoryArgs & FloatingSidebarProps> = {
-  name: 'Initial position',
-  args: {
-    origin: 'bottomright',
-    height: 250,
-  },
-  argTypes: {
-    origin: {
-      control: 'radio',
-      options: [ 'topleft', 'topright', 'bottomleft', 'bottomright' ],
-      description: 'The origin point that determines which corner of the sidebar is anchored to the coordinates'
-    },
-    isOpen: { table: { disable: true }},
-    initialPosition: { table: { disable: true }}
-  },
-  render: (args): JSX.Element => (
-    <>
-      <div style={{ position: 'absolute', top: 300, left: 400, height: '15px', width: '15px', backgroundColor: 'red' }}></div>
-      <FloatingSidebar.Root
-        key={args.origin}
-        isOpen={true}
-        height={args.height}
-        initialPosition={{ x: 400, y: 300, origin: args.origin }}
-      >
-        <FloatingSidebar.Header>
-          <div className='tox-sidebar-content__title'>Floating Header</div>
-        </FloatingSidebar.Header>
-        <div style={{ padding: '12px' }}>Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
-      </FloatingSidebar.Root>
-    </>
   )
 };

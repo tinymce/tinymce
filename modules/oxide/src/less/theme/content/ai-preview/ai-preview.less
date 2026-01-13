@@ -1,0 +1,57 @@
+//
+// TinyMCEAI
+//
+
+@tinymceai-added-background-color: @added-background-color;
+@tinymceai-modified-background-color: @modified-background-color;
+@tinymceai-removed-background-color: @removed-background-color;
+
+@tinymceai-selected-outline-color: @selected-outline-color;
+@tinymceai-selected-box-shadow: 0 -2px 0 0 @tinymceai-selected-outline-color inset, 0 -2px 0 0 @tinymceai-selected-outline-color;
+
+@tinymceai-dim-overlay-color: #222f3e80;
+
+.diff-content(
+  tinymceai,
+  @tinymceai-added-background-color,
+  @tinymceai-modified-background-color,
+  @tinymceai-removed-background-color,
+  @tinymceai-selected-outline-color,
+  @tinymceai-selected-box-shadow
+);
+
+div[tinymceai-data-pending-diff="true"], span[tinymceai-data-pending-diff="true"] {
+  position: relative;
+  z-index: 1;
+  background: @color-white;
+}
+
+.tox-tinymceai__dim-overlay {
+  position: fixed;
+  inset: 0;
+  background: @tinymceai-dim-overlay-color;
+  pointer-events: none;
+}
+
+.tox-tinymceai__preview-body {
+  position: relative;
+  min-height: 100%;
+
+  &.tox-tinymceai__preview-body--with-suggestion {
+    padding-bottom: 56px;
+  }
+}
+
+.tox-tinymceai__bottom-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px @pad-md;
+  background: @color-white;
+  z-index: 2;
+  border-top: 1px solid hsl(from var(--tox-color-white, @color-white) h s calc(l - 11));
+}

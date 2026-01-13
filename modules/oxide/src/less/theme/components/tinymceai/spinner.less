@@ -1,0 +1,29 @@
+.tox .tox-ai__spinner {
+  width: 24px;
+  height: 24px;
+
+  &--circle {
+    svg {
+      animation: tox-rotation 1s linear infinite;
+      fill: var(--tox-private-color-tint, @color-tint);
+    }
+  }
+
+  &--dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+
+    > div {
+      animation: tox-bouncing-dots 1.5s ease-in-out 0s infinite both;
+      width: 6px;
+      height: 6px;
+      background-color: var(--tox-private-color-tint, @color-tint);
+      border-radius: 100%;
+
+      &:nth-child(1) { animation-delay: -.32s; }
+      &:nth-child(2) { animation-delay: -.16s; }
+    }
+  }
+}
