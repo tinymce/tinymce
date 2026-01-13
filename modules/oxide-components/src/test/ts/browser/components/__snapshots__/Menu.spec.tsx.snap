@@ -1,0 +1,922 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`browser.MenuTest > Should be able to open submenus > 1. Before open submenu 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-menu tox-collection tox-collection--list"
+      role="menu"
+    >
+      <div
+        class="tox-collection__group"
+      >
+        <button
+          aria-disabled="false"
+          aria-haspopup="false"
+          class="tox-collection__item tox-collection__item--active"
+          id=":r0:"
+          role="menuitem"
+          tabindex="-1"
+        >
+          <div
+            class="tox-collection__item-label"
+          >
+            Menu item 1
+          </div>
+        </button>
+        <button
+          aria-disabled="false"
+          aria-haspopup="false"
+          aria-selected="false"
+          class="tox-collection__item"
+          id=":r1:"
+          role="menuitemcheckbox"
+          tabindex="-1"
+        >
+          <div
+            class="tox-collection__item-label"
+          >
+            Menu item 2
+          </div>
+          <div
+            class="tox-collection__item-checkmark"
+          >
+            <span
+              class="tox-icon"
+            >
+              <!--?xml version="1.0" encoding="UTF-8"?-->
+              
+
+              <svg
+                height="24px"
+                version="1.1"
+                viewBox="0 0 24 24"
+                width="24px"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                
+    
+                <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+                
+    
+                <title>
+                  icon-checkmark
+                </title>
+                
+    
+                <desc>
+                  Created with Sketch.
+                </desc>
+                
+    
+                <defs />
+                
+    
+                <g
+                  fill="none"
+                  fill-rule="evenodd"
+                  stroke="none"
+                  stroke-width="1"
+                >
+                  
+        
+                  <path
+                    d="M18.1679497,5.4452998 C18.4743022,4.98577112 19.0951715,4.86159725 19.5547002,5.16794971 C20.0142289,5.47430216 20.1384028,6.09517151 19.8320503,6.5547002 L11.8320503,18.5547002 C11.4831227,19.0780915 10.7433669,19.1531818 10.2963845,18.7105809 L5.29919894,13.7623796 C4.90675595,13.3737835 4.90363744,12.7406262 5.29223356,12.3481832 C5.68082968,11.9557402 6.31398698,11.9526217 6.70642997,12.3412178 L10.8411868,16.4354442 L18.1679497,5.4452998 Z"
+                    fill="#000000"
+                    fill-rule="nonzero"
+                  />
+                  
+    
+                </g>
+                
+
+              </svg>
+            </span>
+          </div>
+        </button>
+        <button
+          aria-disabled="false"
+          aria-haspopup="true"
+          class="tox-collection__item"
+          id=":r2:"
+          role="menuitem"
+          style="box-sizing: border-box; width: 100%;"
+          tabindex="-1"
+        >
+          <div
+            class="tox-collection__item-icon"
+          >
+            <span
+              class="tox-icon"
+            />
+          </div>
+          <div
+            class="tox-collection__item-label"
+          >
+            Submenu
+          </div>
+          <div
+            class="tox-collection__item-caret"
+          >
+            <span
+              class="tox-icon"
+            >
+              <!--?xml version="1.0" encoding="UTF-8"?-->
+              
+
+              <svg
+                height="10px"
+                version="1.1"
+                viewBox="0 0 10 10"
+                width="10px"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                
+    
+                <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+                
+    
+                <title>
+                  icon-chevron-right
+                </title>
+                
+    
+                <desc>
+                  Created with Sketch.
+                </desc>
+                
+    
+                <defs />
+                
+    
+                <g
+                  fill="none"
+                  fill-rule="evenodd"
+                  stroke="none"
+                  stroke-width="1"
+                >
+                  
+        
+                  <path
+                    d="M2.21845958,1.3349556 C1.91680892,1.0226681 1.92570969,0.536022971 2.23859257,0.234195098 C2.55147544,-0.0676327747 3.05594483,-0.0762190601 3.37967043,0.214773464 L7.76159819,4.44187585 C8.08197558,4.75131828 8.08197558,5.25261554 7.76159819,5.56205798 L3.37967043,9.78916036 C3.05594483,10.0801529 2.55147544,10.0715666 2.23859257,9.76973873 C1.92570969,9.46791085 1.91680892,8.98126573 2.21845958,8.66897823 L6.01978191,5.00196691 L2.21845958,1.3349556 Z"
+                    fill="#000000"
+                    fill-rule="nonzero"
+                  />
+                  
+    
+                </g>
+                
+
+              </svg>
+            </span>
+          </div>
+        </button>
+        <div
+          class="tox-dropdown-content"
+          popover="auto"
+          style="opacity: 0;"
+        />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.MenuTest > Should be able to open submenus > 2. After opening submenu 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-menu tox-collection tox-collection--list"
+      role="menu"
+    >
+      <div
+        class="tox-collection__group"
+      >
+        <button
+          aria-disabled="false"
+          aria-haspopup="false"
+          class="tox-collection__item"
+          id=":r0:"
+          role="menuitem"
+          tabindex="-1"
+        >
+          <div
+            class="tox-collection__item-label"
+          >
+            Menu item 1
+          </div>
+        </button>
+        <button
+          aria-disabled="false"
+          aria-haspopup="false"
+          aria-selected="false"
+          class="tox-collection__item"
+          id=":r1:"
+          role="menuitemcheckbox"
+          tabindex="-1"
+        >
+          <div
+            class="tox-collection__item-label"
+          >
+            Menu item 2
+          </div>
+          <div
+            class="tox-collection__item-checkmark"
+          >
+            <span
+              class="tox-icon"
+            >
+              <!--?xml version="1.0" encoding="UTF-8"?-->
+              
+
+              <svg
+                height="24px"
+                version="1.1"
+                viewBox="0 0 24 24"
+                width="24px"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                
+    
+                <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+                
+    
+                <title>
+                  icon-checkmark
+                </title>
+                
+    
+                <desc>
+                  Created with Sketch.
+                </desc>
+                
+    
+                <defs />
+                
+    
+                <g
+                  fill="none"
+                  fill-rule="evenodd"
+                  stroke="none"
+                  stroke-width="1"
+                >
+                  
+        
+                  <path
+                    d="M18.1679497,5.4452998 C18.4743022,4.98577112 19.0951715,4.86159725 19.5547002,5.16794971 C20.0142289,5.47430216 20.1384028,6.09517151 19.8320503,6.5547002 L11.8320503,18.5547002 C11.4831227,19.0780915 10.7433669,19.1531818 10.2963845,18.7105809 L5.29919894,13.7623796 C4.90675595,13.3737835 4.90363744,12.7406262 5.29223356,12.3481832 C5.68082968,11.9557402 6.31398698,11.9526217 6.70642997,12.3412178 L10.8411868,16.4354442 L18.1679497,5.4452998 Z"
+                    fill="#000000"
+                    fill-rule="nonzero"
+                  />
+                  
+    
+                </g>
+                
+
+              </svg>
+            </span>
+          </div>
+        </button>
+        <button
+          aria-disabled="false"
+          aria-haspopup="true"
+          class="tox-collection__item tox-collection__item--active"
+          id=":r2:"
+          role="menuitem"
+          style="box-sizing: border-box; width: 100%;"
+          tabindex="-1"
+        >
+          <div
+            class="tox-collection__item-icon"
+          >
+            <span
+              class="tox-icon"
+            />
+          </div>
+          <div
+            class="tox-collection__item-label"
+          >
+            Submenu
+          </div>
+          <div
+            class="tox-collection__item-caret"
+          >
+            <span
+              class="tox-icon"
+            >
+              <!--?xml version="1.0" encoding="UTF-8"?-->
+              
+
+              <svg
+                height="10px"
+                version="1.1"
+                viewBox="0 0 10 10"
+                width="10px"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                
+    
+                <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+                
+    
+                <title>
+                  icon-chevron-right
+                </title>
+                
+    
+                <desc>
+                  Created with Sketch.
+                </desc>
+                
+    
+                <defs />
+                
+    
+                <g
+                  fill="none"
+                  fill-rule="evenodd"
+                  stroke="none"
+                  stroke-width="1"
+                >
+                  
+        
+                  <path
+                    d="M2.21845958,1.3349556 C1.91680892,1.0226681 1.92570969,0.536022971 2.23859257,0.234195098 C2.55147544,-0.0676327747 3.05594483,-0.0762190601 3.37967043,0.214773464 L7.76159819,4.44187585 C8.08197558,4.75131828 8.08197558,5.25261554 7.76159819,5.56205798 L3.37967043,9.78916036 C3.05594483,10.0801529 2.55147544,10.0715666 2.23859257,9.76973873 C1.92570969,9.46791085 1.91680892,8.98126573 2.21845958,8.66897823 L6.01978191,5.00196691 L2.21845958,1.3349556 Z"
+                    fill="#000000"
+                    fill-rule="nonzero"
+                  />
+                  
+    
+                </g>
+                
+
+              </svg>
+            </span>
+          </div>
+        </button>
+        <div
+          class="tox-dropdown-content"
+          popover="auto"
+          style="opacity: 1;"
+        >
+          <div
+            class="tox-menu tox-collection tox-collection--list"
+            role="menu"
+          >
+            <div
+              class="tox-collection__group"
+            >
+              <button
+                aria-disabled="false"
+                aria-haspopup="false"
+                class="tox-collection__item tox-collection__item--active"
+                id=":r3:"
+                role="menuitem"
+                tabindex="-1"
+              >
+                <div
+                  class="tox-collection__item-label"
+                >
+                  Nested menu item 1
+                </div>
+              </button>
+              <button
+                aria-disabled="true"
+                aria-haspopup="false"
+                aria-selected="false"
+                class="tox-collection__item tox-collection__item--state-disabled"
+                disabled=""
+                id=":r4:"
+                role="menuitemcheckbox"
+                tabindex="-1"
+              >
+                <div
+                  class="tox-collection__item-label"
+                >
+                  Nested menu item 2
+                </div>
+                <div
+                  class="tox-collection__item-checkmark"
+                >
+                  <span
+                    class="tox-icon"
+                  >
+                    <!--?xml version="1.0" encoding="UTF-8"?-->
+                    
+
+                    <svg
+                      height="24px"
+                      version="1.1"
+                      viewBox="0 0 24 24"
+                      width="24px"
+                      xmlns="http://www.w3.org/2000/svg"
+                      xmlns:xlink="http://www.w3.org/1999/xlink"
+                    >
+                      
+    
+                      <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+                      
+    
+                      <title>
+                        icon-checkmark
+                      </title>
+                      
+    
+                      <desc>
+                        Created with Sketch.
+                      </desc>
+                      
+    
+                      <defs />
+                      
+    
+                      <g
+                        fill="none"
+                        fill-rule="evenodd"
+                        stroke="none"
+                        stroke-width="1"
+                      >
+                        
+        
+                        <path
+                          d="M18.1679497,5.4452998 C18.4743022,4.98577112 19.0951715,4.86159725 19.5547002,5.16794971 C20.0142289,5.47430216 20.1384028,6.09517151 19.8320503,6.5547002 L11.8320503,18.5547002 C11.4831227,19.0780915 10.7433669,19.1531818 10.2963845,18.7105809 L5.29919894,13.7623796 C4.90675595,13.3737835 4.90363744,12.7406262 5.29223356,12.3481832 C5.68082968,11.9557402 6.31398698,11.9526217 6.70642997,12.3412178 L10.8411868,16.4354442 L18.1679497,5.4452998 Z"
+                          fill="#000000"
+                          fill-rule="nonzero"
+                        />
+                        
+    
+                      </g>
+                      
+
+                    </svg>
+                  </span>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.MenuTest > Should be able to render using MenuRenderer > 1. Before open submenu 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-menu tox-collection tox-collection--list"
+      role="menu"
+    >
+      <div
+        class="tox-collection__group"
+      >
+        <button
+          aria-disabled="false"
+          aria-haspopup="false"
+          class="tox-collection__item tox-collection__item--active"
+          id=":r5:"
+          role="menuitem"
+          tabindex="-1"
+        >
+          <div
+            class="tox-collection__item-label"
+          >
+            Menu item 1
+          </div>
+        </button>
+        <button
+          aria-disabled="false"
+          aria-haspopup="false"
+          aria-selected="false"
+          class="tox-collection__item"
+          id=":r6:"
+          role="menuitemcheckbox"
+          tabindex="-1"
+        >
+          <div
+            class="tox-collection__item-label"
+          >
+            Menu item 2
+          </div>
+          <div
+            class="tox-collection__item-checkmark"
+          >
+            <span
+              class="tox-icon"
+            >
+              <!--?xml version="1.0" encoding="UTF-8"?-->
+              
+
+              <svg
+                height="24px"
+                version="1.1"
+                viewBox="0 0 24 24"
+                width="24px"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                
+    
+                <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+                
+    
+                <title>
+                  icon-checkmark
+                </title>
+                
+    
+                <desc>
+                  Created with Sketch.
+                </desc>
+                
+    
+                <defs />
+                
+    
+                <g
+                  fill="none"
+                  fill-rule="evenodd"
+                  stroke="none"
+                  stroke-width="1"
+                >
+                  
+        
+                  <path
+                    d="M18.1679497,5.4452998 C18.4743022,4.98577112 19.0951715,4.86159725 19.5547002,5.16794971 C20.0142289,5.47430216 20.1384028,6.09517151 19.8320503,6.5547002 L11.8320503,18.5547002 C11.4831227,19.0780915 10.7433669,19.1531818 10.2963845,18.7105809 L5.29919894,13.7623796 C4.90675595,13.3737835 4.90363744,12.7406262 5.29223356,12.3481832 C5.68082968,11.9557402 6.31398698,11.9526217 6.70642997,12.3412178 L10.8411868,16.4354442 L18.1679497,5.4452998 Z"
+                    fill="#000000"
+                    fill-rule="nonzero"
+                  />
+                  
+    
+                </g>
+                
+
+              </svg>
+            </span>
+          </div>
+        </button>
+        <button
+          aria-disabled="false"
+          aria-haspopup="true"
+          class="tox-collection__item"
+          id=":r7:"
+          role="menuitem"
+          style="box-sizing: border-box; width: 100%;"
+          tabindex="-1"
+        >
+          <div
+            class="tox-collection__item-label"
+          >
+            Submenu
+          </div>
+          <div
+            class="tox-collection__item-caret"
+          >
+            <span
+              class="tox-icon"
+            >
+              <!--?xml version="1.0" encoding="UTF-8"?-->
+              
+
+              <svg
+                height="10px"
+                version="1.1"
+                viewBox="0 0 10 10"
+                width="10px"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                
+    
+                <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+                
+    
+                <title>
+                  icon-chevron-right
+                </title>
+                
+    
+                <desc>
+                  Created with Sketch.
+                </desc>
+                
+    
+                <defs />
+                
+    
+                <g
+                  fill="none"
+                  fill-rule="evenodd"
+                  stroke="none"
+                  stroke-width="1"
+                >
+                  
+        
+                  <path
+                    d="M2.21845958,1.3349556 C1.91680892,1.0226681 1.92570969,0.536022971 2.23859257,0.234195098 C2.55147544,-0.0676327747 3.05594483,-0.0762190601 3.37967043,0.214773464 L7.76159819,4.44187585 C8.08197558,4.75131828 8.08197558,5.25261554 7.76159819,5.56205798 L3.37967043,9.78916036 C3.05594483,10.0801529 2.55147544,10.0715666 2.23859257,9.76973873 C1.92570969,9.46791085 1.91680892,8.98126573 2.21845958,8.66897823 L6.01978191,5.00196691 L2.21845958,1.3349556 Z"
+                    fill="#000000"
+                    fill-rule="nonzero"
+                  />
+                  
+    
+                </g>
+                
+
+              </svg>
+            </span>
+          </div>
+        </button>
+        <div
+          class="tox-dropdown-content"
+          popover="auto"
+          style="opacity: 0;"
+        />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.MenuTest > Should be able to render using MenuRenderer > 2. After opening submenu 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      class="tox-menu tox-collection tox-collection--list"
+      role="menu"
+    >
+      <div
+        class="tox-collection__group"
+      >
+        <button
+          aria-disabled="false"
+          aria-haspopup="false"
+          class="tox-collection__item"
+          id=":r5:"
+          role="menuitem"
+          tabindex="-1"
+        >
+          <div
+            class="tox-collection__item-label"
+          >
+            Menu item 1
+          </div>
+        </button>
+        <button
+          aria-disabled="false"
+          aria-haspopup="false"
+          aria-selected="false"
+          class="tox-collection__item"
+          id=":r6:"
+          role="menuitemcheckbox"
+          tabindex="-1"
+        >
+          <div
+            class="tox-collection__item-label"
+          >
+            Menu item 2
+          </div>
+          <div
+            class="tox-collection__item-checkmark"
+          >
+            <span
+              class="tox-icon"
+            >
+              <!--?xml version="1.0" encoding="UTF-8"?-->
+              
+
+              <svg
+                height="24px"
+                version="1.1"
+                viewBox="0 0 24 24"
+                width="24px"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                
+    
+                <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+                
+    
+                <title>
+                  icon-checkmark
+                </title>
+                
+    
+                <desc>
+                  Created with Sketch.
+                </desc>
+                
+    
+                <defs />
+                
+    
+                <g
+                  fill="none"
+                  fill-rule="evenodd"
+                  stroke="none"
+                  stroke-width="1"
+                >
+                  
+        
+                  <path
+                    d="M18.1679497,5.4452998 C18.4743022,4.98577112 19.0951715,4.86159725 19.5547002,5.16794971 C20.0142289,5.47430216 20.1384028,6.09517151 19.8320503,6.5547002 L11.8320503,18.5547002 C11.4831227,19.0780915 10.7433669,19.1531818 10.2963845,18.7105809 L5.29919894,13.7623796 C4.90675595,13.3737835 4.90363744,12.7406262 5.29223356,12.3481832 C5.68082968,11.9557402 6.31398698,11.9526217 6.70642997,12.3412178 L10.8411868,16.4354442 L18.1679497,5.4452998 Z"
+                    fill="#000000"
+                    fill-rule="nonzero"
+                  />
+                  
+    
+                </g>
+                
+
+              </svg>
+            </span>
+          </div>
+        </button>
+        <button
+          aria-disabled="false"
+          aria-haspopup="true"
+          class="tox-collection__item tox-collection__item--active"
+          id=":r7:"
+          role="menuitem"
+          style="box-sizing: border-box; width: 100%;"
+          tabindex="-1"
+        >
+          <div
+            class="tox-collection__item-label"
+          >
+            Submenu
+          </div>
+          <div
+            class="tox-collection__item-caret"
+          >
+            <span
+              class="tox-icon"
+            >
+              <!--?xml version="1.0" encoding="UTF-8"?-->
+              
+
+              <svg
+                height="10px"
+                version="1.1"
+                viewBox="0 0 10 10"
+                width="10px"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                
+    
+                <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+                
+    
+                <title>
+                  icon-chevron-right
+                </title>
+                
+    
+                <desc>
+                  Created with Sketch.
+                </desc>
+                
+    
+                <defs />
+                
+    
+                <g
+                  fill="none"
+                  fill-rule="evenodd"
+                  stroke="none"
+                  stroke-width="1"
+                >
+                  
+        
+                  <path
+                    d="M2.21845958,1.3349556 C1.91680892,1.0226681 1.92570969,0.536022971 2.23859257,0.234195098 C2.55147544,-0.0676327747 3.05594483,-0.0762190601 3.37967043,0.214773464 L7.76159819,4.44187585 C8.08197558,4.75131828 8.08197558,5.25261554 7.76159819,5.56205798 L3.37967043,9.78916036 C3.05594483,10.0801529 2.55147544,10.0715666 2.23859257,9.76973873 C1.92570969,9.46791085 1.91680892,8.98126573 2.21845958,8.66897823 L6.01978191,5.00196691 L2.21845958,1.3349556 Z"
+                    fill="#000000"
+                    fill-rule="nonzero"
+                  />
+                  
+    
+                </g>
+                
+
+              </svg>
+            </span>
+          </div>
+        </button>
+        <div
+          class="tox-dropdown-content"
+          popover="auto"
+          style="opacity: 1;"
+        >
+          <div
+            class="tox-menu tox-collection tox-collection--list"
+            role="menu"
+          >
+            <div
+              class="tox-collection__group"
+            >
+              <button
+                aria-disabled="false"
+                aria-haspopup="false"
+                class="tox-collection__item tox-collection__item--active"
+                id=":r8:"
+                role="menuitem"
+                tabindex="-1"
+              >
+                <div
+                  class="tox-collection__item-label"
+                >
+                  Nested menu item 1
+                </div>
+              </button>
+              <button
+                aria-disabled="false"
+                aria-haspopup="false"
+                aria-selected="false"
+                class="tox-collection__item"
+                id=":r9:"
+                role="menuitemcheckbox"
+                tabindex="-1"
+              >
+                <div
+                  class="tox-collection__item-label"
+                >
+                  Nested menu item 2
+                </div>
+                <div
+                  class="tox-collection__item-checkmark"
+                >
+                  <span
+                    class="tox-icon"
+                  >
+                    <!--?xml version="1.0" encoding="UTF-8"?-->
+                    
+
+                    <svg
+                      height="24px"
+                      version="1.1"
+                      viewBox="0 0 24 24"
+                      width="24px"
+                      xmlns="http://www.w3.org/2000/svg"
+                      xmlns:xlink="http://www.w3.org/1999/xlink"
+                    >
+                      
+    
+                      <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+                      
+    
+                      <title>
+                        icon-checkmark
+                      </title>
+                      
+    
+                      <desc>
+                        Created with Sketch.
+                      </desc>
+                      
+    
+                      <defs />
+                      
+    
+                      <g
+                        fill="none"
+                        fill-rule="evenodd"
+                        stroke="none"
+                        stroke-width="1"
+                      >
+                        
+        
+                        <path
+                          d="M18.1679497,5.4452998 C18.4743022,4.98577112 19.0951715,4.86159725 19.5547002,5.16794971 C20.0142289,5.47430216 20.1384028,6.09517151 19.8320503,6.5547002 L11.8320503,18.5547002 C11.4831227,19.0780915 10.7433669,19.1531818 10.2963845,18.7105809 L5.29919894,13.7623796 C4.90675595,13.3737835 4.90363744,12.7406262 5.29223356,12.3481832 C5.68082968,11.9557402 6.31398698,11.9526217 6.70642997,12.3412178 L10.8411868,16.4354442 L18.1679497,5.4452998 Z"
+                          fill="#000000"
+                          fill-rule="nonzero"
+                        />
+                        
+    
+                      </g>
+                      
+
+                    </svg>
+                  </span>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

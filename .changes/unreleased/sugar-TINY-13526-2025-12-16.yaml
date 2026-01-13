@@ -1,0 +1,6 @@
+project: sugar
+kind: Added
+body: New `SugarFragment.fromHtml` API.
+time: 2025-12-16T13:30:42.06203+08:00
+custom:
+    Issue: TINY-13526
