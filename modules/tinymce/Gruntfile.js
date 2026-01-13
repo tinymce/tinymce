@@ -497,7 +497,6 @@ module.exports = function (grunt) {
               'modules/*/.stylelintrc',
               'modules/tinymce/tools',
               'bin',
-              'patches',
               '.yarnrc',
               'LICENSE.md',
               'NOTICES.txt',
