@@ -50,7 +50,7 @@ const setDirOnElements = (dom: DOMUtils, blocks: Element[], dir: Dir): void => {
 const setDir = (editor: Editor, dir: Dir): void => {
   if (editor.selection.isEditable()) {
     setDirOnElements(editor.dom, editor.selection.getSelectedBlocks(), dir);
-    // editor.nodeChanged();
+    editor.nodeChanged();
   }
 };
 
