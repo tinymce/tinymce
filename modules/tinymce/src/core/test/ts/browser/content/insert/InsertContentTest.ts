@@ -849,6 +849,7 @@ describe('browser.tinymce.core.content.insert.InsertContentTest', () => {
       TinyAssertions.assertRawContent(editor, '<p>insertion</p><p>initial</p>');
     });
 
+    // NOTE: Test fails with  dompurify 3.2.6 and SAFE_FOR_XML: false
     it('TINY-10305: Should sanitize content that can cause mXSS via ZWNBSP trimming', () => {
       const editor = hook.editor();
       editor.setContent('<p>initial</p>');

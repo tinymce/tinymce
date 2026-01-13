@@ -1,0 +1,7 @@
+project: tinymce
+kind: Security
+body: |
+  Updated dependencies and parsing logic for enhanced content sanitization. HTML-like content in comments and certain legacy patterns are now sanitized more strictly when `sanitize` is enabled (default). The Introduced `allow_html_in_comments` option provides control over comment node sanitization behavior.
+time: 2026-01-14T09:25:11.370606+10:00
+custom:
+    Issue: TINY-11900

@@ -1,4 +1,4 @@
-import { afterEach, describe, it } from '@ephox/bedrock-client';
+import { afterEach, context, describe, it } from '@ephox/bedrock-client';
 import { Arr, Fun } from '@ephox/katamari';
 import { assert } from 'chai';
 
@@ -348,170 +348,303 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(ser.serialize(getTestElement()), '<p>test</p>');
   });
 
-  it('Script with non JS type attribute', () => {
-    const ser = DomSerializer({ fix_list_elements: true });
-    ser.setRules('script[type|language|src]');
+  Arr.each([{
+    name: 'sanitization enabled (default)',
+    isSanitizeEnabled: true,
+    settings: { }
+  },
+  {
+    name: 'TINY-9635: sanitization disabled',
+    isSanitizeEnabled: false,
+    settings: { sanitize: false }
+  }], (scenario) => {
+    context(scenario.name, () => {
+      it('Script with non JS type attribute', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true });
+        ser.setRules('script[type|language|src]');
 
-    setTestHtml('<s' + 'cript type="mylanguage"></s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<s' + 'cript type="mylanguage"></s' + 'cript>');
-  });
+        setTestHtml('<s' + 'cript type="mylanguage"></s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<s' + 'cript type="mylanguage"></s' + 'cript>');
+      });
 
-  it('Script with tags inside a comment with element_format: xhtml and sanitize: false', () => {
-    // TINY-8363: Disable sanitization to avoid DOMPurify false positive affecting expected output
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml', sanitize: false });
-    ser.setRules('script[type|language|src]');
+      it('Script with tags inside a comment with element_format: xhtml', () => {
+        // TINY-8363: Disable sanitization to avoid DOMPurify false positive affecting expected output
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true, element_format: 'xhtml' });
+        ser.setRules('script[type|language|src]');
 
-    setTestHtml('<s' + 'cript>// <img src="test"><a href="#"></a></s' + 'cript>');
-    assert.equal(
-      ser.serialize(getTestElement()).replace(/\r/g, ''),
-      '<s' + 'cript>// <![CDATA[\n// <img src="test"><a href="#"></a>\n// ]]></s' + 'cript>'
-    );
-  });
+        setTestHtml('<s' + 'cript>// <img src="test"><a href="#"></a></s' + 'cript>');
+        assert.equal(
+          ser.serialize(getTestElement()).replace(/\r/g, ''),
+          scenario.isSanitizeEnabled ? '' : '<s' + 'cript>// <![CDATA[\n// <img src="test"><a href="#"></a>\n// ]]></s' + 'cript>'
+        );
+      });
 
-  it('Script with tags inside a comment with sanitize: false', () => {
-    // TINY-8363: Disable sanitization to avoid DOMPurify false positive affecting expected output
-    const ser = DomSerializer({ fix_list_elements: true, sanitize: false });
-    ser.setRules('script[type|language|src]');
+      it('Script with tags inside a comment', () => {
+        // TINY-8363: Disable sanitization to avoid DOMPurify false positive affecting expected output
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true });
+        ser.setRules('script[type|language|src]');
 
-    setTestHtml('<s' + 'cript>// <img src="test"><a href="#"></a></s' + 'cript>');
-    assert.equal(
-      ser.serialize(getTestElement()).replace(/\r/g, ''),
-      '<s' + 'cript>// <img src="test"><a href="#"></a></s' + 'cript>'
-    );
-  });
+        setTestHtml('<s' + 'cript>// <img src="test"><a href="#"></a></s' + 'cript>');
+        assert.equal(
+          ser.serialize(getTestElement()).replace(/\r/g, ''),
+          scenario.isSanitizeEnabled ? '' : '<s' + 'cript>// <img src="test"><a href="#"></a></s' + 'cript>'
+        );
+      });
 
-  it('Script with less than with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
-    ser.setRules('script[type|language|src]');
+      it('Script with less than with element_format: xhtml', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true, element_format: 'xhtml' });
+        ser.setRules('script[type|language|src]');
 
-    setTestHtml('<s' + 'cript>1 < 2;</s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<s' + 'cript>// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
-  });
+        setTestHtml('<s' + 'cript>1 < 2;</s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<s' + 'cript>// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
+      });
 
-  it('Script with less than', () => {
-    const ser = DomSerializer({ fix_list_elements: true });
-    ser.setRules('script[type|language|src]');
+      it('Script with less than', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true });
+        ser.setRules('script[type|language|src]');
 
-    setTestHtml('<s' + 'cript>1 < 2;</s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<s' + 'cript>1 < 2;</s' + 'cript>');
-  });
+        setTestHtml('<s' + 'cript>1 < 2;</s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<s' + 'cript>1 < 2;</s' + 'cript>');
+      });
 
-  it('Script with type attrib and less than with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
-    ser.setRules('script[type|language|src]');
+      it('Script with type attrib and less than with element_format: xhtml', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true, element_format: 'xhtml' });
+        ser.setRules('script[type|language|src]');
 
-    setTestHtml('<s' + 'cript type="text/javascript">1 < 2;</s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<script type="text/javascript">// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
-  });
+        setTestHtml('<s' + 'cript type="text/javascript">1 < 2;</s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<script type="text/javascript">// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
+      });
 
-  it('Script with type attrib and less than', () => {
-    const ser = DomSerializer({ fix_list_elements: true });
-    ser.setRules('script[type|language|src]');
+      it('Script with type attrib and less than', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true });
+        ser.setRules('script[type|language|src]');
 
-    setTestHtml('<s' + 'cript type="text/javascript">1 < 2;</s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<script type=\"text/javascript\">1 < 2;</script>');
-  });
+        setTestHtml('<s' + 'cript type="text/javascript">1 < 2;</s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<script type=\"text/javascript\">1 < 2;</script>');
+      });
 
-  it('Script with whitespace in beginning/end with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
-    ser.setRules('script[type|language|src]');
+      it('Script with whitespace in beginning/end with element_format: xhtml', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true, element_format: 'xhtml' });
+        ser.setRules('script[type|language|src]');
 
-    setTestHtml('<script>\n\t1 < 2;\n\t if (2 < 1)\n\t\talert(1);\n</s' + 'cript>');
-    assert.equal(
-      ser.serialize(getTestElement()).replace(/\r/g, ''),
-      '<s' + 'cript>// <![CDATA[\n\t1 < 2;\n\t if (2 < 1)\n\t\talert(1);\n// ]]></s' + 'cript>'
-    );
-  });
+        setTestHtml('<script>\n\t1 < 2;\n\t if (2 < 1)\n\t\talert(1);\n</s' + 'cript>');
+        assert.equal(
+          ser.serialize(getTestElement()).replace(/\r/g, ''),
+          '<s' + 'cript>// <![CDATA[\n\t1 < 2;\n\t if (2 < 1)\n\t\talert(1);\n// ]]></s' + 'cript>'
+        );
+      });
 
-  it('Script with whitespace in beginning/end', () => {
-    const ser = DomSerializer({ fix_list_elements: true });
-    ser.setRules('script[type|language|src]');
+      it('Script with whitespace in beginning/end', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true });
+        ser.setRules('script[type|language|src]');
 
-    setTestHtml('<script>\n\t1 < 2;\n\t if (2 < 1)\n\t\talert(1);\n</s' + 'cript>');
-    assert.equal(
-      ser.serialize(getTestElement()).replace(/\r/g, ''),
-      '<script>\n\t1 < 2;\n\t if (2 < 1)\n\t\talert(1);\n</script>'
-    );
-  });
+        setTestHtml('<script>\n\t1 < 2;\n\t if (2 < 1)\n\t\talert(1);\n</s' + 'cript>');
+        assert.equal(
+          ser.serialize(getTestElement()).replace(/\r/g, ''),
+          '<script>\n\t1 < 2;\n\t if (2 < 1)\n\t\talert(1);\n</script>'
+        );
+      });
 
-  it('Script with a HTML comment and less than with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
-    ser.setRules('script[type|language|src]');
+      it('Script with a HTML comment and less than with element_format: xhtml', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true, element_format: 'xhtml' });
+        ser.setRules('script[type|language|src]');
 
-    setTestHtml('<script><!-- 1 < 2; // --></s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<s' + 'cript>// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
-  });
+        setTestHtml('<script><!-- 1 < 2; // --></s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), scenario.isSanitizeEnabled ? '' : '<s' + 'cript>// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
+      });
 
-  it('Script with a HTML comment and less than', () => {
-    const ser = DomSerializer({ fix_list_elements: true });
-    ser.setRules('script[type|language|src]');
+      it('Script with a HTML comment and less than', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true });
+        ser.setRules('script[type|language|src]');
 
-    setTestHtml('<script><!-- 1 < 2; // --></s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<script><!-- 1 < 2; // --></script>');
-  });
+        setTestHtml('<script><!-- 1 < 2; // --></s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), scenario.isSanitizeEnabled ? '' : '<script><!-- 1 < 2; // --></script>');
+      });
 
-  it('Script with white space in beginning, comment and less than with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
-    ser.setRules('script[type|language|src]');
+      it('Script with white space in beginning, comment and less than with element_format: xhtml', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true, element_format: 'xhtml' });
+        ser.setRules('script[type|language|src]');
 
-    setTestHtml('<script>\n\n<!-- 1 < 2;\n\n--></s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<s' + 'cript>// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
-  });
+        setTestHtml('<script>\n\n<!-- 1 < 2;\n\n--></s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), scenario.isSanitizeEnabled ? '' : '<s' + 'cript>// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
+      });
 
-  it('Script with white space in beginning, comment and less than', () => {
-    const ser = DomSerializer({ fix_list_elements: true });
-    ser.setRules('script[type|language|src]');
+      it('Script with white space in beginning, comment and less than', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true });
+        ser.setRules('script[type|language|src]');
 
-    setTestHtml('<script>\n\n<!-- 1 < 2;\n\n--></s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<script>\n\n<!-- 1 < 2;\n\n--></script>');
-  });
+        setTestHtml('<script>\n\n<!-- 1 < 2;\n\n--></s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), scenario.isSanitizeEnabled ? '' : '<script>\n\n<!-- 1 < 2;\n\n--></script>');
+      });
 
-  it('Script with comments and cdata with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
-    ser.setRules('script[type|language|src]');
+      it('Script with comments and cdata with element_format: xhtml', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true, element_format: 'xhtml' });
+        ser.setRules('script[type|language|src]');
 
-    setTestHtml('<script>// <![CDATA[1 < 2; // ]]></s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<s' + 'cript>// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
-  });
+        setTestHtml('<script>// <![CDATA[1 < 2; // ]]></s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), scenario.isSanitizeEnabled ? '' : '<s' + 'cript>// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
+      });
 
-  it('Script with comments and cdata', () => {
-    const ser = DomSerializer({ fix_list_elements: true });
-    ser.setRules('script[type|language|src]');
+      it('Script with comments and cdata', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true });
+        ser.setRules('script[type|language|src]');
 
-    setTestHtml('<script>// <![CDATA[1 < 2; // ]]></s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<script>// <![CDATA[1 < 2; // ]]></script>');
-  });
+        setTestHtml('<script>// <![CDATA[1 < 2; // ]]></s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), scenario.isSanitizeEnabled ? '' : '<script>// <![CDATA[1 < 2; // ]]></script>');
+      });
 
-  it('Script with cdata with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
-    ser.setRules('script[type|language|src]');
+      it('Script with cdata with element_format: xhtml', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true, element_format: 'xhtml' });
+        ser.setRules('script[type|language|src]');
 
-    setTestHtml('<script><![CDATA[1 < 2; ]]></s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<s' + 'cript>// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
-  });
+        setTestHtml('<script><![CDATA[1 < 2; ]]></s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), scenario.isSanitizeEnabled ? '' : '<s' + 'cript>// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
+      });
 
-  it('Script with cdata', () => {
-    const ser = DomSerializer({ fix_list_elements: true });
-    ser.setRules('script[type|language|src]');
+      it('Script with cdata', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true });
+        ser.setRules('script[type|language|src]');
 
-    setTestHtml('<script><![CDATA[1 < 2; ]]></s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<script><![CDATA[1 < 2; ]]></script>');
-  });
+        setTestHtml('<script><![CDATA[1 < 2; ]]></s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), scenario.isSanitizeEnabled ? '' : '<script><![CDATA[1 < 2; ]]></script>');
+      });
 
-  it('Script whitespace in beginning/end and cdata with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
-    ser.setRules('script[type|language|src]');
+      it('Script whitespace in beginning/end and cdata with element_format: xhtml', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true, element_format: 'xhtml' });
+        ser.setRules('script[type|language|src]');
 
-    setTestHtml('<script>\n\n<![CDATA[\n\n1 < 2;\n\n]]>\n\n</s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<s' + 'cript>// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
-  });
+        setTestHtml('<script>\n\n<![CDATA[\n\n1 < 2;\n\n]]>\n\n</s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), scenario.isSanitizeEnabled ? '' : '<s' + 'cript>// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
+      });
 
-  it('Script whitespace in beginning/end and cdata', () => {
-    const ser = DomSerializer({ fix_list_elements: true });
-    ser.setRules('script[type|language|src]');
+      it('Script whitespace in beginning/end and cdata', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true });
+        ser.setRules('script[type|language|src]');
 
-    setTestHtml('<script>\n\n<![CDATA[\n\n1 < 2;\n\n]]>\n\n</s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<script>\n\n<![CDATA[\n\n1 < 2;\n\n]]>\n\n</script>');
+        setTestHtml('<script>\n\n<![CDATA[\n\n1 < 2;\n\n]]>\n\n</s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), scenario.isSanitizeEnabled ? '' : '<script>\n\n<![CDATA[\n\n1 < 2;\n\n]]>\n\n</script>');
+      });
+
+      it('Script with src attr', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true });
+        ser.setRules('script[type|language|src]');
+
+        setTestHtml('<script src="test.js" data-mce-src="test.js"></s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()), '<s' + 'cript src="test.js"></s' + 'cript>');
+      });
+
+      it('Script with HTML comment, comment and CDATA with element_format: xhtml', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true, element_format: 'xhtml' });
+        ser.setRules('script[type|language|src]');
+
+        setTestHtml('<script><!--// <![CDATA[var hi = "hello";// ]]>--></s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()), scenario.isSanitizeEnabled ? '' : '<script>// <![CDATA[\nvar hi = \"hello\";\n// ]]></s' + 'cript>');
+      });
+
+      it('Script with HTML comment, comment and CDATA', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true });
+        ser.setRules('script[type|language|src]');
+
+        setTestHtml('<script><!--// <![CDATA[var hi = "hello";// ]]>--></s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()), scenario.isSanitizeEnabled ? '' : '<script><!--// <![CDATA[var hi = \"hello\";// ]]>--></script>');
+      });
+
+      it('Script with block comment around cdata with element_format: xhtml', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true, element_format: 'xhtml' });
+        ser.setRules('script[type|language|src]');
+
+        setTestHtml('<script>/* <![CDATA[ */\nvar hi = "hello";\n/* ]]> */</s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()), scenario.isSanitizeEnabled ? '' : '<script>// <![CDATA[\nvar hi = \"hello\";\n// ]]></s' + 'cript>');
+      });
+
+      it('Script with block comment around cdata', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true });
+        ser.setRules('script[type|language|src]');
+
+        setTestHtml('<script>/* <![CDATA[ */\nvar hi = "hello";\n/* ]]> */</s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()), scenario.isSanitizeEnabled ? '' : '<script>/* <![CDATA[ */\nvar hi = \"hello\";\n/* ]]> */</script>');
+      });
+
+      it('Script with html comment and block comment around cdata with element_format: xhtml', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true, element_format: 'xhtml' });
+        ser.setRules('script[type|language|src]');
+
+        setTestHtml('<script><!-- /* <![CDATA[ */\nvar hi = "hello";\n/* ]]>*/--></s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()), scenario.isSanitizeEnabled ? '' : '<script>// <![CDATA[\nvar hi = \"hello\";\n// ]]></s' + 'cript>');
+      });
+
+      it('Script with html comment and block comment around cdata', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true });
+        ser.setRules('script[type|language|src]');
+
+        setTestHtml('<script><!-- /* <![CDATA[ */\nvar hi = "hello";\n/* ]]>*/--></s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()), scenario.isSanitizeEnabled ? '' : '<script><!-- /* <![CDATA[ */\nvar hi = \"hello\";\n/* ]]>*/--></script>');
+      });
+
+      it('Script with line comment and html comment with element_format: xhtml', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true, element_format: 'xhtml' });
+        ser.setRules('script[type|language|src]');
+
+        setTestHtml('<script>// <!--\nvar hi = "hello";\n// --></s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()), scenario.isSanitizeEnabled ? '' : '<script>// <![CDATA[\nvar hi = \"hello\";\n// ]]></s' + 'cript>');
+      });
+
+      it('Script with line comment and html comment', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true });
+        ser.setRules('script[type|language|src]');
+
+        setTestHtml('<script>// <!--\nvar hi = "hello";\n// --></s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()), scenario.isSanitizeEnabled ? '' : '<script>// <!--\nvar hi = \"hello\";\n// --></script>');
+      });
+
+      it('Script with block comment around html comment with element_format: xhtml', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true, element_format: 'xhtml' });
+        ser.setRules('script[type|language|src]');
+
+        setTestHtml('<script>/* <!-- */\nvar hi = "hello";\n/*-->*/</s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()), scenario.isSanitizeEnabled ? '' : '<script>// <![CDATA[\nvar hi = \"hello\";\n// ]]></s' + 'cript>');
+      });
+
+      it('Script with block comment around html comment', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true });
+        ser.setRules('script[type|language|src]');
+
+        setTestHtml('<script>/* <!-- */\nvar hi = "hello";\n/*-->*/</s' + 'cript>');
+        assert.equal(ser.serialize(getTestElement()), scenario.isSanitizeEnabled ? '' : '<script>/* <!-- */\nvar hi = \"hello\";\n/*-->*/</script>');
+      });
+
+      it('Style with whitespace at beginning with element_format: xhtml', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true, valid_children: '+body[style]', element_format: 'xhtml' });
+        ser.setRules('style');
+
+        setTestHtml('<style> body { background:#fff }</style>');
+        assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<style><!--\n body { background:#fff }\n--></style>');
+      });
+
+      it('Style with whitespace at beginning', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true, valid_children: '+body[style]' });
+        ser.setRules('style');
+
+        setTestHtml('<style> body { background:#fff }</style>');
+        assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<style> body { background:#fff }</style>');
+      });
+
+      it('Style with cdata with element_format: xhtml', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true, valid_children: '+body[style]', element_format: 'xhtml' });
+        ser.setRules('style');
+
+        setTestHtml('<style>\r\n<![CDATA[\r\n   body { background:#fff }]]></style>');
+        assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), scenario.isSanitizeEnabled ? '' : '<style><!--\nbody { background:#fff }\n--></style>');
+      });
+
+      it('Style with cdata', () => {
+        const ser = DomSerializer({ ...scenario.settings, fix_list_elements: true, valid_children: '+body[style]' });
+        ser.setRules('style');
+
+        setTestHtml('<style>\r\n<![CDATA[\r\n   body { background:#fff }]]></style>');
+        assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), scenario.isSanitizeEnabled ? '' : '<style>\n<![CDATA[\n   body { background:#fff }]]></style>');
+      });
+    });
   });
 
   it('Whitespace preserve in pre', () => {
@@ -520,94 +653,6 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
 
     setTestHtml('<pre>  </pre>');
     assert.equal(ser.serialize(getTestElement()), '<pre>  </pre>');
-  });
-
-  it('Script with src attr', () => {
-    const ser = DomSerializer({ fix_list_elements: true });
-    ser.setRules('script[type|language|src]');
-
-    setTestHtml('<script src="test.js" data-mce-src="test.js"></s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()), '<s' + 'cript src="test.js"></s' + 'cript>');
-  });
-
-  it('Script with HTML comment, comment and CDATA with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
-    ser.setRules('script[type|language|src]');
-
-    setTestHtml('<script><!--// <![CDATA[var hi = "hello";// ]]>--></s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()), '<script>// <![CDATA[\nvar hi = \"hello\";\n// ]]></s' + 'cript>');
-  });
-
-  it('Script with HTML comment, comment and CDATA', () => {
-    const ser = DomSerializer({ fix_list_elements: true });
-    ser.setRules('script[type|language|src]');
-
-    setTestHtml('<script><!--// <![CDATA[var hi = "hello";// ]]>--></s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()), '<script><!--// <![CDATA[var hi = \"hello\";// ]]>--></script>');
-  });
-
-  it('Script with block comment around cdata with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
-    ser.setRules('script[type|language|src]');
-
-    setTestHtml('<script>/* <![CDATA[ */\nvar hi = "hello";\n/* ]]> */</s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()), '<script>// <![CDATA[\nvar hi = \"hello\";\n// ]]></s' + 'cript>');
-  });
-
-  it('Script with block comment around cdata', () => {
-    const ser = DomSerializer({ fix_list_elements: true });
-    ser.setRules('script[type|language|src]');
-
-    setTestHtml('<script>/* <![CDATA[ */\nvar hi = "hello";\n/* ]]> */</s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()), '<script>/* <![CDATA[ */\nvar hi = \"hello\";\n/* ]]> */</script>');
-  });
-
-  it('Script with html comment and block comment around cdata with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
-    ser.setRules('script[type|language|src]');
-
-    setTestHtml('<script><!-- /* <![CDATA[ */\nvar hi = "hello";\n/* ]]>*/--></s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()), '<script>// <![CDATA[\nvar hi = \"hello\";\n// ]]></s' + 'cript>');
-  });
-
-  it('Script with html comment and block comment around cdata', () => {
-    const ser = DomSerializer({ fix_list_elements: true });
-    ser.setRules('script[type|language|src]');
-
-    setTestHtml('<script><!-- /* <![CDATA[ */\nvar hi = "hello";\n/* ]]>*/--></s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()), '<script><!-- /* <![CDATA[ */\nvar hi = \"hello\";\n/* ]]>*/--></script>');
-  });
-
-  it('Script with line comment and html comment with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
-    ser.setRules('script[type|language|src]');
-
-    setTestHtml('<script>// <!--\nvar hi = "hello";\n// --></s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()), '<script>// <![CDATA[\nvar hi = \"hello\";\n// ]]></s' + 'cript>');
-  });
-
-  it('Script with line comment and html comment', () => {
-    const ser = DomSerializer({ fix_list_elements: true });
-    ser.setRules('script[type|language|src]');
-
-    setTestHtml('<script>// <!--\nvar hi = "hello";\n// --></s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()), '<script>// <!--\nvar hi = \"hello\";\n// --></script>');
-  });
-
-  it('Script with block comment around html comment with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
-    ser.setRules('script[type|language|src]');
-
-    setTestHtml('<script>/* <!-- */\nvar hi = "hello";\n/*-->*/</s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()), '<script>// <![CDATA[\nvar hi = \"hello\";\n// ]]></s' + 'cript>');
-  });
-
-  it('Script with block comment around html comment', () => {
-    const ser = DomSerializer({ fix_list_elements: true });
-    ser.setRules('script[type|language|src]');
-
-    setTestHtml('<script>/* <!-- */\nvar hi = "hello";\n/*-->*/</s' + 'cript>');
-    assert.equal(ser.serialize(getTestElement()), '<script>/* <!-- */\nvar hi = \"hello\";\n/*-->*/</script>');
   });
 
   it('Protected blocks', () => {
@@ -623,38 +668,6 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
 
     setTestHtml('<!--mce:protected ' + escape('<noscript><!-- text --><br></noscript>') + '-->');
     assert.equal(ser.serialize(getTestElement()), '<noscript><!-- text --><br></noscript>');
-  });
-
-  it('Style with whitespace at beginning with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, valid_children: '+body[style]', element_format: 'xhtml' });
-    ser.setRules('style');
-
-    setTestHtml('<style> body { background:#fff }</style>');
-    assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<style><!--\n body { background:#fff }\n--></style>');
-  });
-
-  it('Style with whitespace at beginning', () => {
-    const ser = DomSerializer({ fix_list_elements: true, valid_children: '+body[style]' });
-    ser.setRules('style');
-
-    setTestHtml('<style> body { background:#fff }</style>');
-    assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<style> body { background:#fff }</style>');
-  });
-
-  it('Style with cdata with element_format: xhtml', () => {
-    const ser = DomSerializer({ fix_list_elements: true, valid_children: '+body[style]', element_format: 'xhtml' });
-    ser.setRules('style');
-
-    setTestHtml('<style>\r\n<![CDATA[\r\n   body { background:#fff }]]></style>');
-    assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<style><!--\nbody { background:#fff }\n--></style>');
-  });
-
-  it('Style with cdata', () => {
-    const ser = DomSerializer({ fix_list_elements: true, valid_children: '+body[style]' });
-    ser.setRules('style');
-
-    setTestHtml('<style>\r\n<![CDATA[\r\n   body { background:#fff }]]></style>');
-    assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<style>\n<![CDATA[\n   body { background:#fff }]]></style>');
   });
 
   it('CDATA', () => {
