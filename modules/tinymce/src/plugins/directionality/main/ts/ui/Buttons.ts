@@ -1,36 +1,28 @@
-import { Optional, Strings } from '@ephox/katamari';
-
 import type Editor from 'tinymce/core/api/Editor';
 import type { NodeChangeEvent } from 'tinymce/core/api/EventTypes';
 import type { Toolbar } from 'tinymce/core/api/ui/Ui';
 import type { EditorEvent } from 'tinymce/core/api/util/EventDispatcher';
 
-const getNodeChangeHandler = (editor: Editor, dir: 'ltr' | 'rtl') => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
-  const getDirection = (elem: Element): Optional<string> =>
-    Optional.from(editor.dom.getStyle(elem, 'direction'))
-      .or(Optional.from(editor.dom.getAttrib(elem, 'dir')))
-      .filter(Strings.isNotEmpty);
-
-  const activeDirection = (elem: Element) =>
-    getDirection(elem)
-      .or(Optional.from(editor.dom.getParent(elem, editor.dom.isBlock)).bind(getDirection))
-      .exists((direction: string) => direction === dir);
-
-  const nodeChangeHandler = (e: EditorEvent<NodeChangeEvent>) =>
-    api.setActive(activeDirection(e.element));
-
-  editor.on('NodeChange', nodeChangeHandler);
-
-  return () => editor.off('NodeChange', nodeChangeHandler);
-};
-
 const register = (editor: Editor): void => {
+  const setupHandler = (dir: 'ltr' | 'rtl') => (api: Toolbar.ToolbarToggleButtonInstanceApi) => {
+    const nodeChangeHandler = (e: EditorEvent<NodeChangeEvent>) => {
+      const block = editor.dom.isBlock(e.element) ? e.element : editor.dom.getParent(e.element, editor.dom.isBlock);
+      if (block) {
+        const direction = editor.dom.getStyle(block, 'direction') || editor.dom.getAttrib(block, 'dir');
+        api.setActive(direction === dir);
+      }
+    };
+
+    editor.on('NodeChange', nodeChangeHandler);
+    return () => editor.off('NodeChange', nodeChangeHandler);
+  };
+
   editor.ui.registry.addToggleButton('ltr', {
     tooltip: 'Left to right',
     icon: 'ltr',
     context: 'editable',
     onAction: () => editor.execCommand('mceDirectionLTR'),
-    onSetup: getNodeChangeHandler(editor, 'ltr'),
+    onSetup: setupHandler('ltr'),
   });
 
   editor.ui.registry.addToggleButton('rtl', {
@@ -38,7 +30,7 @@ const register = (editor: Editor): void => {
     icon: 'rtl',
     context: 'editable',
     onAction: () => editor.execCommand('mceDirectionRTL'),
-    onSetup: getNodeChangeHandler(editor, 'rtl')
+    onSetup: setupHandler('rtl')
   });
 };
 
