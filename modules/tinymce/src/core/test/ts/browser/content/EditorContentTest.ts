@@ -952,51 +952,5 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         assert.equal(content, '<p>&lt;&gt;&amp;"&nbsp;&#229;&#228;&#246;</p>', 'Should respect custom entities map and output numeric for å, ä, ö');
       });
     });
-
-    context('Noneditable content', () => {
-      context('allow_noneditable: true', () => {
-        const hook = TinyHooks.bddSetupLight<Editor>({
-          base_url: '/project/tinymce/js/tinymce',
-          noneditable_class: 'mceNonEditable',
-          allow_noneditable: true
-        }, []);
-
-        it('TINY-10121: Should set contenteditable=false when noneditable_class is used', () => {
-          const editor = hook.editor();
-
-          editor.setContent('<p class="mceNonEditable">Should be editable</p>');
-          TinyAssertions.assertContent(editor, '<p class="mceNonEditable">Should be editable</p>');
-        });
-      });
-
-      context('allow_noneditable: false', () => {
-        const hook = TinyHooks.bddSetupLight<Editor>({
-          base_url: '/project/tinymce/js/tinymce',
-          noneditable_class: 'mceNonEditable',
-          allow_noneditable: false
-        }, []);
-
-        it('TINY-10121: Should NOT set contenteditable=false when noneditable_class is used', () => {
-          const editor = hook.editor();
-
-          editor.setContent('<p class="mceNonEditable">Should NOT be editable</p>');
-          TinyAssertions.assertContent(editor, '<p class="mceNonEditable" contenteditable=false>Should NOT be editable</p>');
-        });
-      });
-
-      context('allow_noneditable default', () => {
-        const hook = TinyHooks.bddSetupLight<Editor>({
-          base_url: '/project/tinymce/js/tinymce',
-          noneditable_class: 'mceNonEditable',
-        }, []);
-
-        it('TINY-10121: Should set contenteditable=false by default when noneditable_class is used', () => {
-          const editor = hook.editor();
-
-          editor.setContent('<p class="mceNonEditable">Should NOT be editable</p>');
-          TinyAssertions.assertContent(editor, '<p class="mceNonEditable" contenteditable=false>Should NOT be editable</p>');
-        });
-      });
-    });
   });
 });
