@@ -62,6 +62,7 @@ interface BaseEditorOptions {
   allow_conditional_comments?: boolean;
   allow_html_data_urls?: boolean;
   allow_html_in_named_anchor?: boolean;
+  allow_noneditable?: boolean;
   allow_script_urls?: boolean;
   allow_svg_data_urls?: boolean;
   allow_unsafe_link_target?: boolean;
@@ -182,7 +183,6 @@ interface BaseEditorOptions {
   newdocument_content?: string;
   newline_behavior?: 'block' | 'linebreak' | 'invert' | 'default';
   no_newline_selector?: string;
-  allow_noneditable?: boolean;
   noneditable_class?: string;
   noneditable_regexp?: RegExp | RegExp[];
   nowrap?: boolean;

@@ -828,7 +828,7 @@ const register = (editor: Editor): void => {
 
   registerOption('allow_noneditable', {
     processor: 'boolean',
-    default: false
+    default: true
   });
 
   registerOption('noneditable_class', {
