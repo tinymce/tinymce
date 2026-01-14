@@ -29,7 +29,7 @@ const dropZoneFields = formComponentWithLabelFields.concat([
   FieldSchema.optionString('buttonLabel'),
   FieldSchema.optionString('allowedFileTypes'),
   FieldSchema.optionArrayOf('allowedFileExtensions', ValueType.string),
-  FieldSchema.defaultedFunction('onInvalidFiles', Fun.noop)
+  FieldSchema.defaultedFunction('onInvalidFiles', () => new Promise(Fun.noop))
 ]);
 
 export const dropZoneSchema = StructureSchema.objOf(dropZoneFields);
