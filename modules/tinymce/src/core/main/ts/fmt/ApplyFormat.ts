@@ -77,7 +77,6 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
 
       return true;
     });
-
     return found;
   };
 
@@ -294,6 +293,12 @@ const applyFormatAction = (ed: Editor, name: string, vars?: FormatVars, node?: N
     node = targetNode;
     applyNodeStyle(formatList, node);
     Events.fireFormatApply(ed, name, node, vars);
+
+    // TINY-13333: Apply format to parent block node if noneditable child is selected
+    const parentNode = node.parentNode;
+    if (parentNode && dom.isBlock(parentNode) && dom.getContentEditable(parentNode) !== 'false') {
+      ApplyElementFormat.setElementFormat(ed, parentNode as Element, format, vars, parentNode);
+    }
     return;
   }
 
