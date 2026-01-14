@@ -7,14 +7,9 @@
 @accordion-background-color: @background-color;
 
 @accordion-item-background-color: darken(@background-color, 3%);
-@accordion-item-border-radius: @control-border-radius;
 @accordion-item-margin-bottom: @pad-sm;
 
-@accordion-header-padding-top: @pad-md - 2px;
-@accordion-header-padding-bottom: @pad-md - 2px;
-@accordion-header-padding-left: @pad-sm + 4px;
-@accordion-header-padding-right-icon-end: @pad-xl + @pad-sm + @pad-xs;
-@accordion-header-padding-right-icon-start: @pad-sm + 4px;
+@accordion-header-padding: @pad-sm + @pad-xs;
 @accordion-header-font-size: @font-size-md;
 @accordion-header-font-weight: @font-weight-bold;
 @accordion-header-text-color: @text-color;
@@ -32,9 +27,6 @@
 @accordion-header-disabled-opacity: 0.5;
 @accordion-header-disabled-cursor: not-allowed;
 
-@accordion-header-focus-outline-width: @keyboard-focus-outline-width;
-@accordion-header-focus-outline-color: @keyboard-focus-outline-color;
-
 .tox when (@custom-properties-enabled = true) {
   .tox-accordion {
     --tox-private-accordion-item-background-color: light-dark(
@@ -48,6 +40,8 @@
     );
 
     --tox-private-accordion-icon-color: var(--tox-private-text-color);
+
+    --tox-private-accordion-header-focus-outline: 0 0 0 var(--tox-private-keyboard-focus-outline-width) var(--tox-private-keyboard-focus-outline-color);
   }
 }
 
@@ -62,12 +56,16 @@
     background-color: var(--tox-private-accordion-item-background-color, @accordion-item-background-color);
     border: 1px solid var(--tox-private-border-color, @accordion-border-color);
     border-radius: @control-border-radius;
-    overflow: hidden;
+    position: relative;
   }
 
   .tox-accordion__heading {
     margin: 0;
     width: 100%;
+
+    &:focus {
+      outline: none;
+    }
   }
 
   .tox-accordion__header {
@@ -84,19 +82,38 @@
     font-weight: @accordion-header-font-weight;
     line-height: @line-height-base;
     outline: none;
-    padding: @accordion-header-padding-top @accordion-header-padding-right-icon-start @accordion-header-padding-bottom @accordion-header-padding-left;
+    padding: @accordion-header-padding;
     text-align: left;
     width: 100%;
+
+    // Add pseudo-element for focus outline (following toolbar-button.less pattern)
+    &::after {
+      border-radius: @control-border-radius;
+      bottom: 0;
+      box-shadow: var(--tox-private-accordion-header-focus-outline, 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color);
+      content: '';
+      left: 0;
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
+      right: 0;
+      top: 0;
+
+      @media (forced-colors: active) {
+        border: 2px solid highlight;
+      }
+    }
 
     &:hover:not(.tox-accordion__header--disabled) {
       background-color: var(--tox-private-accordion-header-hover-background-color, @accordion-header-hover-background-color);
     }
 
     &:focus:not(.tox-accordion__header--disabled) {
-      box-shadow: inset 0 0 0 @accordion-header-focus-outline-width @accordion-header-focus-outline-color;
+      position: relative;
+      z-index: 1;
 
-      @media (forced-colors: active) {
-        border: 2px solid highlight;
+      &::after {
+        opacity: 1;
       }
     }
 
@@ -105,15 +122,9 @@
       opacity: @accordion-header-disabled-opacity;
     }
 
-    // Icon at end layout - icon fixed at right edge
     &.tox-accordion__header--icon-end {
-      padding-right: @accordion-header-padding-right-icon-start;
+      padding-right: @accordion-header-padding;
     }
-  }
-
-  .tox-accordion__item:has(.tox-accordion__content--expanded) .tox-accordion__header {
-    padding-top: 7px;
-    padding-bottom: 7px;
   }
 
   .tox-accordion__content--expanded .tox-accordion__content-inner {
@@ -162,6 +173,8 @@
   }
 
   .tox-accordion__content {
+    border-radius: @control-border-radius;
+
     &.tox-accordion__content--collapsed {
       display: none;
     }
@@ -190,7 +203,7 @@
 
     .tox-button-group {
       display: flex;
-      gap: 8px;
+      gap: @pad-sm;
     }
 
     .tox-accordion__model-button {
@@ -203,10 +216,36 @@
       display: flex;
       font-family: inherit;
       font-size: inherit;
-      gap: 4px;
+      gap: @pad-xs;
       margin: 0;
       outline: none;
-      padding: 6px 12px;
+      padding: 6px (@pad-sm + @pad-xs);
+      position: relative;
+
+      &::after {
+        border-radius: @accordion-border-radius;
+        bottom: 0;
+        box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color;
+        content: '';
+        left: 0;
+        opacity: 0;
+        pointer-events: none;
+        position: absolute;
+        right: 0;
+        top: 0;
+
+        @media (forced-colors: active) {
+          border: 2px solid highlight;
+        }
+      }
+
+      &:focus {
+        z-index: 1;
+
+        &::after {
+          opacity: 1;
+        }
+      }
     }
   }
 
@@ -221,6 +260,16 @@
     padding: 0 6px;
     position: relative;
     width: 100%;
+
+    &:focus-within {
+      box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color;
+      z-index: 1;
+
+      @media (forced-colors: active) {
+        border-color: highlight;
+        box-shadow: 0 0 0 2px highlight;
+      }
+    }
 
     button {
       appearance: none;
@@ -245,8 +294,8 @@
       pointer-events: none;
 
       svg {
-        height: 16px;
-        width: 16px;
+        height: @base-value;
+        width: @base-value;
       }
     }
   }
