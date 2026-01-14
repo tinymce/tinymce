@@ -1,4 +1,4 @@
-import { Arr, Fun, Merger, Optional, Strings, Type } from '@ephox/katamari';
+import { Arr, Merger, Optional, Strings, Type } from '@ephox/katamari';
 
 import type Editor from 'tinymce/core/api/Editor';
 import type { BlobInfo } from 'tinymce/core/api/file/BlobCache';
@@ -285,7 +285,7 @@ const makeDialogBody = (info: ImageDialogInfo): DialogType.TabPanelSpec | Dialog
       tabs: Arr.flatten([
         [ MainTab.makeTab(info) ],
         info.hasAdvTab ? [ AdvTab.makeTab(info) ] : [],
-        info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [ UploadTab.makeTab(info, () => new Promise((r) => r(info.alertErr('All inserted files have unallowed extensions', Fun.noop)))) ] : []
+        info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [ UploadTab.makeTab(info, () => new Promise((r) => info.alertErr('All inserted files have unallowed extensions', r))) ] : []
       ])
     };
     return tabPanel;
