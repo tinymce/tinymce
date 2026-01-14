@@ -3,7 +3,7 @@ import { Arr } from '@ephox/katamari';
 import type { DocumentsFileTypes } from 'tinymce/core/api/OptionTypes';
 import type { Dialog } from 'tinymce/core/api/ui/Ui';
 
-const makeTab = (fileTypes: DocumentsFileTypes[], onInvalidFiles: () => void): Dialog.TabSpec => {
+const makeTab = (fileTypes: DocumentsFileTypes[], onInvalidFiles: () => Promise<void>): Dialog.TabSpec => {
   const items: Dialog.BodyComponentSpec[] = [
     {
       type: 'dropzone',

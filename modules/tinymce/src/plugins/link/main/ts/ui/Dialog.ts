@@ -1,4 +1,4 @@
-import { Arr, Cell, Fun, Optional, Optionals } from '@ephox/katamari';
+import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
 
 import type Editor from 'tinymce/core/api/Editor';
 import type { BlobInfo } from 'tinymce/core/api/file/BlobCache';
@@ -163,7 +163,7 @@ const makeDialogBody = (
   catalogs: LinkDialogCatalog,
   hasUploadPanel: boolean,
   fileTypes: DocumentsFileTypes[],
-  onInvalidFiles: () => void
+  onInvalidFiles: () => Promise<void>
 ): Dialog.PanelSpec | Dialog.TabPanelSpec => {
 
   const generalPanelItems = Arr.flatten<Dialog.BodyComponentSpec>([
@@ -201,7 +201,6 @@ const makeDialogBody = (
 };
 
 const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInstanceApi<LinkDialogData>) => void, editor: Editor): Dialog.DialogSpec<LinkDialogData> => {
-  const focusFileinput: Cell<() => void> = Cell(Fun.noop);
   const urlInput: Dialog.UrlInputSpec[] = [
     {
       name: 'url',
@@ -248,7 +247,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInsta
     catalogs,
     settings.hasUploadPanel,
     Options.getDocumentsFileTypes(editor),
-    () => helpers.alertErr('All inserted files have unallowed extensions', () => focusFileinput.get()())
+    () => new Promise((r) => helpers.alertErr('All inserted files have unallowed extensions', r))
   );
   return {
     title: 'Insert/Edit Link',
@@ -271,9 +270,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInsta
     onChange: (api: Dialog.DialogInstanceApi<LinkDialogData>, { name }) => {
       if (name === 'fileinput') {
         changeFileInput(helpers, api);
-        focusFileinput.set(() => api.focus('fileinput'));
       } else {
-        focusFileinput.set(Fun.noop);
         dialogDelta.onChange(api.getData, { name }).each((newData) => {
           api.setData(newData);
         });

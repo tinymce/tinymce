@@ -285,7 +285,7 @@ const makeDialogBody = (info: ImageDialogInfo): DialogType.TabPanelSpec | Dialog
       tabs: Arr.flatten([
         [ MainTab.makeTab(info) ],
         info.hasAdvTab ? [ AdvTab.makeTab(info) ] : [],
-        info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [ UploadTab.makeTab(info, () => info.alertErr('All inserted files have unallowed extensions', Fun.noop)) ] : []
+        info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [ UploadTab.makeTab(info, () => new Promise((r) => r(info.alertErr('All inserted files have unallowed extensions', Fun.noop)))) ] : []
       ])
     };
     return tabPanel;

@@ -19,7 +19,7 @@ describe('headless.tinymce.themes.silver.components.dropzone.DropzoneTest', () =
       dropAreaLabel: Optional.none(),
       allowedFileTypes: Optional.none(),
       allowedFileExtensions: Optional.none(),
-      onInvalidFiles: Fun.noop
+      onInvalidFiles: () => new Promise(Fun.noop)
     }, TestProviders, Optional.none())
   ));
 
@@ -105,7 +105,7 @@ describe('headless.tinymce.themes.silver.components.dropzone.DropzoneTest', () =
         dropAreaLabel: Optional.some('Drop Area Label'),
         allowedFileTypes: Optional.some('text/plain'),
         allowedFileExtensions: Optional.some([ 'txt' ]),
-        onInvalidFiles: () => store.add('error'),
+        onInvalidFiles: () => new Promise((r) => r(store.add('error'))),
       }, TestProviders, Optional.none())
     ));
 
