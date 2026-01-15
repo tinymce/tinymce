@@ -1,7 +1,7 @@
 import { Optional } from '@ephox/katamari';
 import { Focus, SelectorFind, SugarElement } from '@ephox/sugar';
 import { useTabKeyNavigation } from 'oxide-components/keynav/KeyboardNavigationHooks';
-import { forwardRef, useRef, type FC } from 'react';
+import { forwardRef, useRef } from 'react';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
@@ -160,7 +160,7 @@ describe('KeynavTabbingTypeTest', () => {
 
   it('Should handle keyboard navigation using Tab key in a tree structure', async () => {
 
-    const InnerLevel: FC<{ index: number }> = ({ index }) => {
+    const InnerLevel: React.FC<{ index: number }> = ({ index }) => {
       const ref = useRef<HTMLDivElement>(null);
 
       useTabKeyNavigation({

@@ -21,8 +21,8 @@ const mousemoveCommand: BrowserCommand<Parameters<Mouse['move']>> = async (conte
     // This is hacky, but I need to transform real coordinates into iframe coordinates.
     // The moment vitest will expose mousemove event, we can remove this hack.
     const iframe = context.page.locator('iframe[name="vitest-iframe"]');
-    const { top, left } = await iframe.evaluate((el: HTMLIFrameElement) => el.getBoundingClientRect());
-    const scale = await iframe.evaluate((el: HTMLIFrameElement) => Number(el.parentElement?.getAttribute('data-scale') ?? '1'));
+    const { top, left } = await iframe.evaluate((el) => el.getBoundingClientRect());
+    const scale = await iframe.evaluate((el) => Number(el.parentElement?.getAttribute('data-scale')));
 
     await context.page.mouse.move(left + (x * scale), top + (y * scale), options);
   }

@@ -1,5 +1,5 @@
 import type { Throttler } from '@ephox/katamari';
-import { createContext, useContext, type MouseEvent, type Dispatch, type SetStateAction } from 'react';
+import { createContext, useContext, type MouseEvent } from 'react';
 
 export interface DropdownState {
   readonly triggerRef: React.MutableRefObject<HTMLElement | undefined>;
@@ -11,7 +11,7 @@ export interface DropdownState {
   readonly triggerEvents: Array<'click' | 'hover'>;
   readonly debouncedHideHoverablePopover: Throttler.Throttler<[e: MouseEvent]>;
   readonly isOpen: boolean;
-  readonly setIsOpen: Dispatch<SetStateAction<boolean>>;
+  readonly setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const DropdownContext = createContext<DropdownState | null>(null);

@@ -1,5 +1,5 @@
 import type { Property } from 'csstype';
-import type { Dispatch, HTMLAttributes, PropsWithChildren, RefObject, SetStateAction } from 'react';
+import type { HTMLAttributes, PropsWithChildren } from 'react';
 
 export interface AllowedOverflow {
   horizontal: number;
@@ -41,8 +41,8 @@ export interface CssSize {
   height: Property.Height;
 }
 export interface DraggableState {
-  setShift: Dispatch<SetStateAction<Shift>>;
-  draggableRef: RefObject<HTMLDivElement | null>;
+  setShift: React.Dispatch<React.SetStateAction<Shift>>;
+  draggableRef: React.RefObject<HTMLDivElement | null>;
   isDragging: boolean;
   setIsDragging: React.Dispatch<React.SetStateAction<boolean>>;
   setPosition: React.Dispatch<React.SetStateAction<CssPosition | Position>>;
