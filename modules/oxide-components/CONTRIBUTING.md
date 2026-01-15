@@ -170,7 +170,7 @@ Components integrate with TinyMCE's Oxide design system:
 ### Available Scripts
 
 - `bun dev` - Start Vite development server
-- `bun build` - Build library and Storybook
+- `bun run build` - Build library and Storybook
 - `bun start` - Start Storybook development server
 - `bun lint` - Run ESLint
 - `bun test-watch` - Run all tests in watch mode

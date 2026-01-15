@@ -131,7 +131,7 @@ module.exports = function (grunt) {
   const gruntConfig = {
     shell: {
       tsc: { command: 'bun tsc' },
-      legacy: { command: 'bun build' },
+      legacy: { command: 'bun run build' },
       bun: { command: 'bun install' },
       'bun-dev': { command: 'bun dev' }
     },
@@ -185,7 +185,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('legacy-warn', () => grunt.log.warn(`
 *******
-Top-level grunt has been replaced by 'bun build', and the output has moved from project root to modules/tinymce
+Top-level grunt has been replaced by 'bun run build', and the output has moved from project root to modules/tinymce
 *******
 `));
 

@@ -33,7 +33,7 @@ $ git clone https://github.com/tinymce/tinymce.git
 
 ### Build TinyMCE
 
-* `bun build`
+* `bun run build`
 
 This will produce an editor build in `modules/tinymce/js`, with distribution zips in `modules/tinymce/dist/tinymce_[number].zip`.
 
