@@ -921,6 +921,10 @@ const register = (editor: Editor): void => {
     default: 'Anonymous'
   });
 
+  registerOption('content_id', {
+    processor: 'string',
+  });
+
   registerOption('fetch_users', {
     processor: (value) => {
       if (value === undefined) {
