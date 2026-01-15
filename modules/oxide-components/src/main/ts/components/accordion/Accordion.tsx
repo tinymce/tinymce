@@ -1,5 +1,5 @@
 import { Arr, Optional, Type } from '@ephox/katamari';
-import { createContext, useCallback, useContext, useId, useMemo, useRef, useState, type FC, type PropsWithChildren } from 'react';
+import { createContext, useCallback, useContext, useMemo, useRef, useState, type FC, type PropsWithChildren } from 'react';
 
 import * as KeyboardNavigationHooks from '../../keynav/KeyboardNavigationHooks';
 import * as Bem from '../../utils/Bem';
@@ -171,8 +171,8 @@ const Item: FC<AccordionItemProps> = ({
   children
 }) => {
   const { expandedItems, toggleItem } = useAccordion();
-  const contentId = useId();
-  const headerId = useId();
+  const contentId = `tox-${id}-content`;
+  const headerId = `tox-${id}-header`;
 
   const isExpanded = Arr.contains(expandedItems, id);
   const HeadingTag = headingLevel;

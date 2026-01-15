@@ -4,6 +4,9 @@ import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
 import { useState } from 'react';
 
 import { AutoResizingTextarea, Button, UniverseProvider } from '../../main';
+import * as Dropdown from '../dropdown/Dropdown';
+import { Icon } from '../icon/Icon';
+import * as Menu from '../menu/Menu';
 
 import * as Accordion from './Accordion';
 
@@ -159,6 +162,10 @@ Try using keyboard navigation and toggling the controls below.
   },
   render: (args) => {
     const [ lengthOption, setLengthOption ] = useState('longer');
+    const [ selectedModel, setSelectedModel ] = useState('gpt-4');
+
+    const modelNames: Record<string, string> = { 'gpt-4': 'GPT-4', 'gpt-3000': 'GPT-3000', 'claude': 'Claude' };
+    const closeDropdown = () => document.querySelector<HTMLElement>('[popover]')?.hidePopover?.();
 
     return (
       <div className="tox" style={{ width: '400px' }}>
@@ -172,11 +179,32 @@ Try using keyboard navigation and toggling the controls below.
           <Accordion.Item id="item2" title="Adjust length" iconPosition="end">
             <div className="tox-form__group">
               <p>Shorten or lengthen the text as needed.</p>
-              {/* This select need to be a combobox TINY-13450 */}
-              <select value={lengthOption} onChange={(e) => setLengthOption(e.target.value)}>
-                <option value="shorter">Shorter</option>
-                <option value="longer">Longer</option>
-              </select>
+              <Dropdown.Root side="bottom" align="start" gap={2}>
+                <Dropdown.Trigger>
+                  <div className="tox-selectfield">
+                    <button type="button" aria-haspopup="listbox">
+                      {lengthOption === 'shorter' ? 'Shorter' : 'Longer'}
+                    </button>
+                    <Icon icon="chevron-down" />
+                  </div>
+                </Dropdown.Trigger>
+                <Dropdown.Content>
+                  <Menu.Root>
+                    <Menu.Item onAction={() => {
+                      setLengthOption('shorter');
+                      closeDropdown();
+                    }}>
+                      Shorter
+                    </Menu.Item>
+                    <Menu.Item onAction={() => {
+                      setLengthOption('longer');
+                      closeDropdown();
+                    }}>
+                      Longer
+                    </Menu.Item>
+                  </Menu.Root>
+                </Dropdown.Content>
+              </Dropdown.Root>
               <Button variant="primary">Run</Button>
             </div>
           </Accordion.Item>
@@ -190,7 +218,36 @@ Try using keyboard navigation and toggling the controls below.
               />
               <div className="tox-button-group">
                 <Button variant="primary">Run</Button>
-                <Button variant="secondary">Model</Button>
+                <Dropdown.Root side="top" align="start" gap={2}>
+                  <Dropdown.Trigger>
+                    <button type="button" className="tox-accordion__model-button">
+                      {modelNames[selectedModel] || 'Model'}
+                      <Icon icon="chevron-down" />
+                    </button>
+                  </Dropdown.Trigger>
+                  <Dropdown.Content>
+                    <Menu.Root>
+                      <Menu.Item onAction={() => {
+                        setSelectedModel('gpt-4');
+                        closeDropdown();
+                      }}>
+                        GPT-4
+                      </Menu.Item>
+                      <Menu.Item onAction={() => {
+                        setSelectedModel('gpt-3000');
+                        closeDropdown();
+                      }}>
+                        GPT-3000
+                      </Menu.Item>
+                      <Menu.Item onAction={() => {
+                        setSelectedModel('claude');
+                        closeDropdown();
+                      }}>
+                        Claude
+                      </Menu.Item>
+                    </Menu.Root>
+                  </Dropdown.Content>
+                </Dropdown.Root>
               </div>
             </div>
           </Accordion.Item>

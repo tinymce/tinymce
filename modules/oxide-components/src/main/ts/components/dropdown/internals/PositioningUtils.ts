@@ -52,7 +52,8 @@ const getPositionStyles = ( {
     return {
       maxHeight: `${maxHeight}px`,
       top: `${top}px`,
-      left: `${left}px`
+      left: `${left}px`,
+      width: `${anchorRect.width}px`
     };
   }
 
