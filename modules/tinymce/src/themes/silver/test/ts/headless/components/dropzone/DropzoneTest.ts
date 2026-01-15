@@ -105,7 +105,10 @@ describe('headless.tinymce.themes.silver.components.dropzone.DropzoneTest', () =
         dropAreaLabel: Optional.some('Drop Area Label'),
         allowedFileTypes: Optional.some('text/plain'),
         allowedFileExtensions: Optional.some([ 'txt' ]),
-        onInvalidFiles: () => Promise.resolve(store.add('error')),
+        onInvalidFiles: () => {
+          store.add('error');
+          return Promise.resolve();
+        },
       }, TestProviders, Optional.none())
     ));
 
