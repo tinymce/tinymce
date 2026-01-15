@@ -1,5 +1,5 @@
 import type { Throttler } from '@ephox/katamari';
-import { createContext, useContext, type MouseEvent, type MutableRefObject, type RefObject, type Dispatch, type SetStateAction } from 'react';
+import { createContext, useContext, type MouseEvent, type Dispatch, type SetStateAction } from 'react';
 
 export interface DropdownState {
   readonly triggerRef: React.MutableRefObject<HTMLElement | undefined>;

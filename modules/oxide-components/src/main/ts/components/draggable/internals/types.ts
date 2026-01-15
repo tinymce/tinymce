@@ -1,5 +1,5 @@
 import type { Property } from 'csstype';
-import type { HTMLAttributes, PropsWithChildren } from 'react';
+import type { Dispatch, HTMLAttributes, PropsWithChildren, RefObject, SetStateAction } from 'react';
 
 export interface AllowedOverflow {
   horizontal: number;
