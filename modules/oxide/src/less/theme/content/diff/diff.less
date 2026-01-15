@@ -1,0 +1,136 @@
+@added-background-color: fade(@color-success, 20%);
+@modified-background-color: fade(@color-tint, 20%);
+@removed-background-color: fade(@color-error, 20%);
+
+@selected-outline-color: @color-tint;
+@selected-box-shadow: 0 -2px 0 0 @selected-outline-color inset, 0 -2px 0 0 @selected-outline-color;
+
+.diff-content(
+  @pluginName,
+  @added-bg,
+  @modified-bg,
+  @removed-bg,
+  @selected-outline-color,
+  @selected-box-shadow
+) {
+
+  .tox-@{pluginName}__annotation--added,
+  .tox-@{pluginName}__annotation--modified,
+  .tox-@{pluginName}__annotation--removed {
+    text-decoration: none;
+  }
+
+  .tox-@{pluginName}__annotation--added__highlight {
+    background-color: @added-bg;
+    text-decoration: underline;
+  }
+
+  .tox-@{pluginName}__annotation--added__selected {
+    background-color: @added-bg;
+    box-shadow: @selected-box-shadow;
+    text-decoration: none;
+  }
+
+  .tox-@{pluginName}__annotation--modified__highlight {
+    background-color: @modified-bg;
+    text-decoration: underline;
+  }
+
+  .tox-@{pluginName}__annotation--modified__selected {
+    background-color: @modified-bg;
+    box-shadow: @selected-box-shadow;
+    text-decoration: none;
+  }
+
+  .tox-@{pluginName}__annotation--removed__highlight {
+    background-color: @removed-bg;
+    text-decoration: line-through;
+  }
+
+  .tox-@{pluginName}__annotation--removed__selected {
+    background-color: @removed-bg;
+    box-shadow: @selected-box-shadow;
+    text-decoration: line-through;
+  }
+
+  .tox-@{pluginName}__annotation--added.tox-@{pluginName}__annotation--added__hidden,
+  .tox-@{pluginName}__annotation--modified.tox-@{pluginName}__annotation--modified__hidden,
+  .tox-@{pluginName}__annotation--removed.tox-@{pluginName}__annotation--removed__hidden {
+    display: none;
+    text-decoration: none;
+  }
+
+  *:has(> div > iframe) {
+    &.tox-@{pluginName}__annotation--added,
+    &.tox-@{pluginName}__annotation--modified,
+    &.tox-@{pluginName}__annotation--removed {
+      padding: 7px;
+      margin: 5px;
+    }
+  }
+
+  img,
+  video,
+  iframe {
+    &.tox-@{pluginName}__annotation--added__highlight {
+      outline: 0.25em solid @added-bg;
+      padding: 0.25em;
+    }
+
+    &.tox-@{pluginName}__annotation--added__selected {
+      border: 0.25em solid @added-bg;
+      outline: 0.125em solid @selected-outline-color;
+      padding: 0em;
+    }
+
+    &.tox-@{pluginName}__annotation--modified__highlight {
+      outline: 0.25em solid @modified-bg;
+      padding: 0.25em;
+    }
+
+    &.tox-@{pluginName}__annotation--modified__selected {
+      border: 0.25em solid @modified-bg;
+      outline: 0.125em solid @selected-outline-color;
+      padding: 0em;
+    }
+
+    &.tox-@{pluginName}__annotation--removed__highlight {
+      outline: 0.25em solid @removed-bg;
+      padding: 0.25em;
+    }
+
+    &.tox-@{pluginName}__annotation--removed__selected {
+      border: 0.25em solid @removed-bg;
+      outline: 0.125em solid @selected-outline-color;
+      padding: 0em;
+    }
+  }
+
+  div.tox-@{pluginName}__annotation:has(> hr) {
+    padding: 0.25em;
+  }
+
+  div.tox-@{pluginName}__annotation--removed__highlight > hr {
+    border-color: darken(@removed-bg, 50%);
+  }
+
+  div.tox-@{pluginName}__annotation--added__highlight > hr {
+    border-color: darken(@added-bg, 50%);
+  }
+
+  .mce-pagebreak {
+    &.tox-@{pluginName}__annotation--added__selected,
+    &.tox-@{pluginName}__annotation--removed__selected,
+    &.tox-@{pluginName}__annotation--modified__selected {
+      // Taken from the content pagebreak styles
+      border: 1px dashed #aaa;
+      box-shadow: none;
+    }
+
+    &.tox-@{pluginName}__annotation--added__highlight,
+    &.tox-@{pluginName}__annotation--modified__highlight,
+    &.tox-@{pluginName}__annotation--removed__highlight {
+      padding: 0;
+    }
+  }
+}

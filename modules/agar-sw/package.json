@@ -1,6 +1,7 @@
 {
   "name": "@ephox/agar-sw",
   "version": "1.0.0",
+  "private": true,
   "description": "HTTP mocking service worker",
   "repository": {
     "type": "git",
