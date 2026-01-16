@@ -1,7 +1,7 @@
 import { ApproxStructure, Assertions, TestStore, UiFinder } from '@ephox/agar';
 import { type AlloyComponent, AlloyTriggers, Composing, GuiFactory, NativeEvents, Representing } from '@ephox/alloy';
 import { after, context, describe, it } from '@ephox/bedrock-client';
-import { Fun, Optional } from '@ephox/katamari';
+import { Optional } from '@ephox/katamari';
 import { assert } from 'chai';
 
 import { renderDropZone } from 'tinymce/themes/silver/ui/dialog/Dropzone';
@@ -19,7 +19,7 @@ describe('headless.tinymce.themes.silver.components.dropzone.DropzoneTest', () =
       dropAreaLabel: Optional.none(),
       allowedFileTypes: Optional.none(),
       allowedFileExtensions: Optional.none(),
-      onInvalidFiles: Fun.noop
+      onInvalidFiles: () => Promise.resolve(),
     }, TestProviders, Optional.none())
   ));
 
@@ -105,7 +105,10 @@ describe('headless.tinymce.themes.silver.components.dropzone.DropzoneTest', () =
         dropAreaLabel: Optional.some('Drop Area Label'),
         allowedFileTypes: Optional.some('text/plain'),
         allowedFileExtensions: Optional.some([ 'txt' ]),
-        onInvalidFiles: () => store.add('error'),
+        onInvalidFiles: () => {
+          store.add('error');
+          return Promise.resolve();
+        },
       }, TestProviders, Optional.none())
     ));
 

@@ -1,5 +1,4 @@
 import { Arr, Fun, Optional, Optionals } from '@ephox/katamari';
-import { Focus, type SugarElement } from '@ephox/sugar';
 
 import type Editor from 'tinymce/core/api/Editor';
 import type { BlobInfo } from 'tinymce/core/api/file/BlobCache';
@@ -164,7 +163,7 @@ const makeDialogBody = (
   catalogs: LinkDialogCatalog,
   hasUploadPanel: boolean,
   fileTypes: DocumentsFileTypes[],
-  onInvalidFiles: (el: SugarElement<HTMLElement>) => void
+  onInvalidFiles: () => Promise<void>
 ): Dialog.PanelSpec | Dialog.TabPanelSpec => {
 
   const generalPanelItems = Arr.flatten<Dialog.BodyComponentSpec>([
@@ -202,7 +201,6 @@ const makeDialogBody = (
 };
 
 const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInstanceApi<LinkDialogData>) => void, editor: Editor): Dialog.DialogSpec<LinkDialogData> => {
-
   const urlInput: Dialog.UrlInputSpec[] = [
     {
       name: 'url',
@@ -249,7 +247,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInsta
     catalogs,
     settings.hasUploadPanel,
     Options.getDocumentsFileTypes(editor),
-    (el) => helpers.alertErr('All inserted files have unallowed extensions', () => Focus.focus(el))
+    () => new Promise((r) => helpers.alertErr('Selected files do not have allowed extensions', r))
   );
   return {
     title: 'Insert/Edit Link',
