@@ -6,6 +6,14 @@ import { commands, userEvent } from 'vitest/browser';
 // See: https://github.com/vitest-dev/vitest/issues/7836
 // Hopefully in the future we can remove this file and use userEvent API directly.
 
+declare module 'vitest/browser' {
+  interface BrowserCommands {
+    mousedownCommand: (...args: Parameters<Mouse['down']>) => Promise<void>;
+    mouseupCommand: (...args: Parameters<Mouse['up']>) => Promise<void>;
+    mousemoveCommand: (...args: Parameters<Mouse['move']>) => Promise<void>;
+  }
+}
+
 const down = async (...args: Parameters<Mouse['down']>): Promise<void> =>
   commands.mousedownCommand(...args);
 

@@ -84,7 +84,7 @@
     "nohoist": [
       "**/storybook",
       "**/@storybook/**",
-      "**/vite**"
+      "@tinymce/oxide-components/vite"
     ]
   },
   "dependencies": {
