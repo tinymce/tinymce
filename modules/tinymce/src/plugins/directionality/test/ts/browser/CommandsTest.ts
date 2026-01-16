@@ -10,16 +10,16 @@ describe('browser.tinymce.plugins.directionality.CommandsTest', () => {
     base_url: '/project/tinymce/js/tinymce'
   }, [ Plugin ], true);
 
-  it('TINY-9669: mceDirectionLTR on a RTL block in LTR mode should remove the dir property', () => {
+  it('TINY-9669: mceDirectionLTR on a RTL block in LTR mode should add the dir="ltr" property', () => {
     const editor = hook.editor();
 
     editor.setContent('<div dir="rtl">Noneditable content</div>');
     TinySelections.setSelection(editor, [ 0, 0 ], 0, [ 0, 0 ], 2);
     editor.execCommand('mceDirectionLTR');
-    TinyAssertions.assertContent(editor, '<div>Noneditable content</div>');
+    TinyAssertions.assertContent(editor, '<div dir="ltr">Noneditable content</div>');
   });
 
-  it('TINY-9669: mceDirectionRTL on a LTR block in LTR mode should add RTL to the dir property', () => {
+  it('TINY-9669: mceDirectionRTL on a LTR block in LTR mode should add the dir="rtl" property', () => {
     const editor = hook.editor();
 
     editor.setContent('<div>Noneditable content</div>');
@@ -40,4 +40,3 @@ describe('browser.tinymce.plugins.directionality.CommandsTest', () => {
     });
   });
 });
-
