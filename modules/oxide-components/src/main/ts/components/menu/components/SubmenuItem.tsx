@@ -1,5 +1,5 @@
 import { Fun, Type } from '@ephox/katamari';
-import { forwardRef, useEffect, useId, useMemo, useState } from 'react';
+import { forwardRef, useEffect, useId, useMemo, useRef, useState } from 'react';
 
 import * as Bem from '../../../utils/Bem';
 import * as Dropdown from '../../dropdown/Dropdown';
@@ -13,17 +13,22 @@ export const SubmenuItem = forwardRef<HTMLButtonElement, SubmenuProps>(({ autoFo
     hovered: false,
   });
   const id = useId();
+  const stateRef = useRef(state);
+
+  useEffect(() => {
+    stateRef.current = state;
+  }, [ state ]);
 
   useEffect(() => {
     setState((prevState) => ({ ...prevState, enabled }));
   }, [ enabled ]);
 
   const api: CommonMenuItemInstanceApi = useMemo(() => ({
-    isEnabled: () => state.enabled,
+    isEnabled: () => stateRef.current.enabled,
     setEnabled: (newEnabled: boolean) => {
       setState((prev) => ({ ...prev, enabled: newEnabled }));
     }
-  }), [ state ]);
+  }), []);
 
   useEffect(() => {
     if (onSetup) {

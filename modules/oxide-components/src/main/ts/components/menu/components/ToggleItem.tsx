@@ -1,5 +1,5 @@
 import { Fun, Type } from '@ephox/katamari';
-import { forwardRef, useEffect, useId, useMemo, useState } from 'react';
+import { forwardRef, useEffect, useId, useMemo, useRef, useState } from 'react';
 
 import * as Bem from '../../../utils/Bem';
 import { Icon } from '../../icon/Icon';
@@ -13,21 +13,26 @@ export const ToggleItem = forwardRef<HTMLButtonElement, ToggleMenuItemProps>(({ 
     hovered: false,
   });
   const id = useId();
+  const stateRef = useRef(state);
+
+  useEffect(() => {
+    stateRef.current = state;
+  }, [ state ]);
 
   useEffect(() => {
     setState((prevState) => ({ ...prevState, enabled, active }));
   }, [ enabled, active ]);
 
   const api: ToggleMenuItemInstanceApi = useMemo(() => ({
-    isEnabled: () => state.enabled,
+    isEnabled: () => stateRef.current.enabled,
     setEnabled: (newEnabled: boolean) => {
       setState((prev) => ({ ...prev, enabled: newEnabled }));
     },
-    isActive: () => state.active,
+    isActive: () => stateRef.current.active,
     setActive: (newActive: boolean) => {
       setState((prev) => ({ ...prev, active: newActive }));
     }
-  }), [ state ]);
+  }), []);
 
   useEffect(() => {
     if (onSetup) {
