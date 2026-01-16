@@ -3,8 +3,7 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "target": "ES2022",
     "lib": [
-      "ES2022",
-      "DOM"
+      "ES2022"
     ],
     "types": [
       "node"
@@ -25,26 +24,7 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "oxide-components/*": ["src/main/ts/*"],
-      "vitest": ["../../node_modules/vitest"],
-      "vitest/browser": ["../../node_modules/vitest/browser"],
-      "vitest/config": ["../../node_modules/vitest/config"],
-      "vitest/node": ["../../node_modules/vitest/node"],
-      "vitest/internal/browser": ["../../node_modules/vitest/dist/browser"],
-      "@vitest/expect": ["../../node_modules/vitest/node_modules/@vitest/expect"],
-      "@vitest/expect/*": ["../../node_modules/vitest/node_modules/@vitest/expect/*"],
-      "@vitest/spy": ["../../node_modules/vitest/node_modules/@vitest/spy"],
-      "@vitest/spy/*": ["../../node_modules/vitest/node_modules/@vitest/spy/*"],
-      "@vitest/utils": ["../../node_modules/vitest/node_modules/@vitest/utils"],
-      "@vitest/utils/*": ["../../node_modules/vitest/node_modules/@vitest/utils/*"],
-      "@vitest/browser": ["../../node_modules/@vitest/browser"],
-      "@vitest/browser/*": ["../../node_modules/@vitest/browser/*"],
-      "@vitest/browser-playwright": ["../../node_modules/@vitest/browser-playwright"],
-      "@vitest/browser-playwright/*": ["../../node_modules/@vitest/browser-playwright/*"],
-      "vite": ["../../node_modules/vite"],
-      "vite/*": ["../../node_modules/vite/*"],
-      "rollup": ["../../node_modules/rollup"],
-      "rollup/*": ["../../node_modules/rollup/*"]
+      "oxide-components/*": ["src/main/ts/*"]
     }
   },
   "include": [

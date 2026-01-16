@@ -83,8 +83,7 @@
   "workspaces": {
     "nohoist": [
       "**/storybook",
-      "**/@storybook/**",
-      "@tinymce/oxide-components/vite"
+      "**/@storybook/**"
     ]
   },
   "dependencies": {
