@@ -434,6 +434,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     );
   });
 
+  // TODO: Fails (3.2.6 and SAFE_FOR_XML: true)
   it('Script with a HTML comment and less than with element_format: xhtml', () => {
     const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
@@ -442,6 +443,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<s' + 'cript>// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
   });
 
+  // TODO: Fails (3.2.6 and SAFE_FOR_XML: true)
   it('Script with a HTML comment and less than', () => {
     const ser = DomSerializer({ fix_list_elements: true });
     ser.setRules('script[type|language|src]');
@@ -450,6 +452,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<script><!-- 1 < 2; // --></script>');
   });
 
+  // TODO: Fails (3.2.6 and SAFE_FOR_XML: true)
   it('Script with white space in beginning, comment and less than with element_format: xhtml', () => {
     const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
@@ -458,6 +461,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<s' + 'cript>// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
   });
 
+  // TODO: Fails (3.2.6 and SAFE_FOR_XML: true)
   it('Script with white space in beginning, comment and less than', () => {
     const ser = DomSerializer({ fix_list_elements: true });
     ser.setRules('script[type|language|src]');
@@ -466,6 +470,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<script>\n\n<!-- 1 < 2;\n\n--></script>');
   });
 
+  // TODO: Fails (3.2.6 and SAFE_FOR_XML: true)
   it('Script with comments and cdata with element_format: xhtml', () => {
     const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
@@ -474,6 +479,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<s' + 'cript>// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
   });
 
+  // TODO: Fails (3.2.6 and SAFE_FOR_XML: true)
   it('Script with comments and cdata', () => {
     const ser = DomSerializer({ fix_list_elements: true });
     ser.setRules('script[type|language|src]');
@@ -482,6 +488,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<script>// <![CDATA[1 < 2; // ]]></script>');
   });
 
+  // TODO: Fails (3.2.6 and SAFE_FOR_XML: true)
   it('Script with cdata with element_format: xhtml', () => {
     const ser = DomSerializer({ fix_list_elements: true, element_format: 'xhtml' });
     ser.setRules('script[type|language|src]');
@@ -490,6 +497,7 @@ describe('browser.tinymce.core.dom.SerializerTest', () => {
     assert.equal(ser.serialize(getTestElement()).replace(/\r/g, ''), '<s' + 'cript>// <![CDATA[\n1 < 2;\n// ]]></s' + 'cript>');
   });
 
+  // TODO: Fails (3.2.6 and SAFE_FOR_XML: true)
   it('Script with cdata', () => {
     const ser = DomSerializer({ fix_list_elements: true });
     ser.setRules('script[type|language|src]');

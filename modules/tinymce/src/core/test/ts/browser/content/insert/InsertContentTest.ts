@@ -849,6 +849,9 @@ describe('browser.tinymce.core.content.insert.InsertContentTest', () => {
       TinyAssertions.assertRawContent(editor, '<p>insertion</p><p>initial</p>');
     });
 
+    // TODO: Test fails (3.2.6 - SAFE_FOR_XML: false)
+    // Doesn't fail with SAFE_FOR_XML: true
+    // Acutal: <p><!----><iframe sandbox="">-></body>--><span id="mce_marker" data-mce-type="bookmark">&#xFEFF;</span></body></iframe>initial</p>
     it('TINY-10305: Should sanitize content that can cause mXSS via ZWNBSP trimming', () => {
       const editor = hook.editor();
       editor.setContent('<p>initial</p>');

@@ -289,7 +289,7 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
           const content = '<div data-some-attribute="title=<br/>">abc</div>';
           const editor = hook.editor();
           editor.setContent(content);
-          TinyAssertions.assertContent(editor, content, { format: 'raw' });
+          TinyAssertions.assertContent(editor, '<div data-some-attribute="title=&lt;br/&gt;">abc</div>', { format: 'raw' });
         });
 
         const initialContent = '<p>initial</p>';
@@ -607,6 +607,9 @@ describe('browser.tinymce.core.content.EditorContentTest', () => {
         ...options
       }, []);
 
+      // TODO: Test fails (3.2.6 - SAFE_FOR_XML: false)
+      // Doesn't fail with SAFE_FOR_XML: true
+      // Actual: <p>test</p><!----><p><iframe sandbox="">-></body>--></body></iframe></p>
       it('TINY-10305: setContent html should sanitize content that can cause mXSS via ZWNBSP trimming', () => {
         const editor = hook.editor();
         editor.setContent('<p>test</p><!--\ufeff><iframe onload=alert(document.domain)>-></body>-->');

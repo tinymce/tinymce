@@ -16,6 +16,7 @@ describe('browser.tinymce.core.html.SanitizationTest', () => {
       assert.equal(body.innerHTML, testCase.expected);
     };
 
+    // TODO: Test fails (3.2.6 - SAFE_FOR_XML: false)
     it('Sanitize iframe HTML', () => testHtmlSanitizer({
       input: '<iframe src="x"><script>alert(1)</script></iframe><iframe src="javascript:alert(1)"></iframe>',
       expected: '<iframe></iframe>',
