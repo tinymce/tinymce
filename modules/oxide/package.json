@@ -22,6 +22,7 @@
   "sideEffects": false,
   "exports": {
     "./skins/ui/default/skin.ts": "./build/skins/ui/default/skin.ts",
+    "./skins/ui/default/content.ts": "./build/skins/ui/default/content.ts",
     "./skins/ui/default/skin.css": "./build/skins/ui/default/skin.css",
     "./build/*": "./build/*",
     "./src/less/*": "./src/less/*"
@@ -30,6 +31,9 @@
     "*": {
       "./skins/ui/default/skin.ts": [
         "./build/skins/ui/default/skin.ts"
+      ],
+      "./skins/ui/default/content.ts": [
+        "./build/skins/ui/default/content.ts"
       ],
       "./skins/ui/default/skin.css": [
         "./build/skins/ui/default/skin.css"
