@@ -33,7 +33,7 @@
     "@ephox/darwin": "^9.0.0",
     "@tinymce/oxide": "^3.0.0",
     "@tinymce/oxide-icons-default": "^3.0.0",
-    "dompurify": "3.2.4"
+    "dompurify": "3.2.6"
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^5.1.1",

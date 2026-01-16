@@ -574,6 +574,13 @@ const register = (editor: Editor): void => {
     default: false
   });
 
+  // TINY-11900: Set to default to `true` to avoid breaking change
+  registerOption('allow_html_in_comments', {
+    processor: 'boolean',
+    default: true
+    // default: false
+  });
+
   registerOption('allow_script_urls', {
     processor: 'boolean',
     default: false

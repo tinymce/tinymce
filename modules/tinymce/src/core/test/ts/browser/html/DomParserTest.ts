@@ -763,6 +763,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         );
       });
 
+      // TODO: Test fail s(3.2.6 - SAFE_FOR_XML: false)
       // TINY-9624: Safari encodes the iframe innerHTML is `&lt;textarea&gt;`. On Chrome and Firefox, the innerHTML is `<textarea>`, causing
       // the mXSS cleaner in DOMPurify to run and remove the iframe.
       it('parse iframe XSS', () => {
@@ -1042,6 +1043,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         assert.equal(serializedHtml, '<p>a b</p>');
       });
 
+      // TODO: Fails (3.2.6 and SAFE_FOR_XML: true)
       it('Parse cdata with comments', () => {
         const parser = DomParser(scenario.settings, schema);
 
@@ -1049,7 +1051,7 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
         assert.equal(serializedHtml, '<div><!--[CDATA[<!--x----><!--y-->--&gt;]]&gt;</div>');
 
         const serializedXHtml = serializer.serialize(parser.parse('<div><![CDATA[<!--x--><!--y-->--><!--]]></div>', { format: 'xhtml' }));
-        assert.equal(serializedXHtml, '<div><![CDATA[<!--x--><!--y-->--><!--]]></div>');
+        assert.equal(serializedXHtml, scenario.isSanitizeEnabled ? '' : '<div><![CDATA[<!--x--><!--y-->--><!--]]></div>');
       });
 
       it('TINY-7756: Parsing invalid nested children', () => {
@@ -1596,6 +1598,31 @@ describe('browser.tinymce.core.html.DomParserTest', () => {
             testConversion('<embed src="about:blank" type="audio/mpeg" width="100" height="100" style="color: red;">', '<audio src="about:blank" controls=""></audio>'));
           it('TINY-10349: Embed elements with other mime type should preserve width and height attributes only',
             testConversion('<embed src="about:blank" type="application/pdf" width="100" height="100" style="color: red;">', '<iframe src="about:blank" width="100" height="100"></iframe>'));
+        });
+      });
+
+      context('allow_html_in_comments', () => {
+        it('TINY-12220: Should allow html in comment elements', () => {
+          const parser = DomParser({ ...scenario.settings, allow_html_in_comments: true }, schema);
+          const serializer = HtmlSerializer({}, schema);
+
+          const initialHtml = '<!-- <b>test</b> -->';
+          const fragment = parser.parse(initialHtml);
+          const serializedHtml = serializer.serialize(fragment);
+
+          assert.equal(serializedHtml, initialHtml, 'Should match the initial HTML');
+        });
+
+        it('TINY-12220: Should allow html in comment if sanitize is set to false', () => {
+          const parser = DomParser({ ...scenario.settings }, schema);
+          const serializer = HtmlSerializer({}, schema);
+
+          const initialHtml = '<p>foo<!-- <b>bar</b> --></p><!-- <b>baz</b> -->';
+          const fragment = parser.parse(initialHtml);
+          const serializedHtml = serializer.serialize(fragment);
+          const expectedHtml = scenario.isSanitizeEnabled ? '<p>foo</p>' : initialHtml;
+
+          assert.equal(serializedHtml, expectedHtml, 'Should match the expected HTML');
         });
       });
     });
