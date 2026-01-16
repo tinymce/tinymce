@@ -7,6 +7,7 @@ import Schema from '../api/html/Schema';
 import Tools from '../api/util/Tools';
 import * as URI from '../api/util/URI';
 import * as NodeType from '../dom/NodeType';
+import * as KeepHtmlComments from './KeepHtmlComments';
 import * as Namespace from './Namespace';
 
 export type MimeType = 'text/html' | 'application/xhtml+xml';
@@ -25,9 +26,15 @@ const processNode = (node: Node, settings: DomParserSettings, schema: Schema, sc
   const validate = settings.validate;
   const specialElements = schema.getSpecialElements();
 
-  // Pad conditional comments if they aren't allowed
-  if (node.nodeType === NodeTypes.COMMENT && !settings.allow_conditional_comments && /^\[if/i.test(node.nodeValue ?? '')) {
-    node.nodeValue = ' ' + node.nodeValue;
+  if (node.nodeType === NodeTypes.COMMENT) {
+    // Pad conditional comments if they aren't allowed
+    if (!settings.allow_conditional_comments && /^\[if/i.test(node.nodeValue ?? '')) {
+      node.nodeValue = ' ' + node.nodeValue;
+    }
+
+    if (settings.sanitize && settings.allow_html_in_comments && Type.isString(node.nodeValue)) {
+      node.nodeValue = KeepHtmlComments.encodeData(node.nodeValue);
+    }
   }
 
   const lcTagName = evt?.tagName ?? node.nodeName.toLowerCase();
@@ -188,7 +195,7 @@ const getPurifyConfig = (settings: DomParserSettings, mimeType: MimeType): Confi
     ALLOWED_TAGS: [ '#comment', '#cdata-section', 'body' ],
     ALLOWED_ATTR: [],
     // TINY-11332: New settings for dompurify 3.1.7
-    SAFE_FOR_XML: false
+    // SAFE_FOR_XML: false
   };
   const config = { ...basePurifyConfig };
 

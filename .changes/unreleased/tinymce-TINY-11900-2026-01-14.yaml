@@ -1,6 +1,6 @@
 project: tinymce
 kind: Security
-body: Update `dompurify` to ensure latest content parsing protection.
-time: 2026-01-14T09:25:11.370606+10:00
+body: 'New `allow_html_in_comments` option to control HTML like contents inside comment data.'
+time: 2026-01-14T09:49:32.442507+10:00
 custom:
     Issue: TINY-11900
