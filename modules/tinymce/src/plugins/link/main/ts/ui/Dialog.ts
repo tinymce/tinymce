@@ -247,7 +247,7 @@ const makeDialog = (settings: LinkDialogInfo, onSubmit: (api: Dialog.DialogInsta
     catalogs,
     settings.hasUploadPanel,
     Options.getDocumentsFileTypes(editor),
-    () => new Promise((r) => helpers.alertErr('All inserted files have unallowed extensions', r))
+    () => new Promise((r) => helpers.alertErr('Selected files do not have allowed extensions', r))
   );
   return {
     title: 'Insert/Edit Link',
