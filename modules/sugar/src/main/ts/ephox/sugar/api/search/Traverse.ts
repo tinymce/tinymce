@@ -53,7 +53,7 @@ const parents = (element: SugarElement<Node>, isRoot?: (e: SugarElement<Node>) =
   let dom: Node = element.dom;
   const ret: SugarElement<Node>[] = [];
 
-  while (dom.parentNode !== null && dom.parentNode !== undefined) {
+  while (Type.isNonNullable(dom.parentNode)) {
     const rawParent = dom.parentNode;
     const p = SugarElement.fromDom(rawParent);
     ret.push(p);
