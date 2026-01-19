@@ -42,7 +42,7 @@ The Card component is a reusable compound component for displaying content with 
 
 ## Features
 - **Compound Component Pattern**: Flexible composition with Root, Header, Body, and Actions
-- **State Management**: Supports active and resolution states (accepted/rejected)
+- **State Management**: Supports selected and resolution states (accepted/rejected)
 - **Controlled Component**: Parent manages state via props
 - **Accessibility**: Proper ARIA attributes and keyboard support
 
@@ -94,7 +94,7 @@ Spacing: 12px padding from card edge, 12px gap between sections.
 
     return (
       <div style={{ width: '316px' }}>
-        <Card.Root active={selected} onSelect={() => setSelected(!selected)}>
+        <Card.Root selected={selected} onSelect={() => setSelected(!selected)}>
           <Card.Header>
             Review Suggestion
           </Card.Header>
@@ -138,7 +138,7 @@ The content is initially collapsed and can be expanded by clicking the Expand bu
 
     return (
       <div style={{ width: '316px' }}>
-        <Card.Root active={selected} onSelect={() => setSelected(!selected)}>
+        <Card.Root selected={selected} onSelect={() => setSelected(!selected)}>
           <Card.Header title="Lengthy Review" />
           <Card.Body>
             <ExpandableBox
@@ -192,7 +192,7 @@ All buttons use the outlined variant with text color icons.
 
     return (
       <div style={{ width: '316px' }}>
-        <Card.Root active={selected} onSelect={() => setSelected(!selected)}>
+        <Card.Root selected={selected} onSelect={() => setSelected(!selected)}>
           <Card.Header>
             Review Suggestion
           </Card.Header>
@@ -239,7 +239,7 @@ Demonstrates the visual states of cards with status labels:
 
     return (
       <div style={{ width: '316px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <Card.Root active={selectedCard === 1} onSelect={() => setSelectedCard(1)}>
+        <Card.Root selected={selectedCard === 1} onSelect={() => setSelectedCard(1)}>
           <Card.Header>
             Review Suggestion
           </Card.Header>
@@ -258,7 +258,7 @@ Demonstrates the visual states of cards with status labels:
           </Card.Actions>
         </Card.Root>
 
-        <Card.Root active={selectedCard === 2} onSelect={() => setSelectedCard(2)} hasDecision={true}>
+        <Card.Root selected={selectedCard === 2} onSelect={() => setSelectedCard(2)} hasDecision={true}>
           <Card.Header>
             <div className="tox-card__header-label">Applied</div>
           </Card.Header>
@@ -273,7 +273,7 @@ Demonstrates the visual states of cards with status labels:
           </Card.Actions>
         </Card.Root>
 
-        <Card.Root active={selectedCard === 3} onSelect={() => setSelectedCard(3)} hasDecision={true}>
+        <Card.Root selected={selectedCard === 3} onSelect={() => setSelectedCard(3)} hasDecision={true}>
           <Card.Header>
             <div className="tox-card__header-label">Skipped</div>
           </Card.Header>
@@ -336,7 +336,7 @@ This simulates how cards would appear in a sidebar-style UI.
           {reviews.map((review) => (
             <Card.Root
               key={review.id}
-              active={activeCard === review.id}
+              selected={activeCard === review.id}
               onSelect={() => setActiveCard(review.id)}
             >
               <Card.Header title={review.title} />
@@ -356,6 +356,76 @@ This simulates how cards would appear in a sidebar-style UI.
             </Card.Root>
           ))}
         </div>
+      </div>
+    );
+  }
+};
+
+export const KeyboardNavigation: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**Keyboard Navigation with CardList**
+
+Demonstrates the CardList component with full keyboard navigation support:
+- **Arrow Keys**: Navigate between cards (Up/Down)
+- **Enter/Space**: Select the focused card
+- **Tab**: Move focus in/out of the list
+- **Roving Tabindex**: Only the focused card is in tab order
+
+This follows WCAG accessibility guidelines and the listbox pattern.
+
+**Try it:**
+1. Tab to focus the first card
+2. Use arrow keys to navigate
+3. Press Enter/Space to select
+        `
+      }
+    }
+  },
+  render: () => {
+    const [ selectedIndex, setSelectedIndex ] = useState<number | undefined>(undefined);
+
+    const reviews = [
+      { id: 1, title: 'Grammar Fix', content: 'Change "institution club" to "club institution"' },
+      { id: 2, title: 'Spelling Correction', content: 'Correct "tiki-taka" spelling' },
+      { id: 3, title: 'Clarity Improvement', content: 'Simplify complex sentence structure' },
+      { id: 4, title: 'Style Enhancement', content: 'Add transition words for better flow' },
+      { id: 5, title: 'Fact Check', content: 'Verify the 2008-2012 era claim' },
+    ];
+
+    return (
+      <div style={{ width: '316px' }}>
+        <Card.CardList
+          ariaLabel="Review suggestions"
+          selectedIndex={selectedIndex}
+          onSelectCard={setSelectedIndex}
+          cycles={false}
+        >
+          {reviews.map((review, index) => (
+            <Card.Root key={review.id} index={index}>
+              <Card.Header title={review.title} />
+              <Card.Body>
+                <p style={{ margin: 0, fontSize: '14px' }}>{review.content}</p>
+              </Card.Body>
+              <Card.Actions>
+                <Button variant="outlined" onClick={(e) => {
+                  e.stopPropagation(); setSelectedIndex(undefined);
+                }}>
+                  <Icon icon="close" />
+                  Skip
+                </Button>
+                <Button variant="outlined" onClick={(e) => {
+                  e.stopPropagation(); setSelectedIndex(index);
+                }}>
+                  <Icon icon="checkmark" />
+                  Apply
+                </Button>
+              </Card.Actions>
+            </Card.Root>
+          ))}
+        </Card.CardList>
       </div>
     );
   }

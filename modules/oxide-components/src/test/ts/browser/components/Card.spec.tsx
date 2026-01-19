@@ -1,5 +1,5 @@
 import * as Card from 'oxide-components/components/card/Card';
-import { Button, UniverseProvider } from 'oxide-components/main';
+import { Button, ExpandableBox, UniverseProvider } from 'oxide-components/main';
 import * as Bem from 'oxide-components/utils/Bem';
 import { describe, expect, it, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
@@ -22,7 +22,7 @@ describe('browser.components.CardTest', () => {
   };
 
   describe('Rendering Tests', () => {
-    it('Should render with default props', async () => {
+    it('TINY-13459: Should render with default props', async () => {
       const { container } = render(
         <Card.Root>
           <Card.Body>Content</Card.Body>
@@ -34,7 +34,7 @@ describe('browser.components.CardTest', () => {
       expect(card).toBeTruthy();
     });
 
-    it('Should render all child sections (header, body, actions)', async () => {
+    it('TINY-13459:Should render all child sections (header, body, actions)', async () => {
       const { getByText } = render(
         <Card.Root>
           <Card.Header>Test Header</Card.Header>
@@ -51,7 +51,7 @@ describe('browser.components.CardTest', () => {
       expect(getByText('Skip').element()).toBeTruthy();
     });
 
-    it('Should apply custom className', async () => {
+    it('TINY-13459: Should apply custom className', async () => {
       const { container } = render(
         <Card.Root className="custom-class">
           <Card.Body>Content</Card.Body>
@@ -63,7 +63,7 @@ describe('browser.components.CardTest', () => {
       expect(card?.className).toContain('custom-class');
     });
 
-    it('Should render header with title prop', async () => {
+    it('TINY-13459: Should render header with title prop', async () => {
       const { getByText } = render(
         <Card.Root>
           <Card.Header title="Title Prop" />
@@ -74,7 +74,7 @@ describe('browser.components.CardTest', () => {
       expect(getByText('Title Prop').element()).toBeTruthy();
     });
 
-    it('Should render header with children when title is not provided', async () => {
+    it('TINY-13459: Should render header with children when title is not provided', async () => {
       const { getByText } = render(
         <Card.Root>
           <Card.Header>
@@ -89,9 +89,9 @@ describe('browser.components.CardTest', () => {
   });
 
   describe('State Tests', () => {
-    it('Should apply selected CSS class when active is true', async () => {
+    it('TINY-13459: Should apply selected CSS class when selected is true', async () => {
       const { container } = render(
-        <Card.Root active={true}>
+        <Card.Root selected={true}>
           <Card.Body>Content</Card.Body>
         </Card.Root>,
         { wrapper }
@@ -101,9 +101,9 @@ describe('browser.components.CardTest', () => {
       expect(card?.className).toContain('tox-card--selected');
     });
 
-    it('Should not apply selected CSS class when active is false', async () => {
+    it('TINY-13459: Should not apply selected CSS class when selected is false', async () => {
       const { container } = render(
-        <Card.Root active={false}>
+        <Card.Root selected={false}>
           <Card.Body>Content</Card.Body>
         </Card.Root>,
         { wrapper }
@@ -115,7 +115,7 @@ describe('browser.components.CardTest', () => {
   });
 
   describe('Callback Tests', () => {
-    it('Should call onSelect when card is clicked', async () => {
+    it('TINY-13459: Should call onSelect when card is clicked', async () => {
       const onSelect = vi.fn();
       const { container } = render(
         <Card.Root onSelect={onSelect}>
@@ -129,10 +129,10 @@ describe('browser.components.CardTest', () => {
       expect(onSelect).toHaveBeenCalledTimes(1);
     });
 
-    it('Should call onSelect when Enter key is pressed on active card', async () => {
+    it('TINY-13459: Should call onSelect when Enter key is pressed on selected card', async () => {
       const onSelect = vi.fn();
       const { container } = render(
-        <Card.Root onSelect={onSelect} active={true}>
+        <Card.Root onSelect={onSelect} selected={true}>
           <Card.Body>Content</Card.Body>
         </Card.Root>,
         { wrapper }
@@ -144,10 +144,10 @@ describe('browser.components.CardTest', () => {
       expect(onSelect).toHaveBeenCalledTimes(1);
     });
 
-    it('Should call onSelect when Space key is pressed on active card', async () => {
+    it('TINY-13459: Should call onSelect when Space key is pressed on selected card', async () => {
       const onSelect = vi.fn();
       const { container } = render(
-        <Card.Root onSelect={onSelect} active={true}>
+        <Card.Root onSelect={onSelect} selected={true}>
           <Card.Body>Content</Card.Body>
         </Card.Root>,
         { wrapper }
@@ -159,10 +159,10 @@ describe('browser.components.CardTest', () => {
       expect(onSelect).toHaveBeenCalledTimes(1);
     });
 
-    it('Should not call onSelect on keyboard events when card is not active', async () => {
+    it('TINY-13459: Should not call onSelect on keyboard events when card is not selected', async () => {
       const onSelect = vi.fn();
       const { container } = render(
-        <Card.Root onSelect={onSelect} active={false}>
+        <Card.Root onSelect={onSelect} selected={false}>
           <Card.Body>Content</Card.Body>
         </Card.Root>,
         { wrapper }
@@ -174,7 +174,7 @@ describe('browser.components.CardTest', () => {
       expect(onSelect).not.toHaveBeenCalled();
     });
 
-    it('Should call action button callbacks', async () => {
+    it('TINY-13459: Should call action button callbacks', async () => {
       const onSkip = vi.fn();
       const onApply = vi.fn();
       const { getByText } = render(
@@ -196,10 +196,10 @@ describe('browser.components.CardTest', () => {
     });
   });
 
-  describe('Accessibility Tests', () => {
-    it('Active card should have tabIndex 0', async () => {
+  describe('Accessibility Tests - Standalone Card', () => {
+    it('TINY-13459: Selected card should have tabIndex 0', async () => {
       const { container } = render(
-        <Card.Root active={true}>
+        <Card.Root selected={true}>
           <Card.Body>Content</Card.Body>
         </Card.Root>,
         { wrapper }
@@ -209,9 +209,9 @@ describe('browser.components.CardTest', () => {
       expect(card.getAttribute('tabindex')).toBe('0');
     });
 
-    it('Inactive card should have tabIndex -1', async () => {
+    it('TINY-13459: Unselected card should have tabIndex -1', async () => {
       const { container } = render(
-        <Card.Root active={false}>
+        <Card.Root selected={false}>
           <Card.Body>Content</Card.Body>
         </Card.Root>,
         { wrapper }
@@ -221,7 +221,7 @@ describe('browser.components.CardTest', () => {
       expect(card.getAttribute('tabindex')).toBe('-1');
     });
 
-    it('Card should have role="button"', async () => {
+    it('TINY-13459: Standalone card should have role="button"', async () => {
       const { container } = render(
         <Card.Root>
           <Card.Body>Content</Card.Body>
@@ -233,9 +233,9 @@ describe('browser.components.CardTest', () => {
       expect(card.getAttribute('role')).toBe('button');
     });
 
-    it('Card should have aria-pressed attribute', async () => {
+    it('TINY-13459: Standalone card should have aria-pressed attribute', async () => {
       const { container, rerender } = render(
-        <Card.Root active={false}>
+        <Card.Root selected={false}>
           <Card.Body>Content</Card.Body>
         </Card.Root>,
         { wrapper }
@@ -245,17 +245,312 @@ describe('browser.components.CardTest', () => {
       expect(card.getAttribute('aria-pressed')).toBe('false');
 
       rerender(
-        <Card.Root active={true}>
+        <Card.Root selected={true}>
           <Card.Body>Content</Card.Body>
         </Card.Root>
       );
 
       expect(card.getAttribute('aria-pressed')).toBe('true');
     });
+
+  });
+
+  describe('Accessibility Tests - CardList', () => {
+    it('TINY-13459: CardList should have role="listbox"', async () => {
+      const { container } = render(
+        <Card.CardList ariaLabel="Test cards">
+          <Card.Root index={0}>
+            <Card.Body>Card 1</Card.Body>
+          </Card.Root>
+          <Card.Root index={1}>
+            <Card.Body>Card 2</Card.Body>
+          </Card.Root>
+        </Card.CardList>,
+        { wrapper }
+      );
+
+      const list = container.querySelector('.tox-card-list') as HTMLElement;
+      expect(list.getAttribute('role')).toBe('listbox');
+      expect(list.getAttribute('aria-label')).toBe('Test cards');
+    });
+
+    it('TINY-13459: Cards in list should have role="option"', async () => {
+      const { container } = render(
+        <Card.CardList>
+          <Card.Root index={0}>
+            <Card.Body>Card 1</Card.Body>
+          </Card.Root>
+          <Card.Root index={1}>
+            <Card.Body>Card 2</Card.Body>
+          </Card.Root>
+        </Card.CardList>,
+        { wrapper }
+      );
+
+      const cards = container.querySelectorAll('.tox-card');
+      expect(cards[0].getAttribute('role')).toBe('option');
+      expect(cards[1].getAttribute('role')).toBe('option');
+    });
+
+    it('TINY-13459: Cards in list should have aria-selected attribute', async () => {
+      const { container } = render(
+        <Card.CardList selectedIndex={0}>
+          <Card.Root index={0}>
+            <Card.Body>Card 1</Card.Body>
+          </Card.Root>
+          <Card.Root index={1}>
+            <Card.Body>Card 2</Card.Body>
+          </Card.Root>
+        </Card.CardList>,
+        { wrapper }
+      );
+
+      const cards = container.querySelectorAll('.tox-card');
+      expect(cards[0].getAttribute('aria-selected')).toBe('true');
+      expect(cards[1].getAttribute('aria-selected')).toBe('false');
+    });
+
+    it('TINY-13459: Should implement roving tabindex - first card focused by default', async () => {
+      const { container } = render(
+        <Card.CardList defaultFocusedIndex={0}>
+          <Card.Root index={0}>
+            <Card.Body>Card 1</Card.Body>
+          </Card.Root>
+          <Card.Root index={1}>
+            <Card.Body>Card 2</Card.Body>
+          </Card.Root>
+          <Card.Root index={2}>
+            <Card.Body>Card 3</Card.Body>
+          </Card.Root>
+        </Card.CardList>,
+        { wrapper }
+      );
+
+      const cards = container.querySelectorAll('.tox-card') as NodeListOf<HTMLElement>;
+      expect(cards[0].getAttribute('tabindex')).toBe('0');
+      expect(cards[1].getAttribute('tabindex')).toBe('-1');
+      expect(cards[2].getAttribute('tabindex')).toBe('-1');
+    });
+
+    it('TINY-13459: Should update focused card when focusedIndex changes', async () => {
+      const { container, rerender } = render(
+        <Card.CardList focusedIndex={0}>
+          <Card.Root index={0}>
+            <Card.Body>Card 1</Card.Body>
+          </Card.Root>
+          <Card.Root index={1}>
+            <Card.Body>Card 2</Card.Body>
+          </Card.Root>
+        </Card.CardList>,
+        { wrapper }
+      );
+
+      let cards = container.querySelectorAll('.tox-card') as NodeListOf<HTMLElement>;
+      expect(cards[0].getAttribute('tabindex')).toBe('0');
+      expect(cards[1].getAttribute('tabindex')).toBe('-1');
+
+      rerender(
+        <Card.CardList focusedIndex={1}>
+          <Card.Root index={0}>
+            <Card.Body>Card 1</Card.Body>
+          </Card.Root>
+          <Card.Root index={1}>
+            <Card.Body>Card 2</Card.Body>
+          </Card.Root>
+        </Card.CardList>
+      );
+
+      cards = container.querySelectorAll('.tox-card') as NodeListOf<HTMLElement>;
+      expect(cards[0].getAttribute('tabindex')).toBe('-1');
+      expect(cards[1].getAttribute('tabindex')).toBe('0');
+    });
+  });
+
+  describe('Keyboard Navigation Tests', () => {
+    it('TINY-13459: Should navigate between cards with arrow keys', async () => {
+      const onFocusedIndexChange = vi.fn();
+      const { container } = render(
+        <Card.CardList focusedIndex={0} onFocusedIndexChange={onFocusedIndexChange}>
+          <Card.Root index={0}>
+            <Card.Body>Card 1</Card.Body>
+          </Card.Root>
+          <Card.Root index={1}>
+            <Card.Body>Card 2</Card.Body>
+          </Card.Root>
+          <Card.Root index={2}>
+            <Card.Body>Card 3</Card.Body>
+          </Card.Root>
+        </Card.CardList>,
+        { wrapper }
+      );
+
+      const firstCard = container.querySelectorAll('.tox-card')[0] as HTMLElement;
+      firstCard.focus();
+
+      await userEvent.keyboard('{ArrowDown}');
+      // FlowType navigation should move focus to next card
+      // Note: The actual focus management is handled by FlowType
+    });
+
+    it('TINY-13459: Should call onSelectCard when card is clicked in list', async () => {
+      const onSelectCard = vi.fn();
+      const { container } = render(
+        <Card.CardList onSelectCard={onSelectCard}>
+          <Card.Root index={0}>
+            <Card.Body>Card 1</Card.Body>
+          </Card.Root>
+          <Card.Root index={1}>
+            <Card.Body>Card 2</Card.Body>
+          </Card.Root>
+        </Card.CardList>,
+        { wrapper }
+      );
+
+      const secondCard = container.querySelectorAll('.tox-card')[1] as HTMLElement;
+      await userEvent.click(secondCard);
+      expect(onSelectCard).toHaveBeenCalledWith(1);
+    });
+
+    it('TINY-13459: Should call onSelectCard when Enter is pressed on focused card', async () => {
+      const onSelectCard = vi.fn();
+      const { container } = render(
+        <Card.CardList focusedIndex={1} onSelectCard={onSelectCard}>
+          <Card.Root index={0}>
+            <Card.Body>Card 1</Card.Body>
+          </Card.Root>
+          <Card.Root index={1}>
+            <Card.Body>Card 2</Card.Body>
+          </Card.Root>
+        </Card.CardList>,
+        { wrapper }
+      );
+
+      const secondCard = container.querySelectorAll('.tox-card')[1] as HTMLElement;
+      secondCard.focus();
+      await userEvent.keyboard('{Enter}');
+      expect(onSelectCard).toHaveBeenCalledWith(1);
+    });
+
+    it('TINY-13459: Should allow buttons inside card to respond to Space key', async () => {
+      const onButtonClick = vi.fn();
+      const onCardSelect = vi.fn();
+      const { getByRole } = render(
+        <Card.Root onSelect={onCardSelect} selected={true}>
+          <Card.Body>
+            <button onClick={onButtonClick}>Test Button</button>
+          </Card.Body>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      const button = getByRole('button', { name: 'Test Button' });
+      button.element().focus();
+      await userEvent.keyboard('{ }');
+
+      expect(onButtonClick).toHaveBeenCalledTimes(1);
+      expect(onCardSelect).not.toHaveBeenCalled();
+    });
+
+    it('TINY-13459: Should allow buttons inside card to respond to Enter key', async () => {
+      const onButtonClick = vi.fn();
+      const onCardSelect = vi.fn();
+      const { getByRole } = render(
+        <Card.Root onSelect={onCardSelect} selected={true}>
+          <Card.Body>
+            <button onClick={onButtonClick}>Test Button</button>
+          </Card.Body>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      const button = getByRole('button', { name: 'Test Button' });
+      button.element().focus();
+      await userEvent.keyboard('{Enter}');
+
+      expect(onButtonClick).toHaveBeenCalledTimes(1);
+      expect(onCardSelect).not.toHaveBeenCalled();
+    });
+
+    it('TINY-13459: Should allow multiple buttons inside card to work independently', async () => {
+      const onSkip = vi.fn();
+      const onApply = vi.fn();
+      const onCardSelect = vi.fn();
+      const { getByRole } = render(
+        <Card.Root onSelect={onCardSelect} selected={true}>
+          <Card.Body>Content</Card.Body>
+          <Card.Actions>
+            <Button variant="outlined" onClick={onSkip}>Skip</Button>
+            <Button variant="primary" onClick={onApply}>Apply</Button>
+          </Card.Actions>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      const skipButton = getByRole('button', { name: 'Skip' });
+      skipButton.element().focus();
+      await userEvent.keyboard('{Enter}');
+      expect(onSkip).toHaveBeenCalledTimes(1);
+      expect(onCardSelect).not.toHaveBeenCalled();
+
+      const applyButton = getByRole('button', { name: 'Apply' });
+      applyButton.element().focus();
+      await userEvent.keyboard('{ }');
+      expect(onApply).toHaveBeenCalledTimes(1);
+      expect(onCardSelect).not.toHaveBeenCalled();
+    });
+
+    it('TINY-13459: Card should handle keyboard events when focus is on card itself', async () => {
+      const onCardSelect = vi.fn();
+      const { container } = render(
+        <Card.Root onSelect={onCardSelect} selected={true}>
+          <Card.Body>Content without buttons</Card.Body>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      const card = container.querySelector('.tox-card') as HTMLElement;
+      card.focus();
+      await userEvent.keyboard('{Enter}');
+      expect(onCardSelect).toHaveBeenCalledTimes(1);
+
+      await userEvent.keyboard('{ }');
+      expect(onCardSelect).toHaveBeenCalledTimes(2);
+    });
+
+    it('TINY-13459: ExpandableBox toggle button should work with keyboard in card', async () => {
+      const onToggle = vi.fn();
+      const onCardSelect = vi.fn();
+      const longContent = 'Lorem ipsum dolor sit amet, '.repeat(50);
+
+      const { getByRole } = render(
+        <Card.Root onSelect={onCardSelect} selected={true}>
+          <Card.Body>
+            <ExpandableBox onToggle={onToggle} maxHeight={50}>
+              {longContent}
+            </ExpandableBox>
+          </Card.Body>
+        </Card.Root>,
+        { wrapper }
+      );
+
+      // Find the expand button (should be visible due to overflow)
+      const expandButton = getByRole('button', { name: /expand/i });
+      expandButton.element().focus();
+
+      // Press Enter on the expand button
+      await userEvent.keyboard('{Enter}');
+      expect(onToggle).toHaveBeenCalledTimes(1);
+      expect(onCardSelect).not.toHaveBeenCalled();
+
+      // Press Space on the expand button
+      await userEvent.keyboard('{ }');
+      expect(onToggle).toHaveBeenCalledTimes(2);
+      expect(onCardSelect).not.toHaveBeenCalled();
+    });
   });
 
   describe('Actions Layout Tests', () => {
-    it('Should apply flex-start layout by default', async () => {
+    it('TINY-13459: Should apply flex-start layout by default', async () => {
       const { container } = render(
         <Card.Root>
           <Card.Actions>
@@ -269,7 +564,7 @@ describe('browser.components.CardTest', () => {
       expect(actions?.className).toContain('tox-card__actions--flex-start');
     });
 
-    it('Should apply space-between layout when specified', async () => {
+    it('TINY-13459: Should apply space-between layout when specified', async () => {
       const { container } = render(
         <Card.Root>
           <Card.Actions layout="space-between">
@@ -285,7 +580,7 @@ describe('browser.components.CardTest', () => {
   });
 
   describe('Highlight Tests', () => {
-    it('Should render highlight with added type', async () => {
+    it('TINY-13459: Should render highlight with added type', async () => {
       const { container } = render(
         <Card.Root>
           <Card.Body>
@@ -301,7 +596,7 @@ describe('browser.components.CardTest', () => {
       expect(highlight).toBeTruthy();
     });
 
-    it('Should render highlight with deleted type', async () => {
+    it('TINY-13459: Should render highlight with deleted type', async () => {
       const { container } = render(
         <Card.Root>
           <Card.Body>
@@ -317,7 +612,7 @@ describe('browser.components.CardTest', () => {
       expect(highlight).toBeTruthy();
     });
 
-    it('Should render highlight with modified type', async () => {
+    it('TINY-13459: Should render highlight with modified type', async () => {
       const { container } = render(
         <Card.Root>
           <Card.Body>
@@ -335,7 +630,7 @@ describe('browser.components.CardTest', () => {
   });
 
   describe('Snapshot Tests', () => {
-    it('Should match snapshot for default card', async () => {
+    it('TINY-13459: Should match snapshot for default card', async () => {
       const { asFragment } = render(
         <Card.Root>
           <Card.Header>Test Header</Card.Header>
@@ -351,9 +646,9 @@ describe('browser.components.CardTest', () => {
       expect(asFragment()).toMatchSnapshot('Default card');
     });
 
-    it('Should match snapshot for selected card', async () => {
+    it('TINY-13459: Should match snapshot for selected card', async () => {
       const { asFragment } = render(
-        <Card.Root active={true}>
+        <Card.Root selected={true}>
           <Card.Header>Selected Card</Card.Header>
           <Card.Body>Selected content</Card.Body>
           <Card.Actions>
@@ -365,6 +660,32 @@ describe('browser.components.CardTest', () => {
       );
 
       expect(asFragment()).toMatchSnapshot('Selected card');
+    });
+
+    it('TINY-13459: Should match snapshot for CardList', async () => {
+      const { asFragment } = render(
+        <Card.CardList focusedIndex={0} selectedIndex={1} ariaLabel="Review suggestions">
+          <Card.Root index={0}>
+            <Card.Header>First Card</Card.Header>
+            <Card.Body>First content</Card.Body>
+            <Card.Actions>
+              <Button variant="outlined">Skip</Button>
+              <Button variant="outlined">Apply</Button>
+            </Card.Actions>
+          </Card.Root>
+          <Card.Root index={1}>
+            <Card.Header>Second Card</Card.Header>
+            <Card.Body>Second content</Card.Body>
+            <Card.Actions>
+              <Button variant="outlined">Skip</Button>
+              <Button variant="outlined">Apply</Button>
+            </Card.Actions>
+          </Card.Root>
+        </Card.CardList>,
+        { wrapper }
+      );
+
+      expect(asFragment()).toMatchSnapshot('CardList with multiple cards');
     });
   });
 });

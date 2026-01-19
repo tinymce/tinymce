@@ -34,10 +34,18 @@
       box-shadow: 0 4px 8px 0 fade(@color-black, 10%);
     }
 
-    &--selected,
-    &:focus-within,
-    &:focus-visible {
+    &--selected {
       border-color: @card-border-color;
+    }
+
+    &:focus-within {
+      border-color: @card-border-color;
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color;
+      border-color: transparent;
     }
 
     &--has-decision {
@@ -72,10 +80,6 @@
           }
         }
       }
-    }
-
-    &:focus-visible {
-       outline: none;
     }
 
     &__header {
@@ -147,6 +151,16 @@
           padding: @pad-xs @pad-md;
         }
       }
+    }
+  }
+
+  .tox-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: @card-section-gap;
+
+    &:focus {
+      outline: none;
     }
   }
 }

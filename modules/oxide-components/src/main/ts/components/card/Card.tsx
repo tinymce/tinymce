@@ -1,16 +1,22 @@
 import { Type } from '@ephox/katamari';
-import { useCallback, type FC, type PropsWithChildren } from 'react';
+import { useCallback, useEffect, type FC, type PropsWithChildren } from 'react';
 
 import * as Bem from '../../utils/Bem';
 
+import { useCardListContext } from './CardListContext';
 import type { CardHighlightType, CardLayout } from './CardTypes';
 
 export interface CardRootProps extends PropsWithChildren {
   readonly className?: string;
   readonly onSelect?: () => void;
-  readonly active?: boolean;
+  readonly selected?: boolean;
   readonly ariaLabel?: string;
   readonly hasDecision?: boolean;
+  /**
+   * Index of this card within a CardList.
+   * Required when used inside CardList for proper keyboard navigation.
+   */
+  readonly index?: number;
 }
 
 export interface CardHeaderProps extends PropsWithChildren {
@@ -33,44 +39,74 @@ export interface CardHighlightProps extends PropsWithChildren {
 
 /**
  * Card Root component.
- * Container for a card with support for active/resolution states.
+ * Container for a card with support for selection states.
+ * Can be used standalone or within a CardList for keyboard navigation.
  */
 const Root: FC<CardRootProps> = ({
   children,
   className,
   onSelect,
-  active = false,
+  selected = false,
   ariaLabel,
-  hasDecision = false
+  hasDecision = false,
+  index
 }) => {
+  const listContext = useCardListContext();
+
+  const isFocused = listContext
+    ? listContext.focusedIndex === index
+    : selected;
+
+  useEffect(() => {
+    if (listContext && index !== undefined && isFocused) {
+      listContext.setFocusedIndex(index);
+    }
+  }, [ listContext, index, isFocused ]);
+
   const handleClick = useCallback(() => {
+    if (listContext && index !== undefined) {
+      listContext.onSelectCard?.(index);
+      listContext.setFocusedIndex(index);
+    }
     onSelect?.();
-  }, [ onSelect ]);
+  }, [ onSelect, listContext, index ]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if ((e.key === 'Enter' || e.key === ' ') && active) {
+    const target = e.target as HTMLElement;
+    const isInteractiveElement = target.matches('button, a, input, textarea, select, [role="button"]');
+
+    if (isInteractiveElement) {
+      return;
+    }
+
+    if (!listContext && (e.key === 'Enter' || e.key === ' ')) {
       e.preventDefault();
       onSelect?.();
     }
-  }, [ onSelect, active ]);
+  }, [ onSelect, listContext ]);
 
   const baseClassName = Bem.block('tox-card', {
-    'selected': active,
+    selected,
     'has-decision': hasDecision
   });
   const cardClassName = Type.isNonNullable(className)
     ? `${baseClassName} ${className}`
     : baseClassName;
 
+  const role = listContext ? 'option' : 'button';
+  const ariaAttribute = listContext
+    ? { 'aria-selected': selected }
+    : { 'aria-pressed': selected };
+
   return (
     <div
       className={cardClassName}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-      tabIndex={active ? 0 : -1}
-      role="button"
+      tabIndex={isFocused ? 0 : -1}
+      role={role}
       aria-label={ariaLabel ?? 'Card'}
-      aria-pressed={active}
+      {...ariaAttribute}
     >
       {children}
     </div>
@@ -141,4 +177,5 @@ export {
   Highlight
 };
 
+export { CardList } from './CardList';
 export type { CardLayout, CardHighlightType } from './CardTypes';
