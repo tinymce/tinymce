@@ -44,7 +44,7 @@ export const ExpandableBox: FC<ExpandableBoxProps> = ({
         {children}
       </div>
       {
-        overflowing && <Button variant="naked" type="button" onClick={() => onToggle?.()}>
+        overflowing && <Button variant="naked" type="button" onClick={() => onToggle?.()} className="tox-expandable-box__toggle">
           <Icon icon={expanded ? 'chevron-up' : 'chevron-down'} />
           {expanded ? collapseLabel : expandLabel}
         </Button>

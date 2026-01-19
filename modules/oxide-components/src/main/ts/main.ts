@@ -5,6 +5,7 @@ import { Tag } from './bespoke/tinymceai/tag/Tag';
 import * as Accordion from './components/accordion/Accordion';
 import { AutoResizingTextarea } from './components/autoresizingtextarea/AutoResizingTextarea';
 import { Button } from './components/button/Button';
+import * as Card from './components/card/Card';
 import * as ContextToolbar from './components/contexttoolbar/ContextToolbar';
 import * as Draggable from './components/draggable/Draggable';
 import * as Dropdown from './components/dropdown/Dropdown';
@@ -29,6 +30,7 @@ export {
   AutoResizingTextarea,
   Bem,
   Button,
+  Card,
   ContextToolbar,
   Draggable,
   Dropdown,
