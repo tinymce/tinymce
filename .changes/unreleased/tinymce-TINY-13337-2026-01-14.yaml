@@ -1,6 +1,6 @@
 project: tinymce
 kind: Improved
-body: Directionality plugin now always toggles directionality attribute on selected blocks.
+body: Directionality buttons now always toggle the directionality attribute on selected blocks.
 time: 2026-01-13T13:12:06.721743+10:00
 custom:
     Issue: TINY-13337
