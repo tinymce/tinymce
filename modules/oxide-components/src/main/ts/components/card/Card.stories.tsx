@@ -4,6 +4,7 @@ import { getAll as getAllIcons } from '@tinymce/oxide-icons-default';
 import { useState } from 'react';
 
 import { Button, ExpandableBox, UniverseProvider } from '../../main';
+import * as Bem from '../../utils/Bem';
 import { Icon } from '../icon/Icon';
 
 import * as Card from './Card';
@@ -229,64 +230,73 @@ Demonstrates the visual states of cards with status labels:
 - **Applied**: Card with "APPLIED" label showing completed state
 - **Skipped**: Card with "SKIPPED" label showing dismissed state
 
-**Click any card** to select it and see the 2px border.
+**Keyboard Navigation:**
+- Arrow keys to navigate between cards
+- Enter/Space to select the focused card
+- Tab to access buttons within cards
         `
       }
     }
   },
   render: () => {
-    const [ selectedCard, setSelectedCard ] = useState<number | null>(null);
+    const [ selectedIndex, setSelectedIndex ] = useState<number | undefined>(undefined);
 
     return (
-      <div style={{ width: '316px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <Card.Root selected={selectedCard === 1} onSelect={() => setSelectedCard(1)}>
-          <Card.Header>
-            Review Suggestion
-          </Card.Header>
-          <Card.Body>
-            <p style={{ margin: 0 }}>This card has no status yet.</p>
-          </Card.Body>
-          <Card.Actions>
-            <Button variant="outlined">
-              <Icon icon="close" />
-              Skip
-            </Button>
-            <Button variant="outlined">
-              <Icon icon="checkmark" />
-              Apply
-            </Button>
-          </Card.Actions>
-        </Card.Root>
+      <div style={{ width: '316px' }}>
+        <Card.CardList
+          ariaLabel="Review suggestions with different states"
+          selectedIndex={selectedIndex}
+          onSelectCard={setSelectedIndex}
+        >
+          <Card.Root index={0}>
+            <Card.Header>
+              Review Suggestion
+            </Card.Header>
+            <Card.Body>
+              <p style={{ margin: 0 }}>This card has no status yet.</p>
+            </Card.Body>
+            <Card.Actions>
+              <Button variant="outlined" onClick={(e) => e.stopPropagation()}>
+                <Icon icon="close" />
+                Skip
+              </Button>
+              <Button variant="outlined" onClick={(e) => e.stopPropagation()}>
+                <Icon icon="checkmark" />
+                Apply
+              </Button>
+            </Card.Actions>
+          </Card.Root>
 
-        <Card.Root selected={selectedCard === 2} onSelect={() => setSelectedCard(2)} hasDecision={true}>
-          <Card.Header>
-            <div className="tox-card__header-label">Applied</div>
-          </Card.Header>
-          <Card.Body>
-            <p style={{ margin: 0 }}>This suggestion has been applied.</p>
-          </Card.Body>
-          <Card.Actions>
-            <Button variant="outlined">
-              <Icon icon="close" />
-              Revert
-            </Button>
-          </Card.Actions>
-        </Card.Root>
+          <Card.Root index={1} hasDecision={true}>
+            <Card.Header>
+              <div className={Bem.element('tox-card', 'header-label')}>Applied</div>
+            </Card.Header>
+            <Card.Body>
+              <p style={{ margin: 0 }}>This suggestion has been applied.</p>
+            </Card.Body>
+            <Card.Actions>
+              <Button variant="outlined" onClick={(e) => e.stopPropagation()}>
+                <Icon icon="close" />
+                Revert
+              </Button>
+            </Card.Actions>
+          </Card.Root>
 
-        <Card.Root selected={selectedCard === 3} onSelect={() => setSelectedCard(3)} hasDecision={true}>
-          <Card.Header>
-            <div className="tox-card__header-label">Skipped</div>
-          </Card.Header>
-          <Card.Body>
-            <p style={{ margin: 0 }}>This suggestion has been skipped.</p>
-          </Card.Body>
-          <Card.Actions>
-            <Button variant="outlined">
-              <Icon icon="close" />
-              Revert
-            </Button>
-          </Card.Actions>
-        </Card.Root>
+          <Card.Root index={2} hasDecision={true}>
+            <Card.Header>
+              <div className={Bem.element('tox-card', 'header-label')}>Skipped</div>
+            </Card.Header>
+            <Card.Body>
+              <p style={{ margin: 0 }}>This suggestion has been skipped.</p>
+            </Card.Body>
+            <Card.Actions>
+              <Button variant="outlined" onClick={(e) => e.stopPropagation()}>
+                <Icon icon="close" />
+                Revert
+              </Button>
+            </Card.Actions>
+          </Card.Root>
+        </Card.CardList>
       </div>
     );
   }
@@ -304,14 +314,16 @@ Shows multiple review cards in a sidebar-like container (316px width) to demonst
 - Scrolling behavior with multiple cards
 - Hover effects
 - Click/selection interaction
+- **Arrow key navigation** between cards
+- Tab key navigation to buttons
 
-This simulates how cards would appear in a sidebar-style UI.
+This simulates how cards would appear in a sidebar-style UI with full keyboard support.
         `
       }
     }
   },
   render: () => {
-    const [ activeCard, setActiveCard ] = useState<number | null>(null);
+    const [ selectedIndex, setSelectedIndex ] = useState<number | undefined>(undefined);
 
     const reviews = [
       { id: 1, title: 'Grammar Fix', content: 'Change "institution club" to "club institution"' },
@@ -332,30 +344,36 @@ This simulates how cards would appear in a sidebar-style UI.
           borderRadius: '6px'
         }}
       >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {reviews.map((review) => (
-            <Card.Root
-              key={review.id}
-              selected={activeCard === review.id}
-              onSelect={() => setActiveCard(review.id)}
-            >
+        <Card.CardList
+          ariaLabel="Review suggestions"
+          selectedIndex={selectedIndex}
+          onSelectCard={setSelectedIndex}
+        >
+          {reviews.map((review, index) => (
+            <Card.Root key={review.id} index={index}>
               <Card.Header title={review.title} />
               <Card.Body>
                 <p style={{ margin: 0, fontSize: '14px' }}>{review.content}</p>
               </Card.Body>
               <Card.Actions>
-                <Button variant="outlined" onClick={() => setActiveCard(null)}>
+                <Button variant="outlined" onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedIndex(undefined);
+                }}>
                   <Icon icon="close" />
                   Skip
                 </Button>
-                <Button variant="outlined" onClick={() => setActiveCard(null)}>
+                <Button variant="outlined" onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedIndex(index);
+                }}>
                   <Icon icon="checkmark" />
                   Apply
                 </Button>
               </Card.Actions>
             </Card.Root>
           ))}
-        </div>
+        </Card.CardList>
       </div>
     );
   }

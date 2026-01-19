@@ -5,7 +5,6 @@
 @card-text-color: @text-color;
 @card-border-color: @color-tint;
 @card-background-color: @background-color;
-@card-decision-border-width: 1px;
 
 // Highlight colors - mixing with white at 80% opacity
 @card-added-background-color: mix(@color-success, @background-color, 20%);
@@ -15,14 +14,14 @@
 @card-section-padding: @pad-sm + @pad-xs;
 @card-section-gap: @pad-sm + @pad-xs;
 @card-button-gap: @pad-sm;
-@card-card-border-radius: @control-border-radius;
+@card-border-radius: @control-border-radius;
 @card-selected-border-width: @keyboard-focus-outline-width;
 @card-highlight-border-width: @keyboard-focus-outline-width;
 
 .tox {
   .tox-card {
     background-color: @card-background-color;
-    border-radius: @card-card-border-radius;
+    border-radius: @card-border-radius;
     display: flex;
     flex-direction: column;
     gap: @card-section-gap;
@@ -38,10 +37,6 @@
       border-color: @card-border-color;
     }
 
-    &:focus-within {
-      border-color: @card-border-color;
-    }
-
     &:focus-visible {
       outline: none;
       box-shadow: 0 0 0 @keyboard-focus-outline-width @keyboard-focus-outline-color;
@@ -53,7 +48,6 @@
 
       &:not(.tox-card--selected) {
         border-color: @text-color-muted;
-        border-width: @card-decision-border-width;
       }
 
       .tox-card__body {
@@ -64,11 +58,7 @@
         .tox-button--secondary--outline {
           border-color: darken(@background-color, 12%);
 
-          &:hover:not(:disabled) {
-            background-color: darken(@background-color, 12%);
-            border-color: darken(@background-color, 18%);
-          }
-
+          &:hover:not(:disabled),
           &:focus:not(:disabled) {
             background-color: darken(@background-color, 12%);
             border-color: darken(@background-color, 18%);
@@ -83,7 +73,8 @@
     }
 
     &__header {
-      padding: @card-section-padding @card-section-padding 0 @card-section-padding;
+      padding: @card-section-padding;
+      padding-bottom: 0;
       color: @card-text-color;
       font-size: @font-size-md;
 
@@ -134,7 +125,7 @@
     &__actions {
       display: flex;
       gap: @card-button-gap;
-      padding: 0 @card-section-padding @card-section-padding @card-section-padding;
+      padding: 0 @card-section-padding @card-section-padding;
 
       &--space-between {
         justify-content: space-between;
@@ -144,12 +135,10 @@
         justify-content: flex-start;
       }
 
-      .tox-button {
-        &,
-        &.tox-button--icon,
-        &:has(.tox-icon:only-child) {
-          padding: @pad-xs @pad-md;
-        }
+      .tox-button,
+      .tox-button--icon,
+      .tox-button:has(.tox-icon:only-child) {
+        padding: @pad-xs @pad-md;
       }
     }
   }

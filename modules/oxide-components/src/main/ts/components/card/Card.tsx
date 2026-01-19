@@ -73,9 +73,7 @@ const Root: FC<CardRootProps> = ({
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     const target = e.target as HTMLElement;
-    const isInteractiveElement = target.matches('button, a, input, textarea, select, [role="button"]');
-
-    if (isInteractiveElement) {
+    if (target.matches('button, a, input, textarea, select, [role="button"]')) {
       return;
     }
 
@@ -85,13 +83,16 @@ const Root: FC<CardRootProps> = ({
     }
   }, [ onSelect, listContext ]);
 
-  const baseClassName = Bem.block('tox-card', {
-    selected,
+  const handleFocus = useCallback(() => {
+    if (listContext && index !== undefined) {
+      listContext.setFocusedIndex(index);
+    }
+  }, [ listContext, index ]);
+
+  const cardClassName = Bem.block('tox-card', {
+    'selected': listContext ? isFocused : selected,
     'has-decision': hasDecision
-  });
-  const cardClassName = Type.isNonNullable(className)
-    ? `${baseClassName} ${className}`
-    : baseClassName;
+  }) + (Type.isNonNullable(className) ? ` ${className}` : '');
 
   const role = listContext ? 'option' : 'button';
   const ariaAttribute = listContext
@@ -103,6 +104,7 @@ const Root: FC<CardRootProps> = ({
       className={cardClassName}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
+      onFocus={handleFocus}
       tabIndex={isFocused ? 0 : -1}
       role={role}
       aria-label={ariaLabel ?? 'Card'}

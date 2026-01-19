@@ -122,9 +122,7 @@ export const CardList: FC<CardListProps> = ({
     }
   });
 
-  const listClassName = className
-    ? `${Bem.block('tox-card-list')} ${className}`
-    : Bem.block('tox-card-list');
+  const listClassName = Bem.block('tox-card-list') + (className ? ` ${className}` : '');
 
   return (
     <CardListContext.Provider value={contextValue}>

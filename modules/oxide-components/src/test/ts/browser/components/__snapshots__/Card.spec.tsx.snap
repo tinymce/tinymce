@@ -85,3 +85,172 @@ exports[`browser.components.CardTest > Snapshot Tests > Should match snapshot fo
   </div>
 </DocumentFragment>
 `;
+
+exports[`browser.components.CardTest > Snapshot Tests > TINY-13459: Should match snapshot for CardList > CardList with multiple cards 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      aria-label="Review suggestions"
+      class="tox-card-list"
+      role="listbox"
+    >
+      <div
+        aria-label="Card"
+        aria-selected="false"
+        class="tox-card"
+        role="option"
+        tabindex="0"
+      >
+        <div
+          class="tox-card__header"
+        >
+          First Card
+        </div>
+        <div
+          class="tox-card__body"
+        >
+          First content
+        </div>
+        <div
+          class="tox-card__actions tox-card__actions--flex-start"
+        >
+          <button
+            class="tox-button tox-button--secondary--outline "
+            type="button"
+          >
+            Skip
+          </button>
+          <button
+            class="tox-button tox-button--secondary--outline "
+            type="button"
+          >
+            Apply
+          </button>
+        </div>
+      </div>
+      <div
+        aria-label="Card"
+        aria-selected="false"
+        class="tox-card"
+        role="option"
+        tabindex="-1"
+      >
+        <div
+          class="tox-card__header"
+        >
+          Second Card
+        </div>
+        <div
+          class="tox-card__body"
+        >
+          Second content
+        </div>
+        <div
+          class="tox-card__actions tox-card__actions--flex-start"
+        >
+          <button
+            class="tox-button tox-button--secondary--outline "
+            type="button"
+          >
+            Skip
+          </button>
+          <button
+            class="tox-button tox-button--secondary--outline "
+            type="button"
+          >
+            Apply
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.CardTest > Snapshot Tests > TINY-13459: Should match snapshot for default card > Default card 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      aria-label="Card"
+      aria-pressed="false"
+      class="tox-card"
+      role="button"
+      tabindex="-1"
+    >
+      <div
+        class="tox-card__header"
+      >
+        Test Header
+      </div>
+      <div
+        class="tox-card__body"
+      >
+        Test content
+      </div>
+      <div
+        class="tox-card__actions tox-card__actions--flex-start"
+      >
+        <button
+          class="tox-button tox-button--secondary--outline "
+          type="button"
+        >
+          Skip
+        </button>
+        <button
+          class="tox-button tox-button--secondary--outline "
+          type="button"
+        >
+          Apply
+        </button>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`browser.components.CardTest > Snapshot Tests > TINY-13459: Should match snapshot for selected card > Selected card 1`] = `
+<DocumentFragment>
+  <div
+    class="tox"
+  >
+    <div
+      aria-label="Card"
+      aria-pressed="true"
+      class="tox-card tox-card--selected"
+      role="button"
+      tabindex="0"
+    >
+      <div
+        class="tox-card__header"
+      >
+        Selected Card
+      </div>
+      <div
+        class="tox-card__body"
+      >
+        Selected content
+      </div>
+      <div
+        class="tox-card__actions tox-card__actions--flex-start"
+      >
+        <button
+          class="tox-button tox-button--secondary--outline "
+          type="button"
+        >
+          Skip
+        </button>
+        <button
+          class="tox-button tox-button--secondary--outline "
+          type="button"
+        >
+          Apply
+        </button>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
