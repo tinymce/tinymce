@@ -63,7 +63,18 @@ const Root: FC<CardRootProps> = ({
     }
   }, [ listContext, index, isFocused ]);
 
-  const handleClick = useCallback(() => {
+  const handleClick = useCallback((e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    const currentTarget = e.currentTarget as HTMLElement;
+
+    if (target !== currentTarget) {
+      const isInteractive = target.matches('button, a, input, textarea, select') ||
+        target.closest('button, a, input, textarea, select');
+      if (isInteractive) {
+        return;
+      }
+    }
+
     if (listContext && index !== undefined) {
       listContext.onSelectCard?.(index);
       listContext.setFocusedIndex(index);
@@ -72,22 +83,36 @@ const Root: FC<CardRootProps> = ({
   }, [ onSelect, listContext, index ]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    const target = e.target as HTMLElement;
-    if (target.matches('button, a, input, textarea, select, [role="button"]')) {
+    if (e.key !== 'Enter' && e.key !== ' ') {
       return;
     }
 
-    if (!listContext && (e.key === 'Enter' || e.key === ' ')) {
+    const target = e.target as HTMLElement;
+    const currentTarget = e.currentTarget as HTMLElement;
+
+    if (target !== currentTarget) {
+      const isInteractive = target.matches('button, a, input, textarea, select') ||
+        target.closest('button, a, input, textarea, select');
+      if (isInteractive) {
+        return;
+      }
+    }
+
+    if (!listContext && isFocused) {
       e.preventDefault();
       onSelect?.();
     }
-  }, [ onSelect, listContext ]);
+  }, [ onSelect, listContext, isFocused ]);
 
   const handleFocus = useCallback(() => {
     if (listContext && index !== undefined) {
       listContext.setFocusedIndex(index);
     }
   }, [ listContext, index ]);
+
+  const isSelected = listContext
+    ? (listContext.selectedIndex === index)
+    : selected;
 
   const cardClassName = Bem.block('tox-card', {
     'selected': listContext ? isFocused : selected,
@@ -96,7 +121,7 @@ const Root: FC<CardRootProps> = ({
 
   const role = listContext ? 'option' : 'button';
   const ariaAttribute = listContext
-    ? { 'aria-selected': selected }
+    ? { 'aria-selected': isSelected }
     : { 'aria-pressed': selected };
 
   return (
