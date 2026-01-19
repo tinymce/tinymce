@@ -155,7 +155,7 @@ describe('browser.components.CardTest', () => {
 
       const card = container.querySelector('.tox-card') as HTMLElement;
       card.focus();
-      await userEvent.keyboard('{ }');
+      await userEvent.keyboard('{Space}');
       expect(onSelect).toHaveBeenCalledTimes(1);
     });
 
@@ -444,7 +444,7 @@ describe('browser.components.CardTest', () => {
 
       const button = getByRole('button', { name: 'Test Button' });
       button.element().focus();
-      await userEvent.keyboard('{ }');
+      await userEvent.keyboard('{Space}');
 
       expect(onButtonClick).toHaveBeenCalledTimes(1);
       expect(onCardSelect).not.toHaveBeenCalled();
@@ -493,7 +493,7 @@ describe('browser.components.CardTest', () => {
 
       const applyButton = getByRole('button', { name: 'Apply' });
       applyButton.element().focus();
-      await userEvent.keyboard('{ }');
+      await userEvent.keyboard('{Space}');
       expect(onApply).toHaveBeenCalledTimes(1);
       expect(onCardSelect).not.toHaveBeenCalled();
     });
@@ -512,7 +512,7 @@ describe('browser.components.CardTest', () => {
       await userEvent.keyboard('{Enter}');
       expect(onCardSelect).toHaveBeenCalledTimes(1);
 
-      await userEvent.keyboard('{ }');
+      await userEvent.keyboard('{Space}');
       expect(onCardSelect).toHaveBeenCalledTimes(2);
     });
 
@@ -542,7 +542,7 @@ describe('browser.components.CardTest', () => {
       expect(onCardSelect).not.toHaveBeenCalled();
 
       // Press Space on the expand button
-      await userEvent.keyboard('{ }');
+      await userEvent.keyboard('{Space}');
       expect(onToggle).toHaveBeenCalledTimes(2);
       expect(onCardSelect).not.toHaveBeenCalled();
     });
